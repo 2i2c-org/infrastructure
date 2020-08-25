@@ -113,7 +113,7 @@ resource "azurerm_network_security_group" "nfs_vm" {
     source_port_range          = "*"
     source_address_prefix      = "*"
     destination_port_range     = "22"
-    destination_address_prefix = "*"
+    destination_address_prefix = azurerm_network_interface.nfs_vm.private_ip_address
   }
 
   # NFS from internal network
@@ -131,10 +131,9 @@ resource "azurerm_network_security_group" "nfs_vm" {
 }
 
 resource "azurerm_network_interface_security_group_association" "main" {
-  network_interface_id      = azurerm_network_interface.nfs_vm_pub.id
+  network_interface_id      = azurerm_network_interface.nfs_vm.id
   network_security_group_id = azurerm_network_security_group.nfs_vm.id
 }
-
 
 resource "azurerm_linux_virtual_machine" "nfs_vm" {
   name                = "${var.prefix}-nfs-vm"
@@ -145,7 +144,6 @@ resource "azurerm_linux_virtual_machine" "nfs_vm" {
 
   network_interface_ids = [
     azurerm_network_interface.nfs_vm.id,
-    azurerm_network_interface.nfs_vm_pub.id
   ]
 
   admin_ssh_key {
@@ -167,11 +165,30 @@ resource "azurerm_linux_virtual_machine" "nfs_vm" {
   }
 }
 
+resource "azurerm_managed_disk" "nfs_data_disk_1" {
+  name                 = "${var.prefix}-nfs-data-disk-1"
+  location             = azurerm_resource_group.jupyterhub.location
+  resource_group_name  = azurerm_resource_group.jupyterhub.name
+  storage_account_type = "StandardSSD_LRS"
+  create_option        = "Empty"
+  disk_size_gb         = "100"
+
+  lifecycle {
+    # Terraform plz never destroy data thx
+    prevent_destroy = true
+  }
+  tags = {
+    Environment = "Production"
+  }
+}
+
+resource "azurerm_virtual_machine_data_disk_attachment" "nfs_data_disk_1" {
+  virtual_machine_id = azurerm_linux_virtual_machine.nfs_vm.id
+  managed_disk_id    = azurerm_managed_disk.nfs_data_disk_1.id
+  lun                = 0
+  caching            = "None"
+}
 
 output "kubeconfig" {
   value = azurerm_kubernetes_cluster.jupyterhub.kube_config_raw
-}
-
-output "nfs_public_ip" {
-  value = azurerm_public_ip.nfs_vm.ip_address
 }
