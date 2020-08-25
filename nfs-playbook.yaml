@@ -1,0 +1,35 @@
+- name: nfs server setup
+  hosts: all
+  connection: ssh
+  become: true
+  handlers:
+    - name: re-export NFS Shares
+      command:
+        cmd: exportfs -ra
+  tasks:
+    - name: Install NFS packages
+      apt:
+        pkg:
+          - nfs-kernel-server
+          - nfs-common
+          - xfsprogs
+    - name: Setup XFS
+      filesystem:
+        fstype: xfs
+        dev: /dev/disk/azure/scsi1/lun0
+
+    - name: Mount disk
+      mount:
+        path: /export/disk1
+        src: /dev/disk/azure/scsi1/lun0
+        state: mounted
+        fstype: xfs
+        opts: inode64,prjquota
+
+    - name: setup exports file
+      notify:
+        - re-export NFS Shares
+      copy:
+        dest: /etc/exports
+        content: >
+          /export/disk1 10.0.0.0/8(all_squash,anonuid=1000,anongid=1000,no_subtree_check,rw,sync)
