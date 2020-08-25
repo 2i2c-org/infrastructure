@@ -171,7 +171,7 @@ resource "azurerm_managed_disk" "nfs_data_disk_1" {
   resource_group_name  = azurerm_resource_group.jupyterhub.name
   storage_account_type = "StandardSSD_LRS"
   create_option        = "Empty"
-  disk_size_gb         = "100"
+  disk_size_gb         = "200"
 
   lifecycle {
     # Terraform plz never destroy data thx

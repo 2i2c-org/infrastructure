@@ -17,6 +17,7 @@
       filesystem:
         fstype: xfs
         dev: /dev/disk/azure/scsi1/lun0
+        resizefs: true
 
     - name: Mount disk
       mount:
