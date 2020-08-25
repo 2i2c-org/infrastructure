@@ -26,6 +26,14 @@
         fstype: xfs
         opts: inode64,prjquota
 
+    - name: Create home container directory
+      file:
+        state: directory
+        owner: "1000"
+        group: "1000"
+        path: /export/disk1/homes
+        mode: 0700
+
     - name: setup exports file
       notify:
         - re-export NFS Shares
