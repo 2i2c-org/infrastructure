@@ -33,6 +33,12 @@ resource "azurerm_kubernetes_cluster" "jupyterhub" {
   resource_group_name = azurerm_resource_group.jupyterhub.name
   dns_prefix          = "${var.prefix}-cluster"
 
+  linux_profile {
+    admin_username = "hubadmin"
+    ssh_key {
+      key_data = file("${path.module}/ssh-key.pub")
+    }
+  }
   # Core node-pool
   default_node_pool {
     name                = "core"
