@@ -41,4 +41,4 @@
       copy:
         dest: /etc/exports
         content: >
-          /export/disk1 10.0.0.0/8(all_squash,anonuid=1000,anongid=1000,no_subtree_check,rw,sync)
+          /export/{{disk_name}} 10.0.0.0/8(all_squash,anonuid=1000,anongid=1000,no_subtree_check,rw,sync)
