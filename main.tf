@@ -189,6 +189,29 @@ resource "azurerm_virtual_machine_data_disk_attachment" "nfs_data_disk_1" {
   caching            = "None"
 }
 
+locals {
+  ansible_hosts = {
+    "nfs_servers" = {
+      hosts = {
+        (azurerm_linux_virtual_machine.nfs_vm.name) = {
+          ansible_ssh_common_args      = "-o ProxyCommand='../proxycommand.py %h %p'"
+          ansible_user                 = "hubadmin"
+          ansible_ssh_private_key_file = "../ssh-key"
+        }
+      }
+      "vars" = {
+        disk_name = (azurerm_managed_disk.nfs_data_disk_1.name)
+        disk_lun  = (azurerm_virtual_machine_data_disk_attachment.nfs_data_disk_1.lun)
+      }
+    }
+  }
+}
+
+resource "local_file" "ansible_hosts_file" {
+  content  = yamlencode(local.ansible_hosts)
+  filename = "ansible-hosts.yaml"
+}
+
 output "kubeconfig" {
   value = azurerm_kubernetes_cluster.jupyterhub.kube_config_raw
 }

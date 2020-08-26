@@ -1,5 +1,5 @@
 - name: nfs server setup
-  hosts: all
+  hosts: nfs_servers
   connection: ssh
   become: true
   handlers:
@@ -16,13 +16,13 @@
     - name: Setup XFS
       filesystem:
         fstype: xfs
-        dev: /dev/disk/azure/scsi1/lun0
+        dev: /dev/disk/azure/scsi1/lun{{ disk_lun }}
         resizefs: true
 
     - name: Mount disk
       mount:
-        path: /export/disk1
-        src: /dev/disk/azure/scsi1/lun0
+        path: /export/{{ disk_name }}
+        src: /dev/disk/azure/scsi1/lun{{ disk_lun }}
         state: mounted
         fstype: xfs
         opts: inode64,prjquota
@@ -32,7 +32,7 @@
         state: directory
         owner: "1000"
         group: "1000"
-        path: /export/disk1/homes
+        path: /export/{{disk_name}}/homes
         mode: 0700
 
     - name: setup exports file
