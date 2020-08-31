@@ -4,6 +4,16 @@ provider "azurerm" {
   features {}
 }
 
+terraform {
+  backend "azurerm" {
+    resource_group_name  = "terraform-state"
+    storage_account_name = "utorontoterraformstate"
+    container_name       = "terraformstate"
+    key                  = "prod.terraform.tfstate"
+  }
+}
+
+
 provider "local" {
   version = "1.4.0"
 }
