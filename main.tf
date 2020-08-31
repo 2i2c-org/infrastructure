@@ -210,9 +210,9 @@ locals {
     "nfs_servers" = {
       hosts = {
         (azurerm_linux_virtual_machine.nfs_vm.name) = {
-          ansible_ssh_common_args      = "-o ProxyCommand='../proxycommand.py %h %p'"
+          ansible_ssh_common_args      = "-o ProxyCommand='./proxycommand.py %h %p'"
           ansible_user                 = "hubadmin"
-          ansible_ssh_private_key_file = "../ssh-key"
+          ansible_ssh_private_key_file = "../secrets/ssh-key.unsafe"
         }
       }
       "vars" = {
