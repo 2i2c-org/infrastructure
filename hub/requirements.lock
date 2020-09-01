@@ -1,0 +1,6 @@
+dependencies:
+- name: jupyterhub
+  repository: https://jupyterhub.github.io/helm-chart/
+  version: 0.9.0-n116.h1c766a1
+digest: sha256:b9f88d6ff19a57045b15731bca84df7a26514d8bc25c9446fe82cfae6b80c074
+generated: "2020-09-01T12:06:02.981958+05:30"

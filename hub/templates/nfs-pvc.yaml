@@ -1,0 +1,28 @@
+{{ if .Values.nfsPVC.enabled }}
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: {{ .Release.Name }}-home-nfs
+spec:
+  capacity:
+    storage: 1Mi
+  accessModes:
+    - ReadWriteMany
+  nfs:
+    server: {{ .Values.nfsPVC.nfs.serverIP | quote}}
+    path: "/{{ .Values.nfsPVC.nfs.shareName }}"
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: home-nfs
+spec:
+  accessModes:
+    - ReadWriteMany
+  # Match name of PV
+  volumeName: {{ .Release.Name }}-home-nfs
+  storageClassName: ""
+  resources:
+    requests:
+      storage: 1Mi
+{{ end }}

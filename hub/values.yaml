@@ -1,0 +1,112 @@
+etcJupyter:
+  jupyter_notebook_config.json:
+    # if a user leaves a notebook with a running kernel,
+    # the effective idle timeout will typically be CULL_TIMEOUT + CULL_KERNEL_TIMEOUT
+    # as culling the kernel will register activity,
+    # resetting the no_activity timer for the server as a whole
+    MappingKernelManager:
+      # shutdown kernels after no activity
+      cull_idle_timeout: 3600
+      # check for idle kernels this often
+      cull_interval: 300
+      # a kernel with open connections but no activity still counts as idle
+      # this is what allows us to shutdown servers
+      # when people leave a notebook open and wander off
+      cull_connected: true
+
+nfsPVC:
+  enabled: false
+
+jupyterhub:
+  scheduling:
+    podPriority:
+      enabled: true
+      globalDefault: false
+      defaultPriority: 0
+      userPlaceholderPriority: -10
+    userScheduler:
+      enabled: true
+      resources:
+        requests:
+          # FIXME: Just unset this?
+          cpu: 0.01
+          memory: 64Mi
+        limits:
+          memory: 1G
+  prePuller:
+    continuous:
+      enabled: false
+  proxy:
+    chp:
+      resources:
+        requests:
+          # FIXME: We want no guarantees here!!!
+          # This is lowest possible value
+          cpu: 0.001
+          memory: 64Mi
+        limits:
+          memory: 1Gi
+    traefik:
+      resources:
+        requests:
+          memory: 96Mi
+        limits:
+          memory: 1Gi
+    https:
+      letsencrypt:
+        contactEmail: yuvipanda@gmail.com
+    networkPolicy:
+      enabled: true
+  singleuser:
+    startTimeout: 600 # 10 mins, because sometimes we have too many new nodes coming up together
+    defaultUrl: /tree
+    storage:
+      type: none
+    memory:
+      guarantee: 256M
+      limit: 1G
+    networkPolicy:
+      # In clusters with NetworkPolicy enabled, do not
+      # allow outbound internet access that's not DNS, HTTP or HTTPS
+      # We can override this on a case to case basis where
+      # required.
+      enabled: true
+      egress:
+        - ports:
+            - port: 53
+              protocol: UDP
+        - ports:
+            - port: 80
+              protocol: TCP
+        - ports:
+            - port: 443
+              protocol: TCP
+  auth:
+    type: dummy
+  hub:
+    networkPolicy:
+      enabled: true
+    resources:
+      requests:
+        # Very small unit, since we don't want any CPU guarantees
+        # FIXME: Can't seem to get this to null?
+        cpu: 0.001
+        memory: 256Mi
+      limits:
+        memory: 2Gi
+    extraConfig:
+      01-working-dir: |
+        # Make sure working directory is ${HOME}
+        # hubploy has a bug where it unconditionally puts workingdir to be /srv/repo
+        c.KubeSpawner.working_dir = '/home/jovyan'
+      02-prometheus: |
+        # Allow unauthenticated prometheus requests
+        # Otherwise our prometheus server can't get to these
+        c.JupyterHub.authenticate_prometheus = False
+      03-no-setuid: |
+        c.KubeSpawner.extra_container_config = {
+          'securityContext': {
+            # Explicitly disallow setuid binaries from working inside the container
+            'allowPrivilegeEscalation': False
+          }
+        }
