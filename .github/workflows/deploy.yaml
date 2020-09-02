@@ -24,5 +24,8 @@ jobs:
 
       - name: Fetch GKE credentials
         uses: docker://kiwigrid/gcloud-kubectl-helm:3.2.4-296.0.0-263
-        run: |
-          gcloud container clusters get-credentials ${CLUSTER_NAME} --region=us-central1 --project=${PROJECT}
+        with:
+          entrypoint: /bin/bash
+          args: 
+            - -c
+            - gcloud container clusters get-credentials ${CLUSTER_NAME} --region=us-central1 --project=${PROJECT}
