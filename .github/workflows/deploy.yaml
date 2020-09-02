@@ -26,3 +26,10 @@ jobs:
       - name: Fetch kubectl creds
         run: |
          gcloud container clusters get-credentials similar-hubs-cluster --region=us-central1
+
+      - uses: azure/setup-helm@v1
+
+      - name: Deploy hubs
+        run: |
+          pip install ruamel.yaml
+          python3 deploy.py
