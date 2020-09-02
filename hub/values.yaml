@@ -35,7 +35,7 @@ jupyterhub:
         requests:
           # FIXME: Just unset this?
           cpu: 0.01
-          memory: 64Mi
+          memory: 1Mi
         limits:
           memory: 1G
   prePuller:
@@ -48,13 +48,13 @@ jupyterhub:
           # FIXME: We want no guarantees here!!!
           # This is lowest possible value
           cpu: 0.001
-          memory: 64Mi
+          memory: 1Mi
         limits:
           memory: 1Gi
     traefik:
       resources:
         requests:
-          memory: 96Mi
+          memory: 1Mi
         limits:
           memory: 1Gi
     https:
@@ -68,7 +68,7 @@ jupyterhub:
     storage:
       type: none
     memory:
-      guarantee: 256M
+      guarantee: 1M
       limit: 1G
     networkPolicy:
       # In clusters with NetworkPolicy enabled, do not
@@ -96,7 +96,7 @@ jupyterhub:
         # Very small unit, since we don't want any CPU guarantees
         # FIXME: Can't seem to get this to null?
         cpu: 0.001
-        memory: 256Mi
+        memory: 1Mi
       limits:
         memory: 2Gi
     extraConfig:
