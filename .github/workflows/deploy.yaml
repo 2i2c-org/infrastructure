@@ -9,22 +9,17 @@ jobs:
     runs-on: ubuntu-latest
 
     env:
-      GOOGLE_APPLICATION_CREDENTIALS: creds.json
       CLUSTER_NAME: similar-hubs-cluster
       PROJECT: two-eye-two-see
 
     steps:
       - uses: actions/checkout@v2
 
-      - name: Activate service account
-        env:
-          GKE_SA_KEY: ${{ secrets.GKE_SA_KEY }}
-        run: |
-          echo ${GKE_SA_KEY} > ${GOOGLE_APPLICATION_CREDENTIALS}
-
       - name: Fetch GKE credentials
         uses: docker://kiwigrid/gcloud-kubectl-helm:3.2.4-296.0.0-263
+        env:
+          GKE_SA_KEY: ${{ secrets.GKE_SA_KEY }}
         with:
           entrypoint: /bin/bash
           args: | 
-            -c "gcloud container clusters get-credentials ${CLUSTER_NAME} --region=us-central1 --project=${PROJECT}"
+            -c "echo ${GKE_SA_KEY} | gcloud auth activate-service-account --key-file - && gcloud container clusters get-credentials ${CLUSTER_NAME} --region=us-central1 --project=${PROJECT}"
