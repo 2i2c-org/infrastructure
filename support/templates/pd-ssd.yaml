@@ -1,0 +1,9 @@
+# Create an SSD StorageClass for use by Prometheus
+# See https://kubernetes.io/docs/concepts/storage/storage-classes/#gce for details
+kind: StorageClass
+apiVersion: storage.k8s.io/v1
+metadata:
+  name: ssd
+provisioner: kubernetes.io/gce-pd
+parameters:
+  type: pd-ssd
