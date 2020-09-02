@@ -29,6 +29,10 @@ jobs:
 
       - uses: azure/setup-helm@v1
 
+      - name: Fetch helm charts
+        run: |
+          helm dep up hub
+
       - name: Deploy hubs
         env:
           PROXY_SECRET_KEY: ${{ secrets.PROXY_SECRET_KEY }}
