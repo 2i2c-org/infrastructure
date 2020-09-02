@@ -26,6 +26,5 @@ jobs:
         uses: docker://kiwigrid/gcloud-kubectl-helm:3.2.4-296.0.0-263
         with:
           entrypoint: /bin/bash
-          args: 
-            - -c
-            - gcloud container clusters get-credentials ${CLUSTER_NAME} --region=us-central1 --project=${PROJECT}
+          args: | 
+            -c "gcloud container clusters get-credentials ${CLUSTER_NAME} --region=us-central1 --project=${PROJECT}"
