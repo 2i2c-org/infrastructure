@@ -9,7 +9,7 @@ jobs:
     runs-on: ubuntu-latest
 
     env:
-      GOOGLE_APPLICATION_CREDENTIALS: /tmp/creds.json
+      GOOGLE_APPLICATION_CREDENTIALS: creds.json
       CLUSTER_NAME: similar-hubs-cluster
       PROJECT: two-eye-two-see
 
