@@ -62,6 +62,16 @@ jupyterhub:
         contactEmail: yuvipanda@gmail.com
     networkPolicy:
       enabled: true
+      ingress:
+      - from:
+        - namespaceSelector:
+            matchLabels:
+              name: support
+        - podSelector:
+            matchLabels:
+              hub.jupyter.org/network-access-proxy-http: "true"
+        ports:
+        - port: http
   singleuser:
     startTimeout: 600 # 10 mins, because sometimes we have too many new nodes coming up together
     defaultUrl: /tree
