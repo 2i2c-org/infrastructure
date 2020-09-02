@@ -31,5 +31,5 @@ jobs:
 
       - name: Deploy hubs
         run: |
-          pip install ruamel.yaml
+          python3 -m pip install ruamel.yaml
           python3 deploy.py
