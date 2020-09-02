@@ -14,12 +14,15 @@ jobs:
 
     steps:
       - uses: actions/checkout@v2
-
-      - name: Fetch GKE credentials
-        uses: docker://kiwigrid/gcloud-kubectl-helm:3.2.4-296.0.0-263
-        env:
-          GKE_SA_KEY: ${{ secrets.GKE_SA_KEY }}
+      - uses: GoogleCloudPlatform/github-actions/setup-gcloud@master
         with:
-          entrypoint: /bin/bash
-          args: | 
-            -c "echo ${GKE_SA_KEY} | gcloud auth activate-service-account --key-file - && gcloud container clusters get-credentials ${CLUSTER_NAME} --region=us-central1 --project=${PROJECT}"
+          version: '290.0.1'
+          project_id: two-eye-two-see
+          service_account_key: ${{ secrets.GKE_SA_KEY }}
+          export_default_credentials: true
+
+      - run: gcloud info
+
+      - name: Fetch kubectl creds
+        run: |
+         gcloud container clusters get-credentials similar-hubs-cluster --region=us-central1
