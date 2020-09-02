@@ -1,4 +1,9 @@
 hubs:
+  test:
+    jupyterhub:
+      singleuser:
+        memory:
+          limit: 512M
   spelman:
     jupyterhub:
       singleuser:
