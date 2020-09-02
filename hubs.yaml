@@ -1,9 +1,6 @@
 hubs:
   spelman:
     jupyterhub:
-      ingress:
-        hosts:
-          - spelman.alpha.2i2c.cloud
       singleuser:
         memory:
           limit: 1G

@@ -19,6 +19,24 @@ def load_hubs():
 def get_proxy_secret(hub_name):
     return hmac.new(PROXY_SECRET_BASE, hub_name.encode(), hashlib.sha256).hexdigest()
 
+def munge_values(hub_name, hub_values):
+    # Set default hostname to be {hub_name}.alpha.2i2c.cloud
+    ingress = hub_values.setdefault(
+        'jupyterhub', {}
+    ).setdefault(
+        'ingress', {}
+    )
+
+    ingress['hosts'] = [f'{hub_name}.alpha.2i2c.cloud']
+
+    ingress['tls'] = [
+        {
+            'secretName': f'{hub_name}-tls-secret',
+            'hosts': ingress['hosts']
+        }
+    ]
+    return hub_values
+
 def deploy_hub(hub_name, hub_values):
     secret_values = {
         'jupyterhub':  {
@@ -27,6 +45,8 @@ def deploy_hub(hub_name, hub_values):
             }
         }
     }
+    # Modify hub values to set defaults
+    hub_values = munge_values(hub_name, hub_values)
 
     with tempfile.NamedTemporaryFile() as values_file, tempfile.NamedTemporaryFile() as secret_values_file:
         yaml.dump(hub_values, values_file)
