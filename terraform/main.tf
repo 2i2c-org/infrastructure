@@ -5,6 +5,30 @@ terraform {
   }
 }
 
+resource "google_service_account" "ci_deployer" {
+  account_id = "${var.prefix}-ci-deployer"
+  display_name = "CI Deployer"
+  project = var.project_id
+}
+
+resource "google_service_account_iam_binding" "ci_deployer" {
+  service_account_id = google_service_account.ci_deployer.name
+  role               = "roles/iam.serviceAccountUser"
+
+  members = [
+      # Can I not use this one plz?
+      "serviceAccount:${google_service_account.ci_deployer.email}"
+  ]
+}
+
+resource "google_service_account_key" "ci_deployer" {
+  service_account_id = google_service_account.ci_deployer.name
+}
+
+output "ci_deployer_key" {
+  value = google_service_account_key.ci_deployer.private_key
+}
+
 module "gke" {
   source                     = "terraform-google-modules/kubernetes-engine/google"
   project_id                 = var.project_id
@@ -52,5 +76,4 @@ module "gke" {
       "hub.jupyter.org/pool-name" = "core-pool"
     }
   }
-
 }
