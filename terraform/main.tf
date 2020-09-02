@@ -4,29 +4,20 @@ terraform {
     prefix  = "terraform/state/similar-hubs"
   }
 }
-
-resource "google_service_account" "ci_deployer" {
-  account_id = "${var.prefix}-ci-deployer"
-  display_name = "CI Deployer"
-  project = var.project_id
-}
-
-resource "google_service_account_iam_binding" "ci_deployer" {
-  service_account_id = google_service_account.ci_deployer.name
-  role               = "roles/iam.serviceAccountUser"
-
-  members = [
-      # Can I not use this one plz?
-      "serviceAccount:${google_service_account.ci_deployer.email}"
+module "service_accounts" {
+  source        = "terraform-google-modules/service-accounts/google"
+  version       = "~> 2.0"
+  project_id    = var.project_id
+  prefix        = var.prefix
+  generate_keys = true
+  names         = ["cd-sa"]
+  project_roles = [
+      "${var.project_id}=>roles/container.admin"
   ]
 }
 
-resource "google_service_account_key" "ci_deployer" {
-  service_account_id = google_service_account.ci_deployer.name
-}
-
 output "ci_deployer_key" {
-  value = google_service_account_key.ci_deployer.private_key
+  value = module.service_accounts.keys["cd-sa"]
 }
 
 module "gke" {
