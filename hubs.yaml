@@ -1,11 +1,19 @@
 hubs:
-  test:
-    jupyterhub:
-      singleuser:
-        memory:
-          limit: 512M
-  spelman:
-    jupyterhub:
-      singleuser:
-        memory:
-          limit: 1G
+  - name: another-test
+    domain: another-test.alpha.2i2c.cloud
+    config: 
+      jupyterhub: {}
+  - name: test
+    domain: test.alpha.2i2c.cloud
+    config:
+      jupyterhub:
+        singleuser:
+          memory:
+            limit: 512M
+  - name: spelman
+    domain: spelman.alpha.2i2c.cloud
+    config:
+      jupyterhub:
+        singleuser:
+          memory:
+            limit: 1G

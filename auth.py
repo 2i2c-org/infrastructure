@@ -4,8 +4,9 @@ import os
 
 
 class KeyProvider:
-    def __init__(self, domain, auth0_token):
-        self.auth0 = Auth0(domain, auth0_token)
+    def __init__(self, auth0_domain, auth0_token):
+        self.auth0 = Auth0(auth0_domain, auth0_token)
+        self.auth0_domain = auth0_domain
 
     @property
     def clients(self):
@@ -44,7 +45,23 @@ class KeyProvider:
         else:
             client = self.clients[name]
         self.update_client(client, domain)
-        return {
-            'client_id': client['client_id'],
-            'client_secret': client['client_secret']
+
+        auth = {}
+        auth['scopes'] = ['openid', 'name', 'profile', 'email']
+        auth['type'] = 'custom'
+        auth['custom'] = {
+            'className': 'oauthenticator.generic.GenericOAuthenticator',
+            'config': {
+                'authorize_url': f'https://{self.auth0_domain}/authorize',
+                'token_url': f'https://{self.auth0_domain}/oauth/token',
+                'userdata_url': f'https://{self.auth0_domain}/userinfo',
+                'userdata_method': 'GET',
+                # FIXME: This depends on actual auth provider
+                'username_key': 'nickname',
+                'client_id': client['client_id'],
+                'client_secret': client['client_secret']
+            }
+
         }
+
+        return auth
