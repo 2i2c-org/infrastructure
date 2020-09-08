@@ -12,7 +12,6 @@ class Hub:
     """
     A single, deployable JupyterHub
     """
-
     def __init__(self, spec, auth_provider, proxy_secret_key):
         self.spec = spec
         self.auth_provider = auth_provider

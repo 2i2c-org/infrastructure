@@ -1,9 +1,19 @@
 import requests
 from auth0.v3.management import Auth0
+from auth0.v3.authentication import GetToken
 import os
 
 
 class KeyProvider:
+    @staticmethod
+    def get_token(domain, client_id, client_secret):
+        gt = GetToken(domain)
+        creds = gt.client_credentials(
+            client_id, client_secret,
+            f'https://{domain}/api/v2/'
+        )
+        return creds['access_token']
+
     def __init__(self, auth0_domain, auth0_token):
         self.auth0 = Auth0(auth0_domain, auth0_token)
         self.auth0_domain = auth0_domain
