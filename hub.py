@@ -38,8 +38,20 @@ class Hub:
         extraEnv = hub.setdefault('extraEnv', {})
         extraEnv['OAUTH_CALLBACK_URL'] = f'https://{self.spec["domain"]}/hub/oauth_callback'
 
-
         return jupyterhub
+
+    @property
+    def auth_connector(self):
+        auth_provider = self.full_config['jupyterhub']['auth']['type']
+        provider_map = {
+            'google': 'google-oauth2',
+            'github': 'github'
+        }
+
+        if auth_provider not in provider_map:
+            raise KeyError(f'{auth_provider} not a supported auth provider')
+        
+        return provider_map[auth_provider]
 
     @property
     def full_config(self):
@@ -60,7 +72,7 @@ class Hub:
         client = self.auth_provider.ensure_client(
             self.spec['name'],
             self.spec['domain'],
-            self.spec['authProvider']
+            self.auth_connector
         )
 
         secret_values = {
