@@ -6,11 +6,17 @@ import hashlib
 import hmac
 import os
 
+from auth import KeyProvider
+
 # Without `pure=True`, I get an exception about str / byte issues
 yaml = YAML(typ='safe', pure=True)
 
 HERE = Path(__file__).parent
 PROXY_SECRET_BASE = bytes.fromhex(os.environ['PROXY_SECRET_KEY'])
+
+
+AUTH0_DOMAIN = 'yuvipanda.auth0.com'
+k = KeyProvider(AUTH0_DOMAIN, os.environ['AUTH0_TOKEN'])
 
 def load_hubs():
     with open(HERE / "hubs.yaml") as f:
@@ -37,12 +43,41 @@ def munge_values(hub_name, hub_values):
     ]
     return hub_values
 
+
+def get_auth_block(hub_name):
+    domain = f'{hub_name}.alpha.2i2c.cloud'
+    client_config = k.get_client_creds(hub_name, domain)
+    client_config.update({
+        'authorize_url': f'https://{AUTH0_DOMAIN}/authorize',
+        'token_url': f'https://{AUTH0_DOMAIN}/oauth/token',
+        'userdata_url': f'https://{AUTH0_DOMAIN}/userinfo',
+        'userdata_method': 'GET',
+        # FIXME: This depends on actual auth provider
+        'username_key': 'nickname'
+    })
+    return {
+        'scopes': [
+            'openid', 'name', 'profile', 'email'
+        ],
+        'type': 'custom',
+        'custom': {
+            'className': 'oauthenticator.generic.GenericOAuthenticator',
+            'config': client_config
+        }
+    }
+
 def deploy_hub(hub_name, hub_values):
     secret_values = {
         'jupyterhub':  {
+            'hub': {
+                'extraEnv': {
+                    'OAUTH_CALLBACK_URL': f'https://{hub_name}.alpha.2i2c.cloud/hub/oauth_callback'
+                }
+            },
             'proxy': {
                 'secretToken': get_proxy_secret(hub_name)
-            }
+            },
+            'auth': get_auth_block(hub_name)
         }
     }
     # Modify hub values to set defaults
