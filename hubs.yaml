@@ -1,21 +1,23 @@
 hubs:
   - name: another-test
     domain: another-test.alpha.2i2c.cloud
+    auth0:
+      connection: google-oauth2
     config: 
-      jupyterhub:
-        auth:
-          type: google
+      jupyterhub: {}
   - name: test
     domain: test.alpha.2i2c.cloud
+    auth0:
+      connection: github
     config:
       jupyterhub:
-        auth:
-          type: github
         singleuser:
           memory:
             limit: 512M
   - name: spelman
     domain: spelman.alpha.2i2c.cloud
+    auth0:
+      connection: google-oauth2
     config:
       jupyterhub:
         auth:

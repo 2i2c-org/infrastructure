@@ -73,8 +73,12 @@ class KeyProvider:
         return client
 
         
-
-    def get_client_creds(self, client):
+    def get_client_creds(self, client, connection_name):
+        # default to using emails as usernames
+        username_key = 'email'
+        if connection_name == 'github':
+            # Except for GitHub, where we use the username
+            username_key = 'nickname'
         auth = {}
         auth['scopes'] = ['openid', 'name', 'profile', 'email']
         auth['type'] = 'custom'
@@ -85,8 +89,7 @@ class KeyProvider:
                 'token_url': f'https://{self.auth0_domain}/oauth/token',
                 'userdata_url': f'https://{self.auth0_domain}/userinfo',
                 'userdata_method': 'GET',
-                # FIXME: This depends on actual auth provider
-                'username_key': 'nickname',
+                'username_key': username_key,
                 'client_id': client['client_id'],
                 'client_secret': client['client_secret']
             }

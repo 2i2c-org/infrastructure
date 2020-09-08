@@ -41,19 +41,6 @@ class Hub:
         return jupyterhub
 
     @property
-    def auth_connector(self):
-        auth_provider = self.full_config['jupyterhub']['auth']['type']
-        provider_map = {
-            'google': 'google-oauth2',
-            'github': 'github'
-        }
-
-        if auth_provider not in provider_map:
-            raise KeyError(f'{auth_provider} not a supported auth provider')
-        
-        return provider_map[auth_provider]
-
-    @property
     def full_config(self):
         config = deepcopy(self.spec['config'])
 
@@ -72,7 +59,7 @@ class Hub:
         client = self.auth_provider.ensure_client(
             self.spec['name'],
             self.spec['domain'],
-            self.auth_connector
+            self.spec['auth0']['connection']
         )
 
         secret_values = {
@@ -80,7 +67,7 @@ class Hub:
                 'proxy': {
                     'secretToken': self.proxy_secret
                 },
-                'auth': self.auth_provider.get_client_creds(client)
+                'auth': self.auth_provider.get_client_creds(client, self.spec['auth0']['connection'])
             }
         }
 
