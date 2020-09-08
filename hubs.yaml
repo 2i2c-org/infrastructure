@@ -5,6 +5,17 @@ hubs:
       connection: google-oauth2
     config: 
       jupyterhub: {}
+  - name: mills
+    domain: mills.alpha.2i2c.cloud
+    auth0:
+      connection: google-oauth2
+    config: 
+      jupyterhub:
+        auth:
+          admin:
+            users:
+              - yuvipanda@gmail.com
+              - colliand@gmail.com
   - name: test
     domain: test.alpha.2i2c.cloud
     auth0:
