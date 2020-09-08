@@ -12,6 +12,12 @@ hubs:
     config: 
       jupyterhub:
         auth:
+          # Admin names need to be listed wtice here, unfortunately
+          # 'whitelist' will be removed by next jupyterhub release
+          whitelist:
+            users:
+              - yuvipanda@gmail.com
+              - colliand@gmail.com
           admin:
             users:
               - yuvipanda@gmail.com
