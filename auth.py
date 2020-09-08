@@ -8,15 +8,17 @@ class KeyProvider:
         self.auth0 = Auth0(auth0_domain, auth0_token)
         self.auth0_domain = auth0_domain
 
-    @property
-    def clients(self):
-        if not hasattr(self, '_clients'):
-            self._clients = {
-                client['name']: client
-                for client in self.auth0.clients.all()
-            }
-        return self._clients
+    def get_clients(self):
+        return {
+            client['name']: client
+            for client in self.auth0.clients.all()
+        }
 
+    def get_connections(self):
+        return {
+            connection['name']: connection
+            for connection in self.auth0.connections.all()
+        }
     def create_client(self, name, domain):
         client = {
             'name': name,
@@ -26,10 +28,9 @@ class KeyProvider:
             ]
         }
         created_client = self.auth0.clients.create(client)
-        self.clients[name] = created_client
         return created_client
 
-    def update_client(self, client, domain):
+    def _ensure_client_callback(self, client, domain):
         callback_url = f'https://{domain}/hub/oauth_callback'
         if 'callbacks' not in client or callback_url not in client['callbacks']:
             self.auth0.clients.update(
@@ -39,13 +40,41 @@ class KeyProvider:
                 }
             )
 
-    def get_client_creds(self, name, domain):
-        if name not in self.clients:
+    def ensure_client(self, name, domain, connection_name):
+        current_clients = self.get_clients()
+        if name not in current_clients:
+            # Create the client, all good
             client = self.create_client(name, domain)
         else:
-            client = self.clients[name]
-        self.update_client(client, domain)
+            client = current_clients[name]
+            self._ensure_client_callback(client, domain)
 
+        current_connections = self.get_connections()
+        for connection in current_connections.values():
+                # The chosen connection!
+            enabled_clients = connection['enabled_clients'].copy()
+            needs_update = False
+            client_id = client['client_id']
+            if connection['name'] == connection_name:
+                if client_id not in enabled_clients:
+                    enabled_clients.append(client_id)
+                    needs_update = True
+            else:
+                if client_id in enabled_clients:
+                    enabled_clients.remove(client_id)
+                    needs_update = True
+            
+            if needs_update:
+                self.auth0.connections.update(
+                    connection['id'],
+                    {'enabled_clients': enabled_clients}
+                )
+        
+        return client
+
+        
+
+    def get_client_creds(self, client):
         auth = {}
         auth['scopes'] = ['openid', 'name', 'profile', 'email']
         auth['type'] = 'custom'

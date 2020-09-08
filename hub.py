@@ -57,15 +57,18 @@ class Hub:
         return hmac.new(self.proxy_secret_key, self.spec['name'].encode(), hashlib.sha256).hexdigest()
 
     def deploy(self):
+        client = self.auth_provider.ensure_client(
+            self.spec['name'],
+            self.spec['domain'],
+            self.spec['authProvider']
+        )
+
         secret_values = {
             'jupyterhub':  {
                 'proxy': {
                     'secretToken': self.proxy_secret
                 },
-                'auth': self.auth_provider.get_client_creds(
-                    self.spec['name'],
-                    self.spec['domain']
-                )
+                'auth': self.auth_provider.get_client_creds(client)
             }
         }
 
