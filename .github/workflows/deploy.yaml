@@ -36,6 +36,8 @@ jobs:
       - name: Deploy hubs
         env:
           PROXY_SECRET_KEY: ${{ secrets.PROXY_SECRET_KEY }}
+          AUTH0_MANAGEMENT_CLIENT_ID: ${{ secrets.AUTH0_MANAGEMENT_CLIENT_ID }}
+          AUTH0_MANAGEMENT_CLIENT_SECRET: ${{ secrets.AUTH0_MANAGEMENT_CLIENT_SECRET }}
         run: |
           python3 -m pip install ruamel.yaml
           python3 deploy.py
