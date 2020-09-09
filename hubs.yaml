@@ -1,4 +1,10 @@
 hubs:
+  - name: jc-test
+   domain: jc-test.alpha.2i2c.cloud
+   autho0:
+     connection: github
+   config:
+     jupyterhub: {}
   - name: another-test
     domain: another-test.alpha.2i2c.cloud
     auth0:
@@ -12,7 +18,7 @@ hubs:
     config: 
       jupyterhub:
         auth:
-          # Admin names need to be listed wtice here, unfortunately
+          # Admin names need to be listed twice here, unfortunately
           # 'whitelist' will be removed by next jupyterhub release
           whitelist:
             users:
@@ -42,3 +48,4 @@ hubs:
         singleuser:
           memory:
             limit: 1G
+ 
