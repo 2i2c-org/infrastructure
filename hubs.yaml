@@ -7,8 +7,11 @@ hubs:
       jupyterhub: {}
         auth:
 	  whitelist:
-	    -users:
+	    users:
 	      - colliand@gmail.com
+	    admin:
+	      users:
+	        - colliand@gmail.com
   - name: another-test
     domain: another-test.alpha.2i2c.cloud
     auth0:
