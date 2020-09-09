@@ -8,7 +8,7 @@ hubs:
         auth:
 	  whitelist:
 	    -users:
-	      - colliand@crowdmark.com
+	      - colliand@gmail.com
   - name: another-test
     domain: another-test.alpha.2i2c.cloud
     auth0:
