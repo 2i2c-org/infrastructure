@@ -5,6 +5,10 @@ hubs:
       connection: github
     config:
       jupyterhub: {}
+        auth:
+	  whitelist:
+	    -users:
+	      - colliand@crowdmark.com
   - name: another-test
     domain: another-test.alpha.2i2c.cloud
     auth0:
