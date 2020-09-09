@@ -6,12 +6,12 @@ hubs:
     config:
       jupyterhub: {}
         auth:
-	  whitelist:
-	    users:
-	      - colliand@gmail.com
-	    admin:
-	      users:
-	        - colliand@gmail.com
+          whitelist:
+            users:
+              - colliand@crowdmark.com
+            admin:
+              users:
+                - colliand@crowdmark.com
   - name: another-test
     domain: another-test.alpha.2i2c.cloud
     auth0:
