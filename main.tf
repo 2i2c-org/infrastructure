@@ -53,6 +53,7 @@ resource "azurerm_kubernetes_cluster" "jupyterhub" {
   default_node_pool {
     name                = "core"
     node_count          = 1
+    # Unfortunately, changing anything about VM type / size recreates *whole cluster
     vm_size             = var.core_vm_size
     os_disk_size_gb     = 100
     enable_auto_scaling = true
@@ -155,7 +156,7 @@ resource "azurerm_linux_virtual_machine" "nfs_vm" {
   name                = "${var.prefix}-nfs-vm"
   resource_group_name = azurerm_resource_group.jupyterhub.name
   location            = azurerm_resource_group.jupyterhub.location
-  size                = "Standard_F2"
+  size                = var.nfs_vm_size
   admin_username      = "hubadmin"
 
   network_interface_ids = [
@@ -168,9 +169,9 @@ resource "azurerm_linux_virtual_machine" "nfs_vm" {
   }
 
   os_disk {
-    caching              = "ReadWrite"
+    caching              = "None"
     storage_account_type = "StandardSSD_LRS"
-    disk_size_gb         = 250
+    disk_size_gb         = 100
   }
 
   source_image_reference {
@@ -185,7 +186,7 @@ resource "azurerm_managed_disk" "nfs_data_disk_1" {
   name                 = "${var.prefix}-nfs-data-disk-1"
   location             = azurerm_resource_group.jupyterhub.location
   resource_group_name  = azurerm_resource_group.jupyterhub.name
-  storage_account_type = "StandardSSD_LRS"
+  storage_account_type = "Premium_LRS"
   create_option        = "Empty"
   disk_size_gb         = "200"
 

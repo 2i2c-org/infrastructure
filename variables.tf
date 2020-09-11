@@ -16,8 +16,16 @@ variable "user_vm_size" {
 
 variable "core_vm_size" {
   type = string
-  # 16GB of RAM, 2 cores, ssd base disk
-  default = "Standard_E2s_v3"
+  # 8GB of RAM, 4 CPU cores, ssd base disk
+  # UNFORTUNATELY changing this triggers a k8s cluster recreation
+  # BOOOO
+  default = "Standard_F4s_v2"
+}
+
+variable "nfs_vm_size" {
+  type = string
+  # 8GB of RAM, 4 CPU cores, ssd base disk
+  default = "Standard_F4s_v2"
 }
 
 variable "ssh_pub_key" {
