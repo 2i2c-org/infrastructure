@@ -19,7 +19,7 @@ variable "core_vm_size" {
   # 8GB of RAM, 4 CPU cores, ssd base disk
   # UNFORTUNATELY changing this triggers a k8s cluster recreation
   # BOOOO
-  default = "Standard_F4s_v2"
+  default = "Standard_E4s_v3"
 }
 
 variable "nfs_vm_size" {
