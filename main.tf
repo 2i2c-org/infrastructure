@@ -42,6 +42,7 @@ resource "azurerm_kubernetes_cluster" "jupyterhub" {
   location            = azurerm_resource_group.jupyterhub.location
   resource_group_name = azurerm_resource_group.jupyterhub.name
   dns_prefix          = "${var.prefix}-cluster"
+  kubernetes_version = "1.18.8"
 
   linux_profile {
     admin_username = "hubadmin"
@@ -63,6 +64,8 @@ resource "azurerm_kubernetes_cluster" "jupyterhub" {
     node_labels = {
       "hub.jupyter.org/pool-name" = "core-pool"
     }
+
+    orchestrator_version = "1.18.8"
   }
 
   identity {
@@ -90,6 +93,8 @@ resource "azurerm_kubernetes_cluster_node_pool" "user_pool" {
   os_disk_size_gb       = 200
   node_taints           = ["hub.jupyter.org_dedicated=user:NoSchedule"]
   vnet_subnet_id        = azurerm_subnet.node_subnet.id
+
+  orchestrator_version = "1.18.8"
   node_labels = {
     "hub.jupyter.org/pool-name" = "user-alpha-pool"
   }
