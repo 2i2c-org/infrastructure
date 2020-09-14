@@ -68,6 +68,11 @@ resource "azurerm_kubernetes_cluster" "jupyterhub" {
     orchestrator_version = "1.18.8"
   }
 
+  auto_scaler_profile {
+    # Let's get rid of unready nodes ASAP
+    # Azure nodes love being unready
+    scale_down_unready = "1m"
+  }
   identity {
     type = "SystemAssigned"
   }
