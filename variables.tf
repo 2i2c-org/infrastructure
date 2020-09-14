@@ -28,6 +28,12 @@ variable "nfs_vm_size" {
   default = "Standard_F4s_v2"
 }
 
+variable "global_container_registry_name" {
+  type = string
+  # This needs to be globally unique
+  default = "containerregistry2i2cutoronto"
+}
+
 variable "ssh_pub_key" {
   type = string
 }

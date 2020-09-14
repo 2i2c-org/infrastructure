@@ -102,6 +102,16 @@ resource "azurerm_kubernetes_cluster_node_pool" "user_pool" {
   }
 }
 
+# AZure container registry
+
+resource "azurerm_container_registry" "container_registry" {
+  # meh, only alphanumberic chars. No separators. BE CONSISTENT, AZURE
+  name = var.global_container_registry_name
+  resource_group_name = azurerm_resource_group.jupyterhub.name
+  location            = azurerm_resource_group.jupyterhub.location
+  sku = "premium"
+  admin_enabled = true
+}
 # NFS VM
 resource "azurerm_network_interface" "nfs_vm" {
   name                = "${var.prefix}-nfs-vm-inet"
@@ -207,6 +217,15 @@ resource "azurerm_virtual_machine_data_disk_attachment" "nfs_data_disk_1" {
 }
 
 locals {
+  registry_creds = {
+    "singleuser" = {
+      "imagePullSecret" = {
+        "username": azurerm_container_registry.container_registry.admin_username,
+        "password": azurerm_container_registry.container_registry.admin_password,
+        "registry": "https://${azurerm_container_registry.container_registry.login_server}"
+      }
+    }
+  }
   ansible_hosts = {
     "nfs_servers" = {
       hosts = {
@@ -231,4 +250,8 @@ resource "local_file" "ansible_hosts_file" {
 
 output "kubeconfig" {
   value = azurerm_kubernetes_cluster.jupyterhub.kube_config_raw
+}
+
+output "registry_creds_config" {
+  value = jsonencode(local.registry_creds)
 }
