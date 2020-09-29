@@ -1,6 +1,6 @@
 hubs:
   - name: spelman
-    domain: spelman.alpha.2i2c.cloud
+    domain: spelman.pilot.2i2c.cloud
     auth0:
       connection: google-oauth2
     config:

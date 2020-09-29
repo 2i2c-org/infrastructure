@@ -15,7 +15,7 @@ Each hub is a dictionary that can consist of the following keys:
 
    Domain this hub should be available at. Currently, must be a subdomain
    of a domain that has been pre-configured to point to our cluster. Currently,
-   that is `.alpha.2i2c.cloud`
+   that is `.pilot.2i2c.cloud`
 
 3. `auth0`
 
