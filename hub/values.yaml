@@ -42,6 +42,8 @@ jupyterhub:
     continuous:
       enabled: false
   proxy:
+    service:
+      type: ClusterIP
     chp:
       resources:
         requests:
