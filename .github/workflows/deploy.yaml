@@ -9,7 +9,7 @@ jobs:
     runs-on: ubuntu-latest
 
     env:
-      CLUSTER_NAME: similar-hubs-cluster
+      CLUSTER_NAME: low-touch-hubs-cluster
       PROJECT: two-eye-two-see
 
     steps:
@@ -25,7 +25,7 @@ jobs:
 
       - name: Fetch kubectl creds
         run: |
-         gcloud container clusters get-credentials similar-hubs-cluster --region=us-central1
+         gcloud container clusters get-credentials ${CLUSTER_NAME} --region=us-central1
 
       - uses: azure/setup-helm@v1
 
