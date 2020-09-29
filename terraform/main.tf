@@ -1,7 +1,7 @@
 terraform {
   backend "gcs" {
     bucket  = "2i2c-terraform-state"
-    prefix  = "terraform/state/similar-hubs"
+    prefix  = "terraform/state/low-touch-hubs"
   }
 }
 module "service_accounts" {
@@ -24,6 +24,7 @@ module "gke" {
   source                     = "terraform-google-modules/kubernetes-engine/google"
   project_id                 = var.project_id
   name                       = "${var.prefix}-cluster"
+  regional                   = "true" # Pay some money for higher resiliencey
   region                     = var.region
   zones                      = [var.zone]
   network                    = "default"
@@ -37,7 +38,7 @@ module "gke" {
   node_pools = [
     {
       name               = "core-pool"
-      machine_type       = "e2-medium"
+      machine_type       = "n1-highmem-2"
       min_count          = 1
       max_count          = 10
       local_ssd_count    = 0
@@ -45,16 +46,30 @@ module "gke" {
       disk_type          = "pd-standard"
       image_type         = "ubuntu"
       auto_repair        = true
-      auto_upgrade       = true
+      auto_upgrade       = false
+      preemptible        = false
+      initial_node_count = 1
+    },
+    {
+      name               = "user-pool-2020-09-29"
+      machine_type       = "n1-highmem-4"
+      min_count          = 1
+      max_count          = 10
+      local_ssd_count    = 0
+      disk_size_gb       = 200
+      disk_type          = "pd-standard"
+      image_type         = "ubuntu"
+      auto_repair        = true
+      auto_upgrade       = false
       preemptible        = false
       initial_node_count = 1
     },
   ]
 
   node_pools_oauth_scopes = {
-    all = []
-
-    core-pool = [
+    all = [
+      # FIXME: Is this the minimal?
+      #
       "https://www.googleapis.com/auth/cloud-platform",
     ]
   }
@@ -65,6 +80,9 @@ module "gke" {
     core-pool = {
       default-node-pool = true
       "hub.jupyter.org/pool-name" = "core-pool"
+    }
+    user-pool-2020-09-29 = {
+      "hub.jupyter.org/pool-name" = "user-pool"
     }
   }
 }

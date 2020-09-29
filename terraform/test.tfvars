@@ -1,1 +1,1 @@
-prefix = "similar-hubs"
+prefix = "low-touch-hubs"
