@@ -1,15 +1,9 @@
 hubs:
-  - name: another-test
-    domain: another-test.alpha.2i2c.cloud
+  - name: spelman
+    domain: spelman.alpha.2i2c.cloud
     auth0:
       connection: google-oauth2
-    config: 
-      jupyterhub: {}
-  - name: mills
-    domain: mills.alpha.2i2c.cloud
-    auth0:
-      connection: google-oauth2
-    config: 
+    config:
       jupyterhub:
         auth:
           # Admin names need to be listed wtice here, unfortunately
@@ -22,23 +16,6 @@ hubs:
             users:
               - yuvipanda@gmail.com
               - colliand@gmail.com
-  - name: test
-    domain: test.alpha.2i2c.cloud
-    auth0:
-      connection: github
-    config:
-      jupyterhub:
-        singleuser:
-          memory:
-            limit: 512M
-  - name: spelman
-    domain: spelman.alpha.2i2c.cloud
-    auth0:
-      connection: google-oauth2
-    config:
-      jupyterhub:
-        auth:
-          type: google
         singleuser:
           memory:
             limit: 1G
