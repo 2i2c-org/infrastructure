@@ -19,27 +19,3 @@ hubs:
         singleuser:
           memory:
             limit: 1G
-  - name: callysto
-    domain: callysto.pilot.2i2c.cloud
-    auth0:
-      connection: google-oauth2
-    config:
-      jupyterhub:
-        auth:
-          # Admin names need to be listed wtice here, unfortunately
-          # 'whitelist' will be removed by next jupyterhub release
-          whitelist:
-            users:
-              - yuvipanda@gmail.com
-              - colliand@gmail.com
-              - iana@pims.math.ca
-              - byron.chu@cybera.ca
-          admin:
-            users:
-              - yuvipanda@gmail.com
-              - colliand@gmail.com
-              - iana@pims.math.ca
-              - byron.chu@cybera.ca
-        singleuser:
-          memory:
-            limit: 1G
