@@ -19,28 +19,3 @@ hubs:
         singleuser:
           memory:
             limit: 1G
-  - name: holdgraf
-    domain: holdgraf.alpha.2i2c.cloud
-    auth0:
-      connection: google-oauth2
-    config:
-      jupyterhub:
-        auth:
-          # Admin names need to be listed wtice here, unfortunately
-          # 'whitelist' will be removed by next jupyterhub release
-          whitelist:
-            users:
-              - choldgraf@gmail.com
-              - yuvipanda@gmail.com
-              - colliand@gmail.com
-          admin:
-            users:
-              - choldgraf@gmail.com
-              - yuvipanda@gmail.com
-              - colliand@gmail.com
-        singleuser:
-          memory:
-            limit: 1G
-          image:
-            name: jupyter/datascience-notebook
-            tag: latest
