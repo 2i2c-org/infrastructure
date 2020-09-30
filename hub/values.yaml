@@ -80,7 +80,7 @@ jupyterhub:
     storage:
       type: none
     memory:
-      guarantee: 1M
+      guarantee: 256M
       limit: 1G
     networkPolicy:
       # In clusters with NetworkPolicy enabled, do not
