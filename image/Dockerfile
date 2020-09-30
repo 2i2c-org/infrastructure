@@ -22,7 +22,7 @@ RUN mkdir -p ${R_LIBS_USER} && chown ${NB_USER}:${NB_USER} ${R_LIBS_USER}
 
 # Install these without 'recommended' packages to keep image smaller.
 # Useful utils that folks sort of take for granted
-RUN apt-get update -qq --yes && \
+RUN apt-get update -qq --yes > /dev/null && \
     apt-get install --yes --no-install-recommends -qq \
         htop \
         less \
@@ -53,36 +53,12 @@ RUN apt-get update -qq --yes > /dev/null && \
     r-cran-littler \
     nodejs
 
-# Install desktop packages
-RUN apt-get update -qq --yes > /dev/null && \
-    apt-get install --yes -qq \
-        dbus-x11 \
-        firefox \
-        xfce4 \
-        xfce4-panel \
-        xfce4-terminal \
-        xfce4-session \
-        xfce4-settings \
-        xorg \
-        xubuntu-icon-theme > /dev/null
-
-# for nbconvert & notebook-to-pdf
+# for nbconvert
 RUN apt-get update -qq --yes && \
     apt-get install --yes -qq \
         pandoc \
         texlive-xetex \
-        texlive-fonts-recommended \
-        libx11-xcb1 \
-        libxtst6 \
-        libxrandr2 \
-        libasound2 \
-        libpangocairo-1.0-0 \
-        libatk1.0-0 \
-        libatk-bridge2.0-0 \
-        libgtk-3-0 \
-        libnss3 \
-        libxss1 \
-        > /dev/null
+        texlive-fonts-recommended > /dev/null
 
 WORKDIR /home/jovyan
 
