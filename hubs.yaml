@@ -12,10 +12,12 @@ hubs:
             users:
               - yuvipanda@gmail.com
               - colliand@gmail.com
+              - choldgraf@gmail.com
           admin:
             users:
               - yuvipanda@gmail.com
               - colliand@gmail.com
+              - choldgraf@gmail.com
   - name: callysto
     domain: callysto.pilot.2i2c.cloud
     auth0:
@@ -31,9 +33,11 @@ hubs:
               - colliand@gmail.com
               - iana@pims.math.ca
               - byron.chu@cybera.ca
+              - choldgraf@gmail.com
           admin:
             users:
               - yuvipanda@gmail.com
               - colliand@gmail.com
               - iana@pims.math.ca
               - byron.chu@cybera.ca
+              - choldgraf@gmail.com
