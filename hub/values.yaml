@@ -79,7 +79,7 @@ jupyterhub:
     defaultUrl: /tree
     image:
       name: gcr.io/two-eye-two-see/lowtouch-user-image
-      tag: f047cc6
+      tag: a8985f6
     storage:
       type: none
     memory:
