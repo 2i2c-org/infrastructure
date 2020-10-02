@@ -45,7 +45,7 @@ def main():
     subprocess.check_call([
         "docker", "build",
         "-t", image_name,
-        "image/"
+        "images/user"
     ])
 
     subprocess.check_call([
