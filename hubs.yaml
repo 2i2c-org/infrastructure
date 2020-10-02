@@ -41,3 +41,24 @@ hubs:
               - iana@pims.math.ca
               - byron.chu@cybera.ca
               - choldgraf@gmail.com
+  - name: wageningen 
+    domain: wur.pilot.2i2c.cloud
+    auth0:
+      connection: github
+    config:
+      jupyterhub:
+        auth:
+          # Admin names need to be listed wtice here, unfortunately
+          # 'whitelist' will be removed by next jupyterhub release
+          whitelist:
+            users:
+              - yuvipanda
+              - colliand
+              - choldgraf
+              - Chiil
+          admin:
+            users:
+              - yuvipanda
+              - colliand
+              - choldgraf
+              - Chiil
