@@ -4,6 +4,7 @@ import subprocess
 import hmac
 import tempfile
 from ruamel.yaml import YAML
+from build import last_modified_commit
 
 # Without `pure=True`, I get an exception about str / byte issues
 yaml = YAML(typ='safe', pure=True)
@@ -39,6 +40,14 @@ class Hub:
 
         return jupyterhub
 
+    def _setup_image(self, jupyterhub):
+        singleuser = jupyterhub.setdefault('singleuser', {})
+        image = singleuser.setdefault('image', {})
+        # FIXME: parameterize this better?
+        image['tag'] = last_modified_commit("images/user/")
+
+        return jupyterhub
+
     @property
     def full_config(self):
         config = deepcopy(self.spec['config'])
@@ -47,6 +56,7 @@ class Hub:
         jupyterhub = config.setdefault('jupyterhub', {})
         jupyterhub = self._setup_ingress(jupyterhub)
         jupyterhub = self._setup_auth0(jupyterhub)
+        jupyterhub = self._setup_image(jupyterhub)
 
         return config
 
