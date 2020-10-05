@@ -92,6 +92,11 @@ RUN apt-get update && \
                    libproj15 \
                    libudunits2-0 \
                    libxml2 > /dev/null
+# Packages our users have requested.
+# FFMPEG: https://github.com/2i2c-org/pilot/issues/5
+RUN apt-get update && \
+	apt-get install -y --no-install-recommends \
+                   ffmpeg > /dev/null
 # R_LIBS_USER is set by default in /etc/R/Renviron, which RStudio loads.
 # We uncomment the default, and set what we wanna - so it picks up
 # the packages we install. Without this, RStudio doesn't see the packages
