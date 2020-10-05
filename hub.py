@@ -48,6 +48,14 @@ class Hub:
 
         return jupyterhub
 
+    def _setup_home(self, jupyterhub):
+        singleuser = jupyterhub.setdefault('singleuser', {})
+        storage = singleuser.setdefault('storage', {})
+        static = storage.setdefault('static', {})
+        static['subPath'] = 'homes/' + self.spec['name'] + '/{username}'
+
+        return jupyterhub
+
     @property
     def full_config(self):
         config = deepcopy(self.spec['config'])
@@ -57,6 +65,7 @@ class Hub:
         jupyterhub = self._setup_ingress(jupyterhub)
         jupyterhub = self._setup_auth0(jupyterhub)
         jupyterhub = self._setup_image(jupyterhub)
+        jupyterhub = self._setup_home(jupyterhub)
 
         return config
 

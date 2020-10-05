@@ -15,7 +15,10 @@ etcJupyter:
       cull_connected: true
 
 nfsPVC:
-  enabled: false
+  enabled: true
+  nfs:
+    serverIP: nfs-server-01
+    shareName: /export/home-01
 
 jupyterhub:
   ingress:
@@ -81,7 +84,9 @@ jupyterhub:
     image:
       name: gcr.io/two-eye-two-see/lowtouch-user-image
     storage:
-      type: none
+      type: static
+      static:
+        pvcName: home-nfs
     memory:
       guarantee: 256M
       limit: 1G
