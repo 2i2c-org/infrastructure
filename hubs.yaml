@@ -1,5 +1,8 @@
 hubs:
   - name: spelman
+    org_name: Spelman College
+    org_logo: https://www.spelman.edu/images/websiteimages/org_logo_spelman.png
+    org_url: https://www.spelman.edu/
     domain: spelman.pilot.2i2c.cloud
     auth0:
       connection: google-oauth2
@@ -19,6 +22,9 @@ hubs:
               - colliand@gmail.com
               - choldgraf@gmail.com
   - name: callysto
+    org_name: Callysto Canada
+    org_logo: https://callysto.ca/wp-content/uploads/2018/03/header-org_logo1.png
+    org_url: https://callysto.ca/
     domain: callysto.pilot.2i2c.cloud
     auth0:
       connection: google-oauth2
@@ -41,7 +47,10 @@ hubs:
               - iana@pims.math.ca
               - byron.chu@cybera.ca
               - choldgraf@gmail.com
-  - name: wageningen 
+  - name: wageningen
+    org_name: Wageningen University and Research
+    org_logo: https://www.wur.nl/upload/58340fb4-e33a-4d0b-af17-8d596fa93663_WUR_RGB_standard.png
+    org_url: https://www.wur.nl/en/wageningen-university.htm
     domain: wur.pilot.2i2c.cloud
     auth0:
       connection: github
