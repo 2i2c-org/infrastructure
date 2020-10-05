@@ -1,7 +1,7 @@
 hubs:
   - name: spelman
     org_name: Spelman College
-    org_logo: https://www.spelman.edu/images/websiteimages/org_logo_spelman.png
+    org_logo: https://www.spelman.edu/images/websiteimages/logo_spelman.png
     org_url: https://www.spelman.edu/
     domain: spelman.pilot.2i2c.cloud
     auth0:
@@ -23,7 +23,7 @@ hubs:
               - choldgraf@gmail.com
   - name: callysto
     org_name: Callysto Canada
-    org_logo: https://callysto.ca/wp-content/uploads/2018/03/header-org_logo1.png
+    org_logo: https://callysto.ca/wp-content/uploads/2018/03/header-logo1.png
     org_url: https://callysto.ca/
     domain: callysto.pilot.2i2c.cloud
     auth0:
