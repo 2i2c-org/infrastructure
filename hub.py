@@ -40,14 +40,6 @@ class Hub:
 
         return jupyterhub
 
-    def _setup_image(self, jupyterhub):
-        singleuser = jupyterhub.setdefault('singleuser', {})
-        image = singleuser.setdefault('image', {})
-        # FIXME: parameterize this better?
-        image['tag'] = last_modified_commit("images/user/")
-
-        return jupyterhub
-
     def _setup_home(self, jupyterhub):
         singleuser = jupyterhub.setdefault('singleuser', {})
         storage = singleuser.setdefault('storage', {})
@@ -64,7 +56,6 @@ class Hub:
         jupyterhub = config.setdefault('jupyterhub', {})
         jupyterhub = self._setup_ingress(jupyterhub)
         jupyterhub = self._setup_auth0(jupyterhub)
-        jupyterhub = self._setup_image(jupyterhub)
         jupyterhub = self._setup_home(jupyterhub)
 
         return config
