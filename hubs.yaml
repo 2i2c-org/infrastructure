@@ -1,7 +1,7 @@
 hubs:
   - name: spelman
     org_name: Spelman College
-    org_logo: https://www.spelman.edu/images/websiteimages/logo_spelman.png
+    org_logo: https://www.spelman.edu/images/communications/splogotagblk.png
     org_url: https://www.spelman.edu/
     domain: spelman.pilot.2i2c.cloud
     auth0:
