@@ -37,7 +37,7 @@ def last_modified_commit(*paths, n=1, **kwargs):
 def main():
     IMAGE_REPO_NAME = "gcr.io/two-eye-two-see/lowtouch-user-image"
 
-    tag = last_modified_commit("image/")
+    tag = last_modified_commit("images/user")
     image_name = f"{IMAGE_REPO_NAME}:{tag}"
 
     print(f"Trying to build {image_name}")
