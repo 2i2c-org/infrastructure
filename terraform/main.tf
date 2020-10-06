@@ -31,6 +31,13 @@ resource "google_artifact_registry_repository" "container_repository" {
   project = var.project_id
 }
 
+// Give the GKE service account access to our artifact registry docker repo
+resource "google_project_iam_member" "project" {
+  project = var.project_id
+  role    = "roles/artifactregistry.reader"
+  member  = "serviceAccount:${module.gke.service_account}"
+}
+
 
 module "gke" {
   source                     = "terraform-google-modules/kubernetes-engine/google"
