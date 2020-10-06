@@ -11,6 +11,10 @@ spec:
   nfs:
     server: {{ .Values.nfsPVC.nfs.serverIP | quote}}
     path: "/{{ .Values.nfsPVC.nfs.shareName }}"
+  mountOptions:
+    - soft
+    - noatime
+    - vers=4.2
 ---
 apiVersion: v1
 kind: PersistentVolumeClaim
