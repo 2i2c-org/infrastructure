@@ -40,10 +40,11 @@ def last_modified_commit(*paths, n=1, **kwargs):
 def image_exists(image_name):
     env = os.environ.copy()
     env['DOCKER_CLI_EXPERIMENTAL'] = 'enabled'
-    result = subprocess.run([
-        "docker", "manifest", "inspect",
-        image_name
-    ], env=env, capture_output=True)
+    with open(os.devnull, 'w') as devnull:
+        result = subprocess.run([
+            "docker", "manifest", "inspect",
+            image_name
+        ], env=env, stdout=devnull)
 
     return result.returncode == 0
 
