@@ -24,22 +24,14 @@ def substring_with_alpha(s, min_len=7):
     return s[:max(min_len, first_alpha(s))]
 
 
-def last_modified_commit(*paths, n=1, **kwargs):
-    """Get the last commit to modify the given paths"""
-    print(paths, flush=True)
-    cmd = ['git', 'log'] + list(paths)
+def last_modified_commit(path, n=1, **kwargs):
+    """Get the last commit to modify the given path"""
+    cmd = [
+        "git", "rev-list", "-1", "HEAD", path
+    ]
+
     print(cmd, flush=True)
-    subprocess.check_call(cmd)
-
-    raise "hi"
-
-    commit_hash = subprocess.check_output([
-        'git',
-        'log',
-        '-n', str(n),
-        '--pretty=format:%H',
-        '--',
-    ] + list(paths), **kwargs).decode('utf-8').split('\n')[-1]
+    commit_hash = subprocess.check_output(cmd, **kwargs).decode('utf-8').split('\n')[-1]
     return substring_with_alpha(commit_hash)
 
 
