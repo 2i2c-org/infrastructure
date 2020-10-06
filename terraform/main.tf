@@ -26,7 +26,7 @@ resource "google_artifact_registry_repository" "container_repository" {
   provider = google-beta
 
   location = var.region
-  repository_id = "low-touch-user-image"
+  repository_id = "low-touch-hubs"
   format = "DOCKER"
   project = var.project_id
 }

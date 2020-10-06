@@ -82,7 +82,7 @@ jupyterhub:
     startTimeout: 600 # 10 mins, because sometimes we have too many new nodes coming up together
     defaultUrl: /tree
     image:
-      name: gcr.io/two-eye-two-see/lowtouch-user-image
+      name: us-central1-docker.pkg.dev/two-eye-two-see/low-touch-hubs/base-user
       tag: d677471
     storage:
       type: static

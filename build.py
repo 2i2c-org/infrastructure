@@ -35,7 +35,7 @@ def last_modified_commit(*paths, n=1, **kwargs):
     return substring_with_alpha(commit_hash)
 
 def main():
-    IMAGE_REPO_NAME = "us-central1-docker.pkg.dev/two-eye-two-see/low-touch-user-image"
+    IMAGE_REPO_NAME = "us-central1-docker.pkg.dev/two-eye-two-see/low-touch-hubs/base-user"
 
     tag = last_modified_commit("images/user")
     image_name = f"{IMAGE_REPO_NAME}:{tag}"
