@@ -28,8 +28,8 @@ def last_modified_commit(*paths, n=1, **kwargs):
     """Get the last commit to modify the given paths"""
     print(paths, flush=True)
     subprocess.check_call([
-        'git', 'log', '--', *paths
-    ])
+        'git', 'log', '--'
+    ] + list(paths))
 
     commit_hash = subprocess.check_output([
         'git',
@@ -37,8 +37,7 @@ def last_modified_commit(*paths, n=1, **kwargs):
         '-n', str(n),
         '--pretty=format:%H',
         '--',
-        *paths
-    ], **kwargs).decode('utf-8').split('\n')[-1]
+    ] + list(paths), **kwargs).decode('utf-8').split('\n')[-1]
     return substring_with_alpha(commit_hash)
 
 
