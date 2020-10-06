@@ -27,9 +27,11 @@ def substring_with_alpha(s, min_len=7):
 def last_modified_commit(*paths, n=1, **kwargs):
     """Get the last commit to modify the given paths"""
     print(paths, flush=True)
-    subprocess.check_call([
-        'git', 'log', '--'
-    ] + list(paths))
+    cmd = ['git', 'log'] + list(paths)
+    print(cmd, flush=True)
+    subprocess.check_call(cmd)
+
+    raise "hi"
 
     commit_hash = subprocess.check_output([
         'git',
@@ -55,7 +57,11 @@ def image_exists(image_name):
 def main():
     IMAGE_REPO_NAME = "us-central1-docker.pkg.dev/two-eye-two-see/low-touch-hubs/base-user"
 
-    tag = last_modified_commit("images/user")
+    HERE = os.path.dirname(os.path.abspath(__file__))
+    print(__file__, flush=True)
+    print(os.getcwd(), flush=True)
+    print(HERE, flush=True)
+    tag = last_modified_commit(os.path.join(HERE, "images/user"))
     image_name = f"{IMAGE_REPO_NAME}:{tag}"
 
     if image_exists(image_name):

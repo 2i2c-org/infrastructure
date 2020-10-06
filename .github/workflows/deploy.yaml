@@ -39,6 +39,7 @@ jobs:
 
       - name: Build image
         run: |
+          git version
           gcloud auth configure-docker us-central1-docker.pkg.dev
           python3 build.py
 
