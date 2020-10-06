@@ -33,6 +33,15 @@ jobs:
         run: |
           helm dep up hub
 
+      - name: Setup dependencies
+        run: |
+          python3 -m pip install -r requirements.txt
+
+      - name: Build image
+        run: |
+          gcloud auth configure-docker
+          python3 build.py
+
       - name: Deploy hubs
         env:
           PROXY_SECRET_KEY: ${{ secrets.PROXY_SECRET_KEY }}
