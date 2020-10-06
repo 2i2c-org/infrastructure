@@ -67,5 +67,7 @@ def main():
         "docker", "push", image_name
     ])
 
+    print(f"Image tag pushed is: {tag}")
+
 if __name__ == '__main__':
     main()
