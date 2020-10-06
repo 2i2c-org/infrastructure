@@ -1,3 +1,5 @@
+import sys
+import os
 import subprocess
 
 def first_alpha(s):
@@ -34,12 +36,26 @@ def last_modified_commit(*paths, n=1, **kwargs):
     ], **kwargs).decode('utf-8').split('\n')[-1]
     return substring_with_alpha(commit_hash)
 
+
+def image_exists(image_name):
+    env = os.environ.copy()
+    env['DOCKER_CLI_EXPERIMENTAL'] = 'enabled'
+    result = subprocess.run([
+        "docker", "manifest", "inspect",
+        image_name
+    ], env=env, capture_output=True)
+
+    return result.returncode == 0
+
 def main():
     IMAGE_REPO_NAME = "us-central1-docker.pkg.dev/two-eye-two-see/low-touch-hubs/base-user"
 
     tag = last_modified_commit("images/user")
     image_name = f"{IMAGE_REPO_NAME}:{tag}"
 
+    if image_exists(image_name):
+        print(f"Image {image_name} already exists")
+        sys.exit(0)
     print(f"Trying to build {image_name}")
 
     subprocess.check_call([
