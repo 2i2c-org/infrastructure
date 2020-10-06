@@ -4,6 +4,7 @@ terraform {
     prefix  = "terraform/state/low-touch-hubs"
   }
 }
+
 module "service_accounts" {
   source        = "terraform-google-modules/service-accounts/google"
   version       = "~> 2.0"
@@ -12,13 +13,24 @@ module "service_accounts" {
   generate_keys = true
   names         = ["cd-sa"]
   project_roles = [
-      "${var.project_id}=>roles/container.admin"
+      "${var.project_id}=>roles/container.admin",
+      "${var.project_id}=>roles/artifactregistry.writer"
   ]
 }
 
 output "ci_deployer_key" {
   value = module.service_accounts.keys["cd-sa"]
 }
+
+resource "google_artifact_registry_repository" "container_repository" {
+  provider = google-beta
+
+  location = var.region
+  repository_id = "low-touch-user-image"
+  format = "DOCKER"
+  project = var.project_id
+}
+
 
 module "gke" {
   source                     = "terraform-google-modules/kubernetes-engine/google"

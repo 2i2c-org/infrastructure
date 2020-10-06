@@ -39,7 +39,7 @@ jobs:
 
       - name: Build image
         run: |
-          gcloud auth configure-docker
+          gcloud beta auth configure-docker us-central1-docker.pkg.dev
           python3 build.py
 
       - name: Deploy hubs
