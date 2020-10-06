@@ -31,7 +31,7 @@ def last_modified_commit(path, n=1, **kwargs):
     ]
 
     print(cmd, flush=True)
-    commit_hash = subprocess.check_output(cmd, **kwargs).decode('utf-8').split('\n')[-1]
+    commit_hash = subprocess.check_output(cmd, **kwargs).decode('utf-8').strip()
     return substring_with_alpha(commit_hash)
 
 
