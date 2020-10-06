@@ -30,7 +30,6 @@ def last_modified_commit(path, n=1, **kwargs):
         "git", "rev-list", "-1", "HEAD", path
     ]
 
-    print(cmd, flush=True)
     commit_hash = subprocess.check_output(cmd, **kwargs).decode('utf-8').strip()
     return substring_with_alpha(commit_hash)
 
@@ -50,9 +49,6 @@ def main():
     IMAGE_REPO_NAME = "us-central1-docker.pkg.dev/two-eye-two-see/low-touch-hubs/base-user"
 
     HERE = os.path.dirname(os.path.abspath(__file__))
-    print(__file__, flush=True)
-    print(os.getcwd(), flush=True)
-    print(HERE, flush=True)
     tag = last_modified_commit(os.path.join(HERE, "images/user"))
     image_name = f"{IMAGE_REPO_NAME}:{tag}"
 

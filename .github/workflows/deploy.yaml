@@ -37,12 +37,6 @@ jobs:
         run: |
           python3 -m pip install -r requirements.txt
 
-      - name: Build image
-        run: |
-          git version
-          gcloud auth configure-docker us-central1-docker.pkg.dev
-          python3 build.py
-
       - name: Deploy hubs
         env:
           PROXY_SECRET_KEY: ${{ secrets.PROXY_SECRET_KEY }}
