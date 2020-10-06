@@ -65,7 +65,7 @@ module "gke" {
     {
       name               = "user-pool-2020-09-29"
       machine_type       = "n1-highmem-4"
-      min_count          = 1
+      min_count          = 0
       max_count          = 10
       local_ssd_count    = 0
       disk_size_gb       = 200
