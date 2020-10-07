@@ -1,4 +1,6 @@
-# Hubs via hubs.yaml
+# 2i2c Pilot Hubs Infrastructure
+
+This is documentation for the 2i2c Pilot Hubs deployment infrastructure. The goal of this stack is to automatically deploy JupyterHubs in the cloud from a single `hubs.yaml` configuration file.
 
 All hub configuration is in `hubs.yaml`. You can add a new hub by adding
 an entry there, and pushing that to github.
@@ -23,16 +25,16 @@ Each hub is a dictionary that can consist of the following keys:
     many [connections](https://auth0.com/docs/identityproviders). Currently,
     only `connector` property is supported - see section on *Authentication*
     for more information.
-    
+
 4. `config`
 
     Any arbitrary [zero to jupyterhub](https://z2jh.jupyter.org) configuration
     can be passed here. Most common is auth setup, memory / CPU restrictions,
     and max number of active users.
-    
+
     All zero to jupyterhub config needs to be under a `jupyterhub` key. For example,
     if you wanna set the memory limit for a hub, you would use:
-    
+
     ```yaml
     config:
       jupyterhub:
@@ -40,12 +42,12 @@ Each hub is a dictionary that can consist of the following keys:
           memory:
             limit: 1G
     ```
-    
+
 
 ## Authentication
 
 [auth0](https://auth0.com) provides authentication for all hubs here. It can
-be configured with many different [connections](https://auth0.com/docs/identityproviders) 
+be configured with many different [connections](https://auth0.com/docs/identityproviders)
 that users can authenticate with - such as Google, GitHub, etc.
 
 So we want to manage authentication by:
@@ -54,30 +56,30 @@ So we want to manage authentication by:
    `auth0.connection`. Currently common ones are `google-oauth2` for Google &
    `github` for GitHub. *Users* of the hub will use this method to log in to
    the hub.
-   
+
    You can set the auth0 connector for a hub with:
-   
+
    ```yaml
    auth0:
-      connection: google-oauth2 
+      connection: google-oauth2
    ```
-   
+
    Theoretically, every provider in [this list](https://auth0.com/docs/connections/identity-providers-social)
    is supported. However, we've currently only tested this with Google
    (`google-oauth2`) and GitHub (`github`)
-   
+
 2. Explicitly list *admin users* for a given hub. These admin users will be the
    only ones allowed to log in to begin with. They can use the JupyterHub
    admin interface (available from their hub control panel) to explicitly allow
    more users into the hub. This way, we don't need to be involved in explicitly
-   allowing users into hubs. 
-   
+   allowing users into hubs.
+
    In the admin interface, admin users can add users via a username appropriate
    for the auth connector used. For GitHub, it's the username. For Google Auth,
    it's the email address.
-   
+
    You can set the admin interfaces for a hub like this:
-   
+
    ```yaml
    config:
      jupyterhub:
@@ -94,8 +96,8 @@ So we want to manage authentication by:
              - user1@gmail.com
              - user2@gmail.com
    ```
-   
-   
+
+
 ## Default options
 
 Part of being 'low touch' is to provide default options that we think might
@@ -120,7 +122,7 @@ have to manually build & push it after making a change.
    c. The `gcloud` tool, authenticated to the `two-eye-two-see` project.
       You need to run `gcloud auth configure-docker us-central1-docker.pkg.dev`
       once as well.
-   
+
 2. Make the changes you need to make to the environment, and git commit it.
 
 3. Run `python3 build.py`. This will build the image and push it to registry.
