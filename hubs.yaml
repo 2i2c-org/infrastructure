@@ -71,3 +71,23 @@ hubs:
               - colliand
               - choldgraf
               - Chiil
+  - name: ccsf
+    org_name: Community College SF
+    org_logo: https://www.wur.nl/upload/58340fb4-e33a-4d0b-af17-8d596fa93663_WUR_RGB_standard.png
+    org_url: https://www.wur.nl/en/wageningen-university.htm
+    domain: ccsf.pilot.2i2c.cloud
+    auth0:
+      connection: github
+    config:
+      jupyterhub:
+        auth:
+          # Admin names need to be listed wtice here, unfortunately
+          # 'whitelist' will be removed by next jupyterhub release
+          whitelist:
+            users:
+              - choldgraf
+              - ericvd-ucb
+          admin:
+            users:
+              - choldgraf
+              - ericvd-ucb
