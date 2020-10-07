@@ -3,10 +3,14 @@ name: deploy-website
 # Only run this when the master branch changes
 on:
   push:
+    paths:
+    - docs/**
     branches:
     - master
 
   pull_request:
+    paths:
+    - docs/**
     branches:
     - master
 
