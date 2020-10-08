@@ -112,7 +112,7 @@ hubs:
               - choldgraf
               - ericvd-ucb
 - name: pfw
-    org_name: Purdue Fort Wayne
+    org_name: "Purdue Fort Wayne"
     org_logo: https://upload.wikimedia.org/wikipedia/en/thumb/1/14/Purdue_Fort_Wayne_Mastodons_logo.svg/400px-Purdue_Fort_Wayne_Mastodons_logo.svg.png
     org_url: https://www.pfw.edu/
     domain: pfw.pilot.2i2c.cloud
