@@ -111,26 +111,26 @@ hubs:
             users:
               - choldgraf
               - ericvd-ucb
-- name: pfw
-  org_name: Purdue Fort Wayne
-  org_logo: https://upload.wikimedia.org/wikipedia/en/thumb/1/14/Purdue_Fort_Wayne_Mastodons_logo.svg/400px-Purdue_Fort_Wayne_Mastodons_logo.svg.png
-  org_url: https://www.pfw.edu/
-  domain: pfw.pilot.2i2c.cloud
-  auth0:
-    connection: github
-  config:
-    jupyterhub:
-      auth:
-        # Admin names need to be listed wtice here, unfortunately
-        # 'whitelist' will be removed by next jupyterhub release
-        whitelist:
-          users:
-            - colliand
-            - alessandromariaselvitella
-            - fosterk86
-        admin:
-          users:
-            - colliand
-            - alessandromariaselvitella
-            - fosterk86
+  - name: pfw
+    org_name: Purdue Fort Wayne
+    org_logo: https://upload.wikimedia.org/wikipedia/en/thumb/1/14/Purdue_Fort_Wayne_Mastodons_logo.svg/400px-Purdue_Fort_Wayne_Mastodons_logo.svg.png
+    org_url: https://www.pfw.edu/
+    domain: pfw.pilot.2i2c.cloud
+    auth0:
+      connection: github
+    config:
+      jupyterhub:
+        auth:
+          # Admin names need to be listed wtice here, unfortunately
+          # 'whitelist' will be removed by next jupyterhub release
+          whitelist:
+            users:
+              - colliand
+              - alessandromariaselvitella
+              - fosterk86
+          admin:
+            users:
+              - colliand
+              - alessandromariaselvitella
+              - fosterk86
 
