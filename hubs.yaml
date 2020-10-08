@@ -56,6 +56,9 @@ hubs:
       connection: github
     config:
       jupyterhub:
+        singleuser:
+          memory:
+            limit: 2G
         auth:
           # Admin names need to be listed wtice here, unfortunately
           # 'whitelist' will be removed by next jupyterhub release
