@@ -41,7 +41,15 @@ grafana:
   persistence:
     enabled: true
   service:
-    type: LoadBalancer
+    type: ClusterIP
+
+  ingress:
+    enabled: true
+    annotations:
+      kubernetes.io/ingress.class: nginx
+      cert-manager.io/cluster-issuer: letsencrypt-prod
+    hosts:
+      - grafana.pilot.2i2c.cloud
 
   # grafana.ini:
   #   server:
