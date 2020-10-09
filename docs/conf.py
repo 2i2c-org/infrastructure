@@ -28,9 +28,15 @@ author = '2i2c.org'
 # extensions coming with Sphinx (named 'sphinx.ext.*') or your custom
 # ones.
 extensions = [
-    'myst_parser'
+    'myst_parser',
+'sphinx.ext.intersphinx',
 ]
-#
+
+intersphinx_mapping = {'z2jh': ("https://zero-to-jupyterhub.readthedocs.io/en/latest/", None)}
+# -- MyST configuration ---------------------------------------------------
+myst_admonition_enable = True
+myst_deflist_enable = True
+
 source_suffix = ['.rst', '.md']
 
 # Add any paths that contain templates here, relative to this directory.
