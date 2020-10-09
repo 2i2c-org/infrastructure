@@ -9,40 +9,52 @@ an entry there, and pushing that to github.
 
 Each hub is a dictionary that can consist of the following keys:
 
-1. `name`
+`name`
+: A string that uniquely identifies this hub
 
-   A string that uniquely identifies this hub
+`domain`
+: Domain this hub should be available at. Currently, must be a subdomain
+  of a domain that has been pre-configured to point to our cluster. Currently,
+  that is `.pilot.2i2c.cloud`
 
-2. `domain`
+`auth0`
+: We use [auth0](https://auth0.com/) for authentication, and it supports
+  many [connections](https://auth0.com/docs/identityproviders). Currently,
+  only `connector` property is supported - see section on *Authentication*
+  for more information.
 
-   Domain this hub should be available at. Currently, must be a subdomain
-   of a domain that has been pre-configured to point to our cluster. Currently,
-   that is `.pilot.2i2c.cloud`
+`config.jupyterhub`
+: Any arbitrary [zero to jupyterhub](https://z2jh.jupyter.org) configuration
+  can be passed here. Most common is auth setup, memory / CPU restrictions,
+  and max number of active users. See [](config-jupyterhub) for more info.
 
-3. `auth0`
+`org_name`
+: The name of the organization, as displayed in a readable text.
 
-    We use [auth0](https://auth0.com/) for authentication, and it supports
-    many [connections](https://auth0.com/docs/identityproviders). Currently,
-    only `connector` property is supported - see section on *Authentication*
-    for more information.
+`org_logo`
+: A URL to the logo of the organization.
 
-4. `config`
+`org_url`
+: A URL to a website for the organization.
 
-    Any arbitrary [zero to jupyterhub](https://z2jh.jupyter.org) configuration
-    can be passed here. Most common is auth setup, memory / CPU restrictions,
-    and max number of active users.
+(config-jupyterhub)=
+## Configuring each JupyterHub
 
-    All zero to jupyterhub config needs to be under a `jupyterhub` key. For example,
-    if you wanna set the memory limit for a hub, you would use:
+Each JupyterHub can use its own configuration via the `hubs.yaml` file. This configuration exists under `config.jupyterhub`.
+This should be a valid [Zero to JupyterHub](https://z2jh.jupyter.org) configuration. For example, to set a custom memory limit for a hub, you would use:
 
-    ```yaml
-    config:
-      jupyterhub:
-        singleuser:
-          memory:
-            limit: 1G
-    ```
+```yaml
+config:
+   jupyterhub:
+    singleuser:
+       memory:
+          limit: 1G
+```
 
+Here are a few reference pages for JupyterHub Kubernetes configuration:
+
+- {ref}`z2jh:user-environment`
+- {ref}`z2jh:user-resources`
 
 ## Authentication
 
@@ -97,6 +109,9 @@ So we want to manage authentication by:
              - user2@gmail.com
    ```
 
+:::{admonition} Switching auth
+Switching authentication for a pre-existing hub will simply create new usernames. Any pre-existing users will no longer be able to access their accounts (although administrators will be able to do so). If you have pre-existing users and want to switch the hub authentication, rename the users to the new auth pattern (e.g. convert github handles to emails).
+:::
 
 ## Default options
 
