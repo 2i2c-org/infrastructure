@@ -43,7 +43,7 @@ module "gke" {
   source                     = "terraform-google-modules/kubernetes-engine/google"
   project_id                 = var.project_id
   name                       = "${var.prefix}-cluster"
-  regional                   = "true" # Pay some money for higher resiliencey
+  regional                   = var.regional_cluster
   region                     = var.region
   zones                      = [var.zone]
   network                    = "default"

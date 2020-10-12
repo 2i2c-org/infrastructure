@@ -17,3 +17,8 @@ variable "zone" {
   type = string
   default = "us-central1-b"
 }
+
+variable "regional_cluster" {
+  type = string
+  default = "true"
+}
