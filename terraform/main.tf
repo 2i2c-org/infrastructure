@@ -75,13 +75,13 @@ module "gke" {
       min_count          = 0
       max_count          = 10
       local_ssd_count    = 0
-      disk_size_gb       = 200
+      disk_size_gb       = 100
       disk_type          = "pd-standard"
       image_type         = "UBUNTU"
       auto_repair        = true
       auto_upgrade       = false
       preemptible        = false
-      initial_node_count = 1
+      initial_node_count = 0
     },
   ]
 
