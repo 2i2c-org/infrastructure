@@ -16,11 +16,17 @@ hubs:
               - yuvipanda@gmail.com
               - colliand@gmail.com
               - choldgraf@gmail.com
+              - ericvd@gmail.com
+              - jp@jamespercy.com 
+              - jerry.volcy@gmail.com
           admin:
             users:
               - yuvipanda@gmail.com
               - colliand@gmail.com
               - choldgraf@gmail.com
+              - ericvd@gmail.com
+              - jp@jamespercy.com 
+              - jerry.volcy@gmail.com
   - name: callysto
     org_name: Callysto Canada
     org_logo: https://callysto.ca/wp-content/uploads/2018/03/header-logo1.png
