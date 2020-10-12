@@ -18,47 +18,42 @@ class Hub:
         self.auth_provider = auth_provider
         self.proxy_secret_key = proxy_secret_key
 
-    def _setup_ingress(self, jupyterhub):
-        # Setup automatic ingress + TLS for given domain
-        # We don't allow customization of this per-hub
-        jupyterhub['ingress'] = {
-            'hosts': [self.spec['domain']],
-            'tls': [
-                {
-                    'secretName': f'https-auto-tls',
-                    'hosts': [self.spec['domain']]
+    def get_generated_config(self):
+        """
+        Generate config automatically for each hub
+
+        Some config should be automatically set for all hubs based on
+        spec in hubs.yaml. We generate them here.
+
+        Shouldn't have anything secret here.
+        """
+
+        return {
+            'jupyterhub': {
+                'ingress': {
+                    'hosts': [self.spec['domain']],
+                    'tls': [
+                        {
+                            'secretName': f'https-auto-tls',
+                            'hosts': [self.spec['domain']]
+                        }
+                    ]
+
+                },
+                'singleuser': {
+                    'storage': {
+                        'static': {
+                            'subPath': 'homes/' + self.spec['name'] + '/{username}'
+                        }
+                    }
+                },
+                'hub': {
+                    'extraaEnv': {
+                        'OAUTH_CALLBACK_URL': f'https://{self.spec["domain"]}/hub/oauth_callback'
+                    }
                 }
-            ]
+            }
         }
-
-        return jupyterhub
-
-    def _setup_auth0(self, jupyterhub):
-        hub = jupyterhub.setdefault('hub', {})
-        extraEnv = hub.setdefault('extraEnv', {})
-        extraEnv['OAUTH_CALLBACK_URL'] = f'https://{self.spec["domain"]}/hub/oauth_callback'
-
-        return jupyterhub
-
-    def _setup_home(self, jupyterhub):
-        singleuser = jupyterhub.setdefault('singleuser', {})
-        storage = singleuser.setdefault('storage', {})
-        static = storage.setdefault('static', {})
-        static['subPath'] = 'homes/' + self.spec['name'] + '/{username}'
-
-        return jupyterhub
-
-    @property
-    def full_config(self):
-        config = deepcopy(self.spec['config'])
-
-        # config should always have a 'jupyterhub' section
-        jupyterhub = config.setdefault('jupyterhub', {})
-        jupyterhub = self._setup_ingress(jupyterhub)
-        jupyterhub = self._setup_auth0(jupyterhub)
-        jupyterhub = self._setup_home(jupyterhub)
-
-        return config
 
     @property
     def proxy_secret(self):
@@ -80,16 +75,20 @@ class Hub:
             }
         }
 
-        with tempfile.NamedTemporaryFile() as values_file, tempfile.NamedTemporaryFile() as secret_values_file:
-            yaml.dump(self.full_config, values_file)
+        generated_values = self.get_generated_config()
+        with tempfile.NamedTemporaryFile() as values_file, tempfile.NamedTemporaryFile() as generated_values_file, tempfile.NamedTemporaryFile() as secret_values_file:
+            yaml.dump(self.spec['config'], values_file)
+            yaml.dump(generated_values, generated_values_file)
             yaml.dump(secret_values, secret_values_file)
             values_file.flush()
+            generated_values_file.flush()
             secret_values_file.flush()
             cmd = [
                 'helm', 'upgrade', '--install', '--create-namespace', '--wait',
                 '--namespace', self.spec['name'],
                 self.spec['name'], 'hub',
                 '-f', values_file.name,
+                '-f', generated_values_file.name,
                 '-f', secret_values_file.name
             ]
             print(f"Running {' '.join(cmd)}")
