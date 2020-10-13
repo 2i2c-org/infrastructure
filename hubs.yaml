@@ -59,7 +59,7 @@ hubs:
     org_url: https://www.wur.nl/en/wageningen-university.htm
     domain: wur.pilot.2i2c.cloud
     auth0:
-      connection: github
+      connection: google-oauth2
     config:
       jupyterhub:
         singleuser:
@@ -71,16 +71,14 @@ hubs:
           # 'whitelist' will be removed by next jupyterhub release
           whitelist:
             users:
-              - yuvipanda
-              - colliand
-              - choldgraf
-              - Chiil
+              - yuvipanda@gmail.com
+              - choldgraf@gmail.com
+              - chielvanheerwaarden@gmail.com
           admin:
             users:
-              - yuvipanda
-              - colliand
-              - choldgraf
-              - Chiil
+              - yuvipanda@gmail.com
+              - choldgraf@gmail.com
+              - chielvanheerwaarden@gmail.com
   - name: ccsf
     org_name: City College SF
     org_logo: https://www.ccsf.edu/sites/default/files/inline-images/asset-th-logo-black.png
