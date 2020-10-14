@@ -8,24 +8,17 @@ jobs:
   build:
     runs-on: ubuntu-latest
 
-    env:
-      CLUSTER_NAME: low-touch-hubs-cluster
-      PROJECT: two-eye-two-see
-
     steps:
       - uses: actions/checkout@v2
       - uses: GoogleCloudPlatform/github-actions/setup-gcloud@master
         with:
           version: '290.0.1'
+          # This is used for KMS only
           project_id: two-eye-two-see
           service_account_key: ${{ secrets.GCP_KMS_DECRYPTOR_KEY }}
           export_default_credentials: true
 
       - run: gcloud info
-
-      - name: Fetch kubectl creds
-        run: |
-         gcloud container clusters get-credentials ${CLUSTER_NAME} --region=us-central1
 
       - uses: azure/setup-helm@v1
 
