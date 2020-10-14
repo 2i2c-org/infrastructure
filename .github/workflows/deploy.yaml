@@ -18,7 +18,7 @@ jobs:
         with:
           version: '290.0.1'
           project_id: two-eye-two-see
-          service_account_key: ${{ secrets.GKE_SA_KEY }}
+          service_account_key: ${{ secrets.GCP_KMS_DECRYPTOR_KEY }}
           export_default_credentials: true
 
       - run: gcloud info
@@ -28,10 +28,10 @@ jobs:
          gcloud container clusters get-credentials ${CLUSTER_NAME} --region=us-central1
 
       - uses: azure/setup-helm@v1
-
-      - name: Fetch helm charts
         run: |
           helm dep up hub
+
+      - uses: mdgreenwald/mozilla-sops-action@v1
 
       - name: Setup dependencies
         run: |
