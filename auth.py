@@ -5,18 +5,21 @@ import os
 
 
 class KeyProvider:
-    @staticmethod
-    def get_token(domain, client_id, client_secret):
-        gt = GetToken(domain)
-        creds = gt.client_credentials(
-            client_id, client_secret,
-            f'https://{domain}/api/v2/'
-        )
-        return creds['access_token']
+    def __init__(self, domain, client_id, client_secret):
+        self.client_id = client_id
+        self.client_secret = client_secret
+        self.domain = domain
 
-    def __init__(self, auth0_domain, auth0_token):
-        self.auth0 = Auth0(auth0_domain, auth0_token)
-        self.auth0_domain = auth0_domain
+    @property
+    def auth0(self):
+        if not hasattr(self, '_auth0'):
+            gt = GetToken(self.domain)
+            creds = gt.client_credentials(
+                self.client_id, self.client_secret,
+                f'https://{self.domain}/api/v2/'
+            )
+            self._auth0 = Auth0(self.domain, creds['access_token'])
+        return self._auth0
 
     def get_clients(self):
         return {
@@ -95,9 +98,9 @@ class KeyProvider:
         auth['custom'] = {
             'className': 'oauthenticator.generic.GenericOAuthenticator',
             'config': {
-                'authorize_url': f'https://{self.auth0_domain}/authorize',
-                'token_url': f'https://{self.auth0_domain}/oauth/token',
-                'userdata_url': f'https://{self.auth0_domain}/userinfo',
+                'authorize_url': f'https://{self.domain}/authorize',
+                'token_url': f'https://{self.domain}/oauth/token',
+                'userdata_url': f'https://{self.domain}/userinfo',
                 'userdata_method': 'GET',
                 'username_key': username_key,
                 'client_id': client['client_id'],
