@@ -28,6 +28,8 @@ jobs:
          gcloud container clusters get-credentials ${CLUSTER_NAME} --region=us-central1
 
       - uses: azure/setup-helm@v1
+
+      - name: Fetch helm charts
         run: |
           helm dep up hub
 
