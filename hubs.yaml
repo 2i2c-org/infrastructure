@@ -121,7 +121,7 @@ clusters:
         org_url: https://www.wur.nl/en/wageningen-university.htm
         domain: wur.pilot.2i2c.cloud
         auth0:
-          connection: github
+          connection: google-oauth2
         config:
           jupyterhub:
             singleuser:
@@ -133,16 +133,14 @@ clusters:
               # 'whitelist' will be removed by next jupyterhub release
               whitelist:
                 users:
-                  - yuvipanda
-                  - colliand
-                  - choldgraf
-                  - Chiil
+                  - yuvipanda@gmail.com
+                  - choldgraf@gmail.com
+                  - chielvanheerwaarden@gmail.com
               admin:
                 users:
-                  - yuvipanda
-                  - colliand
-                  - choldgraf
-                  - Chiil
+                  - yuvipanda@gmail.com
+                  - choldgraf@gmail.com
+                  - chielvanheerwaarden@gmail.com
       - name: callysto
         cluster: 2i2c
         org_name: Callysto Canada
