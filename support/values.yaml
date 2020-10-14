@@ -27,7 +27,6 @@ prometheus:
       hub.jupyter.org/network-access-hub: 'true'
     persistentVolume:
       size: 100Gi
-      storageClass: default
     retention: 90d
     service:
       type: ClusterIP
