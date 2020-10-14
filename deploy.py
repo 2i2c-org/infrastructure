@@ -7,7 +7,7 @@ import hmac
 import os
 
 from auth import KeyProvider
-from hub import Hub
+from hub import Hub, Cluster
 
 # Without `pure=True`, I get an exception about str / byte issues
 yaml = YAML(typ='safe', pure=True)
@@ -16,20 +16,25 @@ HERE = Path(__file__).parent
 PROXY_SECRET_KEY = bytes.fromhex(os.environ['PROXY_SECRET_KEY'])
 
 AUTH0_DOMAIN = 'yuvipanda.auth0.com'
-auth0_token = KeyProvider.get_token(
+
+k = KeyProvider(
     AUTH0_DOMAIN,
     os.environ['AUTH0_MANAGEMENT_CLIENT_ID'],
     os.environ['AUTH0_MANAGEMENT_CLIENT_SECRET']
 )
 
-k = KeyProvider(AUTH0_DOMAIN, auth0_token)
-
-def load_hubs():
+def load_config():
     with open(HERE / "hubs.yaml") as f:
         return yaml.load(f)
 
-hubs = load_hubs()
+config = load_config()
 
-for hub_yaml in hubs['hubs']:
-    hub = Hub(hub_yaml, k, PROXY_SECRET_KEY)
-    hub.deploy()
+clusters = {}
+
+for cluster_yaml in config['clusters']:
+    cluster = Cluster(cluster_yaml, k)
+    cluster_name = cluster_yaml['name']
+    with cluster.auth():
+        cluster.build_image()
+        for hub in cluster.hubs:
+            hub.deploy(PROXY_SECRET_KEY)

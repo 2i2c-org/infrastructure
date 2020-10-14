@@ -2,6 +2,8 @@ import sys
 import os
 import subprocess
 
+HERE = os.path.dirname(os.path.abspath(__file__))
+
 def first_alpha(s):
     """
     Returns the length of the shortest substring of the input that
@@ -45,16 +47,13 @@ def image_exists(image_name):
 
     return result.returncode == 0
 
-def main():
-    IMAGE_REPO_NAME = "us-central1-docker.pkg.dev/two-eye-two-see/low-touch-hubs/base-user"
-
-    HERE = os.path.dirname(os.path.abspath(__file__))
+def build_image(image_repo):
     tag = last_modified_commit(os.path.join(HERE, "images/user"))
-    image_name = f"{IMAGE_REPO_NAME}:{tag}"
+    image_name = f"{image_repo}:{tag}"
 
     if image_exists(image_name):
         print(f"Image {image_name} already exists")
-        sys.exit(0)
+        return
     print(f"Trying to build {image_name}")
 
     subprocess.check_call([
@@ -69,5 +68,4 @@ def main():
 
     print(f"Image tag pushed is: {tag}")
 
-if __name__ == '__main__':
-    main()
+    return image_name

@@ -1,147 +1,172 @@
-hubs:
-  - name: spelman
-    org_name: Spelman College
-    org_logo: https://www.spelman.edu/images/communications/splogotagblk.png
-    org_url: https://www.spelman.edu/
-    domain: spelman.pilot.2i2c.cloud
-    auth0:
-      connection: google-oauth2
-    config:
-      jupyterhub:
-        auth:
-          # Admin names need to be listed wtice here, unfortunately
-          # 'whitelist' will be removed by next jupyterhub release
-          whitelist:
-            users:
-              - yuvipanda@gmail.com
-              - colliand@gmail.com
-              - choldgraf@gmail.com
-              - ericvd@gmail.com
-              - jp@jamespercy.com 
-              - jerry.volcy@gmail.com
-          admin:
-            users:
-              - yuvipanda@gmail.com
-              - colliand@gmail.com
-              - choldgraf@gmail.com
-              - ericvd@gmail.com
-              - jp@jamespercy.com 
-              - jerry.volcy@gmail.com
-  - name: callysto
-    org_name: Callysto Canada
-    org_logo: https://callysto.ca/wp-content/uploads/2018/03/header-logo1.png
-    org_url: https://callysto.ca/
-    domain: callysto.pilot.2i2c.cloud
-    auth0:
-      connection: google-oauth2
-    config:
-      jupyterhub:
-        auth:
-          # Admin names need to be listed wtice here, unfortunately
-          # 'whitelist' will be removed by next jupyterhub release
-          whitelist:
-            users:
-              - yuvipanda@gmail.com
-              - colliand@gmail.com
-              - ifallison@gmail.com
-              - byron.chu@cybera.ca
-              - choldgraf@gmail.com
-          admin:
-            users:
-              - yuvipanda@gmail.com
-              - colliand@gmail.com
-              - ifallison@gmail.com
-              - byron.chu@cybera.ca
-              - choldgraf@gmail.com
-  - name: wageningen
-    org_name: Wageningen University and Research
-    org_logo: https://www.wur.nl/upload/58340fb4-e33a-4d0b-af17-8d596fa93663_WUR_RGB_standard.png
-    org_url: https://www.wur.nl/en/wageningen-university.htm
-    domain: wur.pilot.2i2c.cloud
-    auth0:
-      connection: google-oauth2
-    config:
-      jupyterhub:
-        singleuser:
-          memory:
-            limit: 2G
-            guarantee: 512M
-        auth:
-          # Admin names need to be listed wtice here, unfortunately
-          # 'whitelist' will be removed by next jupyterhub release
-          whitelist:
-            users:
-              - yuvipanda@gmail.com
-              - choldgraf@gmail.com
-              - chielvanheerwaarden@gmail.com
-          admin:
-            users:
-              - yuvipanda@gmail.com
-              - choldgraf@gmail.com
-              - chielvanheerwaarden@gmail.com
-  - name: ccsf
-    org_name: City College SF
-    org_logo: https://www.ccsf.edu/sites/default/files/inline-images/asset-th-logo-black.png
-    org_url: https://www.ccsf.edu/
-    domain: ccsf.pilot.2i2c.cloud
-    auth0:
-      connection: github
-    config:
-      jupyterhub:
-        auth:
-          # Admin names need to be listed wtice here, unfortunately
-          # 'whitelist' will be removed by next jupyterhub release
-          whitelist:
-            users:
-              - choldgraf
-              - ericvd-ucb
-          admin:
-            users:
-              - choldgraf
-              - ericvd-ucb             
-  - name: elcamino
-    org_name: El Camino College
-    org_logo: https://www.elcamino.edu/_resources/images/logo.png
-    org_url: https://www.elcamino.edu/
-    domain: elcamino.pilot.2i2c.cloud
-    auth0:
-      connection: github
-    config:
-      jupyterhub:
-        auth:
-          # Admin names need to be listed wtice here, unfortunately
-          # 'whitelist' will be removed by next jupyterhub release
-          whitelist:
-            users:
-              - choldgraf
-              - ericvd-ucb
-          admin:
-            users:
-              - choldgraf
-              - ericvd-ucb
-  - name: pfw
-    org_name: Purdue Fort Wayne
-    org_logo: https://upload.wikimedia.org/wikipedia/en/thumb/1/14/Purdue_Fort_Wayne_Mastodons_logo.svg/400px-Purdue_Fort_Wayne_Mastodons_logo.svg.png
-    org_url: https://www.pfw.edu/
-    domain: pfw.pilot.2i2c.cloud
-    auth0:
-      connection: github
-    config:
-      jupyterhub:
-        auth:
-          # Admin names need to be listed wtice here, unfortunately
-          # 'whitelist' will be removed by next jupyterhub release
-          whitelist:
-            users:
-              - colliand
-              - alessandromariaselvitella
-              - fosterk86
-              - choldgraf
-              - yuvipanda
-          admin:
-            users:
-              - colliand
-              - alessandromariaselvitella
-              - fosterk86
-              - choldgraf
-              - yuvipanda
+clusters:
+  - name: cloudbank
+    image_repo:  "us-central1-docker.pkg.dev/cb-1003-1696/low-touch-hubs/base-user"
+    provider: gcp
+    gcp:
+      key: secrets/cloudbank.json
+      project: cb-1003-1696
+      cluster: cloudbank-2i2c-cluster
+      zone: us-central1-b
+    hubs:
+      - name: spelman
+        org_name: Spelman College
+        org_logo: https://www.spelman.edu/images/communications/splogotagblk.png
+        org_url: https://www.spelman.edu/
+        domain: spelman.cloudbank.2i2c.cloud
+        auth0:
+          connection: google-oauth2
+        config:
+          jupyterhub:
+            auth:
+              # Admin names need to be listed wtice here, unfortunately
+              # 'whitelist' will be removed by next jupyterhub release
+              whitelist:
+                users:
+                  - yuvipanda@gmail.com
+                  - colliand@gmail.com
+                  - choldgraf@gmail.com
+                  - ericvd@gmail.com
+                  - jp@jamespercy.com
+                  - jerry.volcy@gmail.com
+              admin:
+                users:
+                  - yuvipanda@gmail.com
+                  - colliand@gmail.com
+                  - choldgraf@gmail.com
+                  - ericvd@gmail.com
+                  - jp@jamespercy.com
+                  - jerry.volcy@gmail.com
+      - name: ccsf
+        cluster: cloudbank
+        org_name: City College SF
+        org_logo: https://www.ccsf.edu/sites/default/files/inline-images/asset-th-logo-black.png
+        org_url: https://www.ccsf.edu/
+        domain: ccsf.cloudbank.2i2c.cloud
+        auth0:
+          connection: github
+        config:
+          jupyterhub:
+            auth:
+              # Admin names need to be listed wtice here, unfortunately
+              # 'whitelist' will be removed by next jupyterhub release
+              whitelist:
+                users:
+                  - choldgraf
+                  - ericvd-ucb
+              admin:
+                users:
+                  - choldgraf
+                  - ericvd-ucb
+      - name: elcamino
+        cluster: cloudbank
+        org_name: El Camino College
+        org_logo: https://www.elcamino.edu/_resources/images/logo.png
+        org_url: https://www.elcamino.edu/
+        domain: elcamino.cloudbank.2i2c.cloud
+        auth0:
+          connection: github
+        config:
+          jupyterhub:
+            auth:
+              # Admin names need to be listed wtice here, unfortunately
+              # 'whitelist' will be removed by next jupyterhub release
+              whitelist:
+                users:
+                  - choldgraf
+                  - ericvd-ucb
+              admin:
+                users:
+                  - choldgraf
+                  - ericvd-ucb
+  - name: 2i2c
+    image_repo:  "us-central1-docker.pkg.dev/two-eye-two-see/low-touch-hubs/base-user"
+    provider: gcp
+    gcp:
+      key: secrets/2i2c.json
+      project: two-eye-two-see
+      cluster: low-touch-hubs-cluster
+      zone: us-central1
+    hubs:
+      - name: pfw
+        cluster: 2i2c
+        org_name: Purdue Fort Wayne
+        org_logo: https://upload.wikimedia.org/wikipedia/en/thumb/1/14/Purdue_Fort_Wayne_Mastodons_logo.svg/400px-Purdue_Fort_Wayne_Mastodons_logo.svg.png
+        org_url: https://www.pfw.edu/
+        domain: pfw.pilot.2i2c.cloud
+        auth0:
+          connection: github
+        config:
+          jupyterhub:
+            auth:
+              # Admin names need to be listed wtice here, unfortunately
+              # 'whitelist' will be removed by next jupyterhub release
+              whitelist:
+                users:
+                  - colliand
+                  - alessandromariaselvitella
+                  - fosterk86
+                  - choldgraf
+                  - yuvipanda
+              admin:
+                users:
+                  - colliand
+                  - alessandromariaselvitella
+                  - fosterk86
+                  - choldgraf
+                  - yuvipanda
+      - name: wageningen
+        cluster: 2i2c
+        org_name: Wageningen University and Research
+        org_logo: https://www.wur.nl/upload/58340fb4-e33a-4d0b-af17-8d596fa93663_WUR_RGB_standard.png
+        org_url: https://www.wur.nl/en/wageningen-university.htm
+        domain: wur.pilot.2i2c.cloud
+        auth0:
+          connection: github
+        config:
+          jupyterhub:
+            singleuser:
+              memory:
+                limit: 2G
+                guarantee: 512M
+            auth:
+              # Admin names need to be listed wtice here, unfortunately
+              # 'whitelist' will be removed by next jupyterhub release
+              whitelist:
+                users:
+                  - yuvipanda
+                  - colliand
+                  - choldgraf
+                  - Chiil
+              admin:
+                users:
+                  - yuvipanda
+                  - colliand
+                  - choldgraf
+                  - Chiil
+      - name: callysto
+        cluster: 2i2c
+        org_name: Callysto Canada
+        org_logo: https://callysto.ca/wp-content/uploads/2018/03/header-logo1.png
+        org_url: https://callysto.ca/
+        domain: callysto.pilot.2i2c.cloud
+        auth0:
+          connection: google-oauth2
+        config:
+          jupyterhub:
+            auth:
+              # Admin names need to be listed wtice here, unfortunately
+              # 'whitelist' will be removed by next jupyterhub release
+              whitelist:
+                users:
+                  - yuvipanda@gmail.com
+                  - colliand@gmail.com
+                  - ifallison@gmail.com
+                  - byron.chu@cybera.ca
+                  - choldgraf@gmail.com
+              admin:
+                users:
+                  - yuvipanda@gmail.com
+                  - colliand@gmail.com
+                  - ifallison@gmail.com
+                  - byron.chu@cybera.ca
+                  - choldgraf@gmail.com
