@@ -58,10 +58,10 @@ class Cluster:
     """
     A single k8s cluster we can deploy to
     """
-    def __init__(self, spec, auth_provider):
+    def __init__(self, spec):
         self.spec = spec
         self.hubs = [
-            Hub(self, hub_yaml, auth_provider)
+            Hub(self, hub_yaml)
             for hub_yaml in self.spec['hubs']
         ]
 
@@ -105,10 +105,9 @@ class Hub:
     """
     A single, deployable JupyterHub
     """
-    def __init__(self, cluster, spec, auth_provider):
+    def __init__(self, cluster, spec):
         self.cluster = cluster
         self.spec = spec
-        self.auth_provider = auth_provider
 
     def get_generated_config(self):
         """
@@ -150,8 +149,8 @@ class Hub:
             }
         }
 
-    def deploy(self, proxy_secret_key):
-        client = self.auth_provider.ensure_client(
+    def deploy(self, proxy_secret_key, auth_provider):
+        client = auth_provider.ensure_client(
             self.spec['name'],
             self.spec['domain'],
             self.spec['auth0']['connection']
@@ -163,7 +162,7 @@ class Hub:
                 'proxy': {
                     'secretToken': proxy_secret
                 },
-                'auth': self.auth_provider.get_client_creds(client, self.spec['auth0']['connection'])
+                'auth': auth_provider.get_client_creds(client, self.spec['auth0']['connection'])
             }
         }
 
