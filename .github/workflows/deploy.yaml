@@ -26,6 +26,11 @@ jobs:
         run: |
           helm dep up hub
 
+      - name: Setup gcloud auth for docker
+        # FIXME: Add more auth providers & registries here as needed
+        run: |
+          gcloud auth configure-docker us-central1-docker.pkg.dev
+
       - uses: mdgreenwald/mozilla-sops-action@v1
 
       - name: Setup dependencies
