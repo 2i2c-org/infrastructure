@@ -110,6 +110,52 @@ jupyterhub:
   auth:
     type: dummy
   hub:
+    initContainers:
+      - name: templates-clone
+        image: alpine/git
+        args:
+          - clone
+          - --depth=1
+          - --single-branch
+          - --
+          - https://github.com/2i2c-org/pilot-homepage
+          - /srv/repo
+        securityContext:
+          runAsUser: 1000
+          allowPrivilegeEscalation: false
+          readOnlyRootFilesystem: true
+        volumeMounts:
+          - name: custom-templates
+            mountPath: /srv/repo
+    extraContainers:
+      # Keep templates in sync, so you can autodeploy from master
+      - name: templates-sync
+        image: alpine/git
+        workingDir: /srv/repo
+        command:
+          - /bin/sh
+        args:
+          - -c
+          # Do git reset --hard origin/master so we aren't confused by force pushes
+          - "while true; do git fetch origin; git reset --hard origin/master; sleep\
+            \ 5m; done"
+        securityContext:
+          runAsUser: 1000
+          allowPrivilegeEscalation: false
+          readOnlyRootFilesystem: true
+        volumeMounts:
+          - name: custom-templates
+            mountPath: /srv/repo
+    extraVolumes:
+      - name: custom-templates
+        emptyDir: {}
+    extraVolumeMounts:
+      - mountPath: /usr/local/share/jupyterhub/custom_templates
+        name: custom-templates
+        subPath: "templates"
+      - mountPath: /usr/local/share/jupyterhub/static/extra-assets
+        name: custom-templates
+        subPath: "extra-assets"
     networkPolicy:
       enabled: true
     resources:
@@ -135,4 +181,11 @@ jupyterhub:
             # Explicitly disallow setuid binaries from working inside the container
             'allowPrivilegeEscalation': False
           }
+        }
+      04-custom-theme: |
+        from z2jh import get_config
+        c.JupyterHub.template_paths = ['/usr/local/share/jupyterhub/custom_templates/']
+
+        c.JupyterHub.template_vars = {
+          'custom':get_config('homepage.templateVars')
         }
