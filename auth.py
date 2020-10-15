@@ -49,7 +49,8 @@ class KeyProvider:
             self.auth0.clients.update(
                 client['client_id'],
                 {
-                    'callbacks': [callback_url]
+                    # Don't remove other callback URLs
+                    'callbacks': client['callbacks'] + [callback_url]
                 }
             )
 
