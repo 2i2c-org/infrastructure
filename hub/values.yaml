@@ -79,6 +79,11 @@ jupyterhub:
         ports:
         - port: http
   singleuser:
+    admin:
+      extraVolumeMounts:
+      - name: home
+        mountPath: /home/jovyan/shared-readwrite
+        subPath: _shared
     startTimeout: 600 # 10 mins, because sometimes we have too many new nodes coming up together
     defaultUrl: /tree
     image:
@@ -89,6 +94,11 @@ jupyterhub:
       static:
         pvcName: home-nfs
         subPath: '{username}'
+      extraVolumeMounts:
+      - name: home
+        mountPath: /home/jovyan/shared
+        subPath: _shared
+        readOnly: true
     memory:
       guarantee: 256M
       limit: 1G
@@ -190,3 +200,16 @@ jupyterhub:
         c.JupyterHub.template_vars = {
           'custom':get_config('homepage.templateVars')
         }
+      05-custom-admin: |
+        from z2jh import get_config
+        from kubespawner import KubeSpawner
+        class CustomSpawner(KubeSpawner):
+          def start(self, *args, **kwargs):
+            custom_admin = get_config('singleuser.admin', {})
+            if custom_admin and self.user.admin:
+                self.init_containers += custom_admin.get('initContainers', [])
+                self.volume_mounts += custom_admin.get('extraVolumeMounts', [])
+
+            return super().start(*args, **kwargs)
+
+        c.JupyterHub.spawner_class = CustomSpawner
