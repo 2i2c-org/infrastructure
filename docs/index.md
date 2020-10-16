@@ -5,17 +5,47 @@ This is documentation for the 2i2c Pilot Hubs deployment infrastructure. The goa
 All hub configuration is in `hubs.yaml`. You can add a new hub by adding
 an entry there, and pushing that to github.
 
+## How we plan to use this repository
+
+Currently, most user-facing documentation for the Hubs Pilot is at [2i2c.org/pilot](https://2i2c.org/pilot/). We'll use the following repositories for managing users and maintenance of these hubs:
+
+- [github.com/2i2c-org/pilot](https://github.com/2i2c-org/pilot) - point-of-contact with users. User documentation. Questions, requests, problems, etc.
+- [github.com/2i2c-org/pilot-hubs](https://github.com/2i2c-org/pilot-hubs) - Hub deployment information, issues for maintenance and technical enhancements on the hubs.
+
+We've asked users to submit any questions, problems, requests, etc as issues via [github.com/2i2c-org/pilot](https://github.com/2i2c-org/pilot) using issue templates. **Hub operators** should triage these issues, and surface any that require ongoing attention as issues in the [github.com/2i2c-org/pilot-hubs](https://github.com/2i2c-org/pilot-hubs) repository. This includes technical problems that need fixes, as well as requests such as environment updates.
+
+2i2c Hub Operators as well as Hub Architects shall use this repository to perform hub updates and maintenance in order to resolve these issues. They'll also use this repository to create new hubs for communities that have reached out via [https://2i2c.org/pilot](2i2c.org/pilot).
+
+## Cluster configuration reference
+
+At the top level of `hubs.yaml` is a list of **clusters**. Each cluster is a cloud deployment (for example, a Google project) that can have one or more hubs deployed inside it.
+
+Clusters have some basic configurability:
+
+`name`
+: A string that uniquely identifies this cluster
+
+`image_repo`
+: The base **user image** that all hubs will use in this cluster.
+
+`provider`
+: The cloud provider for this cluster (e.g. `gcp`).
+
 ## Hub configuration reference
 
+`clusters.hubs:` is a list of hubs to be deployed in each cluster.
 Each hub is a dictionary that can consist of the following keys:
 
 `name`
 : A string that uniquely identifies this hub
 
+`cluster`
+: The cluster where this hub will be deployed.
+
 `domain`
 : Domain this hub should be available at. Currently, must be a subdomain
   of a domain that has been pre-configured to point to our cluster. Currently,
-  that is `.pilot.2i2c.cloud`
+  that is `.<clustername>.2i2c.cloud`
 
 `auth0`
 : We use [auth0](https://auth0.com/) for authentication, and it supports
@@ -27,15 +57,6 @@ Each hub is a dictionary that can consist of the following keys:
 : Any arbitrary [zero to jupyterhub](https://z2jh.jupyter.org) configuration
   can be passed here. Most common is auth setup, memory / CPU restrictions,
   and max number of active users. See [](config-jupyterhub) for more info.
-
-`org_name`
-: The name of the organization, as displayed in a readable text.
-
-`org_logo`
-: A URL to the logo of the organization.
-
-`org_url`
-: A URL to a website for the organization.
 
 (config-jupyterhub)=
 ## Configuring each JupyterHub
@@ -148,3 +169,21 @@ have to manually build & push it after making a change.
 5. Make a commit, make a PR and merge to master! This will deploy all the hubs
    with the new image
 
+## Configuring the hub login page
+
+Each Hub deployed in a cluster has a collection of metadata about who it is deployed for, and who is responsible for running it. This is used to generate the **log-in page** for each hub and tailor it for the community.
+
+For an example, see [the log-in page of the staging hub](https://staging.pilot.2i2c.cloud/hub/login).
+
+The log-in pages are built with [the base template at this repository](https://github.com/2i2c-org/pilot-homepage). Values are inserted into each template based on each hub configuration.
+
+You may customize the configuration for a hub's homepage at `config.jupyterhub.homepage.templateVars`. Changing these values for a hub will make that hub's landing page update automatically. We recommend [using the `hubs.yaml` file as a reference](https://github.com/2i2c-org/pilot-hubs/blob/master/hubs.yaml). Copy the configuration from another hub, and then modify the contents to fit the new hub that is being configured.
+
+## Delete a hub
+
+If you'd like to delete a hub, there are a few steps that we need to take:
+
+1. **Backup the hub database**. Backup the `jupyterhub.sqlite` db off the hub.
+2. **Backup the home directory contents**. Especially if we think that users will want this information in the future (or if we plan to re-deploy a hub elsewhere).
+3. **Delete the Helm namespace**. Run `helm -n <hub-name> delete <hub-name>`.
+4. **Delete our Authentication entry**. If the hub hasn't been recreated anywhere, remove the entry from `auth0.com`
