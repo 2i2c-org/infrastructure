@@ -88,6 +88,7 @@ jupyterhub:
       type: static
       static:
         pvcName: home-nfs
+        subPath: '{username}'
     memory:
       guarantee: 256M
       limit: 1G

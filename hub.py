@@ -120,6 +120,11 @@ class Hub:
         """
 
         return {
+            'nfsPVC': {
+                'nfs': {
+                    'shareName': f'/export/home-01/homes/{self.spec["name"]}'
+                }
+            },
             'jupyterhub': {
                 'ingress': {
                     'hosts': [self.spec['domain']],
@@ -135,11 +140,6 @@ class Hub:
                     'image': {
                         'name': self.cluster.spec['image_repo']
                     },
-                    'storage': {
-                        'static': {
-                            'subPath': 'homes/' + self.spec['name'] + '/{username}'
-                        }
-                    }
                 },
                 'hub': {
                     'extraaEnv': {
