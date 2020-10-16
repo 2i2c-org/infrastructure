@@ -275,3 +275,38 @@ clusters:
                 users:
                   - choldgraf
                   - ericvd-ucb
+      - name: howard
+        cluster: cloudbank
+        domain: howard.cloudbank.2i2c.cloud
+        auth0:
+          connection: google-oauth2
+        config:
+          jupyterhub:
+            homepage:
+              templateVars:
+                org:
+                  name: Howard University
+                  logo_url: https://upload.wikimedia.org/wikipedia/en/a/a3/Howard_University_seal.svg
+                  url: https://home.howard.edu/
+                designed_by:
+                  name: 2i2c
+                  url: https://2i2c.org
+                operated_by:
+                  name: CloudBank
+                  url: http://cloudbank.org/
+                funded_by:
+                  name: CloudBank
+                  url: http://cloudbank.org/
+            auth:
+              # Admin names need to be listed wtice here, unfortunately
+              # 'whitelist' will be removed by next jupyterhub release
+              whitelist:
+                users:
+                  - ericvd@berkeley.edu
+                  - choldgraf@gmail.com
+                  - yuvipanda@gmail.com
+              admin:
+                users:
+                  - ericvd@berkeley.edu
+                  - choldgraf@gmail.com
+                  - yuvipanda@gmail.com
