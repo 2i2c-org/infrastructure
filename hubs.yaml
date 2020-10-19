@@ -213,7 +213,7 @@ clusters:
         cluster: cloudbank
         domain: ccsf.cloudbank.2i2c.cloud
         auth0:
-          connection: github
+          connection: google-oauth2
         config:
           jupyterhub:
             homepage:
@@ -236,12 +236,22 @@ clusters:
               # 'whitelist' will be removed by next jupyterhub release
               whitelist:
                 users:
-                  - choldgraf
-                  - ericvd-ucb
+                  - yuvipanda@gmail.com
+                  - choldgraf@gmail.com
+                  - ericvd@gmail.com
+                  - jp@jamespercy.com
+                  - shawn.wiggins@mail.ccsf.edu
+                  - craig.persiko@mail.ccsf.edu
+                  - efuchs@mail.ccsf.edu
               admin:
                 users:
-                  - choldgraf
-                  - ericvd-ucb
+                  - yuvipanda@gmail.com
+                  - choldgraf@gmail.com
+                  - ericvd@gmail.com
+                  - jp@jamespercy.com
+                  - shawn.wiggins@mail.ccsf.edu
+                  - craig.persiko@mail.ccsf.edu
+                  - efuchs@mail.ccsf.edu
       - name: elcamino
         cluster: cloudbank
         domain: elcamino.cloudbank.2i2c.cloud
