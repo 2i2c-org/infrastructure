@@ -256,7 +256,7 @@ clusters:
         cluster: cloudbank
         domain: elcamino.cloudbank.2i2c.cloud
         auth0:
-          connection: github
+          connection: google-oauth2
         config:
           jupyterhub:
             homepage:
@@ -279,12 +279,18 @@ clusters:
               # 'whitelist' will be removed by next jupyterhub release
               whitelist:
                 users:
-                  - choldgraf
-                  - ericvd-ucb
+                  - yuvipanda@gmail.com
+                  - choldgraf@gmail.com
+                  - ericvd@gmail.com
+                  - jp@jamespercy.com
+                  - solomonrussell@gmail.com
               admin:
                 users:
-                  - choldgraf
-                  - ericvd-ucb
+                  - yuvipanda@gmail.com
+                  - choldgraf@gmail.com
+                  - ericvd@gmail.com
+                  - jp@jamespercy.com
+                  - solomonrussell@gmail.com
       - name: howard
         cluster: cloudbank
         domain: howard.cloudbank.2i2c.cloud
