@@ -130,5 +130,3 @@ RUN /tmp/install.R && \
 
 # Set bash as shell in terminado.
 ADD jupyter_notebook_config.py  ${CONDA_PREFIX}/etc/jupyter/
-# Disable history.
-ADD ipython_config.py ${CONDA_PREFIX}/etc/ipython/
