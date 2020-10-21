@@ -332,3 +332,45 @@ clusters:
                   - gwashington@scs.howard.edu
                   - anthony.fgordon64@gmail.com
                   - mikayladorange@gmail.com
+      - name: skyline
+        cluster: cloudbank
+        domain: skyline.cloudbank.2i2c.cloud
+        auth0:
+          connection: google-oauth2
+        config:
+          jupyterhub:
+            homepage:
+              templateVars:
+                org:
+                  name: Skyline College
+                  logo_url: http://skylinecollege.edu/mcpr/images/logos/png/skyline_logo_horiz_cmyk.png
+                  url: https://www.skylinecollege.edu/
+                designed_by:
+                  name: 2i2c
+                  url: https://2i2c.org
+                operated_by:
+                  name: CloudBank
+                  url: http://cloudbank.org/
+                funded_by:
+                  name: CloudBank
+                  url: http://cloudbank.org/
+            auth:
+              # Admin names need to be listed wtice here, unfortunately
+              # 'whitelist' will be removed by next jupyterhub release
+              whitelist:
+                users:
+                  - yuvipanda@gmail.com
+                  - choldgraf@gmail.com
+                  - ericvd@gmail.com
+                  - jp@jamespercy.com
+                  - dhum1@my.smccd.edu
+                  - kayvanm@gmail.com
+              admin:
+                users:
+                  - yuvipanda@gmail.com
+                  - choldgraf@gmail.com
+                  - ericvd@gmail.com
+                  - jp@jamespercy.com
+                  - dhum1@my.smccd.edu
+                  - kayvanm@gmail.com
+     
