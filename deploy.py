@@ -16,7 +16,7 @@ yaml = YAML(typ='safe', pure=True)
 HERE = Path(__file__).parent
 PROXY_SECRET_KEY = bytes.fromhex(os.environ['PROXY_SECRET_KEY'])
 
-AUTH0_DOMAIN = 'yuvipanda.auth0.com'
+AUTH0_DOMAIN = '2i2c.us.auth0.com'
 
 def parse_clusters():
     with open(HERE / "hubs.yaml") as f:
