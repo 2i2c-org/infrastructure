@@ -88,7 +88,7 @@ jupyterhub:
     defaultUrl: /tree
     image:
       name: set_automatically_by_automation
-      tag: 49c6f0f
+      tag: 6ebfc5d
     storage:
       type: static
       static:
