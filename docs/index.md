@@ -187,3 +187,11 @@ If you'd like to delete a hub, there are a few steps that we need to take:
 2. **Backup the home directory contents**. Especially if we think that users will want this information in the future (or if we plan to re-deploy a hub elsewhere).
 3. **Delete the Helm namespace**. Run `helm -n <hub-name> delete <hub-name>`.
 4. **Delete our Authentication entry**. If the hub hasn't been recreated anywhere, remove the entry from `auth0.com`
+
+## Access the Hub Grafana Dashboards
+
+Each 2i2c Hub is set up with [a Prometheus server](https://prometheus.io/) to generate metrics and information about activity on the hub, and each cluster of hubs has a [Grafana deployment](https://grafana.com/) to ingest and visualize this data.
+
+The Grafana for each cluster can be accessed at `grafana.<cluster-name>.2i2c.cloud`.
+For example, the pilot hubs are accessible at `grafana.pilot.2i2c.cloud`. You'll need
+a username and password to access each one. Ask one of the 2i2c team members for access.
