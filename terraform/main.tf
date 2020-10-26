@@ -13,8 +13,9 @@ module "service_accounts" {
   generate_keys = true
   names         = ["cd-sa"]
   project_roles = [
-      "${var.project_id}=>roles/container.admin",
-      "${var.project_id}=>roles/artifactregistry.writer"
+    "${var.project_id}=>roles/container.admin",
+    "${var.project_id}=>roles/artifactregistry.writer",
+    "${var.project_id}=>roles/compute.osAdminLogin"
   ]
 }
 
