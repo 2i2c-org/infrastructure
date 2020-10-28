@@ -30,7 +30,10 @@ author = "2i2c.org"
 extensions = [
     "myst_parser",
     "sphinx.ext.intersphinx",
+    "sphinx_panels",
 ]
+
+myst_admonition_enable = True
 
 intersphinx_mapping = {
     "z2jh": ("https://zero-to-jupyterhub.readthedocs.io/en/latest/", None)
@@ -57,7 +60,6 @@ exclude_patterns = ["_build", "Thumbs.db", ".DS_Store"]
 #
 html_theme = "sphinx_book_theme"
 html_theme_options = {
-    "single_page": True,
     "repository_url": "https://github.com/2i2c-org/pilot-hubs",
     "use_issues_button": True,
     "use_repository_button": True,
