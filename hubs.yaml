@@ -107,7 +107,7 @@ clusters:
             singleuser:
               memory:
                 limit: 2G
-                guarantee: 512M
+                guarantee: 2G
             auth:
               # Admin names need to be listed wtice here, unfortunately
               # 'whitelist' will be removed by next jupyterhub release
