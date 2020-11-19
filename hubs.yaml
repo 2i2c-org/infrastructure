@@ -199,6 +199,50 @@ clusters:
                   - rbennett@peddie.org
                   - msawula@peddie.org
                   - ericvd@berkeley.edu
+      - name: catalyst-cooperative
+        cluster: pilot
+        domain: catalyst-cooperative.pilot.2i2c.cloud
+        auth0:
+          connection: google-oauth2
+        config:
+          jupyterhub:
+            homepage:
+              templateVars:
+                org:
+                  name: Catalyst Cooperative
+                  logo_url: https://catalyst.coop/files/2018/06/SimpleSquareWalking.png
+                  url: https://catalyst.coop/
+                designed_by:
+                  name: 2i2c
+                  url: https://2i2c.org
+                operated_by:
+                  name: CloudBank
+                  url: http://cloudbank.org/
+                funded_by:
+                  name: CloudBank
+                  url: http://cloudbank.org/
+            singleuser:
+              memory:
+                limit: 2G
+                guarantee: 2G
+            auth:
+              # Admin names need to be listed wtice here, unfortunately
+              # 'whitelist' will be removed by next jupyterhub release
+              whitelist:
+                users:
+                  - choldgraf@gmail.com
+                  - yuvipanda@gmail.com
+                  - zane.selvans@catalyst.coop
+                  - cgosnell@catalyst.coop
+                  - colliand@gmail.com
+              admin:
+                users:
+                  - choldgraf@gmail.com
+                  - yuvipanda@gmail.com
+                  - zane.selvans@catalyst.coop
+                  - cgosnell@catalyst.coop
+                  - colliand@gmail.com
+
   - name: cloudbank
     image_repo:  "us-central1-docker.pkg.dev/cb-1003-1696/low-touch-hubs/base-user"
     provider: gcp
@@ -450,43 +494,4 @@ clusters:
                   - choldgraf@gmail.com
                   - ericvd@gmail.com
                   - jp@jamespercy.com
-                  - colliand@gmail.com
-      - name: catalyst-cooperative
-        cluster: pilot
-        domain: catalyst-cooperative.pilot.2i2c.cloud
-        auth0:
-          connection: google-oauth2
-        config:
-          jupyterhub:
-            homepage:
-              templateVars:
-                org:
-                  name: Catalyst Cooperative
-                  logo_url: https://catalyst.coop/files/2018/06/SimpleSquareWalking.png
-                  url: https://catalyst.coop/
-                designed_by:
-                  name: 2i2c
-                  url: https://2i2c.org
-                operated_by:
-                  name: CloudBank
-                  url: http://cloudbank.org/
-                funded_by:
-                  name: CloudBank
-                  url: http://cloudbank.org/
-            auth:
-              # Admin names need to be listed wtice here, unfortunately
-              # 'whitelist' will be removed by next jupyterhub release
-              whitelist:
-                users:
-                  - choldgraf@gmail.com
-                  - yuvipanda@gmail.com
-                  - zane.selvans@catalyst.coop
-                  - cgosnell@catalyst.coop
-                  - colliand@gmail.com
-              admin:
-                users:
-                  - choldgraf@gmail.com
-                  - yuvipanda@gmail.com
-                  - zane.selvans@catalyst.coop
-                  - cgosnell@catalyst.coop
                   - colliand@gmail.com
