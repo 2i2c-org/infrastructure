@@ -160,6 +160,45 @@ clusters:
                   - ifallison@gmail.com
                   - byron.chu@cybera.ca
                   - choldgraf@gmail.com
+      - name: peddie
+        cluster: 2i2c
+        domain: peddie.pilot.2i2c.cloud
+        auth0:
+          connection: google-oauth2
+        config:
+          jupyterhub:
+            homepage:
+              templateVars:
+                org:
+                  name: Peddie Academy
+                  logo_url: https://resources.finalsite.net/images/f_auto,q_auto,t_image_size_1/v1564687841/peddie/l4yufwwdksquxu2yetv6/PeddieSealPMS289.png
+                  url: http://peddie.org/
+                designed_by:
+                  name: 2i2c
+                  url: https://2i2c.org
+                operated_by:
+                  name: 2i2c
+                  url: https://2i2c.org
+                funded_by:
+                  name: 2i2c
+                  url: https://2i2c.org
+            auth:
+              # Admin names need to be listed wtice here, unfortunately
+              # 'whitelist' will be removed by next jupyterhub release
+              whitelist:
+                users:
+                  - yuvipanda@gmail.com
+                  - choldgraf@gmail.com
+                  - rbennett@peddie.org
+                  - msawula@peddie.org
+                  - ericvd@berkeley.edu
+              admin:
+                users:
+                  - yuvipanda@gmail.com
+                  - choldgraf@gmail.com
+                  - rbennett@peddie.org
+                  - msawula@peddie.org
+                  - ericvd@berkeley.edu
   - name: cloudbank
     image_repo:  "us-central1-docker.pkg.dev/cb-1003-1696/low-touch-hubs/base-user"
     provider: gcp
