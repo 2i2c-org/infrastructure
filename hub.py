@@ -150,6 +150,9 @@ class Hub:
         }
 
     def deploy(self, auth_provider, proxy_secret_key):
+        """
+        Deploy this hub
+        """
         client = auth_provider.ensure_client(
             self.spec['name'],
             self.spec['domain'],

@@ -37,6 +37,11 @@ def last_modified_commit(path, n=1, **kwargs):
 
 
 def image_exists(image_name):
+    """
+    Return true if the image exists in its registry
+
+    Requires a working docker installation
+    """
     env = os.environ.copy()
     env['DOCKER_CLI_EXPERIMENTAL'] = 'enabled'
     with open(os.devnull, 'w') as devnull:
@@ -48,6 +53,9 @@ def image_exists(image_name):
     return result.returncode == 0
 
 def build_image(image_repo):
+    """
+    Build & push image in images/user if needed
+    """
     tag = last_modified_commit(os.path.join(HERE, "images/user"))
     image_name = f"{image_repo}:{tag}"
 

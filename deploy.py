@@ -1,3 +1,6 @@
+"""
+Deploy many JupyterHubs to manny Kubernetes Clusters
+"""
 import tempfile
 from pathlib import Path
 from ruamel.yaml import YAML
@@ -13,19 +16,63 @@ from hub import Hub, Cluster
 # Without `pure=True`, I get an exception about str / byte issues
 yaml = YAML(typ='safe', pure=True)
 
-HERE = Path(__file__).parent
-PROXY_SECRET_KEY = bytes.fromhex(os.environ['PROXY_SECRET_KEY'])
-
-AUTH0_DOMAIN = '2i2c.us.auth0.com'
-
 def parse_clusters():
-    with open(HERE / "hubs.yaml") as f:
+    """
+    Parse hubs.yaml file & return a list of Clusters
+    """
+    with open(Path(__file__).parent / "hubs.yaml") as f:
         config = yaml.load(f)
 
     return [
         Cluster(cluster_yaml)
         for cluster_yaml in config['clusters']
     ]
+
+
+def build():
+    """
+    Build and push all images for all clusters
+    """
+    clusters = parse_clusters()
+    for cluster in clusters:
+        with cluster.auth():
+            cluster.build_image()
+
+
+def deploy():
+    """
+    Deploy all hubs in all clusters
+    """
+
+    # All our hubs use Auth0 for Authentication. This lets us programmatically
+    # determine what auth provider each hub uses - GitHub, Google, etc. Without
+    # this, we'd have to manually generate credentials for each hub - and we
+    # don't want to do that. Auth0 domains are tied to a account, and
+    # this is our auth0 domain for the paid account that 2i2c has.
+    AUTH0_DOMAIN = '2i2c.us.auth0.com'
+
+    k = KeyProvider(
+        AUTH0_DOMAIN,
+        os.environ['AUTH0_MANAGEMENT_CLIENT_ID'],
+        os.environ['AUTH0_MANAGEMENT_CLIENT_SECRET']
+    )
+
+    # Each hub needs a unique proxy.secretToken. However, we don't want
+    # to manually generate & save it. We also don't want it to change with
+    # each deploy - that causes a pod restart with downtime. So instead,
+    # we generate it based on a signle secret key (`PROXY_SECRET_KEY`)
+    # combined with the name of each hub. This way, we get unique,
+    # cryptographically secure proxy.secretTokens without having to
+    # keep much state. We can rotate them by changing `PROXY_SECRET_KEY`.
+    # However, if `PROXY_SECRET_KEY` leaks, that means all the hub's
+    # proxy.secretTokens have leaked. So let's be careful with that!
+    PROXY_SECRET_KEY = bytes.fromhex(os.environ['PROXY_SECRET_KEY'])
+
+    clusters = parse_clusters()
+    for cluster in clusters:
+        with cluster.auth():
+            for hub in cluster.hubs:
+                hub.deploy(k, PROXY_SECRET_KEY)
 
 
 def main():
@@ -42,27 +89,6 @@ def main():
         build()
     elif args.action == 'deploy':
         deploy()
-
-
-def build():
-    clusters = parse_clusters()
-    for cluster in clusters:
-        with cluster.auth():
-            cluster.build_image()
-
-def deploy():
-    k = KeyProvider(
-        AUTH0_DOMAIN,
-        os.environ['AUTH0_MANAGEMENT_CLIENT_ID'],
-        os.environ['AUTH0_MANAGEMENT_CLIENT_SECRET']
-    )
-
-    clusters = parse_clusters()
-    for cluster in clusters:
-        with cluster.auth():
-            for hub in cluster.hubs:
-                hub.deploy(k, PROXY_SECRET_KEY)
-
 
 if __name__ == '__main__':
     main()

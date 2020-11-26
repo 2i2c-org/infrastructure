@@ -12,6 +12,9 @@ class KeyProvider:
 
     @property
     def auth0(self):
+        """
+        Return an authenticated Auth0 instance
+        """
         if not hasattr(self, '_auth0'):
             gt = GetToken(self.domain)
             creds = gt.client_credentials(
@@ -32,6 +35,7 @@ class KeyProvider:
             connection['name']: connection
             for connection in self.auth0.connections.all()
         }
+
     def create_client(self, name, domain):
         client = {
             'name': name,
@@ -88,6 +92,10 @@ class KeyProvider:
 
         
     def get_client_creds(self, client, connection_name):
+        """
+        Return z2jh config for auth0 authentication for this JupyterHub
+        """
+
         # default to using emails as usernames
         username_key = 'email'
         if connection_name == 'github':
