@@ -57,7 +57,7 @@ def build():
             cluster.build_image()
 
 
-def deploy(cluster_name=None, hub_name=None):
+def deploy(cluster_name, hub_name):
     """
     Deploy all hubs in all clusters
     """
@@ -112,29 +112,15 @@ def main():
     build_parser = subparsers.add_parser('build')
     deploy_parser = subparsers.add_parser('deploy')
 
-    deploy_subparsers = deploy_parser.add_subparsers(dest='mode')
-
-    all_parser = deploy_subparsers.add_parser(
-        'all-hubs',
-        help='Deploy all the hubs'
-    )
-    hub_parser = deploy_subparsers.add_parser(
-        'hub',
-        help='Only deploy a specific hub in a cluster'
-    )
-
-    hub_parser.add_argument('cluster_name')
-    hub_parser.add_argument('hub_name')
+    deploy_parser.add_argument('cluster_name', nargs="?")
+    deploy_parser.add_argument('hub_name', nargs="?")
 
     args = argparser.parse_args()
 
     if args.action == 'build':
         build()
     elif args.action == 'deploy':
-        if args.mode == 'all-hubs':
-            deploy()
-        else:
-            deploy(args.cluster_name, args.hub_name)
+        deploy(args.cluster_name, args.hub_name)
 
 if __name__ == '__main__':
     main()
