@@ -29,6 +29,24 @@ def parse_clusters():
     ]
 
 
+def find_cluster_by_name(cluster_name, clusters):
+    """
+    Find a cluster by name in a list of Cluster objects
+    """
+    for cluster in clusters:
+        if cluster.spec['name'] == cluster_name:
+            return cluster
+
+
+def find_hub_in_cluster(hub_name, hubs):
+    """
+    Find a hub by name in a list of Hub objects
+    """
+    for hub in hubs:
+        if hub.spec['name'] == hub_name:
+            return hub
+
+
 def build():
     """
     Build and push all images for all clusters
@@ -39,7 +57,7 @@ def build():
             cluster.build_image()
 
 
-def deploy(cluster=None, hub=None):
+def deploy(cluster_name=None, hub_name=None):
     """
     Deploy all hubs in all clusters
     """
@@ -68,11 +86,19 @@ def deploy(cluster=None, hub=None):
     # proxy.secretTokens have leaked. So let's be careful with that!
     PROXY_SECRET_KEY = bytes.fromhex(os.environ['PROXY_SECRET_KEY'])
 
-    if cluster and hub:
+    clusters = parse_clusters()
+
+    if cluster_name:
+        cluster = find_cluster_by_name(cluster_name, clusters)
         with cluster.auth():
-            hub.deploy(k, PROXY_SECRET_KEY)
+            hubs = cluster.hubs
+            if hub_name:
+                hub = find_hub_in_cluster(hub_name, hubs)
+                hub.deploy(k, PROXY_SECRET_KEY)
+            else:
+                for hub in hubs:
+                    hub.deploy(k, PROXY_SECRET_KEY)
     else:
-        clusters = parse_clusters()
         for cluster in clusters:
             with cluster.auth():
                 for hub in cluster.hubs:
