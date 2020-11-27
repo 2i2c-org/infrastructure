@@ -39,7 +39,7 @@ def build():
             cluster.build_image()
 
 
-def deploy():
+def deploy(cluster=None, hub=None):
     """
     Deploy all hubs in all clusters
     """
@@ -68,27 +68,47 @@ def deploy():
     # proxy.secretTokens have leaked. So let's be careful with that!
     PROXY_SECRET_KEY = bytes.fromhex(os.environ['PROXY_SECRET_KEY'])
 
-    clusters = parse_clusters()
-    for cluster in clusters:
+    if cluster and hub:
         with cluster.auth():
-            for hub in cluster.hubs:
-                hub.deploy(k, PROXY_SECRET_KEY)
+            hub.deploy(k, PROXY_SECRET_KEY)
+    else:
+        clusters = parse_clusters()
+        for cluster in clusters:
+            with cluster.auth():
+                for hub in cluster.hubs:
+                    hub.deploy(k, PROXY_SECRET_KEY)
 
 
 def main():
     argparser = argparse.ArgumentParser()
-    argparser.add_argument(
-        'action',
-        choices=['build', 'deploy']
+    subparsers = argparser.add_subparsers(dest='action')
+
+    build_parser = subparsers.add_parser('build')
+    deploy_parser = subparsers.add_parser('deploy')
+
+    deploy_subparsers = deploy_parser.add_subparsers(dest='mode')
+
+    all_parser = deploy_subparsers.add_parser(
+        'all-hubs',
+        help='Deploy all the hubs'
+    )
+    hub_parser = deploy_subparsers.add_parser(
+        'hub',
+        help='Only deploy a specific hub in a cluster'
     )
 
-    args = argparser.parse_args()
+    hub_parser.add_argument('cluster_name')
+    hub_parser.add_argument('hub_name')
 
+    args = argparser.parse_args()
 
     if args.action == 'build':
         build()
     elif args.action == 'deploy':
-        deploy()
+        if args.mode == 'all-hubs':
+            deploy()
+        else:
+            deploy(args.cluster_name, args.hub_name)
 
 if __name__ == '__main__':
     main()
