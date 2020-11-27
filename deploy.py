@@ -29,7 +29,7 @@ def parse_clusters():
     ]
 
 
-def find_cluster_by_name(cluster_name, clusters):
+def find_cluster(cluster_name, clusters):
     """
     Find a cluster by name in a list of Cluster objects
     """
@@ -38,7 +38,7 @@ def find_cluster_by_name(cluster_name, clusters):
             return cluster
 
 
-def find_hub_in_cluster(hub_name, hubs):
+def find_hub(hub_name, hubs):
     """
     Find a hub by name in a list of Hub objects
     """
@@ -89,11 +89,11 @@ def deploy(cluster_name, hub_name):
     clusters = parse_clusters()
 
     if cluster_name:
-        cluster = find_cluster_by_name(cluster_name, clusters)
+        cluster = find_cluster(cluster_name, clusters)
         with cluster.auth():
             hubs = cluster.hubs
             if hub_name:
-                hub = find_hub_in_cluster(hub_name, hubs)
+                hub = find_hub(hub_name, hubs)
                 hub.deploy(k, PROXY_SECRET_KEY)
             else:
                 for hub in hubs:
