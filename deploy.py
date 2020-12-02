@@ -29,24 +29,6 @@ def parse_clusters():
     ]
 
 
-def find_cluster(cluster_name, clusters):
-    """
-    Find a cluster by name in a list of Cluster objects
-    """
-    for cluster in clusters:
-        if cluster.spec['name'] == cluster_name:
-            return cluster
-
-
-def find_hub(hub_name, hubs):
-    """
-    Find a hub by name in a list of Hub objects
-    """
-    for hub in hubs:
-        if hub.spec['name'] == hub_name:
-            return hub
-
-
 def build():
     """
     Build and push all images for all clusters
@@ -89,11 +71,11 @@ def deploy(cluster_name, hub_name):
     clusters = parse_clusters()
 
     if cluster_name:
-        cluster = find_cluster(cluster_name, clusters)
+        cluster = next((cluster for cluster in clusters if cluster.spec['name'] == cluster_name), None)
         with cluster.auth():
             hubs = cluster.hubs
             if hub_name:
-                hub = find_hub(hub_name, hubs)
+                hub = next((hub for hub in hubs if hub.spec['name'] == hub_name), None)
                 hub.deploy(k, PROXY_SECRET_KEY)
             else:
                 for hub in hubs:
