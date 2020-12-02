@@ -38,11 +38,13 @@ clusters:
                   - yuvipanda@gmail.com
                   - colliand@gmail.com
                   - choldgraf@gmail.com
+                  - georgiana.dolocan@gmail.com
               admin:
                 users:
                   - yuvipanda@gmail.com
                   - colliand@gmail.com
                   - choldgraf@gmail.com
+                  - georgiana.dolocan@gmail.com
       - name: pfw
         cluster: 2i2c
         domain: pfw.pilot.2i2c.cloud
@@ -75,6 +77,7 @@ clusters:
                   - fosterk86
                   - choldgraf
                   - yuvipanda
+                  - GeorgianaElena
               admin:
                 users:
                   - colliand
@@ -82,6 +85,7 @@ clusters:
                   - fosterk86
                   - choldgraf
                   - yuvipanda
+                  - GeorgianaElena
       - name: wageningen
         cluster: 2i2c
         domain: wur.pilot.2i2c.cloud
@@ -116,11 +120,13 @@ clusters:
                   - yuvipanda@gmail.com
                   - choldgraf@gmail.com
                   - chielvanheerwaarden@gmail.com
+                  - georgiana.dolocan@gmail.com
               admin:
                 users:
                   - yuvipanda@gmail.com
                   - choldgraf@gmail.com
                   - chielvanheerwaarden@gmail.com
+                  - georgiana.dolocan@gmail.com
       - name: callysto
         cluster: 2i2c
         domain: callysto.pilot.2i2c.cloud
@@ -153,6 +159,7 @@ clusters:
                   - ifallison@gmail.com
                   - byron.chu@cybera.ca
                   - choldgraf@gmail.com
+                  - georgiana.dolocan@gmail.com
               admin:
                 users:
                   - yuvipanda@gmail.com
@@ -160,6 +167,7 @@ clusters:
                   - ifallison@gmail.com
                   - byron.chu@cybera.ca
                   - choldgraf@gmail.com
+                  - georgiana.dolocan@gmail.com
       - name: peddie
         cluster: 2i2c
         domain: peddie.pilot.2i2c.cloud
@@ -189,6 +197,7 @@ clusters:
                 users:
                   - yuvipanda@gmail.com
                   - choldgraf@gmail.com
+                  - georgiana.dolocan@gmail.com
                   - rbennett@peddie.org
                   - msawula@peddie.org
                   - ericvd@berkeley.edu
@@ -196,6 +205,7 @@ clusters:
                 users:
                   - yuvipanda@gmail.com
                   - choldgraf@gmail.com
+                  - georgiana.dolocan@gmail.com
                   - rbennett@peddie.org
                   - msawula@peddie.org
                   - ericvd@berkeley.edu
@@ -248,6 +258,7 @@ clusters:
                 users:
                   - choldgraf@gmail.com
                   - yuvipanda@gmail.com
+                  - georgiana.dolocan@gmail.com
                   - zane.selvans@catalyst.coop
                   - cgosnell@catalyst.coop
                   - colliand@gmail.com
@@ -255,6 +266,7 @@ clusters:
                 users:
                   - choldgraf@gmail.com
                   - yuvipanda@gmail.com
+                  - georgiana.dolocan@gmail.com
                   - zane.selvans@catalyst.coop
                   - cgosnell@catalyst.coop
                   - colliand@gmail.com
@@ -297,6 +309,7 @@ clusters:
                   - yuvipanda@gmail.com
                   - colliand@gmail.com
                   - choldgraf@gmail.com
+                  - georgiana.dolocan@gmail.com
                   - ericvd@gmail.com
                   - jp@jamespercy.com
                   - jerry.volcy@gmail.com
@@ -305,6 +318,7 @@ clusters:
                   - yuvipanda@gmail.com
                   - colliand@gmail.com
                   - choldgraf@gmail.com
+                  - georgiana.dolocan@gmail.com
                   - ericvd@gmail.com
                   - jp@jamespercy.com
                   - jerry.volcy@gmail.com
@@ -337,6 +351,7 @@ clusters:
                 users:
                   - yuvipanda@gmail.com
                   - choldgraf@gmail.com
+                  - georgiana.dolocan@gmail.com
                   - ericvd@gmail.com
                   - jp@jamespercy.com
                   - shawn.wiggins@mail.ccsf.edu
@@ -346,6 +361,7 @@ clusters:
                 users:
                   - yuvipanda@gmail.com
                   - choldgraf@gmail.com
+                  - georgiana.dolocan@gmail.com
                   - ericvd@gmail.com
                   - jp@jamespercy.com
                   - shawn.wiggins@mail.ccsf.edu
@@ -380,6 +396,7 @@ clusters:
                 users:
                   - yuvipanda@gmail.com
                   - choldgraf@gmail.com
+                  - georgiana.dolocan@gmail.com
                   - ericvd@gmail.com
                   - jp@jamespercy.com
                   - solomonrussell@gmail.com
@@ -387,6 +404,7 @@ clusters:
                 users:
                   - yuvipanda@gmail.com
                   - choldgraf@gmail.com
+                  - georgiana.dolocan@gmail.com
                   - ericvd@gmail.com
                   - jp@jamespercy.com
                   - solomonrussell@gmail.com
@@ -420,6 +438,7 @@ clusters:
                   - ericvd@berkeley.edu
                   - choldgraf@gmail.com
                   - yuvipanda@gmail.com
+                  - georgiana.dolocan@gmail.com
                   - gwashington@scs.howard.edu
                   - anthony.fgordon64@gmail.com
                   - mikayladorange@gmail.com
@@ -428,6 +447,7 @@ clusters:
                   - ericvd@berkeley.edu
                   - choldgraf@gmail.com
                   - yuvipanda@gmail.com
+                  - georgiana.dolocan@gmail.com
                   - gwashington@scs.howard.edu
                   - anthony.fgordon64@gmail.com
                   - mikayladorange@gmail.com
@@ -460,6 +480,7 @@ clusters:
                 users:
                   - yuvipanda@gmail.com
                   - choldgraf@gmail.com
+                  - georgiana.dolocan@gmail.com
                   - ericvd@gmail.com
                   - jp@jamespercy.com
                   - dhum1@my.smccd.edu
@@ -468,6 +489,7 @@ clusters:
                 users:
                   - yuvipanda@gmail.com
                   - choldgraf@gmail.com
+                  - georgiana.dolocan@gmail.com
                   - ericvd@gmail.com
                   - jp@jamespercy.com
                   - dhum1@my.smccd.edu
@@ -501,6 +523,7 @@ clusters:
                 users:
                   - yuvipanda@gmail.com
                   - choldgraf@gmail.com
+                  - georgiana.dolocan@gmail.com
                   - ericvd@gmail.com
                   - jp@jamespercy.com
                   - colliand@gmail.com
@@ -508,6 +531,7 @@ clusters:
                 users:
                   - yuvipanda@gmail.com
                   - choldgraf@gmail.com
+                  - georgiana.dolocan@gmail.com
                   - ericvd@gmail.com
                   - jp@jamespercy.com
                   - colliand@gmail.com
