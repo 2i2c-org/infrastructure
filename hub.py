@@ -202,9 +202,12 @@ class Hub:
                 'helm', 'upgrade', '--install', '--create-namespace', '--wait',
                 '--namespace', self.spec['name'],
                 self.spec['name'], 'hub',
-                '-f', values_file.name,
+                # Ordering matters here - config explicitly mentioned in `hubs.yaml` should take
+                # priority over our generated values. Based on how helm does overrides, this means
+                # we should put the config from hubs.yaml last.
                 '-f', generated_values_file.name,
-                '-f', secret_values_file.name
+                '-f', secret_values_file.name,
+                '-f', values_file.name,
             ]
             print(f"Running {' '.join(cmd)}")
             subprocess.check_call(cmd)
