@@ -22,6 +22,14 @@ prometheus:
   rbac:
     create: true
   server:
+    resources:
+      # Without this, prometheus can easily starve users
+      requests:
+        cpu: 0.2
+        memory: 768Mi
+      limits:
+        cpu: 1
+        memory: 2Gi
     labels:
       # For HTTP access to the hub, to scrape metrics
       hub.jupyter.org/network-access-hub: 'true'
