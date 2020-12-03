@@ -172,21 +172,25 @@ class Hub:
         """
         Deploy this hub
         """
-        client = auth_provider.ensure_client(
-            self.spec['name'],
-            self.spec['domain'],
-            self.spec['auth0']['connection']
-        )
 
         proxy_secret = hmac.new(proxy_secret_key, self.spec['name'].encode(), hashlib.sha256).hexdigest()
+
         secret_values = {
             'jupyterhub':  {
                 'proxy': {
                     'secretToken': proxy_secret
                 },
-                'auth': auth_provider.get_client_creds(client, self.spec['auth0']['connection'])
             }
         }
+
+        # Allow explicilty ignoring auth0 setup
+        if self.spec['auth0'].get('enabled', True):
+            client = auth_provider.ensure_client(
+                self.spec['name'],
+                self.spec['domain'],
+                self.spec['auth0']['connection']
+            )
+            secret_values['jupyterhub']['auth'] = auth_provider.get_client_creds(client, self.spec['auth0']['connection'])
 
         self.setup_nfs_share()
 
@@ -202,9 +206,12 @@ class Hub:
                 'helm', 'upgrade', '--install', '--create-namespace', '--wait',
                 '--namespace', self.spec['name'],
                 self.spec['name'], 'hub',
-                '-f', values_file.name,
+                # Ordering matters here - config explicitly mentioned in `hubs.yaml` should take
+                # priority over our generated values. Based on how helm does overrides, this means
+                # we should put the config from hubs.yaml last.
                 '-f', generated_values_file.name,
-                '-f', secret_values_file.name
+                '-f', secret_values_file.name,
+                '-f', values_file.name,
             ]
             print(f"Running {' '.join(cmd)}")
             subprocess.check_call(cmd)
