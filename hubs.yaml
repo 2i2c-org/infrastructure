@@ -7,6 +7,9 @@ clusters:
       project: two-eye-two-see
       cluster: low-touch-hubs-cluster
       zone: us-central1
+      nfs:
+        server: nfs-server-01
+        zone: us-central1-b
     hubs:
       - name: ephemeral
         cluster: 2i2c
@@ -324,6 +327,9 @@ clusters:
       project: cb-1003-1696
       cluster: cloudbank-2i2c-cluster
       zone: us-central1-b
+      nfs:
+        server: nfs-server-01
+        zone: us-central1-b
     hubs:
       - name: spelman
         domain: spelman.cloudbank.2i2c.cloud
