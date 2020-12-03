@@ -141,11 +141,6 @@ class Hub:
                         'name': self.cluster.spec['image_repo']
                     },
                 },
-                'hub': {
-                    'extraaEnv': {
-                        'OAUTH_CALLBACK_URL': f'https://{self.spec["domain"]}/hub/oauth_callback'
-                    }
-                }
             }
         }
 
