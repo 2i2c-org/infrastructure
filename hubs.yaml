@@ -8,6 +8,51 @@ clusters:
       cluster: low-touch-hubs-cluster
       zone: us-central1
     hubs:
+      - name: ephemeral
+        cluster: 2i2c
+        domain: ephemeral.pilot.2i2c.cloud
+        auth0:
+          enabled: false
+        config:
+          jupyterhub:
+            homepage:
+              templateVars:
+                org:
+                  name: 2i2c Staging
+                  url: https://2i2c.org
+                  logo_url: https://2i2c.org/media/logo.png
+                designed_by:
+                  name: 2i2c
+                  url: https://2i2c.org
+                operated_by:
+                  name: 2i2c
+                  url: https://2i2c.org
+                funded_by:
+                  name: 2i2c
+                  url: https://2i2c.org
+            hub:
+              # No more than 5 active servers at any given time
+              activeServerLimit: 5
+            cull:
+              enabled: true
+              # Using tmpauthenticator, so we should kill users too
+              users: true
+              # Stop servers after 30minutes of idleness
+              timeout: 1800
+              # 8 hours maximum usage per user
+              maxAge: 28800
+            singleuser:
+              events: false
+              storage:
+                type: none
+                # Explicitly disable shared directory mounting
+                extraVolumeMounts: null
+            auth:
+              # Admin names need to be listed wtice here, unfortunately
+              # 'whitelist' will be removed by next jupyterhub release
+              type: custom
+              custom:
+                className: tmpauthenticator.TmpAuthenticator
       - name: staging
         cluster: 2i2c
         domain: staging.pilot.2i2c.cloud
