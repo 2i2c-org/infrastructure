@@ -81,7 +81,9 @@ class Cluster:
         config = self.spec['gcp']
         key_path = config['key']
         project = config['project']
-        zone = config['zone']
+        # If cluster is regional, it'll have a `region` key set.
+        # Else, it'll just have a `zone` key set. Let's respect either.
+        location = config.get('zone', config.get('region'))
         cluster = config['cluster']
 
         with decrypt_file(key_path) as decrypted_key_path:
@@ -93,7 +95,8 @@ class Cluster:
 
         subprocess.check_call([
             'gcloud', 'container', 'clusters',
-            f'--zone={zone}',
+            # --zone works with regions too
+            f'--zone={location}',
             f'--project={project}',
             'get-credentials', cluster
         ])
