@@ -39,7 +39,7 @@ def build():
             cluster.build_image()
 
 
-def deploy():
+def deploy(cluster_name, hub_name):
     """
     Deploy all hubs in all clusters
     """
@@ -69,26 +69,40 @@ def deploy():
     PROXY_SECRET_KEY = bytes.fromhex(os.environ['PROXY_SECRET_KEY'])
 
     clusters = parse_clusters()
-    for cluster in clusters:
+
+    if cluster_name:
+        cluster = next((cluster for cluster in clusters if cluster.spec['name'] == cluster_name), None)
         with cluster.auth():
-            for hub in cluster.hubs:
+            hubs = cluster.hubs
+            if hub_name:
+                hub = next((hub for hub in hubs if hub.spec['name'] == hub_name), None)
                 hub.deploy(k, PROXY_SECRET_KEY)
+            else:
+                for hub in hubs:
+                    hub.deploy(k, PROXY_SECRET_KEY)
+    else:
+        for cluster in clusters:
+            with cluster.auth():
+                for hub in cluster.hubs:
+                    hub.deploy(k, PROXY_SECRET_KEY)
 
 
 def main():
     argparser = argparse.ArgumentParser()
-    argparser.add_argument(
-        'action',
-        choices=['build', 'deploy']
-    )
+    subparsers = argparser.add_subparsers(dest='action')
+
+    build_parser = subparsers.add_parser('build')
+    deploy_parser = subparsers.add_parser('deploy')
+
+    deploy_parser.add_argument('cluster_name', nargs="?")
+    deploy_parser.add_argument('hub_name', nargs="?")
 
     args = argparser.parse_args()
-
 
     if args.action == 'build':
         build()
     elif args.action == 'deploy':
-        deploy()
+        deploy(args.cluster_name, args.hub_name)
 
 if __name__ == '__main__':
     main()
