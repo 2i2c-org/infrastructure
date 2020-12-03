@@ -172,21 +172,25 @@ class Hub:
         """
         Deploy this hub
         """
-        client = auth_provider.ensure_client(
-            self.spec['name'],
-            self.spec['domain'],
-            self.spec['auth0']['connection']
-        )
 
         proxy_secret = hmac.new(proxy_secret_key, self.spec['name'].encode(), hashlib.sha256).hexdigest()
+
         secret_values = {
             'jupyterhub':  {
                 'proxy': {
                     'secretToken': proxy_secret
                 },
-                'auth': auth_provider.get_client_creds(client, self.spec['auth0']['connection'])
             }
         }
+
+        # Allow explicilty ignoring auth0 setup
+        if self.spec['auth0'].get('enabled', True):
+            client = auth_provider.ensure_client(
+                self.spec['name'],
+                self.spec['domain'],
+                self.spec['auth0']['connection']
+            )
+            secret_values['jupyterhub']['auth'] = auth_provider.get_client_creds(client, self.spec['auth0']['connection'])
 
         self.setup_nfs_share()
 
