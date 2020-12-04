@@ -114,23 +114,26 @@ class Hub:
 
         self.nfs_share_name = f'/export/home-01/homes/{self.spec["name"]}'
 
-    def get_generated_config(self):
+    def get_generated_config(self, auth_provider, proxy_secret_key):
         """
         Generate config automatically for each hub
 
         Some config should be automatically set for all hubs based on
         spec in hubs.yaml. We generate them here.
 
-        Shouldn't have anything secret here.
+        WARNING: CONTAINS SECRET VALUES!
         """
 
-        return {
+        proxy_secret = hmac.new(proxy_secret_key, self.spec['name'].encode(), hashlib.sha256).hexdigest()
+
+        generated_config = {
             'nfsPVC': {
                 'nfs': {
                     'shareName': self.nfs_share_name,
                 }
             },
             'jupyterhub': {
+                'proxy': { 'secretToken': proxy_secret },
                 'ingress': {
                     'hosts': [self.spec['domain']],
                     'tls': [
@@ -148,6 +151,18 @@ class Hub:
                 },
             }
         }
+        #
+        # Allow explicilty ignoring auth0 setup
+        if self.spec['auth0'].get('enabled', True):
+            client = auth_provider.ensure_client(
+                self.spec['name'],
+                self.spec['domain'],
+                self.spec['auth0']['connection']
+            )
+            generated_config['jupyterhub']['auth'] = auth_provider.get_client_creds(client, self.spec['auth0']['connection'])
+
+        return generated_config
+
 
     def setup_nfs_share(self):
         """
@@ -173,35 +188,14 @@ class Hub:
         Deploy this hub
         """
 
-        proxy_secret = hmac.new(proxy_secret_key, self.spec['name'].encode(), hashlib.sha256).hexdigest()
-
-        secret_values = {
-            'jupyterhub':  {
-                'proxy': {
-                    'secretToken': proxy_secret
-                },
-            }
-        }
-
-        # Allow explicilty ignoring auth0 setup
-        if self.spec['auth0'].get('enabled', True):
-            client = auth_provider.ensure_client(
-                self.spec['name'],
-                self.spec['domain'],
-                self.spec['auth0']['connection']
-            )
-            secret_values['jupyterhub']['auth'] = auth_provider.get_client_creds(client, self.spec['auth0']['connection'])
-
         self.setup_nfs_share()
 
-        generated_values = self.get_generated_config()
-        with tempfile.NamedTemporaryFile() as values_file, tempfile.NamedTemporaryFile() as generated_values_file, tempfile.NamedTemporaryFile() as secret_values_file:
+        generated_values = self.get_generated_config(auth_provider, proxy_secret_key)
+        with tempfile.NamedTemporaryFile() as values_file, tempfile.NamedTemporaryFile() as generated_values_file:
             yaml.dump(self.spec['config'], values_file)
             yaml.dump(generated_values, generated_values_file)
-            yaml.dump(secret_values, secret_values_file)
             values_file.flush()
             generated_values_file.flush()
-            secret_values_file.flush()
             cmd = [
                 'helm', 'upgrade', '--install', '--create-namespace', '--wait',
                 '--namespace', self.spec['name'],
@@ -210,7 +204,6 @@ class Hub:
                 # priority over our generated values. Based on how helm does overrides, this means
                 # we should put the config from hubs.yaml last.
                 '-f', generated_values_file.name,
-                '-f', secret_values_file.name,
                 '-f', values_file.name,
             ]
             print(f"Running {' '.join(cmd)}")
