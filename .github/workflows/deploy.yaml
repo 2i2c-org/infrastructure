@@ -24,7 +24,8 @@ jobs:
 
       - name: Fetch helm charts
         run: |
-          helm dep up hub
+          helm dep up hub-templates/base-hub
+          helm dep up hub-templates/ephemeral-hub
 
       - name: Setup gcloud auth for docker
         # FIXME: Add more auth providers & registries here as needed
