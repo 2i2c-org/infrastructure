@@ -16,14 +16,10 @@ base-hub:
       timeout: 1800
       # Don't let servers run for more than 8h
       maxAge: 38800
-    scheduling:
-      userPlaceholder:
-        replicas: 1
     singleuser:
-      image:
-        name: set_automatically_by_automation
-        tag: 58761b2
       storage:
+        # Ephemeral hubs shouldn't have any persistent storage
+        # Unsetting extraVolumeMounts removes the shared directory
         type: none
         extraVolumeMounts: []
       memory:
@@ -34,6 +30,9 @@ base-hub:
       custom:
         className: tmpauthenticator.TmpAuthenticator
     hub:
+      # Disable home page setup, since TmpAuthenticator doesn't support a home page
+      # Our home page setup required initContainers, volumes, a sidecar & some hub config
+      # We remove all of that.
       initContainers: []
       extraContainers: []
       extraVolumes: []
