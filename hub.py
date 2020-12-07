@@ -187,19 +187,29 @@ class Hub:
         """
         Deploy this hub
         """
-
-        self.setup_nfs_share()
+        hub_template = self.spec['template']
 
         generated_values = self.get_generated_config(auth_provider, proxy_secret_key)
+        # FIXME: Have a templates config somewhere? Maybe in Chart.yaml
+        # FIXME: This is a hack. Fix it.
+        if hub_template != 'base-hub':
+            generated_values = {
+                'base-hub': generated_values
+            }
+
+        # FIXME: Don't do this for ephemeral hubs
+        self.setup_nfs_share()
+
         with tempfile.NamedTemporaryFile() as values_file, tempfile.NamedTemporaryFile() as generated_values_file:
             yaml.dump(self.spec['config'], values_file)
             yaml.dump(generated_values, generated_values_file)
             values_file.flush()
             generated_values_file.flush()
+
             cmd = [
                 'helm', 'upgrade', '--install', '--create-namespace', '--wait',
                 '--namespace', self.spec['name'],
-                self.spec['name'], 'hub',
+                self.spec['name'], os.path.join('hub-templates', hub_template),
                 # Ordering matters here - config explicitly mentioned in `hubs.yaml` should take
                 # priority over our generated values. Based on how helm does overrides, this means
                 # we should put the config from hubs.yaml last.
