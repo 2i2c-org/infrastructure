@@ -44,6 +44,34 @@ Each hub is a dictionary that can consist of the following keys:
   can be passed here. Most common is auth setup, memory / CPU restrictions,
   and max number of active users. See [](config-jupyterhub) for more info.
 
+## Hub templates
+The hubs are configured and deployed using *hub templates*. Because each hub
+type can be described by a template, with its own deployment chart, a hierarchy
+of hub types can be built and this makes development and usage easier.
+
+Currently there are two hub templates available:
+- the `base-hub` template
+- the `ephemeral-hub` template
+
+For example, the **ephemeral hub** is a special kind of hub that is built using the *ephemeral-hub template*
+and has the following features:
+
+- Temporary, transient binder-style hub
+- No authentication
+- Resource limitations:
+  * memory / CPU limits
+  * maximum number of concurrent user servers
+- More aggressive culling
+- No persistent storage
+- No home page template
+
+
+The graphic below, shows the relationship between the hub templates and the other
+config files and how they are merged together when deploying a JupyterHub.
+
+```{figure} images/config-flow.png
+```
+
 (config-jupyterhub)=
 ## Configuring each JupyterHub
 
