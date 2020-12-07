@@ -149,7 +149,20 @@ class Hub:
                         'name': self.cluster.spec['image_repo']
                     },
                 },
-            }
+                'hub': {
+                    'extraContainers': {
+                        'templates-sync': {
+                            'args':
+                                '-c',
+                                f'while true; do git fetch origin; \
+                                if [[ git ls-remote --heads origin {self.spec["name"]} ]]; \
+                                then git reset --hard origin/{self.spec["name"]} \
+                                else git reset --hard origin/master; \
+                                sleep 5m; done'
+                        }
+                    }
+                }
+            },
         }
         #
         # Allow explicilty ignoring auth0 setup
