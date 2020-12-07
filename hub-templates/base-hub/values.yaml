@@ -48,6 +48,8 @@ jupyterhub:
   prePuller:
     continuous:
       enabled: false
+    hook:
+      enabled: false
   proxy:
     service:
       type: ClusterIP

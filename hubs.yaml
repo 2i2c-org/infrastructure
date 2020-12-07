@@ -11,9 +11,39 @@ clusters:
         server: nfs-server-01
         zone: us-central1-b
     hubs:
+      - name: ephemeral
+        cluster: 2i2c
+        domain: ephemeral.pilot.2i2c.cloud
+        template: ephemeral-hub
+        auth0:
+          enabled: false
+        config:
+          base-hub:
+            jupyterhub:
+              homepage:
+                templateVars:
+                  org:
+                    name: 2i2c Staging
+                    url: https://2i2c.org
+                    logo_url: https://2i2c.org/media/logo.png
+                  designed_by:
+                    name: 2i2c
+                    url: https://2i2c.org
+                  operated_by:
+                    name: 2i2c
+                    url: https://2i2c.org
+                  funded_by:
+                    name: 2i2c
+                    url: https://2i2c.org
+              hub:
+                # No more than 5 active servers at any given time
+                activeServerLimit: 5
+              singleuser:
+                events: false
       - name: staging
         cluster: 2i2c
         domain: staging.pilot.2i2c.cloud
+        template: base-hub
         auth0:
           connection: google-oauth2
         config:
@@ -51,6 +81,7 @@ clusters:
       - name: pfw
         cluster: 2i2c
         domain: pfw.pilot.2i2c.cloud
+        template: base-hub
         auth0:
           connection: github
         config:
@@ -92,6 +123,7 @@ clusters:
       - name: wageningen
         cluster: 2i2c
         domain: wur.pilot.2i2c.cloud
+        template: base-hub
         auth0:
           connection: google-oauth2
         config:
@@ -133,6 +165,7 @@ clusters:
       - name: callysto
         cluster: 2i2c
         domain: callysto.pilot.2i2c.cloud
+        template: base-hub
         auth0:
           connection: google-oauth2
         config:
@@ -174,6 +207,7 @@ clusters:
       - name: peddie
         cluster: 2i2c
         domain: peddie.pilot.2i2c.cloud
+        template: base-hub
         auth0:
           connection: google-oauth2
         config:
@@ -215,6 +249,7 @@ clusters:
       - name: catalyst-cooperative
         cluster: pilot
         domain: catalyst-cooperative.pilot.2i2c.cloud
+        template: base-hub
         auth0:
           connection: google-oauth2
         config:
@@ -288,6 +323,7 @@ clusters:
     hubs:
       - name: spelman
         domain: spelman.cloudbank.2i2c.cloud
+        template: base-hub
         auth0:
           connection: google-oauth2
         config:
@@ -331,6 +367,7 @@ clusters:
       - name: ccsf
         cluster: cloudbank
         domain: ccsf.cloudbank.2i2c.cloud
+        template: base-hub
         auth0:
           connection: google-oauth2
         config:
@@ -376,6 +413,7 @@ clusters:
       - name: elcamino
         cluster: cloudbank
         domain: elcamino.cloudbank.2i2c.cloud
+        template: base-hub
         auth0:
           connection: google-oauth2
         config:
@@ -417,6 +455,7 @@ clusters:
       - name: howard
         cluster: cloudbank
         domain: howard.cloudbank.2i2c.cloud
+        template: base-hub
         auth0:
           connection: google-oauth2
         config:
@@ -460,6 +499,7 @@ clusters:
       - name: skyline
         cluster: cloudbank
         domain: skyline.cloudbank.2i2c.cloud
+        template: base-hub
         auth0:
           connection: google-oauth2
         config:
@@ -503,6 +543,7 @@ clusters:
       - name: demo
         cluster: cloudbank
         domain: demo.cloudbank.2i2c.cloud
+        template: base-hub
         auth0:
           connection: google-oauth2
         config:
