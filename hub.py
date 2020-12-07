@@ -183,6 +183,7 @@ class Hub:
             f'sudo mkdir -p {self.nfs_share_name} && sudo chown 1000:1000 {self.nfs_share_name} && sudo ls -ld {self.nfs_share_name}'
         ])
 
+
     def deploy(self, auth_provider, proxy_secret_key):
         """
         Deploy this hub

@@ -15,7 +15,8 @@ module "service_accounts" {
   project_roles = [
     "${var.project_id}=>roles/container.admin",
     "${var.project_id}=>roles/artifactregistry.writer",
-    "${var.project_id}=>roles/compute.osAdminLogin"
+    # FIXME: This is way too much perms just to ssh into a node
+    "${var.project_id}=>roles/compute.instanceAdmin.v1"
   ]
 }
 
