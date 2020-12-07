@@ -308,6 +308,42 @@ clusters:
                   - zane.selvans@catalyst.coop
                   - cgosnell@catalyst.coop
                   - colliand@gmail.com
+      - name: earthlab
+        cluster: 2i2c
+        domain: earthlab.pilot.2i2c.cloud
+        template: base-hub
+        auth0:
+          connection: github
+        config:
+          jupyterhub:
+            homepage:
+              templateVars:
+                org:
+                  name: EarthLab
+                  logo_url: https://pbs.twimg.com/profile_images/1102342372438925312/64xKJFPk.png
+                  url: https://www.colorado.edu/earthlab/
+                designed_by:
+                  name: 2i2c
+                  url: https://2i2c.org
+                operated_by:
+                  name: 2i2c
+                  url: https://2i2c.org
+                funded_by:
+                  name: 2i2c
+                  url: https://2i2c.org
+            auth:
+              # Admin names need to be listed wtice here, unfortunately
+              # 'whitelist' will be removed by next jupyterhub release
+              whitelist:
+                users:
+                  - yuvipanda
+                  - choldgraf
+                  - lwasser
+              admin:
+                users:
+                  - yuvipanda
+                  - choldgraf
+                  - lwasser
 
   - name: cloudbank
     image_repo:  "us-central1-docker.pkg.dev/cb-1003-1696/low-touch-hubs/base-user"
