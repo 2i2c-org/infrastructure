@@ -157,8 +157,6 @@ class Hub:
                             'image': 'alpine/git',
                             'args': [
                                 'clone',
-                                '--depth=1',
-                                '--single-branch',
                                 '--',
                                 'https://github.com/2i2c-org/pilot-homepage',
                                 '/srv/repo',
@@ -187,9 +185,11 @@ class Hub:
                                 dedent(
                                     f'''\
                                     while true; do git fetch origin;
-                                    if [[ git ls-remote --heads origin {self.spec["name"]} ]];
-                                    then git reset --hard origin/{self.spec["name"]}
-                                    else git reset --hard origin/master;
+                                    if [[ $(git ls-remote --heads origin {self.spec["name"]} | wc -c) -ne 0 ]]; then
+                                        git reset --hard origin/{self.spec["name"]};
+                                    else
+                                        git reset --hard origin/master;
+                                    fi
                                     sleep 5m; done
                                     '''
                                 )
