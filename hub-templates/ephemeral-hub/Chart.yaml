@@ -3,4 +3,7 @@ appVersion: '1.0'
 description: Deployment Chart for an ephemeral JupyterHub
 name: ephemeral-hub
 version: 0.0.1-n2724.h1dfae31
-baseHubPrefix: ephemeral-hub
+dependencies:
+ - name: base-hub
+   version: 0.0.1
+   repository: file://../base-hub
