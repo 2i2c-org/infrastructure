@@ -168,8 +168,10 @@ class Hub:
                                 'allowPrivilegeEscalation': False,
                                 'readOnlyRootFilesystem': True,
                                 'volumeMounts': [
-                                    'name': 'custom-templates',
-                                    'mountPath': '/srv/repo'
+                                    {
+                                        'name': 'custom-templates',
+                                        'mountPath': '/srv/repo'
+                                    }
                                 ]
                             }
                         }
@@ -196,7 +198,7 @@ class Hub:
                                 'runAsUser': 1000,
                                 'allowPrivilegeEscalation': False,
                                 'readOnlyRootFilesystem': True,
-                            }
+                            },
                             'volumeMounts': [
                                 {
                                     'name': 'custom-templates',
