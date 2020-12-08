@@ -217,12 +217,12 @@ class Hub:
                         {
                             'mountPath': '/usr/local/share/jupyterhub/custom_templates',
                             'name': 'custom-templates',
-                            'subPath': '\"templates\"'
+                            'subPath': 'templates'
                         },
                         {
                             'mountPath': '/usr/local/share/jupyterhub/static/extra-assets',
                             'name': 'custom-templates',
-                            'subPath': '\"extra-assets\"'
+                            'subPath': 'extra-assets'
                         }
                     ]
                 }
