@@ -151,6 +151,29 @@ class Hub:
                     },
                 },
                 'hub': {
+                    'initContainers': [
+                        {
+                            'name': 'templates-clone',
+                            'image': 'alpine/git',
+                            'args': [
+                                'clone',
+                                '--depth=1',
+                                '--single-branch',
+                                '--',
+                                'https://github.com/2i2c-org/pilot-homepage',
+                                '/srv/repo',
+                            ],
+                            'securityContext': {
+                                'runAsUser': 1000,
+                                'allowPrivilegeEscalation': False,
+                                'readOnlyRootFilesystem': True,
+                                'volumeMounts': [
+                                    'name': 'custom-templates',
+                                    'mountPath': '/srv/repo'
+                                ]
+                            }
+                        }
+                    ],
                     'extraContainers': [
                         {
                             'name': 'templates-sync',
@@ -180,6 +203,24 @@ class Hub:
                                     'mountPath': '/srv/repo'
                                 }
                             ]
+                        }
+                    ],
+                    'extraVolumes': [
+                        {
+                            'name': 'custom-templates',
+                            'emptyDir': '{}'
+                        }
+                    ],
+                    'extraVolumeMounts':[
+                        {
+                            'mountPath': '/usr/local/share/jupyterhub/custom_templates',
+                            'name': 'custom-templates',
+                            'subPath': '\"templates\"'
+                        },
+                        {
+                            'mountPath': '/usr/local/share/jupyterhub/static/extra-assets',
+                            'name': 'custom-templates',
+                            'subPath': '\"extra-assets\"'
                         }
                     ]
                 }
