@@ -7,6 +7,7 @@ import json
 import tempfile
 from ruamel.yaml import YAML
 from ruamel.yaml.scanner import ScannerError
+from textwrap import dedent
 from build import last_modified_commit
 from contextlib import contextmanager
 from build import build_image
@@ -150,17 +151,37 @@ class Hub:
                     },
                 },
                 'hub': {
-                    'extraContainers': {
-                        'templates-sync': {
-                            'args':
+                    'extraContainers': [
+                        {
+                            'name': 'templates-sync',
+                            'image': 'alpine/git',
+                            'workingDir': '/srv/repo',
+                            'command': ['/bin/sh'],
+                            'args': [
                                 '-c',
-                                f'while true; do git fetch origin; \
-                                if [[ git ls-remote --heads origin {self.spec["name"]} ]]; \
-                                then git reset --hard origin/{self.spec["name"]} \
-                                else git reset --hard origin/master; \
-                                sleep 5m; done'
+                                dedent(
+                                    f'''\
+                                    while true; do git fetch origin;
+                                    if [[ git ls-remote --heads origin {self.spec["name"]} ]];
+                                    then git reset --hard origin/{self.spec["name"]}
+                                    else git reset --hard origin/master;
+                                    sleep 5m; done
+                                    '''
+                                )
+                            ],
+                            'securityContext': {
+                                'runAsUser': 1000,
+                                'allowPrivilegeEscalation': False,
+                                'readOnlyRootFilesystem': True,
+                            }
+                            'volumeMounts': [
+                                {
+                                    'name': 'custom-templates',
+                                    'mountPath': '/srv/repo'
+                                }
+                            ]
                         }
-                    }
+                    ]
                 }
             },
         }
