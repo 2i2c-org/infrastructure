@@ -167,13 +167,13 @@ class Hub:
                                 'runAsUser': 1000,
                                 'allowPrivilegeEscalation': False,
                                 'readOnlyRootFilesystem': True,
-                                'volumeMounts': [
-                                    {
-                                        'name': 'custom-templates',
-                                        'mountPath': '/srv/repo'
-                                    }
-                                ]
-                            }
+                            },
+                            'volumeMounts': [
+                                {
+                                    'name': 'custom-templates',
+                                    'mountPath': '/srv/repo'
+                                }
+                            ]
                         }
                     ],
                     'extraContainers': [
@@ -210,7 +210,7 @@ class Hub:
                     'extraVolumes': [
                         {
                             'name': 'custom-templates',
-                            'emptyDir': '{}'
+                            'emptyDir': {}
                         }
                     ],
                     'extraVolumeMounts':[
