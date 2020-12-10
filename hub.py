@@ -7,6 +7,7 @@ import json
 import tempfile
 from ruamel.yaml import YAML
 from ruamel.yaml.scanner import ScannerError
+from textwrap import dedent
 from build import last_modified_commit
 from contextlib import contextmanager
 from build import build_image
@@ -149,7 +150,83 @@ class Hub:
                         'name': self.cluster.spec['image_repo']
                     },
                 },
-            }
+                'hub': {
+                    'initContainers': [
+                        {
+                            'name': 'templates-clone',
+                            'image': 'alpine/git',
+                            'args': [
+                                'clone',
+                                '--',
+                                'https://github.com/2i2c-org/pilot-homepage',
+                                '/srv/repo',
+                            ],
+                            'securityContext': {
+                                'runAsUser': 1000,
+                                'allowPrivilegeEscalation': False,
+                                'readOnlyRootFilesystem': True,
+                            },
+                            'volumeMounts': [
+                                {
+                                    'name': 'custom-templates',
+                                    'mountPath': '/srv/repo'
+                                }
+                            ]
+                        }
+                    ],
+                    'extraContainers': [
+                        {
+                            'name': 'templates-sync',
+                            'image': 'alpine/git',
+                            'workingDir': '/srv/repo',
+                            'command': ['/bin/sh'],
+                            'args': [
+                                '-c',
+                                dedent(
+                                    f'''\
+                                    while true; do git fetch origin;
+                                    if [[ $(git ls-remote --heads origin {self.spec["name"]} | wc -c) -ne 0 ]]; then
+                                        git reset --hard origin/{self.spec["name"]};
+                                    else
+                                        git reset --hard origin/master;
+                                    fi
+                                    sleep 5m; done
+                                    '''
+                                )
+                            ],
+                            'securityContext': {
+                                'runAsUser': 1000,
+                                'allowPrivilegeEscalation': False,
+                                'readOnlyRootFilesystem': True,
+                            },
+                            'volumeMounts': [
+                                {
+                                    'name': 'custom-templates',
+                                    'mountPath': '/srv/repo'
+                                }
+                            ]
+                        }
+                    ],
+                    'extraVolumes': [
+                        {
+                            'name': 'custom-templates',
+                            'emptyDir': {}
+                        }
+                    ],
+                    'extraVolumeMounts':[
+                        {
+                            'mountPath': '/usr/local/share/jupyterhub/custom_templates',
+                            'name': 'custom-templates',
+                            'subPath': 'templates'
+                        },
+                        {
+                            'mountPath': '/usr/local/share/jupyterhub/static/extra-assets',
+                            'name': 'custom-templates',
+                            'subPath': 'extra-assets'
+                        }
+                    ]
+                }
+            },
         }
         #
         # Allow explicilty ignoring auth0 setup
