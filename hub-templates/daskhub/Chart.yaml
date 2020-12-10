@@ -1,0 +1,12 @@
+apiVersion: v2
+appVersion: '1.0'
+description: Deployment Chart for an ephemeral JupyterHub
+name: ephemeral-hub
+version: 0.0.1-n2724.h1dfae31
+dependencies:
+ - name: base-hub
+   version: 0.0.1
+   repository: file://../base-hub
+ - name: dask-gateway
+   version: "0.9.0"
+   repository: 'https://dask.org/dask-gateway-helm-repo/'

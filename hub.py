@@ -238,7 +238,7 @@ class Hub:
             )
             generated_config['jupyterhub']['auth'] = auth_provider.get_client_creds(client, self.spec['auth0']['connection'])
 
-        return generated_config
+        return self.apply_hub_template_fixes(generated_config, proxy_secret_key)
 
 
     def setup_nfs_share(self):
@@ -261,19 +261,50 @@ class Hub:
         ])
 
 
+    def apply_hub_template_fixes(self, generated_config, proxy_secret_key):
+        """
+        Modify generated_config based on what hub template we're using.
+
+        Different hub templates require different pre-set config. For example,
+        anything deriving from 'base-hub' needs all config to be under a 'base-hub'
+        config. dask hubs require apiTokens, etc.
+
+        Ideally, these would be done declaratively. Untile then, let's put all of
+        them in this function.
+        """
+        hub_template = self.spec['template']
+
+        # FIXME: Have a templates config somewhere? Maybe in Chart.yaml
+        # FIXME: This is a hack. Fix it.
+        if hub_template != 'base-hub':
+            generated_config = {
+                'base-hub': generated_config
+            }
+
+        # LOLSOB FIXME
+        if hub_template == 'daskhub':
+            gateway_token = hmac.new(proxy_secret_key, 'gateway-'.encode() + self.spec['name'].encode(), hashlib.sha256).hexdigest()
+            generated_config['dask-gateway'] = {
+                'gateway': {
+                    'auth': {
+                        'jupyterhub': { 'apiToken': gateway_token }
+                    }
+                }
+            }
+            generated_config['base-hub']['jupyterhub']['hub'] = {
+                'services': {
+                    'dask-gateway': { 'apiToken': gateway_token }
+                }
+            }
+
+        return generated_config
+
     def deploy(self, auth_provider, proxy_secret_key):
         """
         Deploy this hub
         """
-        hub_template = self.spec['template']
 
         generated_values = self.get_generated_config(auth_provider, proxy_secret_key)
-        # FIXME: Have a templates config somewhere? Maybe in Chart.yaml
-        # FIXME: This is a hack. Fix it.
-        if hub_template != 'base-hub':
-            generated_values = {
-                'base-hub': generated_values
-            }
 
         # FIXME: Don't do this for ephemeral hubs
         self.setup_nfs_share()
@@ -287,7 +318,7 @@ class Hub:
             cmd = [
                 'helm', 'upgrade', '--install', '--create-namespace', '--wait',
                 '--namespace', self.spec['name'],
-                self.spec['name'], os.path.join('hub-templates', hub_template),
+                self.spec['name'], os.path.join('hub-templates', self.spec['template']),
                 # Ordering matters here - config explicitly mentioned in `hubs.yaml` should take
                 # priority over our generated values. Based on how helm does overrides, this means
                 # we should put the config from hubs.yaml last.

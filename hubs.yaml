@@ -11,6 +11,49 @@ clusters:
         server: nfs-server-01
         zone: us-central1-b
     hubs:
+      - name: dask-staging
+        cluster: 2i2c
+        domain: dask-staging.pilot.2i2c.cloud
+        template: daskhub
+        auth0:
+          connection: google-oauth2
+        config:
+          base-hub:
+            jupyterhub:
+              homepage:
+                templateVars:
+                  org:
+                    name: 2i2c Dask Staging
+                    url: https://2i2c.org
+                    logo_url: https://2i2c.org/media/logo.png
+                  designed_by:
+                    name: 2i2c
+                    url: https://2i2c.org
+                  operated_by:
+                    name: 2i2c
+                    url: https://2i2c.org
+                  funded_by:
+                    name: 2i2c
+                    url: https://2i2c.org
+              singleuser:
+                image:
+                  name: pangeo/pangeo-notebook
+                  tag: 2020.12.08
+              auth:
+                # Admin names need to be listed wtice here, unfortunately
+                # 'whitelist' will be removed by next jupyterhub release
+                whitelist:
+                  users:
+                    - yuvipanda@gmail.com
+                    - colliand@gmail.com
+                    - choldgraf@gmail.com
+                    - georgiana.dolocan@gmail.com
+                admin:
+                  users:
+                    - yuvipanda@gmail.com
+                    - colliand@gmail.com
+                    - choldgraf@gmail.com
+                    - georgiana.dolocan@gmail.com
       - name: ephemeral
         cluster: 2i2c
         domain: ephemeral.pilot.2i2c.cloud

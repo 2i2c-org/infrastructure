@@ -1,0 +1,156 @@
+base-hub:
+  # Copied from https://github.com/dask/helm-chart/blob/master/daskhub/values.yaml
+  # FIXME: Properly use the upstream chart.
+  jupyterhub:
+    prePuller:
+      hook:
+        enabled: false
+    singleuser:
+      extraLabels:
+         hub.jupyter.org/network-access-proxy-http: "true"
+
+      networkPolicy:
+        # Needed for talking to the proxy pod
+        egress:
+          - ports:
+              - port: 8000
+                protocol: TCP
+          - ports:
+              - port: 80
+                protocol: TCP
+          - ports:
+              - port: 443
+                protocol: TCP
+      cloudMetadata:
+        enabled: true
+        # Don't block access to AWS cloud metadata
+        # If we don't, our users can't access S3 buckets / other AWS services
+        # without an explicit identity
+        # FIXME: Provide an explicit identity for users instead
+        blockWithIptables: false
+      extraEnv:
+        # The default worker image matches the singleuser image.
+        DASK_GATEWAY__CLUSTER__OPTIONS__IMAGE: '{JUPYTER_IMAGE_SPEC}'
+    hub:
+      networkPolicy:
+        enabled: false
+      extraConfig:
+        daskhub-01-add-dask-gateway-values: |
+          # 1. Sets `DASK_GATEWAY__PROXY_ADDRESS` in the singleuser environment.
+          # 2. Adds the URL for the Dask Gateway JupyterHub service.
+          import os
+          # These are set by jupyterhub.
+          release_name = os.environ["HELM_RELEASE_NAME"]
+          release_namespace = os.environ["POD_NAMESPACE"]
+          if "PROXY_HTTP_SERVICE_HOST" in os.environ:
+              # https is enabled, we want to use the internal http service.
+              gateway_address = "http://{}:{}/services/dask-gateway/".format(
+                  os.environ["PROXY_HTTP_SERVICE_HOST"],
+                  os.environ["PROXY_HTTP_SERVICE_PORT"],
+              )
+              print("Setting DASK_GATEWAY__ADDRESS {} from HTTP service".format(gateway_address))
+          else:
+              gateway_address = "http://proxy-public/services/dask-gateway"
+              print("Setting DASK_GATEWAY__ADDRESS {}".format(gateway_address))
+          # Internal address to connect to the Dask Gateway.
+          c.KubeSpawner.environment.setdefault("DASK_GATEWAY__ADDRESS", gateway_address)
+          # Internal address for the Dask Gateway proxy.
+          c.KubeSpawner.environment.setdefault("DASK_GATEWAY__PROXY_ADDRESS", "gateway://traefik-{}-dask-gateway.{}:80".format(release_name, release_namespace))
+          # Relative address for the dashboard link.
+          c.KubeSpawner.environment.setdefault("DASK_GATEWAY__PUBLIC_ADDRESS", "/services/dask-gateway/")
+          # Use JupyterHub to authenticate with Dask Gateway.
+          c.KubeSpawner.environment.setdefault("DASK_GATEWAY__AUTH__TYPE", "jupyterhub")
+          # Adds Dask Gateway as a JupyterHub service to make the gateway available at
+          # {HUB_URL}/services/dask-gateway
+          service_url = "http://traefik-{}-dask-gateway.{}".format(release_name, release_namespace)
+          for service in c.JupyterHub.services:
+              if service["name"] == "dask-gateway":
+                  if not service.get("url", None):
+                      print("Adding dask-gateway service URL")
+                      service.setdefault("url", service_url)
+                  break
+          else:
+              print("dask-gateway service not found. Did you set jupyterhub.hub.services.dask-gateway.apiToken?")
+
+dask-gateway:
+  enabled: true  # Enabling dask-gateway will install Dask Gateway as a dependency.
+  # Futher Dask Gateway configuration goes here
+  # See https://github.com/dask/dask-gateway/blob/master/resources/helm/dask-gateway/values.yaml
+  gateway:
+    backend:
+      scheduler:
+        cores:
+          request: 0.01
+          limit: 1
+        memory:
+          request: 128M
+          limit: 1G
+        extraPodConfig:
+          tolerations:
+            - key: "k8s.dask.org/dedicated"
+              operator: "Equal"
+              value: "scheduler"
+              effect: "NoSchedule"
+            - key: "k8s.dask.org_dedicated"
+              operator: "Equal"
+              value: "scheduler"
+              effect: "NoSchedule"
+      worker:
+        extraContainerConfig:
+          securityContext:
+            runAsGroup: 1000
+            runAsUser: 1000
+        extraPodConfig:
+          securityContext:
+            fsGroup: 1000
+          tolerations:
+            - key: "dask-dedicated"
+              operator: "Equal"
+              value: "worker"
+              effect: "NoSchedule"
+
+    # TODO: figure out a replacement for userLimits.
+    extraConfig:
+      optionHandler: |
+        from dask_gateway_server.options import Options, Integer, Float, String
+
+        def cluster_options(user):
+            def option_handler(options):
+                if ":" not in options.image:
+                    raise ValueError("When specifying an image you must also provide a tag")
+                # FIXME: No user labels or annotations, until https://github.com/pangeo-data/pangeo-cloud-federation/issues/879
+                # is fixed.
+                extra_annotations = {
+                    # "hub.jupyter.org/username": safe_username,
+                    "prometheus.io/scrape": "true",
+                    "prometheus.io/port": "8787",
+                }
+                extra_labels = {
+                    # "hub.jupyter.org/username": safe_username,
+                }
+                return {
+                    "worker_cores_limit": options.worker_cores,
+                    "worker_cores": min(options.worker_cores / 2, 1),
+                    "worker_memory": "%fG" % options.worker_memory,
+                    "image": options.image,
+                    "scheduler_extra_pod_annotations": extra_annotations,
+                    "worker_extra_pod_annotations": extra_annotations,
+                    "scheduler_extra_pod_labels": extra_labels,
+                    "worker_extra_pod_labels": extra_labels,
+                }
+            return Options(
+                Integer("worker_cores", 2, min=1, max=16, label="Worker Cores"),
+                Float("worker_memory", 4, min=1, max=32, label="Worker Memory (GiB)"),
+                String("image", default="pangeo/pangeo-notebook:latest", label="Image"),
+                handler=option_handler,
+            )
+        c.Backend.cluster_options = cluster_options
+      idle: |
+        # timeout after 30 minutes of inactivity
+        c.KubeClusterConfig.idle_timeout = 1800
+    prefix: "/services/dask-gateway"  # Users connect to the Gateway through the JupyterHub service.
+    auth:
+      type: jupyterhub  # Use JupyterHub to authenticate with Dask Gateway
+  traefik:
+    service:
+      type: ClusterIP  # Access Dask Gateway through JupyterHub. To access the Gateway from outside JupyterHub, this must be changed to a `LoadBalancer`.
