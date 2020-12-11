@@ -305,22 +305,6 @@ clusters:
                 memory:
                   limit: 6G
                   guarantee: 4G
-                networkPolicy:
-                  # We want to enable outgoing ssh just for this hub, so we do that here.
-                  # We can't *just* add port 22 here, since egress is a list not a dictionary
-                  egress:
-                    - ports:
-                        - port: 53
-                          protocol: UDP
-                    - ports:
-                        - port: 80
-                          protocol: TCP
-                    - ports:
-                        - port: 443
-                          protocol: TCP
-                    - ports:
-                        - port: 22
-                          protocol: TCP
               homepage:
                 templateVars:
                   org:
