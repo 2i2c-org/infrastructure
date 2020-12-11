@@ -86,15 +86,9 @@ dask-gateway:
           request: 128M
           limit: 1G
         extraPodConfig:
-          tolerations:
-            - key: "k8s.dask.org/dedicated"
-              operator: "Equal"
-              value: "scheduler"
-              effect: "NoSchedule"
-            - key: "k8s.dask.org_dedicated"
-              operator: "Equal"
-              value: "scheduler"
-              effect: "NoSchedule"
+          nodeSelector:
+            # Schedulers should be in the user pool
+            hub.jupyter.org/pool-name: user-pool
       worker:
         extraContainerConfig:
           securityContext:
@@ -103,11 +97,9 @@ dask-gateway:
         extraPodConfig:
           securityContext:
             fsGroup: 1000
-          tolerations:
-            - key: "dask-dedicated"
-              operator: "Equal"
-              value: "worker"
-              effect: "NoSchedule"
+          nodeSelector:
+            # Dask workers get their own pre-emptible pool
+            hub.jupyter.org/pool-name: dask-worker-pool
 
     # TODO: figure out a replacement for userLimits.
     extraConfig:

@@ -70,6 +70,8 @@ module "gke" {
       auto_upgrade       = false
       preemptible        = false
       initial_node_count = 1
+      # Let's pin this so we don't upgrade each time terraform runs
+      version            = "1.17.12-gke.2502"
     },
     {
       name               = "user-pool-2020-09-29"
@@ -84,6 +86,26 @@ module "gke" {
       auto_upgrade       = false
       preemptible        = false
       initial_node_count = 0
+      # Let's pin this so we don't upgrade each time terraform runs
+      version            = "1.17.12-gke.2502"
+    },
+    {
+      name               = "dask-worker-pool-2020-12-11"
+      machine_type       = "e2-standard-4"
+      min_count          = 0
+      max_count          = 10
+      local_ssd_count    = 0
+      disk_size_gb       = 100
+      # Fast startup is important here, so we get fast SSD disks
+      # This pulls in user images much faster
+      disk_type          = "pd-ssd"
+      image_type         = "UBUNTU"
+      auto_repair        = true
+      auto_upgrade       = false
+      preemptible        = true
+      initial_node_count = 0
+      # Let's pin this so we don't upgrade each time terraform runs
+      version            = "1.17.12-gke.2502"
     },
   ]
 
@@ -104,6 +126,9 @@ module "gke" {
     }
     user-pool-2020-09-29 = {
       "hub.jupyter.org/pool-name" = "user-pool"
+    }
+    dask-worker-pool-2020-12-11 = {
+      "hub.jupyter.org/pool-name" = "dask-worker-pool"
     }
   }
 }
