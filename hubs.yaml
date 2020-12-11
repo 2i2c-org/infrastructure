@@ -292,65 +292,66 @@ clusters:
       - name: catalyst-cooperative
         cluster: pilot
         domain: catalyst-cooperative.pilot.2i2c.cloud
-        template: base-hub
+        template: daskhub
         auth0:
           connection: google-oauth2
         config:
-          jupyterhub:
-            singleuser:
-              memory:
-                limit: 6G
-                guarantee: 4G
-              networkPolicy:
-                # We want to enable outgoing ssh just for this hub, so we do that here.
-                # We can't *just* add port 22 here, since egress is a list not a dictionary
-                egress:
-                  - ports:
-                      - port: 53
-                        protocol: UDP
-                  - ports:
-                      - port: 80
-                        protocol: TCP
-                  - ports:
-                      - port: 443
-                        protocol: TCP
-                  - ports:
-                      - port: 22
-                        protocol: TCP
-            homepage:
-              templateVars:
-                org:
-                  name: Catalyst Cooperative
-                  logo_url: https://catalyst.coop/files/2018/06/SimpleSquareWalking.png
-                  url: https://catalyst.coop/
-                designed_by:
-                  name: 2i2c
-                  url: https://2i2c.org
-                operated_by:
-                  name: CloudBank
-                  url: http://cloudbank.org/
-                funded_by:
-                  name: CloudBank
-                  url: http://cloudbank.org/
-            auth:
-              # Admin names need to be listed wtice here, unfortunately
-              # 'whitelist' will be removed by next jupyterhub release
-              whitelist:
-                users:
-                  - choldgraf@gmail.com
-                  - yuvipanda@gmail.com
-                  - georgiana.dolocan@gmail.com
-                  - zane.selvans@catalyst.coop
-                  - cgosnell@catalyst.coop
-                  - colliand@gmail.com
-              admin:
-                users:
-                  - choldgraf@gmail.com
-                  - yuvipanda@gmail.com
-                  - georgiana.dolocan@gmail.com
-                  - zane.selvans@catalyst.coop
-                  - cgosnell@catalyst.coop
-                  - colliand@gmail.com
+          base-hub:
+            jupyterhub:
+              singleuser:
+                memory:
+                  limit: 6G
+                  guarantee: 4G
+                networkPolicy:
+                  # We want to enable outgoing ssh just for this hub, so we do that here.
+                  # We can't *just* add port 22 here, since egress is a list not a dictionary
+                  egress:
+                    - ports:
+                        - port: 53
+                          protocol: UDP
+                    - ports:
+                        - port: 80
+                          protocol: TCP
+                    - ports:
+                        - port: 443
+                          protocol: TCP
+                    - ports:
+                        - port: 22
+                          protocol: TCP
+              homepage:
+                templateVars:
+                  org:
+                    name: Catalyst Cooperative
+                    logo_url: https://catalyst.coop/files/2018/06/SimpleSquareWalking.png
+                    url: https://catalyst.coop/
+                  designed_by:
+                    name: 2i2c
+                    url: https://2i2c.org
+                  operated_by:
+                    name: CloudBank
+                    url: http://cloudbank.org/
+                  funded_by:
+                    name: CloudBank
+                    url: http://cloudbank.org/
+              auth:
+                # Admin names need to be listed wtice here, unfortunately
+                # 'whitelist' will be removed by next jupyterhub release
+                whitelist:
+                  users:
+                    - choldgraf@gmail.com
+                    - yuvipanda@gmail.com
+                    - georgiana.dolocan@gmail.com
+                    - zane.selvans@catalyst.coop
+                    - cgosnell@catalyst.coop
+                    - colliand@gmail.com
+                admin:
+                  users:
+                    - choldgraf@gmail.com
+                    - yuvipanda@gmail.com
+                    - georgiana.dolocan@gmail.com
+                    - zane.selvans@catalyst.coop
+                    - cgosnell@catalyst.coop
+                    - colliand@gmail.com
       - name: earthlab
         cluster: 2i2c
         domain: earthlab.pilot.2i2c.cloud
