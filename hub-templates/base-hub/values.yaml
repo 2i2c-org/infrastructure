@@ -38,6 +38,8 @@ jupyterhub:
       userPlaceholderPriority: -10
     userScheduler:
       enabled: true
+      nodeSelector:
+        hub.jupyter.org/pool-name: core-pool
       resources:
         requests:
           # FIXME: Just unset this?
@@ -54,6 +56,8 @@ jupyterhub:
     service:
       type: ClusterIP
     chp:
+      nodeSelector:
+        hub.jupyter.org/pool-name: core-pool
       resources:
         requests:
           # FIXME: We want no guarantees here!!!
@@ -63,6 +67,8 @@ jupyterhub:
         limits:
           memory: 1Gi
     traefik:
+      nodeSelector:
+        hub.jupyter.org/pool-name: core-pool
       resources:
         requests:
           memory: 64Mi
@@ -128,6 +134,8 @@ jupyterhub:
   auth:
     type: dummy
   hub:
+    nodeSelector:
+      hub.jupyter.org/pool-name: core-pool
     networkPolicy:
       enabled: true
       ingress:

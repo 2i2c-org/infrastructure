@@ -76,7 +76,12 @@ dask-gateway:
   enabled: true  # Enabling dask-gateway will install Dask Gateway as a dependency.
   # Futher Dask Gateway configuration goes here
   # See https://github.com/dask/dask-gateway/blob/master/resources/helm/dask-gateway/values.yaml
+  controller:
+    nodeSelector:
+      hub.jupyter.org/pool-name: core-pool
   gateway:
+    nodeSelector:
+      hub.jupyter.org/pool-name: core-pool
     backend:
       scheduler:
         cores:
@@ -144,5 +149,7 @@ dask-gateway:
     auth:
       type: jupyterhub  # Use JupyterHub to authenticate with Dask Gateway
   traefik:
+    nodeSelector:
+      hub.jupyter.org/pool-name: core-pool
     service:
       type: ClusterIP  # Access Dask Gateway through JupyterHub. To access the Gateway from outside JupyterHub, this must be changed to a `LoadBalancer`.
