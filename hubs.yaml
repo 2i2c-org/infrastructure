@@ -142,8 +142,8 @@ clusters:
                   name: 2i2c
                   url: https://2i2c.org
                 funded_by:
-                  name: 2i2c
-                  url: https://2i2c.org
+                  name: JROST & ISI
+                  url: https://investinopen.org/blog/jrost-rapid-response-fund/
             auth:
               # Admin names need to be listed wtice here, unfortunately
               # 'whitelist' will be removed by next jupyterhub release
@@ -184,8 +184,8 @@ clusters:
                   name: 2i2c
                   url: https://2i2c.org
                 funded_by:
-                  name: 2i2c
-                  url: https://2i2c.org
+                  name: JROST & ISI
+                  url: https://investinopen.org/blog/jrost-rapid-response-fund/
             singleuser:
               memory:
                 limit: 2G
@@ -226,8 +226,8 @@ clusters:
                   name: 2i2c
                   url: https://2i2c.org
                 funded_by:
-                  name: 2i2c
-                  url: https://2i2c.org
+                  name: JROST & ISI
+                  url: https://investinopen.org/blog/jrost-rapid-response-fund/
             auth:
               # Admin names need to be listed wtice here, unfortunately
               # 'whitelist' will be removed by next jupyterhub release
@@ -268,8 +268,8 @@ clusters:
                   name: 2i2c
                   url: https://2i2c.org
                 funded_by:
-                  name: 2i2c
-                  url: https://2i2c.org
+                  name: JROST & ISI
+                  url: https://investinopen.org/blog/jrost-rapid-response-fund/
             auth:
               # Admin names need to be listed wtice here, unfortunately
               # 'whitelist' will be removed by next jupyterhub release
@@ -360,8 +360,8 @@ clusters:
                   name: 2i2c
                   url: https://2i2c.org
                 funded_by:
-                  name: 2i2c
-                  url: https://2i2c.org
+                  name: JROST & ISI
+                  url: https://investinopen.org/blog/jrost-rapid-response-fund/
             auth:
               # Admin names need to be listed wtice here, unfortunately
               # 'whitelist' will be removed by next jupyterhub release
