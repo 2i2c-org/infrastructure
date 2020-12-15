@@ -143,7 +143,7 @@ clusters:
                   url: https://2i2c.org
                 funded_by:
                   name: JROST & ISI
-                  url: https://investinopen.org/blog/jrost-rapid-response-fund/
+                  url: https://investinopen.org/blog/jrost-rapid-response-fund-awardees
             auth:
               # Admin names need to be listed wtice here, unfortunately
               # 'whitelist' will be removed by next jupyterhub release
@@ -185,7 +185,7 @@ clusters:
                   url: https://2i2c.org
                 funded_by:
                   name: JROST & ISI
-                  url: https://investinopen.org/blog/jrost-rapid-response-fund/
+                  url: https://investinopen.org/blog/jrost-rapid-response-fund-awardees
             singleuser:
               memory:
                 limit: 2G
@@ -227,7 +227,7 @@ clusters:
                   url: https://2i2c.org
                 funded_by:
                   name: JROST & ISI
-                  url: https://investinopen.org/blog/jrost-rapid-response-fund/
+                  url: https://investinopen.org/blog/jrost-rapid-response-fund-awardees
             auth:
               # Admin names need to be listed wtice here, unfortunately
               # 'whitelist' will be removed by next jupyterhub release
@@ -269,7 +269,7 @@ clusters:
                   url: https://2i2c.org
                 funded_by:
                   name: JROST & ISI
-                  url: https://investinopen.org/blog/jrost-rapid-response-fund/
+                  url: https://investinopen.org/blog/jrost-rapid-response-fund-awardees
             auth:
               # Admin names need to be listed wtice here, unfortunately
               # 'whitelist' will be removed by next jupyterhub release
@@ -361,7 +361,7 @@ clusters:
                   url: https://2i2c.org
                 funded_by:
                   name: JROST & ISI
-                  url: https://investinopen.org/blog/jrost-rapid-response-fund/
+                  url: https://investinopen.org/blog/jrost-rapid-response-fund-awardees
             auth:
               # Admin names need to be listed wtice here, unfortunately
               # 'whitelist' will be removed by next jupyterhub release
