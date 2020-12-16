@@ -142,7 +142,7 @@ clusters:
                   name: 2i2c
                   url: https://2i2c.org
                 funded_by:
-                  name: JROST & ISI
+                  name: JROST & IOI
                   url: https://investinopen.org/blog/jrost-rapid-response-fund-awardees
             auth:
               # Admin names need to be listed wtice here, unfortunately
@@ -184,7 +184,7 @@ clusters:
                   name: 2i2c
                   url: https://2i2c.org
                 funded_by:
-                  name: JROST & ISI
+                  name: JROST & IOI
                   url: https://investinopen.org/blog/jrost-rapid-response-fund-awardees
             singleuser:
               memory:
@@ -226,7 +226,7 @@ clusters:
                   name: 2i2c
                   url: https://2i2c.org
                 funded_by:
-                  name: JROST & ISI
+                  name: JROST & IOI
                   url: https://investinopen.org/blog/jrost-rapid-response-fund-awardees
             auth:
               # Admin names need to be listed wtice here, unfortunately
@@ -268,7 +268,7 @@ clusters:
                   name: 2i2c
                   url: https://2i2c.org
                 funded_by:
-                  name: JROST & ISI
+                  name: JROST & IOI
                   url: https://investinopen.org/blog/jrost-rapid-response-fund-awardees
             auth:
               # Admin names need to be listed wtice here, unfortunately
@@ -360,7 +360,7 @@ clusters:
                   name: 2i2c
                   url: https://2i2c.org
                 funded_by:
-                  name: JROST & ISI
+                  name: JROST & IOI
                   url: https://investinopen.org/blog/jrost-rapid-response-fund-awardees
             auth:
               # Admin names need to be listed wtice here, unfortunately
