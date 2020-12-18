@@ -101,7 +101,7 @@ jupyterhub:
       hub.jupyter.org/pool-name: user-pool
     image:
       name: set_automatically_by_automation
-      tag: 58761b2
+      tag: 127a4f2
     storage:
       type: static
       static:
