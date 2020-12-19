@@ -299,9 +299,6 @@ clusters:
           base-hub:
             jupyterhub:
               singleuser:
-                image:
-                  name: pangeo/pangeo-notebook
-                  tag: 2020.12.08
                 memory:
                   limit: 6G
                   guarantee: 4G
