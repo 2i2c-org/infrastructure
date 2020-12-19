@@ -23,6 +23,9 @@ dependencies:
   - astropy
   - galpy
   - catalystcoop.pudl
+  - dask==2020.12.0
+  - distributed==2020.12.0
+  - dask-gateway==0.9.0
 
   - pip
 
