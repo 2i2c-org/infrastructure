@@ -260,6 +260,22 @@ class Hub:
             f'sudo mkdir -p {self.nfs_share_name} && sudo chown 1000:1000 {self.nfs_share_name} && sudo ls -ld {self.nfs_share_name}'
         ])
 
+    def check_hub_health(self, test_notebook, service_api_token):
+        """
+        After each hub gets deployed, validate that it 'works'.
+
+        Automatically create a temporary user, start their server and run a test notebook, making
+        sure it runs to completion. Stop and delete the test server at the end. Try this steps twice
+        before declaring it a failure. If any of these steps fails, immediately halt further
+        deployments and error out.
+        """
+        hub_url = f'https://{self.spec["domain"]}'
+        # Export the hub health check service as an env var so that jupyterhub_client can read it.
+        os.environ['JUPYTERHUB_API_TOKEN']=service_api_token
+        subprocess.check_call([
+            'jhubctl', 'run', '--temporary-user', '--notebook', test_notebook, '--hub', hub_url
+        ])
+
 
     def apply_hub_template_fixes(self, generated_config, proxy_secret_key):
         """
@@ -273,6 +289,18 @@ class Hub:
         them in this function.
         """
         hub_template = self.spec['template']
+
+        # Generate a token for the hub health service
+        hub_health_token = hmac.new(proxy_secret_key, 'health-'.encode() + self.spec['name'].encode(), hashlib.sha256).hexdigest()
+        # Describe the hub health service
+        generated_config['jupyterhub']['hub'] = {
+            'services': {
+                'hub-health': {
+                    'apiToken': hub_health_token,
+                    'admin': True
+                }
+            }
+        }
 
         # FIXME: Have a templates config somewhere? Maybe in Chart.yaml
         # FIXME: This is a hack. Fix it.
@@ -291,15 +319,13 @@ class Hub:
                     }
                 }
             }
-            generated_config['base-hub']['jupyterhub']['hub'] = {
-                'services': {
-                    'dask-gateway': { 'apiToken': gateway_token }
-                }
+            generated_config['base-hub']['jupyterhub']['hub']['services'] = {
+                'dask-gateway': { 'apiToken': gateway_token }
             }
 
         return generated_config
 
-    def deploy(self, auth_provider, proxy_secret_key):
+    def deploy(self, auth_provider, proxy_secret_key, test_notebook=None):
         """
         Deploy this hub
         """
@@ -325,6 +351,27 @@ class Hub:
                 '-f', generated_values_file.name,
                 '-f', values_file.name,
             ]
+
             print(f"Running {' '.join(cmd)}")
             subprocess.check_call(cmd)
 
+            if test_notebook:
+                try_idx = 1
+                if self.spec['template'] != 'base-hub':
+                    service_api_token = generated_values["base-hub"]["jupyterhub"]["hub"]["services"]["hub-health"]["apiToken"]
+                else:
+                    service_api_token = generated_values["jupyterhub"]["hub"]["services"]["hub-health"]["apiToken"]
+                # Try 2 times before declaring it a failure
+                while try_idx <= 2:
+                    try:
+                        print(f"Validate hub health try {try_idx} started...")
+                        self.check_hub_health(test_notebook, service_api_token)
+                        print(f"Validate hub health try {try_idx} finished successfully. Hub is healthy!")
+                        break
+                    except subprocess.CalledProcessError:
+                        print(f"Hub check health try {try_idx} failed!")
+                        if try_idx == 1:
+                            print("Trying one more time...")
+                        try_idx += 1
+                if try_idx == 2:
+                    raise

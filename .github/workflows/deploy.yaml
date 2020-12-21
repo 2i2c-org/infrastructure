@@ -45,4 +45,5 @@ jobs:
           AUTH0_MANAGEMENT_CLIENT_SECRET: ${{ secrets.AUTH0_MANAGEMENT_CLIENT_SECRET }}
         run: |
           python3 -m pip install -r requirements.txt
-          python3 deploy.py deploy
+          curl -o test_notebook.ipynb https://raw.githubusercontent.com/costrouc/jupyterhub_client/master/tests/assets/notebook/simple.ipynb
+          python3 deploy.py deploy --test_notebook simple.ipynb --test_notebook test_notebook.ipynb
