@@ -46,4 +46,4 @@ jobs:
         run: |
           python3 -m pip install -r requirements.txt
           curl -o test_notebook.ipynb https://raw.githubusercontent.com/costrouc/jupyterhub_client/master/tests/assets/notebook/simple.ipynb
-          python3 deploy.py deploy --test_notebook simple.ipynb --test_notebook test_notebook.ipynb
+          python3 deploy.py deploy --test-notebook-path test_notebook.ipynb

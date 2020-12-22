@@ -39,7 +39,7 @@ def build():
             cluster.build_image()
 
 
-def deploy(cluster_name, hub_name, test_notebook):
+def deploy(cluster_name, hub_name, test_notebook_path):
     """
     Deploy all hubs in all clusters
     """
@@ -76,15 +76,15 @@ def deploy(cluster_name, hub_name, test_notebook):
             hubs = cluster.hubs
             if hub_name:
                 hub = next((hub for hub in hubs if hub.spec['name'] == hub_name), None)
-                hub.deploy(k, PROXY_SECRET_KEY, test_notebook)
+                hub.deploy(k, PROXY_SECRET_KEY, test_notebook_path)
             else:
                 for hub in hubs:
-                    hub.deploy(k, PROXY_SECRET_KEY, test_notebook)
+                    hub.deploy(k, PROXY_SECRET_KEY, test_notebook_path)
     else:
         for cluster in clusters:
             with cluster.auth():
                 for hub in cluster.hubs:
-                    hub.deploy(k, PROXY_SECRET_KEY, test_notebook)
+                    hub.deploy(k, PROXY_SECRET_KEY, test_notebook_path)
 
 
 def main():
@@ -96,14 +96,14 @@ def main():
 
     deploy_parser.add_argument('cluster_name', nargs="?")
     deploy_parser.add_argument('hub_name', nargs="?")
-    deploy_parser.add_argument('--test_notebook')
+    deploy_parser.add_argument('--test-notebook-path')
 
     args = argparser.parse_args()
 
     if args.action == 'build':
         build()
     elif args.action == 'deploy':
-        deploy(args.cluster_name, args.hub_name, args.test_notebook)
+        deploy(args.cluster_name, args.hub_name, args.test_notebook_path)
 
 if __name__ == '__main__':
     main()

@@ -260,7 +260,7 @@ class Hub:
             f'sudo mkdir -p {self.nfs_share_name} && sudo chown 1000:1000 {self.nfs_share_name} && sudo ls -ld {self.nfs_share_name}'
         ])
 
-    def check_hub_health(self, test_notebook, service_api_token):
+    def check_hub_health(self, test_notebook_path, service_api_token):
         """
         After each hub gets deployed, validate that it 'works'.
 
@@ -273,7 +273,7 @@ class Hub:
         # Export the hub health check service as an env var so that jupyterhub_client can read it.
         os.environ['JUPYTERHUB_API_TOKEN']=service_api_token
         subprocess.check_call([
-            'jhubctl', 'run', '--temporary-user', '--notebook', test_notebook, '--hub', hub_url
+            'jhubctl', 'run', '--temporary-user', '--notebook', test_notebook_path, '--hub', hub_url
         ])
 
 
@@ -325,7 +325,7 @@ class Hub:
 
         return generated_config
 
-    def deploy(self, auth_provider, proxy_secret_key, test_notebook=None):
+    def deploy(self, auth_provider, proxy_secret_key, test_notebook_path=None):
         """
         Deploy this hub
         """
@@ -355,7 +355,7 @@ class Hub:
             print(f"Running {' '.join(cmd)}")
             subprocess.check_call(cmd)
 
-            if test_notebook:
+            if test_notebook_path:
                 try_idx = 1
                 if self.spec['template'] != 'base-hub':
                     service_api_token = generated_values["base-hub"]["jupyterhub"]["hub"]["services"]["hub-health"]["apiToken"]
@@ -365,7 +365,7 @@ class Hub:
                 while try_idx <= 2:
                     try:
                         print(f"Validate hub health try {try_idx} started...")
-                        self.check_hub_health(test_notebook, service_api_token)
+                        self.check_hub_health(test_notebook_path, service_api_token)
                         print(f"Validate hub health try {try_idx} finished successfully. Hub is healthy!")
                         break
                     except subprocess.CalledProcessError:
