@@ -1,3 +1,4 @@
+import backoff
 from copy import deepcopy
 import hashlib
 import subprocess
@@ -11,6 +12,7 @@ from textwrap import dedent
 from build import last_modified_commit
 from contextlib import contextmanager
 from build import build_image
+from jupyterhub_client.execute import execute_notebook
 
 # Without `pure=True`, I get an exception about str / byte issues
 yaml = YAML(typ='safe', pure=True)
@@ -260,7 +262,20 @@ class Hub:
             f'sudo mkdir -p {self.nfs_share_name} && sudo chown 1000:1000 {self.nfs_share_name} && sudo ls -ld {self.nfs_share_name}'
         ])
 
-    def check_hub_health(self, test_notebook_path, service_api_token):
+    def failure_handler(details):
+        print(f"Hub check health validation failed {details['tries']} times, hub not healthy. Stopping further deployments")
+    def success_handler(details):
+        print(f"Hub health validation finished successfully. Hub is healthy!")
+
+    # Try 2 times before declaring it a failure
+    @backoff.on_exception(
+        backoff.expo,
+        ValueError,
+        on_success=success_handler,
+        on_giveup=failure_handler,
+        max_tries=2
+    )
+    async def check_hub_health(self, test_notebook_path, service_api_token):
         """
         After each hub gets deployed, validate that it 'works'.
 
@@ -272,10 +287,14 @@ class Hub:
         hub_url = f'https://{self.spec["domain"]}'
         # Export the hub health check service as an env var so that jupyterhub_client can read it.
         os.environ['JUPYTERHUB_API_TOKEN']=service_api_token
-        subprocess.check_call([
-            'jhubctl', 'run', '--temporary-user', '--notebook', test_notebook_path, '--hub', hub_url
-        ])
 
+        await execute_notebook(
+            hub_url,
+            test_notebook_path,
+            temporary_user=True,
+            create_user=True,
+            delete_user=True
+        )
 
     def apply_hub_template_fixes(self, generated_config, proxy_secret_key):
         """
@@ -325,7 +344,7 @@ class Hub:
 
         return generated_config
 
-    def deploy(self, auth_provider, proxy_secret_key, test_notebook_path=None):
+    async def deploy(self, auth_provider, proxy_secret_key, test_notebook_path=None):
         """
         Deploy this hub
         """
@@ -361,17 +380,4 @@ class Hub:
                     service_api_token = generated_values["base-hub"]["jupyterhub"]["hub"]["services"]["hub-health"]["apiToken"]
                 else:
                     service_api_token = generated_values["jupyterhub"]["hub"]["services"]["hub-health"]["apiToken"]
-                # Try 2 times before declaring it a failure
-                while try_idx <= 2:
-                    try:
-                        print(f"Validate hub health try {try_idx} started...")
-                        self.check_hub_health(test_notebook_path, service_api_token)
-                        print(f"Validate hub health try {try_idx} finished successfully. Hub is healthy!")
-                        break
-                    except subprocess.CalledProcessError:
-                        print(f"Hub check health try {try_idx} failed!")
-                        if try_idx == 1:
-                            print("Trying one more time...")
-                        try_idx += 1
-                if try_idx == 2:
-                    raise
+                await self.check_hub_health(test_notebook_path, service_api_token)
