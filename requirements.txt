@@ -1,4 +1,3 @@
-asyncio
 backoff
 ruamel.yaml
 auth0-python
