@@ -262,15 +262,29 @@ class Hub:
             f'sudo mkdir -p {self.nfs_share_name} && sudo chown 1000:1000 {self.nfs_share_name} && sudo ls -ld {self.nfs_share_name}'
         ])
 
+
+    def unset_env_var(self, env_var, old_env_var_value):
+        """
+        If the old environment variable's value exists, replace the current one with the old one
+        If the old environment variable's value does not exist, delete the current one
+        """
+
+        if env_var in os.environ:
+            del os.environ[env_var]
+        if (old_env_var_value is not None):
+            os.environ[env_var] = old_env_var_value
+
     def failure_handler(details):
         print(f"Hub check health validation failed {details['tries']} times, hub not healthy. Stopping further deployments")
+
     def success_handler(details):
         print(f"Hub health validation finished successfully. Hub is healthy!")
 
     # Try 2 times before declaring it a failure
     @backoff.on_exception(
         backoff.expo,
-        ValueError,
+        (ValueError,
+        TimeoutError),
         on_success=success_handler,
         on_giveup=failure_handler,
         max_tries=2
@@ -286,15 +300,20 @@ class Hub:
         """
         hub_url = f'https://{self.spec["domain"]}'
         # Export the hub health check service as an env var so that jupyterhub_client can read it.
-        os.environ['JUPYTERHUB_API_TOKEN']=service_api_token
+        orig_service_token = os.environ.get('JUPYTERHUB_API_TOKEN', None)
 
-        await execute_notebook(
-            hub_url,
-            test_notebook_path,
-            temporary_user=True,
-            create_user=True,
-            delete_user=True
-        )
+        try:
+            os.environ['JUPYTERHUB_API_TOKEN'] = service_api_token
+            await execute_notebook(
+                hub_url,
+                test_notebook_path,
+                temporary_user=True,
+                create_user=True,
+                delete_user=True
+            )
+        finally:
+            self.unset_env_var(service_api_token, orig_service_token)
+
 
     def apply_hub_template_fixes(self, generated_config, proxy_secret_key):
         """
@@ -380,4 +399,5 @@ class Hub:
                     service_api_token = generated_values["base-hub"]["jupyterhub"]["hub"]["services"]["hub-health"]["apiToken"]
                 else:
                     service_api_token = generated_values["jupyterhub"]["hub"]["services"]["hub-health"]["apiToken"]
+                print("Starting hub health validation...")
                 await self.check_hub_health(test_notebook_path, service_api_token)
