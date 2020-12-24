@@ -1,3 +1,4 @@
+import backoff
 from copy import deepcopy
 import hashlib
 import subprocess
@@ -11,6 +12,7 @@ from textwrap import dedent
 from build import last_modified_commit
 from contextlib import contextmanager
 from build import build_image
+from jupyterhub_client.execute import execute_notebook
 
 # Without `pure=True`, I get an exception about str / byte issues
 yaml = YAML(typ='safe', pure=True)
@@ -261,6 +263,58 @@ class Hub:
         ])
 
 
+    def unset_env_var(self, env_var, old_env_var_value):
+        """
+        If the old environment variable's value exists, replace the current one with the old one
+        If the old environment variable's value does not exist, delete the current one
+        """
+
+        if env_var in os.environ:
+            del os.environ[env_var]
+        if (old_env_var_value is not None):
+            os.environ[env_var] = old_env_var_value
+
+    def failure_handler(details):
+        print(f"Hub check health validation failed {details['tries']} times, hub not healthy. Stopping further deployments")
+
+    def success_handler(details):
+        print(f"Hub health validation finished successfully. Hub is healthy!")
+
+    # Try 2 times before declaring it a failure
+    @backoff.on_exception(
+        backoff.expo,
+        (ValueError,
+        TimeoutError),
+        on_success=success_handler,
+        on_giveup=failure_handler,
+        max_tries=2
+    )
+    async def check_hub_health(self, test_notebook_path, service_api_token):
+        """
+        After each hub gets deployed, validate that it 'works'.
+
+        Automatically create a temporary user, start their server and run a test notebook, making
+        sure it runs to completion. Stop and delete the test server at the end. Try this steps twice
+        before declaring it a failure. If any of these steps fails, immediately halt further
+        deployments and error out.
+        """
+        hub_url = f'https://{self.spec["domain"]}'
+        # Export the hub health check service as an env var so that jupyterhub_client can read it.
+        orig_service_token = os.environ.get('JUPYTERHUB_API_TOKEN', None)
+
+        try:
+            os.environ['JUPYTERHUB_API_TOKEN'] = service_api_token
+            await execute_notebook(
+                hub_url,
+                test_notebook_path,
+                temporary_user=True,
+                create_user=True,
+                delete_user=True
+            )
+        finally:
+            self.unset_env_var(service_api_token, orig_service_token)
+
+
     def apply_hub_template_fixes(self, generated_config, proxy_secret_key):
         """
         Modify generated_config based on what hub template we're using.
@@ -273,6 +327,18 @@ class Hub:
         them in this function.
         """
         hub_template = self.spec['template']
+
+        # Generate a token for the hub health service
+        hub_health_token = hmac.new(proxy_secret_key, 'health-'.encode() + self.spec['name'].encode(), hashlib.sha256).hexdigest()
+        # Describe the hub health service
+        generated_config['jupyterhub']['hub'] = {
+            'services': {
+                'hub-health': {
+                    'apiToken': hub_health_token,
+                    'admin': True
+                }
+            }
+        }
 
         # FIXME: Have a templates config somewhere? Maybe in Chart.yaml
         # FIXME: This is a hack. Fix it.
@@ -291,15 +357,13 @@ class Hub:
                     }
                 }
             }
-            generated_config['base-hub']['jupyterhub']['hub'] = {
-                'services': {
-                    'dask-gateway': { 'apiToken': gateway_token }
-                }
+            generated_config['base-hub']['jupyterhub']['hub']['services'] = {
+                'dask-gateway': { 'apiToken': gateway_token }
             }
 
         return generated_config
 
-    def deploy(self, auth_provider, proxy_secret_key):
+    async def deploy(self, auth_provider, proxy_secret_key, test_notebook_path=None):
         """
         Deploy this hub
         """
@@ -325,6 +389,15 @@ class Hub:
                 '-f', generated_values_file.name,
                 '-f', values_file.name,
             ]
+
             print(f"Running {' '.join(cmd)}")
             subprocess.check_call(cmd)
 
+            if test_notebook_path:
+                try_idx = 1
+                if self.spec['template'] != 'base-hub':
+                    service_api_token = generated_values["base-hub"]["jupyterhub"]["hub"]["services"]["hub-health"]["apiToken"]
+                else:
+                    service_api_token = generated_values["jupyterhub"]["hub"]["services"]["hub-health"]["apiToken"]
+                print("Starting hub health validation...")
+                await self.check_hub_health(test_notebook_path, service_api_token)

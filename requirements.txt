@@ -1,2 +1,4 @@
+backoff
 ruamel.yaml
 auth0-python
+git+https://github.com/GeorgianaElena/jupyterhub_client.git@c5299ccb16f3e85b1b1213d2f2016527a27393bf
