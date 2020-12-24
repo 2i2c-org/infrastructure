@@ -331,13 +331,10 @@ class Hub:
         # Generate a token for the hub health service
         hub_health_token = hmac.new(proxy_secret_key, 'health-'.encode() + self.spec['name'].encode(), hashlib.sha256).hexdigest()
         # Describe the hub health service
-        generated_config['jupyterhub']['hub'] = {
-            'services': {
-                'hub-health': {
-                    'apiToken': hub_health_token,
-                    'admin': True
-                }
-            }
+        generated_config.setdefault('jupyterhub', {}).setdefault('hub', {}).setdefault('services', {})['hub-health'] = {
+            'apiToken': hub_health_token,
+            'admin': True
+
         }
 
         # FIXME: Have a templates config somewhere? Maybe in Chart.yaml
@@ -357,9 +354,7 @@ class Hub:
                     }
                 }
             }
-            generated_config['base-hub']['jupyterhub']['hub']['services'] = {
-                'dask-gateway': { 'apiToken': gateway_token }
-            }
+            generated_config['base-hub']['jupyterhub']['hub']['services']['dask-gateway'] = { 'apiToken': gateway_token }
 
         return generated_config
 
