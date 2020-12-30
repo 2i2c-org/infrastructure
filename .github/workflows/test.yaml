@@ -43,5 +43,5 @@ jobs:
           AUTH0_MANAGEMENT_CLIENT_SECRET: ${{ secrets.AUTH0_MANAGEMENT_CLIENT_SECRET }}
         run: |
           python3 -m pip install -r requirements.txt
-          python3 -m pip install pytest
+          python3 -m pip install -r dev-requirements.txt
           python3 -m pytest -v -s ./tests
