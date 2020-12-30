@@ -40,7 +40,7 @@ clusters:
                   name: pangeo/pangeo-notebook
                   tag: 2020.12.08
               auth:
-                # Admin names need to be listed wtice here, unfortunately
+                # Admin names need to be listed twice here, unfortunately
                 # 'whitelist' will be removed by next jupyterhub release
                 whitelist:
                   users:
