@@ -1,8 +1,6 @@
-name: Deploy Hub
+name: Test deploy on staging
 
-on:
-  push:
-    branches: [ master ]
+on: pull_request
 
 jobs:
   build:
@@ -45,4 +43,5 @@ jobs:
           AUTH0_MANAGEMENT_CLIENT_SECRET: ${{ secrets.AUTH0_MANAGEMENT_CLIENT_SECRET }}
         run: |
           python3 -m pip install -r requirements.txt
-          python3 deploy.py deploy --skip-hub-health-test
+          pip install pytest
+          pytest -v -s ./tests
