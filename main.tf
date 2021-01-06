@@ -164,6 +164,19 @@ resource "azurerm_network_security_group" "nfs_vm" {
     destination_port_range     = "2049"
     destination_address_prefix = azurerm_network_interface.nfs_vm.private_ip_address
   }
+  #
+  # Prometheus from internal network
+  security_rule {
+    access                     = "Allow"
+    direction                  = "Inbound"
+    name                       = "prometheus"
+    priority                   = 102
+    protocol                   = "Tcp"
+    source_port_range          = "*"
+    source_address_prefix      = "*"
+    destination_port_range     = "9100"
+    destination_address_prefix = azurerm_network_interface.nfs_vm.private_ip_address
+  }
 }
 
 resource "azurerm_network_interface_security_group_association" "main" {
