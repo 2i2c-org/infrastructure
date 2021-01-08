@@ -208,45 +208,31 @@ clusters:
       - name: callysto
         cluster: 2i2c
         domain: callysto.pilot.2i2c.cloud
-        template: base-hub
+        template: ephemeral-hub
         auth0:
-          connection: google-oauth2
+          enabled: false
         config:
-          jupyterhub:
-            homepage:
-              templateVars:
-                org:
-                  name: Callysto Canada
-                  logo_url: https://callysto.ca/wp-content/uploads/2018/03/header-logo1.png
-                  url: https://callysto.ca/
-                designed_by:
-                  name: 2i2c
-                  url: https://2i2c.org
-                operated_by:
-                  name: 2i2c
-                  url: https://2i2c.org
-                funded_by:
-                  name: JROST & IOI
-                  url: https://investinopen.org/blog/jrost-rapid-response-fund-awardees
-            auth:
-              # Admin names need to be listed wtice here, unfortunately
-              # 'whitelist' will be removed by next jupyterhub release
-              whitelist:
-                users:
-                  - yuvipanda@gmail.com
-                  - colliand@gmail.com
-                  - ifallison@gmail.com
-                  - byron.chu@cybera.ca
-                  - choldgraf@gmail.com
-                  - georgiana.dolocan@gmail.com
-              admin:
-                users:
-                  - yuvipanda@gmail.com
-                  - colliand@gmail.com
-                  - ifallison@gmail.com
-                  - byron.chu@cybera.ca
-                  - choldgraf@gmail.com
-                  - georgiana.dolocan@gmail.com
+          base-hub:
+            jupyterhub:
+              homepage:
+                templateVars:
+                  org:
+                    name: Callysto Canada
+                    logo_url: https://callysto.ca/wp-content/uploads/2018/03/header-logo1.png
+                    url: https://callysto.ca/
+                  designed_by:
+                    name: 2i2c
+                    url: https://2i2c.org
+                  operated_by:
+                    name: 2i2c
+                    url: https://2i2c.org
+                  funded_by:
+                    name: JROST & IOI
+                    url: https://investinopen.org/blog/jrost-rapid-response-fund-awardees
+              hub:
+                # No more than 15 active servers at any given time
+                activeServerLimit: 15
+
       - name: peddie
         cluster: 2i2c
         domain: peddie.pilot.2i2c.cloud
