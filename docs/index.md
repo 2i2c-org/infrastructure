@@ -8,6 +8,7 @@ an entry there, and pushing that to github.
 ```{toctree}
 configure
 operate
+custom-image
 incidents/index
 ```
 
