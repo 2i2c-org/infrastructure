@@ -1,6 +1,7 @@
 import os
 import pytest
 
+
 @pytest.mark.asyncio
 async def test_hub_healthy(hub, api_token):
     hub_name = hub.spec["name"]
