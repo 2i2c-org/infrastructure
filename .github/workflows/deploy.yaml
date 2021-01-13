@@ -1,4 +1,4 @@
-name: Deploy Hub
+name: Deploy and Test Hubs
 
 on:
   push:
@@ -10,7 +10,7 @@ jobs:
 
     steps:
       - uses: actions/checkout@v2
-      - uses: GoogleCloudPlatform/github-actions/setup-gcloud@master
+      - uses: google-github-actions/setup-gcloud@master
         with:
           version: '290.0.1'
           # This is used for KMS only
@@ -37,12 +37,12 @@ jobs:
       - name: Setup dependencies
         run: |
           python3 -m pip install -r requirements.txt
+          python3 -m pip install -r dev-requirements.txt
 
-      - name: Deploy hubs
+      - name: Deploy and test hubs
         env:
           PROXY_SECRET_KEY: ${{ secrets.PROXY_SECRET_KEY }}
           AUTH0_MANAGEMENT_CLIENT_ID: ${{ secrets.AUTH0_MANAGEMENT_CLIENT_ID }}
           AUTH0_MANAGEMENT_CLIENT_SECRET: ${{ secrets.AUTH0_MANAGEMENT_CLIENT_SECRET }}
         run: |
-          python3 -m pip install -r requirements.txt
-          python3 deploy.py deploy --skip-hub-health-test
+          python3 deploy.py deploy
