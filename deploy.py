@@ -40,7 +40,7 @@ def build():
             cluster.build_image()
 
 
-async def deploy(cluster_name, hub_name, skip_hub_health_test):
+def deploy(cluster_name, hub_name, skip_hub_health_test):
     """
     Deploy all hubs in all clusters
     """
@@ -78,18 +78,18 @@ async def deploy(cluster_name, hub_name, skip_hub_health_test):
             hubs = cluster.hubs
             if hub_name:
                 hub = next((hub for hub in hubs if hub.spec['name'] == hub_name), None)
-                await hub.deploy(k, PROXY_SECRET_KEY, skip_hub_health_test)
+                hub.deploy(k, PROXY_SECRET_KEY, skip_hub_health_test)
             else:
                 for hub in hubs:
-                    await hub.deploy(k, PROXY_SECRET_KEY, skip_hub_health_test)
+                    hub.deploy(k, PROXY_SECRET_KEY, skip_hub_health_test)
     else:
         for cluster in clusters:
             with cluster.auth():
                 for hub in cluster.hubs:
-                    await hub.deploy(k, PROXY_SECRET_KEY, skip_hub_health_test)
+                    hub.deploy(k, PROXY_SECRET_KEY, skip_hub_health_test)
 
 
-async def main():
+def main():
     argparser = argparse.ArgumentParser()
     subparsers = argparser.add_subparsers(dest='action')
 
@@ -105,7 +105,7 @@ async def main():
     if args.action == 'build':
         build()
     elif args.action == 'deploy':
-        await deploy(args.cluster_name, args.hub_name, args.skip_hub_health_test)
+        deploy(args.cluster_name, args.hub_name, args.skip_hub_health_test)
 
 if __name__ == '__main__':
-    asyncio.run(main())
+    main()

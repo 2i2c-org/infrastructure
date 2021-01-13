@@ -5,6 +5,7 @@ import subprocess
 import hmac
 import os
 import json
+import pytest
 import tempfile
 from ruamel.yaml import YAML
 from ruamel.yaml.scanner import ScannerError
@@ -358,7 +359,7 @@ class Hub:
 
         return generated_config
 
-    async def deploy(self, auth_provider, proxy_secret_key, skip_hub_health_test=False):
+    def deploy(self, auth_provider, proxy_secret_key, skip_hub_health_test=False):
         """
         Deploy this hub
         """
@@ -389,20 +390,17 @@ class Hub:
             subprocess.check_call(cmd)
 
             if not skip_hub_health_test:
-                try:
-                    print("Starting hub health validation...")
-                    test_notebook_dir = os.path.join(os.path.dirname(__file__), 'tests/health-check-notebooks')
-                    for root, directories, files in os.walk(test_notebook_dir, topdown=False):
-                        for name in files:
-                            print(f"Running {name} test notebook...")
-                            test_notebook_path = os.path.join(root, name)
-                            try_idx = 1
-                            if self.spec['template'] != 'base-hub':
-                                service_api_token = generated_values["base-hub"]["jupyterhub"]["hub"]["services"]["hub-health"]["apiToken"]
-                            else:
-                                service_api_token = generated_values["jupyterhub"]["hub"]["services"]["hub-health"]["apiToken"]
-                            await self.check_hub_health(test_notebook_path, service_api_token)
-                    print("Hub is healthy!")
-                except Exception as e:
-                    print(f"Hub not healthy! Stopping further deployments. Exception was {e}.")
-                    raise
+
+                if self.spec['template'] != 'base-hub':
+                    service_api_token = generated_values["base-hub"]["jupyterhub"]["hub"]["services"]["hub-health"]["apiToken"]
+                else:
+                    service_api_token = generated_values["jupyterhub"]["hub"]["services"]["hub-health"]["apiToken"]
+
+                exit_code = pytest.main([
+                    "-s", "-v", "tests",
+                    "--hub-name", self.spec["name"],
+                    "--cluster-name", self.cluster.spec["name"],
+                    "--api-token", service_api_token
+                ])
+                if exit_code:
+                    raise(RuntimeError)

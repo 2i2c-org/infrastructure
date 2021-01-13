@@ -1,24 +1,18 @@
 import os
 import pytest
-from pathlib import Path
-import sys
-
-from .context import auth
-from .context import deploy
 
 @pytest.mark.asyncio
-async def test_hub_healthy():
-    AUTH0_DOMAIN = '2i2c.us.auth0.com'
-
-    k = auth.KeyProvider(AUTH0_DOMAIN, os.environ['AUTH0_MANAGEMENT_CLIENT_ID'], os.environ['AUTH0_MANAGEMENT_CLIENT_SECRET'])
-
-    PROXY_SECRET_KEY = bytes.fromhex(os.environ['PROXY_SECRET_KEY'])
-
-    config_file_path = Path(__file__).parent / "staging-hubs.yaml"
-    print(config_file_path)
-    clusters = deploy.parse_clusters(config_file_path)
-
-    for cluster in clusters:
-        with cluster.auth():
-            for hub in cluster.hubs:
-                await hub.deploy(k, PROXY_SECRET_KEY)
+async def test_hub_healthy(hub, api_token):
+    hub_name = hub.spec["name"]
+    try:
+        print(f"Starting hub {hub_name} health validation...")
+        test_notebook_dir = os.path.join(os.path.dirname(__file__), 'health-check-notebooks')
+        for root, directories, files in os.walk(test_notebook_dir, topdown=False):
+            for name in files:
+                print(f"Running {name} test notebook...")
+                test_notebook_path = os.path.join(root, name)
+                await hub.check_hub_health(test_notebook_path, api_token)
+        print(f"Hub {hub_name} is healthy!")
+    except Exception as e:
+        print(f"Hub {hub_name} not healthy! Stopping further deployments. Exception was {e}.")
+        raise(e)
