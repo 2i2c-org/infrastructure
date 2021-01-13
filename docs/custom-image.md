@@ -16,7 +16,7 @@ On top of whatever you are using, your image should match the following requirem
 
 There are a few options to help make this easier.
 
-1. [repo2docker](https://repo2docker.readthedocs.io) to build your image. 
+1. Use [repo2docker](https://repo2docker.readthedocs.io) to build your image. 
 2. Use a [pangeo curated docker image](https://github.com/pangeo-data/pangeo-docker-images/).
    They have an 'onbuild' variant of their images that lets you easily customize
    them.
