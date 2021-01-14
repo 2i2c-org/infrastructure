@@ -402,5 +402,5 @@ class Hub:
                     "--cluster-name", self.cluster.spec["name"],
                     "--api-token", service_api_token
                 ])
-                if exit_code:
+                if exit_code != 0:
                     raise(RuntimeError)
