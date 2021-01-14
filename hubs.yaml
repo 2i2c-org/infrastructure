@@ -645,7 +645,7 @@ clusters:
                 org:
                   name: Lassen College
                   logo_url: https://www.lassencollege.edu/about/governance/graphic-standards/Documents/District-Logo-Standards/LCC-Athletic-Logo-on-blk.jpg
-                  url: hhttp://www.lassencollege.edu/
+                  url: http://www.lassencollege.edu/
                 designed_by:
                   name: 2i2c
                   url: https://2i2c.org
@@ -729,7 +729,7 @@ clusters:
                 org:
                   name: Santa Barbara City College
                   logo_url: https://upload.wikimedia.org/wikipedia/commons/thumb/a/a6/Santa_Barbara_City_College.svg/1200px-Santa_Barbara_City_College.svg.png
-                  url: hhttps://www.sbcc.edu/
+                  url: https://www.sbcc.edu/
                 designed_by:
                   name: 2i2c
                   url: https://2i2c.org
