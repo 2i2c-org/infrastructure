@@ -632,3 +632,129 @@ clusters:
                   - ericvd@gmail.com
                   - jp@jamespercy.com
                   - colliand@gmail.com
+      - name: Lassen
+        cluster: cloudbank
+        domain: lassen.cloudbank.2i2c.cloud
+        template: base-hub
+        auth0:
+          connection: google-oauth2
+        config:
+          jupyterhub:
+            homepage:
+              templateVars:
+                org:
+                  name: Lassen College
+                  logo_url: https://www.lassencollege.edu/about/governance/graphic-standards/Documents/District-Logo-Standards/LCC-Athletic-Logo-on-blk.jpg
+                  url: hhttp://www.lassencollege.edu/
+                designed_by:
+                  name: 2i2c
+                  url: https://2i2c.org
+                operated_by:
+                  name: CloudBank
+                  url: http://cloudbank.org/
+                funded_by:
+                  name: CloudBank
+                  url: http://cloudbank.org/
+            auth:
+              # Admin names need to be listed wtice here, unfortunately
+              # 'whitelist' will be removed by next jupyterhub release
+              whitelist:
+                users:
+                  - yuvipanda@gmail.com
+                  - choldgraf@gmail.com
+                  - georgiana.dolocan@gmail.com
+                  - ericvd@gmail.com
+                  - jp@jamespercy.com
+                  - camacho@lassencollege.edu
+              admin:
+                users:
+                  - yuvipanda@gmail.com
+                  - choldgraf@gmail.com
+                  - georgiana.dolocan@gmail.com
+                  - ericvd@gmail.com
+                  - jp@jamespercy.com
+                  - camacho@lassencollege.edu
+      - name: clovis
+        cluster: cloudbank
+        domain: clovis.cloudbank.2i2c.cloud
+        template: base-hub
+        auth0:
+          connection: google-oauth2
+        config:
+          jupyterhub:
+            homepage:
+              templateVars:
+                org:
+                  name: Clovis College
+                  logo_url: https://www.scccd.edu/_files/images/clovis-logo-bubble-6.png
+                  url: https://www.cloviscollege.edu/
+                designed_by:
+                  name: 2i2c
+                  url: https://2i2c.org
+                operated_by:
+                  name: CloudBank
+                  url: http://cloudbank.org/
+                funded_by:
+                  name: CloudBank
+                  url: http://cloudbank.org/
+            auth:
+              # Admin names need to be listed wtice here, unfortunately
+              # 'whitelist' will be removed by next jupyterhub release
+              whitelist:
+                users:
+                  - yuvipanda@gmail.com
+                  - choldgraf@gmail.com
+                  - georgiana.dolocan@gmail.com
+                  - ericvd@gmail.com
+                  - jp@jamespercy.com
+                  - william.kerney@cloviscollege.edu
+              admin:
+                users:
+                  - yuvipanda@gmail.com
+                  - choldgraf@gmail.com
+                  - georgiana.dolocan@gmail.com
+                  - ericvd@gmail.com
+                  - jp@jamespercy.com
+                  - william.kerney@cloviscollege.edu
+      - name: sbcc
+        cluster: cloudbank
+        domain: sbcc.cloudbank.2i2c.cloud
+        template: base-hub
+        auth0:
+          connection: google-oauth2
+        config:
+          jupyterhub:
+            homepage:
+              templateVars:
+                org:
+                  name: Santa Barbara City College
+                  logo_url:https://upload.wikimedia.org/wikipedia/commons/thumb/a/a6/Santa_Barbara_City_College.svg/1200px-Santa_Barbara_City_College.svg.png
+                  url: hhttps://www.sbcc.edu/
+                designed_by:
+                  name: 2i2c
+                  url: https://2i2c.org
+                operated_by:
+                  name: CloudBank
+                  url: http://cloudbank.org/
+                funded_by:
+                  name: CloudBank
+                  url: http://cloudbank.org/
+            auth:
+              # Admin names need to be listed wtice here, unfortunately
+              # 'whitelist' will be removed by next jupyterhub release
+              whitelist:
+                users:
+                  - yuvipanda@gmail.com
+                  - choldgraf@gmail.com
+                  - georgiana.dolocan@gmail.com
+                  - ericvd@gmail.com
+                  - jp@jamespercy.com
+                  - nfguebels@pipeline.sbcc.edu
+              admin:
+                users:
+                  - yuvipanda@gmail.com
+                  - choldgraf@gmail.com
+                  - georgiana.dolocan@gmail.com
+                  - ericvd@gmail.com
+                  - jp@jamespercy.com
+                  - nfguebels@pipeline.sbcc.edu
