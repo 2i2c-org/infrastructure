@@ -728,7 +728,7 @@ clusters:
               templateVars:
                 org:
                   name: Santa Barbara City College
-                  logo_url:https://upload.wikimedia.org/wikipedia/commons/thumb/a/a6/Santa_Barbara_City_College.svg/1200px-Santa_Barbara_City_College.svg.png
+                  logo_url: https://upload.wikimedia.org/wikipedia/commons/thumb/a/a6/Santa_Barbara_City_College.svg/1200px-Santa_Barbara_City_College.svg.png
                   url: hhttps://www.sbcc.edu/
                 designed_by:
                   name: 2i2c
