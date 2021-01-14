@@ -632,7 +632,7 @@ clusters:
                   - ericvd@gmail.com
                   - jp@jamespercy.com
                   - colliand@gmail.com
-      - name: Lassen
+      - name: lassen
         cluster: cloudbank
         domain: lassen.cloudbank.2i2c.cloud
         template: base-hub
