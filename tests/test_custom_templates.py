@@ -21,7 +21,7 @@ def test_templates_loaded(hub):
     soup = BeautifulSoup(response.text, 'html.parser')
     images = soup.find_all('img')
     for image in images:
-        if image.has_attr("class") and image["class"] == "hub-logo":
+        if image.has_attr("class") and image["class"] == ["hub-logo"]:
             has_logo = True
             assert image['src'] == expected_logo_img
 
