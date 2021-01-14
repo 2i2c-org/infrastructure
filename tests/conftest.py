@@ -4,6 +4,9 @@ from pathlib import Path
 from .context import deploy
 
 def pytest_addoption(parser):
+    """
+    Define the commandline params that can be passed to pytest.
+    """
     parser.addoption(
         "--hub-name",
         action="store",
@@ -22,6 +25,12 @@ def pytest_addoption(parser):
 
 @pytest.fixture()
 def hub(request):
+    """
+    Fixture returning a Hub object.
+
+    Uses the hub-name and cluster-name cmd params to identify the hub
+    in hubs.yaml config file.
+    """
     hub_name = request.config.getoption("--hub-name")
     cluster_name = request.config.getoption("--cluster-name")
     
@@ -36,4 +45,7 @@ def hub(request):
 
 @pytest.fixture()
 def api_token(request):
+    """
+    Fixture returning the service api token passed as a cmd param.
+    """
     return request.config.getoption("--api-token")

@@ -4,6 +4,11 @@ import pytest
 
 @pytest.mark.asyncio
 async def test_hub_healthy(hub, api_token):
+    """
+    Tests the hub is healthy.
+
+    Executes some test notebooks on each hub and validates their output.
+    """
     hub_name = hub.spec["name"]
     try:
         print(f"Starting hub {hub_name} health validation...")
