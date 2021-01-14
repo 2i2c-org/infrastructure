@@ -5,6 +5,7 @@ import subprocess
 import hmac
 import os
 import json
+import pytest
 import tempfile
 from ruamel.yaml import YAML
 from ruamel.yaml.scanner import ScannerError
@@ -275,10 +276,10 @@ class Hub:
             os.environ[env_var] = old_env_var_value
 
     def failure_handler(details):
-        print(f"Hub check health validation failed {details['tries']} times, hub not healthy. Stopping further deployments")
+        print(f"Hub check health validation failed {details['tries']} times, hub not healthy.")
 
     def success_handler(details):
-        print(f"Hub health validation finished successfully. Hub is healthy!")
+        print(f"Notebook execution finished successfully.")
 
     # Try 2 times before declaring it a failure
     @backoff.on_exception(
@@ -358,7 +359,7 @@ class Hub:
 
         return generated_config
 
-    async def deploy(self, auth_provider, proxy_secret_key, test_notebook_path=None):
+    def deploy(self, auth_provider, proxy_secret_key, skip_hub_health_test=False):
         """
         Deploy this hub
         """
@@ -388,11 +389,18 @@ class Hub:
             print(f"Running {' '.join(cmd)}")
             subprocess.check_call(cmd)
 
-            if test_notebook_path:
-                try_idx = 1
+            if not skip_hub_health_test:
+
                 if self.spec['template'] != 'base-hub':
                     service_api_token = generated_values["base-hub"]["jupyterhub"]["hub"]["services"]["hub-health"]["apiToken"]
                 else:
                     service_api_token = generated_values["jupyterhub"]["hub"]["services"]["hub-health"]["apiToken"]
-                print("Starting hub health validation...")
-                await self.check_hub_health(test_notebook_path, service_api_token)
+
+                exit_code = pytest.main([
+                    "-s", "-v", "tests",
+                    "--hub-name", self.spec["name"],
+                    "--cluster-name", self.cluster.spec["name"],
+                    "--api-token", service_api_token
+                ])
+                if exit_code != 0:
+                    raise(RuntimeError)

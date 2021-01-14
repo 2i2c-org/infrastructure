@@ -17,11 +17,11 @@ from hub import Hub, Cluster
 # Without `pure=True`, I get an exception about str / byte issues
 yaml = YAML(typ='safe', pure=True)
 
-def parse_clusters():
+def parse_clusters(config_file_path):
     """
     Parse hubs.yaml file & return a list of Clusters
     """
-    with open(Path(__file__).parent / "hubs.yaml") as f:
+    with open(config_file_path) as f:
         config = yaml.load(f)
 
     return [
@@ -40,7 +40,7 @@ def build():
             cluster.build_image()
 
 
-async def deploy(cluster_name, hub_name, test_notebook_path):
+def deploy(cluster_name, hub_name, skip_hub_health_test):
     """
     Deploy all hubs in all clusters
     """
@@ -69,7 +69,8 @@ async def deploy(cluster_name, hub_name, test_notebook_path):
     # proxy.secretTokens have leaked. So let's be careful with that!
     PROXY_SECRET_KEY = bytes.fromhex(os.environ['PROXY_SECRET_KEY'])
 
-    clusters = parse_clusters()
+    config_file_path = Path(__file__).parent / "hubs.yaml"
+    clusters = parse_clusters(config_file_path)
 
     if cluster_name:
         cluster = next((cluster for cluster in clusters if cluster.spec['name'] == cluster_name), None)
@@ -77,18 +78,18 @@ async def deploy(cluster_name, hub_name, test_notebook_path):
             hubs = cluster.hubs
             if hub_name:
                 hub = next((hub for hub in hubs if hub.spec['name'] == hub_name), None)
-                await hub.deploy(k, PROXY_SECRET_KEY, test_notebook_path)
+                hub.deploy(k, PROXY_SECRET_KEY, skip_hub_health_test)
             else:
                 for hub in hubs:
-                    await hub.deploy(k, PROXY_SECRET_KEY, test_notebook_path)
+                    hub.deploy(k, PROXY_SECRET_KEY, skip_hub_health_test)
     else:
         for cluster in clusters:
             with cluster.auth():
                 for hub in cluster.hubs:
-                    await hub.deploy(k, PROXY_SECRET_KEY, test_notebook_path)
+                    hub.deploy(k, PROXY_SECRET_KEY, skip_hub_health_test)
 
 
-async def main():
+def main():
     argparser = argparse.ArgumentParser()
     subparsers = argparser.add_subparsers(dest='action')
 
@@ -97,14 +98,14 @@ async def main():
 
     deploy_parser.add_argument('cluster_name', nargs="?")
     deploy_parser.add_argument('hub_name', nargs="?")
-    deploy_parser.add_argument('--test-notebook-path')
+    deploy_parser.add_argument('--skip-hub-health-test', action='store_true')
 
     args = argparser.parse_args()
 
     if args.action == 'build':
         build()
     elif args.action == 'deploy':
-        await deploy(args.cluster_name, args.hub_name, args.test_notebook_path)
+        deploy(args.cluster_name, args.hub_name, args.skip_hub_health_test)
 
 if __name__ == '__main__':
-    asyncio.run(main())
+    main()
