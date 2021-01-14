@@ -397,7 +397,7 @@ class Hub:
                     service_api_token = generated_values["jupyterhub"]["hub"]["services"]["hub-health"]["apiToken"]
 
                 exit_code = pytest.main([
-                    "-s", "-v", "tests",
+                    "-v", "tests",
                     "--hub-name", self.spec["name"],
                     "--cluster-name", self.cluster.spec["name"],
                     "--api-token", service_api_token
