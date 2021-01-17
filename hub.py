@@ -338,6 +338,12 @@ class Hub:
 
         }
 
+        # Generate a token for the docs service
+        docs_token = hmac.new(proxy_secret_key, 'docs-'.encode() + self.spec['name'].encode(), hashlib.sha256).hexdigest()
+        # Register the docs service
+        generated_config['jupyterhub']['hub']['services']['docs'] = { 'apiToken': docs_token }
+
+
         # FIXME: Have a templates config somewhere? Maybe in Chart.yaml
         # FIXME: This is a hack. Fix it.
         if hub_template != 'base-hub':

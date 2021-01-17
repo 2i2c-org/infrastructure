@@ -193,3 +193,55 @@ jupyterhub:
             return super().start(*args, **kwargs)
 
         c.JupyterHub.spawner_class = CustomSpawner
+docsService:
+  enabled: true
+  nginx.conf: |
+    events {}
+    http {
+      server {
+          root /usr/local/share/docs;
+          location /foo {
+              autoindex on;
+          }
+      }
+    }
+  initContainers:
+    - name: docs-clone
+      image: alpine/git
+      args: 
+        - clone
+        - --depth=1
+        - --single-branch
+        - --
+        - https://github.com/2i2c-org/pilot-homepage
+        - /srv/docs
+      securityContext:
+          runAsUser: 1000
+          allowPrivilegeEscalation: False
+          readOnlyRootFilesystem: True
+      volumeMounts:
+        - name: docs
+          mountPath: /srv/docs
+  extraContainers:
+    - name: docs-sync
+      image: alpine/git
+      workingDir: /srv/docs
+      command: 
+        - /bin/sh
+      args:
+        - -c
+        - "while true; do git fetch origin; git reset --hard origin/master; sleep\
+          \ 5m; done"
+      securityContext:
+        runAsUser: 1000
+        allowPrivilegeEscalation: False
+        readOnlyRootFilesystem: True
+      volumeMounts:
+        - name: docs
+          mountPath: /srv/docs
+  extraVolumes:
+    - name: docs
+      emptyDir: {}
+  extraVolumeMounts:
+    - mountPath: /usr/local/share/docs
+      name: docs
