@@ -18,7 +18,6 @@ clusters:
         auth0:
           connection: google-oauth2
         config:
-          docsRepo: https://github.com/GeorgianaElena/blackbox-hub-monitoring
           jupyterhub:
             homepage:
               templateVars:

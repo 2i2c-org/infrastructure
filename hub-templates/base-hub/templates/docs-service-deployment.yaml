@@ -1,0 +1,65 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: docs-service
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: docs-service
+  template:
+    metadata:
+      labels:
+        app: docs-service
+    spec:
+      volumes:
+        - name: nginx-config
+          configMap:
+            name: nginx-docs-configmap
+        - name: docs
+          emptyDir: {}
+      initContainers:
+        - name: docs-clone
+          image: alpine/git
+          args: 
+            - clone
+            - --depth=1
+            - --single-branch
+            - --
+            - https://github.com/cloudacademy/static-website-example.git
+            - /srv/docs
+          securityContext:
+              runAsUser: 1000
+              allowPrivilegeEscalation: False
+              readOnlyRootFilesystem: True
+          volumeMounts:
+            - name: docs
+              mountPath: /srv/docs
+      containers:
+        - name: docs-sync
+          image: alpine/git
+          workingDir: /srv/docs
+          command: 
+            - /bin/sh
+          args:
+            - -c
+            - "while true; do git fetch origin; git reset --hard origin/master; sleep\
+              \ 5m; done"
+          securityContext:
+            runAsUser: 1000
+            allowPrivilegeEscalation: False
+            readOnlyRootFilesystem: True
+          volumeMounts:
+            - name: docs
+              mountPath: /srv/docs
+        - name: nginx-docs-service
+          image: nginx
+          command: ["/usr/sbin/nginx", "-g", "daemon off;"]
+          ports:
+            - containerPort: 12222
+          volumeMounts:
+          - name: nginx-config
+            mountPath: /etc/nginx/conf.d/default.conf
+            subPath: nginx.conf
+          - name: docs
+            mountPath: /etc/nginx/html/services/docs

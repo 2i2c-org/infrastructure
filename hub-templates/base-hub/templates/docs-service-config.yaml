@@ -1,0 +1,14 @@
+kind: ConfigMap
+apiVersion: v1
+metadata:
+  name: nginx-docs-configmap
+  labels:
+    app: docs-service
+data:
+  nginx.conf: |
+    server {
+      listen 12222;
+      location / {
+          root /etc/nginx/html;
+      }
+    }
