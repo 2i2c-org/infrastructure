@@ -233,6 +233,40 @@ clusters:
                 # No more than 15 active servers at any given time
                 activeServerLimit: 15
 
+      - name: paleohack20211
+        cluster: 2i2c
+        domain: paleohack2011.pilot.2i2c.cloud
+        template: base-hub
+        auth0:
+          connection: github
+        config:
+          jupyterhub:
+            homepage:
+              templateVars:
+                org:
+                  name: "[WIP] PaleoHack 2021"
+                  logo_url: https://2i2c.org/media/logo.png
+                  url: https://2i2c.org
+                designed_by:
+                  name: 2i2c
+                  url: https://2i2c.org
+                operated_by:
+                  name: 2i2c
+                  url: https://2i2c.org
+                funded_by:
+                  name: "[TBD]"
+                  url: https://example.com
+            auth:
+              # Admin names need to be listed wtice here, unfortunately
+              # 'whitelist' will be removed by next jupyterhub release
+              whitelist:
+                users:
+                  - yuvipanda@gmail.com
+                  - choldgraf
+              admin:
+                users:
+                  - yuvipanda
+                  - choldgraf
       - name: peddie
         cluster: 2i2c
         domain: peddie.pilot.2i2c.cloud
