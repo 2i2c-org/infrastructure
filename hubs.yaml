@@ -233,9 +233,9 @@ clusters:
                 # No more than 15 active servers at any given time
                 activeServerLimit: 15
 
-      - name: paleohack20211
+      - name: paleohack2021
         cluster: 2i2c
-        domain: paleohack2011.pilot.2i2c.cloud
+        domain: paleohack2021.pilot.2i2c.cloud
         template: base-hub
         auth0:
           connection: github
