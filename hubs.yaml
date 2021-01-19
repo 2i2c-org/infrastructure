@@ -261,7 +261,7 @@ clusters:
               # 'whitelist' will be removed by next jupyterhub release
               whitelist:
                 users:
-                  - yuvipanda@gmail.com
+                  - yuvipanda
                   - choldgraf
               admin:
                 users:
