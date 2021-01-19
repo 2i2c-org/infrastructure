@@ -263,10 +263,18 @@ clusters:
                 users:
                   - yuvipanda
                   - choldgraf
+                  - CommonClimate
+                  - khider
+                  - fzhu2e
+                  - alexkjames
               admin:
                 users:
                   - yuvipanda
                   - choldgraf
+                  - CommonClimate
+                  - khider
+                  - fzhu2e
+                  - alexkjames
       - name: peddie
         cluster: 2i2c
         domain: peddie.pilot.2i2c.cloud
