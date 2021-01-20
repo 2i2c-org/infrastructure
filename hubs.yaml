@@ -19,6 +19,8 @@ clusters:
           connection: google-oauth2
         config:
           jupyterhub:
+            docs:
+              repo: https://github.com/2i2c-org/2i2c-org.github.io.git
             homepage:
               templateVars:
                 org:
@@ -35,7 +37,7 @@ clusters:
                   name: 2i2c
                   url: https://2i2c.org
             auth:
-              # Admin names need to be listed wtice here, unfortunately
+              # Admin names need to be listed twice here, unfortunately
               # 'whitelist' will be removed by next jupyterhub release
               whitelist:
                 users:

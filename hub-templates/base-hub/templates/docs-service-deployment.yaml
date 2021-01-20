@@ -21,12 +21,14 @@ spec:
       initContainers:
         - name: docs-clone
           image: alpine/git
-          args: 
+          args:
             - clone
             - --depth=1
+            - -b
+            - gh-pages
             - --single-branch
             - --
-            - https://github.com/cloudacademy/static-website-example.git
+            - {{ .Values.jupyterhub.docs.repo }}
             - /srv/docs
           securityContext:
               runAsUser: 1000
