@@ -800,3 +800,43 @@ clusters:
                   - ericvd@gmail.com
                   - jp@jamespercy.com
                   - nfguebels@pipeline.sbcc.edu
+      - name: mills
+        cluster: cloudbank
+        domain: mills.cloudbank.2i2c.cloud
+        template: base-hub
+        auth0:
+          connection: google-oauth2
+        config:
+          jupyterhub:
+            homepage:
+              templateVars:
+                org:
+                  name: Mills College
+                  logo_url: https://upload.wikimedia.org/wikipedia/commons/4/40/Mills_College_wordmark.svg
+                  url: https://www.mills.edu/
+                designed_by:
+                  name: 2i2c
+                  url: https://2i2c.org
+                operated_by:
+                  name: CloudBank
+                  url: http://cloudbank.org/
+                funded_by:
+                  name: CloudBank
+                  url: http://cloudbank.org/
+            auth:
+              # Admin names need to be listed twice here, unfortunately
+              # 'whitelist' will be removed by next jupyterhub release
+              whitelist:
+                users:
+                  - yuvipanda@gmail.com
+                  - choldgraf@gmail.com
+                  - georgiana.dolocan@gmail.com
+                  - aculich@berkeley.edu
+                  - jpercy@berkeley.edu
+              admin:
+                users:
+                  - yuvipanda@gmail.com
+                  - choldgraf@gmail.com
+                  - georgiana.dolocan@gmail.com
+                  - aculich@berkeley.edu
+                  - jpercy@berkeley.edu
