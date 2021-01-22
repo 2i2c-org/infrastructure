@@ -327,6 +327,9 @@ clusters:
           base-hub:
             jupyterhub:
               singleuser:
+                image:
+                  name: catalystcoop/pilot-hub
+                  tag: 2021.01.22
                 memory:
                   limit: 6G
                   guarantee: 4G
