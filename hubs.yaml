@@ -826,17 +826,10 @@ clusters:
             auth:
               # Admin names need to be listed twice here, unfortunately
               # 'whitelist' will be removed by next jupyterhub release
-              whitelist:
-                users:
-                  - yuvipanda@gmail.com
-                  - choldgraf@gmail.com
-                  - georgiana.dolocan@gmail.com
-                  - aculich@berkeley.edu
-                  - jpercy@berkeley.edu
               admin:
                 users:
-                  - yuvipanda@gmail.com
-                  - choldgraf@gmail.com
-                  - georgiana.dolocan@gmail.com
+                  - yuvipanda@2i2c.org
+                  - choldgraf@2i2c.org
+                  - georgiana.dolocan@2i2c.org
                   - aculich@berkeley.edu
                   - jpercy@berkeley.edu
