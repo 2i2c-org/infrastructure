@@ -91,21 +91,38 @@ class KeyProvider:
         
         return client
 
-    def create_google_domain_rule(self):
+    def create_google_domain_rule(self, hub_name, domain_list, admin_list):
         gt = GetToken(self.domain)
         creds = gt.client_credentials(
             self.client_id, self.client_secret,
             f'https://{self.domain}/api/v2/'
         )
         rules = Rules(self.domain, creds['access_token'])
-        request_body = {
-            "name": "testRule",
-            "script":  "function emailDomainAllowedList(user, context, callback) {\n if (!user.email || !user.email_verified) {\n return callback(new UnauthorizedError('Access denied.')); \n }\n if(context.clientName !== 'mills'){\n return callback(null, user, context);\n }\n const domainAllowedList = ['mills.edu'];\n const userHasDomainAccess = domainAllowedList.some(function (domain) {\n const emailSplit = user.email.split('@');\n return emailSplit[emailSplit.length - 1].toLowerCase() === domain;\n });\n const adminList = [ 'yuvipanda@2i2c.org', 'yuvipanda@gmail.com', 'choldgraf@2i2c.org', 'georgianaelena@2i2c.org', 'georgiana.dolocan@gmail.com', 'aculich@berkeley.edu', 'jpercy@berkeley.edu' ]; // authorized admin users outside of the allowed domains\n const userIsAdmin = adminList.some(function (email) {\n return email === user.email;\n });\n const userHasAccess = userHasDomainAccess || userIsAdmin;\n if (!userHasAccess) {\n return callback(new UnauthorizedError('Access denied.'));\n }\n return callback(null, user, context);\n }",
-            "order": 2,
-            "enabled": False
-        }
-        resp = rules.create(request_body)
-        return resp
+        existing_rules = rules.all(enabled=False, fields=['name', 'order'])
+        print(existing_rules)
+
+        rule_name = "Domain allowed list for {} hub".format(hub_name)
+
+        rule_exists = False
+        rule_max_idx = 0
+        for rule in existing_rules:
+            if rule['order'] > rule_max_idx:
+                rule_max_idx = rule['order']
+            if rule['name'] == rule_name:
+                rule_exists = True
+
+        if not rule_exists:
+            rule = "function emailDomainAllowedList(user, context, callback) {{\n if (!user.email || !user.email_verified) {{\n return callback(new UnauthorizedError('Access denied.')); \n }}\n if(context.clientName !== {}){{\n return callback(null, user, context);\n }}\n const domainAllowedList = {};\n const userHasDomainAccess = domainAllowedList.some(function (domain) {{\n const emailSplit = user.email.split('@');\n return emailSplit[emailSplit.length - 1].toLowerCase() === domain;\n }});\n const adminList = {}; // authorized admin users outside of the allowed domains\n const userIsAdmin = adminList.some(function (email) {{\n return email === user.email;\n }});\n const userHasAccess = userHasDomainAccess || userIsAdmin;\n if (!userHasAccess) {{\n return callback(new UnauthorizedError('Access denied.'));\n }}\n return callback(null, user, context);\n }}"
+            request_body = {
+                "name": rule_name,
+                "script": rule.format(hub_name, domain_list, admin_list),
+                "order": rule_max_idx + 1,
+                "enabled": False
+            }
+            resp = rules.create(request_body)
+            return resp
+        else:
+            print("A rule with this name already exists. Skipping rule creation...")
 
         
     def get_client_creds(self, client, connection_name):

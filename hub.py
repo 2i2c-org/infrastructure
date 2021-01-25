@@ -241,11 +241,13 @@ class Hub:
             )
             generated_config['jupyterhub']['auth'] = auth_provider.get_client_creds(client, self.spec['auth0']['connection'])
 
-        # if self.spec["jupyterhub"]["auth"]["allowed_domains"]
-        r = auth_provider.create_google_domain_rule()
-        print("aaaaaaaaaaaaaaaaaaaaaaaaa")
-        print(r)
-
+        # If a domain is provided, make sure there is an auth0 rule that filters on this domain.
+        if self.spec['config']['jupyterhub']['auth']['allowed_domains']:
+            auth_provider.create_google_domain_rule(
+                self.spec['name'],
+                self.spec['config']['jupyterhub']['auth']['allowed_domains'],
+                self.spec['config']['jupyterhub']['auth']['admin']['users']
+            )
         return self.apply_hub_template_fixes(generated_config, proxy_secret_key)
 
 
@@ -392,7 +394,7 @@ class Hub:
             ]
 
             print(f"Running {' '.join(cmd)}")
-            # subprocess.check_call(cmd)
+            subprocess.check_call(cmd)
 
             if not skip_hub_health_test:
 

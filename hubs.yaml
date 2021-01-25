@@ -825,7 +825,7 @@ clusters:
                   url: http://cloudbank.org/
             auth:
               allowed_domains:
-                - hello
+                - mills.edu
               admin:
                 users:
                   - yuvipanda@2i2c.org
