@@ -1,6 +1,7 @@
 import requests
 from auth0.v3.management import Auth0
 from auth0.v3.authentication import GetToken
+from auth0.v3.management import Rules
 import os
 
 
@@ -89,6 +90,22 @@ class KeyProvider:
                 )
         
         return client
+
+    def create_google_domain_rule(self):
+        gt = GetToken(self.domain)
+        creds = gt.client_credentials(
+            self.client_id, self.client_secret,
+            f'https://{self.domain}/api/v2/'
+        )
+        rules = Rules(self.domain, creds['access_token'])
+        request_body = {
+            "name": "testRule",
+            "script":  "function emailDomainAllowedList(user, context, callback) {\n if (!user.email || !user.email_verified) {\n return callback(new UnauthorizedError('Access denied.')); \n }\n if(context.clientName !== 'mills'){\n return callback(null, user, context);\n }\n const domainAllowedList = ['mills.edu'];\n const userHasDomainAccess = domainAllowedList.some(function (domain) {\n const emailSplit = user.email.split('@');\n return emailSplit[emailSplit.length - 1].toLowerCase() === domain;\n });\n const adminList = [ 'yuvipanda@2i2c.org', 'yuvipanda@gmail.com', 'choldgraf@2i2c.org', 'georgianaelena@2i2c.org', 'georgiana.dolocan@gmail.com', 'aculich@berkeley.edu', 'jpercy@berkeley.edu' ]; // authorized admin users outside of the allowed domains\n const userIsAdmin = adminList.some(function (email) {\n return email === user.email;\n });\n const userHasAccess = userHasDomainAccess || userIsAdmin;\n if (!userHasAccess) {\n return callback(new UnauthorizedError('Access denied.'));\n }\n return callback(null, user, context);\n }",
+            "order": 2,
+            "enabled": False
+        }
+        resp = rules.create(request_body)
+        return resp
 
         
     def get_client_creds(self, client, connection_name):

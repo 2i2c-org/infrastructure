@@ -824,6 +824,8 @@ clusters:
                   name: CloudBank
                   url: http://cloudbank.org/
             auth:
+              allowed_domains:
+                - hello
               admin:
                 users:
                   - yuvipanda@2i2c.org
