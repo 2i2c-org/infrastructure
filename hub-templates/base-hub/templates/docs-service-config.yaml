@@ -7,7 +7,7 @@ metadata:
 data:
   nginx.conf: |
     server {
-      listen 12222;
+      listen 8080;
       location / {
           root /etc/nginx/html;
       }
