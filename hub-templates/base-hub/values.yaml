@@ -21,7 +21,7 @@ nfsPVC:
     shareName: /export/home-01
 
 docsService:
-  enabled: false
+  enabled: true
 
 jupyterhub:
   ingress:
