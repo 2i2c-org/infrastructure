@@ -354,6 +354,12 @@ class Hub:
         them in this function.
         """
         hub_template = self.spec['template']
+        hub_name = self.spec['name']
+
+        if hub_name == "mills":
+            generated_config['jupyterhub']['ingress']['hosts'].append("datahub.mills.edu")
+            generated_config['jupyterhub']['ingress']['tls']['hosts'].append("datahub.mills.edu")
+
 
         # Generate a token for the hub health service
         hub_health_token = hmac.new(proxy_secret_key, 'health-'.encode() + self.spec['name'].encode(), hashlib.sha256).hexdigest()
