@@ -1,3 +1,4 @@
+{{ if .Values.docsService.enabled }}
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -66,3 +67,4 @@ spec:
             subPath: nginx.conf
           - name: docs
             mountPath: /etc/nginx/html/services/docs
+{{ end }}
