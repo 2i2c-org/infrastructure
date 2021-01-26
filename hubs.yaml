@@ -20,7 +20,7 @@ clusters:
         config:
           jupyterhub:
             docs:
-              repo: https://github.com/2i2c-org/2i2c-org.github.io.git
+              repo: https://github.com/2i2c-org/2i2c-org.github.io
             homepage:
               templateVars:
                 org:
