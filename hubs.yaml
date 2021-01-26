@@ -13,7 +13,8 @@ clusters:
     hubs:
       - name: staging
         cluster: 2i2c
-        domain: staging.pilot.2i2c.cloud
+        domain:
+          - staging.pilot.2i2c.cloud
         template: base-hub
         auth0:
           connection: google-oauth2
@@ -49,7 +50,8 @@ clusters:
                   admin_users: *staging_users
       - name: dask-staging
         cluster: 2i2c
-        domain: dask-staging.pilot.2i2c.cloud
+        domain:
+          - dask-staging.pilot.2i2c.cloud
         template: daskhub
         auth0:
           connection: google-oauth2
@@ -86,7 +88,8 @@ clusters:
                     admin_users: *dask_staging_users
       - name: ephemeral
         cluster: 2i2c
-        domain: ephemeral.pilot.2i2c.cloud
+        domain:
+          - ephemeral.pilot.2i2c.cloud
         template: ephemeral-hub
         auth0:
           enabled: false
@@ -115,7 +118,8 @@ clusters:
                 events: false
       - name: pfw
         cluster: 2i2c
-        domain: pfw.pilot.2i2c.cloud
+        domain:
+          - pfw.pilot.2i2c.cloud
         template: base-hub
         auth0:
           connection: github
@@ -149,7 +153,8 @@ clusters:
                   admin_users: *pfw_users
       - name: wageningen
         cluster: 2i2c
-        domain: wur.pilot.2i2c.cloud
+        domain:
+          - wur.pilot.2i2c.cloud
         template: base-hub
         auth0:
           connection: google-oauth2
@@ -185,7 +190,8 @@ clusters:
                   admin_users: *wur_users
       - name: callysto
         cluster: 2i2c
-        domain: callysto.pilot.2i2c.cloud
+        domain:
+          - callysto.pilot.2i2c.cloud
         template: ephemeral-hub
         auth0:
           enabled: false
@@ -213,7 +219,8 @@ clusters:
 
       - name: paleohack2021
         cluster: 2i2c
-        domain: paleohack2021.pilot.2i2c.cloud
+        domain:
+          - paleohack2021.pilot.2i2c.cloud
         template: base-hub
         auth0:
           connection: github
@@ -248,7 +255,8 @@ clusters:
                   admin_users: *paleohack_users
       - name: peddie
         cluster: 2i2c
-        domain: peddie.pilot.2i2c.cloud
+        domain:
+          - peddie.pilot.2i2c.cloud
         template: base-hub
         auth0:
           connection: google-oauth2
@@ -282,7 +290,8 @@ clusters:
                   admin_users: *peddie_users
       - name: catalyst-cooperative
         cluster: pilot
-        domain: catalyst-cooperative.pilot.2i2c.cloud
+        domain:
+          - catalyst-cooperative.pilot.2i2c.cloud
         template: daskhub
         auth0:
           connection: google-oauth2
@@ -324,7 +333,8 @@ clusters:
                     admin_users: *catalyst_users
       - name: earthlab
         cluster: 2i2c
-        domain: earthlab.pilot.2i2c.cloud
+        domain:
+          - earthlab.pilot.2i2c.cloud
         template: base-hub
         auth0:
           connection: github
@@ -368,7 +378,8 @@ clusters:
         zone: us-central1-b
     hubs:
       - name: spelman
-        domain: spelman.cloudbank.2i2c.cloud
+        domain:
+          - spelman.cloudbank.2i2c.cloud
         template: base-hub
         auth0:
           connection: google-oauth2
@@ -403,7 +414,8 @@ clusters:
                   admin_users: *spelman_users
       - name: ccsf
         cluster: cloudbank
-        domain: ccsf.cloudbank.2i2c.cloud
+        domain:
+          - ccsf.cloudbank.2i2c.cloud
         template: base-hub
         auth0:
           connection: google-oauth2
@@ -439,7 +451,8 @@ clusters:
                   admin_users: *ccsf_users
       - name: elcamino
         cluster: cloudbank
-        domain: elcamino.cloudbank.2i2c.cloud
+        domain:
+          - elcamino.cloudbank.2i2c.cloud
         template: base-hub
         auth0:
           connection: google-oauth2
@@ -473,7 +486,8 @@ clusters:
                   admin_users: *elcamino_users
       - name: howard
         cluster: cloudbank
-        domain: howard.cloudbank.2i2c.cloud
+        domain:
+          - howard.cloudbank.2i2c.cloud
         template: base-hub
         auth0:
           connection: google-oauth2
@@ -508,7 +522,8 @@ clusters:
                   admin_users: *howard_users
       - name: skyline
         cluster: cloudbank
-        domain: skyline.cloudbank.2i2c.cloud
+        domain:
+          - skyline.cloudbank.2i2c.cloud
         template: base-hub
         auth0:
           connection: google-oauth2
@@ -543,7 +558,8 @@ clusters:
                   admin_users: *skyline_users
       - name: demo
         cluster: cloudbank
-        domain: demo.cloudbank.2i2c.cloud
+        domain:
+          - demo.cloudbank.2i2c.cloud
         template: base-hub
         auth0:
           connection: google-oauth2
@@ -577,7 +593,8 @@ clusters:
                   admin_users: *demo_users
       - name: lassen
         cluster: cloudbank
-        domain: lassen.cloudbank.2i2c.cloud
+        domain:
+          - lassen.cloudbank.2i2c.cloud
         template: base-hub
         auth0:
           connection: google-oauth2
@@ -611,7 +628,8 @@ clusters:
                   admin_users: *lassen_users
       - name: clovis
         cluster: cloudbank
-        domain: clovis.cloudbank.2i2c.cloud
+        domain:
+          - clovis.cloudbank.2i2c.cloud
         template: base-hub
         auth0:
           connection: google-oauth2
@@ -645,7 +663,8 @@ clusters:
               admin_users: *clovis_users
       - name: sbcc
         cluster: cloudbank
-        domain: sbcc.cloudbank.2i2c.cloud
+        domain:
+          - sbcc.cloudbank.2i2c.cloud
         template: base-hub
         auth0:
           connection: google-oauth2
@@ -679,7 +698,9 @@ clusters:
                   admin_users: *sbcc_users
       - name: mills
         cluster: cloudbank
-        domain: mills.cloudbank.2i2c.cloud
+        domain:
+          - mills.cloudbank.2i2c.cloud
+          - datahub.mills.edu
         template: base-hub
         auth0:
           connection: google-oauth2

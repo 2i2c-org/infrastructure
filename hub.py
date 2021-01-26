@@ -139,11 +139,11 @@ class Hub:
             'jupyterhub': {
                 'proxy': { 'secretToken': proxy_secret },
                 'ingress': {
-                    'hosts': [self.spec['domain']],
+                    'hosts': self.spec['domain'],
                     'tls': [
                         {
                             'secretName': f'https-auto-tls',
-                            'hosts': [self.spec['domain']]
+                            'hosts': self.spec['domain']
                         }
                     ]
 
@@ -235,9 +235,10 @@ class Hub:
         #
         # Allow explicilty ignoring auth0 setup
         if self.spec['auth0'].get('enabled', True):
+            auth0_org_domain = next(domain for domain in self.spec['domain'] if "2i2c" in domain)
             client = auth_provider.ensure_client(
                 self.spec['name'],
-                self.spec['domain'],
+                auth0_org_domain,
                 self.spec['auth0']['connection']
             )
             # FIXME: We're hardcoding GenericOAuthenticator here
@@ -303,10 +304,12 @@ class Hub:
         before declaring it a failure. If any of these steps fails, immediately halt further
         deployments and error out.
         """
-        hub_url = f'https://{self.spec["domain"]}'
+
+        hub_org_domain = next(domain for domain in self.spec['domain'] if "2i2c" in domain)
+        hub_url = f'https://{hub_org_domain}'
         username='deployment-service-check'
 
-        # Export the hub health check service as an env var so that jhub_client can read it.
+        # Export the hub health check service as an env var so that jupyterhub_client can read it.
         orig_service_token = os.environ.get('JUPYTERHUB_API_TOKEN', None)
 
         try:
@@ -355,10 +358,6 @@ class Hub:
         """
         hub_template = self.spec['template']
         hub_name = self.spec['name']
-
-        if hub_name == "mills":
-            generated_config['jupyterhub']['ingress']['hosts'].append("datahub.mills.edu")
-            generated_config['jupyterhub']['ingress']['tls']['hosts'].append("datahub.mills.edu")
 
 
         # Generate a token for the hub health service
