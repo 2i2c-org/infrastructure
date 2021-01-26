@@ -26,7 +26,7 @@ spec:
             - clone
             - --depth=1
             - -b
-            - gh-pages
+            - {{ .Values.jupyterhub.docs.branch }}
             - --single-branch
             - --
             - {{ .Values.jupyterhub.docs.repo }}

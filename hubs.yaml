@@ -21,6 +21,7 @@ clusters:
           jupyterhub:
             docs:
               repo: https://github.com/2i2c-org/2i2c-org.github.io
+              branch: gh-pages
             homepage:
               templateVars:
                 org:
