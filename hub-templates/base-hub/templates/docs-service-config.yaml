@@ -1,3 +1,4 @@
+{{ if .Values.docsService.enabled }}
 kind: ConfigMap
 apiVersion: v1
 metadata:
@@ -12,3 +13,4 @@ data:
           root /etc/nginx/html;
       }
     }
+{{ end }}
