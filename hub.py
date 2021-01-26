@@ -338,11 +338,7 @@ class Hub:
 
         }
 
-        # Generate a token for the docs service
-        docs_token = hmac.new(proxy_secret_key, f'docs-{self.spec["name"]}'.encode(), hashlib.sha256).hexdigest()
-        # Register the docs service
         generated_config['jupyterhub']['hub']['services']['docs'] = {
-            'apiToken': docs_token,
             'url': f'http://docs-service.{self.spec["name"]}'
         }
 
