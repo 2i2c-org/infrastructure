@@ -382,7 +382,7 @@ class Hub:
             generated_values_file.flush()
 
             cmd = [
-                'helm', 'upgrade', '--debug', '--install', '--create-namespace', '--wait',
+                'helm', 'upgrade', '--install', '--create-namespace', '--wait',
                 '--namespace', self.spec['name'],
                 self.spec['name'], os.path.join('hub-templates', self.spec['template']),
                 # Ordering matters here - config explicitly mentioned in `hubs.yaml` should take
