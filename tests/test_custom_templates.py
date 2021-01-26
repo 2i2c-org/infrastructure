@@ -10,7 +10,12 @@ def test_templates_loaded(hub):
     It checks that each hub's login page has their configured institutional logo.
     """
 
-    hub_org_domain = next(domain for domain in hub.spec['domain'] if "2i2c" in domain)
+    hub_org_domain = (
+        self.spec["domain"]
+        if isinstance(self.spec["domain"], str)
+        else next(domain for domain in self.spec["domain"] if "2i2c" in domain)
+    )
+
     url = f'https://{hub_org_domain}/hub/login'
 
     response = requests.get(url)

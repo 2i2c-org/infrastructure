@@ -139,11 +139,11 @@ class Hub:
             'jupyterhub': {
                 'proxy': { 'secretToken': proxy_secret },
                 'ingress': {
-                    'hosts': self.spec['domain'],
+                    'hosts': self.spec['domain'] if isinstance(self.spec['domain'], list) else [self.spec['domain']],
                     'tls': [
                         {
                             'secretName': f'https-auto-tls',
-                            'hosts': self.spec['domain']
+                            'hosts': self.spec['domain'] if isinstance(self.spec['domain'], list) else [self.spec['domain']]
                         }
                     ]
 
@@ -235,10 +235,17 @@ class Hub:
         #
         # Allow explicilty ignoring auth0 setup
         if self.spec['auth0'].get('enabled', True):
-            auth0_org_domain = next(domain for domain in self.spec['domain'] if "2i2c" in domain)
+
+            # hub.spec['auth0']['domain'] takes precedence over hub.spec['domain']
+            # If hub.spec['auth0']['domain'], then hub.spec['domain'] must NOT be a list
+            if self.spec['auth0']['domain']:
+                auth0_domain = self.spec['auth0']['domain']
+            elif isinstance(self.spec['domain'], str):
+                auth0_domain = self.spec['domain']
+
             client = auth_provider.ensure_client(
                 self.spec['name'],
-                auth0_org_domain,
+                auth0_domain,
                 self.spec['auth0']['connection']
             )
             # FIXME: We're hardcoding GenericOAuthenticator here
@@ -305,7 +312,11 @@ class Hub:
         deployments and error out.
         """
 
-        hub_org_domain = next(domain for domain in self.spec['domain'] if "2i2c" in domain)
+        hub_org_domain = (
+            self.spec["domain"]
+            if isinstance(self.spec["domain"], str)
+            else next(domain for domain in self.spec["domain"] if "2i2c" in domain)
+        )
         hub_url = f'https://{hub_org_domain}'
         username='deployment-service-check'
 
