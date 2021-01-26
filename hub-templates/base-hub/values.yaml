@@ -193,18 +193,3 @@ jupyterhub:
             return super().start(*args, **kwargs)
 
         c.JupyterHub.spawner_class = CustomSpawner
-      06-docs-nginx-service: |
-          # Adds JupyterHub service to make the docs available at
-          # {HUB_URL}/services/docs
-          import os
-          host = os.environ["DOCS_SERVICE_SERVICE_HOST"]
-          port = os.environ["DOCS_SERVICE_SERVICE_PORT"]
-          service_url = "http://{}:{}".format(host, port)
-          for service in c.JupyterHub.services:
-              if service["name"] == "docs":
-                  if not service.get("url", None):
-                      print("Adding docs service URL")
-                      service.setdefault("url", service_url)
-                  break
-          else:
-              print("Docs service not found. Did you set jupyterhub.hub.services.docs.apiToken?")
