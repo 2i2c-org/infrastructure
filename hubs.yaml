@@ -19,7 +19,8 @@ clusters:
           connection: google-oauth2
         config:
           jupyterhub:
-            docs:
+            docs_service:
+              enabled: true
               repo: https://github.com/2i2c-org/2i2c-org.github.io
               branch: gh-pages
             homepage:

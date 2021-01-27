@@ -20,9 +20,6 @@ nfsPVC:
     serverIP: nfs-server-01
     shareName: /export/home-01
 
-docsService:
-  enabled: true
-
 jupyterhub:
   ingress:
     enabled: true
