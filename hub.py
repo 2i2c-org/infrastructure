@@ -312,12 +312,12 @@ class Hub:
         deployments and error out.
         """
 
-        hub_org_domain = (
-            self.spec["domain"]
-            if isinstance(self.spec["domain"], str)
-            else next(domain for domain in self.spec["domain"] if "2i2c" in domain)
-        )
-        hub_url = f'https://{hub_org_domain}'
+        if self.spec['auth0']['domain']:
+                hub_domain = self.spec['auth0']['domain']
+            elif isinstance(self.spec['domain'], str):
+                hub_domain = self.spec['domain']
+
+        hub_url = f'https://{hub_domain}'
         username='deployment-service-check'
 
         # Export the hub health check service as an env var so that jupyterhub_client can read it.
