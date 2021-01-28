@@ -338,6 +338,11 @@ class Hub:
 
         }
 
+        generated_config['jupyterhub']['hub']['services']['docs'] = {
+            'url': f'http://docs-service.{self.spec["name"]}'
+        }
+
+
         # FIXME: Have a templates config somewhere? Maybe in Chart.yaml
         # FIXME: This is a hack. Fix it.
         if hub_template != 'base-hub':

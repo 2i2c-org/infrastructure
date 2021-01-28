@@ -19,6 +19,10 @@ clusters:
           connection: google-oauth2
         config:
           jupyterhub:
+            docs_service:
+              enabled: true
+              repo: https://github.com/2i2c-org/pilot-hubs.git
+              branch: gh-pages
             homepage:
               templateVars:
                 org:
@@ -35,7 +39,7 @@ clusters:
                   name: 2i2c
                   url: https://2i2c.org
             auth:
-              # Admin names need to be listed wtice here, unfortunately
+              # Admin names need to be listed twice here, unfortunately
               # 'whitelist' will be removed by next jupyterhub release
               whitelist:
                 users:
