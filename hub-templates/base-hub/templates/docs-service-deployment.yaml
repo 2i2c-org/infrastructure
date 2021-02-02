@@ -1,4 +1,4 @@
-{{ if .Values.jupyterhub.docs_service.enabled }}
+{{ if .Values.docs_service.enabled }}
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -26,10 +26,10 @@ spec:
             - clone
             - --depth=1
             - -b
-            - {{ .Values.jupyterhub.docs_service.branch }}
+            - {{ .Values.docs_service.branch }}
             - --single-branch
             - --
-            - {{ .Values.jupyterhub.docs_service.repo }}
+            - {{ .Values.docs_service.repo }}
             - /srv/docs
           securityContext:
               runAsUser: 1000
