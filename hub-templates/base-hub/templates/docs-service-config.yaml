@@ -1,4 +1,5 @@
-{{ if (.Values.docs_service) and (.Values.docs_service.enabled) }}
+{{ if .Values.docs_service }}
+{{ if .Values.docs_service.enabled }}
 kind: ConfigMap
 apiVersion: v1
 metadata:
@@ -14,4 +15,5 @@ data:
         root /etc/nginx/html;
       }
     }
+{{ end }}
 {{ end }}
