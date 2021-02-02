@@ -18,11 +18,11 @@ clusters:
         auth0:
           connection: google-oauth2
         config:
+          docs_service:
+            enabled: true
+            repo: https://github.com/2i2c-org/pilot-hubs.git
+            branch: gh-pages
           jupyterhub:
-            docs_service:
-              enabled: true
-              repo: https://github.com/2i2c-org/pilot-hubs.git
-              branch: gh-pages
             homepage:
               templateVars:
                 org:

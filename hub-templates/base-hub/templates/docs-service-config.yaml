@@ -1,4 +1,4 @@
-{{ if .Values.jupyterhub.docs_service.enabled }}
+{{ if .Values.docs_service.enabled }}
 kind: ConfigMap
 apiVersion: v1
 metadata:
