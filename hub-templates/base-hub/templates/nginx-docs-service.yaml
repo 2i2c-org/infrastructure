@@ -1,4 +1,5 @@
-{{ if (.Values.docs_service) and (.Values.docs_service.enabled) }}
+{{ if .Values.docs_service }}
+{{ if .Values.docs_service.enabled }}
 apiVersion: v1
 kind: Service
 metadata:
@@ -13,4 +14,5 @@ spec:
       targetPort: nginx-port
   selector:
     app: docs-service
+{{ end }}
 {{ end }}
