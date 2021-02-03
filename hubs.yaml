@@ -333,7 +333,7 @@ clusters:
               singleuser:
                 image:
                   name: catalystcoop/pilot-hub
-                  tag: 2021.01.22
+                  tag: 2021.02.03
                 memory:
                   limit: 6G
                   guarantee: 4G
