@@ -276,7 +276,7 @@ class Hub:
             os.environ[env_var] = old_env_var_value
 
     def failure_handler(details):
-        print(f"Hub check health validation failed {details['tries']} times, hub not healthy.")
+        print(f"Hub check health validation failed, hub not healthy.")
 
     def success_handler(details):
         print(f"Notebook execution finished successfully.")
@@ -288,7 +288,7 @@ class Hub:
         TimeoutError),
         on_success=success_handler,
         on_giveup=failure_handler,
-        max_tries=2
+        max_tries=1
     )
     async def check_hub_health(self, test_notebook_path, service_api_token):
         """
@@ -303,14 +303,20 @@ class Hub:
         # Export the hub health check service as an env var so that jupyterhub_client can read it.
         orig_service_token = os.environ.get('JUPYTERHUB_API_TOKEN', None)
 
+        # If the server takes more than 90s to start, then because it's in a `spawn pending` state,
+        # it cannot be deleted. Having a pre-defined username, will aSo the running server will get re-used when a new health check happens.
         try:
             os.environ['JUPYTERHUB_API_TOKEN'] = service_api_token
             await execute_notebook(
                 hub_url,
                 test_notebook_path,
-                temporary_user=True,
+                username='deployment-service-check',
+                server_creation_timeout=90,
+                kernel_execution_timeout=90, # This doesn't do anything yet
                 create_user=True,
-                delete_user=True
+                delete_user=True,
+                stop_server=True,
+                validate=True
             )
         finally:
             self.unset_env_var(service_api_token, orig_service_token)
