@@ -10,9 +10,14 @@ async def test_hub_healthy(hub, api_token):
     Executes some test notebooks on each hub and validates their output.
     """
     hub_name = hub.spec["name"]
+    hub_template = hub.spec["template"]
+
     try:
         print(f"Starting hub {hub_name} health validation...")
-        test_notebook_dir = os.path.join(os.path.dirname(__file__), 'health-check-notebooks')
+        if hub_template == "daskhub":
+            test_notebook_dir = os.path.join(os.path.dirname(__file__), 'dask-health-check-notebooks')
+        else:
+            test_notebook_dir = os.path.join(os.path.dirname(__file__), 'health-check-notebooks')
         for root, directories, files in os.walk(test_notebook_dir, topdown=False):
             for name in files:
                 print(f"Running {name} test notebook...")
