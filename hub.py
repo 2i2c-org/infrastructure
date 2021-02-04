@@ -314,11 +314,13 @@ class Hub:
             hub = JupyterHubAPI(hub_url)
             async with hub:
                 user = await hub.get_user(username)
-                if(user and user['server'] and not user['pending']):
-                    await hub.delete_server(username)
-                # If we don't delete the username too, than we won't be able to start a kernel for it.
-                # This is because we would have lost its api token from previous run.
-                await hub.delete_user(username)
+                if user:
+                    if user['server'] and not user['pending']:
+                        await hub.delete_server(username)
+
+                    # If we don't delete the user too, than we won't be able to start a kernel for it.
+                    # This is because we would have lost its api token from the previous run.
+                    await hub.delete_user(username)
 
             # Create a new user, start a server and execute a notebook
             await execute_notebook(
