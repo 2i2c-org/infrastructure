@@ -238,16 +238,17 @@ clusters:
                 funded_by:
                   name: "[TBD]"
                   url: https://example.com
-            config:
-              Authenticator:
-                allowed_users: &paleohack_users
-                  - yuvipanda
-                  - choldgraf
-                  - CommonClimate
-                  - khider
-                  - fzhu2e
-                  - alexkjames
-                admin_users: *paleohack_users
+            hub:
+              config:
+                Authenticator:
+                  allowed_users: &paleohack_users
+                    - yuvipanda
+                    - choldgraf
+                    - CommonClimate
+                    - khider
+                    - fzhu2e
+                    - alexkjames
+                  admin_users: *paleohack_users
       - name: peddie
         cluster: 2i2c
         domain: peddie.pilot.2i2c.cloud
@@ -347,14 +348,14 @@ clusters:
                 funded_by:
                   name: JROST & IOI
                   url: https://investinopen.org/blog/jrost-rapid-response-fund-awardees
-              hub:
-                config:
-                  Authenticator:
-                    allowed_users: &earthlab_users
-                      - yuvipanda
-                      - choldgraf
-                      - lwasser
-                    admin_users: *earthlab_users
+            hub:
+              config:
+                Authenticator:
+                  allowed_users: &earthlab_users
+                    - yuvipanda
+                    - choldgraf
+                    - lwasser
+                  admin_users: *earthlab_users
 
   - name: cloudbank
     image_repo:  "us-central1-docker.pkg.dev/cb-1003-1696/low-touch-hubs/base-user"
@@ -390,27 +391,18 @@ clusters:
                 funded_by:
                   name: CloudBank
                   url: http://cloudbank.org/
-            auth:
-              # Admin names need to be listed wtice here, unfortunately
-              # 'whitelist' will be removed by next jupyterhub release
-              whitelist:
-                users:
-                  - yuvipanda@gmail.com
-                  - colliand@gmail.com
-                  - choldgraf@gmail.com
-                  - georgiana.dolocan@gmail.com
-                  - ericvd@gmail.com
-                  - jp@jamespercy.com
-                  - jerry.volcy@gmail.com
-              admin:
-                users:
-                  - yuvipanda@gmail.com
-                  - colliand@gmail.com
-                  - choldgraf@gmail.com
-                  - georgiana.dolocan@gmail.com
-                  - ericvd@gmail.com
-                  - jp@jamespercy.com
-                  - jerry.volcy@gmail.com
+            hub:
+              config:
+                Authenticator:
+                  allowed_users: &spelman_users
+                    - yuvipanda@gmail.com
+                    - colliand@gmail.com
+                    - choldgraf@gmail.com
+                    - georgiana.dolocan@gmail.com
+                    - ericvd@gmail.com
+                    - jp@jamespercy.com
+                    - jerry.volcy@gmail.com
+                  admin_users: *spelman_users
       - name: ccsf
         cluster: cloudbank
         domain: ccsf.cloudbank.2i2c.cloud
@@ -434,29 +426,19 @@ clusters:
                 funded_by:
                   name: CloudBank
                   url: http://cloudbank.org/
-            auth:
-              # Admin names need to be listed wtice here, unfortunately
-              # 'whitelist' will be removed by next jupyterhub release
-              whitelist:
-                users:
-                  - yuvipanda@gmail.com
-                  - choldgraf@gmail.com
-                  - georgiana.dolocan@gmail.com
-                  - ericvd@gmail.com
-                  - jp@jamespercy.com
-                  - shawn.wiggins@mail.ccsf.edu
-                  - craig.persiko@mail.ccsf.edu
-                  - efuchs@mail.ccsf.edu
-              admin:
-                users:
-                  - yuvipanda@gmail.com
-                  - choldgraf@gmail.com
-                  - georgiana.dolocan@gmail.com
-                  - ericvd@gmail.com
-                  - jp@jamespercy.com
-                  - shawn.wiggins@mail.ccsf.edu
-                  - craig.persiko@mail.ccsf.edu
-                  - efuchs@mail.ccsf.edu
+            hub:
+              config:
+                Authenticator:
+                  allowed_users: &ccsf_users
+                    - yuvipanda@gmail.com
+                    - choldgraf@gmail.com
+                    - georgiana.dolocan@gmail.com
+                    - ericvd@gmail.com
+                    - jp@jamespercy.com
+                    - shawn.wiggins@mail.ccsf.edu
+                    - craig.persiko@mail.ccsf.edu
+                    - efuchs@mail.ccsf.edu
+                  admin_users: *ccsf_users
       - name: elcamino
         cluster: cloudbank
         domain: elcamino.cloudbank.2i2c.cloud
@@ -480,25 +462,17 @@ clusters:
                 funded_by:
                   name: CloudBank
                   url: http://cloudbank.org/
-            auth:
-              # Admin names need to be listed wtice here, unfortunately
-              # 'whitelist' will be removed by next jupyterhub release
-              whitelist:
-                users:
-                  - yuvipanda@gmail.com
-                  - choldgraf@gmail.com
-                  - georgiana.dolocan@gmail.com
-                  - ericvd@gmail.com
-                  - jp@jamespercy.com
-                  - solomonrussell@gmail.com
-              admin:
-                users:
-                  - yuvipanda@gmail.com
-                  - choldgraf@gmail.com
-                  - georgiana.dolocan@gmail.com
-                  - ericvd@gmail.com
-                  - jp@jamespercy.com
-                  - solomonrussell@gmail.com
+            hub:
+              config:
+                Authenticator:
+                  allowed_users: &elcamino_users
+                    - yuvipanda@gmail.com
+                    - choldgraf@gmail.com
+                    - georgiana.dolocan@gmail.com
+                    - ericvd@gmail.com
+                    - jp@jamespercy.com
+                    - solomonrussell@gmail.com
+                  admin_users: *elcamino_users
       - name: howard
         cluster: cloudbank
         domain: howard.cloudbank.2i2c.cloud
@@ -522,27 +496,18 @@ clusters:
                 funded_by:
                   name: CloudBank
                   url: http://cloudbank.org/
-            auth:
-              # Admin names need to be listed wtice here, unfortunately
-              # 'whitelist' will be removed by next jupyterhub release
-              whitelist:
-                users:
-                  - ericvd@berkeley.edu
-                  - choldgraf@gmail.com
-                  - yuvipanda@gmail.com
-                  - georgiana.dolocan@gmail.com
-                  - gwashington@scs.howard.edu
-                  - anthony.fgordon64@gmail.com
-                  - mikayladorange@gmail.com
-              admin:
-                users:
-                  - ericvd@berkeley.edu
-                  - choldgraf@gmail.com
-                  - yuvipanda@gmail.com
-                  - georgiana.dolocan@gmail.com
-                  - gwashington@scs.howard.edu
-                  - anthony.fgordon64@gmail.com
-                  - mikayladorange@gmail.com
+            hub:
+              config:
+                Authenticator:
+                  allowed_users: &howard_users
+                    - ericvd@berkeley.edu
+                    - choldgraf@gmail.com
+                    - yuvipanda@gmail.com
+                    - georgiana.dolocan@gmail.com
+                    - gwashington@scs.howard.edu
+                    - anthony.fgordon64@gmail.com
+                    - mikayladorange@gmail.com
+                  admin_users: *howard_users
       - name: skyline
         cluster: cloudbank
         domain: skyline.cloudbank.2i2c.cloud
@@ -566,27 +531,18 @@ clusters:
                 funded_by:
                   name: CloudBank
                   url: http://cloudbank.org/
-            auth:
-              # Admin names need to be listed wtice here, unfortunately
-              # 'whitelist' will be removed by next jupyterhub release
-              whitelist:
-                users:
-                  - yuvipanda@gmail.com
-                  - choldgraf@gmail.com
-                  - georgiana.dolocan@gmail.com
-                  - ericvd@gmail.com
-                  - jp@jamespercy.com
-                  - dhum1@my.smccd.edu
-                  - kayvanm@gmail.com
-              admin:
-                users:
-                  - yuvipanda@gmail.com
-                  - choldgraf@gmail.com
-                  - georgiana.dolocan@gmail.com
-                  - ericvd@gmail.com
-                  - jp@jamespercy.com
-                  - dhum1@my.smccd.edu
-                  - kayvanm@gmail.com
+            hub:
+              config:
+                Authenticator:
+                  allowed_users: &skyline_users
+                    - yuvipanda@gmail.com
+                    - choldgraf@gmail.com
+                    - georgiana.dolocan@gmail.com
+                    - ericvd@gmail.com
+                    - jp@jamespercy.com
+                    - dhum1@my.smccd.edu
+                    - kayvanm@gmail.com
+                  admin_users: *skyline_users
       - name: demo
         cluster: cloudbank
         domain: demo.cloudbank.2i2c.cloud
@@ -610,25 +566,17 @@ clusters:
                 funded_by:
                   name: CloudBank
                   url: http://cloudbank.org/
-            auth:
-              # Admin names need to be listed wtice here, unfortunately
-              # 'whitelist' will be removed by next jupyterhub release
-              whitelist:
-                users:
-                  - yuvipanda@gmail.com
-                  - choldgraf@gmail.com
-                  - georgiana.dolocan@gmail.com
-                  - ericvd@gmail.com
-                  - jp@jamespercy.com
-                  - colliand@gmail.com
-              admin:
-                users:
-                  - yuvipanda@gmail.com
-                  - choldgraf@gmail.com
-                  - georgiana.dolocan@gmail.com
-                  - ericvd@gmail.com
-                  - jp@jamespercy.com
-                  - colliand@gmail.com
+            hub:
+              config:
+                Authenticator:
+                  allowed_users: &demo_users
+                    - yuvipanda@gmail.com
+                    - choldgraf@gmail.com
+                    - georgiana.dolocan@gmail.com
+                    - ericvd@gmail.com
+                    - jp@jamespercy.com
+                    - colliand@gmail.com
+                  admin_users: *demo_users
       - name: lassen
         cluster: cloudbank
         domain: lassen.cloudbank.2i2c.cloud
@@ -652,25 +600,17 @@ clusters:
                 funded_by:
                   name: CloudBank
                   url: http://cloudbank.org/
-            auth:
-              # Admin names need to be listed wtice here, unfortunately
-              # 'whitelist' will be removed by next jupyterhub release
-              whitelist:
-                users:
-                  - yuvipanda@gmail.com
-                  - choldgraf@gmail.com
-                  - georgiana.dolocan@gmail.com
-                  - ericvd@gmail.com
-                  - jp@jamespercy.com
-                  - camacho@lassencollege.edu
-              admin:
-                users:
-                  - yuvipanda@gmail.com
-                  - choldgraf@gmail.com
-                  - georgiana.dolocan@gmail.com
-                  - ericvd@gmail.com
-                  - jp@jamespercy.com
-                  - camacho@lassencollege.edu
+            hub:
+              config:
+                Authenticator:
+                  allowed_users: &lassen_users
+                    - yuvipanda@gmail.com
+                    - choldgraf@gmail.com
+                    - georgiana.dolocan@gmail.com
+                    - ericvd@gmail.com
+                    - jp@jamespercy.com
+                    - camacho@lassencollege.edu
+                  admin_users: *lassen_users
       - name: clovis
         cluster: cloudbank
         domain: clovis.cloudbank.2i2c.cloud
@@ -694,25 +634,17 @@ clusters:
                 funded_by:
                   name: CloudBank
                   url: http://cloudbank.org/
-            auth:
-              # Admin names need to be listed wtice here, unfortunately
-              # 'whitelist' will be removed by next jupyterhub release
-              whitelist:
-                users:
-                  - yuvipanda@gmail.com
-                  - choldgraf@gmail.com
-                  - georgiana.dolocan@gmail.com
-                  - ericvd@gmail.com
-                  - jp@jamespercy.com
-                  - william.kerney@cloviscollege.edu
-              admin:
-                users:
-                  - yuvipanda@gmail.com
-                  - choldgraf@gmail.com
-                  - georgiana.dolocan@gmail.com
-                  - ericvd@gmail.com
-                  - jp@jamespercy.com
-                  - william.kerney@cloviscollege.edu
+            hub:
+              config:
+                Authenticator:
+                  allowed_users: &clovis_users
+                    - yuvipanda@gmail.com
+                    - choldgraf@gmail.com
+                    - georgiana.dolocan@gmail.com
+                    - ericvd@gmail.com
+                    - jp@jamespercy.com
+                    - william.kerney@cloviscollege.edu
+              admin_users: *clovis_users
       - name: sbcc
         cluster: cloudbank
         domain: sbcc.cloudbank.2i2c.cloud
@@ -736,25 +668,17 @@ clusters:
                 funded_by:
                   name: CloudBank
                   url: http://cloudbank.org/
-            auth:
-              # Admin names need to be listed wtice here, unfortunately
-              # 'whitelist' will be removed by next jupyterhub release
-              whitelist:
-                users:
-                  - yuvipanda@gmail.com
-                  - choldgraf@gmail.com
-                  - georgiana.dolocan@gmail.com
-                  - ericvd@gmail.com
-                  - jp@jamespercy.com
-                  - nfguebels@pipeline.sbcc.edu
-              admin:
-                users:
-                  - yuvipanda@gmail.com
-                  - choldgraf@gmail.com
-                  - georgiana.dolocan@gmail.com
-                  - ericvd@gmail.com
-                  - jp@jamespercy.com
-                  - nfguebels@pipeline.sbcc.edu
+            hub:
+              config:
+                Authenticator:
+                  allowed_users: &sbcc_users
+                    - yuvipanda@gmail.com
+                    - choldgraf@gmail.com
+                    - georgiana.dolocan@gmail.com
+                    - ericvd@gmail.com
+                    - jp@jamespercy.com
+                    - nfguebels@pipeline.sbcc.edu
+                  admin_users: *sbcc_users
       - name: mills
         cluster: cloudbank
         domain: mills.cloudbank.2i2c.cloud
@@ -778,13 +702,14 @@ clusters:
                 funded_by:
                   name: CloudBank
                   url: http://cloudbank.org/
-            auth:
-              admin:
-                users:
-                  - yuvipanda@2i2c.org
-                  - yuvipanda@gmail.com
-                  - choldgraf@2i2c.org
-                  - georgianaelena@2i2c.org
-                  - georgiana.dolocan@gmail.com
-                  - aculich@berkeley.edu
-                  - jpercy@berkeley.edu
+            hub:
+              config:
+                Authenticator:
+                  admin_users:
+                    - yuvipanda@2i2c.org
+                    - yuvipanda@gmail.com
+                    - choldgraf@2i2c.org
+                    - georgianaelena@2i2c.org
+                    - georgiana.dolocan@gmail.com
+                    - aculich@berkeley.edu
+                    - jpercy@berkeley.edu
