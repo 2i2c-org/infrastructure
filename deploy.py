@@ -34,7 +34,8 @@ def build():
     """
     Build and push all images for all clusters
     """
-    clusters = parse_clusters()
+    config_file_path = Path(__file__).parent / "hubs.yaml"
+    clusters = parse_clusters(config_file_path)
     for cluster in clusters:
         with cluster.auth():
             cluster.build_image()
