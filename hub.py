@@ -154,6 +154,7 @@ class Hub:
                     },
                 },
                 'hub': {
+                    'config': {},
                     'initContainers': [
                         {
                             'name': 'templates-clone',
@@ -239,7 +240,10 @@ class Hub:
                 self.spec['domain'],
                 self.spec['auth0']['connection']
             )
-            generated_config['jupyterhub']['auth'] = auth_provider.get_client_creds(client, self.spec['auth0']['connection'])
+            # FIXME: We're hardcoding GenericOAuthenticator here
+            # We should *not*. We need dictionary merging in code, so
+            # these can all exist fine.
+            generated_config['jupyterhub']['hub']['config']['GenericOAuthenticator'] = auth_provider.get_client_creds(client, self.spec['auth0']['connection'])
 
         return self.apply_hub_template_fixes(generated_config, proxy_secret_key)
 
@@ -404,7 +408,7 @@ class Hub:
             generated_values_file.flush()
 
             cmd = [
-                'helm', 'upgrade', '--install', '--create-namespace', '--wait',
+                'helm', 'upgrade', '--install', '--create-namespace', '--wait', '--debug', '--dry-run',
                 '--namespace', self.spec['name'],
                 self.spec['name'], os.path.join('hub-templates', self.spec['template']),
                 # Ordering matters here - config explicitly mentioned in `hubs.yaml` should take

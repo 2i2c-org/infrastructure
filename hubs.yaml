@@ -38,21 +38,15 @@ clusters:
                 funded_by:
                   name: 2i2c
                   url: https://2i2c.org
-            auth:
-              # Admin names need to be listed twice here, unfortunately
-              # 'whitelist' will be removed by next jupyterhub release
-              whitelist:
-                users:
-                  - yuvipanda@gmail.com
-                  - colliand@gmail.com
-                  - choldgraf@gmail.com
-                  - georgiana.dolocan@gmail.com
-              admin:
-                users:
-                  - yuvipanda@gmail.com
-                  - colliand@gmail.com
-                  - choldgraf@gmail.com
-                  - georgiana.dolocan@gmail.com
+            hub:
+              config:
+                Authenticator:
+                  allowed_users: &staging_users
+                    - yuvipanda@gmail.com
+                    - colliand@gmail.com
+                    - choldgraf@gmail.com
+                    - georgiana.dolocan@gmail.com
+                  admin_users: *staging_users
       - name: dask-staging
         cluster: 2i2c
         domain: dask-staging.pilot.2i2c.cloud
@@ -81,21 +75,15 @@ clusters:
                 image:
                   name: pangeo/pangeo-notebook
                   tag: 2020.12.08
-              auth:
-                # Admin names need to be listed twice here, unfortunately
-                # 'whitelist' will be removed by next jupyterhub release
-                whitelist:
-                  users:
-                    - yuvipanda@gmail.com
-                    - colliand@gmail.com
-                    - choldgraf@gmail.com
-                    - georgiana.dolocan@gmail.com
-                admin:
-                  users:
-                    - yuvipanda@gmail.com
-                    - colliand@gmail.com
-                    - choldgraf@gmail.com
-                    - georgiana.dolocan@gmail.com
+              hub:
+                config:
+                  Authenticator:
+                    allowed_users: &dask_staging_users
+                      - yuvipanda@gmail.com
+                      - colliand@gmail.com
+                      - choldgraf@gmail.com
+                      - georgiana.dolocan@gmail.com
+                    admin_users: *dask_staging_users
       - name: ephemeral
         cluster: 2i2c
         domain: ephemeral.pilot.2i2c.cloud
@@ -148,25 +136,17 @@ clusters:
                 funded_by:
                   name: JROST & IOI
                   url: https://investinopen.org/blog/jrost-rapid-response-fund-awardees
-            auth:
-              # Admin names need to be listed wtice here, unfortunately
-              # 'whitelist' will be removed by next jupyterhub release
-              whitelist:
-                users:
-                  - colliand
-                  - alessandromariaselvitella
-                  - fosterk86
-                  - choldgraf
-                  - yuvipanda
-                  - GeorgianaElena
-              admin:
-                users:
-                  - colliand
-                  - alessandromariaselvitella
-                  - fosterk86
-                  - choldgraf
-                  - yuvipanda
-                  - GeorgianaElena
+            hub:
+              config:
+                Authenticator:
+                  allowed_users: &pfw_users
+                    - colliand
+                    - alessandromariaselvitella
+                    - fosterk86
+                    - choldgraf
+                    - yuvipanda
+                    - GeorgianaElena
+                  admin_users: *pfw_users
       - name: wageningen
         cluster: 2i2c
         domain: wur.pilot.2i2c.cloud
@@ -194,21 +174,15 @@ clusters:
               memory:
                 limit: 2G
                 guarantee: 2G
-            auth:
-              # Admin names need to be listed wtice here, unfortunately
-              # 'whitelist' will be removed by next jupyterhub release
-              whitelist:
-                users:
-                  - yuvipanda@gmail.com
-                  - choldgraf@gmail.com
-                  - chielvanheerwaarden@gmail.com
-                  - georgiana.dolocan@gmail.com
-              admin:
-                users:
-                  - yuvipanda@gmail.com
-                  - choldgraf@gmail.com
-                  - chielvanheerwaarden@gmail.com
-                  - georgiana.dolocan@gmail.com
+            hub:
+              config:
+                Authenticator:
+                  allowed_users: &wur_users
+                    - yuvipanda@gmail.com
+                    - choldgraf@gmail.com
+                    - chielvanheerwaarden@gmail.com
+                    - georgiana.dolocan@gmail.com
+                  admin_users: *wur_users
       - name: callysto
         cluster: 2i2c
         domain: callysto.pilot.2i2c.cloud
@@ -245,6 +219,10 @@ clusters:
           connection: github
         config:
           jupyterhub:
+            singleuser:
+              image:
+                name:  quay.io/2i2c/paleohack-2021
+                tag: 825b105c3425
             homepage:
               templateVars:
                 org:
@@ -260,25 +238,16 @@ clusters:
                 funded_by:
                   name: "[TBD]"
                   url: https://example.com
-            auth:
-              # Admin names need to be listed wtice here, unfortunately
-              # 'whitelist' will be removed by next jupyterhub release
-              whitelist:
-                users:
+            config:
+              Authenticator:
+                allowed_users: &paleohack_users
                   - yuvipanda
                   - choldgraf
                   - CommonClimate
                   - khider
                   - fzhu2e
                   - alexkjames
-              admin:
-                users:
-                  - yuvipanda
-                  - choldgraf
-                  - CommonClimate
-                  - khider
-                  - fzhu2e
-                  - alexkjames
+                admin_users: *paleohack_users
       - name: peddie
         cluster: 2i2c
         domain: peddie.pilot.2i2c.cloud
@@ -302,25 +271,17 @@ clusters:
                 funded_by:
                   name: JROST & IOI
                   url: https://investinopen.org/blog/jrost-rapid-response-fund-awardees
-            auth:
-              # Admin names need to be listed wtice here, unfortunately
-              # 'whitelist' will be removed by next jupyterhub release
-              whitelist:
-                users:
-                  - yuvipanda@gmail.com
-                  - choldgraf@gmail.com
-                  - georgiana.dolocan@gmail.com
-                  - rbennett@peddie.org
-                  - msawula@peddie.org
-                  - ericvd@berkeley.edu
-              admin:
-                users:
-                  - yuvipanda@gmail.com
-                  - choldgraf@gmail.com
-                  - georgiana.dolocan@gmail.com
-                  - rbennett@peddie.org
-                  - msawula@peddie.org
-                  - ericvd@berkeley.edu
+            hub:
+              config:
+                Authenticator:
+                  allowed_users: &peddie_users
+                    - yuvipanda@gmail.com
+                    - choldgraf@gmail.com
+                    - georgiana.dolocan@gmail.com
+                    - rbennett@peddie.org
+                    - msawula@peddie.org
+                    - ericvd@berkeley.edu
+                  admin_users: *peddie_users
       - name: catalyst-cooperative
         cluster: pilot
         domain: catalyst-cooperative.pilot.2i2c.cloud
@@ -352,25 +313,17 @@ clusters:
                   funded_by:
                     name: CloudBank
                     url: http://cloudbank.org/
-              auth:
-                # Admin names need to be listed wtice here, unfortunately
-                # 'whitelist' will be removed by next jupyterhub release
-                whitelist:
-                  users:
-                    - choldgraf@gmail.com
-                    - yuvipanda@gmail.com
-                    - georgiana.dolocan@gmail.com
-                    - zane.selvans@catalyst.coop
-                    - cgosnell@catalyst.coop
-                    - colliand@gmail.com
-                admin:
-                  users:
-                    - choldgraf@gmail.com
-                    - yuvipanda@gmail.com
-                    - georgiana.dolocan@gmail.com
-                    - zane.selvans@catalyst.coop
-                    - cgosnell@catalyst.coop
-                    - colliand@gmail.com
+              hub:
+                config:
+                  Authenticator:
+                    allowed_users: &catalyst_users
+                      - choldgraf@gmail.com
+                      - yuvipanda@gmail.com
+                      - georgiana.dolocan@gmail.com
+                      - zane.selvans@catalyst.coop
+                      - cgosnell@catalyst.coop
+                      - colliand@gmail.com
+                    admin_users: *catalyst_users
       - name: earthlab
         cluster: 2i2c
         domain: earthlab.pilot.2i2c.cloud
@@ -394,19 +347,14 @@ clusters:
                 funded_by:
                   name: JROST & IOI
                   url: https://investinopen.org/blog/jrost-rapid-response-fund-awardees
-            auth:
-              # Admin names need to be listed wtice here, unfortunately
-              # 'whitelist' will be removed by next jupyterhub release
-              whitelist:
-                users:
-                  - yuvipanda
-                  - choldgraf
-                  - lwasser
-              admin:
-                users:
-                  - yuvipanda
-                  - choldgraf
-                  - lwasser
+              hub:
+                config:
+                  Authenticator:
+                    allowed_users: &earthlab_users
+                      - yuvipanda
+                      - choldgraf
+                      - lwasser
+                    admin_users: *earthlab_users
 
   - name: cloudbank
     image_repo:  "us-central1-docker.pkg.dev/cb-1003-1696/low-touch-hubs/base-user"

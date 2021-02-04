@@ -131,9 +131,13 @@ jupyterhub:
         - ports:
             - port: 443
               protocol: TCP
-  auth:
-    type: dummy
   hub:
+    config:
+      JupyterHub:
+        authenticator_class: oauthenticator.generic.GenericOAuthenticator
+    image:
+      name: quay.io/2i2c/pilot-hub
+      tag: '0.0.1-n311.h51f02bb'
     nodeSelector:
       hub.jupyter.org/pool-name: core-pool
     networkPolicy:
