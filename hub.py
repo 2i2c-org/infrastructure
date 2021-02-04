@@ -305,21 +305,22 @@ class Hub:
         # Export the hub health check service as an env var so that jupyterhub_client can read it.
         orig_service_token = os.environ.get('JUPYTERHUB_API_TOKEN', None)
 
-        # Cleanup: if the server takes more than 90s to start, then because it's in a `spawn pending` state,
-        # it cannot be deleted. So we delete it in the next iteration, before starting a new one,
-        # so that we don't have more than one running.
-        hub = JupyterHubAPI(hub_url)
-        async with hub:
-            user = await hub.get_user(username)
-            if(user and user['server'] and not user['pending']):
-                await hub.delete_server(username)
-            # If we don't delete the username too, than we won't be able to start a kernel for it.
-            # This is because we would have lost its api token from previous run.
-            await hub.delete_user(username)
-
-        # Create a new user, start a server and execute a notebook
         try:
             os.environ['JUPYTERHUB_API_TOKEN'] = service_api_token
+
+            # Cleanup: if the server takes more than 90s to start, then because it's in a `spawn pending` state,
+            # it cannot be deleted. So we delete it in the next iteration, before starting a new one,
+            # so that we don't have more than one running.
+            hub = JupyterHubAPI(hub_url)
+            async with hub:
+                user = await hub.get_user(username)
+                if(user and user['server'] and not user['pending']):
+                    await hub.delete_server(username)
+                # If we don't delete the username too, than we won't be able to start a kernel for it.
+                # This is because we would have lost its api token from previous run.
+                await hub.delete_user(username)
+
+            # Create a new user, start a server and execute a notebook
             await execute_notebook(
                 hub_url,
                 test_notebook_path,
