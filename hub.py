@@ -13,7 +13,7 @@ from textwrap import dedent
 from build import last_modified_commit
 from contextlib import contextmanager
 from build import build_image
-from jupyterhub_client.execute import execute_notebook, JupyterHubAPI
+from jhub_client.execute import execute_notebook, JupyterHubAPI
 
 # Without `pure=True`, I get an exception about str / byte issues
 yaml = YAML(typ='safe', pure=True)
@@ -302,7 +302,7 @@ class Hub:
         hub_url = f'https://{self.spec["domain"]}'
         username='deployment-service-check'
 
-        # Export the hub health check service as an env var so that jupyterhub_client can read it.
+        # Export the hub health check service as an env var so that jhub_client can read it.
         orig_service_token = os.environ.get('JUPYTERHUB_API_TOKEN', None)
 
         try:
