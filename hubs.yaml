@@ -219,10 +219,6 @@ clusters:
           connection: github
         config:
           jupyterhub:
-            singleuser:
-              image:
-                name:  quay.io/2i2c/paleohack-2021
-                tag: 825b105c3425
             homepage:
               templateVars:
                 org:
