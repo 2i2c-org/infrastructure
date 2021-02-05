@@ -58,6 +58,18 @@ jupyterhub:
     chp:
       nodeSelector:
         hub.jupyter.org/pool-name: core-pool
+      networkPolicy:
+        enabled: true
+        ingress:
+        - from:
+          - namespaceSelector:
+              matchLabels:
+                name: support
+          - podSelector:
+              matchLabels:
+                hub.jupyter.org/network-access-proxy-http: "true"
+          ports:
+          - port: http
       resources:
         requests:
           # FIXME: We want no guarantees here!!!
@@ -78,18 +90,6 @@ jupyterhub:
       enabled: true
       letsencrypt:
         contactEmail: yuvipanda@gmail.com
-    networkPolicy:
-      enabled: true
-      ingress:
-      - from:
-        - namespaceSelector:
-            matchLabels:
-              name: support
-        - podSelector:
-            matchLabels:
-              hub.jupyter.org/network-access-proxy-http: "true"
-        ports:
-        - port: http
   singleuser:
     admin:
       extraVolumeMounts:
