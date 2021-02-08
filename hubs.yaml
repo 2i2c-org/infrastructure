@@ -240,6 +240,7 @@ clusters:
                   allowed_users: &paleohack_users
                     - yuvipanda
                     - choldgraf
+                    - GeorgianaElena
                     - CommonClimate
                     - khider
                     - fzhu2e
@@ -350,6 +351,7 @@ clusters:
                   allowed_users: &earthlab_users
                     - yuvipanda
                     - choldgraf
+                    - GeorgianaElena
                     - lwasser
                   admin_users: *earthlab_users
 
