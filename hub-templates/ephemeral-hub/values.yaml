@@ -25,11 +25,10 @@ base-hub:
       memory:
         guarantee: 256M
         limit: 1G
-    auth:
-      type: custom
-      custom:
-        className: tmpauthenticator.TmpAuthenticator
     hub:
+      config:
+        JupyterHub:
+          authenticator_class: tmpauthenticator.TmpAuthenticator
       # Disable home page setup, since TmpAuthenticator doesn't support a home page
       # Our home page setup required initContainers, volumes, a sidecar & some hub config
       # We remove all of that.
