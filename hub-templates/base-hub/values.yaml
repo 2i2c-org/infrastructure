@@ -75,20 +75,9 @@ jupyterhub:
         limits:
           memory: 1Gi
     https:
+      enabled: false
       letsencrypt:
         contactEmail: yuvipanda@gmail.com
-    networkPolicy:
-      enabled: true
-      ingress:
-      - from:
-        - namespaceSelector:
-            matchLabels:
-              name: support
-        - podSelector:
-            matchLabels:
-              hub.jupyter.org/network-access-proxy-http: "true"
-        ports:
-        - port: http
   singleuser:
     admin:
       extraVolumeMounts:
@@ -131,9 +120,10 @@ jupyterhub:
         - ports:
             - port: 443
               protocol: TCP
-  auth:
-    type: dummy
   hub:
+    config:
+      JupyterHub:
+        authenticator_class: oauthenticator.generic.GenericOAuthenticator
     nodeSelector:
       hub.jupyter.org/pool-name: core-pool
     networkPolicy:

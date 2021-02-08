@@ -101,21 +101,15 @@ class KeyProvider:
         if connection_name == 'github':
             # Except for GitHub, where we use the username
             username_key = 'nickname'
-        auth = {}
-        auth['scopes'] = ['openid', 'name', 'profile', 'email']
-        auth['type'] = 'custom'
-        auth['custom'] = {
-            'className': 'oauthenticator.generic.GenericOAuthenticator',
-            'config': {
-                'authorize_url': f'https://{self.domain}/authorize',
-                'token_url': f'https://{self.domain}/oauth/token',
-                'userdata_url': f'https://{self.domain}/userinfo',
-                'userdata_method': 'GET',
-                'username_key': username_key,
-                'client_id': client['client_id'],
-                'client_secret': client['client_secret']
-            }
-
+        auth = {
+            'authorize_url': f'https://{self.domain}/authorize',
+            'token_url': f'https://{self.domain}/oauth/token',
+            'userdata_url': f'https://{self.domain}/userinfo',
+            'userdata_method': 'GET',
+            'username_key': username_key,
+            'client_id': client['client_id'],
+            'client_secret': client['client_secret'],
+            'scopes': ['openid', 'name', 'profile', 'email']
         }
 
         return auth
