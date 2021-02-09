@@ -709,4 +709,4 @@ clusters:
                     - georgiana.dolocan@gmail.com
                     - aculich@berkeley.edu
                     - jpercy@berkeley.edu
-                  username_pattern: '^.+@2i2c.org$|yuvipanda@gmail.com|choldgraf@gmail.com|georgiana.dolocan@gmail.com|aculich@berkeley.edu|jpercy@berkeley.edu|deployment-service-check'
+                  username_pattern: '^.+@mills.edu$|yuvipanda@gmail.com|choldgraf@gmail.com|georgiana.dolocan@gmail.com|aculich@berkeley.edu|jpercy@berkeley.edu|deployment-service-check'
