@@ -109,7 +109,7 @@ class KeyProvider:
             'username_key': username_key,
             'client_id': client['client_id'],
             'client_secret': client['client_secret'],
-            'scopes': ['openid', 'name', 'profile', 'email']
+            'scope': ['openid', 'name', 'profile', 'email']
         }
 
         return auth
