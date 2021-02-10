@@ -1,0 +1,43 @@
+numpy
+scipy
+matplotlib
+pandas
+seaborn
+sympy
+networkx
+scikit-learn
+beautifulsoup4
+statsmodels
+nltk
+spacy
+geopandas
+# From https://github.com/utoronto-2i2c/jupyterhub-deploy/issues/29
+astroquery
+astropy
+galpy
+catalystcoop.pudl
+dask==2020.12.0
+distributed==2020.12.0
+dask-gateway==0.9.0
+# Infrastructure things
+jupyterlab==3.*
+voila==0.2.6
+nbgitpuller==0.9.*
+jupyter-resource-usage==0.5.0
+nbinteract==0.2.6
+RISE==5.6.1
+jupyter_contrib_nbextensions==0.5.1
+notebook==6.1.4
+jupyterhub==1.3.0
+jupyter-rsession-proxy==1.2
+jupyter-tree-download==1.0.1
+ipywidgets==7.5.1
+otter-grader==2.1.3
+datascience
+geojson
+folium
+geopy
+# JupyterLab extensions
+jupyterlab_widgets==1.0.*
+jupytext==1.10.*
+jupyter-server-proxy==1.6.0
