@@ -234,6 +234,10 @@ clusters:
                 funded_by:
                   name: "[TBD]"
                   url: https://example.com
+            singleuser:
+              image:
+                name: quay.io/2i2c/paleohack-2021
+                tag: 2c7ff948c272
             hub:
               config:
                 Authenticator:
