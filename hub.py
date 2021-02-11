@@ -238,7 +238,7 @@ class Hub:
 
             # hub.spec['auth0']['domain'] takes precedence over hub.spec['domain']
             # If hub.spec['auth0']['domain'], then hub.spec['domain'] must NOT be a list
-            if self.spec['auth0']['domain']:
+            if self.spec['auth0'].get('domain', False):
                 auth0_domain = self.spec['auth0']['domain']
             elif isinstance(self.spec['domain'], str):
                 auth0_domain = self.spec['domain']
@@ -312,7 +312,7 @@ class Hub:
         deployments and error out.
         """
 
-        if self.spec['auth0']['domain']:
+        if self.spec['auth0'].get('domain', False):
             hub_domain = self.spec['auth0']['domain']
         elif isinstance(self.spec['domain'], str):
             hub_domain = self.spec['domain']
