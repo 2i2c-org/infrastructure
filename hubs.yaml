@@ -683,10 +683,13 @@ clusters:
                   admin_users: *sbcc_users
       - name: mills
         cluster: cloudbank
-        domain: mills.cloudbank.2i2c.cloud
+        domain:
+          - mills.cloudbank.2i2c.cloud
+          - datahub.mills.edu
         template: base-hub
         auth0:
           connection: google-oauth2
+          domain: mills.cloudbank.2i2c.cloud
         config:
           jupyterhub:
             homepage:

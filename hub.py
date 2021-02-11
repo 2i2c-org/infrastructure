@@ -139,11 +139,11 @@ class Hub:
             'jupyterhub': {
                 'proxy': { 'secretToken': proxy_secret },
                 'ingress': {
-                    'hosts': [self.spec['domain']],
+                    'hosts': self.spec['domain'] if isinstance(self.spec['domain'], list) else [self.spec['domain']],
                     'tls': [
                         {
                             'secretName': f'https-auto-tls',
-                            'hosts': [self.spec['domain']]
+                            'hosts': self.spec['domain'] if isinstance(self.spec['domain'], list) else [self.spec['domain']]
                         }
                     ]
 
@@ -235,9 +235,17 @@ class Hub:
         #
         # Allow explicilty ignoring auth0 setup
         if self.spec['auth0'].get('enabled', True):
+
+            # hub.spec['auth0']['domain'] takes precedence over hub.spec['domain']
+            # If hub.spec['auth0']['domain'], then hub.spec['domain'] must NOT be a list
+            if self.spec['auth0']['domain']:
+                auth0_domain = self.spec['auth0']['domain']
+            elif isinstance(self.spec['domain'], str):
+                auth0_domain = self.spec['domain']
+
             client = auth_provider.ensure_client(
                 self.spec['name'],
-                self.spec['domain'],
+                auth0_domain,
                 self.spec['auth0']['connection']
             )
             # FIXME: We're hardcoding GenericOAuthenticator here
@@ -303,7 +311,13 @@ class Hub:
         before declaring it a failure. If any of these steps fails, immediately halt further
         deployments and error out.
         """
-        hub_url = f'https://{self.spec["domain"]}'
+
+        if self.spec['auth0']['domain']:
+            hub_domain = self.spec['auth0']['domain']
+        elif isinstance(self.spec['domain'], str):
+            hub_domain = self.spec['domain']
+
+        hub_url = f'https://{hub_domain}'
         username='deployment-service-check'
 
         # Export the hub health check service as an env var so that jhub_client can read it.
