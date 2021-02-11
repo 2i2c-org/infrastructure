@@ -8,7 +8,7 @@ def test_templates_loaded(hub):
 
     It checks that each hub's login page has their configured institutional logo.
     """
-    hub_domains = self.spec['domain'] if isinstance(self.spec['domain'], list) else [self.spec['domain']]
+    hub_domains = hub.spec['domain'] if isinstance(hub.spec['domain'], list) else [hub.spec['domain']]
 
     for domain in hub_domains:
         url = f'https://{domain}/hub/login'

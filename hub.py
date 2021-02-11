@@ -313,9 +313,9 @@ class Hub:
         """
 
         if self.spec['auth0']['domain']:
-                hub_domain = self.spec['auth0']['domain']
-            elif isinstance(self.spec['domain'], str):
-                hub_domain = self.spec['domain']
+            hub_domain = self.spec['auth0']['domain']
+        elif isinstance(self.spec['domain'], str):
+            hub_domain = self.spec['domain']
 
         hub_url = f'https://{hub_domain}'
         username='deployment-service-check'
