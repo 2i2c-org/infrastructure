@@ -331,8 +331,8 @@ class Hub:
                 hub_url,
                 test_notebook_path,
                 username=username,
-                server_creation_timeout=90,
-                kernel_execution_timeout=90, # This doesn't do anything yet
+                server_creation_timeout=300,
+                kernel_execution_timeout=300, # This doesn't do anything yet
                 create_user=True,
                 delete_user=False, # To be able to delete its server in case of failure
                 stop_server=True, # If the health check succeeds, this will delete the server
