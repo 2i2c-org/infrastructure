@@ -703,11 +703,10 @@ clusters:
             hub:
               config:
                 Authenticator:
-                  admin_users:
-                    - yuvipanda@2i2c.org
+                  admin_users: &mills_admins
                     - yuvipanda@gmail.com
-                    - choldgraf@2i2c.org
-                    - georgianaelena@2i2c.org
+                    - choldgraf@gmail.com
                     - georgiana.dolocan@gmail.com
                     - aculich@berkeley.edu
                     - jpercy@berkeley.edu
+                  username_pattern: '^(.+@mills\.edu|yuvipanda@gmail\.com|choldgraf@gmail\.com|georgiana\.dolocan@gmail\.com|aculich@berkeley\.edu|jpercy@berkeley\.edu|deployment-service-check)$'
