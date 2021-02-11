@@ -320,7 +320,7 @@ class Hub:
         hub_url = f'https://{hub_domain}'
         username='deployment-service-check'
 
-        # Export the hub health check service as an env var so that jupyterhub_client can read it.
+        # Export the hub health check service as an env var so that jhub_client can read it.
         orig_service_token = os.environ.get('JUPYTERHUB_API_TOKEN', None)
 
         try:
@@ -368,8 +368,6 @@ class Hub:
         them in this function.
         """
         hub_template = self.spec['template']
-        hub_name = self.spec['name']
-
 
         # Generate a token for the hub health service
         hub_health_token = hmac.new(proxy_secret_key, 'health-'.encode() + self.spec['name'].encode(), hashlib.sha256).hexdigest()
