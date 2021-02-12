@@ -80,7 +80,7 @@ module "gke" {
       max_count          = 10
       local_ssd_count    = 0
       disk_size_gb       = 100
-      disk_type          = "pd-standard"
+      disk_type          = "pd-ssd"
       image_type         = "UBUNTU"
       auto_repair        = true
       auto_upgrade       = false
@@ -130,5 +130,20 @@ module "gke" {
     dask-worker-pool-2020-12-11 = {
       "hub.jupyter.org/pool-name" = "dask-worker-pool"
     }
+  }
+
+  node_pools_taints = {
+    all = []
+
+    user-pool-2020-09-29 = [{
+        key    = "hub.jupyter.org_dedicated"
+        value  = "user"
+        effect = "NO_SCHEDULE"
+    }]
+    dask-worker-pool-2020-12-11 = [{
+        key    = "k8s.dask.org_dedicated"
+        value  = "worker"
+        effect = "NO_SCHEDULE"
+    }]
   }
 }

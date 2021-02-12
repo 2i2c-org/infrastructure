@@ -88,16 +88,27 @@ dask-gateway:
       hub.jupyter.org/pool-name: core-pool
     backend:
       scheduler:
+        extraPodConfig:
+          tolerations:
+            # Let's put schedulers on notebook nodes, since they aren't ephemeral
+            # dask can recover from dead workers, but not dead schedulers
+            - key: "hub.jupyter.org/dedicated"
+              operator: "Equal"
+              value: "user"
+              effect: "NoSchedule"
+            - key: "hub.jupyter.org_dedicated"
+              operator: "Equal"
+              value: "user"
+              effect: "NoSchedule"
+          nodeSelector:
+            # Schedulers should be in the user pool
+            hub.jupyter.org/pool-name: user-pool
         cores:
           request: 0.01
           limit: 1
         memory:
           request: 128M
           limit: 1G
-        extraPodConfig:
-          nodeSelector:
-            # Schedulers should be in the user pool
-            hub.jupyter.org/pool-name: user-pool
       worker:
         extraContainerConfig:
           securityContext:
@@ -106,6 +117,15 @@ dask-gateway:
         extraPodConfig:
           securityContext:
             fsGroup: 1000
+          tolerations:
+            - key: "k8s.dask.org/dedicated"
+              operator: "Equal"
+              value: "worker"
+              effect: "NoSchedule"
+            - key: "k8s.dask.org_dedicated"
+              operator: "Equal"
+              value: "worker"
+              effect: "NoSchedule"
           nodeSelector:
             # Dask workers get their own pre-emptible pool
             hub.jupyter.org/pool-name: dask-worker-pool
