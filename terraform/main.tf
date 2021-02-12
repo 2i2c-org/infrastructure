@@ -142,7 +142,7 @@ module "gke" {
     }]
     dask-worker-pool-2020-12-11 = [{
         key    = "k8s.dask.org_dedicated"
-        value  = "user"
+        value  = "worker"
         effect = "NO_SCHEDULE"
     }]
   }
