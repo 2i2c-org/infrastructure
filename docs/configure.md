@@ -217,10 +217,11 @@ Example config:
       branch: <branch>
 ```
 
-**NOTE:**
+```{note}
 
 Depending on what Static Site Generator has been used to generate the website's static content, it **may** or **may not** use relative paths routing by default.
 For example, [Sphinx](https://www.sphinx-doc.org/en/master/) handles relative paths by default, whereas, [Hugo](https://gohugo.io/) leaves all [relative URLs unchanged](https://gohugo.io/content-management/urls/#relative-urls).
 
 However, having relative URLS is a **must** in order for the hub docs service to work. Please check with the docs of your SSG of choice and enable relative URLs if they
 aren't enabled already.
+```
