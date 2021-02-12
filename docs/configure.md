@@ -200,16 +200,6 @@ Assuming there is a hub named `foo` in the `2i2c` cluster and we want to add the
           domain: foo.pilot.2i2c.cloud
         (...)
       ```
-    * In Auth0's **Application Settings page**:
-
-      ```{figure} images/auth-applications.png
-      ```
-
-      Add the callback URL of the new domain to the list of **Allowed Callback URLs**:
-
-      ```{figure} images/auth0-allowed-callback-urls.png
-      ```
-
 
 ## Default options
 
