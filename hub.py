@@ -236,16 +236,9 @@ class Hub:
         # Allow explicilty ignoring auth0 setup
         if self.spec['auth0'].get('enabled', True):
 
-            # hub.spec['auth0']['domain'] takes precedence over hub.spec['domain']
-            # If hub.spec['auth0']['domain'], then hub.spec['domain'] must NOT be a list
-            if self.spec['auth0'].get('domain', False):
-                auth0_domain = self.spec['auth0']['domain']
-            elif isinstance(self.spec['domain'], str):
-                auth0_domain = self.spec['domain']
-
             client = auth_provider.ensure_client(
                 self.spec['name'],
-                auth0_domain,
+                self.spec['domain'],
                 self.spec['auth0']['connection']
             )
             # FIXME: We're hardcoding GenericOAuthenticator here
