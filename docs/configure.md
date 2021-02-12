@@ -148,6 +148,69 @@ So we want to manage authentication by:
 Switching authentication for a pre-existing hub will simply create new usernames. Any pre-existing users will no longer be able to access their accounts (although administrators will be able to do so). If you have pre-existing users and want to switch the hub authentication, rename the users to the new auth pattern (e.g. convert github handles to emails).
 :::
 
+## Adding additional domains to a hub
+
+Existing pilot-hubs in the two 2i2c-managed clusters, have a subdomain created and assingned to them on creation,
+that respects the following naming convention, based on which domain name and cluster they are part of:
+
+- `<name-of-the-hub>.pilot.2i2c.cloud` - for the ones in the 2i2c cluster and *pilot.2i2c.cloud* domain
+- `<name-of-the-hub>.cloudbank.2i2c.cloud` - for the ones in the cloudbank cluster and *cloudbank.2i2c.cloud* domain
+
+But other domains can be easily linked to the same hub in a cluster if needed.
+
+Assuming there is a hub named `foo` in the `2i2c` cluster and we want to add the `foo.edu` domain to it, one would:
+
+1. **Point the `foo.edu` domain to the right cluster.**
+
+    Create a [CNAME](https://en.wikipedia.org/wiki/CNAME_record) entry from the new domain, `foo.edu`, that points to the
+    existing `foo.pilot.2i2c.cloud`, where the `foo` hub already runs.
+
+    This will map the new domain name, `foo.edu`, to the default one `foo.pilot.2i2c.cloud` - *the canonical name* and will
+    make sure `foo.edu` points to the right cluster, no matter which IP address the cluster has.
+
+2. **Point the `foo.edu` domain to the right hub.**
+
+    Since all the hubs in a cluster are running at the same IP address, but are available at different subdomains,
+    we also need a way to specify which hub in this cluster we want the new domain and subsequent requests to point to.
+
+    For this to happen we need to add the new domain as an ingress domain for this hub using the `hubs.yaml` configuration file:
+
+    * Add the new domain to the list in `hubs.<hub-name>.domain`:
+
+      ```yaml
+      - name: foo
+        cluster: 2i2c
+        domain:
+          - foo.pilot.2i2c.cloud # default domain
+          - foo.edu # additionl domain
+        (...)
+      ```
+
+    * Specify which domain to be used for the `auth0` authentication.
+
+      **This is a must** when there is more than one domain specified in the `domain` list from step 2.
+      The `2i2c.cloud` domains are linked to the 2i2c's [`Auth0`](https://auth0.com) account, so unless you want to use something else,
+      specify the 2i2c subdomain under `hubs.<hub-name>.auth0.domain`:
+
+      ```yaml
+      - name: foo
+        (...)
+        auth0:
+          connection: google-oauth2
+          domain: foo.pilot.2i2c.cloud
+        (...)
+      ```
+    * In Auth0's **Application Settings page**:
+
+      ```{figure} images/auth-applications.png
+      ```
+
+      Add the callback URL of the new domain to the list of **Allowed Callback URLs**:
+
+      ```{figure} images/auth0-allowed-callback-urls.png
+      ```
+
+
 ## Default options
 
 Part of being 'low touch' is to provide default options that we think might
