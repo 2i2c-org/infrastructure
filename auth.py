@@ -69,7 +69,7 @@ class KeyProvider:
                 client['client_id'],
                 {
                     # Don't remove other callback URLs
-                    'callbacks': client['callbacks'] + [callback_url]
+                    'callbacks': client['callbacks'] + missing_callbacks
                 }
             )
 
