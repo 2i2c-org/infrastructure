@@ -36,36 +36,51 @@ class KeyProvider:
             for connection in self.auth0.connections.all()
         }
 
-    def create_client(self, name, domain):
+    def create_client(self, name, domains):
+        callbacks = self._get_callback_url_list(domains)
+
         client = {
             'name': name,
             'app_type': 'regular_web',
-            'callbacks': [
-                f'https://{domain}/hub/oauth_callback'
-            ]
+            'callbacks': callbacks
         }
         created_client = self.auth0.clients.create(client)
         return created_client
 
-    def _ensure_client_callback(self, client, domain):
-        callback_url = f'https://{domain}/hub/oauth_callback'
-        if 'callbacks' not in client or callback_url not in client['callbacks']:
+    def _get_callback_url_list(self, domains):
+        if isinstance(domains, list):
+            callbacks = []
+            for domain in domains:
+                callbacks.append(f'https://{domain}/hub/oauth_callback')
+            return callbacks
+
+        return [f'https://{domains}/hub/oauth_callback']
+
+    def _ensure_client_callback(self, client, domains):
+        callback_urls = self._get_callback_url_list(domains)
+        missing_callbacks = []
+
+        for callback_url in callback_urls:
+            if 'callbacks' not in client or callback_url not in client['callbacks']:
+                missing_callbacks.append(callback_url)
+
+        if missing_callbacks:
             self.auth0.clients.update(
                 client['client_id'],
                 {
                     # Don't remove other callback URLs
-                    'callbacks': client['callbacks'] + [callback_url]
+                    'callbacks': client['callbacks'] + missing_callbacks
                 }
             )
 
-    def ensure_client(self, name, domain, connection_name):
+    def ensure_client(self, name, domains, connection_name):
         current_clients = self.get_clients()
         if name not in current_clients:
             # Create the client, all good
-            client = self.create_client(name, domain)
+            client = self.create_client(name, domains)
         else:
             client = current_clients[name]
-            self._ensure_client_callback(client, domain)
+            self._ensure_client_callback(client, domains)
 
         current_connections = self.get_connections()
         for connection in current_connections.values():

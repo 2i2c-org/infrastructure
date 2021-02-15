@@ -6,6 +6,7 @@ import hmac
 import os
 import json
 import pytest
+import random
 import tempfile
 from ruamel.yaml import YAML
 from ruamel.yaml.scanner import ScannerError
@@ -236,16 +237,9 @@ class Hub:
         # Allow explicilty ignoring auth0 setup
         if self.spec['auth0'].get('enabled', True):
 
-            # hub.spec['auth0']['domain'] takes precedence over hub.spec['domain']
-            # If hub.spec['auth0']['domain'], then hub.spec['domain'] must NOT be a list
-            if self.spec['auth0'].get('domain', False):
-                auth0_domain = self.spec['auth0']['domain']
-            elif isinstance(self.spec['domain'], str):
-                auth0_domain = self.spec['domain']
-
             client = auth_provider.ensure_client(
                 self.spec['name'],
-                auth0_domain,
+                self.spec['domain'],
                 self.spec['auth0']['connection']
             )
             # FIXME: We're hardcoding GenericOAuthenticator here
@@ -312,10 +306,10 @@ class Hub:
         deployments and error out.
         """
 
-        if self.spec['auth0'].get('domain', False):
-            hub_domain = self.spec['auth0']['domain']
-        elif isinstance(self.spec['domain'], str):
+        if isinstance(self.spec['domain'], str):
             hub_domain = self.spec['domain']
+        else:
+            hub_domain = random.choice(self.spec['domain'])
 
         hub_url = f'https://{hub_domain}'
         username='deployment-service-check'
