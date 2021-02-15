@@ -689,7 +689,6 @@ clusters:
         template: base-hub
         auth0:
           connection: google-oauth2
-          domain: mills.cloudbank.2i2c.cloud
         config:
           jupyterhub:
             homepage:

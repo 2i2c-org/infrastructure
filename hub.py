@@ -6,6 +6,7 @@ import hmac
 import os
 import json
 import pytest
+import random
 import tempfile
 from ruamel.yaml import YAML
 from ruamel.yaml.scanner import ScannerError
@@ -305,10 +306,10 @@ class Hub:
         deployments and error out.
         """
 
-        if self.spec['auth0'].get('domain', False):
-            hub_domain = self.spec['auth0']['domain']
-        elif isinstance(self.spec['domain'], str):
+        if isinstance(self.spec['domain'], str):
             hub_domain = self.spec['domain']
+        else:
+            hub_domain = random.choice(self.spec['domain'])
 
         hub_url = f'https://{hub_domain}'
         username='deployment-service-check'
