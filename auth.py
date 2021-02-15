@@ -47,24 +47,29 @@ class KeyProvider:
         created_client = self.auth0.clients.create(client)
         return created_client
 
-    def _get_callback_url_list(domains):
+    def _get_callback_url_list(self, domains):
         if isinstance(domains, list):
             callbacks = []
-            for domain in all_domains:
+            for domain in domains:
                 callbacks.append(f'https://{domain}/hub/oauth_callback')
-            return callback_urls
+            return callbacks
 
         return [f'https://{domains}/hub/oauth_callback']
 
     def _ensure_client_callback(self, client, domains):
         callback_urls = self._get_callback_url_list(domains)
+        missing_callbacks = []
 
-        if 'callbacks' not in client or callback_url not in client['callbacks']:
+        for callback_url in callback_urls:
+            if 'callbacks' not in client or callback_url not in client['callbacks']:
+                missing_callbacks.append(callback_url)
+
+        if missing_callbacks:
             self.auth0.clients.update(
                 client['client_id'],
                 {
                     # Don't remove other callback URLs
-                    'callbacks': client['callbacks'] + callback_urls
+                    'callbacks': client['callbacks'] + [callback_url]
                 }
             )
 
