@@ -173,9 +173,8 @@ Assuming there is a hub named `foo` in the `2i2c` cluster and we want to add the
     Since all the hubs in a cluster are running at the same IP address, but are available at different subdomains,
     we also need a way to specify which hub in this cluster we want the new domain and subsequent requests to point to.
 
-    For this to happen we need to add the new domain as an ingress domain for this hub using the `hubs.yaml` configuration file:
-
-    * Add the new domain to the list in `hubs.<hub-name>.domain`:
+    For this to happen we need to add the new domain as an ingress domain for this hub using the `hubs.yaml` configuration file.
+    This can be done by adding the new domain to the list in `hubs.<hub-name>.domain`:
 
       ```yaml
       - name: foo
@@ -183,21 +182,6 @@ Assuming there is a hub named `foo` in the `2i2c` cluster and we want to add the
         domain:
           - foo.pilot.2i2c.cloud # default domain
           - foo.edu # additionl domain
-        (...)
-      ```
-
-    * Specify which domain to be used for the `auth0` authentication.
-
-      **This is a must** when there is more than one domain specified in the `domain` list from step 2.
-      The `2i2c.cloud` domains are linked to the 2i2c's [`Auth0`](https://auth0.com) account, so unless you want to use something else,
-      specify the 2i2c subdomain under `hubs.<hub-name>.auth0.domain`:
-
-      ```yaml
-      - name: foo
-        (...)
-        auth0:
-          connection: google-oauth2
-          domain: foo.pilot.2i2c.cloud
         (...)
       ```
 
