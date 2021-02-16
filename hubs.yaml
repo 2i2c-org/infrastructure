@@ -20,7 +20,7 @@ clusters:
         config:
           docs_service:
             enabled: true
-            repo: https://github.com/2i2c-org/pilot-hubs.git
+            repo: https://github.com/2i2c-org/pilot-hubs
             branch: gh-pages
           jupyterhub:
             homepage:

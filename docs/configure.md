@@ -229,3 +229,36 @@ For an example, see [the log-in page of the staging hub](https://staging.pilot.2
 The log-in pages are built with [the base template at this repository](https://github.com/2i2c-org/pilot-homepage). Values are inserted into each template based on each hub configuration.
 
 You may customize the configuration for a hub's homepage at `config.jupyterhub.homepage.templateVars`. Changing these values for a hub will make that hub's landing page update automatically. We recommend [using the `hubs.yaml` file as a reference](https://github.com/2i2c-org/pilot-hubs/blob/master/hubs.yaml). Copy the configuration from another hub, and then modify the contents to fit the new hub that is being configured.
+
+## Connecting static web content with the hub
+
+The 2i2c hubs can be configured to provide static web content as a [JupyterHub service](https://jupyterhub.readthedocs.io/en/stable/reference/services.html), available
+at `https://<hub-address>/services/docs`. This can be a great tool to provide hub-specific documentation right from inside the hub.
+
+```{figure} images/docs-service.png
+```
+
+To enable the docs service service for a hub:
+
+1. Mark it as *enabled* in `hubs.yaml`, by setting `hubs.<hub>.config.docs_service.enabled` to *True*.
+2. Specify the GitHub repository where the static HTML files are hosted, by setting `hubs.<hub>.config.docs_service.repo`.
+3. Specify the GitHub branch of the respository where the static HTML files are hosted, by setting `hubs.<hub>.config.docs_service.branch`.
+
+Example config:
+
+```yaml
+  config:
+    docs_service:
+      enabled: true
+      repo: https://github.com/<static-web-files-repo-name>
+      branch: <branch>
+```
+
+```{note}
+
+Depending on what Static Site Generator has been used to generate the website's static content, it **may** or **may not** use relative paths routing by default.
+For example, [Sphinx](https://www.sphinx-doc.org/en/master/) handles relative paths by default, whereas, [Hugo](https://gohugo.io/) leaves all [relative URLs unchanged](https://gohugo.io/content-management/urls/#relative-urls).
+
+However, having relative URLS is a **must** in order for the hub docs service to work. Please check with the docs of your SSG of choice and enable relative URLs if they
+aren't enabled already.
+```
