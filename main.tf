@@ -240,12 +240,10 @@ resource "azurerm_virtual_machine_data_disk_attachment" "nfs_data_disk_1" {
 
 locals {
   registry_creds = {
-    "singleuser" = {
-      "imagePullSecret" = {
-        "username": azurerm_container_registry.container_registry.admin_username,
-        "password": azurerm_container_registry.container_registry.admin_password,
-        "registry": "https://${azurerm_container_registry.container_registry.login_server}"
-      }
+    "imagePullSecret" = {
+      "username": azurerm_container_registry.container_registry.admin_username,
+      "password": azurerm_container_registry.container_registry.admin_password,
+      "registry": "https://${azurerm_container_registry.container_registry.login_server}"
     }
   }
   ansible_hosts = {
