@@ -2,11 +2,48 @@
 
 Information about operating the hubs, debugging problems, and performing common actions.
 
+(operate:team-process)=
+## Team process for operating hubs
+
+### Each hub gets an issue
+
+When a new hub is created, [create a new GitHub issue for the hub](https://github.com/2i2c-org/pilot-hubs/issues/new) using the "New Hub" template.
+This issue is a "meta" issue that tracks the state of this hub over time.
+These issues serve both as a "Source of Truth" of information about the hub, as well as a place for conversation around operating that hub.
+
+### Add the new hub issue to the hubs project
+
+We use [a GitHub Project board](https://github.com/2i2c-org/pilot-hubs/projects/1) to keep track of the tasks associated with running the hubs at 2i2c.
+Some of these tasks may be one of the hub issues detailed above.
+Other tasks may be a specific development or improvement item.
+
+### Weekly task syncs
+
+Each week, the 2i2c Hub Operations team reviews the issues that are currently on the 2i2c board in order to divide and conquor.
+
+TODO: define a process where we can track these issues and share responsibility for them.
+
+- Something about certain types of issues that a person is responsible for this week? (e.g. "all 'New Hub' labeled issues"?)
+- Something about support expectations for the week ("who responds to issues and questions?")
+- Review issues opened up in the `pilot/` repository to see if any need to be in `pilot-hubs`.
+- Specific development tasks that someone should work on that week.
+
+## Adding a new hub
+
+Adding a new hub requires that we do three things:
+
+1. [Create a new GitHub issue for the hub](https://github.com/2i2c-org/pilot-hubs/issues/new).
+2. Create the hub via appending a new entry in the `hubs.yaml` file (see [](configure.md) for more information).
+3. Start following [team process](operate:team-process) around operating the hubs.
+
+
 ## Gain `kubectl` & `helm` access to a hub
 
 Each of the hubs in the 2i2c Pilot runs on Google Cloud Platform and Kubernetes.
 To access the Kubernetes objects (in order to inspect them or make changes), use
-the `kubectl` command line tool. You can also use `helm` to 
+the `kubectl` command line tool.
+
+% TODO: Add something about what helm does here
 
 ### Project Access
 

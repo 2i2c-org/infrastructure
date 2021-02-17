@@ -33,14 +33,16 @@ extensions = [
     "sphinx_panels",
 ]
 
-myst_admonition_enable = True
-
 intersphinx_mapping = {
-    "z2jh": ("https://zero-to-jupyterhub.readthedocs.io/en/latest/", None)
+    "z2jh": ("https://zero-to-jupyterhub.readthedocs.io/en/latest/", None),
+    "tc": ("https://2i2c.org/team-compass/", None),
 }
+
 # -- MyST configuration ---------------------------------------------------
-myst_admonition_enable = True
-myst_deflist_enable = True
+myst_enable_extensions = [
+    "deflist",
+    "colon_fence",
+]
 
 source_suffix = [".rst", ".md"]
 
