@@ -20,5 +20,5 @@ variable "zone" {
 
 variable "regional_cluster" {
   type = string
-  default = "true"
+  default = "false"
 }
