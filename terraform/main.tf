@@ -55,17 +55,19 @@ module "gke" {
   http_load_balancing        = false
   horizontal_pod_autoscaling = false
   network_policy             = true
+  # We explicitly set up a core pool, so don't need the default
+  remove_default_node_pool   = true
 
   node_pools = [
     {
       name               = "core-pool"
-      machine_type       = "n1-highmem-2"
+      machine_type       = var.core_node_machine_type
       min_count          = 1
       max_count          = 10
       local_ssd_count    = 0
       disk_size_gb       = 100
       disk_type          = "pd-standard"
-      image_type         = "UBUNTU"
+      image_type         = "COS"
       auto_repair        = true
       auto_upgrade       = false
       preemptible        = false
@@ -74,14 +76,14 @@ module "gke" {
       version            = "1.17.12-gke.2502"
     },
     {
-      name               = "user-pool-2020-09-29"
-      machine_type       = "n1-highmem-4"
+      name               = "user-pool"
+      machine_type       = var.user_node_machine_type
       min_count          = 0
       max_count          = 10
       local_ssd_count    = 0
       disk_size_gb       = 100
       disk_type          = "pd-ssd"
-      image_type         = "UBUNTU"
+      image_type         = "COS"
       auto_repair        = true
       auto_upgrade       = false
       preemptible        = false
@@ -90,8 +92,8 @@ module "gke" {
       version            = "1.17.12-gke.2502"
     },
     {
-      name               = "dask-worker-pool-2020-12-11"
-      machine_type       = "e2-standard-4"
+      name               = "dask-worker-pool"
+      machine_type       = var.dask_worker_machine_type
       min_count          = 0
       max_count          = 10
       local_ssd_count    = 0
@@ -99,7 +101,7 @@ module "gke" {
       # Fast startup is important here, so we get fast SSD disks
       # This pulls in user images much faster
       disk_type          = "pd-ssd"
-      image_type         = "UBUNTU"
+      image_type         = "COS"
       auto_repair        = true
       auto_upgrade       = false
       preemptible        = true
@@ -124,10 +126,10 @@ module "gke" {
       default-node-pool = true
       "hub.jupyter.org/pool-name" = "core-pool"
     }
-    user-pool-2020-09-29 = {
+    user-pool = {
       "hub.jupyter.org/pool-name" = "user-pool"
     }
-    dask-worker-pool-2020-12-11 = {
+    dask-worker-pool = {
       "hub.jupyter.org/pool-name" = "dask-worker-pool"
     }
   }
@@ -135,12 +137,12 @@ module "gke" {
   node_pools_taints = {
     all = []
 
-    user-pool-2020-09-29 = [{
+    user-pool = [{
         key    = "hub.jupyter.org_dedicated"
         value  = "user"
         effect = "NO_SCHEDULE"
     }]
-    dask-worker-pool-2020-12-11 = [{
+    dask-worker-pool = [{
         key    = "k8s.dask.org_dedicated"
         value  = "worker"
         effect = "NO_SCHEDULE"

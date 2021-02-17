@@ -20,5 +20,20 @@ variable "zone" {
 
 variable "regional_cluster" {
   type = string
-  default = "true"
+  default = "false"
+}
+
+variable "core_node_machine_type" {
+  type = string
+  default = "e2-highcpu-4"
+}
+
+variable "user_node_machine_type" {
+  type = string
+  default = "n1-standard-4"
+}
+
+variable "dask_worker_machine_type" {
+  type = string
+  default = "e2-highmem-2"
 }
