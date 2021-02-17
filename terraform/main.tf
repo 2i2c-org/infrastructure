@@ -76,8 +76,8 @@ module "gke" {
       version            = "1.17.12-gke.2502"
     },
     {
-      name               = "user-pool-2020-09-29"
       machine_type       = "n1-highmem-4"
+      name               = "user-pool"
       min_count          = 0
       max_count          = 10
       local_ssd_count    = 0
@@ -92,8 +92,8 @@ module "gke" {
       version            = "1.17.12-gke.2502"
     },
     {
-      name               = "dask-worker-pool-2020-12-11"
       machine_type       = "e2-standard-4"
+      name               = "dask-worker-pool"
       min_count          = 0
       max_count          = 10
       local_ssd_count    = 0
@@ -126,10 +126,10 @@ module "gke" {
       default-node-pool = true
       "hub.jupyter.org/pool-name" = "core-pool"
     }
-    user-pool-2020-09-29 = {
+    user-pool = {
       "hub.jupyter.org/pool-name" = "user-pool"
     }
-    dask-worker-pool-2020-12-11 = {
+    dask-worker-pool = {
       "hub.jupyter.org/pool-name" = "dask-worker-pool"
     }
   }
@@ -137,12 +137,12 @@ module "gke" {
   node_pools_taints = {
     all = []
 
-    user-pool-2020-09-29 = [{
+    user-pool = [{
         key    = "hub.jupyter.org_dedicated"
         value  = "user"
         effect = "NO_SCHEDULE"
     }]
-    dask-worker-pool-2020-12-11 = [{
+    dask-worker-pool = [{
         key    = "k8s.dask.org_dedicated"
         value  = "worker"
         effect = "NO_SCHEDULE"
