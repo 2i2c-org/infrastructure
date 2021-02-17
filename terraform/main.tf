@@ -55,6 +55,8 @@ module "gke" {
   http_load_balancing        = false
   horizontal_pod_autoscaling = false
   network_policy             = true
+  # We explicitly set up a core pool, so don't need the default
+  remove_default_node_pool   = true
 
   node_pools = [
     {
