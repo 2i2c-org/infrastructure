@@ -237,7 +237,7 @@ clusters:
             singleuser:
               image:
                 name: quay.io/2i2c/paleohack-2021
-                tag: 2c7ff948c272
+                tag:  3c014454dd99
             hub:
               config:
                 Authenticator:
@@ -716,3 +716,62 @@ clusters:
                     - aculich@berkeley.edu
                     - jpercy@berkeley.edu
                   username_pattern: '^(.+@mills\.edu|yuvipanda@gmail\.com|choldgraf@gmail\.com|georgiana\.dolocan@gmail\.com|aculich@berkeley\.edu|jpercy@berkeley\.edu|deployment-service-check)$'
+  - name: hackathon-alpha
+    image_repo:  "us-central1-docker.pkg.dev/two-eye-two-see/low-touch-hubs/base-user"
+    provider: gcp
+    gcp:
+      key: secrets/hackathon-alpha.json
+      project: hackathon-2i2c-project-alpha
+      cluster: alpha-cluster
+      region: us-central1-b
+      nfs:
+        server: nfs-server-01
+        zone: us-central1-b
+    hubs:
+      - name: paleohack2021
+        domain: paleohack2021.hackathon.2i2c.cloud
+        template: base-hub
+        auth0:
+          connection: github
+        config:
+          jupyterhub:
+            scheduling:
+              userPlaceholder:
+                # Let's turn this back on during the hackathon
+                # Until then, keeping this off saves cost
+                enabled: false
+
+              userScheduler:
+                # Each user gets almost 1 anyway
+                enabled: false
+            homepage:
+              templateVars:
+                org:
+                  name: "PaleoHack 2021"
+                  logo_url: "https://raw.githubusercontent.com/LinkedEarth/Logos/master/pyleoclim_logo_full_white.png"
+
+                  url: "https://linkedearth.github.io/paleoHackathon/"
+                designed_by:
+                  name: 2i2c
+                  url: https://2i2c.org
+                operated_by:
+                  name: 2i2c
+                  url: https://2i2c.org
+                funded_by:
+                  name: "NSF Paleo Perspectives on Climate Change program"
+                  url: "https://www.nsf.gov/funding/pgm_summ.jsp?pims_id=5750"
+            singleuser:
+              memory:
+                limit: 15G
+                guarantee: 8G
+              cpu:
+                limit: 4
+                guarantee: 2
+              image:
+                name: quay.io/2i2c/paleohack-2021
+                tag:  3c014454dd99
+            hub:
+              config:
+                Authenticator:
+                  allowed_users: *paleohack_users
+                  admin_users: *paleohack_users
