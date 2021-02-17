@@ -416,9 +416,9 @@ class Hub:
         # Temporary disable this until https://github.com/2i2c-org/pilot-hubs/issues/206 is fixed
         # self.setup_nfs_share()
 
-        with tempfile.NamedTemporaryFile() as values_file, tempfile.NamedTemporaryFile() as generated_values_file:
-            yaml.dump(self.spec['config'], values_file)
-            yaml.dump(generated_values, generated_values_file)
+        with tempfile.NamedTemporaryFile(mode='w') as values_file, tempfile.NamedTemporaryFile(mode='w') as generated_values_file:
+            json.dump(self.spec['config'], values_file)
+            json.dump(generated_values, generated_values_file)
             values_file.flush()
             generated_values_file.flush()
 
