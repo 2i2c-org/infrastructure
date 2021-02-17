@@ -61,7 +61,7 @@ module "gke" {
   node_pools = [
     {
       name               = "core-pool"
-      machine_type       = "n1-highmem-2"
+      machine_type       = var.core_node_machine_type
       min_count          = 1
       max_count          = 10
       local_ssd_count    = 0
@@ -76,8 +76,8 @@ module "gke" {
       version            = "1.17.12-gke.2502"
     },
     {
-      machine_type       = "n1-highmem-4"
       name               = "user-pool"
+      machine_type       = var.user_node_machine_type
       min_count          = 0
       max_count          = 10
       local_ssd_count    = 0
@@ -92,8 +92,8 @@ module "gke" {
       version            = "1.17.12-gke.2502"
     },
     {
-      machine_type       = "e2-standard-4"
       name               = "dask-worker-pool"
+      machine_type       = var.dask_worker_machine_type
       min_count          = 0
       max_count          = 10
       local_ssd_count    = 0
