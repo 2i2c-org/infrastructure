@@ -65,7 +65,7 @@ module "gke" {
       local_ssd_count    = 0
       disk_size_gb       = 100
       disk_type          = "pd-standard"
-      image_type         = "UBUNTU"
+      image_type         = "COS"
       auto_repair        = true
       auto_upgrade       = false
       preemptible        = false
@@ -81,7 +81,7 @@ module "gke" {
       local_ssd_count    = 0
       disk_size_gb       = 100
       disk_type          = "pd-ssd"
-      image_type         = "UBUNTU"
+      image_type         = "COS"
       auto_repair        = true
       auto_upgrade       = false
       preemptible        = false
@@ -99,7 +99,7 @@ module "gke" {
       # Fast startup is important here, so we get fast SSD disks
       # This pulls in user images much faster
       disk_type          = "pd-ssd"
-      image_type         = "UBUNTU"
+      image_type         = "COS"
       auto_repair        = true
       auto_upgrade       = false
       preemptible        = true
