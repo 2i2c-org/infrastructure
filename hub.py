@@ -407,8 +407,7 @@ class Hub:
         generated_values = self.get_generated_config(auth_provider, proxy_secret_key)
 
         # FIXME: Don't do this for ephemeral hubs
-        # Temporary disable this until https://github.com/2i2c-org/pilot-hubs/issues/206 is fixed
-        # self.setup_nfs_share()
+        self.setup_nfs_share()
 
         with tempfile.NamedTemporaryFile(mode='w') as values_file, tempfile.NamedTemporaryFile(mode='w') as generated_values_file:
             json.dump(self.spec['config'], values_file)
