@@ -6,7 +6,7 @@ clusters:
       key: secrets/2i2c.json
       project: two-eye-two-see
       cluster: low-touch-hubs-cluster
-      region: us-central1
+      zone: us-central1-b
       nfs:
         server: nfs-server-01
         zone: us-central1-b
