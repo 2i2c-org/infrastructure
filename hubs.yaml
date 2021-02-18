@@ -210,46 +210,6 @@ clusters:
               hub:
                 # No more than 15 active servers at any given time
                 activeServerLimit: 15
-
-      - name: paleohack2021
-        cluster: 2i2c
-        domain: paleohack2021.pilot.2i2c.cloud
-        template: base-hub
-        auth0:
-          connection: github
-        config:
-          jupyterhub:
-            homepage:
-              templateVars:
-                org:
-                  name: "[WIP] PaleoHack 2021"
-                  logo_url: https://2i2c.org/media/logo.png
-                  url: https://2i2c.org
-                designed_by:
-                  name: 2i2c
-                  url: https://2i2c.org
-                operated_by:
-                  name: 2i2c
-                  url: https://2i2c.org
-                funded_by:
-                  name: "[TBD]"
-                  url: https://example.com
-            singleuser:
-              image:
-                name: quay.io/2i2c/paleohack-2021
-                tag:  3c014454dd99
-            hub:
-              config:
-                Authenticator:
-                  allowed_users: &paleohack_users
-                    - yuvipanda
-                    - choldgraf
-                    - GeorgianaElena
-                    - CommonClimate
-                    - khider
-                    - fzhu2e
-                    - alexkjames
-                  admin_users: *paleohack_users
       - name: peddie
         cluster: 2i2c
         domain: peddie.pilot.2i2c.cloud
@@ -773,5 +733,12 @@ clusters:
             hub:
               config:
                 Authenticator:
-                  allowed_users: *paleohack_users
+                  allowed_users: &paleohack_users
+                    - yuvipanda
+                    - choldgraf
+                    - GeorgianaElena
+                    - CommonClimate
+                    - khider
+                    - fzhu2e
+                    - alexkjames
                   admin_users: *paleohack_users
