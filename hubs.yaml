@@ -79,7 +79,9 @@ clusters:
         domain: staging.pilot.2i2c.cloud
         template: base-hub
         auth0:
-          connection: google-oauth2
+          connection:
+            - google-oauth2
+            - github
         config:
           docs_service:
             enabled: true
@@ -109,6 +111,7 @@ clusters:
                     - colliand@gmail.com
                     - choldgraf@gmail.com
                     - georgiana.dolocan@gmail.com
+                    - GeorgianaElena
                   admin_users: *staging_users
       - name: dask-staging
         cluster: 2i2c

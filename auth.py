@@ -84,11 +84,11 @@ class KeyProvider:
 
         current_connections = self.get_connections()
         for connection in current_connections.values():
-                # The chosen connection!
+            # The chosen connection!
             enabled_clients = connection['enabled_clients'].copy()
             needs_update = False
             client_id = client['client_id']
-            if connection['name'] == connection_name:
+            if connection['name'] in connection_name:
                 if client_id not in enabled_clients:
                     enabled_clients.append(client_id)
                     needs_update = True
@@ -112,10 +112,10 @@ class KeyProvider:
         """
 
         # default to using emails as usernames
-        username_key = 'email'
-        if connection_name == 'github':
+        # username_key = 'email'
+        # if connection_name == 'github':
             # Except for GitHub, where we use the username
-            username_key = 'nickname'
+            # username_key = 'nickname'
         auth = {
             'authorize_url': f'https://{self.domain}/authorize',
             'token_url': f'https://{self.domain}/oauth/token',
