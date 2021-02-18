@@ -382,6 +382,42 @@ clusters:
                     - GeorgianaElena
                     - lwasser
                   admin_users: *earthlab_users
+      - name: grenoble
+        cluster: pilot
+        domain: grenoble-swot.pilot.2i2c.cloud
+        template: daskhub
+        auth0:
+          connection: github
+        config:
+          base-hub:
+            jupyterhub:
+              singleuser:
+              homepage:
+                templateVars:
+                  org:
+                    name: "Grenoble SWOT Satellite Data Hub"
+                    logo_url: https://2i2c.org/media/logo.png
+                    url: https://2i2c.org
+                  designed_by:
+                    name: 2i2c
+                    url: https://2i2c.org
+                  operated_by:
+                    name: 2i2c
+                    url: https://2i2c.org
+                  funded_by:
+                    name: 2i2c
+                    url: https://2i2c.org
+              hub:
+                config:
+                  Authenticator:
+                    allowed_users: &grenoble_swot_users
+                      - roxyboy
+                      - lesommer
+                      - auraoupa
+                      - yuvipanda
+                      - choldgraf
+                      - GeorgianaElena
+                    admin_users: *grenoble_swot_users
 
   - name: cloudbank
     image_repo:  "us-central1-docker.pkg.dev/cb-1003-1696/low-touch-hubs/base-user"
