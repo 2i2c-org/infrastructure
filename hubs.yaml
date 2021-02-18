@@ -20,10 +20,8 @@ clusters:
           jupyterhub:
             scheduling:
               userPlaceholder:
-                # Let's turn this back on during the hackathon
-                # Until then, keeping this off saves cost
-                enabled: false
-
+                # On just during the hackathon
+                replicas: 3
               userScheduler:
                 # Each user gets almost 1 anyway
                 enabled: false
