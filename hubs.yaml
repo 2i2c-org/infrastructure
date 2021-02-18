@@ -805,7 +805,7 @@ clusters:
                 guarantee: 2
               image:
                 name: quay.io/2i2c/paleohack-2021
-                tag:  3c014454dd99
+                tag: d8c26cd01c8a
             hub:
               config:
                 Authenticator:
