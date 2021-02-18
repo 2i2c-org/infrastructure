@@ -392,6 +392,9 @@ clusters:
           base-hub:
             jupyterhub:
               singleuser:
+                image:
+                  name: pangeo/pangeo-notebook
+                  tag: 2020.12.08
               homepage:
                 templateVars:
                   org:
