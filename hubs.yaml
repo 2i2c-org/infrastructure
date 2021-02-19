@@ -24,7 +24,7 @@ clusters:
                 replicas: 3
               userScheduler:
                 # Each user gets almost 1 anyway
-                enabled: false
+                enabled: true
             homepage:
               templateVars:
                 org:
