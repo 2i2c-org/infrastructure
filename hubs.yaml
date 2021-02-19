@@ -43,10 +43,9 @@ clusters:
                   url: "https://www.nsf.gov/funding/pgm_summ.jsp?pims_id=5750"
             singleuser:
               memory:
-                limit: 6G
-                guarantee: 5G
+                limit: 4G
+                guarantee: 4G
               cpu:
-                limit: 2
                 guarantee: 2
               image:
                 name: quay.io/2i2c/paleohack-2021
