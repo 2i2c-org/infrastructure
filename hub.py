@@ -117,8 +117,6 @@ class Hub:
         self.cluster = cluster
         self.spec = spec
 
-        self.nfs_share_name = f'/export/home-01/homes/{self.spec["name"]}'
-
     def get_generated_config(self, auth_provider, proxy_secret_key):
         """
         Generate config automatically for each hub
@@ -132,11 +130,6 @@ class Hub:
         proxy_secret = hmac.new(proxy_secret_key, self.spec['name'].encode(), hashlib.sha256).hexdigest()
 
         generated_config = {
-            'nfsPVC': {
-                'nfs': {
-                    'shareName': self.nfs_share_name,
-                }
-            },
             'jupyterhub': {
                 'proxy': { 'secretToken': proxy_secret },
                 'ingress': {
@@ -248,26 +241,6 @@ class Hub:
             generated_config['jupyterhub']['hub']['config']['GenericOAuthenticator'] = auth_provider.get_client_creds(client, self.spec['auth0']['connection'])
 
         return self.apply_hub_template_fixes(generated_config, proxy_secret_key)
-
-
-    def setup_nfs_share(self):
-        """
-        Create the NFS Share used for user home directories
-
-        Instead of mounting the directory containing *all* hubs' home directories and then using
-        `subDir` to make just the user's directory visible to them, we want to mount the directory
-        containing *just* the home directories of users on this hub. To do so, we must create the
-        directory before the user pods can start - since otherwise there's no NFS share to mount.
-        """
-        # FIXME: This should be provider agnostic
-        zone = self.cluster.spec['gcp']['nfs']['zone']
-        project = self.cluster.spec['gcp']['project']
-        # WARNING: This needs to be idempotent, so watch what you do here.
-        # WARNING: This is a very highly privileged operation, so be careful when you touch this.
-        subprocess.check_call([
-            'gcloud', 'compute', 'ssh', 'nfs-server-01', '--zone', zone, '--project', project, '--',
-            f'sudo mkdir -p {self.nfs_share_name} && sudo chown 1000:1000 {self.nfs_share_name} && sudo ls -ld {self.nfs_share_name}'
-        ])
 
 
     def unset_env_var(self, env_var, old_env_var_value):
@@ -405,10 +378,6 @@ class Hub:
         """
 
         generated_values = self.get_generated_config(auth_provider, proxy_secret_key)
-
-        # FIXME: Don't do this for ephemeral hubs
-        # Temporary disable this until https://github.com/2i2c-org/pilot-hubs/issues/206 is fixed
-        # self.setup_nfs_share()
 
         with tempfile.NamedTemporaryFile(mode='w') as values_file, tempfile.NamedTemporaryFile(mode='w') as generated_values_file:
             json.dump(self.spec['config'], values_file)

@@ -6,4 +6,4 @@ dependencies:
   repository: https://dask.org/dask-gateway-helm-repo/
   version: 0.9.0
 digest: sha256:de2e3d8c0e278fef2d15c3a583422c6f148e290b7133ba00c5ba259ce4b48c0d
-generated: "2020-12-09T16:30:33.83066+05:30"
+generated: "2021-02-19T21:15:21.045799+05:30"
