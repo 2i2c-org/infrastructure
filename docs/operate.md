@@ -5,42 +5,7 @@ Information about operating the hubs, debugging problems, and performing common 
 (operate:team-process)=
 ## Team process for hub development and operation
 
-### Issues to track hubs
-
-When a new hub is created, [create a new GitHub issue for the hub](https://github.com/2i2c-org/pilot-hubs/issues/new) using the "New Hub" template.
-This issue is a "meta" issue that tracks the state of this hub over time.
-These issues serve both as a "Source of Truth" of information about the hub, as well as a place for conversation around operating that hub.
-As task issues are created, cross-link them to a hub if they are specifically about that hub.
-
-### Team goals
-
-Team goals are higher-level goals that are usually less-concrete (AKA, there's no single action that will "complete" them) and span a longer period of time.
-
-We keep track of team goals via the [{guilabel}`goal` label in GitHub](https://github.com/2i2c-org/pilot-hubs/issues?q=is%3Aissue+is%3Aopen+sort%3Aupdated-desc+label%3Agoal).
-
-### Team tasks
-
-Team tasks are specific, actionable things that must be done (usually they related to development work on the 2i2c Hubs).
-We keep track of team task via the [{guilabel}`task` label in GitHub](https://github.com/2i2c-org/pilot-hubs/issues?q=is%3Aissue+is%3Aopen+sort%3Aupdated-desc+label%3Atask).
-
-### Bi-weekly task syncs
-
-Every other Monday, the 2i2c Hub Operations team conducts a team sync to get on the same page and coordinate their work for the week.
-
-% CHRIS proposes that we move the "process" sections from here and integrate them into https://2i2c.org/team-compass/team/tech/coordination/#bi-weekly-team-syncs
-
-% TODO: here's a rough proposal, need to flesh this out
-- We modify the process described here: https://2i2c.org/team-compass/team/tech/coordination/#bi-weekly-team-syncs
-- Add these steps to the team member check-in:
-  - Link to any tasks that were completed in the last window
-  - Highlight any tasks that need help from others
-  - Note the tasks that they're assigning themselves to for the next 2 week window.
-  - Provide updates about any goals that they've added themselves to.
-
-```{note}
-While these syncs happen every two weeks, the process of assigning oneself to tasks, completing them, etc can be dynamic and constantly updating.
-The syncs are just to get everyone on the same page.
-```
+See the [](tc:coordination:team-activity)
 
 ## Adding a new hub
 
