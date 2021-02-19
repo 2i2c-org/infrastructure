@@ -54,6 +54,13 @@ templates_path = ["_templates"]
 # This pattern also affects html_static_path and html_extra_path.
 exclude_patterns = ["_build", "Thumbs.db", ".DS_Store"]
 
+# -- Options for MyST -------------------------------------------------
+panels_add_bootstrap_css = False
+myst_enable_extensions = [
+    "colon_fence",
+    "deflist",
+    "linkify",
+]
 
 # -- Options for HTML output -------------------------------------------------
 
