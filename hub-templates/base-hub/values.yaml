@@ -18,7 +18,7 @@ nfsPVC:
   enabled: true
   nfs:
     serverIP: nfs-server-01
-    shareName: /export/home-01
+    baseShareName: /export/home-01/homes
 
 jupyterhub:
   ingress:

@@ -1,0 +1,43 @@
+{{ if .Values.nfsPVC.enabled }}
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: nfs-share-creator
+  labels:
+    hub.jupyter.org/deletable: "true"
+    app.kubernetes.io/managed-by: {{ .Release.Service | quote }}
+    app.kubernetes.io/instance: {{ .Release.Name | quote }}
+    helm.sh/chart: "{{ .Chart.Name }}-{{ .Chart.Version }}"
+  annotations:
+    "helm.sh/hook": pre-install,pre-upgrade
+    "helm.sh/hook-delete-policy": before-hook-creation,hook-succeeded
+    "helm.sh/hook-weight": "10"
+spec:
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/managed-by: {{ .Release.Service | quote }}
+        app.kubernetes.io/instance: {{ .Release.Name | quote }}
+        helm.sh/chart: "{{ .Chart.Name }}-{{ .Chart.Version }}"
+    spec:
+      restartPolicy: Never
+      terminationGracePeriodSeconds: 0
+      containers:
+        - name: dummy
+          image: busybox
+          env:
+            - name: NFS_SHARE_NAME
+              value: "{{ .Values.nfsPVC.nfs.baseShareName }}/{{ .Release.Name }}"
+          command:
+            - /bin/sh
+            - -c
+            - "mkdir -p ${NFS_SHARE_NAME} && chown 1000:1000 ${NFS_SHARE_NAME}"
+          volumeMounts:
+            - name: home-base
+              mountPath: {{ .Values.nfsPVC.nfs.baseShareName | quote }}
+      volumes:
+        - name: home-base
+          nfs:
+            server: {{ .Values.nfsPVC.nfs.serverIP | quote}}
+            path: {{ .Values.nfsPVC.nfs.baseShareName | quote}}
+{{ end }}
