@@ -3,30 +3,44 @@
 Information about operating the hubs, debugging problems, and performing common actions.
 
 (operate:team-process)=
-## Team process for operating hubs
+## Team process for hub development and operation
 
-### Each hub gets an issue
+### Issues to track hubs
 
 When a new hub is created, [create a new GitHub issue for the hub](https://github.com/2i2c-org/pilot-hubs/issues/new) using the "New Hub" template.
 This issue is a "meta" issue that tracks the state of this hub over time.
 These issues serve both as a "Source of Truth" of information about the hub, as well as a place for conversation around operating that hub.
+As task issues are created, cross-link them to a hub if they are specifically about that hub.
 
-### Add the new hub issue to the hubs project
+### Team goals
 
-We use [a GitHub Project board](https://github.com/2i2c-org/pilot-hubs/projects/1) to keep track of the tasks associated with running the hubs at 2i2c.
-Some of these tasks may be one of the hub issues detailed above.
-Other tasks may be a specific development or improvement item.
+Team goals are higher-level goals that are usually less-concrete (AKA, there's no single action that will "complete" them) and span a longer period of time.
 
-### Weekly task syncs
+We keep track of team goals via the [{guilabel}`goal` label in GitHub](https://github.com/2i2c-org/pilot-hubs/issues?q=is%3Aissue+is%3Aopen+sort%3Aupdated-desc+label%3Agoal).
 
-Each week, the 2i2c Hub Operations team reviews the issues that are currently on the 2i2c board in order to divide and conquor.
+### Team tasks
 
-TODO: define a process where we can track these issues and share responsibility for them.
+Team tasks are specific, actionable things that must be done (usually they related to development work on the 2i2c Hubs).
+We keep track of team task via the [{guilabel}`task` label in GitHub](https://github.com/2i2c-org/pilot-hubs/issues?q=is%3Aissue+is%3Aopen+sort%3Aupdated-desc+label%3Atask).
 
-- Something about certain types of issues that a person is responsible for this week? (e.g. "all 'New Hub' labeled issues"?)
-- Something about support expectations for the week ("who responds to issues and questions?")
-- Review issues opened up in the `pilot/` repository to see if any need to be in `pilot-hubs`.
-- Specific development tasks that someone should work on that week.
+### Bi-weekly task syncs
+
+Every other Monday, the 2i2c Hub Operations team conducts a team sync to get on the same page and coordinate their work for the week.
+
+% CHRIS proposes that we move the "process" sections from here and integrate them into https://2i2c.org/team-compass/team/tech/coordination/#bi-weekly-team-syncs
+
+% TODO: here's a rough proposal, need to flesh this out
+- We modify the process described here: https://2i2c.org/team-compass/team/tech/coordination/#bi-weekly-team-syncs
+- Add these steps to the team member check-in:
+  - Link to any tasks that were completed in the last window
+  - Highlight any tasks that need help from others
+  - Note the tasks that they're assigning themselves to for the next 2 week window.
+  - Provide updates about any goals that they've added themselves to.
+
+```{note}
+While these syncs happen every two weeks, the process of assigning oneself to tasks, completing them, etc can be dynamic and constantly updating.
+The syncs are just to get everyone on the same page.
+```
 
 ## Adding a new hub
 
