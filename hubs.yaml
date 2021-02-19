@@ -43,8 +43,8 @@ clusters:
                   url: "https://www.nsf.gov/funding/pgm_summ.jsp?pims_id=5750"
             singleuser:
               memory:
-                limit: 2G
-                guarantee: 2G
+                limit: 6G
+                guarantee: 5G
               cpu:
                 limit: 2
                 guarantee: 2
