@@ -383,7 +383,7 @@ clusters:
                   admin_users: *earthlab_users
       - name: grenoble
         cluster: pilot
-        domain: grenoble-swot.pilot.2i2c.cloud
+        domain: swot-ocean-pangeo.pilot.2i2c.cloud
         template: daskhub
         auth0:
           connection: github
@@ -397,7 +397,7 @@ clusters:
               homepage:
                 templateVars:
                   org:
-                    name: "Grenoble SWOT Satellite Data Hub"
+                    name: "SWOT Ocean Pangeo Team"
                     logo_url: https://2i2c.org/media/logo.png
                     url: https://2i2c.org
                   designed_by:
