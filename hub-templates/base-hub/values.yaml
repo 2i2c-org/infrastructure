@@ -177,8 +177,11 @@ jupyterhub:
           def start(self, *args, **kwargs):
             custom_admin = get_config('singleuser.admin', {})
             if custom_admin and self.user.admin:
-                self.init_containers += custom_admin.get('initContainers', [])
-                self.volume_mounts += custom_admin.get('extraVolumeMounts', [])
+                extra_init_containers = custom_admin.get('initContainers', [])
+                extra_volume_mounts = custom_admin.get('extraVolumeMounts', [])
+
+                self.init_containers += [container for container in extra_init_containers if container not in self.init_containers]
+                self.volume_mounts += [volume for volume in extra_volume_mounts if volume not in self.volume_mounts]
 
             return super().start(*args, **kwargs)
 
