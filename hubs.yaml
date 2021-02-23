@@ -777,4 +777,6 @@ clusters:
                     - georgiana.dolocan@gmail.com
                     - aculich@berkeley.edu
                     - jpercy@berkeley.edu
+                    - akonrad@mills.edu
+                    - wang@mills.edu
                   username_pattern: '^(.+@mills\.edu|yuvipanda@gmail\.com|choldgraf@gmail\.com|georgiana\.dolocan@gmail\.com|aculich@berkeley\.edu|jpercy@berkeley\.edu|deployment-service-check)$'
