@@ -333,11 +333,11 @@ clusters:
                     name: 2i2c
                     url: https://2i2c.org
                   operated_by:
-                    name: CloudBank
-                    url: http://cloudbank.org/
+                    name: 2i2c
+                    url: https://2i2c.org
                   funded_by:
-                    name: CloudBank
-                    url: http://cloudbank.org/
+                    name: 2i2c
+                    url: https://2i2c.org
               hub:
                 config:
                   Authenticator:
