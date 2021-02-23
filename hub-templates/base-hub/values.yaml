@@ -30,7 +30,7 @@ jupyterhub:
   scheduling:
     userPlaceholder:
       enabled: true
-      replicas: 1
+      replicas: 0
     podPriority:
       enabled: true
       globalDefault: false
