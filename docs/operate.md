@@ -2,11 +2,27 @@
 
 Information about operating the hubs, debugging problems, and performing common actions.
 
+(operate:team-process)=
+## Team process for hub development and operation
+
+See the [](tc:coordination:team-activity)
+
+## Adding a new hub
+
+Adding a new hub requires that we do three things:
+
+1. [Create a new GitHub issue for the hub](https://github.com/2i2c-org/pilot-hubs/issues/new).
+2. Create the hub via appending a new entry in the `hubs.yaml` file (see [](configure.md) for more information).
+3. Start following [team process](operate:team-process) around operating the hubs.
+
+
 ## Gain `kubectl` & `helm` access to a hub
 
 Each of the hubs in the 2i2c Pilot runs on Google Cloud Platform and Kubernetes.
 To access the Kubernetes objects (in order to inspect them or make changes), use
-the `kubectl` command line tool. You can also use `helm` to 
+the `kubectl` command line tool.
+
+% TODO: Add something about what helm does here
 
 ### Project Access
 
