@@ -137,7 +137,7 @@ clusters:
               singleuser:
                 image:
                   name: pangeo/pangeo-notebook
-                  tag: 2020.02.19
+                  tag: 2021.02.19
               hub:
                 config:
                   Authenticator:
@@ -393,7 +393,7 @@ clusters:
               singleuser:
                 image:
                   name: pangeo/pangeo-notebook
-                  tag: 2020.02.19
+                  tag: 2021.02.19
               homepage:
                 templateVars:
                   org:
