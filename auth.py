@@ -111,17 +111,11 @@ class KeyProvider:
         Return z2jh config for auth0 authentication for this JupyterHub
         """
 
-        # default to using emails as usernames
-        # username_key = 'email'
-        # if connection_name == 'github':
-            # Except for GitHub, where we use the username
-            # username_key = 'nickname'
         auth = {
             'authorize_url': f'https://{self.domain}/authorize',
             'token_url': f'https://{self.domain}/oauth/token',
             'userdata_url': f'https://{self.domain}/userinfo',
             'userdata_method': 'GET',
-            'username_key': username_key,
             'client_id': client['client_id'],
             'client_secret': client['client_secret'],
             'scope': ['openid', 'name', 'profile', 'email']

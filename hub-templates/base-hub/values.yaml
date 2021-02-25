@@ -186,3 +186,5 @@ jupyterhub:
             return super().start(*args, **kwargs)
 
         c.JupyterHub.spawner_class = CustomSpawner
+      06-custom-username-key: |
+        c.GenericOAuthenticator.username_key = lambda r: r['email'] if r.get('email') else r['nickname']
