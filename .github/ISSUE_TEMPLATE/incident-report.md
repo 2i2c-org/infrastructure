@@ -1,8 +1,8 @@
 ---
-name: "\U0001F4DD Debrief / post-mortem"
+name: "\U0001F4DD Incident report"
 about: Discuss what happened + next steps after an event.
-title: Debrief - {{ TITLE }}
-labels: post-mortem
+title: Incident Report - {{ TITLE }}
+labels: incident-report
 assignees: ''
 
 ---
@@ -33,22 +33,11 @@ More details.
 
 Things that could have gone better. Ideally these should result in concrete
 action items that have GitHub issues created for them and linked to under
-Action items. For example,
-
-1. We do not record the number of hub spawn errors in a clear and useful way,
-   and hence took a long time to find out that was happening.
-2. Our culler process needs better logging, since it is somewhat opaque now
-   and we do not know why restarting it fixed it.
-3. Our documentation was misleading or unclear, and so user expectations weren't correct.
+Action items. 
 
 ## Where we got lucky
 
 These are good things that happened to us but not because we had planned for them.
-For example,
-
-1. We noticed the outage was going to happen a few minutes before it did because
-   we were watching logs for something unrelated.
-2. The one person that knew how to fix this happened to be the one paying attention at that moment.
 
 ## Action items
 
