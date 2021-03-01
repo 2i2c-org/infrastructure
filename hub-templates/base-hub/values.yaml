@@ -78,6 +78,16 @@ jupyterhub:
       enabled: false
       letsencrypt:
         contactEmail: yuvipanda@gmail.com
+  userAffinity:
+    nodeAffinity:
+        preferredDuringSchedulingIgnoredDuringExecution:
+        - preference:
+            matchExpressions:
+            - key: hub.jupyter.org/pool-name
+              operator: In
+              values:
+              - user-pool
+          weight: 100
   singleuser:
     admin:
       extraVolumeMounts:
@@ -86,8 +96,6 @@ jupyterhub:
         subPath: _shared
     startTimeout: 600 # 10 mins, because sometimes we have too many new nodes coming up together
     defaultUrl: /tree
-    nodeSelector:
-      hub.jupyter.org/pool-name: user-pool
     image:
       name: set_automatically_by_automation
       tag: 4066a62
@@ -186,3 +194,19 @@ jupyterhub:
             return super().start(*args, **kwargs)
 
         c.JupyterHub.spawner_class = CustomSpawner
+      06-custom-affinity: |
+        node_selector = dict(
+            matchExpressions=[
+                dict(
+                    key="hub.jupyter.org/pool-name",
+                    operator="In",
+                    values=["user-pool"],
+                )
+            ],
+        )
+        c.KubeSpawner.node_affinity_preferred.append(
+            dict(
+                weight=100,
+                preference=node_selector,
+            ),
+        )
