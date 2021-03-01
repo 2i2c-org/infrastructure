@@ -47,6 +47,16 @@ jupyterhub:
           memory: 64Mi
         limits:
           memory: 1G
+    userPods:
+      nodeAffinity:
+        preferredDuringSchedulingIgnoredDuringExecution:
+        - preference:
+            matchExpressions:
+            - key: hub.jupyter.org/pool-name
+              operator: In
+              values:
+              - user-pool
+          weight: 100
   prePuller:
     continuous:
       enabled: false
@@ -78,16 +88,6 @@ jupyterhub:
       enabled: false
       letsencrypt:
         contactEmail: yuvipanda@gmail.com
-  userAffinity:
-    nodeAffinity:
-        preferredDuringSchedulingIgnoredDuringExecution:
-        - preference:
-            matchExpressions:
-            - key: hub.jupyter.org/pool-name
-              operator: In
-              values:
-              - user-pool
-          weight: 100
   singleuser:
     admin:
       extraVolumeMounts:
@@ -194,19 +194,3 @@ jupyterhub:
             return super().start(*args, **kwargs)
 
         c.JupyterHub.spawner_class = CustomSpawner
-      06-custom-affinity: |
-        node_selector = dict(
-            matchExpressions=[
-                dict(
-                    key="hub.jupyter.org/pool-name",
-                    operator="In",
-                    values=["user-pool"],
-                )
-            ],
-        )
-        c.KubeSpawner.node_affinity_preferred.append(
-            dict(
-                weight=100,
-                preference=node_selector,
-            ),
-        )
