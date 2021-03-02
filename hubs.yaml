@@ -117,6 +117,9 @@ clusters:
         auth0:
           connection: google-oauth2
         config:
+          iam:
+            # FIXME: Automatically inject this
+            projectId: two-eye-two-see
           base-hub:
             jupyterhub:
               homepage:
@@ -314,6 +317,8 @@ clusters:
         auth0:
           connection: google-oauth2
         config:
+          iam:
+            projectId: two-eye-two-see
           base-hub:
             jupyterhub:
               singleuser:
@@ -388,6 +393,9 @@ clusters:
         auth0:
           connection: github
         config:
+          iam:
+            # FIXME: Automatically inject this
+            projectId: two-eye-two-see
           base-hub:
             jupyterhub:
               singleuser:
