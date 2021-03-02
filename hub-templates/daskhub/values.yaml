@@ -10,8 +10,16 @@ base-hub:
          hub.jupyter.org/network-access-proxy-http: "true"
 
       networkPolicy:
-        # Needed for talking to the proxy pod
         egress:
+          # Needed to talk to metadata server.
+          # see https://github.com/2i2c-org/pilot-hubs/issues/280
+          - to:
+              - ipBlock:
+                  cidr: 127.0.0.1/32
+            ports:
+              - port: 988
+                protocol: TCP
+          # Needed for talking to the proxy pod
           - ports:
               - port: 8000
                 protocol: TCP
