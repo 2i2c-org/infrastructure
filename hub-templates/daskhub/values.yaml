@@ -10,8 +10,16 @@ base-hub:
          hub.jupyter.org/network-access-proxy-http: "true"
 
       networkPolicy:
-        # Needed for talking to the proxy pod
         egress:
+          # Needed to talk to metadata server.
+          # see https://github.com/2i2c-org/pilot-hubs/issues/280
+          - to:
+              - ipBlock:
+                  cidr: 127.0.0.1/32
+            ports:
+              - port: 988
+                protocol: TCP
+          # Needed for talking to the proxy pod
           - ports:
               - port: 8000
                 protocol: TCP
@@ -32,6 +40,7 @@ base-hub:
         # without an explicit identity
         # FIXME: Provide an explicit identity for users instead
         blockWithIptables: false
+      serviceAccountName: user-sa
       extraEnv:
         # The default worker image matches the singleuser image.
         DASK_GATEWAY__CLUSTER__OPTIONS__IMAGE: '{JUPYTER_IMAGE_SPEC}'
@@ -89,6 +98,7 @@ dask-gateway:
     backend:
       scheduler:
         extraPodConfig:
+          serviceAccountName: user-sa
           tolerations:
             # Let's put schedulers on notebook nodes, since they aren't ephemeral
             # dask can recover from dead workers, but not dead schedulers
@@ -115,6 +125,7 @@ dask-gateway:
             runAsGroup: 1000
             runAsUser: 1000
         extraPodConfig:
+          serviceAccountName: user-sa
           securityContext:
             fsGroup: 1000
           tolerations:
