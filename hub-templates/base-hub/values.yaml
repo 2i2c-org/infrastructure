@@ -47,16 +47,6 @@ jupyterhub:
           memory: 64Mi
         limits:
           memory: 1G
-    userPods:
-      nodeAffinity:
-        preferredDuringSchedulingIgnoredDuringExecution:
-        - preference:
-            matchExpressions:
-            - key: hub.jupyter.org/pool-name
-              operator: In
-              values:
-              - user-pool
-          weight: 100
   prePuller:
     continuous:
       enabled: false
@@ -96,6 +86,14 @@ jupyterhub:
         subPath: _shared
     startTimeout: 600 # 10 mins, because sometimes we have too many new nodes coming up together
     defaultUrl: /tree
+    extraNodeAffinity:
+      preferred:
+        - weight: 100
+          preference:
+            matchExpressions:
+            - key: hub.jupyter.org/pool-name
+              operator: In
+              values: [user-pool]
     image:
       name: set_automatically_by_automation
       tag: 4066a62
