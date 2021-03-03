@@ -49,25 +49,35 @@ The hubs are configured and deployed using *hub templates*. Because each hub
 type can be described by a template, with its own deployment chart, a hierarchy
 of hub types can be built and this makes development and usage easier.
 
-Currently there are two hub templates available:
-- the `base-hub` template
-- the `ephemeral-hub` template
+Currently there are three hub templates available:
+- `base-hub`
 
-For example, the **ephemeral hub** is a special kind of hub that is built using the *ephemeral-hub template*
-and has the following features:
+  The **base-hub template** is the template that the other templates "inherit" and configure.
+  It provides a base JupyterHub, user storage and culling configuration that satisfies most of the
+  pilot hubs usage requirements.
 
-- Temporary, transient binder-style hub
-- No authentication
-- Resource limitations:
-  * memory / CPU limits
-  * maximum number of concurrent user servers
-- More aggressive culling
-- No persistent storage
-- No home page template
+- `ephemeral-hub`
 
+  The **ephemeral-hub template** helps deploying temporary, transient binder-style hubs.
+    - Doesn't require any user authentication.
+    - Permits limiting of resources:
+      * memory / CPU limits
+      * maximum number of concurrent user servers
+    - Has a more aggressive culling:
+      - Stops server after 30min of idleness
+      - Desn't let servers run for more than 8h
+    - Has no persistent storage
+    - Doesn't use or configures a home page template
+
+- `daskhub`
+
+  The **daskhub template** helps deploying dask-enabled hubs.
+    - Installs [dask-gateway](https://gateway.dask.org/)
+    - Defaults to using a [PANGEO image](https://pangeo-data.github.io/pangeo-stacks/)
+    - Enables outgoing SSH
 
 The graphic below, shows the relationship between the hub templates and the other
-config files and how they are merged together when deploying a JupyterHub.
+config files and how they are merged together when deploying a pilot hub.
 
 ```{figure} images/config-flow.png
 ```
