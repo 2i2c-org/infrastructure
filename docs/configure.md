@@ -63,7 +63,7 @@ Currently there are three hub templates available:
     - Permits limiting of resources:
       * memory / CPU limits
       * maximum number of concurrent user servers
-    - Has a more aggressive culling:
+    - Has more aggressive culling:
       - Stops server after 30min of idleness
       - Desn't let servers run for more than 8h
     - Has no persistent storage
