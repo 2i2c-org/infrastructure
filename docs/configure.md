@@ -49,28 +49,59 @@ The hubs are configured and deployed using *hub templates*. Because each hub
 type can be described by a template, with its own deployment chart, a hierarchy
 of hub types can be built and this makes development and usage easier.
 
-Currently there are two hub templates available:
-- the `base-hub` template
-- the `ephemeral-hub` template
-
-For example, the **ephemeral hub** is a special kind of hub that is built using the *ephemeral-hub template*
-and has the following features:
-
-- Temporary, transient binder-style hub
-- No authentication
-- Resource limitations:
-  * memory / CPU limits
-  * maximum number of concurrent user servers
-- More aggressive culling
-- No persistent storage
-- No home page template
-
-
 The graphic below, shows the relationship between the hub templates and the other
-config files and how they are merged together when deploying a JupyterHub.
+config files and how they are merged together when deploying a pilot hub.
 
 ```{figure} images/config-flow.png
 ```
+
+Currently there are three hub templates available:
+- `base-hub`
+
+  The **base-hub template** is the template that the other templates "inherit" and configure.
+  It provides a base JupyterHub, user storage and culling configuration that satisfies most of the
+  pilot hubs usage requirements.
+
+- `ephemeral-hub`
+
+  The **ephemeral-hub template** helps deploying temporary, transient binder-style hubs.
+    - Doesn't require any user authentication.
+    - Permits limiting of resources:
+      * memory / CPU limits
+      * maximum number of concurrent user servers
+    - Has more aggressive culling:
+      - Stops server after 30min of idleness
+      - Desn't let servers run for more than 8h
+    - Has no persistent storage
+    - Doesn't use or configures a home page template
+
+- `daskhub`
+
+  The **daskhub template** helps deploying dask-enabled hubs.
+    - Installs [dask-gateway](https://gateway.dask.org/)
+    - Defaults to using a [PANGEO image](https://pangeo-data.github.io/pangeo-stacks/)
+    - Enables outgoing SSH
+
+
+### Using the templates to deploy a new hub
+To deploy a new hub, you only need to add and configure it through `hubs.yaml` configuration file.
+This configuration file allows specifying options like the type of template to use for the hub being added,
+the hub domain, how the JupyterHub landing page will look like and authentication preferences.
+
+Because the templates are structured in a **hierarchical** model, so are their helm charts.
+The [jupyterhub helm chart](https://jupyterhub.github.io/helm-chart/) is a subchart of the base-hub and
+the base-hub chart along with the [dask-gateway](https://dask.org/dask-gateway-helm-repo/) one are
+subcharts of the daskhub. The ephemeral-hub chart also subcharts the base-hub.
+
+**Visual of the helm-chart hierarchy:**
+```{figure} images/helm-charts-hierarchy.png
+```
+
+This hierachy is the reason why when adding a new hub using the `daskhub` or the `ephemeral-hub` template, the jupyterhub
+specific configuration in `hubs.yaml` needs to be nested under a `base-hub` key, indicating that we are overriding configuration
+from the *base-hub/jupyterhub* parent chart.
+
+Read more about subcharts and how to configure them in the [Helm docs](https://helm.sh/docs/chart_template_guide/subcharts_and_globals/#overriding-values-from-a-parent-chart).
 
 (config-jupyterhub)=
 ## Configuring each JupyterHub
