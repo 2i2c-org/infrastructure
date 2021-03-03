@@ -1,0 +1,30 @@
+{{- define "daskhub.scratchBucket.name" -}}
+{{ .Values.iam.projectId }}-{{ .Release.Name }}-scratch-bucket
+{{- end }}
+apiVersion: storage.cnrm.cloud.google.com/v1beta1
+kind: StorageBucket
+metadata:
+  annotations:
+    cnrm.cloud.google.com/force-destroy: "false"
+  name: {{ include "daskhub.scratchBucket.name" . }}
+spec:
+  bucketPolicyOnly: true
+  lifecycleRule:
+    - action:
+        type: Delete
+      condition:
+        age: 7
+---
+apiVersion: iam.cnrm.cloud.google.com/v1beta1
+kind: IAMPolicyMember
+metadata:
+  name: scratch-bucket-binding
+spec:
+  member: serviceAccount:{{ include "daskhub.serviceAccountName" . }}@{{ .Values.iam.projectId }}.iam.gserviceaccount.com
+  # This gives users the ability to delete the bucket too :(
+  # But without this, I think you can't list objects in the bucket
+  role: roles/storage.admin
+  resourceRef:
+    apiVersion: storage.cnrm.cloud.google.com/v1beta1
+    kind: StorageBucket
+    name: {{ include "daskhub.scratchBucket.name" . }}
