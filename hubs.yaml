@@ -44,9 +44,10 @@ clusters:
             singleuser:
               memory:
                 limit: 4G
-                guarantee: 4G
+                guarantee: 2G
               cpu:
-                guarantee: 2
+                guarantee: 1
+                limit: 2
               image:
                 name: quay.io/2i2c/paleohack-2021
                 tag: d8c26cd01c8a
