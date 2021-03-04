@@ -44,48 +44,35 @@ base-hub:
       extraEnv:
         # The default worker image matches the singleuser image.
         DASK_GATEWAY__CLUSTER__OPTIONS__IMAGE: '{JUPYTER_IMAGE_SPEC}'
-        SCRATCH_BUCKET_PROTOCOL:
+
+        # Explicitly order environment variables that depend on each
+        # other, since a environment variable needs to be defined first
+        # before they can be interpolated.
+        # See https://github.com/jupyterhub/kubespawner/issues/491
+        daskhub-01-scratch-bucket-protocol:
+          name: SCRATCH_BUCKET_PROTOCOL
           valueFrom:
             configMapKeyRef:
               name: cloud-env-vars
               key: scratch-bucket-protocol
-        SCRATCH_BUCKET_NAME:
+        daskhub-02-scratch-bucket-name:
+          name: SCRATCH_BUCKET_NAME
           valueFrom:
             configMapKeyRef:
               name: cloud-env-vars
               key: scratch-bucket-name
+        daskhub-03-scratch-bucket:
+          name: SCRATCH_BUCKET
+          value: $(SCRATCH_BUCKET_PROTOCOL)://$(SCRATCH_BUCKET_NAME)/$(JUPYTERHUB_USER)
+        daskhub-04-pangeo-scratch:
+          name: PANGEO_SCRATCH
+          value: $(SCRATCH_BUCKET)
+
     hub:
       networkPolicy:
         enabled: false
       extraConfig:
-        daskhub-01-dependent-env-vars: |
-          # Explicitly add user env vars that derive from other env vars
-          # When we use the dict z2jh form, they don't preserve ordering!
-          # Since the env var you refer to must already be defined, this
-          # doesn't work based on the name you have.
-          dependent_env_vars = [
-            {
-              'name': 'SCRATCH_BUCKET',
-              'value': "$(SCRATCH_BUCKET_PROTOCOL)://$(SCRATCH_BUCKET_NAME)/$(JUPYTERHUB_USER)"
-            },{
-              'name': 'PANGEO_SCRATCH',
-              'value': '$(SCRATCH_BUCKET)'
-            }
-          ]
-
-          from kubernetes import client
-
-          def modify_pod_hook(spawner, pod):
-            # FIXME: Make sure sidecars are never first containers
-            user_container = pod.spec.containers[0]
-            for denv in dependent_env_vars:
-              user_container.env.append(
-                client.V1EnvVar(**denv)
-              )
-            return pod
-          c.KubeSpawner.modify_pod_hook = modify_pod_hook
-
-        daskhub-02-add-dask-gateway-values: |
+        daskhub-01-add-dask-gateway-values: |
           # 1. Sets `DASK_GATEWAY__PROXY_ADDRESS` in the singleuser environment.
           # 2. Adds the URL for the Dask Gateway JupyterHub service.
           import os
