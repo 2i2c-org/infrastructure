@@ -186,3 +186,23 @@ jupyterhub:
             return super().start(*args, **kwargs)
 
         c.JupyterHub.spawner_class = CustomSpawner
+
+      06-custom-authenticator: |
+        from oauthenticator.generic import GenericOAuthenticator
+        from traitlets import Unicode
+
+        class CustomOAuthenticator(GenericOAuthenticator):
+          async def authenticate(self, *args, **kwargs):
+            resp = await super().authenticate(*args, **kwargs)
+            if self.username_key == 'sub':
+              # auth0 returns 'sub' in the form of <provider>|<id>. For our
+              # friendly names, we just want <id>, since we don't support multiple
+              # authentication methods in the same hub
+              # This could've been a lambda set to username_key,
+              # but we would need to know which authentication mechanism
+              # auth0 is sending us, so we can use sub / email / nick as
+              # needed. This method is simpler
+              resp['name'] = resp['name'].split('|')[-1]
+            return resp
+
+        c.JupyterHub.authenticator_class = CustomOAuthenticator

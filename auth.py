@@ -3,6 +3,14 @@ from auth0.v3.management import Auth0
 from auth0.v3.authentication import GetToken
 import os
 
+# What key in the authenticated user's profile to use as hub username
+# This shouldn't be changeable by the user!
+USERNAME_KEYS = {
+    'github': 'nickname',
+    'google-oauth2': 'email',
+    'ORCID': 'sub'
+}
+
 
 class KeyProvider:
     def __init__(self, domain, client_id, client_secret):
@@ -111,17 +119,12 @@ class KeyProvider:
         Return z2jh config for auth0 authentication for this JupyterHub
         """
 
-        # default to using emails as usernames
-        username_key = 'email'
-        if connection_name == 'github':
-            # Except for GitHub, where we use the username
-            username_key = 'nickname'
         auth = {
             'authorize_url': f'https://{self.domain}/authorize',
             'token_url': f'https://{self.domain}/oauth/token',
             'userdata_url': f'https://{self.domain}/userinfo',
             'userdata_method': 'GET',
-            'username_key': username_key,
+            'username_key': USERNAME_KEYS[connection_name],
             'client_id': client['client_id'],
             'client_secret': client['client_secret'],
             'scope': ['openid', 'name', 'profile', 'email']
