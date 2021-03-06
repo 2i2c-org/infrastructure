@@ -67,9 +67,9 @@ module "gke" {
       name               = "core-pool"
       machine_type       = var.core_node_machine_type
       min_count          = 1
-      max_count          = 10
+      max_count          = var.core_node_max_count
       local_ssd_count    = 0
-      disk_size_gb       = 100
+      disk_size_gb       = var.core_node_disk_size_gb
       disk_type          = "pd-standard"
       image_type         = "COS"
       auto_repair        = true
@@ -83,7 +83,7 @@ module "gke" {
       name               = "user-pool"
       machine_type       = var.user_node_machine_type
       min_count          = 0
-      max_count          = 10
+      max_count          = var.user_node_max_count
       local_ssd_count    = 0
       disk_size_gb       = 100
       disk_type          = "pd-ssd"

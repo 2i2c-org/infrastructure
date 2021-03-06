@@ -28,9 +28,24 @@ variable "core_node_machine_type" {
   default = "e2-highcpu-4"
 }
 
+variable "core_node_max_count" {
+  type = number
+  default = 5
+}
+
+variable "core_node_disk_size_gb" {
+  type = number
+  default = 50
+}
+
 variable "user_node_machine_type" {
   type = string
   default = "n1-standard-4"
+}
+
+variable "user_node_max_count" {
+  type = number
+  default = 10
 }
 
 variable "dask_worker_machine_type" {
