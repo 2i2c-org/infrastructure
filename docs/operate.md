@@ -5,7 +5,7 @@ Information about operating the hubs, debugging problems, and performing common 
 (operate:team-process)=
 ## Team process for hub development and operation
 
-See the [](tc:coordination:team-activity)
+See the {ref}`tc:coordination:team-activity`.
 
 ## Adding a new hub
 
