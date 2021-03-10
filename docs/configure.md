@@ -42,7 +42,7 @@ Each hub is a dictionary that can consist of the following keys:
 `config.jupyterhub`
 : Any arbitrary [zero to jupyterhub](https://z2jh.jupyter.org) configuration
   can be passed here. Most common is auth setup, memory / CPU restrictions,
-  and max number of active users. See [](config-jupyterhub) for more info.
+  and max number of active users. See {ref}`config-jupyterhub` for more info.
 
 ## Hub templates
 The hubs are configured and deployed using *hub templates*. Because each hub
