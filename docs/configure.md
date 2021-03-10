@@ -54,6 +54,7 @@ config files and how they are merged together when deploying a pilot hub.
 
 ```{figure} images/config-flow.png
 ```
+% The editable version of the diagram is here: https://docs.google.com/presentation/d/1WZKTe5TSDU-5zA4NnNEPsKfgjaBzUqMgdPLTnz-Yb94/edit?usp=sharing
 
 Currently there are three hub templates available:
 - `base-hub`
@@ -96,7 +97,7 @@ subcharts of the daskhub. The ephemeral-hub chart also subcharts the base-hub.
 **Visual of the helm-chart hierarchy:**
 ```{figure} images/helm-charts-hierarchy.png
 ```
-% The editable version of the diagram is here: https://docs.google.com/presentation/d/1nSDxz483g2cx-Ik4usz3OPbQmFyM1QAwfJh_xTDgBSU/edit?usp=sharing
+% The editable version of the diagram is here: https://docs.google.com/presentation/d/1KMyrTd3wdR715tPGuzIHkHqScXBlLpeiksIM2x7EI0g/edit?usp=sharing
 
 This hierachy is the reason why when adding a new hub using the `daskhub` or the `ephemeral-hub` template, the jupyterhub
 specific configuration in `hubs.yaml` needs to be nested under a `base-hub` key, indicating that we are overriding configuration
@@ -269,7 +270,6 @@ at `https://<hub-address>/services/docs`. This can be a great tool to provide hu
 
 ```{figure} images/docs-service.png
 ```
-% The editable version of the diagram is here: https://docs.google.com/presentation/d/1nSDxz483g2cx-Ik4usz3OPbQmFyM1QAwfJh_xTDgBSU/edit?usp=sharing
 
 To enable the docs service service for a hub:
 
