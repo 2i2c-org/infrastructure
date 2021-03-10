@@ -15,7 +15,7 @@ See the [Team Goal label](https://github.com/2i2c-org/pilot-hubs/issues?q=is%3Ai
 
 These issues require attention quickly:
 
-- **New Hubs**: The [Needs Hub issues](https://github.com/2i2c-org/pilot-hubs/issues?q=is%3Aissue+is%3Aopen+sort%3Aupdated-desc+label%3A%22Needs+Hub%22) for a list of hubs that need deployments.
+- **New Hubs**: The [Needs Hub issues](https://github.com/2i2c-org/pilot-hubs/issues?q=is%3Aissue+is%3Aopen+sort%3Aupdated-desc+label%3A%22Needs+Hub%22) are new hubs that need deployments.
 - **Needs Triage**: The [Needs Triage issues](https://github.com/2i2c-org/pilot/issues?q=is%3Aissue+is%3Aopen+sort%3Aupdated-desc+label%3Aneeds%3Atriage) require an initial assessment and labeling.
 - **Priority Issues**: The [Priority Label issues](https://github.com/2i2c-org/pilot-hubs/issues?q=is%3Aissue+is%3Aopen+sort%3Aupdated-desc+label%3Apriority) are important and should be given attention over other issues.
 
