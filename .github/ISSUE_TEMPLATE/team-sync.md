@@ -1,7 +1,7 @@
 ---
 name: "🙌 Team sync"
 about: Syncronize the team's goals and actions
-labels: Team Sync
+labels: team-sync
 title: "Team Sync - [DATE]"
 ---
 
