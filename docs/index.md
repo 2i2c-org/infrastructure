@@ -6,6 +6,7 @@ All hub configuration is in `hubs.yaml`. You can add a new hub by adding
 an entry there, and pushing that to github.
 
 ```{toctree}
+structure
 configure
 operate
 custom-image
