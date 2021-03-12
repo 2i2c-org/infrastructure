@@ -185,7 +185,7 @@ clusters:
         domain: justiceinnovationlab.pilot.2i2c.cloud
         template: base-hub
         auth0:
-          connection: google-oauth2
+          connection: github
         config:
           jupyterhub:
             homepage:
@@ -209,13 +209,11 @@ clusters:
               config:
                 Authenticator:
                   admin_users:
-                    - yuvipanda@gmail.com
-                    - choldgraf@gmail.com
-                    - georgiana.dolocan@gmail.com
-                    - donald.braman@justiceinnovationlab.org
-                    - rory.pulvino@justiceinnovationlab.org
-                    - jared.fishman@justiceinnovationlab.org
-                  username_pattern: '^(.+@justiceinnovationlab\.org|yuvipanda@gmail\.com|choldgraf@gmail\.com|georgiana\.dolocan@gmail\.com|deployment-service-check)$'
+                    - yuvipanda
+                    - choldgraf
+                    - GeorgianaElena
+                    - donaldbraman
+                    - JILPulvino
       - name: pfw
         cluster: 2i2c
         domain: pfw.pilot.2i2c.cloud
