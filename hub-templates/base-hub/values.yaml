@@ -19,6 +19,7 @@ nfsPVC:
   nfs:
     serverIP: nfs-server-01
     baseShareName: /export/home-01/homes
+    clusterMountPath: /home/jovyan/shared-readwrite/user-homes
 
 jupyterhub:
   ingress:
@@ -81,8 +82,10 @@ jupyterhub:
   singleuser:
     admin:
       extraVolumeMounts:
-      - name: home
-        mountPath: /home/jovyan/shared-readwrite
+      - name: homes
+        mountPath: /home/jovyan/shared-readwrite/user-homes
+      - name: public
+        mountPath: /home/jovyan/public
         subPath: _shared
     startTimeout: 600 # 10 mins, because sometimes we have too many new nodes coming up together
     defaultUrl: /tree
@@ -103,8 +106,8 @@ jupyterhub:
         pvcName: home-nfs
         subPath: '{username}'
       extraVolumeMounts:
-      - name: home
-        mountPath: /home/jovyan/shared
+      - name: public
+        mountPath: /home/jovyan/public
         subPath: _shared
         readOnly: true
     memory:

@@ -27,14 +27,14 @@ spec:
           image: busybox
           env:
             - name: NFS_SHARE_NAME
-              value: "{{ .Values.nfsPVC.nfs.baseShareName }}/{{ .Release.Name }}"
+              value: "{{ .Values.nfsPVC.nfs.clusterMountPath }}/{{ .Release.Name }}"
           command:
             - /bin/sh
             - -c
             - "mkdir -p ${NFS_SHARE_NAME} && chown 1000:1000 ${NFS_SHARE_NAME}"
           volumeMounts:
             - name: home-base
-              mountPath: {{ .Values.nfsPVC.nfs.baseShareName | quote }}
+              mountPath: {{ .Values.nfsPVC.nfs.clusterMountPath | quote }}
       volumes:
         - name: home-base
           nfs:
