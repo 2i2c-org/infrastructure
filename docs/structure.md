@@ -39,7 +39,7 @@ We should provide at least the following kinds of documentation:
    heavily driven by the opinionated choices we have made while building it.
 2. **How-to guides** to help users accomplish a specific well defined task, 
    especially if it is something they know how to do in a different system.
-   The documentation titles should always be of the form **How do I <title>?**
+   The documentation titles should always be of the form **How do I `<title>`?**
 3. **Component reference** to inform users where to find documentation for 
    the component they might be having issues with. Most users are unfamiliar 
    with the intricate details of what component does what, so might not be
@@ -70,7 +70,7 @@ of documentaiton.
    with a link to documentation for 2i2c engineers  .
 2. **How-to guides** to help admins accomplish very specific tasks during
    the course of hub usage. Their titles should always be of the form
-   **How do I <title>?**.
+   **How do I `<title>`?**.
 
 This documentation should exist in the [2i2c-org/pilot](https://github.com/2i2c-org/pilot)
 repository, available at [2i2c.org/pilot](https://2i2c.org/pilot/)
@@ -93,7 +93,7 @@ Here are some contexts where they would need documentation.
    pre-requisite knowledge and how it can be acquired.
 2. **How-to guides** for performing common tasks that have not been 
    automated yet. Their titles should always be of the form
-   **How do I <title>?**
+   **How do I `<title>`?**
 3. **Topic guides**
 3. **References**, describing in detail parts of our infrastructure and
    its configuration. This should ideally be kept in the code describing
