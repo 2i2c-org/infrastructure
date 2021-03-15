@@ -82,7 +82,7 @@ jupyterhub:
     admin:
       extraVolumeMounts:
       - name: home
-        mountPath: /home/jovyan/admin-readwrite/user-homes
+        mountPath: /home/jovyan/admin/user-homes
       - name: home
         mountPath: /home/jovyan/shared-readwrite
         subPath: _shared
