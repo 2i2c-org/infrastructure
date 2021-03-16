@@ -6,4 +6,5 @@ cluster-config.md
 hub-config.md
 defaults.md
 hub-templates.md
+storage-layer.md
 ```
