@@ -1,5 +1,5 @@
 """
-Deploy many JupyterHubs to manny Kubernetes Clusters
+Deploy many JupyterHubs to many Kubernetes Clusters
 """
 import tempfile
 from pathlib import Path
@@ -62,7 +62,7 @@ def deploy(cluster_name, hub_name, skip_hub_health_test):
     # Each hub needs a unique proxy.secretToken. However, we don't want
     # to manually generate & save it. We also don't want it to change with
     # each deploy - that causes a pod restart with downtime. So instead,
-    # we generate it based on a signle secret key (`PROXY_SECRET_KEY`)
+    # we generate it based on a single secret key (`PROXY_SECRET_KEY`)
     # combined with the name of each hub. This way, we get unique,
     # cryptographically secure proxy.secretTokens without having to
     # keep much state. We can rotate them by changing `PROXY_SECRET_KEY`.
