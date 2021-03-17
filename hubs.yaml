@@ -569,6 +569,11 @@ clusters:
                 funded_by:
                   name: CloudBank
                   url: http://cloudbank.org/
+
+            singleuser:
+              memory:
+                limit: 2G
+                guarantee: 2G
             hub:
               config:
                 Authenticator:
