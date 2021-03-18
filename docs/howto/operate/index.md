@@ -11,6 +11,7 @@ See the {ref}`tc:coordination:team-activity`.
 add-hub.md
 cmd-access.md
 delete-hub.md
+manual-deploy.md
 test-hub.md
 grafana.md
 ```
