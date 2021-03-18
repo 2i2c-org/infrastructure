@@ -1,4 +1,4 @@
-# Manual deploy a hub
+# Manually deploy a hub
 
 The [`deploy.py`](https://github.com/2i2c-org/pilot-hubs/blob/master/deploy.py) script is a cmd utility built to help deploy one or all the hubs to their Kubernetes clusters, but  also to build the user image. Checkout the [](../configure/update-env.md) section on how to use the deploy script to update the user environment.
 
@@ -53,7 +53,7 @@ optional arguments:
 Before using any of these `deploy.py` commands, you first need to make sure you are authenticated in all the right places and have the right credentials exported as environmental variables. This is because the deploy script need to be able to authenticate into the given cluster and have access to the unique `proxy.secretToken` needed to deploy the proxy pod. It also needs to know how to connect to the Auth0 account in order to determine and configure each hub's auth provider.
 
 ```{note}
-To enable the deploy script to authenticate into the cluster, checkout the [Fetch Cluster credentials](cmd-access.md) section.
+To enable the deploy script to authenticate into the cluster, you only need to be authenticated into the `two-eye-two-see` project. This is because there are [sops](https://github.com/mozilla/sops) encrypted credentials for everything needed under `secrets/` with the key being in the `two-eye-two-see` project. Checkout the [*Project Access*](cmd-access.md) section for more info.
 ```
 
 #### PROXY_SECRET_KEY
