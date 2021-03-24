@@ -2,7 +2,9 @@ import os
 import pytest
 
 
+# Can be flaky due to image pull durations, let's re-run it once more if needed
 @pytest.mark.asyncio
+@pytest.mark.flaky(reruns=1)
 async def test_hub_healthy(hub, api_token):
     """
     Tests the hub is healthy.
