@@ -3,9 +3,9 @@ appVersion: '1.0'
 description: Deployment Chart for JupyterHub
 name: base-hub
 # Let's keep this constant so other charts in this repo can depend on this easily
-version: 0.0.1
+version: 0.0.1-n532.hde0dd1d
 dependencies:
- - name: jupyterhub
+  - name: jupyterhub
    # REMEMBER TO CHANGE BASE IMAGE OF images/hub/ WHEN CHANGING THIS
-   version: 0.11.1-n277.h61b0e003
-   repository: https://jupyterhub.github.io/helm-chart/
+    version: 0.11.1-n277.h61b0e003
+    repository: https://jupyterhub.github.io/helm-chart/
