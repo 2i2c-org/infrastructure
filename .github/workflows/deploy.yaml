@@ -8,6 +8,13 @@ jobs:
   build:
     runs-on: ubuntu-latest
 
+    strategy:
+      matrix:
+        cluster:
+          - hackathon-alpha
+          - 2i2c
+          - cloudbank
+
     steps:
       - uses: actions/checkout@v2
       - uses: google-github-actions/setup-gcloud@master
@@ -44,5 +51,6 @@ jobs:
           PROXY_SECRET_KEY: ${{ secrets.PROXY_SECRET_KEY }}
           AUTH0_MANAGEMENT_CLIENT_ID: ${{ secrets.AUTH0_MANAGEMENT_CLIENT_ID }}
           AUTH0_MANAGEMENT_CLIENT_SECRET: ${{ secrets.AUTH0_MANAGEMENT_CLIENT_SECRET }}
+          CLUSTER_NAME: ${{ matrix.cluster }}
         run: |
-          python3 deploy.py deploy
+          python3 deploy.py deploy ${CLUSTER_NAME}
