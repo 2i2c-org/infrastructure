@@ -135,8 +135,8 @@ jupyterhub:
           - -m
           - jupyterhub_configurator.app
     image:
-      name: us-central1-docker.pkg.dev/two-eye-two-see/low-touch-hubs/agehub
-      tag: '0.0.1-n532.hde0dd1d'
+      name: us-central1-docker.pkg.dev/two-eye-two-see/low-touch-hubs/pilot-hub
+      tag: '0.0.1-n534.h6b3cdb9'
     config:
       JupyterHub:
         authenticator_class: oauthenticator.generic.GenericOAuthenticator

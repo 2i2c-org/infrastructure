@@ -1,6 +1,6 @@
 charts:
   - name: base-hub
-    imagePrefix: us-central1-docker.pkg.dev/two-eye-two-see/low-touch-hubs/age
+    imagePrefix: us-central1-docker.pkg.dev/two-eye-two-see/low-touch-hubs/pilot-
     images:
       hub:
         valuesPath: jupyterhub.hub.image
