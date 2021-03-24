@@ -96,7 +96,7 @@ jupyterhub:
               values: [user-pool]
     image:
       name: set_automatically_by_automation
-      tag: 4066a62
+      tag: 638350c
     storage:
       type: static
       static:
