@@ -35,8 +35,9 @@ def build():
     config_file_path = Path(__file__).parent / "hubs.yaml"
     clusters = parse_clusters(config_file_path)
     for cluster in clusters:
-        with cluster.auth():
-            cluster.build_image()
+        if "image_repo" in cluster.spec:
+            with cluster.auth():
+                cluster.build_image()
 
 
 def deploy(cluster_name, hub_name, skip_hub_health_test):

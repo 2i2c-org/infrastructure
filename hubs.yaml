@@ -1,6 +1,5 @@
 clusters:
   - name: hackathon-alpha
-    image_repo:  "us-central1-docker.pkg.dev/two-eye-two-see/low-touch-hubs/base-user"
     provider: gcp
     gcp:
       key: secrets/hackathon-alpha.json
