@@ -202,8 +202,6 @@ clusters:
                 funded_by:
                   name: 2i2c
                   url: https://2i2c.org
-            singleuser:
-              defaultUrl: /lab
             hub:
               config:
                 Authenticator:
