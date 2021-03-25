@@ -81,9 +81,9 @@ jupyterhub:
   singleuser:
     admin:
       extraVolumeMounts:
-      - name: home
-        mountPath: /home/jovyan/shared-readwrite
-        subPath: _shared
+        - name: home
+          mountPath: /home/jovyan/shared-readwrite
+          subPath: _shared
     startTimeout: 600 # 10 mins, because sometimes we have too many new nodes coming up together
     defaultUrl: /tree
     extraNodeAffinity:
@@ -91,9 +91,9 @@ jupyterhub:
         - weight: 100
           preference:
             matchExpressions:
-            - key: hub.jupyter.org/pool-name
-              operator: In
-              values: [user-pool]
+              - key: hub.jupyter.org/pool-name
+                operator: In
+                values: [user-pool]
     image:
       name: set_automatically_by_automation
       tag: 638350c
@@ -103,10 +103,10 @@ jupyterhub:
         pvcName: home-nfs
         subPath: '{username}'
       extraVolumeMounts:
-      - name: home
-        mountPath: /home/jovyan/shared
-        subPath: _shared
-        readOnly: true
+        - name: home
+          mountPath: /home/jovyan/shared
+          subPath: _shared
+          readOnly: true
     memory:
       guarantee: 256M
       limit: 1G
@@ -127,6 +127,16 @@ jupyterhub:
             - port: 443
               protocol: TCP
   hub:
+    services:
+      configurator:
+        url: http://configurator:10101
+        command:
+          - python3
+          - -m
+          - jupyterhub_configurator.app
+    image:
+      name: quay.io/2i2c/pilot-hub
+      tag: '0.0.1-n534.h0a5b959'
     config:
       JupyterHub:
         authenticator_class: oauthenticator.generic.GenericOAuthenticator
@@ -135,6 +145,26 @@ jupyterhub:
     networkPolicy:
       enabled: true
       ingress:
+        - from:
+            - podSelector:
+                matchLabels:
+                  app: jupyterhub
+                  component: hub
+          ports:
+            - port: 8081
+              protocol: TCP
+        - from:
+            - podSelector:
+                matchLabels:
+                  app: jupyterhub
+                  component: proxy
+            - podSelector:
+                matchLabels:
+                  app: jupyterhub
+                  component: hub
+          ports:
+            - port: 10101
+              protocol: TCP
         - from:
             - namespaceSelector:
                 matchLabels:
@@ -179,7 +209,9 @@ jupyterhub:
       05-custom-admin: |
         from z2jh import get_config
         from kubespawner import KubeSpawner
-        class CustomSpawner(KubeSpawner):
+        from jupyterhub_configurator.mixins import ConfiguratorSpawnerMixin
+
+        class CustomSpawner(ConfiguratorSpawnerMixin, KubeSpawner):
           def start(self, *args, **kwargs):
             custom_admin = get_config('singleuser.admin', {})
             if custom_admin and self.user.admin:
@@ -190,6 +222,7 @@ jupyterhub:
                 self.volume_mounts += [volume for volume in extra_volume_mounts if volume not in self.volume_mounts]
 
             return super().start(*args, **kwargs)
+
 
         c.JupyterHub.spawner_class = CustomSpawner
 

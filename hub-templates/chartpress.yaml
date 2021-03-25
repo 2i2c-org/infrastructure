@@ -1,0 +1,6 @@
+charts:
+  - name: base-hub
+    imagePrefix: quay.io/2i2c/pilot-
+    images:
+      hub:
+        valuesPath: jupyterhub.hub.image
