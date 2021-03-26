@@ -2,6 +2,12 @@
 # If that changes, this should be changed too!
 FROM jupyterhub/k8s-hub:0.11.1-n298.hd9d7403b
 
-ENV CONFIGURATOR_VERSION 746e7285af40b9bafd227dae3f2e41d1a631a301
+ENV CONFIGURATOR_VERSION ed7e3a0df1e3d625d10903ef7d7fd9c2fbb548db
 
 RUN pip install --no-cache git+https://github.com/yuvipanda/jupyterhub-configurator@${CONFIGURATOR_VERSION}
+
+USER root
+RUN mkdir -p /usr/local/etc/jupyterhub-configurator
+
+COPY jupyterhub_configurator_config.py /usr/local/etc/jupyterhub-configurator/jupyterhub_configurator_config.py
+USER $NB_USER
