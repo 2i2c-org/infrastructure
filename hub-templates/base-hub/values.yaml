@@ -127,6 +127,38 @@ jupyterhub:
             - port: 443
               protocol: TCP
   hub:
+    extraFiles:
+      configurator-schema-default:
+        mountPath: /usr/local/etc/jupyterhub-configurator/00-default.schema.json
+        data:
+          type: object
+          name: config
+          properties:
+            KubeSpawner.image:
+              type: string
+              title: User docker image
+              description: Determines languages, libraries and interfaces available
+              help: Leave this blank to use the default
+            Spawner.default_url:
+              type: string
+              title: Default User Interface
+              enum:
+                - "/tree"
+                - "/lab"
+                - "/rstudio"
+              default: "/tree"
+              enumMetadata:
+                interfaces:
+                  - value: "/tree"
+                    title: Classic Notebook
+                    description: What most people think of as Jupyter
+                  - value: "/lab"
+                    title: JupyterLab
+                    description: Powerful next generation notebook interface
+                  - value: "/rstudio"
+                    title: RStudio
+                    description: Very popular R IDE
+
     services:
       configurator:
         url: http://configurator:10101
@@ -134,9 +166,10 @@ jupyterhub:
           - python3
           - -m
           - jupyterhub_configurator.app
+          - --Configurator.config_file=/usr/local/etc/jupyterhub-configurator/jupyterhub_configurator_config.py
     image:
       name: quay.io/2i2c/pilot-hub
-      tag: '0.0.1-n534.h0a5b959'
+      tag: '0.0.1-n569.hb296398'
     config:
       JupyterHub:
         authenticator_class: oauthenticator.generic.GenericOAuthenticator
