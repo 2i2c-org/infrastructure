@@ -151,13 +151,13 @@ jupyterhub:
                 interfaces:
                   - value: "/tree"
                     title: Classic Notebook
-                    description: What most people think of as Jupyter
+                    description: The original single-document interface for creating Jupyter Notebooks.
                   - value: "/lab"
                     title: JupyterLab
-                    description: Powerful next generation notebook interface
+                    description: A Powerful next generation notebook interface
                   - value: "/rstudio"
                     title: RStudio
-                    description: Very popular R IDE
+                    description: An IDE For R, created by the RStudio company
 
     services:
       configurator:
