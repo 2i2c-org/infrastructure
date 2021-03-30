@@ -355,8 +355,8 @@ clusters:
             jupyterhub:
               singleuser:
                 image:
-                  name: catalystcoop/pilot-hub
-                  tag: 2021.02.23
+                  name: catalystcoop/pudl-jupyter
+                  tag: 2021.03.27
                 memory:
                   limit: 6G
                   guarantee: 4G
