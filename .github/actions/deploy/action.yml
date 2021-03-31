@@ -8,7 +8,6 @@ inputs:
 runs:
   using: "composite"
   steps:
-    - uses: actions/checkout@v2
     - uses: google-github-actions/setup-gcloud@master
       with:
         version: '290.0.1'
@@ -46,4 +45,5 @@ runs:
         AUTH0_MANAGEMENT_CLIENT_ID: ${{ secrets.AUTH0_MANAGEMENT_CLIENT_ID }}
         AUTH0_MANAGEMENT_CLIENT_SECRET: ${{ secrets.AUTH0_MANAGEMENT_CLIENT_SECRET }}
       run: |
-        python3 deploy.py deploy ${{ inputs.cluster }}
+        echo "Heeey!"
+        # python3 deploy.py deploy ${{ inputs.cluster }}
