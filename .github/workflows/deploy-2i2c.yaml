@@ -1,0 +1,13 @@
+name: Deploy and Test 2i2c hubs
+
+on:
+  push:
+    branches: [ master ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: ./.github/actions/deploy
+        with:
+          cluster: '2i2c'

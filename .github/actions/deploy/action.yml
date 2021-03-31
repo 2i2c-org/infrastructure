@@ -1,0 +1,49 @@
+name: 'Deploy and Test Hubs'
+description: 'Deploy all hubs in a 2i2c cluster'
+inputs:
+  cluster:  # id of input
+    description: 'Cluster name'
+    required: true
+    default: '2i2c'
+runs:
+  using: "composite"
+  steps:
+    - uses: actions/checkout@v2
+    - uses: google-github-actions/setup-gcloud@master
+      with:
+        version: '290.0.1'
+        # This is used for KMS only
+        project_id: two-eye-two-see
+        service_account_key: ${{ secrets.GCP_KMS_DECRYPTOR_KEY }}
+        export_default_credentials: true
+
+    - run: gcloud info
+
+    - uses: azure/setup-helm@v1
+
+    - name: Fetch helm charts
+      run: |
+        cd hub-templates
+        helm dep up base-hub
+        helm dep up daskhub
+        helm dep up ephemeral-hub
+
+    - name: Setup gcloud auth for docker
+      # FIXME: Add more auth providers & registries here as needed
+      run: |
+        gcloud auth configure-docker us-central1-docker.pkg.dev
+
+    - uses: mdgreenwald/mozilla-sops-action@v1
+
+    - name: Setup dependencies
+      run: |
+        python3 -m pip install -r requirements.txt
+        python3 -m pip install -r dev-requirements.txt
+
+    - name: Deploy and test hubs
+      env:
+        PROXY_SECRET_KEY: ${{ secrets.PROXY_SECRET_KEY }}
+        AUTH0_MANAGEMENT_CLIENT_ID: ${{ secrets.AUTH0_MANAGEMENT_CLIENT_ID }}
+        AUTH0_MANAGEMENT_CLIENT_SECRET: ${{ secrets.AUTH0_MANAGEMENT_CLIENT_SECRET }}
+      run: |
+        python3 deploy.py deploy ${{ inputs.cluster }}
