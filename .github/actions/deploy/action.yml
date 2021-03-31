@@ -1,49 +1,47 @@
-name: 'Deploy and Test Hubs'
-description: 'Deploy all hubs in a 2i2c cluster'
+name: 'Deploy prerequisites'
+description: 'Prerequisites needed to deploy hubs in a 2i2c cluster'
 inputs:
-  cluster:  # id of input
+  cluster:
     description: 'Cluster name'
     required: true
     default: '2i2c'
+  proxy_secret_key:
+    description: 'Proxy secret key'
+    required: true
+  auth0_management_client_id:
+    description: 'Auth0 management id'
+    required: true
+  auth0_management_client_secret:
+    description: 'Auth0 management client secret'
+    required: true
 runs:
   using: "composite"
   steps:
-    - uses: actions/checkout@v2
-    - uses: google-github-actions/setup-gcloud@master
-      with:
-        version: '290.0.1'
-        # This is used for KMS only
-        project_id: two-eye-two-see
-        service_account_key: ${{ secrets.GCP_KMS_DECRYPTOR_KEY }}
-        export_default_credentials: true
-
-    - run: gcloud info
-
-    - uses: azure/setup-helm@v1
-
+    - name: Get gcloud info
+      run: gcloud info
+      shell: bash
     - name: Fetch helm charts
       run: |
         cd hub-templates
         helm dep up base-hub
         helm dep up daskhub
         helm dep up ephemeral-hub
-
+      shell: bash
     - name: Setup gcloud auth for docker
       # FIXME: Add more auth providers & registries here as needed
       run: |
         gcloud auth configure-docker us-central1-docker.pkg.dev
-
-    - uses: mdgreenwald/mozilla-sops-action@v1
-
+      shell: bash
     - name: Setup dependencies
       run: |
         python3 -m pip install -r requirements.txt
         python3 -m pip install -r dev-requirements.txt
-
+      shell: bash
     - name: Deploy and test hubs
       env:
-        PROXY_SECRET_KEY: ${{ secrets.PROXY_SECRET_KEY }}
-        AUTH0_MANAGEMENT_CLIENT_ID: ${{ secrets.AUTH0_MANAGEMENT_CLIENT_ID }}
-        AUTH0_MANAGEMENT_CLIENT_SECRET: ${{ secrets.AUTH0_MANAGEMENT_CLIENT_SECRET }}
+        PROXY_SECRET_KEY: ${{ inputs.proxy_secret_key }}
+        AUTH0_MANAGEMENT_CLIENT_ID: ${{ inputs.auth0_management_client_id }}
+        AUTH0_MANAGEMENT_CLIENT_SECRET: ${{ inputs.auth0_management_client_secret }}
       run: |
         python3 deploy.py deploy ${{ inputs.cluster }}
+      shell: bash
