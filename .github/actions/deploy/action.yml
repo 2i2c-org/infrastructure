@@ -25,12 +25,6 @@ runs:
         python3 -m pip install -r requirements.txt
         python3 -m pip install -r dev-requirements.txt
       shell: bash
-    - name: Setup env vars
-      run: |
-        echo "PROXY_SECRET_KEY=${{ secrets.PROXY_SECRET_KEY }}" >> $GITHUB_ENV
-        echo "AUTH0_MANAGEMENT_CLIENT_ID=${{ secrets.AUTH0_MANAGEMENT_CLIENT_ID }}" >> $GITHUB_ENV
-        echo "AUTH0_MANAGEMENT_CLIENT_SECRET=${{ secrets.AUTH0_MANAGEMENT_CLIENT_SECRET }}" >> $GITHUB_ENV
-      shell: bash
     - name: Deploy and test hubs
       run: |
         echo "Heeey!"
