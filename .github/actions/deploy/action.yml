@@ -1,13 +1,25 @@
-name: 'Deploy and Test Hubs'
-description: 'Deploy all hubs in a 2i2c cluster'
+name: 'Deploy prerequisites'
+description: 'Prerequisites needed to deploy hubs in a 2i2c cluster'
 inputs:
-  cluster:  # id of input
+  cluster:
     description: 'Cluster name'
     required: true
     default: '2i2c'
+  proxy_secret_key:
+    description: 'Proxy secret key'
+    required: true
+  auth0_management_client_id:
+    description: 'Auth0 management id'
+    required: true
+  auth0_management_client_secret:
+    description: 'Auth0 management client secret'
+    required: true
 runs:
   using: "composite"
   steps:
+    - name: Get gcloud info
+      run: gcloud info
+      shell: bash
     - name: Fetch helm charts
       run: |
         cd hub-templates
@@ -26,7 +38,10 @@ runs:
         python3 -m pip install -r dev-requirements.txt
       shell: bash
     - name: Deploy and test hubs
+      env:
+        PROXY_SECRET_KEY: ${{ inputs.proxy_secret_key }}
+        AUTH0_MANAGEMENT_CLIENT_ID: ${{ inputs.auth0_management_client_id }}
+        AUTH0_MANAGEMENT_CLIENT_SECRET: ${{ inputs.auth0_management_client_secret }}
       run: |
-        echo "Heeey!"
-        # python3 deploy.py deploy ${{ inputs.cluster }}
+        python3 deploy.py deploy ${{ inputs.cluster }}
       shell: bash

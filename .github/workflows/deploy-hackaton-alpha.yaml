@@ -9,6 +9,18 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
+      - uses: google-github-actions/setup-gcloud@master
+        with:
+          version: '290.0.1'
+          # This is used for KMS only
+          project_id: two-eye-two-see
+          service_account_key: ${{ secrets.GCP_KMS_DECRYPTOR_KEY }}
+          export_default_credentials: true
+      - uses: azure/setup-helm@v1
+      - uses: mdgreenwald/mozilla-sops-action@v1
       - uses: ./.github/actions/deploy
         with:
           cluster: 'hackathon-alpha'
+          proxy_secret_key: ${{ secrets.PROXY_SECRET_KEY }}
+          auth0_management_client_id: ${{ secrets.AUTH0_MANAGEMENT_CLIENT_ID }}
+          auth0_management_client_secret: ${{ secrets.AUTH0_MANAGEMENT_CLIENT_SECRET }}
