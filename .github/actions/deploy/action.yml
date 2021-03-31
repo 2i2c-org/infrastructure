@@ -14,16 +14,17 @@ runs:
         helm dep up base-hub
         helm dep up daskhub
         helm dep up ephemeral-hub
+      shell: bash
     - name: Setup gcloud auth for docker
       # FIXME: Add more auth providers & registries here as needed
       run: |
         gcloud auth configure-docker us-central1-docker.pkg.dev
-
+      shell: bash
     - name: Setup dependencies
       run: |
         python3 -m pip install -r requirements.txt
         python3 -m pip install -r dev-requirements.txt
-
+      shell: bash
     - name: Deploy and test hubs
       env:
         PROXY_SECRET_KEY: ${{ secrets.PROXY_SECRET_KEY }}
@@ -32,3 +33,4 @@ runs:
       run: |
         echo "Heeey!"
         # python3 deploy.py deploy ${{ inputs.cluster }}
+      shell: bash
