@@ -27,9 +27,9 @@ runs:
       shell: bash
     - name: Deploy and test hubs
       env:
-        PROXY_SECRET_KEY: ${{ secrets.PROXY_SECRET_KEY }}
-        AUTH0_MANAGEMENT_CLIENT_ID: ${{ secrets.AUTH0_MANAGEMENT_CLIENT_ID }}
-        AUTH0_MANAGEMENT_CLIENT_SECRET: ${{ secrets.AUTH0_MANAGEMENT_CLIENT_SECRET }}
+        PROXY_SECRET_KEY: '${{secrets.PROXY_SECRET_KEY}}'
+        AUTH0_MANAGEMENT_CLIENT_ID: '${{secrets.AUTH0_MANAGEMENT_CLIENT_ID}}'
+        AUTH0_MANAGEMENT_CLIENT_SECRET: '${{secrets.AUTH0_MANAGEMENT_CLIENT_SECRET}}'
       run: |
         echo "Heeey!"
         # python3 deploy.py deploy ${{ inputs.cluster }}
