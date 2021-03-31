@@ -16,6 +16,7 @@ jobs:
           project_id: two-eye-two-see
           service_account_key: ${{ secrets.GCP_KMS_DECRYPTOR_KEY }}
           export_default_credentials: true
+      - run: gcloud info
       - uses: azure/setup-helm@v1
       - uses: mdgreenwald/mozilla-sops-action@v1
       - uses: ./.github/actions/deploy
