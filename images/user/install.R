@@ -23,13 +23,20 @@ cran_packages <- c(
   "rstan", "2.21.2",
   # https://github.com/utoronto-2i2c/jupyterhub-deploy/issues/31
   "ggforce", "0.3.2",
-  "ggthemes", "4.2.0"
+  "ggthemes", "4.2.0",
+  # https://github.com/2i2c-org/pilot/issues/66
+  "rJava", "0.9-13",
+  "igraph", "1.2.6",
+  "devtools", "2.3.2",
+  "Rcpp", "1.0.6",
+  "roxygen2", "7.1.1"
 )
 
 github_packages <- c(
   # https://github.com/utoronto-2i2c/jupyterhub-deploy/issues/31
   "cutterkom/generativeart", "56ce6beed0433748b4372bfffba0e1c9f2740f9b",
-  "djnavarro/flametree", "0999530f758d074c214c068726e68786bb4698f6"
+  "djnavarro/flametree", "0999530f758d074c214c068726e68786bb4698f6",
+  "davidsjoberg/ggsankey", "afe822bc92c3a34d834cd787d22c15e255b36cf3"
 )
 
 for (i in seq(1, length(cran_packages), 2)) {

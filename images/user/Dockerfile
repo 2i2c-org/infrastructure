@@ -91,12 +91,27 @@ RUN apt-get update && \
                    libgeos-3.8.0 \
                    libproj15 \
                    libudunits2-0 \
-                   libxml2 > /dev/null
+                   libxml2 \
+                   libglpk-dev \
+                   libgmp3-dev \
+                   libcurl4-openssl-dev \
+                   libgit2-dev \
+                   libxml2-dev > /dev/null
+
+# Needed by rJava library
+RUN apt-get update && \
+    apt-get install -y --no-install-recommends \
+    default-jdk > /dev/null && \
+    R CMD javareconf
+
 # Packages our users have requested.
 # FFMPEG: https://github.com/2i2c-org/pilot/issues/5
 RUN apt-get update && \
 	apt-get install -y --no-install-recommends \
                    ffmpeg > /dev/null
+# gatsby: https://github.com/2i2c-org/pilot/issues/66
+RUN npm install -g gatsby-cli
+
 # R_LIBS_USER is set by default in /etc/R/Renviron, which RStudio loads.
 # We uncomment the default, and set what we wanna - so it picks up
 # the packages we install. Without this, RStudio doesn't see the packages
