@@ -109,8 +109,6 @@ RUN apt-get update && \
 RUN apt-get update && \
 	apt-get install -y --no-install-recommends \
                    ffmpeg > /dev/null
-# gatsby: https://github.com/2i2c-org/pilot/issues/66
-RUN npm install -g gatsby-cli
 
 # R_LIBS_USER is set by default in /etc/R/Renviron, which RStudio loads.
 # We uncomment the default, and set what we wanna - so it picks up
