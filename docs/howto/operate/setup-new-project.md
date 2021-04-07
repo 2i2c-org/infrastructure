@@ -33,15 +33,16 @@ repository.
    issue.
 
 2. Run terraform (with instructions in the org-ops repo README). This will give you a
-   detailed plan on what exactly terraform will do. **Scrutinize this carefully** -
-   only a new project should be created, nothing else should change. Particularly,
-   there should be no **delete** actions.
+   detailed plan on what exactly terraform will do. [prevent_destroy](https://www.terraform.io/docs/language/meta-arguments/lifecycle.html#prevent_destroy)
+   is set to most sensitive resources to prevent accidental destruction - however,
+   you should still scrutinize the plan produced by `terraform apply` carefully before applying it.
+   Particularly, there shouldn't be any *delete* actions with this.
 
 3. Validate that the project has been created, and you have access to it with
    your user account. 
 
 4. Commit the change, make a PR to the repo with it, and merge it. This is
-   preferable to pushing to the repo directly. You can self-merge your PR.
+   preferable to pushing to the repo directly. You can self-merge it.
 
 ## Without billing account access
 
