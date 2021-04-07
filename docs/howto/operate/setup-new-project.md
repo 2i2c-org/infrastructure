@@ -23,7 +23,7 @@ account and give us access.
 
 Once the client organization provides us with a billing account,
 we provision a project for them inside the 2i2c.org GCP organization.
-ALl this work happens in the [org-ops](https://github.com/2i2c-org/org-ops)
+All this work happens in the [org-ops](https://github.com/2i2c-org/org-ops)
 repository.
 
 1. Edit `projects.tfvars`, adding an entry to `fully_managed_projects`.
@@ -33,7 +33,7 @@ repository.
    issue.
 
 2. Run terraform (with instructions in the org-ops repo README). This will give you a
-   detaile plan on what exactly terraform will do. **Scrutinize this carefully** -
+   detailed plan on what exactly terraform will do. **Scrutinize this carefully** -
    only a new project should be created, nothing else should change. Particularly,
    there should be no **delete** actions.
 
