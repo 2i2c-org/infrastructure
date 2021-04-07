@@ -1,7 +1,7 @@
 terraform {
   backend "gcs" {
-    bucket  = "2i2c-terraform-state"
-    prefix  = "terraform/state/low-touch-hubs"
+    bucket = "two-eye-two-see-org-terraform-state"
+    prefix = "terraform/state/pilot-hubs"
   }
 }
 
