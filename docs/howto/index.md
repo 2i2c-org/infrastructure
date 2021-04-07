@@ -36,4 +36,5 @@ customize/configure-login-page.md
 ## Hub operation
 ```{toctree}
 operate/index.md
+operate/setup-new-project.md
 ```
