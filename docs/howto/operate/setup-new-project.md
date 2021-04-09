@@ -32,17 +32,19 @@ repository.
    information about the client organization, ideally pointing to a GitHub
    issue.
 
-2. Run terraform (with instructions in the org-ops repo README). This will give you a
-   detailed plan on what exactly terraform will do. [prevent_destroy](https://www.terraform.io/docs/language/meta-arguments/lifecycle.html#prevent_destroy)
-   is set to most sensitive resources to prevent accidental destruction - however,
-   you should still scrutinize the plan produced by `terraform apply` carefully before applying it.
-   Particularly, there shouldn't be any *delete* actions with this.
+2. Make a commit, and create a pull request in the org-ops repository.
 
-3. Validate that the project has been created, and you have access to it with
+3. Run `terraform plan -var-file project.tfvars` to give you a detailed plan on
+   what exactly terraform will do. Paste this in the PR description, and ask
+   someone else for review.
+
+4. Someone else should review the plan, and merge the PR. There should be co-ordination
+   on when this is merged, so immediately after either the PR creator or merger
+   can run `terraform apply -var-file projects.tfvars` after merging. They should
+   make sure the diff isn't that different, and comment on the PR once it's done.
+
+5. Validate that the project has been created, and you have access to it with
    your user account. 
-
-4. Commit the change, make a PR to the repo with it, and merge it. This is
-   preferable to pushing to the repo directly. You can self-merge it.
 
 ## Without billing account access
 
