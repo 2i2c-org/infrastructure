@@ -1,5 +1,5 @@
 ---
-name: "🧭 New team goal"
+name: "🧭 New Goal"
 about: Creating a new team goal
 labels: "type: goal"
 ---
