@@ -1,7 +1,7 @@
 ---
 name: "🧭 New team goal"
 about: Creating a new team goal
-labels: goal
+labels: "type: goal"
 ---
 
 # Background

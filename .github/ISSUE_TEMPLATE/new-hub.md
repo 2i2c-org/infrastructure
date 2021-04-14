@@ -1,7 +1,7 @@
 ---
 name: "💻 Create a new hub"
 about: Creating a new hub for 2i2c to operate
-labels: Needs Hub, Hub
+labels: "type: hub"
 title: "[Hub] - [Hub name]"
 ---
 
