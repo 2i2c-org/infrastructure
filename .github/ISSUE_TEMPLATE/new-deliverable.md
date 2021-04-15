@@ -1,5 +1,5 @@
 ---
-name: "✅ New Deliverable"
+name: "🏆 New Deliverable"
 about: Deliverables are results that we want to work towards.
 labels: "type: deliverable"
 ---
