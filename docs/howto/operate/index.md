@@ -14,4 +14,5 @@ delete-hub.md
 manual-deploy.md
 test-hub.md
 grafana.md
+node-adm.md
 ```
