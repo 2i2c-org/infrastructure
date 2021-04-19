@@ -9,7 +9,7 @@ The [node selector](https://kubernetes.io/docs/concepts/scheduling-eviction/assi
 
 This separation should protect against user pods exhausting the resources needed by core and support pods.
 
-The nodes spawn by these node pools are configured to run on kinds of VMs, that are determined based on the number, type and the needs(CPU, memory, etc.) of the pods that run on these. Checkout the current configuration of the clusters in the [`terraform` code section](https://github.com/2i2c-org/pilot-hubs/tree/master/terraform).
+The nodes spawned by these node pools are configured to run on kinds of VMs, that are determined based on the number, type and the needs(CPU, memory, etc.) of the pods that run on these. Checkout the current configuration of the clusters in the [`terraform` code section](https://github.com/2i2c-org/pilot-hubs/tree/master/terraform).
 
 
 ## Freeing up a node
