@@ -2,7 +2,12 @@
 
 The current pilot Kubernetes clusters we run, have two types of group nodes ([node pools](https://cloud.google.com/kubernetes-engine/docs/concepts/node-pools)), configured to run on: `core` and `user` pools.
 
-The [node selector](https://kubernetes.io/docs/concepts/scheduling-eviction/assign-pod-node/#nodeselector) configuration will ensure that all core and support pods will be placed and run on nodes from the core pool and all the user pods will be assigned on nodes in the user pool. This separation should protect against user pods exhausting the resources needed by core and support pods.
+The [node selector](https://kubernetes.io/docs/concepts/scheduling-eviction/assign-pod-node/#nodeselector) configuration will ensure the following assignment of pods to nodes:
+
+- **Core and support pods** will be assigned nodes from the core pool
+- **User pods** will be assigned to nodes in the user pool.
+
+This separation should protect against user pods exhausting the resources needed by core and support pods.
 
 The nodes spawn by these node pools are configured to run on kinds of VMs, that are determined based on the number, type and the needs(CPU, memory, etc.) of the pods that run on these. Checkout the current configuration of the clusters in the [`terraform` code section](https://github.com/2i2c-org/pilot-hubs/tree/master/terraform).
 
