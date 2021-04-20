@@ -7,4 +7,5 @@ hub-config.md
 defaults.md
 hub-templates.md
 storage-layer.md
+config.md
 ```
