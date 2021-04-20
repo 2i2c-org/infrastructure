@@ -12,52 +12,14 @@ from ruamel.yaml import YAML
 from ruamel.yaml.scanner import ScannerError
 from textwrap import dedent
 from build import last_modified_commit
-from contextlib import contextmanager
 from build import build_image
+from contextlib import contextmanager
 from jhub_client.execute import execute_notebook, JupyterHubAPI
+from utils import decrypt_file
 
 # Without `pure=True`, I get an exception about str / byte issues
 yaml = YAML(typ='safe', pure=True)
 
-@contextmanager
-def decrypt_file(encrypted_path):
-    """
-    Provide secure temporary decrypted contents of a given file
-
-    If file isn't a sops encrypted file, we assume no encryption is used
-    and return the current path.
-    """
-    # We must first determine if the file is using sops
-    # sops files are JSON/YAML with a `sops` key. So we first check
-    # if the file is valid JSON/YAML, and then if it has a `sops` key
-    with open(encrypted_path) as f:
-        _, ext = os.path.splitext(encrypted_path)
-        # Support the (clearly wrong) people who use .yml instead of .yaml
-        if ext == '.yaml' or ext == '.yml':
-            try:
-                encrypted_data = yaml.load(f)
-            except ScannerError:
-                yield encrypted_path
-                return
-        elif ext == '.json':
-            try:
-                encrypted_data = json.load(f)
-            except json.JSONDecodeError:
-                yield encrypted_path
-                return
-
-    if 'sops' not in encrypted_data:
-        yield encrypted_path
-        return
-
-    # If file has a `sops` key, we assume it's sops encrypted
-    with tempfile.NamedTemporaryFile() as f:
-        subprocess.check_call([
-            'sops',
-            '--output', f.name,
-            '--decrypt', encrypted_path
-        ])
-        yield f.name
 
 class Cluster:
     """
@@ -117,7 +79,7 @@ class Hub:
         self.cluster = cluster
         self.spec = spec
 
-    def get_generated_config(self, auth_provider, proxy_secret_key):
+    def get_generated_config(self, auth_provider, secret_key):
         """
         Generate config automatically for each hub
 
@@ -127,7 +89,7 @@ class Hub:
         WARNING: CONTAINS SECRET VALUES!
         """
 
-        proxy_secret = hmac.new(proxy_secret_key, self.spec['name'].encode(), hashlib.sha256).hexdigest()
+        proxy_secret = hmac.new(secret_key, self.spec['name'].encode(), hashlib.sha256).hexdigest()
 
         generated_config = {
             'jupyterhub': {
@@ -239,7 +201,7 @@ class Hub:
             # these can all exist fine.
             generated_config['jupyterhub']['hub']['config']['GenericOAuthenticator'] = auth_provider.get_client_creds(client, self.spec['auth0']['connection'])
 
-        return self.apply_hub_template_fixes(generated_config, proxy_secret_key)
+        return self.apply_hub_template_fixes(generated_config, secret_key)
 
 
     def unset_env_var(self, env_var, old_env_var_value):
@@ -254,7 +216,7 @@ class Hub:
             os.environ[env_var] = old_env_var_value
 
 
-    def apply_hub_template_fixes(self, generated_config, proxy_secret_key):
+    def apply_hub_template_fixes(self, generated_config, secret_key):
         """
         Modify generated_config based on what hub template we're using.
 
@@ -268,7 +230,7 @@ class Hub:
         hub_template = self.spec['template']
 
         # Generate a token for the hub health service
-        hub_health_token = hmac.new(proxy_secret_key, 'health-'.encode() + self.spec['name'].encode(), hashlib.sha256).hexdigest()
+        hub_health_token = hmac.new(secret_key, 'health-'.encode() + self.spec['name'].encode(), hashlib.sha256).hexdigest()
         # Describe the hub health service
         generated_config.setdefault('jupyterhub', {}).setdefault('hub', {}).setdefault('services', {})['hub-health'] = {
             'apiToken': hub_health_token,
@@ -291,7 +253,7 @@ class Hub:
 
         # LOLSOB FIXME
         if hub_template == 'daskhub':
-            gateway_token = hmac.new(proxy_secret_key, 'gateway-'.encode() + self.spec['name'].encode(), hashlib.sha256).hexdigest()
+            gateway_token = hmac.new(secret_key, 'gateway-'.encode() + self.spec['name'].encode(), hashlib.sha256).hexdigest()
             generated_config['dask-gateway'] = {
                 'gateway': {
                     'auth': {
@@ -303,12 +265,12 @@ class Hub:
 
         return generated_config
 
-    def deploy(self, auth_provider, proxy_secret_key, skip_hub_health_test=False):
+    def deploy(self, auth_provider, secret_key, skip_hub_health_test=False):
         """
         Deploy this hub
         """
 
-        generated_values = self.get_generated_config(auth_provider, proxy_secret_key)
+        generated_values = self.get_generated_config(auth_provider, secret_key)
 
         with tempfile.NamedTemporaryFile(mode='w') as values_file, tempfile.NamedTemporaryFile(mode='w') as generated_values_file:
             json.dump(self.spec['config'], values_file)

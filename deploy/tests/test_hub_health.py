@@ -54,6 +54,8 @@ async def check_hub_health(hub_url, test_notebook_path, service_api_token):
     finally:
         if orig_service_token:
             os.environ['JUPYTERHUB_API_TOKEN'] = orig_service_token
+        else:
+            del os.environ['JUPYTERHUB_API_TOKEN']
 
 
 @pytest.mark.asyncio
