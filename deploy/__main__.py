@@ -64,7 +64,7 @@ def deploy(cluster_name, hub_name, skip_hub_health_test, config_path):
     # proxy.secretTokens have leaked. So let's be careful with that!
     SECRET_KEY = bytes.fromhex(config['secret_key'])
 
-    config_file_path = Path(os.getcwd()) / "config" / f'{cluster_name}.yaml'
+    config_file_path = Path(os.getcwd()) / "clusters" / f'{cluster_name}.yaml'
     with open(config_file_path) as f:
         cluster = Cluster(yaml.load(f))
 
