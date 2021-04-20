@@ -19,17 +19,6 @@ from utils import decrypt_file
 # Without `pure=True`, I get an exception about str / byte issues
 yaml = YAML(typ="safe", pure=True)
 
-
-def parse_clusters(config_file_path):
-    """
-    Parse hubs.yaml file & return a list of Clusters
-    """
-    with open(config_file_path) as f:
-        config = yaml.load(f)
-
-    return [Cluster(cluster_yaml) for cluster_yaml in config["clusters"]]
-
-
 def build():
     """
     Build and push all images for all clusters
@@ -75,27 +64,18 @@ def deploy(cluster_name, hub_name, skip_hub_health_test, config_path):
     # proxy.secretTokens have leaked. So let's be careful with that!
     SECRET_KEY = bytes.fromhex(config['secret_key'])
 
-    config_file_path = Path(os.getcwd()) / "hubs.yaml"
-    clusters = parse_clusters(config_file_path)
+    config_file_path = Path(os.getcwd()) / "config" / f'{cluster_name}.yaml'
+    with open(config_file_path) as f:
+        cluster = Cluster(yaml.load(f))
 
-    if cluster_name:
-        cluster = next(
-            (cluster for cluster in clusters if cluster.spec["name"] == cluster_name),
-            None,
-        )
-        with cluster.auth():
-            hubs = cluster.hubs
-            if hub_name:
-                hub = next((hub for hub in hubs if hub.spec["name"] == hub_name), None)
+    with cluster.auth():
+        hubs = cluster.hubs
+        if hub_name:
+            hub = next((hub for hub in hubs if hub.spec["name"] == hub_name), None)
+            hub.deploy(k, SECRET_KEY, skip_hub_health_test)
+        else:
+            for hub in hubs:
                 hub.deploy(k, SECRET_KEY, skip_hub_health_test)
-            else:
-                for hub in hubs:
-                    hub.deploy(k, SECRET_KEY, skip_hub_health_test)
-    else:
-        for cluster in clusters:
-            with cluster.auth():
-                for hub in cluster.hubs:
-                    hub.deploy(k, SECRET_KEY, skip_hub_health_test)
 
 
 def main():
@@ -106,7 +86,7 @@ def main():
     build_parser = subparsers.add_parser("build")
     deploy_parser = subparsers.add_parser("deploy")
 
-    deploy_parser.add_argument("cluster_name", nargs="?")
+    deploy_parser.add_argument("cluster_name")
     deploy_parser.add_argument("hub_name", nargs="?")
     deploy_parser.add_argument("--skip-hub-health-test", action="store_true")
     deploy_parser.add_argument('--config-path', help='Read deployment config from this file', default='deployment.config.yaml')
