@@ -1,6 +1,7 @@
 """
 Deploy many JupyterHubs to many Kubernetes Clusters
 """
+import sys
 import tempfile
 from pathlib import Path
 from ruamel.yaml import YAML
@@ -69,7 +70,7 @@ def deploy(cluster_name, hub_name, skip_hub_health_test):
     # proxy.secretTokens have leaked. So let's be careful with that!
     PROXY_SECRET_KEY = bytes.fromhex(os.environ["PROXY_SECRET_KEY"])
 
-    config_file_path = Path(__file__).parent / "hubs.yaml"
+    config_file_path = Path(os.getcwd()) / "hubs.yaml"
     clusters = parse_clusters(config_file_path)
 
     if cluster_name:
@@ -109,6 +110,10 @@ def main():
         build()
     elif args.action == "deploy":
         deploy(args.cluster_name, args.hub_name, args.skip_hub_health_test)
+    else:
+        # FIXME: Not sure how to achieve this with just argparse?
+        print(argparser.format_help(), file=sys.stderr)
+        sys.exit(1)
 
 
 if __name__ == "__main__":

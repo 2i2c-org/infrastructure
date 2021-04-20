@@ -253,74 +253,6 @@ class Hub:
         if (old_env_var_value is not None):
             os.environ[env_var] = old_env_var_value
 
-    def failure_handler(details):
-        print(f"Hub check health validation failed, hub not healthy.")
-
-    def success_handler(details):
-        print(f"Notebook execution finished successfully.")
-
-    # Try 2 times before declaring it a failure
-    @backoff.on_exception(
-        backoff.expo,
-        (ValueError,
-        TimeoutError),
-        on_success=success_handler,
-        on_giveup=failure_handler,
-        max_tries=1
-    )
-    async def check_hub_health(self, test_notebook_path, service_api_token):
-        """
-        After each hub gets deployed, validate that it 'works'.
-
-        Automatically create a temporary user, start their server and run a test notebook, making
-        sure it runs to completion. Stop and delete the test server at the end. Try this steps twice
-        before declaring it a failure. If any of these steps fails, immediately halt further
-        deployments and error out.
-        """
-
-        if isinstance(self.spec['domain'], str):
-            hub_domain = self.spec['domain']
-        else:
-            hub_domain = random.choice(self.spec['domain'])
-
-        hub_url = f'https://{hub_domain}'
-        username='deployment-service-check'
-
-        # Export the hub health check service as an env var so that jhub_client can read it.
-        orig_service_token = os.environ.get('JUPYTERHUB_API_TOKEN', None)
-
-        try:
-            os.environ['JUPYTERHUB_API_TOKEN'] = service_api_token
-
-            # Cleanup: if the server takes more than 90s to start, then because it's in a `spawn pending` state,
-            # it cannot be deleted. So we delete it in the next iteration, before starting a new one,
-            # so that we don't have more than one running.
-            hub = JupyterHubAPI(hub_url)
-            async with hub:
-                user = await hub.get_user(username)
-                if user:
-                    if user['server'] and not user['pending']:
-                        await hub.delete_server(username)
-
-                    # If we don't delete the user too, than we won't be able to start a kernel for it.
-                    # This is because we would have lost its api token from the previous run.
-                    await hub.delete_user(username)
-
-            # Create a new user, start a server and execute a notebook
-            await execute_notebook(
-                hub_url,
-                test_notebook_path,
-                username=username,
-                server_creation_timeout=360,
-                kernel_execution_timeout=360, # This doesn't do anything yet
-                create_user=True,
-                delete_user=False, # To be able to delete its server in case of failure
-                stop_server=True, # If the health check succeeds, this will delete the server
-                validate=True
-            )
-        finally:
-            self.unset_env_var(service_api_token, orig_service_token)
-
 
     def apply_hub_template_fixes(self, generated_config, proxy_secret_key):
         """
@@ -385,7 +317,8 @@ class Hub:
             generated_values_file.flush()
 
             cmd = [
-                'helm', 'upgrade', '--install', '--create-namespace', '--wait',
+                'helm', 'upgrade', '--install', '--create-namespace',
+                # '--wait',
                 '--namespace', self.spec['name'],
                 self.spec['name'], os.path.join('hub-templates', self.spec['template']),
                 # Ordering matters here - config explicitly mentioned in `hubs.yaml` should take
@@ -396,20 +329,29 @@ class Hub:
             ]
 
             print(f"Running {' '.join(cmd)}")
+            # Can't test without deploying, since our service token isn't set by default
             subprocess.check_call(cmd)
 
             if not skip_hub_health_test:
 
+                # FIXMEL: Clean this up
                 if self.spec['template'] != 'base-hub':
                     service_api_token = generated_values["base-hub"]["jupyterhub"]["hub"]["services"]["hub-health"]["apiToken"]
                 else:
                     service_api_token = generated_values["jupyterhub"]["hub"]["services"]["hub-health"]["apiToken"]
 
+                domain = self.spec["domain"]
+                if type(domain) == str:
+                    hub_url = f'https://{domain}'
+
+                else:
+                    hub_url = f'https://{random.choice(domain)}'
+
                 exit_code = pytest.main([
-                    "-v", "tests",
-                    "--hub-name", self.spec["name"],
-                    "--cluster-name", self.cluster.spec["name"],
-                    "--api-token", service_api_token
+                    "-v", "deploy/tests",
+                    "--hub-url", hub_url,
+                    "--api-token", service_api_token,
+                    "--hub-type", self.spec['template']
                 ])
                 if exit_code != 0:
                     raise(RuntimeError)
