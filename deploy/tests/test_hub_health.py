@@ -1,7 +1,6 @@
 from pathlib import Path
 import os
 import pytest
-import backoff
 from jhub_client.execute import execute_notebook, JupyterHubAPI
 
 
@@ -9,31 +8,13 @@ from jhub_client.execute import execute_notebook, JupyterHubAPI
 def notebook_dir(hub_type):
     return Path(__file__).parent / 'test-notebooks' / hub_type
 
-def failure_handler(details):
-    print(f"Hub check health validation failed, hub not healthy.")
-
-def success_handler(details):
-    print(f"Notebook execution finished successfully.")
-
-
-
-# Try 2 times before declaring it a failure
-@backoff.on_exception(
-    backoff.expo,
-    (ValueError,
-    TimeoutError),
-    on_success=success_handler,
-    on_giveup=failure_handler,
-    max_tries=1
-)
 async def check_hub_health(hub_url, test_notebook_path, service_api_token):
     """
     After each hub gets deployed, validate that it 'works'.
 
     Automatically create a temporary user, start their server and run a test notebook, making
-    sure it runs to completion. Stop and delete the test server at the end. Try this steps twice
-    before declaring it a failure. If any of these steps fails, immediately halt further
-    deployments and error out.
+    sure it runs to completion. Stop and delete the test server at the end. If any of these
+    steps fail, declare the hub as having failed the health check
     """
 
     username='deployment-service-check'
