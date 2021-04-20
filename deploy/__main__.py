@@ -111,7 +111,8 @@ def main():
     elif args.action == "deploy":
         deploy(args.cluster_name, args.hub_name, args.skip_hub_health_test)
     else:
-        # FIXME: Not sure how to achieve this with just argparse?
+        # Print help message and exit when no arguments are passed
+        # FIXME: Is there a better way to do this?
         print(argparser.format_help(), file=sys.stderr)
         sys.exit(1)
 
