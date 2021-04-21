@@ -20,13 +20,13 @@ Sometimes you might need to delete or to perform maintenance on a node in the cl
 
 1. [Cordon](https://kubernetes.io/docs/reference/generated/kubectl/kubectl-commands#cordon) the node:
     ```bash
-        kubectl cordon <node-name>
+    kubectl cordon <node-name>
     ```
     This command will mark the node as `unschedulable` and no new pods will be scheduled to run on this node.
 
 2. Delete *some* of the pods running on the node:
     ```bash
-        kubectl delete pods <pod>
+    kubectl delete pods <pod>
     ```
 
     There are usually three types of pods running on a node, depending on how were they created:
