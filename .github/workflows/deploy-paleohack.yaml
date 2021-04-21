@@ -20,4 +20,4 @@ jobs:
       - uses: mdgreenwald/mozilla-sops-action@v1
       - uses: ./.github/actions/deploy
         with:
-          cluster: 'hackathon-alpha'
+          cluster: 'paleohack'
