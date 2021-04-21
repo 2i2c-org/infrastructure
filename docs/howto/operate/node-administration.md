@@ -9,7 +9,10 @@ The [node selector](https://kubernetes.io/docs/concepts/scheduling-eviction/assi
 
 This separation should protect against user pods exhausting the resources needed by core and support pods.
 
-The machines where the core nodes run, are different than the ones on which the user nodes run. The type of these machines is chosen based on the number, type and the resource needs (CPU, memory, etc.) of the pods that will be scheduled to run on these nodes. Because of this resource dependance, these types might be adjusted in the future. You can checkout the exact type of the core and user nodes VMs in the [`terraform` config](https://github.com/2i2c-org/pilot-hubs/blob/master/terraform/variables.tf).
+The machines where the core nodes run, are different than the ones on which the user nodes run.
+The type of these machines is chosen based on the number, type, and the resource needs (CPU, memory, etc.) of the pods that will be scheduled to run on these nodes.
+Because of this resource dependance, these types might be adjusted in the future.
+You can checkout the exact type of the core and user nodes VMs in the [`terraform` config](https://github.com/2i2c-org/pilot-hubs/blob/master/terraform/variables.tf).
 
 ## Freeing up a node
 
