@@ -8,7 +8,6 @@ gcp:
   zone: us-central1-b
   nfs:
     server: nfs-server-01
-    zone: us-central1-b
 hubs:
   - name: spelman
     domain: spelman.cloudbank.2i2c.cloud
@@ -45,7 +44,6 @@ hubs:
                 - jerry.volcy@gmail.com
               admin_users: *spelman_users
   - name: ccsf
-    cluster: cloudbank
     domain: ccsf.cloudbank.2i2c.cloud
     template: base-hub
     auth0:
@@ -81,7 +79,6 @@ hubs:
                 - efuchs@mail.ccsf.edu
               admin_users: *ccsf_users
   - name: elcamino
-    cluster: cloudbank
     domain: elcamino.cloudbank.2i2c.cloud
     template: base-hub
     auth0:
@@ -120,7 +117,6 @@ hubs:
                 - solomonrussell@gmail.com
               admin_users: *elcamino_users
   - name: howard
-    cluster: cloudbank
     domain: howard.cloudbank.2i2c.cloud
     template: base-hub
     auth0:
@@ -155,7 +151,6 @@ hubs:
                 - mikayladorange@gmail.com
               admin_users: *howard_users
   - name: skyline
-    cluster: cloudbank
     domain: skyline.cloudbank.2i2c.cloud
     template: base-hub
     auth0:
@@ -190,7 +185,6 @@ hubs:
                 - kayvanm@gmail.com
               admin_users: *skyline_users
   - name: demo
-    cluster: cloudbank
     domain: demo.cloudbank.2i2c.cloud
     template: base-hub
     auth0:
@@ -224,7 +218,6 @@ hubs:
                 - colliand@gmail.com
               admin_users: *demo_users
   - name: lassen
-    cluster: cloudbank
     domain: lassen.cloudbank.2i2c.cloud
     template: base-hub
     auth0:
@@ -258,7 +251,6 @@ hubs:
                 - camacho@lassencollege.edu
               admin_users: *lassen_users
   - name: clovis
-    cluster: cloudbank
     domain: clovis.cloudbank.2i2c.cloud
     template: base-hub
     auth0:
@@ -292,7 +284,6 @@ hubs:
                 - william.kerney@cloviscollege.edu
           admin_users: *clovis_users
   - name: sbcc
-    cluster: cloudbank
     domain: sbcc.cloudbank.2i2c.cloud
     template: base-hub
     auth0:
@@ -326,7 +317,6 @@ hubs:
                 - nfguebels@pipeline.sbcc.edu
               admin_users: *sbcc_users
   - name: mills
-    cluster: cloudbank
     domain:
       - mills.cloudbank.2i2c.cloud
       - datahub.mills.edu

@@ -1,4 +1,4 @@
-# Where does config come from?
+# Configuration Structure
 
 These configuration sources are merged in the following order to produce config
 for each hub.
@@ -8,6 +8,19 @@ for each hub.
 | Upstream defaults from z2jh | z2jh maintainers | [`hub-templates/base-hub/Chart.yaml`](https://github.com/2i2c-org/pilot-hubs/blob/master/hub-templates/base-hub/Chart.yaml) lists the z2jh version. Most of our configuration is directly from upstream | 
 | [`hub-templates/base-hub/values.yaml`](https://github.com/2i2c-org/pilot-hubs/blob/master/hub-templates/base-hub/values.yaml) | 2i2c engineers | Common to all hubs run from this repo |
 | [Deployment script](https://github.com/2i2c-org/pilot-hubs/blob/master/deploy) | 2i2c engineers | Programmatic overrides for each type of hub, particularly around Auth0 integration and home page customization |
-| [Per-hub customization (previously `hubs.yaml`)](https://github.com/2i2c-org/pilot-hubs/blob/master/clusters) | 2i2c engineers | Specific to each hub. There is one YAML file per cluster, and each cluster can have multiple hubs deployed |
+| [`config/hubs` (previously `hubs.yaml`)](https://github.com/2i2c-org/pilot-hubs/blob/master/config/hubs) | 2i2c engineers | Specific to each hub. There is one YAML file per cluster, and each cluster can have multiple hubs deployed.  [`config/hubs/schema.yaml`](https://github.com/2i2c-org/pilot-hubs/blob/master/config/hubs/schema.yaml) contains documentation and validation information for fields in this set of configuration. |
 | [Configurator schema defaults](https://github.com/2i2c-org/pilot-hubs/blob/6248cf84f2e888cb89bbb75e591e9507dabf6f3c/hub-templates/base-hub/values.yaml#L125) | 2i2c engineers | **If** there is a default set in the schema for available options in the configurator, it will always override the config elsewhere in our YAML files | 
 | Configurator | Hub admins | If hub admins 'unset' a value, it should go to what's configured via our yaml files|
+
+## Location of common configuration
+
+Finding out what the value for a particular piece of configuration is can be
+a bit tricky, since there are many places to look at. Here, we'll look at some common
+pieces of config people want to know values for, and where you can find them.
+
+### Memory limits
+
+The default memory limit and guarantee for all users across all our hubs is set
+in [`hub-templates/base-hub/values.yaml`](https://github.com/2i2c-org/pilot-hubs/blob/master/hub-templates/base-hub/values.yaml#L104),
+under `jupyterhub.singleuser.memory`. This is sometimes overriden on a per-hub
+basis in the config for the hub under [`config/hubs`](https://github.com/2i2c-org/pilot-hubs/blob/master/config/hubs)

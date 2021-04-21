@@ -8,10 +8,8 @@ gcp:
   zone: us-central1-b
   nfs:
     server: nfs-server-01
-    zone: us-central1-b
 hubs:
   - name: staging
-    cluster: 2i2c
     domain: staging.pilot.2i2c.cloud
     template: base-hub
     auth0:
@@ -47,7 +45,6 @@ hubs:
                 - georgiana.dolocan@gmail.com
               admin_users: *staging_users
   - name: dask-staging
-    cluster: 2i2c
     domain: dask-staging.pilot.2i2c.cloud
     template: daskhub
     auth0:
@@ -87,7 +84,6 @@ hubs:
                   - georgiana.dolocan@gmail.com
                 admin_users: *dask_staging_users
   - name: ephemeral
-    cluster: 2i2c
     domain: ephemeral.pilot.2i2c.cloud
     template: ephemeral-hub
     auth0:
@@ -116,7 +112,6 @@ hubs:
           singleuser:
             events: false
   - name: justiceinnovationlab
-    cluster: 2i2c
     domain: justiceinnovationlab.pilot.2i2c.cloud
     template: base-hub
     auth0:
@@ -148,7 +143,6 @@ hubs:
                 - donaldbraman
                 - JILPulvino
   - name: pfw
-    cluster: 2i2c
     domain: pfw.pilot.2i2c.cloud
     template: base-hub
     auth0:
@@ -182,7 +176,6 @@ hubs:
                 - GeorgianaElena
               admin_users: *pfw_users
   - name: wageningen
-    cluster: 2i2c
     domain: wur.pilot.2i2c.cloud
     template: base-hub
     auth0:
@@ -218,7 +211,6 @@ hubs:
                 - georgiana.dolocan@gmail.com
               admin_users: *wur_users
   - name: callysto
-    cluster: 2i2c
     domain: callysto.pilot.2i2c.cloud
     template: ephemeral-hub
     auth0:
@@ -245,7 +237,6 @@ hubs:
             # No more than 15 active servers at any given time
             activeServerLimit: 15
   - name: peddie
-    cluster: 2i2c
     domain: peddie.pilot.2i2c.cloud
     template: base-hub
     auth0:
@@ -279,7 +270,6 @@ hubs:
                 - ericvd@berkeley.edu
               admin_users: *peddie_users
   - name: catalyst-cooperative
-    cluster: pilot
     domain: catalyst-cooperative.pilot.2i2c.cloud
     template: daskhub
     auth0:
@@ -323,7 +313,6 @@ hubs:
                   - colliand@gmail.com
                 admin_users: *catalyst_users
   - name: earthlab
-    cluster: 2i2c
     domain: earthlab.pilot.2i2c.cloud
     template: base-hub
     auth0:
@@ -355,7 +344,6 @@ hubs:
                 - lwasser
               admin_users: *earthlab_users
   - name: grenoble
-    cluster: pilot
     domain: swot-ocean-pangeo.pilot.2i2c.cloud
     template: daskhub
     auth0:

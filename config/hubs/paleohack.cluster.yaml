@@ -4,10 +4,9 @@ gcp:
   key: secrets/hackathon-alpha.json
   project: hackathon-2i2c-project-alpha
   cluster: alpha-cluster
-  region: us-central1-b
+  zone: us-central1-b
   nfs:
     server: nfs-server-01
-    zone: us-central1-b
 hubs:
   - name: paleohack2021
     domain: paleohack2021.hackathon.2i2c.cloud

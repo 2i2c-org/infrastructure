@@ -83,8 +83,8 @@ class Hub:
         """
         Generate config automatically for each hub
 
-        Some config should be automatically set for all hubs based on
-        spec in hubs.yaml. We generate them here.
+        Some config - particularly around secrets - needs to be deterministically
+        generated for each hub, based on the contents of the hub's config yaml files
 
         WARNING: CONTAINS SECRET VALUES!
         """
@@ -282,9 +282,9 @@ class Hub:
                 'helm', 'upgrade', '--install', '--create-namespace', '--wait',
                 '--namespace', self.spec['name'],
                 self.spec['name'], os.path.join('hub-templates', self.spec['template']),
-                # Ordering matters here - config explicitly mentioned in `hubs.yaml` should take
+                # Ordering matters here - config explicitly mentioned in clu should take
                 # priority over our generated values. Based on how helm does overrides, this means
-                # we should put the config from hubs.yaml last.
+                # we should put the config from config/hubs last.
                 '-f', generated_values_file.name,
                 '-f', values_file.name,
             ]

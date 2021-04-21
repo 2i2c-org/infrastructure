@@ -2,10 +2,7 @@
 Topic guides provide in-depth explanations of specific topics.
 
 ```{toctree}
-cluster-config.md
-hub-config.md
-defaults.md
+config.md
 hub-templates.md
 storage-layer.md
-config.md
 ```

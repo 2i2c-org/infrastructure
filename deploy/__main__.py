@@ -11,6 +11,7 @@ import hmac
 import os
 import argparse
 import asyncio
+import jsonschema
 
 from auth import KeyProvider
 from hub import Hub, Cluster
@@ -33,8 +34,11 @@ def build():
 
 def deploy(cluster_name, hub_name, skip_hub_health_test, config_path):
     """
-    Deploy all hubs in all clusters
+    Deploy one or more hubs in a given cluster
     """
+
+    # Validate our config with JSON Schema first before continuing
+    validate(cluster_name)
 
     with decrypt_file(config_path) as decrypted_file_path:
         with open(decrypted_file_path) as f:
@@ -64,7 +68,7 @@ def deploy(cluster_name, hub_name, skip_hub_health_test, config_path):
     # proxy.secretTokens have leaked. So let's be careful with that!
     SECRET_KEY = bytes.fromhex(config['secret_key'])
 
-    config_file_path = Path(os.getcwd()) / "clusters" / f'{cluster_name}.yaml'
+    config_file_path = Path(os.getcwd()) / "config/hubs" / f'{cluster_name}.cluster.yaml'
     with open(config_file_path) as f:
         cluster = Cluster(yaml.load(f))
 
@@ -78,6 +82,16 @@ def deploy(cluster_name, hub_name, skip_hub_health_test, config_path):
                 hub.deploy(k, SECRET_KEY, skip_hub_health_test)
 
 
+def validate(cluster_name):
+    cluster_dir = Path(os.getcwd()) / "config/hubs" 
+    schema_file = cluster_dir / "schema.yaml"
+    config_file = cluster_dir / f"{cluster_name}.cluster.yaml"
+    with open(config_file) as cf, open(schema_file) as sf:
+        cluster_config = yaml.load(cf)
+        schema = yaml.load(sf)
+        # Raises useful exception if validation fails
+        jsonschema.validate(cluster_config, schema)
+
 def main():
     argparser = argparse.ArgumentParser()
     argparser.add_argument('--config-path', help='Read deployment config from this file', default='deployment.config.yaml')
@@ -85,11 +99,14 @@ def main():
 
     build_parser = subparsers.add_parser("build")
     deploy_parser = subparsers.add_parser("deploy")
+    validate_parser = subparsers.add_parser("validate")
 
     deploy_parser.add_argument("cluster_name")
     deploy_parser.add_argument("hub_name", nargs="?")
     deploy_parser.add_argument("--skip-hub-health-test", action="store_true")
-    deploy_parser.add_argument('--config-path', help='Read deployment config from this file', default='deployment.config.yaml')
+    deploy_parser.add_argument('--config-path', help='Read deployment config from this file', default='config/secrets.yaml')
+
+    validate_parser.add_argument("cluster_name")
 
     args = argparser.parse_args()
 
@@ -98,6 +115,8 @@ def main():
         build()
     elif args.action == "deploy":
         deploy(args.cluster_name, args.hub_name, args.skip_hub_health_test, args.config_path)
+    elif args.action == 'validate':
+        validate(args.cluster_name)
     else:
         # Print help message and exit when no arguments are passed
         # FIXME: Is there a better way to do this?

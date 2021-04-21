@@ -1,5 +1,5 @@
 creation_rules:
   - path_regex: .*/secrets/.*
     gcp_kms: projects/two-eye-two-see/locations/global/keyRings/sops-keys/cryptoKeys/similar-hubs
-  - path_regex: deployment\.config\.yaml$
+  - path_regex: config/secrets.yaml$
     gcp_kms: projects/two-eye-two-see/locations/global/keyRings/sops-keys/cryptoKeys/similar-hubs
