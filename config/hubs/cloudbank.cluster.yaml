@@ -1,0 +1,354 @@
+name: cloudbank
+image_repo:  "us-central1-docker.pkg.dev/cb-1003-1696/low-touch-hubs/base-user"
+provider: gcp
+gcp:
+  key: secrets/cloudbank.json
+  project: cb-1003-1696
+  cluster: cloudbank-2i2c-cluster
+  zone: us-central1-b
+  nfs:
+    server: nfs-server-01
+hubs:
+  - name: spelman
+    domain: spelman.cloudbank.2i2c.cloud
+    template: base-hub
+    auth0:
+      connection: google-oauth2
+    config:
+      jupyterhub:
+        homepage:
+          templateVars:
+            org:
+              name: Spelman College
+              logo_url: https://www.spelman.edu/images/communications/splogotagblk.png
+              url: https://www.spelman.edu/
+            designed_by:
+              name: 2i2c
+              url: https://2i2c.org
+            operated_by:
+              name: CloudBank
+              url: http://cloudbank.org/
+            funded_by:
+              name: CloudBank
+              url: http://cloudbank.org/
+        hub:
+          config:
+            Authenticator:
+              allowed_users: &spelman_users
+                - yuvipanda@gmail.com
+                - colliand@gmail.com
+                - choldgraf@gmail.com
+                - georgiana.dolocan@gmail.com
+                - ericvd@gmail.com
+                - jp@jamespercy.com
+                - jerry.volcy@gmail.com
+              admin_users: *spelman_users
+  - name: ccsf
+    domain: ccsf.cloudbank.2i2c.cloud
+    template: base-hub
+    auth0:
+      connection: google-oauth2
+    config:
+      jupyterhub:
+        homepage:
+          templateVars:
+            org:
+              name: City College SF
+              logo_url: https://www.ccsf.edu/sites/default/files/inline-images/asset-th-logo-black.png
+              url: https://www.ccsf.edu/
+            designed_by:
+              name: 2i2c
+              url: https://2i2c.org
+            operated_by:
+              name: CloudBank
+              url: http://cloudbank.org/
+            funded_by:
+              name: CloudBank
+              url: http://cloudbank.org/
+        hub:
+          config:
+            Authenticator:
+              allowed_users: &ccsf_users
+                - yuvipanda@gmail.com
+                - choldgraf@gmail.com
+                - georgiana.dolocan@gmail.com
+                - ericvd@gmail.com
+                - jp@jamespercy.com
+                - shawn.wiggins@mail.ccsf.edu
+                - craig.persiko@mail.ccsf.edu
+                - efuchs@mail.ccsf.edu
+              admin_users: *ccsf_users
+  - name: elcamino
+    domain: elcamino.cloudbank.2i2c.cloud
+    template: base-hub
+    auth0:
+      connection: google-oauth2
+    config:
+      jupyterhub:
+        homepage:
+          templateVars:
+            org:
+              name: El Camino College
+              logo_url: https://www.elcamino.edu/_resources/images/logo.png
+              url: https://www.elcamino.edu/
+            designed_by:
+              name: 2i2c
+              url: https://2i2c.org
+            operated_by:
+              name: CloudBank
+              url: http://cloudbank.org/
+            funded_by:
+              name: CloudBank
+              url: http://cloudbank.org/
+
+        singleuser:
+          memory:
+            limit: 2G
+            guarantee: 2G
+        hub:
+          config:
+            Authenticator:
+              allowed_users: &elcamino_users
+                - yuvipanda@gmail.com
+                - choldgraf@gmail.com
+                - georgiana.dolocan@gmail.com
+                - ericvd@gmail.com
+                - jp@jamespercy.com
+                - solomonrussell@gmail.com
+              admin_users: *elcamino_users
+  - name: howard
+    domain: howard.cloudbank.2i2c.cloud
+    template: base-hub
+    auth0:
+      connection: google-oauth2
+    config:
+      jupyterhub:
+        homepage:
+          templateVars:
+            org:
+              name: Howard University
+              logo_url: https://upload.wikimedia.org/wikipedia/en/a/a3/Howard_University_seal.svg
+              url: https://home.howard.edu/
+            designed_by:
+              name: 2i2c
+              url: https://2i2c.org
+            operated_by:
+              name: CloudBank
+              url: http://cloudbank.org/
+            funded_by:
+              name: CloudBank
+              url: http://cloudbank.org/
+        hub:
+          config:
+            Authenticator:
+              allowed_users: &howard_users
+                - ericvd@berkeley.edu
+                - choldgraf@gmail.com
+                - yuvipanda@gmail.com
+                - georgiana.dolocan@gmail.com
+                - gwashington@scs.howard.edu
+                - anthony.fgordon64@gmail.com
+                - mikayladorange@gmail.com
+              admin_users: *howard_users
+  - name: skyline
+    domain: skyline.cloudbank.2i2c.cloud
+    template: base-hub
+    auth0:
+      connection: google-oauth2
+    config:
+      jupyterhub:
+        homepage:
+          templateVars:
+            org:
+              name: Skyline College
+              logo_url: http://skylinecollege.edu/mcpr/images/logos/png/skyline_logo_horiz_cmyk.png
+              url: https://www.skylinecollege.edu/
+            designed_by:
+              name: 2i2c
+              url: https://2i2c.org
+            operated_by:
+              name: CloudBank
+              url: http://cloudbank.org/
+            funded_by:
+              name: CloudBank
+              url: http://cloudbank.org/
+        hub:
+          config:
+            Authenticator:
+              allowed_users: &skyline_users
+                - yuvipanda@gmail.com
+                - choldgraf@gmail.com
+                - georgiana.dolocan@gmail.com
+                - ericvd@gmail.com
+                - jp@jamespercy.com
+                - dhum1@my.smccd.edu
+                - kayvanm@gmail.com
+              admin_users: *skyline_users
+  - name: demo
+    domain: demo.cloudbank.2i2c.cloud
+    template: base-hub
+    auth0:
+      connection: google-oauth2
+    config:
+      jupyterhub:
+        homepage:
+          templateVars:
+            org:
+              name: 2i2c / CloudBank Hubs Demo
+              logo_url: https://www.cloudbank.org/sites/default/files/file_fields/logo.png
+              url: https://2i2c.org/pilot/
+            designed_by:
+              name: 2i2c
+              url: https://2i2c.org
+            operated_by:
+              name: CloudBank
+              url: http://cloudbank.org/
+            funded_by:
+              name: CloudBank
+              url: http://cloudbank.org/
+        hub:
+          config:
+            Authenticator:
+              allowed_users: &demo_users
+                - yuvipanda@gmail.com
+                - choldgraf@gmail.com
+                - georgiana.dolocan@gmail.com
+                - ericvd@gmail.com
+                - jp@jamespercy.com
+                - colliand@gmail.com
+              admin_users: *demo_users
+  - name: lassen
+    domain: lassen.cloudbank.2i2c.cloud
+    template: base-hub
+    auth0:
+      connection: google-oauth2
+    config:
+      jupyterhub:
+        homepage:
+          templateVars:
+            org:
+              name: Lassen College
+              logo_url: https://www.lassencollege.edu/about/governance/graphic-standards/Documents/District-Logo-Standards/LCC-Athletic-Logo-on-blk.jpg
+              url: http://www.lassencollege.edu/
+            designed_by:
+              name: 2i2c
+              url: https://2i2c.org
+            operated_by:
+              name: CloudBank
+              url: http://cloudbank.org/
+            funded_by:
+              name: CloudBank
+              url: http://cloudbank.org/
+        hub:
+          config:
+            Authenticator:
+              allowed_users: &lassen_users
+                - yuvipanda@gmail.com
+                - choldgraf@gmail.com
+                - georgiana.dolocan@gmail.com
+                - ericvd@gmail.com
+                - jp@jamespercy.com
+                - camacho@lassencollege.edu
+              admin_users: *lassen_users
+  - name: clovis
+    domain: clovis.cloudbank.2i2c.cloud
+    template: base-hub
+    auth0:
+      connection: google-oauth2
+    config:
+      jupyterhub:
+        homepage:
+          templateVars:
+            org:
+              name: Clovis College
+              logo_url: https://www.scccd.edu/_files/images/clovis-logo-bubble-6.png
+              url: https://www.cloviscollege.edu/
+            designed_by:
+              name: 2i2c
+              url: https://2i2c.org
+            operated_by:
+              name: CloudBank
+              url: http://cloudbank.org/
+            funded_by:
+              name: CloudBank
+              url: http://cloudbank.org/
+        hub:
+          config:
+            Authenticator:
+              allowed_users: &clovis_users
+                - yuvipanda@gmail.com
+                - choldgraf@gmail.com
+                - georgiana.dolocan@gmail.com
+                - ericvd@gmail.com
+                - jp@jamespercy.com
+                - william.kerney@cloviscollege.edu
+          admin_users: *clovis_users
+  - name: sbcc
+    domain: sbcc.cloudbank.2i2c.cloud
+    template: base-hub
+    auth0:
+      connection: google-oauth2
+    config:
+      jupyterhub:
+        homepage:
+          templateVars:
+            org:
+              name: Santa Barbara City College
+              logo_url: https://upload.wikimedia.org/wikipedia/commons/thumb/a/a6/Santa_Barbara_City_College.svg/1200px-Santa_Barbara_City_College.svg.png
+              url: https://www.sbcc.edu/
+            designed_by:
+              name: 2i2c
+              url: https://2i2c.org
+            operated_by:
+              name: CloudBank
+              url: http://cloudbank.org/
+            funded_by:
+              name: CloudBank
+              url: http://cloudbank.org/
+        hub:
+          config:
+            Authenticator:
+              allowed_users: &sbcc_users
+                - yuvipanda@gmail.com
+                - choldgraf@gmail.com
+                - georgiana.dolocan@gmail.com
+                - ericvd@gmail.com
+                - jp@jamespercy.com
+                - nfguebels@pipeline.sbcc.edu
+              admin_users: *sbcc_users
+  - name: mills
+    domain:
+      - mills.cloudbank.2i2c.cloud
+      - datahub.mills.edu
+    template: base-hub
+    auth0:
+      connection: google-oauth2
+    config:
+      jupyterhub:
+        homepage:
+          templateVars:
+            org:
+              name: Mills College
+              logo_url: https://upload.wikimedia.org/wikipedia/commons/4/40/Mills_College_wordmark.svg
+              url: https://www.mills.edu/
+            designed_by:
+              name: 2i2c
+              url: https://2i2c.org
+            operated_by:
+              name: CloudBank
+              url: http://cloudbank.org/
+            funded_by:
+              name: CloudBank
+              url: http://cloudbank.org/
+        hub:
+          config:
+            Authenticator:
+              admin_users: &mills_admins
+                - yuvipanda@gmail.com
+                - choldgraf@gmail.com
+                - georgiana.dolocan@gmail.com
+                - aculich@berkeley.edu
+                - jpercy@berkeley.edu
+                - akonrad@mills.edu
+                - wang@mills.edu
+              username_pattern: '^(.+@mills\.edu|yuvipanda@gmail\.com|choldgraf@gmail\.com|georgiana\.dolocan@gmail\.com|aculich@berkeley\.edu|jpercy@berkeley\.edu|deployment-service-check)$'

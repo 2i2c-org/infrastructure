@@ -21,6 +21,3 @@ jobs:
       - uses: ./.github/actions/deploy
         with:
           cluster: 'hackathon-alpha'
-          proxy_secret_key: ${{ secrets.PROXY_SECRET_KEY }}
-          auth0_management_client_id: ${{ secrets.AUTH0_MANAGEMENT_CLIENT_ID }}
-          auth0_management_client_secret: ${{ secrets.AUTH0_MANAGEMENT_CLIENT_SECRET }}

@@ -23,8 +23,8 @@ Assuming there is a hub named `foo` in the `2i2c` cluster and we want to add the
     Since all the hubs in a cluster are running at the same IP address, but are available at different subdomains,
     we also need a way to specify which hub in this cluster we want the new domain and subsequent requests to point to.
 
-    For this to happen we need to add the new domain as an ingress domain for this hub using the `hubs.yaml` configuration file.
-    This can be done by adding the new domain to the list in `hubs.<hub-name>.domain`:
+    For this to happen we need to add the new domain to the config for the hub under
+    `config/hubs`, under the `domain` key.
 
       ```yaml
       - name: foo

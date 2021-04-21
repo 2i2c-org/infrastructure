@@ -1,9 +1,9 @@
 # 2i2c Pilot Hubs Infrastructure
 
-This is documentation for the 2i2c Pilot Hubs deployment infrastructure. The goal of this stack is to automatically deploy JupyterHubs in the cloud from a single `hubs.yaml` configuration file.
+This is documentation for the 2i2c Pilot Hubs deployment infrastructure. The goal of this stack is to automatically deploy JupyterHubs in the cloud with configuration from `config/hubs`.
 
-All hub configuration is in `hubs.yaml`. You can add a new hub by adding
-an entry there, and pushing that to github.
+Each hub has an entry under the file representing the cluster where it exists,
+`config/hubs`. You can add a new hub by adding an entry there, and pushing that to github.
 
 ```{toctree}
 :maxdepth: 2

@@ -1,0 +1,386 @@
+name: 2i2c
+image_repo:  "us-central1-docker.pkg.dev/two-eye-two-see/low-touch-hubs/base-user"
+provider: gcp
+gcp:
+  key: secrets/2i2c.json
+  project: two-eye-two-see
+  cluster: low-touch-hubs-cluster
+  zone: us-central1-b
+  nfs:
+    server: nfs-server-01
+hubs:
+  - name: staging
+    domain: staging.pilot.2i2c.cloud
+    template: base-hub
+    auth0:
+      connection: google-oauth2
+    config:
+      docs_service:
+        enabled: true
+        repo: https://github.com/2i2c-org/pilot-hubs
+        branch: gh-pages
+      jupyterhub:
+        homepage:
+          templateVars:
+            org:
+              name: 2i2c Staging
+              url: https://2i2c.org
+              logo_url: https://2i2c.org/media/logo.png
+            designed_by:
+              name: 2i2c
+              url: https://2i2c.org
+            operated_by:
+              name: 2i2c
+              url: https://2i2c.org
+            funded_by:
+              name: 2i2c
+              url: https://2i2c.org
+        hub:
+          config:
+            Authenticator:
+              allowed_users: &staging_users
+                - yuvipanda@gmail.com
+                - colliand@gmail.com
+                - choldgraf@gmail.com
+                - georgiana.dolocan@gmail.com
+              admin_users: *staging_users
+  - name: dask-staging
+    domain: dask-staging.pilot.2i2c.cloud
+    template: daskhub
+    auth0:
+      connection: google-oauth2
+    config:
+      iam:
+        # FIXME: Automatically inject this
+        projectId: two-eye-two-see
+      base-hub:
+        jupyterhub:
+          homepage:
+            templateVars:
+              org:
+                name: 2i2c Dask Staging
+                url: https://2i2c.org
+                logo_url: https://2i2c.org/media/logo.png
+              designed_by:
+                name: 2i2c
+                url: https://2i2c.org
+              operated_by:
+                name: 2i2c
+                url: https://2i2c.org
+              funded_by:
+                name: 2i2c
+                url: https://2i2c.org
+          singleuser:
+            image:
+              name: pangeo/pangeo-notebook
+              tag: 2021.02.19
+          hub:
+            config:
+              Authenticator:
+                allowed_users: &dask_staging_users
+                  - yuvipanda@gmail.com
+                  - colliand@gmail.com
+                  - choldgraf@gmail.com
+                  - georgiana.dolocan@gmail.com
+                admin_users: *dask_staging_users
+  - name: ephemeral
+    domain: ephemeral.pilot.2i2c.cloud
+    template: ephemeral-hub
+    auth0:
+      enabled: false
+    config:
+      base-hub:
+        jupyterhub:
+          homepage:
+            templateVars:
+              org:
+                name: 2i2c Staging
+                url: https://2i2c.org
+                logo_url: https://2i2c.org/media/logo.png
+              designed_by:
+                name: 2i2c
+                url: https://2i2c.org
+              operated_by:
+                name: 2i2c
+                url: https://2i2c.org
+              funded_by:
+                name: 2i2c
+                url: https://2i2c.org
+          hub:
+            # No more than 5 active servers at any given time
+            activeServerLimit: 5
+          singleuser:
+            events: false
+  - name: justiceinnovationlab
+    domain: justiceinnovationlab.pilot.2i2c.cloud
+    template: base-hub
+    auth0:
+      connection: github
+    config:
+      jupyterhub:
+        homepage:
+          templateVars:
+            org:
+              name: Justice Innovation Lab
+              logo_url: "https://images.squarespace-cdn.com/content/5ee35ddb35affc21b29c0fd6/1596634079158-KLDENW5BSW2HQW4ZO0EH/JIL-Logo-Digital.png?format=1500w&content-type=image%2Fpng"
+              url: https://www.justiceinnovationlab.org/
+            designed_by:
+              name: 2i2c
+              url: https://2i2c.org
+            operated_by:
+              name: 2i2c
+              url: https://2i2c.org
+            funded_by:
+              name: 2i2c
+              url: https://2i2c.org
+        hub:
+          config:
+            Authenticator:
+              admin_users:
+                - yuvipanda
+                - choldgraf
+                - GeorgianaElena
+                - donaldbraman
+                - JILPulvino
+  - name: pfw
+    domain: pfw.pilot.2i2c.cloud
+    template: base-hub
+    auth0:
+      connection: github
+    config:
+      jupyterhub:
+        homepage:
+          templateVars:
+            org:
+              name: Purdue Fort Wayne
+              logo_url: https://upload.wikimedia.org/wikipedia/en/thumb/1/14/Purdue_Fort_Wayne_Mastodons_logo.svg/400px-Purdue_Fort_Wayne_Mastodons_logo.svg.png
+              url: https://www.pfw.edu/
+            designed_by:
+              name: 2i2c
+              url: https://2i2c.org
+            operated_by:
+              name: 2i2c
+              url: https://2i2c.org
+            funded_by:
+              name: JROST & IOI
+              url: https://investinopen.org/blog/jrost-rapid-response-fund-awardees
+        hub:
+          config:
+            Authenticator:
+              allowed_users: &pfw_users
+                - colliand
+                - alessandromariaselvitella
+                - fosterk86
+                - choldgraf
+                - yuvipanda
+                - GeorgianaElena
+              admin_users: *pfw_users
+  - name: wageningen
+    domain: wur.pilot.2i2c.cloud
+    template: base-hub
+    auth0:
+      connection: google-oauth2
+    config:
+      jupyterhub:
+        homepage:
+          templateVars:
+            org:
+              name: Wageningen University and Research
+              logo_url: https://www.wur.nl/upload/58340fb4-e33a-4d0b-af17-8d596fa93663_WUR_RGB_standard.png
+              url: https://www.wur.nl/en/wageningen-university.htm
+            designed_by:
+              name: 2i2c
+              url: https://2i2c.org
+            operated_by:
+              name: 2i2c
+              url: https://2i2c.org
+            funded_by:
+              name: JROST & IOI
+              url: https://investinopen.org/blog/jrost-rapid-response-fund-awardees
+        singleuser:
+          memory:
+            limit: 2G
+            guarantee: 2G
+        hub:
+          config:
+            Authenticator:
+              allowed_users: &wur_users
+                - yuvipanda@gmail.com
+                - choldgraf@gmail.com
+                - chielvanheerwaarden@gmail.com
+                - georgiana.dolocan@gmail.com
+              admin_users: *wur_users
+  - name: callysto
+    domain: callysto.pilot.2i2c.cloud
+    template: ephemeral-hub
+    auth0:
+      enabled: false
+    config:
+      base-hub:
+        jupyterhub:
+          homepage:
+            templateVars:
+              org:
+                name: Callysto Canada
+                logo_url: https://callysto.ca/wp-content/uploads/2018/03/header-logo1.png
+                url: https://callysto.ca/
+              designed_by:
+                name: 2i2c
+                url: https://2i2c.org
+              operated_by:
+                name: 2i2c
+                url: https://2i2c.org
+              funded_by:
+                name: JROST & IOI
+                url: https://investinopen.org/blog/jrost-rapid-response-fund-awardees
+          hub:
+            # No more than 15 active servers at any given time
+            activeServerLimit: 15
+  - name: peddie
+    domain: peddie.pilot.2i2c.cloud
+    template: base-hub
+    auth0:
+      connection: google-oauth2
+    config:
+      jupyterhub:
+        homepage:
+          templateVars:
+            org:
+              name: Peddie Academy
+              logo_url: https://resources.finalsite.net/images/f_auto,q_auto,t_image_size_1/v1564687841/peddie/l4yufwwdksquxu2yetv6/PeddieSealPMS289.png
+              url: http://peddie.org/
+            designed_by:
+              name: 2i2c
+              url: https://2i2c.org
+            operated_by:
+              name: 2i2c
+              url: https://2i2c.org
+            funded_by:
+              name: JROST & IOI
+              url: https://investinopen.org/blog/jrost-rapid-response-fund-awardees
+        hub:
+          config:
+            Authenticator:
+              allowed_users: &peddie_users
+                - yuvipanda@gmail.com
+                - choldgraf@gmail.com
+                - georgiana.dolocan@gmail.com
+                - rbennett@peddie.org
+                - msawula@peddie.org
+                - ericvd@berkeley.edu
+              admin_users: *peddie_users
+  - name: catalyst-cooperative
+    domain: catalyst-cooperative.pilot.2i2c.cloud
+    template: daskhub
+    auth0:
+      connection: google-oauth2
+    config:
+      iam:
+        projectId: two-eye-two-see
+      base-hub:
+        jupyterhub:
+          singleuser:
+            image:
+              name: catalystcoop/pudl-jupyter
+              tag: 2021.03.27
+            memory:
+              limit: 6G
+              guarantee: 4G
+          homepage:
+            templateVars:
+              org:
+                name: Catalyst Cooperative
+                logo_url: https://catalyst.coop/files/2018/06/SimpleSquareWalking.png
+                url: https://catalyst.coop/
+              designed_by:
+                name: 2i2c
+                url: https://2i2c.org
+              operated_by:
+                name: 2i2c
+                url: https://2i2c.org
+              funded_by:
+                name: 2i2c
+                url: https://2i2c.org
+          hub:
+            config:
+              Authenticator:
+                allowed_users: &catalyst_users
+                  - choldgraf@gmail.com
+                  - yuvipanda@gmail.com
+                  - georgiana.dolocan@gmail.com
+                  - zane.selvans@catalyst.coop
+                  - cgosnell@catalyst.coop
+                  - colliand@gmail.com
+                admin_users: *catalyst_users
+  - name: earthlab
+    domain: earthlab.pilot.2i2c.cloud
+    template: base-hub
+    auth0:
+      connection: github
+    config:
+      jupyterhub:
+        homepage:
+          templateVars:
+            org:
+              name: EarthLab
+              logo_url: https://pbs.twimg.com/profile_images/1102342372438925312/64xKJFPk.png
+              url: https://www.colorado.edu/earthlab/
+            designed_by:
+              name: 2i2c
+              url: https://2i2c.org
+            operated_by:
+              name: 2i2c
+              url: https://2i2c.org
+            funded_by:
+              name: JROST & IOI
+              url: https://investinopen.org/blog/jrost-rapid-response-fund-awardees
+        hub:
+          config:
+            Authenticator:
+              allowed_users: &earthlab_users
+                - yuvipanda
+                - choldgraf
+                - GeorgianaElena
+                - lwasser
+              admin_users: *earthlab_users
+  - name: grenoble
+    domain: swot-ocean-pangeo.pilot.2i2c.cloud
+    template: daskhub
+    auth0:
+      connection: github
+    config:
+      iam:
+        # FIXME: Automatically inject this
+        projectId: two-eye-two-see
+      base-hub:
+        jupyterhub:
+          singleuser:
+            image:
+              name: pangeo/pangeo-notebook
+              tag: 2021.02.19
+          homepage:
+            templateVars:
+              org:
+                name: "SWOT Ocean Pangeo Team"
+                logo_url: https://2i2c.org/media/logo.png
+                url: https://2i2c.org
+              designed_by:
+                name: 2i2c
+                url: https://2i2c.org
+              operated_by:
+                name: 2i2c
+                url: https://2i2c.org
+              funded_by:
+                name: 2i2c
+                url: https://2i2c.org
+          hub:
+            config:
+              Authenticator:
+                allowed_users: &grenoble_swot_users
+                  - roxyboy
+                  - lesommer
+                  - auraoupa
+                  - yuvipanda
+                  - choldgraf
+                  - GeorgianaElena
+                admin_users: *grenoble_swot_users

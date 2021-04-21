@@ -12,52 +12,14 @@ from ruamel.yaml import YAML
 from ruamel.yaml.scanner import ScannerError
 from textwrap import dedent
 from build import last_modified_commit
-from contextlib import contextmanager
 from build import build_image
+from contextlib import contextmanager
 from jhub_client.execute import execute_notebook, JupyterHubAPI
+from utils import decrypt_file
 
 # Without `pure=True`, I get an exception about str / byte issues
 yaml = YAML(typ='safe', pure=True)
 
-@contextmanager
-def decrypt_file(encrypted_path):
-    """
-    Provide secure temporary decrypted contents of a given file
-
-    If file isn't a sops encrypted file, we assume no encryption is used
-    and return the current path.
-    """
-    # We must first determine if the file is using sops
-    # sops files are JSON/YAML with a `sops` key. So we first check
-    # if the file is valid JSON/YAML, and then if it has a `sops` key
-    with open(encrypted_path) as f:
-        _, ext = os.path.splitext(encrypted_path)
-        # Support the (clearly wrong) people who use .yml instead of .yaml
-        if ext == '.yaml' or ext == '.yml':
-            try:
-                encrypted_data = yaml.load(f)
-            except ScannerError:
-                yield encrypted_path
-                return
-        elif ext == '.json':
-            try:
-                encrypted_data = json.load(f)
-            except json.JSONDecodeError:
-                yield encrypted_path
-                return
-
-    if 'sops' not in encrypted_data:
-        yield encrypted_path
-        return
-
-    # If file has a `sops` key, we assume it's sops encrypted
-    with tempfile.NamedTemporaryFile() as f:
-        subprocess.check_call([
-            'sops',
-            '--output', f.name,
-            '--decrypt', encrypted_path
-        ])
-        yield f.name
 
 class Cluster:
     """
@@ -117,17 +79,17 @@ class Hub:
         self.cluster = cluster
         self.spec = spec
 
-    def get_generated_config(self, auth_provider, proxy_secret_key):
+    def get_generated_config(self, auth_provider, secret_key):
         """
         Generate config automatically for each hub
 
-        Some config should be automatically set for all hubs based on
-        spec in hubs.yaml. We generate them here.
+        Some config - particularly around secrets - needs to be deterministically
+        generated for each hub, based on the contents of the hub's config yaml files
 
         WARNING: CONTAINS SECRET VALUES!
         """
 
-        proxy_secret = hmac.new(proxy_secret_key, self.spec['name'].encode(), hashlib.sha256).hexdigest()
+        proxy_secret = hmac.new(secret_key, self.spec['name'].encode(), hashlib.sha256).hexdigest()
 
         generated_config = {
             'jupyterhub': {
@@ -239,7 +201,7 @@ class Hub:
             # these can all exist fine.
             generated_config['jupyterhub']['hub']['config']['GenericOAuthenticator'] = auth_provider.get_client_creds(client, self.spec['auth0']['connection'])
 
-        return self.apply_hub_template_fixes(generated_config, proxy_secret_key)
+        return self.apply_hub_template_fixes(generated_config, secret_key)
 
 
     def unset_env_var(self, env_var, old_env_var_value):
@@ -253,76 +215,8 @@ class Hub:
         if (old_env_var_value is not None):
             os.environ[env_var] = old_env_var_value
 
-    def failure_handler(details):
-        print(f"Hub check health validation failed, hub not healthy.")
 
-    def success_handler(details):
-        print(f"Notebook execution finished successfully.")
-
-    # Try 2 times before declaring it a failure
-    @backoff.on_exception(
-        backoff.expo,
-        (ValueError,
-        TimeoutError),
-        on_success=success_handler,
-        on_giveup=failure_handler,
-        max_tries=1
-    )
-    async def check_hub_health(self, test_notebook_path, service_api_token):
-        """
-        After each hub gets deployed, validate that it 'works'.
-
-        Automatically create a temporary user, start their server and run a test notebook, making
-        sure it runs to completion. Stop and delete the test server at the end. Try this steps twice
-        before declaring it a failure. If any of these steps fails, immediately halt further
-        deployments and error out.
-        """
-
-        if isinstance(self.spec['domain'], str):
-            hub_domain = self.spec['domain']
-        else:
-            hub_domain = random.choice(self.spec['domain'])
-
-        hub_url = f'https://{hub_domain}'
-        username='deployment-service-check'
-
-        # Export the hub health check service as an env var so that jhub_client can read it.
-        orig_service_token = os.environ.get('JUPYTERHUB_API_TOKEN', None)
-
-        try:
-            os.environ['JUPYTERHUB_API_TOKEN'] = service_api_token
-
-            # Cleanup: if the server takes more than 90s to start, then because it's in a `spawn pending` state,
-            # it cannot be deleted. So we delete it in the next iteration, before starting a new one,
-            # so that we don't have more than one running.
-            hub = JupyterHubAPI(hub_url)
-            async with hub:
-                user = await hub.get_user(username)
-                if user:
-                    if user['server'] and not user['pending']:
-                        await hub.delete_server(username)
-
-                    # If we don't delete the user too, than we won't be able to start a kernel for it.
-                    # This is because we would have lost its api token from the previous run.
-                    await hub.delete_user(username)
-
-            # Create a new user, start a server and execute a notebook
-            await execute_notebook(
-                hub_url,
-                test_notebook_path,
-                username=username,
-                server_creation_timeout=360,
-                kernel_execution_timeout=360, # This doesn't do anything yet
-                create_user=True,
-                delete_user=False, # To be able to delete its server in case of failure
-                stop_server=True, # If the health check succeeds, this will delete the server
-                validate=True
-            )
-        finally:
-            self.unset_env_var(service_api_token, orig_service_token)
-
-
-    def apply_hub_template_fixes(self, generated_config, proxy_secret_key):
+    def apply_hub_template_fixes(self, generated_config, secret_key):
         """
         Modify generated_config based on what hub template we're using.
 
@@ -336,7 +230,7 @@ class Hub:
         hub_template = self.spec['template']
 
         # Generate a token for the hub health service
-        hub_health_token = hmac.new(proxy_secret_key, 'health-'.encode() + self.spec['name'].encode(), hashlib.sha256).hexdigest()
+        hub_health_token = hmac.new(secret_key, 'health-'.encode() + self.spec['name'].encode(), hashlib.sha256).hexdigest()
         # Describe the hub health service
         generated_config.setdefault('jupyterhub', {}).setdefault('hub', {}).setdefault('services', {})['hub-health'] = {
             'apiToken': hub_health_token,
@@ -359,7 +253,7 @@ class Hub:
 
         # LOLSOB FIXME
         if hub_template == 'daskhub':
-            gateway_token = hmac.new(proxy_secret_key, 'gateway-'.encode() + self.spec['name'].encode(), hashlib.sha256).hexdigest()
+            gateway_token = hmac.new(secret_key, 'gateway-'.encode() + self.spec['name'].encode(), hashlib.sha256).hexdigest()
             generated_config['dask-gateway'] = {
                 'gateway': {
                     'auth': {
@@ -371,12 +265,12 @@ class Hub:
 
         return generated_config
 
-    def deploy(self, auth_provider, proxy_secret_key, skip_hub_health_test=False):
+    def deploy(self, auth_provider, secret_key, skip_hub_health_test=False):
         """
         Deploy this hub
         """
 
-        generated_values = self.get_generated_config(auth_provider, proxy_secret_key)
+        generated_values = self.get_generated_config(auth_provider, secret_key)
 
         with tempfile.NamedTemporaryFile(mode='w') as values_file, tempfile.NamedTemporaryFile(mode='w') as generated_values_file:
             json.dump(self.spec['config'], values_file)
@@ -388,28 +282,37 @@ class Hub:
                 'helm', 'upgrade', '--install', '--create-namespace', '--wait',
                 '--namespace', self.spec['name'],
                 self.spec['name'], os.path.join('hub-templates', self.spec['template']),
-                # Ordering matters here - config explicitly mentioned in `hubs.yaml` should take
+                # Ordering matters here - config explicitly mentioned in clu should take
                 # priority over our generated values. Based on how helm does overrides, this means
-                # we should put the config from hubs.yaml last.
+                # we should put the config from config/hubs last.
                 '-f', generated_values_file.name,
                 '-f', values_file.name,
             ]
 
             print(f"Running {' '.join(cmd)}")
+            # Can't test without deploying, since our service token isn't set by default
             subprocess.check_call(cmd)
 
             if not skip_hub_health_test:
 
+                # FIXMEL: Clean this up
                 if self.spec['template'] != 'base-hub':
                     service_api_token = generated_values["base-hub"]["jupyterhub"]["hub"]["services"]["hub-health"]["apiToken"]
                 else:
                     service_api_token = generated_values["jupyterhub"]["hub"]["services"]["hub-health"]["apiToken"]
 
+                domain = self.spec["domain"]
+                if type(domain) == str:
+                    hub_url = f'https://{domain}'
+
+                else:
+                    hub_url = f'https://{random.choice(domain)}'
+
                 exit_code = pytest.main([
-                    "-v", "tests",
-                    "--hub-name", self.spec["name"],
-                    "--cluster-name", self.cluster.spec["name"],
-                    "--api-token", service_api_token
+                    "-v", "deploy/tests",
+                    "--hub-url", hub_url,
+                    "--api-token", service_api_token,
+                    "--hub-type", self.spec['template']
                 ])
                 if exit_code != 0:
                     raise(RuntimeError)

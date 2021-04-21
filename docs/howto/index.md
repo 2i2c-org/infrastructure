@@ -4,7 +4,6 @@ How-To guides answer the question 'How do I...?' for a lot of topics.
 ```{toctree}
 :hidden:
 
-configure/hub-config.md
 configure/auth-management.md
 configure/add-hub-domains.md
 configure/update-env.md
@@ -20,7 +19,6 @@ operate/test-hub.md
 
 ## Hub configuration
 ```{toctree}
-configure/hub-config.md
 configure/auth-management.md
 configure/add-hub-domains.md
 configure/update-env.md
