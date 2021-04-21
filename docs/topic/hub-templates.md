@@ -38,7 +38,8 @@ Currently there are three hub templates available:
     - Enables outgoing SSH
 
 ## Use the templates to deploy a new hub
-To deploy a new hub, you only need to add and configure it through `hubs.yaml` configuration file.
+
+To deploy a new hub, you only need to add it to the appropriate configuration file under `config/hubs`.
 This configuration file allows specifying options like the type of template to use for the hub being added,
 the hub domain, how the JupyterHub landing page will look like and authentication preferences.
 
@@ -53,7 +54,7 @@ subcharts of the daskhub. The ephemeral-hub chart also subcharts the base-hub.
 % The editable version of the diagram is here: https://docs.google.com/presentation/d/1KMyrTd3wdR715tPGuzIHkHqScXBlLpeiksIM2x7EI0g/edit?usp=sharing
 
 This hierachy is the reason why when adding a new hub using the `daskhub` or the `ephemeral-hub` template, the jupyterhub
-specific configuration in `hubs.yaml` needs to be nested under a `base-hub` key, indicating that we are overriding configuration
+specific configuration under `config/hubs` needs to be nested under a `base-hub` key, indicating that we are overriding configuration
 from the *base-hub/jupyterhub* parent chart.
 
 Read more about subcharts and how to configure them in the [Helm docs](https://helm.sh/docs/chart_template_guide/subcharts_and_globals/#overriding-values-from-a-parent-chart).

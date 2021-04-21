@@ -8,17 +8,9 @@ the `kubectl` command line tool.
 
 ## Project Access
 
-First, you'll need to access the Google Cloud projects on which the hubs run. The most accurate name
-of the project can be gleamed from `hubs.yaml` (under `gcp.project` for each cluster entry). Currently,
-the projects are:
-
-| Cluster | Project Name |
-| - | - |
-| *.pilot.2i2c.cloud | `two-eye-two-see` |
-| *.cloudbank.2i2c.cloud | `cb-1003-1696` |
-
-If you don't have access to these, please get in touch with 2i2c staff.
-
+First, you'll need to access the Google Cloud projects on which the hubs run. You
+can find the current list of active projects by examining the `gcp.project`
+values in the files under `config/hubs/*.cluster.yaml`.
 
 ## Commandline tools installation
 
@@ -45,7 +37,7 @@ gcloud container clusters get-credentials <cluster-name> --region <region> --pro
 ```
 
 You can get authoritative information for `<cluster-name>`, `<zone>` and `<project-name>` from
-`hubs.yaml`.
+files under `config/hubs`.
 
 With that, `kubectl` and `helm` should now work! 
 

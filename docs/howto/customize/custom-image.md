@@ -44,8 +44,8 @@ these rate limits. We recommend the following image repositories:
 
 ## Configuring your hub to use the custom image
 
-`hubs.yaml` can contain arbitry `zero to jupyterhub on kubernetes` config, so we
-can use that to set the image name & tag. Here is some example config, with only
+Hub config under `config/hubs` can contain arbitry `zero to jupyterhub on kubernetes` 
+config, so we can use that to set the image name & tag. Here is some example config, with only
 the useful bits.
 
 ```yaml
