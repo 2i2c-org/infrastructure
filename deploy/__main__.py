@@ -20,16 +20,17 @@ from utils import decrypt_file
 # Without `pure=True`, I get an exception about str / byte issues
 yaml = YAML(typ="safe", pure=True)
 
-def build():
+def build(cluster_name):
     """
-    Build and push all images for all clusters
+    Build and push the image for a given cluster
     """
-    config_file_path = Path(__file__).parent / "hubs.yaml"
-    clusters = parse_clusters(config_file_path)
-    for cluster in clusters:
-        if "image_repo" in cluster.spec:
-            with cluster.auth():
-                cluster.build_image()
+    config_file_path = Path(os.getcwd()) / "config/hubs" / f'{cluster_name}.cluster.yaml'
+    with open(config_file_path) as f:
+        cluster = Cluster(yaml.load(f))
+
+    if "image_repo" in cluster.spec:
+        with cluster.auth():
+            cluster.build_image()
 
 
 def deploy(cluster_name, hub_name, skip_hub_health_test, config_path):
