@@ -39,4 +39,4 @@ geopy
 # JupyterLab extensions
 jupyterlab_widgets==1.0.*
 jupytext==1.10.*
-jupyter-server-proxy==1.6.0
+jupyter-server-proxy==3.0.2
