@@ -102,6 +102,8 @@ def main():
     deploy_parser = subparsers.add_parser("deploy")
     validate_parser = subparsers.add_parser("validate")
 
+    build_parser.add_argument("cluster_name")
+
     deploy_parser.add_argument("cluster_name")
     deploy_parser.add_argument("hub_name", nargs="?")
     deploy_parser.add_argument("--skip-hub-health-test", action="store_true")
@@ -111,9 +113,8 @@ def main():
 
     args = argparser.parse_args()
 
-
     if args.action == "build":
-        build()
+        build(args.cluster_name)
     elif args.action == "deploy":
         deploy(args.cluster_name, args.hub_name, args.skip_hub_health_test, args.config_path)
     elif args.action == 'validate':
