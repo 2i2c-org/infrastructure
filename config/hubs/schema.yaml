@@ -107,7 +107,6 @@ properties:
             enum: 
               - base-hub
               - daskhub
-              - ephemeral-hub
           auth0:
             additionalProperties: false
             type: object

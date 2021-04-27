@@ -17,19 +17,6 @@ Currently there are three hub templates available:
   It provides a base JupyterHub, user storage and culling configuration that satisfies most of the
   pilot hubs usage requirements.
 
-- `ephemeral-hub`
-
-  The **ephemeral-hub template** helps deploying temporary, transient binder-style hubs.
-    - Doesn't require any user authentication.
-    - Permits limiting of resources:
-      * memory / CPU limits
-      * maximum number of concurrent user servers
-    - Has more aggressive culling:
-      - Stops server after 30min of idleness
-      - Desn't let servers run for more than 8h
-    - Has no persistent storage
-    - Doesn't use or configures a home page template
-
 - `daskhub`
 
   The **daskhub template** helps deploying dask-enabled hubs.
@@ -46,14 +33,14 @@ the hub domain, how the JupyterHub landing page will look like and authenticatio
 Because the templates are structured in a **hierarchical** model, so are their helm charts.
 The [jupyterhub helm chart](https://jupyterhub.github.io/helm-chart/) is a subchart of the base-hub and
 the base-hub chart along with the [dask-gateway](https://dask.org/dask-gateway-helm-repo/) one are
-subcharts of the daskhub. The ephemeral-hub chart also subcharts the base-hub.
+subcharts of the daskhub. 
 
 **Visual of the helm-chart hierarchy:**
 ```{figure} ../images/helm-charts-hierarchy.png
 ```
 % The editable version of the diagram is here: https://docs.google.com/presentation/d/1KMyrTd3wdR715tPGuzIHkHqScXBlLpeiksIM2x7EI0g/edit?usp=sharing
 
-This hierachy is the reason why when adding a new hub using the `daskhub` or the `ephemeral-hub` template, the jupyterhub
+This hierachy is the reason why when adding a new hub using the `daskhub` 
 specific configuration under `config/hubs` needs to be nested under a `base-hub` key, indicating that we are overriding configuration
 from the *base-hub/jupyterhub* parent chart.
 
