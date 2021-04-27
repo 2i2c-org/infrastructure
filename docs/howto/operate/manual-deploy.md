@@ -57,7 +57,7 @@ of this repository, and can deploy one or more hubs to our clusters.
 2. Deploy just a single hub:
 
    ```bash
-   python3 deploy deploy <cluster-name> <hub-name>
+   python3 python3 deploy <cluster-name> <hub-name>
    ```
 
    The script will look for a hub named `<hub-name>` in the cluster config
@@ -66,7 +66,7 @@ of this repository, and can deploy one or more hubs to our clusters.
 3. You can deploy to *all* hubs on a given cluster by omitting the hub name.
    
    ```bash
-   python3 deploy deploy <cluster-name>
+   python3 python3 deploy <cluster-name>
    ```
 
 ```{note}
