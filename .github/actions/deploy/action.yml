@@ -16,7 +16,6 @@ runs:
         cd hub-templates
         helm dep up base-hub
         helm dep up daskhub
-        helm dep up ephemeral-hub
       shell: bash
     - name: Setup gcloud auth for docker
       # FIXME: Add more auth providers & registries here as needed

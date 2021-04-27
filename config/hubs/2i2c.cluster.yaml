@@ -83,34 +83,6 @@ hubs:
                   - choldgraf@gmail.com
                   - georgiana.dolocan@gmail.com
                 admin_users: *dask_staging_users
-  - name: ephemeral
-    domain: ephemeral.pilot.2i2c.cloud
-    template: ephemeral-hub
-    auth0:
-      enabled: false
-    config:
-      base-hub:
-        jupyterhub:
-          homepage:
-            templateVars:
-              org:
-                name: 2i2c Staging
-                url: https://2i2c.org
-                logo_url: https://2i2c.org/media/logo.png
-              designed_by:
-                name: 2i2c
-                url: https://2i2c.org
-              operated_by:
-                name: 2i2c
-                url: https://2i2c.org
-              funded_by:
-                name: 2i2c
-                url: https://2i2c.org
-          hub:
-            # No more than 5 active servers at any given time
-            activeServerLimit: 5
-          singleuser:
-            events: false
   - name: justiceinnovationlab
     domain: justiceinnovationlab.pilot.2i2c.cloud
     template: base-hub
@@ -210,32 +182,6 @@ hubs:
                 - chielvanheerwaarden@gmail.com
                 - georgiana.dolocan@gmail.com
               admin_users: *wur_users
-  - name: callysto
-    domain: callysto.pilot.2i2c.cloud
-    template: ephemeral-hub
-    auth0:
-      enabled: false
-    config:
-      base-hub:
-        jupyterhub:
-          homepage:
-            templateVars:
-              org:
-                name: Callysto Canada
-                logo_url: https://callysto.ca/wp-content/uploads/2018/03/header-logo1.png
-                url: https://callysto.ca/
-              designed_by:
-                name: 2i2c
-                url: https://2i2c.org
-              operated_by:
-                name: 2i2c
-                url: https://2i2c.org
-              funded_by:
-                name: JROST & IOI
-                url: https://investinopen.org/blog/jrost-rapid-response-fund-awardees
-          hub:
-            # No more than 15 active servers at any given time
-            activeServerLimit: 15
   - name: peddie
     domain: peddie.pilot.2i2c.cloud
     template: base-hub
