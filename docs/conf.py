@@ -55,5 +55,4 @@ html_theme_options = {
     "repository_url": "https://github.com/2i2c-org/pilot-hubs",
     "use_issues_button": True,
     "use_repository_button": True,
-    "show_navbar_depth": 2,
 }
