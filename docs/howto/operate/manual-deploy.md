@@ -26,8 +26,11 @@ of this repository, and can deploy one or more hubs to our clusters.
    ```
 
 3. Install the [Google Cloud SDK](https://cloud.google.com/sdk) so
-   our scripts can authenticate to Google Cloud Platform for various
-   functions. 
+   our scripts can authenticate to Google Cloud Platform for access
+   to our secret keys. Note that we use Google Cloud Platform (with
+   [`sops`](https://github.com/mozilla/sops) secure secrets *stored
+   in this repository* - so you would need the google cloud sdk regardless of
+   the final location of the hub itself.
 
 4. Authenticate to Google Cloud Platform! First, you should run
    `gcloud auth login` and follow the prompts - this authenticates your
