@@ -9,6 +9,7 @@ See the {ref}`tc:coordination:team-activity`.
 
 ```{toctree}
 add-hub.md
+setup-new-project.md
 cmd-access.md
 delete-hub.md
 manual-deploy.md
