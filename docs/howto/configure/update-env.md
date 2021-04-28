@@ -13,7 +13,7 @@ have to manually build & push it after making a change.
 
 2. Make the changes you need to make to the environment, and git commit it.
 
-3. Run `python3 deploy.py build`. This will build the image and push it to
+3. Run `python3 deployer build`. This will build the image and push it to
    registry. It will tell you what the generated image tag is.
 
 4. Update `jupyterhub.singleuser.image.tag` in `hub/values.yaml` with this tag.

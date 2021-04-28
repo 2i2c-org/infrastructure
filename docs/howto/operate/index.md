@@ -13,7 +13,6 @@ setup-new-project.md
 cmd-access.md
 delete-hub.md
 manual-deploy.md
-test-hub.md
 grafana.md
 node-administration.md
 ```

@@ -4,7 +4,7 @@ While deploys generally go through our GitHub Actions workflow, sometimes you
 need to deploy from your laptop - primarily when testing changes on staging or
 actively fixing an outage. This isn't ideal, but this is where we are now.
 
-Our deployment scripts live in the [`deploy/`](https://github.com/2i2c-org/pilot-hubs/blob/master/deploy.py)
+Our deployment scripts live in the [`deployer/`](https://github.com/2i2c-org/pilot-hubs/blob/master/deployer/)
 of this repository, and can deploy one or more hubs to our clusters. 
 
 
@@ -75,3 +75,22 @@ of this repository, and can deploy one or more hubs to our clusters.
 ```{note}
 You should mostly use the `staging` hub in the `2i2c` cluster for testing.
 ```
+
+## Hub health test
+
+After each deployment, the deployer will run health checks on the hub before
+proceeding. If an entire cluster is being deployed, one failing health check
+will stop all further deployments.
+
+There are two types of test notebooks are ran on the hub, based on it's type:
+
+* dask specific notebooks - *are ran on the the daskhub hubs*
+* simple notebooks - *are ran on all the other types of hubs*
+
+This test, creates a new hub user called `deployment-service-check`, starts a
+server for them, and runs the test notebooks.  It checks that the notebook
+runs to completion and the output cells have the expected value.
+
+* If the health check passes, then the user's server is stopped and deleted.
+* If the health check fails, then their user server will be left running, but
+* it will get deleted together with the user in the next iteration.
