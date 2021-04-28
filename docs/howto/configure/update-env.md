@@ -13,10 +13,10 @@ have to manually build & push it after making a change.
 
 2. Make the changes you need to make to the environment, and git commit it.
 
-3. Run `python3 deploy.py build`. This will build the image and push it to
-   registry. It will tell you what the generated image tag is.
+3. Run `python3 deployer build <cluster-name>`, once for each `<cluster>` under `config/hubs`.
+   This will build the image and push it to registry. It will tell you what the generated image tag is.
 
-4. Update `jupyterhub.singleuser.image.tag` in `hub/values.yaml` with this tag.
+4. Update `jupyterhub.singleuser.image.tag` in `hub-templates/base-hub/values.yaml` with this tag.
 
 5. Make a commit, make a PR and merge to master! This will deploy all the hubs
    with the new image
