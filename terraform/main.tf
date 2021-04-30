@@ -58,10 +58,6 @@ module "gke" {
   # We explicitly set up a core pool, so don't need the default
   remove_default_node_pool   = true
 
-  # NEVER DELETE THE CLUSTER WITHOUT DOUBLE ASKING USER
-  lifecycle {
-    prevent_destroy = true
-  }
   node_pools = [
     {
       name               = "core-pool"
