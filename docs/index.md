@@ -52,5 +52,6 @@ Reference information about the pilot hubs.
 :caption: Reference
 :maxdepth: 2
 
+reference/hubs
 incidents/index
 ```

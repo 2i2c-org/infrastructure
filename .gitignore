@@ -131,3 +131,6 @@ dmypy.json
 # helm charts
 hub/charts
 support/charts
+
+# Documentation build assets
+docs/tmp
