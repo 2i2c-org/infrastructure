@@ -68,15 +68,14 @@ import pandas as pd
 from pathlib import Path
 
 # Grab the latest list of clusters defined in pilot-hubs/
-api = GhApi(token=os.environ.get("GITHUB_TOKEN"))
-clusters = api.repos.get_content("2i2c-org", "pilot-hubs", "config/hubs")
+clusters = Path("../config/hubs").glob("*")
 hub_list = []
 for cluster_info in clusters:
-    if "schema" in cluster_info['name']:
+    if "schema" in cluster_info.name:
         continue
     # For each cluster, grab it's YAML w/ the config for each hub
-    yaml = api.repos.get_content("2i2c-org", "pilot-hubs", cluster_info['path'])
-    cluster = safe_load(b64decode(yaml['content']).decode())
+    yaml = cluster_info.read_text()
+    cluster = safe_load(yaml)
 
     # For each hub in cluster, grab its metadata and add it to the list
     for hub in cluster['hubs']:
