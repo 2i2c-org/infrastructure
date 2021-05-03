@@ -61,8 +61,6 @@ html_theme_options = {
 # Pull latest list of communities served by pilot-hubs/
 import requests
 from yaml import safe_load
-from ghapi.all import GhApi
-from base64 import b64decode
 import os
 import pandas as pd
 from pathlib import Path
