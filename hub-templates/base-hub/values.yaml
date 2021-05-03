@@ -18,7 +18,8 @@ nfsPVC:
   enabled: true
   nfs:
     serverIP: nfs-server-01
-    baseShareName: /export/home-01/homes
+    # MUST HAVE TRAILING SLASH
+    baseShareName: /export/home-01/homes/
 
 jupyterhub:
   ingress:
