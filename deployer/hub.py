@@ -37,12 +37,30 @@ class Cluster:
 
     @contextmanager
     def auth(self):
-        with tempfile.NamedTemporaryFile() as kubeconfig:
-            # FIXME: This is dumb
-            os.environ['KUBECONFIG'] = kubeconfig.name
-            assert self.spec['provider'] == 'gcp'
-
+        if self.spec['provider'] == 'gcp':
             yield from self.auth_gcp()
+        elif self.spec['provider'] == 'kubeconfig':
+            yield from self.auth_kubeconfig()
+        else:
+            raise ValueError(f'Provider {self.spec["provider"]} not supported')
+            
+
+    def auth_kubeconfig(self):
+        """
+        Context manager for authenticating with just a kubeconfig file
+
+        For the duration of the contextmanager, we:
+        1. Decrypt the file specified in kubeconfig.file with sops
+        2. Set `KUBECONFIG` env var to our decrypted file path, so applications
+           we call (primarily helm) will use that as config
+        """
+        config = self.spec['kubeconfig']
+        config_path = config['file']
+
+        with decrypt_file(config_path) as decrypted_key_path:
+            # FIXME: Unset this after our yield
+            os.environ['KUBECONFIG'] = decrypted_key_path
+            yield
 
     def auth_gcp(self):
         config = self.spec['gcp']
@@ -52,23 +70,23 @@ class Cluster:
         # Else, it'll just have a `zone` key set. Let's respect either.
         location = config.get('zone', config.get('region'))
         cluster = config['cluster']
+        with tempfile.NamedTemporaryFile() as kubeconfig:
+            with decrypt_file(key_path) as decrypted_key_path:
+                subprocess.check_call([
+                    'gcloud', 'auth',
+                    'activate-service-account',
+                    '--key-file', os.path.abspath(decrypted_key_path)
+                ])
 
-        with decrypt_file(key_path) as decrypted_key_path:
             subprocess.check_call([
-                'gcloud', 'auth',
-                'activate-service-account',
-                '--key-file', os.path.abspath(decrypted_key_path)
+                'gcloud', 'container', 'clusters',
+                # --zone works with regions too
+                f'--zone={location}',
+                f'--project={project}',
+                'get-credentials', cluster
             ])
 
-        subprocess.check_call([
-            'gcloud', 'container', 'clusters',
-            # --zone works with regions too
-            f'--zone={location}',
-            f'--project={project}',
-            'get-credentials', cluster
-        ])
-
-        yield
+            yield
 
 
 class Hub:
