@@ -22,6 +22,8 @@ spec:
     spec:
       restartPolicy: Never
       terminationGracePeriodSeconds: 0
+      tolerations: {{ .Values.nfsPVC.shareCreator.tolerations | toJson }}
+
       containers:
         - name: dummy
           image: busybox

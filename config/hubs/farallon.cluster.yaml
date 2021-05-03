@@ -1,0 +1,164 @@
+name: farallon
+provider: kubeconfig
+kubeconfig:
+  file: secrets/farallon.yaml
+hubs:
+  - name: farallon-staging
+    domain: staging.farallon.2i2c.cloud
+    template: daskhub
+    auth0:
+      connection: github
+    config:
+      scratchBucket:
+        enabled: false
+      base-hub:
+        nfsPVC:
+          nfs:
+            serverIP: fs-7b129903.efs.us-east-2.amazonaws.com
+            baseShareName: /homes
+          shareCreator:
+            tolerations:
+            - key: node-role.kubernetes.io/master
+              operator: "Exists"
+              effect: "NoSchedule"
+        jupyterhub:
+          homepage:
+            templateVars:
+              org:
+                name: Farallon Institute
+                logo_url: https://2i2c.org/media/logo.png
+                url: http://www.faralloninstitute.org/
+              designed_by:
+                name: 2i2c
+                url: https://2i2c.org
+              operated_by:
+                name: 2i2c
+                url: https://2i2c.org
+              funded_by:
+                name: Farallon Institute
+                urL: http://www.faralloninstitute.org/
+          profileList:
+            # The mem-guarantees are here so k8s doesn't schedule other pods
+            # on these nodes.
+            - display_name: "Default: m5.xlarge"
+              description: "~4CPUs & ~15GB RAM"
+              kubespawner_override:
+                mem_guarantee: 14G
+                cpu_guarantee: 3
+                node_selector:
+                  hub.jupyter.org/pool-name: notebook-m5-xlarge
+            - display_name: "Default: m5.2xlarge"
+              description: "~8CPUs & ~30GB RAM"
+              kubespawner_override:
+                mem_guarantee: 28G
+                cpu_guarantee: 7
+                node_selector:
+                  hub.jupyter.org/pool-name: notebook-m5-2xlarge
+          scheduling:
+            userPlaceholder:
+              enabled: false
+              replicas: 0
+            userScheduler:
+              enabled: false
+          proxy:
+            service:
+              type: LoadBalancer
+          
+            chp:
+              nodeSelector: {}
+              tolerations:
+                - key:  "node-role.kubernetes.io/master"
+                  effect: "NoSchedule"
+            traefik:
+              nodeSelector: {}
+              tolerations:
+                - key:  "node-role.kubernetes.io/master"
+                  effect: "NoSchedule"
+          hub:
+            allowNamedServers: true
+            networkPolicy:
+              # FIXME: For dask gateway
+              enabled: false
+            readinessProbe:
+              enabled: false
+            nodeSelector: {}
+            tolerations:
+              - key:  "node-role.kubernetes.io/master"
+                effect: "NoSchedule"
+      dask-gateway:
+        traefik:
+          tolerations:
+            - key:  "node-role.kubernetes.io/master"
+              effect: "NoSchedule"
+        controller:
+          tolerations:
+            - key:  "node-role.kubernetes.io/master"
+              effect: "NoSchedule"
+        gateway:
+          tolerations:
+            - key:  "node-role.kubernetes.io/master"
+              effect: "NoSchedule"
+          backend:
+            scheduler:
+              extraPodConfig:
+                nodeSelector:
+                  hub.jupyter.org/pool-name: dask-worker
+                tolerations:
+                  - key: "k8s.dask.org/dedicated"
+                    operator: "Equal"
+                    value: "worker"
+                    effect: "NoSchedule"
+                  - key: "k8s.dask.org_dedicated"
+                    operator: "Equal"
+                    value: "worker"
+                    effect: "NoSchedule"
+            worker:
+              extraPodConfig:
+                nodeSelector:
+                  hub.jupyter.org/pool-name: dask-worker
+                tolerations:
+                  - key: "k8s.dask.org/dedicated"
+                    operator: "Equal"
+                    value: "worker"
+                    effect: "NoSchedule"
+                  - key: "k8s.dask.org_dedicated"
+                    operator: "Equal"
+                    value: "worker"
+                    effect: "NoSchedule"
+
+            # TODO: figure out a replacement for userLimits.
+          extraConfig:
+            optionHandler: |
+              from dask_gateway_server.options import Options, Integer, Float, String
+              def cluster_options(user):
+                def option_handler(options):
+                    if ":" not in options.image:
+                        raise ValueError("When specifying an image you must also provide a tag")
+                    extra_annotations = {
+                        "hub.jupyter.org/username": user.name,
+                        "prometheus.io/scrape": "true",
+                        "prometheus.io/port": "8787",
+                    }
+                    extra_labels = {
+                        "hub.jupyter.org/username": user.name,
+                    }
+                    return {
+                        "worker_cores_limit": options.worker_cores,
+                        "worker_cores": min(options.worker_cores / 2, 1),
+                        "worker_memory": "%fG" % options.worker_memory,
+                        "image": options.image,
+                        "scheduler_extra_pod_annotations": extra_annotations,
+                        "worker_extra_pod_annotations": extra_annotations,
+                        "scheduler_extra_pod_labels": extra_labels,
+                        "worker_extra_pod_labels": extra_labels,
+                    }
+                return Options(
+                    Integer("worker_cores", 2, min=1, max=16, label="Worker Cores"),
+                    Float("worker_memory", 4, min=1, max=32, label="Worker Memory (GiB)"),
+                    String("image", default="pangeo/pangeo-notebook:latest", label="Image"),
+                    handler=option_handler,
+                )
+              c.Backend.cluster_options = cluster_options
+            idle: |
+              # timeout after 30 minutes of inactivity
+              c.KubeClusterConfig.idle_timeout = 1800
