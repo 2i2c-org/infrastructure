@@ -1,3 +1,10 @@
+scratchBucket:
+  # Enable a 'scratch' bucket per-hub, with read-write permissions for all
+  # users. This will set a `SCRATCH_BUCKET` env variable (and a PANGEO_SCRATCH variable
+  # too, for backwards compatibility). Users can share data with each other using
+  # this bucket.
+  enabled: true
+
 base-hub:
   # Copied from https://github.com/dask/helm-chart/blob/master/daskhub/values.yaml
   # FIXME: Properly use the upstream chart.
@@ -45,6 +52,7 @@ base-hub:
         # The default worker image matches the singleuser image.
         DASK_GATEWAY__CLUSTER__OPTIONS__IMAGE: '{JUPYTER_IMAGE_SPEC}'
 
+        # FIXME: Only set these if scratchBucket.enabled is true
         # Explicitly order environment variables that depend on each
         # other, since a environment variable needs to be defined first
         # before they can be interpolated.
