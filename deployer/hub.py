@@ -309,7 +309,7 @@ class Hub:
                     hub_url = f'https://{random.choice(domain)}'
 
                 exit_code = pytest.main([
-                    "-v", "deploy/tests",
+                    "-v", "deployer/tests",
                     "--hub-url", hub_url,
                     "--api-token", service_api_token,
                     "--hub-type", self.spec['template']
