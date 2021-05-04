@@ -37,23 +37,30 @@ hubs:
               funded_by:
                 name: Farallon Institute
                 urL: http://www.faralloninstitute.org/
-          profileList:
-            # The mem-guarantees are here so k8s doesn't schedule other pods
-            # on these nodes.
-            - display_name: "Default: m5.xlarge"
-              description: "~4CPUs & ~15GB RAM"
-              kubespawner_override:
-                mem_guarantee: 14G
-                cpu_guarantee: 3
-                node_selector:
-                  hub.jupyter.org/pool-name: notebook-m5-xlarge
-            - display_name: "Default: m5.2xlarge"
-              description: "~8CPUs & ~30GB RAM"
-              kubespawner_override:
-                mem_guarantee: 28G
-                cpu_guarantee: 7
-                node_selector:
-                  hub.jupyter.org/pool-name: notebook-m5-2xlarge
+          singleuser:
+            profileList:
+              # The mem-guarantees are here so k8s doesn't schedule other pods
+              # on these nodes.
+              - display_name: "Default: m5.xlarge"
+                description: "~4CPUs & ~15GB RAM"
+                kubespawner_override:
+                  # Expllicitly unset mem_limit, so it overrides the default memory limit we set in
+                  # base-hub/values.yaml
+                  mem_limit: null
+                  mem_guarantee: 14G
+                  cpu_guarantee: 3
+                  node_selector:
+                    hub.jupyter.org/pool-name: notebook-m5-xlarge
+              - display_name: "Default: m5.2xlarge"
+                description: "~8CPUs & ~30GB RAM"
+                kubespawner_override:
+                  # Expllicitly unset mem_limit, so it overrides the default memory limit we set in
+                  # base-hub/values.yaml
+                  mem_limit: null
+                  mem_guarantee: 28G
+                  cpu_guarantee: 7
+                  node_selector:
+                    hub.jupyter.org/pool-name: notebook-m5-2xlarge
           scheduling:
             userPlaceholder:
               enabled: false
