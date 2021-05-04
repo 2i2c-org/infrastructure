@@ -46,6 +46,17 @@ hubs:
                 name: Farallon Institute
                 urL: http://www.faralloninstitute.org/
           singleuser:
+            initContainers:
+              # Need to explicitly fix ownership here, since EFS doesn't do anonuid
+            - name: volume-mount-ownership-fix
+              image: busybox
+              command: ["sh", "-c", "id && chown 1000:1000 /home/jovyan && ls -lhd /home/jovyan"]
+              securityContext:
+                runAsUser: 0
+              volumeMounts:
+              - name: home
+                mountPath: /home/jovyan
+                subPath: "{username}"
             image:
               name: 677861182063.dkr.ecr.us-east-2.amazonaws.com/2i2c-hub/user-image
               tag: 9cd76f1
