@@ -1,8 +1,6 @@
 import pytest
 from pathlib import Path
 
-from .context import deploy
-
 def pytest_addoption(parser):
     """
     Define the commandline params that can be passed to pytest.
