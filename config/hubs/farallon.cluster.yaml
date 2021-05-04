@@ -46,6 +46,9 @@ hubs:
                 name: Farallon Institute
                 urL: http://www.faralloninstitute.org/
           singleuser:
+            image:
+              name: 677861182063.dkr.ecr.us-east-2.amazonaws.com/2i2c-hub/user-image
+              tag: 9cd76f1
             profileList:
               # The mem-guarantees are here so k8s doesn't schedule other pods
               # on these nodes.
