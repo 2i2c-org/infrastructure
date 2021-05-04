@@ -27,7 +27,7 @@ spec:
           image: busybox
           env:
             - name: NFS_SHARE_NAME
-              value: "{{ .Values.nfsPVC.nfs.baseShareName }}/{{ .Release.Name }}"
+              value: "{{ .Values.nfsPVC.nfs.baseShareName }}{{ .Release.Name }}"
           command:
             - /bin/sh
             - -c

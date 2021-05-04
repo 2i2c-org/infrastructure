@@ -10,7 +10,7 @@ spec:
     - ReadWriteMany
   nfs:
     server: {{ .Values.nfsPVC.nfs.serverIP | quote}}
-    path: "{{ .Values.nfsPVC.nfs.baseShareName }}/{{ .Release.Name }}"
+    path: "{{ .Values.nfsPVC.nfs.baseShareName }}{{ .Release.Name }}"
   mountOptions:
     - soft
     - noatime
