@@ -31,10 +31,12 @@ spec:
           command:
             - /bin/sh
             - -c
-            - "mkdir -p ${NFS_SHARE_NAME} && chown 1000:1000 ${NFS_SHARE_NAME}"
+            # ${NFS_SHARE_NAME} starts with `/`
+            - "mkdir -p /mnt${NFS_SHARE_NAME} && chown 1000:1000 /mnt${NFS_SHARE_NAME} && mount && ls -la /mnt/"
           volumeMounts:
             - name: home-base
-              mountPath: {{ .Values.nfsPVC.nfs.baseShareName | quote }}
+              # Put this under /mnt, in case baseShareName is just / (like in EFS)
+              mountPath: /mnt{{ .Values.nfsPVC.nfs.baseShareName }}
       volumes:
         - name: home-base
           nfs:
