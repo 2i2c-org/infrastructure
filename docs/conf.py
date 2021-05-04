@@ -56,3 +56,46 @@ html_theme_options = {
     "use_issues_button": True,
     "use_repository_button": True,
 }
+
+# -- Custom scripts -----------------------------------------
+# Pull latest list of communities served by pilot-hubs/
+import requests
+from yaml import safe_load
+import os
+import pandas as pd
+from pathlib import Path
+
+# Grab the latest list of clusters defined in pilot-hubs/
+clusters = Path("../config/hubs").glob("*")
+hub_list = []
+for cluster_info in clusters:
+    if "schema" in cluster_info.name:
+        continue
+    # For each cluster, grab it's YAML w/ the config for each hub
+    yaml = cluster_info.read_text()
+    cluster = safe_load(yaml)
+
+    # For each hub in cluster, grab its metadata and add it to the list
+    for hub in cluster['hubs']:
+        config = hub['config']
+        # Config is sometimes nested
+        if 'base-hub' in config:
+            hub_config = config['base-hub']['jupyterhub']
+        else:
+            hub_config = config['jupyterhub']
+        # Domain can be a list
+        if isinstance(hub['domain'], list):
+            hub['domain'] = hub['domain'][0]
+
+        hub_list.append({
+            'name': hub_config['homepage']['templateVars']['org']['name'],
+            'domain': f"[{hub['domain']}](https://{hub['domain']})",  
+            "id": hub['name'],
+            "template": hub['template'],
+        })
+df = pd.DataFrame(hub_list)
+path_tmp = Path("tmp")
+path_tmp.mkdir(exist_ok=True)
+path_table = path_tmp / "hub-table.csv"
+if not path_table.exists():
+    df.to_csv(path_table, index=None)
