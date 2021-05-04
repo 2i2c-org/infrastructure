@@ -44,25 +44,11 @@ properties:
           If the cluster is a zonal cluster, this specifies the zone
           in which the cluster is. If it's a regional cluster, this
           specifies the region the cluster is in.
-      nfs:
-        type: object
-        description: |
-          Our home directories use NFS, and it is currently managed
-          outside the cluster. Helm needs to know the location of
-          the NFS server so it can use it for home directories.
-        properties:
-          server:
-            type: string
-            description: |
-              Name of NFS server
-        required:
-          - server
     required:
       - key
       - project
       - cluster
       - zone
-      - nfs
   hubs:
     type: array
     description: |
