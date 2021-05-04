@@ -19,6 +19,10 @@ nfsPVC:
   shareCreator:
     tolerations: []
   nfs:
+    mountOptions:
+      - soft
+      - noatime
+      - vers=4.2
     serverIP: nfs-server-01
     # MUST HAVE TRAILING SLASH
     baseShareName: /export/home-01/homes/
