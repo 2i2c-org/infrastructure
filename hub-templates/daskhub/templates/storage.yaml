@@ -1,6 +1,7 @@
 {{- define "daskhub.scratchBucket.name" -}}
 {{ .Values.iam.projectId }}-{{ .Release.Name }}-scratch-bucket
 {{- end }}
+{{ if .Values.scratchBucket.enabled }}
 apiVersion: storage.cnrm.cloud.google.com/v1beta1
 kind: StorageBucket
 metadata:
@@ -32,3 +33,4 @@ spec:
     apiVersion: storage.cnrm.cloud.google.com/v1beta1
     kind: StorageBucket
     name: {{ include "daskhub.scratchBucket.name" . }}
+{{- end }}

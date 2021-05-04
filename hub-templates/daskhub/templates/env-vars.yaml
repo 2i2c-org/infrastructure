@@ -1,3 +1,4 @@
+{{ if .Values.scratchBucket.enabled }}
 kind: ConfigMap
 apiVersion: v1
 metadata:
@@ -5,3 +6,4 @@ metadata:
 data:
   scratch-bucket-name: {{ include "daskhub.scratchBucket.name" . }}
   scratch-bucket-protocol: "gcs"
+{{- end }}
