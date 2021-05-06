@@ -48,11 +48,14 @@ hubs:
     auth0:
       connection: google-oauth2
     config:
-      iam:
-        # FIXME: Automatically inject this
-        projectId: two-eye-two-see
       basehub:
         jupyterhub:
+          cloudResources:
+            provider: gcp
+            gcp:
+              projectId: two-eye-two-see
+            scratchBucket:
+              enabled: true
           homepage:
             templateVars:
               org:
@@ -219,10 +222,14 @@ hubs:
     auth0:
       connection: google-oauth2
     config:
-      iam:
-        projectId: two-eye-two-see
       basehub:
         jupyterhub:
+          cloudResources:
+            provider: gcp
+            gcp:
+              projectId: two-eye-two-see
+            scratchBucket:
+              enabled: true
           singleuser:
             image:
               name: catalystcoop/pudl-jupyter
@@ -293,11 +300,14 @@ hubs:
     auth0:
       connection: github
     config:
-      iam:
-        # FIXME: Automatically inject this
-        projectId: two-eye-two-see
       basehub:
         jupyterhub:
+          cloudResources:
+            provider: gcp
+            gcp:
+              projectId: two-eye-two-see
+            scratchBucket:
+              enabled: true
           singleuser:
             image:
               name: pangeo/pangeo-notebook
