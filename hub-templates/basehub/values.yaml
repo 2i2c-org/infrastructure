@@ -16,6 +16,8 @@ etcJupyter:
 
 nfsPVC:
   enabled: true
+  shareCreator:
+    tolerations: []
   nfs:
     serverIP: nfs-server-01
     # MUST HAVE TRAILING SLASH
