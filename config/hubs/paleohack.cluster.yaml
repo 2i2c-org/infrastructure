@@ -8,7 +8,7 @@ gcp:
 hubs:
   - name: paleohack2021
     domain: paleohack2021.hackathon.2i2c.cloud
-    template: base-hub
+    template: basehub
     auth0:
       connection: github
     config:

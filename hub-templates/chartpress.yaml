@@ -1,5 +1,5 @@
 charts:
-  - name: base-hub
+  - name: basehub
     imagePrefix: quay.io/2i2c/pilot-
     images:
       hub:

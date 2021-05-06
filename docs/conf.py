@@ -79,8 +79,8 @@ for cluster_info in clusters:
     for hub in cluster['hubs']:
         config = hub['config']
         # Config is sometimes nested
-        if 'base-hub' in config:
-            hub_config = config['base-hub']['jupyterhub']
+        if 'basehub' in config:
+            hub_config = config['basehub']['jupyterhub']
         else:
             hub_config = config['jupyterhub']
         # Domain can be a list

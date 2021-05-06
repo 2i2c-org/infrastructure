@@ -5,7 +5,7 @@ scratchBucket:
   # this bucket.
   enabled: true
 
-base-hub:
+basehub:
   # Copied from https://github.com/dask/helm-chart/blob/master/daskhub/values.yaml
   # FIXME: Properly use the upstream chart.
   jupyterhub:

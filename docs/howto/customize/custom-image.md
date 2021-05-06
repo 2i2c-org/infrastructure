@@ -52,7 +52,7 @@ the useful bits.
 - name: custom-image-hub
   ...
   config:
-    base-hub:
+    basehub:
       jupyterhub:
         singleuser:
           image:

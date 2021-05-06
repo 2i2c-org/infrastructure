@@ -14,7 +14,7 @@ runs:
     - name: Fetch helm charts
       run: |
         cd hub-templates
-        helm dep up base-hub
+        helm dep up basehub
         helm dep up daskhub
       shell: bash
     - name: Setup gcloud auth for docker
