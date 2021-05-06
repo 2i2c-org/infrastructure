@@ -1,15 +1,12 @@
-{{- define "daskhub.scratchBucket.name" -}}
-{{ .Values.iam.projectId }}-{{ .Release.Name }}-scratch-bucket
-{{- end }}
-{{ if .Values.scratchBucket.enabled }}
+{{ if .Values.jupyterhub.cloudResources.scratchBucket.enabled  }}
+{{ if eq .Values.jupyterhub.cloudResources.provider "gcp" }}
 apiVersion: storage.cnrm.cloud.google.com/v1beta1
 kind: StorageBucket
 metadata:
   annotations:
-    cnrm.cloud.google.com/project-id : {{ .Values.iam.projectId | quote }}
+    cnrm.cloud.google.com/project-id : {{ .Values.jupyterhub.cloudResources.gcp.projectId | quote }}
     cnrm.cloud.google.com/force-destroy: "false"
-
-  name: {{ include "daskhub.scratchBucket.name" . }}
+  name: {{ include "cloudResources.scratchBucket.name" . }}
 spec:
   bucketPolicyOnly: true
   lifecycleRule:
@@ -23,14 +20,15 @@ kind: IAMPolicyMember
 metadata:
   name: scratch-bucket-binding
   annotations:
-    cnrm.cloud.google.com/project-id : {{ .Values.iam.projectId | quote }}
+    cnrm.cloud.google.com/project-id : {{ .Values.jupyterhub.cloudResources.gcp.projectId | quote }}
 spec:
-  member: serviceAccount:{{ include "daskhub.serviceAccountName" . }}@{{ .Values.iam.projectId }}.iam.gserviceaccount.com
+  member: serviceAccount:{{ include "cloudResources.gcp.serviceAccountName" . }}@{{ .Values.jupyterhub.cloudResources.gcp.projectId}}.iam.gserviceaccount.com
   # This gives users the ability to delete the bucket too :(
   # But without this, I think you can't list objects in the bucket
   role: roles/storage.admin
   resourceRef:
     apiVersion: storage.cnrm.cloud.google.com/v1beta1
     kind: StorageBucket
-    name: {{ include "daskhub.scratchBucket.name" . }}
+    name: {{ include "cloudResources.scratchBucket.name" . }}
+{{- end }}
 {{- end }}

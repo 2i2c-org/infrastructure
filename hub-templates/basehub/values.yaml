@@ -24,6 +24,12 @@ nfsPVC:
     baseShareName: /export/home-01/homes/
 
 jupyterhub:
+  cloudResources:
+    provider: null
+    gcp:
+      projectId: null
+    scratchBucket:
+      enabled: false
   ingress:
     enabled: true
     annotations:
