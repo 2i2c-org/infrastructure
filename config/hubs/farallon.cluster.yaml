@@ -11,7 +11,7 @@ hubs:
     config:
       scratchBucket:
         enabled: false
-      base-hub:
+      basehub:
         nfsPVC:
           nfs:
             # from https://docs.aws.amazon.com/efs/latest/ug/mounting-fs-nfs-mount-settings.html
@@ -67,7 +67,7 @@ hubs:
                 description: "~4CPUs & ~15GB RAM"
                 kubespawner_override:
                   # Expllicitly unset mem_limit, so it overrides the default memory limit we set in
-                  # base-hub/values.yaml
+                  # basehub/values.yaml
                   mem_limit: null
                   mem_guarantee: 14G
                   cpu_guarantee: 3
@@ -77,7 +77,7 @@ hubs:
                 description: "~8CPUs & ~30GB RAM"
                 kubespawner_override:
                   # Expllicitly unset mem_limit, so it overrides the default memory limit we set in
-                  # base-hub/values.yaml
+                  # basehub/values.yaml
                   mem_limit: null
                   mem_guarantee: 28G
                   cpu_guarantee: 7
