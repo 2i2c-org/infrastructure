@@ -1,0 +1,9 @@
+{{ if .Values.jupyterhub.cloudResources.scratchBucket.enabled}}
+kind: ConfigMap
+apiVersion: v1
+metadata:
+  name: cloud-env-vars
+data:
+  scratch-bucket-name: {{ include "cloudResources.scratchBucket.name" . }}
+  scratch-bucket-protocol: "gcs"
+{{- end }}
