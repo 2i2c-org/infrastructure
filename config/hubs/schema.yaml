@@ -91,7 +91,7 @@ properties:
               `hub-templates` containing a helm chart with base values and dependencies
               that determine the kind of hub deployed.
             enum: 
-              - base-hub
+              - basehub
               - daskhub
           auth0:
             additionalProperties: false

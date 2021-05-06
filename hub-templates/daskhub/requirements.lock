@@ -1,6 +1,6 @@
 dependencies:
-- name: base-hub
-  repository: file://../base-hub
+- name: basehub
+  repository: file://../basehub
   version: v0.0.1
 digest: sha256:6ca4e6932a628f86794cf70bacb9a159a26aee474202336f73841855d9449f15
 generated: "2020-12-04T09:50:53.935463+05:30"

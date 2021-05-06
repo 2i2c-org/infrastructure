@@ -9,7 +9,7 @@ gcp:
 hubs:
   - name: staging
     domain: staging.pilot.2i2c.cloud
-    template: base-hub
+    template: basehub
     auth0:
       connection: google-oauth2
     config:
@@ -51,7 +51,7 @@ hubs:
       iam:
         # FIXME: Automatically inject this
         projectId: two-eye-two-see
-      base-hub:
+      basehub:
         jupyterhub:
           homepage:
             templateVars:
@@ -83,7 +83,7 @@ hubs:
                 admin_users: *dask_staging_users
   - name: justiceinnovationlab
     domain: justiceinnovationlab.pilot.2i2c.cloud
-    template: base-hub
+    template: basehub
     auth0:
       connection: github
     config:
@@ -114,7 +114,7 @@ hubs:
                 - JILPulvino
   - name: pfw
     domain: pfw.pilot.2i2c.cloud
-    template: base-hub
+    template: basehub
     auth0:
       connection: github
     config:
@@ -147,7 +147,7 @@ hubs:
               admin_users: *pfw_users
   - name: wageningen
     domain: wur.pilot.2i2c.cloud
-    template: base-hub
+    template: basehub
     auth0:
       connection: google-oauth2
     config:
@@ -182,7 +182,7 @@ hubs:
               admin_users: *wur_users
   - name: peddie
     domain: peddie.pilot.2i2c.cloud
-    template: base-hub
+    template: basehub
     auth0:
       connection: google-oauth2
     config:
@@ -221,7 +221,7 @@ hubs:
     config:
       iam:
         projectId: two-eye-two-see
-      base-hub:
+      basehub:
         jupyterhub:
           singleuser:
             image:
@@ -258,7 +258,7 @@ hubs:
                 admin_users: *catalyst_users
   - name: earthlab
     domain: earthlab.pilot.2i2c.cloud
-    template: base-hub
+    template: basehub
     auth0:
       connection: github
     config:
@@ -296,7 +296,7 @@ hubs:
       iam:
         # FIXME: Automatically inject this
         projectId: two-eye-two-see
-      base-hub:
+      basehub:
         jupyterhub:
           singleuser:
             image:

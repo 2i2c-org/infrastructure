@@ -221,7 +221,7 @@ class Hub:
         Modify generated_config based on what hub template we're using.
 
         Different hub templates require different pre-set config. For example,
-        anything deriving from 'base-hub' needs all config to be under a 'base-hub'
+        anything deriving from 'basehub' needs all config to be under a 'basehub'
         config. dask hubs require apiTokens, etc.
 
         Ideally, these would be done declaratively. Untile then, let's put all of
@@ -246,9 +246,9 @@ class Hub:
 
         # FIXME: Have a templates config somewhere? Maybe in Chart.yaml
         # FIXME: This is a hack. Fix it.
-        if hub_template != 'base-hub':
+        if hub_template != 'basehub':
             generated_config = {
-                'base-hub': generated_config
+                'basehub': generated_config
             }
 
         # LOLSOB FIXME
@@ -261,7 +261,7 @@ class Hub:
                     }
                 }
             }
-            generated_config['base-hub']['jupyterhub']['hub']['services']['dask-gateway'] = { 'apiToken': gateway_token }
+            generated_config['basehub']['jupyterhub']['hub']['services']['dask-gateway'] = { 'apiToken': gateway_token }
 
         return generated_config
 
@@ -296,8 +296,8 @@ class Hub:
             if not skip_hub_health_test:
 
                 # FIXMEL: Clean this up
-                if self.spec['template'] != 'base-hub':
-                    service_api_token = generated_values["base-hub"]["jupyterhub"]["hub"]["services"]["hub-health"]["apiToken"]
+                if self.spec['template'] != 'basehub':
+                    service_api_token = generated_values["basehub"]["jupyterhub"]["hub"]["services"]["hub-health"]["apiToken"]
                 else:
                     service_api_token = generated_values["jupyterhub"]["hub"]["services"]["hub-health"]["apiToken"]
 

@@ -9,7 +9,7 @@ gcp:
 hubs:
   - name: spelman
     domain: spelman.cloudbank.2i2c.cloud
-    template: base-hub
+    template: basehub
     auth0:
       connection: google-oauth2
     config:
@@ -43,7 +43,7 @@ hubs:
               admin_users: *spelman_users
   - name: ccsf
     domain: ccsf.cloudbank.2i2c.cloud
-    template: base-hub
+    template: basehub
     auth0:
       connection: google-oauth2
     config:
@@ -78,7 +78,7 @@ hubs:
               admin_users: *ccsf_users
   - name: elcamino
     domain: elcamino.cloudbank.2i2c.cloud
-    template: base-hub
+    template: basehub
     auth0:
       connection: google-oauth2
     config:
@@ -116,7 +116,7 @@ hubs:
               admin_users: *elcamino_users
   - name: howard
     domain: howard.cloudbank.2i2c.cloud
-    template: base-hub
+    template: basehub
     auth0:
       connection: google-oauth2
     config:
@@ -150,7 +150,7 @@ hubs:
               admin_users: *howard_users
   - name: skyline
     domain: skyline.cloudbank.2i2c.cloud
-    template: base-hub
+    template: basehub
     auth0:
       connection: google-oauth2
     config:
@@ -184,7 +184,7 @@ hubs:
               admin_users: *skyline_users
   - name: demo
     domain: demo.cloudbank.2i2c.cloud
-    template: base-hub
+    template: basehub
     auth0:
       connection: google-oauth2
     config:
@@ -217,7 +217,7 @@ hubs:
               admin_users: *demo_users
   - name: lassen
     domain: lassen.cloudbank.2i2c.cloud
-    template: base-hub
+    template: basehub
     auth0:
       connection: google-oauth2
     config:
@@ -250,7 +250,7 @@ hubs:
               admin_users: *lassen_users
   - name: clovis
     domain: clovis.cloudbank.2i2c.cloud
-    template: base-hub
+    template: basehub
     auth0:
       connection: google-oauth2
     config:
@@ -283,7 +283,7 @@ hubs:
           admin_users: *clovis_users
   - name: sbcc
     domain: sbcc.cloudbank.2i2c.cloud
-    template: base-hub
+    template: basehub
     auth0:
       connection: google-oauth2
     config:
@@ -318,7 +318,7 @@ hubs:
     domain:
       - mills.cloudbank.2i2c.cloud
       - datahub.mills.edu
-    template: base-hub
+    template: basehub
     auth0:
       connection: google-oauth2
     config:

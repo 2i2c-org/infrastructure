@@ -11,9 +11,9 @@ config files and how they are merged together when deploying a pilot hub.
 % The editable version of the diagram is here: https://docs.google.com/presentation/d/1WZKTe5TSDU-5zA4NnNEPsKfgjaBzUqMgdPLTnz-Yb94/edit?usp=sharing
 
 Currently there are three hub templates available:
-- `base-hub`
+- `basehub`
 
-  The **base-hub template** is the template that the other templates "inherit" and configure.
+  The **basehub template** is the template that the other templates "inherit" and configure.
   It provides a base JupyterHub, user storage and culling configuration that satisfies most of the
   pilot hubs usage requirements.
 
@@ -31,8 +31,8 @@ This configuration file allows specifying options like the type of template to u
 the hub domain, how the JupyterHub landing page will look like and authentication preferences.
 
 Because the templates are structured in a **hierarchical** model, so are their helm charts.
-The [jupyterhub helm chart](https://jupyterhub.github.io/helm-chart/) is a subchart of the base-hub and
-the base-hub chart along with the [dask-gateway](https://dask.org/dask-gateway-helm-repo/) one are
+The [jupyterhub helm chart](https://jupyterhub.github.io/helm-chart/) is a subchart of the basehub and
+the basehub chart along with the [dask-gateway](https://dask.org/dask-gateway-helm-repo/) one are
 subcharts of the daskhub. 
 
 **Visual of the helm-chart hierarchy:**
@@ -41,7 +41,7 @@ subcharts of the daskhub.
 % The editable version of the diagram is here: https://docs.google.com/presentation/d/1KMyrTd3wdR715tPGuzIHkHqScXBlLpeiksIM2x7EI0g/edit?usp=sharing
 
 This hierachy is the reason why when adding a new hub using the `daskhub` 
-specific configuration under `config/hubs` needs to be nested under a `base-hub` key, indicating that we are overriding configuration
-from the *base-hub/jupyterhub* parent chart.
+specific configuration under `config/hubs` needs to be nested under a `basehub` key, indicating that we are overriding configuration
+from the *basehub/jupyterhub* parent chart.
 
 Read more about subcharts and how to configure them in the [Helm docs](https://helm.sh/docs/chart_template_guide/subcharts_and_globals/#overriding-values-from-a-parent-chart).

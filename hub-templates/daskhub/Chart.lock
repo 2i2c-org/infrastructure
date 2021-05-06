@@ -1,9 +1,9 @@
 dependencies:
-- name: base-hub
-  repository: file://../base-hub
-  version: 0.0.1
+- name: basehub
+  repository: file://../basehub
+  version: 0.0.1-n569.hb296398
 - name: dask-gateway
   repository: https://dask.org/dask-gateway-helm-repo/
   version: 0.9.0
-digest: sha256:de2e3d8c0e278fef2d15c3a583422c6f148e290b7133ba00c5ba259ce4b48c0d
-generated: "2021-02-19T21:15:21.045799+05:30"
+digest: sha256:ee9b98778c76df42a5525f80fb31f8db53b84232a8a91515577a4d38cd9a1daf
+generated: "2021-05-06T12:20:07.326225+05:30"
