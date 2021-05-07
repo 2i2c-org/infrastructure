@@ -14,9 +14,23 @@ properties:
     type: string
     description: |
       Cloud provider this cluster is running on. Used to perform
-      authentication against the cluster. Currently supports gcp.
+      authentication against the cluster. Currently supports gcp
+      and raw kubeconfig files.
     enum: 
       - gcp
+      - kubeconfig
+  kubeconfig:
+    type: object
+    description: |
+      Configuration to connect to a cluster purely via a kubeconfig
+      file. 
+    additionalProperties: false
+    properties:
+      file:
+        type: string
+        descriptiON: |
+          Path to kubeconfig file (encrypted with sops) to use for
+          connecting to the cluster
   gcp:
     type: object
     additionalProperties: false
