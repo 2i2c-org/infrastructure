@@ -35,6 +35,11 @@ local data = {
         spec+: {
             machineType: "t3.medium",
             subnets: [zone],
+            nodeLabels+: {
+                "hub.jupyter.org/pool-name": "core-pool"
+            },
+            // Needs to be at least 1
+            minSize: 1,
             maxSize: 3,
             role: "Master"
         },
