@@ -1,0 +1,210 @@
+name: carbonplan
+provider: kubeconfig
+kubeconfig:
+  file: secrets/carbonplan.yaml
+hubs:
+  - name: staging
+    domain: staging.carbonplan.2i2c.cloud
+    template: daskhub
+    auth0:
+      connection: github
+    config: &carbonPlanHubConfig
+      scratchBucket:
+        enabled: false
+      basehub:
+        nfsPVC:
+          nfs:
+            # from https://docs.aws.amazon.com/efs/latest/ug/mounting-fs-nfs-mount-settings.html
+            mountOptions:
+            - rsize=1048576
+            - wsize=1048576
+            - timeo=600
+            - soft # We pick soft over hard, so NFS lockups don't lead to hung processes
+            - retrans=2
+            - noresvport
+            serverIP: fs-2897912f.efs.us-west-2.amazonaws.com
+            baseShareName: /
+          shareCreator:
+            tolerations:
+            - key: node-role.kubernetes.io/master
+              operator: "Exists"
+              effect: "NoSchedule"
+        jupyterhub:
+          homepage:
+            templateVars:
+              org:
+                name: Carbon Plan
+                logo_url: https://pbs.twimg.com/profile_images/1262387945971101697/5q_X3Ruk_400x400.jpg
+                url: https://carbonplan.org
+              designed_by:
+                name: 2i2c
+                url: https://2i2c.org
+              operated_by:
+                name: 2i2c
+                url: https://2i2c.org
+              funded_by:
+                name: Carbon Plan
+                url: https://carbonplan.org
+          singleuser:
+            initContainers:
+              # Need to explicitly fix ownership here, since EFS doesn't do anonuid
+            - name: volume-mount-ownership-fix
+              image: busybox
+              command: ["sh", "-c", "id && chown 1000:1000 /home/jovyan && ls -lhd /home/jovyan"]
+              securityContext:
+                runAsUser: 0
+              volumeMounts:
+              - name: home
+                mountPath: /home/jovyan
+                subPath: "{username}"
+            image:
+              name: carbonplan/r-retro-notebook
+              tag: latest
+            profileList:
+              # The mem-guarantees are here so k8s doesn't schedule other pods
+              # on these nodes.
+              - display_name: "Small: r5.large"
+                description: "~2 CPU, ~15G RAM"
+                kubespawner_override:
+                  # Expllicitly unset mem_limit, so it overrides the default memory limit we set in
+                  # basehub/values.yaml
+                  mem_limit: null
+                  mem_guarantee: 12G
+                  node_selector:
+                    hub.jupyter.org/pool-name: notebook-r5-large
+              - display_name: "Medium: r5.xlarge"
+                description: "~4 CPU, ~30G RAM"
+                kubespawner_override:
+                  mem_limit: null
+                  mem_guarantee: 29G
+                  node_selector:
+                    hub.jupyter.org/pool-name: notebook-r5-xlarge
+              - display_name: "Large: r5.2xlarge"
+                description: "~8 CPU, ~60G RAM"
+                kubespawner_override:
+                  mem_limit: null
+                  mem_guarantee: 60G
+                  node_selector:
+                    hub.jupyter.org/pool-name: notebook-r5-2xlarge
+              - display_name: "Huge: r5.8xlarge"
+                description: "~32 CPU, ~256G RAM"
+                kubespawner_override:
+                  mem_limit: null
+                  mem_guarantee: 250G
+                  node_selector:
+                    hub.jupyter.org/pool-name: notebook-r5-8xlarge
+          scheduling:
+            userPlaceholder:
+              enabled: false
+              replicas: 0
+            userScheduler:
+              enabled: false
+          proxy:
+            service:
+              type: LoadBalancer
+            https:
+              enabled: true
+            chp:
+              nodeSelector: {}
+              tolerations:
+                - key:  "node-role.kubernetes.io/master"
+                  effect: "NoSchedule"
+            traefik:
+              nodeSelector: {}
+              tolerations:
+                - key:  "node-role.kubernetes.io/master"
+                  effect: "NoSchedule"
+          hub:
+            allowNamedServers: true
+            networkPolicy:
+              # FIXME: For dask gateway
+              enabled: false
+            readinessProbe:
+              enabled: false
+            nodeSelector: {}
+            tolerations:
+              - key:  "node-role.kubernetes.io/master"
+                effect: "NoSchedule"
+      dask-gateway:
+        traefik:
+          tolerations:
+            - key:  "node-role.kubernetes.io/master"
+              effect: "NoSchedule"
+        controller:
+          tolerations:
+            - key:  "node-role.kubernetes.io/master"
+              effect: "NoSchedule"
+        gateway:
+          tolerations:
+            - key:  "node-role.kubernetes.io/master"
+              effect: "NoSchedule"
+          backend:
+            scheduler:
+              extraPodConfig:
+                nodeSelector:
+                  hub.jupyter.org/pool-name: dask-worker
+                tolerations:
+                  - key: "k8s.dask.org/dedicated"
+                    operator: "Equal"
+                    value: "worker"
+                    effect: "NoSchedule"
+                  - key: "k8s.dask.org_dedicated"
+                    operator: "Equal"
+                    value: "worker"
+                    effect: "NoSchedule"
+            worker:
+              extraPodConfig:
+                nodeSelector:
+                  hub.jupyter.org/pool-name: dask-worker
+                tolerations:
+                  - key: "k8s.dask.org/dedicated"
+                    operator: "Equal"
+                    value: "worker"
+                    effect: "NoSchedule"
+                  - key: "k8s.dask.org_dedicated"
+                    operator: "Equal"
+                    value: "worker"
+                    effect: "NoSchedule"
+
+            # TODO: figure out a replacement for userLimits.
+          extraConfig:
+            optionHandler: |
+              from dask_gateway_server.options import Options, Integer, Float, String
+              def cluster_options(user):
+                def option_handler(options):
+                    if ":" not in options.image:
+                        raise ValueError("When specifying an image you must also provide a tag")
+                    extra_annotations = {
+                        "hub.jupyter.org/username": user.name,
+                        "prometheus.io/scrape": "true",
+                        "prometheus.io/port": "8787",
+                    }
+                    extra_labels = {
+                        "hub.jupyter.org/username": user.name,
+                    }
+                    return {
+                        "worker_cores_limit": options.worker_cores,
+                        "worker_cores": min(options.worker_cores / 2, 1),
+                        "worker_memory": "%fG" % options.worker_memory,
+                        "image": options.image,
+                        "scheduler_extra_pod_annotations": extra_annotations,
+                        "worker_extra_pod_annotations": extra_annotations,
+                        "scheduler_extra_pod_labels": extra_labels,
+                        "worker_extra_pod_labels": extra_labels,
+                    }
+                return Options(
+                    Integer("worker_cores", 2, min=1, max=16, label="Worker Cores"),
+                    Float("worker_memory", 4, min=1, max=32, label="Worker Memory (GiB)"),
+                    String("image", default="pangeo/pangeo-notebook:latest", label="Image"),
+                    handler=option_handler,
+                )
+              c.Backend.cluster_options = cluster_options
+            idle: |
+              # timeout after 30 minutes of inactivity
+              c.KubeClusterConfig.idle_timeout = 1800
+  - name: prod
+    domain: carbonplan.2i2c.cloud
+    template: daskhub
+    auth0:
+      connection: github
+    config: *carbonPlanHubConfig
