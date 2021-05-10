@@ -94,8 +94,6 @@ hubs:
               type: LoadBalancer
             https:
               enabled: true
-              hosts:
-              - staging.farallon.2i2c.cloud 
             chp:
               nodeSelector: {}
               tolerations:
