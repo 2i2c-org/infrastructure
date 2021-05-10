@@ -1,7 +1,7 @@
 local cluster = import "./libsonnet/cluster.jsonnet";
 local ig = import "./libsonnet/instancegroup.jsonnet";
 
-local zone = "us-east-1a";
+local zone = "us-west-2a";
 local nodes = [
     {spec+: {
         machineType: "m4.xlarge"
@@ -15,10 +15,10 @@ local nodes = [
 local data = {
     cluster: cluster {
         metadata+: {
-            name: "farallon.k8s.local"
+            name: "carbonplanhub.k8s.local"
         },
         spec+: {
-            configBase: "hi"
+            configBase: "s3://2i2c-carbonplan-kops-state"
         },
         _config+:: {
             zone: zone,
