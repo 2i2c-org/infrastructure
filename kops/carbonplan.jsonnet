@@ -3,13 +3,10 @@ local ig = import "./libsonnet/instancegroup.jsonnet";
 
 local zone = "us-west-2a";
 local nodes = [
-    {spec+: {
-        machineType: "m4.xlarge"
-    }},
-    {spec+: {
-        machineType: "m4.2xlarge",
-        maxSize: 20
-    }},
+    {spec+: { machineType: "r5.large" }}, // 2CPU, 16G RAM
+    {spec+: { machineType: "r5.xlarge" }}, // 4CPU, 32G RAM
+    {spec+: { machineType: "r5.2xlarge" }}, // 8CPU, 64G RAM
+    {spec+: { machineType: "r5.8xlarge" }} // 32CPU, 256 RAM
 ];
 
 local data = {
@@ -56,7 +53,7 @@ local data = {
             spec+: {
                 machineType: n.machineType,
                 subnets: [zone],
-                maxSize: 3,
+                maxSize: 20,
                 role: "Node",
                 nodeLabels+: {
                     "hub.jupyter.org/pool-name": thisIg.metadata.name
