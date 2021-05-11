@@ -39,7 +39,6 @@ hubs:
                 - georgiana.dolocan@gmail.com
                 - ericvd@gmail.com
                 - sean.smorris@berkeley.edu
-                - sean.smorris@berkeley.edu
                 - jerry.volcy@gmail.com
               admin_users: *spelman_users
   - name: ccsf
