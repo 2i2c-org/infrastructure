@@ -26,7 +26,11 @@ local makeCloudTaints(taints) = {
     },
     spec: {
         image: "099720109477/ubuntu/images/hvm-ssd/ubuntu-focal-20.04-amd64-server-20210119.1",
-        cloudLabels: makeCloudLabels(self.nodeLabels) + makeCloudTaints(self.taints),
+        cloudLabels: {
+            // Tell autoscaler to scale up this instancegroup when something asks for a node with the label
+            // node.kubernetes.io/instance-type: <machineType>
+            "k8s.io/cluster-autoscaler/node-template/label/node.kubernetes.io/instance-type": $.spec.machineType
+        } + makeCloudLabels(self.nodeLabels) + makeCloudTaints(self.taints),
         taints: [],
         nodeLabels: {},
         machineType: "",
