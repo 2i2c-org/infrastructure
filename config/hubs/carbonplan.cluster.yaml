@@ -71,28 +71,28 @@ hubs:
                   mem_limit: null
                   mem_guarantee: 12G
                   node_selector:
-                    hub.jupyter.org/pool-name: notebook-r5-large
+                    node.kubernetes.io/instance-type: r5.large
               - display_name: "Medium: r5.xlarge"
                 description: "~4 CPU, ~30G RAM"
                 kubespawner_override:
                   mem_limit: null
                   mem_guarantee: 29G
                   node_selector:
-                    hub.jupyter.org/pool-name: notebook-r5-xlarge
+                    node.kubernetes.io/instance-type: r5.xlarge
               - display_name: "Large: r5.2xlarge"
                 description: "~8 CPU, ~60G RAM"
                 kubespawner_override:
                   mem_limit: null
                   mem_guarantee: 60G
                   node_selector:
-                    hub.jupyter.org/pool-name: notebook-r5-2xlarge
+                    node.kubernetes.io/instance-type: r5.2xlarge
               - display_name: "Huge: r5.8xlarge"
                 description: "~32 CPU, ~256G RAM"
                 kubespawner_override:
                   mem_limit: null
                   mem_guarantee: 250G
                   node_selector:
-                    hub.jupyter.org/pool-name: notebook-r5-8xlarge
+                    node.kubernetes.io/instance-type: r5.8xlarge
           scheduling:
             userPlaceholder:
               enabled: false
@@ -138,34 +138,6 @@ hubs:
           tolerations:
             - key:  "node-role.kubernetes.io/master"
               effect: "NoSchedule"
-          backend:
-            scheduler:
-              extraPodConfig:
-                nodeSelector:
-                  hub.jupyter.org/pool-name: dask-worker
-                tolerations:
-                  - key: "k8s.dask.org/dedicated"
-                    operator: "Equal"
-                    value: "worker"
-                    effect: "NoSchedule"
-                  - key: "k8s.dask.org_dedicated"
-                    operator: "Equal"
-                    value: "worker"
-                    effect: "NoSchedule"
-            worker:
-              extraPodConfig:
-                nodeSelector:
-                  hub.jupyter.org/pool-name: dask-worker
-                tolerations:
-                  - key: "k8s.dask.org/dedicated"
-                    operator: "Equal"
-                    value: "worker"
-                    effect: "NoSchedule"
-                  - key: "k8s.dask.org_dedicated"
-                    operator: "Equal"
-                    value: "worker"
-                    effect: "NoSchedule"
-
             # TODO: figure out a replacement for userLimits.
           extraConfig:
             optionHandler: |

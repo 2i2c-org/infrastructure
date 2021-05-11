@@ -33,7 +33,8 @@ local data = {
             machineType: "t3.medium",
             subnets: [zone],
             nodeLabels+: {
-                "hub.jupyter.org/pool-name": "core-pool"
+                "hub.jupyter.org/node-purpose": "core",
+                "k8s.dask.org/node-purpose": "core"
             },
             // Needs to be at least 1
             minSize: 1,
@@ -41,7 +42,7 @@ local data = {
             role: "Master"
         },
     },
-    nodes: [
+    notebookNodes: [
         ig {
             local thisIg = self,
             metadata+: {
@@ -56,11 +57,36 @@ local data = {
                 maxSize: 20,
                 role: "Node",
                 nodeLabels+: {
-                    "hub.jupyter.org/pool-name": thisIg.metadata.name
+                    "hub.jupyter.org/node-purpose": "user",
+                    "k8s.dask.org/node-purpose": "scheduler"
                 },
                 taints: [
                     "hub.jupyter.org_dedicated=user:NoSchedule",
                     "hub.jupyter.org/dedicated=user:NoSchedule"
+                ],
+            },
+        } + n for n in nodes
+    ],
+    daskNodes: [
+        ig {
+            local thisIg = self,
+            metadata+: {
+                labels+: {
+                    "kops.k8s.io/cluster": data.cluster.metadata.name
+                },
+                name: "dask-%s" % std.strReplace(thisIg.spec.machineType, ".", "-")
+            },
+            spec+: {
+                machineType: n.machineType,
+                subnets: [zone],
+                maxSize: 20,
+                role: "Node",
+                nodeLabels+: {
+                    "k8s.dask.org/node-purpose": "worker"
+                },
+                taints: [
+                    "k8s.dask.org_dedicated=worker:NoSchedule",
+                    "k8s.dask.org/dedicated=worker:NoSchedule"
                 ],
             },
         } + n for n in nodes
@@ -70,4 +96,4 @@ local data = {
 [
     data.cluster,
     data.master
-] + data.nodes
+] + data.notebookNodes + data.daskNodes

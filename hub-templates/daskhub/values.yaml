@@ -123,10 +123,10 @@ dask-gateway:
   # See https://github.com/dask/dask-gateway/blob/master/resources/helm/dask-gateway/values.yaml
   controller:
     nodeSelector:
-      hub.jupyter.org/pool-name: core-pool
+      k8s.dask.org/node-purpose: core
   gateway:
     nodeSelector:
-      hub.jupyter.org/pool-name: core-pool
+      k8s.dask.org/node-purpose: core
     backend:
       scheduler:
         extraPodConfig:
@@ -143,8 +143,7 @@ dask-gateway:
               value: "user"
               effect: "NoSchedule"
           nodeSelector:
-            # Schedulers should be in the user pool
-            hub.jupyter.org/pool-name: user-pool
+              k8s.dask.org/node-purpose: scheduler
         cores:
           request: 0.01
           limit: 1
@@ -171,7 +170,7 @@ dask-gateway:
               effect: "NoSchedule"
           nodeSelector:
             # Dask workers get their own pre-emptible pool
-            hub.jupyter.org/pool-name: dask-worker-pool
+            k8s.dask.org/node-purpose: worker
 
     # TODO: figure out a replacement for userLimits.
     extraConfig:
@@ -217,6 +216,6 @@ dask-gateway:
       type: jupyterhub  # Use JupyterHub to authenticate with Dask Gateway
   traefik:
     nodeSelector:
-      hub.jupyter.org/pool-name: core-pool
+      k8s.dask.org/node-purpose: core
     service:
       type: ClusterIP  # Access Dask Gateway through JupyterHub. To access the Gateway from outside JupyterHub, this must be changed to a `LoadBalancer`.
