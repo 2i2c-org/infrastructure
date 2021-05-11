@@ -66,6 +66,8 @@ jupyterhub:
     hook:
       enabled: false
   proxy:
+    https:
+      enabled: false
     service:
       type: ClusterIP
     chp:

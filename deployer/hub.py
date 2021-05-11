@@ -111,7 +111,12 @@ class Hub:
 
         generated_config = {
             'jupyterhub': {
-                'proxy': { 'secretToken': proxy_secret },
+                'proxy': {
+                    'secretToken': proxy_secret,
+                    'https': {
+                        'hosts': self.spec['domain'] if isinstance(self.spec['domain'], list) else [self.spec['domain']]
+                    }
+                },
                 'ingress': {
                     'hosts': self.spec['domain'] if isinstance(self.spec['domain'], list) else [self.spec['domain']],
                     'tls': [
