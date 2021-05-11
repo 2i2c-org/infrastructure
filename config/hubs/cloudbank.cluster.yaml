@@ -38,7 +38,6 @@ hubs:
                 - choldgraf@gmail.com
                 - georgiana.dolocan@gmail.com
                 - ericvd@gmail.com
-                - jp@jamespercy.com
                 - jerry.volcy@gmail.com
               admin_users: *spelman_users
   - name: ccsf
@@ -71,7 +70,6 @@ hubs:
                 - choldgraf@gmail.com
                 - georgiana.dolocan@gmail.com
                 - ericvd@gmail.com
-                - jp@jamespercy.com
                 - shawn.wiggins@mail.ccsf.edu
                 - craig.persiko@mail.ccsf.edu
                 - efuchs@mail.ccsf.edu
@@ -111,7 +109,6 @@ hubs:
                 - choldgraf@gmail.com
                 - georgiana.dolocan@gmail.com
                 - ericvd@gmail.com
-                - jp@jamespercy.com
                 - solomonrussell@gmail.com
               admin_users: *elcamino_users
   - name: howard
@@ -178,7 +175,6 @@ hubs:
                 - choldgraf@gmail.com
                 - georgiana.dolocan@gmail.com
                 - ericvd@gmail.com
-                - jp@jamespercy.com
                 - dhum1@my.smccd.edu
                 - kayvanm@gmail.com
               admin_users: *skyline_users
@@ -212,7 +208,6 @@ hubs:
                 - choldgraf@gmail.com
                 - georgiana.dolocan@gmail.com
                 - ericvd@gmail.com
-                - jp@jamespercy.com
                 - colliand@gmail.com
               admin_users: *demo_users
   - name: lassen
@@ -245,7 +240,6 @@ hubs:
                 - choldgraf@gmail.com
                 - georgiana.dolocan@gmail.com
                 - ericvd@gmail.com
-                - jp@jamespercy.com
                 - camacho@lassencollege.edu
               admin_users: *lassen_users
   - name: clovis
@@ -278,7 +272,6 @@ hubs:
                 - choldgraf@gmail.com
                 - georgiana.dolocan@gmail.com
                 - ericvd@gmail.com
-                - jp@jamespercy.com
                 - william.kerney@cloviscollege.edu
           admin_users: *clovis_users
   - name: sbcc
@@ -311,7 +304,6 @@ hubs:
                 - choldgraf@gmail.com
                 - georgiana.dolocan@gmail.com
                 - ericvd@gmail.com
-                - jp@jamespercy.com
                 - nfguebels@pipeline.sbcc.edu
               admin_users: *sbcc_users
   - name: mills
