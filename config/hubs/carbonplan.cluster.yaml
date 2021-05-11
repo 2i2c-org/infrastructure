@@ -22,7 +22,7 @@ hubs:
             - soft # We pick soft over hard, so NFS lockups don't lead to hung processes
             - retrans=2
             - noresvport
-            serverIP: fs-2897912f.efs.us-west-2.amazonaws.com
+            serverIP: fs-8a4e4f8d.efs.us-west-2.amazonaws.com
             baseShareName: /
           shareCreator:
             tolerations:
