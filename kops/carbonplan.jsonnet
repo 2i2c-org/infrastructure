@@ -15,7 +15,8 @@ local data = {
             name: "carbonplanhub.k8s.local"
         },
         spec+: {
-            configBase: "s3://2i2c-carbonplan-kops-state"
+            // FIXME: Not sure if this is necessary?
+            configBase: "s3://2i2c-carbonplan-kops-state/%s" % data.cluster.metadata.name
         },
         _config+:: {
             zone: zone,
