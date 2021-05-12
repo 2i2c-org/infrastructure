@@ -58,8 +58,8 @@ hubs:
                 mountPath: /home/jovyan
                 subPath: "{username}"
             image:
-              name: pangeo/pangeo-notebook
-              tag: 2021.05.04
+              name: carbonplan/trace-python-notebook
+              tag: sha-da2d1c9
             profileList:
               # The mem-guarantees are here so k8s doesn't schedule other pods
               # on these nodes.
