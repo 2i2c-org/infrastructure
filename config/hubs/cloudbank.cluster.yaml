@@ -376,7 +376,7 @@ hubs:
         hub:
           config:
             Authenticator:
-              admin_users: &palomar_admins
+              allowed_users: &palomar_users
                 - yuvipanda@gmail.com
                 - choldgraf@gmail.com
                 - georgiana.dolocan@gmail.com
@@ -384,4 +384,4 @@ hubs:
                 - sean.smorris@berkeley.edu
                 - tcanon@palomar.edu
                 - PChen@palomar.edu
-              username_pattern: '^(.+@palomar\.edu|yuvipanda@gmail\.com|choldgraf@gmail\.com|georgiana\.dolocan@gmail\.com|aculich@berkeley\.edu|sean.smorris@berkeley\.edu|deployment-service-check)$'
+              admin_users: *palomar_users
