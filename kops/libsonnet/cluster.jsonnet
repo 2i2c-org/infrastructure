@@ -13,9 +13,9 @@
 //    from other AZs (for hub db PVC, for example), and incurs networking cost for no
 //    clear benefit in our use case. An opinionated set of IP ranges is picked here,
 //    and the subnet is created in _config.zone.
-// 4. A /16 network for the entire cluster, with a /19 allocated to the one subnet
-//    currently in use. This allows for ~8000 currently active pods.
-//    FIXME: Consider a /18 instead?
+// 4. kops defaults for networking - a /16 network for the entire cluster,
+//    with a /19 allocated to the one subnet currently in use. This allows for
+//    ~8000 currently active pods.
 // 5. Kubernetes API and SSH access allowed from everywhere.
 // 6. IAM Permissions to pull from ECR.
 // 7. Enables feature gates to allow hub services to run on master node as well.
