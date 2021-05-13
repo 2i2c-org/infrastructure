@@ -123,14 +123,19 @@ module "gke" {
     all = {}
 
     core-pool = {
-      default-node-pool = true
-      "hub.jupyter.org/pool-name" = "core-pool"
+      default-node-pool              = true
+      "hub.jupyter.org/pool-name"    = "core-pool",
+      "hub.jupyter.org/node-purpose" = "core",
+      "k8s.dask.org/node-purpose"    = "core"
     }
     user-pool = {
-      "hub.jupyter.org/pool-name" = "user-pool"
+      "hub.jupyter.org/pool-name"    = "user-pool"
+      "hub.jupyter.org/node-purpose" = "user",
+      "k8s.dask.org/node-purpose"    = "scheduler"
     }
     dask-worker-pool = {
       "hub.jupyter.org/pool-name" = "dask-worker-pool"
+      "k8s.dask.org/node-purpose" = "worker"
     }
   }
 
