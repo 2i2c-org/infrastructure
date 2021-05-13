@@ -101,18 +101,12 @@ class Hub:
         """
         Generate config automatically for each hub
 
-        Some config - particularly around secrets - needs to be deterministically
-        generated for each hub, based on the contents of the hub's config yaml files
-
-        WARNING: CONTAINS SECRET VALUES!
+        WARNING: MIGHT CONTAINS SECRET VALUES!
         """
-
-        proxy_secret = hmac.new(secret_key, self.spec['name'].encode(), hashlib.sha256).hexdigest()
 
         generated_config = {
             'jupyterhub': {
                 'proxy': {
-                    'secretToken': proxy_secret,
                     'https': {
                         'hosts': self.spec['domain'] if isinstance(self.spec['domain'], list) else [self.spec['domain']]
                     }
