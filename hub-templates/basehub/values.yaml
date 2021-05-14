@@ -52,7 +52,7 @@ jupyterhub:
     userScheduler:
       enabled: true
       nodeSelector:
-        hub.jupyter.org/pool-name: core-pool
+        hub.jupyter.org/node-purpose: core
       resources:
         requests:
           # FIXME: Just unset this?
@@ -72,7 +72,7 @@ jupyterhub:
       type: ClusterIP
     chp:
       nodeSelector:
-        hub.jupyter.org/pool-name: core-pool
+        hub.jupyter.org/node-purpose: core
       resources:
         requests:
           # FIXME: We want no guarantees here!!!
@@ -83,7 +83,7 @@ jupyterhub:
           memory: 1Gi
     traefik:
       nodeSelector:
-        hub.jupyter.org/pool-name: core-pool
+        hub.jupyter.org/node-purpose: core
       resources:
         requests:
           memory: 64Mi
@@ -102,7 +102,7 @@ jupyterhub:
     startTimeout: 600 # 10 mins, because sometimes we have too many new nodes coming up together
     defaultUrl: /tree
     nodeSelector:
-      hub.jupyter.org/pool-name: user-pool
+      hub.jupyter.org/node-purpose: user
     image:
       name: set_automatically_by_automation
       tag: 1b83c4f
@@ -183,7 +183,7 @@ jupyterhub:
       JupyterHub:
         authenticator_class: oauthenticator.generic.GenericOAuthenticator
     nodeSelector:
-      hub.jupyter.org/pool-name: core-pool
+      hub.jupyter.org/node-purpose: core
     networkPolicy:
       enabled: true
       ingress:
