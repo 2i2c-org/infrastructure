@@ -68,22 +68,28 @@ class Cluster:
         location = config.get('zone', config.get('region'))
         cluster = config['cluster']
         with tempfile.NamedTemporaryFile() as kubeconfig:
-            with decrypt_file(key_path) as decrypted_key_path:
+            orig_kubeconfig = os.environ.get('KUBECONFIG')
+            try:
+                os.environ['KUBECONFIG'] = kubeconfig.name
+                with decrypt_file(key_path) as decrypted_key_path:
+                    subprocess.check_call([
+                        'gcloud', 'auth',
+                        'activate-service-account',
+                        '--key-file', os.path.abspath(decrypted_key_path)
+                    ])
+
                 subprocess.check_call([
-                    'gcloud', 'auth',
-                    'activate-service-account',
-                    '--key-file', os.path.abspath(decrypted_key_path)
+                    'gcloud', 'container', 'clusters',
+                    # --zone works with regions too
+                    f'--zone={location}',
+                    f'--project={project}',
+                    'get-credentials', cluster
                 ])
 
-            subprocess.check_call([
-                'gcloud', 'container', 'clusters',
-                # --zone works with regions too
-                f'--zone={location}',
-                f'--project={project}',
-                'get-credentials', cluster
-            ])
-
-            yield
+                yield
+            finally:
+                if orig_kubeconfig is not None:
+                    os.environ['KUBECONFIG'] = orig_kubeconfig
 
 
 class Hub:
