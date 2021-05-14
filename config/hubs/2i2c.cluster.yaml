@@ -16,7 +16,7 @@ hubs:
       docs_service:
         enabled: true
         repo: https://github.com/jupyterhub/nbgitpuller
-        branch: master
+        branch: gh-pages
       jupyterhub:
         homepage:
           templateVars:
