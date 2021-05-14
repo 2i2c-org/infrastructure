@@ -1,7 +1,5 @@
-import requests
-from auth0.v3.management import Auth0
 from auth0.v3.authentication import GetToken
-import os
+from auth0.v3.management import Auth0
 
 # What key in the authenticated user's profile to use as hub username
 # This shouldn't be changeable by the user!
@@ -104,16 +102,16 @@ class KeyProvider:
                 if client_id in enabled_clients:
                     enabled_clients.remove(client_id)
                     needs_update = True
-            
+
             if needs_update:
                 self.auth0.connections.update(
                     connection['id'],
                     {'enabled_clients': enabled_clients}
                 )
-        
+
         return client
 
-        
+
     def get_client_creds(self, client, connection_name):
         """
         Return z2jh config for auth0 authentication for this JupyterHub

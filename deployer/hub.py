@@ -1,20 +1,17 @@
-import backoff
-from copy import deepcopy
 import hashlib
-import subprocess
 import hmac
-import os
 import json
-import pytest
+import os
 import random
+import subprocess
 import tempfile
-from ruamel.yaml import YAML
-from ruamel.yaml.scanner import ScannerError
-from textwrap import dedent
-from build import last_modified_commit
-from build import build_image
 from contextlib import contextmanager
-from jhub_client.execute import execute_notebook, JupyterHubAPI
+from textwrap import dedent
+
+import pytest
+from ruamel.yaml import YAML
+
+from build import build_image
 from utils import decrypt_file
 
 # Without `pure=True`, I get an exception about str / byte issues
@@ -43,7 +40,7 @@ class Cluster:
             yield from self.auth_kubeconfig()
         else:
             raise ValueError(f'Provider {self.spec["provider"]} not supported')
-            
+
 
     def auth_kubeconfig(self):
         """
@@ -115,7 +112,7 @@ class Hub:
                     'hosts': self.spec['domain'] if isinstance(self.spec['domain'], list) else [self.spec['domain']],
                     'tls': [
                         {
-                            'secretName': f'https-auto-tls',
+                            'secretName': 'https-auto-tls',
                             'hosts': self.spec['domain'] if isinstance(self.spec['domain'], list) else [self.spec['domain']]
                         }
                     ]
