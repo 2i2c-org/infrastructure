@@ -1,0 +1,18 @@
+name: Lint terraform
+
+on:
+  pull_request:
+    paths:
+    - terraform/*
+
+jobs:
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: hashicorp/setup-terraform@v1
+      - uses: terraform-linters/setup-tflint@v1
+      - name: Run terraform linter
+        run: tflint terraform
+      - name: Check terraform formatting
+        run: terraform fmt -check -diff terraform/

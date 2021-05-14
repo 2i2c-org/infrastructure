@@ -27,10 +27,10 @@ output "ci_deployer_key" {
 resource "google_artifact_registry_repository" "container_repository" {
   provider = google-beta
 
-  location = var.region
+  location      = var.region
   repository_id = "low-touch-hubs"
-  format = "DOCKER"
-  project = var.project_id
+  format        = "DOCKER"
+  project       = var.project_id
 }
 
 // Give the GKE service account access to our artifact registry docker repo
@@ -91,15 +91,15 @@ module "gke" {
       preemptible        = false
       initial_node_count = 0
       # Let's pin this so we don't upgrade each time terraform runs
-      version            = "1.17.12-gke.2502"
+      version = "1.19.9-gke.1400"
     },
     {
-      name               = "dask-worker-pool"
-      machine_type       = var.dask_worker_machine_type
-      min_count          = 0
-      max_count          = 10
-      local_ssd_count    = 0
-      disk_size_gb       = 100
+      name            = "dask-worker-pool"
+      machine_type    = var.dask_worker_machine_type
+      min_count       = 0
+      max_count       = 10
+      local_ssd_count = 0
+      disk_size_gb    = 100
       # Fast startup is important here, so we get fast SSD disks
       # This pulls in user images much faster
       disk_type          = "pd-ssd"
@@ -145,14 +145,14 @@ module "gke" {
     all = []
 
     user-pool = [{
-        key    = "hub.jupyter.org_dedicated"
-        value  = "user"
-        effect = "NO_SCHEDULE"
+      key    = "hub.jupyter.org_dedicated"
+      value  = "user"
+      effect = "NO_SCHEDULE"
     }]
     dask-worker-pool = [{
-        key    = "k8s.dask.org_dedicated"
-        value  = "worker"
-        effect = "NO_SCHEDULE"
+      key    = "k8s.dask.org_dedicated"
+      value  = "worker"
+      effect = "NO_SCHEDULE"
     }]
   }
 }

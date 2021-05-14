@@ -1,4 +1,4 @@
-prefix = "alpha"
+prefix     = "alpha"
 project_id = "hackathon-2i2c-project-alpha"
 
 # Inane CPU requests mean we need at least 3 CPUs for a base node?!?!
