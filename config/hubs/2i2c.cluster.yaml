@@ -15,8 +15,8 @@ hubs:
     config:
       docs_service:
         enabled: true
-        repo: https://github.com/2i2c-org/pilot-hubs
-        branch: gh-pages
+        repo: https://github.com/jupyterhub/nbgitpuller
+        branch: master
       jupyterhub:
         homepage:
           templateVars:
