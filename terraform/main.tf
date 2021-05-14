@@ -21,7 +21,8 @@ module "service_accounts" {
 }
 
 output "ci_deployer_key" {
-  value = module.service_accounts.keys["cd-sa"]
+  value     = module.service_accounts.keys["cd-sa"]
+  sensitive = true
 }
 
 resource "google_artifact_registry_repository" "container_repository" {
