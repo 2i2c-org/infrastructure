@@ -56,7 +56,9 @@ module "gke" {
   horizontal_pod_autoscaling = false
   network_policy             = true
   # We explicitly set up a core pool, so don't need the default
-  remove_default_node_pool   = true
+  remove_default_node_pool = true
+  kubernetes_version       = "1.19.9-gke.1400"
+
 
   node_pools = [
     {
@@ -73,7 +75,7 @@ module "gke" {
       preemptible        = false
       initial_node_count = 1
       # Let's pin this so we don't upgrade each time terraform runs
-      version            = "1.17.12-gke.2502"
+      version = "1.19.9-gke.1400"
     },
     {
       name               = "user-pool"
@@ -107,7 +109,7 @@ module "gke" {
       preemptible        = true
       initial_node_count = 0
       # Let's pin this so we don't upgrade each time terraform runs
-      version            = "1.17.12-gke.2502"
+      version = "1.19.9-gke.1400"
     },
   ]
 
@@ -123,14 +125,19 @@ module "gke" {
     all = {}
 
     core-pool = {
-      default-node-pool = true
-      "hub.jupyter.org/pool-name" = "core-pool"
+      default-node-pool              = true
+      "hub.jupyter.org/pool-name"    = "core-pool",
+      "hub.jupyter.org/node-purpose" = "core",
+      "k8s.dask.org/node-purpose"    = "core"
     }
     user-pool = {
-      "hub.jupyter.org/pool-name" = "user-pool"
+      "hub.jupyter.org/pool-name"    = "user-pool"
+      "hub.jupyter.org/node-purpose" = "user",
+      "k8s.dask.org/node-purpose"    = "scheduler"
     }
     dask-worker-pool = {
       "hub.jupyter.org/pool-name" = "dask-worker-pool"
+      "k8s.dask.org/node-purpose" = "worker"
     }
   }
 
