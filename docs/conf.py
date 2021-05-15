@@ -103,5 +103,4 @@ df = pd.DataFrame(hub_list)
 path_tmp = Path("tmp")
 path_tmp.mkdir(exist_ok=True)
 path_table = path_tmp / "hub-table.csv"
-if not path_table.exists():
-    df.to_csv(path_table, index=None)
+df.to_csv(path_table, index=None)
