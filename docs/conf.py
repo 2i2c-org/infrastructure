@@ -72,7 +72,7 @@ hub_list = [{
     'name': 'University of Toronto',
     'domain': 'jupyter.utoronto.ca',
     'id': 'utoronto',
-    'template': 'base-hub (external repo)'
+    'template': 'base-hub ([deployment repo](https://github.com/utoronto-2i2c/jupyterhub-deploy/))'
 }]
 for cluster_info in clusters:
     if "schema" in cluster_info.name:
@@ -95,7 +95,7 @@ for cluster_info in clusters:
 
         hub_list.append({
             'name': hub_config['homepage']['templateVars']['org']['name'],
-            'domain': f"[{hub['domain']}](https://{hub['domain']})",  
+            'domain': f"[{hub['domain']}](https://{hub['domain']})",
             "id": hub['name'],
             "template": hub['template'],
         })
