@@ -67,7 +67,13 @@ from pathlib import Path
 
 # Grab the latest list of clusters defined in pilot-hubs/
 clusters = Path("../config/hubs").glob("*")
-hub_list = []
+# Add list of repos managed outside pilot-hubs
+hub_list = [{
+    'name': 'University of Toronto',
+    'domain': 'jupyter.utoronto.ca',
+    'id': 'utoronto',
+    'template': 'base-hub (external repo)'
+}]
 for cluster_info in clusters:
     if "schema" in cluster_info.name:
         continue
