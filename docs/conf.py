@@ -59,9 +59,7 @@ html_theme_options = {
 
 # -- Custom scripts -----------------------------------------
 # Pull latest list of communities served by pilot-hubs/
-import requests
 from yaml import safe_load
-import os
 import pandas as pd
 from pathlib import Path
 
@@ -89,7 +87,7 @@ for cluster_info in clusters:
 
         hub_list.append({
             'name': hub_config['homepage']['templateVars']['org']['name'],
-            'domain': f"[{hub['domain']}](https://{hub['domain']})",  
+            'domain': f"[{hub['domain']}](https://{hub['domain']})",
             "id": hub['name'],
             "template": hub['template'],
         })
