@@ -25,7 +25,7 @@ variable "regional_cluster" {
 
 variable "core_node_machine_type" {
   type    = string
-  default = "e2-highcpu-4"
+  default = "n1-highmem-4"
 }
 
 variable "core_node_max_count" {
