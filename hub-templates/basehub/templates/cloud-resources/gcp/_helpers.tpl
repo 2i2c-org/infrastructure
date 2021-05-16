@@ -3,7 +3,7 @@
 {{- end }}
 
 {{- define "cloudResources.scratchBucket.name" -}}
-{{- if eq .Values.jupyterhub.cloudResources.provider "gcp" -}}
-{{ .Values.jupyterhub.cloudResources.gcp.projectId }}-{{ .Release.Name }}-scratch-bucket
+{{- if eq .Values.jupyterhub.custom.cloudResources.provider "gcp" -}}
+{{ .Values.jupyterhub.custom.cloudResources.gcp.projectId }}-{{ .Release.Name }}-scratch-bucket
 {{- end -}}
 {{- end }}

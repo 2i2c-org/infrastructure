@@ -50,12 +50,13 @@ hubs:
     config:
       basehub:
         jupyterhub:
-          cloudResources:
-            provider: gcp
-            gcp:
-              projectId: two-eye-two-see
-            scratchBucket:
-              enabled: true
+          custom:
+            cloudResources:
+              provider: gcp
+              gcp:
+                projectId: two-eye-two-see
+              scratchBucket:
+                enabled: true
           homepage:
             templateVars:
               org:
@@ -224,12 +225,13 @@ hubs:
     config:
       basehub:
         jupyterhub:
-          cloudResources:
-            provider: gcp
-            gcp:
-              projectId: two-eye-two-see
-            scratchBucket:
-              enabled: true
+          custom:
+            cloudResources:
+              provider: gcp
+              gcp:
+                projectId: two-eye-two-see
+              scratchBucket:
+                enabled: true
           singleuser:
             image:
               name: catalystcoop/pudl-jupyter
@@ -302,12 +304,13 @@ hubs:
     config:
       basehub:
         jupyterhub:
-          cloudResources:
-            provider: gcp
-            gcp:
-              projectId: two-eye-two-see
-            scratchBucket:
-              enabled: true
+          custom:
+            cloudResources:
+              provider: gcp
+              gcp:
+                projectId: two-eye-two-see
+              scratchBucket:
+                enabled: true
           singleuser:
             image:
               name: pangeo/pangeo-notebook

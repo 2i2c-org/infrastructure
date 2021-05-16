@@ -2,9 +2,9 @@ apiVersion: v1
 kind: ServiceAccount
 metadata:
   annotations:
-    {{ if .Values.jupyterhub.cloudResources.scratchBucket.enabled}}
-    {{ if eq .Values.jupyterhub.cloudResources.provider "gcp" }}
-    iam.gke.io/gcp-service-account: {{ include "cloudResources.gcp.serviceAccountName" .}}@{{ .Values.jupyterhub.cloudResources.gcp.projectId }}.iam.gserviceaccount.com
+    {{ if .Values.jupyterhub.custom.cloudResources.scratchBucket.enabled}}
+    {{ if eq .Values.jupyterhub.custom.cloudResources.provider "gcp" }}
+    iam.gke.io/gcp-service-account: {{ include "cloudResources.gcp.serviceAccountName" .}}@{{ .Values.jupyterhub.custom.cloudResources.gcp.projectId }}.iam.gserviceaccount.com
     {{- end }}
     {{- end }}
   name: user-sa
