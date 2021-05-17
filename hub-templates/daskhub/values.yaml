@@ -151,7 +151,7 @@ dask-gateway:
     # TODO: figure out a replacement for userLimits.
     extraConfig:
       optionHandler: |
-        from dask_gateway_server.options import Options, Integer, Float, String
+        from dask_gateway_server.options import Options, Integer, Float, String, Mapping
 
         def cluster_options(user):
             def option_handler(options):
@@ -176,11 +176,13 @@ dask-gateway:
                     "worker_extra_pod_annotations": extra_annotations,
                     "scheduler_extra_pod_labels": extra_labels,
                     "worker_extra_pod_labels": extra_labels,
+                    "environment": options.environment,
                 }
             return Options(
                 Integer("worker_cores", 2, min=1, max=16, label="Worker Cores"),
                 Float("worker_memory", 4, min=1, max=32, label="Worker Memory (GiB)"),
                 String("image", default="pangeo/pangeo-notebook:latest", label="Image"),
+                Mapping("environment", {}, label="Environment Variables"),
                 handler=option_handler,
             )
         c.Backend.cluster_options = cluster_options
