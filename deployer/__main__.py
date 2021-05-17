@@ -1,20 +1,16 @@
 """
 Deploy many JupyterHubs to many Kubernetes Clusters
 """
-import sys
-import tempfile
-from pathlib import Path
-from ruamel.yaml import YAML
-import subprocess
-import hashlib
-import hmac
-import os
 import argparse
-import asyncio
+import os
+import sys
+from pathlib import Path
+
 import jsonschema
+from ruamel.yaml import YAML
 
 from auth import KeyProvider
-from hub import Hub, Cluster
+from hub import Cluster
 from utils import decrypt_file
 
 # Without `pure=True`, I get an exception about str / byte issues
@@ -84,7 +80,7 @@ def deploy(cluster_name, hub_name, skip_hub_health_test, config_path):
 
 
 def validate(cluster_name):
-    cluster_dir = Path(os.getcwd()) / "config/hubs" 
+    cluster_dir = Path(os.getcwd()) / "config/hubs"
     schema_file = cluster_dir / "schema.yaml"
     config_file = cluster_dir / f"{cluster_name}.cluster.yaml"
     with open(config_file) as cf, open(schema_file) as sf:
