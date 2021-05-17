@@ -65,7 +65,13 @@ from pathlib import Path
 
 # Grab the latest list of clusters defined in pilot-hubs/
 clusters = Path("../config/hubs").glob("*")
-hub_list = []
+# Add list of repos managed outside pilot-hubs
+hub_list = [{
+    'name': 'University of Toronto',
+    'domain': 'jupyter.utoronto.ca',
+    'id': 'utoronto',
+    'template': 'base-hub ([deployment repo](https://github.com/utoronto-2i2c/jupyterhub-deploy/))'
+}]
 for cluster_info in clusters:
     if "schema" in cluster_info.name:
         continue
@@ -95,5 +101,4 @@ df = pd.DataFrame(hub_list)
 path_tmp = Path("tmp")
 path_tmp.mkdir(exist_ok=True)
 path_table = path_tmp / "hub-table.csv"
-if not path_table.exists():
-    df.to_csv(path_table, index=None)
+df.to_csv(path_table, index=None)
