@@ -30,6 +30,7 @@ class Cluster:
         ]
 
     def build_image(self):
+        self.ensure_docker_credhelpers()
         build_image(self.spec['image_repo'])
 
     @contextmanager
@@ -40,6 +41,39 @@ class Cluster:
             yield from self.auth_kubeconfig()
         else:
             raise ValueError(f'Provider {self.spec["provider"]} not supported')
+
+    def ensure_docker_credhelpers(self):
+        """
+        Setup credHelper for current hub's image registry.
+
+        Most image registries (like ECR, GCP Artifact registry, etc) use
+        a docker credHelper (https://docs.docker.com/engine/reference/commandline/login/#credential-helpers)
+        to authenticate, rather than a username & password. This requires an
+        entry per registry in ~/.docker/config.json.
+
+        This method ensures the appropriate credential helper is present
+        """
+        image_name = self.spec['image_repo']
+        registry = image_name.split('/')[0]
+
+        helper = None
+        # pkg.dev is used by Google Cloud Artifact registry
+        if registry.endswith('pkg.dev'):
+            helper = 'gcloud'
+
+        if helper is not None:
+            dockercfg_path = os.path.expanduser('~/.docker/config.json')
+            try:
+                with open(dockercfg_path) as f:
+                    config = json.load(f)
+            except FileNotFoundError:
+                config = {}
+
+            helpers = config.get('credHelpers', {})
+            helpers[registry] = helper
+            config['credHelpers'] = helpers
+            with open(dockercfg_path, 'w') as f:
+                json.dump(config, f)
 
 
     def auth_kubeconfig(self):
