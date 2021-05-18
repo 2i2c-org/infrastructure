@@ -70,10 +70,11 @@ class Cluster:
                 config = {}
 
             helpers = config.get('credHelpers', {})
-            helpers[registry] = helper
-            config['credHelpers'] = helpers
-            with open(dockercfg_path, 'w') as f:
-                json.dump(config, f)
+            if helpers.get(registry) != helper:
+                helpers[registry] = helper
+                config['credHelpers'] = helpers
+                with open(dockercfg_path, 'w') as f:
+                    json.dump(config, f, indent=4)
 
 
     def auth_kubeconfig(self):
