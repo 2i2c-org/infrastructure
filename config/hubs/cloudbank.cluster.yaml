@@ -396,3 +396,38 @@ hubs:
                 - tcanon@palomar.edu
                 - PChen@palomar.edu
               admin_users: *palomar_users
+  - name: sjcc
+    domain:
+      - sjcc.cloudbank.2i2c.cloud
+    template: basehub
+    auth0:
+      connection: google-oauth2
+    config:
+      jupyterhub:
+        homepage:
+          templateVars:
+            org:
+              name: San Jose Community College
+              logo_url: https://upload.wikimedia.org/wikipedia/commons/c/cf/SJCC_logo.png
+              url: https://www.sjcc.edu/
+            designed_by:
+              name: 2i2c
+              url: https://2i2c.org
+            operated_by:
+              name: CloudBank
+              url: http://cloudbank.org/
+            funded_by:
+              name: CloudBank
+              url: http://cloudbank.org/
+        hub:
+          config:
+            Authenticator:
+              allowed_users: &sjcc_users
+                - yuvipanda@gmail.com
+                - choldgraf@gmail.com
+                - georgiana.dolocan@gmail.com
+                - aculich@berkeley.edu
+                - sean.smorris@berkeley.edu
+                - christiaan.desmond@sjcc.edu
+                - sanjay.dorairaj@sjcc.edu
+              admin_users: *sjcc_users
