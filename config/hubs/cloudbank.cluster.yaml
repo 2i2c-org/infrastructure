@@ -191,7 +191,7 @@ hubs:
     domain: demo.cloudbank.2i2c.cloud
     template: basehub
     auth0:
-      connection: google-oauth2
+      connection: password
     config:
       jupyterhub:
         custom:
@@ -212,15 +212,15 @@ hubs:
                 url: http://cloudbank.org/
         hub:
           config:
-            Authenticator:
-              allowed_users: &demo_users
-                - yuvipanda@gmail.com
-                - choldgraf@gmail.com
-                - georgiana.dolocan@gmail.com
-                - ericvd@gmail.com
-                - sean.smorris@berkeley.edu
-                - colliand@gmail.com
-              admin_users: *demo_users
+            JupyterHub:
+              # No more than 100 users at a time
+              active_server_limit: 100
+        cull:
+          # Cull after 30min of inactivity
+          every: 300
+          timeout: 1800
+          # No pods over 12h long
+          maxAge: 43200
   - name: lassen
     domain: lassen.cloudbank.2i2c.cloud
     template: basehub

@@ -1,3 +1,4 @@
+from auth import KeyProvider
 import hashlib
 import hmac
 import json
@@ -100,7 +101,7 @@ class Hub:
         self.cluster = cluster
         self.spec = spec
 
-    def get_generated_config(self, auth_provider, secret_key):
+    def get_generated_config(self, auth_provider: KeyProvider, secret_key):
         """
         Generate config automatically for each hub
 

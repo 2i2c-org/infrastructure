@@ -6,7 +6,8 @@ from auth0.v3.management import Auth0
 USERNAME_KEYS = {
     'github': 'nickname',
     'google-oauth2': 'email',
-    'ORCID': 'sub'
+    'ORCID': 'sub',
+    'password': 'email'
 }
 
 
@@ -79,6 +80,7 @@ class KeyProvider:
                 }
             )
 
+
     def ensure_client(self, name, domains, connection_name):
         current_clients = self.get_clients()
         if name not in current_clients:
@@ -89,12 +91,32 @@ class KeyProvider:
             self._ensure_client_callback(client, domains)
 
         current_connections = self.get_connections()
+
+        if connection_name == 'password':
+            # Users should not be shared between hubs - each hub
+            # should have its own username / password database.
+            # So we create a new 'database connection' per hub,
+            # instead of sharing one across hubs.
+            db_connection_name = f'database-{name}'
+
+            if db_connection_name not in current_connections:
+                # connection doesn't exist yet, create it
+                connection = self.auth0.connections.create({
+                    'name': db_connection_name,
+                    'display_name': name,
+                    'strategy': 'auth0'
+                })
+                current_connections[db_connection_name] = connection
+            selected_connection_name = db_connection_name
+        else:
+            selected_connection_name = connection_name
+
         for connection in current_connections.values():
                 # The chosen connection!
             enabled_clients = connection['enabled_clients'].copy()
             needs_update = False
             client_id = client['client_id']
-            if connection['name'] == connection_name:
+            if connection['name'] == selected_connection_name:
                 if client_id not in enabled_clients:
                     enabled_clients.append(client_id)
                     needs_update = True

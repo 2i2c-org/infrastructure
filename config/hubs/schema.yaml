@@ -117,10 +117,11 @@ properties:
             properties:
               connection:
                 type: string
-                enum: 
+                enum:
                   - google-oauth2
                   - github
                   - ORCID
+                  - password
                 description: |
                   Authentication method users of the hub can use to log in to the hub.
                   We support a subset of the [connectors](https://auth0.com/docs/identityproviders)
