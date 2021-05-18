@@ -93,9 +93,10 @@ class KeyProvider:
         current_connections = self.get_connections()
 
         if connection_name == 'password':
-            # All hubs attached to a single database 'connection'
-            # will share username / password. So we create one
-            # connection per hub.
+            # Users should not be shared between hubs - each hub
+            # should have its own username / password database.
+            # So we create a new 'database connection' per hub,
+            # instead of sharing one across hubs.
             db_connection_name = f'database-{name}'
 
             if db_connection_name not in current_connections:
