@@ -18,21 +18,22 @@ hubs:
         repo: https://github.com/jupyterhub/nbgitpuller
         branch: gh-pages
       jupyterhub:
-        homepage:
-          templateVars:
-            org:
-              name: 2i2c Staging
-              url: https://2i2c.org
-              logo_url: https://2i2c.org/media/logo.png
-            designed_by:
-              name: 2i2c
-              url: https://2i2c.org
-            operated_by:
-              name: 2i2c
-              url: https://2i2c.org
-            funded_by:
-              name: 2i2c
-              url: https://2i2c.org
+        custom:
+          homepage:
+            templateVars:
+              org:
+                name: 2i2c Staging
+                url: https://2i2c.org
+                logo_url: https://2i2c.org/media/logo.png
+              designed_by:
+                name: 2i2c
+                url: https://2i2c.org
+              operated_by:
+                name: 2i2c
+                url: https://2i2c.org
+              funded_by:
+                name: 2i2c
+                url: https://2i2c.org
         hub:
           config:
             Authenticator:
@@ -57,21 +58,21 @@ hubs:
                 projectId: two-eye-two-see
               scratchBucket:
                 enabled: true
-          homepage:
-            templateVars:
-              org:
-                name: 2i2c Dask Staging
-                url: https://2i2c.org
-                logo_url: https://2i2c.org/media/logo.png
-              designed_by:
-                name: 2i2c
-                url: https://2i2c.org
-              operated_by:
-                name: 2i2c
-                url: https://2i2c.org
-              funded_by:
-                name: 2i2c
-                url: https://2i2c.org
+            homepage:
+              templateVars:
+                org:
+                  name: 2i2c Dask Staging
+                  url: https://2i2c.org
+                  logo_url: https://2i2c.org/media/logo.png
+                designed_by:
+                  name: 2i2c
+                  url: https://2i2c.org
+                operated_by:
+                  name: 2i2c
+                  url: https://2i2c.org
+                funded_by:
+                  name: 2i2c
+                  url: https://2i2c.org
           singleuser:
             image:
               name: pangeo/pangeo-notebook
@@ -92,21 +93,22 @@ hubs:
       connection: github
     config:
       jupyterhub:
-        homepage:
-          templateVars:
-            org:
-              name: Justice Innovation Lab
-              logo_url: "https://images.squarespace-cdn.com/content/5ee35ddb35affc21b29c0fd6/1596634079158-KLDENW5BSW2HQW4ZO0EH/JIL-Logo-Digital.png?format=1500w&content-type=image%2Fpng"
-              url: https://www.justiceinnovationlab.org/
-            designed_by:
-              name: 2i2c
-              url: https://2i2c.org
-            operated_by:
-              name: 2i2c
-              url: https://2i2c.org
-            funded_by:
-              name: 2i2c
-              url: https://2i2c.org
+        custom:
+          homepage:
+            templateVars:
+              org:
+                name: Justice Innovation Lab
+                logo_url: "https://images.squarespace-cdn.com/content/5ee35ddb35affc21b29c0fd6/1596634079158-KLDENW5BSW2HQW4ZO0EH/JIL-Logo-Digital.png?format=1500w&content-type=image%2Fpng"
+                url: https://www.justiceinnovationlab.org/
+              designed_by:
+                name: 2i2c
+                url: https://2i2c.org
+              operated_by:
+                name: 2i2c
+                url: https://2i2c.org
+              funded_by:
+                name: 2i2c
+                url: https://2i2c.org
         hub:
           config:
             Authenticator:
@@ -123,21 +125,22 @@ hubs:
       connection: github
     config:
       jupyterhub:
-        homepage:
-          templateVars:
-            org:
-              name: Purdue Fort Wayne
-              logo_url: https://upload.wikimedia.org/wikipedia/en/thumb/1/14/Purdue_Fort_Wayne_Mastodons_logo.svg/400px-Purdue_Fort_Wayne_Mastodons_logo.svg.png
-              url: https://www.pfw.edu/
-            designed_by:
-              name: 2i2c
-              url: https://2i2c.org
-            operated_by:
-              name: 2i2c
-              url: https://2i2c.org
-            funded_by:
-              name: JROST & IOI
-              url: https://investinopen.org/blog/jrost-rapid-response-fund-awardees
+        custom:
+          homepage:
+            templateVars:
+              org:
+                name: Purdue Fort Wayne
+                logo_url: https://upload.wikimedia.org/wikipedia/en/thumb/1/14/Purdue_Fort_Wayne_Mastodons_logo.svg/400px-Purdue_Fort_Wayne_Mastodons_logo.svg.png
+                url: https://www.pfw.edu/
+              designed_by:
+                name: 2i2c
+                url: https://2i2c.org
+              operated_by:
+                name: 2i2c
+                url: https://2i2c.org
+              funded_by:
+                name: JROST & IOI
+                url: https://investinopen.org/blog/jrost-rapid-response-fund-awardees
         hub:
           config:
             Authenticator:
@@ -156,21 +159,22 @@ hubs:
       connection: google-oauth2
     config:
       jupyterhub:
-        homepage:
-          templateVars:
-            org:
-              name: Wageningen University and Research
-              logo_url: https://www.wur.nl/upload/58340fb4-e33a-4d0b-af17-8d596fa93663_WUR_RGB_standard.png
-              url: https://www.wur.nl/en/wageningen-university.htm
-            designed_by:
-              name: 2i2c
-              url: https://2i2c.org
-            operated_by:
-              name: 2i2c
-              url: https://2i2c.org
-            funded_by:
-              name: JROST & IOI
-              url: https://investinopen.org/blog/jrost-rapid-response-fund-awardees
+        custom:
+          homepage:
+            templateVars:
+              org:
+                name: Wageningen University and Research
+                logo_url: https://www.wur.nl/upload/58340fb4-e33a-4d0b-af17-8d596fa93663_WUR_RGB_standard.png
+                url: https://www.wur.nl/en/wageningen-university.htm
+              designed_by:
+                name: 2i2c
+                url: https://2i2c.org
+              operated_by:
+                name: 2i2c
+                url: https://2i2c.org
+              funded_by:
+                name: JROST & IOI
+                url: https://investinopen.org/blog/jrost-rapid-response-fund-awardees
         singleuser:
           memory:
             limit: 2G
@@ -191,21 +195,22 @@ hubs:
       connection: google-oauth2
     config:
       jupyterhub:
-        homepage:
-          templateVars:
-            org:
-              name: Peddie Academy
-              logo_url: https://resources.finalsite.net/images/f_auto,q_auto,t_image_size_1/v1564687841/peddie/l4yufwwdksquxu2yetv6/PeddieSealPMS289.png
-              url: http://peddie.org/
-            designed_by:
-              name: 2i2c
-              url: https://2i2c.org
-            operated_by:
-              name: 2i2c
-              url: https://2i2c.org
-            funded_by:
-              name: JROST & IOI
-              url: https://investinopen.org/blog/jrost-rapid-response-fund-awardees
+        custom:
+          homepage:
+            templateVars:
+              org:
+                name: Peddie Academy
+                logo_url: https://resources.finalsite.net/images/f_auto,q_auto,t_image_size_1/v1564687841/peddie/l4yufwwdksquxu2yetv6/PeddieSealPMS289.png
+                url: http://peddie.org/
+              designed_by:
+                name: 2i2c
+                url: https://2i2c.org
+              operated_by:
+                name: 2i2c
+                url: https://2i2c.org
+              funded_by:
+                name: JROST & IOI
+                url: https://investinopen.org/blog/jrost-rapid-response-fund-awardees
         hub:
           config:
             Authenticator:
@@ -225,13 +230,6 @@ hubs:
     config:
       basehub:
         jupyterhub:
-          custom:
-            cloudResources:
-              provider: gcp
-              gcp:
-                projectId: two-eye-two-see
-              scratchBucket:
-                enabled: true
           singleuser:
             image:
               name: catalystcoop/pudl-jupyter
@@ -239,21 +237,28 @@ hubs:
             memory:
               limit: 6G
               guarantee: 4G
-          homepage:
-            templateVars:
-              org:
-                name: Catalyst Cooperative
-                logo_url: https://catalyst.coop/files/2018/06/SimpleSquareWalking.png
-                url: https://catalyst.coop/
-              designed_by:
-                name: 2i2c
-                url: https://2i2c.org
-              operated_by:
-                name: 2i2c
-                url: https://2i2c.org
-              funded_by:
-                name: 2i2c
-                url: https://2i2c.org
+          custom:
+            cloudResources:
+              provider: gcp
+              gcp:
+                projectId: two-eye-two-see
+              scratchBucket:
+                enabled: true
+            homepage:
+              templateVars:
+                org:
+                  name: Catalyst Cooperative
+                  logo_url: https://catalyst.coop/files/2018/06/SimpleSquareWalking.png
+                  url: https://catalyst.coop/
+                designed_by:
+                  name: 2i2c
+                  url: https://2i2c.org
+                operated_by:
+                  name: 2i2c
+                  url: https://2i2c.org
+                funded_by:
+                  name: 2i2c
+                  url: https://2i2c.org
           hub:
             config:
               Authenticator:
@@ -272,21 +277,22 @@ hubs:
       connection: github
     config:
       jupyterhub:
-        homepage:
-          templateVars:
-            org:
-              name: EarthLab
-              logo_url: https://pbs.twimg.com/profile_images/1102342372438925312/64xKJFPk.png
-              url: https://www.colorado.edu/earthlab/
-            designed_by:
-              name: 2i2c
-              url: https://2i2c.org
-            operated_by:
-              name: 2i2c
-              url: https://2i2c.org
-            funded_by:
-              name: JROST & IOI
-              url: https://investinopen.org/blog/jrost-rapid-response-fund-awardees
+        custom:
+          homepage:
+            templateVars:
+              org:
+                name: EarthLab
+                logo_url: https://pbs.twimg.com/profile_images/1102342372438925312/64xKJFPk.png
+                url: https://www.colorado.edu/earthlab/
+              designed_by:
+                name: 2i2c
+                url: https://2i2c.org
+              operated_by:
+                name: 2i2c
+                url: https://2i2c.org
+              funded_by:
+                name: JROST & IOI
+                url: https://investinopen.org/blog/jrost-rapid-response-fund-awardees
         hub:
           config:
             Authenticator:
@@ -304,6 +310,10 @@ hubs:
     config:
       basehub:
         jupyterhub:
+          singleuser:
+            image:
+              name: pangeo/pangeo-notebook
+              tag: 2021.02.19
           custom:
             cloudResources:
               provider: gcp
@@ -311,25 +321,21 @@ hubs:
                 projectId: two-eye-two-see
               scratchBucket:
                 enabled: true
-          singleuser:
-            image:
-              name: pangeo/pangeo-notebook
-              tag: 2021.02.19
-          homepage:
-            templateVars:
-              org:
-                name: "SWOT Ocean Pangeo Team"
-                logo_url: https://2i2c.org/media/logo.png
-                url: https://2i2c.org
-              designed_by:
-                name: 2i2c
-                url: https://2i2c.org
-              operated_by:
-                name: 2i2c
-                url: https://2i2c.org
-              funded_by:
-                name: 2i2c
-                url: https://2i2c.org
+            homepage:
+              templateVars:
+                org:
+                  name: "SWOT Ocean Pangeo Team"
+                  logo_url: https://2i2c.org/media/logo.png
+                  url: https://2i2c.org
+                designed_by:
+                  name: 2i2c
+                  url: https://2i2c.org
+                operated_by:
+                  name: 2i2c
+                  url: https://2i2c.org
+                funded_by:
+                  name: 2i2c
+                  url: https://2i2c.org
           hub:
             config:
               Authenticator:

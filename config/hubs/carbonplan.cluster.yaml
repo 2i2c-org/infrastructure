@@ -9,8 +9,6 @@ hubs:
     auth0:
       connection: github
     config: &carbonPlanHubConfig
-      scratchBucket:
-        enabled: false
       basehub:
         nfsPVC:
           nfs:
@@ -30,21 +28,22 @@ hubs:
               operator: "Exists"
               effect: "NoSchedule"
         jupyterhub:
-          homepage:
-            templateVars:
-              org:
-                name: Carbon Plan
-                logo_url: https://pbs.twimg.com/profile_images/1262387945971101697/5q_X3Ruk_400x400.jpg
-                url: https://carbonplan.org
-              designed_by:
-                name: 2i2c
-                url: https://2i2c.org
-              operated_by:
-                name: 2i2c
-                url: https://2i2c.org
-              funded_by:
-                name: Carbon Plan
-                url: https://carbonplan.org
+          custom:
+            homepage:
+              templateVars:
+                org:
+                  name: Carbon Plan
+                  logo_url: https://pbs.twimg.com/profile_images/1262387945971101697/5q_X3Ruk_400x400.jpg
+                  url: https://carbonplan.org
+                designed_by:
+                  name: 2i2c
+                  url: https://2i2c.org
+                operated_by:
+                  name: 2i2c
+                  url: https://2i2c.org
+                funded_by:
+                  name: Carbon Plan
+                  url: https://carbonplan.org
           singleuser:
             initContainers:
               # Need to explicitly fix ownership here, since EFS doesn't do anonuid

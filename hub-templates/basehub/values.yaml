@@ -247,7 +247,7 @@ jupyterhub:
         c.JupyterHub.template_paths = ['/usr/local/share/jupyterhub/custom_templates/']
 
         c.JupyterHub.template_vars = {
-          'custom':get_config('homepage.templateVars')
+          'custom':get_config('custom.homepage.templateVars')
         }
       05-custom-admin: |
         from z2jh import get_config

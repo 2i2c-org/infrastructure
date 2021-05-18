@@ -92,7 +92,7 @@ for cluster_info in clusters:
             hub['domain'] = hub['domain'][0]
 
         hub_list.append({
-            'name': hub_config['homepage']['templateVars']['org']['name'],
+            'name': hub_config['custom']['homepage']['templateVars']['org']['name'],
             'domain': f"[{hub['domain']}](https://{hub['domain']})",
             "id": hub['name'],
             "template": hub['template'],

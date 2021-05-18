@@ -9,15 +9,13 @@ hubs:
     auth0:
       connection: github
     config:
-      scratchBucket:
-        enabled: false
       basehub:
         nfsPVC:
           nfs:
             # from https://docs.aws.amazon.com/efs/latest/ug/mounting-fs-nfs-mount-settings.html
             mountOptions:
             - rsize=1048576
-            - wsize=1048576 
+            - wsize=1048576
             - timeo=600
             - soft # We pick soft over hard, so NFS lockups don't lead to hung processes
             - retrans=2
@@ -30,21 +28,22 @@ hubs:
               operator: "Exists"
               effect: "NoSchedule"
         jupyterhub:
-          homepage:
-            templateVars:
-              org:
-                name: Farallon Institute
-                logo_url: https://2i2c.org/media/logo.png
-                url: http://www.faralloninstitute.org/
-              designed_by:
-                name: 2i2c
-                url: https://2i2c.org
-              operated_by:
-                name: 2i2c
-                url: https://2i2c.org
-              funded_by:
-                name: Farallon Institute
-                urL: http://www.faralloninstitute.org/
+          custom:
+            homepage:
+              templateVars:
+                org:
+                  name: Farallon Institute
+                  logo_url: https://2i2c.org/media/logo.png
+                  url: http://www.faralloninstitute.org/
+                designed_by:
+                  name: 2i2c
+                  url: https://2i2c.org
+                operated_by:
+                  name: 2i2c
+                  url: https://2i2c.org
+                funded_by:
+                  name: Farallon Institute
+                  urL: http://www.faralloninstitute.org/
           singleuser:
             initContainers:
               # Need to explicitly fix ownership here, since EFS doesn't do anonuid
