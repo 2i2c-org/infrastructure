@@ -404,21 +404,22 @@ hubs:
       connection: google-oauth2
     config:
       jupyterhub:
-        homepage:
-          templateVars:
-            org:
-              name: San Jose Community College
-              logo_url: https://upload.wikimedia.org/wikipedia/commons/c/cf/SJCC_logo.png
-              url: https://www.sjcc.edu/
-            designed_by:
-              name: 2i2c
-              url: https://2i2c.org
-            operated_by:
-              name: CloudBank
-              url: http://cloudbank.org/
-            funded_by:
-              name: CloudBank
-              url: http://cloudbank.org/
+        custom:
+          homepage:
+            templateVars:
+              org:
+                name: San Jose Community College
+                logo_url: https://upload.wikimedia.org/wikipedia/commons/c/cf/SJCC_logo.png
+                url: https://www.sjcc.edu/
+              designed_by:
+                name: 2i2c
+                url: https://2i2c.org
+              operated_by:
+                name: CloudBank
+                url: http://cloudbank.org/
+              funded_by:
+                name: CloudBank
+                url: http://cloudbank.org/
         hub:
           config:
             Authenticator:
