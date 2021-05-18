@@ -59,7 +59,7 @@ hubs:
                 subPath: "{username}"
             image:
               name: carbonplan/trace-python-notebook
-              tag: sha-da2d1c9
+              tag: latest
             profileList:
               # The mem-guarantees are here so k8s doesn't schedule other pods
               # on these nodes.
@@ -167,7 +167,7 @@ hubs:
                 return Options(
                     Integer("worker_cores", 2, min=1, max=16, label="Worker Cores"),
                     Float("worker_memory", 4, min=1, max=32, label="Worker Memory (GiB)"),
-                    String("image", default="pangeo/pangeo-notebook:latest", label="Image"),
+                    String("image", default="carbonplan/trace-python-notebook:latest", label="Image"),
                     handler=option_handler,
                 )
               c.Backend.cluster_options = cluster_options
