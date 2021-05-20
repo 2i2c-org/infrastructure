@@ -139,37 +139,6 @@ hubs:
               effect: "NoSchedule"
             # TODO: figure out a replacement for userLimits.
           extraConfig:
-            optionHandler: |
-              from dask_gateway_server.options import Options, Integer, Float, String
-              def cluster_options(user):
-                def option_handler(options):
-                    if ":" not in options.image:
-                        raise ValueError("When specifying an image you must also provide a tag")
-                    extra_annotations = {
-                        "hub.jupyter.org/username": user.name,
-                        "prometheus.io/scrape": "true",
-                        "prometheus.io/port": "8787",
-                    }
-                    extra_labels = {
-                        "hub.jupyter.org/username": user.name,
-                    }
-                    return {
-                        "worker_cores_limit": options.worker_cores,
-                        "worker_cores": min(options.worker_cores / 2, 1),
-                        "worker_memory": "%fG" % options.worker_memory,
-                        "image": options.image,
-                        "scheduler_extra_pod_annotations": extra_annotations,
-                        "worker_extra_pod_annotations": extra_annotations,
-                        "scheduler_extra_pod_labels": extra_labels,
-                        "worker_extra_pod_labels": extra_labels,
-                    }
-                return Options(
-                    Integer("worker_cores", 2, min=1, max=16, label="Worker Cores"),
-                    Float("worker_memory", 4, min=1, max=32, label="Worker Memory (GiB)"),
-                    String("image", default="carbonplan/trace-python-notebook:latest", label="Image"),
-                    handler=option_handler,
-                )
-              c.Backend.cluster_options = cluster_options
             idle: |
               # timeout after 30 minutes of inactivity
               c.KubeClusterConfig.idle_timeout = 1800
