@@ -212,6 +212,15 @@ hubs:
                 url: http://cloudbank.org/
         hub:
           config:
+            Authenticator:
+              # Everyone should be able to sign up, so we don't set allowed_users
+              # These folks should still have admin tho
+              admin_users:
+              - yuvipanda@gmail.com
+              - choldgraf@gmail.com
+              - georgiana.dolocan@gmail.com
+              - ericvd@gmail.com
+              - sean.smorris@berkeley.edu
             JupyterHub:
               # No more than 100 users at a time
               active_server_limit: 100
