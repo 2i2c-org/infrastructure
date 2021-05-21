@@ -104,7 +104,7 @@ class KeyProvider:
                 client['client_id'],
                 {
                     # Don't remove other logout URLs
-                    'allowed_logout_urls': client['allowed_logout_urls'] + missing_logout_urls
+                    'allowed_logout_urls': client.get('allowed_logout_urls', []) + missing_logout_urls
                 }
             )
 
