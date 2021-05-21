@@ -43,11 +43,9 @@ class KeyProvider:
             for connection in self.auth0.connections.all()
         }
 
-    def create_client(self, name, domains, connection_name):
+    def create_client(self, name, domains):
         callbacks = self._get_callback_url_list(domains)
-        logout_urls = []
-        if connection_name == 'password':
-            logout_urls = self._get_allowed_logout_url_list(domains)
+        logout_urls = self._get_allowed_logout_url_list(domains)
 
         client = {
             'name': name,
@@ -115,12 +113,11 @@ class KeyProvider:
         current_clients = self.get_clients()
         if name not in current_clients:
             # Create the client, all good
-            client = self.create_client(name, domains, connection_name)
+            client = self.create_client(name, domains)
         else:
             client = current_clients[name]
             self._ensure_client_callback(client, domains)
-            if connection_name == 'password':
-                self._ensure_client_logout_urls(client, domains)
+            self._ensure_client_logout_urls(client, domains)
 
         current_connections = self.get_connections()
 
