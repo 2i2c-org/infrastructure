@@ -103,7 +103,7 @@ class KeyProvider:
             self.auth0.clients.update(
                 client['client_id'],
                 {
-                    # Don't remove other callback URLs
+                    # Don't remove other logout URLs
                     'allowed_logout_urls': client['allowed_logout_urls'] + missing_logout_urls
                 }
             )

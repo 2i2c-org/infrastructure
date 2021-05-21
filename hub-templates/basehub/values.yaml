@@ -293,7 +293,7 @@ jupyterhub:
               await super().render_logout_page()
 
           async def render_logout_page(self):
-            # Retur to the hub main page after logout
+            # Return to the hub main page after logout
             params = {
               'returnTo': f'https://{self.request.host}{self.hub.server.base_url}'
             }
