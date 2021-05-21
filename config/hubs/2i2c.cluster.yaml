@@ -11,7 +11,7 @@ hubs:
     domain: staging.pilot.2i2c.cloud
     template: basehub
     auth0:
-      connection: google-oauth2
+      connection: password
     config:
       docs_service:
         enabled: true
