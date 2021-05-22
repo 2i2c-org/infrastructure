@@ -45,23 +45,24 @@ class KeyProvider:
 
     def create_client(self, name, domains):
         callbacks = self._get_callback_url_list(domains)
+        logout_urls = self._get_allowed_logout_url_list(domains)
 
         client = {
             'name': name,
             'app_type': 'regular_web',
-            'callbacks': callbacks
+            'callbacks': callbacks,
+            'allowed_logout_urls': logout_urls
         }
         created_client = self.auth0.clients.create(client)
         return created_client
 
     def _get_callback_url_list(self, domains):
-        if isinstance(domains, list):
-            callbacks = []
-            for domain in domains:
-                callbacks.append(f'https://{domain}/hub/oauth_callback')
-            return callbacks
+        return [f'https://{domain}/hub/oauth_callback' for domain in domains] if isinstance(domains, list) else [f'https://{domains}/hub/oauth_callback']
 
-        return [f'https://{domains}/hub/oauth_callback']
+    def _get_allowed_logout_url_list(self, domains):
+        # Mark the hub address as a valid URL address to return to after logout
+        return [f'https://{domain}' for domain in domains] if isinstance(domains, list) else [f'https://{domains}']
+
 
     def _ensure_client_callback(self, client, domains):
         callback_urls = self._get_callback_url_list(domains)
@@ -80,6 +81,23 @@ class KeyProvider:
                 }
             )
 
+    def _ensure_client_logout_urls(self, client, domains):
+        logout_urls = self._get_allowed_logout_url_list(domains)
+        missing_logout_urls = []
+
+        for logout_url in logout_urls:
+            if 'allowed_logout_urls' not in client or logout_url not in client['allowed_logout_urls']:
+                missing_logout_urls.append(logout_url)
+
+        if missing_logout_urls:
+            self.auth0.clients.update(
+                client['client_id'],
+                {
+                    # Don't remove other logout URLs
+                    'allowed_logout_urls': client.get('allowed_logout_urls', []) + missing_logout_urls
+                }
+            )
+
 
     def ensure_client(self, name, domains, connection_name):
         current_clients = self.get_clients()
@@ -89,6 +107,7 @@ class KeyProvider:
         else:
             client = current_clients[name]
             self._ensure_client_callback(client, domains)
+            self._ensure_client_logout_urls(client, domains)
 
         current_connections = self.get_connections()
 
@@ -147,7 +166,8 @@ class KeyProvider:
             'username_key': USERNAME_KEYS[connection_name],
             'client_id': client['client_id'],
             'client_secret': client['client_secret'],
-            'scope': ['openid', 'name', 'profile', 'email']
+            'scope': ['openid', 'name', 'profile', 'email'],
+            'logout_redirect_url': f'https://{self.domain}/v2/logout?client_id={client["client_id"]}'
         }
 
         return auth
