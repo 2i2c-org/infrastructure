@@ -165,10 +165,8 @@ class KeyProvider:
             'username_key': USERNAME_KEYS[connection_name],
             'client_id': client['client_id'],
             'client_secret': client['client_secret'],
-            'scope': ['openid', 'name', 'profile', 'email']
+            'scope': ['openid', 'name', 'profile', 'email'],
+            'logout_redirect_url': f'https://{self.domain}/v2/logout?client_id={client["client_id"]}'
         }
-
-        if connection_name == 'password':
-            auth['logout_redirect_url'] = f'https://{self.domain}/v2/logout?client_id={client["client_id"]}'
 
         return auth
