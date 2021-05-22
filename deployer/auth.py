@@ -57,22 +57,11 @@ class KeyProvider:
         return created_client
 
     def _get_callback_url_list(self, domains):
-        if isinstance(domains, list):
-            callbacks = []
-            for domain in domains:
-                callbacks.append(f'https://{domain}/hub/oauth_callback')
-            return callbacks
-
-        return [f'https://{domains}/hub/oauth_callback']
+        return [f'https://{domain}/hub/oauth_callback' for domain in domains] if isinstance(domains, list) else [f'https://{domains}/hub/oauth_callback']
 
     def _get_allowed_logout_url_list(self, domains):
-        if isinstance(domains, list):
-            logout_urls = []
-            for domain in domains:
-                logout_urls.append(f'https://{domain}/hub/')
-            return logout_urls
+        return [f'https://{domain}/hub/' for domain in domains] if isinstance(domains, list) else [f'https://{domains}/hub/']
 
-        return [f'https://{domains}/hub/']
 
     def _ensure_client_callback(self, client, domains):
         callback_urls = self._get_callback_url_list(domains)
