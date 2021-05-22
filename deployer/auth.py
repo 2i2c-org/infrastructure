@@ -60,7 +60,8 @@ class KeyProvider:
         return [f'https://{domain}/hub/oauth_callback' for domain in domains] if isinstance(domains, list) else [f'https://{domains}/hub/oauth_callback']
 
     def _get_allowed_logout_url_list(self, domains):
-        return [f'https://{domain}/hub/' for domain in domains] if isinstance(domains, list) else [f'https://{domains}/hub/']
+        # Mark the hub address as a valid URL address to return to after logout
+        return [f'https://{domain}' for domain in domains] if isinstance(domains, list) else [f'https://{domains}']
 
 
     def _ensure_client_callback(self, client, domains):
