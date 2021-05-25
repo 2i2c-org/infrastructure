@@ -1,0 +1,88 @@
+name: meom
+provider: gcp
+gcp:
+  key: secrets/meom.json
+  project: meom-ige-cnrs
+  cluster: meom-cluster
+  zone: us-central1-b
+hubs:
+  - name: staging
+    domain: staging.meom-ige.2i2c.cloud
+    template: daskhub
+    auth0:
+      connection: github
+    config: &meomConfig
+      basehub:
+        nfsPVC:
+          nfs:
+            # from https://docs.aws.amazon.com/efs/latest/ug/mounting-fs-nfs-mount-settings.html
+            mountOptions:
+            - rsize=1048576
+            - wsize=1048576
+            - timeo=600
+            - soft # We pick soft over hard, so NFS lockups don't lead to hung processes
+            - retrans=2
+            - noresvport
+            serverIP: nfs-server-01
+            baseShareName: /export/home-01/homes/
+        jupyterhub:
+          custom:
+            homepage:
+              templateVars:
+                org:
+                  name: "SWOT Ocean Pangeo Team"
+                  logo_url: https://2i2c.org/media/logo.png
+                  url: https://2i2c.org
+                designed_by:
+                  name: 2i2c
+                  url: https://2i2c.org
+                operated_by:
+                  name: 2i2c
+                  url: https://2i2c.org
+                funded_by:
+                  name: SWOT Ocean Pangeo Team
+                  url: https://2i2c.org
+          singleuser:
+            image:
+              name: pangeo/pangeo-notebook
+              tag: 2021.02.19
+          scheduling:
+            userPlaceholder:
+              enabled: false
+              replicas: 0
+            userScheduler:
+              enabled: false
+          proxy:
+            service:
+              type: LoadBalancer
+            https:
+              enabled: true
+          hub:
+            config:
+              Authenticator:
+                allowed_users: &users
+                  - roxyboy
+                  - lesommer
+                  - auraoupa
+                  - yuvipanda
+                  - choldgraf
+                  - GeorgianaElena
+                admin_users: *users
+
+            allowNamedServers: true
+            networkPolicy:
+              # FIXME: For dask gateway
+              enabled: false
+            readinessProbe:
+              enabled: false
+      dask-gateway:
+          extraConfig:
+            idle: |
+              # timeout after 30 minutes of inactivity
+              c.KubeClusterConfig.idle_timeout = 1800
+  - name: prod
+    domain: meom-ige.2i2c.cloud
+    template: daskhub
+    auth0:
+      connection: github
+    config: *meomConfig
