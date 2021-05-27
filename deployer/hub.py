@@ -255,7 +255,7 @@ class Hub:
             # FIXME: We're hardcoding GenericOAuthenticator here
             # We should *not*. We need dictionary merging in code, so
             # these can all exist fine.
-            generated_config['jupyterhub']['hub']['config']['GenericOAuthenticator'] = auth_provider.get_client_creds(client, self.spec['auth0']['connection'])
+            generated_config['jupyterhub']['hub']['config']['Auth0OAuthenticator'] = auth_provider.get_client_creds(client, self.spec['auth0']['connection'])
 
         return self.apply_hub_template_fixes(generated_config, secret_key)
 
