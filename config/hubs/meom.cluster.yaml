@@ -43,6 +43,7 @@ hubs:
                   name: SWOT Ocean Pangeo Team
                   url: https://2i2c.org
           singleuser:
+            defaultUrl: /lab
             image:
               name: pangeo/pangeo-notebook
               tag: 2021.02.19
