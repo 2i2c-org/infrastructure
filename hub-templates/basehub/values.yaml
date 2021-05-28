@@ -33,6 +33,17 @@ inClusterNFS:
   size: 100Gi
 
 jupyterhub:
+  staff:
+    names:
+      google:
+        'yuvipanda@gmail.com',
+        'colliand@gmail.com',
+        'choldgraf@gmail.com',
+        'georgiana.dolocan@gmail.com'
+      github:
+        'yuvipanda',
+        'choldgraf',
+        'GeorgianaElena'
   custom:
     singleuserAdmin:
       extraVolumeMounts:

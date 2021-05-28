@@ -351,36 +351,23 @@ class Hub:
             generated_config['jupyterhub']['hub']['config']['Auth0OAuthenticator'] = auth_provider.get_client_creds(client, self.spec['auth0']['connection'])
 
             # Add 2i2c staff to the list of admins and allowed users
-            admin_users, allowed_users = self.get_hub_allowed_users()
-            generated_config['jupyterhub']['hub']['config']['Authenticator'] = {
-                'admin_users': admin_users,
-                'allowed_users': allowed_users
-            }
+            # admin_users, allowed_users = self.get_hub_allowed_users()
+            # generated_config['jupyterhub']['hub']['config']['Authenticator'] = {
+            #     'admin_users': admin_users,
+            #     'allowed_users': allowed_users
+            # }
 
         return self.apply_hub_template_fixes(generated_config, secret_key)
 
-    def get_hub_allowed_users(self):
-        # Add 2i2c staff as admins and allowed users
-        staff_emails = [
-            'yuvipanda@gmail.com',
-            'colliand@gmail.com',
-            'choldgraf@gmail.com',
-            'georgiana.dolocan@gmail.com'
-        ]
-        staff_github_ids = [
-            'yuvipanda',
-            'choldgraf',
-            'GeorgianaElena'
-        ]
+    # def get_hub_allowed_users(self):
+    #     extra_admins = self.spec['auth0']['extra_admins'] if self.spec['auth0'].get('extra_admins', False) else []
+    #     extra_allowed_users = self.spec['auth0']['extra_allowed_users'] if self.spec['auth0'].get('extra_allowed_users', False) else []
 
-        extra_admins = self.spec['auth0']['extra_admins'] if self.spec['auth0'].get('extra_admins', False) else []
-        extra_allowed_users = self.spec['auth0']['extra_allowed_users'] if self.spec['auth0'].get('extra_allowed_users', False) else []
+    #     if 'google' in self.spec['auth0']['connection']:
+    #         return staff_emails + extra_admins, staff_emails + extra_allowed_users
 
-        if 'google' in self.spec['auth0']['connection']:
-            return staff_emails + extra_admins, staff_emails + extra_allowed_users
-
-        # Right now we only have hubs with either google and github auth connections
-        return staff_github_ids + extra_admins, staff_github_ids + extra_allowed_users
+    #     # Right now we only have hubs with either google and github auth connections
+    #     return staff_github_ids + extra_admins, staff_github_ids + extra_allowed_users
 
     def unset_env_var(self, env_var, old_env_var_value):
         """
