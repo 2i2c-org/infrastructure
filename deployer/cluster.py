@@ -31,6 +31,8 @@ class Cluster:
             yield from self.auth_azure()
         elif self.spec["provider"] == "kubeconfig":
             yield from self.auth_kubeconfig()
+        elif self.spec['provider'] == 'none':
+            yield
         else:
             raise ValueError(f'Provider {self.spec["provider"]} not supported')
 
