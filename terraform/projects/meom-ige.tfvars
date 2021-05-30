@@ -1,4 +1,4 @@
-prefix     = "meom"
+prefix     = "meom-ige"
 project_id = "meom-ige-cnrs"
 
 # Minimum number of nodes required to fit kube-system is either
@@ -12,5 +12,28 @@ project_id = "meom-ige-cnrs"
 # the way to go
 core_node_machine_type = "g1-small"
 
-# Give each user ~4G of RAM and ~2CPU
-user_node_machine_type = "n1-custom-2-4096"
+enable_network_policy    = false
+config_connector_enabled = false
+
+notebook_nodes = {
+  "small" : {
+    min : 0,
+    max : 20,
+    machine_type : "e2-standard-2"
+  },
+  "medium" : {
+    min : 0,
+    max : 20,
+    machine_type : "e2-standard-8"
+  },
+  "large" : {
+    min : 0,
+    max : 20,
+    machine_type : "e2-standard-16"
+  },
+  "very-large" : {
+    min : 0,
+    max : 20,
+    machine_type : "e2-standard-32"
+  }
+}

@@ -1,9 +1,9 @@
-name: meom
+name: meom-ige
 provider: gcp
 gcp:
   key: secrets/meom.json
   project: meom-ige-cnrs
-  cluster: meom-cluster
+  cluster: meom-ige-cluster
   zone: us-central1-b
 hubs:
   - name: staging
@@ -32,7 +32,7 @@ hubs:
                 org:
                   name: "SWOT Ocean Pangeo Team"
                   logo_url: https://2i2c.org/media/logo.png
-                  url: https://2i2c.org
+                  url: https://meom-group.github.io/
                 designed_by:
                   name: 2i2c
                   url: https://2i2c.org
@@ -41,8 +41,40 @@ hubs:
                   url: https://2i2c.org
                 funded_by:
                   name: SWOT Ocean Pangeo Team
-                  url: https://2i2c.org
+                  url: https://meom-group.github.io/
           singleuser:
+            profileList:
+              # The mem-guarantees are here so k8s doesn't schedule other pods
+              # on these nodes. They need to be just under total allocatable
+              # RAM on a node, not total node capacity
+              - display_name: "Small"
+                description: "~2 CPU, ~8G RAM"
+                kubespawner_override:
+                  mem_limit: 8G
+                  mem_guarantee: 5.5G
+                  node_selector:
+                    node.kubernetes.io/instance-type: e2-standard-2
+              - display_name: "Medium"
+                description: "~8 CPU, ~32G RAM"
+                kubespawner_override:
+                  mem_limit: 32G
+                  mem_guarantee: 25G
+                  node_selector:
+                    node.kubernetes.io/instance-type: e2-standard-8
+              - display_name: "Large"
+                description: "~16 CPU, ~64G RAM"
+                kubespawner_override:
+                  mem_limit: 64G
+                  mem_guarantee: 55G
+                  node_selector:
+                    node.kubernetes.io/instance-type: e2-standard-16
+              - display_name: "Very Large"
+                description: "~32 CPU, ~128G RAM"
+                kubespawner_override:
+                  mem_limit: 128G
+                  mem_guarantee: 115G
+                  node_selector:
+                    node.kubernetes.io/instance-type: e2-standard-32
             defaultUrl: /lab
             image:
               name: pangeo/pangeo-notebook
@@ -58,7 +90,20 @@ hubs:
               type: LoadBalancer
             https:
               enabled: true
+            chp:
+              resources:
+                requests:
+                  # FIXME: We want no guarantees here!!!
+                  # This is lowest possible value
+                  cpu: 0.01
+                  memory: 1Mi
           hub:
+            resources:
+              requests:
+                # FIXME: We want no guarantees here!!!
+                # This is lowest possible value
+                cpu: 0.01
+                memory: 1Mi
             config:
               Authenticator:
                 allowed_users: &users
