@@ -41,7 +41,6 @@ basehub:
               - port: 22
                 protocol: TCP
       cloudMetadata:
-        enabled: true
         # Don't block access to AWS cloud metadata
         # If we don't, our users can't access S3 buckets / other AWS services
         # without an explicit identity
