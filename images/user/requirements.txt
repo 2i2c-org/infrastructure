@@ -31,7 +31,7 @@ jupyterhub==1.3.0
 jupyter-rsession-proxy==1.2
 jupyter-tree-download==1.0.1
 ipywidgets==7.5.1
-otter-grader==2.1.3
+otter-grader==2.1.7
 datascience
 geojson
 folium
