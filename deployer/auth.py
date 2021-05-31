@@ -1,6 +1,7 @@
 from auth0.v3.authentication import GetToken
 from auth0.v3.management import Auth0
 
+from tornado.httputil import url_concat
 import re
 
 # What key in the authenticated user's profile to use as hub username
@@ -160,6 +161,11 @@ class KeyProvider:
         Return z2jh config for auth0 authentication for this JupyterHub
         """
 
+        logout_redirect_params = {
+            'client_id': client["client_id"],
+            'returnTo': client["allowed_logout_urls"][0]
+        }
+
         auth = {
             'auth0_subdomain': re.sub('\.auth0.com$', '', self.domain),
             'userdata_url': f'https://{self.domain}/userinfo',
@@ -167,7 +173,7 @@ class KeyProvider:
             'client_id': client['client_id'],
             'client_secret': client['client_secret'],
             'scope': ['openid', 'name', 'profile', 'email'],
-            'logout_redirect_url': f'https://{self.domain}/v2/logout?client_id={client["client_id"]}?returnTo={client[logout_urls][0]}'
+            'logout_redirect_url': url_concat(f'https://{self.domain}/v2/logout', logout_redirect_params)
         }
 
         return auth
