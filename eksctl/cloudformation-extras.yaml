@@ -1,0 +1,293 @@
+# Cloudformation is like Terraform but specific to AWS, in other words, it
+# allows you to declare some cloud infrastructure in configuration files that
+# you can then request be setup on AWS by a CLI (aws cloudformation deploy). A
+# quick intro is available here: https://www.youtube.com/watch?v=Omppm_YUG2g
+#
+# This cloudformation configuration contain what we need to complement the
+# eksctl created k8s cluster for the deployer script to run in our CI system.
+
+# Goals:
+#
+#   1. For us maintainers to be able to encrypt/decrypt secret content with
+#      mozilla/sops directly, but also let hubploy use mozilla/sops to decrypt
+#      them using a AWS service account. This will require AWS KMS to be setup.
+#   2. To enable hubploy to build and push docker images to our default AWS
+#      container registry (<aws_account_id>.dkr.ecr.<region>.amazonaws.com).
+#
+# Required AWS infrastructure to create:
+#
+#   1. A dedicated service account (AWS::IAM::User), with an associated
+#      AccessKey (AWS::IAM::AccessKey).
+#   2. A KMS service (AWS::KMS::Key), and permissions to use it to the dedicated
+#      service account.
+#   3. Permissions for the dedicated service account to push to the default
+#      container registry.
+#   4. Permissions for the dedicated service account to work against the k8s
+#      cluster created by eksctl, which use cloudformation under the hood.
+#
+#   5. FUTURE: s3 stuff?
+#   6. FUTURE: EFS stuff?
+#
+
+# Operations:
+#
+# Create/Update:
+#   aws cloudformation deploy --stack-name=jmte-extras --template-file=./cloudformation-extras.yaml --capabilities=CAPABILITY_NAMED_IAM
+#
+# Inspect:
+#   aws cloudformation describe-stacks --stack-name=jmte-extras
+#
+# Delete:
+#   aws cloudformation delete-stack --stack-name=jmte-extras
+#
+
+# References:
+#
+# AWS Cloudformation console:
+#   https://console.aws.amazon.com/cloudformation/home
+#
+# AWS Cloudformation intro:
+#   https://www.youtube.com/watch?v=Omppm_YUG2g
+#
+# AWS IAM intro:
+#   https://www.youtube.com/watch?v=3A5hRIT8zdo
+#
+# The starting point for me:
+#   https://medium.com/mercos-engineering/secrets-as-a-code-with-mozilla-sops-and-aws-kms-d069c45ae1b9
+#
+# Reference on !Join:
+#   https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/intrinsic-function-reference-join.html
+#
+
+# The parameters we need to provide to create this cloudformation stack
+Parameters:
+  # ref: https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/parameters-section-structure.html
+  EksClusterName:
+    Type: String
+    Default: jmte
+  EcrRepositoryName:
+    Type: String
+    Default: jmte/user-env
+  IamUserName:
+    Type: String
+    Default: ci
+  IamRoleNameEcr:
+    Type: String
+    Default: ci-ecr
+  IamRoleNameEks:
+    Type: String
+    Default: ci-eks
+
+
+# The resources we want to be created as part of this cloudformation stack
+Resources:
+  # ref: https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-iam-user.html
+  IamUser:
+    Type: AWS::IAM::User
+    Properties:
+      UserName: !Ref IamUserName
+
+  # ref: https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-iam-accesskey.html
+  IamAccessKey:
+    Type: AWS::IAM::AccessKey
+    Properties:
+      UserName: !Ref IamUser
+
+  # ref: https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-iam-role.html
+  IamRoleEcr:
+    Type: AWS::IAM::Role
+    Properties:
+      RoleName: !Ref IamRoleNameEcr
+      Policies:
+        - PolicyName: EcrAccess
+          PolicyDocument:
+            Version: 2012-10-17
+            Statement:
+              # I have failed restricting this further...
+              - Effect: Allow
+                Action:
+                  - ecr:*
+                Resource: "*"
+      AssumeRolePolicyDocument:
+        Version: 2012-10-17
+        Statement:
+          - Sid: AllowRoleToBeAssumedByOurUser
+            Effect: Allow
+            Principal:
+              AWS: !Join
+                - ''
+                - - 'arn:aws:iam::'
+                  - !Ref AWS::AccountId
+                  - :user/
+                  - !Ref IamUser
+            Action:
+              - sts:AssumeRole
+  IamRoleEks:
+    Type: AWS::IAM::Role
+    Properties:
+      RoleName: !Ref IamRoleNameEks
+      Policies:
+        - PolicyName: EksAccess
+          PolicyDocument:
+            Version: 2012-10-17
+            Statement:
+              - Effect: Allow
+                Action:
+                  - eks:DescribeCluster
+                Resource: !Join
+                - ''
+                - - 'arn:aws:eks:'
+                  - !Ref AWS::Region
+                  - ':'
+                  - !Ref AWS::AccountId
+                  - ':cluster/'
+                  - !Ref EksClusterName
+      AssumeRolePolicyDocument:
+        Version: 2012-10-17
+        Statement:
+          - Sid: AllowRoleToBeAssumedByOurUser
+            Effect: Allow
+            Principal:
+              AWS: !Join
+                - ''
+                - - 'arn:aws:iam::'
+                  - !Ref AWS::AccountId
+                  - :user/
+                  - !Ref IamUser
+            Action:
+              - sts:AssumeRole
+
+  # ref: https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-efs-filesystem.html
+  #
+  EfsFileSystem:
+    Type: AWS::EFS::FileSystem
+    Properties:
+      BackupPolicy:
+        Status: ENABLED
+      Encrypted: true
+  EfsMountTarget0:
+    Type: AWS::EFS::MountTarget
+    Properties:
+      FileSystemId: !GetAtt EfsFileSystem.FileSystemId
+      SecurityGroups:
+        - {"Fn::ImportValue": {"Fn::Sub": "eksctl-${EksClusterName}-cluster::SharedNodeSecurityGroup"}}
+      SubnetId: { "Fn::Select": [0, { "Fn::Split": [",", {"Fn::ImportValue": {"Fn::Sub": "eksctl-${EksClusterName}-cluster::SubnetsPublic"}}]}] }
+  EfsMountTarget1:
+    Type: AWS::EFS::MountTarget
+    Properties:
+      FileSystemId: !GetAtt EfsFileSystem.FileSystemId
+      SecurityGroups:
+        - {"Fn::ImportValue": {"Fn::Sub" : "eksctl-${EksClusterName}-cluster::SharedNodeSecurityGroup"}}
+      SubnetId: { "Fn::Select": [1, { "Fn::Split": [",", {"Fn::ImportValue": {"Fn::Sub": "eksctl-${EksClusterName}-cluster::SubnetsPublic"}}]}] }
+  EfsMountTarget2:
+    Type: AWS::EFS::MountTarget
+    Properties:
+      FileSystemId: !GetAtt EfsFileSystem.FileSystemId
+      SecurityGroups:
+        - {"Fn::ImportValue": {"Fn::Sub" : "eksctl-${EksClusterName}-cluster::SharedNodeSecurityGroup"}}
+      SubnetId: { "Fn::Select": [2, { "Fn::Split": [",", {"Fn::ImportValue": {"Fn::Sub": "eksctl-${EksClusterName}-cluster::SubnetsPublic"}}]}] }
+
+  # ref: https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-s3-bucket.html
+  #
+  S3Bucket:
+    Type: AWS::S3::Bucket
+    Properties:
+      AccessControl: Private
+      BucketName: !Sub ${EksClusterName}-scratch
+
+  # ref: https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ecr-repository.html
+  #
+  EcrRepository:
+    Type: AWS::ECR::Repository
+    Properties:
+      RepositoryName: !Ref EcrRepositoryName
+      RepositoryPolicyText:
+        Version: 2008-10-17
+        Statement:
+          - Sid: Allow pull for who are authenticated with our account
+            Effect: Allow
+            Principal:
+              AWS: !Ref AWS::AccountId
+            Action:
+              - ecr:GetDownloadUrlForLayer
+              - ecr:BatchGetImage
+
+  # ref: https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-kms-key.html
+  #
+  KmsKey:
+    Type: AWS::KMS::Key
+    Properties:
+      Description: Enables mozilla/sops to encrypt/decrypt secrets just in time.
+      KeyPolicy:
+        Version: 2012-10-17
+        Statement:
+          - Sid: Enable Root IAM User Permissions
+            Effect: Allow
+            Principal:
+              AWS: !Join
+                - ''
+                - - 'arn:aws:iam::'
+                  - !Ref AWS::AccountId
+                  - :root
+            Action: 'kms:*'
+            Resource: '*'
+          - Sid: Enable User Permissions
+            Effect: Allow
+            Principal:
+              AWS: !Join
+                - ''
+                - - 'arn:aws:iam::'
+                  - !Ref AWS::AccountId
+                  - :user/
+                  - !Ref IamUser
+            Action:
+              - "kms:DescribeKey"
+              - "kms:Encrypt"
+              - "kms:Decrypt"
+              - "kms:ReEncrypt*"
+              - "kms:GenerateDataKey"
+              - "kms:GenerateDataKeyWithoutPlaintext"
+            Resource: '*'
+
+
+# The relevant information from the created resources.
+Outputs:
+  # A Role to control the k8s cluster
+  IamRoleEksArn:
+    Value: !GetAtt IamRoleEks.Arn
+    Description: The role with permission to work against k8s.
+
+  # A role to control the docker registry
+  IamRoleEcrArn:
+    Value: !GetAtt IamRoleEcr.Arn
+    Description: |
+      The Role with permission to push to our image registry.
+  EcrRepository:
+    Value: !Join
+      - ''
+      - - !Ref AWS::AccountId
+        - .dkr.ecr.
+        - !Ref AWS::Region
+        - .amazonaws.com/
+        - !Ref EcrRepositoryName
+    Description: The image repository for the user environment image.
+
+  S3Bucket:
+    Value: !Ref S3Bucket
+    Description: An S3 private scratch bucket that all users share read/write permission to.
+
+  EfsFileSystemId:
+    Value: !GetAtt EfsFileSystem.FileSystemId
+
+  # The KMS system is not in use currently! Instead we use the 2i2c centralized
+  # Google KMS keychain instead to have one less account to manage.
+  KmsKeyArn:
+    Value: !GetAtt KmsKey.Arn
+    Description: Use this to set creation_rules[0].kms in .sops.yaml
+
+  AwsAccessKeyId:
+    Value: !Ref IamAccessKey
+    Description: Use this to set AWS_ACCESS_KEY_ID as a GitHub project secret
+  AwsSecretAccessKey:
+    Value: !GetAtt IamAccessKey.SecretAccessKey
+    Description: Use this to set AWS_SECRET_ACCESS_KEY as a GitHub project secret
