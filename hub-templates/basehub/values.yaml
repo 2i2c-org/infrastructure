@@ -179,10 +179,10 @@ jupyterhub:
           - --Configurator.config_file=/usr/local/etc/jupyterhub-configurator/jupyterhub_configurator_config.py
     image:
       name: quay.io/2i2c/pilot-hub
-      tag: '0.0.1-n569.hb296398'
+      tag: '0.0.1-n769.hfd04ce8'
     config:
       JupyterHub:
-        authenticator_class: oauthenticator.generic.GenericOAuthenticator
+        authenticator_class: oauthenticator.auth0.Auth0OAuthenticator
     nodeSelector:
       hub.jupyter.org/node-purpose: core
     networkPolicy:
@@ -270,40 +270,9 @@ jupyterhub:
         c.JupyterHub.spawner_class = CustomSpawner
 
       06-custom-authenticator: |
-        from oauthenticator.generic import GenericOAuthenticator
-        from jupyterhub.handlers import LogoutHandler
-        from tornado.httputil import url_concat
-        from traitlets import Unicode
-        from z2jh import get_config
+        from oauthenticator.auth0 import Auth0OAuthenticator
 
-        class CustomLogoutHandler(LogoutHandler):
-          """
-          Handle custom logout URLs. If a custom logout url
-          is specified, the 'logout' button will log the user out of that identity
-          provider in addition to clearing the session with Jupyterhub, otherwise
-          only the Jupyterhub session is cleared.
-          """
-
-          async def render_logout_page(self):
-            if self.authenticator.logout_redirect_url:
-              # Return to the hub main page after logout
-              params = {
-                'returnTo': f'https://{self.request.host}'
-              }
-              self.redirect(
-                url_concat(self.authenticator.logout_redirect_url, params),
-                permanent=False
-              )
-              return
-
-            super().render_logout_page()
-
-        class CustomOAuthenticator(GenericOAuthenticator):
-          logout_redirect_url = Unicode(help="""URL for logging out.""", default_value='').tag(config=True)
-
-          def get_handlers(self, app):
-            return super().get_handlers(app) + [(r'/logout', CustomLogoutHandler)]
-
+        class CustomOAuthenticator(Auth0OAuthenticator):
           async def authenticate(self, *args, **kwargs):
             resp = await super().authenticate(*args, **kwargs)
             if self.username_key == 'sub':

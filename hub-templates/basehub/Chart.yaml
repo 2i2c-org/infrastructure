@@ -3,7 +3,7 @@ appVersion: '1.0'
 description: Deployment Chart for JupyterHub
 name: basehub
 # Let's keep this constant so other charts in this repo can depend on this easily
-version: 0.0.1-n569.hb296398
+version: 0.0.1-n769.hfd04ce8
 dependencies:
   - name: jupyterhub
    # REMEMBER TO CHANGE BASE IMAGE OF images/hub/ WHEN CHANGING THIS
