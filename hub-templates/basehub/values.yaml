@@ -179,7 +179,7 @@ jupyterhub:
           - --Configurator.config_file=/usr/local/etc/jupyterhub-configurator/jupyterhub_configurator_config.py
     image:
       name: quay.io/2i2c/pilot-hub
-      tag: '0.0.1-n569.hb296398'
+      tag: '0.0.1-n769.hfd04ce8'
     config:
       JupyterHub:
         authenticator_class: oauthenticator.auth0.Auth0OAuthenticator
