@@ -86,13 +86,16 @@ hubs:
               # Need to explicitly fix ownership here, since EFS doesn't do anonuid
               - name: volume-mount-ownership-fix
                 image: busybox
-                command: ["sh", "-c", "id && chown 1000:1000 /home/jovyan && ls -lhd /home/jovyan"]
+                command: ["sh", "-c", "id && chown 1000:1000 /home/jovyan /home/jovyan/shared && ls -lhd /home/jovyan"]
                 securityContext:
                   runAsUser: 0
                 volumeMounts:
                   - name: home
                     mountPath: /home/jovyan
                     subPath: "{username}"
+                  - name: home
+                    mountPath: /home/jovyan/shared
+                    subPath: _shared
 
             image:
               name: pangeo/pangeo-notebook
