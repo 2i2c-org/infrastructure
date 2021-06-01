@@ -29,10 +29,15 @@ nfsPVC:
 
 jupyterhub:
   custom:
+    singleuserAdmin:
+      extraVolumeMounts:
+        - name: home
+          mountPath: /home/jovyan/shared-readwrite
+          subPath: _shared
     cloudResources:
-      provider: null
+      provider:
       gcp:
-        projectId: null
+        projectId:
       scratchBucket:
         enabled: false
   ingress:
@@ -67,8 +72,6 @@ jupyterhub:
     hook:
       enabled: false
   proxy:
-    https:
-      enabled: false
     service:
       type: ClusterIP
     chp:
@@ -95,11 +98,6 @@ jupyterhub:
       letsencrypt:
         contactEmail: yuvipanda@gmail.com
   singleuser:
-    admin:
-      extraVolumeMounts:
-        - name: home
-          mountPath: /home/jovyan/shared-readwrite
-          subPath: _shared
     startTimeout: 600 # 10 mins, because sometimes we have too many new nodes coming up together
     defaultUrl: /tree
     nodeSelector:
@@ -161,7 +159,8 @@ jupyterhub:
                 interfaces:
                   - value: "/tree"
                     title: Classic Notebook
-                    description: The original single-document interface for creating Jupyter Notebooks.
+                    description: The original single-document interface for creating
+                      Jupyter Notebooks.
                   - value: "/lab"
                     title: JupyterLab
                     description: A Powerful next generation notebook interface
@@ -179,7 +178,7 @@ jupyterhub:
           - --Configurator.config_file=/usr/local/etc/jupyterhub-configurator/jupyterhub_configurator_config.py
     image:
       name: quay.io/2i2c/pilot-hub
-      tag: '0.0.1-n769.hfd04ce8'
+      tag: '0.0.1-n781.hf8d0498'
     config:
       JupyterHub:
         authenticator_class: oauthenticator.auth0.Auth0OAuthenticator
@@ -256,7 +255,7 @@ jupyterhub:
 
         class CustomSpawner(ConfiguratorSpawnerMixin, KubeSpawner):
           def start(self, *args, **kwargs):
-            custom_admin = get_config('singleuser.admin', {})
+            custom_admin = get_config('custom.singleuserAdmin', {})
             if custom_admin and self.user.admin:
                 extra_init_containers = custom_admin.get('initContainers', [])
                 extra_volume_mounts = custom_admin.get('extraVolumeMounts', [])

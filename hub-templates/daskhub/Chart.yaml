@@ -2,10 +2,9 @@ apiVersion: v2
 appVersion: '1.0'
 description: Deployment Chart for a dask-enabled JupyterHub
 name: daskhub
-version: 0.0.1-n2724.h1dfae31
+version: "0.1.0"
 dependencies:
  - name: basehub
-   version: 0.0.1
    repository: file://../basehub
  - name: dask-gateway
    version: "0.9.0"

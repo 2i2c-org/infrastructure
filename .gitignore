@@ -1,3 +1,11 @@
+# Added by 2i2c
+Chart.lock
+**/charts/*.tgz
+
+.env-*
+
+
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
