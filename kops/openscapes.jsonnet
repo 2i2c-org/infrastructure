@@ -90,7 +90,7 @@ local data = {
     ]
 };
 
-{ 'kops.yaml': [
+[
     data.cluster,
     data.master
-] + data.notebookNodes + data.daskNodes}
+] + data.notebookNodes + data.daskNodes
