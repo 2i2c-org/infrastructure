@@ -197,6 +197,7 @@ hubs:
               extraPodConfig:
                 nodeSelector:
                   hub.jupyter.org/node-purpose: user
+                  k8s.dask.org/node-purpose: null
                 serviceAccountName: *user-sa
             worker:
               extraPodConfig:
