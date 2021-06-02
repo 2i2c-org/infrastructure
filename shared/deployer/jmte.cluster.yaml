@@ -167,6 +167,7 @@ hubs:
                   - tsnow03         # Tasha Snow
                   - whyjz           # Whyjay Zheng
                   - yuvipanda       # Yuvi Panda
+                  - jonathan-taylor # Jonathan Taylor
                 admin_users: *users
             allowNamedServers: true
             networkPolicy:
