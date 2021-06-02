@@ -297,7 +297,7 @@ hubs:
                 - ericvd@gmail.com
                 - sean.smorris@berkeley.edu
                 - william.kerney@cloviscollege.edu
-          admin_users: *clovis_users
+              admin_users: *clovis_users
   - name: sbcc
     domain: sbcc.cloudbank.2i2c.cloud
     template: basehub
