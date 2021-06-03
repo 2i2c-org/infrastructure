@@ -294,9 +294,11 @@ class Hub:
 
         }
 
+        docs_token = hmac.new(secret_key, f'docs-{self.spec["name"]}'.encode(), hashlib.sha256).hexdigest()
         if 'docs_service' in self.spec['config'].keys() and self.spec['config']['docs_service']['enabled']:
             generated_config['jupyterhub']['hub']['services']['docs'] = {
-                'url': f'http://docs-service.{self.spec["name"]}'
+                'url': f'http://docs-service.{self.spec["name"]}',
+                'apiToken': docs_token
             }
 
 
