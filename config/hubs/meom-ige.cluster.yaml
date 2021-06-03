@@ -43,6 +43,9 @@ hubs:
                   name: SWOT Ocean Pangeo Team
                   url: https://meom-group.github.io/
           singleuser:
+            extraEnv:
+              DATA_BUCKET: gcs://meom-ige-data
+              SCRATCH_BUCKET: 'gcs://meom-ige-scratch/$(JUPYTERHUB_USER)'
             profileList:
               # The mem-guarantees are here so k8s doesn't schedule other pods
               # on these nodes. They need to be just under total allocatable

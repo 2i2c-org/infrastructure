@@ -37,3 +37,8 @@ notebook_nodes = {
     machine_type : "e2-standard-32"
   }
 }
+
+user_buckets = [
+  "scratch",
+  "data"
+]

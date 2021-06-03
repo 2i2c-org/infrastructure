@@ -84,3 +84,9 @@ variable "enable_network_policy" {
   default     = true
   description = "Enable kubernetes network policy for access to fine-grained firewall rules"
 }
+
+variable "user_buckets" {
+  type        = set(any)
+  default     = []
+  description = "Buckets to create for the project, they will be prefixed with {var.prefix}-"
+}
