@@ -247,7 +247,7 @@ class Hub:
         # Allow explicilty ignoring auth0 setup
         if self.spec['auth0'].get('enabled', True):
             client = auth_provider.ensure_client(
-                self.cluster.spec['name'],
+                f"{self.cluster.spec['name']}-{self.spec['name']}",
                 self.spec['domain'],
                 self.spec['auth0']['connection']
             )
