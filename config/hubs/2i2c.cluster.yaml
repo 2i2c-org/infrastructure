@@ -347,3 +347,54 @@ hubs:
                   - choldgraf
                   - GeorgianaElena
                 admin_users: *grenoble_swot_users
+  - name: paleohack2021
+    domain: paleohack2021.hackathon.2i2c.cloud
+    template: basehub
+    auth0:
+      connection: github
+    config:
+      jupyterhub:
+        scheduling:
+          userPlaceholder:
+            # Not needed anymore, hackathon is over
+            replicas: 0
+          userScheduler:
+            # Each user gets almost 1 anyway
+            enabled: true
+        custom:
+          homepage:
+            templateVars:
+              org:
+                name: "PaleoHack 2021"
+                logo_url: "https://raw.githubusercontent.com/LinkedEarth/Logos/master/pyleoclim_logo_full_white.png"
+
+                url: "https://linkedearth.github.io/paleoHackathon/"
+              designed_by:
+                name: 2i2c
+                url: https://2i2c.org
+              operated_by:
+                name: 2i2c
+                url: https://2i2c.org
+              funded_by:
+                name: "NSF Paleo Perspectives on Climate Change program"
+                url: "https://www.nsf.gov/funding/pgm_summ.jsp?pims_id=5750"
+        singleuser:
+          memory:
+            limit: 4G
+          cpu:
+            limit: 2
+          image:
+            name: quay.io/2i2c/paleohack-2021
+            tag: d8c26cd01c8a
+        hub:
+          config:
+            Authenticator:
+              allowed_users: &paleohack_users
+                - yuvipanda
+                - choldgraf
+                - GeorgianaElena
+                - CommonClimate
+                - khider
+                - fzhu2e
+                - alexkjames
+              admin_users: *paleohack_users
