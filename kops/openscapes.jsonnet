@@ -27,7 +27,7 @@ local data = {
             name: "master"
         },
         spec+: {
-            machineType: "m5.medium",
+            machineType: "t3.medium",
             subnets: [zone],
             nodeLabels+: {
                 "hub.jupyter.org/node-purpose": "core",
