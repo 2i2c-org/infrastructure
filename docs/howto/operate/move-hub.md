@@ -4,7 +4,6 @@ Moving hubs between clusters is possible, but requires manual steps
 to ensure data is preserved.
 
 1. Setup [a new hub](../../topic/config.md) in the appropriate cluster.
-   If this is
 
 2. Copy home directory contents from the old cluster's NFS server to
    the new cluster's. Here is a simple method that works when the
