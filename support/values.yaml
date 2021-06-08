@@ -15,18 +15,20 @@ prometheus:
         # Deploy onto user nodes
         key: hub.jupyter.org_dedicated
         value: user
+      - effect: NoSchedule
+        # Deploy onto user nodes
+        key: k8s.dask.org_dedicated
+        value: worker
     updateStrategy:
       type: RollingUpdate
   pushgateway:
     enabled: false
-  rbac:
-    create: true
   server:
     resources:
       # Without this, prometheus can easily starve users
       requests:
         cpu: 0.2
-        memory: 768Mi
+        memory: 512Mi
       limits:
         cpu: 1
         memory: 2Gi
@@ -58,9 +60,6 @@ grafana:
     hosts:
       - grafana.pilot.2i2c.cloud
 
-  # grafana.ini:
-  #   server:
-  #     root_url: http://grafana.datahub.berkeley.edu/
   datasources:
     datasources.yaml:
       apiVersion: 1

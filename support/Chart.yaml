@@ -7,24 +7,18 @@ dependencies:
   # Prometheus for collection of metrics.
   # https://github.com/prometheus-community/helm-charts/tree/main/charts/prometheus
   - name: prometheus
-    version: 11.15.0
+    version: 14.1.1
     repository: https://prometheus-community.github.io/helm-charts
 
   # Grafana for dashboarding of metrics.
   # https://github.com/grafana/helm-charts/tree/main/charts/grafana
   - name: grafana
-    version: 5.6.4
+    version: 6.11.0
     repository: https://grafana.github.io/helm-charts
 
   # ingress-nginx for a k8s Ingress resource controller that routes traffic from
   # a single IP entrypoint to various services exposed via k8s Ingress resources
   # that references this controller.
   - name: ingress-nginx
-    version: 2.15.0
+    version: 3.33.0
     repository: https://kubernetes.github.io/ingress-nginx
-
-  # cert-manager for acquisition of TLS certificates
-  # https://github.com/jetstack/cert-manager/tree/master/deploy/charts/cert-manager
-  - name: cert-manager
-    version: v1.0.0-beta.1
-    repository: https://charts.jetstack.io

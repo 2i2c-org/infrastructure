@@ -1,0 +1,4 @@
+grafana:
+  ingress:
+    hosts:
+      - grafana.pilot.2i2c.cloud
