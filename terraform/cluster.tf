@@ -42,6 +42,14 @@ resource "google_container_cluster" "cluster" {
     channel = "UNSPECIFIED"
   }
 
+  cluster_autoscaling {
+    # This disables node autoprovisioning, not cluster autoscaling!
+    enabled = false
+    # Use a scheduler + autoscaling profile optimized for batch workloads like ours
+    # https://cloud.google.com/kubernetes-engine/docs/concepts/cluster-autoscaler#autoscaling_profiles
+    autoscaling_profile = "OPTIMIZE_UTILIZATION"
+  }
+
   network_policy {
     enabled = var.enable_network_policy
   }
