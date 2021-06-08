@@ -192,6 +192,8 @@ hubs:
     template: basehub
     auth0:
       connection: password
+      password:
+        database_name: database-demo
     config:
       jupyterhub:
         custom:
