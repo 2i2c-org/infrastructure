@@ -139,7 +139,7 @@ resource "google_container_node_pool" "dask_worker" {
   location = google_container_cluster.cluster.location
 
   # Default to same config as notebook nodepools config
-  for_each = var.dask_nodes == {} ? var.dask_nodes : var.notebook_nodes
+  for_each = length(var.dask_nodes) == 0 ? var.notebook_nodes : var.dask_nodes
 
   initial_node_count = 0
   autoscaling {
