@@ -25,6 +25,15 @@ resource "google_container_cluster" "cluster" {
     }
   }
 
+  dynamic "workload_identity_config" {
+    # Setup workload identity only if we're using config connector, otherwise
+    # just metadata concealment is used
+    for_each = var.config_connector_enabled == "" ? [] : [1]
+    content {
+      identity_namespace = "${var.project_id}.svc.id.goog"
+    }
+  }
+
   release_channel {
     # We upgrade clusters manually so we can manage downtime of
     # master *and* nodes. When a cluster is in a release channel,
@@ -104,10 +113,13 @@ resource "google_container_node_pool" "notebook" {
 
   node_config {
     workload_metadata_config {
-      // Use node concealment - https://cloud.google.com/kubernetes-engine/docs/how-to/protecting-cluster-metadata
-      // This exposes the cluster Google SA to the pods, so we can
-      // access GCS appropriately.
-      node_metadata = "SECURE"
+      # Config Connector requires workload identity to be enabled (via GKE_METADATA_SERVER).
+      # If config connector is not necessary, we use simple metadata concealment
+      # (https://cloud.google.com/kubernetes-engine/docs/how-to/protecting-cluster-metadata)
+      # to expose the node CA to users safely.
+      # FIXME: This should be a bit more fine-grained - it should be possible to disable
+      # config connector and completely hide all node metadata from user pods
+      node_metadata = var.config_connector_enabled ? "GKE_METADATA_SERVER" : "SECURE"
     }
     labels = {
       # Notebook pods and dask schedulers can exist here
@@ -161,10 +173,13 @@ resource "google_container_node_pool" "dask_worker" {
     disk_type = "pd-ssd"
 
     workload_metadata_config {
-      // Use node concealment - https://cloud.google.com/kubernetes-engine/docs/how-to/protecting-cluster-metadata
-      // This exposes the cluster Google SA to the pods, so we can
-      // access GCS appropriately.
-      node_metadata = "SECURE"
+      # Config Connector requires workload identity to be enabled (via GKE_METADATA_SERVER).
+      # If config connector is not necessary, we use simple metadata concealment
+      # (https://cloud.google.com/kubernetes-engine/docs/how-to/protecting-cluster-metadata)
+      # to expose the node CA to users safely.
+      # FIXME: This should be a bit more fine-grained - it should be possible to disable
+      # config connector and completely hide all node metadata from user pods
+      node_metadata = var.config_connector_enabled ? "GKE_METADATA_SERVER" : "SECURE"
     }
     labels = {
       "k8s.dask.org/node-purpose" = "worker",
