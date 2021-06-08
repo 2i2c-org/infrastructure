@@ -33,15 +33,19 @@ spec:
           command:
             - /bin/sh
             - -c
-            # ${NFS_SHARE_NAME} starts with `/`
             - "mkdir -p /mnt${NFS_SHARE_NAME} && chown 1000:1000 /mnt${NFS_SHARE_NAME} && mount && ls -la /mnt/"
           volumeMounts:
+            # Mount the the base of the filesystem (which must be "/" on EFS as
+            # it will hang if trying to mount a path that isn't created
+            # already).
             - name: home-base
-              # Put this under /mnt, in case baseShareName is just / (like in EFS)
               mountPath: /mnt{{ .Values.nfsPVC.nfs.baseShareName }}
       volumes:
+        # Directly references the NFS server in order to create folders and
+        # update permissions. Note that this does not rely on the PV or PVC
+        # objects to be created.
         - name: home-base
           nfs:
-            server: {{ .Values.nfsPVC.nfs.serverIP | quote}}
-            path: {{ .Values.nfsPVC.nfs.baseShareName | quote}}
+            server: {{ .Values.nfsPVC.nfs.serverIP | quote }}
+            path: {{ .Values.nfsPVC.nfs.baseShareName | quote }}
 {{ end }}
