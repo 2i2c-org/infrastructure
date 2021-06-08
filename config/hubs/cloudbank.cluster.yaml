@@ -443,3 +443,41 @@ hubs:
                 - christiaan.desmond@sjcc.edu
                 - sanjay.dorairaj@sjcc.edu
               admin_users: *sjcc_users
+  - name: avc
+    domain:
+      - avc.cloudbank.2i2c.cloud
+    template: basehub
+    auth0:
+      connection: google-oauth2
+    config:
+      jupyterhub:
+        custom:
+          homepage:
+            templateVars:
+              org:
+                name: Antelope Valley College
+                logo_url: https://www.avc.edu/themes/avc/logo.png
+                url: https://www.avc.edu/
+              designed_by:
+                name: 2i2c
+                url: https://2i2c.org
+              operated_by:
+                name: CloudBank
+                url: http://cloudbank.org/
+              funded_by:
+                name: CloudBank
+                url: http://cloudbank.org/
+        hub:
+          config:
+            Authenticator:
+              allowed_users: &avc_users
+                - yuvipanda@gmail.com
+                - choldgraf@gmail.com
+                - georgiana.dolocan@gmail.com
+                - aculich@berkeley.edu
+                - sean.smorris@berkeley.edu
+                - rbiritwum@avc.edu
+                - jbrownlow@avc.edu
+                - wkitto1@avc.edu
+                - rbiritwum@gmail.com
+              admin_users: *avc_users
