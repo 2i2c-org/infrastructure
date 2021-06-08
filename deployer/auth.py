@@ -101,8 +101,7 @@ class KeyProvider:
                 }
             )
 
-
-    def ensure_client(self, name, domains, connection_name):
+    def ensure_client(self, name, domains, connection_name, connection_config):
         current_clients = self.get_clients()
         if name not in current_clients:
             # Create the client, all good
@@ -119,7 +118,7 @@ class KeyProvider:
             # should have its own username / password database.
             # So we create a new 'database connection' per hub,
             # instead of sharing one across hubs.
-            db_connection_name = f'database-{name}'
+            db_connection_name = connection_config.get("database_name", name)
 
             if db_connection_name not in current_connections:
                 # connection doesn't exist yet, create it
@@ -134,7 +133,7 @@ class KeyProvider:
             selected_connection_name = connection_name
 
         for connection in current_connections.values():
-                # The chosen connection!
+            # The chosen connection!
             enabled_clients = connection['enabled_clients'].copy()
             needs_update = False
             client_id = client['client_id']
