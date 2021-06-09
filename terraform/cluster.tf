@@ -91,7 +91,8 @@ resource "google_container_node_pool" "core" {
 
     # Our service account gets all OAuth scopes so it can access
     # all APIs, but only fine grained permissions + roles are
-    # granted via the service account.
+    # granted via the service account. This follows Google's
+    # recommendation at https://cloud.google.com/compute/docs/access/service-accounts#associating_a_service_account_to_an_instance
     service_account = google_service_account.cluster_sa.email
     oauth_scopes = [
       "https://www.googleapis.com/auth/cloud-platform"
@@ -144,7 +145,8 @@ resource "google_container_node_pool" "notebook" {
 
     # Our service account gets all OAuth scopes so it can access
     # all APIs, but only fine grained permissions + roles are
-    # granted via the service account.
+    # granted via the service account. This follows Google's
+    # recommendation at https://cloud.google.com/compute/docs/access/service-accounts#associating_a_service_account_to_an_instance
     service_account = google_service_account.cluster_sa.email
     oauth_scopes = [
       "https://www.googleapis.com/auth/cloud-platform"
@@ -202,7 +204,8 @@ resource "google_container_node_pool" "dask_worker" {
 
     # Our service account gets all OAuth scopes so it can access
     # all APIs, but only fine grained permissions + roles are
-    # granted via the service account.
+    # granted via the service account. This follows Google's
+    # recommendation at https://cloud.google.com/compute/docs/access/service-accounts#associating_a_service_account_to_an_instance
     service_account = google_service_account.cluster_sa.email
     oauth_scopes = [
       "https://www.googleapis.com/auth/cloud-platform"
