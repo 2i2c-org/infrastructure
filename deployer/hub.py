@@ -29,6 +29,7 @@ class Cluster:
             Hub(self, hub_yaml)
             for hub_yaml in self.spec['hubs']
         ]
+        self.support = self.spec.get('support', {})
 
     def build_image(self):
         self.ensure_docker_credhelpers()
@@ -77,6 +78,32 @@ class Cluster:
                 with open(dockercfg_path, 'w') as f:
                     json.dump(config, f, indent=4)
 
+    def deploy_support(self):
+        cert_manager_version = 'v1.3.1'
+
+        print("Provisioning cert-manager...")
+        subprocess.check_call([
+            'helm', 'upgrade', '--install', '--create-namespace',
+            '--namespace', 'cert-manager',
+            'cert-manager', 'jetstack/cert-manager',
+            '--version', cert_manager_version,
+            '--set', 'installCRDs=true'
+        ])
+        print("Done!")
+
+        print("Support charts...")
+
+        with tempfile.NamedTemporaryFile(mode='w') as f:
+            yaml.dump(self.support.get('config', {}), f)
+            f.flush()
+            subprocess.check_call([
+                'helm', 'upgrade', '--install', '--create-namespace',
+                '--namespace', 'support',
+                'support', 'support',
+                '-f', f.name,
+                '--wait'
+            ])
+        print("Done!")
 
     def auth_kubeconfig(self):
         """
