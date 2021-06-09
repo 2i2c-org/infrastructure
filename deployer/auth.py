@@ -46,70 +46,56 @@ class KeyProvider:
             for connection in self.auth0.connections.all()
         }
 
-    def create_client(self, name, domains):
-        callbacks = self._get_callback_url_list(domains)
-        logout_urls = self._get_allowed_logout_url_list(domains)
-
+    def create_client(self, name, callback_url, logout_url):
         client = {
             'name': name,
             'app_type': 'regular_web',
-            'callbacks': callbacks,
-            'allowed_logout_urls': logout_urls
+            'callbacks': [callback_url],
+            'allowed_logout_urls': [logout_url]
         }
         created_client = self.auth0.clients.create(client)
         return created_client
 
-    def _get_callback_url_list(self, domains):
-        return [f'https://{domain}/hub/oauth_callback' for domain in domains] if isinstance(domains, list) else [f'https://{domains}/hub/oauth_callback']
 
-    def _get_allowed_logout_url_list(self, domains):
-        # Mark the hub address as a valid URL address to return to after logout
-        return [f'https://{domain}' for domain in domains] if isinstance(domains, list) else [f'https://{domains}']
-
-
-    def _ensure_client_callback(self, client, domains):
-        callback_urls = self._get_callback_url_list(domains)
-        missing_callbacks = []
-
-        for callback_url in callback_urls:
-            if 'callbacks' not in client or callback_url not in client['callbacks']:
-                missing_callbacks.append(callback_url)
-
-        if missing_callbacks:
+    def _ensure_client_callback(self, client, callback_url):
+        """
+        Ensure client has correct callback URL
+        """
+        if client['callbacks'] != [callback_url]:
             self.auth0.clients.update(
                 client['client_id'],
                 {
-                    # Don't remove other callback URLs
-                    'callbacks': client['callbacks'] + missing_callbacks
+                    # Overwrite any other callback URL specified
+                    # Only one hub should use any one auth0 application, and it
+                    # should only have one callback url. Additional URLs can be
+                    # a security risk, since people who control those URLs could
+                    # potentially steal user credentials (if they have client_id and secret).
+                    # Fully managing list of callback URLs in code keeps everything
+                    # simpler
+                    'callbacks': [callback_url]
                 }
             )
 
-    def _ensure_client_logout_urls(self, client, domains):
-        logout_urls = self._get_allowed_logout_url_list(domains)
-        missing_logout_urls = []
-
-        for logout_url in logout_urls:
-            if 'allowed_logout_urls' not in client or logout_url not in client['allowed_logout_urls']:
-                missing_logout_urls.append(logout_url)
-
-        if missing_logout_urls:
+    def _ensure_client_logout_url(self, client, logout_url):
+        if client['allowed_logout_urls'] != [logout_url]:
             self.auth0.clients.update(
                 client['client_id'],
                 {
-                    # Don't remove other logout URLs
-                    'allowed_logout_urls': client.get('allowed_logout_urls', []) + missing_logout_urls
+                    # Overwrite any other logout URL - users should only land on
+                    # the hug home page after logging out.
+                    'allowed_logout_urls': [logout_url]
                 }
             )
 
-    def ensure_client(self, name, domains, connection_name, connection_config):
+    def ensure_client(self, name, callback_url, logout_url, connection_name, connection_config):
         current_clients = self.get_clients()
         if name not in current_clients:
             # Create the client, all good
-            client = self.create_client(name, domains)
+            client = self.create_client(name, callback_url, logout_url)
         else:
             client = current_clients[name]
-            self._ensure_client_callback(client, domains)
-            self._ensure_client_logout_urls(client, domains)
+            self._ensure_client_callback(client, callback_url)
+            self._ensure_client_logout_url(client, logout_url)
 
         current_connections = self.get_connections()
 

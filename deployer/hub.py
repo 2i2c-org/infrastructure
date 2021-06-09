@@ -147,15 +147,15 @@ class Hub:
             'jupyterhub': {
                 'proxy': {
                     'https': {
-                        'hosts': self.spec['domain'] if isinstance(self.spec['domain'], list) else [self.spec['domain']]
+                        'hosts': [self.spec['domain']]
                     }
                 },
                 'ingress': {
-                    'hosts': self.spec['domain'] if isinstance(self.spec['domain'], list) else [self.spec['domain']],
+                    'hosts': [self.spec['domain']],
                     'tls': [
                         {
                             'secretName': 'https-auto-tls',
-                            'hosts': self.spec['domain'] if isinstance(self.spec['domain'], list) else [self.spec['domain']]
+                            'hosts': [self.spec['domain']]
                         }
                     ]
 
@@ -246,13 +246,18 @@ class Hub:
         #
         # Allow explicilty ignoring auth0 setup
         if self.spec['auth0'].get('enabled', True):
+            # Auth0 sends users back to this URL after they authenticate
+            callback_url = f"https://{self.spec['domain']}/hub/oauth_callback"
+            # Users are redirected to this URL after they log out
+            logout_url = f"https://{self.spec['domain']}"
             client = auth_provider.ensure_client(
                 name=self.spec['auth0'].get('application_name', f"{self.cluster.spec['name']}-{self.spec['name']}"),
-                domains=self.spec['domain'],
+                callback_url=callback_url,
+                logout_url=logout_url,
                 connection_name=self.spec['auth0']['connection'],
                 connection_config=self.spec['auth0'].get(self.spec['auth0']['connection'], {}),
             )
-            # FIXME: We're hardcoding GenericOAuthenticator here
+            # FIXME: We're hardcoding Auth0OAuthenticator here
             # We should *not*. We need dictionary merging in code, so
             # these can all exist fine.
             generated_config['jupyterhub']['hub']['config']['Auth0OAuthenticator'] = auth_provider.get_client_creds(client, self.spec['auth0']['connection'])
@@ -359,12 +364,7 @@ class Hub:
                 else:
                     service_api_token = generated_values["jupyterhub"]["hub"]["services"]["hub-health"]["apiToken"]
 
-                domain = self.spec["domain"]
-                if type(domain) == str:
-                    hub_url = f'https://{domain}'
-
-                else:
-                    hub_url = f'https://{random.choice(domain)}'
+                hub_url = f'https://{self.spec["domain"]}'
 
                 exit_code = pytest.main([
                     "-v", "deployer/tests",
