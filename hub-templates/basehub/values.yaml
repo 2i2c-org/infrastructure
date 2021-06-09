@@ -104,7 +104,7 @@ jupyterhub:
       hub.jupyter.org/node-purpose: user
     image:
       name: set_automatically_by_automation
-      tag: 0d5aa48
+      tag: e3bbe25
     storage:
       type: static
       static:
