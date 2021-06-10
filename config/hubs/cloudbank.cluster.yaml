@@ -335,9 +335,7 @@ hubs:
                 - nfguebels@pipeline.sbcc.edu
               admin_users: *sbcc_users
   - name: mills
-    domain:
-      - mills.cloudbank.2i2c.cloud
-      - datahub.mills.edu
+    domain: datahub.mills.edu
     template: basehub
     auth0:
       connection: google-oauth2

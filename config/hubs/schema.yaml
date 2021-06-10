@@ -16,14 +16,14 @@ properties:
       Cloud provider this cluster is running on. Used to perform
       authentication against the cluster. Currently supports gcp
       and raw kubeconfig files.
-    enum: 
+    enum:
       - gcp
       - kubeconfig
   kubeconfig:
     type: object
     description: |
       Configuration to connect to a cluster purely via a kubeconfig
-      file. 
+      file.
     additionalProperties: false
     properties:
       file:
@@ -83,28 +83,22 @@ properties:
               Name of the hub. This will be used to determine
               the namespace the hub is deployed to
           domain:
-            anyOf:
-              - type: string 
-                description: |
-                  Domain the hub should be running on. This domain should resolve
-                  to the IP of the ingress controller on the cluster - most likely
-                  via a wildcard DNS entry. 
+            type: string
+            description: |
+              Domain the hub should be running on. This domain should resolve
+              to the IP of the ingress controller on the cluster - most likely
+              via a wildcard DNS entry.
 
-                  For example, there's a entry for '*.pilot.2i2c.cloud' pointing to
-                  the ingress controller of the cluster running hubs in `2i2c.cluster.yaml`.
-                  Similar for '*.cloudbank.2i2c.cloud', etc.
-              - type: array
-                description: |
-                  Multiple domain names that can resolve to this hub. Primarily
-                  used as a way to redirect old hub URLs to new - should be replaced
-                  with something nicer.
+              For example, there's a entry for '*.pilot.2i2c.cloud' pointing to
+              the ingress controller of the cluster running hubs in `2i2c.cluster.yaml`.
+              Similar for '*.cloudbank.2i2c.cloud', etc.
           template:
             type: string
             description: |
               Template to deploy the hub with. This refers to a directory under
               `hub-templates` containing a helm chart with base values and dependencies
               that determine the kind of hub deployed.
-            enum: 
+            enum:
               - basehub
               - daskhub
           auth0:
