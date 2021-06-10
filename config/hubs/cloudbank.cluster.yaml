@@ -4,8 +4,18 @@ provider: gcp
 gcp:
   key: secrets/cloudbank.json
   project: cb-1003-1696
-  cluster: cloudbank-2i2c-cluster
+  cluster: cb-cluster
   zone: us-central1-b
+support:
+  config:
+    grafana:
+      ingress:
+        hosts:
+          - grafana.cloudbank.2i2c.cloud
+        tls:
+          - secretName: grafana-tls
+            hosts:
+              - grafana.cloudbank.2i2c.cloud
 hubs:
   - name: spelman
     domain: spelman.cloudbank.2i2c.cloud
