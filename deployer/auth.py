@@ -82,7 +82,7 @@ class KeyProvider:
                 client['client_id'],
                 {
                     # Overwrite any other logout URL - users should only land on
-                    # the hug home page after logging out.
+                    # the hub home page after logging out.
                     'allowed_logout_urls': [logout_url]
                 }
             )
