@@ -10,6 +10,17 @@ properties:
       {name}.cluster.yaml
   image_repo:
     type: string
+  support:
+    type: object
+    additionalProperties: false
+    description: |
+      Configuration for support components (ingress, monitoring, etc)
+      to be enabled for this cluster.
+    properties:
+      config:
+        type: object
+        description: |
+          Additional YAML values to be deployed with the support chart
   provider:
     type: string
     description: |
