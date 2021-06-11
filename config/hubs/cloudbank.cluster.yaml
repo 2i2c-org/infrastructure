@@ -452,8 +452,7 @@ hubs:
                 - sanjay.dorairaj@sjcc.edu
               admin_users: *sjcc_users
   - name: avc
-    domain:
-      - avc.cloudbank.2i2c.cloud
+    domain: avc.cloudbank.2i2c.cloud
     template: basehub
     auth0:
       connection: google-oauth2
