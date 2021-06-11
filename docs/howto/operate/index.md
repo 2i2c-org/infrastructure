@@ -16,4 +16,5 @@ manual-deploy.md
 grafana.md
 node-administration.md
 move-hub.md
+add-aws-hub.md
 ```
