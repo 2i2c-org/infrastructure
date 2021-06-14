@@ -242,9 +242,6 @@ hubs:
               - georgiana.dolocan@gmail.com
               - ericvd@gmail.com
               - sean.smorris@berkeley.edu
-            JupyterHub:
-              # No more than 100 users at a time
-              active_server_limit: 100
         cull:
           # Cull after 30min of inactivity
           every: 300
