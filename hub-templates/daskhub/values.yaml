@@ -13,6 +13,8 @@ basehub:
       hook:
         enabled: false
     singleuser:
+      # Almost everyone using dask by default wants JupyterLab
+      defaultUrl: /lab
       extraLabels:
          hub.jupyter.org/network-access-proxy-http: "true"
 
@@ -178,8 +180,8 @@ dask-gateway:
                     "environment": options.environment,
                 }
             return Options(
-                Integer("worker_cores", 2, min=1, max=16, label="Worker Cores"),
-                Float("worker_memory", 4, min=1, max=32, label="Worker Memory (GiB)"),
+                Integer("worker_cores", 2, min=1, label="Worker Cores"),
+                Float("worker_memory", 4, min=1, label="Worker Memory (GiB)"),
                 # The default image is set via DASK_GATEWAY__CLUSTER__OPTIONS__IMAGE env variable
                 String("image", label="Image"),
                 Mapping("environment", {}, label="Environment Variables"),

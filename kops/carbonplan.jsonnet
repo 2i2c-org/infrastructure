@@ -6,7 +6,9 @@ local nodes = [
     {spec+: { machineType: "r5.large" }}, // 2CPU, 16G RAM
     {spec+: { machineType: "r5.xlarge" }}, // 4CPU, 32G RAM
     {spec+: { machineType: "r5.2xlarge" }}, // 8CPU, 64G RAM
-    {spec+: { machineType: "r5.8xlarge" }} // 32CPU, 256 RAM
+    {spec+: { machineType: "r5.8xlarge" }}, // 32CPU, 256 RAM
+    {spec+: { machineType: "x1.16xlarge" }}, // 64CPU, 976G RAM
+    {spec+: { machineType: "x1.32xlarge" }} // 128CPU, 1952G RAM
 ];
 
 local data = {
