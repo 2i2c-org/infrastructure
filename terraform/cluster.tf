@@ -108,7 +108,11 @@ resource "google_container_node_pool" "notebook" {
 
   for_each = var.notebook_nodes
 
-  initial_node_count = 0
+  # WARNING: Do not change this value, it will cause the nodepool
+  # to be destroyed & re-created. If you want to increase number of
+  # nodes in a node pool, set the min count to that number and then
+  # scale the pool manually.
+  initial_node_count = each.value.min
   autoscaling {
     min_node_count = each.value.min
     max_node_count = each.value.max
@@ -163,6 +167,10 @@ resource "google_container_node_pool" "dask_worker" {
   # Default to same config as notebook nodepools config
   for_each = length(var.dask_nodes) == 0 ? var.notebook_nodes : var.dask_nodes
 
+  # WARNING: Do not change this value, it will cause the nodepool
+  # to be destroyed & re-created. If you want to increase number of
+  # nodes in a node pool, set the min count to that number and then
+  # scale the pool manually.
   initial_node_count = 0
   autoscaling {
     min_node_count = each.value.min
