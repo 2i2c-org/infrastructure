@@ -62,43 +62,63 @@ html_theme_options = {
 from yaml import safe_load
 import pandas as pd
 from pathlib import Path
+import subprocess
 
-# Grab the latest list of clusters defined in pilot-hubs/
-clusters = Path("../config/hubs").glob("*")
-# Add list of repos managed outside pilot-hubs
-hub_list = [{
-    'name': 'University of Toronto',
-    'domain': 'jupyter.utoronto.ca',
-    'id': 'utoronto',
-    'template': 'base-hub ([deployment repo](https://github.com/utoronto-2i2c/jupyterhub-deploy/))'
-}]
-for cluster_info in clusters:
-    if "schema" in cluster_info.name:
-        continue
-    # For each cluster, grab it's YAML w/ the config for each hub
-    yaml = cluster_info.read_text()
-    cluster = safe_load(yaml)
+def render_hubs():
+    # Grab the latest list of clusters defined in pilot-hubs/
+    clusters = Path("../config/hubs").glob("*")
+    # Add list of repos managed outside pilot-hubs
+    hub_list = [{
+        'name': 'University of Toronto',
+        'domain': 'jupyter.utoronto.ca',
+        'id': 'utoronto',
+        'template': 'base-hub ([deployment repo](https://github.com/utoronto-2i2c/jupyterhub-deploy/))'
+    }]
+    for cluster_info in clusters:
+        if "schema" in cluster_info.name:
+            continue
+        # For each cluster, grab it's YAML w/ the config for each hub
+        yaml = cluster_info.read_text()
+        cluster = safe_load(yaml)
 
-    # For each hub in cluster, grab its metadata and add it to the list
-    for hub in cluster['hubs']:
-        config = hub['config']
-        # Config is sometimes nested
-        if 'basehub' in config:
-            hub_config = config['basehub']['jupyterhub']
-        else:
-            hub_config = config['jupyterhub']
-        # Domain can be a list
-        if isinstance(hub['domain'], list):
-            hub['domain'] = hub['domain'][0]
+        # For each hub in cluster, grab its metadata and add it to the list
+        for hub in cluster['hubs']:
+            config = hub['config']
+            # Config is sometimes nested
+            if 'basehub' in config:
+                hub_config = config['basehub']['jupyterhub']
+            else:
+                hub_config = config['jupyterhub']
+            # Domain can be a list
+            if isinstance(hub['domain'], list):
+                hub['domain'] = hub['domain'][0]
 
-        hub_list.append({
-            'name': hub_config['custom']['homepage']['templateVars']['org']['name'],
-            'domain': f"[{hub['domain']}](https://{hub['domain']})",
-            "id": hub['name'],
-            "template": hub['template'],
-        })
-df = pd.DataFrame(hub_list)
-path_tmp = Path("tmp")
-path_tmp.mkdir(exist_ok=True)
-path_table = path_tmp / "hub-table.csv"
-df.to_csv(path_table, index=None)
+            hub_list.append({
+                'name': hub_config['custom']['homepage']['templateVars']['org']['name'],
+                'domain': f"[{hub['domain']}](https://{hub['domain']})",
+                "id": hub['name'],
+                "template": hub['template'],
+            })
+    df = pd.DataFrame(hub_list)
+    path_tmp = Path("tmp")
+    path_tmp.mkdir(exist_ok=True)
+    path_table = path_tmp / "hub-table.csv"
+    df.to_csv(path_table, index=None)
+
+
+def render_tfdocs():
+    tf_path = Path('../terraform')
+    # Output path is relative to terraform directory
+    output_path = Path('../docs/topic/terraform/reference.md')
+
+    # Template for output file is in ../terraform/.terraform-docs.yml
+    subprocess.check_call([
+        'terraform-docs', 'markdown',
+        f"--output-file={output_path}",
+        str(tf_path)
+    ])
+
+
+
+render_hubs()
+render_tfdocs()
