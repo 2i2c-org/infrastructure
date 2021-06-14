@@ -13,6 +13,8 @@ basehub:
       hook:
         enabled: false
     singleuser:
+      # Almost everyone using dask by default wants JupyterLab
+      defaultUrl: /lab
       extraLabels:
          hub.jupyter.org/network-access-proxy-http: "true"
 
