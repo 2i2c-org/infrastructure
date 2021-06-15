@@ -3,6 +3,7 @@ channels:
 dependencies:
 - go-terraform-docs
 - pip
+- python=3.8
 - pip:
   - myst-parser[sphinx,linkify]
   - sphinx-book-theme
