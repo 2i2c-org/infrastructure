@@ -140,7 +140,7 @@ kubectl -n kube-system patch deployment kube-dns-autoscaler --type json --patch 
 
 ### Create an EFS for your cluster
 
-1. Install boto3 with pip or conda
+1. Install `boto3` with pip or conda
 
 2. Create an [EFS](https://aws.amazon.com/efs/) file system for this hub with
 
