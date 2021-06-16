@@ -145,7 +145,7 @@ kubectl -n kube-system patch deployment kube-dns-autoscaler --type json --patch 
 2. Create an [EFS](https://aws.amazon.com/efs/) file system for this hub with
 
 ```bash
-python3 setup-efs.py <cluster_name>hub.k8s.local us-east-2
+python3 setup-efs.py <cluster_name>hub.k8s.local <region-of-cluster>
 ```
 
 This will output an fs-<xxxxxxxx> id. You should use that value 
