@@ -123,7 +123,9 @@ But validation will not pass until this next section is done.
 
 ### Apply workaround to run CoreDNS on the master node
 
-More details on this [issue](https://github.com/kubernetes/kops/issues/11199)
+```{seealso}
+More details [in this issue](https://github.com/kubernetes/kops/issues/11199)
+```
 
 1. After the failed validation finished (you can run these command in another terminal 
 if you are impatient ;-) patch CoreDNS with
