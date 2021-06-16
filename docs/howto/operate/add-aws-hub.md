@@ -56,8 +56,7 @@ store.
 ### Create and render a kops config file
 
 You can use 
-[one](https://github.com/2i2c-org/pilot-hubs/blob/master/kops/farallon.jsonnet) of the
-existing [jsonnet](https://jsonnet.org/) specifications as a "template" for your cluster.
+of the existing [jsonnet](https://jsonnet.org/) specifications as a "template" for your cluster (for example, [here is the Farallon Institute specification](https://github.com/2i2c-org/pilot-hubs/blob/master/kops/farallon.jsonnet)).
 You may need to tweak zones, names and instances, the rest is boilerplate to create a
 kops-based cluster accordingly to some specification already outlined in 
 [#28](https://github.com/2i2c-org/pangeo-hubs/issues/28). Once you have your jsonnet
