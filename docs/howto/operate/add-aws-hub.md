@@ -169,9 +169,7 @@ sops -i -e secrets/<cluster_name>.yaml
 
 4. Generate a new config file for your cluster
 
-You can use 
-[one](https://github.com/2i2c-org/pilot-hubs/blob/master/config/hubs/farallon.cluster.yaml)
-of the existing cluster config files as a "template" for your cluster.
+You can use of the existing cluster config files as a "template" for your cluster (for example, [here is the Farallon Institute config file](https://github.com/2i2c-org/pilot-hubs/blob/master/config/hubs/farallon.cluster.yaml)).
 You may need to tweak names, `serverIP` and singleuser's images references. Make sure 
 you set up the `profileList` section to be compatible with your kops cluster (ie. match 
 the `node_selector` with the proper `instance-type`).
