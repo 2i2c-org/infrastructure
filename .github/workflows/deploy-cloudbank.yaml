@@ -3,6 +3,13 @@ name: Deploy and Test cloudbank hubs
 on:
   push:
     branches: [ master ]
+    paths:
+      - deployer/**
+      - hub-templates/**
+      - requirements.txt
+      - dev-requirements.txt
+      - config/secrets.yaml
+      - config/hubs/cloudbank.cluster.yaml
 
 jobs:
   build:
