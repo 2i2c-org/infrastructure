@@ -127,7 +127,7 @@ But validation will not pass until this next section is done.
 More details [in this issue](https://github.com/kubernetes/kops/issues/11199)
 ```
 
-1. After the failed validation finished (you can run these command in another terminal 
+1. After the failed validation finished (you can run these commands in another terminal 
 if you are impatient ;-) patch CoreDNS with
 
 ```bash
