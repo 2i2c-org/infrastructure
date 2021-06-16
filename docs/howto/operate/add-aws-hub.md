@@ -49,8 +49,7 @@ aws s3 mb $KOPS_STATE_STORE --region <region>
 ```
 
 ```{note}
-Kops [recommends](https://kops.sigs.k8s.io/getting_started/aws/#cluster-state-storage)
-versioning the S3 bucket in case you ever need to revert or recover a previous state
+Kops [recommends versioning the S3 bucket](https://kops.sigs.k8s.io/getting_started/aws/#cluster-state-storage) in case you ever need to revert or recover a previous state
 store.
 ```
 
