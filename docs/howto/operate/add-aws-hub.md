@@ -19,8 +19,7 @@ discussions outlined in [#431](https://github.com/2i2c-org/pilot-hubs/issues/431
 local environment and prepare `sops` to encrypt and decrypt files.
 
 2. Install the awscli tool (you can use pip or conda to install it in the environment)
-and configure it to use the provided AWS user credentials. Follow this
-[guide](https://docs.aws.amazon.com/cli/latest/userguide/cli-configure-quickstart.html#cli-configure-quickstart-config)
+and configure it to use the provided AWS user credentials. [Follow this guide](https://docs.aws.amazon.com/cli/latest/userguide/cli-configure-quickstart.html#cli-configure-quickstart-config)
 for a quick configuration process.
 
 ```{note}
