@@ -100,7 +100,7 @@ You will need to relocate and encrypt the private key before pushing your change
 repository.
 ```
 
-3. Build the cluster with (notice that you are passing the ssh public key you just 
+3. Build the cluster with the following command (notice that you are passing the ssh public key you just 
 created in the previous step)
 
 ```bash
