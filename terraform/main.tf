@@ -22,7 +22,7 @@ resource "google_project_iam_custom_role" "identify_project_role" {
   role_id     = replace("${var.prefix}_user_sa_role", "-", "_")
   project     = var.project_id
   title       = "Identify as project role for users in ${var.prefix}"
-  description = "A description"
+  description = "Minimal role for hub users on ${var.prefix} to identify as current project"
   permissions = ["serviceusage.services.use"]
 }
 
