@@ -3,6 +3,13 @@ name: Deploy and Test 2i2c hubs
 on:
   push:
     branches: [ master ]
+    paths:
+      - deployer/**
+      - hub-templates/**
+      - requirements.txt
+      - dev-requirements.txt
+      - config/secrets.yaml
+      - config/hubs/2i2c.cluster.yaml
 
 jobs:
   build:
