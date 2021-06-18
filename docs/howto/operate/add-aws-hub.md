@@ -28,7 +28,7 @@ privileges. We will probably explore fine-graining the permissions actually need
 in the short-term.
 ```
 
-3. Export some helpful AWS environment variables (because "aws configure" doesn't export
+3. Export some helpful AWS environment variables (because `aws configure` doesn't export
 these environments vars for kops to use, so we do it manually).
 
 ```bash
