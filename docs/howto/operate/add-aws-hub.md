@@ -95,11 +95,6 @@ mv ssh-key <cluster_name>.key
 mv ssh-key.pub <cluster_name>.key.pub
 ```
 
-```{note}
-You will need to relocate and encrypt the private key before pushing your changes to the
-repository.
-```
-
 3. Build the cluster with the following command (notice that you are passing the ssh public key you just 
 created in the previous step)
 
@@ -120,6 +115,23 @@ kops validate cluster --wait 10m
 ```
 
 But validation will not pass until this next section is done.
+
+4. Relocate and encrypt the generated keys
+
+After creating the cluster, you will need to relocate the public and private keys with
+
+```bash
+mv <cluster_name>.key ssh-keys/<cluster_name>.key
+mv <cluster_name>.key.pub ssh-keys/<cluster_name>.key.pub
+```
+
+and encrypt the private key with
+
+```bash
+sops -i -e ssh-keys/<cluster_name>.key
+```
+
+before pushing your changes to the repository.
 
 ### Apply workaround to run CoreDNS on the master node
 
