@@ -107,14 +107,11 @@ The `--admin` at the end will modify your `~/.kube/config` file to point to the 
 cluster.
 ```
 
-If everything went as expected, the cluster will be created after some minutes, and you 
-should be able to validate it with
+If everything went as expected, the cluster will be created after some minutes.
 
-```bash
-kops validate cluster --wait 10m
+```{note}
+If you try to validate the cluster, validation will not pass until this next section is done.
 ```
-
-But validation will not pass until this next section is done.
 
 4. Relocate and encrypt the generated keys
 
@@ -139,14 +136,19 @@ before pushing your changes to the repository.
 More details [in this issue](https://github.com/kubernetes/kops/issues/11199)
 ```
 
-1. After the failed validation finished (you can run these commands in another terminal 
-if you are impatient ;-) patch CoreDNS with
+1. Patch CoreDNS with the following two commands
 
 ```bash
 kubectl -n kube-system patch deployment kube-dns --type json --patch '[{"op": "add", "path": "/spec/template/spec/tolerations", "value": [{"key": "node-role.kubernetes.io/master", "effect": "NoSchedule"}]}]'
 deployment.apps/kube-dns patched
 
 kubectl -n kube-system patch deployment kube-dns-autoscaler --type json --patch '[{"op": "add", "path": "/spec/template/spec/tolerations", "value": [{"key": "node-role.kubernetes.io/master", "effect": "NoSchedule"}]}]'
+```
+
+2. After applying those patches, you should be able to validate the cluster with
+
+```bash
+kops validate cluster --wait 10m
 ```
 
 ### Create an EFS for your cluster
