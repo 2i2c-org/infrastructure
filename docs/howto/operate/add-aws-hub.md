@@ -46,6 +46,7 @@ export AWS_SECRET_ACCESS_KEY=$(aws configure get aws_secret_access_key)
 ``` bash
 export KOPS_STATE_STORE=s3://2i2c-<cluster-name>-kops-state
 aws s3 mb $KOPS_STATE_STORE --region <region>
+aws s3api put-bucket-versioning --bucket $KOPS_STATE_STORE --versioning-configuration Status=Enabled
 ```
 
 ```{note}
