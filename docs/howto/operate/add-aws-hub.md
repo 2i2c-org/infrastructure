@@ -92,8 +92,6 @@ kops create -f <cluster_name>.kops.yaml
 
 ```bash
 ssh-keygen -f <cluster-name>.key
-mv ssh-key <cluster_name>.key
-mv ssh-key.pub <cluster_name>.key.pub
 ```
 
 3. Build the cluster with the following command (notice that you are passing the ssh public key you just 
@@ -120,7 +118,6 @@ After creating the cluster, you will need to relocate the public and private key
 
 ```bash
 mv <cluster_name>.key ssh-keys/<cluster_name>.key
-mv <cluster_name>.key.pub ssh-keys/<cluster_name>.key.pub
 ```
 
 and encrypt the private key with
@@ -130,6 +127,10 @@ sops -i -e ssh-keys/<cluster_name>.key
 ```
 
 before pushing your changes to the repository.
+
+```{note}
+You can always regenerate the public key with `ssh-keygen -y -f <cluster-name>.key`
+```
 
 ### Apply workaround to run CoreDNS on the master node
 
