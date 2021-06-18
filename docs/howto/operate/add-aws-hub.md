@@ -91,7 +91,7 @@ kops create -f <cluster_name>.kops.yaml
 2. You will need to a ssh key pair before actually creating the cluster
 
 ```bash
-ssh-keygen -f ssh-key
+ssh-keygen -f <cluster-name>.key
 mv ssh-key <cluster_name>.key
 mv ssh-key.pub <cluster_name>.key.pub
 ```
