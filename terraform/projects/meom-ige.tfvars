@@ -39,7 +39,14 @@ notebook_nodes = {
     min : 0,
     max : 20,
     machine_type : "e2-standard-32"
-  }
+  },
+  "huge" : {
+    min : 0,
+    max : 20,
+    # e2 instances only go upto 32 cores
+    machine_type : "n2-standard-64"
+  },
+
 }
 
 user_buckets = [

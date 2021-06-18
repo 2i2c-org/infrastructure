@@ -78,6 +78,13 @@ hubs:
                   mem_guarantee: 115G
                   node_selector:
                     node.kubernetes.io/instance-type: e2-standard-32
+              - display_name: "Huge"
+                description: "~64 CPU, ~256G RAM"
+                kubespawner_override:
+                  mem_limit: 256G
+                  mem_guarantee: 230G
+                  node_selector:
+                    node.kubernetes.io/instance-type: n2-standard-64
             defaultUrl: /lab
             image:
               name: pangeo/pangeo-notebook
