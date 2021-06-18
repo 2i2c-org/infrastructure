@@ -211,6 +211,7 @@ Create a CNAME record for `staging.foo.2i2c.cloud` and point it to the AWS exter
 
 ```{note}
 Wait for about 10 minutes to make sure the DNS records actually resolves properly.
+If you are deploying `prod` hub as well, you will need to repeat this step for `prod`.
 ```
 
 8. Set `proxy.https.enabled` to `true` in the cluster config file so we can get HTTPS.
