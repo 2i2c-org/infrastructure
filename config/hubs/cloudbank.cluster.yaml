@@ -386,8 +386,7 @@ hubs:
                 - wang@mills.edu
               username_pattern: '^(.+@mills\.edu|yuvipanda@gmail\.com|choldgraf@gmail\.com|georgiana\.dolocan@gmail\.com|aculich@berkeley\.edu|jpercy@berkeley\.edu|deployment-service-check)$'
   - name: palomar
-    domain:
-      - palomar.cloudbank.2i2c.cloud
+    domain: palomar.cloudbank.2i2c.cloud
     template: basehub
     auth0:
       connection: google-oauth2
@@ -422,8 +421,7 @@ hubs:
                 - PChen@palomar.edu
               admin_users: *palomar_users
   - name: sjcc
-    domain:
-      - sjcc.cloudbank.2i2c.cloud
+    domain: sjcc.cloudbank.2i2c.cloud
     template: basehub
     auth0:
       connection: google-oauth2
