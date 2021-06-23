@@ -50,7 +50,7 @@ to isolate them from each other.
 For hub users to access cloud resources (like storage buckets), they will need
 to be authorized via a [GCP ServiceAccount](https://cloud.google.com/iam/docs/service-accounts).
 This is different from a [Kubernetes ServiceAccount](https://kubernetes.io/docs/tasks/configure-pod-container/configure-service-account/),
-which is used to authenticate and authorize accss to kubernetes resources (like spawning pods).
+which is used to authenticate and authorize access to kubernetes resources (like spawning pods).
 
 For dask hubs, we want to provide users with write access to at least one storage
 bucket they can use for temporary data storage. User pods need to be given access to
