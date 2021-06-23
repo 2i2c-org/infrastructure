@@ -61,7 +61,7 @@ class KeyProvider:
         """
         Ensure client has correct callback URL
         """
-        if client['callbacks'] != [callback_url]:
+        if 'callbacks' not in client or client['callbacks'] != [callback_url]:
             self.auth0.clients.update(
                 client['client_id'],
                 {
@@ -77,7 +77,7 @@ class KeyProvider:
             )
 
     def _ensure_client_logout_url(self, client, logout_url):
-        if client['allowed_logout_urls'] != [logout_url]:
+        if 'allowed_logout_urls' not in client or client['allowed_logout_urls'] != [logout_url]:
             self.auth0.clients.update(
                 client['client_id'],
                 {
