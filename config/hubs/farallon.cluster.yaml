@@ -58,7 +58,7 @@ hubs:
                 subPath: "{username}"
             image:
               name: 677861182063.dkr.ecr.us-east-2.amazonaws.com/2i2c-hub/user-image
-              tag: 9cd76f1
+              tag: "5115e56"
             profileList:
               # The mem-guarantees are here so k8s doesn't schedule other pods
               # on these nodes.
