@@ -22,7 +22,7 @@ title: "[Hub] - [Hub name]"
 
 # Important Information
 
-- **Link to leads issue**: <!--  link to the leads issue that generated this hub (see https://github.com/2i2c-org/leads/issues) -->
+- **Link to < REPO > issue**: <!--  link to the leads issue that generated this hub (see < LINK >) -->
 - **Hub config name**: <!--  name of config entry, once it is created under config/hubs -->
 - **Community champion**: <!-- name of community champion -->
 - **Hub start date**: <!-- hub start date (does the hub need to start at a certain date?) -->
