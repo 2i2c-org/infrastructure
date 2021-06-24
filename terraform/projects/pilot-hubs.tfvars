@@ -1,10 +1,13 @@
-prefix     = "cb"
-project_id = "cb-1003-1696"
+prefix     = "pilot-hubs"
+project_id = "two-eye-two-see"
 
 core_node_machine_type = "n1-highmem-4"
 
+# Multi-tenant cluster, network policy is required to enforce separation between hubs
 enable_network_policy    = true
-config_connector_enabled = false
+
+# Some hubs want a storage bucket, so we need to have config connector enabled
+config_connector_enabled = true
 
 notebook_nodes = {
   "user" : {

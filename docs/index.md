@@ -42,6 +42,8 @@ Topic guides go more in-depth on a particular topic.
 topic/config.md
 topic/hub-templates.md
 topic/storage-layer.md
+topic/terraform.md
+topic/cluster-design.md
 ```
 
 ## Reference

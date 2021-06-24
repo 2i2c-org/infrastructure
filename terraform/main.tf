@@ -5,155 +5,37 @@ terraform {
   }
 }
 
-module "service_accounts" {
-  source        = "terraform-google-modules/service-accounts/google"
-  version       = "~> 2.0"
-  project_id    = var.project_id
-  prefix        = var.prefix
-  generate_keys = true
-  names         = ["cd-sa"]
-  project_roles = [
-    "${var.project_id}=>roles/container.admin",
-    "${var.project_id}=>roles/artifactregistry.writer",
-    # FIXME: This is way too much perms just to ssh into a node
-    "${var.project_id}=>roles/compute.instanceAdmin.v1"
-  ]
+// Service account used by all the nodes and pods in our cluster
+resource "google_service_account" "cluster_sa" {
+  account_id   = "${var.prefix}-cluster-sa"
+  display_name = "Cluster SA for ${var.prefix}"
+  project      = var.project_id
 }
 
-output "ci_deployer_key" {
-  value     = module.service_accounts.keys["cd-sa"]
-  sensitive = true
+// To access GCS buckets with requestor pays, the calling code needs
+// to have serviceusage.services.use permission. We create a role
+// granting just this to provide the cluster SA, so user pods can
+// use it. See https://cloud.google.com/storage/docs/requester-pays
+// for more info
+resource "google_project_iam_custom_role" "identify_project_role" {
+  // Role names can't contain -, so we swap them out. BOO
+  role_id     = replace("${var.prefix}_user_sa_role", "-", "_")
+  project     = var.project_id
+  title       = "Identify as project role for users in ${var.prefix}"
+  description = "Minimal role for hub users on ${var.prefix} to identify as current project"
+  permissions = ["serviceusage.services.use"]
 }
 
-resource "google_artifact_registry_repository" "container_repository" {
-  provider = google-beta
-
-  location      = var.region
-  repository_id = "low-touch-hubs"
-  format        = "DOCKER"
-  project       = var.project_id
-}
-
-// Give the GKE service account access to our artifact registry docker repo
-resource "google_project_iam_member" "project" {
+resource "google_project_iam_member" "identify_project_binding" {
   project = var.project_id
-  role    = "roles/artifactregistry.reader"
-  member  = "serviceAccount:${module.gke.service_account}"
+  role    = google_project_iam_custom_role.identify_project_role.name
+  member  = "serviceAccount:${google_service_account.cluster_sa.email}"
 }
 
+resource "google_project_iam_member" "cluster_sa_roles" {
+  for_each = var.cluster_sa_roles
 
-module "gke" {
-  source                     = "terraform-google-modules/kubernetes-engine/google"
-  project_id                 = var.project_id
-  name                       = "${var.prefix}-cluster"
-  regional                   = var.regional_cluster
-  region                     = var.region
-  zones                      = [var.zone]
-  network                    = "default"
-  subnetwork                 = "default"
-  ip_range_pods              = ""
-  ip_range_services          = ""
-  http_load_balancing        = false
-  horizontal_pod_autoscaling = false
-  network_policy             = true
-  # We explicitly set up a core pool, so don't need the default
-  remove_default_node_pool = true
-  kubernetes_version       = "1.19.9-gke.1400"
-
-
-  node_pools = [
-    {
-      name               = "core-pool"
-      machine_type       = var.core_node_machine_type
-      min_count          = 1
-      max_count          = var.core_node_max_count
-      local_ssd_count    = 0
-      disk_size_gb       = var.core_node_disk_size_gb
-      disk_type          = "pd-standard"
-      image_type         = "COS"
-      auto_repair        = true
-      auto_upgrade       = false
-      preemptible        = false
-      initial_node_count = 1
-      # Let's pin this so we don't upgrade each time terraform runs
-      version = "1.19.9-gke.1400"
-    },
-    {
-      name               = "user-pool"
-      machine_type       = var.user_node_machine_type
-      min_count          = 0
-      max_count          = var.user_node_max_count
-      local_ssd_count    = 0
-      disk_size_gb       = 100
-      disk_type          = "pd-ssd"
-      image_type         = "COS"
-      auto_repair        = true
-      auto_upgrade       = false
-      preemptible        = false
-      initial_node_count = 0
-      # Let's pin this so we don't upgrade each time terraform runs
-      version = "1.19.9-gke.1400"
-    },
-    {
-      name            = "dask-worker-pool"
-      machine_type    = var.dask_worker_machine_type
-      min_count       = 0
-      max_count       = 10
-      local_ssd_count = 0
-      disk_size_gb    = 100
-      # Fast startup is important here, so we get fast SSD disks
-      # This pulls in user images much faster
-      disk_type          = "pd-ssd"
-      image_type         = "COS"
-      auto_repair        = true
-      auto_upgrade       = false
-      preemptible        = true
-      initial_node_count = 0
-      # Let's pin this so we don't upgrade each time terraform runs
-      version = "1.19.9-gke.1400"
-    },
-  ]
-
-  node_pools_oauth_scopes = {
-    all = [
-      # FIXME: Is this the minimal?
-      #
-      "https://www.googleapis.com/auth/cloud-platform",
-    ]
-  }
-
-  node_pools_labels = {
-    all = {}
-
-    core-pool = {
-      default-node-pool              = true
-      "hub.jupyter.org/pool-name"    = "core-pool",
-      "hub.jupyter.org/node-purpose" = "core",
-      "k8s.dask.org/node-purpose"    = "core"
-    }
-    user-pool = {
-      "hub.jupyter.org/pool-name"    = "user-pool"
-      "hub.jupyter.org/node-purpose" = "user",
-      "k8s.dask.org/node-purpose"    = "scheduler"
-    }
-    dask-worker-pool = {
-      "hub.jupyter.org/pool-name" = "dask-worker-pool"
-      "k8s.dask.org/node-purpose" = "worker"
-    }
-  }
-
-  node_pools_taints = {
-    all = []
-
-    user-pool = [{
-      key    = "hub.jupyter.org_dedicated"
-      value  = "user"
-      effect = "NO_SCHEDULE"
-    }]
-    dask-worker-pool = [{
-      key    = "k8s.dask.org_dedicated"
-      value  = "worker"
-      effect = "NO_SCHEDULE"
-    }]
-  }
+  project = var.project_id
+  role    = each.value
+  member  = "serviceAccount:${google_service_account.cluster_sa.email}"
 }

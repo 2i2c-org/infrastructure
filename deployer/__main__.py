@@ -29,6 +29,23 @@ def build(cluster_name):
             cluster.build_image()
 
 
+def deploy_support(cluster_name):
+    """
+    Deploy support components to a cluster
+    """
+
+    # Validate our config with JSON Schema first before continuing
+    validate(cluster_name)
+
+
+    config_file_path = Path(os.getcwd()) / "config/hubs" / f'{cluster_name}.cluster.yaml'
+    with open(config_file_path) as f:
+        cluster = Cluster(yaml.load(f))
+
+    if cluster.support:
+        with cluster.auth():
+            cluster.deploy_support()
+
 def deploy(cluster_name, hub_name, skip_hub_health_test, config_path):
     """
     Deploy one or more hubs in a given cluster
@@ -97,6 +114,7 @@ def main():
     build_parser = subparsers.add_parser("build")
     deploy_parser = subparsers.add_parser("deploy")
     validate_parser = subparsers.add_parser("validate")
+    deploy_support_parser = subparsers.add_parser("deploy-support")
 
     build_parser.add_argument("cluster_name")
 
@@ -107,6 +125,8 @@ def main():
 
     validate_parser.add_argument("cluster_name")
 
+    deploy_support_parser.add_argument("cluster_name")
+
     args = argparser.parse_args()
 
     if args.action == "build":
@@ -115,6 +135,8 @@ def main():
         deploy(args.cluster_name, args.hub_name, args.skip_hub_health_test, args.config_path)
     elif args.action == 'validate':
         validate(args.cluster_name)
+    elif args.action == 'deploy-support':
+        deploy_support(args.cluster_name)
     else:
         # Print help message and exit when no arguments are passed
         # FIXME: Is there a better way to do this?

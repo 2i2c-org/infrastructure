@@ -1,0 +1,144 @@
+name: meom-ige
+provider: gcp
+gcp:
+  key: secrets/meom.json
+  project: meom-ige-cnrs
+  cluster: meom-ige-cluster
+  zone: us-central1-b
+hubs:
+  - name: staging
+    domain: staging.meom-ige.2i2c.cloud
+    template: daskhub
+    auth0:
+      connection: github
+    config: &meomConfig
+      basehub:
+        nfsPVC:
+          nfs:
+            # from https://docs.aws.amazon.com/efs/latest/ug/mounting-fs-nfs-mount-settings.html
+            mountOptions:
+            - rsize=1048576
+            - wsize=1048576
+            - timeo=600
+            - soft # We pick soft over hard, so NFS lockups don't lead to hung processes
+            - retrans=2
+            - noresvport
+            serverIP: nfs-server-01
+            baseShareName: /export/home-01/homes/
+        jupyterhub:
+          custom:
+            homepage:
+              templateVars:
+                org:
+                  name: "SWOT Ocean Pangeo Team"
+                  logo_url: https://2i2c.org/media/logo.png
+                  url: https://meom-group.github.io/
+                designed_by:
+                  name: 2i2c
+                  url: https://2i2c.org
+                operated_by:
+                  name: 2i2c
+                  url: https://2i2c.org
+                funded_by:
+                  name: SWOT Ocean Pangeo Team
+                  url: https://meom-group.github.io/
+          singleuser:
+            extraEnv:
+              DATA_BUCKET: gcs://meom-ige-data
+              SCRATCH_BUCKET: 'gcs://meom-ige-scratch/$(JUPYTERHUB_USER)'
+            profileList:
+              # The mem-guarantees are here so k8s doesn't schedule other pods
+              # on these nodes. They need to be just under total allocatable
+              # RAM on a node, not total node capacity
+              - display_name: "Small"
+                description: "~2 CPU, ~8G RAM"
+                kubespawner_override:
+                  mem_limit: 8G
+                  mem_guarantee: 5.5G
+                  node_selector:
+                    node.kubernetes.io/instance-type: e2-standard-2
+              - display_name: "Medium"
+                description: "~8 CPU, ~32G RAM"
+                kubespawner_override:
+                  mem_limit: 32G
+                  mem_guarantee: 25G
+                  node_selector:
+                    node.kubernetes.io/instance-type: e2-standard-8
+              - display_name: "Large"
+                description: "~16 CPU, ~64G RAM"
+                kubespawner_override:
+                  mem_limit: 64G
+                  mem_guarantee: 55G
+                  node_selector:
+                    node.kubernetes.io/instance-type: e2-standard-16
+              - display_name: "Very Large"
+                description: "~32 CPU, ~128G RAM"
+                kubespawner_override:
+                  mem_limit: 128G
+                  mem_guarantee: 115G
+                  node_selector:
+                    node.kubernetes.io/instance-type: e2-standard-32
+              - display_name: "Huge"
+                description: "~64 CPU, ~256G RAM"
+                kubespawner_override:
+                  mem_limit: 256G
+                  mem_guarantee: 230G
+                  node_selector:
+                    node.kubernetes.io/instance-type: n2-standard-64
+            defaultUrl: /lab
+            image:
+              name: pangeo/pangeo-notebook
+              tag: 2021.02.19
+          scheduling:
+            userPlaceholder:
+              enabled: false
+              replicas: 0
+            userScheduler:
+              enabled: false
+          proxy:
+            service:
+              type: LoadBalancer
+            https:
+              enabled: true
+            chp:
+              resources:
+                requests:
+                  # FIXME: We want no guarantees here!!!
+                  # This is lowest possible value
+                  cpu: 0.01
+                  memory: 1Mi
+          hub:
+            resources:
+              requests:
+                # FIXME: We want no guarantees here!!!
+                # This is lowest possible value
+                cpu: 0.01
+                memory: 1Mi
+            config:
+              Authenticator:
+                allowed_users: &users
+                  - roxyboy
+                  - lesommer
+                  - auraoupa
+                  - yuvipanda
+                  - choldgraf
+                  - GeorgianaElena
+                admin_users: *users
+
+            allowNamedServers: true
+            networkPolicy:
+              # FIXME: For dask gateway
+              enabled: false
+            readinessProbe:
+              enabled: false
+      dask-gateway:
+          extraConfig:
+            idle: |
+              # timeout after 30 minutes of inactivity
+              c.KubeClusterConfig.idle_timeout = 1800
+  - name: prod
+    domain: meom-ige.2i2c.cloud
+    template: daskhub
+    auth0:
+      connection: github
+    config: *meomConfig
