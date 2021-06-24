@@ -11,7 +11,7 @@ the config of the old hub as much as possible.
 ## Copy home directories
 
 Next, copy home directory contents from the old cluster to the new cluster.
-This might not entirely be necessary - if they source and target cluster
+This might not entirely be necessary - if the source and target cluster
 are in the same GCP Project / AWS Account, we can just re-use the same
 home directory storage!
 
