@@ -120,23 +120,24 @@ RUN sed -i -e '/^R_LIBS_USER=/s/^/#/' /etc/R/Renviron && \
 
 USER ${NB_USER}
 
-COPY requirements.txt /tmp/
-
-RUN python3 -m pip install -r /tmp/requirements.txt
-
 # Set CRAN mirror to rspm before we install anything
 COPY Rprofile.site /usr/lib/R/etc/Rprofile.site
 # RStudio needs its own config
 COPY rsession.conf /etc/rstudio/rsession.conf
 
-# Install IRKernel
-RUN r -e "install.packages('IRkernel', version='1.1.1')" && \
-    r -e "IRkernel::installspec(prefix='${CONDA_DIR}')"
-
 # Install R packages, cleanup temp package download location
+# Install R packages before python packages, since these take longer to install
 COPY install.R /tmp/install.R
 RUN /tmp/install.R && \
  	rm -rf /tmp/downloaded_packages/ /tmp/*.rds
+
+COPY requirements.txt /tmp/
+
+RUN python3 -m pip install -r /tmp/requirements.txt
+
+# Install IRKernel
+RUN r -e "install.packages('IRkernel', version='1.1.1')" && \
+    r -e "IRkernel::installspec(prefix='${CONDA_DIR}')"
 
 # Set bash as shell in terminado.
 ADD jupyter_notebook_config.py  ${CONDA_PREFIX}/etc/jupyter/
