@@ -109,12 +109,13 @@ def render_hubs():
 def render_tfdocs():
     tf_path = Path('../terraform')
     # Output path is relative to terraform directory
-    output_path = Path('../docs/topic/terraform/reference.md')
+    output_path = Path('../docs/reference/terraform.md')
 
     # Template for output file is in ../terraform/.terraform-docs.yml
     subprocess.check_call([
         'terraform-docs', 'markdown',
         f"--output-file={output_path}",
+        f'--config={str(tf_path / ".terraform-docs.yml")}',
         str(tf_path)
     ])
 

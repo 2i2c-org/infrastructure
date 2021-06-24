@@ -55,5 +55,6 @@ Reference information about the pilot hubs.
 :maxdepth: 2
 
 reference/hubs
+reference/terraform.md
 incidents/index
 ```
