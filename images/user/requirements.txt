@@ -11,6 +11,7 @@ statsmodels
 nltk
 spacy
 geopandas
+altair
 # From https://github.com/utoronto-2i2c/jupyterhub-deploy/issues/29
 astroquery
 astropy
