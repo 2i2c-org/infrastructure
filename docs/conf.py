@@ -106,4 +106,19 @@ def render_hubs():
     df.to_csv(path_table, index=None)
 
 
+def render_tfdocs():
+    tf_path = Path('../terraform')
+    # Output path is relative to terraform directory
+    output_path = Path('../docs/topic/terraform/reference.md')
+
+    # Template for output file is in ../terraform/.terraform-docs.yml
+    subprocess.check_call([
+        'terraform-docs', 'markdown',
+        f"--output-file={output_path}",
+        str(tf_path)
+    ])
+
+
+
 render_hubs()
+render_tfdocs()
