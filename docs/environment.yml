@@ -1,7 +1,14 @@
-myst-parser[sphinx,linkify]
-sphinx-book-theme
-sphinx-panels
-sphinx-autobuild
-pandas
-pyyaml
-requests
+channels:
+- conda-forge
+dependencies:
+- go-terraform-docs
+- pip
+- python=3.8
+- pip:
+  - myst-parser[sphinx,linkify]
+  - sphinx-book-theme
+  - sphinx-panels
+  - sphinx-autobuild
+  - pandas
+  - pyyaml
+  - requests
