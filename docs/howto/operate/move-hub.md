@@ -11,9 +11,13 @@ the config of the old hub as much as possible.
 ## Copy home directories
 
 Next, copy home directory contents from the old cluster to the new cluster.
+
+```{note}
+
 This might not entirely be necessary - if the source and target cluster
 are in the same GCP Project / AWS Account, we can just re-use the same
 home directory storage!
+```
 
 ### NFS Servers
 
@@ -45,21 +49,25 @@ Primarily used with GKE right now.
 
 ### EFS
 
-[AWS DataSync](https://aws.amazon.com/datasync/) can copy files between
-EFS volumes in an AWS account. Once the source & dest EFS instances are
-created, create a DataSync instance in the the VPC, Subnet and
-Security Group that have access to the EFS instance (you can find these
-details in the 'Network' tab of the EFS page in the AWS Console). Set the
-transfer to hourly, but immediately manually start the sync task. Once
-the data is transfered over and verified, switch the EFS used in the
-hub config. Remember to delete the datasync instance soon after - or
-it might incur extra charges!
+[AWS DataSync](https://aws.amazon.com/datasync/)
+([docs](https://docs.aws.amazon.com/datasync/latest/userguide/getting-started.html))
+can copy files between EFS volumes in an AWS account. The [quickstart] Once the
+source & dest EFS instances are created, create a DataSync instance in the the
+VPC, Subnet and Security Group that have access to the EFS instance (you can
+find these details in the 'Network' tab of the EFS page in the AWS Console). Set
+the transfer to hourly, but immediately manually start the sync task. Once the
+data is transfered over and verified, switch the EFS used in the hub config.
+Remember to delete the datasync instance soon after - or it might incur extra
+charges!
+
+```{note}
 
 If you need to modify the directory structure on the EFS instance, use
 the ssh key provided to `kops` or `eksctl` during cluster creation to
 ssh into any worker node. Then `mount` the EFS instance manually and
 do your modifications. This prevents needing to create another EC2
 instance just for this.
+```
 
 
 ## Transfer DB
