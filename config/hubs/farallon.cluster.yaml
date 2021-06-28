@@ -111,6 +111,20 @@ hubs:
             readinessProbe:
               enabled: false
             nodeSelector: {}
+            config:
+              Authenticator:
+                allowed_users: &users
+                  - yuvipanda
+                  - caitlinkroeger
+                  - cgentemann
+                  - choldgraf
+                  - DaisyShi19
+                  - GeorgianaElena
+                  - jeffdorman
+                  - marisolgr
+                  - trondkr
+                  - zbird21
+                admin_users: *users
             tolerations:
               - key:  "node-role.kubernetes.io/master"
                 effect: "NoSchedule"
