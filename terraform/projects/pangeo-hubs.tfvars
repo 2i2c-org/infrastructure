@@ -1,7 +1,7 @@
 prefix     = "pangeo-hubs"
 project_id = "pangeo-integration-te-3eea"
 
-core_node_machine_type = "n1-standard-1"
+core_node_machine_type = "n1-highmem-4"
 
 # Multi-tenant cluster, network policy is required to enforce separation between hubs
 enable_network_policy    = true
