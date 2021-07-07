@@ -42,6 +42,33 @@ Helm is used in two ways:
 2. To deploy cluster-wide support components (such as prometheus, grafana,
    nginx-ingress) for each cluster.
 
+#### Tips
+
+- The `--repo` flag allow you to specify a Helm repo directly instead of needing
+  to do `helm repo add` and `helm repo update` first.
+  ```shell
+  helm template --repo https://jupyterhub.github.io/helm-chart/ jupyterhub
+  ```
+- The `helm template` command can quickly render templates for you which is a
+  big part of developing a helm chart.
+- The `helm template --show-only` flag can help you review a specific template.
+  ```shell
+  # 1. An example on how to access a specific template
+  helm template --repo https://jupyterhub.github.io/helm-chart/ jupyterhub \
+      --show-only templates/hub/deployment.yaml
+
+  # 2. An example on how to access a specific template from a subchart
+  #
+  #    Note we need to specify version as the helm repo doesn't contain a valid
+  #    binderhub version that isn't considered a pre-release.
+  helm template --repo https://jupyterhub.github.io/helm-chart/ binderhub \
+      --version=0.2.0-n611.he777436 \
+      --set jupyterhub.hub.services.binder.apiToken=asd \
+      --show-only charts/jupyterhub/templates/hub/deployment.yaml
+  ```
+- The `helm template --validate` flag can help you both render and then validate
+  the rendered templates with a k8s api-server. This is an excellent lightweight
+  test of a Helm chart in a CI system.
 
 ### [`sops`](https://github.com/mozilla/sops/)
 
