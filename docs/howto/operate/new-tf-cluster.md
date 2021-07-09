@@ -53,3 +53,20 @@ terraform workspace new WORKSPACE_NAME
 ```
 
 ## Plan and Apply Changes
+
+Plan your changes with the `terraform plan` command, passing the `.tfvars` file as a variable file.
+
+```bash
+terraform plan -var-file=projects/CLUSTER.tfvars
+```
+
+Check over the output of this command to ensure nothing if being created/deleted than you expected.
+You might want to ask a fellow 2i2c engineer to glance over it too to double check.
+
+If you're satisfied with the plan, apply the changes to deploy the cluster.
+
+```bash
+terraform apply -var-file=projects/CLUSTER.tfvars
+```
+
+Congratulations, you've just deployed a new cluster! :tada:
