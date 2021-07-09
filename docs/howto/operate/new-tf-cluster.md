@@ -43,6 +43,25 @@ cd terraform
 terraform init
 ```
 
+````{note}
+If you are deploying a cluster to a project you have access to via a different account, such as a university-affliated account, there are a few extra steps to take.
+Hopefully, this will be a rare scenario.
+
+First, you will need to provide terraform with an [access token](https://www.terraform.io/docs/language/settings/backends/gcs.html#configuration-variables) to use the state files.
+You can generate one using the below commands and logging in with your 2i2c.org account.
+
+```bash
+gcloud auth application-default login
+gcloud auth application-default print-acces-token
+```
+
+Add the access token to the [terraform backend block](https://github.com/2i2c-org/pilot-hubs/blob/2ef8a4bf35bb5ee9bf04ab3db1218b8c183c5da2/terraform/main.tf#L2-L5) in `main.tf`.
+:warning: DO NOT COMMIT THIS CHANGE :warning:
+Then run `terraform init` or `terraform init -reconfigure`.
+
+You can now login to your other gcloud account and proceed with the guide.
+````
+
 ## Creating a new terraform workspace
 
 We use terraform workspaces so that the state of one `.tfvars` file does not influence another.
@@ -53,6 +72,10 @@ terraform workspace new WORKSPACE_NAME
 ```
 
 ## Plan and Apply Changes
+
+```{note}
+Make sure the [Artifact Registry API](https://console.cloud.google.com/apis/library/artifactregistry.googleapis.com) in enabled on the project before deploying!
+```
 
 Plan your changes with the `terraform plan` command, passing the `.tfvars` file as a variable file.
 
