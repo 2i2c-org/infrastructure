@@ -56,7 +56,7 @@ gcloud auth application-default print-acces-token
 ```
 
 Add the access token to the [terraform backend block](https://github.com/2i2c-org/pilot-hubs/blob/2ef8a4bf35bb5ee9bf04ab3db1218b8c183c5da2/terraform/main.tf#L2-L5) in `main.tf`.
-:warning: DO NOT COMMIT THIS CHANGE :warning:
+**DO NOT COMMIT THIS CHANGE.**
 Then run `terraform init` or `terraform init -reconfigure`.
 
 You can now login to your other gcloud account and proceed with the guide.
@@ -92,4 +92,4 @@ If you're satisfied with the plan, apply the changes to deploy the cluster.
 terraform apply -var-file=projects/CLUSTER.tfvars
 ```
 
-Congratulations, you've just deployed a new cluster! :tada:
+Congratulations, you've just deployed a new cluster!
