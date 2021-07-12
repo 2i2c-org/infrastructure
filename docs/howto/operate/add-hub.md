@@ -26,8 +26,13 @@ to be used.
 
 In consultation with the users, decide
 [which authentication provider](https://pilot.2i2c.org/en/latest/admin/configuration/login.html#authentication)
-the hub should use. While this can be changed later, it's a messy
-process - so we should try to get this right the first time.
+the hub should use.
+
+
+```{note}
+While this can be changed later, it's a messy
+process - so we should try to get this right the first time
+```
 
 ## Step 4: Decide the user image for the hub
 
@@ -69,4 +74,4 @@ Getting this merged will mark the hub as being deployed.
 
 Finally, notify the users of the hub that it is now deployed, and ask that they test it out to make sure it works as expected.
 If they are happy with the result, then close the issue for deploying the new hub.
-Congratulations, you are done! 🎉 
+Congratulations, you are done! 🎉
