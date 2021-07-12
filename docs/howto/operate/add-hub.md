@@ -59,12 +59,13 @@ tries. Specifically test that at least the following work ok:
 
 1. Authentication provider
 2. Admin user access
-3. User image in use
+3. User image in use (check the `JUPYTER_IMAGE` environment variable in a spawned server)
 4. Default user interface when the user logs in (lab, notebook, rstudio, retrolab, etc)
 5. Home page display configuration
 6. (Optionally) `dask-gateway` functionality
 7. (Optionally) Access to any cloud resources (like storage buckets, etc)
    granted to the hub users
+
 ## Step 7: Make a PR
 
 Make a PR with your changes, referencing the issue for creation of the hub. Seek
