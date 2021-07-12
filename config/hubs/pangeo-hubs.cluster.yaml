@@ -1,0 +1,51 @@
+name: pangeo-hubs
+image_repo: "us-central1-docker.pkg.dev/two-eye-two-see/pilot-hubs-registry/base-user"
+provider: gcp
+gcp:
+  key: secrets/pangeo-hubs.json
+  project: pangeo-181919
+  cluster: pangeo-hubs-cluster
+  zone: us-central1-b
+support:
+  config:
+    grafana:
+      ingress:
+        hosts:
+          - grafana.pangeo.2i2c.cloud
+        tls:
+          - secretName: grafana-tls
+            hosts:
+              - grafana.pangeo.2i2c.cloud
+hubs:
+  - name: geospatial-workshop
+    domain: geospatial-workshop.pangeo.2i2c.cloud
+    template: basehub
+    auth0:
+      connection: ""
+    config:
+      # docs_service:
+      #   enabled: true
+      #   repo: https://github.com/jupyterhub/nbgitpuller
+      #   branch: gh-pages
+      jupyterhub:
+        custom:
+          homepage:
+            templateVars:
+              org:
+                name: Geospatial Workshop
+                url: https://2i2c.org
+                logo_url: https://2i2c.org/media/logo.png
+              designed_by:
+                name: 2i2c
+                url: https://2i2c.org
+              operated_by:
+                name: 2i2c
+                url: https://2i2c.org
+              funded_by:
+                name: 2i2c
+                url: https://2i2c.org
+        hub:
+          config:
+            Authenticator:
+              allowed_users: &geospatial_workshop_users
+              admin_users: *geospatial_workshop_users
