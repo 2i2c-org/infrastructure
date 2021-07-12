@@ -92,3 +92,41 @@ terraform apply -var-file=projects/CLUSTER.tfvars
 ```
 
 Congratulations, you've just deployed a new cluster!
+
+## Exporting and Encrypting the Continuous Deployment Service Account
+
+To begin deploying and operating hubs on your new cluster, we need to export the Continuous Deployment Service Account created by terraform, encrypt it using `sops`, and store it in the `secrets` directory of the `pilot-hubs` repo.
+
+Check you are still in the correct terraform workspace
+
+```bash
+terraform workspace show
+```
+
+If you need to change, you can do so as follows
+
+```bash
+terraform workspace list  # List all available workspaces
+terraform workspace select WORKSPACE_NAME
+```
+
+Then, output the JSON key for the service account created by terraform to a file under the `secrets` directory.
+
+```bash
+terraform output -raw ci_deployer_key > ../secrets/CLUSTER_NAME.json
+```
+
+where `CLUSTER_NAME` matches the name of our `.tfvars` file.
+
+Encrypt the key using `sops`
+
+```{note}
+You must be logged into Google with your `@2i2c.org` account at this point so `sops` can read the encryption key from the `two-eye-two-see` project.
+```
+
+```bash
+cd ..
+sops --encrypt --in-place secrets/CLUSTER_NAME.json
+```
+
+This key can now be committed to the `pilot-hubs` repo and used to deploy and manage hubs hosted on that cluster.
