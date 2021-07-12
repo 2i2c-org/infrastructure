@@ -65,7 +65,7 @@ You can now login to your other gcloud account and proceed with the guide.
 ## Creating a new terraform workspace
 
 We use terraform workspaces so that the state of one `.tfvars` file does not influence another.
-Create a new workspace with the below command, and again give it a descriptive name, perhaps even the same as the `.tfvars` filename.
+Create a new workspace with the below command, and again give it the same name as the `.tfvars` filename.
 
 ```bash
 terraform workspace new WORKSPACE_NAME
