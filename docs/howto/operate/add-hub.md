@@ -18,7 +18,8 @@ Each cluster has configuration + list of hubs it supports under
 
 ## Step 2: Decide the template used for the hub
 
-Based on the kinda usage expected of the hub select a [hub template](../../topic/hub-templates.md)
+Hub templates map on to different major use-cases that we aim to enable.
+Ask the hub user(s) about their needs and expected usage, and use their answer to select a [hub template](../../topic/hub-templates.md).
 to be used.
 
 ## Step 4: Decide the authentication provider to be used
@@ -65,3 +66,7 @@ Make a PR with your changes, referencing the issue for creation of the hub. Seek
 review from someone else, and get this merged!
 
 Getting this merged will mark the hub as being deployed.
+
+Finally, notify the users of the hub that it is now deployed, and ask that they test it out to make sure it works as expected.
+If they are happy with the result, then close the issue for deploying the new hub.
+Congratulations, you are done! 🎉 
