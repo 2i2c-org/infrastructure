@@ -51,7 +51,7 @@ You can generate one using the below commands and logging in with your 2i2c.org 
 
 ```bash
 gcloud auth application-default login
-gcloud auth application-default print-acces-token
+gcloud auth application-default print-access-token
 ```
 
 Add the access token to the [terraform backend block](https://github.com/2i2c-org/pilot-hubs/blob/2ef8a4bf35bb5ee9bf04ab3db1218b8c183c5da2/terraform/main.tf#L2-L5) in `main.tf`.
