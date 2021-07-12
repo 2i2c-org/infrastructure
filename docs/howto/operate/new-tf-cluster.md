@@ -32,7 +32,6 @@ project_id = "my-awesome-project-id
 The terraform state is located centrally in our `two-eye-two-see-org` GCP project, therefore you must authenticate `gcloud` to your `@2i2c.org` account before initialising terraform.
 
 ```bash
-gcloud auth login
 gcloud auth application-default login
 ```
 
