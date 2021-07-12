@@ -22,21 +22,21 @@ Hub templates map on to different major use-cases that we aim to enable.
 Ask the hub user(s) about their needs and expected usage, and use their answer to select a [hub template](../../topic/hub-templates.md).
 to be used.
 
-## Step 4: Decide the authentication provider to be used
+## Step 3: Decide the authentication provider to be used
 
 In consultation with the users, decide
 [which authentication provider](https://pilot.2i2c.org/en/latest/admin/configuration/login.html#authentication)
 the hub should use. While this can be changed later, it's a messy
 process - so we should try to get this right the first time.
 
-## Step 5: Decide the user image for the hub
+## Step 4: Decide the user image for the hub
 
 The default user image is present in this repository (`images/user`),
 and is geared towards simple datascience classes - with both R and
 Python. Determine if this is acceptable - if not, you need to
 make a [custom image](../configure/update-env.md) for them.
 
-## Step 6: Add hub config
+## Step 5: Add hub config
 
 Add an entry for the hub in `config/hubs/<cluster-name>.cluster.yaml` for this hub.
 The following docs might be helpful:
@@ -46,7 +46,7 @@ The following docs might be helpful:
 3. [Zero to JupyterHub on k8s Docs](https://zero-to-jupyterhub.readthedocs.io/en/latest/), since ultimately
    that is what we are configuring.
 
-## Step 7: Deploy manually and test
+## Step 6: Deploy manually and test
 
 [Deploy the hub manually](./manual-deploy.md) and test to make sure it works
 the way you would like it to. This might take some iteration and multiple
@@ -60,7 +60,7 @@ tries. Specifically test that at least the following work ok:
 6. (Optionally) `dask-gateway` functionality
 7. (Optionally) Access to any cloud resources (like storage buckets, etc)
    granted to the hub users
-## Step 8: Make a PR
+## Step 7: Make a PR
 
 Make a PR with your changes, referencing the issue for creation of the hub. Seek
 review from someone else, and get this merged!
