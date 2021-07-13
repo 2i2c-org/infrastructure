@@ -1,78 +1,71 @@
+
+terraform {
+  backend "gcs" {
+    bucket = "two-eye-two-see-org-terraform-state"
+    prefix = "terraform/state/pilot-hubs"
+  }
+}
 provider "azurerm" {
-  # whilst the `version` attribute is optional, we recommend pinning to a given version of the Provider
-  version = "=2.20.0"
+  subscription_id = var.subscription_id
   features {}
 }
 
-terraform {
-  backend "azurerm" {
-    resource_group_name  = "terraform-state"
-    storage_account_name = "utorontoterraformstate"
-    container_name       = "terraformstate"
-    key                  = "prod.terraform.tfstate"
-  }
-}
-
-
-provider "local" {
-  version = "1.4.0"
-}
-
 resource "azurerm_resource_group" "jupyterhub" {
-  name     = "${var.prefix}-rg"
-  location = var.region
+  name     = var.resourcegroup_name
+  location = var.location
 }
 
 resource "azurerm_virtual_network" "jupyterhub" {
-  name                = "${var.prefix}-network"
+  name                = "k8s-network"
   location            = azurerm_resource_group.jupyterhub.location
   resource_group_name = azurerm_resource_group.jupyterhub.name
   address_space       = ["10.0.0.0/8"]
 }
 
 resource "azurerm_subnet" "node_subnet" {
-  name                 = "${var.prefix}-node-subnet"
+  name                 = "k8s-nodes-subnet"
   virtual_network_name = azurerm_virtual_network.jupyterhub.name
   resource_group_name  = azurerm_resource_group.jupyterhub.name
   address_prefixes     = ["10.1.0.0/16"]
 }
 
 resource "azurerm_kubernetes_cluster" "jupyterhub" {
-  name                = "${var.prefix}-cluster"
+  name                = "hub-cluster"
   location            = azurerm_resource_group.jupyterhub.location
   resource_group_name = azurerm_resource_group.jupyterhub.name
-  dns_prefix          = "${var.prefix}-cluster"
-  kubernetes_version = "1.18.8"
+  kubernetes_version  = var.kubernetes_version
+  dns_prefix          = "k8s"
 
   linux_profile {
-    admin_username = "hubadmin"
+    admin_username = "hub-admin"
     ssh_key {
-      key_data = file("${path.module}/ssh-key.pub")
+      key_data = var.ssh_pub_key
     }
   }
+
   # Core node-pool
   default_node_pool {
-    name                = "core"
-    node_count          = 1
+    name       = "core"
+    node_count = 1
     # Unfortunately, changing anything about VM type / size recreates *whole cluster
-    vm_size             = var.core_vm_size
-    os_disk_size_gb     = 100
+    vm_size             = var.core_node_vm_size
+    os_disk_size_gb     = 40
     enable_auto_scaling = true
     min_count           = 1
-    max_count           = 8
+    max_count           = 10
     vnet_subnet_id      = azurerm_subnet.node_subnet.id
     node_labels = {
-      "hub.jupyter.org/pool-name" = "core-pool"
+      "hub.jupyter.org/node-purpose" = "core",
+      "k8s.dask.org/node-purpose"    = "core"
     }
 
-    orchestrator_version = "1.18.8"
+    orchestrator_version = var.kubernetes_version
   }
 
   auto_scaler_profile {
-    # Let's get rid of unready nodes ASAP
-    # Azure nodes love being unready
-    scale_down_unready = "1m"
+    skip_nodes_with_local_storage = true
   }
+
   identity {
     type = "SystemAssigned"
   }
@@ -82,196 +75,90 @@ resource "azurerm_kubernetes_cluster" "jupyterhub" {
     network_plugin = "kubenet"
     network_policy = "calico"
   }
-
-  tags = {
-    Environment = "Production"
-    ManagedBy   = "2i2c"
-  }
 }
 
+
+
 resource "azurerm_kubernetes_cluster_node_pool" "user_pool" {
-  name                  = "user"
+  for_each = var.notebook_nodes
+
+  name                  = "nb${each.key}"
   kubernetes_cluster_id = azurerm_kubernetes_cluster.jupyterhub.id
-  vm_size               = var.user_vm_size
   enable_auto_scaling   = true
   os_disk_size_gb       = 200
-  node_taints           = ["hub.jupyter.org_dedicated=user:NoSchedule"]
   vnet_subnet_id        = azurerm_subnet.node_subnet.id
 
-  orchestrator_version = "1.18.8"
+  orchestrator_version = var.kubernetes_version
+
+  vm_size = each.value.vm_size
   node_labels = {
-    "hub.jupyter.org/pool-name" = "user-alpha-pool"
+    "hub.jupyter.org/node-purpose" = "user",
+    "k8s.dask.org/node-purpose"    = "scheduler"
   }
 
-  min_count = 1
-  max_count = 100
-  tags = {
-    Environment = "Production"
-    ManagedBy   = "2i2c"
+  node_taints = [
+    "hub.jupyter.org_dedicated=user:NoSchedule"
+  ]
+
+
+  min_count = each.value.min
+  max_count = each.value.max
+}
+
+resource "azurerm_kubernetes_cluster_node_pool" "dask_pool" {
+  for_each = var.dask_nodes
+
+  name                  = "dask${each.key}"
+  kubernetes_cluster_id = azurerm_kubernetes_cluster.jupyterhub.id
+  enable_auto_scaling   = true
+  os_disk_size_gb       = 200
+  vnet_subnet_id        = azurerm_subnet.node_subnet.id
+
+  orchestrator_version = var.kubernetes_version
+
+  vm_size = each.value.vm_size
+  node_labels = {
+    "hub.jupyter.org/node-purpose" = "user",
+    "k8s.dask.org/node-purpose"    = "scheduler"
   }
+
+  node_taints = [
+    "hub.jupyter.org_dedicated=user:NoSchedule"
+  ]
+
+
+  min_count = each.value.min
+  max_count = each.value.max
 }
 
 # AZure container registry
 
 resource "azurerm_container_registry" "container_registry" {
   # meh, only alphanumberic chars. No separators. BE CONSISTENT, AZURE
-  name = var.global_container_registry_name
+  name                = var.global_container_registry_name
   resource_group_name = azurerm_resource_group.jupyterhub.name
   location            = azurerm_resource_group.jupyterhub.location
-  sku = "premium"
-  admin_enabled = true
-}
-# NFS VM
-resource "azurerm_network_interface" "nfs_vm" {
-  name                = "${var.prefix}-nfs-vm-inet"
-  location            = azurerm_resource_group.jupyterhub.location
-  resource_group_name = azurerm_resource_group.jupyterhub.name
-
-  ip_configuration {
-    name                          = "internal"
-    subnet_id                     = azurerm_subnet.node_subnet.id
-    private_ip_address_allocation = "Dynamic"
-  }
-}
-
-resource "azurerm_network_security_group" "nfs_vm" {
-  name                = "${var.prefix}-nfs-vm-nsg"
-  location            = azurerm_resource_group.jupyterhub.location
-  resource_group_name = azurerm_resource_group.jupyterhub.name
-
-  # SSH from the world
-  security_rule {
-    access                     = "Allow"
-    direction                  = "Inbound"
-    name                       = "ssh"
-    priority                   = 100
-    protocol                   = "Tcp"
-    source_port_range          = "*"
-    source_address_prefix      = "*"
-    destination_port_range     = "22"
-    destination_address_prefix = azurerm_network_interface.nfs_vm.private_ip_address
-  }
-
-  # NFS from internal network
-  security_rule {
-    access                     = "Allow"
-    direction                  = "Inbound"
-    name                       = "nfs"
-    priority                   = 101
-    protocol                   = "Tcp"
-    source_port_range          = "*"
-    source_address_prefix      = "*"
-    destination_port_range     = "2049"
-    destination_address_prefix = azurerm_network_interface.nfs_vm.private_ip_address
-  }
-  #
-  # Prometheus from internal network
-  security_rule {
-    access                     = "Allow"
-    direction                  = "Inbound"
-    name                       = "prometheus"
-    priority                   = 102
-    protocol                   = "Tcp"
-    source_port_range          = "*"
-    source_address_prefix      = "*"
-    destination_port_range     = "9100"
-    destination_address_prefix = azurerm_network_interface.nfs_vm.private_ip_address
-  }
-}
-
-resource "azurerm_network_interface_security_group_association" "main" {
-  network_interface_id      = azurerm_network_interface.nfs_vm.id
-  network_security_group_id = azurerm_network_security_group.nfs_vm.id
-}
-
-resource "azurerm_linux_virtual_machine" "nfs_vm" {
-  name                = "${var.prefix}-nfs-vm"
-  resource_group_name = azurerm_resource_group.jupyterhub.name
-  location            = azurerm_resource_group.jupyterhub.location
-  size                = var.nfs_vm_size
-  admin_username      = "hubadmin"
-
-  network_interface_ids = [
-    azurerm_network_interface.nfs_vm.id,
-  ]
-
-  admin_ssh_key {
-    username   = "hubadmin"
-    public_key = file("${path.module}/ssh-key.pub")
-  }
-
-  os_disk {
-    caching              = "None"
-    storage_account_type = "StandardSSD_LRS"
-    disk_size_gb         = 100
-  }
-
-  source_image_reference {
-    publisher = "Canonical"
-    offer     = "0001-com-ubuntu-server-focal"
-    sku       = "20_04-lts"
-    version   = "latest"
-  }
-}
-
-resource "azurerm_managed_disk" "nfs_data_disk_1" {
-  name                 = "${var.prefix}-nfs-data-disk-1"
-  location             = azurerm_resource_group.jupyterhub.location
-  resource_group_name  = azurerm_resource_group.jupyterhub.name
-  storage_account_type = "Premium_LRS"
-  create_option        = "Empty"
-  disk_size_gb         = "1024"
-
-  lifecycle {
-    # Terraform plz never destroy data thx
-    prevent_destroy = true
-  }
-  tags = {
-    Environment = "Production"
-  }
-}
-
-resource "azurerm_virtual_machine_data_disk_attachment" "nfs_data_disk_1" {
-  virtual_machine_id = azurerm_linux_virtual_machine.nfs_vm.id
-  managed_disk_id    = azurerm_managed_disk.nfs_data_disk_1.id
-  lun                = 0
-  caching            = "None"
+  sku                 = "premium"
+  admin_enabled       = true
 }
 
 locals {
   registry_creds = {
     "imagePullSecret" = {
-      "username": azurerm_container_registry.container_registry.admin_username,
-      "password": azurerm_container_registry.container_registry.admin_password,
-      "registry": "https://${azurerm_container_registry.container_registry.login_server}"
-    }
-  }
-  ansible_hosts = {
-    "nfs_servers" = {
-      hosts = {
-        (azurerm_linux_virtual_machine.nfs_vm.name) = {
-          ansible_ssh_common_args      = "-o ProxyCommand='./proxycommand.py %h %p'"
-          ansible_user                 = "hubadmin"
-          ansible_ssh_private_key_file = "../secrets/ssh-key.unsafe"
-        }
-      }
-      "vars" = {
-        disk_name = (azurerm_managed_disk.nfs_data_disk_1.name)
-        disk_lun  = (azurerm_virtual_machine_data_disk_attachment.nfs_data_disk_1.lun)
-      }
+      "username" : azurerm_container_registry.container_registry.admin_username,
+      "password" : azurerm_container_registry.container_registry.admin_password,
+      "registry" : "https://${azurerm_container_registry.container_registry.login_server}"
     }
   }
 }
 
-resource "local_file" "ansible_hosts_file" {
-  content  = yamlencode(local.ansible_hosts)
-  filename = "ansible-hosts.yaml"
-}
 
 output "kubeconfig" {
-  value = azurerm_kubernetes_cluster.jupyterhub.kube_config_raw
+  value     = azurerm_kubernetes_cluster.jupyterhub.kube_config_raw
+  sensitive = true
 }
 
 output "registry_creds_config" {
-  value = jsonencode(local.registry_creds)
+  value     = jsonencode(local.registry_creds)
+  sensitive = true
 }

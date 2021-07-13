@@ -1,9 +1,0 @@
-"nfs_servers":
-  "hosts":
-    "jupyterhub-2i2c-nfs-vm":
-      "ansible_ssh_common_args": "-o ProxyCommand='./proxycommand.py %h %p'"
-      "ansible_ssh_private_key_file": "../secrets/ssh-key.unsafe"
-      "ansible_user": "hubadmin"
-  "vars":
-    "disk_lun": 0
-    "disk_name": "jupyterhub-2i2c-nfs-data-disk-1"
