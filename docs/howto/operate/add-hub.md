@@ -1,5 +1,11 @@
 # Add a new hub
 
+## Step 0: Open a GitHub issue to track hub creation
+
+In order to track progress on deploying the new hub, [open a GitHub issue in the
+`pilot-hubs/` repository](https://github.com/2i2c-org/pilot-hubs/issues/new/choose).
+Make sure to choose the `new-hub` issue template.
+
 ## Step 1: Decide where the hub will live
 
 Hubs need to exist on a kubernetes cluster, so we will need to
