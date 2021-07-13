@@ -1,6 +1,6 @@
 # Add a new GKE cluster managed by our Terraform configuration
 
-This guide will walk through the process of adding a new cluster to our [terraform configuration](https://github.com/2i2c-org/pilot-hubs/tree/master/terraform).
+This giude will walk through the process of adding a new cluster to our [terraform configuration](https://github.com/2i2c-org/pilot-hubs/tree/master/terraform/gcp).
 
 ## Cluster Design
 
@@ -8,7 +8,7 @@ This guide will assume you have already followed the guidance in {ref}`/topic/cl
 
 ## Creating a Terraform variables file for the cluster
 
-The first step is to create a `.tfvars` file in the [`terraform/projects` directory](https://github.com/2i2c-org/pilot-hubs/tree/master/terraform/projects).
+The first step is to create a `.tfvars` file in the [`terraform/gcp/projects` directory](https://github.com/2i2c-org/pilot-hubs/tree/master/terraform/gcp/projects).
 Give it a descriptive name that at a glance provides context to the location and/or purpose of the cluster.
 
 The _minimum_ inputs this file requires are:
@@ -18,7 +18,7 @@ The _minimum_ inputs this file requires are:
 - `project_id`: GCP Project ID to create resources in.
   Should be the id, rather than display name of the project.
 
-See the [variables file](https://github.com/2i2c-org/pilot-hubs/blob/master/terraform/variables.tf) for other inputs this file can take and their descriptions.
+See the [variables file](https://github.com/2i2c-org/pilot-hubs/blob/master/terraform/gcp/variables.tf) for other inputs this file can take and their descriptions.
 
 Example `.tfvars` file:
 
@@ -40,7 +40,7 @@ gcloud auth application-default login
 Then you can change into the terraform directory and initialise
 
 ```bash
-cd terraform
+cd terraform/gcp
 terraform init
 ```
 
@@ -56,7 +56,7 @@ gcloud auth application-default login
 gcloud auth application-default print-access-token
 ```
 
-Add the access token to the [terraform backend block](https://github.com/2i2c-org/pilot-hubs/blob/2ef8a4bf35bb5ee9bf04ab3db1218b8c183c5da2/terraform/main.tf#L2-L5) in `main.tf`.
+Add the access token to the [terraform backend block](https://github.com/2i2c-org/pilot-hubs/blob/master/terraform/gcp/main.tf#L2-L5) in `main.tf`.
 **DO NOT COMMIT THIS CHANGE.**
 Then run `terraform init` or `terraform init -reconfigure`.
 
@@ -115,7 +115,7 @@ terraform workspace select WORKSPACE_NAME
 Then, output the JSON key for the service account created by terraform to a file under the `secrets` directory.
 
 ```bash
-terraform output -raw ci_deployer_key > ../secrets/CLUSTER_NAME.json
+terraform output -raw ci_deployer_key > ../../secrets/CLUSTER_NAME.json
 ```
 
 where `CLUSTER_NAME` matches the name of our `.tfvars` file.
