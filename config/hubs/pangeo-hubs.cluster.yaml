@@ -21,7 +21,7 @@ hubs:
     domain: geospatial-workshop.pangeo.2i2c.cloud
     template: daskhub
     auth0:
-      connection: ""
+      connection: google-oauth2
     config:
       # docs_service:
       #   enabled: true
