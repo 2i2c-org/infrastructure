@@ -1,6 +1,6 @@
 # Add a new GKE cluster managed by our Terraform configuration
 
-This giude will walk through the process of adding a new cluster to our [terraform configuration](https://github.com/2i2c-org/pilot-hubs/tree/master/terraform).
+This guide will walk through the process of adding a new cluster to our [terraform configuration](https://github.com/2i2c-org/pilot-hubs/tree/master/terraform).
 
 ## Cluster Design
 
