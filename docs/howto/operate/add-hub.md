@@ -13,7 +13,8 @@ decide which cluster it should live in.
 
 1. For standalone hubs where we are being paid or the client has cloud
    credits, we will need to create a cluster specifically for this hub
-   before deploying it.
+   before deploying it. As a general rule, we will create one cluster per
+   billing account.
 2. For hubs we are running for free, they will go into the `pilot-hubs`
    cluster.
 3. Hubs run with the support of [cloudbank](https://www.cloudbank.org/),
