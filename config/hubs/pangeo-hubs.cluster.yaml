@@ -17,8 +17,8 @@ support:
             hosts:
               - grafana.pangeo.2i2c.cloud
 hubs:
-  - name: geospatial-workshop
-    domain: geospatial-workshop.pangeo.2i2c.cloud
+  - name: coessing
+    domain: coessing.pangeo.2i2c.cloud
     template: daskhub
     auth0:
       connection: google-oauth2
@@ -32,9 +32,9 @@ hubs:
           homepage:
             templateVars:
               org:
-                name: Geospatial Workshop
-                url: https://2i2c.org
-                logo_url: https://2i2c.org/media/logo.png
+                name: Coastal Ocean Environment Summer School in Ghana
+                url: https://coessing.org/
+                logo_url: "https://coessing.files.wordpress.com/2016/08/ghana-logo-21.png?w=262&h=376&zoom=2"
               designed_by:
                 name: 2i2c
                 url: https://2i2c.org
@@ -47,5 +47,5 @@ hubs:
         hub:
           config:
             Authenticator:
-              allowed_users: &geospatial_workshop_users
-              admin_users: *geospatial_workshop_users
+              allowed_users: &coessing_users
+              admin_users: *coessing_users
