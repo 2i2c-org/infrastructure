@@ -27,6 +27,8 @@ prefix     = "my-awesome-project"
 project_id = "my-awesome-project-id
 ```
 
+Once you have created this file, open a Pull Request to the `pilot-hubs` repo for review.
+
 ## Initialising Terraform
 
 The terraform state is located centrally in our `two-eye-two-see-org` GCP project, therefore you must authenticate `gcloud` to your `@2i2c.org` account before initialising terraform.
@@ -83,9 +85,9 @@ terraform plan -var-file=projects/CLUSTER.tfvars
 ```
 
 Check over the output of this command to ensure nothing if being created/deleted than you expected.
-You might want to ask a fellow 2i2c engineer to glance over it too to double check.
+Copy-paste the plan into your open Pull Request so a fellow 2i2c engineer can double check it too.
 
-If you're satisfied with the plan, apply the changes to deploy the cluster.
+If you're both satisfied with the plan, merge the Pull Request and apply the changes to deploy the cluster.
 
 ```bash
 terraform apply -var-file=projects/CLUSTER.tfvars
