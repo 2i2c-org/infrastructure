@@ -141,3 +141,8 @@ RUN r -e "install.packages('IRkernel', version='1.1.1')" && \
 
 # Set bash as shell in terminado.
 ADD jupyter_notebook_config.py  ${CONDA_PREFIX}/etc/jupyter/
+
+# Configure conda/mamba to create new environments within the home folder by
+# default. This allows the environments to remain in between restarts of the
+# container if only the home folder is persisted.
+RUN conda config --system --prepend envs_dirs '~/.conda/envs'
