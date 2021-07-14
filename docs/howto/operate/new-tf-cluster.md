@@ -1,6 +1,6 @@
 # Add a new GKE cluster managed by our Terraform configuration
 
-This giude will walk through the process of adding a new cluster to our [terraform configuration](https://github.com/2i2c-org/pilot-hubs/tree/master/terraform/gcp).
+This guide will walk through the process of adding a new cluster to our [terraform configuration](https://github.com/2i2c-org/pilot-hubs/tree/HEAD/terraform/gcp).
 
 ## Cluster Design
 
@@ -8,7 +8,7 @@ This guide will assume you have already followed the guidance in {ref}`/topic/cl
 
 ## Creating a Terraform variables file for the cluster
 
-The first step is to create a `.tfvars` file in the [`terraform/gcp/projects` directory](https://github.com/2i2c-org/pilot-hubs/tree/master/terraform/gcp/projects).
+The first step is to create a `.tfvars` file in the [`terraform/gcp/projects` directory](https://github.com/2i2c-org/pilot-hubs/tree/HEAD/terraform/gcp/projects).
 Give it a descriptive name that at a glance provides context to the location and/or purpose of the cluster.
 
 The _minimum_ inputs this file requires are:
@@ -18,7 +18,7 @@ The _minimum_ inputs this file requires are:
 - `project_id`: GCP Project ID to create resources in.
   Should be the id, rather than display name of the project.
 
-See the [variables file](https://github.com/2i2c-org/pilot-hubs/blob/master/terraform/gcp/variables.tf) for other inputs this file can take and their descriptions.
+See the [variables file](https://github.com/2i2c-org/pilot-hubs/blob/HEAD/terraform/gcp/variables.tf) for other inputs this file can take and their descriptions.
 
 Example `.tfvars` file:
 
@@ -56,7 +56,7 @@ gcloud auth application-default login
 gcloud auth application-default print-access-token
 ```
 
-Add the access token to the [terraform backend block](https://github.com/2i2c-org/pilot-hubs/blob/master/terraform/gcp/main.tf#L2-L5) in `main.tf`.
+Add the access token to the [terraform backend block](https://github.com/2i2c-org/pilot-hubs/blob/HEAD/terraform/gcp/main.tf#L2-L5) in `main.tf`.
 **DO NOT COMMIT THIS CHANGE.**
 Then run `terraform init` or `terraform init -reconfigure`.
 
