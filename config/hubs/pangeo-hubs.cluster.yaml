@@ -23,10 +23,6 @@ hubs:
     auth0:
       connection: google-oauth2
     config:
-      # docs_service:
-      #   enabled: true
-      #   repo: https://github.com/jupyterhub/nbgitpuller
-      #   branch: gh-pages
       jupyterhub:
         custom:
           homepage:
