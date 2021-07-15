@@ -1,5 +1,4 @@
 name: pangeo-hubs
-image_repo: "us-central1-docker.pkg.dev/two-eye-two-see/pilot-hubs-registry/base-user"
 provider: gcp
 gcp:
   key: secrets/pangeo-hubs.json
@@ -51,6 +50,9 @@ hubs:
                 - georgiana.dolocan@gmail.com
               admin_users: *coessing_users
         singleuser:
+          image:
+              name: pangeo/pangeo-notebook
+              tag: 2021.07.06
           cpu:
             limit: 2
             guarantee: 1
