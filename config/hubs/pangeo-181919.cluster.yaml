@@ -1,7 +1,7 @@
-name: pangeo-hubs
+name: pangeo-181919
 provider: gcp
 gcp:
-  key: secrets/pangeo-hubs.json
+  key: secrets/pangeo-181919.json
   project: pangeo-181919
   cluster: pangeo-hubs-cluster
   zone: us-central1-b
