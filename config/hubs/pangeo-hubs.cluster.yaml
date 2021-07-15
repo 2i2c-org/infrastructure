@@ -48,4 +48,9 @@ hubs:
           config:
             Authenticator:
               allowed_users: &coessing_users
+                - paigemar@umich.edu
+                - drsarahlgibson@gmail.com
+                - yuvipanda@gmail.com
+                - choldgraf@gmail.com
+                - georgiana.dolocan@gmail.com
               admin_users: *coessing_users
