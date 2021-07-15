@@ -54,3 +54,10 @@ hubs:
                 - choldgraf@gmail.com
                 - georgiana.dolocan@gmail.com
               admin_users: *coessing_users
+        singleuser:
+          cpu:
+            limit: 2
+            guarantee: 1
+          memory:
+            limit: 4G
+            guarantee: 2G
