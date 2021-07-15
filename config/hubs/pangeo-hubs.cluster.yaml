@@ -61,3 +61,12 @@ hubs:
           memory:
             limit: 4G
             guarantee: 2G
+      gateway:
+        backend:
+          scheduler:
+            cores:
+              request: 0.8
+              limit: 1
+            memory:
+              request: 1G
+              limit: 2G
