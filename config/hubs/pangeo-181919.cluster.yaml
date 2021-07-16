@@ -22,49 +22,56 @@ hubs:
     auth0:
       connection: google-oauth2
     config:
-      jupyterhub:
-        custom:
-          homepage:
-            templateVars:
-              org:
-                name: Coastal Ocean Environment Summer School in Ghana
-                url: https://coessing.org/
-                logo_url: "https://coessing.files.wordpress.com/2016/08/ghana-logo-21.png?w=262&h=376&zoom=2"
-              designed_by:
-                name: 2i2c
-                url: https://2i2c.org
-              operated_by:
-                name: 2i2c
-                url: https://2i2c.org
-              funded_by:
-                name: 2i2c
-                url: https://2i2c.org
-        hub:
-          config:
-            Authenticator:
-              allowed_users: &coessing_users
-                - paigemar@umich.edu
-                - drsarahlgibson@gmail.com
-                - yuvipanda@gmail.com
-                - choldgraf@gmail.com
-                - georgiana.dolocan@gmail.com
-              admin_users: *coessing_users
-        singleuser:
-          image:
+      basehub:
+        jupyterhub:
+          proxy:
+            service:
+              type: LoadBalancer
+            https:
+              enabled: true
+          custom:
+            homepage:
+              templateVars:
+                org:
+                  name: Coastal Ocean Environment Summer School in Ghana
+                  url: https://coessing.org/
+                  logo_url: "https://coessing.files.wordpress.com/2016/08/ghana-logo-21.png?w=262&h=376&zoom=2"
+                designed_by:
+                  name: 2i2c
+                  url: https://2i2c.org
+                operated_by:
+                  name: 2i2c
+                  url: https://2i2c.org
+                funded_by:
+                  name: 2i2c
+                  url: https://2i2c.org
+          hub:
+            config:
+              Authenticator:
+                allowed_users: &coessing_users
+                  - paigemar@umich.edu
+                  - drsarahlgibson@gmail.com
+                  - yuvipanda@gmail.com
+                  - choldgraf@gmail.com
+                  - georgiana.dolocan@gmail.com
+                admin_users: *coessing_users
+          singleuser:
+            image:
               name: pangeo/pangeo-notebook
               tag: 2021.07.06
-          cpu:
-            limit: 2
-            guarantee: 1
-          memory:
-            limit: 4G
-            guarantee: 2G
-      gateway:
-        backend:
-          scheduler:
-            cores:
-              request: 0.8
-              limit: 1
+            cpu:
+              limit: 2
+              guarantee: 1
             memory:
-              request: 1G
-              limit: 2G
+              limit: 4G
+              guarantee: 2G
+      dask-gateway:
+        gateway:
+          backend:
+            scheduler:
+              cores:
+                request: 0.8
+                limit: 1
+              memory:
+                request: 1G
+                limit: 2G
