@@ -54,11 +54,33 @@ variable "core_node_vm_size" {
 
 
 variable "global_container_registry_name" {
-  type = string
+  type        = string
+  description = <<-EOT
+  Name of container registry to use for our image.
+
+  This needs to be globally unique across all of Azure (ugh?)
+  and not contain dashes or underscores.
+  EOT
+}
+
+variable "global_storage_account_name" {
+  type        = string
+  description = <<-EOT
+  Name of storage account to use for Azure files
+
+  This needs to be globally unique across all of Azure (ugh?)
+  and not contain dashes or underscores.
+  EOT
 }
 
 variable "ssh_pub_key" {
-  type = string
+  type        = string
+  description = <<-EOT
+  SSH public key that'll be authorized to login to nodes.
+
+  The username is `hub-admin`, and you can use the private key
+  associated with this public key to login.
+  EOT
 }
 
 variable "notebook_nodes" {
