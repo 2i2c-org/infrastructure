@@ -29,6 +29,14 @@ resource "azurerm_subnet" "node_subnet" {
   address_prefixes     = ["10.1.0.0/16"]
 }
 
+provider "kubernetes" {
+  host                   = azurerm_kubernetes_cluster.jupyterhub.kube_config.0.host
+  client_certificate     = base64decode(azurerm_kubernetes_cluster.jupyterhub.kube_config.0.client_certificate)
+  client_key             = base64decode(azurerm_kubernetes_cluster.jupyterhub.kube_config.0.client_key)
+  cluster_ca_certificate = base64decode(azurerm_kubernetes_cluster.jupyterhub.kube_config.0.cluster_ca_certificate)
+}
+
+
 resource "azurerm_kubernetes_cluster" "jupyterhub" {
   name                = "hub-cluster"
   location            = azurerm_resource_group.jupyterhub.location

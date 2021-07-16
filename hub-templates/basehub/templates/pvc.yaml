@@ -1,0 +1,14 @@
+{{ if .Values.pvc.enabled }}
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: home-nfs
+spec:
+  accessModes:
+    - ReadWriteMany
+  volumeName: {{ .Values.pvc.pvName | default }}
+  storageClassName: ""
+  resources:
+    requests:
+      storage: 1Mi
+{{ end }}

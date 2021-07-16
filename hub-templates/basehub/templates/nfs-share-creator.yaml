@@ -1,4 +1,5 @@
 {{ if .Values.nfsPVC.enabled }}
+{{ if .Values.nfsPVC.shareCreator.enabled }}
 apiVersion: batch/v1
 kind: Job
 metadata:
@@ -48,4 +49,5 @@ spec:
           nfs:
             server: {{ .Values.nfsPVC.nfs.serverIP | quote }}
             path: {{ .Values.nfsPVC.nfs.baseShareName | quote }}
+{{ end }}
 {{ end }}

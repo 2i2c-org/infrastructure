@@ -14,9 +14,14 @@ etcJupyter:
       # when people leave a notebook open and wander off
       cull_connected: true
 
+pvc:
+  enabled: false
+  pvName: homes
+
 nfsPVC:
   enabled: true
   shareCreator:
+    enabled: true
     tolerations: []
   nfs:
     mountOptions:
