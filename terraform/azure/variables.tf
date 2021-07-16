@@ -1,13 +1,3 @@
-variable "tenant_id" {
-  type        = string
-  description = <<-EOT
-  Tenant ID containing the subscription to use.
-
-  A UUID referencing the
-  This
-  EOT
-}
-
 variable "subscription_id" {
   type        = string
   description = <<-EOT
