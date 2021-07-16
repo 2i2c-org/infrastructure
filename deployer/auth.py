@@ -37,7 +37,8 @@ class KeyProvider:
     def get_clients(self):
         return {
             client['name']: client
-            for client in self.auth0.clients.all()
+            # Our account is limited to 100 clients, and we want it all in one go
+            for client in self.auth0.clients.all(per_page=100)
         }
 
     def get_connections(self):
