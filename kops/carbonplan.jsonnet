@@ -57,7 +57,7 @@ local data = {
             spec+: {
                 machineType: n.machineType,
                 subnets: [zone],
-                maxSize: 20,
+                maxSize: 500,
                 role: "Node",
                 nodeLabels+: {
                     "hub.jupyter.org/node-purpose": "user",
@@ -82,7 +82,7 @@ local data = {
             spec+: {
                 machineType: n.machineType,
                 subnets: [zone],
-                maxSize: 20,
+                maxSize: 500,
                 role: "Node",
                 nodeLabels+: {
                     "k8s.dask.org/node-purpose": "worker"
