@@ -33,15 +33,15 @@ local data = {
             name: "master"
         },
         spec+: {
-            machineType: "t3.medium",
+            machineType: "m5.xlarge",
             subnets: [zone],
             nodeLabels+: {
                 "hub.jupyter.org/node-purpose": "core",
                 "k8s.dask.org/node-purpose": "core"
             },
-            // Needs to be at least 1
-            minSize: 1,
-            maxSize: 3,
+            // CarbonPlan runs big jobs, so let's be resilient here
+            minSize: 2,
+            maxSize: 6,
             role: "Master"
         },
     },
