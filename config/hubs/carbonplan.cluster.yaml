@@ -143,11 +143,32 @@ hubs:
           tolerations:
             - key:  "node-role.kubernetes.io/master"
               effect: "NoSchedule"
+          resources:
+            requests:
+              cpu: 0.5
+              memory: 512Mi
+            limits:
+              cpu: 2
+              memory: 4Gi
         controller:
           tolerations:
             - key:  "node-role.kubernetes.io/master"
               effect: "NoSchedule"
+          resources:
+            requests:
+              cpu: 0.5
+              memory: 512Mi
+            limits:
+              cpu: 2
+              memory: 4Gi
         gateway:
+          resources:
+            requests:
+              cpu: 0.5
+              memory: 512Mi
+            limits:
+              cpu: 2
+              memory: 4Gi
           tolerations:
             - key:  "node-role.kubernetes.io/master"
               effect: "NoSchedule"
