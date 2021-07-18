@@ -146,13 +146,74 @@ hubs:
             #   Along with this, we also make use of the autohttps system that
             #   requires us to configure an letsencrypt email.
             #
-            service:
-              type: LoadBalancer
             https:
               enabled: true
               type: letsencrypt
               letsencrypt:
                 contactEmail: erik@sundellopensource.se
+
+            service:
+              # jupyterhub-ssh/sftp integration part 1/3:
+              #
+              # We must accept traffic to the k8s Service (proxy-public) receiving traffic
+              # from the internet. Port 22 is typically used for both SSH and SFTP, but we
+              # can't use the same port for both so we use 2222 for SFTP in this example.
+              #
+              extraPorts:
+                - name: ssh
+                  port: 22
+                  targetPort: ssh
+                - name: sftp
+                  port: 2222
+                  targetPort: sftp
+            traefik:
+              # jupyterhub-ssh/sftp integration part 2/3:
+              #
+              # We must accept traffic arriving to the autohttps pod (traefik) from the
+              # proxy-public service. Expose a port and update the NetworkPolicy
+              # to tolerate incoming (ingress) traffic on the exposed port.
+              #
+              extraPorts:
+                - name: ssh
+                  containerPort: 8022
+                - name: sftp
+                  containerPort: 2222
+              networkPolicy:
+                allowedIngressPorts: [http, https, ssh, sftp]
+              # jupyterhub-ssh/sftp integration part 3/3:
+              #
+              # We must let traefik know it should listen for traffic (traefik entrypoint)
+              # and route it (traefik router) onwards to the jupyterhub-ssh k8s Service
+              # (traefik service).
+              #
+              extraStaticConfig:
+                entryPoints:
+                  ssh-entrypoint:
+                    address: :8022
+                  sftp-entrypoint:
+                    address: :2222
+              extraDynamicConfig:
+                tcp:
+                  services:
+                    ssh-service:
+                      loadBalancer:
+                        servers:
+                          - address: jupyterhub-ssh:22
+                    sftp-service:
+                      loadBalancer:
+                        servers:
+                          - address: jupyterhub-sftp:22
+                  routers:
+                    ssh-router:
+                      entrypoints: [ssh-entrypoint]
+                      rule: HostSNI(`*`)
+                      service: ssh-service
+                    sftp-router:
+                      entrypoints: [sftp-entrypoint]
+                      rule: HostSNI(`*`)
+                      service: sftp-service
+
+
 
           hub:
             config:
@@ -220,3 +281,13 @@ hubs:
               # per Dask cluster limits.
               c.ClusterConfig.cluster_max_cores = 256
               c.ClusterConfig.cluster_max_memory = "1028G"
+
+
+      jupyterhub-ssh:
+        hubUrl: http://proxy-http:8000
+
+        ssh:
+          enabled: true
+
+        sftp:
+          enabled: false

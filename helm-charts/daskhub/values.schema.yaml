@@ -27,6 +27,12 @@ properties:
   dask-gateway:
     type: object
     additionalProperties: true
+  # jupyterhub-ssh is a dependent helm chart, we rely on its schema validation
+  # for values passed to it and are not imposing restrictions on them in this
+  # helm chart.
+  jupyterhub-ssh:
+    type: object
+    additionalProperties: true
   global:
     type: object
     additionalProperties: true

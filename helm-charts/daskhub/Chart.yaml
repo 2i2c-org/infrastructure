@@ -13,3 +13,6 @@ dependencies:
   - name: dask-gateway
     version: "2022.10.0"
     repository: "https://helm.dask.org/"
+  - name: jupyterhub-ssh
+    version: 0.0.1-n114.h3c48a9f
+    repository: https://yuvipanda.github.io/jupyterhub-ssh/
