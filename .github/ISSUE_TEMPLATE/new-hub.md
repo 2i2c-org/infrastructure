@@ -1,37 +1,50 @@
 ---
-name: "💻 New Hub"
+name: "💻  New Hub"
 about: Creating a new hub for 2i2c to operate
 labels: "type: hub"
-title: "New Hub: [Hub name]"
+title: "New Hub: <Hub name>"
 ---
 
 # Background
 
-<!-- a one to two sentence description of the hub -->
+<!-- a one to two sentence description of the hub, and the community that it is meant for. -->
 
-# Setup Information
+_For more information about the fields below and what they mean, see [the Pilot Hubs documentation](https://pilot-hubs.2i2c.org/en/latest/howto/operate/new-hub/index.html)_
 
-- **Hub auth type**: <!-- Which type of authentication will the hub use? (Google, GitHub, Other) -->
-- **Hub administrators**: <!-- list of administrator accounts to add to the hub -->
-- **Hub url**: <!-- the URL of the hub, e.g., my-hub-url.pilot.2i2c.cloud -->
-- **Hub logo**: <!-- hub logo if they want one -->
-- **Hub logo URL**: <!-- hub logo URL if they want one -->
-- **Hub type**: <!-- hub type (education, dask hub, etc) -->
-- **Hub cluster**: <!-- which cluster will the hub run in?? (pilot, cloudbank, etc) -->
-- **Hub image**: <!-- if the hub has a custom image uploaded to quay, what is the name/tag? -->
+# Community Information
 
-# Important Information
+_Information about this hub's community_
 
-- **Link to leads issue**: <!--  link to the leads issue that generated this hub (see https://github.com/2i2c-org/leads/issues) -->
-- **Hub config name**: <!--  name of config entry, once it is created under config/hubs -->
-- **Community Representative**: <!-- name of community representative -->
-- **Hub start date**: <!-- hub start date (does the hub need to start at a certain date?) -->
-- **Hub end date**: <!-- hub end date (does the hub need to end at a certain date?) -->
-- **Hub important dates**: <!-- any important dates we should know about? -->
+- **Community Representative**: 
+- **Target start date**: 
+- **Important dates**: 
 
-# Deploy To Do
+# Hub Authentication
+_Information about how the Hub Representative and Administrators will log in._
 
-- [ ] Initial Hub deployment
+- **Hub auth type**: 
+- **Hub administrators**:
+
+# Deployment Information
+_Information needed to make an initial deploy of the hub._
+
+- **Hub ID**:
+- **Hub Cluster**:
+- **Hub url**:
+- **Hub template**:
+
+# Hub Customization
+_Information to tailor the hub for the community that will use it._
+
+- **Hub logo**:
+- **Hub logo URL**: 
+- **Hub image service**:
+- **Hub image**: 
+
+# Actions to deploy
+
+- [ ] Deploy information filled in above
+- [ ] Initial Hub deployment PR: <link to PR>
 - [ ] Administrators able to log on
 - [ ] Community Representative satisfied with hub environment
 - [ ] Hub now in steady-state
