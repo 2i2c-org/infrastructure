@@ -2,6 +2,16 @@ name: carbonplan
 provider: kubeconfig
 kubeconfig:
   file: secrets/carbonplan.yaml
+support:
+  config:
+    grafana:
+      ingress:
+        hosts:
+          - grafana.carbonplan.2i2c.cloud
+        tls:
+          - secretName: grafana-tls
+            hosts:
+              - grafana.carbonplan.2i2c.cloud
 hubs:
   - name: staging
     domain: staging.carbonplan.2i2c.cloud
@@ -108,10 +118,6 @@ hubs:
             userScheduler:
               enabled: false
           proxy:
-            service:
-              type: LoadBalancer
-            https:
-              enabled: true
             chp:
               resources:
                 requests:
@@ -121,14 +127,6 @@ hubs:
                   cpu: 1
                   memory: 4Gi
               nodeSelector: {}
-            traefik:
-              resources:
-                requests:
-                  cpu: 0.5
-                  memory: 256Mi
-                limits:
-                  cpu: 1
-                  memory: 4Gi
           hub:
             resources:
               requests:
