@@ -51,10 +51,8 @@
         authorization: {
             rbac: {}
         },
-        dns: {
-            kubeDNS: {
-                provider: "CoreDNS"
-            }
+        kubeDNS: {
+            provider: "CoreDNS"
         },
         channel: "stable",
         cloudProvider: "aws",

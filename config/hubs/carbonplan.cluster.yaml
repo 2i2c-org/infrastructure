@@ -22,11 +22,6 @@ hubs:
             - noresvport
             serverIP: fs-8a4e4f8d.efs.us-west-2.amazonaws.com
             baseShareName: /
-          shareCreator:
-            tolerations:
-            - key: node-role.kubernetes.io/master
-              operator: "Exists"
-              effect: "NoSchedule"
         jupyterhub:
           custom:
             homepage:
@@ -126,9 +121,6 @@ hubs:
                   cpu: 1
                   memory: 4Gi
               nodeSelector: {}
-              tolerations:
-                - key:  "node-role.kubernetes.io/master"
-                  effect: "NoSchedule"
             traefik:
               resources:
                 requests:
@@ -137,10 +129,6 @@ hubs:
                 limits:
                   cpu: 1
                   memory: 4Gi
-              nodeSelector: {}
-              tolerations:
-                - key:  "node-role.kubernetes.io/master"
-                  effect: "NoSchedule"
           hub:
             resources:
               requests:
@@ -156,14 +144,8 @@ hubs:
             readinessProbe:
               enabled: false
             nodeSelector: {}
-            tolerations:
-              - key:  "node-role.kubernetes.io/master"
-                effect: "NoSchedule"
       dask-gateway:
         traefik:
-          tolerations:
-            - key:  "node-role.kubernetes.io/master"
-              effect: "NoSchedule"
           resources:
             requests:
               cpu: 0.5
@@ -172,9 +154,6 @@ hubs:
               cpu: 2
               memory: 4Gi
         controller:
-          tolerations:
-            - key:  "node-role.kubernetes.io/master"
-              effect: "NoSchedule"
           resources:
             requests:
               cpu: 0.5
@@ -190,9 +169,6 @@ hubs:
             limits:
               cpu: 2
               memory: 4Gi
-          tolerations:
-            - key:  "node-role.kubernetes.io/master"
-              effect: "NoSchedule"
             # TODO: figure out a replacement for userLimits.
           extraConfig:
             idle: |
