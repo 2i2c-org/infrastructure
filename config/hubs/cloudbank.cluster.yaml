@@ -64,7 +64,7 @@ hubs:
             templateVars:
               org:
                 name: City College SF
-                logo_url: https://www.ccsf.edu/sites/default/files/inline-images/asset-th-logo-black.png
+                logo_url: https://www.ccsf.edu/sites/default/files/inline-images/CCSF%20LOGO.png
                 url: https://www.ccsf.edu/
               designed_by:
                 name: 2i2c
