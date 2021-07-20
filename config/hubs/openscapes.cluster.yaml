@@ -128,6 +128,14 @@ hubs:
             tolerations:
               - key:  "node-role.kubernetes.io/master"
                 effect: "NoSchedule"
+          config:
+            Authenticator:
+              admin_users:
+                - yuvipanda
+                - choldgraf
+                - GeorgianaElena
+                - amfriesz
+                - jules32
       dask-gateway:
         traefik:
           tolerations:
