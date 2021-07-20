@@ -118,16 +118,37 @@ hubs:
             https:
               enabled: true
             chp:
+              resources:
+                requests:
+                  cpu: 0.5
+                  memory: 256Mi
+                limits:
+                  cpu: 1
+                  memory: 4Gi
               nodeSelector: {}
               tolerations:
                 - key:  "node-role.kubernetes.io/master"
                   effect: "NoSchedule"
             traefik:
+              resources:
+                requests:
+                  cpu: 0.5
+                  memory: 256Mi
+                limits:
+                  cpu: 1
+                  memory: 4Gi
               nodeSelector: {}
               tolerations:
                 - key:  "node-role.kubernetes.io/master"
                   effect: "NoSchedule"
           hub:
+            resources:
+              requests:
+                cpu: 0.5
+                memory: 256Mi
+              limits:
+                cpu: 1
+                memory: 4Gi
             allowNamedServers: true
             networkPolicy:
               # FIXME: For dask gateway
@@ -143,11 +164,32 @@ hubs:
           tolerations:
             - key:  "node-role.kubernetes.io/master"
               effect: "NoSchedule"
+          resources:
+            requests:
+              cpu: 0.5
+              memory: 512Mi
+            limits:
+              cpu: 2
+              memory: 4Gi
         controller:
           tolerations:
             - key:  "node-role.kubernetes.io/master"
               effect: "NoSchedule"
+          resources:
+            requests:
+              cpu: 0.5
+              memory: 512Mi
+            limits:
+              cpu: 2
+              memory: 4Gi
         gateway:
+          resources:
+            requests:
+              cpu: 0.5
+              memory: 512Mi
+            limits:
+              cpu: 2
+              memory: 4Gi
           tolerations:
             - key:  "node-role.kubernetes.io/master"
               effect: "NoSchedule"
