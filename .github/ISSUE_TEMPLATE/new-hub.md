@@ -24,7 +24,7 @@ title: "New Hub: [Hub name]"
 
 - **Link to leads issue**: <!--  link to the leads issue that generated this hub (see https://github.com/2i2c-org/leads/issues) -->
 - **Hub config name**: <!--  name of config entry, once it is created under config/hubs -->
-- **Community champion**: <!-- name of community champion -->
+- **Community Representative**: <!-- name of community representative -->
 - **Hub start date**: <!-- hub start date (does the hub need to start at a certain date?) -->
 - **Hub end date**: <!-- hub end date (does the hub need to end at a certain date?) -->
 - **Hub important dates**: <!-- any important dates we should know about? -->
@@ -33,5 +33,5 @@ title: "New Hub: [Hub name]"
 
 - [ ] Initial Hub deployment
 - [ ] Administrators able to log on
-- [ ] Community Champion satisfied with hub environment
+- [ ] Community Representative satisfied with hub environment
 - [ ] Hub now in steady-state
