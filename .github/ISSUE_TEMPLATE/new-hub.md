@@ -20,7 +20,7 @@ _Information about this hub's community_
 - **Important dates**: 
 
 # Hub Authentication
-_Information about how the Hub Representative and Administrators will log in._
+_Information about how the Hub Representative and Administrators will log in and who should be given administrative control over the hub (other than 2i2c engineers)._
 
 - **Hub auth type**: 
 - **Hub administrators**:
