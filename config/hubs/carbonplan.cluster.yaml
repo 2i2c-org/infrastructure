@@ -4,6 +4,15 @@ kubeconfig:
   file: secrets/carbonplan.yaml
 support:
   config:
+    prometheus:
+      server:
+        resources:
+          requests:
+            cpu: 1
+            memory: 6Gi
+          limits:
+            cpu: 4
+            memory: 12Gi
     grafana:
       ingress:
         hosts:
