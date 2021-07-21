@@ -11,6 +11,7 @@ resource "google_container_cluster" "cluster" {
 
   private_cluster_config {
     enable_private_nodes    = true
+    enable_private_endpoint = false
   }
 
   addons_config {
@@ -224,4 +225,3 @@ resource "google_container_node_pool" "dask_worker" {
     ]
   }
 }
-
