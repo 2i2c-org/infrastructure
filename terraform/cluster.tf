@@ -9,6 +9,10 @@ resource "google_container_cluster" "cluster" {
   initial_node_count       = 1
   remove_default_node_pool = true
 
+  private_cluster_config {
+    enable_private_nodes    = true
+  }
+
   addons_config {
     http_load_balancing {
       // FIXME: This used to not work well with websockets, and
