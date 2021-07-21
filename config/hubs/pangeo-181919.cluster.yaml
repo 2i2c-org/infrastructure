@@ -58,7 +58,7 @@ hubs:
           singleuser:
             image:
               name: quay.io/2i2c/coessing-image
-              tag: "5a8a765b7ff9"
+              tag: "9894ec5ce239"
             cpu:
               limit: 2
               guarantee: 1
