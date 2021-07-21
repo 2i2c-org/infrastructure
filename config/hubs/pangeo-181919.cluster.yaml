@@ -57,8 +57,8 @@ hubs:
                 admin_users: *coessing_users
           singleuser:
             image:
-              name: pangeo/pangeo-notebook
-              tag: 2021.07.06
+              name: quay.io/2i2c/coessing-image
+              tag: "5a8a765b7ff9"
             cpu:
               limit: 2
               guarantee: 1
