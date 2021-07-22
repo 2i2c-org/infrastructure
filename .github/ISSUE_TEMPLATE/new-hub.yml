@@ -60,10 +60,10 @@ body:
       description: |
         If you have restrictions about which cloud provider to use, please indicate here. **Only choose a cloud provider if you have a strong opinion**. You may wish to specify a specific provider if you have a dataset that exists in one of the cloud providers already, or a billing account that you wish to use with a pre-existing cloud provider. If you have no preference, we'll use Google Cloud Platform.
       options:
-        - No preference
-        - "[Google Cloud Platform](https://cloud.google.com/)"
-        - "[Amazon Web Services](https://aws.amazon.com/)"
-        - "[Microsoft Azure](https://azure.microsoft.com/en-us/)"
+        - No preference (default)
+        - Google Cloud Platform
+        - Amazon Web Services
+        - Microsoft Azure
     validations:
       required: true
 
