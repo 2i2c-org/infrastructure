@@ -51,7 +51,7 @@ body:
   - type: markdown
     attributes:
       value: |
-        ## Hub Customization
+        ## Cloud Provider Information
 
   - type: dropdown
     id: cloud-provider
@@ -77,6 +77,11 @@ body:
         - label: Yes, I have my own billing account.
     validations:
       required: false
+
+  - type: markdown
+    attributes:
+      value: |
+        ## Hub Customization
 
   - type: input
     id: auth-type
