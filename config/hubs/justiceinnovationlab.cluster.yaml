@@ -1,0 +1,88 @@
+name: justiceinnovationlab
+provider: kubeconfig
+kubeconfig:
+  file: secrets/justiceinnovationlab.yaml
+hubs:
+  - name: staging
+    domain: staging.justiceinnovationlab.2i2c.cloud
+    template: daskhub
+    auth0:
+      connection: github
+    config: &hubConfig
+      scratchBucket:
+        enabled: false
+      basehub:
+        pvc:
+          enabled: true
+          pvName: homes
+        nfs:
+          enabled: false
+          shareCreator:
+            enabled: false
+        jupyterhub:
+          custom:
+            homepage:
+              templateVars:
+                org:
+                  name: Justice Innovation Lab
+                  logo_url: "https://images.squarespace-cdn.com/content/5ee35ddb35affc21b29c0fd6/1596634079158-KLDENW5BSW2HQW4ZO0EH/JIL-Logo-Digital.png?format=1500w&content-type=image%2Fpng"
+                  url: https://www.justiceinnovationlab.org/
+                designed_by:
+                  name: 2i2c
+                  url: https://2i2c.org
+                operated_by:
+                  name: 2i2c
+                  url: https://2i2c.org
+                funded_by:
+                  name: Justice Innovation Lab
+                  url: https://www.justiceinnovationlab.org/
+          singleuser:
+
+            defaultUrl: /lab
+            image:
+              name: jupyter/base-notebook
+              tag: latest
+            storage:
+              type: none
+              extraVolumes:
+              - name: home
+                persistentVolumeClaim:
+                  claimName: home-nfs
+          scheduling:
+            userPlaceholder:
+              enabled: false
+              replicas: 0
+            userScheduler:
+              enabled: false
+          proxy:
+            service:
+              type: LoadBalancer
+            https:
+              enabled: true
+          hub:
+            allowNamedServers: true
+            extraConfig:
+              10-dynamic-subpath: |
+                import os
+                pod_namespace = os.environ['POD_NAMESPACE']
+                # FIXME: This isn't setting up _shared dirs properly
+                c.KubeSpawner.volume_mounts = [
+                  {
+                    "mountPath": "/home/jovyan",
+                    "name": "home",
+                    "subPath": f"{pod_namespace}/{{username}}"
+                  },
+                ]
+
+            networkPolicy:
+              # FIXME: For dask gateway
+              enabled: false
+            readinessProbe:
+              enabled: false
+            nodeSelector: {}
+  - name: prod
+    domain: justiceinnovationlab.2i2c.cloud
+    template: daskhub
+    auth0:
+      connection: github
+    config: *hubConfig
