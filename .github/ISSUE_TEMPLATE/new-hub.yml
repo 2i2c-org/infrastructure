@@ -53,6 +53,31 @@ body:
       value: |
         ## Hub Customization
 
+  - type: dropdown
+    id: cloud-provider
+    attributes:
+      label: Preferred Cloud Provider
+      description: |
+        If you have restrictions about which cloud provider to use, please indicate here. You may wish to specify a specific provider if you have a dataset that exists in one of the cloud providers already, or a billing account that you wish to use with a pre-existing cloud provider. If you have no preference, we'll use Google Cloud Platform.
+      options:
+        - No preference
+        - [Google Cloud Platform](https://cloud.google.com/)
+        - [Amazon Web Services](https://aws.amazon.com/)
+        - [Microsoft Azure](https://azure.microsoft.com/en-us/)
+    validations:
+      required: true
+
+  - type: checkbox
+    id: billing-account
+    attributes:
+      label: Do you have your own billing account?
+      description: |
+        If you have your own billing account, we will need to set up the hub infrastructure connected to *your* account. This will be a bit more complex and take extra time. We'll follow up with more questions if you mark "yes" here.
+      options:
+        - label: Yes, I have my own billing account.
+    validations:
+      required: false
+
   - type: input
     id: auth-type
     attributes:
