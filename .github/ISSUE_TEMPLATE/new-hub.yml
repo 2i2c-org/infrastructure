@@ -8,9 +8,7 @@ body:
       value: |
         # Ask for a new 2i2c JupyterHub!
         
-        This template is designed to help you provide information about your 2i2c Hub so that a 2i2c Engineer can set it up properly.
-        Answer the sections below as best you can.
-        We can update information as we learn more.
+        This template is designed to help you provide information about your 2i2c Hub so that a 2i2c Engineer can set it up properly. Answer the sections below as best you can. We can update information as we learn more.
 
         ## Community Information
 
@@ -28,9 +26,7 @@ body:
     attributes:
       label: Community Representative
       description: |
-        The main point-of-contact for this hub, and the person who requests changes to the hub on behalf of the community.
-        **This person will be the first Hub Administrator**, and may add new hub administrators from the JupyterHub UI.
-        Should be either a GitHub handle or email address, depending on the type of authentication you've indicated below.
+        The main point-of-contact for this hub, and the person who requests changes to the hub on behalf of the community. **This person will be the first Hub Administrator**, and may add new hub administrators from the JupyterHub UI. Should be either a GitHub handle or email address, depending on the type of authentication you've indicated below.
     validations:
       required: true
 
@@ -39,8 +35,7 @@ body:
     attributes:
       label: Target start date
       description: |
-        The target start date when this hub will begin operation.
-        This should be at least a week before any important usage of the hub will occur, to ensure that the Hub Representative has time to try it out. 
+        The target start date when this hub will begin operation. This should be at least a week before any important usage of the hub will occur, to ensure that the Hub Representative has time to try it out. 
     validations:
       required: true
 
@@ -49,8 +44,7 @@ body:
     attributes:
       label: Important dates
       description: |
-        Any important dates that we should consider for this hub.
-        For example, if it will be used for a class, the starting day of class and any days with tests.
+        Any important dates that we should consider for this hub. For example, if it will be used for a class, the starting day of class and any days with tests.
     validations:
       required: true
 
@@ -64,10 +58,7 @@ body:
     attributes:
       label: Hub Authentication Type
       description: |
-        What kind of authentication service will be used for this community.
-        This boils down to what kind of "log-in username" users wish to use on the hub.
-        Currently, the two options are **GitHub handles** (e.g., `@mygithubhandle`) or Google OAuth usernames (e.g., `myname@2i2c.org`).
-        You must choose **only one option**.
+        What kind of authentication service will be used for this community. This boils down to what kind of "log-in username" users wish to use on the hub.Currently, the two options are **GitHub handles** (e.g., `@mygithubhandle`) or Google OAuth usernames (e.g., `myname@2i2c.org`). You must choose **only one option**.
     validations:
       required: true
 
@@ -76,8 +67,7 @@ body:
     attributes:
       label: Extra features you'd like to enable
       description: |
-        In addition to a base JupyterHub, you may enable extra infrastructure features that provide additional functionality.
-        These generally come with added complexity and cost, so make sure you've discussed these options with somebody at 2i2c before selecting them here.
+        In addition to a base JupyterHub, you may enable extra infrastructure features that provide additional functionality. These generally come with added complexity and cost, so make sure you've discussed these options with somebody at 2i2c before selecting them here.
 
       options:
         - label: Dedicated Scalable Dask Cluster with [Dask Gateway](https://gateway.dask.org/)
@@ -108,9 +98,7 @@ body:
     attributes:
       label: Hub image service
       description: |
-        The image registry service used for this hub's user image, if a custom user image is desired.
-        For example, a [quay.io registry image](https://quay.io/).
-        See [the Pilot Hubs documentation on custom images](https://pilot-hubs.2i2c.org/en/latest/howto/customize/custom-image.html) for more information.
+        The image registry service used for this hub's user image, if a custom user image is desired. For example, a [quay.io registry image](https://quay.io/). See [the Pilot Hubs documentation on custom images](https://pilot-hubs.2i2c.org/en/latest/howto/customize/custom-image.html) for more information.
         
     validations:
       required: false
@@ -129,8 +117,7 @@ body:
       value: |
         ## Hub Engineer information
 
-        The Hub Engineer should fill in the metadata below when it available.
-        The Community Representative shouldn't worry about this section, but may be asked to provide help answering some questions.
+        The Hub Engineer should fill in the metadata below when it available. The Community Representative shouldn't worry about this section, but may be asked to provide help answering some questions.
         
         ### Deployment information
 
