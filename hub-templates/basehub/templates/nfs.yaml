@@ -1,0 +1,15 @@
+{{ if .Values.nfs.enabled }}
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: {{ .Release.Name }}-home-nfs
+spec:
+  capacity:
+    storage: 1Mi
+  accessModes:
+    - ReadWriteMany
+  nfs:
+    server: {{ .Values.nfs.pv.serverIP | quote}}
+    path: "{{ .Values.nfs.pv.baseShareName }}{{ .Release.Name }}"
+  mountOptions: {{ .Values.nfs.pv.mountOptions | toJson }}
+{{ end }}

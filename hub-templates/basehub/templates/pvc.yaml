@@ -6,7 +6,7 @@ metadata:
 spec:
   accessModes:
     - ReadWriteMany
-  volumeName: {{ .Values.pvc.pvName | default }}
+  volumeName: {{ .Values.pvc.pvName | default (printf "%s-home-nfs" .Release.Name) }}
   storageClassName: ""
   resources:
     requests:

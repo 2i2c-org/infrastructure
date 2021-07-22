@@ -26,7 +26,7 @@ For each hub, there needs to be a:
 
 ### Hub directory
 
-A directory is created under `/export/home-01/homes` for each hub. This the the base directory under which each hub has a directory ([`nfsPVC.nfs.baseShareName`](https://github.com/2i2c-org/pilot-hubs/blob/master/hub-templates/basehub/values.yaml#L21)). This is done through [a job](https://github.com/2i2c-org/pilot-hubs/blob/master/hub-templates/basehub/templates/nfs-share-creater.yaml) that's created for each deployment via [helm hooks](https://helm.sh/docs/topics/charts_hooks/) that will mount `nfsPVC.nfs.baseShareName`, and make sure the directory for the hub is present on the NFS server with appropriate permissions.
+A directory is created under `/export/home-01/homes` for each hub. This the the base directory under which each hub has a directory ([`nfs.pv.baseShareName`](https://github.com/2i2c-org/pilot-hubs/blob/master/hub-templates/basehub/values.yaml#L21)). This is done through [a job](https://github.com/2i2c-org/pilot-hubs/blob/master/hub-templates/basehub/templates/nfs-share-creater.yaml) that's created for each deployment via [helm hooks](https://helm.sh/docs/topics/charts_hooks/) that will mount `nfs.pv.baseShareName`, and make sure the directory for the hub is present on the NFS server with appropriate permissions.
 
 ```{note}
 The NFS share creator job will be created pre-deploy, run, and cleaned up before deployment proceeds. Ideally, this would only happen once per hub setup - but we don't have a clear way to do that yet.

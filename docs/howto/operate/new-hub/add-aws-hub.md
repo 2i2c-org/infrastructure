@@ -163,9 +163,9 @@ kops validate cluster --wait 10m
 python3 setup-efs.py <cluster_name>hub.k8s.local <region-of-cluster>
 ```
 
-This will output an fs-<xxxxxxxx> id. You should use that value 
+This will output an fs-<xxxxxxxx> id. You should use that value
 (it should be something like `fs-<id>.efs.<region>.amazonaws.com`) in
-the `basehub.nfsPVC.nfs.serverIP` at you hub config file. 
+the `basehub.nfs.pv.serverIP` at you hub config file.
 
 ## Deploy the new hub
 

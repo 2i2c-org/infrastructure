@@ -15,15 +15,15 @@ etcJupyter:
       cull_connected: true
 
 pvc:
-  enabled: false
-  pvName: homes
+  enabled: true
+  pvName:
 
-nfsPVC:
+nfs:
   enabled: true
   shareCreator:
     enabled: true
     tolerations: []
-  nfs:
+  pv:
     mountOptions:
       - soft
       - noatime
