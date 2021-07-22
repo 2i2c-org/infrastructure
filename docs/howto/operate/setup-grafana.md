@@ -18,6 +18,24 @@ gcloud config set project PROJECT_ID
 The `support` chart is a helm chart maintained by the 2i2c Engineers that consists of common tools used to support JupyterHub deployments in the cloud.
 These tools are [`cert-manager`](https://cert-manager.io/docs/), for automatically provisioning TLS certificates from [Let's Encrypt](https://letsencrypt.org/); [Prometheus](https://prometheus.io/), for scraping and storing metrics from the cluster and hub; and [Grafana](https://grafana.com/), for visualising the metrics retreived by Prometheus.
 
-### Edit your `.cluster.yaml` file
+### Edit your `*.cluster.yaml` file
+
+Add the following config as a top-level key to your `*.cluster.yaml` file under `/config/hubs` in `pilot-hubs`.
+`GRAFANA_URL` should follow the pattern `grafana.<cluster_name>.2i2c.cloud`.
+
+```yaml
+support:
+  config:
+    grafana:
+      ingress:
+        hosts:
+          - GRAFANA_URL
+        tls:
+          - secretName: grafana-tls
+            hosts:
+              - GRAFANA_URL
+```
+
+### Deploy the `support` chart via the `deployer`
 
 
