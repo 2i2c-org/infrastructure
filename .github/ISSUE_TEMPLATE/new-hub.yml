@@ -91,7 +91,7 @@ body:
       description: |
         A URL to an image that will be used on the hub's landing page. (optional)
     validations:
-      required: true
+      required: false
 
   - type: input
     id: hub-logo-url
@@ -155,7 +155,6 @@ body:
         - [ ] Administrators able to log on
         - [ ] Community Representative satisfied with hub environment
         - [ ] Hub now in steady-state
-
 
 
 
