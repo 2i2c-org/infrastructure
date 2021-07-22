@@ -30,7 +30,7 @@ body:
       description: |
         The main point-of-contact for this hub, and the person who requests changes to the hub on behalf of the community.
         **This person will be the first Hub Administrator**, and may add new hub administrators from the JupyterHub UI.
-        Should be either a GitHub handle or email address, depending on the type of authentication you've indicated above.
+        Should be either a GitHub handle or email address, depending on the type of authentication you've indicated below.
     validations:
       required: true
 
@@ -155,7 +155,6 @@ body:
         - [ ] Administrators able to log on
         - [ ] Community Representative satisfied with hub environment
         - [ ] Hub now in steady-state
-
 
 
 
