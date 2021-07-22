@@ -92,3 +92,20 @@ new files.
 commandline tool used to interact with Google Cloud Platform (GCP). Our deployment
 scripts use it to authenticate to GCP, and it is very helpful in [debugging node
 issues](../howto/operate/node-administration.md).
+
+### Tips
+
+#### Authentication
+
+`gcloud` has two authentication flows, and that can get quite confusing since we
+work on a number of clusters with different Google credentials.
+
+[`gcloud auth login`](https://cloud.google.com/sdk/gcloud/reference/auth/login)
+provides credentials for `gcloud` commands like `gcloud compute instances list`
+or `gcloud container clusters list`.
+
+[`gcloud auth application-default login`](https://cloud.google.com/sdk/gcloud/reference/auth/application-default/login)
+provides credentials for *other tools* (such as `helm`, `kubectl`, `sops`) to
+authenticate to Google Cloud Platform on your behalf. So if `sops` or
+`kubectl` is complaining about authentication, make sure you are authenticated
+correctly with `application-default`

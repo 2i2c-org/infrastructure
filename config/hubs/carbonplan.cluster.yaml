@@ -2,6 +2,16 @@ name: carbonplan
 provider: kubeconfig
 kubeconfig:
   file: secrets/carbonplan.yaml
+support:
+  config:
+    grafana:
+      ingress:
+        hosts:
+          - grafana.carbonplan.2i2c.cloud
+        tls:
+          - secretName: grafana-tls
+            hosts:
+              - grafana.carbonplan.2i2c.cloud
 hubs:
   - name: staging
     domain: staging.carbonplan.2i2c.cloud
@@ -22,11 +32,6 @@ hubs:
             - noresvport
             serverIP: fs-8a4e4f8d.efs.us-west-2.amazonaws.com
             baseShareName: /
-          shareCreator:
-            tolerations:
-            - key: node-role.kubernetes.io/master
-              operator: "Exists"
-              effect: "NoSchedule"
         jupyterhub:
           custom:
             homepage:
@@ -113,21 +118,23 @@ hubs:
             userScheduler:
               enabled: false
           proxy:
-            service:
-              type: LoadBalancer
-            https:
-              enabled: true
             chp:
+              resources:
+                requests:
+                  cpu: 0.5
+                  memory: 256Mi
+                limits:
+                  cpu: 1
+                  memory: 4Gi
               nodeSelector: {}
-              tolerations:
-                - key:  "node-role.kubernetes.io/master"
-                  effect: "NoSchedule"
-            traefik:
-              nodeSelector: {}
-              tolerations:
-                - key:  "node-role.kubernetes.io/master"
-                  effect: "NoSchedule"
           hub:
+            resources:
+              requests:
+                cpu: 0.5
+                memory: 256Mi
+              limits:
+                cpu: 1
+                memory: 4Gi
             allowNamedServers: true
             networkPolicy:
               # FIXME: For dask gateway
@@ -135,22 +142,31 @@ hubs:
             readinessProbe:
               enabled: false
             nodeSelector: {}
-            tolerations:
-              - key:  "node-role.kubernetes.io/master"
-                effect: "NoSchedule"
       dask-gateway:
         traefik:
-          tolerations:
-            - key:  "node-role.kubernetes.io/master"
-              effect: "NoSchedule"
+          resources:
+            requests:
+              cpu: 0.5
+              memory: 512Mi
+            limits:
+              cpu: 2
+              memory: 4Gi
         controller:
-          tolerations:
-            - key:  "node-role.kubernetes.io/master"
-              effect: "NoSchedule"
+          resources:
+            requests:
+              cpu: 0.5
+              memory: 512Mi
+            limits:
+              cpu: 2
+              memory: 4Gi
         gateway:
-          tolerations:
-            - key:  "node-role.kubernetes.io/master"
-              effect: "NoSchedule"
+          resources:
+            requests:
+              cpu: 0.5
+              memory: 512Mi
+            limits:
+              cpu: 2
+              memory: 4Gi
             # TODO: figure out a replacement for userLimits.
           extraConfig:
             idle: |

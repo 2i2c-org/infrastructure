@@ -18,7 +18,49 @@ local data = {
         },
         spec+: {
             // FIXME: Not sure if this is necessary?
-            configBase: "s3://2i2c-carbonplan-kops-state/%s" % data.cluster.metadata.name
+            configBase: "s3://2i2c-carbonplan-kops-state/%s" % data.cluster.metadata.name,
+
+            etcdClusters: [
+                {
+                    cpuRequest: "500m",
+                    etcdMembers: [
+                        {
+                            instanceGroup: "master",
+                            name: "a"
+                        },
+                        {
+                            instanceGroup: "master",
+                            name: "b"
+                        },
+                        {
+                            instanceGroup: "master",
+                            name: "c"
+                        }
+                    ],
+                    memoryRequest: "1Gi",
+                    name: "main"
+                },
+                {
+                    cpuRequest: "500m",
+                    etcdMembers: [
+
+                        {
+                            instanceGroup: "master",
+                            name: "a"
+                        },
+                        {
+                            instanceGroup: "master",
+                            name: "b"
+                        },
+                        {
+                            instanceGroup: "master",
+                            name: "c"
+                        }
+                    ],
+                    memoryRequest: "1Gi",
+                    name: "events"
+                }
+            ],
         },
         _config+:: {
             zone: zone,
@@ -33,16 +75,31 @@ local data = {
             name: "master"
         },
         spec+: {
-            machineType: "t3.medium",
+            machineType: "m5.4xlarge",
+            subnets: [zone],
+            // CarbonPlan runs big jobs, so let's have a big node here
+            minSize: 1,
+            maxSize: 3,
+            role: "Master"
+        },
+    },
+    coreNodes: ig {
+        metadata+: {
+            labels+: {
+                "kops.k8s.io/cluster": data.cluster.metadata.name
+            },
+            name: "core"
+        },
+        spec+: {
+            machineType: "m5.xlarge",
             subnets: [zone],
             nodeLabels+: {
                 "hub.jupyter.org/node-purpose": "core",
                 "k8s.dask.org/node-purpose": "core"
             },
-            // Needs to be at least 1
-            minSize: 1,
-            maxSize: 3,
-            role: "Master"
+            minSize: 2,
+            maxSize: 6,
+            role: "Node"
         },
     },
     notebookNodes: [
@@ -57,7 +114,7 @@ local data = {
             spec+: {
                 machineType: n.machineType,
                 subnets: [zone],
-                maxSize: 20,
+                maxSize: 500,
                 role: "Node",
                 nodeLabels+: {
                     "hub.jupyter.org/node-purpose": "user",
@@ -82,7 +139,7 @@ local data = {
             spec+: {
                 machineType: n.machineType,
                 subnets: [zone],
-                maxSize: 20,
+                maxSize: 500,
                 role: "Node",
                 nodeLabels+: {
                     "k8s.dask.org/node-purpose": "worker"
@@ -98,5 +155,6 @@ local data = {
 
 [
     data.cluster,
-    data.master
+    data.master,
+    data.coreNodes
 ] + data.notebookNodes + data.daskNodes

@@ -1,6 +1,6 @@
 # Add a new GKE cluster managed by our Terraform configuration
 
-This giude will walk through the process of adding a new cluster to our [terraform configuration](https://github.com/2i2c-org/pilot-hubs/tree/master/terraform).
+This guide will walk through the process of adding a new cluster to our [terraform configuration](https://github.com/2i2c-org/pilot-hubs/tree/master/terraform).
 
 ## Cluster Design
 
@@ -26,6 +26,8 @@ Example `.tfvars` file:
 prefix     = "my-awesome-project"
 project_id = "my-awesome-project-id
 ```
+
+Once you have created this file, open a Pull Request to the `pilot-hubs` repo for review.
 
 ## Initialising Terraform
 
@@ -83,9 +85,9 @@ terraform plan -var-file=projects/CLUSTER.tfvars
 ```
 
 Check over the output of this command to ensure nothing if being created/deleted than you expected.
-You might want to ask a fellow 2i2c engineer to glance over it too to double check.
+Copy-paste the plan into your open Pull Request so a fellow 2i2c engineer can double check it too.
 
-If you're satisfied with the plan, apply the changes to deploy the cluster.
+If you're both satisfied with the plan, merge the Pull Request and apply the changes to deploy the cluster.
 
 ```bash
 terraform apply -var-file=projects/CLUSTER.tfvars
