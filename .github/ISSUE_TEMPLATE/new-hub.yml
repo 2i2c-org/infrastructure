@@ -67,7 +67,7 @@ body:
     validations:
       required: true
 
-  - type: checkbox
+  - type: checkboxes
     id: billing-account
     attributes:
       label: Do you have your own billing account?
