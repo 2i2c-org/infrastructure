@@ -8,7 +8,6 @@ import subprocess
 import tempfile
 from contextlib import contextmanager, redirect_stderr, redirect_stdout
 from textwrap import dedent
-from pathlib import Path
 
 import pytest
 from ruamel.yaml import YAML
@@ -94,17 +93,14 @@ class Cluster:
 
         print("Support charts...")
 
-        support_dir = Path(__file__).parent.parent / 'support'
-        support_secrets_file = support_dir / 'secrets.yaml'
-
-        with tempfile.NamedTemporaryFile(mode='w') as f, decrypt_file(support_secrets_file) as secret_file:
+        with tempfile.NamedTemporaryFile(mode='w') as f:
             yaml.dump(self.support.get('config', {}), f)
             f.flush()
             subprocess.check_call([
                 'helm', 'upgrade', '--install', '--create-namespace',
                 '--namespace', 'support',
-                'support', str(support_dir),
-                '-f', secret_file, '-f', f.name,
+                'support', 'support',
+                '-f', f.name,
                 '--wait'
             ])
         print("Done!")

@@ -27,10 +27,6 @@ runs:
         python3 -m pip install -r requirements.txt
         python3 -m pip install -r dev-requirements.txt
       shell: bash
-    - name: Deploy support components
-      run: |
-        python3 deployer deploy-support ${{ inputs.cluster }}
-      shell: bash
     - name: Deploy and test hubs
       run: |
         python3 deployer deploy ${{ inputs.cluster }}
