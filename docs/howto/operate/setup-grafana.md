@@ -16,7 +16,7 @@ gcloud config set project PROJECT_ID
 ## Deploy the `support` chart
 
 The `support` chart is a helm chart maintained by the 2i2c Engineers that consists of common tools used to support JupyterHub deployments in the cloud.
-These tools are [`cert-manager`](https://cert-manager.io/docs/), for automatically provisioning TLS certificates from [Let's Encrypt](https://letsencrypt.org/); [Prometheus](https://prometheus.io/), for scraping and storing metrics from the cluster and hub; and [Grafana](https://grafana.com/), for visualising the metrics retreived by Prometheus.
+These tools are [`ingress-nginx`](https://kubernetes.github.io/ingress-nginx/), for controlling ingresses and load balancing; [`cert-manager`](https://cert-manager.io/docs/), for automatically provisioning TLS certificates from [Let's Encrypt](https://letsencrypt.org/); [Prometheus](https://prometheus.io/), for scraping and storing metrics from the cluster and hub; and [Grafana](https://grafana.com/), for visualising the metrics retreived by Prometheus.
 
 ### Edit your `*.cluster.yaml` file
 
@@ -38,4 +38,31 @@ support:
 
 ### Deploy the `support` chart via the `deployer`
 
+If you don't have the `cert-manager` chart added to your helm setup already, you can add it and update it like so:
 
+```bash
+helm repo add jetstack https://charts.jetstack.io
+helm repo update
+```
+
+Then use the `deployer` tool to deploy the support chart to the cluster.
+See {ref}`/howto/operate/manual-deploy` for details on how to setup the tool locally.
+
+```bash
+python3 deployer deploy-support CLUSTER_NAME
+```
+
+### Setting the DNS A record
+
+Once the `support` chart has been successfully deployed, retrieve the external IP address for the `ingress-nginx` load balancer.
+
+```bash
+kubectl --namespace support get svc support-ingress-nginx-controller
+```
+
+Add this external IP address to an A record in NameCheap that matches `GRAFANA_URL` that was set in the `*cluster.yaml` file.
+
+**Wait a while for the DNS to propagate!**
+
+Eventually, visiting `GRAFANA_URL` will present you with a login page.
+the username is `admin` and the password is located in `support/secrets.yaml` (`sops` encrypted).
