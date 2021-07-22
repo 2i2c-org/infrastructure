@@ -10,7 +10,7 @@ body:
         
         This template is designed to help you provide information about your 2i2c Hub so that a 2i2c Engineer can set it up properly. Answer the sections below as best you can. We can update information as we learn more.
 
-        ## Community Information
+        # Community Information
 
   - type: textarea
     id: background
@@ -51,7 +51,7 @@ body:
   - type: markdown
     attributes:
       value: |
-        ## Cloud Provider Information
+        # Cloud Provider Information
 
   - type: dropdown
     id: cloud-provider
@@ -81,7 +81,7 @@ body:
   - type: markdown
     attributes:
       value: |
-        ## Hub Customization
+        # Hub Customization
 
   - type: input
     id: auth-type
@@ -140,16 +140,18 @@ body:
       description: |
         A name and tag for a user image, pointing to the registry in the field above.
     validations:
-      required: true
+      required: false
 
   - type: markdown
     attributes:
       value: |
-        ## Hub Engineer information
+        ---
+
+        # Hub Engineer information
 
         The Hub Engineer should fill in the metadata below when it available. The Community Representative shouldn't worry about this section, but may be asked to provide help answering some questions.
         
-        ### Deployment information
+        ## Deployment information
 
         **Hub ID:**
           <!-- The unique ID used to identify this hub. Should be URL-friendly and short. (e.g. `my-university`). -->
@@ -165,7 +167,7 @@ body:
             2. `daskhub`: a JupyterHub with a Dask Gateway enabled for scalable computing.
           -->
 
-        ## Actions to deploy
+        # Actions to deploy
 
         - [ ] Deploy information filled in above
         - [ ] Initial Hub deployment PR: <link to PR>
