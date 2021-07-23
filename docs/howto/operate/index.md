@@ -18,4 +18,5 @@ node-administration.md
 move-hub.md
 add-aws-hub.md
 new-tf-cluster.md
+setup-grafana.md
 ```
