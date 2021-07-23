@@ -1,3 +1,4 @@
+(customize/custom-image)=
 # Use a custom hub image
 
 Pilot hubs use an image we curate as the default. This can be replaced with your

@@ -13,6 +13,8 @@ runs:
       shell: bash
     - name: Fetch helm charts
       run: |
+        helm repo add jetstack https://charts.jetstack.io
+        helm repo update
         cd hub-templates
         helm dep up basehub
         helm dep up daskhub
@@ -26,6 +28,10 @@ runs:
       run: |
         python3 -m pip install -r requirements.txt
         python3 -m pip install -r dev-requirements.txt
+      shell: bash
+    - name: Deploy support components
+      run: |
+        python3 deployer deploy-support ${{ inputs.cluster }}
       shell: bash
     - name: Deploy and test hubs
       run: |
