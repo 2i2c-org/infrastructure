@@ -40,8 +40,8 @@ hubs:
 
             defaultUrl: /lab
             image:
-              name: jupyter/base-notebook
-              tag: latest
+              name: quay.io/2i2c/justiceinnovationlab-image
+              tag: 37c73413ba42
             storage:
               type: none
               extraVolumes:
