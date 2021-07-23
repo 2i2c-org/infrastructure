@@ -67,6 +67,7 @@ The key you create needs admin permissions.
 Some default grafana dashboards for JupyterHub can then be deployed using [`jupyterhub/grafana-dashboards`](https://github.com/jupyterhub/grafana-dashboards).
 
 1. Create a local clone of the repository
-2. Create an environment using `venv` or `conda`
-3. `pip` install the `jsonnet` package into your env
-4. Follow the instructions in the [Deployment](https://github.com/jupyterhub/grafana-dashboards/blob/main/README.md#deployment) section of the README to create the grafana dashboards
+2. Install the [`jsonnet` binary](https://github.com/google/jsonnet#packages).
+   Homebrew is the best option if you're on MacOS.
+   The Python package will not suffice here as we directly call the `jsonnet` library.
+3. Follow the instructions in the [Deployment](https://github.com/jupyterhub/grafana-dashboards/blob/main/README.md#deployment) section of the README to create the grafana dashboards
