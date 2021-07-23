@@ -27,14 +27,7 @@ support:
 
 ### Deploy the `support` chart via the `deployer`
 
-If you don't have the `cert-manager` chart added to your helm setup already, you can add it and update it like so:
-
-```bash
-helm repo add jetstack https://charts.jetstack.io
-helm repo update
-```
-
-Then use the `deployer` tool to deploy the support chart to the cluster.
+Use the `deployer` tool to deploy the support chart to the cluster.
 See {ref}`/howto/operate/manual-deploy` for details on how to setup the tool locally.
 
 ```bash
