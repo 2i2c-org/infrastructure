@@ -1,4 +1,4 @@
-# Setting up Grafana Dashboards for a hub
+# Setting up Grafana Dashboards for a cluster
 
 This guide will walk through the steps required to setup a suite of Grafana dashboards for a cluster.
 
@@ -66,3 +66,18 @@ Add this external IP address to an A record in NameCheap that matches `GRAFANA_U
 
 Eventually, visiting `GRAFANA_URL` will present you with a login page.
 the username is `admin` and the password is located in `support/secrets.yaml` (`sops` encrypted).
+
+## Setting up Grafana Dashboards
+
+Once you have logged into grafana as the admin user, create a new API key.
+You can do this by selecting the gear icon from the left-hand menu, and then selecting API keys.
+The key you create needs admin permissions.
+
+**Keep this key safe as you won't be able to retrieve it!**
+
+Some default grafana dashboards for JupyterHub can then be deployed using [`jupyterhub/grafana-dashboards`](https://github.com/jupyterhub/grafana-dashboards).
+
+1. Create a local clone of the repository
+2. Create an environment using `venv` or `conda`
+3. `pip` install the `jsonnet` package into your env
+4. Follow the instructions in the [Deployment](https://github.com/jupyterhub/grafana-dashboards/blob/main/README.md#deployment) section of the README to create the grafana dashboards
