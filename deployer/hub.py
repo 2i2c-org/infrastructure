@@ -80,7 +80,18 @@ class Cluster:
                     json.dump(config, f, indent=4)
 
     def deploy_support(self):
+        cert_manager_url = 'https://charts.jetstack.io'
         cert_manager_version = 'v1.3.1'
+
+        print("Adding cert-manager chart repo...")
+        subprocess.check_call([
+            'helm', 'repo', 'add', 'jetstack', cert_manager_url,
+        ])
+
+        print("Updating cert-manager chart repo...")
+        subprocess.check_call([
+            'helm', 'repo', 'update',
+        ])
 
         print("Provisioning cert-manager...")
         subprocess.check_call([
