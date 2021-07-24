@@ -153,6 +153,15 @@ body:
     validations:
       required: false
 
+  - type: textarea
+    id: other-information
+    attributes:
+      label: Other relevant information
+      description: |
+        Provide any other relevant information that you think may be important to the 2i2c Engineering team to help deploy and customize your hub.
+    validations:
+      required: false
+
   - type: markdown
     attributes:
       value: |
@@ -180,6 +189,7 @@ body:
 
         # Actions to deploy
 
+        - [ ] Engineer who will deploy the hub is assigned
         - [ ] Deploy information filled in above
         - [ ] Initial Hub deployment PR: <link to PR>
         - [ ] Administrators able to log on
