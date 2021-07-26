@@ -13,6 +13,11 @@ support:
           limits:
             cpu: 4
             memory: 8Gi
+    cluster-autoscaler:
+      enabled: true
+      autoDiscovery:
+        clusterName: carbonplanhub
+      awsRegion: us-west-2
     grafana:
       ingress:
         hosts:

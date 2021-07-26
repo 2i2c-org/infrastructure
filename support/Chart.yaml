@@ -22,3 +22,8 @@ dependencies:
   - name: ingress-nginx
     version: 3.33.0
     repository: https://kubernetes.github.io/ingress-nginx
+
+  - name: cluster-autoscaler
+    version: 9.10.3
+    repository: https://kubernetes.github.io/autoscaler
+    condition: cluster-autoscaler.enabled
