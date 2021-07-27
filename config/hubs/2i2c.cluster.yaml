@@ -118,8 +118,8 @@ hubs:
             homepage:
               templateVars:
                 org:
-                  name: "Ocean Hack Week"
-                  logo_url: https://pbs.twimg.com/profile_images/1295457048830844935/RN-i02MO_400x400.png
+                  name: Ocean Hack Week
+                  logo_url: https://avatars.githubusercontent.com/u/33128979
                   url: https://oceanhackweek.github.io/
                 designed_by:
                   name: 2i2c
