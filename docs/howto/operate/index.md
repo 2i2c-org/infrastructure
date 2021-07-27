@@ -17,4 +17,5 @@ grafana.md
 node-administration.md
 move-hub.md
 new-tf-cluster.md
+setup-grafana.md
 ```
