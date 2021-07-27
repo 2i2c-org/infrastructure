@@ -1,5 +1,6 @@
-prefix     = "pangeo-hubs"
-project_id = "pangeo-integration-te-3eea"
+prefix                 = "pangeo-hubs"
+project_id             = "pangeo-integration-te-3eea"
+enable_private_cluster = true
 
 core_node_machine_type = "n1-highmem-4"
 
