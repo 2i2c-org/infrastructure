@@ -171,3 +171,18 @@ variable "user_buckets" {
   default     = []
   description = "Buckets to create for the project, they will be prefixed with {var.prefix}-"
 }
+
+variable "enable_private_cluster" {
+  type        = bool
+  default     = false
+  description = <<-EOT
+  Enable deployment of GKE into a private cluster.
+
+  For projects that are managed by universities and such, we may find that they
+  have enabled certain constraints and controls that mean our usual method of
+  deployment fails. Enabling a private cluster tends to satisfy many of these
+  controls.
+
+  When we enable a private cluster, we also provision VPC and CloudNAT.
+  EOT
+}
