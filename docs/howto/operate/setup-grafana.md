@@ -57,6 +57,10 @@ The key you create needs admin permissions.
 
 **Keep this key safe as you won't be able to retrieve it!**
 
+```{note}
+In the future, we should define the scenarios where other engineers need this API key after the initial deployment and decide how to store and share it.
+```
+
 Some default grafana dashboards for JupyterHub can then be deployed using [`jupyterhub/grafana-dashboards`](https://github.com/jupyterhub/grafana-dashboards).
 
 1. Create a local clone of the repository
