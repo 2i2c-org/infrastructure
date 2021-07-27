@@ -17,9 +17,9 @@ module "vpc_module" {
 
   subnets = [
     {
-      subnet_name   = "${var.prefix}-${var.region}-subnet"
       // Decide if this subnet IP range is sensible or not
       subnet_ip     = "192.168.1.0/24"
+      subnet_name   = "${var.prefix}-${var.region}-subnet"
       subnet_region = var.region
     }
   ]
