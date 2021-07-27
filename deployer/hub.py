@@ -103,7 +103,10 @@ class Cluster:
         ])
         print("Done!")
 
-        print("Support charts...")
+        print("Provisioning support charts...")
+        subprocess.check_call([
+            'helm', 'dep', 'up', 'support'
+        ])
 
         support_dir = Path(__file__).parent.parent / 'support'
         support_secrets_file = support_dir / 'secrets.yaml'
