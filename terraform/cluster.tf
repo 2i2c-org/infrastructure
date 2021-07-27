@@ -20,10 +20,10 @@ resource "google_container_cluster" "cluster" {
     for_each = var.enable_private_cluster == "" ? [] : [1]
 
     content {
-      enable_private_nodes    = true
-      enable_private_endpoint = false
       // Decide if this CIDR block is sensible or not
       master_ipv4_cidr_block  = "172.16.0.0/28"
+      enable_private_nodes    = true
+      enable_private_endpoint = false
     }
   }
 

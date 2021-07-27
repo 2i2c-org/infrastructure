@@ -7,8 +7,8 @@
 
 // Deploy a VPC: https://cloud.google.com/vpc
 module "vpc_module" {
-  source       = "terraform-google-modules/network/google"
-  version      = "~> 3.3.0"
+  source  = "terraform-google-modules/network/google"
+  version = "~> 3.3.0"
 
   count = var.enable_private_cluster ? 1 : 0
 
@@ -17,9 +17,9 @@ module "vpc_module" {
 
   subnets = [
     {
-      subnet_name   = "${var.prefix}-${var.region}-subnet"
       // Decide if this subnet IP range is sensible or not
       subnet_ip     = "192.168.1.0/24"
+      subnet_name   = "${var.prefix}-${var.region}-subnet"
       subnet_region = var.region
     }
   ]
