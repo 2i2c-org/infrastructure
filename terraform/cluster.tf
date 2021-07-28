@@ -30,7 +30,7 @@ resource "google_container_cluster" "cluster" {
   // Dynamically provision the IP allocation policy when deploying a
   // private cluster
   dynamic "ip_allocation_policy" {
-    for_each = var.enable_private_cluster == "" ? [] : [1]
+    for_each = var.enable_private_cluster ? [1] : []
     content {}
   }
 
