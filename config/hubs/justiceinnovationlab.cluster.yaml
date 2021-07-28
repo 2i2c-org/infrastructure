@@ -12,9 +12,8 @@ hubs:
       scratchBucket:
         enabled: false
       basehub:
-        pvc:
+        azureFile:
           enabled: true
-          pvName: homes
         nfs:
           enabled: false
           shareCreator:
@@ -46,7 +45,7 @@ hubs:
               extraVolumes:
               - name: home
                 persistentVolumeClaim:
-                  claimName: home-nfs
+                  claimName: home-azurefile
           scheduling:
             userPlaceholder:
               enabled: false

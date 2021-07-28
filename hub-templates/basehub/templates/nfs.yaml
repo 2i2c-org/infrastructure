@@ -12,4 +12,17 @@ spec:
     server: {{ .Values.nfs.pv.serverIP | quote}}
     path: "{{ .Values.nfs.pv.baseShareName }}{{ .Release.Name }}"
   mountOptions: {{ .Values.nfs.pv.mountOptions | toJson }}
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: home-nfs
+spec:
+  accessModes:
+    - ReadWriteMany
+  volumeName: {{ .Release.Name }}-home-nfs
+  storageClassName: ""
+  resources:
+    requests:
+      storage: 1Mi
 {{ end }}

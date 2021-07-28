@@ -14,9 +14,18 @@ etcJupyter:
       # when people leave a notebook open and wander off
       cull_connected: true
 
-pvc:
-  enabled: true
-  pvName:
+azureFile:
+  enabled: false
+  pv:
+    secretNamespace: azure-file
+    secretName: access-credentials
+    shareName: homes
+    mountOptions:
+      - uid=1000
+      - forceuid
+      - gid=1000
+      - forcegid
+      - nobrl
 
 nfs:
   enabled: true
