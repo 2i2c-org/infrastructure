@@ -6,6 +6,7 @@
 */
 
 // Deploy a VPC: https://cloud.google.com/vpc
+// Terraform module: https://registry.terraform.io/modules/terraform-google-modules/network/google/latest
 module "vpc_module" {
   source  = "terraform-google-modules/network/google"
   version = "~> 3.3.0"
@@ -49,8 +50,8 @@ resource "google_compute_router" "router" {
   region  = var.region
 }
 
-// Deploy a Cloud NAT (network address translation):
-// https://cloud.google.com/nat/docs/overview
+// Deploy a Cloud NAT (network address translation): https://cloud.google.com/nat/docs/overview
+// Terraform module: https://registry.terraform.io/modules/terraform-google-modules/cloud-nat/google/latest
 module "cloud-nat" {
   count = var.enable_private_cluster ? 1 : 0
 
