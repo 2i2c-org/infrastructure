@@ -105,6 +105,13 @@ jupyterhub:
       letsencrypt:
         contactEmail: yuvipanda@gmail.com
   singleuser:
+    extraEnv:
+      # notebook writes secure files that don't need to survive a
+      # restart here. Writing 'secure' files on some file systems (like
+      # Azure Files with SMB) seems buggy, so we just put runtime dir on
+      # /tmp. This is ok in our case, since no two users are on the same
+      # container.
+      JUPYTER_RUNTIME_DIR: /tmp/.jupyter-runtime
     startTimeout: 600 # 10 mins, because sometimes we have too many new nodes coming up together
     defaultUrl: /tree
     nodeSelector:

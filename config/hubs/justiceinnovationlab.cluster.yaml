@@ -37,7 +37,6 @@ hubs:
                   name: Justice Innovation Lab
                   url: https://www.justiceinnovationlab.org/
           singleuser:
-
             defaultUrl: /lab
             image:
               name: quay.io/2i2c/justiceinnovationlab-image
