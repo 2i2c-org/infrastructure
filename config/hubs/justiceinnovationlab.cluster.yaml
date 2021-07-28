@@ -59,6 +59,16 @@ hubs:
               enabled: true
           hub:
             allowNamedServers: true
+            config:
+              Authenticator:
+                # Only allow admin users + users added via the UI
+                admin_users: &users
+                  - yuvipanda
+                  - choldgraf
+                  - GeorgianaElena
+                  - donaldbraman
+                  - JILPulvino
+                allowed_users: *users
             extraConfig:
               10-dynamic-subpath: |
                 import os
