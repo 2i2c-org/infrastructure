@@ -31,7 +31,7 @@ Once you have created this file, open a Pull Request to the `pilot-hubs` repo fo
 
 ## Initialising Terraform
 
-The terraform state is located centrally in our `two-eye-two-see-org` GCP project, therefore you must authenticate `gcloud` to your `@2i2c.org` account before initialising terraform.
+Our default terraform state is located centrally in our `two-eye-two-see-org` GCP project, therefore you must authenticate `gcloud` to your `@2i2c.org` account before initialising terraform.
 
 ```bash
 gcloud auth application-default login
@@ -41,26 +41,18 @@ Then you can change into the terraform directory and initialise
 
 ```bash
 cd terraform
-terraform init
+terraform init -backend-config=backends/default-backend.hcl
 ```
 
 ````{note}
-If you are deploying a cluster to a project you have access to via a different account, such as a university-affliated account, there are a few extra steps to take.
-Hopefully, this will be a rare scenario.
+If you are working on a project which you cannot access with your 2i2c account, there are other backend config files stored in `terraform/backends` that will configure a different storage bucket to read/write the remote terraform state.
+This saves us the pain of having to handle multiple authentications as these storage buckets are within the project we are trying to deploy to.
 
-First, you will need to provide terraform with an [access token](https://www.terraform.io/docs/language/settings/backends/gcs.html#configuration-variables) to use the state files.
-You can generate one using the below commands and logging in with your 2i2c.org account.
+For example, to work with Pangeo you would initialise terraform like so:
 
 ```bash
-gcloud auth application-default login
-gcloud auth application-default print-access-token
+terraform init -backend-config=pangeo-backend.hcl
 ```
-
-Add the access token to the [terraform backend block](https://github.com/2i2c-org/pilot-hubs/blob/2ef8a4bf35bb5ee9bf04ab3db1218b8c183c5da2/terraform/main.tf#L2-L5) in `main.tf`.
-**DO NOT COMMIT THIS CHANGE.**
-Then run `terraform init` or `terraform init -reconfigure`.
-
-You can now login to your other gcloud account and proceed with the guide.
 ````
 
 ## Creating a new terraform workspace
