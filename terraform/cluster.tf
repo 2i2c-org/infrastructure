@@ -83,6 +83,9 @@ resource "google_container_cluster" "cluster" {
     # DO NOT TOUCH THIS BLOCK, IT REPLACES ENTIRE CLUSTER LOL
     service_account = google_service_account.cluster_sa.email
   }
+
+  // Set these values explicitly so they don't "change outside terraform"
+  resource_labels     = {}
 }
 
 resource "google_container_node_pool" "core" {
@@ -122,6 +125,9 @@ resource "google_container_node_pool" "core" {
     oauth_scopes = [
       "https://www.googleapis.com/auth/cloud-platform"
     ]
+
+    // Set these values explicitly so they don't "change outside terraform"
+    tags = []
   }
 }
 
@@ -180,6 +186,9 @@ resource "google_container_node_pool" "notebook" {
     oauth_scopes = [
       "https://www.googleapis.com/auth/cloud-platform"
     ]
+
+    // Set these values explicitly so they don't "change outside terraform"
+    tags = []
   }
 }
 
@@ -243,5 +252,8 @@ resource "google_container_node_pool" "dask_worker" {
     oauth_scopes = [
       "https://www.googleapis.com/auth/cloud-platform"
     ]
+
+    // Set these values explicitly so they don't "change outside terraform"
+    tags = []
   }
 }
