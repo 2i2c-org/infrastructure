@@ -21,6 +21,11 @@ You can initialise using the following command
 terraform init -backend-config=backends/default-backend.hcl
 ```
 
+```{note}
+Workspaces are defined **per backend**.
+If you can't find the workspace you're looking for, double check you've enabled the correct backend.
+```
+
 ## Other remote state storage
 
 For some projects where we don't have access to using our 2i2c accounts, e.g. universities that require us to have specific university-affiliated identities, we can configure different backends to access the terraform state stored in those projects.

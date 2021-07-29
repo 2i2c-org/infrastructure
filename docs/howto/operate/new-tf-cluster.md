@@ -64,6 +64,11 @@ Create a new workspace with the below command, and again give it the same name a
 terraform workspace new WORKSPACE_NAME
 ```
 
+```{note}
+Workspaces are defined **per backend**.
+If you can't find the workspace you're looking for, double check you've enabled the correct backend.
+```
+
 ## Plan and Apply Changes
 
 ```{note}
