@@ -153,14 +153,14 @@ hubs:
             nodeSelector: {}
             config:
               Authenticator:
-                allowed_users: &staging_users
+                allowed_users: &users
                   - yuvipanda
                   - choldgraf
                   - GeorgianaElena
                   - damianavila
                   - sgibson91
                   - jhamman
-                admin_users: *staging_users
+                admin_users: *users
 
       dask-gateway:
         traefik:
