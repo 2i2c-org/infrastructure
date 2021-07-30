@@ -151,6 +151,16 @@ hubs:
             readinessProbe:
               enabled: false
             nodeSelector: {}
+            config:
+              Authenticator:
+                admin_users:
+                  - yuvipanda
+                  - choldgraf
+                  - GeorgianaElena
+                  - damianavila
+                  - sgibson91
+                  - jhamman
+
       dask-gateway:
         traefik:
           resources:
