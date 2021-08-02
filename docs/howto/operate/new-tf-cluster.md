@@ -41,7 +41,7 @@ Then you can change into the terraform directory and initialise
 
 ```bash
 cd terraform
-terraform init -backend-config=backends/default-backend.hcl
+terraform init -backend-config=backends/default-backend.hcl -reconfigure
 ```
 
 ````{note}
@@ -51,7 +51,7 @@ This saves us the pain of having to handle multiple authentications as these sto
 For example, to work with Pangeo you would initialise terraform like so:
 
 ```bash
-terraform init -backend-config=pangeo-backend.hcl
+terraform init -backend-config=pangeo-backend.hcl -reconfigure
 ```
 ````
 

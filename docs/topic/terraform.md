@@ -18,7 +18,7 @@ access to this project before you can use terraform for our infrastructure.
 You can initialise using the following command
 
 ```bash
-terraform init -backend-config=backends/default-backend.hcl
+terraform init -backend-config=backends/default-backend.hcl -reconfigure
 ```
 
 ```{note}
@@ -30,11 +30,11 @@ If you can't find the workspace you're looking for, double check you've enabled 
 
 For some projects where we don't have access to using our 2i2c accounts, e.g. universities that require us to have specific university-affiliated identities, we can configure different backends to access the terraform state stored in those projects.
 Working this way saves us the pain of trying to work with terraform using two different authentications.
-The backend configs are stored in [`terraform/backends`](https://github.com/2i2c-org/pilot-hubs/tree/master/terraform/backends) and can be used by running `terraform init -backend-config=backends/NAME_OF_CHOSEN_BACKEND`.
+The backend configs are stored in [`terraform/backends`](https://github.com/2i2c-org/pilot-hubs/tree/master/terraform/backends) and can be used by running `terraform init -backend-config=backends/NAME_OF_CHOSEN_BACKEND -reconfigure`.
 For example, for our Pangeo projects, run:
 
 ```bash
-terraform init -backend-config=backends/pangeo-backend.hcl
+terraform init -backend-config=backends/pangeo-backend.hcl -reconfigure
 ```
 
 ## How to switch Terraform workspaces
@@ -67,7 +67,7 @@ To switch between workspaces that are stored in _different_ backends, terraform 
 The commands, therefore, are:
 
 ```bash
-terraform init -backend-config=backends/<REQUIRED_CONFIG>.hcl
+terraform init -backend-config=backends/<REQUIRED_CONFIG>.hcl -reconfigure
 terraform workspace select WORKSPACE_NAME
 ```
 
