@@ -1,8 +1,5 @@
 terraform {
-  backend "gcs" {
-    bucket = "two-eye-two-see-org-terraform-state"
-    prefix = "terraform/state/pilot-hubs"
-  }
+  backend "gcs" {}
 }
 
 // Service account used by all the nodes and pods in our cluster
