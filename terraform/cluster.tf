@@ -11,8 +11,8 @@ resource "google_container_cluster" "cluster" {
 
   // For private clusters, pass the name of the network and subnetwork created
   // by the VPC
-  network    = var.enable_private_cluster ? module.vpc_module[0].network_self_link : null
-  subnetwork = var.enable_private_cluster ? module.vpc_module[0].subnets_self_links[0] : null
+  network    = var.enable_private_cluster ? google_compute_network.vpc_network[0].self_link : null
+  subnetwork = var.enable_private_cluster ? google_compute_subnetwork.subnetwork[0].self_link : null
 
   // Dynamically provision the private cluster config when deploying a
   // private cluster
@@ -28,7 +28,8 @@ resource "google_container_cluster" "cluster" {
   }
 
   // Dynamically provision the IP allocation policy when deploying a
-  // private cluster
+  // private cluster. This allows for IP aliasing and makes the cluster
+  // VPC-native
   dynamic "ip_allocation_policy" {
     for_each = var.enable_private_cluster ? [1] : []
     content {}
