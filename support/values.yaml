@@ -1,3 +1,5 @@
+cluster-autoscaler:
+  enabled: false
 cert-manager:
   installCRDs: true
 ingress-nginx:

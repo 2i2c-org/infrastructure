@@ -58,3 +58,9 @@ These are only sample subheadings. Every action item should have a GitHub issue
 
 1. {{ summary }} [link to github issue]
 2. {{ summary }} [link to github issue]
+
+# Actions
+
+- [ ] Incident has been dealt with or is over
+- [ ] Sections above are filled out
+- [ ] All actionable items above have linked GitHub Issues
