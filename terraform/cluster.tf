@@ -86,7 +86,7 @@ resource "google_container_cluster" "cluster" {
   }
 
   // Set these values explicitly so they don't "change outside terraform"
-  resource_labels     = {}
+  resource_labels = {}
 }
 
 resource "google_container_node_pool" "core" {
