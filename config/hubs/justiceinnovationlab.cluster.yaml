@@ -36,6 +36,39 @@ hubs:
                   name: Justice Innovation Lab
                   url: https://www.justiceinnovationlab.org/
           singleuser:
+            profileList:
+              # The mem-guarantees are here so k8s doesn't schedule other pods
+              # on these nodes.
+              - display_name: "Small"
+                description: "~4 CPU, ~16G RAM"
+                kubespawner_override:
+                  # Expllicitly unset mem_limit, so it overrides the default memory limit we set in
+                  # basehub/values.yaml
+                  mem_limit: null
+                  mem_guarantee: 12G
+                  node_selector:
+                    node.kubernetes.io/instance-type: Standard_E2s_v4
+              - display_name: "Medium:"
+                description: "~4 CPU, ~32G RAM"
+                kubespawner_override:
+                  mem_limit: null
+                  mem_guarantee: 28G
+                  node_selector:
+                    node.kubernetes.io/instance-type: Standard_E4s_v4
+              - display_name: "Large"
+                description: "~8 CPU, ~64G RAM"
+                kubespawner_override:
+                  mem_limit: null
+                  mem_guarantee: 59G
+                  node_selector:
+                    node.kubernetes.io/instance-type: Standard_E8s_v4
+              - display_name: "Huge"
+                description: "~32 CPU, ~256G RAM"
+                kubespawner_override:
+                  mem_limit: null
+                  mem_guarantee: 230G
+                  node_selector:
+                    node.kubernetes.io/instance-type: Standard_E32s_v4
             defaultUrl: /lab
             image:
               name: quay.io/2i2c/justiceinnovationlab-image
