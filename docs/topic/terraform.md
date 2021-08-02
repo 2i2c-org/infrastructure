@@ -36,3 +36,44 @@ For example, for our Pangeo projects, run:
 ```bash
 terraform init -backend-config=backends/pangeo-backend.hcl
 ```
+
+## How to switch Terraform workspaces
+
+### If the new workspace is stored in the same backend as the current workspace
+
+If you want to switch to a different terraform workspace that is stored in the same backend that you initialised with, you can simply run:
+
+```bash
+terraform workspace switch WORKSPACE_NAME
+```
+
+For example, if you were working in the `pilot-hubs` workspace but want to switch to `justiceinnovationlab`, these are both stored in the same backend and so the command looks like:
+
+```bash
+terraform workspace switch justiceinnovationlab
+```
+
+````{note}
+For the majority of day-to-day work, this will be the prevalent workflow provided you have initialised terraform with
+
+```bash
+terraform init -backend-config=backends/default-backend.hcl -reconfigure
+```
+````
+
+### If the new workspace is stored in a different backend to the current workspace
+
+To switch between workspaces that are stored in _different_ backends, terraform will need to be reinitialised in order to pick up the new backend.
+The commands, therefore, are:
+
+```bash
+terraform init -backend-config=backends/<REQUIRED_CONFIG>.hcl
+terraform workspace select WORKSPACE_NAME
+```
+
+For example, if you were working on our `pilot-hubs`, with our default backend initialised, but wanted to switch to working on our Pangeo deployments, the commands would look as follows:
+
+```bash
+terraform init -backend-config=backends/pangeo-backend.hcl -reconfigure
+terraform workspace select pangeo-hubs
+```
