@@ -1,7 +1,4 @@
 terraform {
-  // Need a newer version of terraform in order to use count parameter in modules
-  required_version = ">= 1.0"
-
   backend "gcs" {}
 }
 
