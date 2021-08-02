@@ -1,3 +1,4 @@
+
 // Exports a customizable kops Cluster object.
 // https://kops.sigs.k8s.io/cluster_spec/ lists available properties.
 //
@@ -51,10 +52,8 @@
         authorization: {
             rbac: {}
         },
-        dns: {
-            kubeDNS: {
-                provider: "CoreDNS"
-            }
+        kubeDNS: {
+            provider: "CoreDNS"
         },
         channel: "stable",
         cloudProvider: "aws",

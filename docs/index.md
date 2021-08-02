@@ -56,5 +56,6 @@ Reference information about the pilot hubs.
 
 reference/hubs
 reference/terraform.md
+reference/tools
 incidents/index
 ```

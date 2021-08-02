@@ -44,7 +44,9 @@ local makeCloudTaints(taints) = {
             "k8s.io/cluster-autoscaler/node-template/label/node.kubernetes.io/instance-type": $.spec.machineType
         } + makeCloudLabels(self.nodeLabels) + makeCloudTaints(self.taints),
         taints: [],
-        nodeLabels: {},
+        nodeLabels: {
+            "kops.k8s.io/instance-group": $.metadata.name
+        },
         machineType: "",
         maxSize: 20,
         minSize: 0,
