@@ -1,6 +1,6 @@
 # Add a new GKE cluster managed by our Terraform configuration
 
-This guide will walk through the process of adding a new cluster to our [terraform configuration](https://github.com/2i2c-org/pilot-hubs/tree/master/terraform).
+This guide will walk through the process of adding a new cluster to our [terraform configuration](https://github.com/2i2c-org/pilot-hubs/tree/HEAD/terraform/gcp).
 
 ## Cluster Design
 
@@ -8,7 +8,7 @@ This guide will assume you have already followed the guidance in {ref}`/topic/cl
 
 ## Creating a Terraform variables file for the cluster
 
-The first step is to create a `.tfvars` file in the [`terraform/projects` directory](https://github.com/2i2c-org/pilot-hubs/tree/master/terraform/projects).
+The first step is to create a `.tfvars` file in the [`terraform/gcp/projects` directory](https://github.com/2i2c-org/pilot-hubs/tree/HEAD/terraform/gcp/projects).
 Give it a descriptive name that at a glance provides context to the location and/or purpose of the cluster.
 
 The _minimum_ inputs this file requires are:
@@ -18,7 +18,7 @@ The _minimum_ inputs this file requires are:
 - `project_id`: GCP Project ID to create resources in.
   Should be the id, rather than display name of the project.
 
-See the [variables file](https://github.com/2i2c-org/pilot-hubs/blob/master/terraform/variables.tf) for other inputs this file can take and their descriptions.
+See the [variables file](https://github.com/2i2c-org/pilot-hubs/blob/HEAD/terraform/gcp/variables.tf) for other inputs this file can take and their descriptions.
 
 Example `.tfvars` file:
 
@@ -40,7 +40,7 @@ gcloud auth application-default login
 Then you can change into the terraform directory and initialise
 
 ```bash
-cd terraform
+cd terraform/gcp
 terraform init -backend-config=backends/default-backend.hcl -reconfigure
 ```
 
@@ -53,7 +53,6 @@ For example, to work with Pangeo you would initialise terraform like so:
 ```bash
 terraform init -backend-config=pangeo-backend.hcl -reconfigure
 ```
-````
 
 ## Creating a new terraform workspace
 
@@ -112,7 +111,7 @@ terraform workspace select WORKSPACE_NAME
 Then, output the JSON key for the service account created by terraform to a file under the `secrets` directory.
 
 ```bash
-terraform output -raw ci_deployer_key > ../secrets/CLUSTER_NAME.json
+terraform output -raw ci_deployer_key > ../../secrets/CLUSTER_NAME.json
 ```
 
 where `CLUSTER_NAME` matches the name of our `.tfvars` file.
