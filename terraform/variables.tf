@@ -182,7 +182,5 @@ variable "enable_private_cluster" {
   have enabled certain constraints and controls that mean our usual method of
   deployment fails. Enabling a private cluster tends to satisfy many of these
   controls.
-
-  When we enable a private cluster, we also provision VPC and CloudNAT.
   EOT
 }
