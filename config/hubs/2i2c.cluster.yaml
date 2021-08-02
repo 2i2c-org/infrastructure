@@ -108,6 +108,11 @@ hubs:
             image:
               name: uwhackweeks/oceanhackweek
               tag: 28d1c7b
+            memory:
+              # Increase memory alloted during the workshop
+              #  https://github.com/2i2c-org/pilot-hubs/issues/549#issuecomment-891264570
+              guarantee: 2G
+              limit: 4G
           custom:
             cloudResources:
               provider: gcp
