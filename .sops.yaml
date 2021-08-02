@@ -1,4 +1,6 @@
 creation_rules:
+  - path_regex: .*/secrets/pangeo-hubs.json
+    gcp_kms: projects/pangeo-integration-te-3eea/locations/us-central1/keyRings/sops-keys/cryptoKeys/pangeo-hubs
   - path_regex: .*/secrets/.*
     gcp_kms: projects/two-eye-two-see/locations/global/keyRings/sops-keys/cryptoKeys/similar-hubs
   - path_regex: .*/kops/ssh-keys/.*
