@@ -5,62 +5,36 @@
 * to true
 */
 
-// Deploy a VPC: https://cloud.google.com/vpc
-// Terraform module: https://registry.terraform.io/modules/terraform-google-modules/network/google/latest
-module "vpc_module" {
-  source  = "terraform-google-modules/network/google"
-  version = "~> 3.3.0"
-
+resource "google_compute_network" "vpc_network" {
   count = var.enable_private_cluster ? 1 : 0
 
-  project_id   = var.project_id
-  network_name = "${var.prefix}-vpc-network"
-
-  subnets = [
-    {
-      // Decide if this subnet IP range is sensible or not
-      subnet_ip     = "192.168.1.0/24"
-      subnet_name   = "${var.prefix}-${var.region}-subnet"
-      subnet_region = var.region
-    }
-  ]
+  name                    = "${var.prefix}-vpc-network"
+  project                 = var.project_id
+  auto_create_subnetworks = false
 }
 
-// Set a firewall rule that allows SSH
+resource "google_compute_subnetwork" "subnetwork" {
+  count = var.enable_private_cluster ? 1 : 0
+
+  name                     = "${var.prefix}-subnetwork"
+  project                  = var.project_id
+  region                   = var.region
+  network                  = google_compute_network.vpc_network[0].id
+  private_ip_google_access = true
+
+  // Decide if this is a sensible IP CIDR range or not
+  ip_cidr_range = "10.2.0.0/16"
+}
+
 resource "google_compute_firewall" "firewall_rules" {
   count = var.enable_private_cluster ? 1 : 0
 
-  project = var.project_id
   name    = "allow-ssh"
-  network = module.vpc_module[0].network_self_link
+  project = var.project_id
+  network = google_compute_network.vpc_network[0].name
 
   allow {
     protocol = "tcp"
     ports    = ["22"]
   }
-}
-
-// Deploy a router: https://cloud.google.com/network-connectivity/docs/router
-resource "google_compute_router" "router" {
-  count = var.enable_private_cluster ? 1 : 0
-
-  project = var.project_id
-  name    = "${var.prefix}-router"
-  network = module.vpc_module[0].network.network_self_link
-  region  = var.region
-}
-
-// Deploy a Cloud NAT (network address translation): https://cloud.google.com/nat/docs/overview
-// Terraform module: https://registry.terraform.io/modules/terraform-google-modules/cloud-nat/google/latest
-module "cloud-nat" {
-  count = var.enable_private_cluster ? 1 : 0
-
-  source     = "terraform-google-modules/cloud-nat/google"
-  version    = "~> 2.0.0"
-  project_id = var.project_id
-  name       = "${var.prefix}-cloud-nat"
-  region     = var.region
-  router     = google_compute_router.router[0].name
-
-  source_subnetwork_ip_ranges_to_nat = "ALL_SUBNETWORKS_ALL_IP_RANGES"
 }
