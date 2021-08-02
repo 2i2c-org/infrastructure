@@ -77,3 +77,8 @@ For example, if you were working on our `pilot-hubs`, with our default backend i
 terraform init -backend-config=backends/pangeo-backend.hcl -reconfigure
 terraform workspace select pangeo-hubs
 ```
+## Cloud provider abstractions
+
+We will use completely different terraform code for each cloud provider,
+under `terraform/<cloud-provider>`. This is much simpler than trying to abstract
+them away into a 'lowest common denominator' set of modules.
