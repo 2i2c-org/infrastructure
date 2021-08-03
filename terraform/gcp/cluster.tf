@@ -134,11 +134,11 @@ resource "google_container_node_pool" "notebook" {
       # config connector and completely hide all node metadata from user pods
       node_metadata = var.config_connector_enabled ? "GKE_METADATA_SERVER" : "SECURE"
     }
-    labels = {
+    labels = merge({
       # Notebook pods and dask schedulers can exist here
       "hub.jupyter.org/node-purpose" = "user",
       "k8s.dask.org/node-purpose"    = "scheduler",
-    }
+    }, each.value.labels)
 
     taint = [{
       key    = "hub.jupyter.org_dedicated"
@@ -199,9 +199,9 @@ resource "google_container_node_pool" "dask_worker" {
       # config connector and completely hide all node metadata from user pods
       node_metadata = var.config_connector_enabled ? "GKE_METADATA_SERVER" : "SECURE"
     }
-    labels = {
+    labels = merge({
       "k8s.dask.org/node-purpose" = "worker",
-    }
+    }, each.value.labels)
 
     taint = [{
       key    = "k8s.dask.org_dedicated"

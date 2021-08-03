@@ -102,12 +102,26 @@ hubs:
     auth0:
       connection: github
     config:
+      dask-gateway:
+        gateway:
+          backend:
+            scheduler:
+              nodeSelector:
+                2i2c.org/community: ohw
+            worker:
+              nodeSelector:
+                2i2c.org/community: ohw
       basehub:
         jupyterhub:
+          prePuller:
+            continuous:
+              enabled: true
           singleuser:
             image:
-              name: uwhackweeks/oceanhackweek
-              tag: 28d1c7b
+              name: ghcr.io/oceanhackweek/jupyer-image
+              tag: 9efd4fb
+            nodeSelector:
+                2i2c.org/community: ohw
             memory:
               # Increase memory alloted during the workshop
               #  https://github.com/2i2c-org/pilot-hubs/issues/549#issuecomment-891264570
