@@ -1,6 +1,7 @@
 # Manually setup NFS Server for a cluster
 
 This guide describes the manual steps required for setting up a NFS server to store users' home directories on the hub.
+More information about the NFS Server can be found in {ref}`/topic/storage-layer`.
 
 ## Deploy the host Virtual Machine
 
