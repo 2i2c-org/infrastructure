@@ -37,4 +37,6 @@ resource "google_compute_firewall" "firewall_rules" {
     protocol = "tcp"
     ports    = ["22"]
   }
+
+  source_ranges = ["35.235.240.0/20"]
 }
