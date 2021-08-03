@@ -38,6 +38,8 @@ resource "google_compute_firewall" "iap_ssh_ingress" {
     ports    = ["22"]
   }
 
+  // This range contains all IP addresses that IAP uses for TCP forwarding.
+  // https://cloud.google.com/iap/docs/using-tcp-forwarding
   source_ranges = ["35.235.240.0/20"]
 }
 
