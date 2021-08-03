@@ -51,4 +51,8 @@ resource "google_compute_router_nat" "nat" {
   router                             = google_compute_router.router[0].name
   nat_ip_allocate_option             = "AUTO_ONLY"
   source_subnetwork_ip_ranges_to_nat = "ALL_SUBNETWORKS_ALL_IP_RANGES"
+
+  // Set these values explicitly so they don't "change outside terraform"
+  nat_ips       = []
+  drain_nat_ips = []
 }
