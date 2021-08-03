@@ -115,8 +115,8 @@ hubs:
         jupyterhub:
           singleuser:
             image:
-              name: uwhackweeks/oceanhackweek
-              tag: 28d1c7b
+              name: ghcr.io/oceanhackweek/jupyer-image
+              tag: 9efd4fb
             nodeSelector:
                 2i2c.org/community: ohw
             memory:
