@@ -5,25 +5,15 @@
 * to true
 */
 
-resource "google_compute_network" "vpc_network" {
-  count = var.enable_private_cluster ? 1 : 0
-
-  name                    = "${var.prefix}-vpc-network"
-  project                 = var.project_id
-  auto_create_subnetworks = false
+data "google_compute_network" "default_network" {
+  name    = "default"
+  project = var.project_id
 }
 
-resource "google_compute_subnetwork" "subnetwork" {
-  count = var.enable_private_cluster ? 1 : 0
-
-  name                     = "${var.prefix}-subnetwork"
-  project                  = var.project_id
-  region                   = var.region
-  network                  = google_compute_network.vpc_network[0].id
-  private_ip_google_access = true
-
-  // Decide if this is a sensible IP CIDR range or not
-  ip_cidr_range = "10.2.0.0/16"
+data "google_compute_subnetwork" "default_subnetwork" {
+  name    = "default"
+  project = var.project_id
+  region  = var.region
 }
 
 resource "google_compute_firewall" "iap_ssh_ingress" {
@@ -31,7 +21,7 @@ resource "google_compute_firewall" "iap_ssh_ingress" {
 
   name    = "allow-ssh"
   project = var.project_id
-  network = google_compute_network.vpc_network[0].name
+  network = data.google_compute_network.default_network.name
 
   allow {
     protocol = "tcp"
@@ -49,7 +39,7 @@ resource "google_compute_router" "router" {
   name    = "${var.prefix}-router"
   project = var.project_id
   region  = var.region
-  network = google_compute_network.vpc_network[0].id
+  network = data.google_compute_network.default_network.id
 }
 
 resource "google_compute_router_nat" "nat" {

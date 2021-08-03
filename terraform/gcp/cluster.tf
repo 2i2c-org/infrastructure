@@ -11,8 +11,8 @@ resource "google_container_cluster" "cluster" {
 
   // For private clusters, pass the name of the network and subnetwork created
   // by the VPC
-  network    = var.enable_private_cluster ? google_compute_network.vpc_network[0].name : null
-  subnetwork = var.enable_private_cluster ? google_compute_subnetwork.subnetwork[0].name : null
+  network    = var.enable_private_cluster ? data.google_compute_network.default_network.name : null
+  subnetwork = var.enable_private_cluster ? data.google_compute_subnetwork.default_subnetwork.name : null
 
   // Dynamically provision the private cluster config when deploying a
   // private cluster
