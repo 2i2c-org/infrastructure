@@ -26,7 +26,7 @@ resource "google_compute_subnetwork" "subnetwork" {
   ip_cidr_range = "10.2.0.0/16"
 }
 
-resource "google_compute_firewall" "firewall_rules" {
+resource "google_compute_firewall" "iap_ssh_ingress" {
   count = var.enable_private_cluster ? 1 : 0
 
   name    = "allow-ssh"
