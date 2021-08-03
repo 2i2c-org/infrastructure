@@ -113,6 +113,9 @@ hubs:
                 2i2c.org/community: ohw
       basehub:
         jupyterhub:
+          prePuller:
+            continuous:
+              enabled: true
           singleuser:
             image:
               name: ghcr.io/oceanhackweek/jupyer-image
