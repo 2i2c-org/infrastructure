@@ -56,7 +56,7 @@ This is because the VM will not have an external IP address and will therefore n
 
    ```bash
    sudo apt update
-   sudo apt install nfs-kernel-server nfs-common xfsprogs
+   sudo apt install nfs-kernel-server nfs-common
    ```
 
 2. Create the appropriate directory
