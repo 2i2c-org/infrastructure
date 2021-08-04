@@ -17,7 +17,7 @@ resource "google_container_cluster" "cluster" {
   // Dynamically provision the private cluster config when deploying a
   // private cluster
   dynamic "private_cluster_config" {
-    for_each = var.enable_private_cluster == "" ? [] : [1]
+    for_each = var.enable_private_cluster ? [1] : []
 
     content {
       // Decide if this CIDR block is sensible or not
