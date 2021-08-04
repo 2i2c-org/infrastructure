@@ -117,6 +117,28 @@ hubs:
             continuous:
               enabled: true
           singleuser:
+            networkPolicy:
+              # In clusters with NetworkPolicy enabled, do not
+              # allow outbound internet access that's not DNS, HTTP or HTTPS
+              # For OHW, we allow 8080 (for DAP) and 22 (for ssh)
+              # https://github.com/2i2c-org/pilot-hubs/issues/549#issuecomment-892276020
+              enabled: true
+              egress:
+                - ports:
+                    - port: 53
+                      protocol: UDP
+                - ports:
+                    - port: 80
+                      protocol: TCP
+                - ports:
+                    - port: 443
+                      protocol: TCP
+                - ports:
+                    - port: 8080
+                      protocol: TCP
+                - ports:
+                    - port: 22
+                      protocol: TCP
             image:
               name: ghcr.io/oceanhackweek/jupyer-image
               tag: 9efd4fb
