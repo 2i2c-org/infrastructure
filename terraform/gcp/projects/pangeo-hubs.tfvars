@@ -15,6 +15,7 @@ notebook_nodes = {
     min : 0,
     max : 20,
     machine_type : "n1-highmem-4"
+    labels : {}
   },
 }
 
@@ -23,6 +24,7 @@ dask_nodes = {
     min : 0,
     max : 100,
     machine_type : "n1-highmem-4"
+    labels : {}
   },
 }
 
