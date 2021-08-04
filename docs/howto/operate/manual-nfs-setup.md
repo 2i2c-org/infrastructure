@@ -85,5 +85,5 @@ This is because the VM will not have an external IP address and will therefore n
 5. Run the export command
 
    ```bash
-   sudo exportfs
+   sudo exportfs -ra
    ```
