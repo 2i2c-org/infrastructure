@@ -10,4 +10,7 @@ resource "google_artifact_registry_repository" "registry" {
   repository_id = "${var.prefix}-registry"
   format        = "DOCKER"
   project       = var.project_id
+
+  // Set these values explicitly so they don't "change outside terraform"
+  labels = {}
 }

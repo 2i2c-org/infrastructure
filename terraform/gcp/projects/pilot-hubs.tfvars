@@ -13,16 +13,34 @@ notebook_nodes = {
   "user" : {
     min : 0,
     max : 20,
-    machine_type : "e2-highmem-4"
+    machine_type : "e2-highmem-4",
+    labels: { }
   },
+  "ohw": {
+    min: 0,
+    max: 50,
+    machine_type: "n1-highmem-4",
+    labels: {
+      "2i2c.org/community": "ohw"
+    },
+  }
 }
 
 dask_nodes = {
   "worker" : {
     min : 0,
     max : 100,
-    machine_type : "e2-highmem-4"
+    machine_type : "e2-highmem-4",
+    labels: { }
   },
+  "ohw": {
+    min: 0,
+    max: 100,
+    machine_type: "n1-highmem-4",
+    labels: {
+      "2i2c.org/community": "ohw"
+    },
+  }
 }
 
 user_buckets = []

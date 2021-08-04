@@ -7,6 +7,9 @@ resource "google_storage_bucket" "user_buckets" {
   name     = "${var.prefix}-${each.key}"
   location = var.region
   project  = var.project_id
+
+  // Set these values explicitly so they don't "change outside terraform"
+  labels = {}
 }
 
 resource "google_storage_bucket_iam_member" "member" {
