@@ -69,7 +69,7 @@ This is because the VM will not have an external IP address and will therefore n
 
    ```bash
    sudo chmod -R 0700 /export/
-   sudo chown -R 1000 /export/
+   sudo chown -R 1000:1000 /export/
    ```
 
 4. Create the exports rule in the file `/etc/exports`
