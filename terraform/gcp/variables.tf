@@ -176,11 +176,14 @@ variable "enable_private_cluster" {
   type        = bool
   default     = false
   description = <<-EOT
-  Enable deployment of GKE into a private cluster.
+  Deploy the kubernetes cluster into a private subnet
 
-  For projects that are managed by universities and such, we may find that they
-  have enabled certain constraints and controls that mean our usual method of
-  deployment fails. Enabling a private cluster tends to satisfy many of these
-  controls.
+  By default, GKE gives each of your nodes a public IP & puts them in a public
+  subnet. When this variable is set to `true`, the nodes will be in a private subnet
+  and not have public IPs. A cloud NAT will provide outbound internet access from
+  these nodes. The kubernetes API will still be exposed publicly, so we can access
+  it from our laptops & CD.
+  
+  This is often required by institutional controls banning VMs from having public IPs.
   EOT
 }
