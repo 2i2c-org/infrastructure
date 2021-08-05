@@ -1,4 +1,4 @@
-name: Deploy and Test pangeo hub
+name: Deploy and Test COESSING hub
 
 on:
   push:
