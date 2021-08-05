@@ -20,6 +20,8 @@ jobs:
       fail-fast: false
       matrix:
         cluster_name:
+          # To enable auto-deployments for other clusters,
+          # add its name to the list
           - 2i2c
           - cloudbank
           - carbonplan
