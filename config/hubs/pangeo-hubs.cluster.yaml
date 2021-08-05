@@ -1,0 +1,61 @@
+name: pangeo-hubs
+provider: gcp
+gcp:
+  key: secrets/pangeo-hubs.json
+  project: pangeo-integration-te-3eea
+  cluster: pangeo-hubs-cluster
+  zone: us-central1-b
+hubs:
+  - name: staging
+    domain: staging.pangeo.2i2c.cloud
+    template: daskhub
+    # auth0:
+    #   connection: google-oauth2
+    config: &stagingConfig
+      basehub:
+        jupyterhub:
+          proxy:
+            https:
+              enabled: false
+          custom:
+            homepage:
+              templateVars:
+                org:
+                  name: Pangeo
+                  url: https://pangeo.io
+                  logo_url: "https://coessing.files.wordpress.com/2016/08/ghana-logo-21.png?w=262&h=376&zoom=2"
+                designed_by:
+                  name: 2i2c
+                  url: https://2i2c.org
+                operated_by:
+                  name: 2i2c
+                  url: https://2i2c.org
+                funded_by:
+                  name: Pangeo
+                  url: https://pangeo.io
+          hub:
+            config:
+              Authenticator:
+                allowed_users: &staging_users
+                  - ""
+                admin_users: *staging_users
+          singleuser:
+            image:
+              name: pangeo/pangeo-notebook
+              tag: e60dfe1
+            cpu:
+              limit: 2
+              guarantee: 1
+            memory:
+              limit: 4G
+              guarantee: 2G
+      dask-gateway:
+        gateway:
+          backend:
+            scheduler:
+              cores:
+                request: 0.8
+                limit: 1
+              memory:
+                request: 1G
+                limit: 2G
