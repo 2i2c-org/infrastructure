@@ -407,7 +407,7 @@ hubs:
           singleuser:
             image:
               name: pangeo/pangeo-notebook
-              tag: 2021.02.19
+              tag: 2021.07.17
           custom:
             cloudResources:
               provider: gcp
