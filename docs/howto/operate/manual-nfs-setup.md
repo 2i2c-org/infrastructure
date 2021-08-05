@@ -6,17 +6,7 @@ More information about the NFS Server can be found in {ref}`/topic/storage-layer
 ## Deploy the host Virtual Machine
 
 We need to first deploy a small virtual machine with a persistent disk that will host the NFS server.
-Using `gcloud`, the command is:
-
-```bash
-gcloud compute instances create nfs-server-01 \
-  --image=ubuntu-2004-focal-v20210720 \
-  --image-project=ubuntu-os-cloud \
-  --machine-type=g1-small \
-  --boot-disk-device-name=nfs-server-01 \
-  --boot-disk-size=100GB \
-  --boot-disk-type=pd-standard
-```
+You can use `gcloud` commands to achieve this.
 
 ````{note}
 To find the values of `--image` and `--image-project`, run the following:
@@ -32,6 +22,21 @@ You can then check the image suits your needs by running:
 ```bash
 gcloud computer images describe IMAGE_NAME --project=IMAGE_PROJECT
 ```
+````
+
+```bash
+gcloud compute instances create nfs-server-01 \
+  --image=ubuntu-2004-focal-v20210720 \
+  --image-project=ubuntu-os-cloud \
+  --machine-type=g1-small \
+  --boot-disk-device-name=nfs-server-01 \
+  --boot-disk-size=100GB \
+  --boot-disk-type=pd-standard
+```
+
+````{note}
+The boot disk is where users' home directories and data are stored.
+Feel free to increase `--boot-disk-size` if 100GB won't be enough.
 ````
 
 ```{note}
