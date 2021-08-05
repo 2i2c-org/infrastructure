@@ -1,0 +1,30 @@
+name: Deploy and Test pangeo hub
+
+on:
+  push:
+    branches: [ master ]
+    paths:
+      - deployer/**
+      - hub-templates/**
+      - requirements.txt
+      - dev-requirements.txt
+      - config/secrets.yaml
+      - config/hubs/pangeo-181919.cluster.yaml
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: google-github-actions/setup-gcloud@master
+        with:
+          version: '290.0.1'
+          # This is used for KMS only
+          project_id: two-eye-two-see
+          service_account_key: ${{ secrets.GCP_KMS_DECRYPTOR_KEY }}
+          export_default_credentials: true
+      - uses: azure/setup-helm@v1
+      - uses: mdgreenwald/mozilla-sops-action@v1
+      - uses: ./.github/actions/deploy
+        with:
+          cluster: 'pangeo-181919'
