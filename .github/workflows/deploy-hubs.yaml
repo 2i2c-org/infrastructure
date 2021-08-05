@@ -53,7 +53,9 @@ jobs:
               - "config/hubs/${{ matrix.cluster_name }}.cluster.yaml"
 
       - name: Setup gcloud
-        if: steps.base_files.outputs.files == 'true' || steps.config_files.outputs.hub_config == 'true'
+        if: |
+          (steps.base_files.outputs.files == 'true') ||
+          (steps.config_files.outputs.hub_config == 'true')
         uses: google-github-actions/setup-gcloud@master
         with:
           version: '290.0.1'
@@ -63,15 +65,21 @@ jobs:
           export_default_credentials: true
 
       - name: Setup helm
-        if: steps.base_files.outputs.files == 'true' || steps.config_files.outputs.hub_config == 'true'
+        if: |
+          (steps.base_files.outputs.files == 'true') ||
+          (steps.config_files.outputs.hub_config == 'true')
         uses: azure/setup-helm@v1
 
       - name: Setup sops
-        if: steps.base_files.outputs.files == 'true' || steps.config_files.outputs.hub_config == 'true'
+        if: |
+          (steps.base_files.outputs.files == 'true') ||
+          (steps.config_files.outputs.hub_config == 'true')
         uses: mdgreenwald/mozilla-sops-action@v1
 
       - name: Deploy ${{ matrix.cluster_name }}
-        if: steps.base_files.outputs.files == 'true' || steps.config_files.outputs.hub_config == 'true'
+        if: |
+          (steps.base_files.outputs.files == 'true') ||
+          (steps.config_files.outputs.hub_config == 'true')
         uses: ./.github/actions/deploy
         with:
           cluster: ${{ matrix.cluster_name }}
