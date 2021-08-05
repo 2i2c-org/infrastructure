@@ -16,7 +16,8 @@ jobs:
   deploy:
     runs-on: ubuntu-latest
     strategy:
-      fail-fast: true
+      # Don't stop other deployments if one fails
+      fail-fast: false
       matrix:
         cluster_name:
           - 2i2c
