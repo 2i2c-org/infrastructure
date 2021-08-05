@@ -11,7 +11,7 @@ on:
       - dev-requirements.txt
       - config/secrets.yaml
       - config/hubs/**
-      - .github/workflows/**
+      - .github/workflows/deploy-hubs.yaml
 
 jobs:
   deploy:
@@ -44,7 +44,7 @@ jobs:
               - "requirements.txt"
               - "dev-requirements.txt"
               - "config/secrets.yaml"
-              - ".github/workflows/*"
+              - ".github/workflows/deploy-hubs.yaml"
 
       - name: Check which cluster.yaml file has changed (if any)
         uses: dorny/paths-filter@v2
