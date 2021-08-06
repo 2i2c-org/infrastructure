@@ -1,0 +1,89 @@
+name: Deploy and test hubs
+
+on:
+  push:
+    branches:
+      - master
+    paths:
+      - deployer/**
+      - hub-templates/**
+      - requirements.txt
+      - dev-requirements.txt
+      - config/secrets.yaml
+      - config/hubs/**
+      - .github/workflows/deploy-hubs.yaml
+      - .github/actions/deploy/**
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    strategy:
+      # Don't stop other deployments if one fails
+      fail-fast: false
+      matrix:
+        cluster_name:
+          # To enable auto-deployments for other clusters,
+          # add its name to the list
+          - 2i2c
+          - cloudbank
+          # - carbonplan  # We need to edit deployer to connect to aws before we can autodeploy carbonplan
+          - meom-ige
+          - pangeo-181919
+
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v2
+
+      - name: Check if any of our base files have changed
+        uses: dorny/paths-filter@v2
+        id: base_files
+        with:
+          filters: |
+            files:
+              - "deployer/**"
+              - "hub-templates/**"
+              - "requirements.txt"
+              - "dev-requirements.txt"
+              - "config/secrets.yaml"
+              - ".github/workflows/deploy-hubs.yaml"
+              - ".github/actions/deploy/*"
+
+      - name: Check which cluster.yaml file has changed (if any)
+        uses: dorny/paths-filter@v2
+        id: config_files
+        with:
+          filters: |
+            hub_config:
+              - "config/hubs/${{ matrix.cluster_name }}.cluster.yaml"
+
+      - name: Setup gcloud
+        if: |
+          (steps.base_files.outputs.files == 'true') ||
+          (steps.config_files.outputs.hub_config == 'true')
+        uses: google-github-actions/setup-gcloud@master
+        with:
+          version: '290.0.1'
+          # This is used for KMS only
+          project_id: two-eye-two-see
+          service_account_key: ${{ secrets.GCP_KMS_DECRYPTOR_KEY }}
+          export_default_credentials: true
+
+      - name: Setup helm
+        if: |
+          (steps.base_files.outputs.files == 'true') ||
+          (steps.config_files.outputs.hub_config == 'true')
+        uses: azure/setup-helm@v1
+
+      - name: Setup sops
+        if: |
+          (steps.base_files.outputs.files == 'true') ||
+          (steps.config_files.outputs.hub_config == 'true')
+        uses: mdgreenwald/mozilla-sops-action@v1
+
+      - name: Deploy ${{ matrix.cluster_name }}
+        if: |
+          (steps.base_files.outputs.files == 'true') ||
+          (steps.config_files.outputs.hub_config == 'true')
+        uses: ./.github/actions/deploy
+        with:
+          cluster: ${{ matrix.cluster_name }}

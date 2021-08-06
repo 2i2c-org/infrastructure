@@ -8,6 +8,7 @@ import subprocess
 import tempfile
 from contextlib import contextmanager, redirect_stderr, redirect_stdout
 from textwrap import dedent
+from pathlib import Path
 
 import pytest
 from ruamel.yaml import YAML
@@ -79,7 +80,18 @@ class Cluster:
                     json.dump(config, f, indent=4)
 
     def deploy_support(self):
+        cert_manager_url = 'https://charts.jetstack.io'
         cert_manager_version = 'v1.3.1'
+
+        print("Adding cert-manager chart repo...")
+        subprocess.check_call([
+            'helm', 'repo', 'add', 'jetstack', cert_manager_url,
+        ])
+
+        print("Updating cert-manager chart repo...")
+        subprocess.check_call([
+            'helm', 'repo', 'update',
+        ])
 
         print("Provisioning cert-manager...")
         subprocess.check_call([
@@ -91,16 +103,22 @@ class Cluster:
         ])
         print("Done!")
 
-        print("Support charts...")
+        print("Provisioning support charts...")
+        subprocess.check_call([
+            'helm', 'dep', 'up', 'support'
+        ])
 
-        with tempfile.NamedTemporaryFile(mode='w') as f:
+        support_dir = Path(__file__).parent.parent / 'support'
+        support_secrets_file = support_dir / 'secrets.yaml'
+
+        with tempfile.NamedTemporaryFile(mode='w') as f, decrypt_file(support_secrets_file) as secret_file:
             yaml.dump(self.support.get('config', {}), f)
             f.flush()
             subprocess.check_call([
                 'helm', 'upgrade', '--install', '--create-namespace',
                 '--namespace', 'support',
-                'support', 'support',
-                '-f', f.name,
+                'support', str(support_dir),
+                '-f', secret_file, '-f', f.name,
                 '--wait'
             ])
         print("Done!")
@@ -409,4 +427,4 @@ class Hub:
                     print("Health check failed!", file=sys.stderr)
                     sys.exit(exit_code)
                 else:
-                    print("Helath check succeeded!")
+                    print("Health check succeeded!")

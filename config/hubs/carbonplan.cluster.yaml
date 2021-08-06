@@ -4,6 +4,20 @@ kubeconfig:
   file: secrets/carbonplan.yaml
 support:
   config:
+    prometheus:
+      server:
+        resources:
+          requests:
+            cpu: 1
+            memory: 4Gi
+          limits:
+            cpu: 4
+            memory: 8Gi
+    cluster-autoscaler:
+      enabled: true
+      autoDiscovery:
+        clusterName: carbonplanhub
+      awsRegion: us-west-2
     grafana:
       ingress:
         hosts:
@@ -142,6 +156,17 @@ hubs:
             readinessProbe:
               enabled: false
             nodeSelector: {}
+            config:
+              Authenticator:
+                allowed_users: &users
+                  - yuvipanda
+                  - choldgraf
+                  - GeorgianaElena
+                  - damianavila
+                  - sgibson91
+                  - jhamman
+                admin_users: *users
+
       dask-gateway:
         traefik:
           resources:

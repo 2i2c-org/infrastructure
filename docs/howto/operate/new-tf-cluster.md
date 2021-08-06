@@ -1,6 +1,6 @@
 # Add a new GKE cluster managed by our Terraform configuration
 
-This guide will walk through the process of adding a new cluster to our [terraform configuration](https://github.com/2i2c-org/pilot-hubs/tree/master/terraform).
+This guide will walk through the process of adding a new cluster to our [terraform configuration](https://github.com/2i2c-org/pilot-hubs/tree/HEAD/terraform/gcp).
 
 ## Cluster Design
 
@@ -8,7 +8,7 @@ This guide will assume you have already followed the guidance in {ref}`/topic/cl
 
 ## Creating a Terraform variables file for the cluster
 
-The first step is to create a `.tfvars` file in the [`terraform/projects` directory](https://github.com/2i2c-org/pilot-hubs/tree/master/terraform/projects).
+The first step is to create a `.tfvars` file in the [`terraform/gcp/projects` directory](https://github.com/2i2c-org/pilot-hubs/tree/HEAD/terraform/gcp/projects).
 Give it a descriptive name that at a glance provides context to the location and/or purpose of the cluster.
 
 The _minimum_ inputs this file requires are:
@@ -18,7 +18,7 @@ The _minimum_ inputs this file requires are:
 - `project_id`: GCP Project ID to create resources in.
   Should be the id, rather than display name of the project.
 
-See the [variables file](https://github.com/2i2c-org/pilot-hubs/blob/master/terraform/variables.tf) for other inputs this file can take and their descriptions.
+See the [variables file](https://github.com/2i2c-org/pilot-hubs/blob/HEAD/terraform/gcp/variables.tf) for other inputs this file can take and their descriptions.
 
 Example `.tfvars` file:
 
@@ -31,7 +31,7 @@ Once you have created this file, open a Pull Request to the `pilot-hubs` repo fo
 
 ## Initialising Terraform
 
-The terraform state is located centrally in our `two-eye-two-see-org` GCP project, therefore you must authenticate `gcloud` to your `@2i2c.org` account before initialising terraform.
+Our default terraform state is located centrally in our `two-eye-two-see-org` GCP project, therefore you must authenticate `gcloud` to your `@2i2c.org` account before initialising terraform.
 
 ```bash
 gcloud auth application-default login
@@ -40,28 +40,19 @@ gcloud auth application-default login
 Then you can change into the terraform directory and initialise
 
 ```bash
-cd terraform
-terraform init
+cd terraform/gcp
+terraform init -backend-config=backends/default-backend.hcl -reconfigure
 ```
 
 ````{note}
-If you are deploying a cluster to a project you have access to via a different account, such as a university-affliated account, there are a few extra steps to take.
-Hopefully, this will be a rare scenario.
+If you are working on a project which you cannot access with your 2i2c account, there are other backend config files stored in `terraform/backends` that will configure a different storage bucket to read/write the remote terraform state.
+This saves us the pain of having to handle multiple authentications as these storage buckets are within the project we are trying to deploy to.
 
-First, you will need to provide terraform with an [access token](https://www.terraform.io/docs/language/settings/backends/gcs.html#configuration-variables) to use the state files.
-You can generate one using the below commands and logging in with your 2i2c.org account.
+For example, to work with Pangeo you would initialise terraform like so:
 
 ```bash
-gcloud auth application-default login
-gcloud auth application-default print-access-token
+terraform init -backend-config=pangeo-backend.hcl -reconfigure
 ```
-
-Add the access token to the [terraform backend block](https://github.com/2i2c-org/pilot-hubs/blob/2ef8a4bf35bb5ee9bf04ab3db1218b8c183c5da2/terraform/main.tf#L2-L5) in `main.tf`.
-**DO NOT COMMIT THIS CHANGE.**
-Then run `terraform init` or `terraform init -reconfigure`.
-
-You can now login to your other gcloud account and proceed with the guide.
-````
 
 ## Creating a new terraform workspace
 
@@ -70,6 +61,11 @@ Create a new workspace with the below command, and again give it the same name a
 
 ```bash
 terraform workspace new WORKSPACE_NAME
+```
+
+```{note}
+Workspaces are defined **per backend**.
+If you can't find the workspace you're looking for, double check you've enabled the correct backend.
 ```
 
 ## Plan and Apply Changes
@@ -115,7 +111,7 @@ terraform workspace select WORKSPACE_NAME
 Then, output the JSON key for the service account created by terraform to a file under the `secrets` directory.
 
 ```bash
-terraform output -raw ci_deployer_key > ../secrets/CLUSTER_NAME.json
+terraform output -raw ci_deployer_key > ../../secrets/CLUSTER_NAME.json
 ```
 
 where `CLUSTER_NAME` matches the name of our `.tfvars` file.

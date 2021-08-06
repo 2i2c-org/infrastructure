@@ -23,15 +23,20 @@ body:
     validations:
       required: true
 
-  - type: input
+  - type: textarea
     id: community-representative
     attributes:
-      label: Community Representative
+      label: Community Representative(s)
       description: |
         The main point-of-contact for this hub, and the person who requests changes to the hub on behalf of the community. **This will be the first Hub Administrator**, and may add new Hub Administrators from the JupyterHub UI.
         See [the Managed JupyterHubs roles documentation](https://team-compass.2i2c.org/en/latest/projects/managed-hubs/roles.html) for more information.
-        
         The value here should reflect the type of authentication indicated below (e.g., a GitHub handle or email address).
+
+        There may be up to 2 community representatives, please provide the **name**, **contact information**, and **hub login** of each.
+      placeholder: |
+        Examples:
+        - Jo the Jovyan, jo@jupyter.org, @jothejovyan (if you are using GitHub authentication)
+        - Jo the Jovyan 2, jo2@jupyter.org, jo2@jupyter.org (if you are using OAuth authentication)
     validations:
       required: true
 
