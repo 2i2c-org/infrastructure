@@ -427,4 +427,4 @@ class Hub:
                     print("Health check failed!", file=sys.stderr)
                     sys.exit(exit_code)
                 else:
-                    print("Helath check succeeded!")
+                    print("Health check succeeded!")
