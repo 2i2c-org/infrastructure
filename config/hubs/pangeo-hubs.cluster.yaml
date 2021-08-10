@@ -9,8 +9,8 @@ hubs:
   - name: staging
     domain: staging.pangeo.2i2c.cloud
     template: daskhub
-    auth0:
-      connection: github
+    # auth0:
+    #   connection: google-oauth2
     config: &stagingConfig
       basehub:
         jupyterhub:
@@ -36,21 +36,9 @@ hubs:
           hub:
             config:
               Authenticator:
-                admin_users:
-                  - jhamman
-                  - rabernat
-                  - TomAugspurger
-                  - scottyhq
-                  - sgibson91
-                  - yuvipanda
-                  - damianavila
-              GitHubOAuthenticator:
-                allowed_organizations:
-                  # Allow access to any member of the us-central1-b-gcp team
-                  # under the pangeo-data org
-                  - "pangeo-data:us-central1-b-gcp"
-                scope:
-                  - "read:org"
+                allowed_users: &staging_users
+                  - ""
+                admin_users: *staging_users
           singleuser:
             image:
               name: pangeo/pangeo-notebook
