@@ -9,8 +9,8 @@ hubs:
   - name: staging
     domain: staging.pangeo.2i2c.cloud
     template: daskhub
-    # auth0:
-    #   connection: google-oauth2
+    auth0:
+      connection: github
     config: &stagingConfig
       basehub:
         jupyterhub:
@@ -37,7 +37,9 @@ hubs:
             config:
               Authenticator:
                 allowed_users: &staging_users
-                  - ""
+                  - sgibson91
+                  - yuvipanda
+                  - damianavila
                 admin_users: *staging_users
           singleuser:
             image:
