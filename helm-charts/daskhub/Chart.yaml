@@ -14,5 +14,5 @@ dependencies:
     version: "2022.10.0"
     repository: "https://helm.dask.org/"
   - name: jupyterhub-ssh
-    version: 0.0.1-n114.h3c48a9f
+    version: 0.0.1-n142.h402a3d6
     repository: https://yuvipanda.github.io/jupyterhub-ssh/
