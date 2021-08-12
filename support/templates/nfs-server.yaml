@@ -43,8 +43,8 @@ spec:
     spec:
       volumes:
       - name: nfs-export
-        configMap:
-          name: nfs-config
+        persistentVolumeClaim:
+          claimName: nfs-server-01
       containers:
       - name: nfs-server-01
         image: gcr.io/google_containers/volume-nfs:0.8
