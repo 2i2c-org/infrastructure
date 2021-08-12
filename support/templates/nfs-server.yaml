@@ -3,43 +3,34 @@ kind: PersistentVolumeClaim
 apiVersion: v1
 metadata:
   name: nfs-server-01
-  namespace: {{ .Release.Namespace}}
 spec:
   accessModes:
     - "ReadWriteOnce"
   resources:
     requests:
-      storage: 100GiB
+      storage: 100G
 ---
 apiVersion: v1
 kind: Service
 metadata:
   name: nfs-server-01
-  namespace: {{ .Release.Namespace }}
 spec:
-  type: {{ .Values.service.type }}
-  {{- with .Values.service.loadBalancerIP }}
-  loadBalancerIP: {{ . | quote }}
-  {{- end }}
   selector:
     role: nfs-server-01
     name: nfs-server-01
     component: nfs-server-01
-    release: {{ .Release.Name }}
-    heritage: {{ .Release.Service }}
   ports:
-    - protocol: nfs
+    - name: nfs
       port: 2049
-    - protocol: mountd
+    - name: mountd
       port: 20048
-    - protocol: rpcbind
+    - name: rpcbind
       port: 111
 ---
 apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: nfs-server-01
-  namespace {{ .Release.Namespace }}
 spec:
   replicas: 1
   selector:
@@ -49,11 +40,9 @@ spec:
     metadata:
       labels:
         role: nfs-server-01
-        release: {{ .Release.Name }}
-        heritage: {{ .Release.Service }}
     spec:
       volumes:
-      - name: nfs-server-01
+      - name: nfs-export
         configMap:
           name: nfs-config
       containers:
