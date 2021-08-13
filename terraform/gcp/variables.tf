@@ -152,7 +152,7 @@ variable "core_node_max_count" {
 
 variable "enable_network_policy" {
   type        = bool
-  default     = true
+  default     = false
   description = <<-EOT
   Enable kubernetes network policy enforcement.
 
