@@ -1,6 +1,8 @@
 prefix     = "alpha"
 project_id = "hackathon-2i2c-project-alpha"
 
+enable_network_policy = true
+
 # Inane CPU requests mean we need at least 3 CPUs for a base node?!?!
 # But, we can't have custom machine sizes with odd number of CPUs -
 # only even numbers. So we go with 4. 3840 is the smallest amount
