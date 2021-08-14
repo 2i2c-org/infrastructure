@@ -7,8 +7,10 @@ local clusterRegion = "us-west-2";
 local masterAzs = ["us-west-2a", "us-west-2b", "us-west-2c"];
 local nodeAz = "us-west-2a";
 
-// Node definitions for notebook nodes. Only `instanceType` is
-// supported as a property.
+// Node definitions for notebook nodes. Config here is merged
+// with our notebook node definition.
+// A `node.kubernetes.io/instance-type label is added, so pods
+// can request a particular kind of node with a nodeSelector
 local notebookNodes = [
     { instanceType: "r5.large" },
     { instanceType: "r5.xlarge" },
@@ -18,13 +20,17 @@ local notebookNodes = [
     { instanceType: "x1.32xlarge" }
 ];
 
-// Node definitions for dask worker nodes. Only `instanceType` is
-// supported as a property.
+// Node definitions for dask worker nodes. Config here is merged
+// with our dask worker node definition, which uses spot instances.
+// A `node.kubernetes.io/instance-type label is set to the name of the
+// *first* item in instanceDistribution.instanceTypes, to match
+// what we do with notebook nodes. Pods can request a particular
+// kind of node with a nodeSelector
 local daskNodes = [
-    { instanceType: "r5.large" },
-    { instanceType: "r5.xlarge" },
-    { instanceType: "r5.2xlarge" },
-    { instanceType: "r5.8xlarge" },
+    { instancesDistribution+: { instanceTypes: ["r5.large"] }},
+    { instancesDistribution+: { instanceTypes: ["r5.xlarge"] }},
+    { instancesDistribution+: { instanceTypes: ["r5.2xlarge"] }},
+    { instancesDistribution+: { instanceTypes: ["r5.8xlarge"] }},
 ];
 
 cluster {
@@ -74,7 +80,7 @@ cluster {
         ng {
             // NodeGroup names can't have a '.' in them, while
             // instanceTypes always have a .
-            name: "dask-%s" % std.strReplace(n.instanceType, ".", "-"),
+            name: "dask-%s" % std.strReplace(n.instancesDistribution.instanceTypes[0], ".", "-"),
             availabilityZones: [nodeAz],
             minSize: 0,
             maxSize: 500,
@@ -88,13 +94,12 @@ cluster {
                 "k8s.dask.org_dedicated" : "worker:NoSchedule",
                 "k8s.dask.org/dedicated" : "worker:NoSchedule"
             },
-            instancesDistribution: {
-                instanceTypes: [n.instanceType],
+            instancesDistribution+: {
                 onDemandBaseCapacity: 0,
                 onDemandPercentageAboveBaseCapacity: 0,
                 spotAllocationStrategy: "capacity-optimized",
             },
-        } for n in daskNodes
+        } + n for n in daskNodes
     ]
 
 
