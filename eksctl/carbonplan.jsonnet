@@ -18,7 +18,7 @@ local notebookNodes = [
     { instanceType: "x1.32xlarge" }
 ];
 
-// Node definitions for notebook nodes. Only `instanceType` is
+// Node definitions for dask worker nodes. Only `instanceType` is
 // supported as a property.
 local daskNodes = [
     { instanceType: "r5.large" },
