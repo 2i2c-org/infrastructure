@@ -71,3 +71,21 @@ grafana:
           access: proxy
           isDefault: true
           editable: false
+
+nfs-server-provisioner:
+  storageClass:
+    # Users will have to opt-in to using NFS-type storage under
+    # singleuser.storage.dynamic.storageClass
+    name: nfs
+    create: true
+    defaultClass: false
+    # Mount Options: default v3, should we use v4?
+    # https://github.com/kubernetes-sigs/nfs-ganesha-server-and-external-provisioner/blob/6116a3cd5aad731cbe2a0628702cf3032c5f6752/deploy/helm/values.yaml#L74-L75
+  persistence:
+    enabled: true
+    accessMode: ReadWriteOnce
+    size: 100Gi
+    # Future option is to reference an xfs storage class. This will allow us to enable quotas.
+    # https://github.com/pangeo-data/pangeo-cloud-federation/issues/654#issuecomment-861771398
+    # https://cloud.google.com/kubernetes-engine/docs/how-to/persistent-volumes/gce-pd-csi-driver
+    storageClass: standard
