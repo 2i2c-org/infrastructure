@@ -53,6 +53,12 @@ hubs:
             memory:
               limit: 4G
               guarantee: 2G
+            storage:
+              type: dynamic
+              dynamic:
+                storageClass: "nfs"
+                storageAccessModes:
+                  - ReadWriteMany
       dask-gateway:
         gateway:
           backend:
