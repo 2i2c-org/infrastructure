@@ -13,6 +13,8 @@ hubs:
       connection: github
     config: &stagingConfig
       basehub:
+        nfsPVC:
+          enabled: false
         jupyterhub:
           proxy:
             https:
