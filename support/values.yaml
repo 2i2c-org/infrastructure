@@ -73,6 +73,7 @@ grafana:
           editable: false
 
 nfs-server-provisioner:
+  enabled: false
   storageClass:
     # Users will have to opt-in to using NFS-type storage under
     # singleuser.storage.dynamic.storageClass
