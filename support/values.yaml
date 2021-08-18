@@ -80,8 +80,8 @@ nfs-server-provisioner:
     name: nfs
     create: true
     defaultClass: false
-    # Mount Options: default v3, should we use v4?
-    # https://github.com/kubernetes-sigs/nfs-ganesha-server-and-external-provisioner/blob/6116a3cd5aad731cbe2a0628702cf3032c5f6752/deploy/helm/values.yaml#L74-L75
+    mountOptions:
+      - vers=4
   persistence:
     enabled: true
     accessMode: ReadWriteOnce
