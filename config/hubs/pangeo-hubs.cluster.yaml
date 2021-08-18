@@ -36,8 +36,8 @@ hubs:
                   name: 2i2c
                   url: https://2i2c.org
                 funded_by:
-                  name: Pangeo
-                  url: https://pangeo.io
+                  name: The Gordon and Betty Moore Foundation
+                  url: https://www.moore.org/
           hub:
             config:
               Authenticator:
