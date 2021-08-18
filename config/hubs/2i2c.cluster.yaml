@@ -327,7 +327,7 @@ hubs:
           singleuser:
             image:
               name: catalystcoop/pudl-jupyter
-              tag: 2021.03.27
+              tag: 2021.08.17
             memory:
               limit: 6G
               guarantee: 4G
