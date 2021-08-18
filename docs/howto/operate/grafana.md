@@ -32,11 +32,11 @@ support:
     grafana:
       ingress:
         hosts:
-          - GRAFANA_URL
+          - <grafana-domain>
         tls:
           - secretName: grafana-tls
             hosts:
-              - GRAFANA_URL
+              - <grafana-domain>
 ```
 
 #### Deploy the `support` chart via the `deployer`
