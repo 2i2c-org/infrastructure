@@ -5,9 +5,10 @@ Information about operating the hubs, debugging problems, and performing common 
 (team-process)=
 ## Team process for hub development and operation
 
-See the {ref}`tc:coordination:team-activity`.
+For more information about our team's development and coordination processes, see {ref}`tc:coordination:development`.
 
 ```{toctree}
+:maxdepth: 2
 new-hub/index.md
 setup-new-project.md
 cmd-access.md

@@ -12,7 +12,7 @@ Below is a short overview of the steps in the process.
    The following steps are major sections described in the template.
 2. Collect information about the hub that helps us deploy it in the proper manner (see the issue template for explanations about the information we need).
 3. Create the hub via appending a new hub entry in the appropriate cluster file under
-   `config/hubs` file (see [](../../topic/config.md) for more information).
+   `config/hubs` file (see [](/topic/config.md) for more information).
 4. Start following [team process](team-process) around operating the hubs.
 
 ## Cloud provider-specific information
