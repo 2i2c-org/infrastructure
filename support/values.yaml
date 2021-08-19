@@ -72,6 +72,8 @@ grafana:
           isDefault: true
           editable: false
 
+# Values reference for nfs-server-provisioner
+# https://github.com/kubernetes-sigs/nfs-ganesha-server-and-external-provisioner/blob/master/deploy/helm/values.yaml
 nfs-server-provisioner:
   enabled: false
   storageClass:
