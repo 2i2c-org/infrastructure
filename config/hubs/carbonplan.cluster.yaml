@@ -64,6 +64,7 @@ hubs:
                   name: Carbon Plan
                   url: https://carbonplan.org
           singleuser:
+            serviceAccountName: cloud-user-sa
             initContainers:
               # Need to explicitly fix ownership here, since EFS doesn't do anonuid
             - name: volume-mount-ownership-fix
@@ -168,6 +169,13 @@ hubs:
                 admin_users: *users
 
       dask-gateway:
+        backend:
+          scheduler:
+            extraPodConfig:
+              serviceAccountName: cloud-user-sa
+          worker:
+            extraPodConfig:
+              serviceAccountName: cloud-user-sa
         traefik:
           resources:
             requests:

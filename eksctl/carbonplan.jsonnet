@@ -1,11 +1,15 @@
 // Exports an eksctl config file for carbonplan cluster
-local cluster = import "./libsonnet/cluster.jsonnet";
 local ng = import "./libsonnet/nodegroup.jsonnet";
 
 // place all cluster nodes here
 local clusterRegion = "us-west-2";
 local masterAzs = ["us-west-2a", "us-west-2b", "us-west-2c"];
 local nodeAz = "us-west-2a";
+
+// List of namespaces where we have hubs deployed
+// Each will get a ServiceAccount that will get credentials to talk
+// to AWS services, via https://docs.aws.amazon.com/eks/latest/userguide/iam-roles-for-service-accounts.html
+local namespaces = ['staging', 'prod'];
 
 // Node definitions for notebook nodes. Config here is merged
 // with our notebook node definition.
@@ -33,12 +37,28 @@ local daskNodes = [
     { instancesDistribution+: { instanceTypes: ["r5.8xlarge"] }},
 ];
 
-cluster {
+{
+    apiVersion: 'eksctl.io/v1alpha5',
+    kind: 'ClusterConfig',
     metadata+: {
         name: "carbonplanhub",
-        region: clusterRegion
+        region: clusterRegion,
+        version: '1.19'
     },
     availabilityZones: masterAzs,
+    iam: {
+        withOIDC: true,
+
+        serviceAccounts: [{
+            metadata: {
+                name: "cloud-user-sa",
+                namespace: namespace
+            },
+            attachPolicyARNs:[
+                "arn:aws:iam::aws:policy/AmazonS3FullAccess"
+            ],
+        } for namespace in namespaces],
+    },
     nodeGroups: [
         ng {
             name: 'core-a',
