@@ -1,3 +1,4 @@
+name: pilot-hubs-docs
 channels:
 - conda-forge
 dependencies:
