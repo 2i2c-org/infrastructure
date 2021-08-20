@@ -15,7 +15,7 @@ Client organizations can give us access to a billing account, or
 just to a project. This document describes what 2i2c engineers should
 do once client organizations give us access.
 
-See {ref}`/howto/operate/new-tf-cluster` fore more detailed guidance.
+See {doc}`/howto/operate/new-tf-cluster` fore more detailed guidance.
 
 ## Client organization provides billing account
 
