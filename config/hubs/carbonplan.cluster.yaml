@@ -64,6 +64,7 @@ hubs:
                   name: Carbon Plan
                   url: https://carbonplan.org
           singleuser:
+            serviceAccountName: cloud-user-sa
             initContainers:
               # Need to explicitly fix ownership here, since EFS doesn't do anonuid
             - name: volume-mount-ownership-fix
@@ -185,6 +186,13 @@ hubs:
               cpu: 2
               memory: 4Gi
         gateway:
+          backend:
+            scheduler:
+              extraPodConfig:
+                serviceAccountName: cloud-user-sa
+            worker:
+              extraPodConfig:
+                serviceAccountName: cloud-user-sa
           resources:
             requests:
               cpu: 0.5
