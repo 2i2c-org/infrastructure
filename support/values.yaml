@@ -3,10 +3,12 @@ cluster-autoscaler:
 cert-manager:
   installCRDs: true
 ingress-nginx:
+  enabled: true
   controller:
     podLabels:
       hub.jupyter.org/network-access-proxy-http: 'true'
 prometheus:
+  enabled: true
   networkPolicy:
     enabled: true
   alertmanager:
@@ -44,13 +46,12 @@ prometheus:
       type: ClusterIP
 
 grafana:
+  enabled: true
   persistence:
+    enabled: true
     storageClassName: standard
   deploymentStrategy:
     type: Recreate
-
-  persistence:
-    enabled: true
   service:
     type: ClusterIP
 
