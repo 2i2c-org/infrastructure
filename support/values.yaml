@@ -83,7 +83,9 @@ nfs-server-provisioner:
     create: true
     defaultClass: false
     mountOptions:
-      - vers=4
+      - vers=4.2
+      - soft
+      - noatime
   persistence:
     enabled: true
     accessMode: ReadWriteOnce
