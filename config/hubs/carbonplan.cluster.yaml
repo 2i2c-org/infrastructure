@@ -169,13 +169,6 @@ hubs:
                 admin_users: *users
 
       dask-gateway:
-        backend:
-          scheduler:
-            extraPodConfig:
-              serviceAccountName: cloud-user-sa
-          worker:
-            extraPodConfig:
-              serviceAccountName: cloud-user-sa
         traefik:
           resources:
             requests:
@@ -193,6 +186,13 @@ hubs:
               cpu: 2
               memory: 4Gi
         gateway:
+          backend:
+            scheduler:
+              extraPodConfig:
+                serviceAccountName: cloud-user-sa
+            worker:
+              extraPodConfig:
+                serviceAccountName: cloud-user-sa
           resources:
             requests:
               cpu: 0.5
