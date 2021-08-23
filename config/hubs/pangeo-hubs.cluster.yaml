@@ -15,6 +15,12 @@ support:
           - secretName: grafana-tls
             hosts:
               - pangeo-grafana.pangeo.2i2c.cloud
+    # Disable the Admissions Validation Webhook and the port is not
+    # permitted on private GKE clusters
+    ingress-nginx:
+      controller:
+        admissionWebhooks:
+          enabled: false
     nfs-server-provisioner:
       enabled: true
 hubs:
