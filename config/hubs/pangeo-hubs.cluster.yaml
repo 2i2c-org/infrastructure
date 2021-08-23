@@ -10,6 +10,9 @@ support:
     grafana:
       ingress:
         hosts:
+          # This domain should be updated to just grafana.pangeo.2i2c.cloud
+          # after the COESSING hub has been brought down and no longer requires
+          # grafana.pangeo.2i2c.cloud
           - pangeo-grafana.pangeo.2i2c.cloud
         tls:
           - secretName: grafana-tls
