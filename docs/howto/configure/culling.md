@@ -21,7 +21,7 @@ config:
       maxAge: 43200
 ```
 
-More culling options and info about them, can be found in the [idle-culler documentation](https://github.com/jupyterhub/jupyterhub-idle-culler#readme).
+More culling options and information about them can be found in the [idle-culler documentation](https://github.com/jupyterhub/jupyterhub-idle-culler#readme).
 
 ## Kernel culling configuration
 
