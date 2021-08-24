@@ -88,7 +88,8 @@ jupyterhub:
       jupyter_notebook_config.json:
         mountPath: /usr/local/etc/jupyter/jupyter_notebook_config.json
         # if a user leaves a notebook with a running kernel,
-        # the effective idle timeout will typically be CULL_TIMEOUT + CULL_KERNEL_TIMEOUT
+        # the effective idle timeout will typically be cull idle timeout
+        # of the server + the cull idle timeout of the kernel,
         # as culling the kernel will register activity,
         # resetting the no_activity timer for the server as a whole
         data:

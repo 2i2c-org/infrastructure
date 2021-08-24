@@ -47,5 +47,5 @@ singleuser:
 ```
 
 ### Note
-If a user leaves a notebook with a running kernel, the idle timeout will typically be `CULL_TIMEOUT` + `CULL_KERNEL_TIMEOUT`, as culling the kernel will register activity, resetting the `no_activity` timer for the server as a whole.
+If a user leaves a notebook with a running kernel, the idle timeout will typically be the cull idle timeout of the server + the cull idle timeout set for the kernel, as culling the kernel will register activity, resetting the `no_activity` timer for the server as a whole.
 
