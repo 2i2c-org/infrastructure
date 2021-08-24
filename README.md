@@ -11,7 +11,7 @@ To build this documentation follow these steps:
 1. Create a `conda` environment to build the documentation.
    
    ```bash
-   conda env create -f docs/environment.yml`
+   conda env create -f docs/environment.yml -n pilot-hubs-docs
    ```
 
 2. Activate the new environment:
