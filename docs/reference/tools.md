@@ -2,7 +2,7 @@
 
 ## Base tools
 
-These are helpful for everyone, and not cloud-specific.
+These are helpful for everyone, and not cloud provider-specific.
 
 ### [`kubectl`](https://kubernetes.io/docs/tasks/tools/)
 
@@ -34,6 +34,7 @@ use `kubectl` really helps understand how kubernetes itself works.
   between different k8s clusters and namespaces, which we might have to do
   often.
 
+(tools:helm)=
 ### [`Helm`](https://helm.sh/)
 
 Helm is used in two ways:
@@ -85,6 +86,14 @@ before you can use sops.
 `sops` is called programatically by our deployment scripts to decrypt
 files for deployment, and you will use it interactively to modify or encrypt
 new files.
+
+(tools:terraform)=
+### Terraform
+
+
+[Terraform](https://www.terraform.io/) is an "Infrastructure as Code" (IaC) tool that allows you to build, change, and version infrastructure in the cloud.
+We use terraform to provision cloud infrastructure and modify it directly.
+We then deploy applications on top of that infrastructure via [Helm](tools:helm).
 
 ## Google Cloud tools
 
