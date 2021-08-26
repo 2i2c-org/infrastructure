@@ -1,3 +1,4 @@
+(configure:culling)=
 # Manage resource culling
 
 To improve resource management, every user server that's not actively being used, it's shut down by the [jupyterhub-idle-culler](https://github.com/jupyterhub/jupyterhub-idle-culler) Hub service. Thus, any user pod, will be taken down by the idle culler when they are in an idle state.
