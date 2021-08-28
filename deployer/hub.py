@@ -40,6 +40,8 @@ class Cluster:
     def auth(self):
         if self.spec['provider'] == 'gcp':
             yield from self.auth_gcp()
+        elif self.spec['provider'] == 'aws':
+            yield from self.auth_aws()
         elif self.spec['provider'] == 'kubeconfig':
             yield from self.auth_kubeconfig()
         else:
@@ -139,6 +141,46 @@ class Cluster:
             # FIXME: Unset this after our yield
             os.environ['KUBECONFIG'] = decrypted_key_path
             yield
+
+    def auth_aws(self):
+        config = self.spec['aws']
+        key_path = config['key']
+        cluster_type = config['clusterType']
+        cluster_name = config['clusterName']
+        region = config['region']
+
+        with tempfile.NamedTemporaryFile() as kubeconfig:
+            orig_kubeconfig = os.environ.get('KUBECONFIG', None)
+            orig_access_key_id = os.environ.get('AWS_ACCESS_KEY_ID', None)
+            orig_secret_access_key = os.environ.get('AWS_SECRET_ACCESS_KEY', None)
+            try:
+                os.environ['KUBECONFIG'] = kubeconfig.name
+                with decrypt_file(key_path) as decrypted_key_path:
+
+                    decrypted_key_abspath = os.path.abspath(decrypted_key_path)
+                    if not os.path.isfile(decrypted_key_abspath):
+                        raise FileNotFoundError(
+                            'The decrypted key file does not exist')
+                    with open(decrypted_key_abspath) as f:
+                        creds = json.load(f)
+
+                    os.environ['AWS_ACCESS_KEY_ID'] = creds['AccessKeyId']
+                    os.environ['AWS_SECRET_ACCESS_KEY'] = creds['SecretAccessKey']
+
+                subprocess.check_call([
+                    'aws', 'eks', 'update-kubeconfig',
+                    f'--name={cluster_name}',
+                    f'--region={region}'
+                ])
+
+                yield
+            finally:
+                if orig_kubeconfig is not None:
+                    os.environ['KUBECONFIG'] = orig_kubeconfig
+                if orig_access_key_id is not None:
+                    os.environ['AWS_ACCESS_KEY_ID'] = orig_access_key_id
+                if orig_kubeconfig is not None:
+                    os.environ['AWS_SECRET_ACCESS_KEY'] = orig_secret_access_key
 
     def auth_gcp(self):
         config = self.spec['gcp']
