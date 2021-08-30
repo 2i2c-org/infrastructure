@@ -34,6 +34,9 @@ hubs:
       connection: github
     config: &stagingConfig
       basehub:
+        nfsGanesha:
+          enabled: true
+          size: 10Gi
         nfsPVC:
           enabled: false
         jupyterhub:
@@ -74,12 +77,6 @@ hubs:
             memory:
               limit: 4G
               guarantee: 2G
-            storage:
-              type: dynamic
-              dynamic:
-                storageClass: "nfs"
-                storageAccessModes:
-                  - ReadWriteMany
       dask-gateway:
         gateway:
           backend:

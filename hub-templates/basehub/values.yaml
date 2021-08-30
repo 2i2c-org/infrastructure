@@ -27,6 +27,9 @@ nfsPVC:
     # MUST HAVE TRAILING SLASH
     baseShareName: /export/home-01/homes/
 
+# In-cluster NFS storage
+nfsGanesha:
+  enabled: false
 jupyterhub:
   custom:
     singleuserAdmin:
