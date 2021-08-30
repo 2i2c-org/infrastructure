@@ -87,8 +87,16 @@ nfs-server-provisioner:
   persistence:
     enabled: true
     accessMode: ReadWriteOnce
+    # Ideally, this *must* be set by each cluster's config. But there's no
+    # easy way for us to force this.
+    # This is the total size of the disk to contain *all* the home directories
+    # of *all* the hubs on the cluster. Each hub gets a directory, with quotas
+    # enforced by XFS. If the size here is lower than the sum of all the requests
+    # for all the home directories PVCs on the cluster, hub deployment will
+    # fail with an error. You have to increase the size here, do a deploy-support,
+    # and try again.
     size: 100Gi
-    # Future option is to reference an xfs storage class. This will allow us to enable quotas.
-    # https://github.com/pangeo-data/pangeo-cloud-federation/issues/654#issuecomment-861771398
-    # https://cloud.google.com/kubernetes-engine/docs/how-to/persistent-volumes/gce-pd-csi-driver
-    storageClass: standard
+    # Selects for SSD vs HDD for base storage of the files.
+    # On Google cloud, this is `standard-rwo` for HDD and `premium-rwo` for ssds.
+    # Standard will do for most use cases.
+    storageClass: standard-rwo
