@@ -1,3 +1,4 @@
+(operate:manual-deploy)=
 # Set up and use the the deployment scripts locally
 
 While deploys generally go through our GitHub Actions workflow, sometimes you
@@ -40,22 +41,11 @@ of this repository, and can deploy one or more hubs to our clusters.
    our deploy scripts! See [Application Default Credentials](https://cloud.google.com/docs/authentication/production#automatically)
    for more information.
 
-5. We use [`sops`](https://github.com/mozilla/sops) for secret management.
-   We use `sops` with [Google KMS key](https://cloud.google.com/security-key-management) to
-   automatically encrypt/decrypt files when needed. So access to
-   the KMS key grants access to the secrets. Setting up the
-   application default login in step 4 means sops can use that
-   to decrypt the secrets when necessary. The key currently in use is
-   in the `two-eye-two-see` GCP project, so you must already have
-   access to it to decrypt the files
-
-   You can test it by running `sops config/secrets.yaml`, and checking
-   if your `$EDITOR` pops up with the decrypted contents of the secret
-   file.
+5. Install [`sops` for secrets management](https://github.com/mozilla/sops). See {ref}`tc:secrets:sops` for how to set up `sops` on your machine.
 
 ## Doing a deploy
 
-1. Make the [config change](../topic/config.md) you want to deploy.
+1. Make the [config change](../../topic/config.md) you want to deploy.
 
 2. Deploy just a single hub:
 

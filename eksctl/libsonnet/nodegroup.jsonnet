@@ -15,12 +15,12 @@ local makeCloudTaints(taints) = {
   availabilityZones: [],
   minSize: 0,
   desiredCapacity: self.minSize,
-  instanceType: '',
   volumeSize: 80,
   labels+: {
 	  // Add instance type as label to nodegroups, so they
-	  // can be picked up by the autoscaler
-    'node.kubernetes.io/instance-type': $.instanceType,
+    // can be picked up by the autoscaler. If using spot instances,
+    // pick the first instancetype
+    'node.kubernetes.io/instance-type': if std.objectHas($, 'instanceType') then $.instanceType else $.instancesDistribution.instanceTypes[0],
   },
   taints+: {},
   tags: makeCloudLabels(self.labels) + makeCloudTaints(self.taints),
