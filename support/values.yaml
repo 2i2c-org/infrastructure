@@ -77,7 +77,7 @@ nfs-server-provisioner:
   storageClass:
     # Users will have to opt-in to using NFS-type storage under
     # singleuser.storage.dynamic.storageClass
-    name: nfs
+    name: incluster-nfs
     create: true
     defaultClass: false
     mountOptions:
