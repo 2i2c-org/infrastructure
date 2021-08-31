@@ -82,14 +82,14 @@ To deploy changes, follow these steps:
    :class: tip
    Focus is on both making sure the change is minimally disruptive, and on the quality of the infrastructure design.
    :::
-1. **Deploy the change**. Once approved, `terraform apply` your change, and make sure it works ok.
-1. **Communicate that you've deployed**. Leave a comment in the PR that the changes have been deployed. You should always communicate when a deploy has been made!
+1. **Deploy the change**. Once approved, leave a comment in the PR that you will start deploying the changes. Then `terraform apply` your change and verify it works ok.
 1. **Iterate as needed**. If things break or you need to iterate on the deployment, follow this cycle until the infrastructure is in the state you wish:
-   
+
    1. Amend your PR with changes
    2. Deploy with `terraform apply`
    3. Comment that you've made a deployment
-1. **Self-merge after approval**. Once someone has approved, and you are satisfied with the resulting behavior in our infrastructure, merge the PR.
+1. **Communicate that you've finished deploying**. Leave a comment in the PR that the changes have been deployed. You should always communicate when a deploy has been made!
+1. **Self-merge or request another review**. If you didn't need to make a change to the PR, merge the PR. If you made changes to the PR, use your judgement to decide if you should request another review or if you should self-merge it directly. If you merge, just leave a comment about changes made since the initial approval.
 
 
 
