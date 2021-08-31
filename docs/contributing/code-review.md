@@ -64,14 +64,6 @@ As a result, we have some workflows that are specific to using Terraform, descri
 
 In this scenario, there is already-running infrastructure and you are deploying changes to it.
 
-For modifications to *existing infrastructure*, the suggested workflow is:
-
-
-3. 
-4. After the change has been successfully performed with `terraform apply`,
-   self-merge your PR.
-
-
 To deploy changes, follow these steps:
 
 1. **Propose changes**. Change the codebase and open a PR. **Do not deploy changes yet**. Use `terraform plan` rather than `terraform apply` do understand the change before deploying it.
