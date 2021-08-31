@@ -56,6 +56,8 @@ html_theme_options = {
     "use_issues_button": True,
     "use_repository_button": True,
 }
+# Disable linkcheck for anchors because it throws false errors for any JS anchors
+linkcheck_anchors = False
 
 # -- Custom scripts -----------------------------------------
 # Pull latest list of communities served by pilot-hubs/
