@@ -25,9 +25,7 @@ support:
         admissionWebhooks:
           enabled: false
     nfs-server-provisioner:
-      enabled: true
-      persistence:
-        size: 500Gi
+      enabled: false
 hubs:
   - name: staging
     domain: staging.pangeo.2i2c.cloud
@@ -36,11 +34,16 @@ hubs:
       connection: github
     config: &stagingConfig
       basehub:
-        inClusterNFS:
-          enabled: true
-          size: 10Gi
         nfsPVC:
-          enabled: false
+          enabled: true
+          nfs:
+            mountOptions:
+            - soft
+            - noatime
+            # Google FileStore IP
+            serverIP: 10.229.44.234
+            # Name of Google Filestore share
+            baseShareName: /homes/
         jupyterhub:
           proxy:
             https:
@@ -70,6 +73,17 @@ hubs:
                   - damianavila
                 admin_users: *staging_users
           singleuser:
+            initContainers:
+              # Need to explicitly fix ownership here, since EFS doesn't do anonuid
+            - name: volume-mount-ownership-fix
+              image: busybox
+              command: ["sh", "-c", "id && chown 1000:1000 /home/jovyan && ls -lhd /home/jovyan"]
+              securityContext:
+                runAsUser: 0
+              volumeMounts:
+              - name: home
+                mountPath: /home/jovyan
+                subPath: "{username}"
             image:
               name: pangeo/pangeo-notebook
               tag: e60dfe1

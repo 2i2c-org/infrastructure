@@ -183,7 +183,40 @@ variable "enable_private_cluster" {
   and not have public IPs. A cloud NAT will provide outbound internet access from
   these nodes. The kubernetes API will still be exposed publicly, so we can access
   it from our laptops & CD.
-  
+
   This is often required by institutional controls banning VMs from having public IPs.
+  EOT
+}
+
+variable "enable_filestore" {
+  type = bool
+  default = false
+  description = <<-EOT
+  Deploy a Google FileStore for home directories
+
+  This provisions a managed NFS solution that can be mounted as
+  home directories for users. If this is not enabled, a manual or
+  in-cluster NFS solution must be set up
+  EOT
+}
+
+variable "filestore_capacity_gb" {
+  type = number
+  default = 1024
+  description = <<- EOT
+  Minimum size (in GB) of Google FileStore.
+
+  Minimum is 1024 for BASIC_HDD tier, and 2560 for BASIC_SSD tier.
+  EOT
+}
+
+variable "filestore_tier" {
+  type = string
+  default = "BASIC_HDD"
+  description = <<-EOT
+  Google FileStore service tier to use.
+
+  Most likely BASIC_HDD (for slower home directories, min $204 / month) or
+  BASIC_SSD (for faster home directories, min $768 / month)
   EOT
 }

@@ -31,3 +31,5 @@ dask_nodes = {
 user_buckets = [
   "pangeo-scratch"
 ]
+
+enable_filestore = true
