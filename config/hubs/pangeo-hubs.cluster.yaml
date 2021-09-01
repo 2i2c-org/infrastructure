@@ -1,0 +1,91 @@
+name: pangeo-hubs
+provider: gcp
+gcp:
+  key: secrets/pangeo-hubs.json
+  project: pangeo-integration-te-3eea
+  cluster: pangeo-hubs-cluster
+  zone: us-central1-b
+support:
+  config:
+    grafana:
+      ingress:
+        hosts:
+          # This domain should be updated to just grafana.pangeo.2i2c.cloud
+          # after the COESSING hub has been brought down and no longer requires
+          # grafana.pangeo.2i2c.cloud
+          - pangeo-grafana.pangeo.2i2c.cloud
+        tls:
+          - secretName: grafana-tls
+            hosts:
+              - pangeo-grafana.pangeo.2i2c.cloud
+    # Disable the Admissions Validation Webhook and the port is not
+    # permitted on private GKE clusters
+    ingress-nginx:
+      controller:
+        admissionWebhooks:
+          enabled: false
+    nfs-server-provisioner:
+      enabled: true
+      persistence:
+        size: 500Gi
+hubs:
+  - name: staging
+    domain: staging.pangeo.2i2c.cloud
+    template: daskhub
+    auth0:
+      connection: github
+    config: &stagingConfig
+      basehub:
+        inClusterNFS:
+          enabled: true
+          size: 10Gi
+        nfsPVC:
+          enabled: false
+        jupyterhub:
+          proxy:
+            https:
+              enabled: false
+          custom:
+            homepage:
+              templateVars:
+                org:
+                  name: Pangeo
+                  url: https://pangeo.io
+                  logo_url: "https://raw.githubusercontent.com/pangeo-data/pangeo/master/docs/_static/pangeo_simple_logo.svg"
+                designed_by:
+                  name: 2i2c
+                  url: https://2i2c.org
+                operated_by:
+                  name: 2i2c
+                  url: https://2i2c.org
+                funded_by:
+                  name: The Gordon and Betty Moore Foundation
+                  url: https://www.moore.org/
+          hub:
+            config:
+              Authenticator:
+                allowed_users: &staging_users
+                  - sgibson91
+                  - yuvipanda
+                  - damianavila
+                admin_users: *staging_users
+          singleuser:
+            image:
+              name: pangeo/pangeo-notebook
+              tag: e60dfe1
+            cpu:
+              limit: 2
+              guarantee: 1
+            memory:
+              limit: 4G
+              guarantee: 2G
+      dask-gateway:
+        gateway:
+          backend:
+            scheduler:
+              cores:
+                request: 0.8
+                limit: 1
+              memory:
+                request: 1G
+                limit: 2G

@@ -1,0 +1,13 @@
+{{- if .Values.inClusterNFS.enabled -}}
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: home-nfs
+spec:
+  accessModes:
+    - ReadWriteMany
+  storageClassName: "nfs"
+  resources:
+    requests:
+      storage: {{ .Values.inClusterNFS.size }}
+{{- end }}
