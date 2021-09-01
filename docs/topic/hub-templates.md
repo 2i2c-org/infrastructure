@@ -1,3 +1,4 @@
+(hub-templates)=
 # Hub templates
 The hubs are configured and deployed using *hub templates*. Because each hub
 type can be described by a template, with its own deployment chart, a hierarchy

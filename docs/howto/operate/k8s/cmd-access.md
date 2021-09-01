@@ -54,10 +54,10 @@ yourself, you can instead:
 2. Click on `Connect`, as seen in the figure below.
 
    ````{panels}
-   ```{figure} ../../images/gcp-k8s-dashboard.png
+   ```{figure} ../../../images/gcp-k8s-dashboard.png
    ```
    ---
-   ```{figure} ../../images/gcp-run-in-shell.png
+   ```{figure} ../../../images/gcp-run-in-shell.png
    ```
    ````
 
