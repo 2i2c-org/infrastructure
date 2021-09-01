@@ -26,6 +26,8 @@ support:
           enabled: false
     nfs-server-provisioner:
       enabled: true
+      persistence:
+        size: 500Gi
 hubs:
   - name: staging
     domain: staging.pangeo.2i2c.cloud
@@ -34,7 +36,7 @@ hubs:
       connection: github
     config: &stagingConfig
       basehub:
-        nfsGanesha:
+        inClusterNFS:
           enabled: true
           size: 10Gi
         nfsPVC:

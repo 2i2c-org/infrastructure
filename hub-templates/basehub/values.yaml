@@ -11,9 +11,12 @@ nfsPVC:
     # MUST HAVE TRAILING SLASH
     baseShareName: /export/home-01/homes/
 
-# In-cluster NFS storage
-nfsGanesha:
+
+# Use NFS provided by an in cluster server with the nfs-external-provisioner chart
+inClusterNFS:
   enabled: false
+  size: 100Gi
+
 jupyterhub:
   custom:
     singleuserAdmin:
