@@ -1,5 +1,11 @@
 # Setup a new project for a client organization
 
+:::{warning}
+This documentation is out of date.
+We ended up deciding that we could not programmatically create projects.
+This section will be removed, see [this issue for details](https://github.com/2i2c-org/org-ops/issues/4).
+:::
+
 Each client organization of 2i2c gets their own [GCP Project](https://cloud.google.com/resource-manager/docs/creating-managing-projects).
 This allows us to:
 
