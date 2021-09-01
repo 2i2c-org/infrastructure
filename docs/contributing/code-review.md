@@ -84,7 +84,6 @@ To deploy changes, follow these steps:
 1. **Self-merge or request another review**. If you didn't need to make a change to the PR, merge the PR. If you made changes to the PR, use your judgement to decide if you should request another review or if you should self-merge it directly. If you merge, just leave a comment about changes made since the initial approval.
 
 
-
 ### Changes to set up new infrastructure
 
 For creating *new* infrastructure, you are less-likely to deploy something disruptive to users, and you have a bit more flexibility to experiment.
