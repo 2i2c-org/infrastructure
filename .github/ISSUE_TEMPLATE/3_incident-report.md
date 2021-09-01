@@ -1,8 +1,8 @@
 ---
 name: "\U0001F4DD Incident report"
-about: Discuss what happened + next steps after an event.
+about: Report an incident on our running hub infrastructure.
 title: Incident Report - {{ TITLE }}
-labels: "type: post-mortem"
+labels: "type: incident report"
 assignees: ''
 
 ---
