@@ -164,8 +164,8 @@ class Cluster:
                     with open(decrypted_key_abspath) as f:
                         creds = json.load(f)
 
-                    os.environ['AWS_ACCESS_KEY_ID'] = creds['AccessKeyId']
-                    os.environ['AWS_SECRET_ACCESS_KEY'] = creds['SecretAccessKey']
+                    os.environ['AWS_ACCESS_KEY_ID'] = creds["AccessKey"]['AccessKeyId']
+                    os.environ['AWS_SECRET_ACCESS_KEY'] = creds["AccessKey"]['SecretAccessKey']
 
                 subprocess.check_call([
                     'aws', 'eks', 'update-kubeconfig',

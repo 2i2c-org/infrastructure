@@ -91,6 +91,9 @@ properties:
         type: string
         description: |
           We currently support kops and eks based kubernetes cluster on AWS.
+        enum:
+          - kops
+          - eks
       clusterName:
         type: string
         description: |
