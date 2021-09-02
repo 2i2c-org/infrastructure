@@ -71,6 +71,8 @@ hubs:
                   - sgibson91
                   - yuvipanda
                   - damianavila
+                  - choldgraf
+                  - rabernat
                 admin_users: *staging_users
           singleuser:
             initContainers:
