@@ -88,7 +88,7 @@ hubs:
                 subPath: "{username}"
             image:
               name: pangeo/pangeo-notebook
-              tag: e60dfe1
+              tag: bcfacc5
             cpu:
               limit: 2
               guarantee: 1
