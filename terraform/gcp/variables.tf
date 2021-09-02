@@ -203,7 +203,7 @@ variable "enable_filestore" {
 variable "filestore_capacity_gb" {
   type = number
   default = 1024
-  description = <<- EOT
+  description = <<-EOT
   Minimum size (in GB) of Google FileStore.
 
   Minimum is 1024 for BASIC_HDD tier, and 2560 for BASIC_SSD tier.
