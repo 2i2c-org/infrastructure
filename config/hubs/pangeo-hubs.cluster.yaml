@@ -25,9 +25,7 @@ support:
         admissionWebhooks:
           enabled: false
     nfs-server-provisioner:
-      enabled: true
-      persistence:
-        size: 500Gi
+      enabled: false
 hubs:
   - name: staging
     domain: staging.pangeo.2i2c.cloud
@@ -36,11 +34,16 @@ hubs:
       connection: github
     config: &stagingConfig
       basehub:
-        inClusterNFS:
-          enabled: true
-          size: 10Gi
         nfsPVC:
-          enabled: false
+          enabled: true
+          nfs:
+            mountOptions:
+            - soft
+            - noatime
+            # Google FileStore IP
+            serverIP: 10.229.44.234
+            # Name of Google Filestore share
+            baseShareName: /homes/
         jupyterhub:
           proxy:
             https:
@@ -68,11 +71,56 @@ hubs:
                   - sgibson91
                   - yuvipanda
                   - damianavila
+                  - choldgraf
+                  - rabernat
                 admin_users: *staging_users
           singleuser:
+            profileList:
+              # The mem-guarantees are here so k8s doesn't schedule other pods
+              # on these nodes. They need to be just under total allocatable
+              # RAM on a node, not total node capacity
+              - display_name: "Small"
+                description: "~2 CPU, ~8G RAM"
+                kubespawner_override:
+                  mem_limit: 8G
+                  mem_guarantee: 5.5G
+                  node_selector:
+                    node.kubernetes.io/instance-type: n1-standard-2
+              - display_name: "Medium"
+                description: "~8 CPU, ~32G RAM"
+                kubespawner_override:
+                  mem_limit: 32G
+                  mem_guarantee: 25G
+                  node_selector:
+                    node.kubernetes.io/instance-type: n1-standard-8
+              - display_name: "Large"
+                description: "~16 CPU, ~64G RAM"
+                kubespawner_override:
+                  mem_limit: 64G
+                  mem_guarantee: 55G
+                  node_selector:
+                    node.kubernetes.io/instance-type: n1-standard-16
+              - display_name: "Very Large"
+                description: "~32 CPU, ~128G RAM"
+                kubespawner_override:
+                  mem_limit: 128G
+                  mem_guarantee: 115G
+                  node_selector:
+                    node.kubernetes.io/instance-type: n1-standard-32
+            initContainers:
+              # Need to explicitly fix ownership here, since EFS doesn't do anonuid
+            - name: volume-mount-ownership-fix
+              image: busybox
+              command: ["sh", "-c", "id && chown 1000:1000 /home/jovyan && ls -lhd /home/jovyan"]
+              securityContext:
+                runAsUser: 0
+              volumeMounts:
+              - name: home
+                mountPath: /home/jovyan
+                subPath: "{username}"
             image:
               name: pangeo/pangeo-notebook
-              tag: e60dfe1
+              tag: bcfacc5
             cpu:
               limit: 2
               guarantee: 1
