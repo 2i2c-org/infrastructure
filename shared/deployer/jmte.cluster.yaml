@@ -67,18 +67,18 @@ hubs:
             #
             serviceAccountName: &user-sa s3-full-access
 
-            # cmd: I've experimented with these settings to get a JupyterLab RTC
-            #      setup functioning. It currently is, but is this what makes
-            #      sense to get it to function?
-            #
-            #      ref: https://github.com/jupyterlab-contrib/jupyterlab-link-share/issues/10#issuecomment-851899758
-            #      ref: https://github.com/jupyterlab/jupyterlab/blob/1c8ff104a99e294265e6cf476dcb46279b0c3593/binder/jupyter_notebook_config.py#L39
-            #
-            #      Note the default in z2jh is jupyterhub-singleuser.
+            # cmd: Note the default in z2jh is jupyterhub-singleuser.
             cmd:
               - jupyterhub-singleuser
-              - --LabApp.collaborative=True
-              - --ServerApp.allow_remote_access=True
+              # FIXME: Collaborative mode is disabled due to critical issues
+              #        reported in
+              #        https://discourse.jupyter.org/t/plans-on-bringing-rtc-to-jupyterhub/9813/13
+              #        seem to remain according to Tasha Snow.
+              #
+              #        These issues may be resolved by
+              #        https://github.com/jupyterlab/jupyterlab/pull/11599.
+              #
+              # - --LabApp.collaborative=True
 
             # Increased as we have experienced a too slow image pull at least
             # once. Our pods can take ~6-7 minutes to start on a new node it
