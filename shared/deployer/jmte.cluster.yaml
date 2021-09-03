@@ -110,6 +110,7 @@ hubs:
                   mem_guarantee: 0.875G
                   mem_limit: null
                   node_selector: { 2i2c.org/node-cpu: "4" }
+                  extra_resource_limits: {}
               - display_name: "4th of Medium: 1-4 CPU, 4-16 GB"
                 description: "A shared machine."
                 kubespawner_override:
@@ -117,6 +118,7 @@ hubs:
                   mem_guarantee: 3.5G
                   mem_limit: null
                   node_selector: { 2i2c.org/node-cpu: "4" }
+                  extra_resource_limits: {}
               - display_name: "Medium: 4 CPU, 16 GB"
                 description: "A dedicated machine for you."
                 kubespawner_override:
@@ -124,18 +126,38 @@ hubs:
                   mem_guarantee: 14G
                   mem_limit: null
                   node_selector: { 2i2c.org/node-cpu: "4" }
+                  extra_resource_limits: {}
               - display_name: "Large: 16 CPU, 64 GB"
                 description: "A dedicated machine for you."
                 kubespawner_override:
                   mem_guarantee: 56G
                   mem_limit: null
                   node_selector: { 2i2c.org/node-cpu: "16" }
+                  extra_resource_limits: {}
               - display_name: "Massive: 64 CPU, 256 GB"
                 description: "A dedicated machine for you."
                 kubespawner_override:
                   mem_guarantee: 224G
                   mem_limit: null
                   node_selector: { 2i2c.org/node-cpu: "64" }
+                  extra_resource_limits: {}
+              - display_name: "Medium GPU: 4 CPU, 16 GB, 1 T4 Tensor Core GPU"
+                description: "A dedicated machine for you with one GPU attached."
+                kubespawner_override:
+                  cpu_guarantee: 3.5
+                  mem_guarantee: 14G
+                  mem_limit: null
+                  node_selector: { 2i2c.org/node-cpu: "4", 2i2c.org/node-gpu: "1" }
+                  extra_resource_limits:
+                    nvidia.com/gpu: "1"
+              - display_name: "Large GPU: 16 CPU, 64 GB, 1 T4 Tensor Core GPU"
+                description: "A dedicated machine for you with one GPU attached."
+                kubespawner_override:
+                  mem_guarantee: 56G
+                  mem_limit: null
+                  node_selector: { 2i2c.org/node-cpu: "16", 2i2c.org/node-gpu: "1" }
+                  extra_resource_limits:
+                    nvidia.com/gpu: "1"
 
           proxy:
             # proxy notes:
@@ -155,6 +177,8 @@ hubs:
             service:
               # Revert an unwanted basehub default
               type: LoadBalancer
+              annotations:
+                service.beta.kubernetes.io/aws-load-balancer-connection-idle-timeout: "3600"
 
               # jupyterhub-ssh/sftp integration part 1/3:
               #

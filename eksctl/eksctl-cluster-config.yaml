@@ -90,12 +90,23 @@ iam:
 # - Maximum pods: https://github.com/awslabs/amazon-eks-ami/blob/master/files/eni-max-pods.txt
 # - Node specs:   https://aws.amazon.com/ec2/instance-types/
 # - Cost:         https://ec2pricing.net/
+# - Instance availability in zone:
+#   - https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/instance-discovery.html
+#   - aws ec2 describe-instance-type-offerings --location-type "availability-zone" --filters Name=location,Values=us-west-2d --region us-west-2 | grep g4dn
 #
 # Management advice:
 # - Always use a suffix for node group names that you can replace with something
 #   to create a new node group and delete the old. You will run into issues if
 #   you name it "core" and "core-a" instead of "core-a" and "core-b", such as
 #   when deleting "core" you end up draining both node groups.
+#
+# Common gotcha:
+# - AWS quotas may stop you from scaling up. The symptoms for this will be that
+#   you observe that a scale up request has been made by the cluster-autoscaler
+#   but no new node ever comes online. If that happens, you should visit
+#   https://<your-region-here>.console.aws.amazon.com/ec2autoscaling/home, click
+#   on the auto scaling group (ASG), then go to the activity tab and verify that
+#   you have run into a quota issue. Following that, you make a request to AWS using provided link: https://aws.amazon.com/contact-us/ec2-request
 #
 nodeGroups:
   - name: core-a
@@ -173,6 +184,76 @@ nodeGroups:
       k8s.io/cluster-autoscaler/node-template/label/2i2c.org/node-cpu: "64"
       k8s.io/cluster-autoscaler/node-template/taint/hub.jupyter.org_dedicated: user:NoSchedule
     iam: *user-iam
+
+  # GPU Nodes.
+  #
+  # g4dn was chosen based on input from Shane in this comment
+  # https://github.com/pangeo-data/jupyter-earth/issues/77#issuecomment-910864707.
+  #
+  # For reference of the available choices, see
+  # https://aws.amazon.com/ec2/instance-types/#Accelerated_Computing.
+  #
+  # For reference on the GPU device plugin that needs to be installed, but is
+  # installed automatically by eksctl, see:
+  # https://eksctl.io/usage/gpu-support/#gpu-support
+  #
+  # The machine nodes AMI (what is installed when it starts) for GPU nodes may
+  # require you to subscribe to the AMI and accept some license. For more info,
+  # see:
+  # https://docs.aws.amazon.com/deep-learning-containers/latest/devguide/deep-learning-containers-eks-setup.html#deep-learning-containers-eks-setup-licensing
+  #
+  # Note that we opted for us-west-2b here because g4dn machines were not
+  # available in us-west-2d.
+  #
+  # 57 pods, 4 cpu, 16 GB (Intel, 25 GBits network), 1 T4 Tensor Core GPU
+  - name: user-gpu-a-4
+    availabilityZones: &user-gpu-availabilityZones [us-west-2b]
+    instanceType: g4dn.xlarge
+    minSize: *user-minSize
+    maxSize: *user-maxSize
+    desiredCapacity: *user-desiredCapacity
+    volumeSize: *user-volumeSize
+    labels:
+      hub.jupyter.org/node-purpose: user
+      2i2c.org/node-cpu: "4"
+      2i2c.org/node-gpu: "1"
+    taints:
+      hub.jupyter.org_dedicated: user:NoSchedule
+    tags:
+      k8s.io/cluster-autoscaler/node-template/label/hub.jupyter.org/node-purpose: user
+      k8s.io/cluster-autoscaler/node-template/label/2i2c.org/node-cpu: "4"
+      k8s.io/cluster-autoscaler/node-template/label/2i2c.org/node-gpu: "1"
+      k8s.io/cluster-autoscaler/node-template/taint/hub.jupyter.org_dedicated: user:NoSchedule
+      k8s.io/cluster-autoscaler/node-template/taint/nvidia.com/gpu: NoSchedule
+    iam: &user-iam
+      withAddonPolicies:
+        autoScaler: true
+        efs: true
+
+  # 233 pods, 16 cpu, 64 GB (Intel, 25 GBits network), 1 T4 Tensor Core GPU
+  - name: user-gpu-a-16
+    availabilityZones: *user-gpu-availabilityZones
+    instanceType: g4dn.4xlarge
+    minSize: *user-minSize
+    maxSize: *user-maxSize
+    desiredCapacity: *user-desiredCapacity
+    volumeSize: *user-volumeSize
+    labels:
+      hub.jupyter.org/node-purpose: user
+      2i2c.org/node-cpu: "16"
+      2i2c.org/node-gpu: "1"
+    taints:
+      hub.jupyter.org_dedicated: user:NoSchedule
+    tags:
+      k8s.io/cluster-autoscaler/node-template/label/hub.jupyter.org/node-purpose: user
+      k8s.io/cluster-autoscaler/node-template/label/2i2c.org/node-cpu: "16"
+      k8s.io/cluster-autoscaler/node-template/label/2i2c.org/node-gpu: "1"
+      k8s.io/cluster-autoscaler/node-template/taint/hub.jupyter.org_dedicated: user:NoSchedule
+      k8s.io/cluster-autoscaler/node-template/taint/nvidia.com/gpu: NoSchedule
+    iam: &user-iam
+      withAddonPolicies:
+        autoScaler: true
+        efs: true
 
 
 
