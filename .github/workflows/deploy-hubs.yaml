@@ -29,6 +29,7 @@ jobs:
           # - carbonplan  # We need to edit deployer to connect to aws before we can autodeploy carbonplan
           - meom-ige
           - pangeo-181919
+          - pangeo-hubs
 
     steps:
       - name: Checkout repo
