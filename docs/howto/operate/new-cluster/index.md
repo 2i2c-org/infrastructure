@@ -11,7 +11,10 @@ This section covers topics in deploying a new Kubernetes Cluster for the major u
 Deploying a new cluster is a more complex and costly operation, and generally requires more of our time to upkeep and deploy (and thus, will be more costly to the community).
 In general, we'd like hubs to be deployed on pre-existing clusters whenever possible, rather than having a dedicated cluster that is just for the hub's community.
 
-In general, the question of whether to deploy a new cluster for a community comes down to **whether they need to use their own cloud billing accounts**. This is usually either because they have their own cloud credits that they wish to use, or because they work at an institution that mandates (or otherwise incentivizes) individuals to use institutional cloud accounts.
+In general, the question of whether to deploy a new cluster for a community comes down to two questions:
+
+- **Whether they need to use their own cloud billing accounts**. This is usually either because they have their own cloud credits that they wish to use, or because they work at an institution that mandates (or otherwise incentivizes) individuals to use institutional cloud accounts.
+- **Whether their infrastructure needs require their own cluster**. In some cases a community will need sophisticated infrastructure that requires a dedicated cluster. For example, if they have extreme computational needs, require complex data access, or require different kinds of computing nodes that are not available on clusters that run many different kinds of hubs. For example, [this terraform directory](https://github.com/2i2c-org/pilot-hubs/tree/master/terraform/gcp/projects) contains configurations for a number of different GCP clusters.
 
 For most hub communities that simply wish to pay for a hub and are not opinionated about the cluster on which it runs, we can deploy their hub on a pre-existing Kubernetes cluster.
 In that case, follow the instructions at [](new-hub).
@@ -19,6 +22,10 @@ In that case, follow the instructions at [](new-hub).
 ## Deploying clusters on each cloud provider
 
 The following sections cover how to deploy a Kubernetes cluster on the cloud providers that we support.
+
+:::{note}
+Currently, only Google Cloud has automatic cluster deployments via Terraform, but we should append to the sections below as we implement this for other providers.
+:::
 
 ```{toctree}
 google-cloud.md

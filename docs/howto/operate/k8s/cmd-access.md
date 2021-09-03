@@ -1,8 +1,15 @@
 # Gain `kubectl` & `helm` access to a hub
 
-Each of the hubs in the 2i2c Pilot runs on Google Cloud Platform and Kubernetes.
+Each of the hubs in the 2i2c Pilot runs on Kubernetes.
 To access the Kubernetes objects (in order to inspect them or make changes), use
 the `kubectl` command line tool.
+
+:::{admonition} A note on Azure and AWS
+The information on this page is tailored for Google Cloud, because that is the provider for the majority of the hubs that run in the `pilot-hubs/` repository.
+However, we should update this documentation to include the other major cloud providers as our infrastructure evolves.
+:::
+
+% TODO: Add documentation for AWS and Azure access
 
 % TODO: Add something about what helm does here
 

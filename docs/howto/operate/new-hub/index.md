@@ -5,11 +5,11 @@ This section describes steps around adding hubs to the 2i2c JupyterHub federatio
 
 ## Infrastructure that is needed for a hub
 
-There are three kinds of infrastructure needed to add a new hub:
+There are three kinds of infrastructure needed to add a new hub. In most cases, they are configured via configuration in the `pilot-hubs/` repository.
 
 - **A Kubernetes cluster**.
   Deploying a Kubernetes cluster is specific to the cloud provider. For hubs that do not need to use their own cloud credits, or otherwise are fine running on a cloud project that is not owned by their institution, we can deploy hubs on an already-running Kubernetes Cluster.
-  For hubs that require their own cluster, we'll need to set it up on our own with Terraform.
+  For hubs that require their own cluster, we'll need to set it up on our own.
   To do so, see [new-cluster].
 - **Support infrastructure**.
   This is a collection of services that run on a Kubernetes Cluster and help us in running and monitoring things.
@@ -17,7 +17,8 @@ There are three kinds of infrastructure needed to add a new hub:
   This includes things like Grafana, NFS server provisioners, etc.
 - **JupyterHubs**.
   When a cluster is up and running, we may then deploy JupyterHubs on top of it using the JupyterHub Helm Chart.
-  This is generally controlled via configuration in the `pilot-hubs/` repository, and GitHub actions that automatically deploy new hubs (or modify existing ones) on a cluster.
+  Configuration that is specific to each JupyterHub is stored in the [`config/hubs`](https://github.com/2i2c-org/pilot-hubs/tree/master/config/hubs) folder.
+  GitHub actions then deploy and update hubs on a cluster using this configuration.
   There are some cases where you must manually deploy or modify a hub.
   See [](operate:manual-deploy) for more details.
 
@@ -54,6 +55,11 @@ To deploy a new hub, follow these steps:
 5. Create a Pull Request with the new hub entry, and get a team member to review it.
 6. Once you merge the pull request, the GitHub Workflow will detect that a new entry has been added to the configuration file.
    It will then deploy a new JupyterHub with the configuration you've specified onto the corresponding cluster.
+7. Monitor the action to make sure that it completes.
+   If something goes wrong and the action does not finish, then check its logs to understand what is going on.
+   It may be necessary to make new changes to the hub's configuration via a Pull Request, or to *revert* the old Pull Request if you cannot determine how to resolve the problem.
+8. Log in to the hub and ensure that the hub works as expected from a user's perspective.
+9. Send a link to the hub's Community Representative(s) so they can confirm that it works from their perspective as well.
 
 ## Automated vs. manual deploys
 
