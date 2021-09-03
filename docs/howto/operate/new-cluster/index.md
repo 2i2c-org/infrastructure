@@ -23,10 +23,8 @@ In that case, follow the instructions at [](new-hub).
 
 The following sections cover how to deploy a Kubernetes cluster on the cloud providers that we support.
 
-:::{note}
-Currently, only Google Cloud has automatic cluster deployments via Terraform, but we should append to the sections below as we implement this for other providers.
-:::
-
 ```{toctree}
 google-cloud.md
+aws.md
+azure.md
 ```
