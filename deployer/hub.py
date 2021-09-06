@@ -145,7 +145,11 @@ class Cluster:
     def auth_aws(self):
         """
         Reads `aws` nested config and temporarily sets environment variables
-        like `KUBECONFIG`, `AWS_ACCESS_KEY_ID`, and `AWS_SECRET_ACCESS_KEY`.
+        like `KUBECONFIG`, `AWS_ACCESS_KEY_ID`, and `AWS_SECRET_ACCESS_KEY`
+        before trying to authenticate with the aws eks update-kubeconfig command.
+
+        Finally get those environment variables to the original values to prevent
+        side-effects on existing local configuration.
         """
         config = self.spec['aws']
         key_path = config['key']
@@ -158,7 +162,6 @@ class Cluster:
             orig_access_key_id = os.environ.get('AWS_ACCESS_KEY_ID', None)
             orig_secret_access_key = os.environ.get('AWS_SECRET_ACCESS_KEY', None)
             try:
-                os.environ['KUBECONFIG'] = kubeconfig.name
                 with decrypt_file(key_path) as decrypted_key_path:
 
                     decrypted_key_abspath = os.path.abspath(decrypted_key_path)
@@ -170,6 +173,8 @@ class Cluster:
 
                     os.environ['AWS_ACCESS_KEY_ID'] = creds["AccessKey"]['AccessKeyId']
                     os.environ['AWS_SECRET_ACCESS_KEY'] = creds["AccessKey"]['SecretAccessKey']
+
+                os.environ['KUBECONFIG'] = kubeconfig.name
 
                 subprocess.check_call([
                     'aws', 'eks', 'update-kubeconfig',
