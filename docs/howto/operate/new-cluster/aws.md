@@ -4,7 +4,13 @@
 We do not currently use Terraform to deploy a new cluster in AWS.
 Instead, we use a tool [called `kops`](https://github.com/kubernetes/kops) to provision the cluster.
 
-These instructions describe how to create a new AWS cluster from scratch.
+:::{admonition} We also use `eksctl`
+In addition to `kops`, we have begun using an AWS-native tool called `eksctl` to provision Kubernetes clusters on AWS.
+See [this configuration](https://github.com/2i2c-org/pilot-hubs/tree/master/eksctl) for an example of a hub that uses this.
+As we understand these practices better we will update this guide with more information about `eksctl`.
+:::
+
+These instructions describe how to create a new AWS cluster from scratch with `kops`.
 
 
 ## Pre-requisites
