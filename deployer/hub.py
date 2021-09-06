@@ -143,6 +143,10 @@ class Cluster:
             yield
 
     def auth_aws(self):
+        """
+        Reads `aws` nested config and temporarily sets environment variables
+        like `KUBECONFIG`, `AWS_ACCESS_KEY_ID`, and `AWS_SECRET_ACCESS_KEY`.
+        """
         config = self.spec['aws']
         key_path = config['key']
         cluster_type = config['clusterType']
