@@ -1,53 +1,103 @@
-# Pangeo Data Access via Requestor Pays
+# Pangeo Data Access via Requester Pays
 
-https://cloud.google.com/storage/docs/requester-pays
+For some hubs, such as our Pangeo deployments, the communities they serve require access to data stored in other projects.
+Accessing data normally comes with a charge that the folks _hosting_ the data have to take care of.
+However, there is a method by which those making the request are responsible for the charges instead: [Requester Pays](https://cloud.google.com/storage/docs/requester-pays).
+This document shows the steps required to set this method up.
+
+## Setting up Requester Pays Access on GCP
 
 ```{note}
-We may automate this in the future
+We may automate these steps in the future.
 ```
 
-## Steps to take on GCP
+Make sure you are logged into the `gcloud` CLI and have set the default project to be the one you wish to work with.
 
-1. Create a Service Account
+1. Create a new Service Account
 
 ```bash
-gcloud iam service-accounts create requestor-pays-sa \
+gcloud iam service-accounts create requester-pays-sa \
   --description="Service Account to allow access to Pangeo data stored in the cloud" \
-  --display-name="Requestor Pays Service Account"
+  --display-name="Requester Pays Service Account"
 ```
 
-where `requestor-pays-sa` will be the name of the Service Account.
+where `requester-pays-sa` will be the name of the Service Account.
 
-2. Assign Roles and Policy Bindings
+```{note}
+We create a separate service account for this so as to avoid granting excessive permissions to any single service account.
+We may change this policy in the future.
+```
+
+2. Grant the Service Account roles on the project
+
+We will need to grant the [Service Usage Consumer](https://cloud.google.com/iam/docs/understanding-roles#service-usage-roles) and [Storage Object Viewer](https://cloud.google.com/iam/docs/understanding-roles#cloud-storage-roles) roles on the project to the new service account.
+
+```bash
+gcloud projects add-iam-policy-binding \
+  --role roles/serviceusage.serviceUsageConsumer \
+  --member "serviceAccount:requester-pays-sa@PROJECT_ID.iam.gserviceaccount.com" \
+  PROJECT_ID
+
+gcloud projects add-iam-policy-binding \
+  --role roles/storage.objectViewer \
+  --member "serviceAccount:requester-pays-sa@PROJECT_ID.iam.gserviceaccount.com" \
+  PROJECT_ID
+```
+
+where `PROJECT_ID` is the ID of the Google Cloud project, **not** the display name!
+
+3. Grant the Service Account the `workloadIdentityUser` role on the cluster
+
+We will now grant the [Workload Identity User](https://cloud.google.com/iam/docs/understanding-roles#service-accounts-roles) role to the cluster to act on behalf of the users.
 
 ```bash
 gcloud iam service-accounts add-iam-policy-binding \
   --role roles/iam.workloadIdentityUser \
-  --member "serviceAccount:PROJECT_ID.svc.id.goog[CLUSTER_NAME/NAMESPACE]" \
-  requestor-pays-sa@PROJECT_ID.iam.gserviceaccount.com
+  --member "serviceAccount:PROJECT_ID.svc.id.goog[NAMESPACE/SERVICE_ACCOUNT]" \
+  requester-pays-sa@PROJECT_ID.iam.gserviceaccount.com
 ```
 
 Where:
 
 - `PROJECT_ID` is the project ID of the Google Cloud Project.
   Note: this is the **ID**, not the display name!
-- `CLUSTER_NAME` is the name of the cluster to grant access to.
-- `NAMESPACE` is the Kubernetes namespace/deployment to grant access to.
+- `NAMESPACE` is the Kubernetes namespace/deployment to grant access to
+- `SERVICE_ACCOUNT` is the _Kubernetes_ service account to grant access to.
+  Usually, this is `user-sa`.
+  Run `kubectl --namespace NAMESPACE get serviceaccount` if you're not sure.
 
-3. Link the Google Service Account to the Kubernetes Service Account
+4. Link the Google Service Account to the Kubernetes Service Account
+
+We now link the two service accounts together so Kubernetes can use the Google API.
 
 ```bash
 kubectl annotate serviceaccount \
   --namespace NAMESPACE \
-  SERVICE_ACCOUNT_NAME \
-  iam.gke.io/gcp-service-account=requestor-pays-sa@PROJECT_ID.iam.gserviceaccount.com
+  SERVICE_ACCOUNT \
+  iam.gke.io/gcp-service-account=requester-pays-sa@PROJECT_ID.iam.gserviceaccount.com
 ```
 
 Where:
 
 - `NAMESPACE` is the target Kubernetes namespace
-- `SERVICE_ACCOUNT_NAME` is the target Kubernetes service account name.
+- `SERVICE_ACCOUNT` is the target Kubernetes service account name.
   Usually, this is `user-sa`.
   Run `kubectl --namespace NAMESPACE get serviceaccount` if you're not sure.
 - `PROJECT_ID` is the project ID of the Google Cloud Project.
   Note: this is the **ID**, not the display name!
+
+5. RESTART THE HUB
+
+This is a very important step.
+If you don't do this you won't see the changes applied.
+
+You can restart the hub by heading to `https://<hub_url>/hub/admin` (you need to be logged in as admin), clicking the "Shutdown Hub" button, and waiting for it to come back up.
+
+You can now test the requester pys access by starting a server on the hub and running the below code in a script or Notebook.
+
+```python
+from intake import open_catalog
+
+cat = open_catalog("https://raw.githubusercontent.com/pangeo-data/pangeo-datastore/master/intake-catalogs/ocean/altimetry.yaml")
+ds = cat['j3'].to_dask()
+```
