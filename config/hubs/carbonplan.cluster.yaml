@@ -1,7 +1,10 @@
 name: carbonplan
-provider: kubeconfig
-kubeconfig:
-  file: secrets/carbonplan.yaml
+provider: aws
+aws:
+  key: secrets/carbonplan.json
+  clusterType: eks
+  clusterName: carbonplanhub
+  region: us-west-2
 support:
   config:
     prometheus:
