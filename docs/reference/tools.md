@@ -100,7 +100,7 @@ We then deploy applications on top of that infrastructure via [Helm](tools:helm)
 [`google-cloud-sdk`](https://cloud.google.com/sdk/docs/install) is the primary
 commandline tool used to interact with Google Cloud Platform (GCP). Our deployment
 scripts use it to authenticate to GCP, and it is very helpful in [debugging node
-issues](../howto/operate/node-administration.md).
+issues](../howto/operate/k8s/node-administration.md).
 
 ### Tips
 

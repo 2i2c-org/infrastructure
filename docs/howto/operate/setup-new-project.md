@@ -1,5 +1,11 @@
 # Setup a new project for a client organization
 
+:::{warning}
+This documentation is out of date.
+We ended up deciding that we could not programmatically create projects.
+This section will be removed, see [this issue for details](https://github.com/2i2c-org/org-ops/issues/4).
+:::
+
 Each client organization of 2i2c gets their own [GCP Project](https://cloud.google.com/resource-manager/docs/creating-managing-projects).
 This allows us to:
 
@@ -15,7 +21,7 @@ Client organizations can give us access to a billing account, or
 just to a project. This document describes what 2i2c engineers should
 do once client organizations give us access.
 
-See {doc}`/howto/operate/new-tf-cluster` fore more detailed guidance.
+See {doc}`/howto/operate/new-cluster/google-cloud` fore more detailed guidance.
 
 ## Client organization provides billing account
 
