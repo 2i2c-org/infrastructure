@@ -21,7 +21,7 @@ These instructions describe how to create a new AWS cluster from scratch with `k
    [Follow this guide](https://docs.aws.amazon.com/cli/latest/userguide/cli-configure-quickstart.html#cli-configure-quickstart-config) for a quick configuration process.
 
    ```{note}
-   The customer with AWS admin privileges should have created a user for you with full privileges. 
+   The customer with AWS admin privileges should have created a user for you with full privileges.
    We will probably explore fine-graining the permissions actually needed
    in the short-term.
    ```
@@ -153,6 +153,6 @@ More details [in this issue](https://github.com/kubernetes/kops/issues/11199)
    python3 setup-efs.py <cluster_name>hub.k8s.local <region-of-cluster>
    ```
 
-This will output an fs-<xxxxxxxx> id. You should use that value 
+This will output an fs-<xxxxxxxx> id. You should use that value
 (it should be something like `fs-<id>.efs.<region>.amazonaws.com`) in
-the `basehub.nfsPVC.nfs.serverIP` at you hub config file. 
+the `basehub.nfs.pv.serverIP` at you hub config file.
