@@ -1,0 +1,129 @@
+name: justiceinnovationlab
+provider: kubeconfig
+kubeconfig:
+  file: secrets/justiceinnovationlab.yaml
+hubs:
+  - name: staging
+    domain: staging.justiceinnovationlab.2i2c.cloud
+    template: daskhub
+    auth0:
+      connection: github
+    config: &hubConfig
+      scratchBucket:
+        enabled: false
+      basehub:
+        azureFile:
+          enabled: true
+        nfs:
+          enabled: false
+          shareCreator:
+            enabled: false
+        jupyterhub:
+          custom:
+            homepage:
+              templateVars:
+                org:
+                  name: Justice Innovation Lab
+                  logo_url: "https://images.squarespace-cdn.com/content/5ee35ddb35affc21b29c0fd6/1596634079158-KLDENW5BSW2HQW4ZO0EH/JIL-Logo-Digital.png?format=1500w&content-type=image%2Fpng"
+                  url: https://www.justiceinnovationlab.org/
+                designed_by:
+                  name: 2i2c
+                  url: https://2i2c.org
+                operated_by:
+                  name: 2i2c
+                  url: https://2i2c.org
+                funded_by:
+                  name: Justice Innovation Lab
+                  url: https://www.justiceinnovationlab.org/
+          singleuser:
+            profileList:
+              # The mem-guarantees are here so k8s doesn't schedule other pods
+              # on these nodes.
+              - display_name: "Small"
+                description: "~4 CPU, ~16G RAM"
+                kubespawner_override:
+                  # Expllicitly unset mem_limit, so it overrides the default memory limit we set in
+                  # basehub/values.yaml
+                  mem_limit: null
+                  mem_guarantee: 12G
+                  node_selector:
+                    node.kubernetes.io/instance-type: Standard_E2s_v4
+              - display_name: "Medium:"
+                description: "~4 CPU, ~32G RAM"
+                kubespawner_override:
+                  mem_limit: null
+                  mem_guarantee: 28G
+                  node_selector:
+                    node.kubernetes.io/instance-type: Standard_E4s_v4
+              - display_name: "Large"
+                description: "~8 CPU, ~64G RAM"
+                kubespawner_override:
+                  mem_limit: null
+                  mem_guarantee: 59G
+                  node_selector:
+                    node.kubernetes.io/instance-type: Standard_E8s_v4
+              - display_name: "Huge"
+                description: "~32 CPU, ~256G RAM"
+                kubespawner_override:
+                  mem_limit: null
+                  mem_guarantee: 230G
+                  node_selector:
+                    node.kubernetes.io/instance-type: Standard_E32s_v4
+            defaultUrl: /lab
+            image:
+              name: quay.io/2i2c/justiceinnovationlab-image
+              tag: 37c73413ba42
+            storage:
+              type: none
+              extraVolumes:
+              - name: home
+                persistentVolumeClaim:
+                  claimName: home-azurefile
+          scheduling:
+            userPlaceholder:
+              enabled: false
+              replicas: 0
+            userScheduler:
+              enabled: false
+          proxy:
+            service:
+              type: LoadBalancer
+            https:
+              enabled: true
+          hub:
+            allowNamedServers: true
+            config:
+              Authenticator:
+                # Only allow admin users + users added via the UI
+                admin_users: &users
+                  - yuvipanda
+                  - choldgraf
+                  - GeorgianaElena
+                  - donaldbraman
+                  - JILPulvino
+                allowed_users: *users
+            extraConfig:
+              10-dynamic-subpath: |
+                import os
+                pod_namespace = os.environ['POD_NAMESPACE']
+                # FIXME: This isn't setting up _shared dirs properly
+                c.KubeSpawner.volume_mounts = [
+                  {
+                    "mountPath": "/home/jovyan",
+                    "name": "home",
+                    "subPath": f"{pod_namespace}/{{username}}"
+                  },
+                ]
+
+            networkPolicy:
+              # FIXME: For dask gateway
+              enabled: false
+            readinessProbe:
+              enabled: false
+            nodeSelector: {}
+  - name: prod
+    domain: justiceinnovationlab.2i2c.cloud
+    template: daskhub
+    auth0:
+      connection: github
+    config: *hubConfig

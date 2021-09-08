@@ -1,4 +1,4 @@
-{{ if .Values.nfsPVC.enabled }}
+{{ if .Values.nfs.enabled }}
 apiVersion: v1
 kind: PersistentVolume
 metadata:
@@ -9,9 +9,9 @@ spec:
   accessModes:
     - ReadWriteMany
   nfs:
-    server: {{ .Values.nfsPVC.nfs.serverIP | quote}}
-    path: "{{ .Values.nfsPVC.nfs.baseShareName }}{{ .Release.Name }}"
-  mountOptions: {{ .Values.nfsPVC.nfs.mountOptions | toJson }}
+    server: {{ .Values.nfs.pv.serverIP | quote}}
+    path: "{{ .Values.nfs.pv.baseShareName }}{{ .Release.Name }}"
+  mountOptions: {{ .Values.nfs.pv.mountOptions | toJson }}
 ---
 apiVersion: v1
 kind: PersistentVolumeClaim
@@ -20,7 +20,6 @@ metadata:
 spec:
   accessModes:
     - ReadWriteMany
-  # Match name of PV
   volumeName: {{ .Release.Name }}-home-nfs
   storageClassName: ""
   resources:

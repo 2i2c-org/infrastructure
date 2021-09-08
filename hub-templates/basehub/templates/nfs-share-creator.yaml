@@ -1,4 +1,5 @@
-{{ if .Values.nfsPVC.enabled }}
+{{ if .Values.nfs.enabled }}
+{{ if .Values.nfs.shareCreator.enabled }}
 apiVersion: batch/v1
 kind: Job
 metadata:
@@ -22,14 +23,14 @@ spec:
     spec:
       restartPolicy: Never
       terminationGracePeriodSeconds: 0
-      tolerations: {{ .Values.nfsPVC.shareCreator.tolerations | toJson }}
+      tolerations: {{ .Values.nfs.shareCreator.tolerations | toJson }}
 
       containers:
         - name: dummy
           image: busybox
           env:
             - name: NFS_SHARE_NAME
-              value: "{{ .Values.nfsPVC.nfs.baseShareName }}{{ .Release.Name }}"
+              value: "{{ .Values.nfs.pv.baseShareName }}{{ .Release.Name }}"
           command:
             - /bin/sh
             - -c
@@ -39,13 +40,14 @@ spec:
             # it will hang if trying to mount a path that isn't created
             # already).
             - name: home-base
-              mountPath: /mnt{{ .Values.nfsPVC.nfs.baseShareName }}
+              mountPath: /mnt{{ .Values.nfs.pv.baseShareName }}
       volumes:
         # Directly references the NFS server in order to create folders and
         # update permissions. Note that this does not rely on the PV or PVC
         # objects to be created.
         - name: home-base
           nfs:
-            server: {{ .Values.nfsPVC.nfs.serverIP | quote }}
-            path: {{ .Values.nfsPVC.nfs.baseShareName | quote }}
+            server: {{ .Values.nfs.pv.serverIP | quote }}
+            path: {{ .Values.nfs.pv.baseShareName | quote }}
+{{ end }}
 {{ end }}

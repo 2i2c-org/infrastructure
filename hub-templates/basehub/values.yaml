@@ -1,8 +1,23 @@
-nfsPVC:
+
+azureFile:
+  enabled: false
+  pv:
+    secretNamespace: azure-file
+    secretName: access-credentials
+    shareName: homes
+    mountOptions:
+      - uid=1000
+      - forceuid
+      - gid=1000
+      - forcegid
+      - nobrl
+
+nfs:
   enabled: true
   shareCreator:
+    enabled: true
     tolerations: []
-  nfs:
+  pv:
     mountOptions:
       - soft
       - noatime
@@ -90,6 +105,13 @@ jupyterhub:
       letsencrypt:
         contactEmail: yuvipanda@gmail.com
   singleuser:
+    extraEnv:
+      # notebook writes secure files that don't need to survive a
+      # restart here. Writing 'secure' files on some file systems (like
+      # Azure Files with SMB) seems buggy, so we just put runtime dir on
+      # /tmp. This is ok in our case, since no two users are on the same
+      # container.
+      JUPYTER_RUNTIME_DIR: /tmp/.jupyter-runtime
     extraFiles:
       jupyter_notebook_config.json:
         mountPath: /usr/local/etc/jupyter/jupyter_notebook_config.json

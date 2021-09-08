@@ -37,8 +37,8 @@ hubs:
       connection: github
     config: &carbonPlanHubConfig
       basehub:
-        nfsPVC:
-          nfs:
+        nfs:
+          pv:
             # from https://docs.aws.amazon.com/efs/latest/ug/mounting-fs-nfs-mount-settings.html
             mountOptions:
             - rsize=1048576

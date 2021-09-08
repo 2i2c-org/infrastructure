@@ -34,9 +34,9 @@ hubs:
       connection: github
     config: &stagingConfig
       basehub:
-        nfsPVC:
+        nfs:
           enabled: true
-          nfs:
+          pv:
             mountOptions:
             - soft
             - noatime
