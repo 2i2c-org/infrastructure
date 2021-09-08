@@ -1,18 +1,3 @@
-etcJupyter:
-  jupyter_notebook_config.json:
-    # if a user leaves a notebook with a running kernel,
-    # the effective idle timeout will typically be CULL_TIMEOUT + CULL_KERNEL_TIMEOUT
-    # as culling the kernel will register activity,
-    # resetting the no_activity timer for the server as a whole
-    MappingKernelManager:
-      # shutdown kernels after no activity
-      cull_idle_timeout: 3600
-      # check for idle kernels this often
-      cull_interval: 300
-      # a kernel with open connections but no activity still counts as idle
-      # this is what allows us to shutdown servers
-      # when people leave a notebook open and wander off
-      cull_connected: true
 
 azureFile:
   enabled: false
@@ -40,6 +25,12 @@ nfs:
     serverIP: nfs-server-01
     # MUST HAVE TRAILING SLASH
     baseShareName: /export/home-01/homes/
+
+
+# Use NFS provided by an in cluster server with the nfs-external-provisioner chart
+inClusterNFS:
+  enabled: false
+  size: 100Gi
 
 jupyterhub:
   custom:
@@ -121,13 +112,31 @@ jupyterhub:
       # /tmp. This is ok in our case, since no two users are on the same
       # container.
       JUPYTER_RUNTIME_DIR: /tmp/.jupyter-runtime
+    extraFiles:
+      jupyter_notebook_config.json:
+        mountPath: /usr/local/etc/jupyter/jupyter_notebook_config.json
+        # if a user leaves a notebook with a running kernel,
+        # the effective idle timeout will typically be cull idle timeout
+        # of the server + the cull idle timeout of the kernel,
+        # as culling the kernel will register activity,
+        # resetting the no_activity timer for the server as a whole
+        data:
+          MappingKernelManager:
+            # shutdown kernels after no activity
+            cull_idle_timeout: 3600
+            # check for idle kernels this often
+            cull_interval: 300
+            # a kernel with open connections but no activity still counts as idle
+            # this is what allows us to shutdown servers
+            # when people leave a notebook open and wander off
+            cull_connected: true
     startTimeout: 600 # 10 mins, because sometimes we have too many new nodes coming up together
     defaultUrl: /tree
     nodeSelector:
       hub.jupyter.org/node-purpose: user
     image:
       name: set_automatically_by_automation
-      tag: "135823b"
+      tag: "b9cb08b"
     storage:
       type: static
       static:
@@ -201,7 +210,7 @@ jupyterhub:
           - --Configurator.config_file=/usr/local/etc/jupyterhub-configurator/jupyterhub_configurator_config.py
     image:
       name: quay.io/2i2c/pilot-hub
-      tag: '0.0.1-n781.hf8d0498'
+      tag: '0.0.1-n1159.h5b045cd'
     config:
       JupyterHub:
         authenticator_class: oauthenticator.auth0.Auth0OAuthenticator

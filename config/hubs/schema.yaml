@@ -30,6 +30,7 @@ properties:
     enum:
       - gcp
       - kubeconfig
+      - aws
   kubeconfig:
     type: object
     description: |
@@ -74,6 +75,38 @@ properties:
       - project
       - cluster
       - zone
+  aws:
+    type: object
+    additionalProperties: false
+    description: |
+      Configuration to connect to the cluster on AWS.
+      Is used when provider is set to `aws`.
+    properties:
+      key:
+        type: string
+        description: |
+          Path to a `sops` encrypted JSON file that contains the AWS credentials for the
+          "deployer" user (with enough rights to get full access to the cluster).
+      clusterType:
+        type: string
+        description: |
+          We currently support `kops` and EKS-based cluster on AWS.
+        enum:
+          - kops
+          - eks
+      clusterName:
+        type: string
+        description: |
+          Name of the cluster.
+      region:
+        type: string
+        description: |
+          The AWS region the cluster is in.
+    required:
+      - key
+      - clusterType
+      - clusterName
+      - region
   hubs:
     type: array
     description: |

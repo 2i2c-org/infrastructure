@@ -1,10 +1,10 @@
-# Add a new GKE cluster managed by our Terraform configuration
+# Add a new Google Cloud cluster
 
 This guide will walk through the process of adding a new cluster to our [terraform configuration](https://github.com/2i2c-org/pilot-hubs/tree/HEAD/terraform/gcp).
 
 ## Cluster Design
 
-This guide will assume you have already followed the guidance in {ref}`/topic/cluster-design` to select the appropriate infrastructure.
+This guide will assume you have already followed the guidance in [](/topic/cluster-design) to select the appropriate infrastructure.
 
 ## Creating a Terraform variables file for the cluster
 
@@ -53,6 +53,7 @@ For example, to work with Pangeo you would initialise terraform like so:
 ```bash
 terraform init -backend-config=pangeo-backend.hcl -reconfigure
 ```
+````
 
 ## Creating a new terraform workspace
 

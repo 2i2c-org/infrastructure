@@ -1,7 +1,7 @@
-# Hub Configuration
+# Hub configuration
 
 ```{toctree}
 auth-management.md
-add-hub-domains.md
 update-env.md
+culling.md
 ```

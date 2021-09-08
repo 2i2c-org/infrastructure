@@ -9,6 +9,32 @@ resource "google_container_cluster" "cluster" {
   initial_node_count       = 1
   remove_default_node_pool = true
 
+  // For private clusters, pass the name of the network and subnetwork created
+  // by the VPC
+  network    = var.enable_private_cluster ? data.google_compute_network.default_network.name : null
+  subnetwork = var.enable_private_cluster ? data.google_compute_subnetwork.default_subnetwork.name : null
+
+  // Dynamically provision the private cluster config when deploying a
+  // private cluster
+  dynamic "private_cluster_config" {
+    for_each = var.enable_private_cluster ? [1] : []
+
+    content {
+      // Decide if this CIDR block is sensible or not
+      master_ipv4_cidr_block  = "172.16.0.0/28"
+      enable_private_nodes    = true
+      enable_private_endpoint = false
+    }
+  }
+
+  // Dynamically provision the IP allocation policy when deploying a
+  // private cluster. This allows for IP aliasing and makes the cluster
+  // VPC-native
+  dynamic "ip_allocation_policy" {
+    for_each = var.enable_private_cluster ? [1] : []
+    content {}
+  }
+
   addons_config {
     http_load_balancing {
       // FIXME: This used to not work well with websockets, and
@@ -58,6 +84,9 @@ resource "google_container_cluster" "cluster" {
     # DO NOT TOUCH THIS BLOCK, IT REPLACES ENTIRE CLUSTER LOL
     service_account = google_service_account.cluster_sa.email
   }
+
+  // Set these values explicitly so they don't "change outside terraform"
+  resource_labels = {}
 }
 
 resource "google_container_node_pool" "core" {
@@ -97,6 +126,9 @@ resource "google_container_node_pool" "core" {
     oauth_scopes = [
       "https://www.googleapis.com/auth/cloud-platform"
     ]
+
+    // Set these values explicitly so they don't "change outside terraform"
+    tags = []
   }
 }
 
@@ -134,11 +166,11 @@ resource "google_container_node_pool" "notebook" {
       # config connector and completely hide all node metadata from user pods
       node_metadata = var.config_connector_enabled ? "GKE_METADATA_SERVER" : "SECURE"
     }
-    labels = {
+    labels = merge({
       # Notebook pods and dask schedulers can exist here
       "hub.jupyter.org/node-purpose" = "user",
       "k8s.dask.org/node-purpose"    = "scheduler",
-    }
+    }, each.value.labels)
 
     taint = [{
       key    = "hub.jupyter.org_dedicated"
@@ -155,6 +187,9 @@ resource "google_container_node_pool" "notebook" {
     oauth_scopes = [
       "https://www.googleapis.com/auth/cloud-platform"
     ]
+
+    // Set these values explicitly so they don't "change outside terraform"
+    tags = []
   }
 }
 
@@ -199,9 +234,9 @@ resource "google_container_node_pool" "dask_worker" {
       # config connector and completely hide all node metadata from user pods
       node_metadata = var.config_connector_enabled ? "GKE_METADATA_SERVER" : "SECURE"
     }
-    labels = {
+    labels = merge({
       "k8s.dask.org/node-purpose" = "worker",
-    }
+    }, each.value.labels)
 
     taint = [{
       key    = "k8s.dask.org_dedicated"
@@ -218,6 +253,8 @@ resource "google_container_node_pool" "dask_worker" {
     oauth_scopes = [
       "https://www.googleapis.com/auth/cloud-platform"
     ]
+
+    // Set these values explicitly so they don't "change outside terraform"
+    tags = []
   }
 }
-

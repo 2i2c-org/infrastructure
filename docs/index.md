@@ -59,3 +59,14 @@ reference/terraform.md
 reference/tools
 incidents/index
 ```
+
+## Contributing
+
+Information on contributing to this repository
+
+```{toctree}
+:caption: Contributing
+:maxdepth: 2
+
+contributing/code-review
+```

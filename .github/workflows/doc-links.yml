@@ -1,0 +1,34 @@
+name: Test documentation for broken links
+on:
+  pull_request:
+    paths:
+      - "docs/**"
+  push:
+    paths:
+      - "docs/**"
+  workflow_dispatch:
+
+jobs:
+  linkcheck:
+    runs-on: ubuntu-20.04
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          # chartpress is used by doc/conf.py,
+          # and requires information about the latest tagged commit, which
+          # requires the git history.
+          fetch-depth: 0
+
+      - name: Install environment
+        uses: conda-incubator/setup-miniconda@v2
+        with:
+          environment-file: docs/environment.yml
+          miniforge-version: latest
+          activate-environment: pilot-hubs-docs
+
+      - name: make linkcheck
+        shell: bash -l {0}
+        run: |
+          cd docs
+          conda activate pilot-hubs-docs
+          make linkcheck SPHINXOPTS='--color -W --keep-going'

@@ -142,3 +142,4 @@ support/charts
 
 # Documentation build assets
 docs/tmp
+docs/reference/terraform.md
