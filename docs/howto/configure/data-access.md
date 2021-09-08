@@ -35,16 +35,16 @@ We will need to grant the [Service Usage Consumer](https://cloud.google.com/iam/
 ```bash
 gcloud projects add-iam-policy-binding \
   --role roles/serviceusage.serviceUsageConsumer \
-  --member "serviceAccount:requester-pays-sa@PROJECT_ID.iam.gserviceaccount.com" \
-  PROJECT_ID
+  --member "serviceAccount:requester-pays-sa@{{ PROJECT_ID }}.iam.gserviceaccount.com" \
+  {{ PROJECT_ID }}
 
 gcloud projects add-iam-policy-binding \
   --role roles/storage.objectViewer \
-  --member "serviceAccount:requester-pays-sa@PROJECT_ID.iam.gserviceaccount.com" \
-  PROJECT_ID
+  --member "serviceAccount:requester-pays-sa@{{ PROJECT_ID }}.iam.gserviceaccount.com" \
+  {{ PROJECT_ID }}
 ```
 
-where `PROJECT_ID` is the ID of the Google Cloud project, **not** the display name!
+where `{{ PROJECT_ID }}` is the ID of the Google Cloud project, **not** the display name!
 
 3. Grant the Service Account the `workloadIdentityUser` role on the cluster
 
@@ -53,18 +53,18 @@ We will now grant the [Workload Identity User](https://cloud.google.com/iam/docs
 ```bash
 gcloud iam service-accounts add-iam-policy-binding \
   --role roles/iam.workloadIdentityUser \
-  --member "serviceAccount:PROJECT_ID.svc.id.goog[NAMESPACE/SERVICE_ACCOUNT]" \
-  requester-pays-sa@PROJECT_ID.iam.gserviceaccount.com
+  --member "serviceAccount:{{ PROJECT_ID }}.svc.id.goog[{{ NAMESPACE }}/{{ SERVICE_ACCOUNT }}]" \
+  requester-pays-sa@{{ PROJECT_ID }}.iam.gserviceaccount.com
 ```
 
 Where:
 
-- `PROJECT_ID` is the project ID of the Google Cloud Project.
+- `{{ PROJECT_ID }}` is the project ID of the Google Cloud Project.
   Note: this is the **ID**, not the display name!
-- `NAMESPACE` is the Kubernetes namespace/deployment to grant access to
-- `SERVICE_ACCOUNT` is the _Kubernetes_ service account to grant access to.
+- `{{ NAMESPACE }}` is the Kubernetes namespace/deployment to grant access to
+- `{{ SERVICE_ACCOUNT }}` is the _Kubernetes_ service account to grant access to.
   Usually, this is `user-sa`.
-  Run `kubectl --namespace NAMESPACE get serviceaccount` if you're not sure.
+  Run `kubectl --namespace {{ NAMESPACE }} get serviceaccount` if you're not sure.
 
 4. Link the Google Service Account to the Kubernetes Service Account
 
@@ -72,18 +72,18 @@ We now link the two service accounts together so Kubernetes can use the Google A
 
 ```bash
 kubectl annotate serviceaccount \
-  --namespace NAMESPACE \
-  SERVICE_ACCOUNT \
-  iam.gke.io/gcp-service-account=requester-pays-sa@PROJECT_ID.iam.gserviceaccount.com
+  --namespace {{ NAMESPACE }} \
+  {{ SERVICE_ACCOUNT }} \
+  iam.gke.io/gcp-service-account=requester-pays-sa@{{ PROJECT_ID }}.iam.gserviceaccount.com
 ```
 
 Where:
 
-- `NAMESPACE` is the target Kubernetes namespace
-- `SERVICE_ACCOUNT` is the target Kubernetes service account name.
+- `{{ NAMESPACE }}` is the target Kubernetes namespace
+- `{{ SERVICE_ACCOUNT }}` is the target Kubernetes service account name.
   Usually, this is `user-sa`.
-  Run `kubectl --namespace NAMESPACE get serviceaccount` if you're not sure.
-- `PROJECT_ID` is the project ID of the Google Cloud Project.
+  Run `kubectl --namespace {{ NAMESPACE }} get serviceaccount` if you're not sure.
+- `{{ PROJECT_ID }}` is the project ID of the Google Cloud Project.
   Note: this is the **ID**, not the display name!
 
 5. RESTART THE HUB
@@ -91,7 +91,7 @@ Where:
 This is a very important step.
 If you don't do this you won't see the changes applied.
 
-You can restart the hub by heading to `https://<hub_url>/hub/admin` (you need to be logged in as admin), clicking the "Shutdown Hub" button, and waiting for it to come back up.
+You can restart the hub by heading to `https://{{ hub_url }}/hub/admin` (you need to be logged in as admin), clicking the "Shutdown Hub" button, and waiting for it to come back up.
 
 You can now test the requester pays access by starting a server on the hub and running the below code in a script or Notebook.
 
