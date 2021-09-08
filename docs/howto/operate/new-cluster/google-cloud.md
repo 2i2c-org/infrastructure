@@ -1,4 +1,4 @@
-# Add a new GKE cluster managed by our Terraform configuration
+# Add a new Google Cloud cluster
 
 This guide will walk through the process of adding a new cluster to our [terraform configuration](https://github.com/2i2c-org/pilot-hubs/tree/HEAD/terraform/gcp).
 

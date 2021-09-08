@@ -26,7 +26,7 @@ jobs:
           # add its name to the list
           - 2i2c
           - cloudbank
-          # - carbonplan  # We need to edit deployer to connect to aws before we can autodeploy carbonplan
+          - carbonplan
           - meom-ige
           - pangeo-181919
           - pangeo-hubs

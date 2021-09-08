@@ -1,4 +1,4 @@
-# Hub Configuration
+# Hub configuration
 
 ```{toctree}
 auth-management.md
