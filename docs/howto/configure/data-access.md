@@ -56,6 +56,14 @@ gcloud projects add-iam-policy-binding \
 
 where `{{ PROJECT_ID }}` is the ID of the Google Cloud project, **not** the display name!
 
+````{note}
+If you're not sure what `{{ PROJECT_ID }}` should be, you can run:
+
+```bash
+gcloud config get-value project
+```
+````
+
 3. Grant the Service Account the `workloadIdentityUser` role on the cluster
 
 We will now grant the [Workload Identity User](https://cloud.google.com/iam/docs/understanding-roles#service-accounts-roles) role to the cluster to act on behalf of the users.
