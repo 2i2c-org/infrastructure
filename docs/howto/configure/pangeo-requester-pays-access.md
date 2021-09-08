@@ -93,7 +93,7 @@ If you don't do this you won't see the changes applied.
 
 You can restart the hub by heading to `https://<hub_url>/hub/admin` (you need to be logged in as admin), clicking the "Shutdown Hub" button, and waiting for it to come back up.
 
-You can now test the requester pys access by starting a server on the hub and running the below code in a script or Notebook.
+You can now test the requester pays access by starting a server on the hub and running the below code in a script or Notebook.
 
 ```python
 from intake import open_catalog
