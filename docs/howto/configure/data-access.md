@@ -27,7 +27,7 @@ From step 3 onwards only need to be repeated when **adding a new hub to an alrea
 
 ```bash
 gcloud iam service-accounts create requester-pays-sa \
-  --description="Service Account to allow access to Pangeo data stored in the cloud" \
+  --description="Service Account to allow access to external data stored elsewhere in the cloud" \
   --display-name="Requester Pays Service Account"
 ```
 
