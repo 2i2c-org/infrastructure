@@ -17,6 +17,12 @@ We may automate these steps in the future.
 
 Make sure you are logged into the `gcloud` CLI and have set the default project to be the one you wish to work with.
 
+```{note}
+Steps 1 and 2 only need to be run **when you create a new cluster**!
+
+From step 3 onwards only need to be repeated when **adding a new hub to an already existing cluster**!
+```
+
 1. Create a new Service Account
 
 ```bash
