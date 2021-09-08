@@ -75,6 +75,9 @@ hubs:
                   - rabernat
                 admin_users: *staging_users
           singleuser:
+            image:
+              name: pangeo/pangeo-notebook
+              tag: bcfacc5
             profileList:
               # The mem-guarantees are here so k8s doesn't schedule other pods
               # on these nodes. They need to be just under total allocatable
@@ -125,15 +128,6 @@ hubs:
               - name: home
                 mountPath: /home/jovyan
                 subPath: "{username}"
-            image:
-              name: pangeo/pangeo-notebook
-              tag: bcfacc5
-            cpu:
-              limit: 2
-              guarantee: 1
-            memory:
-              limit: 4G
-              guarantee: 2G
       dask-gateway:
         gateway:
           backend:
