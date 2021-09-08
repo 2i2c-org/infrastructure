@@ -1,9 +1,13 @@
-# Pangeo Data Access via Requester Pays
+# Data Access
+
+Here we will document various ways to grant hubs access to external data.
+
+## Data Access via Requester Pays
 
 For some hubs, such as our Pangeo deployments, the communities they serve require access to data stored in other projects.
 Accessing data normally comes with a charge that the folks _hosting_ the data have to take care of.
 However, there is a method by which those making the request are responsible for the charges instead: [Requester Pays](https://cloud.google.com/storage/docs/requester-pays).
-This document shows the steps required to set this method up.
+This section demonstrates the steps required to setup this method.
 
 ## Setting up Requester Pays Access on GCP
 
