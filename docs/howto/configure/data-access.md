@@ -9,7 +9,7 @@ Accessing data normally comes with a charge that the folks _hosting_ the data ha
 However, there is a method by which those making the request are responsible for the charges instead: [Requester Pays](https://cloud.google.com/storage/docs/requester-pays).
 This section demonstrates the steps required to setup this method.
 
-## Setting up Requester Pays Access on GCP
+### Setting up Requester Pays Access on GCP
 
 ```{note}
 We may automate these steps in the future.
