@@ -23,27 +23,32 @@ notebook_nodes = {
   "small" : {
     min : 0,
     max : 20,
-    machine_type : "n1-standard-2"
+    machine_type : "n1-standard-2",
+    labels: {}
   },
   "medium" : {
     min : 0,
     max : 20,
-    machine_type : "n1-standard-8"
+    machine_type : "n1-standard-8",
+    labels: {}
   },
   "large" : {
     min : 0,
     max : 20,
-    machine_type : "n1-standard-16"
+    machine_type : "n1-standard-16",
+    labels: {}
   },
   "very-large" : {
     min : 0,
     max : 20,
-    machine_type : "n1-standard-32"
+    machine_type : "n1-standard-32",
+    labels: {}
   },
   "huge" : {
     min : 0,
     max : 20,
-    machine_type : "n1-standard-64"
+    machine_type : "n1-standard-64",
+    labels: {}
   },
 
 }
