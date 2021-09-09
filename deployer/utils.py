@@ -47,3 +47,33 @@ def decrypt_file(encrypted_path):
             '--decrypt', encrypted_path
         ])
         yield f.name
+
+
+def flatten(inputlist):
+    """
+    Flatten a list of strings and lists into a flat list of strings.
+    This will only work 1-level deep.
+
+    Parameters
+    ==========
+    names: list of strings and/or lists
+        The 
+    """
+    if isinstance(inputlist, str):
+        inputlist = [inputlist]
+    out = []
+    for ii in inputlist:
+        if isinstance(ii, str):
+            out.append(ii)
+        else:
+            out.extend(ii)
+    return out
+
+
+def clean_config(config):
+    """Prepare a hub's configuration file for deployment."""
+
+    # Flatten authenticated user list since YAML references don't extend, they append
+    authenticator = config.get("jupyterhub", {}).get("hub", {}).get("config", {}).get("Authenticator", {})
+    authenticator["allowed_users"] = flatten(authenticator["allowed_users"])
+    authenticator["admin_users"] = flatten(authenticator["admin_users"])

@@ -16,6 +16,23 @@ support:
           - secretName: grafana-tls
             hosts:
               - grafana.pilot.2i2c.cloud
+staff:
+  # Alphabetical for github handles, and OAuth usernames follow same order as github
+  names:
+    github: &staff-github
+      - choldgraf
+      - consideRatio
+      - damianavila
+      - GeorgianaElena
+      - sgibson91
+      - yuvipanda
+    google_oauth: &staff-google-oauth
+    - choldgraf@2i2c.org
+    - erik@2i2c.org
+    - damianavila@2i2c.org
+    - georgiana.dolocan@gmail.com
+    - sgibson@2i2c.org
+    - yuvipanda@2i2c.org
 hubs:
   - name: staging
     domain: staging.pilot.2i2c.cloud
@@ -48,10 +65,8 @@ hubs:
           config:
             Authenticator:
               allowed_users: &staging_users
-                - yuvipanda@gmail.com
-                - colliand@gmail.com
-                - choldgraf@gmail.com
-                - georgiana.dolocan@gmail.com
+                - *staff-google-oauth
+                - anextrausername
               admin_users: *staging_users
   - name: dask-staging
     domain: dask-staging.pilot.2i2c.cloud
