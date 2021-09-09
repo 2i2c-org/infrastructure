@@ -15,16 +15,19 @@ notebook_nodes = {
   "small" : {
     min : 0,
     max : 100,
+    machine_type : "n1-standard-16",
     labels: {}
   },
   "medium" : {
     min : 0,
     max : 100,
+    machine_type : "n1-standard-32",
     labels: {}
   },
   "large" : {
     min : 0,
     max : 100,
+    machine_type : "n1-highmem-16",
     labels: {}
   },
 }
