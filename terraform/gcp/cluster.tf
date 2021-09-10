@@ -70,10 +70,49 @@ resource "google_container_cluster" "cluster" {
 
   cluster_autoscaling {
     # This disables node autoprovisioning, not cluster autoscaling!
-    enabled = false
+    enabled = var.enable_node_autoprovisioning
     # Use a scheduler + autoscaling profile optimized for batch workloads like ours
     # https://cloud.google.com/kubernetes-engine/docs/concepts/cluster-autoscaler#autoscaling_profiles
     autoscaling_profile = "OPTIMIZE_UTILIZATION"
+
+    // When node auto-provisioning is enabled, set the min and max amount of
+    // CPU and memory to allocate
+    dynamic "resource_limits" {
+      for_each = var.enable_node_autoprovisioning ? [1] : []
+
+      content {
+        resource_type = "memory"
+        minimum       = var.min_memory
+        maximum       = var.max_memory
+      }
+    }
+
+    dynamic "resource_limits" {
+      for_each = var.enable_node_autoprovisioning ? [1] : []
+
+      content {
+        resource_type = "cpu"
+        minimum       = var.min_cpu
+        maximum       = var.max_cpu
+      }
+    }
+
+    // When node auto-provisioning is enabled, define the service account to be
+    // used by the node VMs
+    dynamic "auto_provisioning_defaults" {
+      for_each = var.enable_node_autoprovisioning ? [1] : []
+
+      content {
+        service_account = google_service_account.cluster_sa.email
+      }
+    }
+  }
+
+  // When node auto-provisioning is enabled, also enable vertical pod autoscaling
+  // Following Pangeo setup documented here:
+  // https://github.com/pangeo-data/pangeo-cloud-federation/blob/d051d1829aeb303d321dd483450146891f67a93c/deployments/gcp-uscentral1b/Makefile#L47
+  vertical_pod_autoscaling {
+    enabled = var.enable_node_autoprovisioning
   }
 
   network_policy {
