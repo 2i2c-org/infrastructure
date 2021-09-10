@@ -448,7 +448,7 @@ hubs:
             templateVars:
               org:
                 name: The American University of Paris
-                logo_url: https://www.aup.edu/sites/all/themes/aup_2018/img/home/logo_homepage.png
+                logo_url: https://www.aup.edu/sites/default/files/images/widget-assets/image/auplogo.jpeg
                 url: https://www.aup.edu/
               designed_by:
                 name: 2i2c
