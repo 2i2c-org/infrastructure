@@ -436,3 +436,43 @@ hubs:
                 - fzhu2e
                 - alexkjames
               admin_users: *paleohack_users
+  - name: aup
+    domain: aup.pilot.2i2c.cloud
+    template: basehub
+    auth0:
+      connection: github
+    config:
+      jupyterhub:
+        custom:
+          homepage:
+            templateVars:
+              org:
+                name: The American University of Paris
+                logo_url: https://www.aup.edu/sites/all/themes/aup_2018/img/home/logo_homepage.png
+                url: https://www.aup.edu/
+              designed_by:
+                name: 2i2c
+                url: https://2i2c.org
+              operated_by:
+                name: 2i2c
+                url: https://2i2c.org
+              funded_by:
+                name: AUP
+                url: https://www.aup.edu/
+        singleuser:
+          memory:
+            limit: 2G
+            guarantee: 2G
+        hub:
+          config:
+            Authenticator:
+              allowed_users: &aup_users
+              - choldgraf
+              - consideRatio
+              - damianavila
+              - GeorgianaElena
+              - sgibson91
+              - yuvipanda
+              - swalker
+              - shaolintl
+              admin_users: *aup_users
