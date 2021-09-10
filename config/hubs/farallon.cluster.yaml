@@ -1,7 +1,11 @@
 name: farallon
-provider: kubeconfig
-kubeconfig:
-  file: secrets/farallon.yaml
+provider: aws
+aws:
+  key: secrets/farallon.json
+  clusterType: kops
+  clusterName: farallonhub.k8s.local
+  region: us-east-2
+  stateStore: s3://2i2c-farallon-kops-state
 hubs:
   - name: staging
     domain: staging.farallon.2i2c.cloud
