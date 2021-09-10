@@ -18,20 +18,21 @@ We may automate these steps in the future.
 Make sure you are logged into the `gcloud` CLI and have set the default project to be the one you wish to work with.
 
 ```{note}
-Steps 1 and 2 only need to be run **when you create a new cluster**!
-
-From step 3 onwards only need to be repeated when **adding a new hub to an already existing cluster**!
+These steps should be run every time a new hub is added to a cluster, to avoid sharing of credentials.
 ```
 
 1. Create a new Service Account
 
 ```bash
-gcloud iam service-accounts create requester-pays-sa \
+gcloud iam service-accounts create {{ NAMESPACE }}-user-sa \
   --description="Service Account to allow access to external data stored elsewhere in the cloud" \
   --display-name="Requester Pays Service Account"
 ```
 
-where `requester-pays-sa` will be the name of the Service Account.
+where:
+
+- `{{ NAMESPACE }}-user-sa` will be the name of the Service Account, and;
+- `{{ NAMESPACE }}` is the name of the deployment, e.g. `staging`.
 
 ```{note}
 We create a separate service account for this so as to avoid granting excessive permissions to any single service account.
@@ -45,16 +46,19 @@ We will need to grant the [Service Usage Consumer](https://cloud.google.com/iam/
 ```bash
 gcloud projects add-iam-policy-binding \
   --role roles/serviceusage.serviceUsageConsumer \
-  --member "serviceAccount:requester-pays-sa@{{ PROJECT_ID }}.iam.gserviceaccount.com" \
+  --member "serviceAccount:{{ NAMESPACE }}-user-sa@{{ PROJECT_ID }}.iam.gserviceaccount.com" \
   {{ PROJECT_ID }}
 
 gcloud projects add-iam-policy-binding \
   --role roles/storage.objectViewer \
-  --member "serviceAccount:requester-pays-sa@{{ PROJECT_ID }}.iam.gserviceaccount.com" \
+  --member "serviceAccount:{{ NAMESPACE }}-user-sa@{{ PROJECT_ID }}.iam.gserviceaccount.com" \
   {{ PROJECT_ID }}
 ```
 
-where `{{ PROJECT_ID }}` is the ID of the Google Cloud project, **not** the display name!
+where:
+
+- `{{ PROJECT_ID }}` is the ID of the Google Cloud project, **not** the display name!
+- `{{ NAMESPACE }}` is the deployment namespace
 
 ````{note}
 If you're not sure what `{{ PROJECT_ID }}` should be, you can run:
@@ -72,7 +76,7 @@ We will now grant the [Workload Identity User](https://cloud.google.com/iam/docs
 gcloud iam service-accounts add-iam-policy-binding \
   --role roles/iam.workloadIdentityUser \
   --member "serviceAccount:{{ PROJECT_ID }}.svc.id.goog[{{ NAMESPACE }}/{{ SERVICE_ACCOUNT }}]" \
-  requester-pays-sa@{{ PROJECT_ID }}.iam.gserviceaccount.com
+  {{ NAMESPACE }}-user-sa@{{ PROJECT_ID }}.iam.gserviceaccount.com
 ```
 
 Where:
@@ -92,7 +96,7 @@ We now link the two service accounts together so Kubernetes can use the Google A
 kubectl annotate serviceaccount \
   --namespace {{ NAMESPACE }} \
   {{ SERVICE_ACCOUNT }} \
-  iam.gke.io/gcp-service-account=requester-pays-sa@{{ PROJECT_ID }}.iam.gserviceaccount.com
+  iam.gke.io/gcp-service-account={{ NAMESPACE }}-user-sa@{{ PROJECT_ID }}.iam.gserviceaccount.com
 ```
 
 Where:
