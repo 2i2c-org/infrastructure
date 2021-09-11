@@ -108,13 +108,6 @@ resource "google_container_cluster" "cluster" {
     }
   }
 
-  // When node auto-provisioning is enabled, also enable vertical pod autoscaling
-  // Following Pangeo setup documented here:
-  // https://github.com/pangeo-data/pangeo-cloud-federation/blob/d051d1829aeb303d321dd483450146891f67a93c/deployments/gcp-uscentral1b/Makefile#L47
-  vertical_pod_autoscaling {
-    enabled = var.enable_node_autoprovisioning
-  }
-
   network_policy {
     enabled = var.enable_network_policy
   }
