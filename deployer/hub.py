@@ -183,8 +183,8 @@ class Cluster:
                 if cluster_type == 'kops':
                     subprocess.check_call([
                         'kops', 'export', 'kubecfg', '--admin',
-                        f'--name {cluster_name}',
-                        f'--state {state_store}'
+                        f'--name={cluster_name}',
+                        f'--state={state_store}'
                     ])
                 else:
                     subprocess.check_call([
