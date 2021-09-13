@@ -28,6 +28,7 @@ jobs:
           - cloudbank
           - carbonplan
           - farallon
+          # Uncomment openscapes once a deployer user is created in openscapes AWS land
           # - openscapes
           - meom-ige
           - pangeo-181919
@@ -88,9 +89,11 @@ jobs:
           (steps.base_files.outputs.files == 'true') ||
           (steps.config_files.outputs.hub_config == 'true')
         run: |
-          curl -Lo kops https://github.com/kubernetes/kops/releases/download/$(curl -s https://api.github.com/repos/kubernetes/kops/releases/latest | grep tag_name | cut -d '"' -f 4)/kops-linux-amd64
+          curl -Lo kops https://github.com/kubernetes/kops/releases/download/$KOPS_VERSION/kops-linux-amd64
           chmod +x kops
           sudo mv kops /usr/local/bin/kops
+        env:
+          KOPS_VERSION: "v1.21.1"
 
       - name: Deploy ${{ matrix.cluster_name }}
         if: |
