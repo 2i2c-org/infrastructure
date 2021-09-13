@@ -87,7 +87,10 @@ jobs:
         if: |
           (steps.base_files.outputs.files == 'true') ||
           (steps.config_files.outputs.hub_config == 'true')
-        uses: hiberbee/github-action-kops@1.0.0
+        run: |
+          curl -Lo kops https://github.com/kubernetes/kops/releases/download/$(curl -s https://api.github.com/repos/kubernetes/kops/releases/latest | grep tag_name | cut -d '"' -f 4)/kops-linux-amd64
+          chmod +x kops
+          sudo mv kops /usr/local/bin/kops
 
       - name: Deploy ${{ matrix.cluster_name }}
         if: |
