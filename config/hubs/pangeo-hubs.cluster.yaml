@@ -130,3 +130,9 @@ hubs:
               memory:
                 request: 1G
                 limit: 2G
+  - name: prod
+    domain: prod.pangeo.2i2c.cloud
+    template: daskhub
+    auth0:
+      connection: github
+    config: *stagingConfig
