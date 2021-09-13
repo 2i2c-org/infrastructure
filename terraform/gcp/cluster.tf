@@ -70,10 +70,32 @@ resource "google_container_cluster" "cluster" {
 
   cluster_autoscaling {
     # This disables node autoprovisioning, not cluster autoscaling!
-    enabled = false
+    enabled = var.enable_node_autoprovisioning
     # Use a scheduler + autoscaling profile optimized for batch workloads like ours
     # https://cloud.google.com/kubernetes-engine/docs/concepts/cluster-autoscaler#autoscaling_profiles
     autoscaling_profile = "OPTIMIZE_UTILIZATION"
+
+    // When node auto-provisioning is enabled, set the min and max amount of
+    // CPU and memory to allocate
+    dynamic "resource_limits" {
+      for_each = var.enable_node_autoprovisioning ? [1] : []
+
+      content {
+        resource_type = "memory"
+        minimum       = var.min_memory
+        maximum       = var.max_memory
+      }
+    }
+
+    dynamic "resource_limits" {
+      for_each = var.enable_node_autoprovisioning ? [1] : []
+
+      content {
+        resource_type = "cpu"
+        minimum       = var.min_cpu
+        maximum       = var.max_cpu
+      }
+    }
   }
 
   network_policy {

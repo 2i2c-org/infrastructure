@@ -220,3 +220,57 @@ variable "filestore_tier" {
   BASIC_SSD (for faster home directories, min $768 / month)
   EOT
 }
+
+variable "enable_node_autoprovisioning" {
+  type = bool
+  default = false
+  description = <<-EOT
+  Enable auto-provisioning of nodes based on workload
+  EOT
+}
+
+// Defaults for the below variables are taken from the original Pangeo cluster setup
+// https://github.com/pangeo-data/pangeo-cloud-federation/blob/d051d1829aeb303d321dd483450146891f67a93c/deployments/gcp-uscentral1b/Makefile#L25
+variable "min_memory" {
+  type        = number
+  default     = 1
+  description = <<-EOT
+  When auto-provisioning nodes, this is the minimum amount of memory the nodes
+  should allocate in GB.
+
+  Default = 1 GB
+  EOT
+}
+
+variable "max_memory" {
+  type        = number
+  default     = 5200
+  description = <<-EOT
+  When auto-provisioning nodes, this is the minimum amount of memory the nodes
+  should allocate in GB.
+
+  Default = 5200 GB
+  EOT
+}
+
+variable "min_cpu" {
+  type        = number
+  default     = 1
+  description = <<-EOT
+  When auto-provisioning nodes, this is the minimum number of cores in the
+  cluster to which the cluster can scale.
+
+  Default = 1 CPU
+  EOT
+}
+
+variable "max_cpu" {
+  type        = number
+  default     = 1000
+  description = <<-EOT
+  When auto-provisioning nodes, this is the minimum number of cores in the
+  cluster to which the cluster can scale.
+
+  Default = 1000
+  EOT
+}
