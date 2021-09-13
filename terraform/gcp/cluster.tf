@@ -96,16 +96,6 @@ resource "google_container_cluster" "cluster" {
         maximum       = var.max_cpu
       }
     }
-
-    // When node auto-provisioning is enabled, define the service account to be
-    // used by the node VMs
-    dynamic "auto_provisioning_defaults" {
-      for_each = var.enable_node_autoprovisioning ? [1] : []
-
-      content {
-        service_account = google_service_account.cluster_sa.email
-      }
-    }
   }
 
   network_policy {
