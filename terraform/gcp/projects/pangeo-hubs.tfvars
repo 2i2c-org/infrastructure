@@ -12,9 +12,28 @@ config_connector_enabled = true
 # Setup a filestore for in-cluster NFS
 enable_filestore = true
 
-# Enable node auto-provisioning
-enable_node_autoprovisioning = true
-
 user_buckets = [
   "pangeo-scratch"
 ]
+
+# Setup notebook node pools
+notebook_nodes = {
+  "small" : {
+    min : 0,
+    max : 100,
+    machine_type : "n1-standard-4",
+    labels: {}
+  },
+  "medium" : {
+    min : 0,
+    max : 100,
+    machine_type : "n1-standard-8",
+    labels: {}
+  },
+  "large" : {
+    min : 0,
+    max : 100,
+    machine_type : "n1-standard-16",
+    labels: {}
+  },
+}
