@@ -75,38 +75,40 @@ hubs:
                   - rabernat
                 admin_users: *staging_users
           singleuser:
+            image:
+              name: pangeo/pangeo-notebook
+              tag: bcfacc5
             profileList:
               # The mem-guarantees are here so k8s doesn't schedule other pods
               # on these nodes. They need to be just under total allocatable
               # RAM on a node, not total node capacity
-              - display_name: "Small"
-                description: "~2 CPU, ~8G RAM"
+              - display_name: "Small (1 GB - 4 GB)"
+                default: true
                 kubespawner_override:
+                  cpu_limit: 2
+                  cpu_guarantee: 0.3
+                  mem_limit: 4G
+                  mem_guarantee: 1G
+              - display_name: "Medium (4 GB - 8 GB)"
+                kubespawner_override:
+                  cpu_limit: 2
+                  cpu_guarantee: 1
                   mem_limit: 8G
-                  mem_guarantee: 5.5G
-                  node_selector:
-                    node.kubernetes.io/instance-type: n1-standard-2
-              - display_name: "Medium"
-                description: "~8 CPU, ~32G RAM"
+                  mem_guarantee: 4G
+              - display_name: "Large (12 GB - 16 GB)"
                 kubespawner_override:
-                  mem_limit: 32G
-                  mem_guarantee: 25G
-                  node_selector:
-                    node.kubernetes.io/instance-type: n1-standard-8
-              - display_name: "Large"
-                description: "~16 CPU, ~64G RAM"
+                  cpu_limit: 4
+                  cpu_guarantee: 1
+                  mem_limit: 16G
+                  mem_guarantee: 12G
+              - display_name: "ML Image - Large (12 GB - 16 GB)"
+                description: "https://github.com/pangeo-data/pangeo-docker-images/tree/master/ml-notebook"
                 kubespawner_override:
-                  mem_limit: 64G
-                  mem_guarantee: 55G
-                  node_selector:
-                    node.kubernetes.io/instance-type: n1-standard-16
-              - display_name: "Very Large"
-                description: "~32 CPU, ~128G RAM"
-                kubespawner_override:
-                  mem_limit: 128G
-                  mem_guarantee: 115G
-                  node_selector:
-                    node.kubernetes.io/instance-type: n1-standard-32
+                  image: "pangeo/ml-notebook:master"
+                  cpu_limit: 2
+                  cpu_guarantee: 1
+                  mem_limit: 16G
+                  mem_guarantee: 12G
             initContainers:
               # Need to explicitly fix ownership here, since EFS doesn't do anonuid
             - name: volume-mount-ownership-fix
@@ -118,15 +120,6 @@ hubs:
               - name: home
                 mountPath: /home/jovyan
                 subPath: "{username}"
-            image:
-              name: pangeo/pangeo-notebook
-              tag: bcfacc5
-            cpu:
-              limit: 2
-              guarantee: 1
-            memory:
-              limit: 4G
-              guarantee: 2G
       dask-gateway:
         gateway:
           backend:
