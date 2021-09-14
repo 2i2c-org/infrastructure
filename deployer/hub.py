@@ -146,7 +146,8 @@ class Cluster:
         """
         Reads `aws` nested config and temporarily sets environment variables
         like `KUBECONFIG`, `AWS_ACCESS_KEY_ID`, and `AWS_SECRET_ACCESS_KEY`
-        before trying to authenticate with the aws eks update-kubeconfig command.
+        before trying to authenticate with the `aws eks update-kubeconfig` or
+        the `kops export kubecfg --admin` commands.
 
         Finally get those environment variables to the original values to prevent
         side-effects on existing local configuration.
@@ -156,6 +157,9 @@ class Cluster:
         cluster_type = config['clusterType']
         cluster_name = config['clusterName']
         region = config['region']
+
+        if cluster_type == 'kops':
+            state_store = config['stateStore']
 
         with tempfile.NamedTemporaryFile() as kubeconfig:
             orig_kubeconfig = os.environ.get('KUBECONFIG', None)
@@ -176,11 +180,18 @@ class Cluster:
 
                 os.environ['KUBECONFIG'] = kubeconfig.name
 
-                subprocess.check_call([
-                    'aws', 'eks', 'update-kubeconfig',
-                    f'--name={cluster_name}',
-                    f'--region={region}'
-                ])
+                if cluster_type == 'kops':
+                    subprocess.check_call([
+                        'kops', 'export', 'kubecfg', '--admin',
+                        f'--name={cluster_name}',
+                        f'--state={state_store}'
+                    ])
+                else:
+                    subprocess.check_call([
+                        'aws', 'eks', 'update-kubeconfig',
+                        f'--name={cluster_name}',
+                        f'--region={region}'
+                    ])
 
                 yield
             finally:
