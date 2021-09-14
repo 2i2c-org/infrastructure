@@ -98,7 +98,7 @@ jobs:
           (steps.config_files.outputs.hub_config == 'true')) &&
           (matrix.provider == 'aws')
         run: |
-          curl -Lo kops https://github.com/kubernetes/kops/releases/download/$KOPS_VERSION/kops-linux-amd64
+          wget -O kops https://github.com/kubernetes/kops/releases/download/$KOPS_VERSION/kops-linux-amd64
           chmod +x kops
           sudo mv kops /usr/local/bin/kops
         env:
