@@ -23,7 +23,7 @@ jobs:
       matrix:
         include:
           # To enable auto-deployments for other clusters,
-          # add its name to the list
+          # add its name and provider to the list
           - cluster_name: 2i2c
             provider: gcp
           - cluster_name: cloudbank
