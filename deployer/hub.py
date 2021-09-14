@@ -473,15 +473,20 @@ class Hub:
 
                 hub_url = f'https://{self.spec["domain"]}'
 
+                # On failure, pytest prints out params to the test that failed.
+                # This can contain sensitive info - so we hide stderr
+                # FIXME: Don't use pytest - just call a function instead
                 print("Running hub health check...")
-                exit_code = pytest.main([
-                    "-q",
-                    "deployer/tests",
-                    "--hub-url", hub_url,
-                    "--api-token", service_api_token,
-                    "--hub-type", self.spec['template'],
-                    "--tb=short"
-                ])
-
+                with open(os.devnull, 'w') as dn, redirect_stderr(dn), redirect_stdout(dn):
+                    exit_code = pytest.main([
+                        "-q",
+                        "deployer/tests",
+                        "--hub-url", hub_url,
+                        "--api-token", service_api_token,
+                        "--hub-type", self.spec['template']
+                    ])
                 if exit_code != 0:
+                    print("Health check failed!", file=sys.stderr)
                     sys.exit(exit_code)
+                else:
+                    print("Health check succeeded!")
