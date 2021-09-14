@@ -21,18 +21,26 @@ jobs:
       # Don't stop other deployments if one fails
       fail-fast: false
       matrix:
-        cluster_name:
+        include:
           # To enable auto-deployments for other clusters,
           # add its name to the list
-          - 2i2c
-          - cloudbank
-          - carbonplan
-          - farallon
+          - cluster_name: 2i2c
+            provider: gcp
+          - cluster_name: cloudbank
+            provider: gcp
+          - cluster_name: carbonplan
+            provider: aws
+          - cluster_name: farallon
+            provider: aws
           # Uncomment openscapes once a deployer user is created in openscapes AWS land
-          # - openscapes
-          - meom-ige
-          - pangeo-181919
-          - pangeo-hubs
+          # - cluster_name: openscapes
+          #   provider: aws
+          - cluster_name: meom-ige
+            provider: gcp
+          - cluster_name: pangeo-181919
+            provider: gcp
+          - cluster_name: pangeo-hubs
+            provider: gcp
 
     steps:
       - name: Checkout repo
@@ -87,7 +95,8 @@ jobs:
       - name: Setup kops
         if: |
           (steps.base_files.outputs.files == 'true') ||
-          (steps.config_files.outputs.hub_config == 'true')
+          (steps.config_files.outputs.hub_config == 'true') &&
+          (${{ matrix.provider }} == 'aws')
         run: |
           curl -Lo kops https://github.com/kubernetes/kops/releases/download/$KOPS_VERSION/kops-linux-amd64
           chmod +x kops
