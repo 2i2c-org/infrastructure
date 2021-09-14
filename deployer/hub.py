@@ -474,7 +474,7 @@ class Hub:
                 hub_url = f'https://{self.spec["domain"]}'
 
                 print("Running hub health check...")
-                pytest.main([
+                exit_code = pytest.main([
                     "-q",
                     "deployer/tests",
                     "--hub-url", hub_url,
@@ -482,3 +482,6 @@ class Hub:
                     "--hub-type", self.spec['template'],
                     "--tb=short"
                 ])
+
+                if exit_code != 0:
+                    sys.exit(exit_code)
