@@ -96,7 +96,7 @@ jobs:
         if: |
           (steps.base_files.outputs.files == 'true') ||
           (steps.config_files.outputs.hub_config == 'true') &&
-          (${{ matrix.provider }} == 'aws')
+          (matrix.provider == 'aws')
         run: |
           curl -Lo kops https://github.com/kubernetes/kops/releases/download/$KOPS_VERSION/kops-linux-amd64
           chmod +x kops
