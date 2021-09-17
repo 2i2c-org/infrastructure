@@ -30,9 +30,10 @@ jobs:
             provider: gcp
           - cluster_name: carbonplan
             provider: aws
-          # Uncomment openscapes once a deployer user is created in openscapes AWS land
-          # - cluster_name: openscapes
-          #   provider: aws
+          - cluster_name: farallon
+            provider: aws
+          - cluster_name: openscapes
+            provider: aws
           - cluster_name: meom-ige
             provider: gcp
           - cluster_name: pangeo-181919
