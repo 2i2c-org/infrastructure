@@ -1,7 +1,7 @@
 ---
-name: "\U0001F4DD Incident report"
+name: "\U0001F4DD Hub Incident"
 about: Report an incident on our running hub infrastructure.
-title: Incident Report - {{ TITLE }}
+title: [Incident] {{ TITLE }}
 labels: "type: incident report"
 assignees: ''
 
@@ -9,11 +9,17 @@ assignees: ''
 
 # Summary
 
-Quick summary of what user impact was, how long it was, and how we fixed it.
+<!-- 
+Quick summary of the problem. Update this section as we learn more, answering:
+
+- what user impact was
+- how long it was
+- what went wrong and how we fixed it.
+-->
 
 ## Timeline (if relevant)
 
-If it makes sense to include a timeline for this debrief, then do so below. This is usually most-useful for post-mortems.
+If it makes sense to include a timeline for this incident, then do so below.
 
 All times in {{ most convenient timezone}}.
 
@@ -28,6 +34,13 @@ Investigation starts.
 ### {{ hh:mm }}
 
 More details.
+
+---
+
+# After-action report
+
+These sections should be filled out once we've resolved the incident and know what happened.
+They should focus on the knowledge we've gained and any improvements we should take.
 
 ## What went wrong
 
@@ -63,4 +76,5 @@ These are only sample subheadings. Every action item should have a GitHub issue
 
 - [ ] Incident has been dealt with or is over
 - [ ] Sections above are filled out
+- [ ] Incident title and after-action report is cleaned up
 - [ ] All actionable items above have linked GitHub Issues
