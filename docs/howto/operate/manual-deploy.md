@@ -1,5 +1,5 @@
 (operate:manual-deploy)=
-# Set up and use the the deployment scripts locally
+# Manually deploy hubs
 
 While deploys generally go through our GitHub Actions workflow, sometimes you
 need to deploy from your laptop - primarily when testing changes on staging or

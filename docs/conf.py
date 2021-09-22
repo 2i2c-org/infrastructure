@@ -57,8 +57,18 @@ html_theme_options = {
     "use_issues_button": True,
     "use_repository_button": True,
 }
+html_sidebars = {
+    "**": ["2i2c-logo.html", "sbt-sidebar-nav.html", "sbt-sidebar-footer"]
+}
+html_static_path = ["_static"]
 # Disable linkcheck for anchors because it throws false errors for any JS anchors
 linkcheck_anchors = False
+
+def setup(app):
+    app.add_css_file("custom.css")
+    app.add_css_file("https://code.cdn.mozilla.net/fonts/fira.css")
+
+
 
 # -- Custom scripts -----------------------------------------
 # Pull latest list of communities served by pilot-hubs/
