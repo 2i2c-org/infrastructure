@@ -115,7 +115,6 @@ Presently, this involves a few more manual steps than the `auth0` setup describe
     - name: HUB_NAME
       auth0:
         enabled: false
-        connection: ""  # This key is still required by the schema
       ... # Other config
       config:
         jupyterhub:
@@ -130,8 +129,6 @@ Presently, this involves a few more manual steps than the `auth0` setup describe
                   - ORG_NAME
                 scope:
                   - read:user
-            extraConfig:
-              06-custom-authenticator: ""  # Required to override our overrides...
     ```
 
    To authenticate against a GitHub Team:
@@ -141,7 +138,6 @@ Presently, this involves a few more manual steps than the `auth0` setup describe
     - name: HUB_NAME
       auth0:
         enabled: false
-        connection: ""  # This key is still required by the schema
       ... # Other config
       config:
         jupyterhub:
@@ -156,6 +152,4 @@ Presently, this involves a few more manual steps than the `auth0` setup describe
                   - ORG_NAME:TEAM_NAME
                 scope:
                   - read:org
-            extraConfig:
-              06-custom-authenticator: ""  # Required to override our overrides...
     ```
