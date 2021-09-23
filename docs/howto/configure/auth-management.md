@@ -102,7 +102,7 @@ Presently, this involves a few more manual steps than the `auth0` setup describe
     ```{admonition}
     Make sure this is encrypted with `sops` before committing it to the repository!
 
-    `sops -i -e secrets/config/hub/*.cluster.yaml`
+    `sops -i -e secrets/config/hubs/*.cluster.yaml`
     ```
 
 4. **Edit the non-secret config under `config/hubs`.**
