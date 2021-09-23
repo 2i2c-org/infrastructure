@@ -176,6 +176,7 @@ properties:
                   Authentication method users of the hub can use to log in to the hub.
                   We support a subset of the [connectors](https://auth0.com/docs/identityproviders)
                   that auth0 supports
+                required: false
               application_name:
                 type: string
                 description: |
