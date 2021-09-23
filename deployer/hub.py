@@ -439,9 +439,10 @@ class Hub:
         """
         Deploy this hub
         """
-        if self.spec["auth0"]['enabled'] == False:
-            # Auth0 has been disabled. Instead read in secret config.
-            secret_config_path = Path(os.getcwd()) / "secrets/config/hubs" / f'{self.cluster.spec["name"]}.cluster.yaml'
+        # Check if this hub has any secret config. If yes, read it in.
+        secret_config_path = Path(os.getcwd()) / "secrets/config/hubs" / f'{self.cluster.spec["name"]}.cluster.yaml'
+
+        if os.path.exists(secret_config_path):
             with decrypt_file(secret_config_path) as decrypted_file_path:
                 with open(decrypted_file_path) as f:
                     secret_config = yaml.load(f)
