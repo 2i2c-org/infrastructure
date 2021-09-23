@@ -158,7 +158,7 @@ properties:
               - basehub
               - daskhub
           auth0:
-            additionalProperties: false
+            additionalProperties: true
             type: object
             description: |
               All hubs use Auth0 for authentication, and we dynamically fetch the credentials
