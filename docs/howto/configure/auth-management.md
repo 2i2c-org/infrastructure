@@ -1,6 +1,8 @@
 # Manage authentication
 
-[auth0](https://auth0.com) provides authentication for all hubs here. It can
+## Auth0
+
+[auth0](https://auth0.com) provides authentication for the majority of 2i2c hubs. It can
 be configured with many different [connections](https://auth0.com/docs/identityproviders)
 that users can authenticate with - such as Google, GitHub, etc.
 
@@ -54,3 +56,106 @@ So we want to manage authentication by:
 ```{admonition} Switching auth
 Switching authentication for a pre-existing hub will simply create new usernames. Any pre-existing users will no longer be able to access their accounts (although administrators will be able to do so). If you have pre-existing users and want to switch the hub authentication, rename the users to the new auth pattern (e.g. convert github handles to emails).
 ```
+
+## Native JupyterHub OAuthenticator for GitHub Orgs and Teams
+
+```{admonition}
+This setup is currently only supported for communities that **require** authentication via a GitHub organisation or team.
+
+We may update this policy in the future.
+```
+
+For communities that require authenticating users against a GitHub organisation or team, we instead use the native JupyterHub OAuthenticator.
+Presently, this involves a few more manual steps than the `auth0` setup described above.
+
+1. **Create a GitHub OAuth App.**
+   This can be achieved by following [GitHub's documentation](https://docs.github.com/en/developers/apps/building-oauth-apps/creating-an-oauth-app).
+   - When naming the application, please follow the convention `<CLUSTER_NAME>-<HUB_NAME>` for consistency, e.g. `2i2c-staging` is the OAuth app for the staging hub running on the 2i2c cluster.
+   - The Homepage URL should match that in the `domain` field of the appropriate `*.cluster.yaml` file in the `pilot-hubs` repo.
+   - The authorisation callback URL is the homepage url appended with `/hub/oauth_callback`
+   - Once you have created the OAuth app, make a new of the client ID, generate a client secret and then hold on to these values for a future step
+
+2. **Transfer the OAuth App to the `2i2c-org` GitHub account.**
+   By default, OAuth apps are created under your GitHub account.
+   However, it will be a point of failure if a hub's app is only accessible by a single member of the 2i2c Engineering team.
+   Therefore, please ensure you transfer it to the `2i2c-org` GitHub org by following [GitHub's documentation](https://docs.github.com/en/developers/apps/managing-oauth-apps/transferring-ownership-of-an-oauth-app).
+
+3. **Create or update the appropriate secret config file under `secrets/config/hubs/*.cluster.yaml`.**
+   You should add the following config to this file, pasting in the client ID and secret you generated in step 1.
+
+    ```yaml
+    hubs:
+    - name: HUB_NAME
+      config:
+        jupyterhub:
+          hub:
+            config:
+              GitHubOAuthenticator:
+                client_id: CLIENT_ID
+                client_secret: CLIENT_SECRET
+    ```
+
+    ```{note}
+    Add the `basehub` key between `config` and `jupyterhub` for `daskhub` deployments.
+    ```
+
+    ```{admonition}
+    Make sure this is encrypted with `sops` before committing it to the repository!
+
+    `sops -i -e secrets/config/hub/*.cluster.yaml`
+    ```
+
+4. **Edit the non-secret config under `config/hubs`.**
+   You should make sure the matching hub config takes one of the following forms.
+
+   To authenticate against a GitHub organisation:
+
+    ```yaml
+    hubs:
+    - name: HUB_NAME
+      auth0:
+        enabled: false
+        connection: ""  # This key is still required by the schema
+      ... # Other config
+      config:
+        jupyterhub:
+          hub:
+            config:
+              JupyterHub:
+                authenticator_class: github
+              GitHubOAuthenticator:
+                oauth_callback_url: https://{{ HUB_DOMAIN }}/hub/oauth_callback
+                allowed_organizations:
+                  - 2i2c-org
+                  - ORG_NAME
+                scope:
+                  - read:user
+            extraConfig:
+              06-custom-authenticator: ""  # Required to override our overrides...
+    ```
+
+   To authenticate against a GitHub Team:
+
+    ```yaml
+    hubs:
+    - name: HUB_NAME
+      auth0:
+        enabled: false
+        connection: ""  # This key is still required by the schema
+      ... # Other config
+      config:
+        jupyterhub:
+          hub:
+            config:
+              JupyterHub:
+                authenticator_class: github
+              GitHubOAuthenticator:
+                oauth_callback_url: https://{{ HUB_DOMAIN }}/hub/oauth_callback
+                allowed_organizations:
+                  - 2i2c-org:tech-team
+                  - ORG_NAME:TEAM_NAME
+                scope:
+                  - read:org
+            extraConfig:
+              06-custom-authenticator: ""  # Required to override our overrides...
+    ```
