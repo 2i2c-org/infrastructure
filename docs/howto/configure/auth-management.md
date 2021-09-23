@@ -68,17 +68,14 @@ Presently, this involves a few more manual steps than the `auth0` setup describe
 
 1. **Create a GitHub OAuth App.**
    This can be achieved by following [GitHub's documentation](https://docs.github.com/en/developers/apps/building-oauth-apps/creating-an-oauth-app).
+   Use the "Switch account" button at the top of your settings page to make sure you have `2i2c-org` selected.
+   That way, the app will be owned by the `2i2c-org` GitHub org, rather than your personal GitHub account.
    - When naming the application, please follow the convention `<CLUSTER_NAME>-<HUB_NAME>` for consistency, e.g. `2i2c-staging` is the OAuth app for the staging hub running on the 2i2c cluster.
    - The Homepage URL should match that in the `domain` field of the appropriate `*.cluster.yaml` file in the `pilot-hubs` repo.
    - The authorisation callback URL is the homepage url appended with `/hub/oauth_callback`
    - Once you have created the OAuth app, make a new of the client ID, generate a client secret and then hold on to these values for a future step
 
-2. **Transfer the OAuth App to the `2i2c-org` GitHub account.**
-   By default, OAuth apps are created under your GitHub account.
-   However, it will be a point of failure if a hub's app is only accessible by a single member of the 2i2c Engineering team.
-   Therefore, please ensure you transfer it to the `2i2c-org` GitHub org by following [GitHub's documentation](https://docs.github.com/en/developers/apps/managing-oauth-apps/transferring-ownership-of-an-oauth-app).
-
-3. **Create or update the appropriate secret config file under `secrets/config/hubs/*.cluster.yaml`.**
+2. **Create or update the appropriate secret config file under `secrets/config/hubs/*.cluster.yaml`.**
    You should add the following config to this file, pasting in the client ID and secret you generated in step 1.
 
     ```yaml
@@ -103,7 +100,7 @@ Presently, this involves a few more manual steps than the `auth0` setup describe
     `sops -i -e secrets/config/hubs/*.cluster.yaml`
     ```
 
-4. **Edit the non-secret config under `config/hubs`.**
+3. **Edit the non-secret config under `config/hubs`.**
    You should make sure the matching hub config takes one of the following forms.
 
    To authenticate against a GitHub organisation:
@@ -151,3 +148,5 @@ Presently, this involves a few more manual steps than the `auth0` setup describe
                 scope:
                   - read:org
     ```
+
+4. Run the deployer as normal to apply the config.
