@@ -40,13 +40,11 @@ So we want to manage authentication by:
    config:
      jupyterhub:
        auth:
-         # will be renamed allowedlist in future JupyterHub
-         whitelist:
-           users:
+         allowed_users:
              # WARNING: THESE USER LISTS MUST MATCH (for now)
              - user1@gmail.com
              - user2@gmail.com
-         admin:
+         admin_users:
            users:
              # WARNING: THESE USER LISTS MUST MATCH (for now)
              - user1@gmail.com
@@ -54,7 +52,7 @@ So we want to manage authentication by:
    ```
 
 ```{admonition} Switching auth
-Switching authentication for a pre-existing hub will simply create new usernames. Any pre-existing users will no longer be able to access their accounts (although administrators will be able to do so). If you have pre-existing users and want to switch the hub authentication, rename the users to the new auth pattern (e.g. convert github handles to emails).
+Switching authentication providers (e.g. from GitHub to Google) for a pre-existing hub will simply create new usernames. Any pre-existing users will no longer be able to access their accounts (although administrators will be able to do so). If you have pre-existing users and want to switch the hub authentication, rename the users to the new auth pattern (e.g. convert github handles to emails).
 ```
 
 ## Native JupyterHub OAuthenticator for GitHub Orgs and Teams
