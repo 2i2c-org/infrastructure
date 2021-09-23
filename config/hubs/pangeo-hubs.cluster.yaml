@@ -24,13 +24,12 @@ support:
       controller:
         admissionWebhooks:
           enabled: false
-    nfs-server-provisioner:
-      enabled: false
 hubs:
   - name: staging
     domain: staging.pangeo.2i2c.cloud
     template: daskhub
     auth0:
+      enabled: false
       connection: github
     config: &stagingConfig
       basehub:
@@ -74,6 +73,17 @@ hubs:
                   - choldgraf
                   - rabernat
                 admin_users: *staging_users
+              JupyterHub:
+                authenticator_class: github
+              GitHubOAuthenticator:
+                oauth_callback_url: https://staging.pangeo.2i2c.cloud/hub/oauth_callback
+                allowed_organizations:
+                  - pangeo-data:us-central1-b-gcp
+                  - 2i2c-org:tech-team
+                scope:
+                  - read:org
+            extraConfig:
+              06-custom-authenticator: ""
           singleuser:
             image:
               name: pangeo/pangeo-notebook
