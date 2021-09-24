@@ -420,6 +420,12 @@ class Hub:
         """
         Deploy this hub
         """
+        # Ensure helm charts are up to date
+        os.chdir("hub-templates")
+        subprocess.check_call(["helm", "dep", "up", "basehub"])
+        if self.spec["template"] == "daskhub":
+            subprocess.check_call(["helm", "dep", "up", "daskhub"])
+        os.chdir("..")
 
         generated_values = self.get_generated_config(auth_provider, secret_key)
 

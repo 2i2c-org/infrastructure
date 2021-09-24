@@ -11,12 +11,6 @@ runs:
     - name: Get gcloud info
       run: gcloud info
       shell: bash
-    - name: Fetch helm charts
-      run: |
-        cd hub-templates
-        helm dep up basehub
-        helm dep up daskhub
-      shell: bash
     - name: Setup gcloud auth for docker
       # FIXME: Add more auth providers & registries here as needed
       run: |
