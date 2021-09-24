@@ -18,6 +18,10 @@ div.logo p {
     margin: 0;
 }
 
+div.logo a {
+    text-decoration: none;
+}
+
 p.logo-main {
     font-size: 4.5em;
     font-weight: 700;
