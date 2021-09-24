@@ -15,7 +15,7 @@ If you'd simply like to revert back to the state of the Kubernetes infrastructur
 
 - **Get the deployment name and revision number for the latest deploy**. To do so, run this command:
   ```bash
-  helm list -n {{NAMESPACE}}
+  helm list --namespace {{NAMESPACE}}
   ```
 - Roll back the deployment to the previous revision, using the information output from the above command:
   
