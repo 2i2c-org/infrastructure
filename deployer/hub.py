@@ -468,7 +468,7 @@ class Hub:
                     "--hub-type", self.spec['template']
                 ]
                 if gh_ci == "true":
-                    print("Testing on CI, redirected output")
+                    print("Testing on CI, not printing output")
                     with open(os.devnull, 'w') as dn, redirect_stderr(dn), redirect_stdout(dn):
                         exit_code = pytest.main(pytest_args)
                 else:
