@@ -461,7 +461,7 @@ class Hub:
                 # Show errors locally but redirect on CI
                 gh_ci = os.environ.get('CI', "false")
                 if gh_ci == "true":
-                    print("Testing on CI, redirected output")
+                    print("Testing on CI, not printing output")
                     with open(os.devnull, 'w') as dn, redirect_stderr(dn), redirect_stdout(dn):
                         exit_code = pytest.main([
                             "-q",
