@@ -460,25 +460,20 @@ class Hub:
                 print("Running hub health check...")
                 # Show errors locally but redirect on CI
                 gh_ci = os.environ.get('CI', "false")
+                pytest_args = [
+                    "-q",
+                    "deployer/tests",
+                    "--hub-url", hub_url,
+                    "--api-token", service_api_token,
+                    "--hub-type", self.spec['template']
+                ]
                 if gh_ci == "true":
                     print("Testing on CI, redirected output")
                     with open(os.devnull, 'w') as dn, redirect_stderr(dn), redirect_stdout(dn):
-                        exit_code = pytest.main([
-                            "-q",
-                            "deployer/tests",
-                            "--hub-url", hub_url,
-                            "--api-token", service_api_token,
-                            "--hub-type", self.spec['template']
-                        ])
+                        exit_code = pytest.main(pytest_args)
                 else:
                     print("Testing locally, do not redirect output")
-                    exit_code = pytest.main([
-                        "-q",
-                        "deployer/tests",
-                        "--hub-url", hub_url,
-                        "--api-token", service_api_token,
-                        "--hub-type", self.spec['template']
-                    ])
+                    exit_code = pytest.main(pytest_args)
                 if exit_code != 0:
                     print("Health check failed!", file=sys.stderr)
                     sys.exit(exit_code)
