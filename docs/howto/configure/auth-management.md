@@ -63,7 +63,7 @@ This setup is currently only supported for communities that **require** authenti
 We may update this policy in the future.
 ```
 
-For communities that require authenticating users against a GitHub organisation or team, we instead use the native JupyterHub OAuthenticator.
+For communities that require authenticating users against [a GitHub organisation or team](https://docs.github.com/en/organizations), we instead use the [native JupyterHub OAuthenticator](https://github.com/jupyterhub/oauthenticator).
 Presently, this involves a few more manual steps than the `auth0` setup described above.
 
 1. **Create a GitHub OAuth App.**
