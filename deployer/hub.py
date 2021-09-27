@@ -440,7 +440,7 @@ class Hub:
         """
         Deploy this hub
         """
-        # Check if this hub has any secret config. If yes, read it in.
+        # Check if this cluster has any secret config. If yes, read it in.
         secret_config_path = Path(os.getcwd()) / "secrets/config/hubs" / f'{self.cluster.spec["name"]}.cluster.yaml'
 
         if os.path.exists(secret_config_path):
