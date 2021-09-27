@@ -57,7 +57,7 @@ Switching authentication providers (e.g. from GitHub to Google) for a pre-existi
 
 ## Native JupyterHub OAuthenticator for GitHub Orgs and Teams
 
-```{admonition}
+```{note}
 This setup is currently only supported for communities that **require** authentication via a GitHub organisation or team.
 
 We may update this policy in the future.
@@ -94,7 +94,7 @@ Presently, this involves a few more manual steps than the `auth0` setup describe
     Add the `basehub` key between `config` and `jupyterhub` for `daskhub` deployments.
     ```
 
-    ```{admonition}
+    ```{note}
     Make sure this is encrypted with `sops` before committing it to the repository!
 
     `sops -i -e secrets/config/hubs/*.cluster.yaml`
