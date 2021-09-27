@@ -30,7 +30,6 @@ hubs:
     template: daskhub
     auth0:
       enabled: false
-      connection: github
     config: &stagingConfig
       basehub:
         nfs:
@@ -82,8 +81,6 @@ hubs:
                   - 2i2c-org:tech-team
                 scope:
                   - read:org
-            extraConfig:
-              06-custom-authenticator: ""
           singleuser:
             image:
               name: pangeo/pangeo-notebook
