@@ -42,8 +42,6 @@ class Cluster:
             yield from self.auth_gcp()
         elif self.spec['provider'] == 'aws':
             yield from self.auth_aws()
-        elif self.spec['provider'] == 'kubeconfig':
-            yield from self.auth_kubeconfig()
         else:
             raise ValueError(f'Provider {self.spec["provider"]} not supported')
 
@@ -124,23 +122,6 @@ class Cluster:
                 '--wait'
             ])
         print("Done!")
-
-    def auth_kubeconfig(self):
-        """
-        Context manager for authenticating with just a kubeconfig file
-
-        For the duration of the contextmanager, we:
-        1. Decrypt the file specified in kubeconfig.file with sops
-        2. Set `KUBECONFIG` env var to our decrypted file path, so applications
-           we call (primarily helm) will use that as config
-        """
-        config = self.spec['kubeconfig']
-        config_path = config['file']
-
-        with decrypt_file(config_path) as decrypted_key_path:
-            # FIXME: Unset this after our yield
-            os.environ['KUBECONFIG'] = decrypted_key_path
-            yield
 
     def auth_aws(self):
         """
@@ -440,6 +421,13 @@ class Hub:
         """
         Deploy this hub
         """
+        # Ensure helm charts are up to date
+        os.chdir("hub-templates")
+        subprocess.check_call(["helm", "dep", "up", "basehub"])
+        if self.spec["template"] == "daskhub":
+            subprocess.check_call(["helm", "dep", "up", "daskhub"])
+        os.chdir("..")
+        
         # Check if this cluster has any secret config. If yes, read it in.
         secret_config_path = Path(os.getcwd()) / "secrets/config/hubs" / f'{self.cluster.spec["name"]}.cluster.yaml'
 

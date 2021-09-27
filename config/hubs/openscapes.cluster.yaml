@@ -1,7 +1,11 @@
 name: openscapes
-provider: kubeconfig
-kubeconfig:
-  file: secrets/openscapes.yaml
+provider: aws
+aws:
+  key: secrets/openscapes.json
+  clusterType: kops
+  clusterName: openscapeshub.k8s.local
+  region: us-west-2
+  stateStore: s3://2i2c-openscapes-kops-state
 hubs:
   - name: staging
     domain: staging.openscapes.2i2c.cloud

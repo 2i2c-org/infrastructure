@@ -1,7 +1,7 @@
 ---
 name: "\U0001F4DD Hub Incident"
 about: Report an incident on our running hub infrastructure.
-title: [Incident] {{ TITLE }}
+title: "[Incident] {{ TITLE }}"
 labels: "type: incident report"
 assignees: ''
 
