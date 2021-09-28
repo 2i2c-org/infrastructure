@@ -29,8 +29,9 @@ Many of our hubs are automatically deployed and updated using GitHub Workflows a
 These are a collection of YAML files (one per cluster) that define the configuration for all of our hubs.
 To learn which subset of clusters are *automatically* deployed via GitHub workflows, inspect the `matrix:cluster_name:` list in [the `deploy-hubs.yaml` action](https://github.com/2i2c-org/pilot-hubs/blob/f2ffc8ef51427d5f824747917bfd51533daf3045/.github/workflows/deploy-hubs.yaml#L17-L31).
 
-The process of automatically updating and adding hubs is the same for all of the hubs deployed on these clusters.
+The process of automatically updating and adding hubs is almost the same for all of the hubs deployed on these clusters.
 
+(new-hub:deploy)=
 ## To add a new hub
 
 To deploy a new hub, follow these steps:
@@ -61,21 +62,26 @@ To deploy a new hub, follow these steps:
 8. Log in to the hub and ensure that the hub works as expected from a user's perspective.
 9. Send a link to the hub's Community Representative(s) so they can confirm that it works from their perspective as well.
 
+:::{note}
+If you need to deploy a new hub in a AWS cluster, there are some minor additional steps described on this [section](new-hub:aws).
+:::
+
 ## Automated vs. manual deploys
 
 Some of our infrastructure automatically deploys and updates hubs via GitHub Workflows, while others require manual deploys.
 This is changing over time as we automate more things, and is dependent on the cloud provider.
 
-The best place to look to learn about the latest state of our *automatic* hub deployment is to look at [the `deploy-hubs.yaml` GitHub workflow](https://github.com/2i2c-org/pilot-hubs/blob/master/.github/workflows/deploy-hubs.yaml).
-That workflow defines the automatic hub deployment for many of our major clusters.
+[](operate:ci-cd)
 
-See the sections below for information about deploying hubs on each cloud provider, including whether to manually or automatically deploy.
+You will find more information about our automation in [](operate:ci-cd)
 
 ## Deploying hubs manually
 
 Some of our infrastructure still requires manual deploys.
-The following sections cover how to deploy in these situations.
+There are also situations where you may want to deploy infrastructure manually.
+Or situation where some specific steps still need some manual intervention.
 
-```{toctree}
-aws.md
-```
+The following sections cover how to deploy in these situations:
+
+* [General manual deployment process](operate:manual-deploy)
+* Some [AWS specific manual steps](new-hub:aws) at the time to deploy a new hub for first time

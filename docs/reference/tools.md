@@ -118,3 +118,25 @@ provides credentials for *other tools* (such as `helm`, `kubectl`, `sops`) to
 authenticate to Google Cloud Platform on your behalf. So if `sops` or
 `kubectl` is complaining about authentication, make sure you are authenticated
 correctly with `application-default`
+
+## AWS tools
+
+### awscli
+
+The AWS Command Line Interface (CLI) is a unified tool to manage your AWS services.
+With just one tool to download and configure, you can control multiple AWS services from
+the command line and automate them through scripts.
+
+### eksctl
+
+`eksctl` is a simple CLI tool for creating and managing clusters on EKS - Amazon's
+managed Kubernetes service for EC2.
+
+### kops
+
+`kops` will not only help you create, destroy, upgrade and maintain production-grade,
+highly available, Kubernetes cluster, but it will also provision the necessary cloud
+infrastructure.
+
+Several cloud providers are officially supported by `kops`, but are only using it in the
+[AWS context](https://kops.sigs.k8s.io/getting_started/aws/).
