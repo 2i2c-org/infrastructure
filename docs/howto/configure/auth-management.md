@@ -45,7 +45,6 @@ So we want to manage authentication by:
              - user1@gmail.com
              - user2@gmail.com
          admin_users:
-           users:
              # WARNING: THESE USER LISTS MUST MATCH (for now)
              - user1@gmail.com
              - user2@gmail.com
