@@ -211,6 +211,9 @@ jupyterhub:
     image:
       name: quay.io/2i2c/pilot-hub
       tag: '0.0.1-n1159.h5b045cd'
+    config:
+      JupyterHub:
+        authenticator_class: oauthenticator.auth0.Auth0OAuthenticator
     nodeSelector:
       hub.jupyter.org/node-purpose: core
     networkPolicy:
@@ -313,6 +316,8 @@ jupyterhub:
               # needed. This method is simpler
               resp['name'] = resp['name'].split('|')[-1]
             return resp
+
+        c.JupyterHub.authenticator_class = CustomOAuthenticator
 
       07-cloud-storage-bucket: |
         from z2jh import get_config
