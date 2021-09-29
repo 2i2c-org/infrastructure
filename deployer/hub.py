@@ -348,7 +348,6 @@ class Hub:
             # FIXME: We're hardcoding Auth0OAuthenticator here
             # We should *not*. We need dictionary merging in code, so
             # these can all exist fine.
-            generated_config['jupyterhub']['hub']['config']['JupyterHub']['authenticator_class'] = 'CustomOAuthenticator'
             generated_config['jupyterhub']['hub']['config']['Auth0OAuthenticator'] = auth_provider.get_client_creds(client, self.spec['auth0']['connection'])
 
         return self.apply_hub_template_fixes(generated_config, secret_key)
@@ -428,29 +427,13 @@ class Hub:
             subprocess.check_call(["helm", "dep", "up", "daskhub"])
         os.chdir("..")
 
-        # Check if this cluster has any secret config. If yes, read it in.
-        secret_config_path = Path(os.getcwd()) / "secrets/config/hubs" / f'{self.cluster.spec["name"]}.cluster.yaml'
-
-        if os.path.exists(secret_config_path):
-            with decrypt_file(secret_config_path) as decrypted_file_path:
-                with open(decrypted_file_path) as f:
-                    secret_config = yaml.load(f)
-
-            hubs = secret_config["hubs"]
-            secret_hub_config = next((hub for i, hub in enumerate(hubs) if hubs[i]["name"] == self.spec["name"]), {"config": {}})
-            secret_hub_config = secret_hub_config["config"]
-        else:
-            secret_hub_config = {}
-
         generated_values = self.get_generated_config(auth_provider, secret_key)
 
-        with tempfile.NamedTemporaryFile(mode='w') as values_file, tempfile.NamedTemporaryFile(mode='w') as generated_values_file, tempfile.NamedTemporaryFile(mode='w') as secret_values_file:
+        with tempfile.NamedTemporaryFile(mode='w') as values_file, tempfile.NamedTemporaryFile(mode='w') as generated_values_file:
             json.dump(self.spec['config'], values_file)
             json.dump(generated_values, generated_values_file)
-            json.dump(secret_hub_config, secret_values_file)
             values_file.flush()
             generated_values_file.flush()
-            secret_values_file.flush()
 
             cmd = [
                 'helm', 'upgrade', '--install', '--create-namespace', '--wait',
@@ -461,7 +444,6 @@ class Hub:
                 # we should put the config from config/hubs last.
                 '-f', generated_values_file.name,
                 '-f', values_file.name,
-                '-f', secret_values_file.name,
             ]
 
             print(f"Running {' '.join(cmd)}")
