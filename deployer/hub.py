@@ -427,7 +427,7 @@ class Hub:
         if self.spec["template"] == "daskhub":
             subprocess.check_call(["helm", "dep", "up", "daskhub"])
         os.chdir("..")
-        
+
         # Check if this cluster has any secret config. If yes, read it in.
         secret_config_path = Path(os.getcwd()) / "secrets/config/hubs" / f'{self.cluster.spec["name"]}.cluster.yaml'
 
@@ -437,7 +437,7 @@ class Hub:
                     secret_config = yaml.load(f)
 
             hubs = secret_config["hubs"]
-            secret_hub_config = next((hub for i, hub in enumerate(hubs) if hubs[i]["name"] == self.spec["name"]), None)
+            secret_hub_config = next((hub for i, hub in enumerate(hubs) if hubs[i]["name"] == self.spec["name"]), {"config": {}})
             secret_hub_config = secret_hub_config["config"]
         else:
             secret_hub_config = {}
