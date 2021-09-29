@@ -48,10 +48,7 @@ hubs:
           config:
             Authenticator:
               allowed_users: &staging_users
-                - yuvipanda@gmail.com
                 - colliand@gmail.com
-                - choldgraf@gmail.com
-                - georgiana.dolocan@gmail.com
               admin_users: *staging_users
   - name: dask-staging
     domain: dask-staging.pilot.2i2c.cloud

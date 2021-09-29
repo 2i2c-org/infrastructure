@@ -33,17 +33,6 @@ inClusterNFS:
   size: 100Gi
 
 jupyterhub:
-  staff:
-    names:
-      google:
-        'yuvipanda@gmail.com',
-        'colliand@gmail.com',
-        'choldgraf@gmail.com',
-        'georgiana.dolocan@gmail.com'
-      github:
-        'yuvipanda',
-        'choldgraf',
-        'GeorgianaElena'
   custom:
     singleuserAdmin:
       extraVolumeMounts:
@@ -307,6 +296,53 @@ jupyterhub:
 
 
         c.JupyterHub.spawner_class = CustomSpawner
+
+      06-custom-authenticator: |
+        from oauthenticator.auth0 import Auth0OAuthenticator
+
+        staff_names_googleohw = [
+          "yuvipanda@gmail.com",
+          "choldgraf@gmail.com",
+          "georgiana.dolocan@gmail.com",
+        ]
+
+        staff_names_github = [
+          "yuvipanda",
+          "choldgraf",
+          "GeorgianaElena"
+        ]
+
+        class CustomOAuthenticator(Auth0OAuthenticator):
+          async def authenticate(self, *args, **kwargs):
+            resp = await super().authenticate(*args, **kwargs)
+            if self.username_key == 'sub':
+              # auth0 returns 'sub' in the form of <provider>|<id>. For our
+              # friendly names, we just want <id>, since we don't support multiple
+              # authentication methods in the same hub
+              # This could've been a lambda set to username_key,
+              # but we would need to know which authentication mechanism
+              # auth0 is sending us, so we can use sub / email / nick as
+              # needed. This method is simpler
+              resp['name'] = resp['name'].split('|')[-1]
+            return resp
+
+        c.JupyterHub.authenticator_class = CustomOAuthenticator
+
+        # TODO: based on what's decided in https://github.com/2i2c-org/pilot-hubs/pull/706,
+        # this logic should move in `hub.py`.
+        admin_users = get_config('hub.config.Authenticator.admin_users')
+        allowed_users = get_config('hub.config.Authenticator.allowed_users')
+
+        # FIXME we should find/create a way to check `auth0.connection` here
+        if "@" in admin_users[0]:
+          admin_users += staff_names_google
+          allowed_users += staff_names_google
+        else:
+          admin_users += staff_names_github
+          allowed_users += staff_names_github
+
+        c.Authenticator.admin_users = admin_users
+        c.Authenticator.allowed_users = allowed_users
 
       07-cloud-storage-bucket: |
         from z2jh import get_config
