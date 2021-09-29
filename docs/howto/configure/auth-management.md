@@ -89,9 +89,19 @@ Presently, this involves a few more manual steps than the `auth0` setup describe
                 client_secret: CLIENT_SECRET
     ```
 
-    ```{note}
+    ````{note}
     Add the `basehub` key between `config` and `jupyterhub` for `daskhub` deployments.
+    For example:
+
+    ```yaml
+    hubs:
+    - name: HUB_NAME
+      config:
+        basehub:
+          jupyterhub:
+            ...
     ```
+    ````
 
     ```{note}
     Make sure this is encrypted with `sops` before committing it to the repository!
