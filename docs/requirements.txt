@@ -1,0 +1,7 @@
+myst-parser[sphinx,linkify]
+pandas
+pyyaml
+requests
+sphinx-autobuild
+sphinx-book-theme
+sphinx-panels
