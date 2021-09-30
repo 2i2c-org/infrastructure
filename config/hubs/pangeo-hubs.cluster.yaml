@@ -77,7 +77,7 @@ hubs:
           singleuser:
             image:
               name: pangeo/pangeo-notebook
-              tag: e6128a7
+              tag: bcfacc5
             profileList:
               # The mem-guarantees are here so k8s doesn't schedule other pods
               # on these nodes. They need to be just under total allocatable
