@@ -165,6 +165,14 @@ properties:
               needed for each hub - client_id, client_secret, callback_url - on deploy. This
               block contains configuration on how auth0 should be configured for this hub.
             properties:
+              enabled:
+                type: boolean
+                default: true
+                description: |
+                  Whether or not to enable Auth0 authentication for this hub.
+                  This should almost always true. It should only be false if
+                  authenticating against GitHub Orgs or Teams using the
+                  JupyterHub OAuthenticator. Defaults to true.
               connection:
                 type: string
                 enum:
