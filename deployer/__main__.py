@@ -106,6 +106,19 @@ def validate(cluster_name):
         # Raises useful exception if validation fails
         jsonschema.validate(cluster_config, schema)
 
+    secret_cluster_dir = Path(os.getcwd()) / "secrets/config/hubs"
+    secret_schema_file = secret_cluster_dir / "schema.yaml"
+    secret_config_file = secret_cluster_dir / f"{cluster_name}.cluster.yaml"
+
+    # If a secret config file exists, validate it as well
+    if os.path.exists(secret_config_file):
+        with decrypt_file(secret_config_file) as decrypted_file_path:
+            with open(decrypted_file_path) as scf, open(secret_schema_file) as ssf:
+                secret_cluster_config = yaml.load(scf)
+                secret_schema = yaml.load(ssf)
+                jsonschema.validate(secret_cluster_config, secret_schema)
+
+
 def main():
     argparser = argparse.ArgumentParser()
     argparser.add_argument('--config-path', help='Read deployment config from this file', default='deployment.config.yaml')
