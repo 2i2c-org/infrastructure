@@ -70,6 +70,11 @@ hubs:
               - --LabApp.collaborative=True
               - --ServerApp.allow_remote_access=True
 
+            # Increased as we have experienced a too slow image pull at least
+            # once. Our pods can take ~6-7 minutes to start on a new node it
+            # seems, so this gives us some margin.
+            startTimeout: 900
+
             extraEnv:
               # SCRATCH_BUCKET / PANGEO_SCRATCH are environment variables that
               # help users write notebooks and such referencing this environment
