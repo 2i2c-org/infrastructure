@@ -11,5 +11,5 @@ dependencies:
   - pyyaml
   - requests
   - sphinx-autobuild
-  - sphinx-book-theme
+  - git+https://github.com/2i2c-org/sphinx-2i2c-theme
   - sphinx-panels
