@@ -67,12 +67,3 @@ Information on contributing to this repository
 
 contributing/code-review
 ```
-
-```{toctree}
-:hidden:
-:caption: 2i2c Documentation
-Homepage <https://2i2c.org>
- <https://docs.2i2c.org/en/latest/about/index.html>
-Hub Administrator Guide <https://docs.2i2c.org/en/latest/admin/index.html#>
-Team Compass <https://team-compass.2i2c.org>
-```
