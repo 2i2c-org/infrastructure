@@ -52,7 +52,7 @@ myst_enable_extensions = [
 # a list of builtin themes.
 #
 html_theme = "sphinx_2i2c_theme"
-html_title = "Infrastructure Operations Guide"
+html_title = "Infrastructure Guide"
 html_theme_options = {
     "repository_url": "https://github.com/2i2c-org/pilot-hubs",
     "use_issues_button": True,
