@@ -1,4 +1,4 @@
-# 2i2c Pilot Hubs Infrastructure
+# 2i2c Infrastructure Guide
 
 This is documentation about the infrastructure behind 2i2c's Managed JupyterHubs Service.
 The goal of this stack is to automatically deploy JupyterHubs in the cloud with configuration from `config/hubs`.
