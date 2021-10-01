@@ -170,7 +170,7 @@ properties:
                 default: true
                 description: |
                   Whether or not to enable Auth0 authentication for this hub.
-                  This should almost always true. It should only be false if
+                  This should almost always be true. It should only be false if
                   authenticating against GitHub Orgs or Teams using the
                   JupyterHub OAuthenticator. Defaults to true.
               connection:
