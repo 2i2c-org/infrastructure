@@ -1,6 +1,6 @@
 # -- Project information -----------------------------------------------------
 
-project = "Infrastructure Operations Guide"
+project = "Infrastructure Guide"
 copyright = "2020, 2i2c.org"
 author = "2i2c.org"
 
