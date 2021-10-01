@@ -206,6 +206,13 @@ properties:
                       "<clustername>-<hubname>".
 
                       See https://manage.auth0.com/dashboard/us/2i2c/connections/database.
+            if:
+              properties:
+                enabled:
+                  const: true
+            then:
+              required:
+                - connection
           config:
             type: object
             description: |
