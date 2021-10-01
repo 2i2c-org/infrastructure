@@ -115,7 +115,7 @@ nodeGroups:
     minSize: 0
     maxSize: 2
     desiredCapacity: 1
-    volumeSize: 80
+    volumeSize: 250
     labels:
       hub.jupyter.org/node-purpose: core
     tags:
@@ -132,7 +132,7 @@ nodeGroups:
     minSize: &user-minSize 0
     maxSize: &user-maxSize 4
     desiredCapacity: &user-desiredCapacity 0
-    volumeSize: &user-volumeSize 80
+    volumeSize: &user-volumeSize 500
     labels:
       hub.jupyter.org/node-purpose: user
       2i2c.org/node-cpu: "4"
@@ -280,7 +280,7 @@ nodeGroups:
     minSize: &worker-minSize 0
     maxSize: &worker-maxSize 8
     desiredCapacity: &worker-desiredCapacity 0
-    volumeSize: &worker-volumeSize 80
+    volumeSize: &worker-volumeSize 500
     labels:
       k8s.dask.org/node-purpose: worker
       2i2c.org/node-cpu: "4"
