@@ -6,7 +6,7 @@ BUILD_COMMAND = ["-b", "html", "docs", "docs/_build/html"]
 
 def install_deps(session):
     # Manually installing this because conda is a bit wonky w/ nox
-    session.conda_install("--channel=conda-forge", "go-terraform-docs")
+    session.conda_install("--channel=conda-forge", "go-terraform-docs", "python=3.8")
     session.install("-r", "docs/requirements.txt")
 
 @nox.session(venv_backend='conda')
