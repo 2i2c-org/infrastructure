@@ -96,9 +96,6 @@ hubs:
               Authenticator:
                 # Only allow admin users + users added via the UI
                 admin_users: &users
-                  - yuvipanda
-                  - choldgraf
-                  - GeorgianaElena
                   - donaldbraman
                   - JILPulvino
                 allowed_users: *users

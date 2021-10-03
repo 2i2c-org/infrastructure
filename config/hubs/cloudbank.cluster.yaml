@@ -44,10 +44,7 @@ hubs:
           config:
             Authenticator:
               allowed_users: &spelman_users
-                - yuvipanda@gmail.com
                 - colliand@gmail.com
-                - choldgraf@gmail.com
-                - georgiana.dolocan@gmail.com
                 - ericvd@gmail.com
                 - sean.smorris@berkeley.edu
                 - jerry.volcy@gmail.com
@@ -79,9 +76,6 @@ hubs:
           config:
             Authenticator:
               allowed_users: &ccsf_users
-                - yuvipanda@gmail.com
-                - choldgraf@gmail.com
-                - georgiana.dolocan@gmail.com
                 - ericvd@gmail.com
                 - sean.smorris@berkeley.edu
                 - shawn.wiggins@mail.ccsf.edu
@@ -120,9 +114,6 @@ hubs:
           config:
             Authenticator:
               allowed_users: &elcamino_users
-                - yuvipanda@gmail.com
-                - choldgraf@gmail.com
-                - georgiana.dolocan@gmail.com
                 - ericvd@gmail.com
                 - sean.smorris@berkeley.edu
                 - solomonrussell@gmail.com
@@ -155,9 +146,6 @@ hubs:
             Authenticator:
               allowed_users: &howard_users
                 - ericvd@berkeley.edu
-                - choldgraf@gmail.com
-                - yuvipanda@gmail.com
-                - georgiana.dolocan@gmail.com
                 - gwashington@scs.howard.edu
                 - anthony.fgordon64@gmail.com
                 - mikayladorange@gmail.com
@@ -189,9 +177,6 @@ hubs:
           config:
             Authenticator:
               allowed_users: &skyline_users
-                - yuvipanda@gmail.com
-                - choldgraf@gmail.com
-                - georgiana.dolocan@gmail.com
                 - ericvd@gmail.com
                 - sean.smorris@berkeley.edu
                 - dhum1@my.smccd.edu
@@ -275,9 +260,6 @@ hubs:
           config:
             Authenticator:
               allowed_users: &lassen_users
-                - yuvipanda@gmail.com
-                - choldgraf@gmail.com
-                - georgiana.dolocan@gmail.com
                 - ericvd@gmail.com
                 - sean.smorris@berkeley.edu
                 - camacho@lassencollege.edu
@@ -309,9 +291,6 @@ hubs:
           config:
             Authenticator:
               allowed_users: &clovis_users
-                - yuvipanda@gmail.com
-                - choldgraf@gmail.com
-                - georgiana.dolocan@gmail.com
                 - ericvd@gmail.com
                 - sean.smorris@berkeley.edu
                 - william.kerney@cloviscollege.edu
@@ -343,9 +322,6 @@ hubs:
           config:
             Authenticator:
               allowed_users: &sbcc_users
-                - yuvipanda@gmail.com
-                - choldgraf@gmail.com
-                - georgiana.dolocan@gmail.com
                 - ericvd@gmail.com
                 - sean.smorris@berkeley.edu
                 - nfguebels@pipeline.sbcc.edu
@@ -412,9 +388,6 @@ hubs:
           config:
             Authenticator:
               allowed_users: &palomar_users
-                - yuvipanda@gmail.com
-                - choldgraf@gmail.com
-                - georgiana.dolocan@gmail.com
                 - aculich@berkeley.edu
                 - sean.smorris@berkeley.edu
                 - tcanon@palomar.edu
@@ -447,9 +420,6 @@ hubs:
           config:
             Authenticator:
               allowed_users: &sjcc_users
-                - yuvipanda@gmail.com
-                - choldgraf@gmail.com
-                - georgiana.dolocan@gmail.com
                 - aculich@berkeley.edu
                 - sean.smorris@berkeley.edu
                 - christiaan.desmond@sjcc.edu
@@ -482,9 +452,6 @@ hubs:
           config:
             Authenticator:
               allowed_users: &avc_users
-                - yuvipanda@gmail.com
-                - choldgraf@gmail.com
-                - georgiana.dolocan@gmail.com
                 - aculich@berkeley.edu
                 - sean.smorris@berkeley.edu
                 - rbiritwum@avc.edu

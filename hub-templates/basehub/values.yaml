@@ -309,7 +309,10 @@ jupyterhub:
         staff_names_github = [
           "yuvipanda",
           "choldgraf",
-          "GeorgianaElena"
+          "GeorgianaElena",
+          "consideRatio",
+          "damianavila",
+          "sgibson91",
         ]
 
         class CustomOAuthenticator(Auth0OAuthenticator):

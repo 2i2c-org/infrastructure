@@ -88,10 +88,7 @@ hubs:
             config:
               Authenticator:
                 allowed_users: &dask_staging_users
-                  - yuvipanda@gmail.com
                   - colliand@gmail.com
-                  - choldgraf@gmail.com
-                  - georgiana.dolocan@gmail.com
                 admin_users: *dask_staging_users
   - name: ohw
     domain: ohw.pilot.2i2c.cloud
@@ -161,9 +158,6 @@ hubs:
             config:
               Authenticator:
                 allowed_users: &ohw_users
-                  - yuvipanda
-                  - choldgraf
-                  - GeorgianaElena
                   - ocefpaf
                 admin_users: *ohw_users
   - name: justiceinnovationlab
@@ -228,9 +222,6 @@ hubs:
                 - colliand
                 - alessandromariaselvitella
                 - fosterk86
-                - choldgraf
-                - yuvipanda
-                - GeorgianaElena
               admin_users: *pfw_users
   - name: wageningen
     domain: wur.pilot.2i2c.cloud
@@ -263,10 +254,7 @@ hubs:
           config:
             Authenticator:
               allowed_users: &wur_users
-                - yuvipanda@gmail.com
-                - choldgraf@gmail.com
                 - chielvanheerwaarden@gmail.com
-                - georgiana.dolocan@gmail.com
               admin_users: *wur_users
   - name: peddie
     domain: peddie.pilot.2i2c.cloud
@@ -295,8 +283,6 @@ hubs:
           config:
             Authenticator:
               allowed_users: &peddie_users
-                - yuvipanda@gmail.com
-                - choldgraf@gmail.com
                 - georgiana.dolocan@gmail.com
                 - rbennett@peddie.org
                 - msawula@peddie.org
@@ -343,9 +329,6 @@ hubs:
             config:
               Authenticator:
                 allowed_users: &catalyst_users
-                  - choldgraf@gmail.com
-                  - yuvipanda@gmail.com
-                  - georgiana.dolocan@gmail.com
                   - zane.selvans@catalyst.coop
                   - cgosnell@catalyst.coop
                   - colliand@gmail.com
@@ -377,9 +360,6 @@ hubs:
           config:
             Authenticator:
               allowed_users: &earthlab_users
-                - yuvipanda
-                - choldgraf
-                - GeorgianaElena
                 - lwasser
               admin_users: *earthlab_users
   - name: paleohack2021
@@ -425,9 +405,6 @@ hubs:
           config:
             Authenticator:
               allowed_users: &paleohack_users
-                - yuvipanda
-                - choldgraf
-                - GeorgianaElena
                 - CommonClimate
                 - khider
                 - fzhu2e
@@ -464,12 +441,6 @@ hubs:
           config:
             Authenticator:
               allowed_users: &aup_users
-              - choldgraf
-              - consideRatio
-              - damianavila
-              - GeorgianaElena
-              - sgibson91
-              - yuvipanda
               - swalker
               - shaolintl
               admin_users: *aup_users

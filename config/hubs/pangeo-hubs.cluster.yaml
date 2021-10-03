@@ -66,10 +66,6 @@ hubs:
             config:
               Authenticator:
                 admin_users:
-                  - sgibson91
-                  - yuvipanda
-                  - damianavila
-                  - choldgraf
                   - rabernat
               JupyterHub:
                 authenticator_class: github

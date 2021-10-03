@@ -118,12 +118,9 @@ hubs:
             config:
               Authenticator:
                 allowed_users: &users
-                  - yuvipanda
                   - caitlinkroeger
                   - cgentemann
-                  - choldgraf
                   - DaisyShi19
-                  - GeorgianaElena
                   - jeffdorman
                   - marisolgr
                   - trondkr
