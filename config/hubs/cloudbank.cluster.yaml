@@ -222,9 +222,6 @@ hubs:
               # Everyone should be able to sign up, so we don't set allowed_users
               # These folks should still have admin tho
               admin_users:
-              - yuvipanda@gmail.com
-              - choldgraf@gmail.com
-              - georgiana.dolocan@gmail.com
               - ericvd@gmail.com
               - sean.smorris@berkeley.edu
         cull:
@@ -353,9 +350,6 @@ hubs:
           config:
             Authenticator:
               admin_users: &mills_admins
-                - yuvipanda@gmail.com
-                - choldgraf@gmail.com
-                - georgiana.dolocan@gmail.com
                 - aculich@berkeley.edu
                 - jpercy@berkeley.edu
                 - akonrad@mills.edu

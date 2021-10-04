@@ -187,9 +187,6 @@ hubs:
           config:
             Authenticator:
               admin_users:
-                - yuvipanda
-                - choldgraf
-                - GeorgianaElena
                 - donaldbraman
                 - JILPulvino
   - name: pfw
