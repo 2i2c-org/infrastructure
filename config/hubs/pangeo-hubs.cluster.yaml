@@ -65,13 +65,12 @@ hubs:
           hub:
             config:
               Authenticator:
-                allowed_users: &staging_users
+                admin_users:
                   - sgibson91
                   - yuvipanda
                   - damianavila
                   - choldgraf
                   - rabernat
-                admin_users: *staging_users
               JupyterHub:
                 authenticator_class: github
               GitHubOAuthenticator:
