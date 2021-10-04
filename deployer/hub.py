@@ -345,9 +345,9 @@ class Hub:
                 connection_name=self.spec['auth0']['connection'],
                 connection_config=self.spec['auth0'].get(self.spec['auth0']['connection'], {}),
             )
-            # FIXME: We're hardcoding Auth0OAuthenticator here
-            # We should *not*. We need dictionary merging in code, so
-            # these can all exist fine.
+            # NOTE: Some dictionary merging might make these lines prettier/more readable.
+            # Since Auth0 is enabled, we set the authenticator_class to the CustomOAuthenticator we define in the basehub chart
+            # https://github.com/2i2c-org/pilot-hubs/blob/master/hub-templates/basehub/values.yaml#L303-L318
             generated_config['jupyterhub']['hub']['config']['JupyterHub']['authenticator_class'] = 'CustomOAuthenticator'
             generated_config['jupyterhub']['hub']['config']['Auth0OAuthenticator'] = auth_provider.get_client_creds(client, self.spec['auth0']['connection'])
 
