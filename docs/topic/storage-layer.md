@@ -36,7 +36,7 @@ The NFS share creator job will be created pre-deploy, run, and cleaned up before
 
 ### Hub user mount
 
-For each hub, [a PersistentVolumeClaim(PVC) and a PersistentVolume(PV)](https://github.com/2i2c-org/pilot-hubs/blob/master/hub-templates/basehub/templates/nfs-pvc.yaml#L1) are created. This is the Kubernetes *Volume* that refers to the actual storage on the NFS server. The volume points to the hub directory created for the hub and user at `/export/home-01/homes/<hub-name>/<username>` (this name is dynamically determined as a combination of `nfs.pv.baseShareName` and the current release name). Z2jh then mounts the PVC on each user pod as a [volume named **home**](https://github.com/jupyterhub/zero-to-jupyterhub-k8s/blob/master/jupyterhub/files/hub/jupyterhub_config.py#L277).
+For each hub, [a PersistentVolumeClaim(PVC) and a PersistentVolume(PV)](https://github.com/2i2c-org/pilot-hubs/blob/master/hub-templates/basehub/templates/nfs.yaml) are created. This is the Kubernetes *Volume* that refers to the actual storage on the NFS server. The volume points to the hub directory created for the hub and user at `/export/home-01/homes/<hub-name>/<username>` (this name is dynamically determined as a combination of `nfs.pv.baseShareName` and the current release name). Z2jh then mounts the PVC on each user pod as a [volume named **home**](https://github.com/jupyterhub/zero-to-jupyterhub-k8s/blob/master/jupyterhub/files/hub/jupyterhub_config.py#L277).
 
 Parts of the *home* volume are mounted in different places for the users:
    * [user home directories](https://github.com/2i2c-org/pilot-hubs/blob/master/hub-templates/basehub/values.yaml#L100)
