@@ -298,6 +298,7 @@ jupyterhub:
         c.JupyterHub.spawner_class = CustomSpawner
 
       06-custom-authenticator: |
+        from z2jh import get_config
         from oauthenticator.auth0 import Auth0OAuthenticator
 
         staff_names_googleohw = [
@@ -329,23 +330,26 @@ jupyterhub:
               resp['name'] = resp['name'].split('|')[-1]
             return resp
 
-        c.JupyterHub.authenticator_class = CustomOAuthenticator
+        authenticator_class = get_config('hub.config.JupyterHub.authenticator_class')
 
-        # TODO: based on what's decided in https://github.com/2i2c-org/pilot-hubs/pull/706,
-        # this logic should move in `hub.py`.
-        admin_users = get_config('hub.config.Authenticator.admin_users')
-        allowed_users = get_config('hub.config.Authenticator.allowed_users')
+        if "Auth0" in authenticator_class:
+          c.JupyterHub.authenticator_class = CustomOAuthenticator
 
-        # FIXME we should find/create a way to check `auth0.connection` here
-        if "@" in admin_users[0]:
-          admin_users += staff_names_google
-          allowed_users += staff_names_google
-        else:
-          admin_users += staff_names_github
-          allowed_users += staff_names_github
+          admin_users = get_config('hub.config.Authenticator.admin_users')
+          allowed_users = get_config('hub.config.Authenticator.allowed_users')
 
-        c.Authenticator.admin_users = admin_users
-        c.Authenticator.allowed_users = allowed_users
+          # FIXME we should find/create a way to check `auth0.connection` here
+          if "@" in admin_users[0]:
+            admin_users += staff_names_google
+            if allowed_users:
+              allowed_users += staff_names_google
+          else:
+            admin_users += staff_names_github
+            if allowed_users:
+              allowed_users += staff_names_github
+
+          c.Authenticator.admin_users = admin_users
+          c.Authenticator.allowed_users = allowed_users
 
       07-cloud-storage-bucket: |
         from z2jh import get_config
