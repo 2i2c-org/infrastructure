@@ -14,8 +14,7 @@ def docs(session):
     install_deps(session)
     session.run("sphinx-build", *BUILD_COMMAND)
 
-@nox.session(venv_backend='conda')
-@nox.session
+@nox.session(name="docs-live", venv_backend='conda')
 def docs_live(session):
     install_deps(session)
 

@@ -31,7 +31,7 @@ This should create a local environment in a `.nox` folder, build the documentati
 To build live documentation that updates when you update local files, run the following command:
 
 ```console
-$ nox -s docs_live
+$ nox -s docs-live
 ```
 
 ### Manually with `conda`
