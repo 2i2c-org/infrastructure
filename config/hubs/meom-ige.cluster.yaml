@@ -54,7 +54,7 @@ hubs:
                 description: "~2 CPU, ~8G RAM"
                 kubespawner_override:
                   mem_limit: 8G
-                  mem_guarantee: 5.5G
+                  mem_guarantee: 5G
                   node_selector:
                     node.kubernetes.io/instance-type: n1-standard-2
               - display_name: "Medium"
@@ -68,21 +68,21 @@ hubs:
                 description: "~16 CPU, ~64G RAM"
                 kubespawner_override:
                   mem_limit: 64G
-                  mem_guarantee: 55G
+                  mem_guarantee: 50G
                   node_selector:
                     node.kubernetes.io/instance-type: n1-standard-16
               - display_name: "Very Large"
                 description: "~32 CPU, ~128G RAM"
                 kubespawner_override:
                   mem_limit: 128G
-                  mem_guarantee: 115G
+                  mem_guarantee: 110G
                   node_selector:
                     node.kubernetes.io/instance-type: n1-standard-32
               - display_name: "Huge"
                 description: "~64 CPU, ~256G RAM"
                 kubespawner_override:
                   mem_limit: 256G
-                  mem_guarantee: 230G
+                  mem_guarantee: 220G
                   node_selector:
                     node.kubernetes.io/instance-type: n1-standard-64
             defaultUrl: /lab
