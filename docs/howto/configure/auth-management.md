@@ -112,6 +112,13 @@ Presently, this involves a few more manual steps than the `auth0` setup describe
 3. **Edit the non-secret config under `config/hubs`.**
    You should make sure the matching hub config takes one of the following forms.
 
+   ```{admonition} Removing allowed users
+   When using this method of authentication, make sure to remove the `allowed_users` block from the config.
+   This is because this block will block any user not listed under it **even if** they are valid members of the the organisation or team you are authenticating against.
+
+   You should keep the `admin_users` block, however.
+   ```
+
    To authenticate against a GitHub organisation:
 
     ```yaml
