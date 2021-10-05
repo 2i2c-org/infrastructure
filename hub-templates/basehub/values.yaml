@@ -298,6 +298,7 @@ jupyterhub:
         c.JupyterHub.spawner_class = CustomSpawner
 
       06-custom-authenticator: |
+        from z2jh import get_config
         from oauthenticator.auth0 import Auth0OAuthenticator
 
         class CustomOAuthenticator(Auth0OAuthenticator):
@@ -313,6 +314,11 @@ jupyterhub:
               # needed. This method is simpler
               resp['name'] = resp['name'].split('|')[-1]
             return resp
+
+        authenticator_class = get_config('hub.config.JupyterHub.authenticator_class')
+
+        if "Auth0" in authenticator_class:
+          c.JupyterHub.authenticator_class = CustomOAuthenticator
 
       07-cloud-storage-bucket: |
         from z2jh import get_config
