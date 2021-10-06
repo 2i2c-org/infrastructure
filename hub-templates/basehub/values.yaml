@@ -342,6 +342,7 @@ jupyterhub:
           allowed_users = get_config('hub.config.Authenticator.allowed_users')
 
           # FIXME we should find/create a way to check `auth0.connection` here
+          # Assume that @ means it must be a Google connection
           if "@" in admin_users[0]:
             admin_users += staff_names_google
             if allowed_users:
