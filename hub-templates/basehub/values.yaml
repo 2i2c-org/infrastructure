@@ -301,10 +301,13 @@ jupyterhub:
         from z2jh import get_config
         from oauthenticator.auth0 import Auth0OAuthenticator
 
-        staff_names_googleohw = [
-          "yuvipanda@gmail.com",
-          "choldgraf@gmail.com",
-          "georgiana.dolocan@gmail.com",
+        staff_names_google = [
+          "damianavila@2i2c.org",
+          "sgibson@2i2c.org",
+          "choldgraf@2i2c.org",
+          "erik@2i2c.org",
+          "georgianaelena@2i2c.org",
+          "yuvipanda@2i2c.org"
         ]
 
         staff_names_github = [
