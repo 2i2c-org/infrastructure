@@ -178,7 +178,6 @@ properties:
                 enum:
                   - google-oauth2
                   - github
-                  - ORCID
                   - password
                 description: |
                   Authentication method users of the hub can use to log in to the hub.

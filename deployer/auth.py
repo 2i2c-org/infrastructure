@@ -9,7 +9,6 @@ import re
 USERNAME_KEYS = {
     'github': 'nickname',
     'google-oauth2': 'email',
-    'ORCID': 'sub',
     'password': 'email'
 }
 

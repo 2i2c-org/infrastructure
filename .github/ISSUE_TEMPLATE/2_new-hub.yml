@@ -106,7 +106,7 @@ body:
       options:
         - GitHub Authentication (e.g., @mygithubhandle)
         - Google OAuth (e.g., myemailaddress@2i2c.org)
-        - ORCID
+        - Username / Password via [auth0](https://auth0.com/docs/connections/database)
         - Other (may not be possible, please specify in comments)
     validations:
       required: true
