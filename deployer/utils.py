@@ -68,5 +68,9 @@ def clean_authenticator_config(config):
 
     # Flatten authenticated user list since YAML references don't extend, they append
     authenticator = config.get("jupyterhub", {}).get("hub", {}).get("config", {}).get("Authenticator", {})
-    authenticator["allowed_users"] = flatten_list(authenticator["allowed_users"])
+
+    # `allowed_users` doesn't exist for hubs where all users are allowed
+    if authenticator.get("allowed_users", None):
+        authenticator["allowed_users"] = flatten_list(authenticator["allowed_users"])
+
     authenticator["admin_users"] = flatten_list(authenticator["admin_users"])
