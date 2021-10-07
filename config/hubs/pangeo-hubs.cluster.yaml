@@ -81,6 +81,34 @@ hubs:
                 scope:
                   - read:org
           singleuser:
+            networkPolicy:
+              egress:
+                # Needed to talk to metadata server.
+                # see https://github.com/2i2c-org/pilot-hubs/issues/280
+                - to:
+                    - ipBlock:
+                        cidr: 127.0.0.1/32
+                  ports:
+                    - port: 988
+                      protocol: TCP
+                # Needed for talking to the proxy pod
+                - ports:
+                    - port: 8000
+                      protocol: TCP
+                - ports:
+                    - port: 80
+                      protocol: TCP
+                - ports:
+                    - port: 443
+                      protocol: TCP
+                # Enable outgoing ssh by default on these hubs
+                - ports:
+                    - port: 22
+                      protocol: TCP
+                # Allow FTP access for hub
+                - ports:
+                    - port: 21
+                      protocol: TCP
             image:
               name: pangeo/pangeo-notebook
               tag: bcfacc5
