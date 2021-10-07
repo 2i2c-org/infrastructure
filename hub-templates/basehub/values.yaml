@@ -297,64 +297,6 @@ jupyterhub:
 
         c.JupyterHub.spawner_class = CustomSpawner
 
-      06-custom-authenticator: |
-        from z2jh import get_config
-        from oauthenticator.auth0 import Auth0OAuthenticator
-
-        staff_names_google = [
-          "damianavila@2i2c.org",
-          "sgibson@2i2c.org",
-          "choldgraf@2i2c.org",
-          "erik@2i2c.org",
-          "georgianaelena@2i2c.org",
-          "yuvipanda@2i2c.org"
-        ]
-
-        staff_names_github = [
-          "yuvipanda",
-          "choldgraf",
-          "GeorgianaElena",
-          "consideRatio",
-          "damianavila",
-          "sgibson91",
-        ]
-
-        class CustomOAuthenticator(Auth0OAuthenticator):
-          async def authenticate(self, *args, **kwargs):
-            resp = await super().authenticate(*args, **kwargs)
-            if self.username_key == 'sub':
-              # auth0 returns 'sub' in the form of <provider>|<id>. For our
-              # friendly names, we just want <id>, since we don't support multiple
-              # authentication methods in the same hub
-              # This could've been a lambda set to username_key,
-              # but we would need to know which authentication mechanism
-              # auth0 is sending us, so we can use sub / email / nick as
-              # needed. This method is simpler
-              resp['name'] = resp['name'].split('|')[-1]
-            return resp
-
-        authenticator_class = get_config('hub.config.JupyterHub.authenticator_class')
-
-        if "Auth0" in authenticator_class:
-          c.JupyterHub.authenticator_class = CustomOAuthenticator
-
-          admin_users = get_config('hub.config.Authenticator.admin_users')
-          allowed_users = get_config('hub.config.Authenticator.allowed_users')
-
-          # FIXME we should find/create a way to check `auth0.connection` here
-          # Assume that @ means it must be a Google connection
-          if "@" in admin_users[0]:
-            admin_users += staff_names_google
-            if allowed_users:
-              allowed_users += staff_names_google
-          else:
-            admin_users += staff_names_github
-            if allowed_users:
-              allowed_users += staff_names_github
-
-          c.Authenticator.admin_users = admin_users
-          c.Authenticator.allowed_users = allowed_users
-
       07-cloud-storage-bucket: |
         from z2jh import get_config
         cloud_resources = get_config('custom.cloudResources')
