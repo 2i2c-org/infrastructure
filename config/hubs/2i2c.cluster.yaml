@@ -104,6 +104,7 @@ hubs:
             config:
               Authenticator:
                 allowed_users: &dask_staging_users
+                  - *staff_google_ids
                   - colliand@gmail.com
                 admin_users: *dask_staging_users
   - name: ohw
@@ -174,6 +175,7 @@ hubs:
             config:
               Authenticator:
                 allowed_users: &ohw_users
+                  - *staff_github_ids
                   - ocefpaf
                 admin_users: *ohw_users
   - name: justiceinnovationlab
@@ -232,6 +234,7 @@ hubs:
           config:
             Authenticator:
               allowed_users: &pfw_users
+                - *staff_github_ids
                 - colliand
                 - alessandromariaselvitella
                 - fosterk86
@@ -267,6 +270,7 @@ hubs:
           config:
             Authenticator:
               allowed_users: &wur_users
+                - *staff_google_ids
                 - chielvanheerwaarden@gmail.com
               admin_users: *wur_users
   - name: peddie
@@ -296,7 +300,7 @@ hubs:
           config:
             Authenticator:
               allowed_users: &peddie_users
-                - georgiana.dolocan@gmail.com
+                - *staff_google_ids
                 - rbennett@peddie.org
                 - msawula@peddie.org
                 - ericvd@berkeley.edu
@@ -342,6 +346,7 @@ hubs:
             config:
               Authenticator:
                 allowed_users: &catalyst_users
+                  - *staff_google_ids
                   - zane.selvans@catalyst.coop
                   - cgosnell@catalyst.coop
                   - colliand@gmail.com
@@ -373,6 +378,7 @@ hubs:
           config:
             Authenticator:
               allowed_users: &earthlab_users
+                - *staff_github_ids
                 - lwasser
               admin_users: *earthlab_users
   - name: paleohack2021
@@ -418,6 +424,7 @@ hubs:
           config:
             Authenticator:
               allowed_users: &paleohack_users
+                - *staff_github_ids
                 - CommonClimate
                 - khider
                 - fzhu2e
@@ -454,6 +461,7 @@ hubs:
           config:
             Authenticator:
               allowed_users: &aup_users
+              - *staff_github_ids
               - swalker
               - shaolintl
               admin_users: *aup_users
