@@ -374,6 +374,7 @@ hubs:
           config:
             Authenticator:
               admin_users: &mills_admins
+                - *staff_google_ids
                 - aculich@berkeley.edu
                 - jpercy@berkeley.edu
                 - akonrad@mills.edu

@@ -81,6 +81,7 @@ hubs:
             config:
               Authenticator:
                 admin_users:
+                  - *staff_github_ids
                   - rabernat
               JupyterHub:
                 authenticator_class: github
