@@ -55,6 +55,7 @@ basehub:
 
     hub:
       networkPolicy:
+        # FIXME: Enable this when dask-gateway chart v0.9.1 or higher is used
         enabled: false
       extraConfig:
         daskhub-01-add-dask-gateway-values: |
