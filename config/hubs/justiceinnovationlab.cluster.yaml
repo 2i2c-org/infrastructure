@@ -2,6 +2,14 @@ name: justiceinnovationlab
 provider: kubeconfig
 kubeconfig:
   file: secrets/justiceinnovationlab.yaml
+staff:
+  githubIds: &staff_github_ids
+    - choldgraf
+    - consideRatio
+    - damianavila
+    - GeorgianaElena
+    - sgibson91
+    - yuvipanda
 hubs:
   - name: staging
     domain: staging.justiceinnovationlab.2i2c.cloud
@@ -96,6 +104,7 @@ hubs:
               Authenticator:
                 # Only allow admin users + users added via the UI
                 admin_users: &users
+                  - *staff_github_ids
                   - donaldbraman
                   - JILPulvino
                 allowed_users: *users

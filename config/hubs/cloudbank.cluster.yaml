@@ -16,6 +16,21 @@ support:
           - secretName: grafana-tls
             hosts:
               - grafana.cloudbank.2i2c.cloud
+staff:
+  githubIds: &staff_github_ids
+    - choldgraf
+    - consideRatio
+    - damianavila
+    - GeorgianaElena
+    - sgibson91
+    - yuvipanda
+  googleOauthIds: &staff_google_ids
+    - choldgraf@2i2c.org
+    - erik@2i2c.org
+    - damianavila@2i2c.org
+    - georgianaelena@2i2c.org
+    - sgibson@2i2c.org
+    - yuvipanda@2i2c.org
 hubs:
   - name: spelman
     domain: spelman.cloudbank.2i2c.cloud
@@ -44,6 +59,7 @@ hubs:
           config:
             Authenticator:
               allowed_users: &spelman_users
+                - *staff_google_ids
                 - colliand@gmail.com
                 - ericvd@gmail.com
                 - sean.smorris@berkeley.edu
@@ -76,6 +92,7 @@ hubs:
           config:
             Authenticator:
               allowed_users: &ccsf_users
+                - *staff_google_ids
                 - ericvd@gmail.com
                 - sean.smorris@berkeley.edu
                 - shawn.wiggins@mail.ccsf.edu
@@ -114,6 +131,7 @@ hubs:
           config:
             Authenticator:
               allowed_users: &elcamino_users
+                - *staff_google_ids
                 - ericvd@gmail.com
                 - sean.smorris@berkeley.edu
                 - solomonrussell@gmail.com
@@ -145,6 +163,7 @@ hubs:
           config:
             Authenticator:
               allowed_users: &howard_users
+                - *staff_google_ids
                 - ericvd@berkeley.edu
                 - gwashington@scs.howard.edu
                 - anthony.fgordon64@gmail.com
@@ -177,6 +196,7 @@ hubs:
           config:
             Authenticator:
               allowed_users: &skyline_users
+                - *staff_google_ids
                 - ericvd@gmail.com
                 - sean.smorris@berkeley.edu
                 - dhum1@my.smccd.edu
@@ -222,6 +242,7 @@ hubs:
               # Everyone should be able to sign up, so we don't set allowed_users
               # These folks should still have admin tho
               admin_users:
+              - *staff_google_ids
               - ericvd@gmail.com
               - sean.smorris@berkeley.edu
         cull:
@@ -257,6 +278,7 @@ hubs:
           config:
             Authenticator:
               allowed_users: &lassen_users
+                - *staff_google_ids
                 - ericvd@gmail.com
                 - sean.smorris@berkeley.edu
                 - camacho@lassencollege.edu
@@ -288,6 +310,7 @@ hubs:
           config:
             Authenticator:
               allowed_users: &clovis_users
+                - *staff_google_ids
                 - ericvd@gmail.com
                 - sean.smorris@berkeley.edu
                 - william.kerney@cloviscollege.edu
@@ -319,6 +342,7 @@ hubs:
           config:
             Authenticator:
               allowed_users: &sbcc_users
+                - *staff_google_ids
                 - ericvd@gmail.com
                 - sean.smorris@berkeley.edu
                 - nfguebels@pipeline.sbcc.edu
@@ -382,6 +406,7 @@ hubs:
           config:
             Authenticator:
               allowed_users: &palomar_users
+                - *staff_google_ids
                 - aculich@berkeley.edu
                 - sean.smorris@berkeley.edu
                 - tcanon@palomar.edu
@@ -414,6 +439,7 @@ hubs:
           config:
             Authenticator:
               allowed_users: &sjcc_users
+                - *staff_google_ids
                 - aculich@berkeley.edu
                 - sean.smorris@berkeley.edu
                 - christiaan.desmond@sjcc.edu
@@ -446,6 +472,7 @@ hubs:
           config:
             Authenticator:
               allowed_users: &avc_users
+                - *staff_google_ids
                 - aculich@berkeley.edu
                 - sean.smorris@berkeley.edu
                 - rbiritwum@avc.edu
