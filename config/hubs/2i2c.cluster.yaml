@@ -52,6 +52,7 @@ hubs:
                 - colliand@gmail.com
                 - choldgraf@gmail.com
                 - georgiana.dolocan@gmail.com
+                - sgibson@2i2c.org
               admin_users: *staging_users
   - name: dask-staging
     domain: dask-staging.pilot.2i2c.cloud
