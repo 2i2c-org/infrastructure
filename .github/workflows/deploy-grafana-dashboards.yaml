@@ -1,0 +1,45 @@
+name: Deploy grafana dashboards
+
+on: workflow_dispatch
+
+jobs:
+  deploy_grafana:
+    runs-on: ubuntu-20.04
+    strategy:
+      # Don't stop other deployments if one fails
+      fail-fast: false
+      matrix:
+        include:
+          # To enable auto-deployments of grafana dashboards
+          # for other clusters add its name and, a GitHub
+          # secret for it and save its token to `grafana_token`
+          - cluster_name: 2i2c
+            grafana_token: secrets.GRAFANA_TOKEN
+          - cluster_name: cloudbank
+            grafana_token: secrets.GRAFANA_CLOUDBANK_TOKEN
+          - cluster_name: carbonplan
+            grafana_token: secrets.GRAFANA_CARBONPLAN_TOKEN
+          - cluster_name: farallon
+            grafana_token: secrets.GRAFANA_FARALLON_TOKEN
+          - cluster_name: openscapes
+            grafana_token: secrets.GRAFANA_OPENSCAPES_TOKEN
+          - cluster_name: meom-ige
+            grafana_token: secrets.GRAFANA_MEOM_TOKEN
+          - cluster_name: pangeo-181919
+            grafana_token: secrets.GRAFANA_PANGEO_TOKEN
+          - cluster_name: pangeo-hubs
+            grafana_token: secrets.GRAFANA_PANGEO_HUBS_TOKEN
+    steps:
+      - name: Checkout jupyterhub/grafana-dashboards repo
+        uses: actions/checkout@v2
+        with:
+          name: jupyterhub/grafana-dashboards
+          path: ./grafana-dashboards
+      - name: Deploy grafana to ${{ matrix.cluster_name }} cluster
+        env:
+          GRAFANA_TOKEN: ${{ secrets.[matrix.grafana_token] }}
+        run: |
+          cd grafana-dashboards
+          ./deploy.py grafana.${{ matrix/cluster_name }}.2i2c.cloud
+
+
