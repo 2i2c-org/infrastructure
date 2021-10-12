@@ -16,21 +16,6 @@ support:
           - secretName: grafana-tls
             hosts:
               - grafana.pilot.2i2c.cloud
-staff:
-  githubIds: &staff_github_ids
-    - choldgraf
-    - consideRatio
-    - damianavila
-    - GeorgianaElena
-    - sgibson91
-    - yuvipanda
-  googleOauthIds: &staff_google_ids
-    - choldgraf@2i2c.org
-    - erik@2i2c.org
-    - damianavila@2i2c.org
-    - georgianaelena@2i2c.org
-    - sgibson@2i2c.org
-    - yuvipanda@2i2c.org
 hubs:
   - name: staging
     domain: staging.pilot.2i2c.cloud
@@ -63,7 +48,9 @@ hubs:
           config:
             Authenticator:
               allowed_users: &staging_users
-                - *staff_google_ids
+                # this will be replaced with the actual list of
+                # staff google ids by the deployer script
+                - staff_google_ids
                 - colliand@gmail.com
               admin_users: *staging_users
   - name: dask-staging
@@ -104,7 +91,7 @@ hubs:
             config:
               Authenticator:
                 allowed_users: &dask_staging_users
-                  - *staff_google_ids
+                  - staff_google_ids
                   - colliand@gmail.com
                 admin_users: *dask_staging_users
   - name: ohw
@@ -175,7 +162,7 @@ hubs:
             config:
               Authenticator:
                 allowed_users: &ohw_users
-                  - *staff_github_ids
+                  - staff_github_ids
                   - ocefpaf
                 admin_users: *ohw_users
   - name: justiceinnovationlab
@@ -205,7 +192,7 @@ hubs:
           config:
             Authenticator:
               admin_users:
-                - *staff_github_ids
+                - staff_github_ids
                 - donaldbraman
                 - JILPulvino
   - name: pfw
@@ -235,7 +222,7 @@ hubs:
           config:
             Authenticator:
               allowed_users: &pfw_users
-                - *staff_github_ids
+                - staff_github_ids
                 - colliand
                 - alessandromariaselvitella
                 - fosterk86
@@ -271,7 +258,7 @@ hubs:
           config:
             Authenticator:
               allowed_users: &wur_users
-                - *staff_google_ids
+                - staff_google_ids
                 - chielvanheerwaarden@gmail.com
               admin_users: *wur_users
   - name: peddie
@@ -301,7 +288,7 @@ hubs:
           config:
             Authenticator:
               allowed_users: &peddie_users
-                - *staff_google_ids
+                - staff_google_ids
                 - rbennett@peddie.org
                 - msawula@peddie.org
                 - ericvd@berkeley.edu
@@ -347,7 +334,7 @@ hubs:
             config:
               Authenticator:
                 allowed_users: &catalyst_users
-                  - *staff_google_ids
+                  - staff_google_ids
                   - zane.selvans@catalyst.coop
                   - cgosnell@catalyst.coop
                   - colliand@gmail.com
@@ -379,7 +366,7 @@ hubs:
           config:
             Authenticator:
               allowed_users: &earthlab_users
-                - *staff_github_ids
+                - staff_github_ids
                 - lwasser
               admin_users: *earthlab_users
   - name: paleohack2021
@@ -425,7 +412,7 @@ hubs:
           config:
             Authenticator:
               allowed_users: &paleohack_users
-                - *staff_github_ids
+                - staff_github_ids
                 - CommonClimate
                 - khider
                 - fzhu2e
@@ -462,7 +449,7 @@ hubs:
           config:
             Authenticator:
               allowed_users: &aup_users
-              - *staff_github_ids
+              - staff_github_ids
               - swalker
               - shaolintl
               admin_users: *aup_users
