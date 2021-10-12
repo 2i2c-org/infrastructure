@@ -48,29 +48,35 @@ def decrypt_file(encrypted_path):
         ])
         yield f.name
 
-def flatten_list(inputlist):
+def add_staff(staff, user_list):
     """
-    Flatten a list of strings and lists into a flat list of strings.
-    This will only work 1-level deep.
+    Add the staff ids to the existing user list
     """
-    if isinstance(inputlist, str):
-        inputlist = [inputlist]
-    out = []
-    for ii in inputlist:
-        if isinstance(ii, str):
-            out.append(ii)
-        else:
-            out.extend(ii)
-    return out
+    if isinstance(user_list, str):
+        user_list = [user_list]
+
+    staff_list = []
+
+    if "staff_google_ids" in user_list:
+        user_list = user_list.remove("staff_google_ids")
+        staff_list =  staff["googleIds"]
+    elif "staff_github_ids" in user_list:
+        user_list = user_list.remove("staff_github_ids")
+        staff_list =  staff["githubIds"]
+
+    return user_list + staff_list
 
 def clean_authenticator_config(config):
     """Prepare a hub's configuration file for deployment."""
+    # Load the staff config file
+    with open('config/hubs/staff.yaml') as f:
+        staff = yaml.load(f)
 
     # Flatten authenticated user list since YAML references don't extend, they append
     authenticator = config.get("jupyterhub", {}).get("hub", {}).get("config", {}).get("Authenticator", {})
 
-    # `allowed_users` doesn't exist for hubs where all users are allowed
+    # `Allowed_users` list doesn't exist for hubs where everyone is allowed to login
     if authenticator.get("allowed_users", None):
-        authenticator["allowed_users"] = flatten_list(authenticator["allowed_users"])
+        authenticator["allowed_users"] = add_staff(staff["staff"], authenticator["allowed_users"])
 
-    authenticator["admin_users"] = flatten_list(authenticator["admin_users"])
+    authenticator["admin_users"] = add_staff(staff["staff"], authenticator["admin_users"])
