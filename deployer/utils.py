@@ -57,13 +57,11 @@ def add_staff(staff, user_list):
 
     staff_list = []
 
-    if "staff_google_ids" in user_list:
-        user_list = user_list.remove("staff_google_ids")
-        staff_list =  staff["googleIds"]
-    elif "staff_github_ids" in user_list:
-        user_list = user_list.remove("staff_github_ids")
-        staff_list =  staff["githubIds"]
-
+    for staff_list_type, staff_ids in staff.items():
+        if staff_list_type in user_list:
+            user_list = user_list.remove(staff_list_type)
+            staff_list = staff_ids
+            break
     return user_list + staff_list
 
 def clean_authenticator_config(config):
