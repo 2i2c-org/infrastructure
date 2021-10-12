@@ -118,7 +118,7 @@ hubs:
             config:
               Authenticator:
                 allowed_users: &users
-                  - staff_github_ids
+                  - <staff_github_ids>
                   - caitlinkroeger
                   - cgentemann
                   - DaisyShi19

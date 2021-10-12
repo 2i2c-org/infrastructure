@@ -135,7 +135,7 @@ hubs:
             config:
               Authenticator:
                 admin_users:
-                  - staff_github_ids
+                  - <staff_github_ids>
                   - amfriesz
                   - jules32
       dask-gateway:

@@ -96,7 +96,7 @@ hubs:
               Authenticator:
                 # Only allow admin users + users added via the UI
                 admin_users: &users
-                  - staff_github_ids
+                  - <staff_github_ids>
                   - donaldbraman
                   - JILPulvino
                 allowed_users: *users

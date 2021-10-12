@@ -49,7 +49,7 @@ hubs:
             config:
               Authenticator:
                 allowed_users: &coessing_users
-                  - staff_google_ids
+                  - <staff_google_ids>
                   - paigemar@umich.edu
                   - drsarahlgibson@gmail.com
                 admin_users: *coessing_users
