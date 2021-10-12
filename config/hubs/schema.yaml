@@ -119,24 +119,6 @@ properties:
     then:
       required:
         - stateStore
-  staff:
-    type: object
-    additionalProperties: false
-    description: |
-      List of different login providers staff ids
-    properties:
-      githubIds:
-        type: array
-        description: |
-            List of staff GitHub handles
-        items:
-          type: string
-      googleOauthIds:
-        type: array
-        description: |
-            List of staff Google accounts
-        items:
-          type: string
   hubs:
     type: array
     description: |
