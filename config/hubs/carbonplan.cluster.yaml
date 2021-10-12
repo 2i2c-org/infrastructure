@@ -29,21 +29,6 @@ support:
           - secretName: grafana-tls
             hosts:
               - grafana.carbonplan.2i2c.cloud
-staff:
-  githubIds: &staff_github_ids
-    - choldgraf
-    - consideRatio
-    - damianavila
-    - GeorgianaElena
-    - sgibson91
-    - yuvipanda
-  googleOauthIds: &staff_google_ids
-    - choldgraf@2i2c.org
-    - erik@2i2c.org
-    - damianavila@2i2c.org
-    - georgianaelena@2i2c.org
-    - sgibson@2i2c.org
-    - yuvipanda@2i2c.org
 hubs:
   - name: staging
     domain: staging.carbonplan.2i2c.cloud
@@ -178,7 +163,7 @@ hubs:
             config:
               Authenticator:
                 allowed_users: &users
-                  - *staff_github_ids
+                  - staff_github_ids
                   - jhamman
                 admin_users: *users
 
