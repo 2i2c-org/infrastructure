@@ -50,7 +50,7 @@ hubs:
               allowed_users: &staging_users
                 # this will be replaced with the actual list of
                 # staff google ids by the deployer script
-                - staff_google_ids
+                - <staff_google_ids>
                 - colliand@gmail.com
               admin_users: *staging_users
   - name: dask-staging
