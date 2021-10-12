@@ -63,7 +63,7 @@ def add_staff(staff, user_list):
 
             return custom_users + staff_ids
 
-def clean_authenticator_config(config):
+def update_authenticator_config(config):
     """Prepare a hub's configuration file for deployment."""
     # Load the staff config file
     with open('config/hubs/staff.yaml') as f:
