@@ -63,7 +63,7 @@ To deploy a new hub, follow these steps:
 9. Send a link to the hub's Community Representative(s) so they can confirm that it works from their perspective as well.
 
 :::{note}
-If you need to deploy a new hub in a AWS cluster, there are some minor additional steps described on this [section](new-hub:aws).
+There are some minor additional steps if you need to [deploy a new hub in a AWS cluster](new-hub:aws).
 :::
 
 ## Automated vs. manual deploys
@@ -71,9 +71,7 @@ If you need to deploy a new hub in a AWS cluster, there are some minor additiona
 Some of our infrastructure automatically deploys and updates hubs via GitHub Workflows, while others require manual deploys.
 This is changing over time as we automate more things, and is dependent on the cloud provider.
 
-[](operate:ci-cd)
-
-You will find more information about our automation in [](operate:ci-cd)
+More details about our AWS CI/CD automation lives in [](operate:setup-ci-cd-aws).
 
 ## Deploying hubs manually
 
@@ -85,3 +83,10 @@ The following sections cover how to deploy in these situations:
 
 * [General manual deployment process](operate:manual-deploy)
 * Some [AWS specific manual steps](new-hub:aws) at the time to deploy a new hub for first time
+
+:::{note}
+You should try to avoid a manual deployments.
+They increase the likelihood of confusion, bottlenecks of information, inconsistent
+states and discrepancies between what is already deployed vs. the codebase, among other
+things.
+:::

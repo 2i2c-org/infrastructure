@@ -1,23 +1,23 @@
 # Add a new hub in a AWS kops-based cluster
 
-The idea behind this guide is showcase the process of setting up a 
-[kops](https://kops.sigs.k8s.io/getting_started/aws/)-based AWS
-cluster and manually deploy a new hub on top of it using our deployer tool.
-This is a preliminary but fully functional and manual process. Once
-[#381](https://github.com/2i2c-org/pilot-hubs/issues/381) is resolved, we should be able
-to automate the hub deployment process as we currently do with the GKE-based hubs.
+The idea behind this guide is to showcase the process of setting up a 
+[kops](https://kops.sigs.k8s.io/getting_started/aws/)-based AWS cluster and manually
+deploy a new hub on top of it using our deployer tool.
+This is a preliminary but fully functional and manual process. Eventually, we should be
+able to automate the hub deployment process as we currently do with the GKE-based hubs.
 
 ```{note}
-We will continue working toward a definitive one once we figured out some of the
-discussions outlined in [#431](https://github.com/2i2c-org/pilot-hubs/issues/431).
+We are currently deploying `kops` and `EKS` clusters. Some of the discussions about
+which tool we should bless are outlined in [#431](https://github.com/2i2c-org/pilot-hubs/issues/431).
 ```
 
-## Create an AWS kops-based cluster
+## Create an AWS kops-based cluster (optional)
 
-Follow the instructions in [](new-cluster:aws).
+Follow the instructions in [](new-cluster:aws) if you are not deploying against an
+existing cluster.
 
 (new-hub:aws)=
-## Deploy the new hub
+## Deploy the new AWS hub
 
 Follow the steps outlined in [](new-hub:deploy) with the following modifications:
 
@@ -52,9 +52,13 @@ Follow the steps outlined in [](new-hub:deploy) with the following modifications
    To perform the above command successfully, you will need to get the kubernetes context.
    If you are working with a EKS cluster, you can get the kubeconfig with (modulo you get
    the credential properly configured):
+     ```bash
      aws eks update-kubeconfig --name=<NAME_OF_THE_CLUSTER> --region=<REGION>
+     ```
    if you are working with a kops cluster, you can get it with:
+     ```bash
      kops export kubecfg --admin --name <NAME_OF_THE_CLUSTER>.k8s.local --state s3://2i2c-<NAME_OF_THE_CLUSTER>-kops-state
+     ```
    ```
 
    Create a CNAME record for `staging.foo.2i2c.cloud` and point it to the AWS external IP.

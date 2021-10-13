@@ -14,9 +14,9 @@ new-cluster/index.md
 k8s/index.md
 delete-hub.md
 manual-deploy.md
-ci-cd.md
 grafana.md
 move-hub.md
 manual-nfs-setup.md
+setup-ci-cd-aws.md
 setup-new-project.md
 ```
