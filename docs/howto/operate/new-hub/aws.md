@@ -48,7 +48,6 @@ Follow the steps outlined in [](new-hub:deploy) with the following modifications
    kubectl -n staging get svc proxy-public
    ```
 
-   ```{note}
    To perform the above command successfully, you will need to get the kubernetes context.
    If you are working with a EKS cluster, you can get the kubeconfig with (modulo you get
    the credential properly configured):
@@ -59,7 +58,6 @@ Follow the steps outlined in [](new-hub:deploy) with the following modifications
      ```bash
      kops export kubecfg --admin --name <NAME_OF_THE_CLUSTER>.k8s.local --state s3://2i2c-<NAME_OF_THE_CLUSTER>-kops-state
      ```
-   ```
 
    Create a CNAME record for `staging.foo.2i2c.cloud` and point it to the AWS external IP.
 
