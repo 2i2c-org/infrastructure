@@ -300,8 +300,7 @@ jupyterhub:
 
 
         c.JupyterHub.spawner_class = CustomSpawner
-
-      07-cloud-storage-bucket: |
+      06-cloud-storage-bucket: |
         from z2jh import get_config
         cloud_resources = get_config('custom.cloudResources')
         scratch_bucket = cloud_resources['scratchBucket']
