@@ -185,6 +185,49 @@ nodeGroups:
       k8s.io/cluster-autoscaler/node-template/taint/hub.jupyter.org_dedicated: user:NoSchedule
     iam: *user-iam
 
+  # High memory nodes.
+  #
+  # The local SSD storage available on these high memory nodes is not exposed by
+  # default in some easy way but is rather quite tricky to make use of in k8s.
+  # To make that happen, one needs to have a daemonset installed to prepare the
+  # nodes that has local storage to make it exposed.
+  #
+  # A discussion on how this is done is made in
+  # https://github.com/pangeo-data/jupyter-earth/issues/88.
+  #
+  # To figure out what availability zones we could use, I used the command below
+  # and took the union of that output with the zones of the EKS control plane
+  # configured in the root level of this config. I'm not sure if I could use
+  # nodes in other availability zones.
+  #
+  #   aws ec2 describe-instance-type-offerings \
+  #     --region us-west-2 \
+  #     --filter Name=instance-type,Values=x1.16xlarge \
+  #     --location-type=availability-zone
+  #
+  # 233 pods, 64 cpu, 976 GB, 1,920 GB local SSD storage, (Intel, 10 GBits
+  # network)
+  - name: user-highmem-a-64
+    availabilityZones: &user-highmem-availabilityZones [us-west-2b, us-west-2a]
+    instanceType: x1.16xlarge
+    minSize: *user-minSize
+    maxSize: *user-maxSize
+    desiredCapacity: *user-desiredCapacity
+    volumeSize: *user-volumeSize
+    labels:
+      hub.jupyter.org/node-purpose: user
+      2i2c.org/node-highmem-cpu: "64"
+    taints:
+      hub.jupyter.org_dedicated: user:NoSchedule
+    tags:
+      k8s.io/cluster-autoscaler/node-template/label/hub.jupyter.org/node-purpose: user
+      k8s.io/cluster-autoscaler/node-template/label/2i2c.org/node-highmem-cpu: "64"
+      k8s.io/cluster-autoscaler/node-template/taint/hub.jupyter.org_dedicated: user:NoSchedule
+    iam: &user-iam
+      withAddonPolicies:
+        autoScaler: true
+        efs: true
+
   # GPU Nodes.
   #
   # g4dn was chosen based on input from Shane in this comment

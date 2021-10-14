@@ -146,6 +146,13 @@ hubs:
                   mem_limit: null
                   node_selector: { 2i2c.org/node-cpu: "64" }
                   extra_resource_limits: {}
+              - display_name: "Massive high-memory: 64 CPU, 976 GB"
+                description: "A dedicated machine for you."
+                kubespawner_override:
+                  mem_guarantee: 900G
+                  mem_limit: null
+                  node_selector: { 2i2c.org/node-highmem-cpu: "64" }
+                  extra_resource_limits: {}
               - display_name: "Medium GPU: 4 CPU, 16 GB, 1 T4 Tensor Core GPU"
                 description: "A dedicated machine for you with one GPU attached."
                 kubespawner_override:
