@@ -2,3 +2,5 @@ pytest
 pytest-asyncio
 requests
 beautifulsoup4
+auth0-python
+yarl
