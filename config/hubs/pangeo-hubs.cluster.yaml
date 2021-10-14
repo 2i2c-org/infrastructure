@@ -47,6 +47,12 @@ hubs:
             https:
               enabled: false
           custom:
+            cloudResources:
+              provider: gcp
+              gcp:
+                projectId: pangeo-integration-te-3eea
+              scratchBucket:
+                enabled: true
             homepage:
               templateVars:
                 org:
@@ -166,6 +172,12 @@ hubs:
             https:
               enabled: false
           custom:
+            cloudResources:
+              provider: gcp
+              gcp:
+                projectId: pangeo-integration-te-3eea
+              scratchBucket:
+                enabled: true
             homepage:
               templateVars:
                 org:
