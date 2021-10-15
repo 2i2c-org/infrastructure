@@ -1,0 +1,19 @@
+kind: NetworkPolicy
+apiVersion: networking.k8s.io/v1
+metadata:
+  name: prometheus-server
+spec:
+  podSelector:
+    matchLabels:
+      app: prometheus
+      component: server
+      release: support
+  # Limit ingress to traffic only from grafana
+  ingress:
+    - from:
+        - podSelector:
+            matchLabels:
+              name: grafana
+      ports:
+        - protocol: TCP
+          port: 9090
