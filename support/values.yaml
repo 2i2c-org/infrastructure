@@ -7,15 +7,16 @@ ingress-nginx:
 prometheus:
   networkPolicy:
     enabled: true
-    egress:
-      - to:
-          - ipBlock:
-              cidr: 0.0.0.0/0
-              except:
-                - 10.0.0.0/8
-                - 172.16.0.0/12
-                - 192.168.0.0/16
-                - 169.254.169.254/32
+    # Limit ingress to traffic only from grafana
+    ingress:
+    - from:
+        - podSelector:
+            matchLabels:
+              name: grafana
+      ports:
+        - protocol: TCP
+          port: 9090
+
   alertmanager:
     enabled: false
   nodeExporter:
