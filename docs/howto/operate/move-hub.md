@@ -48,7 +48,11 @@ Primarily used with GKE right now.
 As an alternative to `scp` you can use `rsync` as follows:
 
 ```bash
-rsync -e 'ssh -i nfs-transfer-key' -rougvhP ubuntu@nfs-source-server-public-IP:/export/home-01/homes/<hub-name> /export/home-01/homes/<hub-name>
+rsync -e 'ssh -i nfs-transfer-key' -rougvhP ubuntu@nfs-source-server-public-IP:/export/home-01/homes/<hub-name>/ /export/home-01/homes/<hub-name>/
+```
+
+```{note}
+The trailing slashes are important to copy the contents of the directory, without copying the directory itself.
 ```
 
 See the [`rsync` man page](https://ss64.com/bash/rsync.html) to understand these options.
