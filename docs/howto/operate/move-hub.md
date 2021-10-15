@@ -57,6 +57,34 @@ The trailing slashes are important to copy the contents of the directory, withou
 
 See the [`rsync` man page](https://ss64.com/bash/rsync.html) to understand these options.
 
+### GCP Filestores
+
+We also use GCP Filestores as in-cluster NFS storage and can transfer the home directories between them in a similar fashion to the NFS servers described above.
+
+The filestores must be mounted in order to be accessed.
+
+1. Create VMs in the projects of the source and target filestores.
+2. For **both** filestores, get the server address from the [GCP console](https://cloud.google.com/filestore/docs/mounting-fileshares).
+3. On each VM for the source and target filestores:
+   1. Install `nfs-common`:
+      ```bash
+      sudo apt-get -y update && sudo apt-get -y install nfs-common
+      ```
+   2. Create a mount point:
+      ```bash
+      sudo mkdir -p /mnt/filestore
+      ```
+   3. Mount the Filestore:
+      ```bash
+      sudo mount SERVER_ADDRESS /mnt/filestore
+      ```
+
+The user directories can then be transferred in the same manner as [NFS Servers](#nfs-servers) with the locations updated to be the following:
+
+```bash
+ubuntu@nfs-source-server-public-IP:/mnt/filestore/<hub-name> /mnt/filestore/<hub-name>
+```
+
 ### EFS
 
 [AWS DataSync](https://aws.amazon.com/datasync/)
