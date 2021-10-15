@@ -6,17 +6,7 @@ ingress-nginx:
       hub.jupyter.org/network-access-proxy-http: 'true'
 prometheus:
   networkPolicy:
-    enabled: true
-    # Limit ingress to traffic only from grafana
-    ingress:
-    - from:
-        - podSelector:
-            matchLabels:
-              name: grafana
-      ports:
-        - protocol: TCP
-          port: 9090
-
+    enabled: false
   alertmanager:
     enabled: false
   nodeExporter:
@@ -53,12 +43,10 @@ prometheus:
 
 grafana:
   persistence:
+    enabled: true
     storageClassName: standard
   deploymentStrategy:
     type: Recreate
-
-  persistence:
-    enabled: true
   service:
     type: ClusterIP
 
