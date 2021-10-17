@@ -1,6 +1,6 @@
 # -- Project information -----------------------------------------------------
 
-project = "2i2c Pilot Hubs Infrastructure"
+project = "Infrastructure Guide"
 copyright = "2020, 2i2c.org"
 author = "2i2c.org"
 
@@ -51,15 +51,12 @@ myst_enable_extensions = [
 # The theme to use for HTML and HTML Help pages.  See the documentation for
 # a list of builtin themes.
 #
-html_favicon = "_static/favicon.png"
-html_theme = "sphinx_book_theme"
+html_theme = "sphinx_2i2c_theme"
+html_title = "Infrastructure Guide"
 html_theme_options = {
     "repository_url": "https://github.com/2i2c-org/pilot-hubs",
     "use_issues_button": True,
     "use_repository_button": True,
-}
-html_sidebars = {
-    "**": ["2i2c-logo.html", "sbt-sidebar-nav.html", "sbt-sidebar-footer"]
 }
 html_static_path = ["_static"]
 # Disable linkcheck for anchors because it throws false errors for any JS anchors
@@ -67,7 +64,6 @@ linkcheck_anchors = False
 
 def setup(app):
     app.add_css_file("custom.css")
-    app.add_css_file("https://code.cdn.mozilla.net/fonts/fira.css")
 
 
 
