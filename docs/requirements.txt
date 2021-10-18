@@ -1,0 +1,7 @@
+myst-parser[sphinx,linkify]
+pandas
+pyyaml
+requests
+sphinx-autobuild
+sphinx-panels
+git+https://github.com/2i2c-org/sphinx-2i2c-theme

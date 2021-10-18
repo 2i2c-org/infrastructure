@@ -157,6 +157,10 @@ jupyterhub:
       # required.
       enabled: true
       egress:
+        # FIXME: Either remove UDP for port 53 as this is now default in z2jh
+        # OR also explicitly allow TCP on port 53 as that will prevent some
+        # DNS lookups from failing over UDP because, e.g., the DNS has many IPs
+        # for a certain domain name and fallback to TCP
         - ports:
             - port: 53
               protocol: UDP
@@ -296,8 +300,7 @@ jupyterhub:
 
 
         c.JupyterHub.spawner_class = CustomSpawner
-
-      07-cloud-storage-bucket: |
+      06-cloud-storage-bucket: |
         from z2jh import get_config
         cloud_resources = get_config('custom.cloudResources')
         scratch_bucket = cloud_resources['scratchBucket']
