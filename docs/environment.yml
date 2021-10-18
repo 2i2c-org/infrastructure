@@ -3,13 +3,6 @@ channels:
 - conda-forge
 dependencies:
 - go-terraform-docs
-- pip
 - python=3.8
 - pip:
-  - myst-parser[sphinx,linkify]
-  - pandas
-  - pyyaml
-  - requests
-  - sphinx-autobuild
-  - sphinx-book-theme
-  - sphinx-panels
+  - -r requirements.txt

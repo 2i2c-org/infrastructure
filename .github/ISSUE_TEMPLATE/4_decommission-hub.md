@@ -30,10 +30,10 @@ Usually, it is because it was a hub that we created for a workshop/conference an
 #### Phase II - Hub Removal
 
 - [ ] (Optional) Migrate data from the hub
-- [ ] Remove the hub deployment
-  - `helm delete --namespace HUB_NAME HUB_NAME`
-  - `kubectl delete namespace HUB_NAME`
 - [ ] Remove hub entry from the appropriate `*.cluster.yaml` file
+- [ ] Remove the hub deployment
+  - `helm --namespace HUB_NAME delete HUB_NAME`
+  - `kubectl delete namespace HUB_NAME`
 
 #### Phase III - Cluster Removal
 

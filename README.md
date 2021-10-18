@@ -6,10 +6,40 @@ See [the Pilot Hubs documentation](https://pilot-hubs.2i2c.org) for more informa
 
 ## Building the documentation
 
-To build this documentation follow these steps:
+The documentation is built with [the Sphinx documentation engine](https://sphinx-doc.org).
+
+### Automatically with `nox`
+
+The easiest way to build the documentation in this repository is to use [the `nox` automation tool](https://nox.thea.codes/), a tool for quickly building environments and running commands within them.
+This ensures that your environment has all the dependencies needed to build the documentation.
+
+To do so, follow these steps:
+
+1. Install `nox`
+
+   ```console
+   $ pip install nox
+   ```
+2. Build the documentation:
+
+   ```console
+   $ nox -s docs
+   ```
+
+This should create a local environment in a `.nox` folder, build the documentation (as specified in the `noxfile.py` configuration), and the output will be in `docs/_build/html`.
+
+To build live documentation that updates when you update local files, run the following command:
+
+```console
+$ nox -s docs-live
+```
+
+### Manually with `conda`
+
+If you wish to manually build the documentation, you can use `conda` to do so.
 
 1. Create a `conda` environment to build the documentation.
-   
+
    ```bash
    conda env create -f docs/environment.yml -n pilot-hubs-docs
    ```
@@ -21,7 +51,7 @@ To build this documentation follow these steps:
    ```
 
 3. Build the documentation:
-   
+
    ```
    make html
    ```

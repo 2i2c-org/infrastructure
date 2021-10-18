@@ -8,6 +8,16 @@ resource "google_container_cluster" "cluster" {
 
   initial_node_count       = 1
   remove_default_node_pool = true
+  lifecycle {
+    # Any change to the default node_config forces cluster recreation,
+    # and sometimes terraform seems to mess up and think we have changed
+    # something here when we have not. So we explicitly ignore all changes
+    # to node_config - we remove any nodepool it might create with
+    # remove_default_node_pool = true.
+    ignore_changes = [
+      node_config
+    ]
+  }
 
   // For private clusters, pass the name of the network and subnetwork created
   // by the VPC
