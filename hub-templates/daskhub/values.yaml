@@ -21,7 +21,7 @@ basehub:
       networkPolicy:
         egress:
           # Needed to talk to metadata server.
-          # see https://github.com/2i2c-org/infrastructure/issues/280
+          # see https://github.com/2i2c-org/pilot-hubs/issues/280
           - to:
               - ipBlock:
                   cidr: 127.0.0.1/32
