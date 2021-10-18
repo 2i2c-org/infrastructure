@@ -15,8 +15,7 @@ Currently there are three hub templates available:
 - `basehub`
 
   The **basehub template** is the template that the other templates "inherit" and configure.
-  It provides a base JupyterHub, user storage and culling configuration that satisfies most of the
-  pilot hubs usage requirements.
+  It provides a base JupyterHub, user storage and culling configuration that satisfies most of the infrastructure usage requirements.
 
 - `daskhub`
 

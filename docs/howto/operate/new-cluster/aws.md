@@ -6,7 +6,7 @@ Instead, we use a tool [called `kops`](https://github.com/kubernetes/kops) to pr
 
 :::{admonition} We also use `eksctl`
 In addition to `kops`, we have begun using an AWS-native tool called `eksctl` to provision Kubernetes clusters on AWS.
-See [this configuration](https://github.com/2i2c-org/pilot-hubs/tree/master/eksctl) for an example of a hub that uses this.
+See [this configuration](https://github.com/2i2c-org/infrastructure/tree/master/eksctl) for an example of a hub that uses this.
 As we understand these practices better we will update this guide with more information about `eksctl`.
 :::
 
@@ -36,7 +36,7 @@ These instructions describe how to create a new AWS cluster from scratch with `k
 
 ## Create a state bucket for `kops`
 
-1. From the root directory on `pilot-hubs/`, `cd` into the `kops` directory
+1. From the root directory on `infrastructure/`, `cd` into the `kops` directory
 2. Set up a *state* bucket for kops. This bucket will store the cluster [state](https://kops.sigs.k8s.io/state/).
 
    ```bash
@@ -51,7 +51,7 @@ These instructions describe how to create a new AWS cluster from scratch with `k
 
 ## Create and render a kops config file
 
-You can use one of the existing [jsonnet](https://jsonnet.org/) specifications as a "template" for your cluster (for example, [here is the Farallon Institute specification](https://github.com/2i2c-org/pilot-hubs/blob/master/kops/farallon.jsonnet)).
+You can use one of the existing [jsonnet](https://jsonnet.org/) specifications as a "template" for your cluster (for example, [here is the Farallon Institute specification](https://github.com/2i2c-org/infrastructure/blob/master/kops/farallon.jsonnet)).
 You may need to tweak zones, names and instances, the rest is boilerplate to create a
 kops-based cluster accordingly to some specification already outlined in [#28](https://github.com/2i2c-org/pangeo-hubs/issues/28).
 Once you have your jsonnet specification ready, you need to render it to create the config file kops understand.

@@ -5,7 +5,7 @@ This section describes steps around adding hubs to the 2i2c JupyterHub federatio
 
 ## Infrastructure that is needed for a hub
 
-There are three kinds of infrastructure needed to add a new hub. In most cases, they are configured via configuration in the `pilot-hubs/` repository.
+There are three kinds of infrastructure needed to add a new hub. In most cases, they are configured via configuration in the `infrastructure/` repository.
 
 - **A Kubernetes cluster**.
   Deploying a Kubernetes cluster is specific to the cloud provider. For hubs that do not need to use their own cloud credits, or otherwise are fine running on a cloud project that is not owned by their institution, we can deploy hubs on an already-running Kubernetes Cluster.
@@ -17,17 +17,17 @@ There are three kinds of infrastructure needed to add a new hub. In most cases, 
   This includes things like Grafana, NFS server provisioners, etc.
 - **JupyterHubs**.
   When a cluster is up and running, we may then deploy JupyterHubs on top of it using the JupyterHub Helm Chart.
-  Configuration that is specific to each JupyterHub is stored in the [`config/hubs`](https://github.com/2i2c-org/pilot-hubs/tree/master/config/hubs) folder.
+  Configuration that is specific to each JupyterHub is stored in the [`config/hubs`](https://github.com/2i2c-org/infrastructure/tree/master/config/hubs) folder.
   GitHub actions then deploy and update hubs on a cluster using this configuration.
   There are some cases where you must manually deploy or modify a hub.
   See [](operate:manual-deploy) for more details.
 
 ## Overview of hub configuration
 
-Many of our hubs are automatically deployed and updated using GitHub Workflows and configuration that is defined in [`pilot-hubs/config/hubs`](https://github.com/2i2c-org/pilot-hubs/tree/master/config/hubs).
+Many of our hubs are automatically deployed and updated using GitHub Workflows and configuration that is defined in [`infrastructure/config/hubs`](https://github.com/2i2c-org/infrastructure/tree/master/config/hubs).
 
 These are a collection of YAML files (one per cluster) that define the configuration for all of our hubs.
-To learn which subset of clusters are *automatically* deployed via GitHub workflows, inspect the `matrix:cluster_name:` list in [the `deploy-hubs.yaml` action](https://github.com/2i2c-org/pilot-hubs/blob/f2ffc8ef51427d5f824747917bfd51533daf3045/.github/workflows/deploy-hubs.yaml#L17-L31).
+To learn which subset of clusters are *automatically* deployed via GitHub workflows, inspect the `matrix:cluster_name:` list in [the `deploy-hubs.yaml` action](https://github.com/2i2c-org/infrastructure/blob/f2ffc8ef51427d5f824747917bfd51533daf3045/.github/workflows/deploy-hubs.yaml#L17-L31).
 
 The process of automatically updating and adding hubs is the same for all of the hubs deployed on these clusters.
 
@@ -35,7 +35,7 @@ The process of automatically updating and adding hubs is the same for all of the
 
 To deploy a new hub, follow these steps:
 
-1. [Ask the Community Representative to fill in this issue template](https://github.com/2i2c-org/pilot-hubs/issues/new?assignees=&labels=type%3A+hub&template=2_new-hub.yml&title=New+Hub%3A+%3CHub+name%3E).
+1. [Ask the Community Representative to fill in this issue template](https://github.com/2i2c-org/infrastructure/issues/new?assignees=&labels=type%3A+hub&template=2_new-hub.yml&title=New+Hub%3A+%3CHub+name%3E).
    This will create a "New Hub" issue and ask the representative questions that are important for understanding how to set up their hub.
    Once that issue is created, move to the next step.
 2. Decide whether you'll deploy on a pre-existing Kubernetes cluster, or if you'll need to create a new one.
@@ -47,7 +47,7 @@ To deploy a new hub, follow these steps:
 4. Add a configuration entry for your new hub.
    Each entry is a Zero to JupyterHub configuration, and you can customize whatever you like.
    The easiest way to add new configuration is to look at the entries for similar hubs in the same cluster YAML file, copy / paste one of them, and make modifications as needed for this specific hub.
-   For example, see the entries in [the 2i2c Google Cloud cluster configuration file](https://github.com/2i2c-org/pilot-hubs/blob/master/config/hubs/2i2c.cluster.yaml).
+   For example, see the entries in [the 2i2c Google Cloud cluster configuration file](https://github.com/2i2c-org/infrastructure/blob/master/config/hubs/2i2c.cluster.yaml).
    
    :::{seealso}
    See [](/topic/config.md) for more information about template configuration.
@@ -66,7 +66,7 @@ To deploy a new hub, follow these steps:
 Some of our infrastructure automatically deploys and updates hubs via GitHub Workflows, while others require manual deploys.
 This is changing over time as we automate more things, and is dependent on the cloud provider.
 
-The best place to look to learn about the latest state of our *automatic* hub deployment is to look at [the `deploy-hubs.yaml` GitHub workflow](https://github.com/2i2c-org/pilot-hubs/blob/master/.github/workflows/deploy-hubs.yaml).
+The best place to look to learn about the latest state of our *automatic* hub deployment is to look at [the `deploy-hubs.yaml` GitHub workflow](https://github.com/2i2c-org/infrastructure/blob/master/.github/workflows/deploy-hubs.yaml).
 That workflow defines the automatic hub deployment for many of our major clusters.
 
 See the sections below for information about deploying hubs on each cloud provider, including whether to manually or automatically deploy.

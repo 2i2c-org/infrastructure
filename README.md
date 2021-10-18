@@ -1,8 +1,8 @@
-# Pilot Hubs deployment infrastructure
+# Infrastructure for deployments
 
 This repository contains deployment infrastucture and documentation for a federation of JupyterHubs that 2i2c manages for various communities.
 
-See [the Pilot Hubs documentation](https://pilot-hubs.2i2c.org) for more information.
+See [the infrastructure documentation](https://infrastructure.2i2c.org) for more information.
 
 ## Building the documentation
 
@@ -41,13 +41,13 @@ If you wish to manually build the documentation, you can use `conda` to do so.
 1. Create a `conda` environment to build the documentation.
 
    ```bash
-   conda env create -f docs/environment.yml -n pilot-hubs-docs
+   conda env create -f docs/environment.yml -n infrastructure-docs
    ```
 
 2. Activate the new environment:
 
    ```bash
-   conda activate pilot-hubs-docs
+   conda activate infrastructure-docs
    ```
 
 3. Build the documentation:
