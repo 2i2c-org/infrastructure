@@ -48,9 +48,10 @@ def decrypt_file(encrypted_path):
         ])
         yield f.name
 
-def add_staff(staff, user_list):
+def replace_staff_placeholder(user_list, staff):
     """
-    Add the staff ids to the existing user list
+    Replace the staff placeholder with the actual list
+    of staff members in the user_list.
     """
     if isinstance(user_list, str):
         user_list = [user_list]
@@ -72,7 +73,7 @@ def update_authenticator_config(config):
     authenticator = config.get("jupyterhub", {}).get("hub", {}).get("config", {}).get("Authenticator", {})
 
     # `Allowed_users` list doesn't exist for hubs where everyone is allowed to login
-    if authenticator.get("allowed_users", None):
-        authenticator["allowed_users"] = add_staff(staff["staff"], authenticator["allowed_users"])
+    if authenticator.get("allowed_users", None) is not None:
+        authenticator["allowed_users"] = replace_staff_placeholder(authenticator["allowed_users"], staff["staff"])
 
-    authenticator["admin_users"] = add_staff(staff["staff"], authenticator["admin_users"])
+    authenticator["admin_users"] = replace_staff_placeholder(authenticator["admin_users"], staff["staff"])
