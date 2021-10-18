@@ -82,7 +82,7 @@ The filestores must be mounted in order to be accessed.
 The user directories can then be transferred in the same manner as [NFS Servers](#nfs-servers) with the locations updated to be the following:
 
 ```bash
-ubuntu@nfs-source-server-public-IP:/mnt/filestore/<hub-name> /mnt/filestore/<hub-name>
+<your_scp_or_rsync_command> ubuntu@nfs-source-server-public-IP:/mnt/filestore/<hub-name> /mnt/filestore/<hub-name>
 ```
 
 ### EFS
