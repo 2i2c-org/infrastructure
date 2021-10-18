@@ -74,11 +74,11 @@ def deploy(cluster_name, hub_name, skip_hub_health_test, config_path):
     # Each hub needs a unique proxy.secretToken. However, we don't want
     # to manually generate & save it. We also don't want it to change with
     # each deploy - that causes a pod restart with downtime. So instead,
-    # we generate it based on a single secret key (`PROXY_SECRET_KEY`)
+    # we generate it based on a single secret key (`secret_key`) from our secrets config.
     # combined with the name of each hub. This way, we get unique,
     # cryptographically secure proxy.secretTokens without having to
-    # keep much state. We can rotate them by changing `PROXY_SECRET_KEY`.
-    # However, if `PROXY_SECRET_KEY` leaks, that means all the hub's
+    # keep much state. We can rotate them by changing `secret_key`.
+    # However, if `secret_key` leaks, that means all the hub's
     # proxy.secretTokens have leaked. So let's be careful with that!
     SECRET_KEY = bytes.fromhex(config['secret_key'])
 
