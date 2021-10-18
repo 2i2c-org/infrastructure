@@ -5,11 +5,11 @@
 
 Most secrets are stored in one of two locations:
 
-https://github.com/2i2c-org/pilot-hubs/blob/master/config/secrets.yaml
+https://github.com/2i2c-org/infrastructure/blob/master/config/secrets.yaml
 : Credentials for all of the clusters that we run (across all cloud providers).
 
 
-https://github.com/2i2c-org/pilot-hubs/blob/master/config/secrets.yaml
+https://github.com/2i2c-org/infrastructure/blob/master/config/secrets.yaml
 : `Auth0` and proxy secrets for all of our hubs.
 
 Both are encrypted with [`sops`](https://github.com/mozilla/sops).
@@ -42,7 +42,7 @@ To rotate our secrets, take these steps:
 4. Find the key you'd like to replace, and replace its value with the hash that you've generated above.
    
    :::{admonition} Example
-   If you wish to change the secret keys for the hub proxies, you would update the value of `secret_key` in [the configuration file with proxy secrets](https://github.com/2i2c-org/pilot-hubs/blob/master/config/secrets.yaml).
+   If you wish to change the secret keys for the hub proxies, you would update the value of `secret_key` in [the configuration file with proxy secrets](https://github.com/2i2c-org/infrastructure/blob/master/config/secrets.yaml).
    :::
 
 5. Re-encrypt the file with `sops`.
