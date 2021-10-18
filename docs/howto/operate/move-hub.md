@@ -48,7 +48,7 @@ Primarily used with GKE right now.
 As an alternative to `scp` you can use `rsync` as follows:
 
 ```bash
-rsync -e 'ssh -i nfs-transfer-key' -rougvhP ubuntu@nfs-source-server-public-IP:/export/home-01/homes/<hub-name>/ /export/home-01/homes/<hub-name>/
+rsync -e 'ssh -i nfs-transfer-key' -rouglvhP ubuntu@nfs-source-server-public-IP:/export/home-01/homes/<hub-name>/ /export/home-01/homes/<hub-name>/
 ```
 
 ```{note}
