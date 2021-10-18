@@ -28,8 +28,8 @@ Primarily used with GKE right now.
 2. In the target NFS server, create a new ssh key-pair, with
    `ssh-keygen -f nfs-transfer-key`
 3. Append the public key `nfs-transfer-key.pub` to the source NFS
-   server's `/home/ubuntu/.ssh/authorized_keys` file, so the target
-   NFS server can open SSH connections to the source NFS server.
+   server's `/home/ubuntu/.ssh/authorized_keys` file. This way, the target
+   NFS server will be able to open SSH connections to the source NFS server.
 4. Copy the NFS home directories from the source NFS server to
    the target NFS server, making sure that the NFS exports locations
    match up appopriately. For example, if the source NFS server has
