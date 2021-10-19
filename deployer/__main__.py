@@ -62,7 +62,7 @@ def deploy_jupyterhub_grafana(cluster_name):
 
     # If grafana support chart is not deployed, then there's nothing to do
     if cluster.support:
-        secret_config_file= Path(os.getcwd()) / "secrets/config/hubs" / f"{cluster_name}.cluster.yaml"
+        secret_config_file = Path(os.getcwd()) / "secrets/config/hubs" / f"{cluster_name}.cluster.yaml"
 
         # Read and set GRAFANA_TOKEN from the cluster specific secret config file
         with decrypt_file(secret_config_file) as decrypted_file_path:
