@@ -10,30 +10,15 @@ jobs:
       fail-fast: false
       matrix:
         include:
-          # To enable auto-deployments of grafana dashboards
-          # for other clusters add its name and, a GitHub
-          # secret for it and save its token to `grafana_token`
-          - cluster_grafana_name: grafana.pilot
-            grafana_token: secrets.GRAFANA_TOKEN
-          - cluster_grafana_name: grafana.cloudbank
-            grafana_token: secrets.GRAFANA_CLOUDBANK_TOKEN
-          - cluster_grafana_name: grafana.carbonplan
-            grafana_token: secrets.GRAFANA_CARBONPLAN_TOKEN
-          - cluster_grafana_name: grafana.pangeo
-            grafana_token: secrets.GRAFANA_PANGEO_TOKEN
-          - cluster_grafana_name: pangeo-grafana.pangeo
-            grafana_token: secrets.GRAFANA_PANGEO_HUBS_TOKEN
+          - cluster_name: 2i2c
+          - cluster_name: cloudbank
+          - cluster_name: carbonplan
+          - cluster_name: pangeo-181919
+          - cluster_name: pangeo-hubs
     steps:
-      - name: Checkout jupyterhub/grafana-dashboards repo
+      - name: Checkout repo
         uses: actions/checkout@v2
-        with:
-          name: jupyterhub/grafana-dashboards
-          path: ./grafana-dashboards
-      - name: Deploy ${{ matrix.cluster_grafana_name }}
-        env:
-          GRAFANA_TOKEN: ${{ secrets.[matrix.grafana_token] }}
+
+      - name: Deploy grafana dashboards for ${{ matrix.cluster_name }}
         run: |
-          cd grafana-dashboards
-          ./deploy.py ${{ matrix.cluster_grafana_name }}.2i2c.cloud 
-
-
+          python3 deployer deploy-grafana ${{ matrix.cluster_name }}
