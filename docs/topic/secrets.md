@@ -6,10 +6,10 @@
 Most secrets are stored in one of two locations:
 
 https://github.com/2i2c-org/infrastructure/blob/master/config/secrets.yaml
-: Secrets that are shared across all of our hub and cluster deployments.
+: Secrets that are shared across all of our hub and cluster deployments, such as Auth0 secrets.
 
 https://github.com/2i2c-org/pilot-hubs/tree/master/secrets
-: Secrets that are specific to each cluster / hub that we run (one JSON file for each cluster). For example, `Auth0` and proxy secrets.
+: Secrets that are specific to each cluster / hub that we run (one JSON file for each cluster). For example, cloud provider secrets to control the cluster programmatically.
 
 Both are encrypted with [`sops`](https://github.com/mozilla/sops).
 
