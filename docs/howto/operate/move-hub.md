@@ -23,14 +23,14 @@ home directory storage!
 
 Primarily used with GKE right now.
 
-1. In the target NFS server, create a new ssh key-pair, with
+1. SSH into **both** the target server and source server and then enable the `ubuntu` user on **both** servers with `sudo su ubuntu`.
+   This will ensure that the keys we are about to create will be assigned to the correct user.
+2. In the target NFS server, create a new ssh key-pair, with
    `ssh-keygen -f nfs-transfer-key`
-
-2. Copy the public key `nfs-transfer-key.pub` to the source NFS
-   server's `/home/ubuntu/.ssh/authorized_keys`, so the target
-   NFS server can `scp` from the source NFS server.
-
-3. Copy the NFS home directories from the source NFS server to
+3. Append the public key `nfs-transfer-key.pub` to the source NFS
+   server's `/home/ubuntu/.ssh/authorized_keys` file. This way, the target
+   NFS server will be able to open SSH connections to the source NFS server.
+4. Copy the NFS home directories from the source NFS server to
    the target NFS server, making sure that the NFS exports locations
    match up appopriately. For example, if the source NFS server has
    home directories for each hub stored in `/export/home-01/homes`,
@@ -38,7 +38,6 @@ Primarily used with GKE right now.
    `/export/home-01/homes`, you can `scp` the contents across with:
 
    ```bash
-   su ubuntu
    scp -p -r -i nfs-transfer-key ubuntu@nfs-source-server-public-IP:/export/home-01/homes/<hub-name> /export/home-01/homes/<hub-name>
    ```
 
@@ -46,6 +45,45 @@ Primarily used with GKE right now.
    uid `1000`. Our user pods run as uid `1000`, so this makes sure they
    can mount their home directories.
 
+As an alternative to `scp` you can use `rsync` as follows:
+
+```bash
+rsync -e 'ssh -i nfs-transfer-key' -rouglvhP ubuntu@nfs-source-server-public-IP:/export/home-01/homes/<hub-name>/ /export/home-01/homes/<hub-name>/
+```
+
+```{note}
+The trailing slashes are important to copy the contents of the directory, without copying the directory itself.
+```
+
+See the [`rsync` man page](https://ss64.com/bash/rsync.html) to understand these options.
+
+### GCP Filestores
+
+We also use GCP Filestores as in-cluster NFS storage and can transfer the home directories between them in a similar fashion to the NFS servers described above.
+
+The filestores must be mounted in order to be accessed.
+
+1. Create VMs in the projects of the source and target filestores.
+2. For **both** filestores, get the server address from the [GCP console](https://cloud.google.com/filestore/docs/mounting-fileshares).
+3. On each VM for the source and target filestores:
+   1. Install `nfs-common`:
+      ```bash
+      sudo apt-get -y update && sudo apt-get -y install nfs-common
+      ```
+   2. Create a mount point:
+      ```bash
+      sudo mkdir -p /mnt/filestore
+      ```
+   3. Mount the Filestore:
+      ```bash
+      sudo mount SERVER_ADDRESS /mnt/filestore
+      ```
+
+The user directories can then be transferred in the same manner as [NFS Servers](#nfs-servers) with the locations updated to be the following:
+
+```bash
+<your_scp_or_rsync_command> ubuntu@nfs-source-server-public-IP:/mnt/filestore/<hub-name> /mnt/filestore/<hub-name>
+```
 
 ### EFS
 
@@ -61,14 +99,12 @@ Remember to delete the datasync instance soon after - or it might incur extra
 charges!
 
 ```{note}
-
 If you need to modify the directory structure on the EFS instance, use
 the ssh key provided to `kops` or `eksctl` during cluster creation to
 ssh into any worker node. Then `mount` the EFS instance manually and
 do your modifications. This prevents needing to create another EC2
 instance just for this.
 ```
-
 
 ## Transfer DB
 
