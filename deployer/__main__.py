@@ -52,7 +52,6 @@ def deploy_jupyterhub_grafana(cluster_name):
     Deploy grafana dashboards for operating a hub
     """
     import subprocess
-    from git import Repo
 
     # Validate our config with JSON Schema first before continuing
     validate(cluster_name)
@@ -79,7 +78,7 @@ def deploy_jupyterhub_grafana(cluster_name):
 
         with tempfile.TemporaryDirectory() as grafana_dashboards:
             print("Cloning jupyterhub/grafana-dashboards.git...")
-            Repo.clone_from("https://github.com/jupyterhub/grafana-dashboards.git", grafana_dashboards)
+            subprocess.check_call(["git", "clone", "https://github.com/jupyterhub/grafana-dashboards", grafana_dashboards])
 
             print(f"Deploying grafana dashboards to {cluster_name}...")
             subprocess.check_call([grafana_dashboards + "/deploy.py", grafana_url])
