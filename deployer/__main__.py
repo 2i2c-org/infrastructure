@@ -54,19 +54,23 @@ def deploy_jupyterhub_grafana(cluster_name):
     import subprocess
     from git import Repo
 
-    secret_config_file= Path(os.getcwd()) / "secrets/config/hubs" / f"{cluster_name}.cluster.yaml"
-
-    with decrypt_file(secret_config_file) as decrypted_file_path:
-        with open(decrypted_file_path) as f:
-            config = yaml.load(f)
-
-    os.environ["GRAFANA_TOKEN"] = config["grafana_token"]
+    # Validate our config with JSON Schema first before continuing
+    validate(cluster_name)
 
     config_file_path = Path(os.getcwd()) / "config/hubs" / f'{cluster_name}.cluster.yaml'
     with open(config_file_path) as f:
         cluster = Cluster(yaml.load(f))
 
+    # If grafana support chart is not deployed, then there's nothing to do
     if cluster.support:
+        secret_config_file= Path(os.getcwd()) / "secrets/config/hubs" / f"{cluster_name}.cluster.yaml"
+
+        # Read and set GRAFANA_TOKEN from the cluster specific secret config file
+        with decrypt_file(secret_config_file) as decrypted_file_path:
+            with open(decrypted_file_path) as f:
+                config = yaml.load(f)
+        os.environ["GRAFANA_TOKEN"] = config["grafana_token"]
+
         grafana_url = cluster.support.get("config", {}).get("grafana", {}).get("ingress", {}).get("hosts", {})
         uses_tls = cluster.support.get("config", {}).get("grafana", {}).get("ingress", {}).get("tls", {})
 
