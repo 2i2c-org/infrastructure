@@ -196,7 +196,7 @@ resource "google_container_node_pool" "notebook" {
       # to expose the node CA to users safely.
       # FIXME: This should be a bit more fine-grained - it should be possible to disable
       # config connector and completely hide all node metadata from user pods
-      mode = var.config_connector_enabled ? "GKE_METADATA_SERVER" : "SECURE"
+      mode = var.config_connector_enabled ? "GKE_METADATA" : "UNSPECIFIED"
     }
     labels = merge({
       # Notebook pods and dask schedulers can exist here
@@ -264,7 +264,7 @@ resource "google_container_node_pool" "dask_worker" {
       # to expose the node CA to users safely.
       # FIXME: This should be a bit more fine-grained - it should be possible to disable
       # config connector and completely hide all node metadata from user pods
-      mode = var.config_connector_enabled ? "GKE_METADATA_SERVER" : "SECURE"
+      mode = var.config_connector_enabled ? "GKE_METADATA" : "UNSPECIFIED"
     }
     labels = merge({
       "k8s.dask.org/node-purpose" = "worker",
