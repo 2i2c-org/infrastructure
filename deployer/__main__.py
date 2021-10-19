@@ -70,20 +70,21 @@ def deploy_jupyterhub_grafana(cluster_name):
                 config = yaml.load(f)
         os.environ["GRAFANA_TOKEN"] = config["grafana_token"]
 
+        # Get the url where grafana is running from the cluster config
         grafana_url = cluster.support.get("config", {}).get("grafana", {}).get("ingress", {}).get("hosts", {})
         uses_tls = cluster.support.get("config", {}).get("grafana", {}).get("ingress", {}).get("tls", {})
-
         if grafana_url:
             grafana_url = "https://" + grafana_url[0] if uses_tls else "http://" + grafana_url[0]
 
-        with tempfile.TemporaryDirectory() as grafana_dashboards:
-            print("Cloning jupyterhub/grafana-dashboards.git...")
-            subprocess.check_call(["git", "clone", "https://github.com/jupyterhub/grafana-dashboards", grafana_dashboards])
+            # Use the jupyterhub/grafana-dashboards deployer to deploy the dashboards to this cluster's grafana
+            with tempfile.TemporaryDirectory() as grafana_dashboards:
+                print("Cloning jupyterhub/grafana-dashboards...")
+                subprocess.check_call(["git", "clone", "https://github.com/jupyterhub/grafana-dashboards", grafana_dashboards])
 
-            print(f"Deploying grafana dashboards to {cluster_name}...")
-            subprocess.check_call([grafana_dashboards + "/deploy.py", grafana_url])
+                print(f"Deploying grafana dashboards to {cluster_name}...")
+                subprocess.check_call([grafana_dashboards + "/deploy.py", grafana_url])
 
-            print(f"Done! Dasboards deployed to {grafana_url}.")
+                print(f"Done! Dasboards deployed to {grafana_url}.")
 
 
 def deploy(cluster_name, hub_name, skip_hub_health_test, config_path):
