@@ -4,6 +4,7 @@ Deploy many JupyterHubs to many Kubernetes Clusters
 import argparse
 import os
 import sys
+import subprocess
 from pathlib import Path
 import tempfile
 
@@ -51,7 +52,6 @@ def deploy_jupyterhub_grafana(cluster_name):
     """
     Deploy grafana dashboards for operating a hub
     """
-    import subprocess
 
     # Validate our config with JSON Schema first before continuing
     validate(cluster_name)
@@ -68,7 +68,6 @@ def deploy_jupyterhub_grafana(cluster_name):
         with decrypt_file(secret_config_file) as decrypted_file_path:
             with open(decrypted_file_path) as f:
                 config = yaml.load(f)
-        os.environ["GRAFANA_TOKEN"] = config["grafana_token"]
 
         # Get the url where grafana is running from the cluster config
         grafana_url = cluster.support.get("config", {}).get("grafana", {}).get("ingress", {}).get("hosts", {})
@@ -79,7 +78,10 @@ def deploy_jupyterhub_grafana(cluster_name):
             # Use the jupyterhub/grafana-dashboards deployer to deploy the dashboards to this cluster's grafana
             with tempfile.TemporaryDirectory() as grafana_dashboards:
                 print("Cloning jupyterhub/grafana-dashboards...")
-                subprocess.check_call(["git", "clone", "https://github.com/jupyterhub/grafana-dashboards", grafana_dashboards])
+                subprocess.check_call(
+                    ["git", "clone", "https://github.com/jupyterhub/grafana-dashboards", grafana_dashboards],
+                    env={'GRAFANA_TOKEN': config["grafana_token"]}
+                )
 
                 print(f"Deploying grafana dashboards to {cluster_name}...")
                 subprocess.check_call([grafana_dashboards + "/deploy.py", grafana_url])
