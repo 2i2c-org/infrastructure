@@ -56,6 +56,10 @@ def replace_staff_placeholder(user_list, staff):
     if isinstance(user_list, str):
         user_list = [user_list]
 
+    # We might end up in this case when one hub references the config of another deployed hub as an yaml alias
+    if all(elem in user_list for elem in staff['github_ids']) or all(elem in user_list for elem in staff['google_ids']):
+        return user_list
+
     custom_users = user_list[:]
     for staff_list_type, staff_ids in staff.items():
         staff_placeholder = "<staff_" + staff_list_type + ">"
