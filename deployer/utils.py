@@ -47,3 +47,41 @@ def decrypt_file(encrypted_path):
             '--decrypt', encrypted_path
         ])
         yield f.name
+
+def replace_staff_placeholder(user_list, staff):
+    """
+    Replace the staff placeholder with the actual list
+    of staff members in the user_list.
+    """
+    if isinstance(user_list, str):
+        user_list = [user_list]
+
+    # We might end up in this case when one hub references the config of another deployed hub as an yaml alias
+    if all(elem in user_list for elem in staff['github_ids']) or all(elem in user_list for elem in staff['google_ids']):
+        return user_list
+
+    custom_users = user_list[:]
+    for staff_list_type, staff_ids in staff.items():
+        staff_placeholder = "<staff_" + staff_list_type + ">"
+        if staff_placeholder in user_list:
+            custom_users.remove(staff_placeholder)
+
+            return custom_users + staff_ids
+
+def update_authenticator_config(config, template):
+    """Prepare a hub's configuration file for deployment."""
+    # Load the staff config file
+    with open('config/hubs/staff.yaml') as f:
+        staff = yaml.load(f)
+
+    if "basehub" in template:
+        authenticator = config.get("jupyterhub", {}).get("hub", {}).get("config", {}).get("Authenticator", {})
+    else:
+        # Right now all the other templates inherit from basehub, fix this if things change
+        authenticator = config.get("basehub", {}).get("jupyterhub", {}).get("hub", {}).get("config", {}).get("Authenticator", {})
+
+    # `Allowed_users` list doesn't exist for hubs where everyone is allowed to login
+    if authenticator.get("allowed_users", None) is not None:
+        authenticator["allowed_users"] = replace_staff_placeholder(authenticator["allowed_users"], staff["staff"])
+
+    authenticator["admin_users"] = replace_staff_placeholder(authenticator["admin_users"], staff["staff"])

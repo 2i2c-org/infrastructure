@@ -85,7 +85,7 @@ def render_hubs():
         'template': 'base-hub ([deployment repo](https://github.com/utoronto-2i2c/jupyterhub-deploy/))'
     }]
     for cluster_info in clusters:
-        if "schema" in cluster_info.name:
+        if "schema" in cluster_info.name or "staff" in cluster_info.name:
             continue
         # For each cluster, grab it's YAML w/ the config for each hub
         yaml = cluster_info.read_text()

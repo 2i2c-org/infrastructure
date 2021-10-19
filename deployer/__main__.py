@@ -11,7 +11,7 @@ from ruamel.yaml import YAML
 
 from auth import KeyProvider
 from hub import Cluster
-from utils import decrypt_file
+from utils import decrypt_file, update_authenticator_config
 
 # Without `pure=True`, I get an exception about str / byte issues
 yaml = YAML(typ="safe", pure=True)
@@ -90,9 +90,11 @@ def deploy(cluster_name, hub_name, skip_hub_health_test, config_path):
         hubs = cluster.hubs
         if hub_name:
             hub = next((hub for hub in hubs if hub.spec["name"] == hub_name), None)
+            update_authenticator_config(hub.spec["config"], hub.spec["template"])
             hub.deploy(k, SECRET_KEY, skip_hub_health_test)
         else:
             for hub in hubs:
+                update_authenticator_config(hub.spec["config"], hub.spec["template"])
                 hub.deploy(k, SECRET_KEY, skip_hub_health_test)
 
 

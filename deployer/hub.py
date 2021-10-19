@@ -352,7 +352,6 @@ class Hub:
 
         return self.apply_hub_template_fixes(generated_config, secret_key)
 
-
     def unset_env_var(self, env_var, old_env_var_value):
         """
         If the old environment variable's value exists, replace the current one with the old one

@@ -135,9 +135,7 @@ hubs:
             config:
               Authenticator:
                 admin_users:
-                  - yuvipanda
-                  - choldgraf
-                  - GeorgianaElena
+                  - <staff_github_ids>
                   - amfriesz
                   - jules32
       dask-gateway:
