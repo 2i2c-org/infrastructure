@@ -106,13 +106,26 @@ do your modifications. This prevents needing to create another EC2
 instance just for this.
 ```
 
-## Transfer DB
+## Transfer the JupyterHub Database
 
-Copy `/srv/jupyterhub/jupyterhub.sqlite` file from old hub pod to new
-hub's. This preserves user information, since they might be added via
-the admin UI. The `kubectl cp` command might be used here, to copy
-`jupyterhub.sqlite` file from old hub pod to your local machine, and
-then to the new hub.
+```{note}
+This step is only required if users have been added to a hub manually, using the admin panel.
+In cases where the auth is handled by an external service, e.g. GitHub, the hub database is flexible enough to update itself with the new information.
+```
+
+This step preserves user information, since they might be added via the admin UI.
+
+1. Copy the `/srv/jupyterhub/jupyerhub.sqlite` file from the old hub pod locally.
+
+   ```bash
+   kubectl --namespace OLD_NAMESPACE cp -c hub OLD_HUB_POD_NAME:/srv/jupyterhub/jupyterhub.sqlite ./
+   ```
+
+2. Transfer the local copy of the `jupyterhub.sqlite` file to the new hub pod
+
+   ```bash
+   kubectl --namespace NEW_NAMESPACE cp -c hub ./jupyterhub.sqlite NEW_HUB_POD_NAME:/srv/jupyterhub/jupyterhub.sqlite
+   ```
 
 ## Transfer DNS
 
