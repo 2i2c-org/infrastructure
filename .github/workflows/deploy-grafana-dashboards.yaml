@@ -34,6 +34,6 @@ jobs:
           GRAFANA_TOKEN: ${{ secrets.[matrix.grafana_token] }}
         run: |
           cd grafana-dashboards
-          ./deploy.py ${{ matrix.cluster_grafana_name }}.2i2c.cloud
+          ./deploy.py ${{ matrix.cluster_grafana_name }}.2i2c.cloud 
 
 
