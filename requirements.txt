@@ -5,3 +5,4 @@ ruamel.yaml
 auth0-python
 jhub-client==0.1.2
 jsonschema
+GitPython

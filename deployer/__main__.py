@@ -5,6 +5,7 @@ import argparse
 import os
 import sys
 from pathlib import Path
+import tempfile
 
 import jsonschema
 from ruamel.yaml import YAML
@@ -37,7 +38,6 @@ def deploy_support(cluster_name):
     # Validate our config with JSON Schema first before continuing
     validate(cluster_name)
 
-
     config_file_path = Path(os.getcwd()) / "config/hubs" / f'{cluster_name}.cluster.yaml'
     with open(config_file_path) as f:
         cluster = Cluster(yaml.load(f))
@@ -45,6 +45,43 @@ def deploy_support(cluster_name):
     if cluster.support:
         with cluster.auth():
             cluster.deploy_support()
+
+
+def deploy_jupyterhub_grafana(cluster_name):
+    """
+    Deploy grafana dashboards for operating a hub
+    """
+    import subprocess
+    from git import Repo
+
+    secret_config_file= Path(os.getcwd()) / "secrets/config/hubs" / f"{cluster_name}.cluster.yaml"
+
+    with decrypt_file(secret_config_file) as decrypted_file_path:
+        with open(decrypted_file_path) as f:
+            config = yaml.load(f)
+
+    os.environ["GRAFANA_TOKEN"] = config["grafana_token"]
+
+    config_file_path = Path(os.getcwd()) / "config/hubs" / f'{cluster_name}.cluster.yaml'
+    with open(config_file_path) as f:
+        cluster = Cluster(yaml.load(f))
+
+    if cluster.support:
+        grafana_url = cluster.support.get("config", {}).get("grafana", {}).get("ingress", {}).get("hosts", {})
+        uses_tls = cluster.support.get("config", {}).get("grafana", {}).get("ingress", {}).get("tls", {})
+
+        if grafana_url:
+            grafana_url = "https://" + grafana_url[0] if uses_tls else "http://" + grafana_url[0]
+
+        with tempfile.TemporaryDirectory() as grafana_dashboards:
+            print("Cloning jupyterhub/grafana-dashboards.git...")
+            Repo.clone_from("https://github.com/jupyterhub/grafana-dashboards.git", grafana_dashboards)
+
+            print(f"Deploying grafana dashboards to {cluster_name}...")
+            subprocess.check_call([grafana_dashboards + "/deploy.py", grafana_url])
+
+            print(f"Done! Dasboards deployed to {grafana_url}.")
+
 
 def deploy(cluster_name, hub_name, skip_hub_health_test, config_path):
     """
@@ -130,6 +167,7 @@ def main():
     deploy_parser = subparsers.add_parser("deploy")
     validate_parser = subparsers.add_parser("validate")
     deploy_support_parser = subparsers.add_parser("deploy-support")
+    deploy_grafana_parser = subparsers.add_parser("deploy-grafana")
 
     build_parser.add_argument("cluster_name")
 
@@ -142,6 +180,8 @@ def main():
 
     deploy_support_parser.add_argument("cluster_name")
 
+    deploy_grafana_parser.add_argument("cluster_name")
+
     args = argparser.parse_args()
 
     if args.action == "build":
@@ -152,6 +192,8 @@ def main():
         validate(args.cluster_name)
     elif args.action == 'deploy-support':
         deploy_support(args.cluster_name)
+    elif args.action == 'deploy-grafana':
+        deploy_jupyterhub_grafana(args.cluster_name)
     else:
         # Print help message and exit when no arguments are passed
         # FIXME: Is there a better way to do this?
