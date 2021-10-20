@@ -45,7 +45,7 @@ topic/troubleshooting.md
 
 ## Reference
 
-Reference information about the pilot hubs.
+Reference information about our infrastructure.
 
 ```{toctree}
 :caption: Reference

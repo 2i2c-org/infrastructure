@@ -24,11 +24,11 @@ jobs:
         with:
           environment-file: docs/environment.yml
           miniforge-version: latest
-          activate-environment: pilot-hubs-docs
+          activate-environment: infrastructure-docs
 
       - name: make linkcheck
         shell: bash -l {0}
         run: |
           cd docs
-          conda activate pilot-hubs-docs
+          conda activate infrastructure-docs
           make linkcheck SPHINXOPTS='--color -W --keep-going'

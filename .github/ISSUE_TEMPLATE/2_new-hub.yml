@@ -134,7 +134,7 @@ body:
     attributes:
       label: Hub image service
       description: |
-        The image registry service used for this hub's user image, if a custom user image is desired. For example, a [quay.io registry image](https://quay.io/). See [the Pilot Hubs documentation on custom images](https://pilot-hubs.2i2c.org/en/latest/howto/customize/custom-image.html) for more information. 
+        The image registry service used for this hub's user image, if a custom user image is desired. For example, a [quay.io registry image](https://quay.io/). See [the Infrastructure documentation on custom images](https://infrastructure.2i2c.org/en/latest/howto/customize/custom-image.html) for more information. 
     validations:
       required: false
 

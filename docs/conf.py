@@ -54,7 +54,7 @@ myst_enable_extensions = [
 html_theme = "sphinx_2i2c_theme"
 html_title = "Infrastructure Guide"
 html_theme_options = {
-    "repository_url": "https://github.com/2i2c-org/pilot-hubs",
+    "repository_url": "https://github.com/2i2c-org/infrastructure",
     "use_issues_button": True,
     "use_repository_button": True,
 }
@@ -68,16 +68,16 @@ def setup(app):
 
 
 # -- Custom scripts -----------------------------------------
-# Pull latest list of communities served by pilot-hubs/
+# Pull latest list of communities served by infrastructure/
 from yaml import safe_load
 import pandas as pd
 from pathlib import Path
 import subprocess
 
 def render_hubs():
-    # Grab the latest list of clusters defined in pilot-hubs/
+    # Grab the latest list of clusters defined in infrastructure/
     clusters = Path("../config/hubs").glob("*")
-    # Add list of repos managed outside pilot-hubs
+    # Add list of repos managed outside infrastructure
     hub_list = [{
         'name': 'University of Toronto',
         'domain': 'jupyter.utoronto.ca',

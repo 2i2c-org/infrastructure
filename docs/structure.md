@@ -79,8 +79,8 @@ repository, available at [2i2c.org/pilot](https://2i2c.org/pilot/)
 
 These are folks tasked with building, maintaining, debugging and fixing
 2i2c infrastructure. Documentation targetting them should be in
-[2i2c-org/pilot-hubs](https://github.com/2i2c-org/pilot-hubs).
-repository (2i2c-org/pilot-hubs), regardless of the kind of hub it 
+[2i2c-org/infrastructure](https://github.com/2i2c-org/infrastructure)
+repository (2i2c-org/infrastructure), regardless of the kind of hub it 
 relates to. Since we run our hubs openly, with best practices that can
 be adopted by anyone, we should try write these to be as accessible to
 non 2i2c staff as possible - no secret sauce, minimal 2i2c specific 
