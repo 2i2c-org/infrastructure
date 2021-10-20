@@ -153,3 +153,9 @@ hubs:
     auth0:
       enabled: false
     config: *stagingConfig
+      basehub:
+        jupyterhub:
+          hub:
+            config:
+              GitHubOAuthenticator:
+                oauth_callback_url: https://pangeo.2i2c.cloud/hub/oauth_callback
