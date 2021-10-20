@@ -47,7 +47,12 @@ If you want to switch to a different terraform workspace that is stored in the s
 terraform workspace switch WORKSPACE_NAME
 ```
 
-For example, if you were working in the `infrastructure` workspace but want to switch to `justiceinnovationlab`, these are both stored in the same backend and so the command looks like:
+
+:::{note}
+We recently renamed the `pilot-hubs` repository to `infrastructure`, however we have not yet renamed the Terraform projects, so they are still named `pilot-hubs`!
+:::
+
+For example, if you were working in the `pilot-hubs` workspace but want to switch to `justiceinnovationlab`, these are both stored in the same backend and so the command looks like:
 
 ```bash
 terraform workspace switch justiceinnovationlab
@@ -71,7 +76,7 @@ terraform init -backend-config=backends/<REQUIRED_CONFIG>.hcl -reconfigure
 terraform workspace select WORKSPACE_NAME
 ```
 
-For example, if you were working on our `infrastructure`, with our default backend initialised, but wanted to switch to working on our Pangeo deployments, the commands would look as follows:
+For example, if you were working on our `pilot-hubs`, with our default backend initialised, but wanted to switch to working on our Pangeo deployments, the commands would look as follows:
 
 ```bash
 terraform init -backend-config=backends/pangeo-backend.hcl -reconfigure
