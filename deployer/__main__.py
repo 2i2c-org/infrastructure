@@ -79,12 +79,14 @@ def deploy_jupyterhub_grafana(cluster_name):
             with tempfile.TemporaryDirectory() as grafana_dashboards:
                 print("Cloning jupyterhub/grafana-dashboards...")
                 subprocess.check_call(
-                    ["git", "clone", "https://github.com/jupyterhub/grafana-dashboards", grafana_dashboards],
-                    env={'GRAFANA_TOKEN': config["grafana_token"]}
+                    ["git", "clone", "https://github.com/jupyterhub/grafana-dashboards", grafana_dashboards]
                 )
 
                 print(f"Deploying grafana dashboards to {cluster_name}...")
-                subprocess.check_call([grafana_dashboards + "/deploy.py", grafana_url])
+                subprocess.check_call(
+                    [grafana_dashboards + "/deploy.py", grafana_url],
+                    env={'GRAFANA_TOKEN': config["grafana_token"]}
+                )
 
                 print(f"Done! Dasboards deployed to {grafana_url}.")
 
