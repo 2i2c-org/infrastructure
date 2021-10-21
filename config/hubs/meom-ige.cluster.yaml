@@ -117,12 +117,10 @@ hubs:
             config:
               Authenticator:
                 allowed_users: &users
+                  - <staff_github_ids>
                   - roxyboy
                   - lesommer
                   - auraoupa
-                  - yuvipanda
-                  - choldgraf
-                  - GeorgianaElena
                 admin_users: *users
 
             allowNamedServers: true

@@ -55,7 +55,7 @@ These are good things that happened to us but not because we had planned for the
 ## Action items
 
 These are only sample subheadings. Every action item should have a GitHub issue
-(even a small skeleton of one) attached to it, so these do not get forgotten. These issues don't have to be in `pilot-hubs/`, they can be in other repositories.
+(even a small skeleton of one) attached to it, so these do not get forgotten. These issues don't have to be in `infrastructure/`, they can be in other repositories.
 
 ### Process improvements
 

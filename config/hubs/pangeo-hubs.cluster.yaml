@@ -72,10 +72,7 @@ hubs:
             config:
               Authenticator:
                 admin_users:
-                  - sgibson91
-                  - yuvipanda
-                  - damianavila
-                  - choldgraf
+                  - <staff_github_ids>
                   - rabernat
               JupyterHub:
                 authenticator_class: github
@@ -197,10 +194,7 @@ hubs:
             config:
               Authenticator:
                 allowed_users: &prod_users
-                  - sgibson91
-                  - yuvipanda
-                  - damianavila
-                  - choldgraf
+                  - <staff_github_ids>
                   - rabernat
                 admin_users: *prod_users
           singleuser:

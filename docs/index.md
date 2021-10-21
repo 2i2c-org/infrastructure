@@ -40,12 +40,13 @@ topic/hub-templates.md
 topic/storage-layer.md
 topic/terraform.md
 topic/cluster-design.md
+topic/secrets.md
 topic/troubleshooting.md
 ```
 
 ## Reference
 
-Reference information about the pilot hubs.
+Reference information about our infrastructure.
 
 ```{toctree}
 :caption: Reference

@@ -15,7 +15,7 @@ Usually, it is because it was a hub that we created for a workshop/conference an
 ### Info
 
 - **Community Representative:** <!-- The GitHub ID of the current representative for the Hub and Community, e.g. @octocat -->
-- **Link to New Hub issue:** <!-- The link to the original issue to create the hub, e.g. https://github.com/2i2c-org/pilot-hubs/issues/#NNN -->
+- **Link to New Hub issue:** <!-- The link to the original issue to create the hub, e.g. https://github.com/2i2c-org/infrastructure/issues/#NNN -->
 - **Proposed end date:** <!-- The date by which the hub should be out of service. This should have been mentioned in the New Hub issue above so can be copy-pasted. Otherwise, leave blank and negotiate with the Community Representative. -->
 
 ### Task List
@@ -43,4 +43,4 @@ _This phase is only necessary for single hub clusters._
 - [ ] Remove the following files from the repository:
   - The associated `*.cluster.yaml` file
   - The associated CI deployer key in `secrets/`
-  - Remove the name of the cluster from [CI](https://github.com/2i2c-org/pilot-hubs/tree/master/.github/workflows/deploy-hubs.yaml)
+  - Remove the name of the cluster from [CI](https://github.com/2i2c-org/infrastructure/tree/master/.github/workflows/deploy-hubs.yaml)

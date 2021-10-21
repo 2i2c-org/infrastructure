@@ -1,7 +1,7 @@
 (customize/custom-image)=
 # Use a custom hub image
 
-Pilot hubs use an image we curate as the default. This can be replaced with your
+Community hubs use an image we curate as the default. This can be replaced with your
 own custom image fairly easily. However, custom images should be maintained
 by the hub admins, and we won't be able to help much with things in it.
 
