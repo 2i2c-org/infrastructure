@@ -1,0 +1,14 @@
+name: YAML lint
+
+on:
+  push:
+    paths:
+      - "**/*.yaml"
+      - "**/*.yml"  # Just in case!
+
+jobs:
+  yaml-lint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@master
+      - uses: karancode/yamllint-github-action@v2.0.0
