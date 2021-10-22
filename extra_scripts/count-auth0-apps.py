@@ -128,6 +128,11 @@ if "--purge" in sys.argv[1:]:
                 auth0_inst.clients.delete(filtered_clients[app_name][-1])
                 del filtered_clients[app_name][-1]
 
+        print("[blue]Duplicated apps deleted![/blue] :tada:")
+        print(
+            "[bold green]You should now redeploy all hubs to ensure they have the correct Auth0 tokens![/bold green]"
+        )
+
     else:
         print("[blue]Exiting without purging[/blue]")
         sys.exit()
