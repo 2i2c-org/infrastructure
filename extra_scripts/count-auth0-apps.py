@@ -1,3 +1,31 @@
+"""
+### Summary
+
+This is a helper script that will tell us how many duplicated auth apps we
+currently have on Auth0
+
+### Requirements
+
+All requirements are already listed in `requirements.txt` with the exception of
+rich, which can be installed with:
+
+- pip install rich
+
+### Running the script
+
+Execute the script from the root of the repository:
+
+- python extra_scripts/count-auth0-apps.py
+
+This will output to the consolea list of app names that have more than one
+client id (i.e. they have duplicates)
+
+Adding the purge flag will delete apps on Auth0 until each app name only has one
+client id associated with it
+
+- python extra_scripts/count-auth0-apps.py --purge
+"""
+
 import json
 import os
 import subprocess
