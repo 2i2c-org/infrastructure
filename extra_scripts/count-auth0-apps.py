@@ -1,0 +1,105 @@
+import json
+import os
+import subprocess
+import sys
+import tempfile
+from collections import defaultdict
+from contextlib import contextmanager
+
+from auth0.v3.authentication import GetToken
+from auth0.v3.management import Auth0
+from rich import print
+from ruamel.yaml import YAML
+from ruamel.yaml.scanner import ScannerError
+
+yaml = YAML(typ="safe", pure=True)
+
+
+@contextmanager
+def decrypt_file(encrypted_path):
+    """
+    Provide secure temporary decrypted contents of a given file
+
+    If file isn't a sops encrypted file, we assume no encryption is used
+    and return the current path.
+    """
+    # We must first determine if the file is using sops
+    # sops files are JSON/YAML with a `sops` key. So we first check
+    # if the file is valid JSON/YAML, and then if it has a `sops` key
+    with open(encrypted_path) as f:
+        _, ext = os.path.splitext(encrypted_path)
+        # Support the (clearly wrong) people who use .yml instead of .yaml
+        if ext == ".yaml" or ext == ".yml":
+            try:
+                encrypted_data = yaml.load(f)
+            except ScannerError:
+                yield encrypted_path
+                return
+        elif ext == ".json":
+            try:
+                encrypted_data = json.load(f)
+            except json.JSONDecodeError:
+                yield encrypted_path
+                return
+
+    if "sops" not in encrypted_data:
+        yield encrypted_path
+        return
+
+    # If file has a `sops` key, we assume it's sops encrypted
+    with tempfile.NamedTemporaryFile() as f:
+        subprocess.check_call(["sops", "--output", f.name, "--decrypt", encrypted_path])
+        yield f.name
+
+
+def get_auth0_inst(domain, client_id, client_secret):
+    """
+    Return an authenticated Auth0 instance
+    """
+    gt = GetToken(domain)
+    creds = gt.client_credentials(client_id, client_secret, f"https://{domain}/api/v2/")
+    auth0_inst = Auth0(domain, creds["access_token"])
+    return auth0_inst
+
+
+auth0_secret_path = os.path.join(os.getcwd(), "config", "secrets.yaml")
+with decrypt_file(auth0_secret_path) as decrypted_file_path:
+    with open(decrypted_file_path) as f:
+        auth0_config = yaml.load(f)
+
+auth0_inst = get_auth0_inst(
+    auth0_config["auth0"]["domain"],
+    auth0_config["auth0"]["client_id"],
+    auth0_config["auth0"]["client_secret"],
+)
+
+# Get a dictionary of all apps currently active on Auth0. Where there is more
+#  than one app with the same name, append the client_id to a list
+clients = defaultdict(list)
+for client in auth0_inst.clients.all(per_page=100):
+    clients[client["name"]].append(client["client_id"])
+
+# Filter the dictionary so we only have entries where len(value) > 1
+filtered_clients = {k: v for k, v in clients.items() if len(v) > 1}
+print("[bold blue]Clients with duplicated Auth0 apps:[/bold blue]")
+for k, v in filtered_clients.items():
+    print(f"\t{k}: {len(v)}")
+
+if "--purge" in sys.argv[1:]:
+    print(
+        "[bold red]YOU HAVE OPTED TO PURGE THE DUPLICATED APPS. THIS ACTION CANNOT BE UNDONE. ARE YOU SURE YOU WANT TO PROCEED?[/bold red]"
+    )
+    resp = input("Only 'yes' will be accepted > ")
+
+    if resp == "yes":
+        for app_name in filtered_clients.keys():
+            while len(filtered_clients[app_name]) > 1:
+                print(
+                    f":fire: [bold red]Purging[/bold red] {app_name}:{filtered_clients[app_name][-1]}"
+                )
+                auth0_inst.clients.delete(filtered_clients[app_name][-1])
+                del filtered_clients[app_name][-1]
+
+    else:
+        print("[blue]Exiting without purging[/blue]")
+        sys.exit()
