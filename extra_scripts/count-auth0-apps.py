@@ -17,7 +17,7 @@ Execute the script from the root of the repository:
 
 - python extra_scripts/count-auth0-apps.py
 
-This will output to the consolea list of app names that have more than one
+This will output to the console a list of app names that have more than one
 client id (i.e. they have duplicates)
 
 Adding the purge flag will delete apps on Auth0 until each app name only has one
