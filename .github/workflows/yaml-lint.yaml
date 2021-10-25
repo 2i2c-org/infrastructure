@@ -5,6 +5,10 @@ on:
     paths:
       - "**/*.yaml"
       - "**/*.yml"  # Just in case!
+  pull_request:
+    paths:
+      - "**/*.yaml"
+      - "**/*.yml"
 
 jobs:
   yaml-lint:
