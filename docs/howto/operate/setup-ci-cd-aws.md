@@ -12,10 +12,10 @@ allow performing operations in the cluster as the `deployer` user.
 There are some requisites for being able to successfully and automatically deploy hubs
 on AWS clusters using the provided functionality:
 
-1. Find out if you are working with a [AWS EKS-based](https://aws.amazon.com/eks/) or a
-[kops-based](https://kops.sigs.k8s.io/getting_started/aws/) cluster
+## Find out your type of AWS cluster
   
-   We are currently deploying `EKS`-based (Carbonplan) and `kops`-based (Farallon,
+   We are currently deploying [`EKS`-based](https://aws.amazon.com/eks/) (Carbonplan)
+   and [`kops`-based](https://kops.sigs.k8s.io/getting_started/aws/) (Farallon,
    Openscapes) clusters. Whether to create one or another depends on the cluster
    operational needs and some other factors outlined and being discussed in a dedicated
    [pilot-hub issue](https://github.com/2i2c-org/pilot-hubs/issues/431).
@@ -29,8 +29,10 @@ on AWS clusters using the provided functionality:
    Documentation about creating an `EKS`-based cluster has not yet being written
    :::
 
-2. Create a `deployer` user with enough permissions for being able to automatically
-retrieve the kubernetes context.
+## Create a `deployer` user
+
+   First, you will need to create a new IAM entity (https://docs.aws.amazon.com/IAM/latest/UserGuide/id_users.html)
+   with enough permissions for being able to automatically retrieve the Kubernetes context.
 
    :::{note}
    We are currently setting up the `deployer` user with `AdministratorAccess`, we may
@@ -84,7 +86,7 @@ retrieve the kubernetes context.
    eksctl get iamidentitymapping --cluster <NAME_OF_THE_CLUSTER> --region=<REGION>
    ```
 
-3. Generate credentials for such a user and encrypted them
+## Generate credentials for such a user and encrypted them
 
    * Get the `deployer`credentials with
 
@@ -98,7 +100,7 @@ retrieve the kubernetes context.
    You can find more information about encrypting files in the [sops overview](see {ref}`tc:secrets:sops`)
    :::
 
-4. Set up the cluster config file with additional information about the cluster
+## Set up the cluster config file with additional information about the cluster
 
    This is short snippet from the Carbonplan config file (a `EKS`-based cluster)
 
@@ -135,7 +137,11 @@ retrieve the kubernetes context.
 
    Notice the additional `stateStore` key pointing to the kops state living on a specific s3 bucket.
 
-5. Check if the cluster was added to the [CI deploy-hubs workflow](https://github.com/2i2c-org/pilot-hubs/blob/e96e7bcded187870dc2e07d6626de8a12586ed32/.github/workflows/deploy-hubs.yaml#L31-L36)
+## Check if the cluster was added to the CI deploy-hubs workflow
+
+   The [CI deploy-hubs workflow](https://github.com/2i2c-org/pilot-hubs/blob/e96e7bcded187870dc2e07d6626de8a12586ed32/.github/workflows/deploy-hubs.yaml#L31-L36)
+   contains the list of cluster being automatically deployed by our CI/CD system.
+   Make sure there is an entry for new AWS cluster.
 
    :::{note}
    We are conditionally installing `kops` if the provider is `aws` even with EKS-based
@@ -143,6 +149,3 @@ retrieve the kubernetes context.
    specification to differentiate between `kops` and EKS-based clusters. It needs to be
    fixed/improved in the future.
    :::
-
-
- 
