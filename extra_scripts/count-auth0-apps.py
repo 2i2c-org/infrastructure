@@ -7,9 +7,7 @@ currently have on Auth0
 ### Requirements
 
 All requirements are already listed in `requirements.txt` with the exception of
-rich, which can be installed with:
-
-- pip install rich
+rich, which is listed in `dev-requirements.txt`.
 
 ### Running the script
 
