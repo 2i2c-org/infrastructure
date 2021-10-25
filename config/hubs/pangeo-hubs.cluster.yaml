@@ -24,17 +24,15 @@ support:
       controller:
         admissionWebhooks:
           enabled: false
-    nfs-server-provisioner:
-      enabled: false
 hubs:
   - name: staging
-    domain: staging.pangeo.2i2c.cloud
+    domain: staging.us-central1-b.gcp.pangeo.io
     template: daskhub
     auth0:
-      connection: github
-    config: &stagingConfig
+      enabled: false
+    config:
       basehub:
-        nfs:
+        nfs: &staging_nfs
           enabled: true
           pv:
             mountOptions:
@@ -45,10 +43,16 @@ hubs:
             # Name of Google Filestore share
             baseShareName: /homes/
         jupyterhub:
-          proxy:
+          proxy: &staging_jhub_proxy
             https:
               enabled: false
-          custom:
+          custom: &staging_jhub_custom
+            cloudResources:
+              provider: gcp
+              gcp:
+                projectId: pangeo-integration-te-3eea
+              scratchBucket:
+                enabled: true
             homepage:
               templateVars:
                 org:
@@ -66,15 +70,20 @@ hubs:
                   url: https://www.moore.org/
           hub:
             config:
-              Authenticator:
-                allowed_users: &staging_users
-                  - sgibson91
-                  - yuvipanda
-                  - damianavila
-                  - choldgraf
+              Authenticator: &staging_jhub_authenticator
+                admin_users:
+                  - <staff_github_ids>
                   - rabernat
-                admin_users: *staging_users
-          singleuser:
+              JupyterHub: &staging_jhub_jupyterhub
+                authenticator_class: github
+              GitHubOAuthenticator:
+                oauth_callback_url: https://staging.us-central1-b.gcp.pangeo.io/hub/oauth_callback
+                allowed_organizations: &staging_jhub_allowed_orgs
+                  - pangeo-data:us-central1-b-gcp
+                  - 2i2c-org:tech-team
+                scope: &staging_jhub_scope
+                  - read:org
+          singleuser: &staging_jhub_singleuser
             image:
               name: pangeo/pangeo-notebook
               tag: bcfacc5
@@ -128,7 +137,7 @@ hubs:
               - name: home
                 mountPath: /home/jovyan
                 subPath: "{username}"
-      dask-gateway:
+      dask-gateway: &staging_dask_gateway
         gateway:
           backend:
             scheduler:
@@ -142,5 +151,20 @@ hubs:
     domain: pangeo.2i2c.cloud
     template: daskhub
     auth0:
-      connection: github
-    config: *stagingConfig
+      enabled: false
+    config:
+      basehub:
+        nfs: *staging_nfs
+        jupyterhub:
+          proxy: *staging_jhub_proxy
+          custom: *staging_jhub_custom
+          hub:
+            config:
+              Authenticator: *staging_jhub_authenticator
+              JupyterHub: *staging_jhub_jupyterhub
+              GitHubOAuthenticator:
+                oauth_callback_url: https://pangeo.2i2c.cloud/hub/oauth_callback
+                allowed_organizations: *staging_jhub_allowed_orgs
+                scope: *staging_jhub_scope
+          singleuser: *staging_jhub_singleuser
+      dask-gateway: *staging_dask_gateway

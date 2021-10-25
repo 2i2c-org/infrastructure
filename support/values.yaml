@@ -24,6 +24,10 @@ prometheus:
   pushgateway:
     enabled: false
   server:
+    strategy:
+      # We have a persistent disk attached, so the default (RollingUpdate)
+      # can sometimes get 'stuck' and require pods to be manually deleted.
+      type: Recreate
     resources:
       # Without this, prometheus can easily starve users
       requests:
@@ -43,12 +47,9 @@ prometheus:
 
 grafana:
   persistence:
-    storageClassName: standard
+    enabled: true
   deploymentStrategy:
     type: Recreate
-
-  persistence:
-    enabled: true
   service:
     type: ClusterIP
 

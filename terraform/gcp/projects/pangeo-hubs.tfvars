@@ -11,6 +11,7 @@ config_connector_enabled = true
 
 # Setup a filestore for in-cluster NFS
 enable_filestore = true
+filestore_capacity_gb = 2048
 
 user_buckets = [
   "pangeo-scratch"

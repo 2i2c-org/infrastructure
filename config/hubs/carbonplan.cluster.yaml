@@ -163,11 +163,7 @@ hubs:
             config:
               Authenticator:
                 allowed_users: &users
-                  - yuvipanda
-                  - choldgraf
-                  - GeorgianaElena
-                  - damianavila
-                  - sgibson91
+                  - <staff_github_ids>
                   - jhamman
                 admin_users: *users
 

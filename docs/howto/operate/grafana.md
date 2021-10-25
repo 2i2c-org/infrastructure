@@ -6,7 +6,7 @@ This section describes how to use these dashboards for a cluster.
 ## Access Hub Grafana Dashboards
 
 The Grafana for each cluster can be accessed at `grafana.<cluster-name>.2i2c.cloud`.
-For example, the pilot hubs are accessible at `grafana.pilot.2i2c.cloud`.
+For example, the Grafana for community hubs running on our GCP project is accessible at `grafana.pilot.2i2c.cloud`.
 
 To access the Grafana dashboards you'll need a **username** and **password**.
 These can be accessed using `sops` (see {ref}`tc:secrets:sops` for how to set up `sops` on your machine).
@@ -23,7 +23,7 @@ These tools are [`ingress-nginx`](https://kubernetes.github.io/ingress-nginx/), 
 
 #### Edit your `*.cluster.yaml` file
 
-Add the following config as a top-level key to your `*.cluster.yaml` file under `/config/hubs` in `pilot-hubs`.
+Add the following config as a top-level key to your `*.cluster.yaml` file under `/config/hubs` in `infrastructure`.
 `GRAFANA_URL` should follow the pattern `grafana.<cluster_name>.2i2c.cloud`.
 
 ```yaml

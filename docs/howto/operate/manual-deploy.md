@@ -1,11 +1,11 @@
 (operate:manual-deploy)=
-# Set up and use the the deployment scripts locally
+# Manually deploy hubs
 
 While deploys generally go through our GitHub Actions workflow, sometimes you
 need to deploy from your laptop - primarily when testing changes on staging or
 actively fixing an outage. This isn't ideal, but this is where we are now.
 
-Our deployment scripts live in the [`deployer/`](https://github.com/2i2c-org/pilot-hubs/blob/master/deployer/)
+Our deployment scripts live in the [`deployer/`](https://github.com/2i2c-org/infrastructure/blob/master/deployer/)
 of this repository, and can deploy one or more hubs to our clusters. 
 
 

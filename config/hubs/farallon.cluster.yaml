@@ -118,12 +118,10 @@ hubs:
             config:
               Authenticator:
                 allowed_users: &users
-                  - yuvipanda
+                  - <staff_github_ids>
                   - caitlinkroeger
                   - cgentemann
-                  - choldgraf
                   - DaisyShi19
-                  - GeorgianaElena
                   - jeffdorman
                   - marisolgr
                   - trondkr

@@ -1,6 +1,6 @@
 # Add a new Google Cloud cluster
 
-This guide will walk through the process of adding a new cluster to our [terraform configuration](https://github.com/2i2c-org/pilot-hubs/tree/HEAD/terraform/gcp).
+This guide will walk through the process of adding a new cluster to our [terraform configuration](https://github.com/2i2c-org/infrastructure/tree/HEAD/terraform/gcp).
 
 ## Cluster Design
 
@@ -8,7 +8,7 @@ This guide will assume you have already followed the guidance in [](/topic/clust
 
 ## Creating a Terraform variables file for the cluster
 
-The first step is to create a `.tfvars` file in the [`terraform/gcp/projects` directory](https://github.com/2i2c-org/pilot-hubs/tree/HEAD/terraform/gcp/projects).
+The first step is to create a `.tfvars` file in the [`terraform/gcp/projects` directory](https://github.com/2i2c-org/infrastructure/tree/HEAD/terraform/gcp/projects).
 Give it a descriptive name that at a glance provides context to the location and/or purpose of the cluster.
 
 The _minimum_ inputs this file requires are:
@@ -18,7 +18,7 @@ The _minimum_ inputs this file requires are:
 - `project_id`: GCP Project ID to create resources in.
   Should be the id, rather than display name of the project.
 
-See the [variables file](https://github.com/2i2c-org/pilot-hubs/blob/HEAD/terraform/gcp/variables.tf) for other inputs this file can take and their descriptions.
+See the [variables file](https://github.com/2i2c-org/infrastructure/blob/HEAD/terraform/gcp/variables.tf) for other inputs this file can take and their descriptions.
 
 Example `.tfvars` file:
 
@@ -27,7 +27,7 @@ prefix     = "my-awesome-project"
 project_id = "my-awesome-project-id
 ```
 
-Once you have created this file, open a Pull Request to the `pilot-hubs` repo for review.
+Once you have created this file, open a Pull Request to the `infrastructure` repo for review.
 
 ## Initialising Terraform
 
@@ -94,7 +94,7 @@ Congratulations, you've just deployed a new cluster!
 
 ## Exporting and Encrypting the Continuous Deployment Service Account
 
-To begin deploying and operating hubs on your new cluster, we need to export the Continuous Deployment Service Account created by terraform, encrypt it using `sops`, and store it in the `secrets` directory of the `pilot-hubs` repo.
+To begin deploying and operating hubs on your new cluster, we need to export the Continuous Deployment Service Account created by terraform, encrypt it using `sops`, and store it in the `secrets` directory of the `infrastructure` repo.
 
 Check you are still in the correct terraform workspace
 
@@ -128,4 +128,4 @@ cd ..
 sops --encrypt --in-place secrets/CLUSTER_NAME.json
 ```
 
-This key can now be committed to the `pilot-hubs` repo and used to deploy and manage hubs hosted on that cluster.
+This key can now be committed to the `infrastructure` repo and used to deploy and manage hubs hosted on that cluster.

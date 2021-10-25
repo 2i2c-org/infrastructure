@@ -5,7 +5,7 @@ To access the Kubernetes objects (in order to inspect them or make changes), use
 the `kubectl` command line tool.
 
 :::{admonition} A note on Azure and AWS
-The information on this page is tailored for Google Cloud, because that is the provider for the majority of the hubs that run in the `pilot-hubs/` repository.
+The information on this page is tailored for Google Cloud, because that is the provider for the majority of the hubs that run in the `infrastructure/` repository.
 However, we should update this documentation to include the other major cloud providers as our infrastructure evolves.
 :::
 

@@ -11,7 +11,7 @@ from ruamel.yaml import YAML
 
 from auth import KeyProvider
 from hub import Cluster
-from utils import decrypt_file
+from utils import decrypt_file, update_authenticator_config
 
 # Without `pure=True`, I get an exception about str / byte issues
 yaml = YAML(typ="safe", pure=True)
@@ -90,9 +90,11 @@ def deploy(cluster_name, hub_name, skip_hub_health_test, config_path):
         hubs = cluster.hubs
         if hub_name:
             hub = next((hub for hub in hubs if hub.spec["name"] == hub_name), None)
+            update_authenticator_config(hub.spec["config"], hub.spec["template"])
             hub.deploy(k, SECRET_KEY, skip_hub_health_test)
         else:
             for hub in hubs:
+                update_authenticator_config(hub.spec["config"], hub.spec["template"])
                 hub.deploy(k, SECRET_KEY, skip_hub_health_test)
 
 
@@ -105,6 +107,19 @@ def validate(cluster_name):
         schema = yaml.load(sf)
         # Raises useful exception if validation fails
         jsonschema.validate(cluster_config, schema)
+
+    secret_cluster_dir = Path(os.getcwd()) / "secrets/config/hubs"
+    secret_schema_file = secret_cluster_dir / "schema.yaml"
+    secret_config_file = secret_cluster_dir / f"{cluster_name}.cluster.yaml"
+
+    # If a secret config file exists, validate it as well
+    if os.path.exists(secret_config_file):
+        with decrypt_file(secret_config_file) as decrypted_file_path:
+            with open(decrypted_file_path) as scf, open(secret_schema_file) as ssf:
+                secret_cluster_config = yaml.load(scf)
+                secret_schema = yaml.load(ssf)
+                jsonschema.validate(secret_cluster_config, secret_schema)
+
 
 def main():
     argparser = argparse.ArgumentParser()
