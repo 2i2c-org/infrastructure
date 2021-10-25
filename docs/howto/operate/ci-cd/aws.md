@@ -1,4 +1,4 @@
-(operate:setup-ci-cd-aws)=
+(ci-cd:aws)=
 # Set up the CI/CD system in an AWS cluster
 
 The pilot-hubs deployer code supports [a new `auth_aws` function](https://github.com/2i2c-org/pilot-hubs/blob/e96e7bcded187870dc2e07d6626de8a12586ed32/deployer/hub.py#L126)

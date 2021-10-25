@@ -71,7 +71,9 @@ There are some minor additional steps if you need to [deploy a new hub in a AWS 
 Some of our infrastructure automatically deploys and updates hubs via GitHub Workflows, while others require manual deploys.
 This is changing over time as we automate more things, and is dependent on the cloud provider.
 
-More details about our AWS CI/CD automation lives in [](operate:setup-ci-cd-aws).
+General details about our CI/CD machinery lives at [](/reference/ci-cd.md)
+
+Specific details about our AWS CI/CD automation lives at [](ci-cd:aws).
 
 ## Deploying hubs manually
 

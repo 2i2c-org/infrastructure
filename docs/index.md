@@ -54,8 +54,8 @@ Reference information about the pilot hubs.
 :caption: Reference
 :maxdepth: 2
 
-reference/ci-cd
 reference/hubs
+reference/ci-cd
 reference/terraform.md
 reference/tools
 incidents/index

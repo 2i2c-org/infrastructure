@@ -11,12 +11,12 @@ For more information about our team's development and coordination processes, se
 :maxdepth: 2
 new-hub/index.md
 new-cluster/index.md
+ci-cd/index.md
 k8s/index.md
 delete-hub.md
 manual-deploy.md
 grafana.md
 move-hub.md
 manual-nfs-setup.md
-setup-ci-cd-aws.md
 setup-new-project.md
 ```
