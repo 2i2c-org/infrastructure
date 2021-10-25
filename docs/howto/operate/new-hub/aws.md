@@ -2,13 +2,13 @@
 
 The idea behind this guide is to showcase the process of setting up a 
 [kops](https://kops.sigs.k8s.io/getting_started/aws/)-based AWS cluster and manually
-deploy a new hub on top of it using our deployer tool.
+deploying a new hub on top of it using our deployer tool.
 This is a preliminary but fully functional and manual process. Eventually, we should be
 able to automate the hub deployment process as we currently do with the GKE-based hubs.
 
 ```{note}
 We are currently deploying `kops` and `EKS` clusters. Some of the discussions about
-which tool we should bless are outlined in [#431](https://github.com/2i2c-org/pilot-hubs/issues/431).
+which tool we should use in the future are outlined in [#431](https://github.com/2i2c-org/pilot-hubs/issues/431).
 ```
 
 ## Create an AWS kops-based cluster (optional)
@@ -66,9 +66,9 @@ Follow the steps outlined in [](new-hub:deploy) with the following modifications
    If you are deploying `prod` hub as well, you will need to repeat this step for `prod`.
    ```
 
-6. Set `proxy.https.enabled` to `true` in the cluster config file so we can get HTTPS.
+7. Set `proxy.https.enabled` to `true` in the cluster config file so we can get HTTPS.
 
-7. Repeat steps 4 and 5.
+8. Repeat steps 4 and 5.
 
 ```{note}
 You need to perform the CNAME record update (step 2 - 6) just once, you will not need to

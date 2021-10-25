@@ -2,12 +2,12 @@
 # Set up the CI/CD system in an AWS cluster
 
 The pilot-hubs deployer code supports [a new `auth_aws` function](https://github.com/2i2c-org/pilot-hubs/blob/e96e7bcded187870dc2e07d6626de8a12586ed32/deployer/hub.py#L126)
-to get a temporary kubeconfig file that allows a successful connection with the
+that can export a temporary kubeconfig file allowing a successful connection with the
 kubernetes cluster.
-It is actually expecting a 2i2c generated IAM entity (the `deployer` user) and its
-AWS credentials (that we provide in a sops encrypted json file) to properly set them up
-as the AWS `Access Key ID` and `Secret Access Key` as environment variables and
-successfully perform operations in the cluster as the `deployer` user.
+The function expects a 2i2c generated IAM entity (a `deployer` user) and its AWS
+credentials (provided as a sops encrypted `json` file). These will be used to properly
+set up the AWS `Access Key ID` and `Secret Access Key` environment variables and to
+allow performing operations in the cluster as the `deployer` user.
 
 There are some requisites for being able to successfully and automatically deploy hubs
 on AWS clusters using the provided functionality:
@@ -138,7 +138,10 @@ retrieve the kubernetes context.
 5. Check if the cluster was added to the [CI deploy-hubs workflow](https://github.com/2i2c-org/pilot-hubs/blob/e96e7bcded187870dc2e07d6626de8a12586ed32/.github/workflows/deploy-hubs.yaml#L31-L36)
 
    :::{note}
-   We are conditionally installing `kops` if the provider is `aws` even with EKS-based cluster.
+   We are conditionally installing `kops` if the provider is `aws` even with EKS-based
+   cluster. Installing `kops` is easier than developing a more sophisticated CI/CD
+   specification to differentiate between `kops` and EKS-based clusters. It needs to be
+   fixed/improved in the future.
    :::
 
 

@@ -82,10 +82,10 @@ Or situation where some specific steps still need some manual intervention.
 The following sections cover how to deploy in these situations:
 
 * [General manual deployment process](operate:manual-deploy)
-* Some [AWS specific manual steps](new-hub:aws) at the time to deploy a new hub for first time
+* Some [AWS specific manual steps](new-hub:aws) needed to deploy a new hub for first time
 
 :::{note}
-You should try to avoid a manual deployments.
+Manual deploys should be avoided when possible.
 They increase the likelihood of confusion, bottlenecks of information, inconsistent
 states and discrepancies between what is already deployed vs. the codebase, among other
 things.
