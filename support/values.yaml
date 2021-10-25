@@ -48,7 +48,6 @@ prometheus:
 grafana:
   persistence:
     enabled: true
-    storageClassName: standard
   deploymentStrategy:
     type: Recreate
   service:
