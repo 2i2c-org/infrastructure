@@ -88,11 +88,13 @@ def get_auth0_inst(domain, client_id, client_secret):
     return auth0_inst
 
 
+# Read in the auth0 client id and secret from a file
 auth0_secret_path = os.path.join(os.getcwd(), "config", "secrets.yaml")
 with decrypt_file(auth0_secret_path) as decrypted_file_path:
     with open(decrypted_file_path) as f:
         auth0_config = yaml.load(f)
 
+# Create an authenticated auth0 instance using above creds
 auth0_inst = get_auth0_inst(
     auth0_config["auth0"]["domain"],
     auth0_config["auth0"]["client_id"],
@@ -100,7 +102,7 @@ auth0_inst = get_auth0_inst(
 )
 
 # Get a dictionary of all apps currently active on Auth0. Where there is more
-#  than one app with the same name, append the client_id to a list
+# than one app with the same name, append the client_id to a list
 clients = defaultdict(list)
 for client in auth0_inst.clients.all(per_page=100):
     clients[client["name"]].append(client["client_id"])
