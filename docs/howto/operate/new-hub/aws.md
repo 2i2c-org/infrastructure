@@ -1,4 +1,4 @@
-# Add a new hub in a AWS kops-based cluster
+# Add a hub to an AWS `kops`-based cluster
 
 The idea behind this guide is showcase the process of setting up a 
 [kops](https://kops.sigs.k8s.io/getting_started/aws/)-based AWS

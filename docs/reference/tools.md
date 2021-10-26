@@ -125,19 +125,17 @@ correctly with `application-default`
 
 The [AWS Command Line Interface (CLI)](https://docs.aws.amazon.com/cli/index.html) is a
 unified tool to manage your AWS services.
-With just one tool to download and configure, you can control multiple AWS services from
-the command line and automate them through scripts.
+With just one tool to download and configure, you can control multiple AWS services from the command line and automate them through scripts.
 
 ### eksctl
 
 `eksctl` is a simple CLI tool for creating and managing clusters on EKS - Amazon's
-managed Kubernetes service for EC2.
+managed Kubernetes service for EC2. See [the `eksctl` documentation for more information](https://docs.aws.amazon.com/eks/latest/userguide/getting-started-eksctl.html).
 
 ### kops
 
-`kops` will not only help you create, destroy, upgrade and maintain production-grade,
+`kops` will not only help you create, destroy, upgrade and maintain a production-grade,
 highly available, Kubernetes cluster, but it will also provision the necessary cloud
 infrastructure.
 
-Several cloud providers are officially supported by `kops`, but are only using it in the
-[AWS context](https://kops.sigs.k8s.io/getting_started/aws/).
+Several cloud providers are officially supported by `kops`, but we only [use it for AWS clusters](https://kops.sigs.k8s.io/getting_started/aws/).

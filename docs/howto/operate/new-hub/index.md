@@ -73,8 +73,6 @@ This is changing over time as we automate more things, and is dependent on the c
 
 General details about our CI/CD machinery lives at [](/reference/ci-cd.md)
 
-Specific details about our AWS CI/CD automation lives at [](ci-cd:aws).
-
 ## Deploying hubs manually
 
 Some of our infrastructure still requires manual deploys.
@@ -86,9 +84,17 @@ The following sections cover how to deploy in these situations:
 * [General manual deployment process](operate:manual-deploy)
 * Some [AWS specific manual steps](new-hub:aws) needed to deploy a new hub for first time
 
-:::{note}
+:::{warning}
 Manual deploys should be avoided when possible.
 They increase the likelihood of confusion, bottlenecks of information, inconsistent
 states and discrepancies between what is already deployed vs. the codebase, among other
 things.
 :::
+
+## Cloud-specific deployment steps
+
+See the sections below for information about setting up a new hub on specific commercial clouds.
+
+```{toctree}
+aws
+```
