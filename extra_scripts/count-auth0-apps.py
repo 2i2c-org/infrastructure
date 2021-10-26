@@ -88,11 +88,13 @@ def get_auth0_inst(domain, client_id, client_secret):
     return auth0_inst
 
 
+# Read in the auth0 client id and secret from a file
 auth0_secret_path = os.path.join(os.getcwd(), "config", "secrets.yaml")
 with decrypt_file(auth0_secret_path) as decrypted_file_path:
     with open(decrypted_file_path) as f:
         auth0_config = yaml.load(f)
 
+# Create an authenticated auth0 instance using above creds
 auth0_inst = get_auth0_inst(
     auth0_config["auth0"]["domain"],
     auth0_config["auth0"]["client_id"],
@@ -100,37 +102,48 @@ auth0_inst = get_auth0_inst(
 )
 
 # Get a dictionary of all apps currently active on Auth0. Where there is more
-#  than one app with the same name, append the client_id to a list
+# than one app with the same name, append the client_id to a list
 clients = defaultdict(list)
 for client in auth0_inst.clients.all(per_page=100):
     clients[client["name"]].append(client["client_id"])
 
 # Filter the dictionary so we only have entries where len(value) > 1
 filtered_clients = {k: v for k, v in clients.items() if len(v) > 1}
-print("[bold blue]Clients with duplicated Auth0 apps:[/bold blue]")
-for k, v in filtered_clients.items():
-    print(f"\t{k}: {len(v)}")
 
-if "--purge" in sys.argv[1:]:
-    print(
-        "[bold red]YOU HAVE OPTED TO PURGE THE DUPLICATED APPS. THIS ACTION CANNOT BE UNDONE. ARE YOU SURE YOU WANT TO PROCEED?[/bold red]"
-    )
-    resp = input("Only 'yes' will be accepted > ")
+if len(filtered_clients) > 0:
+    # Print the names of the apps that have duplicates and total number of apps
+    print("[bold blue]Clients with duplicated Auth0 apps:[/bold blue]")
+    for k, v in sorted(filtered_clients.items()):
+        print(f"\t{k}: {len(v)}")
 
-    if resp == "yes":
-        for app_name in filtered_clients.keys():
-            while len(filtered_clients[app_name]) > 1:
-                print(
-                    f":fire: [bold red]Purging[/bold red] {app_name}:{filtered_clients[app_name][-1]}"
-                )
-                auth0_inst.clients.delete(filtered_clients[app_name][-1])
-                del filtered_clients[app_name][-1]
+else:
+    print("[bold green]There are no duplicated Auth0 apps![/bold green] :tada:")
 
-        print("[blue]Duplicated apps deleted![/blue] :tada:")
-        print(
-            "[bold green]You should now redeploy all hubs to ensure they have the correct Auth0 tokens![/bold green]"
-        )
+# ===
+# This section of the script currently does not work as intended as the
+# auth0 client available in config/secrets.yaml is not configured with the
+# clients.delete scope.
+# ===
+# if "--purge" in sys.argv[1:]:
+#     print(
+#         "[bold red]YOU HAVE OPTED TO PURGE THE DUPLICATED APPS. THIS ACTION CANNOT BE UNDONE. ARE YOU SURE YOU WANT TO PROCEED?[/bold red]"
+#     )
+#     resp = input("Only 'yes' will be accepted > ")
 
-    else:
-        print("[blue]Exiting without purging[/blue]")
-        sys.exit()
+#     if resp == "yes":
+#         for app_name in filtered_clients.keys():
+#             while len(filtered_clients[app_name]) > 1:
+#                 print(
+#                     f":fire: [bold red]Purging[/bold red] {app_name}:{filtered_clients[app_name][-1]}"
+#                 )
+#                 auth0_inst.clients.delete(filtered_clients[app_name][-1])
+#                 del filtered_clients[app_name][-1]
+
+#         print("[blue]Duplicated apps deleted![/blue] :tada:")
+#         print(
+#             "[bold green]You should now redeploy all hubs to ensure they have the correct Auth0 tokens![/bold green]"
+#         )
+
+#     else:
+#         print("[blue]Exiting without purging[/blue]")
+#         sys.exit()
