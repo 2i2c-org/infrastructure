@@ -77,7 +77,7 @@ def deploy_jupyterhub_grafana(cluster_name):
     uses_tls = cluster.support.get("config", {}).get("grafana", {}).get("ingress", {}).get("tls", {})
 
     if not grafana_url:
-        print("Couldn't find `config.grafana.ingress.hosts` configured.Skipping Grafana dashboards deployment...")
+        print("Couldn't find `config.grafana.ingress.hosts`. Skipping Grafana dashboards deployment...")
         return
 
     grafana_url = "https://" + grafana_url[0] if uses_tls else "http://" + grafana_url[0]
