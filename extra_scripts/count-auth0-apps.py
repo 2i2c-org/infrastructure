@@ -109,9 +109,15 @@ for client in auth0_inst.clients.all(per_page=100):
 
 # Filter the dictionary so we only have entries where len(value) > 1
 filtered_clients = {k: v for k, v in clients.items() if len(v) > 1}
-print("[bold blue]Clients with duplicated Auth0 apps:[/bold blue]")
-for k, v in sorted(filtered_clients.items()):
-    print(f"\t{k}: {len(v)}")
+
+if len(filtered_clients) > 0:
+    # Print the names of the apps that have duplicates and total number of apps
+    print("[bold blue]Clients with duplicated Auth0 apps:[/bold blue]")
+    for k, v in sorted(filtered_clients.items()):
+        print(f"\t{k}: {len(v)}")
+
+else:
+    print("[bold green]There are no duplicated Auth0 apps![/bold green] :tada:")
 
 # ===
 # This section of the script currently does not work as intended as the
