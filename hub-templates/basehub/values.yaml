@@ -158,6 +158,8 @@ jupyterhub:
         - ipBlock:
             cidr: 0.0.0.0/0
             except:
+            # Don't allow network access to private IP ranges
+            # Listed in https://datatracker.ietf.org/doc/html/rfc1918
             - 10.0.0.0/8
             - 172.16.0.0/12
             - 192.168.0.0/16
