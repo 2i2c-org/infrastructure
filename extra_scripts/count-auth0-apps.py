@@ -111,26 +111,31 @@ print("[bold blue]Clients with duplicated Auth0 apps:[/bold blue]")
 for k, v in filtered_clients.items():
     print(f"\t{k}: {len(v)}")
 
-if "--purge" in sys.argv[1:]:
-    print(
-        "[bold red]YOU HAVE OPTED TO PURGE THE DUPLICATED APPS. THIS ACTION CANNOT BE UNDONE. ARE YOU SURE YOU WANT TO PROCEED?[/bold red]"
-    )
-    resp = input("Only 'yes' will be accepted > ")
+# ===
+# This section of the script currently does not work as intended as the
+# auth0 client available in config/secrets.yaml is not configured with the
+# clients.delete scope.
+# ===
+# if "--purge" in sys.argv[1:]:
+#     print(
+#         "[bold red]YOU HAVE OPTED TO PURGE THE DUPLICATED APPS. THIS ACTION CANNOT BE UNDONE. ARE YOU SURE YOU WANT TO PROCEED?[/bold red]"
+#     )
+#     resp = input("Only 'yes' will be accepted > ")
 
-    if resp == "yes":
-        for app_name in filtered_clients.keys():
-            while len(filtered_clients[app_name]) > 1:
-                print(
-                    f":fire: [bold red]Purging[/bold red] {app_name}:{filtered_clients[app_name][-1]}"
-                )
-                auth0_inst.clients.delete(filtered_clients[app_name][-1])
-                del filtered_clients[app_name][-1]
+#     if resp == "yes":
+#         for app_name in filtered_clients.keys():
+#             while len(filtered_clients[app_name]) > 1:
+#                 print(
+#                     f":fire: [bold red]Purging[/bold red] {app_name}:{filtered_clients[app_name][-1]}"
+#                 )
+#                 auth0_inst.clients.delete(filtered_clients[app_name][-1])
+#                 del filtered_clients[app_name][-1]
 
-        print("[blue]Duplicated apps deleted![/blue] :tada:")
-        print(
-            "[bold green]You should now redeploy all hubs to ensure they have the correct Auth0 tokens![/bold green]"
-        )
+#         print("[blue]Duplicated apps deleted![/blue] :tada:")
+#         print(
+#             "[bold green]You should now redeploy all hubs to ensure they have the correct Auth0 tokens![/bold green]"
+#         )
 
-    else:
-        print("[blue]Exiting without purging[/blue]")
-        sys.exit()
+#     else:
+#         print("[blue]Exiting without purging[/blue]")
+#         sys.exit()
