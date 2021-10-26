@@ -108,7 +108,7 @@ for client in auth0_inst.clients.all(per_page=100):
 # Filter the dictionary so we only have entries where len(value) > 1
 filtered_clients = {k: v for k, v in clients.items() if len(v) > 1}
 print("[bold blue]Clients with duplicated Auth0 apps:[/bold blue]")
-for k, v in filtered_clients.items():
+for k, v in sorted(filtered_clients.items()):
     print(f"\t{k}: {len(v)}")
 
 # ===
