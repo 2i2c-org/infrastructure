@@ -154,16 +154,26 @@ jupyterhub:
       # Allow unrestricted access to the internet but not local cluster network
       enabled: true
       egress:
-      - to:
-        - ipBlock:
-            cidr: 0.0.0.0/0
-            except:
-            # Don't allow network access to private IP ranges
-            # Listed in https://datatracker.ietf.org/doc/html/rfc1918
-            - 10.0.0.0/8
-            - 172.16.0.0/12
-            - 192.168.0.0/16
-            - 169.254.169.254/32
+        - to:
+          - ipBlock:
+              cidr: 0.0.0.0/0
+              except:
+              # Don't allow network access to private IP ranges
+              # Listed in https://datatracker.ietf.org/doc/html/rfc1918
+              - 10.0.0.0/8
+              - 172.16.0.0/12
+              - 192.168.0.0/16
+              # Don't allow network access to the metadata IP
+              - 169.254.169.254/32
+        # Allow code in hubs to talk to ingress provider, so they can talk to
+        # the hub via its public URL
+        - to:
+          - namespaceSelector:
+              matchLabels:
+                name: support
+            podSelector:
+              matchLabels:
+                app.kubernetes.io/name: ingress-nginx
   hub:
     extraFiles:
       configurator-schema-default:
