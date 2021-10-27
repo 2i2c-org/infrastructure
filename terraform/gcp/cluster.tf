@@ -66,7 +66,7 @@ resource "google_container_cluster" "cluster" {
     # just metadata concealment is used
     for_each = var.config_connector_enabled == "" ? [] : [1]
     content {
-      identity_namespace = "${var.project_id}.svc.id.goog"
+      workload_pool = "${var.project_id}.svc.id.goog"
     }
   }
 
@@ -196,7 +196,7 @@ resource "google_container_node_pool" "notebook" {
       # to expose the node CA to users safely.
       # FIXME: This should be a bit more fine-grained - it should be possible to disable
       # config connector and completely hide all node metadata from user pods
-      node_metadata = var.config_connector_enabled ? "GKE_METADATA_SERVER" : "SECURE"
+      mode = var.config_connector_enabled ? "GKE_METADATA" : "MODE_UNSPECIFIED"
     }
     labels = merge({
       # Notebook pods and dask schedulers can exist here
@@ -264,7 +264,7 @@ resource "google_container_node_pool" "dask_worker" {
       # to expose the node CA to users safely.
       # FIXME: This should be a bit more fine-grained - it should be possible to disable
       # config connector and completely hide all node metadata from user pods
-      node_metadata = var.config_connector_enabled ? "GKE_METADATA_SERVER" : "SECURE"
+      mode = var.config_connector_enabled ? "GKE_METADATA" : "MODE_UNSPECIFIED"
     }
     labels = merge({
       "k8s.dask.org/node-purpose" = "worker",
