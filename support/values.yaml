@@ -47,12 +47,9 @@ prometheus:
 
 grafana:
   persistence:
-    storageClassName: standard
+    enabled: true
   deploymentStrategy:
     type: Recreate
-
-  persistence:
-    enabled: true
   service:
     type: ClusterIP
 
