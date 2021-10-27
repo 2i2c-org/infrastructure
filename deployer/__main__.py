@@ -10,6 +10,7 @@ import tempfile
 
 import jsonschema
 from ruamel.yaml import YAML
+import shutil
 
 from auth import KeyProvider
 from hub import Cluster
@@ -83,19 +84,33 @@ def deploy_jupyterhub_grafana(cluster_name):
     grafana_url = "https://" + grafana_url[0] if uses_tls else "http://" + grafana_url[0]
 
     # Use the jupyterhub/grafana-dashboards deployer to deploy the dashboards to this cluster's grafana
-    with tempfile.TemporaryDirectory() as grafana_dashboards:
-        print("Cloning jupyterhub/grafana-dashboards...")
-        subprocess.check_call(
-            ["git", "clone", "https://github.com/jupyterhub/grafana-dashboards", grafana_dashboards]
-        )
+    print("Cloning jupyterhub/grafana-dashboards...")
 
+    dashboards_dir = "grafana_dashboards"
+
+    subprocess.check_call(
+        ["git", "clone", "https://github.com/jupyterhub/grafana-dashboards", dashboards_dir]
+    )
+
+    # We need the existing env too for the deployer to be able to find jssonnet and grafonnet
+    deploy_env = os.environ.copy()
+    deploy_env.update({"GRAFANA_TOKEN": config["grafana_token"]})
+
+    try:
         print(f"Deploying grafana dashboards to {cluster_name}...")
         subprocess.check_call(
-            [grafana_dashboards + "/deploy.py", grafana_url],
-            env={'GRAFANA_TOKEN': config["grafana_token"]}
+            ["./deploy.py", grafana_url],
+            env=deploy_env,
+            cwd=dashboards_dir
         )
 
         print(f"Done! Dasboards deployed to {grafana_url}.")
+    finally:
+        # Delete the directory where we cloned the repo.
+        # The deployer cannot call jsonnet to deploy the dashboards if using a temp directory here.
+        # Might be because opening more than once of a temp file is tried
+        # (https://docs.python.org/3.8/library/tempfile.html#tempfile.NamedTemporaryFile)
+        shutil.rmtree(dashboards_dir)
 
 
 def deploy(cluster_name, hub_name, skip_hub_health_test, config_path):

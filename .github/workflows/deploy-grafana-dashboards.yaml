@@ -19,6 +19,11 @@ jobs:
       - name: Checkout repo
         uses: actions/checkout@v2
 
+      - name: Setup dependencies
+        run: |
+          python3 -m pip install -r requirements.txt
+          python3 -m pip install -r dev-requirements.txt
+
       - name: Deploy grafana dashboards for ${{ matrix.cluster_name }}
         run: |
           python3 deployer deploy-grafana ${{ matrix.cluster_name }}
