@@ -151,25 +151,29 @@ jupyterhub:
       guarantee: 256M
       limit: 1G
     networkPolicy:
-      # In clusters with NetworkPolicy enabled, do not
-      # allow outbound internet access that's not DNS, HTTP or HTTPS
-      # We can override this on a case to case basis where
-      # required.
+      # Allow unrestricted access to the internet but not local cluster network
       enabled: true
       egress:
-        # FIXME: Either remove UDP for port 53 as this is now default in z2jh
-        # OR also explicitly allow TCP on port 53 as that will prevent some
-        # DNS lookups from failing over UDP because, e.g., the DNS has many IPs
-        # for a certain domain name and fallback to TCP
-        - ports:
-            - port: 53
-              protocol: UDP
-        - ports:
-            - port: 80
-              protocol: TCP
-        - ports:
-            - port: 443
-              protocol: TCP
+        - to:
+          - ipBlock:
+              cidr: 0.0.0.0/0
+              except:
+              # Don't allow network access to private IP ranges
+              # Listed in https://datatracker.ietf.org/doc/html/rfc1918
+              - 10.0.0.0/8
+              - 172.16.0.0/12
+              - 192.168.0.0/16
+              # Don't allow network access to the metadata IP
+              - 169.254.169.254/32
+        # Allow code in hubs to talk to ingress provider, so they can talk to
+        # the hub via its public URL
+        - to:
+          - namespaceSelector:
+              matchLabels:
+                name: support
+            podSelector:
+              matchLabels:
+                app.kubernetes.io/name: ingress-nginx
   hub:
     extraFiles:
       configurator-schema-default:
