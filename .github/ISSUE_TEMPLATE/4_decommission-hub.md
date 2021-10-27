@@ -34,6 +34,7 @@ Usually, it is because it was a hub that we created for a workshop/conference an
 - [ ] Remove the hub deployment
   - `helm --namespace HUB_NAME delete HUB_NAME`
   - `kubectl delete namespace HUB_NAME`
+- [ ] Delete the hub's authentication application
 
 #### Phase III - Cluster Removal
 
