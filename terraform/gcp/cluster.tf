@@ -66,7 +66,7 @@ resource "google_container_cluster" "cluster" {
     # just metadata concealment is used
     for_each = var.config_connector_enabled == "" ? [] : [1]
     content {
-      identity_namespace = "${var.project_id}.svc.id.goog"
+      workload_pool = "${var.project_id}.svc.id.goog"
     }
   }
 
