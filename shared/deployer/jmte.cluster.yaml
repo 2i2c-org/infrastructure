@@ -53,6 +53,16 @@ hubs:
                   url: https://jupytearth.org
 
           singleuser:
+            # extraFiles ref: https://zero-to-jupyterhub.readthedocs.io/en/latest/resources/reference.html#singleuser-extrafiles
+            #
+            # Example:
+            #
+            # extraFiles:
+            #   bash-extras:
+            #     mountPath: /etc/test.txt
+            #     stringData: |
+            #       hello world!
+
             # Eksctl: The service account was created by eksctl.
             #
             serviceAccountName: &user-sa s3-full-access
@@ -258,6 +268,9 @@ hubs:
             config:
               Authenticator:
                 allowed_users: &users
+                  # This is just listing a few of the users/admins, a lot of
+                  # users has been added manually, see:
+                  # https://github.com/pangeo-data/jupyter-earth/issues/53
                   - abbyazari       # Abby Azari
                   - andersy005      # Anderson Banihirwe
                   - consideratio    # Erik Sundell
@@ -301,6 +314,19 @@ hubs:
           nodeSelector: null
           backend:
             scheduler:
+              # IMPORTANT: We have experienced that the scheduler can fail with
+              #            1GB memory limit. This was observed "stream closed"
+              #            from the python client working against the
+              #            Dask-Gateway created DaskCluster.
+              #
+              #            CommClosedError: in <TLS (closed) ConnectionPool.gather local=tls://192.168.40.210:54296 remote=gateway://traefik-prod-dask-gateway.prod:80/prod.b9600f678bb747c1a5f038b5bef3eb90>: Stream is closed
+              #
+              cores:
+                request: 1
+                limit: 64
+              memory:
+                request: 2G
+                limit: 500G
               extraPodConfig:
                 nodeSelector:
                   hub.jupyter.org/node-purpose: user

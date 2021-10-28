@@ -15,9 +15,10 @@
 #   eksctl get nodegroups --cluster jmte
 #
 #   eksctl delete nodegroup --config-file=eksctl-cluster-config.yaml --include "user-a-*,worker-a-*" --approve
-#   eksctl create nodegroup --config-file=eksctl-cluster-config.yaml --include "user-a-*,worker-a-*"
-#   eksctl delete nodegroup --cluster jmte --name core-a
-#   eksctl create nodegroup --cluster jmte --name core-a
+#   eksctl create nodegroup --config-file=eksctl-cluster-config.yaml --include "user-a-*,worker-a-*" --install-nvidia-plugin=false
+#   eksctl create nodegroup --config-file=eksctl-cluster-config.yaml --include "user-gpu-a-*" --install-nvidia-plugin=false
+#   eksctl delete nodegroup --cluster jmte --name core-a --approve
+#   eksctl create nodegroup --cluster jmte --name core-a --install-nvidia-plugin=false
 #
 #   eksctl delete nodegroup --config-file=eksctl-cluster-config.yaml --include "user-a-*,worker-a-*" --approve && eksctl create nodegroup --config-file=eksctl-cluster-config.yaml --include "user-a-*,worker-a-*"
 #
@@ -238,7 +239,31 @@ nodeGroups:
   #
   # For reference on the GPU device plugin that needs to be installed, but is
   # installed automatically by eksctl, see:
-  # https://eksctl.io/usage/gpu-support/#gpu-support
+  # https://eksctl.io/usage/gpu-support/#gpu-support. With that said, the
+  # daemonset must still have a toleration set manually on it.
+  #
+  # Do a `kubectl edit ds -n kube-system nvidia-device-plugin-daemonset` and add
+  # the following entries under tolerations:
+  #
+  # - effect: NoSchedule
+  #   key: hub.jupyter.org/dedicated
+  #   operator: Equal
+  #   value: user
+  # - effect: NoSchedule
+  #   key: hub.jupyter.org_dedicated
+  #   operator: Equal
+  #   value: user
+  #
+  # Sadly, something is making this change reset. I don't know why, but I
+  # suspect it happens whenever I do something with eksctl - perhaps whenever I
+  # do something with the nodegroup realted to GPU nodes. I think it resets
+  # whenever a GPU based nodegroup is created unless
+  # --install-nvidia-plugin=false it passed to the `eksctl create nodegroup`
+  # command.
+  #
+  # It seems I may need to specify additional tags also, with associated value
+  # for the GPU of choice:
+  # https://github.com/kubernetes/autoscaler/blob/e80ab518340f88f364fe3ef063f8303755125971/cluster-autoscaler/cloudprovider/aws/aws_cloud_provider.go#L40-L47
   #
   # The machine nodes AMI (what is installed when it starts) for GPU nodes may
   # require you to subscribe to the AMI and accept some license. For more info,
@@ -260,9 +285,12 @@ nodeGroups:
       hub.jupyter.org/node-purpose: user
       2i2c.org/node-cpu: "4"
       2i2c.org/node-gpu: "1"
+      k8s.amazonaws.com/accelerator: "nvidia-tesla-t4"
     taints:
       hub.jupyter.org_dedicated: user:NoSchedule
+      nvidia.com/gpu: NoSchedule
     tags:
+      k8s.io/cluster-autoscaler/node-template/label/k8s.amazonaws.com/accelerator: "nvidia-tesla-t4"
       k8s.io/cluster-autoscaler/node-template/label/hub.jupyter.org/node-purpose: user
       k8s.io/cluster-autoscaler/node-template/label/2i2c.org/node-cpu: "4"
       k8s.io/cluster-autoscaler/node-template/label/2i2c.org/node-gpu: "1"
@@ -292,7 +320,6 @@ nodeGroups:
       k8s.io/cluster-autoscaler/node-template/label/2i2c.org/node-cpu: "16"
       k8s.io/cluster-autoscaler/node-template/label/2i2c.org/node-gpu: "1"
       k8s.io/cluster-autoscaler/node-template/taint/hub.jupyter.org_dedicated: user:NoSchedule
-      k8s.io/cluster-autoscaler/node-template/taint/nvidia.com/gpu: NoSchedule
     iam: &user-iam
       withAddonPolicies:
         autoScaler: true
