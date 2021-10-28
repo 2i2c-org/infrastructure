@@ -371,8 +371,10 @@ hubs:
                 url: "https://www.nsf.gov/funding/pgm_summ.jsp?pims_id=5750"
         singleuser:
           memory:
+            requests: 256M
             limit: 4G
           cpu:
+            requests: 0.1
             limit: 2
           image:
             name: quay.io/2i2c/paleohack-2021
