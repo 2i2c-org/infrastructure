@@ -197,9 +197,9 @@ body:
       required: false        
 
   - type: input
-    id: hub-id
+    id: hub-url
     attributes:
-      label: Hub ID
+      label: Hub URL
       description: |
         The URL of the hub, should be `<hub ID>.<hub cluster>.2i2c.cloud`.
     validations:
