@@ -175,29 +175,61 @@ body:
 
         # Hub Engineer information
 
-        The Hub Engineer should fill in the metadata below when it available. The Community Representative shouldn't worry about this section, but may be asked to provide help answering some questions.
-        
-        ## Deployment information
+        The fields below don't need to be filled out unless you are a 2i2c Hub Engineer or otherwise know the answers to these questions!
+        The Community Representative shouldn't worry about this section, but may be asked to provide help answering some questions.
 
-        **Hub ID:**
-          <!-- The unique ID used to identify this hub. Should be URL-friendly and short. (e.g. `my-university`). -->
-        **Hub Cluster:**
-          <!-- The cloud cluster where this hub will be run. For example, `pilot` or `cloudbank`. -->
-        **Hub URL:**
-          <!-- The URL of the hub, should be `<hub ID>.<hub cluster>.2i2c.cloud`. -->
-        **Hub Template:**
-          <!--
-            The configuration template that defines the basic infrastructure setup for the hub. There are two options:
+  - type: input
+    id: hub-id
+    attributes:
+      label: Hub ID
+      description: |
+        The unique ID used to identify this hub. Should be URL-friendly and short. (e.g. `my-university`).
+    validations:
+      required: false        
 
-            1. `basehub`: a basic JupyterHub with a fairly standard setup.
-            2. `daskhub`: a JupyterHub with a Dask Gateway enabled for scalable computing.
-          -->
+  - type: input
+    id: hub-cluster
+    attributes:
+      label: Hub Cluster
+      description: |
+        The cloud cluster where this hub will be run. For example, `pilot` or `cloudbank`.
+    validations:
+      required: false        
 
-        # Actions to deploy
+  - type: input
+    id: hub-id
+    attributes:
+      label: Hub ID
+      description: |
+        The URL of the hub, should be `<hub ID>.<hub cluster>.2i2c.cloud`.
+    validations:
+      required: false        
 
-        - [ ] Engineer who will deploy the hub is assigned
-        - [ ] Deploy information filled in above
-        - [ ] Initial Hub deployment PR: <link to PR>
-        - [ ] Administrators able to log on
-        - [ ] Community Representative satisfied with hub environment
-        - [ ] Hub now in steady-state
+  - type: input
+    id: hub-template
+    attributes:
+      label: Hub Template
+      description: |
+        The configuration template that defines the basic infrastructure setup for the hub. There are two options:
+
+          1. `basehub`: a basic JupyterHub with a fairly standard setup.
+          2. `daskhub`: a JupyterHub with a Dask Gateway enabled for scalable computing.
+    validations:
+      required: false        
+
+  - type: checkboxes
+    id: tasks-to-deploy
+    attributes:
+      label: Tasks to deploy the hub
+      description: |
+        Tasks we'll need to follow to deploy this hub. This is only needs to be filled out by a 2i2c Engineer.
+
+      options:
+        - label: Engineer who will deploy the hub is assigned
+        - label: Deploy information filled in above
+        - label: "Initial Hub deployment PR: <link to PR>"
+        - label: Administrators able to log on
+        - label: Community Representative satisfied with hub environment
+        - label: Hub now in steady-state
+    validations:
+      required: false
