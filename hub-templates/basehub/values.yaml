@@ -174,6 +174,13 @@ jupyterhub:
             podSelector:
               matchLabels:
                 app.kubernetes.io/name: ingress-nginx
+        # If a hub is using autohttps instead of ingress-nginx, allow traffic
+        # to the autohttps pod as well
+        - to:
+          - podSelector:
+              matchLabels:
+                app: jupyterhub
+                component: autohttps
   hub:
     extraFiles:
       configurator-schema-default:
