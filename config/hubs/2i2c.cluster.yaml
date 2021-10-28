@@ -376,7 +376,7 @@ hubs:
             limit: 2
           image:
             name: quay.io/2i2c/paleohack-2021
-            tag: d8c26cd01c8a
+            tag: d6234e037f4f
           nodeSelector:
             2i2c.org/community: paleo
         hub:
