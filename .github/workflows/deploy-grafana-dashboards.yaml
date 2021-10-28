@@ -23,6 +23,7 @@ jobs:
         run: |
           python3 -m pip install -r requirements.txt
           python3 -m pip install -r dev-requirements.txt
+          sudo apt install jsonnet
 
       - name: Deploy grafana dashboards for ${{ matrix.cluster_name }}
         run: |
