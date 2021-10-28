@@ -342,6 +342,9 @@ hubs:
       connection: github
     config:
       jupyterhub:
+        prePuller:
+          continuous:
+            enabled: true
         scheduling:
           userPlaceholder:
             # Not needed anymore, hackathon is over
@@ -374,6 +377,8 @@ hubs:
           image:
             name: quay.io/2i2c/paleohack-2021
             tag: d8c26cd01c8a
+          nodeSelector:
+            2i2c.org/community: paleo
         hub:
           config:
             Authenticator:
