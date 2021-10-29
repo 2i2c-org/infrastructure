@@ -25,6 +25,9 @@ jobs:
           python3 -m pip install -r dev-requirements.txt
           sudo apt install jsonnet
 
+      - name: Setup sops
+        uses: mdgreenwald/mozilla-sops-action@v1
+
       - name: Deploy grafana dashboards for ${{ matrix.cluster_name }}
         run: |
           python3 deployer deploy-grafana ${{ matrix.cluster_name }}
