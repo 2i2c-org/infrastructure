@@ -429,16 +429,16 @@ class Hub:
         # Check if this cluster has any secret config. If yes, read it in.
         secret_config_path = Path(os.getcwd()) / "secrets/config/hubs" / f'{self.cluster.spec["name"]}.cluster.yaml'
 
+        secret_hub_config = {}
         if os.path.exists(secret_config_path):
             with decrypt_file(secret_config_path) as decrypted_file_path:
                 with open(decrypted_file_path) as f:
                     secret_config = yaml.load(f)
 
-            hubs = secret_config["hubs"]
-            secret_hub_config = next((hub for i, hub in enumerate(hubs) if hubs[i]["name"] == self.spec["name"]), {"config": {}})
-            secret_hub_config = secret_hub_config["config"]
-        else:
-            secret_hub_config = {}
+            if secret_config.get("hubs", {}):
+                hubs = secret_config["hubs"]
+                secret_hub_config = next((hub for i, hub in enumerate(hubs) if hubs[i]["name"] == self.spec["name"]), {"config": {}})
+                secret_hub_config = secret_hub_config["config"]
 
         generated_values = self.get_generated_config(auth_provider, secret_key)
 
