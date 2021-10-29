@@ -4,10 +4,13 @@ Deploy many JupyterHubs to many Kubernetes Clusters
 import argparse
 import os
 import sys
+import subprocess
 from pathlib import Path
+import tempfile
 
 import jsonschema
 from ruamel.yaml import YAML
+import shutil
 
 from auth import KeyProvider
 from hub import Cluster
@@ -37,7 +40,6 @@ def deploy_support(cluster_name):
     # Validate our config with JSON Schema first before continuing
     validate(cluster_name)
 
-
     config_file_path = Path(os.getcwd()) / "config/hubs" / f'{cluster_name}.cluster.yaml'
     with open(config_file_path) as f:
         cluster = Cluster(yaml.load(f))
@@ -45,6 +47,71 @@ def deploy_support(cluster_name):
     if cluster.support:
         with cluster.auth():
             cluster.deploy_support()
+
+
+def deploy_jupyterhub_grafana(cluster_name):
+    """
+    Deploy grafana dashboards for operating a hub
+    """
+
+    # Validate our config with JSON Schema first before continuing
+    validate(cluster_name)
+
+    config_file_path = Path(os.getcwd()) / "config/hubs" / f'{cluster_name}.cluster.yaml'
+    with open(config_file_path) as f:
+        cluster = Cluster(yaml.load(f))
+
+    # If grafana support chart is not deployed, then there's nothing to do
+    if not cluster.support:
+        print("Support chart has not been deployed. Skipping Grafana dashboards deployment...")
+        return
+
+    secret_config_file = Path(os.getcwd()) / "secrets/config/hubs" / f"{cluster_name}.cluster.yaml"
+
+    # Read and set GRAFANA_TOKEN from the cluster specific secret config file
+    with decrypt_file(secret_config_file) as decrypted_file_path:
+        with open(decrypted_file_path) as f:
+            config = yaml.load(f)
+
+    # Get the url where grafana is running from the cluster config
+    grafana_url = cluster.support.get("config", {}).get("grafana", {}).get("ingress", {}).get("hosts", {})
+    uses_tls = cluster.support.get("config", {}).get("grafana", {}).get("ingress", {}).get("tls", {})
+
+    if not grafana_url:
+        print("Couldn't find `config.grafana.ingress.hosts`. Skipping Grafana dashboards deployment...")
+        return
+
+    grafana_url = "https://" + grafana_url[0] if uses_tls else "http://" + grafana_url[0]
+
+    # Use the jupyterhub/grafana-dashboards deployer to deploy the dashboards to this cluster's grafana
+    print("Cloning jupyterhub/grafana-dashboards...")
+
+    dashboards_dir = "grafana_dashboards"
+
+    subprocess.check_call(
+        ["git", "clone", "https://github.com/jupyterhub/grafana-dashboards", dashboards_dir]
+    )
+
+    # We need the existing env too for the deployer to be able to find jssonnet and grafonnet
+    deploy_env = os.environ.copy()
+    deploy_env.update({"GRAFANA_TOKEN": config["grafana_token"]})
+
+    try:
+        print(f"Deploying grafana dashboards to {cluster_name}...")
+        subprocess.check_call(
+            ["./deploy.py", grafana_url],
+            env=deploy_env,
+            cwd=dashboards_dir
+        )
+
+        print(f"Done! Dasboards deployed to {grafana_url}.")
+    finally:
+        # Delete the directory where we cloned the repo.
+        # The deployer cannot call jsonnet to deploy the dashboards if using a temp directory here.
+        # Might be because opening more than once of a temp file is tried
+        # (https://docs.python.org/3.8/library/tempfile.html#tempfile.NamedTemporaryFile)
+        shutil.rmtree(dashboards_dir)
+
 
 def deploy(cluster_name, hub_name, skip_hub_health_test, config_path):
     """
@@ -130,6 +197,7 @@ def main():
     deploy_parser = subparsers.add_parser("deploy")
     validate_parser = subparsers.add_parser("validate")
     deploy_support_parser = subparsers.add_parser("deploy-support")
+    deploy_grafana_parser = subparsers.add_parser("deploy-grafana")
 
     build_parser.add_argument("cluster_name")
 
@@ -142,6 +210,8 @@ def main():
 
     deploy_support_parser.add_argument("cluster_name")
 
+    deploy_grafana_parser.add_argument("cluster_name")
+
     args = argparser.parse_args()
 
     if args.action == "build":
@@ -152,6 +222,8 @@ def main():
         validate(args.cluster_name)
     elif args.action == 'deploy-support':
         deploy_support(args.cluster_name)
+    elif args.action == 'deploy-grafana':
+        deploy_jupyterhub_grafana(args.cluster_name)
     else:
         # Print help message and exit when no arguments are passed
         # FIXME: Is there a better way to do this?
