@@ -150,6 +150,14 @@ jupyterhub:
     memory:
       guarantee: 256M
       limit: 1G
+    cpu:
+      # When limit is set but not guarantee, guarantee is set to match limit! For most
+      # use cases, when we set limit but not guarantee, we want to offer no guarantee and
+      # a limit. This doesn't seem to be possible at all (need to investigate why). In the
+      # meantime, setting a super low guarantee here means we can guard against issues like
+      # https://github.com/2i2c-org/infrastructure/issues/790, where setting the limit
+      # but not guarantee just gave users a huge guarantee, causing node spin ups to fail
+      guarantee: 0.01
     networkPolicy:
       # Allow unrestricted access to the internet but not local cluster network
       enabled: true
