@@ -54,6 +54,7 @@ Reference information about our infrastructure.
 :maxdepth: 2
 
 reference/hubs
+reference/ci-cd
 reference/terraform.md
 reference/tools
 incidents/index
