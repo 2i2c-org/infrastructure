@@ -30,7 +30,8 @@ assignees: ''
 - [ ] **1 day before event** Hub nodes are pre-cooked.
 - [ ] Event in progress.
 - [ ] Confirm event is finished.
-- [ ] Hub pre-cooked nodes are wound down.
+- [ ] Nodegroup created for the hub is decommissioned.
+
 - [ ] Hub decommissioned (if needed).
 - [ ] Debrief with community representative.
   - Did the infrastructure behave as expected?
