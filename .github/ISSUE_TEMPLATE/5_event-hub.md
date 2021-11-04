@@ -27,7 +27,8 @@ assignees: ''
   - Log-in and authentication works as-expected
   - Any `nbgitpuller` links resolve properly
   - Notebooks run as-expected
-- [ ] **1 day before event** Hub nodes are pre-cooked.
+- [ ] **1 day before event** A separate nodegroup is provisioned for the event
+
 - [ ] Event in progress.
 - [ ] Confirm event is finished.
 - [ ] Nodegroup created for the hub is decommissioned.
