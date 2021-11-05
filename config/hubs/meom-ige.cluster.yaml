@@ -75,7 +75,7 @@ hubs:
                 description: "~32 CPU, ~128G RAM"
                 kubespawner_override:
                   mem_limit: 128G
-                  mem_guarantee: 110G
+                  mem_guarantee: 100G
                   node_selector:
                     node.kubernetes.io/instance-type: n1-standard-32
               - display_name: "Huge"
