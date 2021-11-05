@@ -1,10 +1,10 @@
-name: 'Deploy prerequisites'
-description: 'Prerequisites needed to deploy hubs in a 2i2c cluster'
+name: "Deploy prerequisites"
+description: "Prerequisites needed to deploy hubs in a 2i2c cluster"
 inputs:
   cluster:
-    description: 'Cluster name'
+    description: "Cluster name"
     required: true
-    default: '2i2c'
+    default: "2i2c"
 runs:
   using: "composite"
   steps:

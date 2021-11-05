@@ -28,7 +28,7 @@ jobs:
       - name: Setup gcloud
         uses: google-github-actions/setup-gcloud@master
         with:
-          version: '290.0.1'
+          version: "290.0.1"
           # This is used for KMS only
           project_id: two-eye-two-see
           service_account_key: ${{ secrets.GCP_KMS_DECRYPTOR_KEY }}

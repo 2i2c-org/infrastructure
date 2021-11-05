@@ -76,9 +76,9 @@ hubs:
             storage:
               type: none
               extraVolumes:
-              - name: home
-                persistentVolumeClaim:
-                  claimName: home-azurefile
+                - name: home
+                  persistentVolumeClaim:
+                    claimName: home-azurefile
           scheduling:
             userPlaceholder:
               enabled: false
