@@ -1,0 +1,15 @@
+# Helm chart's templates aren't pure YAML files
+**/templates/
+
+# It would be trouble if we had two automatic formatters on the same files. This
+# could happen if we would auto-format the sops generated files with prettier.
+secrets/**/*
+**/secrets.yaml
+!secrets/config/hubs/schema.yaml
+
+# To create a minimal change suggestion, prettier was introduced to auto-format
+# the YAML files only. It is absolutely reasonable to auto-format markdown files
+# and json files as well, but for now, let's make prettier only auto-format
+# YAML.
+**/*.md
+**/*.json
