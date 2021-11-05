@@ -58,7 +58,8 @@ assignees: ''
      - Did the infrastructure behave as expected?
      - Anything that was confusing or could be improved?
      - Any extra functionality you wish you would have had?
-     - Are you willing to share a story about how you used the hub?
+     - Could you share a story about how you used the hub?
+
      - Any other feedback that you'd like to share?
      
      ```
