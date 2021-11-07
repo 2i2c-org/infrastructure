@@ -3,7 +3,7 @@ cluster-autoscaler:
 ingress-nginx:
   controller:
     podLabels:
-      hub.jupyter.org/network-access-proxy-http: 'true'
+      hub.jupyter.org/network-access-proxy-http: "true"
 prometheus:
   networkPolicy:
     enabled: true
@@ -38,7 +38,7 @@ prometheus:
         memory: 2Gi
     labels:
       # For HTTP access to the hub, to scrape metrics
-      hub.jupyter.org/network-access-hub: 'true'
+      hub.jupyter.org/network-access-hub: "true"
     persistentVolume:
       size: 100Gi
     retention: 90d

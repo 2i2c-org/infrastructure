@@ -18,19 +18,19 @@ hubs:
           pv:
             # from https://docs.aws.amazon.com/efs/latest/ug/mounting-fs-nfs-mount-settings.html
             mountOptions:
-            - rsize=1048576
-            - wsize=1048576
-            - timeo=600
-            - soft # We pick soft over hard, so NFS lockups don't lead to hung processes
-            - retrans=2
-            - noresvport
+              - rsize=1048576
+              - wsize=1048576
+              - timeo=600
+              - soft # We pick soft over hard, so NFS lockups don't lead to hung processes
+              - retrans=2
+              - noresvport
             serverIP: fs-cb9c65b0.efs.us-east-2.amazonaws.com
             baseShareName: /
           shareCreator:
             tolerations:
-            - key: node-role.kubernetes.io/master
-              operator: "Exists"
-              effect: "NoSchedule"
+              - key: node-role.kubernetes.io/master
+                operator: "Exists"
+                effect: "NoSchedule"
         jupyterhub:
           custom:
             homepage:
@@ -51,15 +51,20 @@ hubs:
           singleuser:
             initContainers:
               # Need to explicitly fix ownership here, since EFS doesn't do anonuid
-            - name: volume-mount-ownership-fix
-              image: busybox
-              command: ["sh", "-c", "id && chown 1000:1000 /home/jovyan && ls -lhd /home/jovyan"]
-              securityContext:
-                runAsUser: 0
-              volumeMounts:
-              - name: home
-                mountPath: /home/jovyan
-                subPath: "{username}"
+              - name: volume-mount-ownership-fix
+                image: busybox
+                command:
+                  [
+                    "sh",
+                    "-c",
+                    "id && chown 1000:1000 /home/jovyan && ls -lhd /home/jovyan",
+                  ]
+                securityContext:
+                  runAsUser: 0
+                volumeMounts:
+                  - name: home
+                    mountPath: /home/jovyan
+                    subPath: "{username}"
             image:
               name: 677861182063.dkr.ecr.us-east-2.amazonaws.com/2i2c-hub/user-image
               tag: "5115e56"
@@ -100,12 +105,12 @@ hubs:
             chp:
               nodeSelector: {}
               tolerations:
-                - key:  "node-role.kubernetes.io/master"
+                - key: "node-role.kubernetes.io/master"
                   effect: "NoSchedule"
             traefik:
               nodeSelector: {}
               tolerations:
-                - key:  "node-role.kubernetes.io/master"
+                - key: "node-role.kubernetes.io/master"
                   effect: "NoSchedule"
           hub:
             allowNamedServers: true
@@ -128,20 +133,20 @@ hubs:
                   - zbird21
                 admin_users: *users
             tolerations:
-              - key:  "node-role.kubernetes.io/master"
+              - key: "node-role.kubernetes.io/master"
                 effect: "NoSchedule"
       dask-gateway:
         traefik:
           tolerations:
-            - key:  "node-role.kubernetes.io/master"
+            - key: "node-role.kubernetes.io/master"
               effect: "NoSchedule"
         controller:
           tolerations:
-            - key:  "node-role.kubernetes.io/master"
+            - key: "node-role.kubernetes.io/master"
               effect: "NoSchedule"
         gateway:
           tolerations:
-            - key:  "node-role.kubernetes.io/master"
+            - key: "node-role.kubernetes.io/master"
               effect: "NoSchedule"
             # TODO: figure out a replacement for userLimits.
           extraConfig:

@@ -16,7 +16,7 @@ basehub:
       # Almost everyone using dask by default wants JupyterLab
       defaultUrl: /lab
       extraLabels:
-         hub.jupyter.org/network-access-proxy-http: "true"
+        hub.jupyter.org/network-access-proxy-http: "true"
       cloudMetadata:
         # Don't block access to AWS cloud metadata
         # If we don't, our users can't access S3 buckets / other AWS services
@@ -26,7 +26,7 @@ basehub:
       serviceAccountName: user-sa
       extraEnv:
         # The default worker image matches the singleuser image.
-        DASK_GATEWAY__CLUSTER__OPTIONS__IMAGE: '{JUPYTER_IMAGE_SPEC}'
+        DASK_GATEWAY__CLUSTER__OPTIONS__IMAGE: "{JUPYTER_IMAGE_SPEC}"
 
     hub:
       networkPolicy:
@@ -71,7 +71,7 @@ basehub:
               print("dask-gateway service not found. Did you set jupyterhub.hub.services.dask-gateway.apiToken?")
 
 dask-gateway:
-  enabled: true  # Enabling dask-gateway will install Dask Gateway as a dependency.
+  enabled: true # Enabling dask-gateway will install Dask Gateway as a dependency.
   # Futher Dask Gateway configuration goes here
   # See https://github.com/dask/dask-gateway/blob/master/resources/helm/dask-gateway/values.yaml
   controller:
@@ -96,7 +96,7 @@ dask-gateway:
               value: "user"
               effect: "NoSchedule"
           nodeSelector:
-              k8s.dask.org/node-purpose: scheduler
+            k8s.dask.org/node-purpose: scheduler
         cores:
           request: 0.01
           limit: 1
@@ -167,11 +167,11 @@ dask-gateway:
       idle: |
         # timeout after 30 minutes of inactivity
         c.KubeClusterConfig.idle_timeout = 1800
-    prefix: "/services/dask-gateway"  # Users connect to the Gateway through the JupyterHub service.
+    prefix: "/services/dask-gateway" # Users connect to the Gateway through the JupyterHub service.
     auth:
-      type: jupyterhub  # Use JupyterHub to authenticate with Dask Gateway
+      type: jupyterhub # Use JupyterHub to authenticate with Dask Gateway
   traefik:
     nodeSelector:
       k8s.dask.org/node-purpose: core
     service:
-      type: ClusterIP  # Access Dask Gateway through JupyterHub. To access the Gateway from outside JupyterHub, this must be changed to a `LoadBalancer`.
+      type: ClusterIP # Access Dask Gateway through JupyterHub. To access the Gateway from outside JupyterHub, this must be changed to a `LoadBalancer`.

@@ -7,7 +7,7 @@ body:
     attributes:
       value: |
         # Ask for a new 2i2c JupyterHub!
-        
+
         This template is designed to help you provide information about your 2i2c Hub so that a 2i2c Engineer can set it up properly. Answer the sections below as best you can. We can update information as we learn more.
 
         # Community Information
@@ -58,7 +58,7 @@ body:
     attributes:
       label: Target start date
       description: |
-        The target start date when this hub will begin operation. This should be at least a week before any important usage of the hub will occur, to ensure that the Hub Representative has time to try it out. 
+        The target start date when this hub will begin operation. This should be at least a week before any important usage of the hub will occur, to ensure that the Hub Representative has time to try it out.
     validations:
       required: true
 
@@ -125,7 +125,7 @@ body:
     attributes:
       label: Hub logo URL
       description: |
-        A URL that the hub's logo will point to when users click on it on the landing page (optional) 
+        A URL that the hub's logo will point to when users click on it on the landing page (optional)
     validations:
       required: false
 
@@ -134,7 +134,7 @@ body:
     attributes:
       label: Hub image service
       description: |
-        The image registry service used for this hub's user image, if a custom user image is desired. For example, a [quay.io registry image](https://quay.io/). See [the Infrastructure documentation on custom images](https://infrastructure.2i2c.org/en/latest/howto/customize/custom-image.html) for more information. 
+        The image registry service used for this hub's user image, if a custom user image is desired. For example, a [quay.io registry image](https://quay.io/). See [the Infrastructure documentation on custom images](https://infrastructure.2i2c.org/en/latest/howto/customize/custom-image.html) for more information.
     validations:
       required: false
 
@@ -185,7 +185,7 @@ body:
       description: |
         The unique ID used to identify this hub. Should be URL-friendly and short. (e.g. `my-university`).
     validations:
-      required: false        
+      required: false
 
   - type: input
     id: hub-cluster
@@ -194,7 +194,7 @@ body:
       description: |
         The cloud cluster where this hub will be run. For example, `pilot` or `cloudbank`.
     validations:
-      required: false        
+      required: false
 
   - type: input
     id: hub-url
@@ -203,7 +203,7 @@ body:
       description: |
         The URL of the hub, should be `<hub ID>.<hub cluster>.2i2c.cloud`.
     validations:
-      required: false        
+      required: false
 
   - type: input
     id: hub-template
@@ -215,7 +215,7 @@ body:
           1. `basehub`: a basic JupyterHub with a fairly standard setup.
           2. `daskhub`: a JupyterHub with a Dask Gateway enabled for scalable computing.
     validations:
-      required: false        
+      required: false
 
   - type: checkboxes
     id: tasks-to-deploy

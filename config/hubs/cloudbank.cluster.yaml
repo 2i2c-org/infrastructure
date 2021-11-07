@@ -1,5 +1,5 @@
 name: cloudbank
-image_repo:  "us-central1-docker.pkg.dev/cb-1003-1696/low-touch-hubs/base-user"
+image_repo: "us-central1-docker.pkg.dev/cb-1003-1696/low-touch-hubs/base-user"
 provider: gcp
 gcp:
   key: secrets/cloudbank.json
@@ -227,9 +227,9 @@ hubs:
               # Everyone should be able to sign up, so we don't set allowed_users
               # These folks should still have admin tho
               admin_users:
-              - <staff_google_ids>
-              - ericvd@gmail.com
-              - sean.smorris@berkeley.edu
+                - <staff_google_ids>
+                - ericvd@gmail.com
+                - sean.smorris@berkeley.edu
         cull:
           # Cull after 30min of inactivity
           every: 300

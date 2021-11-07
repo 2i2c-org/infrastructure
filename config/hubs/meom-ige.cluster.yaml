@@ -17,12 +17,12 @@ hubs:
           pv:
             # from https://docs.aws.amazon.com/efs/latest/ug/mounting-fs-nfs-mount-settings.html
             mountOptions:
-            - rsize=1048576
-            - wsize=1048576
-            - timeo=600
-            - soft # We pick soft over hard, so NFS lockups don't lead to hung processes
-            - retrans=2
-            - noresvport
+              - rsize=1048576
+              - wsize=1048576
+              - timeo=600
+              - soft # We pick soft over hard, so NFS lockups don't lead to hung processes
+              - retrans=2
+              - noresvport
             serverIP: nfs-server-01
             baseShareName: /export/home-01/homes/
         jupyterhub:
@@ -45,7 +45,7 @@ hubs:
           singleuser:
             extraEnv:
               DATA_BUCKET: gcs://meom-ige-data
-              SCRATCH_BUCKET: 'gcs://meom-ige-scratch/$(JUPYTERHUB_USER)'
+              SCRATCH_BUCKET: "gcs://meom-ige-scratch/$(JUPYTERHUB_USER)"
             profileList:
               # The mem-guarantees are here so k8s doesn't schedule other pods
               # on these nodes. They need to be just under total allocatable
@@ -130,10 +130,10 @@ hubs:
             readinessProbe:
               enabled: false
       dask-gateway:
-          extraConfig:
-            idle: |
-              # timeout after 30 minutes of inactivity
-              c.KubeClusterConfig.idle_timeout = 1800
+        extraConfig:
+          idle: |
+            # timeout after 30 minutes of inactivity
+            c.KubeClusterConfig.idle_timeout = 1800
   - name: prod
     domain: meom-ige.2i2c.cloud
     template: daskhub

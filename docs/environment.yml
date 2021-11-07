@@ -1,8 +1,8 @@
 name: infrastructure-docs
 channels:
-- conda-forge
+  - conda-forge
 dependencies:
-- go-terraform-docs
-- python=3.8
-- pip:
-  - -r requirements.txt
+  - go-terraform-docs
+  - python=3.8
+  - pip:
+      - -r requirements.txt

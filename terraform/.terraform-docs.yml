@@ -10,5 +10,5 @@ output:
 
 sections:
   show:
-  - inputs
-  - outputs
+    - inputs
+    - outputs
