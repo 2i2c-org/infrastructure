@@ -153,7 +153,7 @@ hubs:
                 request: 1G
                 limit: 2G
   - name: prod
-    domain: pangeo.2i2c.cloud
+    domain: us-central1-b.gcp.pangeo.io
     template: daskhub
     auth0:
       enabled: false
@@ -168,7 +168,7 @@ hubs:
               Authenticator: *staging_jhub_authenticator
               JupyterHub: *staging_jhub_jupyterhub
               GitHubOAuthenticator:
-                oauth_callback_url: https://pangeo.2i2c.cloud/hub/oauth_callback
+                oauth_callback_url: https://us-central1-b.gcp.pangeo.io/hub/oauth_callback
                 allowed_organizations: *staging_jhub_allowed_orgs
                 scope: *staging_jhub_scope
           singleuser: *staging_jhub_singleuser
