@@ -2,7 +2,7 @@
 name: "\U0001F4DD Hub Incident"
 about: Report an incident on our running hub infrastructure.
 title: "[Incident] {{ TITLE }}"
-labels: "type: incident report"
+labels: "type: Hub Incident", support
 assignees: ''
 
 ---
@@ -16,6 +16,10 @@ Quick summary of the problem. Update this section as we learn more, answering:
 - how long it was
 - what went wrong and how we fixed it.
 -->
+
+## Hub information
+
+- Hub URL: {{ INSERT HUB URL HERE }}
 
 ## Timeline (if relevant)
 
