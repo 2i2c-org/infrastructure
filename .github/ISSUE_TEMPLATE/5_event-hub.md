@@ -33,12 +33,12 @@ assignees: ''
     Hey {{ COMMUNITY REPRESENTATIVE }}, the date of your event is getting close!
     
     Could you please confirm that your hub environment is ready-to-go, and matches your hub's infrastructure setup, by ensuring the following things:
-     - [ ] Log-in and authentication works as-expected
-
+    - [ ] Log-in and authentication works as-expected
     - [ ] `nbgitpuller` links you intend to use resolve properly
     - [ ] Your notebooks run as-expected
     
     </details>  
+
 - [ ] **1 day before event** A separate nodegroup is provisioned for the event
 
 **During and after event**
