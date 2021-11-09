@@ -66,8 +66,8 @@ hubs:
                   name: 2i2c
                   url: https://2i2c.org
                 funded_by:
-                  name: The Gordon and Betty Moore Foundation
-                  url: https://www.moore.org/
+                  name: NSF EarthCube Program (Award ICER-2026932)
+                  url: "https://www.nsf.gov/awardsearch/showAward?AWD_ID=2026932"
           hub:
             config:
               Authenticator: &staging_jhub_authenticator
