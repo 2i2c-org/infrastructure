@@ -148,6 +148,25 @@ jupyterhub:
     memory:
       guarantee: 256M
       limit: 1G
+    cpu:
+      # If no CPU limit is set, it is possible for a single user or group of users to
+      # starve everyone else of CPU time on a node, even causing new user pods to completely
+      # fail as the notebook server process gets no CPU to complete auth handshake with
+      # the server, and even trivial cells like `print("hello world")` may not run.
+      # Unlike memory guarantees, CPU guarantees are actually enforced by the Linux Kernel
+      # (see https://medium.com/@betz.mark/understanding-resource-limits-in-kubernetes-cpu-time-9eff74d3161b)
+      # By giving each user a 5% CPU guarantee (represented by 0.05), we ensure that:
+      # 1. Simple cells will always execute
+      # 2. Notebook server processes will always start - so users won't have server spawn failure
+      # 3. We don't accidentally set just a high limit for a particular hub and not set a
+      #    guarantee, at which point kubernetes treats the limit as the guarantee! This causes
+      #    far more nodes to be scaled up than needed, making everything super slow (like in
+      #    https://github.com/2i2c-org/infrastructure/issues/790)
+      # 4. Most of our workloads are still memory bound, and we want scaling to happen only
+      #    when a node is full on its memory guarantees. But a 0.05 guarantee means a n1-highmem-8
+      #    node can fit 160 user pods, and since kubernetes already caps us at 100 pods a node,
+      #    this guarantee doesn't actually change our scheduling.
+      guarantee: 0.05
     networkPolicy:
       # Allow unrestricted access to the internet but not local cluster network
       enabled: true
