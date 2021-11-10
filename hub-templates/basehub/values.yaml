@@ -198,6 +198,14 @@ jupyterhub:
                 matchLabels:
                   app: jupyterhub
                   component: autohttps
+        # Allow traffic to the proxy pod from user pods
+        # This is particularly important for daskhubs that utilise the proxy
+        # in order to create clusters (schedulers and workers)
+        - to:
+            - podSelector:
+                matchLabels:
+                  app: jupyterhub
+                  component: proxy
   hub:
     extraFiles:
       configurator-schema-default:
