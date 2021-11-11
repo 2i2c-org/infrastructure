@@ -6,6 +6,16 @@ aws:
   clusterName: openscapeshub.k8s.local
   region: us-west-2
   stateStore: s3://2i2c-openscapes-kops-state
+support:
+  config:
+    grafana:
+      ingress:
+        hosts:
+          - grafana.openscapes.2i2c.cloud
+        tls:
+          - secretName: grafana-tls
+            hosts:
+              - grafana.openscapes.2i2c.cloud
 hubs:
   - name: staging
     domain: staging.openscapes.2i2c.cloud
