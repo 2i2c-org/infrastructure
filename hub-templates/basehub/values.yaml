@@ -206,6 +206,11 @@ jupyterhub:
                 matchLabels:
                   app: jupyterhub
                   component: proxy
+        # Allow traffic to the traefik pod from user pods. Needed for daskhubs.
+        - to:
+            - podSelector:
+                matchLabels:
+                  app.kubernetes.io/component: traefik
   hub:
     extraFiles:
       configurator-schema-default:
