@@ -91,6 +91,13 @@ def render_hubs():
         yaml = cluster_info.read_text()
         cluster = safe_load(yaml)
 
+        # Pull support chart information to populate fields (if it exists)
+        support = cluster.get("support", {}).get("config", {})
+        grafana_url = support.get("grafana", {}).get("ingress", {}).get("hosts", "")
+        if isinstance(grafana_url, list):
+            grafana_url = grafana_url[0]
+            grafana_url = f"[{grafana_url}](http://{grafana_url})"
+
         # For each hub in cluster, grab its metadata and add it to the list
         for hub in cluster['hubs']:
             config = hub['config']
@@ -108,6 +115,7 @@ def render_hubs():
                 'domain': f"[{hub['domain']}](https://{hub['domain']})",
                 "id": hub['name'],
                 "template": hub['template'],
+                "grafana": grafana_url,
             })
     df = pd.DataFrame(hub_list)
     path_tmp = Path("tmp")
