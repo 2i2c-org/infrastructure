@@ -74,6 +74,9 @@ hubs:
                 admin_users:
                   - <staff_github_ids>
                   - rabernat
+                  - jhamman
+                  - scottyhq
+                  - TomAugspurger
               JupyterHub: &staging_jhub_jupyterhub
                 authenticator_class: github
               GitHubOAuthenticator:
