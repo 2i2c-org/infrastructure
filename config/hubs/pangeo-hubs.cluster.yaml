@@ -87,8 +87,6 @@ hubs:
                 scope: &staging_jhub_scope
                   - read:org
           singleuser: &staging_jhub_singleuser
-            networkPolicy:
-              enabled: false
             image:
               name: pangeo/pangeo-notebook
               tag: bcfacc5
