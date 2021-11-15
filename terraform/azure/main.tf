@@ -118,7 +118,9 @@ resource "azurerm_kubernetes_cluster_node_pool" "user_pool" {
 }
 
 resource "azurerm_kubernetes_cluster_node_pool" "dask_pool" {
-  for_each = var.dask_nodes
+  # If dask_nodes is set, we use that. If it isn't, we use notebook_nodes.
+  # This lets us set dask_nodes to an empty array to get no dask nodes
+  for_each = try(var.dask_nodes, var.notebook_nodes)
 
   name                  = "dask${each.key}"
   kubernetes_cluster_id = azurerm_kubernetes_cluster.jupyterhub.id
