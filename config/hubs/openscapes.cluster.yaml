@@ -60,7 +60,7 @@ hubs:
                   [
                     "sh",
                     "-c",
-                    "id && chown 1000:1000 /home/jovyan && ls -lhd /home/jovyan",
+                    "id && chown 1000:1000 /home/jovyan /home/jovyan/shared && ls -lhd /home/jovyan",
                   ]
                 securityContext:
                   runAsUser: 0
@@ -68,10 +68,19 @@ hubs:
                   - name: home
                     mountPath: /home/jovyan
                     subPath: "{username}"
+                  - name: home
+                    mountPath: /home/jovyan/shared
+                    subPath: _shared
 
             image:
               name: 783616723547.dkr.ecr.us-west-2.amazonaws.com/user-image
               tag: "d78bb6c"
+            storage:
+              extraVolumeMounts:
+                - name: home
+                  mountPath: /home/jovyan/shared
+                  subPath: _shared
+                  readOnly: false
             profileList:
               # The mem-guarantees are here so k8s doesn't schedule other pods
               # on these nodes.
