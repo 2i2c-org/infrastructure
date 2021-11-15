@@ -102,10 +102,7 @@ resource "azurerm_kubernetes_cluster_node_pool" "user_pool" {
   node_labels = {
     "hub.jupyter.org/node-purpose" = "user",
     "k8s.dask.org/node-purpose"    = "scheduler"
-    # Explicitly set this label, so the cluster autoscaler recognizes it
-    # Without this, it doesn't seem to bring up nodes in the correct
-    # nodepool when necessary
-    "node.kubernetes.io/instance-type" = each.value.vm_size
+    "hub.jupyter.org/node-size"    = each.value.vm_size
   }
 
   node_taints = [
