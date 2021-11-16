@@ -1,6 +1,6 @@
-# Add a new Google Cloud cluster
+# Add a new Azure or Google Cloud cluster
 
-This guide will walk through the process of adding a new cluster to our [terraform configuration](https://github.com/2i2c-org/infrastructure/tree/HEAD/terraform/gcp).
+This guide will walk through the process of adding a new cluster to our [terraform configuration](https://github.com/2i2c-org/infrastructure/tree/HEAD/terraform).
 
 ## Cluster Design
 
@@ -8,9 +8,14 @@ This guide will assume you have already followed the guidance in [](/topic/clust
 
 ## Creating a Terraform variables file for the cluster
 
-The first step is to create a `.tfvars` file in the [`terraform/gcp/projects` directory](https://github.com/2i2c-org/infrastructure/tree/HEAD/terraform/gcp/projects).
+The first step is to create a `.tfvars` file in the appropriate terraform projects subdirectory:
+
+- [`terraform/gcp/projects`](https://github.com/2i2c-org/infrastructure/tree/HEAD/terraform/gcp/projects) for Google Cloud clusters
+- [`terraform/azure/projects`](https://github.com/2i2c-org/infrastructure/tree/HEAD/terraform/azure/projects) for Azure clusters
+
 Give it a descriptive name that at a glance provides context to the location and/or purpose of the cluster.
 
+````{tabbed} Google Cloud
 The _minimum_ inputs this file requires are:
 
 - `prefix`: Prefix for all objects created by terraform.
@@ -26,8 +31,47 @@ Example `.tfvars` file:
 prefix     = "my-awesome-project"
 project_id = "my-awesome-project-id
 ```
+````
 
-Once you have created this file, open a Pull Request to the `infrastructure` repo for review.
+````{tabbed} Azure
+The _minimum_ inputs this file requires are:
+
+- `subscription_id`: Azure subscription ID to create resources in.
+  Should be the id, rather than display name of the project.
+- `resourcegroup_name`: The name of the Resource Group that the cluster and other resources will be deployed into.
+- `global_container_registry_name`: The name of an Azure Container Registry to use for our image.
+  This must be unique across all of Azure.
+  You can use the following command to check your desired name is available:
+
+  ```bash
+  az acr check-name --name ACR_NAME --output table
+  ```
+
+- `global_storage_account_name`: The name of a storage account to use for Azure File Storage.
+  This must be unique across all of Azure.
+  You can use the following command to check your desired name is available:
+
+  ```bash
+  az storage account check-name --name STORAGE_ACCOUNT_NAME --output table
+  ```
+
+- `ssh_pub_key`: The public half of an SSH key that will be authorised to login to nodes.
+
+See the [variables file](https://github.com/2i2c-org/infrastructure/blob/HEAD/terraform/azure/variables.tf) for other inputs this file can take and their descriptions.
+
+Example `.tfvars` file:
+
+```
+subscription_id                = "my-awesome-subscription-id"
+resourcegroup_name             = "my-awesome-resource-group"
+global_container_registry_name = "myawesomecontainerregistry"
+global_storage_account_name    = "myawesomestorageaccount"
+ssh_pub_key                    = "ssh-rsa my-public-ssh-key"
+```
+````
+
+Once you have created this file, open a Pull Request to the [`infrastructure` repo](https://github.com/2i2c-org/infrastructure) for review.
+See our [review and merge guidelines](infrastructure:review) for how this process should pan out.
 
 ## Initialising Terraform
 
@@ -37,10 +81,10 @@ Our default terraform state is located centrally in our `two-eye-two-see-org` GC
 gcloud auth application-default login
 ```
 
-Then you can change into the terraform directory and initialise
+Then you can change into the terraform subdirectory for the appropriate cloud provider and initialise terraform.
 
 ```bash
-cd terraform/gcp
+cd terraform/{{ gcp | azure }}
 terraform init -backend-config=backends/default-backend.hcl -reconfigure
 ```
 
@@ -72,7 +116,7 @@ If you can't find the workspace you're looking for, double check you've enabled 
 ## Plan and Apply Changes
 
 ```{note}
-Make sure the [Artifact Registry API](https://console.cloud.google.com/apis/library/artifactregistry.googleapis.com) in enabled on the project before deploying!
+When deploying to Google Cloud, make sure the [Artifact Registry API](https://console.cloud.google.com/apis/library/artifactregistry.googleapis.com) in enabled on the project before deploying!
 ```
 
 Plan your changes with the `terraform plan` command, passing the `.tfvars` file as a variable file.
@@ -94,7 +138,7 @@ Congratulations, you've just deployed a new cluster!
 
 ## Exporting and Encrypting the Continuous Deployment Service Account
 
-To begin deploying and operating hubs on your new cluster, we need to export the Continuous Deployment Service Account created by terraform, encrypt it using `sops`, and store it in the `secrets` directory of the `infrastructure` repo.
+To begin deploying and operating hubs on your new cluster, we need to export the credentials created by terraform, encrypt it using `sops`, and store it in the `secrets` directory of the `infrastructure` repo.
 
 Check you are still in the correct terraform workspace
 
@@ -109,15 +153,25 @@ terraform workspace list  # List all available workspaces
 terraform workspace select WORKSPACE_NAME
 ```
 
-Then, output the JSON key for the service account created by terraform to a file under the `secrets` directory.
+Then, output the credentials created by terraform to a file under the `secrets` directory.
 
-```bash
-terraform output -raw ci_deployer_key > ../../secrets/CLUSTER_NAME.json
-```
+.. tabs:
+
+   .. tab: Google Cloud
+
+      ```bash
+      terraform output -raw ci_deployer_key > ../../secrets/CLUSTER_NAME.json
+      ```
+
+   .. tab: Azure
+
+      ```bash
+      terraform output -raw kubeconfig > ../../secrets/CLUSTER_NAME.yaml
+      ```
 
 where `CLUSTER_NAME` matches the name of our `.tfvars` file.
 
-Encrypt the key using `sops`
+Then encrypt the key using `sops`.
 
 ```{note}
 You must be logged into Google with your `@2i2c.org` account at this point so `sops` can read the encryption key from the `two-eye-two-see` project.
