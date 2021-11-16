@@ -24,7 +24,6 @@ In that case, follow the instructions at [](new-hub).
 The following sections cover how to deploy a Kubernetes cluster on the cloud providers that we support.
 
 ```{toctree}
-google-cloud.md
+azure-or-google-cloud.md
 aws.md
-azure.md
 ```
