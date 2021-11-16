@@ -59,6 +59,21 @@ The _minimum_ inputs this file requires are:
 
 See the [variables file](https://github.com/2i2c-org/infrastructure/blob/HEAD/terraform/azure/variables.tf) for other inputs this file can take and their descriptions.
 
+```{admonition} Naming Convention Guidelines for Container Registries and Storage Accounts
+
+Names for Azure container registries and storage accounts **must** conform to the following guidelines:
+
+- alphanumeric strings between 5 and 50 characters long for [container registries](https://docs.microsoft.com/en-us/azure/azure-resource-manager/management/resource-name-rules#microsoftcontainerregistry), e.g., `myContainerRegistry007`
+- alphanumeric strings between 2 and 24 characters for [storage accounts](https://docs.microsoft.com/en-us/azure/azure-resource-manager/management/resource-name-rules#microsoftstorage), e.g., `myStorageAccount314`
+
+We explictly recommend the following conventions using `lowerCamelCase`:
+
+- `{CLUSTER_NAME}HubRegistry` for container registries
+- `{CLUSTER_NAME}HubStorage` for storage accounts
+
+This increases the probability that we won't take up a namespace that may be required by the Hub Community, for example, in cases where we are deploying to Azure subscriptions not owned/managed by 2i2c.
+```
+
 Example `.tfvars` file:
 
 ```
