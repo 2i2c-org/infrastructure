@@ -63,7 +63,7 @@ See the [variables file](https://github.com/2i2c-org/infrastructure/blob/HEAD/te
 
 Names for Azure container registries and storage accounts **must** conform to the following guidelines:
 
-- alphanumeric strings between 5 and 50 characters long for [container registries](https://docs.microsoft.com/en-us/azure/azure-resource-manager/management/resource-name-rules#microsoftcontainerregistry), e.g., `myContainerRegistry007`
+- alphanumeric strings between 5 and 50 characters for [container registries](https://docs.microsoft.com/en-us/azure/azure-resource-manager/management/resource-name-rules#microsoftcontainerregistry), e.g., `myContainerRegistry007`
 - alphanumeric strings between 2 and 24 characters for [storage accounts](https://docs.microsoft.com/en-us/azure/azure-resource-manager/management/resource-name-rules#microsoftstorage), e.g., `myStorageAccount314`
 
 We explictly recommend the following conventions using `lowerCamelCase`:
