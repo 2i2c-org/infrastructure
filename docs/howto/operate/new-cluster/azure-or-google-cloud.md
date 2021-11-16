@@ -155,19 +155,17 @@ terraform workspace select WORKSPACE_NAME
 
 Then, output the credentials created by terraform to a file under the `secrets` directory.
 
-.. tabs:
+````{tabbed} Google Cloud
+```bash
+terraform output -raw ci_deployer_key > ../../secrets/CLUSTER_NAME.json
+```
+````
 
-   .. tab: Google Cloud
-
-      ```bash
-      terraform output -raw ci_deployer_key > ../../secrets/CLUSTER_NAME.json
-      ```
-
-   .. tab: Azure
-
-      ```bash
-      terraform output -raw kubeconfig > ../../secrets/CLUSTER_NAME.yaml
-      ```
+````{tabbed} Azure
+```bash
+terraform output -raw kubeconfig > ../../secrets/CLUSTER_NAME.yaml
+```
+````
 
 where `CLUSTER_NAME` matches the name of our `.tfvars` file.
 
