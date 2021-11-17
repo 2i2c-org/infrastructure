@@ -4,5 +4,4 @@ pyyaml
 requests
 sphinx-autobuild
 sphinx-panels
-sphinx-tabs
 git+https://github.com/2i2c-org/sphinx-2i2c-theme
