@@ -157,7 +157,7 @@ terraform apply -var-file=projects/CLUSTER.tfvars
 
 Congratulations, you've just deployed a new cluster!
 
-## Exporting and Encrypting the Continuous Deployment Service Account
+## Exporting and Encrypting the Cluster Access Credentials
 
 To begin deploying and operating hubs on your new cluster, we need to export the credentials created by terraform, encrypt it using `sops`, and store it in the `secrets` directory of the `infrastructure` repo.
 
