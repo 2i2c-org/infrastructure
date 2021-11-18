@@ -47,7 +47,7 @@ The _minimum_ inputs this file requires are:
 - `resourcegroup_name`: The name of the Resource Group that the cluster and other resources will be deployed into.
 - `global_container_registry_name`: The name of an Azure Container Registry to use for our image.
   This must be unique across all of Azure.
-  You can use the following command to check your desired name is available:
+  You can use the following [Azure CLI](https://docs.microsoft.com/en-us/cli/azure/) command to check your desired name is available:
 
   ```bash
   az acr check-name --name ACR_NAME --output table
@@ -55,7 +55,7 @@ The _minimum_ inputs this file requires are:
 
 - `global_storage_account_name`: The name of a storage account to use for Azure File Storage.
   This must be unique across all of Azure.
-  You can use the following command to check your desired name is available:
+  You can use the following [Azure CLI](https://docs.microsoft.com/en-us/cli/azure/) command to check your desired name is available:
 
   ```bash
   az storage account check-name --name STORAGE_ACCOUNT_NAME --output table
