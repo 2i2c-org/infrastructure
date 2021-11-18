@@ -138,7 +138,7 @@ If you can't find the workspace you're looking for, double check you've enabled 
 ## Plan and Apply Changes
 
 ```{note}
-When deploying to Google Cloud, make sure the [Artifact Registry API](https://console.cloud.google.com/apis/library/artifactregistry.googleapis.com) in enabled on the project before deploying!
+When deploying to Google Cloud, make sure the [Artifact Registry API](https://console.cloud.google.com/apis/library/artifactregistry.googleapis.com) is enabled on the project before deploying!
 ```
 
 Plan your changes with the `terraform plan` command, passing the `.tfvars` file as a variable file.
