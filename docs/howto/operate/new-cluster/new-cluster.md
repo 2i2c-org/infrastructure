@@ -147,7 +147,7 @@ Plan your changes with the `terraform plan` command, passing the `.tfvars` file 
 terraform plan -var-file=projects/CLUSTER.tfvars
 ```
 
-Check over the output of this command to ensure nothing if being created/deleted than you expected.
+Check over the output of this command to ensure nothing is being created/deleted that you didn't expect.
 Copy-paste the plan into your open Pull Request so a fellow 2i2c engineer can double check it too.
 
 If you're both satisfied with the plan, merge the Pull Request and apply the changes to deploy the cluster.
