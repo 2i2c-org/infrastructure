@@ -12,7 +12,7 @@ Please see [](new-cluster:aws) for AWS-specific deployment guidelines.
 
 This guide will assume you have already followed the guidance in [](/topic/cluster-design) to select the appropriate infrastructure.
 
-## Creating a Terraform variables file for the cluster
+## Create a Terraform variables file for the cluster
 
 The first step is to create a `.tfvars` file in the appropriate terraform projects subdirectory:
 
