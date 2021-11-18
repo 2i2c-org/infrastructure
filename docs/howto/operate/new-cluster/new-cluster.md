@@ -97,6 +97,7 @@ See our [review and merge guidelines](infrastructure:review) for how this proces
 ## Initialising Terraform
 
 Our default terraform state is located centrally in our `two-eye-two-see-org` GCP project, therefore you must authenticate `gcloud` to your `@2i2c.org` account before initialising terraform.
+The terraform state includes **all** cloud providers, not just GCP.
 
 ```bash
 gcloud auth application-default login
