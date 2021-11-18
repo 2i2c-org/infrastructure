@@ -136,6 +136,7 @@ hubs:
                 allowed_users: &users
                   - <staff_github_ids>
                   - jhamman
+                  - norlandrhagen
                 admin_users: *users
       dask-gateway:
         traefik:
