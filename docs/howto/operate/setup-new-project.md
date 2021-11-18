@@ -10,7 +10,7 @@ Each client organization of 2i2c gets their own [GCP Project](https://cloud.goog
 This allows us to:
 
 1. Maintain billing easily, since projects are the easiest unit of
-   billing. 
+   billing.
 2. Give members of client organizations (such as IT teams) full access to
    the cloud project, without granting access to other client organizations'
    resources
@@ -21,7 +21,7 @@ Client organizations can give us access to a billing account, or
 just to a project. This document describes what 2i2c engineers should
 do once client organizations give us access.
 
-See {doc}`/howto/operate/new-cluster/google-cloud` fore more detailed guidance.
+See {doc}`/howto/operate/new-cluster/new-cluster` fore more detailed guidance.
 
 ## Client organization provides billing account
 
@@ -52,7 +52,7 @@ repository.
    make sure the diff isn't that different, and comment on the PR once it's done.
 
 5. Validate that the project has been created, and you have access to it with
-   your user account. 
+   your user account.
 
 ## Without billing account access
 
