@@ -144,6 +144,18 @@ hubs:
                   - jhamman
                   - norlandrhagen
                 admin_users: *users
+            extraConfig:
+              10-dynamic-subpath: |
+                import os
+                pod_namespace = os.environ['POD_NAMESPACE']
+                # FIXME: This isn't setting up _shared dirs properly
+                c.KubeSpawner.volume_mounts = [
+                  {
+                    "mountPath": "/home/jovyan",
+                    "name": "home",
+                    "subPath": f"{pod_namespace}/{{username}}"
+                  },
+                ]
       dask-gateway:
         traefik:
           resources:
@@ -170,21 +182,6 @@ hubs:
               cpu: 2
               memory: 4Gi
             # TODO: figure out a replacement for userLimits.
-          extraConfig:
-            idle: |
-              # timeout after 30 minutes of inactivity
-              c.KubeClusterConfig.idle_timeout = 1800
-            10-dynamic-subpath: |
-              import os
-              pod_namespace = os.environ['POD_NAMESPACE']
-              # FIXME: This isn't setting up _shared dirs properly
-              c.KubeSpawner.volume_mounts = [
-                {
-                  "mountPath": "/home/jovyan",
-                  "name": "home",
-                  "subPath": f"{pod_namespace}/{{username}}"
-                },
-              ]
   - name: prod
     domain: carbonplan-azure.2i2c.cloud
     template: daskhub
