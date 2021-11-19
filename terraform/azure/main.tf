@@ -117,7 +117,7 @@ resource "azurerm_kubernetes_cluster_node_pool" "user_pool" {
 resource "azurerm_kubernetes_cluster_node_pool" "dask_pool" {
   # If dask_nodes is set, we use that. If it isn't, we use notebook_nodes.
   # This lets us set dask_nodes to an empty array to get no dask nodes
-  for_each = try(var.dask_nodes, var.notebook_nodes)
+  for_each = length(var.dask_nodes) == 0 ? var.notebook_nodes : var.dask_nodes
 
   name                  = "dask${each.key}"
   kubernetes_cluster_id = azurerm_kubernetes_cluster.jupyterhub.id
@@ -129,16 +129,12 @@ resource "azurerm_kubernetes_cluster_node_pool" "dask_pool" {
 
   vm_size = each.value.vm_size
   node_labels = {
-    "hub.jupyter.org/node-purpose" = "user",
-    "k8s.dask.org/node-purpose"    = "scheduler",
-    # Explicitly set this label, so the cluster autoscaler recognizes it
-    # Without this, it doesn't seem to bring up nodes in the correct
-    # nodepool when necessary
-    "node.kubernetes.io/instance-type" = each.value.vm_size
+    "k8s.dask.org/node-purpose" = "worker",
+    "hub.jupyter.org/node-size" = each.value.vm_size
   }
 
   node_taints = [
-    "hub.jupyter.org_dedicated=user:NoSchedule"
+    "k8s.dask.org_dedicated=worker:NoSchedule"
   ]
 
 
