@@ -1,0 +1,190 @@
+name: carbonplan-azure
+provider: kubeconfig
+kubeconfig:
+  file: secrets/carbonplan-azure.yaml
+support:
+  config:
+    prometheus:
+      server:
+        resources:
+          requests:
+            cpu: 1
+            memory: 4Gi
+          limits:
+            cpu: 4
+            memory: 8Gi
+    grafana:
+      ingress:
+        hosts:
+          - grafana.azure.carbonplan.2i2c.cloud
+        tls:
+          - secretName: grafana-tls
+            hosts:
+              - grafana.azure.carbonplan.2i2c.cloud
+hubs:
+  - name: staging
+    domain: staging.azure.carbonplan.2i2c.cloud
+    template: daskhub
+    auth0:
+      connection: github
+    config: &carbonPlanHubConfig
+      basehub:
+        azureFile:
+          enabled: true
+        nfs:
+          enabled: false
+          shareCreator:
+            enabled: false
+        jupyterhub:
+          custom:
+            homepage:
+              templateVars:
+                org:
+                  name: Carbon Plan
+                  logo_url: https://pbs.twimg.com/profile_images/1262387945971101697/5q_X3Ruk_400x400.jpg
+                  url: https://carbonplan.org
+                designed_by:
+                  name: 2i2c
+                  url: https://2i2c.org
+                operated_by:
+                  name: 2i2c
+                  url: https://2i2c.org
+                funded_by:
+                  name: Carbon Plan
+                  url: https://carbonplan.org
+          singleuser:
+            image:
+              name: pangeo/pangeo-notebook
+              tag: latest
+            profileList:
+              # The mem-guarantees are here so k8s doesn't schedule other pods
+              # on these nodes.
+              - display_name: "Small: E2s v4"
+                description: "~2 CPU, ~15G RAM"
+                kubespawner_override:
+                  # Explicitly unset mem_limit, so it overrides the default memory limit we set in
+                  # basehub/values.yaml
+                  mem_limit: null
+                  mem_guarantee: 12G
+                  node_selector:
+                    hub.jupyter.org/node-size: Standard_E2s_v4
+              - display_name: "Medium: E4s v4"
+                description: "~4 CPU, ~30G RAM"
+                kubespawner_override:
+                  mem_limit: null
+                  mem_guarantee: 29G
+                  node_selector:
+                    hub.jupyter.org/node-size: Standard_E4s_v4
+              - display_name: "Large: E8s v4"
+                description: "~8 CPU, ~60G RAM"
+                kubespawner_override:
+                  mem_limit: null
+                  mem_guarantee: 60G
+                  node_selector:
+                    hub.jupyter.org/node-size: Standard_E8s_v4
+              - display_name: "Huge: E32s v4"
+                description: "~32 CPU, ~256G RAM"
+                kubespawner_override:
+                  mem_limit: null
+                  mem_guarantee: 240G
+                  node_selector:
+                    hub.jupyter.org/node-size: Standard_E32s_v4
+              - display_name: "Very Huge: M64s v2"
+                description: "~64 CPU, ~1024G RAM"
+                kubespawner_override:
+                  mem_limit: null
+                  mem_guarantee: 990G
+                  node_selector:
+                    hub.jupyter.org/node-size: Standard_M64s_v2
+              - display_name: "Very Very Huge: M128s v2"
+                description: "~128 CPU, ~2048G RAM"
+                kubespawner_override:
+                  mem_limit: null
+                  mem_guarantee: 2000G
+                  node_selector:
+                    hub.jupyter.org/node-size: Standard_M182s_v2
+            storage:
+              type: none
+              extraVolumes:
+                - name: home
+                  persistentVolumeClaim:
+                    claimName: home-azurefile
+          scheduling:
+            userPlaceholder:
+              enabled: false
+              replicas: 0
+            userScheduler:
+              enabled: false
+          proxy:
+            chp:
+              resources:
+                requests:
+                  cpu: 0.5
+                  memory: 256Mi
+                limits:
+                  cpu: 1
+                  memory: 4Gi
+              nodeSelector: {}
+          hub:
+            resources:
+              requests:
+                cpu: 0.5
+                memory: 256Mi
+              limits:
+                cpu: 1
+                memory: 4Gi
+            allowNamedServers: true
+            readinessProbe:
+              enabled: false
+            nodeSelector: {}
+            config:
+              Authenticator:
+                allowed_users: &users
+                  - <staff_github_ids>
+                  - jhamman
+                  - norlandrhagen
+                admin_users: *users
+            extraConfig:
+              10-dynamic-subpath: |
+                import os
+                pod_namespace = os.environ['POD_NAMESPACE']
+                # FIXME: This isn't setting up _shared dirs properly
+                c.KubeSpawner.volume_mounts = [
+                  {
+                    "mountPath": "/home/jovyan",
+                    "name": "home",
+                    "subPath": f"{pod_namespace}/{{username}}"
+                  },
+                ]
+      dask-gateway:
+        traefik:
+          resources:
+            requests:
+              cpu: 0.5
+              memory: 512Mi
+            limits:
+              cpu: 2
+              memory: 4Gi
+        controller:
+          resources:
+            requests:
+              cpu: 0.5
+              memory: 512Mi
+            limits:
+              cpu: 2
+              memory: 4Gi
+        gateway:
+          resources:
+            requests:
+              cpu: 0.5
+              memory: 512Mi
+            limits:
+              cpu: 2
+              memory: 4Gi
+            # TODO: figure out a replacement for userLimits.
+  - name: prod
+    domain: prod.azure.carbonplan.2i2c.cloud
+    template: daskhub
+    auth0:
+      connection: github
+    config: *carbonPlanHubConfig
