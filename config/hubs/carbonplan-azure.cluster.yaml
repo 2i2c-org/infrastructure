@@ -16,14 +16,14 @@ support:
     grafana:
       ingress:
         hosts:
-          - grafana.carbonplan-azure.2i2c.cloud
+          - grafana.azure.carbonplan.2i2c.cloud
         tls:
           - secretName: grafana-tls
             hosts:
-              - grafana.carbonplan-azure.2i2c.cloud
+              - grafana.azure.carbonplan.2i2c.cloud
 hubs:
   - name: staging
-    domain: staging.carbonplan-azure.2i2c.cloud
+    domain: staging.azure.carbonplan.2i2c.cloud
     template: daskhub
     auth0:
       connection: github
