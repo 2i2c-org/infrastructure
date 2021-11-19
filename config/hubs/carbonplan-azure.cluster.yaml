@@ -183,7 +183,7 @@ hubs:
               memory: 4Gi
             # TODO: figure out a replacement for userLimits.
   - name: prod
-    domain: carbonplan-azure.2i2c.cloud
+    domain: azure.carbonplan.2i2c.cloud
     template: daskhub
     auth0:
       connection: github
