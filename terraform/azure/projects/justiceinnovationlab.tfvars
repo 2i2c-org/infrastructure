@@ -29,6 +29,3 @@ notebook_nodes = {
     vm_size : "Standard_E32s_v4"
   },
 }
-
-# JIL doesn't use dask-gateway
-dask_nodes = {}
