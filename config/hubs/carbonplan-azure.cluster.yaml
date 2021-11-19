@@ -103,6 +103,12 @@ hubs:
                   mem_guarantee: 2000G
                   node_selector:
                     hub.jupyter.org/node-size: Standard_M182s_v2
+            storage:
+              type: none
+              extraVolumes:
+                - name: home
+                  persistentVolumeClaim:
+                    claimName: home-azurefile
           scheduling:
             userPlaceholder:
               enabled: false
