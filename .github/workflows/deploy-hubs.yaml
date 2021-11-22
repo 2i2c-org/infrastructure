@@ -41,8 +41,6 @@ jobs:
             provider: aws
           - cluster_name: meom-ige
             provider: gcp
-          - cluster_name: pangeo-181919
-            provider: gcp
           - cluster_name: pangeo-hubs
             provider: gcp
 
