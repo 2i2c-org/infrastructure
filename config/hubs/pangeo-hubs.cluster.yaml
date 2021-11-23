@@ -21,6 +21,11 @@ support:
       controller:
         admissionWebhooks:
           enabled: false
+    prometheus:
+      server:
+        resources:
+          limits:
+            memory: 3Gi
 hubs:
   - name: staging
     domain: staging.us-central1-b.gcp.pangeo.io
