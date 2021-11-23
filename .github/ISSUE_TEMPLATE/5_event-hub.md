@@ -2,7 +2,7 @@
 name: "\U0001F4C5 Event for a community"
 about: Coordination and planning around an event for a community
 title: "[EVENT] {{ HUB NAME }}"
-labels: ''
+labels: 'event'
 assignees: ''
 
 ---
@@ -21,22 +21,47 @@ assignees: ''
 
 ### Task List
 
+**Before the event**
+
 - [ ] Dates confirmed with the community representative
 - [ ] **One week before event** Hub is running.
 - [ ] Confirm with Community Representative that their workflows function as expected.
-  - Log-in and authentication works as-expected
-  - Any `nbgitpuller` links resolve properly
-  - Notebooks run as-expected
+  - <details>
+    <summary>👉Template message to send to community representative</summary>
+    
+    ```
+    Hey {{ COMMUNITY REPRESENTATIVE }}, the date of your event is getting close!
+    
+    Could you please confirm that your hub environment is ready-to-go, and matches your hub's infrastructure setup, by ensuring the following things:
+    - [ ] Log-in and authentication works as-expected
+    - [ ] `nbgitpuller` links you intend to use resolve properly
+    - [ ] Your notebooks run as-expected
+    
+    </details>  
+
 - [ ] **1 day before event** A separate nodegroup is provisioned for the event
 
-- [ ] Event in progress.
+**During and after event**
+
 - [ ] Confirm event is finished.
 - [ ] Nodegroup created for the hub is decommissioned.
-
 - [ ] Hub decommissioned (if needed).
 - [ ] Debrief with community representative.
-  - Did the infrastructure behave as expected?
-  - Anything that was confusing or could be improved?
-  - Any extra functionality you wish you would have had?
-  - Are you willing to share a story about how you used the hub?
+  - <details>
+    <summary>👉Template debrief to send to community representative</summary>
+      
+     ```
+     Hey {{ COMMUNITY REPRESENTATIVE }}, your event appears to be over 🎉
+     
+     We hope that your hub worked out well for you! We are trying to understand where we can improve our hub infrastructure and setup around events, and would love any feedback that you're willing to give. Would you mind answering the following questions? If not, just let us know and that is no problem!
+  
+     - Did the infrastructure behave as expected?
+     - Anything that was confusing or could be improved?
+     - Any extra functionality you wish you would have had?
+     - Could you share a story about how you used the hub?
 
+     - Any other feedback that you'd like to share?
+     
+     ```
+
+    </details>  
