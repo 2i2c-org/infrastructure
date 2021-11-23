@@ -13,7 +13,6 @@ jobs:
           - cluster_name: 2i2c
           - cluster_name: cloudbank
           - cluster_name: carbonplan
-          - cluster_name: pangeo-181919
           - cluster_name: pangeo-hubs
     steps:
       - name: Checkout repo
