@@ -54,7 +54,7 @@ hubs:
                   url: https://carbonplan.org
           singleuser:
             image:
-              name: pangeo/pangeo-notebook
+              name: carbonplan/cmip6-downscaling-single-user
               tag: latest
             profileList:
               # The mem-guarantees are here so k8s doesn't schedule other pods
