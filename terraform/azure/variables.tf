@@ -9,6 +9,16 @@ variable "subscription_id" {
   EOT
 }
 
+variable "tenant_id" {
+  type        = string
+  description = <<-EOT
+  Tenant ID inside which our subscription is housed
+
+  `az account show -s SUBSCRIPTION_ID -o table` will show the ID of the tenant
+  after you have logged in with `az login`.
+  EOT
+}
+
 variable "resourcegroup_name" {
   type        = string
   description = <<-EOT
