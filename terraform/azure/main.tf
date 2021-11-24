@@ -1,9 +1,24 @@
 
 terraform {
+  required_providers {
+    azurerm = {
+      source = "hashicorp/azurerm"
+      version = "2.86.0"
+    }
+
+    azuread = {
+      source = "hashicorp/azuread"
+      version = "2.10.0"
+    }
+  }
   backend "gcs" {
     bucket = "two-eye-two-see-org-terraform-state"
     prefix = "terraform/state/pilot-hubs"
   }
+}
+
+provider "azuread" {
+  tenant_id = var.tenant_id
 }
 provider "azurerm" {
   subscription_id = var.subscription_id
