@@ -36,6 +36,7 @@ assignees: ''
     - [ ] Log-in and authentication works as-expected
     - [ ] `nbgitpuller` links you intend to use resolve properly
     - [ ] Your notebooks run as-expected
+    ```
     
     </details>  
 
