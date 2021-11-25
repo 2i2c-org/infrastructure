@@ -25,8 +25,36 @@ basehub:
         blockWithIptables: false
       serviceAccountName: user-sa
       extraEnv:
-        # The default worker image matches the singleuser image.
+        # About DASK_ prefixed variables we set:
+        #
+        # 1. k8s native variable expansion is applied with $(MY_ENV) syntax. The
+        #    order variables are defined matters though and we are under the
+        #    mercy of how KubeSpawner renders our passed dictionaries.
+        #
+        # 2. Dask loads local YAML config.
+        #
+        # 3. Dask loads environment variables prefixed DASK_.
+        #    - DASK_ is stripped
+        #    - Capitalization is ignored
+        #    - Double underscore means a nested configuration
+        #    - `ast.literal_eval` is used to parse values
+        #
+        # 4. dask-gateway and dask-distributed looks at its config and expands
+        #    expressions in {} again, sometimes only with the environment
+        #    variables as context but sometimes also with additional variables.
+        #
+        # References:
+        # - K8s expansion:     https://kubernetes.io/docs/tasks/inject-data-application/define-interdependent-environment-variables/
+        # - KubeSpawner issue: https://github.com/jupyterhub/kubespawner/issues/491
+        # - Dask config:       https://docs.dask.org/en/latest/configuration.html
+        # - Exploration issue: https://github.com/2i2c-org/pilot-hubs/issues/442
+        #
+        # DASK_GATEWAY__CLUSTER__OPTIONS__IMAGE makes the default worker image
+        # match the singleuser image.
         DASK_GATEWAY__CLUSTER__OPTIONS__IMAGE: "{JUPYTER_IMAGE_SPEC}"
+        # DASK_GATEWAY__CLUSTER__OPTIONS__ENVIRONMENT makes some environment
+        # variables be copied over to the worker nodes from the user nodes.
+        DASK_GATEWAY__CLUSTER__OPTIONS__ENVIRONMENT: '{"SCRATCH_BUCKET": "$(SCRATCH_BUCKET)", "PANGEO_SCRATCH": "$(PANGEO_SCRATCH)"}'
 
     hub:
       networkPolicy:
