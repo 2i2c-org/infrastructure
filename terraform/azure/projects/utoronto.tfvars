@@ -8,7 +8,6 @@ global_storage_account_name = "2i2cutorontohubstorage"
 
 location" = "Canada Central"
 
-
 notebook_nodes = {
   "default" : {
     min : 1,
