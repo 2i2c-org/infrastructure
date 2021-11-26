@@ -22,7 +22,7 @@ metadata:
   annotations:
     cnrm.cloud.google.com/project-id : {{ .Values.jupyterhub.custom.cloudResources.gcp.projectId | quote }}
 spec:
-  member: serviceAccount:{{ include "cloudResources.gcp.serviceAccountName" . }}@{{ .Values.jupyterhub.custom.cloudResources.gcp.projectId}}.iam.gserviceaccount.com
+  member: serviceAccount:{{ include "cloudResources.gcp.serviceAccountName" . }}@{{ .Values.jupyterhub.custom.cloudResources.gcp.projectId }}.iam.gserviceaccount.com
   # This gives users the ability to delete the bucket too :(
   # But without this, I think you can't list objects in the bucket
   role: roles/storage.admin
