@@ -38,3 +38,36 @@ notebook_nodes = {
     vm_size : "Standard_M128s_v2"
   },
 }
+
+dask_nodes = {
+  "small" : {
+    min : 0,
+    max : 20,
+    vm_size : "Standard_E2s_v4"
+  },
+  "medium" : {
+    min : 0,
+    max : 20,
+    vm_size : "Standard_E4s_v4"
+  },
+  "large" : {
+    min : 0,
+    max : 20,
+    vm_size : "Standard_E8s_v4"
+  },
+  "huge" : {
+    min : 0,
+    max : 20,
+    vm_size : "Standard_E32s_v4"
+  },
+  "vhuge" : {
+    min : 0,
+    max : 20,
+    vm_size : "Standard_M64s_v2"
+  },
+  "vvhuge" : {
+    min : 0,
+    max : 20,
+    vm_size : "Standard_M128s_v2"
+  },
+}
