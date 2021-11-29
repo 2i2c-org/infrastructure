@@ -46,8 +46,8 @@ The _minimum_ inputs this file requires are:
 
 - `subscription_id`: Azure subscription ID to create resources in.
   Should be the id, rather than display name of the project.
-- `resourcegroup_name`: The name of the Resource Group that the cluster and other resources will be deployed into.
-- `global_container_registry_name`: The name of an Azure Container Registry to use for our image.
+- `resourcegroup_name`: The name of the Resource Group to be created by terraform, where the cluster and other resources will be deployed into.
+- `global_container_registry_name`: The name of an Azure Container Registry to be created by terraform to use for our image.
   This must be unique across all of Azure.
   You can use the following [Azure CLI](https://docs.microsoft.com/en-us/cli/azure/) command to check your desired name is available:
 
@@ -55,7 +55,7 @@ The _minimum_ inputs this file requires are:
   az acr check-name --name ACR_NAME --output table
   ```
 
-- `global_storage_account_name`: The name of a storage account to use for Azure File Storage.
+- `global_storage_account_name`: The name of a storage account to be created by terraform to use for Azure File Storage.
   This must be unique across all of Azure.
   You can use the following [Azure CLI](https://docs.microsoft.com/en-us/cli/azure/) command to check your desired name is available:
 
@@ -72,12 +72,12 @@ See the [variables file](https://github.com/2i2c-org/infrastructure/blob/HEAD/te
 Names for Azure container registries and storage accounts **must** conform to the following guidelines:
 
 - alphanumeric strings between 5 and 50 characters for [container registries](https://docs.microsoft.com/en-us/azure/azure-resource-manager/management/resource-name-rules#microsoftcontainerregistry), e.g., `myContainerRegistry007`
-- alphanumeric strings between 2 and 24 characters for [storage accounts](https://docs.microsoft.com/en-us/azure/azure-resource-manager/management/resource-name-rules#microsoftstorage), e.g., `myStorageAccount314`
+- lowercase letters and numbers strings between 2 and 24 characters for [storage accounts](https://docs.microsoft.com/en-us/azure/azure-resource-manager/management/resource-name-rules#microsoftstorage), e.g., `mystorageaccount314`
 
 We explictly recommend the following conventions using `lowerCamelCase`:
 
-- `{CLUSTER_NAME}HubRegistry` for container registries
-- `{CLUSTER_NAME}HubStorage` for storage accounts
+- `{CLUSTER_NAME}hubregistry` for container registries
+- `{CLUSTER_NAME}hubstorage` for storage accounts
 
 This increases the probability that we won't take up a namespace that may be required by the Hub Community, for example, in cases where we are deploying to Azure subscriptions not owned/managed by 2i2c.
 ```
@@ -87,7 +87,7 @@ Example `.tfvars` file:
 ```
 subscription_id                = "my-awesome-subscription-id"
 resourcegroup_name             = "my-awesome-resource-group"
-global_container_registry_name = "myawesomecontainerregistry"
+global_container_registry_name = "myawesomehubregistry"
 global_storage_account_name    = "myawesomestorageaccount"
 ssh_pub_key                    = "ssh-rsa my-public-ssh-key"
 ```
@@ -113,7 +113,7 @@ terraform init -backend-config=backends/default-backend.hcl -reconfigure
 ```
 
 ````{note}
-If you are working on a project which you cannot access with your 2i2c account, there are other backend config files stored in `terraform/backends` that will configure a different storage bucket to read/write the remote terraform state.
+There are other backend config files stored in `terraform/backends` that will configure a different storage bucket to read/write the remote terraform state for projects which we cannot access with our 2i2c account,.
 This saves us the pain of having to handle multiple authentications as these storage buckets are within the project we are trying to deploy to.
 
 For example, to work with Pangeo you would initialise terraform like so:
@@ -121,6 +121,8 @@ For example, to work with Pangeo you would initialise terraform like so:
 ```bash
 terraform init -backend-config=pangeo-backend.hcl -reconfigure
 ```
+
+TODO: add instructions on how/when to create other backends
 ````
 
 ## Creating a new terraform workspace
@@ -141,6 +143,11 @@ If you can't find the workspace you're looking for, double check you've enabled 
 
 ```{note}
 When deploying to Google Cloud, make sure the [Artifact Registry API](https://console.cloud.google.com/apis/library/artifactregistry.googleapis.com) is enabled on the project before deploying!
+```
+First, make sure you are in the new workspace that you just created.
+
+```bash
+terraform workspace show
 ```
 
 Plan your changes with the `terraform plan` command, passing the `.tfvars` file as a variable file.
