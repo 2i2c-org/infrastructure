@@ -19,3 +19,9 @@ aws.md
 ```{note}
 TODO: write specific documentation for google cloud and azure cloud providers
 ```
+
+## Setting up repo2docker-action
+
+```{toctree}
+split-repo2docker.md
+```
