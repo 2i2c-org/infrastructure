@@ -25,7 +25,8 @@ support:
       server:
         resources:
           limits:
-            memory: 3Gi
+            cpu: 2
+            memory: 12Gi
 hubs:
   - name: staging
     domain: staging.us-central1-b.gcp.pangeo.io
