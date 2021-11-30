@@ -20,8 +20,7 @@ make this happen.
     called `source`, as we will create a new GitHub repo later that will be `origin`.
 
 2. Make sure [git-filter-repo](https://github.com/newren/git-filter-repo)
-   is installed. It should be available in [brew or other package managgers]
-   (https://github.com/newren/git-filter-repo/blob/main/INSTALL.md)
+   is installed. It should be available in [brew or other package managers](https://github.com/newren/git-filter-repo/blob/main/INSTALL.md)
 
 3. Run `git-filter-repo` to remove everything from the repo except the
    image directory.
