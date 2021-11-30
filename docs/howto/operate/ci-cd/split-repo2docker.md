@@ -34,10 +34,10 @@ make this happen.
     as well as full git history for any commits that touched it! This way,
     we do not lose history or attribution.
 
-4. Create a new repository in GitHub based off [this template](https://github.com/2i2c-org/hub-user-image-template).
+4. Create a user image repository in GitHub based off [this template](https://github.com/2i2c-org/hub-user-image-template).
    The template makes it much easier to setup repo2docker-action on it.
 
-5. Add the new repo as a remote you can push commits to / pull commits from.
+5. Add the new user image repo as a remote you can push commits to / pull commits from.
    This will be the primary location of this repo now, so let's call it `origin`.
 
    ```bash
