@@ -12,10 +12,10 @@ make this happen.
    so it has to be a fresh clone.
 
     ```bash
-    git clone https://github.com/utoronto-2i2c/jupyterhub-deploy utoronto-image --origin source
+    git clone <base-repo-url> <hub-image> --origin source
     ```
 
-    We name the directory `utoronto-image` as that would be the name of the
+    We name the directory `<hub-image>` as that would be the name of the
     repo with just the user image. We ask git to name the remote it creates be
     called `source`, as we will create a new GitHub repo later that will be `origin`.
 
@@ -27,10 +27,10 @@ make this happen.
    image directory.
 
    ```bash
-    git filter-repo --subdirectory-filter deployments/utoronto/image --force
+    git filter-repo --subdirectory-filter <path-to-image-directory> --force
     ```
 
-    The repo root directory now contains the contents of `deployments/utoronto/image`,
+    The repo root directory now contains the contents of `<path-to-image-directory>`,
     as well as full git history for any commits that touched it! This way,
     we do not lose history or attribution.
 
