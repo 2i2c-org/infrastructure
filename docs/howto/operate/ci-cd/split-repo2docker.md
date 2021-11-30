@@ -40,7 +40,7 @@ make this happen.
    This will be the primary location of this repo now, so let's call it `origin`.
 
    ```bash
-   git remote add origin git@github.com:2i2c-org/utoronto-image.git
+   git remote add origin git@github.com:<your-org-or-user-name>/<your-repo-name>.git
    ```
 
 6. Fetch the new repo and check out the `main` branch, as that is the final
