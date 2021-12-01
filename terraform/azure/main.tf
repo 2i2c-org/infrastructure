@@ -183,6 +183,12 @@ locals {
   }
 }
 
+
+output "kubeconfig" {
+  value     = azurerm_kubernetes_cluster.jupyterhub.kube_config_raw
+  sensitive = true
+}
+
 output "registry_creds_config" {
   value     = jsonencode(local.registry_creds)
   sensitive = true
