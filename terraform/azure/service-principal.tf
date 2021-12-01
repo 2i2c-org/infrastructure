@@ -9,15 +9,15 @@ resource "azuread_service_principal" "service_principal" {
 resource "azuread_service_principal_password" "service_principal_password" {
   count = var.create_service_principal ? 1 : 0
 
-  service_principal_id = azuread_service_principal.service_principal[1].object_id
+  service_principal_id = azuread_service_principal.service_principal[0].object_id
 }
 
 locals{
   service_principal = {
     "tenant_id": var.tenant_id,
     "subscription_id": var.subscription_id,
-    "service_principal_id": var.create_service_principal ? azuread_service_principal.service_principal[1].object_id : "",
-    "service_principal_password": var.create_service_principal ? azuread_service_principal_password.service_principal_password[1].value : ""
+    "service_principal_id": var.create_service_principal ? azuread_service_principal.service_principal[0].object_id : "",
+    "service_principal_password": var.create_service_principal ? azuread_service_principal_password.service_principal_password[0].value : ""
   }
 }
 
