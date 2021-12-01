@@ -99,9 +99,13 @@ resource "azurerm_kubernetes_cluster" "jupyterhub" {
     network_policy = "calico"
   }
 
-  service_principal {
-    client_id     = azuread_service_principal.service_principal.object_id
-    client_secret = azuread_service_principal_password.service_principal_password.value
+  dynamic "service_principal" {
+    for_each = var.create_service_principal ? [1] : []
+
+    content {
+      client_id     = azuread_service_principal.service_principal[1].object_id
+      client_secret = azuread_service_principal_password.service_principal_password[1].value
+    }
   }
 }
 
