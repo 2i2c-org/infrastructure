@@ -38,3 +38,24 @@ notebook_nodes = {
     labels: {}
   },
 }
+
+dask_nodes = {
+  "small" : {
+    min : 0,
+    max : 100,
+    machine_type : "n1-standard-4",
+    labels: {}
+  },
+  "medium" : {
+    min : 0,
+    max : 100,
+    machine_type : "n1-standard-8",
+    labels: {}
+  },
+  "large" : {
+    min : 0,
+    max : 100,
+    machine_type : "n1-standard-16",
+    labels: {}
+  },
+}

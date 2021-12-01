@@ -232,7 +232,7 @@ resource "google_container_node_pool" "dask_worker" {
   location = google_container_cluster.cluster.location
 
   # Default to same config as notebook nodepools config
-  for_each = length(var.dask_nodes) == 0 ? var.notebook_nodes : var.dask_nodes
+  for_each = var.dask_nodes
 
   # WARNING: Do not change this value, it will cause the nodepool
   # to be destroyed & re-created. If you want to increase number of
