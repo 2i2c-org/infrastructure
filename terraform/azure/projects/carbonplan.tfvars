@@ -1,3 +1,4 @@
+tenant_id          = "d6b0296c-4d43-4983-93b0-36248aa9c592"
 subscription_id    = "c5e7a734-3dbf-4285-80e5-4c0afb1f65dc"
 resourcegroup_name = "2i2c-carbonplan-cluster"
 
