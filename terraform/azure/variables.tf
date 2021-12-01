@@ -101,7 +101,7 @@ variable "notebook_nodes" {
 
 variable "dask_nodes" {
   type        = map(map(string))
-  description = "Dask node pools to create. Defaults to notebook_nodes"
+  description = "Dask node pools to create"
   default     = {}
 }
 
