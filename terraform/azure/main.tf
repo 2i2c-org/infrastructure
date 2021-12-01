@@ -98,6 +98,11 @@ resource "azurerm_kubernetes_cluster" "jupyterhub" {
     network_plugin = "kubenet"
     network_policy = "calico"
   }
+
+  service_principal {
+    client_id     = azuread_service_principal.service_principal.object_id
+    client_secret = azuread_service_principal_password.service_principal_password.value
+  }
 }
 
 
