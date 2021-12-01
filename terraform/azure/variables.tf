@@ -104,3 +104,14 @@ variable "dask_nodes" {
   description = "Dask node pools to create. Defaults to notebook_nodes"
   default     = {}
 }
+
+variable "create_service_principal" {
+  type        = bool
+  default     = false
+  description = <<-EOT
+  When true, create a Service Principal to authenticate with.
+
+  This is a temporary fix to allow for the fact that we cannot create Service
+  Principals for UToronto.
+  EOT
+}
