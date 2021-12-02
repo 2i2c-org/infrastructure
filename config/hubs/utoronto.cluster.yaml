@@ -92,7 +92,7 @@ hubs:
             AzureAdOAuthenticator:
               username_claim: oid
               login_service: "University of Toronto ID"
-              oauth_callback_url: https://staging.us-central1-b.gcp.pangeo.io/hub/oauth_callback
+              oauth_callback_url: https://staging.utoronto.2i2c.cloud/hub/oauth_callback
               tenant_id: 78aac226-2f03-4b4d-9037-b46d56c55210
           extraConfig:
             10-dynamic-subpath: |
