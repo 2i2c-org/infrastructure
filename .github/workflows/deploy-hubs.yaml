@@ -106,20 +106,6 @@ jobs:
         env:
           KOPS_VERSION: "v1.21.1"
 
-      # Borrowed from mybinder.org-deploy config, couldn't find a nice action to install the CLI on the Marketplace :(
-      # https://github.com/jupyterhub/mybinder.org-deploy/blob/90c5f558c8d0f18a6e62b08ec367fe80d4304a0b/.github/workflows/cd.yml#L229-L232
-      - name: Setup Azure CLI
-        if: |
-          ((steps.base_files.outputs.files == 'true') ||
-          (steps.config_files.outputs.hub_config == 'true')) &&
-          (matrix.provider == 'azure')
-        run: |
-          sudo apt-get update && sudo apt-get install ca-certificates curl apt-transport-https lsb-release gnupg && \
-            curl -sL https://packages.microsoft.com/keys/microsoft.asc | gpg --dearmor | \
-            sudo tee /etc/apt/trusted.gpg.d/microsoft.asc.gpg > /dev/null && AZ_REPO=$(lsb_release -cs) && \
-            echo "deb [arch=amd64] https://packages.microsoft.com/repos/azure-cli/ $AZ_REPO main" | \
-            sudo tee /etc/apt/sources.list.d/azure-cli.list && sudo apt-get update && sudo apt-get install azure-cli
-
       - name: Deploy ${{ matrix.cluster_name }}
         if: |
           (steps.base_files.outputs.files == 'true') ||
