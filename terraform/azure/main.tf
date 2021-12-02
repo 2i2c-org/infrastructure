@@ -1,9 +1,24 @@
 
 terraform {
+  required_providers {
+    azurerm = {
+      source = "hashicorp/azurerm"
+      version = "2.86.0"
+    }
+
+    azuread = {
+      source = "hashicorp/azuread"
+      version = "2.10.0"
+    }
+  }
   backend "gcs" {
     bucket = "two-eye-two-see-org-terraform-state"
     prefix = "terraform/state/pilot-hubs"
   }
+}
+
+provider "azuread" {
+  tenant_id = var.tenant_id
 }
 provider "azurerm" {
   subscription_id = var.subscription_id
@@ -82,6 +97,15 @@ resource "azurerm_kubernetes_cluster" "jupyterhub" {
     # I don't trust Azure CNI
     network_plugin = "kubenet"
     network_policy = "calico"
+  }
+
+  dynamic "service_principal" {
+    for_each = var.create_service_principal ? [1] : []
+
+    content {
+      client_id     = azuread_service_principal.service_principal[0].object_id
+      client_secret = azuread_service_principal_password.service_principal_password[0].value
+    }
   }
 }
 

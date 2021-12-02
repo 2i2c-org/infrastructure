@@ -9,6 +9,16 @@ variable "subscription_id" {
   EOT
 }
 
+variable "tenant_id" {
+  type        = string
+  description = <<-EOT
+  Tenant ID inside which our subscription is housed
+
+  `az account show -s SUBSCRIPTION_ID -o table` will show the ID of the tenant
+  after you have logged in with `az login`.
+  EOT
+}
+
 variable "resourcegroup_name" {
   type        = string
   description = <<-EOT
@@ -91,6 +101,17 @@ variable "notebook_nodes" {
 
 variable "dask_nodes" {
   type        = map(map(string))
-  description = "Dask node pools to create. Defaults to notebook_nodes"
+  description = "Dask node pools to create"
   default     = {}
+}
+
+variable "create_service_principal" {
+  type        = bool
+  default     = false
+  description = <<-EOT
+  When true, create a Service Principal to authenticate with.
+
+  This is a temporary fix to allow for the fact that we cannot create Service
+  Principals for UToronto.
+  EOT
 }
