@@ -78,7 +78,7 @@ Names for Azure container registries and storage accounts **must** conform to th
 A failure will occur if you try to create a storage account whose name is not entirely lowercase.
 ````
 
-We explictly recommend the following conventions using `lowercamelcase`:
+We recommend the following conventions using `lowercase`:
 
 - `{CLUSTER_NAME}hubregistry` for container registries
 - `{CLUSTER_NAME}hubstorage` for storage accounts
