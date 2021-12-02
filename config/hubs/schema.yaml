@@ -25,12 +25,13 @@ properties:
     type: string
     description: |
       Cloud provider this cluster is running on. Used to perform
-      authentication against the cluster. Currently supports gcp
+      authentication against the cluster. Currently supports gcp, aws, azure,
       and raw kubeconfig files.
     enum:
       - gcp
       - kubeconfig
       - aws
+      - azure
   kubeconfig:
     type: object
     description: |
@@ -119,6 +120,31 @@ properties:
     then:
       required:
         - stateStore
+  azure:
+    type: object
+    additionalProperties: false
+    description: |
+      Configuration to connect to a cluster on Azure. Is used when
+      provider is set to `azure`
+    properties:
+      key:
+        type: string
+        description: |
+          Path to a `sops` encrypted service principal JSON key that
+          can be used by `az` to authenticate to Azure, with
+          enough rights to get full access to the kubernetes cluster
+      resource_group:
+        type: string
+        description: |
+          The name of the Azure Resource Group that contains this cluster
+      cluster:
+        type: string
+        description: |
+          Name of the cluster inside this Azure Resource Group
+    required:
+      - key
+      - resource_group
+      - cluster
   hubs:
     type: array
     description: |

@@ -42,6 +42,8 @@ class Cluster:
             yield from self.auth_gcp()
         elif self.spec['provider'] == 'aws':
             yield from self.auth_aws()
+        elif self.spec['provider'] == 'azure':
+            yield from self.auth_azure()
         elif self.spec['provider'] == 'kubeconfig':
             yield from self.auth_kubeconfig()
         else:
@@ -201,6 +203,60 @@ class Cluster:
                     os.environ['AWS_ACCESS_KEY_ID'] = orig_access_key_id
                 if orig_kubeconfig is not None:
                     os.environ['AWS_SECRET_ACCESS_KEY'] = orig_secret_access_key
+
+    def auth_azure(self):
+        """
+        Read `azure` nested config, login to Azure with a Service Principal,
+        activate the appropriate subscription, then authenticate against the
+        cluster using `az aks get-credentials`.
+        """
+        config = self.spect['azure']
+        key_path = config['key']
+        cluster = config['cluster']
+        resource_group = config['resource_group']
+
+        with tempfile.NamedTemporaryFile() as kubeconfig:
+            orig_kubeconfig = os.environ.get('KUBECONFIG', None)
+
+            try:
+                os.environ['KUBECONFIG'] = kubeconfig.name
+
+                with decrypt_file(key_path) as decrypted_key_path:
+
+                    decrypted_key_abspath = os.path.abspath(decrypted_key_path)
+                    if not os.path.isfile(decrypted_key_abspath):
+                        raise FileNotFoundError(
+                            'The decrypted key file does not exist'
+                        )
+
+                    with open(decrypted_key_path) as f:
+                        service_principal = json.load(f)
+
+                # Login to Azure
+                subprocess.check_call([
+                    "az", "login", "--service-principal",
+                    "--username", service_principal["service_principal_id"],
+                    "--password", service_principal["service_principal_password"],
+                    "--tenant", service_principal["tenant_id"],
+                ])
+
+                # Set the Azure subscription
+                subprocess.check_call([
+                    "az", "account", "set",
+                    "--subscription", service_principal["subscription_id"],
+                ])
+
+                # Get cluster creds
+                subprocess.check_call([
+                    "az", "aks", "get-credentials",
+                    "--name", cluster,
+                    "--resource-group", resource_group,
+                ])
+
+                yield
+            finally:
+                if orig_kubeconfig is not None:
+                    os.environ['KUBECONFIG'] = orig_kubeconfig
 
     def auth_gcp(self):
         config = self.spec['gcp']
