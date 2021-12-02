@@ -222,6 +222,13 @@ class Cluster:
                 os.environ['KUBECONFIG'] = kubeconfig.name
 
                 with decrypt_file(key_path) as decrypted_key_path:
+
+                    decrypted_key_abspath = os.path.abspath(decrypted_key_path)
+                    if not os.path.isfile(decrypted_key_abspath):
+                        raise FileNotFoundError(
+                            'The decrypted key file does not exist'
+                        )
+
                     with open(decrypted_key_path) as f:
                         service_principal = json.load(f)
 
