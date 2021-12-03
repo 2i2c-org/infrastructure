@@ -17,6 +17,10 @@ support:
       ingress:
         hosts:
           - grafana.utoronto.2i2c.cloud
+        tls:
+          - secretName: grafana-tls
+            hosts:
+              - grafana.utoronto.2i2c.cloud
 hubs:
   - name: staging
     domain: staging.utoronto.2i2c.cloud
@@ -24,6 +28,12 @@ hubs:
     auth0:
       enabled: false
     config: &utorontoHubConfig
+      azureFile:
+          enabled: true
+        nfs:
+          enabled: false
+          shareCreator:
+            enabled: false
       jupyterhub:
         custom:
           homepage:
@@ -45,6 +55,12 @@ hubs:
           image:
             name: quay.io/2i2c/utoronto-image
             tag: 83a724f5b829
+          storage:
+              type: none
+              extraVolumes:
+                - name: home
+                  persistentVolumeClaim:
+                    claimName: home-azurefile
         scheduling:
           userPlaceholder:
             enabled: false
@@ -72,11 +88,12 @@ hubs:
               limits:
                 memory: 512Mi
         hub:
-          requests:
-            cpu: 0.3
-            memory: 512Mi
-          limits:
-            memory: 2Gi
+          resources:
+            requests:
+              cpu: 0.3
+              memory: 512Mi
+            limits:
+              memory: 2Gi
           allowNamedServers: true
           readinessProbe:
             enabled: false
