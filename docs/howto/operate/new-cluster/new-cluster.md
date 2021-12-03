@@ -84,7 +84,7 @@ We recommend the following conventions using `lowercase`:
 - `{CLUSTER_NAME}hubstorage` for storage accounts
 
 ````{ note}
-Changes in Azure's own requirements might break our recommended convension. If any such failure occurs, please signal it.
+Changes in Azure's own requirements might break our recommended convention. If any such failure occurs, please signal it.
 ````
 
 This increases the probability that we won't take up a namespace that may be required by the Hub Community, for example, in cases where we are deploying to Azure subscriptions not owned/managed by 2i2c.
