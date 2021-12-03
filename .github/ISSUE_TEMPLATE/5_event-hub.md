@@ -11,11 +11,18 @@ assignees: ''
 
 <!-- Please provide a short, one-sentence summary about this event. -->
 
-### Info
+### Event Info
 
+<!-- Get this information from the community representative. -->
+
+- **Community Representative:** <!-- The GitHub ID of the current representative for the Hub and Community, e.g. @octocat -->
 - **Event begin:** <!-- The date that the event will start. -->
 - **Event end:** <!-- The date that the event will end. -->
-- **Community Representative:** <!-- The GitHub ID of the current representative for the Hub and Community, e.g. @octocat -->
+- **Number of attendees:** <!-- How many attendees should we expect simultaneously each day. -->
+- [**Hub Events Calendar**](https://calendar.google.com/calendar/u/2?cid=Y19rdDg0c2g3YW5tMHNsb2NqczJzdTNqdnNvY0Bncm91cC5jYWxlbmRhci5nb29nbGUuY29t)
+
+### Hub info
+
 - **Hub URL**: <!-- The URL of the hub that will be used for the event -->
 - **Hub decommisioned after event?**: <!-- Will this hub be decommissioned after the event is over? -->
 
@@ -23,7 +30,7 @@ assignees: ''
 
 **Before the event**
 
-- [ ] Dates confirmed with the community representative
+- [ ] Dates confirmed with the community representative and added to Hub Events Calendar
 - [ ] **One week before event** Hub is running.
 - [ ] Confirm with Community Representative that their workflows function as expected.
   - <details>
@@ -33,19 +40,20 @@ assignees: ''
     Hey {{ COMMUNITY REPRESENTATIVE }}, the date of your event is getting close!
     
     Could you please confirm that your hub environment is ready-to-go, and matches your hub's infrastructure setup, by ensuring the following things:
-    - [ ] Log-in and authentication works as-expected
+    - [ ] Confirm that the "Event Info" above is correct
+    - [ ] On your hub: log-in and authentication works as-expected
     - [ ] `nbgitpuller` links you intend to use resolve properly
-    - [ ] Your notebooks run as-expected
+    - [ ] Your notebooks and content run as-expected
     ```
     
     </details>  
 
-- [ ] **1 day before event** A separate nodegroup is provisioned for the event
+- [ ] **1 day before event**, either a separate nodegroup is provisioned for the event or the cluster is scaled up.
 
 **During and after event**
 
 - [ ] Confirm event is finished.
-- [ ] Nodegroup created for the hub is decommissioned.
+- [ ] Nodegroup created for the hub is decommissioned / cluster is scaled down.
 - [ ] Hub decommissioned (if needed).
 - [ ] Debrief with community representative.
   - <details>
