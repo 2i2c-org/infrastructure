@@ -216,7 +216,7 @@ You must be logged into Google with your `@2i2c.org` account at this point so `s
 
 ```bash
 cd ../..
-sops --encrypt --in-place secrets/CLUSTER_NAME.yaml
+sops --encrypt --in-place secrets/CLUSTER_NAME.{{ json | yaml }}
 ```
 
 This key can now be committed to the `infrastructure` repo and used to deploy and manage hubs hosted on that cluster.
