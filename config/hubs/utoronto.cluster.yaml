@@ -29,7 +29,7 @@ hubs:
       enabled: false
     config: &utorontoHubConfig
       azureFile:
-          enabled: true
+        enabled: true
       nfs:
         enabled: false
         shareCreator:
@@ -56,11 +56,11 @@ hubs:
             name: quay.io/2i2c/utoronto-image
             tag: 83a724f5b829
           storage:
-              type: none
-              extraVolumes:
-                - name: home
-                  persistentVolumeClaim:
-                    claimName: home-azurefile
+            type: none
+            extraVolumes:
+              - name: home
+                persistentVolumeClaim:
+                  claimName: home-azurefile
         scheduling:
           userPlaceholder:
             enabled: false
