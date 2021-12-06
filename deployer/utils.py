@@ -66,7 +66,10 @@ def replace_staff_placeholder(user_list, staff):
         if staff_placeholder in user_list:
             custom_users.remove(staff_placeholder)
 
-            return custom_users + staff_ids
+            custom_users = custom_users + staff_ids
+
+    # If no staff placeholder was provided, then return the original list of users
+    return custom_users
 
 def update_authenticator_config(config, template):
     """Prepare a hub's configuration file for deployment."""
