@@ -30,10 +30,10 @@ hubs:
     config: &utorontoHubConfig
       azureFile:
           enabled: true
-        nfs:
+      nfs:
+        enabled: false
+        shareCreator:
           enabled: false
-          shareCreator:
-            enabled: false
       jupyterhub:
         custom:
           homepage:
