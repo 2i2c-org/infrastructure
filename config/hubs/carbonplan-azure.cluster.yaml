@@ -72,21 +72,21 @@ hubs:
                 description: "~4 CPU, ~30G RAM"
                 kubespawner_override:
                   mem_limit: null
-                  mem_guarantee: 29G
+                  mem_guarantee: 27G
                   node_selector:
                     hub.jupyter.org/node-size: Standard_E4s_v4
               - display_name: "Large: E8s v4"
                 description: "~8 CPU, ~60G RAM"
                 kubespawner_override:
                   mem_limit: null
-                  mem_guarantee: 60G
+                  mem_guarantee: 55G
                   node_selector:
                     hub.jupyter.org/node-size: Standard_E8s_v4
               - display_name: "Huge: E32s v4"
                 description: "~32 CPU, ~256G RAM"
                 kubespawner_override:
                   mem_limit: null
-                  mem_guarantee: 240G
+                  mem_guarantee: 235G
                   node_selector:
                     hub.jupyter.org/node-size: Standard_E32s_v4
               - display_name: "Very Huge: M64s v2"
