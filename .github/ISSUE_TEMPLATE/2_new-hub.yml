@@ -86,7 +86,7 @@ body:
     attributes:
       label: Preferred Location of the Cloud Resources
       description: |
-        If you have restrictions about where in the world your resources should be located, please indicate here. **Only choose a cloud location if you have a strong opinion.** You may wish to specify a specific location if you have a dataset that exists in a particular region/zone already. If you have no preference, we'll use US-based locations.
+        If you have restrictions about where in the world your resources should be located, please indicate here. **Only choose a cloud location if you have a strong reason to do so.**  For example, you may wish to specify a specific location if you have a dataset that exists in a particular region/zone already. If you have no preference, we'll use US-based locations.
     validations:
       required: false
 
