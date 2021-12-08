@@ -5,6 +5,7 @@ ssh_pub_key = "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQDQJ4h39UYNi1wybxAH+jCFkNK2a
 
 global_container_registry_name = "2i2cutorontohubregistry"
 global_storage_account_name = "2i2cutorontohubstorage"
+storage_protocol = "NFS"
 
 location = "canadacentral"
 
