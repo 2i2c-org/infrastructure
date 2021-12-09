@@ -29,12 +29,10 @@ hubs:
       connection: github
     config: &carbonPlanHubConfig
       basehub:
-        azureFile:
-          enabled: true
         nfs:
-          enabled: false
-          shareCreator:
-            enabled: false
+          pv:
+            serverIP: 2i2ccarbonplanhubstorage.file.core.windows.net
+            baseShareName: /homes/
         jupyterhub:
           custom:
             homepage:
