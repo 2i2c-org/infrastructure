@@ -28,12 +28,9 @@ hubs:
     auth0:
       enabled: false
     config: &utorontoHubConfig
-      azureFile:
-        enabled: true
       nfs:
-        enabled: false
-        shareCreator:
-          enabled: false
+        pv:
+          serverIp: 2i2cutorontohubstorage.file.core.windows.net/homes
       jupyterhub:
         custom:
           homepage:
