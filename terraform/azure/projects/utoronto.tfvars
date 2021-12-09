@@ -1,3 +1,4 @@
+tenant_id          = "78aac226-2f03-4b4d-9037-b46d56c55210"
 subscription_id    = "ead3521a-d994-4a44-a68d-b16e35642d5b"
 resourcegroup_name = "2i2c-utoronto-cluster"
 
