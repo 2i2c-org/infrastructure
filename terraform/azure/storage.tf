@@ -14,6 +14,10 @@ resource "azurerm_storage_share" "homes" {
   enabled_protocol     = var.storage_protocol
 }
 
+output "azure_fileshare_url" {
+  value = azurerm_storage_share.homes.url
+}
+
 resource "kubernetes_namespace" "homes" {
   metadata {
     name = "azure-file"
