@@ -27,10 +27,10 @@ hubs:
     template: basehub
     auth0:
       enabled: false
-    config: &utorontoHubConfig
-      azureFile:
+    config:
+      azureFile: &staging_azureFile
         enabled: false
-      nfs:
+      nfs: &staging_nfs
         enabled: true
         pv:
           # Recommended options from the Azure Portal UI for mounting the share
@@ -42,7 +42,7 @@ hubs:
           # Trailing slash is important!
           baseShareName: /2i2cutorontohubstorage/homes/
       jupyterhub:
-        custom:
+        custom: &staging_jhub_custom
           homepage:
             templateVars:
               org:
@@ -58,7 +58,7 @@ hubs:
               funded_by:
                 name: University of Toronto
                 url: https://www.utoronto.ca/
-        singleuser:
+        singleuser: &staging_jhub_singleuser
           initContainers:
             # Need to explicitly fix ownership here, since Azure File doesn't do anonuid
             - name: volume-mount-ownership-fix
@@ -78,7 +78,7 @@ hubs:
           image:
             name: quay.io/2i2c/utoronto-image
             tag: 83a724f5b829
-        scheduling:
+        scheduling: &staging_jhub_scheduling
           userPlaceholder:
             enabled: false
             replicas: 0
@@ -89,7 +89,7 @@ hubs:
                 memory: 512Mi
               limits:
                 memory: 512Mi
-        proxy:
+        proxy: &staging_jhub_proxy
           chp:
             resources:
               requests:
@@ -105,23 +105,23 @@ hubs:
               limits:
                 memory: 512Mi
         hub:
-          resources:
+          resources: &staging_jhub_resources
             requests:
               cpu: 0.3
               memory: 512Mi
             limits:
               memory: 2Gi
-          allowNamedServers: true
-          readinessProbe:
+          allowNamedServers: &staging_jhub_allowNamedServers
+          readinessProbe: &staging_jhub_redinessProbe
             enabled: false
           config:
-            Authenticator:
+            Authenticator: &staging_jhub_authenticator
               enable_auth_state: false
               admin_users:
                 - 7c76d04b-2a80-4db1-b985-a2d2fa2f708c
                 - 09056164-42f5-4113-9fd7-dd852e63ff1d
                 - adb7ebad-9fb8-481a-bc2c-6c0a8b6de670
-            JupyterHub:
+            JupyterHub: &staging_jhub_jupyterhub
               authenticator_class: azuread
             AzureAdOAuthenticator:
               username_claim: oid
@@ -133,5 +133,24 @@ hubs:
     template: basehub
     auth0:
       enabled: false
-    config: *utorontoHubConfig
-
+    config:
+      azureFile: *staging_azureFile
+      nfs: *staging_nfs
+      jupyterhub:
+        custom: *staging_jhub_custom
+        singleuser: *staging_jhub_singleuser
+        scheduling: *staging_jhub_scheduling
+        proxy: *staging_jhub_proxy
+        hub:
+          resources: *staging_jhub_resources
+          allowNamedServers: *staging_jhub_allowNamedServers
+          readinessProbe: *staging_jhub_redinessProbe
+          config:
+            Authenticator: *staging_jhub_authenticator
+            JupyterHub: *staging_jhub_jupyterhub
+            AzureAdOAuthenticator:
+              username_claim: oid
+              login_service: "University of Toronto ID"
+              oauth_callback_url: https://utoronto.2i2c.cloud/hub/oauth_callback
+              tenant_id: 78aac226-2f03-4b4d-9037-b46d56c55210
+          extraConfig: *staging_jhub_extraConfig
