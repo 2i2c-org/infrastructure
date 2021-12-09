@@ -2,8 +2,8 @@ resource "azurerm_storage_account" "homes" {
   name                     = var.global_storage_account_name
   resource_group_name      = azurerm_resource_group.jupyterhub.name
   location                 = azurerm_resource_group.jupyterhub.location
-  account_tier             = "Standard"
-  account_kind             = "StorageV2"
+  account_tier             = "Premium"
+  account_kind             = "FileStorage"
   account_replication_type = "LRS"
 }
 
