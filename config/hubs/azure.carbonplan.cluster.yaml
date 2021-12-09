@@ -1,7 +1,7 @@
-name: carbonplan-azure
+name: azure.carbonplan
 provider: kubeconfig
 kubeconfig:
-  file: secrets/carbonplan-azure.yaml
+  file: secrets/azure.carbonplan.yaml
 support:
   config:
     prometheus:
