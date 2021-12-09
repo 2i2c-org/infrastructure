@@ -31,8 +31,7 @@ hubs:
       basehub:
         nfs:
           pv:
-            serverIP: 2i2ccarbonplanhubstorage.file.core.windows.net
-            baseShareName: /homes/
+            serverIP: 2i2ccarbonplanhubstorage.file.core.windows.net/homes
         jupyterhub:
           custom:
             homepage:
