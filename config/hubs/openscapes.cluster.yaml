@@ -157,10 +157,10 @@ hubs:
                   - amfriesz
                   - jules32
       dask-gateway:
-          extraConfig:
-            idle: |
-              # timeout after 30 minutes of inactivity
-              c.KubeClusterConfig.idle_timeout = 1800
+        extraConfig:
+          idle: |
+            # timeout after 30 minutes of inactivity
+            c.KubeClusterConfig.idle_timeout = 1800
   - name: prod
     domain: openscapes.2i2c.cloud
     template: daskhub
