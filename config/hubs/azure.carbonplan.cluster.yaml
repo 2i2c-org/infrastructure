@@ -125,7 +125,7 @@ hubs:
                   mem_limit: null
                   mem_guarantee: 1950G
                   node_selector:
-                    hub.jupyter.org/node-size: Standard_M182s_v2
+                    hub.jupyter.org/node-size: Standard_M128s_v2
           scheduling:
             userPlaceholder:
               enabled: false
