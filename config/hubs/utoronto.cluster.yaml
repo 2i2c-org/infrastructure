@@ -35,9 +35,9 @@ hubs:
         pv:
           # Recommended options from the Azure Portal UI for mounting the share
           mountOptions:
-          - vers=4
-          - minorversion=1
-          - sec=sys
+            - vers=4
+            - minorversion=1
+            - sec=sys
           serverIP: 2i2cutorontohubstorage.file.core.windows.net
           # Trailing slash is important!
           baseShareName: /2i2cutorontohubstorage/homes/
