@@ -161,18 +161,6 @@ hubs:
                   - jhamman
                   - norlandrhagen
                 admin_users: *users
-            extraConfig:
-              10-dynamic-subpath: |
-                import os
-                pod_namespace = os.environ['POD_NAMESPACE']
-                # FIXME: This isn't setting up _shared dirs properly
-                c.KubeSpawner.volume_mounts = [
-                  {
-                    "mountPath": "/home/jovyan",
-                    "name": "home",
-                    "subPath": f"{pod_namespace}/{{username}}"
-                  },
-                ]
       dask-gateway:
         traefik:
           resources:
