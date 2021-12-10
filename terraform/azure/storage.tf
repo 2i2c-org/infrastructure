@@ -8,6 +8,14 @@ resource "azurerm_storage_account" "homes" {
   # Disable 'secure link' if NFS is enabled
   # see https://docs.microsoft.com/en-us/azure/storage/files/storage-files-how-to-mount-nfs-shares#disable-secure-transfer
   enable_https_traffic_only = var.storage_protocol != "NFS" ? true : false
+
+  network_rules {
+    # Allow NFS access only from our nodes, deny access from all other networks
+    default_action = "Deny"
+    virtual_network_subnet_ids = [
+      azurerm_subnet.node_subnet.id
+    ]
+  }
 }
 
 resource "azurerm_storage_share" "homes" {
