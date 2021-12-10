@@ -116,14 +116,14 @@ hubs:
                 description: "~64 CPU, ~1024G RAM"
                 kubespawner_override:
                   mem_limit: null
-                  mem_guarantee: 990G
+                  mem_guarantee: 950G
                   node_selector:
                     hub.jupyter.org/node-size: Standard_M64s_v2
               - display_name: "Very Very Huge: M128s v2"
                 description: "~128 CPU, ~2048G RAM"
                 kubespawner_override:
                   mem_limit: null
-                  mem_guarantee: 2000G
+                  mem_guarantee: 1950G
                   node_selector:
                     hub.jupyter.org/node-size: Standard_M182s_v2
           scheduling:
