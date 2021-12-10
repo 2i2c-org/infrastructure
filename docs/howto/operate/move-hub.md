@@ -58,7 +58,7 @@ The trailing slashes are important to copy the contents of the directory, withou
 See the [`rsync` man page](https://ss64.com/bash/rsync.html) to understand these options.
 
 ```{note}
-For long-running tasks, especially those ran on a remote machine, we recommend using [`screen`](https://www.gnu.org/software/screen/manual/screen.html). Screen is an utility that allows starting `screen` sessions that can then be put to run in the background with the possiblity of re-attaching to them. Processes running in `screen` will continue to run in the background even if you get disconnected.
+For long-running tasks, especially those running on a remote machine, we recommend using [`screen`](https://www.gnu.org/software/screen/manual/screen.html). Screen is a utility that allows starting `screen` sessions that can then be put to run in the background with the possibility of re-attaching to them. Processes running in `screen` will continue to run in the background even if you get disconnected.
 ```
 
 ### GCP Filestores
@@ -113,10 +113,10 @@ instance just for this.
 ### Azure Files
 
 ```{note}
-The exception: even if the source and target cluster are in the same Azure subscription, re-using the same home directory storage might prove more difficult than copying files from one storage to the other.
+You may be tempted to attach an existing NFS server across two clusters. However, this is not possible since Azure VMs cannot simultaneously exist in two virtual networks and each cluster will have it's own network.
 ```
 
-We also use AzureFiles as in-cluster NFS storage. These are the steps to transfer the home directories between a NFS server located in another cluster, but in the same Azure subscription with an AzureFile NFS storage.
+We also use AzureFiles as in-cluster NFS storage. These are the steps to transfer the home directories from a NFS server located in another cluster, but in the same Azure subscription, into AzureFile NFS storage.
 
 AzureFile needs to be mounted in the source NFS VM in order to copy the data.
 
@@ -127,7 +127,7 @@ AzureFile needs to be mounted in the source NFS VM in order to copy the data.
       ```bash
       sops -d secrets/ssh-key > secrets/ssh-key.unsafe
       ```
-   2. Make sure `kubectl` is set to talk to the Azure cluster, that host the source VM, as we'll be 'hopping' through it to access the NFS VM.
+   2. Make sure `kubectl` is authenticated with the Azure cluster that hosts the source VM, as we'll be 'hopping' through it to access the NFS VM.
       ```bash
       kubectl config use-context <the-desired-context>
       ```
