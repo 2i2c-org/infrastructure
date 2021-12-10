@@ -41,7 +41,7 @@ hubs:
               - sec=sys
             serverIP: 2i2ccarbonplanhubstorage.file.core.windows.net
             # Trailing slash is important!
-            baseShareName: /2i2cutorontohubstorage/homes/
+            baseShareName: /2i2ccarbonplanhubstorage/homes/
         jupyterhub:
           custom:
             homepage:
