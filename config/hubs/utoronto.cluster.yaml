@@ -111,7 +111,7 @@ hubs:
               memory: 512Mi
             limits:
               memory: 2Gi
-          allowNamedServers: &staging_jhub_allowNamedServers
+          allowNamedServers: true
           readinessProbe: &staging_jhub_redinessProbe
             enabled: false
           config:
@@ -143,7 +143,7 @@ hubs:
         proxy: *staging_jhub_proxy
         hub:
           resources: *staging_jhub_resources
-          allowNamedServers: *staging_jhub_allowNamedServers
+          allowNamedServers: true
           readinessProbe: *staging_jhub_redinessProbe
           config:
             Authenticator: *staging_jhub_authenticator
@@ -153,4 +153,3 @@ hubs:
               login_service: "University of Toronto ID"
               oauth_callback_url: https://utoronto.2i2c.cloud/hub/oauth_callback
               tenant_id: 78aac226-2f03-4b4d-9037-b46d56c55210
-          extraConfig: *staging_jhub_extraConfig
