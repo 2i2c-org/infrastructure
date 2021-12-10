@@ -57,6 +57,10 @@ The trailing slashes are important to copy the contents of the directory, withou
 
 See the [`rsync` man page](https://ss64.com/bash/rsync.html) to understand these options.
 
+```{note}
+For long-running tasks, especially those running on a remote machine, we recommend using [`screen`](https://www.gnu.org/software/screen/manual/screen.html). Screen is a utility that allows starting `screen` sessions that can then be put to run in the background with the possibility of re-attaching to them. Processes running in `screen` will continue to run in the background even if you get disconnected.
+```
+
 ### GCP Filestores
 
 We also use GCP Filestores as in-cluster NFS storage and can transfer the home directories between them in a similar fashion to the NFS servers described above.
@@ -105,6 +109,75 @@ ssh into any worker node. Then `mount` the EFS instance manually and
 do your modifications. This prevents needing to create another EC2
 instance just for this.
 ```
+
+### Azure Files
+
+```{note}
+You may be tempted to attach an existing NFS server across two clusters. However, this is not possible since Azure VMs cannot simultaneously exist in two virtual networks and each cluster will have it's own network.
+```
+
+We also use AzureFiles as in-cluster NFS storage. These are the steps to transfer the home directories from a NFS server located in another cluster, but in the same Azure subscription, into AzureFile NFS storage.
+
+AzureFile needs to be mounted in the source NFS VM in order to copy the data.
+
+1. Make sure AzureFile has access to the VNet in which the source NFS VM is in. Documentation on how to do that is can be found [here](https://docs.microsoft.com/en-us/azure/storage/files/storage-files-networking-endpoints?tabs=azure-portal#restrict-public-endpoint-access).
+
+2. On the source NFS VM:
+   1. Locate the private ssh key counterpart of the public one set for this cluster. The private key is usually encrypted with sops and stored into the repository where the infrastructure config of the cluster resides.
+
+      ```bash
+      sops -d secrets/ssh-key > secrets/ssh-key.unsafe
+      ```
+   2. Make sure `kubectl` is authenticated with the Azure cluster that hosts the source VM, as we'll be 'hopping' through it to access the NFS VM.
+      * List available contexts:
+
+        ```bash
+        kubectl config get-contexts
+        ```
+
+      * If the desired context doesn't show up in the list above, then authenticate using:
+
+        ```bash
+        az aks get-credentials --name CLUSTER_NAME --resource-group RESOURCE_GROUP_NAME
+        ```
+
+      * Switch to using the desired context
+
+        ```bash
+        kubectl config use-context <the-desired-context>
+        ```
+
+   3. Ssh into the source NFS VM using the [`./terraform/proxycommand.py`](https://github.com/2i2c-org/infrastructure/blob/master/terraform/azure/proxycommand.py) script, passing it the private key from step 1, the authorized user to connect to the VM using this key pair (this is usually `hubadmin` or `hub-admin`, and can be found in the [terraform config](https://github.com/2i2c-org/infrastructure/blob/master/terraform/azure/main.tf#L63) [`azurerm_kubernetes_cluster.linux_profile.admin_username`](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/kubernetes_cluster#admin_username)), and the address of the NFS VM.
+      ```bash
+      ssh -i secrets/ssh-key.unsafe -o 'ProxyCommand=./terraform/proxycommand.py %h %p' <admin-username>@<nfs-server-address>
+      ```
+
+3. Mount AzureFile onto the sourcec NFS VM with the following commands (run inside the NFS VM):
+   1. Create a mount point:
+
+      ```bash
+      sudo mkdir -p /mnt/new-nfs
+      ```
+
+   2. Mount the Filestore:
+
+      ```bash
+      sudo mount -t nfs 2i2cutorontohubstorage.file.core.windows.net:/2i2cutorontohubstorage/homes /mnt/new-nfs -o vers=4,minorversion=1,sec=sys
+      ```
+
+   3. Create a subdirectory to store the data, called `prod`. This means that user's home dirs that we will be copying will not be available on the `staging` hub, but only for the `prod` hub. This is to protect the user data in case the staging hub gets breached.
+
+      ```bash
+      sudo mkdir /mnt/new-nfs/prod
+      sudo chown 1000:1000 /mnt/new-nfs/prod
+      ```
+
+4. Start transferring the user directories:
+   From within the source NFS VM:
+
+   ```bash
+   <your_scp_or_rsync_command> <homes-directory-location-on-the-source-nfs-server> /mnt/new-nfs/prod/
+   ```
 
 ## Transfer the JupyterHub Database
 
