@@ -5,6 +5,9 @@ resource "azurerm_storage_account" "homes" {
   account_tier             = var.storage_protocol != "NFS" ? "Standard" : "Premium"
   account_kind             = var.storage_protocol != "NFS" ? "StorageV2" : "FileStorage"
   account_replication_type = "LRS"
+  # Disable 'secure link' if NFS is enabled
+  # see https://docs.microsoft.com/en-us/azure/storage/files/storage-files-how-to-mount-nfs-shares#disable-secure-transfer
+  enable_https_traffic_only = var.storage_protocol != "NFS" ? true : false
 }
 
 resource "azurerm_storage_share" "homes" {
