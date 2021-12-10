@@ -1,7 +1,7 @@
-name: carbonplan-azure
+name: azure.carbonplan
 provider: kubeconfig
 kubeconfig:
-  file: secrets/carbonplan-azure.yaml
+  file: secrets/azure.carbonplan.yaml
 support:
   config:
     prometheus:
@@ -30,11 +30,18 @@ hubs:
     config: &carbonPlanHubConfig
       basehub:
         azureFile:
-          enabled: true
-        nfs:
           enabled: false
-          shareCreator:
-            enabled: false
+        nfs:
+          enabled: true
+          pv:
+            # Recommended options from the Azure Portal UI for mounting the share
+            mountOptions:
+              - vers=4
+              - minorversion=1
+              - sec=sys
+            serverIP: 2i2ccarbonplanhubstorage.file.core.windows.net
+            # Trailing slash is important!
+            baseShareName: /2i2ccarbonplanhubstorage/homes/
         jupyterhub:
           custom:
             homepage:
@@ -53,6 +60,22 @@ hubs:
                   name: Carbon Plan
                   url: https://carbonplan.org
           singleuser:
+            initContainers:
+              # Need to explicitly fix ownership here, since Azure File doesn't do anonuid
+              - name: volume-mount-ownership-fix
+                image: busybox
+                command:
+                  [
+                    "sh",
+                    "-c",
+                    "id && chown 1000:1000 /home/jovyan && ls -lhd /home/jovyan",
+                  ]
+                securityContext:
+                  runAsUser: 0
+                volumeMounts:
+                  - name: home
+                    mountPath: /home/jovyan
+                    subPath: "{username}"
             image:
               name: carbonplan/cmip6-downscaling-single-user
               tag: latest
@@ -103,12 +126,6 @@ hubs:
                   mem_guarantee: 2000G
                   node_selector:
                     hub.jupyter.org/node-size: Standard_M182s_v2
-            storage:
-              type: none
-              extraVolumes:
-                - name: home
-                  persistentVolumeClaim:
-                    claimName: home-azurefile
           scheduling:
             userPlaceholder:
               enabled: false
@@ -144,18 +161,6 @@ hubs:
                   - jhamman
                   - norlandrhagen
                 admin_users: *users
-            extraConfig:
-              10-dynamic-subpath: |
-                import os
-                pod_namespace = os.environ['POD_NAMESPACE']
-                # FIXME: This isn't setting up _shared dirs properly
-                c.KubeSpawner.volume_mounts = [
-                  {
-                    "mountPath": "/home/jovyan",
-                    "name": "home",
-                    "subPath": f"{pod_namespace}/{{username}}"
-                  },
-                ]
       dask-gateway:
         traefik:
           resources:
@@ -181,7 +186,6 @@ hubs:
             limits:
               cpu: 2
               memory: 4Gi
-            # TODO: figure out a replacement for userLimits.
   - name: prod
     domain: prod.azure.carbonplan.2i2c.cloud
     template: daskhub
