@@ -110,7 +110,6 @@ def rsync(user, src_basedir, dest_basedir, dry_run):
         '--exclude=*/.cache/*',
         src_homedir, dest_basedir
     ]
-    print('Running ' + ' '.join(rsync_cmd))
     if not dry_run:
         subprocess.check_output(rsync_cmd)
         print(f'Finished rsync for {user}')
@@ -159,6 +158,7 @@ def main():
 
     pool = ThreadPoolExecutor(max_workers=args.concurrency)
     futures = []
+    completed_futures = 0
 
     for user in users_since:
         # Escaping logic from https://github.com/jupyterhub/kubespawner/blob/0eecad35d8829d8d599be876ee26c192d622e442/kubespawner/spawner.py#L1340
@@ -172,6 +172,8 @@ def main():
 
     for future in as_completed(futures):
         future.result()
+        completed_futures += 1
+        print(f'Finished {completed_futures} of {len(users_since)}')
 
     if not args.actually_run_rsync:
         print("No rsync commands were actually performed")
