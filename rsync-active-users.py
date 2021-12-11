@@ -140,10 +140,10 @@ def main():
         if not os.path.exists(src_homedir):
             print(f"Directory {src_homedir} does not exist for user {user}, aborting")
             sys.exit(1)
-        dest_homedir = os.path.join(args.dest_basedir, homedir)
         rsync_cmd = [
             'rsync', '-av',
             '--delete', '--ignore-errors',
+            '--exclude=*/.cache/*',
             src_homedir, args.dest_basedir
         ]
         print('Running ' + ' '.join(rsync_cmd))
