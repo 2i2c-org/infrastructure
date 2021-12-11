@@ -15,6 +15,7 @@ from dateutil.parser import parse
 from datetime import datetime, timedelta, timezone
 from concurrent.futures import ThreadPoolExecutor, as_completed
 import argparse
+import time
 import subprocess
 
 # Copied from https://github.com/minrk/escapism/blob/d1d406c69b9ab0b14aa562d98a9e198adf9c047a/escapism.py
@@ -98,6 +99,7 @@ def get_all_users(hub_url, token):
 
 
 def rsync(user, src_basedir, dest_basedir, dry_run):
+    start_time = time.perf_counter()
     safe_chars = set(string.ascii_lowercase + string.digits)
     homedir = escape(user, safe_chars, '-').lower()
     src_homedir = os.path.join(src_basedir, homedir)
@@ -112,7 +114,7 @@ def rsync(user, src_basedir, dest_basedir, dry_run):
     ]
     if not dry_run:
         subprocess.check_output(rsync_cmd)
-    return user
+    return user, time.perf_counter() - start_time
 
 def main():
     argparser = argparse.ArgumentParser()
@@ -171,9 +173,9 @@ def main():
         futures.append(future)
 
     for future in as_completed(futures):
-        completed_user = future.result()
+        completed_user, duration = future.result()
         completed_futures += 1
-        print(f'Finished {completed_futures} of {len(users_since)} - user ${completed_user}')
+        print(f'Finished {completed_futures} of {len(users_since)} in {duration:0.3f} - user {completed_user}')
 
     if not args.actually_run_rsync:
         print("No rsync commands were actually performed")
