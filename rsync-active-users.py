@@ -97,6 +97,24 @@ def get_all_users(hub_url, token):
     return users
 
 
+def rsync(user, src_basedir, dest_basedir, dry_run):
+    safe_chars = set(string.ascii_lowercase + string.digits)
+    homedir = escape(user, safe_chars, '-').lower()
+    src_homedir = os.path.join(src_basedir, homedir)
+    if not os.path.exists(src_homedir):
+        print(f"Directory {src_homedir} does not exist for user {user}, aborting")
+        sys.exit(1)
+    rsync_cmd = [
+        'rsync', '-av',
+        '--delete', '--ignore-errors',
+        '--exclude=*/.cache/*',
+        src_homedir, dest_basedir
+    ]
+    print('Running ' + ' '.join(rsync_cmd))
+    if not dry_run:
+        subprocess.check_call(rsync_cmd)
+        print(f'Finished rsync for {user}')
+
 def main():
     argparser = argparse.ArgumentParser()
 
@@ -117,6 +135,11 @@ def main():
         action='store_true',
         help="Actually run rsync, otherwise we just dry-run"
     )
+    argparser.add_argument('--concurrency',
+        type=int,
+        help='How many parallel rsyncs to run',
+        default=16
+    )
 
     args = argparser.parse_args()
 
@@ -133,33 +156,19 @@ def main():
             if user['last_activity'] >= time_since:
                 users_since.append(user['name'])
 
-    safe_chars = set(string.ascii_lowercase + string.digits)
 
-    pool = ThreadPoolExecutor(max_workers=4)
+    pool = ThreadPoolExecutor(max_workers=args.concurrency)
     futures = []
 
     for user in users_since:
         # Escaping logic from https://github.com/jupyterhub/kubespawner/blob/0eecad35d8829d8d599be876ee26c192d622e442/kubespawner/spawner.py#L1340
-        homedir = escape(user, safe_chars, '-').lower()
-        src_homedir = os.path.join(args.src_basedir, homedir)
-        if not os.path.exists(src_homedir):
-            print(f"Directory {src_homedir} does not exist for user {user}, aborting")
-            sys.exit(1)
-        rsync_cmd = [
-            'rsync', '-av',
-            '--delete', '--ignore-errors',
-            '--exclude=*/.cache/*',
-            src_homedir, args.dest_basedir
-        ]
-        print('Running ' + ' '.join(rsync_cmd))
         # tarring is CPU bound, so we can parallelize trivially.
         # FIXME: This should be tuneable, or at least default to some multiple of number of cores on the system
 
-        if args.actually_run_rsync:
-            future = pool.submit(subprocess.check_call,
-                rsync_cmd
-            )
-            futures.append(future)
+        future = pool.submit(rsync,
+            user, args.src_basedir, args.dest_basedir, not args.actually_run_rsync
+        )
+        futures.append(future)
 
     for future in as_completed(futures):
         future.result()
