@@ -112,7 +112,7 @@ def rsync(user, src_basedir, dest_basedir, dry_run):
     ]
     print('Running ' + ' '.join(rsync_cmd))
     if not dry_run:
-        subprocess.check_call(rsync_cmd)
+        subprocess.check_output(rsync_cmd)
         print(f'Finished rsync for {user}')
 
 def main():
