@@ -112,7 +112,7 @@ def rsync(user, src_basedir, dest_basedir, dry_run):
     ]
     if not dry_run:
         subprocess.check_output(rsync_cmd)
-        print(f'Finished rsync for {user}')
+    return user
 
 def main():
     argparser = argparse.ArgumentParser()
@@ -171,9 +171,9 @@ def main():
         futures.append(future)
 
     for future in as_completed(futures):
-        future.result()
+        completed_user = future.result()
         completed_futures += 1
-        print(f'Finished {completed_futures} of {len(users_since)}')
+        print(f'Finished {completed_futures} of {len(users_since)} - user ${completed_user}')
 
     if not args.actually_run_rsync:
         print("No rsync commands were actually performed")
