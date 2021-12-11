@@ -13,6 +13,7 @@ import os
 import requests
 from dateutil.parser import parse
 from datetime import datetime, timedelta, timezone
+from concurrent.futures import ThreadPoolExecutor, as_completed
 import argparse
 import subprocess
 
@@ -133,6 +134,10 @@ def main():
                 users_since.append(user['name'])
 
     safe_chars = set(string.ascii_lowercase + string.digits)
+
+    pool = ThreadPoolExecutor(max_workers=4)
+    futures = []
+
     for user in users_since:
         # Escaping logic from https://github.com/jupyterhub/kubespawner/blob/0eecad35d8829d8d599be876ee26c192d622e442/kubespawner/spawner.py#L1340
         homedir = escape(user, safe_chars, '-').lower()
@@ -147,8 +152,17 @@ def main():
             src_homedir, args.dest_basedir
         ]
         print('Running ' + ' '.join(rsync_cmd))
+        # tarring is CPU bound, so we can parallelize trivially.
+        # FIXME: This should be tuneable, or at least default to some multiple of number of cores on the system
+
         if args.actually_run_rsync:
-            subprocess.check_call(rsync_cmd)
+            future = pool.submit(subprocess.check_call,
+                rsync_cmd
+            )
+            futures.append(future)
+
+    for future in as_completed(futures):
+        future.result()
 
     if not args.actually_run_rsync:
         print("No rsync commands were actually performed")
