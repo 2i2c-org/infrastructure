@@ -57,6 +57,15 @@ hubs:
                 name: University of Toronto
                 url: https://www.utoronto.ca/
         singleuser: &staging_jhub_singleuser
+          extraFiles:
+            github-app-private-key.pem:
+              mountPath: /etc/github/github-app-private-key.pem
+            gitconfig:
+              mountPath: /etc/gitconfig
+              stringData: |
+                [credential "https://github.com"]
+                helper = !git-credential-github-app --app-key-file /etc/github/github-app-private-key.pem --app-id 93515
+                useHttpPath = true
           initContainers:
             # Need to explicitly fix ownership here, since Azure File doesn't do anonuid
             - name: volume-mount-ownership-fix
