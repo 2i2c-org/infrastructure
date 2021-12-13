@@ -101,7 +101,7 @@ hubs:
               oauth_callback_url: https://staging.utoronto.2i2c.cloud/hub/oauth_callback
               tenant_id: 78aac226-2f03-4b4d-9037-b46d56c55210
   - name: prod
-    domain: utoronto.2i2c.cloud
+    domain: jupyter.utoronto.ca
     template: basehub
     auth0:
       enabled: false
