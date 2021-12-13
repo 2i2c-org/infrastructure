@@ -124,5 +124,5 @@ hubs:
             AzureAdOAuthenticator:
               username_claim: oid
               login_service: "University of Toronto ID"
-              oauth_callback_url: https://utoronto.2i2c.cloud/hub/oauth_callback
+              oauth_callback_url: https://jupyter.utoronto.ca/hub/oauth_callback
               tenant_id: 78aac226-2f03-4b4d-9037-b46d56c55210
