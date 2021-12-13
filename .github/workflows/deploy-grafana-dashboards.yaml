@@ -14,6 +14,7 @@ jobs:
           - cluster_name: cloudbank
           - cluster_name: carbonplan
           - cluster_name: pangeo-hubs
+          - cluster_name: utoronto
     steps:
       - name: Checkout repo
         uses: actions/checkout@v2
