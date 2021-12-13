@@ -109,7 +109,6 @@ def rsync(user, src_basedir, dest_basedir, dry_run):
     rsync_cmd = [
         'rsync', '-av',
         '--delete', '--ignore-errors',
-        '--exclude=*/.cache/*',
         src_homedir, dest_basedir
     ]
     if not dry_run:
