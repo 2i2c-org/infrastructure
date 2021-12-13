@@ -28,8 +28,6 @@ hubs:
     auth0:
       enabled: false
     config:
-      azureFile: &staging_azureFile
-        enabled: false
       nfs: &staging_nfs
         enabled: true
         pv:
@@ -78,40 +76,11 @@ hubs:
           image:
             name: quay.io/2i2c/utoronto-image
             tag: 83a724f5b829
-        scheduling: &staging_jhub_scheduling
-          userPlaceholder:
-            enabled: false
-            replicas: 0
-          userScheduler:
-            resources:
-              requests:
-                cpu: 0.1
-                memory: 512Mi
-              limits:
-                memory: 512Mi
-        proxy: &staging_jhub_proxy
-          chp:
-            resources:
-              requests:
-                cpu: 0.1
-                memory: 128Mi
-              limits:
-                memory: 512Mi
-          traefik:
-            resources:
-              requests:
-                cpu: 0.1
-                memory: 256Mi
-              limits:
-                memory: 512Mi
         hub:
-          resources: &staging_jhub_resources
-            requests:
-              cpu: 0.3
-              memory: 512Mi
-            limits:
-              memory: 2Gi
-          allowNamedServers: true
+          db:
+            pvc:
+              # Default seems too slow for our database, causes very bad response times
+              storageClassName: managed-premium
           readinessProbe: &staging_jhub_redinessProbe
             enabled: false
           config:
@@ -123,6 +92,9 @@ hubs:
                 - adb7ebad-9fb8-481a-bc2c-6c0a8b6de670
             JupyterHub: &staging_jhub_jupyterhub
               authenticator_class: azuread
+              concurrent_spawn_limit: 100
+              # We wanna keep logs long term, primarily for analytics
+              extra_log_file: /srv/jupyterhub/jupyterhub.log
             AzureAdOAuthenticator:
               username_claim: oid
               login_service: "University of Toronto ID"
@@ -134,16 +106,17 @@ hubs:
     auth0:
       enabled: false
     config:
-      azureFile: *staging_azureFile
       nfs: *staging_nfs
       jupyterhub:
         custom: *staging_jhub_custom
         singleuser: *staging_jhub_singleuser
-        scheduling: *staging_jhub_scheduling
-        proxy: *staging_jhub_proxy
         hub:
-          resources: *staging_jhub_resources
-          allowNamedServers: true
+          db:
+            pvc:
+              # Default seems too slow for our database, causes very bad response times
+              storageClassName: managed-premium
+              # prod also stores logs, so let's make it big
+              storage: 10Gi
           readinessProbe: *staging_jhub_redinessProbe
           config:
             Authenticator: *staging_jhub_authenticator
