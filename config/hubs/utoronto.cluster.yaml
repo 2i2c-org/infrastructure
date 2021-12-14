@@ -85,7 +85,7 @@ hubs:
                   subPath: "{username}"
           image:
             name: quay.io/2i2c/utoronto-image
-            tag: 83a724f5b829
+            tag: d4308bc06360
         hub:
           db:
             pvc:
