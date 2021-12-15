@@ -3,7 +3,7 @@
 
 We use [eksctl](https://eksctl.io/) to provision our k8s clusters on AWS.
 
-:::{admonition}
+:::{note}
 
 We used to use [kops](https://kops.sigs.k8s.io/) as well, for clusters
 where we wanted to minimize base running cost. We have deprecated that now, and use
