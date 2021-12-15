@@ -191,6 +191,15 @@ have least amount of permissions possible.
       region: <your-region>
    ```
 
+## EFS for home directories
+
+The terraform run in the previous step would have also created an
+[EFS instance](https://aws.amazon.com/efs/) for use as home directories,
+and sets up the network correctly to mount it.
+
+Get the address the hub should use for connecting to NFS with
+`terraform output nfs_server_dns`, and set it in the hub's config under
+`nfs.pv.serverIP` (nested under `basehub` when necessary).
 
 ## Add the cluster to be automatically deployed
 
