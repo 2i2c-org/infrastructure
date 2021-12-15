@@ -35,13 +35,11 @@ eksctl for everything.
    ```
 
    When you want to use these credentials, you can simply run `export AWS_PROFILE=<your-cluster-name>`.
-   This helps manage multiple sets of credentials easily.
+   This helps manage multiple sets of credentials easily. You can validate this works by running
+   `aws sts get-caller-identity`.
 
    ```{note}
    The customer with AWS admin privileges should have created a user for you with full privileges.
-
-   We will probably explore fine-graining the permissions actually needed
-   in the short-term.
    ```
 
 ## Create an ssh key
@@ -116,7 +114,7 @@ following command to give them access:
 ```bash
 eksctl create iamidentitymapping \
    --cluster <your-cluster-name> \
-   --region=<your-cluster-region> \
+   --region <your-cluster-region> \
    --arn arn:aws:iam::<your-org-id>:user/<iam-user-name> \
    --username <iam-user-name> \
    --group system:masters
@@ -129,3 +127,74 @@ after this step is done.
 This should eventually be converted to use an [IAM Role](https://docs.aws.amazon.com/IAM/latest/UserGuide/id_roles.html)
 instead, so we need not give each individual user access, but just grant access to the
 role - and users can modify them as they wish.
+
+
+## Create account with finely scoped permissions for automatic deployment
+
+Our AWS *terraform* code can then be used to create an AWS IAM user with just
+enough permissions for automatic deployment of hubs from CI/CD. Since these
+credentials are checked-in to our git repository and made public, they should
+have least amount of permissions possible.
+
+1. Create a `.tfvars` file for this cluster under `terraform/aws/projects`.
+   Currently, you only have to specify `region`.
+
+2. Initialize terraform for use with AWS. We still store [terraform
+   state](https://www.terraform.io/docs/language/state/index.html)
+   in GCP, so you also need to have `gcloud` set up and authenticated already.
+
+   ```bash
+   cd terraform/aws
+   terraform init
+   ```
+
+3. Create the appropriate IAM users and permissions.
+
+   ```bash
+   terraform apply -var-file projects/<your-cluster-name>.tfvars
+   ```
+
+   Observe the plan carefully, and accept it.
+
+4. Fetch credentials we can encrypt and check-in to our repository so
+   they are accessible from our automatic deployment.
+
+   ```bash
+   terraform output -raw continuous_deployer_creds > ../../secrets/<your-cluster-name>.json
+   sops --in-place --encrypt ../../secrets/<your-cluster-name>.json
+   ```
+
+   Double check to make sure that the `../../secrets/<your-cluster-name>.json` file is
+   actually encrypted by `sops` before checking it in to the git repo. Otherwise
+   this can be a serious security leak!
+
+5. Grant the freshly created IAM user access to the kubernetes cluster.
+
+   ```bash
+   eksctl create iamidentitymapping \
+      --cluster <your-cluster-name> \
+      --region <your-cluster-region> \
+      --arn arn:aws:iam::<your-org-id>:user/hub-continuous-deployer \
+      --username hub-continuous-deployer \
+      --group system:masters
+   ```
+
+6. In your hub deployment file (`config/hubs/<your-cluster-name>.cluster.yaml`),
+   provide enough information for the deployer to find the correct credentials.
+
+   ```yaml
+   provider: aws
+   aws:
+      key: secrets/<your-cluster-name>.json
+      clusterType: eks
+      clusterName: <your-cluster-name>
+      region: <your-region>
+   ```
+
+
+## Add the cluster to be automatically deployed
+
+The [CI deploy-hubs
+workflow](https://github.com/2i2c-org/pilot-hubs/blob/e96e7bcded187870dc2e07d6626de8a12586ed32/.github/workflows/deploy-hubs.yaml#L31-L36)
+contains the list of clusters being automatically deployed by our CI/CD system.
+Make sure there is an entry for new AWS cluster.
