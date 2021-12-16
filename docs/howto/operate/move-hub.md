@@ -3,12 +3,12 @@
 Moving hubs between clusters is possible, but requires manual steps
 to ensure data is preserved.
 
-## Setup a new hub
+## 1. Setup a new hub
 
 Setup [a new hub](../../topic/config.md) in the target cluster, mimicking
 the config of the old hub as much as possible.
 
-## Copy home directories
+## 2. Copy home directories
 
 Next, copy home directory contents from the old cluster to the new cluster.
 
@@ -179,7 +179,28 @@ AzureFile needs to be mounted in the source NFS VM in order to copy the data.
    <your_scp_or_rsync_command> <homes-directory-location-on-the-source-nfs-server> /mnt/new-nfs/prod/
    ```
 
-## Transfer the JupyterHub Database
+```{note}
+If the total size of the home directories is considerable, then copying the files from one cluster to another might take a long time. So make sure you have enough time to perform this operation and check the trasnfer rates once the data transfer starts.
+
+Tip: You can use [this script](https://github.com/yuvipanda/datahub/blob/cache/scripts/rsync-active-users.py) that performs a parallel `rsync` of home directories for active users only.
+```
+
+
+## 3. Set up Grafana Dashboards for the new cluster
+Make sure the new cluster has Grafana Dashboards deployed. If not, follow the steps in [](./grafana.md:new-grafana). Also, verify if the old cluster had Prometheus deployed and whether you also need to migrate that.
+
+## 4. Take down the current hub
+Delete the proxy service to make the hub unreacheable.
+
+``` bash
+kubectl delete svc proxy-public -n <old_prod_namespace>
+```
+
+```{note}
+This is a disruptive operation, and will make the hub unusable until the remaining steps are performed and the new hub is ready. So make sure you have planned a migration down-time with the hub representatives.
+```
+
+## 5. Transfer the JupyterHub Database
 
 ```{note}
 This step is only required if users have been added to a hub manually, using the admin panel.
@@ -200,6 +221,27 @@ This step preserves user information, since they might be added via the admin UI
    kubectl --namespace NEW_NAMESPACE cp -c hub ./jupyterhub.sqlite NEW_HUB_POD_NAME:/srv/jupyterhub/jupyterhub.sqlite
    ```
 
-## Transfer DNS
+## 6. Delete all user pods from the old cluster
 
-Move DNS from old cluster to new cluster, thus completing the move.
+This will kick out all users from the old hub and close any running user servers and kernels.
+
+```bash
+kubectl get pods -n <old_prod_namespace> --no-headers=true | awk '/jupyter/{print $1}' | xargs kubectl delete -n <old_prod_namespace> pod
+```
+
+## 7. Do one final copying of the home directories
+This will catch all the user changes since the last rsync. However long this takes is the total amount of downtime we'll have.
+
+## 8. Transfer DNS
+
+Retrieve the external IP address for the `ingress-nginx` load balancer.
+
+```bash
+kubectl --namespace support get svc support-ingress-nginx-controller
+```
+
+Edit the existing DNS entry in NameCheap that matches the old hub domain and type in this external IP address.
+
+This will move DNS from old cluster to new cluster, thus completing the move.
+
+## 9. Cleanup the old cluster and NFS VM, preserving anything we want from there
