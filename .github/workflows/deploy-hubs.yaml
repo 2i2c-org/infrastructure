@@ -43,6 +43,8 @@ jobs:
             provider: gcp
           - cluster_name: pangeo-hubs
             provider: gcp
+          - cluster_name: utoronto
+            provider: kubeconfig
 
     steps:
       - name: Checkout repo
