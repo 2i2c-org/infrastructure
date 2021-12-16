@@ -45,6 +45,8 @@ jobs:
             provider: gcp
           - cluster_name: utoronto
             provider: kubeconfig
+          - cluster_name: azure.carbonplan
+            provider: kubeconfig
 
     steps:
       - name: Checkout repo
