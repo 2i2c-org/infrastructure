@@ -56,6 +56,14 @@ hubs:
               funded_by:
                 name: University of Toronto
                 url: https://www.utoronto.ca/
+              announcements:
+                - |
+                  <div>
+                    <h4>* NEW * Jupyter Support Website</h4>
+
+                    We have started a JupyterHub support website with documentation and tip sheets, and we will be adding more on an
+                    ongoing basis. To reach the support site, please visit: <a href="https://act.utoronto.ca/jupyterhub-support">https://act.utoronto.ca/jupyterhub-support/</a>.
+                  </div>
         singleuser: &staging_jhub_singleuser
           extraFiles:
             github-app-private-key.pem:
