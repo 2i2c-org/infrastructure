@@ -512,8 +512,11 @@ class Hub:
 
             if secret_config.get("hubs", {}):
                 hubs = secret_config["hubs"]
-                secret_hub_config = next((hub for i, hub in enumerate(hubs) if hubs[i]["name"] == self.spec["name"]), {"config": {}})
-                secret_hub_config = secret_hub_config["config"]
+                current_hub = next((hub for hub in hubs if hub["name"] == self.spec["name"]), {})
+                # Support domain name overrides
+                if "domain" in current_hub:
+                    self.spec["domain"] = current_hub["domain"]
+                secret_hub_config = current_hub.get("config", {})
 
         generated_values = self.get_generated_config(auth_provider, secret_key)
 

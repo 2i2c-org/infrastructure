@@ -148,7 +148,6 @@ hubs:
           config:
             Authenticator:
               allowed_users: &howard_users
-                - <staff_google_ids>
                 - ericvd@berkeley.edu
                 - gwashington@scs.howard.edu
                 - anthony.fgordon64@gmail.com
