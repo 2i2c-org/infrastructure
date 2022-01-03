@@ -187,7 +187,7 @@ Tip: You can use [this script](https://github.com/yuvipanda/datahub/blob/cache/s
 
 
 ## 3. Set up Grafana Dashboards for the new cluster
-Make sure the new cluster has Grafana Dashboards deployed. If not, follow the steps in [](./grafana.md:new-grafana). Also, verify if the old cluster had Prometheus deployed and whether you also need to migrate that.
+Make sure the new cluster has Grafana Dashboards deployed. If not, follow the steps in {ref}`grafana:new-grafana`. Also, verify if the old cluster had Prometheus deployed and whether you also need to migrate that.
 
 ## 4. Take down the current hub
 Delete the proxy service to make the hub unreacheable.
