@@ -244,4 +244,4 @@ Edit the existing DNS entry in NameCheap that matches the old hub domain and typ
 
 This will move DNS from old cluster to new cluster, thus completing the move.
 
-## 9. Cleanup the old cluster and NFS VM, preserving anything we want from there
+## 9. Cleanup the old cluster and NFS VM, preserving any relevant information, such as logs
