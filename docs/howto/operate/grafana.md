@@ -12,6 +12,7 @@ To access the Grafana dashboards you'll need a **username** and **password**.
 These can be accessed using `sops` (see {ref}`tc:secrets:sops` for how to set up `sops` on your machine).
 See [](grafana:log-in) for how to find the credentials information.
 
+(grafana:new-grafana)=
 ## Set up Grafana Dashboards for a cluster
 
 This guide will walk through the steps required to setup a suite of Grafana dashboards for a cluster.
