@@ -148,11 +148,10 @@ hubs:
                 effect: "NoSchedule"
             config:
               Authenticator:
-                allowed_users: &openscapes_admins
+                admin_users:
                   - <staff_github_ids>
                   - amfriesz
                   - jules32
-                admin_users: *openscapes_admins
       dask-gateway:
         traefik:
           tolerations:
