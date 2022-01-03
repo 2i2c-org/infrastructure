@@ -148,10 +148,12 @@ hubs:
               enabled: false
             config:
               Authenticator:
-                admin_users:
+                admin_users: &users
                   - <staff_github_ids>
                   - amfriesz
                   - jules32
+                # Without this, any GitHub user can authenticate
+                allowed_users: *users
       dask-gateway:
         extraConfig:
           idle: |
