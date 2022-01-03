@@ -2,10 +2,33 @@ name: openscapes
 provider: aws
 aws:
   key: secrets/openscapes.json
-  clusterType: kops
-  clusterName: openscapeshub.k8s.local
+  clusterType: eks
+  clusterName: openscapeshub
   region: us-west-2
-  stateStore: s3://2i2c-openscapes-kops-state
+support:
+  config:
+    prometheus:
+      server:
+        resources:
+          requests:
+            cpu: 1
+            memory: 4Gi
+          limits:
+            cpu: 4
+            memory: 8Gi
+    cluster-autoscaler:
+      enabled: true
+      autoDiscovery:
+        clusterName: openscapeshub
+      awsRegion: us-west-2
+    grafana:
+      ingress:
+        hosts:
+          - grafana.openscapes.2i2c.cloud
+        tls:
+          - secretName: grafana-tls
+            hosts:
+              - grafana.openscapes.2i2c.cloud
 hubs:
   - name: staging
     domain: staging.openscapes.2i2c.cloud
@@ -28,11 +51,6 @@ hubs:
               - noresvport
             serverIP: fs-b25253b5.efs.us-west-2.amazonaws.com
             baseShareName: /
-          shareCreator:
-            tolerations:
-              - key: node-role.kubernetes.io/master
-                operator: "Exists"
-                effect: "NoSchedule"
         jupyterhub:
           custom:
             homepage:
@@ -51,6 +69,7 @@ hubs:
                   name: Openscapes
                   url: https://www.openscapes.org/
           singleuser:
+            serviceAccountName: cloud-user-sa
             defaultUrl: /lab
             initContainers:
               # Need to explicitly fix ownership here, since EFS doesn't do anonuid
@@ -90,28 +109,28 @@ hubs:
                   # Expllicitly unset mem_limit, so it overrides the default memory limit we set in
                   # basehub/values.yaml
                   mem_limit: null
-                  mem_guarantee: 7G
+                  mem_guarantee: 6.5G
                   node_selector:
                     node.kubernetes.io/instance-type: m5.large
               - display_name: "Medium: m5.xlarge"
                 description: "~4 CPU, ~15G RAM"
                 kubespawner_override:
                   mem_limit: null
-                  mem_guarantee: 13G
+                  mem_guarantee: 12G
                   node_selector:
                     node.kubernetes.io/instance-type: m5.xlarge
               - display_name: "Large: m5.2xlarge"
                 description: "~8 CPU, ~30G RAM"
                 kubespawner_override:
                   mem_limit: null
-                  mem_guarantee: 28G
+                  mem_guarantee: 26G
                   node_selector:
                     node.kubernetes.io/instance-type: m5.2xlarge
               - display_name: "Huge: m5.8xlarge"
                 description: "~32 CPU, ~128G RAM"
                 kubespawner_override:
                   mem_limit: null
-                  mem_guarantee: 120G
+                  mem_guarantee: 115G
                   node_selector:
                     node.kubernetes.io/instance-type: m5.8xlarge
           scheduling:
@@ -120,21 +139,6 @@ hubs:
               replicas: 0
             userScheduler:
               enabled: false
-          proxy:
-            service:
-              type: LoadBalancer
-            https:
-              enabled: true
-            chp:
-              nodeSelector: {}
-              tolerations:
-                - key: "node-role.kubernetes.io/master"
-                  effect: "NoSchedule"
-            traefik:
-              nodeSelector: {}
-              tolerations:
-                - key: "node-role.kubernetes.io/master"
-                  effect: "NoSchedule"
           hub:
             allowNamedServers: true
             networkPolicy:
@@ -142,34 +146,19 @@ hubs:
               enabled: false
             readinessProbe:
               enabled: false
-            nodeSelector: {}
-            tolerations:
-              - key: "node-role.kubernetes.io/master"
-                effect: "NoSchedule"
             config:
               Authenticator:
-                admin_users:
+                admin_users: &users
                   - <staff_github_ids>
                   - amfriesz
                   - jules32
+                # Without this, any GitHub user can authenticate
+                allowed_users: *users
       dask-gateway:
-        traefik:
-          tolerations:
-            - key: "node-role.kubernetes.io/master"
-              effect: "NoSchedule"
-        controller:
-          tolerations:
-            - key: "node-role.kubernetes.io/master"
-              effect: "NoSchedule"
-        gateway:
-          tolerations:
-            - key: "node-role.kubernetes.io/master"
-              effect: "NoSchedule"
-            # TODO: figure out a replacement for userLimits.
-          extraConfig:
-            idle: |
-              # timeout after 30 minutes of inactivity
-              c.KubeClusterConfig.idle_timeout = 1800
+        extraConfig:
+          idle: |
+            # timeout after 30 minutes of inactivity
+            c.KubeClusterConfig.idle_timeout = 1800
   - name: prod
     domain: openscapes.2i2c.cloud
     template: daskhub
