@@ -146,10 +146,6 @@ hubs:
               enabled: false
             readinessProbe:
               enabled: false
-            nodeSelector: {}
-            tolerations:
-              - key: "node-role.kubernetes.io/master"
-                effect: "NoSchedule"
             config:
               Authenticator:
                 admin_users:
