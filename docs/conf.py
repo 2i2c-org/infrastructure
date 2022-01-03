@@ -62,7 +62,7 @@ html_static_path = ["_static"]
 # Disable linkcheck for anchors because it throws false errors for any JS anchors
 linkcheck_anchors = False
 linkcheck_ignore = [
-    "howard.cloudbank.2i2c.cloud*",  # Temporarily ignore because we've changed the hub name
+    "https://howard.cloudbank.2i2c.cloud*",  # Temporarily ignore because we've changed the hub name
 ]
 
 def setup(app):
