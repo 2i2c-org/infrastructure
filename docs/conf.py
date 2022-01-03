@@ -61,6 +61,9 @@ html_theme_options = {
 html_static_path = ["_static"]
 # Disable linkcheck for anchors because it throws false errors for any JS anchors
 linkcheck_anchors = False
+linkcheck_ignore = [
+    "https://howard.cloudbank.2i2c.cloud*",  # Temporarily ignore because we've changed the hub name
+]
 
 def setup(app):
     app.add_css_file("custom.css")
