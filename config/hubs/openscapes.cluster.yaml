@@ -152,6 +152,8 @@ hubs:
                   - <staff_github_ids>
                   - amfriesz
                   - jules32
+                  - erinmr
+                  - betolink
                 # Without this, any GitHub user can authenticate
                 allowed_users: *users
       dask-gateway:
