@@ -12,7 +12,7 @@ body:
         - **Who would benefit** from the solution?
       placeholder: |
         It is common for an instructor to want to do X. However, this isn't currently possible because Y.
-        
+
         We could implement X by doing Z, this would allow users to W which would benefit their workflows in the following ways...
     validations:
       required: true
@@ -33,14 +33,14 @@ body:
 
     validations:
       required: false
-      
+
   - type: textarea
     id: timeestimate
     attributes:
       label: Time to spend on this
       description: |
         How much time do we want to spend trying to resolve this problem? This should relate to its
-        importance and its complexity. 
+        importance and its complexity.
 
       placeholder: |
         - We'll spend 4 weeks working on this, and re-assess whether we want to update scope at that time.
