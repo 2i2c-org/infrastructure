@@ -4,16 +4,22 @@ body:
   - type: textarea
     id: description
     attributes:
-      label: Problem to solve and opportunity
+      label: Description and opportunity
       description: |
         - **What is the problem** that needs to be solved?
         - **What is the solution** that would resolve it?
         - **What is the opportunity / value** in solving this problem?
         - **Who would benefit** from the solution?
-      placeholder: |
+      value: |
+        <!-- A few ideas to get started -->
+        **Problem description**
         It is common for an instructor to want to do X. However, this isn't currently possible because Y.
 
-        We could implement X by doing Z, this would allow users to W which would benefit their workflows in the following ways...
+        **Proposed solution**
+        So, we should implement X by doing Z.
+        
+        **What's the value and who would benefit**
+        This would allow educational users to do XXX which would benefit their workflows in the following ways...
     validations:
       required: true
 
@@ -23,29 +29,13 @@ body:
       label: Implementation guide and constraints
       description: |
         - Suggestions to reduce risk and guide others who may want to implement a solution.
-        - Pointers to likely place where an implementation would happen.
         - Constraints and "out of scope" ideas that shouldn't be addressed here.
-
+        - Time boxes and work planning.
       placeholder: |
         - The best way to do this would be...
         - This work should *not* include...
         - There are a few ways to do this, we should choose between...
-
-    validations:
-      required: false
-
-  - type: textarea
-    id: timeestimate
-    attributes:
-      label: Time to spend on this
-      description: |
-        How much time do we want to spend trying to resolve this problem? This should relate to its
-        importance and its complexity.
-
-      placeholder: |
-        - We'll spend 4 weeks working on this, and re-assess whether we want to update scope at that time.
-        - This should only take a day or two.
-        - This is a quick fix.
+        - We should try to do XXX in a 2-week time box before moving further.
 
     validations:
       required: false
@@ -55,7 +45,7 @@ body:
     attributes:
       label: Updates and ongoing work
       description: |
-        Use this section to provide updates as we start to plan and do work.
+        Provide updates as we start to plan and do work.
         - Specific tasks to complete
         - Sub-issues to work on
         - Links to project boards
