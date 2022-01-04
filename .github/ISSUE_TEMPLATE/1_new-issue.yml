@@ -4,12 +4,11 @@ body:
   - type: textarea
     id: description
     attributes:
-      label: Description and opportunity
+      label: Problem description and opportunity to solve it
       description: |
         - **What is the problem** that needs to be solved?
         - **What is the solution** that would resolve it?
-        - **What is the opportunity / value** in solving this problem?
-        - **Who would benefit** from the solution?
+        - **What is the opportunity / value** in solving this problem? And for who?
       value: |
         <!-- A few ideas to get started -->
         **Problem description**
@@ -17,7 +16,7 @@ body:
 
         **Proposed solution**
         So, we should implement X by doing Z.
-
+        
         **What's the value and who would benefit**
         This would allow educational users to do XXX which would benefit their workflows in the following ways...
     validations:
@@ -34,7 +33,6 @@ body:
       placeholder: |
         - The best way to do this would be...
         - This work should *not* include...
-        - There are a few ways to do this, we should choose between...
         - We should try to do XXX in a 2-week time box before moving further.
 
     validations:
@@ -46,8 +44,7 @@ body:
       label: Updates and ongoing work
       description: |
         Provide updates as we start to plan and do work.
-        - Specific tasks to complete
-        - Sub-issues to work on
+        - Sub-issues and tasks to work on
         - Links to project boards
         - Updates over time
 
