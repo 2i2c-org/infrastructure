@@ -1,8 +1,8 @@
 name: Ping slack if we have approved PRs waiting to merge
 on:
   schedule:
-  # Run every MWF at 07:00 AM UTC / 09:00AM Europe / 00:00AM California
-  - cron: "0 07 * * 1,3,5"
+    # Run every MWF at 07:00 AM UTC / 09:00AM Europe / 00:00AM California
+    - cron: "0 07 * * 1,3,5"
 
   workflow_dispatch:
     inputs:
@@ -15,35 +15,35 @@ jobs:
   create-sync-issue:
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v2
-    - uses: actions/setup-python@v2
-    - name: Install python
-      run: pip install ghapi pandas
+      - uses: actions/checkout@v2
+      - uses: actions/setup-python@v2
+      - name: Install python
+        run: pip install ghapi pandas
 
-    - name: Pull open PRs and check if they have old approvals
-      id: approved-prs
-      run: python .github/workflows/approved_prs_reminder.py
-    
-    # Decide what message to send
-    - name: Sets env vars for automated message
-      if: github.event_name != 'workflow_dispatch'
-      run: |
-        echo "SLACK_MESSAGE="${{ steps.approved-prs.outputs.PRS_MESSAGE }} >> $GITHUB_ENV
-        echo "DO_SEND_MESSAGE="${{ steps.approved-prs.outputs.DO_SEND_MESSAGE }} >> $GITHUB_ENV
+      - name: Pull open PRs and check if they have old approvals
+        id: approved-prs
+        run: python .github/workflows/approved_prs_reminder.py
 
-    - name: Sets env vars for dispatch message
-      if: github.event_name == 'workflow_dispatch'
-      run: |
-        echo "SLACK_MESSAGE="${{ github.event.inputs.message }} >> $GITHUB_ENV
-        echo "DO_SEND_MESSAGE=TRUE" >> $GITHUB_ENV
+      # Decide what message to send
+      - name: Sets env vars for automated message
+        if: github.event_name != 'workflow_dispatch'
+        run: |
+          echo "SLACK_MESSAGE="${{ steps.approved-prs.outputs.PRS_MESSAGE }} >> $GITHUB_ENV
+          echo "DO_SEND_MESSAGE="${{ steps.approved-prs.outputs.DO_SEND_MESSAGE }} >> $GITHUB_ENV
 
-    # Ref: https://github.com/slackapi/slack-github-action#technique-2-slack-app
-    - name: Post to a Slack channel
-      if: ${{ env.DO_SEND_MESSAGE == 'TRUE' }} 
-      id: slack
-      uses: slackapi/slack-github-action@v1.16.0
-      with:
-        channel-id: 'C0206KLF76E'  # This is hub-development
-        slack-message: ${{ env.SLACK_MESSAGE }}
-      env:
-        SLACK_BOT_TOKEN: ${{ secrets.SLACK_BOT_TOKEN }}
+      - name: Sets env vars for dispatch message
+        if: github.event_name == 'workflow_dispatch'
+        run: |
+          echo "SLACK_MESSAGE="${{ github.event.inputs.message }} >> $GITHUB_ENV
+          echo "DO_SEND_MESSAGE=TRUE" >> $GITHUB_ENV
+
+      # Ref: https://github.com/slackapi/slack-github-action#technique-2-slack-app
+      - name: Post to a Slack channel
+        if: ${{ env.DO_SEND_MESSAGE == 'TRUE' }}
+        id: slack
+        uses: slackapi/slack-github-action@v1.16.0
+        with:
+          channel-id: "C0206KLF76E" # This is hub-development
+          slack-message: ${{ env.SLACK_MESSAGE }}
+        env:
+          SLACK_BOT_TOKEN: ${{ secrets.SLACK_BOT_TOKEN }}
