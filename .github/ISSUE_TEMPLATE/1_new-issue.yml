@@ -4,51 +4,36 @@ body:
   - type: textarea
     id: description
     attributes:
-      label: Description
+      label: Description of problem and opportunity to address it
       description: |
-        Describe what you are proposing, or the question you're asking. Provide as much context as possible and link to related issues and/or pull requests.
-        This section should contain "what" you are proposing.
+        - **What is the problem** that needs to be solved?
+        - **What is the solution** that would resolve it?
+        - **What is the opportunity / value** in solving this problem? And for who?
+      value: |
+        <!-- A few ideas to get started -->
+        **Problem description**
+        It is common for an instructor to want to do X. However, this isn't currently possible because Y.
 
-        🐛 If this issue is related to a bug, include information about how to reproduce it and add the `bug` label.
-        ✨ If this issue is an enhancement or feature, add the `enhancement` label.
-        ✅ If this issue is a task to complete, add the `task` label.
+        **Proposed solution**
+        So, we should implement X by doing Z.
 
-    validations:
-      required: true
-
-  - type: textarea
-    id: value
-    attributes:
-      label: Value / benefit
-      description: |
-        What is the value in resolving this issue, and who will benefit from it? Include any information that could help us prioritize the issue.
-        This section should contain "why" this issue should be resolved.
-
-        ✨ If this is for a new feature or enhancement, consider adding [user stories](https://www.atlassian.com/agile/project-management/user-stories).
-        🐛 If this is for a bug or problem, estimate the severity and scale of the impact.
-
-      placeholder: |
-        - Many people have requested this feature, as seen in...
-        - This would facilitate XXX which is common for our hub users
-        - This problem affects anybody that does XXX on a hub
-
+        **What's the value and who would benefit**
+        This would allow educational users to do XXX which would benefit their workflows in the following ways...
     validations:
       required: true
 
   - type: textarea
     id: implementation
     attributes:
-      label: Implementation details
+      label: Implementation guide and constraints
       description: |
-        Anything that will help others understand how this issue could be addressed. Where appropriate, note locations in a codebase where a change would need to be made, or other considerations that should be taken.
-        This section should contain "how" this issue should be resolved.
-
-        _If you can't think of anything then just leave this blank and we can fill it in later! This can be filled in as we understand more about an issue._
-
+        - Suggestions to reduce risk and guide others who may want to implement a solution.
+        - Constraints and "out of scope" ideas that shouldn't be addressed here.
+        - Time boxes and work planning.
       placeholder: |
-        - This change would be probably need to be over here...
         - The best way to do this would be...
-        - There are a few ways to do this, we should choose between...
+        - This work should *not* include...
+        - We should try to do XXX in a 2-week time box before moving further.
 
     validations:
       required: false
@@ -56,28 +41,12 @@ body:
   - type: textarea
     id: tasks
     attributes:
-      label: Tasks to complete
+      label: Updates and ongoing work
       description: |
-        Any concrete tasks that should be completed to resolve this issue.
-        The more specific the better. If issues have lots of complex tasks associated with them, consider breaking them up into separate issues with cross-links.
-
-        _If you can't think of anything then just leave this blank and we can fill it in later! This can be filled in as we understand more about an issue._
-
-      placeholder: |
-        - [ ] Discuss and decide on what to do...
-        - [ ] Implement partial feature A...
-
-    validations:
-      required: false
-
-  - type: textarea
-    id: updates
-    attributes:
-      label: Updates
-      description: |
-        To avoid that others have to read through the full thread of comments, please update the initial issue with important updates (e.g. decisions taken) regularly. You can update any of the sections above directly (this is encouraged!) or add new information below in this new section.
-
-        _If you can't think of anything then just leave this blank and we can fill it in later! This can be filled in as we understand more about an issue._
+        Provide updates as we start to plan and do work.
+        - Sub-issues and tasks to work on
+        - Links to project boards
+        - Updates over time
 
     validations:
       required: false
