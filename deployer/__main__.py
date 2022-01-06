@@ -19,18 +19,6 @@ from utils import decrypt_file, update_authenticator_config
 # Without `pure=True`, I get an exception about str / byte issues
 yaml = YAML(typ="safe", pure=True)
 
-def build(cluster_name):
-    """
-    Build and push the image for a given cluster
-    """
-    config_file_path = Path(os.getcwd()) / "config/hubs" / f'{cluster_name}.cluster.yaml'
-    with open(config_file_path) as f:
-        cluster = Cluster(yaml.load(f))
-
-    if "image_repo" in cluster.spec:
-        with cluster.auth():
-            cluster.build_image()
-
 
 def deploy_support(cluster_name):
     """
@@ -193,13 +181,10 @@ def main():
     argparser.add_argument('--config-path', help='Read deployment config from this file', default='deployment.config.yaml')
     subparsers = argparser.add_subparsers(dest="action")
 
-    build_parser = subparsers.add_parser("build")
     deploy_parser = subparsers.add_parser("deploy")
     validate_parser = subparsers.add_parser("validate")
     deploy_support_parser = subparsers.add_parser("deploy-support")
     deploy_grafana_parser = subparsers.add_parser("deploy-grafana")
-
-    build_parser.add_argument("cluster_name")
 
     deploy_parser.add_argument("cluster_name")
     deploy_parser.add_argument("hub_name", nargs="?")
@@ -214,9 +199,7 @@ def main():
 
     args = argparser.parse_args()
 
-    if args.action == "build":
-        build(args.cluster_name)
-    elif args.action == "deploy":
+    if args.action == "deploy":
         deploy(args.cluster_name, args.hub_name, args.skip_hub_health_test, args.config_path)
     elif args.action == 'validate':
         validate(args.cluster_name)
