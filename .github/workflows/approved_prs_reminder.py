@@ -30,7 +30,7 @@ for pr in open_prs:
             msg += f"- [{pr['title']}]({pr['html_url']}) - {n_workdays} workdays old."
 if msg:
     msg = (
-        "**The following PRs are more than 24 hours old, have approval, and should be merged!**\n\n"
+        "**The following PRs were approved more than 2 business days ago and should be merged!**\n\n"
         + msg
     )
     # Print to output in a way that will store as an environment variable
