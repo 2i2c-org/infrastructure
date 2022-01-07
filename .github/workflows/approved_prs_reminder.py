@@ -8,6 +8,7 @@ This script helps remind our team when it's time to merge a PR. It does these th
 """
 from ghapi.all import GhApi
 import pandas as pd
+from datetime import datetime
 
 api = GhApi()
 
@@ -21,16 +22,15 @@ for pr in open_prs:
         # Only care about reviews that caused approvals
         if review["state"] != "APPROVED":
             continue
-        # Check whether we've had an approval for > 24 hours, and if so add to message list
+        # Check whether we've had an approval for > 2 business days
         today = pd.to_datetime(datetime.today()).tz_localize("US/Pacific")
         review_time = pd.to_datetime(review["submitted_at"]).astimezone("US/Pacific")
-        age = today - review_time
-        hours_old = age.seconds // 60 // 60  # Convert to hours
-        if hours_old > 24:
-            msg += f"- [{pr['title']}]({pr['html_url']}) - {hours_old} hours old."
+        n_workdays = len(pd.bdate_range(review_time.date(), today.date()))
+        if n_workdays > 2:
+            msg += f"- [{pr['title']}]({pr['html_url']}) - {n_workdays} workdays old."
 if msg:
     msg = (
-        "**The following PRs are more than 24 hours old, have approval, and should be merged!**\n\n"
+        "**The following PRs were approved more than 2 business days ago and should be merged!**\n\n"
         + msg
     )
     # Print to output in a way that will store as an environment variable
