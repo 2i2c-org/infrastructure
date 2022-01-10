@@ -8,7 +8,7 @@ The image is built and pushed using [jupyterhub/repo2docker-action](https://gith
 To update this environment:
 
 1. Make the changes you need to make to the environment, by editing the files in
-   the [pilot-hubs-image repository](https://github.com/2i2c-org/pilot-hubs-image)
+   the [2i2c-hubs-image repository](https://github.com/2i2c-org/2i2c-hubs-image)
    and open a pull request. This will also provide you the ability to test your
    changes on Binder to make sure everything works as expected.
 2. Once the PR is merged or a commit to the `main` branch happens, the new image will be pushed
