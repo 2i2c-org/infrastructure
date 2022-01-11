@@ -1,5 +1,5 @@
 name: 2i2c
-image_repo: "us-central1-docker.pkg.dev/two-eye-two-see/pilot-hubs-registry/base-user"
+image_repo: "quay.io/2i2c/2i2c-hubs-image"
 provider: gcp
 gcp:
   key: secrets/2i2c.json

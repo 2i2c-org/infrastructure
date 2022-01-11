@@ -1,5 +1,5 @@
 name: cloudbank
-image_repo: "us-central1-docker.pkg.dev/cb-1003-1696/low-touch-hubs/base-user"
+image_repo: "quay.io/2i2c/2i2c-hubs-image"
 provider: gcp
 gcp:
   key: secrets/cloudbank.json
