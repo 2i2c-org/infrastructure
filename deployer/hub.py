@@ -13,7 +13,6 @@ from pathlib import Path
 import pytest
 from ruamel.yaml import YAML
 
-from build import build_image
 from utils import decrypt_file
 
 # Without `pure=True`, I get an exception about str / byte issues
@@ -31,10 +30,6 @@ class Cluster:
             for hub_yaml in self.spec['hubs']
         ]
         self.support = self.spec.get('support', {})
-
-    def build_image(self):
-        self.ensure_docker_credhelpers()
-        build_image(self.spec['image_repo'])
 
     @contextmanager
     def auth(self):
