@@ -27,15 +27,15 @@ for pr in open_prs:
         review_time = pd.to_datetime(review["submitted_at"]).astimezone("US/Pacific")
         n_workdays = len(pd.bdate_range(review_time.date(), today.date()))
         if n_workdays > 2:
-            msg += f"- [{pr['title']}]({pr['html_url']}) - {n_workdays} workdays old."
-if msg:
+            msg += f"- {pr['title']} ({pr['html_url']}) - {n_workdays} workdays old.\n"
+if len(msg) > 0:
     msg = (
         "**The following PRs were approved more than 2 business days ago and should be merged!**\n\n"
         + msg
     )
     # Print to output in a way that will store as an environment variable
-    print("Found PRs with old approvals, sending Slack message")
-    print(f"::set-output name=PRS_MESSAGE::{msg}")
+    print(f"Found PRs with old approvals, sending Slack message: \n===\n{msg}")
+    print(f"::set-output name=PRS_MESSAGE::'{msg}'")
     print(f"::set-output name=DO_SEND_MESSAGE::TRUE")
 else:
     print("No PRs with old approvals found, not sending Slack message")
