@@ -28,8 +28,8 @@ jobs:
       - name: Sets env vars for automated message
         if: github.event_name != 'workflow_dispatch'
         run: |
-          echo "SLACK_MESSAGE="${{ steps.approved-prs.outputs.PRS_MESSAGE }} >> $GITHUB_ENV
-          echo "DO_SEND_MESSAGE="${{ steps.approved-prs.outputs.DO_SEND_MESSAGE }} >> $GITHUB_ENV
+          echo SLACK_MESSAGE="${{ steps.approved-prs.outputs.PRS_MESSAGE }}" >> $GITHUB_ENV
+          echo DO_SEND_MESSAGE="${{ steps.approved-prs.outputs.DO_SEND_MESSAGE }}" >> $GITHUB_ENV
 
       - name: Sets env vars for dispatch message
         if: github.event_name == 'workflow_dispatch'
