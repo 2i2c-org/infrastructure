@@ -78,18 +78,14 @@ The key you create needs admin permissions.
 
 **Keep this key safe as you won't be able to retrieve it!**
 
-```{note}
-In the future, we should define the scenarios where other engineers need this API key after the initial deployment and decide how to store and share it.
-```
+Encrypt and store this key using `sops` in `secrets/config/hubs/<cluster>.yaml` under `grafana_token` key.
 
-Some default grafana dashboards for JupyterHub can then be deployed using [`jupyterhub/grafana-dashboards`](https://github.com/jupyterhub/grafana-dashboards).
+This key will be used by the [`deploy-grafana-dashboards` Github Action](https://github.com/2i2c-org/infrastructure/blob/HEAD/.github/workflows/deploy-grafana-dashboards.yaml) to deploy some default grafana dashboards for JupyterHub using[`jupyterhub/grafana-dashboards`](https://github.com/jupyterhub/grafana-dashboards).
 
-1. Create a local clone of the repository
-2. Install the [`jsonnet` binary](https://github.com/google/jsonnet#packages).
+Once you've pushed the ecrypted `grafana_token` to the GitHub repository, manually trigger the GitHub Action to deploy the dashboads.
 
 ```{note}
-Homebrew is the best option if you're on MacOS.
-The Python package will not suffice here as we directly call the `jsonnet` library.
-```
+The action only runs when manually triggered.
 
-3. Follow the instructions in the [Deployment](https://github.com/jupyterhub/grafana-dashboards/blob/main/README.md#deployment) section of the README to create the grafana dashboards
+Any re-triggering of the action after the initial deployment will overwrite any dashboard created from the Grafana UI and not stored in the [`jupyterhub/grafana-dashboards`](https://github.com/jupyterhub/grafana-dashboards) repository.
+```
