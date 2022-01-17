@@ -33,6 +33,14 @@ spec:
         operator: "Equal"
         value: "gpu"
         effect: "NoSchedule"
+      - effect: NoSchedule
+        key: hub.jupyter.org/dedicated
+        operator: Equal
+        value: user
+      - effect: NoSchedule
+        key: hub.jupyter.org_dedicated
+        operator: Equal
+        value: user
       containers:
       - image: mcr.microsoft.com/oss/nvidia/k8s-device-plugin:1.11
         name: nvidia-device-plugin-ctr
