@@ -123,18 +123,18 @@ resource "azurerm_kubernetes_cluster_node_pool" "user_pool" {
   os_disk_size_gb       = 200
   vnet_subnet_id        = azurerm_subnet.node_subnet.id
 
-  orchestrator_version = var.kubernetes_version
+  orchestrator_version = each.value.kubernetes_version == "" ? var.kubernetes_version : each.value.kubernetes_version
 
   vm_size = each.value.vm_size
-  node_labels = {
+  node_labels = merge({
     "hub.jupyter.org/node-purpose" = "user",
     "k8s.dask.org/node-purpose"    = "scheduler"
     "hub.jupyter.org/node-size"    = each.value.vm_size
-  }
+  }, each.value.labels)
 
-  node_taints = [
+  node_taints = concat([
     "hub.jupyter.org_dedicated=user:NoSchedule"
-  ]
+  ], each.value.taints)
 
 
   min_count = each.value.min
@@ -152,17 +152,17 @@ resource "azurerm_kubernetes_cluster_node_pool" "dask_pool" {
   os_disk_size_gb       = 200
   vnet_subnet_id        = azurerm_subnet.node_subnet.id
 
-  orchestrator_version = var.kubernetes_version
+  orchestrator_version = each.value.kubernetes_version == "" ? var.kubernetes_version : each.value.kubernetes_version
 
   vm_size = each.value.vm_size
-  node_labels = {
+  node_labels = merge({
     "k8s.dask.org/node-purpose" = "worker",
     "hub.jupyter.org/node-size" = each.value.vm_size
-  }
+  }, each.value.labels)
 
-  node_taints = [
+  node_taints = concat([
     "k8s.dask.org_dedicated=worker:NoSchedule"
-  ]
+  ], each.value.taints)
 
 
   min_count = each.value.min
