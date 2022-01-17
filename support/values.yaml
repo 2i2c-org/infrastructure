@@ -101,3 +101,9 @@ nfs-server-provisioner:
     # On Google cloud, this is `standard-rwo` for HDD and `premium-rwo` for ssds.
     # Standard will do for most use cases.
     storageClass: standard-rwo
+
+# Enable a daemonset to install nvidia device plugin to GPU nodes
+nvidiaDevicePlugin:
+  # For Azure-specific image, default to false
+  azure:
+    enabled: false
