@@ -123,7 +123,7 @@ resource "azurerm_kubernetes_cluster_node_pool" "user_pool" {
   os_disk_size_gb       = 200
   vnet_subnet_id        = azurerm_subnet.node_subnet.id
 
-  orchestrator_version = var.kubernetes_version
+  orchestrator_version = each.value.kubernetes_version == "" ? var.kubernetes_version : each.value.kubernetes_version
 
   vm_size = each.value.vm_size
   node_labels = merge({
@@ -152,7 +152,7 @@ resource "azurerm_kubernetes_cluster_node_pool" "dask_pool" {
   os_disk_size_gb       = 200
   vnet_subnet_id        = azurerm_subnet.node_subnet.id
 
-  orchestrator_version = var.kubernetes_version
+  orchestrator_version = each.value.kubernetes_version == "" ? var.kubernetes_version : each.value.kubernetes_version
 
   vm_size = each.value.vm_size
   node_labels = merge({

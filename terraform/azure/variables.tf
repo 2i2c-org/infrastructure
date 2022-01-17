@@ -94,13 +94,13 @@ variable "ssh_pub_key" {
 }
 
 variable "notebook_nodes" {
-  type        = map(object({ min : number, max : number, vm_size : string, labels : map(string), taints : list(string) }))
+  type        = map(object({ min : number, max : number, vm_size : string, labels : map(string), taints : list(string), kubernetes_version : string }))
   description = "Notebook node pools to create"
   default     = {}
 }
 
 variable "dask_nodes" {
-  type        = map(object({ min : number, max : number, vm_size : string, labels : map(string), taints : list(string) }))
+  type        = map(object({ min : number, max : number, vm_size : string, labels : map(string), taints : list(string), kubernetes_version : string }))
   description = "Dask node pools to create"
   default     = {}
 }
