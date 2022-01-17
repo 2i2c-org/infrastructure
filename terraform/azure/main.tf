@@ -132,7 +132,7 @@ resource "azurerm_kubernetes_cluster_node_pool" "user_pool" {
     "hub.jupyter.org/node-size"    = each.value.vm_size
   }, each.value.labels)
 
-  node_taints = merge([
+  node_taints = concat([
     "hub.jupyter.org_dedicated=user:NoSchedule"
   ], each.value.taints)
 
@@ -160,7 +160,7 @@ resource "azurerm_kubernetes_cluster_node_pool" "dask_pool" {
     "hub.jupyter.org/node-size" = each.value.vm_size
   }, each.value.labels)
 
-  node_taints = merge([
+  node_taints = concat([
     "k8s.dask.org_dedicated=worker:NoSchedule"
   ], each.value.taints)
 
