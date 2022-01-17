@@ -82,7 +82,7 @@ Encrypt and store this key using `sops` in `secrets/config/hubs/<cluster>.yaml` 
 
 This key will be used by the [`deploy-grafana-dashboards` workflow](https://github.com/2i2c-org/infrastructure/blob/HEAD/.github/workflows/deploy-grafana-dashboards.yaml) to deploy some default grafana dashboards for JupyterHub using [`jupyterhub/grafana-dashboards`](https://github.com/jupyterhub/grafana-dashboards).
 
-Once you've pushed the encrypted `grafana_token` to the GitHub repository, manually trigger the GitHub Action to deploy the dashboards.
+Once you've pushed the encrypted `grafana_token` to the GitHub repository, manually trigger the `deploy-grafana-dashboards` workflow using the "Run workflow" button [from here](https://github.com/2i2c-org/infrastructure/actions/workflows/deploy-grafana-dashboards.yaml) to deploy the dashboards.
 
 ```{note}
 The action only runs when manually triggered.
