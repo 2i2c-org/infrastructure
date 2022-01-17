@@ -13,37 +13,53 @@ notebook_nodes = {
   "small" : {
     min : 0,
     max : 20,
-    vm_size : "Standard_E2s_v4"
+    vm_size : "Standard_E2s_v4",
+    labels: { },
+    taints: [ ],
   },
   "medium" : {
     min : 0,
     max : 20,
-    vm_size : "Standard_E4s_v4"
+    vm_size : "Standard_E4s_v4",
+    labels: { },
+    taints: [ ],
   },
   "large" : {
     min : 0,
     max : 20,
-    vm_size : "Standard_E8s_v4"
+    vm_size : "Standard_E8s_v4",
+    labels: { },
+    taints: [ ],
   },
   "huge" : {
     min : 0,
     max : 20,
-    vm_size : "Standard_E32s_v4"
+    vm_size : "Standard_E32s_v4",
+    labels: { },
+    taints: [ ],
   },
   "vhuge" : {
     min : 0,
     max : 20,
-    vm_size : "Standard_M64s_v2"
+    vm_size : "Standard_M64s_v2",
+    labels: { },
+    taints: [ ],
   },
   "vvhuge" : {
     min : 0,
     max : 20,
-    vm_size : "Standard_M128s_v2"
+    vm_size : "Standard_M128s_v2",
+    labels: { },
+    taints: [ ],
   },
     "gpu" : {
     min : 0,
     max : 20,
-    vm_size : "Standard_NC16as_T4_v3"
+    vm_size : "Standard_NC16as_T4_v3",
+    labels: { },
+    taints: [
+      "sku=gpu:NoSchedule",
+    ],
   },
 }
 
@@ -51,36 +67,52 @@ dask_nodes = {
   "small" : {
     min : 0,
     max : 20,
-    vm_size : "Standard_E2s_v4"
+    vm_size : "Standard_E2s_v4",
+    labels: { },
+    taints: [ ],
   },
   "medium" : {
     min : 0,
     max : 20,
-    vm_size : "Standard_E4s_v4"
+    vm_size : "Standard_E4s_v4",
+    labels: { },
+    taints: [ ],
   },
   "large" : {
     min : 0,
     max : 20,
-    vm_size : "Standard_E8s_v4"
+    vm_size : "Standard_E8s_v4",
+    labels: { },
+    taints: [ ],
   },
   "huge" : {
     min : 0,
     max : 20,
-    vm_size : "Standard_E32s_v4"
+    vm_size : "Standard_E32s_v4",
+    labels: { },
+    taints: [ ],
   },
   "vhuge" : {
     min : 0,
     max : 20,
-    vm_size : "Standard_M64s_v2"
+    vm_size : "Standard_M64s_v2",
+    labels: { },
+    taints: [ ],
   },
   "vvhuge" : {
     min : 0,
     max : 20,
-    vm_size : "Standard_M128s_v2"
+    vm_size : "Standard_M128s_v2",
+    labels: { },
+    taints: [ ],
   },
   "gpu" : {
     min : 0,
     max : 20,
-    vm_size : "Standard_NC16as_T4_v3"
+    vm_size : "Standard_NC16as_T4_v3",
+    labels: { },
+    taints: [
+      "sku=gpu:NoSchedule",
+    ],
   },
 }
