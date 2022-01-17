@@ -40,6 +40,11 @@ notebook_nodes = {
     max : 20,
     vm_size : "Standard_M128s_v2"
   },
+    "gpu" : {
+    min : 0,
+    max : 20,
+    vm_size : "Standard_NC16as_T4_v3"
+  },
 }
 
 dask_nodes = {
@@ -72,5 +77,10 @@ dask_nodes = {
     min : 0,
     max : 20,
     vm_size : "Standard_M128s_v2"
+  },
+  "gpu" : {
+    min : 0,
+    max : 20,
+    vm_size : "Standard_NC16as_T4_v3"
   },
 }
