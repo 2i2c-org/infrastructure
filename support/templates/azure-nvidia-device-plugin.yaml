@@ -1,4 +1,4 @@
-{{ if .Values.config.nvidiaDevicePlugin.azure.enabled }}
+{{- if .Values.config.nvidiaDevicePlugin.azure.enabled -}}
 # Below config is from the example in the Azure AKS docs
 # https://docs.microsoft.com/en-us/azure/aks/gpu-cluster#manually-install-the-nvidia-device-plugin
 apiVersion: apps/v1
