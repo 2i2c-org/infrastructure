@@ -85,7 +85,7 @@ This key will be used by the [`deploy-grafana-dashboards` workflow](https://gith
 Once you've pushed the encrypted `grafana_token` to the GitHub repository, manually trigger the `deploy-grafana-dashboards` workflow using the "Run workflow" button [from here](https://github.com/2i2c-org/infrastructure/actions/workflows/deploy-grafana-dashboards.yaml) to deploy the dashboards.
 
 ```{note}
-The action only runs when manually triggered.
+The workflow only runs when manually triggered.
 
 Any re-triggering of the action after the initial deployment will overwrite any dashboard created from the Grafana UI and not stored in the [`jupyterhub/grafana-dashboards`](https://github.com/jupyterhub/grafana-dashboards) repository.
 ```
