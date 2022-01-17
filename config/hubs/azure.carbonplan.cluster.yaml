@@ -4,6 +4,8 @@ kubeconfig:
   file: secrets/azure.carbonplan.yaml
 support:
   config:
+    nvidiaDevicePlugin:
+      enabled: true
     prometheus:
       server:
         resources:
