@@ -5,7 +5,8 @@ kubeconfig:
 support:
   config:
     nvidiaDevicePlugin:
-      enabled: true
+      azure:
+        enabled: true
     prometheus:
       server:
         resources:
