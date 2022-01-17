@@ -126,6 +126,13 @@ hubs:
                   mem_guarantee: 1950G
                   node_selector:
                     hub.jupyter.org/node-size: Standard_M128s_v2
+              - display_name: "GPU: NC16as T4 v3"
+                description: "~16 CPU, ~90G RAM"
+                kubespawner_override:
+                  mem_limit: null
+                  mem_guarantee: 90G
+                  node_selector:
+                    hub.jupyter.org/node-size: Standard_NC16as_T4_v3
           scheduling:
             userPlaceholder:
               enabled: false
