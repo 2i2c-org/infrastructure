@@ -87,5 +87,5 @@ Once you've pushed the encrypted `grafana_token` to the GitHub repository, manua
 ```{note}
 The workflow only runs when manually triggered.
 
-Any re-triggering of the action after the initial deployment will overwrite any dashboard created from the Grafana UI and not stored in the [`jupyterhub/grafana-dashboards`](https://github.com/jupyterhub/grafana-dashboards) repository.
+Any re-triggering of the workflow after the initial deployment will overwrite any dashboard created from the Grafana UI and not stored in the [`jupyterhub/grafana-dashboards`](https://github.com/jupyterhub/grafana-dashboards) repository.
 ```
