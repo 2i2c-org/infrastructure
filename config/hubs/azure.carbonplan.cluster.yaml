@@ -129,6 +129,7 @@ hubs:
               - display_name: "GPU: NC16as T4 v3"
                 description: "~16 CPU, ~90G RAM"
                 kubespawner_override:
+                  image: "pangeo/ml-notebook:master"
                   mem_limit: null
                   mem_guarantee: 90G
                   node_selector:
