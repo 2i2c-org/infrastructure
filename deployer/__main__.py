@@ -6,7 +6,6 @@ import os
 import sys
 import subprocess
 from pathlib import Path
-import tempfile
 
 import jsonschema
 from ruamel.yaml import YAML
