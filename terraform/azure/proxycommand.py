@@ -37,7 +37,8 @@ try:
             POD_NAME,
             "--",
             "/bin/sh",
-            f"-c={SCRIPT}",
+            "-c",
+            SCRIPT,
         ]
     )
 
