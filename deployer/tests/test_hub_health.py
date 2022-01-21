@@ -6,7 +6,8 @@ from jhub_client.execute import execute_notebook, JupyterHubAPI
 
 @pytest.fixture
 def notebook_dir(hub_type):
-    return Path(__file__).parent / 'test-notebooks' / hub_type
+    return Path(__file__).parent / "test-notebooks" / hub_type
+
 
 async def check_hub_health(hub_url, test_notebook_path, service_api_token):
     """
@@ -17,13 +18,13 @@ async def check_hub_health(hub_url, test_notebook_path, service_api_token):
     steps fail, declare the hub as having failed the health check
     """
 
-    username='deployment-service-check'
+    username = "deployment-service-check"
 
     # Export the hub health check service as an env var so that jhub_client can read it.
-    orig_service_token = os.environ.get('JUPYTERHUB_API_TOKEN', None)
+    orig_service_token = os.environ.get("JUPYTERHUB_API_TOKEN", None)
 
     try:
-        os.environ['JUPYTERHUB_API_TOKEN'] = service_api_token
+        os.environ["JUPYTERHUB_API_TOKEN"] = service_api_token
 
         # Cleanup: if the server takes more than 90s to start, then because it's in a `spawn pending` state,
         # it cannot be deleted. So we delete it in the next iteration, before starting a new one,
@@ -32,7 +33,7 @@ async def check_hub_health(hub_url, test_notebook_path, service_api_token):
         async with hub:
             user = await hub.get_user(username)
             if user:
-                if user['server'] and not user['pending']:
+                if user["server"] and not user["pending"]:
                     await hub.delete_server(username)
 
                 # If we don't delete the user too, than we won't be able to start a kernel for it.
@@ -45,17 +46,17 @@ async def check_hub_health(hub_url, test_notebook_path, service_api_token):
             test_notebook_path,
             username=username,
             server_creation_timeout=360,
-            kernel_execution_timeout=360, # This doesn't do anything yet
+            kernel_execution_timeout=360,  # This doesn't do anything yet
             create_user=True,
-            delete_user=False, # To be able to delete its server in case of failure
-            stop_server=True, # If the health check succeeds, this will delete the server
-            validate=True
+            delete_user=False,  # To be able to delete its server in case of failure
+            stop_server=True,  # If the health check succeeds, this will delete the server
+            validate=True,
         )
     finally:
         if orig_service_token:
-            os.environ['JUPYTERHUB_API_TOKEN'] = orig_service_token
+            os.environ["JUPYTERHUB_API_TOKEN"] = orig_service_token
         else:
-            del os.environ['JUPYTERHUB_API_TOKEN']
+            del os.environ["JUPYTERHUB_API_TOKEN"]
 
 
 @pytest.mark.asyncio
@@ -69,5 +70,7 @@ async def test_hub_healthy(hub_url, api_token, notebook_dir):
                 await check_hub_health(hub_url, test_notebook_path, api_token)
         print(f"Hub {hub_url} is healthy!")
     except Exception as e:
-        print(f"Hub {hub_url} not healthy! Stopping further deployments. Exception was {e}.")
-        raise(e)
+        print(
+            f"Hub {hub_url} not healthy! Stopping further deployments. Exception was {e}."
+        )
+        raise (e)
