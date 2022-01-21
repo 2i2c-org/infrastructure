@@ -166,3 +166,59 @@ Presently, this involves a few more manual steps than the `auth0` setup describe
     ```
 
 4. Run the deployer as normal to apply the config.
+
+# CILogon
+
+For communities that require authenticating users against their campus identity providers, [CILogon](https://www.cilogon.org) can be used. CILogon authentication is managed through [auth0](https://auth0.com), similar with how the Google and GitHub authentication is setup.
+
+```{note}
+  The `USERNAME_KEY` used for the CILogon login is the email, so the JupyterHub username will be set to the email address associated with the CILogon connection and not the CILogon user_id!
+```
+
+To enable CILogon authentication:
+
+1. Explicitly list CILogon as the type of connection we want for a hub, via `auth0.connection`:
+
+   ```yaml
+   auth0:
+      connection: CILogon
+   ```
+
+2. Explicitly list *admin users* for a given hub and only allow the users that match specific identity providers to login into the hub.
+
+  ```{note}
+  Don't forget to allow login to the test user (`deployment-service-check`), otherwise the hub health check performed during deployment will fail.
+  ```
+
+  ```yaml
+    config:
+      jupyterhub:
+        hub:
+          config:
+            Authenticator:
+              admin_users:
+                - user1@campus.edu
+                - user2@gmail.com
+                # This will be replaced with the staff's google addresses
+                - <staff_google_ids>
+              username_pattern: '^(.+@2i2c\.org|.+@campus\.edu|deployment-service-check)$'
+   ```
+
+  This example does two things:
+
+  1. Sets the hub admins to be:
+
+    - the 2i2c staff (identified through their 2i2c email address)
+    - one `@campus.edu` user
+    - one `@gmail.com` user
+
+  2. Allows logging in only the users that match the `username_pattern` expression:
+
+    - all `@2i2c.org` email adresses
+    - all `@campus.edu` email addresses
+    - `user2@gmail.com`
+    - the test username, `deployment-service-check`
+
+  ```{note}
+  All the users listed under `admin_users` need to match the `username_pattern` expression otherwise they won't be allowed to login!
+  ```
