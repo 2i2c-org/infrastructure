@@ -111,8 +111,7 @@ class Cluster:
                 "cert-manager",
                 "jetstack/cert-manager",
                 f"--version={cert_manager_version}",
-                "--set",
-                "installCRDs=true",
+                "--set=installCRDs=true",
             ]
         )
         print("Done!")
