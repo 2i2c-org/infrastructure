@@ -6,6 +6,7 @@
 # E402: module level import not at top of file
 # I100: Import statements are in the wrong order
 # I101: Imported names are in the wrong order. Should be
+max-line-length = 88
 ignore = E, C, W, E402, I100, I101, D400
 exclude =
     .cache,
