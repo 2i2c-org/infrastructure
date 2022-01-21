@@ -9,6 +9,3 @@
 # I101: Imported names are in the wrong order. Should be
 max-line-length = 88
 ignore = E, C, W, E402, F821, I100, I101, D400
-exclude =
-    .github/,
-    .cache
