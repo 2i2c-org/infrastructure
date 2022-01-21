@@ -107,12 +107,10 @@ class Cluster:
                 "upgrade",
                 "--install",
                 "--create-namespace",
-                "--namespace",
-                "cert-manager",
+                "--namespace=cert-manager",
                 "cert-manager",
                 "jetstack/cert-manager",
-                "--version",
-                cert_manager_version,
+                f"--version={cert_manager_version}",
                 "--set",
                 "installCRDs=true",
             ]
@@ -136,14 +134,11 @@ class Cluster:
                     "upgrade",
                     "--install",
                     "--create-namespace",
-                    "--namespace",
-                    "support",
+                    "--namespace=support",
                     "support",
                     str(support_dir),
-                    "-f",
-                    secret_file,
-                    "-f",
-                    f.name,
+                    f"--values={secret_file}",
+                    f"--values={f.name}",
                     "--wait",
                 ]
             )
@@ -268,12 +263,9 @@ class Cluster:
                         "az",
                         "login",
                         "--service-principal",
-                        "--username",
-                        service_principal["service_principal_id"],
-                        "--password",
-                        service_principal["service_principal_password"],
-                        "--tenant",
-                        service_principal["tenant_id"],
+                        f"--username={service_principal['service_principal_id']}",
+                        f"--password={service_principal['service_principal_password']}",
+                        f"--tenant={service_principal['tenant_id']}",
                     ]
                 )
 
@@ -283,8 +275,7 @@ class Cluster:
                         "az",
                         "account",
                         "set",
-                        "--subscription",
-                        service_principal["subscription_id"],
+                        f"--subscription={service_principal['subscription_id']}",
                     ]
                 )
 
@@ -294,10 +285,8 @@ class Cluster:
                         "az",
                         "aks",
                         "get-credentials",
-                        "--name",
-                        cluster,
-                        "--resource-group",
-                        resource_group,
+                        f"--name={cluster}",
+                        f"--resource-group={resource_group}",
                     ]
                 )
 
@@ -324,8 +313,7 @@ class Cluster:
                             "gcloud",
                             "auth",
                             "activate-service-account",
-                            "--key-file",
-                            os.path.abspath(decrypted_key_path),
+                            f"--key-file={os.path.abspath(decrypted_key_path)}",
                         ]
                     )
 
@@ -597,19 +585,15 @@ class Hub:
                 "--install",
                 "--create-namespace",
                 "--wait",
-                "--namespace",
-                self.spec["name"],
+                f"--namespace={self.spec['name']}",
                 self.spec["name"],
                 os.path.join("hub-templates", self.spec["template"]),
                 # Ordering matters here - config explicitly mentioned in clu should take
                 # priority over our generated values. Based on how helm does overrides, this means
                 # we should put the config from config/hubs last.
-                "-f",
-                generated_values_file.name,
-                "-f",
-                values_file.name,
-                "-f",
-                secret_values_file.name,
+                f"--values={generated_values_file.name}",
+                f"--values={values_file.name}",
+                f"--values={secret_values_file.name}",
             ]
 
             print(f"Running {' '.join(cmd)}")

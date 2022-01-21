@@ -31,15 +31,13 @@ try:
         [
             "kubectl",
             "run",
-            "--image",
-            POD_IMAGE,
+            f"--image={POD_IMAGE}",
             "--command",
             "--wait",
             POD_NAME,
             "--",
             "/bin/sh",
-            "-c",
-            SCRIPT,
+            f"-c={SCRIPT}",
         ]
     )
 
