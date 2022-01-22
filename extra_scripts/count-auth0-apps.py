@@ -27,7 +27,6 @@ client id associated with it
 import json
 import os
 import subprocess
-import sys
 import tempfile
 from collections import defaultdict
 from contextlib import contextmanager
@@ -145,5 +144,7 @@ else:
 #         )
 
 #     else:
+#         import sys
+#
 #         print("[blue]Exiting without purging[/blue]")
 #         sys.exit()
