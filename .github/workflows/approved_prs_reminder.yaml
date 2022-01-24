@@ -22,7 +22,7 @@ jobs:
 
       - name: Pull open PRs and check if they have old approvals
         id: approved-prs
-        run: python .github/workflows/approved_prs_reminder.py
+        run: python extra_scripts/approved_prs_reminder.py
 
       # Decide what message to send
       - name: Sets env vars for automated message
