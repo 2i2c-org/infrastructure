@@ -639,7 +639,7 @@ class Hub:
                     print_colour("Testing locally, do not redirect output")
                     exit_code = pytest.main(pytest_args)
                 if exit_code != 0:
-                    print_colour("Health check failed!", file=sys.stderr)
+                    print("Health check failed!", file=sys.stderr)
                     sys.exit(exit_code)
                 else:
                     print_colour("Health check succeeded!")
