@@ -13,7 +13,7 @@ import shutil
 
 from auth import KeyProvider
 from hub import Cluster
-from utils import decrypt_file, update_authenticator_config
+from utils import decrypt_file, update_authenticator_config, print_colour
 
 # Without `pure=True`, I get an exception about str / byte issues
 yaml = YAML(typ="safe", pure=True)
@@ -54,7 +54,7 @@ def deploy_jupyterhub_grafana(cluster_name):
 
     # If grafana support chart is not deployed, then there's nothing to do
     if not cluster.support:
-        print(
+        print_colour(
             "Support chart has not been deployed. Skipping Grafana dashboards deployment..."
         )
         return
@@ -83,7 +83,7 @@ def deploy_jupyterhub_grafana(cluster_name):
     )
 
     if not grafana_url:
-        print(
+        print_colour(
             "Couldn't find `config.grafana.ingress.hosts`. Skipping Grafana dashboards deployment..."
         )
         return
@@ -93,7 +93,7 @@ def deploy_jupyterhub_grafana(cluster_name):
     )
 
     # Use the jupyterhub/grafana-dashboards deployer to deploy the dashboards to this cluster's grafana
-    print("Cloning jupyterhub/grafana-dashboards...")
+    print_colour("Cloning jupyterhub/grafana-dashboards...")
 
     dashboards_dir = "grafana_dashboards"
 
@@ -111,12 +111,12 @@ def deploy_jupyterhub_grafana(cluster_name):
     deploy_env.update({"GRAFANA_TOKEN": config["grafana_token"]})
 
     try:
-        print(f"Deploying grafana dashboards to {cluster_name}...")
+        print_colour(f"Deploying grafana dashboards to {cluster_name}...")
         subprocess.check_call(
             ["./deploy.py", grafana_url], env=deploy_env, cwd=dashboards_dir
         )
 
-        print(f"Done! Dasboards deployed to {grafana_url}.")
+        print_colour(f"Done! Dasboards deployed to {grafana_url}.")
     finally:
         # Delete the directory where we cloned the repo.
         # The deployer cannot call jsonnet to deploy the dashboards if using a temp directory here.
