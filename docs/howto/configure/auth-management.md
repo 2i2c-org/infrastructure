@@ -193,35 +193,37 @@ To enable CILogon authentication:
   Don't forget to allow login to the test user (`deployment-service-check`), otherwise the hub health check performed during deployment will fail.
   ```
 
-  ```yaml
-    config:
-      jupyterhub:
-        hub:
-          config:
-            Authenticator:
-              admin_users:
-                - user1@campus.edu
-                - user2@gmail.com
-                # This will be replaced with the staff's google addresses
-                - <staff_google_ids>
-              username_pattern: '^(.+@2i2c\.org|.+@campus\.edu|deployment-service-check)$'
-   ```
 
-  This example does two things:
+### Example config for CILogon
 
-  1. Sets the hub admins to be:
+The following configuration example shows off how to configure hub admins and allowed users:
 
-    - the 2i2c staff (identified through their 2i2c email address)
-    - one `@campus.edu` user
-    - one `@gmail.com` user
+1. **Hub admins** are these explicit emails:
+  - one `@campus.edu` user
+  - one `@gmail.com` user
+  - the 2i2c staff (identified through their 2i2c email address)
 
-  2. Allows logging in only the users that match the `username_pattern` expression:
+2. **Allowed users** are matched against a pattern, with a few specific addresses added in as well
+  - all `@2i2c.org` email adresses
+  - all `@campus.edu` email addresses
+  - `user2@gmail.com`
+  - the test username, `deployment-service-check`
 
-    - all `@2i2c.org` email adresses
-    - all `@campus.edu` email addresses
-    - `user2@gmail.com`
-    - the test username, `deployment-service-check`
+```yaml
+config:
+  jupyterhub:
+    hub:
+      config:
+        Authenticator:
+          admin_users:
+            - user1@campus.edu
+            - user2@gmail.com
+            # This will be replaced with the staff's google addresses
+            - <staff_google_ids>
+          username_pattern: '^(.+@2i2c\.org|.+@campus\.edu|user2@gmail\.com|deployment-service-check)$'
+```
 
-  ```{note}
-  All the users listed under `admin_users` need to match the `username_pattern` expression otherwise they won't be allowed to login!
-  ```
+
+```{note}
+All the users listed under `admin_users` need to match the `username_pattern` expression otherwise they won't be allowed to login!
+```
