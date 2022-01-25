@@ -13,7 +13,7 @@ from pathlib import Path
 import pytest
 from ruamel.yaml import YAML
 
-from utils import decrypt_file
+from utils import decrypt_file, print_colour
 
 # Without `pure=True`, I get an exception about str / byte issues
 yaml = YAML(typ="safe", pure=True)
@@ -80,7 +80,7 @@ class Cluster:
         cert_manager_url = "https://charts.jetstack.io"
         cert_manager_version = "v1.3.1"
 
-        print("Adding cert-manager chart repo...")
+        print_colour("Adding cert-manager chart repo...")
         subprocess.check_call(
             [
                 "helm",
@@ -91,7 +91,7 @@ class Cluster:
             ]
         )
 
-        print("Updating cert-manager chart repo...")
+        print_colour("Updating cert-manager chart repo...")
         subprocess.check_call(
             [
                 "helm",
@@ -100,7 +100,7 @@ class Cluster:
             ]
         )
 
-        print("Provisioning cert-manager...")
+        print_colour("Provisioning cert-manager...")
         subprocess.check_call(
             [
                 "helm",
@@ -114,9 +114,9 @@ class Cluster:
                 "--set=installCRDs=true",
             ]
         )
-        print("Done!")
+        print_colour("Done!")
 
-        print("Provisioning support charts...")
+        print_colour("Provisioning support charts...")
         subprocess.check_call(["helm", "dep", "up", "support"])
 
         support_dir = Path(__file__).parent.parent / "support"
@@ -141,7 +141,7 @@ class Cluster:
                     "--wait",
                 ]
             )
-        print("Done!")
+        print_colour("Done!")
 
     def auth_kubeconfig(self):
         """
@@ -595,7 +595,7 @@ class Hub:
                 f"--values={secret_values_file.name}",
             ]
 
-            print(f"Running {' '.join(cmd)}")
+            print_colour(f"Running {' '.join(cmd)}")
             # Can't test without deploying, since our service token isn't set by default
             subprocess.check_call(cmd)
 
@@ -616,7 +616,7 @@ class Hub:
                 # On failure, pytest prints out params to the test that failed.
                 # This can contain sensitive info - so we hide stderr
                 # FIXME: Don't use pytest - just call a function instead
-                print("Running hub health check...")
+                print_colour("Running hub health check...")
                 # Show errors locally but redirect on CI
                 gh_ci = os.environ.get("CI", "false")
                 pytest_args = [
@@ -630,16 +630,16 @@ class Hub:
                     self.spec["template"],
                 ]
                 if gh_ci == "true":
-                    print("Testing on CI, not printing output")
+                    print_colour("Testing on CI, not printing output")
                     with open(os.devnull, "w") as dn, redirect_stderr(
                         dn
                     ), redirect_stdout(dn):
                         exit_code = pytest.main(pytest_args)
                 else:
-                    print("Testing locally, do not redirect output")
+                    print_colour("Testing locally, do not redirect output")
                     exit_code = pytest.main(pytest_args)
                 if exit_code != 0:
-                    print("Health check failed!", file=sys.stderr)
+                    print_colour("Health check failed!", file=sys.stderr)
                     sys.exit(exit_code)
                 else:
-                    print("Health check succeeded!")
+                    print_colour("Health check succeeded!")
