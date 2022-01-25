@@ -180,7 +180,7 @@ The JupyterHub username will be the email address that users provide when authen
 
 To enable CILogon authentication:
 
-1. Explicitly list CILogon as the type of connection we want for a hub, via `auth0.connection`:
+1. List CILogon as the type of connection we want for a hub, via `auth0.connection`:
 
    ```yaml
    auth0:
