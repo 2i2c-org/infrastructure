@@ -116,9 +116,9 @@ def print_colour(msg: str):
         msg (str): The message to print in colour
     """
     if os.environ.get("TERM"):
-        BOLD = subprocess.check_output(['tput', 'bold']).decode()
-        GREEN = subprocess.check_output(['tput', 'setaf', '2']).decode()
-        NC = subprocess.check_output(['tput', 'sgr0']).decode()
+        BOLD = subprocess.check_output(["tput", "bold"]).decode()
+        GREEN = subprocess.check_output(["tput", "setaf", "2"]).decode()
+        NC = subprocess.check_output(["tput", "sgr0"]).decode()
     else:
         # no term, no colors
         BOLD = GREEN = NC = ""
