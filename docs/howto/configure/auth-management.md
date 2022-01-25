@@ -187,7 +187,7 @@ To enable CILogon authentication:
       connection: CILogon
    ```
 
-2. Explicitly list *admin users* for a given hub and only allow the users that match specific identity providers to login into the hub.
+2. Add **admin users** to the hub by explicitly listing their email addresses. Add **allowed users** for the hub by providing a regex pattern that will match to an institutional email address. (see example below)
 
   ```{note}
   Don't forget to allow login to the test user (`deployment-service-check`), otherwise the hub health check performed during deployment will fail.
