@@ -117,3 +117,5 @@ jobs:
         uses: ./.github/actions/deploy
         with:
           cluster: ${{ matrix.cluster_name }}
+        env:
+          TERM: xterm
