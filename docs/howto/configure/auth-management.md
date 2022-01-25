@@ -172,7 +172,7 @@ Presently, this involves a few more manual steps than the `auth0` setup describe
 [CILogon](https://www.cilogon.org) allows us to authenticate users against their campus identity providers. It is managed through [auth0](https://auth0.com), similar to Google and GitHub authentication.
 
 ```{note}
-  The `USERNAME_KEY` used for the CILogon login is the email, so the JupyterHub username will be set to the email address associated with the CILogon connection and not the CILogon user_id!
+The JupyterHub username will be the email address that users provide when authenticating in CILogon connection. It will not be the CILogon `user_id`! This is because the `USERNAME_KEY` used for the CILogon login is the email address.
 ```
 
 To enable CILogon authentication:
