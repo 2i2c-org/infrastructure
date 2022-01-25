@@ -167,7 +167,7 @@ Presently, this involves a few more manual steps than the `auth0` setup describe
 
 4. Run the deployer as normal to apply the config.
 
-# CILogon
+## CILogon
 
 For communities that require authenticating users against their campus identity providers, [CILogon](https://www.cilogon.org) can be used. CILogon authentication is managed through [auth0](https://auth0.com), similar with how the Google and GitHub authentication is setup.
 
