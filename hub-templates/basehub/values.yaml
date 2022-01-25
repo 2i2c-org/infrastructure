@@ -110,6 +110,9 @@ jupyterhub:
       # /tmp. This is ok in our case, since no two users are on the same
       # container.
       JUPYTER_RUNTIME_DIR: /tmp/.jupyter-runtime
+      # By default, /bin/sh is used as shell for terminals, not /bin/bash
+      # Most people do not expect this, so let's match expectation
+      SHELL: /bin/bash
     extraFiles:
       jupyter_notebook_config.json:
         mountPath: /usr/local/etc/jupyter/jupyter_notebook_config.json
