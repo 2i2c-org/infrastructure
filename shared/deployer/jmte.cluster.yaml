@@ -56,14 +56,22 @@ hubs:
 
           singleuser:
             # extraFiles ref: https://zero-to-jupyterhub.readthedocs.io/en/latest/resources/reference.html#singleuser-extrafiles
-            #
-            # Example:
-            #
-            # extraFiles:
-            #   bash-extras:
-            #     mountPath: /etc/test.txt
-            #     stringData: |
-            #       hello world!
+            extraFiles:
+              # github-app-user-auth requires:
+              # - Installed python package
+              # - GITHUB_APP_CLIENT_ID environment set
+              # - This configuration
+              #
+              # NOTE: an associated GitHub App has been created by Erik Sundell
+              #       aka. @consideRatio and can be configured by him at:
+              #       https://github.com/settings/apps/hub-jupytearth-org-github-integ
+              #
+              github-app-user-auth:
+                mountPath: /etc/gitconfig
+                stringData: |
+                  [credential]
+                      helper = store --file=/tmp/github-app-git-credentials
+
 
             # Eksctl: The service account was created by eksctl.
             #
@@ -98,7 +106,11 @@ hubs:
               #
               SCRATCH_BUCKET: s3://jmte-scratch/$(JUPYTERHUB_USER)
               PANGEO_SCRATCH: s3://jmte-scratch/$(JUPYTERHUB_USER)
-
+              # GITHUB_APP_CLIENT_ID, see notes in singleuser.extraFiles about
+              # this environment variable. Two entries are created as I think
+              # the shorter may be deprecated soon.
+              GITHUB_APP_CLIENT_ID: Iv1.a073b1649637af12
+              GITHUB_APP_USER_AUTH_CLIENT_ID: Iv1.a073b1649637af12
             initContainers:
               # Need to explicitly fix ownership here, since EFS doesn't do anonuid
               - name: volume-mount-ownership-fix
