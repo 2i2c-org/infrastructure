@@ -13,9 +13,12 @@ hubs:
       basehub:
         # Cloudformation: The EFS filesystem was created by cloudformation.
         #
-        nfsPVC:
+        nfs:
           enabled: true
-          nfs:
+          shareCreator:
+            enabled: true
+          pv:
+            serverIP: fs-01707b06.efs.us-west-2.amazonaws.com
             # mountOptions from https://docs.aws.amazon.com/efs/latest/ug/mounting-fs-nfs-mount-settings.html
             mountOptions:
               - rsize=1048576
@@ -24,7 +27,6 @@ hubs:
               - soft # We pick soft over hard, so NFS lockups don't lead to hung processes
               - retrans=2
               - noresvport
-            serverIP: fs-01707b06.efs.us-west-2.amazonaws.com
             # baseShareName is required to be just "/" so that we can create
             # various sub folders in the filesystem that our PV to access the
             # NFS server can reference successfully as it isn't supported to
