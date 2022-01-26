@@ -46,9 +46,9 @@ hubs:
         # cluster, and staging is always deployed before prod
         prePuller:
           continuous:
-            enabled: false
+            enabled: true
           hook:
-            enabled: false
+            enabled: true
         custom: &staging_jhub_custom
           homepage:
             templateVars:
