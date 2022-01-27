@@ -363,7 +363,7 @@ hubs:
                 - jpercy@berkeley.edu
                 - akonrad@mills.edu
                 - wang@mills.edu
-              username_pattern: '^(.+@mills\.edu|yuvipanda@2i2c\.org|choldgraf@2i2c\.org|georgianaelena@2i2c\.org|sgibson@2i2c\.org|erik@2i2c\.org|damianavila@2i2c\.org|aculich@berkeley\.edu|jpercy@berkeley\.edu|deployment-service-check)$'
+              username_pattern: '^(.+@mills\.edu|.+@2i2c\.org|aculich@berkeley\.edu|jpercy@berkeley\.edu|deployment-service-check)$'
   - name: palomar
     domain: palomar.cloudbank.2i2c.cloud
     template: basehub
