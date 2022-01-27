@@ -94,6 +94,35 @@ hubs:
                   - <staff_google_ids>
                   - colliand@gmail.com
                 admin_users: *dask_staging_users
+  - name: demo
+    domain: demo.pilot.2i2c.cloud
+    template: basehub
+    auth0:
+      connection: CILogon
+    config:
+      jupyterhub:
+        custom:
+          homepage:
+            templateVars:
+              org:
+                name: 2i2c Demo Hub
+                url: https://2i2c.org
+                logo_url: https://2i2c.org/media/logo.png
+              designed_by:
+                name: 2i2c
+                url: https://2i2c.org
+              operated_by:
+                name: 2i2c
+                url: https://2i2c.org
+              funded_by:
+                name: 2i2c
+                url: https://2i2c.org
+        hub:
+          config:
+            Authenticator:
+              admin_users:
+                - <staff_google_ids>
+              username_pattern: '^(.+@2i2c\.org|deployment-service-check)$'
   - name: ohw
     domain: ohw.pilot.2i2c.cloud
     template: daskhub
