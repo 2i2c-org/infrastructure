@@ -34,7 +34,7 @@ Sometimes you might need to delete or to perform maintenance on a node in the cl
     * Pods created by [ReplicaSet](https://kubernetes.io/docs/concepts/workloads/controllers/replicaset/) objects, through [Deployments](https://kubernetes.io/docs/concepts/workloads/controllers/deployment/)
 
         Once deleted, these Pods will get re-created and assigned to a different node (because the current node it's cordoned).
-        The [hub, proxy](https://github.com/2i2c-org/infrastructure/blob/master/hub-templates/basehub/Chart.yaml) and the [docs service](https://github.com/2i2c-org/infrastructure/blob/master/hub-templates/basehub/templates/docs-service-deployment.yaml) are some examples of such pods.
+        The [hub, proxy](https://github.com/2i2c-org/infrastructure/blob/master/helm-charts/basehub/Chart.yaml) and the [docs service](https://github.com/2i2c-org/infrastructure/blob/master/helm-charts/basehub/templates/docs-service-deployment.yaml) are some examples of such pods.
     * Pods created by [DaemonSet](https://kubernetes.io/docs/concepts/workloads/controllers/daemonset/) objects.
 
         These run on every node, regardless of their `cordon` status. So, they don't need to be deleted, otherwise, they will be re-created on the same cordoned node.

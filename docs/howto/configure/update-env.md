@@ -14,4 +14,4 @@ To update this environment:
 2. Once the PR is merged or a commit to the `main` branch happens, the new image will be pushed
    to the registry.
 3. Get the latest tag from the [tags section](https://quay.io/repository/2i2c/2i2c-hubs-image?tab=tags) in quay.io
-4. Update `jupyterhub.singleuser.image.tag` in `hub-templates/basehub/values.yaml` with this tag.
+4. Update `jupyterhub.singleuser.image.tag` in `helm-charts/basehub/values.yaml` with this tag.
