@@ -533,7 +533,7 @@ class Hub:
         Deploy this hub
         """
         # Ensure helm charts are up to date
-        os.chdir("hub-templates")
+        os.chdir("helm-charts")
         subprocess.check_call(["helm", "dep", "up", "basehub"])
         if self.spec["template"] == "daskhub":
             subprocess.check_call(["helm", "dep", "up", "daskhub"])
@@ -586,7 +586,7 @@ class Hub:
                 "--wait",
                 f"--namespace={self.spec['name']}",
                 self.spec["name"],
-                os.path.join("hub-templates", self.spec["template"]),
+                os.path.join("helm-charts", self.spec["template"]),
                 # Ordering matters here - config explicitly mentioned in clu should take
                 # priority over our generated values. Based on how helm does overrides, this means
                 # we should put the config from config/hubs last.
