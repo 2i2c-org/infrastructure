@@ -41,7 +41,7 @@ To deploy a new hub, follow these steps:
    Once that issue is created, move to the next step.
 2. Decide whether you'll deploy on a pre-existing Kubernetes cluster, or if you'll need to create a new one.
    See [](cluster:when-to-deploy) for information to help you decide.
-3. Determine the **hub template** that is needed.
+3. Determine the **hub helm chart** that is needed.
    Hub helm charts are pre-configured deployments for certain kinds of JupyterHubs.
    There are a few base charts to choose from.
    For more information about our hub helm charts and how to choose, see [](hub-helm-charts).
