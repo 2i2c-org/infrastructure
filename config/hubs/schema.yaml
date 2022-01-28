@@ -178,7 +178,7 @@ properties:
             type: string
             description: |
               Template to deploy the hub with. This refers to a directory under
-              `hub-templates` containing a helm chart with base values and dependencies
+              `helm-charts` containing a helm chart with base values and dependencies
               that determine the kind of hub deployed.
             enum:
               - basehub

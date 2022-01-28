@@ -9,7 +9,7 @@ following paths are modified:
 
 ```
 - deployer/**
-- hub-templates/**
+- helm-charts/**
 - requirements.txt
 - dev-requirements.txt
 - config/secrets.yaml

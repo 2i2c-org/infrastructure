@@ -36,7 +36,7 @@ Topic guides go more in-depth on a particular topic.
 :caption: Topic guides
 :maxdepth: 2
 topic/config.md
-topic/hub-templates.md
+topic/hub-helm-charts.md
 topic/storage-layer.md
 topic/network.md
 topic/terraform.md

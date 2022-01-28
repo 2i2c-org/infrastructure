@@ -41,15 +41,15 @@ To deploy a new hub, follow these steps:
    Once that issue is created, move to the next step.
 2. Decide whether you'll deploy on a pre-existing Kubernetes cluster, or if you'll need to create a new one.
    See [](cluster:when-to-deploy) for information to help you decide.
-3. Determine the **hub template** that is needed.
-   Hub templates are pre-configured deployments for certain kinds of JupyterHubs.
-   There are a few base templates to choose from.
-   For more information about our templates and how to choose, see [](hub-templates).
+3. Determine the **hub helm chart** that is needed.
+   Hub helm charts are pre-configured deployments for certain kinds of JupyterHubs.
+   There are a few base charts to choose from.
+   For more information about our hub helm charts and how to choose, see [](hub-helm-charts).
 4. Add a configuration entry for your new hub.
    Each entry is a Zero to JupyterHub configuration, and you can customize whatever you like.
    The easiest way to add new configuration is to look at the entries for similar hubs in the same cluster YAML file, copy / paste one of them, and make modifications as needed for this specific hub.
    For example, see the entries in [the 2i2c Google Cloud cluster configuration file](https://github.com/2i2c-org/infrastructure/blob/master/config/hubs/2i2c.cluster.yaml).
-   
+
    :::{seealso}
    See [](/topic/config.md) for more information about template configuration.
    :::
