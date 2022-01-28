@@ -12,7 +12,7 @@ config files and how they are merged together when deploying a pilot hub.
 ```
 % The editable version of the diagram is here: https://docs.google.com/presentation/d/1WZKTe5TSDU-5zA4NnNEPsKfgjaBzUqMgdPLTnz-Yb94/edit?usp=sharing
 
-Currently there are three hub helm charts available:
+Currently there are two hub helm charts available:
 - `basehub`
 
   The **basehub helm chart** is the chart that the other hub helm charts "inherit" and configure.
