@@ -1,13 +1,11 @@
 import pytest
 
+
 def pytest_addoption(parser):
     """
     Define the commandline params that can be passed to pytest.
     """
-    parser.addoption(
-        "--hub-url",
-        action="store"
-    )
+    parser.addoption("--hub-url", action="store")
     parser.addoption(
         "--api-token",
         action="store",
@@ -20,11 +18,13 @@ def pytest_addoption(parser):
 
 @pytest.fixture
 def hub_url(request):
-    return request.config.getoption('--hub-url')
+    return request.config.getoption("--hub-url")
+
 
 @pytest.fixture
 def hub_type(request):
-    return request.config.getoption('--hub-type')
+    return request.config.getoption("--hub-type")
+
 
 @pytest.fixture()
 def api_token(request):

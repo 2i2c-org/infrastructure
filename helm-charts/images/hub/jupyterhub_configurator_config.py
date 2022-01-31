@@ -5,7 +5,7 @@ import json
 
 CONFIGURATOR_BASE_PATH = "/usr/local/etc/jupyterhub-configurator"
 
-schema_files = sorted(glob(os.path.join(CONFIGURATOR_BASE_PATH, '*.schema.json')))
+schema_files = sorted(glob(os.path.join(CONFIGURATOR_BASE_PATH, "*.schema.json")))
 
 schemas = {}
 

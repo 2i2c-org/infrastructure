@@ -25,14 +25,16 @@ import string
 import sys
 
 SAFE = set(string.ascii_letters + string.digits)
-ESCAPE_CHAR = '_'
+ESCAPE_CHAR = "_"
+
+
 def _escape_char(c, escape_char=ESCAPE_CHAR):
     """Escape a single character"""
     buf = []
-    for byte in c.encode('utf8'):
+    for byte in c.encode("utf8"):
         buf.append(escape_char)
-        buf.append('%X' % byte)
-    return ''.join(buf)
+        buf.append("%X" % byte)
+    return "".join(buf)
 
 
 def escape(to_escape, safe=SAFE, escape_char=ESCAPE_CHAR, allow_collisions=False):
@@ -58,7 +60,7 @@ def escape(to_escape, safe=SAFE, escape_char=ESCAPE_CHAR, allow_collisions=False
     """
     if isinstance(to_escape, bytes):
         # always work on text
-        to_escape = to_escape.decode('utf8')
+        to_escape = to_escape.decode("utf8")
 
     if not isinstance(safe, set):
         safe = set(safe)
@@ -81,81 +83,80 @@ def escape(to_escape, safe=SAFE, escape_char=ESCAPE_CHAR, allow_collisions=False
             chars.append(c)
         else:
             chars.append(_escape_char(c, escape_char))
-    return u''.join(chars)
-
+    return "".join(chars)
 
 
 def get_all_users(hub_url, token):
-    url = f'{hub_url}/hub/api/users'
-    resp = requests.get(url, headers={
-        'Authorization': f'token {token}'
-    })
+    url = f"{hub_url}/hub/api/users"
+    resp = requests.get(url, headers={"Authorization": f"token {token}"})
 
     users = resp.json()
     for user in users:
-        if user['last_activity']:
-            user['last_activity'] = parse(user.get('last_activity'))
+        if user["last_activity"]:
+            user["last_activity"] = parse(user.get("last_activity"))
     return users
 
 
 def rsync(user, src_basedir, dest_basedir, dry_run):
     start_time = time.perf_counter()
     safe_chars = set(string.ascii_lowercase + string.digits)
-    homedir = escape(user, safe_chars, '-').lower()
+    homedir = escape(user, safe_chars, "-").lower()
     src_homedir = os.path.join(src_basedir, homedir)
     if not os.path.exists(src_homedir):
         print(f"Directory {src_homedir} does not exist for user {user}, aborting")
         sys.exit(1)
     rsync_cmd = [
-        'rsync', '-av',
-        '--delete', '--ignore-errors',
-        src_homedir, dest_basedir
+        "rsync",
+        "-av",
+        "--delete",
+        "--ignore-errors",
+        src_homedir,
+        dest_basedir,
     ]
     if not dry_run:
         subprocess.check_output(rsync_cmd)
     return user, time.perf_counter() - start_time
 
+
 def main():
     argparser = argparse.ArgumentParser()
 
-    argparser.add_argument('hub_url',
-        help='Base URL of the JupyterHub to talk to'
-    )
-    argparser.add_argument('hours_ago',
-        help='How recently should the user have been active to be rsynced',
+    argparser.add_argument("hub_url", help="Base URL of the JupyterHub to talk to")
+    argparser.add_argument(
+        "hours_ago",
+        help="How recently should the user have been active to be rsynced",
         type=int,
     )
-    argparser.add_argument('src_basedir',
-        help='Base directory containing home directories to be rsynced'
+    argparser.add_argument(
+        "src_basedir", help="Base directory containing home directories to be rsynced"
     )
-    argparser.add_argument('dest_basedir',
-        help='Base directory where home directories should be rsynced to'
+    argparser.add_argument(
+        "dest_basedir",
+        help="Base directory where home directories should be rsynced to",
     )
-    argparser.add_argument('--actually-run-rsync',
-        action='store_true',
-        help="Actually run rsync, otherwise we just dry-run"
+    argparser.add_argument(
+        "--actually-run-rsync",
+        action="store_true",
+        help="Actually run rsync, otherwise we just dry-run",
     )
-    argparser.add_argument('--concurrency',
-        type=int,
-        help='How many parallel rsyncs to run',
-        default=16
+    argparser.add_argument(
+        "--concurrency", type=int, help="How many parallel rsyncs to run", default=16
     )
 
     args = argparser.parse_args()
 
-    if 'JUPYTERHUB_TOKEN' not in os.environ:
-        print('Could not find JUPYTERHUB_TOKEN in environment.')
-        print('Please get an admin user\'s token from {args.hub_url}/hub/token')
+    if "JUPYTERHUB_TOKEN" not in os.environ:
+        print("Could not find JUPYTERHUB_TOKEN in environment.")
+        print("Please get an admin user's token from {args.hub_url}/hub/token")
         sys.exit(1)
 
     time_since = datetime.now(timezone.utc) - timedelta(hours=args.hours_ago)
     users_since = []
 
-    for user in get_all_users(args.hub_url, os.environ['JUPYTERHUB_TOKEN']):
-        if user['last_activity']:
-            if user['last_activity'] >= time_since:
-                users_since.append(user['name'])
-
+    for user in get_all_users(args.hub_url, os.environ["JUPYTERHUB_TOKEN"]):
+        if user["last_activity"]:
+            if user["last_activity"] >= time_since:
+                users_since.append(user["name"])
 
     pool = ThreadPoolExecutor(max_workers=args.concurrency)
     futures = []
@@ -166,20 +167,28 @@ def main():
         # tarring is CPU bound, so we can parallelize trivially.
         # FIXME: This should be tuneable, or at least default to some multiple of number of cores on the system
 
-        future = pool.submit(rsync,
-            user, args.src_basedir, args.dest_basedir, not args.actually_run_rsync
+        future = pool.submit(
+            rsync,
+            user,
+            args.src_basedir,
+            args.dest_basedir,
+            not args.actually_run_rsync,
         )
         futures.append(future)
 
     for future in as_completed(futures):
         completed_user, duration = future.result()
         completed_futures += 1
-        print(f'Finished {completed_futures} of {len(users_since)} in {duration:0.3f} - user {completed_user}')
+        print(
+            f"Finished {completed_futures} of {len(users_since)} in {duration:0.3f} - user {completed_user}"
+        )
 
     if not args.actually_run_rsync:
         print("No rsync commands were actually performed")
-        print("Check the rsync commands output, and then run this command with `--actually-run-rsync`")
+        print(
+            "Check the rsync commands output, and then run this command with `--actually-run-rsync`"
+        )
 
-if __name__ == '__main__':
+
+if __name__ == "__main__":
     main()
-

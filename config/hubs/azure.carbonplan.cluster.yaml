@@ -27,7 +27,7 @@ support:
 hubs:
   - name: staging
     domain: staging.azure.carbonplan.2i2c.cloud
-    template: daskhub
+    helm_chart: daskhub
     auth0:
       connection: github
     config: &carbonPlanHubConfig
@@ -191,7 +191,7 @@ hubs:
               memory: 4Gi
   - name: prod
     domain: prod.azure.carbonplan.2i2c.cloud
-    template: daskhub
+    helm_chart: daskhub
     auth0:
       connection: github
     config: *carbonPlanHubConfig

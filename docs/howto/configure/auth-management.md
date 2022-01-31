@@ -166,3 +166,64 @@ Presently, this involves a few more manual steps than the `auth0` setup describe
     ```
 
 4. Run the deployer as normal to apply the config.
+
+## CILogon
+
+[CILogon](https://www.cilogon.org) allows us to authenticate users against their campus identity providers. It is managed through [auth0](https://auth0.com), similar to Google and GitHub authentication.
+
+```{seealso}
+See the [CILogon documentation on `Auth0`](https://www.cilogon.org/auth0) for more configuration information.
+```
+```{note}
+The JupyterHub username will be the email address that users provide when authenticating in CILogon connection. It will not be the CILogon `user_id`! This is because the `USERNAME_KEY` used for the CILogon login is the email address.
+```
+
+To enable CILogon authentication:
+
+1. List CILogon as the type of connection we want for a hub, via `auth0.connection`:
+
+   ```yaml
+   auth0:
+      connection: CILogon
+   ```
+
+2. Add **admin users** to the hub by explicitly listing their email addresses. Add **allowed users** for the hub by providing a regex pattern that will match to an institutional email address. (see example below)
+
+  ```{note}
+  Don't forget to allow login to the test user (`deployment-service-check`), otherwise the hub health check performed during deployment will fail.
+  ```
+
+
+### Example config for CILogon
+
+The following configuration example shows off how to configure hub admins and allowed users:
+
+1. **Hub admins** are these explicit emails:
+  - one `@campus.edu` user
+  - one `@gmail.com` user
+  - the 2i2c staff (identified through their 2i2c email address)
+
+2. **Allowed users** are matched against a pattern, with a few specific addresses added in as well
+  - all `@2i2c.org` email adresses
+  - all `@campus.edu` email addresses
+  - `user2@gmail.com`
+  - the test username, `deployment-service-check`
+
+```yaml
+config:
+  jupyterhub:
+    hub:
+      config:
+        Authenticator:
+          admin_users:
+            - user1@campus.edu
+            - user2@gmail.com
+            # This will be replaced with the staff's google addresses
+            - <staff_google_ids>
+          username_pattern: '^(.+@2i2c\.org|.+@campus\.edu|user2@gmail\.com|deployment-service-check)$'
+```
+
+
+```{note}
+All the users listed under `admin_users` need to match the `username_pattern` expression otherwise they won't be allowed to login!
+```

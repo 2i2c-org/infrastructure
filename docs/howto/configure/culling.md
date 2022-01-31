@@ -28,7 +28,7 @@ More culling options and information about them can be found in the [idle-culler
 
 The kernel culling options are configured through the `jupyter_notebook_config.json` file, located at `/usr/local/etc/jupyter/jupyter_notebook_config.json` in the user pod. This file is injected into the pod’s container on startup, by defining its location and content under [`singleuser.extraFiles`](https://zero-to-jupyterhub.readthedocs.io/en/latest/resources/reference.html#singleuser-extrafiles) dictionary.
 
-You can modify the current culling options values, under `singleuser.extraFiles.data`, in the `hub-templates/basehub/values.yaml` file.
+You can modify the current culling options values, under `singleuser.extraFiles.data`, in the `helm-charts/basehub/values.yaml` file.
 
 Example:
 
@@ -49,4 +49,3 @@ singleuser:
 
 ### Note
 If a user leaves a notebook with a running kernel, the idle timeout will typically be the cull idle timeout of the server + the cull idle timeout set for the kernel, as culling the kernel will register activity, resetting the `no_activity` timer for the server as a whole.
-
