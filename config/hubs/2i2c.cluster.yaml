@@ -492,11 +492,9 @@ hubs:
             - name: postgres-volume-mount-hack
               image: busybox
               command:
-                [
-                  "sh",
-                  "-c",
-                  "id && chown -R 1000:1000 /var/lib/postgresql && ls -lhd /var/lib/postgresql",
-                ]
+                - sh
+                - -c
+                - "id && chown -R 1000:1000 /var/lib/postgresql && ls -lhd /var/lib/postgresql"
               securityContext:
                 runAsUser: 0
               volumeMounts:
