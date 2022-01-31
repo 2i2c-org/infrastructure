@@ -450,3 +450,82 @@ hubs:
                 - swalker
                 - shaolintl
               admin_users: *aup_users
+  - name: utexas-demo
+    domain: utexas-demo.pilot.2i2c.cloud
+    template: basehub
+    auth0:
+      connection: github
+    config:
+      jupyterhub:
+        custom:
+          homepage:
+            templateVars:
+              org:
+                name: University of Texas
+                logo_url: https://upload.wikimedia.org/wikipedia/en/thumb/e/e1/University_of_Texas_at_Austin_seal.svg/300px-University_of_Texas_at_Austin_seal.svg.png
+                url: https://www.utexas.edu/
+              designed_by:
+                name: 2i2c
+                url: https://2i2c.org
+              operated_by:
+                name: 2i2c
+                url: https://2i2c.org
+              funded_by:
+                name: JROST & IOI
+                url: https://investinopen.org/blog/jrost-rapid-response-fund-awardees
+        hub:
+          config:
+            Authenticator:
+              allowed_users: &utexas_demo_users
+                - <staff_github_ids>
+              admin_users: *utexas_demo_users
+        singleuser:
+          storage:
+            extraVolumes:
+            - name: postgres-db
+              # No persistence for now, will be backed by a PVC later
+              emptyDir: {}
+          initContainers:
+            # /var/lib/postgresql should be writeable by uid 1000, so students
+            # can blow out their db directories if need to. Also lets postgres actually
+            # write to its data directory
+            - name: postgres-volume-mount-hack
+              image: busybox
+              command: ["sh", "-c", "id && chown -R 1000:1000 /var/lib/postgresql && ls -lhd /var/lib/postgresql"]
+              securityContext:
+                runAsUser: 0
+              volumeMounts:
+              - name: postgres-db
+                mountPath: /var/lib/postgresql/data
+                # postgres recommends against mounting a volume directly here
+                # So we put data in a subpath
+                subPath: data
+          extraContainers:
+            - name: postgres
+              image: postgres:9.6
+              resources:
+                limits:
+                  # Best effort only. No more than 1 CPU
+                  memory: 512Mi
+                  cpu: 1.0
+                requests:
+                  # If we don't set requests, k8s sets requests == limits!
+                  memory: 64Mi
+                  cpu: 0.01
+              env:
+              - name: POSTGRES_HOST_AUTH_METHOD
+                value: "trust"
+              - name: POSTGRES_USER
+                value: "jovyan"
+              securityContext:
+                runAsUser: 1000
+                fsGroup: 1000
+              volumeMounts:
+              - name: home
+                mountPath: /home/jovyan
+                subPath: "{username}"
+              - name: postgres-db
+                mountPath: /var/lib/postgresql/data
+                # postgres recommends against mounting a volume directly here
+                # So we put data in a subpath
+                subPath: data
