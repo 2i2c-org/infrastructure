@@ -123,7 +123,7 @@ def render_hubs():
                     ],
                     "domain": f"[{hub['domain']}](https://{hub['domain']})",
                     "id": hub["name"],
-                    "template": hub["template"],
+                    "template": hub["helm_chart"],
                     "grafana": grafana_url,
                 }
             )
