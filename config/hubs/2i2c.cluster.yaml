@@ -452,7 +452,7 @@ hubs:
               admin_users: *aup_users
   - name: utexas-demo
     domain: utexas-demo.pilot.2i2c.cloud
-    template: basehub
+    helm_chart: basehub
     auth0:
       connection: github
     config:
