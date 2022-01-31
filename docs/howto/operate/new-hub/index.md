@@ -51,7 +51,7 @@ To deploy a new hub, follow these steps:
    For example, see the entries in [the 2i2c Google Cloud cluster configuration file](https://github.com/2i2c-org/infrastructure/blob/master/config/hubs/2i2c.cluster.yaml).
 
    :::{seealso}
-   See [](/topic/config.md) for more information about template configuration.
+   See [](/topic/config.md) for more information about hub helm chart configuration.
    :::
 5. Create a Pull Request with the new hub entry, and get a team member to review it.
 6. Once you merge the pull request, the GitHub Workflow will detect that a new entry has been added to the configuration file.
