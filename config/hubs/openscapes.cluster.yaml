@@ -32,7 +32,7 @@ support:
 hubs:
   - name: staging
     domain: staging.openscapes.2i2c.cloud
-    template: daskhub
+    helm_chart: daskhub
     auth0:
       connection: github
     config: &openscapesHubConfig
@@ -163,7 +163,7 @@ hubs:
             c.KubeClusterConfig.idle_timeout = 1800
   - name: prod
     domain: openscapes.2i2c.cloud
-    template: daskhub
+    helm_chart: daskhub
     auth0:
       connection: github
     config: *openscapesHubConfig

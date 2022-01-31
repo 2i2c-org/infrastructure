@@ -19,7 +19,7 @@ support:
 hubs:
   - name: spelman
     domain: spelman.cloudbank.2i2c.cloud
-    template: basehub
+    helm_chart: basehub
     auth0:
       connection: google-oauth2
     config:
@@ -52,7 +52,7 @@ hubs:
               admin_users: *spelman_users
   - name: ccsf
     domain: ccsf.cloudbank.2i2c.cloud
-    template: basehub
+    helm_chart: basehub
     auth0:
       connection: google-oauth2
     config:
@@ -86,7 +86,7 @@ hubs:
               admin_users: *ccsf_users
   - name: elcamino
     domain: elcamino.cloudbank.2i2c.cloud
-    template: basehub
+    helm_chart: basehub
     auth0:
       connection: google-oauth2
     config:
@@ -123,7 +123,7 @@ hubs:
               admin_users: *elcamino_users
   - name: howard
     domain: howard.cloudbank.2i2c.cloud
-    template: basehub
+    helm_chart: basehub
     auth0:
       connection: google-oauth2
     config:
@@ -155,7 +155,7 @@ hubs:
               admin_users: *howard_users
   - name: skyline
     domain: skyline.cloudbank.2i2c.cloud
-    template: basehub
+    helm_chart: basehub
     auth0:
       connection: google-oauth2
     config:
@@ -188,7 +188,7 @@ hubs:
               admin_users: *skyline_users
   - name: demo
     domain: demo.cloudbank.2i2c.cloud
-    template: basehub
+    helm_chart: basehub
     auth0:
       connection: password
       password:
@@ -237,7 +237,7 @@ hubs:
           maxAge: 43200
   - name: lassen
     domain: lassen.cloudbank.2i2c.cloud
-    template: basehub
+    helm_chart: basehub
     auth0:
       connection: google-oauth2
     config:
@@ -269,7 +269,7 @@ hubs:
               admin_users: *lassen_users
   - name: clovis
     domain: clovis.cloudbank.2i2c.cloud
-    template: basehub
+    helm_chart: basehub
     auth0:
       connection: google-oauth2
     config:
@@ -301,7 +301,7 @@ hubs:
               admin_users: *clovis_users
   - name: sbcc
     domain: sbcc.cloudbank.2i2c.cloud
-    template: basehub
+    helm_chart: basehub
     auth0:
       connection: google-oauth2
     config:
@@ -333,7 +333,7 @@ hubs:
               admin_users: *sbcc_users
   - name: mills
     domain: datahub.mills.edu
-    template: basehub
+    helm_chart: basehub
     auth0:
       connection: google-oauth2
     config:
@@ -366,7 +366,7 @@ hubs:
               username_pattern: '^(.+@mills\.edu|.+@2i2c\.org|aculich@berkeley\.edu|jpercy@berkeley\.edu|deployment-service-check)$'
   - name: palomar
     domain: palomar.cloudbank.2i2c.cloud
-    template: basehub
+    helm_chart: basehub
     auth0:
       connection: google-oauth2
     config:
@@ -399,7 +399,7 @@ hubs:
               admin_users: *palomar_users
   - name: sjcc
     domain: sjcc.cloudbank.2i2c.cloud
-    template: basehub
+    helm_chart: basehub
     auth0:
       connection: google-oauth2
     config:
@@ -432,7 +432,7 @@ hubs:
               admin_users: *sjcc_users
   - name: avc
     domain: avc.cloudbank.2i2c.cloud
-    template: basehub
+    helm_chart: basehub
     auth0:
       connection: google-oauth2
     config:
@@ -467,7 +467,7 @@ hubs:
               admin_users: *avc_users
   - name: csu
     domain: csu.cloudbank.2i2c.cloud
-    template: basehub
+    helm_chart: basehub
     auth0:
       connection: password
       password:

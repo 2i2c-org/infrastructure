@@ -5,7 +5,7 @@ kubeconfig:
 hubs:
   - name: staging
     domain: staging.justiceinnovationlab.2i2c.cloud
-    template: daskhub
+    helm_chart: daskhub
     auth0:
       connection: github
     config: &hubConfig
@@ -121,7 +121,7 @@ hubs:
             nodeSelector: {}
   - name: prod
     domain: justiceinnovationlab.2i2c.cloud
-    template: daskhub
+    helm_chart: daskhub
     auth0:
       connection: github
     config: *hubConfig

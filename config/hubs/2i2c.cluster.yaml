@@ -19,7 +19,7 @@ support:
 hubs:
   - name: staging
     domain: staging.pilot.2i2c.cloud
-    template: basehub
+    helm_chart: basehub
     auth0:
       connection: google-oauth2
     config:
@@ -55,7 +55,7 @@ hubs:
               admin_users: *staging_users
   - name: dask-staging
     domain: dask-staging.pilot.2i2c.cloud
-    template: daskhub
+    helm_chart: daskhub
     auth0:
       connection: google-oauth2
     config:
@@ -96,7 +96,7 @@ hubs:
                 admin_users: *dask_staging_users
   - name: demo
     domain: demo.pilot.2i2c.cloud
-    template: basehub
+    helm_chart: basehub
     auth0:
       connection: CILogon
     config:
@@ -125,7 +125,7 @@ hubs:
               username_pattern: '^(.+@2i2c\.org|deployment-service-check)$'
   - name: ohw
     domain: ohw.pilot.2i2c.cloud
-    template: daskhub
+    helm_chart: daskhub
     auth0:
       connection: github
     config:
@@ -196,7 +196,7 @@ hubs:
                 admin_users: *ohw_users
   - name: justiceinnovationlab
     domain: justiceinnovationlab.pilot.2i2c.cloud
-    template: basehub
+    helm_chart: basehub
     auth0:
       connection: github
     config:
@@ -226,7 +226,7 @@ hubs:
                 - JILPulvino
   - name: pfw
     domain: pfw.pilot.2i2c.cloud
-    template: basehub
+    helm_chart: basehub
     auth0:
       connection: github
     config:
@@ -258,7 +258,7 @@ hubs:
               admin_users: *pfw_users
   - name: peddie
     domain: peddie.pilot.2i2c.cloud
-    template: basehub
+    helm_chart: basehub
     auth0:
       connection: google-oauth2
     config:
@@ -290,7 +290,7 @@ hubs:
               admin_users: *peddie_users
   - name: catalyst-cooperative
     domain: catalyst-cooperative.pilot.2i2c.cloud
-    template: daskhub
+    helm_chart: daskhub
     auth0:
       connection: google-oauth2
     config:
@@ -336,7 +336,7 @@ hubs:
                 admin_users: *catalyst_users
   - name: earthlab
     domain: earthlab.pilot.2i2c.cloud
-    template: basehub
+    helm_chart: basehub
     auth0:
       connection: github
     config:
@@ -366,7 +366,7 @@ hubs:
               admin_users: *earthlab_users
   - name: paleohack2021
     domain: paleohack2021.hackathon.2i2c.cloud
-    template: basehub
+    helm_chart: basehub
     auth0:
       connection: github
     config:
@@ -417,7 +417,7 @@ hubs:
               admin_users: *paleohack_users
   - name: aup
     domain: aup.pilot.2i2c.cloud
-    template: basehub
+    helm_chart: basehub
     auth0:
       connection: github
     config:

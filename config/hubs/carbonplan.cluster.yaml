@@ -32,7 +32,7 @@ support:
 hubs:
   - name: staging
     domain: staging.carbonplan.2i2c.cloud
-    template: daskhub
+    helm_chart: daskhub
     auth0:
       connection: github
     config: &carbonPlanHubConfig
@@ -211,7 +211,7 @@ hubs:
               c.KubeClusterConfig.idle_timeout = 1800
   - name: prod
     domain: carbonplan.2i2c.cloud
-    template: daskhub
+    helm_chart: daskhub
     auth0:
       connection: github
     config: *carbonPlanHubConfig
