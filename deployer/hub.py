@@ -462,7 +462,7 @@ class Hub:
                 "Auth0OAuthenticator"
             ] = auth_provider.get_client_creds(client, self.spec["auth0"]["connection"])
 
-        return self.apply_hub_template_fixes(generated_config, secret_key)
+        return self.apply_hub_helm_chart_fixes(generated_config, secret_key)
 
     def unset_env_var(self, env_var, old_env_var_value):
         """
@@ -475,18 +475,18 @@ class Hub:
         if old_env_var_value is not None:
             os.environ[env_var] = old_env_var_value
 
-    def apply_hub_template_fixes(self, generated_config, secret_key):
+    def apply_hub_helm_chart_fixes(self, generated_config, secret_key):
         """
-        Modify generated_config based on what hub template we're using.
+        Modify generated_config based on what hub helm chart we're using.
 
-        Different hub templates require different pre-set config. For example,
+        Different hub helm charts require different pre-set config. For example,
         anything deriving from 'basehub' needs all config to be under a 'basehub'
         config. dask hubs require apiTokens, etc.
 
-        Ideally, these would be done declaratively. Untile then, let's put all of
+        Ideally, these would be done declaratively. Until then, let's put all of
         them in this function.
         """
-        hub_template = self.spec["template"]
+        hub_helm_chart = self.spec["helm_chart"]
 
         # Generate a token for the hub health service
         hub_health_token = hmac.new(
@@ -511,11 +511,11 @@ class Hub:
 
         # FIXME: Have a templates config somewhere? Maybe in Chart.yaml
         # FIXME: This is a hack. Fix it.
-        if hub_template != "basehub":
+        if hub_helm_chart != "basehub":
             generated_config = {"basehub": generated_config}
 
         # LOLSOB FIXME
-        if hub_template == "daskhub":
+        if hub_helm_chart == "daskhub":
             gateway_token = hmac.new(
                 secret_key, b"gateway-" + self.spec["name"].encode(), hashlib.sha256
             ).hexdigest()
@@ -535,7 +535,7 @@ class Hub:
         # Ensure helm charts are up to date
         os.chdir("helm-charts")
         subprocess.check_call(["helm", "dep", "up", "basehub"])
-        if self.spec["template"] == "daskhub":
+        if self.spec["helm_chart"] == "daskhub":
             subprocess.check_call(["helm", "dep", "up", "daskhub"])
         os.chdir("..")
 
@@ -586,7 +586,7 @@ class Hub:
                 "--wait",
                 f"--namespace={self.spec['name']}",
                 self.spec["name"],
-                os.path.join("helm-charts", self.spec["template"]),
+                os.path.join("helm-charts", self.spec["helm_chart"]),
                 # Ordering matters here - config explicitly mentioned in clu should take
                 # priority over our generated values. Based on how helm does overrides, this means
                 # we should put the config from config/hubs last.
@@ -602,7 +602,7 @@ class Hub:
             if not skip_hub_health_test:
 
                 # FIXMEL: Clean this up
-                if self.spec["template"] != "basehub":
+                if self.spec["helm_chart"] != "basehub":
                     service_api_token = generated_values["basehub"]["jupyterhub"][
                         "hub"
                     ]["services"]["hub-health"]["apiToken"]
@@ -627,7 +627,7 @@ class Hub:
                     "--api-token",
                     service_api_token,
                     "--hub-type",
-                    self.spec["template"],
+                    self.spec["helm_chart"],
                 ]
                 if gh_ci == "true":
                     print_colour("Testing on CI, not printing output")
