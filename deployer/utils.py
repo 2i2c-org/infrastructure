@@ -72,13 +72,13 @@ def replace_staff_placeholder(user_list, staff):
     return custom_users
 
 
-def update_authenticator_config(config, template):
+def update_authenticator_config(config, helm_chart):
     """Prepare a hub's configuration file for deployment."""
     # Load the staff config file
     with open("config/hubs/staff.yaml") as f:
         staff = yaml.load(f)
 
-    if "basehub" in template:
+    if "basehub" in helm_chart:
         authenticator = (
             config.get("jupyterhub", {})
             .get("hub", {})
@@ -86,7 +86,7 @@ def update_authenticator_config(config, template):
             .get("Authenticator", {})
         )
     else:
-        # Right now all the other templates inherit from basehub, fix this if things change
+        # Right now all the other helm charts inherit from basehub, fix this if things change
         authenticator = (
             config.get("basehub", {})
             .get("jupyterhub", {})

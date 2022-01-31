@@ -30,7 +30,7 @@ support:
 hubs:
   - name: staging
     domain: staging.us-central1-b.gcp.pangeo.io
-    template: daskhub
+    helm_chart: daskhub
     auth0:
       enabled: false
     config:
@@ -160,7 +160,7 @@ hubs:
                 limit: 2G
   - name: prod
     domain: us-central1-b.gcp.pangeo.io
-    template: daskhub
+    helm_chart: daskhub
     auth0:
       enabled: false
     config:
