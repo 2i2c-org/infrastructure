@@ -478,7 +478,9 @@ hubs:
             Authenticator:
               allowed_users: &utexas_demo_users
                 - <staff_github_ids>
+                - jameshowison
               admin_users: *utexas_demo_users
+                
         singleuser:
           storage:
             extraVolumes:
