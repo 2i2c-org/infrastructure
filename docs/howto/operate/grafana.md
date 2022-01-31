@@ -68,7 +68,7 @@ Eventually, visiting `GRAFANA_URL` will present you with a login page.
 Here are the credentials for logging in:
 
 - **username**: `admin`
-- **password**: located in `support/secrets.yaml` (`sops` encrypted).
+- **password**: located in `helm-charts/support/secrets.yaml` (`sops` encrypted).
 
 ### Setting up Grafana Dashboards
 

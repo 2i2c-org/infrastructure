@@ -38,7 +38,7 @@ Sometimes you might need to delete or to perform maintenance on a node in the cl
     * Pods created by [DaemonSet](https://kubernetes.io/docs/concepts/workloads/controllers/daemonset/) objects.
 
         These run on every node, regardless of their `cordon` status. So, they don't need to be deleted, otherwise, they will be re-created on the same cordoned node.
-        The [prometheus node-exporter](https://github.com/prometheus-community/helm-charts/blob/main/charts/prometheus-node-exporter/templates/daemonset.yaml) configured [here](https://github.com/2i2c-org/infrastructure/blob/master/support/values.yaml#L12), is an example of such a pod.
+        The [prometheus node-exporter](https://github.com/prometheus-community/helm-charts/blob/main/charts/prometheus-node-exporter/templates/daemonset.yaml) configured [here](https://github.com/2i2c-org/infrastructure/blob/master/helm-charts/support/values.yaml#L12), is an example of such a pod.
     * Pods **not** controlled by a Controller
 
         These are usually the user pods and shouldn't be deleted, as they would disrupt the user. Instead, these will be taken down by the [idle culler](https://github.com/jupyterhub/jupyterhub-idle-culler) when they're in an idle state.
