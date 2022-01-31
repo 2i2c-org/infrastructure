@@ -87,7 +87,7 @@ def render_hubs():
             "name": "University of Toronto",
             "domain": "jupyter.utoronto.ca",
             "id": "utoronto",
-            "template": "base-hub ([deployment repo](https://github.com/utoronto-2i2c/jupyterhub-deploy/))",
+            "hub_type": "base-hub ([deployment repo](https://github.com/utoronto-2i2c/jupyterhub-deploy/))",
         }
     ]
     for cluster_info in clusters:
@@ -123,7 +123,7 @@ def render_hubs():
                     ],
                     "domain": f"[{hub['domain']}](https://{hub['domain']})",
                     "id": hub["name"],
-                    "template": hub["helm_chart"],
+                    "hub_type": hub["helm_chart"],
                     "grafana": grafana_url,
                 }
             )
@@ -139,7 +139,7 @@ def render_tfdocs():
     # Output path is relative to terraform directory
     output_path = Path("../docs/reference/terraform.md")
 
-    # Template for output file is in ../terraform/.terraform-docs.yml
+    # hub_type for output file is in ../terraform/.terraform-docs.yml
     subprocess.check_call(
         [
             "terraform-docs",
