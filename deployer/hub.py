@@ -117,9 +117,10 @@ class Cluster:
         print_colour("Done!")
 
         print_colour("Provisioning support charts...")
-        subprocess.check_call(["helm", "dep", "up", "support"])
 
-        support_dir = Path(__file__).parent.parent / "support"
+        subprocess.check_call(["helm", "dep", "up", "helm-charts/support"])
+
+        support_dir = Path(__file__).parent.parent / "helm-charts/support"
         support_secrets_file = support_dir / "secrets.yaml"
 
         with tempfile.NamedTemporaryFile(mode="w") as f, decrypt_file(
