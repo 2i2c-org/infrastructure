@@ -28,7 +28,7 @@ def deploy_support(cluster_name):
     validate(cluster_name)
 
     config_file_path = (
-        Path(os.getcwd()) / "config/hubs" / f"{cluster_name}.cluster.yaml"
+        Path(os.getcwd()).joinpath("config", "hubs", f"{cluster_name}.cluster.yaml")
     )
     with open(config_file_path) as f:
         cluster = Cluster(yaml.load(f))
@@ -47,7 +47,7 @@ def deploy_jupyterhub_grafana(cluster_name):
     validate(cluster_name)
 
     config_file_path = (
-        Path(os.getcwd()) / "config/hubs" / f"{cluster_name}.cluster.yaml"
+        Path(os.getcwd()).joinpath("config", "hubs", f"{cluster_name}.cluster.yaml")
     )
     with open(config_file_path) as f:
         cluster = Cluster(yaml.load(f))
@@ -60,7 +60,7 @@ def deploy_jupyterhub_grafana(cluster_name):
         return
 
     secret_config_file = (
-        Path(os.getcwd()) / "secrets/config/hubs" / f"{cluster_name}.cluster.yaml"
+        Path(os.getcwd()).joinpath("secrets", "config", "hubs", f"{cluster_name}.cluster.yaml")
     )
 
     # Read and set GRAFANA_TOKEN from the cluster specific secret config file
@@ -158,7 +158,7 @@ def deploy(cluster_name, hub_name, skip_hub_health_test, config_path):
     SECRET_KEY = bytes.fromhex(config["secret_key"])
 
     config_file_path = (
-        Path(os.getcwd()) / "config/hubs" / f"{cluster_name}.cluster.yaml"
+        Path(os.getcwd()).joinpath("config", "hubs", f"{cluster_name}.cluster.yaml")
     )
     with open(config_file_path) as f:
         cluster = Cluster(yaml.load(f))
@@ -176,18 +176,18 @@ def deploy(cluster_name, hub_name, skip_hub_health_test, config_path):
 
 
 def validate(cluster_name):
-    cluster_dir = Path(os.getcwd()) / "config/hubs"
-    schema_file = cluster_dir / "schema.yaml"
-    config_file = cluster_dir / f"{cluster_name}.cluster.yaml"
+    cluster_dir = Path(os.getcwd()).joinpath("config", "hubs")
+    schema_file = cluster_dir.joinpath("schema.yaml")
+    config_file = cluster_dir.joinpath(f"{cluster_name}.cluster.yaml")
     with open(config_file) as cf, open(schema_file) as sf:
         cluster_config = yaml.load(cf)
         schema = yaml.load(sf)
         # Raises useful exception if validation fails
         jsonschema.validate(cluster_config, schema)
 
-    secret_cluster_dir = Path(os.getcwd()) / "secrets/config/hubs"
-    secret_schema_file = secret_cluster_dir / "schema.yaml"
-    secret_config_file = secret_cluster_dir / f"{cluster_name}.cluster.yaml"
+    secret_cluster_dir = Path(os.getcwd()).joinpath("secrets", "config", "hubs")
+    secret_schema_file = secret_cluster_dir.joinpath("schema.yaml")
+    secret_config_file = secret_cluster_dir.joinpath(f"{cluster_name}.cluster.yaml")
 
     # If a secret config file exists, validate it as well
     if os.path.exists(secret_config_file):

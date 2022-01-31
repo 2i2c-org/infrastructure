@@ -119,8 +119,8 @@ class Cluster:
         print_colour("Provisioning support charts...")
         subprocess.check_call(["helm", "dep", "up", "support"])
 
-        support_dir = Path(__file__).parent.parent / "support"
-        support_secrets_file = support_dir / "secrets.yaml"
+        support_dir = (Path(__file__).parent.parent).joinpath("support")
+        support_secrets_file = support_dir.joinpath("secrets.yaml")
 
         with tempfile.NamedTemporaryFile(mode="w") as f, decrypt_file(
             support_secrets_file
@@ -541,9 +541,9 @@ class Hub:
 
         # Check if this cluster has any secret config. If yes, read it in.
         secret_config_path = (
-            Path(os.getcwd())
-            / "secrets/config/hubs"
-            / f'{self.cluster.spec["name"]}.cluster.yaml'
+            Path(os.getcwd()).joinpath(
+            "secrets", "config", "hubs",
+            f'{self.cluster.spec["name"]}.cluster.yaml')
         )
 
         secret_hub_config = {}
