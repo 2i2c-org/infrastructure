@@ -39,4 +39,4 @@ When a new hub is created, we use one of these two placeholders to add 2i2c staf
 
 When a hub is deployed, these placeholders are removed, and the usernames corresponding to the correct staff list are added to the hub's Admin and Allowed users.
 
-You can find the list of staff usernames at [`config/clusters/staff.yaml`](https://github.com/2i2c-org/infrastructure/tree/HEAD/config/clusters/staff.yaml).
+You can find the list of staff usernames at [`config/staff.yaml`](https://github.com/2i2c-org/infrastructure/tree/HEAD/config/staff.yaml).
