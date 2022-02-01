@@ -17,14 +17,14 @@ There are three kinds of infrastructure needed to add a new hub. In most cases, 
   This includes things like Grafana, NFS server provisioners, etc.
 - **JupyterHubs**.
   When a cluster is up and running, we may then deploy JupyterHubs on top of it using the JupyterHub Helm Chart.
-  Configuration that is specific to each JupyterHub is stored in the [`config/hubs`](https://github.com/2i2c-org/infrastructure/tree/master/config/hubs) folder.
+  Configuration that is specific to each JupyterHub is stored in the [`config/clusters`](https://github.com/2i2c-org/infrastructure/tree/HEAD/config/clusters) folder.
   GitHub actions then deploy and update hubs on a cluster using this configuration.
   There are some cases where you must manually deploy or modify a hub.
   See [](operate:manual-deploy) for more details.
 
 ## Overview of hub configuration
 
-Many of our hubs are automatically deployed and updated using GitHub Workflows and configuration that is defined in [`infrastructure/config/hubs`](https://github.com/2i2c-org/infrastructure/tree/master/config/hubs).
+Many of our hubs are automatically deployed and updated using GitHub Workflows and configuration that is defined in [`infrastructure/config/clusters`](https://github.com/2i2c-org/infrastructure/tree/HEAD/config/clusters).
 
 These are a collection of YAML files (one per cluster) that define the configuration for all of our hubs.
 To learn which subset of clusters are *automatically* deployed via GitHub workflows, inspect the `matrix:cluster_name:` list in [the `deploy-hubs.yaml` action](https://github.com/2i2c-org/infrastructure/blob/f2ffc8ef51427d5f824747917bfd51533daf3045/.github/workflows/deploy-hubs.yaml#L17-L31).
@@ -41,17 +41,17 @@ To deploy a new hub, follow these steps:
    Once that issue is created, move to the next step.
 2. Decide whether you'll deploy on a pre-existing Kubernetes cluster, or if you'll need to create a new one.
    See [](cluster:when-to-deploy) for information to help you decide.
-3. Determine the **hub template** that is needed.
-   Hub templates are pre-configured deployments for certain kinds of JupyterHubs.
-   There are a few base templates to choose from.
-   For more information about our templates and how to choose, see [](hub-templates).
+3. Determine the **hub helm chart** that is needed.
+   Hub helm charts are pre-configured deployments for certain kinds of JupyterHubs.
+   There are a few base charts to choose from.
+   For more information about our hub helm charts and how to choose, see [](hub-helm-charts).
 4. Add a configuration entry for your new hub.
    Each entry is a Zero to JupyterHub configuration, and you can customize whatever you like.
    The easiest way to add new configuration is to look at the entries for similar hubs in the same cluster YAML file, copy / paste one of them, and make modifications as needed for this specific hub.
-   For example, see the entries in [the 2i2c Google Cloud cluster configuration file](https://github.com/2i2c-org/infrastructure/blob/master/config/hubs/2i2c.cluster.yaml).
-   
+   For example, see the entries in [the 2i2c Google Cloud cluster configuration file](https://github.com/2i2c-org/infrastructure/tree/HEAD/config/clusters/2i2c.cluster.yaml).
+
    :::{seealso}
-   See [](/topic/config.md) for more information about template configuration.
+   See [](/topic/config.md) for more information about hub helm chart configuration.
    :::
 5. Create a Pull Request with the new hub entry, and get a team member to review it.
 6. Once you merge the pull request, the GitHub Workflow will detect that a new entry has been added to the configuration file.

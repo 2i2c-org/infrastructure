@@ -1,19 +1,19 @@
 # Our CI/CD system
 
 The best place to learn about the latest state of our *automatic* hub deployment
-is to look at [the `deploy-hubs.yaml` GitHub workflow](https://github.com/2i2c-org/pilot-hubs/blob/master/.github/workflows/deploy-hubs.yaml).
+is to look at [the `deploy-hubs.yaml` GitHub workflow](https://github.com/2i2c-org/infrastructure/tree/HEAD/.github/workflows/deploy-hubs.yaml).
 That workflow defines the automatic hub deployment for many of our major clusters.
 
-Currently, our CI/CD system is triggered on pushes to the master branch when any of the
+Currently, our CI/CD system is triggered on pushes to the default branch when any of the
 following paths are modified:
 
 ```
 - deployer/**
-- hub-templates/**
+- helm-charts/**
 - requirements.txt
 - dev-requirements.txt
 - config/secrets.yaml
-- config/hubs/**
+- config/clusters/**
 - .github/workflows/deploy-hubs.yaml
 - .github/actions/deploy/**
 ```
@@ -25,7 +25,7 @@ cluster is deployed.
 The following steps are path-filtered so we can trigger new deployments on specific
 clusters when the associated files are actually changed.
 
-Finally, the [deploy action](https://github.com/2i2c-org/infrastructure/blob/master/.github/actions/deploy/action.yml)
+Finally, the [deploy action](https://github.com/2i2c-org/infrastructure/tree/HEAD/.github/actions/deploy/action.yml)
 is called which in turn will use the deployer script to deploy the hubs on the corresponding
 clusters.
 

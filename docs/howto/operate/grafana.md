@@ -24,7 +24,7 @@ These tools are [`ingress-nginx`](https://kubernetes.github.io/ingress-nginx/), 
 
 #### Edit your `*.cluster.yaml` file
 
-Add the following config as a top-level key to your `*.cluster.yaml` file under `/config/hubs` in `infrastructure`.
+Add the following config as a top-level key to your `*.cluster.yaml` file under `/config/clusters` in `infrastructure`.
 `GRAFANA_URL` should follow the pattern `grafana.<cluster_name>.2i2c.cloud`.
 
 ```yaml
@@ -68,7 +68,7 @@ Eventually, visiting `GRAFANA_URL` will present you with a login page.
 Here are the credentials for logging in:
 
 - **username**: `admin`
-- **password**: located in `support/secrets.yaml` (`sops` encrypted).
+- **password**: located in `helm-charts/support/secrets.yaml` (`sops` encrypted).
 
 ### Setting up Grafana Dashboards
 
@@ -78,18 +78,14 @@ The key you create needs admin permissions.
 
 **Keep this key safe as you won't be able to retrieve it!**
 
-```{note}
-In the future, we should define the scenarios where other engineers need this API key after the initial deployment and decide how to store and share it.
-```
+Encrypt and store this key using `sops` in `secrets/config/clusters/<cluster>.yaml` under `grafana_token` key.
 
-Some default grafana dashboards for JupyterHub can then be deployed using [`jupyterhub/grafana-dashboards`](https://github.com/jupyterhub/grafana-dashboards).
+This key will be used by the [`deploy-grafana-dashboards` workflow](https://github.com/2i2c-org/infrastructure/tree/HEAD/.github/workflows/deploy-grafana-dashboards.yaml) to deploy some default grafana dashboards for JupyterHub using [`jupyterhub/grafana-dashboards`](https://github.com/jupyterhub/grafana-dashboards).
 
-1. Create a local clone of the repository
-2. Install the [`jsonnet` binary](https://github.com/google/jsonnet#packages).
+Once you've pushed the encrypted `grafana_token` to the GitHub repository, manually trigger the `deploy-grafana-dashboards` workflow using the "Run workflow" button [from here](https://github.com/2i2c-org/infrastructure/actions/workflows/deploy-grafana-dashboards.yaml) to deploy the dashboards.
 
 ```{note}
-Homebrew is the best option if you're on MacOS.
-The Python package will not suffice here as we directly call the `jsonnet` library.
-```
+The workflow only runs when manually triggered.
 
-3. Follow the instructions in the [Deployment](https://github.com/jupyterhub/grafana-dashboards/blob/main/README.md#deployment) section of the README to create the grafana dashboards
+Any re-triggering of the workflow after the initial deployment will overwrite any dashboard created from the Grafana UI and not stored in the [`jupyterhub/grafana-dashboards`](https://github.com/jupyterhub/grafana-dashboards) repository.
+```

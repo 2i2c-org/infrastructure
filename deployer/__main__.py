@@ -6,7 +6,6 @@ import os
 import sys
 import subprocess
 from pathlib import Path
-import tempfile
 
 import jsonschema
 from ruamel.yaml import YAML
@@ -14,7 +13,7 @@ import shutil
 
 from auth import KeyProvider
 from hub import Cluster
-from utils import decrypt_file, update_authenticator_config
+from utils import decrypt_file, update_authenticator_config, print_colour
 
 # Without `pure=True`, I get an exception about str / byte issues
 yaml = YAML(typ="safe", pure=True)
@@ -28,7 +27,9 @@ def deploy_support(cluster_name):
     # Validate our config with JSON Schema first before continuing
     validate(cluster_name)
 
-    config_file_path = Path(os.getcwd()) / "config/hubs" / f'{cluster_name}.cluster.yaml'
+    config_file_path = (
+        Path(os.getcwd()) / "config/clusters" / f"{cluster_name}.cluster.yaml"
+    )
     with open(config_file_path) as f:
         cluster = Cluster(yaml.load(f))
 
@@ -45,16 +46,22 @@ def deploy_jupyterhub_grafana(cluster_name):
     # Validate our config with JSON Schema first before continuing
     validate(cluster_name)
 
-    config_file_path = Path(os.getcwd()) / "config/hubs" / f'{cluster_name}.cluster.yaml'
+    config_file_path = (
+        Path(os.getcwd()) / "config/clusters" / f"{cluster_name}.cluster.yaml"
+    )
     with open(config_file_path) as f:
         cluster = Cluster(yaml.load(f))
 
     # If grafana support chart is not deployed, then there's nothing to do
     if not cluster.support:
-        print("Support chart has not been deployed. Skipping Grafana dashboards deployment...")
+        print_colour(
+            "Support chart has not been deployed. Skipping Grafana dashboards deployment..."
+        )
         return
 
-    secret_config_file = Path(os.getcwd()) / "secrets/config/hubs" / f"{cluster_name}.cluster.yaml"
+    secret_config_file = (
+        Path(os.getcwd()) / "secrets/config/clusters" / f"{cluster_name}.cluster.yaml"
+    )
 
     # Read and set GRAFANA_TOKEN from the cluster specific secret config file
     with decrypt_file(secret_config_file) as decrypted_file_path:
@@ -62,22 +69,41 @@ def deploy_jupyterhub_grafana(cluster_name):
             config = yaml.load(f)
 
     # Get the url where grafana is running from the cluster config
-    grafana_url = cluster.support.get("config", {}).get("grafana", {}).get("ingress", {}).get("hosts", {})
-    uses_tls = cluster.support.get("config", {}).get("grafana", {}).get("ingress", {}).get("tls", {})
+    grafana_url = (
+        cluster.support.get("config", {})
+        .get("grafana", {})
+        .get("ingress", {})
+        .get("hosts", {})
+    )
+    uses_tls = (
+        cluster.support.get("config", {})
+        .get("grafana", {})
+        .get("ingress", {})
+        .get("tls", {})
+    )
 
     if not grafana_url:
-        print("Couldn't find `config.grafana.ingress.hosts`. Skipping Grafana dashboards deployment...")
+        print_colour(
+            "Couldn't find `config.grafana.ingress.hosts`. Skipping Grafana dashboards deployment..."
+        )
         return
 
-    grafana_url = "https://" + grafana_url[0] if uses_tls else "http://" + grafana_url[0]
+    grafana_url = (
+        "https://" + grafana_url[0] if uses_tls else "http://" + grafana_url[0]
+    )
 
     # Use the jupyterhub/grafana-dashboards deployer to deploy the dashboards to this cluster's grafana
-    print("Cloning jupyterhub/grafana-dashboards...")
+    print_colour("Cloning jupyterhub/grafana-dashboards...")
 
     dashboards_dir = "grafana_dashboards"
 
     subprocess.check_call(
-        ["git", "clone", "https://github.com/jupyterhub/grafana-dashboards", dashboards_dir]
+        [
+            "git",
+            "clone",
+            "https://github.com/jupyterhub/grafana-dashboards",
+            dashboards_dir,
+        ]
     )
 
     # We need the existing env too for the deployer to be able to find jssonnet and grafonnet
@@ -85,14 +111,12 @@ def deploy_jupyterhub_grafana(cluster_name):
     deploy_env.update({"GRAFANA_TOKEN": config["grafana_token"]})
 
     try:
-        print(f"Deploying grafana dashboards to {cluster_name}...")
+        print_colour(f"Deploying grafana dashboards to {cluster_name}...")
         subprocess.check_call(
-            ["./deploy.py", grafana_url],
-            env=deploy_env,
-            cwd=dashboards_dir
+            ["./deploy.py", grafana_url], env=deploy_env, cwd=dashboards_dir
         )
 
-        print(f"Done! Dasboards deployed to {grafana_url}.")
+        print_colour(f"Done! Dasboards deployed to {grafana_url}.")
     finally:
         # Delete the directory where we cloned the repo.
         # The deployer cannot call jsonnet to deploy the dashboards if using a temp directory here.
@@ -118,13 +142,9 @@ def deploy(cluster_name, hub_name, skip_hub_health_test, config_path):
     # this, we'd have to manually generate credentials for each hub - and we
     # don't want to do that. Auth0 domains are tied to a account, and
     # this is our auth0 domain for the paid account that 2i2c has.
-    auth0 = config['auth0']
+    auth0 = config["auth0"]
 
-    k = KeyProvider(
-        auth0['domain'],
-        auth0['client_id'],
-        auth0['client_secret']
-    )
+    k = KeyProvider(auth0["domain"], auth0["client_id"], auth0["client_secret"])
 
     # Each hub needs a unique proxy.secretToken. However, we don't want
     # to manually generate & save it. We also don't want it to change with
@@ -135,9 +155,11 @@ def deploy(cluster_name, hub_name, skip_hub_health_test, config_path):
     # keep much state. We can rotate them by changing `PROXY_SECRET_KEY`.
     # However, if `PROXY_SECRET_KEY` leaks, that means all the hub's
     # proxy.secretTokens have leaked. So let's be careful with that!
-    SECRET_KEY = bytes.fromhex(config['secret_key'])
+    SECRET_KEY = bytes.fromhex(config["secret_key"])
 
-    config_file_path = Path(os.getcwd()) / "config/hubs" / f'{cluster_name}.cluster.yaml'
+    config_file_path = (
+        Path(os.getcwd()) / "config/clusters" / f"{cluster_name}.cluster.yaml"
+    )
     with open(config_file_path) as f:
         cluster = Cluster(yaml.load(f))
 
@@ -145,16 +167,16 @@ def deploy(cluster_name, hub_name, skip_hub_health_test, config_path):
         hubs = cluster.hubs
         if hub_name:
             hub = next((hub for hub in hubs if hub.spec["name"] == hub_name), None)
-            update_authenticator_config(hub.spec["config"], hub.spec["template"])
+            update_authenticator_config(hub.spec["config"], hub.spec["helm_chart"])
             hub.deploy(k, SECRET_KEY, skip_hub_health_test)
         else:
             for hub in hubs:
-                update_authenticator_config(hub.spec["config"], hub.spec["template"])
+                update_authenticator_config(hub.spec["config"], hub.spec["helm_chart"])
                 hub.deploy(k, SECRET_KEY, skip_hub_health_test)
 
 
 def validate(cluster_name):
-    cluster_dir = Path(os.getcwd()) / "config/hubs"
+    cluster_dir = Path(os.getcwd()) / "config/clusters"
     schema_file = cluster_dir / "schema.yaml"
     config_file = cluster_dir / f"{cluster_name}.cluster.yaml"
     with open(config_file) as cf, open(schema_file) as sf:
@@ -163,7 +185,7 @@ def validate(cluster_name):
         # Raises useful exception if validation fails
         jsonschema.validate(cluster_config, schema)
 
-    secret_cluster_dir = Path(os.getcwd()) / "secrets/config/hubs"
+    secret_cluster_dir = Path(os.getcwd()) / "secrets/config/clusters"
     secret_schema_file = secret_cluster_dir / "schema.yaml"
     secret_config_file = secret_cluster_dir / f"{cluster_name}.cluster.yaml"
 
@@ -178,7 +200,11 @@ def validate(cluster_name):
 
 def main():
     argparser = argparse.ArgumentParser()
-    argparser.add_argument('--config-path', help='Read deployment config from this file', default='deployment.config.yaml')
+    argparser.add_argument(
+        "--config-path",
+        help="Read deployment config from this file",
+        default="deployment.config.yaml",
+    )
     subparsers = argparser.add_subparsers(dest="action")
 
     deploy_parser = subparsers.add_parser("deploy")
@@ -189,7 +215,11 @@ def main():
     deploy_parser.add_argument("cluster_name")
     deploy_parser.add_argument("hub_name", nargs="?")
     deploy_parser.add_argument("--skip-hub-health-test", action="store_true")
-    deploy_parser.add_argument('--config-path', help='Read deployment config from this file', default='config/secrets.yaml')
+    deploy_parser.add_argument(
+        "--config-path",
+        help="Read deployment config from this file",
+        default="config/secrets.yaml",
+    )
 
     validate_parser.add_argument("cluster_name")
 
@@ -200,12 +230,17 @@ def main():
     args = argparser.parse_args()
 
     if args.action == "deploy":
-        deploy(args.cluster_name, args.hub_name, args.skip_hub_health_test, args.config_path)
-    elif args.action == 'validate':
+        deploy(
+            args.cluster_name,
+            args.hub_name,
+            args.skip_hub_health_test,
+            args.config_path,
+        )
+    elif args.action == "validate":
         validate(args.cluster_name)
-    elif args.action == 'deploy-support':
+    elif args.action == "deploy-support":
         deploy_support(args.cluster_name)
-    elif args.action == 'deploy-grafana':
+    elif args.action == "deploy-grafana":
         deploy_jupyterhub_grafana(args.cluster_name)
     else:
         # Print help message and exit when no arguments are passed

@@ -24,7 +24,7 @@ support:
 hubs:
   - name: staging
     domain: staging.utoronto.2i2c.cloud
-    template: basehub
+    helm_chart: basehub
     auth0:
       enabled: false
     config:
@@ -40,6 +40,15 @@ hubs:
           # Trailing slash is important!
           baseShareName: /2i2cutorontohubstorage/homes/
       jupyterhub:
+        # pre-puller is necessary as the image is pretty big, and
+        # pulling during first user spawn might cause timeouts.
+        # Only required on staging hub though, as they share the same
+        # cluster, and staging is always deployed before prod
+        prePuller:
+          continuous:
+            enabled: true
+          hook:
+            enabled: true
         custom: &staging_jhub_custom
           homepage:
             templateVars:
@@ -93,7 +102,7 @@ hubs:
                   subPath: "{username}"
           image:
             name: quay.io/2i2c/utoronto-image
-            tag: e5765d227655
+            tag: f3069be5964c
         hub:
           db:
             pvc:
@@ -120,7 +129,7 @@ hubs:
               tenant_id: 78aac226-2f03-4b4d-9037-b46d56c55210
   - name: prod
     domain: jupyter.utoronto.ca
-    template: basehub
+    helm_chart: basehub
     auth0:
       enabled: false
     config:

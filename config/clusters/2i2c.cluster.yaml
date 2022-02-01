@@ -19,7 +19,7 @@ support:
 hubs:
   - name: staging
     domain: staging.pilot.2i2c.cloud
-    template: basehub
+    helm_chart: basehub
     auth0:
       connection: google-oauth2
     config:
@@ -55,7 +55,7 @@ hubs:
               admin_users: *staging_users
   - name: dask-staging
     domain: dask-staging.pilot.2i2c.cloud
-    template: daskhub
+    helm_chart: daskhub
     auth0:
       connection: google-oauth2
     config:
@@ -94,9 +94,38 @@ hubs:
                   - <staff_google_ids>
                   - colliand@gmail.com
                 admin_users: *dask_staging_users
+  - name: demo
+    domain: demo.pilot.2i2c.cloud
+    helm_chart: basehub
+    auth0:
+      connection: CILogon
+    config:
+      jupyterhub:
+        custom:
+          homepage:
+            templateVars:
+              org:
+                name: 2i2c Demo Hub
+                url: https://2i2c.org
+                logo_url: https://2i2c.org/media/logo.png
+              designed_by:
+                name: 2i2c
+                url: https://2i2c.org
+              operated_by:
+                name: 2i2c
+                url: https://2i2c.org
+              funded_by:
+                name: 2i2c
+                url: https://2i2c.org
+        hub:
+          config:
+            Authenticator:
+              admin_users:
+                - <staff_google_ids>
+              username_pattern: '^(.+@2i2c\.org|deployment-service-check)$'
   - name: ohw
     domain: ohw.pilot.2i2c.cloud
-    template: daskhub
+    helm_chart: daskhub
     auth0:
       connection: github
     config:
@@ -167,7 +196,7 @@ hubs:
                 admin_users: *ohw_users
   - name: justiceinnovationlab
     domain: justiceinnovationlab.pilot.2i2c.cloud
-    template: basehub
+    helm_chart: basehub
     auth0:
       connection: github
     config:
@@ -197,7 +226,7 @@ hubs:
                 - JILPulvino
   - name: pfw
     domain: pfw.pilot.2i2c.cloud
-    template: basehub
+    helm_chart: basehub
     auth0:
       connection: github
     config:
@@ -229,7 +258,7 @@ hubs:
               admin_users: *pfw_users
   - name: peddie
     domain: peddie.pilot.2i2c.cloud
-    template: basehub
+    helm_chart: basehub
     auth0:
       connection: google-oauth2
     config:
@@ -261,7 +290,7 @@ hubs:
               admin_users: *peddie_users
   - name: catalyst-cooperative
     domain: catalyst-cooperative.pilot.2i2c.cloud
-    template: daskhub
+    helm_chart: daskhub
     auth0:
       connection: google-oauth2
     config:
@@ -307,7 +336,7 @@ hubs:
                 admin_users: *catalyst_users
   - name: earthlab
     domain: earthlab.pilot.2i2c.cloud
-    template: basehub
+    helm_chart: basehub
     auth0:
       connection: github
     config:
@@ -337,7 +366,7 @@ hubs:
               admin_users: *earthlab_users
   - name: paleohack2021
     domain: paleohack2021.hackathon.2i2c.cloud
-    template: basehub
+    helm_chart: basehub
     auth0:
       connection: github
     config:
@@ -388,7 +417,7 @@ hubs:
               admin_users: *paleohack_users
   - name: aup
     domain: aup.pilot.2i2c.cloud
-    template: basehub
+    helm_chart: basehub
     auth0:
       connection: github
     config:
@@ -421,3 +450,86 @@ hubs:
                 - swalker
                 - shaolintl
               admin_users: *aup_users
+  - name: utexas-demo
+    domain: utexas-demo.pilot.2i2c.cloud
+    helm_chart: basehub
+    auth0:
+      connection: github
+    config:
+      jupyterhub:
+        custom:
+          homepage:
+            templateVars:
+              org:
+                name: University of Texas
+                logo_url: https://upload.wikimedia.org/wikipedia/en/thumb/e/e1/University_of_Texas_at_Austin_seal.svg/300px-University_of_Texas_at_Austin_seal.svg.png
+                url: https://www.utexas.edu/
+              designed_by:
+                name: 2i2c
+                url: https://2i2c.org
+              operated_by:
+                name: 2i2c
+                url: https://2i2c.org
+              funded_by:
+                name: JROST & IOI
+                url: https://investinopen.org/blog/jrost-rapid-response-fund-awardees
+        hub:
+          config:
+            Authenticator:
+              allowed_users: &utexas_demo_users
+                - <staff_github_ids>
+                - jameshowison
+              admin_users: *utexas_demo_users
+        singleuser:
+          storage:
+            extraVolumes:
+              - name: postgres-db
+                # No persistence for now, will be backed by a PVC later
+                emptyDir: {}
+          initContainers:
+            # /var/lib/postgresql should be writeable by uid 1000, so students
+            # can blow out their db directories if need to. Also lets postgres actually
+            # write to its data directory
+            - name: postgres-volume-mount-hack
+              image: busybox
+              command:
+                - sh
+                - -c
+                - "id && chown -R 1000:1000 /var/lib/postgresql && ls -lhd /var/lib/postgresql"
+              securityContext:
+                runAsUser: 0
+              volumeMounts:
+                - name: postgres-db
+                  mountPath: /var/lib/postgresql/data
+                  # postgres recommends against mounting a volume directly here
+                  # So we put data in a subpath
+                  subPath: data
+          extraContainers:
+            - name: postgres
+              image: postgres:9.6
+              resources:
+                limits:
+                  # Best effort only. No more than 1 CPU
+                  memory: 512Mi
+                  cpu: 1.0
+                requests:
+                  # If we don't set requests, k8s sets requests == limits!
+                  memory: 64Mi
+                  cpu: 0.01
+              env:
+                - name: POSTGRES_HOST_AUTH_METHOD
+                  value: "trust"
+                - name: POSTGRES_USER
+                  value: "jovyan"
+              securityContext:
+                runAsUser: 1000
+                fsGroup: 1000
+              volumeMounts:
+                - name: home
+                  mountPath: /home/jovyan
+                  subPath: "{username}"
+                - name: postgres-db
+                  mountPath: /var/lib/postgresql/data
+                  # postgres recommends against mounting a volume directly here
+                  # So we put data in a subpath
+                  subPath: data

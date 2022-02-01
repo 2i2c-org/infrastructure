@@ -65,9 +65,9 @@ linkcheck_ignore = [
     "https://howard.cloudbank.2i2c.cloud*",  # Temporarily ignore because we've changed the hub name
 ]
 
+
 def setup(app):
     app.add_css_file("custom.css")
-
 
 
 # -- Custom scripts -----------------------------------------
@@ -77,16 +77,19 @@ import pandas as pd
 from pathlib import Path
 import subprocess
 
+
 def render_hubs():
     # Grab the latest list of clusters defined in infrastructure/
-    clusters = Path("../config/hubs").glob("*")
+    clusters = Path("../config/clusters").glob("*")
     # Add list of repos managed outside infrastructure
-    hub_list = [{
-        'name': 'University of Toronto',
-        'domain': 'jupyter.utoronto.ca',
-        'id': 'utoronto',
-        'template': 'base-hub ([deployment repo](https://github.com/utoronto-2i2c/jupyterhub-deploy/))'
-    }]
+    hub_list = [
+        {
+            "name": "University of Toronto",
+            "domain": "jupyter.utoronto.ca",
+            "id": "utoronto",
+            "hub_type": "base-hub ([deployment repo](https://github.com/utoronto-2i2c/jupyterhub-deploy/))",
+        }
+    ]
     for cluster_info in clusters:
         if "schema" in cluster_info.name or "staff" in cluster_info.name:
             continue
@@ -102,24 +105,28 @@ def render_hubs():
             grafana_url = f"[{grafana_url}](http://{grafana_url})"
 
         # For each hub in cluster, grab its metadata and add it to the list
-        for hub in cluster['hubs']:
-            config = hub['config']
+        for hub in cluster["hubs"]:
+            config = hub["config"]
             # Config is sometimes nested
-            if 'basehub' in config:
-                hub_config = config['basehub']['jupyterhub']
+            if "basehub" in config:
+                hub_config = config["basehub"]["jupyterhub"]
             else:
-                hub_config = config['jupyterhub']
+                hub_config = config["jupyterhub"]
             # Domain can be a list
-            if isinstance(hub['domain'], list):
-                hub['domain'] = hub['domain'][0]
+            if isinstance(hub["domain"], list):
+                hub["domain"] = hub["domain"][0]
 
-            hub_list.append({
-                'name': hub_config['custom']['homepage']['templateVars']['org']['name'],
-                'domain': f"[{hub['domain']}](https://{hub['domain']})",
-                "id": hub['name'],
-                "template": hub['template'],
-                "grafana": grafana_url,
-            })
+            hub_list.append(
+                {
+                    "name": hub_config["custom"]["homepage"]["templateVars"]["org"][
+                        "name"
+                    ],
+                    "domain": f"[{hub['domain']}](https://{hub['domain']})",
+                    "id": hub["name"],
+                    "hub_type": hub["helm_chart"],
+                    "grafana": grafana_url,
+                }
+            )
     df = pd.DataFrame(hub_list)
     path_tmp = Path("tmp")
     path_tmp.mkdir(exist_ok=True)
@@ -128,18 +135,20 @@ def render_hubs():
 
 
 def render_tfdocs():
-    tf_path = Path('../terraform')
+    tf_path = Path("../terraform")
     # Output path is relative to terraform directory
-    output_path = Path('../docs/reference/terraform.md')
+    output_path = Path("../docs/reference/terraform.md")
 
-    # Template for output file is in ../terraform/.terraform-docs.yml
-    subprocess.check_call([
-        'terraform-docs', 'markdown',
-        f"--output-file={output_path}",
-        f'--config={str(tf_path / ".terraform-docs.yml")}',
-        str(tf_path)
-    ])
-
+    # hub_type for output file is in ../terraform/.terraform-docs.yml
+    subprocess.check_call(
+        [
+            "terraform-docs",
+            "markdown",
+            f"--output-file={output_path}",
+            f'--config={str(tf_path / ".terraform-docs.yml")}',
+            str(tf_path),
+        ]
+    )
 
 
 render_hubs()

@@ -5,9 +5,8 @@ While deploys generally go through our GitHub Actions workflow, sometimes you
 need to deploy from your laptop - primarily when testing changes on staging or
 actively fixing an outage. This isn't ideal, but this is where we are now.
 
-Our deployment scripts live in the [`deployer/`](https://github.com/2i2c-org/infrastructure/blob/master/deployer/)
-of this repository, and can deploy one or more hubs to our clusters. 
-
+Our deployment scripts live in the [`deployer/`](https://github.com/2i2c-org/infrastructure/tree/HEAD/deployer/)
+of this repository, and can deploy one or more hubs to our clusters.
 
 ## Setting up local environment
 
@@ -21,7 +20,7 @@ of this repository, and can deploy one or more hubs to our clusters.
    You can also use `conda` if you prefer instead.
 
 2. Install python packages required by our deployment script
-   
+
    ```bash
    pip install -r requirements.txt
    ```
@@ -54,10 +53,10 @@ of this repository, and can deploy one or more hubs to our clusters.
    ```
 
    The script will look for a hub named `<hub-name>` in the cluster config
-   defined at `config/hubs/<cluster-name>.cluster.yaml`.
+   defined at `config/clusters/<cluster-name>.cluster.yaml`.
 
 3. You can deploy to *all* hubs on a given cluster by omitting the hub name.
-   
+
    ```bash
    python3 deployer deploy <cluster-name>
    ```

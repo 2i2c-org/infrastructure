@@ -9,7 +9,7 @@ aws:
 hubs:
   - name: staging
     domain: staging.farallon.2i2c.cloud
-    template: daskhub
+    helm_chart: daskhub
     auth0:
       connection: github
     config: &hubConfig
@@ -155,7 +155,7 @@ hubs:
               c.KubeClusterConfig.idle_timeout = 1800
   - name: prod
     domain: farallon.2i2c.cloud
-    template: daskhub
+    helm_chart: daskhub
     auth0:
       connection: github
     config: *hubConfig

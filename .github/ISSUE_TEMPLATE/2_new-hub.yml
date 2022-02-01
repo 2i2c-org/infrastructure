@@ -215,11 +215,11 @@ body:
       required: false
 
   - type: input
-    id: hub-template
+    id: hub-type
     attributes:
-      label: Hub Template
+      label: Hub Type
       description: |
-        The configuration template that defines the basic infrastructure setup for the hub. There are two options:
+        The set configuration that defines the basic infrastructure setup for the hub. There are two options:
 
           1. `basehub`: a basic JupyterHub with a fairly standard setup.
           2. `daskhub`: a JupyterHub with a Dask Gateway enabled for scalable computing.

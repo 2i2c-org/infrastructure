@@ -179,7 +179,7 @@ have least amount of permissions possible.
       --group system:masters
    ```
 
-6. In your hub deployment file (`config/hubs/<your-cluster-name>.cluster.yaml`),
+6. In your hub deployment file (`config/clusters/<your-cluster-name>.cluster.yaml`),
    provide enough information for the deployer to find the correct credentials.
 
    ```yaml
@@ -204,6 +204,6 @@ Get the address the hub should use for connecting to NFS with
 ## Add the cluster to be automatically deployed
 
 The [CI deploy-hubs
-workflow](https://github.com/2i2c-org/pilot-hubs/blob/e96e7bcded187870dc2e07d6626de8a12586ed32/.github/workflows/deploy-hubs.yaml#L31-L36)
+workflow](https://github.com/2i2c-org/infrastructure/tree/HEAD/.github/workflows/deploy-hubs.yaml#L31-L36)
 contains the list of clusters being automatically deployed by our CI/CD system.
 Make sure there is an entry for new AWS cluster.

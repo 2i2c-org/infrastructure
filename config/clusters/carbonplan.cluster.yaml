@@ -1,7 +1,10 @@
-name: azure.carbonplan
-provider: kubeconfig
-kubeconfig:
-  file: secrets/azure.carbonplan.yaml
+name: carbonplan
+provider: aws
+aws:
+  key: secrets/carbonplan.json
+  clusterType: eks
+  clusterName: carbonplanhub
+  region: us-west-2
 support:
   config:
     prometheus:
@@ -13,35 +16,39 @@ support:
           limits:
             cpu: 4
             memory: 8Gi
+    cluster-autoscaler:
+      enabled: true
+      autoDiscovery:
+        clusterName: carbonplanhub
+      awsRegion: us-west-2
     grafana:
       ingress:
         hosts:
-          - grafana.azure.carbonplan.2i2c.cloud
+          - grafana.carbonplan.2i2c.cloud
         tls:
           - secretName: grafana-tls
             hosts:
-              - grafana.azure.carbonplan.2i2c.cloud
+              - grafana.carbonplan.2i2c.cloud
 hubs:
   - name: staging
-    domain: staging.azure.carbonplan.2i2c.cloud
-    template: daskhub
+    domain: staging.carbonplan.2i2c.cloud
+    helm_chart: daskhub
     auth0:
       connection: github
     config: &carbonPlanHubConfig
       basehub:
-        azureFile:
-          enabled: false
         nfs:
-          enabled: true
           pv:
-            # Recommended options from the Azure Portal UI for mounting the share
+            # from https://docs.aws.amazon.com/efs/latest/ug/mounting-fs-nfs-mount-settings.html
             mountOptions:
-              - vers=4
-              - minorversion=1
-              - sec=sys
-            serverIP: 2i2ccarbonplanhubstorage.file.core.windows.net
-            # Trailing slash is important!
-            baseShareName: /2i2ccarbonplanhubstorage/homes/
+              - rsize=1048576
+              - wsize=1048576
+              - timeo=600
+              - soft # We pick soft over hard, so NFS lockups don't lead to hung processes
+              - retrans=2
+              - noresvport
+            serverIP: fs-8a4e4f8d.efs.us-west-2.amazonaws.com
+            baseShareName: /
         jupyterhub:
           custom:
             homepage:
@@ -60,8 +67,9 @@ hubs:
                   name: Carbon Plan
                   url: https://carbonplan.org
           singleuser:
+            serviceAccountName: cloud-user-sa
             initContainers:
-              # Need to explicitly fix ownership here, since Azure File doesn't do anonuid
+              # Need to explicitly fix ownership here, since EFS doesn't do anonuid
               - name: volume-mount-ownership-fix
                 image: busybox
                 command:
@@ -77,63 +85,55 @@ hubs:
                     mountPath: /home/jovyan
                     subPath: "{username}"
             image:
-              name: carbonplan/cmip6-downscaling-single-user
+              name: carbonplan/trace-python-notebook
               tag: latest
             profileList:
               # The mem-guarantees are here so k8s doesn't schedule other pods
               # on these nodes.
-              - display_name: "Small: E2s v4"
+              - display_name: "Small: r5.large"
                 description: "~2 CPU, ~15G RAM"
                 kubespawner_override:
-                  # Explicitly unset mem_limit, so it overrides the default memory limit we set in
+                  # Expllicitly unset mem_limit, so it overrides the default memory limit we set in
                   # basehub/values.yaml
                   mem_limit: null
                   mem_guarantee: 12G
                   node_selector:
-                    hub.jupyter.org/node-size: Standard_E2s_v4
-              - display_name: "Medium: E4s v4"
+                    node.kubernetes.io/instance-type: r5.large
+              - display_name: "Medium: r5.xlarge"
                 description: "~4 CPU, ~30G RAM"
                 kubespawner_override:
                   mem_limit: null
-                  mem_guarantee: 27G
+                  mem_guarantee: 29G
                   node_selector:
-                    hub.jupyter.org/node-size: Standard_E4s_v4
-              - display_name: "Large: E8s v4"
+                    node.kubernetes.io/instance-type: r5.xlarge
+              - display_name: "Large: r5.2xlarge"
                 description: "~8 CPU, ~60G RAM"
                 kubespawner_override:
                   mem_limit: null
-                  mem_guarantee: 55G
+                  mem_guarantee: 60G
                   node_selector:
-                    hub.jupyter.org/node-size: Standard_E8s_v4
-              - display_name: "Huge: E32s v4"
+                    node.kubernetes.io/instance-type: r5.2xlarge
+              - display_name: "Huge: r5.8xlarge"
                 description: "~32 CPU, ~256G RAM"
                 kubespawner_override:
                   mem_limit: null
-                  mem_guarantee: 235G
+                  mem_guarantee: 240G
                   node_selector:
-                    hub.jupyter.org/node-size: Standard_E32s_v4
-              - display_name: "Very Huge: M64s v2"
-                description: "~64 CPU, ~1024G RAM"
+                    node.kubernetes.io/instance-type: r5.8xlarge
+              - display_name: "Very Huge: x1.16xlarge"
+                description: "~64 CPU, ~976G RAM"
                 kubespawner_override:
                   mem_limit: null
-                  mem_guarantee: 950G
+                  mem_guarantee: 940G
                   node_selector:
-                    hub.jupyter.org/node-size: Standard_M64s_v2
-              - display_name: "Very Very Huge: M128s v2"
-                description: "~128 CPU, ~2048G RAM"
+                    node.kubernetes.io/instance-type: x1.16xlarge
+              - display_name: "Very Very Huge: x1.32xlarge"
+                description: "~128 CPU, ~1952G RAM"
                 kubespawner_override:
                   mem_limit: null
-                  mem_guarantee: 1950G
+                  mem_guarantee: 1900G
                   node_selector:
-                    hub.jupyter.org/node-size: Standard_M128s_v2
-              - display_name: "GPU: NC16as T4 v3"
-                description: "~16 CPU, ~90G RAM"
-                kubespawner_override:
-                  image: "pangeo/ml-notebook:master"
-                  mem_limit: null
-                  mem_guarantee: 90G
-                  node_selector:
-                    hub.jupyter.org/node-size: Standard_NC16as_T4_v3
+                    node.kubernetes.io/instance-type: x1.32xlarge
           scheduling:
             userPlaceholder:
               enabled: false
@@ -159,6 +159,9 @@ hubs:
                 cpu: 1
                 memory: 4Gi
             allowNamedServers: true
+            networkPolicy:
+              # FIXME: For dask gateway
+              enabled: false
             readinessProbe:
               enabled: false
             nodeSelector: {}
@@ -167,8 +170,8 @@ hubs:
                 allowed_users: &users
                   - <staff_github_ids>
                   - jhamman
-                  - norlandrhagen
                 admin_users: *users
+
       dask-gateway:
         traefik:
           resources:
@@ -187,6 +190,13 @@ hubs:
               cpu: 2
               memory: 4Gi
         gateway:
+          backend:
+            scheduler:
+              extraPodConfig:
+                serviceAccountName: cloud-user-sa
+            worker:
+              extraPodConfig:
+                serviceAccountName: cloud-user-sa
           resources:
             requests:
               cpu: 0.5
@@ -194,9 +204,14 @@ hubs:
             limits:
               cpu: 2
               memory: 4Gi
+            # TODO: figure out a replacement for userLimits.
+          extraConfig:
+            idle: |
+              # timeout after 30 minutes of inactivity
+              c.KubeClusterConfig.idle_timeout = 1800
   - name: prod
-    domain: prod.azure.carbonplan.2i2c.cloud
-    template: daskhub
+    domain: carbonplan.2i2c.cloud
+    helm_chart: daskhub
     auth0:
       connection: github
     config: *carbonPlanHubConfig

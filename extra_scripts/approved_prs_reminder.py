@@ -36,7 +36,7 @@ if len(msg) > 0:
     # Print to output in a way that will store as an environment variable
     print(f"Found PRs with old approvals, sending Slack message: \n===\n{msg}")
     print(f"::set-output name=PRS_MESSAGE::'{msg}'")
-    print(f"::set-output name=DO_SEND_MESSAGE::TRUE")
+    print("::set-output name=DO_SEND_MESSAGE::TRUE")
 else:
     print("No PRs with old approvals found, not sending Slack message")
-    print(f"::set-output name=DO_SEND_MESSAGE::FALSE")
+    print("::set-output name=DO_SEND_MESSAGE::FALSE")
