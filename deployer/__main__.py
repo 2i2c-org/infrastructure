@@ -28,7 +28,7 @@ def deploy_support(cluster_name):
     validate(cluster_name)
 
     config_file_path = (
-        Path(os.getcwd()) / "config/clusters" / f"{cluster_name}.cluster.yaml"
+        Path(os.getcwd()) / "config/clusters"/ cluster_name / f"{cluster_name}.cluster.yaml"
     )
     with open(config_file_path) as f:
         cluster = Cluster(yaml.load(f))
@@ -47,7 +47,7 @@ def deploy_jupyterhub_grafana(cluster_name):
     validate(cluster_name)
 
     config_file_path = (
-        Path(os.getcwd()) / "config/clusters" / f"{cluster_name}.cluster.yaml"
+        Path(os.getcwd()) / "config/clusters" / cluster_name / f"{cluster_name}.cluster.yaml"
     )
     with open(config_file_path) as f:
         cluster = Cluster(yaml.load(f))
@@ -158,7 +158,7 @@ def deploy(cluster_name, hub_name, skip_hub_health_test, config_path):
     SECRET_KEY = bytes.fromhex(config["secret_key"])
 
     config_file_path = (
-        Path(os.getcwd()) / "config/clusters" / f"{cluster_name}.cluster.yaml"
+        Path(os.getcwd()) / "config/clusters" / cluster_name / f"{cluster_name}.cluster.yaml"
     )
     with open(config_file_path) as f:
         cluster = Cluster(yaml.load(f))
@@ -178,7 +178,7 @@ def deploy(cluster_name, hub_name, skip_hub_health_test, config_path):
 def validate(cluster_name):
     cluster_dir = Path(os.getcwd()) / "config/clusters"
     schema_file = cluster_dir / "schema.yaml"
-    config_file = cluster_dir / f"{cluster_name}.cluster.yaml"
+    config_file = cluster_dir / cluster_name / f"{cluster_name}.cluster.yaml"
     with open(config_file) as cf, open(schema_file) as sf:
         cluster_config = yaml.load(cf)
         schema = yaml.load(sf)
