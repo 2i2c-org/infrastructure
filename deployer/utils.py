@@ -75,7 +75,7 @@ def replace_staff_placeholder(user_list, staff):
 def update_authenticator_config(config, helm_chart):
     """Prepare a hub's configuration file for deployment."""
     # Load the staff config file
-    with open("config/clusters/staff.yaml") as f:
+    with open("config/staff.yaml") as f:
         staff = yaml.load(f)
 
     if "basehub" in helm_chart:
