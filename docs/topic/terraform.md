@@ -37,7 +37,7 @@ If you can't find the workspace you're looking for, double check you've enabled 
 
 For some projects where we don't have access to using our 2i2c accounts, e.g. universities that require us to have specific university-affiliated identities, we can configure different backends to access the terraform state stored in those projects.
 Working this way saves us the pain of trying to work with terraform using two different authentications.
-The backend configs are stored in [`terraform/backends`](https://github.com/2i2c-org/infrastructure/tree/master/terraform/backends) and can be used by running `terraform init -backend-config=backends/NAME_OF_CHOSEN_BACKEND -reconfigure`.
+The backend configs are stored in [`terraform/backends`](https://github.com/2i2c-org/infrastructure/tree/HEAD/terraform/backends) and can be used by running `terraform init -backend-config=backends/NAME_OF_CHOSEN_BACKEND -reconfigure`.
 For example, for our Pangeo projects, run:
 
 ```bash

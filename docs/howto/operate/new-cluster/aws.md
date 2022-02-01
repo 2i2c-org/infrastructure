@@ -204,6 +204,6 @@ Get the address the hub should use for connecting to NFS with
 ## Add the cluster to be automatically deployed
 
 The [CI deploy-hubs
-workflow](https://github.com/2i2c-org/infrastructure/blob/master/.github/workflows/deploy-hubs.yaml#L31-L36)
+workflow](https://github.com/2i2c-org/infrastructure/tree/HEAD/.github/workflows/deploy-hubs.yaml#L31-L36)
 contains the list of clusters being automatically deployed by our CI/CD system.
 Make sure there is an entry for new AWS cluster.

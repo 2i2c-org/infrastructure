@@ -13,7 +13,7 @@ The machines where the core nodes run, are different than the ones on which the 
 The type of these machines is chosen based on the number, type, and the resource needs (CPU, memory, etc.) of the pods that will be scheduled to run on these nodes.
 Because of this resource dependance, these types might be adjusted in the future.
 You can checkout the exact type of the core and user nodes VMs in the `terraform` config for each cloud provider.
-For example, here is the [`terraform` config for Google Cloud](https://github.com/2i2c-org/infrastructure/blob/master/terraform/gcp/variables.tf).
+For example, here is the [`terraform` config for Google Cloud](https://github.com/2i2c-org/infrastructure/tree/HEAD/terraform/gcp/variables.tf).
 
 ## Freeing up a node
 
@@ -34,11 +34,11 @@ Sometimes you might need to delete or to perform maintenance on a node in the cl
     * Pods created by [ReplicaSet](https://kubernetes.io/docs/concepts/workloads/controllers/replicaset/) objects, through [Deployments](https://kubernetes.io/docs/concepts/workloads/controllers/deployment/)
 
         Once deleted, these Pods will get re-created and assigned to a different node (because the current node it's cordoned).
-        The [hub, proxy](https://github.com/2i2c-org/infrastructure/blob/master/helm-charts/basehub/Chart.yaml) and the [docs service](https://github.com/2i2c-org/infrastructure/blob/master/helm-charts/basehub/templates/docs-service-deployment.yaml) are some examples of such pods.
+        The [hub, proxy](https://github.com/2i2c-org/infrastructure/tree/HEAD/helm-charts/basehub/Chart.yaml) and the [docs service](https://github.com/2i2c-org/infrastructure/tree/HEAD/helm-charts/basehub/templates/docs-service-deployment.yaml) are some examples of such pods.
     * Pods created by [DaemonSet](https://kubernetes.io/docs/concepts/workloads/controllers/daemonset/) objects.
 
         These run on every node, regardless of their `cordon` status. So, they don't need to be deleted, otherwise, they will be re-created on the same cordoned node.
-        The [prometheus node-exporter](https://github.com/prometheus-community/helm-charts/blob/main/charts/prometheus-node-exporter/templates/daemonset.yaml) configured [here](https://github.com/2i2c-org/infrastructure/blob/master/helm-charts/support/values.yaml#L12), is an example of such a pod.
+        The [prometheus node-exporter](https://github.com/prometheus-community/helm-charts/blob/main/charts/prometheus-node-exporter/templates/daemonset.yaml) configured [here](https://github.com/2i2c-org/infrastructure/tree/HEAD/helm-charts/support/values.yaml#L12), is an example of such a pod.
     * Pods **not** controlled by a Controller
 
         These are usually the user pods and shouldn't be deleted, as they would disrupt the user. Instead, these will be taken down by the [idle culler](https://github.com/jupyterhub/jupyterhub-idle-culler) when they're in an idle state.
