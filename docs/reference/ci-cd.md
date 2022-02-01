@@ -1,7 +1,7 @@
 # Our CI/CD system
 
 The best place to learn about the latest state of our *automatic* hub deployment
-is to look at [the `deploy-hubs.yaml` GitHub workflow](https://github.com/2i2c-org/pilot-hubs/tree/HEAD/.github/workflows/deploy-hubs.yaml).
+is to look at [the `deploy-hubs.yaml` GitHub workflow](https://github.com/2i2c-org/infrastructure/tree/HEAD/.github/workflows/deploy-hubs.yaml).
 That workflow defines the automatic hub deployment for many of our major clusters.
 
 Currently, our CI/CD system is triggered on pushes to the default branch when any of the
