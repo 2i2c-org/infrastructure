@@ -31,7 +31,7 @@ The _minimum_ inputs this file requires are:
 - `project_id`: GCP Project ID to create resources in.
   Should be the id, rather than display name of the project.
 
-See the [variables file](https://github.com/2i2c-org/infrastructure/blob/HEAD/terraform/gcp/variables.tf) for other inputs this file can take and their descriptions.
+See the [variables file](https://github.com/2i2c-org/infrastructure/tree/HEAD/terraform/gcp/variables.tf) for other inputs this file can take and their descriptions.
 
 Example `.tfvars` file:
 
@@ -65,7 +65,7 @@ The _minimum_ inputs this file requires are:
 
 - `ssh_pub_key`: The public half of an SSH key that will be authorised to login to nodes.
 
-See the [variables file](https://github.com/2i2c-org/infrastructure/blob/HEAD/terraform/azure/variables.tf) for other inputs this file can take and their descriptions.
+See the [variables file](https://github.com/2i2c-org/infrastructure/tree/HEAD/terraform/azure/variables.tf) for other inputs this file can take and their descriptions.
 
 ```{admonition} Naming Convention Guidelines for Container Registries and Storage Accounts
 

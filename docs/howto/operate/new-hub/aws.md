@@ -25,7 +25,7 @@ Follow the steps outlined in [](new-hub:deploy) with the following modifications
 1. Generate a new config file for your hubs if there is not an existing one.
 
    You can use one of the existing hub config files as a "template" for your hubs (for
-   example, [here is the Farallon Institute config file](https://github.com/2i2c-org/infrastructure/blob/master/config/clusters/farallon.cluster.yaml)).
+   example, [here is the Farallon Institute config file](https://github.com/2i2c-org/infrastructure/tree/HEAD/config/clusters/farallon.cluster.yaml)).
    You may need to tweak names, `serverIP` and singleuser's images references.
    Make sure you set up the `profileList` section to be compatible with your kops cluster
    (ie. match the `node_selector` with the proper `instance-type`).
