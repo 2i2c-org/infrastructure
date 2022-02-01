@@ -1,6 +1,6 @@
 # Add a hub to an AWS `kops`-based cluster
 
-The idea behind this guide is showcase the process of setting up a 
+The idea behind this guide is showcase the process of setting up a
 [kops](https://kops.sigs.k8s.io/getting_started/aws/)-based AWS
 cluster and manually deploy a new hub on top of it using our deployer tool.
 This is a preliminary but fully functional and semi-automatic process. Eventually, we
@@ -25,7 +25,7 @@ Follow the steps outlined in [](new-hub:deploy) with the following modifications
 1. Generate a new config file for your hubs if there is not an existing one.
 
    You can use one of the existing hub config files as a "template" for your hubs (for
-   example, [here is the Farallon Institute config file](https://github.com/2i2c-org/pilot-hubs/blob/master/config/hubs/farallon.cluster.yaml)).
+   example, [here is the Farallon Institute config file](https://github.com/2i2c-org/infrastructure/blob/master/config/clusters/farallon.cluster.yaml)).
    You may need to tweak names, `serverIP` and singleuser's images references.
    Make sure you set up the `profileList` section to be compatible with your kops cluster
    (ie. match the `node_selector` with the proper `instance-type`).

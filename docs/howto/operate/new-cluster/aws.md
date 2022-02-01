@@ -179,7 +179,7 @@ have least amount of permissions possible.
       --group system:masters
    ```
 
-6. In your hub deployment file (`config/hubs/<your-cluster-name>.cluster.yaml`),
+6. In your hub deployment file (`config/clusters/<your-cluster-name>.cluster.yaml`),
    provide enough information for the deployer to find the correct credentials.
 
    ```yaml

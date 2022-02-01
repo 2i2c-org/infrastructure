@@ -9,7 +9,7 @@ at `https://<hub-address>/services/docs`. This can be a great tool to provide hu
 To enable the docs service service for a hub:
 
 1. Mark it as *enabled* by setting `hubs.<hub>.config.docs_service.enabled` to *True* in the
-   appropriate file under `config/hubs`.
+   appropriate file under `config/clusters`.
 2. Specify the GitHub repository where the static HTML files are hosted, by setting `hubs.<hub>.config.docs_service.repo`.
 3. Specify the GitHub branch of the respository where the static HTML files are hosted, by setting `hubs.<hub>.config.docs_service.branch`.
 
