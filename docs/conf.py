@@ -80,7 +80,7 @@ import subprocess
 
 def render_hubs():
     # Grab the latest list of clusters defined in infrastructure/
-    clusters = Path("../config/hubs").glob("*")
+    clusters = Path("../config/clusters").glob("*")
     # Add list of repos managed outside infrastructure
     hub_list = [
         {

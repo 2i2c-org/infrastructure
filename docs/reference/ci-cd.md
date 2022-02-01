@@ -13,7 +13,7 @@ following paths are modified:
 - requirements.txt
 - dev-requirements.txt
 - config/secrets.yaml
-- config/hubs/**
+- config/clusters/**
 - .github/workflows/deploy-hubs.yaml
 - .github/actions/deploy/**
 ```

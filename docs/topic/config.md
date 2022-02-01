@@ -12,7 +12,7 @@ for each hub.
 | Upstream defaults from z2jh | z2jh maintainers | [`helm-charts/basehub/Chart.yaml`](https://github.com/2i2c-org/infrastructure/blob/master/helm-charts/basehub/Chart.yaml) lists the z2jh version. Most of our configuration is directly from upstream |
 | [`helm-charts/basehub/values.yaml`](https://github.com/2i2c-org/infrastructure/blob/master/helm-charts/basehub/values.yaml) | 2i2c engineers | Common to all hubs run from this repo |
 | [Deployment script](https://github.com/2i2c-org/infrastructure/blob/master/deployer) | 2i2c engineers | Programmatic overrides for each type of hub, particularly around Auth0 integration and home page customization |
-| [`config/hubs` (previously `hubs.yaml`)](https://github.com/2i2c-org/infrastructure/blob/master/config/hubs) | 2i2c engineers | Specific to each hub. There is one YAML file per cluster, and each cluster can have multiple hubs deployed.  [`config/hubs/schema.yaml`](https://github.com/2i2c-org/infrastructure/blob/master/config/hubs/schema.yaml) contains documentation and validation information for fields in this set of configuration. |
+| [`config/clusters` (previously `hubs.yaml`)](https://github.com/2i2c-org/infrastructure/blob/master/config/clusters) | 2i2c engineers | Specific to each hub. There is one YAML file per cluster, and each cluster can have multiple hubs deployed.  [`config/clusters/schema.yaml`](https://github.com/2i2c-org/infrastructure/blob/master/config/clusters/schema.yaml) contains documentation and validation information for fields in this set of configuration. |
 | [Configurator schema defaults](https://github.com/2i2c-org/infrastructure/blob/master/helm-charts/basehub/values.yaml#L143) | 2i2c engineers | **If** there is a default set in the schema for available options in the configurator, it will always override the config elsewhere in our YAML files |
 | Configurator | Hub admins | If hub admins 'unset' a value, it should go to what's configured via our yaml files|
 
@@ -27,7 +27,7 @@ pieces of config people want to know values for, and where you can find them.
 The default memory limit and guarantee for all users across all our hubs is set
 in [`helm-charts/basehub/values.yaml`](https://github.com/2i2c-org/infrastructure/blob/master/helm-charts/basehub/values.yaml#L104),
 under `jupyterhub.singleuser.memory`. This is sometimes overriden on a per-hub
-basis in the config for the hub under [`config/hubs`](https://github.com/2i2c-org/infrastructure/blob/master/config/hubs)
+basis in the config for the hub under [`config/clusters`](https://github.com/2i2c-org/infrastructure/blob/master/config/clusters)
 
 ### 2i2c staff lists
 
@@ -39,4 +39,4 @@ When a new hub is created, we use one of these two placeholders to add 2i2c staf
 
 When a hub is deployed, these placeholders are removed, and the usernames corresponding to the correct staff list are added to the hub's Admin and Allowed users.
 
-You can find the list of staff usernames at [`config/hubs/staff.yaml`](https://github.com/2i2c-org/pilot-hubs/blob/master/config/hubs/staff.yaml).
+You can find the list of staff usernames at [`config/clusters/staff.yaml`](https://github.com/2i2c-org/infrastructure/blob/master/config/clusters/staff.yaml).

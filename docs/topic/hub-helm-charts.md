@@ -27,7 +27,7 @@ Currently there are two hub helm charts available:
 
 ## Use the helm charts to deploy a new hub
 
-To deploy a new hub, you only need to add it to the appropriate configuration file under `config/hubs`.
+To deploy a new hub, you only need to add it to the appropriate configuration file under `config/clusters`.
 This configuration file allows specifying options like the type of helm chart to use for the hub being added,
 the hub domain, how the JupyterHub landing page will look like and authentication preferences.
 
@@ -42,7 +42,7 @@ subcharts of the daskhub.
 % The editable version of the diagram is here: https://docs.google.com/presentation/d/1KMyrTd3wdR715tPGuzIHkHqScXBlLpeiksIM2x7EI0g/edit?usp=sharing
 
 This hierachy is the reason why when adding a new hub using the `daskhub`
-specific configuration under `config/hubs` needs to be nested under a `basehub` key, indicating that we are overriding configuration
+specific configuration under `config/clusters` needs to be nested under a `basehub` key, indicating that we are overriding configuration
 from the *basehub/jupyterhub* parent chart.
 
 Read more about subcharts and how to configure them in the [Helm docs](https://helm.sh/docs/chart_template_guide/subcharts_and_globals/#overriding-values-from-a-parent-chart).

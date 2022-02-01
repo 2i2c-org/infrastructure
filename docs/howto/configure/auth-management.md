@@ -74,7 +74,7 @@ Presently, this involves a few more manual steps than the `auth0` setup describe
    - The authorisation callback URL is the homepage url appended with `/hub/oauth_callback`. For example, `staging.pilot.2i2c.cloud/hub/oauth_callback`.
    - Once you have created the OAuth app, make a new of the client ID, generate a client secret and then hold on to these values for a future step
 
-2. **Create or update the appropriate secret config file under `secrets/config/hubs/*.cluster.yaml`.**
+2. **Create or update the appropriate secret config file under `secrets/config/clusters/*.cluster.yaml`.**
    You should add the following config to this file, pasting in the client ID and secret you generated in step 1.
 
     ```yaml
@@ -106,10 +106,10 @@ Presently, this involves a few more manual steps than the `auth0` setup describe
     ```{note}
     Make sure this is encrypted with `sops` before committing it to the repository!
 
-    `sops -i -e secrets/config/hubs/*.cluster.yaml`
+    `sops -i -e secrets/config/clusters/*.cluster.yaml`
     ```
 
-3. **Edit the non-secret config under `config/hubs`.**
+3. **Edit the non-secret config under `config/clusters`.**
    You should make sure the matching hub config takes one of the following forms.
 
    ```{admonition} Removing allowed users
