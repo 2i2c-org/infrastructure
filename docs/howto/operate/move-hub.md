@@ -147,7 +147,7 @@ AzureFile needs to be mounted in the source NFS VM in order to copy the data.
         kubectl config use-context <the-desired-context>
         ```
 
-   3. Ssh into the source NFS VM using the [`./terraform/proxycommand.py`](https://github.com/2i2c-org/infrastructure/blob/master/terraform/azure/proxycommand.py) script, passing it the private key from step 1, the authorized user to connect to the VM using this key pair (this is usually `hubadmin` or `hub-admin`, and can be found in the [terraform config](https://github.com/2i2c-org/infrastructure/blob/master/terraform/azure/main.tf#L63) [`azurerm_kubernetes_cluster.linux_profile.admin_username`](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/kubernetes_cluster#admin_username)), and the address of the NFS VM.
+   3. Ssh into the source NFS VM using the [`./terraform/proxycommand.py`](https://github.com/2i2c-org/infrastructure/tree/HEAD/terraform/azure/proxycommand.py) script, passing it the private key from step 1, the authorized user to connect to the VM using this key pair (this is usually `hubadmin` or `hub-admin`, and can be found in the [terraform config](https://github.com/2i2c-org/infrastructure/tree/HEAD/terraform/azure/main.tf#L63) [`azurerm_kubernetes_cluster.linux_profile.admin_username`](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/kubernetes_cluster#admin_username)), and the address of the NFS VM.
       ```bash
       ssh -i secrets/ssh-key.unsafe -o 'ProxyCommand=./terraform/proxycommand.py %h %p' <admin-username>@<nfs-server-address>
       ```
@@ -182,7 +182,7 @@ AzureFile needs to be mounted in the source NFS VM in order to copy the data.
 ```{note}
 If the total size of the home directories is considerable, then copying the files from one cluster to another might take a long time. So make sure you have enough time to perform this operation and check the transfer rates once the data transfer starts.
 
-Tip: You can use [this script](https://github.com/2i2c-org/infrastructure/blob/HEAD/extra_scripts/rsync-active-users.py) that performs a parallel `rsync` of home directories for active users only.
+Tip: You can use [this script](https://github.com/2i2c-org/infrastructure/tree/HEAD/extra_scripts/rsync-active-users.py) that performs a parallel `rsync` of home directories for active users only.
 ```
 
 

@@ -45,7 +45,8 @@ these rate limits. We recommend the following image repositories:
 
 ## Configuring your hub to use the custom image
 
-The hub config under `config/hubs` can contain arbitry [`zero to jupyterhub on kubernetes`](https://zero-to-jupyterhub.readthedocs.io/en/stable/resources/reference.html)
+A hub config in a `config/clusters/*.cluster.yaml` file can contain arbitrary
+[`zero to jupyterhub on kubernetes`](https://zero-to-jupyterhub.readthedocs.io/en/stable/resources/reference.html)
 config, so we can use that to set the image name & tag. Here is some example config, with only
 the useful bits.
 

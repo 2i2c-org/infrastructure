@@ -17,7 +17,7 @@ However, we should update this documentation to include the other major cloud pr
 
 First, you'll need to access the Google Cloud projects on which the hubs run. You
 can find the current list of active projects by examining the `gcp.project`
-values in the files under `config/hubs/*.cluster.yaml`.
+values in the files under `config/clusters/*.cluster.yaml`.
 
 ## Commandline tools installation
 
@@ -44,9 +44,9 @@ gcloud container clusters get-credentials <cluster-name> --region <region> --pro
 ```
 
 You can get authoritative information for `<cluster-name>`, `<zone>` and `<project-name>` from
-files under `config/hubs`.
+files under `config/clusters`.
 
-With that, `kubectl` and `helm` should now work! 
+With that, `kubectl` and `helm` should now work!
 
 ## (Optional) Access via Google Cloud Shell
 

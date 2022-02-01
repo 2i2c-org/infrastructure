@@ -1,7 +1,7 @@
 # 2i2c Infrastructure Guide
 
 This is documentation about the infrastructure behind 2i2c's Managed JupyterHubs Service.
-The goal of this stack is to automatically deploy JupyterHubs in the cloud with configuration from `config/hubs`.
+The goal of this stack is to automatically deploy JupyterHubs in the cloud with configuration from `config/clusters`.
 
 :::{note}
 This documentation is primarily for the 2i2c Open Engineering team.
