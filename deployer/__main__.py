@@ -86,7 +86,9 @@ def deploy_grafana_dashboards(cluster_name):
 
     # Check the secret file exists before continuing
     if not os.path.exists(secret_config_file):
-        raise FileExistsError(f"File does not exist! Please create it and try again: {secret_config_file}")
+        raise FileExistsError(
+            f"File does not exist! Please create it and try again: {secret_config_file}"
+        )
 
     # Read the cluster specific secret config file
     with decrypt_file(secret_config_file) as decrypted_file_path:
@@ -95,7 +97,9 @@ def deploy_grafana_dashboards(cluster_name):
 
     # Check GRAFANA_TOKEN exists in the secret config file before continuing
     if "grafana_token" not in config.keys():
-        raise ValueError(f"`grafana_token` not provided in secret file! Please add it and try again: {secret_config_file}")
+        raise ValueError(
+            f"`grafana_token` not provided in secret file! Please add it and try again: {secret_config_file}"
+        )
 
     # Get the url where grafana is running from the cluster config
     grafana_url = (
@@ -234,20 +238,36 @@ def main():
         infrastructure
         """
     )
-    subparsers = argparser.add_subparsers(required=True, dest="action", help="Available subcommands")
+    subparsers = argparser.add_subparsers(
+        required=True, dest="action", help="Available subcommands"
+    )
 
-    #=== Arguments and options shared across subcommands go here ===#
+    # === Arguments and options shared across subcommands go here ===#
     # NOTE: If you we do not add a base_parser here with the add_help=False
     #       option, then we see a "conflicting option strings" error when
     #       running `python deployer --help`
     base_parser = argparse.ArgumentParser(add_help=False)
-    base_parser.add_argument("cluster_name", type=str, help="The name of the cluster to authenticate against and perform actions on")
+    base_parser.add_argument(
+        "cluster_name",
+        type=str,
+        help="The name of the cluster to authenticate against and perform actions on",
+    )
 
-    #=== Add new subcommands in this section ===#
+    # === Add new subcommands in this section ===#
     # Deploy subcommand
-    deploy_parser = subparsers.add_parser("deploy", parents=[base_parser], help="Install/upgrade the helm charts of JupyterHubs on a cluster")
-    deploy_parser.add_argument("hub_name", nargs="?", help="The hub, or list of hubs, to install/upgrade the helm chart for")
-    deploy_parser.add_argument("--skip-hub-health-test", action="store_true", help="Bypass the hub health test")
+    deploy_parser = subparsers.add_parser(
+        "deploy",
+        parents=[base_parser],
+        help="Install/upgrade the helm charts of JupyterHubs on a cluster",
+    )
+    deploy_parser.add_argument(
+        "hub_name",
+        nargs="?",
+        help="The hub, or list of hubs, to install/upgrade the helm chart for",
+    )
+    deploy_parser.add_argument(
+        "--skip-hub-health-test", action="store_true", help="Bypass the hub health test"
+    )
     deploy_parser.add_argument(
         "--config-path",
         help="File to read secret deployment configuration from",
@@ -255,17 +275,33 @@ def main():
     )
 
     # Validate subcommand
-    validate_parser = subparsers.add_parser("validate", parents=[base_parser], help="Validate the cluster configuration against a JSON schema")
+    validate_parser = subparsers.add_parser(
+        "validate",
+        parents=[base_parser],
+        help="Validate the cluster configuration against a JSON schema",
+    )
 
     # deploy-support subcommand
-    deploy_support_parser = subparsers.add_parser("deploy-support", parents=[base_parser], help="Install/upgrade the support helm release on a given cluster")
+    deploy_support_parser = subparsers.add_parser(
+        "deploy-support",
+        parents=[base_parser],
+        help="Install/upgrade the support helm release on a given cluster",
+    )
 
     # deploy-grafana-dashboards subcommand
-    deploy_grafana_dashboards_parser = subparsers.add_parser("deploy-grafana-dashboards", parents=[base_parser], help="Deploy grafana dashboards to a cluster for monitoring JupyterHubs. deploy-support must be run first!")
+    deploy_grafana_dashboards_parser = subparsers.add_parser(
+        "deploy-grafana-dashboards",
+        parents=[base_parser],
+        help="Deploy grafana dashboards to a cluster for monitoring JupyterHubs. deploy-support must be run first!",
+    )
 
     # Auth subcommand
-    auth_parser = subparsers.add_parser("auth", parents=[base_parser], help="Authenticate against a cluster using deployer credentials to gain quick command line access")
-    #=== End section ===#
+    auth_parser = subparsers.add_parser(
+        "auth",
+        parents=[base_parser],
+        help="Authenticate against a cluster using deployer credentials to gain quick command line access",
+    )
+    # === End section ===#
 
     args = argparser.parse_args()
 
