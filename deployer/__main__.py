@@ -20,7 +20,12 @@ yaml = YAML(typ="safe", pure=True)
 
 def setup_cluster_credentials(cluster_name):
     """
-    Quickly gain command-line access to a cluster using deployer credentials
+    Quickly gain command-line access to a cluster by udpating the current
+    kubeconfig file to use the deployer's access credentials for the named
+    cluster.
+
+    This function is to be used with the `setup-cluster-credentials` CLI
+    command only - it is not used by the rest of the deployer codebase.
     """
 
     # Validate our config with JSON Schema first before continuing
@@ -251,7 +256,7 @@ def main():
     base_parser.add_argument(
         "cluster_name",
         type=str,
-        help="The name of the cluster to authenticate against and perform actions on",
+        help="The name of the cluster to perform actions on",
     )
 
     # === Add new subcommands in this section ===#
