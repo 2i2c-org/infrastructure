@@ -208,33 +208,41 @@ def validate(cluster_name):
 
 
 def main():
-    argparser = argparse.ArgumentParser()
-    argparser.add_argument(
-        "--config-path",
-        help="Read deployment config from this file",
-        default="deployment.config.yaml",
+    argparser = argparse.ArgumentParser(
+        description="""A command line tool to perform various functions related
+        to deploying and maintaining a JupyterHub running on kubernetes
+        infrastructure
+        """
     )
-    subparsers = argparser.add_subparsers(dest="action")
+    subparsers = argparser.add_subparsers(required=True, dest="action", help="Available subcommands")
 
-    deploy_parser = subparsers.add_parser("deploy")
-    validate_parser = subparsers.add_parser("validate")
-    deploy_support_parser = subparsers.add_parser("deploy-support")
-    deploy_grafana_dashboards_parser = subparsers.add_parser("deploy-grafana-dashboards")
+    #=== Arguments and options shared across subcommands go here ===#
+    # NOTE: If you we do not add a base_parser here with the add_help=False
+    #       option, then we see a "conflicting option strings" error when
+    #       running `python deployer --help`
+    base_parser = argparse.ArgumentParser(add_help=False)
+    base_parser.add_argument("cluster_name", type=str, help="The name of the cluster to authenticate against and perform actions on")
 
-    deploy_parser.add_argument("cluster_name")
-    deploy_parser.add_argument("hub_name", nargs="?")
-    deploy_parser.add_argument("--skip-hub-health-test", action="store_true")
+    #=== Add new subcommands in this section ===#
+    # Deploy subcommand
+    deploy_parser = subparsers.add_parser("deploy", parents=[base_parser], help="Install/upgrade the helm charts of JupyterHubs on a cluster")
+    deploy_parser.add_argument("hub_name", nargs="?", help="The hub, or list of hubs, to install/upgrade the helm chart for")
+    deploy_parser.add_argument("--skip-hub-health-test", action="store_true", help="Bypass the hub health test")
     deploy_parser.add_argument(
         "--config-path",
-        help="Read deployment config from this file",
+        help="File to read secret deployment configuration from",
         default="config/secrets.yaml",
     )
 
-    validate_parser.add_argument("cluster_name")
+    # Validate subcommand
+    validate_parser = subparsers.add_parser("validate", parents=[base_parser], help="Validate the cluster configuration against a JSON schema")
 
-    deploy_support_parser.add_argument("cluster_name")
+    # deploy-support subcommand
+    deploy_support_parser = subparsers.add_parser("deploy-support", parents=[base_parser], help="Install/upgrade the support helm release on a given cluster")
 
-    deploy_grafana_dashboards_parser.add_argument("cluster_name")
+    # deploy-grafana-dashboards subcommand
+    deploy_grafana_dashboards_parser = subparsers.add_parser("deploy-grafana-dashboards", parents=[base_parser], help="Deploy grafana dashboards to a cluster for monitoring JupyterHubs. deploy-support must be run first!")
+    #=== End section ===#
 
     args = argparser.parse_args()
 
@@ -251,11 +259,6 @@ def main():
         deploy_support(args.cluster_name)
     elif args.action == "deploy-grafana-dashboards":
         deploy_grafana_dashboards(args.cluster_name)
-    else:
-        # Print help message and exit when no arguments are passed
-        # FIXME: Is there a better way to do this?
-        print(argparser.format_help(), file=sys.stderr)
-        sys.exit(1)
 
 
 if __name__ == "__main__":
