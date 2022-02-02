@@ -66,6 +66,9 @@ def deploy_grafana_dashboards(cluster_name):
     """
     Deploy grafana dashboards to a cluster that provide useful metrics
     for operating a JupyterHub
+
+    Grafana dashboards and deployment mechanism in question are maintained in
+    this repo: https://github.com/jupyterhub/grafana-dashboards
     """
 
     # Validate our config with JSON Schema first before continuing
