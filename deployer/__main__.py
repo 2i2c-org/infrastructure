@@ -20,9 +20,9 @@ yaml = YAML(typ="safe", pure=True)
 
 def setup_cluster_credentials(cluster_name):
     """
-    Quickly gain command-line access to a cluster by udpating the current
-    kubeconfig file to use the deployer's access credentials for the named
-    cluster.
+    Quickly gain command-line access to a cluster by updating the current
+    kubeconfig file to include the deployer's access credentials for the named
+    cluster and mark it as the cluster to work against by default.
 
     This function is to be used with the `setup-cluster-credentials` CLI
     command only - it is not used by the rest of the deployer codebase.
@@ -304,7 +304,7 @@ def main():
         help="Deploy grafana dashboards to a cluster for monitoring JupyterHubs. deploy-support must be run first!",
     )
 
-    # setup-cluster_-redentials subcommand
+    # setup-cluster-credentials subcommand
     setup_cluster_credentials_parser = subparsers.add_parser(
         "setup-cluster-credentials",
         parents=[base_parser],
