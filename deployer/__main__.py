@@ -33,7 +33,7 @@ def auth(cluster_name):
     with open(config_file_path) as f:
         cluster = Cluster(yaml.load(f))
 
-    # Cluster.auth() method is has the context manager decorator so cannot call
+    # Cluster.auth() method has the context manager decorator so cannot call
     # it like a normal function
     with cluster.auth():
         return None
