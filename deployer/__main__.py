@@ -18,7 +18,7 @@ from utils import decrypt_file, update_authenticator_config, print_colour
 yaml = YAML(typ="safe", pure=True)
 
 
-def auth(cluster_name):
+def setup_cluster_credentials(cluster_name):
     """
     Quickly gain command-line access to a cluster using deployer credentials
     """
@@ -296,11 +296,11 @@ def main():
         help="Deploy grafana dashboards to a cluster for monitoring JupyterHubs. deploy-support must be run first!",
     )
 
-    # Auth subcommand
-    auth_parser = subparsers.add_parser(
-        "auth",
+    # setup-cluster_-redentials subcommand
+    setup_cluster_credentials_parser = subparsers.add_parser(
+        "setup-cluster-credentials",
         parents=[base_parser],
-        help="Authenticate against a cluster using deployer credentials to gain quick command line access",
+        help="Modify the current kubeconfig with the deployer's access credentials for the named cluster",
     )
     # === End section ===#
 
@@ -319,8 +319,8 @@ def main():
         deploy_support(args.cluster_name)
     elif args.action == "deploy-grafana-dashboards":
         deploy_grafana_dashboards(args.cluster_name)
-    elif args.action == "auth":
-        auth(args.cluster_name)
+    elif args.action == "setup-cluster-credentials":
+        setup_cluster_credentials(args.cluster_name)
 
 
 if __name__ == "__main__":
