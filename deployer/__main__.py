@@ -19,6 +19,26 @@ from utils import decrypt_file, update_authenticator_config, print_colour
 yaml = YAML(typ="safe", pure=True)
 
 
+def auth(cluster_name):
+    """
+    Quickly gain command-line access to a cluster using deployer credentials
+    """
+
+    # Validate our config with JSON Schema first before continuing
+    validate(cluster_name)
+
+    config_file_path = (
+        Path(os.getcwd()) / "config/clusters" / f"{cluster_name}.cluster.yaml"
+    )
+    with open(config_file_path) as f:
+        cluster = Cluster(yaml.load(f))
+
+    # Cluster.auth() method is has the context manager decorator so cannot call
+    # it like a normal function
+    with cluster.auth():
+        return None
+
+
 def deploy_support(cluster_name):
     """
     Deploy support components to a cluster
@@ -242,6 +262,9 @@ def main():
 
     # deploy-grafana-dashboards subcommand
     deploy_grafana_dashboards_parser = subparsers.add_parser("deploy-grafana-dashboards", parents=[base_parser], help="Deploy grafana dashboards to a cluster for monitoring JupyterHubs. deploy-support must be run first!")
+
+    # Auth subcommand
+    auth_parser = subparsers.add_parser("auth", parents=[base_parser], help="Authenticate against a cluster using deployer credentials to gain quick command line access")
     #=== End section ===#
 
     args = argparser.parse_args()
@@ -259,6 +282,8 @@ def main():
         deploy_support(args.cluster_name)
     elif args.action == "deploy-grafana-dashboards":
         deploy_grafana_dashboards(args.cluster_name)
+    elif args.action == "auth":
+        auth(args.cluster_name)
 
 
 if __name__ == "__main__":
