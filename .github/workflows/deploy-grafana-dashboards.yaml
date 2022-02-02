@@ -3,7 +3,7 @@ name: Deploy grafana dashboards
 on: workflow_dispatch
 
 jobs:
-  deploy_grafana:
+  deploy_grafana_dashboards:
     runs-on: ubuntu-20.04
     strategy:
       # Don't stop other deployments if one fails
@@ -39,4 +39,4 @@ jobs:
 
       - name: Deploy grafana dashboards for ${{ matrix.cluster_name }}
         run: |
-          python3 deployer deploy-grafana ${{ matrix.cluster_name }}
+          python3 deployer deploy-grafana-dashboards ${{ matrix.cluster_name }}

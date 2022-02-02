@@ -62,7 +62,7 @@ def replace_staff_placeholder(user_list, staff):
 
     custom_users = user_list[:]
     for staff_list_type, staff_ids in staff.items():
-        staff_placeholder = "<staff_" + staff_list_type + ">"
+        staff_placeholder = f"<staff_{staff_list_type}>"
         if staff_placeholder in user_list:
             custom_users.remove(staff_placeholder)
 
