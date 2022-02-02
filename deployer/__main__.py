@@ -38,9 +38,10 @@ def deploy_support(cluster_name):
             cluster.deploy_support()
 
 
-def deploy_jupyterhub_grafana(cluster_name):
+def deploy_grafana_dashboards(cluster_name):
     """
-    Deploy grafana dashboards for operating a hub
+    Deploy grafana dashboards to a cluster that provide useful metrics
+    for operating a JupyterHub
     """
 
     # Validate our config with JSON Schema first before continuing
@@ -63,10 +64,18 @@ def deploy_jupyterhub_grafana(cluster_name):
         Path(os.getcwd()) / "secrets/config/clusters" / f"{cluster_name}.cluster.yaml"
     )
 
-    # Read and set GRAFANA_TOKEN from the cluster specific secret config file
+    # Check the secret file exists before continuing
+    if not os.path.exists(secret_config_file):
+        raise FileExistsError(f"File does not exist! Please create it and try again: {secret_config_file}")
+
+    # Read the cluster specific secret config file
     with decrypt_file(secret_config_file) as decrypted_file_path:
         with open(decrypted_file_path) as f:
             config = yaml.load(f)
+
+    # Check GRAFANA_TOKEN exists in the secret config file before continuing
+    if "grafana_token" not in config.keys():
+        raise ValueError(f"`grafana_token` not provided in secret file! Please add it and try again: {secret_config_file}")
 
     # Get the url where grafana is running from the cluster config
     grafana_url = (
@@ -89,7 +98,7 @@ def deploy_jupyterhub_grafana(cluster_name):
         return
 
     grafana_url = (
-        "https://" + grafana_url[0] if uses_tls else "http://" + grafana_url[0]
+        f"https://{grafana_url[0]}" if uses_tls else f"http://{grafana_url[0]}"
     )
 
     # Use the jupyterhub/grafana-dashboards deployer to deploy the dashboards to this cluster's grafana
@@ -116,7 +125,7 @@ def deploy_jupyterhub_grafana(cluster_name):
             ["./deploy.py", grafana_url], env=deploy_env, cwd=dashboards_dir
         )
 
-        print_colour(f"Done! Dasboards deployed to {grafana_url}.")
+        print_colour(f"Done! Dashboards deployed to {grafana_url}.")
     finally:
         # Delete the directory where we cloned the repo.
         # The deployer cannot call jsonnet to deploy the dashboards if using a temp directory here.
@@ -210,7 +219,7 @@ def main():
     deploy_parser = subparsers.add_parser("deploy")
     validate_parser = subparsers.add_parser("validate")
     deploy_support_parser = subparsers.add_parser("deploy-support")
-    deploy_grafana_parser = subparsers.add_parser("deploy-grafana")
+    deploy_grafana_dashboards_parser = subparsers.add_parser("deploy-grafana-dashboards")
 
     deploy_parser.add_argument("cluster_name")
     deploy_parser.add_argument("hub_name", nargs="?")
@@ -225,7 +234,7 @@ def main():
 
     deploy_support_parser.add_argument("cluster_name")
 
-    deploy_grafana_parser.add_argument("cluster_name")
+    deploy_grafana_dashboards_parser.add_argument("cluster_name")
 
     args = argparser.parse_args()
 
@@ -240,8 +249,8 @@ def main():
         validate(args.cluster_name)
     elif args.action == "deploy-support":
         deploy_support(args.cluster_name)
-    elif args.action == "deploy-grafana":
-        deploy_jupyterhub_grafana(args.cluster_name)
+    elif args.action == "deploy-grafana-dashboards":
+        deploy_grafana_dashboards(args.cluster_name)
     else:
         # Print help message and exit when no arguments are passed
         # FIXME: Is there a better way to do this?
