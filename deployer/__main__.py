@@ -203,7 +203,9 @@ def deploy(cluster_name, hub_name, skip_hub_health_test, config_path):
             update_authenticator_config(hub.spec["config"], hub.spec["helm_chart"])
             hub.deploy(k, SECRET_KEY, skip_hub_health_test)
         else:
-            for hub in hubs:
+            hubN = len(hubs)
+            for i, hub in enumerate(hubs):
+                print_colour(f"{i+1} / {hubN}: Deploying hub {hub.spec['name']}...")
                 update_authenticator_config(hub.spec["config"], hub.spec["helm_chart"])
                 hub.deploy(k, SECRET_KEY, skip_hub_health_test)
 
