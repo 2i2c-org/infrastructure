@@ -194,7 +194,7 @@ To enable CILogon authentication:
   ```
 
 ```{note}
-If a user wishes to change which account they login with, they will need to go to the [CILogon's logout page](https://cilogon/logout) before using the same CILogon Identity Provider with another account.
+If a user wishes to change which account they login with, they will need to go to the [CILogon's logout page](https://cilogon.org/logout) before using the same CILogon Identity Provider with another account.
 
 However, if another Indentity Provider is to be used, then the extra logout step is no longer required.
 ```
