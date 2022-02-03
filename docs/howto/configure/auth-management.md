@@ -194,9 +194,9 @@ To enable CILogon authentication:
   ```
 
 ```{note}
-A second login into a CILogon-enabled hub using a different account but the same CILogon Identity Provider as a previous login, requires navigating to https://cilogon/logout before in order to logout of CILogon.
+If a user wishes to change which account they login with, they will need to go to the [CILogon's logout page](https://cilogon/logout) before using the same CILogon Identity Provider with another account.
 
-If another Indentity Provider is to be used in the second login attempt, then the extra logout step is no longer required.
+However, if another Indentity Provider is to be used, then the extra logout step is no longer required.
 ```
 
 ### Example config for CILogon
