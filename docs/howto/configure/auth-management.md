@@ -193,6 +193,11 @@ To enable CILogon authentication:
   Don't forget to allow login to the test user (`deployment-service-check`), otherwise the hub health check performed during deployment will fail.
   ```
 
+```{note}
+A second login into a CILogon-enabled hub using a different account but the same CILogon Identity Provider as a previous login, requires navigating to https://cilogon/logout before in order to logout of CILogon.
+
+If another Indentity Provider is to be used in the second login attempt, then the extra logout step is no longer required.
+```
 
 ### Example config for CILogon
 
