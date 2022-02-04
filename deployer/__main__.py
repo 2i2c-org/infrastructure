@@ -18,13 +18,13 @@ from utils import decrypt_file, update_authenticator_config, print_colour
 yaml = YAML(typ="safe", pure=True)
 
 
-def setup_cluster_credentials(cluster_name):
+def use_cluster_credentials(cluster_name):
     """
     Quickly gain command-line access to a cluster by updating the current
     kubeconfig file to include the deployer's access credentials for the named
     cluster and mark it as the cluster to work against by default.
 
-    This function is to be used with the `setup-cluster-credentials` CLI
+    This function is to be used with the `use-cluster-credentials` CLI
     command only - it is not used by the rest of the deployer codebase.
     """
 
@@ -308,9 +308,9 @@ def main():
         help="Deploy grafana dashboards to a cluster for monitoring JupyterHubs. deploy-support must be run first!",
     )
 
-    # setup-cluster-credentials subcommand
-    setup_cluster_credentials_parser = subparsers.add_parser(
-        "setup-cluster-credentials",
+    # use-cluster-credentials subcommand
+    use_cluster_credentials_parser = subparsers.add_parser(
+        "use-cluster-credentials",
         parents=[base_parser],
         help="Modify the current kubeconfig with the deployer's access credentials for the named cluster",
     )
@@ -331,8 +331,8 @@ def main():
         deploy_support(args.cluster_name)
     elif args.action == "deploy-grafana-dashboards":
         deploy_grafana_dashboards(args.cluster_name)
-    elif args.action == "setup-cluster-credentials":
-        setup_cluster_credentials(args.cluster_name)
+    elif args.action == "use-cluster-credentials":
+        use_cluster_credentials(args.cluster_name)
 
 
 if __name__ == "__main__":
