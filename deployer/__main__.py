@@ -43,6 +43,10 @@ def use_cluster_credentials(cluster_name):
         # This command will spawn a new shell with all the env vars (including
         # KUBECONFIG) inherited, and once you quit that shell the python program
         # will resume as usual.
+        # TODO: Figure out how to change the PS1 env var of the spawned shell
+        # to change the prompt to f"cluster-{cluster.spec['name']}". This will
+        # make it visually clear that the user is now operating in a different
+        # shell.
         subprocess.check_call([os.environ["SHELL"], "-l"])
 
 
