@@ -174,9 +174,6 @@ Presently, this involves a few more manual steps than the `auth0` setup describe
 ```{seealso}
 See the [CILogon documentation on `Auth0`](https://www.cilogon.org/auth0) for more configuration information.
 ```
-```{note}
-The JupyterHub username will be the email address that users provide when authenticating in CILogon connection. It will not be the CILogon `user_id`! This is because the `USERNAME_KEY` used for the CILogon login is the email address.
-```
 
 To enable CILogon authentication:
 
@@ -192,12 +189,6 @@ To enable CILogon authentication:
   ```{note}
   Don't forget to allow login to the test user (`deployment-service-check`), otherwise the hub health check performed during deployment will fail.
   ```
-
-```{note}
-If a user wishes to change which account they login with, they will need to go to the [CILogon's logout page](https://cilogon.org/logout) before using the same CILogon Identity Provider with another account.
-
-However, if another Indentity Provider is to be used, then the extra logout step is no longer required.
-```
 
 ### Example config for CILogon
 
@@ -232,3 +223,26 @@ config:
 ```{note}
 All the users listed under `admin_users` need to match the `username_pattern` expression otherwise they won't be allowed to login!
 ```
+
+### Explanation of CILogon accounts
+
+There are two details for CILogon accounts worth mentioning:
+
+- **Institutional connection**. This is the direct connection with CILogon, negotiated by each institution. When a user logs in via CILogon, they first may choose from a variety of institutions (e.g. `UC Berkeley` or `Australia National University`). There is also a fall-back for "Google OAuth".
+- **User account**. Within an institution, each user is expected to have their own user account (e.g. `myname@berkeley.edu`). This is the account that is used to give somebody an ID on their JupyterHub.
+
+The CILogon connection works by providing access to any user with an account under a particular **institutional connection**, e.g. `*@berkeley.edu`.
+
+```{note}
+Their JupyterHub username will be the **email address** that users provide under the when authenticating with an institutional connection. It will not be the CILogon `user_id`! This is because the `USERNAME_KEY` used for the CILogon login is the email address.
+```
+
+### Switching user accounts or institutions
+
+By default, logging in with a particular user account will persist your credentials in future sessions.
+This means that you'll automatically re-use the same institutional and user account if you try to log back in.
+
+**To switch user accounts**, a user can go to the URL endpoing `https://{hub-name}/hub/logout`.
+The next time they go to the hub's landing page, they'll be asked to re-authenticate.
+
+**To switch CILogon institutions**, a user must go to the [CILogon logout page](https://cilogon.org/logout) and click the button to log out of their institutional account. When they try to log back in they should be directed to a page to select institutions once again.
