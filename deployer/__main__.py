@@ -44,7 +44,6 @@ def use_cluster_credentials(cluster_name):
         # KUBECONFIG) inherited, and once you quit that shell the python program
         # will resume as usual.
         subprocess.check_call([os.environ["SHELL"], "-l"])
-        return None
 
 
 def deploy_support(cluster_name):
