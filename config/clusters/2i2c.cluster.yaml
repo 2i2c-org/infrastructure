@@ -508,22 +508,22 @@ hubs:
             - name: pgadmin4
               image: dpage/pgadmin4
               env:
-              # Users use this to login to pgadmin4 itself
-              # Access to that is secured with jupyter-server-proxy
-              - name: PGADMIN_DEFAULT_EMAIL
-                value: jovyan@jovyan.org
-              - name: PGADMIN_DEFAULT_PASSWORD
-                value: jovyan
-              # Don't allow outside users to even connect to pgadmin4
-              - name: PGADMIN_LISTEN_ADDRESS
-                value: "127.0.0.1"
-              - name: PGADMIN_LISTEN_PORT
-                value: "5050"
-              # Tell pgadmin4 what base_url it's running under
-              - name: SCRIPT_NAME
-                # FIXME: This doesn't work with named servers,
-                # https://github.com/jupyterhub/kubespawner/pull/565 fixes this
-                value: "/user/{username}/proxy/absolute/5050"
+                # Users use this to login to pgadmin4 itself
+                # Access to that is secured with jupyter-server-proxy
+                - name: PGADMIN_DEFAULT_EMAIL
+                  value: jovyan@jovyan.org
+                - name: PGADMIN_DEFAULT_PASSWORD
+                  value: jovyan
+                # Don't allow outside users to even connect to pgadmin4
+                - name: PGADMIN_LISTEN_ADDRESS
+                  value: "127.0.0.1"
+                - name: PGADMIN_LISTEN_PORT
+                  value: "5050"
+                # Tell pgadmin4 what base_url it's running under
+                - name: SCRIPT_NAME
+                  # FIXME: This doesn't work with named servers,
+                  # https://github.com/jupyterhub/kubespawner/pull/565 fixes this
+                  value: "/user/{username}/proxy/absolute/5050"
             - name: postgres
               image: postgres:14.1
               resources:
