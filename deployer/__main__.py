@@ -18,6 +18,38 @@ from utils import decrypt_file, update_authenticator_config, print_colour
 yaml = YAML(typ="safe", pure=True)
 
 
+def use_cluster_credentials(cluster_name):
+    """
+    Quickly gain command-line access to a cluster by updating the current
+    kubeconfig file to include the deployer's access credentials for the named
+    cluster and mark it as the cluster to work against by default.
+
+    This function is to be used with the `use-cluster-credentials` CLI
+    command only - it is not used by the rest of the deployer codebase.
+    """
+
+    # Validate our config with JSON Schema first before continuing
+    validate(cluster_name)
+
+    config_file_path = (
+        Path(os.getcwd()) / "config/clusters" / f"{cluster_name}.cluster.yaml"
+    )
+    with open(config_file_path) as f:
+        cluster = Cluster(yaml.load(f))
+
+    # Cluster.auth() method has the context manager decorator so cannot call
+    # it like a normal function
+    with cluster.auth():
+        # This command will spawn a new shell with all the env vars (including
+        # KUBECONFIG) inherited, and once you quit that shell the python program
+        # will resume as usual.
+        # TODO: Figure out how to change the PS1 env var of the spawned shell
+        # to change the prompt to f"cluster-{cluster.spec['name']}". This will
+        # make it visually clear that the user is now operating in a different
+        # shell.
+        subprocess.check_call([os.environ["SHELL"], "-l"])
+
+
 def deploy_support(cluster_name):
     """
     Deploy support components to a cluster
@@ -278,6 +310,13 @@ def main():
         parents=[base_parser],
         help="Deploy grafana dashboards to a cluster for monitoring JupyterHubs. deploy-support must be run first!",
     )
+
+    # use-cluster-credentials subcommand
+    use_cluster_credentials_parser = subparsers.add_parser(
+        "use-cluster-credentials",
+        parents=[base_parser],
+        help="Modify the current kubeconfig with the deployer's access credentials for the named cluster",
+    )
     # === End section ===#
 
     args = argparser.parse_args()
@@ -295,6 +334,8 @@ def main():
         deploy_support(args.cluster_name)
     elif args.action == "deploy-grafana-dashboards":
         deploy_grafana_dashboards(args.cluster_name)
+    elif args.action == "use-cluster-credentials":
+        use_cluster_credentials(args.cluster_name)
 
 
 if __name__ == "__main__":
