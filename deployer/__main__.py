@@ -43,7 +43,7 @@ def setup_cluster_credentials(cluster_name):
         # This command will spawn a new shell with all the env vars (including
         # KUBECONFIG) inherited, and once you quit that shell the python program
         # will resume as usual.
-        subprocess.check_call([os.environ['SHELL'], '-l'])
+        subprocess.check_call([os.environ["SHELL"], "-l"])
         return None
 
 
