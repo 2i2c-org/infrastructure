@@ -24,7 +24,7 @@ These tools are [`ingress-nginx`](https://kubernetes.github.io/ingress-nginx/), 
 
 #### Edit your `*.cluster.yaml` file
 
-Add the following config as a top-level key to your `*.cluster.yaml` file under `/config/hubs` in `infrastructure`.
+Add the following config as a top-level key to your `*.cluster.yaml` file under `/config/clusters` in `infrastructure`.
 `GRAFANA_URL` should follow the pattern `grafana.<cluster_name>.2i2c.cloud`.
 
 ```yaml
@@ -68,7 +68,7 @@ Eventually, visiting `GRAFANA_URL` will present you with a login page.
 Here are the credentials for logging in:
 
 - **username**: `admin`
-- **password**: located in `support/secrets.yaml` (`sops` encrypted).
+- **password**: located in `helm-charts/support/secrets.yaml` (`sops` encrypted).
 
 ### Setting up Grafana Dashboards
 
@@ -78,9 +78,9 @@ The key you create needs admin permissions.
 
 **Keep this key safe as you won't be able to retrieve it!**
 
-Encrypt and store this key using `sops` in `secrets/config/hubs/<cluster>.yaml` under `grafana_token` key.
+Encrypt and store this key using `sops` in `secrets/config/clusters/<cluster>.yaml` under `grafana_token` key.
 
-This key will be used by the [`deploy-grafana-dashboards` workflow](https://github.com/2i2c-org/infrastructure/blob/HEAD/.github/workflows/deploy-grafana-dashboards.yaml) to deploy some default grafana dashboards for JupyterHub using [`jupyterhub/grafana-dashboards`](https://github.com/jupyterhub/grafana-dashboards).
+This key will be used by the [`deploy-grafana-dashboards` workflow](https://github.com/2i2c-org/infrastructure/tree/HEAD/.github/workflows/deploy-grafana-dashboards.yaml) to deploy some default grafana dashboards for JupyterHub using [`jupyterhub/grafana-dashboards`](https://github.com/jupyterhub/grafana-dashboards).
 
 Once you've pushed the encrypted `grafana_token` to the GitHub repository, manually trigger the `deploy-grafana-dashboards` workflow using the "Run workflow" button [from here](https://github.com/2i2c-org/infrastructure/actions/workflows/deploy-grafana-dashboards.yaml) to deploy the dashboards.
 

@@ -117,9 +117,10 @@ class Cluster:
         print_colour("Done!")
 
         print_colour("Provisioning support charts...")
-        subprocess.check_call(["helm", "dep", "up", "support"])
 
-        support_dir = (Path(__file__).parent.parent).joinpath("support")
+        subprocess.check_call(["helm", "dep", "up", "helm-charts/support"])
+
+        support_dir = (Path(__file__).parent.parent).joinpath("helm-charts", "support")
         support_secrets_file = support_dir.joinpath("secrets.yaml")
 
         with tempfile.NamedTemporaryFile(mode="w") as f, decrypt_file(
@@ -542,7 +543,7 @@ class Hub:
         # Check if this cluster has any secret config. If yes, read it in.
         secret_config_path = (
             Path(os.getcwd()).joinpath(
-            "secrets", "config", "hubs",
+            "secrets", "config", "clusters",
             f'{self.cluster.spec["name"]}.cluster.yaml')
         )
 
@@ -589,7 +590,7 @@ class Hub:
                 os.path.join("helm-charts", self.spec["helm_chart"]),
                 # Ordering matters here - config explicitly mentioned in clu should take
                 # priority over our generated values. Based on how helm does overrides, this means
-                # we should put the config from config/hubs last.
+                # we should put the config from config/clusters last.
                 f"--values={generated_values_file.name}",
                 f"--values={values_file.name}",
                 f"--values={secret_values_file.name}",

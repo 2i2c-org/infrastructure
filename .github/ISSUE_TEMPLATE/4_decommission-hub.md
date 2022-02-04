@@ -44,4 +44,4 @@ _This phase is only necessary for single hub clusters._
 - [ ] Remove the following files from the repository:
   - The associated `*.cluster.yaml` file
   - The associated CI deployer key in `secrets/`
-  - Remove the name of the cluster from [CI](https://github.com/2i2c-org/infrastructure/tree/master/.github/workflows/deploy-hubs.yaml)
+  - Remove the name of the cluster from [CI](https://github.com/2i2c-org/infrastructure/tree/HEAD/.github/workflows/deploy-hubs.yaml)

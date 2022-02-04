@@ -62,7 +62,7 @@ def replace_staff_placeholder(user_list, staff):
 
     custom_users = user_list[:]
     for staff_list_type, staff_ids in staff.items():
-        staff_placeholder = "<staff_" + staff_list_type + ">"
+        staff_placeholder = f"<staff_{staff_list_type}>"
         if staff_placeholder in user_list:
             custom_users.remove(staff_placeholder)
 
@@ -75,7 +75,7 @@ def replace_staff_placeholder(user_list, staff):
 def update_authenticator_config(config, helm_chart):
     """Prepare a hub's configuration file for deployment."""
     # Load the staff config file
-    with open(os.path.join("config", "hubs", "staff.yaml")) as f:
+    with open(os.path.join("config", "clusters", "staff.yaml")) as f:
         staff = yaml.load(f)
 
     if "basehub" in helm_chart:

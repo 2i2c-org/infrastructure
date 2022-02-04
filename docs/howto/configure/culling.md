@@ -7,7 +7,7 @@ Since the server's kernel activity counts as server activity, the idle-culler al
 
 ## User server culling configuration
 
-To configure the server's different culling options, these options must be specified on a per-hub basis, under the appropriate configuration file in `config/hubs`.
+To configure the server's different culling options, these options must be specified on a per-hub basis, under the appropriate configuration file in `config/clusters`.
 
 Example:
 
@@ -48,4 +48,5 @@ singleuser:
 ```
 
 ### Note
+
 If a user leaves a notebook with a running kernel, the idle timeout will typically be the cull idle timeout of the server + the cull idle timeout set for the kernel, as culling the kernel will register activity, resetting the `no_activity` timer for the server as a whole.
