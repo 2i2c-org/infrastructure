@@ -528,7 +528,7 @@ hubs:
             extraVolumes:
               - name: postgres-db
                 persistentVolumeClaim:
-                  claimName: 'postgres-{username}'
+                  claimName: "postgres-{username}"
             extraVolumeMounts:
               - name: postgres-db
                 mountPath: /var/lib/postgresql/data
