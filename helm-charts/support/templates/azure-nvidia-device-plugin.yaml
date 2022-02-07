@@ -21,6 +21,8 @@ spec:
       labels:
         name: nvidia-device-plugin-ds
     spec:
+      nodeSelector:
+        hub.jupyter.org/sku: gpu
       tolerations:
       # Allow this pod to be rescheduled while the node is in "critical add-ons only" mode.
       # This, along with the annotation above marks this pod as a critical add-on.
@@ -29,10 +31,6 @@ spec:
       - key: nvidia.com/gpu
         operator: Exists
         effect: NoSchedule
-      - key: "sku"
-        operator: "Equal"
-        value: "gpu"
-        effect: "NoSchedule"
       - effect: NoSchedule
         key: hub.jupyter.org/dedicated
         operator: Equal
