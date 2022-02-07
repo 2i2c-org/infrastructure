@@ -186,8 +186,7 @@ Some notions about CILogon authentication worth mentioning:
 
   Example:
 
-  ```{figure}
-    ../../images/cilogon-ipd-list.png
+  ```{figure} ../../images/cilogon-ipd-list.png
   ```
 
 2. **User account**.
@@ -195,8 +194,7 @@ Some notions about CILogon authentication worth mentioning:
 
   Example:
 
-  ```{figure}
-    ../../images/cilogon-berkley-login-page.png
+  ```{figure} ../../images/cilogon-berkley-login-page.png
   ```
 
 ```{note}
@@ -274,11 +272,10 @@ This means that you'll automatically re-use the same institutional and user acco
   4. Choose the **same Identity Provider** to login.
   5. The user can now choose **another user account** to login with.
 
-#### **Forbidden access - 403 error**
+#### Forbidden access - 403 error
   If you've been shown a 403 error page, then this means that the account you were using to login hasn't been allowed by the hub administrator.
 
-  ```{figure}
-    ../../images/403-forbidden.png
+  ```{figure} ../../images/403-forbidden.png
   ```
 
   If you think this is an error, and the account should have been allowed, then contact the hub adminstrator/s.
