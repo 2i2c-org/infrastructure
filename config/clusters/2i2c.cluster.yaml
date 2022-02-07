@@ -574,7 +574,7 @@ hubs:
                   # https://github.com/jupyterhub/kubespawner/pull/565 fixes this
                   value: "/user/{username}/proxy/absolute/5050"
             - name: postgres
-              image: postgres:14.1
+              image: postgres:10
               resources:
                 limits:
                   # Best effort only. No more than 1 CPU
