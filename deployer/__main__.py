@@ -18,21 +18,21 @@ from utils import decrypt_file, update_authenticator_config, print_colour
 yaml = YAML(typ="safe", pure=True)
 
 
-def setup_cluster_credentials(cluster_name):
+def use_cluster_credentials(cluster_name):
     """
     Quickly gain command-line access to a cluster by updating the current
     kubeconfig file to include the deployer's access credentials for the named
     cluster and mark it as the cluster to work against by default.
 
-    This function is to be used with the `setup-cluster-credentials` CLI
+    This function is to be used with the `use-cluster-credentials` CLI
     command only - it is not used by the rest of the deployer codebase.
     """
 
     # Validate our config with JSON Schema first before continuing
     validate(cluster_name)
 
-    config_file_path = (
-        Path(os.getcwd()) / "config/clusters" / f"{cluster_name}.cluster.yaml"
+    config_file_path = Path(os.getcwd()).joinpath(
+        "config", "clusters", f"{cluster_name}.cluster.yaml"
     )
     with open(config_file_path) as f:
         cluster = Cluster(yaml.load(f))
@@ -40,7 +40,14 @@ def setup_cluster_credentials(cluster_name):
     # Cluster.auth() method has the context manager decorator so cannot call
     # it like a normal function
     with cluster.auth():
-        return None
+        # This command will spawn a new shell with all the env vars (including
+        # KUBECONFIG) inherited, and once you quit that shell the python program
+        # will resume as usual.
+        # TODO: Figure out how to change the PS1 env var of the spawned shell
+        # to change the prompt to f"cluster-{cluster.spec['name']}". This will
+        # make it visually clear that the user is now operating in a different
+        # shell.
+        subprocess.check_call([os.environ["SHELL"], "-l"])
 
 
 def deploy_support(cluster_name):
@@ -51,8 +58,8 @@ def deploy_support(cluster_name):
     # Validate our config with JSON Schema first before continuing
     validate(cluster_name)
 
-    config_file_path = (
-        Path(os.getcwd()) / "config/clusters"/ cluster_name / f"{cluster_name}.cluster.yaml"
+    config_file_path = Path(os.getcwd()).joinpath(
+        "config", "clusters", cluster_name, f"{cluster_name}.cluster.yaml"
     )
     with open(config_file_path) as f:
         cluster = Cluster(yaml.load(f))
@@ -74,8 +81,8 @@ def deploy_grafana_dashboards(cluster_name):
     # Validate our config with JSON Schema first before continuing
     validate(cluster_name)
 
-    config_file_path = (
-        Path(os.getcwd()) / "config/clusters" / cluster_name / f"{cluster_name}.cluster.yaml"
+    config_file_path = Path(os.getcwd()).joinpath(
+        "config", "clusters", cluster_name, f"{cluster_name}.cluster.yaml"
     )
     with open(config_file_path) as f:
         cluster = Cluster(yaml.load(f))
@@ -87,8 +94,8 @@ def deploy_grafana_dashboards(cluster_name):
         )
         return
 
-    secret_config_file = (
-        Path(os.getcwd()) / "secrets/config/clusters" / f"{cluster_name}.cluster.yaml"
+    secret_config_file = Path(os.getcwd()).joinpath(
+        "secrets", "config", "clusters", f"{cluster_name}.cluster.yaml"
     )
 
     # Check the secret file exists before continuing
@@ -197,8 +204,8 @@ def deploy(cluster_name, hub_name, skip_hub_health_test, config_path):
     # proxy.secretTokens have leaked. So let's be careful with that!
     SECRET_KEY = bytes.fromhex(config["secret_key"])
 
-    config_file_path = (
-        Path(os.getcwd()) / "config/clusters" / cluster_name / f"{cluster_name}.cluster.yaml"
+    config_file_path = Path(os.getcwd()).joinpath(
+        "config", "clusters", cluster_name, f"{cluster_name}.cluster.yaml"
     )
     with open(config_file_path) as f:
         cluster = Cluster(yaml.load(f))
@@ -218,18 +225,18 @@ def deploy(cluster_name, hub_name, skip_hub_health_test, config_path):
 
 
 def validate(cluster_name):
-    cluster_dir = Path(os.getcwd()) / "config/clusters"
-    schema_file = cluster_dir / "schema.yaml"
-    config_file = cluster_dir / cluster_name / f"{cluster_name}.cluster.yaml"
+    cluster_dir = Path(os.getcwd()).joinpath("config", "clusters")
+    schema_file = cluster_dir.joinpath("schema.yaml")
+    config_file = cluster_dir.joinpath(cluster_name, f"{cluster_name}.cluster.yaml")
     with open(config_file) as cf, open(schema_file) as sf:
         cluster_config = yaml.load(cf)
         schema = yaml.load(sf)
         # Raises useful exception if validation fails
         jsonschema.validate(cluster_config, schema)
 
-    secret_cluster_dir = Path(os.getcwd()) / "secrets/config/clusters"
-    secret_schema_file = secret_cluster_dir / "schema.yaml"
-    secret_config_file = secret_cluster_dir / f"{cluster_name}.cluster.yaml"
+    secret_cluster_dir = Path(os.getcwd()).joinpath("secrets", "config", "clusters")
+    secret_schema_file = secret_cluster_dir.joinpath("schema.yaml")
+    secret_config_file = secret_cluster_dir.joinpath(f"{cluster_name}.cluster.yaml")
 
     # If a secret config file exists, validate it as well
     if os.path.exists(secret_config_file):
@@ -304,9 +311,9 @@ def main():
         help="Deploy grafana dashboards to a cluster for monitoring JupyterHubs. deploy-support must be run first!",
     )
 
-    # setup-cluster-credentials subcommand
-    setup_cluster_credentials_parser = subparsers.add_parser(
-        "setup-cluster-credentials",
+    # use-cluster-credentials subcommand
+    use_cluster_credentials_parser = subparsers.add_parser(
+        "use-cluster-credentials",
         parents=[base_parser],
         help="Modify the current kubeconfig with the deployer's access credentials for the named cluster",
     )
@@ -327,8 +334,8 @@ def main():
         deploy_support(args.cluster_name)
     elif args.action == "deploy-grafana-dashboards":
         deploy_grafana_dashboards(args.cluster_name)
-    elif args.action == "setup-cluster-credentials":
-        setup_cluster_credentials(args.cluster_name)
+    elif args.action == "use-cluster-credentials":
+        use_cluster_credentials(args.cluster_name)
 
 
 if __name__ == "__main__":
