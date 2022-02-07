@@ -4,6 +4,9 @@ kubeconfig:
   file: secrets/azure.carbonplan.yaml
 support:
   config:
+    nvidiaDevicePlugin:
+      azure:
+        enabled: true
     prometheus:
       server:
         resources:
@@ -134,6 +137,7 @@ hubs:
                   mem_guarantee: 90G
                   node_selector:
                     hub.jupyter.org/node-size: Standard_NC24s_v3
+                    hub.jupyter.org/sku: gpu
           scheduling:
             userPlaceholder:
               enabled: false
