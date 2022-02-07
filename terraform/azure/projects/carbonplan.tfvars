@@ -61,11 +61,11 @@ notebook_nodes = {
     "gpu" : {
     min : 0,
     max : 20,
-    vm_size : "Standard_NC16as_T4_v3",
-    labels: { },
-    taints: [
-      "sku=gpu:NoSchedule",
-    ],
+    vm_size : "Standard_NC24s_v3",
+    labels: {
+      "hub.jupyter.org/sku": "gpu",
+    },
+    taints: [ ],
     kubernetes_version = "1.19.13",
   },
 }
@@ -122,11 +122,11 @@ dask_nodes = {
   "gpu" : {
     min : 0,
     max : 20,
-    vm_size : "Standard_NC16as_T4_v3",
-    labels: { },
-    taints: [
-      "sku=gpu:NoSchedule",
-    ],
+    vm_size : "Standard_NC24s_v3",
+    labels: {
+      "hub.jupyter.org/sku": "gpu",
+    },
+    taints: [ ],
     kubernetes_version = "1.19.13",
   },
 }
