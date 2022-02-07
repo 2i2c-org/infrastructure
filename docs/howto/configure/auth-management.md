@@ -178,28 +178,28 @@ See the [CILogon documentation on `Auth0`](https://www.cilogon.org/auth0) for mo
 Some notions about CILogon authentication worth mentioning:
 
 1. **Identity Provider**.
-  This is the authentication service available through the CILogon connection.
+   This is the authentication service available through the CILogon connection.
 
-  When a user logs in via CILogon, they are first presented with a list of various institutions and organization that they may choose from (e.g. `UC Berkeley` or `Australia National University`).
+   When a user logs in via CILogon, they are first presented with a list of various institutions and organization that they may choose from (e.g. `UC Berkeley` or `Australia National University`).
 
-  The available identity providers are members of [InCommon](https://www.incommon.org/federation/), a federation of universities and other organizations that provide single sign-on access to various resources.
+   The available identity providers are members of [InCommon](https://www.incommon.org/federation/), a federation of universities and other organizations that provide single sign-on access to various resources.
 
-  Example:
+   Example:
 
-  ```{figure} ../../images/cilogon-ipd-list.png
-  ```
+   ```{figure} ../../images/cilogon-ipd-list.png
+   ```
 
 2. **User account**.
-  Within an institution, each user is expected to have their own user account (e.g. `myname@berkeley.edu`). This is the account that is used to give somebody an ID on their JupyterHub.
+   Within an institution, each user is expected to have their own user account (e.g. `myname@berkeley.edu`). This is the account that is used to give somebody an ID on their JupyterHub.
 
-  Example:
+   Example:
 
-  ```{figure} ../../images/cilogon-berkley-login-page.png
-  ```
+   ```{figure} ../../images/cilogon-berkley-login-page.png
+   ```
 
-```{note}
-The JupyterHub usernames will be the **email address** that users provide when authenticating with an institutional identity provider. It will not be the CILogon `user_id`! This is because the `USERNAME_KEY` used for the CILogon login is the email address.
-```
+   ```{note}
+   The JupyterHub usernames will be the **email address** that users provide when authenticating with an institutional identity provider. It will not be the CILogon `user_id`! This is because the `USERNAME_KEY` used for the CILogon login is the email address.
+   ```
 
 ### Steps to enable CILogon authentication
 
@@ -223,15 +223,15 @@ The CILogon connection works by providing users the option to login into a hub u
 The following configuration example shows off how to configure hub admins and allowed users:
 
 1. **Hub admins** are these explicit emails:
-  - one `@campus.edu` user
-  - one `@gmail.com` user
-  - the 2i2c staff (identified through their 2i2c email address)
+   - one `@campus.edu` user
+   - one `@gmail.com` user
+   - the 2i2c staff (identified through their 2i2c email address)
 
 2. **Allowed users** are matched against a pattern, with a few specific addresses added in as well
-  - all `@2i2c.org` email adresses
-  - all `@campus.edu` email addresses
-  - `user2@gmail.com`
-  - the test username, `deployment-service-check`
+   - all `@2i2c.org` email adresses
+   - all `@campus.edu` email addresses
+   - `user2@gmail.com`
+   - the test username, `deployment-service-check`
 
 ```yaml
 config:
@@ -261,9 +261,9 @@ This means that you'll automatically re-use the same institutional and user acco
   2. The next time the user goes to the hub's landing page, they'll be asked to re-authenticate and will be presented with the list of available Identity Providers after choosing the CILogon connection.
   3. They can now choose **another Identity Provider** to login against
 
-    ```{note}
-    If the user choses the same Identity Provider, then they will be automatically logged in with the same user account they've used beore. To change the user account, checkout **option 2**.
-    ```
+  ```{note}
+  If the user choses the same Identity Provider, then they will be automatically logged in with the same user account they've used beore. To change the user account, checkout **option 2**.
+  ```
 
 #### To switch user accounts within an institutional Identity Provider
   1. Logout of the Hub using the logout button or by going to `https://{hub-name}/hub/logout`.
