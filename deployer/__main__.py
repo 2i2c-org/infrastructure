@@ -31,8 +31,8 @@ def use_cluster_credentials(cluster_name):
     # Validate our config with JSON Schema first before continuing
     validate(cluster_name)
 
-    config_file_path = (
-        Path(os.getcwd()).joinpath("config", "clusters", f"{cluster_name}.cluster.yaml")
+    config_file_path = Path(os.getcwd()).joinpath(
+        "config", "clusters", f"{cluster_name}.cluster.yaml"
     )
     with open(config_file_path) as f:
         cluster = Cluster(yaml.load(f))
