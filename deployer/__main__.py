@@ -31,8 +31,8 @@ def use_cluster_credentials(cluster_name):
     # Validate our config with JSON Schema first before continuing
     validate(cluster_name)
 
-    config_file_path = (
-        Path(os.getcwd()) / "config/clusters" / f"{cluster_name}.cluster.yaml"
+    config_file_path = Path(os.getcwd()).joinpath(
+        "config", "clusters", f"{cluster_name}.cluster.yaml"
     )
     with open(config_file_path) as f:
         cluster = Cluster(yaml.load(f))
@@ -58,8 +58,8 @@ def deploy_support(cluster_name):
     # Validate our config with JSON Schema first before continuing
     validate(cluster_name)
 
-    config_file_path = (
-        Path(os.getcwd()) / "config/clusters" / f"{cluster_name}.cluster.yaml"
+    config_file_path = Path(os.getcwd()).joinpath(
+        "config", "clusters", f"{cluster_name}.cluster.yaml"
     )
     with open(config_file_path) as f:
         cluster = Cluster(yaml.load(f))
@@ -81,8 +81,8 @@ def deploy_grafana_dashboards(cluster_name):
     # Validate our config with JSON Schema first before continuing
     validate(cluster_name)
 
-    config_file_path = (
-        Path(os.getcwd()) / "config/clusters" / f"{cluster_name}.cluster.yaml"
+    config_file_path = Path(os.getcwd()).joinpath(
+        "config", "clusters", f"{cluster_name}.cluster.yaml"
     )
     with open(config_file_path) as f:
         cluster = Cluster(yaml.load(f))
@@ -94,8 +94,8 @@ def deploy_grafana_dashboards(cluster_name):
         )
         return
 
-    secret_config_file = (
-        Path(os.getcwd()) / "secrets/config/clusters" / f"{cluster_name}.cluster.yaml"
+    secret_config_file = Path(os.getcwd()).joinpath(
+        "secrets", "config", "clusters", f"{cluster_name}.cluster.yaml"
     )
 
     # Check the secret file exists before continuing
@@ -204,8 +204,8 @@ def deploy(cluster_name, hub_name, skip_hub_health_test, config_path):
     # proxy.secretTokens have leaked. So let's be careful with that!
     SECRET_KEY = bytes.fromhex(config["secret_key"])
 
-    config_file_path = (
-        Path(os.getcwd()) / "config/clusters" / f"{cluster_name}.cluster.yaml"
+    config_file_path = Path(os.getcwd()).joinpath(
+        "config", "clusters", f"{cluster_name}.cluster.yaml"
     )
     with open(config_file_path) as f:
         cluster = Cluster(yaml.load(f))
@@ -225,18 +225,18 @@ def deploy(cluster_name, hub_name, skip_hub_health_test, config_path):
 
 
 def validate(cluster_name):
-    cluster_dir = Path(os.getcwd()) / "config/clusters"
-    schema_file = cluster_dir / "schema.yaml"
-    config_file = cluster_dir / f"{cluster_name}.cluster.yaml"
+    cluster_dir = Path(os.getcwd()).joinpath("config", "clusters")
+    schema_file = cluster_dir.joinpath("schema.yaml")
+    config_file = cluster_dir.joinpath(f"{cluster_name}.cluster.yaml")
     with open(config_file) as cf, open(schema_file) as sf:
         cluster_config = yaml.load(cf)
         schema = yaml.load(sf)
         # Raises useful exception if validation fails
         jsonschema.validate(cluster_config, schema)
 
-    secret_cluster_dir = Path(os.getcwd()) / "secrets/config/clusters"
-    secret_schema_file = secret_cluster_dir / "schema.yaml"
-    secret_config_file = secret_cluster_dir / f"{cluster_name}.cluster.yaml"
+    secret_cluster_dir = Path(os.getcwd()).joinpath("secrets", "config", "clusters")
+    secret_schema_file = secret_cluster_dir.joinpath("schema.yaml")
+    secret_config_file = secret_cluster_dir.joinpath(f"{cluster_name}.cluster.yaml")
 
     # If a secret config file exists, validate it as well
     if os.path.exists(secret_config_file):

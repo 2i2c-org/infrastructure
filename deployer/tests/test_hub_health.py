@@ -6,7 +6,7 @@ from jhub_client.execute import execute_notebook, JupyterHubAPI
 
 @pytest.fixture
 def notebook_dir(hub_type):
-    return Path(__file__).parent / "test-notebooks" / hub_type
+    return (Path(__file__).parent).joinpath("test-notebooks", hub_type)
 
 
 async def check_hub_health(hub_url, test_notebook_path, service_api_token):
