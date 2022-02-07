@@ -58,8 +58,8 @@ def deploy_support(cluster_name):
     # Validate our config with JSON Schema first before continuing
     validate(cluster_name)
 
-    config_file_path = (
-        Path(os.getcwd()).joinpath("config", "clusters", f"{cluster_name}.cluster.yaml")
+    config_file_path = Path(os.getcwd()).joinpath(
+        "config", "clusters", f"{cluster_name}.cluster.yaml"
     )
     with open(config_file_path) as f:
         cluster = Cluster(yaml.load(f))
@@ -81,8 +81,8 @@ def deploy_grafana_dashboards(cluster_name):
     # Validate our config with JSON Schema first before continuing
     validate(cluster_name)
 
-    config_file_path = (
-        Path(os.getcwd()).joinpath("config", "clusters", f"{cluster_name}.cluster.yaml")
+    config_file_path = Path(os.getcwd()).joinpath(
+        "config", "clusters", f"{cluster_name}.cluster.yaml"
     )
     with open(config_file_path) as f:
         cluster = Cluster(yaml.load(f))
@@ -94,8 +94,8 @@ def deploy_grafana_dashboards(cluster_name):
         )
         return
 
-    secret_config_file = (
-        Path(os.getcwd()).joinpath("secrets", "config", "clusters", f"{cluster_name}.cluster.yaml")
+    secret_config_file = Path(os.getcwd()).joinpath(
+        "secrets", "config", "clusters", f"{cluster_name}.cluster.yaml"
     )
 
     # Check the secret file exists before continuing
@@ -204,8 +204,8 @@ def deploy(cluster_name, hub_name, skip_hub_health_test, config_path):
     # proxy.secretTokens have leaked. So let's be careful with that!
     SECRET_KEY = bytes.fromhex(config["secret_key"])
 
-    config_file_path = (
-        Path(os.getcwd()).joinpath("config", "clusters", f"{cluster_name}.cluster.yaml")
+    config_file_path = Path(os.getcwd()).joinpath(
+        "config", "clusters", f"{cluster_name}.cluster.yaml"
     )
     with open(config_file_path) as f:
         cluster = Cluster(yaml.load(f))

@@ -541,10 +541,8 @@ class Hub:
         os.chdir("..")
 
         # Check if this cluster has any secret config. If yes, read it in.
-        secret_config_path = (
-            Path(os.getcwd()).joinpath(
-            "secrets", "config", "clusters",
-            f'{self.cluster.spec["name"]}.cluster.yaml')
+        secret_config_path = Path(os.getcwd()).joinpath(
+            "secrets", "config", "clusters", f'{self.cluster.spec["name"]}.cluster.yaml'
         )
 
         secret_hub_config = {}
