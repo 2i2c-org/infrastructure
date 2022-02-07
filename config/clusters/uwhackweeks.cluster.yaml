@@ -146,6 +146,14 @@ hubs:
             readinessProbe:
               enabled: false
             config:
+              JupyterHub:
+                authenticator_class: github
+              GitHubOAuthenticator:
+                allowed_organizations:
+                  - 2i2c-org
+                  - ICESAT-2HackWeek:jupyterhub-2022
+                scope:
+                  - read:user
               Authenticator:
                 admin_users: &users
                   - <staff_github_ids>

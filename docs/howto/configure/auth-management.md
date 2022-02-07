@@ -67,8 +67,8 @@ Presently, this involves a few more manual steps than the `auth0` setup describe
 
 1. **Create a GitHub OAuth App.**
    This can be achieved by following [GitHub's documentation](https://docs.github.com/en/developers/apps/building-oauth-apps/creating-an-oauth-app).
-   - Use the "Switch account" button at the top of your settings page to make sure you have `2i2c-org` selected.
-     That way, the app will be owned by the `2i2c-org` GitHub org, rather than your personal GitHub account.
+   - Create [a new app](https://github.com/organizations/2i2c-org/settings/applications/new) inside the
+     `2i2c-org`.
    - When naming the application, please follow the convention `<CLUSTER_NAME>-<HUB_NAME>` for consistency, e.g. `2i2c-staging` is the OAuth app for the staging hub running on the 2i2c cluster.
    - The Homepage URL should match that in the `domain` field of the appropriate `*.cluster.yaml` file in the `infrastructure` repo.
    - The authorisation callback URL is the homepage url appended with `/hub/oauth_callback`. For example, `staging.pilot.2i2c.cloud/hub/oauth_callback`.
