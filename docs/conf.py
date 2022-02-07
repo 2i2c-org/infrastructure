@@ -63,7 +63,7 @@ html_static_path = ["_static"]
 linkcheck_anchors = False
 linkcheck_ignore = [
     "https://howard.cloudbank.2i2c.cloud*",  # Temporarily ignore because we've changed the hub name
-    "https://github.com/organizations/2i2c-org/settings/applications/new", # Only accessible to 2i2c-org members
+    "https://github.com/organizations/2i2c-org/settings/applications/new",  # Only accessible to 2i2c-org members
 ]
 
 
