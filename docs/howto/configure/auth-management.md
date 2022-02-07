@@ -169,13 +169,41 @@ Presently, this involves a few more manual steps than the `auth0` setup describe
 
 ## CILogon
 
-[CILogon](https://www.cilogon.org) allows us to authenticate users against their campus identity providers. It is managed through [auth0](https://auth0.com), similar to Google and GitHub authentication.
+[CILogon](https://www.cilogon.org) is a service provider that allows users to login against various identity providers, including campus identity providers. 2i2c manages CILogon through [auth0](https://auth0.com), similar to Google and GitHub authentication.
 
 ```{seealso}
 See the [CILogon documentation on `Auth0`](https://www.cilogon.org/auth0) for more configuration information.
 ```
 
-To enable CILogon authentication:
+Some notions about CILogon authentication worth mentioning:
+
+1. **Identity Provider**.
+  This is the authentication service available through the CILogon connection.
+
+  When a user logs in via CILogon, they are first presented with a list of various institutions and organization that they may choose from (e.g. `UC Berkeley` or `Australia National University`).
+
+  The available identity providers are members of [InCommon](https://www.incommon.org/federation/), a federation of universities and other organizations that provide single sign-on access to various resources.
+
+  Example:
+
+  ```{figure}
+    ../../images/cilogon-ipd-list.png
+  ```
+
+2. **User account**.
+  Within an institution, each user is expected to have their own user account (e.g. `myname@berkeley.edu`). This is the account that is used to give somebody an ID on their JupyterHub.
+
+  Example:
+
+  ```{figure}
+    ../../images/cilogon-berkley-login-page.png
+  ```
+
+```{note}
+The JupyterHub usernames will be the **email address** that users provide when authenticating with an institutional identity provider. It will not be the CILogon `user_id`! This is because the `USERNAME_KEY` used for the CILogon login is the email address.
+```
+
+### Steps to enable CILogon authentication
 
 1. List CILogon as the type of connection we want for a hub, via `auth0.connection`:
 
@@ -191,6 +219,8 @@ To enable CILogon authentication:
   ```
 
 ### Example config for CILogon
+
+The CILogon connection works by providing users the option to login into a hub using any CILogon Identity Provider of their choice, as long as the email address of the user or the entire organization (e.g. `*@berkeley.edu`) has been provided access into the hub.
 
 The following configuration example shows off how to configure hub admins and allowed users:
 
@@ -219,30 +249,42 @@ config:
           username_pattern: '^(.+@2i2c\.org|.+@campus\.edu|user2@gmail\.com|deployment-service-check)$'
 ```
 
-
 ```{note}
 All the users listed under `admin_users` need to match the `username_pattern` expression otherwise they won't be allowed to login!
 ```
 
-### Explanation of CILogon accounts
-
-There are two details for CILogon accounts worth mentioning:
-
-- **Institutional connection**. This is the direct connection with CILogon, negotiated by each institution. When a user logs in via CILogon, they first may choose from a variety of institutions (e.g. `UC Berkeley` or `Australia National University`). There is also a fall-back for "Google OAuth".
-- **User account**. Within an institution, each user is expected to have their own user account (e.g. `myname@berkeley.edu`). This is the account that is used to give somebody an ID on their JupyterHub.
-
-The CILogon connection works by providing access to any user with an account under a particular **institutional connection**, e.g. `*@berkeley.edu`.
-
-```{note}
-Their JupyterHub username will be the **email address** that users provide under the when authenticating with an institutional connection. It will not be the CILogon `user_id`! This is because the `USERNAME_KEY` used for the CILogon login is the email address.
-```
-
-### Switching user accounts or institutions
+### Switching user accounts or Identity Providers
 
 By default, logging in with a particular user account will persist your credentials in future sessions.
-This means that you'll automatically re-use the same institutional and user account if you try to log back in.
+This means that you'll automatically re-use the same institutional and user account when you access the hub's home page.
 
-**To switch user accounts**, a user can go to the URL endpoing `https://{hub-name}/hub/logout`.
-The next time they go to the hub's landing page, they'll be asked to re-authenticate.
+#### To switch CILogon Identity Provider
+  1. Logout of the Hub using the logout button or by going to `https://{hub-name}/hub/logout`.
+  2. The next time the user goes to the hub's landing page, they'll be asked to re-authenticate and will be presented with the list of available Identity Providers after choosing the CILogon connection.
+  3. They can now choose **another Identity Provider** to login against
 
-**To switch CILogon institutions**, a user must go to the [CILogon logout page](https://cilogon.org/logout) and click the button to log out of their institutional account. When they try to log back in they should be directed to a page to select institutions once again.
+    ```{note}
+    If the user choses the same Identity Provider, then they will be automatically logged in with the same user account they've used beore. To change the user account, checkout **option 2**.
+    ```
+
+#### To switch user accounts within an institutional Identity Provider
+  1. Logout of the Hub using the logout button or by going to `https://{hub-name}/hub/logout`.
+  2. Logout of CILogon by going to the [CILogon logout page](https://cilogon.org/logout).
+  3. The next time the user goes to the hub's landing page, they'll be asked to re-authenticate and will be presented with the list of available Identity Providers after choosing the CILogon connection.
+  4. Choose the **same Identity Provider** to login.
+  5. The user can now choose **another user account** to login with.
+
+#### **Forbidden access - 403 error**
+  If you've been shown a 403 error page, then this means that the account you were using to login hasn't been allowed by the hub administrator.
+
+  ```{figure}
+    ../../images/403-forbidden.png
+  ```
+
+  If you think this is an error, and the account should have been allowed, then contact the hub adminstrator/s.
+
+  If however you made a mistake and used the wrong user account, here is what you can do to be able to try logging in using another account:
+
+  1. Logout of the Hub using the `Tap to try another account` button or by going to `https://{hub-name}/hub/logout`.
+  2. Logout of CILogon by going to the [CILogon logout page](https://cilogon.org/logout).
+  3. Go to hub home page and follow the login process using the correct user account.
