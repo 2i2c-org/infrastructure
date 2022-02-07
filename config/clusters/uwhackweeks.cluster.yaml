@@ -154,6 +154,7 @@ hubs:
                   - ICESAT-2HackWeek:jupyterhub-2022
                 scope:
                   - read:user
+                  - read:org
               Authenticator:
                 admin_users: &users
                   - <staff_github_ids>
