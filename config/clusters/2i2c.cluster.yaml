@@ -450,8 +450,8 @@ hubs:
                 - swalker
                 - shaolintl
               admin_users: *aup_users
-  - name: utexas-demo
-    domain: utexas-demo.pilot.2i2c.cloud
+  - name: utexas
+    domain: utexas.pilot.2i2c.cloud
     helm_chart: basehub
     auth0:
       connection: github
