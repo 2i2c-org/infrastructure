@@ -63,7 +63,7 @@ notebook_nodes = {
     max : 20,
     vm_size : "Standard_NC24s_v3",
     labels: {
-      "hub.jupyter.org/sku=gpu",
+      "hub.jupyter.org/sku": "gpu",
     },
     taints: [ ],
     kubernetes_version = "1.19.13",
@@ -124,7 +124,7 @@ dask_nodes = {
     max : 20,
     vm_size : "Standard_NC24s_v3",
     labels: {
-      "hub.jupyter.org/sku=gpu",
+      "hub.jupyter.org/sku": "gpu",
     },
     taints: [ ],
     kubernetes_version = "1.19.13",
