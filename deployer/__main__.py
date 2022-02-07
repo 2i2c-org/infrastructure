@@ -234,7 +234,7 @@ def validate(cluster_name):
         # Raises useful exception if validation fails
         jsonschema.validate(cluster_config, schema)
 
-    secret_cluster_dir = Path(os.getcwd()).joinpath("secrets", "clusters", "hubs")
+    secret_cluster_dir = Path(os.getcwd()).joinpath("secrets", "config", "clusters")
     secret_schema_file = secret_cluster_dir.joinpath("schema.yaml")
     secret_config_file = secret_cluster_dir.joinpath(f"{cluster_name}.cluster.yaml")
 
