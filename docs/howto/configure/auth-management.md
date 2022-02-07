@@ -85,6 +85,7 @@ Presently, this involves a few more manual steps than the `auth0` setup describe
           hub:
             config:
               GitHubOAuthenticator:
+                oauth_callback_url: https://{{ HUB_DOMAIN }}/hub/oauth_callback
                 client_id: CLIENT_ID
                 client_secret: CLIENT_SECRET
     ```
@@ -134,7 +135,6 @@ Presently, this involves a few more manual steps than the `auth0` setup describe
               JupyterHub:
                 authenticator_class: github
               GitHubOAuthenticator:
-                oauth_callback_url: https://{{ HUB_DOMAIN }}/hub/oauth_callback
                 allowed_organizations:
                   - 2i2c-org
                   - ORG_NAME
@@ -157,7 +157,6 @@ Presently, this involves a few more manual steps than the `auth0` setup describe
               JupyterHub:
                 authenticator_class: github
               GitHubOAuthenticator:
-                oauth_callback_url: https://{{ HUB_DOMAIN }}/hub/oauth_callback
                 allowed_organizations:
                   - 2i2c-org:tech-team
                   - ORG_NAME:TEAM_NAME
