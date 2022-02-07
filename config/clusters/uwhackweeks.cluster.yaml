@@ -92,7 +92,7 @@ hubs:
                     subPath: _shared
             image:
               name: quay.io/uwhackweek/icesat2
-              tag: latest
+              tag: "2022.02.03"
             storage:
               extraVolumeMounts:
                 - name: home
