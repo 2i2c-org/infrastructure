@@ -126,14 +126,14 @@ hubs:
                   mem_guarantee: 1950G
                   node_selector:
                     hub.jupyter.org/node-size: Standard_M128s_v2
-              - display_name: "GPU: NC16as T4 v3"
-                description: "~16 CPU, ~90G RAM"
+              - display_name: "GPU: NC24s v3"
+                description: "~24 CPU, ~90G RAM"
                 kubespawner_override:
                   image: "pangeo/ml-notebook:master"
                   mem_limit: null
                   mem_guarantee: 90G
                   node_selector:
-                    hub.jupyter.org/node-size: Standard_NC16as_T4_v3
+                    hub.jupyter.org/node-size: Standard_NC24s_v3
           scheduling:
             userPlaceholder:
               enabled: false
