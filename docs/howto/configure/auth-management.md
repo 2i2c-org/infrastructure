@@ -265,6 +265,18 @@ This means that you'll automatically re-use the same institutional Identity Prov
   If you choose the same Identity Provider, then you will be automatically logged in with the same user account you've used beore. To change the user account, checkout **option 2**.
   ```
 
+  **Exception**
+  You've selected for CILogon to remember a certain Identity Provider connection.
+
+  ```figure ../../images/cilogon-remember-this-selection.png
+  ```
+
+  Then you'll need to [clear the cookies](https://www.lifewire.com/how-to-delete-cookies-2617981) for https://cilogon.org, to be able to choose another Identity Provider.
+
+  Firefox example:
+  ```figure ../../images/cilogon-clear-cookies.png
+  ```
+
 #### Switch user account
   1. Logout of the Hub using the logout button or by going to `https://{hub-name}/hub/logout`.
   2. Logout of CILogon by going to the [CILogon logout page](https://cilogon.org/logout).
