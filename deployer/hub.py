@@ -533,6 +533,10 @@ class Hub:
         """
         Deploy this hub
         """
+        # Find helm chart values files
+        cluster_dir = Path(os.getcwd()).joinpath("config", "clusters", self.cluster.spec["name"])
+        values_files = [f"--values={cluster_dir.joinpath(values_file)}" for values_file in self.spec["helm_chart_values_files"]]
+
         # Ensure helm charts are up to date
         os.chdir("helm-charts")
         subprocess.check_call(["helm", "dep", "up", "basehub"])
@@ -565,15 +569,11 @@ class Hub:
 
         with tempfile.NamedTemporaryFile(
             mode="w"
-        ) as values_file, tempfile.NamedTemporaryFile(
-            mode="w"
         ) as generated_values_file, tempfile.NamedTemporaryFile(
             mode="w"
         ) as secret_values_file:
-            json.dump(self.spec["config"], values_file)
             json.dump(generated_values, generated_values_file)
             json.dump(secret_hub_config, secret_values_file)
-            values_file.flush()
             generated_values_file.flush()
             secret_values_file.flush()
 
@@ -590,9 +590,13 @@ class Hub:
                 # priority over our generated values. Based on how helm does overrides, this means
                 # we should put the config from config/clusters last.
                 f"--values={generated_values_file.name}",
-                f"--values={values_file.name}",
-                f"--values={secret_values_file.name}",
             ]
+
+            # Add on the values files
+            cmd.extend(values_files)
+
+            # Add on the secret file
+            cmd.append(f"--values={secret_values_file.name}")
 
             print_colour(f"Running {' '.join(cmd)}")
             # Can't test without deploying, since our service token isn't set by default
