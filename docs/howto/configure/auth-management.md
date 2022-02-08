@@ -268,13 +268,13 @@ This means that you'll automatically re-use the same institutional Identity Prov
   **Exception**
   You've selected for CILogon to remember a certain Identity Provider connection.
 
-  ```figure ../../images/cilogon-remember-this-selection.png
+  ```{figure} ../../images/cilogon-remember-this-selection.png
   ```
 
   Then you'll need to [clear the cookies](https://www.lifewire.com/how-to-delete-cookies-2617981) for https://cilogon.org, to be able to choose another Identity Provider.
 
   Firefox example:
-  ```figure ../../images/cilogon-clear-cookies.png
+  ```{figure} ../../images/cilogon-clear-cookies.png
   ```
 
 #### Switch user account
