@@ -1,0 +1,124 @@
+basehub:
+  nfs:
+    enabled: true
+    pv:
+      mountOptions:
+        - soft
+        - noatime
+      # Google FileStore IP
+      serverIP: 10.229.44.234
+      # Name of Google Filestore share
+      baseShareName: /homes/
+  jupyterhub:
+    proxy:
+      https:
+        enabled: false
+    custom:
+      cloudResources:
+        provider: gcp
+        gcp:
+          projectId: pangeo-integration-te-3eea
+        scratchBucket:
+          enabled: true
+      homepage:
+        templateVars:
+          org:
+            name: Pangeo
+            url: https://pangeo.io
+            logo_url: "https://raw.githubusercontent.com/pangeo-data/pangeo/master/docs/_static/pangeo_simple_logo.svg"
+          designed_by:
+            name: 2i2c
+            url: https://2i2c.org
+          operated_by:
+            name: 2i2c
+            url: https://2i2c.org
+          funded_by:
+            name: NSF EarthCube Program (Award ICER-2026932)
+            url: "https://www.nsf.gov/awardsearch/showAward?AWD_ID=2026932"
+    hub:
+      config:
+        Authenticator:
+          admin_users:
+            - <staff_github_ids>
+            - rabernat
+            - jhamman
+            - scottyhq
+            - TomAugspurger
+        JupyterHub:
+          authenticator_class: github
+        GitHubOAuthenticator:
+          oauth_callback_url: https://staging.us-central1-b.gcp.pangeo.io/hub/oauth_callback
+          allowed_organizations:
+            - pangeo-data:us-central1-b-gcp
+            - 2i2c-org:tech-team
+          scope:
+            - read:org
+    singleuser:
+      image:
+        name: pangeo/pangeo-notebook
+        tag: bcfacc5
+      profileList:
+        # The mem-guarantees are here so k8s doesn't schedule other pods
+        # on these nodes. They need to be just under total allocatable
+        # RAM on a node, not total node capacity
+        - display_name: "Small (1 GB - 4 GB)"
+          default: true
+          kubespawner_override:
+            cpu_limit: 2
+            cpu_guarantee: 0.3
+            mem_limit: 4G
+            mem_guarantee: 1G
+            node_selector:
+              node.kubernetes.io/instance-type: n1-standard-4
+        - display_name: "Medium (4 GB - 8 GB)"
+          kubespawner_override:
+            cpu_limit: 2
+            cpu_guarantee: 1
+            mem_limit: 8G
+            mem_guarantee: 4G
+            node_selector:
+              node.kubernetes.io/instance-type: n1-standard-8
+        - display_name: "Large (12 GB - 16 GB)"
+          kubespawner_override:
+            cpu_limit: 4
+            cpu_guarantee: 1
+            mem_limit: 16G
+            mem_guarantee: 12G
+            node_selector:
+              node.kubernetes.io/instance-type: n1-standard-16
+        - display_name: "ML Image - Large (12 GB - 16 GB)"
+          description: "https://github.com/pangeo-data/pangeo-docker-images/tree/master/ml-notebook"
+          kubespawner_override:
+            image: "pangeo/ml-notebook:master"
+            cpu_limit: 2
+            cpu_guarantee: 1
+            mem_limit: 16G
+            mem_guarantee: 12G
+            node_selector:
+              node.kubernetes.io/instance-type: n1-standard-16
+      initContainers:
+        # Need to explicitly fix ownership here, since EFS doesn't do anonuid
+        - name: volume-mount-ownership-fix
+          image: busybox
+          command:
+            [
+              "sh",
+              "-c",
+              "id && chown 1000:1000 /home/jovyan && ls -lhd /home/jovyan",
+            ]
+          securityContext:
+            runAsUser: 0
+          volumeMounts:
+            - name: home
+              mountPath: /home/jovyan
+              subPath: "{username}"
+dask-gateway:
+  gateway:
+    backend:
+      scheduler:
+        cores:
+          request: 0.8
+          limit: 1
+        memory:
+          request: 1G
+          limit: 2G
