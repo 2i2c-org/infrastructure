@@ -254,33 +254,33 @@ All the users listed under `admin_users` need to match the `username_pattern` ex
 ### Switching user accounts or Identity Providers
 
 By default, logging in with a particular user account will persist your credentials in future sessions.
-This means that you'll automatically re-use the same institutional and user account when you access the hub's home page.
+This means that you'll automatically re-use the same institutional Identity Provider and user account when you access the hub's home page.
 
-#### To switch CILogon Identity Provider
+#### Switch Identity Providers
   1. Logout of the Hub using the logout button or by going to `https://{hub-name}/hub/logout`.
-  2. The next time the user goes to the hub's landing page, they'll be asked to re-authenticate and will be presented with the list of available Identity Providers after choosing the CILogon connection.
-  3. They can now choose **another Identity Provider** to login against
+  2. The next time you will go to the hub's landing page, you'll be asked to re-authenticate. After choosing the CILogon connection, you will be presented with the list of available Identity Providers.
+  3. You can now choose **another Identity Provider** to login against.
 
   ```{note}
-  If the user choses the same Identity Provider, then they will be automatically logged in with the same user account they've used beore. To change the user account, checkout **option 2**.
+  If you choose the same Identity Provider, then you will be automatically logged in with the same user account you've used beore. To change the user account, checkout **option 2**.
   ```
 
-#### To switch user accounts within an institutional Identity Provider
+#### Switch user account
   1. Logout of the Hub using the logout button or by going to `https://{hub-name}/hub/logout`.
   2. Logout of CILogon by going to the [CILogon logout page](https://cilogon.org/logout).
-  3. The next time the user goes to the hub's landing page, they'll be asked to re-authenticate and will be presented with the list of available Identity Providers after choosing the CILogon connection.
+  3. The next time you will go to the hub's landing page, you'll be asked to re-authenticate. After choosing the CILogon connection, you will be presented with the list of available Identity Providers.
   4. Choose the **same Identity Provider** to login.
-  5. The user can now choose **another user account** to login with.
+  5. You can now choose **another user account** to login with.
 
-#### Forbidden access - 403 error
-  If you've been shown a 403 error page, then this means that the account you were using to login hasn't been allowed by the hub administrator.
+#### Try another account after 403 error
+  If you've been shown a 403 error page, then this means that the account you were using to login with, hasn't been allowed by the hub administrator/s.
 
   ```{figure} ../../images/403-forbidden.png
   ```
 
   If you think this is an error, and the account should have been allowed, then contact the hub adminstrator/s.
 
-  If however you made a mistake and used the wrong user account, here is what you can do to be able to try logging in using another account:
+  If however you made a mistake and used the wrong user account, here is what you can do to try logging in using another account:
 
   1. Logout of the Hub using the `Tap to try another account` button or by going to `https://{hub-name}/hub/logout`.
   2. Logout of CILogon by going to the [CILogon logout page](https://cilogon.org/logout).
