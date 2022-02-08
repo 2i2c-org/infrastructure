@@ -39,6 +39,8 @@ jobs:
             provider: aws
           - cluster_name: openscapes
             provider: aws
+          - cluster_name: uwhackweeks
+            provider: aws
           - cluster_name: meom-ige
             provider: gcp
           - cluster_name: pangeo-hubs
