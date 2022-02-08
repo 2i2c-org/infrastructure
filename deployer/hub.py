@@ -534,8 +534,13 @@ class Hub:
         Deploy this hub
         """
         # Find helm chart values files
-        cluster_dir = Path(os.getcwd()).joinpath("config", "clusters", self.cluster.spec["name"])
-        values_files = [f"--values={cluster_dir.joinpath(values_file)}" for values_file in self.spec["helm_chart_values_files"]]
+        cluster_dir = Path(os.getcwd()).joinpath(
+            "config", "clusters", self.cluster.spec["name"]
+        )
+        values_files = [
+            f"--values={cluster_dir.joinpath(values_file)}"
+            for values_file in self.spec["helm_chart_values_files"]
+        ]
 
         # Ensure helm charts are up to date
         os.chdir("helm-charts")
