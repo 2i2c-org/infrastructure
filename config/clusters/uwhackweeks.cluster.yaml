@@ -156,11 +156,9 @@ hubs:
                   - read:user
                   - read:org
               Authenticator:
-                admin_users: &users
+                admin_users:
                   - <staff_github_ids>
                   - scottyhq
-                # Without this, any GitHub user can authenticate
-                allowed_users: *users
       dask-gateway:
         extraConfig:
           idle: |
