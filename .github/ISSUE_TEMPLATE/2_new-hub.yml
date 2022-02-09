@@ -65,32 +65,7 @@ body:
   - type: markdown
     attributes:
       value: |
-        # Cloud Provider Information
-
-  - type: input
-    id: resource-location
-    attributes:
-      label: Preferred Location of the Cloud Resources
-      description: |
-        If you have restrictions about where in the world your resources should be located, please indicate here. **Only choose a cloud location if you have a strong reason to do so.**  For example, you may wish to specify a specific location if you have a dataset that exists in a particular region/zone already. If you have no preference, we'll use US-based locations.
-    validations:
-      required: false
-
-  - type: checkboxes
-    id: billing-account
-    attributes:
-      label: Do you have your own billing account?
-      description: |
-        If you have your own billing account, we will need to set up the hub infrastructure connected to *your* account. This will be a bit more complex and take extra time. We'll follow up with more questions if you mark "yes" here.
-      options:
-        - label: Yes, I have my own billing account.
-    validations:
-      required: false
-
-  - type: markdown
-    attributes:
-      value: |
-        # Hub Customization
+        # Infrastructure customization
 
   - type: dropdown
     id: auth-type
@@ -143,14 +118,13 @@ body:
         These generally come with added complexity and cost, so make sure you've discussed these options with somebody at 2i2c before selecting them here.
 
         **Explanation of options**:
-        - **Dedicated Scalable Dask Cluster** with [Dask Gateway](https://gateway.dask.org/): if you have very large datasets or otherwise need high-performance parallelizable computing via the cloud.
-        - **Dedicated Kubernetes cluster**: if you need to run the infrastructure on your own cloud account, or otherwise wish to have a dedicated cluster.
         - **Specific cloud provider or datacenter**: If you have restrictions about which cloud provider to use, and which data center the hub should live in (e.g. if it is next to a specific dataset).
-
+        - **Dedicated Scalable Dask Cluster** with [Dask Gateway](https://gateway.dask.org/): if you have very large datasets or otherwise need high-performance parallelizable computing via the cloud.
+        - **Dedicated Kubernetes cluster**: If you need to run the infrastructure on your own cloud account, or otherwise wish to have a dedicated cluster.
       value: |
-        - [ ] Dedicated Scalable Dask Cluster
-        - [ ] Dedicated Scalable Dask Cluster
-        - [ ] Specific cloud provider or datacenter**: <!-- Specify which if yes -->
+        - [ ] Specific cloud provider or datacenter: <!-- Specify which if yes -->
+        - [ ] Dedicated Kubernetes cluster
+        - [ ] Scalable Dask Cluster
     validations:
       required: false
 
