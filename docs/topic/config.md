@@ -35,4 +35,4 @@ The 2i2c team keeps a central list of staff usernames that it automatically adds
 
 When a hub is deployed, some custom code is run as part of `jupyterhub_config.py` and the usernames corresponding to the correct staff list are added to the hub's Admin and Allowed users.
 
-You can find the list of staff usernames in [the `basehub` helm chart](https://github.com/2i2c-org/infrastructure/tree/HEAD/helm-chart/basehub/values.yaml#L52) along with the [custom code](https://github.com/2i2c-org/infrastructure/tree/HEAD/helm-chart/basehub/values.yaml#L392) used to inject them.
+You can find the list of staff usernames in [the `basehub` helm chart](https://github.com/2i2c-org/infrastructure/tree/HEAD/helm-charts/basehub/values.yaml#L52) along with the [custom code](https://github.com/2i2c-org/infrastructure/tree/HEAD/helm-charts/basehub/values.yaml#L392) used to inject them.
