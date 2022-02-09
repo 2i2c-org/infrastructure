@@ -400,8 +400,8 @@ class Hub:
                                 dedent(
                                     f"""\
                                     while true; do git fetch origin;
-                                    if [[ $(git ls-remote --heads origin {self.cluster}-{self.spec["name"]} | wc -c) -ne 0 ]]; then
-                                        git reset --hard origin/{self.cluster}-{self.spec["name"]};
+                                    if [[ $(git ls-remote --heads origin {self.cluster.spec["name"]}-{self.spec["name"]} | wc -c) -ne 0 ]]; then
+                                        git reset --hard origin/{self.cluster.spec["name"]}-{self.spec["name"]};
                                     else
                                         git reset --hard origin/master;
                                     fi
