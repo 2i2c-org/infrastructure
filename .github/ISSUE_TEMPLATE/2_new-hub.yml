@@ -141,7 +141,7 @@ body:
       description: |
         In addition to a base JupyterHub, there are a few extra features that are possible. Use the checkboxes below to ask for them.
         These generally come with added complexity and cost, so make sure you've discussed these options with somebody at 2i2c before selecting them here.
-        
+
         **Explanation of options**:
         - **Dedicated Scalable Dask Cluster** with [Dask Gateway](https://gateway.dask.org/): if you have very large datasets or otherwise need high-performance parallelizable computing via the cloud.
         - **Dedicated Kubernetes cluster**: if you need to run the infrastructure on your own cloud account, or otherwise wish to have a dedicated cluster.
