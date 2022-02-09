@@ -67,20 +67,6 @@ body:
       value: |
         # Cloud Provider Information
 
-  - type: dropdown
-    id: cloud-provider
-    attributes:
-      label: Preferred Cloud Provider
-      description: |
-        If you have restrictions about which cloud provider to use, please indicate here. **Only choose a cloud provider if you have a strong opinion**. You may wish to specify a specific provider if you have a dataset that exists in one of the cloud providers already, or a billing account that you wish to use with a pre-existing cloud provider. If you have no preference, we'll use Google Cloud Platform.
-      options:
-        - No preference (default)
-        - Google Cloud Platform
-        - Amazon Web Services
-        - Microsoft Azure
-    validations:
-      required: true
-
   - type: input
     id: resource-location
     attributes:
@@ -115,56 +101,56 @@ body:
       options:
         - GitHub Authentication (e.g., @mygithubhandle)
         - Google OAuth (e.g., myemailaddress@2i2c.org)
+        - CILogon (yy
         - Username / Password via [auth0](https://auth0.com/docs/connections/database)
         - Other (may not be possible, please specify in comments)
     validations:
       required: true
 
-  - type: input
+  - type: textarea
     id: hub-logo
     attributes:
-      label: Hub logo
+      label: Hub logo information
       description: |
-        A URL to an image that will be used on the hub's landing page. (optional)
+        The hub landing page will have its own logo and a link attached to it. This generally points to a community or institutional website.
+      value: |
+        - **URL to Hub Image**: {{ URL HERE }}
+        - **URL for Image Link**: {{ URL HERE }}
     validations:
       required: false
 
-  - type: input
-    id: hub-logo-url
-    attributes:
-      label: Hub logo URL
-      description: |
-        A URL that the hub's logo will point to when users click on it on the landing page (optional)
-    validations:
-      required: false
-
-  - type: input
+  - type: textarea
     id: hub-image-service
     attributes:
-      label: Hub image service
+      label: Hub user image
       description: |
-        The image registry service used for this hub's user image, if a custom user image is desired. For example, a [quay.io registry image](https://quay.io/). See [the Infrastructure documentation on custom images](https://infrastructure.2i2c.org/en/latest/howto/customize/custom-image.html) for more information.
+        It is possible to customize the user image for the hub, as long as the image is in a public registry. 
+        For example, a [quay.io registry image](https://quay.io/). See [the Infrastructure documentation on custom images](https://infrastructure.2i2c.org/en/latest/howto/customize/custom-image.html) for more information.
+        Use this section to fill in relevant information:
+      value: |
+        - Repository for user image: { REPO LINK IF IT EXISTS }
+        - User image registry: { REGISTRY IF ONE ALREADY EXISTS }
+        - User image tag and name: { NAME AND TAG IF IT EXISTS }
     validations:
       required: false
 
-  - type: input
-    id: hub-image
-    attributes:
-      label: Hub image
-      description: |
-        A name and tag for a user image, pointing to the registry in the field above.
-    validations:
-      required: false
-
-  - type: checkboxes
+  - type: textarea
     id: features
     attributes:
       label: Extra features you'd like to enable
       description: |
-        In addition to a base JupyterHub, you may enable extra infrastructure features that provide additional functionality. These generally come with added complexity and cost, so make sure you've discussed these options with somebody at 2i2c before selecting them here.
+        In addition to a base JupyterHub, there are a few extra features that are possible. Use the checkboxes below to ask for them.
+        These generally come with added complexity and cost, so make sure you've discussed these options with somebody at 2i2c before selecting them here.
+        
+        **Explanation of options**:
+        - **Dedicated Scalable Dask Cluster** with [Dask Gateway](https://gateway.dask.org/): if you have very large datasets or otherwise need high-performance parallelizable computing via the cloud.
+        - **Dedicated Kubernetes cluster**: if you need to run the infrastructure on your own cloud account, or otherwise wish to have a dedicated cluster.
+        - **Specific cloud provider or datacenter**: If you have restrictions about which cloud provider to use, and which data center the hub should live in (e.g. if it is next to a specific dataset).
 
-      options:
-        - label: Dedicated Scalable Dask Cluster with [Dask Gateway](https://gateway.dask.org/)
+      value: |
+        - [ ] Dedicated Scalable Dask Cluster
+        - [ ] Dedicated Scalable Dask Cluster
+        - [ ] Specific cloud provider or datacenter**: <!-- Specify which if yes -->
     validations:
       required: false
 
@@ -188,29 +174,14 @@ body:
         The Community Representative shouldn't worry about this section, but may be asked to provide help answering some questions.
 
   - type: input
-    id: hub-id
-    attributes:
-      label: Hub ID
-      description: |
-        The unique ID used to identify this hub. Should be URL-friendly and short. (e.g. `my-university`).
-    validations:
-      required: false
-
-  - type: input
-    id: hub-cluster
-    attributes:
-      label: Hub Cluster
-      description: |
-        The cloud cluster where this hub will be run. For example, `pilot` or `cloudbank`.
-    validations:
-      required: false
-
-  - type: input
     id: hub-url
     attributes:
       label: Hub URL
       description: |
-        The URL of the hub, should be `<hub ID>.<hub cluster>.2i2c.cloud`.
+        The hub URL has the form: `<hub ID>.<hub cluster>.2i2c.cloud`
+        - `<hub ID>`: The unique ID used to identify this hub. Should be URL-friendly and short. (e.g. `my-university`).
+        - `<hub cluster>`: The cloud cluster where this hub will be run. For example, `pilot` or `cloudbank`.
+      value: <hub ID>.<hub cluster>.2i2c.cloud
     validations:
       required: false
 
