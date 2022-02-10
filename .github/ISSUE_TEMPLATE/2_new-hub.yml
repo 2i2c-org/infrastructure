@@ -66,7 +66,7 @@ body:
         What kind of authentication service will be used for this community. This is the type of "log-in username" users will use on the hub.
       options:
         - GitHub Authentication (e.g., @mygithubhandle)
-        - Google OAuth (e.g., myemailaddress@2i2c.org)
+        - Google OAuth (myemailaddress@gmail.org, or a Google-backed domain)
         - CILogon (e.g., username@institution.org)
         - Username / Password via auth0: https://auth0.com/docs/connections/database
         - Other (may not be possible, please specify in comments)
