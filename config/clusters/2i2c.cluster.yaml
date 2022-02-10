@@ -228,9 +228,14 @@ hubs:
         hub:
           config:
             Authenticator:
-              admin_users:
+              admin_users: &jil_admin_users
                 - donaldbraman
                 - JILPulvino
+              # 2022-02-10 Sarah Gibson: I added in allowed_users here even though
+              # I know we will be decomissioning this hub soon, just so that it's
+              # no longer open to everyone with a GitHub account. Please revert
+              # if this was not the correct thing to do.
+              allowed_users: *jil_admin_users
   - name: pfw
     domain: pfw.pilot.2i2c.cloud
     helm_chart: basehub
