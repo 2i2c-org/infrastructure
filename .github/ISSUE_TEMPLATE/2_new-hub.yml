@@ -49,7 +49,7 @@ body:
       value: |
         - **Required start date**: <!-- the hub MUST by running as-needed by this date -->
         - **Target start date**: <!-- choose a target date ~1 week earlier than the required date -->
-        - **Any important dates for usage**: For example - exams, periods of heavy usage, etc.
+        - **Any important dates for usage**: <!-- For example - exams, periods of heavy usage, etc. -->
     validations:
       required: true
 
@@ -67,8 +67,8 @@ body:
       options:
         - GitHub Authentication (e.g., @mygithubhandle)
         - Google OAuth (e.g., myemailaddress@2i2c.org)
-        - CILogon (yy
-        - Username / Password via [auth0](https://auth0.com/docs/connections/database)
+        - CILogon (e.g., username@institution.org)
+        - Username / Password via auth0: https://auth0.com/docs/connections/database
         - Other (may not be possible, please specify in comments)
     validations:
       required: true
@@ -78,7 +78,7 @@ body:
     attributes:
       label: Hub logo information
       description: |
-        The hub landing page will have its own logo and a link attached to it. This generally points to a community or institutional website.
+        The hub landing page can have a specific logo and a link attached to it. This generally points to a community or institutional website.
       value: |
         - **URL to Hub Image**: {{ URL HERE }}
         - **URL for Image Link**: {{ URL HERE }}
