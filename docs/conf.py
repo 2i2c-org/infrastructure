@@ -13,6 +13,7 @@ author = "2i2c.org"
 extensions = [
     "myst_parser",
     "sphinx.ext.intersphinx",
+    "sphinx_copybutton",
     "sphinx_panels",
 ]
 
