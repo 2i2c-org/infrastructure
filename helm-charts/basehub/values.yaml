@@ -392,7 +392,19 @@ jupyterhub:
       07-2i2c-add-staff-user-ids-to-admin-users: |
         from z2jh import get_config
         add_staff_user_ids_to_admin_users = get_config("custom.2i2c.add_staff_user_ids_to_admin_users", False)
+
         if add_staff_user_ids_to_admin_users:
             user_id_type = get_config("custom.2i2c.add_staff_user_ids_of_type")
             staff_user_ids = get_config(f"custom.2i2c.staff_{user_id_type}_ids", [])
             c.Authenticator.admin_users.extend(staff_user_ids)
+
+            # Check what authenticator class is set. If it's "github", we assume
+            # GitHub Orgs/Teams is being used for auth and unset allowed_users
+            # so valid members are not refused access.
+            # FIXME: This should be handled in basehub's schema validation file
+            # so that we get useful feedback about config. But at time of writing,
+            # it doesn't have one! Issue to track the creation of such files is:
+            # https://github.com/2i2c-org/infrastructure/issues/937
+            authenticator_class = get_config("hub.config.JupyterHub.authenticator_class")
+            if authenticator_class == "github":
+                c.Authenticator.allowed_users = set()
