@@ -406,5 +406,6 @@ jupyterhub:
             # it doesn't have one! Issue to track the creation of such files is:
             # https://github.com/2i2c-org/infrastructure/issues/937
             authenticator_class = get_config("hub.config.JupyterHub.authenticator_class")
-            if authenticator_class == "github":
+            if authenticator_class == "github" and c.Authenticator.allowed_users:
+                print("WARNING: hub.config.JupyterHub.authenticator_class was set to github and c.Authenticator.allowed_users was set, custom 2i2c jupyterhub config is now resetting allowed_users to an empty set.")
                 c.Authenticator.allowed_users = set()
