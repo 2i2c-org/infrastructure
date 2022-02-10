@@ -20,6 +20,9 @@ hubs:
             enabled: false
         jupyterhub:
           custom:
+            2i2c:
+              add_staff_user_ids_to_admin_users: true
+              add_staff_user_ids_of_type: "github"
             homepage:
               templateVars:
                 org:
@@ -96,7 +99,6 @@ hubs:
               Authenticator:
                 # Only allow admin users + users added via the UI
                 admin_users: &users
-                  - <staff_github_ids>
                   - donaldbraman
                   - JILPulvino
                 allowed_users: *users
