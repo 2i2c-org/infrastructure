@@ -43,6 +43,26 @@ jupyterhub:
         projectId:
       scratchBucket:
         enabled: false
+    2i2c:
+      # Should 2i2c engineering staff user IDs be injected to the admin_users
+      # configuration of the JupyterHub's authenticator by our custom
+      # jupyterhub_config.py snippet as declared in hub.extraConfig?
+      add_staff_user_ids_to_admin_users: false
+      add_staff_user_ids_of_type: ""
+      staff_github_ids:
+        - choldgraf
+        - consideRatio
+        - damianavila
+        - GeorgianaElena
+        - sgibson91
+        - yuvipanda
+      staff_google_ids:
+        - choldgraf@2i2c.org
+        - erik@2i2c.org
+        - damianavila@2i2c.org
+        - georgianaelena@2i2c.org
+        - sgibson@2i2c.org
+        - yuvipanda@2i2c.org
   ingress:
     enabled: true
     annotations:
@@ -369,3 +389,23 @@ jupyterhub:
           }
 
           c.KubeSpawner.environment.update(env)
+      07-2i2c-add-staff-user-ids-to-admin-users: |
+        from z2jh import get_config
+        add_staff_user_ids_to_admin_users = get_config("custom.2i2c.add_staff_user_ids_to_admin_users", False)
+
+        if add_staff_user_ids_to_admin_users:
+            user_id_type = get_config("custom.2i2c.add_staff_user_ids_of_type")
+            staff_user_ids = get_config(f"custom.2i2c.staff_{user_id_type}_ids", [])
+            c.Authenticator.admin_users.extend(staff_user_ids)
+
+            # Check what authenticator class is set. If it's "github", we assume
+            # GitHub Orgs/Teams is being used for auth and unset allowed_users
+            # so valid members are not refused access.
+            # FIXME: This should be handled in basehub's schema validation file
+            # so that we get useful feedback about config. But at time of writing,
+            # it doesn't have one! Issue to track the creation of such files is:
+            # https://github.com/2i2c-org/infrastructure/issues/937
+            authenticator_class = get_config("hub.config.JupyterHub.authenticator_class")
+            if authenticator_class == "github" and c.Authenticator.allowed_users:
+                print("WARNING: hub.config.JupyterHub.authenticator_class was set to github and c.Authenticator.allowed_users was set, custom 2i2c jupyterhub config is now resetting allowed_users to an empty set.")
+                c.Authenticator.allowed_users = set()

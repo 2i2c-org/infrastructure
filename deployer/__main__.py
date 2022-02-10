@@ -12,7 +12,7 @@ import shutil
 
 from auth import KeyProvider
 from hub import Cluster
-from utils import decrypt_file, update_authenticator_config, print_colour
+from utils import decrypt_file, print_colour
 
 # Without `pure=True`, I get an exception about str / byte issues
 yaml = YAML(typ="safe", pure=True)
@@ -214,13 +214,11 @@ def deploy(cluster_name, hub_name, skip_hub_health_test, config_path):
         hubs = cluster.hubs
         if hub_name:
             hub = next((hub for hub in hubs if hub.spec["name"] == hub_name), None)
-            update_authenticator_config(hub.spec["config"], hub.spec["helm_chart"])
             hub.deploy(k, SECRET_KEY, skip_hub_health_test)
         else:
             hubN = len(hubs)
             for i, hub in enumerate(hubs):
                 print_colour(f"{i+1} / {hubN}: Deploying hub {hub.spec['name']}...")
-                update_authenticator_config(hub.spec["config"], hub.spec["helm_chart"])
                 hub.deploy(k, SECRET_KEY, skip_hub_health_test)
 
 

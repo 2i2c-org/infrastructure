@@ -34,6 +34,8 @@ hubs:
     domain: staging.openscapes.2i2c.cloud
     helm_chart: daskhub
     auth0:
+      # connection update? Also ensure the basehub Helm chart is provided a
+      # matching value for jupyterhub.custom.2i2c.add_staff_user_ids_of_type!
       connection: github
     config: &openscapesHubConfig
       scratchBucket:
@@ -53,6 +55,9 @@ hubs:
             baseShareName: /
         jupyterhub:
           custom:
+            2i2c:
+              add_staff_user_ids_to_admin_users: true
+              add_staff_user_ids_of_type: "github"
             homepage:
               templateVars:
                 org:
@@ -149,7 +154,6 @@ hubs:
             config:
               Authenticator:
                 admin_users: &users
-                  - <staff_github_ids>
                   - amfriesz
                   - jules32
                   - erinmr
@@ -165,5 +169,7 @@ hubs:
     domain: openscapes.2i2c.cloud
     helm_chart: daskhub
     auth0:
+      # connection update? Also ensure the basehub Helm chart is provided a
+      # matching value for jupyterhub.custom.2i2c.add_staff_user_ids_of_type!
       connection: github
     config: *openscapesHubConfig

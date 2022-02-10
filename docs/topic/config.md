@@ -32,11 +32,7 @@ basis in the config for the hub under [`config/clusters`](https://github.com/2i2
 ### 2i2c staff lists
 
 The 2i2c team keeps a central list of staff usernames that it automatically adds as administrators to each of the hubs that we deploy.
-When a new hub is created, we use one of these two placeholders to add 2i2c staff to the hub:
 
-- `<staff_github_ids>` - If the hub uses GitHub authentication
-- `<staff_google_ids>` - If the hub uses Google OAuth authentication
+When a hub is deployed, some custom code is run as part of `jupyterhub_config.py` and the usernames corresponding to the correct staff list are added to the hub's Admin and Allowed users.
 
-When a hub is deployed, these placeholders are removed, and the usernames corresponding to the correct staff list are added to the hub's Admin and Allowed users.
-
-You can find the list of staff usernames at [`config/clusters/staff.yaml`](https://github.com/2i2c-org/infrastructure/tree/HEAD/config/clusters/staff.yaml).
+You can find the list of staff usernames in [the `basehub` helm chart](https://github.com/2i2c-org/infrastructure/tree/HEAD/helm-charts/basehub/values.yaml#L52) along with the [custom code](https://github.com/2i2c-org/infrastructure/tree/HEAD/helm-charts/basehub/values.yaml#L392) used to inject them.

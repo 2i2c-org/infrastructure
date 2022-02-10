@@ -237,14 +237,16 @@ The following configuration example shows off how to configure hub admins and al
 ```yaml
 config:
   jupyterhub:
+    custom:
+      2i2c:
+        add_staff_user_ids_to_admin_users: true
+        add_staff_user_ids_of_type: "google"
     hub:
       config:
         Authenticator:
           admin_users:
             - user1@campus.edu
             - user2@gmail.com
-            # This will be replaced with the staff's google addresses
-            - <staff_google_ids>
           username_pattern: '^(.+@2i2c\.org|.+@campus\.edu|user2@gmail\.com|deployment-service-check)$'
 ```
 
