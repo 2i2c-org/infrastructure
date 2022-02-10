@@ -534,7 +534,6 @@ hubs:
         hub:
           config:
             Authenticator:
-              allowed_users:
               username_pattern: '^(.+@2i2c\.org|.+@anu\.edu\.au|deployment-service-check)$'
   - name: utexas
     domain: utexas.pilot.2i2c.cloud
