@@ -21,6 +21,8 @@ hubs:
     domain: spelman.cloudbank.2i2c.cloud
     helm_chart: basehub
     auth0:
+      # connection update? Also ensure the basehub Helm chart is provided a
+      # matching value for jupyterhub.custom.2i2c.add_staff_user_ids_of_type!
       connection: google-oauth2
     config:
       jupyterhub:
@@ -56,6 +58,8 @@ hubs:
     domain: ccsf.cloudbank.2i2c.cloud
     helm_chart: basehub
     auth0:
+      # connection update? Also ensure the basehub Helm chart is provided a
+      # matching value for jupyterhub.custom.2i2c.add_staff_user_ids_of_type!
       connection: google-oauth2
     config:
       jupyterhub:
@@ -92,6 +96,8 @@ hubs:
     domain: elcamino.cloudbank.2i2c.cloud
     helm_chart: basehub
     auth0:
+      # connection update? Also ensure the basehub Helm chart is provided a
+      # matching value for jupyterhub.custom.2i2c.add_staff_user_ids_of_type!
       connection: google-oauth2
     config:
       jupyterhub:
@@ -131,6 +137,8 @@ hubs:
     domain: howard.cloudbank.2i2c.cloud
     helm_chart: basehub
     auth0:
+      # connection update? Also ensure the basehub Helm chart is provided a
+      # matching value for jupyterhub.custom.2i2c.add_staff_user_ids_of_type!
       connection: google-oauth2
     config:
       jupyterhub:
@@ -166,6 +174,8 @@ hubs:
     domain: skyline.cloudbank.2i2c.cloud
     helm_chart: basehub
     auth0:
+      # connection update? Also ensure the basehub Helm chart is provided a
+      # matching value for jupyterhub.custom.2i2c.add_staff_user_ids_of_type!
       connection: google-oauth2
     config:
       jupyterhub:
@@ -201,6 +211,8 @@ hubs:
     domain: demo.cloudbank.2i2c.cloud
     helm_chart: basehub
     auth0:
+      # connection update? Also ensure the basehub Helm chart is provided a
+      # matching value for jupyterhub.custom.2i2c.add_staff_user_ids_of_type!
       connection: password
       password:
         database_name: database-demo
@@ -252,6 +264,8 @@ hubs:
     domain: lassen.cloudbank.2i2c.cloud
     helm_chart: basehub
     auth0:
+      # connection update? Also ensure the basehub Helm chart is provided a
+      # matching value for jupyterhub.custom.2i2c.add_staff_user_ids_of_type!
       connection: google-oauth2
     config:
       jupyterhub:
@@ -286,6 +300,8 @@ hubs:
     domain: clovis.cloudbank.2i2c.cloud
     helm_chart: basehub
     auth0:
+      # connection update? Also ensure the basehub Helm chart is provided a
+      # matching value for jupyterhub.custom.2i2c.add_staff_user_ids_of_type!
       connection: google-oauth2
     config:
       jupyterhub:
@@ -320,6 +336,8 @@ hubs:
     domain: sbcc.cloudbank.2i2c.cloud
     helm_chart: basehub
     auth0:
+      # connection update? Also ensure the basehub Helm chart is provided a
+      # matching value for jupyterhub.custom.2i2c.add_staff_user_ids_of_type!
       connection: google-oauth2
     config:
       jupyterhub:
@@ -354,6 +372,8 @@ hubs:
     domain: datahub.mills.edu
     helm_chart: basehub
     auth0:
+      # connection update? Also ensure the basehub Helm chart is provided a
+      # matching value for jupyterhub.custom.2i2c.add_staff_user_ids_of_type!
       connection: google-oauth2
     config:
       jupyterhub:
@@ -389,6 +409,8 @@ hubs:
     domain: palomar.cloudbank.2i2c.cloud
     helm_chart: basehub
     auth0:
+      # connection update? Also ensure the basehub Helm chart is provided a
+      # matching value for jupyterhub.custom.2i2c.add_staff_user_ids_of_type!
       connection: google-oauth2
     config:
       jupyterhub:
@@ -424,6 +446,8 @@ hubs:
     domain: sjcc.cloudbank.2i2c.cloud
     helm_chart: basehub
     auth0:
+      # connection update? Also ensure the basehub Helm chart is provided a
+      # matching value for jupyterhub.custom.2i2c.add_staff_user_ids_of_type!
       connection: google-oauth2
     config:
       jupyterhub:
@@ -459,6 +483,8 @@ hubs:
     domain: avc.cloudbank.2i2c.cloud
     helm_chart: basehub
     auth0:
+      # connection update? Also ensure the basehub Helm chart is provided a
+      # matching value for jupyterhub.custom.2i2c.add_staff_user_ids_of_type!
       connection: google-oauth2
     config:
       jupyterhub:
@@ -496,6 +522,8 @@ hubs:
     domain: csu.cloudbank.2i2c.cloud
     helm_chart: basehub
     auth0:
+      # connection update? Also ensure the basehub Helm chart is provided a
+      # matching value for jupyterhub.custom.2i2c.add_staff_user_ids_of_type!
       connection: password
       password:
         database_name: database-csu

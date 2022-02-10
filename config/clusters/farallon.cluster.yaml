@@ -11,6 +11,8 @@ hubs:
     domain: staging.farallon.2i2c.cloud
     helm_chart: daskhub
     auth0:
+      # connection update? Also ensure the basehub Helm chart is provided a
+      # matching value for jupyterhub.custom.2i2c.add_staff_user_ids_of_type!
       connection: github
     config: &hubConfig
       basehub:
@@ -159,5 +161,7 @@ hubs:
     domain: farallon.2i2c.cloud
     helm_chart: daskhub
     auth0:
+      # connection update? Also ensure the basehub Helm chart is provided a
+      # matching value for jupyterhub.custom.2i2c.add_staff_user_ids_of_type!
       connection: github
     config: *hubConfig
