@@ -534,6 +534,8 @@ hubs:
         hub:
           config:
             Authenticator:
+              admin_users:
+                - matthew.mckay@anu.edu.au
               username_pattern: '^(.+@2i2c\.org|.+@anu\.edu\.au|deployment-service-check)$'
   - name: utexas
     domain: utexas.pilot.2i2c.cloud
