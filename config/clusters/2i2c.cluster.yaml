@@ -132,6 +132,7 @@ hubs:
           config:
             Authenticator:
               # Only usernames matching this regex will be allowed to login into the hub
+              # ref: https://jupyterhub.readthedocs.io/en/stable/api/auth.html#jupyterhub.auth.Authenticator.username_pattern
               username_pattern: '^(.+@2i2c\.org|deployment-service-check)$'
   - name: ohw
     domain: ohw.pilot.2i2c.cloud
@@ -538,6 +539,7 @@ hubs:
               admin_users:
                 - matthew.mckay@anu.edu.au
               # Only usernames matching this regex will be allowed to login into the hub
+              # ref: https://jupyterhub.readthedocs.io/en/stable/api/auth.html#jupyterhub.auth.Authenticator.username_pattern
               username_pattern: '^(.+@2i2c\.org|.+@anu\.edu\.au|deployment-service-check)$'
   - name: utexas
     domain: utexas.pilot.2i2c.cloud
