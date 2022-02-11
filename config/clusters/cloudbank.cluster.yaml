@@ -404,6 +404,7 @@ hubs:
                 - jpercy@berkeley.edu
                 - akonrad@mills.edu
                 - wang@mills.edu
+              # Only usernames matching this regex will be allowed to login into the hub
               username_pattern: '^(.+@mills\.edu|.+@2i2c\.org|aculich@berkeley\.edu|jpercy@berkeley\.edu|deployment-service-check)$'
   - name: palomar
     domain: palomar.cloudbank.2i2c.cloud

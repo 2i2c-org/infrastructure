@@ -131,6 +131,7 @@ hubs:
         hub:
           config:
             Authenticator:
+              # Only usernames matching this regex will be allowed to login into the hub
               username_pattern: '^(.+@2i2c\.org|deployment-service-check)$'
   - name: ohw
     domain: ohw.pilot.2i2c.cloud
@@ -536,6 +537,7 @@ hubs:
             Authenticator:
               admin_users:
                 - matthew.mckay@anu.edu.au
+              # Only usernames matching this regex will be allowed to login into the hub
               username_pattern: '^(.+@2i2c\.org|.+@anu\.edu\.au|deployment-service-check)$'
   - name: utexas
     domain: utexas.pilot.2i2c.cloud
