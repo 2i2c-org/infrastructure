@@ -1,0 +1,127 @@
+scratchBucket:
+  enabled: false
+basehub:
+  nfs:
+    pv:
+      # from https://docs.aws.amazon.com/efs/latest/ug/mounting-fs-nfs-mount-settings.html
+      mountOptions:
+        - rsize=1048576
+        - wsize=1048576
+        - timeo=600
+        - soft # We pick soft over hard, so NFS lockups don't lead to hung processes
+        - retrans=2
+        - noresvport
+      serverIP: fs-b25253b5.efs.us-west-2.amazonaws.com
+      baseShareName: /
+  jupyterhub:
+    custom:
+      2i2c:
+        add_staff_user_ids_to_admin_users: true
+        add_staff_user_ids_of_type: "github"
+      homepage:
+        templateVars:
+          org:
+            name: Openscapes
+            logo_url: https://www.openscapes.org/img/logo.png
+            url: https://www.openscapes.org/
+          designed_by:
+            name: 2i2c
+            url: https://2i2c.org
+          operated_by:
+            name: 2i2c
+            url: https://2i2c.org
+          funded_by:
+            name: Openscapes
+            url: https://www.openscapes.org/
+    singleuser:
+      serviceAccountName: cloud-user-sa
+      defaultUrl: /lab
+      initContainers:
+        # Need to explicitly fix ownership here, since EFS doesn't do anonuid
+        - name: volume-mount-ownership-fix
+          image: busybox
+          command:
+            [
+              "sh",
+              "-c",
+              "id && chown 1000:1000 /home/jovyan /home/jovyan/shared && ls -lhd /home/jovyan",
+            ]
+          securityContext:
+            runAsUser: 0
+          volumeMounts:
+            - name: home
+              mountPath: /home/jovyan
+              subPath: "{username}"
+            - name: home
+              mountPath: /home/jovyan/shared
+              subPath: _shared
+
+      image:
+        name: 783616723547.dkr.ecr.us-west-2.amazonaws.com/user-image
+        tag: "d78bb6c"
+      storage:
+        extraVolumeMounts:
+          - name: home
+            mountPath: /home/jovyan/shared
+            subPath: _shared
+            readOnly: false
+      profileList:
+        # The mem-guarantees are here so k8s doesn't schedule other pods
+        # on these nodes.
+        - display_name: "Small: m5.large"
+          description: "~2 CPU, ~8G RAM"
+          kubespawner_override:
+            # Expllicitly unset mem_limit, so it overrides the default memory limit we set in
+            # basehub/values.yaml
+            mem_limit: null
+            mem_guarantee: 6.5G
+            node_selector:
+              node.kubernetes.io/instance-type: m5.large
+        - display_name: "Medium: m5.xlarge"
+          description: "~4 CPU, ~15G RAM"
+          kubespawner_override:
+            mem_limit: null
+            mem_guarantee: 12G
+            node_selector:
+              node.kubernetes.io/instance-type: m5.xlarge
+        - display_name: "Large: m5.2xlarge"
+          description: "~8 CPU, ~30G RAM"
+          kubespawner_override:
+            mem_limit: null
+            mem_guarantee: 26G
+            node_selector:
+              node.kubernetes.io/instance-type: m5.2xlarge
+        - display_name: "Huge: m5.8xlarge"
+          description: "~32 CPU, ~128G RAM"
+          kubespawner_override:
+            mem_limit: null
+            mem_guarantee: 115G
+            node_selector:
+              node.kubernetes.io/instance-type: m5.8xlarge
+    scheduling:
+      userPlaceholder:
+        enabled: false
+        replicas: 0
+      userScheduler:
+        enabled: false
+    hub:
+      allowNamedServers: true
+      networkPolicy:
+        # FIXME: For dask gateway
+        enabled: false
+      readinessProbe:
+        enabled: false
+      config:
+        Authenticator:
+          admin_users: &users
+            - amfriesz
+            - jules32
+            - erinmr
+            - betolink
+          # Without this, any GitHub user can authenticate
+          allowed_users: *users
+dask-gateway:
+  extraConfig:
+    idle: |
+      # timeout after 30 minutes of inactivity
+      c.KubeClusterConfig.idle_timeout = 1800
