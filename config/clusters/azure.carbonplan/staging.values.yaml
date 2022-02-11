@@ -105,8 +105,7 @@ basehub:
             image: "pangeo/ml-notebook:master"
             mem_limit: null
             mem_guarantee: 90G
-            environment:
-              { "NVIDIA_DRIVER_CAPABILITIES": "compute,utility" }
+            environment: { "NVIDIA_DRIVER_CAPABILITIES": "compute,utility" }
             extra_resource_limits:
               nvidia.com/gpu: "1"
             node_selector:
