@@ -1,0 +1,50 @@
+name: carbonplan
+provider: aws
+aws:
+  key: secrets/carbonplan.json
+  clusterType: eks
+  clusterName: carbonplanhub
+  region: us-west-2
+support:
+  config:
+    prometheus:
+      server:
+        resources:
+          requests:
+            cpu: 1
+            memory: 4Gi
+          limits:
+            cpu: 4
+            memory: 8Gi
+    cluster-autoscaler:
+      enabled: true
+      autoDiscovery:
+        clusterName: carbonplanhub
+      awsRegion: us-west-2
+    grafana:
+      ingress:
+        hosts:
+          - grafana.carbonplan.2i2c.cloud
+        tls:
+          - secretName: grafana-tls
+            hosts:
+              - grafana.carbonplan.2i2c.cloud
+hubs:
+  - name: staging
+    domain: staging.carbonplan.2i2c.cloud
+    helm_chart: daskhub
+    auth0:
+      # connection update? Also ensure the basehub Helm chart is provided a
+      # matching value for jupyterhub.custom.2i2c.add_staff_user_ids_of_type!
+      connection: github
+    helm_chart_values_files:
+      - staging.values.yaml
+  - name: prod
+    domain: carbonplan.2i2c.cloud
+    helm_chart: daskhub
+    auth0:
+      # connection update? Also ensure the basehub Helm chart is provided a
+      # matching value for jupyterhub.custom.2i2c.add_staff_user_ids_of_type!
+      connection: github
+    helm_chart_values_files:
+      - staging.values.yaml
