@@ -25,6 +25,9 @@ hubs:
       # matching value for jupyterhub.custom.2i2c.add_staff_user_ids_of_type!
       connection: google-oauth2
     helm_chart_values_files:
+      # The order in which you list files here is the order the will be passed
+      # to the helm upgrade command in, and that has meaning. Please check
+      # that you intend for these files to be applied in this order.
       - spelman.values.yaml
   - name: ccsf
     domain: ccsf.cloudbank.2i2c.cloud
@@ -34,6 +37,9 @@ hubs:
       # matching value for jupyterhub.custom.2i2c.add_staff_user_ids_of_type!
       connection: google-oauth2
     helm_chart_values_files:
+      # The order in which you list files here is the order the will be passed
+      # to the helm upgrade command in, and that has meaning. Please check
+      # that you intend for these files to be applied in this order.
       - ccsf.values.yaml
   - name: elcamino
     domain: elcamino.cloudbank.2i2c.cloud
@@ -43,6 +49,9 @@ hubs:
       # matching value for jupyterhub.custom.2i2c.add_staff_user_ids_of_type!
       connection: google-oauth2
     helm_chart_values_files:
+      # The order in which you list files here is the order the will be passed
+      # to the helm upgrade command in, and that has meaning. Please check
+      # that you intend for these files to be applied in this order.
       - elcamino.values.yaml
   - name: howard
     domain: howard.cloudbank.2i2c.cloud
@@ -52,6 +61,9 @@ hubs:
       # matching value for jupyterhub.custom.2i2c.add_staff_user_ids_of_type!
       connection: google-oauth2
     helm_chart_values_files:
+      # The order in which you list files here is the order the will be passed
+      # to the helm upgrade command in, and that has meaning. Please check
+      # that you intend for these files to be applied in this order.
       - howard.values.yaml
   - name: skyline
     domain: skyline.cloudbank.2i2c.cloud
@@ -61,6 +73,9 @@ hubs:
       # matching value for jupyterhub.custom.2i2c.add_staff_user_ids_of_type!
       connection: google-oauth2
     helm_chart_values_files:
+      # The order in which you list files here is the order the will be passed
+      # to the helm upgrade command in, and that has meaning. Please check
+      # that you intend for these files to be applied in this order.
       - skyline.values.yaml
   - name: demo
     domain: demo.cloudbank.2i2c.cloud
@@ -72,6 +87,9 @@ hubs:
       password:
         database_name: database-demo
     helm_chart_values_files:
+      # The order in which you list files here is the order the will be passed
+      # to the helm upgrade command in, and that has meaning. Please check
+      # that you intend for these files to be applied in this order.
       - demo.values.yaml
   - name: lassen
     domain: lassen.cloudbank.2i2c.cloud
@@ -81,6 +99,9 @@ hubs:
       # matching value for jupyterhub.custom.2i2c.add_staff_user_ids_of_type!
       connection: google-oauth2
     helm_chart_values_files:
+      # The order in which you list files here is the order the will be passed
+      # to the helm upgrade command in, and that has meaning. Please check
+      # that you intend for these files to be applied in this order.
       - lassen.values.yaml
   - name: clovis
     domain: clovis.cloudbank.2i2c.cloud
@@ -90,6 +111,9 @@ hubs:
       # matching value for jupyterhub.custom.2i2c.add_staff_user_ids_of_type!
       connection: google-oauth2
     helm_chart_values_files:
+      # The order in which you list files here is the order the will be passed
+      # to the helm upgrade command in, and that has meaning. Please check
+      # that you intend for these files to be applied in this order.
       - clovis.values.yaml
   - name: sbcc
     domain: sbcc.cloudbank.2i2c.cloud
@@ -99,6 +123,9 @@ hubs:
       # matching value for jupyterhub.custom.2i2c.add_staff_user_ids_of_type!
       connection: google-oauth2
     helm_chart_values_files:
+      # The order in which you list files here is the order the will be passed
+      # to the helm upgrade command in, and that has meaning. Please check
+      # that you intend for these files to be applied in this order.
       - sbcc.values.yaml
   - name: mills
     domain: datahub.mills.edu
@@ -108,6 +135,9 @@ hubs:
       # matching value for jupyterhub.custom.2i2c.add_staff_user_ids_of_type!
       connection: google-oauth2
     helm_chart_values_files:
+      # The order in which you list files here is the order the will be passed
+      # to the helm upgrade command in, and that has meaning. Please check
+      # that you intend for these files to be applied in this order.
       - mills.values.yaml
   - name: palomar
     domain: palomar.cloudbank.2i2c.cloud
@@ -117,6 +147,9 @@ hubs:
       # matching value for jupyterhub.custom.2i2c.add_staff_user_ids_of_type!
       connection: google-oauth2
     helm_chart_values_files:
+      # The order in which you list files here is the order the will be passed
+      # to the helm upgrade command in, and that has meaning. Please check
+      # that you intend for these files to be applied in this order.
       - palomar.values.yaml
   - name: sjcc
     domain: sjcc.cloudbank.2i2c.cloud
@@ -126,6 +159,9 @@ hubs:
       # matching value for jupyterhub.custom.2i2c.add_staff_user_ids_of_type!
       connection: google-oauth2
     helm_chart_values_files:
+      # The order in which you list files here is the order the will be passed
+      # to the helm upgrade command in, and that has meaning. Please check
+      # that you intend for these files to be applied in this order.
       - sjcc.values.yaml
   - name: avc
     domain: avc.cloudbank.2i2c.cloud
@@ -135,6 +171,9 @@ hubs:
       # matching value for jupyterhub.custom.2i2c.add_staff_user_ids_of_type!
       connection: google-oauth2
     helm_chart_values_files:
+      # The order in which you list files here is the order the will be passed
+      # to the helm upgrade command in, and that has meaning. Please check
+      # that you intend for these files to be applied in this order.
       - avc.values.yaml
   - name: csu
     domain: csu.cloudbank.2i2c.cloud
@@ -146,4 +185,7 @@ hubs:
       password:
         database_name: database-csu
     helm_chart_values_files:
+      # The order in which you list files here is the order the will be passed
+      # to the helm upgrade command in, and that has meaning. Please check
+      # that you intend for these files to be applied in this order.
       - csu.values.yaml

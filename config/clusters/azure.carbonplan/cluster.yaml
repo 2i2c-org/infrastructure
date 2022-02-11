@@ -33,6 +33,9 @@ hubs:
       # matching value for jupyterhub.custom.2i2c.add_staff_user_ids_of_type!
       connection: github
     helm_chart_values_files:
+      # The order in which you list files here is the order the will be passed
+      # to the helm upgrade command in, and that has meaning. Please check
+      # that you intend for these files to be applied in this order.
       - staging.values.yaml
   - name: prod
     domain: prod.azure.carbonplan.2i2c.cloud
@@ -42,4 +45,7 @@ hubs:
       # matching value for jupyterhub.custom.2i2c.add_staff_user_ids_of_type!
       connection: github
     helm_chart_values_files:
+      # The order in which you list files here is the order the will be passed
+      # to the helm upgrade command in, and that has meaning. Please check
+      # that you intend for these files to be applied in this order.
       - staging.values.yaml
