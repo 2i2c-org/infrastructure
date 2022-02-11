@@ -27,10 +27,13 @@ hubs:
     helm_chart: basehub
     auth0:
       enabled: false
-    config:
+    helm_chart_values_files:
+      - staging.values.yaml
   - name: prod
     domain: jupyter.utoronto.ca
     helm_chart: basehub
     auth0:
       enabled: false
-    config:
+    helm_chart_values_files:
+      - staging.values.yaml
+      - prod.values.yaml
