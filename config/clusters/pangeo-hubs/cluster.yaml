@@ -27,3 +27,19 @@ support:
           limits:
             cpu: 2
             memory: 12Gi
+hubs:
+  - name: staging
+    domain: staging.us-central1-b.gcp.pangeo.io
+    helm_chart: daskhub
+    auth0:
+      enabled: false
+    helm_chart_values_files:
+      - staging.values.yaml
+  - name: prod
+    domain: us-central1-b.gcp.pangeo.io
+    helm_chart: daskhub
+    auth0:
+      enabled: false
+    helm_chart_values_files:
+      - staging.values.yaml
+      - prod.values.yaml
