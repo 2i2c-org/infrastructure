@@ -404,6 +404,8 @@ hubs:
                 - jpercy@berkeley.edu
                 - akonrad@mills.edu
                 - wang@mills.edu
+              # We do not define allowed_users here since only usernames matching this regex will be allowed to login into the hub.
+              # Ref: https://jupyterhub.readthedocs.io/en/stable/api/auth.html#jupyterhub.auth.Authenticator.username_pattern
               username_pattern: '^(.+@mills\.edu|.+@2i2c\.org|aculich@berkeley\.edu|jpercy@berkeley\.edu|deployment-service-check)$'
   - name: palomar
     domain: palomar.cloudbank.2i2c.cloud
