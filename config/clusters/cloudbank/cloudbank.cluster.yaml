@@ -21,10 +21,15 @@ hubs:
     domain: spelman.cloudbank.2i2c.cloud
     helm_chart: basehub
     auth0:
+      # connection update? Also ensure the basehub Helm chart is provided a
+      # matching value for jupyterhub.custom.2i2c.add_staff_user_ids_of_type!
       connection: google-oauth2
     config:
       jupyterhub:
         custom:
+          2i2c:
+            add_staff_user_ids_to_admin_users: true
+            add_staff_user_ids_of_type: "google"
           homepage:
             templateVars:
               org:
@@ -44,7 +49,6 @@ hubs:
           config:
             Authenticator:
               allowed_users: &spelman_users
-                - <staff_google_ids>
                 - colliand@gmail.com
                 - ericvd@gmail.com
                 - sean.smorris@berkeley.edu
@@ -54,10 +58,15 @@ hubs:
     domain: ccsf.cloudbank.2i2c.cloud
     helm_chart: basehub
     auth0:
+      # connection update? Also ensure the basehub Helm chart is provided a
+      # matching value for jupyterhub.custom.2i2c.add_staff_user_ids_of_type!
       connection: google-oauth2
     config:
       jupyterhub:
         custom:
+          2i2c:
+            add_staff_user_ids_to_admin_users: true
+            add_staff_user_ids_of_type: "google"
           homepage:
             templateVars:
               org:
@@ -77,7 +86,6 @@ hubs:
           config:
             Authenticator:
               allowed_users: &ccsf_users
-                - <staff_google_ids>
                 - ericvd@gmail.com
                 - sean.smorris@berkeley.edu
                 - shawn.wiggins@mail.ccsf.edu
@@ -88,10 +96,15 @@ hubs:
     domain: elcamino.cloudbank.2i2c.cloud
     helm_chart: basehub
     auth0:
+      # connection update? Also ensure the basehub Helm chart is provided a
+      # matching value for jupyterhub.custom.2i2c.add_staff_user_ids_of_type!
       connection: google-oauth2
     config:
       jupyterhub:
         custom:
+          2i2c:
+            add_staff_user_ids_to_admin_users: true
+            add_staff_user_ids_of_type: "google"
           homepage:
             templateVars:
               org:
@@ -116,7 +129,6 @@ hubs:
           config:
             Authenticator:
               allowed_users: &elcamino_users
-                - <staff_google_ids>
                 - ericvd@gmail.com
                 - sean.smorris@berkeley.edu
                 - solomonrussell@gmail.com
@@ -125,10 +137,15 @@ hubs:
     domain: howard.cloudbank.2i2c.cloud
     helm_chart: basehub
     auth0:
+      # connection update? Also ensure the basehub Helm chart is provided a
+      # matching value for jupyterhub.custom.2i2c.add_staff_user_ids_of_type!
       connection: google-oauth2
     config:
       jupyterhub:
         custom:
+          2i2c:
+            add_staff_user_ids_to_admin_users: true
+            add_staff_user_ids_of_type: "google"
           homepage:
             templateVars:
               org:
@@ -157,10 +174,15 @@ hubs:
     domain: skyline.cloudbank.2i2c.cloud
     helm_chart: basehub
     auth0:
+      # connection update? Also ensure the basehub Helm chart is provided a
+      # matching value for jupyterhub.custom.2i2c.add_staff_user_ids_of_type!
       connection: google-oauth2
     config:
       jupyterhub:
         custom:
+          2i2c:
+            add_staff_user_ids_to_admin_users: true
+            add_staff_user_ids_of_type: "google"
           homepage:
             templateVars:
               org:
@@ -180,7 +202,6 @@ hubs:
           config:
             Authenticator:
               allowed_users: &skyline_users
-                - <staff_google_ids>
                 - ericvd@gmail.com
                 - sean.smorris@berkeley.edu
                 - dhum1@my.smccd.edu
@@ -190,6 +211,8 @@ hubs:
     domain: demo.cloudbank.2i2c.cloud
     helm_chart: basehub
     auth0:
+      # connection update? Also ensure the basehub Helm chart is provided a
+      # matching value for jupyterhub.custom.2i2c.add_staff_user_ids_of_type!
       connection: password
       password:
         database_name: database-demo
@@ -205,6 +228,9 @@ hubs:
             guarantee: 512M
             limit: 1G
         custom:
+          2i2c:
+            add_staff_user_ids_to_admin_users: true
+            add_staff_user_ids_of_type: "google"
           homepage:
             templateVars:
               org:
@@ -226,7 +252,6 @@ hubs:
               # Everyone should be able to sign up, so we don't set allowed_users
               # These folks should still have admin tho
               admin_users:
-                - <staff_google_ids>
                 - ericvd@gmail.com
                 - sean.smorris@berkeley.edu
         cull:
@@ -239,10 +264,15 @@ hubs:
     domain: lassen.cloudbank.2i2c.cloud
     helm_chart: basehub
     auth0:
+      # connection update? Also ensure the basehub Helm chart is provided a
+      # matching value for jupyterhub.custom.2i2c.add_staff_user_ids_of_type!
       connection: google-oauth2
     config:
       jupyterhub:
         custom:
+          2i2c:
+            add_staff_user_ids_to_admin_users: true
+            add_staff_user_ids_of_type: "google"
           homepage:
             templateVars:
               org:
@@ -262,7 +292,6 @@ hubs:
           config:
             Authenticator:
               allowed_users: &lassen_users
-                - <staff_google_ids>
                 - ericvd@gmail.com
                 - sean.smorris@berkeley.edu
                 - camacho@lassencollege.edu
@@ -271,10 +300,15 @@ hubs:
     domain: clovis.cloudbank.2i2c.cloud
     helm_chart: basehub
     auth0:
+      # connection update? Also ensure the basehub Helm chart is provided a
+      # matching value for jupyterhub.custom.2i2c.add_staff_user_ids_of_type!
       connection: google-oauth2
     config:
       jupyterhub:
         custom:
+          2i2c:
+            add_staff_user_ids_to_admin_users: true
+            add_staff_user_ids_of_type: "google"
           homepage:
             templateVars:
               org:
@@ -294,7 +328,6 @@ hubs:
           config:
             Authenticator:
               allowed_users: &clovis_users
-                - <staff_google_ids>
                 - ericvd@gmail.com
                 - sean.smorris@berkeley.edu
                 - william.kerney@cloviscollege.edu
@@ -303,10 +336,15 @@ hubs:
     domain: sbcc.cloudbank.2i2c.cloud
     helm_chart: basehub
     auth0:
+      # connection update? Also ensure the basehub Helm chart is provided a
+      # matching value for jupyterhub.custom.2i2c.add_staff_user_ids_of_type!
       connection: google-oauth2
     config:
       jupyterhub:
         custom:
+          2i2c:
+            add_staff_user_ids_to_admin_users: true
+            add_staff_user_ids_of_type: "google"
           homepage:
             templateVars:
               org:
@@ -326,7 +364,6 @@ hubs:
           config:
             Authenticator:
               allowed_users: &sbcc_users
-                - <staff_google_ids>
                 - ericvd@gmail.com
                 - sean.smorris@berkeley.edu
                 - nfguebels@pipeline.sbcc.edu
@@ -335,10 +372,15 @@ hubs:
     domain: datahub.mills.edu
     helm_chart: basehub
     auth0:
+      # connection update? Also ensure the basehub Helm chart is provided a
+      # matching value for jupyterhub.custom.2i2c.add_staff_user_ids_of_type!
       connection: google-oauth2
     config:
       jupyterhub:
         custom:
+          2i2c:
+            add_staff_user_ids_to_admin_users: true
+            add_staff_user_ids_of_type: "google"
           homepage:
             templateVars:
               org:
@@ -358,7 +400,6 @@ hubs:
           config:
             Authenticator:
               admin_users: &mills_admins
-                - <staff_google_ids>
                 - aculich@berkeley.edu
                 - jpercy@berkeley.edu
                 - akonrad@mills.edu
@@ -368,10 +409,15 @@ hubs:
     domain: palomar.cloudbank.2i2c.cloud
     helm_chart: basehub
     auth0:
+      # connection update? Also ensure the basehub Helm chart is provided a
+      # matching value for jupyterhub.custom.2i2c.add_staff_user_ids_of_type!
       connection: google-oauth2
     config:
       jupyterhub:
         custom:
+          2i2c:
+            add_staff_user_ids_to_admin_users: true
+            add_staff_user_ids_of_type: "google"
           homepage:
             templateVars:
               org:
@@ -391,7 +437,6 @@ hubs:
           config:
             Authenticator:
               allowed_users: &palomar_users
-                - <staff_google_ids>
                 - aculich@berkeley.edu
                 - sean.smorris@berkeley.edu
                 - tcanon@palomar.edu
@@ -401,10 +446,15 @@ hubs:
     domain: sjcc.cloudbank.2i2c.cloud
     helm_chart: basehub
     auth0:
+      # connection update? Also ensure the basehub Helm chart is provided a
+      # matching value for jupyterhub.custom.2i2c.add_staff_user_ids_of_type!
       connection: google-oauth2
     config:
       jupyterhub:
         custom:
+          2i2c:
+            add_staff_user_ids_to_admin_users: true
+            add_staff_user_ids_of_type: "google"
           homepage:
             templateVars:
               org:
@@ -424,7 +474,6 @@ hubs:
           config:
             Authenticator:
               allowed_users: &sjcc_users
-                - <staff_google_ids>
                 - aculich@berkeley.edu
                 - sean.smorris@berkeley.edu
                 - christiaan.desmond@sjcc.edu
@@ -434,10 +483,15 @@ hubs:
     domain: avc.cloudbank.2i2c.cloud
     helm_chart: basehub
     auth0:
+      # connection update? Also ensure the basehub Helm chart is provided a
+      # matching value for jupyterhub.custom.2i2c.add_staff_user_ids_of_type!
       connection: google-oauth2
     config:
       jupyterhub:
         custom:
+          2i2c:
+            add_staff_user_ids_to_admin_users: true
+            add_staff_user_ids_of_type: "google"
           homepage:
             templateVars:
               org:
@@ -457,7 +511,6 @@ hubs:
           config:
             Authenticator:
               allowed_users: &avc_users
-                - <staff_google_ids>
                 - aculich@berkeley.edu
                 - sean.smorris@berkeley.edu
                 - rbiritwum@avc.edu
@@ -469,6 +522,8 @@ hubs:
     domain: csu.cloudbank.2i2c.cloud
     helm_chart: basehub
     auth0:
+      # connection update? Also ensure the basehub Helm chart is provided a
+      # matching value for jupyterhub.custom.2i2c.add_staff_user_ids_of_type!
       connection: password
       password:
         database_name: database-csu
@@ -484,6 +539,9 @@ hubs:
             guarantee: 512M
             limit: 1G
         custom:
+          2i2c:
+            add_staff_user_ids_to_admin_users: true
+            add_staff_user_ids_of_type: "google"
           homepage:
             templateVars:
               org:
@@ -505,7 +563,6 @@ hubs:
               # Everyone should be able to sign up, so we don't set allowed_users
               # These folks should still have admin though
               admin_users:
-                - <staff_google_ids>
                 - ericvd@gmail.com
                 - sean.smorris@berkeley.edu
         cull:
