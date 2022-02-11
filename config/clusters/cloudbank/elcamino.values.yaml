@@ -1,0 +1,33 @@
+jupyterhub:
+  custom:
+    2i2c:
+      add_staff_user_ids_to_admin_users: true
+      add_staff_user_ids_of_type: "google"
+    homepage:
+      templateVars:
+        org:
+          name: El Camino College
+          logo_url: https://www.elcamino.edu/_resources/images/logo.png
+          url: https://www.elcamino.edu/
+        designed_by:
+          name: 2i2c
+          url: https://2i2c.org
+        operated_by:
+          name: CloudBank
+          url: http://cloudbank.org/
+        funded_by:
+          name: CloudBank
+          url: http://cloudbank.org/
+
+  singleuser:
+    memory:
+      limit: 2G
+      guarantee: 2G
+  hub:
+    config:
+      Authenticator:
+        allowed_users: &elcamino_users
+          - ericvd@gmail.com
+          - sean.smorris@berkeley.edu
+          - solomonrussell@gmail.com
+        admin_users: *elcamino_users

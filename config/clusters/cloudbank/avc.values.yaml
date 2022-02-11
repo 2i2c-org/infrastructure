@@ -1,0 +1,31 @@
+jupyterhub:
+  custom:
+    2i2c:
+      add_staff_user_ids_to_admin_users: true
+      add_staff_user_ids_of_type: "google"
+    homepage:
+      templateVars:
+        org:
+          name: Antelope Valley College
+          logo_url: https://www.avc.edu/themes/avc/logo.png
+          url: https://www.avc.edu/
+        designed_by:
+          name: 2i2c
+          url: https://2i2c.org
+        operated_by:
+          name: CloudBank
+          url: http://cloudbank.org/
+        funded_by:
+          name: CloudBank
+          url: http://cloudbank.org/
+  hub:
+    config:
+      Authenticator:
+        allowed_users: &avc_users
+          - aculich@berkeley.edu
+          - sean.smorris@berkeley.edu
+          - rbiritwum@avc.edu
+          - jbrownlow@avc.edu
+          - wkitto1@avc.edu
+          - rbiritwum@gmail.com
+        admin_users: *avc_users

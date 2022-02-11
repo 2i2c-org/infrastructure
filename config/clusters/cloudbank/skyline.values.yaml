@@ -1,0 +1,29 @@
+jupyterhub:
+  custom:
+    2i2c:
+      add_staff_user_ids_to_admin_users: true
+      add_staff_user_ids_of_type: "google"
+    homepage:
+      templateVars:
+        org:
+          name: Skyline College
+          logo_url: http://skylinecollege.edu/mcpr/images/logos/png/skyline_logo_horiz_cmyk.png
+          url: https://www.skylinecollege.edu/
+        designed_by:
+          name: 2i2c
+          url: https://2i2c.org
+        operated_by:
+          name: CloudBank
+          url: http://cloudbank.org/
+        funded_by:
+          name: CloudBank
+          url: http://cloudbank.org/
+  hub:
+    config:
+      Authenticator:
+        allowed_users: &skyline_users
+          - ericvd@gmail.com
+          - sean.smorris@berkeley.edu
+          - dhum1@my.smccd.edu
+          - kayvanm@gmail.com
+        admin_users: *skyline_users

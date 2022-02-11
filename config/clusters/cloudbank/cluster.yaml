@@ -1,0 +1,149 @@
+name: cloudbank
+image_repo: "quay.io/2i2c/2i2c-hubs-image"
+provider: gcp
+gcp:
+  key: secrets/cloudbank.json
+  project: cb-1003-1696
+  cluster: cb-cluster
+  zone: us-central1-b
+support:
+  config:
+    grafana:
+      ingress:
+        hosts:
+          - grafana.cloudbank.2i2c.cloud
+        tls:
+          - secretName: grafana-tls
+            hosts:
+              - grafana.cloudbank.2i2c.cloud
+hubs:
+  - name: spelman
+    domain: spelman.cloudbank.2i2c.cloud
+    helm_chart: basehub
+    auth0:
+      # connection update? Also ensure the basehub Helm chart is provided a
+      # matching value for jupyterhub.custom.2i2c.add_staff_user_ids_of_type!
+      connection: google-oauth2
+    helm_chart_values_files:
+      - spelman.values.yaml
+  - name: ccsf
+    domain: ccsf.cloudbank.2i2c.cloud
+    helm_chart: basehub
+    auth0:
+      # connection update? Also ensure the basehub Helm chart is provided a
+      # matching value for jupyterhub.custom.2i2c.add_staff_user_ids_of_type!
+      connection: google-oauth2
+    helm_chart_values_files:
+      - ccsf.values.yaml
+  - name: elcamino
+    domain: elcamino.cloudbank.2i2c.cloud
+    helm_chart: basehub
+    auth0:
+      # connection update? Also ensure the basehub Helm chart is provided a
+      # matching value for jupyterhub.custom.2i2c.add_staff_user_ids_of_type!
+      connection: google-oauth2
+    helm_chart_values_files:
+      - elcamino.values.yaml
+  - name: howard
+    domain: howard.cloudbank.2i2c.cloud
+    helm_chart: basehub
+    auth0:
+      # connection update? Also ensure the basehub Helm chart is provided a
+      # matching value for jupyterhub.custom.2i2c.add_staff_user_ids_of_type!
+      connection: google-oauth2
+    helm_chart_values_files:
+      - howard.values.yaml
+  - name: skyline
+    domain: skyline.cloudbank.2i2c.cloud
+    helm_chart: basehub
+    auth0:
+      # connection update? Also ensure the basehub Helm chart is provided a
+      # matching value for jupyterhub.custom.2i2c.add_staff_user_ids_of_type!
+      connection: google-oauth2
+    helm_chart_values_files:
+      - skyline.values.yaml
+  - name: demo
+    domain: demo.cloudbank.2i2c.cloud
+    helm_chart: basehub
+    auth0:
+      # connection update? Also ensure the basehub Helm chart is provided a
+      # matching value for jupyterhub.custom.2i2c.add_staff_user_ids_of_type!
+      connection: password
+      password:
+        database_name: database-demo
+    helm_chart_values_files:
+      - demo.values.yaml
+  - name: lassen
+    domain: lassen.cloudbank.2i2c.cloud
+    helm_chart: basehub
+    auth0:
+      # connection update? Also ensure the basehub Helm chart is provided a
+      # matching value for jupyterhub.custom.2i2c.add_staff_user_ids_of_type!
+      connection: google-oauth2
+    helm_chart_values_files:
+      - lassen.values.yaml
+  - name: clovis
+    domain: clovis.cloudbank.2i2c.cloud
+    helm_chart: basehub
+    auth0:
+      # connection update? Also ensure the basehub Helm chart is provided a
+      # matching value for jupyterhub.custom.2i2c.add_staff_user_ids_of_type!
+      connection: google-oauth2
+    helm_chart_values_files:
+      - clovis.values.yaml
+  - name: sbcc
+    domain: sbcc.cloudbank.2i2c.cloud
+    helm_chart: basehub
+    auth0:
+      # connection update? Also ensure the basehub Helm chart is provided a
+      # matching value for jupyterhub.custom.2i2c.add_staff_user_ids_of_type!
+      connection: google-oauth2
+    helm_chart_values_files:
+      - sbcc.values.yaml
+  - name: mills
+    domain: datahub.mills.edu
+    helm_chart: basehub
+    auth0:
+      # connection update? Also ensure the basehub Helm chart is provided a
+      # matching value for jupyterhub.custom.2i2c.add_staff_user_ids_of_type!
+      connection: google-oauth2
+    helm_chart_values_files:
+      - mills.values.yaml
+  - name: palomar
+    domain: palomar.cloudbank.2i2c.cloud
+    helm_chart: basehub
+    auth0:
+      # connection update? Also ensure the basehub Helm chart is provided a
+      # matching value for jupyterhub.custom.2i2c.add_staff_user_ids_of_type!
+      connection: google-oauth2
+    helm_chart_values_files:
+      - palomar.values.yaml
+  - name: sjcc
+    domain: sjcc.cloudbank.2i2c.cloud
+    helm_chart: basehub
+    auth0:
+      # connection update? Also ensure the basehub Helm chart is provided a
+      # matching value for jupyterhub.custom.2i2c.add_staff_user_ids_of_type!
+      connection: google-oauth2
+    helm_chart_values_files:
+      - sjcc.values.yaml
+  - name: avc
+    domain: avc.cloudbank.2i2c.cloud
+    helm_chart: basehub
+    auth0:
+      # connection update? Also ensure the basehub Helm chart is provided a
+      # matching value for jupyterhub.custom.2i2c.add_staff_user_ids_of_type!
+      connection: google-oauth2
+    helm_chart_values_files:
+      - avc.values.yaml
+  - name: csu
+    domain: csu.cloudbank.2i2c.cloud
+    helm_chart: basehub
+    auth0:
+      # connection update? Also ensure the basehub Helm chart is provided a
+      # matching value for jupyterhub.custom.2i2c.add_staff_user_ids_of_type!
+      connection: password
+      password:
+        database_name: database-csu
+    helm_chart_values_files:
+      - csu.values.yaml

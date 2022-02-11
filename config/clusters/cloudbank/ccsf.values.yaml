@@ -1,0 +1,30 @@
+jupyterhub:
+  custom:
+    2i2c:
+      add_staff_user_ids_to_admin_users: true
+      add_staff_user_ids_of_type: "google"
+    homepage:
+      templateVars:
+        org:
+          name: City College SF
+          logo_url: https://www.ccsf.edu/sites/default/files/inline-images/CCSF%20LOGO.png
+          url: https://www.ccsf.edu/
+        designed_by:
+          name: 2i2c
+          url: https://2i2c.org
+        operated_by:
+          name: CloudBank
+          url: http://cloudbank.org/
+        funded_by:
+          name: CloudBank
+          url: http://cloudbank.org/
+  hub:
+    config:
+      Authenticator:
+        allowed_users: &ccsf_users
+          - ericvd@gmail.com
+          - sean.smorris@berkeley.edu
+          - shawn.wiggins@mail.ccsf.edu
+          - craig.persiko@mail.ccsf.edu
+          - efuchs@mail.ccsf.edu
+        admin_users: *ccsf_users
