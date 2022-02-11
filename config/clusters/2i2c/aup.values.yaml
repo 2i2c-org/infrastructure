@@ -1,0 +1,31 @@
+jupyterhub:
+  custom:
+    2i2c:
+      add_staff_user_ids_to_admin_users: true
+      add_staff_user_ids_of_type: "github"
+    homepage:
+      templateVars:
+        org:
+          name: The American University of Paris
+          logo_url: https://www.aup.edu/sites/default/files/images/widget-assets/image/auplogo.jpeg
+          url: https://www.aup.edu/
+        designed_by:
+          name: 2i2c
+          url: https://2i2c.org
+        operated_by:
+          name: 2i2c
+          url: https://2i2c.org
+        funded_by:
+          name: AUP
+          url: https://www.aup.edu/
+  singleuser:
+    memory:
+      limit: 2G
+      guarantee: 2G
+  hub:
+    config:
+      Authenticator:
+        allowed_users: &aup_users
+          - swalker
+          - shaolintl
+        admin_users: *aup_users

@@ -1,0 +1,46 @@
+jupyterhub:
+  scheduling:
+    userPlaceholder:
+      # Not needed anymore, hackathon is over
+      replicas: 0
+    userScheduler:
+      # Each user gets almost 1 anyway
+      enabled: true
+  custom:
+    2i2c:
+      add_staff_user_ids_to_admin_users: true
+      add_staff_user_ids_of_type: "github"
+    homepage:
+      templateVars:
+        org:
+          name: "PaleoHack 2021"
+          logo_url: "https://raw.githubusercontent.com/LinkedEarth/Logos/master/pyleoclim_logo_full_white.png"
+          url: "https://linkedearth.github.io/paleoHackathon/"
+        designed_by:
+          name: 2i2c
+          url: https://2i2c.org
+        operated_by:
+          name: 2i2c
+          url: https://2i2c.org
+        funded_by:
+          name: "NSF Paleo Perspectives on Climate Change program"
+          url: "https://www.nsf.gov/funding/pgm_summ.jsp?pims_id=5750"
+  singleuser:
+    memory:
+      guarantee: 256M
+      limit: 4G
+    cpu:
+      guarantee: 0.1
+      limit: 2
+    image:
+      name: quay.io/2i2c/paleohack-2021
+      tag: 7534858b1098
+  hub:
+    config:
+      Authenticator:
+        allowed_users: &paleohack_users
+          - CommonClimate
+          - khider
+          - fzhu2e
+          - alexkjames
+        admin_users: *paleohack_users

@@ -1,0 +1,37 @@
+basehub:
+  jupyterhub:
+    custom:
+      cloudResources:
+        provider: gcp
+        gcp:
+          projectId: two-eye-two-see
+        scratchBucket:
+          enabled: true
+      2i2c:
+        add_staff_user_ids_to_admin_users: true
+        add_staff_user_ids_of_type: "google"
+      homepage:
+        templateVars:
+          org:
+            name: 2i2c Dask Staging
+            url: https://2i2c.org
+            logo_url: https://2i2c.org/media/logo.png
+          designed_by:
+            name: 2i2c
+            url: https://2i2c.org
+          operated_by:
+            name: 2i2c
+            url: https://2i2c.org
+          funded_by:
+            name: 2i2c
+            url: https://2i2c.org
+    singleuser:
+      image:
+        name: pangeo/pangeo-notebook
+        tag: 2021.02.19
+    hub:
+      config:
+        Authenticator:
+          allowed_users: &dask_staging_users
+            - colliand@gmail.com
+          admin_users: *dask_staging_users
