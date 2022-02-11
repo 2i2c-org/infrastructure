@@ -498,18 +498,6 @@ class Hub:
             "services", {}
         )["hub-health"] = {"apiToken": hub_health_token, "admin": True}
 
-        docs_token = hmac.new(
-            secret_key, f'docs-{self.spec["name"]}'.encode(), hashlib.sha256
-        ).hexdigest()
-        if (
-            "docs_service" in self.spec["config"].keys()
-            and self.spec["config"]["docs_service"]["enabled"]
-        ):
-            generated_config["jupyterhub"]["hub"]["services"]["docs"] = {
-                "url": f'http://docs-service.{self.spec["name"]}',
-                "apiToken": docs_token,
-            }
-
         # FIXME: Have a templates config somewhere? Maybe in Chart.yaml
         # FIXME: This is a hack. Fix it.
         if hub_helm_chart != "basehub":
