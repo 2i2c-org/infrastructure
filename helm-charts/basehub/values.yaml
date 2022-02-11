@@ -270,7 +270,7 @@ jupyterhub:
                     description: An IDE For R, created by the RStudio company
 
     services:
-      docs_service:
+      docs:
         url: http://docs-service
       configurator:
         url: http://configurator:10101
