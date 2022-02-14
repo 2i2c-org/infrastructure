@@ -23,6 +23,9 @@ jupyterhub:
           name: 2i2c
           url: https://2i2c.org
   hub:
+    services:
+      docs:
+        url: http://docs-service
     config:
       Authenticator:
         allowed_users: &staging_users
