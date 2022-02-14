@@ -1,0 +1,51 @@
+name: pangeo-hubs
+provider: gcp
+gcp:
+  key: secrets/pangeo-hubs.json
+  project: pangeo-integration-te-3eea
+  cluster: pangeo-hubs-cluster
+  zone: us-central1-b
+support:
+  config:
+    grafana:
+      ingress:
+        hosts:
+          - grafana.gcp.pangeo.2i2c.cloud
+        tls:
+          - secretName: grafana-tls
+            hosts:
+              - grafana.gcp.pangeo.2i2c.cloud
+    # Disable the Admissions Validation Webhook and the port is not
+    # permitted on private GKE clusters
+    ingress-nginx:
+      controller:
+        admissionWebhooks:
+          enabled: false
+    prometheus:
+      server:
+        resources:
+          limits:
+            cpu: 2
+            memory: 12Gi
+hubs:
+  - name: staging
+    domain: staging.us-central1-b.gcp.pangeo.io
+    helm_chart: daskhub
+    auth0:
+      enabled: false
+    helm_chart_values_files:
+      # The order in which you list files here is the order the will be passed
+      # to the helm upgrade command in, and that has meaning. Please check
+      # that you intend for these files to be applied in this order.
+      - staging.values.yaml
+  - name: prod
+    domain: us-central1-b.gcp.pangeo.io
+    helm_chart: daskhub
+    auth0:
+      enabled: false
+    helm_chart_values_files:
+      # The order in which you list files here is the order the will be passed
+      # to the helm upgrade command in, and that has meaning. Please check
+      # that you intend for these files to be applied in this order.
+      - staging.values.yaml
+      - prod.values.yaml

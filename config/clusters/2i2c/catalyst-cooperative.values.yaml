@@ -1,0 +1,42 @@
+basehub:
+  jupyterhub:
+    singleuser:
+      image:
+        name: catalystcoop/pudl-jupyter
+        tag: 2021.11.11
+      memory:
+        limit: 6G
+        guarantee: 4G
+    custom:
+      2i2c:
+        add_staff_user_ids_to_admin_users: true
+        add_staff_user_ids_of_type: "google"
+      cloudResources:
+        provider: gcp
+        gcp:
+          projectId: two-eye-two-see
+        scratchBucket:
+          enabled: true
+      homepage:
+        templateVars:
+          org:
+            name: Catalyst Cooperative
+            logo_url: https://catalyst.coop/files/2018/06/SimpleSquareWalking.png
+            url: https://catalyst.coop/
+          designed_by:
+            name: 2i2c
+            url: https://2i2c.org
+          operated_by:
+            name: 2i2c
+            url: https://2i2c.org
+          funded_by:
+            name: 2i2c
+            url: https://2i2c.org
+    hub:
+      config:
+        Authenticator:
+          allowed_users: &catalyst_users
+            - zane.selvans@catalyst.coop
+            - cgosnell@catalyst.coop
+            - colliand@gmail.com
+          admin_users: *catalyst_users

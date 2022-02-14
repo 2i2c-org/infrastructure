@@ -32,7 +32,7 @@ def use_cluster_credentials(cluster_name):
     validate(cluster_name)
 
     config_file_path = Path(os.getcwd()).joinpath(
-        "config", "clusters", f"{cluster_name}.cluster.yaml"
+        "config", "clusters", cluster_name, "cluster.yaml"
     )
     with open(config_file_path) as f:
         cluster = Cluster(yaml.load(f))
@@ -59,7 +59,7 @@ def deploy_support(cluster_name):
     validate(cluster_name)
 
     config_file_path = Path(os.getcwd()).joinpath(
-        "config", "clusters", f"{cluster_name}.cluster.yaml"
+        "config", "clusters", cluster_name, "cluster.yaml"
     )
     with open(config_file_path) as f:
         cluster = Cluster(yaml.load(f))
@@ -82,7 +82,7 @@ def deploy_grafana_dashboards(cluster_name):
     validate(cluster_name)
 
     config_file_path = Path(os.getcwd()).joinpath(
-        "config", "clusters", f"{cluster_name}.cluster.yaml"
+        "config", "clusters", cluster_name, "cluster.yaml"
     )
     with open(config_file_path) as f:
         cluster = Cluster(yaml.load(f))
@@ -205,7 +205,7 @@ def deploy(cluster_name, hub_name, skip_hub_health_test, config_path):
     SECRET_KEY = bytes.fromhex(config["secret_key"])
 
     config_file_path = Path(os.getcwd()).joinpath(
-        "config", "clusters", f"{cluster_name}.cluster.yaml"
+        "config", "clusters", cluster_name, "cluster.yaml"
     )
     with open(config_file_path) as f:
         cluster = Cluster(yaml.load(f))
@@ -225,7 +225,7 @@ def deploy(cluster_name, hub_name, skip_hub_health_test, config_path):
 def validate(cluster_name):
     cluster_dir = Path(os.getcwd()).joinpath("config", "clusters")
     schema_file = cluster_dir.joinpath("schema.yaml")
-    config_file = cluster_dir.joinpath(f"{cluster_name}.cluster.yaml")
+    config_file = cluster_dir.joinpath(cluster_name, "cluster.yaml")
     with open(config_file) as cf, open(schema_file) as sf:
         cluster_config = yaml.load(cf)
         schema = yaml.load(sf)

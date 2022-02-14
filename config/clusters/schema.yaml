@@ -154,7 +154,7 @@ properties:
       - domain
       - auth0
       - helm_chart
-      - config
+      - helm_chart_values_files
     items:
       - type: object
         additionalProperties: false
@@ -239,7 +239,8 @@ properties:
             then:
               required:
                 - connection
-          config:
-            type: object
+          helm_chart_values_files:
+            type: array
             description: |
-              YAML configuration that is passed through to helm.
+              A list of *.values.yaml files which, together, describe the complete
+              helm chart values for a single hub deployment.

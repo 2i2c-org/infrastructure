@@ -82,16 +82,9 @@ import subprocess
 
 def render_hubs():
     # Grab the latest list of clusters defined in infrastructure/
-    clusters = Path("../config/clusters").glob("*")
-    # Add list of repos managed outside infrastructure
-    hub_list = [
-        {
-            "name": "University of Toronto",
-            "domain": "jupyter.utoronto.ca",
-            "id": "utoronto",
-            "hub_type": "base-hub ([deployment repo](https://github.com/utoronto-2i2c/jupyterhub-deploy/))",
-        }
-    ]
+    clusters = Path("../config/clusters").glob("**/*cluster.yaml")
+
+    hub_list = []
     for cluster_info in clusters:
         if "schema" in cluster_info.name or "staff" in cluster_info.name:
             continue
@@ -108,23 +101,14 @@ def render_hubs():
 
         # For each hub in cluster, grab its metadata and add it to the list
         for hub in cluster["hubs"]:
-            config = hub["config"]
-            # Config is sometimes nested
-            if "basehub" in config:
-                hub_config = config["basehub"]["jupyterhub"]
-            else:
-                hub_config = config["jupyterhub"]
             # Domain can be a list
             if isinstance(hub["domain"], list):
                 hub["domain"] = hub["domain"][0]
 
             hub_list.append(
                 {
-                    "name": hub_config["custom"]["homepage"]["templateVars"]["org"][
-                        "name"
-                    ],
-                    "domain": f"[{hub['domain']}](https://{hub['domain']})",
                     "id": hub["name"],
+                    "domain": f"[{hub['domain']}](https://{hub['domain']})",
                     "hub_type": hub["helm_chart"],
                     "grafana": grafana_url,
                 }

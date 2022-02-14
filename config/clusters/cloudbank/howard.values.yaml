@@ -1,0 +1,29 @@
+jupyterhub:
+  custom:
+    2i2c:
+      add_staff_user_ids_to_admin_users: true
+      add_staff_user_ids_of_type: "google"
+    homepage:
+      templateVars:
+        org:
+          name: Howard University
+          logo_url: https://upload.wikimedia.org/wikipedia/en/a/a3/Howard_University_seal.svg
+          url: https://home.howard.edu/
+        designed_by:
+          name: 2i2c
+          url: https://2i2c.org
+        operated_by:
+          name: CloudBank
+          url: http://cloudbank.org/
+        funded_by:
+          name: CloudBank
+          url: http://cloudbank.org/
+  hub:
+    config:
+      Authenticator:
+        allowed_users: &howard_users
+          - ericvd@berkeley.edu
+          - gwashington@scs.howard.edu
+          - anthony.fgordon64@gmail.com
+          - mikayladorange@gmail.com
+        admin_users: *howard_users

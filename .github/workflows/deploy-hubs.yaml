@@ -68,13 +68,13 @@ jobs:
               - ".github/workflows/deploy-hubs.yaml"
               - ".github/actions/deploy/*"
 
-      - name: Check which cluster.yaml file has changed (if any)
+      - name: Check which cluster directory has changes (if any)
         uses: dorny/paths-filter@v2
         id: config_files
         with:
           filters: |
             hub_config:
-              - "config/clusters/${{ matrix.cluster_name }}.cluster.yaml"
+              - "config/clusters/${{ matrix.cluster_name }}/**"
 
       - name: Setup gcloud
         if: |

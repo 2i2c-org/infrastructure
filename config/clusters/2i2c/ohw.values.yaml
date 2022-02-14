@@ -1,0 +1,67 @@
+basehub:
+  jupyterhub:
+    prePuller:
+      continuous:
+        enabled: true
+    singleuser:
+      networkPolicy:
+        # In clusters with NetworkPolicy enabled, do not
+        # allow outbound internet access that's not DNS, HTTP or HTTPS
+        # For OHW, we allow 8080 (for DAP) and 22 (for ssh)
+        # https://github.com/2i2c-org/pilot-hubs/issues/549#issuecomment-892276020
+        enabled: true
+        egress:
+          - ports:
+              - port: 53
+                protocol: UDP
+          - ports:
+              - port: 80
+                protocol: TCP
+          - ports:
+              - port: 443
+                protocol: TCP
+          - ports:
+              - port: 8080
+                protocol: TCP
+          - ports:
+              - port: 22
+                protocol: TCP
+      image:
+        name: ghcr.io/oceanhackweek/jupyer-image
+        tag: 9efd4fb
+      memory:
+        # Increase memory alloted during the workshop
+        #  https://github.com/2i2c-org/pilot-hubs/issues/549#issuecomment-891264570
+        guarantee: 7G
+        limit: 8G
+    custom:
+      cloudResources:
+        provider: gcp
+        gcp:
+          projectId: two-eye-two-see
+        scratchBucket:
+          enabled: true
+      2i2c:
+        add_staff_user_ids_to_admin_users: true
+        add_staff_user_ids_of_type: "github"
+      homepage:
+        templateVars:
+          org:
+            name: Ocean Hack Week
+            logo_url: https://avatars.githubusercontent.com/u/33128979
+            url: https://oceanhackweek.github.io/
+          designed_by:
+            name: 2i2c
+            url: https://2i2c.org
+          operated_by:
+            name: 2i2c
+            url: https://2i2c.org
+          funded_by:
+            name: 2i2c
+            url: https://2i2c.org
+    hub:
+      config:
+        Authenticator:
+          allowed_users: &ohw_users
+            - ocefpaf
+          admin_users: *ohw_users
