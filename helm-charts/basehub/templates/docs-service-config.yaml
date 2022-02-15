@@ -1,4 +1,3 @@
-{{ if .Values.docs_service }}
 {{ if .Values.docs_service.enabled }}
 kind: ConfigMap
 apiVersion: v1
