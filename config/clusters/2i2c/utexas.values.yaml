@@ -117,6 +117,13 @@ jupyterhub:
             # FIXME: This doesn't work with named servers,
             # https://github.com/jupyterhub/kubespawner/pull/565 fixes this
             value: "/user/{username}/proxy/absolute/5050"
+          # Turn off tying the user session to a particular IP the request
+          # is coming from - in a dynamic environment like kubernetes, this
+          # means users keep getting 'logged out' every minute or so.
+          # Look for `ENHANCED_COOKIE_PROTECTION` in
+          # https://www.pgadmin.org/docs/pgadmin4/development/config_py.html
+          - name: PGADMIN_CONFIG_ENHANCED_COOKIE_PROTECTION
+            value: 'False'
       - name: postgres
         image: postgres:10
         resources:
