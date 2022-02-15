@@ -67,7 +67,7 @@ jupyterhub:
         - sgibson@2i2c.org
         - yuvipanda@2i2c.org
     docs_service:
-      - enabled: false
+      enabled: false
   ingress:
     enabled: true
     annotations:
@@ -418,4 +418,4 @@ jupyterhub:
         from z2jh import get_config
 
         if get_config("custom.docs_service.enabled"):
-          c.JupyterHub.services.append({ "docs": {"url": "http://docs-service"} })
+          c.JupyterHub.services.append({"name": "docs", "url": "http://docs-service"})
