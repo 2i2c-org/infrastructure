@@ -1,4 +1,4 @@
-{{ if .Values.jupyterhub.custom.docs_service.enabled }}
+{{- if .Values.jupyterhub.custom.docs_service.enabled -}}
 kind: ConfigMap
 apiVersion: v1
 metadata:
@@ -14,4 +14,4 @@ data:
         root /etc/nginx/html;
       }
     }
-{{ end }}
+{{- end }}

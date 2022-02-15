@@ -1,4 +1,4 @@
-{{ if .Values.jupyterhub.custom.docs_service.enabled }}
+{{- if .Values.jupyterhub.custom.docs_service.enabled -}}
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -67,4 +67,4 @@ spec:
             subPath: nginx.conf
           - name: docs
             mountPath: /etc/nginx/html/services/docs
-{{ end }}
+{{- end }}
