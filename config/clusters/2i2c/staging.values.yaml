@@ -4,6 +4,8 @@ docs_service:
   branch: gh-pages
 jupyterhub:
   custom:
+    docs_service:
+      enabled: true
     2i2c:
       add_staff_user_ids_to_admin_users: true
       add_staff_user_ids_of_type: "google"
@@ -23,9 +25,6 @@ jupyterhub:
           name: 2i2c
           url: https://2i2c.org
   hub:
-    services:
-      docs:
-        url: http://docs-service
     config:
       Authenticator:
         allowed_users: &staging_users

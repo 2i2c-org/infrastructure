@@ -30,6 +30,9 @@ inClusterNFS:
   enabled: false
   size: 100Gi
 
+docs_service:
+  enabled: false
+
 jupyterhub:
   custom:
     singleuserAdmin:
@@ -63,6 +66,8 @@ jupyterhub:
         - georgianaelena@2i2c.org
         - sgibson@2i2c.org
         - yuvipanda@2i2c.org
+    docs_service:
+      - enabled: false
   ingress:
     enabled: true
     annotations:
@@ -409,3 +414,8 @@ jupyterhub:
             if authenticator_class == "github" and c.Authenticator.allowed_users:
                 print("WARNING: hub.config.JupyterHub.authenticator_class was set to github and c.Authenticator.allowed_users was set, custom 2i2c jupyterhub config is now resetting allowed_users to an empty set.")
                 c.Authenticator.allowed_users = set()
+      08-add-docs-service-if-enabled: |
+        from z2jh import get_config
+
+        if get_config("custom.docs_service.enabled"):
+          c.JupyterHub.services.append({ "docs": {"url": "http://docs-service"} })
