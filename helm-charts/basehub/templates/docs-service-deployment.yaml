@@ -68,4 +68,3 @@ spec:
           - name: docs
             mountPath: /etc/nginx/html/services/docs
 {{ end }}
-{{ end }}
