@@ -30,9 +30,6 @@ inClusterNFS:
   enabled: false
   size: 100Gi
 
-docs_service:
-  enabled: false
-
 jupyterhub:
   custom:
     singleuserAdmin:
@@ -46,6 +43,10 @@ jupyterhub:
         projectId:
       scratchBucket:
         enabled: false
+    docs_service:
+      enabled: false
+      repo: ""
+      branch: ""
     2i2c:
       # Should 2i2c engineering staff user IDs be injected to the admin_users
       # configuration of the JupyterHub's authenticator by our custom
@@ -66,8 +67,6 @@ jupyterhub:
         - georgianaelena@2i2c.org
         - sgibson@2i2c.org
         - yuvipanda@2i2c.org
-    docs_service:
-      enabled: false
   ingress:
     enabled: true
     annotations:
