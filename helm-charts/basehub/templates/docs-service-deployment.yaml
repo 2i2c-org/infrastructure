@@ -1,5 +1,4 @@
-{{ if .Values.docs_service }}
-{{ if .Values.docs_service.enabled }}
+{{- if .Values.jupyterhub.custom.docs_service.enabled -}}
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -27,10 +26,10 @@ spec:
             - clone
             - --depth=1
             - -b
-            - {{ .Values.docs_service.branch }}
+            - {{ .Values.jupyterhub.custom.docs_service.branch }}
             - --single-branch
             - --
-            - {{ .Values.docs_service.repo }}
+            - {{ .Values.jupyterhub.custom.docs_service.repo }}
             - /srv/docs
           securityContext:
               runAsUser: 1000
@@ -68,5 +67,4 @@ spec:
             subPath: nginx.conf
           - name: docs
             mountPath: /etc/nginx/html/services/docs
-{{ end }}
-{{ end }}
+{{- end }}

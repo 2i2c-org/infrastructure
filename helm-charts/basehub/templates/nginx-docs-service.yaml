@@ -1,5 +1,4 @@
-{{ if .Values.docs_service }}
-{{ if .Values.docs_service.enabled }}
+{{- if .Values.jupyterhub.custom.docs_service.enabled -}}
 apiVersion: v1
 kind: Service
 metadata:
@@ -14,5 +13,4 @@ spec:
       targetPort: nginx-port
   selector:
     app: docs-service
-{{ end }}
-{{ end }}
+{{- end }}

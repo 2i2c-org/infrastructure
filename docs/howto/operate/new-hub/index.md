@@ -48,7 +48,7 @@ To deploy a new hub, follow these steps:
 4. Add a configuration entry for your new hub.
    Each entry is a Zero to JupyterHub configuration, and you can customize whatever you like.
    The easiest way to add new configuration is to look at the entries for similar hubs in the same cluster YAML file, copy / paste one of them, and make modifications as needed for this specific hub.
-   For example, see the entries in [the 2i2c Google Cloud cluster configuration file](https://github.com/2i2c-org/infrastructure/tree/HEAD/config/clusters/2i2c.cluster.yaml).
+   For example, see the hubs configuration in [the 2i2c Google Cloud cluster configuration directory](https://github.com/2i2c-org/infrastructure/tree/HEAD/config/clusters/2i2c).
 
    :::{seealso}
    See [](/topic/config.md) for more information about hub helm chart configuration.
