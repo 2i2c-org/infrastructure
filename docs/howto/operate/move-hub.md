@@ -19,6 +19,7 @@ are in the same GCP Project / AWS Account, we can just re-use the same
 home directory storage!
 ```
 
+(nfs_servers)=
 ### NFS Servers
 
 Primarily used with GKE right now.
@@ -83,7 +84,7 @@ The filestores must be mounted in order to be accessed.
       sudo mount SERVER_ADDRESS /mnt/filestore
       ```
 
-The user directories can then be transferred in the same manner as [NFS Servers](#nfs-servers) with the locations updated to be the following:
+The user directories can then be transferred in the same manner as [NFS Servers](nfs_servers) with the locations updated to be the following:
 
 ```bash
 <your_scp_or_rsync_command> ubuntu@nfs-source-server-public-IP:/mnt/filestore/<hub-name> /mnt/filestore/<hub-name>
