@@ -32,7 +32,7 @@ basehub:
             url: https://2i2c.org
           funded_by:
             name:
-            url: https://www.openscapes.org/
+            url: https://icesat-2.hackweek.io
     singleuser:
       serviceAccountName: cloud-user-sa
       defaultUrl: /lab
