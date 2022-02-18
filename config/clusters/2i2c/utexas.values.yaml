@@ -68,6 +68,9 @@ jupyterhub:
           - jameshowison
         admin_users: *utexas_demo_users
   singleuser:
+    memory:
+      guarantee: 2G
+      limit: 2G
     storage:
       extraVolumes:
         - name: postgres-db
