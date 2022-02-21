@@ -53,7 +53,7 @@ of this repository, and can deploy one or more hubs to our clusters.
    ```
 
    The script will look for a hub named `<hub-name>` in the cluster config
-   defined at `config/clusters/<cluster-name>.cluster.yaml`.
+   defined at `config/clusters/<cluster-name>/cluster.yaml` and read in the `*.values.yaml` files associated with that hub.
 
 3. You can deploy to *all* hubs on a given cluster by omitting the hub name.
 
