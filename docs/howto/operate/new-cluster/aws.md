@@ -10,14 +10,13 @@ where we wanted to minimize base running cost. We have deprecated that now, and 
 eksctl for everything.
 :::
 
-
 ## Install needed tools locally
 
 1. Follow the instructions outlined in [Set up and use the the deployment
    scripts locally](operate:manual-deploy) to set up the local environment and
    prepare `sops` to encrypt and decrypt files.
 
-2. Install the awscli tool (you can use pip or conda to install it in the
+2. Install the `awscli` tool (you can use pip or conda to install it in the
    environment) and configure it to use the provided AWS user credentials.  [Follow
    this guide](https://docs.aws.amazon.com/cli/latest/userguide/cli-configure-quickstart.html#cli-configure-quickstart-config)
    for a quick configuration process.
@@ -48,8 +47,18 @@ eksctl requires an [ssh key](https://eksctl.io/introduction/#ssh-access) during
 cluster creation. This is used to log in to the nodes to debug them later if necessary.
 We keep the private key encrypted in `eksctl/ssh-keys`.
 
-Generate the key with `ssh-keygen -f eksctl/ssh-keys/<cluster-name>.key`, and encrypt
-the private key part with `sops --in-place --encrypt eksctl/ssh-keys/<cluster-name>.key`.
+Generate the key with
+
+```bash
+ssh-keygen -f eksctl/ssh-keys/<cluster-name>.key
+```
+
+and encrypt the private key part with
+
+```bash
+sops --in-place --encrypt eksctl/ssh-keys/<cluster-name>.key
+```
+
 This will leave the public key unencrypted in `eksctl/ssh-keys/<cluster-name>.key.pub` -
 we will use this in our eksctl config.
 
@@ -179,7 +188,7 @@ have least amount of permissions possible.
       --group system:masters
    ```
 
-6. In your hub deployment file (`config/clusters/<your-cluster-name>.cluster.yaml`),
+6. In your hub deployment file (`config/clusters/<your-cluster-name>/cluster.yaml`),
    provide enough information for the deployer to find the correct credentials.
 
    ```yaml

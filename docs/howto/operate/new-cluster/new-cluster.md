@@ -115,10 +115,19 @@ gcloud auth application-default login
 
 Then you can change into the terraform subdirectory for the appropriate cloud provider and initialise terraform.
 
+````{tabbed} Google
 ```bash
-cd terraform/{{ gcp | azure }}
+cd terraform/gcp
 terraform init -backend-config=backends/default-backend.hcl -reconfigure
 ```
+````
+
+````{tabbed} Azure
+```bash
+cd terraform/azure
+terraform init
+```
+````
 
 ````{note}
 There are other backend config files stored in `terraform/backends` that will configure a different storage bucket to read/write the remote terraform state for projects which we cannot access from GCP with our `@2i2c.org` email accounts.
@@ -130,7 +139,7 @@ For example, to work with Pangeo you would initialise terraform like so:
 terraform init -backend-config=pangeo-backend.hcl -reconfigure
 ```
 
-TODO: add instructions on how/when to create other backends
+<!-- TODO: add instructions on how/when to create other backends -->
 ````
 
 ## Creating a new terraform workspace
@@ -152,6 +161,7 @@ If you can't find the workspace you're looking for, double check you've enabled 
 ```{note}
 When deploying to Google Cloud, make sure the [Artifact Registry API](https://console.cloud.google.com/apis/library/artifactregistry.googleapis.com) is enabled on the project before deploying!
 ```
+
 First, make sure you are in the new workspace that you just created.
 
 ```bash
