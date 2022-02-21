@@ -11,6 +11,11 @@ The source files for each provider we currently deploy with terraform are under 
 
 Each provider directory also has a `projects` subdirectory where variables defining each cluster are stored.
 
+```{note}
+Currently, only our GCP terraform config uses different backends.
+If you are working on an Azure cluster, you can use `terraform init` as normal.
+```
+
 ## Workspaces
 
 We use [terraform workspaces](https://www.terraform.io/docs/language/state/workspaces.html)
