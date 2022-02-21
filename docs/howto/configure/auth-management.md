@@ -69,7 +69,7 @@ Presently, this involves a few more manual steps than the `auth0` setup describe
    - Create [a new app](https://github.com/organizations/2i2c-org/settings/applications/new) inside the
      `2i2c-org`.
    - When naming the application, please follow the convention `<CLUSTER_NAME>-<HUB_NAME>` for consistency, e.g. `2i2c-staging` is the OAuth app for the staging hub running on the 2i2c cluster.
-   - The Homepage URL should match that in the `domain` field of the appropriate `*.cluster.yaml` file in the `infrastructure` repo.
+   - The Homepage URL should match that in the `domain` field of the appropriate `<hub_name>.values.yaml` file in the `infrastructure` repo.
    - The authorisation callback URL is the homepage url appended with `/hub/oauth_callback`. For example, `staging.pilot.2i2c.cloud/hub/oauth_callback`.
    - Once you have created the OAuth app, make a new of the client ID, generate a client secret and then hold on to these values for a future step
 
