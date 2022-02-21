@@ -45,27 +45,23 @@ these rate limits. We recommend the following image repositories:
 
 ## Configuring your hub to use the custom image
 
-A hub config in a `config/clusters/*.cluster.yaml` file can contain arbitrary
-[`zero to jupyterhub on kubernetes`](https://zero-to-jupyterhub.readthedocs.io/en/stable/resources/reference.html)
-config, so we can use that to set the image name & tag. Here is some example config, with only
-the useful bits.
+We define arbitrary [zero to jupyterhub on kubernetes`](https://zero-to-jupyterhub.readthedocs.io/en/stable/resources/reference.html) values in `config/clusters/CLUSTER_NAME/HUB_NAME.values.yaml` files, which we can use to set the image name and tag.
+Here are some example values with only the useful bits.
 
 ```yaml
-- name: custom-image-hub
-  ...
-  config:
-    basehub:
-      jupyterhub:
-        singleuser:
-          image:
-            name: pangeo/pangeo-notebook
-            tag: 2020.12.08
+jupyterhub:
+  singleuser:
+    image:
+      name: pangeo/pangeo-notebook
+      tag: 2020.12.08
 ```
 
-This can be any image name & tag.
+This can be any image name & tag available in a public container regsitry.
 
-Whenever you push a new image, you'll have to make a PR that updates the tag here.
+Whenever you push a new image, you should make a PR that updates the tag here.
 Only on merge will the hub get the new image.
+
+Another way to update the image is to use the [configurator](https://docs.2i2c.org/en/latest/admin/howto/configurator.html).
 
 ## Split up an image for use with r2d-action
 
