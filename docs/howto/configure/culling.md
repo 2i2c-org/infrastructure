@@ -12,14 +12,13 @@ To configure the server's different culling options, these options must be speci
 Example:
 
 ```yaml
-config:
-  jupyterhub:
-    cull:
-      # Cull after 30min of inactivity
-      every: 300
-      timeout: 1800
-      # No pods over 12h long
-      maxAge: 43200
+jupyterhub:
+  cull:
+    # Cull after 30min of inactivity
+    every: 300
+    timeout: 1800
+    # No pods over 12h long
+    maxAge: 43200
 ```
 
 More culling options and information about them can be found in the [idle-culler documentation](https://github.com/jupyterhub/jupyterhub-idle-culler#readme).
