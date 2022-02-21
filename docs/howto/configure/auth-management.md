@@ -37,17 +37,16 @@ So we want to manage authentication by:
    You can set the admin interfaces for a hub like this:
 
    ```yaml
-   config:
-     jupyterhub:
-       auth:
-         allowed_users:
-             # WARNING: THESE USER LISTS MUST MATCH (for now)
-             - user1@gmail.com
-             - user2@gmail.com
-         admin_users:
-             # WARNING: THESE USER LISTS MUST MATCH (for now)
-             - user1@gmail.com
-             - user2@gmail.com
+   jupyterhub:
+     auth:
+       allowed_users:
+           # WARNING: THESE USER LISTS MUST MATCH (for now)
+           - user1@gmail.com
+           - user2@gmail.com
+       admin_users:
+           # WARNING: THESE USER LISTS MUST MATCH (for now)
+           - user1@gmail.com
+           - user2@gmail.com
    ```
 
 ```{admonition} Switching auth
@@ -85,7 +84,6 @@ Presently, this involves a few more manual steps than the `auth0` setup describe
           hub:
             config:
               GitHubOAuthenticator:
-                oauth_callback_url: https://{{ HUB_DOMAIN }}/hub/oauth_callback
                 client_id: CLIENT_ID
                 client_secret: CLIENT_SECRET
     ```
@@ -110,61 +108,61 @@ Presently, this involves a few more manual steps than the `auth0` setup describe
     `sops -i -e secrets/config/clusters/*.cluster.yaml`
     ```
 
-3. **Edit the non-secret config under `config/clusters`.**
+3. **Set the hub to _not_ configure Auth0 in the `config/clusters/CLUSTER_NAME/cluster.yaml` file.**
+   To ensure the deployer does not provision and configure an OAuth app from Auth0, the following config should be added to the appropriate hub in the cluster's cluster.yaml` file.
+
+   ```yaml
+   hubs:
+     - name: HUB_NAME
+       auth0:
+       enabled: false
+   ```
+
+4. **Edit the non-secret config under `config/clusters/CLUSTER_NAME/HUB_NAME.values.yaml`.**
    You should make sure the matching hub config takes one of the following forms.
 
-   ```{admonition} Removing allowed users
-   When using this method of authentication, make sure to remove the `allowed_users` block from the config.
-   This is because this block will block any user not listed under it **even if** they are valid members of the the organisation or team you are authenticating against.
+   ```{warning}
+   When using this method of authentication, make sure to remove the `allowed_users` key from the config.
+   This is because this key will block any user not listed under it **even if** they are valid members of the the organisation or team you are authenticating against.
 
-   You should keep the `admin_users` block, however.
+   You should keep the `admin_users` key, however.
    ```
 
    To authenticate against a GitHub organisation:
 
     ```yaml
-    hubs:
-    - name: HUB_NAME
-      auth0:
-        enabled: false
-      ... # Other config
-      config:
-        jupyterhub:
-          hub:
-            config:
-              JupyterHub:
-                authenticator_class: github
-              GitHubOAuthenticator:
-                allowed_organizations:
-                  - 2i2c-org
-                  - ORG_NAME
-                scope:
-                  - read:user
+    jupyterhub:
+      hub:
+        config:
+          JupyterHub:
+            authenticator_class: github
+          GitHubOAuthenticator:
+            oauth_callback_url: https://{{ HUB_DOMAIN }}/hub/oauth_callback
+            allowed_organizations:
+              - 2i2c-org
+              - ORG_NAME
+            scope:
+              - read:user
     ```
 
    To authenticate against a GitHub Team:
 
     ```yaml
-    hubs:
-    - name: HUB_NAME
-      auth0:
-        enabled: false
-      ... # Other config
-      config:
-        jupyterhub:
-          hub:
-            config:
-              JupyterHub:
-                authenticator_class: github
-              GitHubOAuthenticator:
-                allowed_organizations:
-                  - 2i2c-org:tech-team
-                  - ORG_NAME:TEAM_NAME
-                scope:
-                  - read:org
+    jupyterhub:
+      hub:
+        config:
+          JupyterHub:
+            authenticator_class: github
+          GitHubOAuthenticator:
+            oauth_callback_url: https://{{ HUB_DOMAIN }}/hub/oauth_callback
+            allowed_organizations:
+              - 2i2c-org:tech-team
+              - ORG_NAME:TEAM_NAME
+            scope:
+              - read:org
     ```
 
-4. Run the deployer as normal to apply the config.
+5. Run the deployer as normal to apply the config.
 
 ## CILogon
 
@@ -235,19 +233,18 @@ The following configuration example shows off how to configure hub admins and al
    - the test username, `deployment-service-check`
 
 ```yaml
-config:
-  jupyterhub:
-    custom:
-      2i2c:
-        add_staff_user_ids_to_admin_users: true
-        add_staff_user_ids_of_type: "google"
-    hub:
-      config:
-        Authenticator:
-          admin_users:
-            - user1@campus.edu
-            - user2@gmail.com
-          username_pattern: '^(.+@2i2c\.org|.+@campus\.edu|user2@gmail\.com|deployment-service-check)$'
+jupyterhub:
+  custom:
+    2i2c:
+      add_staff_user_ids_to_admin_users: true
+      add_staff_user_ids_of_type: "google"
+  hub:
+    config:
+      Authenticator:
+        admin_users:
+          - user1@campus.edu
+          - user2@gmail.com
+        username_pattern: '^(.+@2i2c\.org|.+@campus\.edu|user2@gmail\.com|deployment-service-check)$'
 ```
 
 ```{note}
