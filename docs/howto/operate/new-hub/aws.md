@@ -25,7 +25,7 @@ Follow the steps outlined in [](new-hub:deploy) with the following modifications
 1. Generate a new config file for your hubs if there is not an existing one.
 
    You can use one of the existing hub config files as a "template" for your hubs (for
-   example, [here is the Farallon Institute config file](https://github.com/2i2c-org/infrastructure/tree/HEAD/config/clusters/farallon/staging.values.yaml)).
+   example, [here is the Farallon Institute staging hub values file](https://github.com/2i2c-org/infrastructure/tree/HEAD/config/clusters/farallon/staging.values.yaml)).
    You may need to tweak names, `serverIP` and singleuser's images references.
    Make sure you set up the `profileList` section to be compatible with your kops cluster
    (ie. match the `node_selector` with the proper `instance-type`).
@@ -36,12 +36,12 @@ Follow the steps outlined in [](new-hub:deploy) with the following modifications
 
 3. Create a Pull Request with the new entries, and get a team member to review it.
 
-4. Once you merge the pull request, the GitHub Workflow will detect that a new entry has
+4. Once you merge the pull request, the GitHub Actions workflow will detect that a new entry has
    been added to the configuration file.
    It will then deploy a new JupyterHub with the configuration you've specified onto the
    corresponding AWS cluster.
 
-5. Monitor the action to make sure that it completes.
+5. Monitor the workflow to make sure that it completes.
 
 6. Get the AWS external IP for your hub with (supposing your hub is `staging`):
 
