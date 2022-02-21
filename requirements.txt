@@ -3,5 +3,5 @@ chartpress
 six # temp workaround for docker==5.0.0, used by chartpress, that failed to depend on six
 ruamel.yaml
 auth0-python
-jhub-client==0.1.2
+jhub-client==0.1.4
 jsonschema
