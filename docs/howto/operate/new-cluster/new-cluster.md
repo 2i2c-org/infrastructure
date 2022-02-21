@@ -73,22 +73,22 @@ Names for Azure container registries and storage accounts **must** conform to th
 
 - alphanumeric strings between 5 and 50 characters for [container registries](https://docs.microsoft.com/en-us/azure/azure-resource-manager/management/resource-name-rules#microsoftcontainerregistry), e.g., `myContainerRegistry007`
 - lowercase letters and numbers strings between 2 and 24 characters for [storage accounts](https://docs.microsoft.com/en-us/azure/azure-resource-manager/management/resource-name-rules#microsoftstorage), e.g., `mystorageaccount314`
+```
 
-````{ note}
+```{note}
 A failure will occur if you try to create a storage account whose name is not entirely lowercase.
-````
+```
 
 We recommend the following conventions using `lowercase`:
 
 - `{CLUSTER_NAME}hubregistry` for container registries
 - `{CLUSTER_NAME}hubstorage` for storage accounts
 
-````{ note}
+```{note}
 Changes in Azure's own requirements might break our recommended convention. If any such failure occurs, please signal it.
-````
+```
 
 This increases the probability that we won't take up a namespace that may be required by the Hub Community, for example, in cases where we are deploying to Azure subscriptions not owned/managed by 2i2c.
-```
 
 Example `.tfvars` file:
 
