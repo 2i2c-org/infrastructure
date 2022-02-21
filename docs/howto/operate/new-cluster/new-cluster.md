@@ -73,22 +73,22 @@ Names for Azure container registries and storage accounts **must** conform to th
 
 - alphanumeric strings between 5 and 50 characters for [container registries](https://docs.microsoft.com/en-us/azure/azure-resource-manager/management/resource-name-rules#microsoftcontainerregistry), e.g., `myContainerRegistry007`
 - lowercase letters and numbers strings between 2 and 24 characters for [storage accounts](https://docs.microsoft.com/en-us/azure/azure-resource-manager/management/resource-name-rules#microsoftstorage), e.g., `mystorageaccount314`
+```
 
-````{ note}
+```{note}
 A failure will occur if you try to create a storage account whose name is not entirely lowercase.
-````
+```
 
 We recommend the following conventions using `lowercase`:
 
 - `{CLUSTER_NAME}hubregistry` for container registries
 - `{CLUSTER_NAME}hubstorage` for storage accounts
 
-````{ note}
+```{note}
 Changes in Azure's own requirements might break our recommended convention. If any such failure occurs, please signal it.
-````
+```
 
 This increases the probability that we won't take up a namespace that may be required by the Hub Community, for example, in cases where we are deploying to Azure subscriptions not owned/managed by 2i2c.
-```
 
 Example `.tfvars` file:
 
@@ -115,10 +115,19 @@ gcloud auth application-default login
 
 Then you can change into the terraform subdirectory for the appropriate cloud provider and initialise terraform.
 
+````{tabbed} Google
 ```bash
-cd terraform/{{ gcp | azure }}
+cd terraform/gcp
 terraform init -backend-config=backends/default-backend.hcl -reconfigure
 ```
+````
+
+````{tabbed} Azure
+```bash
+cd terraform/azure
+terraform init
+```
+````
 
 ````{note}
 There are other backend config files stored in `terraform/backends` that will configure a different storage bucket to read/write the remote terraform state for projects which we cannot access from GCP with our `@2i2c.org` email accounts.
@@ -130,7 +139,7 @@ For example, to work with Pangeo you would initialise terraform like so:
 terraform init -backend-config=pangeo-backend.hcl -reconfigure
 ```
 
-TODO: add instructions on how/when to create other backends
+<!-- TODO: add instructions on how/when to create other backends -->
 ````
 
 ## Creating a new terraform workspace
@@ -152,6 +161,7 @@ If you can't find the workspace you're looking for, double check you've enabled 
 ```{note}
 When deploying to Google Cloud, make sure the [Artifact Registry API](https://console.cloud.google.com/apis/library/artifactregistry.googleapis.com) is enabled on the project before deploying!
 ```
+
 First, make sure you are in the new workspace that you just created.
 
 ```bash

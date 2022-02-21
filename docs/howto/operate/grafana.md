@@ -22,9 +22,9 @@ This guide will walk through the steps required to setup a suite of Grafana dash
 The `support` chart is a helm chart maintained by the 2i2c Engineers that consists of common tools used to support JupyterHub deployments in the cloud.
 These tools are [`ingress-nginx`](https://kubernetes.github.io/ingress-nginx/), for controlling ingresses and load balancing; [`cert-manager`](https://cert-manager.io/docs/), for automatically provisioning TLS certificates from [Let's Encrypt](https://letsencrypt.org/); [Prometheus](https://prometheus.io/), for scraping and storing metrics from the cluster and hub; and [Grafana](https://grafana.com/), for visualising the metrics retreived by Prometheus.
 
-#### Edit your `*.cluster.yaml` file
+#### Edit your `cluster.yaml` file
 
-Add the following config as a top-level key to your `*.cluster.yaml` file under `/config/clusters` in `infrastructure`.
+Add the following config as a top-level key to your `cluster.yaml` file under `/config/clusters/<cluster_name>` in `infrastructure`.
 `GRAFANA_URL` should follow the pattern `grafana.<cluster_name>.2i2c.cloud`.
 
 ```yaml
@@ -57,7 +57,7 @@ Once the `support` chart has been successfully deployed, retrieve the external I
 kubectl --namespace support get svc support-ingress-nginx-controller
 ```
 
-Add this external IP address to an A record in NameCheap that matches `GRAFANA_URL` that was set in the `*cluster.yaml` file.
+Add this external IP address to an A record in NameCheap that matches `GRAFANA_URL` that was set in the `cluster.yaml` file.
 
 **Wait a while for the DNS to propagate!**
 

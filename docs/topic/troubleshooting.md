@@ -36,7 +36,7 @@ Prometheus collects Kubernetes metrics for our grafana charts and often requires
 If the server runs out of memory during the startup process, this presents itself as a "Timed out waiting for condition" error from `helm` on the command line, and `OOMKilled` events in the prometheus server pod events before the pod reverts to `CrashLoopBackOff` status.
 This will also block our CI/CD system from updating the hubs on the cluster since the support chart is always upgraded before the hub charts.
 
-To resolve this issue, we feed prometheus more RAM which you can do by adding the below config to the relevant `*.cluster.yaml` file.
+To resolve this issue, we feed prometheus more RAM which you can do by adding the below config to the relevant `cluster.yaml` file.
 
 ```yaml
 support:

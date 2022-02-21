@@ -17,7 +17,7 @@ However, we should update this documentation to include the other major cloud pr
 
 First, you'll need to access the Google Cloud projects on which the hubs run. You
 can find the current list of active projects by examining the `gcp.project`
-values in the files under `config/clusters/*.cluster.yaml`.
+values in the files under `config/clusters/<cluster_name>/cluster.yaml`.
 
 ## Commandline tools installation
 
