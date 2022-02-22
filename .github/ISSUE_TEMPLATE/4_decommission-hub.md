@@ -30,7 +30,8 @@ Usually, it is because it was a hub that we created for a workshop/conference an
 #### Phase II - Hub Removal
 
 - [ ] (Optional) Migrate data from the hub
-- [ ] Remove hub entry from the appropriate `*.cluster.yaml` file
+- [ ] Remove the appropriate `config/clusters/<cluster_name>/<hub_name>.values.yaml` file
+- [ ] Remove the associated hub entry from the `config/clusters/<cluster_name>/cluster.yaml file.
 - [ ] Remove the hub deployment
   - `helm --namespace HUB_NAME delete HUB_NAME`
   - `kubectl delete namespace HUB_NAME`
@@ -40,8 +41,8 @@ Usually, it is because it was a hub that we created for a workshop/conference an
 
 _This phase is only necessary for single hub clusters._
 
-- [ ] Run `terraform plan -destroy` and `terraform apply` to destroy the cluster
+- [ ] Run `terraform plan -destroy` and `terraform apply` from the appropriate workspace, to destroy the cluster
 - [ ] Remove the following files from the repository:
-  - The associated `*.cluster.yaml` file
+  - The associated `config/clusters/<cluster_name>` directory
   - The associated CI deployer key in `secrets/`
   - Remove the name of the cluster from [CI](https://github.com/2i2c-org/infrastructure/tree/HEAD/.github/workflows/deploy-hubs.yaml)
