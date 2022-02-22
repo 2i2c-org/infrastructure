@@ -8,7 +8,7 @@
 #
 FROM jupyterhub/k8s-hub:1.1.3
 
-ENV CONFIGURATOR_VERSION ed7e3a0df1e3d625d10903ef7d7fd9c2fbb548db
+ENV CONFIGURATOR_VERSION d49dcd4df404137205c92f8988de079f9acba7a8
 
 RUN pip install --no-cache git+https://github.com/yuvipanda/jupyterhub-configurator@${CONFIGURATOR_VERSION}
 
