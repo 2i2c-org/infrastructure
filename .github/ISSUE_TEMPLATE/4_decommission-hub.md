@@ -41,7 +41,7 @@ Usually, it is because it was a hub that we created for a workshop/conference an
 
 _This phase is only necessary for single hub clusters._
 
-- [ ] Run `terraform plan -destroy` and `terraform apply` from the appropriate workspace, to destroy the cluster
+- [ ] Run `terraform plan -destroy` and `terraform apply` from the [appropriate workspace](https://infrastructure.2i2c.org/en/latest/topic/terraform.html#workspaces), to destroy the cluster
 - [ ] Remove the following files from the repository:
   - The associated `config/clusters/<cluster_name>` directory
   - The associated CI deployer key in `secrets/`
