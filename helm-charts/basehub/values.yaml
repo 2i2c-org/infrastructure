@@ -283,7 +283,7 @@ jupyterhub:
           - --Configurator.config_file=/usr/local/etc/jupyterhub-configurator/jupyterhub_configurator_config.py
     image:
       name: quay.io/2i2c/pilot-hub
-      tag: "0.0.1-n1159.h5b045cd"
+      tag: "0.0.1-n2184.h4ff07d9"
     nodeSelector:
       hub.jupyter.org/node-purpose: core
     networkPolicy:
