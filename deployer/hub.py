@@ -503,7 +503,8 @@ class Hub:
         if hub_helm_chart != "basehub":
             generated_config = {"basehub": generated_config}
 
-        # LOLSOB FIXME
+        # FIXME: This section can be fixed upon resolution of:
+        # https://github.com/dask/dask-gateway/issues/473
         if hub_helm_chart == "daskhub":
             gateway_token = hmac.new(
                 secret_key, b"gateway-" + self.spec["name"].encode(), hashlib.sha256
