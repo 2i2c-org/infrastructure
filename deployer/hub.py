@@ -121,7 +121,7 @@ class Cluster:
         subprocess.check_call(["helm", "dep", "up", "helm-charts/support"])
 
         support_dir = (Path(__file__).parent.parent).joinpath("helm-charts", "support")
-        support_secrets_file = support_dir.joinpath("secrets.yaml")
+        support_secrets_file = support_dir.joinpath("enc-support.secret.yaml")
 
         with tempfile.NamedTemporaryFile(mode="w") as f, decrypt_file(
             support_secrets_file
