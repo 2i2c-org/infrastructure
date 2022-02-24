@@ -78,7 +78,7 @@ def deploy_grafana_dashboards(cluster_name):
     # Validate our config with JSON Schema first before continuing
     validate(cluster_name)
 
-    config_file_path = find_absolute_path_to_cluster_file(cluster_name)
+    config_file_path = find_absolute_path_to_cluster_file(cluster_name).parent
     with open(config_file_path) as f:
         cluster = Cluster(yaml.load(f))
 
@@ -89,25 +89,23 @@ def deploy_grafana_dashboards(cluster_name):
         )
         return
 
-    secret_config_file = Path(os.getcwd()).joinpath(
-        "secrets", "config", "clusters", f"enc-{cluster_name}.cluster.yaml"
-    )
+    grafana_token_file = (config_file_path.parent).joinpath("enc-grafana-token.secret.yaml")
 
     # Check the secret file exists before continuing
-    if not os.path.exists(secret_config_file):
+    if not os.path.exists(grafana_token_file):
         raise FileExistsError(
-            f"File does not exist! Please create it and try again: {secret_config_file}"
+            f"File does not exist! Please create it and try again: {grafana_token_file}"
         )
 
     # Read the cluster specific secret config file
-    with verify_and_decrypt_file(secret_config_file) as decrypted_file_path:
+    with verify_and_decrypt_file(grafana_token_file) as decrypted_file_path:
         with open(decrypted_file_path) as f:
             config = yaml.load(f)
 
     # Check GRAFANA_TOKEN exists in the secret config file before continuing
     if "grafana_token" not in config.keys():
         raise ValueError(
-            f"`grafana_token` not provided in secret file! Please add it and try again: {secret_config_file}"
+            f"`grafana_token` not provided in secret file! Please add it and try again: {grafana_token_file}"
         )
 
     # Get the url where grafana is running from the cluster config
