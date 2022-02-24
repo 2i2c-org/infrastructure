@@ -536,13 +536,20 @@ class Hub:
 
         # Ensure helm charts are up to date
         helm_charts_dir = (Path(__file__).parent.parent).joinpath("helm-charts")
-        subprocess.check_call(["helm", "dep", "up", helm_charts_dir.joinpath("basehub")])
+        subprocess.check_call(
+            ["helm", "dep", "up", helm_charts_dir.joinpath("basehub")]
+        )
         if self.spec["helm_chart"] == "daskhub":
-            subprocess.check_call(["helm", "dep", "up", helm_charts_dir.joinpath("daskhub")])
+            subprocess.check_call(
+                ["helm", "dep", "up", helm_charts_dir.joinpath("daskhub")]
+            )
 
         # Check if this cluster has any secret config. If yes, read it in.
         secret_config_path = Path(os.getcwd()).joinpath(
-            "secrets", "config", "clusters", f'enc-{self.cluster.spec["name"]}.cluster.yaml'
+            "secrets",
+            "config",
+            "clusters",
+            f'enc-{self.cluster.spec["name"]}.cluster.yaml',
         )
 
         secret_hub_config = {}
