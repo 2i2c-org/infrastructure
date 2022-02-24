@@ -224,9 +224,8 @@ def deploy(cluster_name, hub_name, skip_hub_health_test, config_path):
 
 
 def validate(cluster_name):
-    cluster_dir = Path(os.getcwd()).joinpath("config", "clusters")
-    schema_file = cluster_dir.joinpath("schema.yaml")
-    config_file = cluster_dir.joinpath(cluster_name, "cluster.yaml")
+    schema_file = (Path(os.getcwd())).joinpath("shared", "deployer", "cluster.schema.yaml")
+    config_file = (Path(os.getcwd())).joinpath("config", "clusters", cluster_name, "cluster.yaml")
 
     with open(config_file) as cf, open(schema_file) as sf:
         cluster_config = yaml.load(cf)
@@ -295,7 +294,8 @@ def main():
     deploy_parser.add_argument(
         "--config-path",
         help="File to read secret deployment configuration from",
-        default="config/secrets.yaml",
+        # This filepath is relative to the PROJECT ROOT
+        default="shared/deployer/enc-deployer.secret.yaml",
     )
 
     # Validate subcommand
