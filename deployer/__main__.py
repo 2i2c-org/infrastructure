@@ -89,7 +89,9 @@ def deploy_grafana_dashboards(cluster_name):
         )
         return
 
-    grafana_token_file = (config_file_path.parent).joinpath("enc-grafana-token.secret.yaml")
+    grafana_token_file = (config_file_path.parent).joinpath(
+        "enc-grafana-token.secret.yaml"
+    )
 
     # Check the secret file exists before continuing
     if not os.path.exists(grafana_token_file):
