@@ -6,10 +6,6 @@ version: 2
 
 build:
   os: ubuntu-20.04
-  tools:
-    # NOTE: Update the python version hand in hand with the requirement
-    #       specification in docs/environment.yml
-    python: "3.8"
 
 sphinx:
   configuration: docs/conf.py
