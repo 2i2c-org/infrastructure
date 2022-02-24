@@ -71,7 +71,7 @@ def verify_and_decrypt_file(encrypted_path):
 
     # Our convention is that encrypted secrets in the repository begin with "enc-",
     # so first we check for that
-    if (filename.startswith("enc-")):
+    if filename.startswith("enc-"):
         # We must then determine if the file is using sops
         # sops files are JSON/YAML with a `sops` key. So we first check
         # if the file is valid JSON/YAML, and then if it has a `sops` key
@@ -100,7 +100,9 @@ def verify_and_decrypt_file(encrypted_path):
 
         # If file has a `sops` key, we assume it's sops encrypted
         with tempfile.NamedTemporaryFile() as f:
-            subprocess.check_call(["sops", "--output", f.name, "--decrypt", encrypted_path])
+            subprocess.check_call(
+                ["sops", "--output", f.name, "--decrypt", encrypted_path]
+            )
             yield f.name
 
     else:
