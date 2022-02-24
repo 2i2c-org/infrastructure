@@ -542,7 +542,7 @@ class Hub:
 
         # Check if this cluster has any secret config. If yes, read it in.
         secret_config_path = Path(os.getcwd()).joinpath(
-            "secrets", "config", "clusters", f'{self.cluster.spec["name"]}.cluster.yaml'
+            "secrets", "config", "clusters", f'enc-{self.cluster.spec["name"]}.cluster.yaml'
         )
 
         secret_hub_config = {}
@@ -582,9 +582,9 @@ class Hub:
                 f"--namespace={self.spec['name']}",
                 self.spec["name"],
                 os.path.join("helm-charts", self.spec["helm_chart"]),
-                # Ordering matters here - config explicitly mentioned in clu should take
+                # Ordering matters here - config explicitly mentioned in cli should take
                 # priority over our generated values. Based on how helm does overrides, this means
-                # we should put the config from config/clusters last.
+                # we should put the config from cluster.yaml last.
                 f"--values={generated_values_file.name}",
             ]
 
