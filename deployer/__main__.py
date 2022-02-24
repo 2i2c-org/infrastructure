@@ -223,8 +223,12 @@ def deploy(cluster_name, hub_name, skip_hub_health_test, config_path):
 
 
 def validate(cluster_name):
-    schema_file = (Path(os.getcwd())).joinpath("shared", "deployer", "cluster.schema.yaml")
-    config_file = (Path(os.getcwd())).joinpath("config", "clusters", cluster_name, "cluster.yaml")
+    schema_file = (Path(os.getcwd())).joinpath(
+        "shared", "deployer", "cluster.schema.yaml"
+    )
+    config_file = (Path(os.getcwd())).joinpath(
+        "config", "clusters", cluster_name, "cluster.yaml"
+    )
 
     with open(config_file) as cf, open(schema_file) as sf:
         cluster_config = yaml.load(cf)
