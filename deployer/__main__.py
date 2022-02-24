@@ -12,7 +12,11 @@ import shutil
 
 from auth import KeyProvider
 from hub import Cluster
-from utils import verify_and_decrypt_file, print_colour, find_absolute_path_to_cluster_file
+from utils import (
+    verify_and_decrypt_file,
+    print_colour,
+    find_absolute_path_to_cluster_file,
+)
 
 # Without `pure=True`, I get an exception about str / byte issues
 yaml = YAML(typ="safe", pure=True)
