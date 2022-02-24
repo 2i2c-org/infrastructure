@@ -27,5 +27,5 @@ updates:
       interval: "weekly"
     ignore:
       # Ignore patch upgrades to further reduce noise
-      update-types:
-        - "patch"
+      - update-types: "patch"
+        dependency-name: "*" # Match all packages
