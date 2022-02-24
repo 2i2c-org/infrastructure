@@ -12,7 +12,7 @@ import shutil
 
 from auth import KeyProvider
 from hub import Cluster
-from utils import decrypt_file, print_colour
+from utils import verify_and_decrypt_file, print_colour
 
 # Without `pure=True`, I get an exception about str / byte issues
 yaml = YAML(typ="safe", pure=True)
@@ -105,7 +105,7 @@ def deploy_grafana_dashboards(cluster_name):
         )
 
     # Read the cluster specific secret config file
-    with decrypt_file(secret_config_file) as decrypted_file_path:
+    with verify_and_decrypt_file(secret_config_file) as decrypted_file_path:
         with open(decrypted_file_path) as f:
             config = yaml.load(f)
 
@@ -180,7 +180,7 @@ def deploy(cluster_name, hub_name, skip_hub_health_test, config_path):
     # Validate our config with JSON Schema first before continuing
     validate(cluster_name)
 
-    with decrypt_file(config_path) as decrypted_file_path:
+    with verify_and_decrypt_file(config_path) as decrypted_file_path:
         with open(decrypted_file_path) as f:
             config = yaml.load(f)
 
@@ -238,7 +238,7 @@ def validate(cluster_name):
 
     # If a secret config file exists, validate it as well
     if os.path.exists(secret_config_file):
-        with decrypt_file(secret_config_file) as decrypted_file_path:
+        with verify_and_decrypt_file(secret_config_file) as decrypted_file_path:
             with open(decrypted_file_path) as scf, open(secret_schema_file) as ssf:
                 secret_cluster_config = yaml.load(scf)
                 secret_schema = yaml.load(ssf)

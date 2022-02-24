@@ -51,40 +51,64 @@ def find_absolute_path_to_cluster_file(cluster_name: str):
 
 
 @contextmanager
-def decrypt_file(encrypted_path):
+def verify_and_decrypt_file(encrypted_path):
     """
-    Provide secure temporary decrypted contents of a given file
+    Provide secure, temporarily decrypted contents of a given file. We verify the file
+    is sops-encrypted and raise an error if we do not find the sops key when we expect
+    to, in case the decrypted contents have been leaked via version control.
 
-    If file isn't a sops encrypted file, we assume no encryption is used
-    and return the current path.
+    Args:
+        encrypted_path (path object): Absolute path to an encrypted file to perform
+            checks on and decrypt
+
+    Yields:
+        decrypted_path (path object): Abolute path to a tempfile containing the
+            decrypted contents. Unless the file is not valid JSON/YAML or does not have
+            the prefix `enc-`, then we return the original, encrypted path.
     """
-    # We must first determine if the file is using sops
-    # sops files are JSON/YAML with a `sops` key. So we first check
-    # if the file is valid JSON/YAML, and then if it has a `sops` key
-    with open(encrypted_path) as f:
-        _, ext = os.path.splitext(encrypted_path)
-        # Support the (clearly wrong) people who use .yml instead of .yaml
-        if ext == ".yaml" or ext == ".yml":
-            try:
-                encrypted_data = yaml.load(f)
-            except ScannerError:
-                yield encrypted_path
-                return
-        elif ext == ".json":
-            try:
-                encrypted_data = json.load(f)
-            except json.JSONDecodeError:
-                yield encrypted_path
-                return
+    filename = os.path.basename(encrypted_path)
+    _, ext = os.path.splitext(filename)
 
-    if "sops" not in encrypted_data:
+    # Our convention is that encrypted secrets in the repository begin with "enc-",
+    # so first we check for that
+    if (filename.startswith("enc-")):
+        # We must then determine if the file is using sops
+        # sops files are JSON/YAML with a `sops` key. So we first check
+        # if the file is valid JSON/YAML, and then if it has a `sops` key
+        with open(encrypted_path) as f:
+
+            # Support the (clearly wrong) people who use .yml instead of .yaml
+            if ext == ".yaml" or ext == ".yml":
+                try:
+                    encrypted_data = yaml.load(f)
+                except ScannerError:
+                    yield encrypted_path
+                    return
+            elif ext == ".json":
+                try:
+                    encrypted_data = json.load(f)
+                except json.JSONDecodeError:
+                    yield encrypted_path
+                    return
+
+        if "sops" not in encrypted_data:
+            raise KeyError(
+                "Expecting to find the `sops` key in this encrypted file - but it "
+                + "wasn't found! Please regenerate the secret in case it has been "
+                + "checked into version control and leaked!"
+            )
+
+        # If file has a `sops` key, we assume it's sops encrypted
+        with tempfile.NamedTemporaryFile() as f:
+            subprocess.check_call(["sops", "--output", f.name, "--decrypt", encrypted_path])
+            yield f.name
+
+    else:
+        # Hmmm. A file has been passed to this function but does not have the `enc-`
+        # prefix. What is the correct thing to do here? For now, we do what has been
+        # done before and return the path to the encrypted file
         yield encrypted_path
         return
-
-    # If file has a `sops` key, we assume it's sops encrypted
-    with tempfile.NamedTemporaryFile() as f:
-        subprocess.check_call(["sops", "--output", f.name, "--decrypt", encrypted_path])
-        yield f.name
 
 
 def print_colour(msg: str):

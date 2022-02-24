@@ -13,7 +13,7 @@ from pathlib import Path
 import pytest
 from ruamel.yaml import YAML
 
-from utils import decrypt_file, print_colour
+from utils import verify_and_decrypt_file, print_colour
 
 # Without `pure=True`, I get an exception about str / byte issues
 yaml = YAML(typ="safe", pure=True)
@@ -123,7 +123,7 @@ class Cluster:
         support_dir = (Path(__file__).parent.parent).joinpath("helm-charts", "support")
         support_secrets_file = support_dir.joinpath("enc-support.secret.yaml")
 
-        with tempfile.NamedTemporaryFile(mode="w") as f, decrypt_file(
+        with tempfile.NamedTemporaryFile(mode="w") as f, verify_and_decrypt_file(
             support_secrets_file
         ) as secret_file:
             yaml.dump(self.support.get("config", {}), f)
@@ -156,7 +156,7 @@ class Cluster:
         config = self.spec["kubeconfig"]
         config_path = config["file"]
 
-        with decrypt_file(config_path) as decrypted_key_path:
+        with verify_and_decrypt_file(config_path) as decrypted_key_path:
             # FIXME: Unset this after our yield
             os.environ["KUBECONFIG"] = decrypted_key_path
             yield
@@ -185,7 +185,7 @@ class Cluster:
             orig_access_key_id = os.environ.get("AWS_ACCESS_KEY_ID", None)
             orig_secret_access_key = os.environ.get("AWS_SECRET_ACCESS_KEY", None)
             try:
-                with decrypt_file(key_path) as decrypted_key_path:
+                with verify_and_decrypt_file(key_path) as decrypted_key_path:
 
                     decrypted_key_abspath = os.path.abspath(decrypted_key_path)
                     if not os.path.isfile(decrypted_key_abspath):
@@ -248,7 +248,7 @@ class Cluster:
             try:
                 os.environ["KUBECONFIG"] = kubeconfig.name
 
-                with decrypt_file(key_path) as decrypted_key_path:
+                with verify_and_decrypt_file(key_path) as decrypted_key_path:
 
                     decrypted_key_abspath = os.path.abspath(decrypted_key_path)
                     if not os.path.isfile(decrypted_key_abspath):
@@ -307,7 +307,7 @@ class Cluster:
             orig_kubeconfig = os.environ.get("KUBECONFIG")
             try:
                 os.environ["KUBECONFIG"] = kubeconfig.name
-                with decrypt_file(key_path) as decrypted_key_path:
+                with verify_and_decrypt_file(key_path) as decrypted_key_path:
                     subprocess.check_call(
                         [
                             "gcloud",
@@ -545,7 +545,7 @@ class Hub:
 
         secret_hub_config = {}
         if os.path.exists(secret_config_path):
-            with decrypt_file(secret_config_path) as decrypted_file_path:
+            with verify_and_decrypt_file(secret_config_path) as decrypted_file_path:
                 with open(decrypted_file_path) as f:
                     secret_config = yaml.load(f)
 
