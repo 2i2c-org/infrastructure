@@ -122,11 +122,10 @@ class Cluster:
 
         print_colour("Provisioning support charts...")
 
-        subprocess.check_call(["helm", "dep", "up", "helm-charts/support"])
-
         support_dir = (Path(__file__).parent.parent).joinpath("helm-charts", "support")
-        support_secrets_file = support_dir.joinpath("enc-support.secret.yaml")
+        subprocess.check_call(["helm", "dep", "up", support_dir])
 
+        support_secrets_file = support_dir.joinpath("enc-support.secret.yaml")
         with tempfile.NamedTemporaryFile(mode="w") as f, verify_and_decrypt_file(
             support_secrets_file
         ) as secret_file:
@@ -536,11 +535,10 @@ class Hub:
         ]
 
         # Ensure helm charts are up to date
-        os.chdir("helm-charts")
-        subprocess.check_call(["helm", "dep", "up", "basehub"])
+        helm_charts_dir = (Path(__file__).parent.parent).joinpath("helm-charts")
+        subprocess.check_call(["helm", "dep", "up", helm_charts_dir.joinpath("basehub")])
         if self.spec["helm_chart"] == "daskhub":
-            subprocess.check_call(["helm", "dep", "up", "daskhub"])
-        os.chdir("..")
+            subprocess.check_call(["helm", "dep", "up", helm_charts_dir.joinpath("daskhub")])
 
         # Check if this cluster has any secret config. If yes, read it in.
         secret_config_path = Path(os.getcwd()).joinpath(
