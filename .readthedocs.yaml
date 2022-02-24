@@ -1,5 +1,5 @@
 # Configuration on how ReadTheDocs (RTD) builds our documentation
-# ref: https://readthedocs.org/projects/2i2c-pilot-hubs/
+# ref: https://readthedocs.org/projects/2i2c-pilot-hubs
 # ref: https://docs.readthedocs.io/en/stable/config-file/v2.html
 #
 version: 2
