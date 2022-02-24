@@ -5,8 +5,49 @@ import subprocess
 from ruamel.yaml import YAML
 from ruamel.yaml.scanner import ScannerError
 from contextlib import contextmanager
+from pathlib import Path
+import warnings
 
 yaml = YAML(typ="safe", pure=True)
+
+
+def find_absolute_path_to_cluster_file(cluster_name: str):
+    """Find the absolute path to a cluster.yaml file for a named cluster
+
+    Args:
+        cluster_name (str): The name of the cluster we wish to perform actions on.
+            This corresponds to a folder name, and that folder should contain a
+            cluster.yaml file.
+
+    Returns:
+        Path object: The absolute path to the cluster.yaml file for the named cluster
+    """
+    filepaths = list((Path(os.getcwd())).glob(f"**/{cluster_name}/cluster.yaml"))
+
+    if len(filepaths) > 1:
+        raise FileExistsError(
+            "Multiple files found. "
+            + "Only ONE (1) cluster.yaml file should exist per cluster folder."
+        )
+    elif len(filepaths) == 0:
+        raise FileNotFoundError(
+            f"No cluster.yaml file exists for cluster {cluster_name}. "
+            + "Please create one and then continue."
+        )
+    else:
+        cluster_file = filepaths[0]
+
+    with open(cluster_file) as cf:
+        cluster_config = yaml.load(cf)
+
+    if not os.path.dirname(cluster_file).endswith(cluster_config["name"]):
+        warnings.warn(
+            "Cluster Name Mismatch: It is convention that the cluster name defined "
+            + "in cluster.yaml matches the name of the parent directory. "
+            + "Deployment won't be halted but please update this for consistency!"
+        )
+
+    return cluster_file
 
 
 @contextmanager

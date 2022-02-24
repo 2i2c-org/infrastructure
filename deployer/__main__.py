@@ -5,7 +5,6 @@ import argparse
 import os
 import subprocess
 from pathlib import Path
-import warnings
 
 import jsonschema
 from ruamel.yaml import YAML
@@ -229,14 +228,6 @@ def validate(cluster_name):
 
     with open(config_file) as cf, open(schema_file) as sf:
         cluster_config = yaml.load(cf)
-
-        if not os.path.dirname(config_file).endswith(cluster_config["name"]):
-            warnings.warn(
-                "Cluster Name Mismatch: It is convention that the cluster name defined "
-                + "in cluster.yaml matches the name of the parent directory. "
-                + "Deployment won't be halted but please update this for consistency!"
-            )
-
         schema = yaml.load(sf)
         # Raises useful exception if validation fails
         jsonschema.validate(cluster_config, schema)
