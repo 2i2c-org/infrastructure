@@ -12,7 +12,7 @@ import shutil
 
 from auth import KeyProvider
 from hub import Cluster
-from utils import verify_and_decrypt_file, print_colour
+from utils import verify_and_decrypt_file, print_colour, find_absolute_path_to_cluster_file
 
 # Without `pure=True`, I get an exception about str / byte issues
 yaml = YAML(typ="safe", pure=True)
@@ -27,13 +27,10 @@ def use_cluster_credentials(cluster_name):
     This function is to be used with the `use-cluster-credentials` CLI
     command only - it is not used by the rest of the deployer codebase.
     """
-
     # Validate our config with JSON Schema first before continuing
     validate(cluster_name)
 
-    config_file_path = Path(os.getcwd()).joinpath(
-        "config", "clusters", cluster_name, "cluster.yaml"
-    )
+    config_file_path = find_absolute_path_to_cluster_file(cluster_name)
     with open(config_file_path) as f:
         cluster = Cluster(yaml.load(f))
 
@@ -54,13 +51,10 @@ def deploy_support(cluster_name):
     """
     Deploy support components to a cluster
     """
-
     # Validate our config with JSON Schema first before continuing
     validate(cluster_name)
 
-    config_file_path = Path(os.getcwd()).joinpath(
-        "config", "clusters", cluster_name, "cluster.yaml"
-    )
+    config_file_path = find_absolute_path_to_cluster_file(cluster_name)
     with open(config_file_path) as f:
         cluster = Cluster(yaml.load(f))
 
@@ -77,13 +71,10 @@ def deploy_grafana_dashboards(cluster_name):
     Grafana dashboards and deployment mechanism in question are maintained in
     this repo: https://github.com/jupyterhub/grafana-dashboards
     """
-
     # Validate our config with JSON Schema first before continuing
     validate(cluster_name)
 
-    config_file_path = Path(os.getcwd()).joinpath(
-        "config", "clusters", cluster_name, "cluster.yaml"
-    )
+    config_file_path = find_absolute_path_to_cluster_file(cluster_name)
     with open(config_file_path) as f:
         cluster = Cluster(yaml.load(f))
 
@@ -95,7 +86,7 @@ def deploy_grafana_dashboards(cluster_name):
         return
 
     secret_config_file = Path(os.getcwd()).joinpath(
-        "secrets", "config", "clusters", f"{cluster_name}.cluster.yaml"
+        "secrets", "config", "clusters", f"enc-{cluster_name}.cluster.yaml"
     )
 
     # Check the secret file exists before continuing
@@ -226,9 +217,7 @@ def validate(cluster_name):
     schema_file = (Path(os.getcwd())).joinpath(
         "shared", "deployer", "cluster.schema.yaml"
     )
-    config_file = (Path(os.getcwd())).joinpath(
-        "config", "clusters", cluster_name, "cluster.yaml"
-    )
+    config_file = find_absolute_path_to_cluster_file(cluster_name)
 
     with open(config_file) as cf, open(schema_file) as sf:
         cluster_config = yaml.load(cf)
@@ -238,7 +227,7 @@ def validate(cluster_name):
 
     secret_cluster_dir = Path(os.getcwd()).joinpath("secrets", "config", "clusters")
     secret_schema_file = secret_cluster_dir.joinpath("schema.yaml")
-    secret_config_file = secret_cluster_dir.joinpath(f"{cluster_name}.cluster.yaml")
+    secret_config_file = secret_cluster_dir.joinpath(f"enc-{cluster_name}.cluster.yaml")
 
     # If a secret config file exists, validate it as well
     if os.path.exists(secret_config_file):

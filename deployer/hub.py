@@ -13,7 +13,7 @@ from pathlib import Path
 import pytest
 from ruamel.yaml import YAML
 
-from utils import verify_and_decrypt_file, print_colour
+from utils import verify_and_decrypt_file, print_colour, find_absolute_path_to_cluster_file
 
 # Without `pure=True`, I get an exception about str / byte issues
 yaml = YAML(typ="safe", pure=True)
@@ -523,9 +523,7 @@ class Hub:
         Deploy this hub
         """
         # Find helm chart values files
-        cluster_dir = Path(os.getcwd()).joinpath(
-            "config", "clusters", self.cluster.spec["name"]
-        )
+        cluster_dir = find_absolute_path_to_cluster_file(self.cluster.spec["name"]).parent
         values_files = [
             f"--values={cluster_dir.joinpath(values_file)}"
             for values_file in self.spec["helm_chart_values_files"]
