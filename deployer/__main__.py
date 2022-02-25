@@ -227,18 +227,6 @@ def validate(cluster_name):
         # Raises useful exception if validation fails
         jsonschema.validate(cluster_config, schema)
 
-    secret_cluster_dir = Path(os.getcwd()).joinpath("secrets", "config", "clusters")
-    secret_schema_file = secret_cluster_dir.joinpath("schema.yaml")
-    secret_config_file = secret_cluster_dir.joinpath(f"enc-{cluster_name}.cluster.yaml")
-
-    # If a secret config file exists, validate it as well
-    if os.path.exists(secret_config_file):
-        with verify_and_decrypt_file(secret_config_file) as decrypted_file_path:
-            with open(decrypted_file_path) as scf, open(secret_schema_file) as ssf:
-                secret_cluster_config = yaml.load(scf)
-                secret_schema = yaml.load(ssf)
-                jsonschema.validate(secret_cluster_config, secret_schema)
-
 
 def main():
     argparser = argparse.ArgumentParser(
