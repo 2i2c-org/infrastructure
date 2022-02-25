@@ -11,6 +11,21 @@ import warnings
 yaml = YAML(typ="safe", pure=True)
 
 
+def check_file_exists(filepath):
+    """Check a filepath exists, raise an error if not. This function is to be used for
+    files that *absolutely have to exist* in order to successfully complete deployment,
+    such as, files listed in the `helm_chart_values_file` key in the `cluster.yaml` file
+
+    Args:
+        filepath (str): Absolute path to the file that is to be checked for existence
+    """
+    if not os.path.exists(filepath):
+        raise FileNotFoundError(f"""
+            File Not Found at following location! Have you checked it's the correct path?
+            {filepath}
+        """)
+
+
 def find_absolute_path_to_cluster_file(cluster_name: str):
     """Find the absolute path to a cluster.yaml file for a named cluster
 
