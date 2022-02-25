@@ -20,10 +20,12 @@ def check_file_exists(filepath):
         filepath (str): Absolute path to the file that is to be checked for existence
     """
     if not os.path.exists(filepath):
-        raise FileNotFoundError(f"""
+        raise FileNotFoundError(
+            f"""
             File Not Found at following location! Have you checked it's the correct path?
             {filepath}
-        """)
+        """
+        )
 
 
 def find_absolute_path_to_cluster_file(cluster_name: str):

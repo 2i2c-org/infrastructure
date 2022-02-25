@@ -535,10 +535,14 @@ class Hub:
         for values_file in self.spec["helm_chart_values_files"]:
             check_file_exists(self.config_path.joinpath(values_file))
             if values_file.startswith("enc-") or ("secret" in values_file):
-                with verify_and_decrypt_file(self.config_path.joinpath(values_file)) as decrypted_file:
+                with verify_and_decrypt_file(
+                    self.config_path.joinpath(values_file)
+                ) as decrypted_file:
                     values_files.append(f"--values={decrypted_file}")
             else:
-                values_files.append(f"--values={self.config_path.joinpath(values_file)}")
+                values_files.append(
+                    f"--values={self.config_path.joinpath(values_file)}"
+                )
 
         # Check if this cluster has any secret config. If yes, read it in.
         # secret_config_path = Path(os.getcwd()).joinpath(
@@ -575,7 +579,7 @@ class Hub:
             )
 
         with tempfile.NamedTemporaryFile(mode="w") as generated_values_file:
-            #, tempfile.NamedTemporaryFile(mode="w") as secret_values_file:
+            # , tempfile.NamedTemporaryFile(mode="w") as secret_values_file:
             json.dump(generated_values, generated_values_file)
             generated_values_file.flush()
             # json.dump(secret_hub_config, secret_values_file)
