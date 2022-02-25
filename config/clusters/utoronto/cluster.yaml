@@ -1,7 +1,7 @@
 name: utoronto
 provider: kubeconfig
 kubeconfig:
-  file: secrets/utoronto.yaml
+  file: enc-deployer-credentials.secret.yaml
 support:
   config:
     prometheus:

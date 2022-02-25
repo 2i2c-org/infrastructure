@@ -1,7 +1,7 @@
 name: uwhackweeks
 provider: aws
 aws:
-  key: secrets/uwhackweeks.json
+  key: enc-deployer-credentials.secret.json
   clusterType: eks
   clusterName: uwhackweeks
   region: us-west-2

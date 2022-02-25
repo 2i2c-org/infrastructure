@@ -2,7 +2,7 @@ name: 2i2c
 image_repo: "quay.io/2i2c/2i2c-hubs-image"
 provider: gcp
 gcp:
-  key: secrets/2i2c.json
+  key: enc-deployer-credentials.secret.json
   project: two-eye-two-see
   cluster: pilot-hubs-cluster
   zone: us-central1-b

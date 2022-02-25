@@ -1,7 +1,7 @@
 name: carbonplan
 provider: aws
 aws:
-  key: secrets/carbonplan.json
+  key: enc-deployer-credentials.secret.json
   clusterType: eks
   clusterName: carbonplanhub
   region: us-west-2

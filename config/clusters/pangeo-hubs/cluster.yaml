@@ -1,7 +1,7 @@
 name: pangeo-hubs
 provider: gcp
 gcp:
-  key: secrets/pangeo-hubs.json
+  key: enc-deployer-credentials.secret.json
   project: pangeo-integration-te-3eea
   cluster: pangeo-hubs-cluster
   zone: us-central1-b
