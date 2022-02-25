@@ -528,6 +528,24 @@ class Hub:
         """
         Deploy this hub
         """
+        # Support overriding domains in case we want to block access to a hub
+        #
+        # Check if this hub has an override file. If yes, apply overrides.
+        if "domain_override_file" in self.spec.keys():
+            domain_override_file = self.spec["domain_override_file"]
+
+            check_file_exists(self.config_path.joinpath(domain_override_file))
+
+            if domain_override_file.startswith("enc-") or ("secret" in domain_override_file):
+                with verify_and_decrypt_file(self.config_path.joinpath(domain_override_file)) as decrypted_path:
+                    with open(decrypted_path) as f:
+                        domain_override_config = yaml.load(f)
+            else:
+                with open(self.config_path.joinpath(domain_override_file)) as f:
+                    domain_override_config = yaml.load(f)
+
+            self.spec["domain"] = domain_override_config["domain"]
+
         generated_values = self.get_generated_config(auth_provider, secret_key)
 
         # Find helm chart values files
@@ -544,30 +562,6 @@ class Hub:
                     f"--values={self.config_path.joinpath(values_file)}"
                 )
 
-        # Check if this cluster has any secret config. If yes, read it in.
-        # secret_config_path = Path(os.getcwd()).joinpath(
-        #     "secrets",
-        #     "config",
-        #     "clusters",
-        #     f'enc-{self.cluster.spec["name"]}.cluster.yaml',
-        # )
-
-        # secret_hub_config = {}
-        # if os.path.exists(secret_config_path):
-        #     with verify_and_decrypt_file(secret_config_path) as decrypted_file_path:
-        #         with open(decrypted_file_path) as f:
-        #             secret_config = yaml.load(f)
-
-        #     if secret_config.get("hubs", {}):
-        #         hubs = secret_config["hubs"]
-        #         current_hub = next(
-        #             (hub for hub in hubs if hub["name"] == self.spec["name"]), {}
-        #         )
-        #         # Support domain name overrides
-        #         if "domain" in current_hub:
-        #             self.spec["domain"] = current_hub["domain"]
-        #         secret_hub_config = current_hub.get("config", {})
-
         # Ensure helm charts are up to date
         helm_charts_dir = (Path(__file__).parent.parent).joinpath("helm-charts")
         subprocess.check_call(
@@ -579,11 +573,8 @@ class Hub:
             )
 
         with tempfile.NamedTemporaryFile(mode="w") as generated_values_file:
-            # , tempfile.NamedTemporaryFile(mode="w") as secret_values_file:
             json.dump(generated_values, generated_values_file)
             generated_values_file.flush()
-            # json.dump(secret_hub_config, secret_values_file)
-            # secret_values_file.flush()
 
             cmd = [
                 "helm",
@@ -602,9 +593,6 @@ class Hub:
 
             # Add on the values files
             cmd.extend(values_files)
-
-            # # Add on the secret file
-            # cmd.append(f"--values={secret_values_file.name}")
 
             print_colour(f"Running {' '.join([str(c) for c in cmd])}")
             # Can't test without deploying, since our service token isn't set by default
