@@ -1,4 +1,21 @@
 # Added by 2i2c
+#
+# To clean up ignored files you can use: git clean -Xfd
+# Delete untracked files (-X), with required confirmation (-f), recursively (-d).
+
+# This section handles sensitive content that is or isn't encrypted in our repo.
+#
+# Ignore files (but not directories) with secret in their name
+*secret*
+!*secret*/
+# Don't ignore enc- prefixed files
+!enc-*
+# Don't ignore Helm chart templates with secret in their name as
+# they are not supposed to contain sensitive content but can often
+# have secret in their name.
+!**/templates/**/*secret*.yaml
+
+# Ignore helm chart generated outputs
 Chart.lock
 **/charts/*.tgz
 
