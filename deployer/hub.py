@@ -17,6 +17,7 @@ from utils import (
     verify_and_decrypt_file,
     print_colour,
     find_absolute_path_to_cluster_file,
+    check_file_exists,
 )
 
 # Without `pure=True`, I get an exception about str / byte issues
@@ -527,11 +528,41 @@ class Hub:
         """
         Deploy this hub
         """
+        generated_values = self.get_generated_config(auth_provider, secret_key)
+
         # Find helm chart values files
-        values_files = [
-            f"--values={self.config_path.joinpath(values_file)}"
-            for values_file in self.spec["helm_chart_values_files"]
-        ]
+        values_files = []
+        for values_file in self.spec["helm_chart_values_files"]:
+            check_file_exists(self.config_path.joinpath(values_file))
+            if values_file.startswith("enc-") or ("secret" in values_file):
+                with verify_and_decrypt_file(self.config_path.joinpath(values_file)) as decrypted_file:
+                    values_files.append(f"--values={decrypted_file}")
+            else:
+                values_files.append(f"--values={self.config_path.joinpath(values_file)}")
+
+        # Check if this cluster has any secret config. If yes, read it in.
+        # secret_config_path = Path(os.getcwd()).joinpath(
+        #     "secrets",
+        #     "config",
+        #     "clusters",
+        #     f'enc-{self.cluster.spec["name"]}.cluster.yaml',
+        # )
+
+        # secret_hub_config = {}
+        # if os.path.exists(secret_config_path):
+        #     with verify_and_decrypt_file(secret_config_path) as decrypted_file_path:
+        #         with open(decrypted_file_path) as f:
+        #             secret_config = yaml.load(f)
+
+        #     if secret_config.get("hubs", {}):
+        #         hubs = secret_config["hubs"]
+        #         current_hub = next(
+        #             (hub for hub in hubs if hub["name"] == self.spec["name"]), {}
+        #         )
+        #         # Support domain name overrides
+        #         if "domain" in current_hub:
+        #             self.spec["domain"] = current_hub["domain"]
+        #         secret_hub_config = current_hub.get("config", {})
 
         # Ensure helm charts are up to date
         helm_charts_dir = (Path(__file__).parent.parent).joinpath("helm-charts")
@@ -543,41 +574,12 @@ class Hub:
                 ["helm", "dep", "up", helm_charts_dir.joinpath("daskhub")]
             )
 
-        # Check if this cluster has any secret config. If yes, read it in.
-        secret_config_path = Path(os.getcwd()).joinpath(
-            "secrets",
-            "config",
-            "clusters",
-            f'enc-{self.cluster.spec["name"]}.cluster.yaml',
-        )
-
-        secret_hub_config = {}
-        if os.path.exists(secret_config_path):
-            with verify_and_decrypt_file(secret_config_path) as decrypted_file_path:
-                with open(decrypted_file_path) as f:
-                    secret_config = yaml.load(f)
-
-            if secret_config.get("hubs", {}):
-                hubs = secret_config["hubs"]
-                current_hub = next(
-                    (hub for hub in hubs if hub["name"] == self.spec["name"]), {}
-                )
-                # Support domain name overrides
-                if "domain" in current_hub:
-                    self.spec["domain"] = current_hub["domain"]
-                secret_hub_config = current_hub.get("config", {})
-
-        generated_values = self.get_generated_config(auth_provider, secret_key)
-
-        with tempfile.NamedTemporaryFile(
-            mode="w"
-        ) as generated_values_file, tempfile.NamedTemporaryFile(
-            mode="w"
-        ) as secret_values_file:
+        with tempfile.NamedTemporaryFile(mode="w") as generated_values_file:
+            #, tempfile.NamedTemporaryFile(mode="w") as secret_values_file:
             json.dump(generated_values, generated_values_file)
-            json.dump(secret_hub_config, secret_values_file)
             generated_values_file.flush()
-            secret_values_file.flush()
+            # json.dump(secret_hub_config, secret_values_file)
+            # secret_values_file.flush()
 
             cmd = [
                 "helm",
@@ -587,7 +589,7 @@ class Hub:
                 "--wait",
                 f"--namespace={self.spec['name']}",
                 self.spec["name"],
-                os.path.join("helm-charts", self.spec["helm_chart"]),
+                helm_charts_dir.joinpath(self.spec["helm_chart"]),
                 # Ordering matters here - config explicitly mentioned in cli should take
                 # priority over our generated values. Based on how helm does overrides, this means
                 # we should put the config from cluster.yaml last.
@@ -597,10 +599,10 @@ class Hub:
             # Add on the values files
             cmd.extend(values_files)
 
-            # Add on the secret file
-            cmd.append(f"--values={secret_values_file.name}")
+            # # Add on the secret file
+            # cmd.append(f"--values={secret_values_file.name}")
 
-            print_colour(f"Running {' '.join(cmd)}")
+            print_colour(f"Running {' '.join([str(c) for c in cmd])}")
             # Can't test without deploying, since our service token isn't set by default
             subprocess.check_call(cmd)
 
