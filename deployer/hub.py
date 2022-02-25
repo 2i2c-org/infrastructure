@@ -16,7 +16,6 @@ from ruamel.yaml import YAML
 from utils import (
     verify_and_decrypt_file,
     print_colour,
-    find_absolute_path_to_cluster_file,
     check_file_exists,
 )
 
