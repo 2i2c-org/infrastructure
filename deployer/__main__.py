@@ -36,7 +36,7 @@ def use_cluster_credentials(cluster_name):
 
     config_file_path = find_absolute_path_to_cluster_file(cluster_name)
     with open(config_file_path) as f:
-        cluster = Cluster(yaml.load(f))
+        cluster = Cluster(yaml.load(f), config_file_path.parent)
 
     # Cluster.auth() method has the context manager decorator so cannot call
     # it like a normal function
@@ -60,7 +60,7 @@ def deploy_support(cluster_name):
 
     config_file_path = find_absolute_path_to_cluster_file(cluster_name)
     with open(config_file_path) as f:
-        cluster = Cluster(yaml.load(f))
+        cluster = Cluster(yaml.load(f), config_file_path.parent)
 
     if cluster.support:
         with cluster.auth():
@@ -78,9 +78,9 @@ def deploy_grafana_dashboards(cluster_name):
     # Validate our config with JSON Schema first before continuing
     validate(cluster_name)
 
-    config_file_path = find_absolute_path_to_cluster_file(cluster_name).parent
+    config_file_path = find_absolute_path_to_cluster_file(cluster_name)
     with open(config_file_path) as f:
-        cluster = Cluster(yaml.load(f))
+        cluster = Cluster(yaml.load(f), config_file_path.parent)
 
     # If grafana support chart is not deployed, then there's nothing to do
     if not cluster.support:
@@ -199,11 +199,9 @@ def deploy(cluster_name, hub_name, skip_hub_health_test, config_path):
     # proxy.secretTokens have leaked. So let's be careful with that!
     SECRET_KEY = bytes.fromhex(config["secret_key"])
 
-    config_file_path = Path(os.getcwd()).joinpath(
-        "config", "clusters", cluster_name, "cluster.yaml"
-    )
+    config_file_path = find_absolute_path_to_cluster_file(cluster_name)
     with open(config_file_path) as f:
-        cluster = Cluster(yaml.load(f))
+        cluster = Cluster(yaml.load(f), config_file_path.parent)
 
     with cluster.auth():
         hubs = cluster.hubs
@@ -254,7 +252,7 @@ def main():
     )
 
     # === Arguments and options shared across subcommands go here ===#
-    # NOTE: If you we do not add a base_parser here with the add_help=False
+    # NOTE: If we do not add a base_parser here with the add_help=False
     #       option, then we see a "conflicting option strings" error when
     #       running `python deployer --help`
     base_parser = argparse.ArgumentParser(add_help=False)
@@ -283,7 +281,7 @@ def main():
         "--config-path",
         help="File to read secret deployment configuration from",
         # This filepath is relative to the PROJECT ROOT
-        default="shared/deployer/enc-deployer.secret.yaml",
+        default="shared/deployer/enc-auth0-credentials.secret.yaml",
     )
 
     # Validate subcommand

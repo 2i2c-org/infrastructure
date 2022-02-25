@@ -28,9 +28,10 @@ class Cluster:
     A single k8s cluster we can deploy to
     """
 
-    def __init__(self, spec):
+    def __init__(self, spec, config_path):
         self.spec = spec
-        self.hubs = [Hub(self, hub_yaml) for hub_yaml in self.spec["hubs"]]
+        self.config_path = config_path
+        self.hubs = [Hub(self, hub_yaml, config_path) for hub_yaml in self.spec["hubs"]]
         self.support = self.spec.get("support", {})
 
     @contextmanager
@@ -157,7 +158,7 @@ class Cluster:
            we call (primarily helm) will use that as config
         """
         config = self.spec["kubeconfig"]
-        config_path = config["file"]
+        config_path = self.config_path.joinpath(config["file"])
 
         with verify_and_decrypt_file(config_path) as decrypted_key_path:
             # FIXME: Unset this after our yield
@@ -175,7 +176,7 @@ class Cluster:
         side-effects on existing local configuration.
         """
         config = self.spec["aws"]
-        key_path = config["key"]
+        key_path = self.config_path.joinpath(config["key"])
         cluster_type = config["clusterType"]
         cluster_name = config["clusterName"]
         region = config["region"]
@@ -241,7 +242,7 @@ class Cluster:
         cluster using `az aks get-credentials`.
         """
         config = self.spect["azure"]
-        key_path = config["key"]
+        key_path = self.config_path.joinpath(config["key"])
         cluster = config["cluster"]
         resource_group = config["resource_group"]
 
@@ -300,7 +301,7 @@ class Cluster:
 
     def auth_gcp(self):
         config = self.spec["gcp"]
-        key_path = config["key"]
+        key_path = self.config_path.joinpath(config["key"])
         project = config["project"]
         # If cluster is regional, it'll have a `region` key set.
         # Else, it'll just have a `zone` key set. Let's respect either.
@@ -344,9 +345,10 @@ class Hub:
     A single, deployable JupyterHub
     """
 
-    def __init__(self, cluster, spec):
+    def __init__(self, cluster, spec, config_path):
         self.cluster = cluster
         self.spec = spec
+        self.config_path = config_path
 
     def get_generated_config(self, auth_provider: KeyProvider, secret_key):
         """
@@ -526,11 +528,8 @@ class Hub:
         Deploy this hub
         """
         # Find helm chart values files
-        cluster_dir = find_absolute_path_to_cluster_file(
-            self.cluster.spec["name"]
-        ).parent
         values_files = [
-            f"--values={cluster_dir.joinpath(values_file)}"
+            f"--values={self.config_path.joinpath(values_file)}"
             for values_file in self.spec["helm_chart_values_files"]
         ]
 
