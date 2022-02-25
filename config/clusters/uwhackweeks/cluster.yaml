@@ -42,6 +42,7 @@ hubs:
       # to the helm upgrade command in, and that has meaning. Please check
       # that you intend for these files to be applied in this order.
       - staging.values.yaml
+      - enc-staging.secret.values.yaml
   - name: prod
     domain: uwhackweeks.2i2c.cloud
     helm_chart: daskhub
@@ -55,3 +56,4 @@ hubs:
       # that you intend for these files to be applied in this order.
       - staging.values.yaml
       - prod.values.yaml
+      - enc-prod.secret.values.yaml

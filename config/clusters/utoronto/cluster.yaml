@@ -32,6 +32,7 @@ hubs:
       # to the helm upgrade command in, and that has meaning. Please check
       # that you intend for these files to be applied in this order.
       - staging.values.yaml
+      - enc-staging.secret.values.yaml
   - name: prod
     domain: jupyter.utoronto.ca
     helm_chart: basehub
@@ -43,3 +44,4 @@ hubs:
       # that you intend for these files to be applied in this order.
       - staging.values.yaml
       - prod.values.yaml
+      - enc-prod.secret.values.yaml
