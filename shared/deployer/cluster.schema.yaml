@@ -41,9 +41,11 @@ properties:
     properties:
       file:
         type: string
-        descriptiON: |
+        description: |
           Path to kubeconfig file (encrypted with sops) to use for
-          connecting to the cluster
+          connecting to the cluster. This path is defined RELATIVE to the
+          location of the cluster.yaml file and has the naming convention
+          'enc-deployer-credentials.secret.{{ json | yaml }}'
   gcp:
     type: object
     additionalProperties: false
@@ -56,7 +58,10 @@ properties:
         description: |
           Path to a `sops` encrypted service account JSON key that
           can be used by `gcloud` to authenticate to GCP, with
-          enough rights to get full access to the kubernetes cluster
+          enough rights to get full access to the kubernetes cluster.
+          This path is defined RELATIVE to the location of the cluster.yaml
+          file and has the naming convention
+          'enc-deployer-credentials.secret.{{ json | yaml }}'
       project:
         type: string
         description: |
@@ -88,6 +93,9 @@ properties:
         description: |
           Path to a `sops` encrypted JSON file that contains the AWS credentials for the
           "deployer" user (with enough rights to get full access to the cluster).
+          This path is defined RELATIVE to the location of the cluster.yaml
+          file and has the naming convention
+          'enc-deployer-credentials.secret.{{ json | yaml }}'
       clusterType:
         type: string
         description: |
@@ -132,7 +140,10 @@ properties:
         description: |
           Path to a `sops` encrypted service principal JSON key that
           can be used by `az` to authenticate to Azure, with
-          enough rights to get full access to the kubernetes cluster
+          enough rights to get full access to the kubernetes cluster.
+          This path is defined RELATIVE to the location of the cluster.yaml
+          file and has the naming convention
+          'enc-deployer-credentials.secret.{{ json | yaml }}'
       resource_group:
         type: string
         description: |
