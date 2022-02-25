@@ -598,6 +598,8 @@ class Hub:
             # Add on the values files
             cmd.extend(values_files)
 
+            # join method will fail on the PosixPath element if not transformed
+            # into a string first
             print_colour(f"Running {' '.join([str(c) for c in cmd])}")
             # Can't test without deploying, since our service token isn't set by default
             subprocess.check_call(cmd)
