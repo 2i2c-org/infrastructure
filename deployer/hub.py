@@ -536,8 +536,12 @@ class Hub:
 
             check_file_exists(self.config_path.joinpath(domain_override_file))
 
-            if domain_override_file.startswith("enc-") or ("secret" in domain_override_file):
-                with verify_and_decrypt_file(self.config_path.joinpath(domain_override_file)) as decrypted_path:
+            if domain_override_file.startswith("enc-") or (
+                "secret" in domain_override_file
+            ):
+                with verify_and_decrypt_file(
+                    self.config_path.joinpath(domain_override_file)
+                ) as decrypted_path:
                     with open(decrypted_path) as f:
                         domain_override_config = yaml.load(f)
             else:
