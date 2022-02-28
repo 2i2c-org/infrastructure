@@ -18,10 +18,9 @@
 
 version: 2
 updates:
-  # Bump pip dependencies for docs
-  - package-ecosystem: "pip"
-    # Only check the pip dependencies listed in our docs folder
-    directory: "/docs"
+  # Maintain dependencies for GitHub Actions
+  - package-ecosystem: "github-actions"
+    directory: "/"
     schedule:
       # Check for updates once a week. By default, this check happens on a Monday.
       interval: "weekly"
