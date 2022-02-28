@@ -345,10 +345,9 @@ class Hub:
     A single, deployable JupyterHub
     """
 
-    def __init__(self, cluster, spec, config_path):
+    def __init__(self, cluster, spec):
         self.cluster = cluster
         self.spec = spec
-        self.config_path = config_path
 
     def get_generated_config(self, auth_provider: KeyProvider, secret_key):
         """
@@ -533,18 +532,18 @@ class Hub:
         if "domain_override_file" in self.spec.keys():
             domain_override_file = self.spec["domain_override_file"]
 
-            check_file_exists(self.config_path.joinpath(domain_override_file))
+            check_file_exists(self.cluster.config_path.joinpath(domain_override_file))
 
             if domain_override_file.startswith("enc-") or (
                 "secret" in domain_override_file
             ):
                 with verify_and_decrypt_file(
-                    self.config_path.joinpath(domain_override_file)
+                    self.cluster.config_path.joinpath(domain_override_file)
                 ) as decrypted_path:
                     with open(decrypted_path) as f:
                         domain_override_config = yaml.load(f)
             else:
-                with open(self.config_path.joinpath(domain_override_file)) as f:
+                with open(self.cluster.config_path.joinpath(domain_override_file)) as f:
                     domain_override_config = yaml.load(f)
 
             self.spec["domain"] = domain_override_config["domain"]
@@ -554,15 +553,15 @@ class Hub:
         # Find helm chart values files
         values_files = []
         for values_file in self.spec["helm_chart_values_files"]:
-            check_file_exists(self.config_path.joinpath(values_file))
+            check_file_exists(self.cluster.config_path.joinpath(values_file))
             if values_file.startswith("enc-") or ("secret" in values_file):
                 with verify_and_decrypt_file(
-                    self.config_path.joinpath(values_file)
+                    self.cluster.config_path.joinpath(values_file)
                 ) as decrypted_file:
                     values_files.append(f"--values={decrypted_file}")
             else:
                 values_files.append(
-                    f"--values={self.config_path.joinpath(values_file)}"
+                    f"--values={self.cluster.config_path.joinpath(values_file)}"
                 )
 
         # Ensure helm charts are up to date
