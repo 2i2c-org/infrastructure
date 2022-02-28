@@ -1,5 +1,15 @@
 terraform {
   backend "gcs" {}
+  required_providers {
+    google = {
+      source  = "google"
+      version = "4.11.0"
+    }
+    google-beta = {
+      source  = "google-beta"
+      version = "4.11.0"
+    }
+  }
 }
 
 // Service account used by all the nodes and pods in our cluster
