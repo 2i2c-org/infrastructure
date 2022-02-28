@@ -1,11 +1,18 @@
+# Configuration on how ReadTheDocs (RTD) builds our documentation
+# ref: https://readthedocs.org/projects/2i2c-pilot-hubs/
+# ref: https://docs.readthedocs.io/en/stable/config-file/v2.html
+#
 version: 2
+
+build:
+  os: ubuntu-20.04
+  tools:
+    # NOTE: This must be miniconda or it will mistakenly try to invoke `python` to do a conda install
+    # ref: https://stackoverflow.com/questions/69774313/why-does-rtd-run-python-env-create-instead-of-conda-env-create-when-building
+    python: "miniconda3-4.7"
+
+sphinx:
+  configuration: docs/conf.py
 
 conda:
   environment: docs/environment.yml
-
-build:
-  image: latest
-
-python:
-  version: 3.8
-  install: []
