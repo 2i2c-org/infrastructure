@@ -66,12 +66,18 @@ hubs:
               #       aka. @consideRatio and can be configured by him at:
               #       https://github.com/settings/apps/hub-jupytearth-org-github-integ
               #
-              github-app-user-auth:
+              gitconfig:
                 mountPath: /etc/gitconfig
                 stringData: |
                   [credential]
                       helper = store --file=/tmp/github-app-git-credentials
-
+              jupyter_notebook_config.json:
+                mountPath: /etc/jupyter/jupyter_notebook_config.json
+                data:
+                  # Allow jupyterlab option to show hidden files in browser
+                  # https://github.com/berkeley-dsep-infra/datahub/issues/3160
+                  ContentsManager:
+                    allow_hidden: true
 
             # Eksctl: The service account was created by eksctl.
             #
