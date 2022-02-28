@@ -1,7 +1,7 @@
 name: meom-ige
 provider: gcp
 gcp:
-  key: secrets/meom.json
+  key: enc-deployer-credentials.secret.json
   project: meom-ige-cnrs
   cluster: meom-ige-cluster
   zone: us-central1-b

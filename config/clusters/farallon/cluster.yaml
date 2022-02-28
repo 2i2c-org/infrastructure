@@ -1,7 +1,7 @@
 name: farallon
 provider: aws
 aws:
-  key: secrets/farallon.json
+  key: enc-deployer-credentials.secret.json
   clusterType: kops
   clusterName: farallonhub.k8s.local
   region: us-east-2

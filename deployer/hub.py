@@ -13,7 +13,11 @@ from pathlib import Path
 import pytest
 from ruamel.yaml import YAML
 
-from utils import decrypt_file, print_colour
+from utils import (
+    verify_and_decrypt_file,
+    print_colour,
+    check_file_exists,
+)
 
 # Without `pure=True`, I get an exception about str / byte issues
 yaml = YAML(typ="safe", pure=True)
@@ -24,9 +28,10 @@ class Cluster:
     A single k8s cluster we can deploy to
     """
 
-    def __init__(self, spec):
+    def __init__(self, spec, config_path):
         self.spec = spec
-        self.hubs = [Hub(self, hub_yaml) for hub_yaml in self.spec["hubs"]]
+        self.config_path = config_path
+        self.hubs = [Hub(self, hub_spec) for hub_spec in self.spec["hubs"]]
         self.support = self.spec.get("support", {})
 
     @contextmanager
@@ -118,12 +123,11 @@ class Cluster:
 
         print_colour("Provisioning support charts...")
 
-        subprocess.check_call(["helm", "dep", "up", "helm-charts/support"])
-
         support_dir = (Path(__file__).parent.parent).joinpath("helm-charts", "support")
-        support_secrets_file = support_dir.joinpath("secrets.yaml")
+        subprocess.check_call(["helm", "dep", "up", support_dir])
 
-        with tempfile.NamedTemporaryFile(mode="w") as f, decrypt_file(
+        support_secrets_file = support_dir.joinpath("enc-support.secret.yaml")
+        with tempfile.NamedTemporaryFile(mode="w") as f, verify_and_decrypt_file(
             support_secrets_file
         ) as secret_file:
             yaml.dump(self.support.get("config", {}), f)
@@ -154,9 +158,9 @@ class Cluster:
            we call (primarily helm) will use that as config
         """
         config = self.spec["kubeconfig"]
-        config_path = config["file"]
+        config_path = self.config_path.joinpath(config["file"])
 
-        with decrypt_file(config_path) as decrypted_key_path:
+        with verify_and_decrypt_file(config_path) as decrypted_key_path:
             # FIXME: Unset this after our yield
             os.environ["KUBECONFIG"] = decrypted_key_path
             yield
@@ -172,7 +176,7 @@ class Cluster:
         side-effects on existing local configuration.
         """
         config = self.spec["aws"]
-        key_path = config["key"]
+        key_path = self.config_path.joinpath(config["key"])
         cluster_type = config["clusterType"]
         cluster_name = config["clusterName"]
         region = config["region"]
@@ -185,7 +189,7 @@ class Cluster:
             orig_access_key_id = os.environ.get("AWS_ACCESS_KEY_ID", None)
             orig_secret_access_key = os.environ.get("AWS_SECRET_ACCESS_KEY", None)
             try:
-                with decrypt_file(key_path) as decrypted_key_path:
+                with verify_and_decrypt_file(key_path) as decrypted_key_path:
 
                     decrypted_key_abspath = os.path.abspath(decrypted_key_path)
                     if not os.path.isfile(decrypted_key_abspath):
@@ -238,7 +242,7 @@ class Cluster:
         cluster using `az aks get-credentials`.
         """
         config = self.spect["azure"]
-        key_path = config["key"]
+        key_path = self.config_path.joinpath(config["key"])
         cluster = config["cluster"]
         resource_group = config["resource_group"]
 
@@ -248,7 +252,7 @@ class Cluster:
             try:
                 os.environ["KUBECONFIG"] = kubeconfig.name
 
-                with decrypt_file(key_path) as decrypted_key_path:
+                with verify_and_decrypt_file(key_path) as decrypted_key_path:
 
                     decrypted_key_abspath = os.path.abspath(decrypted_key_path)
                     if not os.path.isfile(decrypted_key_abspath):
@@ -297,7 +301,7 @@ class Cluster:
 
     def auth_gcp(self):
         config = self.spec["gcp"]
-        key_path = config["key"]
+        key_path = self.config_path.joinpath(config["key"])
         project = config["project"]
         # If cluster is regional, it'll have a `region` key set.
         # Else, it'll just have a `zone` key set. Let's respect either.
@@ -307,7 +311,7 @@ class Cluster:
             orig_kubeconfig = os.environ.get("KUBECONFIG")
             try:
                 os.environ["KUBECONFIG"] = kubeconfig.name
-                with decrypt_file(key_path) as decrypted_key_path:
+                with verify_and_decrypt_file(key_path) as decrypted_key_path:
                     subprocess.check_call(
                         [
                             "gcloud",
@@ -522,54 +526,65 @@ class Hub:
         """
         Deploy this hub
         """
-        # Find helm chart values files
-        cluster_dir = Path(os.getcwd()).joinpath(
-            "config", "clusters", self.cluster.spec["name"]
-        )
-        values_files = [
-            f"--values={cluster_dir.joinpath(values_file)}"
-            for values_file in self.spec["helm_chart_values_files"]
-        ]
+        # Support overriding domain configuration in the loaded cluster.yaml via
+        # a cluster.yaml specified enc-<something>.secret.yaml file that only
+        # includes the domain configuration of a typical cluster.yaml file.
+        #
+        # Check if this hub has an override file. If yes, apply override.
+        #
+        # FIXME: This could could be generalized so that the cluster.yaml would allow
+        #        any of this configuration to be specified in a secret file instead of a
+        #        publicly readable file. We should not keep adding specific config overrides
+        #        if such need occur but instead make cluster.yaml be able to link to
+        #        additional secret configuration.
+        if "domain_override_file" in self.spec.keys():
+            domain_override_file = self.spec["domain_override_file"]
 
-        # Ensure helm charts are up to date
-        os.chdir("helm-charts")
-        subprocess.check_call(["helm", "dep", "up", "basehub"])
-        if self.spec["helm_chart"] == "daskhub":
-            subprocess.check_call(["helm", "dep", "up", "daskhub"])
-        os.chdir("..")
+            check_file_exists(self.cluster.config_path.joinpath(domain_override_file))
 
-        # Check if this cluster has any secret config. If yes, read it in.
-        secret_config_path = Path(os.getcwd()).joinpath(
-            "secrets", "config", "clusters", f'{self.cluster.spec["name"]}.cluster.yaml'
-        )
+            if domain_override_file.startswith("enc-") or (
+                "secret" in domain_override_file
+            ):
+                with verify_and_decrypt_file(
+                    self.cluster.config_path.joinpath(domain_override_file)
+                ) as decrypted_path:
+                    with open(decrypted_path) as f:
+                        domain_override_config = yaml.load(f)
+            else:
+                with open(self.cluster.config_path.joinpath(domain_override_file)) as f:
+                    domain_override_config = yaml.load(f)
 
-        secret_hub_config = {}
-        if os.path.exists(secret_config_path):
-            with decrypt_file(secret_config_path) as decrypted_file_path:
-                with open(decrypted_file_path) as f:
-                    secret_config = yaml.load(f)
-
-            if secret_config.get("hubs", {}):
-                hubs = secret_config["hubs"]
-                current_hub = next(
-                    (hub for hub in hubs if hub["name"] == self.spec["name"]), {}
-                )
-                # Support domain name overrides
-                if "domain" in current_hub:
-                    self.spec["domain"] = current_hub["domain"]
-                secret_hub_config = current_hub.get("config", {})
+            self.spec["domain"] = domain_override_config["domain"]
 
         generated_values = self.get_generated_config(auth_provider, secret_key)
 
-        with tempfile.NamedTemporaryFile(
-            mode="w"
-        ) as generated_values_file, tempfile.NamedTemporaryFile(
-            mode="w"
-        ) as secret_values_file:
+        # Find helm chart values files
+        values_files = []
+        for values_file in self.spec["helm_chart_values_files"]:
+            check_file_exists(self.cluster.config_path.joinpath(values_file))
+            if values_file.startswith("enc-") or ("secret" in values_file):
+                with verify_and_decrypt_file(
+                    self.cluster.config_path.joinpath(values_file)
+                ) as decrypted_file:
+                    values_files.append(f"--values={decrypted_file}")
+            else:
+                values_files.append(
+                    f"--values={self.cluster.config_path.joinpath(values_file)}"
+                )
+
+        # Ensure helm charts are up to date
+        helm_charts_dir = (Path(__file__).parent.parent).joinpath("helm-charts")
+        subprocess.check_call(
+            ["helm", "dep", "up", helm_charts_dir.joinpath("basehub")]
+        )
+        if self.spec["helm_chart"] == "daskhub":
+            subprocess.check_call(
+                ["helm", "dep", "up", helm_charts_dir.joinpath("daskhub")]
+            )
+
+        with tempfile.NamedTemporaryFile(mode="w") as generated_values_file:
             json.dump(generated_values, generated_values_file)
-            json.dump(secret_hub_config, secret_values_file)
             generated_values_file.flush()
-            secret_values_file.flush()
 
             cmd = [
                 "helm",
@@ -579,20 +594,19 @@ class Hub:
                 "--wait",
                 f"--namespace={self.spec['name']}",
                 self.spec["name"],
-                os.path.join("helm-charts", self.spec["helm_chart"]),
-                # Ordering matters here - config explicitly mentioned in clu should take
+                helm_charts_dir.joinpath(self.spec["helm_chart"]),
+                # Ordering matters here - config explicitly mentioned in cli should take
                 # priority over our generated values. Based on how helm does overrides, this means
-                # we should put the config from config/clusters last.
+                # we should put the config from cluster.yaml last.
                 f"--values={generated_values_file.name}",
             ]
 
             # Add on the values files
             cmd.extend(values_files)
 
-            # Add on the secret file
-            cmd.append(f"--values={secret_values_file.name}")
-
-            print_colour(f"Running {' '.join(cmd)}")
+            # join method will fail on the PosixPath element if not transformed
+            # into a string first
+            print_colour(f"Running {' '.join([str(c) for c in cmd])}")
             # Can't test without deploying, since our service token isn't set by default
             subprocess.check_call(cmd)
 

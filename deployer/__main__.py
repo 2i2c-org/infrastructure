@@ -5,7 +5,6 @@ import argparse
 import os
 import subprocess
 from pathlib import Path
-import warnings
 
 import jsonschema
 from ruamel.yaml import YAML
@@ -13,7 +12,11 @@ import shutil
 
 from auth import KeyProvider
 from hub import Cluster
-from utils import decrypt_file, print_colour
+from utils import (
+    verify_and_decrypt_file,
+    print_colour,
+    find_absolute_path_to_cluster_file,
+)
 
 # Without `pure=True`, I get an exception about str / byte issues
 yaml = YAML(typ="safe", pure=True)
@@ -28,15 +31,12 @@ def use_cluster_credentials(cluster_name):
     This function is to be used with the `use-cluster-credentials` CLI
     command only - it is not used by the rest of the deployer codebase.
     """
-
     # Validate our config with JSON Schema first before continuing
     validate(cluster_name)
 
-    config_file_path = Path(os.getcwd()).joinpath(
-        "config", "clusters", cluster_name, "cluster.yaml"
-    )
+    config_file_path = find_absolute_path_to_cluster_file(cluster_name)
     with open(config_file_path) as f:
-        cluster = Cluster(yaml.load(f))
+        cluster = Cluster(yaml.load(f), config_file_path.parent)
 
     # Cluster.auth() method has the context manager decorator so cannot call
     # it like a normal function
@@ -55,15 +55,12 @@ def deploy_support(cluster_name):
     """
     Deploy support components to a cluster
     """
-
     # Validate our config with JSON Schema first before continuing
     validate(cluster_name)
 
-    config_file_path = Path(os.getcwd()).joinpath(
-        "config", "clusters", cluster_name, "cluster.yaml"
-    )
+    config_file_path = find_absolute_path_to_cluster_file(cluster_name)
     with open(config_file_path) as f:
-        cluster = Cluster(yaml.load(f))
+        cluster = Cluster(yaml.load(f), config_file_path.parent)
 
     if cluster.support:
         with cluster.auth():
@@ -78,15 +75,12 @@ def deploy_grafana_dashboards(cluster_name):
     Grafana dashboards and deployment mechanism in question are maintained in
     this repo: https://github.com/jupyterhub/grafana-dashboards
     """
-
     # Validate our config with JSON Schema first before continuing
     validate(cluster_name)
 
-    config_file_path = Path(os.getcwd()).joinpath(
-        "config", "clusters", cluster_name, "cluster.yaml"
-    )
+    config_file_path = find_absolute_path_to_cluster_file(cluster_name)
     with open(config_file_path) as f:
-        cluster = Cluster(yaml.load(f))
+        cluster = Cluster(yaml.load(f), config_file_path.parent)
 
     # If grafana support chart is not deployed, then there's nothing to do
     if not cluster.support:
@@ -95,25 +89,25 @@ def deploy_grafana_dashboards(cluster_name):
         )
         return
 
-    secret_config_file = Path(os.getcwd()).joinpath(
-        "secrets", "config", "clusters", f"{cluster_name}.cluster.yaml"
+    grafana_token_file = (config_file_path.parent).joinpath(
+        "enc-grafana-token.secret.yaml"
     )
 
     # Check the secret file exists before continuing
-    if not os.path.exists(secret_config_file):
+    if not os.path.exists(grafana_token_file):
         raise FileExistsError(
-            f"File does not exist! Please create it and try again: {secret_config_file}"
+            f"File does not exist! Please create it and try again: {grafana_token_file}"
         )
 
     # Read the cluster specific secret config file
-    with decrypt_file(secret_config_file) as decrypted_file_path:
+    with verify_and_decrypt_file(grafana_token_file) as decrypted_file_path:
         with open(decrypted_file_path) as f:
             config = yaml.load(f)
 
     # Check GRAFANA_TOKEN exists in the secret config file before continuing
     if "grafana_token" not in config.keys():
         raise ValueError(
-            f"`grafana_token` not provided in secret file! Please add it and try again: {secret_config_file}"
+            f"`grafana_token` not provided in secret file! Please add it and try again: {grafana_token_file}"
         )
 
     # Get the url where grafana is running from the cluster config
@@ -181,7 +175,7 @@ def deploy(cluster_name, hub_name, skip_hub_health_test, config_path):
     # Validate our config with JSON Schema first before continuing
     validate(cluster_name)
 
-    with decrypt_file(config_path) as decrypted_file_path:
+    with verify_and_decrypt_file(config_path) as decrypted_file_path:
         with open(decrypted_file_path) as f:
             config = yaml.load(f)
 
@@ -205,11 +199,9 @@ def deploy(cluster_name, hub_name, skip_hub_health_test, config_path):
     # proxy.secretTokens have leaked. So let's be careful with that!
     SECRET_KEY = bytes.fromhex(config["secret_key"])
 
-    config_file_path = Path(os.getcwd()).joinpath(
-        "config", "clusters", cluster_name, "cluster.yaml"
-    )
+    config_file_path = find_absolute_path_to_cluster_file(cluster_name)
     with open(config_file_path) as f:
-        cluster = Cluster(yaml.load(f))
+        cluster = Cluster(yaml.load(f), config_file_path.parent)
 
     with cluster.auth():
         hubs = cluster.hubs
@@ -224,35 +216,16 @@ def deploy(cluster_name, hub_name, skip_hub_health_test, config_path):
 
 
 def validate(cluster_name):
-    cluster_dir = Path(os.getcwd()).joinpath("config", "clusters")
-    schema_file = cluster_dir.joinpath("schema.yaml")
-    config_file = cluster_dir.joinpath(cluster_name, "cluster.yaml")
+    schema_file = Path(os.getcwd()).joinpath(
+        "shared", "deployer", "cluster.schema.yaml"
+    )
+    config_file = find_absolute_path_to_cluster_file(cluster_name)
 
     with open(config_file) as cf, open(schema_file) as sf:
         cluster_config = yaml.load(cf)
-
-        if not os.path.dirname(config_file).endswith(cluster_config["name"]):
-            warnings.warn(
-                "Cluster Name Mismatch: It is convention that the cluster name defined "
-                + "in cluster.yaml matches the name of the parent directory. "
-                + "Deployment won't be halted but please update this for consistency!"
-            )
-
         schema = yaml.load(sf)
         # Raises useful exception if validation fails
         jsonschema.validate(cluster_config, schema)
-
-    secret_cluster_dir = Path(os.getcwd()).joinpath("secrets", "config", "clusters")
-    secret_schema_file = secret_cluster_dir.joinpath("schema.yaml")
-    secret_config_file = secret_cluster_dir.joinpath(f"{cluster_name}.cluster.yaml")
-
-    # If a secret config file exists, validate it as well
-    if os.path.exists(secret_config_file):
-        with decrypt_file(secret_config_file) as decrypted_file_path:
-            with open(decrypted_file_path) as scf, open(secret_schema_file) as ssf:
-                secret_cluster_config = yaml.load(scf)
-                secret_schema = yaml.load(ssf)
-                jsonschema.validate(secret_cluster_config, secret_schema)
 
 
 def main():
@@ -267,7 +240,7 @@ def main():
     )
 
     # === Arguments and options shared across subcommands go here ===#
-    # NOTE: If you we do not add a base_parser here with the add_help=False
+    # NOTE: If we do not add a base_parser here with the add_help=False
     #       option, then we see a "conflicting option strings" error when
     #       running `python deployer --help`
     base_parser = argparse.ArgumentParser(add_help=False)
@@ -295,7 +268,8 @@ def main():
     deploy_parser.add_argument(
         "--config-path",
         help="File to read secret deployment configuration from",
-        default="config/secrets.yaml",
+        # This filepath is relative to the PROJECT ROOT
+        default="shared/deployer/enc-auth0-credentials.secret.yaml",
     )
 
     # Validate subcommand

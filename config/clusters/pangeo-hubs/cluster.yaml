@@ -1,7 +1,7 @@
 name: pangeo-hubs
 provider: gcp
 gcp:
-  key: secrets/pangeo-hubs.json
+  key: enc-deployer-credentials.secret.json
   project: pangeo-integration-te-3eea
   cluster: pangeo-hubs-cluster
   zone: us-central1-b
@@ -38,6 +38,7 @@ hubs:
       # to the helm upgrade command in, and that has meaning. Please check
       # that you intend for these files to be applied in this order.
       - staging.values.yaml
+      - enc-staging.secret.values.yaml
   - name: prod
     domain: us-central1-b.gcp.pangeo.io
     helm_chart: daskhub
@@ -49,3 +50,4 @@ hubs:
       # that you intend for these files to be applied in this order.
       - staging.values.yaml
       - prod.values.yaml
+      - enc-prod.secret.values.yaml

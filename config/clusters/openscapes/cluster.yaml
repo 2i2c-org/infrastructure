@@ -1,7 +1,7 @@
 name: openscapes
 provider: aws
 aws:
-  key: secrets/openscapes.json
+  key: enc-deployer-credentials.secret.json
   clusterType: eks
   clusterName: openscapeshub
   region: us-west-2

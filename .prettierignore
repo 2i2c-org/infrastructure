@@ -3,9 +3,8 @@
 
 # It would be trouble if we had two automatic formatters on the same files. This
 # could happen if we would auto-format the sops generated files with prettier.
-secrets/**/*
-**/secrets.yaml
-!secrets/config/clusters/schema.yaml
+enc-*
+*secret*
 
 # To create a minimal change suggestion, prettier was introduced to auto-format
 # the YAML files only. It is absolutely reasonable to auto-format markdown files

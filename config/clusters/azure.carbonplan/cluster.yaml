@@ -1,7 +1,7 @@
 name: azure.carbonplan
 provider: kubeconfig
 kubeconfig:
-  file: secrets/azure.carbonplan.yaml
+  file: enc-deployer-credentials.secret.yaml
 support:
   config:
     nvidiaDevicePlugin:

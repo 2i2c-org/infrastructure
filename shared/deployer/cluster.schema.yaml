@@ -41,9 +41,11 @@ properties:
     properties:
       file:
         type: string
-        descriptiON: |
+        description: |
           Path to kubeconfig file (encrypted with sops) to use for
-          connecting to the cluster
+          connecting to the cluster. This path is defined RELATIVE to the
+          location of the cluster.yaml file and has the naming convention
+          'enc-deployer-credentials.secret.{{ json | yaml }}'
   gcp:
     type: object
     additionalProperties: false
@@ -56,7 +58,10 @@ properties:
         description: |
           Path to a `sops` encrypted service account JSON key that
           can be used by `gcloud` to authenticate to GCP, with
-          enough rights to get full access to the kubernetes cluster
+          enough rights to get full access to the kubernetes cluster.
+          This path is defined RELATIVE to the location of the cluster.yaml
+          file and has the naming convention
+          'enc-deployer-credentials.secret.{{ json | yaml }}'
       project:
         type: string
         description: |
@@ -88,6 +93,9 @@ properties:
         description: |
           Path to a `sops` encrypted JSON file that contains the AWS credentials for the
           "deployer" user (with enough rights to get full access to the cluster).
+          This path is defined RELATIVE to the location of the cluster.yaml
+          file and has the naming convention
+          'enc-deployer-credentials.secret.{{ json | yaml }}'
       clusterType:
         type: string
         description: |
@@ -132,7 +140,10 @@ properties:
         description: |
           Path to a `sops` encrypted service principal JSON key that
           can be used by `az` to authenticate to Azure, with
-          enough rights to get full access to the kubernetes cluster
+          enough rights to get full access to the kubernetes cluster.
+          This path is defined RELATIVE to the location of the cluster.yaml
+          file and has the naming convention
+          'enc-deployer-credentials.secret.{{ json | yaml }}'
       resource_group:
         type: string
         description: |
@@ -174,6 +185,19 @@ properties:
               For example, there's a entry for '*.pilot.2i2c.cloud' pointing to
               the ingress controller of the cluster running hubs in `2i2c.cluster.yaml`.
               Similar for '*.cloudbank.2i2c.cloud', etc.
+          domain_override_file:
+            type: string
+            description: |
+              In some cases, we may want to temporarily change the domain a hub is
+              operational at. For instance, to prevent cheating on an educational hub
+              or hide the hub from miners.
+
+              Provide the filepath to a domain override YAML file here. The YAML should
+              contain the 'domain' key and the new domain to point the hub at. If we do
+              not want the hub to be discoverable, then this file should be sops
+              encrypted, but that is not strictly enforced. This path is defined
+              RELATIVE to the location of the cluster.yaml file and has the naming
+              convention '{{enc-}}HUB_NAME.domain-override{{.secret}}.yaml'
           helm_chart:
             type: string
             description: |
