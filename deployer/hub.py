@@ -526,9 +526,17 @@ class Hub:
         """
         Deploy this hub
         """
-        # Support overriding domains in case we want to block access to a hub
+        # Support overriding domain configuration in the loaded cluster.yaml via
+        # a cluster.yaml specified enc-<something>.secret.yaml file that only
+        # includes the domain configuration of a typical cluster.yaml file.
         #
-        # Check if this hub has an override file. If yes, apply overrides.
+        # Check if this hub has an override file. If yes, apply override.
+        #
+        # FIXME: This could could be generalized so that the cluster.yaml would allow
+        #        any of this configuration to be specified in a secret file instead of a
+        #        publicly readable file. We should not keep adding specific config overrides
+        #        if such need occur but instead make cluster.yaml be able to link to
+        #        additional secret configuration.
         if "domain_override_file" in self.spec.keys():
             domain_override_file = self.spec["domain_override_file"]
 
