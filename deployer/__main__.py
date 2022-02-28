@@ -269,7 +269,7 @@ def main():
         "--config-path",
         help="File to read secret deployment configuration from",
         # This filepath is relative to the PROJECT ROOT
-        default="shared/deployer/enc-auth0-credentials.secret.yaml",
+        default="shared/deployer/enc-auth-providers-credentials.secret.yaml",
     )
 
     # Validate subcommand
