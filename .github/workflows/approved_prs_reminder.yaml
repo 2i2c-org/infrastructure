@@ -41,7 +41,7 @@ jobs:
       - name: Post to a Slack channel
         if: ${{ env.DO_SEND_MESSAGE == 'TRUE' }}
         id: slack
-        uses: slackapi/slack-github-action@v1.16.0
+        uses: slackapi/slack-github-action@v1.18
         with:
           channel-id: "C0206KLF76E" # This is hub-development
           slack-message: ${{ env.SLACK_MESSAGE }}
