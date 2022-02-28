@@ -216,7 +216,7 @@ def deploy(cluster_name, hub_name, skip_hub_health_test, config_path):
 
 
 def validate(cluster_name):
-    schema_file = (Path(os.getcwd())).joinpath(
+    schema_file = Path(os.getcwd()).joinpath(
         "shared", "deployer", "cluster.schema.yaml"
     )
     config_file = find_absolute_path_to_cluster_file(cluster_name)
