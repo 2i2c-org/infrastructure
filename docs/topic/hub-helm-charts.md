@@ -27,7 +27,7 @@ Currently there are two hub helm charts available:
 
 ## Use the helm charts to deploy a new hub
 
-To deploy a new hub, you only need to add it to the appropriate configuration file under `config/clusters`.
+To deploy a new hub, you only need to add a new `*.values.yaml` file to the appropriate cluster folder file under `config/clusters`, and add a new entry to the `hubs` key in that cluster's `cluster.yaml` file.
 This configuration file allows specifying options like the type of helm chart to use for the hub being added,
 the hub domain, how the JupyterHub landing page will look like and authentication preferences.
 
