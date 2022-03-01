@@ -569,7 +569,11 @@ class Hub:
                 ["helm", "dep", "up", helm_charts_dir.joinpath("daskhub")]
             )
 
-        with tempfile.NamedTemporaryFile(mode="w") as generated_values_file, get_decrypted_files(self.spec["helm_chart_values_files"], self.cluster.config_path) as values_files:
+        with tempfile.NamedTemporaryFile(
+            mode="w"
+        ) as generated_values_file, get_decrypted_files(
+            self.spec["helm_chart_values_files"], self.cluster.config_path
+        ) as values_files:
             json.dump(generated_values, generated_values_file)
             generated_values_file.flush()
 
