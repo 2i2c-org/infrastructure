@@ -14,7 +14,7 @@ import pytest
 from ruamel.yaml import YAML
 
 from utils import (
-    verify_and_decrypt_file,
+    get_decrypted_file,
     print_colour,
     get_decrypted_files,
 )
@@ -127,7 +127,7 @@ class Cluster:
         subprocess.check_call(["helm", "dep", "up", support_dir])
 
         support_secrets_file = support_dir.joinpath("enc-support.secret.yaml")
-        with tempfile.NamedTemporaryFile(mode="w") as f, verify_and_decrypt_file(
+        with tempfile.NamedTemporaryFile(mode="w") as f, get_decrypted_file(
             support_secrets_file
         ) as secret_file:
             yaml.dump(self.support.get("config", {}), f)
@@ -160,7 +160,7 @@ class Cluster:
         config = self.spec["kubeconfig"]
         config_path = self.config_path.joinpath(config["file"])
 
-        with verify_and_decrypt_file(config_path) as decrypted_key_path:
+        with get_decrypted_file(config_path) as decrypted_key_path:
             # FIXME: Unset this after our yield
             os.environ["KUBECONFIG"] = decrypted_key_path
             yield
@@ -189,7 +189,7 @@ class Cluster:
             orig_access_key_id = os.environ.get("AWS_ACCESS_KEY_ID", None)
             orig_secret_access_key = os.environ.get("AWS_SECRET_ACCESS_KEY", None)
             try:
-                with verify_and_decrypt_file(key_path) as decrypted_key_path:
+                with get_decrypted_file(key_path) as decrypted_key_path:
 
                     decrypted_key_abspath = os.path.abspath(decrypted_key_path)
                     if not os.path.isfile(decrypted_key_abspath):
@@ -252,7 +252,7 @@ class Cluster:
             try:
                 os.environ["KUBECONFIG"] = kubeconfig.name
 
-                with verify_and_decrypt_file(key_path) as decrypted_key_path:
+                with get_decrypted_file(key_path) as decrypted_key_path:
 
                     decrypted_key_abspath = os.path.abspath(decrypted_key_path)
                     if not os.path.isfile(decrypted_key_abspath):
@@ -311,7 +311,7 @@ class Cluster:
             orig_kubeconfig = os.environ.get("KUBECONFIG")
             try:
                 os.environ["KUBECONFIG"] = kubeconfig.name
-                with verify_and_decrypt_file(key_path) as decrypted_key_path:
+                with get_decrypted_file(key_path) as decrypted_key_path:
                     subprocess.check_call(
                         [
                             "gcloud",
@@ -540,7 +540,7 @@ class Hub:
         if "domain_override_file" in self.spec.keys():
             domain_override_file = self.spec["domain_override_file"]
 
-            with verify_and_decrypt_file(
+            with get_decrypted_file(
                 self.cluster.config_path.joinpath(domain_override_file)
             ) as decrypted_path:
                 with open(decrypted_path) as f:

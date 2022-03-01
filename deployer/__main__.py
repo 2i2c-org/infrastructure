@@ -13,7 +13,7 @@ import shutil
 from auth import KeyProvider
 from hub import Cluster
 from utils import (
-    verify_and_decrypt_file,
+    get_decrypted_file,
     print_colour,
     find_absolute_path_to_cluster_file,
 )
@@ -94,7 +94,7 @@ def deploy_grafana_dashboards(cluster_name):
     )
 
     # Read the cluster specific secret grafana token file
-    with verify_and_decrypt_file(grafana_token_file) as decrypted_file_path:
+    with get_decrypted_file(grafana_token_file) as decrypted_file_path:
         with open(decrypted_file_path) as f:
             config = yaml.load(f)
 
@@ -169,7 +169,7 @@ def deploy(cluster_name, hub_name, skip_hub_health_test, config_path):
     # Validate our config with JSON Schema first before continuing
     validate(cluster_name)
 
-    with verify_and_decrypt_file(config_path) as decrypted_file_path:
+    with get_decrypted_file(config_path) as decrypted_file_path:
         with open(decrypted_file_path) as f:
             config = yaml.load(f)
 
