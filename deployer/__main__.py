@@ -93,7 +93,7 @@ def deploy_grafana_dashboards(cluster_name):
         "enc-grafana-token.secret.yaml"
     )
 
-    # Read the cluster specific secret config file
+    # Read the cluster specific secret grafana token file
     with verify_and_decrypt_file(grafana_token_file) as decrypted_file_path:
         with open(decrypted_file_path) as f:
             config = yaml.load(f)
