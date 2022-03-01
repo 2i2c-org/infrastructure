@@ -1,5 +1,3 @@
-scratchBucket:
-  enabled: false
 basehub:
   nfs:
     pv:
