@@ -88,6 +88,7 @@ def verify_and_decrypt_file(encrypted_path):
             decrypted contents. Unless the file is not valid JSON/YAML or does not have
             the prefix `enc-`, then we return the original, encrypted path.
     """
+    _ = assert_file_exists(encrypted_path)
     filename = os.path.basename(encrypted_path)
     _, ext = os.path.splitext(filename)
 
