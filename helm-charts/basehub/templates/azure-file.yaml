@@ -1,4 +1,4 @@
-{{ if .Values.azureFile.enabled }}
+{{- if .Values.azureFile.enabled -}}
 apiVersion: v1
 kind: PersistentVolume
 metadata:
@@ -26,4 +26,4 @@ spec:
   resources:
     requests:
       storage: 1Mi
-{{ end }}
+{{- end }}

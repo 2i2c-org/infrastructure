@@ -1,5 +1,5 @@
-{{ if .Values.nfs.enabled }}
-{{ if .Values.nfs.shareCreator.enabled }}
+{{- if .Values.nfs.enabled -}}
+{{- if .Values.nfs.shareCreator.enabled -}}
 apiVersion: batch/v1
 kind: Job
 metadata:
@@ -49,5 +49,5 @@ spec:
           nfs:
             server: {{ .Values.nfs.pv.serverIP | quote }}
             path: {{ .Values.nfs.pv.baseShareName | quote }}
-{{ end }}
-{{ end }}
+{{- end }}
+{{- end }}
