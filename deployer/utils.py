@@ -87,8 +87,10 @@ def verify_and_decrypt_file(encrypted_path):
     filename = os.path.basename(encrypted_path)
     _, ext = os.path.splitext(filename)
 
-    # Our convention is that encrypted secrets in the repository begin with "enc-",
-    # so first we check for that
+    # Our convention is that encrypted secrets in the repository begin with "enc-" and include
+    # "secret" in the filename, so first we check for that. We use an 'or' conditional here since
+    # we want to catch files that contain "secret" but do not have the "enc-" prefix and ensure
+    # they are encrypted, raising an error if not.
     if filename.startswith("enc-") or ("secret" in filename):
         # We must then determine if the file is using sops
         # sops files are JSON/YAML with a `sops` key. So we first check
