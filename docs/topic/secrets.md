@@ -1,3 +1,4 @@
+(secrets)=
 # Secrets and private keys
 
 (secrets:locations)=
