@@ -125,7 +125,7 @@ def get_decrypted_file(original_filepath):
         # If file has a `sops` key, we assume it's sops encrypted
         with tempfile.NamedTemporaryFile() as f:
             subprocess.check_call(
-                ["sops", "--output", f.name, "--decrypt", encrypted_path]
+                ["sops", "--output", f.name, "--decrypt", original_filepath]
             )
             yield f.name
 
