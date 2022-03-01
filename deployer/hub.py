@@ -541,18 +541,10 @@ class Hub:
         if "domain_override_file" in self.spec.keys():
             domain_override_file = self.spec["domain_override_file"]
 
-            assert_file_exists(self.cluster.config_path.joinpath(domain_override_file))
-
-            if domain_override_file.startswith("enc-") or (
-                "secret" in domain_override_file
-            ):
-                with verify_and_decrypt_file(
-                    self.cluster.config_path.joinpath(domain_override_file)
-                ) as decrypted_path:
-                    with open(decrypted_path) as f:
-                        domain_override_config = yaml.load(f)
-            else:
-                with open(self.cluster.config_path.joinpath(domain_override_file)) as f:
+            with verify_and_decrypt_file(
+                self.cluster.config_path.joinpath(domain_override_file)
+            ) as decrypted_path:
+                with open(decrypted_path) as f:
                     domain_override_config = yaml.load(f)
 
             self.spec["domain"] = domain_override_config["domain"]

@@ -93,12 +93,6 @@ def deploy_grafana_dashboards(cluster_name):
         "enc-grafana-token.secret.yaml"
     )
 
-    # Check the secret file exists before continuing
-    if not os.path.exists(grafana_token_file):
-        raise FileExistsError(
-            f"File does not exist! Please create it and try again: {grafana_token_file}"
-        )
-
     # Read the cluster specific secret config file
     with verify_and_decrypt_file(grafana_token_file) as decrypted_file_path:
         with open(decrypted_file_path) as f:
