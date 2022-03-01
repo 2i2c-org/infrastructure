@@ -19,7 +19,7 @@ def assert_file_exists(filepath):
     Args:
         filepath (str): Absolute path to the file that is to be asserted for existence
     """
-    if not os.path.exists(filepath):
+    if not os.path.isfile(filepath):
         raise FileNotFoundError(
             f"""
             File Not Found at following location! Have you checked it's the correct path?
