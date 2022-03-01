@@ -1,3 +1,12 @@
+# Non default entries manually added by basehub developers
+
+# Ignore the .yaml that generates the .json, only the .json is relevant to
+# bundle with the Helm chart when it is packaged or "helm dep up" is used to
+# copy it over to another location where it is referenced.
+values.schema.yaml
+
+# -----------------------------------------------------------------------------
+
 # Patterns to ignore when building packages.
 # This supports shell glob matching, relative path matching, and
 # negation (prefixed with !). Only one pattern per line.
