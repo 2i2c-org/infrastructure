@@ -14,9 +14,9 @@ import pytest
 from ruamel.yaml import YAML
 
 from utils import (
-    verify_and_decrypt_file,
+    get_decrypted_file,
     print_colour,
-    check_file_exists,
+    get_decrypted_files,
 )
 
 # Without `pure=True`, I get an exception about str / byte issues
@@ -127,7 +127,7 @@ class Cluster:
         subprocess.check_call(["helm", "dep", "up", support_dir])
 
         support_secrets_file = support_dir.joinpath("enc-support.secret.yaml")
-        with tempfile.NamedTemporaryFile(mode="w") as f, verify_and_decrypt_file(
+        with tempfile.NamedTemporaryFile(mode="w") as f, get_decrypted_file(
             support_secrets_file
         ) as secret_file:
             yaml.dump(self.support.get("config", {}), f)
@@ -160,7 +160,7 @@ class Cluster:
         config = self.spec["kubeconfig"]
         config_path = self.config_path.joinpath(config["file"])
 
-        with verify_and_decrypt_file(config_path) as decrypted_key_path:
+        with get_decrypted_file(config_path) as decrypted_key_path:
             # FIXME: Unset this after our yield
             os.environ["KUBECONFIG"] = decrypted_key_path
             yield
@@ -189,7 +189,7 @@ class Cluster:
             orig_access_key_id = os.environ.get("AWS_ACCESS_KEY_ID", None)
             orig_secret_access_key = os.environ.get("AWS_SECRET_ACCESS_KEY", None)
             try:
-                with verify_and_decrypt_file(key_path) as decrypted_key_path:
+                with get_decrypted_file(key_path) as decrypted_key_path:
 
                     decrypted_key_abspath = os.path.abspath(decrypted_key_path)
                     if not os.path.isfile(decrypted_key_abspath):
@@ -252,7 +252,7 @@ class Cluster:
             try:
                 os.environ["KUBECONFIG"] = kubeconfig.name
 
-                with verify_and_decrypt_file(key_path) as decrypted_key_path:
+                with get_decrypted_file(key_path) as decrypted_key_path:
 
                     decrypted_key_abspath = os.path.abspath(decrypted_key_path)
                     if not os.path.isfile(decrypted_key_abspath):
@@ -311,7 +311,7 @@ class Cluster:
             orig_kubeconfig = os.environ.get("KUBECONFIG")
             try:
                 os.environ["KUBECONFIG"] = kubeconfig.name
-                with verify_and_decrypt_file(key_path) as decrypted_key_path:
+                with get_decrypted_file(key_path) as decrypted_key_path:
                     subprocess.check_call(
                         [
                             "gcloud",
@@ -540,37 +540,15 @@ class Hub:
         if "domain_override_file" in self.spec.keys():
             domain_override_file = self.spec["domain_override_file"]
 
-            check_file_exists(self.cluster.config_path.joinpath(domain_override_file))
-
-            if domain_override_file.startswith("enc-") or (
-                "secret" in domain_override_file
-            ):
-                with verify_and_decrypt_file(
-                    self.cluster.config_path.joinpath(domain_override_file)
-                ) as decrypted_path:
-                    with open(decrypted_path) as f:
-                        domain_override_config = yaml.load(f)
-            else:
-                with open(self.cluster.config_path.joinpath(domain_override_file)) as f:
+            with get_decrypted_file(
+                self.cluster.config_path.joinpath(domain_override_file)
+            ) as decrypted_path:
+                with open(decrypted_path) as f:
                     domain_override_config = yaml.load(f)
 
             self.spec["domain"] = domain_override_config["domain"]
 
         generated_values = self.get_generated_config(auth_provider, secret_key)
-
-        # Find helm chart values files
-        values_files = []
-        for values_file in self.spec["helm_chart_values_files"]:
-            check_file_exists(self.cluster.config_path.joinpath(values_file))
-            if values_file.startswith("enc-") or ("secret" in values_file):
-                with verify_and_decrypt_file(
-                    self.cluster.config_path.joinpath(values_file)
-                ) as decrypted_file:
-                    values_files.append(f"--values={decrypted_file}")
-            else:
-                values_files.append(
-                    f"--values={self.cluster.config_path.joinpath(values_file)}"
-                )
 
         # Ensure helm charts are up to date
         helm_charts_dir = (Path(__file__).parent.parent).joinpath("helm-charts")
@@ -582,7 +560,11 @@ class Hub:
                 ["helm", "dep", "up", helm_charts_dir.joinpath("daskhub")]
             )
 
-        with tempfile.NamedTemporaryFile(mode="w") as generated_values_file:
+        with tempfile.NamedTemporaryFile(
+            mode="w"
+        ) as generated_values_file, get_decrypted_files(
+            self.spec["helm_chart_values_files"], self.cluster.config_path
+        ) as values_files:
             json.dump(generated_values, generated_values_file)
             generated_values_file.flush()
 
@@ -602,7 +584,8 @@ class Hub:
             ]
 
             # Add on the values files
-            cmd.extend(values_files)
+            for values_file in values_files:
+                cmd.append(f"--values={values_file}")
 
             # join method will fail on the PosixPath element if not transformed
             # into a string first
