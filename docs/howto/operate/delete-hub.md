@@ -4,7 +4,7 @@ If you'd like to delete a hub, there are a few steps that we need to take:
 
 1. **Remove the hub values file**.
    Without removing the values file from the repository first, the hub could be redeployed by any merged PR that triggers our CI/CD pipeline.
-   Open a PR that removes the appropriate `config/clusters/<cluster_name>/<hub_name>.values.yaml` file, and removes the associated hub entry from the `config/clusters/<cluster_name>/cluster.yaml file.
+   Open a PR that removes the appropriate `config/clusters/<cluster_name>/<hub_name>.values.yaml` file, and removes the associated hub entry from the `config/clusters/<cluster_name>/cluster.yaml` file.
    Steps 2 and 3 can be actioned while this PR is reviewed and merged.
 
 2. **Backup the hub database**. Backup the `jupyterhub.sqlite` db off the hub.
