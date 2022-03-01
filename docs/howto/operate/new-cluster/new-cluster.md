@@ -206,7 +206,7 @@ Then, output the credentials created by terraform to a file under the `secrets` 
 
 ````{tabbed} Google Cloud
 ```bash
-terraform output -raw ci_deployer_key > ../../config/cluster/<cluster_name>/deployer-credentials.secret.json
+terraform output -raw ci_deployer_key > ../../config/clusters/<cluster_name>/deployer-credentials.secret.json
 ```
 ````
 
