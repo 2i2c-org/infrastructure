@@ -4,7 +4,7 @@ import tempfile
 import subprocess
 from ruamel.yaml import YAML
 from ruamel.yaml.scanner import ScannerError
-from contextlib import contextmanager
+from contextlib import contextmanager, ExitStack
 from pathlib import Path
 import warnings
 
@@ -18,6 +18,9 @@ def check_file_exists(filepath):
 
     Args:
         filepath (str): Absolute path to the file that is to be checked for existence
+
+    Returns:
+        bool: Returns True if the function has not raised an error
     """
     if not os.path.exists(filepath):
         raise FileNotFoundError(
@@ -26,6 +29,8 @@ def check_file_exists(filepath):
             {filepath}
         """
         )
+
+    return True
 
 
 def find_absolute_path_to_cluster_file(cluster_name: str):
@@ -128,6 +133,21 @@ def verify_and_decrypt_file(encrypted_path):
         # done before and return the path to the encrypted file
         yield encrypted_path
         return
+
+
+@contextmanager
+def get_decrypted_files(files, abspath):
+    """
+    This is a context manager that when entered provides a list of
+    file paths, where temporary files have been created if needed for
+    files that were encrypted and first need to be decrypted.
+    """
+    with ExitStack() as stack:
+        yield [
+            stack.enter_context(verify_and_decrypt_file(abspath.joinpath(f)))
+            for f in files
+            if check_file_exists(abspath.joinpath(f))  # Check the file exists
+        ]
 
 
 def print_colour(msg: str):

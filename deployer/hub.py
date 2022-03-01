@@ -17,6 +17,7 @@ from utils import (
     verify_and_decrypt_file,
     print_colour,
     check_file_exists,
+    get_decrypted_files,
 )
 
 # Without `pure=True`, I get an exception about str / byte issues
@@ -558,20 +559,6 @@ class Hub:
 
         generated_values = self.get_generated_config(auth_provider, secret_key)
 
-        # Find helm chart values files
-        values_files = []
-        for values_file in self.spec["helm_chart_values_files"]:
-            check_file_exists(self.cluster.config_path.joinpath(values_file))
-            if values_file.startswith("enc-") or ("secret" in values_file):
-                with verify_and_decrypt_file(
-                    self.cluster.config_path.joinpath(values_file)
-                ) as decrypted_file:
-                    values_files.append(f"--values={decrypted_file}")
-            else:
-                values_files.append(
-                    f"--values={self.cluster.config_path.joinpath(values_file)}"
-                )
-
         # Ensure helm charts are up to date
         helm_charts_dir = (Path(__file__).parent.parent).joinpath("helm-charts")
         subprocess.check_call(
@@ -582,7 +569,7 @@ class Hub:
                 ["helm", "dep", "up", helm_charts_dir.joinpath("daskhub")]
             )
 
-        with tempfile.NamedTemporaryFile(mode="w") as generated_values_file:
+        with tempfile.NamedTemporaryFile(mode="w") as generated_values_file, get_decrypted_files(self.spec["helm_chart_values_files"], self.cluster.config_path) as values_files:
             json.dump(generated_values, generated_values_file)
             generated_values_file.flush()
 
@@ -602,7 +589,8 @@ class Hub:
             ]
 
             # Add on the values files
-            cmd.extend(values_files)
+            for values_file in values_files:
+                cmd.append([f"--values={values_file}"])
 
             # join method will fail on the PosixPath element if not transformed
             # into a string first
