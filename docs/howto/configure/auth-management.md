@@ -68,57 +68,65 @@ Presently, this involves a few more manual steps than the `auth0` setup describe
    This can be achieved by following [GitHub's documentation](https://docs.github.com/en/developers/apps/building-oauth-apps/creating-an-oauth-app).
    - Create [a new app](https://github.com/organizations/2i2c-org/settings/applications/new) inside the
      `2i2c-org`.
-   - When naming the application, please follow the convention `<CLUSTER_NAME>-<HUB_NAME>` for consistency, e.g. `2i2c-staging` is the OAuth app for the staging hub running on the 2i2c cluster.
+   - When naming the application, please follow the convention `<cluster_name>-<hub_name>` for consistency, e.g. `2i2c-staging` is the OAuth app for the staging hub running on the 2i2c cluster.
    - The Homepage URL should match that in the `domain` field of the appropriate `cluster.yaml` file in the `infrastructure` repo.
    - The authorisation callback URL is the homepage url appended with `/hub/oauth_callback`. For example, `staging.pilot.2i2c.cloud/hub/oauth_callback`.
    - Once you have created the OAuth app, make a new of the client ID, generate a client secret and then hold on to these values for a future step
 
-2. **Create or update the appropriate secret config file under `secrets/config/clusters/*.cluster.yaml`.**
+2. **Create or update the appropriate secret config file under `config/clusters/<cluster_name>/<hub_name>.secret.values.yaml`.**
    You should add the following config to this file, pasting in the client ID and secret you generated in step 1.
 
     ```yaml
-    hubs:
-    - name: HUB_NAME
-      config:
-        jupyterhub:
-          hub:
-            config:
-              GitHubOAuthenticator:
-                client_id: CLIENT_ID
-                client_secret: CLIENT_SECRET
+    jupyterhub:
+      hub:
+        config:
+          GitHubOAuthenticator:
+            client_id: CLIENT_ID
+            client_secret: CLIENT_SECRET
     ```
 
     ````{note}
-    Add the `basehub` key between `config` and `jupyterhub` for `daskhub` deployments.
+    Add the `basehub` key above the `jupyterhub` key for `daskhub` deployments.
     For example:
 
     ```yaml
-    hubs:
-    - name: HUB_NAME
-      config:
-        basehub:
-          jupyterhub:
-            ...
+    basehub:
+      jupyterhub:
+        ...
     ```
     ````
 
     ```{note}
     Make sure this is encrypted with `sops` before committing it to the repository!
 
-    `sops -i -e secrets/config/clusters/*.cluster.yaml`
+    `sops --output config/clusters/<cluster_name>/enc-<hub_name>.secret.values.yaml --encrypt config/clusters/<cluster_name>/<hub_name>.secret.values.yaml`
     ```
 
-3. **Set the hub to _not_ configure Auth0 in the `config/clusters/CLUSTER_NAME/cluster.yaml` file.**
-   To ensure the deployer does not provision and configure an OAuth app from Auth0, the following config should be added to the appropriate hub in the cluster's cluster.yaml` file.
+3. **Set the hub to _not_ configure Auth0 in the `config/clusters/<cluster_name>/cluster.yaml` file.**
+   To ensure the deployer does not provision and configure an OAuth app from Auth0, the following config should be added to the appropriate hub in the cluster's `cluster.yaml` file.
 
    ```yaml
    hubs:
-     - name: HUB_NAME
+     - name: <hub_name>
        auth0:
          enabled: false
    ```
 
-4. **Edit the non-secret config under `config/clusters/<cluster_name>/<hub_name>.values.yaml`.**
+4. **If not already present, add the secret hub config file to the list of helm chart values file in `config/clusters<cluster_name>/cluster.yaml`.**
+   If you created the `enc-<hub_name>.secret.values.yaml` file in step 2, add it the the `cluster.yaml` file like so:
+
+   ```yaml
+   ...
+   hubs:
+     - name: <hub_name>
+       ...
+       helm_chart_values_files:
+         - <hub_name>.values.yaml
+         - enc-<hub_name>.secret.values.yaml
+     ...
+   ```
+
+5. **Edit the non-secret config under `config/clusters/<cluster_name>/<hub_name>.values.yaml`.**
    You should make sure the matching hub config takes one of the following forms.
 
    ```{warning}
@@ -162,7 +170,7 @@ Presently, this involves a few more manual steps than the `auth0` setup describe
               - read:org
     ```
 
-5. Run the deployer as normal to apply the config.
+6. Run the deployer as normal to apply the config.
 
 ## CILogon
 
