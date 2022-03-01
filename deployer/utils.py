@@ -11,13 +11,13 @@ import warnings
 yaml = YAML(typ="safe", pure=True)
 
 
-def check_file_exists(filepath):
-    """Check a filepath exists, raise an error if not. This function is to be used for
+def assert_file_exists(filepath):
+    """Assert a filepath exists, raise an error if not. This function is to be used for
     files that *absolutely have to exist* in order to successfully complete deployment,
     such as, files listed in the `helm_chart_values_file` key in the `cluster.yaml` file
 
     Args:
-        filepath (str): Absolute path to the file that is to be checked for existence
+        filepath (str): Absolute path to the file that is to be asserted for existence
 
     Returns:
         bool: Returns True if the function has not raised an error
@@ -146,7 +146,7 @@ def get_decrypted_files(files, abspath):
         yield [
             stack.enter_context(verify_and_decrypt_file(abspath.joinpath(f)))
             for f in files
-            if check_file_exists(abspath.joinpath(f))  # Check the file exists
+            if assert_file_exists(abspath.joinpath(f))  # Check the file exists
         ]
 
 
