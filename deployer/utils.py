@@ -18,9 +18,6 @@ def assert_file_exists(filepath):
 
     Args:
         filepath (str): Absolute path to the file that is to be asserted for existence
-
-    Returns:
-        bool: Returns True if the function has not raised an error
     """
     if not os.path.exists(filepath):
         raise FileNotFoundError(
@@ -29,8 +26,6 @@ def assert_file_exists(filepath):
             {filepath}
         """
         )
-
-    return True
 
 
 def find_absolute_path_to_cluster_file(cluster_name: str):
@@ -88,7 +83,7 @@ def verify_and_decrypt_file(encrypted_path):
             decrypted contents. Unless the file is not valid JSON/YAML or does not have
             the prefix `enc-`, then we return the original, encrypted path.
     """
-    _ = assert_file_exists(encrypted_path)
+    assert_file_exists(encrypted_path)
     filename = os.path.basename(encrypted_path)
     _, ext = os.path.splitext(filename)
 
