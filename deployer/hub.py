@@ -16,7 +16,6 @@ from ruamel.yaml import YAML
 from utils import (
     verify_and_decrypt_file,
     print_colour,
-    assert_file_exists,
     get_decrypted_files,
 )
 
