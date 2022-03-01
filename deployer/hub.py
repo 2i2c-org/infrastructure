@@ -585,7 +585,7 @@ class Hub:
 
             # Add on the values files
             for values_file in values_files:
-                cmd.append([f"--values={values_file}"])
+                cmd.append(f"--values={values_file}")
 
             # join method will fail on the PosixPath element if not transformed
             # into a string first
