@@ -69,7 +69,7 @@ Eventually, visiting `GRAFANA_URL` will present you with a login page.
 Here are the credentials for logging in:
 
 - **username**: `admin`
-- **password**: located in `helm-charts/support/secrets.yaml` (`sops` encrypted).
+- **password**: located in `helm-charts/support/enc-support.secret.yaml` (`sops` encrypted).
 
 ### Setting up Grafana Dashboards
 
@@ -79,7 +79,19 @@ The key you create needs admin permissions.
 
 **Keep this key safe as you won't be able to retrieve it!**
 
-Encrypt and store this key using `sops` in `secrets/config/clusters/<cluster>.yaml` under `grafana_token` key.
+Create the file `config/clusters/<cluster>/grafana-token.secret.yaml` with the following content.
+
+```yaml
+grafana_token: PASTE_YOUR_API KEY HERE
+```
+
+Then encrypt this file using `sops` like so:
+
+```bash
+sops --output config/clusters/<cluster>/enc-grafana-token.secret.yaml --encrypt config/clusters/<cluster>/grafana-token.secret.yaml
+```
+
+The encrypted file can now be committed to the repository.
 
 This key will be used by the [`deploy-grafana-dashboards` workflow](https://github.com/2i2c-org/infrastructure/tree/HEAD/.github/workflows/deploy-grafana-dashboards.yaml) to deploy some default grafana dashboards for JupyterHub using [`jupyterhub/grafana-dashboards`](https://github.com/jupyterhub/grafana-dashboards).
 
