@@ -216,7 +216,6 @@ terraform output -raw kubeconfig > ../../config/clusters/<cluster_name>/deployer
 ```
 ````
 
-where `<cluster_name>` matches the name of our `.tfvars` file.
 
 Then encrypt the key using `sops`.
 
