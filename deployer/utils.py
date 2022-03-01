@@ -142,7 +142,6 @@ def get_decrypted_files(files, abspath):
         yield [
             stack.enter_context(verify_and_decrypt_file(abspath.joinpath(f)))
             for f in files
-            if assert_file_exists(abspath.joinpath(f))  # Check the file exists
         ]
 
 
