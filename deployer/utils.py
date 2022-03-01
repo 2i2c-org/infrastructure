@@ -144,8 +144,7 @@ def get_decrypted_files(files, abspath):
     """
     with ExitStack() as stack:
         yield [
-            stack.enter_context(get_decrypted_file(abspath.joinpath(f)))
-            for f in files
+            stack.enter_context(get_decrypted_file(abspath.joinpath(f))) for f in files
         ]
 
 
