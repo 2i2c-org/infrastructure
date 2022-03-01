@@ -136,9 +136,8 @@ def verify_and_decrypt_file(encrypted_path):
 @contextmanager
 def get_decrypted_files(files, abspath):
     """
-    This is a context manager that when entered provides a list of
-    file paths, where temporary files have been created if needed for
-    files that were encrypted and first need to be decrypted.
+    This is a context manager that combines multiple `verify_and_decrypt_file`
+    context managers that open and/or decrypt the files in `files`.
     """
     with ExitStack() as stack:
         yield [
