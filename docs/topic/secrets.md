@@ -1,4 +1,4 @@
-(secrets)=
+(secrets:top)=
 # Secrets and private keys
 
 (secrets:locations)=

@@ -86,4 +86,4 @@ When designing our configuration structure, we apply the following conventions.
 3. In the spirit of convention 2, we should not house our secrets under a specific folder and mimic the structure of `config/clusters` under it.
    Instead, we define all config for a cluster, encrypted or not, into the same place.
    We then use filenames to track if a file should be encrypted and whether it is currently encrypted or not.
-   See [](secrets) for more information on this.
+   See [](secrets:top) for more information on this.
