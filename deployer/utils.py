@@ -89,7 +89,7 @@ def verify_and_decrypt_file(encrypted_path):
 
     # Our convention is that encrypted secrets in the repository begin with "enc-",
     # so first we check for that
-    if filename.startswith("enc-"):
+    if filename.startswith("enc-") or ("secret" in filename):
         # We must then determine if the file is using sops
         # sops files are JSON/YAML with a `sops` key. So we first check
         # if the file is valid JSON/YAML, and then if it has a `sops` key
