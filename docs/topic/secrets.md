@@ -76,6 +76,6 @@ You have now rotated the secret for this key!
 (secrets:cleaning)=
 ## Cleaning up decrypted files
 
-The [naming conventions](secrets:naimg-conventions) we outlined above allow us to clean the repository of unencrypted secrets using our [`.gitignore` config](https://github.com/2i2c-org/infrastructure/blob/HEAD/.gitignore#L6-L16) and the `git clean` command.
+The [naming conventions](secrets:naming-conventions) we outlined above allow us to clean the repository of unencrypted secrets using our [`.gitignore` config](https://github.com/2i2c-org/infrastructure/blob/HEAD/.gitignore#L6-L16) and the `git clean` command.
 
 To clean up unencrypted secrets (and other ignored files) you can use `git clean -Xfd` which will delete untracked files (`-X`), with required confirmation (`-f`), recursively (`-d`).
