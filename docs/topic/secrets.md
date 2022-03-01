@@ -65,7 +65,7 @@ To rotate our secrets, take these steps:
 4. Find the key you'd like to replace, and replace its value with the hash that you've generated above.
 
    :::{admonition} Example
-   If you wish to change the secret keys for the hub proxies, you would update the value of `secret_key` in [the configuration file with proxy secrets](https://github.com/2i2c-org/infrastructure/tree/HEAD/config/secrets.yaml).
+   If you wish to change the secret keys for the hub proxies, you would update the value of `secret_key` in [the configuration file with proxy secrets](https://github.com/2i2c-org/infrastructure/blob/HEAD/shared/deployer/enc-auth-providers-credentials.secret.yaml).
    :::
 
 5. Re-encrypt the file with `sops`.
