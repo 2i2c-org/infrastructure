@@ -169,11 +169,11 @@ have least amount of permissions possible.
    they are accessible from our automatic deployment.
 
    ```bash
-   terraform output -raw continuous_deployer_creds > ../../secrets/<your-cluster-name>.json
-   sops --in-place --encrypt ../../secrets/<your-cluster-name>.json
+   terraform output -raw continuous_deployer_creds > ../../config/clusters/<your-cluster-name>/deployer-credentials.secret.json
+   sops --output config/clusters/<your-cluster-name>/enc-deployer-credentials.secret.json --encrypt ../../config/clusters/<your-cluster-name>/deployer-credentials.secret.json
    ```
 
-   Double check to make sure that the `../../secrets/<your-cluster-name>.json` file is
+   Double check to make sure that the `config/clusters/<your-cluster-name>/enc-deployer-credentials.secret.json` file is
    actually encrypted by `sops` before checking it in to the git repo. Otherwise
    this can be a serious security leak!
 
@@ -194,10 +194,14 @@ have least amount of permissions possible.
    ```yaml
    provider: aws
    aws:
-      key: secrets/<your-cluster-name>.json
+      key: enc-deployer-credentials.secret.json
       clusterType: eks
       clusterName: <your-cluster-name>
       region: <your-region>
+   ```
+
+   ```{note}
+   The `aws.key` file is defined _relative_ to the location of the `cluster.yaml` file.
    ```
 
 ## EFS for home directories
