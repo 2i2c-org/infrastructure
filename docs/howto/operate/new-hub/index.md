@@ -27,7 +27,7 @@ There are three kinds of infrastructure needed to add a new hub. In most cases, 
 Many of our hubs are automatically deployed and updated using GitHub Action workflows and configuration that is defined in [`infrastructure/config/clusters`](https://github.com/2i2c-org/infrastructure/tree/HEAD/config/clusters).
 
 These are a collection of folders (one per cluster) that contain a collection of YAML files (one per hub deployed to that cluster, plus a cluster-wide file) that define the configuration for all of our hubs.
-To learn which subset of clusters are *automatically* deployed via GitHub Actions, inspect the `matrix:cluster_name:` list in [the `deploy-hubs.yaml` workflow file](https://github.com/2i2c-org/infrastructure/blob/f2ffc8ef51427d5f824747917bfd51533daf3045/.github/workflows/deploy-hubs.yaml#L17-L31).
+To learn which subset of clusters are *automatically* deployed via GitHub Actions, inspect the `matrix.cluster_name` list in [the `deploy-hubs.yaml` workflow file](https://github.com/2i2c-org/infrastructure/blob/f2ffc8ef51427d5f824747917bfd51533daf3045/.github/workflows/deploy-hubs.yaml#L17-L31).
 
 The process of automatically updating and adding hubs is almost the same for all of the hubs deployed on these clusters.
 
@@ -45,8 +45,8 @@ To deploy a new hub, follow these steps:
    Hub helm charts are pre-configured deployments for certain kinds of JupyterHubs.
    There are a few base charts to choose from.
    For more information about our hub helm charts and how to choose, see [](hub-helm-charts).
-4. Add a configuration entry for your new hub by creating a new `*.values.yaml` file under the appropriate cluster folder.
-   Each entry is a Zero to JupyterHub configuration, and you can customize whatever you like.
+4. Add a configuration entry for your new hub by creating a new `<hub_name>.values.yaml` file under the appropriate cluster folder, and referencing this file in a new entry under the `hubs` key in the cluster's `cluster.yaml` file.
+   Each `*.values.yaml` file is a Zero to JupyterHub configuration, and you can customize whatever you like.
    The easiest way to add new configuration is to look at the entries for similar hubs under the same cluster folder, copy / paste one of them, and make modifications as needed for this specific hub.
    For example, see the hubs configuration in [the 2i2c Google Cloud cluster configuration directory](https://github.com/2i2c-org/infrastructure/tree/HEAD/config/clusters/2i2c).
 
