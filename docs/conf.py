@@ -102,7 +102,9 @@ def render_hubs():
                 with open(cluster_path.joinpath(support_file)) as f:
                     support_config = safe_load(f)
 
-            grafana_url = support_config.get("grafana", {}).get("ingress", {}).get("hosts", "")
+            grafana_url = (
+                support_config.get("grafana", {}).get("ingress", {}).get("hosts", "")
+            )
             if isinstance(grafana_url, list):
                 grafana_url = grafana_url[0]
                 grafana_url = f"[{grafana_url}](http://{grafana_url})"
