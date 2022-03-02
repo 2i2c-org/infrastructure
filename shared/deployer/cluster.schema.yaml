@@ -175,6 +175,11 @@ properties:
             description: |
               Name of the hub. This will be used to determine
               the kubernetes namespace the hub is deployed into.
+           display_name:
+             type: string
+             description: |
+               A long form name for the hub to display on our website. This is usually
+               the name of the community we run the hub for.
           domain:
             type: string
             description: |
