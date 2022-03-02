@@ -7,15 +7,8 @@ gcp:
   cluster: cb-cluster
   zone: us-central1-b
 support:
-  config:
-    grafana:
-      ingress:
-        hosts:
-          - grafana.cloudbank.2i2c.cloud
-        tls:
-          - secretName: grafana-tls
-            hosts:
-              - grafana.cloudbank.2i2c.cloud
+  helm_chart_values_files:
+    - support.values.yaml
 hubs:
   - name: spelman
     domain: spelman.cloudbank.2i2c.cloud
