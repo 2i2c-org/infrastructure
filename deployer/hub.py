@@ -1,26 +1,28 @@
-from auth import KeyProvider
 import hashlib
 import hmac
 import json
 import os
-import sys
 import subprocess
+import sys
 import tempfile
 from contextlib import contextmanager, redirect_stderr, redirect_stdout
-from textwrap import dedent
 from pathlib import Path
+from textwrap import dedent
 
 import pytest
 from ruamel.yaml import YAML
 
+from auth import KeyProvider
 from utils import (
     get_decrypted_file,
-    print_colour,
     get_decrypted_files,
+    prepare_helm_charts_dependencies_and_schemas,
+    print_colour,
 )
 
 # Without `pure=True`, I get an exception about str / byte issues
 yaml = YAML(typ="safe", pure=True)
+helm_charts_dir = Path(__file__).parent.parent.joinpath("helm-charts")
 
 
 class Cluster:
@@ -526,6 +528,8 @@ class Hub:
         """
         Deploy this hub
         """
+        prepare_helm_charts_dependencies_and_schemas()
+
         # Support overriding domain configuration in the loaded cluster.yaml via
         # a cluster.yaml specified enc-<something>.secret.yaml file that only
         # includes the domain configuration of a typical cluster.yaml file.
@@ -549,16 +553,6 @@ class Hub:
             self.spec["domain"] = domain_override_config["domain"]
 
         generated_values = self.get_generated_config(auth_provider, secret_key)
-
-        # Ensure helm charts are up to date
-        helm_charts_dir = (Path(__file__).parent.parent).joinpath("helm-charts")
-        subprocess.check_call(
-            ["helm", "dep", "up", helm_charts_dir.joinpath("basehub")]
-        )
-        if self.spec["helm_chart"] == "daskhub":
-            subprocess.check_call(
-                ["helm", "dep", "up", helm_charts_dir.joinpath("daskhub")]
-            )
 
         with tempfile.NamedTemporaryFile(
             mode="w"

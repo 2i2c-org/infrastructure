@@ -1,8 +1,8 @@
+import re
+
 from auth0.v3.authentication import GetToken
 from auth0.v3.management import Auth0
-
 from yarl import URL
-import re
 
 # What key in the authenticated user's profile to use as hub username
 # This shouldn't be changeable by the user!

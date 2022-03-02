@@ -1,14 +1,17 @@
-import os
+import functools
 import json
-import tempfile
+import os
 import subprocess
-from ruamel.yaml import YAML
-from ruamel.yaml.scanner import ScannerError
+import tempfile
+import warnings
 from contextlib import contextmanager, ExitStack
 from pathlib import Path
-import warnings
+
+from ruamel.yaml import YAML
+from ruamel.yaml.scanner import ScannerError
 
 yaml = YAML(typ="safe", pure=True)
+helm_charts_dir = Path(__file__).parent.parent.joinpath("helm-charts")
 
 
 def assert_file_exists(filepath):
@@ -146,6 +149,43 @@ def get_decrypted_files(files, abspath):
         yield [
             stack.enter_context(get_decrypted_file(abspath.joinpath(f))) for f in files
         ]
+
+
+@functools.lru_cache
+def _generate_values_schema_json(helm_chart_dir):
+    """
+    This script reads the values.schema.yaml files part of our Helm charts and
+    generates a values.schema.json that can allowing helm the CLI to perform
+    validation of passed values before rendering templates or making changes in k8s.
+
+    FIXME: Currently we have a hard coupling between the deployer script and the
+           Helm charts part of this repo. Managing the this logic here is a
+           compromise but it should really be managed as part of packaging it
+           and uploading it to a helm chart registry instead.
+    """
+    values_schema_yaml = os.path.join(helm_chart_dir, "values.schema.yaml")
+    values_schema_json = os.path.join(helm_chart_dir, "values.schema.json")
+
+    with open(values_schema_yaml) as f:
+        schema = yaml.load(f)
+    with open(values_schema_json, "w") as f:
+        json.dump(schema, f)
+
+
+@functools.lru_cache
+def prepare_helm_charts_dependencies_and_schemas():
+    """
+    Ensures that the helm charts we deploy, basehub and daskhub, have got their
+    dependencies updated and .json schema files generated so that they can be
+    rendered during validation or deployment.
+    """
+    basehub_dir = helm_charts_dir.joinpath("basehub")
+    _generate_values_schema_json(basehub_dir)
+    subprocess.check_call(["helm", "dep", "up", basehub_dir])
+
+    daskhub_dir = helm_charts_dir.joinpath("daskhub")
+    _generate_values_schema_json(daskhub_dir)
+    subprocess.check_call(["helm", "dep", "up", daskhub_dir])
 
 
 def print_colour(msg: str):

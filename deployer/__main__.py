@@ -3,23 +3,26 @@ Deploy many JupyterHubs to many Kubernetes Clusters
 """
 import argparse
 import os
+import shutil
 import subprocess
+import sys
 from pathlib import Path
 
 import jsonschema
 from ruamel.yaml import YAML
-import shutil
 
 from auth import KeyProvider
 from hub import Cluster
 from utils import (
     get_decrypted_file,
+    prepare_helm_charts_dependencies_and_schemas,
     print_colour,
     find_absolute_path_to_cluster_file,
 )
 
 # Without `pure=True`, I get an exception about str / byte issues
 yaml = YAML(typ="safe", pure=True)
+helm_charts_dir = Path(__file__).parent.parent.joinpath("helm-charts")
 
 
 def use_cluster_credentials(cluster_name):
@@ -31,8 +34,7 @@ def use_cluster_credentials(cluster_name):
     This function is to be used with the `use-cluster-credentials` CLI
     command only - it is not used by the rest of the deployer codebase.
     """
-    # Validate our config with JSON Schema first before continuing
-    validate(cluster_name)
+    validate_cluster_config(cluster_name)
 
     config_file_path = find_absolute_path_to_cluster_file(cluster_name)
     with open(config_file_path) as f:
@@ -55,8 +57,7 @@ def deploy_support(cluster_name):
     """
     Deploy support components to a cluster
     """
-    # Validate our config with JSON Schema first before continuing
-    validate(cluster_name)
+    validate_cluster_config(cluster_name)
 
     config_file_path = find_absolute_path_to_cluster_file(cluster_name)
     with open(config_file_path) as f:
@@ -75,8 +76,7 @@ def deploy_grafana_dashboards(cluster_name):
     Grafana dashboards and deployment mechanism in question are maintained in
     this repo: https://github.com/jupyterhub/grafana-dashboards
     """
-    # Validate our config with JSON Schema first before continuing
-    validate(cluster_name)
+    validate_cluster_config(cluster_name)
 
     config_file_path = find_absolute_path_to_cluster_file(cluster_name)
     with open(config_file_path) as f:
@@ -165,9 +165,8 @@ def deploy(cluster_name, hub_name, skip_hub_health_test, config_path):
     """
     Deploy one or more hubs in a given cluster
     """
-
-    # Validate our config with JSON Schema first before continuing
-    validate(cluster_name)
+    validate_cluster_config(cluster_name)
+    validate_hub_config(cluster_name, hub_name)
 
     with get_decrypted_file(config_path) as decrypted_file_path:
         with open(decrypted_file_path) as f:
@@ -209,17 +208,62 @@ def deploy(cluster_name, hub_name, skip_hub_health_test, config_path):
                 hub.deploy(k, SECRET_KEY, skip_hub_health_test)
 
 
-def validate(cluster_name):
-    schema_file = Path(os.getcwd()).joinpath(
+def validate_cluster_config(cluster_name):
+    """
+    Validates cluster.yaml configuration against a JSONSchema.
+    """
+    cluster_schema_file = Path(os.getcwd()).joinpath(
         "shared", "deployer", "cluster.schema.yaml"
     )
-    config_file = find_absolute_path_to_cluster_file(cluster_name)
+    cluster_file = find_absolute_path_to_cluster_file(cluster_name)
 
-    with open(config_file) as cf, open(schema_file) as sf:
+    with open(cluster_file) as cf, open(cluster_schema_file) as sf:
         cluster_config = yaml.load(cf)
         schema = yaml.load(sf)
         # Raises useful exception if validation fails
         jsonschema.validate(cluster_config, schema)
+
+
+def validate_hub_config(cluster_name, hub_name):
+    """
+    Validates the provided non-encrypted helm chart values files for each hub of
+    a specific cluster.
+    """
+    prepare_helm_charts_dependencies_and_schemas()
+
+    config_file_path = find_absolute_path_to_cluster_file(cluster_name)
+    with open(config_file_path) as f:
+        cluster = Cluster(yaml.load(f), config_file_path.parent)
+
+    hubs = []
+    if hub_name:
+        hubs = [h for h in cluster.hubs if h.spec["name"] == hub_name]
+    else:
+        hubs = cluster.hubs
+
+    for i, hub in enumerate(hubs):
+        print_colour(
+            f"{i+1} / {len(hubs)}: Validating non-encrypted hub values files for {hub.spec['name']}..."
+        )
+
+        cmd = [
+            "helm",
+            "template",
+            str(helm_charts_dir.joinpath(hub.spec["helm_chart"])),
+        ]
+        for values_file in hub.spec["helm_chart_values_files"]:
+            if "secret" not in os.path.basename(values_file):
+                cmd.append(f"--values={config_file_path.parent.joinpath(values_file)}")
+        # Workaround the current requirement for dask-gateway 0.9.0 to have a
+        # JupyterHub api-token specified, for updates if this workaround can be
+        # removed, see https://github.com/dask/dask-gateway/issues/473.
+        if hub.spec["helm_chart"] == "daskhub":
+            cmd.append("--set=dask-gateway.gateway.auth.jupyterhub.apiToken=dummy")
+        try:
+            subprocess.check_output(cmd, text=True)
+        except subprocess.CalledProcessError as e:
+            print(e.stdout)
+            sys.exit(1)
 
 
 def main():
@@ -270,7 +314,12 @@ def main():
     validate_parser = subparsers.add_parser(
         "validate",
         parents=[base_parser],
-        help="Validate the cluster configuration against a JSON schema",
+        help="Validate the cluster.yaml configuration itself, as well as the provided non-encrypted helm chart values files for each hub or the specified hub.",
+    )
+    validate_parser.add_argument(
+        "hub_name",
+        nargs="?",
+        help="The hub, or list of hubs, to validate provided non-encrypted helm chart values for.",
     )
 
     # deploy-support subcommand
@@ -305,7 +354,8 @@ def main():
             args.config_path,
         )
     elif args.action == "validate":
-        validate(args.cluster_name)
+        validate_cluster_config(args.cluster_name)
+        validate_hub_config(args.cluster_name, args.hub_name)
     elif args.action == "deploy-support":
         deploy_support(args.cluster_name)
     elif args.action == "deploy-grafana-dashboards":
