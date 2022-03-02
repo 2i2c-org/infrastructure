@@ -279,22 +279,25 @@ def validate_support_config(cluster_name):
     with open(config_file_path) as f:
         cluster = Cluster(yaml.load(f), config_file_path.parent)
 
-    print_colour(f"Validating non-encrypted support values files for {cluster_name}...")
+    if cluster.support:
+        print_colour(f"Validating non-encrypted support values files for {cluster_name}...")
 
-    cmd = [
-        "helm",
-        "template",
-        str(helm_charts_dir.joinpath("support")),
-    ]
+        cmd = [
+            "helm",
+            "template",
+            str(helm_charts_dir.joinpath("support")),
+        ]
 
-    for values_file in cluster.support["helm_chart_values_files"]:
-        cmd.append(f"--values={config_file_path.parent.joinpath(values_file)}")
+        for values_file in cluster.support["helm_chart_values_files"]:
+            cmd.append(f"--values={config_file_path.parent.joinpath(values_file)}")
 
-        try:
-            subprocess.check_output(cmd, text=True)
-        except subprocess.CalledProcessError as e:
-            print(e.stdout)
-            sys.exit(1)
+            try:
+                subprocess.check_output(cmd, text=True)
+            except subprocess.CalledProcessError as e:
+                print(e.stdout)
+                sys.exit(1)
+    else:
+        print_colour(f"No support defined for {cluster_name}. Nothing to validate!")
 
 
 def main():
