@@ -1,0 +1,254 @@
+# This schema (a jsonschema in YAML format) is used to generate
+# values.schema.json which is, when available, used by the helm CLI for client
+# side validation by Helm of the chart's values before template rendering.
+#
+# We look to document everything we have default values for in values.yaml, but
+# we don't look to enforce the perfect validation logic within this file.
+#
+# ref: https://json-schema.org/learn/getting-started-step-by-step.html
+#
+$schema: http://json-schema.org/draft-07/schema#
+type: object
+additionalProperties: false
+required:
+  - azureFile
+  - nfs
+  - inClusterNFS
+  - global
+  - jupyterhub
+properties:
+  azureFile:
+    type: object
+    additionalProperties: false
+    required:
+      - enabled
+      - pv
+    properties:
+      enabled:
+        type: boolean
+      pv:
+        type: object
+        additionalProperties: false
+        required:
+          - secretNamespace
+          - secretName
+          - shareName
+          - mountOptions
+        properties:
+          secretNamespace:
+            type: string
+          secretName:
+            type: string
+          shareName:
+            type: string
+          mountOptions:
+            type: array
+            items:
+              type: string
+  nfs:
+    type: object
+    additionalProperties: false
+    required:
+      - enabled
+      - shareCreator
+      - pv
+    properties:
+      enabled:
+        type: boolean
+      shareCreator:
+        type: object
+        additionalProperties: false
+        required:
+          - enabled
+          - tolerations
+        properties:
+          enabled:
+            type: boolean
+          tolerations:
+            type: array
+            items:
+              type: object
+              additionalProperties: true
+      pv:
+        type: object
+        additionalProperties: false
+        required:
+          - mountOptions
+          - serverIP
+          - baseShareName
+        properties:
+          mountOptions:
+            type: array
+            items:
+              type: string
+          serverIP:
+            type: string
+          baseShareName:
+            type: string
+  inClusterNFS:
+    type: object
+    additionalProperties: false
+    required:
+      - enabled
+      - size
+    properties:
+      enabled:
+        type: boolean
+      size:
+        type: string
+  global:
+    type: object
+    additionalProperties: true
+  jupyterhub:
+    type: object
+    additionalProperties: true
+    required:
+      - custom
+    properties:
+      custom:
+        type: object
+        additionalProperties: true
+        required:
+          - singleuserAdmin
+          - cloudResources
+          - docs_service
+          - 2i2c
+        properties:
+          homepage:
+            type: object
+            additionalProperties: false
+            required:
+              - templateVars
+            properties:
+              templateVars:
+                type: object
+                additionalProperties: false
+                required:
+                  - org
+                  - designed_by
+                  - operated_by
+                  - funded_by
+                properties:
+                  announcements:
+                    type: array
+                    items:
+                      type: string
+                  org:
+                    type: object
+                    additionalProperties: false
+                    required:
+                      - name
+                      - logo_url
+                      - url
+                    properties:
+                      name:
+                        type: string
+                      logo_url:
+                        type: string
+                      url:
+                        type: string
+                  designed_by:
+                    type: object
+                    additionalProperties: false
+                    required:
+                      - name
+                      - url
+                    properties:
+                      name:
+                        type: string
+                      url:
+                        type: string
+                  operated_by:
+                    type: object
+                    additionalProperties: false
+                    required:
+                      - name
+                      - url
+                    properties:
+                      name:
+                        type: string
+                      url:
+                        type: string
+                  funded_by:
+                    type: object
+                    additionalProperties: false
+                    required:
+                      - name
+                      - url
+                    properties:
+                      name:
+                        type: string
+                      url:
+                        type: string
+          singleuserAdmin:
+            type: object
+            additionalProperties: false
+            required:
+              - extraVolumeMounts
+            properties:
+              extraVolumeMounts:
+                type: array
+                items:
+                  type: object
+                  additionalProperties: true
+          cloudResources:
+            type: object
+            additionalProperties: false
+            required:
+              - provider
+              - gcp
+              - scratchBucket
+            properties:
+              provider:
+                enum: ["", gcp]
+              gcp:
+                type: object
+                additionalProperties: false
+                required:
+                  - projectId
+                properties:
+                  projectId:
+                    type: string
+              scratchBucket:
+                type: object
+                additionalProperties: false
+                required:
+                  - enabled
+                properties:
+                  enabled:
+                    type: boolean
+          docs_service:
+            type: object
+            additionalProperties: false
+            required:
+              - enabled
+              - repo
+              - branch
+            properties:
+              enabled:
+                type: boolean
+              repo:
+                type: string
+              branch:
+                type: string
+          2i2c:
+            type: object
+            additionalProperties: false
+            required:
+              - add_staff_user_ids_to_admin_users
+              - add_staff_user_ids_of_type
+              - staff_github_ids
+              - staff_google_ids
+            properties:
+              add_staff_user_ids_to_admin_users:
+                type: boolean
+              add_staff_user_ids_of_type:
+                type: string
+              staff_github_ids:
+                type: array
+                items:
+                  type: string
+              staff_google_ids:
+                type: array
+                items:
+                  type: string
