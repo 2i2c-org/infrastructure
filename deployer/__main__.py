@@ -104,16 +104,20 @@ def deploy_grafana_dashboards(cluster_name):
             f"`grafana_token` not provided in secret file! Please add it and try again: {grafana_token_file}"
         )
 
-    # Get the url where grafana is running from the cluster config
+    # FIXME: We assume grafana_url and uses_tls config will be defined in the first
+    #        file listed under support.helm_chart_values_files.
+    support_values_file = cluster.support.get("helm_chart_values_files", [])[0]
+    with open(config_file_path.parent.joinpath(support_values_file)) as f:
+        support_values_config = yaml.load(f)
+
+    # Get the url where grafana is running from the support values file
     grafana_url = (
-        cluster.support.get("config", {})
-        .get("grafana", {})
+        support_values_config.get("grafana", {})
         .get("ingress", {})
         .get("hosts", {})
     )
     uses_tls = (
-        cluster.support.get("config", {})
-        .get("grafana", {})
+        support_values_config.get("grafana", {})
         .get("ingress", {})
         .get("tls", {})
     )
