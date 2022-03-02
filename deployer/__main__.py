@@ -280,7 +280,9 @@ def validate_support_config(cluster_name):
         cluster = Cluster(yaml.load(f), config_file_path.parent)
 
     if cluster.support:
-        print_colour(f"Validating non-encrypted support values files for {cluster_name}...")
+        print_colour(
+            f"Validating non-encrypted support values files for {cluster_name}..."
+        )
 
         cmd = [
             "helm",
