@@ -2,8 +2,9 @@
 # https://docs.github.com/en/actions/learn-github-actions/workflow-syntax-for-github-actions
 #
 # Runs the deployer script to validate clusters. This will both validate
-# cluster.yaml files as well as each hubs passed non-encrypted values files
-# against the Helm charts' values schema.
+# cluster.yaml files, any non-encrypted values files for the support chart (if they
+# exist), as well as each hubs passed non-encrypted values files against the Helm
+# charts' values schema.
 #
 name: Validate clusters
 
@@ -14,6 +15,7 @@ on:
       - deployer/**
       - helm-charts/basehub/**
       - helm-charts/daskhub/**
+      - helm-charts/support/**
       - requirements.txt
       - .github/workflows/validate-hubs.yaml
   push:
@@ -22,6 +24,7 @@ on:
       - deployer/**
       - helm-charts/basehub/**
       - helm-charts/daskhub/**
+      - helm-charts/support/**
       - requirements.txt
       - .github/workflows/validate-hubs.yaml
     branches-ignore:
@@ -32,7 +35,7 @@ on:
   workflow_dispatch:
 
 jobs:
-  validate-hubs-values-files:
+  validate-helm-charts-values-files:
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false
@@ -61,6 +64,7 @@ jobs:
               - deployer/**
               - helm-charts/basehub/**
               - helm-charts/daskhub/**
+              - helm-charts/support/**
               - requirements.txt
               - .github/workflows/validate-hubs.yaml
 

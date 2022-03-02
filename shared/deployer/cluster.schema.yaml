@@ -6,8 +6,7 @@ properties:
     type: string
     description: |
       Name of the cluster, used primarily to identify it in
-      the deploy script. The file should be named as
-      {name}.cluster.yaml
+      the deploy script. This value should match the parent folder name.
   image_repo:
     type: string
   support:
@@ -17,10 +16,13 @@ properties:
       Configuration for support components (ingress, monitoring, etc)
       to be enabled for this cluster.
     properties:
-      config:
-        type: object
+      helm_chart_values_files:
+        type: array
         description: |
-          Additional YAML values to be deployed with the support chart
+          A list of *.values.yaml files which, together, describe the complete
+          helm chart values to configure the support chart. These filepaths are defined
+          RELATIVE to the location of the cluster.yaml file. They have the naming
+          convention 'support.values.yaml'.
   provider:
     type: string
     description: |
@@ -267,4 +269,6 @@ properties:
             type: array
             description: |
               A list of *.values.yaml files which, together, describe the complete
-              helm chart values for a single hub deployment.
+              helm chart values for a single hub deployment. These filepaths are defined
+              RELATIVE to the location of the cluster.yaml file and have the naming
+              convention '{{ hub name }}.values.yaml'.

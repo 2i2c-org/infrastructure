@@ -92,6 +92,8 @@ def render_hubs():
         yaml = cluster_info.read_text()
         cluster = safe_load(yaml)
 
+        # FIXME: This is broken by https://github.com/2i2c-org/infrastructure/pull/1047
+        #        Work to fix this is tracked in https://github.com/2i2c-org/infrastructure/issues/1009
         # Pull support chart information to populate fields (if it exists)
         support = cluster.get("support", {}).get("config", {})
         grafana_url = support.get("grafana", {}).get("ingress", {}).get("hosts", "")

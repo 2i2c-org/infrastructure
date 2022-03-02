@@ -58,6 +58,7 @@ def deploy_support(cluster_name):
     Deploy support components to a cluster
     """
     validate_cluster_config(cluster_name)
+    validate_support_config(cluster_name)
 
     config_file_path = find_absolute_path_to_cluster_file(cluster_name)
     with open(config_file_path) as f:
@@ -77,6 +78,7 @@ def deploy_grafana_dashboards(cluster_name):
     this repo: https://github.com/jupyterhub/grafana-dashboards
     """
     validate_cluster_config(cluster_name)
+    validate_support_config(cluster_name)
 
     config_file_path = find_absolute_path_to_cluster_file(cluster_name)
     with open(config_file_path) as f:
@@ -104,18 +106,18 @@ def deploy_grafana_dashboards(cluster_name):
             f"`grafana_token` not provided in secret file! Please add it and try again: {grafana_token_file}"
         )
 
-    # Get the url where grafana is running from the cluster config
+    # FIXME: We assume grafana_url and uses_tls config will be defined in the first
+    #        file listed under support.helm_chart_values_files.
+    support_values_file = cluster.support.get("helm_chart_values_files", [])[0]
+    with open(config_file_path.parent.joinpath(support_values_file)) as f:
+        support_values_config = yaml.load(f)
+
+    # Get the url where grafana is running from the support values file
     grafana_url = (
-        cluster.support.get("config", {})
-        .get("grafana", {})
-        .get("ingress", {})
-        .get("hosts", {})
+        support_values_config.get("grafana", {}).get("ingress", {}).get("hosts", {})
     )
     uses_tls = (
-        cluster.support.get("config", {})
-        .get("grafana", {})
-        .get("ingress", {})
-        .get("tls", {})
+        support_values_config.get("grafana", {}).get("ingress", {}).get("tls", {})
     )
 
     if not grafana_url:
@@ -266,6 +268,40 @@ def validate_hub_config(cluster_name, hub_name):
             sys.exit(1)
 
 
+def validate_support_config(cluster_name):
+    """
+    Validates the provided non-encrypted helm chart values files for the support chart
+    of a specific cluster.
+    """
+    prepare_helm_charts_dependencies_and_schemas()
+
+    config_file_path = find_absolute_path_to_cluster_file(cluster_name)
+    with open(config_file_path) as f:
+        cluster = Cluster(yaml.load(f), config_file_path.parent)
+
+    if cluster.support:
+        print_colour(
+            f"Validating non-encrypted support values files for {cluster_name}..."
+        )
+
+        cmd = [
+            "helm",
+            "template",
+            str(helm_charts_dir.joinpath("support")),
+        ]
+
+        for values_file in cluster.support["helm_chart_values_files"]:
+            cmd.append(f"--values={config_file_path.parent.joinpath(values_file)}")
+
+            try:
+                subprocess.check_output(cmd, text=True)
+            except subprocess.CalledProcessError as e:
+                print(e.stdout)
+                sys.exit(1)
+    else:
+        print_colour(f"No support defined for {cluster_name}. Nothing to validate!")
+
+
 def main():
     argparser = argparse.ArgumentParser(
         description="""A command line tool to perform various functions related
@@ -355,6 +391,7 @@ def main():
         )
     elif args.action == "validate":
         validate_cluster_config(args.cluster_name)
+        validate_support_config(args.cluster_name)
         validate_hub_config(args.cluster_name, args.hub_name)
     elif args.action == "deploy-support":
         deploy_support(args.cluster_name)

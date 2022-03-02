@@ -129,25 +129,29 @@ class Cluster:
         subprocess.check_call(["helm", "dep", "up", support_dir])
 
         support_secrets_file = support_dir.joinpath("enc-support.secret.yaml")
-        with tempfile.NamedTemporaryFile(mode="w") as f, get_decrypted_file(
-            support_secrets_file
-        ) as secret_file:
-            yaml.dump(self.support.get("config", {}), f)
-            f.flush()
-            subprocess.check_call(
-                [
-                    "helm",
-                    "upgrade",
-                    "--install",
-                    "--create-namespace",
-                    "--namespace=support",
-                    "support",
-                    str(support_dir),
-                    f"--values={secret_file}",
-                    f"--values={f.name}",
-                    "--wait",
-                ]
-            )
+        # TODO: Update this with statement to handle any number of context managers
+        #       containing decrypted support values files. Not critical right now as
+        #       no individual cluster has specific support secrets, but it's possible
+        #       to support that if we want to in the future.
+        with get_decrypted_file(support_secrets_file) as secret_file:
+            cmd = [
+                "helm",
+                "upgrade",
+                "--install",
+                "--create-namespace",
+                "--namespace=support",
+                "--wait",
+                "support",
+                str(support_dir),
+                f"--values={secret_file}",
+            ]
+
+            for values_file in self.support["helm_chart_values_files"]:
+                cmd.append(f"--values={self.config_path.joinpath(values_file)}")
+
+            print_colour(f"Running {' '.join([str(c) for c in cmd])}")
+            subprocess.check_call(cmd)
+
         print_colour("Done!")
 
     def auth_kubeconfig(self):

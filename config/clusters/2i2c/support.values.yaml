@@ -1,0 +1,8 @@
+grafana:
+  ingress:
+    hosts:
+      - grafana.pilot.2i2c.cloud
+    tls:
+      - secretName: grafana-tls
+        hosts:
+          - grafana.pilot.2i2c.cloud
