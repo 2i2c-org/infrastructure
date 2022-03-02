@@ -1,0 +1,42 @@
+# This schema (a jsonschema in YAML format) is used to generate
+# values.schema.json which is, when available, used by the helm CLI for client
+# side validation by Helm of the chart's values before template rendering.
+#
+# We look to document everything we have default values for in values.yaml, but
+# we don't look to enforce the perfect validation logic within this file.
+#
+# ref: https://json-schema.org/learn/getting-started-step-by-step.html
+#
+$schema: http://json-schema.org/draft-07/schema#
+type: object
+additionalProperties: false
+required:
+  - cluster-autoscaler
+  - ingress-nginx
+  - prometheus
+  - grafana
+  - nfs-server-provisioner
+  - nvidiaDevicePlugin
+  - global
+properties:
+  cluster-autoscaler:
+    type: object
+    additionalProperties: true
+  ingress-nginx:
+    type: object
+    additionalProperties: true
+  prometheus:
+    type: object
+    additionalProperties: true
+  grafana:
+    type: object
+    additionalProperties: true
+  nfs-server-provisioner:
+    type: object
+    additionalProperties: true
+  nvidiaDevicePlugin:
+    type: object
+    additionalProperties: true
+  global:
+    type: object
+    additionalProperties: true
