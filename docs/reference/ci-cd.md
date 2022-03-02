@@ -11,7 +11,6 @@ following paths are modified:
 - deployer/**
 - helm-charts/**
 - requirements.txt
-- dev-requirements.txt
 - config/secrets.yaml
 - config/clusters/**
 - .github/workflows/deploy-hubs.yaml

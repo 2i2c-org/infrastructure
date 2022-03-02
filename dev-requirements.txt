@@ -1,5 +1,13 @@
-pytest
-pytest-asyncio
+# These requirements represents the needs for doing various tasks in this git
+# repo besides using the deployer script.
+#
+
+# chartpress is relevant to build and push helm-charts/images/hub/Dockerfile and
+# update basehub's default values to reference the new image.
+chartpress
+
+# requests is used by extra_scripts/rsync-active-users.py
 requests
-beautifulsoup4
+
+# rich is used by extra_scripts/count-auth0-apps.py
 rich
