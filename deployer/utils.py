@@ -187,6 +187,10 @@ def prepare_helm_charts_dependencies_and_schemas():
     _generate_values_schema_json(daskhub_dir)
     subprocess.check_call(["helm", "dep", "up", daskhub_dir])
 
+    support_dir = helm_charts_dir.joinpath("support")
+    _generate_values_schema_json(support_dir)
+    subprocess.check_call(["helm", "dep", "up", support_dir])
+
 
 def print_colour(msg: str):
     """Print messages in colour to be distinguishable in CI logs
