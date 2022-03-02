@@ -107,8 +107,10 @@ def render_hubs():
 
             hub_list.append(
                 {
-                    "id": hub["name"],
+                    # Fallback to name if display_name isn't available
+                    "name": hub.get("display_name", "name"),
                     "domain": f"[{hub['domain']}](https://{hub['domain']})",
+                    "id": hub["name"],
                     "hub_type": hub["helm_chart"],
                     "grafana": grafana_url,
                 }
