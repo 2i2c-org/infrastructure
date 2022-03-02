@@ -112,14 +112,10 @@ def deploy_grafana_dashboards(cluster_name):
 
     # Get the url where grafana is running from the support values file
     grafana_url = (
-        support_values_config.get("grafana", {})
-        .get("ingress", {})
-        .get("hosts", {})
+        support_values_config.get("grafana", {}).get("ingress", {}).get("hosts", {})
     )
     uses_tls = (
-        support_values_config.get("grafana", {})
-        .get("ingress", {})
-        .get("tls", {})
+        support_values_config.get("grafana", {}).get("ingress", {}).get("tls", {})
     )
 
     if not grafana_url:
