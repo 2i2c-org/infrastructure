@@ -18,6 +18,7 @@ support:
               - grafana.pilot.2i2c.cloud
 hubs:
   - name: staging
+    display_name: "2i2c staging"
     domain: staging.pilot.2i2c.cloud
     helm_chart: basehub
     auth0:
@@ -30,6 +31,7 @@ hubs:
       # that you intend for these files to be applied in this order.
       - staging.values.yaml
   - name: dask-staging
+    display_name: "2i2c dask staging"
     domain: dask-staging.pilot.2i2c.cloud
     helm_chart: daskhub
     auth0:
@@ -42,6 +44,7 @@ hubs:
       # that you intend for these files to be applied in this order.
       - dask-staging.values.yaml
   - name: demo
+    display_name: "2i2c demo"
     domain: demo.pilot.2i2c.cloud
     helm_chart: basehub
     auth0:
@@ -54,6 +57,7 @@ hubs:
       # that you intend for these files to be applied in this order.
       - demo.values.yaml
   - name: ohw
+    display_name: "Ocean Hack Week"
     domain: ohw.pilot.2i2c.cloud
     helm_chart: daskhub
     auth0:
@@ -66,6 +70,7 @@ hubs:
       # that you intend for these files to be applied in this order.
       - ohw.values.yaml
   - name: pfw
+    display_name: "Purdue Fort Wayne"
     domain: pfw.pilot.2i2c.cloud
     helm_chart: basehub
     auth0:
@@ -78,6 +83,7 @@ hubs:
       # that you intend for these files to be applied in this order.
       - pfw.values.yaml
   - name: peddie
+    display_name: "Peddie Academy"
     domain: peddie.pilot.2i2c.cloud
     helm_chart: basehub
     auth0:
@@ -90,6 +96,7 @@ hubs:
       # that you intend for these files to be applied in this order.
       - peddie.values.yaml
   - name: catalyst-cooperative
+    display_name: "Catalyst Cooperative"
     domain: catalyst-cooperative.pilot.2i2c.cloud
     helm_chart: daskhub
     auth0:
@@ -102,6 +109,7 @@ hubs:
       # that you intend for these files to be applied in this order.
       - catalyst-cooperative.values.yaml
   - name: earthlab
+    display_name: "EarthLab"
     domain: earthlab.pilot.2i2c.cloud
     helm_chart: basehub
     auth0:
@@ -114,6 +122,7 @@ hubs:
       # that you intend for these files to be applied in this order.
       - earthlab.values.yaml
   - name: paleohack2021
+    display_name: "PaleoHack"
     domain: paleohack2021.hackathon.2i2c.cloud
     helm_chart: basehub
     auth0:
@@ -126,6 +135,7 @@ hubs:
       # that you intend for these files to be applied in this order.
       - paleohack2021.values.yaml
   - name: aup
+    display_name: "The American University of Paris"
     domain: aup.pilot.2i2c.cloud
     helm_chart: basehub
     auth0:
@@ -138,6 +148,7 @@ hubs:
       # that you intend for these files to be applied in this order.
       - aup.values.yaml
   - name: anu
+    display_name: "The Australian National University"
     domain: anu.pilot.2i2c.cloud
     helm_chart: basehub
     auth0:
@@ -148,6 +159,7 @@ hubs:
       # that you intend for these files to be applied in this order.
       - anu.values.yaml
   - name: utexas
+    display_name: "University of Texas"
     domain: utexas.pilot.2i2c.cloud
     helm_chart: basehub
     auth0:
