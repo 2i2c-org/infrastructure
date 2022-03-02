@@ -1,0 +1,17 @@
+prometheus:
+  server:
+    resources:
+      requests:
+        cpu: 0.5
+        memory: 4Gi
+      limits:
+        cpu: 2
+        memory: 16Gi
+grafana:
+  ingress:
+    hosts:
+      - grafana.utoronto.2i2c.cloud
+    tls:
+      - secretName: grafana-tls
+        hosts:
+          - grafana.utoronto.2i2c.cloud

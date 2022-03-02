@@ -1,0 +1,30 @@
+# Non default entries manually added by support developers
+
+# Ignore the .yaml that generates the .json, only the .json is relevant to
+# bundle with the Helm chart when it is packaged or "helm dep up" is used to
+# copy it over to another location where it is referenced.
+values.schema.yaml
+
+# -----------------------------------------------------------------------------
+
+# Patterns to ignore when building packages.
+# This supports shell glob matching, relative path matching, and
+# negation (prefixed with !). Only one pattern per line.
+.DS_Store
+# Common VCS dirs
+.git/
+.gitignore
+.bzr/
+.bzrignore
+.hg/
+.hgignore
+.svn/
+# Common backup files
+*.swp
+*.bak
+*.tmp
+*~
+# Various IDEs
+.project
+.idea/
+*.tmproj

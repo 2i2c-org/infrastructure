@@ -6,29 +6,8 @@ aws:
   clusterName: carbonplanhub
   region: us-west-2
 support:
-  config:
-    prometheus:
-      server:
-        resources:
-          requests:
-            cpu: 1
-            memory: 4Gi
-          limits:
-            cpu: 4
-            memory: 8Gi
-    cluster-autoscaler:
-      enabled: true
-      autoDiscovery:
-        clusterName: carbonplanhub
-      awsRegion: us-west-2
-    grafana:
-      ingress:
-        hosts:
-          - grafana.carbonplan.2i2c.cloud
-        tls:
-          - secretName: grafana-tls
-            hosts:
-              - grafana.carbonplan.2i2c.cloud
+  helm_chart_values_files:
+    - support.values.yaml
 hubs:
   - name: staging
     display_name: "Carbon Plan (AWS, staging)"

@@ -1,0 +1,22 @@
+prometheus:
+  server:
+    resources:
+      requests:
+        cpu: 1
+        memory: 4Gi
+      limits:
+        cpu: 4
+        memory: 8Gi
+cluster-autoscaler:
+  enabled: true
+  autoDiscovery:
+    clusterName: openscapeshub
+  awsRegion: us-west-2
+grafana:
+  ingress:
+    hosts:
+      - grafana.openscapes.2i2c.cloud
+    tls:
+      - secretName: grafana-tls
+        hosts:
+          - grafana.openscapes.2i2c.cloud

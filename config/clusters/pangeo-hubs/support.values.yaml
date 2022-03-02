@@ -1,0 +1,20 @@
+grafana:
+  ingress:
+    hosts:
+      - grafana.gcp.pangeo.2i2c.cloud
+    tls:
+      - secretName: grafana-tls
+        hosts:
+          - grafana.gcp.pangeo.2i2c.cloud
+# Disable the Admissions Validation Webhook and the port is not
+# permitted on private GKE clusters
+ingress-nginx:
+  controller:
+    admissionWebhooks:
+      enabled: false
+prometheus:
+  server:
+    resources:
+      limits:
+        cpu: 2
+        memory: 12Gi

@@ -1,0 +1,20 @@
+nvidiaDevicePlugin:
+  azure:
+    enabled: true
+prometheus:
+  server:
+    resources:
+      requests:
+        cpu: 1
+        memory: 4Gi
+      limits:
+        cpu: 4
+        memory: 8Gi
+grafana:
+  ingress:
+    hosts:
+      - grafana.azure.carbonplan.2i2c.cloud
+    tls:
+      - secretName: grafana-tls
+        hosts:
+          - grafana.azure.carbonplan.2i2c.cloud

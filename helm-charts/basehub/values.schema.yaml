@@ -99,6 +99,14 @@ properties:
   global:
     type: object
     additionalProperties: true
+  # jupyterhub is a dependent helm chart, we rely _mostly_ on its schema
+  # validation for values passed to it and are not imposing restrictions on them
+  # in this helm chart. But, we do we provide custom configuration (`custom`)
+  # that is read by custom jupyterhub configuration (`hub.config`).
+  #
+  # Due to that, we provide a strict schema for the `jupyterhub.custom` values
+  # passed to this helm chart.
+  #
   jupyterhub:
     type: object
     additionalProperties: true
