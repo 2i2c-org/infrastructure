@@ -160,15 +160,15 @@ properties:
     type: array
     description: |
       Each item here is a hub deployed to this cluster.
-    required:
-      - name
-      - domain
-      - auth0
-      - helm_chart
-      - helm_chart_values_files
     items:
       - type: object
         additionalProperties: false
+        required:
+          - name
+          - domain
+          - auth0
+          - helm_chart
+          - helm_chart_values_files
         properties:
           name:
             type: string
