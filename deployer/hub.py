@@ -127,6 +127,10 @@ class Cluster:
         subprocess.check_call(["helm", "dep", "up", support_dir])
 
         support_secrets_file = support_dir.joinpath("enc-support.secret.yaml")
+        # TODO: Update this with statement to handle any number of context managers
+        #       containing decrypted support values files. Not critical right now as
+        #       no individual cluster has specific support secrets, but it's possible
+        #       to support that if we want to in the future.
         with get_decrypted_file(support_secrets_file) as secret_file:
             cmd = [
                 "helm",
