@@ -28,3 +28,7 @@ jupyterhub:
         allowed_users: &staging_users
           - colliand@gmail.com
         admin_users: *staging_users
+      JupyterHub:
+          authenticator_class: cilogon
+      CILogonOAuthenticator:
+        username_claim: "email"
