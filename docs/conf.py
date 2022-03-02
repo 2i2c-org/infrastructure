@@ -86,20 +86,28 @@ def render_hubs():
 
     hub_list = []
     for cluster_info in clusters:
+        cluster_path = cluster_info.parent
         if "schema" in cluster_info.name or "staff" in cluster_info.name:
             continue
         # For each cluster, grab it's YAML w/ the config for each hub
         yaml = cluster_info.read_text()
         cluster = safe_load(yaml)
 
-        # FIXME: This is broken by https://github.com/2i2c-org/infrastructure/pull/1047
-        #        Work to fix this is tracked in https://github.com/2i2c-org/infrastructure/issues/1009
         # Pull support chart information to populate fields (if it exists)
-        support = cluster.get("support", {}).get("config", {})
-        grafana_url = support.get("grafana", {}).get("ingress", {}).get("hosts", "")
-        if isinstance(grafana_url, list):
-            grafana_url = grafana_url[0]
-            grafana_url = f"[{grafana_url}](http://{grafana_url})"
+        support_files = cluster.get("support", {}).get("helm_chart_values_files", None)
+
+        if support_files is not None:
+            # FIXME: If there's more than one support values file defined, this will break
+            for support_file in support_files:
+                with open(cluster_path.joinpath(support_file)) as f:
+                    support_config = safe_load(f)
+
+            grafana_url = support_config.get("grafana", {}).get("ingress", {}).get("hosts", "")
+            if isinstance(grafana_url, list):
+                grafana_url = grafana_url[0]
+                grafana_url = f"[{grafana_url}](http://{grafana_url})"
+        else:
+            grafana_url = ""
 
         # For each hub in cluster, grab its metadata and add it to the list
         for hub in cluster["hubs"]:
