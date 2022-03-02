@@ -58,6 +58,7 @@ def deploy_support(cluster_name):
     Deploy support components to a cluster
     """
     validate_cluster_config(cluster_name)
+    validate_support_config(cluster_name)
 
     config_file_path = find_absolute_path_to_cluster_file(cluster_name)
     with open(config_file_path) as f:
@@ -77,6 +78,7 @@ def deploy_grafana_dashboards(cluster_name):
     this repo: https://github.com/jupyterhub/grafana-dashboards
     """
     validate_cluster_config(cluster_name)
+    validate_support_config(cluster_name)
 
     config_file_path = find_absolute_path_to_cluster_file(cluster_name)
     with open(config_file_path) as f:
@@ -259,6 +261,37 @@ def validate_hub_config(cluster_name, hub_name):
         # removed, see https://github.com/dask/dask-gateway/issues/473.
         if hub.spec["helm_chart"] == "daskhub":
             cmd.append("--set=dask-gateway.gateway.auth.jupyterhub.apiToken=dummy")
+        try:
+            subprocess.check_output(cmd, text=True)
+        except subprocess.CalledProcessError as e:
+            print(e.stdout)
+            sys.exit(1)
+
+
+def validate_support_config(cluster_name):
+    """
+    Validates the provided non-encrypted helm chart values files for the support chart
+    of a specific cluster.
+    """
+    prepare_helm_charts_dependencies_and_schemas()
+
+    config_file_path = find_absolute_path_to_cluster_file(cluster_name)
+    with open(config_file_path) as f:
+        cluster = Cluster(yaml.load(f), config_file_path.parent)
+
+    print_colour(
+        f"Validating non-encrypted support values files for {cluster_name}..."
+    )
+
+    cmd = [
+        "helm",
+        "template",
+        str(helm_charts_dir.joinpath("support")),
+    ]
+
+    for values_file in cluster.support["helm_chart_values_files"]:
+        cmd.append(f"--values={config_file_path.parent.joinpath(values_file)}")
+
         try:
             subprocess.check_output(cmd, text=True)
         except subprocess.CalledProcessError as e:
