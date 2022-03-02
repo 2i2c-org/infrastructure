@@ -30,6 +30,11 @@ inClusterNFS:
   enabled: false
   size: 100Gi
 
+# A placeholder as global values that can be referenced from the same location
+# of any chart should be possible to provide, but aren't necessarily provided or
+# used.
+global: {}
+
 jupyterhub:
   custom:
     singleuserAdmin:
@@ -38,9 +43,9 @@ jupyterhub:
           mountPath: /home/jovyan/shared-readwrite
           subPath: _shared
     cloudResources:
-      provider:
+      provider: ""
       gcp:
-        projectId:
+        projectId: ""
       scratchBucket:
         enabled: false
     docs_service:

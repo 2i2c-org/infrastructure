@@ -29,7 +29,7 @@ basehub:
             name: 2i2c
             url: https://2i2c.org
           funded_by:
-            name:
+            name: ICESat Hackweek
             url: https://icesat-2.hackweek.io
     singleuser:
       serviceAccountName: cloud-user-sa
