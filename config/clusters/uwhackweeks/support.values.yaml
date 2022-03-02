@@ -1,0 +1,22 @@
+prometheus:
+  server:
+    resources:
+      requests:
+        cpu: 1
+        memory: 4Gi
+      limits:
+        cpu: 4
+        memory: 8Gi
+cluster-autoscaler:
+  enabled: true
+  autoDiscovery:
+    clusterName: uwhackweeks
+  awsRegion: us-west-2
+grafana:
+  ingress:
+    hosts:
+      - grafana.uwhackweeks.2i2c.cloud
+    tls:
+      - secretName: grafana-tls
+        hosts:
+          - grafana.uwhackweeks.2i2c.cloud
