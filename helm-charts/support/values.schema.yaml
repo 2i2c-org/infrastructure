@@ -19,24 +19,56 @@ required:
   - nvidiaDevicePlugin
   - global
 properties:
+  # cluster-autoscaler is a dependent helm chart, we rely on its schema
+  # validation for values passed to it and are not imposing restrictions on them
+  # in this helm chart.
   cluster-autoscaler:
     type: object
     additionalProperties: true
+  # ingress-nginx is a dependent helm chart, we rely on its schema validation
+  # for values passed to it and are not imposing restrictions on them in this
+  # helm chart.
   ingress-nginx:
     type: object
     additionalProperties: true
+  # prometheus is a dependent helm chart, we rely on its schema validation for
+  # values passed to it and are not imposing restrictions on them in this helm
+  # chart.
   prometheus:
     type: object
     additionalProperties: true
+  # grafana is a dependent helm chart, we rely on its schema validation for
+  # values passed to it and are not imposing restrictions on them in this helm
+  # chart.
   grafana:
     type: object
     additionalProperties: true
+  # nfs-server-provisioner is a dependent helm chart, we rely on its schema
+  # validation for values passed to it and are not imposing restrictions on them
+  # in this helm chart.
   nfs-server-provisioner:
     type: object
     additionalProperties: true
+  # nvidiaDevicePlugin is _not a dependent helm chart_. It is values directly
+  # coupled with this helm chart and are influencing the rendering of templates
+  # we provide as part of this helm chart.
+  #
+  # Due to that, we maintain a strict schema here but not elsewhere.
+  #
   nvidiaDevicePlugin:
     type: object
-    additionalProperties: true
+    additionalProperties: false
+    required:
+      - azure
+    properties:
+      azure:
+        type: object
+        additionalProperties: false
+        required:
+          - enabled
+        properties:
+          enabled:
+            type: boolean
   global:
     type: object
     additionalProperties: true
