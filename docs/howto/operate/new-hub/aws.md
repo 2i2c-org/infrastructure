@@ -22,17 +22,17 @@ existing cluster.
 
 Follow the steps outlined in [](new-hub:deploy) with the following modifications:
 
-1. Generate a new config file for your hubs if there is not an existing one.
+1. Generate a new values file for your hub if there is not an existing one.
 
-   You can use one of the existing hub config files as a "template" for your hubs (for
+   You can use one of the existing hub values files as a "template" for your hub (for
    example, [here is the Farallon Institute staging hub values file](https://github.com/2i2c-org/infrastructure/tree/HEAD/config/clusters/farallon/staging.values.yaml)).
    You may need to tweak names, `serverIP` and singleuser's images references.
    Make sure you set up the `profileList` section to be compatible with your kops cluster
    (ie. match the `node_selector` with the proper `instance-type`).
 
 2. Set `proxy.https.enabled` to `false`.
-   This creates the hubs without trying to give them HTTPS, so we can appropriately
-   create DNS entries for them.
+   This creates the hub without trying to give it an HTTPS certificate, so we can appropriately
+   create DNS entries for it.
 
 3. Create a Pull Request with the new entries, and get a team member to review it.
 
@@ -67,7 +67,7 @@ Follow the steps outlined in [](new-hub:deploy) with the following modifications
    If you are deploying `prod` hub as well, you will need to repeat this step for `prod`.
    ```
 
-7. Set `proxy.https.enabled` to `true` in the cluster config file so we can get HTTPS.
+7. Set `proxy.https.enabled` to `true` in the hub values file so we can get HTTPS.
 
 8. Repeat steps 4 and 5.
 
