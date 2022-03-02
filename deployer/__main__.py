@@ -389,6 +389,7 @@ def main():
         )
     elif args.action == "validate":
         validate_cluster_config(args.cluster_name)
+        validate_support_config(args.cluster_name)
         validate_hub_config(args.cluster_name, args.hub_name)
     elif args.action == "deploy-support":
         deploy_support(args.cluster_name)
