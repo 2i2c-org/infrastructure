@@ -15,6 +15,10 @@
 # have secret in their name.
 !**/templates/**/*secret*.yaml
 
+# Ignore the .json version of our Helm chart's schema files so we only version
+# control the .yaml file that we use to generate the .json file.
+values.schema.json
+
 # Ignore helm chart generated outputs
 Chart.lock
 **/charts/*.tgz

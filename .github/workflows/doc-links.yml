@@ -13,11 +13,6 @@ jobs:
     runs-on: ubuntu-20.04
     steps:
       - uses: actions/checkout@v2
-        with:
-          # chartpress is used by doc/conf.py,
-          # and requires information about the latest tagged commit, which
-          # requires the git history.
-          fetch-depth: 0
 
       - name: Install environment
         uses: conda-incubator/setup-miniconda@v2

@@ -35,7 +35,7 @@ basehub:
             url: https://2i2c.org
           funded_by:
             name: Farallon Institute
-            urL: http://www.faralloninstitute.org/
+            url: http://www.faralloninstitute.org/
     singleuser:
       initContainers:
         # Need to explicitly fix ownership here, since EFS doesn't do anonuid

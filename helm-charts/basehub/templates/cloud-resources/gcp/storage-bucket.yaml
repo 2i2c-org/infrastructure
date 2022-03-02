@@ -1,5 +1,5 @@
-{{ if .Values.jupyterhub.custom.cloudResources.scratchBucket.enabled  }}
-{{ if eq .Values.jupyterhub.custom.cloudResources.provider "gcp" }}
+{{- if .Values.jupyterhub.custom.cloudResources.scratchBucket.enabled -}}
+{{- if eq .Values.jupyterhub.custom.cloudResources.provider "gcp" -}}
 apiVersion: storage.cnrm.cloud.google.com/v1beta1
 kind: StorageBucket
 metadata:

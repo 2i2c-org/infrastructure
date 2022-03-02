@@ -1,0 +1,96 @@
+# This is a GitHub workflow defining a set of jobs with a set of steps. ref:
+# https://docs.github.com/en/actions/learn-github-actions/workflow-syntax-for-github-actions
+#
+# Runs the deployer script to validate clusters. This will both validate
+# cluster.yaml files as well as each hubs passed non-encrypted values files
+# against the Helm charts' values schema.
+#
+name: Validate clusters
+
+on:
+  pull_request:
+    paths:
+      - config/clusters/**
+      - deployer/**
+      - helm-charts/basehub/**
+      - helm-charts/daskhub/**
+      - requirements.txt
+      - .github/workflows/validate-hubs.yaml
+  push:
+    paths:
+      - config/clusters/**
+      - deployer/**
+      - helm-charts/basehub/**
+      - helm-charts/daskhub/**
+      - requirements.txt
+      - .github/workflows/validate-hubs.yaml
+    branches-ignore:
+      - "dependabot/**"
+      - "pre-commit-ci-update-config"
+    tags:
+      - "**"
+  workflow_dispatch:
+
+jobs:
+  validate-hubs-values-files:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - cluster_name: 2i2c
+          - cluster_name: azure.carbonplan
+          - cluster_name: carbonplan
+          - cluster_name: cloudbank
+          - cluster_name: farallon
+          - cluster_name: meom-ige
+          - cluster_name: openscapes
+          - cluster_name: pangeo-hubs
+          - cluster_name: utoronto
+          - cluster_name: uwhackweeks
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Check if any cluster common files has changed
+        uses: dorny/paths-filter@v2
+        id: cluster_common_files
+        with:
+          filters: |
+            files:
+              - deployer/**
+              - helm-charts/basehub/**
+              - helm-charts/daskhub/**
+              - requirements.txt
+              - .github/workflows/validate-hubs.yaml
+
+      - name: Check if cluster specific files has changes
+        uses: dorny/paths-filter@v2
+        id: cluster_specific_files
+        with:
+          filters: |
+            changes:
+              - config/clusters/${{ matrix.cluster_name }}/**
+
+      # To continue this cluster specific job we must either have manually
+      # invoked this workflow to run for all clusters, or there should have been
+      # changes to the cluster common files or cluster specific files.
+      - name: Decide if the job should continue
+        id: decision
+        run: |
+          echo ::set-output name=continue-job::${{ github.event_name == 'workflow_dispatch' || (steps.cluster_common_files.outputs.files == 'true' || steps.cluster_specific_files.outputs.changes == 'true') }}
+
+      - uses: actions/setup-python@v3
+        with:
+          python-version: "3.9"
+
+      - name: Install deployer script dependencies
+        run: |
+          pip install -r requirements.txt
+
+      - name: "Validate cluster: ${{ matrix.cluster_name }}"
+        if: steps.decision.outputs.continue-job == 'true'
+        env:
+          TERM: xterm
+        run: |
+          python deployer validate ${{ matrix.cluster_name }}
