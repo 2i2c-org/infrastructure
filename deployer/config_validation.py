@@ -42,7 +42,7 @@ def _generate_values_schema_json(helm_chart_dir):
 
 
 @functools.lru_cache
-def prepare_helm_charts_dependencies_and_schemas():
+def _prepare_helm_charts_dependencies_and_schemas():
     """
     Ensures that the helm charts we deploy, basehub and daskhub, have got their
     dependencies updated and .json schema files generated so that they can be
@@ -82,7 +82,7 @@ def validate_hub_config(cluster_name, hub_name):
     Validates the provided non-encrypted helm chart values files for each hub of
     a specific cluster.
     """
-    prepare_helm_charts_dependencies_and_schemas()
+    _prepare_helm_charts_dependencies_and_schemas()
 
     config_file_path = find_absolute_path_to_cluster_file(cluster_name)
     with open(config_file_path) as f:
@@ -124,7 +124,7 @@ def validate_support_config(cluster_name):
     Validates the provided non-encrypted helm chart values files for the support chart
     of a specific cluster.
     """
-    prepare_helm_charts_dependencies_and_schemas()
+    _prepare_helm_charts_dependencies_and_schemas()
 
     config_file_path = find_absolute_path_to_cluster_file(cluster_name)
     with open(config_file_path) as f:

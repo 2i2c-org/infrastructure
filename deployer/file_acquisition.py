@@ -17,7 +17,7 @@ from ruamel.yaml.scanner import ScannerError
 yaml = YAML(typ="safe", pure=True)
 
 
-def assert_file_exists(filepath):
+def _assert_file_exists(filepath):
     """Assert a filepath exists, raise an error if not. This function is to be used for
     files that *absolutely have to exist* in order to successfully complete deployment,
     such as, files listed in the `helm_chart_values_file` key in the `cluster.yaml` file
@@ -93,7 +93,7 @@ def get_decrypted_file(original_filepath):
             yielded if the file is not valid JSON/YAML, or does not have the prefix
             'enc-' or contain 'secret'.
     """
-    assert_file_exists(original_filepath)
+    _assert_file_exists(original_filepath)
     filename = os.path.basename(original_filepath)
     _, ext = os.path.splitext(filename)
 
