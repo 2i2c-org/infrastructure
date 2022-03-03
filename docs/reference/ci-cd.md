@@ -47,14 +47,4 @@ Therefore, we can use these schemas to validate all our config before making dep
 
 We have [functions within the deployer](https://github.com/2i2c-org/infrastructure/blob/HEAD/deployer/__main__.py#L213-L302) that validate the cluster config, the support chart values, and the helm chart values for each hub against these schemas.
 We automatically run these functions in GitHub Actions configured by the [`validate-clusters.yaml` workflow file](https://github.com/2i2c-org/infrastructure/blob/master/.github/workflows/validate-clusters.yaml).
-This workflow is triggered when changes to files along the following filepaths are detected.
-
-```
-- config/clusters/**
-- deployer/**
-- helm-charts/basehub/**
-- helm-charts/daskhub/**
-- helm-charts/support/**
-- requirements.txt
-- .github/workflows/validate-hubs.yaml
-```
+This workflow is only triggered when related configuration has changed.
