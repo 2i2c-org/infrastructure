@@ -13,10 +13,10 @@ import pytest
 from ruamel.yaml import YAML
 
 from auth import KeyProvider
+from config_validation import prepare_helm_charts_dependencies_and_schemas
 from utils import (
     get_decrypted_file,
     get_decrypted_files,
-    prepare_helm_charts_dependencies_and_schemas,
     print_colour,
 )
 

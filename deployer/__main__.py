@@ -5,17 +5,19 @@ import argparse
 import os
 import shutil
 import subprocess
-import sys
 from pathlib import Path
 
-import jsonschema
 from ruamel.yaml import YAML
 
 from auth import KeyProvider
 from hub import Cluster
+from config_validation import (
+    validate_cluster_config,
+    validate_hub_config,
+    validate_support_config,
+)
 from utils import (
     get_decrypted_file,
-    prepare_helm_charts_dependencies_and_schemas,
     print_colour,
     find_absolute_path_to_cluster_file,
 )
@@ -208,98 +210,6 @@ def deploy(cluster_name, hub_name, skip_hub_health_test, config_path):
             for i, hub in enumerate(hubs):
                 print_colour(f"{i+1} / {hubN}: Deploying hub {hub.spec['name']}...")
                 hub.deploy(k, SECRET_KEY, skip_hub_health_test)
-
-
-def validate_cluster_config(cluster_name):
-    """
-    Validates cluster.yaml configuration against a JSONSchema.
-    """
-    cluster_schema_file = Path(os.getcwd()).joinpath(
-        "shared", "deployer", "cluster.schema.yaml"
-    )
-    cluster_file = find_absolute_path_to_cluster_file(cluster_name)
-
-    with open(cluster_file) as cf, open(cluster_schema_file) as sf:
-        cluster_config = yaml.load(cf)
-        schema = yaml.load(sf)
-        # Raises useful exception if validation fails
-        jsonschema.validate(cluster_config, schema)
-
-
-def validate_hub_config(cluster_name, hub_name):
-    """
-    Validates the provided non-encrypted helm chart values files for each hub of
-    a specific cluster.
-    """
-    prepare_helm_charts_dependencies_and_schemas()
-
-    config_file_path = find_absolute_path_to_cluster_file(cluster_name)
-    with open(config_file_path) as f:
-        cluster = Cluster(yaml.load(f), config_file_path.parent)
-
-    hubs = []
-    if hub_name:
-        hubs = [h for h in cluster.hubs if h.spec["name"] == hub_name]
-    else:
-        hubs = cluster.hubs
-
-    for i, hub in enumerate(hubs):
-        print_colour(
-            f"{i+1} / {len(hubs)}: Validating non-encrypted hub values files for {hub.spec['name']}..."
-        )
-
-        cmd = [
-            "helm",
-            "template",
-            str(helm_charts_dir.joinpath(hub.spec["helm_chart"])),
-        ]
-        for values_file in hub.spec["helm_chart_values_files"]:
-            if "secret" not in os.path.basename(values_file):
-                cmd.append(f"--values={config_file_path.parent.joinpath(values_file)}")
-        # Workaround the current requirement for dask-gateway 0.9.0 to have a
-        # JupyterHub api-token specified, for updates if this workaround can be
-        # removed, see https://github.com/dask/dask-gateway/issues/473.
-        if hub.spec["helm_chart"] == "daskhub":
-            cmd.append("--set=dask-gateway.gateway.auth.jupyterhub.apiToken=dummy")
-        try:
-            subprocess.check_output(cmd, text=True)
-        except subprocess.CalledProcessError as e:
-            print(e.stdout)
-            sys.exit(1)
-
-
-def validate_support_config(cluster_name):
-    """
-    Validates the provided non-encrypted helm chart values files for the support chart
-    of a specific cluster.
-    """
-    prepare_helm_charts_dependencies_and_schemas()
-
-    config_file_path = find_absolute_path_to_cluster_file(cluster_name)
-    with open(config_file_path) as f:
-        cluster = Cluster(yaml.load(f), config_file_path.parent)
-
-    if cluster.support:
-        print_colour(
-            f"Validating non-encrypted support values files for {cluster_name}..."
-        )
-
-        cmd = [
-            "helm",
-            "template",
-            str(helm_charts_dir.joinpath("support")),
-        ]
-
-        for values_file in cluster.support["helm_chart_values_files"]:
-            cmd.append(f"--values={config_file_path.parent.joinpath(values_file)}")
-
-            try:
-                subprocess.check_output(cmd, text=True)
-            except subprocess.CalledProcessError as e:
-                print(e.stdout)
-                sys.exit(1)
-    else:
-        print_colour(f"No support defined for {cluster_name}. Nothing to validate!")
 
 
 def main():
