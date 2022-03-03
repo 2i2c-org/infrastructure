@@ -151,17 +151,6 @@ class Hub:
 
         return self.apply_hub_helm_chart_fixes(generated_config, secret_key)
 
-    def unset_env_var(self, env_var, old_env_var_value):
-        """
-        If the old environment variable's value exists, replace the current one with the old one
-        If the old environment variable's value does not exist, delete the current one
-        """
-
-        if env_var in os.environ:
-            del os.environ[env_var]
-        if old_env_var_value is not None:
-            os.environ[env_var] = old_env_var_value
-
     def apply_hub_helm_chart_fixes(self, generated_config, secret_key):
         """
         Modify generated_config based on what hub helm chart we're using.
