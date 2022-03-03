@@ -204,5 +204,7 @@ def deploy(cluster_name, hub_name, skip_hub_health_test, config_path):
             hub.deploy(k, SECRET_KEY, skip_hub_health_test)
         else:
             for i, hub in enumerate(hubs):
-                print_colour(f"{i+1} / {len(hubs)}: Deploying hub {hub.spec['name']}...")
+                print_colour(
+                    f"{i+1} / {len(hubs)}: Deploying hub {hub.spec['name']}..."
+                )
                 hub.deploy(k, SECRET_KEY, skip_hub_health_test)
