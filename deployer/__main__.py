@@ -11,15 +11,12 @@ from ruamel.yaml import YAML
 
 from auth import KeyProvider
 from hub import Cluster
+from utils import print_colour
+from file_acquisition import find_absolute_path_to_cluster_file, get_decrypted_file
 from config_validation import (
     validate_cluster_config,
     validate_hub_config,
     validate_support_config,
-)
-from utils import (
-    get_decrypted_file,
-    print_colour,
-    find_absolute_path_to_cluster_file,
 )
 
 # Without `pure=True`, I get an exception about str / byte issues

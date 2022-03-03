@@ -13,12 +13,9 @@ import pytest
 from ruamel.yaml import YAML
 
 from auth import KeyProvider
+from utils import print_colour
 from config_validation import prepare_helm_charts_dependencies_and_schemas
-from utils import (
-    get_decrypted_file,
-    get_decrypted_files,
-    print_colour,
-)
+from file_acquisition import get_decrypted_file, get_decrypted_files
 
 # Without `pure=True`, I get an exception about str / byte issues
 yaml = YAML(typ="safe", pure=True)

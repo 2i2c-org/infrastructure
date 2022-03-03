@@ -1,3 +1,7 @@
+"""
+Functions related to validating configuration files such as helm chart values and our
+cluster.yaml files
+"""
 import functools
 import os
 import sys
@@ -9,7 +13,8 @@ from pathlib import Path
 from ruamel.yaml import YAML
 
 from hub import Cluster
-from utils import print_colour, find_absolute_path_to_cluster_file
+from utils import print_colour
+from file_acquisition import find_absolute_path_to_cluster_file
 
 yaml = YAML(typ="safe", pure=True)
 helm_charts_dir = Path(__file__).parent.parent.joinpath("helm-charts")
