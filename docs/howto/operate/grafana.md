@@ -23,22 +23,33 @@ This guide will walk through the steps required to setup a suite of Grafana dash
 The `support` chart is a helm chart maintained by the 2i2c Engineers that consists of common tools used to support JupyterHub deployments in the cloud.
 These tools are [`ingress-nginx`](https://kubernetes.github.io/ingress-nginx/), for controlling ingresses and load balancing; [`cert-manager`](https://cert-manager.io/docs/), for automatically provisioning TLS certificates from [Let's Encrypt](https://letsencrypt.org/); [Prometheus](https://prometheus.io/), for scraping and storing metrics from the cluster and hub; and [Grafana](https://grafana.com/), for visualising the metrics retreived by Prometheus.
 
-#### Edit your `cluster.yaml` file
+#### Create a `support.values.yaml` file in your chosen cluster folder
 
-Add the following config as a top-level key to your `cluster.yaml` file under `/config/clusters/<cluster_name>` in `infrastructure`.
+In the `infrastructure` repo, the full filepath should be: `config/clusters/<cluster_name>/support.values.yaml`.
+
+Add the following helm chart values to your `support.values.yaml` file.
 `GRAFANA_URL` should follow the pattern `grafana.<cluster_name>.2i2c.cloud`.
 
 ```yaml
-support:
-  config:
-    grafana:
-      ingress:
+grafana:
+  ingress:
+    hosts:
+      - <grafana-domain>
+    tls:
+      - secretName: grafana-tls
         hosts:
           - <grafana-domain>
-        tls:
-          - secretName: grafana-tls
-            hosts:
-              - <grafana-domain>
+```
+
+#### Edit your `cluster.yaml` file
+
+Add the following config as a top-level key to your `cluster.yaml` file.
+Note this filepath is _relative_ to the location of your `cluster.yaml` file.
+
+```yaml
+support:
+  helm_chart_values_files:
+    - support.values.yaml
 ```
 
 #### Deploy the `support` chart via the `deployer`
