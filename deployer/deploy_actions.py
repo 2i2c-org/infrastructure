@@ -200,9 +200,9 @@ def deploy(cluster_name, hub_name, skip_hub_health_test, config_path):
         hubs = cluster.hubs
         if hub_name:
             hub = next((hub for hub in hubs if hub.spec["name"] == hub_name), None)
+            print_colour(f"Deploying hub {hub.spec['name']}...")
             hub.deploy(k, SECRET_KEY, skip_hub_health_test)
         else:
-            hubN = len(hubs)
             for i, hub in enumerate(hubs):
-                print_colour(f"{i+1} / {hubN}: Deploying hub {hub.spec['name']}...")
+                print_colour(f"{i+1} / {len(hubs)}: Deploying hub {hub.spec['name']}...")
                 hub.deploy(k, SECRET_KEY, skip_hub_health_test)
