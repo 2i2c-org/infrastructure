@@ -28,7 +28,7 @@ These tools are [`ingress-nginx`](https://kubernetes.github.io/ingress-nginx/), 
 In the `infrastructure` repo, the full filepath should be: `config/clusters/<cluster_name>/support.values.yaml`.
 
 Add the following helm chart values to your `support.values.yaml` file.
-`GRAFANA_URL` should follow the pattern `grafana.<cluster_name>.2i2c.cloud`.
+`<grafana-domain>` should follow the pattern `grafana.<cluster_name>.2i2c.cloud`.
 
 ```yaml
 grafana:
