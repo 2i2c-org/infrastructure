@@ -1,5 +1,9 @@
 # Our CI/CD system
 
+## Overview
+
+We use [GitHub Actions](https://docs.github.com/en/actions) as our CI/CD vendor and all our workflows are defined as YAML files in the [`.github/workflows` folder](https://github.com/2i2c-org/infrastructure/tree/master/.github/workflows) in the `infrastructure` repo.
+
 ## Automatic hub deployment
 
 The best place to learn about the latest state of our *automatic* hub deployment
