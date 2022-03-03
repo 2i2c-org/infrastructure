@@ -10,7 +10,7 @@ from pathlib import Path
 from ruamel.yaml import YAML
 
 from auth import KeyProvider
-from hub import Cluster
+from cluster import Cluster
 from utils import print_colour
 from file_acquisition import find_absolute_path_to_cluster_file, get_decrypted_file
 from config_validation import (

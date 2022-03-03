@@ -12,7 +12,7 @@ import jsonschema
 from pathlib import Path
 from ruamel.yaml import YAML
 
-from hub import Cluster
+from cluster import Cluster
 from utils import print_colour
 from file_acquisition import find_absolute_path_to_cluster_file
 
