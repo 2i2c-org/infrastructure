@@ -14,7 +14,6 @@ from ruamel.yaml import YAML
 
 from auth import KeyProvider
 from utils import print_colour
-from config_validation import prepare_helm_charts_dependencies_and_schemas
 from file_acquisition import get_decrypted_file, get_decrypted_files
 
 # Without `pure=True`, I get an exception about str / byte issues
@@ -197,8 +196,6 @@ class Hub:
         """
         Deploy this hub
         """
-        prepare_helm_charts_dependencies_and_schemas()
-
         # Support overriding domain configuration in the loaded cluster.yaml via
         # a cluster.yaml specified enc-<something>.secret.yaml file that only
         # includes the domain configuration of a typical cluster.yaml file.
