@@ -15,6 +15,14 @@ notebook_nodes = {
     max : 20,
     machine_type : "n1-highmem-4",
     labels: { }
+  },
+  "paleo": {
+    min: 0,
+    max: 20,
+    machine_type: "n1-highmem-4",
+    labels: {
+      "2i2c.org/community": "paleo"
+    }
   }
 }
 
