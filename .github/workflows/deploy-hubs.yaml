@@ -56,7 +56,7 @@ jobs:
 
       - name: Check if any of our base files have changed
         uses: dorny/paths-filter@v2
-        id: base_files
+        id: cluster_common_files
         with:
           filters: |
             files:
@@ -69,43 +69,42 @@ jobs:
 
       - name: Check which cluster directory has changes (if any)
         uses: dorny/paths-filter@v2
-        id: config_files
+        id: cluster_specific_files
         with:
           filters: |
-            hub_config:
+            changes:
               - "config/clusters/${{ matrix.cluster_name }}/**"
 
+      # To continue this cluster specific job, there should have been
+      # changes to the cluster common files or cluster specific files.
+      - name: Decide if the job should continue
+        id: decision
+        run: |
+          echo ::set-output name=continue-job::${{ steps.cluster_common_files.outputs.files == 'true' || steps.cluster_specific_files.outputs.changes == 'true' }}
+
       - name: Authenticate to Google Cloud
+        if: steps.decision.outputs.continue-job == 'true'
         uses: google-github-actions/auth@v0.6.0
         with:
           project_id: two-eye-two-see
           credentials_json: ${{ secrets.GCP_KMS_DECRYPTOR_KEY }}
 
       - name: Setup gcloud
-        if: |
-          (steps.base_files.outputs.files == 'true') ||
-          (steps.config_files.outputs.hub_config == 'true')
+        if: steps.decision.outputs.continue-job == 'true'
         uses: google-github-actions/setup-gcloud@v0.5.1
         with:
           version: "290.0.1"
 
       - name: Setup helm
-        if: |
-          (steps.base_files.outputs.files == 'true') ||
-          (steps.config_files.outputs.hub_config == 'true')
+        if: steps.decision.outputs.continue-job == 'true'
         uses: azure/setup-helm@v2.0
 
       - name: Setup sops
-        if: |
-          (steps.base_files.outputs.files == 'true') ||
-          (steps.config_files.outputs.hub_config == 'true')
+        if: steps.decision.outputs.continue-job == 'true'
         uses: mdgreenwald/mozilla-sops-action@v1
 
       - name: Setup kops
-        if: |
-          ((steps.base_files.outputs.files == 'true') ||
-          (steps.config_files.outputs.hub_config == 'true')) &&
-          (matrix.provider == 'aws')
+        if: steps.decision.outputs.continue-job == 'true' && matrix.provider == 'aws'
         run: |
           curl -Lo /tmp/kops https://github.com/kubernetes/kops/releases/download/$KOPS_VERSION/kops-linux-amd64
           chmod +x /tmp/kops
@@ -114,9 +113,7 @@ jobs:
           KOPS_VERSION: "v1.21.1"
 
       - name: Deploy ${{ matrix.cluster_name }}
-        if: |
-          (steps.base_files.outputs.files == 'true') ||
-          (steps.config_files.outputs.hub_config == 'true')
+        if: steps.decision.outputs.continue-job == 'true'
         uses: ./.github/actions/deploy
         with:
           cluster: ${{ matrix.cluster_name }}
