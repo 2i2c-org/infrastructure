@@ -78,7 +78,7 @@ jobs:
       - name: Decide if the job should continue
         id: decision
         run: |
-          echo ::set-output name=continue-job::${{ (steps.cluster_common_files.outputs.files == 'true' || steps.cluster_specific_files.outputs.changes == 'true') }}
+          echo ::set-output name=continue-job::${{ steps.cluster_common_files.outputs.files == 'true' || steps.cluster_specific_files.outputs.changes == 'true' }}
 
       - name: Authenticate to Google Cloud
         if: steps.decision.outputs.continue-job == 'true'
