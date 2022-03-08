@@ -91,9 +91,6 @@ jobs:
         uses: google-github-actions/setup-gcloud@v0.5.1
         with:
           version: "290.0.1"
-          # This is used for KMS only
-          project_id: two-eye-two-see
-          export_default_credentials: true
 
       - name: Setup helm
         if: steps.decision.outputs.continue-job == 'true'
