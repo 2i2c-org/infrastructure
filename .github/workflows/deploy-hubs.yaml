@@ -73,8 +73,7 @@ jobs:
             changes:
               - "config/clusters/${{ matrix.cluster_name }}/**"
 
-      # To continue this cluster specific job we must either have manually
-      # invoked this workflow to run for all clusters, or there should have been
+      # To continue this cluster specific job, there should have been
       # changes to the cluster common files or cluster specific files.
       - name: Decide if the job should continue
         id: decision
