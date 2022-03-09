@@ -7,6 +7,12 @@ resource "google_filestore_instance" "homedirs" {
 
   count = var.enable_filestore ? 1 : 0
 
+  lifecycle {
+    # Additional safeguard against deleting the filestore
+    # as this causes irreversible data loss!
+    prevent_destroy = true
+  }
+
   file_shares {
     capacity_gb = var.filestore_capacity_gb
     name        = "homes"

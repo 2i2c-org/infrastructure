@@ -45,6 +45,12 @@ resource "aws_efs_file_system" "homedirs" {
   tags = {
     Name = "hub-homedirs"
   }
+
+  lifecycle {
+    # Additional safeguard against deleting the EFS
+    # as this causes irreversible data loss!
+    prevent_destroy = true
+  }
 }
 
 resource "aws_efs_mount_target" "homedirs" {
