@@ -45,6 +45,8 @@ jobs:
             provider: gcp
           - cluster_name: pangeo-hubs
             provider: gcp
+          - cluster_name: leap
+            provider: gcp
           - cluster_name: utoronto
             provider: kubeconfig
           - cluster_name: azure.carbonplan

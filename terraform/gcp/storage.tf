@@ -1,8 +1,8 @@
 resource "google_filestore_instance" "homedirs" {
 
-  name = "${var.prefix}-homedirs"
-  zone = var.zone
-  tier = var.filestore_tier
+  name    = "${var.prefix}-homedirs"
+  zone    = var.zone
+  tier    = var.filestore_tier
   project = var.project_id
 
   count = var.enable_filestore ? 1 : 0
@@ -19,7 +19,7 @@ resource "google_filestore_instance" "homedirs" {
   }
 
   networks {
-    network    = var.enable_private_cluster ? data.google_compute_network.default_network.name : null
+    network = google_container_cluster.cluster.network
     modes   = ["MODE_IPV4"]
   }
 }
