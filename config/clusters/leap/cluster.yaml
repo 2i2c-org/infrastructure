@@ -1,4 +1,4 @@
-name: pangeo-hubs
+name: leap
 provider: gcp
 gcp:
   key: enc-deployer-credentials.secret.json
