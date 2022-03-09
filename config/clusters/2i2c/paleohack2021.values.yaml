@@ -25,6 +25,11 @@ jupyterhub:
         funded_by:
           name: "NSF Paleo Perspectives on Climate Change program"
           url: "https://www.nsf.gov/funding/pgm_summ.jsp?pims_id=5750"
+  prePuller:
+    continuous:
+      enabled: true
+    hook:
+      enabled: true
   singleuser:
     memory:
       guarantee: 256M
@@ -34,7 +39,7 @@ jupyterhub:
       limit: 2
     image:
       name: quay.io/2i2c/paleohack-2021
-      tag: 7534858b1098
+      tag: 9d557294938e
     nodeSelector:
       2i2c.org/community: paleo
   hub:
