@@ -62,6 +62,13 @@ resource "azurerm_kubernetes_cluster" "jupyterhub" {
   kubernetes_version  = var.kubernetes_version
   dns_prefix          = "k8s"
 
+  lifecycle {
+    # An additional safeguard against accidentally deleting the cluster.
+    # The databases for the hubs are held in PVCs managed by the cluster,
+    # so cluster deletion will cause data loss!
+    prevent_destroy = true
+  }
+
   linux_profile {
     admin_username = "hub-admin"
     ssh_key {

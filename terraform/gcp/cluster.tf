@@ -17,6 +17,11 @@ resource "google_container_cluster" "cluster" {
     ignore_changes = [
       node_config
     ]
+
+    # An additional safeguard against accidentally deleting the cluster.
+    # The databases for the hubs are held in PVCs managed by the cluster,
+    # so cluster deletion will cause data loss!
+    prevent_destroy = true
   }
 
   // For private clusters, pass the name of the network and subnetwork created

@@ -23,6 +23,11 @@ resource "azurerm_storage_share" "homes" {
   storage_account_name = azurerm_storage_account.homes.name
   quota                = 100
   enabled_protocol     = var.storage_protocol
+  lifecycle {
+    # Additional safeguard against deleting the share
+    # as this causes irreversible data loss!
+    prevent_destroy = true
+  }
 }
 
 output "azure_fileshare_url" {
