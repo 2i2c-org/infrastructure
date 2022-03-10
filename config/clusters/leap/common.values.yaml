@@ -57,7 +57,7 @@ basehub:
     singleuser:
       image:
         name: pangeo/pangeo-notebook
-        tag: bcfacc5
+        tag: 2022.02.04
       profileList:
         # The mem-guarantees are here so k8s doesn't schedule other pods
         # on these nodes. They need to be just under total allocatable
