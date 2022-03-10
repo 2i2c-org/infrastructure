@@ -39,6 +39,7 @@ basehub:
             name: LEAP
             url: https://leap-stc.github.io
     hub:
+      allowNamedServers: true
       config:
         Authenticator:
           # This hub uses GitHub Teams auth and so we don't set
