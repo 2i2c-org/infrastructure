@@ -184,9 +184,13 @@ def deploy(cluster_name, hub_name, skip_hub_health_test, config_path):
 
     def _get_client_provider(hub_config):
         if hub_config["auth0"].get("enabled", True):
-            return Auth0ClientProvider(auth0["client_id"], auth0["client_secret"], auth0["domain"])
+            return Auth0ClientProvider(
+                auth0["client_id"], auth0["client_secret"], auth0["domain"]
+            )
 
-        return CILogonClientProvider(cilogon_admin["client_id"], cilogon_admin["client_secret"])
+        return CILogonClientProvider(
+            cilogon_admin["client_id"], cilogon_admin["client_secret"]
+        )
 
     # Each hub needs a unique proxy.secretToken. However, we don't want
     # to manually generate & save it. We also don't want it to change with

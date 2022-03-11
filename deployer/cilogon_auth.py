@@ -10,6 +10,7 @@ from file_acquisition import get_decrypted_file
 
 yaml = YAML(typ="safe")
 
+
 class CILogonAdmin:
     timeout = 5.0
 
@@ -18,13 +19,14 @@ class CILogonAdmin:
         self.admin_secret = admin_secret
 
         token_string = f"{self.admin_id}:{self.admin_secret}"
-        bearer_token = base64.urlsafe_b64encode(token_string.encode('utf-8')).decode('ascii')
+        bearer_token = base64.urlsafe_b64encode(token_string.encode("utf-8")).decode(
+            "ascii"
+        )
 
         self.base_headers = {
             "Authorization": f"Bearer {bearer_token}",
             "Content-Type": "application/json; charset=UTF-8",
         }
-    
 
     def _url(self, id=None):
         url = "https://cilogon.org/oauth2/oidc-cm"
@@ -34,23 +36,22 @@ class CILogonAdmin:
 
         return str(URL(url).with_query({"client_id": id}))
 
-    
     def _post(self, url, data=None):
         headers = self.base_headers.copy()
 
         return requests.post(url, json=data, headers=headers, timeout=self.timeout)
-    
+
     def _get(self, url, params=None):
         # todo: make this resilient, use of an exponentiall backoff
         headers = self.base_headers.copy()
 
         return requests.get(url, params=params, headers=headers, timeout=self.timeout)
-    
+
     def _put(self, url, data=None):
         headers = self.base_headers.copy()
 
         return requests.put(url, json=data, headers=headers, timeout=self.timeout)
-    
+
     def create(self, body):
         """Creates a new client
 
@@ -65,7 +66,7 @@ class CILogonAdmin:
             return
 
         return response.json()
-    
+
     def get(self, id):
         """Retrieves a client by its id.
 
@@ -80,10 +81,10 @@ class CILogonAdmin:
             return
 
         return response.json()
-    
+
     def update(self, id, body):
         """Modifies a client by its id.
-        
+
         The client_secret attribute cannot be updated.
         Note that any values missing will be deleted from the information for the server!
         Args:
@@ -123,7 +124,7 @@ class CILogonClientProvider(ClientProvider):
         }
 
         return self.admin_client.create(client_details)
-    
+
     def update_client(self, client_id, name, callback_url):
         client_details = {
             "client_name": name,
@@ -134,16 +135,20 @@ class CILogonClientProvider(ClientProvider):
 
         return self.admin_client.update(client_id, client_details)
 
-  
     def ensure_client(
-        self, name, callback_url, logout_url=None, connection_name=None, connection_config=None
+        self,
+        name,
+        callback_url,
+        logout_url=None,
+        connection_name=None,
+        connection_config=None,
     ):
         client_id = None
         try:
             with get_decrypted_file(connection_config) as decrypted_path:
                 with open(decrypted_path) as f:
                     cilogon_clients = yaml.load(f)
-            cilogon_client= cilogon_clients.get(name, None)
+            cilogon_client = cilogon_clients.get(name, None)
             client_id = cilogon_client["client_id"]
         except FileNotFoundError:
             cilogon_clients = {}
@@ -154,7 +159,7 @@ class CILogonClientProvider(ClientProvider):
                 client = self.create_client(name, callback_url)
                 cilogon_clients[name] = {
                     "client_id": client["client_id"],
-                    "client_secret": client["client_id"]
+                    "client_secret": client["client_id"],
                 }
                 # persist the client id
                 # todo: use a semaphore when we'll deploy hubs in parallel
@@ -182,7 +187,7 @@ class CILogonClientProvider(ClientProvider):
             "scope": client["scope"],
             "oauth_callback_url": callback_url,
             "logout_redirect_url": "https://cilogon.org/logout/",
-            "allowed_idps": [connection_name]
+            "allowed_idps": [connection_name],
         }
 
         return auth

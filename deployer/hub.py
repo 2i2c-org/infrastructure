@@ -122,7 +122,9 @@ class Hub:
         }
 
         # Allow explicilty ignoring auth0/cilogon setup
-        if self.spec["auth0"].get("enabled", False) and self.spec["cilogon"].get("enabled", False):
+        if self.spec["auth0"].get("enabled", False) and self.spec["cilogon"].get(
+            "enabled", False
+        ):
             return self.apply_hub_helm_chart_fixes(generated_config, secret_key)
 
         # Send users back to this URL after they authenticate
@@ -136,13 +138,15 @@ class Hub:
         if self.spec["auth0"].get("enabled", True):
             connection_name = self.spec["auth0"]["connection"]
             connection_config = self.spec["auth0"].get(
-                                    self.spec["auth0"]["connection"], {}
-                                )
+                self.spec["auth0"]["connection"], {}
+            )
             authenticator_class_entrypoint = "auth0"
             authenticator_class_name = "Auth0OAuthenticator"
         elif self.spec["cilogon"].get("enabled", True):
             connection_name = self.spec["cilogon"]["allowed_idps"]
-            connection_config = self.cluster.config_path.joinpath("enc-cilogon-clients.secret.yaml")
+            connection_config = self.cluster.config_path.joinpath(
+                "enc-cilogon-clients.secret.yaml"
+            )
             authenticator_class_entrypoint = "cilogon"
             authenticator_class_name = "CILogonOAuthenticator"
 
