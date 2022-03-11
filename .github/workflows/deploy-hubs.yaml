@@ -98,6 +98,8 @@ jobs:
           (steps.base_files.outputs.files == 'true') ||
           (steps.config_files.outputs.hub_config == 'true')
         uses: mdgreenwald/mozilla-sops-action@v1
+        with:
+          version: v3.7.2
 
       - name: Setup kops
         if: |
