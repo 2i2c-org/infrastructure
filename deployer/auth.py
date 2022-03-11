@@ -4,6 +4,8 @@ from auth0.v3.authentication import GetToken
 from auth0.v3.management import Auth0
 from yarl import URL
 
+from auth_client_provider import ClientProvider
+
 # What key in the authenticated user's profile to use as hub username
 # This shouldn't be changeable by the user!
 USERNAME_KEYS = {
@@ -14,36 +16,36 @@ USERNAME_KEYS = {
 }
 
 
-class KeyProvider:
-    def __init__(self, domain, client_id, client_secret):
+class Auth0ClientProvider(ClientProvider):
+    def __init__(self, client_id, client_secret, domain):
         self.client_id = client_id
         self.client_secret = client_secret
         self.domain = domain
 
     @property
-    def auth0(self):
+    def admin_client(self):
         """
         Return an authenticated Auth0 instance
         """
-        if not hasattr(self, "_auth0"):
+        if not hasattr(self, "_admin_client"):
             gt = GetToken(self.domain)
             creds = gt.client_credentials(
                 self.client_id, self.client_secret, f"https://{self.domain}/api/v2/"
             )
-            self._auth0 = Auth0(self.domain, creds["access_token"])
-        return self._auth0
+            self._admin_client = Auth0(self.domain, creds["access_token"])
+        return self._admin_client
 
-    def get_clients(self):
+    def _get_clients(self):
         return {
             client["name"]: client
             # Our account is limited to 100 clients, and we want it all in one go
-            for client in self.auth0.clients.all(per_page=100)
+            for client in self.admin_client.clients.all(per_page=100)
         }
 
-    def get_connections(self):
+    def _get_connections(self):
         return {
             connection["name"]: connection
-            for connection in self.auth0.connections.all()
+            for connection in self.admin_client.connections.all()
         }
 
     def create_client(self, name, callback_url, logout_url):
@@ -53,7 +55,7 @@ class KeyProvider:
             "callbacks": [callback_url],
             "allowed_logout_urls": [logout_url],
         }
-        created_client = self.auth0.clients.create(client)
+        created_client = self.admin_client.clients.create(client)
         return created_client
 
     def _ensure_client_callback(self, client, callback_url):
@@ -61,7 +63,7 @@ class KeyProvider:
         Ensure client has correct callback URL
         """
         if "callbacks" not in client or client["callbacks"] != [callback_url]:
-            self.auth0.clients.update(
+            self.admin_client.clients.update(
                 client["client_id"],
                 {
                     # Overwrite any other callback URL specified
@@ -79,7 +81,7 @@ class KeyProvider:
         if "allowed_logout_urls" not in client or client["allowed_logout_urls"] != [
             logout_url
         ]:
-            self.auth0.clients.update(
+            self.admin_client.clients.update(
                 client["client_id"],
                 {
                     # Overwrite any other logout URL - users should only land on
@@ -91,7 +93,7 @@ class KeyProvider:
     def ensure_client(
         self, name, callback_url, logout_url, connection_name, connection_config
     ):
-        current_clients = self.get_clients()
+        current_clients = self._get_clients()
         if name not in current_clients:
             # Create the client, all good
             client = self.create_client(name, callback_url, logout_url)
@@ -100,7 +102,7 @@ class KeyProvider:
             self._ensure_client_callback(client, callback_url)
             self._ensure_client_logout_url(client, logout_url)
 
-        current_connections = self.get_connections()
+        current_connections = self._get_connections()
 
         if connection_name == "password":
             # Users should not be shared between hubs - each hub
@@ -111,7 +113,7 @@ class KeyProvider:
 
             if db_connection_name not in current_connections:
                 # connection doesn't exist yet, create it
-                connection = self.auth0.connections.create(
+                connection = self.admin_client.connections.create(
                     {
                         "name": db_connection_name,
                         "display_name": name,
@@ -138,13 +140,13 @@ class KeyProvider:
                     needs_update = True
 
             if needs_update:
-                self.auth0.connections.update(
+                self.admin_client.connections.update(
                     connection["id"], {"enabled_clients": enabled_clients}
                 )
 
         return client
 
-    def get_client_creds(self, client, connection_name):
+    def get_client_creds(self, client, connection_name, callback_url=None):
         """
         Return z2jh config for auth0 authentication for this JupyterHub
         """
