@@ -141,6 +141,8 @@ properties:
                     type: array
                     items:
                       type: string
+                  interface_selector:
+                    type: boolean
                   org:
                     type: object
                     additionalProperties: false
