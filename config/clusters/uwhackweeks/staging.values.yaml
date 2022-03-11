@@ -20,7 +20,7 @@ basehub:
         templateVars:
           org:
             name: ICESat Hackweek
-            logo_url: https://icesat-2hackweek.github.io/assets/images/ICESat2.png
+            logo_url: https://github.com/ICESAT-2HackWeek/icesat-2hackweek.github.io/raw/2022.03.01/assets/images/ICESat2.png
             url: https://icesat-2hackweek.github.io
           designed_by:
             name: 2i2c
