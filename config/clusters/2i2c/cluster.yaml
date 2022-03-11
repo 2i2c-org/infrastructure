@@ -18,8 +18,7 @@ hubs:
     auth0:
       # connection update? Also ensure the basehub Helm chart is provided a
       # matching value for jupyterhub.custom.2i2c.add_staff_user_ids_of_type!
-      # connection: google-oauth2
-      enabled: false
+      connection: google-oauth2
     helm_chart_values_files:
       # The order in which you list files here is the order the will be passed
       # to the helm upgrade command in, and that has meaning. Please check
@@ -32,7 +31,11 @@ hubs:
     auth0:
       # connection update? Also ensure the basehub Helm chart is provided a
       # matching value for jupyterhub.custom.2i2c.add_staff_user_ids_of_type!
-      connection: google-oauth2
+      enabled: false
+      # connection: google-oauth2
+    cilogon:
+      enabled: true
+      allowed_idps: "2i2c.org"
     helm_chart_values_files:
       # The order in which you list files here is the order the will be passed
       # to the helm upgrade command in, and that has meaning. Please check
