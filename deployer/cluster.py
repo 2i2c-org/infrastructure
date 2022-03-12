@@ -223,7 +223,7 @@ class Cluster:
                     os.environ["KUBECONFIG"] = orig_kubeconfig
                 if orig_access_key_id is not None:
                     os.environ["AWS_ACCESS_KEY_ID"] = orig_access_key_id
-                if orig_kubeconfig is not None:
+                if orig_secret_access_key is not None:
                     os.environ["AWS_SECRET_ACCESS_KEY"] = orig_secret_access_key
 
     def auth_azure(self):
