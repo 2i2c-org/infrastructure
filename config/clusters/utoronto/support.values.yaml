@@ -1,5 +1,16 @@
+prometheusAuth:
+  enabled: true
+
 prometheus:
   server:
+    ingress:
+      enabled: true
+      hosts:
+        - prometheus.utoronto.2i2c.cloud
+      tls:
+        - secretName: prometheus-tls
+          hosts:
+            - prometheus.utoronto.2i2c.cloud
     resources:
       requests:
         cpu: 0.5

@@ -8,6 +8,7 @@ aws:
 support:
   helm_chart_values_files:
     - support.values.yaml
+    - enc-support.secret.yaml
 hubs:
   - name: staging
     display_name: "ICESat Hackweek (staging)"

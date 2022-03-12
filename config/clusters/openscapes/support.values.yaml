@@ -1,5 +1,17 @@
+
+prometheusAuth:
+  enabled: true
+
 prometheus:
   server:
+    ingress:
+      enabled: true
+      hosts:
+        - prometheus.openscapes.2i2c.cloud
+      tls:
+        - secretName: prometheus-tls
+          hosts:
+            - prometheus.openscapes.2i2c.cloud
     resources:
       requests:
         cpu: 1

@@ -9,6 +9,7 @@ gcp:
 support:
   helm_chart_values_files:
     - support.values.yaml
+    - enc-support.secret.yaml
 hubs:
   - name: spelman
     display_name: "Spelman College"
