@@ -1,4 +1,3 @@
-
 prometheusAuth:
   enabled: true
 

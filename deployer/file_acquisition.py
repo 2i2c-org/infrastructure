@@ -157,6 +157,4 @@ def get_decrypted_files(files):
     files should be all absolute paths
     """
     with ExitStack() as stack:
-        yield [
-            stack.enter_context(get_decrypted_file(f)) for f in files
-        ]
+        yield [stack.enter_context(get_decrypted_file(f)) for f in files]

@@ -114,10 +114,11 @@ class Cluster:
         support_dir = (Path(__file__).parent.parent).joinpath("helm-charts", "support")
         # subprocess.check_call(["helm", "dep", "up", support_dir])
 
-		# contains both encrypted and unencrypted values files
-        values_file_paths = [
-            support_dir.joinpath("enc-support.secret.yaml")
-        ] + [self.config_path.joinpath(p) for p in self.support['helm_chart_values_files']]
+        # contains both encrypted and unencrypted values files
+        values_file_paths = [support_dir.joinpath("enc-support.secret.yaml")] + [
+            self.config_path.joinpath(p)
+            for p in self.support["helm_chart_values_files"]
+        ]
 
         with get_decrypted_files(values_file_paths) as values_files:
             cmd = [
