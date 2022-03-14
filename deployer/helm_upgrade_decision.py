@@ -160,7 +160,7 @@ def generate_hub_matrix_jobs(
     for cluster_filepath in cluster_filepaths:
         # Read in the cluster.yaml file
         with open(cluster_filepath.joinpath("cluster.yaml")) as f:
-            cluster_config = yaml.safe_load(f)
+            cluster_config = yaml.load(f)
 
         if not upgrade_all_hubs:
             # Check if this cluster file has been modified. If so, set
@@ -291,7 +291,7 @@ def generate_support_matrix_jobs(modified_dirpaths, upgrade_all_clusters=False):
     for cluster_filepath in modified_dirpaths:
         # Read in the cluster.yaml file
         with open(cluster_filepath.joinpath("cluster.yaml")) as f:
-            cluster_config = yaml.safe_load(f)
+            cluster_config = yaml.load(f)
 
         # Generate a dictionary-style job entry for this cluster
         cluster_info = {
