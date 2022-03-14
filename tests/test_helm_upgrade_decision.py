@@ -22,9 +22,7 @@ def test_generate_lists_of_filepaths_and_filenames():
 
     # Expected returns
     expected_cluster_filepaths = [Path("test-clusters/cluster1")]
-    expected_cluster_files = {
-        os.path.join("test-clusters", "cluster1", "cluster.yaml")
-    }
+    expected_cluster_files = {os.path.join("test-clusters", "cluster1", "cluster.yaml")}
     expected_values_files = {
         os.path.join("test-clusters", "cluster1", "hub1.values.yaml"),
         os.path.join("test-clusters", "cluster1", "support.values.yaml"),
@@ -306,9 +304,7 @@ def test_discover_modified_common_files_support_helm_chart():
 
 
 def test_evaluate_condition_for_upgrading_support_chart():
-    input_cluster_files = {
-        os.path.join("test-clusters", "cluster1", "cluster.yaml")
-    }
+    input_cluster_files = {os.path.join("test-clusters", "cluster1", "cluster.yaml")}
     input_support_files = {
         os.path.join("test-clusters", "cluster2", "support.values.yaml")
     }
