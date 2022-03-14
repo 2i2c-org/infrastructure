@@ -15,6 +15,10 @@ from ruamel.yaml.scanner import ScannerError
 
 yaml = YAML(typ="safe", pure=True)
 
+# Determine if we are running a test or not. We set this env var to true in the
+# pyproject.toml file so it is set when the package is tested using pytest.
+test_env = os.getenv("RUN_ENV", False)
+
 
 def _assert_file_exists(filepath):
     """Assert a filepath exists, raise an error if not. This function is to be used for
@@ -44,7 +48,22 @@ def find_absolute_path_to_cluster_file(cluster_name: str):
     Returns:
         Path object: The absolute path to the cluster.yaml file for the named cluster
     """
-    filepaths = list((Path(os.getcwd())).glob(f"**/{cluster_name}/cluster.yaml"))
+    if test_env:
+        # We are running a test via pytest. We only want to focus on the cluster
+        # folders nested under the `tests/` folder.
+        filepaths = [
+            filepath
+            for filepath in Path(os.getcwd()).glob(f"**/{cluster_name}/cluster.yaml")
+            if "tests/" in str(filepath)
+        ]
+    else:
+        # We are NOT running a test via pytest. We want to explicitly ignore the
+        # cluster folders nested under the `tests/` folder.
+        filepaths = [
+            filepath
+            for filepath in Path(os.getcwd()).glob(f"**/{cluster_name}/cluster.yaml")
+            if "tests/" not in str(filepath)
+        ]
 
     if len(filepaths) > 1:
         raise FileExistsError(
