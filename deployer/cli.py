@@ -8,12 +8,20 @@ from deploy_actions import (
     deploy_support,
     deploy_grafana_dashboards,
     use_cluster_credentials,
+    generate_helm_upgrade_jobs,
 )
 from config_validation import (
     validate_cluster_config,
     validate_support_config,
     validate_hub_config,
 )
+
+
+def _convert_string_to_list(full_str: str) -> list:
+    """
+    Take a SPACE-DELIMITED string and split it into a list
+    """
+    return full_str.split(" ")
 
 
 def main():
@@ -92,6 +100,24 @@ def main():
         parents=[base_parser],
         help="Modify the current kubeconfig with the deployer's access credentials for the named cluster",
     )
+
+    # generate-helm-upgrade-jobs subcommand
+    # This subparser does not depend on the base parser.
+    generate_helm_upgrade_jobs_parser = subparsers.add_parser(
+        "generate-helm-upgrade-jobs",
+        help="Generate a set of matrix jobs to perform a helm upgrade in parallel across clusters and hubs",
+    )
+    generate_helm_upgrade_jobs_parser.add_argument(
+        "filepaths",
+        nargs="?",
+        type=_convert_string_to_list,
+        help="A singular or space-delimited list of added or modified filepaths in the repo",
+    )
+    generate_helm_upgrade_jobs_parser.add_argument(
+        "--pretty-print",
+        action="store_true",
+        help="Pretty print the generated matrix jobs as tables using rich",
+    )
     # === End section ===#
 
     args = argparser.parse_args()
@@ -113,3 +139,5 @@ def main():
         deploy_grafana_dashboards(args.cluster_name)
     elif args.action == "use-cluster-credentials":
         use_cluster_credentials(args.cluster_name)
+    elif args.action == "generate-helm-upgrade-jobs":
+        generate_helm_upgrade_jobs(args.filepaths, pretty_print=args.pretty_print)
