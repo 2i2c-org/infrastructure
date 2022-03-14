@@ -33,7 +33,7 @@ prometheus:
       annotations:
         # Annotations required to enable basic authentication for any ingress
         # into prometheus server from the outside world - this secret is
-        # created via the prometheus-htpasswd.yaml file, controlled by config
+        # created via templates/prometheus-ingress-auth.yaml file, controlled by config
         # under prometheusIngressBasicAuth. Ingress is not enabled by default,
         # so whichever clusters we want this we should enable it by default.
         nginx.ingress.kubernetes.io/auth-type: basic
