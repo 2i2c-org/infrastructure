@@ -1,6 +1,6 @@
 # Manual node administration
 
-The current pilot Kubernetes clusters we run, have two types of group nodes ([node pools](https://cloud.google.com/kubernetes-engine/docs/concepts/node-pools)), configured to run on: `core` and `user` pools.
+The current Kubernetes clusters we run have two types of group nodes ([node pools](https://cloud.google.com/kubernetes-engine/docs/concepts/node-pools)), configured to run on: `core` and `user` pools.
 
 The [node selector](https://kubernetes.io/docs/concepts/scheduling-eviction/assign-pod-node/#nodeselector) configuration will ensure the following assignment of pods to nodes:
 

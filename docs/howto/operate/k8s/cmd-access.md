@@ -1,6 +1,6 @@
 # Gain `kubectl` & `helm` access to a hub
 
-Each of the hubs in the 2i2c Pilot runs on Kubernetes.
+All of the hubs that 2i2c operates run on Kubernetes.
 To access the Kubernetes objects (in order to inspect them or make changes), use
 the `kubectl` command line tool.
 

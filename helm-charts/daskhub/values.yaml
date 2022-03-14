@@ -40,7 +40,7 @@ basehub:
         # - K8s expansion:     https://kubernetes.io/docs/tasks/inject-data-application/define-interdependent-environment-variables/
         # - KubeSpawner issue: https://github.com/jupyterhub/kubespawner/issues/491
         # - Dask config:       https://docs.dask.org/en/latest/configuration.html
-        # - Exploration issue: https://github.com/2i2c-org/pilot-hubs/issues/442
+        # - Exploration issue: https://github.com/2i2c-org/infrastructure/issues/442
         #
         # DASK_GATEWAY__CLUSTER__OPTIONS__IMAGE makes the default worker image
         # match the singleuser image.

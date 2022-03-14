@@ -45,8 +45,8 @@ We should provide at least the following kinds of documentation:
    with the intricate details of what component does what, so might not be
    able to find the appropriate place to look at.
 
-This documentation should exist in the [2i2c-org/pilot](https://github.com/2i2c-org/pilot)
-repository, available at [2i2c.org/pilot](https://2i2c.org/pilot/)
+This documentation should exist in the [2i2c-org/docs](https://github.com/2i2c-org/docs)
+repository, available at [docs.2i2c.org](https://docs.2i2c.org)
 
 ## Hub administrators
 
@@ -72,8 +72,8 @@ of documentaiton.
    the course of hub usage. Their titles should always be of the form
    **How do I `<title>`?**.
 
-This documentation should exist in the [2i2c-org/pilot](https://github.com/2i2c-org/pilot)
-repository, available at [2i2c.org/pilot](https://2i2c.org/pilot/)
+This documentation should exist in the [2i2c-org/docs](https://github.com/2i2c-org/docs)
+repository, available at [docs.2i2c.org](https://docs.2i2c.org/)
 
 ## 2i2c engineers
 
