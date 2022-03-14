@@ -72,6 +72,11 @@ properties:
             type: boolean
   prometheusBasicAuthCreds:
     type: object
+    # prometheusBasicAuthCreds is _not a dependent helm chart_. It is values directly
+    # coupled with this helm chart and are influencing the rendering of templates
+    # we provide as part of this helm chart.
+    #
+    # Due to that, we maintain a strict schema here but not elsewhere.
     additionalProperties: false
     required:
       - enabled
