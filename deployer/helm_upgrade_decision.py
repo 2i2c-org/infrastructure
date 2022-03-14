@@ -6,9 +6,11 @@ added or modified in a GitHub Pull Request.
 import fnmatch
 import os
 from pathlib import Path
-import yaml
+from ruamel.yaml import YAML
 from rich.console import Console
 from rich.table import Table
+
+yaml = YAML(typ="safe", pure=True)
 
 # Determine if we are running a test or not. We set this env var to true in the
 # pytest.ini file so it is set when the package is tested.
