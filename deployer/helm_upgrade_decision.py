@@ -12,8 +12,8 @@ from rich.table import Table
 
 yaml = YAML(typ="safe", pure=True)
 
-# Determine if we are running a test or not. We set this env var to true in the
-# pytest.ini file so it is set when the package is tested.
+# Determine if we are running a test or not. We set this env var to "test" in the
+# pyproject.toml file so it is set when the package is tested using pytest.
 test_env = os.getenv("RUN_ENV", False)
 
 
@@ -140,7 +140,7 @@ def generate_hub_matrix_jobs(
         )
 
         # Overwrite cluster_filepaths to contain paths to all clusters
-        if test_env:
+        if test_env == "test":
             # We are running a test via pytest. We only want to focus on the cluster
             # folders nested under the `tests/` folder.
             cluster_filepaths = [
@@ -271,7 +271,7 @@ def generate_support_matrix_jobs(modified_dirpaths, upgrade_all_clusters=False):
         )
 
         # Overwrite cluster_filepaths to contain paths to all clusters
-        if test_env:
+        if test_env == "test":
             # We are running a test via pytest. We only want to focus on the cluster
             # folders nested under the `tests/` folder.
             modified_dirpaths = [
