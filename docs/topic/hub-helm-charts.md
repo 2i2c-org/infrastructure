@@ -6,7 +6,7 @@ type can be described by a helm chart, a hierarchy
 of hub types can be built and this makes development and usage easier.
 
 The graphic below, shows the relationship between the hub helm charts and the other
-config files and how they are merged together when deploying a pilot hub.
+config files and how they are merged together when deploying a hub.
 
 ```{figure} ../images/config-flow.png
 ```
