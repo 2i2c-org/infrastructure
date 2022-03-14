@@ -19,6 +19,7 @@ hubs:
       # The order in which you list files here is the order the will be passed
       # to the helm upgrade command in, and that has meaning. Please check
       # that you intend for these files to be applied in this order.
+      - common.values.yaml
       - staging.values.yaml
       - enc-staging.secret.values.yaml
   - name: prod
@@ -31,6 +32,6 @@ hubs:
       # The order in which you list files here is the order the will be passed
       # to the helm upgrade command in, and that has meaning. Please check
       # that you intend for these files to be applied in this order.
-      - staging.values.yaml
+      - common.values.yaml
       - prod.values.yaml
       - enc-prod.secret.values.yaml

@@ -18,7 +18,7 @@ hubs:
       # The order in which you list files here is the order the will be passed
       # to the helm upgrade command in, and that has meaning. Please check
       # that you intend for these files to be applied in this order.
-      - staging.values.yaml
+      - common.values.yaml
   - name: prod
     display_name: "SWOT Ocean Pangeo Team (prod)"
     domain: meom-ige.2i2c.cloud
@@ -31,4 +31,4 @@ hubs:
       # The order in which you list files here is the order the will be passed
       # to the helm upgrade command in, and that has meaning. Please check
       # that you intend for these files to be applied in this order.
-      - staging.values.yaml
+      - common.values.yaml
