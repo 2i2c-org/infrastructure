@@ -1,6 +1,9 @@
 prometheusBasicAuthCreds:
   enabled: true
 
+nvidiaDevicePlugin:
+  azure:
+    enabled: true
 prometheus:
   server:
     ingress:
@@ -11,12 +14,6 @@ prometheus:
         - secretName: prometheus-tls
           hosts:
             - prometheus.azure.carbonplan.2i2c.cloud
-
-nvidiaDevicePlugin:
-  azure:
-    enabled: true
-prometheus:
-  server:
     resources:
       requests:
         cpu: 1
