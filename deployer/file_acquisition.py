@@ -16,7 +16,7 @@ from ruamel.yaml.scanner import ScannerError
 
 yaml = YAML(typ="safe", pure=True)
 
-# Determine if we are running a test or not. We set this env var to true in the
+# Determine if we are running a test or not. We set this env var to "test" in the
 # pyproject.toml file so it is set when the package is tested using pytest.
 test_env = os.getenv("RUN_ENV", False)
 
@@ -49,7 +49,7 @@ def find_absolute_path_to_cluster_file(cluster_name: str):
     Returns:
         Path object: The absolute path to the cluster.yaml file for the named cluster
     """
-    if test_env:
+    if test_env == "test":
         # We are running a test via pytest. We only want to focus on the cluster
         # folders nested under the `tests/` folder.
         filepaths = [
