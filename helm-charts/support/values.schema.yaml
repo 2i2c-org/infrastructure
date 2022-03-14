@@ -17,7 +17,7 @@ required:
   - grafana
   - nfs-server-provisioner
   - nvidiaDevicePlugin
-  - prometheusAuth
+  - prometheusBasicAuthCreds
   - global
 properties:
   # cluster-autoscaler is a dependent helm chart, we rely on its schema
@@ -70,7 +70,7 @@ properties:
         properties:
           enabled:
             type: boolean
-  prometheusAuth:
+  prometheusBasicAuthCreds:
     type: object
     additionalProperties: false
     required:

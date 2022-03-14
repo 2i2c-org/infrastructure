@@ -13,7 +13,7 @@ ingress-nginx:
     admissionWebhooks:
       enabled: false
 
-prometheusAuth:
+prometheusBasicAuthCreds:
   enabled: true
 
 prometheus:
