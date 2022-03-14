@@ -1,4 +1,4 @@
-prometheusBasicAuthCreds:
+prometheusIngressAuthSecret:
   enabled: true
 
 prometheus:
