@@ -18,6 +18,16 @@ from config_validation import (
     validate_support_config,
     assert_single_auth_method_enabled,
 )
+from helm_upgrade_decision import (
+    discover_modified_common_files,
+    generate_lists_of_filepaths_and_filenames,
+    evaluate_condition_for_upgrading_support_chart,
+    generate_support_matrix_jobs,
+    generate_hub_matrix_jobs,
+    pretty_print_matrix_jobs,
+    update_github_env,
+)
+
 
 # Without `pure=True`, I get an exception about str / byte issues
 yaml = YAML(typ="safe", pure=True)
@@ -210,3 +220,55 @@ def deploy(cluster_name, hub_name, skip_hub_health_test, config_path):
                     f"{i+1} / {len(hubs)}: Deploying hub {hub.spec['name']}..."
                 )
                 hub.deploy(k, SECRET_KEY, skip_hub_health_test)
+
+
+def generate_helm_upgrade_jobs(changed_filepaths, pretty_print=False):
+    """Analyse added or modified files from a GitHub Pull Request and decide which
+    clusters and/or hubs require helm upgrades to be performed for their *hub helm
+    charts or the support helm chart.
+
+    Args:
+        changed_filepaths (list[str]): A list of files that have been added or
+            modified by a GitHub Pull Request
+        pretty_print (bool, optional): If True, output a human readable table of jobs
+            to be run using rich. If False, output a list of dictionaries to be
+            passed to a GitHub Actions matrix jobs. Defaults to False.
+    """
+    upgrade_all_clusters, upgrade_all_hubs = discover_modified_common_files(
+        changed_filepaths
+    )
+
+    # Generate a list of filepaths to target cluster folders, and sets of affected
+    # cluster.yaml files, hub helm chart values files, and support helm chart values
+    # files
+    (
+        target_cluster_filepaths,
+        target_cluster_files,
+        target_values_files,
+        target_support_files,
+    ) = generate_lists_of_filepaths_and_filenames(changed_filepaths)
+
+    # Generate a job matrix of all hubs that need upgrading
+    hub_matrix_jobs = generate_hub_matrix_jobs(
+        target_cluster_filepaths,
+        target_cluster_files,
+        target_values_files,
+        upgrade_all_hubs=upgrade_all_hubs,
+    )
+
+    modified_paths_for_support_upgrade = evaluate_condition_for_upgrading_support_chart(
+        target_cluster_files, target_support_files
+    )
+
+    # Generate a job matrix of all clusters that need their support chart upgrading
+    support_matrix_jobs = generate_support_matrix_jobs(
+        modified_paths_for_support_upgrade,
+        upgrade_all_clusters=upgrade_all_clusters,
+    )
+
+    env = os.environ.get("GITHUB_ENV", {})
+    if pretty_print or not env:
+        pretty_print_matrix_jobs(hub_matrix_jobs, support_matrix_jobs)
+    else:
+        # Add these matrix jobs to the GitHub environment for use in another job
+        update_github_env(hub_matrix_jobs, support_matrix_jobs)
