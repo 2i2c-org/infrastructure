@@ -66,6 +66,10 @@ See the config for the [staging hub on the 2i2c cluster](https://github.com/2i2c
 A hub's helm chart values file can be encrypted as well, following the naming convention `enc-<hub-name>.secret.values.yaml`
 ```
 
+Where we run dedicated clusters that only host a `staging` and `prod` hub, we aggregate all helm chart values shared by each hub into a `common.values.yaml` file, and then describe the helm chart values specific to either `staging` or `prod` with a `staging.values.yaml` or `prod.values.yaml` file respectively.
+See the [Pangeo config](https://github.com/2i2c-org/infrastructure/blob/HEAD/config/clusters/pangeo-hubs/cluster.yaml) for more information.
+This may lead to cases where two hubs on the same cluster use the same config for the `staging` and `prod` hubs, see the [Carbon Plan config](https://github.com/2i2c-org/infrastructure/blob/HEAD/config/clusters/carbonplan/cluster.yaml) as an example.
+
 ### Conventions for our configuration structure
 
 When designing our configuration structure, we apply the following conventions.
