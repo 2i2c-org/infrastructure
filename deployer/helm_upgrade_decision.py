@@ -10,6 +10,10 @@ import yaml
 from rich.console import Console
 from rich.table import Table
 
+# Determine if we are running a test or not. We set this env var to true in the
+# pytest.ini file so it is set when the package is tested.
+test_env = os.getenv("RUN_ENV", False)
+
 
 def discover_modified_common_files(modified_paths: list):
     """There are certain common files which, if modified, we should upgrade all hubs
@@ -132,10 +136,6 @@ def generate_hub_matrix_jobs(
         print(
             "Common config has been updated. Generating jobs to upgrade all hubs on ALL clusters."
         )
-
-        # Determine if we are running a test or not. We set this env var to true in the
-        # pytest.ini file so it is set when the package is tested.
-        test_env = os.getenv("RUN_ENV", False)
 
         # Overwrite cluster_filepaths to contain paths to all clusters
         if test_env:
@@ -267,17 +267,19 @@ def generate_support_matrix_jobs(modified_dirpaths, upgrade_all_clusters=False):
         print(
             "Common config has been updated. Generating jobs to upgrade support chart on ALL clusters."
         )
-        # Determine if we are running a test or not
-        test_env = os.getenv("RUN_ENV", False)
 
         # Overwrite cluster_filepaths to contain paths to all clusters
         if test_env:
+            # We are running a test via pytest. We only want to focus on the cluster
+            # folders nested under the `tests/` folder.
             modified_dirpaths = [
                 filepath.parent
                 for filepath in Path(os.getcwd()).glob("**/cluster.yaml")
                 if "tests/" in str(filepath)
             ]
         else:
+            # We are NOT running a test via pytest. We want to explicitly ignore the
+            # cluster folders nested under the `tests/` folder.
             modified_dirpaths = [
                 filepath.parent
                 for filepath in Path(os.getcwd()).glob("**/cluster.yaml")
