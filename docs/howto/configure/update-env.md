@@ -1,7 +1,7 @@
 # Update environment
 
 The default user environment is specified in its own GitHub repository, located
-at https://github.com/2i2c-org/pilot-hubs-image.
+at https://github.com/2i2c-org/infrastructure-image.
 
 The image is built and pushed using [jupyterhub/repo2docker-action](https://github.com/jupyterhub/repo2docker-action) to the [pilot-hubs-image quay.io](https://quay.io/repository/2i2c/pilot-hubs-image) registry.
 

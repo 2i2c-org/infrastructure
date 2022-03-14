@@ -8,7 +8,7 @@ basehub:
         # In clusters with NetworkPolicy enabled, do not
         # allow outbound internet access that's not DNS, HTTP or HTTPS
         # For OHW, we allow 8080 (for DAP) and 22 (for ssh)
-        # https://github.com/2i2c-org/pilot-hubs/issues/549#issuecomment-892276020
+        # https://github.com/2i2c-org/infrastructure/issues/549#issuecomment-892276020
         enabled: true
         egress:
           - ports:
@@ -31,7 +31,7 @@ basehub:
         tag: 9efd4fb
       memory:
         # Increase memory alloted during the workshop
-        #  https://github.com/2i2c-org/pilot-hubs/issues/549#issuecomment-891264570
+        #  https://github.com/2i2c-org/infrastructure/issues/549#issuecomment-891264570
         guarantee: 7G
         limit: 8G
     custom:

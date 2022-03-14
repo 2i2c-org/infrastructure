@@ -2,7 +2,7 @@
 
 ## Summary
 
-On 2020-08-28, WER reported [stuck pages](https://github.com/2i2c-org/pilot/issues/27) for students. A total outage, nothing usable.
+On 2020-08-28, WER reported [stuck pages](https://github.com/2i2c-org/docs/issues/27) for students. A total outage, nothing usable.
 
 After investigation, we determined that the core pods didn't have appropriate resource guarantees set. There was also no dedicated core pool, so the WER students overloaded CPU & RAM of the nodes. This starved everything of resources, causing issues.
 
@@ -17,11 +17,11 @@ All times in IST
 
 ### 08:52 PM
 
-Incoming report that many students can not access the hub, and it is [frozen](https://github.com/2i2c-org/pilot/issues/27#issue-731543843)
+Incoming report that many students can not access the hub, and it is [frozen](https://github.com/2i2c-org/docs/issues/27#issue-731543843)
 
 ### 09:02 PM
 
-Activity bump [is noticed](https://github.com/2i2c-org/pilot/issues/27#issuecomment-718014094) but regular
+Activity bump [is noticed](https://github.com/2i2c-org/docs/issues/27#issuecomment-718014094) but regular
 fixes (incognito, restarting servers, etc) don't seem to fix things
 
 ### 09:21 PM
@@ -40,7 +40,7 @@ There were only core nodes - no separate user nodes. The suspicion is that the u
 
 ### 09:23 PM
 
-Based on [tests on how much RAM WER needs](https://github.com/2i2c-org/pilot/issues/15), we had set a limit of 2G but guarantee of only 512M - a 4x overcommit as we often do. However, the tests revealed that users almost always use just under 1G of RAM, so our overcommit should've been just 2x. We just [remove overcommit](https://github.com/2i2c-org/infrastructure/pull/88) for now. This will also probably spawn another node, thus easing pressure on the other existing nodes.
+Based on [tests on how much RAM WER needs](https://github.com/2i2c-org/docs/issues/15), we had set a limit of 2G but guarantee of only 512M - a 4x overcommit as we often do. However, the tests revealed that users almost always use just under 1G of RAM, so our overcommit should've been just 2x. We just [remove overcommit](https://github.com/2i2c-org/infrastructure/pull/88) for now. This will also probably spawn another node, thus easing pressure on the other existing nodes.
 
 ### 09:24 PM
 
@@ -48,7 +48,7 @@ We [bump resource guarantees](https://github.com/2i2c-org/infrastructure/commit/
 
 ### 09:46 PM
 
-The [issue is closed](https://github.com/2i2c-org/pilot/issues/27#issuecomment-718044571) and everything seems fine
+The [issue is closed](https://github.com/2i2c-org/docs/issues/27#issuecomment-718044571) and everything seems fine
 
 ## Action Items
 
