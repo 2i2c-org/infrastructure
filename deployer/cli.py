@@ -105,7 +105,7 @@ def main():
     # This subparser does not depend on the base parser.
     generate_helm_upgrade_jobs_parser = subparsers.add_parser(
         "generate-helm-upgrade-jobs",
-        help="Generate a set of matrix jobs to perform a helm upgrade in parallel across clusters and hubs",
+        help="Generate a set of matrix jobs to perform a helm upgrade in parallel across clusters and hubs. Emit JSON to stdout that can be read by the strategy.matrix field of a GitHub Actions workflow.",
     )
     generate_helm_upgrade_jobs_parser.add_argument(
         "filepaths",
