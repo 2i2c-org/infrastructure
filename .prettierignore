@@ -1,14 +1,15 @@
 # Helm chart's templates aren't pure YAML files
 **/templates/
 
-# It would be trouble if we had two automatic formatters on the same files. This
-# could happen if we would auto-format the sops generated files with prettier.
-enc-*
-*secret*
-
+# We have removed the config that prevented prettier from formatting our secret files.
+# This is because sops outputs files with tabs for indentation and we have made our
+# deployer more strict about reading in encrypted files using only the YAML parser
+# since valid JSON == valid YAML... except if that JSON uses tabs instead of
+# whitespace!!! So now we want prettier to format our secret files in order to replace
+# tabs with whitepaces.
+#
 # To create a minimal change suggestion, prettier was introduced to auto-format
-# the YAML files only. It is absolutely reasonable to auto-format markdown files
-# and json files as well, but for now, let's make prettier only auto-format
-# YAML.
+# the YAML files only, and we now wish it to format JSON files too. It is absolutely
+# reasonable to auto-format markdown files as well, but for now, let's make prettier
+# only auto-format YAML and JSON.
 **/*.md
-**/*.json
