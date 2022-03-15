@@ -187,7 +187,7 @@ class CILogonClientProvider(ClientProvider):
             "scope": client["scope"],
             "oauth_callback_url": callback_url,
             "logout_redirect_url": "https://cilogon.org/logout/",
-            "allowed_idps": [connection_name],
+            "allowed_idps": connection_name,
         }
 
         return auth

@@ -35,7 +35,8 @@ hubs:
       # connection: google-oauth2
     cilogon:
       enabled: true
-      allowed_idps: "2i2c.org"
+      allowed_idps:
+        - "2i2c.org"
     helm_chart_values_files:
       # The order in which you list files here is the order the will be passed
       # to the helm upgrade command in, and that has meaning. Please check

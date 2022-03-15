@@ -277,9 +277,10 @@ properties:
                   Whether or not to enable CILogon authentication for this hub.
                   Defaults to false
               allowed_idps:
-                type: string
+                type: array
                 description: |
-                  Allowed identity providers.
+                  A list of identity providers that are allowed to authenticate.
+                  Reference https://github.com/jupyterhub/oauthenticator/blob/main/oauthenticator/cilogon.py#L89-L92
             if:
               properties:
                 enabled:
