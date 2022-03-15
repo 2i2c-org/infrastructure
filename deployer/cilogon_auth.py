@@ -45,7 +45,20 @@ class CILogonAdmin:
     def _get(self, url, params=None):
         headers = self.base_headers.copy()
 
-        return requests.get(url, params=params, headers=headers, timeout=self.timeout)
+        timeout = time.time() + 10
+        t = 0.05
+
+        # Allow up to 10s of retrying getting the response
+        while time.time() < timeout:
+            response = requests.get(url, params=params, headers=headers, timeout=self.timeout)
+            if response.status_code == 200:
+                return response
+
+            t = min(2, t * 2)
+            time.sleep(t)
+
+        # Return latest response to the request
+        return response
 
     def _put(self, url, data=None):
         headers = self.base_headers.copy()
