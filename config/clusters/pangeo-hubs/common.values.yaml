@@ -58,6 +58,7 @@ basehub:
           scope:
             - read:org
     singleuser:
+      # User image repo: https://github.com/pangeo-data/pangeo-docker-images
       image:
         name: pangeo/pangeo-notebook
         tag: 2022.02.04
