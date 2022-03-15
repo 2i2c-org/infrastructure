@@ -6,29 +6,28 @@ labels: ["type: Hub Incident", "support"]
 assignees: ""
 ---
 
-# Context
-
-## Summary
+### Summary
 
 <!-- Quick summary of the problem and resolution. Update as we learn more -->
 
-## Impact on users
+### Impact on users
 
 <!-- How this impacts users on the hub. Help us understand how urgent this is. -->
 
-## Important information
+### Important information
 
 <!-- Any links that could help people debug or learn more.  -->
 
 - Hub URL: {{ INSERT HUB URL HERE }}
 - Support ticket ref: {{ INSERT SUPPORT REF HERE }}
 
-## Tasks and updates
+### Tasks and updates
 
+- [ ] Discuss and address incident, leaving comments below with updates
 - [ ] Incident has been dealt with or is over
 - [ ] Copy/paste the after-action report below and fill in relevant sections
-- [ ] Incident title and after-action report is cleaned up
-- [ ] All actionable items above have linked GitHub Issues
+- [ ] Incident title is discoverable and accurate
+- [ ] All actionable items in report have linked GitHub Issues
 
 <!-- A copy/paste-able after-action report to help with follow-up -->
 <details>
