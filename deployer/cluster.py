@@ -73,46 +73,46 @@ class Cluster:
         cert_manager_url = "https://charts.jetstack.io"
         cert_manager_version = "v1.3.1"
 
-        # print_colour("Adding cert-manager chart repo...")
-        # subprocess.check_call(
-        #     [
-        #         "helm",
-        #         "repo",
-        #         "add",
-        #         "jetstack",
-        #         cert_manager_url,
-        #     ]
-        # )
+        print_colour("Adding cert-manager chart repo...")
+        subprocess.check_call(
+            [
+                "helm",
+                "repo",
+                "add",
+                "jetstack",
+                cert_manager_url,
+            ]
+        )
 
-        # print_colour("Updating cert-manager chart repo...")
-        # subprocess.check_call(
-        #     [
-        #         "helm",
-        #         "repo",
-        #         "update",
-        #     ]
-        # )
+        print_colour("Updating cert-manager chart repo...")
+        subprocess.check_call(
+            [
+                "helm",
+                "repo",
+                "update",
+            ]
+        )
 
-        # print_colour("Provisioning cert-manager...")
-        # subprocess.check_call(
-        #     [
-        #         "helm",
-        #         "upgrade",
-        #         "--install",
-        #         "--create-namespace",
-        #         "--namespace=cert-manager",
-        #         "cert-manager",
-        #         "jetstack/cert-manager",
-        #         f"--version={cert_manager_version}",
-        #         "--set=installCRDs=true",
-        #     ]
-        # )
-        # print_colour("Done!")
+        print_colour("Provisioning cert-manager...")
+        subprocess.check_call(
+            [
+                "helm",
+                "upgrade",
+                "--install",
+                "--create-namespace",
+                "--namespace=cert-manager",
+                "cert-manager",
+                "jetstack/cert-manager",
+                f"--version={cert_manager_version}",
+                "--set=installCRDs=true",
+            ]
+        )
+        print_colour("Done!")
 
-        # print_colour("Provisioning support charts...")
+        print_colour("Provisioning support charts...")
 
         support_dir = (Path(__file__).parent.parent).joinpath("helm-charts", "support")
-        # subprocess.check_call(["helm", "dep", "up", support_dir])
+        subprocess.check_call(["helm", "dep", "up", support_dir])
 
         # contains both encrypted and unencrypted values files
         values_file_paths = [support_dir.joinpath("enc-support.secret.values.yaml")] + [
