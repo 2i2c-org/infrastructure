@@ -64,7 +64,7 @@ feature of nginx-ingress is used to restrict this. A `enc-support.secret.values.
 file is used to provide these secret credentials.
 
 ```yaml
-prometheusEngressAuthSecret:
+prometheusIngressAuthSecret:
   username: <output of pwgen -s 64 1>
   password: <output of pwgen -s 64 1>
 ```
