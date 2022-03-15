@@ -50,7 +50,9 @@ class CILogonAdmin:
 
         # Allow up to 10s of retrying getting the response
         while time.time() < timeout:
-            response = requests.get(url, params=params, headers=headers, timeout=self.timeout)
+            response = requests.get(
+                url, params=params, headers=headers, timeout=self.timeout
+            )
             if response.status_code == 200:
                 return response
 
