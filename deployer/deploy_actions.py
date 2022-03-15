@@ -20,7 +20,7 @@ from config_validation import (
 )
 from helm_upgrade_decision import (
     discover_modified_common_files,
-    generate_lists_of_filepaths_and_filenames,
+    get_categorised_unique_filepaths,
     evaluate_condition_for_upgrading_support_chart,
     generate_support_matrix_jobs,
     generate_hub_matrix_jobs,
@@ -246,7 +246,7 @@ def generate_helm_upgrade_jobs(changed_filepaths, pretty_print=False):
         target_cluster_files,
         target_values_files,
         target_support_files,
-    ) = generate_lists_of_filepaths_and_filenames(changed_filepaths)
+    ) = get_categorised_unique_filepaths(changed_filepaths)
 
     # Generate a job matrix of all hubs that need upgrading
     hub_matrix_jobs = generate_hub_matrix_jobs(

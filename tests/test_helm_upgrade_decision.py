@@ -6,14 +6,14 @@ from deployer.helm_upgrade_decision import (
     discover_modified_common_files,
     evaluate_condition_for_upgrading_support_chart,
     generate_hub_matrix_jobs,
-    generate_lists_of_filepaths_and_filenames,
+    get_categorised_unique_filepaths,
     generate_support_matrix_jobs,
 )
 
 case = TestCase()
 
 
-def test_generate_lists_of_filepaths_and_filenames():
+def test_get_categorised_unique_filepaths():
     input_filepaths = [
         os.path.join("test-clusters", "cluster1", "cluster.yaml"),
         os.path.join("test-clusters", "cluster1", "hub1.values.yaml"),
@@ -38,7 +38,7 @@ def test_generate_lists_of_filepaths_and_filenames():
         target_cluster_files,
         target_values_files,
         target_support_files,
-    ) = generate_lists_of_filepaths_and_filenames(input_filepaths)
+    ) = get_categorised_unique_filepaths(input_filepaths)
 
     case.assertCountEqual(target_cluster_filepaths, expected_cluster_filepaths)
     assert target_cluster_files == expected_cluster_files
