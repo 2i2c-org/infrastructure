@@ -43,17 +43,12 @@ def discover_modified_common_files(modified_paths: list):
     support_chart_filepath = "helm-charts/support/*"
 
     # Discover if the support chart has been modified
-    support_matches = []
-    support_matches.extend(fnmatch.filter(modified_paths, support_chart_filepath))
-    upgrade_all_clusters = len(support_matches) > 0
+    upgrade_all_clusters = bool(fnmatch.filter(modified_paths, support_chart_filepath))
 
     # Discover if any common config has been modified
-    common_config_matches = []
-    for common_filepath_pattern in common_filepaths:
-        common_config_matches.extend(
-            fnmatch.filter(modified_paths, common_filepath_pattern)
-        )
-    upgrade_all_hubs = len(common_config_matches) > 0
+    upgrade_all_hubs = False
+    while not upgrade_all_hubs:
+        upgrade_all_hubs = bool(fnmatch.filter(modified_paths, common_filepath_pattern) for common_filepath_pattern in common_filepaths)
 
     return upgrade_all_clusters, upgrade_all_hubs
 
