@@ -29,6 +29,8 @@ Chart.lock
 docs/tmp
 docs/reference/terraform.md
 
+# Common editor config
+.vscode
 
 
 # Python.gitignore below - Add exceptions above for easier maintenance

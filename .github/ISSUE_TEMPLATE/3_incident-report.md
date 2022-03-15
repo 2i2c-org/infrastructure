@@ -6,19 +6,39 @@ labels: ["type: Hub Incident", "support"]
 assignees: ""
 ---
 
-# Summary
+# Context
 
-<!-- 
-Quick summary of the problem. Update this section as we learn more, answering:
+## Summary
 
-- what user impact was
-- how long it was
-- what went wrong and how we fixed it.
--->
+<!-- Quick summary of the problem and resolution. Update as we learn more -->
 
-## Hub information
+## Impact on users
+
+<!-- How this impacts users on the hub. Help us understand how urgent this is. -->
+
+## Important information
+
+<!-- Any links that could help people debug or learn more.  -->
 
 - Hub URL: {{ INSERT HUB URL HERE }}
+- Support ticket ref: {{ INSERT SUPPORT REF HERE }}
+
+## Tasks and updates
+
+- [ ] Incident has been dealt with or is over
+- [ ] Copy/paste the after-action report below and fill in relevant sections
+- [ ] Incident title and after-action report is cleaned up
+- [ ] All actionable items above have linked GitHub Issues
+
+<!-- A copy/paste-able after-action report to help with follow-up -->
+<details>
+<summary>After-action report template</summary>
+
+```
+# After-action report
+
+These sections should be filled out once we've resolved the incident and know what happened.
+They should focus on the knowledge we've gained and any improvements we should take.
 
 ## Timeline (if relevant)
 
@@ -37,13 +57,6 @@ Investigation starts.
 ### {{ hh:mm }}
 
 More details.
-
----
-
-# After-action report
-
-These sections should be filled out once we've resolved the incident and know what happened.
-They should focus on the knowledge we've gained and any improvements we should take.
 
 ## What went wrong
 
@@ -74,10 +87,6 @@ These are only sample subheadings. Every action item should have a GitHub issue
 
 1. {{ summary }} [link to github issue]
 2. {{ summary }} [link to github issue]
+```
 
-# Actions
-
-- [ ] Incident has been dealt with or is over
-- [ ] Sections above are filled out
-- [ ] Incident title and after-action report is cleaned up
-- [ ] All actionable items above have linked GitHub Issues
+</details>
