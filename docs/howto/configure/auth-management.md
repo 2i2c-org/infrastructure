@@ -53,7 +53,7 @@ So we want to manage authentication by:
 Switching authentication providers (e.g. from GitHub to Google) for a pre-existing hub will simply create new usernames. Any pre-existing users will no longer be able to access their accounts (although administrators will be able to do so). If you have pre-existing users and want to switch the hub authentication, rename the users to the new auth pattern (e.g. convert github handles to emails).
 ```
 
-## GitHub Orgs and Teams with Native JupyterHub OAuthenticator
+## Native JupyterHub OAuthenticator for GitHub Orgs and Teams
 
 ```{note}
 This setup is currently only supported for communities that **require** authentication via a GitHub organisation or team.
@@ -62,8 +62,7 @@ We may update this policy in the future.
 ```
 
 For communities that require authenticating users against [a GitHub organisation or team](https://docs.github.com/en/organizations), we instead use the [native JupyterHub OAuthenticator](https://github.com/jupyterhub/oauthenticator).
-This involves a few more manual steps than the `auth0` setup described above.
-There are also some steps that a Community Representative will need to take to set up authentication, described below.
+Presently, this involves a few more manual steps than the `auth0` setup described above.
 
 1. **Create a GitHub OAuth App.**
    This can be achieved by following [GitHub's documentation](https://docs.github.com/en/developers/apps/building-oauth-apps/creating-an-oauth-app).
@@ -172,17 +171,6 @@ There are also some steps that a Community Representative will need to take to s
     ```
 
 6. Run the deployer as normal to apply the config.
-
-### Follow-up: GitHub organization administrators must grant access
-
-Once the OAuth callbacks have been set up following the steps above, somebody with administrator permissions for the GitHub organization needs to grant access to the OAuth app that we have created.
-
-The first time that somebody tries to log on to the hub with this authentication set up, they should be presented with a page that asks them to grant access to various GitHub organizations.
-**They must grant access to the organization that is being used to authenticate**.
-
-If administrators report a `403 forbidden` error when they try to log in to the hub, there is a good chance that they did _not grant access_ to the right GitHub organization.
-In this case, they should go to the configuration page for this app within their GitHub organization and explicitly grant it access.
-See [the GitHub apps for organizations docs](https://docs.github.com/en/organizations/managing-access-to-your-organizations-apps) for more information.
 
 ## CILogon
 
