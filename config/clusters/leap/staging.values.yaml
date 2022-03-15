@@ -1,5 +1,6 @@
 basehub:
   jupyterhub:
-    config:
-      GitHubOAuthenticator:
-        oauth_callback_url: https://staging.leap.2i2c.cloud/hub/oauth_callback
+    hub:
+      config:
+        GitHubOAuthenticator:
+          oauth_callback_url: https://staging.leap.2i2c.cloud/hub/oauth_callback

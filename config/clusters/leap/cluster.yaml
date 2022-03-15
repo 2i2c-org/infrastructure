@@ -27,5 +27,5 @@ hubs:
       enabled: false
     helm_chart_values_files:
       - common.values.yaml
-      - prod.yaml
+      - prod.values.yaml
       - enc-prod.secret.values.yaml
