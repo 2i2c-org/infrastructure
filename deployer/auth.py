@@ -91,7 +91,12 @@ class Auth0ClientProvider(ClientProvider):
             )
 
     def ensure_client(
-        self, name, callback_url, logout_url, allowed_connections: str, connection_config
+        self,
+        name,
+        callback_url,
+        logout_url,
+        allowed_connections: str,
+        connection_config,
     ):
         # Our Auth0 setup currently suports only one connection, so this must be a string!
         connection_name = allowed_connections
