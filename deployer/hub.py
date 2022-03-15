@@ -136,14 +136,15 @@ class Hub:
         connection_config = None
 
         if self.spec["auth0"].get("enabled", True):
-            connection_name = self.spec["auth0"]["connection"]
+            # With auth0 we can only have one accepted connection github/google-oauth2/password
+            allowed_connections = self.spec["auth0"]["connection"]
             connection_config = self.spec["auth0"].get(
                 self.spec["auth0"]["connection"], {}
             )
             authenticator_class_entrypoint = "auth0"
             authenticator_class_name = "Auth0OAuthenticator"
         elif self.spec["cilogon"].get("enabled", True):
-            connection_name = self.spec["cilogon"]["allowed_idps"]
+            allowed_connections = self.spec["cilogon"]["allowed_idps"]
             connection_config = self.cluster.config_path.joinpath(
                 "enc-cilogon-clients.secret.yaml"
             )
@@ -154,7 +155,7 @@ class Hub:
             name=client_name,
             callback_url=callback_url,
             logout_url=logout_url,
-            connection_name=connection_name,
+            allowed_connections=allowed_connections,
             connection_config=connection_config,
         )
 
@@ -164,7 +165,7 @@ class Hub:
         }
         generated_config["jupyterhub"]["hub"]["config"][
             authenticator_class_name
-        ] = auth_provider.get_client_creds(client, connection_name, callback_url)
+        ] = auth_provider.get_client_creds(client, allowed_connections, callback_url)
 
         return self.apply_hub_helm_chart_fixes(generated_config, secret_key)
 

@@ -91,8 +91,11 @@ class Auth0ClientProvider(ClientProvider):
             )
 
     def ensure_client(
-        self, name, callback_url, logout_url, connection_name, connection_config
+        self, name, callback_url, logout_url, allowed_connections: str, connection_config
     ):
+        # Our Auth0 setup currently suports only one connection, so this must be a string!
+        connection_name = allowed_connections
+
         current_clients = self._get_clients()
         if name not in current_clients:
             # Create the client, all good
@@ -146,10 +149,9 @@ class Auth0ClientProvider(ClientProvider):
 
         return client
 
-    def get_client_creds(self, client, connection_name, callback_url=None):
-        """
-        Return z2jh config for auth0 authentication for this JupyterHub
-        """
+    def get_client_creds(self, client, allowed_connections: str, callback_url):
+        # Our Auth0 setup currently suports only one connection, so this must be a string!
+        connection_name = allowed_connections
 
         logout_redirect_params = {
             "client_id": client["client_id"],

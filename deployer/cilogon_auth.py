@@ -139,9 +139,9 @@ class CILogonClientProvider(ClientProvider):
         self,
         name,
         callback_url,
-        logout_url=None,
-        connection_name=None,
-        connection_config=None,
+        logout_url,
+        allowed_connections,
+        connection_config,
     ):
         client_id = None
         try:
@@ -175,11 +175,7 @@ class CILogonClientProvider(ClientProvider):
 
         return client
 
-    def get_client_creds(self, client, connection_name, callback_url):
-        """
-        Return z2jh config for cilogon authentication for this JupyterHub
-        """
-
+    def get_client_creds(self, client, allowed_connections, callback_url):
         auth = {
             "client_id": client["client_id"],
             "client_secret": client["client_secret"],
@@ -187,7 +183,7 @@ class CILogonClientProvider(ClientProvider):
             "scope": client["scope"],
             "oauth_callback_url": callback_url,
             "logout_redirect_url": "https://cilogon.org/logout/",
-            "allowed_idps": connection_name,
+            "allowed_idps": allowed_connections,
         }
 
         return auth
