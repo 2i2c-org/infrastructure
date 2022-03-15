@@ -1,4 +1,5 @@
 import base64
+import time
 import requests
 import subprocess
 
@@ -42,7 +43,6 @@ class CILogonAdmin:
         return requests.post(url, json=data, headers=headers, timeout=self.timeout)
 
     def _get(self, url, params=None):
-        # todo: make this resilient, use of an exponentiall backoff
         headers = self.base_headers.copy()
 
         return requests.get(url, params=params, headers=headers, timeout=self.timeout)
@@ -157,9 +157,10 @@ class CILogonClientProvider(ClientProvider):
             if client_id is None:
                 # Create the client, all good
                 client = self.create_client(name, callback_url)
+                print(f"Created a new CILogon client for {name}.")
                 cilogon_clients[name] = {
                     "client_id": client["client_id"],
-                    "client_secret": client["client_id"],
+                    "client_secret": client["client_secret"],
                 }
                 # persist the client id
                 # todo: use a semaphore when we'll deploy hubs in parallel
@@ -169,6 +170,7 @@ class CILogonClientProvider(ClientProvider):
                     ["sops", "--encrypt", "--in-place", connection_config]
                 )
             else:
+                print(f"Updated the existing CILogon client for {name}.")
                 client = self.update_client(client_id, name, callback_url)
                 # CILogon doesn't return the client secret after its creation
                 client["client_secret"] = cilogon_clients[name]["client_secret"]
