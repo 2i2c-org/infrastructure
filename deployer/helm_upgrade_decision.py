@@ -48,7 +48,10 @@ def discover_modified_common_files(modified_paths: list):
     # Discover if any common config has been modified
     upgrade_all_hubs = False
     while not upgrade_all_hubs:
-        upgrade_all_hubs = bool(fnmatch.filter(modified_paths, common_filepath_pattern) for common_filepath_pattern in common_filepaths)
+        upgrade_all_hubs = bool(
+            fnmatch.filter(modified_paths, common_filepath_pattern)
+            for common_filepath_pattern in common_filepaths
+        )
 
     return upgrade_all_clusters, upgrade_all_hubs
 
@@ -92,7 +95,9 @@ def get_categorised_unique_filepaths(added_or_modified_files: list):
     values_files = set(fnmatch.filter(added_or_modified_files, "*/*.values.yaml"))
 
     # Filter for all add/modified support chart values files
-    support_files = set(fnmatch.filter(added_or_modified_files, "*/*support*.values.yaml"))
+    support_files = set(
+        fnmatch.filter(added_or_modified_files, "*/*support*.values.yaml")
+    )
 
     return cluster_filepaths, cluster_files, values_files, support_files
 
