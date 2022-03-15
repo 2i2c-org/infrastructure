@@ -173,7 +173,7 @@ def deploy(cluster_name, hub_name, skip_hub_health_test, config_path):
         with open(decrypted_file_path) as f:
             config = yaml.load(f)
 
-    # Some of our hubs use Auth0 for Authentication and some use CILogong.
+    # Some of our hubs use Auth0 for Authentication and some use CILogon.
     # This lets us programmatically determine what auth provider each hub
     # uses - GitHub, Google, etc or which Institutional Identity Provider.
     # Without this, we'd have to manually generate credentials for each
