@@ -59,6 +59,13 @@ basehub:
       image:
         name: pangeo/pangeo-notebook
         tag: 2022.02.04
+      extraEnv:
+        SCRATCH_BUCKET_PROTOCOL: gcs
+        # Created via terraform
+        SCRATCH_BUCKET_NAME: leap-pangeo-scratch
+        # Use k8s syntax of $(ENV_VAR) to substitute env vars dynamically in other env vars
+        SCRATCH_BUCKET: "{bucket_protocol}://{bucket_name}/$(JUPYTERHUB_USER)"
+        PANGEO_SCRATCH: "{bucket_protocol}://{bucket_name}/$(JUPYTERHUB_USER)"
       profileList:
         # The mem-guarantees are here so k8s doesn't schedule other pods
         # on these nodes. They need to be just under total allocatable
