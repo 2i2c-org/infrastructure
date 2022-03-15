@@ -32,7 +32,7 @@ Add the following helm chart values to your `support.values.yaml` file.
 and `<prometheus-domain>` should follow the pattern `prometheus.<cluster_name>.2i2c.cloud`.
 
 ```yaml
-prometheusEngressAuthSecret:
+prometheusIngressAuthSecret:
   enabled: true
 
 grafana:
@@ -60,7 +60,7 @@ prometheus:
 
 Only 2i2c staff + our centralized grafana should be able to access the
 prometheus data on a cluster from outside the cluster. The [basic auth](https://kubernetes.github.io/ingress-nginx/examples/auth/basic/)
-feature of nginx-ingress is used to restrict this. A `enc-support.seecret.yaml`
+feature of nginx-ingress is used to restrict this. A `enc-support.secret.values.yaml`
 file is used to provide these secret credentials.
 
 ```yaml
