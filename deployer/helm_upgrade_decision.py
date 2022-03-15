@@ -321,6 +321,11 @@ def update_github_env(hub_matrix_jobs, support_matrix_jobs):
             set of matrix jobs required to update only the support chart on clusters
             whose config has been modified.
     """
+    # In GitHub Actions, the environment a workflow/job/step executes in can be
+    # influenced by the contents of the `GITHUB_ENV` file.
+    #
+    # For more information, see:
+    # https://docs.github.com/en/actions/using-workflows/workflow-commands-for-github-actions#setting-an-environment-variable
     with open(os.getenv("GITHUB_ENV"), "a") as f:
         f.write(
             "\n".join(
