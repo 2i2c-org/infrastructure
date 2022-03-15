@@ -17,6 +17,7 @@ hubs:
       enabled: false
     helm_chart_values_files:
       - common.values.yaml
+      - staging.values.yaml
       - enc-staging.secret.values.yaml
   - name: prod
     display_name: "LEAP Prod"
@@ -26,4 +27,5 @@ hubs:
       enabled: false
     helm_chart_values_files:
       - common.values.yaml
+      - prod.yaml
       - enc-prod.secret.values.yaml
