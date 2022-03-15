@@ -206,13 +206,13 @@ Then, output the credentials created by terraform to a file under the `secrets` 
 
 ````{tabbed} Google Cloud
 ```bash
-terraform output -raw ci_deployer_key > ../../config/clusters/<cluster_name>/deployer-credentials.secret.json
+terraform output -raw ci_deployer_key > ../../config/clusters/<cluster_name>/enc-deployer-credentials.secret.json
 ```
 ````
 
 ````{tabbed} Azure
 ```bash
-terraform output -raw kubeconfig > ../../config/clusters/<cluster_name>/deployer-credentials.secret.yaml
+terraform output -raw kubeconfig > ../../config/clusters/<cluster_name>/enc-deployer-credentials.secret.yaml
 ```
 ````
 
@@ -225,7 +225,7 @@ You must be logged into Google with your `@2i2c.org` account at this point so `s
 
 ```bash
 cd ../..
-sops --output config/clusters/<cluster_name>/enc-deployer-credentials.secret.{{ json | yaml }} --encrypt config/clusters/<cluster_name>/deployer-credentials.secret.{{ json | yaml }}
+sops --in-place  --encrypt config/clusters/<cluster_name>/enc-deployer-credentials.secret.{{ json | yaml }}
 ```
 
 This key can now be committed to the `infrastructure` repo and used to deploy and manage hubs hosted on that cluster.

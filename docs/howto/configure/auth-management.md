@@ -73,7 +73,7 @@ Presently, this involves a few more manual steps than the `auth0` setup describe
    - The authorisation callback URL is the homepage url appended with `/hub/oauth_callback`. For example, `staging.pilot.2i2c.cloud/hub/oauth_callback`.
    - Once you have created the OAuth app, make a new of the client ID, generate a client secret and then hold on to these values for a future step
 
-2. **Create or update the appropriate secret config file under `config/clusters/<cluster_name>/<hub_name>.secret.values.yaml`.**
+2. **Create or update the appropriate secret config file under `config/clusters/<cluster_name>/enc-<hub_name>.secret.values.yaml`.**
    You should add the following config to this file, pasting in the client ID and secret you generated in step 1.
 
     ```yaml
@@ -96,11 +96,9 @@ Presently, this involves a few more manual steps than the `auth0` setup describe
     ```
     ````
 
-    ```{note}
     Make sure this is encrypted with `sops` before committing it to the repository!
 
-    `sops --output config/clusters/<cluster_name>/enc-<hub_name>.secret.values.yaml --encrypt config/clusters/<cluster_name>/<hub_name>.secret.values.yaml`
-    ```
+    `sops --in-place --encrypt config/clusters/<cluster_name>/enc-<hub_name>.secret.values.yaml`
 
 3. **Set the hub to _not_ configure Auth0 in the `config/clusters/<cluster_name>/cluster.yaml` file.**
    To ensure the deployer does not provision and configure an OAuth app from Auth0, the following config should be added to the appropriate hub in the cluster's `cluster.yaml` file.

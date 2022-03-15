@@ -90,7 +90,7 @@ The key you create needs admin permissions.
 
 **Keep this key safe as you won't be able to retrieve it!**
 
-Create the file `config/clusters/<cluster>/grafana-token.secret.yaml` with the following content.
+Create the file `config/clusters/<cluster>/enc-grafana-token.secret.yaml` with the following content.
 
 ```yaml
 grafana_token: PASTE_YOUR_API KEY HERE
@@ -99,7 +99,7 @@ grafana_token: PASTE_YOUR_API KEY HERE
 Then encrypt this file using `sops` like so:
 
 ```bash
-sops --output config/clusters/<cluster>/enc-grafana-token.secret.yaml --encrypt config/clusters/<cluster>/grafana-token.secret.yaml
+sops --in-place --encrypt config/clusters/<cluster>/enc-grafana-token.secret.yaml
 ```
 
 The encrypted file can now be committed to the repository.

@@ -169,13 +169,13 @@ have least amount of permissions possible.
    they are accessible from our automatic deployment.
 
    ```bash
-   terraform output -raw continuous_deployer_creds > ../../config/clusters/<your-cluster-name>/deployer-credentials.secret.json
-   sops --output config/clusters/<your-cluster-name>/enc-deployer-credentials.secret.json --encrypt ../../config/clusters/<your-cluster-name>/deployer-credentials.secret.json
+   terraform output -raw continuous_deployer_creds > ../../config/clusters/<your-cluster-name>/enc-deployer-credentials.secret.json
+   sops --in-place --encrypt ../../config/clusters/<your-cluster-name>/deployer-credentials.secret.json
    ```
 
    Double check to make sure that the `config/clusters/<your-cluster-name>/enc-deployer-credentials.secret.json` file is
    actually encrypted by `sops` before checking it in to the git repo. Otherwise
-   this can be a serious security leak!
+   this will be a serious security leak!
 
 5. Grant the freshly created IAM user access to the kubernetes cluster.
 
