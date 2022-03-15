@@ -9,7 +9,7 @@ gcp:
 support:
   helm_chart_values_files:
     - support.values.yaml
-    - enc-support.secret.yaml
+    - enc-support.secret.values.yaml
 hubs:
   - name: staging
     display_name: "2i2c staging"

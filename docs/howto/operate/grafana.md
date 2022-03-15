@@ -56,7 +56,7 @@ prometheus:
             - <prometheus-domain>
 ```
 
-#### Create a `enc-support.secret.yaml` file
+#### Create a `enc-support.secret.values.yaml` file
 
 Only 2i2c staff + our centralized grafana should be able to access the
 prometheus data on a cluster from outside the cluster. The [basic auth](https://kubernetes.github.io/ingress-nginx/examples/auth/basic/)
@@ -86,7 +86,7 @@ Note this filepath is _relative_ to the location of your `cluster.yaml` file.
 support:
   helm_chart_values_files:
     - support.values.yaml
-    - enc-support.secret.yaml
+    - enc-support.secret.values.yaml
 ```
 
 #### Deploy the `support` chart via the `deployer`
@@ -124,7 +124,7 @@ Eventually, visiting `GRAFANA_URL` will present you with a login page.
 Here are the credentials for logging in:
 
 - **username**: `admin`
-- **password**: located in `helm-charts/support/enc-support.secret.yaml` (`sops` encrypted).
+- **password**: located in `helm-charts/support/enc-support.secret.values.yaml` (`sops` encrypted).
 
 ### Setting up Grafana Dashboards
 
