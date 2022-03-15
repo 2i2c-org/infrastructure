@@ -39,38 +39,36 @@ assignees: ""
 These sections should be filled out once we've resolved the incident and know what happened.
 They should focus on the knowledge we've gained and any improvements we should take.
 
-## Timeline (if relevant)
+## Timeline
 
-If it makes sense to include a timeline for this incident, then do so below.
+_A short list of dates / times and major updates, with links to relevant comments in the issue for more context._
 
 All times in {{ most convenient timezone}}.
 
-### {{ yyyy-mm-dd hh:mm }}
+- {{ yyyy-mm-dd }} - [Summary of first update](link to comment)
+- {{ yyyy-mm-dd }} - [Summary of another update](link to comment)
+- {{ yyyy-mm-dd }} - [Summary of final update](link to comment)
 
-Start of incident. First symptoms, possibly how they were identified.
-
-### {{ hh:mm }}
-
-Investigation starts.
-
-### {{ hh:mm }}
-
-More details.
 
 ## What went wrong
 
-Things that could have gone better. Ideally these should result in concrete
+_Things that could have gone better. Ideally these should result in concrete
 action items that have GitHub issues created for them and linked to under
-Action items. 
+Action items._
+
+- Thing one
+- Thing two
 
 ## Where we got lucky
 
-These are good things that happened to us but not because we had planned for them.
+_These are good things that happened to us but not because we had planned for them._
 
-## Action items
+- Thing one
+- Thing two
 
-These are only sample subheadings. Every action item should have a GitHub issue
-(even a small skeleton of one) attached to it, so these do not get forgotten. These issues don't have to be in `infrastructure/`, they can be in other repositories.
+## Follow-up actions
+
+_Every action item should have a GitHub issue (even a small skeleton of one) attached to it, so these do not get forgotten. These issues don't have to be in `infrastructure/`, they can be in other repositories._
 
 ### Process improvements
 
