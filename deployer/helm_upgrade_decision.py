@@ -47,11 +47,10 @@ def discover_modified_common_files(modified_paths: list):
 
     # Discover if any common config has been modified
     upgrade_all_hubs = False
-    while not upgrade_all_hubs:
-        upgrade_all_hubs = bool(
-            fnmatch.filter(modified_paths, common_filepath_pattern)
-            for common_filepath_pattern in common_filepaths
-        )
+    for common_filepath_pattern in common_filepaths:
+        upgrade_all_hubs = bool(fnmatch.filter(modified_paths, common_filepath_pattern))
+        if upgrade_all_hubs:
+            break
 
     return upgrade_all_clusters, upgrade_all_hubs
 
