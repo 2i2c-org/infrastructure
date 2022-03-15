@@ -141,7 +141,7 @@ def get_decrypted_file(original_filepath):
             yield f.name
 
     else:
-        # The file does not have "secret" in it's name, therefore does not need to be
+        # The file does not have "secret" in its name, therefore does not need to be
         # decrypted. Yield the original filepath unchanged.
         yield original_filepath
 
