@@ -3,7 +3,6 @@ Functions related to finding and reading files. Checking files exist, finding th
 absolute paths, decrypting and reading encrypted files when needed.
 """
 import os
-import json
 import warnings
 import subprocess
 import tempfile
