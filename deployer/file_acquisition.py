@@ -3,7 +3,6 @@ Functions related to finding and reading files. Checking files exist, finding th
 absolute paths, decrypting and reading encrypted files when needed.
 """
 import os
-import json
 import warnings
 import subprocess
 import tempfile
@@ -104,29 +103,14 @@ def get_decrypted_file(original_filepath):
     if filename.startswith("enc-") or ("secret" in filename):
         # We must then determine if the file is using sops
         # sops files are JSON/YAML with a `sops` key. So we first check
-        # if the file is valid JSON/YAML, and then if it has a `sops` key
+        # if the file is valid JSON/YAML, and then if it has a `sops` key.
+        # Since valid JSON is also valid YAML by design, a YAML parser can read in JSON.
         with open(original_filepath) as f:
-
-            # FIXME: Right now we expect encrypted files to be JSON or YAML files, and
-            #        so we fail if these are not valid JSON/YAML. However in the
-            #        future, we may want to support encrypted files of other types
-            #        and we should update this section accordingly.
-            #
-            # Support the (clearly wrong) people who use .yml instead of .yaml
-            if ext == ".yaml" or ext == ".yml":
-                try:
-                    content = yaml.load(f)
-                except ScannerError:
-                    raise ScannerError(
-                        "We expect encrypted files to be valid JSON or YAML files."
-                    )
-            elif ext == ".json":
-                try:
-                    content = json.load(f)
-                except json.JSONDecodeError:
-                    raise json.JSONDecodeError(
-                        "We expect encrypted files to be valid JSON or YAML files."
-                    )
+            try:
+                content = yaml.load(f)
+            except ScannerError:
+                yield original_filepath
+                return
 
         if "sops" not in content:
             raise KeyError(
