@@ -97,11 +97,9 @@ def get_decrypted_file(original_filepath):
     filename = os.path.basename(original_filepath)
     _, ext = os.path.splitext(filename)
 
-    # Our convention is that encrypted secrets in the repository begin with "enc-" and include
-    # "secret" in the filename, so first we check for that. We use an 'or' conditional here since
-    # we want to catch files that contain "secret" but do not have the "enc-" prefix and ensure
-    # they are encrypted, raising an error if not.
-    if filename.startswith("enc-") or ("secret" in filename):
+    # Our convention is that secrets in the repository include "secret" in their filename,
+    # so first we check for that
+    if "secret" in filename:
         # We must then determine if the file is using sops
         # sops files are JSON/YAML with a `sops` key. So we first check
         # if the file is valid JSON/YAML, and then if it has a `sops` key
@@ -143,8 +141,8 @@ def get_decrypted_file(original_filepath):
             yield f.name
 
     else:
-        # For a file that does not match our naming conventions for secrets, yield the
-        # original path
+        # The file does not have "secret" in it's name, therefore does not need to be
+        # decrypted. Yield the original filepath unchanged.
         yield original_filepath
 
 
