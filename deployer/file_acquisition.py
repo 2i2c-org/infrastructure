@@ -107,26 +107,19 @@ def get_decrypted_file(original_filepath):
         # if the file is valid JSON/YAML, and then if it has a `sops` key
         with open(original_filepath) as f:
 
-            # FIXME: Right now we expect encrypted files to be JSON or YAML files, and
-            #        so we fail if these are not valid JSON/YAML. However in the
-            #        future, we may want to support encrypted files of other types
-            #        and we should update this section accordingly.
-            #
             # Support the (clearly wrong) people who use .yml instead of .yaml
             if ext == ".yaml" or ext == ".yml":
                 try:
                     content = yaml.load(f)
                 except ScannerError:
-                    raise ScannerError(
-                        "We expect encrypted files to be valid JSON or YAML files."
-                    )
+                    yield original_filepath
+                    return
             elif ext == ".json":
                 try:
                     content = json.load(f)
                 except json.JSONDecodeError:
-                    raise json.JSONDecodeError(
-                        "We expect encrypted files to be valid JSON or YAML files."
-                    )
+                    yield original_filepath
+                    return
 
         if "sops" not in content:
             raise KeyError(
