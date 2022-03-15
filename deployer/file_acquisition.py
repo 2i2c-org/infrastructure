@@ -104,22 +104,14 @@ def get_decrypted_file(original_filepath):
     if filename.startswith("enc-") or ("secret" in filename):
         # We must then determine if the file is using sops
         # sops files are JSON/YAML with a `sops` key. So we first check
-        # if the file is valid JSON/YAML, and then if it has a `sops` key
+        # if the file is valid JSON/YAML, and then if it has a `sops` key.
+        # Since valid JSON is also valid YAML by design, a YAML parser can read in JSON.
         with open(original_filepath) as f:
-
-            # Support the (clearly wrong) people who use .yml instead of .yaml
-            if ext == ".yaml" or ext == ".yml":
-                try:
-                    content = yaml.load(f)
-                except ScannerError:
-                    yield original_filepath
-                    return
-            elif ext == ".json":
-                try:
-                    content = json.load(f)
-                except json.JSONDecodeError:
-                    yield original_filepath
-                    return
+            try:
+                content = yaml.load(f)
+            except ScannerError:
+                yield original_filepath
+                return
 
         if "sops" not in content:
             raise KeyError(
