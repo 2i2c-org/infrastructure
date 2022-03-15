@@ -31,4 +31,4 @@ jobs:
           pip install -r requirements.txt
       - name: Run tests
         run: |
-          pytest -vvv --color=yes
+          python -m pytest -vvv --color=yes
