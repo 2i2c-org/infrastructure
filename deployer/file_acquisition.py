@@ -107,8 +107,9 @@ def get_decrypted_file(original_filepath):
             try:
                 content = yaml.load(f)
             except ScannerError:
-                yield original_filepath
-                return
+                raise ScannerError(
+                    "We expect encrypted files to be valid JSON or YAML files."
+                )
 
         if "sops" not in content:
             raise KeyError(
