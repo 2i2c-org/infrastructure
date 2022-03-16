@@ -65,28 +65,24 @@ dask_nodes = {
     max : 20,
     machine_type : "n1-standard-8",
     labels: {},
-    disk_type: "pd-ssd"
   },
   "large" : {
     min : 0,
     max : 20,
     machine_type : "n1-standard-16",
     labels: {},
-    disk_type: "pd-ssd"
   },
   "very-large" : {
     min : 0,
     max : 20,
     machine_type : "n1-standard-32",
     labels: {},
-    disk_type: "pd-ssd"
   },
   "huge" : {
     min : 0,
     max : 20,
     machine_type : "n1-standard-64",
     labels: {},
-    disk_type: "pd-ssd"
   },
 
 }
