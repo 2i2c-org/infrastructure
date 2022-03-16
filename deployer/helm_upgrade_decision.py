@@ -34,7 +34,7 @@ def discover_modified_common_files(modified_paths: list):
         upgrade_all_hubs_on_all_clusters (bool): Whether or not all hubs on all clusters
             should be upgraded since a core piece of infrastructure has changed
     """
-    # If any of the following filepaths have changed, we should update all hubs on all clusters
+    # If any of the following filepaths have changed, we should upgrade all hubs on all clusters
     common_filepaths = [
         # Filepaths related to the deployer infrastructure
         "deployer/*",
@@ -46,7 +46,7 @@ def discover_modified_common_files(modified_paths: list):
         "helm-charts/basehub/*",
         "helm-charts/daskhub/*",
     ]
-    # If this filepath has changes, we should update the support chart on all clusters
+    # If this filepath has changes, we should upgrade the support chart on all clusters
     support_chart_filepath = "helm-charts/support/*"
 
     # Discover if the support chart has been modified
@@ -136,7 +136,7 @@ def generate_hub_matrix_jobs(
     # Empty list to store the matrix job definitions in
     matrix_jobs = []
 
-    # This flag will allow us to establish when a cluster.yaml file has been updated
+    # This flag will allow us to establish when a cluster.yaml file has been modified
     # and all hubs on that cluster should be upgraded, without also upgrading all hubs
     # on all other clusters
     upgrade_all_hubs_on_this_cluster = False
@@ -248,7 +248,7 @@ def generate_support_matrix_jobs(
         added_or_modified_files (set): A set of all added or modified files from the
             input of a GitHub Pull Request
         upgrade_support_on_all_clusters (bool, optional): If True, generates jobs to
-            update the support chart on all clusters. This is triggered when common
+            upgrade the support chart on all clusters. This is triggered when common
             config has been modified in the support helm chart. Defaults to False.
 
     Returns:
