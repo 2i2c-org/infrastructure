@@ -64,7 +64,7 @@ def discover_modified_common_files(modified_paths: list):
     return upgrade_support_on_all_clusters, upgrade_all_hubs_on_all_clusters
 
 
-def get_unique_cluster_dirpaths(added_or_modified_files: list):
+def get_unique_cluster_filepaths(added_or_modified_files: list):
     """For a list of added and modified files, get the list of unique filepaths to
     cluster folders containing added/modified files
 
