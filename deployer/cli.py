@@ -17,9 +17,13 @@ from config_validation import (
 )
 
 
-def _convert_string_to_list(full_str: str) -> list:
+def _converted_string_to_list(full_str: str) -> list:
     """
-    Take a SPACE-DELIMITED string and split it into a list
+    Take a SPACE-DELIMITED string and split it into a list.
+
+    This function is used by the generate-helm-upgrade-jobs subcommand to ensure that
+    the list os added or modified files parsed from the command line is transformed
+    into a list of strings instead of one long string with spaces between the elements
     """
     return full_str.split(" ")
 
@@ -110,7 +114,7 @@ def main():
     generate_helm_upgrade_jobs_parser.add_argument(
         "filepaths",
         nargs="?",
-        type=_convert_string_to_list,
+        type=_converted_string_to_list,
         help="A singular or space-delimited list of added or modified filepaths in the repo",
     )
     generate_helm_upgrade_jobs_parser.add_argument(
