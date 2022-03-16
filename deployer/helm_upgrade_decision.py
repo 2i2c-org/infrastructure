@@ -217,7 +217,7 @@ def generate_hub_matrix_jobs(
                     # this hub has been modified, add it to list of matrix jobs to be
                     # upgraded
                     reason_for_redeploy = (
-                        "Following helm chart values files were modified:\n"
+                        "Following helm chart values files were modified:\n- "
                         + "\n- ".join(intersection)
                     )
 
@@ -414,7 +414,7 @@ def generate_support_matrix_jobs(
 
                     if len(support_values_intersection) > 0:
                         matrix_job["reason_for_redeploy"] = (
-                            "Following helm chart values files were modified:\n"
+                            "Following helm chart values files were modified:\n- "
                             + "\n- ".join(support_values_intersection)
                         )
                     elif len(cluster_yaml_intersection) > 0:
