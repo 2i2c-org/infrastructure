@@ -54,6 +54,7 @@ basehub:
               mountPath: /home/jovyan/shared
               subPath: _shared
 
+      # User image repo: https://github.com/NASA-Openscapes/corn
       image:
         name: 783616723547.dkr.ecr.us-west-2.amazonaws.com/user-image
         tag: "d78bb6c"

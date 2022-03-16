@@ -53,6 +53,7 @@ basehub:
             - name: home
               mountPath: /home/jovyan/shared
               subPath: _shared
+      # User image repo: https://github.com/ICESAT-2HackWeek/website2022
       image:
         name: quay.io/uwhackweek/icesat2
         tag: "2022.02.03"
