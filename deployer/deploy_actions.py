@@ -20,7 +20,6 @@ from config_validation import (
 from helm_upgrade_decision import (
     discover_modified_common_files,
     get_unique_cluster_dirpaths,
-    evaluate_condition_for_upgrading_support_chart,
     generate_support_matrix_jobs,
     generate_hub_matrix_jobs,
     pretty_print_matrix_jobs,
@@ -244,10 +243,6 @@ def generate_helm_upgrade_jobs(changed_filepaths, pretty_print=False):
         cluster_filepaths,
         set(changed_filepaths),
         upgrade_all_hubs_on_all_clusters=upgrade_all_hubs_on_all_clusters,
-    )
-
-    modified_paths_for_support_upgrade = evaluate_condition_for_upgrading_support_chart(
-        cluster_filepaths  # target_support_files
     )
 
     # Generate a job matrix of all clusters that need their support chart upgrading
