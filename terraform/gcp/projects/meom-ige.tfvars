@@ -24,31 +24,31 @@ notebook_nodes = {
     min : 0,
     max : 20,
     machine_type : "n1-standard-2",
-    labels: {}
+    labels: {},
   },
   "medium" : {
     min : 0,
     max : 20,
     machine_type : "n1-standard-8",
-    labels: {}
+    labels: {},
   },
   "large" : {
     min : 0,
     max : 20,
     machine_type : "n1-standard-16",
-    labels: {}
+    labels: {},
   },
   "very-large" : {
     min : 0,
     max : 20,
     machine_type : "n1-standard-32",
-    labels: {}
+    labels: {},
   },
   "huge" : {
     min : 0,
     max : 20,
     machine_type : "n1-standard-64",
-    labels: {}
+    labels: {},
   },
 
 }
@@ -58,31 +58,35 @@ dask_nodes = {
     min : 0,
     max : 20,
     machine_type : "n1-standard-2",
-    labels: {}
+    labels: {},
   },
   "medium" : {
     min : 0,
     max : 20,
     machine_type : "n1-standard-8",
-    labels: {}
+    labels: {},
+    disk_type: "pd-ssd"
   },
   "large" : {
     min : 0,
     max : 20,
     machine_type : "n1-standard-16",
-    labels: {}
+    labels: {},
+    disk_type: "pd-ssd"
   },
   "very-large" : {
     min : 0,
     max : 20,
     machine_type : "n1-standard-32",
-    labels: {}
+    labels: {},
+    disk_type: "pd-ssd"
   },
   "huge" : {
     min : 0,
     max : 20,
     machine_type : "n1-standard-64",
-    labels: {}
+    labels: {},
+    disk_type: "pd-ssd"
   },
 
 }
