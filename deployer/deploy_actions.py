@@ -266,6 +266,13 @@ def generate_helm_upgrade_jobs(changed_filepaths, pretty_print=False):
         upgrade_all_clusters=upgrade_all_clusters,
     )
 
+    # The existence of the GITHUB_ENV environment variable is an indication that
+    # we are running in an GitHub Actions workflow
+    # https://docs.github.com/en/actions/learn-github-actions/environment-variables#default-environment-variables
+    # We should always default to pretty printing the results of the decision logic
+    # if we are not running in GitHub Actions, even when the --pretty-print flag has
+    # not been parsed on the command line. This will avoid errors trying to write to
+    # a GITHUB_ENV file that does not exist in the update_github_env function
     env = os.environ.get("GITHUB_ENV", {})
     if pretty_print or not env:
         pretty_print_matrix_jobs(hub_matrix_jobs, support_matrix_jobs)
