@@ -10,7 +10,7 @@ from ruamel.yaml import YAML
 from rich.console import Console
 from rich.table import Table
 
-from .utils import print_colour
+from utils import print_colour
 
 yaml = YAML(typ="safe", pure=True)
 
