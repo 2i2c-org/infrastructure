@@ -231,7 +231,7 @@ def generate_helm_upgrade_jobs(changed_filepaths, pretty_print=False):
             modified by a GitHub Pull Request
         pretty_print (bool, optional): If True, output a human readable table of jobs
             to be run using rich. If False, output a list of dictionaries to be
-            passed to a GitHub Actions matrix jobs. Defaults to False.
+            passed to a GitHub Actions matrix job. Defaults to False.
     """
     (
         upgrade_support_on_all_clusters,
