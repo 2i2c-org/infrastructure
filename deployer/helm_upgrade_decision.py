@@ -27,8 +27,8 @@ def discover_modified_common_files(modified_paths: list):
             in a given GitHub Pull Request.
 
     Returns:
-        upgrade_support_on_all_clusters (bool): Whether or not all clusters should be
-            upgraded since the support chart has changed
+        upgrade_support_on_all_clusters (bool): Whether or not all clusters should have
+            their support chart upgraded since has changes
         upgrade_all_hubs_on_all_clusters (bool): Whether or not all hubs on all clusters
             should be upgraded since a core piece of infrastructure has changed
     """
@@ -285,7 +285,7 @@ def generate_support_matrix_jobs(
         support_config = cluster_config.get("support", {})
         if support_config:
             if upgrade_support_on_all_clusters:
-                # We know we're upgrading all hubs, so just add the hub name to the list
+                # We know we're upgrading support on all clusters, so just add the cluster name to the list
                 # of matrix jobs and move on
                 matrix_jobs.append(cluster_info)
             else:
@@ -319,6 +319,7 @@ def update_github_env(hub_matrix_jobs, support_matrix_jobs):
     """Update the GITHUB_ENV environment with two new variables describing the matrix
     jobs that need to be run in order to update the support charts and hubs that have
     been modified.
+
     Args:
         hub_matrix_jobs (list[dict]): A list of dictionaries which describe the set of
             matrix jobs required to update only the hubs on clusters whose config has
