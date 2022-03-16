@@ -21,38 +21,43 @@ def discover_modified_common_files(modified_paths: list):
     """There are certain common files which, if modified, we should upgrade all hubs
     and/or all clusters appropriately. These common files include the helm charts we
     deploy, as well as the GitHub Actions and deployer package we use to deploy them.
+
     Args:
         modified_paths (list[str]): The list of files that have been added or modified
             in a given GitHub Pull Request.
+
     Returns:
-        upgrade_all_clusters (bool): Whether or not all clusters should be upgraded
-            since the support chart has changed
-        upgrade_all_hubs (bool): Whether or not all hubs on all clusters should be
-            upgraded since a core piece of infrastructure has changed
+        upgrade_support_on_all_clusters (bool): Whether or not all clusters should be
+            upgraded since the support chart has changed
+        upgrade_all_hubs_on_all_clusters (bool): Whether or not all hubs on all clusters
+            should be upgraded since a core piece of infrastructure has changed
     """
     # If any of the following filepaths have changed, we should update all hubs on all clusters
     common_filepaths = [
+        # Filepaths related to the deployer infrastructure
         "deployer/*",
+        "requirements.txt",
+        # Filepaths related to GitHub Actions infrastructure
+        ".github/workflows/deploy-hubs.yaml",
+        ".github/actions/deploy/*",
+        # Filepaths related to helm chart infrastructure
         "helm-charts/basehub/*",
         "helm-charts/daskhub/*",
-        ".github/actions/deploy/*",
-        "requirements.txt",
-        ".github/workflows/deploy-hubs.yaml",
     ]
     # If this filepath has changes, we should update the support chart on all clusters
     support_chart_filepath = "helm-charts/support/*"
 
     # Discover if the support chart has been modified
-    upgrade_all_clusters = bool(fnmatch.filter(modified_paths, support_chart_filepath))
+    upgrade_support_on_all_clusters = bool(fnmatch.filter(modified_paths, support_chart_filepath))
 
     # Discover if any common config has been modified
-    upgrade_all_hubs = False
+    upgrade_all_hubs_on_all_clusters = False
     for common_filepath_pattern in common_filepaths:
-        upgrade_all_hubs = bool(fnmatch.filter(modified_paths, common_filepath_pattern))
-        if upgrade_all_hubs:
+        upgrade_all_hubs_on_all_clusters = bool(fnmatch.filter(modified_paths, common_filepath_pattern))
+        if upgrade_all_hubs_on_all_clusters:
             break
 
-    return upgrade_all_clusters, upgrade_all_hubs
+    return upgrade_support_on_all_clusters, upgrade_all_hubs_on_all_clusters
 
 
 def get_categorised_unique_filepaths(added_or_modified_files: list):
@@ -105,7 +110,7 @@ def generate_hub_matrix_jobs(
     cluster_filepaths,
     modified_cluster_files,
     modified_values_files,
-    upgrade_all_hubs=False,
+    upgrade_all_hubs_on_all_clusters=False,
 ):
     """Generate a list of dictionaries describing which hubs on which clusters need
     to undergo a helm upgrade based on whether their associated helm chart values
@@ -120,9 +125,9 @@ def generate_hub_matrix_jobs(
             been added or modified
         modified_values_files (set[list]): A set of all */*.values.yaml files that have
             been added or modified
-        upgrade_all_hubs (bool, optional): If True, generates jobs to upgrade all hubs
-            on all clusters. This is triggered when common config has been modified,
-            such as basehub or daskhub helm charts. Defaults to False.
+        upgrade_all_hubs_on_all_clusters (bool, optional): If True, generates jobs to
+            upgrade all hubs on all clusters. This is triggered when common config has
+            been modified, such as basehub or daskhub helm charts. Defaults to False.
 
     Returns:
         list[dict]: A list of dictionaries. Each dictionary contains: the name of a
@@ -137,7 +142,7 @@ def generate_hub_matrix_jobs(
     # on all other clusters
     upgrade_all_hubs_on_this_cluster = False
 
-    if upgrade_all_hubs:
+    if upgrade_all_hubs_on_all_clusters:
         print(
             "Common config has been updated. Generating jobs to upgrade all hubs on ALL clusters."
         )
@@ -165,7 +170,7 @@ def generate_hub_matrix_jobs(
         with open(cluster_filepath.joinpath("cluster.yaml")) as f:
             cluster_config = yaml.load(f)
 
-        if not upgrade_all_hubs:
+        if not upgrade_all_hubs_on_all_clusters:
             # Check if this cluster file has been modified. If so, set
             # upgrade_all_hubs_on_this_cluster to True
             intersection = modified_cluster_files.intersection(
@@ -185,7 +190,7 @@ def generate_hub_matrix_jobs(
 
         # Loop over each hub on this cluster
         for hub in cluster_config.get("hubs", {}):
-            if upgrade_all_hubs or upgrade_all_hubs_on_this_cluster:
+            if upgrade_all_hubs_on_all_clusters or upgrade_all_hubs_on_this_cluster:
                 # We know we're upgrading all hubs, so just add the hub name to the list
                 # of matrix jobs and move on
                 matrix_job = cluster_info.copy()
@@ -248,19 +253,22 @@ def evaluate_condition_for_upgrading_support_chart(
     return modified_paths_for_support_upgrade
 
 
-def generate_support_matrix_jobs(modified_dirpaths, upgrade_all_clusters=False):
+def generate_support_matrix_jobs(modified_dirpaths, upgrade_support_on_all_clusters=False):
     """Generate a list of dictionaries describing which clusters need to undergo a helm
     upgrade of their support chart based on whether their cluster.yaml file or
     associated support chart values files have been modified. To be parsed to GitHub
     Actions in order to generate parallel jobs in a matrix.
+
     Note: "cluster folders" are those that contain a cluster.yaml file.
+
     Args:
         modified_dirpaths (list[path obj]): List of absolute paths to cluster folders
             that contain EITHER a modified cluster.yaml OR a modified support.values.yaml
             file
-        upgrade_all_clusters (bool, optional): If True, generates jobs to update the
-            support chart on all clusters. This is triggered when common config has been
-            modified in the support helm chart. Defaults to False.
+        upgrade_support_on_all_clusters (bool, optional): If True, generates jobs to
+            update the support chart on all clusters. This is triggered when common
+            config has been modified in the support helm chart. Defaults to False.
+
     Returns:
         list[dict]: A list of dictionaries. Each dictionary contains: the name of a
             cluster and the cloud provider that cluster runs on.
@@ -268,7 +276,7 @@ def generate_support_matrix_jobs(modified_dirpaths, upgrade_all_clusters=False):
     # Empty list to store the matrix definitions in
     matrix_jobs = []
 
-    if upgrade_all_clusters:
+    if upgrade_support_on_all_clusters:
         print(
             "Common config has been updated. Generating jobs to upgrade support chart on ALL clusters."
         )

@@ -232,7 +232,7 @@ def generate_helm_upgrade_jobs(changed_filepaths, pretty_print=False):
             to be run using rich. If False, output a list of dictionaries to be
             passed to a GitHub Actions matrix jobs. Defaults to False.
     """
-    upgrade_all_clusters, upgrade_all_hubs = discover_modified_common_files(
+    upgrade_support_on_all_clusters, upgrade_all_hubs_on_all_clusters = discover_modified_common_files(
         changed_filepaths
     )
 
@@ -251,7 +251,7 @@ def generate_helm_upgrade_jobs(changed_filepaths, pretty_print=False):
         target_cluster_filepaths,
         target_cluster_files,
         target_values_files,
-        upgrade_all_hubs=upgrade_all_hubs,
+        upgrade_all_hubs_on_all_clusters=upgrade_all_hubs_on_all_clusters,
     )
 
     modified_paths_for_support_upgrade = evaluate_condition_for_upgrading_support_chart(
@@ -261,7 +261,7 @@ def generate_helm_upgrade_jobs(changed_filepaths, pretty_print=False):
     # Generate a job matrix of all clusters that need their support chart upgrading
     support_matrix_jobs = generate_support_matrix_jobs(
         modified_paths_for_support_upgrade,
-        upgrade_all_clusters=upgrade_all_clusters,
+        upgrade_support_on_all_clusters=upgrade_support_on_all_clusters,
     )
 
     # The existence of the GITHUB_ENV environment variable is an indication that
