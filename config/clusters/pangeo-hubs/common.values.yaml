@@ -10,6 +10,9 @@ basehub:
       # Name of Google Filestore share
       baseShareName: /homes/
   jupyterhub:
+    scheduler:
+      userScheduler:
+        enabled: true
     proxy:
       https:
         enabled: false
