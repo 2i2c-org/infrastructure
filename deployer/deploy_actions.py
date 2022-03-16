@@ -242,8 +242,7 @@ def generate_helm_upgrade_jobs(changed_filepaths, pretty_print=False):
     # Generate a job matrix of all hubs that need upgrading
     hub_matrix_jobs = generate_hub_matrix_jobs(
         cluster_filepaths,
-        # target_cluster_files,
-        # target_values_files,
+        set(changed_filepaths),
         upgrade_all_hubs_on_all_clusters=upgrade_all_hubs_on_all_clusters,
     )
 
@@ -253,7 +252,8 @@ def generate_helm_upgrade_jobs(changed_filepaths, pretty_print=False):
 
     # Generate a job matrix of all clusters that need their support chart upgrading
     support_matrix_jobs = generate_support_matrix_jobs(
-        modified_paths_for_support_upgrade,
+        cluster_filepaths,
+        set(changed_filepaths),
         upgrade_support_on_all_clusters=upgrade_support_on_all_clusters,
     )
 
