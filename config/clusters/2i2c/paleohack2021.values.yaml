@@ -34,7 +34,7 @@ jupyterhub:
       limit: 2
     image:
       name: quay.io/2i2c/paleohack-2021
-      tag: 7534858b1098
+      tag: 9d557294938e
   hub:
     config:
       Authenticator:
