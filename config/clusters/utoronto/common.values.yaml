@@ -10,7 +10,7 @@ nfs:
     # Trailing slash is important!
     baseShareName: /2i2cutorontohubstorage/homes/
 jupyterhub:
-  scheduler:
+  scheduling:
     userScheduler:
       enabled: true
   # pre-puller is necessary as the image is pretty big, and
