@@ -231,9 +231,10 @@ def generate_helm_upgrade_jobs(changed_filepaths, pretty_print=False):
             to be run using rich. If False, output a list of dictionaries to be
             passed to a GitHub Actions matrix jobs. Defaults to False.
     """
-    upgrade_support_on_all_clusters, upgrade_all_hubs_on_all_clusters = discover_modified_common_files(
-        changed_filepaths
-    )
+    (
+        upgrade_support_on_all_clusters,
+        upgrade_all_hubs_on_all_clusters,
+    ) = discover_modified_common_files(changed_filepaths)
 
     # Get a list of filepaths to target cluster folders
     cluster_filepaths = get_unique_cluster_dirpaths(changed_filepaths)

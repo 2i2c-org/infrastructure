@@ -38,9 +38,7 @@ def test_generate_hub_matrix_jobs_one_cluster_one_hub():
         {"provider": "gcp", "cluster_name": "cluster1", "hub_name": "hub1"}
     ]
 
-    result_matrix_jobs = generate_hub_matrix_jobs(
-        input_cluster_filepaths, input_files
-    )
+    result_matrix_jobs = generate_hub_matrix_jobs(input_cluster_filepaths, input_files)
 
     case.assertCountEqual(result_matrix_jobs, expected_matrix_jobs)
     assert isinstance(result_matrix_jobs, list)
@@ -63,9 +61,7 @@ def test_generate_hub_matrix_jobs_one_cluster_many_hubs():
         {"provider": "gcp", "cluster_name": "cluster1", "hub_name": "hub2"},
     ]
 
-    result_matrix_jobs = generate_hub_matrix_jobs(
-        input_cluster_filepaths, input_files
-    )
+    result_matrix_jobs = generate_hub_matrix_jobs(input_cluster_filepaths, input_files)
 
     case.assertCountEqual(result_matrix_jobs, expected_matrix_jobs)
     assert isinstance(result_matrix_jobs, list)
@@ -89,9 +85,7 @@ def test_generate_hub_matrix_jobs_one_cluster_all_hubs():
         {"provider": "gcp", "cluster_name": "cluster1", "hub_name": "hub3"},
     ]
 
-    result_matrix_jobs = generate_hub_matrix_jobs(
-        input_cluster_filepaths, input_files
-    )
+    result_matrix_jobs = generate_hub_matrix_jobs(input_cluster_filepaths, input_files)
 
     case.assertCountEqual(result_matrix_jobs, expected_matrix_jobs)
     assert isinstance(result_matrix_jobs, list)
@@ -117,9 +111,7 @@ def test_generate_hub_matrix_jobs_many_clusters_one_hub():
         {"provider": "aws", "cluster_name": "cluster2", "hub_name": "hub1"},
     ]
 
-    result_matrix_jobs = generate_hub_matrix_jobs(
-        input_cluster_filepaths, input_files
-    )
+    result_matrix_jobs = generate_hub_matrix_jobs(input_cluster_filepaths, input_files)
 
     case.assertCountEqual(result_matrix_jobs, expected_matrix_jobs)
     assert isinstance(result_matrix_jobs, list)
@@ -149,9 +141,7 @@ def test_generate_hub_matrix_jobs_many_clusters_many_hubs():
         {"provider": "aws", "cluster_name": "cluster2", "hub_name": "hub2"},
     ]
 
-    result_matrix_jobs = generate_hub_matrix_jobs(
-        input_cluster_filepaths, input_files
-    )
+    result_matrix_jobs = generate_hub_matrix_jobs(input_cluster_filepaths, input_files)
 
     case.assertCountEqual(result_matrix_jobs, expected_matrix_jobs)
     assert isinstance(result_matrix_jobs, list)
@@ -195,7 +185,9 @@ def test_generate_support_matrix_jobs_one_cluster():
 
     expected_matrix_jobs = [{"provider": "gcp", "cluster_name": "cluster1"}]
 
-    result_matrix_jobs = generate_support_matrix_jobs(input_cluster_filepaths, input_files)
+    result_matrix_jobs = generate_support_matrix_jobs(
+        input_cluster_filepaths, input_files
+    )
 
     case.assertCountEqual(result_matrix_jobs, expected_matrix_jobs)
     assert isinstance(result_matrix_jobs, list)
@@ -220,7 +212,9 @@ def test_generate_support_matrix_jobs_many_clusters():
         {"provider": "aws", "cluster_name": "cluster2"},
     ]
 
-    result_matrix_jobs = generate_support_matrix_jobs(input_cluster_filepaths, input_files)
+    result_matrix_jobs = generate_support_matrix_jobs(
+        input_cluster_filepaths, input_files
+    )
 
     case.assertCountEqual(result_matrix_jobs, expected_matrix_jobs)
     assert isinstance(result_matrix_jobs, list)
