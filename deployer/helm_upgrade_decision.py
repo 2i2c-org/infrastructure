@@ -297,7 +297,9 @@ def generate_support_matrix_jobs(
                 # We know we're upgrading support on all clusters, so just add the cluster name to the list
                 # of matrix jobs and move on
                 matrix_job = cluster_info.copy()
-                matrix_job["reason_for_redeploy"] = "Support helm chart has been modified"
+                matrix_job[
+                    "reason_for_redeploy"
+                ] = "Support helm chart has been modified"
                 matrix_jobs.append(matrix_job)
             else:
                 # Has the cluster.yaml file for this cluster folder been modified?
