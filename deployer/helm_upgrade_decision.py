@@ -60,13 +60,9 @@ def discover_modified_common_files(modified_paths: list):
     return upgrade_support_on_all_clusters, upgrade_all_hubs_on_all_clusters
 
 
-def get_categorised_unique_filepaths(added_or_modified_files: list):
-    """For a list of added and modified files, get the following categorised, unique
-    filepaths:
-    - A list of unique filepaths to cluster folders containing added/modified files
-    - A set of all added/modified files matching the pattern "*/cluster.yaml"
-    - A set of all added/modified files matching the pattern "*/*.values.yaml"
-    - A set of all added/modified files matching the pattern "*/support.values.yaml"
+def get_unique_cluster_dirpaths(added_or_modified_files: list):
+    """For a list of added and modified files, get the list of unique filepaths to
+    cluster folders containing added/modified files
 
     Note: "cluster folders" are those that contain a cluster.yaml file.
 
@@ -76,34 +72,18 @@ def get_categorised_unique_filepaths(added_or_modified_files: list):
 
     Returns:
         list[path obj]: A list of unique filepaths to cluster folders
-        set[str]: A set of all files matching the pattern "*/cluster.yaml"
-        set[str]: A set of all files matching the pattern "*/*.values.yaml"
-        set[str]: A set of all files matching the pattern "*/*support*.values.yaml"
     """
-    patterns_to_match = ["*/cluster.yaml", "*/*.values.yaml", "*/*support*.values.yaml"]
-    cluster_filepaths = []
-
-    # Identify cluster paths amongst target paths depending on the files they contain
-    for pattern in patterns_to_match:
-        cluster_filepaths.extend(fnmatch.filter(added_or_modified_files, pattern))
-
     # Get absolute paths
-    cluster_filepaths = [Path(filepath).parent for filepath in cluster_filepaths]
+    filepaths = [Path(filepath).parent for filepath in added_or_modified_files]
     # Get unique absolute paths
-    cluster_filepaths = list(set(cluster_filepaths))
+    filepaths = list(set(filepaths))
 
-    # Filter for all added/modified cluster config files
-    cluster_files = set(fnmatch.filter(added_or_modified_files, "*/cluster.yaml"))
+    # Check these filepaths are cluster folders by the existence of a cluster.yaml file
+    for filepath in filepaths:
+        if not filepath.joinpath("cluster.yaml").is_file():
+            filepaths.remove(filepath)
 
-    # Filter for all added/modified helm chart values files
-    values_files = set(fnmatch.filter(added_or_modified_files, "*/*.values.yaml"))
-
-    # Filter for all add/modified support chart values files
-    support_files = set(
-        fnmatch.filter(added_or_modified_files, "*/*support*.values.yaml")
-    )
-
-    return cluster_filepaths, cluster_files, values_files, support_files
+    return filepaths
 
 
 def generate_hub_matrix_jobs(
