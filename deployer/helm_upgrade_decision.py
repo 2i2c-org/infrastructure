@@ -141,8 +141,9 @@ def generate_hub_matrix_jobs(
 
     if upgrade_all_hubs_on_all_clusters:
         print(
-            "Common config has been updated. Generating jobs to upgrade all hubs on ALL clusters."
+            "Core infrastrucure has been modified. Generating jobs to upgrade all hubs on ALL clusters."
         )
+        reason_for_redeploy = "Core infrastructure has changed"
 
         # Overwrite cluster_filepaths to contain paths to all clusters
         if test_env == "test":
@@ -178,6 +179,7 @@ def generate_hub_matrix_jobs(
                     f"This cluster.yaml file has been modified. Generating jobs to upgrade all hubs on THIS cluster: {cluster_config.get('name', {})}"
                 )
                 upgrade_all_hubs_on_this_cluster = True
+                reason_for_redeploy = "cluster.yaml file was modified"
 
         # Generate template dictionary for all jobs associated with this cluster
         cluster_info = {
@@ -192,6 +194,7 @@ def generate_hub_matrix_jobs(
                 # of matrix jobs and move on
                 matrix_job = cluster_info.copy()
                 matrix_job["hub_name"] = hub["name"]
+                matrix_job["reason_for_redeploy"] = reason_for_redeploy
                 matrix_jobs.append(matrix_job)
 
             else:
@@ -210,8 +213,14 @@ def generate_hub_matrix_jobs(
                     # If at least one of the helm chart values files associated with
                     # this hub has been modified, add it to list of matrix jobs to be
                     # upgraded
+                    reason_for_redeploy = (
+                        "Following helm chart values files were modified:\n"
+                        + "\n- ".join(intersection)
+                    )
+
                     matrix_job = cluster_info.copy()
                     matrix_job["hub_name"] = hub["name"]
+                    matrix_job["reason_for_redeploy"] = reason_for_redeploy
                     matrix_jobs.append(matrix_job)
 
         # Reset upgrade_all_hubs_on_this_cluster for the next iteration
@@ -249,7 +258,7 @@ def generate_support_matrix_jobs(
 
     if upgrade_support_on_all_clusters:
         print(
-            "Common config has been updated. Generating jobs to upgrade support chart on ALL clusters."
+            "Support helm chart has been modified. Generating jobs to upgrade support chart on ALL clusters."
         )
 
         # Overwrite cluster_filepaths to contain paths to all clusters
@@ -287,7 +296,9 @@ def generate_support_matrix_jobs(
             if upgrade_support_on_all_clusters:
                 # We know we're upgrading support on all clusters, so just add the cluster name to the list
                 # of matrix jobs and move on
-                matrix_jobs.append(cluster_info)
+                matrix_job = cluster_info.copy()
+                matrix_job["reason_for_redeploy"] = "Support helm chart has been modified"
+                matrix_jobs.append(matrix_job)
             else:
                 # Has the cluster.yaml file for this cluster folder been modified?
                 cluster_yaml_intersection = added_or_modified_files.intersection(
@@ -308,6 +319,20 @@ def generate_support_matrix_jobs(
                 if (len(cluster_yaml_intersection) > 0) or (
                     len(support_values_intersection) > 0
                 ):
+                    matrix_job = cluster_info.copy()
+
+                    if len(support_values_intersection) > 0:
+                        matrix_job["reason_to_redeploy"] = (
+                            "Following helm chart values files were modified:\n"
+                            + "\n- ".join(support_values_intersection)
+                        )
+                    elif len(cluster_yaml_intersection) > 0:
+                        matrix_job[
+                            "reason_to_redeploy"
+                        ] = "cluster.yaml file was modified"
+                    else:
+                        matrix_job["reason_to_redeploy"] = ""
+
                     matrix_jobs.append(cluster_info)
         else:
             print(f"No support defined for cluster: {cluster_config.get('name', {})}")
@@ -349,20 +374,29 @@ def pretty_print_matrix_jobs(hub_matrix_jobs, support_matrix_jobs):
     support_table = Table(title="Support chart upgrades")
     support_table.add_column("Cloud Provider")
     support_table.add_column("Cluster Name")
+    support_table.add_column("Reason for Redeploy")
 
     # Add rows
     for job in support_matrix_jobs:
-        support_table.add_row(job["provider"], job["cluster_name"])
+        support_table.add_row(
+            job["provider"], job["cluster_name"], job["reason_for_redeploy"]
+        )
 
     # Construct table for hub helm chart upgrades
     hub_table = Table(title="Hub helm chart upgrades")
     hub_table.add_column("Cloud Provider")
     hub_table.add_column("Cluster Name")
     hub_table.add_column("Hub Name")
+    hub_table.add_column("Reason for Redeploy")
 
     # Add rows
     for job in hub_matrix_jobs:
-        hub_table.add_row(job["provider"], job["cluster_name"], job["hub_name"])
+        hub_table.add_row(
+            job["provider"],
+            job["cluster_name"],
+            job["hub_name"],
+            job["reason_for_redeploy"],
+        )
 
     console = Console()
     console.print(support_table)
