@@ -88,8 +88,7 @@ def get_unique_cluster_dirpaths(added_or_modified_files: list):
 
 def generate_hub_matrix_jobs(
     cluster_filepaths,
-    modified_cluster_files,
-    modified_values_files,
+    added_or_modified_files,
     upgrade_all_hubs_on_all_clusters=False,
 ):
     """Generate a list of dictionaries describing which hubs on which clusters need
@@ -101,10 +100,8 @@ def generate_hub_matrix_jobs(
 
     Args:
         cluster_filepaths (list[path obj]): List of absolute paths to cluster folders
-        modified_cluster_files (set[list]): A set of all */cluster.yaml files that have
-            been added or modified
-        modified_values_files (set[list]): A set of all */*.values.yaml files that have
-            been added or modified
+        added_or_modified_files (set[str]): A set of all added or modified files
+            provided in a GitHub Pull Requests
         upgrade_all_hubs_on_all_clusters (bool, optional): If True, generates jobs to
             upgrade all hubs on all clusters. This is triggered when common config has
             been modified, such as basehub or daskhub helm charts. Defaults to False.
@@ -153,7 +150,7 @@ def generate_hub_matrix_jobs(
         if not upgrade_all_hubs_on_all_clusters:
             # Check if this cluster file has been modified. If so, set
             # upgrade_all_hubs_on_this_cluster to True
-            intersection = modified_cluster_files.intersection(
+            intersection = added_or_modified_files.intersection(
                 [str(cluster_filepath.joinpath("cluster.yaml"))]
             )
             if len(intersection) > 0:
@@ -186,7 +183,7 @@ def generate_hub_matrix_jobs(
                 # Establish if any of this hub's helm chart values files have been
                 # modified
                 intersection = list(
-                    modified_values_files.intersection(helm_chart_values_files)
+                    added_or_modified_files.intersection(helm_chart_values_files)
                 )
 
                 if len(intersection) > 0:
@@ -233,7 +230,7 @@ def evaluate_condition_for_upgrading_support_chart(
     return modified_paths_for_support_upgrade
 
 
-def generate_support_matrix_jobs(modified_dirpaths, upgrade_support_on_all_clusters=False):
+def generate_support_matrix_jobs(cluster_filepaths, added_or_modified_files, upgrade_support_on_all_clusters=False):
     """Generate a list of dictionaries describing which clusters need to undergo a helm
     upgrade of their support chart based on whether their cluster.yaml file or
     associated support chart values files have been modified. To be parsed to GitHub
@@ -242,9 +239,11 @@ def generate_support_matrix_jobs(modified_dirpaths, upgrade_support_on_all_clust
     Note: "cluster folders" are those that contain a cluster.yaml file.
 
     Args:
-        modified_dirpaths (list[path obj]): List of absolute paths to cluster folders
-            that contain EITHER a modified cluster.yaml OR a modified support.values.yaml
-            file
+        cluster_filepaths (list[path obj]): List of absolute paths to cluster folders
+            that contain added or modified files from the input of a GitHub Pull
+            Request
+        added_or_modified_files (set): A set of all added or modified files from the
+            input of a GitHub Pull Request
         upgrade_support_on_all_clusters (bool, optional): If True, generates jobs to
             update the support chart on all clusters. This is triggered when common
             config has been modified in the support helm chart. Defaults to False.
@@ -290,11 +289,20 @@ def generate_support_matrix_jobs(modified_dirpaths, upgrade_support_on_all_clust
             "provider": cluster_config.get("provider", {}),
         }
 
-        # Double-check that support is defined for this cluster. If it is, append the
-        # job definition to the list of matrix jobs.
+        # Double-check that support is defined for this cluster.
         support_config = cluster_config.get("support", {})
         if support_config:
-            matrix_jobs.append(cluster_info)
+            # Has the cluster.yaml file for this cluster folder been modified?
+            cluster_yaml_intersection = added_or_modified_files.intersection([str(cluster_filepath.joinpath("cluster.yaml"))])
+
+            # Have the related support values files for this cluster been modified?
+            support_values_files = [str(cluster_filepath.joinpath(values_file)) for values_file in support_config.get("helm_chart_values")]
+            support_values_intersection = added_or_modified_files.intersection(support_values_files)
+
+            # If either of the intersections have a length greater than zero, append
+            # the job definition to the list of matrix jobs
+            if (len(cluster_yaml_intersection) > 0) or (len(support_values_intersection) > 0):
+                matrix_jobs.append(cluster_info)
         else:
             print(f"No support defined for cluster: {cluster_config.get('name', {})}")
 
