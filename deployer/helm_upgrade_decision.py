@@ -326,18 +326,16 @@ def generate_support_matrix_jobs(
                     matrix_job = cluster_info.copy()
 
                     if len(support_values_intersection) > 0:
-                        matrix_job["reason_to_redeploy"] = (
+                        matrix_job["reason_for_redeploy"] = (
                             "Following helm chart values files were modified:\n"
                             + "\n- ".join(support_values_intersection)
                         )
                     elif len(cluster_yaml_intersection) > 0:
                         matrix_job[
-                            "reason_to_redeploy"
+                            "reason_for_redeploy"
                         ] = "cluster.yaml file was modified"
-                    else:
-                        matrix_job["reason_to_redeploy"] = ""
 
-                    matrix_jobs.append(cluster_info)
+                    matrix_jobs.append(matrix_job)
         else:
             print_colour(f"No support defined for cluster: {cluster_config.get('name', {})}")
 

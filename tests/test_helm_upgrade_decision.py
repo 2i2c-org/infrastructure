@@ -35,7 +35,7 @@ def test_generate_hub_matrix_jobs_one_cluster_one_hub():
     }
 
     expected_matrix_jobs = [
-        {"provider": "gcp", "cluster_name": "cluster1", "hub_name": "hub1"}
+        {"provider": "gcp", "cluster_name": "cluster1", "hub_name": "hub1", "reason_for_redeploy": "Following helm chart values files were modified:\ntests/test-clusters/cluster1/hub1.values.yaml"}
     ]
 
     result_matrix_jobs = generate_hub_matrix_jobs(input_cluster_filepaths, input_files)
@@ -47,6 +47,7 @@ def test_generate_hub_matrix_jobs_one_cluster_one_hub():
     assert "provider" in result_matrix_jobs[0].keys()
     assert "cluster_name" in result_matrix_jobs[0].keys()
     assert "hub_name" in result_matrix_jobs[0].keys()
+    assert "reason_for_redeploy" in result_matrix_jobs[0].keys()
 
 
 def test_generate_hub_matrix_jobs_one_cluster_many_hubs():
@@ -57,8 +58,8 @@ def test_generate_hub_matrix_jobs_one_cluster_many_hubs():
     }
 
     expected_matrix_jobs = [
-        {"provider": "gcp", "cluster_name": "cluster1", "hub_name": "hub1"},
-        {"provider": "gcp", "cluster_name": "cluster1", "hub_name": "hub2"},
+        {"provider": "gcp", "cluster_name": "cluster1", "hub_name": "hub1", "reason_for_redeploy": "Following helm chart values files were modified:\ntests/test-clusters/cluster1/hub1.values.yaml"},
+        {"provider": "gcp", "cluster_name": "cluster1", "hub_name": "hub2", "reason_for_redeploy": "Following helm chart values files were modified:\ntests/test-clusters/cluster1/hub2.values.yaml"},
     ]
 
     result_matrix_jobs = generate_hub_matrix_jobs(input_cluster_filepaths, input_files)
@@ -70,6 +71,7 @@ def test_generate_hub_matrix_jobs_one_cluster_many_hubs():
     assert "provider" in result_matrix_jobs[0].keys()
     assert "cluster_name" in result_matrix_jobs[0].keys()
     assert "hub_name" in result_matrix_jobs[0].keys()
+    assert "reason_for_redeploy" in result_matrix_jobs[0].keys()
 
 
 def test_generate_hub_matrix_jobs_one_cluster_all_hubs():
@@ -80,9 +82,9 @@ def test_generate_hub_matrix_jobs_one_cluster_all_hubs():
     }
 
     expected_matrix_jobs = [
-        {"provider": "gcp", "cluster_name": "cluster1", "hub_name": "hub1"},
-        {"provider": "gcp", "cluster_name": "cluster1", "hub_name": "hub2"},
-        {"provider": "gcp", "cluster_name": "cluster1", "hub_name": "hub3"},
+        {"provider": "gcp", "cluster_name": "cluster1", "hub_name": "hub1", "reason_for_redeploy": "cluster.yaml file was modified"},
+        {"provider": "gcp", "cluster_name": "cluster1", "hub_name": "hub2", "reason_for_redeploy": "cluster.yaml file was modified"},
+        {"provider": "gcp", "cluster_name": "cluster1", "hub_name": "hub3", "reason_for_redeploy": "cluster.yaml file was modified"},
     ]
 
     result_matrix_jobs = generate_hub_matrix_jobs(input_cluster_filepaths, input_files)
@@ -94,6 +96,7 @@ def test_generate_hub_matrix_jobs_one_cluster_all_hubs():
     assert "provider" in result_matrix_jobs[0].keys()
     assert "cluster_name" in result_matrix_jobs[0].keys()
     assert "hub_name" in result_matrix_jobs[0].keys()
+    assert "reason_for_redeploy" in result_matrix_jobs[0].keys()
 
 
 def test_generate_hub_matrix_jobs_many_clusters_one_hub():
@@ -107,8 +110,8 @@ def test_generate_hub_matrix_jobs_many_clusters_one_hub():
     }
 
     expected_matrix_jobs = [
-        {"provider": "gcp", "cluster_name": "cluster1", "hub_name": "hub1"},
-        {"provider": "aws", "cluster_name": "cluster2", "hub_name": "hub1"},
+        {"provider": "gcp", "cluster_name": "cluster1", "hub_name": "hub1", "reason_for_redeploy": "Following helm chart values files were modified:\ntests/test-clusters/cluster1/hub1.values.yaml"},
+        {"provider": "aws", "cluster_name": "cluster2", "hub_name": "hub1", "reason_for_redeploy": "Following helm chart values files were modified:\ntests/test-clusters/cluster2/hub1.values.yaml"},
     ]
 
     result_matrix_jobs = generate_hub_matrix_jobs(input_cluster_filepaths, input_files)
@@ -120,6 +123,7 @@ def test_generate_hub_matrix_jobs_many_clusters_one_hub():
     assert "provider" in result_matrix_jobs[0].keys()
     assert "cluster_name" in result_matrix_jobs[0].keys()
     assert "hub_name" in result_matrix_jobs[0].keys()
+    assert "reason_for_redeploy" in result_matrix_jobs[0].keys()
 
 
 def test_generate_hub_matrix_jobs_many_clusters_many_hubs():
@@ -135,10 +139,10 @@ def test_generate_hub_matrix_jobs_many_clusters_many_hubs():
     }
 
     expected_matrix_jobs = [
-        {"provider": "gcp", "cluster_name": "cluster1", "hub_name": "hub1"},
-        {"provider": "gcp", "cluster_name": "cluster1", "hub_name": "hub2"},
-        {"provider": "aws", "cluster_name": "cluster2", "hub_name": "hub1"},
-        {"provider": "aws", "cluster_name": "cluster2", "hub_name": "hub2"},
+        {"provider": "gcp", "cluster_name": "cluster1", "hub_name": "hub1", "reason_for_redeploy": "Following helm chart values files were modified:\ntests/test-clusters/cluster1/hub1.values.yaml"},
+        {"provider": "gcp", "cluster_name": "cluster1", "hub_name": "hub2", "reason_for_redeploy": "Following helm chart values files were modified:\ntests/test-clusters/cluster1/hub2.values.yaml"},
+        {"provider": "aws", "cluster_name": "cluster2", "hub_name": "hub1", "reason_for_redeploy": "Following helm chart values files were modified:\ntests/test-clusters/cluster2/hub1.values.yaml"},
+        {"provider": "aws", "cluster_name": "cluster2", "hub_name": "hub2", "reason_for_redeploy": "Following helm chart values files were modified:\ntests/test-clusters/cluster2/hub2.values.yaml"},
     ]
 
     result_matrix_jobs = generate_hub_matrix_jobs(input_cluster_filepaths, input_files)
@@ -150,16 +154,17 @@ def test_generate_hub_matrix_jobs_many_clusters_many_hubs():
     assert "provider" in result_matrix_jobs[0].keys()
     assert "cluster_name" in result_matrix_jobs[0].keys()
     assert "hub_name" in result_matrix_jobs[0].keys()
+    assert "reason_for_redeploy" in result_matrix_jobs[0].keys()
 
 
 def test_generate_hub_matrix_jobs_all_clusters_all_hubs():
     expected_matrix_jobs = [
-        {"provider": "gcp", "cluster_name": "cluster1", "hub_name": "hub1"},
-        {"provider": "gcp", "cluster_name": "cluster1", "hub_name": "hub2"},
-        {"provider": "gcp", "cluster_name": "cluster1", "hub_name": "hub3"},
-        {"provider": "aws", "cluster_name": "cluster2", "hub_name": "hub1"},
-        {"provider": "aws", "cluster_name": "cluster2", "hub_name": "hub2"},
-        {"provider": "aws", "cluster_name": "cluster2", "hub_name": "hub3"},
+        {"provider": "gcp", "cluster_name": "cluster1", "hub_name": "hub1", "reason_for_redeploy": "Core infrastructure has changed"},
+        {"provider": "gcp", "cluster_name": "cluster1", "hub_name": "hub2", "reason_for_redeploy": "Core infrastructure has changed"},
+        {"provider": "gcp", "cluster_name": "cluster1", "hub_name": "hub3", "reason_for_redeploy": "Core infrastructure has changed"},
+        {"provider": "aws", "cluster_name": "cluster2", "hub_name": "hub1", "reason_for_redeploy": "Core infrastructure has changed"},
+        {"provider": "aws", "cluster_name": "cluster2", "hub_name": "hub2", "reason_for_redeploy": "Core infrastructure has changed"},
+        {"provider": "aws", "cluster_name": "cluster2", "hub_name": "hub3", "reason_for_redeploy": "Core infrastructure has changed"},
     ]
 
     result_matrix_jobs = generate_hub_matrix_jobs(
@@ -175,6 +180,7 @@ def test_generate_hub_matrix_jobs_all_clusters_all_hubs():
     assert "provider" in result_matrix_jobs[0].keys()
     assert "cluster_name" in result_matrix_jobs[0].keys()
     assert "hub_name" in result_matrix_jobs[0].keys()
+    assert "reason_for_redeploy" in result_matrix_jobs[0].keys()
 
 
 def test_generate_support_matrix_jobs_one_cluster():
@@ -183,7 +189,7 @@ def test_generate_support_matrix_jobs_one_cluster():
         os.path.join("tests", "test-clusters", "cluster1", "support.values.yaml"),
     }
 
-    expected_matrix_jobs = [{"provider": "gcp", "cluster_name": "cluster1"}]
+    expected_matrix_jobs = [{"provider": "gcp", "cluster_name": "cluster1", "reason_for_redeploy": "Following helm chart values files were modified:\ntests/test-clusters/cluster1/support.values.yaml"}]
 
     result_matrix_jobs = generate_support_matrix_jobs(
         input_cluster_filepaths, input_files
@@ -195,6 +201,7 @@ def test_generate_support_matrix_jobs_one_cluster():
 
     assert "provider" in result_matrix_jobs[0].keys()
     assert "cluster_name" in result_matrix_jobs[0].keys()
+    assert "reason_for_redeploy" in result_matrix_jobs[0].keys()
 
 
 def test_generate_support_matrix_jobs_many_clusters():
@@ -208,8 +215,8 @@ def test_generate_support_matrix_jobs_many_clusters():
     }
 
     expected_matrix_jobs = [
-        {"provider": "gcp", "cluster_name": "cluster1"},
-        {"provider": "aws", "cluster_name": "cluster2"},
+        {"provider": "gcp", "cluster_name": "cluster1", "reason_for_redeploy": "Following helm chart values files were modified:\ntests/test-clusters/cluster1/support.values.yaml"},
+        {"provider": "aws", "cluster_name": "cluster2", "reason_for_redeploy": "Following helm chart values files were modified:\ntests/test-clusters/cluster2/support.values.yaml"},
     ]
 
     result_matrix_jobs = generate_support_matrix_jobs(
@@ -222,12 +229,13 @@ def test_generate_support_matrix_jobs_many_clusters():
 
     assert "provider" in result_matrix_jobs[0].keys()
     assert "cluster_name" in result_matrix_jobs[0].keys()
+    assert "reason_for_redeploy" in result_matrix_jobs[0].keys()
 
 
 def test_generate_support_matrix_jobs_all_clusters():
     expected_matrix_jobs = [
-        {"provider": "gcp", "cluster_name": "cluster1"},
-        {"provider": "aws", "cluster_name": "cluster2"},
+        {"provider": "gcp", "cluster_name": "cluster1", "reason_for_redeploy": "Support helm chart has been modified"},
+        {"provider": "aws", "cluster_name": "cluster2", "reason_for_redeploy": "Support helm chart has been modified"},
     ]
 
     result_matrix_jobs = generate_support_matrix_jobs(
@@ -240,6 +248,7 @@ def test_generate_support_matrix_jobs_all_clusters():
 
     assert "provider" in result_matrix_jobs[0].keys()
     assert "cluster_name" in result_matrix_jobs[0].keys()
+    assert "reason_for_redeploy" in result_matrix_jobs[0].keys()
 
 
 def test_discover_modified_common_files_hub_helm_charts():
