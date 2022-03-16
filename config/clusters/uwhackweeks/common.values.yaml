@@ -113,10 +113,9 @@ basehub:
           authenticator_class: github
         GitHubOAuthenticator:
           allowed_organizations:
-            - 2i2c-org
+            - 2i2c-org:tech-team
             - ICESAT-2HackWeek:jupyterhub-2022
           scope:
-            - read:user
             - read:org
         Authenticator:
           # This hub uses GitHub Orgs/Teams auth and so we do not set
