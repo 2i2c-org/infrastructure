@@ -431,17 +431,20 @@ def generate_support_matrix_jobs(
     return matrix_jobs
 
 
-def update_github_env(hub_matrix_jobs, support_matrix_jobs):
+def update_github_env(support_matrix_jobs, staging_hub_matrix_jobs, prod_hub_matrix_jobs):
     """Update the GITHUB_ENV environment with two new variables describing the matrix
     jobs that need to be run in order to update the support charts and hubs that have
     been modified.
 
     Args:
-        hub_matrix_jobs (list[dict]): A list of dictionaries which describe the set of
-            matrix jobs required to update only the hubs on clusters whose config has
-            been modified.
         support_matrix_jobs (list[dict]):  A list of dictionaries which describe the
-            set of matrix jobs required to update only the support chart on clusters
+            set of matrix jobs required to upgrade only the support chart on clusters
+            whose config has been modified.
+        staging_hub_matrix_jobs (list[dict]): A list of dictionaries which describe the
+            set of matrix jobs required to upgrade only the staging hubs on clusters
+            whose config has been modified.
+        prod_hub_matrix_jobs (list[dict]): A list of dictionaries which describe the
+            set of matrix jobs required to upgrade only the production hubs on clusters
             whose config has been modified.
     """
     # In GitHub Actions, the environment a workflow/job/step executes in can be
@@ -453,14 +456,15 @@ def update_github_env(hub_matrix_jobs, support_matrix_jobs):
         f.write(
             "\n".join(
                 [
-                    f"HUB_MATRIX_JOBS={hub_matrix_jobs}",
                     f"SUPPORT_MATRIX_JOBS={support_matrix_jobs}",
+                    f"STAGING_HUB_MATRIX_JOBS={staging_hub_matrix_jobs}",
+                    f"PROD_HUB_MATRIX_JOBS={prod_hub_matrix_jobs}",
                 ]
             )
         )
 
 
-def pretty_print_matrix_jobs(hub_matrix_jobs, support_matrix_jobs):
+def pretty_print_matrix_jobs(support_matrix_jobs, staging_hub_matrix_jobs, prod_hub_matrix_jobs):
     # Construct table for support chart upgrades
     support_table = Table(title="Support chart upgrades")
     support_table.add_column("Cloud Provider")
@@ -473,16 +477,32 @@ def pretty_print_matrix_jobs(hub_matrix_jobs, support_matrix_jobs):
             job["provider"], job["cluster_name"], job["reason_for_redeploy"]
         )
 
-    # Construct table for hub helm chart upgrades
-    hub_table = Table(title="Hub helm chart upgrades")
-    hub_table.add_column("Cloud Provider")
-    hub_table.add_column("Cluster Name")
-    hub_table.add_column("Hub Name")
-    hub_table.add_column("Reason for Redeploy")
+    # Construct table for staging hub helm chart upgrades
+    staging_hub_table = Table(title="Hub helm chart upgrades - Staging")
+    staging_hub_table.add_column("Cloud Provider")
+    staging_hub_table.add_column("Cluster Name")
+    staging_hub_table.add_column("Hub Name")
+    staging_hub_table.add_column("Reason for Redeploy")
 
     # Add rows
-    for job in hub_matrix_jobs:
-        hub_table.add_row(
+    for job in staging_hub_matrix_jobs:
+        staging_hub_table.add_row(
+            job["provider"],
+            job["cluster_name"],
+            job["hub_name"],
+            job["reason_for_redeploy"],
+        )
+
+    # Construct table for production hub helm chart upgrades
+    prod_hub_table = Table(title="Hub helm chart upgrades")
+    prod_hub_table.add_column("Cloud Provider")
+    prod_hub_table.add_column("Cluster Name")
+    prod_hub_table.add_column("Hub Name")
+    prod_hub_table.add_column("Reason for Redeploy")
+
+    # Add rows
+    for job in prod_hub_matrix_jobs:
+        prod_hub_table.add_row(
             job["provider"],
             job["cluster_name"],
             job["hub_name"],
@@ -491,4 +511,5 @@ def pretty_print_matrix_jobs(hub_matrix_jobs, support_matrix_jobs):
 
     console = Console()
     console.print(support_table)
-    console.print(hub_table)
+    console.print(staging_hub_table)
+    console.print(prod_hub_table)
