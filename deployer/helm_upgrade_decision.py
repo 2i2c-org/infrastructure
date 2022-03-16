@@ -339,7 +339,9 @@ def generate_support_matrix_jobs(
 
                     matrix_jobs.append(cluster_info)
         else:
-            print_colour(f"No support defined for cluster: {cluster_config.get('name', {})}")
+            print_colour(
+                f"No support defined for cluster: {cluster_config.get('name', {})}"
+            )
 
     return matrix_jobs
 
