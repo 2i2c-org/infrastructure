@@ -4,55 +4,33 @@ from unittest import TestCase
 
 from deployer.helm_upgrade_decision import (
     discover_modified_common_files,
-    evaluate_condition_for_upgrading_support_chart,
     generate_hub_matrix_jobs,
-    get_categorised_unique_filepaths,
+    get_unique_cluster_dirpaths,
     generate_support_matrix_jobs,
 )
 
 case = TestCase()
 
 
-def test_get_categorised_unique_filepaths():
+def test_get_unique_cluster_dirpaths():
     input_filepaths = [
-        os.path.join("test-clusters", "cluster1", "cluster.yaml"),
-        os.path.join("test-clusters", "cluster1", "hub1.values.yaml"),
-        os.path.join("test-clusters", "cluster1", "support.values.yaml"),
+        os.path.join("tests", "test-clusters", "cluster1", "cluster.yaml"),
+        os.path.join("tests", "test-clusters", "cluster1", "hub1.values.yaml"),
+        os.path.join("tests", "test-clusters", "cluster1", "support.values.yaml"),
     ]
 
     # Expected returns
-    expected_cluster_filepaths = [Path("test-clusters/cluster1")]
-    expected_cluster_files = {os.path.join("test-clusters", "cluster1", "cluster.yaml")}
-    expected_values_files = {
-        os.path.join("test-clusters", "cluster1", "hub1.values.yaml"),
-        os.path.join("test-clusters", "cluster1", "support.values.yaml"),
-    }
-    expected_support_files = {
-        os.path.join("test-clusters", "cluster1", "support.values.yaml")
-    }
+    expected_cluster_filepaths = [Path("tests/test-clusters/cluster1")]
 
-    (
-        target_cluster_filepaths,
-        target_cluster_files,
-        target_values_files,
-        target_support_files,
-    ) = get_categorised_unique_filepaths(input_filepaths)
+    result_cluster_filepaths = get_unique_cluster_dirpaths(input_filepaths)
 
-    case.assertCountEqual(target_cluster_filepaths, expected_cluster_filepaths)
-    assert target_cluster_files == expected_cluster_files
-    assert target_values_files == expected_values_files
-    assert target_support_files == expected_support_files
-
-    assert isinstance(target_cluster_filepaths, list)
-    assert isinstance(target_cluster_files, set)
-    assert isinstance(target_values_files, set)
-    assert isinstance(target_support_files, set)
+    case.assertCountEqual(result_cluster_filepaths, expected_cluster_filepaths)
+    assert isinstance(result_cluster_filepaths, list)
 
 
 def test_generate_hub_matrix_jobs_one_cluster_one_hub():
     input_cluster_filepaths = [Path("tests/test-clusters/cluster1")]
-    input_cluster_files = set()
-    input_values_files = {
+    input_files = {
         os.path.join("tests", "test-clusters", "cluster1", "hub1.values.yaml")
     }
 
@@ -61,7 +39,7 @@ def test_generate_hub_matrix_jobs_one_cluster_one_hub():
     ]
 
     result_matrix_jobs = generate_hub_matrix_jobs(
-        input_cluster_filepaths, input_cluster_files, input_values_files
+        input_cluster_filepaths, input_files
     )
 
     case.assertCountEqual(result_matrix_jobs, expected_matrix_jobs)
@@ -75,8 +53,7 @@ def test_generate_hub_matrix_jobs_one_cluster_one_hub():
 
 def test_generate_hub_matrix_jobs_one_cluster_many_hubs():
     input_cluster_filepaths = [Path("tests/test-clusters/cluster1")]
-    input_cluster_files = set()
-    input_values_files = {
+    input_files = {
         os.path.join("tests", "test-clusters", "cluster1", "hub1.values.yaml"),
         os.path.join("tests", "test-clusters", "cluster1", "hub2.values.yaml"),
     }
@@ -87,7 +64,7 @@ def test_generate_hub_matrix_jobs_one_cluster_many_hubs():
     ]
 
     result_matrix_jobs = generate_hub_matrix_jobs(
-        input_cluster_filepaths, input_cluster_files, input_values_files
+        input_cluster_filepaths, input_files
     )
 
     case.assertCountEqual(result_matrix_jobs, expected_matrix_jobs)
@@ -101,11 +78,9 @@ def test_generate_hub_matrix_jobs_one_cluster_many_hubs():
 
 def test_generate_hub_matrix_jobs_one_cluster_all_hubs():
     input_cluster_filepaths = [Path("tests/test-clusters/cluster1")]
-    input_cluster_files = {
-        os.path.join("tests", "test-clusters", "cluster1", "cluster.yaml")
-    }
-    input_values_files = {
+    input_files = {
         os.path.join("tests", "test-clusters", "cluster1", "hub1.values.yaml"),
+        os.path.join("tests", "test-clusters", "cluster1", "cluster.yaml"),
     }
 
     expected_matrix_jobs = [
@@ -115,7 +90,7 @@ def test_generate_hub_matrix_jobs_one_cluster_all_hubs():
     ]
 
     result_matrix_jobs = generate_hub_matrix_jobs(
-        input_cluster_filepaths, input_cluster_files, input_values_files
+        input_cluster_filepaths, input_files
     )
 
     case.assertCountEqual(result_matrix_jobs, expected_matrix_jobs)
@@ -132,8 +107,7 @@ def test_generate_hub_matrix_jobs_many_clusters_one_hub():
         Path("tests/test-clusters/cluster1"),
         Path("tests/test-clusters/cluster2"),
     ]
-    input_cluster_files = set()
-    input_values_files = {
+    input_files = {
         os.path.join("tests", "test-clusters", "cluster1", "hub1.values.yaml"),
         os.path.join("tests", "test-clusters", "cluster2", "hub1.values.yaml"),
     }
@@ -144,7 +118,7 @@ def test_generate_hub_matrix_jobs_many_clusters_one_hub():
     ]
 
     result_matrix_jobs = generate_hub_matrix_jobs(
-        input_cluster_filepaths, input_cluster_files, input_values_files
+        input_cluster_filepaths, input_files
     )
 
     case.assertCountEqual(result_matrix_jobs, expected_matrix_jobs)
@@ -161,8 +135,7 @@ def test_generate_hub_matrix_jobs_many_clusters_many_hubs():
         Path("tests/test-clusters/cluster1"),
         Path("tests/test-clusters/cluster2"),
     ]
-    input_cluster_files = set()
-    input_values_files = {
+    input_files = {
         os.path.join("tests", "test-clusters", "cluster1", "hub1.values.yaml"),
         os.path.join("tests", "test-clusters", "cluster1", "hub2.values.yaml"),
         os.path.join("tests", "test-clusters", "cluster2", "hub1.values.yaml"),
@@ -177,7 +150,7 @@ def test_generate_hub_matrix_jobs_many_clusters_many_hubs():
     ]
 
     result_matrix_jobs = generate_hub_matrix_jobs(
-        input_cluster_filepaths, input_cluster_files, input_values_files
+        input_cluster_filepaths, input_files
     )
 
     case.assertCountEqual(result_matrix_jobs, expected_matrix_jobs)
@@ -190,10 +163,6 @@ def test_generate_hub_matrix_jobs_many_clusters_many_hubs():
 
 
 def test_generate_hub_matrix_jobs_all_clusters_all_hubs():
-    input_cluster_filepaths = [Path("tests/test-clusters/cluster1")]
-    input_cluster_files = set()
-    input_values_files = {}
-
     expected_matrix_jobs = [
         {"provider": "gcp", "cluster_name": "cluster1", "hub_name": "hub1"},
         {"provider": "gcp", "cluster_name": "cluster1", "hub_name": "hub2"},
@@ -204,10 +173,9 @@ def test_generate_hub_matrix_jobs_all_clusters_all_hubs():
     ]
 
     result_matrix_jobs = generate_hub_matrix_jobs(
-        input_cluster_filepaths,
-        input_cluster_files,
-        input_values_files,
-        upgrade_all_hubs=True,
+        [],
+        set(),
+        upgrade_all_hubs_on_all_clusters=True,
     )
 
     case.assertCountEqual(result_matrix_jobs, expected_matrix_jobs)
@@ -220,11 +188,14 @@ def test_generate_hub_matrix_jobs_all_clusters_all_hubs():
 
 
 def test_generate_support_matrix_jobs_one_cluster():
-    input_dirpaths = [Path("tests/test-clusters/cluster1")]
+    input_cluster_filepaths = [Path("tests/test-clusters/cluster1")]
+    input_files = {
+        os.path.join("tests", "test-clusters", "cluster1", "support.values.yaml"),
+    }
 
     expected_matrix_jobs = [{"provider": "gcp", "cluster_name": "cluster1"}]
 
-    result_matrix_jobs = generate_support_matrix_jobs(input_dirpaths)
+    result_matrix_jobs = generate_support_matrix_jobs(input_cluster_filepaths, input_files)
 
     case.assertCountEqual(result_matrix_jobs, expected_matrix_jobs)
     assert isinstance(result_matrix_jobs, list)
@@ -235,17 +206,21 @@ def test_generate_support_matrix_jobs_one_cluster():
 
 
 def test_generate_support_matrix_jobs_many_clusters():
-    input_dirpaths = [
+    input_cluster_filepaths = [
         Path("tests/test-clusters/cluster1"),
         Path("tests/test-clusters/cluster2"),
     ]
+    input_files = {
+        os.path.join("tests", "test-clusters", "cluster1", "support.values.yaml"),
+        os.path.join("tests", "test-clusters", "cluster2", "support.values.yaml"),
+    }
 
     expected_matrix_jobs = [
         {"provider": "gcp", "cluster_name": "cluster1"},
         {"provider": "aws", "cluster_name": "cluster2"},
     ]
 
-    result_matrix_jobs = generate_support_matrix_jobs(input_dirpaths)
+    result_matrix_jobs = generate_support_matrix_jobs(input_cluster_filepaths, input_files)
 
     case.assertCountEqual(result_matrix_jobs, expected_matrix_jobs)
     assert isinstance(result_matrix_jobs, list)
@@ -256,15 +231,13 @@ def test_generate_support_matrix_jobs_many_clusters():
 
 
 def test_generate_support_matrix_jobs_all_clusters():
-    input_dirpaths = [Path("tests/test-clusters/cluster1")]
-
     expected_matrix_jobs = [
         {"provider": "gcp", "cluster_name": "cluster1"},
         {"provider": "aws", "cluster_name": "cluster2"},
     ]
 
     result_matrix_jobs = generate_support_matrix_jobs(
-        input_dirpaths, upgrade_all_clusters=True
+        [], set(), upgrade_support_on_all_clusters=True
     )
 
     case.assertCountEqual(result_matrix_jobs, expected_matrix_jobs)
@@ -301,21 +274,3 @@ def test_discover_modified_common_files_support_helm_chart():
 
     assert upgrade_all_clusters
     assert not upgrade_all_hubs
-
-
-def test_evaluate_condition_for_upgrading_support_chart():
-    input_cluster_files = {os.path.join("test-clusters", "cluster1", "cluster.yaml")}
-    input_support_files = {
-        os.path.join("test-clusters", "cluster2", "support.values.yaml")
-    }
-
-    expected_dirpaths = [
-        Path("test-clusters/cluster1"),
-        Path("test-clusters/cluster2"),
-    ]
-
-    res_dirpaths = evaluate_condition_for_upgrading_support_chart(
-        input_cluster_files, input_support_files
-    )
-
-    case.assertCountEqual(res_dirpaths, expected_dirpaths)

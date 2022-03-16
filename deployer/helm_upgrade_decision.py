@@ -74,7 +74,23 @@ def get_unique_cluster_dirpaths(added_or_modified_files: list):
         list[path obj]: A list of unique filepaths to cluster folders
     """
     # Get absolute paths
-    filepaths = [Path(filepath).parent for filepath in added_or_modified_files]
+    if test_env == "test":
+        # We are running a test via pytest. We only want to focus on the cluster
+        # folders nested under the `tests/` folder.
+        filepaths = [
+            Path(filepath).parent
+            for filepath in added_or_modified_files
+            if "tests/" in filepath
+        ]
+    else:
+        # We are NOT running a test via pytest. We want to explicitly ignore the
+        # cluster folders nested under the `tests/` folder.
+        filepaths = [
+            Path(filepath).parent
+            for filepath in added_or_modified_files
+            if "tests/" not in filepath
+        ]
+
     # Get unique absolute paths
     filepaths = list(set(filepaths))
 
@@ -234,7 +250,7 @@ def generate_support_matrix_jobs(cluster_filepaths, added_or_modified_files, upg
         if test_env == "test":
             # We are running a test via pytest. We only want to focus on the cluster
             # folders nested under the `tests/` folder.
-            modified_dirpaths = [
+            cluster_filepaths = [
                 filepath.parent
                 for filepath in Path(os.getcwd()).glob("**/cluster.yaml")
                 if "tests/" in str(filepath)
@@ -242,13 +258,13 @@ def generate_support_matrix_jobs(cluster_filepaths, added_or_modified_files, upg
         else:
             # We are NOT running a test via pytest. We want to explicitly ignore the
             # cluster folders nested under the `tests/` folder.
-            modified_dirpaths = [
+            cluster_filepaths = [
                 filepath.parent
                 for filepath in Path(os.getcwd()).glob("**/cluster.yaml")
                 if "tests/" not in str(filepath)
             ]
 
-    for cluster_filepath in modified_dirpaths:
+    for cluster_filepath in cluster_filepaths:
         # Read in the cluster.yaml file
         with open(cluster_filepath.joinpath("cluster.yaml")) as f:
             cluster_config = yaml.load(f)
@@ -262,17 +278,22 @@ def generate_support_matrix_jobs(cluster_filepaths, added_or_modified_files, upg
         # Double-check that support is defined for this cluster.
         support_config = cluster_config.get("support", {})
         if support_config:
-            # Has the cluster.yaml file for this cluster folder been modified?
-            cluster_yaml_intersection = added_or_modified_files.intersection([str(cluster_filepath.joinpath("cluster.yaml"))])
-
-            # Have the related support values files for this cluster been modified?
-            support_values_files = [str(cluster_filepath.joinpath(values_file)) for values_file in support_config.get("helm_chart_values")]
-            support_values_intersection = added_or_modified_files.intersection(support_values_files)
-
-            # If either of the intersections have a length greater than zero, append
-            # the job definition to the list of matrix jobs
-            if (len(cluster_yaml_intersection) > 0) or (len(support_values_intersection) > 0):
+            if upgrade_support_on_all_clusters:
+                # We know we're upgrading all hubs, so just add the hub name to the list
+                # of matrix jobs and move on
                 matrix_jobs.append(cluster_info)
+            else:
+                # Has the cluster.yaml file for this cluster folder been modified?
+                cluster_yaml_intersection = added_or_modified_files.intersection([str(cluster_filepath.joinpath("cluster.yaml"))])
+
+                # Have the related support values files for this cluster been modified?
+                support_values_files = [str(cluster_filepath.joinpath(values_file)) for values_file in support_config.get("helm_chart_values_files", {})]
+                support_values_intersection = added_or_modified_files.intersection(support_values_files)
+
+                # If either of the intersections have a length greater than zero, append
+                # the job definition to the list of matrix jobs
+                if (len(cluster_yaml_intersection) > 0) or (len(support_values_intersection) > 0):
+                    matrix_jobs.append(cluster_info)
         else:
             print(f"No support defined for cluster: {cluster_config.get('name', {})}")
 
