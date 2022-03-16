@@ -5,14 +5,14 @@ from unittest import TestCase
 from deployer.helm_upgrade_decision import (
     discover_modified_common_files,
     generate_hub_matrix_jobs,
-    get_unique_cluster_dirpaths,
+    get_unique_cluster_filepaths,
     generate_support_matrix_jobs,
 )
 
 case = TestCase()
 
 
-def test_get_unique_cluster_dirpaths():
+def test_get_unique_cluster_filepaths():
     input_filepaths = [
         os.path.join("tests", "test-clusters", "cluster1", "cluster.yaml"),
         os.path.join("tests", "test-clusters", "cluster1", "hub1.values.yaml"),
@@ -22,7 +22,7 @@ def test_get_unique_cluster_dirpaths():
     # Expected returns
     expected_cluster_filepaths = [Path("tests/test-clusters/cluster1")]
 
-    result_cluster_filepaths = get_unique_cluster_dirpaths(input_filepaths)
+    result_cluster_filepaths = get_unique_cluster_filepaths(input_filepaths)
 
     case.assertCountEqual(result_cluster_filepaths, expected_cluster_filepaths)
     assert isinstance(result_cluster_filepaths, list)
