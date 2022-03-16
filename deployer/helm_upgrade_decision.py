@@ -48,12 +48,16 @@ def discover_modified_common_files(modified_paths: list):
     support_chart_filepath = "helm-charts/support/*"
 
     # Discover if the support chart has been modified
-    upgrade_support_on_all_clusters = bool(fnmatch.filter(modified_paths, support_chart_filepath))
+    upgrade_support_on_all_clusters = bool(
+        fnmatch.filter(modified_paths, support_chart_filepath)
+    )
 
     # Discover if any common config has been modified
     upgrade_all_hubs_on_all_clusters = False
     for common_filepath_pattern in common_filepaths:
-        upgrade_all_hubs_on_all_clusters = bool(fnmatch.filter(modified_paths, common_filepath_pattern))
+        upgrade_all_hubs_on_all_clusters = bool(
+            fnmatch.filter(modified_paths, common_filepath_pattern)
+        )
         if upgrade_all_hubs_on_all_clusters:
             break
 
@@ -216,7 +220,9 @@ def generate_hub_matrix_jobs(
     return matrix_jobs
 
 
-def generate_support_matrix_jobs(cluster_filepaths, added_or_modified_files, upgrade_support_on_all_clusters=False):
+def generate_support_matrix_jobs(
+    cluster_filepaths, added_or_modified_files, upgrade_support_on_all_clusters=False
+):
     """Generate a list of dictionaries describing which clusters need to undergo a helm
     upgrade of their support chart based on whether their cluster.yaml file or
     associated support chart values files have been modified. To be parsed to GitHub
@@ -284,15 +290,24 @@ def generate_support_matrix_jobs(cluster_filepaths, added_or_modified_files, upg
                 matrix_jobs.append(cluster_info)
             else:
                 # Has the cluster.yaml file for this cluster folder been modified?
-                cluster_yaml_intersection = added_or_modified_files.intersection([str(cluster_filepath.joinpath("cluster.yaml"))])
+                cluster_yaml_intersection = added_or_modified_files.intersection(
+                    [str(cluster_filepath.joinpath("cluster.yaml"))]
+                )
 
                 # Have the related support values files for this cluster been modified?
-                support_values_files = [str(cluster_filepath.joinpath(values_file)) for values_file in support_config.get("helm_chart_values_files", {})]
-                support_values_intersection = added_or_modified_files.intersection(support_values_files)
+                support_values_files = [
+                    str(cluster_filepath.joinpath(values_file))
+                    for values_file in support_config.get("helm_chart_values_files", {})
+                ]
+                support_values_intersection = added_or_modified_files.intersection(
+                    support_values_files
+                )
 
                 # If either of the intersections have a length greater than zero, append
                 # the job definition to the list of matrix jobs
-                if (len(cluster_yaml_intersection) > 0) or (len(support_values_intersection) > 0):
+                if (len(cluster_yaml_intersection) > 0) or (
+                    len(support_values_intersection) > 0
+                ):
                     matrix_jobs.append(cluster_info)
         else:
             print(f"No support defined for cluster: {cluster_config.get('name', {})}")
