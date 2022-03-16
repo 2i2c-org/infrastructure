@@ -10,6 +10,8 @@ from ruamel.yaml import YAML
 from rich.console import Console
 from rich.table import Table
 
+from .utils import print_colour
+
 yaml = YAML(typ="safe", pure=True)
 
 # Determine if we are running a test or not. We set this env var to "test" in the
@@ -140,7 +142,7 @@ def generate_hub_matrix_jobs(
     upgrade_all_hubs_on_this_cluster = False
 
     if upgrade_all_hubs_on_all_clusters:
-        print(
+        print_colour(
             "Core infrastrucure has been modified. Generating jobs to upgrade all hubs on ALL clusters."
         )
         reason_for_redeploy = "Core infrastructure has changed"
@@ -175,7 +177,7 @@ def generate_hub_matrix_jobs(
                 [str(cluster_filepath.joinpath("cluster.yaml"))]
             )
             if len(intersection) > 0:
-                print(
+                print_colour(
                     f"This cluster.yaml file has been modified. Generating jobs to upgrade all hubs on THIS cluster: {cluster_config.get('name', {})}"
                 )
                 upgrade_all_hubs_on_this_cluster = True
@@ -257,7 +259,7 @@ def generate_support_matrix_jobs(
     matrix_jobs = []
 
     if upgrade_support_on_all_clusters:
-        print(
+        print_colour(
             "Support helm chart has been modified. Generating jobs to upgrade support chart on ALL clusters."
         )
 
@@ -335,7 +337,7 @@ def generate_support_matrix_jobs(
 
                     matrix_jobs.append(cluster_info)
         else:
-            print(f"No support defined for cluster: {cluster_config.get('name', {})}")
+            print_colour(f"No support defined for cluster: {cluster_config.get('name', {})}")
 
     return matrix_jobs
 
