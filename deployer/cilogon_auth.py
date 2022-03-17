@@ -143,7 +143,9 @@ class CILogonClientProvider:
         return client_details
 
     def _build_config_filename(self, cluster_name, hub_name):
-        cluster_config_dir_path = find_absolute_path_to_cluster_file(cluster_name).parent
+        cluster_config_dir_path = find_absolute_path_to_cluster_file(
+            cluster_name
+        ).parent
 
         return cluster_config_dir_path.joinpath(f"enc-{hub_name}.secret.values.yaml")
 
@@ -155,7 +157,7 @@ class CILogonClientProvider:
                     "config": {
                         "CILogonOAuthenticator": {
                             "client_id": client["client_id"],
-                            "client_secret": client["client_secret"]
+                            "client_secret": client["client_secret"],
                         }
                     }
                 }
@@ -169,9 +171,7 @@ class CILogonClientProvider:
 
         with open(config_filename, "w+") as f:
             yaml.dump(auth_config, f)
-        subprocess.check_call(
-            ["sops", "--encrypt", "--in-place", config_filename]
-        )
+        subprocess.check_call(["sops", "--encrypt", "--in-place", config_filename])
 
     def _load_client_id(self, config_filename):
         try:
@@ -181,14 +181,21 @@ class CILogonClientProvider:
 
             basehub = auth_config.get("basehub", None)
             if basehub:
-                return auth_config["basehub"]["jupyterhub"]["hub"]["config"]["CILogonOAuthenticator"]["client_id"]
-            return auth_config["jupyterhub"]["hub"]["config"]["CILogonOAuthenticator"]["client_id"]
+                return auth_config["basehub"]["jupyterhub"]["hub"]["config"][
+                    "CILogonOAuthenticator"
+                ]["client_id"]
+            return auth_config["jupyterhub"]["hub"]["config"]["CILogonOAuthenticator"][
+                "client_id"
+            ]
         except FileNotFoundError:
-            print("The CILogon client you requested to update doesn't exist! Please create it first.")
-
+            print(
+                "The CILogon client you requested to update doesn't exist! Please create it first."
+            )
 
     def create_client(self, cluster_name, hub_name, hub_type, callback_url):
-        client_details = self._build_client_details(cluster_name, hub_name, callback_url)
+        client_details = self._build_client_details(
+            cluster_name, hub_name, callback_url
+        )
         config_filename = self._build_config_filename(cluster_name, hub_name)
 
         # Ask CILogon to create the client
@@ -202,7 +209,9 @@ class CILogonClientProvider:
         print(f"Client credentials encrypted and stored to {config_filename}.")
 
     def update_client(self, cluster_name, hub_name, callback_url):
-        client_details = self._build_client_details(cluster_name, hub_name, callback_url)
+        client_details = self._build_client_details(
+            cluster_name, hub_name, callback_url
+        )
         config_filename = self._build_config_filename(cluster_name, hub_name)
         client_id = self.load_client_id(config_filename)
 
@@ -242,7 +251,7 @@ def main():
         "hub_type",
         type=str,
         help="The type of hub for which we'll create a CILogon client.",
-        default="basehub"
+        default="basehub",
     )
 
     create_parser.add_argument(
@@ -259,7 +268,9 @@ def main():
         with open(decrypted_file_path) as f:
             config = yaml.load(f)
 
-    cilogon = CILogonClientProvider(config["cilogon"]["client_id"], config["cilogon"]["client_secret"])
+    cilogon = CILogonClientProvider(
+        config["cilogon"]["client_id"], config["cilogon"]["client_secret"]
+    )
     print(cilogon.admin_id)
     print(cilogon.admin_secret)
 
@@ -270,6 +281,7 @@ def main():
     #         args.hub_type,
     #         args.callback_url,
     #     )
+
 
 if __name__ == "__main__":
     main()
