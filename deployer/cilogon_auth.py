@@ -1,13 +1,12 @@
+import argparse
 import base64
 import time
 import requests
 import subprocess
-
 from ruamel.yaml import YAML
 from yarl import URL
 
-from auth_client_provider import ClientProvider
-from file_acquisition import get_decrypted_file
+from file_acquisition import find_absolute_path_to_cluster_file, get_decrypted_file
 
 yaml = YAML(typ="safe")
 
@@ -76,7 +75,10 @@ class CILogonAdmin:
         See: https://github.com/ncsa/OA4MP/blob/HEAD/oa4mp-server-admin-oauth2/src/main/scripts/oidc-cm-scripts/cm-post.sh
         """
 
+        print(f"body {body}")
         response = self._post(self._url(), data=body)
+        print(f"response {response}")
+        print(response.json())
         if response.status_code != 200:
             return
 
@@ -115,7 +117,7 @@ class CILogonAdmin:
         return response.json()
 
 
-class CILogonClientProvider(ClientProvider):
+class CILogonClientProvider:
     def __init__(self, admin_id, admin_secret):
         self.admin_id = admin_id
         self.admin_secret = admin_secret
@@ -130,77 +132,144 @@ class CILogonClientProvider(ClientProvider):
 
         return self._cilogon_admin
 
-    def create_client(self, name, callback_url):
+    def _build_client_details(self, cluster_name, hub_name, callback_url):
         client_details = {
-            "client_name": name,
+            "client_name": f"{cluster_name}-{hub_name}",
             "app_type": "web",
             "redirect_uris": [callback_url],
             "scope": "openid email org.cilogon.userinfo",
         }
 
-        return self.admin_client.create(client_details)
+        return client_details
 
-    def update_client(self, client_id, name, callback_url):
-        client_details = {
-            "client_name": name,
-            "app_type": "web",
-            "redirect_uris": [callback_url],
-            "scope": "openid email org.cilogon.userinfo",
+    def _build_config_filename(self, cluster_name, hub_name):
+        cluster_config_dir_path = find_absolute_path_to_cluster_file(cluster_name).parent
+
+        return cluster_config_dir_path.joinpath(f"enc-{hub_name}.secret.values.yaml")
+
+    def _persist_client_credentials(self, client, hub_type, config_filename):
+        auth_config = {}
+        jupyterhub_config = {
+            "jupyterhub": {
+                "hub": {
+                    "config": {
+                        "CILogonOAuthenticator": {
+                            "client_id": client["client_id"],
+                            "client_secret": client["client_secret"]
+                        }
+                    }
+                }
+            }
         }
 
+        if hub_type != "basehub":
+            auth_config["basehub"] = jupyterhub_config
+        else:
+            auth_config = jupyterhub_config
+
+        with open(config_filename, "w+") as f:
+            yaml.dump(auth_config, f)
+        subprocess.check_call(
+            ["sops", "--encrypt", "--in-place", config_filename]
+        )
+
+    def _load_client_id(self, config_filename):
+        try:
+            with get_decrypted_file(config_filename) as decrypted_path:
+                with open(decrypted_path) as f:
+                    auth_config = yaml.load(f)
+
+            basehub = auth_config.get("basehub", None)
+            if basehub:
+                return auth_config["basehub"]["jupyterhub"]["hub"]["config"]["CILogonOAuthenticator"]["client_id"]
+            return auth_config["jupyterhub"]["hub"]["config"]["CILogonOAuthenticator"]["client_id"]
+        except FileNotFoundError:
+            print("The CILogon client you requested to update doesn't exist! Please create it first.")
+
+
+    def create_client(self, cluster_name, hub_name, hub_type, callback_url):
+        client_details = self._build_client_details(cluster_name, hub_name, callback_url)
+        config_filename = self._build_config_filename(cluster_name, hub_name)
+
+        # Ask CILogon to create the client
+        print(f"Creating client with details {client_details}")
+        client = self.admin_client.create(client_details)
+        print(f"Created a new CILogon client for {cluster_name}-{hub_name}.")
+        print(client)
+
+        # Persist and encrypt the client credentials
+        self._persist_client_credentials(client, hub_type, config_filename)
+        print(f"Client credentials encrypted and stored to {config_filename}.")
+
+    def update_client(self, cluster_name, hub_name, callback_url):
+        client_details = self._build_client_details(cluster_name, hub_name, callback_url)
+        config_filename = self._build_config_filename(cluster_name, hub_name)
+        client_id = self.load_client_id(config_filename)
+
+        print(f"Updating the existing CILogon client for {cluster_name}-{hub_name}.")
         return self.admin_client.update(client_id, client_details)
 
-    def ensure_client(
-        self,
-        name,
-        callback_url,
-        logout_url,
-        allowed_connections,
-        connection_config,
-    ):
-        client_id = None
-        try:
-            with get_decrypted_file(connection_config) as decrypted_path:
-                with open(decrypted_path) as f:
-                    cilogon_clients = yaml.load(f)
-            cilogon_client = cilogon_clients.get(name, None)
-            client_id = cilogon_client["client_id"]
-        except FileNotFoundError:
-            cilogon_clients = {}
-            client_id = None
-        finally:
-            if client_id is None:
-                # Create the client, all good
-                client = self.create_client(name, callback_url)
-                print(f"Created a new CILogon client for {name}.")
-                cilogon_clients[name] = {
-                    "client_id": client["client_id"],
-                    "client_secret": client["client_secret"],
-                }
-                # persist the client id
-                # todo: use a semaphore when we'll deploy hubs in parallel
-                with open(connection_config, "w+") as f:
-                    yaml.dump(cilogon_clients, f)
-                subprocess.check_call(
-                    ["sops", "--encrypt", "--in-place", connection_config]
-                )
-            else:
-                print(f"Updated the existing CILogon client for {name}.")
-                client = self.update_client(client_id, name, callback_url)
-                # CILogon doesn't return the client secret after its creation
-                client["client_secret"] = cilogon_clients[name]["client_secret"]
 
-        return client
+def main():
+    argparser = argparse.ArgumentParser(
+        description="""A command line tool to create/update/delete
+        CILogon clients.
+        """
+    )
+    subparsers = argparser.add_subparsers(
+        required=True, dest="action", help="Available subcommands"
+    )
 
-    def get_client_creds(self, client, allowed_connections, callback_url):
-        auth = {
-            "client_id": client["client_id"],
-            "client_secret": client["client_secret"],
-            "username_claim": "email",
-            "scope": client["scope"],
-            "oauth_callback_url": callback_url,
-            "logout_redirect_url": "https://cilogon.org/logout/",
-            "allowed_idps": allowed_connections,
-        }
+    # Create subcommand
+    create_parser = subparsers.add_parser(
+        "create",
+        help="Create a CILogon client",
+    )
 
-        return auth
+    create_parser.add_argument(
+        "cluster_name",
+        type=str,
+        help="The name of the cluster where the hub lives",
+    )
+
+    create_parser.add_argument(
+        "hub_name",
+        type=str,
+        help="The hub for which we'll create a CILogon client",
+    )
+
+    create_parser.add_argument(
+        "hub_type",
+        type=str,
+        help="The type of hub for which we'll create a CILogon client.",
+        default="basehub"
+    )
+
+    create_parser.add_argument(
+        "callback_url",
+        type=str,
+        help="URL that is invoked after OAuth authorization",
+    )
+
+    args = argparser.parse_args()
+
+    # This filepath is relative to the PROJECT ROOT
+    general_auth_config = "shared/deployer/enc-auth-providers-credentials.secret.yaml"
+    with get_decrypted_file(general_auth_config) as decrypted_file_path:
+        with open(decrypted_file_path) as f:
+            config = yaml.load(f)
+
+    cilogon = CILogonClientProvider(config["cilogon"]["client_id"], config["cilogon"]["client_secret"])
+    print(cilogon.admin_id)
+    print(cilogon.admin_secret)
+
+    # if args.action == "create":
+    #     cilogon.create_client(
+    #         args.cluster_name,
+    #         args.hub_name,
+    #         args.hub_type,
+    #         args.callback_url,
+    #     )
+
+if __name__ == "__main__":
+    main()
