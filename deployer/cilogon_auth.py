@@ -271,17 +271,14 @@ def main():
     cilogon = CILogonClientProvider(
         config["cilogon"]["client_id"], config["cilogon"]["client_secret"]
     )
-    print(cilogon.admin_id)
-    print(cilogon.admin_secret)
 
-    # if args.action == "create":
-    #     cilogon.create_client(
-    #         args.cluster_name,
-    #         args.hub_name,
-    #         args.hub_type,
-    #         args.callback_url,
-    #     )
-
+    if args.action == "create":
+        cilogon.create_client(
+            args.cluster_name,
+            args.hub_name,
+            args.hub_type,
+            args.callback_url,
+        )
 
 if __name__ == "__main__":
     main()
