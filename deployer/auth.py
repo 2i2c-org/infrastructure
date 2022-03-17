@@ -93,7 +93,7 @@ class KeyProvider:
         name,
         callback_url,
         logout_url,
-        connection_name: str,
+        connection_name,
         connection_config,
     ):
         current_clients = self._get_clients()
@@ -149,7 +149,10 @@ class KeyProvider:
 
         return client
 
-    def get_client_creds(self, client, connection_name: str, callback_url):
+    def get_client_creds(self, client, connection_name):
+        """
+        Return z2jh config for auth0 authentication for this JupyterHub
+        """
         logout_redirect_params = {
             "client_id": client["client_id"],
             "returnTo": client["allowed_logout_urls"][0],
