@@ -8,8 +8,7 @@ from pathlib import Path
 
 from ruamel.yaml import YAML
 
-from auth import Auth0ClientProvider
-from cilogon_auth import CILogonClientProvider
+from auth import KeyProvider
 from cluster import Cluster
 from utils import print_colour
 from file_acquisition import find_absolute_path_to_cluster_file, get_decrypted_file
@@ -173,24 +172,14 @@ def deploy(cluster_name, hub_name, skip_hub_health_test, config_path):
         with open(decrypted_file_path) as f:
             config = yaml.load(f)
 
-    # Some of our hubs use Auth0 for Authentication and some use CILogon.
-    # This lets us programmatically determine what auth provider each hub
-    # uses - GitHub, Google, etc or which Institutional Identity Provider.
-    # Without this, we'd have to manually generate credentials for each
-    # hub - and we don't want to do that. Auth0 domains are tied to a account,
-    # and this is our auth0 domain for the paid account that 2i2c has.
+    # All our hubs use Auth0 for Authentication. This lets us programmatically
+    # determine what auth provider each hub uses - GitHub, Google, etc. Without
+    # this, we'd have to manually generate credentials for each hub - and we
+    # don't want to do that. Auth0 domains are tied to a account, and
+    # this is our auth0 domain for the paid account that 2i2c has.
     auth0 = config["auth0"]
-    cilogon_admin = config["cilogon_admin"]
 
-    def _get_client_provider(hub_config):
-        if hub_config["auth0"].get("enabled", True):
-            return Auth0ClientProvider(
-                auth0["client_id"], auth0["client_secret"], auth0["domain"]
-            )
-
-        return CILogonClientProvider(
-            cilogon_admin["client_id"], cilogon_admin["client_secret"]
-        )
+    k = KeyProvider(auth0["domain"], auth0["client_id"], auth0["client_secret"])
 
     # Each hub needs a unique proxy.secretToken. However, we don't want
     # to manually generate & save it. We also don't want it to change with
@@ -211,13 +200,11 @@ def deploy(cluster_name, hub_name, skip_hub_health_test, config_path):
         hubs = cluster.hubs
         if hub_name:
             hub = next((hub for hub in hubs if hub.spec["name"] == hub_name), None)
-            client_provider = _get_client_provider(hub.spec)
             print_colour(f"Deploying hub {hub.spec['name']}...")
-            hub.deploy(client_provider, SECRET_KEY, skip_hub_health_test)
+            hub.deploy(k, SECRET_KEY, skip_hub_health_test)
         else:
             for i, hub in enumerate(hubs):
                 print_colour(
                     f"{i+1} / {len(hubs)}: Deploying hub {hub.spec['name']}..."
                 )
-                client_provider = _get_client_provider(hub.spec)
-                hub.deploy(client_provider, SECRET_KEY, skip_hub_health_test)
+                hub.deploy(k, SECRET_KEY, skip_hub_health_test)
