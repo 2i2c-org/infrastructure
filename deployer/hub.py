@@ -12,7 +12,7 @@ from pathlib import Path
 from textwrap import dedent
 from ruamel.yaml import YAML
 
-from auth_client_provider import ClientProvider
+from auth import KeyProvider
 from utils import print_colour
 from file_acquisition import get_decrypted_file, get_decrypted_files
 
@@ -30,7 +30,7 @@ class Hub:
         self.cluster = cluster
         self.spec = spec
 
-    def get_generated_config(self, auth_provider: ClientProvider, secret_key):
+    def get_generated_config(self, auth_provider: KeyProvider, secret_key):
         """
         Generate config automatically for each hub
 
@@ -120,52 +120,33 @@ class Hub:
                 },
             },
         }
-
-        # Allow explicilty ignoring auth0/cilogon setup
-        if self.spec["auth0"].get("enabled", False) and self.spec["cilogon"].get(
-            "enabled", False
-        ):
-            return self.apply_hub_helm_chart_fixes(generated_config, secret_key)
-
-        # Send users back to this URL after they authenticate
-        callback_url = f"https://{self.spec['domain']}/hub/oauth_callback"
-        # Users are redirected to this URL after they log out
-        logout_url = f"https://{self.spec['domain']}"
-        # Human readable name of the client OAuth2 application
-        client_name = f"{self.cluster.spec['name']}-{self.spec['name']}"
-        connection_config = None
-
+        #
+        # Allow explicilty ignoring auth0 setup
         if self.spec["auth0"].get("enabled", True):
-            # With auth0 we can only have one accepted connection github/google-oauth2/password
-            allowed_connections = self.spec["auth0"]["connection"]
-            connection_config = self.spec["auth0"].get(
-                self.spec["auth0"]["connection"], {}
+            # Auth0 sends users back to this URL after they authenticate
+            callback_url = f"https://{self.spec['domain']}/hub/oauth_callback"
+            # Users are redirected to this URL after they log out
+            logout_url = f"https://{self.spec['domain']}"
+            client = auth_provider.ensure_client(
+                name=self.spec["auth0"].get(
+                    "application_name",
+                    f"{self.cluster.spec['name']}-{self.spec['name']}",
+                ),
+                callback_url=callback_url,
+                logout_url=logout_url,
+                connection_name=self.spec["auth0"]["connection"],
+                connection_config=self.spec["auth0"].get(
+                    self.spec["auth0"]["connection"], {}
+                ),
             )
-            authenticator_class_entrypoint = "auth0"
-            authenticator_class_name = "Auth0OAuthenticator"
-        elif self.spec["cilogon"].get("enabled", True):
-            allowed_connections = self.spec["cilogon"]["allowed_idps"]
-            connection_config = self.cluster.config_path.joinpath(
-                "enc-cilogon-clients.secret.yaml"
-            )
-            authenticator_class_entrypoint = "cilogon"
-            authenticator_class_name = "CILogonOAuthenticator"
-
-        client = auth_provider.ensure_client(
-            name=client_name,
-            callback_url=callback_url,
-            logout_url=logout_url,
-            allowed_connections=allowed_connections,
-            connection_config=connection_config,
-        )
-
-        # NOTE: Some dictionary merging might make these lines prettier/more readable.
-        generated_config["jupyterhub"]["hub"]["config"]["JupyterHub"] = {
-            "authenticator_class": authenticator_class_entrypoint
-        }
-        generated_config["jupyterhub"]["hub"]["config"][
-            authenticator_class_name
-        ] = auth_provider.get_client_creds(client, allowed_connections, callback_url)
+            # NOTE: Some dictionary merging might make these lines prettier/more readable.
+            # Since Auth0 is enabled, we set the authenticator_class to the Auth0OAuthenticator class
+            generated_config["jupyterhub"]["hub"]["config"]["JupyterHub"] = {
+                "authenticator_class": "oauthenticator.auth0.Auth0OAuthenticator"
+            }
+            generated_config["jupyterhub"]["hub"]["config"][
+                "Auth0OAuthenticator"
+            ] = auth_provider.get_client_creds(client, self.spec["auth0"]["connection"])
 
         return self.apply_hub_helm_chart_fixes(generated_config, secret_key)
 
