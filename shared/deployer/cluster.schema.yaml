@@ -241,6 +241,13 @@ properties:
                   Authentication method users of the hub can use to log in to the hub.
                   We support a subset of the [connectors](https://auth0.com/docs/identityproviders)
                   that auth0 supports
+              application_name:
+                type: string
+                description: |
+                  We make use of an OAuth2 applications in Auth0 and this is the
+                  name of that application. Defaults to
+                  "<clustername>-<hubname>".
+                  See https://manage.auth0.com/dashboard/us/2i2c/applications.
               password:
                 type: object
                 description: |
@@ -262,25 +269,6 @@ properties:
             then:
               required:
                 - connection
-          cilogon:
-            additionalProperties: false
-            type: object
-            description: |
-              Some hubs use CILogon for authentication, and we dynamically fetch the credentials
-              needed for each hub - client_id, client_secret, callback_url - on deploy. This
-              block contains configuration on how cilogon should be configured for this hub.
-            properties:
-              enabled:
-                type: boolean
-                default: false
-                description: |
-                  Whether or not to enable CILogon authentication for this hub.
-                  Defaults to false
-              allowed_idps:
-                type: array
-                description: |
-                  A list of identity providers that are allowed to authenticate.
-                  Reference https://github.com/jupyterhub/oauthenticator/blob/main/oauthenticator/cilogon.py#L89-L92
             if:
               properties:
                 enabled:
