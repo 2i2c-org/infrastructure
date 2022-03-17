@@ -247,6 +247,7 @@ properties:
                   We make use of an OAuth2 applications in Auth0 and this is the
                   name of that application. Defaults to
                   "<clustername>-<hubname>".
+
                   See https://manage.auth0.com/dashboard/us/2i2c/applications.
               password:
                 type: object
@@ -269,13 +270,6 @@ properties:
             then:
               required:
                 - connection
-            if:
-              properties:
-                enabled:
-                  const: true
-            then:
-              required:
-                - allowed_idps
           helm_chart_values_files:
             type: array
             description: |
