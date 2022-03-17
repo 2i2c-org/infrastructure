@@ -4,8 +4,6 @@ from auth0.v3.authentication import GetToken
 from auth0.v3.management import Auth0
 from yarl import URL
 
-from auth_client_provider import ClientProvider
-
 # What key in the authenticated user's profile to use as hub username
 # This shouldn't be changeable by the user!
 USERNAME_KEYS = {
@@ -16,36 +14,36 @@ USERNAME_KEYS = {
 }
 
 
-class Auth0ClientProvider(ClientProvider):
-    def __init__(self, client_id, client_secret, domain):
+class KeyProvider():
+    def __init__(self, domain, client_id, client_secret):
         self.client_id = client_id
         self.client_secret = client_secret
         self.domain = domain
 
     @property
-    def admin_client(self):
+    def auth0(self):
         """
         Return an authenticated Auth0 instance
         """
-        if not hasattr(self, "_admin_client"):
+        if not hasattr(self, "_auth0"):
             gt = GetToken(self.domain)
             creds = gt.client_credentials(
                 self.client_id, self.client_secret, f"https://{self.domain}/api/v2/"
             )
-            self._admin_client = Auth0(self.domain, creds["access_token"])
-        return self._admin_client
+            self._auth0 = Auth0(self.domain, creds["access_token"])
+        return self._auth0
 
     def _get_clients(self):
         return {
             client["name"]: client
             # Our account is limited to 100 clients, and we want it all in one go
-            for client in self.admin_client.clients.all(per_page=100)
+            for client in self.auth0.clients.all(per_page=100)
         }
 
     def _get_connections(self):
         return {
             connection["name"]: connection
-            for connection in self.admin_client.connections.all()
+            for connection in self.auth0.connections.all()
         }
 
     def create_client(self, name, callback_url, logout_url):
@@ -55,7 +53,7 @@ class Auth0ClientProvider(ClientProvider):
             "callbacks": [callback_url],
             "allowed_logout_urls": [logout_url],
         }
-        created_client = self.admin_client.clients.create(client)
+        created_client = self.auth0.clients.create(client)
         return created_client
 
     def _ensure_client_callback(self, client, callback_url):
@@ -63,7 +61,7 @@ class Auth0ClientProvider(ClientProvider):
         Ensure client has correct callback URL
         """
         if "callbacks" not in client or client["callbacks"] != [callback_url]:
-            self.admin_client.clients.update(
+            self.auth0.clients.update(
                 client["client_id"],
                 {
                     # Overwrite any other callback URL specified
@@ -81,7 +79,7 @@ class Auth0ClientProvider(ClientProvider):
         if "allowed_logout_urls" not in client or client["allowed_logout_urls"] != [
             logout_url
         ]:
-            self.admin_client.clients.update(
+            self.auth0.clients.update(
                 client["client_id"],
                 {
                     # Overwrite any other logout URL - users should only land on
@@ -95,12 +93,9 @@ class Auth0ClientProvider(ClientProvider):
         name,
         callback_url,
         logout_url,
-        allowed_connections: str,
+        connection_name: str,
         connection_config,
     ):
-        # Our Auth0 setup currently suports only one connection, so this must be a string!
-        connection_name = allowed_connections
-
         current_clients = self._get_clients()
         if name not in current_clients:
             # Create the client, all good
@@ -121,7 +116,7 @@ class Auth0ClientProvider(ClientProvider):
 
             if db_connection_name not in current_connections:
                 # connection doesn't exist yet, create it
-                connection = self.admin_client.connections.create(
+                connection = self.auth0.connections.create(
                     {
                         "name": db_connection_name,
                         "display_name": name,
@@ -148,16 +143,13 @@ class Auth0ClientProvider(ClientProvider):
                     needs_update = True
 
             if needs_update:
-                self.admin_client.connections.update(
+                self.auth0.connections.update(
                     connection["id"], {"enabled_clients": enabled_clients}
                 )
 
         return client
 
-    def get_client_creds(self, client, allowed_connections: str, callback_url):
-        # Our Auth0 setup currently suports only one connection, so this must be a string!
-        connection_name = allowed_connections
-
+    def get_client_creds(self, client, connection_name: str, callback_url):
         logout_redirect_params = {
             "client_id": client["client_id"],
             "returnTo": client["allowed_logout_urls"][0],
