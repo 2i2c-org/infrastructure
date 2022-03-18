@@ -91,11 +91,13 @@ user_buckets = [
 
 hub_cloud_permissions = {
   "staging" : {
-    requestorPays : true,
-    bucketAdmin: ["scratch", "data"]
+    requestor_pays : true,
+    bucket_admin: ["scratch", "data"],
+    hub_namespace: "staging"
   },
   "prod" : {
-    requestorPays : true,
-    bucketAdmin: ["scratch", "data"]
+    requestor_pays : true,
+    bucket_admin: ["scratch", "data"],
+    hub_namespace: "prod"
   }
 }

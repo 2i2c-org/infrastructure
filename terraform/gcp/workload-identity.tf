@@ -15,7 +15,7 @@
 # kind of permissions it wants.
 resource "google_service_account" "workload_sa" {
   for_each     = var.hub_cloud_permissions
-  account_id   = "${var.prefix}-${each.key}-workload-sa"
+  account_id   = "${var.prefix}-${each.key}"
   display_name = "Service account for user pods in hub ${each.key} in ${var.prefix}"
   project      = var.project_id
 }
@@ -27,7 +27,7 @@ resource "google_service_account_iam_binding" "workload_identity_binding" {
   service_account_id = google_service_account.workload_sa[each.key].id
   role               = "roles/iam.workloadIdentityUser"
   members = [
-    "serviceAccount:${var.project_id}.svc.id.goog[${each.key}/user-sa]"
+    "serviceAccount:${var.project_id}.svc.id.goog[${each.value.hub_namespace}/user-sa]"
   ]
 }
 
@@ -36,19 +36,19 @@ resource "google_service_account_iam_binding" "workload_identity_binding" {
 # granting just this to provide the workload SA, so user pods can
 # use it. See https://cloud.google.com/storage/docs/requester-pays
 # for more info
-resource "google_project_iam_custom_role" "workload_role" {
+resource "google_project_iam_custom_role" "requestor_pays" {
   // Role names can't contain -, so we swap them out. BOO
-  role_id     = replace("${var.prefix}_workload_sa_role", "-", "_")
+  role_id     = replace("${var.prefix}_requestor_pays", "-", "_")
   project     = var.project_id
   title       = "Identify as project role for users in ${var.prefix}"
   description = "Minimal role for hub users on ${var.prefix} to identify as current project"
   permissions = ["serviceusage.services.use"]
 }
 
-resource "google_project_iam_member" "workload_binding" {
-  for_each = toset([for hub_name, permissions in var.hub_cloud_permissions : hub_name if permissions.requestorPays])
+resource "google_project_iam_member" "requestor_pays_binding" {
+  for_each = toset([for hub_name, permissions in var.hub_cloud_permissions : hub_name if permissions.requestor_pays])
   project  = var.project_id
-  role     = google_project_iam_custom_role.workload_role.name
+  role     = google_project_iam_custom_role.requestor_pays.name
   member   = "serviceAccount:${google_service_account.workload_sa[each.value].email}"
 }
 
@@ -60,7 +60,7 @@ resource "kubernetes_service_account" "workload_kubernetes_sa" {
 
   metadata {
     name      = "user-sa"
-    namespace = each.key
+    namespace = each.value.hub_namespace
     annotations = {
       "iam.gke.io/gcp-service-account" = google_service_account.workload_sa[each.key].email
     }

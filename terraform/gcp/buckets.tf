@@ -16,7 +16,7 @@ locals {
   # Nested for loop, thanks to https://www.daveperrett.com/articles/2021/08/19/nested-for-each-with-terraform/
   bucket_permissions = distinct(flatten([
     for hub_name, permissions in var.hub_cloud_permissions : [
-      for bucket_name in permissions.bucketAdmin : {
+      for bucket_name in permissions.bucket_admin : {
         hub_name    = hub_name
         bucket_name = bucket_name
       }
