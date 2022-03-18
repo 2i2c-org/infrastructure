@@ -12,8 +12,20 @@ ingress-nginx:
   controller:
     admissionWebhooks:
       enabled: false
+
+prometheusIngressAuthSecret:
+  enabled: true
+
 prometheus:
   server:
+    ingress:
+      enabled: true
+      hosts:
+        - prometheus.gcp.pangeo.2i2c.cloud
+      tls:
+        - secretName: prometheus-tls
+          hosts:
+            - prometheus.gcp.pangeo.2i2c.cloud
     resources:
       limits:
         cpu: 2

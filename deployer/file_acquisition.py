@@ -132,12 +132,12 @@ def get_decrypted_file(original_filepath):
 
 
 @contextmanager
-def get_decrypted_files(files, abspath):
+def get_decrypted_files(files):
     """
     This is a context manager that combines multiple `get_decrypted_file`
     context managers that open and/or decrypt the files in `files`.
+
+    files should be all absolute paths
     """
     with ExitStack() as stack:
-        yield [
-            stack.enter_context(get_decrypted_file(abspath.joinpath(f))) for f in files
-        ]
+        yield [stack.enter_context(get_decrypted_file(f)) for f in files]

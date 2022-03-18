@@ -28,9 +28,13 @@ These tools are [`ingress-nginx`](https://kubernetes.github.io/ingress-nginx/), 
 In the `infrastructure` repo, the full filepath should be: `config/clusters/<cluster_name>/support.values.yaml`.
 
 Add the following helm chart values to your `support.values.yaml` file.
-`<grafana-domain>` should follow the pattern `grafana.<cluster_name>.2i2c.cloud`.
+`<grafana-domain>` should follow the pattern `grafana.<cluster_name>.2i2c.cloud`,
+and `<prometheus-domain>` should follow the pattern `prometheus.<cluster_name>.2i2c.cloud`.
 
 ```yaml
+prometheusIngressAuthSecret:
+  enabled: true
+
 grafana:
   ingress:
     hosts:
@@ -39,7 +43,39 @@ grafana:
       - secretName: grafana-tls
         hosts:
           - <grafana-domain>
+
+prometheus:
+  server:
+    ingress:
+      enabled: true
+      hosts:
+        - <prometheus-domain>
+      tls:
+        - secretName: prometheus-tls
+          hosts:
+            - <prometheus-domain>
 ```
+
+#### Create a `enc-support.secret.values.yaml` file
+
+Only 2i2c staff + our centralized grafana should be able to access the
+prometheus data on a cluster from outside the cluster. The [basic auth](https://kubernetes.github.io/ingress-nginx/examples/auth/basic/)
+feature of nginx-ingress is used to restrict this. A `enc-support.secret.values.yaml`
+file is used to provide these secret credentials.
+
+```yaml
+prometheusIngressAuthSecret:
+  username: <output of pwgen -s 64 1>
+  password: <output of pwgen -s 64 1>
+```
+
+```{note}
+We use the [pwgen](https://linux.die.net/man/1/pwgen) program, commonly
+installed by default in many operating systems, to generate the password.
+```
+
+Once you create the file, encrypt it in-place with `sops --in-place --encrypt <file-name>`.
+
 
 #### Edit your `cluster.yaml` file
 
@@ -50,6 +86,7 @@ Note this filepath is _relative_ to the location of your `cluster.yaml` file.
 support:
   helm_chart_values_files:
     - support.values.yaml
+    - enc-support.secret.values.yaml
 ```
 
 #### Deploy the `support` chart via the `deployer`
@@ -61,7 +98,7 @@ See [](operate:manual-deploy) for details on how to setup the tool locally.
 python3 deployer deploy-support CLUSTER_NAME
 ```
 
-#### Setting the DNS A record
+#### Setting DNS records
 
 Once the `support` chart has been successfully deployed, retrieve the external IP address for the `ingress-nginx` load balancer.
 
@@ -69,7 +106,14 @@ Once the `support` chart has been successfully deployed, retrieve the external I
 kubectl --namespace support get svc support-ingress-nginx-controller
 ```
 
-Add this external IP address to an A record in NameCheap that matches `GRAFANA_URL` that was set in the `cluster.yaml` file.
+Add the following DNS records via Namecheap.com:
+
+1. `<cluster-name>.2i2c.cloud`, used for the primary hub (if it exists).
+2. `*.<cluster-name>.2i2c.cloud`, for all other hubs, grafana and prometheus
+   instances.
+
+The DNS records should be `A` records if using GCP or Azure (where external IP is an
+IPv4 address), or `CNAME` records if using AWS (where external IP is a domain name).
 
 **Wait a while for the DNS to propagate!**
 
@@ -80,7 +124,7 @@ Eventually, visiting `GRAFANA_URL` will present you with a login page.
 Here are the credentials for logging in:
 
 - **username**: `admin`
-- **password**: located in `helm-charts/support/enc-support.secret.yaml` (`sops` encrypted).
+- **password**: located in `helm-charts/support/enc-support.secret.values.yaml` (`sops` encrypted).
 
 ### Setting up Grafana Dashboards
 

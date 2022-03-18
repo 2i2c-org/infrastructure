@@ -8,7 +8,7 @@ from contextlib import contextmanager
 
 from hub import Hub
 from utils import print_colour
-from file_acquisition import get_decrypted_file
+from file_acquisition import get_decrypted_file, get_decrypted_files
 
 
 class Cluster:
@@ -114,12 +114,13 @@ class Cluster:
         support_dir = (Path(__file__).parent.parent).joinpath("helm-charts", "support")
         subprocess.check_call(["helm", "dep", "up", support_dir])
 
-        support_secrets_file = support_dir.joinpath("enc-support.secret.yaml")
-        # TODO: Update this with statement to handle any number of context managers
-        #       containing decrypted support values files. Not critical right now as
-        #       no individual cluster has specific support secrets, but it's possible
-        #       to support that if we want to in the future.
-        with get_decrypted_file(support_secrets_file) as secret_file:
+        # contains both encrypted and unencrypted values files
+        values_file_paths = [support_dir.joinpath("enc-support.secret.values.yaml")] + [
+            self.config_path.joinpath(p)
+            for p in self.support["helm_chart_values_files"]
+        ]
+
+        with get_decrypted_files(values_file_paths) as values_files:
             cmd = [
                 "helm",
                 "upgrade",
@@ -129,11 +130,10 @@ class Cluster:
                 "--wait",
                 "support",
                 str(support_dir),
-                f"--values={secret_file}",
             ]
 
-            for values_file in self.support["helm_chart_values_files"]:
-                cmd.append(f"--values={self.config_path.joinpath(values_file)}")
+            for values_file in values_files:
+                cmd.append(f"--values={values_file}")
 
             print_colour(f"Running {' '.join([str(c) for c in cmd])}")
             subprocess.check_call(cmd)
@@ -224,7 +224,7 @@ class Cluster:
                     os.environ["KUBECONFIG"] = orig_kubeconfig
                 if orig_access_key_id is not None:
                     os.environ["AWS_ACCESS_KEY_ID"] = orig_access_key_id
-                if orig_kubeconfig is not None:
+                if orig_secret_access_key is not None:
                     os.environ["AWS_SECRET_ACCESS_KEY"] = orig_secret_access_key
 
     def auth_azure(self):
