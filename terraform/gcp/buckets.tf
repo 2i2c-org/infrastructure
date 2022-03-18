@@ -15,8 +15,8 @@ resource "google_storage_bucket" "user_buckets" {
 locals {
   # Nested for loop, thanks to https://www.daveperrett.com/articles/2021/08/19/nested-for-each-with-terraform/
   bucket_permissions = distinct(flatten([
-    for hub_name in var.workload_identity_enabled_hubs : [
-      for bucket_name in var.user_buckets : {
+    for hub_name, permissions in var.hub_cloud_permissions : [
+      for bucket_name in permissions.bucketAdmin : {
         hub_name    = hub_name
         bucket_name = bucket_name
       }

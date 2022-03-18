@@ -256,14 +256,19 @@ variable "max_cpu" {
   EOT
 }
 
-variable "workload_identity_enabled_hubs" {
-  type        = set(string)
-  default     = []
+variable "hub_cloud_permissions" {
+  type        = map(object({ requestorPays : bool, bucketAdmin : set(string) }))
+  default     = {}
   description = <<-EOT
-  List of hubs that will get workload identity enabled.
+  Map of cloud permissions given to a particular hub
 
-  This should match individual namespaces that exist in the cluster. An
-  appropriate Google Cloud Service Account will be created for *each* of these,
-  and a Kubernetes Service Account will also be created.
+  Key is name of the hub namespace in the cluster, and values are particular
+  permissions users running on those hubs should have. Currently supported are:
+
+  1. requestorPays: Identify as coming from the google cloud project when accessing
+     storage buckets marked as  https://cloud.google.com/storage/docs/requester-pays.
+     This *potentially* incurs cost for us, the originating project, so opt-in.
+  2. bucketAdmin: List of GCS storage buckets that users on this hub should have read
+     and write permissions for.
   EOT
 }

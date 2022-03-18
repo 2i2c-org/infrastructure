@@ -7,13 +7,28 @@
 #
 # Since each cluster can contain multiple hubs, we need to tell terraform which hubs we want
 # to equip with the KSA that has cloud credentials. Terraform will create this Kubernetes
-# Service Account (and the namespace, if it does not exist).
+# Service Account (and the namespace, if it does not exist). We will also need to tell it
+# exactly what permissions we want each hub to have, so we don't give them too many
+# permissions
 
+# Create the service account if there is an entry for the hub, regardless of what
+# kind of permissions it wants.
 resource "google_service_account" "workload_sa" {
-  for_each     = var.workload_identity_enabled_hubs
-  account_id   = "${var.prefix}-${each.value}-workload-sa"
-  display_name = "Service account for user pods in hub ${each.value} in ${var.prefix}"
+  for_each     = var.hub_cloud_permissions
+  account_id   = "${var.prefix}-${each.key}-workload-sa"
+  display_name = "Service account for user pods in hub ${each.key} in ${var.prefix}"
   project      = var.project_id
+}
+
+
+# Bind the Kubernetes Service Accounts to their appropriate Google Cloud Service Accounts
+resource "google_service_account_iam_binding" "workload_identity_binding" {
+  for_each           = var.hub_cloud_permissions
+  service_account_id = google_service_account.workload_sa[each.key].id
+  role               = "roles/iam.workloadIdentityUser"
+  members = [
+    "serviceAccount:${var.project_id}.svc.id.goog[${each.key}/user-sa]"
+  ]
 }
 
 # To access GCS buckets with requestor pays, the calling code needs
@@ -31,33 +46,23 @@ resource "google_project_iam_custom_role" "workload_role" {
 }
 
 resource "google_project_iam_member" "workload_binding" {
-  for_each = var.workload_identity_enabled_hubs
+  for_each = toset([for hub_name, permissions in var.hub_cloud_permissions : hub_name if permissions.requestorPays])
   project  = var.project_id
   role     = google_project_iam_custom_role.workload_role.name
   member   = "serviceAccount:${google_service_account.workload_sa[each.value].email}"
-}
-
-# Bind the Kubernetes Service Accounts to their appropriate Google Cloud Service Accounts
-resource "google_service_account_iam_binding" "workload_identity_binding" {
-  for_each           = var.workload_identity_enabled_hubs
-  service_account_id = google_service_account.workload_sa[each.value].id
-  role               = "roles/iam.workloadIdentityUser"
-  members = [
-    "serviceAccount:${var.project_id}.svc.id.goog[${each.value}/user-sa]"
-  ]
 }
 
 # Create the Service Account in the Kubernetes Namespace
 # FIXME: We might need to create the k8s namespace here some of the time, but then who is
 # responsible for that - terraform or helm (via our deployer?)
 resource "kubernetes_service_account" "workload_kubernetes_sa" {
-  for_each = var.workload_identity_enabled_hubs
+  for_each = var.hub_cloud_permissions
 
   metadata {
     name      = "user-sa"
-    namespace = each.value
+    namespace = each.key
     annotations = {
-      "iam.gke.io/gcp-service-account" = google_service_account.workload_sa[each.value].email
+      "iam.gke.io/gcp-service-account" = google_service_account.workload_sa[each.key].email
     }
   }
 }

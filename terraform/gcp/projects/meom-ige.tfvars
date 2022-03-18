@@ -15,7 +15,6 @@ core_node_machine_type = "g1-small"
 # Single-tenant cluster, network policy not needed
 enable_network_policy    = false
 
-workload_identity_enabled_hubs = ["staging", "prod"]
 
 notebook_nodes = {
   "small" : {
@@ -89,3 +88,14 @@ user_buckets = [
   "scratch",
   "data"
 ]
+
+hub_cloud_permissions = {
+  "staging" : {
+    requestorPays : true,
+    bucketAdmin: ["scratch", "data"]
+  },
+  "prod" : {
+    requestorPays : true,
+    bucketAdmin: ["scratch", "data"]
+  }
+}
