@@ -64,38 +64,26 @@ basehub:
             subPath: _shared
             readOnly: false
       profileList:
-        # The mem-guarantees are here so k8s doesn't schedule other pods
-        # on these nodes.
-        - display_name: "Small: m5.large"
-          description: "~2 CPU, ~8G RAM"
+        # Temporary, until https://github.com/2i2c-org/infrastructure/issues/1128 is resolved
+        - display_name: "Tiny"
+          description: "~2G RAM"
+          default: true
+          kubespawner_override:
+            mem_limit: 2G
+            mem_guarantee: 2G
+            cpu_limit: 1
+            node_selector:
+              node.kubernetes.io/instance-type: m5.2xlarge
+        - display_name: "Small"
+          description: "~2 CPU, ~6G RAM"
           kubespawner_override:
             # Expllicitly unset mem_limit, so it overrides the default memory limit we set in
             # basehub/values.yaml
-            mem_limit: null
-            mem_guarantee: 6.5G
-            node_selector:
-              node.kubernetes.io/instance-type: m5.large
-        - display_name: "Medium: m5.xlarge"
-          description: "~4 CPU, ~15G RAM"
-          kubespawner_override:
-            mem_limit: null
-            mem_guarantee: 12G
-            node_selector:
-              node.kubernetes.io/instance-type: m5.xlarge
-        - display_name: "Large: m5.2xlarge"
-          description: "~8 CPU, ~30G RAM"
-          kubespawner_override:
-            mem_limit: null
-            mem_guarantee: 26G
+            mem_limit: 6G
+            mem_guarantee: 6G
+            cpu_limit: 2
             node_selector:
               node.kubernetes.io/instance-type: m5.2xlarge
-        - display_name: "Huge: m5.8xlarge"
-          description: "~32 CPU, ~128G RAM"
-          kubespawner_override:
-            mem_limit: null
-            mem_guarantee: 115G
-            node_selector:
-              node.kubernetes.io/instance-type: m5.8xlarge
     scheduling:
       userPlaceholder:
         enabled: false
