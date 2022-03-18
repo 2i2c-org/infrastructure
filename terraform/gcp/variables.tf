@@ -189,8 +189,8 @@ variable "enable_private_cluster" {
 }
 
 variable "enable_filestore" {
-  type = bool
-  default = false
+  type        = bool
+  default     = false
   description = <<-EOT
   Deploy a Google FileStore for home directories
 
@@ -201,8 +201,8 @@ variable "enable_filestore" {
 }
 
 variable "filestore_capacity_gb" {
-  type = number
-  default = 1024
+  type        = number
+  default     = 1024
   description = <<-EOT
   Minimum size (in GB) of Google FileStore.
 
@@ -211,8 +211,8 @@ variable "filestore_capacity_gb" {
 }
 
 variable "filestore_tier" {
-  type = string
-  default = "BASIC_HDD"
+  type        = string
+  default     = "BASIC_HDD"
   description = <<-EOT
   Google FileStore service tier to use.
 
@@ -222,8 +222,8 @@ variable "filestore_tier" {
 }
 
 variable "enable_node_autoprovisioning" {
-  type = bool
-  default = false
+  type        = bool
+  default     = false
   description = <<-EOT
   Enable auto-provisioning of nodes based on workload
   EOT

@@ -23,19 +23,19 @@ notebook_nodes = {
     min : 0,
     max : 100,
     machine_type : "n1-standard-4",
-    labels: {}
+    labels: {},
   },
   "medium" : {
     min : 0,
     max : 100,
     machine_type : "n1-standard-8",
-    labels: {}
+    labels: {},
   },
   "large" : {
     min : 0,
     max : 100,
     machine_type : "n1-standard-16",
-    labels: {}
+    labels: {},
   },
 }
 
@@ -44,18 +44,18 @@ dask_nodes = {
     min : 0,
     max : 100,
     machine_type : "n1-standard-4",
-    labels: {}
+    labels: {},
   },
   "medium" : {
     min : 0,
     max : 100,
     machine_type : "n1-standard-8",
-    labels: {}
+    labels: {},
   },
   "large" : {
     min : 0,
     max : 100,
     machine_type : "n1-standard-16",
-    labels: {}
+    labels: {},
   },
 }
