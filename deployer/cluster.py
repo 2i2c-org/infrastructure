@@ -73,36 +73,17 @@ class Cluster:
         cert_manager_url = "https://charts.jetstack.io"
         cert_manager_version = "v1.3.1"
 
-        print_colour("Adding cert-manager chart repo...")
-        subprocess.check_call(
-            [
-                "helm",
-                "repo",
-                "add",
-                "jetstack",
-                cert_manager_url,
-            ]
-        )
-
-        print_colour("Updating cert-manager chart repo...")
-        subprocess.check_call(
-            [
-                "helm",
-                "repo",
-                "update",
-            ]
-        )
-
         print_colour("Provisioning cert-manager...")
         subprocess.check_call(
             [
                 "helm",
                 "upgrade",
+                "cert-manager",  # given release name (aka. installation name)
+                "cert-manager",  # helm chart to install
+                f"--repo={cert_manager_url}",
                 "--install",
                 "--create-namespace",
                 "--namespace=cert-manager",
-                "cert-manager",
-                "jetstack/cert-manager",
                 f"--version={cert_manager_version}",
                 "--set=installCRDs=true",
             ]
