@@ -61,7 +61,7 @@ class Hub:
                             "args": [
                                 "clone",
                                 "--",
-                                "https://github.com/2i2c-org/pilot-homepage",
+                                "https://github.com/2i2c-org/default-hub-homepage",
                                 "/srv/repo",
                             ],
                             "securityContext": {
