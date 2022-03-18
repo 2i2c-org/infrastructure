@@ -2,9 +2,9 @@
 
 Each Hub deployed in a cluster has a collection of metadata about who it is deployed for, and who is responsible for running it. This is used to generate the **log-in page** for each hub and tailor it for the community.
 
-For an example, see [the log-in page of the staging hub](https://staging.pilot.2i2c.cloud/hub/login).
+For an example, see [the log-in page of the staging hub](https://staging.2i2c.cloud/hub/login).
 
-The log-in pages are built with [the base template at this repository](https://github.com/2i2c-org/pilot-homepage). Values are inserted into each template based on each hub configuration.
+The log-in pages are built with [the base template at this repository](https://github.com/2i2c-org/default-hub-homepage). Values are inserted into each template based on each hub configuration.
 
 You may customize the configuration for a hub's homepage `jupyterhub.homepage.templateVars` in the appropriate hub values file under `config/clusters/<cluster_name>`. Changing these values for a hub will ensure that the hub's landing page updates automatically.
 Some example config is below.
