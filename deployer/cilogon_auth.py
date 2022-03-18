@@ -75,14 +75,7 @@ class CILogonAdmin:
         See: https://github.com/ncsa/OA4MP/blob/HEAD/oa4mp-server-admin-oauth2/src/main/scripts/oidc-cm-scripts/cm-post.sh
         """
 
-        print(f"body {body}")
-        response = self._post(self._url(), data=body)
-        print(f"response {response}")
-        print(response.json())
-        if response.status_code != 200:
-            return
-
-        return response.json()
+        return self._post(self._url(), data=body)
 
     def get(self, id):
         """Retrieves a client by its id.
@@ -93,11 +86,7 @@ class CILogonAdmin:
         See: https://github.com/ncsa/OA4MP/blob/HEAD/oa4mp-server-admin-oauth2/src/main/scripts/oidc-cm-scripts/cm-get.sh
         """
 
-        response = self._get(self._url(id))
-        if response.status_code != 200:
-            return
-
-        return response.json()
+        return self._get(self._url(id))
 
     def update(self, id, body):
         """Modifies a client by its id.
@@ -110,11 +99,7 @@ class CILogonAdmin:
 
         See: https://github.com/ncsa/OA4MP/blob/HEAD/oa4mp-server-admin-oauth2/src/main/scripts/oidc-cm-scripts/cm-put.sh
         """
-        response = self._put(self._url(id), data=body)
-        if response.status_code != 200:
-            return
-
-        return response.json()
+        return self._put(self._url(id), data=body)
 
 
 class CILogonClientProvider:
@@ -200,9 +185,13 @@ class CILogonClientProvider:
 
         # Ask CILogon to create the client
         print(f"Creating client with details {client_details}")
-        client = self.admin_client.create(client_details)
+        response = self.admin_client.create(client_details)
+        if response.status_code != 200:
+            print(f"An error occured when creating the {cluster_name}-{hub_name} client. \n Error was {response.text}.")
+            response.raise_for_status()
+
+        client = response.json()
         print(f"Created a new CILogon client for {cluster_name}-{hub_name}.")
-        print(client)
 
         # Persist and encrypt the client credentials
         self._persist_client_credentials(client, hub_type, config_filename)
