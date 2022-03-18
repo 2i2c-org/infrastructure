@@ -187,7 +187,9 @@ class CILogonClientProvider:
         print(f"Creating client with details {client_details}")
         response = self.admin_client.create(client_details)
         if response.status_code != 200:
-            print(f"An error occured when creating the {cluster_name}-{hub_name} client. \n Error was {response.text}.")
+            print(
+                f"An error occured when creating the {cluster_name}-{hub_name} client. \n Error was {response.text}."
+            )
             response.raise_for_status()
 
         client = response.json()
