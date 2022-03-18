@@ -51,25 +51,6 @@ variable "config_connector_enabled" {
   EOT
 }
 
-variable "cluster_sa_roles" {
-  type = set(string)
-  default = [
-    "roles/logging.logWriter",
-    "roles/monitoring.metricWriter",
-    "roles/monitoring.viewer",
-    "roles/stackdriver.resourceMetadata.writer",
-    "roles/artifactregistry.reader"
-  ]
-  description = <<-EOT
-  List of roles granted to the SA assumed by cluster nodes.
-
-  The defaults grant just enough access for the components on the node
-  to write metrics & logs to stackdriver, and pull images from artifact registry.
-
-  https://cloud.google.com/kubernetes-engine/docs/how-to/hardening-your-cluster
-  has more information.
-  EOT
-}
 
 variable "cd_sa_roles" {
   type = set(string)
@@ -272,5 +253,17 @@ variable "max_cpu" {
   cluster to which the cluster can scale.
 
   Default = 1000
+  EOT
+}
+
+variable "workload_identity_enabled_hubs" {
+  type        = set(string)
+  default     = []
+  description = <<-EOT
+  List of hubs that will get workload identity enabled.
+
+  This should match individual namespaces that exist in the cluster. An
+  appropriate Google Cloud Service Account will be created for *each* of these,
+  and a Kubernetes Service Account will also be created.
   EOT
 }

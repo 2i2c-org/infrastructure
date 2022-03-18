@@ -15,9 +15,7 @@ core_node_machine_type = "g1-small"
 # Single-tenant cluster, network policy not needed
 enable_network_policy    = false
 
-# Single tenant cluster, so bucket access is provided via
-# metadata concealment + node SA. Config Connector not needed.
-config_connector_enabled = false
+workload_identity_enabled_hubs = ["staging", "prod"]
 
 notebook_nodes = {
   "small" : {
