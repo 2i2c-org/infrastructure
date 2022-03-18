@@ -1,0 +1,90 @@
+basehub:
+  nfs:
+    enabled: true
+
+  jupyterhub:
+    singleuser:
+      # Eksctl: The service account was created by eksctl.
+      #
+      serviceAccountName: &user-sa s3-full-access
+
+      extraEnv:
+        # SCRATCH_BUCKET / PANGEO_SCRATCH are environment variables that
+        # help users write notebooks and such referencing this environment
+        # variable in a way that will work between users.
+        #
+        # $(ENV_VAR) will by evaluated by k8s automatically
+        #
+        # Cloudformation: The s3 bucket was created by cloudformation.
+        #
+        SCRATCH_BUCKET: s3://jmte-scratch/$(JUPYTERHUB_USER)
+        PANGEO_SCRATCH: s3://jmte-scratch/$(JUPYTERHUB_USER)
+
+      initContainers:
+        # Need to explicitly fix ownership here, since EFS doesn't do anonuid
+        - name: volume-mount-ownership-fix
+          image: busybox
+          command:
+            [
+              "sh",
+              "-c",
+              "id && chown 1000:1000 /home/jovyan /home/jovyan/shared && ls -lhd /home/jovyan",
+            ]
+          securityContext:
+            runAsUser: 0
+          volumeMounts:
+            - name: home
+              mountPath: /home/jovyan
+              subPath: "{username}"
+            - name: home
+              mountPath: /home/jovyan/shared
+              subPath: _shared
+
+    proxy:
+      traefik:
+        # jupyterhub-ssh/sftp integration part 3/3:
+        #
+        # We must let traefik know it should listen for traffic (traefik entrypoint)
+        # and route it (traefik router) onwards to the jupyterhub-ssh k8s Service
+        # (traefik service).
+        #
+        extraStaticConfig:
+          entryPoints:
+            ssh-entrypoint:
+              address: :8022
+            sftp-entrypoint:
+              address: :2222
+        extraDynamicConfig:
+          tcp:
+            services:
+              ssh-service:
+                loadBalancer:
+                  servers:
+                    - address: jupyterhub-ssh:22
+              sftp-service:
+                loadBalancer:
+                  servers:
+                    - address: jupyterhub-sftp:22
+            routers:
+              ssh-router:
+                entrypoints: [ssh-entrypoint]
+                rule: HostSNI(`*`)
+                service: ssh-service
+              sftp-router:
+                entrypoints: [sftp-entrypoint]
+                rule: HostSNI(`*`)
+                service: sftp-service
+
+dask-gateway:
+  gateway:
+    backend:
+      scheduler:
+        extraPodConfig:
+          serviceAccountName: *user-sa
+      worker:
+        extraPodConfig:
+          serviceAccountName: *user-sa
+
+jupyterhub-ssh:
+  sftp:
+    enabled: true

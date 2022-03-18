@@ -78,7 +78,6 @@ Parameters:
     Type: String
     Default: ci-eks
 
-
 # The resources we want to be created as part of this cloudformation stack
 Resources:
   # ref: https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-iam-user.html
@@ -115,8 +114,8 @@ Resources:
             Effect: Allow
             Principal:
               AWS: !Join
-                - ''
-                - - 'arn:aws:iam::'
+                - ""
+                - - "arn:aws:iam::"
                   - !Ref AWS::AccountId
                   - :user/
                   - !Ref IamUser
@@ -135,13 +134,13 @@ Resources:
                 Action:
                   - eks:DescribeCluster
                 Resource: !Join
-                - ''
-                - - 'arn:aws:eks:'
-                  - !Ref AWS::Region
-                  - ':'
-                  - !Ref AWS::AccountId
-                  - ':cluster/'
-                  - !Ref EksClusterName
+                  - ""
+                  - - "arn:aws:eks:"
+                    - !Ref AWS::Region
+                    - ":"
+                    - !Ref AWS::AccountId
+                    - ":cluster/"
+                    - !Ref EksClusterName
       AssumeRolePolicyDocument:
         Version: 2012-10-17
         Statement:
@@ -149,8 +148,8 @@ Resources:
             Effect: Allow
             Principal:
               AWS: !Join
-                - ''
-                - - 'arn:aws:iam::'
+                - ""
+                - - "arn:aws:iam::"
                   - !Ref AWS::AccountId
                   - :user/
                   - !Ref IamUser
@@ -170,22 +169,91 @@ Resources:
     Properties:
       FileSystemId: !GetAtt EfsFileSystem.FileSystemId
       SecurityGroups:
-        - {"Fn::ImportValue": {"Fn::Sub": "eksctl-${EksClusterName}-cluster::SharedNodeSecurityGroup"}}
-      SubnetId: { "Fn::Select": [0, { "Fn::Split": [",", {"Fn::ImportValue": {"Fn::Sub": "eksctl-${EksClusterName}-cluster::SubnetsPublic"}}]}] }
+        - {
+            "Fn::ImportValue":
+              {
+                "Fn::Sub": "eksctl-${EksClusterName}-cluster::SharedNodeSecurityGroup",
+              },
+          }
+      SubnetId:
+        {
+          "Fn::Select":
+            [
+              0,
+              {
+                "Fn::Split":
+                  [
+                    ",",
+                    {
+                      "Fn::ImportValue":
+                        {
+                          "Fn::Sub": "eksctl-${EksClusterName}-cluster::SubnetsPublic",
+                        },
+                    },
+                  ],
+              },
+            ],
+        }
   EfsMountTarget1:
     Type: AWS::EFS::MountTarget
     Properties:
       FileSystemId: !GetAtt EfsFileSystem.FileSystemId
       SecurityGroups:
-        - {"Fn::ImportValue": {"Fn::Sub" : "eksctl-${EksClusterName}-cluster::SharedNodeSecurityGroup"}}
-      SubnetId: { "Fn::Select": [1, { "Fn::Split": [",", {"Fn::ImportValue": {"Fn::Sub": "eksctl-${EksClusterName}-cluster::SubnetsPublic"}}]}] }
+        - {
+            "Fn::ImportValue":
+              {
+                "Fn::Sub": "eksctl-${EksClusterName}-cluster::SharedNodeSecurityGroup",
+              },
+          }
+      SubnetId:
+        {
+          "Fn::Select":
+            [
+              1,
+              {
+                "Fn::Split":
+                  [
+                    ",",
+                    {
+                      "Fn::ImportValue":
+                        {
+                          "Fn::Sub": "eksctl-${EksClusterName}-cluster::SubnetsPublic",
+                        },
+                    },
+                  ],
+              },
+            ],
+        }
   EfsMountTarget2:
     Type: AWS::EFS::MountTarget
     Properties:
       FileSystemId: !GetAtt EfsFileSystem.FileSystemId
       SecurityGroups:
-        - {"Fn::ImportValue": {"Fn::Sub" : "eksctl-${EksClusterName}-cluster::SharedNodeSecurityGroup"}}
-      SubnetId: { "Fn::Select": [2, { "Fn::Split": [",", {"Fn::ImportValue": {"Fn::Sub": "eksctl-${EksClusterName}-cluster::SubnetsPublic"}}]}] }
+        - {
+            "Fn::ImportValue":
+              {
+                "Fn::Sub": "eksctl-${EksClusterName}-cluster::SharedNodeSecurityGroup",
+              },
+          }
+      SubnetId:
+        {
+          "Fn::Select":
+            [
+              2,
+              {
+                "Fn::Split":
+                  [
+                    ",",
+                    {
+                      "Fn::ImportValue":
+                        {
+                          "Fn::Sub": "eksctl-${EksClusterName}-cluster::SubnetsPublic",
+                        },
+                    },
+                  ],
+              },
+            ],
+        }
 
   # ref: https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-s3-bucket.html
   #
@@ -225,18 +293,18 @@ Resources:
             Effect: Allow
             Principal:
               AWS: !Join
-                - ''
-                - - 'arn:aws:iam::'
+                - ""
+                - - "arn:aws:iam::"
                   - !Ref AWS::AccountId
                   - :root
-            Action: 'kms:*'
-            Resource: '*'
+            Action: "kms:*"
+            Resource: "*"
           - Sid: Enable User Permissions
             Effect: Allow
             Principal:
               AWS: !Join
-                - ''
-                - - 'arn:aws:iam::'
+                - ""
+                - - "arn:aws:iam::"
                   - !Ref AWS::AccountId
                   - :user/
                   - !Ref IamUser
@@ -247,8 +315,7 @@ Resources:
               - "kms:ReEncrypt*"
               - "kms:GenerateDataKey"
               - "kms:GenerateDataKeyWithoutPlaintext"
-            Resource: '*'
-
+            Resource: "*"
 
 # The relevant information from the created resources.
 Outputs:
@@ -264,7 +331,7 @@ Outputs:
       The Role with permission to push to our image registry.
   EcrRepository:
     Value: !Join
-      - ''
+      - ""
       - - !Ref AWS::AccountId
         - .dkr.ecr.
         - !Ref AWS::Region

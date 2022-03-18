@@ -1,0 +1,318 @@
+basehub:
+  # Cloudformation: The EFS filesystem was created by cloudformation.
+  #
+  nfs:
+    # enabled is adjusted by staging/prod values
+    # enabled: true
+    shareCreator:
+      enabled: true
+    pv:
+      serverIP: fs-01707b06.efs.us-west-2.amazonaws.com
+      # mountOptions from https://docs.aws.amazon.com/efs/latest/ug/mounting-fs-nfs-mount-settings.html
+      mountOptions:
+        - rsize=1048576
+        - wsize=1048576
+        - timeo=600
+        - soft # We pick soft over hard, so NFS lockups don't lead to hung processes
+        - retrans=2
+        - noresvport
+      # baseShareName is required to be just "/" so that we can create
+      # various sub folders in the filesystem that our PV to access the
+      # NFS server can reference successfully as it isn't supported to
+      # access a not yet existing folder. This creation is automated by
+      # the nfs-share-creator resource part of the basehub Helm chart.
+      baseShareName: /
+
+  jupyterhub:
+    custom:
+      homepage:
+        templateVars:
+          org:
+            name: Jupyter meets the Earth
+            logo_url: https://pangeo-data.github.io/jupyter-earth/_static/jupyter-earth.png
+            url: https://jupytearth.org
+          designed_by:
+            name: 2i2c
+            url: https://2i2c.org
+          operated_by:
+            name: 2i2c
+            url: https://2i2c.org
+          funded_by:
+            name: Jupyter meets the Earth
+            url: https://jupytearth.org
+
+    scheduling:
+      userScheduler:
+        # Revert basehubs default that relies on GKE's built in scheduler that
+        # is optimized to pack pods into busy nodes. This is a AWS EKS based
+        # hub without such default scheduler.
+        enabled: true
+
+    singleuser:
+      # extraFiles ref: https://zero-to-jupyterhub.readthedocs.io/en/latest/resources/reference.html#singleuser-extrafiles
+      extraFiles:
+        # github-app-user-auth requires:
+        # - Installed python package
+        # - GITHUB_APP_CLIENT_ID environment set
+        # - This configuration
+        #
+        # NOTE: an associated GitHub App has been created by Erik Sundell
+        #       aka. @consideRatio and can be configured by him at:
+        #       https://github.com/settings/apps/hub-jupytearth-org-github-integ
+        #
+        gitconfig:
+          mountPath: /etc/gitconfig
+          stringData: |
+            [credential]
+                helper = store --file=/tmp/github-app-git-credentials
+        jupyter_notebook_config.json:
+          mountPath: /etc/jupyter/jupyter_notebook_config.json
+          data:
+            # Allow jupyterlab option to show hidden files in browser
+            # https://github.com/berkeley-dsep-infra/datahub/issues/3160
+            ContentsManager:
+              allow_hidden: true
+
+      # Eksctl: The service account was created by eksctl.
+      #
+      # serviceAccountName is added to prod values
+      # serviceAccountName: &user-sa s3-full-access
+
+      # Increased as we have experienced a too slow image pull at least
+      # once. Our pods can take ~6-7 minutes to start on a new node it
+      # seems, so this gives us some margin.
+      startTimeout: 900
+
+      extraEnv:
+        # GITHUB_APP_CLIENT_ID, see notes in singleuser.extraFiles about
+        # this environment variable. Two entries are created as I think
+        # the shorter may be deprecated soon.
+        GITHUB_APP_CLIENT_ID: Iv1.a073b1649637af12
+        GITHUB_APP_USER_AUTH_CLIENT_ID: Iv1.a073b1649637af12
+
+      image:
+        # NOTE: We use the jupyterhub-configurator so this image/tag is not
+        #       relevant. Visit its UI to configure the hub.
+        #
+        #       staging: https://staging.hub.jupytearth.org/services/configurator/
+        #       prod:    https://hub.jupytearth.org/services/configurator/
+        pullPolicy: Always
+        name: 286354552638.dkr.ecr.us-west-2.amazonaws.com/jmte/user-env
+        tag: "latest"
+
+      profileList:
+        - display_name: "16th of Medium: 0.25-4 CPU, 1-16 GB"
+          default: True
+          description: "A shared machine, the recommended option until you experience a limitation."
+          kubespawner_override:
+            cpu_guarantee: 0.225
+            mem_guarantee: 0.875G
+            mem_limit: null
+            node_selector: { 2i2c.org/node-cpu: "4" }
+            extra_resource_limits: {}
+        - display_name: "4th of Medium: 1-4 CPU, 4-16 GB"
+          description: "A shared machine."
+          kubespawner_override:
+            cpu_guarantee: 0.875
+            mem_guarantee: 3.5G
+            mem_limit: null
+            node_selector: { 2i2c.org/node-cpu: "4" }
+            extra_resource_limits: {}
+        - display_name: "Medium: 4 CPU, 16 GB"
+          description: "A dedicated machine for you."
+          kubespawner_override:
+            cpu_guarantee: 3.5
+            mem_guarantee: 14G
+            mem_limit: null
+            node_selector: { 2i2c.org/node-cpu: "4" }
+            extra_resource_limits: {}
+        - display_name: "Large: 16 CPU, 64 GB"
+          description: "A dedicated machine for you."
+          kubespawner_override:
+            mem_guarantee: 56G
+            mem_limit: null
+            node_selector: { 2i2c.org/node-cpu: "16" }
+            extra_resource_limits: {}
+        - display_name: "Massive: 64 CPU, 256 GB"
+          description: "A dedicated machine for you."
+          kubespawner_override:
+            mem_guarantee: 224G
+            mem_limit: null
+            node_selector: { 2i2c.org/node-cpu: "64" }
+            extra_resource_limits: {}
+        - display_name: "Massive high-memory: 64 CPU, 976 GB"
+          description: "A dedicated machine for you."
+          kubespawner_override:
+            mem_guarantee: 900G
+            mem_limit: null
+            node_selector: { 2i2c.org/node-highmem-cpu: "64" }
+            extra_resource_limits: {}
+        - display_name: "Medium GPU: 4 CPU, 16 GB, 1 T4 Tensor Core GPU"
+          description: "A dedicated machine for you with one GPU attached."
+          kubespawner_override:
+            cpu_guarantee: 3.5
+            mem_guarantee: 14G
+            mem_limit: null
+            node_selector: { 2i2c.org/node-cpu: "4", 2i2c.org/node-gpu: "1" }
+            extra_resource_limits:
+              nvidia.com/gpu: "1"
+        - display_name: "Large GPU: 16 CPU, 64 GB, 1 T4 Tensor Core GPU"
+          description: "A dedicated machine for you with one GPU attached."
+          kubespawner_override:
+            mem_guarantee: 56G
+            mem_limit: null
+            node_selector: { 2i2c.org/node-cpu: "16", 2i2c.org/node-gpu: "1" }
+            extra_resource_limits:
+              nvidia.com/gpu: "1"
+
+    proxy:
+      # proxy notes:
+      #
+      # - Revert basehubs overrides as we don't install ingress-nginx and
+      #   cert-manager yet, and therefore should use
+      #   service.type=LoadBalancer instead of service.type=ClusterIP.
+      #   Along with this, we also make use of the autohttps system that
+      #   requires us to configure an letsencrypt email.
+      #
+      https:
+        enabled: true
+        type: letsencrypt
+        letsencrypt:
+          contactEmail: erik@sundellopensource.se
+
+      service:
+        # Revert an unwanted basehub default
+        type: LoadBalancer
+        annotations:
+          service.beta.kubernetes.io/aws-load-balancer-connection-idle-timeout: "3600"
+
+        # jupyterhub-ssh/sftp integration part 1/3:
+        #
+        # We must accept traffic to the k8s Service (proxy-public) receiving traffic
+        # from the internet. Port 22 is typically used for both SSH and SFTP, but we
+        # can't use the same port for both so we use 2222 for SFTP in this example.
+        #
+        extraPorts:
+          - name: ssh
+            port: 22
+            targetPort: ssh
+          - name: sftp
+            port: 2222
+            targetPort: sftp
+      traefik:
+        # jupyterhub-ssh/sftp integration part 2/3:
+        #
+        # We must accept traffic arriving to the autohttps pod (traefik) from the
+        # proxy-public service. Expose a port and update the NetworkPolicy
+        # to tolerate incoming (ingress) traffic on the exposed port.
+        #
+        extraPorts:
+          - name: ssh
+            containerPort: 8022
+          - name: sftp
+            containerPort: 2222
+        networkPolicy:
+          allowedIngressPorts: [http, https, ssh, sftp]
+        # jupyterhub-ssh/sftp integration part 3/3:
+        #
+        # extraStaticConfig is adjusted by staging/prod values
+        # extraDynamicConfig is adjusted by staging/prod values
+
+    hub:
+      config:
+        Authenticator:
+          allowed_users: &users
+            # This is just listing a few of the users/admins, a lot of
+            # users has been added manually, see:
+            # https://github.com/pangeo-data/jupyter-earth/issues/53
+            - abbyazari # Abby Azari
+            - andersy005 # Anderson Banihirwe
+            - consideratio # Erik Sundell
+            - choldgraf # Chris Holdgraf
+            - elliesch # Ellie Abrahams
+            - EMscience # Edom Moges
+            - espg # Shane Grigsby
+            - facusapienza21 # Facundo Sapienza
+            - fperez # Fernando Pérez
+            - kmpaul # Kevin Paul
+            - lrennels # Lisa Rennels
+            - mrsiegfried # Matthew Siegfried
+            - tsnow03 # Tasha Snow
+            - whyjz # Whyjay Zheng
+            - yuvipanda # Yuvi Panda
+            - jonathan-taylor # Jonathan Taylor
+          admin_users: *users
+      allowNamedServers: true
+      networkPolicy:
+        # FIXME: Required for dask gateway 0.9.0. It is fixed but a Helm
+        #        chart of newer version is not yet released.
+        enabled: false
+
+dask-gateway:
+  # dask-gateway notes:
+  #
+  # - Explicitly unset daskhub's nodeSelectors for all pods except the
+  #   worker pods. The tolerations applied in the basehub config to all
+  #   non-worker pods in dask-gateway will provide a preferred affinity
+  #   towards suitable nodes without needing to have a label on them. Then
+  #   we use the node label "k8s.dask.org/node-purpose: worker"
+  #   specifically for enforce workers to schedule on such nodes.
+  #
+  traefik:
+    nodeSelector: null
+  controller:
+    nodeSelector: null
+  gateway:
+    nodeSelector: null
+    backend:
+      scheduler:
+        # IMPORTANT: We have experienced that the scheduler can fail with
+        #            1GB memory limit. This was observed "stream closed"
+        #            from the python client working against the
+        #            Dask-Gateway created DaskCluster.
+        #
+        #            CommClosedError: in <TLS (closed) ConnectionPool.gather local=tls://192.168.40.210:54296 remote=gateway://traefik-prod-dask-gateway.prod:80/prod.b9600f678bb747c1a5f038b5bef3eb90>: Stream is closed
+        #
+        cores:
+          request: 1
+          limit: 64
+        memory:
+          request: 2G
+          limit: 500G
+        extraPodConfig:
+          nodeSelector:
+            hub.jupyter.org/node-purpose: user
+            k8s.dask.org/node-purpose: null
+          # serviceAccountName is adjusted by staging/prod values
+          # serviceAccountName: *user-sa
+      worker:
+        extraPodConfig:
+          nodeSelector:
+            k8s.dask.org/node-purpose: worker
+          # serviceAccountName is adjusted by staging/prod values
+          # serviceAccountName: *user-sa
+
+    extraConfig:
+      idle: |
+        # timeout after 30 minutes of inactivity
+        c.KubeClusterConfig.idle_timeout = 1800
+      limits: |
+        # per Dask cluster limits.
+        c.ClusterConfig.cluster_max_cores = 256
+        c.ClusterConfig.cluster_max_memory = "1028G"
+
+# jupyterhub-ssh values.yaml reference:
+# https://github.com/yuvipanda/jupyterhub-ssh/blob/main/helm-chart/jupyterhub-ssh/values.yaml
+#
+jupyterhub-ssh:
+  hubUrl: http://proxy-http:8000
+
+  ssh:
+    enabled: true
+
+  sftp:
+    # enabled is adjusted by staging/prod values
+    # enabled: true
+    pvc:
+      enabled: true
+      name: home-nfs

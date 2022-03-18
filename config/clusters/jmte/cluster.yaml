@@ -1,0 +1,19 @@
+name: jmte
+provider: none
+hubs:
+  - name: staging
+    domain: staging.hub.jupytearth.org
+    helm_chart: daskhub
+    auth0:
+      connection: github
+    helm_chart_values_files:
+      - common.values.yaml
+      - staging.values.yaml
+  - name: prod
+    domain: hub.jupytearth.org
+    helm_chart: daskhub
+    auth0:
+      connection: github
+    helm_chart_values_files:
+      - common.values.yaml
+      - prod.values.yaml

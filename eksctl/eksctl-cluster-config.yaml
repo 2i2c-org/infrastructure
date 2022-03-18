@@ -26,8 +26,6 @@
 # ref: https://github.com/2i2c-org/pangeo-hubs/blob/8e552bc198d8339efe8c003cb847849255e8f8ed/aws/eksctl-config.yaml
 #
 
-
-
 apiVersion: eksctl.io/v1alpha5
 kind: ClusterConfig
 metadata:
@@ -48,8 +46,6 @@ metadata:
 #
 availabilityZones: [us-west-2d, us-west-2b, us-west-2a]
 
-
-
 # This section will create additional k8s ServiceAccount's that are coupled with
 # AWS Role's. By declaring pods to use them, you can grant these pods the
 # associated permissions. For this deployment, we create a k8s ServiceAccount
@@ -57,7 +53,7 @@ availabilityZones: [us-west-2d, us-west-2b, us-west-2a]
 # pods will make use of.
 #
 iam:
-  withOIDC: true        # https://eksctl.io/usage/security/#withoidc
+  withOIDC: true # https://eksctl.io/usage/security/#withoidc
   # serviceAccounts like nodeGroups etc can be managed directly with eksctl, for
   # more information, see: https://eksctl.io/usage/iamserviceaccounts/
   #
@@ -78,8 +74,6 @@ iam:
           aws-usage: application
       attachPolicyARNs:
         - arn:aws:iam::aws:policy/AmazonS3FullAccess
-
-
 
 # Choose the type of node group?
 # - nodeGroups cannot be updated but must be recreated on changes:
@@ -111,8 +105,8 @@ iam:
 #
 nodeGroups:
   - name: core-a
-    availabilityZones: [us-west-2d]   # aws ec2 describe-availability-zones --region <region-name>
-    instanceType: m5.large   # 28 pods, 2 cpu, 8 GB
+    availabilityZones: [us-west-2d] # aws ec2 describe-availability-zones --region <region-name>
+    instanceType: m5.large # 28 pods, 2 cpu, 8 GB
     minSize: 0
     maxSize: 2
     desiredCapacity: 1
@@ -325,8 +319,6 @@ nodeGroups:
         autoScaler: true
         efs: true
 
-
-
   # Worker node pools using cheaper spot instances that are temporary.
   #
   #   References:
@@ -346,7 +338,8 @@ nodeGroups:
   #       and was just part of YAML 1.1 but not 1.0 or 1.2.
   #
   - name: worker-a-4
-    availabilityZones: &worker-availabilityZones [us-west-2d, us-west-2b, us-west-2a]
+    availabilityZones:
+      &worker-availabilityZones [us-west-2d, us-west-2b, us-west-2a]
     minSize: &worker-minSize 0
     maxSize: &worker-maxSize 8
     desiredCapacity: &worker-desiredCapacity 0
@@ -367,8 +360,8 @@ nodeGroups:
     # Spot instance specific configuration
     instancesDistribution:
       instanceTypes:
-        - m5a.xlarge      # 57 pods, 4 cpu, 16 GB (AMD,   10 GBits network,  100% cost)
-        - m5.xlarge       # 57 pods, 4 cpu, 16 GB (Intel, 10 GBits network, ~112% cost)
+        - m5a.xlarge # 57 pods, 4 cpu, 16 GB (AMD,   10 GBits network,  100% cost)
+        - m5.xlarge # 57 pods, 4 cpu, 16 GB (Intel, 10 GBits network, ~112% cost)
         # - m5n.xlarge    # 57 pods, 4 cpu, 16 GB (Intel, 25 GBits network, ~139% cost)
       onDemandBaseCapacity: &worker-onDemandBaseCapacity 0
       onDemandPercentageAboveBaseCapacity: &worker-onDemandPercentageAboveBaseCapacity 0
@@ -392,8 +385,8 @@ nodeGroups:
     iam: *worker-iam
     instancesDistribution:
       instanceTypes:
-        - m5a.4xlarge     # 233 pods, 16 cpu, 64 GB (AMD,   10 GBits network,  100% cost)
-        - m5.4xlarge      # 233 pods, 16 cpu, 64 GB (Intel, 10 GBits network, ~112% cost)
+        - m5a.4xlarge # 233 pods, 16 cpu, 64 GB (AMD,   10 GBits network,  100% cost)
+        - m5.4xlarge # 233 pods, 16 cpu, 64 GB (Intel, 10 GBits network, ~112% cost)
         # - m5n.4xlarge   # 233 pods, 16 cpu, 64 GB (Intel, 25 GBits network, ~139% cost)
       onDemandBaseCapacity: *worker-onDemandBaseCapacity
       onDemandPercentageAboveBaseCapacity: *worker-onDemandPercentageAboveBaseCapacity
@@ -417,8 +410,8 @@ nodeGroups:
     iam: *worker-iam
     instancesDistribution:
       instanceTypes:
-        - m5a.16xlarge     # 736 pods, 64 cpu, 256 GB (AMD,   12 GBits network,  100% cost)
-        - m5.16xlarge      # 736 pods, 64 cpu, 256 GB (Intel, 20 GBits network, ~112% cost)
+        - m5a.16xlarge # 736 pods, 64 cpu, 256 GB (AMD,   12 GBits network,  100% cost)
+        - m5.16xlarge # 736 pods, 64 cpu, 256 GB (Intel, 20 GBits network, ~112% cost)
         # - m5n.16xlarge   # 736 pods, 64 cpu, 256 GB (Intel, 75 GBits network, ~139% cost)
       onDemandBaseCapacity: *worker-onDemandBaseCapacity
       onDemandPercentageAboveBaseCapacity: *worker-onDemandPercentageAboveBaseCapacity

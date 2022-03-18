@@ -1,0 +1,29 @@
+basehub:
+  nfs:
+    enabled: false
+
+  jupyterhub:
+    custom:
+      singleuserAdmin:
+        extraVolumeMounts: []
+
+    singleuser:
+      storage:
+        type: none
+        extraVolumeMounts: []
+
+      # cmd: Note the default in z2jh is jupyterhub-singleuser.
+      cmd:
+        - jupyterhub-singleuser
+        # WARNING: Collaborative mode is enabled in the staging hub specifically
+        #          to debug a critical issue leading to a loss of data.
+        #
+        #          ref: https://github.com/jupyterlab/jupyterlab/issues/12154#issuecomment-1069352840
+        #          ref: https://discourse.jupyter.org/t/plans-on-bringing-rtc-to-jupyterhub/9813/13
+        #          ref: https://github.com/jupyterlab/jupyterlab/pull/11599
+        #
+        - --LabApp.collaborative=True
+
+jupyterhub-ssh:
+  sftp:
+    enabled: false

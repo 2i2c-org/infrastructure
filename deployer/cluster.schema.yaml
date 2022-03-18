@@ -27,7 +27,7 @@ properties:
       Cloud provider this cluster is running on. Used to perform
       authentication against the cluster. Currently supports gcp, aws, azure,
       and raw kubeconfig files.
-    enum: 
+    enum:
       - none
       - gcp
       - kubeconfig
