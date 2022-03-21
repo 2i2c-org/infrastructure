@@ -77,7 +77,18 @@ class CILogonAdmin:
         See: https://github.com/ncsa/OA4MP/blob/HEAD/oa4mp-server-admin-oauth2/src/main/scripts/oidc-cm-scripts/cm-post.sh
         """
 
-        return self._post(self._url(), data=body)
+        response = self._post(self._url(), data=body)
+        client_name = body["client_name"]
+
+        if response.status_code != 200:
+            print(
+                f"An error occured when creating the {client_name} client. \n Error was {response.text}."
+            )
+            response.raise_for_status()
+
+        print(f"Successfully created a new CILogon client for {client_name}!")
+        return response.json()
+
 
     def get(self, id):
         """Retrieves a client by its id.
@@ -88,7 +99,16 @@ class CILogonAdmin:
         See: https://github.com/ncsa/OA4MP/blob/HEAD/oa4mp-server-admin-oauth2/src/main/scripts/oidc-cm-scripts/cm-get.sh
         """
 
-        return self._get(self._url(id))
+        response = self._get(self._url(id))
+
+        if response.status_code != 200:
+            print(
+                f"An error occured when creating the {id} client. \n Error was {response.text}."
+            )
+            response.raise_for_status()
+
+        print(f"Successfully created a new CILogon client for {id}!")
+        return response.json()
 
     def update(self, id, body):
         """Modifies a client by its id.
@@ -101,7 +121,17 @@ class CILogonAdmin:
 
         See: https://github.com/ncsa/OA4MP/blob/HEAD/oa4mp-server-admin-oauth2/src/main/scripts/oidc-cm-scripts/cm-put.sh
         """
-        return self._put(self._url(id), data=body)
+        response = self._put(self._url(id), data=body)
+        client_name = body["client_name"]
+
+        if response.status_code != 200:
+            print(
+                f"An error occured when updating the {client_name} client. \n Error was {response.text}."
+            )
+            response.raise_for_status()
+
+        print("Client updated succesfuly!")
+        return response.status_code
 
 
 class CILogonClientProvider:
@@ -187,21 +217,16 @@ class CILogonClientProvider:
 
         if Path(config_filename).is_file():
             print(
-                f"Oops! A CILogon client already exists for this hub! Use the `update` command to update it or delete {config_filename} if you want to generate a new one."
+                f"""
+                Oops! A CILogon client already exists for this hub!
+                Use the update subcommand to update it or delete {config_filename} if you want to generate a new one.
+                """
             )
             return
 
         # Ask CILogon to create the client
         print(f"Creating client with details {client_details}")
-        response = self.admin_client.create(client_details)
-        if response.status_code != 200:
-            print(
-                f"An error occured when creating the {cluster_name}-{hub_name} client. \n Error was {response.text}."
-            )
-            response.raise_for_status()
-
-        client = response.json()
-        print(f"Created a new CILogon client for {cluster_name}-{hub_name}.")
+        client = self.admin_client.create(client_details)
 
         # Persist and encrypt the client credentials
         self._persist_client_credentials(client, hub_type, config_filename)
@@ -215,14 +240,30 @@ class CILogonClientProvider:
 
         if not Path(config_filename).is_file():
             print(
-                f"Oops! No CILogon client has been found for this hub! Use the `create` command to create one"
+                f"Oops! No CILogon client has been found for this hub! Use the create subcommand to create one."
             )
             return
 
-        client_id = self.load_client_id(config_filename)
+
+        client_id = self._load_client_id(config_filename)
 
         print(f"Updating the existing CILogon client for {cluster_name}-{hub_name}.")
         return self.admin_client.update(client_id, client_details)
+
+    def get_client(self, cluster_name, hub_name):
+        config_filename = self._build_config_filename(cluster_name, hub_name)
+
+        if not Path(config_filename).is_file():
+            print(
+                f"Oops! No CILogon client has been found for this hub! Use the `create` command to create one."
+            )
+            return
+
+        client_id = self._load_client_id(config_filename)
+
+        print(f"Getting the stored CILogon client details for {cluster_name}-{hub_name}...")
+        response = self.admin_client.get(client_id)
+        print(response.json())
 
 
 def main():
@@ -266,6 +307,52 @@ def main():
         help="URL that is invoked after OAuth authorization",
     )
 
+    # Update subcommand
+    update_parser = subparsers.add_parser(
+        "update",
+        help="Update a CILogon client",
+    )
+
+    update_parser.add_argument(
+        "cluster_name",
+        type=str,
+        help="The name of the cluster where the hub lives",
+    )
+
+    update_parser.add_argument(
+        "hub_name",
+        type=str,
+        help="The hub for which we'll update the CILogon client",
+    )
+
+    update_parser.add_argument(
+        "callback_url",
+        type=str,
+        help="""
+        New callback_url to associate with the client.
+        This URL is invoked after OAuth authorization
+        """,
+    )
+
+    # Get subcommand
+    get_parser = subparsers.add_parser(
+        "get",
+        help="Retrieve details about an existing CILogon client",
+    )
+
+    get_parser.add_argument(
+        "cluster_name",
+        type=str,
+        help="The name of the cluster where the hub lives",
+    )
+
+    get_parser.add_argument(
+        "hub_name",
+        type=str,
+        help="The hub for which we'll retrieve the CILogon client details.",
+    )
+
+
     args = argparser.parse_args()
 
     # This filepath is relative to the PROJECT ROOT
@@ -284,6 +371,17 @@ def main():
             args.hub_name,
             args.hub_type,
             args.callback_url,
+        )
+    elif args.action == "update":
+        cilogon.update_client(
+            args.cluster_name,
+            args.hub_name,
+            args.callback_url,
+        )
+    elif args.action == "get":
+        cilogon.get_client(
+            args.cluster_name,
+            args.hub_name,
         )
 
 
