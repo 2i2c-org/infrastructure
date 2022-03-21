@@ -36,6 +36,7 @@ hubs:
       # The order in which you list files here is the order the will be passed
       # to the helm upgrade command in, and that has meaning. Please check
       # that you intend for these files to be applied in this order.
+      - enc-dask-staging.secret.values.yaml
       - dask-staging.values.yaml
   - name: demo
     display_name: "2i2c demo"
