@@ -119,9 +119,6 @@ To do so, follow these steps for each 2i2c engineer:
 
 The canonical list of AWS accounts we have access to is maintained [in this google sheet](https://docs.google.com/spreadsheets/d/1NSaAKLG2_njXxs6JlGUAhSWeHONz9QSGLVwEK790IZo/edit#gid=537065664).
 
-
-https://docs.aws.amazon.com/IAM/latest/UserGuide/id_credentials_access-keys.html#Using_CreateAccessKey
-
 #### Access AWS web console
 
 1. Go to [console.aws.amazon.com/](https://console.aws.amazon.com/).
