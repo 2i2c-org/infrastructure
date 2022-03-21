@@ -219,7 +219,6 @@ class CILogonClientProvider:
             )
             return
 
-
         client_id = self.load_client_id(config_filename)
 
         print(f"Updating the existing CILogon client for {cluster_name}-{hub_name}.")
