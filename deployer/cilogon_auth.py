@@ -1,8 +1,10 @@
 import argparse
 import base64
-import time
 import requests
 import subprocess
+import time
+
+from pathlib import Path
 from ruamel.yaml import YAML
 from yarl import URL
 
@@ -183,6 +185,12 @@ class CILogonClientProvider:
         )
         config_filename = self._build_config_filename(cluster_name, hub_name)
 
+        if Path(config_filename).is_file():
+            print(
+                f"Oops! A CILogon client already exists for this hub! Use the `update` command to update it or delete {config_filename} if you want to generate a new one."
+            )
+            return
+
         # Ask CILogon to create the client
         print(f"Creating client with details {client_details}")
         response = self.admin_client.create(client_details)
@@ -204,6 +212,14 @@ class CILogonClientProvider:
             cluster_name, hub_name, callback_url
         )
         config_filename = self._build_config_filename(cluster_name, hub_name)
+
+        if not Path(config_filename).is_file():
+            print(
+                f"Oops! No CILogon client has been found for this hub! Use the `create` command to create one"
+            )
+            return
+
+
         client_id = self.load_client_id(config_filename)
 
         print(f"Updating the existing CILogon client for {cluster_name}-{hub_name}.")
