@@ -103,11 +103,11 @@ class CILogonAdmin:
 
         if response.status_code != 200:
             print(
-                f"An error occured when creating the {id} client. \n Error was {response.text}."
+                f"An error occured when getting the details of {id} client. \n Error was {response.text}."
             )
             response.raise_for_status()
 
-        print(f"Successfully created a new CILogon client for {id}!")
+        print(f"Successfully got the details for {id} client!")
         return response.json()
 
     def update(self, id, body):
@@ -225,7 +225,7 @@ class CILogonClientProvider:
             return
 
         # Ask CILogon to create the client
-        print(f"Creating client with details {client_details}")
+        print(f"Creating client with details {client_details}...")
         client = self.admin_client.create(client_details)
 
         # Persist and encrypt the client credentials
@@ -247,7 +247,7 @@ class CILogonClientProvider:
 
         client_id = self._load_client_id(config_filename)
 
-        print(f"Updating the existing CILogon client for {cluster_name}-{hub_name}.")
+        print(f"Updating the existing CILogon client for {cluster_name}-{hub_name}...")
         return self.admin_client.update(client_id, client_details)
 
     def get_client(self, cluster_name, hub_name):
@@ -262,8 +262,7 @@ class CILogonClientProvider:
         client_id = self._load_client_id(config_filename)
 
         print(f"Getting the stored CILogon client details for {cluster_name}-{hub_name}...")
-        response = self.admin_client.get(client_id)
-        print(response.json())
+        print(self.admin_client.get(client_id))
 
 
 def main():
