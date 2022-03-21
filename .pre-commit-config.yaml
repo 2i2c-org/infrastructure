@@ -44,4 +44,4 @@ repos:
     hooks:
       - id: sops-encryption
         # Add files here if they contain the word 'secret' but should not be encrypted
-        exclude: secrets\.md
+        exclude: secrets\.md|helm-charts/support/templates/prometheus-ingres-auth/secret\.yaml
