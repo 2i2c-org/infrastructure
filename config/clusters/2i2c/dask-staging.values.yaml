@@ -31,8 +31,14 @@ basehub:
         tag: 2021.02.19
     hub:
       config:
+        JupyterHub:
+          authenticator_class: cilogon
         CILogonOAuthenticator:
           username_claim: "email"
-          scope: "openid email org.cilogon.userinfo"
-          oauth_callback_url: "https://dask-staging.pilot.2i2c.cloud/hub/oauth_callback"
-          allowed_idps: "2i2c.org"
+          scope:
+            - openid
+            - email
+            - org.cilogon.userinfo
+          oauth_callback_url: "https://dask-staging.2i2c.cloud/hub/oauth_callback"
+          allowed_idps:
+            - "2i2c.org"
