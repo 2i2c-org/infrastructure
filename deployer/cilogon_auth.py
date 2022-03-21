@@ -89,7 +89,6 @@ class CILogonAdmin:
         print(f"Successfully created a new CILogon client for {client_name}!")
         return response.json()
 
-
     def get(self, id):
         """Retrieves a client by its id.
 
@@ -244,7 +243,6 @@ class CILogonClientProvider:
             )
             return
 
-
         client_id = self._load_client_id(config_filename)
 
         print(f"Updating the existing CILogon client for {cluster_name}-{hub_name}...")
@@ -261,7 +259,9 @@ class CILogonClientProvider:
 
         client_id = self._load_client_id(config_filename)
 
-        print(f"Getting the stored CILogon client details for {cluster_name}-{hub_name}...")
+        print(
+            f"Getting the stored CILogon client details for {cluster_name}-{hub_name}..."
+        )
         print(self.admin_client.get(client_id))
 
 
@@ -350,7 +350,6 @@ def main():
         type=str,
         help="The hub for which we'll retrieve the CILogon client details.",
     )
-
 
     args = argparser.parse_args()
 
