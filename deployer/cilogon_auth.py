@@ -239,7 +239,7 @@ class CILogonClientProvider:
 
         if not Path(config_filename).is_file():
             print(
-                f"Oops! No CILogon client has been found for this hub! Use the create subcommand to create one."
+                "Oops! No CILogon client has been found for this hub! Use the create subcommand to create one."
             )
             return
 
@@ -253,7 +253,7 @@ class CILogonClientProvider:
 
         if not Path(config_filename).is_file():
             print(
-                f"Oops! No CILogon client has been found for this hub! Use the `create` command to create one."
+                "Oops! No CILogon client has been found for this hub! Use the `create` command to create one."
             )
             return
 
