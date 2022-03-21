@@ -231,15 +231,15 @@ server startup faster.
    `retryable error (Throttling: Rate exceeded`. This is just a warning,
    and shouldn't have any actual effects on the scaling operation except
    cause a delay.
-   ``
+   ```
 
-4. Validate that appropriate new nodes are coming up by authenticatingb
+4. Validate that appropriate new nodes are coming up by authenticating
    to the cluster, and running `kubectl get node`.
 
 5. Commit the change and make a PR, and note that you have already
    completed the scaling operation. This is flexible, as the scaling operation
    might need to be timed differently in each case. The goal is to make sure
-   that the `minSize` parameter in the github repository match reality.
+   that the `minSize` parameter in the github repository matches reality.
 
 ## EFS for home directories
 
