@@ -260,7 +260,7 @@ def main():
             config = yaml.load(f)
 
     cilogon = CILogonClientProvider(
-        config["cilogon"]["client_id"], config["cilogon"]["client_secret"]
+        config["cilogon_admin"]["client_id"], config["cilogon_admin"]["client_secret"]
     )
 
     if args.action == "create":
