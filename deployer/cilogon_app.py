@@ -280,15 +280,11 @@ class CILogonClientProvider:
         if not client_id:
             return
 
-        print(
-            f"Deleting the CILogon client details for {cluster_name}-{hub_name}..."
-        )
+        print(f"Deleting the CILogon client details for {cluster_name}-{hub_name}...")
         print(self.admin_client.delete(client_id))
 
     def get_all_clients(self):
-        print(
-            f"Getting all existing OAauth client applications..."
-        )
+        print(f"Getting all existing OAauth client applications...")
         print(self.admin_client.get())
 
 
