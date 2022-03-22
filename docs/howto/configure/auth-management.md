@@ -241,7 +241,7 @@ The steps to enable the JupyterHub CILogonOAuthenticator for a hub are simmilar 
         jupyterhub:
           hub:
             config:
-              GitHubOAuthenticator:
+              CILogonOAuthenticator:
                 client_id: CLIENT_ID
                 client_secret: CLIENT_SECRET
         ```
