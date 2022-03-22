@@ -38,36 +38,6 @@ class CILogonAdmin:
 
         return str(URL(url).with_query({"client_id": id}))
 
-    def _post(self, url, data=None):
-        headers = self.base_headers.copy()
-
-        return requests.post(url, json=data, headers=headers, timeout=self.timeout)
-
-    def _get(self, url, params=None):
-        headers = self.base_headers.copy()
-
-        timeout = time.time() + 10
-        t = 0.05
-
-        # Allow up to 10s of retrying getting the response
-        while time.time() < timeout:
-            response = requests.get(
-                url, params=params, headers=headers, timeout=self.timeout
-            )
-            if response.status_code == 200:
-                return response
-
-            t = min(2, t * 2)
-            time.sleep(t)
-
-        # Return latest response to the request
-        return response
-
-    def _put(self, url, data=None):
-        headers = self.base_headers.copy()
-
-        return requests.put(url, json=data, headers=headers, timeout=self.timeout)
-
     def create(self, body):
         """Creates a new client
 
@@ -77,7 +47,9 @@ class CILogonAdmin:
         See: https://github.com/ncsa/OA4MP/blob/HEAD/oa4mp-server-admin-oauth2/src/main/scripts/oidc-cm-scripts/cm-post.sh
         """
 
-        response = self._post(self._url(), data=body)
+        headers = self.base_headers.copy()
+        response = requests.post(self._url(), json=body, headers=headers, timeout=self.timeout)
+
         client_name = body["client_name"]
 
         if response.status_code != 200:
@@ -98,7 +70,8 @@ class CILogonAdmin:
         See: https://github.com/ncsa/OA4MP/blob/HEAD/oa4mp-server-admin-oauth2/src/main/scripts/oidc-cm-scripts/cm-get.sh
         """
 
-        response = self._get(self._url(id))
+        headers = self.base_headers.copy()
+        response = requests.get(self._url(id), params=None, headers=headers, timeout=self.timeout)
 
         if response.status_code != 200:
             print(
@@ -120,7 +93,9 @@ class CILogonAdmin:
 
         See: https://github.com/ncsa/OA4MP/blob/HEAD/oa4mp-server-admin-oauth2/src/main/scripts/oidc-cm-scripts/cm-put.sh
         """
-        response = self._put(self._url(id), data=body)
+        headers = self.base_headers.copy()
+        response = requests.put(self._url(id), json=body, headers=headers, timeout=self.timeout)
+
         client_name = body["client_name"]
 
         if response.status_code != 200:
