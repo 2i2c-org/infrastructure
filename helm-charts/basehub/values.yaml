@@ -423,3 +423,9 @@ jupyterhub:
 
         if get_config("custom.docs_service.enabled"):
           c.JupyterHub.services.append({"name": "docs", "url": "http://docs-service"})
+      09-add-cilogon-scopes-if-enabled: |
+        from z2jh import get_config
+
+        authenticator_class = get_config("hub.config.JupyterHub.authenticator_class")
+        if authenticator_class == "cilogon":
+            c.CILogonOAuthenticator.scope = ["openid", "email", "org.cilogon.userinfo"]
