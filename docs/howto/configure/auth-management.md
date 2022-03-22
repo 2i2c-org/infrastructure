@@ -277,7 +277,8 @@ The steps to enable the JupyterHub CILogonOAuthenticator for a hub are simmilar 
    When using this method of authentication, make sure to remove the `allowed_users` key from the config.
    This is because this key will block any user not listed under it **even if** they are valid members of the the organisation or team you are authenticating against.
 
-   Also, the `admin_users` list need to match `allowed_idps` currently. TODO: we should fix this upstream.
+   Also, the `admin_users` list need to match `allowed_idps` currently.
+   Reference https://github.com/jupyterhub/oauthenticator/issues/494.
    ```
 
    To authenticate using CILogon, allowing only a certain identity provider:
