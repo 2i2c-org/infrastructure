@@ -44,6 +44,8 @@ class CILogonAdmin:
         Args:
            body (dict): Attributes for the new client
 
+        Returns a dict containing the client details.
+
         See: https://github.com/ncsa/OA4MP/blob/HEAD/oa4mp-server-admin-oauth2/src/main/scripts/oidc-cm-scripts/cm-post.sh
         """
 
@@ -63,11 +65,13 @@ class CILogonAdmin:
         print(f"Successfully created a new CILogon client for {client_name}!")
         return response.json()
 
-    def get(self, id):
+    def get(self, id=None):
         """Retrieves a client by its id.
 
         Args:
            id (str): Id of the client to get
+
+        Returns a dict containing the client details.
 
         See: https://github.com/ncsa/OA4MP/blob/HEAD/oa4mp-server-admin-oauth2/src/main/scripts/oidc-cm-scripts/cm-get.sh
         """
@@ -95,6 +99,8 @@ class CILogonAdmin:
            id (str): Id of the client to modify
            body (dict): Attributes to modify.
 
+        Returns 200 OK or raises an error if the update request returned anything other than 200..
+
         See: https://github.com/ncsa/OA4MP/blob/HEAD/oa4mp-server-admin-oauth2/src/main/scripts/oidc-cm-scripts/cm-put.sh
         """
         headers = self.base_headers.copy()
@@ -111,6 +117,29 @@ class CILogonAdmin:
             response.raise_for_status()
 
         print("Client updated succesfuly!")
+        return response.status_code
+
+    def delete(self, id):
+        """Deletes the client associated with the id.
+
+        Args:
+           id (str): Id of the client to delete
+
+        Returns 200 OK or raises an error if the delete request returned anything other than 200.
+
+        See: https://github.com/ncsa/OA4MP/blob/HEAD/oa4mp-server-admin-oauth2/src/main/scripts/oidc-cm-scripts/cm-delete.sh
+        """
+
+        headers = self.base_headers.copy()
+        response = requests.delete(self._url(id), headers=headers, timeout=self.timeout)
+
+        if response.status_code != 200:
+            print(
+                f"An error occured when deleting the {id} client. \n Error was {response.text}."
+            )
+            response.raise_for_status()
+
+        print(f"Successfully deleted the {id} client!")
         return response.status_code
 
 
@@ -186,8 +215,9 @@ class CILogonClientProvider:
             ]
         except FileNotFoundError:
             print(
-                "The CILogon client you requested to update doesn't exist! Please create it first."
+                "Oops! The CILogon client you requested to doesn't exist! Please create it first."
             )
+            return
 
     def create_client(self, cluster_name, hub_name, hub_type, callback_url):
         client_details = self._build_client_details(
@@ -218,13 +248,11 @@ class CILogonClientProvider:
         )
         config_filename = self._build_config_filename(cluster_name, hub_name)
 
-        if not Path(config_filename).is_file():
-            print(
-                "Oops! No CILogon client has been found for this hub! Use the create subcommand to create one."
-            )
-            return
-
         client_id = self._load_client_id(config_filename)
+
+        # No client has been found for this hub
+        if not client_id:
+            return
 
         print(f"Updating the existing CILogon client for {cluster_name}-{hub_name}...")
         return self.admin_client.update(client_id, client_details)
@@ -232,18 +260,36 @@ class CILogonClientProvider:
     def get_client(self, cluster_name, hub_name):
         config_filename = self._build_config_filename(cluster_name, hub_name)
 
-        if not Path(config_filename).is_file():
-            print(
-                "Oops! No CILogon client has been found for this hub! Use the `create` command to create one."
-            )
-            return
-
         client_id = self._load_client_id(config_filename)
+
+        # No client has been found
+        if not client_id:
+            return
 
         print(
             f"Getting the stored CILogon client details for {cluster_name}-{hub_name}..."
         )
         print(self.admin_client.get(client_id))
+
+    def delete_client(self, cluster_name, hub_name):
+        config_filename = self._build_config_filename(cluster_name, hub_name)
+
+        client_id = self._load_client_id(config_filename)
+
+        # No client has been found
+        if not client_id:
+            return
+
+        print(
+            f"Deleting the CILogon client details for {cluster_name}-{hub_name}..."
+        )
+        print(self.admin_client.delete(client_id))
+
+    def get_all_clients(self):
+        print(
+            f"Getting all existing OAauth client applications..."
+        )
+        print(self.admin_client.get())
 
 
 def main():
@@ -332,6 +378,30 @@ def main():
         help="The hub for which we'll retrieve the CILogon client details.",
     )
 
+    # Get all subcommand
+    subparsers.add_parser(
+        "get-all",
+        help="Retrieve details about an existing CILogon client",
+    )
+
+    # Delete subcommand
+    delete_parser = subparsers.add_parser(
+        "delete",
+        help="Delete an existing CILogon client",
+    )
+
+    delete_parser.add_argument(
+        "cluster_name",
+        type=str,
+        help="The name of the cluster where the hub lives",
+    )
+
+    delete_parser.add_argument(
+        "hub_name",
+        type=str,
+        help="The hub for which we'll delete the CILogon client details.",
+    )
+
     args = argparser.parse_args()
 
     # This filepath is relative to the PROJECT ROOT
@@ -362,6 +432,13 @@ def main():
             args.cluster_name,
             args.hub_name,
         )
+    elif args.action == "delete":
+        cilogon.delete_client(
+            args.cluster_name,
+            args.hub_name,
+        )
+    elif args.action == "get-all":
+        cilogon.get_all_clients()
 
 
 if __name__ == "__main__":
