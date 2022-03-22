@@ -48,7 +48,9 @@ class CILogonAdmin:
         """
 
         headers = self.base_headers.copy()
-        response = requests.post(self._url(), json=body, headers=headers, timeout=self.timeout)
+        response = requests.post(
+            self._url(), json=body, headers=headers, timeout=self.timeout
+        )
 
         client_name = body["client_name"]
 
@@ -71,7 +73,9 @@ class CILogonAdmin:
         """
 
         headers = self.base_headers.copy()
-        response = requests.get(self._url(id), params=None, headers=headers, timeout=self.timeout)
+        response = requests.get(
+            self._url(id), params=None, headers=headers, timeout=self.timeout
+        )
 
         if response.status_code != 200:
             print(
@@ -94,7 +98,9 @@ class CILogonAdmin:
         See: https://github.com/ncsa/OA4MP/blob/HEAD/oa4mp-server-admin-oauth2/src/main/scripts/oidc-cm-scripts/cm-put.sh
         """
         headers = self.base_headers.copy()
-        response = requests.put(self._url(id), json=body, headers=headers, timeout=self.timeout)
+        response = requests.put(
+            self._url(id), json=body, headers=headers, timeout=self.timeout
+        )
 
         client_name = body["client_name"]
 
