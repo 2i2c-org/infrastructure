@@ -226,7 +226,7 @@ User account
 The steps to enable the JupyterHub CILogonOAuthenticator for a hub are simmilar with the ones for enabling GitHubOAuthenticator:
 
 1. **Create a CILogon OAuth client**
-   This can be achieved by using the [cilogon_app.py](https://github.com/2i2c-org/infrastructure/blob/master/deployer/cilogon_app.py) script.
+   This can be achieved by using the [cilogon_app.py](https://github.com/2i2c-org/infrastructure/blob/HEAD/deployer/cilogon_app.py) script.
    
    - The script needs to be passed the cluster and hub name for which a client id and secret will be generated, but also the hub type, and the authorisation callback URL.
    - The authorisation callback URL is the homepage url appended with `/hub/oauth_callback`. For example, `staging.pilot.2i2c.cloud/hub/oauth_callback`.
