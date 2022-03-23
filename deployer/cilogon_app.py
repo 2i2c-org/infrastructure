@@ -308,9 +308,7 @@ class CILogonClientProvider:
         print(self.admin_client.delete(client_id))
 
     def get_all_clients(self):
-        print(
-            "Getting all existing OAauth client applications..."
-        )
+        print("Getting all existing OAauth client applications...")
         print(self.admin_client.get())
 
 
