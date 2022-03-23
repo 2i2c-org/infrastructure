@@ -296,8 +296,20 @@ The steps to enable the JupyterHub CILogonOAuthenticator for a hub are simmilar 
               - 2i2c.org
               - IDP
     ```
-  - Check the [CILogon scopes section](https://www.cilogon.org/oidc#h.p_PEQXL8QUjsQm) to checkout available values for `USERNAME_KEY` claim.
-  - Per [CILogon's suggestion]((https://www.cilogon.org/oidc#h.p_PEQXL8QUjsQm)), please use the same list of scopes in this example when enabling CILogon for a hub.
+
+  Check the [CILogon scopes
+  section](https://www.cilogon.org/oidc#h.p_PEQXL8QUjsQm) to checkout available
+  values for `USERNAME_KEY` claim. This *cannot* be changed afterwards without manual
+  migration of user names, so choose this carefully.
+
+  ```{warning}
+  `USERNAME_KEY` should be something the user *cannot change* in any of the identity providers
+  we support. If they can, it can be easily used to impersonate others! For example, if we allow
+  both GitHub and `utoronto.ca` as allowed authentication providers, and only use `email` as
+  `USERNAME_KEY`, any GitHub user can set their email field in their GitHub profile to a `utoronto.ca`
+  email and thus gain access to any `utoronto.ca` user's server! So a very careful choice needs to
+  be made here.
+  ```
 
 6. Run the deployer as normal to apply the config.
 
