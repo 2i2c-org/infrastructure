@@ -144,7 +144,7 @@ There are also some steps that a Community Representative will need to take to s
    You should keep the `admin_users` key, however.
    ```
 
-   To authenticate against a GitHub organisation:
+   To authenticate against a GitHub organisation (note the `read:user` scope):
 
     ```yaml
     jupyterhub:
@@ -161,7 +161,7 @@ There are also some steps that a Community Representative will need to take to s
               - read:user
     ```
 
-   To authenticate against a GitHub Team:
+   To authenticate against a GitHub Team (note the `read:org` scope):
 
     ```yaml
     jupyterhub:
@@ -185,7 +185,9 @@ There are also some steps that a Community Representative will need to take to s
 Once the OAuth callbacks have been set up following the steps above, somebody with administrator permissions for the GitHub organization needs to grant access to the OAuth app that we have created.
 
 The first time that somebody tries to log on to the hub with this authentication set up, they should be presented with a page that asks them to grant access to various GitHub organizations.
-**They must grant access to the organization that is being used to authenticate**.
+For each user, GitHub will list _all organizations to which they can control authorization_.
+**They must grant access to the organization that is added to `allowed_organizations` above**, but do not need to grant access to any other organizations.
+In this case, "granting access" only means that the JupyterHub can view whether a user is a member of the GitHub organization.
 
 If administrators report a `403 forbidden` error when they try to log in to the hub, there is a good chance that they did _not grant access_ to the right GitHub organization.
 In this case, they should go to the configuration page for this app within their GitHub organization and explicitly grant it access.
