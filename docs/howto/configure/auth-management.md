@@ -232,7 +232,7 @@ The steps to enable the JupyterHub CILogonOAuthenticator for a hub are simmilar 
    - The authorisation callback URL is the homepage url appended with `/hub/oauth_callback`. For example, `staging.pilot.2i2c.cloud/hub/oauth_callback`.
    - Example script invocation that creates a CILogon OAuth client for the 2i2c dask-staging hub:
       ```bash
-      python3 ./deployer/cilogon_auth.py create 2i2c dask-staging daskhub https://dask-staging.2i2c.cloud/hub/oauth_callback
+      python3 ./deployer/cilogon_app.py create 2i2c dask-staging daskhub https://dask-staging.2i2c.cloud/hub/oauth_callback
       ```
    - If successfull, the script will have created a secret values file under `config/clusters/<cluster_name>/enc-<hub_name>.secret.values.yaml`. This file
    holds the encrypted OAuth client id and secret that have been created for this hub.
