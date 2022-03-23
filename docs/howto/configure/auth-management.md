@@ -227,14 +227,14 @@ The steps to enable the JupyterHub CILogonOAuthenticator for a hub are simmilar 
 
 1. **Create a CILogon OAuth client**
    This can be achieved by using the [cilogon_app.py](https://github.com/2i2c-org/infrastructure/blob/HEAD/deployer/cilogon_app.py) script.
-   
+
    - The script needs to be passed the cluster and hub name for which a client id and secret will be generated, but also the hub type, and the authorisation callback URL.
    - The authorisation callback URL is the homepage url appended with `/hub/oauth_callback`. For example, `staging.pilot.2i2c.cloud/hub/oauth_callback`.
    - Example script invocation that creates a CILogon OAuth client for the 2i2c dask-staging hub:
       ```bash
       python3 ./deployer/cilogon_auth.py create 2i2c dask-staging daskhub https://dask-staging.2i2c.cloud/hub/oauth_callback
       ```
-   - If successfull, the script will have created a secret values file under `config/clusters/<cluster_name>/enc-<hub_name>.secret.values.yaml`. This file 
+   - If successfull, the script will have created a secret values file under `config/clusters/<cluster_name>/enc-<hub_name>.secret.values.yaml`. This file
    holds the encrypted OAuth client id and secret that have been created for this hub.
    - The unecrypted file contents should look like this:
       ```yaml
@@ -292,10 +292,6 @@ The steps to enable the JupyterHub CILogonOAuthenticator for a hub are simmilar 
           CILogonOAuthenticator:
             oauth_callback_url: https://{{ HUB_DOMAIN }}/hub/oauth_callback
             username_claim: USERNAME_KEY
-            scope:
-              - openid
-              - email
-              - org.cilogon.userinfo
             allowed_idps:
               - 2i2c.org
               - IDP
