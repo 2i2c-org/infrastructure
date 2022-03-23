@@ -33,5 +33,5 @@ If you'd like to delete a hub, there are a few steps that we need to take:
    script. Use the script to delete this CILogon client when a hub is removed.
 
    ```bash
-   python deployer/cilogon_app.py delete <cluster-name> <hub-name>
+   python3 deployer/cilogon_app.py delete <cluster-name> <hub-name>
    ```
