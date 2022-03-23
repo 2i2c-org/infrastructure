@@ -2,7 +2,6 @@ import argparse
 import base64
 import requests
 import subprocess
-import time
 
 from pathlib import Path
 from ruamel.yaml import YAML
@@ -284,7 +283,9 @@ class CILogonClientProvider:
         print(self.admin_client.delete(client_id))
 
     def get_all_clients(self):
-        print(f"Getting all existing OAauth client applications...")
+        print(
+            "Getting all existing OAauth client applications..."
+        )
         print(self.admin_client.get())
 
 
