@@ -20,7 +20,7 @@ The script can be used to:
 Get usage instructions about each of the available subcommands (create/update/get/get-all/delete)
 by executing the script with `--help` flag, from the root of the repository:
 
-- python extra_scripts/cilogon_app.py create --help
+- python deployer/cilogon_app.py create --help
 """
 
 import argparse
