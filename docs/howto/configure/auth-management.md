@@ -187,6 +187,7 @@ Once the OAuth callbacks have been set up following the steps above, somebody wi
 The first time that somebody tries to log on to the hub with this authentication set up, they should be presented with a page that asks them to grant access to various GitHub organizations.
 For each user, GitHub will list _all organizations to which they can control authorization_.
 **They must grant access to the organization that is added to `allowed_organizations` above**, but do not need to grant access to any other organizations.
+In this case, "granting access" only means that the JupyterHub can view whether a user is a member of the GitHub organization.
 
 If administrators report a `403 forbidden` error when they try to log in to the hub, there is a good chance that they did _not grant access_ to the right GitHub organization.
 In this case, they should go to the configuration page for this app within their GitHub organization and explicitly grant it access.
