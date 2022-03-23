@@ -77,7 +77,7 @@ jupyterhub:
             subPath: "{username}"
     image:
       name: quay.io/2i2c/utoronto-image
-      tag: 3aa146dc095f
+      tag: d422076c3695
   hub:
     db:
       pvc:
