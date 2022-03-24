@@ -8,7 +8,8 @@ enable_private_cluster = false
 # Multi-tenant cluster, network policy is required to enforce separation between hubs
 enable_network_policy  = true
 
-# Some hubs want a storage bucket, so we need to have config connector enabled
+# FIXME: config_connector doesn't actually work, so right now access to cloud
+# buckets dosn't properly work. Should be fixed by https://github.com/2i2c-org/infrastructure/pull/1130
 config_connector_enabled = false
 
 # Setup a filestore for in-cluster NFS
