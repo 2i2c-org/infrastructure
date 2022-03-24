@@ -26,7 +26,7 @@ jupyterhub:
         # We do not define allowed_users here since only usernames matching this regex will be allowed to login into the hub.
         # Ref: https://jupyterhub.readthedocs.io/en/stable/api/auth.html#jupyterhub.auth.Authenticator.username_pattern
         username_pattern: '^(.+@2i2c\.org|.+@rmbl\.org|deployment-service-check)$'
-      CILogonAuthenticator:
+      CILogonOAuthenticator:
         oauth_callback_url: https://demo.2i2c.cloud/hub/oauth_callback
         username_claim: email
         allowed_idps:
