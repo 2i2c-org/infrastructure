@@ -1,0 +1,125 @@
+basehub:
+  nfs:
+    enabled: true
+    pv:
+      mountOptions:
+        - soft
+        - noatime
+      # Google FileStore IP
+      serverIP: 10.236.154.106
+      # Name of Google Filestore share
+      baseShareName: /homes/
+  jupyterhub:
+    proxy:
+      https:
+        enabled: false
+    custom:
+      2i2c:
+        add_staff_user_ids_to_admin_users: true
+        add_staff_user_ids_of_type: "github"
+      cloudResources:
+        provider: gcp
+        gcp:
+          projectId: leap-pangeo
+        scratchBucket:
+          enabled: false
+      homepage:
+        templateVars:
+          org:
+            name: LEAP
+            url: https://leap-stc.github.io
+            logo_url: https://leap-stc.github.io/_static/LEAP_logo.png
+          designed_by:
+            name: 2i2c
+            url: https://2i2c.org
+          operated_by:
+            name: 2i2c
+            url: https://2i2c.org
+          funded_by:
+            name: LEAP
+            url: https://leap-stc.github.io
+    hub:
+      allowNamedServers: true
+      config:
+        Authenticator:
+          # This hub uses GitHub Teams auth and so we don't set
+          # allowed_users in order to not deny access to valid members of
+          # the listed teams. These people should have admin access though.
+          admin_users:
+            - rabernat
+        JupyterHub:
+          authenticator_class: github
+        GitHubOAuthenticator:
+          allowed_organizations:
+            - leap-stc:leap-pangeo-users
+            - 2i2c-org:tech-team
+          scope:
+            - read:org
+    singleuser:
+      image:
+        name: pangeo/pangeo-notebook
+        tag: 2022.02.04
+      extraEnv:
+        # This bucket is created by terraform
+        SCRATCH_BUCKET: "gs://leap-pangeo-scratch/$(JUPYTERHUB_USER)"
+        PANGEO_SCRATCH: "gs://leap-pangeo-scratch/$(JUPYTERHUB_USER)"
+      profileList:
+        # The mem-guarantees are here so k8s doesn't schedule other pods
+        # on these nodes. They need to be just under total allocatable
+        # RAM on a node, not total node capacity. Values calculated using
+        # https://learnk8s.io/kubernetes-instance-calculator
+        - display_name: "Small"
+          description: 5GB RAM, 2 CPUs
+          default: true
+          kubespawner_override:
+            mem_limit: 7G
+            mem_guarantee: 4.5G
+            node_selector:
+              node.kubernetes.io/instance-type: n1-standard-2
+        - display_name: Medium
+          description: 11GB RAM, 4 CPUs
+          kubespawner_override:
+            mem_limit: 15G
+            mem_guarantee: 11G
+            node_selector:
+              node.kubernetes.io/instance-type: n1-standard-4
+        - display_name: Large
+          description: 24GB RAM, 8 CPUs
+          kubespawner_override:
+            mem_limit: 30G
+            mem_guarantee: 24G
+            node_selector:
+              node.kubernetes.io/instance-type: n1-standard-8
+        - display_name: Huge
+          description: 52GB RAM, 16 CPUs
+          kubespawner_override:
+            mem_limit: 60G
+            mem_guarantee: 52G
+            node_selector:
+              node.kubernetes.io/instance-type: n1-standard-16
+      initContainers:
+        # Need to explicitly fix ownership here, since EFS doesn't do anonuid
+        - name: volume-mount-ownership-fix
+          image: busybox
+          command:
+            [
+              "sh",
+              "-c",
+              "id && chown 1000:1000 /home/jovyan && ls -lhd /home/jovyan",
+            ]
+          securityContext:
+            runAsUser: 0
+          volumeMounts:
+            - name: home
+              mountPath: /home/jovyan
+              subPath: "{username}"
+dask-gateway:
+  gateway:
+    backend:
+      scheduler:
+        cores:
+          request: 0.8
+          limit: 1
+        memory:
+          request: 1G
+          limit: 2G

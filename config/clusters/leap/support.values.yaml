@@ -1,0 +1,14 @@
+grafana:
+  ingress:
+    hosts:
+      - grafana.leap.2i2c.cloud
+    tls:
+      - secretName: grafana-tls
+        hosts:
+          - grafana.leap.2i2c.cloud
+prometheus:
+  server:
+    resources:
+      limits:
+        cpu: 2
+        memory: 12Gi
