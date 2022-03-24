@@ -29,5 +29,3 @@ jupyterhub:
       CILogonOAuthenticator:
         oauth_callback_url: https://demo.2i2c.cloud/hub/oauth_callback
         username_claim: email
-        allowed_idps:
-          - "2i2c.org"
