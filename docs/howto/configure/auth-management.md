@@ -227,14 +227,14 @@ The steps to enable the JupyterHub CILogonOAuthenticator for a hub are simmilar 
 
 1. **Create a CILogon OAuth client**
    This can be achieved by using the [cilogon_app.py](https://github.com/2i2c-org/infrastructure/blob/HEAD/deployer/cilogon_app.py) script.
-   
+
    - The script needs to be passed the cluster and hub name for which a client id and secret will be generated, but also the hub type, and the authorisation callback URL.
    - The authorisation callback URL is the homepage url appended with `/hub/oauth_callback`. For example, `staging.pilot.2i2c.cloud/hub/oauth_callback`.
    - Example script invocation that creates a CILogon OAuth client for the 2i2c dask-staging hub:
       ```bash
-      python3 ./deployer/cilogon_auth.py create 2i2c dask-staging daskhub https://dask-staging.2i2c.cloud/hub/oauth_callback
+      python3 ./deployer/cilogon_app.py create 2i2c dask-staging daskhub https://dask-staging.2i2c.cloud/hub/oauth_callback
       ```
-   - If successfull, the script will have created a secret values file under `config/clusters/<cluster_name>/enc-<hub_name>.secret.values.yaml`. This file 
+   - If successfull, the script will have created a secret values file under `config/clusters/<cluster_name>/enc-<hub_name>.secret.values.yaml`. This file
    holds the encrypted OAuth client id and secret that have been created for this hub.
    - The unecrypted file contents should look like this:
       ```yaml
@@ -292,16 +292,24 @@ The steps to enable the JupyterHub CILogonOAuthenticator for a hub are simmilar 
           CILogonOAuthenticator:
             oauth_callback_url: https://{{ HUB_DOMAIN }}/hub/oauth_callback
             username_claim: USERNAME_KEY
-            scope:
-              - openid
-              - email
-              - org.cilogon.userinfo
             allowed_idps:
               - 2i2c.org
               - IDP
     ```
-  - Check the [CILogon scopes section](https://www.cilogon.org/oidc#h.p_PEQXL8QUjsQm) to checkout available values for `USERNAME_KEY` claim.
-  - Per [CILogon's suggestion]((https://www.cilogon.org/oidc#h.p_PEQXL8QUjsQm)), please use the same list of scopes in this example when enabling CILogon for a hub.
+
+  Check the [CILogon scopes
+  section](https://www.cilogon.org/oidc#h.p_PEQXL8QUjsQm) to checkout available
+  values for `USERNAME_KEY` claim. This *cannot* be changed afterwards without manual
+  migration of user names, so choose this carefully.
+
+  ```{warning}
+  `USERNAME_KEY` should be something the user *cannot change* in any of the identity providers
+  we support. If they can, it can be easily used to impersonate others! For example, if we allow
+  both GitHub and `utoronto.ca` as allowed authentication providers, and only use `email` as
+  `USERNAME_KEY`, any GitHub user can set their email field in their GitHub profile to a `utoronto.ca`
+  email and thus gain access to any `utoronto.ca` user's server! So a very careful choice needs to
+  be made here.
+  ```
 
 6. Run the deployer as normal to apply the config.
 
