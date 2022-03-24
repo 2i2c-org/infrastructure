@@ -79,7 +79,7 @@ jobs:
         if: |
           (steps.base_files.outputs.files == 'true') ||
           (steps.config_files.outputs.hub_config == 'true')
-        uses: google-github-actions/setup-gcloud@master
+        uses: google-github-actions/setup-gcloud@v0
         with:
           version: "290.0.1"
           # This is used for KMS only
