@@ -244,14 +244,6 @@ jupyterhub:
                 matchLabels:
                   app.kubernetes.io/component: traefik
   hub:
-    config:
-      # Default options for CILogonOAuthenticator, for hubs where it is enabled
-      CILogonOAuthenticator:
-        scope:
-          - openid
-          - email
-          - org.cilogon.userinfo
-
     extraFiles:
       configurator-schema-default:
         mountPath: /usr/local/etc/jupyterhub-configurator/00-default.schema.json
