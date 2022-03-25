@@ -20,9 +20,18 @@ If you'd like to delete a hub, there are a few steps that we need to take:
    `kubectl delete namespace <hub-name>`, to cleanup any possible leftovers that
    step (3) missed
 
-6. **Delete our Auth0 application**.  For each hub, we create an
+6. **Delete the OAuth application**.  For each hub that uses Auth0, we create an
    [Application](https://auth0.com/docs/applications) in Auth0.  There is a
    limited number of Auth0 applications available, so we should delete the one
    used by this hub when it's done.  You should be able to see the [list of
    applications](https://manage.auth0.com/dashboard/us/2i2c/applications) if you
    login to auth0 with your 2i2c google account.
+
+   Similarly, for each hub that uses CILogon, we dynamically create an OAuth
+   [client application](https://cilogon.github.io/oa4mp/server/manuals/dynamic-client-registration.html)
+   in CILogon using the [cilogon_app.py](https://github.com/2i2c-org/infrastructure/blob/HEAD/deployer/cilogon_app.py)
+   script. Use the script to delete this CILogon client when a hub is removed.
+
+   ```bash
+   python3 deployer/cilogon_app.py delete <cluster-name> <hub-name>
+   ```
