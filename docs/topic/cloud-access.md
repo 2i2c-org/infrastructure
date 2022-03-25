@@ -154,5 +154,4 @@ are used to provide access to the AWS account from your terminal.
    This helps manage multiple sets of credentials easily. You can validate this works by running
    `aws sts get-caller-identity`.
 
-
 % TODO: Add instructions for Azure as well.
