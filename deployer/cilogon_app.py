@@ -309,7 +309,9 @@ class CILogonClientProvider:
 
     def get_all_clients(self):
         print("Getting all existing OAauth client applications...")
-        print(self.admin_client.get())
+        clients = self.admin_client.get()
+        for c in clients["clients"]:
+            print(c)
 
 
 def main():
