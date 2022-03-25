@@ -142,7 +142,8 @@ def validate_support_config(cluster_name):
         ]
 
         for values_file in cluster.support["helm_chart_values_files"]:
-            cmd.append(f"--values={config_file_path.parent.joinpath(values_file)}")
+            if "secret" not in os.path.basename(values_file):
+                cmd.append(f"--values={config_file_path.parent.joinpath(values_file)}")
 
             try:
                 subprocess.check_output(cmd, text=True)

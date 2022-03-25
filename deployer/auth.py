@@ -33,14 +33,14 @@ class KeyProvider:
             self._auth0 = Auth0(self.domain, creds["access_token"])
         return self._auth0
 
-    def get_clients(self):
+    def _get_clients(self):
         return {
             client["name"]: client
             # Our account is limited to 100 clients, and we want it all in one go
             for client in self.auth0.clients.all(per_page=100)
         }
 
-    def get_connections(self):
+    def _get_connections(self):
         return {
             connection["name"]: connection
             for connection in self.auth0.connections.all()
@@ -89,9 +89,14 @@ class KeyProvider:
             )
 
     def ensure_client(
-        self, name, callback_url, logout_url, connection_name, connection_config
+        self,
+        name,
+        callback_url,
+        logout_url,
+        connection_name,
+        connection_config,
     ):
-        current_clients = self.get_clients()
+        current_clients = self._get_clients()
         if name not in current_clients:
             # Create the client, all good
             client = self.create_client(name, callback_url, logout_url)
@@ -100,7 +105,7 @@ class KeyProvider:
             self._ensure_client_callback(client, callback_url)
             self._ensure_client_logout_url(client, logout_url)
 
-        current_connections = self.get_connections()
+        current_connections = self._get_connections()
 
         if connection_name == "password":
             # Users should not be shared between hubs - each hub
@@ -148,7 +153,6 @@ class KeyProvider:
         """
         Return z2jh config for auth0 authentication for this JupyterHub
         """
-
         logout_redirect_params = {
             "client_id": client["client_id"],
             "returnTo": client["allowed_logout_urls"][0],

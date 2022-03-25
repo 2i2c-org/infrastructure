@@ -1,5 +1,5 @@
 (customize/custom-image)=
-# Use a custom hub image
+# Use a custom user image
 
 Community hubs use an image we curate as the default. This can be replaced with your
 own custom image fairly easily. However, custom images should be maintained

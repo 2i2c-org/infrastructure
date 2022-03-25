@@ -10,6 +10,9 @@ nfs:
     # Trailing slash is important!
     baseShareName: /2i2cutorontohubstorage/homes/
 jupyterhub:
+  scheduling:
+    userScheduler:
+      enabled: true
   # pre-puller is necessary as the image is pretty big, and
   # pulling during first user spawn might cause timeouts.
   # Only required on staging hub though, as they share the same

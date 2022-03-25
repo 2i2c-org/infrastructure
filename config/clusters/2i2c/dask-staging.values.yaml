@@ -31,7 +31,10 @@ basehub:
         tag: 2021.02.19
     hub:
       config:
-        Authenticator:
-          allowed_users: &dask_staging_users
-            - colliand@gmail.com
-          admin_users: *dask_staging_users
+        JupyterHub:
+          authenticator_class: cilogon
+        CILogonOAuthenticator:
+          username_claim: "email"
+          oauth_callback_url: "https://dask-staging.2i2c.cloud/hub/oauth_callback"
+          allowed_idps:
+            - "2i2c.org"

@@ -1,14 +1,13 @@
-(new-cluster:aws)=
-# Add a new AWS cluster
+# AWS
 
 We use [eksctl](https://eksctl.io/) to provision our k8s clusters on AWS.
 
-:::{note}
+```{note}
 
 We used to use [kops](https://kops.sigs.k8s.io/) as well, for clusters
 where we wanted to minimize base running cost. We have deprecated that now, and use
 eksctl for everything.
-:::
+```
 
 ## Install needed tools locally
 
@@ -24,24 +23,18 @@ eksctl for everything.
 3. Install the latest version of [eksctl](https://eksctl.io/introduction/#installation). Mac users
    can get it from homebrew with `brew install eksctl`.
 
-4. Put your AWS credentials (access key id and secret) in `~/.aws/credentials` file, in the following
-   format:
+(new-cluster:aws)=
+## Create a new cluster
 
-   ```ini
-   [your-cluster-name]
-   aws_access_key_id = <key-id>
-   aws_access_secret_key = <access-key>
-   ```
+### Setup credentials
 
-   When you want to use these credentials, you can simply run `export AWS_PROFILE=<your-cluster-name>`.
-   This helps manage multiple sets of credentials easily. You can validate this works by running
-   `aws sts get-caller-identity`.
+Depending on wether this project is using AWS SSO or not, you can use the following
+links to figure out how to authenticate to this project from your terminal.
 
-   ```{note}
-   The customer with AWS admin privileges should have created a user for you with full privileges.
-   ```
+- [For accounts setup with AWS SSO](cloud-access:aws-sso:terminal)
+- [For accounts without AWS SSO](cloud-access:aws-iam:terminal)
 
-## Create an ssh key
+### Create an ssh key
 
 eksctl requires an [ssh key](https://eksctl.io/introduction/#ssh-access) during
 cluster creation. This is used to log in to the nodes to debug them later if necessary.
@@ -62,7 +55,7 @@ sops --in-place --encrypt eksctl/ssh-keys/<cluster-name>.key
 This will leave the public key unencrypted in `eksctl/ssh-keys/<cluster-name>.key.pub` -
 we will use this in our eksctl config.
 
-## Create and render an eksctl config file
+### Create and render an eksctl config file
 
 We use an eksctl [config file](https://eksctl.io/usage/schema/) in YAML to specify
 how our cluster should be built. Since it can get repetitive, we use
@@ -88,7 +81,7 @@ can read.
 jsonnet <your-cluster>.jsonnet > <your-cluster>.eksctl.yaml
 ```
 
-## Create the cluster
+### Create the cluster
 
 Now you're ready to create the cluster!
 
@@ -111,7 +104,7 @@ aws eks update-kubeconfig --name=<your-cluster-name> --region=<your-cluster-regi
 `kubectl` should be able to find your cluster now! `kubectl get node` should show
 you at least one core node running.
 
-## Grant access to other users
+### Grant access to other users
 
 AWS EKS has a strange access control problem, where the IAM user who creates
 the cluster has [full access without any visible settings
@@ -138,7 +131,7 @@ instead, so we need not give each individual user access, but just grant access 
 role - and users can modify them as they wish.
 
 
-## Create account with finely scoped permissions for automatic deployment
+### Create account with finely scoped permissions for automatic deployment
 
 Our AWS *terraform* code can then be used to create an AWS IAM user with just
 enough permissions for automatic deployment of hubs from CI/CD. Since these
@@ -203,6 +196,50 @@ have least amount of permissions possible.
    ```{note}
    The `aws.key` file is defined _relative_ to the location of the `cluster.yaml` file.
    ```
+
+## Scaling up a nodegroup in a cluster
+
+`eksctl` creates nodepools that are mostly immutable, except for autoscaling properties -
+minimum and maximum number of nodes. In certain cases, it might be helpful to 'scale up'
+a nodegroup in a cluster before an event, to test cloud provider quotas or to make user
+server startup faster.
+
+1. Open the appropriate `.jsonnet` file for the cluster in question, and set the
+   `minNodes` property of `notebookNodes` to the appropriate number you want.
+
+   ```{warning}
+   It is currently unclear if *lowering* the `minNodes` property just allows
+   the autoscaler to reclaim nodes, or if it actively destroys nodes at time
+   of application! If it actively destroys nodes, it is unclear if it does
+   so regardless of user pods running in these nodes! Until this can be
+   determined, please do scale-downs only when there are no users on
+   the nodes.
+   ```
+
+2. Render the `.jsonnet` file into a YAML file with:
+
+   ```bash
+   jsonnet <your-cluster>.jsonnet > <your-cluster>.eksctl.yaml
+3. Use `eksctl` to scale the cluster.
+
+   ```bash
+   eksctl scale nodegroup --config-file=<your-cluster>.eksctl.yaml
+   ```
+
+   ```{note}
+   `eksctl` might print warning messages such as
+   `retryable error (Throttling: Rate exceeded`. This is just a warning,
+   and shouldn't have any actual effects on the scaling operation except
+   cause a delay.
+   ```
+
+4. Validate that appropriate new nodes are coming up by authenticating
+   to the cluster, and running `kubectl get node`.
+
+5. Commit the change and make a PR, and note that you have already
+   completed the scaling operation. This is flexible, as the scaling operation
+   might need to be timed differently in each case. The goal is to make sure
+   that the `minSize` parameter in the github repository matches reality.
 
 ## EFS for home directories
 

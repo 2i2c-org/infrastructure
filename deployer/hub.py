@@ -61,7 +61,7 @@ class Hub:
                             "args": [
                                 "clone",
                                 "--",
-                                "https://github.com/2i2c-org/pilot-homepage",
+                                "https://github.com/2i2c-org/default-hub-homepage",
                                 "/srv/repo",
                             ],
                             "securityContext": {
@@ -223,7 +223,8 @@ class Hub:
         with tempfile.NamedTemporaryFile(
             mode="w"
         ) as generated_values_file, get_decrypted_files(
-            self.spec["helm_chart_values_files"], self.cluster.config_path
+            self.cluster.config_path.joinpath(p)
+            for p in self.spec["helm_chart_values_files"]
         ) as values_files:
             json.dump(generated_values, generated_values_file)
             generated_values_file.flush()

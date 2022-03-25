@@ -194,6 +194,13 @@ resource "google_container_node_pool" "notebook" {
 
 
   node_config {
+
+    # Balanced disks are much faster than standard disks, and much cheaper
+    # than SSD disks. It contributes heavily to how fast new nodes spin up,
+    # as images being pulled takes up a lot of new node spin up time.
+    # Faster disks provide faster image pulls!
+    disk_type = "pd-balanced"
+
     workload_metadata_config {
       # Config Connector requires workload identity to be enabled (via GKE_METADATA_SERVER).
       # If config connector is not necessary, we use simple metadata concealment
@@ -257,10 +264,12 @@ resource "google_container_node_pool" "dask_worker" {
   node_config {
 
     preemptible = true
-    # SSD Disks for dask workers make image pulls much faster
-    # Since we might have many dask workers spinning up at the
-    # same time, the extra cost of using this is probably worth it.
-    disk_type = "pd-ssd"
+
+    # Balanced disks are much faster than standard disks, and much cheaper
+    # than SSD disks. It contributes heavily to how fast new nodes spin up,
+    # as images being pulled takes up a lot of new node spin up time.
+    # Faster disks provide faster image pulls!
+    disk_type = "pd-balanced"
 
     workload_metadata_config {
       # Config Connector requires workload identity to be enabled (via GKE_METADATA_SERVER).
