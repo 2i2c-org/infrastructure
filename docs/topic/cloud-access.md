@@ -90,3 +90,6 @@ To do so, follow these steps for each 2i2c engineer:
 2. This should have the broadest set of permissions for the client's account.
 
 The canonical list of AWS accounts we have access to is maintained [in this google sheet](https://docs.google.com/spreadsheets/d/1NSaAKLG2_njXxs6JlGUAhSWeHONz9QSGLVwEK790IZo/edit#gid=537065664).
+
+
+% TODO: Add instructions for Azure as well.
