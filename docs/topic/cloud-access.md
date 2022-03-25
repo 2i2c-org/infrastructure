@@ -109,6 +109,14 @@ To do so, follow these steps:
    AWS accounts we create.
 4. Create the account! They'll receive an email with appropriate instructions.
 
+### Create new accounts in our SSO
+
+We often create new accounts in the 2i2c organization if we want to run community-specific infrastructure attached to that account (e.g., a dedicated Kubernetes cluster).
+To create a new Account under our AWS SSO, follow these steps:
+
+1. Do XXX @yuvipanda can you fill in these steps?
+2. Double check that the **quota** for this account is large enough to withstand expected usage. If not, request a quota via AWS support.
+
 ### Access individual AWS accounts
 
 For AWS accounts that are managed by clients, we use an individual AWS account for each team member, and ask the client to provide us access for each person.
