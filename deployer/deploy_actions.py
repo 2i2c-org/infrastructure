@@ -16,6 +16,7 @@ from config_validation import (
     validate_cluster_config,
     validate_hub_config,
     validate_support_config,
+    validate_authenticator_config,
 )
 
 # Without `pure=True`, I get an exception about str / byte issues
@@ -167,12 +168,13 @@ def deploy(cluster_name, hub_name, skip_hub_health_test, config_path):
     """
     validate_cluster_config(cluster_name)
     validate_hub_config(cluster_name, hub_name)
+    validate_authenticator_config(cluster_name, hub_name)
 
     with get_decrypted_file(config_path) as decrypted_file_path:
         with open(decrypted_file_path) as f:
             config = yaml.load(f)
 
-    # All our hubs use Auth0 for Authentication. This lets us programmatically
+    # Most of our hubs use Auth0 for Authentication. This lets us programmatically
     # determine what auth provider each hub uses - GitHub, Google, etc. Without
     # this, we'd have to manually generate credentials for each hub - and we
     # don't want to do that. Auth0 domains are tied to a account, and
