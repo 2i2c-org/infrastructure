@@ -16,7 +16,7 @@ from config_validation import (
     validate_cluster_config,
     validate_hub_config,
     validate_support_config,
-    validate_authenticator_config,
+    validate_auth0_config,
 )
 
 # Without `pure=True`, I get an exception about str / byte issues
@@ -168,7 +168,7 @@ def deploy(cluster_name, hub_name, skip_hub_health_test, config_path):
     """
     validate_cluster_config(cluster_name)
     validate_hub_config(cluster_name, hub_name)
-    validate_authenticator_config(cluster_name, hub_name)
+    validate_auth0_config(cluster_name, hub_name)
 
     with get_decrypted_file(config_path) as decrypted_file_path:
         with open(decrypted_file_path) as f:

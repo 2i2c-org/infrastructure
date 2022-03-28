@@ -153,8 +153,7 @@ def validate_support_config(cluster_name):
     else:
         print_colour(f"No support defined for {cluster_name}. Nothing to validate!")
 
-
-def validate_authenticator_config(cluster_name, hub_name):
+def validate_auth0_config(cluster_name, hub_name):
     """
     For each hub of a specific cluster, it validates that when an authenticator
     other than Auth0 is enabled, then `auth0` is explicitly disabled.
