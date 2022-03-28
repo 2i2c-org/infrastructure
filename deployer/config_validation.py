@@ -153,6 +153,7 @@ def validate_support_config(cluster_name):
     else:
         print_colour(f"No support defined for {cluster_name}. Nothing to validate!")
 
+
 def validate_authenticator_config(cluster_name, hub_name):
     """
     Validates the provided authenticator config for each hub of a specific cluster.
@@ -181,11 +182,17 @@ def validate_authenticator_config(cluster_name, hub_name):
                 config = yaml.load(values_file)
                 try:
                     if hub.spec["helm_chart"] != "basehub":
-                        authenticator_class = config["basehub"]["jupyterhub"]["hub"]["config"]["JupyterHub"]["authenticator_class"]
+                        authenticator_class = config["basehub"]["jupyterhub"]["hub"][
+                            "config"
+                        ]["JupyterHub"]["authenticator_class"]
                     else:
-                        authenticator_class = config["jupyterhub"]["hub"]["config"]["JupyterHub"]["authenticator_class"]
+                        authenticator_class = config["jupyterhub"]["hub"]["config"][
+                            "JupyterHub"
+                        ]["authenticator_class"]
                 except KeyError:
                     pass
 
         if authenticator_class != "auth0" and hub.spec["auth0"].get("enabled", True):
-            raise ValueError(f"Please disable auth0 for {hub.spec['name']} hub before using another authenticator class!")
+            raise ValueError(
+                f"Please disable auth0 for {hub.spec['name']} hub before using another authenticator class!"
+            )
