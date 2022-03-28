@@ -156,7 +156,8 @@ def validate_support_config(cluster_name):
 
 def validate_authenticator_config(cluster_name, hub_name):
     """
-    Validates the provided authenticator config for each hub of a specific cluster.
+    For each hub of a specific cluster, it validates that when an authenticator
+    other than Auth0 is enabled, then `auth0` is explicitly disabled.
     """
     _prepare_helm_charts_dependencies_and_schemas()
 
@@ -179,7 +180,9 @@ def validate_authenticator_config(cluster_name, hub_name):
         for values_file_name in hub.spec["helm_chart_values_files"]:
             if "secret" not in os.path.basename(values_file_name):
                 values_file = config_file_path.parent.joinpath(values_file_name)
+                # Load the hub extra config from its specific values files
                 config = yaml.load(values_file)
+                # Check if there's config that specifies an authenticator class
                 try:
                     if hub.spec["helm_chart"] != "basehub":
                         authenticator_class = config["basehub"]["jupyterhub"]["hub"][
@@ -192,6 +195,8 @@ def validate_authenticator_config(cluster_name, hub_name):
                 except KeyError:
                     pass
 
+        # If the authenticator class is other than auth0, then raise an error
+        # if auth0 is not explicitly disabled from the cluster config
         if authenticator_class != "auth0" and hub.spec["auth0"].get("enabled", True):
             raise ValueError(
                 f"Please disable auth0 for {hub.spec['name']} hub before using another authenticator class!"
