@@ -114,7 +114,7 @@ users want this!
 
    Since storage buckets need to be globally unique across all of Google Cloud,
    the actual created names are `<prefix>-<bucket-name>`, where `<prefix>` is
-   set by the `prefi` variable in the `.tfvars` file
+   set by the `prefix` variable in the `.tfvars` file
 
 2. Enable access to these buckets from the hub by [editing `hub_cloud_permissions`](howto:features:cloud-access:gcp:access-perms)
    in the same `.tfvars` file. Follow all the steps listed there - this
@@ -123,7 +123,7 @@ users want this!
 3. You can set the `SCRATCH_BUCKET` (and the deprecated `PANGEO_SCRATCH`)
    env vars on all user pods so users can use the created bucket without
    having to hard-code the bucket name in their code. In the hub-specific
-   `.values.yaml` file in `config/clusters/<cluster-name>/<hub-name>.values.yaml`,
+   `.values.yaml` file in `config/clusters/<cluster-name>`,
    set:
 
    ```yaml
