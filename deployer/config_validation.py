@@ -156,8 +156,9 @@ def validate_support_config(cluster_name):
 
 def assert_single_auth_method_enabled(cluster_name, hub_name):
     """
-    For each hub of a specific cluster, it validates that when an authenticator
-    other than Auth0 is enabled, then `auth0` is explicitly disabled.
+    For each hub of a specific cluster, it asserts that only a single auth
+    method is enabled. An error is raised when an authenticator
+    other than Auth0 is enabled and `auth0` is not explicitly disabled.
     """
     _prepare_helm_charts_dependencies_and_schemas()
 
