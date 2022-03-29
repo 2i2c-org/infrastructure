@@ -1,3 +1,6 @@
+# We define a service account that is attached by default to all Jupyter user posd
+# and dask-gateway workers. By default, this has no permissions - although extra
+# cloud access permissions may be granted - see docs/topic/features.md.
 userServiceAccount:
   enabled: true
   annotations: {}
