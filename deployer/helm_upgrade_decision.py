@@ -67,46 +67,38 @@ def discover_modified_common_files(modified_paths: list):
     return upgrade_support_on_all_clusters, upgrade_all_hubs_on_all_clusters
 
 
-def get_unique_cluster_filepaths(added_or_modified_files: list):
-    """For a list of added and modified files, get the list of unique filepaths to
-    cluster folders containing added/modified files
-
-    Note: "cluster folders" are those that contain a cluster.yaml file.
+def get_all_cluster_yaml_files(test_env: bool = False) -> set:
+    """Get a set of absolute paths to all cluster.yaml files in the repository
 
     Args:
-        added_or_modified_files (list[str]): A list of files that have been added or
-            modified in a GitHub Pull Request
+        test_env (bool, optional): A flag to determine whether we are running a test
+            suite or not. If True, only return the paths to cluster.yaml files under the
+            'tests/' directory. If False, explicitly exclude the cluster.yaml files
+            nested under the 'tests/' directory. Defaults to False.
 
     Returns:
-        list[path obj]: A list of unique filepaths to cluster folders
+        set[path obj]: A set of absolute paths to all cluster.yaml files in the repo
     """
     # Get absolute paths
-    if test_env == "test":
+    if test_env:
         # We are running a test via pytest. We only want to focus on the cluster
         # folders nested under the `tests/` folder.
-        filepaths = [
-            Path(filepath).parent
-            for filepath in added_or_modified_files
-            if "tests/" in filepath
+        cluster_files = [
+            filepath
+            for filepath in Path(os.getcwd()).glob("**/cluster.yaml")
+            if "tests" in str(filepath)
         ]
     else:
         # We are NOT running a test via pytest. We want to explicitly ignore the
         # cluster folders nested under the `tests/` folder.
-        filepaths = [
-            Path(filepath).parent
-            for filepath in added_or_modified_files
-            if "tests/" not in filepath
+        cluster_files = [
+            filepath
+            for filepath in Path(os.getcwd()).glob("**/cluster.yaml")
+            if "tests" not in str(filepath)
         ]
 
-    # Get unique absolute paths
-    filepaths = list(set(filepaths))
-
-    # Check these filepaths are cluster folders by the existence of a cluster.yaml file
-    for filepath in filepaths:
-        if not filepath.joinpath("cluster.yaml").is_file():
-            filepaths.remove(filepath)
-
-    return filepaths
+    # Return unique absolute paths
+    return set(cluster_files)
 
 
 def generate_hub_matrix_jobs(
