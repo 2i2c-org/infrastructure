@@ -468,52 +468,47 @@ def assign_staging_jobs_for_missing_clusters(
     return support_and_staging_matrix_jobs
 
 
-def pretty_print_matrix_jobs(support_matrix_jobs, staging_hub_matrix_jobs, prod_hub_matrix_jobs):
+def pretty_print_matrix_jobs(
+    prod_hub_matrix_jobs, support_and_staging_matrix_jobs
+):
     # Construct table for support chart upgrades
-    support_table = Table(title="Support chart upgrades")
+    support_table = Table(title="Support chart and Staging hub upgrades")
     support_table.add_column("Cloud Provider")
     support_table.add_column("Cluster Name")
-    support_table.add_column("Reason for Redeploy")
+    support_table.add_column("Upgrade Support?")
+    support_table.add_column("Reason for Support Redeploy")
+    support_table.add_column("Upgrade Staging?")
+    support_table.add_column("Reason for Staging Redeploy")
 
     # Add rows
-    for job in support_matrix_jobs:
+    for job in support_and_staging_matrix_jobs:
         support_table.add_row(
-            job["provider"], job["cluster_name"], job["reason_for_redeploy"]
-        )
-
-    # Construct table for staging hub helm chart upgrades
-    staging_hub_table = Table(title="Hub helm chart upgrades - Staging")
-    staging_hub_table.add_column("Cloud Provider")
-    staging_hub_table.add_column("Cluster Name")
-    staging_hub_table.add_column("Hub Name")
-    staging_hub_table.add_column("Reason for Redeploy")
-
-    # Add rows
-    for job in staging_hub_matrix_jobs:
-        staging_hub_table.add_row(
             job["provider"],
             job["cluster_name"],
-            job["hub_name"],
-            job["reason_for_redeploy"],
+            job["upgrade_support"],
+            job["reason_for_support_redeploy"],
+            job["upgrade_staging"],
+            job["reason_for_staging_redeploy"],
+            end_section=True,
         )
 
-    # Construct table for production hub helm chart upgrades
-    prod_hub_table = Table(title="Hub helm chart upgrades")
-    prod_hub_table.add_column("Cloud Provider")
-    prod_hub_table.add_column("Cluster Name")
-    prod_hub_table.add_column("Hub Name")
-    prod_hub_table.add_column("Reason for Redeploy")
+    # Construct table for prod hub upgrades
+    hub_table = Table(title="Prod hub upgrades")
+    hub_table.add_column("Cloud Provider")
+    hub_table.add_column("Cluster Name")
+    hub_table.add_column("Hub Name")
+    hub_table.add_column("Reason for Redeploy")
 
     # Add rows
     for job in prod_hub_matrix_jobs:
-        prod_hub_table.add_row(
+        hub_table.add_row(
             job["provider"],
             job["cluster_name"],
             job["hub_name"],
             job["reason_for_redeploy"],
+            end_section=True,
         )
 
     console = Console()
     console.print(support_table)
-    console.print(staging_hub_table)
-    console.print(prod_hub_table)
+    console.print(hub_table)
