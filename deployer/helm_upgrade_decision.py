@@ -72,11 +72,11 @@ def discover_modified_common_files(modified_paths: list) -> (bool, bool):
     return upgrade_support_on_all_clusters, upgrade_all_hubs_on_all_clusters
 
 
-def get_all_cluster_yaml_files(test_env: bool = False) -> set:
+def get_all_cluster_yaml_files(is_test: bool = False) -> set:
     """Get a set of absolute paths to all cluster.yaml files in the repository
 
     Args:
-        test_env (bool, optional): A flag to determine whether we are running a test
+        is_test (bool, optional): A flag to determine whether we are running a test
             suite or not. If True, only return the paths to cluster.yaml files under the
             'tests/' directory. If False, explicitly exclude the cluster.yaml files
             nested under the 'tests/' directory. Defaults to False.
@@ -85,7 +85,7 @@ def get_all_cluster_yaml_files(test_env: bool = False) -> set:
         set[path obj]: A set of absolute paths to all cluster.yaml files in the repo
     """
     # Get absolute paths
-    if test_env:
+    if is_test:
         # We are running a test via pytest. We only want to focus on the cluster
         # folders nested under the `tests/` folder.
         cluster_files = [
