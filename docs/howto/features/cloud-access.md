@@ -130,7 +130,7 @@ users want this!
     jupyterhub:
       singleuser:
          extraEnv:
-            SCRATCH_BUCKET: gcs://<bucket-name>/$(JUPYTERHUB_USER)
+            SCRATCH_BUCKET: gcs://<bucket-full-name>/$(JUPYTERHUB_USER)
    ```
 
    ```{note}
@@ -142,7 +142,12 @@ users want this!
    their own stuff without stepping on other people's objects. But this is
    **not a security mechanism** - everyone can access everyone else's objects!
 
-    You can also add other env vars pointing to other buckets users requested.
+   `<bucket-full-name>` is the *full* name of the bucket, which is formed by
+   `<prefix>-<bucket-name>`, where `<prefix>` is also set in the `.tfvars` file.
+   You can see the full names of created buckets with `terraform output buckets`
+   too.
+
+   You can also add other env vars pointing to other buckets users requested.
 
 4. Get this change deployed, and users should now be able to use the buckets!
    Currently running users might have to restart their pods for the change to take effect.

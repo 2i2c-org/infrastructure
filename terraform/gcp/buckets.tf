@@ -30,3 +30,14 @@ resource "google_storage_bucket_iam_member" "member" {
   role     = "roles/storage.admin"
   member   = "serviceAccount:${google_service_account.workload_sa[each.value.hub_name].email}"
 }
+
+output "buckets" {
+  value       = { for b in var.user_buckets : b => google_storage_bucket.user_buckets[b].name }
+  description = <<-EOT
+  List of GCS buckets created for this cluster
+
+  Since GCS bucket names need to be globally unique, we prefix each item in
+  the user_buckets variable with the prefix variable. This output displays
+  the full name of all GCS buckets created conveniently.
+  EOT
+}
