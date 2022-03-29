@@ -258,7 +258,7 @@ def generate_support_matrix_jobs(
                 matrix_jobs.append(matrix_job)
 
     else:
-        print(f"No support defined for cluster: {cluster_info['cluster_name']}")
+        print_colour(f"No support defined for cluster: {cluster_info['cluster_name']}")
 
     return matrix_jobs
 
@@ -464,9 +464,7 @@ def assign_staging_jobs_for_missing_clusters(
     return support_and_staging_matrix_jobs
 
 
-def pretty_print_matrix_jobs(
-    prod_hub_matrix_jobs, support_and_staging_matrix_jobs
-):
+def pretty_print_matrix_jobs(prod_hub_matrix_jobs, support_and_staging_matrix_jobs):
     # Construct table for support chart upgrades
     support_table = Table(title="Support chart and Staging hub upgrades")
     support_table.add_column("Cloud Provider")
