@@ -18,12 +18,14 @@ from config_validation import (
     validate_support_config,
 )
 from helm_upgrade_decision import (
+    assign_staging_jobs_for_missing_clusters,
     discover_modified_common_files,
-    get_unique_cluster_filepaths,
-    generate_support_matrix_jobs,
+    ensure_support_staging_jobs_have_correct_keys,
+    get_all_cluster_yaml_files,
     generate_hub_matrix_jobs,
+    generate_support_matrix_jobs,
+    move_staging_hubs_to_staging_matrix,
     pretty_print_matrix_jobs,
-    update_github_env,
 )
 
 
@@ -236,33 +238,94 @@ def generate_helm_upgrade_jobs(changed_filepaths, pretty_print=False):
         upgrade_all_hubs_on_all_clusters,
     ) = discover_modified_common_files(changed_filepaths)
 
-    # Get a list of filepaths to target cluster folders
-    cluster_filepaths = get_unique_cluster_filepaths(changed_filepaths)
+    # Get a list of filepaths to all cluster.yaml files in the repo
+    cluster_files = get_all_cluster_yaml_files()
 
-    # Generate a job matrix of all hubs that need upgrading
-    hub_matrix_jobs = generate_hub_matrix_jobs(
-        cluster_filepaths,
-        set(changed_filepaths),
-        upgrade_all_hubs_on_all_clusters=upgrade_all_hubs_on_all_clusters,
+    # Empty lists to store job definitions in
+    prod_hub_matrix_jobs = []
+    support_and_staging_matrix_jobs = []
+
+    for cluster_file in cluster_files:
+        # Read in the cluster.yaml file
+        with open(cluster_file) as f:
+            cluster_config = yaml.load(f)
+
+        # Get cluster's name and its cloud provider
+        cluster_name = cluster_config.get("name", {})
+        provider = cluster_config.get("provider", {})
+
+        # Generate template dictionary for all jobs associated with this cluster
+        cluster_info = {
+            "cluster_name": cluster_name,
+            "provider": provider,
+            "reason_for_redeploy": "",
+        }
+
+        # Check if this cluster file has been modified. If so, set boolean flags to True
+        intersection = set(changed_filepaths).intersection([str(cluster_file)])
+        if intersection:
+            print(
+                f"This cluster.yaml file has been modified. Generating jobs to upgrade all hubs and the support chart on THIS cluster: {cluster_name}"
+            )
+            upgrade_all_hubs_on_this_cluster = True
+            upgrade_support_on_this_cluster = True
+            cluster_info["reason_for_redeploy"] = "cluster.yaml file was modified"
+        else:
+            upgrade_all_hubs_on_this_cluster = False
+            upgrade_support_on_this_cluster = False
+
+        # Generate a job matrix of all hubs that need upgrading on this cluster
+        prod_hub_matrix_jobs.extend(
+            generate_hub_matrix_jobs(
+                cluster_file,
+                cluster_config,
+                cluster_info,
+                set(changed_filepaths),
+                upgrade_all_hubs_on_this_cluster=upgrade_all_hubs_on_this_cluster,
+                upgrade_all_hubs_on_all_clusters=upgrade_all_hubs_on_all_clusters,
+            )
+        )
+
+        # Generate a job matrix for support chart upgrades
+        support_and_staging_matrix_jobs.extend(
+            generate_support_matrix_jobs(
+                cluster_file,
+                cluster_config,
+                cluster_info,
+                set(changed_filepaths),
+                upgrade_support_on_this_cluster=upgrade_support_on_this_cluster,
+                upgrade_support_on_all_clusters=upgrade_support_on_all_clusters,
+            )
+        )
+
+    # Clean up the matrix jobs
+    (
+        prod_hub_matrix_jobs,
+        support_and_staging_matrix_jobs,
+    ) = move_staging_hubs_to_staging_matrix(
+        prod_hub_matrix_jobs, support_and_staging_matrix_jobs
+    )
+    support_and_staging_matrix_jobs = ensure_support_staging_jobs_have_correct_keys(
+        support_and_staging_matrix_jobs, prod_hub_matrix_jobs
+    )
+    support_and_staging_matrix_jobs = assign_staging_jobs_for_missing_clusters(
+        support_and_staging_matrix_jobs, prod_hub_matrix_jobs
     )
 
-    # Generate a job matrix of all clusters that need their support chart upgrading
-    support_matrix_jobs = generate_support_matrix_jobs(
-        cluster_filepaths,
-        set(changed_filepaths),
-        upgrade_support_on_all_clusters=upgrade_support_on_all_clusters,
-    )
-
-    # The existence of the GITHUB_ENV environment variable is an indication that
-    # we are running in an GitHub Actions workflow
-    # https://docs.github.com/en/actions/learn-github-actions/environment-variables#default-environment-variables
+    # The existence of the CI environment variable is an indication that we are running
+    # in an GitHub Actions workflow
+    # https://docs.github.com/en/actions/using-workflows/workflow-syntax-for-github-actions#example-defining-outputs-for-a-job
     # We should always default to pretty printing the results of the decision logic
     # if we are not running in GitHub Actions, even when the --pretty-print flag has
-    # not been parsed on the command line. This will avoid errors trying to write to
-    # a GITHUB_ENV file that does not exist in the update_github_env function
-    env = os.environ.get("GITHUB_ENV", {})
-    if pretty_print or not env:
-        pretty_print_matrix_jobs(hub_matrix_jobs, support_matrix_jobs)
+    # not been parsed on the command line. This will avoid errors trying to set CI
+    # output variables in an environment that doesn't exist.
+    ci_env = os.environ.get("CI", False)
+    if pretty_print or not ci_env:
+        pretty_print_matrix_jobs(prod_hub_matrix_jobs, support_and_staging_matrix_jobs)
     else:
-        # Add these matrix jobs to the GitHub environment for use in another job
-        update_github_env(hub_matrix_jobs, support_matrix_jobs)
+        # Add these matrix jobs as output variables for use in another job
+        # https://docs.github.com/en/actions/using-workflows/workflow-syntax-for-github-actions
+        print(f"::set-output name=prod-hub-matrix-jobs::{prod_hub_matrix_jobs}")
+        print(
+            f"::set-output name=support-and-staging-matrix-jobs::{support_and_staging_matrix_jobs}"
+        )
