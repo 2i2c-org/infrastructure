@@ -4,6 +4,9 @@ support:
   helm_chart_values_files:
     - support.values.yaml
 hubs:
+  - name: staging
+    helm_chart_values_files:
+      - staging.values.yaml
   - name: hub1
     helm_chart_values_files:
       - hub1.values.yaml
