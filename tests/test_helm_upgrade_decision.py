@@ -24,7 +24,7 @@ def test_get_all_cluster_yaml_files():
         Path(os.getcwd()).joinpath("tests/test-clusters/cluster2/cluster.yaml"),
     }
 
-    result_cluster_files = get_all_cluster_yaml_files(test_env=True)
+    result_cluster_files = get_all_cluster_yaml_files(is_test=True)
 
     assert result_cluster_files == expected_cluster_files
     assert isinstance(result_cluster_files, set)
