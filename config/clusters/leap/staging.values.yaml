@@ -1,5 +1,11 @@
 basehub:
+  userServiceAccount:
+    annotations:
+      iam.gke.io/gcp-service-account: leap-staging@leap-pangeo.iam.gserviceaccount.com
   jupyterhub:
+    singleuser:
+      extraEnv:
+        SCRATCH_BUCKET: gcs://leap-scratch-staging/$(JUPYTERHUB_USER)
     hub:
       config:
         GitHubOAuthenticator:
