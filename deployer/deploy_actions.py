@@ -264,7 +264,7 @@ def generate_helm_upgrade_jobs(changed_filepaths, pretty_print=False):
         # Check if this cluster file has been modified. If so, set boolean flags to True
         intersection = set(changed_filepaths).intersection([str(cluster_file)])
         if intersection:
-            print(
+            print_colour(
                 f"This cluster.yaml file has been modified. Generating jobs to upgrade all hubs and the support chart on THIS cluster: {cluster_name}"
             )
             upgrade_all_hubs_on_this_cluster = True
