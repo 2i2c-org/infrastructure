@@ -37,7 +37,7 @@ Topic guides go more in-depth on a particular topic.
 :caption: Topic guides
 :maxdepth: 2
 topic/config.md
-topic/cloud-access.md
+topic/cloud-auth.md
 topic/features.md
 topic/credits.md
 topic/hub-helm-charts.md

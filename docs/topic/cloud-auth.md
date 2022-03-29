@@ -1,4 +1,4 @@
-# Cloud project access
+# Authenticating with cloud providers for 2i2c engineers
 
 We manage many projects across multiple cloud providers. This
 document defines our access policy, and is the canonical location
