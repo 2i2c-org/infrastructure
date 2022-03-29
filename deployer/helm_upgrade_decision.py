@@ -102,124 +102,82 @@ def get_all_cluster_yaml_files(test_env: bool = False) -> set:
 
 
 def generate_hub_matrix_jobs(
-    cluster_filepaths,
+    cluster_file,
+    cluster_config,
+    cluster_info,
     added_or_modified_files,
+    upgrade_all_hubs_on_this_cluster=False,
     upgrade_all_hubs_on_all_clusters=False,
 ):
-    """Generate a list of dictionaries describing which hubs on which clusters need
+    """Generate a list of dictionaries describing which hubs on a given cluster need
     to undergo a helm upgrade based on whether their associated helm chart values
     files have been modified. To be parsed to GitHub Actions in order to generate
     parallel jobs in a matrix.
 
-    Note: "cluster folders" are those that contain a cluster.yaml file.
-
     Args:
-        cluster_filepaths (list[path obj]): List of absolute paths to cluster folders
+        cluster_file (path obj): The absolute path to the cluster.yaml file of a given
+            cluster
+        cluster_config (dict): The cluster-wide config for a given cluster in
+            dictionary format
+        cluster_info (dict): A template dictionary for defining matrix jobs prepopulated
+            with some info. "cluster_name": The name of the given cluster; "provider":
+            the cloud provider the given cluster runs on; "reason_for_redeploy":
+            what has changed in the repository to prompt a hub on this cluster to be
+            redeployed.
         added_or_modified_files (set[str]): A set of all added or modified files
             provided in a GitHub Pull Requests
+        upgrade_all_hubs_on_this_cluster (bool, optional): If True, generates jobs to
+            upgrade all hubs on the given cluster. This is triggered when the
+            cluster.yaml file itself has been modified. Defaults to False.
         upgrade_all_hubs_on_all_clusters (bool, optional): If True, generates jobs to
             upgrade all hubs on all clusters. This is triggered when common config has
-            been modified, such as basehub or daskhub helm charts. Defaults to False.
+            been modified, such as the basehub or daskhub helm charts. Defaults to False.
 
     Returns:
         list[dict]: A list of dictionaries. Each dictionary contains: the name of a
-            cluster, the cloud provider that cluster runs on, and the name of a hub
-            deployed to that cluster.
+            cluster, the cloud provider that cluster runs on, the name of a hub
+            deployed to that cluster, and the reason that hub needs to be redeployed.
     """
-    # Empty list to store the matrix job definitions in
+    # Empty list to store all the matrix job definitions in
     matrix_jobs = []
 
-    # This flag will allow us to establish when a cluster.yaml file has been modified
-    # and all hubs on that cluster should be upgraded, without also upgrading all hubs
-    # on all other clusters
-    upgrade_all_hubs_on_this_cluster = False
+    # Loop over each hub on this cluster
+    for hub in cluster_config.get("hubs", {}):
+        if upgrade_all_hubs_on_all_clusters or upgrade_all_hubs_on_this_cluster:
+            # We know we're upgrading all hubs, so just add the hub name to the list
+            # of matrix jobs and move on
+            matrix_job = cluster_info.copy()
+            matrix_job["hub_name"] = hub["name"]
 
-    if upgrade_all_hubs_on_all_clusters:
-        print_colour(
-            "Core infrastrucure has been modified. Generating jobs to upgrade all hubs on ALL clusters."
-        )
-        reason_for_redeploy = "Core infrastructure has changed"
+            if upgrade_all_hubs_on_all_clusters:
+                matrix_job[
+                    "reason_for_redeploy"
+                ] = "Core infrastructure has been modified"
 
-        # Overwrite cluster_filepaths to contain paths to all clusters
-        if test_env == "test":
-            # We are running a test via pytest. We only want to focus on the cluster
-            # folders nested under the `tests/` folder.
-            cluster_filepaths = [
-                filepath.parent
-                for filepath in Path(os.getcwd()).glob("**/cluster.yaml")
-                if "tests/" in str(filepath)
-            ]
+            matrix_jobs.append(matrix_job)
+
         else:
-            # We are NOT running a test via pytest. We want to explicitly ignore the
-            # cluster folders nested under the `tests/` folder.
-            cluster_filepaths = [
-                filepath.parent
-                for filepath in Path(os.getcwd()).glob("**/cluster.yaml")
-                if "tests/" not in str(filepath)
+            # Read in this hub's helm chart values files from the cluster.yaml file
+            values_files = [
+                cluster_file.parent.joinpath(values_file)
+                for values_file in hub.get("helm_chart_values_files", {})
             ]
+            # Establish if any of this hub's helm chart values files have been
+            # modified
+            intersection = added_or_modified_files.intersection(values_files)
 
-    for cluster_filepath in cluster_filepaths:
-        # Read in the cluster.yaml file
-        with open(cluster_filepath.joinpath("cluster.yaml")) as f:
-            cluster_config = yaml.load(f)
-
-        if not upgrade_all_hubs_on_all_clusters:
-            # Check if this cluster file has been modified. If so, set
-            # upgrade_all_hubs_on_this_cluster to True
-            intersection = added_or_modified_files.intersection(
-                [str(cluster_filepath.joinpath("cluster.yaml"))]
-            )
-            if len(intersection) > 0:
-                print_colour(
-                    f"This cluster.yaml file has been modified. Generating jobs to upgrade all hubs on THIS cluster: {cluster_config.get('name', {})}"
-                )
-                upgrade_all_hubs_on_this_cluster = True
-                reason_for_redeploy = "cluster.yaml file was modified"
-
-        # Generate template dictionary for all jobs associated with this cluster
-        cluster_info = {
-            "cluster_name": cluster_config.get("name", {}),
-            "provider": cluster_config.get("provider", {}),
-        }
-
-        # Loop over each hub on this cluster
-        for hub in cluster_config.get("hubs", {}):
-            if upgrade_all_hubs_on_all_clusters or upgrade_all_hubs_on_this_cluster:
-                # We know we're upgrading all hubs, so just add the hub name to the list
-                # of matrix jobs and move on
+            if intersection:
+                # If at least one of the helm chart values files associated with
+                # this hub has been modified, add it to list of matrix jobs to be
+                # upgraded
                 matrix_job = cluster_info.copy()
                 matrix_job["hub_name"] = hub["name"]
-                matrix_job["reason_for_redeploy"] = reason_for_redeploy
-                matrix_jobs.append(matrix_job)
-
-            else:
-                # Read in this hub's helm chart values files from the cluster.yaml file
-                helm_chart_values_files = [
-                    str(cluster_filepath.joinpath(values_file))
-                    for values_file in hub.get("helm_chart_values_files", {})
-                ]
-                # Establish if any of this hub's helm chart values files have been
-                # modified
-                intersection = list(
-                    added_or_modified_files.intersection(helm_chart_values_files)
+                matrix_job[
+                    "reason_for_redeploy"
+                ] = "Following helm chart values files were modified: " + ", ".join(
+                    [path.name for path in intersection]
                 )
-
-                if len(intersection) > 0:
-                    # If at least one of the helm chart values files associated with
-                    # this hub has been modified, add it to list of matrix jobs to be
-                    # upgraded
-                    reason_for_redeploy = (
-                        "Following helm chart values files were modified:\n- "
-                        + "\n- ".join(intersection)
-                    )
-
-                    matrix_job = cluster_info.copy()
-                    matrix_job["hub_name"] = hub["name"]
-                    matrix_job["reason_for_redeploy"] = reason_for_redeploy
-                    matrix_jobs.append(matrix_job)
-
-        # Reset upgrade_all_hubs_on_this_cluster for the next iteration
-        upgrade_all_hubs_on_this_cluster = False
+                matrix_jobs.append(matrix_job)
 
     return matrix_jobs
 
