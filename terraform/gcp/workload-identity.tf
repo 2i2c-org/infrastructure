@@ -14,7 +14,8 @@
 # Create the service account if there is an entry for the hub, regardless of what
 # kind of permissions it wants.
 resource "google_service_account" "workload_sa" {
-  for_each     = var.hub_cloud_permissions
+  for_each = var.hub_cloud_permissions
+  # Service account IDs are limited to 30 chars, so use key not hub namespace
   account_id   = "${var.prefix}-${each.key}"
   display_name = "Service account for user pods in hub ${each.key} in ${var.prefix}"
   project      = var.project_id
@@ -52,17 +53,16 @@ resource "google_project_iam_member" "requestor_pays_binding" {
   member   = "serviceAccount:${google_service_account.workload_sa[each.value].email}"
 }
 
-# Create the Service Account in the Kubernetes Namespace
-# FIXME: We might need to create the k8s namespace here some of the time, but then who is
-# responsible for that - terraform or helm (via our deployer?)
-resource "kubernetes_service_account" "workload_kubernetes_sa" {
-  for_each = var.hub_cloud_permissions
+output "kubernetes_sa_annotations" {
+  value       = { for k, v in var.hub_cloud_permissions : v.hub_namespace => "iam.gke.io/gcp-service-account: ${google_service_account.workload_sa[k].email}" }
+  description = <<-EOT
+  Annotations to apply to userServiceAccount in each hub to enable cloud permissions for them.
 
-  metadata {
-    name      = "user-sa"
-    namespace = each.value.hub_namespace
-    annotations = {
-      "iam.gke.io/gcp-service-account" = google_service_account.workload_sa[each.key].email
-    }
-  }
+  Helm, not terraform, control namespace creation for us. This makes it quite difficult
+  to create the appropriate kubernetes service account attached to the Google Cloud Service
+  Account in the appropriate namespace. Instead, this output provides the list of annotations
+  to be applied to the kubernetes service account used by jupyter and dask pods in a given hub.
+  This should be specified under userServiceAccount.annotations (or basehub.userServiceAccount.annotations
+  in case of daskhub) on a values file created specifically for that hub.
+  EOT
 }

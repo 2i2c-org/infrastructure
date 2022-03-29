@@ -1,3 +1,7 @@
+userServiceAccount:
+  enabled: true
+  annotations: {}
+
 azureFile:
   enabled: false
   pv:

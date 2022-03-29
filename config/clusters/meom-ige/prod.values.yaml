@@ -1,0 +1,4 @@
+basehub:
+  userServiceAccount:
+    annotations:
+      iam.gke.io/gcp-service-account: meom-ige-prod@meom-ige-cnrs.iam.gserviceaccount.com

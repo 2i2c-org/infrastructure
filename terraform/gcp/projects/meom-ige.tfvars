@@ -92,12 +92,12 @@ user_buckets = [
 hub_cloud_permissions = {
   "staging" : {
     requestor_pays : true,
-    bucket_admin: ["scratch", "data"],
+    bucket_admin_access: ["scratch", "data"],
     hub_namespace: "staging"
   },
   "prod" : {
     requestor_pays : true,
-    bucket_admin: ["scratch", "data"],
+    bucket_admin_access: ["scratch", "data"],
     hub_namespace: "prod"
   }
 }

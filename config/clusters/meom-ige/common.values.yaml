@@ -1,4 +1,7 @@
 basehub:
+  userServiceAccount:
+    annotations:
+      iam.gke.io/gcp-service-account: meom-ige-staging-workload-sa@meom-ige-cnrs.iam.gserviceaccount.com
   nfs:
     pv:
       # from https://docs.aws.amazon.com/efs/latest/ug/mounting-fs-nfs-mount-settings.html
