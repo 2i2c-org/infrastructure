@@ -256,7 +256,7 @@ class Hub:
 
             if not skip_hub_health_test:
 
-                # FIXMEL: Clean this up
+                # FIXME: Clean this up
                 if self.spec["helm_chart"] != "basehub":
                     service_api_token = generated_values["basehub"]["jupyterhub"][
                         "hub"

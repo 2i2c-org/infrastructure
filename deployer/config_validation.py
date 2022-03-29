@@ -152,3 +152,53 @@ def validate_support_config(cluster_name):
                 sys.exit(1)
     else:
         print_colour(f"No support defined for {cluster_name}. Nothing to validate!")
+
+
+def assert_single_auth_method_enabled(cluster_name, hub_name):
+    """
+    For each hub of a specific cluster, it asserts that only a single auth
+    method is enabled. An error is raised when an authenticator
+    other than Auth0 is enabled and `auth0` is not explicitly disabled.
+    """
+    _prepare_helm_charts_dependencies_and_schemas()
+
+    config_file_path = find_absolute_path_to_cluster_file(cluster_name)
+    with open(config_file_path) as f:
+        cluster = Cluster(yaml.load(f), config_file_path.parent)
+
+    hubs = []
+    if hub_name:
+        hubs = [h for h in cluster.hubs if h.spec["name"] == hub_name]
+    else:
+        hubs = cluster.hubs
+
+    for i, hub in enumerate(hubs):
+        print_colour(
+            f"{i+1} / {len(hubs)}: Validating authenticator config for {hub.spec['name']}..."
+        )
+
+        authenticator_class = "auth0"
+        for values_file_name in hub.spec["helm_chart_values_files"]:
+            if "secret" not in os.path.basename(values_file_name):
+                values_file = config_file_path.parent.joinpath(values_file_name)
+                # Load the hub extra config from its specific values files
+                config = yaml.load(values_file)
+                # Check if there's config that specifies an authenticator class
+                try:
+                    if hub.spec["helm_chart"] != "basehub":
+                        authenticator_class = config["basehub"]["jupyterhub"]["hub"][
+                            "config"
+                        ]["JupyterHub"]["authenticator_class"]
+                    else:
+                        authenticator_class = config["jupyterhub"]["hub"]["config"][
+                            "JupyterHub"
+                        ]["authenticator_class"]
+                except KeyError:
+                    pass
+
+        # If the authenticator class is other than auth0, then raise an error
+        # if auth0 is not explicitly disabled from the cluster config
+        if authenticator_class != "auth0" and hub.spec["auth0"].get("enabled", True):
+            raise ValueError(
+                f"Please disable auth0 for {hub.spec['name']} hub before using another authenticator class!"
+            )
