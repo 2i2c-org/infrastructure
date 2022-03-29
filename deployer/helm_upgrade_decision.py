@@ -358,56 +358,52 @@ def move_staging_jobs_to_staging_matrix(
     return prod_hub_matrix_jobs, support_and_staging_matrix_jobs
 
 
-        # Double-check that support is defined for this cluster.
-        support_config = cluster_config.get("support", {})
-        if support_config:
-            if upgrade_support_on_all_clusters:
-                # We know we're upgrading support on all clusters, so just add the cluster name to the list
-                # of matrix jobs and move on
-                matrix_job = cluster_info.copy()
-                matrix_job[
-                    "reason_for_redeploy"
-                ] = "Support helm chart has been modified"
-                matrix_jobs.append(matrix_job)
+def ensure_support_staging_jobs_have_correct_keys(
+    support_and_staging_matrix_jobs: list, prod_hub_matrix_jobs: list
+) -> list:
+    """This function ensures that all entries in support_and_staging_matrix_jobs have
+    the expected upgrade_staging and eason_for_staging_redeploy keys, even if they are
+    set to false/empty.
+
+    Args:
+        support_and_staging_matrix_jobs (list[dict]): A list of dictionaries
+            representing jobs to upgrade the support chart and staging hub on clusters
+            that require it.
+        prod_hub_matrix_jobs (list[dict]): A list of dictionaries representing jobs to
+            upgrade production hubs that require it.
+
+    Returns:
+        support_and_staging_matrix_jobs (list[dict]): Updated to ensure each entry has
+            the upgrade_staging and reason_for_staging_redeploy keys, even if they are
+            false/empty.
+    """
+    # For each job listed in support_and_staging_matrix_jobs, ensure it has the
+    # upgrade_staging key present, even if we just set it to False
+    for job in support_and_staging_matrix_jobs:
+        if "upgrade_staging" not in job.keys():
+            # Get a list of prod hubs running on the same cluster this staging job will
+            # run on
+            hubs_on_this_cluster = [
+                hub["hub_name"]
+                for hub in prod_hub_matrix_jobs
+                if hub["cluster_name"] == job["cluster_name"]
+            ]
+            if hubs_on_this_cluster:
+                # There are prod hubs on this cluster that require an upgrade, and so we
+                # also upgrade staging
+                job["upgrade_staging"] = "true"
+                job[
+                    "reason_for_staging_redeploy"
+                ] = "Following prod hubs require redeploy: " + ", ".join(
+                    hubs_on_this_cluster
+                )
             else:
-                # Has the cluster.yaml file for this cluster folder been modified?
-                cluster_yaml_intersection = added_or_modified_files.intersection(
-                    [str(cluster_filepath.joinpath("cluster.yaml"))]
-                )
+                # There are no prod hubs on this cluster that require an upgrade, so we
+                # do not upgrade staging
+                job["upgrade_staging"] = "false"
+                job["reason_for_staging_redeploy"] = ""
 
-                # Have the related support values files for this cluster been modified?
-                support_values_files = [
-                    str(cluster_filepath.joinpath(values_file))
-                    for values_file in support_config.get("helm_chart_values_files", {})
-                ]
-                support_values_intersection = added_or_modified_files.intersection(
-                    support_values_files
-                )
-
-                # If either of the intersections have a length greater than zero, append
-                # the job definition to the list of matrix jobs
-                if (len(cluster_yaml_intersection) > 0) or (
-                    len(support_values_intersection) > 0
-                ):
-                    matrix_job = cluster_info.copy()
-
-                    if len(support_values_intersection) > 0:
-                        matrix_job["reason_for_redeploy"] = (
-                            "Following helm chart values files were modified:\n- "
-                            + "\n- ".join(support_values_intersection)
-                        )
-                    elif len(cluster_yaml_intersection) > 0:
-                        matrix_job[
-                            "reason_for_redeploy"
-                        ] = "cluster.yaml file was modified"
-
-                    matrix_jobs.append(matrix_job)
-        else:
-            print_colour(
-                f"No support defined for cluster: {cluster_config.get('name', {})}"
-            )
-
-    return matrix_jobs
+    return support_and_staging_matrix_jobs
 
 
 def update_github_env(support_matrix_jobs, staging_hub_matrix_jobs, prod_hub_matrix_jobs):
