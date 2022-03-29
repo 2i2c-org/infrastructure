@@ -33,14 +33,14 @@ def _assert_file_exists(filepath):
         )
 
 
-def find_absolute_path_to_cluster_file(cluster_name: str, test_env: bool = False):
+def find_absolute_path_to_cluster_file(cluster_name: str, is_test: bool = False):
     """Find the absolute path to a cluster.yaml file for a named cluster
 
     Args:
         cluster_name (str): The name of the cluster we wish to perform actions on.
             This corresponds to a folder name, and that folder should contain a
             cluster.yaml file.
-        test_env (bool, optional): A flag to determine whether we are running a test
+        is_test (bool, optional): A flag to determine whether we are running a test
             suite or not. If True, only return the paths to cluster.yaml files under the
             'tests/' directory. If False, explicitly exclude the cluster.yaml files
             nested under the 'tests/' directory. Defaults to False.
@@ -48,7 +48,7 @@ def find_absolute_path_to_cluster_file(cluster_name: str, test_env: bool = False
     Returns:
         Path object: The absolute path to the cluster.yaml file for the named cluster
     """
-    if test_env:
+    if is_test:
         # We are running a test via pytest. We only want to focus on the cluster
         # folders nested under the `tests/` folder.
         filepaths = [
