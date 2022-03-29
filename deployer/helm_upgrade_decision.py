@@ -267,67 +267,96 @@ def generate_support_matrix_jobs(
     return matrix_jobs
 
 
+def move_staging_jobs_to_staging_matrix(
+    all_hub_matrix_jobs: list, support_and_staging_matrix_jobs: list
+) -> (list, list):
+    """This function's first argument is a list of dictionary jobs calculated for
+    hubs by the generate_hub_matrix_job function and filters them based on whether
+    "staging" appears in the "hub_name" field or not. The list of production hub jobs,
+    those without "staging" in their name, are returned unchanged as the first argument.
 
-def generate_support_matrix_jobs(
-    cluster_filepaths, added_or_modified_files, upgrade_support_on_all_clusters=False
-):
-    """Generate a list of dictionaries describing which clusters need to undergo a helm
-    upgrade of their support chart based on whether their cluster.yaml file or
-    associated support chart values files have been modified. To be parsed to GitHub
-    Actions in order to generate parallel jobs in a matrix.
+    The second argument is a list of dictionary jobs to upgrade the support chart on
+    clusters that require it. The filtered list of staging hubs, those with "staging"
+    in their name, is used to update these jobs with information to upgrade the staging
+    hub for that cluster. If a job for a cluster matching a staging hub does not already
+    exist in support_and_staging_matrix_jobs, one is created that *doesn't* also upgrade
+    the support chart since this is the reason the job doesn't exist in the first place.
 
-    Note: "cluster folders" are those that contain a cluster.yaml file.
+    Updated support_and_staging_matrix_jobs with the following properties are returned
+    as the second argument. Note: string representations of booleans are required to be
+    recognised by the GitHub Actions runner.
+
+    {
+        "cluster_name": str,
+        "provider": str,
+        "upgrade_support": str(bool),
+        "reason_for_support_redeploy_: str,
+        "upgrade_staging": str(bool),
+        "reason_for_staging_redeploy_: str,
+    }
 
     Args:
-        cluster_filepaths (list[path obj]): List of absolute paths to cluster folders
-            that contain added or modified files from the input of a GitHub Pull
-            Request
-        added_or_modified_files (set): A set of all added or modified files from the
-            input of a GitHub Pull Request
-        upgrade_support_on_all_clusters (bool, optional): If True, generates jobs to
-            upgrade the support chart on all clusters. This is triggered when common
-            config has been modified in the support helm chart. Defaults to False.
+        all_hub_matrix_jobs (list[dict]): A list of dictionaries representing matrix
+            jobs to upgrade deployed hubs as identified by the generate_hub_matrix_jobs
+            function.
+        support_and_staging_matrix_jobs (list[dict]): A list of dictionaries
+            representing matrix jobs to upgrade the support chart for clusters as
+            identified by the generate_support_matrix_jobs function.
 
     Returns:
-        list[dict]: A list of dictionaries. Each dictionary contains: the name of a
-            cluster and the cloud provider that cluster runs on.
+        prod_hub_matrix_jobs (list[dict]): A list of dictionaries representing matrix
+            jobs to upgrade all production hubs, i.e., those without "staging" in their
+            name.
+        support_and_staging_matrix_jobs (list[dict]): A list of dictionaries representing
+            matrix jobs to upgrade the support chart and staging hub on clusters that
+            require it.
     """
-    # Empty list to store the matrix definitions in
-    matrix_jobs = []
+    # Separate the jobs for hubs with "staging" in their name (including "dask-staging")
+    # from those without staging in their name
+    staging_hub_jobs = [
+        job for job in all_hub_matrix_jobs if "staging" in job["hub_name"]
+    ]
+    prod_hub_matrix_jobs = [
+        job for job in all_hub_matrix_jobs if "staging" not in job["hub_name"]
+    ]
 
-    if upgrade_support_on_all_clusters:
-        print_colour(
-            "Support helm chart has been modified. Generating jobs to upgrade support chart on ALL clusters."
+    # Loop over each job for a staging hub
+    for staging_job in staging_hub_jobs:
+        # Find a job in support_and_staging_matrix_jobs that is for the same cluster as
+        # the current staging hub job
+        job_idx = next(
+            (
+                idx
+                for (idx, job) in enumerate(support_and_staging_matrix_jobs)
+                if staging_job["cluster_name"] == job["cluster_name"]
+            ),
+            None,
         )
 
-        # Overwrite cluster_filepaths to contain paths to all clusters
-        if test_env == "test":
-            # We are running a test via pytest. We only want to focus on the cluster
-            # folders nested under the `tests/` folder.
-            cluster_filepaths = [
-                filepath.parent
-                for filepath in Path(os.getcwd()).glob("**/cluster.yaml")
-                if "tests/" in str(filepath)
-            ]
+        if job_idx is not None:
+            # Update the matching job in support_and_staging_matrix_jobs to hold
+            # information related to upgrading the staging hub
+            support_and_staging_matrix_jobs[job_idx]["upgrade_staging"] = "true"
+            support_and_staging_matrix_jobs[job_idx][
+                "reason_for_staging_redeploy"
+            ] = staging_job["reason_for_redeploy"]
         else:
-            # We are NOT running a test via pytest. We want to explicitly ignore the
-            # cluster folders nested under the `tests/` folder.
-            cluster_filepaths = [
-                filepath.parent
-                for filepath in Path(os.getcwd()).glob("**/cluster.yaml")
-                if "tests/" not in str(filepath)
-            ]
+            # A job with a matching cluster name doesn't exist, this is because its
+            # support chart doesn't need upgrading. We create a new job in that will
+            # upgrade the staging deployment for this cluster, but not the support
+            # chart.
+            new_job = {
+                "cluster_name": staging_job["cluster_name"],
+                "provider": staging_job["provider"],
+                "upgrade_staging": "true",
+                "reason_for_staging_redeploy": staging_job["reason_for_redeploy"],
+                "upgrade_support": "false",
+                "reason_for_support_redeploy": "",
+            }
+            support_and_staging_matrix_jobs.append(new_job)
 
-    for cluster_filepath in cluster_filepaths:
-        # Read in the cluster.yaml file
-        with open(cluster_filepath.joinpath("cluster.yaml")) as f:
-            cluster_config = yaml.load(f)
+    return prod_hub_matrix_jobs, support_and_staging_matrix_jobs
 
-        # Generate a dictionary-style job entry for this cluster
-        cluster_info = {
-            "cluster_name": cluster_config.get("name", {}),
-            "provider": cluster_config.get("provider", {}),
-        }
 
         # Double-check that support is defined for this cluster.
         support_config = cluster_config.get("support", {})
