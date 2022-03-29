@@ -263,7 +263,7 @@ def generate_support_matrix_jobs(
     return matrix_jobs
 
 
-def move_staging_jobs_to_staging_matrix(
+def move_staging_hubs_to_staging_matrix(
     all_hub_matrix_jobs: list, support_and_staging_matrix_jobs: list
 ) -> (list, list):
     """This function's first argument is a list of dictionary jobs calculated for
