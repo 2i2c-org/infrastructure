@@ -16,9 +16,7 @@ jsonschema
 # parse by a human
 rich
 
-# jhub_client, pytest, and pytest-asyncio are used for our health checks. pytest-env is
-# used to set environment variables for our tests of the deployer itself.
+# jhub_client, pytest, and pytest-asyncio are used for our health checks
 jhub-client==0.1.4
 pytest
 pytest-asyncio
-pytest-env
