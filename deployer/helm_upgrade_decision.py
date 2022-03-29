@@ -7,7 +7,6 @@ import fnmatch
 import os
 from pathlib import Path
 
-import jmespath
 from rich.console import Console
 from rich.table import Table
 from ruamel.yaml import YAML
@@ -15,12 +14,8 @@ from utils import print_colour
 
 yaml = YAML(typ="safe", pure=True)
 
-# Determine if we are running a test or not. We set this env var to "test" in the
-# pyproject.toml file so it is set when the package is tested using pytest.
-test_env = os.getenv("RUN_ENV", False)
 
-
-def discover_modified_common_files(modified_paths: list):
+def discover_modified_common_files(modified_paths: list) -> (bool, bool):
     """There are certain common files which, if modified, we should upgrade all hubs
     and/or all clusters appropriately. These common files include the helm charts we
     deploy, as well as the GitHub Actions and deployer package we use to deploy them.
@@ -35,7 +30,8 @@ def discover_modified_common_files(modified_paths: list):
         upgrade_all_hubs_on_all_clusters (bool): Whether or not all hubs on all clusters
             should be upgraded since a core piece of infrastructure has changed
     """
-    # If any of the following filepaths have changed, we should upgrade all hubs on all clusters
+    # If any of the following filepaths have changed, we should upgrade all hubs on all
+    # clusters
     common_filepaths = [
         # Filepaths related to the deployer infrastructure
         "deployer/*",
