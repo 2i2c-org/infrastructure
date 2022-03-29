@@ -101,8 +101,8 @@ This Google Cloud Service Account is managed via terraform.
 (howto:features:cloud-access:gcp:storage-buckets)=
 ### Creating storage buckets for use with the hub
 
-See [the relevant topic page](topic:features:cloud:gcp:scratch-buckets) for
-users want this!
+See [the relevant topic page](topic:features:cloud:gcp:scratch-buckets) for more information
+on why users want this!
 
 1. In the `.tfvars` file for the project in which this hub is based off
    create (or modify) the `user_buckets` variable. The config is
