@@ -24,7 +24,7 @@ except ModuleNotFoundError:
 yaml = YAML(typ="safe", pure=True)
 
 
-def discover_modified_common_files(modified_paths: list) -> (bool, bool):
+def discover_modified_common_files(modified_paths):
     """There are certain common files which, if modified, we should upgrade all hubs
     and/or all clusters appropriately. These common files include the helm charts we
     deploy, as well as the GitHub Actions and deployer package we use to deploy them.
@@ -72,7 +72,7 @@ def discover_modified_common_files(modified_paths: list) -> (bool, bool):
     return upgrade_support_on_all_clusters, upgrade_all_hubs_on_all_clusters
 
 
-def get_all_cluster_yaml_files(is_test: bool = False) -> set:
+def get_all_cluster_yaml_files(is_test=False):
     """Get a set of absolute paths to all cluster.yaml files in the repository
 
     Args:
@@ -273,8 +273,8 @@ def generate_support_matrix_jobs(
 
 
 def move_staging_hubs_to_staging_matrix(
-    all_hub_matrix_jobs: list, support_and_staging_matrix_jobs: list
-) -> (list, list):
+    all_hub_matrix_jobs, support_and_staging_matrix_jobs
+):
     """This function's first argument is a list of dictionary jobs calculated for
     hubs by the generate_hub_matrix_job function and filters them based on whether
     "staging" appears in the "hub_name" field or not. The list of production hub jobs,
@@ -364,8 +364,8 @@ def move_staging_hubs_to_staging_matrix(
 
 
 def ensure_support_staging_jobs_have_correct_keys(
-    support_and_staging_matrix_jobs: list, prod_hub_matrix_jobs: list
-) -> list:
+    support_and_staging_matrix_jobs, prod_hub_matrix_jobs
+):
     """This function ensures that all entries in support_and_staging_matrix_jobs have
     the expected upgrade_staging and eason_for_staging_redeploy keys, even if they are
     set to false/empty.
@@ -412,8 +412,8 @@ def ensure_support_staging_jobs_have_correct_keys(
 
 
 def assign_staging_jobs_for_missing_clusters(
-    support_and_staging_matrix_jobs: list, prod_hub_matrix_jobs: list
-) -> list:
+    support_and_staging_matrix_jobs, prod_hub_matrix_jobs
+):
     """Ensure that for each cluster listed in prod_hub_matrix_jobs, there is an
     associated job in support_and_staging_matrix_jobs. This is our last-hope catch-all
     to ensure there are no prod hub jobs trying to run without an associated
