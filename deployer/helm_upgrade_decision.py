@@ -47,7 +47,7 @@ def discover_modified_common_files(modified_paths):
         "requirements.txt",
         # Filepaths related to GitHub Actions infrastructure
         ".github/workflows/deploy-hubs.yaml",
-        ".github/actions/deploy/*",
+        ".github/actions/setup-deploy/*",
         # Filepaths related to helm chart infrastructure
         "helm-charts/basehub/*",
         "helm-charts/daskhub/*",
