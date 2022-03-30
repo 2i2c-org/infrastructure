@@ -18,6 +18,17 @@ from config_validation import (
     validate_support_config,
     assert_single_auth_method_enabled,
 )
+from helm_upgrade_decision import (
+    assign_staging_jobs_for_missing_clusters,
+    discover_modified_common_files,
+    ensure_support_staging_jobs_have_correct_keys,
+    get_all_cluster_yaml_files,
+    generate_hub_matrix_jobs,
+    generate_support_matrix_jobs,
+    move_staging_hubs_to_staging_matrix,
+    pretty_print_matrix_jobs,
+)
+
 
 # Without `pure=True`, I get an exception about str / byte issues
 yaml = YAML(typ="safe", pure=True)
@@ -210,3 +221,113 @@ def deploy(cluster_name, hub_name, skip_hub_health_test, config_path):
                     f"{i+1} / {len(hubs)}: Deploying hub {hub.spec['name']}..."
                 )
                 hub.deploy(k, SECRET_KEY, skip_hub_health_test)
+
+
+def generate_helm_upgrade_jobs(changed_filepaths, pretty_print=False):
+    """Analyse added or modified files from a GitHub Pull Request and decide which
+    clusters and/or hubs require helm upgrades to be performed for their *hub helm
+    charts or the support helm chart.
+
+    Args:
+        changed_filepaths (list[str]): A list of files that have been added or
+            modified by a GitHub Pull Request
+        pretty_print (bool, optional): If True, output a human readable table of jobs
+            to be run using rich. If False, output a list of dictionaries to be
+            passed to a GitHub Actions matrix job. Defaults to False.
+    """
+    (
+        upgrade_support_on_all_clusters,
+        upgrade_all_hubs_on_all_clusters,
+    ) = discover_modified_common_files(changed_filepaths)
+
+    # Get a list of filepaths to all cluster.yaml files in the repo
+    cluster_files = get_all_cluster_yaml_files()
+
+    # Empty lists to store job definitions in
+    prod_hub_matrix_jobs = []
+    support_and_staging_matrix_jobs = []
+
+    for cluster_file in cluster_files:
+        # Read in the cluster.yaml file
+        with open(cluster_file) as f:
+            cluster_config = yaml.load(f)
+
+        # Get cluster's name and its cloud provider
+        cluster_name = cluster_config.get("name", {})
+        provider = cluster_config.get("provider", {})
+
+        # Generate template dictionary for all jobs associated with this cluster
+        cluster_info = {
+            "cluster_name": cluster_name,
+            "provider": provider,
+            "reason_for_redeploy": "",
+        }
+
+        # Check if this cluster file has been modified. If so, set boolean flags to True
+        intersection = set(changed_filepaths).intersection([str(cluster_file)])
+        if intersection:
+            print_colour(
+                f"This cluster.yaml file has been modified. Generating jobs to upgrade all hubs and the support chart on THIS cluster: {cluster_name}"
+            )
+            upgrade_all_hubs_on_this_cluster = True
+            upgrade_support_on_this_cluster = True
+            cluster_info["reason_for_redeploy"] = "cluster.yaml file was modified"
+        else:
+            upgrade_all_hubs_on_this_cluster = False
+            upgrade_support_on_this_cluster = False
+
+        # Generate a job matrix of all hubs that need upgrading on this cluster
+        prod_hub_matrix_jobs.extend(
+            generate_hub_matrix_jobs(
+                cluster_file,
+                cluster_config,
+                cluster_info,
+                set(changed_filepaths),
+                upgrade_all_hubs_on_this_cluster=upgrade_all_hubs_on_this_cluster,
+                upgrade_all_hubs_on_all_clusters=upgrade_all_hubs_on_all_clusters,
+            )
+        )
+
+        # Generate a job matrix for support chart upgrades
+        support_and_staging_matrix_jobs.extend(
+            generate_support_matrix_jobs(
+                cluster_file,
+                cluster_config,
+                cluster_info,
+                set(changed_filepaths),
+                upgrade_support_on_this_cluster=upgrade_support_on_this_cluster,
+                upgrade_support_on_all_clusters=upgrade_support_on_all_clusters,
+            )
+        )
+
+    # Clean up the matrix jobs
+    (
+        prod_hub_matrix_jobs,
+        support_and_staging_matrix_jobs,
+    ) = move_staging_hubs_to_staging_matrix(
+        prod_hub_matrix_jobs, support_and_staging_matrix_jobs
+    )
+    support_and_staging_matrix_jobs = ensure_support_staging_jobs_have_correct_keys(
+        support_and_staging_matrix_jobs, prod_hub_matrix_jobs
+    )
+    support_and_staging_matrix_jobs = assign_staging_jobs_for_missing_clusters(
+        support_and_staging_matrix_jobs, prod_hub_matrix_jobs
+    )
+
+    # The existence of the CI environment variable is an indication that we are running
+    # in an GitHub Actions workflow
+    # https://docs.github.com/en/actions/using-workflows/workflow-syntax-for-github-actions#example-defining-outputs-for-a-job
+    # We should always default to pretty printing the results of the decision logic
+    # if we are not running in GitHub Actions, even when the --pretty-print flag has
+    # not been parsed on the command line. This will avoid errors trying to set CI
+    # output variables in an environment that doesn't exist.
+    ci_env = os.environ.get("CI", False)
+    if pretty_print or not ci_env:
+        pretty_print_matrix_jobs(prod_hub_matrix_jobs, support_and_staging_matrix_jobs)
+    else:
+        # Add these matrix jobs as output variables for use in another job
+        # https://docs.github.com/en/actions/using-workflows/workflow-syntax-for-github-actions
+        print(f"::set-output name=prod-hub-matrix-jobs::{prod_hub_matrix_jobs}")
+        print(
+            f"::set-output name=support-and-staging-matrix-jobs::{support_and_staging_matrix_jobs}"
+        )

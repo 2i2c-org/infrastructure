@@ -81,8 +81,13 @@ import subprocess
 
 
 def render_hubs():
-    # Grab the latest list of clusters defined in infrastructure/
-    clusters = Path("../config/clusters").glob("**/*cluster.yaml")
+    # Grab the latest list of clusters defined in infrastructure/ explicitly ignoring
+    # the test clusters in the ./tests directory
+    clusters = [
+        filepath
+        for filepath in Path("../config/clusters").glob("**/*cluster.yaml")
+        if "tests/" not in str(filepath)
+    ]
 
     hub_list = []
     for cluster_info in clusters:

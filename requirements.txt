@@ -12,7 +12,11 @@ auth0-python
 # jsonschema is used for validating cluster.yaml configurations
 jsonschema
 
-# jhub_client, pytest, and pytest_asyncio are used for our health checks
+# rich is used for pretty printing outputs that would otherwise be difficult to
+# parse by a human
+rich
+
+# jhub_client, pytest, and pytest-asyncio are used for our health checks
 jhub-client==0.1.4
 pytest
 pytest-asyncio
