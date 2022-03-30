@@ -28,3 +28,23 @@ dask_nodes = {
 }
 
 user_buckets = []
+
+
+hub_cloud_permissions = {
+  "dask-staging" : {
+    requestor_pays : true,
+    bucket_admin_access: [],
+    hub_namespace: "dask-staging"
+  },
+  "ohw" : {
+    requestor_pays : true,
+    bucket_admin_access: [],
+    hub_namespace: "ohw"
+  },
+  # Can't use full name here as it violates line length restriction of service account id
+  "catalyst-coop" : {
+    requestor_pays : true,
+    bucket_admin_access: [],
+    hub_namespace: "catalyst-cooperative"
+  }
+}
