@@ -77,50 +77,13 @@ jobs:
             hub_config:
               - "config/clusters/${{ matrix.cluster_name }}/**"
 
-      - name: Setup gcloud
-        if: |
-          (steps.base_files.outputs.files == 'true') ||
-          (steps.config_files.outputs.hub_config == 'true')
-        uses: google-github-actions/setup-gcloud@v0
-        with:
-          version: "290.0.1"
-          # This is used for KMS only
-          project_id: two-eye-two-see
-          service_account_key: ${{ secrets.GCP_KMS_DECRYPTOR_KEY }}
-          export_default_credentials: true
-
-      - name: Setup helm
-        if: |
-          (steps.base_files.outputs.files == 'true') ||
-          (steps.config_files.outputs.hub_config == 'true')
-        uses: azure/setup-helm@v2.0
-
-      - name: Setup sops
-        if: |
-          (steps.base_files.outputs.files == 'true') ||
-          (steps.config_files.outputs.hub_config == 'true')
-        uses: mdgreenwald/mozilla-sops-action@v1
-        with:
-          version: v3.7.1
-
-      - name: Setup kops
-        if: |
-          ((steps.base_files.outputs.files == 'true') ||
-          (steps.config_files.outputs.hub_config == 'true')) &&
-          (matrix.provider == 'aws')
-        run: |
-          curl -Lo /tmp/kops https://github.com/kubernetes/kops/releases/download/$KOPS_VERSION/kops-linux-amd64
-          chmod +x /tmp/kops
-          sudo mv /tmp/kops /usr/local/bin/kops
-        env:
-          KOPS_VERSION: "v1.21.1"
-
       - name: Deploy ${{ matrix.cluster_name }}
         if: |
           (steps.base_files.outputs.files == 'true') ||
           (steps.config_files.outputs.hub_config == 'true')
         uses: ./.github/actions/deploy
         with:
+          provider: ${{ matrix.provider }}
           cluster: ${{ matrix.cluster_name }}
         env:
           TERM: xterm

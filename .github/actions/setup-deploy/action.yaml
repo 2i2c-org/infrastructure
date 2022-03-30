@@ -1,6 +1,10 @@
 name: "Deploy prerequisites"
 description: "Prerequisites needed to deploy hubs in a 2i2c cluster"
 inputs:
+  provider:
+    description: "Cloud provider a cluster runs on"
+    required: true
+    default: "gcp"
   cluster:
     description: "Cluster name"
     required: true
@@ -8,22 +12,55 @@ inputs:
 runs:
   using: "composite"
   steps:
+    - name: Checkout repo
+      uses: actions/checkout@v3
+
+    - name: Setup gcloud
+      uses: google-github-actions/setup-gcloud@v0
+      with:
+        version: "290.0.1"
+        # This is used for KMS only
+        project_id: two-eye-two-see
+        service_account_key: ${{ secrets.GCP_KMS_DECRYPTOR_KEY }}
+        export_default_credentials: true
+
     - name: Get gcloud info
       run: gcloud info
       shell: bash
+
     - name: Setup gcloud auth for docker
       # FIXME: Add more auth providers & registries here as needed
       run: |
         gcloud auth configure-docker us-central1-docker.pkg.dev
       shell: bash
+
+    - name: Setup helm
+      uses: azure/setup-helm@v2.0
+
+    - name: Setup sops
+      uses: mdgreenwald/mozilla-sops-action@v1
+      with:
+        version: v3.7.1
+
+    - name: Setup kops
+      if: inputs.provider == 'aws'
+      run: |
+        curl -Lo /tmp/kops https://github.com/kubernetes/kops/releases/download/$KOPS_VERSION/kops-linux-amd64
+        chmod +x /tmp/kops
+        sudo mv /tmp/kops /usr/local/bin/kops
+      env:
+        KOPS_VERSION: "v1.21.1"
+
     - name: Setup dependencies
       run: |
         python3 -m pip install -r requirements.txt
       shell: bash
+
     - name: Deploy support components
       run: |
         python3 deployer deploy-support ${{ inputs.cluster }}
       shell: bash
+
     - name: Deploy and test hubs
       run: |
         python3 deployer deploy ${{ inputs.cluster }}
