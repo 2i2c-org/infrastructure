@@ -28,6 +28,14 @@ on:
 # https://github.blog/changelog/2021-04-19-github-actions-limit-workflow-run-or-job-concurrency/
 concurrency: deploy
 
+# This is the maximum number of matrix jobs to run in parallel. By default, GitHub
+# maximises this number based on the available runners on GitHub-hosted virtual machines
+# https://docs.github.com/en/actions/using-workflows/workflow-syntax-for-github-actions#jobsjob_idstrategymax-parallel
+# The number 20 was chosen arbitrarily and we should change this to optimise our workflow
+# as needed.
+env:
+  max-parallel: 20
+
 jobs:
   generate-jobs:
     runs-on: ubuntu-latest
@@ -66,70 +74,35 @@ jobs:
         run: |
           python deployer generate-helm-upgrade-jobs --pretty-print "${{ steps.changed-files.outputs.added_modified }}"
 
-  deploy:
+  upgrade-support-and-staging-jobs:
     runs-on: ubuntu-latest
+    needs: generate-jobs
     strategy:
       # Don't stop other deployments if one fails
       fail-fast: false
+      # Maximum number of jobs to run in parallel
+      max-parallel: ${{ env.max-parallel }}
       matrix:
-        include:
-          # To enable auto-deployments for other clusters,
-          # add its name and provider to the list
-          - cluster_name: 2i2c
-            provider: gcp
-          - cluster_name: cloudbank
-            provider: gcp
-          - cluster_name: carbonplan
-            provider: aws
-          - cluster_name: farallon
-            provider: aws
-          - cluster_name: openscapes
-            provider: aws
-          - cluster_name: uwhackweeks
-            provider: aws
-          - cluster_name: meom-ige
-            provider: gcp
-          - cluster_name: pangeo-hubs
-            provider: gcp
-          - cluster_name: leap
-            provider: gcp
-          - cluster_name: utoronto
-            provider: kubeconfig
-          - cluster_name: azure.carbonplan
-            provider: kubeconfig
+        jobs: ${{ fromJson(needs.generate-jobs.outputs.support-and-staging-matrix-jobs) }}
 
     steps:
-      - name: Checkout repo
-        uses: actions/checkout@v3
-
-      - name: Check if any of our base files have changed
-        uses: dorny/paths-filter@v2
-        id: base_files
-        with:
-          filters: |
-            files:
-              - "deployer/**"
-              - "helm-charts/**"
-              - "requirements.txt"
-              - "config/secrets.yaml"
-              - ".github/workflows/deploy-hubs.yaml"
-              - ".github/actions/deploy/*"
-
-      - name: Check which cluster directory has changes (if any)
-        uses: dorny/paths-filter@v2
-        id: config_files
-        with:
-          filters: |
-            hub_config:
-              - "config/clusters/${{ matrix.cluster_name }}/**"
-
-      - name: Deploy ${{ matrix.cluster_name }}
-        if: |
-          (steps.base_files.outputs.files == 'true') ||
-          (steps.config_files.outputs.hub_config == 'true')
-        uses: ./.github/actions/deploy
+      - name: Setup deploy for ${{ matrix.jobs.cluster_name }}
+        uses: ./.github/actions/setup-deploy
         with:
           provider: ${{ matrix.provider }}
           cluster: ${{ matrix.cluster_name }}
-        env:
-          TERM: xterm
+
+      - name: Upgrade support chart on cluster ${{ matrix.jobs.cluster_name }}
+        if: matrix.jobs.upgrade_support == 'true'
+        run: |
+          python deployer deploy-support ${{ matrix.jobs.cluster_name }}
+
+      - name: Upgrade staging hub on cluster ${{ matrix.jobs.cluster_name }}
+        if: matrix.jobs.upgrade_staging == 'true'
+        run: |
+          python deployer deploy ${{ matrix.jobs.cluster_name }} staging
+
+      - name: Upgrade dask-staging hub on cluster ${{ matrix.jobs.cluster_name }}
+        if: matrix.jobs.upgrade_staging == 'true' && matrix.jobs.cluster_name == '2i2c'
+        run: |
+          python deployer deploy ${{ matrix.jobs.cluster_name }} dask-staging
