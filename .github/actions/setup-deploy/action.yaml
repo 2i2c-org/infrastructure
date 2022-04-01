@@ -5,10 +5,6 @@ inputs:
     description: "Cloud provider a cluster runs on"
     required: true
     default: "gcp"
-  cluster:
-    description: "Cluster name"
-    required: true
-    default: "2i2c"
 runs:
   using: "composite"
   steps:
