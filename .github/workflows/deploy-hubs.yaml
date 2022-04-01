@@ -28,14 +28,6 @@ on:
 # https://github.blog/changelog/2021-04-19-github-actions-limit-workflow-run-or-job-concurrency/
 concurrency: deploy
 
-# This is the maximum number of matrix jobs to run in parallel. By default, GitHub
-# maximises this number based on the available runners on GitHub-hosted virtual machines
-# https://docs.github.com/en/actions/using-workflows/workflow-syntax-for-github-actions#jobsjob_idstrategymax-parallel
-# The number 20 was chosen arbitrarily and we should change this to optimise our workflow
-# as needed.
-env:
-  max-parallel: 20
-
 jobs:
   generate-jobs:
     runs-on: ubuntu-latest
@@ -83,8 +75,6 @@ jobs:
     strategy:
       # Don't stop other deployments if one fails
       fail-fast: false
-      # Maximum number of jobs to run in parallel
-      max-parallel: ${{ env.max-parallel }}
       matrix:
         jobs: ${{ fromJson(needs.generate-jobs.outputs.support-and-staging-matrix-jobs) }}
 
@@ -119,8 +109,6 @@ jobs:
     strategy:
       # Don't stop other deployments if one fails
       fail-fast: false
-      # Maximum number of jobs to run in parallel
-      max-parallel: ${{ env.max-parallel }}
       matrix:
         jobs: ${{ fromJson(needs.generate-jobs.outputs.prob-hub-matrix-jobs) }}
 
