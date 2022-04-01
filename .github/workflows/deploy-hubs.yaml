@@ -106,3 +106,25 @@ jobs:
         if: matrix.jobs.upgrade_staging == 'true' && matrix.jobs.cluster_name == '2i2c'
         run: |
           python deployer deploy ${{ matrix.jobs.cluster_name }} dask-staging
+
+  upgrade-prod-hub-jobs:
+    runs-on: ubuntu-latest
+    needs: [generate-jobs, upgrade-support-and-staging-jobs]
+    strategy:
+      # Don't stop other deployments if one fails
+      fail-fast: false
+      # Maximum number of jobs to run in parallel
+      max-parallel: ${{ env.max-parallel }}
+      matrix:
+        jobs: ${{ fromJson(needs.generate-jobs.outputs.prob-hub-matrix-jobs) }}
+
+    steps:
+      - name: Setup deploy for ${{ matrix.jobs.cluster_name }}
+        uses: ./.github/actions/setup-deploy
+        with:
+          provider: ${{ matrix.provider }}
+          cluster: ${{ matrix.cluster_name }}
+
+      - name: Upgrade  and test ${{ matrix.jobs.hub_name }} on cluster ${{ matrix.jobs.cluster_name }}
+        run: |
+          python deployer deploy ${{ matrix.jobs.cluster_name }} ${{ matrix.jobs.hub_name }}
