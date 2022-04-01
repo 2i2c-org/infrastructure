@@ -90,7 +90,6 @@ jobs:
         with:
           provider: ${{ matrix.provider }}
 
-
       - name: Upgrade support chart on cluster ${{ matrix.jobs.cluster_name }}
         if: matrix.jobs.upgrade_support == 'true'
         run: |
