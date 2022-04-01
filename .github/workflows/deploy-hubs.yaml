@@ -21,7 +21,6 @@ on:
       - .github/workflows/deploy-hubs.yaml
       - .github/actions/setup-deploy/**
       - "**.yaml"
-  workflow_dispatch:
 
 # When multiple PRs triggering this workflow are merged, queue them instead
 # of running them in parallel
@@ -108,7 +107,8 @@ jobs:
           python deployer deploy ${{ matrix.jobs.cluster_name }} dask-staging
 
   # TODO: Add in "job 3a" where the matrix for prod jobs is edited to exclude any clusters
-  # that failed the preceding upgrade-support-and-staging job.
+  # that failed the preceding upgrade-support-and-staging job. See discussion in:
+  # https://github.com/2i2c-org/infrastructure/issues/1131
 
   upgrade-prod-hubs:
     runs-on: ubuntu-latest
