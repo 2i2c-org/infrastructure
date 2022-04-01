@@ -21,7 +21,6 @@ on:
       - .github/workflows/deploy-hubs.yaml
       - .github/actions/setup-deploy/**
       - "**.yaml"
-  workflow_dispatch:
 
 # When multiple PRs triggering this workflow are merged, queue them instead
 # of running them in parallel
