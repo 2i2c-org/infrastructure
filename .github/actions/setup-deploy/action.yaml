@@ -51,17 +51,12 @@ runs:
       env:
         KOPS_VERSION: "v1.21.1"
 
+    - name: Setup Python 3.9
+      uses: actions/setup-python@v3
+      with:
+        python-version: "3.9"
+
     - name: Setup dependencies
       run: |
-        python3 -m pip install -r requirements.txt
-      shell: bash
-
-    - name: Deploy support components
-      run: |
-        python3 deployer deploy-support ${{ inputs.cluster }}
-      shell: bash
-
-    - name: Deploy and test hubs
-      run: |
-        python3 deployer deploy ${{ inputs.cluster }}
+        python -m pip install -r requirements.txt
       shell: bash
