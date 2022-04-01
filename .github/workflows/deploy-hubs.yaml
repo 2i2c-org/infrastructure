@@ -10,8 +10,6 @@ on:
       - .github/workflows/deploy-hubs.yaml
       - .github/actions/setup-deploy/**
       - "**.yaml"
-    tags:
-      - "**"
   pull_request:
     branches:
       - master
