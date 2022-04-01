@@ -50,7 +50,7 @@ jobs:
       - name: Install Python 3.9
         uses: actions/setup-python@v3
         with:
-          python-version: 3.9
+          python-version: "3.9"
 
       - name: Install dependencies
         run: |
@@ -69,12 +69,15 @@ jobs:
         run: |
           python deployer generate-helm-upgrade-jobs "${{ steps.changed-files.outputs.added_modified }}"
 
+      # TODO: Post the output of this step as a comment on the Pull Request. Do this in
+      # a Netlify-style way where if a comment already exists, it is updated instead
+      # of generating a new comment.
       - name: Pretty print matrix jobs
         if: github.event_name != 'pull_request'
         run: |
           python deployer generate-helm-upgrade-jobs --pretty-print "${{ steps.changed-files.outputs.added_modified }}"
 
-  upgrade-support-and-staging-jobs:
+  upgrade-support-and-staging:
     runs-on: ubuntu-latest
     needs: generate-jobs
     strategy:
@@ -107,9 +110,12 @@ jobs:
         run: |
           python deployer deploy ${{ matrix.jobs.cluster_name }} dask-staging
 
-  upgrade-prod-hub-jobs:
+# TODO: Add in "job 3a" where the matrix for prod jobs is edited to exclude any clusters
+# that failed the preceding upgrade-support-and-staging job.
+
+  upgrade-prod-hubs:
     runs-on: ubuntu-latest
-    needs: [generate-jobs, upgrade-support-and-staging-jobs]
+    needs: [generate-jobs, upgrade-support-and-staging]
     strategy:
       # Don't stop other deployments if one fails
       fail-fast: false
