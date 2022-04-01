@@ -107,8 +107,8 @@ jobs:
         run: |
           python deployer deploy ${{ matrix.jobs.cluster_name }} dask-staging
 
-# TODO: Add in "job 3a" where the matrix for prod jobs is edited to exclude any clusters
-# that failed the preceding upgrade-support-and-staging job.
+  # TODO: Add in "job 3a" where the matrix for prod jobs is edited to exclude any clusters
+  # that failed the preceding upgrade-support-and-staging job.
 
   upgrade-prod-hubs:
     runs-on: ubuntu-latest
