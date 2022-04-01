@@ -38,6 +38,8 @@ jobs:
     steps:
       - name: Checkout repo
         uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
 
       - name: Install Python 3.9
         uses: actions/setup-python@v3
