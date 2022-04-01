@@ -130,6 +130,6 @@ jobs:
         with:
           provider: ${{ matrix.provider }}
 
-      - name: Upgrade  and test ${{ matrix.jobs.hub_name }} on cluster ${{ matrix.jobs.cluster_name }}
+      - name: Upgrade and test ${{ matrix.jobs.hub_name }} on cluster ${{ matrix.jobs.cluster_name }}
         run: |
           python deployer deploy ${{ matrix.jobs.cluster_name }} ${{ matrix.jobs.hub_name }}
