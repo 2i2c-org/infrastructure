@@ -15,9 +15,6 @@ core_node_machine_type = "g1-small"
 # Single-tenant cluster, network policy not needed
 enable_network_policy    = false
 
-# Single tenant cluster, so bucket access is provided via
-# metadata concealment + node SA. Config Connector not needed.
-config_connector_enabled = false
 
 notebook_nodes = {
   "small" : {
@@ -91,3 +88,16 @@ user_buckets = [
   "scratch",
   "data"
 ]
+
+hub_cloud_permissions = {
+  "staging" : {
+    requestor_pays : true,
+    bucket_admin_access: ["scratch", "data"],
+    hub_namespace: "staging"
+  },
+  "prod" : {
+    requestor_pays : true,
+    bucket_admin_access: ["scratch", "data"],
+    hub_namespace: "prod"
+  }
+}

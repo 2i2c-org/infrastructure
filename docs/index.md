@@ -24,6 +24,7 @@ How-To guides answer the question 'How do I...?' for a lot of topics.
 :maxdepth: 2
 :caption: How-to guides
 howto/configure/index
+howto/features/index
 howto/customize/index
 howto/operate/index
 ```
@@ -36,7 +37,8 @@ Topic guides go more in-depth on a particular topic.
 :caption: Topic guides
 :maxdepth: 2
 topic/config.md
-topic/cloud-access.md
+topic/cloud-auth.md
+topic/features.md
 topic/credits.md
 topic/hub-helm-charts.md
 topic/storage-layer.md

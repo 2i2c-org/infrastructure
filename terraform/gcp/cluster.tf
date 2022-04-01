@@ -1,5 +1,27 @@
+resource "google_service_account" "cluster_sa" {
+  account_id   = "${var.prefix}-cluster-sa"
+  display_name = "Service account used by nodes of cluster ${var.prefix}"
+  project      = var.project_id
+}
+
+resource "google_project_iam_member" "cluster_sa_roles" {
+  # https://cloud.google.com/kubernetes-engine/docs/how-to/hardening-your-cluster
+  # has information on why the cluster SA needs these rights
+  for_each = toset([
+    "roles/logging.logWriter",
+    "roles/monitoring.metricWriter",
+    "roles/monitoring.viewer",
+    "roles/stackdriver.resourceMetadata.writer",
+    "roles/artifactregistry.reader"
+  ])
+
+  project = var.project_id
+  role    = each.value
+  member  = "serviceAccount:${google_service_account.cluster_sa.email}"
+}
+
 resource "google_container_cluster" "cluster" {
-  # config_connector_config is in beta
+  # Setting cluster autoscaling profile is in google-beta
   provider = google-beta
 
   name     = "${var.prefix}-cluster"
@@ -61,18 +83,10 @@ resource "google_container_cluster" "cluster" {
       // This isn't used anywhere, so let's turn this off
       disabled = true
     }
-    config_connector_config {
-      enabled = var.config_connector_enabled
-    }
   }
 
-  dynamic "workload_identity_config" {
-    # Setup workload identity only if we're using config connector, otherwise
-    # just metadata concealment is used
-    for_each = var.config_connector_enabled == "" ? [] : [1]
-    content {
-      workload_pool = "${var.project_id}.svc.id.goog"
-    }
+  workload_identity_config {
+    workload_pool = "${var.project_id}.svc.id.goog"
   }
 
   release_channel {
@@ -208,7 +222,7 @@ resource "google_container_node_pool" "notebook" {
       # to expose the node CA to users safely.
       # FIXME: This should be a bit more fine-grained - it should be possible to disable
       # config connector and completely hide all node metadata from user pods
-      mode = var.config_connector_enabled ? "GKE_METADATA" : "MODE_UNSPECIFIED"
+      mode = "GKE_METADATA"
     }
     labels = merge({
       # Notebook pods and dask schedulers can exist here
@@ -278,7 +292,7 @@ resource "google_container_node_pool" "dask_worker" {
       # to expose the node CA to users safely.
       # FIXME: This should be a bit more fine-grained - it should be possible to disable
       # config connector and completely hide all node metadata from user pods
-      mode = var.config_connector_enabled ? "GKE_METADATA" : "MODE_UNSPECIFIED"
+      mode = "GKE_METADATA"
     }
     labels = merge({
       "k8s.dask.org/node-purpose" = "worker",

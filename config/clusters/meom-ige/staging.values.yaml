@@ -1,0 +1,4 @@
+basehub:
+  userServiceAccount:
+    annotations:
+      iam.gke.io/gcp-service-account: meom-ige-staging-workload-sa@meom-ige-cnrs.iam.gserviceaccount.com

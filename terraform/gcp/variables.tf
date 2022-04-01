@@ -51,25 +51,6 @@ variable "config_connector_enabled" {
   EOT
 }
 
-variable "cluster_sa_roles" {
-  type = set(string)
-  default = [
-    "roles/logging.logWriter",
-    "roles/monitoring.metricWriter",
-    "roles/monitoring.viewer",
-    "roles/stackdriver.resourceMetadata.writer",
-    "roles/artifactregistry.reader"
-  ]
-  description = <<-EOT
-  List of roles granted to the SA assumed by cluster nodes.
-
-  The defaults grant just enough access for the components on the node
-  to write metrics & logs to stackdriver, and pull images from artifact registry.
-
-  https://cloud.google.com/kubernetes-engine/docs/how-to/hardening-your-cluster
-  has more information.
-  EOT
-}
 
 variable "cd_sa_roles" {
   type = set(string)
@@ -272,5 +253,22 @@ variable "max_cpu" {
   cluster to which the cluster can scale.
 
   Default = 1000
+  EOT
+}
+
+variable "hub_cloud_permissions" {
+  type        = map(object({ requestor_pays : bool, bucket_admin_access : set(string), hub_namespace : string }))
+  default     = {}
+  description = <<-EOT
+  Map of cloud permissions given to a particular hub
+
+  Key is name of the hub namespace in the cluster, and values are particular
+  permissions users running on those hubs should have. Currently supported are:
+
+  1. requestor_pays: Identify as coming from the google cloud project when accessing
+     storage buckets marked as  https://cloud.google.com/storage/docs/requester-pays.
+     This *potentially* incurs cost for us, the originating project, so opt-in.
+  2. bucket_admin_access: List of GCS storage buckets that users on this hub should have read
+     and write permissions for.
   EOT
 }

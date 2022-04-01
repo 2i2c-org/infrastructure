@@ -12,10 +12,32 @@ resource "google_storage_bucket" "user_buckets" {
   labels = {}
 }
 
-resource "google_storage_bucket_iam_member" "member" {
+locals {
+  # Nested for loop, thanks to https://www.daveperrett.com/articles/2021/08/19/nested-for-each-with-terraform/
+  bucket_permissions = distinct(flatten([
+    for hub_name, permissions in var.hub_cloud_permissions : [
+      for bucket_name in permissions.bucket_admin_access : {
+        hub_name    = hub_name
+        bucket_name = bucket_name
+      }
+    ]
+  ]))
+}
 
-  for_each = var.user_buckets
-  bucket   = google_storage_bucket.user_buckets[each.key].name
+resource "google_storage_bucket_iam_member" "member" {
+  for_each = { for bp in local.bucket_permissions : "${bp.hub_name}.${bp.bucket_name}" => bp }
+  bucket   = google_storage_bucket.user_buckets[each.value.bucket_name].name
   role     = "roles/storage.admin"
-  member   = "serviceAccount:${google_service_account.cluster_sa.email}"
+  member   = "serviceAccount:${google_service_account.workload_sa[each.value.hub_name].email}"
+}
+
+output "buckets" {
+  value       = { for b in var.user_buckets : b => google_storage_bucket.user_buckets[b].name }
+  description = <<-EOT
+  List of GCS buckets created for this cluster
+
+  Since GCS bucket names need to be globally unique, we prefix each item in
+  the user_buckets variable with the prefix variable. This output displays
+  the full name of all GCS buckets created conveniently.
+  EOT
 }
