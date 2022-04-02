@@ -101,20 +101,25 @@ def render_hubs():
         # Pull support chart information to populate fields (if it exists)
         support_files = cluster.get("support", {}).get("helm_chart_values_files", None)
 
+        # Incase we don't find any Grafana config, use an empty string as default
+        grafana_url = ""
+
+        # Loop through support files, look for Grafana config, and grab the URL
         if support_files is not None:
-            # FIXME: If there's more than one support values file defined, this will break
             for support_file in support_files:
                 with open(cluster_path.joinpath(support_file)) as f:
                     support_config = safe_load(f)
 
-            grafana_url = (
-                support_config.get("grafana", {}).get("ingress", {}).get("hosts", "")
-            )
-            if isinstance(grafana_url, list):
-                grafana_url = grafana_url[0]
-                grafana_url = f"[{grafana_url}](http://{grafana_url})"
-        else:
-            grafana_url = ""
+                grafana_url = (
+                    support_config.get("grafana", {})
+                    .get("ingress", {})
+                    .get("hosts", "")
+                )
+                # If we find a grafana url, set it here and break the loop, we are done
+                if isinstance(grafana_url, list):
+                    grafana_url = grafana_url[0]
+                    grafana_url = f"[{grafana_url}](http://{grafana_url})"
+                    break
 
         # For each hub in cluster, grab its metadata and add it to the list
         for hub in cluster["hubs"]:
