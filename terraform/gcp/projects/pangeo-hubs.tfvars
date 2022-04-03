@@ -7,14 +7,15 @@ enable_private_cluster = true
 enable_network_policy  = true
 
 # Some hubs want a storage bucket, so we need to have config connector enabled
-config_connector_enabled = true
+config_connector_enabled = false
 
 # Setup a filestore for in-cluster NFS
 enable_filestore = true
 filestore_capacity_gb = 2048
 
 user_buckets = [
-  "pangeo-scratch"
+  "scratch",
+  "scratch-staging"
 ]
 
 # Setup notebook node pools
@@ -57,5 +58,18 @@ dask_nodes = {
     max : 100,
     machine_type : "n1-standard-16",
     labels: {},
+  },
+}
+
+hub_cloud_permissions = {
+  "staging" : {
+    requestor_pays : true,
+    bucket_admin_access: ["scratch-staging"],
+    hub_namespace: "staging"
+  },
+  "prod" : {
+    requestor_pays : true,
+    bucket_admin_access: ["scratch"],
+    hub_namespace: "prod"
   },
 }

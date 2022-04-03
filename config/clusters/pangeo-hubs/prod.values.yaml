@@ -1,7 +1,7 @@
 basehub:
   userServiceAccount:
     annotations:
-      iam.gke.io/gcp-service-account: prod-user-sa@pangeo-integration-te-3eea.iam.gserviceaccount.com
+      iam.gke.io/gcp-service-account: pangeo-hubs-prod@pangeo-integration-te-3eea.iam.gserviceaccount.com
   jupyterhub:
     hub:
       config:
