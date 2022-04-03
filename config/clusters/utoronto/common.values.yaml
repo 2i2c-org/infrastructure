@@ -48,6 +48,9 @@ jupyterhub:
               ongoing basis. To reach the support site, please visit: <a href="https://act.utoronto.ca/jupyterhub-support">https://act.utoronto.ca/jupyterhub-support/</a>.
             </div>
   singleuser:
+    memory:
+      limit: 2G
+      guarantee: 2G
     extraFiles:
       github-app-private-key.pem:
         mountPath: /etc/github/github-app-private-key.pem
