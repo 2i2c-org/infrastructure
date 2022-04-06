@@ -36,6 +36,8 @@ jobs:
       - name: Checkout repo
         uses: actions/checkout@v3
         with:
+          # Fetch-depth is required for the jitterbit/get-changed-files action
+          # https://github.com/jitterbit/get-changed-files/issues/24#issuecomment-1047442168
           fetch-depth: 0
 
       - name: Install Python 3.9
@@ -98,7 +100,7 @@ jobs:
         run: |
           python deployer deploy ${{ matrix.jobs.cluster_name }} staging
 
-      - name: Upgrade dask-staging hub on cluster ${{ matrix.jobs.cluster_name }}
+      - name: Upgrade dask-staging hub on cluster ${{ matrix.jobs.cluster_name }} if it exists
         if: matrix.jobs.upgrade_staging == 'true' && matrix.jobs.cluster_name == '2i2c'
         run: |
           python deployer deploy ${{ matrix.jobs.cluster_name }} dask-staging
@@ -110,7 +112,7 @@ jobs:
   upgrade-prod-hubs:
     runs-on: ubuntu-latest
     needs: [generate-jobs, upgrade-support-and-staging]
-    # Only run this job on pushes to the default branch and when the job output is not
+    # Only run this job on pushes to the default branch and when the `generate-jobs` job output is not
     # an empty list
     if: |
       (github.event_name == 'push' && contains(github.ref, 'master')) &&
