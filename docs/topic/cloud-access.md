@@ -109,8 +109,6 @@ To do so, follow these steps:
    AWS accounts we create.
 4. Create the account! They'll receive an email with appropriate instructions.
 
-2. Double check that the **quota** for this account is large enough to withstand expected usage. If not, request a quota via AWS support.
-
 ### Access individual AWS accounts
 
 For AWS accounts that are managed by clients, we use an individual AWS account for each team member, and ask the client to provide us access for each person.
