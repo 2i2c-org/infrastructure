@@ -31,7 +31,8 @@ assignees: ''
 
 **Before the event**
 
-- [ ] Dates confirmed with the community representative and added to Hub Events Calendar
+- [ ] Dates confirmed with the community representative and added to Hub Events Calendar.
+- [ ] Quotas from the cloud provider are high-enough to handle expected usage.
 - [ ] **One week before event** Hub is running.
 - [ ] Confirm with Community Representative that their workflows function as expected.
   - <details>
@@ -48,7 +49,6 @@ assignees: ''
     ```
     
     </details>  
-
 - [ ] **1 day before event**, either a separate nodegroup is provisioned for the event or the cluster is scaled up.
 
 **During and after event**
