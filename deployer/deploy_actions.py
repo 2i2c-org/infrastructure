@@ -314,17 +314,16 @@ def generate_helm_upgrade_jobs(changed_filepaths, pretty_print=False):
         support_and_staging_matrix_jobs, prod_hub_matrix_jobs
     )
 
+    # Pretty print the jobs using rich
+    pretty_print_matrix_jobs(prod_hub_matrix_jobs, support_and_staging_matrix_jobs)
+
     # The existence of the CI environment variable is an indication that we are running
     # in an GitHub Actions workflow
     # https://docs.github.com/en/actions/using-workflows/workflow-syntax-for-github-actions#example-defining-outputs-for-a-job
-    # We should always default to pretty printing the results of the decision logic
-    # if we are not running in GitHub Actions, even when the --pretty-print flag has
-    # not been parsed on the command line. This will avoid errors trying to set CI
-    # output variables in an environment that doesn't exist.
+    # This will avoid errors trying to set CI output variables in an environment that
+    # doesn't exist.
     ci_env = os.environ.get("CI", False)
-    if pretty_print or not ci_env:
-        pretty_print_matrix_jobs(prod_hub_matrix_jobs, support_and_staging_matrix_jobs)
-    else:
+    if ci_env:
         # Add these matrix jobs as output variables for use in another job
         # https://docs.github.com/en/actions/using-workflows/workflow-syntax-for-github-actions
         print(f"::set-output name=prod-hub-matrix-jobs::{prod_hub_matrix_jobs}")
