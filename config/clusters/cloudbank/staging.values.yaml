@@ -1,0 +1,30 @@
+jupyterhub:
+  custom:
+    docs_service:
+      enabled: true
+      repo: https://github.com/jupyterhub/nbgitpuller
+      branch: gh-pages
+    2i2c:
+      add_staff_user_ids_to_admin_users: true
+      add_staff_user_ids_of_type: "google"
+    homepage:
+      templateVars:
+        org:
+          name: Cloudbank Staging
+          url: https://2i2c.org
+          logo_url: https://2i2c.org/media/logo.png
+        designed_by:
+          name: 2i2c
+          url: https://2i2c.org
+        operated_by:
+          name: 2i2c
+          url: https://2i2c.org
+        funded_by:
+          name: 2i2c
+          url: https://2i2c.org
+  hub:
+    config:
+      Authenticator:
+        allowed_users: &staging_users
+          - colliand@gmail.com
+        admin_users: *staging_users
