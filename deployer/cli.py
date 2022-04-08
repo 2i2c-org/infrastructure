@@ -117,11 +117,6 @@ def main():
         type=_converted_string_to_list,
         help="A singular or space-delimited list of added or modified filepaths in the repo",
     )
-    generate_helm_upgrade_jobs_parser.add_argument(
-        "--pretty-print",
-        action="store_true",
-        help="Pretty print the generated matrix jobs as tables using rich",
-    )
     # === End section ===#
 
     args = argparser.parse_args()
@@ -144,4 +139,4 @@ def main():
     elif args.action == "use-cluster-credentials":
         use_cluster_credentials(args.cluster_name)
     elif args.action == "generate-helm-upgrade-jobs":
-        generate_helm_upgrade_jobs(args.filepaths, pretty_print=args.pretty_print)
+        generate_helm_upgrade_jobs(args.filepaths)

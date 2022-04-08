@@ -223,7 +223,7 @@ def deploy(cluster_name, hub_name, skip_hub_health_test, config_path):
                 hub.deploy(k, SECRET_KEY, skip_hub_health_test)
 
 
-def generate_helm_upgrade_jobs(changed_filepaths, pretty_print=False):
+def generate_helm_upgrade_jobs(changed_filepaths):
     """Analyse added or modified files from a GitHub Pull Request and decide which
     clusters and/or hubs require helm upgrades to be performed for their *hub helm
     charts or the support helm chart.
@@ -231,9 +231,6 @@ def generate_helm_upgrade_jobs(changed_filepaths, pretty_print=False):
     Args:
         changed_filepaths (list[str]): A list of files that have been added or
             modified by a GitHub Pull Request
-        pretty_print (bool, optional): If True, output a human readable table of jobs
-            to be run using rich. If False, output a list of dictionaries to be
-            passed to a GitHub Actions matrix job. Defaults to False.
     """
     (
         upgrade_support_on_all_clusters,
