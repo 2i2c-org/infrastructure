@@ -23,11 +23,31 @@ How-To guides answer the question 'How do I...?' for a lot of topics.
 ```{toctree}
 :maxdepth: 2
 :caption: How-to guides
-howto/configure/index
+howto/hubs/index.md
 howto/features/index
-howto/customize/index
-howto/operate/index
+howto/k8s/index.md
+howto/configure/auth-management
+howto/configure/update-env
 ```
+
+Manage authentication
+
+Manage resource culling
+Update environment
+Enable user access to cloud features
+Use a custom user image
+Connect static web content with the hub
+Configure the hub login page
+Add a new hub
+Add a new cluster
+Work with Kubernetes infrastructure
+Delete a hub
+Manually deploy hubs
+Grafana Dashboards
+Move a Hub across clusters
+Manually setup NFS Server for a cluster
+Setup a new project for a client organization
+Override a hub’s domain name
 
 ## Topic guides
 

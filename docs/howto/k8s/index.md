@@ -1,4 +1,4 @@
-# Work with Kubernetes infrastructure
+# Cloud and Kubernetes infrastructure
 
 There are some cases where you need to inspect or modify actively-running Kubernetes infrastructure, or make changes to the Kubernetes cluster on which our hubs are running.
 This is a more manual step than [modifying a hub's configuration](/topic/config) and requires some extra tools, setup, and expertise.
@@ -21,5 +21,9 @@ The following sections cover common things that you might need to do using Kuber
 
 ```{toctree}
 :maxdepth: 2
+../operate/new-cluster/index.md
 node-administration.md
+../operate/manual-nfs-setup.md
+../configure/culling.md
+../operate/grafana.md
 ```

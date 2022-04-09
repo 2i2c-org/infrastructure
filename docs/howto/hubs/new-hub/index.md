@@ -1,5 +1,5 @@
 (new-hub)=
-# Add a new hub
+# Deploy a new hub
 
 This section describes steps around adding hubs to the 2i2c JupyterHub federation.
 
@@ -95,11 +95,3 @@ They increase the likelihood of confusion, bottlenecks of information, inconsist
 states and discrepancies between what is already deployed vs. the codebase, among other
 things.
 :::
-
-## Cloud-specific deployment steps
-
-See the sections below for information about setting up a new hub on specific commercial clouds.
-
-```{toctree}
-aws
-```
