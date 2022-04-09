@@ -16,6 +16,15 @@ Below is a quick introduction of this documentation's structure.
 structure
 ```
 
+## Tutorials
+
+Tutorials help guide you through accomplishing a specific task.
+
+```{toctree}
+:maxdepth: 1
+tutorials/setup.md
+```
+
 ## How-to guides
 
 How-To guides answer the question 'How do I...?' for a lot of topics.
