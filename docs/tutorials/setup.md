@@ -67,7 +67,7 @@ system, so we will not go into them here. Two quick suggestions are to either us
 `conda`, or use `brew install python3` on a Mac.
 
 Once Python is installed, you need to create a virtual environment to install the specific
-libraries we will use. Again this depends on how you installed python, and wether you
+libraries we will use. Again this depends on how you installed python, and whether you
 want to use `conda` or `pip`.
 
 Once you have a virtual environment setup and activated, install the libraries
@@ -93,7 +93,7 @@ your `2i2c.org` Google Account. If
 
 Tada, now you're logged in!
 
-## Step 3: Getting access to any of our kubernetes clusters with `deployer.py`
+## Step 3: Getting access to any of our kubernetes clusters with `deployer` module
 
 ```{note}
 You should have already been given access to the `two-eye-two-see` Google Cloud
@@ -108,9 +108,10 @@ subcommand.
 
 1. Look for the cluster you want to try accessing - there is one cluster per directory inside
    `config/clusters`.
-2. Run `python3 deployer use-cluster-credentials` from the terminal, and this will authenticate you
+2. Run `python3 deployer use-cluster-credentials CLUSTER_NAME` from the terminal, and this will authenticate you
    to the correct kubernetes cluster!
 
 You can test this out by running `kubectl get node`, which should list the nodes in the
 kubernetes cluster selected.
 
+The `use-cluster-credentials` subcommand actually creates a new shell and sets environment variables to allow access to the chosen cluster, so make sure to run `exit` or `Ctrl`+`D`/`Cmd`+`D` when you are finished.
