@@ -54,12 +54,6 @@ runs:
       run: gcloud info
       shell: bash
 
-    - name: Setup gcloud auth for docker
-      # FIXME: Add more auth providers & registries here as needed
-      run: |
-        gcloud auth configure-docker us-central1-docker.pkg.dev
-      shell: bash
-
     - name: Setup helm
       uses: azure/setup-helm@v2.0
 
