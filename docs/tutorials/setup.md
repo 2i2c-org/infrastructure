@@ -23,7 +23,7 @@ On a Mac, you can install these easily with `homebrew`:
 brew install helm kubectl
 ```
 
-On other operating systems, the documentation link above should help you find
+On other operating systems, the documentation links above should help you find
 ways of installing them.
 
 ### Secret decryption tools
@@ -42,7 +42,7 @@ You can download releases for other platforms from [the sops github releases pag
 ### Cloud provider tools
 
 We primarily interact with Google Cloud, Amazon Web Services (AWS) and Azure.
-All these providers provide decent commandline tools that we need to have locally
+All these providers provide decent command line tools that we need to have locally
 installed.
 
 1. [gcloud](https://cloud.google.com/sdk)
@@ -77,15 +77,15 @@ scripts!
 Remember you need to *activate the environment* you installed these libraries into each
 time you use any of our scripts.
 
-## Step 2: Authentication with Google Cloud to help decrypt our secret files
+## Step 3: Authenticate with Google Cloud to decrypt our secret files
 
 Permission to decrypt the secret files in this repo is managed via
 Google Cloud's [Key Management Service](https://cloud.google.com/security-key-management),
 **regardless of the cloud provider running the cluster you are interested in**.
-So authentication to google cloud via `gcloud` is *required*.
+So to decrypt our secrets, you *must* authenticatie to google cloud via `gcloud`.
 
 You need to already have permissions to the `two-eye-two-see` project via
-your `2i2c.org` Google Account. If
+your `2i2c.org` Google Account. If you don't have this, please ask a team member.
 
 1. Run `gcloud auth login`, and when the browser window pops up, login with
    your `2i2c.org` google account.
@@ -93,7 +93,7 @@ your `2i2c.org` Google Account. If
 
 Tada, now you're logged in!
 
-## Step 3: Getting access to any of our kubernetes clusters with `deployer` module
+## Step 4: Access kubernetes clusters with the `deployer` module
 
 ```{note}
 You should have already been given access to the `two-eye-two-see` Google Cloud
@@ -102,16 +102,16 @@ during this step. Please chat with whoever onboarded you to make sure you have t
 required cloud access.
 ```
 
-Our deployer has a very convenient way to set up all the authentication necessary
-for you to interact with a kubernetes cluster from the commandline - the `use-cluster-credentials`
+Our deployer has a convenient way to authenticate you in order
+to interact with a kubernetes cluster from the commandline - the `use-cluster-credentials`
 subcommand.
 
-1. Look for the cluster you want to try accessing - there is one cluster per directory inside
+1. Look for the cluster you want to access - there is one cluster per directory inside
    `config/clusters`.
 2. Run `python3 deployer use-cluster-credentials CLUSTER_NAME` from the terminal, and this will authenticate you
    to the correct kubernetes cluster!
 
-You can test this out by running `kubectl get node`, which should list the nodes in the
+Test that you've been correctly authenticated by running `kubectl get node`, which should list the nodes in the
 kubernetes cluster selected.
 
 The `use-cluster-credentials` subcommand actually creates a new shell and sets environment variables to allow access to the chosen cluster, so make sure to run `exit` or `Ctrl`+`D`/`Cmd`+`D` when you are finished.
