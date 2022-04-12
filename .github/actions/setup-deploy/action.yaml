@@ -38,9 +38,6 @@ inputs:
 runs:
   using: "composite"
   steps:
-    - name: Checkout repo
-      uses: actions/checkout@v3
-
     - name: Setup gcloud with credentials to a KMS used by sops
       uses: google-github-actions/setup-gcloud@v0
       with:

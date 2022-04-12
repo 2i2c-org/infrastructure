@@ -95,6 +95,9 @@ jobs:
         jobs: ${{ fromJson(needs.generate-jobs.outputs.support-and-staging-matrix-jobs) }}
 
     steps:
+      - name: Checkout repo
+        uses: actions/checkout@v3
+
       - name: Setup deploy for ${{ matrix.jobs.cluster_name }}
         uses: ./.github/actions/setup-deploy
         with:
@@ -139,6 +142,9 @@ jobs:
         jobs: ${{ fromJson(needs.generate-jobs.outputs.prob-hub-matrix-jobs) }}
 
     steps:
+      - name: Checkout repo
+        uses: actions/checkout@v3
+
       - name: Setup deploy for ${{ matrix.jobs.cluster_name }}
         uses: ./.github/actions/setup-deploy
         with:
