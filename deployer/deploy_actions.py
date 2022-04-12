@@ -339,7 +339,9 @@ def run_hub_health_check(cluster_name, hub_name, check_dask_scaling=False):
         cluster = Cluster(yaml.load(f), config_file_path.parent)
 
     # Find the hub's config
-    hub_indx = [indx for (indx, h) in enumerate(cluster.hubs) if h.spec["name"] == hub_name]
+    hub_indx = [
+        indx for (indx, h) in enumerate(cluster.hubs) if h.spec["name"] == hub_name
+    ]
     if len(hub_indx) == 1:
         hub = cluster.hubs[hub_indx]
     elif len(hub_indx) > 1:
@@ -347,9 +349,7 @@ def run_hub_health_check(cluster_name, hub_name, check_dask_scaling=False):
     elif len(hub_indx) == 0:
         raise ValueError("No hubs with this name found!")
 
-    print_colour(
-        f"Running hub health check for {hub.spec['name']}..."
-    )
+    print_colour(f"Running hub health check for {hub.spec['name']}...")
 
     # Retrieve hub's URL
     hub_url = f'https://{hub.spec["domain"]}'
@@ -357,13 +357,13 @@ def run_hub_health_check(cluster_name, hub_name, check_dask_scaling=False):
     # 3. Read in the service api token: https://github.com/2i2c-org/infrastructure/issues/1024#issuecomment-1096862704
     # FIXME: Clean this up
     if hub.spec["helm_chart"] != "basehub":
-        service_api_token = generated_values["basehub"]["jupyterhub"][
-            "hub"
-        ]["services"]["hub-health"]["apiToken"]
-    else:
-        service_api_token = generated_values["jupyterhub"]["hub"][
+        service_api_token = generated_values["basehub"]["jupyterhub"]["hub"][
             "services"
         ]["hub-health"]["apiToken"]
+    else:
+        service_api_token = generated_values["jupyterhub"]["hub"]["services"][
+            "hub-health"
+        ]["apiToken"]
 
     # On failure, pytest prints out params to the test that failed.
     # This can contain sensitive info - so we hide stderr
@@ -383,9 +383,7 @@ def run_hub_health_check(cluster_name, hub_name, check_dask_scaling=False):
     ]
     if gh_ci == "true":
         print_colour("Testing on CI, not printing output")
-        with open(os.devnull, "w") as dn, redirect_stderr(
-            dn
-        ), redirect_stdout(dn):
+        with open(os.devnull, "w") as dn, redirect_stderr(dn), redirect_stdout(dn):
             exit_code = pytest.main(pytest_args)
     else:
         print_colour("Testing locally, do not redirect output")
