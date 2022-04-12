@@ -1,13 +1,9 @@
 import hashlib
 import hmac
 import json
-import os
 import subprocess
-import sys
 import tempfile
-import pytest
 
-from contextlib import redirect_stderr, redirect_stdout
 from pathlib import Path
 from textwrap import dedent
 from ruamel.yaml import YAML
@@ -251,50 +247,4 @@ class Hub:
             # join method will fail on the PosixPath element if not transformed
             # into a string first
             print_colour(f"Running {' '.join([str(c) for c in cmd])}")
-            # Can't test without deploying, since our service token isn't set by default
             subprocess.check_call(cmd)
-
-            if not skip_hub_health_test:
-
-                # FIXME: Clean this up
-                if self.spec["helm_chart"] != "basehub":
-                    service_api_token = generated_values["basehub"]["jupyterhub"][
-                        "hub"
-                    ]["services"]["hub-health"]["apiToken"]
-                else:
-                    service_api_token = generated_values["jupyterhub"]["hub"][
-                        "services"
-                    ]["hub-health"]["apiToken"]
-
-                hub_url = f'https://{self.spec["domain"]}'
-
-                # On failure, pytest prints out params to the test that failed.
-                # This can contain sensitive info - so we hide stderr
-                # FIXME: Don't use pytest - just call a function instead
-                print_colour("Running hub health check...")
-                # Show errors locally but redirect on CI
-                gh_ci = os.environ.get("CI", "false")
-                pytest_args = [
-                    "-q",
-                    "deployer/tests",
-                    "--hub-url",
-                    hub_url,
-                    "--api-token",
-                    service_api_token,
-                    "--hub-type",
-                    self.spec["helm_chart"],
-                ]
-                if gh_ci == "true":
-                    print_colour("Testing on CI, not printing output")
-                    with open(os.devnull, "w") as dn, redirect_stderr(
-                        dn
-                    ), redirect_stdout(dn):
-                        exit_code = pytest.main(pytest_args)
-                else:
-                    print_colour("Testing locally, do not redirect output")
-                    exit_code = pytest.main(pytest_args)
-                if exit_code != 0:
-                    print("Health check failed!", file=sys.stderr)
-                    sys.exit(exit_code)
-                else:
-                    print_colour("Health check succeeded!")
