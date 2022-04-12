@@ -1,6 +1,7 @@
 """
 Actions available when deploying many JupyterHubs to many Kubernetes clusters
 """
+import base64
 import os
 import sys
 import shutil
@@ -354,16 +355,25 @@ def run_hub_health_check(cluster_name, hub_name, check_dask_scaling=False):
     # Retrieve hub's URL
     hub_url = f'https://{hub.spec["domain"]}'
 
-    # 3. Read in the service api token: https://github.com/2i2c-org/infrastructure/issues/1024#issuecomment-1096862704
-    # FIXME: Clean this up
-    if hub.spec["helm_chart"] != "basehub":
-        service_api_token = generated_values["basehub"]["jupyterhub"]["hub"][
-            "services"
-        ]["hub-health"]["apiToken"]
-    else:
-        service_api_token = generated_values["jupyterhub"]["hub"]["services"][
-            "hub-health"
-        ]["apiToken"]
+    # Read in the service api token from a k8s Secret in the k8s cluster
+    with cluster.auth():
+        try:
+            service_api_token_b64encoded = subprocess.check_output(
+                [
+                    "kubectl",
+                    "get",
+                    "secrets",
+                    "hub",
+                    f"--namespace={hub.spec['name']}",
+                    r"""--output="jsonpath={.data['hub\.services\.hub-health\.apiToken']}""",
+                ],
+                text=True,
+            )
+        except subprocess.CalledProcessError as e:
+            raise ValueError(
+                f"Failed to acquire a JupyterHub API token for the hub-health service: {e.stdout}"
+            )
+        service_api_token = base64.b64decode(service_api_token_b64encoded).decode()
 
     # On failure, pytest prints out params to the test that failed.
     # This can contain sensitive info - so we hide stderr
