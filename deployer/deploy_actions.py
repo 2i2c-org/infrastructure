@@ -176,7 +176,7 @@ def deploy_grafana_dashboards(cluster_name):
         shutil.rmtree(dashboards_dir)
 
 
-def deploy(cluster_name, hub_name, skip_hub_health_test, config_path):
+def deploy(cluster_name, hub_name, config_path):
     """
     Deploy one or more hubs in a given cluster
     """
@@ -217,13 +217,13 @@ def deploy(cluster_name, hub_name, skip_hub_health_test, config_path):
         if hub_name:
             hub = next((hub for hub in hubs if hub.spec["name"] == hub_name), None)
             print_colour(f"Deploying hub {hub.spec['name']}...")
-            hub.deploy(k, SECRET_KEY, skip_hub_health_test)
+            hub.deploy(k, SECRET_KEY)
         else:
             for i, hub in enumerate(hubs):
                 print_colour(
                     f"{i+1} / {len(hubs)}: Deploying hub {hub.spec['name']}..."
                 )
-                hub.deploy(k, SECRET_KEY, skip_hub_health_test)
+                hub.deploy(k, SECRET_KEY)
 
 
 def generate_helm_upgrade_jobs(changed_filepaths):

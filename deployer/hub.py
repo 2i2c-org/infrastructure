@@ -188,7 +188,7 @@ class Hub:
 
         return generated_config
 
-    def deploy(self, auth_provider, secret_key, skip_hub_health_test=False):
+    def deploy(self, auth_provider, secret_key):
         """
         Deploy this hub
         """

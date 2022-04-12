@@ -142,7 +142,6 @@ def main():
         deploy(
             args.cluster_name,
             args.hub_name,
-            args.skip_hub_health_test,
             args.config_path,
         )
     elif args.action == "validate":
