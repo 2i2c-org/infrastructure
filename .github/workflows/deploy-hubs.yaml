@@ -102,6 +102,7 @@ jobs:
         uses: ./.github/actions/setup-deploy
         with:
           provider: ${{ matrix.provider }}
+          GCP_KMS_DECRYPTOR_KEY: ${{ secrets.GCP_KMS_DECRYPTOR_KEY }}
 
       - name: Upgrade support chart on cluster ${{ matrix.jobs.cluster_name }}
         if: matrix.jobs.upgrade_support == 'true'
@@ -149,6 +150,7 @@ jobs:
         uses: ./.github/actions/setup-deploy
         with:
           provider: ${{ matrix.provider }}
+          GCP_KMS_DECRYPTOR_KEY: ${{ secrets.GCP_KMS_DECRYPTOR_KEY }}
 
       - name: Upgrade and test ${{ matrix.jobs.hub_name }} on cluster ${{ matrix.jobs.cluster_name }}
         run: |
