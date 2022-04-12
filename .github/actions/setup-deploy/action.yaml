@@ -67,6 +67,7 @@ runs:
         sudo mv /tmp/kops /usr/local/bin/kops
       env:
         KOPS_VERSION: "v1.21.1"
+      shell: bash
 
     - name: Setup Python 3.9
       uses: actions/setup-python@v3
