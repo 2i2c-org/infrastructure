@@ -70,6 +70,7 @@ jobs:
       # Do this in a Netlify-style way where if a comment already exists, it is updated
       # instead of generating a new comment.
       - name: Generate matrix jobs
+        id: generate-jobs
         run: |
           python deployer generate-helm-upgrade-jobs "${{ steps.changed-files.outputs.added_modified }}"
 
