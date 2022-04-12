@@ -38,8 +38,8 @@ jobs:
   generate-jobs:
     runs-on: ubuntu-latest
     outputs:
-      support-and-staging-matrix-jobs: ${{ steps.generated-jobs.outputs.support-and-staging-matrix-jobs }}
-      prob-hub-matrix-jobs: ${{ steps.generated-jobs.outputs.prod-hub-matrix-jobs }}
+      support-and-staging-matrix-jobs: ${{ steps.generate-jobs.outputs.support-and-staging-matrix-jobs }}
+      prob-hub-matrix-jobs: ${{ steps.generate-jobs.outputs.prod-hub-matrix-jobs }}
 
     steps:
       - name: Checkout repo
