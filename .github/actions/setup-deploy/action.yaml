@@ -1,0 +1,82 @@
+# This is a _local composite GitHub action_ that helps us reuse CI logic across
+# different workflows and jobs by referencing this action in a job's step.
+#
+# > A composite action allows you to combine multiple workflow steps within one
+# > action.
+#
+# This local action can be referenced like this from a job:
+#
+#   steps:
+#     - uses: ./.github/actions/setup-deploy
+#       with:
+#         provider: gcp
+#
+# General action configuration reference:
+# https://docs.github.com/en/actions/creating-actions/metadata-syntax-for-github-actions#about-yaml-syntax-for-github-actions
+#
+name: "Setup the deployer script for use to deploy"
+description: >-
+  Setups the deployer script by loading credentials and installing relevant tools
+  needed to interact with encrypted files, kubernetes clusters, and container
+  registries.
+
+# inputs configuration reference:
+# https://docs.github.com/en/actions/creating-actions/metadata-syntax-for-github-actions#inputs
+#
+inputs:
+  provider:
+    description: "Cloud provider a cluster runs on"
+    required: true
+    default: "gcp"
+
+# runs (for composite actions) configuration reference:
+# https://docs.github.com/en/actions/creating-actions/metadata-syntax-for-github-actions#runs-for-composite-actions
+#
+# Note that while this section looks almost like the steps of a job in a
+# workflow, it is different!
+#
+runs:
+  using: "composite"
+  steps:
+    - name: Checkout repo
+      uses: actions/checkout@v3
+
+    - name: Setup gcloud with credentials to a KMS used by sops
+      uses: google-github-actions/setup-gcloud@v0
+      with:
+        version: "290.0.1"
+        # This is used for KMS only
+        project_id: two-eye-two-see
+        service_account_key: ${{ secrets.GCP_KMS_DECRYPTOR_KEY }}
+        export_default_credentials: true
+
+    - name: Get gcloud info
+      run: gcloud info
+      shell: bash
+
+    - name: Setup helm
+      uses: azure/setup-helm@v2.0
+
+    - name: Setup sops
+      uses: mdgreenwald/mozilla-sops-action@v1
+      with:
+        version: v3.7.1
+
+    - name: Setup kops
+      if: inputs.provider == 'aws'
+      run: |
+        curl -Lo /tmp/kops https://github.com/kubernetes/kops/releases/download/$KOPS_VERSION/kops-linux-amd64
+        chmod +x /tmp/kops
+        sudo mv /tmp/kops /usr/local/bin/kops
+      env:
+        KOPS_VERSION: "v1.21.1"
+
+    - name: Setup Python 3.9
+      uses: actions/setup-python@v3
+      with:
+        python-version: "3.9"
+
+    - name: Setup deployer script Python dependencies
+      run: |
+        python -m pip install -r requirements.txt
+      shell: bash

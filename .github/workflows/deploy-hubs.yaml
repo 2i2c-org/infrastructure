@@ -6,13 +6,19 @@ on:
       - master
     paths:
       - deployer/**
-      - helm-charts/**
       - requirements.txt
-      - dev-requirements.txt
-      - config/secrets.yaml
-      - config/clusters/**
       - .github/workflows/deploy-hubs.yaml
-      - .github/actions/deploy/**
+      - .github/actions/setup-deploy/**
+      - "**.yaml"
+  pull_request:
+    branches:
+      - master
+    paths:
+      - deployer/**
+      - requirements.txt
+      - .github/workflows/deploy-hubs.yaml
+      - .github/actions/setup-deploy/**
+      - "**.yaml"
 
 # When multiple PRs triggering this workflow are merged, queue them instead
 # of running them in parallel
@@ -20,107 +26,123 @@ on:
 concurrency: deploy
 
 jobs:
-  deploy:
+  # This job runs in Pull Requests and on pushes to the default branch. It identifies
+  # which files have been aded or modified by recent GitHub activity and parsed a list
+  # to the generate-helm-upgrade-jobs function of the deployer. This function generates
+  # two lists of dictionaries, which can be read by GitHub Actions as matrix jobs. The
+  # first set of jobs describes which clusters need their support chart and/or staging
+  # hub upgraded; and the second set of jobs describe which production hubs require
+  # upgrading. These two lists are set as job outputs using ::set-output to be consumed
+  # by the later jobs. They are also pretty-printed in a human-readable format to the
+  # logs.
+  generate-jobs:
     runs-on: ubuntu-latest
-    strategy:
-      # Don't stop other deployments if one fails
-      fail-fast: false
-      matrix:
-        include:
-          # To enable auto-deployments for other clusters,
-          # add its name and provider to the list
-          - cluster_name: 2i2c
-            provider: gcp
-          - cluster_name: cloudbank
-            provider: gcp
-          - cluster_name: carbonplan
-            provider: aws
-          - cluster_name: farallon
-            provider: aws
-          - cluster_name: openscapes
-            provider: aws
-          - cluster_name: uwhackweeks
-            provider: aws
-          - cluster_name: meom-ige
-            provider: gcp
-          - cluster_name: pangeo-hubs
-            provider: gcp
-          - cluster_name: leap
-            provider: gcp
-          - cluster_name: utoronto
-            provider: kubeconfig
-          - cluster_name: azure.carbonplan
-            provider: kubeconfig
+    outputs:
+      support-and-staging-matrix-jobs: ${{ steps.generated-jobs.outputs.support-and-staging-matrix-jobs }}
+      prob-hub-matrix-jobs: ${{ steps.generated-jobs.outputs.prod-hub-matrix-jobs }}
 
     steps:
       - name: Checkout repo
         uses: actions/checkout@v3
-
-      - name: Check if any of our base files have changed
-        uses: dorny/paths-filter@v2
-        id: base_files
         with:
-          filters: |
-            files:
-              - "deployer/**"
-              - "helm-charts/**"
-              - "requirements.txt"
-              - "config/secrets.yaml"
-              - ".github/workflows/deploy-hubs.yaml"
-              - ".github/actions/deploy/*"
+          # Fetch-depth is required for the jitterbit/get-changed-files action
+          # https://github.com/jitterbit/get-changed-files/issues/24#issuecomment-1047442168
+          fetch-depth: 0
 
-      - name: Check which cluster directory has changes (if any)
-        uses: dorny/paths-filter@v2
-        id: config_files
+      - name: Install Python 3.9
+        uses: actions/setup-python@v3
         with:
-          filters: |
-            hub_config:
-              - "config/clusters/${{ matrix.cluster_name }}/**"
+          python-version: "3.9"
 
-      - name: Setup gcloud
-        if: |
-          (steps.base_files.outputs.files == 'true') ||
-          (steps.config_files.outputs.hub_config == 'true')
-        uses: google-github-actions/setup-gcloud@v0
-        with:
-          version: "290.0.1"
-          # This is used for KMS only
-          project_id: two-eye-two-see
-          service_account_key: ${{ secrets.GCP_KMS_DECRYPTOR_KEY }}
-          export_default_credentials: true
-
-      - name: Setup helm
-        if: |
-          (steps.base_files.outputs.files == 'true') ||
-          (steps.config_files.outputs.hub_config == 'true')
-        uses: azure/setup-helm@v2.0
-
-      - name: Setup sops
-        if: |
-          (steps.base_files.outputs.files == 'true') ||
-          (steps.config_files.outputs.hub_config == 'true')
-        uses: mdgreenwald/mozilla-sops-action@v1
-        with:
-          version: v3.7.1
-
-      - name: Setup kops
-        if: |
-          ((steps.base_files.outputs.files == 'true') ||
-          (steps.config_files.outputs.hub_config == 'true')) &&
-          (matrix.provider == 'aws')
+      - name: Install deployer script dependencies
         run: |
-          curl -Lo /tmp/kops https://github.com/kubernetes/kops/releases/download/$KOPS_VERSION/kops-linux-amd64
-          chmod +x /tmp/kops
-          sudo mv /tmp/kops /usr/local/bin/kops
-        env:
-          KOPS_VERSION: "v1.21.1"
+          python -m pip install --upgrade pip
+          python -m pip install -r requirements.txt
 
-      - name: Deploy ${{ matrix.cluster_name }}
-        if: |
-          (steps.base_files.outputs.files == 'true') ||
-          (steps.config_files.outputs.hub_config == 'true')
-        uses: ./.github/actions/deploy
+      - name: Identify files that have been added or modified
+        uses: jitterbit/get-changed-files@v1
+        id: changed-files
         with:
-          cluster: ${{ matrix.cluster_name }}
-        env:
-          TERM: xterm
+          format: space-delimited
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      # TODO: Post the pretty print output of this step as a comment on the Pull Request.
+      # Do this in a Netlify-style way where if a comment already exists, it is updated
+      # instead of generating a new comment.
+      - name: Generate matrix jobs
+        run: |
+          python deployer generate-helm-upgrade-jobs "${{ steps.changed-files.outputs.added_modified }}"
+
+  # This job upgrades the support chart, staging hub, and dask-staging hub (if present)
+  # for clusters in parallel, if those upgrades are required. This job needs the
+  # `generate-jobs` job to have completed and set an output to the
+  # `support-and-staging-matrix-jobs` variable name. It's inputs are a list of
+  # dictionaries with the keys cluster_name, provider, upgrade_support, and
+  # upgrade_staging for each cluster that requires it.
+  upgrade-support-and-staging:
+    runs-on: ubuntu-latest
+    needs: generate-jobs
+    # Only run this job on pushes to the default branch and when the job output is not
+    # an empty list
+    if: |
+      (github.event_name == 'push' && contains(github.ref, 'master')) &&
+      ${{ fromJson(needs.generate-jobs.outputs.support-and-staging-matrix-jobs) }} != '[]'
+    strategy:
+      # Don't stop other deployments if one fails
+      fail-fast: false
+      matrix:
+        jobs: ${{ fromJson(needs.generate-jobs.outputs.support-and-staging-matrix-jobs) }}
+
+    steps:
+      - name: Setup deploy for ${{ matrix.jobs.cluster_name }}
+        uses: ./.github/actions/setup-deploy
+        with:
+          provider: ${{ matrix.provider }}
+
+      - name: Upgrade support chart on cluster ${{ matrix.jobs.cluster_name }}
+        if: matrix.jobs.upgrade_support == 'true'
+        run: |
+          python deployer deploy-support ${{ matrix.jobs.cluster_name }}
+
+      - name: Upgrade staging hub on cluster ${{ matrix.jobs.cluster_name }}
+        if: matrix.jobs.upgrade_staging == 'true'
+        run: |
+          python deployer deploy ${{ matrix.jobs.cluster_name }} staging
+
+      - name: Upgrade dask-staging hub on cluster ${{ matrix.jobs.cluster_name }} if it exists
+        if: matrix.jobs.upgrade_staging == 'true' && matrix.jobs.cluster_name == '2i2c'
+        run: |
+          python deployer deploy ${{ matrix.jobs.cluster_name }} dask-staging
+
+  # TODO: Add in "job 3a" where the matrix for prod jobs is edited to exclude any clusters
+  # that failed the preceding upgrade-support-and-staging job. See discussion in:
+  # https://github.com/2i2c-org/infrastructure/issues/1131
+
+  # This job upgrades production hubs on clusters in parallel, if required. This job
+  # needs both the `generate-jobs` and `upgrade-support-and-staging` jobs to have
+  # completed and set an output to the `prob-hub-matrix-jobs` variable name. It's inputs
+  # are a list of dictionaries with the keys cluster_name, provider, and hub+name for
+  # each production hub that requires an upgrade.
+  upgrade-prod-hubs:
+    runs-on: ubuntu-latest
+    needs: [generate-jobs, upgrade-support-and-staging]
+    # Only run this job on pushes to the default branch and when the `generate-jobs` job output is not
+    # an empty list
+    if: |
+      (github.event_name == 'push' && contains(github.ref, 'master')) &&
+      ${{ fromJson(needs.generate-jobs.outputs.prob-hub-matrix-jobs) }} != '[]'
+    strategy:
+      # Don't stop other deployments if one fails
+      fail-fast: false
+      matrix:
+        jobs: ${{ fromJson(needs.generate-jobs.outputs.prob-hub-matrix-jobs) }}
+
+    steps:
+      - name: Setup deploy for ${{ matrix.jobs.cluster_name }}
+        uses: ./.github/actions/setup-deploy
+        with:
+          provider: ${{ matrix.provider }}
+
+      - name: Upgrade and test ${{ matrix.jobs.hub_name }} on cluster ${{ matrix.jobs.cluster_name }}
+        run: |
+          python deployer deploy ${{ matrix.jobs.cluster_name }} ${{ matrix.jobs.hub_name }}
