@@ -101,7 +101,7 @@ jobs:
       - name: Setup deploy for ${{ matrix.jobs.cluster_name }}
         uses: ./.github/actions/setup-deploy
         with:
-          provider: ${{ matrix.provider }}
+          provider: ${{ matrix.jobs.provider }}
           GCP_KMS_DECRYPTOR_KEY: ${{ secrets.GCP_KMS_DECRYPTOR_KEY }}
 
       - name: Upgrade support chart on cluster ${{ matrix.jobs.cluster_name }}
@@ -149,7 +149,7 @@ jobs:
       - name: Setup deploy for ${{ matrix.jobs.cluster_name }}
         uses: ./.github/actions/setup-deploy
         with:
-          provider: ${{ matrix.provider }}
+          provider: ${{ matrix.jobs.provider }}
           GCP_KMS_DECRYPTOR_KEY: ${{ secrets.GCP_KMS_DECRYPTOR_KEY }}
 
       - name: Upgrade and test ${{ matrix.jobs.hub_name }} on cluster ${{ matrix.jobs.cluster_name }}
