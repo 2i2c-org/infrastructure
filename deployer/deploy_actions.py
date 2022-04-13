@@ -354,6 +354,18 @@ def run_hub_health_check(cluster_name, hub_name, check_dask_scaling=False):
 
     print_colour(f"Running hub health check for {hub.spec['name']}...")
 
+    # Check if this hub has a domain override file. If yes, apply override.
+    if "domain_override_file" in hub.spec.keys():
+        domain_override_file = hub.spec["domain_override_file"]
+
+        with get_decrypted_file(
+            hub.cluster.config_path.joinpath(domain_override_file)
+        ) as decrypted_path:
+            with open(decrypted_path) as f:
+                domain_override_config = yaml.load(f)
+
+        hub.spec["domain"] = domain_override_config["domain"]
+
     # Retrieve hub's URL
     hub_url = f'https://{hub.spec["domain"]}'
 
