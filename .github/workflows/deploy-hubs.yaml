@@ -119,20 +119,30 @@ jobs:
         run: |
           python deployer deploy ${{ matrix.jobs.cluster_name }} staging
 
+      # Retry action: https://github.com/marketplace/actions/retry-step
       - name: Run health check for staging hub on cluster ${{ matrix.jobs.cluster_name }}
         if: matrix.jobs.upgrade_staging == 'true'
-        run: |
-          python deployer run-hub-health-check ${{ matrix.jobs.cluster_name }} staging
+        uses: nick-fields/retry@v2.4.0
+        with:
+          timeout_minutes: 10
+          max_attempts: 3
+          command: |
+            python deployer run-hub-health-check ${{ matrix.jobs.cluster_name }} staging
 
       - name: Upgrade dask-staging hub on cluster ${{ matrix.jobs.cluster_name }} if it exists
         if: matrix.jobs.upgrade_staging == 'true' && matrix.jobs.cluster_name == '2i2c'
         run: |
           python deployer deploy ${{ matrix.jobs.cluster_name }} dask-staging
 
+      # Retry action: https://github.com/marketplace/actions/retry-step
       - name: Run health check for dask-staging hub on cluster ${{ matrix.jobs.cluster_name }} if it exists
         if: matrix.jobs.upgrade_staging == 'true' && matrix.jobs.cluster_name == '2i2c'
-        run: |
-          python deployer run-hub-health-check ${{ matrix.jobs.cluster_name }} dask-staging
+        uses: nick-fields/retry@v2.4.0
+        with:
+          timeout_minutes: 10
+          max_attempts: 3
+          command: |
+            python deployer run-hub-health-check ${{ matrix.jobs.cluster_name }} dask-staging
 
   # TODO: Add in "job 3a" where the matrix for prod jobs is edited to exclude any clusters
   # that failed the preceding upgrade-support-and-staging job. See discussion in:
@@ -171,6 +181,11 @@ jobs:
         run: |
           python deployer deploy ${{ matrix.jobs.cluster_name }} ${{ matrix.jobs.hub_name }}
 
+      # Retry action: https://github.com/marketplace/actions/retry-step
       - name: Run health check against ${{ matrix.jobs.hub_name }} hub on cluster ${{ matrix.jobs.cluster_name}}
-        run: |
-          python deployer run-hub-health-check ${{ matrix.jobs.cluster_name }} ${{ matrix.jobs.hub_name }}
+        uses: nick-fields/retry@v2.4.0
+        with:
+          timeout_minutes: 10
+          max_attempts: 3
+          command: |
+            python deployer run-hub-health-check ${{ matrix.jobs.cluster_name }} ${{ matrix.jobs.hub_name }}
