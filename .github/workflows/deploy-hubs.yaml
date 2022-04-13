@@ -25,6 +25,11 @@ on:
 # https://github.blog/changelog/2021-04-19-github-actions-limit-workflow-run-or-job-concurrency/
 concurrency: deploy
 
+# This environment variable triggers the deployer to colourise print statments in the
+# GitHug Actions logs for easy reading
+env:
+  term: XTERM
+
 jobs:
   # This job runs in Pull Requests and on pushes to the default branch. It identifies
   # which files have been aded or modified by recent GitHub activity and parsed a list
