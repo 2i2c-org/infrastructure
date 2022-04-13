@@ -170,7 +170,7 @@ jobs:
         id: declare-failure-status
         if: always()
         run: |
-          echo ::set-output name=failure_${{ matrix.jobs.cluster_name }}::${{ failure() }}
+          echo ::set-output name=failure_${{ matrix.jobs.cluster_name }}::${{ job.status == 'failure' }}
 
   # This jobs reduces the initially planned prod-hub-matrix-jobs deployments by
   # filtering out any deployment to a cluster with a failed support-and-staging
