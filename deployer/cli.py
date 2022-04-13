@@ -123,7 +123,7 @@ def main():
     run_hub_health_check_parser = subparsers.add_parser(
         "run-hub-health-check",
         parents=[base_parser],
-        help="",
+        help="Run a health check against a given hub deployed on a given cluster",
     )
     run_hub_health_check_parser.add_argument(
         "hub_name",
@@ -132,7 +132,7 @@ def main():
     run_hub_health_check_parser.add_argument(
         "--check-dask-scaling",
         action="store_true",
-        help="",
+        help="For daskhubs, optionally check that dask workers can be scaled",
     )
     # === End section ===#
 
