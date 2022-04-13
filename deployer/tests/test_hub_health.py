@@ -1,6 +1,7 @@
 from pathlib import Path
 import os
 import pytest
+import time
 from jhub_client.execute import execute_notebook, JupyterHubAPI
 
 
@@ -60,14 +61,38 @@ async def check_hub_health(hub_url, test_notebook_path, service_api_token):
 
 
 @pytest.mark.asyncio
-async def test_hub_healthy(hub_url, api_token, notebook_dir):
+async def test_hub_healthy(hub_url, api_token, notebook_dir, check_dask_scaling):
     try:
         print(f"Starting hub {hub_url} health validation...")
         for root, directories, files in os.walk(notebook_dir, topdown=False):
-            for name in files:
+            for i, name in enumerate(files):
+                if i > 0:
+                    # FIXME: When we run our hub health check, we create a user server, execute some
+                    # code on that server, and then delete the server and user. The JupyterHub API
+                    # returns two codes: 202 - the server is taking a while to stop, 204 - the server
+                    # has stopped. It is unclear which code response jhub-client waits for.
+                    # When we execute both our standard check *and* the dask scaling check, we
+                    # essentially spin up two servers for the same user one after the other. If
+                    # jhub-client is returning a 202 (as opposed to a 204) we may see the following
+                    # error:
+                    # >> Exception was server for username=deployment-service-check is already running.
+                    # As a workaround for this, we add some sleep time to ensure the server has had
+                    # sufficient time to properly shut down before we continue and provision the
+                    # next check.
+                    # Upstream jhub-client issue: https://github.com/Quansight/jhub-client/issues/14
+                    print("Waiting for previous server to fully shutdown...")
+                    time.sleep(35)
+
+                # We only want to run the "scale_dask_workers.ipynb" file if the
+                # check_dask_scaling variable is true. We continue in the loop if
+                # check_dask_scaling == False when we iterate over this file.
+                if (not check_dask_scaling) and (name == "scale_dask_workers.ipynb"):
+                    continue
+
                 print(f"Running {name} test notebook...")
                 test_notebook_path = os.path.join(root, name)
                 await check_hub_health(hub_url, test_notebook_path, api_token)
+
         print(f"Hub {hub_url} is healthy!")
     except Exception as e:
         print(

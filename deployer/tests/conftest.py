@@ -14,6 +14,10 @@ def pytest_addoption(parser):
         "--hub-type",
         action="store",
     )
+    parser.addoption(
+        "--check-dask-scaling",
+        action="store_true",
+    )
 
 
 @pytest.fixture
@@ -29,3 +33,8 @@ def hub_type(request):
 @pytest.fixture()
 def api_token(request):
     return request.config.getoption("--api-token")
+
+
+@pytest.fixture()
+def check_dask_scaling(request):
+    return request.config.getoption("--check-dask-scaling")
