@@ -50,7 +50,7 @@ async def check_hub_health(hub_url, test_notebook_path, service_api_token):
             create_user=True,
             delete_user=False,  # To be able to delete its server in case of failure
             stop_server=True,  # If the health check succeeds, this will delete the server
-            validate=True,
+            validate=False,  # Don't validate notebook outputs. We only care that is runs top-to-bottom without error.
         )
     finally:
         if orig_service_token:
