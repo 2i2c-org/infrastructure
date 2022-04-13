@@ -357,7 +357,7 @@ def run_hub_health_check(cluster_name, hub_name, check_dask_scaling=False):
         indx for (indx, h) in enumerate(cluster.hubs) if h.spec["name"] == hub_name
     ]
     if len(hub_indx) == 1:
-        hub = cluster.hubs[hub_indx]
+        hub = cluster.hubs[hub_indx[0]]
     elif len(hub_indx) > 1:
         print_colour("ERROR: More than one hub with this name found!")
         sys.exit(1)
