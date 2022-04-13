@@ -33,7 +33,6 @@ from helm_upgrade_decision import (
     pretty_print_matrix_jobs,
 )
 
-
 # Without `pure=True`, I get an exception about str / byte issues
 yaml = YAML(typ="safe", pure=True)
 helm_charts_dir = Path(__file__).parent.parent.joinpath("helm-charts")
@@ -416,13 +415,14 @@ def run_hub_health_check(cluster_name, hub_name, check_dask_scaling=False):
     pytest_args = [
         "-q",
         "deployer/tests",
-        "--hub-url",
-        hub_url,
-        "--api-token",
-        service_api_token,
-        "--hub-type",
-        hub.spec["helm_chart"],
+        f"--hub-url={hub_url}",
+        f"--api-token={service_api_token}",
+        f"--hub-type={hub.spec['helm_chart']}",
     ]
+
+    if (hub.spec["helm_chart"] == "daskhub") and check_dask_scaling:
+        pytest_args.append("--check-dask-scaling")
+
     if gh_ci == "true":
         print_colour("Testing on CI, not printing output")
         with open(os.devnull, "w") as dn, redirect_stderr(dn), redirect_stdout(dn):
