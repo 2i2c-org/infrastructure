@@ -1,5 +1,5 @@
 (new-cluster)=
-# Add a new cluster
+# Add Kubernetes clusters
 
 The first thing we need in deploying a new hub is a Kubernetes Cluster.
 Deploying a new cluster is specific to the cloud provider, though there are many similarities between them all.

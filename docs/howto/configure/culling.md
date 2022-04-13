@@ -1,5 +1,5 @@
 (configure:culling)=
-# Manage resource culling
+# Cull resources
 
 To improve resource management, every user server that's not actively being used, it's shut down by the [jupyterhub-idle-culler](https://github.com/jupyterhub/jupyterhub-idle-culler) Hub service. Thus, any user pod, will be taken down by the idle culler when they are in an idle state.
 
@@ -46,6 +46,6 @@ singleuser:
           cull_connected: true
 ```
 
-### Note
+## Note
 
 If a user leaves a notebook with a running kernel, the idle timeout will typically be the cull idle timeout of the server + the cull idle timeout set for the kernel, as culling the kernel will register activity, resetting the `no_activity` timer for the server as a whole.
