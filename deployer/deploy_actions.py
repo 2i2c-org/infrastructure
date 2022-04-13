@@ -346,9 +346,11 @@ def run_hub_health_check(cluster_name, hub_name, check_dask_scaling=False):
     if len(hub_indx) == 1:
         hub = cluster.hubs[hub_indx]
     elif len(hub_indx) > 1:
-        raise ValueError("More than one hub with this name found!")
+        print_colour("ERROR: More than one hub with this name found!")
+        sys.exit(1)
     elif len(hub_indx) == 0:
-        raise ValueError("No hubs with this name found!")
+        print_colour("ERROR: No hubs with this name found!")
+        sys.exit(1)
 
     print_colour(f"Running hub health check for {hub.spec['name']}...")
 
