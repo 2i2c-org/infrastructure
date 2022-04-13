@@ -10,10 +10,16 @@ It is **not** necessary reading for Hub Administrators, but we invite you to exp
 For documentation about **administering** a 2i2c JupyterHub, see [the 2i2c Hub Administrator's guide](https://docs.2i2c.org).
 :::
 
-Below is a quick introduction of this documentation's structure.
+## Get started
+
+These sections help you get started working with 2i2c's infrastructure.
+[](structure) provides a high-level guide to this documentation, and our tutorials are step-by-step guides to help you understand and use our infrastructure.
 
 ```{toctree}
+:maxdepth: 1
+:caption: Get started
 structure
+tutorials/setup.md
 ```
 
 ## How-to guides
