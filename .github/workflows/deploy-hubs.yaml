@@ -25,6 +25,11 @@ on:
 # https://github.blog/changelog/2021-04-19-github-actions-limit-workflow-run-or-job-concurrency/
 concurrency: deploy
 
+# This environment variable triggers the deployer to colourise print statments in the
+# GitHug Actions logs for easy reading
+env:
+  term: XTERM
+
 jobs:
   # This job runs in Pull Requests and on pushes to the default branch. It identifies
   # which files have been aded or modified by recent GitHub activity and parsed a list
@@ -73,8 +78,6 @@ jobs:
         id: generate-jobs
         run: |
           python deployer generate-helm-upgrade-jobs "${{ steps.changed-files.outputs.added_modified }}"
-        env:
-          term: XTERM
 
   # This job upgrades the support chart, staging hub, and dask-staging hub (if present)
   # for clusters in parallel, if those upgrades are required. This job needs the
@@ -110,36 +113,26 @@ jobs:
         if: matrix.jobs.upgrade_support == 'true'
         run: |
           python deployer deploy-support ${{ matrix.jobs.cluster_name }}
-        env:
-          term: XTERM
 
       - name: Upgrade staging hub on cluster ${{ matrix.jobs.cluster_name }}
         if: matrix.jobs.upgrade_staging == 'true'
         run: |
           python deployer deploy ${{ matrix.jobs.cluster_name }} staging
-        env:
-          term: XTERM
 
       - name: Run health check for staging hub on cluster ${{ matrix.jobs.cluster_name }}
         if: matrix.jobs.upgrade_staging == 'true'
         run: |
           python deployer run-hub-health-check ${{ matrix.jobs.cluster_name }} staging
-        env:
-          term: XTERM
 
       - name: Upgrade dask-staging hub on cluster ${{ matrix.jobs.cluster_name }} if it exists
         if: matrix.jobs.upgrade_staging == 'true' && matrix.jobs.cluster_name == '2i2c'
         run: |
           python deployer deploy ${{ matrix.jobs.cluster_name }} dask-staging
-        env:
-          term: XTERM
 
       - name: Run health check for dask-staging hub on cluster ${{ matrix.jobs.cluster_name }} if it exists
         if: matrix.jobs.upgrade_staging == 'true' && matrix.jobs.cluster_name == '2i2c'
         run: |
           python deployer run-hub-health-check ${{ matrix.jobs.cluster_name }} dask-staging
-        env:
-          term: XTERM
 
   # TODO: Add in "job 3a" where the matrix for prod jobs is edited to exclude any clusters
   # that failed the preceding upgrade-support-and-staging job. See discussion in:
@@ -177,11 +170,7 @@ jobs:
       - name: Upgrade ${{ matrix.jobs.hub_name }} hub on cluster ${{ matrix.jobs.cluster_name }}
         run: |
           python deployer deploy ${{ matrix.jobs.cluster_name }} ${{ matrix.jobs.hub_name }}
-        env:
-          term: XTERM
 
       - name: Run health check against ${{ matrix.jobs.hub_name }} hub on cluster ${{ matrix.jobs.cluster_name}}
         run: |
           python deployer run-hub-health-check ${{ matrix.jobs.cluster_name }} ${{ matrix.jobs.hub_name }}
-        env:
-          term: XTERM
