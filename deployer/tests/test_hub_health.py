@@ -66,16 +66,6 @@ async def test_hub_healthy(hub_url, api_token, notebook_dir, check_dask_scaling)
         print(f"Starting hub {hub_url} health validation...")
         for root, directories, files in os.walk(notebook_dir, topdown=False):
             for i, name in enumerate(files):
-                # We only want to run the "scale_dask_workers.ipynb" file if the
-                # check_dask_scaling variable is true. We continue in the loop if
-                # check_dask_scaling == False when we iterate over this file.
-                if (not check_dask_scaling) and (name == "scale_dask_workers.ipynb"):
-                    continue
-
-                print(f"Running {name} test notebook...")
-                test_notebook_path = os.path.join(root, name)
-                await check_hub_health(hub_url, test_notebook_path, api_token)
-
                 if i > 0:
                     # FIXME: When we run our hub health check, we create a user server, execute some
                     # code on that server, and then delete the server and user. The JupyterHub API
@@ -92,6 +82,16 @@ async def test_hub_healthy(hub_url, api_token, notebook_dir, check_dask_scaling)
                     # Upstream jhub-client issue: https://github.com/Quansight/jhub-client/issues/14
                     print("Waiting for previous server to fully shutdown...")
                     time.sleep(35)
+
+                # We only want to run the "scale_dask_workers.ipynb" file if the
+                # check_dask_scaling variable is true. We continue in the loop if
+                # check_dask_scaling == False when we iterate over this file.
+                if (not check_dask_scaling) and (name == "scale_dask_workers.ipynb"):
+                    continue
+
+                print(f"Running {name} test notebook...")
+                test_notebook_path = os.path.join(root, name)
+                await check_hub_health(hub_url, test_notebook_path, api_token)
 
         print(f"Hub {hub_url} is healthy!")
     except Exception as e:
