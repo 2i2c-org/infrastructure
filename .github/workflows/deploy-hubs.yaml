@@ -28,7 +28,7 @@ concurrency: deploy
 # This environment variable triggers the deployer to colourise print statments in the
 # GitHug Actions logs for easy reading
 env:
-  term: XTERM
+  TERM: xterm
 
 jobs:
   # This job runs in Pull Requests and on pushes to the default branch. It identifies
