@@ -241,6 +241,11 @@ def generate_helm_upgrade_jobs(changed_filepaths):
         upgrade_all_hubs_on_all_clusters,
     ) = discover_modified_common_files(changed_filepaths)
 
+    # Convert changed filepaths into absolute Posix Paths
+    changed_filepaths = [
+        Path(os.getcwd()).joinpath(filepath) for filepath in changed_filepaths
+    ]
+
     # Get a list of filepaths to all cluster.yaml files in the repo
     cluster_files = get_all_cluster_yaml_files()
 
