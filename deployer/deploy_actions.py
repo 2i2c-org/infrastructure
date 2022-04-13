@@ -397,7 +397,7 @@ def run_hub_health_check(cluster_name, hub_name, check_dask_scaling=False):
                     "secrets",
                     "hub",
                     f"--namespace={hub.spec['name']}",
-                    r"""--output="jsonpath={.data['hub\.services\.hub-health\.apiToken']}""",
+                    r"--output=jsonpath={.data['hub\.services\.hub-health\.apiToken']}",
                 ],
                 text=True,
             )
