@@ -334,6 +334,19 @@ def generate_helm_upgrade_jobs(changed_filepaths):
 
 
 def run_hub_health_check(cluster_name, hub_name, check_dask_scaling=False):
+    """Run a health check on a given hub on a given cluster. Optionally check scaling
+    of dask workers if the hub is a daskhub.
+
+    Args:
+        cluster_name (str): The name of the cluster where the hub is deployed
+        hub_name (str): The name of the hub to run a health check for
+        check_dask_scaling (bool, optional): If true, run an additional check that dask
+            workers can scale. Only applies to daskhubs. Defaults to False.
+
+    Returns
+        exit_code (int): The exit code of the pytest process. 0 for pass, any other
+            integer number greater than 0 for failure.
+    """
     # Read in the cluster.yaml file
     config_file_path = find_absolute_path_to_cluster_file(cluster_name)
     with open(config_file_path) as f:
