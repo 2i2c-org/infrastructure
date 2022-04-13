@@ -9,6 +9,7 @@ from deploy_actions import (
     deploy_grafana_dashboards,
     use_cluster_credentials,
     generate_helm_upgrade_jobs,
+    run_hub_health_check,
 )
 from config_validation import (
     validate_cluster_config,
@@ -117,6 +118,22 @@ def main():
         type=_converted_string_to_list,
         help="A singular or space-delimited list of added or modified filepaths in the repo",
     )
+
+    # run-hub-health-check subcommand
+    run_hub_health_check_parser = subparsers.add_parser(
+        "run-hub-health-check",
+        parents=[base_parser],
+        help="Run a health check against a given hub deployed on a given cluster",
+    )
+    run_hub_health_check_parser.add_argument(
+        "hub_name",
+        help="The hub to run health checks against.",
+    )
+    run_hub_health_check_parser.add_argument(
+        "--check-dask-scaling",
+        action="store_true",
+        help="For daskhubs, optionally check that dask workers can be scaled",
+    )
     # === End section ===#
 
     args = argparser.parse_args()
@@ -125,7 +142,6 @@ def main():
         deploy(
             args.cluster_name,
             args.hub_name,
-            args.skip_hub_health_test,
             args.config_path,
         )
     elif args.action == "validate":
@@ -140,3 +156,9 @@ def main():
         use_cluster_credentials(args.cluster_name)
     elif args.action == "generate-helm-upgrade-jobs":
         generate_helm_upgrade_jobs(args.filepaths)
+    elif args.action == "run-hub-health-check":
+        run_hub_health_check(
+            args.cluster_name,
+            args.hub_name,
+            check_dask_scaling=args.check_dask_scaling,
+        )

@@ -1,12 +1,16 @@
 """
 Actions available when deploying many JupyterHubs to many Kubernetes clusters
 """
+import base64
 import os
+import sys
 import shutil
 import subprocess
 from pathlib import Path
 
+import pytest
 from ruamel.yaml import YAML
+from contextlib import redirect_stderr, redirect_stdout
 
 from auth import KeyProvider
 from cluster import Cluster
@@ -173,7 +177,7 @@ def deploy_grafana_dashboards(cluster_name):
         shutil.rmtree(dashboards_dir)
 
 
-def deploy(cluster_name, hub_name, skip_hub_health_test, config_path):
+def deploy(cluster_name, hub_name, config_path):
     """
     Deploy one or more hubs in a given cluster
     """
@@ -214,13 +218,13 @@ def deploy(cluster_name, hub_name, skip_hub_health_test, config_path):
         if hub_name:
             hub = next((hub for hub in hubs if hub.spec["name"] == hub_name), None)
             print_colour(f"Deploying hub {hub.spec['name']}...")
-            hub.deploy(k, SECRET_KEY, skip_hub_health_test)
+            hub.deploy(k, SECRET_KEY)
         else:
             for i, hub in enumerate(hubs):
                 print_colour(
                     f"{i+1} / {len(hubs)}: Deploying hub {hub.spec['name']}..."
                 )
-                hub.deploy(k, SECRET_KEY, skip_hub_health_test)
+                hub.deploy(k, SECRET_KEY)
 
 
 def generate_helm_upgrade_jobs(changed_filepaths):
@@ -332,3 +336,103 @@ def generate_helm_upgrade_jobs(changed_filepaths):
         print(
             f"::set-output name=support-and-staging-matrix-jobs::{support_and_staging_matrix_jobs}"
         )
+
+
+def run_hub_health_check(cluster_name, hub_name, check_dask_scaling=False):
+    """Run a health check on a given hub on a given cluster. Optionally check scaling
+    of dask workers if the hub is a daskhub.
+
+    Args:
+        cluster_name (str): The name of the cluster where the hub is deployed
+        hub_name (str): The name of the hub to run a health check for
+        check_dask_scaling (bool, optional): If true, run an additional check that dask
+            workers can scale. Only applies to daskhubs. Defaults to False.
+
+    Returns
+        exit_code (int): The exit code of the pytest process. 0 for pass, any other
+            integer number greater than 0 for failure.
+    """
+    # Read in the cluster.yaml file
+    config_file_path = find_absolute_path_to_cluster_file(cluster_name)
+    with open(config_file_path) as f:
+        cluster = Cluster(yaml.load(f), config_file_path.parent)
+
+    # Find the hub's config
+    hub_indx = [
+        indx for (indx, h) in enumerate(cluster.hubs) if h.spec["name"] == hub_name
+    ]
+    if len(hub_indx) == 1:
+        hub = cluster.hubs[hub_indx[0]]
+    elif len(hub_indx) > 1:
+        print_colour("ERROR: More than one hub with this name found!")
+        sys.exit(1)
+    elif len(hub_indx) == 0:
+        print_colour("ERROR: No hubs with this name found!")
+        sys.exit(1)
+
+    print_colour(f"Running hub health check for {hub.spec['name']}...")
+
+    # Check if this hub has a domain override file. If yes, apply override.
+    if "domain_override_file" in hub.spec.keys():
+        domain_override_file = hub.spec["domain_override_file"]
+
+        with get_decrypted_file(
+            hub.cluster.config_path.joinpath(domain_override_file)
+        ) as decrypted_path:
+            with open(decrypted_path) as f:
+                domain_override_config = yaml.load(f)
+
+        hub.spec["domain"] = domain_override_config["domain"]
+
+    # Retrieve hub's URL
+    hub_url = f'https://{hub.spec["domain"]}'
+
+    # Read in the service api token from a k8s Secret in the k8s cluster
+    with cluster.auth():
+        try:
+            service_api_token_b64encoded = subprocess.check_output(
+                [
+                    "kubectl",
+                    "get",
+                    "secrets",
+                    "hub",
+                    f"--namespace={hub.spec['name']}",
+                    r"--output=jsonpath={.data['hub\.services\.hub-health\.apiToken']}",
+                ],
+                text=True,
+            )
+        except subprocess.CalledProcessError as e:
+            raise ValueError(
+                f"Failed to acquire a JupyterHub API token for the hub-health service: {e.stdout}"
+            )
+        service_api_token = base64.b64decode(service_api_token_b64encoded).decode()
+
+    # On failure, pytest prints out params to the test that failed.
+    # This can contain sensitive info - so we hide stderr
+    # FIXME: Don't use pytest - just call a function instead
+    #
+    # Show errors locally but redirect on CI
+    gh_ci = os.environ.get("CI", "false")
+    pytest_args = [
+        "-q",
+        "deployer/tests",
+        "--hub-url",
+        hub_url,
+        "--api-token",
+        service_api_token,
+        "--hub-type",
+        hub.spec["helm_chart"],
+    ]
+    if gh_ci == "true":
+        print_colour("Testing on CI, not printing output")
+        with open(os.devnull, "w") as dn, redirect_stderr(dn), redirect_stdout(dn):
+            exit_code = pytest.main(pytest_args)
+    else:
+        print_colour("Testing locally, do not redirect output")
+        exit_code = pytest.main(pytest_args)
+    if exit_code != 0:
+        print("Health check failed!", file=sys.stderr)
+    else:
+        print_colour("Health check succeeded!")
+
+    return exit_code
