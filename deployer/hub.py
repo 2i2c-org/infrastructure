@@ -159,22 +159,22 @@ class Hub:
         """
         hub_helm_chart = self.spec["helm_chart"]
 
-        # Generate a token for the hub health service
-        hub_health_token = hmac.new(
-            secret_key, b"health-" + self.spec["name"].encode(), hashlib.sha256
-        ).hexdigest()
-        # Describe the hub health service
-        generated_config.setdefault("jupyterhub", {}).setdefault("hub", {}).setdefault(
-            "services", {}
-        )["hub-health"] = {"apiToken": hub_health_token, "admin": True}
-
-        # FIXME: Have a templates config somewhere? Maybe in Chart.yaml
-        # FIXME: This is a hack. Fix it.
+        # FIXME: This section is only relevant if we generate any config in this
+        #        function. Currently we only generate a JupyterHub API token for
+        #        dask-gateway to use, but as that is resolved we can cleanup
+        #        this entire function.
+        #
         if hub_helm_chart != "basehub":
             generated_config = {"basehub": generated_config}
 
-        # FIXME: This section can be fixed upon resolution of:
-        # https://github.com/dask/dask-gateway/issues/473
+        # FIXME: This section can be removed upon resolution of the below linked issue, where we would
+        #        instead just define a JupyterHub service under hub.services and
+        #        rely on the JupyterHub Helm chart to generate an api token if
+        #        needed.
+        #
+        #        Blocked by https://github.com/dask/dask-gateway/issues/473 and a
+        #        release including it.
+        #
         if hub_helm_chart == "daskhub":
             gateway_token = hmac.new(
                 secret_key, b"gateway-" + self.spec["name"].encode(), hashlib.sha256
