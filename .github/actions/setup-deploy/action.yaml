@@ -44,18 +44,13 @@ inputs:
 runs:
   using: "composite"
   steps:
-    - name: Setup gcloud with credentials to a KMS used by sops
-      uses: google-github-actions/setup-gcloud@v0
+    - name: Setup credentials for sops to decrypt files with Google Cloud KMS
+      uses: google-github-actions/auth@v0
       with:
-        version: "290.0.1"
-        # This is used for KMS only
-        project_id: two-eye-two-see
-        service_account_key: ${{ inputs.GCP_KMS_DECRYPTOR_KEY }}
-        export_default_credentials: true
+        credentials_json: "${{ inputs.GCP_KMS_DECRYPTOR_KEY }}"
 
-    - name: Get gcloud info
-      run: gcloud info
-      shell: bash
+    - name: Install gcloud
+      uses: google-github-actions/setup-gcloud@v0
 
     - name: Setup helm
       uses: azure/setup-helm@v2.0
