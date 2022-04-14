@@ -190,9 +190,8 @@ jobs:
     # Only run this job on pushes to the default branch and when the job output is not
     # an empty list
     #
-    # always() is added as it seems to be required to avoid having this job be
-    # skipped when its dependent upgrade-support-and-staging job has had a
-    # failure we wan't to ignore.
+    # always() is added as it seems to be a magic function to ensure a job can
+    # run at all without being skipped if a previous job has had any failures.
     #
     if: |
       always() &&
@@ -235,7 +234,12 @@ jobs:
     needs: [filter-generate-jobs]
     # Only run this job on pushes to the default branch and when the `generate-jobs` job output is not
     # an empty list
+    #
+    # always() is added as it seems to be a magic function to ensure a job can
+    # run at all without being skipped if a previous job has had any failures.
+    #
     if: |
+      always() &&
       (github.event_name == 'push' && contains(github.ref, 'master')) &&
       needs.filter-generate-jobs.outputs.filtered-prod-hub-matrix-jobs != '[]'
     strategy:
