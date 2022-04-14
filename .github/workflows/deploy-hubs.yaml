@@ -197,12 +197,12 @@ jobs:
 
           prod_hub_matrix_jobs = json.loads(
               r"""
-              ${{ fromJson(needs.generate-jobs.outputs.prod-hub-matrix-jobs) }}
+              ${{ needs.generate-jobs.outputs.prod-hub-matrix-jobs }}
               """
           )
           outputs = json.loads(
               r"""
-              ${{ fromJson(needs.upgrade-support-and-staging.outputs) }}
+              ${{ toJson(needs.upgrade-support-and-staging.outputs) }}
               """
           )
 
