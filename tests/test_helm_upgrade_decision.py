@@ -193,7 +193,7 @@ def test_generate_support_matrix_jobs_one_cluster():
         {
             "provider": "gcp",
             "cluster_name": "cluster1",
-            "upgrade_support": "true",
+            "upgrade_support": True,
             "reason_for_support_redeploy": "Following helm chart values files were modified: support.values.yaml",
         }
     ]
@@ -232,7 +232,7 @@ def test_generate_support_matrix_jobs_all_clusters():
             {
                 "provider": "gcp",
                 "cluster_name": "cluster1",
-                "upgrade_support": "true",
+                "upgrade_support": True,
                 "reason_for_support_redeploy": reason,
             }
         ]
@@ -300,7 +300,7 @@ def test_move_staging_hubs_to_staging_matrix_job_exists():
         {
             "cluster_name": "cluster1",
             "provider": "gcp",
-            "upgrade_support": "true",
+            "upgrade_support": True,
             "reason_for_support_redeploy": "cluster.yaml file was modified",
         }
     ]
@@ -317,9 +317,9 @@ def test_move_staging_hubs_to_staging_matrix_job_exists():
         {
             "cluster_name": "cluster1",
             "provider": "gcp",
-            "upgrade_support": "true",
+            "upgrade_support": True,
             "reason_for_support_redeploy": "cluster.yaml file was modified",
-            "upgrade_staging": "true",
+            "upgrade_staging": True,
             "reason_for_staging_redeploy": "cluster.yaml file was modified",
         }
     ]
@@ -366,9 +366,9 @@ def test_move_staging_hubs_to_staging_matrix_job_does_not_exist():
         {
             "cluster_name": "cluster1",
             "provider": "gcp",
-            "upgrade_support": "false",
+            "upgrade_support": False,
             "reason_for_support_redeploy": "",
-            "upgrade_staging": "true",
+            "upgrade_staging": True,
             "reason_for_staging_redeploy": "cluster.yaml file was modified",
         }
     ]
@@ -391,7 +391,7 @@ def test_ensure_support_staging_jobs_have_correct_keys_hubs_exist():
         {
             "cluster_name": "cluster1",
             "provider": "gcp",
-            "upgrade_support": "false",
+            "upgrade_support": False,
             "reason_for_support_upgrade": "",
         }
     ]
@@ -409,9 +409,9 @@ def test_ensure_support_staging_jobs_have_correct_keys_hubs_exist():
         {
             "cluster_name": "cluster1",
             "provider": "gcp",
-            "upgrade_support": "false",
+            "upgrade_support": False,
             "reason_for_support_upgrade": "",
-            "upgrade_staging": "true",
+            "upgrade_staging": True,
             "reason_for_staging_redeploy": "Following prod hubs require redeploy: hub1",
         }
     ]
@@ -428,7 +428,7 @@ def test_ensure_support_staging_jobs_have_correct_keys_hubs_dont_exist():
         {
             "cluster_name": "cluster1",
             "provider": "gcp",
-            "upgrade_support": "false",
+            "upgrade_support": False,
             "reason_for_support_upgrade": "",
         }
     ]
@@ -437,9 +437,9 @@ def test_ensure_support_staging_jobs_have_correct_keys_hubs_dont_exist():
         {
             "cluster_name": "cluster1",
             "provider": "gcp",
-            "upgrade_support": "false",
+            "upgrade_support": False,
             "reason_for_support_upgrade": "",
-            "upgrade_staging": "false",
+            "upgrade_staging": False,
             "reason_for_staging_redeploy": "",
         }
     ]
@@ -464,9 +464,9 @@ def test_assign_staging_jobs_for_missing_clusters_is_missing():
         {
             "provider": "gcp",
             "cluster_name": "cluster1",
-            "upgrade_support": "false",
+            "upgrade_support": False,
             "reason_for_support_redeploy": "",
-            "upgrade_staging": "true",
+            "upgrade_staging": True,
             "reason_for_staging_redeploy": "Following prod hubs require redeploy: hub1",
         }
     ]
@@ -491,9 +491,9 @@ def test_assign_staging_jobs_for_missing_clusters_is_present():
         {
             "provider": "gcp",
             "cluster_name": "cluster1",
-            "upgrade_support": "false",
+            "upgrade_support": False,
             "reason_for_support_redeploy": "",
-            "upgrade_staging": "true",
+            "upgrade_staging": True,
             "reason_for_staging_redeploy": "Following prod hubs require redeploy: hub1",
         }
     ]
@@ -502,9 +502,9 @@ def test_assign_staging_jobs_for_missing_clusters_is_present():
         {
             "provider": "gcp",
             "cluster_name": "cluster1",
-            "upgrade_support": "false",
+            "upgrade_support": False,
             "reason_for_support_redeploy": "",
-            "upgrade_staging": "true",
+            "upgrade_staging": True,
             "reason_for_staging_redeploy": "Following prod hubs require redeploy: hub1",
         }
     ]
