@@ -250,7 +250,7 @@ def generate_support_matrix_jobs(
             # We know we're upgrading support on all clusters, so just add the cluster
             # name to the list of matrix jobs and move on
             matrix_job = cluster_info.copy()
-            matrix_job["upgrade_support"] = "true"
+            matrix_job["upgrade_support"] = True
 
             if upgrade_support_on_all_clusters:
                 matrix_job[
@@ -269,7 +269,7 @@ def generate_support_matrix_jobs(
 
             if intersection:
                 matrix_job = cluster_info.copy()
-                matrix_job["upgrade_support"] = "true"
+                matrix_job["upgrade_support"] = True
                 matrix_job[
                     "reason_for_support_redeploy"
                 ] = "Following helm chart values files were modified: " + ", ".join(
@@ -305,9 +305,9 @@ def move_staging_hubs_to_staging_matrix(
     {
         "cluster_name": str,
         "provider": str,
-        "upgrade_support": str(bool),
+        "upgrade_support": bool,
         "reason_for_support_redeploy_: str,
-        "upgrade_staging": str(bool),
+        "upgrade_staging": bool,
         "reason_for_staging_redeploy_: str,
     }
 
@@ -352,7 +352,7 @@ def move_staging_hubs_to_staging_matrix(
         if job_idx is not None:
             # Update the matching job in support_and_staging_matrix_jobs to hold
             # information related to upgrading the staging hub
-            support_and_staging_matrix_jobs[job_idx]["upgrade_staging"] = "true"
+            support_and_staging_matrix_jobs[job_idx]["upgrade_staging"] = True
             support_and_staging_matrix_jobs[job_idx][
                 "reason_for_staging_redeploy"
             ] = staging_job["reason_for_redeploy"]
@@ -364,9 +364,9 @@ def move_staging_hubs_to_staging_matrix(
             new_job = {
                 "cluster_name": staging_job["cluster_name"],
                 "provider": staging_job["provider"],
-                "upgrade_staging": "true",
+                "upgrade_staging": True,
                 "reason_for_staging_redeploy": staging_job["reason_for_redeploy"],
-                "upgrade_support": "false",
+                "upgrade_support": False,
                 "reason_for_support_redeploy": "",
             }
             support_and_staging_matrix_jobs.append(new_job)
@@ -378,7 +378,7 @@ def ensure_support_staging_jobs_have_correct_keys(
     support_and_staging_matrix_jobs, prod_hub_matrix_jobs
 ):
     """This function ensures that all entries in support_and_staging_matrix_jobs have
-    the expected upgrade_staging and eason_for_staging_redeploy keys, even if they are
+    the expected upgrade_staging and reason_for_staging_redeploy keys, even if they are
     set to false/empty.
 
     Args:
@@ -407,7 +407,7 @@ def ensure_support_staging_jobs_have_correct_keys(
             if hubs_on_this_cluster:
                 # There are prod hubs on this cluster that require an upgrade, and so we
                 # also upgrade staging
-                job["upgrade_staging"] = "true"
+                job["upgrade_staging"] = True
                 job[
                     "reason_for_staging_redeploy"
                 ] = "Following prod hubs require redeploy: " + ", ".join(
@@ -416,7 +416,7 @@ def ensure_support_staging_jobs_have_correct_keys(
             else:
                 # There are no prod hubs on this cluster that require an upgrade, so we
                 # do not upgrade staging
-                job["upgrade_staging"] = "false"
+                job["upgrade_staging"] = False
                 job["reason_for_staging_redeploy"] = ""
 
     return support_and_staging_matrix_jobs
@@ -472,9 +472,9 @@ def assign_staging_jobs_for_missing_clusters(
             new_job = {
                 "cluster_name": missing_cluster,
                 "provider": provider,
-                "upgrade_support": "false",
+                "upgrade_support": False,
                 "reason_for_support_redeploy": "",
-                "upgrade_staging": "true",
+                "upgrade_staging": True,
                 "reason_for_staging_redeploy": (
                     "Following prod hubs require redeploy: " + ", ".join(prod_hubs)
                 ),
