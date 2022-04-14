@@ -1,3 +1,10 @@
+[tool.black]
+# target-version should be all supported versions
+target-version = ['py37', 'py38', 'py39', 'py310']
+
+[tool.isort]
+profile = "black"
+
 [tool.pytest.ini_options]
 asyncio_mode = "auto"
 testpaths = [
