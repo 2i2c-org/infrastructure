@@ -12,11 +12,7 @@ on:
       # We no longer trigger on this file since it does not contain any logic
       # concerning setting up the clusters for deploy. This now all lives in the
       # setup-deploy local action
-      #
-      # FIXME: Disable trigger on changes to workflow, temporary enabled to get
-      #        things right.
-      #
-      - .github/workflows/deploy-hubs.yaml
+      # - .github/workflows/deploy-hubs.yaml
   pull_request:
     branches:
       - master
