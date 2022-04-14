@@ -167,7 +167,7 @@ class Hub:
         if hub_helm_chart != "basehub":
             generated_config = {"basehub": generated_config}
 
-        # FIXME: This section can be removed upon resolution of, where we would
+        # FIXME: This section can be removed upon resolution of the below linked issue, where we would
         #        instead just define a JupyterHub service under hub.services and
         #        rely on the JupyterHub Helm chart to generate an api token if
         #        needed.
