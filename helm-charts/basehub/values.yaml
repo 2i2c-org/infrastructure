@@ -293,6 +293,17 @@ jupyterhub:
           - -m
           - jupyterhub_configurator.app
           - --Configurator.config_file=/usr/local/etc/jupyterhub-configurator/jupyterhub_configurator_config.py
+      # hub-health service helps us run health checks from the deployer script.
+      # The JupyterHub Helm chart will automatically generate an API token for
+      # services and expose it in a k8s Secret named `hub`. When we run health
+      # tests against a hub, we read this token from the k8s Secret to acquire
+      # the credentials needed to interacting with the JupyterHub API.
+      #
+      hub-health:
+        # FIXME: With JupyterHub 2 we can define a role for this service with
+        #        more tightly scoped permissions based on our needs.
+        #
+        admin: true
     image:
       name: quay.io/2i2c/pilot-hub
       tag: "0.0.1-n2546.ha1b6098"
