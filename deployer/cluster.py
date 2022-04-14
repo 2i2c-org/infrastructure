@@ -281,6 +281,13 @@ class Cluster:
         location = config.get("zone", config.get("region"))
         cluster = config["cluster"]
         with tempfile.NamedTemporaryFile() as kubeconfig:
+            # CLOUDSDK_AUTH_CREDENTIAL_FILE_OVERRIDE is removed as the action of
+            # "gcloud auth activate-server-account" will be secondary to it
+            # otherwise, and this env var can be set by GitHub Actions we use
+            # before using this deployer script to deploy hubs to clusters.
+            orig_cloudsdk_auth_credential_file_override = os.environ.pop(
+                "CLOUDSDK_AUTH_CREDENTIAL_FILE_OVERRIDE", None
+            )
             orig_kubeconfig = os.environ.get("KUBECONFIG")
             try:
                 os.environ["KUBECONFIG"] = kubeconfig.name
@@ -311,3 +318,7 @@ class Cluster:
             finally:
                 if orig_kubeconfig is not None:
                     os.environ["KUBECONFIG"] = orig_kubeconfig
+                if orig_cloudsdk_auth_credential_file_override is not None:
+                    os.environ[
+                        "CLOUDSDK_AUTH_CREDENTIAL_FILE_OVERRIDE"
+                    ] = orig_cloudsdk_auth_credential_file_override
