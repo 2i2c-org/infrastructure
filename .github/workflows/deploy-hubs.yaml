@@ -12,7 +12,11 @@ on:
       # We no longer trigger on this file since it does not contain any logic
       # concerning setting up the clusters for deploy. This now all lives in the
       # setup-deploy local action
-      # - .github/workflows/deploy-hubs.yaml
+      #
+      # FIXME: Disable trigger on changes to workflow, temporary enabled to get
+      #        things right.
+      #
+      - .github/workflows/deploy-hubs.yaml
   pull_request:
     branches:
       - master
@@ -175,8 +179,11 @@ jobs:
       - name: Declare failure status
         id: declare-failure-status
         if: always()
+        shell: python
         run: |
-          echo ::set-output name=failure_${{ matrix.jobs.cluster_name }}::${{ job.status == 'failure' }}
+          name = "${{ matrix.jobs.cluster_name }}".replace(".", "-")
+          failure = "${{ job.status == 'failure' }}"
+          print(f"::set-output name=failure_{name}::{failure}")
 
   # This jobs reduces the initially planned prod-hub-matrix-jobs deployments by
   # filtering out any deployment to a cluster with a failed support-and-staging
@@ -195,23 +202,26 @@ jobs:
       filtered-prod-hub-matrix-jobs: ${{ steps.filter-generate-jobs.outputs.filtered-prod-hub-matrix-jobs }}
 
     steps:
+      # This Python script filters out any prod hub deployment job from running
+      # later based on if its part of a cluster where support/staging upgrade
+      # just failed. Data is injected to the script before its executed via
+      # string literals as rendered GitHub workflow expressions.
       - name: Filter prod deploy jobs to run based on failures in support/staging
         id: filter-generate-jobs
         shell: python
         run: |
           import json
 
-          prod_hub_matrix_jobs = json.loads('${{ needs.generate-jobs.outputs.prod-hub-matrix-jobs }}')
-          outputs = json.loads('${{ toJson(needs.upgrade-support-and-staging.outputs) }}')
+          jobs = json.loads(r"""${{ needs.generate-jobs.outputs.prod-hub-matrix-jobs }}""")
+          outputs = json.loads(r"""${{ toJson(needs.upgrade-support-and-staging.outputs) }}""")
 
-          # Filter any prod job that had a support/staging job run and fail
-          filtered_prod_hub_matrix_jobs = [
-              prod_job
-              for prod_job in prod_hub_matrix_jobs
-              if outputs[f"failure_{prod_job['cluster_name']}"] != "true"
+          filtered_jobs = [
+              job
+              for job in jobs
+              if outputs[f"failure_{job['cluster_name'].replace('.', '-')}"] != "true"
           ]
 
-          print(f"::set-output name=filtered-prod-hub-matrix-jobs::{json.dumps(filtered_prod_hub_matrix_jobs)}")
+          print(f"::set-output name=filtered-prod-hub-matrix-jobs::{json.dumps(filtered_jobs)}")
 
   # This job upgrades production hubs on clusters in parallel, if required. This
   # job needs both the `filter-generate-jobs` to have completed to provide its
