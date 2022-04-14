@@ -182,9 +182,9 @@ class Hub:
             generated_config["dask-gateway"] = {
                 "gateway": {"auth": {"jupyterhub": {"apiToken": gateway_token}}}
             }
-            generated_config["basehub"]["jupyterhub"]["hub"]["services"][
-                "dask-gateway"
-            ] = {"apiToken": gateway_token}
+            generated_config.setdefault("jupyterhub", {}).setdefault(
+                "hub", {}
+            ).setdefault("services", {})["dask-gateway"] = {"apiToken": gateway_token}
 
         return generated_config
 
