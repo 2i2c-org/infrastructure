@@ -1,8 +1,7 @@
 #!/usr/bin/env python3
-import sys
 import subprocess
+import sys
 import time
-
 
 POD_NAME = "ssh-proxycommand-pod"
 POD_IMAGE = "alpine/socat"

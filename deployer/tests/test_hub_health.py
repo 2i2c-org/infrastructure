@@ -1,7 +1,8 @@
-from pathlib import Path
 import os
+from pathlib import Path
+
 import pytest
-from jhub_client.execute import execute_notebook, JupyterHubAPI
+from jhub_client.execute import JupyterHubAPI, execute_notebook
 
 
 @pytest.fixture

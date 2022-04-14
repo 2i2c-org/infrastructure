@@ -1,7 +1,6 @@
+import json
 import os
 from glob import glob
-import json
-
 
 CONFIGURATOR_BASE_PATH = "/usr/local/etc/jupyterhub-configurator"
 

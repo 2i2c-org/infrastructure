@@ -3,18 +3,17 @@ Functions related to validating configuration files such as helm chart values an
 cluster.yaml files
 """
 import functools
-import os
-import sys
 import json
+import os
 import subprocess
-import jsonschema
-
+import sys
 from pathlib import Path
-from ruamel.yaml import YAML
 
+import jsonschema
 from cluster import Cluster
-from utils import print_colour
 from file_acquisition import find_absolute_path_to_cluster_file
+from ruamel.yaml import YAML
+from utils import print_colour
 
 yaml = YAML(typ="safe", pure=True)
 helm_charts_dir = Path(__file__).parent.parent.joinpath("helm-charts")

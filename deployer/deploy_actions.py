@@ -4,35 +4,34 @@ Actions available when deploying many JupyterHubs to many Kubernetes clusters
 import base64
 import json
 import os
-import sys
 import shutil
 import subprocess
+import sys
+from contextlib import redirect_stderr, redirect_stdout
 from pathlib import Path
 
 import pytest
-from ruamel.yaml import YAML
-from contextlib import redirect_stderr, redirect_stdout
-
 from auth import KeyProvider
 from cluster import Cluster
-from utils import print_colour
-from file_acquisition import find_absolute_path_to_cluster_file, get_decrypted_file
 from config_validation import (
+    assert_single_auth_method_enabled,
     validate_cluster_config,
     validate_hub_config,
     validate_support_config,
-    assert_single_auth_method_enabled,
 )
+from file_acquisition import find_absolute_path_to_cluster_file, get_decrypted_file
 from helm_upgrade_decision import (
     assign_staging_jobs_for_missing_clusters,
     discover_modified_common_files,
     ensure_support_staging_jobs_have_correct_keys,
-    get_all_cluster_yaml_files,
     generate_hub_matrix_jobs,
     generate_support_matrix_jobs,
+    get_all_cluster_yaml_files,
     move_staging_hubs_to_staging_matrix,
     pretty_print_matrix_jobs,
 )
+from ruamel.yaml import YAML
+from utils import print_colour
 
 # Without `pure=True`, I get an exception about str / byte issues
 yaml = YAML(typ="safe", pure=True)

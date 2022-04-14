@@ -1,14 +1,13 @@
-import os
 import json
+import os
 import subprocess
 import tempfile
-
-from pathlib import Path
 from contextlib import contextmanager
+from pathlib import Path
 
+from file_acquisition import get_decrypted_file, get_decrypted_files
 from hub import Hub
 from utils import print_colour
-from file_acquisition import get_decrypted_file, get_decrypted_files
 
 
 class Cluster:
