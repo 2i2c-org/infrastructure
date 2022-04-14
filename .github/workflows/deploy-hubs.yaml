@@ -125,7 +125,7 @@ jobs:
       # Don't stop other deployments if one fails
       fail-fast: false
       matrix:
-        jobs: ${{ fromJson(needs.generate-jobs.outputs.support-and-staging-matrix-jobs) }}
+        jobs: ${{ needs.generate-jobs.outputs.support-and-staging-matrix-jobs }}
 
     steps:
       - name: Checkout repo
@@ -239,7 +239,7 @@ jobs:
       # Don't stop other deployments if one fails
       fail-fast: false
       matrix:
-        jobs: ${{ fromJson(needs.filter-generate-jobs.outputs.filtered-prod-hub-matrix-jobs) }}
+        jobs: ${{ needs.filter-generate-jobs.outputs.filtered-prod-hub-matrix-jobs }}
 
     steps:
       - name: Checkout repo
