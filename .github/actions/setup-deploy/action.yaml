@@ -63,7 +63,7 @@ runs:
     - name: Setup sops
       uses: mdgreenwald/mozilla-sops-action@v1
       with:
-        version: v3.7.1
+        version: v3.7.2
 
     - name: Setup kops
       if: inputs.provider == 'aws'
