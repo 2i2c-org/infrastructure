@@ -3,14 +3,13 @@ import hmac
 import json
 import subprocess
 import tempfile
-
 from pathlib import Path
 from textwrap import dedent
-from ruamel.yaml import YAML
 
 from auth import KeyProvider
-from utils import print_colour
 from file_acquisition import get_decrypted_file, get_decrypted_files
+from ruamel.yaml import YAML
+from utils import print_colour
 
 # Without `pure=True`, I get an exception about str / byte issues
 yaml = YAML(typ="safe", pure=True)

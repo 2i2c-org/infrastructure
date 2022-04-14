@@ -3,18 +3,18 @@ Command line interface for deployer
 """
 import argparse
 
-from deploy_actions import (
-    deploy,
-    deploy_support,
-    deploy_grafana_dashboards,
-    use_cluster_credentials,
-    generate_helm_upgrade_jobs,
-    run_hub_health_check,
-)
 from config_validation import (
     validate_cluster_config,
-    validate_support_config,
     validate_hub_config,
+    validate_support_config,
+)
+from deploy_actions import (
+    deploy,
+    deploy_grafana_dashboards,
+    deploy_support,
+    generate_helm_upgrade_jobs,
+    run_hub_health_check,
+    use_cluster_credentials,
 )
 
 

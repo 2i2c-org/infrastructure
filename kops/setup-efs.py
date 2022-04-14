@@ -10,10 +10,11 @@ Should be terraform that runs after kops cluster is created and
 fetches VPC / SG / Subnets with data sources instead.
 """
 
-import sys
-import boto3
 import secrets
+import sys
 import time
+
+import boto3
 
 
 def find_subnets(cluster_name, region):

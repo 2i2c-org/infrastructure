@@ -27,8 +27,14 @@ repos:
           - --py36-plus
 
   # Autoformat: Python code
+  - repo: https://github.com/pycqa/isort
+    rev: "5.10.1"
+    hooks:
+      - id: isort
+
+  # Autoformat: Python code
   - repo: https://github.com/psf/black
-    rev: 22.3.0
+    rev: "22.3.0"
     hooks:
       - id: black
 

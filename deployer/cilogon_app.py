@@ -25,14 +25,13 @@ by executing the script with `--help` flag, from the root of the repository:
 
 import argparse
 import base64
-import requests
 import subprocess
-
 from pathlib import Path
+
+import requests
+from file_acquisition import find_absolute_path_to_cluster_file, get_decrypted_file
 from ruamel.yaml import YAML
 from yarl import URL
-
-from file_acquisition import find_absolute_path_to_cluster_file, get_decrypted_file
 
 yaml = YAML(typ="safe")
 

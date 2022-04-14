@@ -73,12 +73,14 @@ def setup(app):
     app.add_css_file("custom.css")
 
 
+import subprocess
+from pathlib import Path
+
+import pandas as pd
+
 # -- Custom scripts -----------------------------------------
 # Pull latest list of communities served by infrastructure/
 from yaml import safe_load
-import pandas as pd
-from pathlib import Path
-import subprocess
 
 
 def render_hubs():

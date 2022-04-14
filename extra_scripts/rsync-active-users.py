@@ -9,20 +9,21 @@ home directories.
 An environment variable 'JUPYTERHUB_ADMIN' must be set with an admin token,
 obtainable from {hub_url}/hub/token by an admin user.
 """
-import os
-import requests
-from dateutil.parser import parse
-from datetime import datetime, timedelta, timezone
-from concurrent.futures import ThreadPoolExecutor, as_completed
 import argparse
-import time
+import os
+import string
 import subprocess
+import sys
+import time
 
 # Copied from https://github.com/minrk/escapism/blob/d1d406c69b9ab0b14aa562d98a9e198adf9c047a/escapism.py
 # this is the library JuptyerHub uses to escape usernames into a form that works for filesystem paths
 import warnings
-import string
-import sys
+from concurrent.futures import ThreadPoolExecutor, as_completed
+from datetime import datetime, timedelta, timezone
+
+import requests
+from dateutil.parser import parse
 
 SAFE = set(string.ascii_letters + string.digits)
 ESCAPE_CHAR = "_"

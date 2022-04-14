@@ -6,9 +6,10 @@ This script helps remind our team when it's time to merge a PR. It does these th
 - If the approval was longer than 24 hours ago, add it to a list of PRs we should merge
 - Ping our #hub-development channel with a list of the PRs that are ready to merge
 """
-from ghapi.all import GhApi
-import pandas as pd
 from datetime import datetime
+
+import pandas as pd
+from ghapi.all import GhApi
 
 api = GhApi()
 
