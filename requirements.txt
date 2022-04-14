@@ -17,6 +17,6 @@ jsonschema
 rich
 
 # jhub_client, pytest, and pytest-asyncio are used for our health checks
-jhub-client==0.1.4
+jhub-client==0.1.6
 pytest
 pytest-asyncio
