@@ -201,16 +201,8 @@ jobs:
         run: |
           import json
 
-          prod_hub_matrix_jobs = json.loads(
-              r"""
-              ${{ needs.generate-jobs.outputs.prod-hub-matrix-jobs }}
-              """
-          )
-          outputs = json.loads(
-              r"""
-              ${{ toJson(needs.upgrade-support-and-staging.outputs) }}
-              """
-          )
+          prod_hub_matrix_jobs = json.loads('${{ needs.generate-jobs.outputs.prod-hub-matrix-jobs }}')
+          outputs = json.loads('${{ toJson(needs.upgrade-support-and-staging.outputs) }}')
 
           # Filter any prod job that had a support/staging job run and fail
           filtered_prod_hub_matrix_jobs = [
