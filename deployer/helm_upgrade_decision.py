@@ -499,9 +499,9 @@ def pretty_print_matrix_jobs(prod_hub_matrix_jobs, support_and_staging_matrix_jo
         support_table.add_row(
             job["provider"],
             job["cluster_name"],
-            job["upgrade_support"],
+            "Yes" if job["upgrade_support"] else "No",
             job["reason_for_support_redeploy"],
-            job["upgrade_staging"],
+            "Yes" if job["upgrade_staging"] else "No",
             job["reason_for_staging_redeploy"],
             end_section=True,
         )
