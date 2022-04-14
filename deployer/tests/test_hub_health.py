@@ -1,7 +1,6 @@
 from pathlib import Path
 import os
 import pytest
-import time
 from jhub_client.execute import execute_notebook, JupyterHubAPI
 
 
@@ -35,7 +34,7 @@ async def check_hub_health(hub_url, test_notebook_path, service_api_token):
             user = await hub.get_user(username)
             if user:
                 if user["server"] and not user["pending"]:
-                    await hub.delete_server(username)
+                    await hub.ensure_server_deleted(username, 60)
 
                 # If we don't delete the user too, than we won't be able to start a kernel for it.
                 # This is because we would have lost its api token from the previous run.
@@ -66,23 +65,6 @@ async def test_hub_healthy(hub_url, api_token, notebook_dir, check_dask_scaling)
         print(f"Starting hub {hub_url} health validation...")
         for root, directories, files in os.walk(notebook_dir, topdown=False):
             for i, name in enumerate(files):
-                if i > 0:
-                    # FIXME: When we run our hub health check, we create a user server, execute some
-                    # code on that server, and then delete the server and user. The JupyterHub API
-                    # returns two codes: 202 - the server is taking a while to stop, 204 - the server
-                    # has stopped. It is unclear which code response jhub-client waits for.
-                    # When we execute both our standard check *and* the dask scaling check, we
-                    # essentially spin up two servers for the same user one after the other. If
-                    # jhub-client is returning a 202 (as opposed to a 204) we may see the following
-                    # error:
-                    # >> Exception was server for username=deployment-service-check is already running.
-                    # As a workaround for this, we add some sleep time to ensure the server has had
-                    # sufficient time to properly shut down before we continue and provision the
-                    # next check.
-                    # Upstream jhub-client issue: https://github.com/Quansight/jhub-client/issues/14
-                    print("Waiting for previous server to fully shutdown...")
-                    time.sleep(35)
-
                 # We only want to run the "scale_dask_workers.ipynb" file if the
                 # check_dask_scaling variable is true. We continue in the loop if
                 # check_dask_scaling == False when we iterate over this file.
