@@ -204,11 +204,11 @@ minimum and maximum number of nodes. In certain cases, it might be helpful to 's
 a nodegroup in a cluster before an event, to test cloud provider quotas or to make user
 server startup faster.
 
-1. Open the appropriate `.jsonnet` file for the cluster in question, and set the
-   `minNodes` property of `notebookNodes` to the appropriate number you want.
+1. Open the appropriate `.jsonnet` file for the cluster in question, and set a
+   `minSize` property of `notebookNodes` to the appropriate number you want.
 
    ```{warning}
-   It is currently unclear if *lowering* the `minNodes` property just allows
+   It is currently unclear if *lowering* the `minSize` property just allows
    the autoscaler to reclaim nodes, or if it actively destroys nodes at time
    of application! If it actively destroys nodes, it is unclear if it does
    so regardless of user pods running in these nodes! Until this can be
