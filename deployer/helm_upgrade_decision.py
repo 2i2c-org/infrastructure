@@ -223,7 +223,19 @@ def generate_support_matrix_jobs(
             cluster, the cloud provider that cluster runs on, a Boolean indicating if
             the support chart should be upgraded, and a reason why the support chart
             needs upgrading.
+
+            Example:
+
+            [
+                {
+                    "cluster_name": 2i2c,
+                    "provider": "gcp",
+                    "reason_for_support_redeploy": "Support helm chart has been modified",
+                    "upgrade_support": True,
+                },
+            ]
     """
+    # Rename dictionary key
     cluster_info["reason_for_support_redeploy"] = cluster_info.pop(
         "reason_for_redeploy"
     )
