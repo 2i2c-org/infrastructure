@@ -2,6 +2,7 @@
 Actions available when deploying many JupyterHubs to many Kubernetes clusters
 """
 import base64
+import json
 import os
 import sys
 import shutil
@@ -331,9 +332,11 @@ def generate_helm_upgrade_jobs(changed_filepaths):
     if ci_env:
         # Add these matrix jobs as output variables for use in another job
         # https://docs.github.com/en/actions/using-workflows/workflow-syntax-for-github-actions
-        print(f"::set-output name=prod-hub-matrix-jobs::{prod_hub_matrix_jobs}")
         print(
-            f"::set-output name=support-and-staging-matrix-jobs::{support_and_staging_matrix_jobs}"
+            f"::set-output name=prod-hub-matrix-jobs::{json.dumps(prod_hub_matrix_jobs)}"
+        )
+        print(
+            f"::set-output name=support-and-staging-matrix-jobs::{json.dumps(support_and_staging_matrix_jobs)}"
         )
 
 
