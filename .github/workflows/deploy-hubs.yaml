@@ -218,7 +218,7 @@ jobs:
   # This job upgrades production hubs on clusters in parallel, if required. This
   # job needs both the `filter-generate-jobs` to have completed to provide its
   # output `filtered-prob-hub-matrix-jobs`. It is a list of dictionaries with
-  # the keys cluster_name, provider, and hub+name for each production hub that
+  # the keys cluster_name, provider, and hub_name for each production hub that
   # requires an upgrade and didn't have a failed support-and-staging-upgrade job
   # run as part of this workflow.
   upgrade-prod-hubs:
