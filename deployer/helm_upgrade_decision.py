@@ -45,8 +45,7 @@ def discover_modified_common_files(modified_paths):
         # Filepaths related to the deployer infrastructure
         "deployer/*",
         "requirements.txt",
-        # Filepaths related to GitHub Actions infrastructure
-        ".github/workflows/deploy-hubs.yaml",
+        # Filepath to local GitHub Action that sets up clusters for deploy
         ".github/actions/setup-deploy/*",
         # Filepaths related to helm chart infrastructure
         "helm-charts/basehub/*",

@@ -7,18 +7,24 @@ on:
     paths:
       - deployer/**
       - requirements.txt
-      - .github/workflows/deploy-hubs.yaml
       - .github/actions/setup-deploy/**
       - "**.yaml"
+      # We no longer trigger on this file since it does not contain any logic
+      # concerning setting up the clusters for deploy. This now all lives in the
+      # setup-deploy local action
+      # - .github/workflows/deploy-hubs.yaml
   pull_request:
     branches:
       - master
     paths:
       - deployer/**
       - requirements.txt
-      - .github/workflows/deploy-hubs.yaml
       - .github/actions/setup-deploy/**
       - "**.yaml"
+      # We no longer trigger on this file since it does not contain any logic
+      # concerning setting up the clusters for deploy. This now all lives in the
+      # setup-deploy local action
+      # - .github/workflows/deploy-hubs.yaml
 
 # When multiple PRs triggering this workflow are merged, queue them instead
 # of running them in parallel
