@@ -179,21 +179,12 @@ class Hub:
             gateway_token = hmac.new(
                 secret_key, b"gateway-" + self.spec["name"].encode(), hashlib.sha256
             ).hexdigest()
-            # ensure we have initialized dictionaries without overwriting them
-            generated_config.setdefault("basehub", {}).setdefault(
-                "jupyterhub", {}
-            ).setdefault("hub", {}).setdefault("services", {})
-            generated_config.setdefault("dask-gateway", {}).setdefault(
-                "gateway", {}
-            ).setdefault("auth", {})
-            # declare a jupyterhub api-token for a jupyterhub service and let
-            # the dask-gateway helm chart use it
-            generated_config["basehub"]["jupyterhub"]["hub"]["services"][
-                "dask-gateway"
-            ] = {"apiToken": gateway_token}
-            generated_config["dask-gateway"]["gateway"]["auth"]["jupyterhub"] = {
-                "apiToken": gateway_token
+            generated_config["dask-gateway"] = {
+                "gateway": {"auth": {"jupyterhub": {"apiToken": gateway_token}}}
             }
+            generated_config["basehub"].setdefault("jupyterhub", {}).setdefault(
+                "hub", {}
+            ).setdefault("services", {})["dask-gateway"] = {"apiToken": gateway_token}
 
         return generated_config
 
