@@ -44,7 +44,7 @@ jobs:
     runs-on: ubuntu-latest
     outputs:
       support-and-staging-matrix-jobs: ${{ steps.generate-jobs.outputs.support-and-staging-matrix-jobs }}
-      prob-hub-matrix-jobs: ${{ steps.generate-jobs.outputs.prod-hub-matrix-jobs }}
+      prod-hub-matrix-jobs: ${{ steps.generate-jobs.outputs.prod-hub-matrix-jobs }}
 
     steps:
       - name: Checkout repo
@@ -186,7 +186,7 @@ jobs:
       needs.generate-jobs.outputs.prod-hub-matrix-jobs != '[]'
 
     outputs:
-      filtered-prob-hub-matrix-jobs: ${{ steps.filter-generate-jobs.outputs.filtered-prod-hub-matrix-jobs }}
+      filtered-prod-hub-matrix-jobs: ${{ steps.filter-generate-jobs.outputs.filtered-prod-hub-matrix-jobs }}
 
     steps:
       - name: Filter prod deploy jobs to run based on failures in support/staging
@@ -217,7 +217,7 @@ jobs:
 
   # This job upgrades production hubs on clusters in parallel, if required. This
   # job needs both the `filter-generate-jobs` to have completed to provide its
-  # output `filtered-prob-hub-matrix-jobs`. It is a list of dictionaries with
+  # output `filtered-prod-hub-matrix-jobs`. It is a list of dictionaries with
   # the keys cluster_name, provider, and hub_name for each production hub that
   # requires an upgrade and didn't have a failed support-and-staging-upgrade job
   # run as part of this workflow.
@@ -228,12 +228,12 @@ jobs:
     # an empty list
     if: |
       (github.event_name == 'push' && contains(github.ref, 'master')) &&
-      needs.filter-generate-jobs.outputs.filtered-prob-hub-matrix-jobs != '[]'
+      needs.filter-generate-jobs.outputs.filtered-prod-hub-matrix-jobs != '[]'
     strategy:
       # Don't stop other deployments if one fails
       fail-fast: false
       matrix:
-        jobs: ${{ fromJson(needs.filter-generate-jobs.outputs.filtered-prob-hub-matrix-jobs) }}
+        jobs: ${{ fromJson(needs.filter-generate-jobs.outputs.filtered-prod-hub-matrix-jobs) }}
 
     steps:
       - name: Checkout repo
