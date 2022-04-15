@@ -17,9 +17,10 @@
 #
 name: "Setup the deployer script for use to deploy"
 description: >-
-  Setups the deployer script by loading credentials and installing relevant tools
-  needed to interact with encrypted files, kubernetes clusters, and container
-  registries.
+  Setups the deployer script by loading credentials and installing library
+  dependencies and relevant tools needed to interact with encrypted files,
+  kubernetes clusters, and container registries. Tools already available in the
+  github virtual environments are not re-installed (gcloud, helm).
 
 # inputs configuration reference:
 # https://docs.github.com/en/actions/creating-actions/metadata-syntax-for-github-actions#inputs
@@ -48,12 +49,6 @@ runs:
       uses: google-github-actions/auth@v0
       with:
         credentials_json: "${{ inputs.GCP_KMS_DECRYPTOR_KEY }}"
-
-    - name: Install gcloud
-      uses: google-github-actions/setup-gcloud@v0
-
-    - name: Setup helm
-      uses: azure/setup-helm@v2.0
 
     - name: Setup sops
       uses: mdgreenwald/mozilla-sops-action@v1
