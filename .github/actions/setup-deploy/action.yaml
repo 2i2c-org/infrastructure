@@ -75,7 +75,20 @@ runs:
       with:
         python-version: "3.9"
 
-    - name: Setup deployer script Python dependencies
+    - name: Attempt to restore cached Python dependencies
+      uses: actions/cache@v3
+      id: cache-pip
+      with:
+        path: ~/.cache/pip
+        # key determines if we define or re-use an existing cache or not, and we
+        # define a string composed of parts to ensure we only cache within a
+        # workflow run attempt, not between workflow runs or separate attempts
+        # of the runs.
+        key: "${{ github.run_id }}-${{ github.run_attempt }}"
+
+    - name: Install deployer script's Python dependencies
+      if: steps.cache-pip.outputs.cache-hit != 'true'
       run: |
-        python -m pip install -r requirements.txt
+        pip install -r requirements.txt
+        pip list
       shell: bash
