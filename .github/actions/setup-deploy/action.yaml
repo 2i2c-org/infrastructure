@@ -49,16 +49,18 @@ runs:
       with:
         python-version: "3.9"
 
-    - name: Attempt to restore cached Python dependencies
+    # There should always be a cache hit because from the "generate-jobs" job
+    # that is needed by any job calling this composite action. The installation
+    # step below is a precaution.
+    - name: Restore cached Python dependencies
       uses: actions/cache@v3
       id: cache-pip
       with:
         path: ~/.cache/pip
-        # key determines if we define or re-use an existing cache or not, and we
-        # define a string composed of parts to ensure we only cache within a
-        # workflow run attempt, not between workflow runs or separate attempts
-        # of the runs.
-        key: "${{ github.run_id }}-${{ github.run_attempt }}"
+        # key determines if we define or re-use an existing cache or not. Our
+        # key ensure we cache within a workflow run and its attempts, but not
+        # between workflow runs.
+        key: "${{ github.run_id }}"
 
     - name: Install deployer script's Python dependencies
       if: steps.cache-pip.outputs.cache-hit != 'true'
@@ -67,6 +69,8 @@ runs:
         pip list
       shell: bash
 
+    # This step could be cached, but we only do it for a few jobs in the
+    # workflow where this action is used
     - name: Install kops
       if: inputs.provider == 'aws'
       run: |
@@ -77,6 +81,7 @@ runs:
         KOPS_VERSION: "v1.21.1"
       shell: bash
 
+    # This action use the github official cache mechanism so we don't need to
     - name: Install sops
       uses: mdgreenwald/mozilla-sops-action@v1
       with:
