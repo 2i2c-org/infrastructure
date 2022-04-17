@@ -17,9 +17,11 @@
 #
 name: "Setup the deployer script for use to deploy"
 description: >-
-  Setups the deployer script by loading credentials and installing relevant tools
-  needed to interact with encrypted files, kubernetes clusters, and container
-  registries.
+  Setups the deployer script by loading credentials and installing library
+  dependencies and relevant tools needed to interact with encrypted files,
+  kubernetes clusters, and container registries. `gcloud` already available in
+  the github virtual environment is not re-installed but `helm` is pinned to
+  avoid issues of a changing version.
 
 # inputs configuration reference:
 # https://docs.github.com/en/actions/creating-actions/metadata-syntax-for-github-actions#inputs
@@ -44,23 +46,39 @@ inputs:
 runs:
   using: "composite"
   steps:
-    - name: Setup credentials for sops to decrypt files with Google Cloud KMS
-      uses: google-github-actions/auth@v0
+    - uses: actions/setup-python@v3
       with:
-        credentials_json: "${{ inputs.GCP_KMS_DECRYPTOR_KEY }}"
+        python-version: "3.9"
 
-    - name: Install gcloud
-      uses: google-github-actions/setup-gcloud@v0
-
-    - name: Setup helm
-      uses: azure/setup-helm@v2.0
-
-    - name: Setup sops
-      uses: mdgreenwald/mozilla-sops-action@v1
+    # There will always be a cache hit on the cache key when this composite
+    # action is run, as its only done after the "generate-jobs" job has been run
+    # which will save a cache.
+    - name: Restore pip's install cache
+      uses: actions/cache@v3
       with:
-        version: v3.7.2
+        path: ~/.cache/pip
+        # key determines if we define or re-use an existing cache or not. Our
+        # key ensure we cache within a workflow run and its attempts, but not
+        # between workflow runs.
+        key: "${{ github.run_id }}"
 
-    - name: Setup kops
+    - name: Install deployer script's Python dependencies
+      run: |
+        pip install -r requirements.txt
+        pip list
+      shell: bash
+
+    # This action use the github official cache mechanism internally
+    - uses: azure/setup-helm@v2.0
+      with:
+        # version is pinned for helm to avoid an automatic update of its version
+        # which would cause something unexpected without an action on our
+        # behalf.
+        version: v3.8.2
+
+    # This step could be cached, but we only do it for a few jobs in the
+    # workflow where this action is used
+    - name: Install kops
       if: inputs.provider == 'aws'
       run: |
         curl -Lo /tmp/kops https://github.com/kubernetes/kops/releases/download/$KOPS_VERSION/kops-linux-amd64
@@ -70,12 +88,13 @@ runs:
         KOPS_VERSION: "v1.21.1"
       shell: bash
 
-    - name: Setup Python 3.9
-      uses: actions/setup-python@v3
+    # This action use the github official cache mechanism internally
+    - name: Install sops
+      uses: mdgreenwald/mozilla-sops-action@v1
       with:
-        python-version: "3.9"
+        version: v3.7.2
 
-    - name: Setup deployer script Python dependencies
-      run: |
-        python -m pip install -r requirements.txt
-      shell: bash
+    - name: Setup sops credentials to decrypt repo secrets
+      uses: google-github-actions/auth@v0
+      with:
+        credentials_json: "${{ inputs.GCP_KMS_DECRYPTOR_KEY }}"
