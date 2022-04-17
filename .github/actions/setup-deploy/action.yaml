@@ -19,8 +19,9 @@ name: "Setup the deployer script for use to deploy"
 description: >-
   Setups the deployer script by loading credentials and installing library
   dependencies and relevant tools needed to interact with encrypted files,
-  kubernetes clusters, and container registries. Tools already available in the
-  github virtual environments are not re-installed (gcloud, helm).
+  kubernetes clusters, and container registries. `gcloud` already available in
+  the github virtual environment is not re-installed but `helm` is pinned to
+  avoid issues of a changing version.
 
 # inputs configuration reference:
 # https://docs.github.com/en/actions/creating-actions/metadata-syntax-for-github-actions#inputs
@@ -49,12 +50,11 @@ runs:
       with:
         python-version: "3.9"
 
-    # There should always be a cache hit because from the "generate-jobs" job
-    # that is needed by any job calling this composite action. The installation
-    # step below is a precaution.
-    - name: Restore cached Python dependencies
+    # There will always be a cache hit on the cache key when this composite
+    # action is run, as its only done after the "generate-jobs" job has been run
+    # which will save a cache.
+    - name: Restore pip's install cache
       uses: actions/cache@v3
-      id: cache-pip
       with:
         path: ~/.cache/pip
         # key determines if we define or re-use an existing cache or not. Our
@@ -63,7 +63,6 @@ runs:
         key: "${{ github.run_id }}"
 
     - name: Install deployer script's Python dependencies
-      if: steps.cache-pip.outputs.cache-hit != 'true'
       run: |
         pip install -r requirements.txt
         pip list

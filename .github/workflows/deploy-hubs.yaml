@@ -65,9 +65,12 @@ jobs:
         with:
           python-version: "3.9"
 
-      - name: Save cache of Python dependencies on job completion
+      # There will almost never be a cache hit on the cache key when this job is
+      # run, as it is the first of all jobs in this workflow. An exception is if
+      # this job is re-attempted as part of the same workflow run after
+      # succeeding previously.
+      - name: Save pip's install cache on job completion
         uses: actions/cache@v3
-        id: cache-pip
         with:
           path: ~/.cache/pip
           # key determines if we define or re-use an existing cache or not. Our
@@ -76,7 +79,6 @@ jobs:
           key: "${{ github.run_id }}"
 
       - name: Install deployer script's Python dependencies
-        if: steps.cache-pip.outputs.cache-hit != 'true'
         run: |
           pip install -r requirements.txt
           pip list
