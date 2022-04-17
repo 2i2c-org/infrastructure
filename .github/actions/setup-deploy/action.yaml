@@ -68,6 +68,14 @@ runs:
         pip list
       shell: bash
 
+    # This action use the github official cache mechanism internally
+    - uses: azure/setup-helm@v2.0
+      with:
+        # version is pinned for helm to avoid an automatic update of its version
+        # which would cause something unexpected without an action on our
+        # behalf.
+        version: v3.8.2
+
     # This step could be cached, but we only do it for a few jobs in the
     # workflow where this action is used
     - name: Install kops
@@ -80,7 +88,7 @@ runs:
         KOPS_VERSION: "v1.21.1"
       shell: bash
 
-    # This action use the github official cache mechanism so we don't need to
+    # This action use the github official cache mechanism internally
     - name: Install sops
       uses: mdgreenwald/mozilla-sops-action@v1
       with:
