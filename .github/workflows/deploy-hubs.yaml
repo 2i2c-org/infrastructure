@@ -78,7 +78,6 @@ jobs:
       - name: Install deployer script's Python dependencies
         if: steps.cache-pip.outputs.cache-hit != 'true'
         run: |
-          pip install --upgrade pip
           pip install -r requirements.txt
           pip list
 
