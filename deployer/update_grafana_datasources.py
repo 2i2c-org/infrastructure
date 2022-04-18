@@ -39,13 +39,15 @@ def build_datasource_details(cluster_name):
     prometheus_creds = get_cluster_prometheus_creds(cluster_name)
 
     datasource_details = {
-        "name": f"{cluster_name}",
+        "name": cluster_name,
         "type": "prometheus",
-        "url": f"https://{datasource_url}",
         "access": "proxy",
+        "url": f"https://{datasource_url}",
         "basicAuth": True,
         "basicAuthUser": prometheus_creds["username"],
-        "secureJsonData": {"basicAuthPassword": prometheus_creds["password"]},
+        "secureJsonData": {
+            "basicAuthPassword": prometheus_creds["password"]
+        },
     }
 
     return datasource_details
@@ -186,10 +188,12 @@ def main():
                 datasource_details = build_datasource_details(cluster_name)
                 req_body = json.dumps(datasource_details)
                 print(req_body)
+
+
                 # Tell Grafana to create and register a datasource for this cluster
                 headers = build_request_headers()
                 response = requests.post(
-                    DATASOURCE_ENDPOINT, json=req_body, headers=headers
+                    DATASOURCE_ENDPOINT, data=req_body, headers=headers
                 )
                 if response.status_code != 200:
                     print(
