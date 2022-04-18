@@ -16,12 +16,12 @@ local namespaces = ['staging', 'prod'];
 // A `node.kubernetes.io/instance-type label is added, so pods
 // can request a particular kind of node with a nodeSelector
 local notebookNodes = [
-    { instanceType: "r5.large", minNodes: 0 },
-    { instanceType: "r5.xlarge", minNodes: 0 },
-    { instanceType: "r5.2xlarge", minNodes: 0 },
-    { instanceType: "r5.8xlarge", minNodes: 0 },
-    { instanceType: "x1.16xlarge", minNodes: 0 },
-    { instanceType: "x1.32xlarge", minNodes: 0 }
+    { instanceType: "r5.large" },
+    { instanceType: "r5.xlarge" },
+    { instanceType: "r5.2xlarge" },
+    { instanceType: "r5.8xlarge" },
+    { instanceType: "x1.16xlarge" },
+    { instanceType: "x1.32xlarge" }
 ];
 
 // Node definitions for dask worker nodes. Config here is merged
@@ -80,7 +80,7 @@ local daskNodes = [
             // instanceTypes always have a .
             name: "nb-%s" % std.strReplace(n.instanceType, ".", "-"),
             availabilityZones: [nodeAz],
-            minSize: n.minNodes,
+            minSize: 0,
             maxSize: 500,
             instanceType: n.instanceType,
             ssh: {
