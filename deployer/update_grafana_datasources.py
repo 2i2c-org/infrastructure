@@ -10,13 +10,12 @@ $ python deployer/grafana_datasources_manager.py
 """
 
 import json
-import requests
 
+import requests
 from file_acquisition import find_absolute_path_to_cluster_file, get_decrypted_file
 from helm_upgrade_decision import get_all_cluster_yaml_files
-from utils import print_colour
-
 from ruamel.yaml import YAML
+from utils import print_colour
 
 yaml = YAML(typ="safe")
 
@@ -45,16 +44,14 @@ def build_datasource_details(cluster_name):
         "url": f"https://{datasource_url}",
         "basicAuth": True,
         "basicAuthUser": prometheus_creds["username"],
-        "secureJsonData": {
-            "basicAuthPassword": prometheus_creds["password"]
-        },
+        "secureJsonData": {"basicAuthPassword": prometheus_creds["password"]},
     }
 
     return datasource_details
 
 
 def get_cluster_prometheus_address(cluster_name):
-    """ Retrieves the address of the prometheus instance running on the `cluster_name` cluster.
+    """Retrieves the address of the prometheus instance running on the `cluster_name` cluster.
     This address is stored in the `support.values.yaml` file of each cluster config directory.
 
     Args:
@@ -149,8 +146,7 @@ def build_request_headers():
 
 
 def get_clusters_used_as_datasources():
-    """Returns a list of cluster names that have prometheus instances already defined as datasources of the centralized Grafana.
-    """
+    """Returns a list of cluster names that have prometheus instances already defined as datasources of the centralized Grafana."""
     headers = build_request_headers()
     # Get a list of all the currently existing datasources
     response = requests.get(DATASOURCE_ENDPOINT, headers=headers)
@@ -188,7 +184,6 @@ def main():
                 datasource_details = build_datasource_details(cluster_name)
                 req_body = json.dumps(datasource_details)
                 print(req_body)
-
 
                 # Tell Grafana to create and register a datasource for this cluster
                 headers = build_request_headers()
