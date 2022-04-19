@@ -190,9 +190,7 @@ def main():
         # Get the cluster's name
         cluster_name = cluster_config.get("name", {})
         if cluster_name and cluster_name not in datasources:
-            print(
-                f"Found {cluster_name} cluster. Checking if it can be added..."
-            )
+            print(f"Found {cluster_name} cluster. Checking if it can be added...")
             # Build the datasource details for the instances that aren't configures as datasources
             try:
                 datasource_details = build_datasource_details(cluster_name)
@@ -214,7 +212,8 @@ def main():
                 )
             except Exception as e:
                 print_colour(
-                    f"An error occured for {cluster_name}.\nError was: {e}.\nSkipping...", "yellow"
+                    f"An error occured for {cluster_name}.\nError was: {e}.\nSkipping...",
+                    "yellow",
                 )
                 exceptions += 1
                 pass

@@ -2,7 +2,7 @@ import os
 import subprocess
 
 
-def print_colour(msg: str, colour = "green"):
+def print_colour(msg: str, colour="green"):
     """Print messages in colour to be distinguishable in CI logs
 
     See the mybinder.org deploy.py script for more details:
