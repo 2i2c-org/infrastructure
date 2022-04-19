@@ -152,12 +152,7 @@ def get_clusters_used_as_datasources(cluster_name, datasource_endpoint):
         response.raise_for_status()
 
     datasources = response.json()
-    datasources = [datasource["name"] for datasource in datasources]
-    print_colour(
-        f"Successfully retrieved {len(datasources)} existing datasources! {datasources}"
-    )
-
-    return datasources
+    return [datasource["name"] for datasource in datasources]
 
 
 def main():
@@ -195,7 +190,7 @@ def main():
         # Get the cluster's name
         cluster_name = cluster_config.get("name", {})
         if cluster_name and cluster_name not in datasources:
-            print_colour(
+            print(
                 f"Found {cluster_name} cluster. Checking if it can be added..."
             )
             # Build the datasource details for the instances that aren't configures as datasources
@@ -218,14 +213,17 @@ def main():
                     f"Successfully created a new datasource for {cluster_name}!"
                 )
             except Exception as e:
-                print(
-                    f"An error occured for {cluster_name}.\nError was: {e}.\nSkipping..."
+                print_colour(
+                    f"An error occured for {cluster_name}.\nError was: {e}.\nSkipping...", "yellow"
                 )
                 exceptions += 1
                 pass
 
     print_colour(
-        f"Failed to add {exceptions} clusters as datasources. See errors above!"
+        f"Failed to add {exceptions} clusters as datasources. See errors above!", "red"
+    )
+    print_colour(
+        f"Successfully retrieved {len(datasources)} existing datasources! {datasources}"
     )
 
 
