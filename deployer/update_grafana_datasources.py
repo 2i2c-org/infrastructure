@@ -101,9 +101,7 @@ def get_cluster_prometheus_creds(cluster_name):
     """
     cluster_config_dir_path = find_absolute_path_to_cluster_file(cluster_name).parent
 
-    config_filename = cluster_config_dir_path.joinpath(
-        "enc-support.secret.values.yaml"
-    )
+    config_filename = cluster_config_dir_path.joinpath("enc-support.secret.values.yaml")
 
     with get_decrypted_file(config_filename) as decrypted_path:
         with open(decrypted_path) as f:
