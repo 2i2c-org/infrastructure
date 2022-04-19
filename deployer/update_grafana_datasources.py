@@ -163,10 +163,20 @@ def main():
     )
 
     argparser.add_argument(
-        "cluster_name", type=str, help="The name of the cluster where the Grafana lives"
+        "cluster_name",
+        type=str,
+        nargs="?",
+        help="The name of the cluster where the Grafana lives",
+        default="2i2c",
     )
 
-    argparser.add_argument("grafana_url", type=str, help="The public URL of Grafana")
+    argparser.add_argument(
+        "grafana_url",
+        type=str,
+        nargs="?",
+        help="The public URL of Grafana",
+        default="https://grafana.pilot.2i2c.cloud",
+    )
 
     args = argparser.parse_args()
     cluster = args.cluster_name
