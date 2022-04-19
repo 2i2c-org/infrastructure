@@ -163,7 +163,6 @@ def get_clusters_used_as_datasources():
 def main():
     # Get a list of the clusters that already have their prometheus instances used as datasources
     datasources = get_clusters_used_as_datasources()
-    print(datasources)
 
     # Get a list of filepaths to all cluster.yaml files in the repo
     cluster_files = get_all_cluster_yaml_files()
