@@ -30,7 +30,7 @@ cluster is deployed.
 The following steps are path-filtered so we can trigger new deployments on specific
 clusters when the associated files are actually changed.
 
-Finally, the [deploy action](https://github.com/2i2c-org/infrastructure/tree/HEAD/.github/actions/deploy/action.yml)
+Finally, the [deploy action](https://github.com/2i2c-org/infrastructure/tree/HEAD/.github/actions/setup-deploy/action.yaml)
 is called which in turn will use the deployer script to deploy the hubs on the corresponding
 clusters.
 
