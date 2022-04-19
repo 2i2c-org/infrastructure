@@ -2,6 +2,11 @@
 # Grafana Dashboards
 
 Each 2i2c Hub is set up with [a Prometheus server](https://prometheus.io/) to generate metrics and information about activity on the hub, and each cluster of hubs has a [Grafana deployment](https://grafana.com/) to ingest and visualize this data.
+
+```{note}
+The Grafana deployement in the `2i2c` cluster ingests data from all the 2i2c clusters and will soon be able to be used as "the central Grafana".
+```
+
 This section describes how to use these dashboards for a cluster.
 
 ## Access Hub Grafana Dashboards
@@ -118,13 +123,27 @@ IPv4 address), or `CNAME` records if using AWS (where external IP is a domain na
 **Wait a while for the DNS to propagate!**
 
 (grafana:log-in)=
-### Log in to the Grafana dashboard
+### Log in to the cluster-spcific Grafana dashboard
 
 Eventually, visiting `GRAFANA_URL` will present you with a login page.
 Here are the credentials for logging in:
 
 - **username**: `admin`
 - **password**: located in `helm-charts/support/enc-support.secret.values.yaml` (`sops` encrypted).
+
+### Register the cluster's Prometheus Server with the central Grafana
+
+Once you have deployed the support chart, you must also register this cluster as a datasource for the central Grafana dashboard. This will allow you to visualize cluster statistics not only from the cluster-specific Grafana deployement but also from the central dashboard, that aggregates data from all the clusters.
+
+Run the `update_grafana_datasources.py` script in the deployer to let the central Grafana know about this new prometheus server:
+
+```
+$ python3 deployer/update_grafana_datasources.py <grafana-cluster-name> <grafana-url>
+```
+
+Where:
+- <grafana-cluster-name> is the name of the cluster where the central Grafana lives. Right now, this defaults to "2i2c".
+- <grafana-url> is the public URL of the Grafana dashboard. Right now, this defaults to "https://grafana.pilot.2i2c.cloud"
 
 ### Setting up Grafana Dashboards
 
