@@ -9,6 +9,7 @@ $ python deployer/grafana_datasources_manager.py
 
 """
 
+import argparse
 import json
 
 import requests
@@ -18,9 +19,6 @@ from ruamel.yaml import YAML
 from utils import print_colour
 
 yaml = YAML(typ="safe")
-
-DATASOURCE_ENDPOINT = "https://grafana.pilot.2i2c.cloud/api/datasources"
-DESIGNATED_CENTRAL_CLUSTER = "2i2c"
 
 
 def build_datasource_details(cluster_name):
@@ -110,14 +108,12 @@ def get_cluster_prometheus_creds(cluster_name):
     return prometheus_config.get("prometheusIngressAuthSecret", {})
 
 
-def get_central_grafana_token():
-    """Returns the access token of the central Grafana, i.e. the 2i2c one.
+def get_central_grafana_token(cluster_name):
+    """Returns the access token of the Grafana located in `cluster_name` cluster.
     This access token should have enough permissions to create datasources.
     """
     # Get the location of the file that stores the central grafana token
-    cluster_config_dir_path = find_absolute_path_to_cluster_file(
-        DESIGNATED_CENTRAL_CLUSTER
-    ).parent
+    cluster_config_dir_path = find_absolute_path_to_cluster_file(cluster_name).parent
 
     grafana_token_file = (cluster_config_dir_path).joinpath(
         "enc-grafana-token.secret.yaml"
@@ -131,8 +127,8 @@ def get_central_grafana_token():
     return config["grafana_token"]
 
 
-def build_request_headers():
-    token = get_central_grafana_token()
+def build_request_headers(cluster_name):
+    token = get_central_grafana_token(cluster_name)
 
     headers = {
         "Accept": "application/json",
@@ -143,30 +139,54 @@ def build_request_headers():
     return headers
 
 
-def get_clusters_used_as_datasources():
+def get_clusters_used_as_datasources(cluster_name, datasource_endpoint):
     """Returns a list of cluster names that have prometheus instances already defined as datasources of the centralized Grafana."""
-    headers = build_request_headers()
+    headers = build_request_headers(cluster_name)
     # Get a list of all the currently existing datasources
-    response = requests.get(DATASOURCE_ENDPOINT, headers=headers)
+    response = requests.get(datasource_endpoint, headers=headers)
 
     if response.status_code != 200:
         print(
-            f"An error occured when retrieving the datasources from {DATASOURCE_ENDPOINT}. \n Error was {response.text}."
+            f"An error occured when retrieving the datasources from {datasource_endpoint}. \n Error was {response.text}."
         )
         response.raise_for_status()
 
-    print("Successfully retrieved the datasources!")
     datasources = response.json()
-    return [datasource["name"] for datasource in datasources]
+    datasources = [datasource["name"] for datasource in datasources]
+    print_colour(
+        f"Successfully retrieved {len(datasources)} existing datasources! {datasources}"
+    )
+
+    return datasources
 
 
 def main():
+    argparser = argparse.ArgumentParser(
+        description="""A command line tool to update Grafana
+        datasources.
+        """
+    )
+
+    argparser.add_argument(
+        "cluster_name", type=str, help="The name of the cluster where the Grafana lives"
+    )
+
+    argparser.add_argument("grafana_url", type=str, help="The public URL of Grafana")
+
+    args = argparser.parse_args()
+    cluster = args.cluster_name
+    grafana_url = args.grafana_url.rstrip("/")
+    datasource_endpoint = f"{grafana_url}/api/datasources"
+
     # Get a list of the clusters that already have their prometheus instances used as datasources
-    datasources = get_clusters_used_as_datasources()
+    datasources = get_clusters_used_as_datasources(cluster, datasource_endpoint)
 
     # Get a list of filepaths to all cluster.yaml files in the repo
     cluster_files = get_all_cluster_yaml_files()
 
+    print("Searching for clusters that aren't Grafana datasources...")
+    # Count how many clusters we can't add as datasources for logging
+    exceptions = 0
     for cluster_file in cluster_files:
         # Read in the cluster.yaml file
         with open(cluster_file) as f:
@@ -175,7 +195,9 @@ def main():
         # Get the cluster's name
         cluster_name = cluster_config.get("name", {})
         if cluster_name and cluster_name not in datasources:
-            print_colour(f"Checking cluster {cluster_name}...")
+            print_colour(
+                f"Found {cluster_name} cluster. Checking if it can be added..."
+            )
             # Build the datasource details for the instances that aren't configures as datasources
             try:
                 datasource_details = build_datasource_details(cluster_name)
@@ -185,7 +207,7 @@ def main():
                 # Tell Grafana to create and register a datasource for this cluster
                 headers = build_request_headers()
                 response = requests.post(
-                    DATASOURCE_ENDPOINT, data=req_body, headers=headers
+                    datasource_endpoint, data=req_body, headers=headers
                 )
                 if response.status_code != 200:
                     print(
@@ -199,7 +221,12 @@ def main():
                 print(
                     f"An error occured for {cluster_name}.\nError was: {e}.\nSkipping..."
                 )
+                exceptions += 1
                 pass
+
+    print_colour(
+        f"Failed to add {exceptions} clusters as datasources. See errors above!"
+    )
 
 
 if __name__ == "__main__":
