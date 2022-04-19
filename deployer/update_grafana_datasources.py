@@ -64,7 +64,7 @@ def get_cluster_prometheus_address(cluster_name):
     """
     cluster_config_dir_path = find_absolute_path_to_cluster_file(cluster_name).parent
 
-    config_file = cluster_config_dir_path.joinpath(f"support.values.yaml")
+    config_file = cluster_config_dir_path.joinpath("support.values.yaml")
     with open(config_file) as f:
         support_config = yaml.load(f)
 
@@ -102,7 +102,7 @@ def get_cluster_prometheus_creds(cluster_name):
     cluster_config_dir_path = find_absolute_path_to_cluster_file(cluster_name).parent
 
     config_filename = cluster_config_dir_path.joinpath(
-        f"enc-support.secret.values.yaml"
+        "enc-support.secret.values.yaml"
     )
 
     with get_decrypted_file(config_filename) as decrypted_path:
@@ -157,7 +157,7 @@ def get_clusters_used_as_datasources():
         )
         response.raise_for_status()
 
-    print(f"Successfully retrieved the datasources!")
+    print("Successfully retrieved the datasources!")
     datasources = response.json()
     return [datasource["name"] for datasource in datasources]
 
