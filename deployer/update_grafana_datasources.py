@@ -1,9 +1,11 @@
 """
 ### Summary
 
-This is a helper script that will make sure the central grafana at https://grafana.pilot.2i2c.cloud is configured to use as datasource the authenticated prometheus instances of all the clusters that we run.
+Ensures that the central grafana at https://grafana.pilot.2i2c.cloud is configured to use as datasource the authenticated prometheus instances of all the clusters that we run.
 
-### Run the script
+### How to use
+
+This is meant to by run as a script from the command line, like so:
 
 $ python deployer/grafana_datasources_manager.py
 
