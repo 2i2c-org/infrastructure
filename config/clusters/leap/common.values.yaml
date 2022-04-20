@@ -57,6 +57,8 @@ basehub:
         # This bucket is created by terraform
         SCRATCH_BUCKET: "gs://leap-pangeo-scratch/$(JUPYTERHUB_USER)"
         PANGEO_SCRATCH: "gs://leap-pangeo-scratch/$(JUPYTERHUB_USER)"
+        GH_SCOPED_CREDS_CLIENT_ID: "Iv1.0c7df3d4b3191b2f"
+        GH_SCOPED_CREDS_APP_URL: https://github.com/apps/leap-hub-push-access
       profileList:
         # The mem-guarantees are here so k8s doesn't schedule other pods
         # on these nodes. They need to be just under total allocatable
