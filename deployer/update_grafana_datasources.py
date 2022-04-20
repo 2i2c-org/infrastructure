@@ -50,6 +50,28 @@ def build_datasource_details(cluster_name):
     return datasource_details
 
 
+def get_central_grafana_url(central_cluster_name):
+    cluster_config_dir_path = find_absolute_path_to_cluster_file(
+        central_cluster_name
+    ).parent
+
+    config_file = cluster_config_dir_path.joinpath("support.values.yaml")
+    with open(config_file) as f:
+        support_config = yaml.load(f)
+
+    grafana_tls_config = (
+        support_config.get("grafana", {}).get("ingress", {}).get("tls", [])
+    )
+
+    if not grafana_tls_config:
+        raise ValueError(
+            f"No tls config was found for the Grafana instance of {central_cluster_name}. Please consider enable it before using it as the central Grafana."
+        )
+
+    # We only have one tls host right now. Modify this when things change.
+    return grafana_tls_config[0]["hosts"][0]
+
+
 def get_cluster_prometheus_address(cluster_name):
     """Retrieves the address of the prometheus instance running on the `cluster_name` cluster.
     This address is stored in the `support.values.yaml` file of each cluster config directory.
@@ -86,7 +108,7 @@ def get_cluster_prometheus_address(cluster_name):
             f"No tls config was found for the prometheus instance of {cluster_name}"
         )
 
-    # We only have one tls host right now. Re-think this if this changes.
+    # We only have one tls host right now. Modify this when things change.
     return tls_config[0]["hosts"][0]
 
 
@@ -172,18 +194,10 @@ def main():
         default="2i2c",
     )
 
-    argparser.add_argument(
-        "grafana_url",
-        type=str,
-        nargs="?",
-        help="The public URL of Grafana",
-        default="https://grafana.pilot.2i2c.cloud",
-    )
-
     args = argparser.parse_args()
     cluster = args.cluster_name
-    grafana_url = args.grafana_url.rstrip("/")
-    datasource_endpoint = f"{grafana_url}/api/datasources"
+    grafana_host = get_central_grafana_url(cluster)
+    datasource_endpoint = f"https://{grafana_host}/api/datasources"
 
     # Get a list of the clusters that already have their prometheus instances used as datasources
     datasources = get_clusters_used_as_datasources(cluster, datasource_endpoint)
