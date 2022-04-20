@@ -58,6 +58,9 @@ basehub:
           scope:
             - read:org
     singleuser:
+      extraEnv:
+        GH_SCOPED_CREDS_CLIENT_ID: "Iv1.c90ee430400a347f"
+        GH_SCOPED_CREDS_APP_URL: https://github.com/apps/pangeo-gcp-hub-push-access
       # User image repo: https://github.com/pangeo-data/pangeo-docker-images
       image:
         name: pangeo/pangeo-notebook
