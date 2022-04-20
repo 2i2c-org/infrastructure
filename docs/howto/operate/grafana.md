@@ -3,10 +3,6 @@
 
 Each 2i2c Hub is set up with [a Prometheus server](https://prometheus.io/) to generate metrics and information about activity on the hub, and each cluster of hubs has a [Grafana deployment](https://grafana.com/) to ingest and visualize this data.
 
-```{note}
-The Grafana deployement in the `2i2c` cluster ingests data from all the 2i2c clusters and will soon be able to be used as "the central Grafana".
-```
-
 This section describes how to use these dashboards for a cluster.
 
 ## Access Hub Grafana Dashboards
@@ -17,6 +13,14 @@ For example, the Grafana for community hubs running on our GCP project is access
 To access the Grafana dashboards you'll need a **username** and **password**.
 These can be accessed using `sops` (see {ref}`tc:secrets:sops` for how to set up `sops` on your machine).
 See [](grafana:log-in) for how to find the credentials information.
+
+## The Central Grafana
+
+The Grafana deployment in the `2i2c` cluster ingests data from all the 2i2c clusters and will soon be able to be used as "the central Grafana".
+
+```{note}
+TODO: should add more info once this is ready to use.
+```
 
 (grafana:new-grafana)=
 ## Set up Grafana Dashboards for a cluster
