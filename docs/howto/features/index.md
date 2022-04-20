@@ -8,6 +8,7 @@ See the sections below for more details:
 :maxdepth: 2
 
 cloud-access
+github
 ../customize/docs-service
 ../customize/configure-login-page
 ../operate/override-domain.md
