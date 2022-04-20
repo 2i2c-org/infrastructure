@@ -52,7 +52,7 @@ basehub:
     singleuser:
       image:
         name: pangeo/pangeo-notebook
-        tag: 2022.02.04
+        tag: 2022.04.20
       extraEnv:
         # This bucket is created by terraform
         SCRATCH_BUCKET: "gs://leap-pangeo-scratch/$(JUPYTERHUB_USER)"
