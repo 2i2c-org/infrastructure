@@ -10,10 +10,11 @@ hubs:
       - common.values.yaml
       - staging.values.yaml
   - name: prod
+    display_name: "Jupyter Meets the Earth"
     domain: hub.jupytearth.org
-    helm_chart: daskhub
     auth0:
       connection: github
+    helm_chart: daskhub
     helm_chart_values_files:
       - common.values.yaml
       - prod.values.yaml
