@@ -195,12 +195,12 @@ def main():
     )
 
     args = argparser.parse_args()
-    cluster = args.cluster_name
-    grafana_host = get_central_grafana_url(cluster)
+    central_cluster = args.cluster_name
+    grafana_host = get_central_grafana_url(central_cluster)
     datasource_endpoint = f"https://{grafana_host}/api/datasources"
 
     # Get a list of the clusters that already have their prometheus instances used as datasources
-    datasources = get_clusters_used_as_datasources(cluster, datasource_endpoint)
+    datasources = get_clusters_used_as_datasources(central_cluster, datasource_endpoint)
 
     # Get a list of filepaths to all cluster.yaml files in the repo
     cluster_files = get_all_cluster_yaml_files()
@@ -221,10 +221,9 @@ def main():
             try:
                 datasource_details = build_datasource_details(cluster_name)
                 req_body = json.dumps(datasource_details)
-                print(req_body)
 
                 # Tell Grafana to create and register a datasource for this cluster
-                headers = build_request_headers()
+                headers = build_request_headers(central_cluster)
                 response = requests.post(
                     datasource_endpoint, data=req_body, headers=headers
                 )
