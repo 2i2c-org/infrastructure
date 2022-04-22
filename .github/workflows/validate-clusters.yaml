@@ -49,6 +49,7 @@ jobs:
           - cluster_name: meom-ige
           - cluster_name: openscapes
           - cluster_name: pangeo-hubs
+          - cluster_name: m2lines
           - cluster_name: utoronto
           - cluster_name: uwhackweeks
 

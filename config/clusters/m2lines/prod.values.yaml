@@ -1,0 +1,12 @@
+basehub:
+  userServiceAccount:
+    annotations:
+      iam.gke.io/gcp-service-account: m2lines-prod@m2lines-hub.iam.gserviceaccount.com
+  jupyterhub:
+    singleuser:
+      extraEnv:
+        SCRATCH_BUCKET: gcs://m2lines-scratch/$(JUPYTERHUB_USER)
+    hub:
+      config:
+        GitHubOAuthenticator:
+          oauth_callback_url: https://m2lines.2i2c.cloud/hub/oauth_callback
