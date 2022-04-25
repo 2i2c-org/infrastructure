@@ -116,6 +116,7 @@ jobs:
     # IMPORTANT: names can include alphanumerics, '-', and '_', but not '.', so
     #            we replace '.' for '-' in cluster names.
     #
+    # If you are adding a new cluster, please remember to list it here!
     outputs:
       failure_2i2c: "${{ steps.declare-failure-status.outputs.failure_2i2c }}"
       failure_azure-carbonplan: "${{ steps.declare-failure-status.outputs.failure_azure-carbonplan }}"
@@ -128,6 +129,7 @@ jobs:
       failure_pangeo-hubs: "${{ steps.declare-failure-status.outputs.failure_pangeo-hubs }}"
       failure_utoronto: "${{ steps.declare-failure-status.outputs.failure_utoronto }}"
       failure_uwhackweeks: "${{ steps.declare-failure-status.outputs.failure_uwhackweeks }}"
+      failure_m2lines: "${{ steps.declare-failure-status.outputs.failure_m2lines }}"
 
     # Only run this job on pushes to the default branch and when the job output is not
     # an empty list
