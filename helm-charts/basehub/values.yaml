@@ -464,6 +464,10 @@ jupyterhub:
             """
             auth_state = yield spawner.user.get_auth_state()
 
+            if not auth_state or "teams" not in auth_state:
+              print(f"User {spawner.user.name} does not have any auth_state set")
+              raise web.HTTPError(403)
+
             # Make a list of team names of form org-name:team-name
             # This is the same syntax used by allowed_organizations traitlet of GitHubOAuthenticator
             teams = set([f'{team_info["organization"]["login"]}:{team_info["slug"]}' for team_info in auth_state["teams"]])
