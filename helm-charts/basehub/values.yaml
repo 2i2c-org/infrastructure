@@ -441,3 +441,60 @@ jupyterhub:
 
         if get_config("custom.docs_service.enabled"):
             c.JupyterHub.services.append({"name": "docs", "url": "http://docs-service"})
+      09-gh-teams: |
+        from textwrap import dedent
+        from tornado import gen, web
+
+        # Make a copy of the original profile_list, as that is the data we will work with
+        original_profile_list = c.KubeSpawner.profile_list
+
+        # This has to be a gen.coroutine, not async def! Kubespawner uses gen.maybe_future to
+        # run this, and that only seems to recognize tornado coroutines, not async functions!
+        # We can convert this to async def once that has been fixed upstream.
+        @gen.coroutine
+        def custom_profile_list(spawner):
+            """
+            Dynamically set allowed list of user profiles based on GitHub teams user is part of.
+
+            Adds a 'allowed_teams' key to profile_list, with a list of GitHub teams (of the form
+            org-name:team-name) for which the profile is made available.
+
+            If the user isn't part of any team whose membership grants them access to even a single
+            profile, they aren't allowed to start any servers.
+            """
+            auth_state = yield spawner.user.get_auth_state()
+
+            # Make a list of team names of form org-name:team-name
+            # This is the same syntax used by allowed_organizations traitlet of GitHubOAuthenticator
+            teams = set([f'{team_info["organization"]["login"]}:{team_info["slug"]}' for team_info in auth_state["teams"]])
+
+            allowed_profiles = []
+
+            for profile in original_profile_list:
+              # Keep the profile is the user is part of *any* team listed in allowed_teams
+              # If allowed_teams is empty or not set, it'll not be accessible to *anyone*
+              if set(profile.get('allowed_teams', [])) & teams:
+                allowed_profiles.append(profile)
+                print(f"Allowing profile {profile['display_name']} for user {spawner.user.name}")
+              else:
+                print(f"Dropping profile {profile['display_name']} for user {spawner.user.name}")
+
+            if len(allowed_profiles) == 0:
+              # If no profiles are allowed, user should not be able to spawn anything!
+              # If we don't explicitly stop this, user will be logged into the 'default' settings
+              # set in singleuser, without any profile overrides. Not desired behavior
+              # FIXME: User doesn't actually see this error message, just the generic 403.
+              error_msg = dedent(f"""
+              Your GitHub team membership is insufficient to launch any server profiles.
+
+              GitHub teams you are a member of that this JupyterHub knows about are {', '.join(teams)}.
+
+              If you are part of additional teams, log out of this JupyterHub and log back in to refresh that information.
+              """)
+              raise web.HTTPError(403, error_msg)
+
+            return allowed_profiles
+
+        # Customize list of profiles dynamically, rather than override options form.
+        # This is more secure, as users can't override the options available to them via the hub API
+        c.KubeSpawner.profile_list = custom_profile_list
