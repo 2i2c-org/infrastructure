@@ -34,6 +34,7 @@ howto/features/index
 howto/k8s/index.md
 howto/configure/auth-management
 howto/configure/update-env
+howto/cloud/new-gcp-project
 ```
 
 Manage authentication
