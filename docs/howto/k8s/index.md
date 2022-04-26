@@ -21,7 +21,6 @@ The following sections cover common things that you might need to do using Kuber
 
 ```{toctree}
 :maxdepth: 2
-../operate/new-cluster/index.md
 node-administration.md
 ../operate/manual-nfs-setup.md
 ../configure/culling.md
