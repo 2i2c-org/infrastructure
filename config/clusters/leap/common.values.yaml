@@ -90,6 +90,7 @@ basehub:
         - display_name: Large
           description: 24GB RAM, 8 CPUs
           allowed_teams:
+            - leap-stc:leap-pangeo-education
             - leap-stc:leap-pangeo-research
             - 2i2c-org:tech-team
           kubespawner_override:
