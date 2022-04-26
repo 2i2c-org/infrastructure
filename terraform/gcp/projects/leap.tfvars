@@ -5,6 +5,9 @@ core_node_machine_type = "n1-highmem-4"
 # No need for this to be a private cluster, public ones are cheaper
 enable_private_cluster = false
 
+# GPUs not available in us-central1-b
+zone = "us-central1-c"
+
 # Multi-tenant cluster, network policy is required to enforce separation between hubs
 enable_network_policy  = true
 
@@ -36,25 +39,56 @@ notebook_nodes = {
     min : 0,
     max : 100,
     machine_type : "n1-standard-2",
-    labels: {}
+    labels: {},
+    gpu: {
+      enabled: false,
+      type: "",
+      count: 0
+    }
   },
   "medium" : {
     min : 0,
     max : 100,
     machine_type : "n1-standard-4",
-    labels: {}
+    labels: {},
+    gpu: {
+      enabled: false,
+      type: "",
+      count: 0
+    }
   },
   "large" : {
     min : 0,
     max : 100,
     machine_type : "n1-standard-8",
-    labels: {}
+    labels: {},
+    gpu: {
+      enabled: false,
+      type: "",
+      count: 0
+    }
   },
   "huge" : {
     min : 0,
     max : 100,
     machine_type : "n1-standard-16",
-    labels: {}
+    labels: {},
+    gpu: {
+      enabled: false,
+      type: "",
+      count: 0
+    }
+  },
+  "gpu-k80" : {
+    min : 0,
+    max : 100,
+    machine_type : "n1-standard-8",
+    labels: {},
+    gpu: {
+      enabled: true,
+      type: "nvidia-tesla-k80",
+      count: 1
+    }
   },
 }
 
@@ -63,24 +97,44 @@ dask_nodes = {
     min : 0,
     max : 100,
     machine_type : "n1-standard-2",
-    labels: {}
+    labels: {},
+    gpu: {
+      enabled: false,
+      type: "",
+      count: 0
+    }
   },
   "medium" : {
     min : 0,
     max : 100,
     machine_type : "n1-standard-4",
-    labels: {}
+    labels: {},
+    gpu: {
+      enabled: false,
+      type: "",
+      count: 0
+    }
   },
   "large" : {
     min : 0,
     max : 100,
     machine_type : "n1-standard-8",
-    labels: {}
+    labels: {},
+    gpu: {
+      enabled: false,
+      type: "",
+      count: 0
+    }
   },
   "huge" : {
     min : 0,
     max : 100,
     machine_type : "n1-standard-16",
-    labels: {}
+    labels: {},
+    gpu: {
+      enabled: false,
+      type: "",
+      count: 0
+    }
   },
 }
