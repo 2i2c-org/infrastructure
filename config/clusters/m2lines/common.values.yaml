@@ -101,10 +101,17 @@ basehub:
               node.kubernetes.io/instance-type: n1-standard-8
             environment:
               NVIDIA_DRIVER_CAPABILITIES: compute,utility
-
               # Remove once https://github.com/pangeo-data/pangeo-docker-images/pull/311 is merged
-              PATH: "/srv/conda/envs/notebook/bin:/srv/conda/condabin:/srv/conda/envs/notebook/bin:/srv/conda/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/local/nvidia/bin"
-              LD_LIBRARY_PATH: /usr/local/nvidia/lib64
+            cmd:
+              - /bin/bash
+              - -c
+              - |
+                export PATH="${PATH}:/usr/local/nvidia/bin"
+                export LD_LIBRARY_PATH=${LD_LIBRARY_PATH}/usr/local/nvidia/lib64
+                exec jupyterhub-singleuser \
+                  --ip=0.0.0.0 \
+                  --port=8888 \
+                  --SingleUserNotebookApp.default_url=/lab
             extra_resource_limits:
               nvidia.com/gpu: "1"
       initContainers:
