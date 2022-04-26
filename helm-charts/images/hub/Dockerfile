@@ -18,6 +18,9 @@ RUN pip install --no-cache git+https://github.com/yuvipanda/jupyterhub-configura
 # z2jh 1.2.x ships with kubespawner 1.1.0, so we just do a little bump
 RUN pip install --no-cache --upgrade jupyterhub-kubespawner==1.1.2
 
+# Brings in https://github.com/jupyterhub/oauthenticator/pull/498
+RUN pip install --no-cache --upgrade git+https://github.com/yuvipanda/oauthenticator@7f3fdc0a14d06f1a081c23b1ceb7060a940d11f8
+
 USER root
 RUN mkdir -p /usr/local/etc/jupyterhub-configurator
 

@@ -36,6 +36,7 @@ basehub:
       allowNamedServers: true
       config:
         Authenticator:
+          enable_auth_state: true
           # This hub uses GitHub Teams auth and so we don't set
           # allowed_users in order to not deny access to valid members of
           # the listed teams. These people should have admin access though.
@@ -44,6 +45,7 @@ basehub:
         JupyterHub:
           authenticator_class: github
         GitHubOAuthenticator:
+          populate_teams_in_auth_state: true
           allowed_organizations:
             - leap-stc:leap-pangeo-users
             - 2i2c-org:tech-team
@@ -67,6 +69,9 @@ basehub:
         - display_name: "Small"
           description: 5GB RAM, 2 CPUs
           default: true
+          allowed_teams:
+            - leap-stc:leap-pangeo-users
+            - 2i2c-org:tech-team
           kubespawner_override:
             mem_limit: 7G
             mem_guarantee: 4.5G
@@ -74,6 +79,9 @@ basehub:
               node.kubernetes.io/instance-type: n1-standard-2
         - display_name: Medium
           description: 11GB RAM, 4 CPUs
+          allowed_teams:
+            - leap-stc:leap-pangeo-users
+            - 2i2c-org:tech-team
           kubespawner_override:
             mem_limit: 15G
             mem_guarantee: 11G
@@ -81,6 +89,10 @@ basehub:
               node.kubernetes.io/instance-type: n1-standard-4
         - display_name: Large
           description: 24GB RAM, 8 CPUs
+          allowed_teams:
+            - leap-stc:leap-pangeo-education
+            - leap-stc:leap-pangeo-research
+            - 2i2c-org:tech-team
           kubespawner_override:
             mem_limit: 30G
             mem_guarantee: 24G
@@ -88,6 +100,9 @@ basehub:
               node.kubernetes.io/instance-type: n1-standard-8
         - display_name: Huge
           description: 52GB RAM, 16 CPUs
+          allowed_teams:
+            - leap-stc:leap-pangeo-research
+            - 2i2c-org:tech-team
           kubespawner_override:
             mem_limit: 60G
             mem_guarantee: 52G
