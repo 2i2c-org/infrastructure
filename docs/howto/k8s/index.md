@@ -12,7 +12,7 @@ See the following section for instructions on how to do so.
 ```{toctree}
 :maxdepth: 2
 
-cmd-access.md
+/topic/cloud-auth
 ```
 
 ## Common operations with Kubernetes

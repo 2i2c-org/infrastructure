@@ -29,6 +29,7 @@ How-To guides answer the question 'How do I...?' for a lot of topics.
 ```{toctree}
 :maxdepth: 2
 :caption: How-to guides
+howto/operate/index.md
 howto/hubs/index.md
 howto/features/index
 howto/k8s/index.md
