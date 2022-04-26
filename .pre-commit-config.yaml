@@ -51,3 +51,10 @@ repos:
       - id: sops-encryption
         # Add files here if they contain the word 'secret' but should not be encrypted
         exclude: secrets\.md|helm-charts/support/templates/prometheus-ingres-auth/secret\.yaml
+
+  # Format and validate terraform code
+  - repo: git://github.com/kintoandar/pre-commit.git
+    rev: v2.1.2
+    hooks:
+      - id: terraform_fmt
+      - id: terraform_validate
