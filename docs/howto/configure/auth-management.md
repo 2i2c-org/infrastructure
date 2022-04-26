@@ -193,6 +193,77 @@ If administrators report a `403 forbidden` error when they try to log in to the 
 In this case, they should go to the configuration page for this app within their GitHub organization and explicitly grant it access.
 See [the GitHub apps for organizations docs](https://docs.github.com/en/organizations/managing-access-to-your-organizations-apps) for more information.
 
+### Restricting user profiles based on GitHub Team Membership
+
+JupyterHub has support for using [profileList](https://zero-to-jupyterhub.readthedocs.io/en/latest/jupyterhub/customizing/user-environment.html#using-multiple-profiles-to-let-users-select-their-environment)
+to give users a choice of machine sizes and images to choose from when launching their
+server.
+
+In addition, we can allow people access to specific profiles based on their GitHub Teams membership!
+This only works if the hub is already set to allow people only from certain GitHub organizations
+to log in.
+
+The key `allowed_teams` can be set for any profile definition, with a list of GitHub
+teams (formatted as `<github-org>:<team-name>`) that will get access to that profile. Users
+need to be a member of any one of the listed teams for access. The list of teams a user
+is part of is fetched at login time - so if the user is added to a GitHub team, they need
+to log out and log back in to the JupyterHub (not necessarily to GitHub!) to see the new
+profiles they have access to. To remove access to a profile from a user, they have to be
+removed from the appropriate team on GitHub *and* their JupyterHub user needs to be
+deleted from the hub admin dashboard.
+
+To enable this access,
+
+1. Enable storing the list of GitHub teams a user is in as a part of
+   [`auth_state`](https://zero-to-jupyterhub.readthedocs.io/en/latest/administrator/authentication.html#enable-auth-state)
+   with the following config:
+
+   ```yaml
+   jupyterhub:
+      hub:
+        config:
+          Authenticator:
+            enable_auth_state: true
+          GitHubOAuthenticator:
+            populate_teams_in_auth_state: true
+  ```
+
+  If `populate_teams_in_auth_state` is not set, this entire feature is disabled.
+
+2. Specify which teams should have access to which profiles with an `allowed_teams` key
+   under `profileList`:
+
+    ```yaml
+    jupyterhub:
+      singleuser:
+        profileList:
+          - display_name: "Small"
+            description: 5GB RAM, 2 CPUs
+            default: true
+            allowed_teams:
+              - <org-name>:<team-name>
+              - 2i2c-org:tech-team
+            kubespawner_override:
+              mem_limit: 7G
+              mem_guarantee: 4.5G
+              node_selector:
+                node.kubernetes.io/instance-type: n1-standard-2
+          - display_name: Medium
+            description: 11GB RAM, 4 CPUs
+            allowed_teams:
+              - <org-name>:<team-name>
+              - 2i2c-org:tech-team
+            kubespawner_override:
+              mem_limit: 15G
+              mem_guarantee: 11G
+              node_selector:
+                node.kubernetes.io/instance-type: n1-standard-4
+    ```
+
+    Users who are a part of *any* of the listed teams will be able to access that profile.
+    Add `2i2c-org:teach-team` to all `allowed_teams` so 2i2c engineers can log in to debug
+    issues. If `allowed_teams` is not set, that profile is not available to anyone.
+
 ## CILogon
 
 [CILogon](https://www.cilogon.org) is a service provider that allows users to login against various identity providers, including campus identity providers. 2i2c can manage CILogon either using the JupyterHub CILogonOAuthenticator or through [auth0](https://auth0.com), similar to Google and GitHub authentication.
