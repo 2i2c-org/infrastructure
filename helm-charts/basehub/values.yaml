@@ -462,6 +462,12 @@ jupyterhub:
             If the user isn't part of any team whose membership grants them access to even a single
             profile, they aren't allowed to start any servers.
             """
+
+            # If populate_teams_in_auth_state is not set, github teams are not fetched
+            # So we just don't do any of this filtering, and let anyone into everything
+            if spawner.authenticator.populate_teams_in_auth_state == False:
+              return original_profile_list
+
             auth_state = yield spawner.user.get_auth_state()
 
             if not auth_state or "teams" not in auth_state:
