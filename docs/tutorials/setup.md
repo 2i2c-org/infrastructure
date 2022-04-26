@@ -1,3 +1,4 @@
+(tutorials:setup)=
 # Setting up your local environment to work on this repo
 
 This tutorial will guide you through all the steps needed to have a fully

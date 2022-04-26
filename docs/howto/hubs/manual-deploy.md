@@ -1,52 +1,22 @@
 (operate:manual-deploy)=
-# Manually deploy hubs
+# Manually deploy a config change
 
 While deploys generally go through our GitHub Actions workflow, sometimes you
 need to deploy from your laptop - primarily when testing changes on staging or
-actively fixing an outage. This isn't ideal, but this is where we are now.
+actively fixing an outage. After doing a manual deploy, you *must* make a PR and
+get it deployed as soon as possible - otherwise your changes might get reverted
+the next time a different PR is merged and deploys to the hub you deployed to!
 
 Our deployment scripts live in the [`deployer/`](https://github.com/2i2c-org/infrastructure/tree/HEAD/deployer/)
 of this repository, and can deploy one or more hubs to our clusters.
 
-## Setting up local environment
+## Deploy a single hub
 
-1. Create a virtual environment for use with this repository
+1. [Setup your local environment](tutorials:setup) to be able to do deploys
 
-   ```bash
-   python3 -m venv .
-   source bin/activate
-   ```
+2. Make the [config change](../../topic/config.md) you want to deploy.
 
-   You can also use `conda` if you prefer instead.
-
-2. Install python packages required by our deployment script
-
-   ```bash
-   pip install -r requirements.txt
-   ```
-
-3. Install the [Google Cloud SDK](https://cloud.google.com/sdk) so
-   our scripts can authenticate to Google Cloud Platform for access
-   to our secret keys. Note that we use Google Cloud Platform (with
-   [`sops`](https://github.com/mozilla/sops) secure secrets *stored
-   in this repository* - so you would need the google cloud sdk regardless of
-   the final location of the hub itself.
-
-4. Authenticate to Google Cloud Platform! First, you should run
-   `gcloud auth login` and follow the prompts - this authenticates your
-   `gcloud` commandline tool. Next, you should run `gcloud auth application-default login`,
-   and follow the prompts - this authenticates you to any tools that
-   want to authenticate to Google Cloud *on your behalf* - including
-   our deploy scripts! See [Application Default Credentials](https://cloud.google.com/docs/authentication/production#automatically)
-   for more information.
-
-5. Install [`sops` for secrets management](https://github.com/mozilla/sops). See {ref}`tc:secrets:sops` for how to set up `sops` on your machine.
-
-## Doing a deploy
-
-1. Make the [config change](../../topic/config.md) you want to deploy.
-
-2. Deploy just a single hub:
+3. Deploy just a single hub:
 
    ```bash
    python3 deployer deploy <cluster-name> <hub-name>
@@ -55,7 +25,7 @@ of this repository, and can deploy one or more hubs to our clusters.
    The script will look for a hub named `<hub-name>` in the cluster config
    defined at `config/clusters/<cluster-name>/cluster.yaml` and read in the `*.values.yaml` files associated with that hub.
 
-3. You can deploy to *all* hubs on a given cluster by omitting the hub name.
+4. You can deploy to *all* hubs on a given cluster by omitting the hub name.
 
    ```bash
    python3 deployer deploy <cluster-name>
@@ -65,21 +35,31 @@ of this repository, and can deploy one or more hubs to our clusters.
 You should mostly use the `staging` hub in the `2i2c` cluster for testing.
 ```
 
-## Hub health test
+## Run a health check on the hub
 
-After each deployment, the deployer will run health checks on the hub before
-proceeding. If an entire cluster is being deployed, one failing health check
-will stop all further deployments.
+After doing a deploy, you should run a health check on the hub you just
+deployed to make sure it continues to function. You can do this manually, but
+there's also some automation that runs through some basic tests.
 
-There are two types of test notebooks are ran on the hub, based on it's type:
-
-* dask specific notebooks - *are ran on the the daskhub hubs*
-* simple notebooks - *are ran on all the other types of hubs*
-
-This test, creates a new hub user called `deployment-service-check`, starts a
+The automated test, creates a new hub user called `deployment-service-check`, starts a
 server for them, and runs the test notebooks.  It checks that the notebook
 runs to completion and the output cells have the expected value.
 
 * If the health check passes, then the user's server is stopped and deleted.
 * If the health check fails, then their user server will be left running, but
 * it will get deleted together with the user in the next iteration.
+
+To run the automated health check on a hub, run
+
+```bash
+python3 deployer run-hub-health-check <cluster-name> <hub-name>
+```
+
+This will test a simple notebook, but not any dask functionality. To test dask
+functionality as well, run
+
+```bash
+python3 deployer run-hub-health-check --check-dask-scaling <cluster-name> <hub-name>
+```
+
+These tests are automatically run when you deploy via CI.
