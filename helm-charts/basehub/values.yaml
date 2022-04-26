@@ -471,6 +471,10 @@ jupyterhub:
             auth_state = yield spawner.user.get_auth_state()
 
             if not auth_state or "teams" not in auth_state:
+              if spawner.user.name == 'deployment-service-check':
+                # For our hub deployer health checker, ignore all this logic
+                print("Ignoring allowed_teams check for deployment-service-check")
+                return original_profile_list
               print(f"User {spawner.user.name} does not have any auth_state set")
               raise web.HTTPError(403)
 
