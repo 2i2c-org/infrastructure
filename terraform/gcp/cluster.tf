@@ -215,6 +215,16 @@ resource "google_container_node_pool" "notebook" {
     # Faster disks provide faster image pulls!
     disk_type = "pd-balanced"
 
+    dynamic "guest_accelerator" {
+      for_each = each.value.gpu.enabled ? [1] : []
+
+      content {
+        type  = each.value.gpu.type
+        count = each.value.gpu.count
+      }
+
+    }
+
     workload_metadata_config {
       # Config Connector requires workload identity to be enabled (via GKE_METADATA_SERVER).
       # If config connector is not necessary, we use simple metadata concealment

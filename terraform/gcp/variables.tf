@@ -24,13 +24,13 @@ variable "project_id" {
 }
 
 variable "notebook_nodes" {
-  type        = map(object({ min : number, max : number, machine_type : string, labels : map(string) }))
+  type        = map(object({ min : number, max : number, machine_type : string, labels : map(string), gpu : object({ enabled : bool, type : string, count : number }) }))
   description = "Notebook node pools to create"
   default     = {}
 }
 
 variable "dask_nodes" {
-  type        = map(object({ min : number, max : number, machine_type : string, labels : map(string) }))
+  type        = map(object({ min : number, max : number, machine_type : string, labels : map(string), gpu : object({ enabled : bool, type : string, count : number }) }))
   description = "Dask node pools to create. Defaults to notebook_nodes"
   default     = {}
 }
