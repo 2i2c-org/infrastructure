@@ -53,7 +53,7 @@ repos:
         exclude: secrets\.md|helm-charts/support/templates/prometheus-ingres-auth/secret\.yaml
 
   # Format and validate terraform code
-  - repo: git://github.com/kintoandar/pre-commit.git
+  - repo: https://github.com/kintoandar/pre-commit
     rev: v2.1.2
     hooks:
       - id: terraform_fmt
