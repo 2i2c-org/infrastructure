@@ -88,6 +88,22 @@ variable "region" {
 
 }
 
+variable "regional_cluster" {
+  type        = bool
+  default     = false
+  description = <<-EOT
+  Enable to have a highly available cluster with multi zonal masters
+
+  These are more reliable, as otherwise the k8s API might have small
+  outages now and then - with this set to false, the nodes serving
+  the k8s API can go down periodically for upgrades.
+
+  See https://cloud.google.com/kubernetes-engine/docs/concepts/regional-clusters
+  for more information
+  EOT
+}
+
+
 variable "zone" {
   type        = string
   default     = "us-central1-b"

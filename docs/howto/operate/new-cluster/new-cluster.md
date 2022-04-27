@@ -30,6 +30,15 @@ The _minimum_ inputs this file requires are:
   Primary identifier to 'group' together resources.
 - `project_id`: GCP Project ID to create resources in.
   Should be the id, rather than display name of the project.
+- `regional_cluster`: Set to true to provision a [GKE Regional
+  Highly Available cluster](https://cloud.google.com/kubernetes-engine/docs/concepts/regional-clusters).
+  Costs ~70$ a month, but worth it for the added reliability for most
+  cases except when cost saving is an absolute requirement.
+- `zone`: Zone where cluster nodes and filestore for home directory
+  are created.
+- `region`: Region where cluster master (if `regional_cluster` is
+  `true`) is run, as well as any storage buckets created with
+  `user_buckets`.
 
 See the [variables file](https://github.com/2i2c-org/infrastructure/tree/HEAD/terraform/gcp/variables.tf) for other inputs this file can take and their descriptions.
 
