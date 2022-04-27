@@ -61,8 +61,17 @@ properties:
     additionalProperties: false
     required:
       - azure
+      - gke
     properties:
       azure:
+        type: object
+        additionalProperties: false
+        required:
+          - enabled
+        properties:
+          enabled:
+            type: boolean
+      gke:
         type: object
         additionalProperties: false
         required:

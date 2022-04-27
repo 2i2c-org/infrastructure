@@ -6,7 +6,7 @@ basehub:
         - soft
         - noatime
       # Google FileStore IP
-      serverIP: 10.19.162.106
+      serverIP: 10.98.223.138
       # Name of Google Filestore share
       baseShareName: /homes/
   jupyterhub:
@@ -91,6 +91,18 @@ basehub:
             mem_guarantee: 52G
             node_selector:
               node.kubernetes.io/instance-type: n1-standard-16
+        - display_name: Large + Nvidia K80 GPU
+          description: 24GB RAM, 8 CPUs
+          kubespawner_override:
+            image: "pangeo/ml-notebook:master"
+            mem_limit: 30G
+            mem_guarantee: 24G
+            node_selector:
+              node.kubernetes.io/instance-type: n1-standard-8
+            environment:
+              NVIDIA_DRIVER_CAPABILITIES: compute,utility
+            extra_resource_limits:
+              nvidia.com/gpu: "1"
       initContainers:
         # Need to explicitly fix ownership here, since EFS doesn't do anonuid
         - name: volume-mount-ownership-fix
