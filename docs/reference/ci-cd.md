@@ -14,7 +14,7 @@ The best place to learn about the latest state of our *automatic* hub deployment
 is to look at [the `deploy-hubs.yaml` GitHub Actions workflow file](https://github.com/2i2c-org/infrastructure/tree/HEAD/.github/workflows/deploy-hubs.yaml).
 This workflow file depends on a locally defined action that [sets up access to a given cluster](https://github.com/2i2c-org/infrastructure/blob/master/.github/actions/setup-deploy/action.yaml) and itself contains four main jobs, detailed below.
 
-(cicd/hub/job1)=
+(cicd/hub/generate-jobs)=
 ### 1. `generate-jobs`: Generate Helm upgrade jobs
 
 The first job takes a list of files that have been added/modified as part of a Pull Request and pipes them into the [`generate-helm-upgrade-jobs` sub-command](https://github.com/2i2c-org/infrastructure/blob/master/deployer/helm_upgrade_decision.py) of the [deployer module](https://github.com/2i2c-org/infrastructure/tree/master/deployer).
@@ -37,7 +37,7 @@ While the aim of this workflow is to only upgrade the pieces of the infrastructu
 - If the deployer module has additions/modifications in its path, then we redeploy **all** hubs on **all** clusters.
 
 ```{note}
-Right now, we redeploy everything was the deployer changes since the deployer undertakes some tasks that generates config related to authentication.
+Right now, we redeploy everything when the deployer changes since the deployer undertakes some tasks that generates config related to authentication.
 This may change in the future as we move towards the deployer becoming a separable, stand-alone package.
 ```
 
@@ -69,7 +69,7 @@ This last job deploys all production hubs that require it in parallel to the clu
 
 ### Known issues with this workflow
 
-Sometimes the [`generate-jobs` job](cicd/hub/job1) fails with the following message:
+Sometimes the [`generate-jobs` job](cicd/hub/generate-jobs) fails with the following message:
 
 ```
 The head commit for this pull_request event is not ahead of the base commit. Please submit an issue on this action's GitHub repo.
