@@ -2,6 +2,10 @@
 
 ## Installing dependencies
 
+```bash
+pip install -r requirements.txt
+```
+
 ## Functions
 
 ```bash
@@ -122,4 +126,11 @@ positional arguments:
 optional arguments:
   -h, --help            show this help message and exit
   --check-dask-scaling  For daskhubs, optionally check that dask workers can be scaled
+```
+
+### Running Tests
+
+```bash
+pip install -r dev-requirements.txt
+python -m pytest -vvv
 ```
