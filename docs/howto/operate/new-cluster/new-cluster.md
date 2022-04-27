@@ -33,7 +33,8 @@ The _minimum_ inputs this file requires are:
 - `regional_cluster`: Set to true to provision a [GKE Regional
   Highly Available cluster](https://cloud.google.com/kubernetes-engine/docs/concepts/regional-clusters).
   Costs ~70$ a month, but worth it for the added reliability for most
-  cases except when cost saving is an absolute requirement.
+  cases except when cost saving is an absolute requirement. Defaults
+  to `true`.
 - `zone`: Zone where cluster nodes and filestore for home directory
   are created.
 - `region`: Region where cluster master (if `regional_cluster` is

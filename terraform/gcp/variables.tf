@@ -90,7 +90,7 @@ variable "region" {
 
 variable "regional_cluster" {
   type        = bool
-  default     = false
+  default     = true
   description = <<-EOT
   Enable to have a highly available cluster with multi zonal masters
 
