@@ -170,7 +170,7 @@ hubs:
     domain: dummy.2i2c.cloud
     helm_chart: basehub
     auth0:
-      connection: false
+      enabled: false
     helm_chart_values_files:
       - dummy.values.yaml
       - enc-dummy.secret.values.yaml
