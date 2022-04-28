@@ -46,8 +46,11 @@ See the [variables file](https://github.com/2i2c-org/infrastructure/tree/HEAD/te
 Example `.tfvars` file:
 
 ```
-prefix     = "my-awesome-project"
-project_id = "my-awesome-project-id
+prefix           = "my-awesome-project"
+project_id       = "my-awesome-project-id
+zone             = "us-central1-c"
+region           = "us-central1"
+regional_cluster = true
 ```
 ````
 
