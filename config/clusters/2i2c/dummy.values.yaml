@@ -1,0 +1,13 @@
+jupyterhub:
+  hub:
+    config:
+      Authenticator:
+        admin_users:
+          - sgibson91
+      JupyterHub:
+        authenticator_class: github
+      GitHubOAuthenticator:
+        allowed_organizations:
+          - 2i2c-org:test-team
+        scope:
+          - read:org

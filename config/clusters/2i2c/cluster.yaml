@@ -166,3 +166,11 @@ hubs:
       # to the helm upgrade command in, and that has meaning. Please check
       # that you intend for these files to be applied in this order.
       - utexas.values.yaml
+  - name: dummy
+    domain: dummy.2i2c.cloud
+    helm_chart: basehub
+    auth0:
+      connection: false
+    helm_chart_values_files:
+      - dummy.values.yaml
+      - enc-dummy.secret.values.yaml
