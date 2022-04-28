@@ -167,7 +167,7 @@ hubs:
       # that you intend for these files to be applied in this order.
       - utexas.values.yaml
   - name: dummy
-    domain: dummy.2i2c.cloud
+    domain: dummy.hub.2i2c.cloud
     helm_chart: basehub
     auth0:
       enabled: false
