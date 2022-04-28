@@ -11,3 +11,19 @@ jupyterhub:
           - 2i2c-org:test-team
         scope:
           - read:org
+  custom:
+    homepage:
+      templateVars:
+        org:
+          name: Dummy
+          url: https://2i2c.org
+          logo_url: "https://raw.githubusercontent.com/pangeo-data/pangeo/master/docs/_static/pangeo_simple_logo.svg"
+        designed_by:
+          name: 2i2c
+          url: https://2i2c.org
+        operated_by:
+          name: 2i2c
+          url: https://2i2c.org
+        funded_by:
+          name: NSF EarthCube Program (Award ICER-2026932)
+          url: "https://www.nsf.gov/awardsearch/showAward?AWD_ID=2026932"
