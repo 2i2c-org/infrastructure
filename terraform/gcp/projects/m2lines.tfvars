@@ -6,6 +6,8 @@ enable_network_policy  = true
 
 # GPUs not available in us-central1-b
 zone = "us-central1-c"
+region = "us-central1"
+regional_cluster = true
 
 # Setup a filestore for in-cluster NFS
 enable_filestore = true
