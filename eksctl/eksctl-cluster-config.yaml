@@ -16,6 +16,7 @@
 #
 #   eksctl delete nodegroup --config-file=eksctl-cluster-config.yaml --include "user-a-*,worker-a-*" --approve
 #   eksctl create nodegroup --config-file=eksctl-cluster-config.yaml --include "user-a-*,worker-a-*" --install-nvidia-plugin=false
+#   eksctl delete nodegroup --config-file=eksctl-cluster-config.yaml --include "user-gpu-a-*" --approve
 #   eksctl create nodegroup --config-file=eksctl-cluster-config.yaml --include "user-gpu-a-*" --install-nvidia-plugin=false
 #   eksctl delete nodegroup --cluster jmte --name core-a --approve
 #   eksctl create nodegroup --cluster jmte --name core-a --install-nvidia-plugin=false
@@ -35,7 +36,60 @@ metadata:
   #   dataset.
   #
   region: us-west-2
-  version: "1.19"
+  # version:
+  #   The k8s control plane version, to upgrade this, see
+  #   https://eksctl.io/usage/cluster-upgrade/.
+  #
+  # For reference, this is the steps I took when upgrading from k8s 1.19 to k8s
+  # 1.22, April 29th 2022.
+  #
+  # 1. Updated the version field in this config from 1.19 to 1.20
+  #
+  #    - It is not allowed to upgrade the control plane more than one minor at the time
+  #
+  # 2. Upgraded the control plane (takes ~10 minutes)
+  #
+  #    eksctl upgrade cluster --config-file eksctl-cluster-config.yaml --approve
+  #
+  # 2. Deleted all non-core nodegroups
+  #
+  #    eksctl delete nodegroup --config-file=eksctl-cluster-config.yaml --include "user-*,worker-*" --approve
+  #
+  # 3. Updated the version field in this config from 1.20 to 1.22
+  #
+  #    - It is allowed to have a nodegroup +-2 minors away from the control plan version
+  #
+  # 4. Created a new core nodepool (core-b)
+  #
+  #    eksctl create nodegroup --config-file=eksctl-cluster-config.yaml --include "core-b" --install-nvidia-plugin=false
+  #
+  # 5. Deleted the old core nodepool (core-a)
+  #
+  #    eksctl delete nodegroup --config-file=eksctl-cluster-config.yaml --include "core-a" --approve
+  #
+  # 6. Upgraded add-ons (takes ~3*5s)
+  #
+  #    eksctl utils update-kube-proxy --cluster=jmte --approve
+  #    eksctl utils update-aws-node --cluster=jmte --approve
+  #    eksctl utils update-coredns --cluster=jmte --approve
+  #
+  # 7. Update the version field in this config from 1.22 to 1.21
+  #
+  # 8. Upgraded the control plane, as in step 2.
+  #
+  # 9. Upgraded add-ons, as in step 6.
+  #
+  # A. Update the version field in this config from 1.21 to 1.22
+  #
+  # B. Upgraded the control plane, as in step 2.
+  #
+  # C. Upgraded add-ons, as in step 6.
+  #
+  # D. Recreated all nodegroups
+  #
+  #    eksctl create nodegroup --config-file=eksctl-cluster-config.yaml --include "*" --install-nvidia-plugin=false
+  #
+  version: "1.22"
   tags:
     2i2c.org/project: jmte
 
@@ -104,7 +158,7 @@ iam:
 #   you have run into a quota issue. Following that, you make a request to AWS using provided link: https://aws.amazon.com/contact-us/ec2-request
 #
 nodeGroups:
-  - name: core-a
+  - name: core-b
     availabilityZones: [us-west-2d] # aws ec2 describe-availability-zones --region <region-name>
     instanceType: m5.large # 28 pods, 2 cpu, 8 GB
     minSize: 0
@@ -248,12 +302,8 @@ nodeGroups:
   #   operator: Equal
   #   value: user
   #
-  # Sadly, something is making this change reset. I don't know why, but I
-  # suspect it happens whenever I do something with eksctl - perhaps whenever I
-  # do something with the nodegroup realted to GPU nodes. I think it resets
-  # whenever a GPU based nodegroup is created unless
-  # --install-nvidia-plugin=false it passed to the `eksctl create nodegroup`
-  # command.
+  # WARNING: If you create any nodegroup without --install-nvidia-plugin=false,
+  #          the daemonset will reset and this change will be lost.
   #
   # It seems I may need to specify additional tags also, with associated value
   # for the GPU of choice:
