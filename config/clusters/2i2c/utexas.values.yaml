@@ -47,6 +47,8 @@ jupyterhub:
             )
 
         # 1Gi seems the smallest PVC you can make - anything smaller than that is rounded up to 1Gi
+        # This size can be increased, and users will get the newer sized disk when they start
+        # their servers next - https://kubernetes.io/docs/concepts/storage/persistent-volumes/#expanding-persistent-volumes-claims
         make_db_pvc = partial(make_extra_pvc, 'postgres-storage', 'postgres-{username}', 'standard-rwo', '10Gi')
 
         async def ensure_db_pvc(spawner):
