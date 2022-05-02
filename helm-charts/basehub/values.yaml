@@ -444,6 +444,7 @@ jupyterhub:
       09-gh-teams: |
         from textwrap import dedent
         from tornado import gen, web
+        from oauthenticator.github import GitHubOAuthenticator
 
         # Make a copy of the original profile_list, as that is the data we will work with
         original_profile_list = c.KubeSpawner.profile_list
@@ -462,6 +463,9 @@ jupyterhub:
             If the user isn't part of any team whose membership grants them access to even a single
             profile, they aren't allowed to start any servers.
             """
+            # Only apply to GitHub Authenticator
+            if not isinstance(spawner.authenticator, GitHubOAuthenticator):
+              return original_profile_list
 
             # If populate_teams_in_auth_state is not set, github teams are not fetched
             # So we just don't do any of this filtering, and let anyone into everything
@@ -509,6 +513,10 @@ jupyterhub:
 
             return allowed_profiles
 
-        # Customize list of profiles dynamically, rather than override options form.
-        # This is more secure, as users can't override the options available to them via the hub API
-        c.KubeSpawner.profile_list = custom_profile_list
+        # Only set this customized profile_list *if* we already have a profile_list set
+        # otherwise, we'll show users a blank server options form and they won't be able to
+        # start their server
+        if c.KubeSpawner.profile_list:
+          # Customize list of profiles dynamically, rather than override options form.
+          # This is more secure, as users can't override the options available to them via the hub API
+          c.KubeSpawner.profile_list = custom_profile_list
