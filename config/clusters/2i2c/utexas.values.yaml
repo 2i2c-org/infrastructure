@@ -46,8 +46,8 @@ jupyterhub:
                 annotations=annotations
             )
 
-        # 1Gi seems the smallest PVC you can make - anything smaller than that is rounded up to 1Gi
-        make_db_pvc = partial(make_extra_pvc, 'postgres-storage', 'postgres-{username}', 'standard-rwo', '1Gi')
+        # 10Gi seems the smallest PVC you can make - anything smaller than that is rounded up to 1Gi
+        make_db_pvc = partial(make_extra_pvc, 'postgres-storage', 'postgres-{username}', 'standard-rwo', '10Gi')
 
         async def ensure_db_pvc(spawner):
             """"
