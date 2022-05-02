@@ -165,7 +165,7 @@ jobs:
       # Retry action: https://github.com/marketplace/actions/retry-step
       - name: Run health check for staging hub on cluster ${{ matrix.jobs.cluster_name }}
         if: matrix.jobs.upgrade_staging
-        uses: nick-fields/retry@v2.6.0
+        uses: nick-fields/retry@v2.7.0
         with:
           timeout_minutes: 10
           max_attempts: 2
@@ -180,7 +180,7 @@ jobs:
       # Retry action: https://github.com/marketplace/actions/retry-step
       - name: Run health check for dask-staging hub on cluster ${{ matrix.jobs.cluster_name }} if it exists
         if: matrix.jobs.upgrade_staging && matrix.jobs.cluster_name == '2i2c'
-        uses: nick-fields/retry@v2.6.0
+        uses: nick-fields/retry@v2.7.0
         with:
           timeout_minutes: 10
           max_attempts: 2
@@ -281,7 +281,7 @@ jobs:
 
       # Retry action: https://github.com/marketplace/actions/retry-step
       - name: Run health check against ${{ matrix.jobs.hub_name }} hub on cluster ${{ matrix.jobs.cluster_name}}
-        uses: nick-fields/retry@v2.6.0
+        uses: nick-fields/retry@v2.7.0
         with:
           timeout_minutes: 10
           max_attempts: 3
