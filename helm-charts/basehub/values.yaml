@@ -465,7 +465,7 @@ jupyterhub:
             """
             # Only apply to GitHub Authenticator
             if not isinstance(spawner.authenticator, GitHubOAuthenticator):
-              return original_profile_list
+                return original_profile_list
 
             # If populate_teams_in_auth_state is not set, github teams are not fetched
             # So we just don't do any of this filtering, and let anyone into everything
@@ -517,6 +517,6 @@ jupyterhub:
         # otherwise, we'll show users a blank server options form and they won't be able to
         # start their server
         if c.KubeSpawner.profile_list:
-          # Customize list of profiles dynamically, rather than override options form.
-          # This is more secure, as users can't override the options available to them via the hub API
-          c.KubeSpawner.profile_list = custom_profile_list
+            # Customize list of profiles dynamically, rather than override options form.
+            # This is more secure, as users can't override the options available to them via the hub API
+            c.KubeSpawner.profile_list = custom_profile_list
