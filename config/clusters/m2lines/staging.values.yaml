@@ -9,4 +9,4 @@ basehub:
     hub:
       config:
         GitHubOAuthenticator:
-          oauth_callback_url: https://staging.m2lines.2i2c.cloud
+          oauth_callback_url: https://staging.m2lines.2i2c.cloud/hub/oauth_callback
