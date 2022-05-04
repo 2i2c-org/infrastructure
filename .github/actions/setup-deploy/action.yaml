@@ -81,7 +81,6 @@ runs:
     - uses: azure/setup-kubectl@v2.0
       with:
         version: "1.23"
-      id: install
 
     # This step could be cached, but we only do it for a few jobs in the
     # workflow where this action is used
