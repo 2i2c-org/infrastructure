@@ -47,6 +47,8 @@ jobs:
     # on the master branch.
     runs-on: ubuntu-latest
     needs: [get-pr-number]
+    permissions:
+      issues: write
     if: needs.get-pr-number.outputs.continue-workflow == 'True'
     steps:
       - name: Comment on merged PR with GitHub Actions link
