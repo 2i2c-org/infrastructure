@@ -7,8 +7,9 @@ on:
     paths:
       - deployer/**
       - requirements.txt
+      - helm-charts/**
+      - config/clusters/**
       - .github/actions/setup-deploy/**
-      - "**.yaml"
 
 jobs:
   # In order to comment on a Pull Request, we need its number. But because we do not
