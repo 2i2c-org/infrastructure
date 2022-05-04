@@ -15,7 +15,7 @@ jobs:
   # trigger this workflow in a Pull Request context, it is not readily available to us.
   # Instead, we extract the PR number from the message of the head commit in the push
   # event payload. In the case of a merged PR, this message will be of the form:
-  # 'Merged pull request #XXX from owner/branch'
+  # 'Merge pull request #XXX from owner/branch'
   # This job sets two outputs: continue-workflow (bool, whether or not to run the next
   # job) and pr-number (str)
   get-pr-number:
