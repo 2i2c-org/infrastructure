@@ -8,7 +8,8 @@ on:
       - deployer/**
       - requirements.txt
       - .github/actions/setup-deploy/**
-      - "**.yaml"
+      - helm-charts/**
+      - config/clusters/**
       # We no longer trigger on this file since it does not contain any logic
       # concerning setting up the clusters for deploy. This now all lives in the
       # setup-deploy local action
