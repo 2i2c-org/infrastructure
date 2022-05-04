@@ -49,7 +49,7 @@ jobs:
     needs: [get-pr-number]
     if: needs.get-pr-number.outputs.continue-workflow == 'True'
     steps:
-      - name: Comment on closed PR with GitHub Actions link
+      - name: Comment on merged PR with GitHub Actions link
         uses: actions/github-script@v6
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
