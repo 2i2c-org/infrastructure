@@ -24,7 +24,7 @@ jobs:
       continue-workflow: ${{ steps.get-pr-number.outputs.continue-workflow }}
       pr-number: ${{ steps.get-pr-number.outputs.pr-number }}
     steps:
-      - name: Echo commit message
+      - name: Extract Pull Request number
         id: get-pr-number
         shell: python
         run: |
@@ -48,7 +48,7 @@ jobs:
     runs-on: ubuntu-latest
     needs: [get-pr-number]
     permissions:
-      issues: write
+      pull-requests: write
     if: needs.get-pr-number.outputs.continue-workflow == 'True'
     steps:
       - name: Comment on merged PR with GitHub Actions link
