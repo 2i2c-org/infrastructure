@@ -76,6 +76,12 @@ runs:
         # behalf.
         version: v3.8.2
 
+    # Pin kubectl version to 1.23 otherwise interactions with k8s clusters versioned <=1.21 won't work.
+    # See https://github.com/2i2c-org/infrastructure/issues/1271.
+    - uses: azure/setup-kubectl@v2.0
+      with:
+        version: "1.23"
+
     # This step could be cached, but we only do it for a few jobs in the
     # workflow where this action is used
     - name: Install kops
