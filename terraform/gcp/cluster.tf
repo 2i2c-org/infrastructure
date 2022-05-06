@@ -24,9 +24,10 @@ resource "google_container_cluster" "cluster" {
   # Setting cluster autoscaling profile is in google-beta
   provider = google-beta
 
-  name     = "${var.prefix}-cluster"
-  location = var.zone
-  project  = var.project_id
+  name           = "${var.prefix}-cluster"
+  location       = var.regional_cluster ? var.region : var.zone
+  node_locations = [var.zone]
+  project        = var.project_id
 
   initial_node_count       = 1
   remove_default_node_pool = true

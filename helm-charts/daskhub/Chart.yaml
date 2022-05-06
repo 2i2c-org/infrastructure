@@ -8,5 +8,5 @@ dependencies:
     version: "0.1.0"
     repository: file://../basehub
   - name: dask-gateway
-    version: "0.9.0"
-    repository: "https://dask.org/dask-gateway-helm-repo/"
+    version: "2022.4.0"
+    repository: "https://helm.dask.org/"

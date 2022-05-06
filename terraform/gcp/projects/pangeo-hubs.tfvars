@@ -13,6 +13,8 @@ config_connector_enabled = false
 enable_filestore = true
 filestore_capacity_gb = 2048
 
+regional_cluster = false
+
 user_buckets = [
   "scratch",
   "scratch-staging"

@@ -118,7 +118,8 @@ basehub:
       readinessProbe:
         enabled: false
 dask-gateway:
-  extraConfig:
-    idle: |
-      # timeout after 30 minutes of inactivity
-      c.KubeClusterConfig.idle_timeout = 1800
+  gateway:
+    extraConfig:
+      idle: |
+        # timeout after 30 minutes of inactivity
+        c.KubeClusterConfig.idle_timeout = 1800

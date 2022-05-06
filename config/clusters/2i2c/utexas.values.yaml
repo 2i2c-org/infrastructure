@@ -47,7 +47,13 @@ jupyterhub:
             )
 
         # 1Gi seems the smallest PVC you can make - anything smaller than that is rounded up to 1Gi
-        make_db_pvc = partial(make_extra_pvc, 'postgres-storage', 'postgres-{username}', 'standard-rwo', '1Gi')
+
+        # This db size can be increased, but existing PVCs will need to be resized explicitly
+        # with the following command:
+        # kubectl -n <namespace> get pvc -l component=postgres-storage | choose 0 | xargs -L1  kubectl -n <namespace> patch pvc  -p '{"spec": {"resources": {"requests": {"storage": "<new-storage>"}}}}'
+        # When the users start up their servers next, they will get the expanded storage,
+        # using https://kubernetes.io/docs/concepts/storage/persistent-volumes/#expanding-persistent-volumes-claims
+        make_db_pvc = partial(make_extra_pvc, 'postgres-storage', 'postgres-{username}', 'standard-rwo', '10Gi')
 
         async def ensure_db_pvc(spawner):
             """"

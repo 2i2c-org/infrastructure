@@ -15,6 +15,7 @@ core_node_machine_type = "g1-small"
 # Single-tenant cluster, network policy not needed
 enable_network_policy    = false
 
+regional_cluster = false
 
 notebook_nodes = {
   "small" : {

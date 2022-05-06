@@ -1,0 +1,73 @@
+name: Comment GitHub Actions link on a merged PR
+
+on:
+  push:
+    branches:
+      - master
+    paths:
+      - deployer/**
+      - requirements.txt
+      - helm-charts/**
+      - config/clusters/**
+      - .github/actions/setup-deploy/**
+
+jobs:
+  # In order to comment on a Pull Request, we need its number. But because we do not
+  # trigger this workflow in a Pull Request context, it is not readily available to us.
+  # Instead, we extract the PR number from the message of the head commit in the push
+  # event payload. In the case of a merged PR, this message will be of the form:
+  # 'Merge pull request #XXX from owner/branch'
+  # This job sets two outputs: continue-workflow (bool, whether or not to run the next
+  # job) and pr-number (str)
+  get-pr-number:
+    runs-on: ubuntu-latest
+    outputs:
+      continue-workflow: ${{ steps.get-pr-number.outputs.continue-workflow }}
+      pr-number: ${{ steps.get-pr-number.outputs.pr-number }}
+    steps:
+      - name: Extract Pull Request number
+        id: get-pr-number
+        shell: python
+        run: |
+          import re
+
+          commit_msg = r"""${{ github.event.head_commit.message }}"""
+          print(f"::set-output name=continue-workflow::{'Merge pull request' in commit_msg}")
+
+          match = re.search('(?<=#)[0-9]*', commit_msg)
+          if match is not None:
+              pr_number = match.group(0)
+              print(f"::set-output name=pr-number::{pr_number}")
+          else:
+              print(f"::set-output name=pr-number::{None}")
+
+  add-pr-comment:
+    # This job depends on the get-pr-number job to have completed successfully and set
+    # the continue-workflow variable to True. It consumes the pr-number variable to
+    # comment on that Pull Request with a link to the deploy-hubs.yaml wiorkflow running
+    # on the master branch.
+    runs-on: ubuntu-latest
+    needs: [get-pr-number]
+    permissions:
+      pull-requests: write
+    if: needs.get-pr-number.outputs.continue-workflow == 'True'
+    steps:
+      - name: Comment on merged PR with GitHub Actions link
+        uses: actions/github-script@v6
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          script: |
+            var PR_NUMBER = process.env.PR_NUMBER;
+            var WORKFLOW_FILENAME = process.env.WORKFLOW_FILENAME;
+            var BRANCH = process.env.BRANCH;
+
+            github.rest.issues.createComment({
+              issue_number: `${PR_NUMBER}`,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: `:tada::tada::tada::tada:\n\nMonitor the deployment of the hubs here :point_right: https://github.com/${context.repo.owner}/${context.repo.repo}/actions/workflows/${WORKFLOW_FILENAME}?query=branch%3A${BRANCH}`
+            })
+        env:
+          PR_NUMBER: "${{ needs.get-pr-number.outputs.pr-number }}"
+          WORKFLOW_FILENAME: deploy-hubs.yaml
+          BRANCH: master
