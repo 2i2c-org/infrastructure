@@ -23,7 +23,7 @@ This section describes the functions the `deployer` can carry out, their purpose
 $ pwd
 [...]/infrastructure/deployer
 $ cd .. && pwd
-[...]/deployer
+[...]/infrastructure
 $ python deployer [sub-command]
 ```
 
