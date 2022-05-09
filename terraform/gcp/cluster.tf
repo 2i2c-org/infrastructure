@@ -26,7 +26,7 @@ resource "google_container_cluster" "cluster" {
 
   name           = "${var.prefix}-cluster"
   location       = var.regional_cluster ? var.region : var.zone
-  node_locations = [var.zone]
+  node_locations = var.regional_cluster ? [var.zone] : null
   project        = var.project_id
 
   initial_node_count       = 1
