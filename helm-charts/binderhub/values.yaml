@@ -1,0 +1,7 @@
+binderhub:
+
+dask-gateway:
+  # Do not enable the dask-gateway sub-chart by default. To enable dask-gateway for a
+  # specific BinderHub deployment, set dask-gateway.enabled = true in the hub's specific
+  # values.yaml file.
+  enabled: false
