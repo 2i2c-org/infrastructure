@@ -251,6 +251,14 @@ jupyterhub:
                 matchLabels:
                   app.kubernetes.io/component: traefik
   hub:
+    config:
+      Authenticator:
+        # Don't allow test username to login into the hub
+        # The test service will still be able to create this hub username
+        # and start their server.
+        # Ref: https://github.com/2i2c-org/meta/issues/321
+        blocked_users:
+          - deployment-service-check
     extraFiles:
       configurator-schema-default:
         mountPath: /usr/local/etc/jupyterhub-configurator/00-default.schema.json
