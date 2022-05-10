@@ -251,6 +251,10 @@ jupyterhub:
                 matchLabels:
                   app.kubernetes.io/component: traefik
   hub:
+    config:
+      Authenticator:
+        blocked_users:
+          - deployment-service-check
     extraFiles:
       configurator-schema-default:
         mountPath: /usr/local/etc/jupyterhub-configurator/00-default.schema.json
