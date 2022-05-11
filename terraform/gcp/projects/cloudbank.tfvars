@@ -18,6 +18,11 @@ notebook_nodes = {
     max : 20,
     machine_type : "n1-highmem-4",
     labels: {},
+    gpu: {
+      enabled: false,
+      type: "",
+      count: 0
+    }
   },
 }
 
@@ -27,6 +32,11 @@ dask_nodes = {
     max : 100,
     machine_type : "n1-highmem-4",
     labels: {},
+    gpu: {
+      enabled: false,
+      type: "",
+      count: 0
+    }
   },
 }
 

@@ -27,18 +27,33 @@ notebook_nodes = {
     max : 100,
     machine_type : "n1-standard-4",
     labels: {},
+    gpu: {
+      enabled: false,
+      type: "",
+      count: 0
+    }
   },
   "medium" : {
     min : 0,
     max : 100,
     machine_type : "n1-standard-8",
     labels: {},
+    gpu: {
+      enabled: false,
+      type: "",
+      count: 0
+    }
   },
   "large" : {
     min : 0,
     max : 100,
     machine_type : "n1-standard-16",
     labels: {},
+    gpu: {
+      enabled: false,
+      type: "",
+      count: 0
+    }
   },
 }
 
@@ -48,18 +63,33 @@ dask_nodes = {
     max : 100,
     machine_type : "n1-standard-4",
     labels: {},
+    gpu: {
+      enabled: false,
+      type: "",
+      count: 0
+    }
   },
   "medium" : {
     min : 0,
     max : 100,
     machine_type : "n1-standard-8",
     labels: {},
+    gpu: {
+      enabled: false,
+      type: "",
+      count: 0
+    }
   },
   "large" : {
     min : 0,
     max : 100,
     machine_type : "n1-standard-16",
     labels: {},
+    gpu: {
+      enabled: false,
+      type: "",
+      count: 0
+    }
   },
 }
 
