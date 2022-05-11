@@ -17,10 +17,14 @@ enable_network_policy  = true
 enable_filestore = true
 filestore_capacity_gb = 1024
 
-user_buckets = [
-  "scratch-staging",
-  "scratch"
-]
+user_buckets = {
+  "scratch-staging": {
+    "delete_after": 7
+  },
+  "scratch": {
+    "delete_after": 7
+  }
+}
 
 hub_cloud_permissions = {
   "staging" : {

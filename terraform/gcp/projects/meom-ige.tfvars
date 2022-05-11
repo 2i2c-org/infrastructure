@@ -135,10 +135,14 @@ dask_nodes = {
 
 }
 
-user_buckets = [
-  "scratch",
-  "data"
-]
+user_buckets = {
+  "scratch": {
+    "delete_after": null
+  },
+  "data": {
+    "delete_after": null
+  }
+}
 
 hub_cloud_permissions = {
   "staging" : {

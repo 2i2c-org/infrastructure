@@ -13,10 +13,14 @@ regional_cluster = true
 enable_filestore = true
 filestore_capacity_gb = 2048
 
-user_buckets = [
-  "scratch",
-  "scratch-staging"
-]
+user_buckets = {
+  "scratch-staging": {
+    "delete_after": 7
+  },
+  "scratch": {
+    "delete_after": 7
+  }
+}
 
 # Setup notebook node pools
 notebook_nodes = {

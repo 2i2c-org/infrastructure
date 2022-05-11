@@ -164,9 +164,18 @@ variable "enable_network_policy" {
 }
 
 variable "user_buckets" {
-  type        = set(any)
-  default     = []
-  description = "Buckets to create for the project, they will be prefixed with {var.prefix}-"
+  type        = map(object({ delete_after : number }))
+  default     = {}
+  description = <<-EOT
+  GCS Buckets to be created.
+
+  The key for each entry will be prefixed with {var.prefix}- to form
+  the name of the bucket.
+
+  The value is a map, with 'delete_after' the only accepted key in that
+  map - it lists the number of days after which any content in the
+  bucket will be deleted. Set to null to not delete data.
+  EOT
 }
 
 variable "enable_private_cluster" {
