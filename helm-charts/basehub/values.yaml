@@ -283,8 +283,7 @@ jupyterhub:
                 interfaces:
                   - value: "/tree"
                     title: Classic Notebook
-                    description:
-                      The original single-document interface for creating
+                    description: The original single-document interface for creating
                       Jupyter Notebooks.
                   - value: "/lab"
                     title: JupyterLab
@@ -314,7 +313,7 @@ jupyterhub:
         admin: true
     image:
       name: quay.io/2i2c/pilot-hub
-      tag: "0.0.1-n3027.h52c5e2a"
+      tag: "0.0.1-n3130.hba64f6a"
     nodeSelector:
       hub.jupyter.org/node-purpose: core
     networkPolicy:
