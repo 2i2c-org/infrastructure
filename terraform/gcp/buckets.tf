@@ -10,6 +10,20 @@ resource "google_storage_bucket" "user_buckets" {
 
   // Set these values explicitly so they don't "change outside terraform"
   labels = {}
+
+  dynamic "lifecycle_rule" {
+    for_each = each.value.delete_after != null ? [1] : []
+
+    content {
+      condition {
+        age = each.value.delete_after
+      }
+      action {
+        type = "Delete"
+      }
+    }
+
+  }
 }
 
 locals {
@@ -32,7 +46,7 @@ resource "google_storage_bucket_iam_member" "member" {
 }
 
 output "buckets" {
-  value       = { for b in var.user_buckets : b => google_storage_bucket.user_buckets[b].name }
+  value       = { for b, _ in var.user_buckets : b => google_storage_bucket.user_buckets[b].name }
   description = <<-EOT
   List of GCS buckets created for this cluster
 

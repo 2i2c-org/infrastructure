@@ -40,4 +40,4 @@ dask_nodes = {
   },
 }
 
-user_buckets = []
+user_buckets = {}

@@ -39,7 +39,7 @@ dask_nodes = {
   }
 }
 
-user_buckets = []
+user_buckets = {}
 
 
 hub_cloud_permissions = {
