@@ -177,7 +177,7 @@ dask-gateway:
                 }
                 return {
                     "worker_cores_limit": options.worker_cores,
-                    "worker_cores": min(options.worker_cores / 2, 1),
+                    "worker_cores": options.worker_cores,
                     "worker_memory": "%fG" % options.worker_memory,
                     "image": options.image,
                     "scheduler_extra_pod_annotations": extra_annotations,
