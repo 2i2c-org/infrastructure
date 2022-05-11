@@ -55,6 +55,11 @@ basehub:
         DASK_DISTRIBUTED__DASHBOARD_LINK: "/user/{JUPYTERHUB_USER}/proxy/{port}/status"
 
     hub:
+      services:
+        dask-gateway:
+          # Don't display a dask-gateway entry under 'services',
+          # as dask-gateway has no UI
+          display: false
       networkPolicy:
         # FIXME: Enable this when dask-gateway chart v0.9.1 or higher is used
         enabled: false
