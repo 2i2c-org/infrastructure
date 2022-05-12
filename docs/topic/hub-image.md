@@ -10,7 +10,7 @@ The 2i2c custom hub image is lives at [Quay.io](https://quay.io/repository/2i2c/
 
 When this hub image needs to be updated, the steps to take are:
 
-1. Update the [Dockerfile]((https://github.com/2i2c-org/infrastructure/blob/HEAD/helm-charts/images/hub/Dockerfile) with any changes wanted
+1. Update the [Dockerfile](https://github.com/2i2c-org/infrastructure/blob/HEAD/helm-charts/images/hub/Dockerfile) with any changes wanted
 
 2. Commit the changes
 
