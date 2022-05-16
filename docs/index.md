@@ -50,7 +50,6 @@ topic/cloud-auth.md
 topic/features.md
 topic/credits.md
 topic/hub-helm-charts.md
-topic/hub-image.md
 topic/storage-layer.md
 topic/network.md
 topic/terraform.md
