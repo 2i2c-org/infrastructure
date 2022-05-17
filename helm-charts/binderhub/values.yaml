@@ -1,4 +1,16 @@
 binderhub:
+  config:
+    BinderHub:
+      use_registry: true
+  service:
+    type: ClusterIP
+  ingress:
+    enabled: true
+    annotations:
+      nginx.ingress.kubernetes.io/proxy-body-size: 256m
+      kubernetes.io/ingress.class: nginx
+      cert-manager.io/cluster-issuer: letsencrypt-prod
+
   jupyterhub:
     #=== VALUES BELOW HERE ARE COPIED FROM BASEHUB VALUES AND SHOULD BE UPDATED ===#
     #=== IF BASEHUB CHANGES ===#
