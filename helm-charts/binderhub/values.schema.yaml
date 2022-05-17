@@ -11,8 +11,22 @@ $schema: http://json-schema.org/draft-07/schema#
 type: object
 additionalProperties: false
 required:
+  - binderhub
+  - dask-gateway
   - global
 properties:
+  # binderhub is a dependent helm chart, we rely on its schema validation for
+  # values passed to it and are not imposing restrictions on them in this helm
+  # chart.
+  binderhub:
+    type: object
+    additionalProperties: true
+  # dask-gateway is a dependent helm chart, we rely on its schema validation for
+  # values passed to it and are not imposing restrictions on them in this helm
+  # chart.
+  dask-gateway:
+    type: object
+    additionalProperties: true
   global:
     type: object
     additionalProperties: true
