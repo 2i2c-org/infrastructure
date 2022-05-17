@@ -450,8 +450,8 @@ dask-gateway:
   # values.yaml file.
   enabled: false
 
-  #=== VALUES BELOW HERE ARE COPIED FROM BASEHUB VALUES AND SHOULD BE UPDATED ===#
-  #=== IF BASEHUB CHANGES ===#
+  #=== VALUES BELOW HERE ARE COPIED FROM DASKHUB VALUES AND SHOULD BE UPDATED ===#
+  #=== IF DASKHUB CHANGES ===#
   controller:
     nodeSelector:
       k8s.dask.org/node-purpose: core
