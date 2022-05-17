@@ -4,6 +4,14 @@ This document is a concise description of various features we can
 optionally enable on a given JupyterHub. Explicit instructions on how to
 do so should be provided in a linked how-to document.
 
+## GPUs
+
+GPUs are heavily used in machine learning workflows, and we support
+provisioning GPUs for users on all major platforms.
+
+See [the associated howto guide](howto:features:gpu) for more information
+on enabling this.
+
 ## Cloud Permissions
 
 Users of our hubs often need to be granted specific cloud permissions

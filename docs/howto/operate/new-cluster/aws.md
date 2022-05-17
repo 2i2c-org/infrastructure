@@ -21,7 +21,8 @@ eksctl for everything.
    for a quick configuration process.
 
 3. Install the latest version of [eksctl](https://eksctl.io/introduction/#installation). Mac users
-   can get it from homebrew with `brew install eksctl`.
+   can get it from homebrew with `brew install eksctl`. Make sure the version is at least 0.97 -
+   you can check by running `eksctl version`
 
 (new-cluster:aws)=
 ## Create a new cluster

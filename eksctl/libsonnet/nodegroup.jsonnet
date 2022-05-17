@@ -23,7 +23,7 @@ local makeCloudTaints(taints) = {
     'node.kubernetes.io/instance-type': if std.objectHas($, 'instanceType') then $.instanceType else $.instancesDistribution.instanceTypes[0],
   },
   taints+: {},
-  tags: makeCloudLabels(self.labels) + makeCloudTaints(self.taints),
+  tags+: makeCloudLabels(self.labels) + makeCloudTaints(self.taints),
   iam: {
     withAddonPolicies: {
       autoScaler: true,

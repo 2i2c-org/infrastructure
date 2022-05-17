@@ -132,6 +132,9 @@ With just one tool to download and configure, you can control multiple AWS servi
 `eksctl` is a simple CLI tool for creating and managing clusters on EKS - Amazon's
 managed Kubernetes service for EC2. See [the `eksctl` documentation for more information](https://docs.aws.amazon.com/eks/latest/userguide/getting-started-eksctl.html).
 
+Make sure you are using at least version 0.97. You
+can check the installed version with `eksctl version`
+
 ### kops
 
 `kops` will not only help you create, destroy, upgrade and maintain a production-grade,
