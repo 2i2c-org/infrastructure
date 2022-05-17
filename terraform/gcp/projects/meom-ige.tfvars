@@ -23,30 +23,55 @@ notebook_nodes = {
     max : 20,
     machine_type : "n1-standard-2",
     labels: {},
+    gpu: {
+      enabled: false,
+      type: "",
+      count: 0
+    }
   },
   "medium" : {
     min : 0,
     max : 20,
     machine_type : "n1-standard-8",
     labels: {},
+    gpu: {
+      enabled: false,
+      type: "",
+      count: 0
+    }
   },
   "large" : {
     min : 0,
     max : 20,
     machine_type : "n1-standard-16",
     labels: {},
+    gpu: {
+      enabled: false,
+      type: "",
+      count: 0
+    }
   },
   "very-large" : {
     min : 0,
     max : 20,
     machine_type : "n1-standard-32",
     labels: {},
+    gpu: {
+      enabled: false,
+      type: "",
+      count: 0
+    }
   },
   "huge" : {
     min : 0,
     max : 20,
     machine_type : "n1-standard-64",
     labels: {},
+    gpu: {
+      enabled: false,
+      type: "",
+      count: 0
+    }
   },
 
 }
@@ -57,38 +82,67 @@ dask_nodes = {
     max : 20,
     machine_type : "n1-standard-2",
     labels: {},
+    gpu: {
+      enabled: false,
+      type: "",
+      count: 0
+    }
   },
   "medium" : {
     min : 0,
     max : 20,
     machine_type : "n1-standard-8",
     labels: {},
+    gpu: {
+      enabled: false,
+      type: "",
+      count: 0
+    }
   },
   "large" : {
     min : 0,
     max : 20,
     machine_type : "n1-standard-16",
     labels: {},
+    gpu: {
+      enabled: false,
+      type: "",
+      count: 0
+    }
   },
   "very-large" : {
     min : 0,
     max : 20,
     machine_type : "n1-standard-32",
     labels: {},
+    gpu: {
+      enabled: false,
+      type: "",
+      count: 0
+    }
   },
   "huge" : {
     min : 0,
     max : 20,
     machine_type : "n1-standard-64",
     labels: {},
+    gpu: {
+      enabled: false,
+      type: "",
+      count: 0
+    }
   },
 
 }
 
-user_buckets = [
-  "scratch",
-  "data"
-]
+user_buckets = {
+  "scratch": {
+    "delete_after": null
+  },
+  "data": {
+    "delete_after": null
+  }
+}
 
 hub_cloud_permissions = {
   "staging" : {

@@ -109,12 +109,24 @@ on why users want this!
    like:
 
    ```terraform
-   user_buckets = ["bucket1", "bucket2"]
+   user_buckets = {
+      "bucket1": {
+         "delete_after": 7
+      },
+      "bucket2": {
+         "delete_after": null
+      }
+   }
    ```
 
    Since storage buckets need to be globally unique across all of Google Cloud,
    the actual created names are `<prefix>-<bucket-name>`, where `<prefix>` is
    set by the `prefix` variable in the `.tfvars` file
+
+   `delete_after` specifies the number of days after *object creation
+   time* the object will be automatically cleaned up - this is
+   very helpful for 'scratch' buckets that are temporary. Set to
+   `null` to prevent this cleaning up process from happening.
 
 2. Enable access to these buckets from the hub by [editing `hub_cloud_permissions`](howto:features:cloud-access:gcp:access-perms)
    in the same `.tfvars` file. Follow all the steps listed there - this

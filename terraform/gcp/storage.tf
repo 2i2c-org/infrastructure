@@ -1,9 +1,9 @@
 resource "google_filestore_instance" "homedirs" {
 
-  name    = "${var.prefix}-homedirs"
-  zone    = var.zone
-  tier    = var.filestore_tier
-  project = var.project_id
+  name     = "${var.prefix}-homedirs"
+  location = var.zone
+  tier     = var.filestore_tier
+  project  = var.project_id
 
   count = var.enable_filestore ? 1 : 0
 

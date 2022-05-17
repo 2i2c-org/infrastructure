@@ -2,9 +2,6 @@ basehub:
   # Copied from https://github.com/dask/helm-chart/blob/master/daskhub/values.yaml
   # FIXME: Properly use the upstream chart.
   jupyterhub:
-    prePuller:
-      hook:
-        enabled: false
     singleuser:
       # Almost everyone using dask by default wants JupyterLab
       defaultUrl: /lab
@@ -55,6 +52,11 @@ basehub:
         DASK_DISTRIBUTED__DASHBOARD_LINK: "/user/{JUPYTERHUB_USER}/proxy/{port}/status"
 
     hub:
+      services:
+        dask-gateway:
+          # Don't display a dask-gateway entry under 'services',
+          # as dask-gateway has no UI
+          display: false
       networkPolicy:
         # FIXME: Enable this when dask-gateway chart v0.9.1 or higher is used
         enabled: false
@@ -172,7 +174,7 @@ dask-gateway:
                 }
                 return {
                     "worker_cores_limit": options.worker_cores,
-                    "worker_cores": min(options.worker_cores / 2, 1),
+                    "worker_cores": options.worker_cores,
                     "worker_memory": "%fG" % options.worker_memory,
                     "image": options.image,
                     "scheduler_extra_pod_annotations": extra_annotations,
