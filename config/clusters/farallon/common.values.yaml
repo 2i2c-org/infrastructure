@@ -90,6 +90,8 @@ basehub:
         type: LoadBalancer
       https:
         enabled: true
+        letsencrypt:
+          contactEmail: yuvipanda@gmail.com
       chp:
         nodeSelector: {}
         tolerations:
