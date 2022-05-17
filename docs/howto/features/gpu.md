@@ -1,4 +1,4 @@
-(howto:features:gpu=)
+(howto:features:gpu)=
 # Enable access to GPUs
 
 GPUs are heavily used in machine learning workflows, and we support
