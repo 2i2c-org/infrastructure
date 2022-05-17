@@ -54,7 +54,7 @@ binderhub:
           limits:
             memory: 1Gi
     singleuser:
-      {{- if .Values.dask-gateway.enabled -}}
+      {{- if .Values.dask-gateway.enabled }}
       # Almost everyone using dask by default wants JupyterLab
       defaultUrl: /lab
       extraLabels:
@@ -102,7 +102,7 @@ binderhub:
         # that this still misbehave if you have a named server but now its at
         # least functional for non-named servers.
         DASK_DISTRIBUTED__DASHBOARD_LINK: "/user/{JUPYTERHUB_USER}/proxy/{port}/status"
-      {{- end -}}
+      {{- end }}
 
       extraFiles:
         jupyter_notebook_config.json:
@@ -189,12 +189,12 @@ binderhub:
           blocked_users:
             - deployment-service-check
       services:
-        {{- if .Values.dask-gateway.enabled -}}
+        {{- if .Values.dask-gateway.enabled }}
         dask-gateway:
           # Don't display a dask-gateway entry under 'services',
           # as dask-gateway has no UI
           display: false
-        {{- end -}}
+        {{- end }}
 
         # hub-health service helps us run health checks from the deployer script.
         # The JupyterHub Helm chart will automatically generate an API token for
@@ -210,10 +210,10 @@ binderhub:
       nodeSelector:
         hub.jupyter.org/node-purpose: core
       networkPolicy:
-        {{- if .Values.dask-gateway.enabled -}}
+        {{- if .Values.dask-gateway.enabled }}
         # FIXME: Enable this when dask-gateway chart v0.9.1 or higher is used
         enabled: false
-        {{- else -}}
+        {{- else }}
         enabled: true
         ingress:
           - from:
@@ -247,10 +247,10 @@ binderhub:
             ports:
               - port: http
                 protocol: TCP
-        {{- end -}}
+        {{- end }}
 
       extraConfig:
-        {{- if .Values.dask-gateway.enabled -}}
+        {{- if .Values.dask-gateway.enabled }}
         daskhub-01-add-dask-gateway-values: |
           # 1. Sets `DASK_GATEWAY__PROXY_ADDRESS` in the singleuser environment.
           # 2. Adds the URL for the Dask Gateway JupyterHub service.
@@ -287,7 +287,7 @@ binderhub:
                   break
           else:
               print("dask-gateway service not found. Did you set jupyterhub.hub.services.dask-gateway.apiToken?")
-        {{- end -}}
+        {{- end }}
 
         01-custom-theme: |
           from z2jh import get_config
