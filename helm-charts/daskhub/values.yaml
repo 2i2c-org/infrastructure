@@ -2,9 +2,6 @@ basehub:
   # Copied from https://github.com/dask/helm-chart/blob/master/daskhub/values.yaml
   # FIXME: Properly use the upstream chart.
   jupyterhub:
-    prePuller:
-      hook:
-        enabled: false
     singleuser:
       # Almost everyone using dask by default wants JupyterLab
       defaultUrl: /lab
