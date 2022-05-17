@@ -1,4 +1,346 @@
 binderhub:
+  jupyterhub:
+    #=== VALUES BELOW HERE ARE COPIED FROM BASEHUB VALUES AND SHOULD BE UPDATED ===#
+    #=== IF BASEHUB CHANGES ===#
+    custom:
+      2i2c:
+        # Should 2i2c engineering staff user IDs be injected to the admin_users
+        # configuration of the JupyterHub's authenticator by our custom
+        # jupyterhub_config.py snippet as declared in hub.extraConfig?
+        add_staff_user_ids_to_admin_users: false
+        add_staff_user_ids_of_type: ""
+        staff_github_ids:
+          - choldgraf
+          - consideRatio
+          - damianavila
+          - GeorgianaElena
+          - sgibson91
+          - yuvipanda
+        staff_google_ids:
+          - choldgraf@2i2c.org
+          - erik@2i2c.org
+          - damianavila@2i2c.org
+          - georgianaelena@2i2c.org
+          - sgibson@2i2c.org
+          - yuvipanda@2i2c.org
+    ingress:
+      enabled: true
+      annotations:
+        nginx.ingress.kubernetes.io/proxy-body-size: 256m
+        kubernetes.io/ingress.class: nginx
+        cert-manager.io/cluster-issuer: letsencrypt-prod
+    proxy:
+      service:
+        type: ClusterIP
+      chp:
+        nodeSelector:
+          hub.jupyter.org/node-purpose: core
+        resources:
+          requests:
+            # FIXME: We want no guarantees here!!!
+            # This is lowest possible value
+            cpu: 0.01
+            memory: 64Mi
+          limits:
+            memory: 1Gi
+      traefik:
+        image:
+          tag: v2.4.8
+        nodeSelector:
+          hub.jupyter.org/node-purpose: core
+        resources:
+          requests:
+            memory: 64Mi
+          limits:
+            memory: 1Gi
+    singleuser:
+      extraFiles:
+        jupyter_notebook_config.json:
+          mountPath: /usr/local/etc/jupyter/jupyter_notebook_config.json
+          # if a user leaves a notebook with a running kernel,
+          # the effective idle timeout will typically be cull idle timeout
+          # of the server + the cull idle timeout of the kernel,
+          # as culling the kernel will register activity,
+          # resetting the no_activity timer for the server as a whole
+          data:
+            MappingKernelManager:
+              # shutdown kernels after no activity
+              cull_idle_timeout: 3600
+              # check for idle kernels this often
+              cull_interval: 300
+              # a kernel with open connections but no activity still counts as idle
+              # this is what allows us to shutdown servers
+              # when people leave a notebook open and wander off
+              cull_connected: true
+      nodeSelector:
+        hub.jupyter.org/node-purpose: user
+      networkPolicy:
+        # Allow unrestricted access to the internet but not local cluster network
+        enabled: true
+        egress:
+          - to:
+              - ipBlock:
+                  cidr: 0.0.0.0/0
+                  except:
+                    # Don't allow network access to private IP ranges
+                    # Listed in https://datatracker.ietf.org/doc/html/rfc1918
+                    - 10.0.0.0/8
+                    - 172.16.0.0/12
+                    - 192.168.0.0/16
+                    # Don't allow network access to the metadata IP
+                    - 169.254.169.254/32
+          # Allow code in hubs to talk to ingress provider, so they can talk to
+          # the hub via its public URL
+          - to:
+              - namespaceSelector:
+                  matchLabels:
+                    name: support
+                podSelector:
+                  matchLabels:
+                    app.kubernetes.io/name: ingress-nginx
+          # If a hub is using autohttps instead of ingress-nginx, allow traffic
+          # to the autohttps pod as well
+          - to:
+              - podSelector:
+                  matchLabels:
+                    app: jupyterhub
+                    component: autohttps
+          # Allow traffic to the proxy pod from user pods
+          # This is particularly important for daskhubs that utilise the proxy
+          # in order to create clusters (schedulers and workers)
+          - to:
+              - podSelector:
+                  matchLabels:
+                    app: jupyterhub
+                    component: proxy
+          # Allow traffic to the traefik pod from user pods. Needed for daskhubs.
+          - to:
+              - podSelector:
+                  matchLabels:
+                    app.kubernetes.io/component: traefik
+    hub:
+      config:
+        JupyterHub:
+          # Allow unauthenticated prometheus requests
+          # Otherwise our prometheus server can't get hub metrics
+          authenticate_prometheus: false
+        KubeSpawner:
+          # Make sure working directory is ${HOME}
+          working_dir: /home/jovyan
+          extra_container_config:
+            securityContext:
+              # Explicitly disallow setuid binaries from working inside the container
+              allowPrivilegeEscalation: false
+        Authenticator:
+          # Don't allow test username to login into the hub
+          # The test service will still be able to create this hub username
+          # and start their server.
+          # Ref: https://github.com/2i2c-org/meta/issues/321
+          blocked_users:
+            - deployment-service-check
+      services:
+        # hub-health service helps us run health checks from the deployer script.
+        # The JupyterHub Helm chart will automatically generate an API token for
+        # services and expose it in a k8s Secret named `hub`. When we run health
+        # tests against a hub, we read this token from the k8s Secret to acquire
+        # the credentials needed to interacting with the JupyterHub API.
+        #
+        hub-health:
+          # FIXME: With JupyterHub 2 we can define a role for this service with
+          #        more tightly scoped permissions based on our needs.
+          #
+          admin: true
+      nodeSelector:
+        hub.jupyter.org/node-purpose: core
+      networkPolicy:
+        enabled: true
+        ingress:
+          - from:
+              - podSelector:
+                  matchLabels:
+                    app: jupyterhub
+                    component: hub
+            ports:
+              - port: 8081
+                protocol: TCP
+          - from:
+              - podSelector:
+                  matchLabels:
+                    app: jupyterhub
+                    component: proxy
+              - podSelector:
+                  matchLabels:
+                    app: jupyterhub
+                    component: hub
+            ports:
+              - port: 10101
+                protocol: TCP
+          - from:
+              - namespaceSelector:
+                  matchLabels:
+                    name: support
+                podSelector:
+                  matchLabels:
+                    app: prometheus
+                    component: server
+            ports:
+              - port: http
+                protocol: TCP
+      extraConfig:
+        01-custom-theme: |
+          from z2jh import get_config
+          c.JupyterHub.template_paths = ['/usr/local/share/jupyterhub/custom_templates/']
+
+          c.JupyterHub.template_vars = {
+              'custom': get_config('custom.homepage.templateVars')
+          }
+        02-custom-admin: |
+          from z2jh import get_config
+          from kubespawner import KubeSpawner
+          from jupyterhub_configurator.mixins import ConfiguratorSpawnerMixin
+
+          class CustomSpawner(ConfiguratorSpawnerMixin, KubeSpawner):
+              def start(self, *args, **kwargs):
+                  custom_admin = get_config('custom.singleuserAdmin', {})
+                  if custom_admin and self.user.admin:
+                      extra_init_containers = custom_admin.get('initContainers', [])
+                      extra_volume_mounts = custom_admin.get('extraVolumeMounts', [])
+
+                      self.init_containers += [container for container in extra_init_containers if container not in self.init_containers]
+                      self.volume_mounts += [volume for volume in extra_volume_mounts if volume not in self.volume_mounts]
+
+                  return super().start(*args, **kwargs)
+
+
+          c.JupyterHub.spawner_class = CustomSpawner
+        03-cloud-storage-bucket: |
+          from z2jh import get_config
+          cloud_resources = get_config('custom.cloudResources')
+          scratch_bucket = cloud_resources['scratchBucket']
+          import os
+
+          if scratch_bucket['enabled']:
+              # FIXME: Support other providers too
+              assert cloud_resources['provider'] == 'gcp'
+              project_id = cloud_resources['gcp']['projectId']
+
+              release = os.environ['HELM_RELEASE_NAME']
+              bucket_protocol = 'gcs'
+              bucket_name = f'{project_id}-{release}-scratch-bucket'
+              env = {
+                  'SCRATCH_BUCKET_PROTOCOL': bucket_protocol,
+                  # Matches "daskhub.scratchBUcket.name" helm template
+                  'SCRATCH_BUCKET_NAME': bucket_name,
+                  # Use k8s syntax of $(ENV_VAR) to substitute env vars dynamically in other env vars
+                  'SCRATCH_BUCKET': f'{bucket_protocol}://{bucket_name}/$(JUPYTERHUB_USER)',
+                  'PANGEO_SCRATCH': f'{bucket_protocol}://{bucket_name}/$(JUPYTERHUB_USER)',
+              }
+
+              c.KubeSpawner.environment.update(env)
+        04-2i2c-add-staff-user-ids-to-admin-users: |
+          from z2jh import get_config
+          add_staff_user_ids_to_admin_users = get_config("custom.2i2c.add_staff_user_ids_to_admin_users", False)
+
+          if add_staff_user_ids_to_admin_users:
+              user_id_type = get_config("custom.2i2c.add_staff_user_ids_of_type")
+              staff_user_ids = get_config(f"custom.2i2c.staff_{user_id_type}_ids", [])
+              c.Authenticator.admin_users.extend(staff_user_ids)
+
+              # Check what authenticator class is set. If it's "github", we assume
+              # GitHub Orgs/Teams is being used for auth and unset allowed_users
+              # so valid members are not refused access.
+              # FIXME: This should be handled in basehub's schema validation file
+              # so that we get useful feedback about config. But at time of writing,
+              # it doesn't have one! Issue to track the creation of such files is:
+              # https://github.com/2i2c-org/infrastructure/issues/937
+              authenticator_class = get_config("hub.config.JupyterHub.authenticator_class")
+              if authenticator_class == "github" and c.Authenticator.allowed_users:
+                  print("WARNING: hub.config.JupyterHub.authenticator_class was set to github and c.Authenticator.allowed_users was set, custom 2i2c jupyterhub config is now resetting allowed_users to an empty set.")
+                  c.Authenticator.allowed_users = set()
+        05-add-docs-service-if-enabled: |
+          from z2jh import get_config
+
+          if get_config("custom.docs_service.enabled"):
+              c.JupyterHub.services.append({"name": "docs", "url": "http://docs-service"})
+        06-gh-teams: |
+          from textwrap import dedent
+          from tornado import gen, web
+          from oauthenticator.github import GitHubOAuthenticator
+
+          # Make a copy of the original profile_list, as that is the data we will work with
+          original_profile_list = c.KubeSpawner.profile_list
+
+          # This has to be a gen.coroutine, not async def! Kubespawner uses gen.maybe_future to
+          # run this, and that only seems to recognize tornado coroutines, not async functions!
+          # We can convert this to async def once that has been fixed upstream.
+          @gen.coroutine
+          def custom_profile_list(spawner):
+              """
+              Dynamically set allowed list of user profiles based on GitHub teams user is part of.
+
+              Adds a 'allowed_teams' key to profile_list, with a list of GitHub teams (of the form
+              org-name:team-name) for which the profile is made available.
+
+              If the user isn't part of any team whose membership grants them access to even a single
+              profile, they aren't allowed to start any servers.
+              """
+              # Only apply to GitHub Authenticator
+              if not isinstance(spawner.authenticator, GitHubOAuthenticator):
+                  return original_profile_list
+
+              # If populate_teams_in_auth_state is not set, github teams are not fetched
+              # So we just don't do any of this filtering, and let anyone into everything
+              if spawner.authenticator.populate_teams_in_auth_state == False:
+                return original_profile_list
+
+              auth_state = yield spawner.user.get_auth_state()
+
+              if not auth_state or "teams" not in auth_state:
+                if spawner.user.name == 'deployment-service-check':
+                  # For our hub deployer health checker, ignore all this logic
+                  print("Ignoring allowed_teams check for deployment-service-check")
+                  return original_profile_list
+                print(f"User {spawner.user.name} does not have any auth_state set")
+                raise web.HTTPError(403)
+
+              # Make a list of team names of form org-name:team-name
+              # This is the same syntax used by allowed_organizations traitlet of GitHubOAuthenticator
+              teams = set([f'{team_info["organization"]["login"]}:{team_info["slug"]}' for team_info in auth_state["teams"]])
+
+              allowed_profiles = []
+
+              for profile in original_profile_list:
+                # Keep the profile is the user is part of *any* team listed in allowed_teams
+                # If allowed_teams is empty or not set, it'll not be accessible to *anyone*
+                if set(profile.get('allowed_teams', [])) & teams:
+                  allowed_profiles.append(profile)
+                  print(f"Allowing profile {profile['display_name']} for user {spawner.user.name}")
+                else:
+                  print(f"Dropping profile {profile['display_name']} for user {spawner.user.name}")
+
+              if len(allowed_profiles) == 0:
+                # If no profiles are allowed, user should not be able to spawn anything!
+                # If we don't explicitly stop this, user will be logged into the 'default' settings
+                # set in singleuser, without any profile overrides. Not desired behavior
+                # FIXME: User doesn't actually see this error message, just the generic 403.
+                error_msg = dedent(f"""
+                Your GitHub team membership is insufficient to launch any server profiles.
+
+                GitHub teams you are a member of that this JupyterHub knows about are {', '.join(teams)}.
+
+                If you are part of additional teams, log out of this JupyterHub and log back in to refresh that information.
+                """)
+                raise web.HTTPError(403, error_msg)
+
+              return allowed_profiles
+
+          # Only set this customized profile_list *if* we already have a profile_list set
+          # otherwise, we'll show users a blank server options form and they won't be able to
+          # start their server
+          if c.KubeSpawner.profile_list:
+              # Customize list of profiles dynamically, rather than override options form.
+              # This is more secure, as users can't override the options available to them via the hub API
+              c.KubeSpawner.profile_list = custom_profile_list
 
 dask-gateway:
   # Do not enable the dask-gateway sub-chart by default. To enable dask-gateway for a
