@@ -2,6 +2,9 @@ nvidiaDevicePlugin:
   gke:
     enabled: true
 
+prometheusIngressAuthSecret:
+  enabled: true
+
 grafana:
   ingress:
     hosts:
@@ -11,15 +14,15 @@ grafana:
         hosts:
           - grafana.leap.2i2c.cloud
 prometheus:
-  ingress:
-    enabled: true
-    hosts:
-      - prometheus.leap.2i2c.cloud
-    tls:
-      - secretName: prometheus-tls
-        hosts:
-          - prometheus.leap.2i2c.cloud
   server:
+    ingress:
+      enabled: true
+      hosts:
+        - prometheus.leap.2i2c.cloud
+      tls:
+        - secretName: prometheus-tls
+          hosts:
+            - prometheus.leap.2i2c.cloud
     resources:
       limits:
         cpu: 2
