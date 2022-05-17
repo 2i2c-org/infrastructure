@@ -347,3 +347,107 @@ dask-gateway:
   # specific BinderHub deployment, set dask-gateway.enabled = true in the hub's specific
   # values.yaml file.
   enabled: false
+
+  #=== VALUES BELOW HERE ARE COPIED FROM BASEHUB VALUES AND SHOULD BE UPDATED ===#
+  #=== IF BASEHUB CHANGES ===#
+  controller:
+    nodeSelector:
+      k8s.dask.org/node-purpose: core
+  gateway:
+    nodeSelector:
+      k8s.dask.org/node-purpose: core
+    backend:
+      scheduler:
+        extraPodConfig:
+          serviceAccountName: user-sa
+          tolerations:
+            # Let's put schedulers on notebook nodes, since they aren't ephemeral
+            # dask can recover from dead workers, but not dead schedulers
+            - key: "hub.jupyter.org/dedicated"
+              operator: "Equal"
+              value: "user"
+              effect: "NoSchedule"
+            - key: "hub.jupyter.org_dedicated"
+              operator: "Equal"
+              value: "user"
+              effect: "NoSchedule"
+          nodeSelector:
+            k8s.dask.org/node-purpose: scheduler
+        cores:
+          request: 0.01
+          limit: 1
+        memory:
+          request: 128M
+          limit: 1G
+      worker:
+        extraContainerConfig:
+          securityContext:
+            runAsGroup: 1000
+            runAsUser: 1000
+        extraPodConfig:
+          serviceAccountName: user-sa
+          securityContext:
+            fsGroup: 1000
+          tolerations:
+            - key: "k8s.dask.org/dedicated"
+              operator: "Equal"
+              value: "worker"
+              effect: "NoSchedule"
+            - key: "k8s.dask.org_dedicated"
+              operator: "Equal"
+              value: "worker"
+              effect: "NoSchedule"
+          nodeSelector:
+            # Dask workers get their own pre-emptible pool
+            k8s.dask.org/node-purpose: worker
+
+    # TODO: figure out a replacement for userLimits.
+    extraConfig:
+      optionHandler: |
+        from dask_gateway_server.options import Options, Integer, Float, String, Mapping
+
+        def cluster_options(user):
+            def option_handler(options):
+                if ":" not in options.image:
+                    raise ValueError("When specifying an image you must also provide a tag")
+                # FIXME: No user labels or annotations, until https://github.com/pangeo-data/pangeo-cloud-federation/issues/879
+                # is fixed.
+                extra_annotations = {
+                    # "hub.jupyter.org/username": safe_username,
+                    "prometheus.io/scrape": "true",
+                    "prometheus.io/port": "8787",
+                }
+                extra_labels = {
+                    # "hub.jupyter.org/username": safe_username,
+                }
+                return {
+                    "worker_cores_limit": options.worker_cores,
+                    "worker_cores": options.worker_cores,
+                    "worker_memory": "%fG" % options.worker_memory,
+                    "image": options.image,
+                    "scheduler_extra_pod_annotations": extra_annotations,
+                    "worker_extra_pod_annotations": extra_annotations,
+                    "scheduler_extra_pod_labels": extra_labels,
+                    "worker_extra_pod_labels": extra_labels,
+                    "environment": options.environment,
+                }
+            return Options(
+                Integer("worker_cores", 2, min=1, label="Worker Cores"),
+                Float("worker_memory", 4, min=1, label="Worker Memory (GiB)"),
+                # The default image is set via DASK_GATEWAY__CLUSTER__OPTIONS__IMAGE env variable
+                String("image", label="Image"),
+                Mapping("environment", {}, label="Environment Variables"),
+                handler=option_handler,
+            )
+        c.Backend.cluster_options = cluster_options
+      idle: |
+        # timeout after 30 minutes of inactivity
+        c.KubeClusterConfig.idle_timeout = 1800
+    prefix: "/services/dask-gateway" # Users connect to the Gateway through the JupyterHub service.
+    auth:
+      type: jupyterhub # Use JupyterHub to authenticate with Dask Gateway
+  traefik:
+    nodeSelector:
+      k8s.dask.org/node-purpose: core
+    service:
+      type: ClusterIP # Access Dask Gateway through JupyterHub. To access the Gateway from outside JupyterHub, this must be changed to a `LoadBalancer`.
