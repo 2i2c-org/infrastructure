@@ -96,6 +96,18 @@ basehub:
             mem_guarantee: 115G
             node_selector:
               node.kubernetes.io/instance-type: m5.8xlarge
+        - display_name: "Large + GPU: p2.xlarge"
+          description: "~4CPUs, 60G RAM, 1 NVIDIA K80 GPU"
+          kubespawner_override:
+            mem_limit: null
+            mem_guarantee: 55G
+            image: "pangeo/ml-notebook:master"
+            environment:
+              NVIDIA_DRIVER_CAPABILITIES: compute,utility
+            extra_resource_limits:
+              nvidia.com/gpu: "1"
+            node_selector:
+              node.kubernetes.io/instance-type: p2.xlarge
     scheduling:
       userPlaceholder:
         enabled: false
