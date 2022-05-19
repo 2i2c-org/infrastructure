@@ -1,6 +1,6 @@
 prometheusIngressAuthSecret:
-    enabled: true
-  
+  enabled: true
+
 prometheus:
   server:
     ingress:
