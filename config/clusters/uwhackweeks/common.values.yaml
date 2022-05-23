@@ -32,7 +32,6 @@ basehub:
             name: ICESat Hackweek
             url: https://icesat-2.hackweek.io
     singleuser:
-      serviceAccountName: cloud-user-sa
       defaultUrl: /lab
       initContainers:
         # Need to explicitly fix ownership here, since EFS doesn't do anonuid

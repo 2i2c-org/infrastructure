@@ -1,4 +1,7 @@
 basehub:
+  userServiceAccount:
+    annotations:
+      eks.amazonaws.com/role-arn: arn:aws:iam::740010314650:role/uwhackweeks-staging
   jupyterhub:
     hub:
       config:

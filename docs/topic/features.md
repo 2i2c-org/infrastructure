@@ -36,16 +36,16 @@ When this feature is enabled, users on a hub accessing cloud buckets from
 other organizations marked as 'requestor pays' will increase our cloud bill.
 Hence, this is an opt-in feature.
 
-(topic:features:cloud:gcp:scratch-buckets)=
-#### 'Scratch' Buckets on Google Cloud Storage
+(topic:features:cloud:scratch-buckets)=
+## 'Scratch' Buckets on object storage
 
-Users often want one or more Google Cloud Storage [buckets](https://cloud.google.com/storage/docs/json_api/v1/buckets)
+Users often want one or more object storage buckets
 to store intermediate results, share big files with other users, or
 to store raw data that should be accessible to everyone within the hub.
 We can create one more more buckets and provide *all* users on the hub
 *equal* access to these buckets, allowing users to create objects in them.
 A single bucket can also be designated as as *scratch bucket*, which will
 set a `SCRATCH_BUCKET` (and a deprecated `PANGEO_SCRATCH`) environment variable
-of the form `gcs://<bucket-name>/<user-name>`. This can be used by individual
+of the form `<s3 or gcs>://<bucket-name>/<user-name>`. This can be used by individual
 users to store objects temporarily for their own use, although there is nothing
 preventing other users from accessing these objects!
