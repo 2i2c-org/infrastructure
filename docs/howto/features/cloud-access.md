@@ -28,10 +28,9 @@ to map a particular [Kubernetes Service Account](https://kubernetes.io/docs/task
 to a particular [AWS IAM Role](https://docs.aws.amazon.com/IAM/latest/UserGuide/id_roles.html).
 All pods using the Kubernetes Service Account (user's jupyter notebook pods
 as well as dask worker pods)
-will have the permissions assigned to the Google Cloud Service Account.
-This Google Cloud Service Account is managed via terraform.
+will have the permissions assigned to the AWS IAM Role.
+This AWS IAM Role is managed via terraform.
 
-On
 
 (howto:features:cloud-access:access-perms)=
 ## Enabling specific cloud access permissions
@@ -82,19 +81,24 @@ On
    show you a list of hubs and the annotation required to be set on them:
 
    ```{tabbed} GCP
+   <pre>
    $ terraform output kubernetes_sa_annotations
    {
-    "prod" = "iam.gke.io/gcp-service-account: meom-ige-prod@meom-ige-cnrs.iam.gserviceaccount.com"
-    "staging" = "iam.gke.io/gcp-service-account: meom-ige-staging@meom-ige-cnrs.iam.gserviceaccount.com"
+     "prod" = "iam.gke.io/gcp-service-account: meom-ige-prod@meom-ige-cnrs.iam.gserviceaccount.com"
+     "staging" = "iam.gke.io/gcp-service-account: meom-ige-staging@meom-ige-cnrs.iam.gserviceaccount.com"
    }
+   </pre>
    ```
 
    ```{tabbed} AWS
+   <pre>
    $ terraform output kubernetes_sa_annotations
    {
-      "prod" = "eks.amazonaws.com/role-arn: arn:aws:iam::740010314650:role/uwhackweeks-prod"
-      "staging" = "eks.amazonaws.com/role-arn: arn:aws:iam::740010314650:role/uwhackweeks-staging"
+     "prod" = "eks.amazonaws.com/role-arn: arn:aws:iam::740010314650:role/uwhackweeks-prod"
+     "staging" = "eks.amazonaws.com/role-arn: arn:aws:iam::740010314650:role/uwhackweeks-staging"
    }
+   </pre>
+   ```
 
    This shows all the annotations for all the hubs configured to provide cloud access
    in this cluster. You only need to care about the hub you are currently dealing with.
@@ -105,15 +109,19 @@ On
 6. Specify the annotation from step 4, nested under `userServiceAccount.annotations`.
 
    ```{tabbed} GCP
+    <pre>
     userServiceAccount:
         annotations:
             iam.gke.io/gcp-service-account: meom-ige-staging@meom-ige-cnrs.iam.gserviceaccount.com"
+   </pre>
     ```
 
    ```{tabbed} AWS
+    <pre>
     userServiceAccount:
         annotations:
             eks.amazonaws.com/role-arn: arn:aws:iam::740010314650:role/uwhackweeks-staging
+   </pre>
     ```
 
     ```{note}
