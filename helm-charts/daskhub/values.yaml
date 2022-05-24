@@ -157,20 +157,26 @@ dask-gateway:
     extraConfig:
       optionHandler: |
         from dask_gateway_server.options import Options, Integer, Float, String, Mapping
+        from escapism import escape
+        import string
+
+        safe_chars = set(string.ascii_lowercase + string.digits)
 
         def cluster_options(user):
+            # All valid label values must be DNS Safe
+            safe_username = escapism.escape(user.name, safe=safe_chars, escape_char='-').lower()
             def option_handler(options):
                 if ":" not in options.image:
                     raise ValueError("When specifying an image you must also provide a tag")
                 # FIXME: No user labels or annotations, until https://github.com/pangeo-data/pangeo-cloud-federation/issues/879
                 # is fixed.
                 extra_annotations = {
-                    # "hub.jupyter.org/username": safe_username,
+                    "hub.jupyter.org/username": safe_username,
                     "prometheus.io/scrape": "true",
                     "prometheus.io/port": "8787",
                 }
                 extra_labels = {
-                    # "hub.jupyter.org/username": safe_username,
+                    "hub.jupyter.org/username": safe_username,
                 }
                 return {
                     "worker_cores_limit": options.worker_cores,
