@@ -30,7 +30,7 @@ notebook_nodes = {
   "small" : {
     min : 0,
     max : 100,
-    machine_type : "n1-standard-4",
+    machine_type : "n1-standard-2",
     labels: {},
     gpu: {
       enabled: false,
@@ -41,7 +41,7 @@ notebook_nodes = {
   "medium" : {
     min : 0,
     max : 100,
-    machine_type : "n1-standard-8",
+    machine_type : "n1-standard-4",
     labels: {},
     gpu: {
       enabled: false,
@@ -52,12 +52,34 @@ notebook_nodes = {
   "large" : {
     min : 0,
     max : 100,
+    machine_type : "n1-standard-8",
+    labels: {},
+    gpu: {
+      enabled: false,
+      type: "",
+      count: 0
+    }
+  },
+  "huge" : {
+    min : 0,
+    max : 100,
     machine_type : "n1-standard-16",
     labels: {},
     gpu: {
       enabled: false,
       type: "",
       count: 0
+    }
+  },
+  "gpu-k80" : {
+    min : 0,
+    max : 100,
+    machine_type : "n1-standard-8",
+    labels: {},
+    gpu: {
+      enabled: true,
+      type: "nvidia-tesla-k80",
+      count: 1
     }
   },
 }
