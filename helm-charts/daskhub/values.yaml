@@ -157,20 +157,42 @@ dask-gateway:
     extraConfig:
       optionHandler: |
         from dask_gateway_server.options import Options, Integer, Float, String, Mapping
+        import string
+
+        # escape a string to be dns-safe
+        # from https://github.com/minrk/escapism
+        def escape_string_label_safe(to_escape):
+            safe_chars = set(string.ascii_lowercase + string.digits)
+            escape_char = "-"
+            chars = []
+            for c in to_escape:
+                if c in safe_chars:
+                    chars.append(c)
+                else:
+                    # escape one character
+                    buf = []
+                    # UTF-8 uses 1 to 4 bytes per character, depending on the Unicode symbol
+                    # so we need to transform each byte to its hex value
+                    for byte in c.encode("utf8"):
+                        buf.append(escape_char)
+                        # %X is the hex value of the byte
+                        buf.append('%X' % byte)
+                    escaped_hex_char = "".join(buf)
+                    chars.append(escaped_hex_char)
+            return u''.join(chars)
 
         def cluster_options(user):
+            safe_username = escape_string_label_safe(user.name)
             def option_handler(options):
                 if ":" not in options.image:
                     raise ValueError("When specifying an image you must also provide a tag")
-                # FIXME: No user labels or annotations, until https://github.com/pangeo-data/pangeo-cloud-federation/issues/879
-                # is fixed.
                 extra_annotations = {
-                    # "hub.jupyter.org/username": safe_username,
+                    "hub.jupyter.org/username": safe_username,
                     "prometheus.io/scrape": "true",
                     "prometheus.io/port": "8787",
                 }
                 extra_labels = {
-                    # "hub.jupyter.org/username": safe_username,
+                    "hub.jupyter.org/username": safe_username,
                 }
                 return {
                     "worker_cores_limit": options.worker_cores,
