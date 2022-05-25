@@ -28,3 +28,14 @@ updates:
       # Ignore patch upgrades to further reduce noise
       - update-types: ["version-update:semver-patch"]
         dependency-name: "*" # Match all packages
+  # Maintain dependencies for pip
+  - package-ecosystem: "pip"
+    directory: "/"
+    schedule:
+      # Check for updates once a week. By default, this check happens on a Monday.
+      interval: "weekly"
+    ignore:
+      # Ignore patch upgrades to further reduce noise
+      - update-types: ["version-update:semver-patch"]
+        dependency-name: "*" # Match all packages
+    reviewers:
