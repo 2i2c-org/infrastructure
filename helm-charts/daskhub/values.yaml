@@ -160,7 +160,7 @@ dask-gateway:
         import string
 
         # Escape a string to be dns-safe in the same way that KubeSpawner does it.
-        # Reference https://github.com/jupyterhub/kubespawner/blob/main/kubespawner/spawner.py#L1828-L1835
+        # Reference https://github.com/jupyterhub/kubespawner/blob/616f72c4aee26c3d2127c6af6086ec50d6cda383/kubespawner/spawner.py#L1828-L1835
         # Adapted from https://github.com/minrk/escapism to avoid installing the package
         # in the dask-gateway api pod which would have been problematic.
         def escape_string_label_safe(to_escape):
