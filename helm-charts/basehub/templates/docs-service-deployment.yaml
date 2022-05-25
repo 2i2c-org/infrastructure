@@ -25,11 +25,10 @@ spec:
           args:
             - clone
             - --depth=1
-            - -b
-            - {{ .Values.jupyterhub.custom.docs_service.branch }}
+            - --branch={{ .Values.jupyterhub.custom.docs_service.branch | required "jupyterhub.custom.docs_service.branch is required with jupyterhub.custom.docs_service.enabled set to true" }}
             - --single-branch
             - --
-            - {{ .Values.jupyterhub.custom.docs_service.repo }}
+            - '{{ .Values.jupyterhub.custom.docs_service.repo | required "jupyterhub.custom.docs_service.repo is required with jupyterhub.custom.docs_service.enabled set to true" }}'
             - /srv/docs
           securityContext:
               runAsUser: 1000
