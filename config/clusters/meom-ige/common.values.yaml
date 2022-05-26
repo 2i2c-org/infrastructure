@@ -85,12 +85,6 @@ basehub:
       userScheduler:
         enabled: false
     proxy:
-      service:
-        type: LoadBalancer
-      https:
-        enabled: true
-        letsencrypt:
-          contactEmail: yuvipanda@gmail.com
       chp:
         resources:
           requests:

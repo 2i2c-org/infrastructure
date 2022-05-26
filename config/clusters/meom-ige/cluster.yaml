@@ -5,6 +5,10 @@ gcp:
   project: meom-ige-cnrs
   cluster: meom-ige-cluster
   zone: us-central1-b
+support:
+  helm_chart_values_files:
+    - support.values.yaml
+    - enc-support.secret.values.yaml
 hubs:
   - name: staging
     display_name: "SWOT Ocean Pangeo Team (staging)"
