@@ -23,6 +23,12 @@ basehub:
             name: 2i2c
             url: https://2i2c.org
     singleuser:
+      memory:
+        guarantee: 1G
+        limit: 1G
+      cpu:
+        guarantee: 1
+        limit: 2
       defaultUrl: /lab
       initContainers:
         # Need to explicitly fix ownership here, since EFS doesn't do anonuid
