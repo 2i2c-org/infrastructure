@@ -18,10 +18,6 @@ basehub:
         add_staff_user_ids_of_type: "github"
       homepage:
         templateVars:
-          org:
-            name: ICESat Hackweek
-            logo_url: https://github.com/ICESAT-2HackWeek/icesat-2hackweek.github.io/raw/2022.03.01/assets/images/ICESat2.png
-            url: https://icesat-2hackweek.github.io
           designed_by:
             name: 2i2c
             url: https://2i2c.org
@@ -124,9 +120,6 @@ basehub:
         JupyterHub:
           authenticator_class: github
         GitHubOAuthenticator:
-          allowed_organizations:
-            - 2i2c-org:tech-team
-            - ICESAT-2HackWeek:jupyterhub-2022
           scope:
             - read:org
         Authenticator:

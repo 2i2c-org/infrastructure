@@ -3,6 +3,13 @@ basehub:
     annotations:
       eks.amazonaws.com/role-arn: arn:aws:iam::740010314650:role/uwhackweeks-staging
   jupyterhub:
+    custom:
+      homepage:
+        templateVars:
+          org:
+            name: ICESat Hackweek
+            logo_url: https://github.com/ICESAT-2HackWeek/icesat-2hackweek.github.io/raw/2022.03.01/assets/images/ICESat2.png
+            url: https://icesat-2hackweek.github.io
     singleuser:
       extraEnv:
         SCRATCH_BUCKET: s3://uwhackweeks-scratch-staging/$(JUPYTERHUB_USER)
@@ -10,4 +17,7 @@ basehub:
     hub:
       config:
         GitHubOAuthenticator:
+          allowed_organizations:
+            - 2i2c-org:tech-team
+            - ICESAT-2HackWeek:jupyterhub-2022
           oauth_callback_url: https://staging.uwhackweeks.2i2c.cloud/hub/oauth_callback
