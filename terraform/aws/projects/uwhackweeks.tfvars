@@ -10,6 +10,9 @@ user_buckets = {
     },
     "scratch": {
         "delete_after": 7
+    },
+    "snowex-scratch": {
+        "delete_after": 7
     }
 }
 
@@ -22,5 +25,9 @@ hub_cloud_permissions = {
   "prod" : {
     requestor_pays: true,
     bucket_admin_access: ["scratch"],
+  },
+  "snowex" : {
+    requestor_pays: true,
+    bucket_admin_access: ["snowex-scratch"],
   }
 }
