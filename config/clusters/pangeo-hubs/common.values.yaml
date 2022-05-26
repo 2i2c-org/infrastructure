@@ -88,7 +88,7 @@ basehub:
         - display_name: Large
           description: 24GB RAM, 8 CPUs
           allowed_teams:
-            - pangeo-data/cds-lab
+            - pangeo-data:cds-lab
             - 2i2c-org:tech-team
           kubespawner_override:
             mem_limit: 30G
@@ -98,7 +98,7 @@ basehub:
         - display_name: Huge
           description: 52GB RAM, 16 CPUs
           allowed_teams:
-            - pangeo-data/cds-lab
+            - pangeo-data:cds-lab
             - 2i2c-org:tech-team
           kubespawner_override:
             mem_limit: 60G
@@ -108,7 +108,7 @@ basehub:
         - display_name: Large + Nvidia K80 GPU
           description: 24GB RAM, 8 CPUs, Nvidia Tesla K80 GPU
           allowed_teams:
-            - pangeo-data/cds-lab
+            - pangeo-data:cds-lab
             - 2i2c-org:tech-team
           kubespawner_override:
             image: "pangeo/ml-notebook:master"
