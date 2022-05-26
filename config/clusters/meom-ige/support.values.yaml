@@ -17,7 +17,7 @@ prometheus:
         memory: 512Mi
       limits:
         cpu: 500m
-        memory: 512Mi
+        memory: 1G
 grafana:
   ingress:
     hosts:
