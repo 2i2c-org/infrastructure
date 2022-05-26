@@ -73,6 +73,9 @@ basehub:
         - display_name: "Small"
           description: 5GB RAM, 2 CPUs
           default: true
+          allowed_teams:
+            - pangeo-data:us-central1-b-gcp
+            - 2i2c-org:tech-team
           kubespawner_override:
             mem_limit: 7G
             mem_guarantee: 4.5G
@@ -80,6 +83,9 @@ basehub:
               node.kubernetes.io/instance-type: n1-standard-2
         - display_name: Medium
           description: 11GB RAM, 4 CPUs
+          allowed_teams:
+            - pangeo-data:us-central1-b-gcp
+            - 2i2c-org:tech-team
           kubespawner_override:
             mem_limit: 15G
             mem_guarantee: 11G
