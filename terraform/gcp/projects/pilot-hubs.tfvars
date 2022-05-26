@@ -39,7 +39,11 @@ dask_nodes = {
   }
 }
 
-user_buckets = {}
+user_buckets = {
+  "jackeddy-scratch": {
+    "delete_after": 7
+  }
+}
 
 
 hub_cloud_permissions = {
@@ -58,5 +62,11 @@ hub_cloud_permissions = {
     requestor_pays : true,
     bucket_admin_access: [],
     hub_namespace: "catalyst-cooperative"
+  },
+  "jackeddy": {
+    requestor_pays: true,
+    bucket_admin_access: ["jackeddy-scratch"],
+    hub_namespace: "jackeddy"
   }
+
 }

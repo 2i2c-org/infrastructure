@@ -1,0 +1,96 @@
+basehub:
+  userServiceAccount:
+    annotations:
+      iam.gke.io/gcp-service-account: pilot-hubs-jackeddy@two-eye-two-see.iam.gserviceaccount.com
+  jupyterhub:
+    custom:
+      2i2c:
+        add_staff_user_ids_to_admin_users: true
+        add_staff_user_ids_of_type: "github"
+      homepage:
+        templateVars:
+          org:
+            name: Jack Eddy Symposium JupyterHub
+            logo_url: https://cpaess.ucar.edu/sites/default/files/meetings/2022/nasa-jack-eddy-symposium-2022-860.jpg
+            url: https://cpaess.ucar.edu/meetings/eddy-symposium-2022
+          designed_by:
+            name: 2i2c
+            url: https://2i2c.org
+          operated_by:
+            name: 2i2c
+            url: https://2i2c.org
+          funded_by:
+            name: 2i2c
+            url: https://2i2c.org
+    singleuser:
+      defaultUrl: /lab
+      initContainers:
+        # Need to explicitly fix ownership here, since EFS doesn't do anonuid
+        - name: volume-mount-ownership-fix
+          image: busybox
+          command:
+            [
+              "sh",
+              "-c",
+              "id && chown 1000:1000 /home/jovyan /home/jovyan/shared && ls -lhd /home/jovyan",
+            ]
+          securityContext:
+            runAsUser: 0
+          volumeMounts:
+            - name: home
+              mountPath: /home/jovyan
+              subPath: "{username}"
+            - name: home
+              mountPath: /home/jovyan/shared
+              subPath: _shared
+      extraEnv:
+        SCRATCH_BUCKET: gcs://pilot-hubs-jackeddy-scratch/$(JUPYTERHUB_USER)
+        PANGEO_SCRATCH: gcs://pilot-hubs-jackeddy-scratch/$(JUPYTERHUB_USER)
+        GH_SCOPED_CREDS_CLIENT_ID: "Iv1.37646d01f3f58a80"
+        GH_SCOPED_CREDS_APP_URL: https://github.com/apps/jack-eddy-jupyterhub-push-access
+      image:
+        name: pangeo/pangeo-notebook
+        tag: 2022.05.10
+      storage:
+        extraVolumeMounts:
+          - name: home
+            mountPath: /home/jovyan/shared
+            subPath: _shared
+            readOnly: true
+    scheduling:
+      userPlaceholder:
+        enabled: false
+        replicas: 0
+      userScheduler:
+        enabled: false
+    hub:
+      allowNamedServers: true
+      networkPolicy:
+        # FIXME: For dask gateway
+        enabled: false
+      readinessProbe:
+        enabled: false
+      config:
+        JupyterHub:
+          authenticator_class: github
+        GitHubOAuthenticator:
+          oauth_callback_url: https://jackeddy.2i2c.cloud/hub/oauth_callback
+          allowed_organizations:
+            - 2i2c-org:tech-team
+            - jack-eddy-symposium
+          scope:
+            - read:org
+        Authenticator:
+          # This hub uses GitHub Orgs/Teams auth and so we do not set
+          # allowed_users in order to not deny access to valid members of
+          # the listed Orgs/Teams. The following people should have admin
+          # access though.
+          admin_users:
+            - colliand
+            - dan800
+dask-gateway:
+  gateway:
+    extraConfig:
+      idle: |
+        # timeout after 30 minutes of inactivity
+        c.KubeClusterConfig.idle_timeout = 1800
