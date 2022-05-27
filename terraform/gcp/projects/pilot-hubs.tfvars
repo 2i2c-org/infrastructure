@@ -23,6 +23,19 @@ notebook_nodes = {
       count: 0
     }
   },
+  "jackeddy" : {
+    min : 0,
+    max : 150,
+    machine_type : "n1-highmem-4",
+    labels: {
+      "2i2c.org/community": "jackeddy"
+    },
+    gpu: {
+      enabled: false,
+      type: "",
+      count: 0
+    }
+  },
 }
 
 dask_nodes = {

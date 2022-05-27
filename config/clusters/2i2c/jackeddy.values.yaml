@@ -23,12 +23,15 @@ basehub:
             name: 2i2c
             url: https://2i2c.org
     singleuser:
+      # Resources of a single n1-highmem-4
       memory:
-        guarantee: 8G
-        limit: 8G
+        guarantee: 21G
+        limit: 24G
       cpu:
-        guarantee: 1
-        limit: 2
+        guarantee: 3
+        limit: 4
+      nodeSelector:
+        2i2c.org/community: jackeddy
       defaultUrl: /lab
       initContainers:
         # Need to explicitly fix ownership here, since EFS doesn't do anonuid
