@@ -24,8 +24,8 @@ basehub:
             url: https://2i2c.org
     singleuser:
       memory:
-        guarantee: 1G
-        limit: 1G
+        guarantee: 8G
+        limit: 8G
       cpu:
         guarantee: 1
         limit: 2
