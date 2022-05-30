@@ -25,6 +25,8 @@ jobs:
     steps:
       # We want tests to be run on the Pull Request that gets opened by the next step,
       # so we generate a token from a GitHub App that would allow this.
+      #
+      # Action: https://github.com/marketplace/actions/github-app-token
       - name: Fetch a token from GitHub App
         id: generate_token
         uses: tibdex/github-app-token@v1.5
