@@ -25,6 +25,8 @@ jobs:
     steps:
       # We want tests to be run on the Pull Request that gets opened by the next step,
       # so we generate a token from a GitHub App that would allow this.
+      # By default, secrets.GITHUB_TOKEN is prevented from triggering
+      # secondary workflows.
       #
       # Action: https://github.com/marketplace/actions/github-app-token
       - name: Fetch a token from GitHub App
