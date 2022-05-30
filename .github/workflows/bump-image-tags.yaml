@@ -3,7 +3,7 @@ name: Bump Image Tags
 on:
   workflow_dispatch:
   schedule:
-    - cron: "0 0 * * 1"  # Run at 00:00 UTC every Monday
+    - cron: "0 0 * * 1" # Run at 00:00 UTC every Monday
 
 env:
   team_reviewers: 2i2c-org:tech-team
