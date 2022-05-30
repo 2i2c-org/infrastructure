@@ -6,7 +6,7 @@ on:
     - cron: "0 0 * * 1" # Run at 00:00 UTC every Monday
 
 env:
-  team_reviewers: 2i2c-org:tech-team
+  team_reviewers: 2i2c-org/tech-team
 
 jobs:
   bump-image-tags:
