@@ -21,6 +21,12 @@ jobs:
           - name: "pangeo-hubs common singleuser image"
             config_path: "config/clusters/pangeo-hubs/common.values.yaml"
             values_paths: ".basehub.jupyterhub.singleuser.image"
+          - name: "m2lines common singleuser/PyTorch/Tensorflow"
+            config_path: "config/clusters/m2lines/common.values.yaml"
+            values_paths: ".basehub.jupyterhub.singleuser.image .basehub.jupyterhub.singleuser.profileList[4].kubespawner_override.image .basehub.jupyterhub.singleuser.profileList[5].kubespawner_override.image"
+          - name: "leap common singleuser/pangeo-ml-notebook"
+            config_path: "config/clusters/leap/common.values.yaml"
+            values_paths: ".basehub.jupyterhub.singleuser.image .basehub.jupyterhub.singleuser.profileList[4].kubespawner_override.image"
 
     steps:
       # We want tests to be run on the Pull Request that gets opened by the next step,
