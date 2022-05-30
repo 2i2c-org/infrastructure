@@ -23,10 +23,49 @@ notebook_nodes = {
       count: 0
     }
   },
-  "jackeddy" : {
+  "jackeddy-small" : {
     min : 0,
-    max : 150,
-    machine_type : "n1-highmem-4",
+    max : 100,
+    machine_type : "n1-standard-2",
+    labels: {
+      "2i2c.org/community": "jackeddy"
+    },
+    gpu: {
+      enabled: false,
+      type: "",
+      count: 0
+    }
+  },
+  "jackeddy-medium" : {
+    min : 0,
+    max : 100,
+    machine_type : "n1-standard-4",
+    labels: {
+      "2i2c.org/community": "jackeddy"
+    },
+    gpu: {
+      enabled: false,
+      type: "",
+      count: 0
+    }
+  },
+  "jackeddy-large" : {
+    min : 0,
+    max : 100,
+    machine_type : "n1-standard-8",
+    labels: {
+      "2i2c.org/community": "jackeddy"
+    },
+    gpu: {
+      enabled: false,
+      type: "",
+      count: 0
+    }
+  },
+  "jackeddy-huge" : {
+    min : 0,
+    max : 100,
+    machine_type : "n1-standard-16",
     labels: {
       "2i2c.org/community": "jackeddy"
     },

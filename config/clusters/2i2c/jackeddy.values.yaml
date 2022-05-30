@@ -23,14 +23,42 @@ basehub:
             name: 2i2c
             url: https://2i2c.org
     singleuser:
-      # Resources of a single n1-highmem-4
-      memory:
-        guarantee: 21G
-        limit: 24G
-      cpu:
-        guarantee: 3
-        limit: 4
+      profileList:
+        # The mem-guarantees are here so k8s doesn't schedule other pods
+        # on these nodes. They need to be just under total allocatable
+        # RAM on a node, not total node capacity. Values calculated using
+        # https://learnk8s.io/kubernetes-instance-calculator
+        - display_name: "Small"
+          description: 5GB RAM, 2 CPUs
+          default: true
+          kubespawner_override:
+            mem_limit: 7G
+            mem_guarantee: 4.5G
+            node_selector:
+              node.kubernetes.io/instance-type: n1-standard-2
+        - display_name: Medium
+          description: 11GB RAM, 4 CPUs
+          kubespawner_override:
+            mem_limit: 15G
+            mem_guarantee: 11G
+            node_selector:
+              node.kubernetes.io/instance-type: n1-standard-4
+        - display_name: Large
+          description: 24GB RAM, 8 CPUs
+          kubespawner_override:
+            mem_limit: 30G
+            mem_guarantee: 24G
+            node_selector:
+              node.kubernetes.io/instance-type: n1-standard-8
+        - display_name: Huge
+          description: 52GB RAM, 16 CPUs
+          kubespawner_override:
+            mem_limit: 60G
+            mem_guarantee: 52G
+            node_selector:
+              node.kubernetes.io/instance-type: n1-standard-16
       nodeSelector:
+        # Applied to all profile options
         2i2c.org/community: jackeddy
       defaultUrl: /lab
       initContainers:
