@@ -42,6 +42,7 @@ jobs:
           app_id: ${{ secrets.APP_ID }}
           private_key: ${{ secrets.PRIVATE_KEY }}
 
+      # Action repo: https://github.com/sgibson91/bump-jhub-image-action
       - name: "Bump image tags: ${{ matrix.name }}"
         uses: sgibson91/bump-jhub-image-action@main
         with:
