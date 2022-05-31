@@ -1,130 +1,130 @@
 basehub:
-   nfs:
-      enabled: true
-      pv:
-         mountOptions:
-         - soft
-         - noatime
-         serverIP: 10.98.223.138
-         baseShareName: /homes/
-   jupyterhub:
-      proxy:
-         https:
-            enabled: false
-      custom:
-         2i2c:
-            add_staff_user_ids_to_admin_users: true
-            add_staff_user_ids_of_type: github
-         homepage:
-            templateVars:
-               org:
-                  name: M²LInES
-                  url: https://m2lines.github.io/
-                  logo_url: https://m2lines.github.io/images/newlogo.png
-               designed_by:
-                  name: 2i2c
-                  url: https://2i2c.org
-               operated_by:
-                  name: 2i2c
-                  url: https://2i2c.org
-               funded_by:
-                  name: M²LInES
-                  url: https://m2lines.github.io/
-      hub:
-         config:
-            Authenticator:
-               admin_users:
-               - rabernat
-               - johannag126
-            JupyterHub:
-               authenticator_class: github
-            GitHubOAuthenticator:
-               allowed_organizations:
-               - m2lines
-               - 2i2c-org:tech-team
-               scope:
-               - read:org
-      singleuser:
-         extraEnv:
-            GH_SCOPED_CREDS_CLIENT_ID: Iv1.1c4d967ffc205f98
-            GH_SCOPED_CREDS_APP_URL: https://github.com/apps/m2lines-pangeo-hub-push-access
-         image:
-            name: pangeo/pangeo-notebook
-            tag: 39778b5
-         profileList:
-         - display_name: Small
-           description: 5GB RAM, 2 CPUs
-           default: true
-           kubespawner_override:
-              mem_limit: 7G
-              mem_guarantee: 4.5G
-              node_selector:
-                 node.kubernetes.io/instance-type: n1-standard-2
-         - display_name: Medium
-           description: 11GB RAM, 4 CPUs
-           kubespawner_override:
-              mem_limit: 15G
-              mem_guarantee: 11G
-              node_selector:
-                 node.kubernetes.io/instance-type: n1-standard-4
-         - display_name: Large
-           description: 24GB RAM, 8 CPUs
-           kubespawner_override:
-              mem_limit: 30G
-              mem_guarantee: 24G
-              node_selector:
-                 node.kubernetes.io/instance-type: n1-standard-8
-         - display_name: Huge
-           description: 52GB RAM, 16 CPUs
-           kubespawner_override:
-              mem_limit: 60G
-              mem_guarantee: 52G
-              node_selector:
-                 node.kubernetes.io/instance-type: n1-standard-16
-         - display_name: Large + Nvidia K80 GPU + Tensorflow
-           description: 24GB RAM, 8 CPUs
-           kubespawner_override:
-              image: pangeo/ml-notebook:39778b5
-              mem_limit: 30G
-              mem_guarantee: 24G
-              node_selector:
-                 node.kubernetes.io/instance-type: n1-standard-8
-              environment:
-                 NVIDIA_DRIVER_CAPABILITIES: compute,utility
-              extra_resource_limits:
-                 nvidia.com/gpu: '1'
-         - display_name: Large + Nvidia K80 GPU + PyTorch
-           description: 24GB RAM, 8 CPUs
-           kubespawner_override:
-              image: pangeo/pytorch-notebook:39778b5
-              mem_limit: 30G
-              mem_guarantee: 24G
-              node_selector:
-                 node.kubernetes.io/instance-type: n1-standard-8
-              environment:
-                 NVIDIA_DRIVER_CAPABILITIES: compute,utility
-              extra_resource_limits:
-                 nvidia.com/gpu: '1'
-         initContainers:
-         - name: volume-mount-ownership-fix
-           image: busybox
-           command:
-           - sh
-           - -c
-           - id && chown 1000:1000 /home/jovyan && ls -lhd /home/jovyan
-           securityContext:
-              runAsUser: 0
-           volumeMounts:
-           - name: home
-             mountPath: /home/jovyan
-             subPath: '{username}'
+  nfs:
+    enabled: true
+    pv:
+      mountOptions:
+        - soft
+        - noatime
+      serverIP: 10.98.223.138
+      baseShareName: /homes/
+  jupyterhub:
+    proxy:
+      https:
+        enabled: false
+    custom:
+      2i2c:
+        add_staff_user_ids_to_admin_users: true
+        add_staff_user_ids_of_type: github
+      homepage:
+        templateVars:
+          org:
+            name: M²LInES
+            url: https://m2lines.github.io/
+            logo_url: https://m2lines.github.io/images/newlogo.png
+          designed_by:
+            name: 2i2c
+            url: https://2i2c.org
+          operated_by:
+            name: 2i2c
+            url: https://2i2c.org
+          funded_by:
+            name: M²LInES
+            url: https://m2lines.github.io/
+    hub:
+      config:
+        Authenticator:
+          admin_users:
+            - rabernat
+            - johannag126
+        JupyterHub:
+          authenticator_class: github
+        GitHubOAuthenticator:
+          allowed_organizations:
+            - m2lines
+            - 2i2c-org:tech-team
+          scope:
+            - read:org
+    singleuser:
+      extraEnv:
+        GH_SCOPED_CREDS_CLIENT_ID: Iv1.1c4d967ffc205f98
+        GH_SCOPED_CREDS_APP_URL: https://github.com/apps/m2lines-pangeo-hub-push-access
+      image:
+        name: pangeo/pangeo-notebook
+        tag: 39778b5
+      profileList:
+        - display_name: Small
+          description: 5GB RAM, 2 CPUs
+          default: true
+          kubespawner_override:
+            mem_limit: 7G
+            mem_guarantee: 4.5G
+            node_selector:
+              node.kubernetes.io/instance-type: n1-standard-2
+        - display_name: Medium
+          description: 11GB RAM, 4 CPUs
+          kubespawner_override:
+            mem_limit: 15G
+            mem_guarantee: 11G
+            node_selector:
+              node.kubernetes.io/instance-type: n1-standard-4
+        - display_name: Large
+          description: 24GB RAM, 8 CPUs
+          kubespawner_override:
+            mem_limit: 30G
+            mem_guarantee: 24G
+            node_selector:
+              node.kubernetes.io/instance-type: n1-standard-8
+        - display_name: Huge
+          description: 52GB RAM, 16 CPUs
+          kubespawner_override:
+            mem_limit: 60G
+            mem_guarantee: 52G
+            node_selector:
+              node.kubernetes.io/instance-type: n1-standard-16
+        - display_name: Large + Nvidia K80 GPU + Tensorflow
+          description: 24GB RAM, 8 CPUs
+          kubespawner_override:
+            image: pangeo/ml-notebook:39778b5
+            mem_limit: 30G
+            mem_guarantee: 24G
+            node_selector:
+              node.kubernetes.io/instance-type: n1-standard-8
+            environment:
+              NVIDIA_DRIVER_CAPABILITIES: compute,utility
+            extra_resource_limits:
+              nvidia.com/gpu: "1"
+        - display_name: Large + Nvidia K80 GPU + PyTorch
+          description: 24GB RAM, 8 CPUs
+          kubespawner_override:
+            image: pangeo/pytorch-notebook:39778b5
+            mem_limit: 30G
+            mem_guarantee: 24G
+            node_selector:
+              node.kubernetes.io/instance-type: n1-standard-8
+            environment:
+              NVIDIA_DRIVER_CAPABILITIES: compute,utility
+            extra_resource_limits:
+              nvidia.com/gpu: "1"
+      initContainers:
+        - name: volume-mount-ownership-fix
+          image: busybox
+          command:
+            - sh
+            - -c
+            - id && chown 1000:1000 /home/jovyan && ls -lhd /home/jovyan
+          securityContext:
+            runAsUser: 0
+          volumeMounts:
+            - name: home
+              mountPath: /home/jovyan
+              subPath: "{username}"
 dask-gateway:
-   gateway:
-      backend:
-         scheduler:
-            cores:
-               request: 0.8
-               limit: 1
-            memory:
-               request: 1G
-               limit: 2G
+  gateway:
+    backend:
+      scheduler:
+        cores:
+          request: 0.8
+          limit: 1
+        memory:
+          request: 1G
+          limit: 2G
