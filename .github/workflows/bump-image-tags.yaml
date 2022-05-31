@@ -23,9 +23,11 @@ jobs:
             values_paths: ".basehub.jupyterhub.singleuser.image"
           - name: "m2lines common singleuser/PyTorch/Tensorflow"
             config_path: "config/clusters/m2lines/common.values.yaml"
+            # If the ordering of profileList changes, update the index in this expression
             values_paths: ".basehub.jupyterhub.singleuser.image .basehub.jupyterhub.singleuser.profileList[4].kubespawner_override.image .basehub.jupyterhub.singleuser.profileList[5].kubespawner_override.image"
           - name: "leap common singleuser/pangeo-ml-notebook"
             config_path: "config/clusters/leap/common.values.yaml"
+            # If the ordering of profileList changes, update the index in this expression
             values_paths: ".basehub.jupyterhub.singleuser.image .basehub.jupyterhub.singleuser.profileList[4].kubespawner_override.image"
 
     steps:
