@@ -52,3 +52,4 @@ jobs:
           values_paths: ${{ matrix.values_paths }}
           github_token: ${{ steps.generate_token.outputs.token }}
           team_reviewers: ${{ env.team_reviewers }}
+          base_branch: "master"
