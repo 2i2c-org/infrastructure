@@ -1,0 +1,54 @@
+name: Bump Image Tags
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: "0 0 * * 1" # Run at 00:00 UTC every Monday
+
+env:
+  team_reviewers: 2i2c-org/tech-team
+
+jobs:
+  bump-image-tags:
+    runs-on: ubuntu-latest
+    environment: github-app-token-generator
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          # For each new config_path to monitor, add a new item in this matrix.
+          # The Action can read multiple paths to images, but not multiple config files.
+          - name: "pangeo-hubs common singleuser image"
+            config_path: "config/clusters/pangeo-hubs/common.values.yaml"
+            values_paths: ".basehub.jupyterhub.singleuser.image"
+          - name: "m2lines common singleuser/PyTorch/Tensorflow"
+            config_path: "config/clusters/m2lines/common.values.yaml"
+            # If the ordering of profileList changes, update the index in this expression
+            values_paths: ".basehub.jupyterhub.singleuser.image .basehub.jupyterhub.singleuser.profileList[4].kubespawner_override.image .basehub.jupyterhub.singleuser.profileList[5].kubespawner_override.image"
+          - name: "leap common singleuser/pangeo-ml-notebook"
+            config_path: "config/clusters/leap/common.values.yaml"
+            # If the ordering of profileList changes, update the index in this expression
+            values_paths: ".basehub.jupyterhub.singleuser.image .basehub.jupyterhub.singleuser.profileList[4].kubespawner_override.image"
+
+    steps:
+      # We want tests to be run on the Pull Request that gets opened by the next step,
+      # so we generate a token from a GitHub App that would allow this.
+      # By default, secrets.GITHUB_TOKEN is prevented from triggering
+      # secondary workflows.
+      #
+      # Action: https://github.com/marketplace/actions/github-app-token
+      - name: Fetch a token from GitHub App
+        id: generate_token
+        uses: tibdex/github-app-token@v1.5
+        with:
+          app_id: ${{ secrets.APP_ID }}
+          private_key: ${{ secrets.PRIVATE_KEY }}
+
+      # Action repo: https://github.com/sgibson91/bump-jhub-image-action
+      - name: "Bump image tags: ${{ matrix.name }}"
+        uses: sgibson91/bump-jhub-image-action@main
+        with:
+          config_path: ${{ matrix.config_path }}
+          values_paths: ${{ matrix.values_paths }}
+          github_token: ${{ steps.generate_token.outputs.token }}
+          team_reviewers: ${{ env.team_reviewers }}
