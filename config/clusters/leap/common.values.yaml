@@ -5,9 +5,7 @@ basehub:
       mountOptions:
         - soft
         - noatime
-      # Google FileStore IP
       serverIP: 10.104.103.242
-      # Name of Google Filestore share
       baseShareName: /homes/
   jupyterhub:
     proxy:
@@ -16,7 +14,7 @@ basehub:
     custom:
       2i2c:
         add_staff_user_ids_to_admin_users: true
-        add_staff_user_ids_of_type: "github"
+        add_staff_user_ids_of_type: github
       homepage:
         templateVars:
           org:
@@ -37,9 +35,6 @@ basehub:
       config:
         Authenticator:
           enable_auth_state: true
-          # This hub uses GitHub Teams auth and so we don't set
-          # allowed_users in order to not deny access to valid members of
-          # the listed teams. These people should have admin access though.
           admin_users:
             - rabernat
         JupyterHub:
@@ -54,88 +49,81 @@ basehub:
     singleuser:
       image:
         name: pangeo/pangeo-notebook
-        tag: 2022.04.20
+        tag: 39778b5
       extraEnv:
-        GH_SCOPED_CREDS_CLIENT_ID: "Iv1.0c7df3d4b3191b2f"
+        GH_SCOPED_CREDS_CLIENT_ID: Iv1.0c7df3d4b3191b2f
         GH_SCOPED_CREDS_APP_URL: https://github.com/apps/leap-hub-push-access
       profileList:
-        # The mem-guarantees are here so k8s doesn't schedule other pods
-        # on these nodes. They need to be just under total allocatable
-        # RAM on a node, not total node capacity. Values calculated using
-        # https://learnk8s.io/kubernetes-instance-calculator
-        - display_name: "Small"
-          description: 5GB RAM, 2 CPUs
-          default: true
-          allowed_teams:
-            - leap-stc:leap-pangeo-users
-            - 2i2c-org:tech-team
-          kubespawner_override:
-            mem_limit: 7G
-            mem_guarantee: 4.5G
-            node_selector:
-              node.kubernetes.io/instance-type: n1-standard-2
+        - display_name: Small
+        description: 5GB RAM, 2 CPUs
+        default: true
+        allowed_teams:
+          - leap-stc:leap-pangeo-users
+          - 2i2c-org:tech-team
+        kubespawner_override:
+          mem_limit: 7G
+          mem_guarantee: 4.5G
+          node_selector:
+            node.kubernetes.io/instance-type: n1-standard-2
         - display_name: Medium
-          description: 11GB RAM, 4 CPUs
-          allowed_teams:
-            - leap-stc:leap-pangeo-users
-            - 2i2c-org:tech-team
-          kubespawner_override:
-            mem_limit: 15G
-            mem_guarantee: 11G
-            node_selector:
-              node.kubernetes.io/instance-type: n1-standard-4
+        description: 11GB RAM, 4 CPUs
+        allowed_teams:
+          - leap-stc:leap-pangeo-users
+          - 2i2c-org:tech-team
+        kubespawner_override:
+          mem_limit: 15G
+          mem_guarantee: 11G
+          node_selector:
+            node.kubernetes.io/instance-type: n1-standard-4
         - display_name: Large
-          description: 24GB RAM, 8 CPUs
-          allowed_teams:
-            - leap-stc:leap-pangeo-education
-            - leap-stc:leap-pangeo-research
-            - 2i2c-org:tech-team
-          kubespawner_override:
-            mem_limit: 30G
-            mem_guarantee: 24G
-            node_selector:
-              node.kubernetes.io/instance-type: n1-standard-8
+        description: 24GB RAM, 8 CPUs
+        allowed_teams:
+          - leap-stc:leap-pangeo-education
+          - leap-stc:leap-pangeo-research
+          - 2i2c-org:tech-team
+        kubespawner_override:
+          mem_limit: 30G
+          mem_guarantee: 24G
+          node_selector:
+            node.kubernetes.io/instance-type: n1-standard-8
         - display_name: Huge
-          description: 52GB RAM, 16 CPUs
-          allowed_teams:
-            - leap-stc:leap-pangeo-research
-            - 2i2c-org:tech-team
-          kubespawner_override:
-            mem_limit: 60G
-            mem_guarantee: 52G
-            node_selector:
-              node.kubernetes.io/instance-type: n1-standard-16
+        description: 52GB RAM, 16 CPUs
+        allowed_teams:
+          - leap-stc:leap-pangeo-research
+          - 2i2c-org:tech-team
+        kubespawner_override:
+          mem_limit: 60G
+          mem_guarantee: 52G
+          node_selector:
+            node.kubernetes.io/instance-type: n1-standard-16
         - display_name: Large + Nvidia K80 GPU
-          description: 24GB RAM, 8 CPUs, Nvidia Tesla K80 GPU
-          allowed_teams:
-            - leap-stc:leap-pangeo-research
-            - 2i2c-org:tech-team
-          kubespawner_override:
-            image: "pangeo/ml-notebook:master"
-            mem_limit: 30G
-            mem_guarantee: 24G
-            node_selector:
-              node.kubernetes.io/instance-type: n1-standard-8
-            environment:
-              NVIDIA_DRIVER_CAPABILITIES: compute,utility
-            extra_resource_limits:
-              nvidia.com/gpu: "1"
+        description: 24GB RAM, 8 CPUs, Nvidia Tesla K80 GPU
+        allowed_teams:
+          - leap-stc:leap-pangeo-research
+          - 2i2c-org:tech-team
+        kubespawner_override:
+          image: pangeo/ml-notebook:39778b5
+          mem_limit: 30G
+          mem_guarantee: 24G
+          node_selector:
+            node.kubernetes.io/instance-type: n1-standard-8
+          environment:
+            NVIDIA_DRIVER_CAPABILITIES: compute,utility
+          extra_resource_limits:
+            nvidia.com/gpu: '1'
       initContainers:
-        # Need to explicitly fix ownership here, since EFS doesn't do anonuid
         - name: volume-mount-ownership-fix
-          image: busybox
-          command:
-            [
-              "sh",
-              "-c",
-              "id && chown 1000:1000 /home/jovyan && ls -lhd /home/jovyan",
-            ]
-          securityContext:
-            runAsUser: 0
-          volumeMounts:
-            - name: home
-              mountPath: /home/jovyan
-              subPath: "{username}"
+        image: busybox
+        command:
+          - sh
+          - -c
+          - id && chown 1000:1000 /home/jovyan && ls -lhd /home/jovyan
+        securityContext:
+          runAsUser: 0
+        volumeMounts:
+          - name: home
+          mountPath: /home/jovyan
+          subPath: '{username}'
 dask-gateway:
   gateway:
     backend:
