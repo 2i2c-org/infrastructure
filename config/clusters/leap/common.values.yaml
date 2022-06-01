@@ -110,7 +110,7 @@ basehub:
             environment:
               NVIDIA_DRIVER_CAPABILITIES: compute,utility
             extra_resource_limits:
-              nvidia.com/gpu: '1'
+              nvidia.com/gpu: "1"
       initContainers:
         - name: volume-mount-ownership-fix
           image: busybox
@@ -123,7 +123,7 @@ basehub:
           volumeMounts:
             - name: home
               mountPath: /home/jovyan
-              subPath: '{username}'
+              subPath: "{username}"
 dask-gateway:
   gateway:
     backend:
