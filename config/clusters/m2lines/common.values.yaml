@@ -5,9 +5,7 @@ basehub:
       mountOptions:
         - soft
         - noatime
-      # Google FileStore IP
       serverIP: 10.98.223.138
-      # Name of Google Filestore share
       baseShareName: /homes/
   jupyterhub:
     proxy:
@@ -16,7 +14,7 @@ basehub:
     custom:
       2i2c:
         add_staff_user_ids_to_admin_users: true
-        add_staff_user_ids_of_type: "github"
+        add_staff_user_ids_of_type: github
       homepage:
         templateVars:
           org:
@@ -35,9 +33,6 @@ basehub:
     hub:
       config:
         Authenticator:
-          # This hub uses GitHub Teams auth and so we don't set
-          # allowed_users in order to not deny access to valid members of
-          # the listed teams. These people should have admin access though.
           admin_users:
             - rabernat
             - johannag126
@@ -51,18 +46,13 @@ basehub:
             - read:org
     singleuser:
       extraEnv:
-        GH_SCOPED_CREDS_CLIENT_ID: "Iv1.1c4d967ffc205f98"
+        GH_SCOPED_CREDS_CLIENT_ID: Iv1.1c4d967ffc205f98
         GH_SCOPED_CREDS_APP_URL: https://github.com/apps/m2lines-pangeo-hub-push-access
-      # User image repo: https://github.com/pangeo-data/pangeo-docker-images
       image:
         name: pangeo/pangeo-notebook
-        tag: 2022.05.10
+        tag: 39778b5
       profileList:
-        # The mem-guarantees are here so k8s doesn't schedule other pods
-        # on these nodes. They need to be just under total allocatable
-        # RAM on a node, not total node capacity. Values calculated using
-        # https://learnk8s.io/kubernetes-instance-calculator
-        - display_name: "Small"
+        - display_name: Small
           description: 5GB RAM, 2 CPUs
           default: true
           kubespawner_override:
@@ -94,7 +84,7 @@ basehub:
         - display_name: Large + Nvidia K80 GPU + Tensorflow
           description: 24GB RAM, 8 CPUs
           kubespawner_override:
-            image: "pangeo/ml-notebook:7181f87"
+            image: pangeo/ml-notebook:39778b5
             mem_limit: 30G
             mem_guarantee: 24G
             node_selector:
@@ -102,11 +92,11 @@ basehub:
             environment:
               NVIDIA_DRIVER_CAPABILITIES: compute,utility
             extra_resource_limits:
-              nvidia.com/gpu: "1"
+              nvidia.com/gpu: '1'
         - display_name: Large + Nvidia K80 GPU + PyTorch
           description: 24GB RAM, 8 CPUs
           kubespawner_override:
-            image: "pangeo/pytorch-notebook:7181f87"
+            image: pangeo/pytorch-notebook:39778b5
             mem_limit: 30G
             mem_guarantee: 24G
             node_selector:
@@ -114,23 +104,20 @@ basehub:
             environment:
               NVIDIA_DRIVER_CAPABILITIES: compute,utility
             extra_resource_limits:
-              nvidia.com/gpu: "1"
+              nvidia.com/gpu: '1'
       initContainers:
-        # Need to explicitly fix ownership here, since EFS doesn't do anonuid
         - name: volume-mount-ownership-fix
           image: busybox
           command:
-            [
-              "sh",
-              "-c",
-              "id && chown 1000:1000 /home/jovyan && ls -lhd /home/jovyan",
-            ]
+            - sh
+            - -c
+            - id && chown 1000:1000 /home/jovyan && ls -lhd /home/jovyan
           securityContext:
             runAsUser: 0
           volumeMounts:
             - name: home
               mountPath: /home/jovyan
-              subPath: "{username}"
+              subPath: '{username}'
 dask-gateway:
   gateway:
     backend:
