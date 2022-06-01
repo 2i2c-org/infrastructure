@@ -1,0 +1,522 @@
+binderhub:
+  config:
+    BinderHub:
+      use_registry: true
+  service:
+    type: ClusterIP
+  ingress:
+    enabled: true
+    annotations:
+      nginx.ingress.kubernetes.io/proxy-body-size: 256m
+      kubernetes.io/ingress.class: nginx
+      cert-manager.io/cluster-issuer: letsencrypt-prod
+
+  jupyterhub:
+    #=== VALUES BELOW HERE ARE COPIED FROM DASKHUB VALUES AND SHOULD BE UPDATED ===#
+    #=== IF DASKHUB CHANGES ===#
+    custom:
+      2i2c:
+        # Should 2i2c engineering staff user IDs be injected to the admin_users
+        # configuration of the JupyterHub's authenticator by our custom
+        # jupyterhub_config.py snippet as declared in hub.extraConfig?
+        add_staff_user_ids_to_admin_users: false
+        add_staff_user_ids_of_type: ""
+        staff_github_ids:
+          - choldgraf
+          - consideRatio
+          - damianavila
+          - GeorgianaElena
+          - sgibson91
+          - yuvipanda
+        staff_google_ids:
+          - choldgraf@2i2c.org
+          - erik@2i2c.org
+          - damianavila@2i2c.org
+          - georgianaelena@2i2c.org
+          - sgibson@2i2c.org
+          - yuvipanda@2i2c.org
+    ingress:
+      enabled: true
+      annotations:
+        nginx.ingress.kubernetes.io/proxy-body-size: 256m
+        kubernetes.io/ingress.class: nginx
+        cert-manager.io/cluster-issuer: letsencrypt-prod
+    proxy:
+      service:
+        type: ClusterIP
+      chp:
+        nodeSelector:
+          hub.jupyter.org/node-purpose: core
+        resources:
+          requests:
+            # FIXME: We want no guarantees here!!!
+            # This is lowest possible value
+            cpu: 0.01
+            memory: 64Mi
+          limits:
+            memory: 1Gi
+      traefik:
+        image:
+          tag: v2.4.8
+        nodeSelector:
+          hub.jupyter.org/node-purpose: core
+        resources:
+          requests:
+            memory: 64Mi
+          limits:
+            memory: 1Gi
+    singleuser:
+      # Almost everyone using dask by default wants JupyterLab
+      defaultUrl: /lab
+      extraLabels:
+        hub.jupyter.org/network-access-proxy-http: "true"
+      cloudMetadata:
+        # Don't block access to AWS cloud metadata
+        # If we don't, our users can't access S3 buckets / other AWS services
+        # without an explicit identity
+        # FIXME: Provide an explicit identity for users instead
+        blockWithIptables: false
+      serviceAccountName: user-sa
+      extraEnv:
+        # About DASK_ prefixed variables we set:
+        #
+        # 1. k8s native variable expansion is applied with $(MY_ENV) syntax. The
+        #    order variables are defined matters though and we are under the
+        #    mercy of how KubeSpawner renders our passed dictionaries.
+        #
+        # 2. Dask loads local YAML config.
+        #
+        # 3. Dask loads environment variables prefixed DASK_.
+        #    - DASK_ is stripped
+        #    - Capitalization is ignored
+        #    - Double underscore means a nested configuration
+        #    - `ast.literal_eval` is used to parse values
+        #
+        # 4. dask-gateway and dask-distributed looks at its config and expands
+        #    expressions in {} again, sometimes only with the environment
+        #    variables as context but sometimes also with additional variables.
+        #
+        # References:
+        # - K8s expansion:     https://kubernetes.io/docs/tasks/inject-data-application/define-interdependent-environment-variables/
+        # - KubeSpawner issue: https://github.com/jupyterhub/kubespawner/issues/491
+        # - Dask config:       https://docs.dask.org/en/latest/configuration.html
+        # - Exploration issue: https://github.com/2i2c-org/infrastructure/issues/442
+        #
+        # DASK_GATEWAY__CLUSTER__OPTIONS__IMAGE makes the default worker image
+        # match the singleuser image.
+        DASK_GATEWAY__CLUSTER__OPTIONS__IMAGE: "{JUPYTER_IMAGE_SPEC}"
+        # DASK_GATEWAY__CLUSTER__OPTIONS__ENVIRONMENT makes some environment
+        # variables be copied over to the worker nodes from the user nodes.
+        DASK_GATEWAY__CLUSTER__OPTIONS__ENVIRONMENT: '{"SCRATCH_BUCKET": "$(SCRATCH_BUCKET)", "PANGEO_SCRATCH": "$(PANGEO_SCRATCH)"}'
+        # DASK_DISTRIBUTED__DASHBOARD_LINK makes the suggested link to the
+        # dashboard account for the /user/<username> prefix in the path. Note
+        # that this still misbehave if you have a named server but now its at
+        # least functional for non-named servers.
+        DASK_DISTRIBUTED__DASHBOARD_LINK: "/user/{JUPYTERHUB_USER}/proxy/{port}/status"
+      extraFiles:
+        jupyter_notebook_config.json:
+          mountPath: /usr/local/etc/jupyter/jupyter_notebook_config.json
+          # if a user leaves a notebook with a running kernel,
+          # the effective idle timeout will typically be cull idle timeout
+          # of the server + the cull idle timeout of the kernel,
+          # as culling the kernel will register activity,
+          # resetting the no_activity timer for the server as a whole
+          data:
+            MappingKernelManager:
+              # shutdown kernels after no activity
+              cull_idle_timeout: 3600
+              # check for idle kernels this often
+              cull_interval: 300
+              # a kernel with open connections but no activity still counts as idle
+              # this is what allows us to shutdown servers
+              # when people leave a notebook open and wander off
+              cull_connected: true
+      nodeSelector:
+        hub.jupyter.org/node-purpose: user
+      networkPolicy:
+        # Allow unrestricted access to the internet but not local cluster network
+        enabled: true
+        egress:
+          - to:
+              - ipBlock:
+                  cidr: 0.0.0.0/0
+                  except:
+                    # Don't allow network access to private IP ranges
+                    # Listed in https://datatracker.ietf.org/doc/html/rfc1918
+                    - 10.0.0.0/8
+                    - 172.16.0.0/12
+                    - 192.168.0.0/16
+                    # Don't allow network access to the metadata IP
+                    - 169.254.169.254/32
+          # Allow code in hubs to talk to ingress provider, so they can talk to
+          # the hub via its public URL
+          - to:
+              - namespaceSelector:
+                  matchLabels:
+                    name: support
+                podSelector:
+                  matchLabels:
+                    app.kubernetes.io/name: ingress-nginx
+          # If a hub is using autohttps instead of ingress-nginx, allow traffic
+          # to the autohttps pod as well
+          - to:
+              - podSelector:
+                  matchLabels:
+                    app: jupyterhub
+                    component: autohttps
+          # Allow traffic to the proxy pod from user pods
+          # This is particularly important for daskhubs that utilise the proxy
+          # in order to create clusters (schedulers and workers)
+          - to:
+              - podSelector:
+                  matchLabels:
+                    app: jupyterhub
+                    component: proxy
+          # Allow traffic to the traefik pod from user pods. Needed for daskhubs.
+          - to:
+              - podSelector:
+                  matchLabels:
+                    app.kubernetes.io/component: traefik
+    hub:
+      config:
+        JupyterHub:
+          # Allow unauthenticated prometheus requests
+          # Otherwise our prometheus server can't get hub metrics
+          authenticate_prometheus: false
+        KubeSpawner:
+          # Make sure working directory is ${HOME}
+          working_dir: /home/jovyan
+          extra_container_config:
+            securityContext:
+              # Explicitly disallow setuid binaries from working inside the container
+              allowPrivilegeEscalation: false
+        Authenticator:
+          # Don't allow test username to login into the hub
+          # The test service will still be able to create this hub username
+          # and start their server.
+          # Ref: https://github.com/2i2c-org/meta/issues/321
+          blocked_users:
+            - deployment-service-check
+      services:
+        dask-gateway:
+          # Don't display a dask-gateway entry under 'services',
+          # as dask-gateway has no UI
+          display: false
+        # hub-health service helps us run health checks from the deployer script.
+        # The JupyterHub Helm chart will automatically generate an API token for
+        # services and expose it in a k8s Secret named `hub`. When we run health
+        # tests against a hub, we read this token from the k8s Secret to acquire
+        # the credentials needed to interacting with the JupyterHub API.
+        #
+        hub-health:
+          # FIXME: With JupyterHub 2 we can define a role for this service with
+          #        more tightly scoped permissions based on our needs.
+          #
+          admin: true
+      nodeSelector:
+        hub.jupyter.org/node-purpose: core
+      networkPolicy:
+        # FIXME: Enable this when dask-gateway chart v0.9.1 or higher is used
+        enabled: false
+      extraConfig:
+        daskhub-01-add-dask-gateway-values: |
+          # 1. Sets `DASK_GATEWAY__PROXY_ADDRESS` in the singleuser environment.
+          # 2. Adds the URL for the Dask Gateway JupyterHub service.
+          import os
+          # These are set by jupyterhub.
+          release_name = os.environ["HELM_RELEASE_NAME"]
+          release_namespace = os.environ["POD_NAMESPACE"]
+          if "PROXY_HTTP_SERVICE_HOST" in os.environ:
+              # https is enabled, we want to use the internal http service.
+              gateway_address = "http://{}:{}/services/dask-gateway/".format(
+                  os.environ["PROXY_HTTP_SERVICE_HOST"],
+                  os.environ["PROXY_HTTP_SERVICE_PORT"],
+              )
+              print("Setting DASK_GATEWAY__ADDRESS {} from HTTP service".format(gateway_address))
+          else:
+              gateway_address = "http://proxy-public/services/dask-gateway"
+              print("Setting DASK_GATEWAY__ADDRESS {}".format(gateway_address))
+          # Internal address to connect to the Dask Gateway.
+          c.KubeSpawner.environment.setdefault("DASK_GATEWAY__ADDRESS", gateway_address)
+          # Internal address for the Dask Gateway proxy.
+          c.KubeSpawner.environment.setdefault("DASK_GATEWAY__PROXY_ADDRESS", "gateway://traefik-{}-dask-gateway.{}:80".format(release_name, release_namespace))
+          # Relative address for the dashboard link.
+          c.KubeSpawner.environment.setdefault("DASK_GATEWAY__PUBLIC_ADDRESS", "/services/dask-gateway/")
+          # Use JupyterHub to authenticate with Dask Gateway.
+          c.KubeSpawner.environment.setdefault("DASK_GATEWAY__AUTH__TYPE", "jupyterhub")
+          # Adds Dask Gateway as a JupyterHub service to make the gateway available at
+          # {HUB_URL}/services/dask-gateway
+          service_url = "http://traefik-{}-dask-gateway.{}".format(release_name, release_namespace)
+          for service in c.JupyterHub.services:
+              if service["name"] == "dask-gateway":
+                  if not service.get("url", None):
+                      print("Adding dask-gateway service URL")
+                      service.setdefault("url", service_url)
+                  break
+          else:
+              print("dask-gateway service not found. Did you set jupyterhub.hub.services.dask-gateway.apiToken?")
+        01-custom-theme: |
+          from z2jh import get_config
+          c.JupyterHub.template_paths = ['/usr/local/share/jupyterhub/custom_templates/']
+
+          c.JupyterHub.template_vars = {
+              'custom': get_config('custom.homepage.templateVars')
+          }
+        02-custom-admin: |
+          from z2jh import get_config
+          from kubespawner import KubeSpawner
+          from jupyterhub_configurator.mixins import ConfiguratorSpawnerMixin
+
+          class CustomSpawner(ConfiguratorSpawnerMixin, KubeSpawner):
+              def start(self, *args, **kwargs):
+                  custom_admin = get_config('custom.singleuserAdmin', {})
+                  if custom_admin and self.user.admin:
+                      extra_init_containers = custom_admin.get('initContainers', [])
+                      extra_volume_mounts = custom_admin.get('extraVolumeMounts', [])
+
+                      self.init_containers += [container for container in extra_init_containers if container not in self.init_containers]
+                      self.volume_mounts += [volume for volume in extra_volume_mounts if volume not in self.volume_mounts]
+
+                  return super().start(*args, **kwargs)
+
+
+          c.JupyterHub.spawner_class = CustomSpawner
+        03-cloud-storage-bucket: |
+          from z2jh import get_config
+          cloud_resources = get_config('custom.cloudResources')
+          scratch_bucket = cloud_resources['scratchBucket']
+          import os
+
+          if scratch_bucket['enabled']:
+              # FIXME: Support other providers too
+              assert cloud_resources['provider'] == 'gcp'
+              project_id = cloud_resources['gcp']['projectId']
+
+              release = os.environ['HELM_RELEASE_NAME']
+              bucket_protocol = 'gcs'
+              bucket_name = f'{project_id}-{release}-scratch-bucket'
+              env = {
+                  'SCRATCH_BUCKET_PROTOCOL': bucket_protocol,
+                  # Matches "daskhub.scratchBUcket.name" helm template
+                  'SCRATCH_BUCKET_NAME': bucket_name,
+                  # Use k8s syntax of $(ENV_VAR) to substitute env vars dynamically in other env vars
+                  'SCRATCH_BUCKET': f'{bucket_protocol}://{bucket_name}/$(JUPYTERHUB_USER)',
+                  'PANGEO_SCRATCH': f'{bucket_protocol}://{bucket_name}/$(JUPYTERHUB_USER)',
+              }
+
+              c.KubeSpawner.environment.update(env)
+        04-2i2c-add-staff-user-ids-to-admin-users: |
+          from z2jh import get_config
+          add_staff_user_ids_to_admin_users = get_config("custom.2i2c.add_staff_user_ids_to_admin_users", False)
+
+          if add_staff_user_ids_to_admin_users:
+              user_id_type = get_config("custom.2i2c.add_staff_user_ids_of_type")
+              staff_user_ids = get_config(f"custom.2i2c.staff_{user_id_type}_ids", [])
+              c.Authenticator.admin_users.extend(staff_user_ids)
+
+              # Check what authenticator class is set. If it's "github", we assume
+              # GitHub Orgs/Teams is being used for auth and unset allowed_users
+              # so valid members are not refused access.
+              # FIXME: This should be handled in basehub's schema validation file
+              # so that we get useful feedback about config. But at time of writing,
+              # it doesn't have one! Issue to track the creation of such files is:
+              # https://github.com/2i2c-org/infrastructure/issues/937
+              authenticator_class = get_config("hub.config.JupyterHub.authenticator_class")
+              if authenticator_class == "github" and c.Authenticator.allowed_users:
+                  print("WARNING: hub.config.JupyterHub.authenticator_class was set to github and c.Authenticator.allowed_users was set, custom 2i2c jupyterhub config is now resetting allowed_users to an empty set.")
+                  c.Authenticator.allowed_users = set()
+        05-add-docs-service-if-enabled: |
+          from z2jh import get_config
+
+          if get_config("custom.docs_service.enabled"):
+              c.JupyterHub.services.append({"name": "docs", "url": "http://docs-service"})
+        06-gh-teams: |
+          from textwrap import dedent
+          from tornado import gen, web
+          from oauthenticator.github import GitHubOAuthenticator
+
+          # Make a copy of the original profile_list, as that is the data we will work with
+          original_profile_list = c.KubeSpawner.profile_list
+
+          # This has to be a gen.coroutine, not async def! Kubespawner uses gen.maybe_future to
+          # run this, and that only seems to recognize tornado coroutines, not async functions!
+          # We can convert this to async def once that has been fixed upstream.
+          @gen.coroutine
+          def custom_profile_list(spawner):
+              """
+              Dynamically set allowed list of user profiles based on GitHub teams user is part of.
+
+              Adds a 'allowed_teams' key to profile_list, with a list of GitHub teams (of the form
+              org-name:team-name) for which the profile is made available.
+
+              If the user isn't part of any team whose membership grants them access to even a single
+              profile, they aren't allowed to start any servers.
+              """
+              # Only apply to GitHub Authenticator
+              if not isinstance(spawner.authenticator, GitHubOAuthenticator):
+                  return original_profile_list
+
+              # If populate_teams_in_auth_state is not set, github teams are not fetched
+              # So we just don't do any of this filtering, and let anyone into everything
+              if spawner.authenticator.populate_teams_in_auth_state == False:
+                return original_profile_list
+
+              auth_state = yield spawner.user.get_auth_state()
+
+              if not auth_state or "teams" not in auth_state:
+                if spawner.user.name == 'deployment-service-check':
+                  # For our hub deployer health checker, ignore all this logic
+                  print("Ignoring allowed_teams check for deployment-service-check")
+                  return original_profile_list
+                print(f"User {spawner.user.name} does not have any auth_state set")
+                raise web.HTTPError(403)
+
+              # Make a list of team names of form org-name:team-name
+              # This is the same syntax used by allowed_organizations traitlet of GitHubOAuthenticator
+              teams = set([f'{team_info["organization"]["login"]}:{team_info["slug"]}' for team_info in auth_state["teams"]])
+
+              allowed_profiles = []
+
+              for profile in original_profile_list:
+                # Keep the profile is the user is part of *any* team listed in allowed_teams
+                # If allowed_teams is empty or not set, it'll not be accessible to *anyone*
+                if set(profile.get('allowed_teams', [])) & teams:
+                  allowed_profiles.append(profile)
+                  print(f"Allowing profile {profile['display_name']} for user {spawner.user.name}")
+                else:
+                  print(f"Dropping profile {profile['display_name']} for user {spawner.user.name}")
+
+              if len(allowed_profiles) == 0:
+                # If no profiles are allowed, user should not be able to spawn anything!
+                # If we don't explicitly stop this, user will be logged into the 'default' settings
+                # set in singleuser, without any profile overrides. Not desired behavior
+                # FIXME: User doesn't actually see this error message, just the generic 403.
+                error_msg = dedent(f"""
+                Your GitHub team membership is insufficient to launch any server profiles.
+
+                GitHub teams you are a member of that this JupyterHub knows about are {', '.join(teams)}.
+
+                If you are part of additional teams, log out of this JupyterHub and log back in to refresh that information.
+                """)
+                raise web.HTTPError(403, error_msg)
+
+              return allowed_profiles
+
+          # Only set this customized profile_list *if* we already have a profile_list set
+          # otherwise, we'll show users a blank server options form and they won't be able to
+          # start their server
+          if c.KubeSpawner.profile_list:
+              # Customize list of profiles dynamically, rather than override options form.
+              # This is more secure, as users can't override the options available to them via the hub API
+              c.KubeSpawner.profile_list = custom_profile_list
+
+dask-gateway:
+  #=== VALUES BELOW HERE ARE COPIED FROM DASKHUB VALUES AND SHOULD BE UPDATED ===#
+  #=== IF DASKHUB CHANGES ===#
+  enabled: true # Enabling dask-gateway will install Dask Gateway as a dependency.
+  controller:
+    nodeSelector:
+      k8s.dask.org/node-purpose: core
+  gateway:
+    nodeSelector:
+      k8s.dask.org/node-purpose: core
+    backend:
+      scheduler:
+        extraPodConfig:
+          serviceAccountName: user-sa
+          tolerations:
+            # Let's put schedulers on notebook nodes, since they aren't ephemeral
+            # dask can recover from dead workers, but not dead schedulers
+            - key: "hub.jupyter.org/dedicated"
+              operator: "Equal"
+              value: "user"
+              effect: "NoSchedule"
+            - key: "hub.jupyter.org_dedicated"
+              operator: "Equal"
+              value: "user"
+              effect: "NoSchedule"
+          nodeSelector:
+            k8s.dask.org/node-purpose: scheduler
+        cores:
+          request: 0.01
+          limit: 1
+        memory:
+          request: 128M
+          limit: 1G
+      worker:
+        extraContainerConfig:
+          securityContext:
+            runAsGroup: 1000
+            runAsUser: 1000
+        extraPodConfig:
+          serviceAccountName: user-sa
+          securityContext:
+            fsGroup: 1000
+          tolerations:
+            - key: "k8s.dask.org/dedicated"
+              operator: "Equal"
+              value: "worker"
+              effect: "NoSchedule"
+            - key: "k8s.dask.org_dedicated"
+              operator: "Equal"
+              value: "worker"
+              effect: "NoSchedule"
+          nodeSelector:
+            # Dask workers get their own pre-emptible pool
+            k8s.dask.org/node-purpose: worker
+
+    # TODO: figure out a replacement for userLimits.
+    extraConfig:
+      optionHandler: |
+        from dask_gateway_server.options import Options, Integer, Float, String, Mapping
+
+        def cluster_options(user):
+            def option_handler(options):
+                if ":" not in options.image:
+                    raise ValueError("When specifying an image you must also provide a tag")
+                # FIXME: No user labels or annotations, until https://github.com/pangeo-data/pangeo-cloud-federation/issues/879
+                # is fixed.
+                extra_annotations = {
+                    # "hub.jupyter.org/username": safe_username,
+                    "prometheus.io/scrape": "true",
+                    "prometheus.io/port": "8787",
+                }
+                extra_labels = {
+                    # "hub.jupyter.org/username": safe_username,
+                }
+                return {
+                    "worker_cores_limit": options.worker_cores,
+                    "worker_cores": options.worker_cores,
+                    "worker_memory": "%fG" % options.worker_memory,
+                    "image": options.image,
+                    "scheduler_extra_pod_annotations": extra_annotations,
+                    "worker_extra_pod_annotations": extra_annotations,
+                    "scheduler_extra_pod_labels": extra_labels,
+                    "worker_extra_pod_labels": extra_labels,
+                    "environment": options.environment,
+                }
+            return Options(
+                Integer("worker_cores", 2, min=1, label="Worker Cores"),
+                Float("worker_memory", 4, min=1, label="Worker Memory (GiB)"),
+                # The default image is set via DASK_GATEWAY__CLUSTER__OPTIONS__IMAGE env variable
+                String("image", label="Image"),
+                Mapping("environment", {}, label="Environment Variables"),
+                handler=option_handler,
+            )
+        c.Backend.cluster_options = cluster_options
+      idle: |
+        # timeout after 30 minutes of inactivity
+        c.KubeClusterConfig.idle_timeout = 1800
+    prefix: "/services/dask-gateway" # Users connect to the Gateway through the JupyterHub service.
+    auth:
+      type: jupyterhub # Use JupyterHub to authenticate with Dask Gateway
+  traefik:
+    nodeSelector:
+      k8s.dask.org/node-purpose: core
+    service:
+      type: ClusterIP # Access Dask Gateway through JupyterHub. To access the Gateway from outside JupyterHub, this must be changed to a `LoadBalancer`.
+
+# A placeholder as global values that can be referenced from the same location
+# of any chart should be possible to provide, but aren't necessarily provided or
+# used.
+global: {}
