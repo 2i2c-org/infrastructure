@@ -113,7 +113,7 @@ basehub:
           volumeMounts:
             - name: home
               mountPath: /home/jovyan
-              subPath: '{username}'
+              subPath: "{username}"
 dask-gateway:
   gateway:
     backend:
