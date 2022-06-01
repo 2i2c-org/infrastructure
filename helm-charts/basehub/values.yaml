@@ -125,8 +125,6 @@ jupyterhub:
         limits:
           memory: 1Gi
     traefik:
-      image:
-        tag: v2.4.8
       nodeSelector:
         hub.jupyter.org/node-purpose: core
       resources:
