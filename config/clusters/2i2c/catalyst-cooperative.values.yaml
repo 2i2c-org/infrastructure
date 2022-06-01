@@ -7,7 +7,7 @@ basehub:
     singleuser:
       image:
         name: catalystcoop/pudl-jupyter
-        tag: 2021.11.11
+        tag: "2021.11.11"
       memory:
         limit: 6G
         guarantee: 4G

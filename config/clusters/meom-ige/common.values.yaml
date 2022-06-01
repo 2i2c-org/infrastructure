@@ -77,7 +77,7 @@ basehub:
       defaultUrl: /lab
       image:
         name: pangeo/pangeo-notebook
-        tag: 2021.07.17
+        tag: "2021.07.17"
     scheduling:
       userPlaceholder:
         enabled: false

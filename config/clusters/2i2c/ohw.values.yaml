@@ -32,7 +32,7 @@ basehub:
                 protocol: TCP
       image:
         name: ghcr.io/oceanhackweek/jupyer-image
-        tag: 9efd4fb
+        tag: "9efd4fb"
       memory:
         # Increase memory alloted during the workshop
         #  https://github.com/2i2c-org/infrastructure/issues/549#issuecomment-891264570
