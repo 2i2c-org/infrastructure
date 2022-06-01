@@ -1,6 +1,10 @@
 prometheusIngressAuthSecret:
   enabled: true
 
+nvidiaDevicePlugin:
+  aws:
+    enabled: true
+
 prometheus:
   server:
     ingress:

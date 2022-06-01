@@ -129,6 +129,9 @@ nvidiaDevicePlugin:
   # For GKE specific image, defaults to false
   gke:
     enabled: false
+  # For eksctl / AWS specific daemonset, defaults to false
+  aws:
+    enabled: false
 
 # A placeholder as global values that can be referenced from the same location
 # of any chart should be possible to provide, but aren't necessarily provided or

@@ -8,6 +8,7 @@ See the sections below for more details:
 :maxdepth: 2
 
 cloud-access
+gpu
 github
 ../customize/docs-service
 ../customize/configure-login-page
