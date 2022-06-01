@@ -5,9 +5,7 @@ basehub:
       mountOptions:
         - soft
         - noatime
-      # Google FileStore IP
       serverIP: 10.229.44.234
-      # Name of Google Filestore share
       baseShareName: /homes/
   jupyterhub:
     proxy:
@@ -16,7 +14,7 @@ basehub:
     custom:
       2i2c:
         add_staff_user_ids_to_admin_users: true
-        add_staff_user_ids_of_type: "github"
+        add_staff_user_ids_of_type: github
       cloudResources:
         provider: gcp
         gcp:
@@ -28,7 +26,7 @@ basehub:
           org:
             name: Pangeo
             url: https://pangeo.io
-            logo_url: "https://raw.githubusercontent.com/pangeo-data/pangeo/master/docs/_static/pangeo_simple_logo.svg"
+            logo_url: https://raw.githubusercontent.com/pangeo-data/pangeo/master/docs/_static/pangeo_simple_logo.svg
           designed_by:
             name: 2i2c
             url: https://2i2c.org
@@ -37,13 +35,10 @@ basehub:
             url: https://2i2c.org
           funded_by:
             name: NSF EarthCube Program (Award ICER-2026932)
-            url: "https://www.nsf.gov/awardsearch/showAward?AWD_ID=2026932"
+            url: https://www.nsf.gov/awardsearch/showAward?AWD_ID=2026932
     hub:
       config:
         Authenticator:
-          # This hub uses GitHub Teams auth and so we don't set
-          # allowed_users in order to not deny access to valid members of
-          # the listed teams. These people should have admin access though.
           admin_users:
             - rabernat
             - jhamman
@@ -59,18 +54,13 @@ basehub:
             - read:org
     singleuser:
       extraEnv:
-        GH_SCOPED_CREDS_CLIENT_ID: "Iv1.c90ee430400a347f"
+        GH_SCOPED_CREDS_CLIENT_ID: Iv1.c90ee430400a347f
         GH_SCOPED_CREDS_APP_URL: https://github.com/apps/pangeo-gcp-hub-push-access
-      # User image repo: https://github.com/pangeo-data/pangeo-docker-images
       image:
         name: pangeo/pangeo-notebook
-        tag: 2022.04.20
+        tag: 39778b5
       profileList:
-        # The mem-guarantees are here so k8s doesn't schedule other pods
-        # on these nodes. They need to be just under total allocatable
-        # RAM on a node, not total node capacity. Values calculated using
-        # https://learnk8s.io/kubernetes-instance-calculator
-        - display_name: "Small"
+        - display_name: Small
           description: 5GB RAM, 2 CPUs
           default: true
           allowed_teams:
@@ -112,21 +102,18 @@ basehub:
             node_selector:
               node.kubernetes.io/instance-type: n1-standard-16
       initContainers:
-        # Need to explicitly fix ownership here, since EFS doesn't do anonuid
         - name: volume-mount-ownership-fix
           image: busybox
           command:
-            [
-              "sh",
-              "-c",
-              "id && chown 1000:1000 /home/jovyan && ls -lhd /home/jovyan",
-            ]
+            - sh
+            - -c
+            - id && chown 1000:1000 /home/jovyan && ls -lhd /home/jovyan
           securityContext:
             runAsUser: 0
           volumeMounts:
             - name: home
               mountPath: /home/jovyan
-              subPath: "{username}"
+              subPath: '{username}'
 dask-gateway:
   gateway:
     backend:
