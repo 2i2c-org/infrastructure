@@ -27,7 +27,7 @@ jupyterhub:
       limit: 2
     image:
       name: quay.io/mmcky/anu-emet2007
-      tag: b7937f446fe6
+      tag: "b7937f446fe6"
   hub:
     config:
       JupyterHub:
