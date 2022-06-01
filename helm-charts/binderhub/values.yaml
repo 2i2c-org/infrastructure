@@ -12,8 +12,8 @@ binderhub:
       cert-manager.io/cluster-issuer: letsencrypt-prod
 
   jupyterhub:
-    #=== VALUES BELOW HERE ARE COPIED FROM BASEHUB VALUES AND SHOULD BE UPDATED ===#
-    #=== IF BASEHUB CHANGES ===#
+    #=== VALUES BELOW HERE ARE COPIED FROM DASKHUB VALUES AND SHOULD BE UPDATED ===#
+    #=== IF DASKHUB CHANGES ===#
     custom:
       2i2c:
         # Should 2i2c engineering staff user IDs be injected to the admin_users
@@ -66,6 +66,53 @@ binderhub:
           limits:
             memory: 1Gi
     singleuser:
+      # Almost everyone using dask by default wants JupyterLab
+      defaultUrl: /lab
+      extraLabels:
+        hub.jupyter.org/network-access-proxy-http: "true"
+      cloudMetadata:
+        # Don't block access to AWS cloud metadata
+        # If we don't, our users can't access S3 buckets / other AWS services
+        # without an explicit identity
+        # FIXME: Provide an explicit identity for users instead
+        blockWithIptables: false
+      serviceAccountName: user-sa
+      extraEnv:
+        # About DASK_ prefixed variables we set:
+        #
+        # 1. k8s native variable expansion is applied with $(MY_ENV) syntax. The
+        #    order variables are defined matters though and we are under the
+        #    mercy of how KubeSpawner renders our passed dictionaries.
+        #
+        # 2. Dask loads local YAML config.
+        #
+        # 3. Dask loads environment variables prefixed DASK_.
+        #    - DASK_ is stripped
+        #    - Capitalization is ignored
+        #    - Double underscore means a nested configuration
+        #    - `ast.literal_eval` is used to parse values
+        #
+        # 4. dask-gateway and dask-distributed looks at its config and expands
+        #    expressions in {} again, sometimes only with the environment
+        #    variables as context but sometimes also with additional variables.
+        #
+        # References:
+        # - K8s expansion:     https://kubernetes.io/docs/tasks/inject-data-application/define-interdependent-environment-variables/
+        # - KubeSpawner issue: https://github.com/jupyterhub/kubespawner/issues/491
+        # - Dask config:       https://docs.dask.org/en/latest/configuration.html
+        # - Exploration issue: https://github.com/2i2c-org/infrastructure/issues/442
+        #
+        # DASK_GATEWAY__CLUSTER__OPTIONS__IMAGE makes the default worker image
+        # match the singleuser image.
+        DASK_GATEWAY__CLUSTER__OPTIONS__IMAGE: "{JUPYTER_IMAGE_SPEC}"
+        # DASK_GATEWAY__CLUSTER__OPTIONS__ENVIRONMENT makes some environment
+        # variables be copied over to the worker nodes from the user nodes.
+        DASK_GATEWAY__CLUSTER__OPTIONS__ENVIRONMENT: '{"SCRATCH_BUCKET": "$(SCRATCH_BUCKET)", "PANGEO_SCRATCH": "$(PANGEO_SCRATCH)"}'
+        # DASK_DISTRIBUTED__DASHBOARD_LINK makes the suggested link to the
+        # dashboard account for the /user/<username> prefix in the path. Note
+        # that this still misbehave if you have a named server but now its at
+        # least functional for non-named servers.
+        DASK_DISTRIBUTED__DASHBOARD_LINK: "/user/{JUPYTERHUB_USER}/proxy/{port}/status"
       extraFiles:
         jupyter_notebook_config.json:
           mountPath: /usr/local/etc/jupyter/jupyter_notebook_config.json
@@ -151,6 +198,10 @@ binderhub:
           blocked_users:
             - deployment-service-check
       services:
+        dask-gateway:
+          # Don't display a dask-gateway entry under 'services',
+          # as dask-gateway has no UI
+          display: false
         # hub-health service helps us run health checks from the deployer script.
         # The JupyterHub Helm chart will automatically generate an API token for
         # services and expose it in a k8s Secret named `hub`. When we run health
@@ -165,40 +216,45 @@ binderhub:
       nodeSelector:
         hub.jupyter.org/node-purpose: core
       networkPolicy:
-        enabled: true
-        ingress:
-          - from:
-              - podSelector:
-                  matchLabels:
-                    app: jupyterhub
-                    component: hub
-            ports:
-              - port: 8081
-                protocol: TCP
-          - from:
-              - podSelector:
-                  matchLabels:
-                    app: jupyterhub
-                    component: proxy
-              - podSelector:
-                  matchLabels:
-                    app: jupyterhub
-                    component: hub
-            ports:
-              - port: 10101
-                protocol: TCP
-          - from:
-              - namespaceSelector:
-                  matchLabels:
-                    name: support
-                podSelector:
-                  matchLabels:
-                    app: prometheus
-                    component: server
-            ports:
-              - port: http
-                protocol: TCP
+        # FIXME: Enable this when dask-gateway chart v0.9.1 or higher is used
+        enabled: false
       extraConfig:
+        daskhub-01-add-dask-gateway-values: |
+          # 1. Sets `DASK_GATEWAY__PROXY_ADDRESS` in the singleuser environment.
+          # 2. Adds the URL for the Dask Gateway JupyterHub service.
+          import os
+          # These are set by jupyterhub.
+          release_name = os.environ["HELM_RELEASE_NAME"]
+          release_namespace = os.environ["POD_NAMESPACE"]
+          if "PROXY_HTTP_SERVICE_HOST" in os.environ:
+              # https is enabled, we want to use the internal http service.
+              gateway_address = "http://{}:{}/services/dask-gateway/".format(
+                  os.environ["PROXY_HTTP_SERVICE_HOST"],
+                  os.environ["PROXY_HTTP_SERVICE_PORT"],
+              )
+              print("Setting DASK_GATEWAY__ADDRESS {} from HTTP service".format(gateway_address))
+          else:
+              gateway_address = "http://proxy-public/services/dask-gateway"
+              print("Setting DASK_GATEWAY__ADDRESS {}".format(gateway_address))
+          # Internal address to connect to the Dask Gateway.
+          c.KubeSpawner.environment.setdefault("DASK_GATEWAY__ADDRESS", gateway_address)
+          # Internal address for the Dask Gateway proxy.
+          c.KubeSpawner.environment.setdefault("DASK_GATEWAY__PROXY_ADDRESS", "gateway://traefik-{}-dask-gateway.{}:80".format(release_name, release_namespace))
+          # Relative address for the dashboard link.
+          c.KubeSpawner.environment.setdefault("DASK_GATEWAY__PUBLIC_ADDRESS", "/services/dask-gateway/")
+          # Use JupyterHub to authenticate with Dask Gateway.
+          c.KubeSpawner.environment.setdefault("DASK_GATEWAY__AUTH__TYPE", "jupyterhub")
+          # Adds Dask Gateway as a JupyterHub service to make the gateway available at
+          # {HUB_URL}/services/dask-gateway
+          service_url = "http://traefik-{}-dask-gateway.{}".format(release_name, release_namespace)
+          for service in c.JupyterHub.services:
+              if service["name"] == "dask-gateway":
+                  if not service.get("url", None):
+                      print("Adding dask-gateway service URL")
+                      service.setdefault("url", service_url)
+                  break
+          else:
+              print("dask-gateway service not found. Did you set jupyterhub.hub.services.dask-gateway.apiToken?")
         01-custom-theme: |
           from z2jh import get_config
           c.JupyterHub.template_paths = ['/usr/local/share/jupyterhub/custom_templates/']
@@ -355,13 +411,9 @@ binderhub:
               c.KubeSpawner.profile_list = custom_profile_list
 
 dask-gateway:
-  # Do not enable the dask-gateway sub-chart by default. To enable dask-gateway for a
-  # specific BinderHub deployment, set dask-gateway.enabled = true in the hub's specific
-  # values.yaml file.
-  enabled: false
-
   #=== VALUES BELOW HERE ARE COPIED FROM DASKHUB VALUES AND SHOULD BE UPDATED ===#
   #=== IF DASKHUB CHANGES ===#
+  enabled: true # Enabling dask-gateway will install Dask Gateway as a dependency.
   controller:
     nodeSelector:
       k8s.dask.org/node-purpose: core
