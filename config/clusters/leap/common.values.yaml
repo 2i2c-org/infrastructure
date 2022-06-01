@@ -54,7 +54,7 @@ basehub:
     singleuser:
       image:
         name: pangeo/pangeo-notebook
-        tag: 2022.04.20
+        tag: 39778b5
       extraEnv:
         GH_SCOPED_CREDS_CLIENT_ID: "Iv1.0c7df3d4b3191b2f"
         GH_SCOPED_CREDS_APP_URL: https://github.com/apps/leap-hub-push-access
@@ -111,7 +111,7 @@ basehub:
             - leap-stc:leap-pangeo-research
             - 2i2c-org:tech-team
           kubespawner_override:
-            image: "pangeo/ml-notebook:master"
+            image: "pangeo/ml-notebook:39778b5"
             mem_limit: 30G
             mem_guarantee: 24G
             node_selector:
@@ -124,12 +124,7 @@ basehub:
         # Need to explicitly fix ownership here, since EFS doesn't do anonuid
         - name: volume-mount-ownership-fix
           image: busybox
-          command:
-            [
-              "sh",
-              "-c",
-              "id && chown 1000:1000 /home/jovyan && ls -lhd /home/jovyan",
-            ]
+          command: ["sh", "-c", "id && chown 1000:1000 /home/jovyan && ls -lhd /home/jovyan"]
           securityContext:
             runAsUser: 0
           volumeMounts:
