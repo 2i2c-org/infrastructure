@@ -126,6 +126,7 @@ basehub:
           admin_users:
             - colliand
             - dan800
+            - fperez
 dask-gateway:
   gateway:
     extraConfig:
