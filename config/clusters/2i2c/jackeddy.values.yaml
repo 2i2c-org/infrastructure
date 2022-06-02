@@ -86,8 +86,9 @@ basehub:
         GH_SCOPED_CREDS_CLIENT_ID: "Iv1.37646d01f3f58a80"
         GH_SCOPED_CREDS_APP_URL: https://github.com/apps/jack-eddy-jupyterhub-push-access
       image:
-        name: pangeo/pangeo-notebook
-        tag: 2022.05.10
+        # From https://github.com/2i2c-org/jackeddy-image
+        name: quay.io/2i2c/jackeddy-image
+        tag: d1843f464b3e
       storage:
         extraVolumeMounts:
           - name: home
