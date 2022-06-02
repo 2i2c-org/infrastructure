@@ -23,6 +23,12 @@ basehub:
             name: 2i2c
             url: https://2i2c.org
     singleuser:
+      extraFiles:
+        jupyter_notebook_config.json:
+          data:
+            # Allow jupyterlab option to show hidden files in browser
+            ContentsManager:
+              allow_hidden: true
       profileList:
         # The mem-guarantees are here so k8s doesn't schedule other pods
         # on these nodes. They need to be just under total allocatable
