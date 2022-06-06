@@ -38,7 +38,10 @@ basehub:
         # RAM on a node, not total node capacity. Values calculated using
         # https://learnk8s.io/kubernetes-instance-calculator
         - display_name: "Small"
-          description: 5GB RAM, 2 CPUs
+          description: |
+            5GB RAM, 2 CPUs
+
+            Fastest spinup time, recommended for workshop users
           default: true
           kubespawner_override:
             mem_limit: 7G
