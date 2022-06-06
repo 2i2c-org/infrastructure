@@ -88,7 +88,7 @@ basehub:
       image:
         # From https://github.com/2i2c-org/jackeddy-image
         name: quay.io/2i2c/jackeddy-image
-        tag: 2c53c1370c52
+        tag: "2c53c1370c52"
       storage:
         extraVolumeMounts:
           - name: home
