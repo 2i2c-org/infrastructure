@@ -11,7 +11,13 @@ prometheus:
         - secretName: prometheus-tls
           hosts:
             - prometheus.pilot.2i2c.cloud
-
+    resources:
+      requests:
+        cpu: 1
+        memory: 2Gi
+      limits:
+        cpu: 2
+        memory: 4Gi
 grafana:
   ingress:
     hosts:
