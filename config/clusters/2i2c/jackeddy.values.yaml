@@ -39,15 +39,16 @@ basehub:
         # https://learnk8s.io/kubernetes-instance-calculator
         - display_name: "Small"
           description: |
-            5GB RAM, 2 CPUs
+            5GB RAM, 2 CPUs.
 
             Fastest spinup time, recommended for workshop users
           default: true
           kubespawner_override:
-            mem_limit: 7G
-            mem_guarantee: 4.5G
+            mem_limit: 5G
+            mem_guarantee: 4G
+            cpu_guarantee: 2
             node_selector:
-              node.kubernetes.io/instance-type: n1-standard-2
+              node.kubernetes.io/instance-type: n1-standard-16
         - display_name: Medium
           description: 11GB RAM, 4 CPUs
           kubespawner_override:
