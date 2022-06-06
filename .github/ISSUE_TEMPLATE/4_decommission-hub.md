@@ -31,7 +31,7 @@ Usually, it is because it was a hub that we created for a workshop/conference an
 
 - [ ] (Optional) Migrate data from the hub
 - [ ] Remove the appropriate `config/clusters/<cluster_name>/<hub_name>.values.yaml` file
-- [ ] Remove the associated hub entry from the `config/clusters/<cluster_name>/cluster.yaml file.
+- [ ] Remove the associated hub entry from the `config/clusters/<cluster_name>/cluster.yaml` file.
 - [ ] Remove the hub deployment
   - `helm --namespace HUB_NAME delete HUB_NAME`
   - `kubectl delete namespace HUB_NAME`
