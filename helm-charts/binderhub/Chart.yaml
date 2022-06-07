@@ -5,7 +5,7 @@ name: binderhub
 version: "0.1.0"
 dependencies:
   - name: binderhub
-    version: "0.2.0-n919.he87e25a"
+    version: "0.2.0-n961.h20697c6"
     repository: "https://jupyterhub.github.io/helm-chart/"
   - name: dask-gateway
     version: "2022.4.0"
