@@ -2,6 +2,7 @@ binderhub:
   config:
     BinderHub:
       use_registry: true
+      build_image: "quay.io/jupyterhub/repo2docker:2022.02.0-30.gc4e01b3"
   service:
     type: ClusterIP
   ingress:
