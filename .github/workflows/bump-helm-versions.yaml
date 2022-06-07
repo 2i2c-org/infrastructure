@@ -1,0 +1,48 @@
+name: Bump Helm Chart Versions
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: "0 0 * * 1" # Run every Monday at 00:00 UTC
+
+env:
+  team_reviewers: 2i2c-org/tech-team
+
+jobs:
+  bump-helm-versions:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          # For each new helm chart to bump the subchart versions of, add a new item in
+          # this matrix.
+          - name: "binderhub"
+            chart_path: "helm-charts/binderhub/Chart.yaml"
+            # To bump multiple subchart versions, provide the chart name and a URL to
+            # a published list of versions in this dictionary.
+            chart_urls: '{"binderhub": "https://raw.githubusercontent.com/jupyterhub/helm-chart/gh-pages/index.yaml"}'
+
+    steps:
+      # We want tests to be run on the Pull Request that gets opened by the next step,
+      # so we generate a token from a GitHub App that would allow this.
+      # By default, secrets.GITHUB_TOKEN is prevented from triggering
+      # secondary workflows.
+      #
+      # Action: https://github.com/marketplace/actions/github-app-token
+      - name: Fetch a token from GitHub App
+        id: generate_token
+        uses: tibdex/github-app-token@v1.5
+        with:
+          app_id: ${{ secrets.APP_ID }}
+          private_key: ${{ secrets.PRIVATE_KEY }}
+
+      # Action repo: https://github.com/sgibson91/bump-helm-deps-action
+      - name: "Bump helm chart versions: ${{ matrix.name }}"
+        uses: sgibson91/bump-helm-deps-action@main
+        with:
+          chart_path: ${{ matrix.chart_path }}
+          chart_urls: ${{ matrix.chart_urls }}
+          github_token: ${{ steps.generate_token.outputs.token }}
+          team_reviewers: ${{ env.team_reviewers }}
+          base_branch: "master"
