@@ -11,6 +11,7 @@ env:
 jobs:
   bump-helm-versions:
     runs-on: ubuntu-latest
+    environment: github-app-token-generator
     strategy:
       fail-fast: false
       matrix:
