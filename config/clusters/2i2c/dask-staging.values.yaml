@@ -37,7 +37,27 @@ basehub:
         JupyterHub:
           authenticator_class: cilogon
         CILogonOAuthenticator:
-          username_claim: "email"
           oauth_callback_url: "https://dask-staging.2i2c.cloud/hub/oauth_callback"
+          # Only show the option to login with Google
+          shown_idps:
+            - https://accounts.google.com/o/oauth2/auth
           allowed_idps:
-            - "2i2c.org"
+            # CILogon still uses the old google oidc enpoint instead of the new one listed in `shown_idps`.
+            # Should open an issue upstream to fix this.
+            # Docs about new one https://developers.google.com/identity/protocols/oauth2/openid-connect.
+            http://google.com/accounts/o8/id:
+              username_derivation:
+                username_claim: "email"
+                action: "strip_idp_domain"
+                # Use a hack here to allow leaving usernames unchanged.
+                # https://github.com/jupyterhub/oauthenticator/blob/42bebe989ec10e8a439bc80a011fbe64cc01669f/oauthenticator/cilogon.py#L341
+                # Since we're only allowing 2i2c.org domains, then this will fail
+                # and usernames will be left unchanged.
+                # FIXME when https://github.com/jupyterhub/oauthenticator/issues/514 lands.
+                domain: "gmail.com"
+        Authenticator:
+          # We only want 2i2c users to sign up
+          # Protects against cryptominers - https://github.com/2i2c-org/infrastructure/issues/1216
+          username_pattern: '^(.+@2i2c\.org|deployment-service-check)$'
+          # Delete any prior existing users in the db that don't pass username_pattern
+          # delete_invalid_users: true
