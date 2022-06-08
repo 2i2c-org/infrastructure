@@ -77,7 +77,6 @@ binderhub:
         # without an explicit identity
         # FIXME: Provide an explicit identity for users instead
         blockWithIptables: false
-      serviceAccountName: user-sa
       extraEnv:
         # About DASK_ prefixed variables we set:
         #
