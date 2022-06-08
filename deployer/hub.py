@@ -35,28 +35,28 @@ class Hub:
             generated_config = {
                 "binderhub": {
                     "config": {
-                        "BinderHub": {
-                            "hub_url": f"https://hub.{self.spec['domain']}"
-                        }
+                        "BinderHub": {"hub_url": f"https://hub.{self.spec['domain']}"}
                     },
                     "ingress": {
                         "hosts": [self.spec["domain"]],
                         "tls": [
                             {
-                                "secretName": "https-auto-tls-binder", "hosts": [self.spec["domain"]]
+                                "secretName": "https-auto-tls-binder",
+                                "hosts": [self.spec["domain"]],
                             }
-                        ]
+                        ],
                     },
                     "jupyterhub": {
                         "ingress": {
                             "hosts": [f"hub.{self.spec['domain']}"],
                             "tls": [
                                 {
-                                    "secretName": "https-auto-tls-hub", "hosts": [f"hub.{self.spec['domain']}"]
+                                    "secretName": "https-auto-tls-hub",
+                                    "hosts": [f"hub.{self.spec['domain']}"],
                                 }
-                            ]
+                            ],
                         }
-                    }
+                    },
                 }
             }
         else:
@@ -66,7 +66,10 @@ class Hub:
                     "ingress": {
                         "hosts": [self.spec["domain"]],
                         "tls": [
-                            {"secretName": "https-auto-tls", "hosts": [self.spec["domain"]]}
+                            {
+                                "secretName": "https-auto-tls",
+                                "hosts": [self.spec["domain"]],
+                            }
                         ],
                     },
                     "singleuser": {
@@ -93,7 +96,10 @@ class Hub:
                                     "readOnlyRootFilesystem": True,
                                 },
                                 "volumeMounts": [
-                                    {"name": "custom-templates", "mountPath": "/srv/repo"}
+                                    {
+                                        "name": "custom-templates",
+                                        "mountPath": "/srv/repo",
+                                    }
                                 ],
                             }
                         ],
@@ -123,7 +129,10 @@ class Hub:
                                     "readOnlyRootFilesystem": True,
                                 },
                                 "volumeMounts": [
-                                    {"name": "custom-templates", "mountPath": "/srv/repo"}
+                                    {
+                                        "name": "custom-templates",
+                                        "mountPath": "/srv/repo",
+                                    }
                                 ],
                             }
                         ],
