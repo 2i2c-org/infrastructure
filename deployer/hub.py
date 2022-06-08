@@ -214,6 +214,17 @@ class Hub:
                 "hub", {}
             ).setdefault("services", {})["dask-gateway"] = {"apiToken": gateway_token}
 
+        elif self.spec["helm_chart"] == "binderhub":
+            gateway_token = hmac.new(
+                secret_key, b"gateway-" + self.spec["name"].encode(), hashlib.sha256
+            ).hexdigest()
+            generated_config["dask-gateway"] = {
+                "gateway": {"auth": {"jupyterhub": {"apiToken": gateway_token}}}
+            }
+            generated_config["binderhub"].setdefault("jupyterhub", {}).setdefault(
+                "hub", {}
+            ).setdefault("services", {})["dask-gateway"] = {"apiToken": gateway_token}
+
         return generated_config
 
     def deploy(self, auth_provider, secret_key):
