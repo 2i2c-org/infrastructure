@@ -280,7 +280,6 @@ binderhub:
 
         #           return super().start(*args, **kwargs)
 
-
         #   c.JupyterHub.spawner_class = CustomSpawner
         # 03-cloud-storage-bucket: |
         #   from z2jh import get_config
