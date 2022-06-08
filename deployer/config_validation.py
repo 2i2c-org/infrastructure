@@ -55,6 +55,10 @@ def _prepare_helm_charts_dependencies_and_schemas():
     _generate_values_schema_json(daskhub_dir)
     subprocess.check_call(["helm", "dep", "up", daskhub_dir])
 
+    binderhub_dir = helm_charts_dir.joinpath("binderhub")
+    _generate_values_schema_json(binderhub_dir)
+    subprocess.check_call(["helm", "dep", "up", binderhub_dir])
+
     support_dir = helm_charts_dir.joinpath("support")
     _generate_values_schema_json(support_dir)
     subprocess.check_call(["helm", "dep", "up", support_dir])
