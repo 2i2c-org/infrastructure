@@ -25,11 +25,12 @@ Usually, it is because it was a hub that we created for a workshop/conference an
 - [ ] Confirm with Community Representative that the hub is no longer in use and it's safe to decommission
 - [ ] Confirm if there is any data to migrate from the hub before decommissioning
   - [ ] If yes, confirm where the data should be migrated to
-  - [ ] Confirm a 2i2c Engineer has access to the destination in order to complete the data migration
+    - [ ] Confirm a 2i2c Engineer has access to the destination in order to complete the data migration
+  - [ ] If no, confirm it is ok to delete all the data stored in the user home directories
 
 #### Phase II - Hub Removal
 
-- [ ] (Optional) Migrate data from the hub
+- [ ] Manage existing data (migrate data from the hub or delete it)
 - [ ] Remove the appropriate `config/clusters/<cluster_name>/<hub_name>.values.yaml` file
 - [ ] Remove the associated hub entry from the `config/clusters/<cluster_name>/cluster.yaml` file.
 - [ ] Remove the hub deployment
