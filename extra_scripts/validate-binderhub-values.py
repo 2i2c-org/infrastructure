@@ -1,5 +1,5 @@
-import sys
 import difflib
+import sys
 from io import StringIO
 from pathlib import Path
 
@@ -7,11 +7,14 @@ from ruamel.yaml import YAML
 
 # Import colorama to colorize diff output, with a fallback incase colorama is not available
 try:
-    from colorama import Fore, Back, Style, init
+    from colorama import Back, Fore, Style, init
+
     init()
 except ImportError:  # Fallback so that the imported classes always exist
-    class ColorFallback():
-        __getattr__ = lambda self, name: ''
+
+    class ColorFallback:
+        __getattr__ = lambda self, name: ""
+
     Fore = Back = Style = ColorFallback()
 
 
@@ -51,7 +54,7 @@ keys_to_remove_from_jupyterhub_config = [
     ".custom.docs_service",
     ".scheduling",
     ".prepuller",
-    ""
+    "",
 ]
 
 # Get filepaths
@@ -100,12 +103,12 @@ else:
 # Compare jupyterhub values in the BinderHub and daskhub helm charts
 # Raise an error if they differ
 print("*** Merging jupyterhub config from basehub and daskhub ***")
-jupyterhub_config = basehub_values["jupyterhub"] | daskhub_values["basehub"]["jupyterhub"]
+jupyterhub_config = (
+    basehub_values["jupyterhub"] | daskhub_values["basehub"]["jupyterhub"]
+)
 
 print("*** Comparing jupyterhub config ***")
-jupyterhub_config = obj_to_yaml_str(
-    jupyterhub_config
-).splitlines(keepends=True)
+jupyterhub_config = obj_to_yaml_str(jupyterhub_config).splitlines(keepends=True)
 binderhub_values_jupyterhub = obj_to_yaml_str(
     binderhub_values["binderhub"]["jupyterhub"]
 ).splitlines(keepends=True)
