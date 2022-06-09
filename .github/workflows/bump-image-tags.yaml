@@ -54,5 +54,5 @@ jobs:
           config_path: ${{ matrix.config_path }}
           images_info: ${{ matrix.images_info }}
           github_token: ${{ steps.generate_token.outputs.token }}
-          team_reviewers: ${{ env.team_reviewers }}
+          # team_reviewers: ${{ env.team_reviewers }}
           base_branch: "master"
