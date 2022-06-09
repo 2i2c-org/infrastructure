@@ -94,7 +94,7 @@ basehub:
         - display_name: Large + Nvidia K80 GPU + Tensorflow
           description: 24GB RAM, 8 CPUs
           kubespawner_override:
-            image: "pangeo/ml-notebook:2022.06.02"
+            image: "pangeo/ml-notebook:7181f87"
             mem_limit: 30G
             mem_guarantee: 24G
             node_selector:
@@ -106,7 +106,7 @@ basehub:
         - display_name: Large + Nvidia K80 GPU + PyTorch
           description: 24GB RAM, 8 CPUs
           kubespawner_override:
-            image: "pangeo/pytorch-notebook:2022.06.02"
+            image: "pangeo/pytorch-notebook:7181f87"
             mem_limit: 30G
             mem_guarantee: 24G
             node_selector:
