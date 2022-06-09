@@ -111,7 +111,7 @@ basehub:
             - leap-stc:leap-pangeo-research
             - 2i2c-org:tech-team
           kubespawner_override:
-            image: "pangeo/ml-notebook:2022.06.02"
+            image: "pangeo/ml-notebook:master"
             mem_limit: 30G
             mem_guarantee: 24G
             node_selector:
