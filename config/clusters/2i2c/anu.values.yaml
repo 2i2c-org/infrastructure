@@ -44,23 +44,9 @@ jupyterhub:
           http://google.com/accounts/o8/id:
               username_derivation:
                 username_claim: "email"
-                action: "strip_idp_domain"
-                # Use a hack here to allow leaving usernames unchanged.
-                # https://github.com/jupyterhub/oauthenticator/blob/42bebe989ec10e8a439bc80a011fbe64cc01669f/oauthenticator/cilogon.py#L341
-                # Since we're only allowing 2i2c.org domains and anu.edu.au, then this will fail
-                # and usernames will be left unchanged.
-                # FIXME when https://github.com/jupyterhub/oauthenticator/issues/514 lands.
-                domain: "gmail.com"
           https://idp2.anu.edu.au/idp/shibboleth:
                 username_derivation:
                 username_claim: "email"
-                action: "strip_idp_domain"
-                # Use a hack here to allow leaving usernames unchanged.
-                # https://github.com/jupyterhub/oauthenticator/blob/42bebe989ec10e8a439bc80a011fbe64cc01669f/oauthenticator/cilogon.py#L341
-                # Since we're only allowing 2i2c.org domains and anu.edu.au, then this will fail
-                # and usernames will be left unchanged.
-                # FIXME when https://github.com/jupyterhub/oauthenticator/issues/514 lands.
-                domain: "gmail.com"
       Authenticator:
         # We only want 2i2c and any users to sign up
         username_pattern: '^(.+@2i2c\.org|.+@anu\.edu\.au|deployment-service-check)$'
