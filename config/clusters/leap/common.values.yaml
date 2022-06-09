@@ -54,7 +54,7 @@ basehub:
     singleuser:
       image:
         name: pangeo/pangeo-notebook
-        tag: "2022.04.20"
+        tag: "2022.06.02"
       extraEnv:
         GH_SCOPED_CREDS_CLIENT_ID: "Iv1.0c7df3d4b3191b2f"
         GH_SCOPED_CREDS_APP_URL: https://github.com/apps/leap-hub-push-access
