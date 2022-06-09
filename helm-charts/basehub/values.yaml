@@ -288,7 +288,8 @@ jupyterhub:
                 interfaces:
                   - value: "/tree"
                     title: Classic Notebook
-                    description: The original single-document interface for creating
+                    description:
+                      The original single-document interface for creating
                       Jupyter Notebooks.
                   - value: "/lab"
                     title: JupyterLab

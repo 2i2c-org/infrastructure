@@ -42,11 +42,11 @@ jupyterhub:
           - https://accounts.google.com/o/oauth2/auth
         allowed_idps:
           http://google.com/accounts/o8/id:
-              username_derivation:
-                username_claim: "email"
+            username_derivation:
+              username_claim: "email"
           https://idp2.anu.edu.au/idp/shibboleth:
-                username_derivation:
-                username_claim: "email"
+            username_derivation:
+            username_claim: "email"
       Authenticator:
         # We only want 2i2c and any users to sign up
         username_pattern: '^(.+@2i2c\.org|.+@anu\.edu\.au|deployment-service-check)$'
