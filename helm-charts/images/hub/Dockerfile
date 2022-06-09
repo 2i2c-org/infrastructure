@@ -19,7 +19,7 @@ RUN pip install --no-cache git+https://github.com/yuvipanda/jupyterhub-configura
 RUN pip install --no-cache --upgrade jupyterhub-kubespawner==1.1.2
 
 # Latest version comes with some breaking changes https://oauthenticator.readthedocs.io/en/latest/migrations.html#migrating-cilogonoauthenticator-to-version-15-0-0
-RUN pip install --no-cache --upgrade oauthenticator==15.0.0
+RUN pip install --no-cache --upgrade oauthenticator==15.0.1
 
 USER root
 RUN mkdir -p /usr/local/etc/jupyterhub-configurator
