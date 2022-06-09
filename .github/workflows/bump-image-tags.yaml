@@ -20,15 +20,18 @@ jobs:
           # The Action can read multiple paths to images, but not multiple config files.
           - name: "pangeo-hubs common singleuser image"
             config_path: "config/clusters/pangeo-hubs/common.values.yaml"
-            values_paths: ".basehub.jupyterhub.singleuser.image"
+            # The regexpr attribute will ensure we only bump tags in the form YYYY.MM.DD
+            images_info: '[{"values_path": ".basehub.jupyterhub.singleuser.image", "regexpr": "[0-9]{4}.[0-9]{2}.[0-9]{2}"}]'
           - name: "m2lines common singleuser/PyTorch/Tensorflow"
             config_path: "config/clusters/m2lines/common.values.yaml"
+            # The regexpr attribute will ensure we only bump tags in the form YYYY.MM.DD
             # If the ordering of profileList changes, update the index in this expression
-            values_paths: ".basehub.jupyterhub.singleuser.image .basehub.jupyterhub.singleuser.profileList[4].kubespawner_override.image .basehub.jupyterhub.singleuser.profileList[5].kubespawner_override.image"
+            images_info: '[{"values_path"": ".basehub.jupyterhub.singleuser.image", "regexpr": "[0-9]{4}.[0-9]{2}.[0-9]{2}"}, {"values_path": ".basehub.jupyterhub.singleuser.profileList[4].kubespawner_override.image", "regexpr": "[0-9]{4}.[0-9]{2}.[0-9]{2}"}, {"values_path": ".basehub.jupyterhub.singleuser.profileList[5].kubespawner_override.image", "regexpr": "[0-9]{4}.[0-9]{2}.[0-9]{2}"}]'
           - name: "leap common singleuser/pangeo-ml-notebook"
             config_path: "config/clusters/leap/common.values.yaml"
+            # The regexpr attribute will ensure we only bump tags in the form YYYY.MM.DD
             # If the ordering of profileList changes, update the index in this expression
-            values_paths: ".basehub.jupyterhub.singleuser.image .basehub.jupyterhub.singleuser.profileList[4].kubespawner_override.image"
+            images_info: '[{"values_path": ".basehub.jupyterhub.singleuser.image", "regexpr": "[0-9]{4}.[0-9]{2}.[0-9]{2}"}, {"values_path": ".basehub.jupyterhub.singleuser.profileList[4].kubespawner_override.image", "regexpr": "[0-9]{4}.[0-9]{2}.[0-9]{2}"}]'
 
     steps:
       # We want tests to be run on the Pull Request that gets opened by the next step,
@@ -49,7 +52,7 @@ jobs:
         uses: sgibson91/bump-jhub-image-action@main
         with:
           config_path: ${{ matrix.config_path }}
-          values_paths: ${{ matrix.values_paths }}
+          images_info: ${{ matrix.images_info }}
           github_token: ${{ steps.generate_token.outputs.token }}
           team_reviewers: ${{ env.team_reviewers }}
           base_branch: "master"
