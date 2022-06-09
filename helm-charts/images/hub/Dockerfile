@@ -18,7 +18,7 @@ RUN pip install --no-cache git+https://github.com/yuvipanda/jupyterhub-configura
 # z2jh 1.2.x ships with kubespawner 1.1.0, so we just do a little bump
 RUN pip install --no-cache --upgrade jupyterhub-kubespawner==1.1.2
 
-# Latest version comes with some breaking changes https://oauthenticator.readthedocs.io/en/latest/migrations.html#migrating-cilogonoauthenticator-to-version-15-0-0
+# Latest version comes with some breaking changes https://oauthenticator.readthedocs.io/en/latest/migrations.html#migrating-cilogonoauthenticator-to-version-15-0
 RUN pip install --no-cache --upgrade oauthenticator==15.0.1
 
 USER root
