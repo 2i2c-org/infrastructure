@@ -85,7 +85,7 @@ jobs:
         run: |
           echo ::set-output name=continue-job::${{ github.event_name == 'workflow_dispatch' || (steps.cluster_common_files.outputs.files == 'true' || steps.cluster_specific_files.outputs.changes == 'true') }}
 
-      - uses: actions/setup-python@v3
+      - uses: actions/setup-python@v4
         with:
           python-version: "3.9"
 
