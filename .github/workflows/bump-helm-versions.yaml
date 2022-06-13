@@ -45,5 +45,5 @@ jobs:
           chart_path: ${{ matrix.chart_path }}
           chart_urls: ${{ matrix.chart_urls }}
           github_token: ${{ steps.generate_token.outputs.token }}
-          team_reviewers: ${{ env.team_reviewers }}
+          # team_reviewers: ${{ env.team_reviewers }}
           base_branch: "master"
