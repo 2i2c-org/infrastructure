@@ -46,12 +46,14 @@ jobs:
   # hub upgraded; and the second set of jobs describe which production hubs require
   # upgrading. These two lists are set as job outputs using ::set-output to be consumed
   # by the later jobs. They are also pretty-printed in a human-readable format to the
-  # logs.
+  # logs, and converted into Markdown tables for posting into GitHub comments.
   generate-jobs:
     runs-on: ubuntu-latest
     outputs:
       support-and-staging-matrix-jobs: ${{ steps.generate-jobs.outputs.support-and-staging-matrix-jobs }}
       prod-hub-matrix-jobs: ${{ steps.generate-jobs.outputs.prod-hub-matrix-jobs }}
+      md-table-support-staging: ${{ steps.generate-jobs.outputs.md-table-support-staging }}
+      md-table-prod: ${{ steps.generate-jobs.outputs.md-table-prod }}
 
     steps:
       - name: Checkout repo
@@ -91,9 +93,6 @@ jobs:
           format: space-delimited
           token: ${{ secrets.GITHUB_TOKEN }}
 
-      # TODO: Post the pretty print output of this step as a comment on the Pull Request.
-      # Do this in a Netlify-style way where if a comment already exists, it is updated
-      # instead of generating a new comment.
       - name: Generate matrix jobs
         id: generate-jobs
         run: |
@@ -288,3 +287,108 @@ jobs:
           max_attempts: 3
           command: |
             python deployer run-hub-health-check ${{ matrix.jobs.cluster_name }} ${{ matrix.jobs.hub_name }}
+
+  # This job posts the matrix jobs defined in generate-jobs to a comment on a Pull
+  # Request in Markdown table format. This means that no-one has to go searching through
+  # GitHub Actions logs to see if the hubs they intended to be upgraded, are being
+  # upgraded. The job posts the comment in a 'Netlify style', i.e., if a comment has
+  # already been posted (identified as having the 'github-actions[bot]' author and
+  # '<!-- deployment-plan -->' string in the body), the existing comment will be
+  # updated rather than posting a new one.
+  #
+  # This job requires the generate-jobs job to have completed successfully and assigned
+  # the Markdown formatted tables to the md-table-support-staging and md-table-prod
+  # variables.
+  post-deployment-plan:
+    # Only run this job on Pull Requests
+    if: github.event_name == 'pull_request'
+    # Grant GITHUB_TOKEN just enough permissions to comment on pull requests
+    permissions:
+      pull-requests: write
+    runs-on: ubuntu-latest
+    needs: [generate-jobs]
+    steps:
+      - name: Install ghapi to interact with the GitHub API via Python
+        run: |
+          pip install ghapi
+
+      # As far as GitHub's API is concerned regarding comments, Pull Requests are the
+      # same objects as issues so we use "issue" terminology here
+      - name: Ascertain if a comment already exists on the Pull Request
+        id: comment-exists
+        shell: python
+        run: |
+          from ghapi.all import GhApi, paged
+
+          # Setup variables
+          api = GhApi(token=r"""${{ secrets.GITHUB_TOKEN }}""")
+          owner, repo = r"""${{ github.repository }}""".split("/")
+          issue_number = r"""${{ github.event.number }}"""
+
+          # List all comments on current issue
+          issue_comments = paged(
+              api.issues.list_comments,
+              owner=onwer,
+              repo=repo,
+              issue_number=issue_number,
+              per_page=100,
+          )
+
+          # Find if a deployment-plan comment has been previously posted
+          comment = next(
+              (
+                  comment[0]
+                  for comment in issue_comments
+                  if comment[0].user.login == "github-actions[bot]"
+                  and "<!-- deployment-plan -->" in comment[0].body
+              ),
+              False,
+          )
+
+          # Set outputs
+          if comment:
+              print("::set-output name=comment-exists::true")
+              print(f"::set-output name=comment-id::{comment.id}")
+          else:
+              print("::set-output name=comment-exists::false")
+              print(f"::set-output name=comment-id::null")
+
+      - name: Post deployment plan as a comment
+        if: steps.comment-exists.outputs.comment-exists == 'false'
+        uses: actions/github-script@v6.1.0
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          script: |
+            var MD_TABLE_SUPPORT_STAGING = process.env.MD_TABLE_SUPPORT_STAGING;
+            var MD_TABLE_PROD = process.env.MD_TABLE_PROD;
+
+            github.rest.issues.createComment({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: `<!-- deployment-plan -->\n\nMerging this Pull Request will trigger the following deployments:\n\n**Support and Staging deployments**\n\n ${MD_TABLE_SUPPORT_STAGING}\n\n**Production deployments**\n\n${MD_TABLE_PROD}`
+            })
+        env:
+          MD_TABLE_SUPPORT_STAGING: ${{ needs.generate-jobs.outputs.md-table-support-staging }}
+          MD_TABLE_PROD: ${{ needs.generate-jobs.outputs.md-table-prod }}
+
+      - name: Update a comment containing a deployment plan
+        if: steps.comment-exists.outputs.comment-exists == 'true'
+        uses: actions/github-script@v6.1.0
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          script: |
+            var MD_TABLE_SUPPORT_STAGING = process.env.MD_TABLE_SUPPORT_STAGING;
+            var MD_TABLE_PROD = process.env.MD_TABLE_PROD;
+            var COMMENT_ID = process.env.COMMENT_ID
+
+            github.rest.issues.updateComment({
+              comment_id: `${COMMENT_ID}`,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: `<!-- deployment-plan -->\n\nMerging this Pull Request will trigger the following deployments:\n\n**Support and Staging deployments**\n\n ${MD_TABLE_SUPPORT_STAGING}\n\n**Production deployments**\n\n${MD_TABLE_PROD}`
+            })
+        env:
+          MD_TABLE_SUPPORT_STAGING: ${{ needs.generate-jobs.outputs.md-table-support-staging }}
+          MD_TABLE_PROD: ${{ needs.generate-jobs.outputs.md-table-prod }}
+          COMMENT_ID: ${{ steps.comment-exists.outputs.comment-id }}
