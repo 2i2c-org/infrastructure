@@ -12,9 +12,10 @@ auth0-python
 # jsonschema is used for validating cluster.yaml configurations
 jsonschema
 
-# rich is used for pretty printing outputs that would otherwise be difficult to
-# parse by a human
+# rich and py-markdown-table are used for pretty printing outputs that would otherwise
+# be difficult to parse by a human
 rich
+py-markdown-table
 
 # jhub_client, pytest, and pytest-asyncio are used for our health checks
 jhub-client==0.1.6
