@@ -7,6 +7,7 @@ import fnmatch
 import os
 from pathlib import Path
 
+from markdownTable import markdownTable
 from rich.console import Console
 from rich.table import Table
 from ruamel.yaml import YAML
@@ -526,3 +527,63 @@ def pretty_print_matrix_jobs(prod_hub_matrix_jobs, support_and_staging_matrix_jo
     console = Console()
     console.print(support_table)
     console.print(hub_table)
+
+
+def convert_to_markdown_table(data, suffix=None):
+    """Convert a list of dictionaries into a Markdown formatted table for posting to
+    GitHub as comments. This function uses GitHub's ::set-output to allow a GitHub
+    Actions workflow to reuse this variable in another step and/or job.
+
+    Args:
+        data (list[dict]): The list of dictionaries to convert into a Markdown formatted
+            table. The keys of each dictionary become the column headers of the table,
+            and the keys must be consistent across all dictionaries in the list.
+        suffix (str, optional): A suffix to add to the variable name under which the
+            table will be referenced in a GitHub Actions workflow. Defaults to None.
+    """
+    # Set the name of the variable the Markdown table will be saved to
+    if suffix is None:
+        name = "md-table"
+    else:
+        name = "md-table-" + suffix
+
+    # A dictionary to convert column names
+    column_converter = {
+        "cluster_name": "Cluster Name",
+        "provider": "Cloud Provider",
+        "upgrade_support": "Upgrade Support?",
+        "reason_for_support_redeploy": "Reason for Support Redeploy",
+        "upgrade_staging": "Upgrade Staging?",
+        "reason_for_staging_redeploy": "Reason for Staging Redeploy",
+        "hub_name": "Hub Name",
+        "reason_for_redeploy": "Reason for Redeploy",
+    }
+
+    # A dictionary to convert row values when they are Boolean
+    row_converter = {
+        True: "Yes",
+        False: "No",
+    }
+
+    # Convert the columns (keys) and rows (values) of data where applicable
+    data = [
+        {
+            column_converter[k]
+            if k in column_converter.keys()
+            else k: row_converter[v]
+            if v in row_converter.keys()
+            else v
+            for k, v in item.items()
+        }
+        for item in data
+    ]
+
+    # Generate a Markdown table
+    md_table = (
+        markdownTable(data).setParams(row_sep="markdown", quote=False).getMarkdown()
+    )
+    # Replace '\n' with '%0A' else GitHub's ::set-output will not respect new lines
+    md_table = md_table.replace("\n", "%0A")
+
+    # Set the Markdown table string as an output variable
+    print(f"::set-output {name}::{md_table}")
