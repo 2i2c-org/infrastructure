@@ -586,4 +586,4 @@ def convert_to_markdown_table(data, suffix=None):
     md_table = md_table.replace("\n", "%0A")
 
     # Set the Markdown table string as an output variable
-    print(f"::set-output {name}::{md_table}")
+    print(f"::set-output name={name}::{md_table}")
