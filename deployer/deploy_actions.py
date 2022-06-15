@@ -181,7 +181,7 @@ def deploy(cluster_name, hub_name, config_path):
     Deploy one or more hubs in a given cluster
     """
     validate_cluster_config(cluster_name)
-    # validate_hub_config(cluster_name, hub_name)
+    validate_hub_config(cluster_name, hub_name)
     assert_single_auth_method_enabled(cluster_name, hub_name)
 
     with get_decrypted_file(config_path) as decrypted_file_path:
