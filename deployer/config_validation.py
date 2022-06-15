@@ -113,7 +113,9 @@ def validate_hub_config(cluster_name, hub_name):
         # Workaround the current requirement for dask-gateway 0.9.0 to have a
         # JupyterHub api-token specified, for updates if this workaround can be
         # removed, see https://github.com/dask/dask-gateway/issues/473.
-        if hub.spec["helm_chart"] == "daskhub":
+        if (hub.spec["helm_chart"] == "daskhub") or (
+            hub.spec["helm_chart"] == "binderhub"
+        ):
             cmd.append("--set=dask-gateway.gateway.auth.jupyterhub.apiToken=dummy")
         try:
             subprocess.check_output(cmd, text=True)
