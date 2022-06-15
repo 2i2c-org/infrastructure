@@ -133,6 +133,10 @@ nvidiaDevicePlugin:
   aws:
     enabled: false
 
+# Enables  https://github.com/yuvipanda/cryptnono/ to prevent cryptomining
+cryptnono:
+  enabled: true
+
 # A placeholder as global values that can be referenced from the same location
 # of any chart should be possible to provide, but aren't necessarily provided or
 # used.
