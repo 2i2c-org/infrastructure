@@ -35,3 +35,10 @@ dependencies:
     version: 1.3.1
     repository: https://kvaps.github.io/charts
     condition: nfs-server-provisioner.enabled
+
+  # cryptnono, counters crypto mining
+  # Source code: https://github.com/yuvipanda/cryptnono/
+  - name: cryptnono
+    version: "0.0.1-n025.h28f473f"
+    repository: https://yuvipanda.github.io/cryptnono/
+    condition: cryptnono.enabled
