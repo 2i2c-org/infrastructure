@@ -318,16 +318,30 @@ jobs:
 
       # As far as GitHub's API is concerned regarding comments, Pull Requests are the
       # same objects as issues so we use "issue" terminology here
-      - name: Ascertain if a comment already exists on the Pull Request
-        id: comment-exists
+      - name: Create or Update a Comment on the PR with the deployment plan
         shell: python
         run: |
+          from textwrap import dedent
           from ghapi.all import GhApi, paged
 
           # Setup variables
           api = GhApi(token=r"""${{ secrets.GITHUB_TOKEN }}""")
           owner, repo = r"""${{ github.repository }}""".split("/")
           issue_number = r"""${{ github.event.number }}"""
+          MD_TABLE_SUPPORT_STAGING = r"""${{ needs.generate-jobs.outputs.md-table-support-staging }}"""
+          MD_TABLE_PROD = r"""${{ needs.generate-jobs.outputs.md-table-prod }}"""
+
+          comment_body = dedent(f"""<!-- deployment-plan -->
+              Merging this Pull Request will trigger the following deployments:
+
+              ### Support and Staging deployments
+
+              {MD_TABLE_SUPPORT_STAGING}
+
+              ### Production deployments
+
+              {MD_TABLE_PROD}
+          """)
 
           # List all comments on current issue
           issue_comments = paged(
@@ -349,50 +363,19 @@ jobs:
               False,
           )
 
-          # Set outputs
           if comment:
-              print("::set-output name=comment-exists::true")
-              print(f"::set-output name=comment-id::{comment.id}")
+              # Comment exists - update it
+              api.issues.update_comment(
+                  owner=owner,
+                  repo=repo,
+                  comment_id=comment.id,
+                  body=comment_body,
+              )
           else:
-              print("::set-output name=comment-exists::false")
-              print(f"::set-output name=comment-id::null")
-
-      - name: Post deployment plan as a comment
-        if: steps.comment-exists.outputs.comment-exists == 'false'
-        uses: actions/github-script@v6
-        with:
-          github-token: ${{ secrets.GITHUB_TOKEN }}
-          script: |
-            var MD_TABLE_SUPPORT_STAGING = process.env.MD_TABLE_SUPPORT_STAGING;
-            var MD_TABLE_PROD = process.env.MD_TABLE_PROD;
-
-            github.rest.issues.createComment({
-              issue_number: context.issue.number,
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              body: `<!-- deployment-plan -->\n\nMerging this Pull Request will trigger the following deployments:\n\n**Support and Staging deployments**\n\n ${MD_TABLE_SUPPORT_STAGING}\n\n**Production deployments**\n\n${MD_TABLE_PROD}`
-            })
-        env:
-          MD_TABLE_SUPPORT_STAGING: ${{ needs.generate-jobs.outputs.md-table-support-staging }}
-          MD_TABLE_PROD: ${{ needs.generate-jobs.outputs.md-table-prod }}
-
-      - name: Update a comment containing a deployment plan
-        if: steps.comment-exists.outputs.comment-exists == 'true'
-        uses: actions/github-script@v6
-        with:
-          github-token: ${{ secrets.GITHUB_TOKEN }}
-          script: |
-            var MD_TABLE_SUPPORT_STAGING = process.env.MD_TABLE_SUPPORT_STAGING;
-            var MD_TABLE_PROD = process.env.MD_TABLE_PROD;
-            var COMMENT_ID = process.env.COMMENT_ID
-
-            github.rest.issues.updateComment({
-              comment_id: `${COMMENT_ID}`,
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              body: `<!-- deployment-plan -->\n\nMerging this Pull Request will trigger the following deployments:\n\n**Support and Staging deployments**\n\n ${MD_TABLE_SUPPORT_STAGING}\n\n**Production deployments**\n\n${MD_TABLE_PROD}`
-            })
-        env:
-          MD_TABLE_SUPPORT_STAGING: ${{ needs.generate-jobs.outputs.md-table-support-staging }}
-          MD_TABLE_PROD: ${{ needs.generate-jobs.outputs.md-table-prod }}
-          COMMENT_ID: ${{ steps.comment-exists.outputs.comment-id }}
+              # Comment doesn't exist - create a new one
+              api.issues.create_comment(
+                  owner=owner,
+                  repo=repo,
+                  issue_number=issue_number,
+                  body=comment_body,
+              )
