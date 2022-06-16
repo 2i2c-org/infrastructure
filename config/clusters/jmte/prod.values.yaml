@@ -3,6 +3,15 @@ basehub:
     enabled: true
 
   jupyterhub:
+    scheduling:
+      userPlaceholder:
+        enabled: true
+        replicas: 1
+        resources:
+          requests:
+            cpu: 2.5
+            memory: 14G
+
     singleuser:
       # Eksctl: The service account was created by eksctl.
       #
