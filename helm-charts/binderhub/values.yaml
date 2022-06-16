@@ -41,10 +41,6 @@ binderhub:
       mountPath: /etc/binderhub/custom
   dind:
     enabled: true
-    daemonset:
-      image:
-        name: docker
-        tag: 19.03.5-dind
   imageCleaner:
     enabled: true
     # when 80% of inodes are used,
