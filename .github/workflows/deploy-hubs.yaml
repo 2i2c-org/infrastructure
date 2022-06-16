@@ -331,7 +331,7 @@ jobs:
           # List all comments on current issue
           issue_comments = paged(
               api.issues.list_comments,
-              owner=onwer,
+              owner=owner,
               repo=repo,
               issue_number=issue_number,
               per_page=100,
