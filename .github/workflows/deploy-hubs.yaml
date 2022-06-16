@@ -359,7 +359,7 @@ jobs:
 
       - name: Post deployment plan as a comment
         if: steps.comment-exists.outputs.comment-exists == 'false'
-        uses: actions/github-script@v6.1.0
+        uses: actions/github-script@v6
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           script: |
@@ -378,7 +378,7 @@ jobs:
 
       - name: Update a comment containing a deployment plan
         if: steps.comment-exists.outputs.comment-exists == 'true'
-        uses: actions/github-script@v6.1.0
+        uses: actions/github-script@v6
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           script: |
