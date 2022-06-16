@@ -51,20 +51,6 @@ basehub:
     singleuser:
       # extraFiles ref: https://zero-to-jupyterhub.readthedocs.io/en/latest/resources/reference.html#singleuser-extrafiles
       extraFiles:
-        # github-app-user-auth requires:
-        # - Installed python package
-        # - GITHUB_APP_CLIENT_ID environment set
-        # - This configuration
-        #
-        # NOTE: an associated GitHub App has been created by Erik Sundell
-        #       aka. @consideRatio and can be configured by him at:
-        #       https://github.com/settings/apps/hub-jupytearth-org-github-integ
-        #
-        gitconfig:
-          mountPath: /etc/gitconfig
-          stringData: |
-            [credential]
-                helper = store --file=/tmp/github-app-git-credentials
         jupyter_notebook_config.json:
           mountPath: /etc/jupyter/jupyter_notebook_config.json
           data:
@@ -84,11 +70,17 @@ basehub:
       startTimeout: 900
 
       extraEnv:
-        # GITHUB_APP_CLIENT_ID, see notes in singleuser.extraFiles about
-        # this environment variable. Two entries are created as I think
-        # the shorter may be deprecated soon.
-        GITHUB_APP_CLIENT_ID: Iv1.a073b1649637af12
-        GITHUB_APP_USER_AUTH_CLIENT_ID: Iv1.a073b1649637af12
+        # github-app-user-auth requires:
+        # - Installed python package
+        # - GH_SCOPED_CREDS_APP_URL env var set
+        # - GITHUB_APP_CLIENT_ID env var set
+        #
+        # NOTE: an associated GitHub App has been created by Erik Sundell aka.
+        #       @consideRatio and can be configured by him at:
+        #       https://github.com/settings/apps/hub-jupytearth-org-github-integ
+        #
+        GH_SCOPED_CREDS_APP_URL: https://github.com/apps/hub-jupytearth-org-github-integ
+        GH_SCOPED_CREDS_CLIENT_ID: Iv1.a073b1649637af12
 
       image:
         # NOTE: We use the jupyterhub-configurator so this image/tag is not
