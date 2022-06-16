@@ -3,6 +3,13 @@ basehub:
     enabled: true
 
   jupyterhub:
+    # Reverts changes in basehub configuration to the z2jh defaults and ensures
+    # 1 pod is used as a placeholder pod, sized as the smallest node in the JMTE
+    # cluster.
+    #
+    prePuller:
+      continuous:
+        enabled: true
     scheduling:
       userPlaceholder:
         enabled: true
