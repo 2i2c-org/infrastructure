@@ -18,6 +18,7 @@ required:
   - nfs-server-provisioner
   - nvidiaDevicePlugin
   - prometheusIngressAuthSecret
+  - cryptnono
   - global
 properties:
   # cluster-autoscaler is a dependent helm chart, we rely on its schema
@@ -48,6 +49,10 @@ properties:
   # validation for values passed to it and are not imposing restrictions on them
   # in this helm chart.
   nfs-server-provisioner:
+    type: object
+    additionalProperties: true
+  # Enables  https://github.com/yuvipanda/cryptnono/ to prevent cryptomining
+  cryptnono:
     type: object
     additionalProperties: true
   # nvidiaDevicePlugin is _not a dependent helm chart_. It is values directly
