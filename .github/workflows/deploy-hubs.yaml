@@ -301,8 +301,10 @@ jobs:
   # the Markdown formatted tables to the md-table-support-staging and md-table-prod
   # variables.
   post-deployment-plan:
-    # Only run this job on Pull Requests
-    if: github.event_name == 'pull_request'
+    # Only run this job on Pull Requests and when the job matrices are not empty
+    if: github.event_name == 'pull_request' &&
+      needs.generate-jobs.outputs.support-and-staging-matrix-jobs != '[]' &&
+      needs.generate-jobs.outputs.prod-hub-matrix-jobs != '[]'
     # Grant GITHUB_TOKEN just enough permissions to comment on pull requests
     permissions:
       pull-requests: write
