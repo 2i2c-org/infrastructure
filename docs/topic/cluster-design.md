@@ -35,7 +35,7 @@ or enabling [Network Policy](https://cloud.google.com/kubernetes-engine/docs/how
 requires more resources as well.
 
 With poorly structured experimentation, the current recommendation is to run
-3 `g1-small` instances for a cluster without config connector or network policy,
+3 `n1-highmem-2` instances for a cluster without config connector or network policy,
 or a single `n1-highmem-4` instance for a cluster with either of those options
 turned on. This needs to be better investigated.
 
