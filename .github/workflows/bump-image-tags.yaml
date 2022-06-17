@@ -20,7 +20,7 @@ jobs:
           # The Action can read multiple paths to images, but not multiple config files.
           - name: "BinderHub/repo2docker bump"
             config_path: "helm-charts/binderhub/values.yaml"
-            images_info: '{"values_path": ".binderhub.config.BinderHub.build_image"}'
+            images_info: '[{"values_path": ".binderhub.config.BinderHub.build_image"}]'
 
           # Turn off bumping of Pangeo images as per https://github.com/2i2c-org/infrastructure/issues/1240#issuecomment-1151212986
           # - name: "pangeo-hubs common singleuser image"
