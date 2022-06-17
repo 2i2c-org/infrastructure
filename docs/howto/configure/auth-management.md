@@ -226,9 +226,9 @@ To enable this access,
             enable_auth_state: true
           GitHubOAuthenticator:
             populate_teams_in_auth_state: true
-  ```
+   ```
 
-  If `populate_teams_in_auth_state` is not set, this entire feature is disabled.
+   If `populate_teams_in_auth_state` is not set, this entire feature is disabled.
 
 2. Specify which teams should have access to which profiles with an `allowed_teams` key
    under `profileList`:
