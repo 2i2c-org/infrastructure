@@ -8,7 +8,9 @@ We use [GitHub Actions](https://docs.github.com/en/actions) as our CI/CD vendor 
 (cicd/hub)=
 ## Automatic hub deployment
 
-% TODO: Add a link to the blog post when it is published
+```{admonition} Further reading
+You can learn more about this workflow in our blog post [Multiple JupyterHubs, multiple clusters, one repository](https://2i2c.org/blog/2022/ci-cd-improvements/).
+```
 
 The best place to learn about the latest state of our *automatic* hub deployment
 is to look at [the `deploy-hubs.yaml` GitHub Actions workflow file](https://github.com/2i2c-org/infrastructure/tree/HEAD/.github/workflows/deploy-hubs.yaml).
