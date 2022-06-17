@@ -242,3 +242,10 @@ sops --output config/clusters/<cluster_name>/enc-deployer-credentials.secret.{{ 
 ```
 
 This key can now be committed to the `infrastructure` repo and used to deploy and manage hubs hosted on that cluster.
+
+## Adding the new cluster to CI/CD
+
+To ensure the new cluster is appropriately handled by our CI/CD system, please add it as an entry in the following places:
+
+- The [`deploy-hubs.yaml`](https://github.com/2i2c-org/infrastructure/blob/008ae2c1deb3f5b97d0c334ed124fa090df1f0c6/.github/workflows/deploy-hubs.yaml#L121) workflow file
+- The [`validate-cluster.yaml`](https://github.com/2i2c-org/infrastructure/blob/008ae2c1deb3f5b97d0c334ed124fa090df1f0c6/.github/workflows/validate-clusters.yaml#L43) workflow file
