@@ -22,7 +22,7 @@ jobs:
             config_path: "helm-charts/binderhub/values.yaml"
             images_info: '{"values_path": ".binderhub.config.BinderHub.build_image"}'
 
-          # Turn of bumping of Pangeo images as per https://github.com/2i2c-org/infrastructure/issues/1240#issuecomment-1151212986
+          # Turn off bumping of Pangeo images as per https://github.com/2i2c-org/infrastructure/issues/1240#issuecomment-1151212986
           # - name: "pangeo-hubs common singleuser image"
           #   config_path: "config/clusters/pangeo-hubs/common.values.yaml"
           #   # The regexpr attribute will ensure we only bump tags in the form YYYY.MM.DD
