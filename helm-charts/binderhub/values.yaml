@@ -2,7 +2,7 @@ binderhub:
   config:
     BinderHub:
       use_registry: true
-      build_image: "quay.io/jupyterhub/repo2docker:2022.02.0-30.gc4e01b3"
+      build_image: "quay.io/jupyterhub/repo2docker:2022.02.0-32.ge7524a7"
       per_repo_quota: 150
       template_path: /etc/binderhub/custom/templates
       extra_static_path: /etc/binderhub/custom/static
@@ -120,7 +120,9 @@ binderhub:
         DASK_GATEWAY__CLUSTER__OPTIONS__IMAGE: "{JUPYTER_IMAGE_SPEC}"
         # DASK_GATEWAY__CLUSTER__OPTIONS__ENVIRONMENT makes some environment
         # variables be copied over to the worker nodes from the user nodes.
-        DASK_GATEWAY__CLUSTER__OPTIONS__ENVIRONMENT: '{"SCRATCH_BUCKET": "$(SCRATCH_BUCKET)", "PANGEO_SCRATCH": "$(PANGEO_SCRATCH)"}'
+        DASK_GATEWAY__CLUSTER__OPTIONS__ENVIRONMENT:
+          '{"SCRATCH_BUCKET": "$(SCRATCH_BUCKET)",
+          "PANGEO_SCRATCH": "$(PANGEO_SCRATCH)"}'
         # DASK_DISTRIBUTED__DASHBOARD_LINK makes the suggested link to the
         # dashboard account for the /user/<username> prefix in the path. Note
         # that this still misbehave if you have a named server but now its at
@@ -316,7 +318,6 @@ dask-gateway:
           nodeSelector:
             # Dask workers get their own pre-emptible pool
             k8s.dask.org/node-purpose: worker
-
     # TODO: figure out a replacement for userLimits.
     extraConfig:
       optionHandler: |
@@ -367,7 +368,6 @@ dask-gateway:
       k8s.dask.org/node-purpose: core
     service:
       type: ClusterIP # Access Dask Gateway through JupyterHub. To access the Gateway from outside JupyterHub, this must be changed to a `LoadBalancer`.
-
 # A placeholder as global values that can be referenced from the same location
 # of any chart should be possible to provide, but aren't necessarily provided or
 # used.

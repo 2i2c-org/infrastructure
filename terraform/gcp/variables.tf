@@ -118,7 +118,7 @@ variable "zone" {
 
 variable "core_node_machine_type" {
   type        = string
-  default     = "g1-small"
+  default     = "n1-highmem-2"
   description = <<-EOT
   Machine type to use for core nodes.
 
@@ -126,7 +126,7 @@ variable "core_node_machine_type" {
   for a cluster. We should try to run with as few of them
   as possible.
 
-  For single-tenant clusters, a single g1-small node seems
+  For single-tenant clusters, a single n1-highmem-2 node seems
   enough - if network policy and config connector are not on.
   For others, please experiment to see what fits.
   EOT

@@ -33,7 +33,7 @@ the hub domain, how the JupyterHub landing page will look like and authenticatio
 
 The helm charts are structured in a **hierarchical** model.
 The [jupyterhub helm chart](https://jupyterhub.github.io/helm-chart/) is a subchart of the basehub chart and
-the basehub chart along with the [dask-gateway](https://dask.org/dask-gateway-helm-repo/) one are
+the basehub chart along with the [dask-gateway](https://helm.dask.org) one are
 subcharts of the daskhub.
 
 **Visual of the helm-chart hierarchy:**
