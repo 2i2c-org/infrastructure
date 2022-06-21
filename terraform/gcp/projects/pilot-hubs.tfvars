@@ -122,3 +122,8 @@ hub_cloud_permissions = {
   }
 
 }
+
+container_repos = [
+  "pilot-hubs",
+  "binder-staging",
+]
