@@ -46,7 +46,7 @@ resource "google_service_account_key" "registry_sa_keys" {
 
 // Output the service account key for use in the hub config to authenticate image push/pulls
 output "registry_sa_keys" {
-  value     = { for n, k in var.container_repos : k => base64decode(google_service_account_key.registry_sa_keys[n].private_key) }
+  value     = { for cr in var.container_repos : cr => base64decode(google_service_account_key.registry_sa_keys[cr].private_key) }
   sensitive = true
 
   description = <<-EOT
