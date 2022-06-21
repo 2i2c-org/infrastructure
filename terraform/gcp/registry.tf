@@ -50,5 +50,9 @@ output "registry_sa_keys" {
   sensitive = true
 
   description = <<-EOT
+  List of artifact registry service accounts created for this cluster.
+
+  This output displays the private keys of each service account which can be supplied to
+  hub config in order to authenticate the push/pull of images from the registry.
   EOT
 }
