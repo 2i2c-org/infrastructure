@@ -297,3 +297,14 @@ variable "hub_cloud_permissions" {
      and write permissions for.
   EOT
 }
+
+variable "container_repos" {
+  type        = list
+  default     = []
+  description = <<-EOT
+  A list of container repositories to create in Google Artifact Registry to store Docker
+  images. Each entry is the name of the hub namespace in the cluster. If deploying a
+  BiderHub, definitely add the namespace here so that there is somewhere to push the
+  repo2docker-built images to.
+  EOT
+}
