@@ -53,4 +53,4 @@ basehub:
           # Protects against cryptominers - https://github.com/2i2c-org/infrastructure/issues/1216
           username_pattern: '^(.+@2i2c\.org|deployment-service-check)$'
           # Delete any prior existing users in the db that don't pass username_pattern
-          # delete_invalid_users: true
+          delete_invalid_users: true

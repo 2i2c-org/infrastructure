@@ -51,4 +51,4 @@ jupyterhub:
         # We only want 2i2c and anu users to sign up
         username_pattern: '^(.+@2i2c\.org|.+@anu\.edu\.au|deployment-service-check)$'
         # Delete any prior existing users in the db that don't pass username_pattern
-        # delete_invalid_users: true
+        delete_invalid_users: true
