@@ -9,6 +9,9 @@ binderhub:
       extra_static_url_prefix: /extra_static/
       about_message: |
         <p>binder.pangeo.io is public infrastructure operated by the <a href="https://2i2c.org">2i2c team</a>.<br /><br />
+      build_node_selector:
+        # Build user images only on user nodes, not dask or core nodes
+        hub.jupyter.org/node-purpose: user
   service:
     type: ClusterIP
   ingress:
