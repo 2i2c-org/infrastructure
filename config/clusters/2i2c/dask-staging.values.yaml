@@ -43,8 +43,7 @@ basehub:
             - https://accounts.google.com/o/oauth2/auth
           allowed_idps:
             # CILogon still uses the old google oidc enpoint instead of the new one listed in `shown_idps`.
-            # Should open an issue upstream to fix this.
-            # Docs about new one https://developers.google.com/identity/protocols/oauth2/openid-connect.
+            # Ref https://github.com/ncsa/OA4MP/issues/45
             http://google.com/accounts/o8/id:
               username_derivation:
                 username_claim: "email"
