@@ -35,6 +35,28 @@ Here are some guidelines for merging and reviewing in this case:
   - Updating the user image of a hub.
   :::
 
+## Changing authentication related configuration
+
+Extra caution must be taken when changing authentication related configuration. Since the current testing infrastructure doesn't automatically test the authentication workflow, any issue within the authentication process might go undetected and cause an outage, if no manual testing is conducted before deploying it to all the hubs.
+
+To deploy changes to the authentication workflow, follow these steps:
+1. **Propose changes**. Change the codebase and open a PR.
+1. **Manually deploy changes to a few kinds of staging hubs**. The hubs use different authentication mechanisms, based on their needs, but testing on the staging hubs listed below should cover all the possible types. The hubs are:
+   - cluster: `leap`, hub: `staging` (GitHub)
+   - cluster: `utoronto`, hub: `staging` (Azure AD)
+   - cluster: `2i2c`, hub: `staging` (Auth0)
+   - cluster: `2i2c`, hub: `demo`    (CILogon)
+1. **Login into the staging hubs**. Try logging in into the hubs where you deployed your changes.
+1. **Start a server**. Afer you've logged into the hub, make sure everything works as expected by spinning up a server.
+1. **Post the status of the manual steps above**. In your PR's top comment, post the hubs where you've deployed the changes and whether or not they are functioning properly.
+1. **Wait for review and approval**. Leave the PR open for other team members to review and approve.
+
+   :::{admonition} Guidelines for reviewing changes to authentication infrastructure
+   :class: tip
+   Apply slightly higher code review scrutiny when reviewing changes to the authentication workflow.
+   :::
+1. **Merge the change**. Once approved, merge the PR. This will deploy your change to all the hubs.
+
 (infrastructure:review:terraform)=
 ## Terraform changes
 
