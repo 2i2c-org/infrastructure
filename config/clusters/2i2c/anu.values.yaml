@@ -34,10 +34,21 @@ jupyterhub:
         authenticator_class: cilogon
       CILogonOAuthenticator:
         oauth_callback_url: https://anu.pilot.2i2c.cloud/hub/oauth_callback
-        username_claim: "email"
         admin_users:
           - matthew.mckay@anu.edu.au
-        # We do not define allowed_users here since only usernames matching these domains will be allowed to login into the hub.
+        # Only show the option to login with Google and ANU
+        shown_idps:
+          - https://idp2.anu.edu.au/idp/shibboleth
+          - https://accounts.google.com/o/oauth2/auth
         allowed_idps:
-          - 2i2c.org
-          - anu.edu.au
+          http://google.com/accounts/o8/id:
+            username_derivation:
+              username_claim: "email"
+          https://idp2.anu.edu.au/idp/shibboleth:
+            username_derivation:
+              username_claim: "email"
+      Authenticator:
+        # We only want 2i2c and anu users to sign up
+        username_pattern: '^(.+@2i2c\.org|.+@anu\.edu\.au|deployment-service-check)$'
+        # Delete any prior existing users in the db that don't pass username_pattern
+        delete_invalid_users: true
