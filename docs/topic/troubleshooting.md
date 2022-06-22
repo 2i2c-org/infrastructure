@@ -34,18 +34,16 @@ This should revert the Helm deployment to the previous revision (the one just be
 
 Prometheus collects Kubernetes metrics for our grafana charts and often requires a lot of memory during startup.
 If the server runs out of memory during the startup process, this presents itself as a "Timed out waiting for condition" error from `helm` on the command line, and `OOMKilled` events in the prometheus server pod events before the pod reverts to `CrashLoopBackOff` status.
-This will also block our CI/CD system from updating the hubs on the cluster since the support chart is always upgraded before the hub charts.
+This might also block our CI/CD system from updating the hubs on the cluster if the support chart requires an upgrade after a Pull Request is merged.
 
-To resolve this issue, we feed prometheus more RAM which you can do by adding the below config to the relevant `cluster.yaml` file.
+To resolve this issue, we feed prometheus more RAM which you can do by adding the below config to the `support.values.yaml` file under the relevant folder in `config/clusters`.
 
 ```yaml
-support:
-  config:
-    prometheus:
-      server:
-        resources:
-          limits:
-            memory: {{RAM_LIMIT}}
+prometheus:
+  server:
+    resources:
+      limits:
+        memory: {{RAM_LIMIT}}
 ```
 
 The [default for this value is 2GB](https://github.com/2i2c-org/infrastructure/tree/HEAD/helm-charts/support/values.yaml#L38).
