@@ -1,3 +1,5 @@
+userServiceAccount:
+  enabled: true
 binderhub:
   config:
     BinderHub:
@@ -83,6 +85,7 @@ binderhub:
           limits:
             memory: 1Gi
     singleuser:
+      serviceAccountName: user-sa
       # Almost everyone using dask by default wants JupyterLab
       defaultUrl: /lab
       extraLabels:
