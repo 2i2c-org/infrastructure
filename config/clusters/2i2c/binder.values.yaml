@@ -1,0 +1,4 @@
+binderhub:
+  config:
+    BinderHub:
+      image_prefix: "sgibson91/2i2c-binder-staging-"

@@ -31,90 +31,127 @@ class Hub:
 
         WARNING: MIGHT CONTAINS SECRET VALUES!
         """
-
-        generated_config = {
-            "jupyterhub": {
-                "proxy": {"https": {"hosts": [self.spec["domain"]]}},
-                "ingress": {
-                    "hosts": [self.spec["domain"]],
-                    "tls": [
-                        {"secretName": "https-auto-tls", "hosts": [self.spec["domain"]]}
-                    ],
-                },
-                "singleuser": {
-                    # If image_repo isn't set, just have an empty image dict
-                    "image": {"name": self.cluster.spec["image_repo"]}
-                    if "image_repo" in self.cluster.spec
-                    else {},
-                },
-                "hub": {
-                    "config": {},
-                    "initContainers": [
-                        {
-                            "name": "templates-clone",
-                            "image": "alpine/git",
-                            "args": [
-                                "clone",
-                                "--",
-                                "https://github.com/2i2c-org/default-hub-homepage",
-                                "/srv/repo",
-                            ],
-                            "securityContext": {
-                                "runAsUser": 1000,
-                                "allowPrivilegeEscalation": False,
-                                "readOnlyRootFilesystem": True,
-                            },
-                            "volumeMounts": [
-                                {"name": "custom-templates", "mountPath": "/srv/repo"}
+        if self.spec["helm_chart"] == "binderhub":
+            generated_config = {
+                "binderhub": {
+                    "config": {
+                        "BinderHub": {"hub_url": f"https://hub.{self.spec['domain']}"}
+                    },
+                    "ingress": {
+                        "hosts": [self.spec["domain"]],
+                        "tls": [
+                            {
+                                "secretName": "https-auto-tls-binder",
+                                "hosts": [self.spec["domain"]],
+                            }
+                        ],
+                    },
+                    "jupyterhub": {
+                        "ingress": {
+                            "hosts": [f"hub.{self.spec['domain']}"],
+                            "tls": [
+                                {
+                                    "secretName": "https-auto-tls-hub",
+                                    "hosts": [f"hub.{self.spec['domain']}"],
+                                }
                             ],
                         }
-                    ],
-                    "extraContainers": [
-                        {
-                            "name": "templates-sync",
-                            "image": "alpine/git",
-                            "workingDir": "/srv/repo",
-                            "command": ["/bin/sh"],
-                            "args": [
-                                "-c",
-                                dedent(
-                                    f"""\
-                                    while true; do git fetch origin;
-                                    if [[ $(git ls-remote --heads origin {self.cluster.spec["name"]}-{self.spec["name"]} | wc -c) -ne 0 ]]; then
-                                        git reset --hard origin/{self.cluster.spec["name"]}-{self.spec["name"]};
-                                    else
-                                        git reset --hard origin/master;
-                                    fi
-                                    sleep 5m; done
-                                    """
-                                ),
-                            ],
-                            "securityContext": {
-                                "runAsUser": 1000,
-                                "allowPrivilegeEscalation": False,
-                                "readOnlyRootFilesystem": True,
+                    },
+                }
+            }
+        else:
+            generated_config = {
+                "jupyterhub": {
+                    "proxy": {"https": {"hosts": [self.spec["domain"]]}},
+                    "ingress": {
+                        "hosts": [self.spec["domain"]],
+                        "tls": [
+                            {
+                                "secretName": "https-auto-tls",
+                                "hosts": [self.spec["domain"]],
+                            }
+                        ],
+                    },
+                    "singleuser": {
+                        # If image_repo isn't set, just have an empty image dict
+                        "image": {"name": self.cluster.spec["image_repo"]}
+                        if "image_repo" in self.cluster.spec
+                        else {},
+                    },
+                    "hub": {
+                        "config": {},
+                        "initContainers": [
+                            {
+                                "name": "templates-clone",
+                                "image": "alpine/git",
+                                "args": [
+                                    "clone",
+                                    "--",
+                                    "https://github.com/2i2c-org/default-hub-homepage",
+                                    "/srv/repo",
+                                ],
+                                "securityContext": {
+                                    "runAsUser": 1000,
+                                    "allowPrivilegeEscalation": False,
+                                    "readOnlyRootFilesystem": True,
+                                },
+                                "volumeMounts": [
+                                    {
+                                        "name": "custom-templates",
+                                        "mountPath": "/srv/repo",
+                                    }
+                                ],
+                            }
+                        ],
+                        "extraContainers": [
+                            {
+                                "name": "templates-sync",
+                                "image": "alpine/git",
+                                "workingDir": "/srv/repo",
+                                "command": ["/bin/sh"],
+                                "args": [
+                                    "-c",
+                                    dedent(
+                                        f"""\
+                                        while true; do git fetch origin;
+                                        if [[ $(git ls-remote --heads origin {self.cluster.spec["name"]}-{self.spec["name"]} | wc -c) -ne 0 ]]; then
+                                            git reset --hard origin/{self.cluster.spec["name"]}-{self.spec["name"]};
+                                        else
+                                            git reset --hard origin/master;
+                                        fi
+                                        sleep 5m; done
+                                        """
+                                    ),
+                                ],
+                                "securityContext": {
+                                    "runAsUser": 1000,
+                                    "allowPrivilegeEscalation": False,
+                                    "readOnlyRootFilesystem": True,
+                                },
+                                "volumeMounts": [
+                                    {
+                                        "name": "custom-templates",
+                                        "mountPath": "/srv/repo",
+                                    }
+                                ],
+                            }
+                        ],
+                        "extraVolumes": [{"name": "custom-templates", "emptyDir": {}}],
+                        "extraVolumeMounts": [
+                            {
+                                "mountPath": "/usr/local/share/jupyterhub/custom_templates",
+                                "name": "custom-templates",
+                                "subPath": "templates",
                             },
-                            "volumeMounts": [
-                                {"name": "custom-templates", "mountPath": "/srv/repo"}
-                            ],
-                        }
-                    ],
-                    "extraVolumes": [{"name": "custom-templates", "emptyDir": {}}],
-                    "extraVolumeMounts": [
-                        {
-                            "mountPath": "/usr/local/share/jupyterhub/custom_templates",
-                            "name": "custom-templates",
-                            "subPath": "templates",
-                        },
-                        {
-                            "mountPath": "/usr/local/share/jupyterhub/static/extra-assets",
-                            "name": "custom-templates",
-                            "subPath": "extra-assets",
-                        },
-                    ],
+                            {
+                                "mountPath": "/usr/local/share/jupyterhub/static/extra-assets",
+                                "name": "custom-templates",
+                                "subPath": "extra-assets",
+                            },
+                        ],
+                    },
                 },
-            },
-        }
+            }
         #
         # Allow explicilty ignoring auth0 setup
         if self.spec["auth0"].get("enabled", True):
@@ -156,16 +193,6 @@ class Hub:
         Ideally, these would be done declaratively. Until then, let's put all of
         them in this function.
         """
-        hub_helm_chart = self.spec["helm_chart"]
-
-        # FIXME: This section is only relevant if we generate any config in this
-        #        function. Currently we only generate a JupyterHub API token for
-        #        dask-gateway to use, but as that is resolved we can cleanup
-        #        this entire function.
-        #
-        if hub_helm_chart != "basehub":
-            generated_config = {"basehub": generated_config}
-
         # FIXME: This section can be removed upon resolution of the below linked issue, where we would
         #        instead just define a JupyterHub service under hub.services and
         #        rely on the JupyterHub Helm chart to generate an api token if
@@ -174,7 +201,9 @@ class Hub:
         #        Blocked by https://github.com/dask/dask-gateway/issues/473 and a
         #        release including it.
         #
-        if hub_helm_chart == "daskhub":
+        if self.spec["helm_chart"] == "daskhub":
+            generated_config = {"basehub": generated_config}
+
             gateway_token = hmac.new(
                 secret_key, b"gateway-" + self.spec["name"].encode(), hashlib.sha256
             ).hexdigest()
@@ -182,6 +211,17 @@ class Hub:
                 "gateway": {"auth": {"jupyterhub": {"apiToken": gateway_token}}}
             }
             generated_config["basehub"].setdefault("jupyterhub", {}).setdefault(
+                "hub", {}
+            ).setdefault("services", {})["dask-gateway"] = {"apiToken": gateway_token}
+
+        elif self.spec["helm_chart"] == "binderhub":
+            gateway_token = hmac.new(
+                secret_key, b"gateway-" + self.spec["name"].encode(), hashlib.sha256
+            ).hexdigest()
+            generated_config["dask-gateway"] = {
+                "gateway": {"auth": {"jupyterhub": {"apiToken": gateway_token}}}
+            }
+            generated_config["binderhub"].setdefault("jupyterhub", {}).setdefault(
                 "hub", {}
             ).setdefault("services", {})["dask-gateway"] = {"apiToken": gateway_token}
 
