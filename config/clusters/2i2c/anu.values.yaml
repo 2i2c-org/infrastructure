@@ -46,7 +46,7 @@ jupyterhub:
               username_claim: "email"
           https://idp2.anu.edu.au/idp/shibboleth:
             username_derivation:
-            username_claim: "email"
+              username_claim: "email"
       Authenticator:
         # We only want 2i2c and anu users to sign up
         username_pattern: '^(.+@2i2c\.org|.+@anu\.edu\.au|deployment-service-check)$'
