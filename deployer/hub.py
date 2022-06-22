@@ -35,9 +35,7 @@ class Hub:
             # For Google Artifact registry, this takes the following form:
             # {LOCATION}-docker.pkg.dev
             # If the zone of the cluster is us-central1-b, then the location is us-central1
-            registry_url = (
-                f"{'-'.join(self.cluster.spec['gcp']['zone'].split('-')[:2])}-docker.pkg.dev"
-            )
+            registry_url = f"{'-'.join(self.cluster.spec['gcp']['zone'].split('-')[:2])}-docker.pkg.dev"
 
             # NOTE: We are hard-coding config for using Google Artifact Registry here.
             # We should not. Instead we should provide a way to support as many container
