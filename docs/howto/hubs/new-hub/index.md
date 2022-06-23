@@ -67,10 +67,6 @@ To deploy a new hub, follow these steps:
 8. Log in to the hub and ensure that the hub works as expected from a user's perspective.
 9. Send a link to the hub's Community Representative(s) so they can confirm that it works from their perspective as well.
 
-:::{note}
-There are some minor additional steps if you need to [deploy a new hub in a AWS cluster](new-hub:aws).
-:::
-
 ## Automated vs. manual deploys
 
 Some of our infrastructure automatically deploys and updates hubs via GitHub Actions workflows, while others require manual deploys.
@@ -87,7 +83,6 @@ Or situation where some specific steps still need some manual intervention.
 The following sections cover how to deploy in these situations:
 
 * [General manual deployment process](operate:manual-deploy)
-* Some [AWS specific manual steps](new-hub:aws) needed to deploy a new hub for first time
 
 :::{warning}
 Manual deploys should be avoided when possible.
