@@ -36,4 +36,4 @@ grafana:
     token_url:  https://github.com/login/oauth/access_token
     api_url: https://api.github.com/user
     allowed_organizations:
-      - 2i2c
+      - 2i2c-org
