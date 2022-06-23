@@ -31,7 +31,7 @@ Usually, it is because it was a hub that we created for a workshop/conference an
 #### Phase II - Hub Removal
 
 - [ ] Manage existing data (migrate data from the hub or delete it)
-- [ ] Remove the appropriate `config/clusters/<cluster_name>/<hub_name>.values.yaml` file
+- [ ] Remove the appropriate `config/clusters/<cluster_name>/<hub_name>.values.yaml` files. A complete list of relevant files can be found under the appropriate entry in the associated `cluster.yaml` file.
 - [ ] Remove the associated hub entry from the `config/clusters/<cluster_name>/cluster.yaml` file.
 - [ ] Remove the hub deployment
   - `helm --namespace HUB_NAME delete HUB_NAME`
