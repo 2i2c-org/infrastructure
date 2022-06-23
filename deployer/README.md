@@ -150,6 +150,28 @@ optional arguments:
   -h, --help    show this help message and exit
 ```
 
+### `exec-homes-shell`
+
+This function gives you a shell with the home directories of all the
+users on the given hub in the given cluster mounted under `/home`.
+Very helpful when doing (rare) manual operations on user home directories,
+such as renames.
+
+When you exit the shell, the temporary pod spun up is removed.
+
+**Command line usage:**
+
+```bash
+usage: deployer exec-homes-shell [-h] cluster_name hub_name
+
+positional arguments:
+  cluster_name  The name of the cluster to perform actions on
+  hub_name      The deployed hub whose home directories are to be examined
+
+optional arguments:
+  -h, --help    show this help message and exit
+```
+
 ### `generate-helm-upgrade-jobs`
 
 This function consumes a list of files that have been added or modified, and from that deduces which hubs on which clusters require a helm upgrade, and whether the support chart also needs upgrading.

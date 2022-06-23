@@ -248,6 +248,62 @@ class Hub:
 
         return generated_config
 
+    def exec_homes_shell(self):
+        """
+        Pop a shell with the home directories of the given hub mounted
+
+        Homes will be mounter under /home
+        """
+        pod = {
+            "apiVersion": "v1",
+            "kind": "Pod",
+            "spec": {
+                "terminationGracePeriodSeconds": 1,
+                "automountServiceAccountToken": False,
+                "volumes": [
+                    # This PVC is created by basehub
+                    {"name": "home", "persistentVolumeClaim": {"claimName": "home-nfs"}}
+                ],
+                "containers": [
+                    {
+                        "name": "shell",
+                        # Use ubuntu image so we get better gnu rm
+                        "image": "ubuntu:jammy",
+                        "stdin": True,
+                        "stdinOnce": True,
+                        "tty": True,
+                        "volumeMounts": [
+                            {
+                                "name": "home",
+                                "mountPath": "/home",
+                            }
+                        ],
+                    }
+                ],
+            },
+        }
+
+        cmd = [
+            "kubectl",
+            "-n",
+            self.spec["name"],
+            "run",
+            "--rm",  # Remove pod when we're done
+            "-it",  # Give us a shell!
+            "--overrides",
+            json.dumps(pod),
+            "--image",
+            # Use ubuntu image so we get GNU rm and other tools
+            # Should match what we have in our pod definition
+            "ubuntu:jammy",
+            "shell",
+            "--",
+            "/bin/bash",
+            "-l",
+        ]
+
+        subprocess.check_call(cmd)
+
     def deploy(self, auth_provider, secret_key):
         """
         Deploy this hub
