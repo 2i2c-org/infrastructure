@@ -105,7 +105,7 @@ charges!
 
 ```{note}
 If you need to modify the directory structure on the EFS instance, use
-the ssh key provided to `kops` or `eksctl` during cluster creation to
+the ssh key provided to `eksctl` during cluster creation to
 ssh into any worker node. Then `mount` the EFS instance manually and
 do your modifications. This prevents needing to create another EC2
 instance just for this.

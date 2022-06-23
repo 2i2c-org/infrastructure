@@ -124,7 +124,6 @@ jobs:
       failure_azure-carbonplan: "${{ steps.declare-failure-status.outputs.failure_azure-carbonplan }}"
       failure_carbonplan: "${{ steps.declare-failure-status.outputs.failure_carbonplan }}"
       failure_cloudbank: "${{ steps.declare-failure-status.outputs.failure_cloudbank }}"
-      failure_farallon: "${{ steps.declare-failure-status.outputs.failure_farallon }}"
       failure_leap: "${{ steps.declare-failure-status.outputs.failure_leap }}"
       failure_meom-ige: "${{ steps.declare-failure-status.outputs.failure_meom-ige }}"
       failure_openscapes: "${{ steps.declare-failure-status.outputs.failure_openscapes }}"
