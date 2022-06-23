@@ -12,6 +12,7 @@ from deploy_actions import (
     deploy,
     deploy_grafana_dashboards,
     deploy_support,
+    exec_homes_shell,
     generate_helm_upgrade_jobs,
     run_hub_health_check,
     use_cluster_credentials,
@@ -134,6 +135,17 @@ def main():
         action="store_true",
         help="For daskhubs, optionally check that dask workers can be scaled",
     )
+
+    # exec-homes subcommand
+    homes_parser = subparsers.add_parser(
+        "exec-homes-shell",
+        parents=[base_parser],
+        help="Pop a shell with home directories of given hub mounted",
+    )
+    homes_parser.add_argument(
+        "hub_name",
+        help="The deployed hub whose home directories are to be examined",
+    )
     # === End section ===#
 
     args = argparser.parse_args()
@@ -144,6 +156,8 @@ def main():
             args.hub_name,
             args.config_path,
         )
+    elif args.action == "exec-homes-shell":
+        exec_homes_shell(args.cluster_name, args.hub_name)
     elif args.action == "validate":
         validate_cluster_config(args.cluster_name)
         validate_support_config(args.cluster_name)

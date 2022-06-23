@@ -439,3 +439,18 @@ def run_hub_health_check(cluster_name, hub_name, check_dask_scaling=False):
         print_colour("Health check succeeded!")
 
     return exit_code
+
+
+def exec_homes_shell(cluster_name, hub_name):
+    """
+    Pop a shell with the home directories of the given hub mounted
+
+    Homes will be mounter under /home
+    """
+    config_file_path = find_absolute_path_to_cluster_file(cluster_name)
+    with open(config_file_path) as f:
+        cluster = Cluster(yaml.load(f), config_file_path.parent)
+    with cluster.auth():
+        hubs = cluster.hubs
+        hub = next((hub for hub in hubs if hub.spec["name"] == hub_name), None)
+        hub.exec_homes_shell()
