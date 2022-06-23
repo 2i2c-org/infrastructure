@@ -12,19 +12,15 @@ on:
   pull_request:
     paths:
       - config/clusters/**
+      - helm-charts/**
       - deployer/**
-      - helm-charts/basehub/**
-      - helm-charts/daskhub/**
-      - helm-charts/support/**
       - requirements.txt
       - .github/workflows/validate-hubs.yaml
   push:
     paths:
       - config/clusters/**
+      - helm-charts/**
       - deployer/**
-      - helm-charts/basehub/**
-      - helm-charts/daskhub/**
-      - helm-charts/support/**
       - requirements.txt
       - .github/workflows/validate-hubs.yaml
     branches-ignore:
