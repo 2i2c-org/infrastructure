@@ -47,3 +47,4 @@ _This phase is only necessary for single hub clusters._
 - Remove the cluster from CI:
   - [ ] [`deploy-hubs.yaml`](https://github.com/2i2c-org/infrastructure/blob/HEAD/.github/workflows/deploy-hubs.yaml)
   - [ ] [`validate-clusters.yaml`](https://github.com/2i2c-org/infrastructure/blob/HEAD/.github/workflows/validate-clusters.yaml)
+- [ ] Remove the cluster from the list of grafana datasources at https://grafana.pilot.2i2c.cloud/datasources
