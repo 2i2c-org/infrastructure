@@ -5,14 +5,6 @@ nvidiaDevicePlugin:
 prometheusIngressAuthSecret:
   enabled: true
 
-grafana:
-  ingress:
-    hosts:
-      - grafana.leap.2i2c.cloud
-    tls:
-      - secretName: grafana-tls
-        hosts:
-          - grafana.leap.2i2c.cloud
 prometheus:
   server:
     ingress:
@@ -27,3 +19,23 @@ prometheus:
       limits:
         cpu: 2
         memory: 12Gi
+
+grafana:
+  ingress:
+    hosts:
+      - grafana.leap.2i2c.cloud
+    tls:
+      - secretName: grafana-tls
+        hosts:
+          - grafana.leap.2i2c.cloud
+  grafana.ini:
+    server:
+      root_url: https://grafana.leap.2i2c.cloud/
+    auth.github:
+      enabled: true
+      allow_sign_up: false
+      scopes: user:email,read:org
+      auth_url: https://github.com/login/oauth/authorize
+      token_url: https://github.com/login/oauth/access_token
+      api_url: https://api.github.com/user
+      allowed_organizations: 2i2c-org
