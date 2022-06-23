@@ -74,6 +74,6 @@ where the `-A` flag will apply this command across all namespaces.
 Find the webhooks running on a cluster by running:
 
 ```bash
-kubectl get ValidatingWebhooksConfigurations
+kubectl -A get ValidatingWebhooksConfigurations
 ```
 ````
