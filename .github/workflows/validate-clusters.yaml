@@ -45,7 +45,6 @@ jobs:
           - cluster_name: azure.carbonplan
           - cluster_name: carbonplan
           - cluster_name: cloudbank
-          - cluster_name: farallon
           - cluster_name: meom-ige
           - cluster_name: openscapes
           - cluster_name: pangeo-hubs
