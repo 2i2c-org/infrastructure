@@ -254,6 +254,8 @@ class Hub:
 
         Homes will be mounter under /home
         """
+        # Name pod to include hub name so we don't end up in wrong one
+        pod_name = f'{self.spec["name"]}-shell'
         pod = {
             "apiVersion": "v1",
             "kind": "Pod",
@@ -266,7 +268,7 @@ class Hub:
                 ],
                 "containers": [
                     {
-                        "name": "shell",
+                        "name": pod_name,
                         # Use ubuntu image so we get better gnu rm
                         "image": "ubuntu:jammy",
                         "stdin": True,
@@ -296,7 +298,7 @@ class Hub:
             # Use ubuntu image so we get GNU rm and other tools
             # Should match what we have in our pod definition
             "ubuntu:jammy",
-            "shell",
+            pod_name,
             "--",
             "/bin/bash",
             "-l",
