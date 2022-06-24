@@ -298,7 +298,7 @@ class CILogonClientProvider:
         if not client_id:
             if not cluster_name or not hub_name:
                 print(
-                    "Please provide either the client id to delete or or the cluster and hub name."
+                    "Please provide either the client id to delete or the cluster and hub name."
                 )
                 return
 
