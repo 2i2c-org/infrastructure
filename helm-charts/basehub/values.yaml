@@ -140,6 +140,9 @@ jupyterhub:
       # https://github.com/jupyterhub/zero-to-jupyterhub-k8s/pull/2449
       - jupyterhub-singleuser
     extraEnv:
+      # until https://github.com/jupyterhub/jupyterhub/pull/3918 or equivalent lands,
+      # and we upgrade to jupyterhub >= 2.3.1 on all images.
+      JUPYTERHUB_SINGLEUSER_APP: "notebook.notebookapp.NotebookApp"
       # notebook writes secure files that don't need to survive a
       # restart here. Writing 'secure' files on some file systems (like
       # Azure Files with SMB) seems buggy, so we just put runtime dir on
