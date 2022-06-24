@@ -30,28 +30,26 @@ $ python deployer [sub-command]
 **Command line usage:**
 
 ```bash
-usage: python deployer [-h]
-                {deploy,validate,deploy-support,deploy-grafana-dashboards,use-cluster-credentials,generate-helm-upgrade-jobs,run-hub-health-check}
-                ...
+usage: deployer [-h] {deploy,validate,deploy-support,deploy-grafana-dashboards,use-cluster-credentials,generate-helm-upgrade-jobs,run-hub-health-check,exec-homes-shell} ...
 
 A command line tool to perform various functions related to deploying and maintaining a JupyterHub running on kubernetes infrastructure
 
 positional arguments:
-  {deploy,validate,deploy-support,deploy-grafana-dashboards,use-cluster-credentials,generate-helm-upgrade-jobs,run-hub-health-check}
+  {deploy,validate,deploy-support,deploy-grafana-dashboards,use-cluster-credentials,generate-helm-upgrade-jobs,run-hub-health-check,exec-homes-shell}
                         Available subcommands
     deploy              Install/upgrade the helm charts of JupyterHubs on a cluster
-    validate            Validate the cluster.yaml configuration itself, as well as the provided non-encrypted helm chart values files for each
-                        hub or the specified hub.
+    validate            Validate the cluster.yaml configuration itself, as well as the provided non-encrypted helm chart values files for each hub or the specified hub.
     deploy-support      Install/upgrade the support helm release on a given cluster
     deploy-grafana-dashboards
                         Deploy grafana dashboards to a cluster for monitoring JupyterHubs. deploy-support must be run first!
     use-cluster-credentials
                         Modify the current kubeconfig with the deployer's access credentials for the named cluster
     generate-helm-upgrade-jobs
-                        Generate a set of matrix jobs to perform a helm upgrade in parallel across clusters and hubs. Emit JSON to stdout that
-                        can be read by the strategy.matrix field of a GitHub Actions workflow.
+                        Generate a set of matrix jobs to perform a helm upgrade in parallel across clusters and hubs. Emit JSON to stdout that can be read by the strategy.matrix
+                        field of a GitHub Actions workflow.
     run-hub-health-check
                         Run a health check against a given hub deployed on a given cluster
+    exec-homes-shell    Pop a shell with home directories of given hub mounted
 
 optional arguments:
   -h, --help            show this help message and exit
