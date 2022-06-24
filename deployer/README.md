@@ -214,6 +214,62 @@ optional arguments:
   --check-dask-scaling  For daskhubs, optionally check that dask workers can be scaled
 ```
 
+## Sub-scripts
+
+This section describes the utility scripts that are present in the `deployer` module, what is their purpose, and their command line usage.\
+
+**Note:** The `deployer` sub-scripts must currently be invoked from the root of this repository, i.e.:
+
+```bash
+$ pwd
+[...]/infrastructure/deployer
+$ cd .. && pwd
+[...]/infrastructure
+$ python deployer/[sub-script].py
+```
+
+### `cilogon_app`
+
+This is a helper script that can create/update/get/delete CILogon clients using the 2i2c administrative client provided by CILogon.
+
+**Command line usage:**
+
+```bash
+usage: cilogon_app.py [-h] {create,update,get,get-all,delete} ...
+
+A command line tool to create/update/delete CILogon clients.
+
+positional arguments:
+  {create,update,get,get-all,delete}
+                        Available subcommands
+    create              Create a CILogon client
+    update              Update a CILogon client
+    get                 Retrieve details about an existing CILogon client
+    get-all             Retrieve details about an existing CILogon client
+    delete              Delete an existing CILogon client
+
+optional arguments:
+  -h, --help            show this help message and exit
+```
+
+### `update_central_grafana_datasources.py`
+
+Ensures that the central grafana at https://grafana.pilot.2i2c.cloud is configured to use as datasource the authenticated prometheus instances of all the clusters that we run.
+
+**Command line usage:**
+
+```bash
+usage: update_central_grafana_datasources.py [-h] [cluster_name]
+
+A command line tool to update Grafana datasources.
+
+positional arguments:
+  cluster_name  The name of the cluster where the Grafana lives
+
+optional arguments:
+  -h, --help    show this help message and exit
+```
+
 ## Running Tests
 
 To execute tests on the `deployer`, you will need to install the development requirements and then invoke `pytest` from the root of the repository.
