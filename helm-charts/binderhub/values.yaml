@@ -6,11 +6,6 @@ binderhub:
       use_registry: true
       build_image: "quay.io/jupyterhub/repo2docker:2022.02.0-32.ge7524a7"
       per_repo_quota: 150
-      template_path: /etc/binderhub/custom/templates
-      extra_static_path: /etc/binderhub/custom/static
-      extra_static_url_prefix: /extra_static/
-      about_message: |
-        <p>binder.pangeo.io is public infrastructure operated by the <a href="https://2i2c.org">2i2c team</a>.<br /><br />
       build_node_selector:
         # Build user images only on user nodes, not dask or core nodes
         hub.jupyter.org/node-purpose: user
@@ -22,28 +17,6 @@ binderhub:
       nginx.ingress.kubernetes.io/proxy-body-size: 256m
       kubernetes.io/ingress.class: nginx
       cert-manager.io/cluster-issuer: letsencrypt-prod
-  initContainers:
-    - name: git-clone-templates
-      image: alpine/git
-      args:
-        - clone
-        - --single-branch
-        - --branch=master
-        - --depth=1
-        - --
-        - https://github.com/pangeo-data/pangeo-custom-binderhub-templates.git
-        - /etc/binderhub/custom
-      securityContext:
-        runAsUser: 0
-      volumeMounts:
-        - name: custom-templates
-          mountPath: /etc/binderhub/custom
-  extraVolumes:
-    - name: custom-templates
-      emptyDir: {}
-  extraVolumeMounts:
-    - name: custom-templates
-      mountPath: /etc/binderhub/custom
   dind:
     enabled: true
   imageCleaner:
