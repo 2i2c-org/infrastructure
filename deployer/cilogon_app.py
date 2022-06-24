@@ -297,7 +297,9 @@ class CILogonClientProvider:
     def delete_client(self, cluster_name, hub_name, client_id=None):
         if not client_id:
             if not cluster_name or not hub_name:
-                print("Please provide either the client id to delete or or the cluster and hub name.")
+                print(
+                    "Please provide either the client id to delete or or the cluster and hub name."
+                )
                 return
 
             config_filename = self._build_config_filename(cluster_name, hub_name)
@@ -420,7 +422,7 @@ def main():
         type=str,
         help="The name of the cluster where the hub lives or none if --id is present",
         default="",
-        nargs="?"
+        nargs="?",
     )
 
     delete_parser.add_argument(
@@ -428,7 +430,7 @@ def main():
         type=str,
         help="The hub for which we'll delete the CILogon client details or none if --id is present",
         default="",
-        nargs="?"
+        nargs="?",
     )
 
     delete_parser.add_argument(
@@ -468,11 +470,7 @@ def main():
             args.hub_name,
         )
     elif args.action == "delete":
-        cilogon.delete_client(
-            args.cluster_name,
-            args.hub_name,
-            args.id
-        )
+        cilogon.delete_client(args.cluster_name, args.hub_name, args.id)
     elif args.action == "get-all":
         cilogon.get_all_clients()
 
