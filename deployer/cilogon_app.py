@@ -294,16 +294,22 @@ class CILogonClientProvider:
         )
         print(self.admin_client.get(client_id))
 
-    def delete_client(self, cluster_name, hub_name):
-        config_filename = self._build_config_filename(cluster_name, hub_name)
-
-        client_id = self._load_client_id(config_filename)
-
-        # No client has been found
+    def delete_client(self, cluster_name, hub_name, client_id=None):
         if not client_id:
-            return
+            if not cluster_name or not hub_name:
+                print(
+                    "Please provide either the client id to delete or the cluster and hub name."
+                )
+                return
 
-        print(f"Deleting the CILogon client details for {cluster_name}-{hub_name}...")
+            config_filename = self._build_config_filename(cluster_name, hub_name)
+            client_id = self._load_client_id(config_filename)
+
+            # No client has been found
+            if not client_id:
+                return
+
+        print(f"Deleting the CILogon client details for {client_id}...")
         print(self.admin_client.delete(client_id))
 
     def get_all_clients(self):
@@ -396,7 +402,7 @@ def main():
     get_parser.add_argument(
         "hub_name",
         type=str,
-        help="The hub for which we'll retrieve the CILogon client details.",
+        help="The hub for which we'll retrieve the CILogon client details",
     )
 
     # Get all subcommand
@@ -414,13 +420,23 @@ def main():
     delete_parser.add_argument(
         "cluster_name",
         type=str,
-        help="The name of the cluster where the hub lives",
+        help="The name of the cluster where the hub lives or none if --id is present",
+        default="",
+        nargs="?",
     )
 
     delete_parser.add_argument(
         "hub_name",
         type=str,
-        help="The hub for which we'll delete the CILogon client details.",
+        help="The hub for which we'll delete the CILogon client details or none if --id is present",
+        default="",
+        nargs="?",
+    )
+
+    delete_parser.add_argument(
+        "--id",
+        type=str,
+        help="The id of the client to delete of the form cilogon:/client_id/<id>",
     )
 
     args = argparser.parse_args()
@@ -454,10 +470,7 @@ def main():
             args.hub_name,
         )
     elif args.action == "delete":
-        cilogon.delete_client(
-            args.cluster_name,
-            args.hub_name,
-        )
+        cilogon.delete_client(args.cluster_name, args.hub_name, args.id)
     elif args.action == "get-all":
         cilogon.get_all_clients()
 
