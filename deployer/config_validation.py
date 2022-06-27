@@ -53,15 +53,15 @@ def _prepare_helm_charts_dependencies_and_schemas():
 
     daskhub_dir = helm_charts_dir.joinpath("daskhub")
     _generate_values_schema_json(daskhub_dir)
-    subprocess.check_call(["helm", "dep", "up", daskhub_dir])
+    subprocess.check_call(["helm", "dep", "up", daskhub_dir, "--skip-refresh"])
 
     binderhub_dir = helm_charts_dir.joinpath("binderhub")
     _generate_values_schema_json(binderhub_dir)
-    subprocess.check_call(["helm", "dep", "up", binderhub_dir])
+    subprocess.check_call(["helm", "dep", "up", binderhub_dir, "--skip-refresh"])
 
     support_dir = helm_charts_dir.joinpath("support")
     _generate_values_schema_json(support_dir)
-    subprocess.check_call(["helm", "dep", "up", support_dir])
+    subprocess.check_call(["helm", "dep", "up", support_dir, "--skip-refresh"])
 
 
 def validate_cluster_config(cluster_name):
