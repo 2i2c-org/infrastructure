@@ -4,7 +4,7 @@ binderhub:
   config:
     BinderHub:
       use_registry: true
-      build_image: "quay.io/jupyterhub/repo2docker:2022.02.0-32.ge7524a7"
+      build_image: "quay.io/jupyterhub/repo2docker:2022.02.0-34.g0f0fca1"
       per_repo_quota: 150
       template_path: /etc/binderhub/custom/templates
       extra_static_path: /etc/binderhub/custom/static
@@ -54,7 +54,6 @@ binderhub:
     imageGCThresholdLow: 40
     host:
       enabled: false
-
   jupyterhub:
     ingress:
       enabled: true
@@ -126,8 +125,7 @@ binderhub:
         DASK_GATEWAY__CLUSTER__OPTIONS__IMAGE: "{JUPYTER_IMAGE_SPEC}"
         # DASK_GATEWAY__CLUSTER__OPTIONS__ENVIRONMENT makes some environment
         # variables be copied over to the worker nodes from the user nodes.
-        DASK_GATEWAY__CLUSTER__OPTIONS__ENVIRONMENT:
-          '{"SCRATCH_BUCKET": "$(SCRATCH_BUCKET)",
+        DASK_GATEWAY__CLUSTER__OPTIONS__ENVIRONMENT: '{"SCRATCH_BUCKET": "$(SCRATCH_BUCKET)",
           "PANGEO_SCRATCH": "$(PANGEO_SCRATCH)"}'
         # DASK_DISTRIBUTED__DASHBOARD_LINK makes the suggested link to the
         # dashboard account for the /user/<username> prefix in the path. Note
@@ -269,7 +267,6 @@ binderhub:
                   break
           else:
               print("dask-gateway service not found. Did you set jupyterhub.hub.services.dask-gateway.apiToken?")
-
 dask-gateway:
   #=== VALUES BELOW HERE ARE COPIED FROM DASKHUB VALUES AND SHOULD BE UPDATED ===#
   #=== IF DASKHUB CHANGES ===#
