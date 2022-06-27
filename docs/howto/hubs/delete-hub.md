@@ -78,7 +78,3 @@ And then identitify the client of the hub and delete based on its id with:
 ```bash
 $ python3 deployer/cilogon_app.py delete --id cilogon:/client_id/<id>
 ```
-
-```bash
-$ python3 deployer/cilogon_app.py delete <cluster-name> <hub-name>
-```
