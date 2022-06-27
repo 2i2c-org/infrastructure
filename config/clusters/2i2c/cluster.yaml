@@ -47,7 +47,8 @@ hubs:
       # matching value for jupyterhub.custom.2i2c.add_staff_user_ids_of_type!
       enabled: false
     helm_chart_values_files:
-      - enc-binder.secret.values.yaml
+      - binder-staging.values.yaml
+      - enc-binder-staging.secret.values.yaml
   - name: demo
     display_name: "2i2c demo"
     domain: demo.2i2c.cloud
