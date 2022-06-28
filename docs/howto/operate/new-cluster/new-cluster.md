@@ -47,7 +47,7 @@ Example `.tfvars` file:
 
 ```
 prefix           = "my-awesome-project"
-project_id       = "my-awesome-project-id
+project_id       = "my-awesome-project-id"
 zone             = "us-central1-c"
 region           = "us-central1"
 regional_cluster = true
