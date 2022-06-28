@@ -6,7 +6,5 @@ gcp:
   cluster: linked-earth-cluster
   zone: us-central1-c
 support:
-  helm_chart_values_files:
-    - support.values.yaml
-    - enc-support.secret.values.yaml
+  helm_chart_values_files: []
 hubs: []
