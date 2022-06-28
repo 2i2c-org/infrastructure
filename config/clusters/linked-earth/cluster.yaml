@@ -1,7 +1,7 @@
 name: linked-earth
 provider: gcp
 gcp:
-  key: endc-deployer-credentidals.secret.json
+  key: enc-deployer-credentidals.secret.json
   project: linked-earth-hubs
   cluster: linked-earth-cluster
   zone: us-central1-c
