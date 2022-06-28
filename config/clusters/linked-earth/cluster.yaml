@@ -1,10 +1,12 @@
 name: linked-earth
 provider: gcp
 gcp:
-  key: enc-deployer-credentidals.secret.json
+  key: enc-deployer-credentials.secret.json
   project: linked-earth-hubs
   cluster: linked-earth-cluster
   zone: us-central1-c
 support:
-  helm_chart_values_files: []
+  helm_chart_values_files:
+    - support.values.yaml
+    - enc-support.secret.values.yaml
 hubs: []
