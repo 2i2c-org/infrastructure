@@ -99,7 +99,6 @@ def main():
         help="The version of cert-manager to deploy in the form vX.Y.Z. Defaults to v1.3.1",
     )
 
-
     # deploy-grafana-dashboards subcommand
     deploy_grafana_dashboards_parser = subparsers.add_parser(
         "deploy-grafana-dashboards",
@@ -170,7 +169,9 @@ def main():
         validate_support_config(args.cluster_name)
         validate_hub_config(args.cluster_name, args.hub_name)
     elif args.action == "deploy-support":
-        deploy_support(args.cluster_name, cert_manager_version=args.cert_manager_version)
+        deploy_support(
+            args.cluster_name, cert_manager_version=args.cert_manager_version
+        )
     elif args.action == "deploy-grafana-dashboards":
         deploy_grafana_dashboards(args.cluster_name)
     elif args.action == "use-cluster-credentials":
