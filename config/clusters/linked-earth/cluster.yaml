@@ -4,7 +4,7 @@ gcp:
   key: enc-deployer-credentials.secret.json
   project: linked-earth-hubs
   cluster: linked-earth-cluster
-  zone: us-central1-c
+  zone: us-central1
 support:
   helm_chart_values_files: []
 hubs: []
