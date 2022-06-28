@@ -47,6 +47,7 @@ jobs:
           - cluster_name: m2lines
           - cluster_name: utoronto
           - cluster_name: uwhackweeks
+          - cluster_name: linked-earth
 
     steps:
       - uses: actions/checkout@v3

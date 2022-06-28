@@ -131,6 +131,7 @@ jobs:
       failure_utoronto: "${{ steps.declare-failure-status.outputs.failure_utoronto }}"
       failure_uwhackweeks: "${{ steps.declare-failure-status.outputs.failure_uwhackweeks }}"
       failure_m2lines: "${{ steps.declare-failure-status.outputs.failure_m2lines }}"
+      failure_linked-earth: "${{ steps.declare-failure-status.outputs.failure_linked-earth }}"
 
     # Only run this job on pushes to the default branch and when the job output is not
     # an empty list
