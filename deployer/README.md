@@ -30,28 +30,26 @@ $ python deployer [sub-command]
 **Command line usage:**
 
 ```bash
-usage: python deployer [-h]
-                {deploy,validate,deploy-support,deploy-grafana-dashboards,use-cluster-credentials,generate-helm-upgrade-jobs,run-hub-health-check}
-                ...
+usage: deployer [-h] {deploy,validate,deploy-support,deploy-grafana-dashboards,use-cluster-credentials,generate-helm-upgrade-jobs,run-hub-health-check,exec-homes-shell} ...
 
 A command line tool to perform various functions related to deploying and maintaining a JupyterHub running on kubernetes infrastructure
 
 positional arguments:
-  {deploy,validate,deploy-support,deploy-grafana-dashboards,use-cluster-credentials,generate-helm-upgrade-jobs,run-hub-health-check}
+  {deploy,validate,deploy-support,deploy-grafana-dashboards,use-cluster-credentials,generate-helm-upgrade-jobs,run-hub-health-check,exec-homes-shell}
                         Available subcommands
     deploy              Install/upgrade the helm charts of JupyterHubs on a cluster
-    validate            Validate the cluster.yaml configuration itself, as well as the provided non-encrypted helm chart values files for each
-                        hub or the specified hub.
+    validate            Validate the cluster.yaml configuration itself, as well as the provided non-encrypted helm chart values files for each hub or the specified hub.
     deploy-support      Install/upgrade the support helm release on a given cluster
     deploy-grafana-dashboards
                         Deploy grafana dashboards to a cluster for monitoring JupyterHubs. deploy-support must be run first!
     use-cluster-credentials
                         Modify the current kubeconfig with the deployer's access credentials for the named cluster
     generate-helm-upgrade-jobs
-                        Generate a set of matrix jobs to perform a helm upgrade in parallel across clusters and hubs. Emit JSON to stdout that
-                        can be read by the strategy.matrix field of a GitHub Actions workflow.
+                        Generate a set of matrix jobs to perform a helm upgrade in parallel across clusters and hubs. Emit JSON to stdout that can be read by the strategy.matrix
+                        field of a GitHub Actions workflow.
     run-hub-health-check
                         Run a health check against a given hub deployed on a given cluster
+    exec-homes-shell    Pop a shell with home directories of given hub mounted
 
 optional arguments:
   -h, --help            show this help message and exit
@@ -214,6 +212,62 @@ positional arguments:
 optional arguments:
   -h, --help            show this help message and exit
   --check-dask-scaling  For daskhubs, optionally check that dask workers can be scaled
+```
+
+## Sub-scripts
+
+This section describes the utility scripts that are present in the `deployer` module, what is their purpose, and their command line usage.\
+
+**Note:** The `deployer` sub-scripts must currently be invoked from the root of this repository, i.e.:
+
+```bash
+$ pwd
+[...]/infrastructure/deployer
+$ cd .. && pwd
+[...]/infrastructure
+$ python deployer/[sub-script].py
+```
+
+### `cilogon_app`
+
+This is a helper script that can create/update/get/delete CILogon clients using the 2i2c administrative client provided by CILogon.
+
+**Command line usage:**
+
+```bash
+usage: cilogon_app.py [-h] {create,update,get,get-all,delete} ...
+
+A command line tool to create/update/delete CILogon clients.
+
+positional arguments:
+  {create,update,get,get-all,delete}
+                        Available subcommands
+    create              Create a CILogon client
+    update              Update a CILogon client
+    get                 Retrieve details about an existing CILogon client
+    get-all             Retrieve details about an existing CILogon client
+    delete              Delete an existing CILogon client
+
+optional arguments:
+  -h, --help            show this help message and exit
+```
+
+### `update_central_grafana_datasources.py`
+
+Ensures that the central grafana at https://grafana.pilot.2i2c.cloud is configured to use as datasource the authenticated prometheus instances of all the clusters that we run.
+
+**Command line usage:**
+
+```bash
+usage: update_central_grafana_datasources.py [-h] [cluster_name]
+
+A command line tool to update Grafana datasources.
+
+positional arguments:
+  cluster_name  The name of the cluster where the Grafana lives
+
+optional arguments:
+  -h, --help    show this help message and exit
 ```
 
 ## Running Tests
