@@ -36,6 +36,11 @@ hub_cloud_permissions = {
     requestor_pays : false,
     bucket_admin_access: [],
     hub_namespace: "staging"
+  },
+  "prod" : {
+    requestor_pays : false,
+    bucket_admin_access: [],
+    hub_namespace: "prod"
   }
 }
 
