@@ -1,0 +1,10 @@
+name: linked-earth
+provider: gcp
+gcp:
+  key: endc-deployer-credentidals.secret.json
+  project: linked-earth-hubs
+  cluster: linked-earth-cluster
+  zone: us-central1-c
+support:
+  helm_chart_values_files: []
+hubs: []
