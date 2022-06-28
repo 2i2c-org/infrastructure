@@ -68,11 +68,18 @@ class Cluster:
                 with open(dockercfg_path, "w") as f:
                     json.dump(config, f, indent=4)
 
-    def deploy_support(self):
+    def deploy_support(self, cert_manager_version):
         cert_manager_url = "https://charts.jetstack.io"
-        cert_manager_version = "v1.3.1"
 
         print_colour("Provisioning cert-manager...")
+        subprocess.check_call(
+            [
+                "kubectl",
+                "apply",
+                "-f",
+                f"https://github.com/cert-manager/cert-manager/releases/download/{cert_manager_version}/cert-manager.crds.yaml",
+            ]
+        )
         subprocess.check_call(
             [
                 "helm",

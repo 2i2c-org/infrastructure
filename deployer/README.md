@@ -103,13 +103,15 @@ This command only needs to be run once per cluster, not once per hub.
 **Command line usage:**
 
 ```bash
-usage: python deployer deploy-support [-h] cluster_name
+usage: python deployer deploy-support [-h] [--cert-manager-version CERT_MANAGER_VERSION] cluster_name
 
 positional arguments:
-  cluster_name  The name of the cluster to perform actions on
+  cluster_name          The name of the cluster to perform actions on
 
 optional arguments:
-  -h, --help    show this help message and exit
+  -h, --help            show this help message and exit
+  --cert-manager-version CERT_MANAGER_VERSION
+                        The version of cert-manager to deploy in the form vX.Y.Z. Defaults to v1.3.1
 ```
 
 ### `deploy-grafana-dashboards`

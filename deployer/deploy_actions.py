@@ -66,9 +66,13 @@ def use_cluster_credentials(cluster_name):
         subprocess.check_call([os.environ["SHELL"], "-l"])
 
 
-def deploy_support(cluster_name):
-    """
-    Deploy support components to a cluster
+def deploy_support(cluster_name, cert_manager_version):
+    """Deploy support components to a cluster
+
+    Args:
+        cluster_name (str): The name of the cluster to deploy support components to
+        cert_manager_version (str): The version of cert-manager to deploy to the
+            cluster, in the form vX.Y.Z. where X.Y.Z is valid SemVer.
     """
     validate_cluster_config(cluster_name)
     validate_support_config(cluster_name)
@@ -79,7 +83,7 @@ def deploy_support(cluster_name):
 
     if cluster.support:
         with cluster.auth():
-            cluster.deploy_support()
+            cluster.deploy_support(cert_manager_version=cert_manager_version)
 
 
 def deploy_grafana_dashboards(cluster_name):
