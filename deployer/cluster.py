@@ -91,7 +91,6 @@ class Cluster:
                 "--create-namespace",
                 "--namespace=cert-manager",
                 f"--version={cert_manager_version}",
-                "--set=installCRDs=true",
             ]
         )
         print_colour("Done!")
