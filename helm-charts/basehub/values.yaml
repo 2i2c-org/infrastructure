@@ -70,6 +70,7 @@ jupyterhub:
         - consideRatio
         - damianavila
         - GeorgianaElena
+        - jmunroe
         - sgibson91
         - yuvipanda
       staff_google_ids:
@@ -77,6 +78,7 @@ jupyterhub:
         - erik@2i2c.org
         - damianavila@2i2c.org
         - georgianaelena@2i2c.org
+        - jmunroe@2i2c.org
         - sgibson@2i2c.org
         - yuvipanda@2i2c.org
   ingress:
