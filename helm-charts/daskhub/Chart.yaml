@@ -7,6 +7,9 @@ dependencies:
   - name: basehub
     version: "0.1.0"
     repository: file://../basehub
+    # If bumping the version of dask-gateway, please also bump the default version set
+    # in the deployer's CLI
+    # https://github.com/2i2c-org/infrastructure/blob/HEAD/deployer/cli.py#L73-L78
   - name: dask-gateway
     version: "2022.6.1"
     repository: "https://helm.dask.org/"
