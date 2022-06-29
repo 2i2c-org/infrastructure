@@ -1,0 +1,34 @@
+jupyterhub:
+  custom:
+    2i2c:
+      add_staff_user_ids_to_admin_users: true
+      add_staff_user_ids_of_type: "google"
+    homepage:
+      templateVars:
+        org:
+          name: Fresno City College
+          logo_url: https://www.fresnocitycollege.edu/_files/images/headerlogo.png
+          url: https://www.fresnocitycollege.edu/
+        designed_by:
+          name: 2i2c
+          url: https://2i2c.org
+        operated_by:
+          name: CloudBank
+          url: http://cloudbank.org/
+        funded_by:
+          name: CloudBank
+          url: http://cloudbank.org/
+  hub:
+    config:
+      JupyterHub:
+        authenticator_class: cilogon
+      CILogonOAuthenticator:
+        oauth_callback_url: https://fresno.cloudbank.2i2c.cloud/hub/oauth_callback
+        username_claim: email
+      Authenticator:
+        admin_users:
+          - joellen.green@fresnocitycollege.edu
+          - ericvd@berkeley.edu
+          - k_usovich@berkeley.edu
+          - sean.smorris@berkeley.edu
+        username_pattern: '^(.+@2i2c\.org|.+@berkeley\.edu|.+@fresnocitycollege\.edu|deployment-service-check)$'
