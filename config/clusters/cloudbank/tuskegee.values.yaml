@@ -33,4 +33,4 @@ jupyterhub:
           - deborah_nolan@berkeley.edu
           - ericvd@gmail.com
           - sean.smorris@berkeley.edu
-        username_pattern: '^(.+@2i2c\.org|.+@berkeley\.edu|.+@tuskegee\.edu|deployment-service-check)$'
+        username_pattern: '^(.+@2i2c\.org|.+@berkeley\.edu|.+@eecs\.berkeley\.edu|.+@tuskegee\.edu|deployment-service-check)$'
