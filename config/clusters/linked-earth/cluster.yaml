@@ -11,5 +11,7 @@ gcp:
   # Did you mean [linked-earth-cluster] in [us-central1]?
   zone: us-central1
 support:
-  helm_chart_values_files: []
+  helm_chart_values_files:
+    - support.values.yaml
+    - enc-support.secret.values.yaml
 hubs: []
