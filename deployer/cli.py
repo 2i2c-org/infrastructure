@@ -65,9 +65,6 @@ def main():
         help="The hub, or list of hubs, to install/upgrade the helm chart for",
     )
     deploy_parser.add_argument(
-        "--skip-hub-health-test", action="store_true", help="Bypass the hub health test"
-    )
-    deploy_parser.add_argument(
         "--config-path",
         help="File to read secret deployment configuration from",
         # This filepath is relative to the PROJECT ROOT
