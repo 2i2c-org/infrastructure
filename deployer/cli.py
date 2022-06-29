@@ -70,6 +70,12 @@ def main():
         # This filepath is relative to the PROJECT ROOT
         default="shared/deployer/enc-auth-providers-credentials.secret.yaml",
     )
+    deploy_parser.add_argument(
+        "--dask-gateway-version",
+        type=str,
+        default="2022.6.1",
+        help="For daskhubs, the version of dask-gateway to install for the CRDs. Default: 2022.6.1",
+    )
 
     # Validate subcommand
     validate_parser = subparsers.add_parser(
@@ -158,6 +164,7 @@ def main():
             args.cluster_name,
             args.hub_name,
             args.config_path,
+            dask_gateway_version=args.dask_gateway_version,
         )
     elif args.action == "exec-homes-shell":
         exec_homes_shell(args.cluster_name, args.hub_name)
