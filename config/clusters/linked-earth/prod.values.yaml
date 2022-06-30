@@ -1,0 +1,6 @@
+basehub:
+  jupyterhub:
+    hub:
+      config:
+        CILogonOAuthenticator:
+          oauth_callback_url: "https://linkedearth.2i2c.cloud/hub/oauth_callback"
