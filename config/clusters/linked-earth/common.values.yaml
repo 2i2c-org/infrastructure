@@ -42,9 +42,12 @@ basehub:
           username_pattern: '^(.+@2i2c\.org|deployment-service-check)$'
           delete_invalid_users: true
         CILogonAuthenticator:
-          username_claim: "email"
+          shown_idps:
+            - https://accounts.google.com/o/oauth2/auth
           allowed_idps:
-            - 2i2c.org
+            http://google.com/accounts/o8/id:
+              username_derivation:
+                username_claim: email
     singleuser:
       image:
         # User image repo: https://quay.io/repository/linkedearth/pyleoclim
