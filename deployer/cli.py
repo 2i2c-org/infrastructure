@@ -100,8 +100,8 @@ def main():
     deploy_support_parser.add_argument(
         "--cert-manager-version",
         type=str,
-        default="v1.3.1",
-        help="The version of cert-manager to deploy in the form vX.Y.Z. Defaults to v1.3.1",
+        default="v1.8.2",
+        help="The version of cert-manager to deploy in the form vX.Y.Z. Defaults to v1.8.2",
     )
 
     # deploy-grafana-dashboards subcommand
