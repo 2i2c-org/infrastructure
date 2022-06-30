@@ -1,0 +1,33 @@
+jupyterhub:
+  custom:
+    2i2c:
+      add_staff_user_ids_to_admin_users: true
+      add_staff_user_ids_of_type: "google"
+    homepage:
+      templateVars:
+        org:
+          name: Glendale Community College
+          logo_url: https://www.glendale.edu/home/showpublishedimage/33622/637538639301600000
+          url: https://www.glendale.edu/
+        designed_by:
+          name: 2i2c
+          url: https://2i2c.org
+        operated_by:
+          name: CloudBank
+          url: http://cloudbank.org/
+        funded_by:
+          name: CloudBank
+          url: http://cloudbank.org/
+  hub:
+    config:
+      JupyterHub:
+        authenticator_class: cilogon
+      CILogonOAuthenticator:
+        oauth_callback_url: https://glendale.cloudbank.2i2c.cloud/hub/oauth_callback
+        username_claim: email
+      Authenticator:
+        admin_users:
+          - simon@glendale.edu
+          - ericvd@berkeley.edu
+          - sean.smorris@berkeley.edu
+        username_pattern: '^(.+@2i2c\.org|.+@berkeley\.edu|.+@glendale\.edu|.+@student\.glendale\.edu|deployment-service-check)$'
