@@ -41,7 +41,7 @@ basehub:
           # Ref: https://jupyterhub.readthedocs.io/en/stable/api/auth.html#jupyterhub.auth.Authenticator.username_pattern
           username_pattern: '^(.+@2i2c\.org|deployment-service-check)$'
           delete_invalid_users: true
-        CILogonAuthenticator:
+        CILogonOAuthenticator:
           shown_idps:
             - https://accounts.google.com/o/oauth2/auth
           allowed_idps:
