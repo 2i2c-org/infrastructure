@@ -1,18 +1,18 @@
 resource "aws_s3_bucket" "user_buckets" {
   for_each = var.user_buckets
-  bucket     = "${var.cluster_name}-${each.key}"
+  bucket   = "${var.cluster_name}-${each.key}"
 
 }
 
 resource "aws_s3_bucket_lifecycle_configuration" "user_bucket_expiry" {
   for_each = var.user_buckets
-  bucket     = "${var.cluster_name}-${each.key}"
+  bucket   = "${var.cluster_name}-${each.key}"
 
   dynamic "rule" {
     for_each = each.value.delete_after != null ? [1] : []
 
     content {
-      id = "delete-after-expiry"
+      id     = "delete-after-expiry"
       status = "Enabled"
 
       expiration {
@@ -34,11 +34,10 @@ locals {
   ]))
 }
 
-
 data "aws_iam_policy_document" "bucket_access" {
   for_each = { for bp in local.bucket_permissions : "${bp.hub_name}.${bp.bucket_name}" => bp }
   statement {
-    effect = "Allow"
+    effect  = "Allow"
     actions = ["s3:*"]
     principals {
       type = "AWS"
@@ -57,6 +56,6 @@ data "aws_iam_policy_document" "bucket_access" {
 resource "aws_s3_bucket_policy" "user_bucket_access" {
 
   for_each = { for bp in local.bucket_permissions : "${bp.hub_name}.${bp.bucket_name}" => bp }
-  bucket = aws_s3_bucket.user_buckets[each.value.bucket_name].id
-  policy = data.aws_iam_policy_document.bucket_access[each.key].json
+  bucket   = aws_s3_bucket.user_buckets[each.value.bucket_name].id
+  policy   = data.aws_iam_policy_document.bucket_access[each.key].json
 }

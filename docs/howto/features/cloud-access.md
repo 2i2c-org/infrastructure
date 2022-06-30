@@ -200,3 +200,20 @@ on why users want this!
 
 4. Get this change deployed, and users should now be able to use the buckets!
    Currently running users might have to restart their pods for the change to take effect.
+
+
+## Granting access to cloud buckets in other accounts
+
+Sometimes, users on a hub we manage need access to a storage bucket
+managed by an external third party - often a different research
+group. This can help with access to raw data, collaboration, etc.
+
+This section outlines how to grant this access. Currently, this
+functionality is implemented only on AWS - but we can add it for
+other cloud providers when needed.
+
+### AWS
+
+1. Get ARN of the IAM role we'll use
+2. Get 3rd party to give it appropriate rights on the bucket
+3. Add it to hub_cloud_permissions for the hub we care about
