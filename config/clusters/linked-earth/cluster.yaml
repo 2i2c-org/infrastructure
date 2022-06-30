@@ -5,7 +5,7 @@ gcp:
   project: linked-earth-hubs
   cluster: linked-earth-cluster
   # The zone is actually us-central1-c but the deployer throws the below error unless
-  # we set this to us-central1
+  # we set this to us-central1. Possibly because it is a regional cluster.
   #
   # Could not find [linked-earth-cluster] in [us-central1-c].
   # Did you mean [linked-earth-cluster] in [us-central1]?
