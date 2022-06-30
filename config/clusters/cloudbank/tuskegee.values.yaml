@@ -29,8 +29,8 @@ jupyterhub:
         admin_users:
           - mndoye@tuskegee.edu
           - yrawajfih@tuskegee.edu
-          - yanlisa@eecs.berkeley.edu
+          - yanlisa@berkeley.edu
           - deborah_nolan@berkeley.edu
-          - ericvd@gmail.com
+          - ericvd@berkeley.edu
           - sean.smorris@berkeley.edu
-        username_pattern: '^(.+@2i2c\.org|.+@berkeley\.edu|.+@tuskegee\.edu|yanlisa@eecs\.berkeley\.edu|ericvd@gmail\.com|deployment-service-check)$'
+        username_pattern: '^(.+@2i2c\.org|.+@berkeley\.edu|.+@tuskegee\.edu|.+@gmail\.com|deployment-service-check)$'
