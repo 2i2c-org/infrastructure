@@ -40,6 +40,7 @@ basehub:
           # We do not define allowed_users here since only usernames matching this regex will be allowed to login into the hub.
           # Ref: https://jupyterhub.readthedocs.io/en/stable/api/auth.html#jupyterhub.auth.Authenticator.username_pattern
           username_pattern: '^(.+@2i2c\.org|deployment-service-check)$'
+          delete_invalid_users: true
         CILogonAuthenticator:
           username_claim: "email"
           allowed_idps:
