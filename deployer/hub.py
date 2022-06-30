@@ -306,7 +306,7 @@ class Hub:
 
         subprocess.check_call(cmd)
 
-    def deploy(self, auth_provider, secret_key):
+    def deploy(self, auth_provider, secret_key, dask_gateway_version):
         """
         Deploy this hub
         """
@@ -333,6 +333,16 @@ class Hub:
             self.spec["domain"] = domain_override_config["domain"]
 
         generated_values = self.get_generated_config(auth_provider, secret_key)
+
+        if self.spec["helm_chart"] == "daskhub":
+            # Install CRDs for daskhub before deployment
+            manifest_urls = [
+                f"https://raw.githubusercontent.com/dask/dask-gateway/{dask_gateway_version}/resources/helm/dask-gateway/crds/daskclusters.yaml",
+                f"https://raw.githubusercontent.com/dask/dask-gateway/{dask_gateway_version}/resources/helm/dask-gateway/crds/traefik.yaml",
+            ]
+
+            for manifest_url in manifest_urls:
+                subprocess.check_call(["kubectl", "apply", "-f", manifest_url])
 
         with tempfile.NamedTemporaryFile(
             mode="w"

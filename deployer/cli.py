@@ -65,13 +65,18 @@ def main():
         help="The hub, or list of hubs, to install/upgrade the helm chart for",
     )
     deploy_parser.add_argument(
-        "--skip-hub-health-test", action="store_true", help="Bypass the hub health test"
-    )
-    deploy_parser.add_argument(
         "--config-path",
         help="File to read secret deployment configuration from",
         # This filepath is relative to the PROJECT ROOT
         default="shared/deployer/enc-auth-providers-credentials.secret.yaml",
+    )
+    deploy_parser.add_argument(
+        "--dask-gateway-version",
+        type=str,
+        # This version must match what is listed in daskhub's Chart.yaml file
+        # https://github.com/2i2c-org/infrastructure/blob/HEAD/helm-charts/daskhub/Chart.yaml#L14
+        default="2022.6.1",
+        help="For daskhubs, the version of dask-gateway to install for the CRDs. Default: 2022.6.1",
     )
 
     # Validate subcommand
@@ -161,6 +166,7 @@ def main():
             args.cluster_name,
             args.hub_name,
             args.config_path,
+            dask_gateway_version=args.dask_gateway_version,
         )
     elif args.action == "exec-homes-shell":
         exec_homes_shell(args.cluster_name, args.hub_name)

@@ -20,7 +20,7 @@ dependencies:
   # a single IP entrypoint to various services exposed via k8s Ingress resources
   # that references this controller.
   - name: ingress-nginx
-    version: 3.33.0
+    version: 4.1.4
     repository: https://kubernetes.github.io/ingress-nginx
 
   # cluster-autoscaler for k8s clusters where it doesn't come out of the box (EKS)

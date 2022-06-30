@@ -63,7 +63,7 @@ It takes a name of a cluster and a name of a hub (or list of names) as arguments
 **Command line usage:**
 
 ```bash
-usage: python deployer deploy [-h] [--skip-hub-health-test] [--config-path CONFIG_PATH] cluster_name [hub_name]
+usage: python deployer deploy [-h] [--config-path CONFIG_PATH] [--dask-gateway-version DASK_GATEWAY_VERSION] cluster_name [hub_name]
 
 positional arguments:
   cluster_name          The name of the cluster to perform actions on
@@ -71,10 +71,10 @@ positional arguments:
 
 optional arguments:
   -h, --help            show this help message and exit
-  --skip-hub-health-test
-                        Bypass the hub health test
   --config-path CONFIG_PATH
                         File to read secret deployment configuration from
+  --dask-gateway-version DASK_GATEWAY_VERSION
+                        For daskhubs, the version of dask-gateway to install for the CRDs. Default: 2022.6.1
 ```
 
 ### `validate`
