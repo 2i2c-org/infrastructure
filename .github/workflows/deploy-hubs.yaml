@@ -100,7 +100,7 @@ jobs:
         run: |
           python deployer generate-helm-upgrade-jobs "${{ steps.changed-files.outputs.added_modified }}"
 
-      # The comment-deploy-ment-plan-pr.yaml workflow won't have the correct context to
+      # The comment-deployment-plan-pr.yaml workflow won't have the correct context to
       # know the PR number, so we save it to a file to pass to that workflow
       - name: Save Pull Request number to a file
         if: github.event_name == 'pull_request'
