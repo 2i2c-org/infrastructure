@@ -133,5 +133,5 @@ def create_markdown_comment(support_staging_matrix, prod_matrix):
     )
 
     # Save comment body to a file to be uploaded as an atrifact by GitHub Actions
-    with open("comment-body.txt") as f:
+    with open("comment-body.txt", "w") as f:
         f.write(comment_body)
