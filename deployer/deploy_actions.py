@@ -268,9 +268,8 @@ def generate_helm_upgrade_jobs(changed_filepaths):
 
         # Generate template dictionary for all jobs associated with this cluster
         cluster_info = {
-            "provider": provider,
             "cluster_name": cluster_name,
-            "hub_name": "",
+            "provider": provider,
             "reason_for_redeploy": "",
         }
 
