@@ -22,7 +22,6 @@ from config_validation import (
 from file_acquisition import find_absolute_path_to_cluster_file, get_decrypted_file
 from helm_upgrade_decision import (
     assign_staging_jobs_for_missing_clusters,
-    convert_to_markdown_table,
     discover_modified_common_files,
     ensure_support_staging_jobs_have_correct_keys,
     generate_hub_matrix_jobs,
@@ -32,7 +31,7 @@ from helm_upgrade_decision import (
     pretty_print_matrix_jobs,
 )
 from ruamel.yaml import YAML
-from utils import print_colour
+from utils import create_markdown_comment, print_colour
 
 # Without `pure=True`, I get an exception about str / byte issues
 yaml = YAML(typ="safe", pure=True)
@@ -343,12 +342,13 @@ def generate_helm_upgrade_jobs(changed_filepaths):
             f"::set-output name=support-and-staging-matrix-jobs::{json.dumps(support_and_staging_matrix_jobs)}"
         )
 
-        # Generate Markdown tables from the job matrices and set them as outputs for use
-        # in another job
-        convert_to_markdown_table(
-            support_and_staging_matrix_jobs, suffix="support-staging"
-        )
-        convert_to_markdown_table(prod_hub_matrix_jobs, suffix="prod")
+        # Don't bother generating a comment if both of the matrices are empty
+        if support_and_staging_matrix_jobs or prod_hub_matrix_jobs:
+            # Generate Markdown tables from the job matrices and write them to a file
+            # for use in another job
+            create_markdown_comment(
+                support_and_staging_matrix_jobs, prod_hub_matrix_jobs
+            )
 
 
 def run_hub_health_check(cluster_name, hub_name, check_dask_scaling=False):
