@@ -16,7 +16,7 @@ basehub:
     custom:
       2i2c:
         add_staff_user_ids_to_admin_users: true
-        add_staff_user_ids_of_type: "google"
+        add_staff_user_ids_of_type: "github"
       homepage:
         templateVars:
           org:
@@ -35,19 +35,18 @@ basehub:
     hub:
       config:
         JupyterHub:
-          authenticator_class: cilogon
+          authenticator_class: github
         Authenticator:
-          # We do not define allowed_users here since only usernames matching this regex will be allowed to login into the hub.
-          # Ref: https://jupyterhub.readthedocs.io/en/stable/api/auth.html#jupyterhub.auth.Authenticator.username_pattern
-          username_pattern: '^(.+@2i2c\.org|deployment-service-check)$'
-          delete_invalid_users: true
-        CILogonOAuthenticator:
-          shown_idps:
-            - https://accounts.google.com/o/oauth2/auth
-          allowed_idps:
-            http://google.com/accounts/o8/id:
-              username_derivation:
-                username_claim: email
+          # This hub uses GitHub Orgs auth and so we don't set
+          # allowed_users in order to not deny access to valid members of
+          # the listed orgs. These people should have admin access though.
+          admin_users:
+            - khider
+        GitHubOAuthenticator:
+          allowed_organizations:
+            - 2i2c-org
+          scope:
+            - read:user
     singleuser:
       image:
         # User image repo: https://quay.io/repository/linkedearth/pyleoclim

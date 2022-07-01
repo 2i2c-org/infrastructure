@@ -9,5 +9,5 @@ basehub:
         PANGEO_SCRATCH: gcs://m2lines-scratch-staging/$(JUPYTERHUB_USER)
     hub:
       config:
-        CILogonOAuthenticator:
+        GitHubOAuthenticator:
           oauth_callback_url: "https://staging.linkedearth.2i2c.cloud/hub/oauth_callback"
