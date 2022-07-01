@@ -32,6 +32,7 @@ jobs:
       pull-requests: write
     steps:
       - name: Download artifacts
+        id: download-artifacts
         uses: actions/github-script@v6.1.0
         with:
           script: |
@@ -45,25 +46,34 @@ jobs:
               return artifact.name == "pr"
             })[0];
 
-            var download = await github.actions.downloadArtifact({
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              artifact_id: matchArtifact.id,
-              archive_format: 'zip',
-            });
+            try {
+              var download = await github.actions.downloadArtifact({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                artifact_id: matchArtifact.id,
+                archive_format: 'zip',
+              });
 
-            var fs = require('fs');
-            fs.writeFileSync('${{ github.workspace }}/pr.zip', Buffer.from(download.data));
+              var fs = require('fs');
+              fs.writeFileSync('${{ github.workspace }}/pr.zip', Buffer.from(download.data));
+
+              console.log("::set-output name=status::succeeded")
+            } catch {
+              console.log("::set-output name=status::failed")
+            }
 
       - name: Unzip artifact
+        if: steps.download-artifacts.outputs.status != 'failed'
         run: |
           unzip pr.zip
 
       - name: Install ghapi to interact with the GitHub API via Python
+        if: steps.download-artifacts.outputs.status != 'failed'
         run: |
           pip install ghapi
 
       - name: Create or Update a Comment on the PR with the deployment plan
+        if: steps.download-artifacts.outputs.status != 'failed'
         shell: python
         run: |
           from ghapi.all import GhApi, paged
