@@ -92,10 +92,31 @@ jobs:
           format: space-delimited
           token: ${{ secrets.GITHUB_TOKEN }}
 
+      # This step will create a comment-body.txt file containing the jobs to be run in a
+      # Markdown table format to be posted on a Pull Request, if this job is triggered
+      # by one
       - name: Generate matrix jobs
         id: generate-jobs
         run: |
           python deployer generate-helm-upgrade-jobs "${{ steps.changed-files.outputs.added_modified }}"
+
+      # The comment-deploy-ment-plan-pr.yaml workflow won't have the correct context to
+      # know the PR number, so we save it to a file to pass to that workflow
+      - name: Save Pull Request number to a file
+        if: github.event_name == 'pull_request'
+        run: |
+          echo "${{ github.event.number }}" > pr-number.txt
+
+      # Upload the pr-number.txt and comment-body.txt files as artifacts for the
+      # comment-deployment-plan-pr.yaml workflow to access
+      - name: Upload artifacts
+        if: github.event_name == 'pull_request'
+        uses: actions/upload-artifact@v3.1.0
+        with:
+          name: pr
+          path: |
+            pr-number.txt
+            comment-body.txt
 
   # This job upgrades the support chart, staging hub, and dask-staging hub (if present)
   # for clusters in parallel, if those upgrades are required. This job needs the
