@@ -101,9 +101,8 @@ properties:
       clusterType:
         type: string
         description: |
-          We currently support `kops` and EKS-based cluster on AWS.
+          We currently support EKS-based cluster on AWS.
         enum:
-          - kops
           - eks
       clusterName:
         type: string
@@ -113,23 +112,11 @@ properties:
         type: string
         description: |
           The AWS region the cluster is in.
-      stateStore:
-        type: string
-        description: |
-          A dedicated S3 bucket for kops to use in order to store the state
-          (and the representation) of your of your kops cluster.
     required:
       - key
       - clusterType
       - clusterName
       - region
-    if:
-      properties:
-        clusterType:
-          const: kops
-    then:
-      required:
-        - stateStore
   azure:
     type: object
     additionalProperties: false

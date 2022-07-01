@@ -29,21 +29,23 @@ Usually, it is because it was a hub that we created for a workshop/conference an
   - [ ] If no, confirm it is ok to delete all the data stored in the user home directories
 
 #### Phase II - Hub Removal
+(These steps are decribed in more detail in the docs at https://infrastructure.2i2c.org/en/latest/howto/hubs/delete-hub.html.)
 
 - [ ] Manage existing data (migrate data from the hub or delete it)
-- [ ] Remove the appropriate `config/clusters/<cluster_name>/<hub_name>.values.yaml` file
+- [ ] Remove the appropriate `config/clusters/<cluster_name>/<hub_name>.values.yaml` files. A complete list of relevant files can be found under the appropriate entry in the associated `cluster.yaml` file.
 - [ ] Remove the associated hub entry from the `config/clusters/<cluster_name>/cluster.yaml` file.
 - [ ] Remove the hub deployment
   - `helm --namespace HUB_NAME delete HUB_NAME`
   - `kubectl delete namespace HUB_NAME`
-- [ ] Delete the hub's authentication application on auth0 or GitHub
+- [ ] Delete the hub's authentication application on auth0, GitHub or CILogon
 
 #### Phase III - Cluster Removal
 
 _This phase is only necessary for single hub clusters._
 
 - [ ] Run `terraform plan -destroy` and `terraform apply` from the [appropriate workspace](https://infrastructure.2i2c.org/en/latest/topic/terraform.html#workspaces), to destroy the cluster
-- [ ] Remove the following files from the repository:
-  - The associated `config/clusters/<cluster_name>` directory
-  - The associated CI deployer key in `secrets/`
-  - Remove the name of the cluster from [CI](https://github.com/2i2c-org/infrastructure/tree/HEAD/.github/workflows/deploy-hubs.yaml)
+- [ ] Remove the associated `config/clusters/<cluster_name>` directory and all its contents
+- Remove the cluster from CI:
+  - [ ] [`deploy-hubs.yaml`](https://github.com/2i2c-org/infrastructure/blob/HEAD/.github/workflows/deploy-hubs.yaml)
+  - [ ] [`validate-clusters.yaml`](https://github.com/2i2c-org/infrastructure/blob/HEAD/.github/workflows/validate-clusters.yaml)
+- [ ] Remove the cluster from the list of grafana datasources at https://grafana.pilot.2i2c.cloud/datasources

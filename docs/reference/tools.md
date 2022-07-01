@@ -134,11 +134,3 @@ managed Kubernetes service for EC2. See [the `eksctl` documentation for more inf
 
 Make sure you are using at least version 0.97. You
 can check the installed version with `eksctl version`
-
-### kops
-
-`kops` will not only help you create, destroy, upgrade and maintain a production-grade,
-highly available, Kubernetes cluster, but it will also provision the necessary cloud
-infrastructure.
-
-Several cloud providers are officially supported by `kops`, but we only [use it for AWS clusters](https://kops.sigs.k8s.io/getting_started/aws/).

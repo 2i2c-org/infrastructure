@@ -74,7 +74,7 @@ check out [Firefox Multi-Account Containers](https://addons.mozilla.org/en-US/fi
 (cloud-access:aws-sso:terminal)=
 #### Access AWS from your terminal
 
-To use programs like `eksctl`, `kops` or `terraform`, you need to get AWS credentials that
+To use programs like `eksctl`, or `terraform`, you need to get AWS credentials that
 can be accessed from the terminal on your computer. When set up with AWS SSO, the portal
 easily provides access with *time limited* credentials. These are valid only for **60 minutes**,
 and will need to be refreshed with new sets whenever that time is up.

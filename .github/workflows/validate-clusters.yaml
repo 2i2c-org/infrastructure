@@ -12,19 +12,15 @@ on:
   pull_request:
     paths:
       - config/clusters/**
+      - helm-charts/**
       - deployer/**
-      - helm-charts/basehub/**
-      - helm-charts/daskhub/**
-      - helm-charts/support/**
       - requirements.txt
       - .github/workflows/validate-hubs.yaml
   push:
     paths:
       - config/clusters/**
+      - helm-charts/**
       - deployer/**
-      - helm-charts/basehub/**
-      - helm-charts/daskhub/**
-      - helm-charts/support/**
       - requirements.txt
       - .github/workflows/validate-hubs.yaml
     branches-ignore:
@@ -45,7 +41,6 @@ jobs:
           - cluster_name: azure.carbonplan
           - cluster_name: carbonplan
           - cluster_name: cloudbank
-          - cluster_name: farallon
           - cluster_name: meom-ige
           - cluster_name: openscapes
           - cluster_name: pangeo-hubs

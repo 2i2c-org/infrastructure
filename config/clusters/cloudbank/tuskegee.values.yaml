@@ -1,0 +1,36 @@
+jupyterhub:
+  custom:
+    2i2c:
+      add_staff_user_ids_to_admin_users: true
+      add_staff_user_ids_of_type: "google"
+    homepage:
+      templateVars:
+        org:
+          name: Tuskegee University
+          logo_url: https://www.tuskegee.edu/Content/Uploads/Tuskegee/Images/f-logo.png
+          url: https://www.tuskegee.edu/
+        designed_by:
+          name: 2i2c
+          url: https://2i2c.org
+        operated_by:
+          name: CloudBank
+          url: http://cloudbank.org/
+        funded_by:
+          name: CloudBank
+          url: http://cloudbank.org/
+  hub:
+    config:
+      JupyterHub:
+        authenticator_class: cilogon
+      CILogonOAuthenticator:
+        oauth_callback_url: https://tuskegee.cloudbank.2i2c.cloud/hub/oauth_callback
+        username_claim: email
+      Authenticator:
+        admin_users:
+          - mndoye@tuskegee.edu
+          - yrawajfih@tuskegee.edu
+          - yanlisa@berkeley.edu
+          - deborah_nolan@berkeley.edu
+          - ericvd@berkeley.edu
+          - sean.smorris@berkeley.edu
+        username_pattern: '^(.+@2i2c\.org|.+@berkeley\.edu|.+@tuskegee\.edu|.+@gmail\.com|deployment-service-check)$'

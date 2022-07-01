@@ -12,6 +12,7 @@ from deploy_actions import (
     deploy,
     deploy_grafana_dashboards,
     deploy_support,
+    exec_homes_shell,
     generate_helm_upgrade_jobs,
     run_hub_health_check,
     use_cluster_credentials,
@@ -64,13 +65,18 @@ def main():
         help="The hub, or list of hubs, to install/upgrade the helm chart for",
     )
     deploy_parser.add_argument(
-        "--skip-hub-health-test", action="store_true", help="Bypass the hub health test"
-    )
-    deploy_parser.add_argument(
         "--config-path",
         help="File to read secret deployment configuration from",
         # This filepath is relative to the PROJECT ROOT
         default="shared/deployer/enc-auth-providers-credentials.secret.yaml",
+    )
+    deploy_parser.add_argument(
+        "--dask-gateway-version",
+        type=str,
+        # This version must match what is listed in daskhub's Chart.yaml file
+        # https://github.com/2i2c-org/infrastructure/blob/HEAD/helm-charts/daskhub/Chart.yaml#L14
+        default="2022.6.1",
+        help="For daskhubs, the version of dask-gateway to install for the CRDs. Default: 2022.6.1",
     )
 
     # Validate subcommand
@@ -90,6 +96,12 @@ def main():
         "deploy-support",
         parents=[base_parser],
         help="Install/upgrade the support helm release on a given cluster",
+    )
+    deploy_support_parser.add_argument(
+        "--cert-manager-version",
+        type=str,
+        default="v1.8.2",
+        help="The version of cert-manager to deploy in the form vX.Y.Z. Defaults to v1.8.2",
     )
 
     # deploy-grafana-dashboards subcommand
@@ -134,6 +146,17 @@ def main():
         action="store_true",
         help="For daskhubs, optionally check that dask workers can be scaled",
     )
+
+    # exec-homes subcommand
+    homes_parser = subparsers.add_parser(
+        "exec-homes-shell",
+        parents=[base_parser],
+        help="Pop a shell with home directories of given hub mounted",
+    )
+    homes_parser.add_argument(
+        "hub_name",
+        help="The deployed hub whose home directories are to be examined",
+    )
     # === End section ===#
 
     args = argparser.parse_args()
@@ -143,13 +166,18 @@ def main():
             args.cluster_name,
             args.hub_name,
             args.config_path,
+            dask_gateway_version=args.dask_gateway_version,
         )
+    elif args.action == "exec-homes-shell":
+        exec_homes_shell(args.cluster_name, args.hub_name)
     elif args.action == "validate":
         validate_cluster_config(args.cluster_name)
         validate_support_config(args.cluster_name)
         validate_hub_config(args.cluster_name, args.hub_name)
     elif args.action == "deploy-support":
-        deploy_support(args.cluster_name)
+        deploy_support(
+            args.cluster_name, cert_manager_version=args.cert_manager_version
+        )
     elif args.action == "deploy-grafana-dashboards":
         deploy_grafana_dashboards(args.cluster_name)
     elif args.action == "use-cluster-credentials":

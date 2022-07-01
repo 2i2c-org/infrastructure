@@ -1,0 +1,7 @@
+{{ if .Values.userServiceAccount.enabled -}}
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  annotations: {{ .Values.userServiceAccount.annotations | toJson}}
+  name: user-sa
+{{- end }}

@@ -47,7 +47,7 @@ Example `.tfvars` file:
 
 ```
 prefix           = "my-awesome-project"
-project_id       = "my-awesome-project-id
+project_id       = "my-awesome-project-id"
 zone             = "us-central1-c"
 region           = "us-central1"
 regional_cluster = true
@@ -172,7 +172,7 @@ If you can't find the workspace you're looking for, double check you've enabled 
 ## Plan and Apply Changes
 
 ```{note}
-When deploying to Google Cloud, make sure the [Artifact Registry API](https://console.cloud.google.com/apis/library/artifactregistry.googleapis.com) is enabled on the project before deploying!
+When deploying to Google Cloud, make sure the [Compute Engine](https://console.cloud.google.com/apis/library/compute.googleapis.com), [Kubernetes Engine](https://console.cloud.google.com/apis/library/container.googleapis.com), and [Artifact Registry](https://console.cloud.google.com/apis/library/artifactregistry.googleapis.com) APIs are enabled on the project before deploying!
 ```
 
 First, make sure you are in the new workspace that you just created.

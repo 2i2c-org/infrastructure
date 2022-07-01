@@ -67,9 +67,13 @@ def use_cluster_credentials(cluster_name):
         subprocess.check_call([os.environ["SHELL"], "-l"])
 
 
-def deploy_support(cluster_name):
-    """
-    Deploy support components to a cluster
+def deploy_support(cluster_name, cert_manager_version):
+    """Deploy support components to a cluster
+
+    Args:
+        cluster_name (str): The name of the cluster to deploy support components to
+        cert_manager_version (str): The version of cert-manager to deploy to the
+            cluster, in the form vX.Y.Z. where X.Y.Z is valid SemVer.
     """
     validate_cluster_config(cluster_name)
     validate_support_config(cluster_name)
@@ -80,7 +84,7 @@ def deploy_support(cluster_name):
 
     if cluster.support:
         with cluster.auth():
-            cluster.deploy_support()
+            cluster.deploy_support(cert_manager_version=cert_manager_version)
 
 
 def deploy_grafana_dashboards(cluster_name):
@@ -177,7 +181,7 @@ def deploy_grafana_dashboards(cluster_name):
         shutil.rmtree(dashboards_dir)
 
 
-def deploy(cluster_name, hub_name, config_path):
+def deploy(cluster_name, hub_name, config_path, dask_gateway_version):
     """
     Deploy one or more hubs in a given cluster
     """
@@ -218,13 +222,13 @@ def deploy(cluster_name, hub_name, config_path):
         if hub_name:
             hub = next((hub for hub in hubs if hub.spec["name"] == hub_name), None)
             print_colour(f"Deploying hub {hub.spec['name']}...")
-            hub.deploy(k, SECRET_KEY)
+            hub.deploy(k, SECRET_KEY, dask_gateway_version)
         else:
             for i, hub in enumerate(hubs):
                 print_colour(
                     f"{i+1} / {len(hubs)}: Deploying hub {hub.spec['name']}..."
                 )
-                hub.deploy(k, SECRET_KEY)
+                hub.deploy(k, SECRET_KEY, dask_gateway_version)
 
 
 def generate_helm_upgrade_jobs(changed_filepaths):
@@ -448,3 +452,18 @@ def run_hub_health_check(cluster_name, hub_name, check_dask_scaling=False):
         print_colour("Health check succeeded!")
 
     return exit_code
+
+
+def exec_homes_shell(cluster_name, hub_name):
+    """
+    Pop a shell with the home directories of the given hub mounted
+
+    Homes will be mounter under /home
+    """
+    config_file_path = find_absolute_path_to_cluster_file(cluster_name)
+    with open(config_file_path) as f:
+        cluster = Cluster(yaml.load(f), config_file_path.parent)
+    with cluster.auth():
+        hubs = cluster.hubs
+        hub = next((hub for hub in hubs if hub.spec["name"] == hub_name), None)
+        hub.exec_homes_shell()

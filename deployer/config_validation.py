@@ -55,6 +55,10 @@ def _prepare_helm_charts_dependencies_and_schemas():
     _generate_values_schema_json(daskhub_dir)
     subprocess.check_call(["helm", "dep", "up", daskhub_dir])
 
+    binderhub_dir = helm_charts_dir.joinpath("binderhub")
+    _generate_values_schema_json(binderhub_dir)
+    subprocess.check_call(["helm", "dep", "up", binderhub_dir])
+
     support_dir = helm_charts_dir.joinpath("support")
     _generate_values_schema_json(support_dir)
     subprocess.check_call(["helm", "dep", "up", support_dir])
@@ -109,7 +113,7 @@ def validate_hub_config(cluster_name, hub_name):
         # Workaround the current requirement for dask-gateway 0.9.0 to have a
         # JupyterHub api-token specified, for updates if this workaround can be
         # removed, see https://github.com/dask/dask-gateway/issues/473.
-        if hub.spec["helm_chart"] == "daskhub":
+        if hub.spec["helm_chart"] in ("daskhub", "binderhub"):
             cmd.append("--set=dask-gateway.gateway.auth.jupyterhub.apiToken=dummy")
         try:
             subprocess.check_output(cmd, text=True)

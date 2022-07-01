@@ -22,59 +22,7 @@ notebook_nodes = {
       type: "",
       count: 0
     }
-  },
-  "jackeddy-small" : {
-    min : 0,
-    max : 100,
-    machine_type : "n1-standard-2",
-    labels: {
-      "2i2c.org/community": "jackeddy"
-    },
-    gpu: {
-      enabled: false,
-      type: "",
-      count: 0
-    }
-  },
-  "jackeddy-medium" : {
-    min : 0,
-    max : 100,
-    machine_type : "n1-standard-4",
-    labels: {
-      "2i2c.org/community": "jackeddy"
-    },
-    gpu: {
-      enabled: false,
-      type: "",
-      count: 0
-    }
-  },
-  "jackeddy-large" : {
-    min : 0,
-    max : 100,
-    machine_type : "n1-standard-8",
-    labels: {
-      "2i2c.org/community": "jackeddy"
-    },
-    gpu: {
-      enabled: false,
-      type: "",
-      count: 0
-    }
-  },
-  "jackeddy-huge" : {
-    min : 0,
-    max : 100,
-    machine_type : "n1-standard-16",
-    labels: {
-      "2i2c.org/community": "jackeddy"
-    },
-    gpu: {
-      enabled: false,
-      type: "",
-      count: 0
-    }
-  },
+  }
 }
 
 dask_nodes = {
@@ -91,11 +39,7 @@ dask_nodes = {
   }
 }
 
-user_buckets = {
-  "jackeddy-scratch": {
-    "delete_after": 7
-  }
-}
+user_buckets = { }
 
 
 hub_cloud_permissions = {
@@ -115,10 +59,9 @@ hub_cloud_permissions = {
     bucket_admin_access: [],
     hub_namespace: "catalyst-cooperative"
   },
-  "jackeddy": {
-    requestor_pays: true,
-    bucket_admin_access: ["jackeddy-scratch"],
-    hub_namespace: "jackeddy"
-  }
-
 }
+
+container_repos = [
+  "pilot-hubs",
+  "binder-staging",
+]

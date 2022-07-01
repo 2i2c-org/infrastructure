@@ -63,6 +63,11 @@ prometheus:
     retention: 90d
     service:
       type: ClusterIP
+  # make sure we collect metrics on pods by app/component at least
+  kube-state-metrics:
+    metricLabelsAllowlist:
+      - pods=[app,component,hub.jupyter.org/username]
+      - nodes=[*]
 
 grafana:
   persistence:

@@ -7,7 +7,7 @@ dependencies:
   # Prometheus for collection of metrics.
   # https://github.com/prometheus-community/helm-charts/tree/main/charts/prometheus
   - name: prometheus
-    version: 13.8.0
+    version: 15.10.1
     repository: https://prometheus-community.github.io/helm-charts
 
   # Grafana for dashboarding of metrics.
@@ -20,7 +20,7 @@ dependencies:
   # a single IP entrypoint to various services exposed via k8s Ingress resources
   # that references this controller.
   - name: ingress-nginx
-    version: 3.33.0
+    version: 4.1.4
     repository: https://kubernetes.github.io/ingress-nginx
 
   # cluster-autoscaler for k8s clusters where it doesn't come out of the box (EKS)

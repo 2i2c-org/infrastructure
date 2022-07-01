@@ -8,5 +8,4 @@ new-hub/index.md
 manual-deploy
 move-hub
 delete-hub
-new-hub/aws
 ```
