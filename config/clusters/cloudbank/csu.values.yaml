@@ -33,8 +33,9 @@ jupyterhub:
         # Everyone should be able to sign up, so we don't set allowed_users
         # These folks should still have admin though
         admin_users:
-          - ericvd@gmail.com
+          - ericvd@berkeley.edu
           - sean.smorris@berkeley.edu
+        username_pattern: '^(.+@2i2c\.org|.+\.edu|deployment-service-check)$'
   cull:
     # Cull after 30min of inactivity
     every: 300
