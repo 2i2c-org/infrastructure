@@ -45,6 +45,7 @@ basehub:
         GitHubOAuthenticator:
           allowed_organizations:
             - 2i2c-org
+            - LinkedEarth
           scope:
             - read:user
     singleuser:
