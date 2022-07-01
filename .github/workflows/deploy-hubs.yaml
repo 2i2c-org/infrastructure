@@ -40,7 +40,7 @@ env:
 
 jobs:
   # This job runs in Pull Requests and on pushes to the default branch. It identifies
-  # which files have been aded or modified by recent GitHub activity and parsed a list
+  # which files have been added or modified by recent GitHub activity and parsed a list
   # to the generate-helm-upgrade-jobs function of the deployer. This function generates
   # two lists of dictionaries, which can be read by GitHub Actions as matrix jobs. The
   # first set of jobs describes which clusters need their support chart and/or staging
