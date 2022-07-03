@@ -43,6 +43,17 @@ basehub:
         #
         SCRATCH_BUCKET: s3://jmte-scratch/$(JUPYTERHUB_USER)
         PANGEO_SCRATCH: s3://jmte-scratch/$(JUPYTERHUB_USER)
+        # An Amazon RDS postgresql 14 database server has been setup on a
+        # machine with 4 cores and 32 GB memory. See
+        # https://us-west-2.console.aws.amazon.com/rds/home?region=us-west-2#modify-instance:id=jmte-db.https://us-west-2.console.aws.amazon.com/rds/home?region=us-west-2#modify-instance:id=jmte-db
+        #
+        # I created a postgresql user and database for use by some like this:
+        #
+        # CREATE USER proj WITH ENCRYPTED PASSWORD '***';
+        # CREATE DATABASE proj;
+        # GRANT ALL PRIVILEGES ON DATABASE proj TO proj;
+        #
+        JMTE_DB_HOST: jmte-db.cqf1ngjal8bq.us-west-2.rds.amazonaws.com
 
       initContainers:
         # Need to explicitly fix ownership here, since EFS doesn't do anonuid
