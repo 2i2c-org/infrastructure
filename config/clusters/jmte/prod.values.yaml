@@ -5,7 +5,8 @@ basehub:
   jupyterhub:
     # Reverts changes in basehub configuration to the z2jh defaults and ensures
     # 1 pod is used as a placeholder pod, sized as the smallest node in the JMTE
-    # cluster.
+    # cluster. We also update singleuser.nodeSelector to ensure we default to
+    # have a placeholder for the smallest nodes only.
     #
     prePuller:
       continuous:
@@ -20,6 +21,13 @@ basehub:
             memory: 14G
 
     singleuser:
+      # This default value will be relevant for the userPlaceholder
+      # configuration, but irrelevant for the defaults we override in our
+      # profileList configuration.
+      #
+      nodeSelector:
+        2i2c.org/node-cpu: "4"
+
       # Eksctl: The service account was created by eksctl.
       #
       serviceAccountName: &user-sa s3-full-access
