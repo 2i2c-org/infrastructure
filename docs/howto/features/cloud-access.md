@@ -202,7 +202,7 @@ on why users want this!
    Currently running users might have to restart their pods for the change to take effect.
 
 
-## Granting access to cloud buckets in other accounts
+## Granting access to cloud buckets in other cloud accounts / projects
 
 Sometimes, users on a hub we manage need access to a storage bucket
 managed by an external third party - often a different research
@@ -214,6 +214,72 @@ other cloud providers when needed.
 
 ### AWS
 
-1. Get ARN of the IAM role we'll use
-2. Get 3rd party to give it appropriate rights on the bucket
-3. Add it to hub_cloud_permissions for the hub we care about
+On AWS, we would need to set up [cross account S3 access](https://aws.amazon.com/premiumsupport/knowledge-center/cross-account-access-s3/).
+
+1. Find the ARN of the service account used by the *users* on the hub. You can
+   find this under `userServiceAccount.annotations.eks.amazon.com/role-arn` in
+   the `values.yaml` file for your hub. It should look something like
+   `arn:aws:iam::<account-id>:role/<hub-name>`.
+2. In the AWS account *with the S3 bucket*, [create an IAM
+   policy](https://docs.aws.amazon.com/IAM/latest/UserGuide/access_policies_create-console.html)
+   that grants appropriate access to the S3 bucket from the hub. For example, the
+   following policy grants readonly access to the bucket for users of the hub
+
+   ```json
+   {
+    "Version": "2012-10-17",
+    "Statement": [
+        {
+            "Effect": "Allow",
+            "Principal": {
+                "AWS": "<arn-of-service-account-from-step-1>"
+            },
+            "Action": [
+                "s3:GetObject",
+                "s3:GetObjectVersion",
+                "s3:ListBucket"
+            ],
+            "Resource": [
+                "arn:aws:s3:::<name-of-bucket>",
+                "arn:aws:s3:::<name-of-bucket>/*"
+            ]
+        }
+    ]
+   }
+   ```
+
+   You can add additional permissions to the bucket if needed here.
+
+   ```{note}
+   You can list as many buckets as you want, but each bucket needs two entries -
+   one with the `/*` and one without so both listing the bucket as well as fetching
+   data from it can work
+   ```
+
+3. In the `.tfvars` file for the cluster hosting the hub, add `extra_iam_policy`
+   as a key to the hub under `hub_cloud_permissions`. This is used to set any additional
+   IAM permissions granted to the users of the hub. In this case, you should copy the
+   exact policy that was applied to the bucket in step 2, but remove the "Principal" key.
+   So it would look something like:
+
+   ```json
+   {
+    "Version": "2012-10-17",
+    "Statement": [
+        {
+            "Effect": "Allow",
+            "Action": [
+                "s3:GetObject",
+                "s3:GetObjectVersion",
+                "s3:ListBucket"
+            ],
+            "Resource": [
+                "arn:aws:s3:::<name-of-bucket>",
+                "arn:aws:s3:::<name-of-bucket>/*"
+            ]
+        }
+    ]
+   }
+   ```
+
+4. Apply the terraform config, and test out if s3 bucket access works on the hub!
