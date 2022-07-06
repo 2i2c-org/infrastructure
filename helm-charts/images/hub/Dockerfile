@@ -6,17 +6,11 @@
 # quay.io container registry credentials configured to have access to
 # https://quay.io/repository/2i2c/pilot-hub.
 #
-FROM jupyterhub/k8s-hub:1.2.0
+FROM jupyterhub/k8s-hub:1.1.3-n644.h35436cda
 
 ENV CONFIGURATOR_VERSION ed7e3a0df1e3d625d10903ef7d7fd9c2fbb548db
 
 RUN pip install --no-cache git+https://github.com/yuvipanda/jupyterhub-configurator@${CONFIGURATOR_VERSION}
-
-
-# Install newer version of jupyterhub-kubespawner, to bring in https://github.com/jupyterhub/kubespawner/pull/525
-# https://github.com/2i2c-org/infrastructure/issues/1103 is happening frequently enough
-# z2jh 1.2.x ships with kubespawner 1.1.0, so we just do a little bump
-RUN pip install --no-cache --upgrade jupyterhub-kubespawner==1.1.2
 
 # Latest version comes with some breaking changes https://oauthenticator.readthedocs.io/en/latest/migrations.html#migrating-cilogonoauthenticator-to-version-15-0
 RUN pip install --no-cache --upgrade oauthenticator==15.0.1

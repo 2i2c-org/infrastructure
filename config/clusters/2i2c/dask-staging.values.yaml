@@ -31,7 +31,7 @@ basehub:
     singleuser:
       image:
         name: pangeo/pangeo-notebook
-        tag: "2021.02.19"
+        tag: "2022.06.02"
     hub:
       config:
         JupyterHub:

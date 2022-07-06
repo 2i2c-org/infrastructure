@@ -135,7 +135,14 @@ jupyterhub:
         limits:
           memory: 1Gi
   singleuser:
+    cmd:
+      # Explicitly define this, as it's no longer set by z2jh
+      # https://github.com/jupyterhub/zero-to-jupyterhub-k8s/pull/2449
+      - jupyterhub-singleuser
     extraEnv:
+      # until https://github.com/jupyterhub/jupyterhub/pull/3918 or equivalent lands,
+      # and we upgrade to jupyterhub >= 2.3.1 on all images.
+      JUPYTERHUB_SINGLEUSER_APP: "notebook.notebookapp.NotebookApp"
       # notebook writes secure files that don't need to survive a
       # restart here. Writing 'secure' files on some file systems (like
       # Azure Files with SMB) seems buggy, so we just put runtime dir on
@@ -169,7 +176,7 @@ jupyterhub:
       hub.jupyter.org/node-purpose: user
     image:
       name: quay.io/2i2c/2i2c-hubs-image
-      tag: "532c5eab47a1"
+      tag: 69b1f9dff7c7
     storage:
       type: static
       static:
@@ -247,6 +254,15 @@ jupyterhub:
                 matchLabels:
                   app.kubernetes.io/component: traefik
   hub:
+    loadRoles:
+      # Should use this, not hub.config.JupyterHub.load_roles - that will
+      # override any existing load_roles set by z2jh
+      service-use:
+        name: user
+        scopes:
+          # Allow all users access to 'services', which includes dask-gateway & configurator
+          - access:services
+          - self
     config:
       JupyterHub:
         # Allow unauthenticated prometheus requests
@@ -321,7 +337,7 @@ jupyterhub:
         admin: true
     image:
       name: quay.io/2i2c/pilot-hub
-      tag: "0.0.1-n3288.h27beafd1"
+      tag: "0.0.1-n3521.hb54fb723"
     nodeSelector:
       hub.jupyter.org/node-purpose: core
     networkPolicy:
