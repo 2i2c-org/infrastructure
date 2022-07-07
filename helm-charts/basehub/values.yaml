@@ -5,6 +5,9 @@ userServiceAccount:
   enabled: true
   annotations: {}
 
+dex:
+  enabled: false
+
 azureFile:
   enabled: false
   pv:

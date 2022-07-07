@@ -17,7 +17,24 @@ required:
   - global
   - jupyterhub
   - userServiceAccount
+  - dex
 properties:
+  dex:
+    type: object
+    additionalProperties: false
+    required:
+      - enabled
+    properties:
+      enabled:
+        type: boolean
+        description: |
+          Enable dex to provide OIDC
+      hubHostName:
+        type: string
+        description: |
+          Publicly accessible domain name of the hub.
+
+          Used to construct URLs.
   userServiceAccount:
     type: object
     additionalProperties: false

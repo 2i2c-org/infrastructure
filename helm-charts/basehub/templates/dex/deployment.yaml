@@ -1,0 +1,50 @@
+{{- if .Values.dex.enabled -}}
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: dex
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: dex
+  template:
+    metadata:
+      labels:
+        app: dex
+      annotations:
+        checksum/config: {{ include (print $.Template.BasePath "/dex/configmap.yaml") . | sha256sum }}
+    spec:
+      volumes:
+        - name: db
+          persistentVolumeClaim:
+            claimName: dex
+        - name: config
+          configMap:
+            name: dex
+      securityContext:
+        # The upstream repo runs with gid 0, and setting this makes
+        # sure the db volume we mount can be written to by the dex process
+        fsGroup: 0
+      containers:
+        - name: dex
+          image: ghcr.io/dexidp/dex:v2.32.0
+          ports:
+            - name: dex
+              containerPort: 5556
+          env:
+          - name: OAUTH2_CLIENT_SECRET
+            valueFrom:
+              secretKeyRef:
+                name: hub
+                key: hub.services.dex.apiToken
+          volumeMounts:
+          - name: config
+            mountPath: /srv/config
+          - name: db
+            mountPath: /srv/db
+          command:
+          - dex
+          - serve
+          - /srv/config/dex.yaml
+{{- end }}

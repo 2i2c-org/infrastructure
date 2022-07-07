@@ -1,3 +1,7 @@
+dex:
+  enabled: true
+  hubHostName: staging.2i2c.cloud
+
 jupyterhub:
   custom:
     docs_service:
@@ -23,6 +27,10 @@ jupyterhub:
           name: 2i2c
           url: https://2i2c.org
   hub:
+    services:
+      dex:
+        url: http://dex
+        oauth_redirect_uri: https://staging.2i2c.cloud/services/dex/callback
     config:
       Authenticator:
         allowed_users: &staging_users

@@ -1,0 +1,16 @@
+{{- if .Values.dex.enabled -}}
+apiVersion: v1
+kind: Service
+metadata:
+  name: dex
+  labels:
+    app: dex
+spec:
+  type: ClusterIP
+  ports:
+    - name: http
+      port: 80
+      targetPort: dex
+  selector:
+    app: dex
+{{- end }}
