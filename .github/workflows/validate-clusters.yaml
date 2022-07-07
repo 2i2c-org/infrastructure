@@ -38,16 +38,6 @@ jobs:
       matrix:
         include:
           - cluster_name: 2i2c
-          - cluster_name: azure.carbonplan
-          - cluster_name: carbonplan
-          - cluster_name: cloudbank
-          - cluster_name: meom-ige
-          - cluster_name: openscapes
-          - cluster_name: pangeo-hubs
-          - cluster_name: m2lines
-          - cluster_name: utoronto
-          - cluster_name: uwhackweeks
-          - cluster_name: linked-earth
 
     steps:
       - uses: actions/checkout@v3
@@ -88,6 +78,12 @@ jobs:
       - name: Install deployer script dependencies
         run: |
           pip install -r requirements.txt
+
+      - name: "DEBUGGING: test misc details"
+        if: steps.decision.outputs.continue-job == 'true'
+        run: |
+          helm repo list
+          helm dep up helm-charts/daskhub
 
       - name: "Validate cluster: ${{ matrix.cluster_name }}"
         if: steps.decision.outputs.continue-job == 'true'
