@@ -23,7 +23,7 @@ jobs:
       - run: pip install -r requirements.txt
 
       - run: |
-          helm repo list
+          helm repo list || true
           helm dep up helm-charts/basehub
           helm dep up helm-charts/daskhub --skip-refresh
 
