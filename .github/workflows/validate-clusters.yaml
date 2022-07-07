@@ -10,25 +10,6 @@ name: Validate clusters
 
 on:
   pull_request:
-    paths:
-      - config/clusters/**
-      - helm-charts/**
-      - deployer/**
-      - requirements.txt
-      - .github/workflows/validate-clusters.yaml
-  push:
-    paths:
-      - config/clusters/**
-      - helm-charts/**
-      - deployer/**
-      - requirements.txt
-      - .github/workflows/validate-clusters.yaml
-    branches-ignore:
-      - "dependabot/**"
-      - "pre-commit-ci-update-config"
-    tags:
-      - "**"
-  workflow_dispatch:
 
 jobs:
   validate-helm-charts-values-files:
@@ -47,7 +28,8 @@ jobs:
         if: steps.decision.outputs.continue-job == 'true'
         run: |
           helm repo list
-          helm dep up helm-charts/daskhub
+          helm dep up helm-charts/basehub
+          helm dep up helm-charts/daskhub --skip-refresh
 
       - name: "Validate cluster: ${{ matrix.cluster_name }}"
         if: steps.decision.outputs.continue-job == 'true'
