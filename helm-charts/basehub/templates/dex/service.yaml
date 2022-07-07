@@ -8,9 +8,12 @@ metadata:
 spec:
   type: ClusterIP
   ports:
-    - name: http
-      port: 80
+    - name: dex
+      port: 5556
       targetPort: dex
+    - name: oauth2-proxy
+      port: 9000
+      targetPort: oauth2-proxy
   selector:
     app: dex
 {{- end }}

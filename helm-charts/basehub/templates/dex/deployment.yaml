@@ -14,6 +14,7 @@ spec:
         app: dex
       annotations:
         checksum/config: {{ include (print $.Template.BasePath "/dex/configmap.yaml") . | sha256sum }}
+        checksum/secret: {{ include (print $.Template.BasePath "/dex/secret.yaml") . | sha256sum }}
     spec:
       volumes:
         - name: db
@@ -33,11 +34,16 @@ spec:
             - name: dex
               containerPort: 5556
           env:
-          - name: OAUTH2_CLIENT_SECRET
+          - name: HUB_OAUTH2_CLIENT_SECRET
             valueFrom:
               secretKeyRef:
                 name: hub
                 key: hub.services.dex.apiToken
+          - name: OAUTH2_PROXY_CLIENT_SECRET
+            valueFrom:
+              secretKeyRef:
+                name: dex
+                key: oauth2Proxy.clientSecret
           volumeMounts:
           - name: config
             mountPath: /srv/config
@@ -47,4 +53,26 @@ spec:
           - dex
           - serve
           - /srv/config/dex.yaml
+        - name: oauth2-proxy
+          image: quay.io/oauth2-proxy/oauth2-proxy:v7.3.0
+          command:
+          - oauth2-proxy
+          - --config=/srv/config/oauth2-proxy.cfg
+          volumeMounts:
+          - name: config
+            mountPath: /srv/config
+          ports:
+            - name: oauth2-proxy
+              containerPort: 9000
+          env:
+          - name: OAUTH2_PROXY_COOKIE_SECRET
+            valueFrom:
+              secretKeyRef:
+                name: dex
+                key: oauth2Proxy.cookieSecret
+          - name: OAUTH2_PROXY_CLIENT_SECRET
+            valueFrom:
+              secretKeyRef:
+                name: dex
+                key: oauth2Proxy.clientSecret
 {{- end }}

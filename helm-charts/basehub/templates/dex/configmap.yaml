@@ -34,7 +34,7 @@ data:
       config:
         # Connector config values starting with a "$" will read from the environment.
         clientID: service-dex
-        clientSecret:  $OAUTH2_CLIENT_SECRET
+        clientSecret:  $HUB_OAUTH2_CLIENT_SECRET
         redirectURI: https://{{ .Values.dex.hubHostName }}/services/dex/callback
         userIDKey: name
         tokenURL: http://proxy-public/hub/api/oauth2/token
@@ -44,7 +44,17 @@ data:
     staticClients:
     - id: oauth2-proxy
       redirectURIs:
-      - 'http://127.0.0.1:9000/oauth2/callback'
-      name: 'oauth2-proxy'
-      secret: proxy
+      -  https://{{ .Values.dex.hubHostName }}/services/oauth2-proxy/oauth2/callback
+      name: oauth2-proxy
+      secret: $OAUTH2_PROXY_CLIENT_SECRET
+  oauth2-proxy.cfg: |
+    provider = "oidc"
+    client_id = "oauth2-proxy"
+    redirect_url = "https://{{ .Values.dex.hubHostName }}/services/oauth2-proxy/oauth2/callback"
+    oidc_issuer_url = "https://{{ .Values.dex.hubHostName }}/services/dex"
+    oidc_email_claim = "sub"
+    insecure_oidc_allow_unverified_email = true
+    email_domains = "*"
+    http_address = "http://0.0.0.0:9000"
+    skip_provider_button = true
 {{- end }}
