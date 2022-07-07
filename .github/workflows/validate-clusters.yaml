@@ -15,14 +15,14 @@ on:
       - helm-charts/**
       - deployer/**
       - requirements.txt
-      - .github/workflows/validate-hubs.yaml
+      - .github/workflows/validate-clusters.yaml
   push:
     paths:
       - config/clusters/**
       - helm-charts/**
       - deployer/**
       - requirements.txt
-      - .github/workflows/validate-hubs.yaml
+      - .github/workflows/validate-clusters.yaml
     branches-ignore:
       - "dependabot/**"
       - "pre-commit-ci-update-config"
