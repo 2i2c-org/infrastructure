@@ -11,6 +11,5 @@ cloud-access
 gpu
 github
 static-sites
-../customize/configure-login-page
-../operate/override-domain.md
+login-page
 ```
