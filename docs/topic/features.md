@@ -49,3 +49,4 @@ set a `SCRATCH_BUCKET` (and a deprecated `PANGEO_SCRATCH`) environment variable
 of the form `<s3 or gcs>://<bucket-name>/<user-name>`. This can be used by individual
 users to store objects temporarily for their own use, although there is nothing
 preventing other users from accessing these objects!
+

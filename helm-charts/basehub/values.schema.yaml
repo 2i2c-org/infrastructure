@@ -30,6 +30,27 @@ properties:
         type: boolean
         description: |
           Enable hosting static sites associated with this hub.
+      githubApp:
+        type: object
+        additionalProperties: false
+        description: |
+          Enable using a GitHub app to authenticate the cloner,
+          so private repositories can be cloned. Uses
+          https://github.com/yuvipanda/git-credential-helpers
+        properties:
+          enabled:
+            type: boolean
+            description: |
+              Enable the github app integration
+          id:
+            type: integer
+            description: |
+              Integer id of GitHub app to use when cloning private repos
+          privateKey:
+            type: string
+            description: |
+              Private RSA key created to authenticate as this GitHuba pp
+
       repo:
         type: string
         description: |

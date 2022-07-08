@@ -4,10 +4,12 @@ dex:
 
 staticSites:
   enabled: true
-  repo: https://github.com/inferentialthinking/inferentialthinking.github.io
+  repo: https://github.com/yuvipanda/test-repo-push
   branch: master
   host: staging.2i2c.cloud
   path: /textbook
+  githubApp:
+    enabled: true
 
 jupyterhub:
   custom:

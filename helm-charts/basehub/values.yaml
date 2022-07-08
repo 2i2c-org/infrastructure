@@ -11,6 +11,14 @@ dex:
 staticSites:
   enabled: false
   branch: main
+  githubApp:
+    enabled: false
+    # Primarily here for validation to 'work',
+    # as these are set in secret config otherwise. I don't like this,
+    # as we won't catch these values missing if they aren't set.
+    id: 0
+    privateKey: ""
+
 azureFile:
   enabled: false
   pv:

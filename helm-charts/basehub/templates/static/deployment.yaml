@@ -16,15 +16,21 @@ spec:
         checksum/config: {{ include (print $.Template.BasePath "/static/configmap.yaml") . | sha256sum }}
     spec:
       volumes:
-        - name: nginx-config
+        - name: config
           configMap:
             name: static-sites
         - name: content
           emptyDir: {}
+        {{ if .Values.staticSites.githubApp.enabled }}
+        - name: git-config
+          secret:
+            secretName: static-sites
+        {{ end }}
       initContainers:
-        - name: site-clone
-          image: alpine/git
-          args:
+        - name: content-clone
+          image: quay.io/yuvipanda/git-credential-helpers:0.2
+          command:
+            - git
             - clone
             - --depth=1
             - --branch={{ .Values.staticSites.branch | required "staticSites.branch is required with staticSite.enabled set to true" }}
@@ -39,9 +45,19 @@ spec:
           volumeMounts:
             - name: content
               mountPath: /srv/content
+            {{ if .Values.staticSites.githubApp.enabled }}
+            - name: git-config
+              mountPath: /etc/gitconfig
+              subPath: gitconfig
+              readOnly: true
+            - name: git-config
+              mountPath: /etc/github/github-app-private-key.pem
+              subPath: github-app-private-key.pem
+              readOnly: true
+            {{ end }}
       containers:
         - name: content-sync
-          image: alpine/git
+          image: quay.io/yuvipanda/git-credential-helpers:0.2
           workingDir: /srv/content
           command:
             - /bin/sh
@@ -56,6 +72,16 @@ spec:
           volumeMounts:
             - name: content
               mountPath: /srv/content
+            {{ if .Values.staticSites.githubApp.enabled }}
+            - name: git-config
+              mountPath: /etc/gitconfig
+              subPath: gitconfig
+              readOnly: true
+            - name: git-config
+              mountPath: /etc/github/github-app-private-key.pem
+              subPath: github-app-private-key.pem
+              readOnly: true
+            {{ end }}
         - name: server
           image: nginx:1.19
           command: ["/usr/sbin/nginx", "-g", "daemon off;"]
@@ -63,7 +89,7 @@ spec:
             - name: nginx
               containerPort: 8080
           volumeMounts:
-          - name: nginx-config
+          - name: config
             mountPath: /etc/nginx/conf.d/default.conf
             subPath: nginx.conf
           - name: content
