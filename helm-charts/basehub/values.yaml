@@ -11,7 +11,6 @@ dex:
 staticSites:
   enabled: false
   branch: main
-
 azureFile:
   enabled: false
   pv:
@@ -62,10 +61,6 @@ jupyterhub:
         projectId: ""
       scratchBucket:
         enabled: false
-    docs_service:
-      enabled: false
-      repo: ""
-      branch: ""
     2i2c:
       # Should 2i2c engineering staff user IDs be injected to the admin_users
       # configuration of the JupyterHub's authenticator by our custom
@@ -459,12 +454,7 @@ jupyterhub:
             if authenticator_class == "github" and c.Authenticator.allowed_users:
                 print("WARNING: hub.config.JupyterHub.authenticator_class was set to github and c.Authenticator.allowed_users was set, custom 2i2c jupyterhub config is now resetting allowed_users to an empty set.")
                 c.Authenticator.allowed_users = set()
-      05-add-docs-service-if-enabled: |
-        from z2jh import get_config
-
-        if get_config("custom.docs_service.enabled"):
-            c.JupyterHub.services.append({"name": "docs", "url": "http://docs-service"})
-      06-gh-teams: |
+      05-gh-teams: |
         from textwrap import dedent
         from tornado import gen, web
         from oauthenticator.github import GitHubOAuthenticator

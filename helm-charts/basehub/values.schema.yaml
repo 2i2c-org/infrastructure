@@ -189,7 +189,6 @@ properties:
         required:
           - singleuserAdmin
           - cloudResources
-          - docs_service
           - 2i2c
         properties:
           homepage:
@@ -297,20 +296,6 @@ properties:
                 properties:
                   enabled:
                     type: boolean
-          docs_service:
-            type: object
-            additionalProperties: false
-            required:
-              - enabled
-              - repo
-              - branch
-            properties:
-              enabled:
-                type: boolean
-              repo:
-                type: string
-              branch:
-                type: string
           2i2c:
             type: object
             additionalProperties: false
