@@ -23,7 +23,7 @@ variable "user_buckets" {
   type        = map(object({ delete_after : number }))
   default     = {}
   description = <<-EOT
-  GCS Buckets to be created.
+  S3 Buckets to be created.
 
   The key for each entry will be prefixed with {var.prefix}- to form
   the name of the bucket.
@@ -35,7 +35,7 @@ variable "user_buckets" {
 }
 
 variable "hub_cloud_permissions" {
-  type        = map(object({ requestor_pays : bool, bucket_admin_access : set(string) }))
+  type        = map(object({ requestor_pays : bool, bucket_admin_access : set(string), extra_iam_policy : string }))
   default     = {}
   description = <<-EOT
   Map of cloud permissions given to a particular hub
@@ -46,7 +46,19 @@ variable "hub_cloud_permissions" {
   1. requestor_pays: Identify as coming from the google cloud project when accessing
      storage buckets marked as  https://cloud.google.com/storage/docs/requester-pays.
      This *potentially* incurs cost for us, the originating project, so opt-in.
-  2. bucket_admin_access: List of GCS storage buckets that users on this hub should have read
+  2. bucket_admin_access: List of S3 storage buckets that users on this hub should have read
      and write permissions for.
+  3. extra_iam_policy: An AWS IAM Policy document that grants additional rights to the users
+     on this hub when talking to AWS services.
+  EOT
+}
+
+variable "extra_user_iam_policy" {
+  default     = {}
+  description = <<-EOT
+  Policy JSON to attach to the IAM role assumed by users of the hub.
+
+  Used to grant additional permissions to the IAM role that is assumed by
+  user pods when making requests to AWS services (such as S3)
   EOT
 }
