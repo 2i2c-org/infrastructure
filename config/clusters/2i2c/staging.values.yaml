@@ -35,8 +35,10 @@ jupyterhub:
         url: http://dex:5556
         oauth_redirect_uri: https://staging.2i2c.cloud/services/dex/callback
         oauth_no_confirm: true
+        display: false
       oauth2-proxy:
         url: http://dex:9000
+        display: false
     config:
       Authenticator:
         allowed_users: &staging_users

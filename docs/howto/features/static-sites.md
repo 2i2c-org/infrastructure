@@ -30,7 +30,9 @@ jupyterhub:
         url: http://dex:5556
         oauth_redirect_url: https://<hostname-of-hub>/services/dex/callback
         oauth_no_confirm: true
+        display: false
       oauth2-proxy:
+        display: false
         url: http://dex:9000
 
 ```
