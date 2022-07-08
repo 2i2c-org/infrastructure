@@ -1,29 +1,15 @@
-name: Test documentation for broken links
+name: Build documentation and check links
+
 on:
-  pull_request:
-    paths:
-      - "docs/**"
-  push:
-    paths:
-      - "docs/**"
   workflow_dispatch:
+  schedule:
+  # Runs at 1am each day.
+  - cron: '0 1 * * *'
 
 jobs:
+  # ref: https://github.com/2i2c-org/.github/blob/main/.github/workflows/documentation-link-check.yaml
   linkcheck:
-    runs-on: ubuntu-20.04
-    steps:
-      - uses: actions/checkout@v3
-
-      - name: Install environment
-        uses: conda-incubator/setup-miniconda@v2
-        with:
-          environment-file: docs/environment.yml
-          miniforge-version: latest
-          activate-environment: infrastructure-docs
-
-      - name: make linkcheck
-        shell: bash -l {0}
-        run: |
-          cd docs
-          conda activate infrastructure-docs
-          make linkcheck SPHINXOPTS='--color -W --keep-going'
+    uses: 2i2c-org/.github/.github/workflows/documentation-link-check.yaml@main
+    with:
+      docs_path: docs
+      requirements_path: docs/requirements.txt
