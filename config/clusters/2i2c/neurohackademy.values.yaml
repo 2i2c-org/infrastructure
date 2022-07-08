@@ -25,7 +25,12 @@ jupyterhub:
       Authenticator:
         allowed_users: &neurohackademy_users
           - arokem
-      admin_users: *neurohackademy_users
+        admin_users: *neurohackademy_users
       CILogonOAuthenticator:
         oauth_callback_url: https://neurohackademy.2i2c.cloud/hub/oauth_callback
-        username_claim: nickname
+        shown_idps:
+          - https://github.com/login/oauth/authorize
+        allowed_idps:
+          http://github.com/login/oauth/authorize:
+            username_derivation:
+              username_claim: "preferred_username"
