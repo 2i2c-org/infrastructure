@@ -8,6 +8,10 @@ userServiceAccount:
 dex:
   enabled: false
 
+staticSites:
+  enabled: false
+  branch: main
+
 azureFile:
   enabled: false
   pv:

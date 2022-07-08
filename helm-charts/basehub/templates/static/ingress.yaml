@@ -1,0 +1,24 @@
+{{- if .Values.staticSites.enabled -}}
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  annotations:
+    # Authenticate with oauth2-proxy so only hub logged-in users see this
+    # https://kubernetes.github.io/ingress-nginx/examples/auth/oauth-external-auth/
+    nginx.ingress.kubernetes.io/auth-url: "http://dex.{{ .Release.Namespace }}.svc.cluster.local:9000/services/oauth2-proxy/oauth2/auth"
+    nginx.ingress.kubernetes.io/auth-signin: "https://$host/services/oauth2-proxy/oauth2/start?rd=$escaped_request_uri"
+  name: static-sites
+spec:
+  ingressClassName: nginx
+  rules:
+  - host: {{ .Values.staticSites.host}}
+    http:
+      paths:
+      - path: {{ .Values.staticSites.path }}
+        pathType: Prefix
+        backend:
+          service:
+            name: static-sites
+            port:
+              number: 80
+{{- end }}

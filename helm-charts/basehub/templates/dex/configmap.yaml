@@ -7,10 +7,6 @@ metadata:
     app: dex
 data:
   dex.yaml: |
-    # dex expands env vars in values, but does *not* interpolate
-    # them. So we can use an env var for OAUTH2_CLIENT_SECRET as
-    # it is just an expansion, but can not use env vars when constructing
-    # URLs as there's no interpolation! grr.
     issuer: https://{{ .Values.dex.hubHostName }}/services/dex
     storage:
       type: sqlite3
@@ -24,7 +20,7 @@ data:
 
     oauth2:
       # Don't explicitly require users to grant access via the
-      # dex interface, for a smoother interface
+      # dex interface, for a smoother experience
       skipApprovalScreen: true
 
     connectors:
@@ -32,9 +28,10 @@ data:
       id: hub
       name: hub
       config:
-        # Connector config values starting with a "$" will read from the environment.
         clientID: service-dex
-        clientSecret:  $HUB_OAUTH2_CLIENT_SECRET
+        # Env vars are expanded via gomplate, which is present in the
+        # upstream dex docker image
+        clientSecret:  {{ "{{" }} .Env.HUB_OAUTH2_CLIENT_SECRET {{ "}}" }}
         redirectURI: https://{{ .Values.dex.hubHostName }}/services/dex/callback
         userIDKey: name
         tokenURL: http://proxy-public/hub/api/oauth2/token
@@ -46,15 +43,25 @@ data:
       redirectURIs:
       -  https://{{ .Values.dex.hubHostName }}/services/oauth2-proxy/oauth2/callback
       name: oauth2-proxy
-      secret: $OAUTH2_PROXY_CLIENT_SECRET
+      # Env vars are expanded via gomplate, which is present in the
+      # upstream dex docker image
+      secret: {{ "{{" }} .Env.OAUTH2_PROXY_CLIENT_SECRET {{ "}}" }}
   oauth2-proxy.cfg: |
     provider = "oidc"
+    # This is hardcoded in the dex config
     client_id = "oauth2-proxy"
     redirect_url = "https://{{ .Values.dex.hubHostName }}/services/oauth2-proxy/oauth2/callback"
     oidc_issuer_url = "https://{{ .Values.dex.hubHostName }}/services/dex"
     oidc_email_claim = "sub"
+    # We don't actually use email for anything here, so skip email verification
     insecure_oidc_allow_unverified_email = true
     email_domains = "*"
+    # Listen on port 9000
     http_address = "http://0.0.0.0:9000"
+    # Don't require user interaction to log in - treat this more like SSO
     skip_provider_button = true
+    # This is exposed to the internet as a JupyterHub service,
+    # so it is only available prefixed with this URL
+    reverse_proxy = true
+    proxy_prefix = "/services/oauth2-proxy/oauth2"
 {{- end }}

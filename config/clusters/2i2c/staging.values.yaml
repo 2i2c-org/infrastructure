@@ -2,6 +2,13 @@ dex:
   enabled: true
   hubHostName: staging.2i2c.cloud
 
+staticSites:
+  enabled: true
+  repo: https://github.com/inferentialthinking/inferentialthinking.github.io
+  branch: master
+  host: staging.2i2c.cloud
+  path: /textbook
+
 jupyterhub:
   custom:
     2i2c:
@@ -27,6 +34,7 @@ jupyterhub:
       dex:
         url: http://dex:5556
         oauth_redirect_uri: https://staging.2i2c.cloud/services/dex/callback
+        oauth_no_confirm: true
       oauth2-proxy:
         url: http://dex:9000
     config:

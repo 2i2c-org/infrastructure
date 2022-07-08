@@ -18,7 +18,36 @@ required:
   - jupyterhub
   - userServiceAccount
   - dex
+  - staticSites
 properties:
+  staticSites:
+    type: object
+    additionalProperties: false
+    required:
+      - enabled
+    properties:
+      enabled:
+        type: boolean
+        description: |
+          Enable hosting static sites associated with this hub.
+      repo:
+        type: string
+        description: |
+          Git repo to clone and serve statically
+      branch:
+        type: string
+        description: |
+          Branch in given git repo to check out after cloning the repo
+      host:
+        type: string
+        description: |
+          DNS host name of the JupyterHub.
+
+          Must match what the JupyterHub and dex are set up with.
+      path:
+        type: string
+        description: |
+          Absolute path under which the static sites should be available
   dex:
     type: object
     additionalProperties: false
