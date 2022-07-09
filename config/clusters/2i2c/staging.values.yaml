@@ -2,7 +2,7 @@ dex:
   enabled: true
   hubHostName: staging.2i2c.cloud
 
-staticSites:
+staticWebsite:
   enabled: true
   repo: https://github.com/yuvipanda/test-repo-push
   branch: master

@@ -1,4 +1,4 @@
-{{- if .Values.staticSites.enabled -}}
+{{- if .Values.staticWebsite.enabled -}}
 kind: ConfigMap
 apiVersion: v1
 metadata:
@@ -9,7 +9,7 @@ data:
   nginx.conf: |
     server {
       listen 8080;
-      location {{ .Values.staticSites.path }} {
+      location {{ .Values.staticWebsite.path }} {
         index index.html;
         alias /srv/content/repo;
       }

@@ -1,4 +1,4 @@
-{{- if .Values.staticSites.enabled -}}
+{{- if .Values.staticWebsite.enabled -}}
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
@@ -11,10 +11,10 @@ metadata:
 spec:
   ingressClassName: nginx
   rules:
-  - host: {{ .Values.staticSites.host }}
+  - host: {{ .Values.staticWebsite.host }}
     http:
       paths:
-      - path: {{ .Values.staticSites.path }}
+      - path: {{ .Values.staticWebsite.path }}
         pathType: Prefix
         backend:
           service:

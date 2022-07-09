@@ -16,7 +16,7 @@ dex:
   enabled: true
   hubHostName: <hostname-of-hub>
 
-staticSites:
+staticWebsite:
   enabled: true
   repo: <url-of-git-repo>
   branch: <name-of-git-branch>
@@ -52,7 +52,7 @@ dex:
   enabled: true
   hubHostName: staging.2i2c.cloud
 
-staticSites:
+staticWebsite:
   enabled: true
   repo: https://github.com/inferentialthinking/inferentialthinking.github.io
   branch: master
@@ -151,5 +151,5 @@ part that hub admins rather than 2i2c engineers need to do**.
 ### Do a deploy
 
 After all the permissions are setup, you should make sure the config under
-`staticSites.repo` and `staticSites.branch` are set appropriately, and do a deployment
+`staticWebsite.repo` and `staticWebsite.branch` are set appropriately, and do a deployment
 to pull in the private repo!

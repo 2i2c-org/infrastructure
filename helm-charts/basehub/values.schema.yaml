@@ -18,9 +18,9 @@ required:
   - jupyterhub
   - userServiceAccount
   - dex
-  - staticSites
+  - staticWebsite
 properties:
-  staticSites:
+  staticWebsite:
     type: object
     additionalProperties: false
     required:

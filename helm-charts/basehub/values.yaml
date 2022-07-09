@@ -8,7 +8,7 @@ userServiceAccount:
 dex:
   enabled: false
 
-staticSites:
+staticWebsite:
   enabled: false
   branch: main
   githubApp:

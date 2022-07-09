@@ -1,4 +1,4 @@
-{{- if .Values.staticSites.enabled -}}
+{{- if .Values.staticWebsite.enabled -}}
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -21,7 +21,7 @@ spec:
             name: static-sites
         - name: content
           emptyDir: {}
-        {{- if .Values.staticSites.githubApp.enabled }}
+        {{- if .Values.staticWebsite.githubApp.enabled }}
         - name: git-config
           secret:
             secretName: static-sites
@@ -33,10 +33,10 @@ spec:
             - git
             - clone
             - --depth=1
-            - --branch={{ .Values.staticSites.branch | required "staticSites.branch is required with staticSite.enabled set to true" }}
+            - --branch={{ .Values.staticWebsite.branch | required "staticWebsite.branch is required with staticSite.enabled set to true" }}
             - --single-branch
             - --
-            - '{{ .Values.staticSites.repo | required "staticSites.repo is required with staticSites.enabled set to true" }}'
+            - '{{ .Values.staticWebsite.repo | required "staticWebsite.repo is required with staticWebsite.enabled set to true" }}'
             - /srv/content/repo
           securityContext:
               runAsUser: 1000
@@ -45,7 +45,7 @@ spec:
           volumeMounts:
             - name: content
               mountPath: /srv/content
-            {{- if .Values.staticSites.githubApp.enabled }}
+            {{- if .Values.staticWebsite.githubApp.enabled }}
             - name: git-config
               mountPath: /etc/gitconfig
               subPath: gitconfig
@@ -63,7 +63,7 @@ spec:
             - /bin/sh
           args:
             - -c
-            - "while true; do git fetch origin; git reset --hard origin/{{ .Values.staticSites.branch }}; sleep\
+            - "while true; do git fetch origin; git reset --hard origin/{{ .Values.staticWebsite.branch }}; sleep\
               \ 5m; done"
           securityContext:
             runAsUser: 1000
@@ -72,7 +72,7 @@ spec:
           volumeMounts:
             - name: content
               mountPath: /srv/content
-            {{- if .Values.staticSites.githubApp.enabled }}
+            {{- if .Values.staticWebsite.githubApp.enabled }}
             - name: git-config
               mountPath: /etc/gitconfig
               subPath: gitconfig
