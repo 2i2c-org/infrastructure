@@ -33,10 +33,10 @@ spec:
             - git
             - clone
             - --depth=1
-            - --branch={{ .Values.staticWebsite.branch | required "staticWebsite.branch is required with staticSite.enabled set to true" }}
+            - --branch={{ .Values.staticWebsite.source.git.branch | required "staticWebsite.source.git.branch is required with staticSite.enabled set to true" }}
             - --single-branch
             - --
-            - '{{ .Values.staticWebsite.repo | required "staticWebsite.repo is required with staticWebsite.enabled set to true" }}'
+            - '{{ .Values.staticWebsite.source.git.repo | required "staticWebsite.source.git.repo is required with staticWebsite.enabled set to true" }}'
             - /srv/content/repo
           securityContext:
               runAsUser: 1000
@@ -63,7 +63,7 @@ spec:
             - /bin/sh
           args:
             - -c
-            - "while true; do git fetch origin; git reset --hard origin/{{ .Values.staticWebsite.branch }}; sleep\
+            - "while true; do git fetch origin; git reset --hard origin/{{ .Values.staticWebsite.source.git.branch }}; sleep\
               \ 5m; done"
           securityContext:
             runAsUser: 1000

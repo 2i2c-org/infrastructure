@@ -30,6 +30,26 @@ properties:
         type: boolean
         description: |
           Enable hosting static sites associated with this hub.
+      source:
+        type: object
+        additionalProperties: false
+        description: |
+          Source of the static files to serve
+        properties:
+          git:
+            type: object
+            additionalProperties: false
+            description: |
+              Config of git repository to pull from
+            properties:
+              repo:
+                type: string
+                description: |
+                  Git repo to clone and serve statically
+              branch:
+                type: string
+                description: |
+                  Branch in given git repo to check out after cloning the repo
       githubApp:
         type: object
         additionalProperties: false
@@ -50,15 +70,6 @@ properties:
             type: string
             description: |
               Private RSA key created to authenticate as this GitHuba pp
-
-      repo:
-        type: string
-        description: |
-          Git repo to clone and serve statically
-      branch:
-        type: string
-        description: |
-          Branch in given git repo to check out after cloning the repo
       host:
         type: string
         description: |

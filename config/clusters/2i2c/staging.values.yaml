@@ -4,8 +4,10 @@ dex:
 
 staticWebsite:
   enabled: true
-  repo: https://github.com/yuvipanda/test-repo-push
-  branch: master
+  source:
+    git:
+      repo: https://github.com/yuvipanda/test-repo-push
+      branch: master
   host: staging.2i2c.cloud
   path: /textbook
   githubApp:

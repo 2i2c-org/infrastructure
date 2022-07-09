@@ -18,8 +18,10 @@ dex:
 
 staticWebsite:
   enabled: true
-  repo: <url-of-git-repo>
-  branch: <name-of-git-branch>
+  source:
+    git:
+      repo: <url-of-git-repo>
+      branch: <name-of-git-branch>
   host: <hostname-of-hub>
   path: <absolute-path-where-content-is-available>
 
@@ -54,8 +56,10 @@ dex:
 
 staticWebsite:
   enabled: true
-  repo: https://github.com/inferentialthinking/inferentialthinking.github.io
-  branch: master
+  source:
+    git:
+      repo: https://github.com/inferentialthinking/inferentialthinking.github.io
+      branch: master
   host: staging.2i2c.cloud
   path: /textbook
 
@@ -151,5 +155,5 @@ part that hub admins rather than 2i2c engineers need to do**.
 ### Do a deploy
 
 After all the permissions are setup, you should make sure the config under
-`staticWebsite.repo` and `staticWebsite.branch` are set appropriately, and do a deployment
+`staticWebsite.source.git.repo` and `staticWebsite.source.git.repo` are set appropriately, and do a deployment
 to pull in the private repo!

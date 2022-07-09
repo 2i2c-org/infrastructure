@@ -10,7 +10,9 @@ dex:
 
 staticWebsite:
   enabled: false
-  branch: main
+  source:
+    git:
+      branch: main
   githubApp:
     enabled: false
     # Primarily here for validation to 'work',
