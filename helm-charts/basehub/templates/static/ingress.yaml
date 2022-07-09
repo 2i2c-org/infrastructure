@@ -11,7 +11,7 @@ metadata:
 spec:
   ingressClassName: nginx
   rules:
-  - host: {{ .Values.staticSites.host}}
+  - host: {{ .Values.staticSites.host }}
     http:
       paths:
       - path: {{ .Values.staticSites.path }}
