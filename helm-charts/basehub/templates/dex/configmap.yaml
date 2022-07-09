@@ -24,24 +24,24 @@ data:
       skipApprovalScreen: true
 
     connectors:
-    - type: oauth
-      id: hub
-      name: hub
-      config:
-        clientID: service-dex
-        # Env vars are expanded via gomplate, which is present in the
-        # upstream dex docker image
-        clientSecret:  {{ "{{" }} .Env.HUB_OAUTH2_CLIENT_SECRET {{ "}}" }}
-        redirectURI: https://{{ .Values.dex.hubHostName }}/services/dex/callback
-        userIDKey: name
-        tokenURL: http://proxy-public/hub/api/oauth2/token
-        authorizationURL: https://{{ .Values.dex.hubHostName }}/hub/api/oauth2/authorize
-        userInfoURL: http://proxy-public/hub/api/user
+      - type: oauth
+        id: hub
+        name: hub
+        config:
+          clientID: service-dex
+          # Env vars are expanded via gomplate, which is present in the
+          # upstream dex docker image
+          clientSecret:  {{ "{{" }} .Env.HUB_OAUTH2_CLIENT_SECRET {{ "}}" }}
+          redirectURI: https://{{ .Values.dex.hubHostName }}/services/dex/callback
+          userIDKey: name
+          tokenURL: http://proxy-public/hub/api/oauth2/token
+          authorizationURL: https://{{ .Values.dex.hubHostName }}/hub/api/oauth2/authorize
+          userInfoURL: http://proxy-public/hub/api/user
 
     staticClients:
     - id: oauth2-proxy
       redirectURIs:
-      -  https://{{ .Values.dex.hubHostName }}/services/oauth2-proxy/oauth2/callback
+        - https://{{ .Values.dex.hubHostName }}/services/oauth2-proxy/oauth2/callback
       name: oauth2-proxy
       # Env vars are expanded via gomplate, which is present in the
       # upstream dex docker image
