@@ -21,7 +21,7 @@ spec:
             name: static-sites
         - name: content
           emptyDir: {}
-        {{- if .Values.staticWebsite.githubApp.enabled }}
+        {{- if .Values.staticWebsite.githubAuth.enabled }}
         - name: git-config
           secret:
             secretName: static-sites
@@ -45,7 +45,7 @@ spec:
           volumeMounts:
             - name: content
               mountPath: /srv/content
-            {{- if .Values.staticWebsite.githubApp.enabled }}
+            {{- if .Values.staticWebsite.githubAuth.enabled }}
             - name: git-config
               mountPath: /etc/gitconfig
               subPath: gitconfig
@@ -72,7 +72,7 @@ spec:
           volumeMounts:
             - name: content
               mountPath: /srv/content
-            {{- if .Values.staticWebsite.githubApp.enabled }}
+            {{- if .Values.staticWebsite.githubAuth.enabled }}
             - name: git-config
               mountPath: /etc/gitconfig
               subPath: gitconfig

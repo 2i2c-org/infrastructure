@@ -121,8 +121,8 @@ Now, we can configure our static files server to make use of the GitHub app to a
 1. Enable the gitHub app in the `.values.yaml` file for the hub.
 
    ```yaml
-   staticFiles:
-     githubApp:
+   staticWebsite:
+     gitHubAuth:
        enabled: true
    ```
 
@@ -131,11 +131,12 @@ Now, we can configure our static files server to make use of the GitHub app to a
    the GitHub app.
 
    ```yaml
-   staticFiles:
-     githubApp:
-       id: <id-of-the-app>
-       privateKey: |
-        <contents-of-private-key-file>
+   staticWebsite:
+     githubAuth:
+       githubApp:
+         id: <id-of-the-app>
+         privateKey: |
+           <contents-of-private-key-file>
    ```
 
    Make sure this file is also listed under `helm_chart_values_files` for the hub in

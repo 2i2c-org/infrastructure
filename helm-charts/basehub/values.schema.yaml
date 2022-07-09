@@ -50,7 +50,7 @@ properties:
                 type: string
                 description: |
                   Branch in given git repo to check out after cloning the repo
-      githubApp:
+      githubAuth:
         type: object
         additionalProperties: false
         description: |
@@ -62,14 +62,20 @@ properties:
             type: boolean
             description: |
               Enable the github app integration
-          id:
-            type: integer
+          githubApp:
+            type: object
+            additionalProperties: false
             description: |
-              Integer id of GitHub app to use when cloning private repos
-          privateKey:
-            type: string
-            description: |
-              Private RSA key created to authenticate as this GitHuba pp
+              Configuration of the github app to use for authentication
+            properties:
+              id:
+                type: integer
+                description: |
+                  Integer id of GitHub app to use when cloning private repos
+              privateKey:
+                type: string
+                description: |
+                  Private RSA key created to authenticate as this GitHuba pp
       url:
         type: object
         additionalProperties: false

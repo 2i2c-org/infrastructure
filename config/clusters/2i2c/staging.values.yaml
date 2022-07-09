@@ -11,7 +11,7 @@ staticWebsite:
   url:
     host: staging.2i2c.cloud
     path: /textbook
-  githubApp:
+  githubAuth:
     enabled: true
 
 jupyterhub:
