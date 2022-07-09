@@ -11,10 +11,10 @@ metadata:
 spec:
   ingressClassName: nginx
   rules:
-  - host: {{ .Values.staticWebsite.host }}
+  - host: {{ .Values.staticWebsite.url.host }}
     http:
       paths:
-      - path: {{ .Values.staticWebsite.path }}
+      - path: {{ .Values.staticWebsite.url.path }}
         pathType: Prefix
         backend:
           service:

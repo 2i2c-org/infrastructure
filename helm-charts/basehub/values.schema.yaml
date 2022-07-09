@@ -70,16 +70,22 @@ properties:
             type: string
             description: |
               Private RSA key created to authenticate as this GitHuba pp
-      host:
-        type: string
+      url:
+        type: object
+        additionalProperties: false
         description: |
-          DNS host name of the JupyterHub.
+          URL where this static website should be available
+        properties:
+          host:
+            type: string
+            description: |
+              DNS host name of the JupyterHub.
 
-          Must match what the JupyterHub and dex are set up with.
-      path:
-        type: string
-        description: |
-          Absolute path under which the static sites should be available
+              Must match what the JupyterHub and dex are set up with.
+          path:
+            type: string
+            description: |
+              Absolute path under which the static sites should be available
   dex:
     type: object
     additionalProperties: false

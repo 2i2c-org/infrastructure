@@ -22,8 +22,9 @@ staticWebsite:
     git:
       repo: <url-of-git-repo>
       branch: <name-of-git-branch>
-  host: <hostname-of-hub>
-  path: <absolute-path-where-content-is-available>
+  url:
+    host: <hostname-of-hub>
+    path: <absolute-path-where-content-is-available>
 
 jupyterhub:
   hub:
@@ -60,8 +61,9 @@ staticWebsite:
     git:
       repo: https://github.com/inferentialthinking/inferentialthinking.github.io
       branch: master
-  host: staging.2i2c.cloud
-  path: /textbook
+  url:
+    host: staging.2i2c.cloud
+    path: /textbook
 
 jupyterhub:
   hub:

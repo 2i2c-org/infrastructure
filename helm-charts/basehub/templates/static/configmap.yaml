@@ -9,7 +9,7 @@ data:
   nginx.conf: |
     server {
       listen 8080;
-      location {{ .Values.staticWebsite.path }} {
+      location {{ .Values.staticWebsite.url.path }} {
         index index.html;
         alias /srv/content/repo;
       }
