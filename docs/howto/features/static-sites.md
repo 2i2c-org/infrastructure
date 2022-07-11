@@ -104,7 +104,7 @@ to pull private repos as static content.
 4. Under 'Repository permissions', select 'Read' for 'Contents'.
 
 5. Under 'Where can this GitHub App be installed?', select 'Any account'. This will
-   enable users to push to their own user repositories or other organization repositaries,
+   enable users to push to their own user repositories or other organization repositories,
    rather than just the 2i2c repos.
 
 6. Create the application with the 'Create GitHub app' button.
