@@ -17,7 +17,97 @@ required:
   - global
   - jupyterhub
   - userServiceAccount
+  - dex
+  - staticWebsite
 properties:
+  staticWebsite:
+    type: object
+    additionalProperties: false
+    required:
+      - enabled
+    properties:
+      enabled:
+        type: boolean
+        description: |
+          Enable hosting static sites associated with this hub.
+      source:
+        type: object
+        additionalProperties: false
+        description: |
+          Source of the static files to serve
+        properties:
+          git:
+            type: object
+            additionalProperties: false
+            description: |
+              Config of git repository to pull from
+            properties:
+              repo:
+                type: string
+                description: |
+                  Git repo to clone and serve statically
+              branch:
+                type: string
+                description: |
+                  Branch in given git repo to check out after cloning the repo
+      githubAuth:
+        type: object
+        additionalProperties: false
+        description: |
+          Enable using a GitHub app to authenticate the cloner,
+          so private repositories can be cloned. Uses
+          https://github.com/yuvipanda/git-credential-helpers
+        properties:
+          enabled:
+            type: boolean
+            description: |
+              Enable the github app integration
+          githubApp:
+            type: object
+            additionalProperties: false
+            description: |
+              Configuration of the github app to use for authentication
+            properties:
+              id:
+                type: integer
+                description: |
+                  Integer id of GitHub app to use when cloning private repos
+              privateKey:
+                type: string
+                description: |
+                  Private RSA key created to authenticate as this GitHuba pp
+      ingress:
+        type: object
+        additionalProperties: false
+        description: |
+          Configuration for the ingress that gets traffic into the static site
+        properties:
+          host:
+            type: string
+            description: |
+              DNS host name of the JupyterHub.
+
+              Must match what the JupyterHub and dex are set up with.
+          path:
+            type: string
+            description: |
+              Absolute path under which the static sites should be available
+  dex:
+    type: object
+    additionalProperties: false
+    required:
+      - enabled
+    properties:
+      enabled:
+        type: boolean
+        description: |
+          Enable dex to provide OIDC
+      hubHostName:
+        type: string
+        description: |
+          Publicly accessible domain name of the hub.
+
+          Used to construct URLs.
   userServiceAccount:
     type: object
     additionalProperties: false
@@ -143,7 +233,6 @@ properties:
         required:
           - singleuserAdmin
           - cloudResources
-          - docs_service
           - 2i2c
         properties:
           homepage:
@@ -251,20 +340,6 @@ properties:
                 properties:
                   enabled:
                     type: boolean
-          docs_service:
-            type: object
-            additionalProperties: false
-            required:
-              - enabled
-              - repo
-              - branch
-            properties:
-              enabled:
-                type: boolean
-              repo:
-                type: string
-              branch:
-                type: string
           2i2c:
             type: object
             additionalProperties: false

@@ -1,0 +1,97 @@
+{{- if .Values.staticWebsite.enabled -}}
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: static-sites
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: static-sites
+  template:
+    metadata:
+      labels:
+        app: static-sites
+      annotations:
+        checksum/config: {{ include (print $.Template.BasePath "/static/configmap.yaml") . | sha256sum }}
+    spec:
+      volumes:
+        - name: config
+          configMap:
+            name: static-sites
+        - name: content
+          emptyDir: {}
+        {{- if .Values.staticWebsite.githubAuth.enabled }}
+        - name: git-config
+          secret:
+            secretName: static-sites
+        {{- end }}
+      initContainers:
+        - name: content-clone
+          image: quay.io/yuvipanda/git-credential-helpers:0.2
+          command:
+            - git
+            - clone
+            - --depth=1
+            - --branch={{ .Values.staticWebsite.source.git.branch | required "staticWebsite.source.git.branch is required with staticSite.enabled set to true" }}
+            - --single-branch
+            - --
+            - '{{ .Values.staticWebsite.source.git.repo | required "staticWebsite.source.git.repo is required with staticWebsite.enabled set to true" }}'
+            - /srv/content/repo
+          securityContext:
+              runAsUser: 1000
+              allowPrivilegeEscalation: False
+              readOnlyRootFilesystem: True
+          volumeMounts:
+            - name: content
+              mountPath: /srv/content
+            {{- if .Values.staticWebsite.githubAuth.enabled }}
+            - name: git-config
+              mountPath: /etc/gitconfig
+              subPath: gitconfig
+              readOnly: true
+            - name: git-config
+              mountPath: /etc/github/github-app-private-key.pem
+              subPath: github-app-private-key.pem
+              readOnly: true
+            {{- end }}
+      containers:
+        - name: content-sync
+          image: quay.io/yuvipanda/git-credential-helpers:0.2
+          workingDir: /srv/content
+          command:
+            - /bin/sh
+          args:
+            - -c
+            - "while true; do git fetch origin; git reset --hard origin/{{ .Values.staticWebsite.source.git.branch }}; sleep\
+              \ 5m; done"
+          securityContext:
+            runAsUser: 1000
+            allowPrivilegeEscalation: False
+            readOnlyRootFilesystem: True
+          volumeMounts:
+            - name: content
+              mountPath: /srv/content
+            {{- if .Values.staticWebsite.githubAuth.enabled }}
+            - name: git-config
+              mountPath: /etc/gitconfig
+              subPath: gitconfig
+              readOnly: true
+            - name: git-config
+              mountPath: /etc/github/github-app-private-key.pem
+              subPath: github-app-private-key.pem
+              readOnly: true
+            {{- end }}
+        - name: server
+          image: nginx:1.19
+          command: ["/usr/sbin/nginx", "-g", "daemon off;"]
+          ports:
+            - name: nginx
+              containerPort: 8080
+          volumeMounts:
+            - name: config
+              mountPath: /etc/nginx/conf.d/default.conf
+              subPath: nginx.conf
+            - name: content
+              mountPath: /srv/content
+{{- end }}

@@ -10,7 +10,6 @@ See the sections below for more details:
 cloud-access
 gpu
 github
-../customize/docs-service
-../customize/configure-login-page
-../operate/override-domain.md
+static-sites
+login-page
 ```

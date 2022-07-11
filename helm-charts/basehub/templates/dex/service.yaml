@@ -1,0 +1,19 @@
+{{- if .Values.dex.enabled -}}
+apiVersion: v1
+kind: Service
+metadata:
+  name: dex
+  labels:
+    app: dex
+spec:
+  type: ClusterIP
+  ports:
+    - name: dex
+      port: 5556
+      targetPort: dex
+    - name: oauth2-proxy
+      port: 9000
+      targetPort: oauth2-proxy
+  selector:
+    app: dex
+{{- end }}
