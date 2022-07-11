@@ -76,11 +76,11 @@ properties:
                 type: string
                 description: |
                   Private RSA key created to authenticate as this GitHuba pp
-      url:
+      ingress:
         type: object
         additionalProperties: false
         description: |
-          URL where this static website should be available
+          Configuration for the ingress that gets traffic into the static site
         properties:
           host:
             type: string

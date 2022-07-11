@@ -22,7 +22,7 @@ staticWebsite:
     git:
       repo: <url-of-git-repo>
       branch: <name-of-git-branch>
-  url:
+  ingress:
     host: <hostname-of-hub>
     path: <absolute-path-where-content-is-available>
 
@@ -61,7 +61,7 @@ staticWebsite:
     git:
       repo: https://github.com/inferentialthinking/inferentialthinking.github.io
       branch: master
-  url:
+  ingress:
     host: staging.2i2c.cloud
     path: /textbook
 
