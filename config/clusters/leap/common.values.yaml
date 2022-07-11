@@ -128,7 +128,7 @@ basehub:
             [
               "sh",
               "-c",
-              "id && chown 1000:1000 /home/jovyan && ls -lhd /home/jovyan",
+              "id && chown 1000:1000 /home/jovyan && chown 1000:1000 /home/jovyan/shared-readwrite && ls -lhd /home/jovyan ",
             ]
           securityContext:
             runAsUser: 0
@@ -136,6 +136,10 @@ basehub:
             - name: home
               mountPath: /home/jovyan
               subPath: "{username}"
+            # Here so we can chown it appropriately
+            - name: home
+              mountPath: /home/jovyan/shared-readwrite
+              subPath: _shared
 dask-gateway:
   gateway:
     backend:
