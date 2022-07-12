@@ -1,3 +1,29 @@
+dex:
+  enabled: true
+  hubHostName: neurohackademy.2i2c.cloud
+
+staticWebsite:
+  enabled: true
+  source:
+    git:
+      repo: https://github.com/neurohackademy/zoom2022
+      branch: main
+  ingress:
+    host: neurohackademy.2i2c.cloud
+    path: /zoom
+  githubAuth:
+    enabled: true
+
+jupyterhub:
+  hub:
+    services:
+      dex:
+        url: http://dex:5556
+        oauth_redirect_uri: https://neurohackademy.2i2c.cloud/services/dex/callback
+        oauth_no_confirm: true
+      oauth2-proxy:
+        url: http://dex:9000
+
 jupyterhub:
   custom:
     2i2c:
