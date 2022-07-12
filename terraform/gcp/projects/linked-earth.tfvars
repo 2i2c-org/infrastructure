@@ -7,7 +7,7 @@ enable_network_policy  = true
 
 # Setup a filestore for in-cluster NFS
 enable_filestore = true
-filestore_capacity_gb = 2048
+filestore_capacity_gb = 1024
 
 user_buckets = {
   "scratch-staging": {
