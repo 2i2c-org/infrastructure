@@ -15,16 +15,6 @@ staticWebsite:
     enabled: true
 
 jupyterhub:
-  hub:
-    services:
-      dex:
-        url: http://dex:5556
-        oauth_redirect_uri: https://neurohackademy.2i2c.cloud/services/dex/callback
-        oauth_no_confirm: true
-      oauth2-proxy:
-        url: http://dex:9000
-
-jupyterhub:
   custom:
     2i2c:
       add_staff_user_ids_to_admin_users: true
@@ -65,3 +55,10 @@ jupyterhub:
           http://github.com/login/oauth/authorize:
             username_derivation:
               username_claim: "preferred_username"
+    services:
+      dex:
+        url: http://dex:5556
+        oauth_redirect_uri: https://neurohackademy.2i2c.cloud/services/dex/callback
+        oauth_no_confirm: true
+      oauth2-proxy:
+        url: http://dex:9000
