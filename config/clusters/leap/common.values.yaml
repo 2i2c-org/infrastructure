@@ -145,8 +145,8 @@ dask-gateway:
     backend:
       scheduler:
         cores:
-          request: 0.8
-          limit: 1
+          request: 1
+          limit: 2
         memory:
-          request: 1G
-          limit: 2G
+          request: 4G
+          limit: 4G
