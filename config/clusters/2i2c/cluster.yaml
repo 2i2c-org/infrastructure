@@ -57,6 +57,20 @@ hubs:
       # that you intend for these files to be applied in this order.
       - enc-demo.secret.values.yaml
       - demo.values.yaml
+  - name: neurohackademy
+    display_name: "NeuroHackademy"
+    domain: neurohackademy.2i2c.cloud
+    helm_chart: basehub
+    auth0:
+      # connection update? Also ensure the basehub Helm chart is provided a
+      # matching value for jupyterhub.custom.2i2c.add_staff_user_ids_of_type!
+      enabled: false
+    helm_chart_values_files:
+      # The order in which you list files here is the order the will be passed
+      # to the helm upgrade command in, and that has meaning. Please check
+      # that you intend for these files to be applied in this order.
+      - enc-neurohackademy.secret.values.yaml
+      - neurohackademy.values.yaml
   - name: ohw
     display_name: "Ocean Hack Week"
     domain: ohw.pilot.2i2c.cloud
