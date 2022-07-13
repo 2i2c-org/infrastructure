@@ -58,7 +58,7 @@ spec:
       containers:
         - name: content-sync
           image: quay.io/yuvipanda/git-credential-helpers:0.2
-          workingDir: /srv/content
+          workingDir: /srv/content/repo
           command:
             - /bin/sh
           args:
