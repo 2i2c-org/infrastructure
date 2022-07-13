@@ -36,6 +36,7 @@ jupyterhub:
           url: https://reporter.nih.gov/search/ydTvTwXxk0yd6eGdRznbLQ/project-details/10409452
   singleuser:
     # User image: https://quay.io/repository/arokem/nh-jhub-2022?tab=tags
+    defaultUrl: /lab
     image:
       name: quay.io/arokem/nh-jhub-2022
       tag: "3d441bdb82f6"
