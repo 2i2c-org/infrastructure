@@ -91,7 +91,10 @@ properties:
           path:
             type: string
             description: |
-              Absolute path under which the static sites should be available
+              Absolute path under which the static sites should be available.
+
+              Should not end with a trailing slash.
+            pattern: "[^/]$"
   dex:
     type: object
     additionalProperties: false

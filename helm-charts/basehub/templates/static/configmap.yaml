@@ -9,9 +9,15 @@ data:
   nginx.conf: |
     server {
       listen 8080;
-      location {{ .Values.staticWebsite.ingress.path }} {
+      # We require path to *not* have a trailing slash
+      location {{ .Values.staticWebsite.ingress.path }}/ {
         index index.html;
         alias /srv/content/repo;
+      }
+
+      # If there's no trailing slash, just redirect it to trailing slash
+      location {{ .Values.staticWebsite.ingress.path }} {
+        return 301 {{ .Values.staticWebsite.ingress.path }};
       }
     }
 {{- end }}
