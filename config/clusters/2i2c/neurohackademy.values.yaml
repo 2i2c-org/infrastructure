@@ -7,7 +7,7 @@ staticWebsite:
   source:
     git:
       repo: https://github.com/neurohackademy/zoom2022
-      branch: main
+      branch: master
   ingress:
     host: neurohackademy.2i2c.cloud
     path: /zoom
