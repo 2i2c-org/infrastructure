@@ -47,7 +47,7 @@ basehub:
             - 2i2c-org
             - LinkedEarth
           scope:
-            - read:user
+            - read:org
     singleuser:
       image:
         # User image repo: https://quay.io/repository/linkedearth/pyleoclim
