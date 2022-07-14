@@ -6,7 +6,7 @@ basehub:
         - soft
         - noatime
       # Google FileStore IP
-      serverIP: 10.58.206.114
+      serverIP: 10.155.150.2
       # Name of Google Filestore share
       baseShareName: /homes/
   jupyterhub:
