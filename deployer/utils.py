@@ -62,7 +62,7 @@ def create_markdown_comment(support_staging_matrix, prod_matrix):
     }
 
     # A dictionary to convert row values when they are Boolean
-    row_converter = {
+    boolean_converter = {
         True: "Yes",
         False: "No",
     }
@@ -78,13 +78,13 @@ def create_markdown_comment(support_staging_matrix, prod_matrix):
         formatted_entry = {
             column_converter["provider"]: entry["provider"],
             column_converter["cluster_name"]: entry["cluster_name"],
-            column_converter["upgrade_support"]: row_converter[
+            column_converter["upgrade_support"]: boolean_converter[
                 entry["upgrade_support"]
             ],
             column_converter["reason_for_support_redeploy"]: entry[
                 "reason_for_support_redeploy"
             ],
-            column_converter["upgrade_staging"]: row_converter[
+            column_converter["upgrade_staging"]: boolean_converter[
                 entry["upgrade_staging"]
             ],
             column_converter["reason_for_staging_redeploy"]: entry[
