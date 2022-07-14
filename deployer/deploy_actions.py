@@ -31,7 +31,7 @@ from helm_upgrade_decision import (
     pretty_print_matrix_jobs,
 )
 from ruamel.yaml import YAML
-from utils import print_colour
+from utils import create_markdown_comment, print_colour
 
 # Without `pure=True`, I get an exception about str / byte issues
 yaml = YAML(typ="safe", pure=True)
@@ -341,6 +341,14 @@ def generate_helm_upgrade_jobs(changed_filepaths):
         print(
             f"::set-output name=support-and-staging-matrix-jobs::{json.dumps(support_and_staging_matrix_jobs)}"
         )
+
+        # Don't bother generating a comment if both of the matrices are empty
+        if support_and_staging_matrix_jobs or prod_hub_matrix_jobs:
+            # Generate Markdown tables from the job matrices and write them to a file
+            # for use in another job
+            create_markdown_comment(
+                support_and_staging_matrix_jobs, prod_hub_matrix_jobs
+            )
 
 
 def run_hub_health_check(cluster_name, hub_name, check_dask_scaling=False):

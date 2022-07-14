@@ -40,14 +40,14 @@ env:
 
 jobs:
   # This job runs in Pull Requests and on pushes to the default branch. It identifies
-  # which files have been aded or modified by recent GitHub activity and parsed a list
+  # which files have been added or modified by recent GitHub activity and parsed a list
   # to the generate-helm-upgrade-jobs function of the deployer. This function generates
   # two lists of dictionaries, which can be read by GitHub Actions as matrix jobs. The
   # first set of jobs describes which clusters need their support chart and/or staging
   # hub upgraded; and the second set of jobs describe which production hubs require
   # upgrading. These two lists are set as job outputs using ::set-output to be consumed
   # by the later jobs. They are also pretty-printed in a human-readable format to the
-  # logs.
+  # logs, and converted into Markdown tables for posting into GitHub comments.
   generate-jobs:
     runs-on: ubuntu-latest
     outputs:
@@ -92,13 +92,35 @@ jobs:
           format: space-delimited
           token: ${{ secrets.GITHUB_TOKEN }}
 
-      # TODO: Post the pretty print output of this step as a comment on the Pull Request.
-      # Do this in a Netlify-style way where if a comment already exists, it is updated
-      # instead of generating a new comment.
+      # This step will create a comment-body.txt file containing the jobs to be run in a
+      # Markdown table format to be posted on a Pull Request, if this job is triggered
+      # by one
       - name: Generate matrix jobs
         id: generate-jobs
         run: |
           python deployer generate-helm-upgrade-jobs "${{ steps.changed-files.outputs.added_modified }}"
+
+      # The comment-deployment-plan-pr.yaml workflow won't have the correct context to
+      # know the PR number, so we save it to a file to pass to that workflow
+      - name: Save Pull Request number to a file
+        if: github.event_name == 'pull_request'
+        run: |
+          echo "${{ github.event.number }}" > pr-number.txt
+
+      # Upload the pr-number.txt and comment-body.txt files as artifacts for the
+      # comment-deployment-plan-pr.yaml workflow to access
+      - name: Upload artifacts
+        # Only run this steps in PRs when the matrices are not empty
+        if: >
+          github.event_name == 'pull_request' &&
+          steps.generate-jobs.outputs.support-and-staging-matrix-jobs != '[]' &&
+          steps.generate-jobs.outputs.prod-hub-matrix-jobs != '[]'
+        uses: actions/upload-artifact@v3.1.0
+        with:
+          name: pr
+          path: |
+            pr-number.txt
+            comment-body.txt
 
   # This job upgrades the support chart, staging hub, and dask-staging hub (if present)
   # for clusters in parallel, if those upgrades are required. This job needs the
