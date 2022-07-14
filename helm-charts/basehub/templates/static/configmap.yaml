@@ -9,7 +9,7 @@ data:
   nginx.conf: |
     server {
       listen 8080;
-      # We require path to *not* have a trailing slash
+      # We enforce path to *not* have a trailing slash via the helm chart schema
       location {{ .Values.staticWebsite.ingress.path }}/ {
         index index.html;
         alias /srv/content/repo;
