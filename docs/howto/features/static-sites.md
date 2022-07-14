@@ -46,6 +46,10 @@ them in our deploy scripts. This leads to some additional copy-pasting and
 duplication, but keeps our config explicit and simple.
 ```
 
+```{note}
+`staticWebsite.ingress.path` should not have a trailing slash.
+```
+
 ## Example
 
 Here's a sample that hosts the data8 textbook under `https://staging.2i2c.cloud/textbook`:
