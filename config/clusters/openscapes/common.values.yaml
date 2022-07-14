@@ -69,6 +69,23 @@ basehub:
         # on these nodes.
         - display_name: "Small: m5.large"
           description: "~2 CPU, ~8G RAM"
+          profile_options: &profile_options
+            image:
+              display_name: Image
+              choices:
+                python:
+                  display_name: Python
+                  default: true
+                  kubespawner_override:
+                    image: openscapes/python:8c7d33e
+                rocker:
+                  display_name: R
+                  kubespawner_override:
+                    image: openscapes/rocker:b88a034
+                matlab:
+                  display_name: Matlab
+                  kubespawner_override:
+                    image: openscapes/matlab:fb41496
           kubespawner_override:
             # Expllicitly unset mem_limit, so it overrides the default memory limit we set in
             # basehub/values.yaml
@@ -78,6 +95,7 @@ basehub:
               node.kubernetes.io/instance-type: m5.large
         - display_name: "Medium: m5.xlarge"
           description: "~4 CPU, ~15G RAM"
+          profile_options: *profile_options
           kubespawner_override:
             mem_limit: null
             mem_guarantee: 12G
@@ -85,6 +103,7 @@ basehub:
               node.kubernetes.io/instance-type: m5.xlarge
         - display_name: "Large: m5.2xlarge"
           description: "~8 CPU, ~30G RAM"
+          profile_options: *profile_options
           kubespawner_override:
             mem_limit: null
             mem_guarantee: 26G
@@ -92,6 +111,7 @@ basehub:
               node.kubernetes.io/instance-type: m5.2xlarge
         - display_name: "Huge: m5.8xlarge"
           description: "~32 CPU, ~128G RAM"
+          profile_options: *profile_options
           kubespawner_override:
             mem_limit: null
             mem_guarantee: 115G
