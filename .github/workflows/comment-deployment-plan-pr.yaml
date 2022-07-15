@@ -25,9 +25,10 @@ jobs:
     if: >
       github.event.workflow_run.event == 'pull_request' &&
       github.event.workflow_run.conclusion == 'success'
-    # Give GITHUB_TOKEN enough permissions to read issue comments and post/update
-    # comments on Pull Requests
+    # Give GITHUB_TOKEN enough permissions to read actions artifacts, issue comments and
+    # post/update comments on Pull Requests
     permissions:
+      actions: read
       issues: read
       pull-requests: write
     steps:
