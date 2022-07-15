@@ -4,7 +4,7 @@ binderhub:
   config:
     BinderHub:
       use_registry: true
-      build_image: "quay.io/jupyterhub/repo2docker:2022.02.0-32.ge7524a7"
+      build_image: "quay.io/jupyterhub/repo2docker:2022.02.0-60.g5b688f4"
       per_repo_quota: 150
       build_node_selector:
         # Build user images only on user nodes, not dask or core nodes
@@ -27,7 +27,6 @@ binderhub:
     imageGCThresholdLow: 40
     host:
       enabled: false
-
   jupyterhub:
     ingress:
       enabled: true
@@ -242,7 +241,6 @@ binderhub:
                   break
           else:
               print("dask-gateway service not found. Did you set jupyterhub.hub.services.dask-gateway.apiToken?")
-
 dask-gateway:
   #=== VALUES BELOW HERE ARE COPIED FROM DASKHUB VALUES AND SHOULD BE UPDATED ===#
   #=== IF DASKHUB CHANGES ===#
