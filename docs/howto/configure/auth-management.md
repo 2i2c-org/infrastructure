@@ -144,7 +144,7 @@ There are also some steps that a Community Representative will need to take to s
    You should keep the `admin_users` key, however.
    ```
 
-   To authenticate against a GitHub organisation (note the `read:user` scope):
+   To authenticate against a GitHub organisation (Note the `read:user` scope. See comment box below.):
 
     ```yaml
     jupyterhub:
@@ -161,7 +161,7 @@ There are also some steps that a Community Representative will need to take to s
               - read:user
     ```
 
-   To authenticate against a GitHub Team (note the `read:org` scope):
+   To authenticate against a GitHub Team (Note the `read:org` scope. See the comment box below.):
 
     ```yaml
     jupyterhub:
@@ -176,6 +176,15 @@ There are also some steps that a Community Representative will need to take to s
               - ORG_NAME:TEAM_NAME
             scope:
               - read:org
+    ```
+
+    ```{admonition} A note on scopes
+    When authenticating against a whole organisation, we used the `read:user` scope in the example above.
+    This means that the GitHub OAuth App will read the _user's_ profile to determine whether the currently authenticating user is a member of the listed organisation. **It also requires the user to have their membership of the organisation publicly listed otherwise authentication will fail, even if they are valid members.**
+
+    To avoid this requirement, you may choose to use the `read:org` scope instead. This grants the GitHub OAuth App permission to read the profile of the _whole organisation_, however, and may be more powerful than the organisation owners wish to grant. So use your best judgment here.
+
+    When authenticating against a GitHub Team, we are required to use the `read:org` scope as the GitHub OAuth App needs to know which teams belong to the organisation as well as the members of the specified team.
     ```
 
 6. Run the deployer as normal to apply the config.
