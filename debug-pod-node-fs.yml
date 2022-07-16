@@ -1,0 +1,32 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: node-fs-inspection
+spec:
+  containers:
+    - name: node-fs-inspection
+      image: ubuntu:22.04
+      command: ["sh", "-c", "sleep infinity"]
+      resources:
+        requests:
+          cpu: 225m
+          memory: "939524096"
+      volumeMounts:
+        - name: node-root-fs
+          mountPath: /node-root-fs
+  terminationGracePeriodSeconds: 1
+  nodeSelector:
+    2i2c.org/node-gpu: "1"
+  tolerations:
+    - effect: NoSchedule
+      key: hub.jupyter.org/dedicated
+      operator: Equal
+      value: user
+    - effect: NoSchedule
+      key: hub.jupyter.org_dedicated
+      operator: Equal
+      value: user
+  volumes:
+    - name: node-root-fs
+      hostPath:
+        path: /
