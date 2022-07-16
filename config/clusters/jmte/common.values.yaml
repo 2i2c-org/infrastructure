@@ -81,6 +81,15 @@ basehub:
         #
         GH_SCOPED_CREDS_APP_URL: https://github.com/apps/hub-jupytearth-org-github-integ
         GH_SCOPED_CREDS_CLIENT_ID: Iv1.a073b1649637af12
+        # NVIDIA_DRIVER_CAPABILITIES is added based on
+        # https://github.com/2i2c-org/infrastructure/pull/1314 and
+        # https://docs.nvidia.com/datacenter/cloud-native/container-toolkit/user-guide.html#driver-capabilities
+        # that indicate this is needed.
+        #
+        # It was added when `nvidia-smi` didn't report a CUDA driver version,
+        # and no /usr/local/cuda folders were found in the container filesystem.
+        #
+        NVIDIA_DRIVER_CAPABILITIES: compute,utility
 
       image:
         # NOTE: We use the jupyterhub-configurator so this image/tag is not
