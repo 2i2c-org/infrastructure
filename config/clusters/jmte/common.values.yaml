@@ -58,6 +58,30 @@ basehub:
             # https://github.com/berkeley-dsep-infra/datahub/issues/3160
             ContentsManager:
               allow_hidden: true
+      # /dev/shm is mounted as a filesystem path, where writing to it means to
+      # write to memory.
+      #
+      # How to: https://stackoverflow.com/questions/46085748/define-size-for-dev-shm-on-container-engine/46434614#46434614
+      # Request for this by Ellie: https://fperezgroup.slack.com/archives/C020XCEFPEH/p1658168872788389
+      #
+      storage:
+        extraVolumes:
+          - name: dev-shm
+            emptyDir:
+              medium: Memory
+        extraVolumeMounts:
+          - name: dev-shm
+            mountPath: /dev/shm
+          # FIXME: we override the list extraVolumeMounts which is also set in
+          #        the the basehub chart, due to that, we need to add this here
+          #        as well. An option is to add hub.extraConfig entries that
+          #        append the kubespawner configuration to include these extra
+          #        volume mounts.
+          #
+          - name: home
+            mountPath: /home/jovyan/shared
+            subPath: _shared
+            readOnly: true
 
       # Eksctl: The service account was created by eksctl.
       #
