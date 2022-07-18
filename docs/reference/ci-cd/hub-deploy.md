@@ -27,7 +27,7 @@ This job provides the following outputs:
 While the aim of this workflow is to only upgrade the pieces of the infrastructure that require it with every change, some changes do require us to redeploy everything.
 
 - If a cluster's `cluster.yaml` file has been modified, we upgrade the support chart and **all** hubs on **that** cluster. This is because we cannot tell what has been changed without inspecting the diff of the file.
-- If either the `basehub` or `daskhub` Helm charts have additions/modifications in their paths, we redeploy **all** hubs across **all** clusters.
+- If any of the `basehub`, `daskhub`, or `binderhub` Helm charts have additions/modifications in their paths, we redeploy **all** hubs across **all** clusters.
 - If the support Helm chart has additions/modifications in its path, we redeploy the support chart on **all** clusters.
 - If the deployer module has additions/modifications in its path, then we redeploy **all** hubs on **all** clusters.
 
@@ -78,10 +78,10 @@ The [`generate-jobs`](cicd/hub/generate-jobs) job outputs tables of all the hubs
 However, this table can be difficult to track down in amongst the GitHub Actions logs.
 Therefore, we have another workflow that will post this information as a comment on the Pull Request that triggered the run for discoverability.
 
-When `generate-jobs` has been triggered by a PR, extra steps are run: first, the deployer converts the matrix jobs into Markdown tables (provided there are valid jobs) and saves them to a file; and second, the job exports the number of the PR to a file.
+When `generate-jobs` has been triggered by a PR, extra steps are run: first, the [deployer converts the matrix jobs into Markdown tables](https://github.com/2i2c-org/infrastructure/blob/HEAD/deployer/utils.py#L40-L137) (provided there are valid jobs) and saves them to a file; and second, the job exports the number of the PR to a file.
 These files are then uploaded as [GitHub Actions artifacts](https://docs.github.com/en/actions/using-workflows/storing-workflow-data-as-artifacts).
 
-Upon completion of the ["Deploy and test hubs" workflow](https://github.com/2i2c-org/infrastructure/blob/HEAD/.github/workflows/deploy-hubs.yaml), the ["Comment Hub Deployment Plan to a Pull Request" workflow](https://github.com/2i2c-org/infrastructure/blob/HEAD/.github/workflows/comment-deployment-plan-pr.yaml) is executed.
+Upon the successful completion of the ["Deploy and test hubs" workflow](https://github.com/2i2c-org/infrastructure/blob/HEAD/.github/workflows/deploy-hubs.yaml), the ["Comment Hub Deployment Plan to a Pull Request" workflow](https://github.com/2i2c-org/infrastructure/blob/HEAD/.github/workflows/comment-deployment-plan-pr.yaml) is executed.
 
 This workflow downloads the artifacts uploaded by `generate-jobs` and then uses the GitHub API to complete the following tasks:
 
