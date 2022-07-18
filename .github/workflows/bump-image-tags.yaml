@@ -18,25 +18,16 @@ jobs:
         include:
           # For each new config_path to monitor, add a new item in this matrix.
           # The Action can read multiple paths to images, but not multiple config files.
+          #
+          # Bump repo2docker image in BinderHub helm chart
           - name: "BinderHub/repo2docker bump"
             config_path: "helm-charts/binderhub/values.yaml"
             images_info: '[{"values_path": ".binderhub.config.BinderHub.build_image"}]'
 
-          # Turn off bumping of Pangeo images as per https://github.com/2i2c-org/infrastructure/issues/1240#issuecomment-1151212986
-          # - name: "pangeo-hubs common singleuser image"
-          #   config_path: "config/clusters/pangeo-hubs/common.values.yaml"
-          #   # The regexpr attribute will ensure we only bump tags in the form YYYY.MM.DD
-          #   images_info: '[{"values_path": ".basehub.jupyterhub.singleuser.image", "regexpr": "[0-9]{4}.[0-9]{2}.[0-9]{2}"}]'
-          # - name: "m2lines common singleuser/PyTorch/Tensorflow"
-          #   config_path: "config/clusters/m2lines/common.values.yaml"
-          #   # The regexpr attribute will ensure we only bump tags in the form YYYY.MM.DD
-          #   # If the ordering of profileList changes, update the index in this expression
-          #   images_info: '[{"values_path": ".basehub.jupyterhub.singleuser.image", "regexpr": "[0-9]{4}.[0-9]{2}.[0-9]{2}"}, {"values_path": ".basehub.jupyterhub.singleuser.profileList[4].kubespawner_override.image", "regexpr": "[0-9]{4}.[0-9]{2}.[0-9]{2}"}, {"values_path": ".basehub.jupyterhub.singleuser.profileList[5].kubespawner_override.image", "regexpr": "[0-9]{4}.[0-9]{2}.[0-9]{2}"}]'
-          # - name: "leap common singleuser/pangeo-ml-notebook"
-          #   config_path: "config/clusters/leap/common.values.yaml"
-          #   # The regexpr attribute will ensure we only bump tags in the form YYYY.MM.DD
-          #   # If the ordering of profileList changes, update the index in this expression
-          #   images_info: '[{"values_path": ".basehub.jupyterhub.singleuser.image", "regexpr": "[0-9]{4}.[0-9]{2}.[0-9]{2}"}, {"values_path": ".basehub.jupyterhub.singleuser.profileList[4].kubespawner_override.image", "regexpr": "[0-9]{4}.[0-9]{2}.[0-9]{2}"}]'
+          # Bump images in openscapes cluster
+          - name: "OpenScapes profiles"
+            config_path: "config/clusters/openscapes/common.values.yaml"
+            images_info: '[{"values_path": ".basehub.jupyterhub.profileList[0].profile_options.image.choices.python.kubespawner_override.image"}, {"values_path": ".basehub.jupyterhub.profileList[0].profile_options.image.choices.rocker.kubespawner_override.image"}, {"values_path": ".basehub.jupyterhub.profileList[0].profile_options.image.choices.matlab.kubespawner_override.image"}]'
 
     steps:
       # We want tests to be run on the Pull Request that gets opened by the next step,
