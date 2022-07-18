@@ -27,6 +27,7 @@ jobs:
           # Bump images in openscapes cluster
           - name: "OpenScapes profiles"
             config_path: "config/clusters/openscapes/common.values.yaml"
+            # Note: if position of images in profileList changes, update the index in these expressions
             images_info: '[{"values_path": ".basehub.jupyterhub.profileList[0].profile_options.image.choices.python.kubespawner_override.image"}, {"values_path": ".basehub.jupyterhub.profileList[0].profile_options.image.choices.rocker.kubespawner_override.image"}, {"values_path": ".basehub.jupyterhub.profileList[0].profile_options.image.choices.matlab.kubespawner_override.image"}]'
 
     steps:
