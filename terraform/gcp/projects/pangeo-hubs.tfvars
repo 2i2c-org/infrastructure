@@ -22,6 +22,9 @@ user_buckets = {
   },
   "scratch": {
     "delete_after": 7
+  },
+  "coessing-scratch": {
+    "delete_after": 14
   }
 }
 
@@ -119,5 +122,10 @@ hub_cloud_permissions = {
     requestor_pays : true,
     bucket_admin_access: ["scratch"],
     hub_namespace: "prod"
+  },
+  "coessing" : {
+    requestor_pays : true,
+    bucket_admin_access: ["coessing-scratch"],
+    hub_namespace: "coessing"
   },
 }
