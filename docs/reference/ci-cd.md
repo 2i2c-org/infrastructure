@@ -79,6 +79,32 @@ The head commit for this pull_request event is not ahead of the base commit. Ple
 
 This issue is [tracked upstream](https://github.com/jitterbit/get-changed-files/issues/11) and can be resolved by rebasing your branch against `master`.
 
+### Posting the deployment plan as a comment on a Pull Request
+
+The [`generate-jobs`](cicd/hub/generate-jobs) job outputs tables of all the hubs across all the clusters that will be upgraded as a result of changes in the repository.
+However, this table can be difficult to track down in amongst the GitHub Actions logs.
+Therefore, we have another workflow that will post this information as a comment on the Pull Request that triggered the run for discoverability.
+
+When `generate-jobs` has been triggered by a PR, extra steps are run: first, the deployer converts the matrix jobs into Markdown tables (provided there are valid jobs) and saves them to a file; and second, the job exports the number of the PR to a file.
+These files are then uploaded as [GitHub Actions artifacts](https://docs.github.com/en/actions/using-workflows/storing-workflow-data-as-artifacts).
+
+Upon completion of the ["Deploy and test hubs" workflow](https://github.com/2i2c-org/infrastructure/blob/HEAD/.github/workflows/deploy-hubs.yaml), the ["Comment Hub Deployment Plan to a Pull Request" workflow](https://github.com/2i2c-org/infrastructure/blob/HEAD/.github/workflows/comment-deployment-plan-pr.yaml) is executed.
+
+This workflow downloads the artifacts uploaded by `generate-jobs` and then uses the GitHub API to complete the following tasks:
+
+- Establish whether a deployment plan has already been added to the Pull Request, as identified by a comment made by the user `github-actions[bot]` and the presence of the `<!-- deployment-plan -->` tag in the comment body.
+- Either update an existing comment or create a new comment on the PR posting the Markdown tables downloaded as an artifact.
+
+```{admonition} Why we're using artifacts and separate workflow files
+
+Any secrets used by GitHub Actions are not available to Pull Requests that come from forks by default to protect against malicious code being executed with privileged access. `generate-jobs` needs to run in the PR context in order to establish which files are added/modified, but the required secrets would not be available for the rest of the workflow that would post a comment to the PR.
+
+To overcome this in a secure manner, we upload the required information (the body of the comment to be posted and the number of the PR the comment should be posted to) as artifacts.
+We then trigger a **new** workflow, **not** running in the PR context and with secret access, to complete the process of interacting with the API to post the comment.
+
+See this blog on [securing workflows](https://securitylab.github.com/research/github-actions-preventing-pwn-requests/) for more context.
+```
+
 ## Helm chart values and cluster config validation
 
 All of our [helm charts](https://github.com/2i2c-org/infrastructure/tree/HEAD/helm-charts) have associated `values.schema.yaml` files and we also maintain a custom [`cluster.schema.yaml` file](https://github.com/2i2c-org/infrastructure/blob/HEAD/shared/deployer/cluster.schema.yaml).
