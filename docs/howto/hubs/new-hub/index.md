@@ -72,7 +72,7 @@ To deploy a new hub, follow these steps:
 Some of our infrastructure automatically deploys and updates hubs via GitHub Actions workflows, while others require manual deploys.
 This is changing over time as we automate more things, and is dependent on the cloud provider.
 
-General details about our CI/CD machinery lives at [](/reference/ci-cd.md)
+General details about our CI/CD machinery lives at [](/reference/ci-cd/index.md)
 
 ## Deploying hubs manually
 
