@@ -1,4 +1,3 @@
-# This is a noop change just to trigger the workflow while testing
 basehub:
   userServiceAccount:
     annotations:
