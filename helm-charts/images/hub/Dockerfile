@@ -12,6 +12,13 @@ ENV CONFIGURATOR_VERSION ed7e3a0df1e3d625d10903ef7d7fd9c2fbb548db
 
 RUN pip install --no-cache git+https://github.com/yuvipanda/jupyterhub-configurator@${CONFIGURATOR_VERSION}
 
+# Needed to install JupyterHub from source
+USER root
+RUN apt update --yes > /dev/null && apt install --yes --no-install-recommends nodejs npm > /dev/null
+USER $NB_USER
+# Until https://github.com/jupyterhub/jupyterhub/pull/3984 is merged
+RUN pip install --upgrade git+https://github.com/meeseeksmachine/jupyterhub@72e4119e1a9f5fead690cb399dba36143d6d2ecc
+
 # Latest version comes with some breaking changes https://oauthenticator.readthedocs.io/en/latest/migrations.html#migrating-cilogonoauthenticator-to-version-15-0
 RUN pip install --no-cache --upgrade oauthenticator==15.0.1
 
