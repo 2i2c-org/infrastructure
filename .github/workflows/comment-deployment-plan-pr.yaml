@@ -42,6 +42,12 @@ jobs:
               repo: context.repo.repo,
               run_id: ${{ github.event.workflow_run.id }},
             });
+            artifacts.then(function(x,y){
+              console.log("Stuff in the artifact: ");
+              console.log(artifacts, x, y);
+              console.log("github actions");
+              console.log(github.actions.listWorkflowRunArtifacts);
+            });
 
             var matchArtifact = artifacts.data.artifacts.filter((artifact) => {
               return artifact.name == "pr"
