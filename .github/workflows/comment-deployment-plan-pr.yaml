@@ -32,61 +32,70 @@ jobs:
       issues: read
       pull-requests: write
     steps:
-      - name: Download artifacts
-        id: download-artifacts
-        uses: actions/github-script@v6.1.0
-        with:
-          script: |
-            var artifacts = await github.actions.listWorkflowRunArtifacts({
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              run_id: ${{ github.event.workflow_run.id }},
-            });
-            artifacts.then(function(x,y){
-              console.log("Stuff in the artifact: ");
-              console.log(artifacts, x, y);
-              console.log("github actions");
-              console.log(github.actions.listWorkflowRunArtifacts);
-            });
-
-            var matchArtifact = artifacts.data.artifacts.filter((artifact) => {
-              return artifact.name == "pr"
-            })[0];
-
-            try {
-              var download = await github.actions.downloadArtifact({
-                owner: context.repo.owner,
-                repo: context.repo.repo,
-                artifact_id: matchArtifact.id,
-                archive_format: 'zip',
-              });
-
-              var fs = require('fs');
-              fs.writeFileSync('${{ github.workspace }}/pr.zip', Buffer.from(download.data));
-
-              console.log("::set-output name=status::succeeded")
-            } catch {
-              console.log("::set-output name=status::failed")
-            }
-
-      - name: Unzip artifact
-        if: steps.download-artifacts.outputs.status != 'failed'
-        run: |
-          unzip pr.zip
-
       - name: Install ghapi to interact with the GitHub API via Python
-        if: steps.download-artifacts.outputs.status != 'failed'
         run: |
           pip install ghapi
 
-      - name: Create or Update a Comment on the PR with the deployment plan
-        if: steps.download-artifacts.outputs.status != 'failed'
+      - name: Retrieve artifacts and post deployment plan as a comment on a Pull Request
         shell: python
         run: |
+          import os
+          import sys
+          import zipfile
+          from textwrap import dedent
+
           from ghapi.all import GhApi, paged
 
           # Setup variables
           owner, repo = r"""${{ github.repository }}""".split("/")
+          run_id = r"""${{ github.event.workflow_run.id }}"""
+
+          print(dedent(f"""Repo owner: {owner}
+              Repo name: {repo}
+              Workflow run ID: {run_id}
+          """))
+
+          # Authenticate with GitHub API
+          api = GhApi(token=r"""${{ secrets.GITHUB_TOKEN }}""")
+
+          # List all artifacts for the workflow run
+          all_artifacts = paged(
+              api.actions.list_workflow_run_artifacts,
+              owner=owner,
+              repo=repo,
+              run_id=run_id,
+              per_page=100,
+          )
+          print(f"Does all_artifacts have something in it?: {bool(all_artifacts)}")
+
+          # Filter for the artifact with the name we want: 'pr'
+          artifact_id = next(
+              (
+                  artifact["id"]
+                  for artifact in all_artifacts["artifacts"]
+                  if artifact["name"] == "pr"
+              ),
+              None,
+          )
+          if artifact_id is None:
+              print(f"No artifact found called 'pr' for workflow run: {run_id}")
+              sys.exit()
+
+          # Download the artifact
+          api.actions.download_artifact(
+              owner=owner,
+              repo=repo,
+              artifact_id=artifact_id,
+              archive_format="zip",
+          )
+
+          # Extract the zip archive
+          try:
+              with zipfile.ZipFile("pr.zip", "r") as zip_ref:
+                  zip_ref.extractall(os.getcwd())
+          except BadZipFile:
+              print("Zip archive could not be unzipped")
+              sys.exit()
 
           # Read in Pull Request number
           with open("pr-number.txt") as f:
@@ -96,8 +105,10 @@ jobs:
           with open("comment-body.txt") as f:
               comment_body = f.read().strip("\n")
 
-          # Authenticate with GitHub API
-          api = GhApi(token=r"""${{ secrets.GITHUB_TOKEN }}""")
+          print(dedent(f"""PR number: {pr_number}
+              Comment body:
+              {comment_body}
+          """))
 
           # List all comments on the PR
           issue_comments = paged(
