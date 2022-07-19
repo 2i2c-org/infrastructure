@@ -53,8 +53,8 @@ jobs:
           run_id = r"""${{ github.event.workflow_run.id }}"""
 
           print(dedent(f"""Repo owner: {owner}
-              Repo name: {repo}
-              Workflow run ID: {run_id}
+          Repo name: {repo}
+          Workflow run ID: {run_id}
           """))
 
           # Authenticate with GitHub API
@@ -109,7 +109,7 @@ jobs:
               comment_body = f.read().strip("\n")
 
           print(dedent(f"""PR number: {pr_number}
-              Comment body:
+          Comment body:
               {comment_body}
           """))
 
