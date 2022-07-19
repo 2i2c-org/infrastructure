@@ -93,6 +93,8 @@ jobs:
               artifact_id=artifact_id,
               archive_format="zip",
           )
+          print(os.getcwd())
+          print(os.listdir(os.getcwd()))
 
           # Extract the zip archive
           try:
