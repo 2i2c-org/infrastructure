@@ -32,9 +32,9 @@ jobs:
       issues: read
       pull-requests: write
     steps:
-      - name: Install ghapi to interact with the GitHub API via Python
+      - name: Install ghapi and requests to interact with the GitHub API via Python
         run: |
-          pip install ghapi
+          pip install ghapi requests
 
       - name: Retrieve artifacts and post deployment plan as a comment on a Pull Request
         shell: python
