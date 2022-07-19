@@ -1,13 +1,16 @@
 basehub:
   userServiceAccount:
     annotations:
-      # iam.gke.io/gcp-service-account: pangeo-hubs-prod@pangeo-integration-te-3eea.iam.gserviceaccount.com
+      iam.gke.io/gcp-service-account: pangeo-hubs-coessing@pangeo-integration-te-3eea.iam.gserviceaccount.com
   jupyterhub:
     custom:
       2i2c:
         add_staff_user_ids_to_admin_users: true
         add_staff_user_ids_of_type: "google"
     singleuser:
+      extraEnv:
+        SCRATCH_BUCKET: gcs://pangeo-hubs-coessing-scratch/$(JUPYTERHUB_USER)
+        PANGEO_SCRATCH: gcs://pangeo-hubs-coessing-scratch/$(JUPYTERHUB_USER)
       # No profiles
       profileList: null
       memory:
