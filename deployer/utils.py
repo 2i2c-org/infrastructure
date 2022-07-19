@@ -1,6 +1,5 @@
 import os
 import subprocess
-from textwrap import dedent
 
 from markdownTable import markdownTable
 
@@ -119,18 +118,15 @@ def create_markdown_comment(support_staging_matrix, prod_matrix):
     )
 
     # Create the body of the comment to post
-    comment_body = dedent(
-        f"""<!-- deployment-plan -->
+    comment_body = f"""<!-- deployment-plan -->
+### Support and Staging deployments
 
-        ### Support and Staging deployments
+{support_staging_md_table}
 
-        {support_staging_md_table}
+### Production deployments
 
-        ### Production deployments
-
-        {prod_md_table}
-        """
-    )
+{prod_md_table}
+"""
 
     # Save comment body to a file to be uploaded as an atrifact by GitHub Actions
     with open("comment-body.txt", "w") as f:
