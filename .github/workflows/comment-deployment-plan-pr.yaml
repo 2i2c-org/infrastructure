@@ -91,7 +91,7 @@ jobs:
           # Download the artifact
           url = f"https://api.github.com/repos/{owner}/{repo}/actions/artifacts/{artifact_id}/zip"
           headers = {
-              "Accept": application/vnd.github+json",
+              "Accept": "application/vnd.github+json",
               "Authorization": r"""token ${{ secrets.GITHUB_TOKEN }}"""
           }
           resp = requests.get(url, headers=headers, stream=True)
