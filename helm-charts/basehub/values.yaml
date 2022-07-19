@@ -352,7 +352,7 @@ jupyterhub:
         admin: true
     image:
       name: quay.io/2i2c/pilot-hub
-      tag: "0.0.1-n3521.hb54fb723"
+      tag: "0.0.1-n3636.h5f27d655"
     nodeSelector:
       hub.jupyter.org/node-purpose: core
     networkPolicy:
