@@ -39,11 +39,13 @@ jobs:
       - name: Retrieve artifacts and post deployment plan as a comment on a Pull Request
         shell: python
         run: |
+          import io
           import os
           import sys
           import zipfile
           from textwrap import dedent
 
+          import requests
           from ghapi.all import GhApi, paged
 
           # Setup variables
@@ -87,22 +89,16 @@ jobs:
               sys.exit()
 
           # Download the artifact
-          api.actions.download_artifact(
-              owner=owner,
-              repo=repo,
-              artifact_id=artifact_id,
-              archive_format="zip",
-          )
-          print(os.getcwd())
-          print(os.listdir(os.getcwd()))
+          url = f"https://api.github.com/repos/{owner}/{repo}/actions/artifacts/{artifact_id}/zip"
+          headers = {
+              "Accept": application/vnd.github+json",
+              "Authorization": r"""token ${{ secrets.GITHUB_TOKEN }}"""
+          }
+          resp = requests.get(url, headers=headers, stream=True)
 
           # Extract the zip archive
-          try:
-              with zipfile.ZipFile("pr.zip", "r") as zip_ref:
-                  zip_ref.extractall(os.getcwd())
-          except zipfile.BadZipFile:
-              print("Zip archive could not be unzipped")
-              sys.exit()
+          with zipfile.ZipFile(io.BytesIO(resp.content)) as zip_ref:
+              zip_ref.extractall(os.getcwd())
 
           # Read in Pull Request number
           with open("pr-number.txt") as f:
