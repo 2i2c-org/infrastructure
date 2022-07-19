@@ -81,7 +81,7 @@ jobs:
 
               if artifact_id is not None:
                   break
-                  
+
           if artifact_id is None:
               print(f"No artifact found called 'pr' for workflow run: {run_id}")
               sys.exit()
@@ -93,12 +93,14 @@ jobs:
               artifact_id=artifact_id,
               archive_format="zip",
           )
+          print(os.getcwd())
+          print(os.listdir(os.getcwd()))
 
           # Extract the zip archive
           try:
               with zipfile.ZipFile("pr.zip", "r") as zip_ref:
                   zip_ref.extractall(os.getcwd())
-          except BadZipFile:
+          except zipfile.BadZipFile:
               print("Zip archive could not be unzipped")
               sys.exit()
 
