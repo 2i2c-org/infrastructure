@@ -69,14 +69,19 @@ jobs:
           print(f"Does all_artifacts have something in it?: {bool(all_artifacts)}")
 
           # Filter for the artifact with the name we want: 'pr'
-          artifact_id = next(
-              (
-                  artifact["id"]
-                  for artifact in all_artifacts["artifacts"]
-                  if artifact["name"] == "pr"
-              ),
-              None,
-          )
+          for page in all_artifacts:
+              artifact_id = next(
+                  (
+                      artifact["id"]
+                      for artifact in page["artifacts"]
+                      if artifact["name"] == "pr"
+                  ),
+                  None,
+              )
+
+              if artifact_id is not None:
+                  break
+                  
           if artifact_id is None:
               print(f"No artifact found called 'pr' for workflow run: {run_id}")
               sys.exit()
