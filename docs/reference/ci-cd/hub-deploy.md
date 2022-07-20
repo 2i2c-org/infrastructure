@@ -44,8 +44,8 @@ A matrix job is set up that parallelises over all the clusters defined in the JS
 For each cluster, the support chart is first upgraded (if required) followed by the staging hub (if required).
 
 ```{note}
-The 2i2c cluster is a special case here as it has two staging hubs: one running the `basehub` Helm chart, and the other running the `daskhub` Helm chart.
-We therefore run an extra step for the 2i2c cluster to upgrade the `dask-staging` hub (if required).
+The 2i2c cluster is a special case here as it has three staging hubs: one running the `basehub` Helm chart, another running the `daskhub` Helm chart, and another running the `binderhub` helm chart.
+We therefore run extra steps for the 2i2c cluster to upgrade these hubs (if required).
 ```
 
 We use staging hubs as [canary deployments](https://sre.google/workbook/canarying-releases/) and prevent deploying production hubs if a staging deployment fails.
