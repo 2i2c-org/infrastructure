@@ -201,7 +201,7 @@ jobs:
         run: |
           python deployer deploy ${{ matrix.jobs.cluster_name }} dask-staging
 
-      - name: Upgrade dask-staging hub on cluster ${{ matrix.jobs.cluster_name }} if it exists
+      - name: Upgrade binder-staging hub on cluster ${{ matrix.jobs.cluster_name }} if it exists
         if: matrix.jobs.upgrade_staging && matrix.jobs.cluster_name == '2i2c'
         run: |
           python deployer deploy ${{ matrix.jobs.cluster_name }} binder-staging
