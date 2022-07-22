@@ -41,6 +41,12 @@ jupyterhub:
       tag: "3d441bdb82f6"
     nodeSelector:
       2i2c.org/community: neurohackademy
+    cpu:
+      guarantee: 0.1
+      limit: 2
+    memory:
+      guarantee: 6G
+      limit: 8G
   hub:
     config:
       JupyterHub:
