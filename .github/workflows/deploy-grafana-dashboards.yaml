@@ -22,6 +22,7 @@ jobs:
           - cluster_name: pangeo-hubs
           - cluster_name: utoronto
           - cluster_name: uwhackweeks
+          - cluster_name: awi-ciroh
     steps:
       - name: Checkout repo
         uses: actions/checkout@v3
