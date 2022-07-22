@@ -22,6 +22,15 @@ notebook_nodes = {
       type: "",
       count: 0
     }
+  },
+  "neurohackademy": {
+    # We expect around 120 users
+    min: 2,
+    max: 10,
+    machine_type: "n1-highmem-4",
+    labels: {
+      "2i2c.org/community": "neurohackademy"
+    }
   }
 }
 
