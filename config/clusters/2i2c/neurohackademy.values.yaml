@@ -35,6 +35,7 @@ jupyterhub:
           name: The National Institutes of Health grant 2R25MH112480-06
           url: https://reporter.nih.gov/search/ydTvTwXxk0yd6eGdRznbLQ/project-details/10409452
   singleuser:
+    # Pulls content from https://github.com/neurohackademy/nh2022-curriculum using nbgitpuller then opens up /lab
     defaultUrl: /git-pull?repo=https%3A%2F%2Fgithub.com%2Fneurohackademy%2Fnh2022-curriculum&urlpath=lab%2Ftree%2Fnh2022-curriculum%2F&branch=main
     # User image: https://quay.io/repository/arokem/nh-jhub-2022?tab=tags
     image:
