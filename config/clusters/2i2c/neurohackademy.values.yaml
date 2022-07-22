@@ -82,7 +82,6 @@ jupyterhub:
                     title: Pull curriculum repo and redirect to /lab
                     description: Use ngbitpuller to pull https://github.com/neurohackademy/nh2022-curriculum and redirect to /lab afterwards
 
-
     services:
       dex:
         url: http://dex:5556
