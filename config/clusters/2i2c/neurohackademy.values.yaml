@@ -61,27 +61,7 @@ jupyterhub:
         data:
           properties:
             Spawner.default_url:
-              type: string
-              title: Default User Interface
-              enum:
-                - "/tree"
-                - "/lab"
-                - "/git-pull?repo=https%3A%2F%2Fgithub.com%2Fneurohackademy%2Fnh2022-curriculum&urlpath=lab%2Ftree%2Fnh2022-curriculum%2F&branch=main"
-              default: "/lab"
-              enumMetadata:
-                interfaces:
-                  - value: "/tree"
-                    title: Classic Notebook
-                    description:
-                      The original single-document interface for creating
-                      Jupyter Notebooks.
-                  - value: "/lab"
-                    title: JupyterLab
-                    description: A Powerful next generation notebook interface
-                  - value: "/git-pull?repo=https%3A%2F%2Fgithub.com%2Fneurohackademy%2Fnh2022-curriculum&urlpath=lab%2Ftree%2Fnh2022-curriculum%2F&branch=main"
-                    title: Pull curriculum repo and redirect to /lab
-                    description: Use ngbitpuller to pull https://github.com/neurohackademy/nh2022-curriculum and redirect to /lab afterwards
-
+              default: null
     services:
       dex:
         url: http://dex:5556
