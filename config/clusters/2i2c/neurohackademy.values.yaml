@@ -36,6 +36,8 @@ jupyterhub:
           url: https://reporter.nih.gov/search/ydTvTwXxk0yd6eGdRznbLQ/project-details/10409452
   singleuser:
     # Pulls content from https://github.com/neurohackademy/nh2022-curriculum using nbgitpuller then opens up /lab
+    # This configuration needs to be paired with not setting a defaultURL again in the schema configuration of jupyterhub-configurator, see the
+    # hub.extraFiles.configurator-schema-default entry below!
     defaultUrl: /git-pull?repo=https%3A%2F%2Fgithub.com%2Fneurohackademy%2Fnh2022-curriculum&urlpath=lab%2Ftree%2Fnh2022-curriculum%2F&branch=main
     # User image: https://quay.io/repository/arokem/nh-jhub-2022?tab=tags
     image:
@@ -58,6 +60,11 @@ jupyterhub:
             username_derivation:
               username_claim: "preferred_username"
     extraFiles:
+      # We disable the defaultUrl set by the jupyterhub-configurator schema,
+      # otherwise it would override the singleuser.defaultUrl set above.
+      # This is because the jupyterhub-configurator schema gets loaded after the hub
+      # yaml config and overrides any config set before.
+      # Ref: https://infrastructure.2i2c.org/en/latest/topic/config.html#inheritance-of-configuration
       configurator-schema-default:
         data:
           properties:
