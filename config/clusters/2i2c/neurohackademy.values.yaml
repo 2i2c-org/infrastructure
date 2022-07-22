@@ -35,8 +35,7 @@ jupyterhub:
           name: The National Institutes of Health grant 2R25MH112480-06
           url: https://reporter.nih.gov/search/ydTvTwXxk0yd6eGdRznbLQ/project-details/10409452
   singleuser:
-    # Pulls content from https://github.com/neurohackademy/nh2022-curriculum using nbgitpuller then opens up /lab
-    defaultUrl: https://neurohackademy.2i2c.cloud/hub/user-redirect/git-pull?repo=https%3A%2F%2Fgithub.com%2Fneurohackademy%2Fnh2022-curriculum&urlpath=lab%2Ftree%2Fnh2022-curriculum%2F&branch=main
+    defaultUrl: /git-pull?repo=https%3A%2F%2Fgithub.com%2Fneurohackademy%2Fnh2022-curriculum&urlpath=lab%2Ftree%2Fnh2022-curriculum%2F&branch=main
     # User image: https://quay.io/repository/arokem/nh-jhub-2022?tab=tags
     image:
       name: quay.io/arokem/nh-jhub-2022
@@ -57,6 +56,33 @@ jupyterhub:
           http://github.com/login/oauth/authorize:
             username_derivation:
               username_claim: "preferred_username"
+     extraFiles:
+      configurator-schema-default:
+        data:
+          properties:
+            Spawner.default_url:
+              type: string
+              title: Default User Interface
+              enum:
+                - "/tree"
+                - "/lab"
+                - "/git-pull?repo=https%3A%2F%2Fgithub.com%2Fneurohackademy%2Fnh2022-curriculum&urlpath=lab%2Ftree%2Fnh2022-curriculum%2F&branch=main"
+              default: "/lab"
+              enumMetadata:
+                interfaces:
+                  - value: "/tree"
+                    title: Classic Notebook
+                    description:
+                      The original single-document interface for creating
+                      Jupyter Notebooks.
+                  - value: "/lab"
+                    title: JupyterLab
+                    description: A Powerful next generation notebook interface
+                  - value: "/git-pull?repo=https%3A%2F%2Fgithub.com%2Fneurohackademy%2Fnh2022-curriculum&urlpath=lab%2Ftree%2Fnh2022-curriculum%2F&branch=main"
+                    title: Pull curriculum repo and redirect to /lab
+                    description: Use ngbitpuller to pull https://github.com/neurohackademy/nh2022-curriculum and redirect to /lab afterwards
+
+
     services:
       dex:
         url: http://dex:5556
