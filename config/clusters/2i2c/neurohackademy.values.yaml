@@ -56,7 +56,7 @@ jupyterhub:
           http://github.com/login/oauth/authorize:
             username_derivation:
               username_claim: "preferred_username"
-     extraFiles:
+    extraFiles:
       configurator-schema-default:
         data:
           properties:
