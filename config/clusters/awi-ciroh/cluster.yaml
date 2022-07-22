@@ -1,0 +1,10 @@
+name: awi-ciroh
+provider: gcp
+gcp:
+  key: enc-deployer-credentials.secret.json
+  project: awi-ciroh
+  cluster: awi-ciroh-cluster
+  zone: us-central1
+support:
+  helm_chart_values_files: []
+hubs: []
