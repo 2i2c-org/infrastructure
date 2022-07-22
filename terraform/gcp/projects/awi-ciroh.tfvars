@@ -1,5 +1,5 @@
 prefix                 = "awi-ciroh"
-project_id             = "awi-ciroh-hubs"
+project_id             = "awi-ciroh"
 zone                   = "us-central1-b"
 region                 = "us-central1"
 core_node_machine_type = "n1-highmem-4"
