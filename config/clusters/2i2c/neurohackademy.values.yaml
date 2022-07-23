@@ -67,8 +67,8 @@ jupyterhub:
               enum:
                 - "/tree"
                 - "/lab"
-                - "/git-pull?repo=https%3A%2F%2Fgithub.com%2Fneurohackademy%2Fnh2022-curriculum&urlpath=lab%2Ftree%2Fnh2022-curriculum%2F&branch=main"
-              default: "/git-pull?repo=https%3A%2F%2Fgithub.com%2Fneurohackademy%2Fnh2022-curriculum&urlpath=lab%2Ftree%2Fnh2022-curriculum%2F&branch=main"
+                - "/git-pull?repo=https%3A%2F%2Fgithub.com%2Fneurohackademy%2Fnh2022-curriculum&urlpath=lab&branch=main"
+              default: "/git-pull?repo=https%3A%2F%2Fgithub.com%2Fneurohackademy%2Fnh2022-curriculum&urlpath=lab&branch=main"
               enumMetadata:
                 interfaces:
                   - value: "/tree"
@@ -79,7 +79,7 @@ jupyterhub:
                   - value: "/lab"
                     title: JupyterLab
                     description: A Powerful next generation notebook interface
-                  - value: "/git-pull?repo=https%3A%2F%2Fgithub.com%2Fneurohackademy%2Fnh2022-curriculum&urlpath=lab%2Ftree%2Fnh2022-curriculum%2F&branch=main"
+                  - value: "/git-pull?repo=https%3A%2F%2Fgithub.com%2Fneurohackademy%2Fnh2022-curriculum&urlpath=lab&branch=main"
                     title: Pull curriculum repo and redirect to /lab
                     description: Use ngbitpuller to pull https://github.com/neurohackademy/nh2022-curriculum and redirect to /lab afterwards
     services:
