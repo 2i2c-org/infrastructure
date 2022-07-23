@@ -102,7 +102,7 @@ dask_nodes = {
   "small" : {
     min : 0,
     max : 100,
-    machine_type : "n1-standard-2",
+    machine_type : "n1-highmem-2",
     labels: {},
     gpu: {
       enabled: false,
@@ -113,7 +113,7 @@ dask_nodes = {
   "medium" : {
     min : 0,
     max : 100,
-    machine_type : "n1-standard-4",
+    machine_type : "n1-highmem-4",
     labels: {},
     gpu: {
       enabled: false,
@@ -124,7 +124,7 @@ dask_nodes = {
   "large" : {
     min : 0,
     max : 100,
-    machine_type : "n1-standard-8",
+    machine_type : "n1-highmem-8",
     labels: {},
     gpu: {
       enabled: false,
@@ -135,7 +135,7 @@ dask_nodes = {
   "huge" : {
     min : 0,
     max : 100,
-    machine_type : "n1-standard-16",
+    machine_type : "n1-highmem-16",
     labels: {},
     gpu: {
       enabled: false,
