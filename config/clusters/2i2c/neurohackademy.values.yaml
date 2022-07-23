@@ -38,7 +38,7 @@ jupyterhub:
     # Pulls content from https://github.com/neurohackademy/nh2022-curriculum using nbgitpuller then opens up /lab
     # This configuration needs to be paired with not setting a defaultURL again in the schema configuration of jupyterhub-configurator, see the
     # hub.extraFiles.configurator-schema-default entry below!
-    defaultUrl: /git-pull?repo=https%3A%2F%2Fgithub.com%2Fneurohackademy%2Fnh2022-curriculum&urlpath=lab%2Ftree%2Fnh2022-curriculum%2F&branch=main
+    defaultUrl: /git-pull?repo=https%3A%2F%2Fgithub.com%2Fneurohackademy%2Fnh2022-curriculum&urlpath=lab&branch=main
     # User image: https://quay.io/repository/arokem/nh-jhub-2022?tab=tags
     image:
       name: quay.io/arokem/nh-jhub-2022
