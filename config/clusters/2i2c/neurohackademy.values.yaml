@@ -42,10 +42,11 @@ jupyterhub:
     nodeSelector:
       2i2c.org/community: neurohackademy
     cpu:
-      guarantee: 0.1
-      limit: 2
+      guarantee: 0.5
+      # We're on n1-highmem-16 machines
+      limit: 14
     memory:
-      guarantee: 6G
+      guarantee: 4G
       limit: 8G
   hub:
     config:
