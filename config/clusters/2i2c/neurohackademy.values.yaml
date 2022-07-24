@@ -39,6 +39,15 @@ jupyterhub:
     image:
       name: quay.io/arokem/nh-jhub-2022
       tag: "3d441bdb82f6"
+    nodeSelector:
+      2i2c.org/community: neurohackademy
+    cpu:
+      guarantee: 0.5
+      # We're on n1-highmem-16 machines
+      limit: 14
+    memory:
+      guarantee: 4G
+      limit: 8G
   hub:
     config:
       JupyterHub:
