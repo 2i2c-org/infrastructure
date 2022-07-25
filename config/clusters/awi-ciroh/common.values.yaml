@@ -44,7 +44,9 @@ basehub:
             - jameshalgren
         GitHubOAuthenticator:
           allowed_organizations:
-            - 2i2c-org:tech-team
+            - 2i2c-org
+            - alabamawaterinstitute
+            - NOAA-OWP
           scope:
             - read:org
     singleuser:
