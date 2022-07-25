@@ -37,15 +37,16 @@ basehub:
           default: true
           kubespawner_override:
             # todo: find out the correct image
-            image: ghcr.io/oceanhackweek/jupyer-image:9efd4fb
+            # image: ghcr.io/oceanhackweek/jupyer-image:9efd4fb
+            default_url: "/lab"
             mem_limit: 8G
             mem_guarantee: 4G
         - display_name: "R image"
           description: "~2 CPU, ~8G RAM"
-          default: true
           kubespawner_override:
             # todo: find out the correct image
-            image: ghcr.io/oceanhackweek/jupyer-image:9efd4fb
+            # image: ghcr.io/oceanhackweek/jupyer-image:9efd4fb
+            default_url: "/rstudio"
             mem_limit: 8G
             mem_guarantee: 4G
     custom:
@@ -86,6 +87,5 @@ basehub:
           scope:
             - read:org
         Authenticator:
-          allowed_users: &ohw_users
+          admin_users:
             - ocefpaf
-          admin_users: *ohw_users
