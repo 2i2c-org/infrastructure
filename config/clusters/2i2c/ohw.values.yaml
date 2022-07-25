@@ -6,6 +6,7 @@ basehub:
   jupyterhub:
     prePuller:
       continuous:
+        # Todo: turn this off after the event
         enabled: true
     singleuser:
       networkPolicy:
@@ -30,14 +31,23 @@ basehub:
           - ports:
               - port: 22
                 protocol: TCP
-      image:
-        name: ghcr.io/oceanhackweek/jupyer-image
-        tag: "9efd4fb"
-      memory:
-        # Increase memory alloted during the workshop
-        #  https://github.com/2i2c-org/infrastructure/issues/549#issuecomment-891264570
-        guarantee: 7G
-        limit: 8G
+      profileList:
+        - display_name: "Python image"
+          description: "~2 CPU, ~8G RAM"
+          default: true
+          kubespawner_override:
+            # todo: find out the correct image
+            image: ghcr.io/oceanhackweek/jupyer-image:9efd4fb
+            mem_limit: 8G
+            mem_guarantee: 4G
+        - display_name: "R image"
+          description: "~2 CPU, ~8G RAM"
+          default: true
+          kubespawner_override:
+            # todo: find out the correct image
+            image: ghcr.io/oceanhackweek/jupyer-image:9efd4fb
+            mem_limit: 8G
+            mem_guarantee: 4G
     custom:
       cloudResources:
         provider: gcp
