@@ -28,6 +28,7 @@ jupyterhub:
       Authenticator:
         admin_users:
           - sfirouzian@miracosta.edu
+          - shawnfirouzian@gmail.com
           - ericvd@berkeley.edu
           - sean.smorris@berkeley.edu
-        username_pattern: '^(.+@2i2c\.org|.+@berkeley\.edu|.+@miracosta\.edu|deployment-service-check)$'
+        username_pattern: '^(.+@2i2c\.org|.+@berkeley\.edu|.+@miracosta\.edu|shawnfirouzian@gmail.com|deployment-service-check)$'
