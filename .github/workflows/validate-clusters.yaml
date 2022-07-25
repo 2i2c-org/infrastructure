@@ -48,6 +48,7 @@ jobs:
           - cluster_name: utoronto
           - cluster_name: uwhackweeks
           - cluster_name: linked-earth
+          - cluster_name: awi-ciroh
 
     steps:
       - uses: actions/checkout@v3
