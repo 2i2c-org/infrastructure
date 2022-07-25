@@ -243,9 +243,11 @@ def main():
                 exceptions += 1
                 pass
 
-    print_colour(
-        f"Failed to add {exceptions} clusters as datasources. See errors above!", "red"
-    )
+    if exceptions:
+        print_colour(
+            f"Failed to add {exceptions} clusters as datasources. See errors above!",
+            "red",
+        )
     print_colour(
         f"Successfully retrieved {len(datasources)} existing datasources! {datasources}"
     )
