@@ -15,7 +15,7 @@ basehub:
           org:
             name: COESSING
             url: https://coessing.org/
-            logo_url: "https://coessing.org/2022-school-in-nigeria/#jp-carousel-510"
+            logo_url: "https://coessing.files.wordpress.com/2016/08/ghana-logo-21.png?w=262&h=376&zoom=2"
     singleuser:
       extraEnv:
         SCRATCH_BUCKET: gcs://pangeo-hubs-coessing-scratch/$(JUPYTERHUB_USER)
