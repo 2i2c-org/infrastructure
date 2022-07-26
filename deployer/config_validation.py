@@ -197,14 +197,14 @@ def validate_authenticator_config(cluster_name, hub_name):
                         authenticator_class = config["basehub"]["jupyterhub"]["hub"][
                             "config"
                         ]["JupyterHub"]["authenticator_class"]
-                        allowed_users= config["basehub"]["jupyterhub"]["hub"][
+                        allowed_users = config["basehub"]["jupyterhub"]["hub"][
                             "config"
                         ]["Authenticator"]["allowed_users"]
                     else:
                         authenticator_class = config["jupyterhub"]["hub"]["config"][
                             "JupyterHub"
                         ]["authenticator_class"]
-                        allowed_users= config["jupyterhub"]["hub"]["config"][
+                        allowed_users = config["jupyterhub"]["hub"]["config"][
                             "Authenticator"
                         ]["allowed_users"]
                 except KeyError:

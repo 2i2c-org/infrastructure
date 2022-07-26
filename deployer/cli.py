@@ -4,10 +4,10 @@ Command line interface for deployer
 import argparse
 
 from config_validation import (
+    validate_authenticator_config,
     validate_cluster_config,
     validate_hub_config,
     validate_support_config,
-    validate_authenticator_config,
 )
 from deploy_actions import (
     deploy,
