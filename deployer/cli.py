@@ -7,6 +7,7 @@ from config_validation import (
     validate_cluster_config,
     validate_hub_config,
     validate_support_config,
+    validate_authenticator_config,
 )
 from deploy_actions import (
     deploy,
@@ -174,6 +175,7 @@ def main():
         validate_cluster_config(args.cluster_name)
         validate_support_config(args.cluster_name)
         validate_hub_config(args.cluster_name, args.hub_name)
+        validate_authenticator_config(args.cluster_name, args.hub_name)
     elif args.action == "deploy-support":
         deploy_support(
             args.cluster_name, cert_manager_version=args.cert_manager_version
