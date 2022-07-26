@@ -53,7 +53,7 @@ basehub:
       image:
         # Image build repo: https://github.com/2i2c-org/awi-ciroh-image
         name: "quay.io/2i2c/awi-ciroh-image"
-        tag: "7b080bef9a29"
+        tag: "63ecd92f8d84"
       profileList:
         # The mem-guarantees are here so k8s doesn't schedule other pods
         # on these nodes. They need to be just under total allocatable
