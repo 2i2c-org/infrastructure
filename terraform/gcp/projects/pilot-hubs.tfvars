@@ -36,6 +36,14 @@ notebook_nodes = {
       type: "",
       count: 0
     }
+  },
+  "ohw": {
+    min: 0,
+    max: 100,
+    machine_type: "n1-highmem-4",
+    labels: {
+      "2i2c.org/community": "ohw"
+    },
   }
 }
 
@@ -45,6 +53,19 @@ dask_nodes = {
     max : 100,
     machine_type : "n1-highmem-4",
     labels: { },
+    gpu: {
+      enabled: false,
+      type: "",
+      count: 0
+    }
+  }
+  "ohw": {
+    min: 0,
+    max: 100,
+    machine_type: "n1-highmem-4",
+    labels: {
+      "2i2c.org/community": "ohw"
+    },
     gpu: {
       enabled: false,
       type: "",

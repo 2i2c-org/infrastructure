@@ -1,3 +1,12 @@
+dask-gateway:
+  gateway:
+    backend:
+      scheduler:
+        nodeSelector:
+          2i2c.org/community: ohw
+      worker:
+        nodeSelector:
+          2i2c.org/community: ohw
 basehub:
   userServiceAccount:
     annotations:
@@ -47,6 +56,8 @@ basehub:
             default_url: "/rstudio"
             mem_limit: 8G
             mem_guarantee: 4G
+      nodeSelector:
+        2i2c.org/community: ohw
     custom:
       cloudResources:
         provider: gcp
