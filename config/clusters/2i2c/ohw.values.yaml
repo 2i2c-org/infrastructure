@@ -36,16 +36,14 @@ basehub:
           description: "~2 CPU, ~8G RAM"
           default: true
           kubespawner_override:
-            # todo: change this with the community image
-            image: quay.io/2i2c/2i2c-hubs-image:69b1f9dff7c7
+            image: "ghcr.io/oceanhackweek/python:e7303ce"
             default_url: "/lab"
             mem_limit: 8G
             mem_guarantee: 4G
         - display_name: "R image"
           description: "~2 CPU, ~8G RAM"
           kubespawner_override:
-            # todo: change this with the community image
-            image: quay.io/2i2c/2i2c-hubs-image:69b1f9dff7c7
+            image: "ghcr.io/oceanhackweek/r:e7303ce"
             default_url: "/rstudio"
             mem_limit: 8G
             mem_guarantee: 4G
@@ -79,13 +77,15 @@ basehub:
         JupyterHub:
           authenticator_class: github
         GitHubOAuthenticator:
-          oauth_callback_url: https://ohw.pilot.2i2c.cloud/hub/oauth_callback
+          oauth_callback_url: https://oceanhackweek.2i2c.cloud/hub/oauth_callback
           allowed_organizations:
             - 2i2c-org:tech-team
             - oceanhackweek:participants_2022
             - oceanhackweek:ohw22-organizers
+            - oceanhackweek:ohw22-mentor-helper-presenter
           scope:
             - read:org
         Authenticator:
           admin_users:
             - ocefpaf
+            - abkfenris

@@ -73,7 +73,7 @@ hubs:
       - neurohackademy.values.yaml
   - name: ohw
     display_name: "Ocean Hack Week"
-    domain: ohw.pilot.2i2c.cloud
+    domain: oceanhackweek.2i2c.cloud
     helm_chart: daskhub
     auth0:
       enabled: false
