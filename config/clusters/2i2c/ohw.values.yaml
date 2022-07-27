@@ -82,8 +82,10 @@ basehub:
             - 2i2c-org:tech-team
             - oceanhackweek:participants_2022
             - oceanhackweek:ohw22-organizers
+            - oceanhackweek:ohw22-mentor-helper-presenter
           scope:
             - read:org
         Authenticator:
           admin_users:
             - ocefpaf
+            - abkfenris
