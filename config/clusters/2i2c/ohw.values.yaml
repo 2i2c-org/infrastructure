@@ -36,16 +36,14 @@ basehub:
           description: "~2 CPU, ~8G RAM"
           default: true
           kubespawner_override:
-            # todo: change this with the community image
-            image: quay.io/2i2c/2i2c-hubs-image:69b1f9dff7c7
+            image: ghcr.io/oceanhackweek/python:e7303ce
             default_url: "/lab"
             mem_limit: 8G
             mem_guarantee: 4G
         - display_name: "R image"
           description: "~2 CPU, ~8G RAM"
           kubespawner_override:
-            # todo: change this with the community image
-            image: quay.io/2i2c/2i2c-hubs-image:69b1f9dff7c7
+            image: ghcr.io/oceanhackweek/r:e7303ce
             default_url: "/rstudio"
             mem_limit: 8G
             mem_guarantee: 4G
