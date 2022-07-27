@@ -14,7 +14,7 @@ import pytest
 from auth import KeyProvider
 from cluster import Cluster
 from config_validation import (
-    assert_single_auth_method_enabled,
+    validate_authenticator_config,
     validate_cluster_config,
     validate_hub_config,
     validate_support_config,
@@ -186,7 +186,7 @@ def deploy(cluster_name, hub_name, config_path, dask_gateway_version):
     """
     validate_cluster_config(cluster_name)
     validate_hub_config(cluster_name, hub_name)
-    assert_single_auth_method_enabled(cluster_name, hub_name)
+    validate_authenticator_config(cluster_name, hub_name)
 
     with get_decrypted_file(config_path) as decrypted_file_path:
         with open(decrypted_file_path) as f:

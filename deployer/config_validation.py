@@ -157,11 +157,15 @@ def validate_support_config(cluster_name):
         print_colour(f"No support defined for {cluster_name}. Nothing to validate!")
 
 
-def assert_single_auth_method_enabled(cluster_name, hub_name):
+def validate_authenticator_config(cluster_name, hub_name):
     """
-    For each hub of a specific cluster, it asserts that only a single auth
-    method is enabled. An error is raised when an authenticator
-    other than Auth0 is enabled and `auth0` is not explicitly disabled.
+    For each hub of a specific cluster:
+     - It asserts that only a single auth method is enabled.
+       An error is raised when an authenticator other than Auth0
+       is enabled and `auth0` is not explicitly disabled.
+     - It asserts that when the JupyterHub GitHubOAuthenticator is used,
+       then `Authenticator.allowed_users` is not set.
+       An error is raised otherwise.
     """
     _prepare_helm_charts_dependencies_and_schemas()
 
@@ -181,6 +185,7 @@ def assert_single_auth_method_enabled(cluster_name, hub_name):
         )
 
         authenticator_class = "auth0"
+        allowed_users = []
         for values_file_name in hub.spec["helm_chart_values_files"]:
             if "secret" not in os.path.basename(values_file_name):
                 values_file = config_file_path.parent.joinpath(values_file_name)
@@ -192,10 +197,16 @@ def assert_single_auth_method_enabled(cluster_name, hub_name):
                         authenticator_class = config["basehub"]["jupyterhub"]["hub"][
                             "config"
                         ]["JupyterHub"]["authenticator_class"]
+                        allowed_users = config["basehub"]["jupyterhub"]["hub"][
+                            "config"
+                        ]["Authenticator"]["allowed_users"]
                     else:
                         authenticator_class = config["jupyterhub"]["hub"]["config"][
                             "JupyterHub"
                         ]["authenticator_class"]
+                        allowed_users = config["jupyterhub"]["hub"]["config"][
+                            "Authenticator"
+                        ]["allowed_users"]
                 except KeyError:
                     pass
 
@@ -204,4 +215,14 @@ def assert_single_auth_method_enabled(cluster_name, hub_name):
         if authenticator_class != "auth0" and hub.spec["auth0"].get("enabled", True):
             raise ValueError(
                 f"Please disable auth0 for {hub.spec['name']} hub before using another authenticator class!"
+            )
+
+        # If the authenticator class is github, then raise an error
+        # if `Authenticator.allowed_users` is set
+        if authenticator_class == "github" and allowed_users:
+            raise ValueError(
+                f"""
+                    Please unset `Authenticator.allowed_users` for {hub.spec['name']} when GitHub Orgs/Teams is
+                    being used for auth so valid members are not refused access.
+                """
             )
