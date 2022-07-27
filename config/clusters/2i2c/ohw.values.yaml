@@ -77,7 +77,7 @@ basehub:
         JupyterHub:
           authenticator_class: github
         GitHubOAuthenticator:
-          oauth_callback_url: https://ohw.pilot.2i2c.cloud/hub/oauth_callback
+          oauth_callback_url: https://oceanhackweek.2i2c.cloud/hub/oauth_callback
           allowed_organizations:
             - 2i2c-org:tech-team
             - oceanhackweek:participants_2022
