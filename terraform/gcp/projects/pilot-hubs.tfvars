@@ -44,6 +44,11 @@ notebook_nodes = {
     labels: {
       "2i2c.org/community": "ohw"
     },
+    gpu: {
+      enabled: false,
+      type: "",
+      count: 0
+    }
   }
 }
 
