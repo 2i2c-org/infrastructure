@@ -188,7 +188,7 @@ There are also some steps that a Community Representative will need to take to s
     ```
     
     ````{note}
-    Allowing access to a specific GitHub team, let's say `ORG_NAME:TEAM_NAME`, doesn't mean that the users that are only members of the TEAM_NAME sub-teams, , e.g. ORG_NAME:TEAM_NAME:SUB_TEAM_NAME`, will get access too.
+    Allowing access to a specific GitHub team, let's say `ORG_NAME:TEAM_NAME`, doesn't mean that the users that are only members of the TEAM_NAME sub-teams, e.g. ORG_NAME:TEAM_NAME:SUB_TEAM_NAME`, will get access too.
     
     Instead, each sub-team must be explicitly added to the `allowed_organizations` list:
     ```yaml
