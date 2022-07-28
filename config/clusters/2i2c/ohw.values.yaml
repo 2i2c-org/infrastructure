@@ -1,12 +1,7 @@
 dask-gateway:
   gateway:
-    backend:
-      scheduler:
-        nodeSelector:
-          2i2c.org/community: ohw
-      worker:
-        nodeSelector:
-          2i2c.org/community: ohw
+    nodeSelector:
+      2i2c.org/community: ohw
 basehub:
   userServiceAccount:
     annotations:
