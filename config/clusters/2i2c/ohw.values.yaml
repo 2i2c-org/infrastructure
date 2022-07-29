@@ -1,7 +1,16 @@
 dask-gateway:
   gateway:
     nodeSelector:
-      2i2c.org/community: ohw
+      k8s.dask.org/node-purpose: core
+    backend:
+      scheduler:
+        extraPodConfig:
+          nodeSelector:
+            2i2c.org/community: ohw
+      worker:
+        extraPodConfig:
+          nodeSelector:
+            2i2c.org/community: ohw
 basehub:
   userServiceAccount:
     annotations:
