@@ -1,7 +1,5 @@
 dask-gateway:
   gateway:
-    nodeSelector:
-      k8s.dask.org/node-purpose: core
     backend:
       scheduler:
         extraPodConfig:
