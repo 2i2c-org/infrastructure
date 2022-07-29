@@ -40,7 +40,7 @@ notebook_nodes = {
   "ohw": {
     min: 0,
     max: 100,
-    machine_type: "n1-highmem-4",
+    machine_type: "n1-highmem-8",
     labels: {
       "2i2c.org/community": "ohw"
     },
