@@ -40,7 +40,7 @@ binderhub:
             - http://google.com/accounts/o8/id:
                 username_derivation:
                   username_claim: "email"
-          username_pattern: "^(.+@2i2c\.org|deployment-service-check)$"
+          username_pattern: '^(.+@2i2c\.org|deployment-service-check)$'
     singleuser:
       cmd: jupyterhub-singleuser
   initContainers:
