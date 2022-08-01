@@ -21,6 +21,16 @@ binderhub:
       extra_static_url_prefix: /extra_static/
       about_message: |
         <p>binder.pangeo.io is public infrastructure operated by the <a href="https://2i2c.org">2i2c team</a>.<br /><br />
+  jupyterhub:
+    hub:
+      config:
+        JupyterHub:
+          authenticator_class: cilogon
+        CILogonOAuthenticator:
+          oauth_callback_url: "https://binder-staging.2i2c.cloud/hub/oauth_callback"
+          username_claim: "email"
+          allowed_idps:
+            - 2i2c.org
   initContainers:
     - name: git-clone-templates
       image: alpine/git
