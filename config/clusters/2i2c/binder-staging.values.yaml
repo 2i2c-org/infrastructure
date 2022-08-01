@@ -30,7 +30,10 @@ binderhub:
           oauth_callback_url: "https://binder-staging.2i2c.cloud/hub/oauth_callback"
           username_claim: "email"
           allowed_idps:
-            - 2i2c.org
+            - http://google.com/accounts/o8/id:
+                 username_derivation:
+                   username_claim: "email"
+          username_pattern: '^(.+@2i2c\.org|deployment-service-check)$'
   initContainers:
     - name: git-clone-templates
       image: alpine/git
