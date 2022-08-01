@@ -31,8 +31,8 @@ binderhub:
           username_claim: "email"
           allowed_idps:
             - http://google.com/accounts/o8/id:
-                 username_derivation:
-                   username_claim: "email"
+                username_derivation:
+                  username_claim: "email"
           username_pattern: '^(.+@2i2c\.org|deployment-service-check)$'
   initContainers:
     - name: git-clone-templates
