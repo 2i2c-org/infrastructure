@@ -1,8 +1,8 @@
-myst-parser[sphinx,linkify]
-pandas
-pyyaml
-requests
-sphinx-autobuild
-sphinx-copybutton
-sphinx-panels
+myst-parser[sphinx,linkify]==0.18.0
+pandas==1.4.3
+pyyaml==6.0
+requests==2.28.1
+sphinx-autobuild==2021.3.14
+sphinx-copybutton==0.5.0
+sphinx-panels==0.6.0
 git+https://github.com/2i2c-org/sphinx-2i2c-theme
