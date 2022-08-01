@@ -6,6 +6,11 @@
 # quay.io container registry credentials configured to have access to
 # https://quay.io/repository/2i2c/pilot-hub.
 #
+# Note: if on macOs wit M1, you need to run chartpress with docker buildx under the hood and specify
+# the architecture to use.
+# `chartpress --push --builder docker-buildx --platform linux/amd64`
+# Ref: https://cloudolife.com/2022/03/05/Infrastructure-as-Code-IaC/Container/Docker/Docker-buildx-support-multiple-architectures-images/
+#
 FROM jupyterhub/k8s-hub:1.1.3-n644.h35436cda
 
 ENV CONFIGURATOR_VERSION ed7e3a0df1e3d625d10903ef7d7fd9c2fbb548db
