@@ -48,4 +48,4 @@ basehub:
               username_derivation:
                 username_claim: "email"
               allowed_domains:
-                 - "2i2c.org"
+                - "2i2c.org"
