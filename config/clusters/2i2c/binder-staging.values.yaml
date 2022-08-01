@@ -1,6 +1,7 @@
 binderhub:
   config:
     BinderHub:
+      auth_enabled: true
       template_path: /etc/binderhub/custom/templates
       extra_static_path: /etc/binderhub/custom/static
       extra_static_url_prefix: /extra_static/
@@ -8,7 +9,14 @@ binderhub:
         <p>binder.pangeo.io is public infrastructure operated by the <a href="https://2i2c.org">2i2c team</a>.<br /><br />
   jupyterhub:
     hub:
+      redirectToServer: false
       config:
+        BinderSpawner:
+          auth_enabled: false
+        services:
+          binder:
+            oauth_no_confirm: true
+            oauth_redirect_uri: "https://binder-staging.2i2c.cloud/hub/oauth_callback"
         JupyterHub:
           authenticator_class: cilogon
         CILogonOAuthenticator:
@@ -18,7 +26,9 @@ binderhub:
             - http://google.com/accounts/o8/id:
                 username_derivation:
                   username_claim: "email"
-          username_pattern: '^(.+@2i2c\.org|deployment-service-check)$'
+          username_pattern: "^(.+@2i2c\.org|deployment-service-check)$"
+    singleuser:
+      cmd: jupyterhub-singleuser
   initContainers:
     - name: git-clone-templates
       image: alpine/git
