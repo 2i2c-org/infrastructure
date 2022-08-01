@@ -20,7 +20,7 @@ USER $NB_USER
 RUN pip install --upgrade git+https://github.com/meeseeksmachine/jupyterhub@72e4119e1a9f5fead690cb399dba36143d6d2ecc
 
 # Latest version comes with some breaking changes https://oauthenticator.readthedocs.io/en/latest/migrations.html#migrating-cilogonoauthenticator-to-version-15-0
-RUN pip install --no-cache --upgrade oauthenticator==15.0.1
+RUN pip install --no-cache --upgrade git+https://github.com/jupyterhub/oauthenticator@5837ca9093529dfda35aa47844380bf8f65289a2
 
 USER root
 RUN mkdir -p /usr/local/etc/jupyterhub-configurator
