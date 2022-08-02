@@ -47,6 +47,16 @@ When this hub image needs to be updated, the steps to take are:
      chartpress --push
      ```
 
+     ````{note}
+     If you are on macOs with M1, you need to run chartpress with [docker buildx](https://docs.docker.com/build/buildx/) under the hood and specify which platform to use, i.e. `amd64`.
+
+     ```
+      chartpress --push --builder docker-buildx --platform linux/amd64
+     ```
+
+     Ref: https://cloudolife.com/2022/03/05/Infrastructure-as-Code-IaC/Container/Docker/Docker-buildx-support-multiple-architectures-images/
+     ````
+
    - Commit the changes made by `chartpress` to `helm-charts/basehub/values.yaml`, but discard the changes made to `helm-charts/basehub/Chart.yaml` as the last may cause problems with the `daskhub` dependency mechanism.
 
      ```bash

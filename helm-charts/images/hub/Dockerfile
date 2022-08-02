@@ -6,6 +6,11 @@
 # quay.io container registry credentials configured to have access to
 # https://quay.io/repository/2i2c/pilot-hub.
 #
+# Note: if on macOs with M1, you need to run chartpress with docker buildx under the hood and specify
+# the architecture to use.
+# `chartpress --push --builder docker-buildx --platform linux/amd64`
+# Ref: https://cloudolife.com/2022/03/05/Infrastructure-as-Code-IaC/Container/Docker/Docker-buildx-support-multiple-architectures-images/
+#
 FROM jupyterhub/k8s-hub:1.1.3-n644.h35436cda
 
 ENV CONFIGURATOR_VERSION ed7e3a0df1e3d625d10903ef7d7fd9c2fbb548db
@@ -20,7 +25,7 @@ USER $NB_USER
 RUN pip install --upgrade git+https://github.com/meeseeksmachine/jupyterhub@72e4119e1a9f5fead690cb399dba36143d6d2ecc
 
 # Latest version comes with some breaking changes https://oauthenticator.readthedocs.io/en/latest/migrations.html#migrating-cilogonoauthenticator-to-version-15-0
-RUN pip install --no-cache --upgrade oauthenticator==15.0.1
+RUN pip install --no-cache --upgrade git+https://github.com/jupyterhub/oauthenticator@6cf6599d99b47f99db3826ceaaedf467af14a05d
 
 USER root
 RUN mkdir -p /usr/local/etc/jupyterhub-configurator
