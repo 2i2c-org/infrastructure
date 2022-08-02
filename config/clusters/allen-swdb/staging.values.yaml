@@ -1,7 +1,7 @@
 basehub:
   userServiceAccount:
     annotations:
-      eks.amazonaws.com/role-arn: arn:aws:iam::740010314650:role/uwhackweeks-staging
+      eks.amazonaws.com/role-arn: arn:aws:iam::681657084407:role/allen-swdb-staging
   jupyterhub:
     singleuser:
       extraEnv:
