@@ -1,3 +1,4 @@
+import os
 import subprocess
 from pathlib import Path
 
@@ -53,12 +54,19 @@ def aws(cluster_name):
         ]
     )
 
+    # Move the generated ssh private key file under secret/
+    os.rename(
+        f"{REPO_ROOT}/eksctl/ssh-keys/{cluster_name}.key",
+        f"{REPO_ROOT}/eksctl/ssh-keys/secret/{cluster_name}.key",
+    )
+
+    # Encrypt the private key
     subprocess.check_call(
         [
             "sops",
             "--in-place",
             "--encrypt",
-            f"{REPO_ROOT}/eksctl/ssh-keys/{cluster_name}.key",
+            f"{REPO_ROOT}/eksctl/ssh-keys/secret/{cluster_name}.key",
         ]
     )
 
