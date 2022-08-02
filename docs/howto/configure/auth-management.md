@@ -431,42 +431,42 @@ The steps to enable the JupyterHub CILogonOAuthenticator for a hub are simmilar 
           - adds a `2i2c:` prefix to the usernames logging in through Google. The hub usernames are the `email` addresses of these accounts, as specified through `username_claim`.
           - strips the `@anu.edu.au` domain from the usernames logging in through ANU IDP. The hub usernames are the `email` addresses of these accounts, as specified through `username_claim`.
 
-        ```{note}
-        To get the value of the key that must go in the `allowed_idp` dict for a specific IdP, go to https://cilogon.org/idplist and get the value of the `EntityID` key of the desired institutional IdP.
-        ```
+      ```{note}
+      To get the value of the key that must go in the `allowed_idp` dict for a specific IdP, go to https://cilogon.org/idplist and get the value of the `EntityID` key of the desired institutional IdP.
+      ```
 
-        Example config:
+      Example config:
 
-        ```yaml
-          jupyterhub:
-            hub:
-              config:
-                JupyterHub:
-                  authenticator_class: cilogon
-                CILogonOAuthenticator:
-                  oauth_callback_url: https://{{ HUB_DOMAIN }}/hub/oauth_callback
-                  admin_users:
-                    - admin@anu.edu.au
-                  # Only show the option to login with Google and ANU
-                  shown_idps:
-                    - https://idp2.anu.edu.au/idp/shibboleth
-                    - https://accounts.google.com/o/oauth2/auth
-                  allowed_idps:
-                    http://google.com/accounts/o8/id:
-                      username_derivation:
-                        username_claim: "email"
-                        action: "prefix"
-                        prefix: "2i2c"
-                      allowed_domains:
-                        - "2i2c.org"
-                    https://idp2.anu.edu.au/idp/shibboleth:
-                      username_derivation:
-                        username_claim: "email"
-                        action: "strip_idp_domain",
-                        domain: "anu.edu.au"
-                      allowed_domains:
-                        - "anu.edu.au"
-        ```
+      ```yaml
+      jupyterhub:
+        hub:
+          config:
+            JupyterHub:
+              authenticator_class: cilogon
+            CILogonOAuthenticator:
+              oauth_callback_url: https://{{ HUB_DOMAIN }}/hub/oauth_callback
+              admin_users:
+                - admin@anu.edu.au
+              # Only show the option to login with Google and ANU
+              shown_idps:
+                - https://idp2.anu.edu.au/idp/shibboleth
+                - https://accounts.google.com/o/oauth2/auth
+              allowed_idps:
+                http://google.com/accounts/o8/id:
+                  username_derivation:
+                    username_claim: "email"
+                    action: "prefix"
+                    prefix: "2i2c"
+                  allowed_domains:
+                    - "2i2c.org"
+                https://idp2.anu.edu.au/idp/shibboleth:
+                  username_derivation:
+                    username_claim: "email"
+                    action: "strip_idp_domain",
+                    domain: "anu.edu.au"
+                  allowed_domains:
+                    - "anu.edu.au"
+      ```
 
    ```{note}
    To learn about all the possible config options of the `CILogonOAuthenticator` dict, checkout [the docs](https://oauthenticator.readthedocs.io/en/latest/api/gen/oauthenticator.cilogon.html#oauthenticator.cilogon.CILogonOAuthenticator.allowed_idps).
