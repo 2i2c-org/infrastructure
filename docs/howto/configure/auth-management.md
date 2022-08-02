@@ -425,11 +425,11 @@ The steps to enable the JupyterHub CILogonOAuthenticator for a hub are simmilar 
     3. **Authenticate using an instutional identity provider for the hub community users and Google for 2i2c staff.**
 
         This example:
-          - only shows the ANU identity provider and Google as the possible login option though CILogon
-          - sets `2i2c.org` as the only domain that can login into the hub using Google
-          - sets `anu.edu.au` as the only domain that can login into the hub using the ANU institutional id provider
+          - only shows Shibboleth, the ANU identity provider, and Google as the possible login options through CILogon
+          - sets `2i2c.org` as the only domain that can login to the hub using Google
+          - sets `anu.edu.au` as the only domain that can login to the hub using Shibboleth
           - adds a `2i2c:` prefix to the usernames logging in through Google. The hub usernames are the `email` addresses of these accounts, as specified through `username_claim`.
-          - strips the `@anu.edu.au` domain from the usernames logging in through ANU IDP. The hub usernames are the `email` addresses of these accounts, as specified through `username_claim`.
+          - strips the `@anu.edu.au` domain from the usernames logging in through Shibboleth. The hub usernames are the `email` addresses of these accounts, as specified through `username_claim`.
 
       ```{note}
       To get the value of the key that must go in the `allowed_idp` dict for a specific IdP, go to https://cilogon.org/idplist and get the value of the `EntityID` key of the desired institutional IdP.
@@ -447,7 +447,7 @@ The steps to enable the JupyterHub CILogonOAuthenticator for a hub are simmilar 
               oauth_callback_url: https://{{ HUB_DOMAIN }}/hub/oauth_callback
               admin_users:
                 - admin@anu.edu.au
-              # Only show the option to login with Google and ANU
+              # Only show the option to login with Google and Shibboleth
               shown_idps:
                 - https://idp2.anu.edu.au/idp/shibboleth
                 - https://accounts.google.com/o/oauth2/auth
