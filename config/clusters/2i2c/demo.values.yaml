@@ -28,9 +28,9 @@ jupyterhub:
         shown_idps:
           - https://accounts.google.com/o/oauth2/auth
         allowed_idps:
-            http://google.com/accounts/o8/id:
-              username_derivation:
-                username_claim: "email"
-              allowed_domains:
-                - "2i2c.org"
-                - "rmbl.org"
+          http://google.com/accounts/o8/id:
+            username_derivation:
+              username_claim: "email"
+            allowed_domains:
+              - "2i2c.org"
+              - "rmbl.org"
