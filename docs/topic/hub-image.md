@@ -48,7 +48,7 @@ When this hub image needs to be updated, the steps to take are:
      ```
 
      ````{note}
-     If you are on macOs wit M1, you need to run chartpress with [docker buildx](https://docs.docker.com/build/buildx/) under the hood and specify which platform to use, i.e. `amd64`.
+     If you are on macOs with M1, you need to run chartpress with [docker buildx](https://docs.docker.com/build/buildx/) under the hood and specify which platform to use, i.e. `amd64`.
 
      ```
       chartpress --push --builder docker-buildx --platform linux/amd64
