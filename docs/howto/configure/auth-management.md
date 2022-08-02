@@ -364,8 +364,9 @@ The steps to enable the JupyterHub CILogonOAuthenticator for a hub are simmilar 
      ...
    ```
 
-5. **Edit the non-secret config under `config/clusters/<cluster_name>/<hub_name>.values.yaml`.**
-   5.1. **A few rules of thumb when using this method of authentication:**
+4. **Edit the non-secret config under `config/clusters/<cluster_name>/<hub_name>.values.yaml`.**
+
+   4.1. **A few rules of thumb when using this method of authentication:**
 
     - The `admin_users` list need to match `allowed_idps` rules too.
 
@@ -383,9 +384,10 @@ The steps to enable the JupyterHub CILogonOAuthenticator for a hub are simmilar 
       You can check the [CILogon scopes section](https://www.cilogon.org/oidc#h.p_PEQXL8QUjsQm) to checkout available values for `username_claim`. This *cannot* be changed afterwards without manual migration of user names, so choose this carefully.
       ```
 
-   5.2. **Most common configurations for 2i2c clusters:**
+   4.2. **Most common configurations for 2i2c clusters:**
 
     1. **Only display specific identity provider as a login options**
+
         *This example uses GitHub as the only identity provider to show to the user.*
 
         ```yaml
@@ -401,6 +403,7 @@ The steps to enable the JupyterHub CILogonOAuthenticator for a hub are simmilar 
         ```
 
     2. **Authenticate using Google with CILogon, allowing only a certain domain**:
+
         *This example sets `2i2c.org` as the only domain that can login into the hub using Google*
 
         ```yaml
@@ -420,6 +423,7 @@ The steps to enable the JupyterHub CILogonOAuthenticator for a hub are simmilar 
         ```
 
     3. **Authenticate using an instutional identity provider for the hub community users and Google for 2i2c staff.**
+
         This example:
           - only shows the ANU identity provider and Google as the possible login option though CILogon
           - sets `2i2c.org` as the only domain that can login into the hub using Google
@@ -432,6 +436,7 @@ The steps to enable the JupyterHub CILogonOAuthenticator for a hub are simmilar 
         ```
 
         Example config:
+
         ```yaml
         jupyterhub:
           hub:
@@ -462,11 +467,12 @@ The steps to enable the JupyterHub CILogonOAuthenticator for a hub are simmilar 
                     allowed_domains:
                       - "anu.edu.au"
         ```
+
    ```{note}
-   To learn about all the possible config options of the `CILogonOAuthenticator` dict, checkout [the docs](https://oauthenticator.readthedocs.io/en/latest/api/gen/oauthenticator.cilogon.html?highlight=allowed_domain#oauthenticator.cilogon.CILogonOAuthenticator.allowed_idps).
+   To learn about all the possible config options of the `CILogonOAuthenticator` dict, checkout [the docs](https://oauthenticator.readthedocs.io/en/latest/api/gen/oauthenticator.cilogon.html#oauthenticator.cilogon.CILogonOAuthenticator.allowed_idps).
    ```
 
-6. Run the deployer as normal to apply the config.
+5. Run the deployer as normal to apply the config.
 
 
 ### CILogon through Auth0
