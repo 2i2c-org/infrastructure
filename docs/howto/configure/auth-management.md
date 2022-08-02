@@ -438,34 +438,34 @@ The steps to enable the JupyterHub CILogonOAuthenticator for a hub are simmilar 
         Example config:
 
         ```yaml
-        jupyterhub:
-          hub:
-            config:
-              JupyterHub:
-                authenticator_class: cilogon
-              CILogonOAuthenticator:
-                oauth_callback_url: https://{{ HUB_DOMAIN }}/hub/oauth_callback
-                admin_users:
-                  - admin@anu.edu.au
-                # Only show the option to login with Google and ANU
-                shown_idps:
-                  - https://idp2.anu.edu.au/idp/shibboleth
-                  - https://accounts.google.com/o/oauth2/auth
-                allowed_idps:
-                  http://google.com/accounts/o8/id:
-                    username_derivation:
-                      username_claim: "email"
-                      action: "prefix"
-                      prefix: "2i2c"
-                    allowed_domains:
-                      - "2i2c.org"
-                  https://idp2.anu.edu.au/idp/shibboleth:
-                    username_derivation:
-                      username_claim: "email"
-                      action: "strip_idp_domain",
-                      domain: "anu.edu.au"
-                    allowed_domains:
-                      - "anu.edu.au"
+          jupyterhub:
+            hub:
+              config:
+                JupyterHub:
+                  authenticator_class: cilogon
+                CILogonOAuthenticator:
+                  oauth_callback_url: https://{{ HUB_DOMAIN }}/hub/oauth_callback
+                  admin_users:
+                    - admin@anu.edu.au
+                  # Only show the option to login with Google and ANU
+                  shown_idps:
+                    - https://idp2.anu.edu.au/idp/shibboleth
+                    - https://accounts.google.com/o/oauth2/auth
+                  allowed_idps:
+                    http://google.com/accounts/o8/id:
+                      username_derivation:
+                        username_claim: "email"
+                        action: "prefix"
+                        prefix: "2i2c"
+                      allowed_domains:
+                        - "2i2c.org"
+                    https://idp2.anu.edu.au/idp/shibboleth:
+                      username_derivation:
+                        username_claim: "email"
+                        action: "strip_idp_domain",
+                        domain: "anu.edu.au"
+                      allowed_domains:
+                        - "anu.edu.au"
         ```
 
    ```{note}
