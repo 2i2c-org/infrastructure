@@ -1,0 +1,16 @@
+basehub:
+  userServiceAccount:
+    annotations:
+      eks.amazonaws.com/role-arn: arn:aws:iam::740010314650:role/uwhackweeks-snowex
+  jupyterhub:
+    singleuser:
+      extraEnv:
+        SCRATCH_BUCKET: s3://allen-swdb-scratch/$(JUPYTERHUB_USER)
+        PANGEO_SCRATCH: s3://allen-swdb-scratch/$(JUPYTERHUB_USER)
+    hub:
+      config:
+        GitHubOAuthenticator:
+          allowed_organizations:
+            - 2i2c-org:tech-team
+            - alleninstitute
+          oauth_callback_url: https://allen-swdb.2i2c.cloud/hub/oauth_callback

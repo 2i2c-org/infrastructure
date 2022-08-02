@@ -18,6 +18,7 @@ from deploy_actions import (
     run_hub_health_check,
     use_cluster_credentials,
 )
+from generate_cluster import generate_cluster
 
 
 def _converted_string_to_list(full_str: str) -> list:
@@ -158,6 +159,18 @@ def main():
         "hub_name",
         help="The deployed hub whose home directories are to be examined",
     )
+
+    # generate-cluster subcommand
+    generate_cluster_parser = subparsers.add_parser(
+        "generate-cluster",
+        parents=[base_parser],
+        help="Generate files for a new cluster",
+    )
+    generate_cluster_parser.add_argument(
+        "--cloud-provider",
+        choices=["aws"],
+        help="Which cloud provider to generate a cluster for",
+    )
     # === End section ===#
 
     args = argparser.parse_args()
@@ -192,3 +205,5 @@ def main():
             args.hub_name,
             check_dask_scaling=args.check_dask_scaling,
         )
+    elif args.action == "generate-cluster":
+        generate_cluster(args.cloud_provider, args.cluster_name)
