@@ -36,7 +36,7 @@ The steps to enable the JupyterHub CILogonOAuthenticator for a hub are simmilar 
    This can be achieved by using the [cilogon_app.py](https://github.com/2i2c-org/infrastructure/blob/HEAD/deployer/cilogon_app.py) script.
 
    - The script needs to be passed the cluster and hub name for which a client id and secret will be generated, but also the hub type, and the authorisation callback URL.
-   - The authorisation callback URL is the homepage url appended with `/hub/oauth_callback`. For example, `staging.pilot.2i2c.cloud/hub/oauth_callback`.
+   - The authorisation callback URL is the homepage url appended with `/hub/oauth_callback`. For example, `staging.2i2c.cloud/hub/oauth_callback`.
    - Example script invocation that creates a CILogon OAuth client for the 2i2c dask-staging hub:
       ```bash
       python3 ./deployer/cilogon_app.py create 2i2c dask-staging daskhub https://dask-staging.2i2c.cloud/hub/oauth_callback
@@ -77,48 +77,115 @@ The steps to enable the JupyterHub CILogonOAuthenticator for a hub are simmilar 
      ...
    ```
 
-5. **Edit the non-secret config under `config/clusters/<cluster_name>/<hub_name>.values.yaml`.**
-   You should make sure the matching hub config takes one of the following forms.
+4. **Edit the non-secret config under `config/clusters/<cluster_name>/<hub_name>.values.yaml`.**
 
-   ```{warning}
-   When using this method of authentication, make sure to remove the `allowed_users` key from the config.
-   This is because this key will block any user not listed under it **even if** they are valid members of the the organisation or team you are authenticating against.
+   4.1. **A few rules of thumb when using this method of authentication:**
 
-   Also, the `admin_users` list need to match `allowed_idps` currently.
-   Reference https://github.com/jupyterhub/oauthenticator/issues/494.
+    - The `admin_users` list need to match `allowed_idps` rules too.
+
+    - It is recommended to define in the `allowed_idps` dict, all the identity providers we plan to allow to be used for a hub. This way, only these will be allowed to be used.
+
+      ```{note}
+      The keys allowed in the `allowed_idps` dict **must be valid CILogon `EntityIDs`**.
+      Go to https://cilogon.org/idplist for the list of EntityIDs of each IdP.
+      ```
+
+    - All the identity providers must define a `username_derivation` scheme, with their own `username_claim`, that the user *cannot change*. If they can, it can be easily used to impersonate others! For example, if we allow both GitHub and `utoronto.ca` as allowed authentication providers, and only use `email` as `username_claim`, for both providers, any GitHub user can set their email field in their GitHub profile to a `utoronto.ca` email and thus gain access to any `utoronto.ca` user's server! So a very careful choice needs to
+    be made here.
+
+      ```{note}
+      You can check the [CILogon scopes section](https://www.cilogon.org/oidc#h.p_PEQXL8QUjsQm) to checkout available values for `username_claim`. This *cannot* be changed afterwards without manual migration of user names, so choose this carefully.
+      ```
+
+   4.2. **Most common configurations for 2i2c clusters:**
+
+    1. **Only display specific identity provider as a login options**
+
+        *This example uses GitHub as the only identity provider to show to the user.*
+
+        ```yaml
+        jupyterhub:
+          hub:
+            config:
+              JupyterHub:
+                authenticator_class: cilogon
+              CILogonOAuthenticator:
+                # This config option will only display GitHub as the only identity provider option
+                shown_idps:
+                  - https://github.com/login/oauth/authorize
+        ```
+
+    2. **Authenticate using Google with CILogon, allowing only a certain domain**:
+
+        *This example sets `2i2c.org` as the only domain that can login into the hub using Google*
+
+        ```yaml
+        jupyterhub:
+          hub:
+            config:
+              JupyterHub:
+                authenticator_class: cilogon
+              CILogonOAuthenticator:
+                oauth_callback_url: https://{{ HUB_DOMAIN }}/hub/oauth_callback
+                allowed_idps:
+                  http://google.com/accounts/o8/id:
+                    username_derivation:
+                      username_claim: "email"
+                    allowed_domains:
+                        - "2i2c.org"
+        ```
+
+    3. **Authenticate using an instutional identity provider for the hub community users and Google for 2i2c staff.**
+
+        This example:
+          - only shows Shibboleth, the ANU identity provider, and Google as the possible login options through CILogon
+          - sets `2i2c.org` as the only domain that can login to the hub using Google
+          - sets `anu.edu.au` as the only domain that can login to the hub using Shibboleth
+          - adds a `2i2c:` prefix to the usernames logging in through Google. The hub usernames are the `email` addresses of these accounts, as specified through `username_claim`.
+          - strips the `@anu.edu.au` domain from the usernames logging in through Shibboleth. The hub usernames are the `email` addresses of these accounts, as specified through `username_claim`.
+
+      ```{note}
+      To get the value of the key that must go in the `allowed_idp` dict for a specific IdP, go to https://cilogon.org/idplist and get the value of the `EntityID` key of the desired institutional IdP.
+      ```
+
+      Example config:
+
+      ```yaml
+      jupyterhub:
+        hub:
+          config:
+            JupyterHub:
+              authenticator_class: cilogon
+            CILogonOAuthenticator:
+              oauth_callback_url: https://{{ HUB_DOMAIN }}/hub/oauth_callback
+              admin_users:
+                - admin@anu.edu.au
+              # Only show the option to login with Google and Shibboleth
+              shown_idps:
+                - https://idp2.anu.edu.au/idp/shibboleth
+                - https://accounts.google.com/o/oauth2/auth
+              allowed_idps:
+                http://google.com/accounts/o8/id:
+                  username_derivation:
+                    username_claim: "email"
+                    action: "prefix"
+                    prefix: "2i2c"
+                  allowed_domains:
+                    - "2i2c.org"
+                https://idp2.anu.edu.au/idp/shibboleth:
+                  username_derivation:
+                    username_claim: "email"
+                    action: "strip_idp_domain",
+                    domain: "anu.edu.au"
+                  allowed_domains:
+                    - "anu.edu.au"
+      ```
+
+   ```{note}
+   To learn about all the possible config options of the `CILogonOAuthenticator` dict, checkout [the docs](https://oauthenticator.readthedocs.io/en/latest/api/gen/oauthenticator.cilogon.html#oauthenticator.cilogon.CILogonOAuthenticator.allowed_idps).
    ```
 
-   To authenticate using CILogon, allowing only a certain identity provider:
-
-    ```yaml
-    jupyterhub:
-      hub:
-        config:
-          JupyterHub:
-            authenticator_class: cilogon
-          CILogonOAuthenticator:
-            oauth_callback_url: https://{{ HUB_DOMAIN }}/hub/oauth_callback
-            username_claim: USERNAME_KEY
-            allowed_idps:
-              - 2i2c.org
-              - IDP
-    ```
-
-  Check the [CILogon scopes
-  section](https://www.cilogon.org/oidc#h.p_PEQXL8QUjsQm) to checkout available
-  values for `USERNAME_KEY` claim. This *cannot* be changed afterwards without manual
-  migration of user names, so choose this carefully.
-
-  ```{warning}
-  `USERNAME_KEY` should be something the user *cannot change* in any of the identity providers
-  we support. If they can, it can be easily used to impersonate others! For example, if we allow
-  both GitHub and `utoronto.ca` as allowed authentication providers, and only use `email` as
-  `USERNAME_KEY`, any GitHub user can set their email field in their GitHub profile to a `utoronto.ca`
-  email and thus gain access to any `utoronto.ca` user's server! So a very careful choice needs to
-  be made here.
-  ```
-
-6. Run the deployer as normal to apply the config.
+5. Run the deployer as normal to apply the config.
 
 ## CILogon through Auth0
 
