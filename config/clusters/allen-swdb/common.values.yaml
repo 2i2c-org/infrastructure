@@ -112,6 +112,10 @@ basehub:
         JupyterHub:
           authenticator_class: github
         GitHubOAuthenticator:
+          allowed_organizations:
+            - 2i2c-org:tech-team
+            - alleninstitute
+            - SWDB2022
           scope:
             - read:org
         Authenticator:

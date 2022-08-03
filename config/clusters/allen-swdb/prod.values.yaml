@@ -10,7 +10,4 @@ basehub:
     hub:
       config:
         GitHubOAuthenticator:
-          allowed_organizations:
-            - 2i2c-org:tech-team
-            - alleninstitute
           oauth_callback_url: https://allen-swdb.2i2c.cloud/hub/oauth_callback
