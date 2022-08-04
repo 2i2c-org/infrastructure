@@ -8,6 +8,7 @@ The source files for each provider we currently deploy with terraform are under 
 
 - [`terraform/gcp`](https://github.com/2i2c-org/infrastructure/tree/HEAD/terraform/gcp)
 - [`terraform/azure`](https://github.com/2i2c-org/infrastructure/tree/HEAD/terraform/azure)
+- [`terraform/aws`](https://github.com/2i2c-org/infrastructure/tree/HEAD/terraform/aws)
 
 Each provider directory also has a `projects` subdirectory where variables defining each cluster are stored.
 
@@ -27,10 +28,13 @@ Workspaces are stored centrally in the `two-eye-two-see` GCP project, even
 when we use Terraform for projects running on AWS / Azure. You must have
 access to this project before you can use terraform for our infrastructure.
 
-You can initialise using the following command
+You can initialise using `terraform init` command, run from within the directory where the source files of the specific provider you want to access are:
+
+For example, to initialize the workspaces configured for the GCP clusters run the following command:
 
 ```bash
-terraform init -backend-config=backends/default-backend.hcl -reconfigure
+cd terraform/gcp
+terraform init -backend-config=../backends/default-backend.hcl -reconfigure
 ```
 
 ```{note}
@@ -46,7 +50,7 @@ The backend configs are stored in [`terraform/backends`](https://github.com/2i2c
 For example, for our Pangeo projects, run:
 
 ```bash
-terraform init -backend-config=backends/pangeo-backend.hcl -reconfigure
+terraform init -backend-config=../backends/pangeo-backend.hcl -reconfigure
 ```
 
 ## How to change Terraform workspaces
@@ -74,7 +78,7 @@ terraform workspace select justiceinnovationlab
 For the majority of day-to-day work, this will be the prevalent workflow provided you have initialised terraform with
 
 ```bash
-terraform init -backend-config=backends/default-backend.hcl -reconfigure
+terraform init -backend-config=../backends/default-backend.hcl -reconfigure
 ```
 ````
 
@@ -84,13 +88,13 @@ To change between workspaces that are stored in _different_ backends, terraform 
 The commands, therefore, are:
 
 ```bash
-terraform init -backend-config=backends/<REQUIRED_CONFIG>.hcl -reconfigure
+terraform init -backend-config=../backends/<REQUIRED_CONFIG>.hcl -reconfigure
 terraform workspace select WORKSPACE_NAME
 ```
 
 For example, if you were working on our `pilot-hubs`, with our default backend initialised, but wanted to change to working on our Pangeo deployments, the commands would look as follows:
 
 ```bash
-terraform init -backend-config=backends/pangeo-backend.hcl -reconfigure
+terraform init -backend-config=../backends/pangeo-backend.hcl -reconfigure
 terraform workspace select pangeo-hubs
 ```
