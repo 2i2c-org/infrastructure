@@ -33,22 +33,6 @@ basehub:
             url: https://carbonplan.org
     singleuser:
       serviceAccountName: cloud-user-sa
-      initContainers:
-        # Need to explicitly fix ownership here, since EFS doesn't do anonuid
-        - name: volume-mount-ownership-fix
-          image: busybox
-          command:
-            [
-              "sh",
-              "-c",
-              "id && chown 1000:1000 /home/jovyan && ls -lhd /home/jovyan",
-            ]
-          securityContext:
-            runAsUser: 0
-          volumeMounts:
-            - name: home
-              mountPath: /home/jovyan
-              subPath: "{username}"
       image:
         name: carbonplan/trace-python-notebook
         # pullPolicy set to "Always" because we use the changing over time tag
