@@ -15,7 +15,8 @@ Each provider directory also has a `projects` subdirectory where variables defin
 
 ## Backends
 
-A [backend](https://www.terraform.io/language/settings/backends/configuration) defines where Terraform stores its state data files. Normally, terraform automatically manages state in the workspaces associated with your configuration, and there's no need to explicity define a backend.
+A [backend](https://www.terraform.io/language/settings/backends/configuration) defines where Terraform stores its state data files in cloud storage (we use a GCP bucket for the majority of our deployments).
+Normally, we are using Terraform when logged in with our 2i2c accounts and there's no need to explicitly define a backend.
 
 But for some projects where we don't have access to using our 2i2c accounts, e.g. universities that require us to have specific university-affiliated identities, we can configure different backends to access the terraform state stored in those projects.
 Working this way saves us the pain of trying to work with terraform using two different authentications.
