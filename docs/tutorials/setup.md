@@ -59,6 +59,20 @@ brew install google-cloud-sdk awscli azure-cli
 For other platforms, consult the documentation in the links above to find
 installation methods.
 
+### Terraform
+
+We use [terraform](https://www.terraform.io/) to manage our infrastructure in the cloud.
+So in order to update existing clusters or add new ones, you'll need to install this tool.
+
+On a Mac, you can easily [install it](https://learn.hashicorp.com/tutorials/terraform/install-cli#install-terraform) with `homebrew`:
+
+```bash
+brew tap hashicorp/tap
+brew install hashicorp/tap/terraform
+```
+
+Checkout this [information about terraform](topic:terraform) for how to configure and use it.
+
 ## Step 2: Setup the python environment
 
 Our deployment scripts are all written in python, so you'll need to have a recent
