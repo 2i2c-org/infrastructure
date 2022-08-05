@@ -21,7 +21,8 @@ Normally, we are using Terraform when logged in with our 2i2c accounts and there
 But for some projects where we don't have access to using our 2i2c accounts, e.g. universities that require us to have specific university-affiliated identities, we can configure different backends to access the terraform state stored in those projects.
 Working this way saves us the pain of trying to work with terraform using two different authentications.
 
-These backend configs are stored in [`terraform/gcp/backends`](https://github.com/2i2c-org/infrastructure/tree/HEAD/terraform/gcp/backends) 
+These backend configs are stored in [`terraform/gcp/backends`](https://github.com/2i2c-org/infrastructure/tree/HEAD/terraform/gcp/backends).
+Currently, we only implement a choice of backend for GCP deployments.
 
 ### Backend Initialization
 
