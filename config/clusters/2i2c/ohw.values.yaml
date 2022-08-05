@@ -13,7 +13,6 @@ basehub:
   userServiceAccount:
     annotations:
       iam.gke.io/gcp-service-account: pilot-hubs-ohw@two-eye-two-see.iam.gserviceaccount.com
-
   jupyterhub:
     prePuller:
       continuous:
@@ -47,7 +46,7 @@ basehub:
           description: "~2 CPU, ~8G RAM"
           default: true
           kubespawner_override:
-            image: "ghcr.io/oceanhackweek/python:f6f8b9f"
+            image: "ghcr.io/oceanhackweek/python:sha256:bd084421f3b0b77b57d81e616f7bba155d988d609575d4e97bd32eebbbfbb7c3"
             default_url: "/lab"
             mem_limit: 8G
             mem_guarantee: 4G
@@ -56,7 +55,7 @@ basehub:
         - display_name: "R image"
           description: "~2 CPU, ~8G RAM"
           kubespawner_override:
-            image: "ghcr.io/oceanhackweek/r:f6f8b9f"
+            image: "ghcr.io/oceanhackweek/r:sha256:a17281189435cbe59969e501e149cf15f5ee590339f82480424dbfbb65045526"
             default_url: "/rstudio"
             mem_limit: 8G
             mem_guarantee: 4G
