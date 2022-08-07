@@ -316,10 +316,6 @@ jupyterhub:
       KubeSpawner:
         # Make sure working directory is ${HOME}
         working_dir: /home/jovyan
-        extra_container_config:
-          securityContext:
-            # Explicitly disallow setuid binaries from working inside the container
-            allowPrivilegeEscalation: false
       Authenticator:
         # Don't allow test username to login into the hub
         # The test service will still be able to create this hub username

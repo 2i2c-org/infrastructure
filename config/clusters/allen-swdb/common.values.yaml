@@ -113,6 +113,16 @@ basehub:
       readinessProbe:
         enabled: false
       config:
+        KubeSpawner:
+          # Run the container as root + privileged so it can mount s3fs via FUSE
+          # But we then use jupyterhub-roothooks to drop privileges
+          container_security_context:
+            privileged: true
+            runAsUser: 0
+            allowPrivilegeEscalation: true
+            capabilities:
+              add:
+                - SYS_ADMIN
         JupyterHub:
           authenticator_class: github
         GitHubOAuthenticator:
