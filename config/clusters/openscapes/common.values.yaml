@@ -38,12 +38,8 @@ basehub:
         # Need to explicitly fix ownership here, since EFS doesn't do anonuid
         - name: volume-mount-ownership-fix
           image: busybox
-          command:
-            [
-              "sh",
-              "-c",
-              "id && chown 1000:1000 /home/jovyan /home/jovyan/shared && ls -lhd /home/jovyan",
-            ]
+          command: ["sh", "-c", "id && chown 1000:1000 /home/jovyan /home/jovyan/shared\
+                \ && ls -lhd /home/jovyan"]
           securityContext:
             runAsUser: 0
           volumeMounts:
@@ -53,7 +49,6 @@ basehub:
             - name: home
               mountPath: /home/jovyan/shared
               subPath: _shared
-
       # User image repo: https://github.com/NASA-Openscapes/corn
       image:
         name: 783616723547.dkr.ecr.us-west-2.amazonaws.com/user-image
@@ -77,7 +72,7 @@ basehub:
                   display_name: Python
                   default: true
                   kubespawner_override:
-                    image: openscapes/python:8c7d33e
+                    image: openscapes/python:431a94c
                 rocker:
                   display_name: R
                   kubespawner_override:
@@ -89,7 +84,7 @@ basehub:
           kubespawner_override:
             # Expllicitly unset mem_limit, so it overrides the default memory limit we set in
             # basehub/values.yaml
-            mem_limit: null
+            mem_limit:
             mem_guarantee: 6.5G
             node_selector:
               node.kubernetes.io/instance-type: m5.large
@@ -97,7 +92,7 @@ basehub:
           description: "~4 CPU, ~15G RAM"
           profile_options: *profile_options
           kubespawner_override:
-            mem_limit: null
+            mem_limit:
             mem_guarantee: 12G
             node_selector:
               node.kubernetes.io/instance-type: m5.xlarge
@@ -105,7 +100,7 @@ basehub:
           description: "~8 CPU, ~30G RAM"
           profile_options: *profile_options
           kubespawner_override:
-            mem_limit: null
+            mem_limit:
             mem_guarantee: 26G
             node_selector:
               node.kubernetes.io/instance-type: m5.2xlarge
@@ -113,7 +108,7 @@ basehub:
           description: "~32 CPU, ~128G RAM"
           profile_options: *profile_options
           kubespawner_override:
-            mem_limit: null
+            mem_limit:
             mem_guarantee: 115G
             node_selector:
               node.kubernetes.io/instance-type: m5.8xlarge
@@ -142,6 +137,6 @@ basehub:
 dask-gateway:
   gateway:
     extraConfig:
-      idle: |
+      idle: |-
         # timeout after 30 minutes of inactivity
         c.KubeClusterConfig.idle_timeout = 1800
