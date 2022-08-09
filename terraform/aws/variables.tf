@@ -63,21 +63,37 @@ variable "extra_user_iam_policy" {
   EOT
 }
 
+variable "db_enabled" {
+  default     = false
+  type        = bool
+  description = <<-EOT
+  Run a database for the hub with AWS RDS
+  EOT
+}
+
 variable "db_instance_class" {
   default     = "db.t3.micro"
   description = <<-EOT
+  Size (memory & CPU) of the db instance to provision.
+
+  See list in https://aws.amazon.com/rds/instance-types/
   EOT
 }
 
 variable "db_storage_size" {
   default     = 10
   description = <<-EOT
+  Size (in GiB) of storage to provision for the RDS instance
   EOT
 }
 
 variable "db_engine" {
   default     = "mysql"
   description = <<-EOT
+  AWS RDS database engine to use.
+
+  We should really only support mysql or postgres here, with a
+  preference for postgres.
   EOT
 }
 
@@ -85,14 +101,15 @@ variable "db_engine" {
 variable "db_engine_version" {
   default     = "8.0"
   description = <<-EOT
+  Version of database engine to provision.
   EOT
 }
 
 variable "db_instance_identifier" {
   description = <<-EOT
+  Human readable instance name to give the database server.
+
+  This is used in the hostname, but otherwise doesn't have much of
+  an effect.
   EOT
 }
-
-
-
-
