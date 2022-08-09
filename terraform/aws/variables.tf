@@ -62,3 +62,37 @@ variable "extra_user_iam_policy" {
   user pods when making requests to AWS services (such as S3)
   EOT
 }
+
+variable "db_instance_class" {
+  default     = "db.t3.micro"
+  description = <<-EOT
+  EOT
+}
+
+variable "db_storage_size" {
+  default     = 10
+  description = <<-EOT
+  EOT
+}
+
+variable "db_engine" {
+  default     = "mysql"
+  description = <<-EOT
+  EOT
+}
+
+
+variable "db_engine_version" {
+  default     = "8.0"
+  description = <<-EOT
+  EOT
+}
+
+variable "db_instance_identifier" {
+  description = <<-EOT
+  EOT
+}
+
+
+
+

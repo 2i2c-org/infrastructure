@@ -4,6 +4,11 @@ cluster_name = "allen-swdb"
 
 cluster_nodes_location = "us-west-2a"
 
+db_engine = "mysql"
+db_engine_version = "8.0"
+db_instance_identifier = "swdb"
+db_storage_size = 200
+
 user_buckets = {
     "scratch-staging": {
         "delete_after" : 7
