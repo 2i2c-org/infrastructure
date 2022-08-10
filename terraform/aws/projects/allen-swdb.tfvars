@@ -9,6 +9,7 @@ db_engine = "mysql"
 db_engine_version = "8.0"
 db_instance_identifier = "swdb"
 db_storage_size = 200
+db_instance_class = "db.m5.2xlarge"
 
 user_buckets = {
     "scratch-staging": {

@@ -113,3 +113,10 @@ variable "db_instance_identifier" {
   an effect.
   EOT
 }
+
+variable "db_mysql_user_grants" {
+  default     = ["SELECT", "SHOW VIEW", "SHOW DATABASES", "PROCESS"]
+  description = <<-EOT
+  List of privileges to grant the default hub db user if using mysql
+  EOT
+}
