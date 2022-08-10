@@ -139,6 +139,8 @@ basehub:
           # access though.
           admin_users:
             - mabuice
+            - fcollman
+            - morriscb
 dask-gateway:
   gateway:
     extraConfig:
