@@ -55,7 +55,7 @@ basehub:
         - display_name: "R image"
           description: "~2 CPU, ~8G RAM"
           kubespawner_override:
-            image: "ghcr.io/oceanhackweek/r:d8feeae"
+            image: "ghcr.io/oceanhackweek/r:ea9e482"
             default_url: "/rstudio"
             mem_limit: 8G
             mem_guarantee: 4G
