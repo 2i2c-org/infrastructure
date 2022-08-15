@@ -7,6 +7,8 @@ on:
     paths:
       - deployer/**
       - tests/**
+      - requirements.txt
+      - dev-requirements.txt
     tags:
       - "**"
   pull_request:
@@ -15,6 +17,8 @@ on:
     paths:
       - deployer/**
       - tests/**
+      - requirements.txt
+      - dev-requirements.txt
   workflow_dispatch:
 
 jobs:
