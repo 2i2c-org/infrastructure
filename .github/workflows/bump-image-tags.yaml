@@ -2,6 +2,14 @@ name: Bump Image Tags
 
 on:
   workflow_dispatch:
+    inputs:
+      dry_run:
+        type: boolean
+        description: |
+          Perform a dry-run of the action and don't open a Pull Request. Information
+          on which images need to be bumped to which versions will be printed to stdout.
+        default: false
+        required: false
   schedule:
     - cron: "0 0 * * 1" # Run at 00:00 UTC every Monday
 
@@ -53,3 +61,4 @@ jobs:
           github_token: ${{ steps.generate_token.outputs.token }}
           # team_reviewers: ${{ env.team_reviewers }}
           base_branch: "master"
+          dry_run: ${{ github.event.inputs.dry_run || true}}

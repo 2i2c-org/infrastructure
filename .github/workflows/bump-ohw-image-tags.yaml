@@ -2,8 +2,17 @@ name: Bump Ohw Image Tags
 
 on:
   workflow_dispatch:
+    inputs:
+      dry_run:
+        type: boolean
+        description: |
+          Perform a dry-run of the action and don't open a Pull Request. Information
+          on which images need to be bumped to which tags will be printed to stdout.
+        default: false
+        required: false
   schedule:
     - cron: "0 */6 * * *" # Run every 6th hour.
+
 env:
   team_reviewers: tech-team
 
@@ -34,3 +43,4 @@ jobs:
           github_token: ${{ steps.generate_token.outputs.token }}
           # team_reviewers: ${{ env.team_reviewers }}
           base_branch: "master"
+          dry_run: ${{ github.event.inputs.dry_run || true }}
