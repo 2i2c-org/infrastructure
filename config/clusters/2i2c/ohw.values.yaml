@@ -46,7 +46,7 @@ basehub:
           description: "~2 CPU, ~8G RAM"
           default: true
           kubespawner_override:
-            image: "ghcr.io/oceanhackweek/python:d6b63fd"
+            image: "ghcr.io/oceanhackweek/python:d20444f"
             default_url: "/lab"
             mem_limit: 8G
             mem_guarantee: 4G
@@ -55,7 +55,7 @@ basehub:
         - display_name: "R image"
           description: "~2 CPU, ~8G RAM"
           kubespawner_override:
-            image: "ghcr.io/oceanhackweek/r:1597363"
+            image: "ghcr.io/oceanhackweek/r:d20444f"
             default_url: "/rstudio"
             mem_limit: 8G
             mem_guarantee: 4G
