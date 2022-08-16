@@ -69,15 +69,6 @@ basehub:
       profileList:
         # The mem-guarantees are here so k8s doesn't schedule other pods
         # on these nodes.
-        - display_name: "Small: m5.large"
-          description: "~2 CPU, ~8G RAM"
-          kubespawner_override:
-            # Expllicitly unset mem_limit, so it overrides the default memory limit we set in
-            # basehub/values.yaml
-            mem_limit: null
-            mem_guarantee: 6.5G
-            node_selector:
-              node.kubernetes.io/instance-type: m5.large
         - display_name: "Medium: m5.xlarge"
           description: "~4 CPU, ~15G RAM"
           kubespawner_override:
