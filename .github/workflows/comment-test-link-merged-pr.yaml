@@ -114,7 +114,7 @@ jobs:
 
   # This job depends on the get-pr-number and get-workflow-url jobs to have completed
   # successfully and set the get-pr-number.outputs.continue-workflow variable to 'True'
-  # and the get-workflow-url.outputs.workflow-url to something other than 'False'. This
+  # and the get-workflow-url.outputs.workflow-url variable to something other than 'False'. This
   # job consumes the pr-number and workflow-url variables to comment on the matching
   # Pull Request with the workflow URL to the running deployment workflow.
   add-pr-comment:
