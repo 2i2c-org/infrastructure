@@ -42,6 +42,8 @@ basehub:
           # the listed orgs. These people should have admin access though.
           admin_users:
             - jameshalgren
+            - arpita0911patel
+            - karnesh
         GitHubOAuthenticator:
           allowed_organizations:
             - 2i2c-org
