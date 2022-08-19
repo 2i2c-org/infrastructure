@@ -60,6 +60,15 @@ basehub:
         # on these nodes.
         - display_name: "Small: r5.large"
           description: "~2 CPU, ~15G RAM"
+          profile_options: &profile_options
+            image:
+              display_name: Image
+              choices:
+                python_trace:
+                  display_name: Trace Python Notebook
+                  default: true
+                  kubespawner_override:
+                    image: carbonplan/trace-python-notebook:latest
           kubespawner_override:
             # Expllicitly unset mem_limit, so it overrides the default memory limit we set in
             # basehub/values.yaml
@@ -69,6 +78,7 @@ basehub:
               node.kubernetes.io/instance-type: r5.large
         - display_name: "Medium: r5.xlarge"
           description: "~4 CPU, ~30G RAM"
+          profile_options: *profile_options
           kubespawner_override:
             mem_limit: null
             mem_guarantee: 29G
@@ -76,6 +86,7 @@ basehub:
               node.kubernetes.io/instance-type: r5.xlarge
         - display_name: "Large: r5.2xlarge"
           description: "~8 CPU, ~60G RAM"
+          profile_options: *profile_options
           kubespawner_override:
             mem_limit: null
             mem_guarantee: 60G
@@ -83,6 +94,7 @@ basehub:
               node.kubernetes.io/instance-type: r5.2xlarge
         - display_name: "Huge: r5.8xlarge"
           description: "~32 CPU, ~256G RAM"
+          profile_options: *profile_options
           kubespawner_override:
             mem_limit: null
             mem_guarantee: 240G
@@ -90,6 +102,7 @@ basehub:
               node.kubernetes.io/instance-type: r5.8xlarge
         - display_name: "Very Huge: x1.16xlarge"
           description: "~64 CPU, ~976G RAM"
+          profile_options: *profile_options
           kubespawner_override:
             mem_limit: null
             mem_guarantee: 940G
@@ -97,6 +110,7 @@ basehub:
               node.kubernetes.io/instance-type: x1.16xlarge
         - display_name: "Very Very Huge: x1.32xlarge"
           description: "~128 CPU, ~1952G RAM"
+          profile_options: *profile_options
           kubespawner_override:
             mem_limit: null
             mem_guarantee: 1900G
