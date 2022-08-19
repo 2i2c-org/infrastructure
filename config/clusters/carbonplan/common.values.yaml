@@ -69,6 +69,10 @@ basehub:
                   default: true
                   kubespawner_override:
                     image: carbonplan/trace-python-notebook:latest
+                cmip6_downscaling:
+                  display_name: CMIP6 Downscaling
+                  kubespawner_override:
+                    image: carbonplan/cmip6-downscaling-single-user:latest
           kubespawner_override:
             # Expllicitly unset mem_limit, so it overrides the default memory limit we set in
             # basehub/values.yaml
