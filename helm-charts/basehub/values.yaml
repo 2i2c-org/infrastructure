@@ -583,6 +583,8 @@ jupyterhub:
             # This is the same syntax used by allowed_organizations traitlet of GitHubOAuthenticator
             teams = set([f'{team_info["organization"]["login"]}:{team_info["slug"]}' for team_info in auth_state["teams"]])
 
+
+            print(f"User {spawner.user.name} is part of teams {' '.join(teams)}")
             allowed_profiles = []
 
             for profile in original_profile_list:
@@ -590,7 +592,17 @@ jupyterhub:
               # If allowed_teams is empty or not set, it'll not be accessible to *anyone*
               if set(profile.get('allowed_teams', [])) & teams:
                 allowed_profiles.append(profile)
-                print(f"Allowing profile {profile['display_name']} for user {spawner.user.name}")
+                print(f"Allowing profile {profile['display_name']} for user {spawner.user.name} based on team membership")
+              elif 'allowed_orgs' in profile:
+                allowed_orgs = profile['allowed_orgs']
+                for org in allowed_orgs:
+                  user_in_org = yield spawner.authenticator._check_membership_allowed_organizations(
+                      org, spawner.user.name, auth_state['access_token']
+                  )
+                  if user_in_org:
+                    allowed_profiles.append(profile)
+                    print(f"Allowing profile {profile['display_name']} for user {spawner.user.name} based on org membership")
+                    break
               else:
                 print(f"Dropping profile {profile['display_name']} for user {spawner.user.name}")
 

@@ -71,6 +71,11 @@ basehub:
         # on these nodes.
         - display_name: "Medium: m5.xlarge"
           description: "~4 CPU, ~15G RAM"
+          allowed_orgs:
+            - SWDB2022
+            - alleninstitute
+          allowed_teams:
+            - 2i2c-org:tech-team
           kubespawner_override:
             mem_limit: null
             mem_guarantee: 12G
@@ -78,6 +83,9 @@ basehub:
               node.kubernetes.io/instance-type: m5.xlarge
         - display_name: "Large: m5.2xlarge"
           description: "~8 CPU, ~30G RAM"
+          allowed_orgs:
+            - SWDB2022
+            - alleninstitute
           kubespawner_override:
             mem_limit: null
             mem_guarantee: 26G
@@ -85,11 +93,32 @@ basehub:
               node.kubernetes.io/instance-type: m5.2xlarge
         - display_name: "Huge: m5.8xlarge"
           description: "~32 CPU, ~128G RAM"
+          allowed_orgs:
+            - SWDB2022
+            - alleninstitute
+          allowed_teams:
+            - 2i2c-org:tech-team
           kubespawner_override:
             mem_limit: null
             mem_guarantee: 115G
             node_selector:
               node.kubernetes.io/instance-type: m5.8xlarge
+        - display_name: "Large + GPU: p2.xlarge"
+          description: "~4CPUs, 60G RAM, 1 NVIDIA K80 GPU"
+          allowed_orgs:
+            - alleninstitute
+          allowed_teams:
+            - 2i2c-org:tech-team
+            - SWDB2022:gpu
+          kubespawner_override:
+            mem_limit: null
+            mem_guarantee: 55G
+            environment:
+              NVIDIA_DRIVER_CAPABILITIES: compute,utility
+            extra_resource_limits:
+              nvidia.com/gpu: "1"
+            node_selector:
+              node.kubernetes.io/instance-type: p2.xlarge
     scheduling:
       userPlaceholder:
         enabled: false
@@ -117,6 +146,7 @@ basehub:
         JupyterHub:
           authenticator_class: github
         GitHubOAuthenticator:
+          populate_teams_in_auth_state: true
           allowed_organizations:
             - 2i2c-org:tech-team
             - alleninstitute
@@ -124,6 +154,7 @@ basehub:
           scope:
             - read:org
         Authenticator:
+          enable_auth_state: true
           # This hub uses GitHub Orgs/Teams auth and so we do not set
           # allowed_users in order to not deny access to valid members of
           # the listed Orgs/Teams. The following people should have admin
