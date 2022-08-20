@@ -64,6 +64,18 @@ resource "aws_db_instance" "db" {
   skip_final_snapshot    = true
   apply_immediately      = true
   availability_zone      = var.cluster_nodes_location
+  parameter_group_name   = aws_db_parameter_group.db.name
+}
+
+resource "aws_db_parameter_group" "db" {
+  name   = var.db_instance_identifier
+  family = "mysql8.0"
+
+  parameter {
+    # FIXME: Parameterize it
+    name  = "max_allowed_packet"
+    value = "1073741824"
+  }
 }
 
 resource "random_password" "db_root_password" {
