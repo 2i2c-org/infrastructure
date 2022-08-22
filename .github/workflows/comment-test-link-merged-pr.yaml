@@ -108,7 +108,7 @@ jobs:
               if workflow_url:
                   break
 
-          print(f"::set-output name=workflow-url::{workflow_run.html_url}")
+          print(f"::set-output name=workflow-url::{workflow_url}")
         env:
           BRANCH: "master"
           EVENT: "push"
