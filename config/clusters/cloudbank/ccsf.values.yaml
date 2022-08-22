@@ -28,3 +28,5 @@ jupyterhub:
           - craig.persiko@mail.ccsf.edu
           - efuchs@mail.ccsf.edu
         admin_users: *ccsf_users
+  singleuser:
+    defaultUrl: /retro
