@@ -96,14 +96,19 @@ jobs:
           )
 
           for wf_runs in all_workflow_runs:
-              for workflow_run in wf_runs.workflow_runs:
-                  if (
-                      (workflow_run.name == r"""${{ env.WORKFLOW_NAME }}""")
-                      and (workflow_run.head_commit.message == r"""${{ github.event.head_commit.message }}""")
-                  ):
-                      print(f"::set-output name=workflow-url::{workflow_run.html_url}")
-                  else:
-                      print(f"::set-output name=workflow-url::{False}")
+              workflow_url = next(
+                  (
+                      workflow_run.html_url
+                      for workflow_run in wf_runs.workflow_runs
+                      if workflow_run.name == r"""${{ env.WORKFLOW_NAME }}"""
+                      and workflow_run.head_commit.message == r"""${{ github.event.head_commit.message }}"""
+                  ),
+                  False,
+              )
+              if workflow_url:
+                  break
+
+          print(f"::set-output name=workflow-url::{workflow_run.html_url}")
         env:
           BRANCH: "master"
           EVENT: "push"
