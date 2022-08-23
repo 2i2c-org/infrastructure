@@ -68,6 +68,7 @@ basehub:
         # on these nodes.
         - display_name: "Small: m5.large"
           description: "~2 CPU, ~8G RAM"
+          slug: "small"
           profile_options: &profile_options
             image:
               display_name: Image
@@ -75,14 +76,17 @@ basehub:
                 python:
                   display_name: Python
                   default: true
+                  slug: "python"
                   kubespawner_override:
                     image: openscapes/python:431a94c
                 rocker:
                   display_name: R
+                  slug: "rocker"
                   kubespawner_override:
                     image: openscapes/rocker:b88a034
                 matlab:
                   display_name: Matlab
+                  slug: "matlab"
                   kubespawner_override:
                     image: openscapes/matlab:fb41496
           kubespawner_override:
