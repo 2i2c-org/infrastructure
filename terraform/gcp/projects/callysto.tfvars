@@ -7,8 +7,7 @@ region                 = "northamerica-northeast1"
 core_node_machine_type = "n1-highmem-4"
 enable_network_policy  = true
 
-# No plans to provide storage buckets to users on this hub, so no need to deploy
-# config connector
+# No plans to provide storage buckets to users on this hub, so no need to deploy config connector
 config_connector_enabled = false
 
 notebook_nodes = {
