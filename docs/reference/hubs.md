@@ -1,6 +1,14 @@
 # List of running hubs
 
 Here's a list of running hubs.
+It is automatically generated from the config stored in the [`config/clusters` folder of the `infrastructure` repository](https://github.com/2i2c-org/infrastructure/tree/HEAD/config/clusters) and can therefore be limited in the information it provides.
+
+```{admonition} Missing information for Azure hubs
+Hubs that have `kubeconfig` listed as their provider are most likely running on Azure.
+The reason `kubeconfig` is listed as a provider is because that is the mechanism we are using to authenticate to that cluster in the case where we do not have a Service Principal.
+
+Unlike GCP and AWS, Azure does not require the location for authentication and it is therefore not listed in our config files and hence cannot be populated in this table.
+```
 
 <div class="full-width">
 
@@ -23,7 +31,7 @@ Team members should feel free to experiment with this hub and try out new functi
 <!-- DataTables to make the table above look nice -->
 <link rel="stylesheet"
       href="https://cdn.datatables.net/1.10.24/css/jquery.dataTables.min.css">
-<script type="text/javascript" 
+<script type="text/javascript"
         src="https://cdn.datatables.net/1.10.24/js/jquery.dataTables.min.js"></script>
 
 <script>
