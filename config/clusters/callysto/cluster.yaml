@@ -6,19 +6,7 @@ gcp:
   cluster: callysto-cluster
   zone: northamerica-northeast1
 support:
-  helm_chart_values_files: []
-hubs:
-  - name: staging
-    display_name: "Callysto Staging"
-    domain: staging.callysto.2i2c.cloud
-    helm_chart: basehub
-    auth0:
-      enabled: false
-    helm_chart_values_files: []
-  # - name: prod
-  #   display_name: "Callysto"
-  #   domain: 2i2c.callysto.ca
-  #   helm_chart: basehub
-  #   auth0:
-  #     enabled: false
-  #   helm_chart_values_files: []
+  helm_chart_values_files:
+    - support.values.yaml
+    - enc-support.secret.values.yaml
+hubs: []
