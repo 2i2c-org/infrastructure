@@ -107,6 +107,16 @@ def render_hubs():
         # Incase we don't find any Grafana config, use an empty string as default
         grafana_url = ""
 
+        # Try to identify the data centre location of the cluster
+        # For kubeconfig and Azure providers, this will always default to None since
+        # we do not store that information in the cluster.yaml file
+        #
+        # First try "zone" for GCP clusters
+        datacentre_loc = cluster.get(cluster["provider"], {}).get("zone", None)
+        if datacentre_loc is None:
+            # Try "region" for AWS clusters
+            datacentre_loc = cluster.get(cluster["provider"], {}).get("region", None)
+
         # Loop through support files, look for Grafana config, and grab the URL
         if support_files is not None:
             for support_file in support_files:
@@ -138,6 +148,8 @@ def render_hubs():
                     "id": hub["name"],
                     "hub_type": hub["helm_chart"],
                     "grafana": grafana_url,
+                    "provider": cluster["provider"],
+                    "data center location": datacentre_loc,  # Americanising for you ;)
                 }
             )
     df = pd.DataFrame(hub_list)
