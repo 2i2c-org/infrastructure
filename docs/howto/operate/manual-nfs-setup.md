@@ -1,5 +1,11 @@
 # Manually setup an NFS server
 
+```{warning}
+
+Use this as a last resort only on GCP clusters that are *very* price sensitive. Use
+Google Filestore as default instead.
+```
+
 This guide describes the manual steps required for setting up a NFS server to store users' home directories on the hub.
 More information about the NFS Server can be found in [](/topic/storage-layer).
 
