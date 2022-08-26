@@ -1,15 +1,15 @@
 nfs:
-    pv:
-      # from https://docs.aws.amazon.com/efs/latest/ug/mounting-fs-nfs-mount-settings.html
-      mountOptions:
-        - rsize=1048576
-        - wsize=1048576
-        - timeo=600
-        - soft # We pick soft over hard, so NFS lockups don't lead to hung processes
-        - retrans=2
-        - noresvport
-      serverIP: nfs-server-01
-      baseShareName: /export/home-01/homes/
+  pv:
+    # from https://docs.aws.amazon.com/efs/latest/ug/mounting-fs-nfs-mount-settings.html
+    mountOptions:
+      - rsize=1048576
+      - wsize=1048576
+      - timeo=600
+      - soft # We pick soft over hard, so NFS lockups don't lead to hung processes
+      - retrans=2
+      - noresvport
+    serverIP: nfs-server-01
+    baseShareName: /export/home-01/homes/
 jupyterhub:
   custom:
     2i2c:
