@@ -69,6 +69,7 @@ basehub:
         - display_name: "Small: m5.large"
           description: "~2 CPU, ~8G RAM"
           slug: "small"
+          default: true
           profile_options: &profile_options
             image:
               display_name: Image
