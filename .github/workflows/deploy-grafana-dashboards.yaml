@@ -12,7 +12,6 @@ jobs:
         include:
           # The grafana for 2i2c cluster holds also info about all other clusters
           - cluster_name: 2i2c
-          - cluster_name: azure.carbonplan
           - cluster_name: carbonplan
           - cluster_name: cloudbank
           - cluster_name: leap
