@@ -120,3 +120,10 @@ variable "db_mysql_user_grants" {
   List of privileges to grant the default hub db user if using mysql
   EOT
 }
+
+variable "db_mysql_params" {
+  default     = {}
+  description = <<-EOT
+  Mapping of parameters to set on the mysql server
+  EOT
+}

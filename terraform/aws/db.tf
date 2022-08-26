@@ -71,10 +71,12 @@ resource "aws_db_parameter_group" "db" {
   name   = var.db_instance_identifier
   family = "mysql8.0"
 
-  parameter {
-    # FIXME: Parameterize it
-    name  = "max_allowed_packet"
-    value = "1073741824"
+  dynamic "parameter" {
+    for_each = var.db_mysql_params
+    content {
+      name  = parameter.key
+      value = parameter.value
+    }
   }
 }
 

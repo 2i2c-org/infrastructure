@@ -33,3 +33,7 @@ hub_cloud_permissions = {
     extra_iam_policy: ""
   },
 }
+
+db_mysql_params = {
+  "max_allowed_packet":  "1073741824"
+}
