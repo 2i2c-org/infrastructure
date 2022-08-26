@@ -1,0 +1,48 @@
+nfs:
+    pv:
+      # from https://docs.aws.amazon.com/efs/latest/ug/mounting-fs-nfs-mount-settings.html
+      mountOptions:
+        - rsize=1048576
+        - wsize=1048576
+        - timeo=600
+        - soft # We pick soft over hard, so NFS lockups don't lead to hung processes
+        - retrans=2
+        - noresvport
+      serverIP: nfs-server-01
+      baseShareName: /export/home-01/homes/
+jupyterhub:
+  custom:
+    2i2c:
+      add_staff_user_ids_to_admin_users: true
+      add_staff_user_ids_of_type: "google"
+    homepage:
+      templateVars:
+        org:
+          name: Callysto
+          url: https://www.callysto.ca
+          logo_url: https://www.callysto.ca/wp-content/uploads/2022/08/Callysto-HUB_vertical.png
+        designed_by:
+          name: 2i2c
+          url: https://2i2c.org
+        operated_by:
+          name: 2i2c
+          url: https://2i2c.org
+        funded_by:
+          name: TODO
+          url: https://2i2c.org
+  hub:
+    config:
+      JupyterHub:
+        authenticator_class: cilogon
+      CILogonOAuthenticator:
+        # Only show the option to login with Google and Mirosoft
+        shown_idps:
+          - https://accounts.google.com/o/oauth2/auth
+          - https://login.microsoftonline.com/common/oauth2/v2.0/authorize
+        allowed_idps:
+          http://google.com/accounts/o8/id:
+            username_derivation:
+              username_claim: "sub"
+          https://login.microsoftonline.com/common/oauth2/v2.0/authorize:
+            username_derivation:
+              username_claim: "sub"
