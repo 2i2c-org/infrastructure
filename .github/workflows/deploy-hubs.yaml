@@ -143,7 +143,6 @@ jobs:
     # If you are adding a new cluster, please remember to list it here!
     outputs:
       failure_2i2c: "${{ steps.declare-failure-status.outputs.failure_2i2c }}"
-      failure_azure-carbonplan: "${{ steps.declare-failure-status.outputs.failure_azure-carbonplan }}"
       failure_carbonplan: "${{ steps.declare-failure-status.outputs.failure_carbonplan }}"
       failure_cloudbank: "${{ steps.declare-failure-status.outputs.failure_cloudbank }}"
       failure_leap: "${{ steps.declare-failure-status.outputs.failure_leap }}"
