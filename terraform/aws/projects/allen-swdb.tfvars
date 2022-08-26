@@ -37,3 +37,5 @@ hub_cloud_permissions = {
 db_mysql_params = {
   "max_allowed_packet":  "1073741824"
 }
+
+db_mysql_user_password_special_chars = false

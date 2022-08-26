@@ -87,9 +87,8 @@ resource "random_password" "db_root_password" {
 }
 
 resource "random_password" "db_readonly_password" {
-  count = var.db_enabled ? 1 : 0
-  # FIXME: Parameterize it
-  special = false
+  count   = var.db_enabled ? 1 : 0
+  special = var.db_mysql_user_password_special_chars
   # mysql passwords can't be longer than 41 chars lololol
   length = 41
 }

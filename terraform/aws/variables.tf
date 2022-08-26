@@ -127,3 +127,10 @@ variable "db_mysql_params" {
   Mapping of parameters to set on the mysql server
   EOT
 }
+
+variable "db_mysql_user_password_special_chars" {
+  default     = true
+  description = <<-EOT
+  Set to True if you don't want special characters in generated mysql passwords
+  EOT
+}
