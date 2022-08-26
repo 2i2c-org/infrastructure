@@ -67,13 +67,13 @@ This is because the VM will not have an external IP address and will therefore n
 2. Create the appropriate directory
 
    ```bash
-   sudo mkdir -p /export/home-01
+   sudo mkdir -p /export/home-01/homes
    ```
 
 3. Set the appropriate permissions on the directory
 
    ```bash
-   sudo chmod -R 0700 /export/
+   sudo chmod -R 0755 /export/
    sudo chown -R 1000:1000 /export/
    ```
 
