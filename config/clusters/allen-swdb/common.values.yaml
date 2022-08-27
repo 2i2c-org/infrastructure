@@ -71,11 +71,10 @@ basehub:
         # on these nodes.
         - display_name: "Medium: m5.xlarge"
           description: "~4 CPU, ~15G RAM"
-          allowed_orgs:
-            - SWDB2022
-            - alleninstitute
           allowed_teams:
             - 2i2c-org:tech-team
+            - SWDB2022
+            - alleninstitute
           kubespawner_override:
             mem_limit: null
             mem_guarantee: 12G
@@ -83,9 +82,10 @@ basehub:
               node.kubernetes.io/instance-type: m5.xlarge
         - display_name: "Large: m5.2xlarge"
           description: "~8 CPU, ~30G RAM"
-          allowed_orgs:
-            - SWDB2022
+          allowed_teams:
             - alleninstitute
+            - 2i2c-org:tech-team
+            - SWDB2022
           kubespawner_override:
             mem_limit: null
             mem_guarantee: 26G
@@ -93,11 +93,10 @@ basehub:
               node.kubernetes.io/instance-type: m5.2xlarge
         - display_name: "Huge: m5.8xlarge"
           description: "~32 CPU, ~128G RAM"
-          allowed_orgs:
-            - SWDB2022
-            - alleninstitute
           allowed_teams:
             - 2i2c-org:tech-team
+            - SWDB2022
+            - alleninstitute
           kubespawner_override:
             mem_limit: null
             mem_guarantee: 115G
@@ -105,9 +104,8 @@ basehub:
               node.kubernetes.io/instance-type: m5.8xlarge
         - display_name: "Large + GPU: p2.xlarge"
           description: "~4CPUs, 60G RAM, 1 NVIDIA K80 GPU"
-          allowed_orgs:
-            - alleninstitute
           allowed_teams:
+            - alleninstitute
             - 2i2c-org:tech-team
             - SWDB2022:gpu
           kubespawner_override:

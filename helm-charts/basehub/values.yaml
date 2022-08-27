@@ -587,14 +587,19 @@ jupyterhub:
             print(f"User {spawner.user.name} is part of teams {' '.join(teams)}")
             allowed_profiles = []
 
+
             for profile in original_profile_list:
+              # If there is no ':' in allowed_teams, it's an org and we should check that
+              # differently
+              allowed_orgs = set([o for o in profile.get('allowed_teams', []) if ':' not in o])
+              allowed_teams = set([t for t in profile.get('allowed_teams', []) if ':' in t])
+
               # Keep the profile is the user is part of *any* team listed in allowed_teams
               # If allowed_teams is empty or not set, it'll not be accessible to *anyone*
-              if set(profile.get('allowed_teams', [])) & teams:
+              if allowed_teams & teams:
                 allowed_profiles.append(profile)
                 print(f"Allowing profile {profile['display_name']} for user {spawner.user.name} based on team membership")
-              elif 'allowed_orgs' in profile:
-                allowed_orgs = profile['allowed_orgs']
+              elif allowed_orgs:
                 for org in allowed_orgs:
                   user_in_org = yield spawner.authenticator._check_membership_allowed_organizations(
                       org, spawner.user.name, auth_state['access_token']
