@@ -121,16 +121,20 @@ variable "db_mysql_user_grants" {
   EOT
 }
 
-variable "db_mysql_params" {
+variable "db_params" {
   default     = {}
   description = <<-EOT
-  Mapping of parameters to set on the mysql server
+  Mapping of parameters to set on the RDS instance.
+
+  This is specific to the type of database (postgres, mysql) being
+  used. You can find the list of available options based on
+  documentation here: https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/USER_WorkingWithDBInstanceParamGroups.html#USER_WorkingWithParamGroups.Listing
   EOT
 }
 
-variable "db_mysql_user_password_special_chars" {
+variable "db_user_password_special_chars" {
   default     = true
   description = <<-EOT
-  Set to True if you don't want special characters in generated mysql passwords
+  Set to True if you don't want special characters in generated user password
   EOT
 }

@@ -69,10 +69,10 @@ resource "aws_db_instance" "db" {
 
 resource "aws_db_parameter_group" "db" {
   name   = var.db_instance_identifier
-  family = "mysql8.0"
+  family = "${var.db_engine}${var.db_engine_version}"
 
   dynamic "parameter" {
-    for_each = var.db_mysql_params
+    for_each = var.db_params
     content {
       name  = parameter.key
       value = parameter.value
@@ -88,7 +88,7 @@ resource "random_password" "db_root_password" {
 
 resource "random_password" "db_readonly_password" {
   count   = var.db_enabled ? 1 : 0
-  special = var.db_mysql_user_password_special_chars
+  special = var.db_user_password_special_chars
   # mysql passwords can't be longer than 41 chars lololol
   length = 41
 }
