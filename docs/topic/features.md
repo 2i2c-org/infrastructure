@@ -50,3 +50,5 @@ of the form `<s3 or gcs>://<bucket-name>/<user-name>`. This can be used by indiv
 users to store objects temporarily for their own use, although there is nothing
 preventing other users from accessing these objects!
 
+If you're using `daskhub`, the emitted config should be nested under a `basehub`
+key.

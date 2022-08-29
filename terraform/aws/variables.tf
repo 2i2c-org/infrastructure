@@ -102,6 +102,9 @@ variable "db_engine_version" {
   default     = "8.0"
   description = <<-EOT
   Version of database engine to provision.
+
+  See https://awscli.amazonaws.com/v2/documentation/api/latest/reference/rds/describe-db-engine-versions.html
+  for more info on how to get list of allowed versions.
   EOT
 }
 
@@ -117,7 +120,7 @@ variable "db_instance_identifier" {
 variable "db_mysql_user_grants" {
   default     = ["SELECT", "SHOW VIEW", "SHOW DATABASES", "PROCESS"]
   description = <<-EOT
-  List of privileges to grant the default hub db user if using mysql
+  List of privileges to grant the default non-root hub db user if using mysql
   EOT
 }
 

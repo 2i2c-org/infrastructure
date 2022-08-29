@@ -120,32 +120,34 @@ resource "mysql_grant" "user" {
 
 output "db_helm_config" {
   value = yamlencode({
-    "custom" : {
-      "singleuserAdmin" : {
-        "extraEnv" : {
-          "MYSQL_ROOT_USERNAME" : aws_db_instance.db[0].username,
-          "MYSQL_ROOT_PASSWORD" : random_password.db_root_password[0].result
+    "jupyterhub" : {
+      "custom" : {
+        "singleuserAdmin" : {
+          "extraEnv" : {
+            "MYSQL_ROOT_USERNAME" : aws_db_instance.db[0].username,
+            "MYSQL_ROOT_PASSWORD" : random_password.db_root_password[0].result
+          }
         }
       }
-    }
-    "singleuser" : {
-      "extraFiles" : {
+      "singleuser" : {
+        "extraFiles" : {
 
-        "my-cnf" : {
-          "mountPath" : "/home/jovyan/.my.cnf",
-          "stringData" : format(
-            "[client]\nhost='%s'\nuser='%s'\npassword='%s'",
-            aws_db_instance.db[0].address,
-            mysql_user.user[0].user,
-            random_password.db_readonly_password[0].result
-          )
-        }
-      },
-      "extraEnv" : {
-        "MYSQL_HOST" : aws_db_instance.db[0].address,
-        "MYSQL_USERNAME" : mysql_user.user[0].user
-        "MYSQL_PASSWORD" : random_password.db_readonly_password[0].result
-      },
+          "my-cnf" : {
+            "mountPath" : "/home/jovyan/.my.cnf",
+            "stringData" : format(
+              "[client]\nhost='%s'\nuser='%s'\npassword='%s'",
+              aws_db_instance.db[0].address,
+              mysql_user.user[0].user,
+              random_password.db_readonly_password[0].result
+            )
+          }
+        },
+        "extraEnv" : {
+          "MYSQL_HOST" : aws_db_instance.db[0].address,
+          "MYSQL_USERNAME" : mysql_user.user[0].user
+          "MYSQL_PASSWORD" : random_password.db_readonly_password[0].result
+        },
+      }
     }
   })
   sensitive = true
