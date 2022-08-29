@@ -37,25 +37,6 @@ basehub:
             url: https://alleninstitute.org/
     singleuser:
       defaultUrl: /lab
-      initContainers:
-        # Need to explicitly fix ownership here, since EFS doesn't do anonuid
-        - name: volume-mount-ownership-fix
-          image: busybox
-          command:
-            [
-              "sh",
-              "-c",
-              "id && chown 1000:1000 /home/jovyan /home/jovyan/shared && ls -lhd /home/jovyan",
-            ]
-          securityContext:
-            runAsUser: 0
-          volumeMounts:
-            - name: home
-              mountPath: /home/jovyan
-              subPath: "{username}"
-            - name: home
-              mountPath: /home/jovyan/shared
-              subPath: _shared
       # User image repo: https://github.com/ICESAT-2HackWeek/website2022
       image:
         name: quay.io/mabuice/swdb2022
