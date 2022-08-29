@@ -65,22 +65,6 @@ jupyterhub:
           [credential "https://github.com"]
           helper = !git-credential-github-app --app-key-file /etc/github/github-app-private-key.pem --app-id 93515
           useHttpPath = true
-    initContainers:
-      # Need to explicitly fix ownership here, since Azure File doesn't do anonuid
-      - name: volume-mount-ownership-fix
-        image: busybox
-        command:
-          [
-            "sh",
-            "-c",
-            "id && chown 1000:1000 /home/jovyan && ls -lhd /home/jovyan",
-          ]
-        securityContext:
-          runAsUser: 0
-        volumeMounts:
-          - name: home
-            mountPath: /home/jovyan
-            subPath: "{username}"
     image:
       name: quay.io/2i2c/utoronto-image
       tag: "d422076c3695"

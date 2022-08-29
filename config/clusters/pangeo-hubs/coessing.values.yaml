@@ -17,26 +17,6 @@ basehub:
             url: https://coessing.org/
             logo_url: "https://coessing.files.wordpress.com/2016/08/ghana-logo-21.png?w=262&h=376&zoom=2"
     singleuser:
-      initContainers:
-        # Need to explicitly fix ownership here, since EFS doesn't do anonuid
-        - name: volume-mount-ownership-fix
-          image: busybox
-          command:
-            [
-              "sh",
-              "-c",
-              "id && chown 1000:1000 /home/jovyan && chown 1000:1000 /home/jovyan/shared-readwrite && ls -lhd /home/jovyan ",
-            ]
-          securityContext:
-            runAsUser: 0
-          volumeMounts:
-            - name: home
-              mountPath: /home/jovyan
-              subPath: "{username}"
-            # Here so we can chown it appropriately
-            - name: home
-              mountPath: /home/jovyan/shared-readwrite
-              subPath: _shared
       extraEnv:
         SCRATCH_BUCKET: gcs://pangeo-hubs-coessing-scratch/$(JUPYTERHUB_USER)
         PANGEO_SCRATCH: gcs://pangeo-hubs-coessing-scratch/$(JUPYTERHUB_USER)
