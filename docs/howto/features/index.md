@@ -13,4 +13,5 @@ github
 static-sites
 per-user-db
 login-page
+image
 ```
