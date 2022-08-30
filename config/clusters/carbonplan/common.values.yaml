@@ -69,6 +69,10 @@ basehub:
                   default: true
                   kubespawner_override:
                     image: carbonplan/trace-python-notebook:latest
+                main_single_user:
+                  display_name: Main Single User
+                  kubespawner_override:
+                    image: carbonplan/main-single-user:latest
                 cmip6_downscaling:
                   display_name: CMIP6 Downscaling
                   kubespawner_override:
