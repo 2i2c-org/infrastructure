@@ -60,6 +60,7 @@ basehub:
         # on these nodes.
         - display_name: "Small: r5.large"
           description: "~2 CPU, ~15G RAM"
+          default: true
           profile_options: &profile_options
             image:
               display_name: Image
