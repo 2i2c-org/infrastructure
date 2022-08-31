@@ -61,6 +61,8 @@ global: {}
 
 jupyterhub:
   custom:
+    singleuser:
+      extraPVCs: []
     singleuserAdmin:
       extraVolumeMounts:
         - name: home
