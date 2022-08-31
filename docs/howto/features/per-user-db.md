@@ -84,16 +84,21 @@ jupyterhub:
     extraContainers:
       - name: postgres
         image: postgres:14.5 # use the latest version
+        args:
+          # Listen only on localhost, rather than on all interfaces
+          # This allows us to use passwordless login, as only the user notebook container can access this
+          - -c
+          - listen_addresses=127.0.0.1
         resources:
-        limits:
-          # Best effort only. No more than 1 CPU, and if postgrtes uses more than 512M, restart it
-          memory: 512Mi
-          cpu: 1.0
-        requests:
-          # If we don't set requests, k8s sets requests == limits!
-          # So we set something tiny
-          memory: 64Mi
-          cpu: 0.01
+          limits:
+            # Best effort only. No more than 1 CPU, and if postgrtes uses more than 512M, restart it
+            memory: 512Mi
+            cpu: 1.0
+          requests:
+            # If we don't set requests, k8s sets requests == limits!
+            # So we set something tiny
+            memory: 64Mi
+            cpu: 0.01
         env:
         # Configured using the env vars documented in https://hub.docker.com/_/postgres/
         # Postgres is only listening on localhost, so we can trust all connections that come to it

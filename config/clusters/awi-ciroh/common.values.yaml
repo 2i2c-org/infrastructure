@@ -100,6 +100,11 @@ basehub:
       extraContainers:
         - name: postgres
           image: postgres:14.5
+          args:
+          # Listen only on localhost, rather than on all interfaces
+          # This allows us to use passwordless login, as only the user notebook container can access this
+          - -c
+          - listen_addresses=127.0.0.1
           resources:
             limits:
               # Best effort only. No more than 1 CPU
