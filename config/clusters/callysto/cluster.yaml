@@ -20,3 +20,13 @@ hubs:
       - common.values.yaml
       - staging.values.yaml
       - enc-staging.secret.values.yaml
+  - name: prod
+    display_name: "Callysto Staging"
+    domain: callysto.2i2c.cloud
+    helm_chart: basehub
+    auth0:
+      enabled: false
+    helm_chart_values_files:
+      - common.values.yaml
+      - prod.values.yaml
+      - enc-prod.secret.values.yaml
