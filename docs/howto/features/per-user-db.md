@@ -24,6 +24,12 @@ per user, named `postgres-<name-of-user>`, created with Kubernetes [Storage
 Class](https://kubernetes.io/docs/concepts/storage/storage-classes/), and capacity of
 `1Gi` (remember it is `1Gi`, not `1G`!).
 
+`capacity` can be increased later on if needed and kubernetes will
+[automatically resize](https://kubernetes.io/blog/2018/07/12/resizing-persistent-volumes-using-kubernetes/) the disk
+when users start / stop the server. However, the storage class *can not* be changed
+afterwards - so users will have to decide if they want spinning disks (slower, chepeaper)
+or ssd disks (faster, much more expensive) at the start.
+
 ## Setup the database server
 
 We can then run the database server (such as postgres) as a [sidecar
