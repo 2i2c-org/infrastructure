@@ -44,22 +44,26 @@ basehub:
         # on these nodes.
         - display_name: "Small: r5.large"
           description: "~2 CPU, ~15G RAM"
+          slug: "small"
           default: true
           profile_options: &profile_options
             image:
               display_name: Image
               choices:
-                python_trace:
+                python:
                   display_name: Trace Python Notebook
                   default: true
+                  slug: "python"
                   kubespawner_override:
                     image: carbonplan/trace-python-notebook:latest
-                main_single_user:
+                main:
                   display_name: Main Single User
+                  slug: "main"
                   kubespawner_override:
                     image: carbonplan/main-single-user:latest
-                cmip6_downscaling:
+                cmip6:
                   display_name: CMIP6 Downscaling
+                  slug: "cmip6"
                   kubespawner_override:
                     image: carbonplan/cmip6-downscaling-single-user:latest
           kubespawner_override:
