@@ -61,7 +61,7 @@ basehub:
         extraVolumes:
           - name: postgres-db
             persistentVolumeClaim:
-              claimName: 'postgres-{username}'
+              claimName: "postgres-{username}"
         extraVolumeMounts:
           - name: postgres-db
             mountPath: /var/lib/postgresql/data
@@ -101,10 +101,10 @@ basehub:
         - name: postgres
           image: postgres:14.5
           args:
-          # Listen only on localhost, rather than on all interfaces
-          # This allows us to use passwordless login, as only the user notebook container can access this
-          - -c
-          - listen_addresses=127.0.0.1
+            # Listen only on localhost, rather than on all interfaces
+            # This allows us to use passwordless login, as only the user notebook container can access this
+            - -c
+            - listen_addresses=127.0.0.1
           resources:
             limits:
               # Best effort only. No more than 1 CPU
@@ -115,21 +115,21 @@ basehub:
               memory: 64Mi
               cpu: 0.01
           env:
-          - name: POSTGRES_HOST_AUTH_METHOD
-            value: "trust"
-          - name: POSTGRES_USER
-            value: "jovyan"
+            - name: POSTGRES_HOST_AUTH_METHOD
+              value: "trust"
+            - name: POSTGRES_USER
+              value: "jovyan"
           securityContext:
             runAsUser: 1000
           volumeMounts:
-          - name: home
-            mountPath: /home/jovyan
-            subPath: "{username}"
-          - name: postgres-db
-            mountPath: /var/lib/postgresql/data
-            # postgres recommends against mounting a volume directly here
-            # So we put data in a subpath
-            subPath: data
+            - name: home
+              mountPath: /home/jovyan
+              subPath: "{username}"
+            - name: postgres-db
+              mountPath: /var/lib/postgresql/data
+              # postgres recommends against mounting a volume directly here
+              # So we put data in a subpath
+              subPath: data
       image:
         # Image build repo: https://github.com/2i2c-org/awi-ciroh-image
         name: "quay.io/2i2c/awi-ciroh-image"

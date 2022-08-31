@@ -243,16 +243,16 @@ properties:
             type: object
             additionalProperties: false
             required:
-            - extraPVCs
+              - extraPVCs
             properties:
               extraPVCs:
                 type: array
                 items:
                   type: object
                   required:
-                  - name
-                  - class
-                  - capacity
+                    - name
+                    - class
+                    - capacity
                   properties:
                     name:
                       type: string
