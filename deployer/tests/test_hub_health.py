@@ -44,8 +44,6 @@ async def check_hub_health(hub_url, test_notebook_path, service_api_token):
         # Temporary fix for https://github.com/2i2c-org/infrastructure/issues/1611
         # FIXME: Remove this once https://github.com/jupyterhub/kubespawner/pull/631 gets merged
         user_options = None
-        print(hub_url)
-        print("carbonplan" in hub_url)
         if ("openscapes" in hub_url) or ("carbonplan" in hub_url):
             user_options = {"profile": "small", "image": "python"}
         # Create a new user, start a server and execute a notebook
