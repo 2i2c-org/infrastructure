@@ -26,8 +26,8 @@ jupyterhub:
           name: 2i2c
           url: https://2i2c.org
         funded_by:
-          name: TODO
-          url: https://2i2c.org
+          name: Callysto
+          url: https://www.callysto.ca
   hub:
     config:
       JupyterHub:
