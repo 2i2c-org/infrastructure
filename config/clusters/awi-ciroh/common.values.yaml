@@ -70,10 +70,10 @@ basehub:
             subPath: data
       initContainers:
         # /var/lib/postgresql should be writeable by uid 1000, so students
-        # can blow out their db directories if need to. Just setting UID on the
-        # postgres server should have been enough - but because we did not do it
-        # early enough, many users have data dirs owned by uid 999.
-        # We explicitly chown them back. We should remove this eventually.
+        # can blow out their db directories if need to.
+        # We have to chown /home/jovyan and /home/jovyan/shared-readwrite as well -
+        # since initContainers is a list, setting this here overwrites the chowning
+        # initContainer we hahve set in basehub/values.yaml
         - name: volume-mount-ownership-fix
           image: busybox
           command:

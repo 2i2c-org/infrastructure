@@ -40,6 +40,35 @@ Tweak the config as necessary for the specific hub's needs.
 ```yaml
 jupyterhub:
   singleuser:
+    initContainers:
+      # /var/lib/postgresql should be writeable by uid 1000, so students
+      # can blow out their db directories if need to.
+      # We have to chown /home/jovyan and /home/jovyan/shared-readwrite as well -
+      # since initContainers is a list, setting this here overwrites the chowning
+      # initContainer we hahve set in basehub/values.yaml
+      - name: volume-mount-ownership-fix
+        image: busybox
+        command:
+            [
+                "sh",
+                "-c",
+                "id && chown 1000:1000 /home/jovyan && chown 1000:1000 /home/jovyan/shared-readwrite && chown 1000:1000 /var/lib/postgresql/data && ls -lhd /home/jovyan ",
+            ]
+        securityContext:
+            runAsUser: 0
+        volumeMounts:
+        - name: home
+          mountPath: /home/jovyan
+          subPath: "{username}"
+        # Here so we can chown it appropriately
+        - name: home
+          mountPath: /home/jovyan/shared-readwrite
+          subPath: _shared
+        - name: postgres-db
+          mountPath: /var/lib/postgresql/data
+          # postgres recommends against mounting a volume directly here
+          # So we put data in a subpath
+          subPath: data
     storage:
       extraVolumes:
         - name: postgres-db
