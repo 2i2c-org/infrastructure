@@ -68,6 +68,35 @@ basehub:
             # postgres recommends against mounting a volume directly here
             # So we put data in a subpath
             subPath: data
+      initContainers:
+        # /var/lib/postgresql should be writeable by uid 1000, so students
+        # can blow out their db directories if need to. Just setting UID on the
+        # postgres server should have been enough - but because we did not do it
+        # early enough, many users have data dirs owned by uid 999.
+        # We explicitly chown them back. We should remove this eventually.
+        - name: volume-mount-ownership-fix
+          image: busybox
+          command:
+            [
+              "sh",
+              "-c",
+              "id && chown 1000:1000 /home/jovyan && chown 1000:1000 /home/jovyan/shared-readwrite && chown 1000:1000 /var/lib/postgresql/data && ls -lhd /home/jovyan ",
+            ]
+          securityContext:
+            runAsUser: 0
+          volumeMounts:
+            - name: home
+              mountPath: /home/jovyan
+              subPath: "{username}"
+            # Here so we can chown it appropriately
+            - name: home
+              mountPath: /home/jovyan/shared-readwrite
+              subPath: _shared
+            - name: postgres-db
+              mountPath: /var/lib/postgresql/data
+              # postgres recommends against mounting a volume directly here
+              # So we put data in a subpath
+              subPath: data
       extraContainers:
         - name: postgres
           image: postgres:14.5
