@@ -241,13 +241,12 @@ hubs:
     auth0:
       # connection update? Also ensure the basehub Helm chart is provided a
       # matching value for jupyterhub.custom.2i2c.add_staff_user_ids_of_type!
-      enabled: false
+      connection: google-oauth2
     helm_chart_values_files:
       # The order in which you list files here is the order the will be passed
       # to the helm upgrade command in, and that has meaning. Please check
       # that you intend for these files to be applied in this order.
       - tuskegee.values.yaml
-      - enc-tuskegee.secret.values.yaml
   - name: avc
     display_name: "Antelope Valley College"
     domain: avc.cloudbank.2i2c.cloud

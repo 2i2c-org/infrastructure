@@ -20,17 +20,13 @@ jupyterhub:
           url: http://cloudbank.org/
   hub:
     config:
-      JupyterHub:
-        authenticator_class: cilogon
-      CILogonOAuthenticator:
-        oauth_callback_url: https://tuskegee.cloudbank.2i2c.cloud/hub/oauth_callback
-        username_claim: email
       Authenticator:
-        admin_users:
-          - mndoye@tuskegee.edu
-          - yrawajfih@tuskegee.edu
+        allowed_users: &tuskegee_users
+          - yasmeen.rawajfih@gmail.com
+          - Wu.fan01@gmail.com
           - yanlisa@berkeley.edu
           - deborah_nolan@berkeley.edu
           - ericvd@berkeley.edu
           - sean.smorris@berkeley.edu
-        username_pattern: '^(.+@2i2c\.org|.+@berkeley\.edu|.+@tuskegee\.edu|.+@gmail\.com|deployment-service-check)$'
+          - sean.smorris@gmail.com
+        admin_users: *tuskegee_users
