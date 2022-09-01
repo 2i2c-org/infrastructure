@@ -34,8 +34,8 @@ jupyterhub:
         authenticator_class: cilogon
       CILogonOAuthenticator:
         admin_users:
-          - "117859169473992122769"
-          - "111953611001323379758"
+          - "117859169473992122769" #Georgiana
+          - "115722756968212778437" #Sarah
         # Only show the option to login with Google and Mirosoft
         shown_idps:
           - https://accounts.google.com/o/oauth2/auth
