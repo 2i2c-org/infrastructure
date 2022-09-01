@@ -2,4 +2,4 @@ jupyterhub:
   hub:
     config:
       CILogonOAuthenticator:
-        oauth_callback_url: https://callysto.2i2c.cloud/hub/oauth_callback
+        oauth_callback_url: https://2i2c.callysto.ca/hub/oauth_callback
