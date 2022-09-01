@@ -34,10 +34,9 @@ jupyterhub:
         authenticator_class: cilogon
       CILogonOAuthenticator:
         # Only show the option to login with Google and Mirosoft
-        allowed_users:
-          - "117859169473992122769"
         admin_users:
           - "117859169473992122769"
+          - "111953611001323379758"
         shown_idps:
           - https://accounts.google.com/o/oauth2/auth
           - https://login.microsoftonline.com/common/oauth2/v2.0/authorize
