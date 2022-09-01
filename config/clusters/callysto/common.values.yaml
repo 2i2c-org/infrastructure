@@ -28,6 +28,10 @@ jupyterhub:
         funded_by:
           name: Callysto
           url: https://www.callysto.ca
+  singleuser:
+    image:
+      name: callysto/2i2c
+      tag: 0.1.0
   hub:
     config:
       JupyterHub:
