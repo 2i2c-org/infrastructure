@@ -20,6 +20,11 @@ jupyterhub:
           url: https://www.temple.edu/
   hub:
     config:
+      Authenticator:
+        admin_users:
+          # Somehow 2i2c.org admin users aren't being added automatically?
+          - yuvipanda@2i2c.org
+          - jmsmith1@temple.edu
       JupyterHub:
         authenticator_class: cilogon
       CILogonOAuthenticator:
