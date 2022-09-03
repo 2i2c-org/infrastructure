@@ -65,7 +65,7 @@ This provides info about the NFS usage and monitors things like CPU, memory, dis
 
 5. **Usage Dashboard**
 
-This has onformation about the number of users using the cluster over various periods of time.
+This has information about the number of users using the cluster over various periods of time.
 
 6. **Usage Report**
 
