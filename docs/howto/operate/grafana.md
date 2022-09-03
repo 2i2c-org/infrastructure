@@ -13,7 +13,7 @@ This section provides information for both engineers and non-engineers about whe
 ### Logging in
 
 Each cluster's Grafana deployment can be accessed at `grafana.<cluster-name>.2i2c.cloud`.
-For example, the Grafana for the community hubs running on our GCP project is accessible at `grafana.pilot.2i2c.cloud`.
+For example, the Grafana for the community hubs running on our GCP project is accessible at `grafana.pilot.2i2c.cloud`. Checkout the list of all 2i2c running clusters and their Grafana [here](https://infrastructure.2i2c.org/en/latest/reference/hubs.html).
 
 To access the Grafana dashboards you have two options:
 
