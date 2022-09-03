@@ -149,7 +149,7 @@ support:
 
 #### (Optional) Enable GitHub authentication
 
-You can enable users and/community members to authenticate Grafana, through GitHub by following the next steps:
+To enable logging in Grafana using GitHub, follow the next steps:
 
 1. Create a GitHub OAuth application following [Grafana's documentation](https://grafana.com/docs/grafana/latest/setup-grafana/configure-security/configure-authentication/github/#configure-github-oauth-application).
   - Create [a new app](https://github.com/organizations/2i2c-org/settings/applications/new) inside the `2i2c-org`.
@@ -261,10 +261,6 @@ sops --output config/clusters/<cluster>/enc-grafana-token.secret.yaml --encrypt 
 The encrypted file can now be committed to the repository.
 
 This key will be used by the [`deploy-grafana-dashboards` workflow](https://github.com/2i2c-org/infrastructure/tree/HEAD/.github/workflows/deploy-grafana-dashboards.yaml) to deploy some default grafana dashboards for JupyterHub using [`jupyterhub/grafana-dashboards`](https://github.com/jupyterhub/grafana-dashboards).
-
-### Enable GitHub authentication
-
-You can enable users and/community members to authenticate a Grafana, through GitHub.
 
 ### Deploying the Grafana Dashboards from CI/CD
 
