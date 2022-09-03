@@ -18,10 +18,12 @@ For example, the Grafana for the community hubs running on our GCP project is ac
 To access the Grafana dashboards you have two options:
 
 - Get `Viewer` access into the Grafana.
+
   This is the recommended way of accessing grafana if modifying/creating dashboards is not needed.
   To get access, ask a 2i2c engineer to enable **GitHub authentication** following [](grafana:enable-github-auth) for that particular Grafana (if it's not already) and allow you access.
 
 - Use a **username** and **password** to get `Admin` access into the Grafana.
+
   These credentials can be accessed using `sops` (see {ref `tc:secrets:sops` for how to set up `sops` on your machine). See [](grafana:log-in) for how to find the credentials information.
 
 ### The Central Grafana
@@ -32,44 +34,44 @@ The central Grafana is running at https://grafana.pilot.2i2c.cloud and you can u
 
 The dashboards available at https://grafana.pilot.2i2c.cloud/dashboards are the default Grafana dashboards from JupyterHub. The following list provides some information about the structure of the dashboards folder in Grafana, but this info is subject to change based on how upstream repository changes. So more information about the metrics and graphs available can be found at [`jupyterhub/grafana-dashboards`](https://github.com/jupyterhub/grafana-dashboards).
 
-#### The `JupyterHub Default Dashboards` Grafana folder structure
+### The `JupyterHub Default Dashboards` Grafana folder structure
 
 Navigating at https://grafana.pilot.2i2c.cloud/dashboards, shows a `JupyterHub Default Dashboards` where all the dashboards are available, each of the Grafana panels, being grouped in sub-folders (dashboards) based on the component they are monitoring:
 
 1. **Cluster Information**
 
-Contains panels with different cluster usage statistics about things like:
-  - nodes
-  - memory
-  - cpu
-  - running users per hub in cluster
+  Contains panels with different cluster usage statistics about things like:
+    - nodes
+    - memory
+    - cpu
+    - running users per hub in cluster
 
 2. **Global Usage Dashboard**
 
-This dashboard contains information about the weekly active users we get on each of the clusters we manage.
+  This dashboard contains information about the weekly active users we get on each of the clusters we manage.
 
 3. **JupyterHub Dashboard**
 
-This is the place to find information about the hub usage stats and hub diagnostics, like
-- number of active users
-- user CPU usage distribution
-- user memory usage distribution
-- server start times
-- hub respone latency
+  This is the place to find information about the hub usage stats and hub diagnostics, like
+  - number of active users
+  - user CPU usage distribution
+  - user memory usage distribution
+  - server start times
+  - hub respone latency
 
-There is also a Panel section about `Anomalous user pods` where pods with high CPU usage or high memory usage are tracked.
+  There is also a Panel section about `Anomalous user pods` where pods with high CPU usage or high memory usage are tracked.
 
 4. **NFS and Support Information**
 
-This provides info about the NFS usage and monitors things like CPU, memory, disk and network usage of the Prometheus instance.
+  This provides info about the NFS usage and monitors things like CPU, memory, disk and network usage of the Prometheus instance.
 
 5. **Usage Dashboard**
 
-This has information about the number of users using the cluster over various periods of time.
+  This has information about the number of users using the cluster over various periods of time.
 
 6. **Usage Report**
 
-This provides a report about the memory requests, grouped by username, for notebook nodes and dask-gateway nodes. It also provides a graph that monitors GPU requests per user pod.
+  This provides a report about the memory requests, grouped by username, for notebook nodes and dask-gateway nodes. It also provides a graph that monitors GPU requests per user pod.
 
 (grafana:new-grafana)=
 ## 2. Set up Grafana Dashboards for a cluster
