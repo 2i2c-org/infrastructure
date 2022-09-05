@@ -48,6 +48,7 @@ jobs:
           - cluster_name: uwhackweeks
           - cluster_name: linked-earth
           - cluster_name: awi-ciroh
+          - cluster_name: callysto
 
     steps:
       - uses: actions/checkout@v3

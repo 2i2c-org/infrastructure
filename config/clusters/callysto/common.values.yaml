@@ -1,0 +1,53 @@
+nfs:
+  enabled: true
+  pv:
+    mountOptions:
+      - soft # We pick soft over hard, so NFS lockups don't lead to hung processes
+      - noatime
+    # Google FileStore IP
+    serverIP: 10.93.235.178
+    # Name of Google Filestore share
+    baseShareName: /homes/
+jupyterhub:
+  custom:
+    2i2c:
+      add_staff_user_ids_to_admin_users: false
+      # add_staff_user_ids_of_type: "google"
+    homepage:
+      templateVars:
+        org:
+          name: Callysto
+          url: https://www.callysto.ca
+          logo_url: https://www.callysto.ca/wp-content/uploads/2022/08/Callysto-HUB_vertical.png
+        designed_by:
+          name: 2i2c
+          url: https://2i2c.org
+        operated_by:
+          name: 2i2c
+          url: https://2i2c.org
+        funded_by:
+          name: Callysto
+          url: https://www.callysto.ca
+  singleuser:
+    image:
+      name: callysto/2i2c
+      tag: 0.1.0
+  hub:
+    config:
+      JupyterHub:
+        authenticator_class: cilogon
+      CILogonOAuthenticator:
+        admin_users:
+          - "117859169473992122769" #Georgiana
+          - "115722756968212778437" #Sarah
+        # Only show the option to login with Google and Mirosoft
+        shown_idps:
+          - https://accounts.google.com/o/oauth2/auth
+          - https://login.microsoftonline.com/common/oauth2/v2.0/authorize
+        allowed_idps:
+          http://google.com/accounts/o8/id:
+            username_derivation:
+              username_claim: "oidc"
+          http://login.microsoftonline.com/common/oauth2/v2.0/authorize:
+            username_derivation:
+              username_claim: "oidc"
