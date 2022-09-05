@@ -82,6 +82,9 @@ basehub:
             mountPath: /home/jovyan/shared
             subPath: _shared
             readOnly: true
+          - name: home
+            mountPath: /home/jovyan/shared-public
+            subPath: _shared_public
 
       # Eksctl: The service account was created by eksctl.
       #
