@@ -317,12 +317,19 @@ nodeGroups:
   # Note that we opted for us-west-2b here because g4dn machines were not
   # available in us-west-2d.
   #
+  #   aws ec2 describe-instance-type-offerings \
+  #     --region us-west-2 \
+  #     --filter Name=instance-type,Values=g4dn.xlarge \
+  #     --location-type=availability-zone
+  #
   # 57 pods, 4 cpu, 16 GB (Intel, 25 GBits network), 1 T4 Tensor Core GPU
   - name: user-gpu-a-4
-    availabilityZones: &user-gpu-availabilityZones [us-west-2b]
+    availabilityZones: &user-gpu-availabilityZones [us-west-2a, us-west-2b]
     instanceType: g4dn.xlarge
     minSize: *user-minSize
-    maxSize: *user-maxSize
+    # maxSize increased to accommodate request by Facu that a workshop is to
+    # support 8 simultaneous users with GPU servers.
+    maxSize: 10
     desiredCapacity: *user-desiredCapacity
     volumeSize: *user-volumeSize
     labels:
