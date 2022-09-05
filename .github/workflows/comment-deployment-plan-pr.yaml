@@ -123,15 +123,19 @@ jobs:
           )
 
           # Find if a deployment-plan comment has been previously posted
-          comment = next(
-              (
-                  comment[0]
-                  for comment in issue_comments
-                  if comment[0].user.login == "github-actions[bot]"
-                  and "<!-- deployment-plan -->" in comment[0].body
-              ),
-              False,
-          )
+          for page in issue_comments:
+              comment = next(
+                  (
+                      comment
+                      for comment in page
+                      if comment.user.login == "github-actions[bot]"
+                      and "<!-- deployment-plan -->" in comment.body
+                  ),
+                  False,
+              )
+
+              if comment:
+                  break
 
           if comment:
               # Comment exists - update it
