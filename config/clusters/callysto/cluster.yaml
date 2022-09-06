@@ -21,7 +21,7 @@ hubs:
       - staging.values.yaml
       - enc-staging.secret.values.yaml
   - name: prod
-    display_name: "Callysto Staging"
+    display_name: "Callysto Prod"
     domain: 2i2c.callysto.ca
     helm_chart: basehub
     auth0:
