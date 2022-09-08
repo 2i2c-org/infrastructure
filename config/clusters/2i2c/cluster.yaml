@@ -174,3 +174,12 @@ hubs:
       # to the helm upgrade command in, and that has meaning. Please check
       # that you intend for these files to be applied in this order.
       - utexas.values.yaml
+  - name: temple
+    display_name: "Temple University"
+    domain: temple.2i2c.cloud
+    helm_chart: basehub
+    auth0:
+      enabled: false
+    helm_chart_values_files:
+      - temple.values.yaml
+      - enc-temple.secret.values.yaml
