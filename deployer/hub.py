@@ -132,16 +132,14 @@ class Hub:
                                     "-c",
                                     "ls -lhd /srv/repo && chown 1000:1000 /srv/repo && ls -lhd /srv/repo",
                                 ],
-                                "securityContext": {
-                                  "runAsUser": 0
-                                },
+                                "securityContext": {"runAsUser": 0},
                                 "volumeMounts": [
                                     {
                                         "name": "custom-templates",
                                         "mountPath": "/srv/repo",
                                     }
                                 ],
-                            }
+                            },
                         ],
                         "extraContainers": [
                             {
