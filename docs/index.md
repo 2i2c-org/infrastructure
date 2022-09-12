@@ -71,7 +71,6 @@ reference/hubs
 reference/ci-cd/index
 reference/terraform.md
 reference/tools
-incidents/index
 ```
 
 ## Contributing
