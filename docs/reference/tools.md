@@ -71,6 +71,7 @@ Helm is used in two ways:
   the rendered templates with a k8s api-server. This is an excellent lightweight
   test of a Helm chart in a CI system.
 
+(tools:sops)=
 ### [`sops`](https://github.com/mozilla/sops/)
 
 In line with 2i2c's [Customer Right to Replicate](https://2i2c.org/right-to-replicate/),
@@ -104,6 +105,7 @@ issues](../howto/k8s/node-administration.md).
 
 ### Tips
 
+(tools:gcloud:auth)=
 #### Authentication
 
 `gcloud` has two authentication flows, and that can get quite confusing since we

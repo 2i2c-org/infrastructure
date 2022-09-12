@@ -36,6 +36,7 @@ howto/k8s/index.md
 howto/configure/auth-management/index.md
 howto/configure/update-env
 howto/cloud/new-gcp-project
+howto/support/index
 ```
 
 ## Topic guides
