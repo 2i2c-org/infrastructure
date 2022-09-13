@@ -14,11 +14,6 @@ basehub:
       https:
         enabled: false
     custom:
-      singleuser:
-        extraPVCs:
-          - name: postgres-{username}
-            class: standard
-            capacity: 1Gi
       2i2c:
         add_staff_user_ids_to_admin_users: true
         add_staff_user_ids_of_type: "github"
@@ -57,79 +52,6 @@ basehub:
           scope:
             - read:org
     singleuser:
-      storage:
-        extraVolumes:
-          - name: postgres-db
-            persistentVolumeClaim:
-              claimName: "postgres-{username}"
-        extraVolumeMounts:
-          - name: postgres-db
-            mountPath: /var/lib/postgresql/data
-            # postgres recommends against mounting a volume directly here
-            # So we put data in a subpath
-            subPath: data
-      initContainers:
-        # /var/lib/postgresql should be writeable by uid 1000, so students
-        # can blow out their db directories if need to.
-        # We have to chown /home/jovyan and /home/jovyan/shared-readwrite as well -
-        # since initContainers is a list, setting this here overwrites the chowning
-        # initContainer we hahve set in basehub/values.yaml
-        - name: volume-mount-ownership-fix
-          image: busybox
-          command:
-            [
-              "sh",
-              "-c",
-              "id && chown 1000:1000 /home/jovyan && chown 1000:1000 /home/jovyan/shared-readwrite && chown 1000:1000 /var/lib/postgresql/data && ls -lhd /home/jovyan ",
-            ]
-          securityContext:
-            runAsUser: 0
-          volumeMounts:
-            - name: home
-              mountPath: /home/jovyan
-              subPath: "{username}"
-            # Here so we can chown it appropriately
-            - name: home
-              mountPath: /home/jovyan/shared-readwrite
-              subPath: _shared
-            - name: postgres-db
-              mountPath: /var/lib/postgresql/data
-              # postgres recommends against mounting a volume directly here
-              # So we put data in a subpath
-              subPath: data
-      extraContainers:
-        - name: postgres
-          image: postgres:14.5
-          args:
-            # Listen only on localhost, rather than on all interfaces
-            # This allows us to use passwordless login, as only the user notebook container can access this
-            - -c
-            - listen_addresses=127.0.0.1
-          resources:
-            limits:
-              # Best effort only. No more than 1 CPU
-              memory: 512Mi
-              cpu: 1.0
-            requests:
-              # If we don't set requests, k8s sets requests == limits!
-              memory: 64Mi
-              cpu: 0.01
-          env:
-            - name: POSTGRES_HOST_AUTH_METHOD
-              value: "trust"
-            - name: POSTGRES_USER
-              value: "jovyan"
-          securityContext:
-            runAsUser: 1000
-          volumeMounts:
-            - name: home
-              mountPath: /home/jovyan
-              subPath: "{username}"
-            - name: postgres-db
-              mountPath: /var/lib/postgresql/data
-              # postgres recommends against mounting a volume directly here
-              # So we put data in a subpath
-              subPath: data
       image:
         # Image build repo: https://github.com/2i2c-org/awi-ciroh-image
         name: "quay.io/2i2c/awi-ciroh-image"
