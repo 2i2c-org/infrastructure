@@ -24,6 +24,11 @@ per user, named `postgres-<name-of-user>`, created with Kubernetes [Storage
 Class](https://kubernetes.io/docs/concepts/storage/storage-classes/), and capacity of
 `1Gi` (remember it is `1Gi`, not `1G`!).
 
+You can get the list of storageclasses available in the target cluster with a
+`kubectl get storageclass`. On AWS, the two options generally available are
+`gp2` (standard spinning disk) and `ssd` (faster, more expensive SSD). On GKE, the two options
+are `standard` (spinning disk), `standard-rwo` ("balanced" disk) and `premium-rwo` (SSD disk).
+
 `capacity` can be increased later on if needed and kubernetes will
 [automatically resize](https://kubernetes.io/blog/2018/07/12/resizing-persistent-volumes-using-kubernetes/) the disk
 when users start / stop the server. However, the storage class *can not* be changed
