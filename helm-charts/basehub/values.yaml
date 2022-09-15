@@ -206,6 +206,9 @@ jupyterhub:
             # this is what allows us to shutdown servers
             # when people leave a notebook open and wander off
             cull_connected: true
+          NotebookApp:
+            extra_template_paths:
+              - /usr/local/share/jupyter/custom_template
     startTimeout: 600 # 10 mins, because sometimes we have too many new nodes coming up together
     defaultUrl: /tree
     nodeSelector:

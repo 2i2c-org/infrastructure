@@ -32,6 +32,28 @@ jupyterhub:
     image:
       name: callysto/2i2c
       tag: 0.1.0
+    extraFiles:
+      page.html:
+        mountPath: /usr/local/share/jupyter/custom_template/tree.html
+        stringData: |
+          {% extends "templates/tree.html" %}
+          {% block header %}
+          <style>
+          .clusters_tab_link {
+            visibility: hidden;
+          }
+          </style>
+          {% endblock %}
+          {% block logo %}
+            <img src="https://www.callysto.ca/wp-content/uploads/2022/08/Callysto-HUB_horizontal.png" alt="CallystoHub"/>
+          {% endblock %}
+      notebook.html:
+        mountPath: /usr/local/share/jupyter/custom_template/notebook.html
+        stringData: |
+          {% extends "templates/notebook.html" %}
+          {% block logo %}
+            <img src="https://www.callysto.ca/wp-content/uploads/2022/08/Callysto-HUB_horizontal.png" alt="CallystoHub"/>
+          {% endblock %}
   hub:
     config:
       JupyterHub:
