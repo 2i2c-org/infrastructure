@@ -7,5 +7,6 @@ requests.
 ```{toctree}
 :maxdepth: 2
 
+home-dir
 decrypt-age
 ```
