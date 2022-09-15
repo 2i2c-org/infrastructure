@@ -113,6 +113,7 @@ class Hub:
                                 ],
                                 "securityContext": {
                                     "runAsUser": 1000,
+                                    "runAsGroup": 1000,
                                     "allowPrivilegeEscalation": False,
                                     "readOnlyRootFilesystem": True,
                                 },
@@ -122,7 +123,23 @@ class Hub:
                                         "mountPath": "/srv/repo",
                                     }
                                 ],
-                            }
+                            },
+                            {
+                                "name": "templates-ownership-fix",
+                                "image": "alpine/git",
+                                "command": ["/bin/sh"],
+                                "args": [
+                                    "-c",
+                                    "ls -lhd /srv/repo && chown 1000:1000 /srv/repo && ls -lhd /srv/repo",
+                                ],
+                                "securityContext": {"runAsUser": 0},
+                                "volumeMounts": [
+                                    {
+                                        "name": "custom-templates",
+                                        "mountPath": "/srv/repo",
+                                    }
+                                ],
+                            },
                         ],
                         "extraContainers": [
                             {
@@ -134,6 +151,7 @@ class Hub:
                                     "-c",
                                     dedent(
                                         f"""\
+                                        ls -lhd /srv/repo;
                                         while true; do git fetch origin;
                                         if [[ $(git ls-remote --heads origin {self.cluster.spec["name"]}-{self.spec["name"]} | wc -c) -ne 0 ]]; then
                                             git reset --hard origin/{self.cluster.spec["name"]}-{self.spec["name"]};
@@ -146,6 +164,7 @@ class Hub:
                                 ],
                                 "securityContext": {
                                     "runAsUser": 1000,
+                                    "runAsGroup": 1000,
                                     "allowPrivilegeEscalation": False,
                                     "readOnlyRootFilesystem": True,
                                 },
