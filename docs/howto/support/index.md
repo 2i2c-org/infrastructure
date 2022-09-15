@@ -8,4 +8,5 @@ requests.
 :maxdepth: 2
 
 decrypt-age
+build-image-remotely
 ```
