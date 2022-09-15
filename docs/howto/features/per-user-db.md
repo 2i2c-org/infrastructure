@@ -51,7 +51,7 @@ jupyterhub:
       # can blow out their db directories if need to.
       # We have to chown /home/jovyan and /home/jovyan/shared-readwrite as well -
       # since initContainers is a list, setting this here overwrites the chowning
-      # initContainer we hahve set in basehub/values.yaml
+      # initContainer we have set in basehub/values.yaml
       - name: volume-mount-ownership-fix
         image: busybox
         command:
@@ -89,7 +89,7 @@ jupyterhub:
           subPath: data
     extraContainers:
       - name: postgres
-        image: postgres:14.5 # use the latest version
+        image: postgres:14.5 # use the latest version available at https://hub.docker.com/_/postgres/tags
         args:
           # Listen only on localhost, rather than on all interfaces
           # This allows us to use passwordless login, as only the user notebook container can access this
@@ -97,7 +97,7 @@ jupyterhub:
           - listen_addresses=127.0.0.1
         resources:
           limits:
-            # Best effort only. No more than 1 CPU, and if postgrtes uses more than 512M, restart it
+            # Best effort only. No more than 1 CPU, and if postgres uses more than 512M, restart it
             memory: 512Mi
             cpu: 1.0
           requests:
