@@ -178,6 +178,8 @@ jupyterhub:
     extraEnv:
       # until https://github.com/jupyterhub/jupyterhub/pull/3918 or equivalent lands,
       # and we upgrade to jupyterhub >= 2.3.1 on all images.
+      # Note: please checkout all occurences of `NotebookApp` configurations
+      # when moving away from it.
       JUPYTERHUB_SINGLEUSER_APP: "notebook.notebookapp.NotebookApp"
       # notebook writes secure files that don't need to survive a
       # restart here. Writing 'secure' files on some file systems (like
@@ -206,6 +208,8 @@ jupyterhub:
             # this is what allows us to shutdown servers
             # when people leave a notebook open and wander off
             cull_connected: true
+          # If we switch from setting `JUPYTERHUB_SINGLEUSER_APP` to be the NotebookApp
+          # this config kere might need to go under ServerApp instead
           NotebookApp:
             extra_template_paths:
               - /usr/local/share/jupyter/custom_template
