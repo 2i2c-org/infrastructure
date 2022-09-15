@@ -33,7 +33,7 @@ jupyterhub:
       name: callysto/2i2c
       tag: 0.1.0
     extraFiles:
-      page.html:
+      tree.html:
         mountPath: /usr/local/share/jupyter/custom_template/tree.html
         stringData: |
           {% extends "templates/tree.html" %}
