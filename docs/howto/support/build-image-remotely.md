@@ -69,7 +69,6 @@ Yes, we can!
    ```bash
    # The name of the image we wanna test
    IMAGE_NAME=test-image:v1
-   IMAGE_NAME=wat
    # The DIND pod running in the default namespace
    DIND_POD_NAME=$(kubectl get pod -l app=dind -o name)
    # Now, we execute a docker commandline command from inside this dind pod!
@@ -109,7 +108,7 @@ Yes, we can!
    ```
 
    This establishes a port-forward from your local machine at port 9999 (or whatever `PORT` is) to the
-   jupter lab running inside the container inside the kubernetes pod on the remote cluster!
+   jupyter lab running inside the container inside the kubernetes pod on the remote cluster!
 
 5. *Now* Go to the URL you found in step (2), and it should give you a jupyter lab instance in the
    browser! RStudio, Linux Desktop, etc should also work if they are in the image.
