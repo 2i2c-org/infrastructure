@@ -17,4 +17,6 @@ in `<cluster-name>` mounted in read-write fashion under `/home/`.
 
 ```{warning}
 BE CAREFUL! DO NOT DELETE THINGS HERE WITHOUT BEING SURE YOU WANT THEM GONE.
+
+If in doubt, **rename files** which will allow the server to start up again and preserve the file for the user so they can correct the file contents.
 ```
