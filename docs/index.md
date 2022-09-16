@@ -49,7 +49,6 @@ Topic guides go more in-depth on a particular topic.
 topic/config.md
 topic/cloud-auth.md
 topic/features.md
-topic/credits.md
 topic/hub-helm-charts.md
 topic/hub-image.md
 topic/storage-layer.md
