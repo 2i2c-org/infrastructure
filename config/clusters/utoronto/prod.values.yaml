@@ -1,4 +1,15 @@
 jupyterhub:
+  scheduling:
+    userPlaceholder:
+      # Keep at least one spare node around
+      replicas: 1
+      resources:
+        requests:
+          # Each node on the UToronto cluster has 59350076Ki of RAM
+          # You can find this out by looking at the output of `kubectl get node <node-name> -o yaml`
+          # Look under `allocatable`, not `capacity`
+          # So even though this is under `userPlaceholder`, it really is operating as a `nodePlaceholder`
+          memory: 57350076Ki
   hub:
     db:
       pvc:
