@@ -7,7 +7,9 @@ jupyterhub:
         requests:
           # Each node on the UToronto cluster has 59350076Ki of RAM
           # You can find this out by looking at the output of `kubectl get node <node-name> -o yaml`
-          # Look under `allocatable`, not `capacity`
+          # Look under `allocatable`, not `capacity`. Unfortunately then you have to fiddle with it to
+          # find the right number that's big enough that no user pods will schedule here, but small enough
+          # that pods in `kube-system` will still schedule.
           # So even though this is under `userPlaceholder`, it really is operating as a `nodePlaceholder`
           memory: 57350076Ki
   hub:
