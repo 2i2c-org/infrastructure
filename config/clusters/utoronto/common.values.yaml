@@ -50,7 +50,7 @@ jupyterhub:
   singleuser:
     memory:
       limit: 2G
-      guarantee: 2G
+      guarantee: 1G
     extraFiles:
       github-app-private-key.pem:
         mountPath: /etc/github/github-app-private-key.pem
