@@ -1,4 +1,4 @@
-# Cloud Credits
+# Apply Cloud Credits
 
 On each cloud provider, it is common to provide cloud credits that cover the infrastructure costs instead of paying with cash.
 This page has information about how this works for each major cloud provider we use.
@@ -12,6 +12,7 @@ To do so, follow these steps:
 
 1. Log in to the relevant account via [our AWS SSO](cloud-access:aws-sso).
 2. Confirm that you are in the right account! Credits will *only be available for this account*, and unavailable in any other accounts in the 2i2c AWS organization.
+   So *make sure you are in the correct account* before applying them.
 3. Go to {guilabel}`AWS Billing` -> {guilabel}`Credits`
 4. Click {guilabel}`Redeem Credit` in the top-right.
 5. Enter the Promotion Code and click {guilabel}`Redeem Credit` in the bottom-right.
