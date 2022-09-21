@@ -20,8 +20,16 @@ jupyterhub:
           url: http://cloudbank.org/
   hub:
     config:
+      JupyterHub:
+        authenticator_class: cilogon
+      CILogonOAuthenticator:
+        oauth_callback_url: https://pasadena.cloudbank.2i2c.cloud/hub/oauth_callback
+        username_claim: email
       Authenticator:
-        allowed_users: &pasadena_users
-          - sean.smorris@berkeley.edu
+        admin_users:
+          - yxchang@go.pasadena.edu
           - yccdharma@gmail.com
-        admin_users: *pasadena_users
+          - ericvd@berkeley.edu
+          - k_usovich@berkeley.edu
+          - sean.smorris@berkeley.edu
+        username_pattern: '^(.+@2i2c\.org|.+@berkeley\.edu|.+@go\.pasadena\.edu|yccdharma@gmail\.com|deployment-service-check)$'
