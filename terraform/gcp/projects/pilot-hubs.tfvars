@@ -23,20 +23,6 @@ notebook_nodes = {
       count: 0
     }
   },
-  "neurohackademy": {
-    # We expect around 120 users
-    min: 1,
-    max: 100,
-    machine_type: "n1-highmem-16",
-    labels: {
-      "2i2c.org/community": "neurohackademy"
-    },
-    gpu: {
-      enabled: false,
-      type: "",
-      count: 0
-    }
-  },
 }
 
 dask_nodes = {
