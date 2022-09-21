@@ -23,4 +23,5 @@ jupyterhub:
       Authenticator:
         allowed_users: &pasadena_users
           - sean.smorris@berkeley.edu
+          - yccdharma@gmail.com
         admin_users: *pasadena_users
