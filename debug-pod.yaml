@@ -1,19 +1,7 @@
 apiVersion: v1
 kind: Pod
 metadata:
-  annotations:
-    hub.jupyter.org/username: fperez
-  labels:
-    app: jupyterhub
-    chart: jupyterhub-1.1.1
-    component: singleuser-server
-    heritage: jupyterhub
-    hub.jupyter.org/network-access-hub: "true"
-    hub.jupyter.org/network-access-proxy-http: "true"
-    hub.jupyter.org/servername: ""
-    hub.jupyter.org/username: fperez
-    release: prod
-  name: jupyter-fperez-debugging
+  name: jupyter-debugging
   namespace: prod
 spec:
   affinity:
@@ -27,49 +15,31 @@ spec:
                   - user
           weight: 100
   containers:
-    - args:
-        - jupyterhub-singleuser
-        - --ip=0.0.0.0
-        - --port=8888
-        - --SingleUserNotebookApp.default_url=/lab
-      image: 286354552638.dkr.ecr.us-west-2.amazonaws.com/jmte/user-env:c6d9558
-      name: notebook
-      ports:
-        - containerPort: 8888
-          name: notebook-port
-          protocol: TCP
-      resources:
-        requests:
-          cpu: 225m
-          memory: "939524096"
-  initContainers:
-    - command:
-        - sh
-        - -c
-        - id && chown 1000:1000 /home/jovyan /home/jovyan/shared && ls -lhd /home/jovyan & sleep infinity
+    - name: busybox
       image: busybox
-      imagePullPolicy: Always
-      name: volume-mount-ownership-fix
+      command: ["sh", "-c", "sleep infinity"]
       securityContext:
         runAsUser: 0
       volumeMounts:
+        - mountPath: /nfs
+          name: home
         - mountPath: /home/jovyan
           name: home
           subPath: fperez
         - mountPath: /home/jovyan/shared
           name: home
           subPath: _shared
+        - mountPath: /home/jovyan/shared-public
+          name: home
+          subPath: _shared_public
+      resources:
+        requests:
+          cpu: 225m
+          memory: "939524096"
   nodeSelector:
     2i2c.org/node-cpu: "4"
-  priority: 0
-  priorityClassName: prod-default-priority
-  restartPolicy: OnFailure
   schedulerName: prod-user-scheduler
-  securityContext:
-    fsGroup: 100
-  serviceAccount: s3-full-access
   serviceAccountName: s3-full-access
-  terminationGracePeriodSeconds: 30
   tolerations:
     - effect: NoSchedule
       key: hub.jupyter.org/dedicated
