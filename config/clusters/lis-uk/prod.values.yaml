@@ -1,0 +1,5 @@
+jupyterhub:
+    hub:
+      config:
+        GitHubOAuthenticator:
+          oauth_callback_url: "https://ds.lis.2i2c.cloud/hub/oauth_callback"
