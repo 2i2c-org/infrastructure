@@ -67,7 +67,7 @@ jupyterhub:
           useHttpPath = true
     image:
       name: quay.io/2i2c/utoronto-image
-      tag: "f61cffcd38ce"
+      tag: "445cbd1f113b"
   hub:
     db:
       pvc:
