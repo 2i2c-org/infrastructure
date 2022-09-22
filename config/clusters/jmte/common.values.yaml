@@ -192,6 +192,16 @@ basehub:
             node_selector: { 2i2c.org/node-cpu: "16", 2i2c.org/node-gpu: "1" }
             extra_resource_limits:
               nvidia.com/gpu: "1"
+        - display_name: "16th of Medium: 0.25-4 CPU, 1-16 GB - Test of latest image"
+          description: "Helps us test an image before we make it the default"
+          kubespawner_override:
+            image: 286354552638.dkr.ecr.us-west-2.amazonaws.com/jmte/user-env:latest
+            image_pull_policy: Always
+            cpu_guarantee: 0.225
+            mem_guarantee: 0.875G
+            mem_limit: null
+            node_selector: { 2i2c.org/node-cpu: "4" }
+            extra_resource_limits: {}
 
     proxy:
       # proxy notes:
