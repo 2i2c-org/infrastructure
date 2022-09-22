@@ -49,6 +49,7 @@ jobs:
           - cluster_name: linked-earth
           - cluster_name: awi-ciroh
           - cluster_name: callysto
+          - cluster_name: lis-uk
 
     steps:
       - uses: actions/checkout@v3

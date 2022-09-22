@@ -155,6 +155,7 @@ jobs:
       failure_linked-earth: "${{ steps.declare-failure-status.outputs.failure_linked-earth }}"
       failure_awi-ciroh: "${{ steps.declare-failure-status.outputs.failure_awi-ciroh }}"
       failure_callysto: "${{ steps.declare-failure-status.outputs.failure_callysto }}"
+      failure_lis-uk: "${{ steps.declare-failure-status.outputs.failure_lis-uk }}"
 
     # Only run this job on pushes to the default branch and when the job output is not
     # an empty list
