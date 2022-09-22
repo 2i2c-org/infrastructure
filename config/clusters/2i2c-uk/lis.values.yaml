@@ -5,7 +5,7 @@ nfs:
       - soft
       - noatime
     # Google FileStore IP
-    serverIP: 172.23.44.250
+    serverIP: 10.65.88.114
     # Name of Google Filestore share
     baseShareName: /homes/
 jupyterhub:
@@ -50,3 +50,4 @@ jupyterhub:
           - lisds
         scope:
           - read:org
+        oauth_callback_url: "https://ds.lis.2i2c.cloud/hub/oauth_callback"

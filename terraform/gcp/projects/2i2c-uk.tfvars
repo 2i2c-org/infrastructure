@@ -1,5 +1,5 @@
-prefix                 = "lis-uk"
-project_id             = "lis-uk"
+prefix                 = "two-eye-two-see-uk"
+project_id             = "two-eye-two-see-uk"
 
 zone                   = "europe-west2-b"
 region                 = "europe-west2"
