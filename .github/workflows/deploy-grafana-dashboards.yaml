@@ -23,6 +23,7 @@ jobs:
           - cluster_name: uwhackweeks
           - cluster_name: awi-ciroh
           - cluster_name: callysto
+          - cluster_name: 2i2c-uk
     steps:
       - name: Checkout repo
         uses: actions/checkout@v3
