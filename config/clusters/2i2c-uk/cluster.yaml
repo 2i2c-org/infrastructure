@@ -12,7 +12,7 @@ support:
 hubs:
   - name: staging
     display_name: "2i2c-uk Staging"
-    domain: staging.community.uk.2i2c.cloud
+    domain: staging.uk.2i2c.cloud
     helm_chart: basehub
     auth0:
       connection: github

@@ -6,16 +6,16 @@ prometheus:
     ingress:
       enabled: true
       hosts:
-        - prometheus.community.uk.2i2c.cloud
+        - prometheus.uk.2i2c.cloud
       tls:
         - secretName: prometheus-tls
           hosts:
-            - prometheus.community.uk.2i2c.cloud
+            - prometheus.uk.2i2c.cloud
 grafana:
   ingress:
     hosts:
-      - grafana.community.uk.2i2c.cloud
+      - grafana.uk.2i2c.cloud
     tls:
       - secretName: grafana-tls
         hosts:
-          - grafana.community.uk.2i2c.cloud
+          - grafana.uk.2i2c.cloud
