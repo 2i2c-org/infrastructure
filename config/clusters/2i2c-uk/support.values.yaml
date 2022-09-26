@@ -1,0 +1,21 @@
+prometheusIngressAuthSecret:
+  enabled: true
+
+prometheus:
+  server:
+    ingress:
+      enabled: true
+      hosts:
+        - prometheus.uk.2i2c.cloud
+      tls:
+        - secretName: prometheus-tls
+          hosts:
+            - prometheus.uk.2i2c.cloud
+grafana:
+  ingress:
+    hosts:
+      - grafana.uk.2i2c.cloud
+    tls:
+      - secretName: grafana-tls
+        hosts:
+          - grafana.uk.2i2c.cloud
