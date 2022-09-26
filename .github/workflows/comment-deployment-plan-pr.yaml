@@ -122,6 +122,8 @@ jobs:
               per_page=100,
           )
 
+          # Otherwise, if no `issue_comments`, this will be undefined
+          comment_id = None
           # Find if a deployment-plan comment has been previously posted
           for page in issue_comments:
               comment_id = next(
