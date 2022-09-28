@@ -1,0 +1,170 @@
+name: 💻  New Hub
+description: Creating a new hub for 2i2c to operate
+title: "[Information Provider] New Hub: {{ HUB NAME }}"
+labels: ["type: hub"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        # Ask for a new 2i2c JupyterHub!
+
+        This template is designed to help you provide information about your 2i2c Hub so that a 2i2c Engineer can set it up properly. Answer the sections below as best you can. We can update information as we learn more.
+
+        # Community Information
+
+  - type: textarea
+    id: important-dates
+    attributes:
+      label: Important dates
+      description: |
+        Any important dates that we should consider for this hub. For example, if it will be used for a class, the starting day of class and any days with tests.
+      value: |
+        - **Target start date**: <!-- choose a target date ~1 week earlier than the required date -->
+        - **Required start date**: <!-- the hub MUST by running as-needed by this date -->
+        - **Any important dates for usage**: <!-- For example - exams, periods of heavy usage, etc. -->
+    validations:
+      required: true
+
+  - type: markdown
+    attributes:
+      value: |
+        # Infrastructure customization
+
+  - type: dropdown
+    id: auth-type
+    attributes:
+      label: Hub Authentication Type
+      description: |
+        What kind of authentication service will be used for this community. This is the type of "log-in username" users will use on the hub.
+      options:
+        - GitHub (e.g., @mygithubhandle)
+        - Google (myemailaddress@gmail.org, or a Google-backed domain)
+        - Institutional Provider via CILogon (e.g., username@institution.org)
+        - Username / Password via auth0: https://auth0.com/docs/connections/database
+        - Other (may not be possible, please specify in comments)
+    validations:
+      required: true
+
+  - type: textarea
+    id: hub-admins
+    attributes:
+      label: First Hub Administrators
+      description: |
+        **This will be the first Hub Administrator**, and may add new Hub Administrators from the JupyterHub UI.
+        The value here should reflect the type of authentication indicated below (e.g., a GitHub handle or email address).
+
+        There may be up to 2 community representatives, please provide the **name**, **contact information**, and **hub login** of each.
+      placeholder: |
+        Examples:
+        - Jo the Jovyan, jo@jupyter.org, @jothejovyan (if you are using GitHub authentication)
+        - Jo the Jovyan 2, jo2@jupyter.org, jo2@jupyter.org (if you are using OAuth authentication)
+    validations:
+      required: true
+
+  - type: markdown
+    attributes:
+      value: |
+        ## Hub logo information
+
+  - type: input
+    id: hub-logo-url
+    attributes:
+      label: Hub logo url
+      description: |
+        The hub landing page can have a specific logo and a link attached to it.
+        Insert the URL where to find the logo image.
+    validations:
+      required: true
+
+   - type: input
+    id: hub-logo-
+    attributes:
+      label: Hub logo information
+      description: |
+        The hub landing page can have a specific logo and a link attached to it.
+        Insert the URL where clicking the hub logo should point to. This generally points to a community or institutional website.
+    validations:
+      required: true
+
+  - type: markdown
+    attributes:
+      value: |
+        ## Hub user image
+      description: |
+        It is possible to customize the user image for the hub, as long as the image is in a public registry.
+        For example, a [quay.io registry image](https://quay.io/).
+        See [the Infrastructure documentation on custom images](https://infrastructure.2i2c.org/en/latest/howto/customize/custom-image.html) for more information.
+        Use this section to fill in relevant information:
+
+  - type: input
+    id: hub-image-repo
+    attributes:
+      label: Hub user image
+      description: |
+        Repository for user image
+    validations:
+      required: true
+
+  - type: input
+    id: hub-image-registry
+    attributes:
+      label: Hub user image
+      description: |
+        User image tag and name (including the registry). Eg. "quay.io/org/user-image:c4e586ff9240"
+    validations:
+      required: true
+
+  - type: textarea
+    id: features
+    attributes:
+      label: Extra features you'd like to enable
+      description: |
+        In addition to a base JupyterHub, there are a few extra features that are possible. Use the checkboxes below to ask for them.
+        These generally come with added complexity and cost, so make sure you've discussed these options with somebody at 2i2c before selecting them here.
+
+        **Explanation of options**:
+        - **Specific cloud provider or datacenter**: If you have restrictions about which cloud provider to use, and which data center the hub should live in (e.g. if it is next to a specific dataset).
+        - **Dedicated Scalable Dask Cluster** with [Dask Gateway](https://gateway.dask.org/): if you have very large datasets or otherwise need high-performance parallelizable computing via the cloud.
+        - **Dedicated Kubernetes cluster**: If you need to run the infrastructure on your own cloud account, or otherwise wish to have a dedicated cluster.
+      value: |
+        - [ ] Specific cloud provider or datacenter: <!-- Specify which if yes -->
+        - [ ] Dedicated Kubernetes cluster
+        - [ ] Scalable Dask Cluster
+    validations:
+      required: false
+
+  - type: textarea
+    id: other-information
+    attributes:
+      label: Other relevant information
+      description: |
+        Provide any other relevant information that you think may be important to the 2i2c Engineering team to help deploy and customize your hub.
+    validations:
+      required: false
+
+  - type: markdown
+    attributes:
+      value: |
+        ---
+
+        # (Do not fill this in) Hub Engineer information
+
+        The fields below don't need to be filled out unless you are a 2i2c Hub Engineer.
+        The Community Representative shouldn't worry about this section.
+
+    required: false
+
+  - type: checkboxes
+    id: tasks-to-deploy
+    attributes:
+      label: Tasks to deploy the hub
+      description: |
+        Tasks we'll need to follow to deploy this hub. This is only needs to be filled out by a 2i2c Engineer.
+
+      options:
+        - label: 1. Deploy information filled in above
+        - label: 2. Engineer who will deploy the hub is assigned
+        - label: 3. "Initial Hub deployment PR: <link to PR>"
+        - label: 4. Administrators able to log on -> Hub now in steady-state
+    validations:
+      required: false

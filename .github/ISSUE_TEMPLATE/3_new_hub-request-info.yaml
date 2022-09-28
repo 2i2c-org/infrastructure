@@ -1,0 +1,55 @@
+name: 💻  New Hub - Information Request
+description: Request information from the Community Representative the new hub 2i2c will create and operate
+title: "[Information Request] New Hub: {{ HUB NAME }}"
+labels: ["type: hub"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        # Ask for a new 2i2c JupyterHub!
+
+        This template is designed to help you ask information from the Community Representative about a new 2i2c Hub so that the Engineer can set it up properly. Make sure this issue is closed when a `New Hub - Information Provider` issue if completely filled in. We can update information as we learn more.
+
+        # Community Information
+
+  - type: textarea
+    id: background
+    attributes:
+      label: Hub Description
+      description: |
+        Two or three sentences about the community and use-case for the hub.
+      placeholder: |
+        For example: The XYZ community focuses their efforts around <some topic> and is mostly based in <some location>...
+    validations:
+      required: true
+
+  - type: textarea
+    id: community-representative
+    attributes:
+      label: Community Representative(s)
+      description: |
+        The main point-of-contact for this hub, and the person who requests changes to the hub on behalf of the community.
+        They will be the one responsible for filling in a `New Hub - Information Provider` new issue.
+      value: |
+        Hey @<!-- please replace this with the community rep GitHub handle -->!
+        Please open a [new issue](https://github.com/2i2c-org/infrastructure/issues/new?template=2_new-hub_provide_info.yml) and fill in all the information in the form.
+        If there are any questions about the form, please feel free to ask any questiomn in **this issue**.
+        After the form is filled in, an engineer will be assigned and will start deploying the new hub 🚀.
+        Thank you!
+    validations:
+      required: true
+
+  - type: checkboxes
+    id: tasks-to-deploy
+    attributes:
+      label: Tasks to complete the information gathering phase
+      description: |
+       Tasks to perform to consider the information gathering phase completed and close this issue.
+
+      options:
+        - label: Community Representative has all the information and tools to fill in a `New Hub - Information Provider` form
+        - label: `New Hub - Information Provider` issue was opened by a Community Representative
+        - label: <link to new hub info provider issue>
+        - label: Engineer has all the information needed to deploy the new hub requested
+    validations:
+      required: false
