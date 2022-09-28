@@ -44,7 +44,7 @@ body:
     attributes:
       label: Tasks to complete the information gathering phase
       description: |
-       Tasks to perform to consider the information gathering phase completed and close this issue.
+        Tasks to perform to consider the information gathering phase completed and close this issue.
 
       options:
         - label: Community Representative has all the information and tools to fill in a `New Hub - Information Provider` form
