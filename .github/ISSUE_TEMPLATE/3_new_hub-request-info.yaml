@@ -33,7 +33,7 @@ body:
       value: |
         Hey @<!-- please replace this with the community rep GitHub handle -->!
         Please open a [new issue](https://github.com/2i2c-org/infrastructure/issues/new?template=2_new-hub_provide_info.yml) and fill in all the information in the form.
-        If there are any questions about the form, please feel free to ask any questiomn in **this issue**.
+        If there are any questions about the form, please feel free to ask them in **this issue**.
         After the form is filled in, an engineer will be assigned and will start deploying the new hub 🚀.
         Thank you!
     validations:
@@ -48,7 +48,7 @@ body:
 
       options:
         - label: Community Representative has all the information and tools to fill in a `New Hub - Information Provider` form
-        - label: `New Hub - Information Provider` issue was opened by a Community Representative
+        - label: New Hub - Information Provider issue was opened by a Community Representative
         - label: <link to new hub info provider issue>
         - label: Engineer has all the information needed to deploy the new hub requested
     validations:

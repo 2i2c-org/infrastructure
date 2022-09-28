@@ -1,5 +1,5 @@
-name: 💻  New Hub
-description: Creating a new hub for 2i2c to operate
+name: 💻  New Hub - Information Provider
+description: Provide information about creating a new hub for 2i2c to operate
 title: "[Information Provider] New Hub: {{ HUB NAME }}"
 labels: ["type: hub"]
 body:
@@ -64,24 +64,23 @@ body:
   - type: markdown
     attributes:
       value: |
-        ## Hub logo information
+        # Hub landing page logo information
+        The hub landing page can have a specific logo and a link attached to it.
 
   - type: input
     id: hub-logo-url
     attributes:
-      label: Hub logo url
+      label: Hub logo image URL
       description: |
-        The hub landing page can have a specific logo and a link attached to it.
         Insert the URL where to find the logo image.
     validations:
       required: true
 
-   - type: input
-    id: hub-logo-
+  - type: input
+    id: hub-logo-info
     attributes:
-      label: Hub logo information
+      label: Hub logo website URL
       description: |
-        The hub landing page can have a specific logo and a link attached to it.
         Insert the URL where clicking the hub logo should point to. This generally points to a community or institutional website.
     validations:
       required: true
@@ -89,32 +88,31 @@ body:
   - type: markdown
     attributes:
       value: |
-        ## Hub user image
-      description: |
-        It is possible to customize the user image for the hub, as long as the image is in a public registry.
-        For example, a [quay.io registry image](https://quay.io/).
+        # Hub user image
+
+        It is possible to customize the user image for the hub, as long as the image is in a public registry. For example, a [quay.io registry image](https://quay.io/).
         See [the Infrastructure documentation on custom images](https://infrastructure.2i2c.org/en/latest/howto/customize/custom-image.html) for more information.
         Use this section to fill in relevant information:
 
   - type: input
     id: hub-image-repo
     attributes:
-      label: Hub user image
+      label: Hub user image GitHub repository
       description: |
-        Repository for user image
+        Insert the link to the GitHub repository for user image (if avaiblable)
     validations:
-      required: true
+      required: false
 
   - type: input
     id: hub-image-registry
     attributes:
-      label: Hub user image
+      label: Hub user image tag and name
       description: |
         User image tag and name (including the registry). Eg. "quay.io/org/user-image:c4e586ff9240"
     validations:
       required: true
 
-  - type: textarea
+  - type: dropdown
     id: features
     attributes:
       label: Extra features you'd like to enable
@@ -126,17 +124,45 @@ body:
         - **Specific cloud provider or datacenter**: If you have restrictions about which cloud provider to use, and which data center the hub should live in (e.g. if it is next to a specific dataset).
         - **Dedicated Scalable Dask Cluster** with [Dask Gateway](https://gateway.dask.org/): if you have very large datasets or otherwise need high-performance parallelizable computing via the cloud.
         - **Dedicated Kubernetes cluster**: If you need to run the infrastructure on your own cloud account, or otherwise wish to have a dedicated cluster.
-      value: |
-        - [ ] Specific cloud provider or datacenter: <!-- Specify which if yes -->
-        - [ ] Dedicated Kubernetes cluster
-        - [ ] Scalable Dask Cluster
+      multiple: true
+      options:
+        - Specific cloud provider or datacenter (otherwise GCP)
+        - Dedicated Kubernetes cluster
+        - Scalable Dask Cluster
     validations:
       required: false
+
+  - type: dropdown
+    id: cloud-provider
+    attributes:
+      label: (Optional) Preffered cloud provider
+      description: |
+        If you selected the `Specific cloud provider or datacenter` extra option above, please select which one do you prefer.
+      options:
+        - No preference
+        - GCP (preffered)
+        - AWS
+        - Azure
+    validations:
+      required: false
+
+  - type: dropdown
+    id: billing-account
+    attributes:
+      label: (Optional) Billing and Cloud account
+      description: |
+        If you selected the `Dedicated Kubernetes cluster` extra option and require a dedicated Kubernetes cluster
+        on a cloud provider of your choice, please make sure the billing and cloud accounts are set up and enough permissions
+        were granted to the 2i2c Engineers.
+        Documentation about this topic can be found here https://docs.2i2c.org/en/latest/admin/howto/create-billing-account.html
+      options:
+        - I have read the docs and have setup the billing and cloud accounts
+        - I need help figuring out the billing and cloud accounts
 
   - type: textarea
     id: other-information
     attributes:
-      label: Other relevant information
+      label: Other relevant information to the features above
       description: |
         Provide any other relevant information that you think may be important to the 2i2c Engineering team to help deploy and customize your hub.
     validations:
@@ -151,8 +177,8 @@ body:
 
         The fields below don't need to be filled out unless you are a 2i2c Hub Engineer.
         The Community Representative shouldn't worry about this section.
-
-    required: false
+    validations:
+      required: false
 
   - type: checkboxes
     id: tasks-to-deploy
@@ -164,7 +190,7 @@ body:
       options:
         - label: 1. Deploy information filled in above
         - label: 2. Engineer who will deploy the hub is assigned
-        - label: 3. "Initial Hub deployment PR: <link to PR>"
+        - label: 3. Initial Hub deployment PR <link to PR>
         - label: 4. Administrators able to log on -> Hub now in steady-state
     validations:
       required: false
