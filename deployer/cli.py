@@ -167,7 +167,7 @@ def main():
         help="Generate files for a new cluster",
     )
     generate_cluster_parser.add_argument(
-        "--cloud-provider",
+        "cloud_provider",
         choices=["aws"],
         help="Which cloud provider to generate a cluster for",
     )
