@@ -152,7 +152,6 @@ jobs:
       failure_pangeo-hubs: "${{ steps.declare-failure-status.outputs.failure_pangeo-hubs }}"
       failure_utoronto: "${{ steps.declare-failure-status.outputs.failure_utoronto }}"
       failure_uwhackweeks: "${{ steps.declare-failure-status.outputs.failure_uwhackweeks }}"
-      failure_allen-swdb: "${{ steps.declare-failure-status.outputs.failure_allen-swdb }}"
       failure_m2lines: "${{ steps.declare-failure-status.outputs.failure_m2lines }}"
       failure_linked-earth: "${{ steps.declare-failure-status.outputs.failure_linked-earth }}"
       failure_awi-ciroh: "${{ steps.declare-failure-status.outputs.failure_awi-ciroh }}"
