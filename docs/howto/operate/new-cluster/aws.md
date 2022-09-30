@@ -28,26 +28,29 @@ links to figure out how to authenticate to this project from your terminal.
 - [For accounts setup with AWS SSO](cloud-access:aws-sso:terminal)
 - [For accounts without AWS SSO](cloud-access:aws-iam:terminal)
 
-### Create an ssh key
+### Generate cluster files
 
-eksctl requires an [ssh key](https://eksctl.io/introduction/#ssh-access) during
-cluster creation. This is used to log in to the nodes to debug them later if necessary.
-We keep the private key encrypted in `eksctl/ssh-keys`.
+We automatically generate the files required to setup a new cluster:
 
-Generate the key with
+- A `.jsonnet` file for use with `eksctl`
+- An [ssh key](https://eksctl.io/introduction/#ssh-access) for use with eksctl
+- A `.tfvars` file for use with `terraform`
 
-```bash
-ssh-keygen -f eksctl/ssh-keys/<cluster-name>.key
-```
-
-and encrypt the private key part with
+You can generate these with:
 
 ```bash
-sops --in-place --encrypt eksctl/ssh-keys/<cluster-name>.key
+python3 deployer generate-cluster aws <cluster-name>
 ```
 
-This will leave the public key unencrypted in `eksctl/ssh-keys/<cluster-name>.key.pub` -
-we will use this in our eksctl config.
+This will generate the following files:
+
+1. `eksctl/<cluster-name>.jsonnet` with a default cluster configuration, deployed to `us-west-2`
+2. `eksctl/ssh-keys/secret/<cluster-name>.key`, a `sops` encrypted ssh private key that can be
+   used to ssh into the kubernetes nodes.
+3. `eksctl/ssh-keys/<cluster-name>.pub`, an ssh public key used by `eksctl` to grant access to
+   the prviate key.
+4. `terraform/aws/projects/<cluster-name>.tfvars`, a terraform variables file that will setup
+   most of the non EKS infrastructure.
 
 ### Create and render an eksctl config file
 
@@ -56,8 +59,8 @@ how our cluster should be built. Since it can get repetitive, we use
 [jsonnet](https://jsonnet.org) to declaratively specify this config. You can
 find the `.jsonnet` files for the current clusters in the `eksctl/` directory.
 
-Create a new `.jsonnet` file by copying an existing one and making whatever
-modifications you would like. The eksctl docs have a [reference](https://eksctl.io/usage/schema/)
+The previous step should've created a baseline `.jsonnet` file you can modify as
+you like. The eksctl docs have a [reference](https://eksctl.io/usage/schema/)
 for all the possible options. You'd want to make sure to change at least the following:
 
 - Region / Zone - make sure you are creating your cluster in the correct region!
@@ -65,8 +68,6 @@ for all the possible options. You'd want to make sure to change at least the fol
   make sure you have enough quota to launch these instances in your selected regions.
 - Kubernetes version - older `.jsonnet` files might be on older versions, but you should
   pick a newer version when you create a new cluster.
-- The ssh key path points to the `<cluster-name>.key.pub` file we created in the previous
-  step
 
 Once you have a `.jsonnet` file, you can render it into a config file that eksctl
 can read.

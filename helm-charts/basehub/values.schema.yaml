@@ -350,12 +350,15 @@ properties:
             additionalProperties: false
             required:
               - extraVolumeMounts
+              - extraEnv
             properties:
               extraVolumeMounts:
                 type: array
                 items:
                   type: object
                   additionalProperties: true
+              extraEnv:
+                type: object
           cloudResources:
             type: object
             additionalProperties: false

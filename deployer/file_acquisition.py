@@ -2,6 +2,7 @@
 Functions related to finding and reading files. Checking files exist, finding their
 absolute paths, decrypting and reading encrypted files when needed.
 """
+import json
 import os
 import subprocess
 import tempfile
@@ -120,10 +121,15 @@ def get_decrypted_file(original_filepath):
         # We must then determine if the file is using sops
         # sops files are JSON/YAML with a `sops` key. So we first check
         # if the file is valid JSON/YAML, and then if it has a `sops` key.
-        # Since valid JSON is also valid YAML by design, a YAML parser can read in JSON.
         with open(original_filepath) as f:
+            # JSON files output by terraform have hard tabs, the *one* thing that is
+            # valid JSON but not valid YAML
+            if ext.endswith("json"):
+                loader_func = json.load
+            else:
+                loader_func = yaml.load
             try:
-                content = yaml.load(f)
+                content = loader_func(f)
             except ScannerError:
                 raise ScannerError(
                     "We expect encrypted files to be valid JSON or YAML files."

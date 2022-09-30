@@ -64,6 +64,7 @@ jupyterhub:
     singleuser:
       extraPVCs: []
     singleuserAdmin:
+      extraEnv: {}
       extraVolumeMounts:
         - name: home
           mountPath: /home/jovyan/shared-readwrite
@@ -316,10 +317,6 @@ jupyterhub:
       KubeSpawner:
         # Make sure working directory is ${HOME}
         working_dir: /home/jovyan
-        extra_container_config:
-          securityContext:
-            # Explicitly disallow setuid binaries from working inside the container
-            allowPrivilegeEscalation: false
       Authenticator:
         # Don't allow test username to login into the hub
         # The test service will still be able to create this hub username
@@ -445,9 +442,11 @@ jupyterhub:
                 if custom_admin and self.user.admin:
                     extra_init_containers = custom_admin.get('initContainers', [])
                     extra_volume_mounts = custom_admin.get('extraVolumeMounts', [])
+                    extra_env = custom_admin.get('extraEnv', {})
 
                     self.init_containers += [container for container in extra_init_containers if container not in self.init_containers]
                     self.volume_mounts += [volume for volume in extra_volume_mounts if volume not in self.volume_mounts]
+                    self.environment.update(extra_env)
 
                 return super().start(*args, **kwargs)
 
@@ -584,14 +583,31 @@ jupyterhub:
             # This is the same syntax used by allowed_organizations traitlet of GitHubOAuthenticator
             teams = set([f'{team_info["organization"]["login"]}:{team_info["slug"]}' for team_info in auth_state["teams"]])
 
+
+            print(f"User {spawner.user.name} is part of teams {' '.join(teams)}")
             allowed_profiles = []
 
+
             for profile in original_profile_list:
+              # If there is no ':' in allowed_teams, it's an org and we should check that
+              # differently
+              allowed_orgs = set([o for o in profile.get('allowed_teams', []) if ':' not in o])
+              allowed_teams = set([t for t in profile.get('allowed_teams', []) if ':' in t])
+
               # Keep the profile is the user is part of *any* team listed in allowed_teams
               # If allowed_teams is empty or not set, it'll not be accessible to *anyone*
-              if set(profile.get('allowed_teams', [])) & teams:
+              if allowed_teams & teams:
                 allowed_profiles.append(profile)
-                print(f"Allowing profile {profile['display_name']} for user {spawner.user.name}")
+                print(f"Allowing profile {profile['display_name']} for user {spawner.user.name} based on team membership")
+              elif allowed_orgs:
+                for org in allowed_orgs:
+                  user_in_org = yield spawner.authenticator._check_membership_allowed_organizations(
+                      org, spawner.user.name, auth_state['access_token']
+                  )
+                  if user_in_org:
+                    allowed_profiles.append(profile)
+                    print(f"Allowing profile {profile['display_name']} for user {spawner.user.name} based on org membership")
+                    break
               else:
                 print(f"Dropping profile {profile['display_name']} for user {spawner.user.name}")
 
