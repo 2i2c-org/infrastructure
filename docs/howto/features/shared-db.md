@@ -9,7 +9,7 @@ database, which is then read by various users on the hub (who only have readonly
 We currently only support this on AWS, using managed [AWS RDS instances](https://aws.amazon.com/rds/). Our terraform only supports MySQL at this point, but it should be
 fairly simple to port it to Postgres.
 
-### Setting upt the RDS Instance
+### Setting up the RDS Instance
 
 We have a bunch of Terraform variables, prefixed with `db_` that help you control the
 database instance to be set up.
@@ -32,14 +32,14 @@ db_params = {}
 ```
 
 You can see more documentation for these specific variables in their descriptions
-in `aws/variables.tf`.
+in [`aws/variables.tf`](https://github.com/2i2c-org/infrastructure/blob/HEAD/terraform/aws/variables.tf).
 
 
 ### Setting up a readonly user
 
 For MySQL, we also currently support setting up a ReadOnly user whose credentials
 can be distributed to non-admin user. By default, it has just enough MySQL grants to
-read all contents of all databases, and notihng more. This can be adjusted with the
+read all contents of all databases, and nothing more. This can be adjusted with the
 `db_mysql_user_grants` terraform variable. If for some reason you don't want to have
 special characters in the generated password for this user, you can toggle that with
 `db_user_password_special_chars`.
@@ -49,7 +49,6 @@ special characters in the generated password for this user, you can toggle that 
 Once you've `terraform apply`d all the config, you can get the config that should
 be passed to `helm` with `terraform output -raw db_helm_config`. This should output
 YAML that should put into a `sops` encrypted secret config file specific to the hub.
-*
 This sets up a couple of environment variables (`MYSQL_ROOT_USERNAME` and
 `MYSQL_ROOT_PASSWORD`) available *just* to hub admins, and a bunch more
 (`MYSQL_HOST`, `MYSQL_USERNAME`, `MYSQL_PASSWORD`) available to all users.
