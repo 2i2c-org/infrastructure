@@ -54,7 +54,7 @@ basehub:
     singleuser:
       image:
         name: pangeo/pangeo-notebook
-        tag: "2022.06.02"
+        tag: "2022.09.21"
       extraEnv:
         GH_SCOPED_CREDS_CLIENT_ID: "Iv1.0c7df3d4b3191b2f"
         GH_SCOPED_CREDS_APP_URL: https://github.com/apps/leap-hub-push-access
@@ -106,12 +106,24 @@ basehub:
             node_selector:
               node.kubernetes.io/instance-type: n1-standard-16
         - display_name: Large + Nvidia K80 GPU
-          description: 24GB RAM, 8 CPUs, Nvidia Tesla K80 GPU
+          description: 24GB RAM, 8 CPUs, Nvidia Tesla K80 GPU + Tensorflow
           allowed_teams:
             - leap-stc:leap-pangeo-research
             - 2i2c-org:tech-team
           kubespawner_override:
-            image: "pangeo/ml-notebook:master"
+            image: "pangeo/ml-notebook:2022.09.21"
+            mem_limit: 30G
+            mem_guarantee: 24G
+            node_selector:
+              node.kubernetes.io/instance-type: n1-standard-8
+            environment:
+              NVIDIA_DRIVER_CAPABILITIES: compute,utility
+            extra_resource_limits:
+              nvidia.com/gpu: "1"
+        - display_name: Large + Nvidia K80 GPU + PyTorch
+          description: 24GB RAM, 8 CPUs
+          kubespawner_override:
+            image: "pangeo/pytorch-notebook:2022.09.21"
             mem_limit: 30G
             mem_guarantee: 24G
             node_selector:
