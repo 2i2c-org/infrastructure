@@ -32,7 +32,7 @@ jupyterhub:
     image:
       # Image build repo: https://github.com/lisds/lisds-images
       name: "lisds/lisds-base"
-      tag: "781af1c"
+      tag: "b183052"
   hub:
     config:
       JupyterHub:
