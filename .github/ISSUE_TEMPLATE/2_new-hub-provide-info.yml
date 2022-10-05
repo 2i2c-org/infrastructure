@@ -135,12 +135,12 @@ body:
   - type: dropdown
     id: cloud-provider
     attributes:
-      label: (Optional) Preffered cloud provider
+      label: (Optional) Preferred cloud provider
       description: |
         If you selected the `Specific cloud provider or datacenter` extra option above, please select which one do you prefer.
       options:
         - No preference
-        - GCP (preffered)
+        - GCP (preferred)
         - AWS
         - Azure
     validations:
