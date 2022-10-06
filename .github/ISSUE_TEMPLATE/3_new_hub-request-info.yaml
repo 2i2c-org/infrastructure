@@ -48,7 +48,7 @@ body:
 
       options:
         - label: Community Representative has all the information and tools to fill in a `New Hub - Collect Information` form
-        - label: "New Hub - Collect Information" issue was opened by a Community Representative
+        - label: New Hub - Collect Information issue was opened by a Community Representative
         - label: <link to new hub collect information issue>
         - label: Engineer has all the information needed to deploy a first iteration of the new hub requested
     validations:
