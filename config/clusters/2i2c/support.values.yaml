@@ -3,6 +3,7 @@ prometheusIngressAuthSecret:
 
 prometheus:
   server:
+    etention: 365d
     ingress:
       enabled: true
       hosts:
