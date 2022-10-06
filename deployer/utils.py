@@ -127,13 +127,15 @@ def create_markdown_comment(support_staging_matrix, prod_matrix):
 
     # Create the body of the comment to post
     comment_body = f"""<!-- deployment-plan -->
+Merging this PR will trigger the following deployment actions.
+
 ### Support and Staging deployments
 
-{support_staging_md_table}
+{support_staging_md_table if bool(support_staging_md_table) else 'No support or staging upgrades will be triggered'}
 
 ### Production deployments
 
-{prod_md_table}
+{prod_md_table if bool(prod_md_table) else 'No production hub upgrades will be triggered'}
 """
 
     # Save comment body to a file to be uploaded as an atrifact by GitHub Actions
