@@ -71,51 +71,59 @@ def create_markdown_comment(support_staging_matrix, prod_matrix):
     # === columns of the table. Moreover, we want the columns to be in 'sensible' order
     # === when a human reads this table; therefore, we reformat the inputted jobs.
 
-    # Format the Support and Staging matrix jobs
-    formatted_support_staging_matrix = []
-    for entry in support_staging_matrix:
-        formatted_entry = {
-            column_converter["provider"]: entry["provider"],
-            column_converter["cluster_name"]: entry["cluster_name"],
-            column_converter["upgrade_support"]: boolean_converter[
-                entry["upgrade_support"]
-            ],
-            column_converter["reason_for_support_redeploy"]: entry[
-                "reason_for_support_redeploy"
-            ],
-            column_converter["upgrade_staging"]: boolean_converter[
-                entry["upgrade_staging"]
-            ],
-            column_converter["reason_for_staging_redeploy"]: entry[
-                "reason_for_staging_redeploy"
-            ],
-        }
-        formatted_support_staging_matrix.append(formatted_entry)
+    # Only execute if support_staging_matrix is not an empty list
+    if support_staging_matrix:
+        # Format the Support and Staging matrix jobs
+        formatted_support_staging_matrix = []
+        for entry in support_staging_matrix:
+            formatted_entry = {
+                column_converter["provider"]: entry["provider"],
+                column_converter["cluster_name"]: entry["cluster_name"],
+                column_converter["upgrade_support"]: boolean_converter[
+                    entry["upgrade_support"]
+                ],
+                column_converter["reason_for_support_redeploy"]: entry[
+                    "reason_for_support_redeploy"
+                ],
+                column_converter["upgrade_staging"]: boolean_converter[
+                    entry["upgrade_staging"]
+                ],
+                column_converter["reason_for_staging_redeploy"]: entry[
+                    "reason_for_staging_redeploy"
+                ],
+            }
+            formatted_support_staging_matrix.append(formatted_entry)
 
-    # Generate a Markdown table
-    support_staging_md_table = (
-        markdownTable(formatted_support_staging_matrix)
-        .setParams(row_sep="markdown", quote=False)
-        .getMarkdown()
-    )
+        # Generate a Markdown table
+        support_staging_md_table = (
+            markdownTable(formatted_support_staging_matrix)
+            .setParams(row_sep="markdown", quote=False)
+            .getMarkdown()
+        )
+    else:
+        support_staging_md_table = []
 
-    # Format the Support and Staging matrix jobs
-    formatted_prod_matrix = []
-    for entry in prod_matrix:
-        formatted_entry = {
-            column_converter["provider"]: entry["provider"],
-            column_converter["cluster_name"]: entry["cluster_name"],
-            column_converter["hub_name"]: entry["hub_name"],
-            column_converter["reason_for_redeploy"]: entry["reason_for_redeploy"],
-        }
-        formatted_prod_matrix.append(formatted_entry)
+    # Only execute if prod_matrix is not an empty list
+    if prod_matrix:
+        # Format the Production Hubs matrix jobs
+        formatted_prod_matrix = []
+        for entry in prod_matrix:
+            formatted_entry = {
+                column_converter["provider"]: entry["provider"],
+                column_converter["cluster_name"]: entry["cluster_name"],
+                column_converter["hub_name"]: entry["hub_name"],
+                column_converter["reason_for_redeploy"]: entry["reason_for_redeploy"],
+            }
+            formatted_prod_matrix.append(formatted_entry)
 
-    # Generate a Markdown table
-    prod_md_table = (
-        markdownTable(formatted_prod_matrix)
-        .setParams(row_sep="markdown", quote=False)
-        .getMarkdown()
-    )
+        # Generate a Markdown table
+        prod_md_table = (
+            markdownTable(formatted_prod_matrix)
+            .setParams(row_sep="markdown", quote=False)
+            .getMarkdown()
+        )
+    else:
+        prod_md_table = []
 
     # Create the body of the comment to post
     comment_body = f"""<!-- deployment-plan -->
