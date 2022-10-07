@@ -23,7 +23,9 @@ More information on these terms can be found in [](cloud-access:aws).
    * On the "Review and submit assignments" page, click "Submit".
 
 You have successfully created a new AWS account and connected it to our SSO Management Account!
+Now, [setup a new cluster](new-cluster:new-cluster) inside it via Terraform.
 
+## Checking quotas and requesting increases
 
 [^1]: AWS documentation on creating new accounts in an Organization: <https://docs.aws.amazon.com/organizations/latest/userguide/orgs_manage_accounts_create.html>
 [^2]: AWS documentation on managing account access: <https://docs.aws.amazon.com/organizations/latest/userguide/orgs_manage_accounts_access.html>

@@ -23,3 +23,5 @@
    ```
 
 8. [Setup a new cluster](new-cluster:new-cluster) inside it via Terraform
+
+## Checking quotas and requesting increases
