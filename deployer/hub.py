@@ -8,6 +8,14 @@ from textwrap import dedent
 
 from auth import KeyProvider
 from file_acquisition import get_decrypted_file, get_decrypted_files
+from google.cloud.monitoring_v3 import (
+    Aggregation,
+    AlertPolicy,
+    AlertPolicyServiceClient,
+    ComparisonType,
+    UptimeCheckConfig,
+    UptimeCheckServiceClient,
+)
 from ruamel.yaml import YAML
 from utils import print_colour
 
@@ -324,6 +332,89 @@ class Hub:
         ]
 
         subprocess.check_call(cmd)
+
+    def create_uptime_check(self, project_name):
+        """
+        Create a simple HTTPS uptime check using GCP Monitoring.
+        """
+        config = UptimeCheckConfig()
+        config.display_name = f"{self.spec['domain']} on {self.cluster.spec['name']}"
+        config.monitored_resource = {
+            "type": "uptime_url",
+            "labels": {
+                "host": self.spec["domain"],
+                "cluster": self.cluster.spec["name"],
+            },
+        }
+        config.http_check = {
+            "request_method": UptimeCheckConfig.HttpCheck.RequestMethod.GET,
+            "path": "/hub/health",
+            "port": 443,
+            "use_ssl": True,
+        }
+        config.timeout = {"seconds": 10}
+        config.period = {"seconds": 300}
+
+        client = UptimeCheckServiceClient()
+        return client.create_uptime_check_config(
+            request={"parent": project_name, "uptime_check_config": config}
+        )
+
+    def ensure_uptime_alert(self, project_name, uptime_check_id, notification_channel):
+        client = AlertPolicyServiceClient()
+
+        existing_policy = list(
+            client.list_alert_policies(
+                {
+                    "name": project_name,
+                    # GCP *autogenerates* uptime check IDs that have capital letters, and then
+                    # prevents us from using those in labels. This is just poor design, wtf.
+                    "filter": f'user_labels.check_id = "{uptime_check_id.lower()}"',
+                }
+            )
+        )
+
+        if existing_policy:
+            config = existing_policy[0]
+        else:
+            config = AlertPolicy()
+        config.display_name = f"{self.spec['domain']} on {self.cluster.spec['name']}"
+        config.combiner = AlertPolicy.ConditionCombinerType.OR
+
+        config.user_labels = {"check_id": uptime_check_id.lower()}
+        config.notification_channels = [notification_channel]
+        config.conditions = [
+            AlertPolicy.Condition(
+                display_name=config.display_name,
+                condition_threshold=AlertPolicy.Condition.MetricThreshold(
+                    filter=f"""
+                    resource.type = "uptime_url"
+                    AND metric.type = "monitoring.googleapis.com/uptime_check/check_passed"
+                    AND metric.labels.check_id = "{uptime_check_id}"
+                    """,
+                    duration="300s",  # Alert if we are down for 5 minutes
+                    comparison=ComparisonType.COMPARISON_GT,
+                    threshold_value=1,
+                    aggregations=[
+                        Aggregation(
+                            group_by_fields=["resource.label.host"],
+                            alignment_period="300s",  # I don't know what this means
+                            per_series_aligner=Aggregation.Aligner.ALIGN_NEXT_OLDER,  # I also don't know what this means
+                            cross_series_reducer=Aggregation.Reducer.REDUCE_COUNT_FALSE,
+                        )
+                    ],
+                ),
+            )
+        ]
+
+        if not existing_policy:
+            client.create_alert_policy(
+                request={"name": project_name, "alert_policy": config}
+            )
+            print(f'Created alert policy for {self.spec["domain"]}')
+        else:
+            client.update_alert_policy(request={"alert_policy": config})
+            print(f'Updated alert policy for {self.spec["domain"]}')
 
     def deploy(self, auth_provider, secret_key, dask_gateway_version):
         """
