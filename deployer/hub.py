@@ -341,6 +341,10 @@ class Hub:
         will be created. We should already be authenticated in a way that allows making
         Uptime Check API requests to that project.
         """
+        # NOTE: IF YOU CHANGE THE CONFIG HERE, YOU *MUST* RECREATE ALL UPTIME CHECKS AND
+        # ALERTPOLICIES BY RUNNING python3 deployer ensure-uptime-checks --force-recreate.
+        # Without that, new config will only be applied to new alerts & checks.
+
         config = UptimeCheckConfig()
         config.display_name = f"{self.spec['domain']} on {self.cluster.spec['name']}"
         config.monitored_resource = {
@@ -364,11 +368,11 @@ class Hub:
             request={"parent": project_name, "uptime_check_config": config}
         )
 
-    def ensure_uptime_alert(
+    def create_uptime_alert(
         self, project_name: str, uptime_check_id: str, notification_channel: str
     ):
         """
-        Ensure an alert is set up for a given uptime_check_id
+        Create an alert for a given uptime_check_id
 
         project_name is the name of the GCP project under which GCP Alert Policy
         will be created. We should already be authenticated in a way that allows making
@@ -382,28 +386,23 @@ class Hub:
         """
         client = AlertPolicyServiceClient()
 
-        existing_policy = list(
-            client.list_alert_policies(
-                {
-                    "name": project_name,
-                    # GCP *autogenerates* uptime check IDs that have capital letters, and then
-                    # prevents us from using those in labels. This is just poor design, wtf.
-                    "filter": f'user_labels.check_id = "{uptime_check_id.lower()}"',
-                }
-            )
-        )
-
-        if existing_policy:
-            config = existing_policy[0]
-        else:
-            config = AlertPolicy()
+        # NOTE: IF YOU CHANGE THE CONFIG HERE, YOU *MUST* RECREATE ALL UPTIME CHECKS AND
+        # ALERTPOLICIES BY RUNNING python3 deployer ensure-uptime-checks --force-recreate.
+        # Without that, new config will only be applied to new alerts & checks.
+        config = AlertPolicy()
         config.display_name = f"{self.spec['domain']} on {self.cluster.spec['name']}"
         config.combiner = AlertPolicy.ConditionCombinerType.OR
 
-        # label values are super restricted, and can only be lowercase
-        config.user_labels = {"check_id": uptime_check_id.lower()}
-
         config.notification_channels = [notification_channel]
+        config.documentation = AlertPolicy.Documentation(
+            content=dedent(
+                f"""
+                Simple HTTPS Health check on {self.spec['domain']} on the {self.cluster.spec['name']} cluster
+                on provider {self.cluster.spec['provider']}.
+                """,
+            ),
+            mime_type="text/markdown",
+        )
 
         config.conditions = [
             AlertPolicy.Condition(
@@ -432,14 +431,9 @@ class Hub:
             )
         ]
 
-        if not existing_policy:
-            client.create_alert_policy(
-                request={"name": project_name, "alert_policy": config}
-            )
-            print(f'Created alert policy for {self.spec["domain"]}')
-        else:
-            client.update_alert_policy(request={"alert_policy": config})
-            print(f'Updated alert policy for {self.spec["domain"]}')
+        client.create_alert_policy(
+            request={"name": project_name, "alert_policy": config}
+        )
 
     def deploy(self, auth_provider, secret_key, dask_gateway_version):
         """

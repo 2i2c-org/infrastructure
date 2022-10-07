@@ -190,6 +190,11 @@ def main():
         default="projects/two-eye-two-see/notificationChannels/13354360469399183285",
         help="ID of GCP Notification channel to send alerts to",
     )
+    ensure_uptime_checks_parser.add_argument(
+        "--force-recreate",
+        action="store_true",
+        help="Delete & Recreate all uptime checks & alert policies",
+    )
     # === End section ===#
 
     args = argparser.parse_args()
@@ -227,4 +232,8 @@ def main():
     elif args.action == "generate-cluster":
         generate_cluster(args.cloud_provider, args.cluster_name)
     elif args.action == "ensure-uptime-checks":
-        ensure_uptime_checks(args.notification_cluster_id, args.notification_channel_id)
+        ensure_uptime_checks(
+            args.notification_cluster_id,
+            args.notification_channel_id,
+            args.force_recreate,
+        )

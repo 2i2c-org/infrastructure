@@ -17,9 +17,11 @@ When any of the checks fail, they automatically open an Incident in the
 we maintain in PagerDuty. This is done via a GCP Notification Channel in the `two-eye-two-see`
 GCP project, created [following these instructions](https://cloud.google.com/monitoring/support/notification-options#pagerduty).
 
-## Known issues
+## Changing the configuration of the checks
 
-It looks like GCP will automatically mark an incident as 'resolved' if the AlertPolicy gets
-updated while it is still live. So if `python3 deployer ensure-uptime-checks` is run *while*
-an incident is in progress, it'll `re-trigger` the incident - closing and re-opening it. This
-is annoying, but mostly harmless.
+If you change the configuration of the checks themselves (such as their frequency,
+target URL, etc) - `ensure-uptime-checks` will *not* modify currently existing checks. The new
+config will only be applied to new checks. You will need to run
+`python3 deployer ensure-uptime-checks --force-recreate` - this will delete all existing
+UptimeChecks and AlertPolicies and recreate them, making sure your changes are applied to
+everything.
