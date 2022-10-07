@@ -471,6 +471,13 @@ def exec_homes_shell(cluster_name, hub_name):
 def ensure_uptime_checks(cluster_name: str, notification_channel_id: str):
     """
     Ensure uptime checks for *all* hubs are set up
+
+    cluster_name is the *cluster* that is in the *project* where we want to
+    create the uptime checks. We are using this as a convenience function to
+    authenticate to the appropriate GCP project.
+
+    notification_channel is the full id (of the form projects/<project-id>/notificationChannels/<id>)
+    which should receive the alerts when they are triggered.
     """
     config_file_path = find_absolute_path_to_cluster_file(cluster_name)
     with open(config_file_path) as f:
@@ -483,36 +490,33 @@ def ensure_uptime_checks(cluster_name: str, notification_channel_id: str):
 
     project = checks_cluster.spec["gcp"]["project"]
 
+    # Authenticate to the project in which we will create these uptime checks
     with checks_cluster.auth():
 
+        # Get a list of *all* clusters
         cluster_files = get_all_cluster_yaml_files()
 
         client = UptimeCheckServiceClient()
+
+        # Get a list of all existing uptime checks
         existing_checks = client.list_uptime_check_configs(
             request={"parent": f"projects/{project}"}
         )
+        existing_check_hosts = [
+            c.monitored_resource.labels["host"] for c in existing_checks
+        ]
 
         for cf in cluster_files:
             with open(cf) as f:
                 cluster = Cluster(yaml.load(f), cf.parent)
 
-                existing_check_hosts = [
-                    c.monitored_resource.labels["host"] for c in existing_checks
-                ]
-
                 for hub in cluster.hubs:
                     if hub.spec["domain"] not in existing_check_hosts:
+                        # Create uptime check *only* if needed
                         check = hub.create_uptime_check(f"projects/{project}")
-                        print(f"Created uptime check for {hub.spec['domain']}")
-                    else:
-                        check = next(
-                            ec
-                            for ec in existing_checks
-                            if ec.monitored_resource.labels["host"]
-                            == hub.spec["domain"]
+                        hub.ensure_uptime_alert(
+                            f"projects/{project}",
+                            check.name.split("/")[-1],
+                            notification_channel_id,
                         )
-                    hub.ensure_uptime_alert(
-                        f"projects/{project}",
-                        check.name.split("/")[-1],
-                        notification_channel_id,
-                    )
+                        print(f"Created uptime check for {hub.spec['domain']}")
