@@ -90,8 +90,7 @@ def get_all_cluster_yaml_files(is_test=False):
         # folders nested under the `tests/` folder.
         return set(root_path.glob("tests/test-clusters/**/cluster.yaml"))
 
-    # We are NOT running a test via pytest. We want to explicitly ignore the
-    # cluster folders nested under the `tests/` folder.
+    # We are NOT running a test via pytest. We only care about the clusters under config/clusters
     return set(root_path.glob("config/clusters/**/cluster.yaml"))
 
 
