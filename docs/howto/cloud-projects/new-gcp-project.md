@@ -25,3 +25,20 @@
 8. [Setup a new cluster](new-cluster:new-cluster) inside it via Terraform
 
 ## Checking quotas and requesting increases
+
+Finally, we should check what quotas are enforced on the project and increase them as necessary.
+
+1. Navigate to <https://console.cloud.google.com>
+2. Select the project you created from the dropdown in the top menu bar
+   ```{tip}
+   If you can't find the project you're looking for, click the "All" tab to see all projects that you have access to.
+   ```
+3. In the search bar in the top menu, search for "All quotas"
+4. Once on the quotas page, check the checkbox next to the quota you would like to edit, e.g., CPUs, then click "Edit quotas"
+5. In the pane that opens, enter the new limit, e.g. 128 CPUs.
+   You will then be asked to provide some contact information.
+   Click "Submit request" and you will receive a confirmation email.
+   ```{warning}
+   It is not possible to provide the `support@2i2c.org` email here, or even cc it.
+   You have to provide then email you are signed in with.
+   ```
