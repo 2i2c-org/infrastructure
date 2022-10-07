@@ -1,0 +1,11 @@
+# Simple HTTPS Uptime Checks
+
+Ideally, when a hub is down, a machine alerts us - we do not have to wait for a user
+to report it to our helpdesk. While we aren't quite there, we currently have very simple
+uptime monitoring for all our hubs. [GCP Uptime Checks](https://cloud.google.com/monitoring/uptime-checks)
+are used (because they are free) to hit the `/hub/health` endpoint
+of the public URL of all our hubs. If these checks fail for 5 minutes, an alert is sent
+to our [PagerDuty](https://team-compass.2i2c.org/en/latest/projects/managed-hubs/incidents.html)
+notification channel. This automatically posts a message in the `#pagerduty-notifications`
+channel in the 2i2c slack, and starts an incident in PagerDuty - kicking off the incident
+response process.
