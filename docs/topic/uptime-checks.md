@@ -9,3 +9,10 @@ to our [PagerDuty](https://team-compass.2i2c.org/en/latest/projects/managed-hubs
 notification channel. This automatically posts a message in the `#pagerduty-notifications`
 channel in the 2i2c slack, and starts an incident in PagerDuty - kicking off the incident
 response process.
+
+## Known issues
+
+It looks like GCP will automatically mark an incident as 'resolved' if the AlertPolicy gets
+updated while it is still live. So if `python3 deployer ensure-uptime-checks` is run *while*
+an incident is in progress, it'll `re-trigger` the incident - closing and re-opening it. This
+is annoying, but mostly harmless.
