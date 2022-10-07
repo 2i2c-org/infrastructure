@@ -68,9 +68,8 @@ def validate_cluster_config(cluster_name):
     """
     Validates cluster.yaml configuration against a JSONSchema.
     """
-    cluster_schema_file = Path(os.getcwd()).joinpath(
-        "shared", "deployer", "cluster.schema.yaml"
-    )
+    root_dir = Path(__file__).parent.parent
+    cluster_schema_file = root_dir.joinpath("shared", "deployer", "cluster.schema.yaml")
     cluster_file = find_absolute_path_to_cluster_file(cluster_name)
 
     with open(cluster_file) as cf, open(cluster_schema_file) as sf:

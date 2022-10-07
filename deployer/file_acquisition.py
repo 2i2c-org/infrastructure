@@ -40,55 +40,32 @@ def find_absolute_path_to_cluster_file(cluster_name: str, is_test: bool = False)
         cluster_name (str): The name of the cluster we wish to perform actions on.
             This corresponds to a folder name, and that folder should contain a
             cluster.yaml file.
-        is_test (bool, optional): A flag to determine whether we are running a test
-            suite or not. If True, only return the paths to cluster.yaml files under the
-            'tests/' directory. If False, explicitly exclude the cluster.yaml files
-            nested under the 'tests/' directory. Defaults to False.
 
     Returns:
         Path object: The absolute path to the cluster.yaml file for the named cluster
     """
-    if is_test:
-        # We are running a test via pytest. We only want to focus on the cluster
-        # folders nested under the `tests/` folder.
-        filepaths = [
-            filepath
-            for filepath in Path(os.getcwd()).glob(f"**/{cluster_name}/cluster.yaml")
-            if "tests/" in str(filepath)
-        ]
-    else:
-        # We are NOT running a test via pytest. We want to explicitly ignore the
-        # cluster folders nested under the `tests/` folder.
-        filepaths = [
-            filepath
-            for filepath in Path(os.getcwd()).glob(f"**/{cluster_name}/cluster.yaml")
-            if "tests/" not in str(filepath)
-        ]
+    root_dir = Path(__file__).parent.parent
+    cluster_yaml_path = root_dir.joinpath(
+        f"config/clusters/{cluster_name}/cluster.yaml"
+    )
 
-    if len(filepaths) > 1:
-        raise FileExistsError(
-            "Multiple files found. "
-            + "Only ONE (1) cluster.yaml file should exist per cluster folder."
-        )
-    elif len(filepaths) == 0:
+    if not cluster_yaml_path.exists():
         raise FileNotFoundError(
             f"No cluster.yaml file exists for cluster {cluster_name}. "
             + "Please create one and then continue."
         )
-    else:
-        cluster_file = filepaths[0]
 
-    with open(cluster_file) as cf:
+    with open(cluster_yaml_path) as cf:
         cluster_config = yaml.load(cf)
 
-    if not os.path.dirname(cluster_file).endswith(cluster_config["name"]):
+    if cluster_yaml_path.parent.name != cluster_config["name"]:
         warnings.warn(
             "Cluster Name Mismatch: It is convention that the cluster name defined "
             + "in cluster.yaml matches the name of the parent directory. "
             + "Deployment won't be halted but please update this for consistency!"
         )
 
-    return cluster_file
+    return cluster_yaml_path
 
 
 @contextmanager
