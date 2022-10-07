@@ -1,5 +1,3 @@
-import hashlib
-import hmac
 import json
 import subprocess
 import tempfile
@@ -25,7 +23,7 @@ class Hub:
         self.cluster = cluster
         self.spec = spec
 
-    def get_generated_config(self, auth_provider: KeyProvider, secret_key):
+    def get_generated_config(self, auth_provider: KeyProvider):
         """
         Generate config automatically for each hub
 
@@ -220,50 +218,10 @@ class Hub:
                 "Auth0OAuthenticator"
             ] = auth_provider.get_client_creds(client, self.spec["auth0"]["connection"])
 
-        return self.apply_hub_helm_chart_fixes(generated_config, secret_key)
-
-    def apply_hub_helm_chart_fixes(self, generated_config, secret_key):
-        """
-        Modify generated_config based on what hub helm chart we're using.
-
-        Different hub helm charts require different pre-set config. For example,
-        anything deriving from 'basehub' needs all config to be under a 'basehub'
-        config. dask hubs require apiTokens, etc.
-
-        Ideally, these would be done declaratively. Until then, let's put all of
-        them in this function.
-        """
-        # FIXME: This section can be removed upon resolution of the below linked issue, where we would
-        #        instead just define a JupyterHub service under hub.services and
-        #        rely on the JupyterHub Helm chart to generate an api token if
-        #        needed.
-        #
-        #        Blocked by https://github.com/dask/dask-gateway/issues/473 and a
-        #        release including it.
-        #
+        # Due to nesting of charts on top of the basehub, our generated basehub
+        # config may need to be nested as well.
         if self.spec["helm_chart"] == "daskhub":
             generated_config = {"basehub": generated_config}
-
-            gateway_token = hmac.new(
-                secret_key, b"gateway-" + self.spec["name"].encode(), hashlib.sha256
-            ).hexdigest()
-            generated_config["dask-gateway"] = {
-                "gateway": {"auth": {"jupyterhub": {"apiToken": gateway_token}}}
-            }
-            generated_config["basehub"].setdefault("jupyterhub", {}).setdefault(
-                "hub", {}
-            ).setdefault("services", {})["dask-gateway"] = {"apiToken": gateway_token}
-
-        elif self.spec["helm_chart"] == "binderhub":
-            gateway_token = hmac.new(
-                secret_key, b"gateway-" + self.spec["name"].encode(), hashlib.sha256
-            ).hexdigest()
-            generated_config["dask-gateway"] = {
-                "gateway": {"auth": {"jupyterhub": {"apiToken": gateway_token}}}
-            }
-            generated_config["binderhub"].setdefault("jupyterhub", {}).setdefault(
-                "hub", {}
-            ).setdefault("services", {})["dask-gateway"] = {"apiToken": gateway_token}
 
         return generated_config
 
@@ -351,7 +309,7 @@ class Hub:
 
             self.spec["domain"] = domain_override_config["domain"]
 
-        generated_values = self.get_generated_config(auth_provider, secret_key)
+        generated_values = self.get_generated_config(auth_provider)
 
         if self.spec["helm_chart"] == "daskhub":
             # Install CRDs for daskhub before deployment

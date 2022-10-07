@@ -96,7 +96,7 @@ basehub:
                       service.setdefault("url", service_url)
                   break
           else:
-              print("dask-gateway service not found. Did you set jupyterhub.hub.services.dask-gateway.apiToken?")
+              print("dask-gateway service not found, this should not happen!")
 
 dask-gateway:
   enabled: true # Enabling dask-gateway will install Dask Gateway as a dependency.
