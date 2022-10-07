@@ -17,4 +17,5 @@ This allows us to exactly determine the spend on a cloud account, ensure the pri
 :maxdepth: 1
 :caption: How to create new cloud accounts for our supported providers
 new-gcp-project
+new-aws-account
 ```
