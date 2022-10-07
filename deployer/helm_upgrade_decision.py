@@ -88,11 +88,11 @@ def get_all_cluster_yaml_files(is_test=False):
     if is_test:
         # We are running a test via pytest. We only want to focus on the cluster
         # folders nested under the `tests/` folder.
-        return root_path.glob("tests/test-clusters/**/cluster.yaml")
+        return set(root_path.glob("tests/test-clusters/**/cluster.yaml"))
     else:
         # We are NOT running a test via pytest. We want to explicitly ignore the
         # cluster folders nested under the `tests/` folder.
-        return root_path.glob("config/clusters/**/cluster.yaml")
+        return set(root_path.glob("config/clusters/**/cluster.yaml"))
 
 
 def generate_hub_matrix_jobs(
