@@ -112,7 +112,7 @@ body:
     validations:
       required: true
 
-  - type: dropdown
+  - type: checkboxes
     id: features
     attributes:
       label: Extra features you'd like to enable
@@ -124,11 +124,10 @@ body:
         - **Specific cloud provider or datacenter**: If you have restrictions about which cloud provider to use, and which data center the hub should live in (e.g. if it is next to a specific dataset).
         - **Dedicated Scalable Dask Cluster** with [Dask Gateway](https://gateway.dask.org/): if you have very large datasets or otherwise need high-performance parallelizable computing via the cloud.
         - **Dedicated Kubernetes cluster**: If you need to run the infrastructure on your own cloud account, or otherwise wish to have a dedicated cluster.
-      multiple: true
       options:
-        - Specific cloud provider or datacenter (otherwise GCP)
-        - Dedicated Kubernetes cluster
-        - Scalable Dask Cluster
+        - label: Specific cloud provider or datacenter (otherwise GCP)
+        - label: Dedicated Kubernetes cluster
+        - label: Scalable Dask Cluster
     validations:
       required: false
 
