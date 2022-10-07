@@ -468,11 +468,9 @@ def exec_homes_shell(cluster_name, hub_name):
         hub.exec_homes_shell()
 
 
-def ensure_uptime_checks(cluster_name, notification_channel_id):
+def ensure_uptime_checks(cluster_name: str, notification_channel_id: str):
     """
-    Pop a shell with the home directories of the given hub mounted
-
-    Homes will be mounter under /home
+    Ensure uptime checks for *all* hubs are set up
     """
     config_file_path = find_absolute_path_to_cluster_file(cluster_name)
     with open(config_file_path) as f:
