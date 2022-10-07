@@ -333,9 +333,13 @@ class Hub:
 
         subprocess.check_call(cmd)
 
-    def create_uptime_check(self, project_name):
+    def create_uptime_check(self, project_name: str):
         """
         Create a simple HTTPS uptime check using GCP Monitoring.
+
+        project_name is the name of the GCP project under which GCP Uptime Checks
+        will be created. We should already be authenticated in a way that allows making
+        Uptime Check API requests to that project.
         """
         config = UptimeCheckConfig()
         config.display_name = f"{self.spec['domain']} on {self.cluster.spec['name']}"
@@ -360,7 +364,22 @@ class Hub:
             request={"parent": project_name, "uptime_check_config": config}
         )
 
-    def ensure_uptime_alert(self, project_name, uptime_check_id, notification_channel):
+    def ensure_uptime_alert(
+        self, project_name: str, uptime_check_id: str, notification_channel: str
+    ):
+        """
+        Ensure an alert is set up for a given uptime_check_id
+
+        project_name is the name of the GCP project under which GCP Alert Policy
+        will be created. We should already be authenticated in a way that allows making
+        Alert Policy API requests to that project.
+
+        uptime_check_id is the short id of the uptime check which should be monitored
+        by this Alert Policy. This must already exist.
+
+        notification_channel is the full id (of the form projects/<project-id>/notificationChannels/<id>)
+        which should receive the alerts when they are triggered.
+        """
         client = AlertPolicyServiceClient()
 
         existing_policy = list(
@@ -381,8 +400,11 @@ class Hub:
         config.display_name = f"{self.spec['domain']} on {self.cluster.spec['name']}"
         config.combiner = AlertPolicy.ConditionCombinerType.OR
 
+        # label values are super restricted, and can only be lowercase
         config.user_labels = {"check_id": uptime_check_id.lower()}
+
         config.notification_channels = [notification_channel]
+
         config.conditions = [
             AlertPolicy.Condition(
                 display_name=config.display_name,
@@ -398,8 +420,11 @@ class Hub:
                     aggregations=[
                         Aggregation(
                             group_by_fields=["resource.label.host"],
-                            alignment_period="300s",  # I don't know what this means
-                            per_series_aligner=Aggregation.Aligner.ALIGN_NEXT_OLDER,  # I also don't know what this means
+                            # https://cloud.google.com/monitoring/alerts/concepts-indepth#duration has
+                            # more information about alignment
+                            alignment_period="300s",
+                            per_series_aligner=Aggregation.Aligner.ALIGN_NEXT_OLDER,
+                            # Count each failure as '1' and a success as '0'
                             cross_series_reducer=Aggregation.Reducer.REDUCE_COUNT_FALSE,
                         )
                     ],

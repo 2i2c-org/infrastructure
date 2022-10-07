@@ -173,7 +173,7 @@ def main():
         help="Which cloud provider to generate a cluster for",
     )
 
-    # create-uptime-check subcommand
+    # ensure-uptime-checks subcommand
     ensure_uptime_checks_parser = subparsers.add_parser(
         "ensure-uptime-checks",
         help="Ensure Uptime Checks & Alerts are created in GCP Project",
