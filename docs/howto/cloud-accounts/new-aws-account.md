@@ -27,5 +27,14 @@ Now, [setup a new cluster](new-cluster:new-cluster) inside it via Terraform.
 
 ## Checking quotas and requesting increases
 
+Finally, we should check what quotas are enforced on the account and increase them as necessary[^3].
+
+1. Visit the [Service Quotas console](https://console.aws.amazon.com/servicequotas/home) and select "AWS services" from the left-hand side menu
+2. Search for the service you would like to manage the quotas for, e.g., "Amazon Elastic Kubernetes Service (Amazon EKS)"
+3. Select the quota you would like to manage, e.g., "Nodes per managed node group"
+4. Click the "Request quota increase" button in the "Recent quota increase requests" section of the page
+5. Fill in the form that pops up and change the quota value (must be greater than the current quota value), then click "Request"
+
 [^1]: AWS documentation on creating new accounts in an Organization: <https://docs.aws.amazon.com/organizations/latest/userguide/orgs_manage_accounts_create.html>
 [^2]: AWS documentation on managing account access: <https://docs.aws.amazon.com/organizations/latest/userguide/orgs_manage_accounts_access.html>
+[^3]: AWS documentation on service quotas: <https://docs.aws.amazon.com/general/latest/gr/aws_service_limits.html>
