@@ -4,7 +4,6 @@ support helm chart upgrading depending on an input list of filenames that have b
 added or modified in a GitHub Pull Request.
 """
 import fnmatch
-import os
 from pathlib import Path
 
 from rich.console import Console
@@ -84,26 +83,15 @@ def get_all_cluster_yaml_files(is_test=False):
     Returns:
         set[path obj]: A set of absolute paths to all cluster.yaml files in the repo
     """
+    root_path = Path(__file__).parent.parent
     # Get absolute paths
     if is_test:
         # We are running a test via pytest. We only want to focus on the cluster
         # folders nested under the `tests/` folder.
-        cluster_files = [
-            filepath
-            for filepath in Path(os.getcwd()).glob("**/cluster.yaml")
-            if "tests" in str(filepath)
-        ]
-    else:
-        # We are NOT running a test via pytest. We want to explicitly ignore the
-        # cluster folders nested under the `tests/` folder.
-        cluster_files = [
-            filepath
-            for filepath in Path(os.getcwd()).glob("**/cluster.yaml")
-            if "tests" not in str(filepath)
-        ]
+        return set(root_path.glob("tests/test-clusters/**/cluster.yaml"))
 
-    # Return unique absolute paths
-    return set(cluster_files)
+    # We are NOT running a test via pytest. We only care about the clusters under config/clusters
+    return set(root_path.glob("config/clusters/**/cluster.yaml"))
 
 
 def generate_hub_matrix_jobs(

@@ -30,6 +30,7 @@ import subprocess
 import tempfile
 from collections import defaultdict
 from contextlib import contextmanager
+from pathlib import Path
 
 from auth0.v3.authentication import GetToken
 from auth0.v3.management import Auth0
@@ -88,7 +89,8 @@ def get_auth0_inst(domain, client_id, client_secret):
 
 
 # Read in the auth0 client id and secret from a file
-auth0_secret_path = os.path.join(os.getcwd(), "config", "secrets.yaml")
+root_dir = Path(__file__).parent.parent
+auth0_secret_path = os.path.join(root_dir, "config", "secrets.yaml")
 with decrypt_file(auth0_secret_path) as decrypted_file_path:
     with open(decrypted_file_path) as f:
         auth0_config = yaml.load(f)

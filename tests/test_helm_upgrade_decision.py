@@ -16,12 +16,13 @@ from deployer.helm_upgrade_decision import (
 
 yaml = YAML(typ="safe", pure=True)
 case = TestCase()
+root_path = Path(__file__).parent.parent
 
 
 def test_get_all_cluster_yaml_files():
     expected_cluster_files = {
-        Path(os.getcwd()).joinpath("tests/test-clusters/cluster1/cluster.yaml"),
-        Path(os.getcwd()).joinpath("tests/test-clusters/cluster2/cluster.yaml"),
+        root_path.joinpath("tests/test-clusters/cluster1/cluster.yaml"),
+        root_path.joinpath("tests/test-clusters/cluster2/cluster.yaml"),
     }
 
     result_cluster_files = get_all_cluster_yaml_files(is_test=True)
@@ -31,9 +32,7 @@ def test_get_all_cluster_yaml_files():
 
 
 def test_generate_hub_matrix_jobs_one_hub():
-    cluster_file = Path(os.getcwd()).joinpath(
-        "tests/test-clusters/cluster1/cluster.yaml"
-    )
+    cluster_file = root_path.joinpath("tests/test-clusters/cluster1/cluster.yaml")
     with open(cluster_file) as f:
         cluster_config = yaml.load(f)
 
@@ -44,7 +43,7 @@ def test_generate_hub_matrix_jobs_one_hub():
     }
 
     modified_file = {
-        Path(os.getcwd()).joinpath("tests/test-clusters/cluster1/hub1.values.yaml"),
+        root_path.joinpath("tests/test-clusters/cluster1/hub1.values.yaml"),
     }
 
     expected_matrix_jobs = [
@@ -66,9 +65,7 @@ def test_generate_hub_matrix_jobs_one_hub():
 
 
 def test_generate_hub_matrix_jobs_many_hubs():
-    cluster_file = Path(os.getcwd()).joinpath(
-        "tests/test-clusters/cluster1/cluster.yaml"
-    )
+    cluster_file = root_path.joinpath("tests/test-clusters/cluster1/cluster.yaml")
     with open(cluster_file) as f:
         cluster_config = yaml.load(f)
 
@@ -79,8 +76,8 @@ def test_generate_hub_matrix_jobs_many_hubs():
     }
 
     modified_files = {
-        Path(os.getcwd()).joinpath("tests/test-clusters/cluster1/hub1.values.yaml"),
-        Path(os.getcwd()).joinpath("tests/test-clusters/cluster1/hub2.values.yaml"),
+        root_path.joinpath("tests/test-clusters/cluster1/hub1.values.yaml"),
+        root_path.joinpath("tests/test-clusters/cluster1/hub2.values.yaml"),
     }
 
     expected_matrix_jobs = [
@@ -111,9 +108,7 @@ def test_generate_hub_matrix_jobs_many_hubs():
 
 
 def test_generate_hub_matrix_jobs_all_hubs():
-    cluster_file = Path(os.getcwd()).joinpath(
-        "tests/test-clusters/cluster1/cluster.yaml"
-    )
+    cluster_file = root_path.joinpath("tests/test-clusters/cluster1/cluster.yaml")
     with open(cluster_file) as f:
         cluster_config = yaml.load(f)
 
@@ -173,9 +168,7 @@ def test_generate_hub_matrix_jobs_all_hubs():
 
 
 def test_generate_support_matrix_jobs_one_cluster():
-    cluster_file = Path(os.getcwd()).joinpath(
-        "tests/test-clusters/cluster1/cluster.yaml"
-    )
+    cluster_file = root_path.joinpath("tests/test-clusters/cluster1/cluster.yaml")
     with open(cluster_file) as f:
         cluster_config = yaml.load(f)
 
@@ -186,7 +179,7 @@ def test_generate_support_matrix_jobs_one_cluster():
     }
 
     modified_file = {
-        Path(os.getcwd()).joinpath("tests/test-clusters/cluster1/support.values.yaml"),
+        root_path.joinpath("tests/test-clusters/cluster1/support.values.yaml"),
     }
 
     expected_matrix_jobs = [
@@ -208,9 +201,7 @@ def test_generate_support_matrix_jobs_one_cluster():
 
 
 def test_generate_support_matrix_jobs_all_clusters():
-    cluster_file = Path(os.getcwd()).joinpath(
-        "tests/test-clusters/cluster1/cluster.yaml"
-    )
+    cluster_file = root_path.joinpath("tests/test-clusters/cluster1/cluster.yaml")
     with open(cluster_file) as f:
         cluster_config = yaml.load(f)
 
