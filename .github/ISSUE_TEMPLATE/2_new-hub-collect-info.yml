@@ -1,5 +1,5 @@
 name: 💻  New Hub - Collect Information
-description: Provide information about creating a new hub for 2i2c to operate
+description: Provide information about the new hub 2i2c will operate
 title: "[Collect Information] New Hub: {{ HUB NAME }}"
 labels: ["type: hub"]
 body:
@@ -40,7 +40,7 @@ body:
         - GitHub (e.g., @mygithubhandle)
         - Google (e.g., myemailaddress@gmail.org, or a Google-backed domain)
         - Institutional Provider via CILogon (e.g., username@institution.org)
-        - Username / Password via auth0 (https://auth0.com/docs/connections/database)
+        - Username / Password via auth0
         - Other (may not be possible, please specify in comments)
     validations:
       required: true
@@ -90,8 +90,8 @@ body:
       value: |
         # Hub user image
 
-        It is possible to customize the user image for the hub, as long as the image is in a public registry. For example, a [quay.io registry image](https://quay.io/).
-        See [the Infrastructure documentation on custom images](https://infrastructure.2i2c.org/en/latest/howto/customize/custom-image.html) for more information.
+        It is possible to customize the user image for the hub, as long as the image is in a public registry.
+        For example, a [quay.io registry image](https://quay.io/). See [the Infrastructure documentation on custom images](https://infrastructure.2i2c.org/en/latest/howto/customize/custom-image.html) for more information.
         Use this section to fill in relevant information:
 
   - type: input

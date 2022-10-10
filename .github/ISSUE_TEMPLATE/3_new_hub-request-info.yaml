@@ -1,5 +1,5 @@
 name: 📚  New Hub - Request Information
-description: Request information from the Community Representative the new hub 2i2c will create and operate
+description: Request information from the Community Representative about the new hub 2i2c will create and operate
 title: "[Request Information] New Hub: {{ HUB NAME }}"
 labels: ["type: hub"]
 body:
@@ -32,8 +32,8 @@ body:
         They will be the one responsible for filling in a `New Hub - Collect Information` new issue.
       value: |
         Hey @<!-- please replace this with the community rep GitHub handle -->!
-        Please open a [new issue](https://github.com/2i2c-org/infrastructure/issues/new?template=2_new-hub_provide_info.yml) and fill in all the information in the form.
-        If there are any questions about the form, please feel free to ask them in **this issue**.
+        Please open a [new issue](https://github.com/2i2c-org/infrastructure/issues/new?template=2_new-hub_provide_info.yml) and fill in the form.
+        If you have any questions, please feel free to ask them in **this issue**.
         After the form is filled in, an engineer will be assigned and will start deploying the new hub 🚀.
         Thank you!
     validations:
@@ -42,14 +42,12 @@ body:
   - type: checkboxes
     id: tasks-to-deploy
     attributes:
-      label: Tasks to complete the information gathering phase
+      label: Tasks to complete the information collection phase
       description: |
-        Tasks to perform to consider the information gathering phase completed and close this issue.
-
+        Tasks to perform to consider the information collection phase completed and close this issue.
       options:
         - label: Community Representative has all the information and tools to fill in a `New Hub - Collect Information` form
         - label: New Hub - Collect Information issue was opened by a Community Representative
-        - label: <link to new hub collect information issue>
         - label: Engineer has all the information needed to deploy a first iteration of the new hub requested
     validations:
       required: false
