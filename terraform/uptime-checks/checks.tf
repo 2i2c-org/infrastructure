@@ -16,6 +16,9 @@ resource "google_monitoring_uptime_check_config" "hub_simple_uptime_check" {
   display_name = "${each.value.domain} on ${each.value.cluster}"
   timeout      = "30s"
 
+  # Check every minute
+  period = "300s"
+
   http_check {
     # BinderHub has a different health check URL
     path           = each.value.helm_chart != "binderhub" ? "/hub/health" : "/health"
@@ -50,12 +53,13 @@ resource "google_monitoring_alert_policy" "hub_simple_uptime_alert" {
   conditions {
     display_name = "Simple Health Check Endpoint"
     condition_threshold {
-      filter          = <<-EOT
+      filter = <<-EOT
       resource.type = "uptime_url"
       AND metric.type = "monitoring.googleapis.com/uptime_check/check_passed"
       AND metric.labels.check_id = "${google_monitoring_uptime_check_config.hub_simple_uptime_check[each.key].uptime_check_id}"
       EOT
-      duration        = "60s"
+      # Alert after 10min of downtime, or 2 failed checks - checks are 5min apart
+      duration        = "600s"
       comparison      = "COMPARISON_GT"
       threshold_value = 1
       aggregations {
