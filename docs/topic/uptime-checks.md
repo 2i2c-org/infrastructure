@@ -2,11 +2,7 @@
 
 Ideally, when a hub is down, a machine alerts us - we do not have to wait for a user
 to report it to our helpdesk. While we aren't quite there, we currently have very simple
-uptime monitoring for all our hubs. [GCP Uptime Checks](https://cloud.google.com/monitoring/uptime-checks)
-are used (because they are free) to hit the `/hub/health` endpoint
-of the public URL of all our hubs. If these checks fail for 5 minutes, an alert is sent
-to our [PagerDuty](https://team-compass.2i2c.org/en/latest/projects/managed-hubs/incidents.html)
-notification channel.
+uptime monitoring for all our hubs with free [GCP Uptime Checks](https://cloud.google.com/monitoring/uptime-checks).
 
 ## Where are the checks?
 
@@ -16,30 +12,24 @@ has a few advantages:
 
 1. We do not have to implement the same functionality three times (one per cloud provider),
    as we would have to if this were to exist in the same project as the hub.
-2. We use a centralized PagerDuty for alerting, so this Notification Channel can exist in
-   only one place. Setting up this channel requires secrets, and we'll have to either add
-   secret handling to our terraform code or re-implement setting this up in python 3 times.
-3. These are all 'black box' external checks, so it does not particularly matter where they
+2. These are all 'black box' external checks, so it does not particularly matter where they
    come from.
 
 You can browse the existing checks [on the GCP Console](https://console.cloud.google.com/monitoring/uptime?project=two-eye-two-see)
 as well.
 
-## How does notification work?
+## When are notifications triggered?
 
-We use PagerDuty for notifying us whenever any of these checks fail. This is
-done via a GCP Notification Channel in the `two-eye-two-see` GCP project,
-created [following these
-instructions](https://cloud.google.com/monitoring/support/notification-options#pagerduty).
+Our uptime checks are performed every 5 minutes, and we alert if checks have failed for 11 minutes.
+This make sure there are at least 2 failed checks before we alert.
 
-```{note}
-This Notification Channel was created manually following instructions in the
-link provided, not automatically. We *must* automate this if we create another
-notification channel, but since a single notification channel is ok for how we
-use PagerDuty now, it is fine.
-```
+We are optimizing for *actionable alerts* that we can completely *trust*,
+and prevent any kind of alert fatigue for our engineers. The JupyterHub *does* get restarted during
+deployment, and this can cause a few seconds of downtime - and we do not want to alert in
+case the uptime check hits the hub *just* at that moment. We trade-off a few minutes of responsiveness
+for trust here.
 
-When any of the checks fail, they automatically open an Incident in the
+When an alert is triggered, it automatically opens an Incident in the
 [Managed JupyterHubs](https://2i2c-org.pagerduty.com/service-directory/PS10YJ3) service
 we maintain in PagerDuty. This also notifies the `#pagerduty-notifications` channel on
 the 2i2c slack, and kicks off [our incident response process](https://team-compass.2i2c.org/en/latest/projects/managed-hubs/incidents.html)
