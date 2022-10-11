@@ -63,7 +63,7 @@ This AWS IAM Role is managed via terraform.
       access to. Used along with the [user_buckets](howto:features:cloud-access:storage-buckets)
       terraform variable to enable the [scratch buckets](topic:features:cloud:scratch-buckets)
       feature.
-   3. (GCP only) `hub_namespace` is the full name of the hub, as hubs are put in Kubernetes
+   4. (GCP only) `hub_namespace` is the full name of the hub, as hubs are put in Kubernetes
       Namespaces that are the same as their names. This is explicitly specified here
       because `<hub-name-slug>` could possibly be truncated on GCP.
 
