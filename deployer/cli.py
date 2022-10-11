@@ -187,6 +187,7 @@ def main():
 
     ensure_uptime_checks_parser.add_argument(
         "--notification-channel-id",
+        # https://console.cloud.google.com/monitoring/alerting/notifications?project=two-eye-two-see
         default="projects/two-eye-two-see/notificationChannels/13354360469399183285",
         help="ID of GCP Notification channel to send alerts to",
     )
