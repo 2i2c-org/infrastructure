@@ -1,6 +1,6 @@
-name: 💻  New Hub - Collect Information
+name: 💻  New Hub - Provide Information
 description: Provide information about the new hub 2i2c will operate
-title: "[Collect Information] New Hub: {{ HUB NAME }}"
+title: "[Provide Information] New Hub: {{ HUB NAME }}"
 labels: ["type: hub"]
 body:
   - type: markdown

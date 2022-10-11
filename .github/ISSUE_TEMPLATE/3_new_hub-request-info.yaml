@@ -8,7 +8,8 @@ body:
       value: |
         # Ask for a new 2i2c JupyterHub!
 
-        This template is designed to help you ask information from the Community Representative about a new 2i2c Hub so that the Engineer can set it up properly. Make sure this issue is closed when a `New Hub - Collect Information` issue if completely filled in. We can update information as we learn more.
+        This template is designed to help you collect information from the Community Representative about a new 2i2c Hub so that the Engineer can set it up properly.
+        Make sure this issue is closed when a `New Hub - Provide Information` issue is completely filled in. We can update information as we learn more.
 
         # Community Information
 
@@ -29,11 +30,11 @@ body:
       label: Community Representative(s)
       description: |
         The main point-of-contact for this hub, and the person who requests changes to the hub on behalf of the community.
-        They will be the one responsible for filling in a `New Hub - Collect Information` new issue.
+        They will be the ones responsible for filling in a `New Hub - Provide Information` new issue.
       value: |
         Hey @<!-- please replace this with the community rep GitHub handle -->!
         Please open a [new issue](https://github.com/2i2c-org/infrastructure/issues/new?template=2_new-hub_provide_info.yml) and fill in the form.
-        If you have any questions, please feel free to ask them in **this issue**.
+        If you have questions about any section of the for, please feel free to ask them in **this issue** before.
         After the form is filled in, an engineer will be assigned and will start deploying the new hub 🚀.
         Thank you!
     validations:
@@ -47,7 +48,7 @@ body:
         Tasks to perform to consider the information collection phase completed and close this issue.
       options:
         - label: Community Representative has all the information and tools to fill in a `New Hub - Collect Information` form
-        - label: New Hub - Collect Information issue was opened by a Community Representative
+        - label: New Hub - Provide Information issue was opened by a Community Representative
         - label: Engineer has all the information needed to deploy a first iteration of the new hub requested
     validations:
       required: false
