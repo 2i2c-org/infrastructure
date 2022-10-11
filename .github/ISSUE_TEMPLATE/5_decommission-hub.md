@@ -38,7 +38,6 @@ Usually, it is because it was a hub that we created for a workshop/conference an
   - `helm --namespace HUB_NAME delete HUB_NAME`
   - `kubectl delete namespace HUB_NAME`
 - [ ] Delete the hub's authentication application on auth0, GitHub or CILogon
-- [ ] Remove the [uptime check](https://console.cloud.google.com/monitoring/uptime?referrer=search&project=two-eye-two-see) and associated alert policy for this hub
 
 #### Phase III - Cluster Removal
 
