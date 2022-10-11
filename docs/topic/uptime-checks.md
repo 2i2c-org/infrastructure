@@ -44,11 +44,17 @@ When any of the checks fail, they automatically open an Incident in the
 we maintain in PagerDuty. This also notifies the `#pagerduty-notifications` channel on
 the 2i2c slack, and kicks off [our incident response process](https://team-compass.2i2c.org/en/latest/projects/managed-hubs/incidents.html)
 
-## Changing the configuration of the checks
+## How are the checks set up?
 
-If you change the configuration of the checks themselves (such as their frequency,
-target URL, etc) - `ensure-uptime-checks` will *not* modify currently existing checks. The new
-config will only be applied to new checks. You will need to run
-`python3 deployer ensure-uptime-checks --force-recreate` - this will delete all existing
-UptimeChecks and AlertPolicies and recreate them, making sure your changes are applied to
-everything.
+We use Terraform in the [terraform/uptime-checks](https://github.com/2i2c-org/infrastructure/tree/HEAD/terraform/uptime-checks)
+directory to set up the checks, notifications channel and alerting policies. This allows new
+checks to be created *automatically* whenever a new hub or cluster is added, with no manual
+steps required.
+
+ Terraform is run in our continuous deployment pipeline on GitHub actions at the
+ end of every deployment, using [a GCP
+ ServiceAccount](https://console.cloud.google.com/iam-admin/serviceaccounts/details/114061400394069109140?project=two-eye-two-see)
+ that was manually created. It has just enough permissions to access the
+ terraform state (on GCS), the uptime checks, notification channels and alert
+ policies. *Nothing destructive* can happen if this `terraform apply` goes
+ wrong, so it is alright to run this without human supervision on GitHub Actions

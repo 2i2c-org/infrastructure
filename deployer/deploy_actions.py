@@ -20,10 +20,6 @@ from config_validation import (
     validate_support_config,
 )
 from file_acquisition import find_absolute_path_to_cluster_file, get_decrypted_file
-from google.cloud.monitoring_v3 import (
-    AlertPolicyServiceClient,
-    UptimeCheckServiceClient,
-)
 from helm_upgrade_decision import (
     assign_staging_jobs_for_missing_clusters,
     discover_modified_common_files,
@@ -469,81 +465,3 @@ def exec_homes_shell(cluster_name, hub_name):
         hubs = cluster.hubs
         hub = next((hub for hub in hubs if hub.spec["name"] == hub_name), None)
         hub.exec_homes_shell()
-
-
-def ensure_uptime_checks(
-    cluster_name: str, notification_channel_id: str, force_recreate: bool = False
-):
-    """
-    Ensure uptime checks for *all* hubs are set up
-
-    cluster_name is the *cluster* that is in the *project* where we want to
-    create the uptime checks. We are using this as a convenience function to
-    authenticate to the appropriate GCP project.
-
-    notification_channel is the full id (of the form projects/<project-id>/notificationChannels/<id>)
-    which should receive the alerts when they are triggered.
-
-    force_recreate will delete all existing checks and alerts and recreate them.
-    This is necessary if you change the *config* of the checks or alerts, to keep
-    our code for ensuring UptimeChecks and AlertPolicies are in sync with what we
-    have in the code.
-    """
-    config_file_path = find_absolute_path_to_cluster_file(cluster_name)
-    with open(config_file_path) as f:
-        checks_cluster = Cluster(yaml.load(f), config_file_path.parent)
-
-    if checks_cluster.spec["provider"] != "gcp":
-        print("Uptime checks can be only created *in* GCP projects")
-        print(f"Cluster {cluster_name} uses {checks_cluster.spec['provider']}")
-        sys.exit(1)
-
-    project = checks_cluster.spec["gcp"]["project"]
-
-    # Authenticate to the project in which we will create these uptime checks
-    with checks_cluster.auth():
-
-        # Get a list of *all* clusters
-        cluster_files = get_all_cluster_yaml_files()
-
-        client = UptimeCheckServiceClient()
-
-        if force_recreate:
-            # We first delete all AlertPolicies, as UptimeChecks can't be
-            # deleted if an AlertPolicy exists for them
-            alert_client = AlertPolicyServiceClient()
-            for ap in alert_client.list_alert_policies({"name": f"projects/{project}"}):
-                alert_client.delete_alert_policy({"name": ap.name})
-                print(f"Deleted AlertPolicy {ap.name}")
-
-            # Now we delete all UptimeChecks
-            for uc in client.list_uptime_check_configs(
-                {"parent": f"projects/{project}"}
-            ):
-                client.delete_uptime_check_config({"name": uc.name})
-                print(f"Deleted UptimeCheck {uc.name}")
-
-        # Get a list of all existing uptime checks
-        existing_checks = client.list_uptime_check_configs(
-            request={"parent": f"projects/{project}"}
-        )
-        existing_check_hosts = [
-            c.monitored_resource.labels["host"] for c in existing_checks
-        ]
-
-        for cf in cluster_files:
-            with open(cf) as f:
-                cluster = Cluster(yaml.load(f), cf.parent)
-
-                for hub in cluster.hubs:
-                    if hub.spec["domain"] not in existing_check_hosts:
-                        # Create uptime check *only* if needed
-                        check = hub.create_uptime_check(f"projects/{project}")
-                        hub.create_uptime_alert(
-                            f"projects/{project}",
-                            check.name.split("/")[-1],
-                            notification_channel_id,
-                        )
-                        print(
-                            f"Created uptime check & alert policy for {hub.spec['domain']}"
-                        )

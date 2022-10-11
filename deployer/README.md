@@ -31,12 +31,12 @@ $ python deployer [sub-command]
 
 ```bash
 usage: deployer [-h]
-                {deploy,validate,deploy-support,deploy-grafana-dashboards,use-cluster-credentials,generate-helm-upgrade-jobs,run-hub-health-check,exec-homes-shell,generate-cluster,ensure-uptime-checks} ...
+                {deploy,validate,deploy-support,deploy-grafana-dashboards,use-cluster-credentials,generate-helm-upgrade-jobs,run-hub-health-check,exec-homes-shell,generate-cluster} ...
 
 A command line tool to perform various functions related to deploying and maintaining a JupyterHub running on kubernetes infrastructure
 
 positional arguments:
-  {deploy,validate,deploy-support,deploy-grafana-dashboards,use-cluster-credentials,generate-helm-upgrade-jobs,run-hub-health-check,exec-homes-shell,generate-cluster,ensure-uptime-checks}
+  {deploy,validate,deploy-support,deploy-grafana-dashboards,use-cluster-credentials,generate-helm-upgrade-jobs,run-hub-health-check,exec-homes-shell,generate-cluster}
                         Available subcommands
     deploy              Install/upgrade the helm charts of JupyterHubs on a cluster
     validate            Validate the cluster.yaml configuration itself, as well as the provided non-encrypted helm chart values files for each hub or the specified hub.
@@ -52,8 +52,6 @@ positional arguments:
                         Run a health check against a given hub deployed on a given cluster
     exec-homes-shell    Pop a shell with home directories of given hub mounted
     generate-cluster    Generate files for a new cluster
-    ensure-uptime-checks
-                        Ensure Uptime Checks & Alerts are created in GCP Project
 
 options:
   -h, --help            show this help message and exit
@@ -218,22 +216,6 @@ positional arguments:
 optional arguments:
   -h, --help            show this help message and exit
   --check-dask-scaling  For daskhubs, optionally check that dask workers can be scaled
-```
-
-### `ensure-uptime-checks`
-
-This subcommand ensures there is a simple HTTPS check for every hub we deploy. If these checks
-fail, we will get a notification via PagerDuty.
-
-```
-usage: deployer ensure-uptime-checks [-h] [--notification-cluster-id NOTIFICATION_CLUSTER_ID] [--notification-channel-id NOTIFICATION_CHANNEL_ID]
-
-options:
-  -h, --help            show this help message and exit
-  --notification-cluster-id NOTIFICATION_CLUSTER_ID
-                        Cluster with credentials to access the project with uptime checks
-  --notification-channel-id NOTIFICATION_CHANNEL_ID
-                        ID of GCP Notification channel to send alerts to
 ```
 
 ## Sub-scripts

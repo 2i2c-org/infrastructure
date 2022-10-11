@@ -13,7 +13,6 @@ from deploy_actions import (
     deploy,
     deploy_grafana_dashboards,
     deploy_support,
-    ensure_uptime_checks,
     exec_homes_shell,
     generate_helm_upgrade_jobs,
     run_hub_health_check,
@@ -172,30 +171,6 @@ def main():
         choices=["aws"],
         help="Which cloud provider to generate a cluster for",
     )
-
-    # ensure-uptime-checks subcommand
-    ensure_uptime_checks_parser = subparsers.add_parser(
-        "ensure-uptime-checks",
-        help="Ensure Uptime Checks & Alerts are created in GCP Project",
-    )
-
-    ensure_uptime_checks_parser.add_argument(
-        "--notification-cluster-id",
-        default="2i2c",
-        help="Cluster with credentials to access the project with uptime checks",
-    )
-
-    ensure_uptime_checks_parser.add_argument(
-        "--notification-channel-id",
-        # https://console.cloud.google.com/monitoring/alerting/notifications?project=two-eye-two-see
-        default="projects/two-eye-two-see/notificationChannels/13354360469399183285",
-        help="ID of GCP Notification channel to send alerts to",
-    )
-    ensure_uptime_checks_parser.add_argument(
-        "--force-recreate",
-        action="store_true",
-        help="Delete & Recreate all uptime checks & alert policies",
-    )
     # === End section ===#
 
     args = argparser.parse_args()
@@ -232,9 +207,3 @@ def main():
         )
     elif args.action == "generate-cluster":
         generate_cluster(args.cloud_provider, args.cluster_name)
-    elif args.action == "ensure-uptime-checks":
-        ensure_uptime_checks(
-            args.notification_cluster_id,
-            args.notification_channel_id,
-            args.force_recreate,
-        )

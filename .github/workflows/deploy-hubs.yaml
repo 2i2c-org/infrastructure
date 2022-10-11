@@ -329,13 +329,25 @@ jobs:
       - name: Checkout repo
         uses: actions/checkout@v3
 
-      - name: Setup deploy for ${{ matrix.jobs.cluster_name }} cluster
-        uses: ./.github/actions/setup-deploy
+      - uses: hashicorp/setup-terraform@v2
+
+      - name: Install sops
+        uses: mdgreenwald/mozilla-sops-action@v1
         with:
-          # Use GCP, as we use GCP uptime checks
-          provider: gcp
-          GCP_KMS_DECRYPTOR_KEY: ${{ secrets.GCP_KMS_DECRYPTOR_KEY }}
+          version: v3.7.2
+
+      - name: Setup sops credentials to decrypt repo secrets
+        uses: google-github-actions/auth@v0
+        with:
+          credentials_json: "${{ inputs.GCP_KMS_DECRYPTOR_KEY }}"
 
       - name: ensure uptime checks are set up
         run: |
-          python3 deployer ensure-uptime-checks
+          cd terraform/uptime-checks
+          # Decrypt the GCP ServiceAccount key with permissions to run terrafomr
+          sops -d enc-service-account-key.secret.json > service-account-key.json
+          export GOOGLE_APPLICATION_CREDENTIALS=service-account-key.json
+          # Setup Terraform
+          terraform init
+          # Run terraform automatically
+          terraform apply -auto-approve
