@@ -30,8 +30,7 @@ $ python deployer [sub-command]
 **Command line usage:**
 
 ```bash
-usage: deployer [-h]
-                {deploy,validate,deploy-support,deploy-grafana-dashboards,use-cluster-credentials,generate-helm-upgrade-jobs,run-hub-health-check,exec-homes-shell,generate-cluster} ...
+usage: deployer [-h] {deploy,validate,deploy-support,deploy-grafana-dashboards,use-cluster-credentials,generate-helm-upgrade-jobs,run-hub-health-check,exec-homes-shell,generate-cluster} ...
 
 A command line tool to perform various functions related to deploying and maintaining a JupyterHub running on kubernetes infrastructure
 
