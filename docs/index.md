@@ -57,6 +57,7 @@ topic/terraform.md
 topic/cluster-design.md
 topic/secrets.md
 topic/troubleshooting.md
+topic/uptime-checks.md
 ```
 
 ## Reference

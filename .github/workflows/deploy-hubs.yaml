@@ -318,3 +318,48 @@ jobs:
           max_attempts: 3
           command: |
             python deployer run-hub-health-check ${{ matrix.jobs.cluster_name }} ${{ matrix.jobs.hub_name }}
+
+  # This job should run after we deploy staging or prod hubs
+  # It makes sure there is an uptime check and an alerting policy for all our hubs
+  ensure-uptime-checks:
+    runs-on: ubuntu-latest
+    needs: [upgrade-support-and-staging, upgrade-prod-hubs]
+
+    # always() is added as it seems to be a magic function to ensure a job can
+    # run at all without being skipped if a previous job has had any failures.
+    # https://docs.github.com/en/actions/learn-github-actions/expressions#always
+    # We want this job to run if *any* hub was deployed, production or staging.
+    if: |
+      always() && needs.filter-generate-jobs.result == 'success' &&
+      (github.event_name == 'push' && contains(github.ref, 'master')) &&
+      (needs.filter-generate-jobs.outputs.filtered-prod-hub-matrix-jobs != '[]' ||
+      needs.generate-jobs.outputs.support-and-staging-matrix-jobs != '[]')
+
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v3
+
+      # Uptime checks are set up and managed via terraform
+      - uses: hashicorp/setup-terraform@v2
+
+      # We use sops to store encrypted GCP ServiceAccount Key that terraform uses
+      # to run, as well as PagerDuty config terraform uses
+      - name: Install sops
+        uses: mdgreenwald/mozilla-sops-action@v1
+
+      # Authenticate with the correct KMS key that sops will use.
+      - name: Setup sops credentials to decrypt repo secrets
+        uses: google-github-actions/auth@v0
+        with:
+          credentials_json: "${{ inputs.GCP_KMS_DECRYPTOR_KEY }}"
+
+      - name: ensure uptime checks are set up
+        run: |
+          cd terraform/uptime-checks
+          # Decrypt the GCP ServiceAccount key with permissions to run terraform
+          sops -d enc-service-account-key.secret.json > service-account-key.json
+          export GOOGLE_APPLICATION_CREDENTIALS=service-account-key.json
+          # Setup Terraform
+          terraform init
+          # Run terraform automatically
+          terraform apply -auto-approve
