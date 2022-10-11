@@ -15,7 +15,6 @@ required:
   - ingress-nginx
   - prometheus
   - grafana
-  - nfs-server-provisioner
   - nvidiaDevicePlugin
   - prometheusIngressAuthSecret
   - cryptnono
@@ -43,12 +42,6 @@ properties:
   # values passed to it and are not imposing restrictions on them in this helm
   # chart.
   grafana:
-    type: object
-    additionalProperties: true
-  # nfs-server-provisioner is a dependent helm chart, we rely on its schema
-  # validation for values passed to it and are not imposing restrictions on them
-  # in this helm chart.
-  nfs-server-provisioner:
     type: object
     additionalProperties: true
   # Enables  https://github.com/yuvipanda/cryptnono/ to prevent cryptomining
