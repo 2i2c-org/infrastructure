@@ -103,6 +103,7 @@ nvidiaDevicePlugin:
   # For GKE specific image, defaults to false
   gke:
     enabled: false
+    version: "stable"
   # For eksctl / AWS specific daemonset, defaults to false
   aws:
     enabled: false

@@ -21,6 +21,7 @@
 # node and the daemonset can just use that image.
 
 {{- if .Values.nvidiaDevicePlugin.gke.enabled -}}
+{{- if eq .Values.nvidiaDevicePlugin.gke.version "stable" }}
 # Documented from https://cloud.google.com/kubernetes-engine/docs/how-to/gpus#installing_drivers
 # From https://raw.githubusercontent.com/GoogleCloudPlatform/container-engine-accelerators/master/nvidia-driver-installer/cos/daemonset-preloaded.yaml
 apiVersion: apps/v1
@@ -107,4 +108,5 @@ spec:
       containers:
       - image: "gcr.io/google-containers/pause:2.0"
         name: pause
+{{- end }}
 {{- end }}
