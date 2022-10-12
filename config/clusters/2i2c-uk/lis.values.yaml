@@ -30,7 +30,7 @@ jupyterhub:
           url: https://www.lis.ac.uk
   singleuser:
     image:
-      # Image build repo: https://github.com/lisds/lisds-images
+      # https://hub.docker.com/r/lisacuk/lishub-base
       name: "lisacuk/lishub-base"
       tag: "b183052"
   hub:
