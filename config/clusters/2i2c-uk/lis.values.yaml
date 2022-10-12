@@ -31,7 +31,7 @@ jupyterhub:
   singleuser:
     image:
       # Image build repo: https://github.com/lisds/lisds-images
-      name: "lisds/lisds-base"
+      name: "lisacuk/lishub-base"
       tag: "b183052"
   hub:
     config:
