@@ -36,10 +36,9 @@ The process of automatically updating and adding hubs is almost the same for all
 
 To deploy a new hub, follow these steps:
 
-1. [Ask the Community Representative to fill in this issue template](https://github.com/2i2c-org/infrastructure/issues/new?assignees=&labels=type%3A+hub&template=2_new-hub.yml&title=New+Hub%3A+%3CHub+name%3E).
-   This will create a "New Hub" issue and ask the representative questions that are important for understanding how to set up their hub.
+1. Make sure a [`New Hub - Provide Information`](https://github.com/2i2c-org/infrastructure/issues/new?assignees=&labels=type%3A+hub&template=2_new-hub-provide-info.yml&title=%Provide+Information%5D+New+Hub%3A+%7B%7B+HUB+NAME+%7D%7D) issue was created and filled in with enough information from the Community Representative.
    Once that issue is created, move to the next step.
-2. Decide whether you'll deploy on a pre-existing Kubernetes cluster, or if you'll need to create a new one.
+2. If no option was explicitly asked by the Community Representative, decide whether you'll deploy on a pre-existing Kubernetes cluster, or if you'll need to create a new one.
    See [](cluster:when-to-deploy) for information to help you decide.
 3. Determine the **hub helm chart** that is needed.
    Hub helm charts are pre-configured deployments for certain kinds of JupyterHubs.
