@@ -57,9 +57,6 @@ basehub:
           # Don't display a dask-gateway entry under 'services',
           # as dask-gateway has no UI
           display: false
-      networkPolicy:
-        # FIXME: Enable this when dask-gateway chart v0.9.1 or higher is used
-        enabled: false
       extraConfig:
         daskhub-01-add-dask-gateway-values: |
           # 1. Sets `DASK_GATEWAY__PROXY_ADDRESS` in the singleuser environment.
