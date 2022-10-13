@@ -109,6 +109,7 @@ variable "db_engine_version" {
 }
 
 variable "db_instance_identifier" {
+  default     = "shared-db"
   description = <<-EOT
   Human readable instance name to give the database server.
 
