@@ -48,7 +48,7 @@ This will generate the following files:
 2. `eksctl/ssh-keys/secret/<cluster-name>.key`, a `sops` encrypted ssh private key that can be
    used to ssh into the kubernetes nodes.
 3. `eksctl/ssh-keys/<cluster-name>.pub`, an ssh public key used by `eksctl` to grant access to
-   the prviate key.
+   the private key.
 4. `terraform/aws/projects/<cluster-name>.tfvars`, a terraform variables file that will setup
    most of the non EKS infrastructure.
 
