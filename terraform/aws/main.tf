@@ -6,8 +6,8 @@ terraform {
     }
 
     mysql = {
-      source  = "winebarrel/mysql"
-      version = "1.10.6"
+      source  = "petoju/mysql"
+      version = "3.0.20"
     }
 
   }

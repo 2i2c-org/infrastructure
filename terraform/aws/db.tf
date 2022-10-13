@@ -64,10 +64,11 @@ resource "aws_db_instance" "db" {
   skip_final_snapshot    = true
   apply_immediately      = true
   availability_zone      = var.cluster_nodes_location
-  parameter_group_name   = aws_db_parameter_group.db.name
+  parameter_group_name   = aws_db_parameter_group.db[0].name
 }
 
 resource "aws_db_parameter_group" "db" {
+  count  = var.db_enabled ? 1 : 0
   name   = var.db_instance_identifier
   family = "${var.db_engine}${var.db_engine_version}"
 
@@ -94,10 +95,14 @@ resource "random_password" "db_readonly_password" {
 }
 
 provider "mysql" {
-  endpoint = aws_db_instance.db[0].endpoint
+  # We only want to set this up if db is enabled, otherwise there is no
+  # mysql endpoint for this provider to connect to. These are all still 'required'
+  # parameters, so we set them to empty whenever possible. endpoint is validated to be
+  # not an empty string, so we set it to "does-not-exist"
+  endpoint = var.db_enabled ? aws_db_instance.db[0].endpoint : "does-not-exist"
 
-  username = aws_db_instance.db[0].username
-  password = random_password.db_root_password[0].result
+  username = var.db_enabled ? aws_db_instance.db[0].username : ""
+  password = var.db_enabled ? random_password.db_root_password[0].result : ""
 }
 
 resource "mysql_user" "user" {
@@ -119,7 +124,7 @@ resource "mysql_grant" "user" {
 }
 
 output "db_helm_config" {
-  value = yamlencode({
+  value = var.db_enabled ? yamlencode({
     "jupyterhub" : {
       "custom" : {
         "singleuserAdmin" : {
@@ -149,6 +154,6 @@ output "db_helm_config" {
         },
       }
     }
-  })
+  }) : ""
   sensitive = true
 }
