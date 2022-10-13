@@ -76,6 +76,10 @@ can read.
 jsonnet <your-cluster>.jsonnet > <your-cluster>.eksctl.yaml
 ```
 
+```{tip}
+There's no requirement to commit the `*.eksctl.yaml` file to the repository since we can regenerate it using the above `jsonnet` command.
+```
+
 ### Create the cluster
 
 Now you're ready to create the cluster!
