@@ -39,7 +39,7 @@ We automatically generate the files required to setup a new cluster:
 You can generate these with:
 
 ```bash
-python3 deployer generate-cluster aws <cluster-name>
+python3 deployer generate-cluster <cluster-name> aws
 ```
 
 This will generate the following files:
