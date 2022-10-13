@@ -84,6 +84,10 @@ Now you're ready to create the cluster!
 eksctl create cluster  --config-file <your-cluster>.eksctl.yaml
 ```
 
+```{tip}
+Make sure the run this command **inside** the `eksctl` directory, otherwise it cannot discover the `ssh-keys` subfolder.
+```
+
 This might take a few minutes.
 
 If any errors are reported in the config (there is a schema validation step),
