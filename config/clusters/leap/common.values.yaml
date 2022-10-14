@@ -117,7 +117,6 @@ basehub:
               choices:
                 k80:
                   display_name: NVidia Tesla K80
-                  default: true
                   slug: k80
                   kubespawner_override:
                     node_selector:
@@ -126,6 +125,7 @@ basehub:
                 t4:
                   display_name: NVidia Tesla T4
                   slug: t4
+                  default: true
                   kubespawner_override:
                     node_selector:
                       node.kubernetes.io/instance-type: n1-standard-8
@@ -138,12 +138,12 @@ basehub:
                   default: true
                   slug: "tensorflow"
                   kubespawner_override:
-                    image: "pangeo/ml-notebook:f84546a"
+                    image: "pangeo/ml-notebook:2022.10.13"
                 pytorch:
                   display_name: Pangeo PyTorch ML Notebook
                   slug: "pytorch"
                   kubespawner_override:
-                    image: "pangeo/pytorch-notebook:f84546a"
+                    image: "pangeo/pytorch-notebook:2022.10.13"
           kubespawner_override:
             mem_limit: 30G
             mem_guarantee: 24G
