@@ -58,6 +58,9 @@ basehub:
       extraEnv:
         GH_SCOPED_CREDS_CLIENT_ID: "Iv1.0c7df3d4b3191b2f"
         GH_SCOPED_CREDS_APP_URL: https://github.com/apps/leap-hub-push-access
+        # Temporarily set for *all* pods, including pods without any GPUs,
+        # to work around https://github.com/2i2c-org/infrastructure/issues/1530
+        NVIDIA_DRIVER_CAPABILITIES: compute,utility
       profileList:
         # The mem-guarantees are here so k8s doesn't schedule other pods
         # on these nodes. They need to be just under total allocatable
@@ -147,8 +150,6 @@ basehub:
           kubespawner_override:
             mem_limit: 30G
             mem_guarantee: 24G
-            environment:
-              NVIDIA_DRIVER_CAPABILITIES: compute,utility
             extra_resource_limits:
               nvidia.com/gpu: "1"
 dask-gateway:
