@@ -28,6 +28,7 @@ links to figure out how to authenticate to this project from your terminal.
 - [For accounts setup with AWS SSO](cloud-access:aws-sso:terminal)
 - [For accounts without AWS SSO](cloud-access:aws-iam:terminal)
 
+(new-cluster:aws:generate-cluster-files)=
 ### Generate cluster files
 
 We automatically generate the files required to setup a new cluster:
@@ -39,7 +40,7 @@ We automatically generate the files required to setup a new cluster:
 You can generate these with:
 
 ```bash
-python3 deployer generate-cluster aws <cluster-name>
+python3 deployer generate-cluster <cluster-name> aws
 ```
 
 This will generate the following files:
@@ -48,7 +49,7 @@ This will generate the following files:
 2. `eksctl/ssh-keys/secret/<cluster-name>.key`, a `sops` encrypted ssh private key that can be
    used to ssh into the kubernetes nodes.
 3. `eksctl/ssh-keys/<cluster-name>.pub`, an ssh public key used by `eksctl` to grant access to
-   the prviate key.
+   the private key.
 4. `terraform/aws/projects/<cluster-name>.tfvars`, a terraform variables file that will setup
    most of the non EKS infrastructure.
 
@@ -76,12 +77,20 @@ can read.
 jsonnet <your-cluster>.jsonnet > <your-cluster>.eksctl.yaml
 ```
 
+```{tip}
+There's no requirement to commit the `*.eksctl.yaml` file to the repository since we can regenerate it using the above `jsonnet` command.
+```
+
 ### Create the cluster
 
 Now you're ready to create the cluster!
 
 ```bash
 eksctl create cluster  --config-file <your-cluster>.eksctl.yaml
+```
+
+```{tip}
+Make sure the run this command **inside** the `eksctl` directory, otherwise it cannot discover the `ssh-keys` subfolder.
 ```
 
 This might take a few minutes.
@@ -100,6 +109,10 @@ aws eks update-kubeconfig --name=<your-cluster-name> --region=<your-cluster-regi
 you at least one core node running.
 
 ### Grant access to other users
+
+```{note}
+This section is still required even if the account is managed by SSO.
+```
 
 AWS EKS has a strange access control problem, where the IAM user who creates
 the cluster has [full access without any visible settings
@@ -125,47 +138,53 @@ This should eventually be converted to use an [IAM Role](https://docs.aws.amazon
 instead, so we need not give each individual user access, but just grant access to the
 role - and users can modify them as they wish.
 
+## Deploy Terraform-managed infrastructure
 
-### Create account with finely scoped permissions for automatic deployment
+Our AWS *terraform* code is now used to deploy supporting infrastructure for the EKS cluster, including:
 
-Our AWS *terraform* code can then be used to create an AWS IAM user with just
-enough permissions for automatic deployment of hubs from CI/CD. Since these
-credentials are checked-in to our git repository and made public, they should
-have least amount of permissions possible.
+- An IAM identity account for use with our CI/CD system
+- Appropriately networked EFS storage to serve as an NFS server for hub home directories
+- Optionally, setup a [shared database](features:shared-db:aws)
+- Optionally, setup [user buckets](howto:features:cloud-access:storage-buckets)
 
-1. Create a `.tfvars` file for this cluster under `terraform/aws/projects`.
-   Currently, you only have to specify `region`.
+We still store [terraform state](https://www.terraform.io/docs/language/state/index.html)
+in GCP, so you also need to have `gcloud` set up and authenticated already.
 
-2. Initialize terraform for use with AWS. We still store [terraform
-   state](https://www.terraform.io/docs/language/state/index.html)
-   in GCP, so you also need to have `gcloud` set up and authenticated already.
-
+1. The steps in [](new-cluster:aws:generate-cluster-files) will have created a default `.tfvars` file.
+   This file can either be used as-is or edited to enable the optional features listed above.
+2. Initialise terraform for use with AWS:
    ```bash
    cd terraform/aws
    terraform init
    ```
 
-3. Create the appropriate IAM users and permissions.
-
+3. Deploy the terraform-managed infrastructure
    ```bash
    terraform apply -var-file projects/<your-cluster-name>.tfvars
    ```
-
    Observe the plan carefully, and accept it.
 
-4. Fetch credentials we can encrypt and check-in to our repository so
+### Export account credentials with finely scoped permissions for automatic deployment
+
+In the previous step, we will have created an AWS IAM user with just
+enough permissions for automatic deployment of hubs from CI/CD. Since these
+credentials are checked-in to our git repository and made public, they should
+have least amount of permissions possible.
+
+1. Fetch credentials we can encrypt and check-in to our repository so
    they are accessible from our automatic deployment.
 
    ```bash
    terraform output -raw continuous_deployer_creds > ../../config/clusters/<your-cluster-name>/deployer-credentials.secret.json
-   sops --output config/clusters/<your-cluster-name>/enc-deployer-credentials.secret.json --encrypt ../../config/clusters/<your-cluster-name>/deployer-credentials.secret.json
+   cd ../..  # sops commands must be run from the root of the repo
+   sops --output config/clusters/<your-cluster-name>/enc-deployer-credentials.secret.json --encrypt config/clusters/<your-cluster-name>/deployer-credentials.secret.json
    ```
 
    Double check to make sure that the `config/clusters/<your-cluster-name>/enc-deployer-credentials.secret.json` file is
    actually encrypted by `sops` before checking it in to the git repo. Otherwise
    this can be a serious security leak!
 
-5. Grant the freshly created IAM user access to the kubernetes cluster. As this requires
+2. Grant the freshly created IAM user access to the kubernetes cluster. As this requires
    passing in some parameters that match the created cluster, we have a `terraform output`
    that can give you the exact command to run.
 
@@ -182,10 +201,11 @@ have least amount of permissions possible.
    Run the command output by `terraform output -raw eksctl_iam_command`, and that should
    give the continuous deployer user access.
 
-6. In your hub deployment file (`config/clusters/<your-cluster-name>/cluster.yaml`),
-   provide enough information for the deployer to find the correct credentials.
+3. Create a minimal `cluster.yaml` file (`config/clusters/<your-cluster-name>/cluster.yaml`),
+   and provide enough information for the deployer to find the correct credentials.
 
    ```yaml
+   name: <your-cluster-name>
    provider: aws
    aws:
       key: enc-deployer-credentials.secret.json
@@ -198,11 +218,29 @@ have least amount of permissions possible.
    The `aws.key` file is defined _relative_ to the location of the `cluster.yaml` file.
    ```
 
-7. Test the access by running `python deployer use-cluster-credentials <cluster-name>` and
+4. Test the access by running `python deployer use-cluster-credentials <cluster-name>` and
    running `kubectl get node`. It should show you the provisioned node on the cluster if
    everything works out ok.
 
+## Export the EFS IP address for home directories
+
+The terraform run in the previous step will have also created an
+[EFS instance](https://aws.amazon.com/efs/) to store the hub home directories,
+and sets up the network correctly to mount it.
+
+Get the address a hub on this cluster should use for connecting to NFS with
+`terraform output nfs_server_dns`, and set it in the hub's config under
+`nfs.pv.serverIP` (nested under `basehub` when necessary) in the appropriate
+`<hub>.values.yaml` file.
+>>>>>>> upstream/master
+
 ## Scaling up a nodegroup in a cluster
+
+```{note}
+This section is optional.
+You will most likely need it for Event Hubs that are expecting users at a
+specific time and do not wish to make their users wait for node scale-ups.
+```
 
 `eksctl` creates nodepools that are mostly immutable, except for autoscaling properties -
 minimum and maximum number of nodes. In certain cases, it might be helpful to 'scale up'
@@ -225,6 +263,8 @@ server startup faster.
 
    ```bash
    jsonnet <your-cluster>.jsonnet > <your-cluster>.eksctl.yaml
+   ```
+
 3. Use `eksctl` to scale the cluster.
 
    ```bash
@@ -245,16 +285,6 @@ server startup faster.
    completed the scaling operation. This is flexible, as the scaling operation
    might need to be timed differently in each case. The goal is to make sure
    that the `minSize` parameter in the github repository matches reality.
-
-## EFS for home directories
-
-The terraform run in the previous step would have also created an
-[EFS instance](https://aws.amazon.com/efs/) for use as home directories,
-and sets up the network correctly to mount it.
-
-Get the address the hub should use for connecting to NFS with
-`terraform output nfs_server_dns`, and set it in the hub's config under
-`nfs.pv.serverIP` (nested under `basehub` when necessary).
 
 ## Add the cluster to be automatically deployed
 

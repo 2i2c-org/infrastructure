@@ -117,15 +117,15 @@ basehub:
               choices:
                 tensorflow:
                   display_name: Pangeo Tensorflow ML Notebook
-                  default: true
                   slug: "tensorflow"
                   kubespawner_override:
-                    image: "pangeo/ml-notebook:f84546a"
+                    image: "pangeo/ml-notebook:2022.10.13"
                 pytorch:
                   display_name: Pangeo PyTorch ML Notebook
+                  default: true
                   slug: "pytorch"
                   kubespawner_override:
-                    image: "pangeo/pytorch-notebook:f84546a"
+                    image: "pangeo/pytorch-notebook:2022.10.13"
           kubespawner_override:
             mem_limit: 30G
             mem_guarantee: 24G
