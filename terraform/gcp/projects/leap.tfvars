@@ -96,6 +96,17 @@ notebook_nodes = {
       count: 1
     }
   },
+  "gpu-t4" : {
+    min : 0,
+    max : 100,
+    machine_type : "n1-standard-8",
+    labels: {},
+    gpu: {
+      enabled: true,
+      type: "nvidia-tesla-t4",
+      count: 1
+    }
+  },
 }
 
 dask_nodes = {

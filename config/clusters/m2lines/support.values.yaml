@@ -1,6 +1,7 @@
 nvidiaDevicePlugin:
   gke:
     enabled: true
+    version: "latest"
 
 grafana:
   ingress:
