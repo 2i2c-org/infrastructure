@@ -40,3 +40,15 @@ output "continuous_deployer_creds" {
   value     = jsonencode(local.cd_creds)
   sensitive = true
 }
+
+output "eksctl_iam_command" {
+  description = "eksctl command to grant cluster access to our CD"
+  value       = <<-EOT
+   eksctl create iamidentitymapping \
+      --cluster ${var.cluster_name} \
+      --region ${var.region} \
+      --arn ${aws_iam_user.continuous_deployer.arn} \
+      --username ${aws_iam_user.continuous_deployer.name}  \
+      --group system:masters
+  EOT
+}

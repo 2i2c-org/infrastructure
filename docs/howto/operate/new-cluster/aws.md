@@ -165,9 +165,12 @@ have least amount of permissions possible.
    actually encrypted by `sops` before checking it in to the git repo. Otherwise
    this can be a serious security leak!
 
-5. Grant the freshly created IAM user access to the kubernetes cluster.
+5. Grant the freshly created IAM user access to the kubernetes cluster. As this requires
+   passing in some parameters that match the created cluster, we have a `terraform output`
+   that can give you the exact command to run.
 
    ```bash
+   $ terraform output -raw eksctl_iam_command
    eksctl create iamidentitymapping \
       --cluster <your-cluster-name> \
       --region <your-cluster-region> \
@@ -175,6 +178,9 @@ have least amount of permissions possible.
       --username hub-continuous-deployer \
       --group system:masters
    ```
+
+   Run the command output by `terraform output -raw eksctl_iam_command`, and that should
+   give the continuous deployer user access.
 
 6. In your hub deployment file (`config/clusters/<your-cluster-name>/cluster.yaml`),
    provide enough information for the deployer to find the correct credentials.
@@ -191,6 +197,10 @@ have least amount of permissions possible.
    ```{note}
    The `aws.key` file is defined _relative_ to the location of the `cluster.yaml` file.
    ```
+
+7. Test the access by running `python deployer use-cluster-credentials <cluster-name>` and
+   running `kubectl get node`. It should show you the provisioned node on the cluster if
+   everything works out ok.
 
 ## Scaling up a nodegroup in a cluster
 
