@@ -1,9 +1,11 @@
+(features:shared-db)=
 # Setup a shared database for all users on the hub
 
 We can setup a *centralized* database that can be used by various users on the hub.
 The most common use case here is to have hub admins load useful data into the
 database, which is then read by various users on the hub (who only have readonly access).
 
+(features:shared-db:aws)=
 ## AWS
 
 We currently only support this on AWS, using managed [AWS RDS instances](https://aws.amazon.com/rds/). Our terraform only supports MySQL at this point, but it should be
