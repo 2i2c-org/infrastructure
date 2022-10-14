@@ -109,7 +109,9 @@ you at least one core node running.
 
 ### Grant access to other users
 
-<!-- Is this section still relevant if the account is managed by SSO? -->
+```{note}
+This section is still required even if the account is managed by SSO.
+```
 
 AWS EKS has a strange access control problem, where the IAM user who creates
 the cluster has [full access without any visible settings
