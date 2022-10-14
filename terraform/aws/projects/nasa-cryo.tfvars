@@ -26,7 +26,3 @@ hub_cloud_permissions = {
     extra_iam_policy: ""
   },
 }
-
-# Sarah added this value because terraform asked for it to be provided on the
-# command line when she executed `tf plan`
-db_instance_identifier = "nasa-cryo"
