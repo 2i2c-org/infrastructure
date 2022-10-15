@@ -24,15 +24,31 @@ Our uptime checks are performed every 5 minutes, and we alert if checks have fai
 This make sure there are at least 2 failed checks before we alert.
 
 We are optimizing for *actionable alerts* that we can completely *trust*,
-and prevent any kind of alert fatigue for our engineers. The JupyterHub *does* get restarted during
-deployment, and this can cause a few seconds of downtime - and we do not want to alert in
-case the uptime check hits the hub *just* at that moment. We trade-off a few minutes of responsiveness
-for trust here.
+and prevent any kind of alert fatigue for our engineers.
+
+### JupyterHub health checks
+
+The JupyterHub *does* get restarted during deployment, and this can cause a few
+seconds of downtime - and we do not want to alert in case the uptime check hits
+the hub *just* at that moment. We trade-off a few minutes of responsiveness for
+trust here. `/hub/health` is the endpoint checked for hubs, and `/health` is checked
+for binderhub.
 
 When an alert is triggered, it automatically opens an Incident in the
 [Managed JupyterHubs](https://2i2c-org.pagerduty.com/service-directory/PS10YJ3) service
 we maintain in PagerDuty. This also notifies the `#pagerduty-notifications` channel on
 the 2i2c slack, and kicks off [our incident response process](https://team-compass.2i2c.org/en/latest/projects/managed-hubs/incidents.html)
+
+### Prometheus health checks
+
+Our prometheus instances are protected by auth, so we just check to see if we get a
+`401 Unauthorized` response from the prometheus instance.
+
+When an alert is triggered, it automatically opens an Incident in the
+[Cluster Prometheus](https://2i2c-org.pagerduty.com/service-directory/P4B7MEA) service
+we maintain in PagerDuty. This also notifies the `#pagerduty-notifications` channel on
+the 2i2c slack, and kicks off [our incident response process](https://team-compass.2i2c.org/en/latest/projects/managed-hubs/incidents.html)
+
 
 ## How are the checks set up?
 
