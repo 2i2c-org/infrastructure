@@ -96,6 +96,8 @@ new files.
 We use terraform to provision cloud infrastructure and modify it directly.
 We then deploy applications on top of that infrastructure via [Helm](tools:helm).
 
+The minimum required version is `1.3`.
+
 ## Google Cloud tools
 
 [`google-cloud-sdk`](https://cloud.google.com/sdk/docs/install) is the primary
