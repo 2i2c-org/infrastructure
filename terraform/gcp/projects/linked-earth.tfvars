@@ -4,6 +4,9 @@ project_id = "linked-earth-hubs"
 zone   = "us-central1-c"
 region = "us-central1"
 
+billing_account_id  = "018C36-9A47B4-82AE21"
+budget_alert_amount = "800"
+
 k8s_versions = {
   min_master_version : "1.29.1-gke.1589018",
   core_nodes_version : "1.29.1-gke.1589018",

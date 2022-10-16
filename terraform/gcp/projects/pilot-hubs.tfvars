@@ -5,6 +5,9 @@ zone             = "us-central1-b"
 region           = "us-central1"
 regional_cluster = false
 
+billing_account_id  = "0157F7-E3EA8C-25AC3C"
+budget_alert_amount = "1250"
+
 k8s_versions = {
   # NOTE: This isn't a regional cluster / highly available cluster, when
   #       upgrading the control plane, there will be ~5 minutes of k8s not being

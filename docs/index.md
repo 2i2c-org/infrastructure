@@ -88,6 +88,7 @@ topic/billing/index.md
 topic/monitoring-alerting/index.md
 topic/features.md
 topic/resource-allocation.md
+topic/budget-alerts.md
 ```
 
 ## Reference

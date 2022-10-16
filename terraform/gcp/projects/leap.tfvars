@@ -4,6 +4,9 @@ project_id = "leap-pangeo"
 # prometheus requires more memory than a n2-highmem-2 can provide.
 core_node_machine_type = "n2-highmem-4"
 
+billing_account_id  = "01A164-923D17-3199D9"
+budget_alert_amount = "2000"
+
 k8s_versions = {
   min_master_version : "1.29.1-gke.1589018",
   core_nodes_version : "1.29.1-gke.1589018",

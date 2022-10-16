@@ -27,6 +27,9 @@ regional_cluster       = false
 core_node_machine_type = "n2-highmem-4"
 enable_private_cluster = true
 
+# We don't have enough rights to make billing alerts
+billing_alert_enabled = false
+
 k8s_versions = {
   # NOTE: This isn't a regional cluster / highly available cluster, when
   #       upgrading the control plane, there will be ~5 minutes of k8s not being

@@ -437,15 +437,3 @@ variable "container_repos" {
   repo2docker-built images to.
   EOT
 }
-
-variable "enable_logging" {
-  type        = bool
-  default     = true
-  description = <<-EOT
-  Conditionally enable usage logs to be written to a bucket. This is generally a
-  useful feature so is OPT-OUT.
-
-  When true, a bucket for storing usage logs is created with the appropriate
-  access policy.
-  EOT
-}
