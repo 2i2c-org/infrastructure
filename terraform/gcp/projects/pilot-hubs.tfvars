@@ -1,6 +1,9 @@
 prefix     = "pilot-hubs"
 project_id = "two-eye-two-see"
 
+billing_account_id = "0157F7-E3EA8C-25AC3C"
+budget_alert_amount = "1250"
+
 core_node_machine_type = "n1-highmem-4"
 
 # Multi-tenant cluster, network policy is required to enforce separation between hubs

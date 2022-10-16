@@ -3,6 +3,9 @@ project_id             = "pangeo-integration-te-3eea"
 core_node_machine_type = "n1-highmem-4"
 enable_private_cluster = true
 
+# We don't have enough rights to make billing alerts
+billing_alert_enabled = false
+
 # Multi-tenant cluster, network policy is required to enforce separation between hubs
 enable_network_policy  = true
 

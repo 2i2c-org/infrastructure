@@ -3,11 +3,11 @@ terraform {
   required_providers {
     google = {
       source  = "google"
-      version = "4.11.0"
+      version = "4.40.0"
     }
     google-beta = {
       source  = "google-beta"
-      version = "4.11.0"
+      version = "4.40.0"
     }
     kubernetes = {
       version = "2.8.0"
@@ -15,6 +15,12 @@ terraform {
   }
 }
 
+provider "google" {
+  # This is required for Billing Alerts to work
+  # See warning in https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/billing_budget
+  user_project_override = true
+  billing_project       = var.project_id
+}
 data "google_client_config" "default" {}
 
 provider "kubernetes" {

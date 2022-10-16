@@ -58,6 +58,7 @@ topic/cluster-design.md
 topic/secrets.md
 topic/troubleshooting.md
 topic/uptime-checks.md
+topic/budget-alerts.md
 ```
 
 ## Reference

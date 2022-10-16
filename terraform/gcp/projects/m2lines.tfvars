@@ -1,3 +1,6 @@
+billing_account_id = "0157F7-E3EA8C-25AC3C"
+budget_alert_amount = "1000"
+
 prefix                 = "m2lines"
 project_id             = "m2lines-hub"
 core_node_machine_type = "n1-highmem-4"

@@ -30,6 +30,17 @@ The _minimum_ inputs this file requires are:
   Primary identifier to 'group' together resources.
 - `project_id`: GCP Project ID to create resources in.
   Should be the id, rather than display name of the project.
+- `billing_account_id`: The billing account id associated with the
+  project, used to setup budget alerts. You can find this by going
+  into the `Billing` panel on the cloud console. If we don't have
+  access to the billing account, set `budget_alert_enabled` variable
+  to false.
+- `budget_alert_amount`: The amount of money that we don't want to go
+  over every month for this project. An alert will be sent to
+  `support@2i2c.org` if the *forecasted* spend at the end of the month
+  goves over this number, or if actual spend goes over 80% of this number.
+  See [](topic:budget-alerts) for more information. It defaults to USD as
+  currency, but you can choose other currencies by setting `budget_alert_currency`.
 - `regional_cluster`: Set to true to provision a [GKE Regional
   Highly Available cluster](https://cloud.google.com/kubernetes-engine/docs/concepts/regional-clusters).
   Costs ~70$ a month, but worth it for the added reliability for most

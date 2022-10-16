@@ -1,3 +1,6 @@
+billing_account_id = "018C36-9A47B4-82AE21"
+budget_alert_amount = "800"
+
 prefix           = "linked-earth"
 project_id       = "linked-earth-hubs"
 zone             = "us-central1-c"

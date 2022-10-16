@@ -1,3 +1,7 @@
+billing_account_id = "015AF3-346967-3DD18B"
+budget_alert_currency = "EUR"
+budget_alert_amount = "600"
+
 prefix     = "meom-ige"
 project_id = "meom-ige-cnrs"
 

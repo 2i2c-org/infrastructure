@@ -1,3 +1,6 @@
+billing_account_id = "01A164-923D17-3199D9"
+budget_alert_amount = "2000"
+
 prefix                 = "leap"
 project_id             = "leap-pangeo"
 core_node_machine_type = "n1-highmem-4"

@@ -299,12 +299,45 @@ variable "hub_cloud_permissions" {
 }
 
 variable "container_repos" {
-  type        = list
+  type        = list(any)
   default     = []
   description = <<-EOT
   A list of container repositories to create in Google Artifact Registry to store Docker
   images. Each entry is the name of the hub namespace in the cluster. If deploying a
   BinderHub, definitely add the namespace here so that there is somewhere to push the
   repo2docker-built images to.
+  EOT
+}
+
+variable "billing_account_id" {
+  type        = string
+  description = <<-EOT
+  ID of the billing account used for this project. Used to set up alerts
+  for budget forecasts
+  EOT
+}
+
+variable "budget_alert_currency" {
+  type        = string
+  default     = "USD"
+  description = <<-EOT
+  Currency used for budget alerts
+  EOT
+}
+
+variable "budget_alert_amount" {
+  type        = string
+  description = <<-EOT
+  Amount of *forecasted spend* at which to send a billing alert
+  EOT
+}
+
+variable "budget_alert_enabled" {
+  type        = bool
+  default     = true
+  description = <<-EOT
+  Enable budget alerts.
+
+  Disable in cases where we do not have enough permissions on the billing account.
   EOT
 }
