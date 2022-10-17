@@ -60,7 +60,8 @@ prometheus:
       hub.jupyter.org/network-access-hub: "true"
     persistentVolume:
       size: 100Gi
-    retention: 90d
+    # Keep data for at least 1 year
+    retention: 366d
     service:
       type: ClusterIP
   # make sure we collect metrics on pods by app/component at least
