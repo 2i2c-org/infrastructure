@@ -158,7 +158,12 @@ in GCP, so you also need to have `gcloud` set up and authenticated already.
    terraform init
    ```
 
-3. Deploy the terraform-managed infrastructure
+3. Create a new [terraform workspace](topic:terraform:workspaces)
+   ```{bash}
+   terraform workspace new <your-cluster-name>
+   ```
+
+4. Deploy the terraform-managed infrastructure
    ```bash
    terraform apply -var-file projects/<your-cluster-name>.tfvars
    ```
