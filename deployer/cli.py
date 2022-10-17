@@ -77,8 +77,8 @@ def main():
         type=str,
         # This version must match what is listed in daskhub's Chart.yaml file
         # https://github.com/2i2c-org/infrastructure/blob/HEAD/helm-charts/daskhub/Chart.yaml#L14
-        default="2022.6.1",
-        help="For daskhubs, the version of dask-gateway to install for the CRDs. Default: 2022.6.1",
+        default="2022.10.0",
+        help="For daskhubs, the version of dask-gateway to install for the CRDs. Default: 2022.10.0",
     )
 
     # Validate subcommand

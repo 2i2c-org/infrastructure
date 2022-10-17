@@ -75,7 +75,7 @@ optional arguments:
   --config-path CONFIG_PATH
                         File to read secret deployment configuration from
   --dask-gateway-version DASK_GATEWAY_VERSION
-                        For daskhubs, the version of dask-gateway to install for the CRDs. Default: 2022.6.1
+                        For daskhubs, the version of dask-gateway to install for the CRDs. Default: 2022.10.0
 ```
 
 ### `validate`
