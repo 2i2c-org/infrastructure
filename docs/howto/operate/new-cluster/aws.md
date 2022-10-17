@@ -232,7 +232,6 @@ Get the address a hub on this cluster should use for connecting to NFS with
 `terraform output nfs_server_dns`, and set it in the hub's config under
 `nfs.pv.serverIP` (nested under `basehub` when necessary) in the appropriate
 `<hub>.values.yaml` file.
->>>>>>> upstream/master
 
 ## Scaling up a nodegroup in a cluster
 
