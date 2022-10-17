@@ -28,5 +28,6 @@ prometheus:
             - prometheus.gcp.pangeo.2i2c.cloud
     resources:
       limits:
+        # Increase limits here as this isn't too small a cluster
         cpu: 2
-        memory: 16Gi
+        memory: 4Gi
