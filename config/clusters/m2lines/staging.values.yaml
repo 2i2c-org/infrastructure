@@ -7,6 +7,7 @@ basehub:
       extraEnv:
         SCRATCH_BUCKET: gcs://m2lines-scratch-staging/$(JUPYTERHUB_USER)
         PANGEO_SCRATCH: gcs://m2lines-scratch-staging/$(JUPYTERHUB_USER)
+        PERSISTENT_BUCKET: gcs://m2lines-persistent-staging/$(JUPYTERHUB_USER)
     hub:
       config:
         GitHubOAuthenticator:

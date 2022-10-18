@@ -15,4 +15,5 @@ per-user-db
 login-page
 image
 shared-db
+buckets
 ```

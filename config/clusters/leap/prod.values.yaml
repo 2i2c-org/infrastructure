@@ -6,6 +6,7 @@ basehub:
     singleuser:
       extraEnv:
         SCRATCH_BUCKET: gcs://leap-scratch/$(JUPYTERHUB_USER)
+        PERSISTENT_BUCKET: gcs://leap-persistent/$(JUPYTERHUB_USER)
         PANGEO_SCRATCH: gcs://leap-scratch/$(JUPYTERHUB_USER)
     hub:
       config:

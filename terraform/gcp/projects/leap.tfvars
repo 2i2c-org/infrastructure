@@ -24,17 +24,24 @@ user_buckets = {
   "scratch": {
     "delete_after": 7
   }
+  # For https://github.com/2i2c-org/infrastructure/issues/1230#issuecomment-1278183441
+  "persistent": {
+    "delete_after": null
+  },
+  "persistent-staging": {
+    "delete_after": null
+  }
 }
 
 hub_cloud_permissions = {
   "staging" : {
     requestor_pays : true,
-    bucket_admin_access: ["scratch-staging"],
+    bucket_admin_access: ["scratch-staging", "persistent-staging"],
     hub_namespace: "staging"
   },
   "prod" : {
     requestor_pays : true,
-    bucket_admin_access: ["scratch"],
+    bucket_admin_access: ["scratch", "persistent"],
     hub_namespace: "prod"
   }
 }

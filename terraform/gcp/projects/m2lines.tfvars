@@ -19,7 +19,15 @@ user_buckets = {
   },
   "scratch": {
     "delete_after": 7
+  },
+  # For https://2i2c.freshdesk.com/a/tickets/218
+  "persistent": {
+    "delete_after": null
+  },
+  "persistent-staging": {
+    "delete_after": null
   }
+
 }
 
 # Setup notebook node pools
@@ -142,12 +150,12 @@ dask_nodes = {
 hub_cloud_permissions = {
   "staging" : {
     requestor_pays : true,
-    bucket_admin_access: ["scratch-staging"],
+    bucket_admin_access: ["scratch-staging", "persistent-staging"],
     hub_namespace: "staging"
   },
   "prod" : {
     requestor_pays : true,
-    bucket_admin_access: ["scratch"],
+    bucket_admin_access: ["scratch", "persistent"],
     hub_namespace: "prod"
   },
 }
