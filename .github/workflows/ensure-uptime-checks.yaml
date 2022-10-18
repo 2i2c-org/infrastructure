@@ -20,7 +20,7 @@ on:
 concurrency: uptime-checks
 
 # This environment variable triggers the deployer to colourise print statments in the
-# GitHug Actions logs for easy reading
+# GitHub Actions logs for easy reading
 env:
   TERM: xterm
 
