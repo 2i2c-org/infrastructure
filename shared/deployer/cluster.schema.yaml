@@ -7,8 +7,6 @@ properties:
     description: |
       Name of the cluster, used primarily to identify it in
       the deploy script. This value should match the parent folder name.
-  image_repo:
-    type: string
   support:
     type: object
     additionalProperties: false

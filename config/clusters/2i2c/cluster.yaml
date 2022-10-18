@@ -1,5 +1,4 @@
 name: 2i2c
-image_repo: "quay.io/2i2c/2i2c-hubs-image"
 provider: gcp
 gcp:
   key: enc-deployer-credentials.secret.json

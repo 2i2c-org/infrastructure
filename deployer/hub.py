@@ -91,12 +91,6 @@ class Hub:
                             }
                         ],
                     },
-                    "singleuser": {
-                        # If image_repo isn't set, just have an empty image dict
-                        "image": {"name": self.cluster.spec["image_repo"]}
-                        if "image_repo" in self.cluster.spec
-                        else {},
-                    },
                     "hub": {
                         "config": {},
                         "initContainers": [
