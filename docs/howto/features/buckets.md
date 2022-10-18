@@ -26,7 +26,7 @@ on why users want this!
    `delete_after` specifies the number of days after *object creation
    time* the object will be automatically cleaned up - this is
    very helpful for 'scratch' buckets that are temporary. Set to
-   `null` to prevent this cleaning up process from happening.
+   `null` to prevent this cleaning up process from happening, e.g., if users want a persistent bucket.
 
 2. Enable access to these buckets from the hub by [editing `hub_cloud_permissions`](howto:features:cloud-access:access-perms)
    in the same `.tfvars` file. Follow all the steps listed there - this
