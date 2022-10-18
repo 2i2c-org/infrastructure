@@ -105,9 +105,6 @@ nvidiaDevicePlugin:
   gke:
     enabled: false
     version: "stable"
-  # For eksctl / AWS specific daemonset, defaults to false
-  aws:
-    enabled: false
 
 # Enables  https://github.com/yuvipanda/cryptnono/ to prevent cryptomining
 cryptnono:
