@@ -24,6 +24,7 @@ jobs:
           - cluster_name: awi-ciroh
           - cluster_name: callysto
           - cluster_name: 2i2c-uk
+          - cluster_name: nasa-cryo
     steps:
       - name: Checkout repo
         uses: actions/checkout@v3
