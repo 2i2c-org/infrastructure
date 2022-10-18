@@ -23,7 +23,7 @@ we might need to do something different than if it does on day 30. If it is expe
 to overshoot by 500% vs by 10$, our actions might be different. One valid action is
 we just adjust the forecast. As an organization, we need more experience with costs
 to figure out what the right thing to do is. So our current primary goal would
-be to work with our stakeholders and gather that texperience.
+be to work with our stakeholders and gather that experience.
 
 ## Where are these alerts sent?
 
