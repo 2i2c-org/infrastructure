@@ -59,7 +59,7 @@ basehub:
       # User image repo: https://github.com/pangeo-data/pangeo-docker-images
       image:
         name: pangeo/pangeo-notebook
-        tag: "2022.10.13"
+        tag: "2022.10.18"
       profileList:
         # The mem-guarantees are here so k8s doesn't schedule other pods
         # on these nodes. They need to be just under total allocatable
@@ -122,13 +122,13 @@ basehub:
                   display_name: Pangeo Tensorflow ML Notebook
                   slug: "tensorflow"
                   kubespawner_override:
-                    image: "pangeo/ml-notebook:2022.10.13"
+                    image: "pangeo/ml-notebook:2022.10.18"
                 pytorch:
                   display_name: Pangeo PyTorch ML Notebook
                   default: true
                   slug: "pytorch"
                   kubespawner_override:
-                    image: "pangeo/pytorch-notebook:2022.10.13"
+                    image: "pangeo/pytorch-notebook:2022.10.18"
           kubespawner_override:
             mem_limit: 30G
             mem_guarantee: 24G
