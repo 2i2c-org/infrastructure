@@ -31,9 +31,9 @@ jobs:
             # To bump multiple subchart versions, provide the chart name and a URL to
             # a published list of versions in this dictionary.
             chart_urls: '{"binderhub": "https://raw.githubusercontent.com/jupyterhub/helm-chart/gh-pages/index.yaml"}'
-          - name: "cryptnono"
+          - name: "support"
             chart_path: "helm-charts/support/Chart.yaml"
-            chart_urls: '{"cryptnono": "https://yuvipanda.github.io/cryptnono/index.yaml"}'
+            chart_urls: '{"cryptnono": "https://yuvipanda.github.io/cryptnono/index.yaml", "ingress-nginx": "https://kubernetes.github.io/ingress-nginx", "grafana": "https://grafana.github.io/helm-charts", "prometheus": "https://prometheus-community.github.io/helm-charts"}'
 
     steps:
       # We want tests to be run on the Pull Request that gets opened by the next step,
