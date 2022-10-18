@@ -28,9 +28,12 @@ basehub:
           operated_by:
             name: 2i2c
             url: https://2i2c.org
+          # Ideally, this community would like to list more than one funder
+          # Issue tracking implementation of this feature:
+          # https://github.com/2i2c-org/default-hub-homepage/issues/16
           funded_by:
-            name: ""
-            url: ""
+            name: "NASA ICESat-2 Science Team"
+            url: https://icesat-2.gsfc.nasa.gov/science_definition_team
     hub:
       config:
         Authenticator:
