@@ -4,6 +4,9 @@ project_id             = "callysto-202316"
 zone                   = "northamerica-northeast1-b"
 region                 = "northamerica-northeast1"
 
+# We don't have enough rights to make billing alerts
+billing_alert_enabled = false
+
 core_node_machine_type = "n1-highmem-4"
 enable_network_policy  = true
 
