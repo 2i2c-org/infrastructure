@@ -1,6 +1,12 @@
 prometheusIngressAuthSecret:
   enabled: true
 
+cluster-autoscaler:
+  enabled: true
+  autoDiscovery:
+    clusterName: nasa-cryo
+  awsRegion: us-west-2
+
 grafana:
   ingress:
     hosts:
