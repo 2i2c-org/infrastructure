@@ -1,6 +1,6 @@
-name: 💻  New Hub - Provide Information
-description: Provide information about the new hub 2i2c will operate
-title: "[Provide Information] New Hub: {{ HUB NAME }}"
+name: 💻  New Hub - Request deployment
+description: Request a new hub for 2i2c to operate and provide information about it
+title: "[Request deployment] New Hub: {{ HUB NAME }}"
 labels: ["type: hub"]
 body:
   - type: markdown
