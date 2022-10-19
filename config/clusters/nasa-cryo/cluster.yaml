@@ -38,3 +38,5 @@ hubs:
       # to the helm upgrade command in, and that has meaning. Please check
       # that you intend for these files to be applied in this order.
       - common.values.yaml
+      - prod.values.yaml
+      - enc-prod.secret.values.yaml
