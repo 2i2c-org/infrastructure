@@ -20,7 +20,7 @@ basehub:
         templateVars:
           org:
             name: Cryo in the Cloud
-            logo_url: https://github.com/CryoInTheCloud/CryoCloudWebsite/blob/main/cryocloud.png
+            logo_url: https://raw.githubusercontent.com/CryoInTheCloud/CryoCloudWebsite/main/cryocloud.png
             url: https://github.com/CryoInTheCloud
           designed_by:
             name: 2i2c
