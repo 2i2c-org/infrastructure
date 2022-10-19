@@ -60,7 +60,6 @@ basehub:
           scope:
             - read:org
     singleuser:
-      serviceAccountName: cloud-user-sa
       defaultUrl: /lab
       # User image repo: https://github.com/CryoInTheCloud/CryoCloudWebsite/tree/main/conda
       image:
