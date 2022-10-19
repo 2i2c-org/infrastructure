@@ -34,7 +34,7 @@ body:
       value: |
         Hey @<!-- please replace this with the community rep GitHub handle -->!
         Please open a [💻 New Hub - Request deployment](https://github.com/2i2c-org/infrastructure/issues/new/choose) and fill in the form.
-        If you have questions about any section of the for, please feel free to ask them in **this issue** before.
+        If you have questions about any section of the form, ask them in **this issue** beforehand.
         After the form is filled in, an engineer will be assigned and will start deploying the new hub 🚀.
         Thank you!
     validations:
