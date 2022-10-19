@@ -33,8 +33,8 @@ body:
         They will be the ones responsible for filling in a `New Hub - Provide Information` new issue.
       value: |
         Hey @<!-- please replace this with the community rep GitHub handle -->!
-        Please open a [New Hub - Provide Information](https://github.com/2i2c-org/infrastructure/issues/new?assignees=&labels=type%3A+hub&template=2_new-hub-provide-info.yml&title=%Provide+Information%5D+New+Hub%3A+%7B%7B+HUB+NAME+%7D%7D) and fill in the form.
-        If you have questions about any section of the for, please feel free to ask them in **this issue** before.
+        Please open a [💻 New Hub - Request deployment](https://github.com/2i2c-org/infrastructure/issues/new/choose) and fill in the form.
+        If you have questions about any section of the form, ask them in **this issue** beforehand.
         After the form is filled in, an engineer will be assigned and will start deploying the new hub 🚀.
         Thank you!
     validations:
