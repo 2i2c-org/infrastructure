@@ -23,6 +23,8 @@ hubs:
       # to the helm upgrade command in, and that has meaning. Please check
       # that you intend for these files to be applied in this order.
       - common.values.yaml
+      - staging.values.yaml
+      - enc-staging.secret.values.yaml
   - name: prod
     display_name: "NASA Cryo in the Cloud (prod)"
     domain: cryointhecloud.2i2c.cloud
