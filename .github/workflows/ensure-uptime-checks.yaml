@@ -50,7 +50,7 @@ jobs:
         run: |
           cd terraform/uptime-checks
           # Decrypt the GCP ServiceAccount key with permissions to run terraform
-          sops -d enc-service-account-key.secret.json > service-account-key.json
+          sops -d secret/enc-service-account-key.secret.json > service-account-key.json
           export GOOGLE_APPLICATION_CREDENTIALS=service-account-key.json
           # Setup Terraform
           terraform init
