@@ -1,5 +1,5 @@
 name: 💻  New Hub - Request deployment
-description: Request a new hub for 2i2c to operate and provide information about it
+description: Request a new hub for 2i2c to operate and provide information to help the engineering team deploy it
 title: "[Request deployment] New Hub: {{ HUB NAME }}"
 labels: ["type: hub"]
 body:
