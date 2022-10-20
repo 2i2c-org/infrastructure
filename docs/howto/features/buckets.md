@@ -42,14 +42,14 @@ on why users want this!
     jupyterhub:
       singleuser:
          extraEnv:
-            SCRATCH_BUCKET: <s3 or gcs>://<bucket-full-name>/$(JUPYTERHUB_USER)
-            PANGEO_SCRATCH: <s3 or gcs>://<bucket-full-name>/$(JUPYTERHUB_USER)
+            SCRATCH_BUCKET: <s3 or gs>://<bucket-full-name>/$(JUPYTERHUB_USER)
+            PANGEO_SCRATCH: <s3 or gs>://<bucket-full-name>/$(JUPYTERHUB_USER)
             # If we have a bucket that does not have a `delete_after`
-            PERSISTENT_BUCKET: <s3 or gcs>://<bucket-full-name>/$(JUPYTERHUB_USER)
+            PERSISTENT_BUCKET: <s3 or gs>://<bucket-full-name>/$(JUPYTERHUB_USER)
    ```
 
    ```{note}
-   Use s3 on AWS and gcs on GCP for the protocol part
+   Use s3 on AWS and gs on GCP for the protocol part
    ```
    ```{note}
    If the hub is a `daskhub`, nest the config under a `basehub` key
