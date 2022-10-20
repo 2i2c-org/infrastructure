@@ -48,12 +48,13 @@ resource "google_billing_budget" "budget" {
   # and terraform apply won't be clean.
   threshold_rules {
     # Alert when *actual* spend reached 80% of budget
-    threshold_percent = 0.8
+    threshold_percent = 1.0
     spend_basis       = "CURRENT_SPEND"
   }
   threshold_rules {
     # Alert when *forecasted* spend is about to blow over our budget
-    threshold_percent = 1.0
+    # Adding the extra 1% to help terraform not redo this each time.
+    threshold_percent = 1.01
     spend_basis       = "FORECASTED_SPEND"
   }
 

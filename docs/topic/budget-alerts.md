@@ -13,7 +13,7 @@ Budget alerts are sent under two conditions:
 1. When *forecasted monthly spend* at end of the month goes over our spending limit.
    This is an *early warning* system, that helps us evaluate where spend is going
    and make sure this is expected.
-2. When *current actual spend* goves over 80% of our spending limit.
+2. When *current actual spend* goves over 100% of our spending limit.
 
 ## What to do when we receive an alert?
 
