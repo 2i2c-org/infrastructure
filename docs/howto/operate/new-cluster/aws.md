@@ -303,3 +303,18 @@ The [CI deploy-hubs
 workflow](https://github.com/2i2c-org/infrastructure/tree/HEAD/.github/workflows/deploy-hubs.yaml#L31-L36)
 contains the list of clusters being automatically deployed by our CI/CD system.
 Make sure there is an entry for new AWS cluster.
+
+## A note on the support chart for AWS clusters
+
+````{warning}
+When you deploy the support chart on an AWS cluster, you **must** enable the `cluster-autoscaler` sub-chart, otherwise the node groups will not automatically scale.
+Include the following in your `support.values.yaml` file:
+
+```
+cluster-autoscaler:
+  enabled: true
+  autoDiscovery:
+    clusterName: <cluster-name>
+  awsRegion: <aws-region>
+```
+````
