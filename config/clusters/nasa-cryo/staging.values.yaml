@@ -6,4 +6,4 @@ basehub:
     hub:
       config:
         GitHubOAuthenticator:
-          oauth_callback_url: https://staging.cryointhecloud.2i2c.cloud/hub/oauth_callback
+          oauth_callback_url: https://staging.hub.cryointhecloud.com/hub/oauth_callback
