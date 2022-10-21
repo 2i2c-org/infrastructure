@@ -7,7 +7,7 @@ from pathlib import Path
 
 from file_acquisition import get_decrypted_file, get_decrypted_files
 from hub import Hub
-from utils import print_colour
+from utils import print_colour, unset_env_vars
 
 
 class Cluster:
@@ -104,8 +104,9 @@ class Cluster:
         config = self.spec["kubeconfig"]
         config_path = self.config_path.joinpath(config["file"])
 
-        with get_decrypted_file(config_path) as decrypted_key_path:
-            # FIXME: Unset this after our yield
+        with get_decrypted_file(config_path) as decrypted_key_path, unset_env_vars(
+            ["KUBECONFIG"]
+        ):
             os.environ["KUBECONFIG"] = decrypted_key_path
             yield
 
@@ -123,44 +124,37 @@ class Cluster:
         cluster_name = config["clusterName"]
         region = config["region"]
 
-        with tempfile.NamedTemporaryFile() as kubeconfig:
-            orig_kubeconfig = os.environ.get("KUBECONFIG", None)
-            orig_access_key_id = os.environ.get("AWS_ACCESS_KEY_ID", None)
-            orig_secret_access_key = os.environ.get("AWS_SECRET_ACCESS_KEY", None)
-            try:
-                with get_decrypted_file(key_path) as decrypted_key_path:
+        # Unset all env vars that start with AWS_, as that might affect the aws
+        # commandline we call. This could make some weird error messages.
+        unset_envs = ["KUBECONFIG"] + [k for k in os.environ if k.startswith("AWS_")]
 
-                    decrypted_key_abspath = os.path.abspath(decrypted_key_path)
-                    if not os.path.isfile(decrypted_key_abspath):
-                        raise FileNotFoundError("The decrypted key file does not exist")
-                    with open(decrypted_key_abspath) as f:
-                        creds = json.load(f)
+        with tempfile.NamedTemporaryFile() as kubeconfig, unset_env_vars(unset_envs):
+            with get_decrypted_file(key_path) as decrypted_key_path:
 
-                    os.environ["AWS_ACCESS_KEY_ID"] = creds["AccessKey"]["AccessKeyId"]
-                    os.environ["AWS_SECRET_ACCESS_KEY"] = creds["AccessKey"][
-                        "SecretAccessKey"
-                    ]
+                decrypted_key_abspath = os.path.abspath(decrypted_key_path)
+                if not os.path.isfile(decrypted_key_abspath):
+                    raise FileNotFoundError("The decrypted key file does not exist")
+                with open(decrypted_key_abspath) as f:
+                    creds = json.load(f)
 
-                os.environ["KUBECONFIG"] = kubeconfig.name
+                os.environ["AWS_ACCESS_KEY_ID"] = creds["AccessKey"]["AccessKeyId"]
+                os.environ["AWS_SECRET_ACCESS_KEY"] = creds["AccessKey"][
+                    "SecretAccessKey"
+                ]
 
-                subprocess.check_call(
-                    [
-                        "aws",
-                        "eks",
-                        "update-kubeconfig",
-                        f"--name={cluster_name}",
-                        f"--region={region}",
-                    ]
-                )
+            os.environ["KUBECONFIG"] = kubeconfig.name
 
-                yield
-            finally:
-                if orig_kubeconfig is not None:
-                    os.environ["KUBECONFIG"] = orig_kubeconfig
-                if orig_access_key_id is not None:
-                    os.environ["AWS_ACCESS_KEY_ID"] = orig_access_key_id
-                if orig_secret_access_key is not None:
-                    os.environ["AWS_SECRET_ACCESS_KEY"] = orig_secret_access_key
+            subprocess.check_call(
+                [
+                    "aws",
+                    "eks",
+                    "update-kubeconfig",
+                    f"--name={cluster_name}",
+                    f"--region={region}",
+                ]
+            )
+
+            yield
 
     def auth_azure(self):
         """
@@ -173,58 +167,54 @@ class Cluster:
         cluster = config["cluster"]
         resource_group = config["resource_group"]
 
-        with tempfile.NamedTemporaryFile() as kubeconfig:
-            orig_kubeconfig = os.environ.get("KUBECONFIG", None)
+        with tempfile.NamedTemporaryFile() as kubeconfig, unset_env_vars(
+            ["KUBECONFIG"]
+        ):
+            os.environ["KUBECONFIG"] = kubeconfig.name
 
-            try:
-                os.environ["KUBECONFIG"] = kubeconfig.name
+            with get_decrypted_file(key_path) as decrypted_key_path:
 
-                with get_decrypted_file(key_path) as decrypted_key_path:
+                decrypted_key_abspath = os.path.abspath(decrypted_key_path)
+                if not os.path.isfile(decrypted_key_abspath):
+                    raise FileNotFoundError("The decrypted key file does not exist")
 
-                    decrypted_key_abspath = os.path.abspath(decrypted_key_path)
-                    if not os.path.isfile(decrypted_key_abspath):
-                        raise FileNotFoundError("The decrypted key file does not exist")
+                with open(decrypted_key_path) as f:
+                    service_principal = json.load(f)
 
-                    with open(decrypted_key_path) as f:
-                        service_principal = json.load(f)
+            # Login to Azure
+            subprocess.check_call(
+                [
+                    "az",
+                    "login",
+                    "--service-principal",
+                    f"--username={service_principal['service_principal_id']}",
+                    f"--password={service_principal['service_principal_password']}",
+                    f"--tenant={service_principal['tenant_id']}",
+                ]
+            )
 
-                # Login to Azure
-                subprocess.check_call(
-                    [
-                        "az",
-                        "login",
-                        "--service-principal",
-                        f"--username={service_principal['service_principal_id']}",
-                        f"--password={service_principal['service_principal_password']}",
-                        f"--tenant={service_principal['tenant_id']}",
-                    ]
-                )
+            # Set the Azure subscription
+            subprocess.check_call(
+                [
+                    "az",
+                    "account",
+                    "set",
+                    f"--subscription={service_principal['subscription_id']}",
+                ]
+            )
 
-                # Set the Azure subscription
-                subprocess.check_call(
-                    [
-                        "az",
-                        "account",
-                        "set",
-                        f"--subscription={service_principal['subscription_id']}",
-                    ]
-                )
+            # Get cluster creds
+            subprocess.check_call(
+                [
+                    "az",
+                    "aks",
+                    "get-credentials",
+                    f"--name={cluster}",
+                    f"--resource-group={resource_group}",
+                ]
+            )
 
-                # Get cluster creds
-                subprocess.check_call(
-                    [
-                        "az",
-                        "aks",
-                        "get-credentials",
-                        f"--name={cluster}",
-                        f"--resource-group={resource_group}",
-                    ]
-                )
-
-                yield
-            finally:
-                if orig_kubeconfig is not None:
-                    os.environ["KUBECONFIG"] = orig_kubeconfig
+            yield
 
     def auth_gcp(self):
         config = self.spec["gcp"]

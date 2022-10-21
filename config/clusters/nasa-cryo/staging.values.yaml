@@ -1,0 +1,9 @@
+basehub:
+  userServiceAccount:
+    annotations:
+      eks.amazonaws.com/role-arn: arn:aws:iam::574251165169:role/nasa-cryo-staging
+  jupyterhub:
+    hub:
+      config:
+        GitHubOAuthenticator:
+          oauth_callback_url: https://staging.hub.cryointhecloud.com/hub/oauth_callback

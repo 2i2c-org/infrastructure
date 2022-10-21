@@ -50,6 +50,7 @@ terraform init -backend-config=backends/pangeo-backend.hcl
 If prior backend data exists in a `terraform.lock.hcl`, you might see an `Error: Backend configuration changed` when trying to initialize that backend. To reconfigure this backend, ignoring any saved configuration, add the `-reconfigure` flag to the init command.
 ```
 
+(topic:terraform:workspaces)=
 ## Workspaces
 
 We use [terraform workspaces](https://www.terraform.io/docs/language/state/workspaces.html)

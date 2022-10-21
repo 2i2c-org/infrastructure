@@ -108,36 +108,7 @@ aws eks update-kubeconfig --name=<your-cluster-name> --region=<your-cluster-regi
 `kubectl` should be able to find your cluster now! `kubectl get node` should show
 you at least one core node running.
 
-### Grant access to other users
-
-```{note}
-This section is still required even if the account is managed by SSO.
-```
-
-AWS EKS has a strange access control problem, where the IAM user who creates
-the cluster has [full access without any visible settings
-changes](https://docs.aws.amazon.com/eks/latest/userguide/add-user-role.html),
-and nobody else does. You need to explicitly grant access to other users. Find
-the usernames of the 2i2c engineers on this particular AWS account, and run the
-following command to give them access:
-
-```bash
-eksctl create iamidentitymapping \
-   --cluster <your-cluster-name> \
-   --region <your-cluster-region> \
-   --arn arn:aws:iam::<your-org-id>:user/<iam-user-name> \
-   --username <iam-user-name> \
-   --group system:masters
-```
-
-This gives all the users full access to the entire kubernetes cluster. They can
-fetch local config with `aws eks update-kubeconfig --name=<your-cluster-name> --region=<your-cluster-region>`
-after this step is done.
-
-This should eventually be converted to use an [IAM Role](https://docs.aws.amazon.com/IAM/latest/UserGuide/id_roles.html)
-instead, so we need not give each individual user access, but just grant access to the
-role - and users can modify them as they wish.
-
+(new-cluster:aws:terraform)=
 ## Deploy Terraform-managed infrastructure
 
 Our AWS *terraform* code is now used to deploy supporting infrastructure for the EKS cluster, including:
@@ -158,12 +129,18 @@ in GCP, so you also need to have `gcloud` set up and authenticated already.
    terraform init
    ```
 
-3. Deploy the terraform-managed infrastructure
+3. Create a new [terraform workspace](topic:terraform:workspaces)
+   ```{bash}
+   terraform workspace new <your-cluster-name>
+   ```
+
+4. Deploy the terraform-managed infrastructure
    ```bash
    terraform apply -var-file projects/<your-cluster-name>.tfvars
    ```
    Observe the plan carefully, and accept it.
 
+(new-cluster:aws:terraform:cicd)=
 ### Export account credentials with finely scoped permissions for automatic deployment
 
 In the previous step, we will have created an AWS IAM user with just
@@ -184,9 +161,12 @@ have least amount of permissions possible.
    actually encrypted by `sops` before checking it in to the git repo. Otherwise
    this can be a serious security leak!
 
-2. Grant the freshly created IAM user access to the kubernetes cluster.
+2. Grant the freshly created IAM user access to the kubernetes cluster. As this requires
+   passing in some parameters that match the created cluster, we have a `terraform output`
+   that can give you the exact command to run.
 
    ```bash
+   $ terraform output -raw eksctl_iam_command
    eksctl create iamidentitymapping \
       --cluster <your-cluster-name> \
       --region <your-cluster-region> \
@@ -194,6 +174,9 @@ have least amount of permissions possible.
       --username hub-continuous-deployer \
       --group system:masters
    ```
+
+   Run the command output by `terraform output -raw eksctl_iam_command`, and that should
+   give the continuous deployer user access.
 
 3. Create a minimal `cluster.yaml` file (`config/clusters/<your-cluster-name>/cluster.yaml`),
    and provide enough information for the deployer to find the correct credentials.
@@ -211,6 +194,45 @@ have least amount of permissions possible.
    ```{note}
    The `aws.key` file is defined _relative_ to the location of the `cluster.yaml` file.
    ```
+
+4. Test the access by running `python deployer use-cluster-credentials <cluster-name>` and
+   running `kubectl get node`. It should show you the provisioned node on the cluster if
+   everything works out ok.
+
+## Grant `eksctl` access to other users
+
+```{note}
+This section is still required even if the account is managed by SSO.
+Though a user could run `python deployer use-cluster-credentials` to gain access as well.
+```
+
+AWS EKS has a strange access control problem, where the IAM user who creates
+the cluster has [full access without any visible settings
+changes](https://docs.aws.amazon.com/eks/latest/userguide/add-user-role.html),
+and nobody else does. You need to explicitly grant access to other users. Find
+the usernames of the 2i2c engineers on this particular AWS account, and run the
+following command to give them access:
+
+```{note}
+You can modify the command output by running `terraform output -raw eksctl_iam_command` as described in [](new-cluster:aws:terraform:cicd).
+```
+
+```bash
+eksctl create iamidentitymapping \
+   --cluster <your-cluster-name> \
+   --region <your-cluster-region> \
+   --arn arn:aws:iam::<your-org-id>:user/<iam-user-name> \
+   --username <iam-user-name> \
+   --group system:masters
+```
+
+This gives all the users full access to the entire kubernetes cluster. They can
+fetch local config with `aws eks update-kubeconfig --name=<your-cluster-name> --region=<your-cluster-region>`
+after this step is done.
+
+This should eventually be converted to use an [IAM Role](https://docs.aws.amazon.com/IAM/latest/UserGuide/id_roles.html)
+instead, so we need not give each individual user access, but just grant access to the
+role - and users can modify them as they wish.
 
 ## Export the EFS IP address for home directories
 
@@ -281,3 +303,18 @@ The [CI deploy-hubs
 workflow](https://github.com/2i2c-org/infrastructure/tree/HEAD/.github/workflows/deploy-hubs.yaml#L31-L36)
 contains the list of clusters being automatically deployed by our CI/CD system.
 Make sure there is an entry for new AWS cluster.
+
+## A note on the support chart for AWS clusters
+
+````{warning}
+When you deploy the support chart on an AWS cluster, you **must** enable the `cluster-autoscaler` sub-chart, otherwise the node groups will not automatically scale.
+Include the following in your `support.values.yaml` file:
+
+```
+cluster-autoscaler:
+  enabled: true
+  autoDiscovery:
+    clusterName: <cluster-name>
+  awsRegion: <aws-region>
+```
+````

@@ -116,6 +116,19 @@ prometheus:
             - <prometheus-domain>
 ```
 
+````{warning}
+If you are deploying the support chart on an AWS cluster, you **must** enable the `cluster-autoscaler` sub-chart, otherwise the node groups will not automatically scale.
+Include the following in your `support.values.yaml` file:
+
+```
+cluster-autoscaler:
+  enabled: true
+  autoDiscovery:
+    clusterName: <cluster-name>
+  awsRegion: <aws-region>
+```
+````
+
 #### Create a `enc-support.secret.values.yaml` file
 
 Only 2i2c staff + our centralized grafana should be able to access the

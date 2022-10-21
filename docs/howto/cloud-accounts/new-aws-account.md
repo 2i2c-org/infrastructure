@@ -35,6 +35,14 @@ Finally, we should check what quotas are enforced on the account and increase th
 4. Click the "Request quota increase" button in the "Recent quota increase requests" section of the page
 5. Fill in the form that pops up and change the quota value (must be greater than the current quota value), then click "Request"
 
+The quotas we mostly need increasing are [EC2 quotas](https://us-east-1.console.aws.amazon.com/servicequotas/home/services/ec2/quotas) in order for new nodes to spin up.
+In particular, we need to increase:
+
+- `All Standard (A, C, D, H, I, M, R, T, Z) Spot Instance Requests`: This is what dask instances use (as they are spot instances)
+- `Running On-Demand Standard (A, C, D, H, I, M, R, T, Z) instances`: This is what is used for core and notebook instances
+
+The values of these quotas are 'Total CPUs' and hence larger nodes consume more quota.
+
 [^1]: AWS documentation on creating new accounts in an Organization: <https://docs.aws.amazon.com/organizations/latest/userguide/orgs_manage_accounts_create.html>
 [^2]: AWS documentation on managing account access: <https://docs.aws.amazon.com/organizations/latest/userguide/orgs_manage_accounts_access.html>
 [^3]: AWS documentation on service quotas: <https://docs.aws.amazon.com/general/latest/gr/aws_service_limits.html>
