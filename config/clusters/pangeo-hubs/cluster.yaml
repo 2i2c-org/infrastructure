@@ -1,5 +1,6 @@
 name: pangeo-hubs
 provider: gcp
+account: columbia
 gcp:
   key: enc-deployer-credentials.secret.json
   project: pangeo-integration-te-3eea

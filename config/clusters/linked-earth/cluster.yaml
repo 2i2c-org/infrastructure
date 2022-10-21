@@ -1,5 +1,6 @@
 name: linked-earth
 provider: gcp
+account: columbia
 gcp:
   key: enc-deployer-credentials.secret.json
   project: linked-earth-hubs

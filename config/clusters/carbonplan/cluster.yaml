@@ -1,5 +1,6 @@
 name: carbonplan
 provider: aws
+account: don't know
 aws:
   key: enc-deployer-credentials.secret.json
   clusterType: eks

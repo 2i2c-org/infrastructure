@@ -79,7 +79,6 @@ from pathlib import Path
 # -- Custom scripts -----------------------------------------
 subprocess.run(["python", "scripts/render_hubs.py"])
 
-
 def render_tfdocs():
     tf_path = Path("../terraform")
     # Output path is relative to terraform directory

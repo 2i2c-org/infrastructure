@@ -1,5 +1,6 @@
 name: openscapes
 provider: aws
+account: 2i2cAdministrator
 aws:
   key: enc-deployer-credentials.secret.json
   clusterType: eks
