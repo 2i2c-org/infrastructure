@@ -55,8 +55,8 @@ basehub:
           populate_teams_in_auth_state: true
           allowed_organizations:
             - 2i2c-org:tech-team
-            - CryoInTheCloud:CryoCloudUser
-            - CryoInTheCloud:CryoCloudAdvanced
+            - CryoInTheCloud:cryoclouduser
+            - CryoInTheCloud:cryocloudadvanced
           scope:
             - read:org
     singleuser:
@@ -81,8 +81,8 @@ basehub:
           default: true
           allowed_teams:
             - 2i2c-org:tech-team
-            - CryoInTheCloud:CryoCloudUser
-            - CryoInTheCloud:CryoCloudAdvanced
+            - CryoInTheCloud:cryoclouduser
+            - CryoInTheCloud:cryocloudadvanced
           kubespawner_override:
             # Explicitly unset mem_limit, so it overrides the default memory limit we set in
             # basehub/values.yaml
@@ -94,8 +94,8 @@ basehub:
           description: "~4 CPU, ~15G RAM"
           allowed_teams:
             - 2i2c-org:tech-team
-            - CryoInTheCloud:CryoCloudUser
-            - CryoInTheCloud:CryoCloudAdvanced
+            - CryoInTheCloud:cryoclouduser
+            - CryoInTheCloud:cryocloudadvanced
           kubespawner_override:
             mem_limit: null
             mem_guarantee: 12G
@@ -105,7 +105,7 @@ basehub:
           description: "~8 CPU, ~30G RAM"
           allowed_teams:
             - 2i2c-org:tech-team
-            - CryoInTheCloud:CryoCloudAdvanced
+            - CryoInTheCloud:cryocloudadvanced
           kubespawner_override:
             mem_limit: null
             mem_guarantee: 26G
@@ -115,7 +115,7 @@ basehub:
           description: "~32 CPU, ~128G RAM"
           allowed_teams:
             - 2i2c-org:tech-team
-            - CryoInTheCloud:CryoCloudAdvanced
+            - CryoInTheCloud:cryocloudadvanced
           kubespawner_override:
             mem_limit: null
             mem_guarantee: 115G
