@@ -33,6 +33,8 @@ jupyterhub:
       # https://hub.docker.com/r/lisacuk/lishub-base
       name: "lisacuk/lishub-base"
       tag: "b183052"
+  # Extra mount point for admins to access to all users' home dirs
+  # Ref https://2i2c.freshdesk.com/a/tickets/228
   singleuserAdmin:
       extraVolumeMounts:
         - name: home
