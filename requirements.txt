@@ -7,7 +7,7 @@ ruamel.yaml==0.17.21
 
 # auth0 is used to communicate with Auth0's REST API that we integrate with in
 # various ways.
-auth0-python==3.23.1
+auth0-python==3.24.0
 
 # jsonschema is used for validating cluster.yaml configurations
 jsonschema==4.16.0
