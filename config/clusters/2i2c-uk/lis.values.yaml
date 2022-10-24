@@ -36,9 +36,9 @@ jupyterhub:
   # Extra mount point for admins to access to all users' home dirs
   # Ref https://2i2c.freshdesk.com/a/tickets/228
   singleuserAdmin:
-      extraVolumeMounts:
-        - name: home
-          mountPath: /home/jovyan/allusers
+    extraVolumeMounts:
+      - name: home
+        mountPath: /home/jovyan/allusers
   hub:
     config:
       JupyterHub:
