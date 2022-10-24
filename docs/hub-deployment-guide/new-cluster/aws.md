@@ -1,11 +1,11 @@
-# AWS
+# Add a new Kubernetes cluster to AWS
 
 We use [eksctl](https://eksctl.io/) to provision our k8s clusters on AWS.
 
 ## Install needed tools locally
 
 1. Follow the instructions outlined in [Set up and use the the deployment
-   scripts locally](operate:manual-deploy) to set up the local environment and
+   scripts locally](hubs:manual-deploy) to set up the local environment and
    prepare `sops` to encrypt and decrypt files.
 
 2. Install the `awscli` tool (you can use pip or conda to install it in the

@@ -24,6 +24,7 @@ In that case, follow the instructions at [](new-hub).
 The following sections cover how to deploy a Kubernetes cluster on the cloud providers that we support.
 
 ```{toctree}
+:maxdepth: 2
 new-cluster.md
 aws.md
 ```

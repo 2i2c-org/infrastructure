@@ -15,12 +15,13 @@ There are three kinds of infrastructure needed to add a new hub. In most cases, 
   This is a collection of services that run on a Kubernetes Cluster and help us in running and monitoring things.
   There is one set of services running per **cluster**, not per hub.
   This includes things like Grafana, NFS server provisioners, etc.
+  To setup this infrastructure, see [](support-components).
 - **JupyterHubs**.
   When a cluster is up and running, we may then deploy JupyterHubs on top of it using the JupyterHub Helm Chart.
   Configuration that is specific to each JupyterHub is stored in the [`config/clusters`](https://github.com/2i2c-org/infrastructure/tree/HEAD/config/clusters) folder.
   A GitHub Action workflow then deploys and updates the hubs on a cluster using this configuration.
   There are some cases where you must manually deploy or modify a hub.
-  See [](operate:manual-deploy) for more details.
+  See [](hubs:manual-deploy) for more details.
 
 ## Overview of hub configuration
 
@@ -49,20 +50,27 @@ To deploy a new hub, follow these steps:
    The easiest way to add new configuration is to look at the entries for similar hubs under the same cluster folder, copy / paste one of them, and make modifications as needed for this specific hub.
    For example, see the hubs configuration in [the 2i2c Google Cloud cluster configuration directory](https://github.com/2i2c-org/infrastructure/tree/HEAD/config/clusters/2i2c).
 
-   :::{seealso}
+   ```{seealso}
    See [](/topic/config.md) for more information about hub helm chart configuration.
-   :::
+   ```
+
+```{note}
+During this process you will likely also need to configure an Authentication Provider for the hub.
+See [](enable-auth-provider) for steps on how to achieve this.
+```
+
 5. Create a Pull Request with the new hub entry, and get a team member to review it.
 6. Once you merge the pull request, the GitHub Action workflow will detect that a new entry has been added to the configuration file.
    It will then deploy a new JupyterHub with the configuration you've specified onto the corresponding cluster.
 7. Monitor the action to make sure that it completes.
-   If something goes wrong and the workflow does not finish, try [deploying locally](operate:manual-deploy) to access the logs to help understand what is going on.
+   If something goes wrong and the workflow does not finish, try [deploying locally](hubs:manual-deploy) to access the logs to help understand what is going on.
    It may be necessary to make new changes to the hub's configuration via a Pull Request, or to *revert* the old Pull Request if you cannot determine how to resolve the problem.
 
    ```{note}
-   In order to protect sensitive tokens, our CI/CD pipeline will not print testing output to its logs.
-   You will need to run the deployer locally to inspect these logs.
+   In order to protect sensitive tokens, our CI/CD pipeline will **not** print testing output to its logs.
+   You will need to run the [health check locally](hubs:manual-deploy:health-check) to inspect these logs.
    ```
+
 8. Log in to the hub and ensure that the hub works as expected from a user's perspective.
 9. Send a link to the hub's Community Representative(s) so they can confirm that it works from their perspective as well.
 
@@ -73,7 +81,7 @@ This is changing over time as we automate more things, and is dependent on the c
 
 General details about our CI/CD machinery lives at [](/reference/ci-cd/index.md)
 
-## Deploying hubs manually
+### Deploying hubs manually
 
 Some of our infrastructure still requires manual deploys.
 There are also situations where you may want to deploy infrastructure manually.
@@ -81,11 +89,11 @@ Or situation where some specific steps still need some manual intervention.
 
 The following sections cover how to deploy in these situations:
 
-* [General manual deployment process](operate:manual-deploy)
+- [General manual deployment process](hubs:manual-deploy)
 
-:::{warning}
+```{warning}
 Manual deploys should be avoided when possible.
 They increase the likelihood of confusion, bottlenecks of information, inconsistent
 states and discrepancies between what is already deployed vs. the codebase, among other
 things.
-:::
+```

@@ -1,4 +1,5 @@
-# Authentication
+(enable-auth-provider)=
+# Enable authentication
 
 This section describes how to set up various authentication providers for the 2i2c JupyterHubs.
 

@@ -4,7 +4,6 @@ These guides go through the steps to create a new Kubernetes cluster on any of o
 
 ```{toctree}
 :maxdepth: 2
-new-cluster/index.md
 grafana.md
 manual-nfs-setup.md
 override-domain.md

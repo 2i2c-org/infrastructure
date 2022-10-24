@@ -1,3 +1,4 @@
+(new-cloud-account)=
 # Create new cloud accounts
 
 This documentation provides guides on creating new cloud accounts for our supported cloud providers.

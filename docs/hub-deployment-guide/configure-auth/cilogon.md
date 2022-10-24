@@ -13,14 +13,14 @@ Identity Provider
 
   Example:
 
-  ```{figure} ../../../images/cilogon-ipd-list.png
+  ```{figure} ../../images/cilogon-ipd-list.png
   A list of Identity Providers the user may select from.
   ```
 
 User account
 : Within an institution, each user is expected to have their own user account (e.g. `myname@berkeley.edu`). This is the account that is used to give somebody an ID on their JupyterHub. This is entered on an Identity Provider's login screen. For example:
 
-  ```{figure} ../../../images/cilogon-berkley-login-page.png
+  ```{figure} ../../images/cilogon-berkley-login-page.png
   The Berkeley authentication screen.
   ```
 
@@ -254,12 +254,12 @@ This means that you'll automatically re-use the same institutional and user acco
 1. **Logout of the Hub** using the logout button or by going to `https://{hub-name}/hub/logout`.
 2. **Clear browser cookies** (optional). If the user asked CILogon to re-use the same Identity Provider connection when they logged in, they'll need to [clear browser cookies](https://www.lifewire.com/how-to-delete-cookies-2617981) for <https://cilogon.org>.
 
-   ```{figure} ../../../images/cilogon-remember-this-selection.png
+   ```{figure} ../../images/cilogon-remember-this-selection.png
    The dialog box that allows you to re-use the same Identity Provider.
    ```
 
    Firefox example:
-   ```{figure} ../../../images/cilogon-clear-cookies.png
+   ```{figure} ../../images/cilogon-clear-cookies.png
    An example of clearing cookies with Firefox.
    ```
 
@@ -283,7 +283,7 @@ If the user choses the same Identity Provider, then they will be automatically l
 
 If you see a 403 error page, this means that the account you were using to login hasn't been allowed by the hub administrator.
 
-```{figure} ../../../images/403-forbidden.png
+```{figure} ../../images/403-forbidden.png
 ```
 
 If you think this is an error, and the account should have been allowed, then contact the hub adminstrator/s.

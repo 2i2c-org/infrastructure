@@ -1,4 +1,4 @@
-(operate:manual-deploy)=
+(hubs:manual-deploy)=
 # Manually deploy a config change
 
 While deploys generally go through our GitHub Actions workflow, sometimes you
@@ -35,6 +35,7 @@ of this repository, and can deploy one or more hubs to our clusters.
 You should mostly use the `staging` hub in the `2i2c` cluster for testing.
 ```
 
+(hubs:manual-deploy:health-check)=
 ## Run a health check on the hub
 
 After doing a deploy, you should run a health check on the hub you just
