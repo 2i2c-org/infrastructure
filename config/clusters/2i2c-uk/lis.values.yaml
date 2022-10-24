@@ -28,17 +28,17 @@ jupyterhub:
         funded_by:
           name: London Interdisciplinary School
           url: https://www.lis.ac.uk
+    # Extra mount point for admins to access to all users' home dirs
+    # Ref https://2i2c.freshdesk.com/a/tickets/228
+    singleuserAdmin:
+      extraVolumeMounts:
+        - name: home
+          mountPath: /home/jovyan/allusers
   singleuser:
     image:
       # https://hub.docker.com/r/lisacuk/lishub-base
       name: "lisacuk/lishub-base"
       tag: "b183052"
-  # Extra mount point for admins to access to all users' home dirs
-  # Ref https://2i2c.freshdesk.com/a/tickets/228
-  singleuserAdmin:
-    extraVolumeMounts:
-      - name: home
-        mountPath: /home/jovyan/allusers
   hub:
     config:
       JupyterHub:
