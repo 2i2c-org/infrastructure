@@ -33,6 +33,10 @@ jupyterhub:
       # https://hub.docker.com/r/lisacuk/lishub-base
       name: "lisacuk/lishub-base"
       tag: "b183052"
+  singleuserAdmin:
+      extraVolumeMounts:
+        - name: home
+          mountPath: /home/jovyan/allusers
   hub:
     config:
       JupyterHub:
