@@ -22,6 +22,7 @@ structure
 tutorials/setup.md
 ```
 
+(sre-guide)=
 ## Site reliability engineering guide
 
 The SRE guide covers day-to-day tasks undertaken by engineers as well as tasks that may need to be completed as part of our [support process](https://team-compass.2i2c.org/en/latest/projects/managed-hubs/support.html).
@@ -36,6 +37,7 @@ sre-guide/node-scale-up/index.md
 sre-guide/troubleshooting.md
 ```
 
+(hub-deployment-guide)=
 ## Hub deployment guide
 
 These sections walk an engineer step-by-step through the workflow of setting up a new 2i2c-managed JupyterHub.
@@ -58,15 +60,18 @@ hub-deployment-guide/hubs/other-hub-ops/index.md
 ## How-to guides
 
 How-To guides answer the question 'How do I...?' for a lot of topics.
+These operations do not fall into day-to-day tasks of the [](sre-guide), nor the
+standard operations of [deploying a new hub](hub-deployment-guide), but may be
+deployed occasionally as a specific addition.
 
 ```{toctree}
-:maxdepth: 2
+:maxdepth: 1
 :caption: How-to guides
-howto/operate/index.md
-howto/features/index
-howto/k8s/index.md
-howto/configure/update-env
-howto/support/index
+howto/features/index.md
+howto/grafana-github-auth.md
+howto/override-domain.md
+howto/update-env.md
+howto/manual-nfs-setup.md
 ```
 
 ## Topic guides
@@ -78,6 +83,7 @@ Topic guides go more in-depth on a particular topic.
 :maxdepth: 2
 topic/config.md
 topic/cloud-auth.md
+topic/grafana.md
 topic/features.md
 topic/hub-helm-charts.md
 topic/hub-image.md
