@@ -16,7 +16,7 @@ To access the Grafana dashboards you have two options:
 - Get `Viewer` access into the Grafana.
 
   This is the recommended way of accessing grafana if modifying/creating dashboards is not needed.
-  To get access, ask a 2i2c engineer to enable **GitHub authentication** following [](grafana:enable-github-auth) for that particular Grafana (if it's not already) and allow you access.
+  To get access, ask a 2i2c engineer to enable **GitHub authentication** following [](grafana-dashboards:github-auth) for that particular Grafana (if it's not already) and allow you access.
 
 - Use a **username** and **password** to get `Admin` access into the Grafana.
 
@@ -27,7 +27,7 @@ To access the Grafana dashboards you have two options:
 
 The Grafana deployment in the `2i2c` cluster is *"the 2i2c central Grafana"* because it ingests data from all of the 2i2c clusters. This is useful because it can be used to access information about all the clusters that 2i2c manages from one central place.
 
-The central Grafana is running at <https://grafana.pilot.2i2c.cloud> and you can use the two authentication mechanisms listed in the [](grafana:access-grafana) section above to access it.
+The central Grafana is running at <https://grafana.pilot.2i2c.cloud> and you can use the two authentication mechanisms listed in the [](grafana-dashboards:access-grafana) section above to access it.
 
 The dashboards available at <https://grafana.pilot.2i2c.cloud/dashboards> are the default Grafana dashboards from JupyterHub. The following list provides some information about the structure of the dashboards folder in Grafana, but this info is subject to change based on how upstream repository changes. So more information about the metrics and graphs available can be found at [`jupyterhub/grafana-dashboards`](https://github.com/jupyterhub/grafana-dashboards).
 

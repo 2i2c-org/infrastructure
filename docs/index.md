@@ -92,7 +92,6 @@ topic/network.md
 topic/terraform.md
 topic/cluster-design.md
 topic/secrets.md
-topic/troubleshooting.md
 topic/uptime-checks.md
 ```
 
@@ -102,7 +101,7 @@ Reference information about our infrastructure.
 
 ```{toctree}
 :caption: Reference
-:maxdepth: 2
+:maxdepth: 1
 
 reference/hubs
 reference/ci-cd/index
