@@ -22,6 +22,20 @@ structure
 tutorials/setup.md
 ```
 
+## Site reliability engineering guide
+
+The SRE guide covers day-to-day tasks undertaken by engineers as well as tasks that may need to be completed as part of our [support process](https://team-compass.2i2c.org/en/latest/projects/managed-hubs/support.html).
+We also document common problems and their solutions within these sections, where a permanent solution has not been developed (yet).
+
+```{toctree}
+:maxdepth: 1
+:caption: SRE guide
+sre-guide/support/index.md
+sre-guide/manage-k8s/index.md
+sre-guide/node-scale-up/index.md
+sre-guide/troubleshooting.md
+```
+
 ## Hub deployment guide
 
 These sections walk an engineer step-by-step through the workflow of setting up a new 2i2c-managed JupyterHub.
