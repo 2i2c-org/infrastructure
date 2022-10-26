@@ -14,7 +14,7 @@ extensions = [
     "myst_parser",
     "sphinx.ext.intersphinx",
     "sphinx_copybutton",
-    "sphinx_panels",
+    "sphinx_design",
 ]
 
 intersphinx_mapping = {

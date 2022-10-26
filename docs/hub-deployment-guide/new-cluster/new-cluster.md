@@ -23,7 +23,9 @@ The first step is to create a `.tfvars` file in the appropriate terraform projec
 
 Give it a descriptive name that at a glance provides context to the location and/or purpose of the cluster.
 
-````{tabbed} Google Cloud
+`````{tab-set}
+````{tab-item} Google Cloud
+:sync: gcp-key
 The _minimum_ inputs this file requires are:
 
 - `prefix`: Prefix for all objects created by terraform.
@@ -54,7 +56,8 @@ regional_cluster = true
 ```
 ````
 
-````{tabbed} Azure
+````{tab-item} Azure
+:sync: azure-key
 The _minimum_ inputs this file requires are:
 
 - `subscription_id`: Azure subscription ID to create resources in.
@@ -113,6 +116,7 @@ global_storage_account_name    = "myawesomestorageaccount"
 ssh_pub_key                    = "ssh-rsa my-public-ssh-key"
 ```
 ````
+`````
 
 Once you have created this file, open a Pull Request to the [`infrastructure` repo](https://github.com/2i2c-org/infrastructure) for review.
 See our [review and merge guidelines](infrastructure:review) for how this process should pan out.
@@ -128,19 +132,23 @@ gcloud auth application-default login
 
 Then you can change into the terraform subdirectory for the appropriate cloud provider and initialise terraform.
 
-````{tabbed} Google
+`````{tab-set}
+````{tab-item} Google Cloud
+:sync: gcp-key
 ```bash
 cd terraform/gcp
 terraform init -backend-config=backends/default-backend.hcl -reconfigure
 ```
 ````
 
-````{tabbed} Azure
+````{tab-item} Azure
+:sync: azure-key
 ```bash
 cd terraform/azure
 terraform init
 ```
 ````
+`````
 
 ````{note}
 There are other backend config files stored in `terraform/backends` that will configure a different storage bucket to read/write the remote terraform state for projects which we cannot access from GCP with our `@2i2c.org` email accounts.
@@ -217,18 +225,21 @@ terraform workspace select WORKSPACE_NAME
 
 Then, output the credentials created by terraform to a file under the `secrets` directory.
 
-````{tabbed} Google Cloud
+`````{tab-set}
+````{tab-item} Google Cloud
+:sync: gcp-key
 ```bash
 terraform output -raw ci_deployer_key > ../../config/clusters/<cluster_name>/deployer-credentials.secret.json
 ```
 ````
 
-````{tabbed} Azure
+````{tab-item} Azure
+:sync: azure-key
 ```bash
 terraform output -raw kubeconfig > ../../config/clusters/<cluster_name>/deployer-credentials.secret.yaml
 ```
 ````
-
+`````
 
 Then encrypt the key using `sops`.
 
