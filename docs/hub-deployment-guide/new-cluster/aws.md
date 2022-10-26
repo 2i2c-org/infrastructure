@@ -10,9 +10,8 @@ terraform to provision supporting infrastructure, such as storage buckets.
    prepare `sops` to encrypt and decrypt files.
 
 2. Install the `awscli` tool (you can use pip or conda to install it in the
-   environment) and configure it to use the provided AWS user credentials.  [Follow
-   this guide](https://docs.aws.amazon.com/cli/latest/userguide/cli-configure-quickstart.html#cli-configure-quickstart-config)
-   for a quick configuration process.
+   environment) and configure it to use the provided AWS user credentials.
+   More about setting out the credentials in [](new-cluster:aws-setup-credentials).
 
 3. Install the latest version of [eksctl](https://eksctl.io/introduction/#installation). Mac users
    can get it from homebrew with `brew install eksctl`. Make sure the version is at least 0.97 -
@@ -20,6 +19,7 @@ terraform to provision supporting infrastructure, such as storage buckets.
 
 ## Create a new cluster
 
+(new-cluster:aws-setup-credentials)
 ### Setup credentials
 
 Depending on wether this project is using AWS SSO or not, you can use the following
