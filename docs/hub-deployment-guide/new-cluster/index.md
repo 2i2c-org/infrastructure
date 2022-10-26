@@ -19,12 +19,15 @@ In general, the question of whether to deploy a new cluster for a community come
 For most hub communities that simply wish to pay for a hub and are not opinionated about the cluster on which it runs, we can deploy their hub on a pre-existing Kubernetes cluster.
 In that case, follow the instructions at [](new-hub).
 
-## Deploying clusters on each cloud provider
+The following sections cover how to deploy a Kubernetes cluster.
 
-The following sections cover how to deploy a Kubernetes cluster on the cloud providers that we support.
+```{warning}
+Deploying Kubernetes to AWS has a distinctly different workflow than GCP or Azure, and therefore it has its own guide.
+```
 
 ```{toctree}
-:maxdepth: 2
+:maxdepth: 1
+:caption: Deploying Kubernetes
 new-cluster.md
 aws.md
 ```

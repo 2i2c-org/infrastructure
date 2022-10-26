@@ -1,4 +1,4 @@
-# Add a new Kubernetes cluster to AWS
+# New Kubernetes cluster on AWS
 
 We use [eksctl](https://eksctl.io/) to provision our k8s clusters on AWS.
 
@@ -130,7 +130,7 @@ in GCP, so you also need to have `gcloud` set up and authenticated already.
    ```
 
 3. Create a new [terraform workspace](topic:terraform:workspaces)
-   ```{bash}
+   ```bash
    terraform workspace new <your-cluster-name>
    ```
 

@@ -1,12 +1,12 @@
 (new-cluster:new-cluster)=
-# Add a new Kubernetes cluster
+# New Kubernetes cluster on GCP or Azure
 
 This guide will walk through the process of adding a new cluster to our [terraform configuration](https://github.com/2i2c-org/infrastructure/tree/HEAD/terraform).
 
 You can find out more about terraform in [](/topic/terraform) and their [documentation](https://www.terraform.io/docs/index.html).
 
 ```{attention}
-Currently, we do not deploy clusters to AWS using terraform.
+Currently, we do not deploy clusters to AWS _solely_ using terraform.
 Please see [](new-cluster:aws) for AWS-specific deployment guidelines.
 ```
 
