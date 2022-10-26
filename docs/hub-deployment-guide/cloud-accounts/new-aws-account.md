@@ -1,4 +1,3 @@
-(new-cluster:new-cluster-aws)
 # Create a new AWS account
 
 When we create a new AWS account[^1], we would also need to add it to our Management Account so that all 2i2c engineers can access it via SSO[^2].
