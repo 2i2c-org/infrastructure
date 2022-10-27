@@ -25,7 +25,7 @@ series nodes.
 6. Input the *number of vCPUs* needed. This translates to a total
    number of GPU nodes based on how many CPUs the nodes we want have.
    For example, if we are using [G4 nodes](https://aws.amazon.com/ec2/instance-types/g4/)
-   with NVIDIA K80 GPUs, each `g4dn.xlarge` node gives us 1 GPU and
+   with NVIDIA T4 GPUs, each `g4dn.xlarge` node gives us 1 GPU and
    4 vCPUs, so a quota of 8 vCPUs will allow us to spawn 2 GPU nodes.
    We should fine tune this calculation for later, but for now, the
    recommendation is to give users a single `g4dn.xlarge` each, so the number
