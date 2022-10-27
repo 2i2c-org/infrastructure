@@ -13,6 +13,12 @@ user_buckets = {
   },
   "scratch": {
     "delete_after": 7
+  },
+  "persistent-staging": {
+    "delete_after": null
+  },
+  "persistent": {
+    "delete_after": null
   }
 }
 
@@ -114,12 +120,12 @@ dask_nodes = {
 hub_cloud_permissions = {
   "staging" : {
     requestor_pays : false,
-    bucket_admin_access: ["scratch-staging"],
+    bucket_admin_access: ["scratch-staging", "persistent-staging"],
     hub_namespace: "staging"
   },
   "prod" : {
     requestor_pays : false,
-    bucket_admin_access: ["scratch"],
+    bucket_admin_access: ["scratch", "persistent"],
     hub_namespace: "prod"
   }
 }
