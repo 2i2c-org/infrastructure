@@ -51,7 +51,7 @@ To deploy a new hub, follow these steps:
    For example, see the hubs configuration in [the 2i2c Google Cloud cluster configuration directory](https://github.com/2i2c-org/infrastructure/tree/HEAD/config/clusters/2i2c).
 
    ```{seealso}
-   See [](/topic/config.md) for more information about hub helm chart configuration.
+   See [](/topic/infrastructure/config.md) for more information about hub helm chart configuration.
    ```
 
 ```{note}

@@ -8,7 +8,7 @@ of hub types can be built and this makes development and usage easier.
 The graphic below, shows the relationship between the hub helm charts and the other
 config files and how they are merged together when deploying a hub.
 
-```{figure} ../images/config-flow.png
+```{figure} ../../images/config-flow.png
 ```
 % The editable version of the diagram is here: https://docs.google.com/presentation/d/1WZKTe5TSDU-5zA4NnNEPsKfgjaBzUqMgdPLTnz-Yb94/edit?usp=sharing
 
@@ -37,7 +37,7 @@ the basehub chart along with the [dask-gateway](https://helm.dask.org) one are
 subcharts of the daskhub.
 
 **Visual of the helm-chart hierarchy:**
-```{figure} ../images/helm-charts-hierarchy.png
+```{figure} ../../images/helm-charts-hierarchy.png
 ```
 % The editable version of the diagram is here: https://docs.google.com/presentation/d/1KMyrTd3wdR715tPGuzIHkHqScXBlLpeiksIM2x7EI0g/edit?usp=sharing
 

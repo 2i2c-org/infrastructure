@@ -2,7 +2,7 @@
 
 All users on all the hubs get a home directory with persistent storage. This is made available through a Network File System [(NFS)](https://en.wikipedia.org/wiki/Network_File_System) that allows remote systems to access a storage resource over the network using a server-client model.
 
-```{figure} ../images/infrastructure-storage-layer.png
+```{figure} ../../images/infrastructure-storage-layer.png
 ```
 
 % The editable version of the diagram is here: https://docs.google.com/presentation/d/1zu7d1mXN6R32i124vtohNXVIpqO-goiY01KzWQsZsas/edit?usp=sharing

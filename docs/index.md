@@ -81,18 +81,10 @@ Topic guides go more in-depth on a particular topic.
 ```{toctree}
 :caption: Topic guides
 :maxdepth: 2
-topic/config.md
-topic/cloud-auth.md
-topic/grafana.md
+topic/access-creds/index.md
+topic/infrastructure/index.md
+topic/monitoring-alerting/index.md
 topic/features.md
-topic/hub-helm-charts.md
-topic/hub-image.md
-topic/storage-layer.md
-topic/network.md
-topic/terraform.md
-topic/cluster-design.md
-topic/secrets.md
-topic/uptime-checks.md
 ```
 
 ## Reference
