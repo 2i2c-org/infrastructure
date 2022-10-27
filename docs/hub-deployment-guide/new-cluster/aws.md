@@ -86,7 +86,7 @@ There's no requirement to commit the `*.eksctl.yaml` file to the repository sinc
 Now you're ready to create the cluster!
 
 ```bash
-eksctl create cluster  --config-file <your-cluster>.eksctl.yaml
+eksctl create cluster --config-file <your-cluster>.eksctl.yaml
 ```
 
 ```{tip}
@@ -139,10 +139,14 @@ in GCP, so you also need to have `gcloud` set up and authenticated already.
 4. Deploy the terraform-managed infrastructure
 
    ```bash
-   terraform apply -var-file projects/<your-cluster-name>.tfvars
+   terraform plan -var-file projects/<your-cluster-name>.tfvars
    ```
 
    Observe the plan carefully, and accept it.
+
+   ```bash
+   terraform apply -var-file projects/<your-cluster-name>.tfvars
+   ```
 
 (new-cluster:aws:terraform:cicd)=
 ### Export account credentials with finely scoped permissions for automatic deployment
