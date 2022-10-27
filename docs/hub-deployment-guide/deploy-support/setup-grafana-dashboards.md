@@ -3,9 +3,14 @@
 
 Now, we will deploy some specific dashboards to the grafana instance we deployed as part of [](deploy-support-chart).
 
-```{note}
-It is also possible to [enable logging in with GitHub](grafana-dashboards:github-auth) to allow Hub Administrators to access these dashboards as well.
+````{seealso}
+It is also possible to [enable logging in with GitHub](grafana-dashboards:github-auth)
+to allow Community Representatives and Hub Administrators to access these dashboards as well.
+```{warning}
+We should enable GitHub login for _all_ Grafana dashboards running on **dedicated**
+clusters, so the Community Representatives have access to them.
 ```
+````
 
 (setup-grafana:log-in)=
 ## Login to the cluster-specific grafana
