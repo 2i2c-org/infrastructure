@@ -1,11 +1,12 @@
+(new-cluster:aws)=
 # New Kubernetes cluster on AWS
 
-We use [eksctl](https://eksctl.io/) to provision our k8s clusters on AWS.
+We use [eksctl](https://eksctl.io/) to provision our k8s clusters on AWS and
+terraform to provision supporting infrastructure, such as storage buckets.
 
-## Install needed tools locally
+## Install required tools locally
 
-1. Follow the instructions outlined in [Set up and use the the deployment
-   scripts locally](hubs:manual-deploy) to set up the local environment and
+1. Follow the instructions outlined in [](hubs:manual-deploy) to set up the local environment and
    prepare `sops` to encrypt and decrypt files.
 
 2. Install the `awscli` tool (you can use pip or conda to install it in the
@@ -17,7 +18,6 @@ We use [eksctl](https://eksctl.io/) to provision our k8s clusters on AWS.
    can get it from homebrew with `brew install eksctl`. Make sure the version is at least 0.97 -
    you can check by running `eksctl version`
 
-(new-cluster:aws)=
 ## Create a new cluster
 
 ### Setup credentials
@@ -124,20 +124,24 @@ in GCP, so you also need to have `gcloud` set up and authenticated already.
 1. The steps in [](new-cluster:aws:generate-cluster-files) will have created a default `.tfvars` file.
    This file can either be used as-is or edited to enable the optional features listed above.
 2. Initialise terraform for use with AWS:
+
    ```bash
    cd terraform/aws
    terraform init
    ```
 
 3. Create a new [terraform workspace](topic:terraform:workspaces)
+
    ```bash
    terraform workspace new <your-cluster-name>
    ```
 
 4. Deploy the terraform-managed infrastructure
+
    ```bash
    terraform apply -var-file projects/<your-cluster-name>.tfvars
    ```
+
    Observe the plan carefully, and accept it.
 
 (new-cluster:aws:terraform:cicd)=

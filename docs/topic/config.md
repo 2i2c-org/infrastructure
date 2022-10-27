@@ -1,3 +1,4 @@
+(config)=
 # Configuration Structure
 
 This page describes the basic structure of our hub configuration.
@@ -37,6 +38,7 @@ When a hub is deployed, some custom code is run as part of `jupyterhub_config.py
 
 You can find the list of staff usernames in [the `basehub` helm chart](https://github.com/2i2c-org/infrastructure/tree/HEAD/helm-charts/basehub/values.yaml#L52) along with the [custom code](https://github.com/2i2c-org/infrastructure/tree/HEAD/helm-charts/basehub/values.yaml#L392) used to inject them.
 
+(config:structure)=
 ## Configuration structure
 
 We have a [`config/clusters` directory](https://github.com/2i2c-org/infrastructure/tree/HEAD/config/clusters) which contains folders that each contain configuration files describing a single cluster and the JupyterHubs running on that cluster.

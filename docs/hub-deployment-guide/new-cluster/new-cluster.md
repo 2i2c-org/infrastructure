@@ -223,7 +223,15 @@ terraform workspace list  # List all available workspaces
 terraform workspace select WORKSPACE_NAME
 ```
 
-Then, output the credentials created by terraform to a file under the `secrets` directory.
+Then, output the credentials created by terraform to a file under the appropriate cluster directory: `/config/clusters/<cluster-name>`.
+
+````{note}
+Create the cluster directory if it doesn't already exist with:
+
+```bash
+mkdir -p ../../config/clusters/<cluster-name>
+```
+````
 
 `````{tab-set}
 ````{tab-item} Google Cloud
@@ -248,11 +256,73 @@ You must be logged into Google with your `@2i2c.org` account at this point so `s
 ```
 
 ```bash
-cd ../..
+cd ../..  # Make sure you are in the root of the repository
 sops --output config/clusters/<cluster_name>/enc-deployer-credentials.secret.{{ json | yaml }} --encrypt config/clusters/<cluster_name>/deployer-credentials.secret.{{ json | yaml }}
 ```
 
 This key can now be committed to the `infrastructure` repo and used to deploy and manage hubs hosted on that cluster.
+
+## Create a `cluster.yaml` file
+
+```{seealso}
+We use `cluster.yaml` files to describe a specific cluster and all the hubs deployed onto it.
+See [](config:structure) for more information.
+```
+
+Create a `cluster.yaml` file under the `config/cluster/<cluster-name>` folder and populate it with the following info:
+
+`````{tab-set}
+````{tab-item} Google Cloud
+:sync: gcp-key
+```yaml
+name: <cluster-name>  # This should also match the name of the folder: config/clusters/<cluster-name>
+provider: gcp
+gcp:
+  # The location of the *encrypted* key we exported from terraform
+  key: enc-deployer-credentials.secret.json
+  # The name of the GCP project the cluster is deployed in
+  project: <gcp-project-name>
+  # The name of the cluster *as it appears in the GCP console*! Sometimes our
+  # terraform code appends '-cluster' to the 'name' field, so double check this.
+  cluster: <cluster-name-in-gcp>
+  # The GCP zone the cluster in deployed in. For multi-regional clusters, you
+  # may have to strip the last identifier, i.e., 'us-central1-a' becomes 'us-central1'
+  zone: <gcp-zone>
+```
+````
+````{tab-item} Azure (kubeconfig)
+:sync: azure-key
+```{warning}
+We use this config only when we do not have permissions on the Azure subscription
+to create a [Service Principal](https://learn.microsoft.com/en-us/azure/active-directory/develop/app-objects-and-service-principals)
+with terraform.
+```
+```yaml
+name: <cluster-name>  # This should also match the name of the folder: config/clusters/<cluster-name>
+provider: kubeconfig
+kubeconfig:
+  # The location of the *encrypted* key we exported from terraform
+  file: enc-deployer-credentials.secret.yaml
+```
+````
+````{tab-item} Azure (Service Principal)
+```yaml
+name: <cluster-name>  # This should also match the name of the folder: config/clusters/<cluster-name>
+provider: azure
+azure:
+  # The location of the *encrypted* key we exported from terraform
+  key: enc-deployer-credentials.secret.json
+  # The name of the cluster *as it appears in the Azure Portal*! Sometimes our
+  # terraform code adjusts the contents of the 'name' field, so double check this.
+  cluster: <cluster-name>
+  # The name of the resource group the cluster has been deployed into. This is
+  # the same as the resourcegroup_name variable in the .tfvars file.
+  resource_group: <resource-group-name>
+```
+````
+`````
+
+Commit this file to the repo.
 
 ## Adding the new cluster to CI/CD
 
