@@ -221,6 +221,7 @@ have least amount of permissions possible.
       clusterType: eks
       clusterName: <your-cluster-name>
       region: <your-region>
+   hubs: []
    ```
 
    ```{note}
