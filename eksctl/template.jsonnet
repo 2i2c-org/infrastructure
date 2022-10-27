@@ -36,7 +36,7 @@ local daskNodes = [
     metadata+: {
         name: "<< cluster_name >>",
         region: clusterRegion,
-        version: '1.22'
+        version: '1.23'
     },
     availabilityZones: masterAzs,
     iam: {
