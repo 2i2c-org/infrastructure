@@ -1,5 +1,5 @@
 (grafana-dashboards)=
-# Grafana Dashboards
+# Grafana dashboards
 
 Each 2i2c Hub is set up with [a Prometheus server](https://prometheus.io/) to generate metrics and information about activity on the hub, and each cluster of hubs has a [Grafana deployment](https://grafana.com/) to ingest and visualize this data.
 

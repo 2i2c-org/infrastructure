@@ -1,5 +1,5 @@
 (hub-helm-charts)=
-# Hub Helm Charts
+# Hub helm charts
 
 The hubs are configured and deployed using [*locally defined helm charts*](https://helm.sh/docs/topics/chart_repository/#create-a-chart-repository). Because each hub
 type can be described by a helm chart, a hierarchy

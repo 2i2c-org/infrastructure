@@ -1,4 +1,4 @@
-# Simple HTTPS Uptime Checks
+# Simple HTTPS uptime checks
 
 Ideally, when a hub is down, a machine alerts us - we do not have to wait for a user
 to report it to our helpdesk. While we aren't quite there, we currently have very simple

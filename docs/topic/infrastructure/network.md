@@ -1,4 +1,4 @@
-# Network Policy
+# Network policy
 
 2i2c-managed hubs have a permissive network policy for the user servers that allows all outbound access to the internet, but restricts traffic within the cluster.
 

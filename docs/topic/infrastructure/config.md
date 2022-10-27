@@ -1,5 +1,5 @@
 (config)=
-# Configuration Structure
+# Configuration structure
 
 This page describes the basic structure of our hub configuration.
 
