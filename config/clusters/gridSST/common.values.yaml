@@ -1,0 +1,54 @@
+basehub:
+  nfs:
+    pv:
+      # from https://docs.aws.amazon.com/efs/latest/ug/mounting-fs-nfs-mount-settings.html
+      mountOptions:
+        - rsize=1048576
+        - wsize=1048576
+        - timeo=600
+        - soft # We pick soft over hard, so NFS lockups don't lead to hung processes
+        - retrans=2
+        - noresvport
+      serverIP: fs-04019990bf84aa2e3.efs.us-west-2.amazonaws.com
+      baseShareName: /
+  jupyterhub:
+    custom:
+      2i2c:
+        add_staff_user_ids_to_admin_users: true
+        add_staff_user_ids_of_type: "github"
+      homepage:
+        templateVars:
+          org:
+            name: gridSST Hack-A-Thon
+            logo_url: https://drive.google.com/file/d/1i9R3JkdNRddWpMYWrLKSn2mQNu0YxRjE/view
+            url: https://github.com/2i2c-org/infrastructure/issues/1650 # todo: find the correct link here
+          designed_by:
+            name: 2i2c
+            url: https://2i2c.org
+          operated_by:
+            name: 2i2c
+            url: https://2i2c.org
+          funded_by:
+            name: "NASA ?"
+            url: https://github.com/2i2c-org/infrastructure/issues/1650 # todo: find the correct link here
+    hub:
+      config:
+        Authenticator:
+          allowed_users: &gridSST_users
+            - AlisonGray
+            - dgumustel
+          admin_users: *gridSST_users
+        JupyterHub:
+          authenticator_class: github
+    singleuser:
+      defaultUrl: /lab
+      # User image: https://quay.io/repository/uwhackweek/snowex?tab=tags
+      image:
+        name: quay.io/uwhackweek/snowex
+        tag: "2022.07.07"
+    scheduling:
+      userPlaceholder:
+        enabled: false
+        replicas: 0
+      userScheduler:
+        enabled: false
