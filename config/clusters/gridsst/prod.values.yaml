@@ -1,7 +1,7 @@
 basehub:
   userServiceAccount:
     annotations:
-      eks.amazonaws.com/role-arn: arn:aws:iam::993998403439:role/gridSST-prod
+      eks.amazonaws.com/role-arn: arn:aws:iam::993998403439:role/gridsst-prod
   jupyterhub:
     hub:
       config:

@@ -1,7 +1,7 @@
 basehub:
   userServiceAccount:
     annotations:
-      eks.amazonaws.com/role-arn: arn:aws:iam::993998403439:role/gridSST-staging
+      eks.amazonaws.com/role-arn: arn:aws:iam::993998403439:role/gridsst-staging
   jupyterhub:
     hub:
       config:
