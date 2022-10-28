@@ -9,7 +9,7 @@ basehub:
         - soft # We pick soft over hard, so NFS lockups don't lead to hung processes
         - retrans=2
         - noresvport
-      serverIP: fs-04019990bf84aa2e3.efs.us-west-2.amazonaws.com
+      serverIP: fs-05f68d7e096d7cf16.efs.us-west-2.amazonaws.com
       baseShareName: /
   jupyterhub:
     custom:
@@ -20,7 +20,7 @@ basehub:
         templateVars:
           org:
             name: gridSST Hack-A-Thon
-            logo_url: https://drive.google.com/file/d/1i9R3JkdNRddWpMYWrLKSn2mQNu0YxRjE/view
+            logo_url: https://drive.google.com/file/d/1i9R3JkdNRddWpMYWrLKSn2mQNu0YxRjE/preview
             url: https://github.com/2i2c-org/infrastructure/issues/1650 # todo: find the correct link here
           designed_by:
             name: 2i2c
