@@ -20,8 +20,8 @@ basehub:
         templateVars:
           org:
             name: gridSST Hack-A-Thon
-            logo_url: https://drive.google.com/file/d/1i9R3JkdNRddWpMYWrLKSn2mQNu0YxRjE/preview
-            url: https://github.com/2i2c-org/infrastructure/issues/1650 # todo: find the correct link here
+            logo_url: https://gridsst-hackathon.github.io/_static/logo.png
+            url: https://gridsst-hackathon.github.io/ # todo: find the correct link here
           designed_by:
             name: 2i2c
             url: https://2i2c.org
@@ -29,8 +29,8 @@ basehub:
             name: 2i2c
             url: https://2i2c.org
           funded_by:
-            name: "NASA ?"
-            url: https://github.com/2i2c-org/infrastructure/issues/1650 # todo: find the correct link here
+            name: "NASA Physical Oceanography Program"
+            url: https://science.nasa.gov/earth-science/focus-areas/climate-variability-and-change/ocean-physics
     hub:
       config:
         Authenticator:
