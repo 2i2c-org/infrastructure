@@ -197,11 +197,15 @@ def validate_authenticator_config(cluster_name, hub_name):
                     else:
                         hub_config = config["jupyterhub"]["hub"]["config"]
 
-                    authenticator_class = hub_config["JupyterHub"]["authenticator_class"]
+                    authenticator_class = hub_config["JupyterHub"][
+                        "authenticator_class"
+                    ]
                     allowed_users = hub_config["Authenticator"]["allowed_users"]
                     org_based_github_auth = False
                     if hub_config.get("GitHubOAuthenticator", None):
-                        org_based_github_auth = hub_config["GitHubOAuthenticator"].get("allowed_organizations", False)
+                        org_based_github_auth = hub_config["GitHubOAuthenticator"].get(
+                            "allowed_organizations", False
+                        )
                 except KeyError:
                     pass
 
