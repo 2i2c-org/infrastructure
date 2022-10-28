@@ -34,9 +34,9 @@ local daskNodes = [
     apiVersion: 'eksctl.io/v1alpha5',
     kind: 'ClusterConfig',
     metadata+: {
-        name: "gridSST",
+        name: "gridsst",
         region: clusterRegion,
-        version: '1.23'
+        version: '1.22'
     },
     availabilityZones: masterAzs,
     iam: {
@@ -47,7 +47,7 @@ local daskNodes = [
             name: 'core-a',
             availabilityZones: [nodeAz],
             ssh: {
-                publicKeyPath: 'ssh-keys/gridSST.key.pub'
+                publicKeyPath: 'ssh-keys/gridsst.key.pub'
             },
             instanceType: "m5.xlarge",
             minSize: 1,
@@ -67,7 +67,7 @@ local daskNodes = [
             maxSize: 500,
             instanceType: n.instanceType,
             ssh: {
-                publicKeyPath: 'ssh-keys/gridSST.key.pub'
+                publicKeyPath: 'ssh-keys/gridsst.key.pub'
             },
             labels+: {
                 "hub.jupyter.org/node-purpose": "user",
@@ -88,7 +88,7 @@ local daskNodes = [
             minSize: 0,
             maxSize: 500,
             ssh: {
-                publicKeyPath: 'ssh-keys/gridSST.key.pub'
+                publicKeyPath: 'ssh-keys/gridsst.key.pub'
             },
             labels+: {
                 "k8s.dask.org/node-purpose": "worker"

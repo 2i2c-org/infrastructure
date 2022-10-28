@@ -1,6 +1,6 @@
 region = "us-west-2"
 
-cluster_name = "gridSST"
+cluster_name = "gridsst"
 
 cluster_nodes_location = "us-west-2a"
 
