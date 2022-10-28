@@ -4,7 +4,7 @@ prometheusIngressAuthSecret:
 cluster-autoscaler:
   enabled: true
   autoDiscovery:
-    clusterName: gridSST
+    clusterName: gridsst
   awsRegion: us-west-2
 
 grafana:

@@ -1,10 +1,10 @@
-name: gridSST
+name: gridsst
 provider: aws
 aws:
-  key: enc-deployer-credentials.secret.json
-  clusterType: eks
-  clusterName: gridSST
-  region: us-west-2
+   key: enc-deployer-credentials.secret.json
+   clusterType: eks
+   clusterName: gridsst
+   region: us-west-2
 support:
   helm_chart_values_files:
     - support.values.yaml

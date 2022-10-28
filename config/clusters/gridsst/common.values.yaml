@@ -34,10 +34,10 @@ basehub:
     hub:
       config:
         Authenticator:
-          allowed_users: &gridSST_users
+          allowed_users: &gridsst_users
             - AlisonGray
             - dgumustel
-          admin_users: *gridSST_users
+          admin_users: *gridsst_users
         JupyterHub:
           authenticator_class: github
     singleuser:
