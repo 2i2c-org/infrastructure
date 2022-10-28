@@ -76,17 +76,6 @@ notebook_nodes = {
       count: 0
     }
   },
-  "gpu-k80" : {
-    min : 0,
-    max : 100,
-    machine_type : "n1-standard-8",
-    labels: {},
-    gpu: {
-      enabled: true,
-      type: "nvidia-tesla-k80",
-      count: 1
-    }
-  },
   "gpu-t4" : {
     min : 0,
     max : 100,
