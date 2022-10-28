@@ -35,7 +35,7 @@ basehub:
       config:
         Authenticator:
           allowed_users: &gridsst_users
-            - AlisonGray
+            - alisonrgray
             - dgumustel
           admin_users: *gridsst_users
         JupyterHub:
