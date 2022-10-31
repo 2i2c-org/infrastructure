@@ -34,7 +34,7 @@ We also document common problems and their solutions within these sections, wher
 sre-guide/support/index.md
 sre-guide/manage-k8s/index.md
 sre-guide/node-scale-up/index.md
-sre-guide/troubleshooting.md
+sre-guide/common-problems-solutions.md
 ```
 
 (hub-deployment-guide)=

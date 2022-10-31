@@ -1,7 +1,11 @@
 (troubleshooting)=
-# Troubleshooting and debugging
+# Common problems and their solutions
 
-These sections describe a few common and useful tips for troubleshooting our infrastructure.
+These sections describe a few common problems we face on our infrastructure and tips on how to solve them.
+
+```{contents}
+:local:
+```
 
 (troubleshooting/rollback)=
 ## Roll back (revert) a helm deploy
@@ -33,7 +37,7 @@ If you'd simply like to revert back to the state of the Kubernetes infrastructur
 This should revert the Helm deployment to the previous revision (the one just before you ran `helm upgrade`).
 
 (troubleshooting/prometheus-oom)=
-## Prometheus Server is Out Of Memory (OOM)
+## Prometheus server is out of memory (OOM)
 
 Prometheus collects Kubernetes metrics for our grafana charts and often requires a lot of memory during startup.
 If the server runs out of memory during the startup process, this presents itself as a "Timed out waiting for condition" error from `helm` on the command line, and `OOMKilled` events in the prometheus server pod events before the pod reverts to `CrashLoopBackOff` status.
