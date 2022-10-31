@@ -157,6 +157,7 @@ jobs:
       failure_awi-ciroh: "${{ steps.declare-failure-status.outputs.failure_awi-ciroh }}"
       failure_callysto: "${{ steps.declare-failure-status.outputs.failure_callysto }}"
       failure_nasa-cryo: "${{ steps.declare-failure-status.outputs.failure_nasa-cryo }}"
+      failure_gridsst: "${{ steps.declare-failure-status.outputs.failure_gridsst }}"
 
     # Only run this job on pushes to the default branch and when the job output is not
     # an empty list
