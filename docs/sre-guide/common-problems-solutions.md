@@ -81,3 +81,43 @@ Find the webhooks running on a cluster by running:
 kubectl -A get ValidatingWebhooksConfigurations
 ```
 ````
+
+## `No space left on device` error
+
+If users report a `No space left on device` error message when trying to login or
+use an `nbgitpuller` link, this is because the NFS mount storing users home
+directories is full. We rectify this by increasing the size of the NFS store.
+
+```{note}
+AWS EFS scales infinitely automatically, so we shouldn't see this error on AWS-hosted hubs.
+```
+
+### GCP Filestore
+
+1. Navigate to <https://console.cloud.google.com/filestore/instances> and ensure the correct Google Cloud project is selected in the top menu bar
+2. Select the Filestore you wish to resize from the list
+3. Click the "Edit" button at the top of the page
+4. Add the new capacity in the "Edit capacity" field. The value is Terabytes (TiB).
+5. Click "Save". Once this update has precipitated, users should now be able to login again.
+6. Follow-up this workflow with a PR to the infrastructure repo that updates the size of the Filestore in the appropriate `.tfvars` file (under `terraform/gcp/projects`) to match the change made in the console
+
+```{important}
+It is critical to complete this workflow by opening a PR, otherwise the changes
+made in the console will be undone the next time we run terraform!
+```
+
+### Manual NFS deployment to a VM on GCP
+
+```{warning}
+We have deprecated this method of deploying the NFS store but some of our clusters
+still use it presently.
+```
+
+1. Navigate to <https://console.cloud.google.com/compute/disks> and ensure the correct Google Cloud project is selected in the top menu bar
+2. Select the disk named `hub-homes-01`. The "Details" page should show "In use by: `nfs-server-01`".
+3. Click the "Edit" button at the top of the page
+4. Add the new disk size in the "Size" field under "Properties". The value is Gigabytes (GB).
+5. Click "Save"
+6. Navigate to the NFS VM that has the disk you just edited mounted to it. You can quickly get there by clicking `nfs-server-01` in the "In use by" field on the "Details" page of the disk.
+7. SSH into this VM. There is a dropdown menu called "SSH" at the top of the page that provides a variety of options to gain SSH access.
+8. Once you have successfully SSH'd into the machine, run the following command to expand the filesystem: `sudo xfs_growfs /export/home-01/`
