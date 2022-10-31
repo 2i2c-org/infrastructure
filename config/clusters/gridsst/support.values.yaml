@@ -8,6 +8,9 @@ cluster-autoscaler:
   awsRegion: us-west-2
 
 grafana:
+  grafana.ini:
+    server:
+      root_url: https://grafana.gridsst.2i2c.cloud/
   ingress:
     hosts:
       - grafana.gridsst.2i2c.cloud

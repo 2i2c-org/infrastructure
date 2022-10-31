@@ -4,6 +4,9 @@ nvidiaDevicePlugin:
     version: "latest"
 
 grafana:
+  grafana.ini:
+    server:
+      root_url: https://grafana.m2lines.2i2c.cloud/
   ingress:
     hosts:
       - grafana.m2lines.2i2c.cloud
