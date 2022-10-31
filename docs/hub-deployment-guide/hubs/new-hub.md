@@ -51,13 +51,18 @@ To deploy a new hub, follow these steps:
    For example, see the hubs configuration in [the 2i2c Google Cloud cluster configuration directory](https://github.com/2i2c-org/infrastructure/tree/HEAD/config/clusters/2i2c).
 
    ```{seealso}
-   See [](/topic/infrastructure/config.md) for more information about hub helm chart configuration.
+   See [](/topic/infrastructure/config.md) for general information about hub helm chart configuration.
    ```
 
-```{note}
-During this process you will likely also need to configure an Authentication Provider for the hub.
-See [](enable-auth-provider) for steps on how to achieve this.
-```
+   ```{seealso}
+   During this process you will likely also need to configure an Authentication Provider for the hub.
+   See [](enable-auth-provider) for steps on how to achieve this.
+   ```
+
+   ```{seealso}
+   At this point, you should have everything you need to deploy a hub that matches the requirements of the Community Representative.
+   If however a specific feature has been requested that does not come out-of-the-box with `basehub` or `daskhub`, see [](hub-features) for information on how to deploy it and the relevant config that should be added to the `<hub>.values.yaml` file.
+   ```
 
 5. Create a Pull Request with the new hub entry, and get a team member to review it.
 6. Once you merge the pull request, the GitHub Action workflow will detect that a new entry has been added to the configuration file.
@@ -66,7 +71,7 @@ See [](enable-auth-provider) for steps on how to achieve this.
    If something goes wrong and the workflow does not finish, try [deploying locally](hubs:manual-deploy) to access the logs to help understand what is going on.
    It may be necessary to make new changes to the hub's configuration via a Pull Request, or to *revert* the old Pull Request if you cannot determine how to resolve the problem.
 
-   ```{note}
+   ```{attention}
    In order to protect sensitive tokens, our CI/CD pipeline will **not** print testing output to its logs.
    You will need to run the [health check locally](hubs:manual-deploy:health-check) to inspect these logs.
    ```
