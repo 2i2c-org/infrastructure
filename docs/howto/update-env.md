@@ -5,7 +5,7 @@
 The default user environment is specified in its own GitHub repository, located
 at <https://github.com/2i2c-org/2i2c-hubs-image>.
 
-The image is built and pushed using [jupyterhub/repo2docker-action](https://github.com/jupyterhub/repo2docker-action) to the [pilot-hubs-image quay.io](https://quay.io/repository/2i2c/pilot-hubs-image) registry.
+The image is built and pushed using [jupyterhub/repo2docker-action](https://github.com/jupyterhub/repo2docker-action) to the [2i2c-hubs-image repository](https://quay.io/repository/2i2c/2i2c-hubs-image) on quay.io.
 
 To update this environment:
 
@@ -57,7 +57,7 @@ these rate limits. We recommend the following image repositories:
    and **recommended as the default**
 2. [Google Artifact Registry](https://cloud.google.com/artifact-registry), if
    you already have infrastructure running on Google Cloud.
-3. [AWS Public Container Registry](https://aws.amazon.com/blogs/aws/amazon-ecr-public-a-new-public-container-registry/)
+3. [AWS Elastic Container Registry](https://aws.amazon.com/blogs/aws/amazon-ecr-public-a-new-public-container-registry/)
    if you already have infrastructure running on AWS.
 4. [GitHub container registry](https://docs.github.com/en/free-pro-team@latest/packages/guides/about-github-container-registry).
    It integrates better with GitHub, but doesn't have a clear policy on rate limits
@@ -76,14 +76,14 @@ jupyterhub:
       tag: "2020.12.08"
 ```
 
-This can be any image name & tag available in a public container regsitry.
+This can be any image name & tag available in a public container registry.
 
 Whenever you push a new image, you should make a PR that updates the tag here.
 Only on merge will the hub get the new image.
 
 Another way to update the image is to use the [configurator](https://docs.2i2c.org/en/latest/admin/howto/configurator.html).
 
-### Split up an image for use with r2d-action
+### Split up an image for use with the repo2docker-action
 
 Sometimes we have user images defined in a repo, and we want to extract
 it to a standalone repo so it can be used with the [repo2docker action](https://github.com/jupyterhub/repo2docker-action).
