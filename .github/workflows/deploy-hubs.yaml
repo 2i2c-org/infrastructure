@@ -263,11 +263,14 @@ jobs:
           jobs = json.loads(r"""${{ needs.generate-jobs.outputs.prod-hub-matrix-jobs }}""")
           outputs = json.loads(r"""${{ toJson(needs.upgrade-support-and-staging.outputs) }}""")
 
-          filtered_jobs = [
-              job
-              for job in jobs
-              if outputs[f"failure_{job['cluster_name'].replace('.', '-')}"] != "true"
-          ]
+          try:
+            filtered_jobs = [
+                job
+                for job in jobs
+                if outputs[f"failure_{job['cluster_name'].replace('.', '-')}"] != "true"
+            ]
+          except KeyError:
+            print(f"The {cluster_name} cluster wasn't found in the `upgrade-support-and-staging.outputs` list. Please add it before continuing!")
 
           print(f"::set-output name=filtered-prod-hub-matrix-jobs::{json.dumps(filtered_jobs)}")
 
