@@ -193,19 +193,19 @@ def validate_authenticator_config(cluster_name, hub_name):
                 # Check if there's config that specifies an authenticator class
                 try:
                     if hub.spec["helm_chart"] != "basehub":
-                        authenticator_class = config["basehub"]["jupyterhub"]["hub"][
-                            "config"
-                        ]["JupyterHub"]["authenticator_class"]
-                        allowed_users = config["basehub"]["jupyterhub"]["hub"][
-                            "config"
-                        ]["Authenticator"]["allowed_users"]
+                        hub_config = config["basehub"]["jupyterhub"]["hub"]["config"]
                     else:
-                        authenticator_class = config["jupyterhub"]["hub"]["config"][
-                            "JupyterHub"
-                        ]["authenticator_class"]
-                        allowed_users = config["jupyterhub"]["hub"]["config"][
-                            "Authenticator"
-                        ]["allowed_users"]
+                        hub_config = config["jupyterhub"]["hub"]["config"]
+
+                    authenticator_class = hub_config["JupyterHub"][
+                        "authenticator_class"
+                    ]
+                    allowed_users = hub_config["Authenticator"]["allowed_users"]
+                    org_based_github_auth = False
+                    if hub_config.get("GitHubOAuthenticator", None):
+                        org_based_github_auth = hub_config["GitHubOAuthenticator"].get(
+                            "allowed_organizations", False
+                        )
                 except KeyError:
                     pass
 
@@ -218,7 +218,7 @@ def validate_authenticator_config(cluster_name, hub_name):
 
         # If the authenticator class is github, then raise an error
         # if `Authenticator.allowed_users` is set
-        if authenticator_class == "github" and allowed_users:
+        if authenticator_class == "github" and allowed_users and org_based_github_auth:
             raise ValueError(
                 f"""
                     Please unset `Authenticator.allowed_users` for {hub.spec['name']} when GitHub Orgs/Teams is
