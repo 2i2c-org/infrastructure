@@ -25,6 +25,7 @@ jobs:
           - cluster_name: callysto
           - cluster_name: 2i2c-uk
           - cluster_name: nasa-cryo
+          - cluster_name: gridsst
     steps:
       - name: Checkout repo
         uses: actions/checkout@v3
