@@ -72,6 +72,7 @@ See [](hubs:manual-deploy) for details on how to setup the tool locally.
 python3 deployer deploy-support CLUSTER_NAME
 ```
 
+(deploy-support-chart:dns-records)=
 ## Setting DNS records
 
 Once the `support` chart has been successfully deployed, retrieve the external IP address for the `ingress-nginx` load balancer.

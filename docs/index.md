@@ -68,8 +68,8 @@ deployed occasionally as a specific addition.
 :maxdepth: 1
 :caption: How-to guides
 howto/features/index.md
+howto/manage-domains/index.md
 howto/grafana-github-auth.md
-howto/override-domain.md
 howto/update-env.md
 howto/manual-nfs-setup.md
 ```

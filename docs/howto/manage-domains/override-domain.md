@@ -14,7 +14,7 @@ This could be for reasons such as:
 This is generally a temporary fix to rapidly make a hub undiscoverable and should not replace or take priority over processes that more robustly address the above concerns.
 ```
 
-## How-To Guide
+## How-to guide
 
 1. Create a new file with the path `config/clusters/<cluster_name>/<hub_name>.domain_override.secret.yaml` where `<hub_name>` is the name of the hub we are targeting, and `<cluster_name>` is the name of the cluster upon which the hub is running.
    ```{note}
