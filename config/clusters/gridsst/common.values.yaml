@@ -39,11 +39,20 @@ basehub:
         Authenticator:
           allowed_users: &gridsst_users
             - alisonrgray
+            - nikki-t
             - dgumustel
           admin_users: *gridsst_users
         JupyterHub:
           authenticator_class: github
     singleuser:
+      memory:
+        guarantee: 15G
+        limit: 16G
+      cpu:
+        guarantee: 4
+        limit: 8
+      nodeSelector:
+        node.kubernetes.io/instance-type: m5.8xlarge
       defaultUrl: /lab
       # User image: https://quay.io/repository/uwhackweek/snowex?tab=tags
       image:
