@@ -121,3 +121,34 @@ still use it presently.
 6. Navigate to the NFS VM that has the disk you just edited mounted to it. You can quickly get there by clicking `nfs-server-01` in the "In use by" field on the "Details" page of the disk.
 7. SSH into this VM. There is a dropdown menu called "SSH" at the top of the page that provides a variety of options to gain SSH access.
 8. Once you have successfully SSH'd into the machine, run the following command to expand the filesystem: `sudo xfs_growfs /export/home-01/`
+
+## Resetting a GitHub OAuth app when users are faced with a `403 Forbidden` error at login
+
+```{warning}
+These steps require you to have **admin** privileges on the GitHub org the hub is trying to authenticate against.
+If you don't have these privileges, ask the Community Representative to grant them to you.
+You can remove yourself from the org after establishing that the problem has been rectified.
+```
+
+When we setup authentication to use [GitHub orgs or teams](auth:github-orgs), we create an OAuth app in the 2i2c org, regardless of which org we are authenticating with.
+Upon the first login, the admins of the _target_ org need to grant permissions to this app to read their org info.
+If they don't do this correctly, all users will report a `403 Forbidden` error when they try to login.
+
+```{note}
+If this community has a staging and prod hub, you will need to repeat this process on both hubs
+```
+
+1. Find and select the appropriate [OAuth app in the 2i2c GitHub org](https://github.com/organizations/2i2c-org/settings/applications)
+2. Under "General" settings for the app, click the "Revoke all user tokens" button.
+   For all users that have previously attempt to login, this will force them to login again. Including you!
+3. Log into the affected hub again. You will repeat the OAuth flow and be asked to authorise the OAuth app again.
+   You will be presented with a list of all the GitHub orgs related to your account.
+   Some will already be authorised and have a green tick next to them, others where you are a member will have a "Request" button next to them.
+   Orgs where you are an admin will have a "Grant" button next to them. Click the "Grant" button next to the _target_ org before clicking the green "Authorize" button.
+   For example, see the below screenshot where we wish to grant the `nasa-cryo-staging` OAuth app access to the `binderhub-test-org` org.
+
+   ```{figure} ../images/granting-org-access-to-oauth-app.jpg
+   How to grant org access to an OAuth app on GitHub
+   ```
+
+The OAuth app will now have the correct permissions to read the org info and hence users should be able to successfully log into their hub.
