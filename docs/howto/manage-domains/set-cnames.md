@@ -29,14 +29,16 @@ deployment" issue asking them to complete the steps.
 For the hub to be available at hub.`<community-domain>`, please follow the below steps:
 
 1. Please create a CNAME record in your DNS zone
-2. Call the CNAME record `hub`
+2. Give the CNAME record an understandable name. This can be anything you want,
+   for example, `hub`.
 3. Set the following URL as the CNAME target:
    - `<community-name>.2i2c.cloud`  # Or whatever the record in our DNS zone is
 4. Let me know when you have done that and I shall redeploy the hub to use the new URL
 
 You can repeat this process to also host the staging hub at staging.hub.`<community-name>`,
-but this time, name the CNAME record should be called `staging.hub` and the
-target URL is `staging.<community-name>.2i2c.cloud`
+but this time, the CNAME record should be called something slightly different,
+such as `staging.hub` or whatever you prefer, and the target URL is
+`staging.<community-name>.2i2c.cloud`
 
 Hope that makes sense!
 ```
