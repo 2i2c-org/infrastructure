@@ -19,6 +19,9 @@ prometheusIngressAuthSecret:
   enabled: true
 
 grafana:
+  grafana.ini:
+    server:
+      root_url: https://<grafana-domain>/
   ingress:
     hosts:
       - <grafana-domain>
