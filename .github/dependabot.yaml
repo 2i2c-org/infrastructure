@@ -15,6 +15,10 @@
 #
 # Full configuration options can be found here:
 # https://docs.github.com/en/code-security/supply-chain-security/keeping-your-dependencies-updated-automatically/configuration-options-for-dependency-updates
+#
+# `directory` is a required field that can only take one value. Therefore, to
+# locate the different requirements.txt files throughout the repo, we must define
+# multiple rules with a specific path for `directory`
 
 version: 2
 updates:
@@ -30,9 +34,33 @@ updates:
         dependency-name: "*" # Match all packages
     reviewers:
       - "2i2c-org/tech-team"
-  # Maintain dependencies for pip
+  # Maintain dependencies for pip defined in project root (deployer module)
   - package-ecosystem: "pip"
     directory: "/"
+    schedule:
+      # Check for updates once a week. By default, this check happens on a Monday.
+      interval: "weekly"
+    ignore:
+      # Ignore patch upgrades to further reduce noise
+      - update-types: ["version-update:semver-patch"]
+        dependency-name: "*" # Match all packages
+    reviewers:
+      - "2i2c-org/tech-team"
+  # Maintain dependencies for pip defined in docs folder (documentation)
+  - package-ecosystem: "pip"
+    directory: "/docs"
+    schedule:
+      # Check for updates once a week. By default, this check happens on a Monday.
+      interval: "weekly"
+    ignore:
+      # Ignore patch upgrades to further reduce noise
+      - update-types: ["version-update:semver-patch"]
+        dependency-name: "*" # Match all packages
+    reviewers:
+      - "2i2c-org/tech-team"
+  # Maintain dependencies for pip defined in helm-charts/images/hub folder (default hub image)
+  - package-ecosystem: "pip"
+    directory: "/helm-charts/images/hub"
     schedule:
       # Check for updates once a week. By default, this check happens on a Monday.
       interval: "weekly"
