@@ -80,25 +80,29 @@ This AWS IAM Role is managed via terraform.
 4. Run `terraform output kubernetes_sa_annotations`, this should
    show you a list of hubs and the annotation required to be set on them:
 
-   ```{tabbed} GCP
-   <pre>
+   `````{tab-set}
+   ````{tab-item} GCP
+   :sync: gcp-key
+   ```bash
    $ terraform output kubernetes_sa_annotations
    {
      "prod" = "iam.gke.io/gcp-service-account: meom-ige-prod@meom-ige-cnrs.iam.gserviceaccount.com"
      "staging" = "iam.gke.io/gcp-service-account: meom-ige-staging@meom-ige-cnrs.iam.gserviceaccount.com"
    }
-   </pre>
    ```
+   ````
 
-   ```{tabbed} AWS
-   <pre>
+   ````{tab-item} AWS
+   :sync: aws-key
+   ```bash
    $ terraform output kubernetes_sa_annotations
    {
      "prod" = "eks.amazonaws.com/role-arn: arn:aws:iam::740010314650:role/uwhackweeks-prod"
      "staging" = "eks.amazonaws.com/role-arn: arn:aws:iam::740010314650:role/uwhackweeks-staging"
    }
-   </pre>
    ```
+   ````
+   `````
 
    This shows all the annotations for all the hubs configured to provide cloud access
    in this cluster. You only need to care about the hub you are currently dealing with.
@@ -108,21 +112,25 @@ This AWS IAM Role is managed via terraform.
 
 6. Specify the annotation from step 4, nested under `userServiceAccount.annotations`.
 
-   ```{tabbed} GCP
-    <pre>
-    userServiceAccount:
-        annotations:
-            iam.gke.io/gcp-service-account: meom-ige-staging@meom-ige-cnrs.iam.gserviceaccount.com"
-   </pre>
-    ```
+   `````{tab-set}
+   ````{tab-item} GCP
+   :sync: gcp-key
+   ```yaml
+   userServiceAccount:
+     annotations:
+       iam.gke.io/gcp-service-account: meom-ige-staging@meom-ige-cnrs.iam.gserviceaccount.com"
+   ```
+   ````
 
-   ```{tabbed} AWS
-    <pre>
-    userServiceAccount:
-        annotations:
-            eks.amazonaws.com/role-arn: arn:aws:iam::740010314650:role/uwhackweeks-staging
-   </pre>
-    ```
+   ````{tab-item} AWS
+   :sync: aws-key
+   ```yaml
+   userServiceAccount:
+     annotations:
+       eks.amazonaws.com/role-arn: arn:aws:iam::740010314650:role/uwhackweeks-staging
+   ```
+   ````
+   `````
 
     ```{note}
     If the hub is a `daskhub`, nest the config under a `basehub` key

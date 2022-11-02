@@ -1,4 +1,4 @@
-# Documentation Structure
+# Documentation structure
 
 We primarily offer documentation, peace of mind and expertise to
 our users - and code/configuration is simply an implementation

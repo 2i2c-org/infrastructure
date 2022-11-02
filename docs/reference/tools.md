@@ -103,7 +103,7 @@ The minimum required version is `1.3`.
 [`google-cloud-sdk`](https://cloud.google.com/sdk/docs/install) is the primary
 commandline tool used to interact with Google Cloud Platform (GCP). Our deployment
 scripts use it to authenticate to GCP, and it is very helpful in [debugging node
-issues](../howto/k8s/node-administration.md).
+issues](../sre-guide/manage-k8s/node-administration.md).
 
 ### Tips
 
