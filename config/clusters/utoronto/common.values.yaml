@@ -85,8 +85,6 @@ jupyterhub:
       JupyterHub:
         authenticator_class: azuread
         concurrent_spawn_limit: 100
-        # We wanna keep logs long term, primarily for analytics
-        extra_log_file: /srv/jupyterhub/jupyterhub.log
       AzureAdOAuthenticator:
         username_claim: oid
         login_service: "University of Toronto ID"
