@@ -12,6 +12,9 @@ prometheus:
           hosts:
             - prometheus.cloudbank.2i2c.cloud
 grafana:
+  grafana.ini:
+    server:
+      root_url: https://grafana.cloudbank.2i2c.cloud/
   ingress:
     hosts:
       - grafana.cloudbank.2i2c.cloud

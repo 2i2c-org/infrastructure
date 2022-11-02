@@ -11,10 +11,10 @@ local nodeAz = "us-west-2a";
 // A `node.kubernetes.io/instance-type label is added, so pods
 // can request a particular kind of node with a nodeSelector
 local notebookNodes = [
-    { instanceType: "m5.large" },
-    { instanceType: "m5.xlarge" },
-    { instanceType: "m5.2xlarge" },
-    { instanceType: "m5.8xlarge" },
+    { instanceType: "m5.large", minSize: 1 },
+    { instanceType: "m5.xlarge", minSize: 0 },
+    { instanceType: "m5.2xlarge", minSize: 0 },
+    { instanceType: "m5.8xlarge", minSize: 0 },
 ];
 
 // Node definitions for dask worker nodes. Config here is merged
@@ -34,11 +34,8 @@ local daskNodes = [
     apiVersion: 'eksctl.io/v1alpha5',
     kind: 'ClusterConfig',
     metadata+: {
-        name: "<< cluster_name >>",
+        name: "gridsst",
         region: clusterRegion,
-        // Warning: version 1.23 introduces some breaking changes
-        // Checkout the docs before upgrading
-        // ref: https://docs.aws.amazon.com/eks/latest/userguide/ebs-csi-migration-faq.html
         version: '1.22'
     },
     availabilityZones: masterAzs,
@@ -50,7 +47,7 @@ local daskNodes = [
             name: 'core-a',
             availabilityZones: [nodeAz],
             ssh: {
-                publicKeyPath: 'ssh-keys/<< cluster_name >>.key.pub'
+                publicKeyPath: 'ssh-keys/gridsst.key.pub'
             },
             instanceType: "m5.xlarge",
             minSize: 1,
@@ -66,11 +63,11 @@ local daskNodes = [
             // instanceTypes always have a .
             name: "nb-%s" % std.strReplace(n.instanceType, ".", "-"),
             availabilityZones: [nodeAz],
-            minSize: 0,
+            minSize: n.minSize,
             maxSize: 500,
             instanceType: n.instanceType,
             ssh: {
-                publicKeyPath: 'ssh-keys/<< cluster_name >>.key.pub'
+                publicKeyPath: 'ssh-keys/gridsst.key.pub'
             },
             labels+: {
                 "hub.jupyter.org/node-purpose": "user",
@@ -91,7 +88,7 @@ local daskNodes = [
             minSize: 0,
             maxSize: 500,
             ssh: {
-                publicKeyPath: 'ssh-keys/<< cluster_name >>.key.pub'
+                publicKeyPath: 'ssh-keys/gridsst.key.pub'
             },
             labels+: {
                 "k8s.dask.org/node-purpose": "worker"

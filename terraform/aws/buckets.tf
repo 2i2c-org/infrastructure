@@ -1,12 +1,12 @@
 resource "aws_s3_bucket" "user_buckets" {
   for_each = var.user_buckets
-  bucket   = "${var.cluster_name}-${each.key}"
+  bucket   = lower("${var.cluster_name}-${each.key}")
 
 }
 
 resource "aws_s3_bucket_lifecycle_configuration" "user_bucket_expiry" {
   for_each = var.user_buckets
-  bucket   = "${var.cluster_name}-${each.key}"
+  bucket   = lower("${var.cluster_name}-${each.key}")
 
   dynamic "rule" {
     for_each = each.value.delete_after != null ? [1] : []

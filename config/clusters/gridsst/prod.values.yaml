@@ -1,0 +1,9 @@
+basehub:
+  userServiceAccount:
+    annotations:
+      eks.amazonaws.com/role-arn: arn:aws:iam::993998403439:role/gridsst-prod
+  jupyterhub:
+    hub:
+      config:
+        GitHubOAuthenticator:
+          oauth_callback_url: https://gridsst.2i2c.cloud/hub/oauth_callback

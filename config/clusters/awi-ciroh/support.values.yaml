@@ -2,6 +2,9 @@ prometheusIngressAuthSecret:
   enabled: true
 
 grafana:
+  grafana.ini:
+    server:
+      root_url: https://grafana.ciroh.awi.2i2c.cloud/
   ingress:
     hosts:
       - grafana.ciroh.awi.2i2c.cloud
