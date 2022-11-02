@@ -41,11 +41,6 @@ async def check_hub_health(hub_url, test_notebook_path, service_api_token):
                 # This is because we would have lost its api token from the previous run.
                 await hub.delete_user(username)
 
-        # Temporary fix for https://github.com/2i2c-org/infrastructure/issues/1611
-        # FIXME: Remove this once https://github.com/jupyterhub/kubespawner/pull/631 gets merged
-        user_options = None
-        if ("openscapes" in hub_url) or ("carbonplan" in hub_url):
-            user_options = {"profile": "small", "image": "python"}
         # Create a new user, start a server and execute a notebook
         await execute_notebook(
             hub_url,
