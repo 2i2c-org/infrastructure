@@ -41,6 +41,12 @@ When this hub image needs to be updated, the steps to take are:
 
      This package is also listed under `dev-requirements.txt`, so it should be present if you've installed the dev dependencies.
 
+   - Make sure you are in the `helm-charts` directory, where the `chartpress.yaml` is located:
+
+     ```bash
+     cd ./helm-charts
+     ```
+
    - Run chartpress to build the image, push it to the registry and update the basehub helm chart to use the updated image tag
 
      ```bash
