@@ -16,7 +16,7 @@ jupyterhub:
     db:
       pvc:
         # prod stores logs, so let's make it big
-        storage: 10Gi
+        storage: 60Gi
     config:
       AzureAdOAuthenticator:
         oauth_callback_url: https://jupyter.utoronto.ca/hub/oauth_callback
