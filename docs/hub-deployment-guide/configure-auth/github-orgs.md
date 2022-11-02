@@ -2,8 +2,17 @@
 # GitHub Orgs and Teams
 
 For communities that require authenticating users against [a GitHub organisation or team](https://docs.github.com/en/organizations), we instead use the [native JupyterHub OAuthenticator](https://github.com/jupyterhub/oauthenticator).
-This involves a few more manual steps than the `auth0` setup described above.
-There are also some steps that a Community Representative will need to take to set up authentication, described below.
+
+## Get admin access to the target organisation
+
+To more easily facilitate setting up this method of authentication, the engineer responsible for deploying the hub should have admin access to the organisation the Community Representative(s) want to use to manage its members.
+We ask for this permission because, if the Community Representative doesn't grant permissions to the OAuth app during the first login, _all_ subsequent users will be see a `403 Forbidden` error when they try to login and correcting this can involve a lot of back-and-forth between us and the Community Representative.
+This process is a lot more streamlined if we have the power to set this up ourselves.
+
+Please ask the Community Representative on the "New Hub" issue to grant you admin access to the org before setting up this infrastructure.
+You can remove yourself from the org once you have confirmed that login is working as expected.
+
+## How-to setup GitHub auth
 
 1. **Create a GitHub OAuth App.**
    This can be achieved by following [GitHub's documentation](https://docs.github.com/en/developers/apps/building-oauth-apps/creating-an-oauth-app).
@@ -129,23 +138,37 @@ There are also some steps that a Community Representative will need to take to s
         - ORG_NAME:TEAM_NAME
         - ORG_NAME:SUB_TEAM_NAME
     ```
-
     ````
 
 6. Run the deployer as normal to apply the config.
 
-## Follow-up: GitHub organization administrators must grant access
+### Granting access to the OAuth app
 
-Once the OAuth callbacks have been set up following the steps above, somebody with administrator permissions for the GitHub organization needs to grant access to the OAuth app that we have created.
+Once the OAuth callbacks have been set up following the steps above, you need to grant access to the OAuth app that we have created.
 
-The first time that somebody tries to log on to the hub with this authentication set up, they should be presented with a page that asks them to grant access to various GitHub organizations.
-For each user, GitHub will list _all organizations to which they can control authorization_.
-**They must grant access to the organization that is added to `allowed_organizations` above**, but do not need to grant access to any other organizations.
+The first time that you log on to the hub with this authentication set up, you will be presented with a page that asks you to grant access to various GitHub organizations.
+For each user, GitHub will list _all organizations of which they are a member_.
+
+- Organisations with a green tick next to them already permit the app to read their data
+- Organisations that you are a member of (but not an admin) have a "Request" button next to them.
+  This will notify the org admins to grant access to this app on your behalf.
+- Organisations that you are an admin of will have a "Grant" button next to them
+
+**You must grant access to the organization that is added to `allowed_organizations` in the config**, but do not need to grant access to any other organizations.
 In this case, "granting access" only means that the JupyterHub can view whether a user is a member of the GitHub organization.
 
-If administrators report a `403 forbidden` error when they try to log in to the hub, there is a good chance that they did _not grant access_ to the right GitHub organization.
-In this case, they should go to the configuration page for this app within their GitHub organization and explicitly grant it access.
-See [the GitHub apps for organizations docs](https://docs.github.com/en/organizations/managing-access-to-your-organizations-apps) for more information.
+For example, see the image below for how we would grant the `nasa-cryo-staging` OAuth app access to the `binderhub-test-org`.
+
+```{figure} ../../images/granting-org-access-to-oauth-app.jpg
+How to grant org access to an OAuth app on GitHub
+```
+
+```{note}
+If you need to reset the permissions of the app for any reason, see [](troubleshooting:reset-github-app).
+You will **still** require admin access to the org to carry out those steps.
+```
+
+Once you have confirmed with the Community Representative that users can login, you can remove yourself from the org.
 
 ## Restricting user profiles based on GitHub Team Membership
 

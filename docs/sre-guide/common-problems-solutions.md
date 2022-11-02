@@ -122,6 +122,7 @@ still use it presently.
 7. SSH into this VM. There is a dropdown menu called "SSH" at the top of the page that provides a variety of options to gain SSH access.
 8. Once you have successfully SSH'd into the machine, run the following command to expand the filesystem: `sudo xfs_growfs /export/home-01/`
 
+(troubleshooting:reset-github-app)=
 ## Resetting a GitHub OAuth app when users are faced with a `403 Forbidden` error at login
 
 ```{warning}
