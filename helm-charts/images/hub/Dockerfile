@@ -13,12 +13,9 @@
 #
 FROM jupyterhub/k8s-hub:2.0.1-0.dev.git.5840.h71ad2287
 
-ENV CONFIGURATOR_VERSION ed7e3a0df1e3d625d10903ef7d7fd9c2fbb548db
+COPY requirements.txt /tmp/
 
-RUN pip install --no-cache git+https://github.com/yuvipanda/jupyterhub-configurator@${CONFIGURATOR_VERSION}
-
-# Latest version comes with some breaking changes https://oauthenticator.readthedocs.io/en/latest/migrations.html#migrating-cilogonoauthenticator-to-version-15-0
-RUN pip install --no-cache --upgrade git+https://github.com/jupyterhub/oauthenticator@6cf6599d99b47f99db3826ceaaedf467af14a05d
+RUN pip install -r /tmp/requirements.txt
 
 USER root
 RUN mkdir -p /usr/local/etc/jupyterhub-configurator
