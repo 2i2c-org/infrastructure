@@ -2,9 +2,10 @@
 # declared in basehub/Chart.yaml.
 #
 # If you make an update to this tag and the JupyterHub Helm chart's version,
-# then commit those changes and then perform `chartpress --push` with your
-# quay.io container registry credentials configured to have access to
-# https://quay.io/repository/2i2c/pilot-hub.
+# then first commit those changes.
+# Then, from the `helm-charts` directory where the `chartpress.yaml` is located,
+# perform `chartpress --push` with your quay.io container registry credentials
+# configured to have access to https://quay.io/repository/2i2c/pilot-hub.
 #
 # Note: if on macOs with M1, you need to run chartpress with docker buildx under the hood and specify
 # the architecture to use.
