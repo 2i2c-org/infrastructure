@@ -31,6 +31,110 @@ on:
   workflow_dispatch:
 
 jobs:
+  # This job inspects changed files in order to determine which cluster files
+  # should be validated. If helm-chart files change, then all clusters will be
+  # validated. The output of this job is a json-encoded dictionary of the
+  # cluster names to be validated. This is passed to the
+  # validate-helm-charts-values-files job to define a matrix strategy.
+  # We also set a continue_workflow job output that determines if either the
+  # common or cluster_specific files have changed and whether the next job
+  # should be run.
+  #
+  # === Notes on dorny/paths-filter syntax ===
+  # 1. Setting 'list-files: csv' sets an output called '${FILTER_NAME}_files'
+  #    that we use to determine which specific clusters have file changes
+  # 2. The 'added|modified:' syntax before a path glob pattern means that we
+  #    only care about files that have been added or modified, not deleted
+  # 3. We can also group filters together and hence only need to run the action
+  #    step *once* with the 'common' and 'cluster-specific' filters together
+  generate-clusters-to-validate:
+    runs-on: ubuntu-latest
+    permissions:
+      pull-requests: read
+    outputs:
+      continue_workflow: |
+        ${{ steps.file_changes.outputs.common == 'true' }} ||
+        ${{ steps.file_changes.outputs.cluster_specific == 'true' }}
+      cluster_matrix: ${{ env.MATRIX }}
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-python@v4
+        with:
+          python-version: "3.10"
+
+      - name: Check for file changes
+        # Action repo: https://github.com/dorny/paths-filter
+        uses: dorny/paths-filter@v2
+        id: file_changes
+        with:
+          list-files: csv
+          filters: |
+            common:
+              - added|modified: deployer/**
+              - added|modified: helm-charts/basehub/**
+              - added|modified: helm-charts/daskhub/**
+              - added|modified: helm-charts/support/**
+              - added|modified: requirements.txt
+              - added|modified: .github/workflows/validate-hubs.yaml
+            cluster_specific:
+              - added|modified: config/clusters/**
+
+      # Only run this step if there *ARE* changes under the common filter
+      - name: Generate a matrix containing all clusters
+        if: steps.file_changes.outputs.common == 'true'
+        shell: python
+        run: |
+          import os
+
+          # List all cluster folders
+          cluster_folders = os.listdir("config/clusters")
+
+          # Construct a matrix of all clusters
+          matrix = []
+          for cluster in cluster_folders:
+              matrix.append({"cluster_name": cluster})
+
+          # Write matrix to the GITHUB_ENV file in GitHub Actions
+          env_file = os.getenv("GITHUB_ENV")
+          with open(env_file, "a") as f:
+              f.write(f"MATRIX={matrix}")
+
+      # Only run this step if there are *NO* changes under the common filepaths,
+      # but *ARE* changes under the cluster_specific filter
+      - name: Generate a matrix containing only clusters that have changes
+        if: |
+          steps.file_changes.outputs.common != 'true' &&
+          steps.file_changes.outputs.cluster_specific == 'true'
+        shell: python
+        run: |
+          import os
+          from pathlib import Path
+
+          # Consume list of changed cluster files and convert to list by splitting
+          # on the comma character
+          cluster_files = r"""${{ steps.cluster_specific_files.outputs.cluster_specific_files }}"""
+          cluster_files = cluster_files.split(",")
+          assert isinstance(cluster_files, list)
+
+          # Extract the cluster names from the paths of the changed files
+          clusters = []
+          for cluster_file in cluster_files:
+              clusters.append(Path(cluster_file).parent.stem)
+
+          # Ensure each cluster name only appears once by transforming the list
+          # into a set
+          clusters = set(clusters)
+
+          # Construct a matrix of clusters that have changes
+          matrix = []
+          for cluster in clusters:
+              matrix.append({"cluster_name": cluster})
+
+          # Write the matrix to the GITHUB_ENV file in GitHub Actions
+          env_file = os.getenv("GITHUB_ENV")
+          with open(env_file, "a") as f:
+              f.write(f"matrix={matrix}")
+
   validate-helm-charts-values-files:
     runs-on: ubuntu-latest
     strategy:
