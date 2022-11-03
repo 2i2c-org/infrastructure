@@ -10,6 +10,8 @@ name: Validate clusters
 
 on:
   pull_request:
+    branches:
+      - master
     paths:
       - config/clusters/**
       - helm-charts/**
@@ -17,15 +19,14 @@ on:
       - requirements.txt
       - .github/workflows/validate-hubs.yaml
   push:
+    branches:
+      - master
     paths:
       - config/clusters/**
       - helm-charts/**
       - deployer/**
       - requirements.txt
       - .github/workflows/validate-hubs.yaml
-    branches-ignore:
-      - "dependabot/**"
-      - "pre-commit-ci-update-config"
     tags:
       - "**"
   workflow_dispatch:
