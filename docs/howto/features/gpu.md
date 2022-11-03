@@ -17,7 +17,9 @@ series nodes.
 1. Login to the AWS management console of the account the cluster i
    in.
 2. Make sure you are in same region the cluster is in, by checking the
-   region selector on the top right.
+   region selector on the top right. **This is very important**, as getting
+   a quota increase in the wrong region means we have to do this all over
+   again.
 3. Open the [EC2 Service Quotas](https://us-west-2.console.aws.amazon.com/servicequotas/home/services/ec2/quotas)
    page
 4. Select 'Running On-Demand G and VT Instances' quota - this provisions NVidia T4
