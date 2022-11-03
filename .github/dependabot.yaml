@@ -70,7 +70,7 @@ updates:
         dependency-name: "*" # Match all packages
     reviewers:
       - "2i2c-org/tech-team"
-    # This dependabot PRs should not be merged as is, because additional manual steps are required also.
-    # Checkout https://infrastructure.2i2c.org/en/latest/topic/infrastructure/hub-image.html#updating-the-hub-image
     labels:
+      # This dependabot PRs should not be merged as is, because additional manual steps are required also.
+      # Checkout https://infrastructure.2i2c.org/en/latest/topic/infrastructure/hub-image.html#updating-the-hub-image
       - "requires follow-up""
