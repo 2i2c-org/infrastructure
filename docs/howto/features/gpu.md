@@ -20,7 +20,8 @@ series nodes.
    region selector on the top right.
 3. Open the [EC2 Service Quotas](https://us-west-2.console.aws.amazon.com/servicequotas/home/services/ec2/quotas)
    page
-4. Select 'Running On-Demand P Instances' quota
+4. Select 'Running On-Demand G and VT Instances' quota - this provisions NVidia T4
+   GPUs (which are the `G4dn` instance type).
 5. Select 'Request Quota Increase'.
 6. Input the *number of vCPUs* needed. This translates to a total
    number of GPU nodes based on how many CPUs the nodes we want have.
