@@ -1,3 +1,4 @@
+# From https://docs.github.com/en/actions/managing-issues-and-pull-requests/commenting-on-an-issue-when-a-label-is-added
 name: Comment dependabot PRs with specific label
 on:
   pull_request:
