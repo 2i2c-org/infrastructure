@@ -342,7 +342,9 @@ def generate_helm_upgrade_jobs(changed_filepaths):
             f.write(f"prod-hub-matrix-jobs={json.dumps(prod_hub_matrix_jobs)}")
 
         with open(env_file, "a") as f:
-            f.write(f"support-and-staging-matrix-jobs={json.dumps(support_and_staging_matrix_jobs)}")
+            f.write(
+                f"support-and-staging-matrix-jobs={json.dumps(support_and_staging_matrix_jobs)}"
+            )
 
         # Don't bother generating a comment if both of the matrices are empty
         if support_and_staging_matrix_jobs or prod_hub_matrix_jobs:
