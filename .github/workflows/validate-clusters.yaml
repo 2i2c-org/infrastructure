@@ -38,7 +38,8 @@ jobs:
   # validate-helm-charts-values-files job to define a matrix strategy.
   # We also set a continue_workflow job output that determines if either the
   # common or cluster_specific files have changed and whether the next job
-  # should be run.
+  # should be run. We always run the next job if the workflow was manually
+  # triggered.
   #
   # === Notes on dorny/paths-filter syntax ===
   # 1. Setting 'list-files: csv' sets an output called '${FILTER_NAME}_files'
@@ -53,8 +54,9 @@ jobs:
       pull-requests: read
     outputs:
       continue_workflow: |
-        ${{ steps.file_changes.outputs.common == 'true' }} ||
-        ${{ steps.file_changes.outputs.cluster_specific == 'true' }}
+        ${{ github.event_name == 'workflow_dispatch' }} ||  # Continue the workflow if it was manually triggered
+        (${{ steps.file_changes.outputs.common == 'true' }} ||
+        ${{ steps.file_changes.outputs.cluster_specific == 'true' }})
       cluster_matrix: ${{ env.MATRIX }}
     steps:
       - uses: actions/checkout@v3
@@ -63,6 +65,8 @@ jobs:
           python-version: "3.10"
 
       - name: Check for file changes
+        # Don't run this step when we manually trigger the workflow
+        if: github.event_name != 'workflow_dispatch'
         # Action repo: https://github.com/dorny/paths-filter
         uses: dorny/paths-filter@v2
         id: file_changes
@@ -79,9 +83,12 @@ jobs:
             cluster_specific:
               - added|modified: config/clusters/**
 
-      # Only run this step if there *ARE* changes under the common filter
+      # Only run this step if there *ARE* changes under the common filter, *OR*
+      # we have manually triggered the workflow
       - name: Generate a matrix containing all clusters
-        if: steps.file_changes.outputs.common == 'true'
+        if: |
+          github.event_name == 'workflow_dispatch' ||
+          steps.file_changes.outputs.common == 'true'
         shell: python
         run: |
           import os
@@ -100,9 +107,11 @@ jobs:
               f.write(f"MATRIX={matrix}")
 
       # Only run this step if there are *NO* changes under the common filter,
-      # but *ARE* changes under the cluster_specific filter
+      # but *ARE* changes under the cluster_specific filter, *AND* we have not
+      # manually triggered the workflow
       - name: Generate a matrix containing only clusters that have changes
         if: |
+          github.event_name != 'workflow_dispatch' &&
           steps.file_changes.outputs.common != 'true' &&
           steps.file_changes.outputs.cluster_specific == 'true'
         shell: python
