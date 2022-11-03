@@ -70,3 +70,5 @@ updates:
         dependency-name: "*" # Match all packages
     reviewers:
       - "2i2c-org/tech-team"
+    labels:
+      - "do not merge"
