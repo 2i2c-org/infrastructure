@@ -331,15 +331,18 @@ def generate_helm_upgrade_jobs(changed_filepaths):
     # This will avoid errors trying to set CI output variables in an environment that
     # doesn't exist.
     ci_env = os.environ.get("CI", False)
+    # The use of ::set-output was deprecated as per the below blog post and
+    # instead we share variables between steps/jobs by writing them to GITHUB_ENV:
+    # https://github.blog/changelog/2022-10-11-github-actions-deprecating-save-state-and-set-output-commands/
+    # More info on GITHUB_ENV: https://docs.github.com/en/actions/learn-github-actions/environment-variables
+    env_file = os.getenv("GITHUB_ENV")
     if ci_env:
-        # Add these matrix jobs as output variables for use in another job
-        # https://docs.github.com/en/actions/using-workflows/workflow-syntax-for-github-actions
-        print(
-            f"::set-output name=prod-hub-matrix-jobs::{json.dumps(prod_hub_matrix_jobs)}"
-        )
-        print(
-            f"::set-output name=support-and-staging-matrix-jobs::{json.dumps(support_and_staging_matrix_jobs)}"
-        )
+        # Add these matrix jobs as environment variables for use in another job
+        with open(env_file, "a") as f:
+            f.write(f"prod-hub-matrix-jobs={json.dumps(prod_hub_matrix_jobs)}")
+
+        with open(env_file, "a") as f:
+            f.write(f"support-and-staging-matrix-jobs={json.dumps(support_and_staging_matrix_jobs)}")
 
         # Don't bother generating a comment if both of the matrices are empty
         if support_and_staging_matrix_jobs or prod_hub_matrix_jobs:
