@@ -82,9 +82,6 @@ basehub:
       memory:
         guarantee: 15G
         limit: 16G
-      cpu:
-        guarantee: 4
-        limit: 8
       nodeSelector:
         node.kubernetes.io/instance-type: m5.8xlarge
       defaultUrl: /lab
