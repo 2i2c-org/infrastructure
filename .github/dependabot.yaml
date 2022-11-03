@@ -72,3 +72,5 @@ updates:
       - "2i2c-org/tech-team"
     labels:
       - "do not merge"
+    commit-message:
+      - prefix: "[Do Not Merge]"
