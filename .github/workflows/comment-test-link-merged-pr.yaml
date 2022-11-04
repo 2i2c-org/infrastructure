@@ -1,3 +1,10 @@
+# The use of ::set-output in this workflow file was deprecated as per:
+# https://github.blog/changelog/2022-10-11-github-actions-deprecating-save-state-and-set-output-commands/
+# We have instead pivoted to writing to the GITHUB_ENV file, either by the
+# method suggested in the above blog post, or by following the below Stack
+# Overflow answer for python code: https://stackoverflow.com/a/70123641
+# More info on GITHUB_ENV: https://docs.github.com/en/actions/learn-github-actions/environment-variables
+
 name: Comment GitHub Actions link on a merged PR
 
 on:
@@ -22,24 +29,32 @@ jobs:
   get-pr-number:
     runs-on: ubuntu-latest
     outputs:
-      continue-workflow: ${{ steps.get-pr-number.outputs.continue-workflow }}
-      pr-number: ${{ steps.get-pr-number.outputs.pr-number }}
+      continue-workflow: ${{ env.continue-workflow }}
+      pr-number: ${{ env.pr-number }}
     steps:
       - name: Extract Pull Request number
-        id: get-pr-number
         shell: python
         run: |
+          import os
           import re
 
-          commit_msg = r"""${{ github.event.head_commit.message }}"""
-          print(f"::set-output name=continue-workflow::{'Merge pull request' in commit_msg}")
+          # Get GITHUB_ENV file in GitHub Actions
+          env_file = os.getenv("GITHUB_ENV")
 
+          # Retrieve the commit message from GitHub Actions context
+          commit_msg = r"""${{ github.event.head_commit.message }}"""
+
+          # Use regex to extract the PR number from the commit message
           match = re.search('(?<=#)[0-9]*', commit_msg)
-          if match is not None:
-              pr_number = match.group(0)
-              print(f"::set-output name=pr-number::{pr_number}")
-          else:
-              print(f"::set-output name=pr-number::{None}")
+          pr_number = None if match is None else match.group(0)
+
+          # Write the continue_workflow and pr_number variables to the
+          # GITHUB_ENV file in GitHub Actions
+          with open(env_file, "a") as f:
+              f.write(f"continue-workflow="{'Merge pull request' in commit_msg}")
+
+          with open(env_file, "a") as f:
+              f.write(f"pr-number={pr_number}")
 
   # The other piece of information we require is the URL of the running workflow
   # triggered by merging the Pull Request. We use the ghapi Python package to interact
@@ -60,15 +75,15 @@ jobs:
       # Grant GITHUB_TOKEN permissions to read a list of workflows for the repo
       actions: read
     outputs:
-      workflow-url: ${{ steps.get-workflow-url.outputs.workflow-url}}
+      workflow-url: ${{ env.workflow-url }}
     steps:
       - name: Install ghapi to interact with the GitHub REST API via Python
         run: pip install ghapi
 
       - name: Find workflow URL
-        id: get-workflow-url
         shell: python
         run: |
+          import os
           from datetime import datetime
           from ghapi.all import GhApi, paged
 
@@ -108,7 +123,10 @@ jobs:
               if workflow_url:
                   break
 
-          print(f"::set-output name=workflow-url::{workflow_url}")
+          # Write the workflow URL to the GITHUB_ENV file in GitHub Actions
+          env_file = os.getenv("GITHUB_ENV")
+          with open(env_file, "a") as f:
+              f.write(f"workflow-url={workflow_url")
         env:
           BRANCH: "master"
           EVENT: "push"
