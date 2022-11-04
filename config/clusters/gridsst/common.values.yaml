@@ -45,6 +45,10 @@ basehub:
         JupyterHub:
           authenticator_class: github
     singleuser:
+      extraEnv:
+        # Temporarily set for *all* pods, including pods without any GPUs,
+        # to work around https://github.com/2i2c-org/infrastructure/issues/1530
+        NVIDIA_DRIVER_CAPABILITIES: compute,utility
       profileList:
         # The mem-guarantees are here so k8s doesn't schedule other pods
         # on these nodes.
@@ -79,9 +83,32 @@ basehub:
             mem_guarantee: 115G
             node_selector:
               node.kubernetes.io/instance-type: m5.8xlarge
-      memory:
-        guarantee: 15G
-        limit: 16G
+        - display_name: "GPU"
+          # P2.xlarge has 64G of RAM per GPU while g4dn has 16?!
+          description: |
+            ~4CPUs, Nvidia T4 GPU, 14G of RAM.
+          profile_options:
+            image:
+              display_name: Image
+              choices:
+                tensorflow:
+                  display_name: Pangeo Tensorflow ML Notebook
+                  slug: "tensorflow"
+                  kubespawner_override:
+                    image: "pangeo/ml-notebook:2022.10.18"
+                pytorch:
+                  display_name: Pangeo PyTorch ML Notebook
+                  default: true
+                  slug: "pytorch"
+                  kubespawner_override:
+                    image: "pangeo/pytorch-notebook:2022.10.18"
+          kubespawner_override:
+            mem_limit: null
+            extra_resource_limits:
+              nvidia.com/gpu: "1"
+            mem_guarantee: 14G
+            node_selector:
+              node.kubernetes.io/instance-type: g4dn.xlarge
       nodeSelector:
         node.kubernetes.io/instance-type: m5.8xlarge
       defaultUrl: /lab
