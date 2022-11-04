@@ -57,10 +57,6 @@ jobs:
     steps:
       - name: Checkout repo
         uses: actions/checkout@v3
-        with:
-          # Fetch-depth is required for the jitterbit/get-changed-files action
-          # https://github.com/jitterbit/get-changed-files/issues/24#issuecomment-1047442168
-          fetch-depth: 0
 
       - name: Install Python 3.9
         uses: actions/setup-python@v4
@@ -86,11 +82,20 @@ jobs:
           pip list
 
       - name: Identify files that have been added or modified
-        uses: jitterbit/get-changed-files@v1
+        # Action repo: https://github.com/dorny/paths-filter
+        uses: dorny/paths-filter@v2
         id: changed-files
         with:
-          format: space-delimited
-          token: ${{ secrets.GITHUB_TOKEN }}
+          list-files: csv
+          filters: |
+            changed:
+              - added|modified: deployer/**
+              - added|modified: requirements.txt
+              - added|modified: .github/actions/setup-deploy/**
+              - added|modified: helm-charts/basehub/**
+              - added|modified: helm-charts/daskhub/**
+              - added|modified: helm-charts/support/**
+              - added|modified: config/clusters/**
 
       # This step will create a comment-body.txt file containing the jobs to be run in a
       # Markdown table format to be posted on a Pull Request, if this job is triggered
@@ -98,7 +103,7 @@ jobs:
       - name: Generate matrix jobs
         id: generate-jobs
         run: |
-          python deployer generate-helm-upgrade-jobs "${{ steps.changed-files.outputs.added_modified }}"
+          python deployer generate-helm-upgrade-jobs "${{ steps.changed-files.outputs.changed_files }}"
 
       # The comment-deployment-plan-pr.yaml workflow won't have the correct context to
       # know the PR number, so we save it to a file to pass to that workflow
