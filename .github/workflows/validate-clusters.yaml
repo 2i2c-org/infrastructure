@@ -17,7 +17,7 @@ on:
       - helm-charts/**
       - deployer/**
       - requirements.txt
-      - .github/workflows/validate-hubs.yaml
+      - .github/workflows/validate-clusters.yaml
   push:
     branches:
       - master
@@ -26,7 +26,7 @@ on:
       - helm-charts/**
       - deployer/**
       - requirements.txt
-      - .github/workflows/validate-hubs.yaml
+      - .github/workflows/validate-clusters.yaml
     tags:
       - "**"
   workflow_dispatch:
@@ -55,9 +55,9 @@ jobs:
       pull-requests: read
     outputs:
       continue_workflow: |
-        ${{ github.event_name == 'workflow_dispatch' }} ||  # Continue the workflow if it was manually triggered
-        (${{ steps.file_changes.outputs.common == 'true' }} ||
-        ${{ steps.file_changes.outputs.cluster_specific == 'true' }})
+        ${{ github.event_name == 'workflow_dispatch' ||
+        (steps.file_changes.outputs.common == 'true' ||
+        steps.file_changes.outputs.cluster_specific == 'true') }}
       cluster_matrix: ${{ env.MATRIX }}
     # Only run this job if one of the following conditions is true:
     # - The workflow was manually triggered
@@ -67,7 +67,7 @@ jobs:
     if: |
       github.event_name == 'workflow_dispatch' ||
       (github.event_name == 'push' && contains(github.ref, 'master')) ||
-      (github.event_name == 'pull_request' && contains(github.head_ref, fromJson('["dependabot", "pre-commit"]')) == 'false')
+      (github.event_name == 'pull_request' && contains(github.head_ref, fromJson('["dependabot", "pre-commit"]')) == false)
 
     steps:
       - uses: actions/checkout@v3
@@ -90,7 +90,7 @@ jobs:
               - added|modified: helm-charts/daskhub/**
               - added|modified: helm-charts/support/**
               - added|modified: requirements.txt
-              - added|modified: .github/workflows/validate-hubs.yaml
+              - added|modified: .github/workflows/validate-clusters.yaml
             cluster_specific:
               - added|modified: config/clusters/**
 
@@ -171,7 +171,7 @@ jobs:
     runs-on: ubuntu-latest
     needs: [generate-clusters-to-validate]
     if: |
-      needs.generate-clusters-to-validate.outputs.continue_workflow == 'true' &&
+      needs.generate-clusters-to-validate.outputs.continue_workflow &&
       needs.generate-clusters-to-validate.outputs.cluster_matrix != '[]'
     strategy:
       fail-fast: false
@@ -188,8 +188,8 @@ jobs:
         run: |
           pip install -r requirements.txt
 
-      - name: "Validate cluster: ${{ matrix.cluster_name }}"
+      - name: "Validate cluster: ${{ matrix.jobs.cluster_name }}"
         env:
           TERM: xterm
         run: |
-          python deployer validate ${{ matrix.cluster_name }}
+          python deployer validate ${{ matrix.jobs.cluster_name }}
