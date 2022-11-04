@@ -157,8 +157,8 @@ jobs:
 
       - name: Test outputs
         run: |
-          echo "common file changes?: ${{ steps.file_changes.outputs.common }}""
-          echo "cluster specific file changes?: ${{ steps.file_changes.outputs.cluster_specific }}""
+          echo "common file changes?: ${{ steps.file_changes.outputs.common }}"
+          echo "cluster specific file changes?: ${{ steps.file_changes.outputs.cluster_specific }}"
           echo "combined conditional: ${{ github.event_name == 'workflow_dispatch' || (steps.file_changes.outputs.common == 'true' || steps.file_changes.outputs.cluster_specific == 'true') }}"
           echo "check matrix is not empty: ${{ env.MATRIX != '[]' }}"
 
@@ -178,7 +178,7 @@ jobs:
     runs-on: ubuntu-latest
     needs: [generate-clusters-to-validate]
     if: |
-      needs.generate-clusters-to-validate.outputs.continue_workflow == 'true' &&
+      needs.generate-clusters-to-validate.outputs.continue_workflow == true &&
       needs.generate-clusters-to-validate.outputs.cluster_matrix != '[]'
     strategy:
       fail-fast: false
