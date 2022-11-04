@@ -340,8 +340,7 @@ def generate_helm_upgrade_jobs(changed_filepaths):
         # Add these matrix jobs as environment variables for use in another job
         with open(env_file, "a") as f:
             f.write(f"prod-hub-matrix-jobs={json.dumps(prod_hub_matrix_jobs)}")
-
-        with open(env_file, "a") as f:
+            f.write("\n")
             f.write(
                 f"support-and-staging-matrix-jobs={json.dumps(support_and_staging_matrix_jobs)}"
             )
