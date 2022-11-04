@@ -62,16 +62,6 @@ This job reads in the production hub job definitions generated in job 1 and the 
 
 This last job deploys all production hubs that require it in parallel to the clusters that successfully completed job 2.
 
-## Known issues with this workflow
-
-Sometimes the [`generate-jobs` job](cicd/hub/generate-jobs) fails with the following message:
-
-```
-The head commit for this pull_request event is not ahead of the base commit. Please submit an issue on this action's GitHub repo.
-```
-
-This issue is [tracked upstream](https://github.com/jitterbit/get-changed-files/issues/11) and can be resolved by rebasing your branch against `master`.
-
 ## Posting the deployment plan as a comment on a Pull Request
 
 The [`generate-jobs`](cicd/hub/generate-jobs) job outputs tables of all the hubs across all the clusters that will be upgraded as a result of changes in the repository.
