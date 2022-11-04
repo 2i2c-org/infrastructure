@@ -4,14 +4,18 @@
 
 The `deployer` is a Python module that automates various tasks that 2i2c undertake to manage 2i2c-hosted JupyterHubs.
 
-## Installing dependencies
+## Installing the deployer
 
-You can install the `deployer`'s dependencies with `pip`.
+The deployer is packaged as a local package (not published on PyPI). You can
+use `pip` to install it.
 You may wish to create a virtual environment using `venv` or `conda` first.
 
 ```bash
-pip install -r requirements.txt
+pip install --editable .
 ```
+
+The `--editable` makes sure any changes you make to the deployer itself are
+immediately effected.
 
 ## Functions
 

@@ -40,7 +40,7 @@ support:
 Then redeploy the `support chart`.
 
 ```bash
-python3 deployer deploy-support <cluster-name>
+deployer deploy-support <cluster-name>
 ```
 
 ## Link the cluster's Prometheus server to the central Grafana
@@ -48,7 +48,7 @@ python3 deployer deploy-support <cluster-name>
 Run the `update_central_grafana_datasources.py` script in the deployer to let the central Grafana know about this new prometheus server:
 
 ```bash
-python3 deployer/update_central_grafana_datasources.py <grafana-cluster-name>
+deployer/update_central_grafana_datasources.py <grafana-cluster-name>
 ```
 
 Where `<grafana-cluster-name>` is the name of the cluster where the central Grafana lives. Right now, this defaults to "2i2c".

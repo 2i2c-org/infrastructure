@@ -13,7 +13,7 @@ scale upload / download speeds.
    for the `2i2c` cluster.
 
    ```bash
-   python3 deployer use-cluster-credentials 2i2c
+   deployer use-cluster-credentials 2i2c
    ```
 
    This should set your current context to be that of the 2i2c cluster.
@@ -59,7 +59,7 @@ Yes, we can!
 1. Open a new terminal, and make sure you are authenticated to the 2i2c cluster.
 
    ```bash
-   python3 deployer use-cluster-credentials 2i2c
+   deployer use-cluster-credentials 2i2c
    ```
 
 2. Now, let's assume the image you built and want to test is called `test-image:v1`. This

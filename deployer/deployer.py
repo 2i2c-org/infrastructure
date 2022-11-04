@@ -11,16 +11,19 @@ from contextlib import redirect_stderr, redirect_stdout
 from pathlib import Path
 
 import pytest
-from auth import KeyProvider
-from cluster import Cluster
-from config_validation import (
+import typer
+from ruamel.yaml import YAML
+
+from .auth import KeyProvider
+from .cluster import Cluster
+from .config_validation import (
     validate_authenticator_config,
     validate_cluster_config,
     validate_hub_config,
     validate_support_config,
 )
-from file_acquisition import find_absolute_path_to_cluster_file, get_decrypted_file
-from helm_upgrade_decision import (
+from .file_acquisition import find_absolute_path_to_cluster_file, get_decrypted_file
+from .helm_upgrade_decision import (
     assign_staging_jobs_for_missing_clusters,
     discover_modified_common_files,
     ensure_support_staging_jobs_have_correct_keys,
@@ -30,23 +33,24 @@ from helm_upgrade_decision import (
     move_staging_hubs_to_staging_matrix,
     pretty_print_matrix_jobs,
 )
-from ruamel.yaml import YAML
-from utils import create_markdown_comment, print_colour
+from .utils import create_markdown_comment, print_colour
 
 # Without `pure=True`, I get an exception about str / byte issues
 yaml = YAML(typ="safe", pure=True)
 helm_charts_dir = Path(__file__).parent.parent.joinpath("helm-charts")
 
+app = typer.Typer(help="Deploy many JupyterHubs on many Kubernetes Clusters")
 
-def use_cluster_credentials(cluster_name):
+
+@app.command()
+def use_cluster_credentials(cluster_name: str):
     """
     Quickly gain command-line access to a cluster by updating the current
     kubeconfig file to include the deployer's access credentials for the named
     cluster and mark it as the cluster to work against by default.
-
-    This function is to be used with the `use-cluster-credentials` CLI
-    command only - it is not used by the rest of the deployer codebase.
     """
+    # This function is to be used with the `use-cluster-credentials` CLI
+    # command only - it is not used by the rest of the deployer codebase.
     validate_cluster_config(cluster_name)
 
     config_file_path = find_absolute_path_to_cluster_file(cluster_name)
@@ -66,13 +70,15 @@ def use_cluster_credentials(cluster_name):
         subprocess.check_call([os.environ["SHELL"], "-l"])
 
 
-def deploy_support(cluster_name, cert_manager_version):
-    """Deploy support components to a cluster
-
-    Args:
-        cluster_name (str): The name of the cluster to deploy support components to
-        cert_manager_version (str): The version of cert-manager to deploy to the
-            cluster, in the form vX.Y.Z. where X.Y.Z is valid SemVer.
+@app.command()
+def deploy_support(
+    cluster_name: str,
+    cert_manager_version: str = typer.Option(
+        "v1.8.2", help="Version of cert-manager to install"
+    ),
+):
+    """
+    Deploy support components to a cluster
     """
     validate_cluster_config(cluster_name)
     validate_support_config(cluster_name)
@@ -86,7 +92,8 @@ def deploy_support(cluster_name, cert_manager_version):
             cluster.deploy_support(cert_manager_version=cert_manager_version)
 
 
-def deploy_grafana_dashboards(cluster_name):
+@app.command()
+def deploy_grafana_dashboards(cluster_name: str):
     """
     Deploy grafana dashboards to a cluster that provide useful metrics
     for operating a JupyterHub
@@ -180,7 +187,18 @@ def deploy_grafana_dashboards(cluster_name):
         shutil.rmtree(dashboards_dir)
 
 
-def deploy(cluster_name, hub_name, config_path, dask_gateway_version):
+@app.command()
+def deploy(
+    cluster_name: str,
+    hub_name: str,
+    config_path: str = typer.Option(
+        "shared/deployer/enc-auth-providers-credentials.secret.yaml",
+        help="File to read secret deployment config from",
+    ),
+    dask_gateway_version: str = typer.Option(
+        "v2022.10.0", help="Version of dask-gateway to install CRDs for"
+    ),
+):
     """
     Deploy one or more hubs in a given cluster
     """
@@ -219,15 +237,18 @@ def deploy(cluster_name, hub_name, config_path, dask_gateway_version):
                 hub.deploy(k, dask_gateway_version)
 
 
-def generate_helm_upgrade_jobs(changed_filepaths):
-    """Analyse added or modified files from a GitHub Pull Request and decide which
+@app.command()
+def generate_helm_upgrade_jobs(
+    changed_filepaths: str = typer.Argument(
+        ..., help="Space delimited list of files that have changed"
+    )
+):
+    """
+    Analyse added or modified files from a GitHub Pull Request and decide which
     clusters and/or hubs require helm upgrades to be performed for their *hub helm
     charts or the support helm chart.
-
-    Args:
-        changed_filepaths (list[str]): A list of files that have been added or
-            modified by a GitHub Pull Request
     """
+    changed_filepaths = changed_filepaths.split(" ")
     (
         upgrade_support_on_all_clusters,
         upgrade_all_hubs_on_all_clusters,
@@ -343,19 +364,17 @@ def generate_helm_upgrade_jobs(changed_filepaths):
             )
 
 
-def run_hub_health_check(cluster_name, hub_name, check_dask_scaling=False):
-    """Run a health check on a given hub on a given cluster. Optionally check scaling
+@app.command()
+def run_hub_health_check(
+    cluster_name: str,
+    hub_name: str,
+    check_dask_scaling: bool = typer.Option(
+        False, help="Check that dask workers can be scaled"
+    ),
+):
+    """
+    Run a health check on a given hub on a given cluster. Optionally check scaling
     of dask workers if the hub is a daskhub.
-
-    Args:
-        cluster_name (str): The name of the cluster where the hub is deployed
-        hub_name (str): The name of the hub to run a health check for
-        check_dask_scaling (bool, optional): If true, run an additional check that dask
-            workers can scale. Only applies to daskhubs. Defaults to False.
-
-    Returns
-        exit_code (int): The exit code of the pytest process. 0 for pass, any other
-            integer number greater than 0 for failure.
     """
     # Read in the cluster.yaml file
     config_file_path = find_absolute_path_to_cluster_file(cluster_name)
@@ -442,4 +461,15 @@ def run_hub_health_check(cluster_name, hub_name, check_dask_scaling=False):
     else:
         print_colour("Health check succeeded!")
 
-    return exit_code
+
+@app.command
+def validate(cluster_name: str, hub_name: str):
+    """ """
+    validate_cluster_config(cluster_name)
+    validate_support_config(cluster_name)
+    validate_hub_config(cluster_name, hub_name)
+    validate_authenticator_config(cluster_name, hub_name)
+
+
+def main():
+    app()

@@ -10,10 +10,11 @@ import sys
 from pathlib import Path
 
 import jsonschema
-from cluster import Cluster
-from file_acquisition import find_absolute_path_to_cluster_file
 from ruamel.yaml import YAML
-from utils import print_colour
+
+from .cluster import Cluster
+from .file_acquisition import find_absolute_path_to_cluster_file
+from .utils import print_colour
 
 yaml = YAML(typ="safe", pure=True)
 helm_charts_dir = Path(__file__).parent.parent.joinpath("helm-charts")

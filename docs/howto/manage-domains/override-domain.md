@@ -55,5 +55,5 @@ This is generally a temporary fix to rapidly make a hub undiscoverable and shoul
 5. Run the deployer for the hub!
 
    ```bash
-   python3 deployer deploy <cluster_name> <hub_name>
+   deployer deploy <cluster_name> <hub_name>
    ```

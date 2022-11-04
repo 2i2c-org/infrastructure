@@ -123,7 +123,7 @@ subcommand.
 
 1. Look for the cluster you want to access - there is one cluster per directory inside
    `config/clusters`.
-2. Run `python3 deployer use-cluster-credentials CLUSTER_NAME` from the terminal, and this will authenticate you
+2. Run `deployer use-cluster-credentials CLUSTER_NAME` from the terminal, and this will authenticate you
    to the correct kubernetes cluster!
 
 Test that you've been correctly authenticated by running `kubectl get node`, which should list the nodes in the

@@ -6,6 +6,6 @@ To run this test suite, **from the root of the repo**, install the requirements,
 (You may wish to create a virtual environment first before executing these commands using `venv` or `conda`.)
 
 ```bash
-pip install -r requirements.txt
+pip install .
 python -m pytest -vvv
 ```

@@ -62,9 +62,9 @@ runs:
         # between workflow runs.
         key: "${{ github.run_id }}"
 
-    - name: Install deployer script's Python dependencies
+    - name: Install the deployer
       run: |
-        pip install -r requirements.txt
+        pip install .
         pip list
       shell: bash
 
