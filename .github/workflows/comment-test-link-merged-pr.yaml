@@ -125,7 +125,7 @@ jobs:
           # Write the workflow URL to the GITHUB_ENV file in GitHub Actions
           env_file = os.getenv("GITHUB_ENV")
           with open(env_file, "a") as f:
-              f.write(f"workflow-url={workflow_url")
+              f.write(f"workflow-url={workflow_url}")
         env:
           BRANCH: "master"
           EVENT: "push"
