@@ -159,7 +159,7 @@ jobs:
         run: |
           echo ${{ steps.file_changes.outputs.common }}
           echo ${{ steps.file_changes.outputs.cluster_specific }}
-          echo ${{ github.event_name == 'workflow_dispatch' }} || (${{ steps.file_changes.outputs.common == 'true' }} || ${{ steps.file_changes.outputs.cluster_specific == 'true' }})
+          echo ${{ github.event_name == 'workflow_dispatch' || (steps.file_changes.outputs.common == 'true' || steps.file_changes.outputs.cluster_specific == 'true') }}
 
   # This job runs the 'deployer validate' subcommand across a matrix of
   # cluster names.
