@@ -23,13 +23,13 @@ from generate_cluster import generate_cluster
 
 def _converted_string_to_list(full_str: str) -> list:
     """
-    Take a SPACE-DELIMITED string and split it into a list.
+    Take a COMMA-DELIMITED string and split it into a list.
 
     This function is used by the generate-helm-upgrade-jobs subcommand to ensure that
     the list os added or modified files parsed from the command line is transformed
-    into a list of strings instead of one long string with spaces between the elements
+    into a list of strings instead of one long string with commas between the elements
     """
-    return full_str.split(" ")
+    return full_str.split(",")
 
 
 def main():
