@@ -55,9 +55,9 @@ jobs:
       pull-requests: read
     outputs:
       continue_workflow: |
-        ${{ github.event_name == 'workflow_dispatch' }} ||
-        (${{ steps.file_changes.outputs.common == 'true' }} ||
-        ${{ steps.file_changes.outputs.cluster_specific == 'true' }})
+        ${{ github.event_name == 'workflow_dispatch' ||
+        (steps.file_changes.outputs.common == 'true' ||
+        steps.file_changes.outputs.cluster_specific == 'true') }}
       cluster_matrix: ${{ env.MATRIX }}
     # Only run this job if one of the following conditions is true:
     # - The workflow was manually triggered
