@@ -157,9 +157,10 @@ jobs:
 
       - name: Test outputs
         run: |
-          echo ${{ steps.file_changes.outputs.common }}
-          echo ${{ steps.file_changes.outputs.cluster_specific }}
-          echo ${{ github.event_name == 'workflow_dispatch' || (steps.file_changes.outputs.common == 'true' || steps.file_changes.outputs.cluster_specific == 'true') }}
+          echo "common file changes?: ${{ steps.file_changes.outputs.common }}""
+          echo "cluster specific file changes?: ${{ steps.file_changes.outputs.cluster_specific }}""
+          echo "combined conditional: ${{ github.event_name == 'workflow_dispatch' || (steps.file_changes.outputs.common == 'true' || steps.file_changes.outputs.cluster_specific == 'true') }}"
+          echo "check matrix is not empty: ${{ env.MATRIX != '[]' }}"
 
   # This job runs the 'deployer validate' subcommand across a matrix of
   # cluster names.
