@@ -51,7 +51,7 @@ jobs:
           # Write the continue_workflow and pr_number variables to the
           # GITHUB_ENV file in GitHub Actions
           with open(env_file, "a") as f:
-              f.write(f"continue-workflow="{'Merge pull request' in commit_msg}")
+              f.write(f"continue-workflow={'Merge pull request' in commit_msg}")
 
           with open(env_file, "a") as f:
               f.write(f"pr-number={pr_number}")
