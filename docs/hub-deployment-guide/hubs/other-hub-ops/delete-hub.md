@@ -25,7 +25,7 @@ Especially if we think that users will want this information in the future (or i
 Delete user home directories using the [deployer `exec-homes-shell`](https://github.com/2i2c-org/infrastructure/blob/master/deployer/README.md#exec-homes-shell) option.
 
 ```bash
-python3 deployer exec-homes-shell <cluster_name> <hub_name>
+python3 deployer.debug exec-homes-shell <cluster_name> <hub_name>
 ```
 
 This should get you a shell with the home directories of all the users on the given hub. Delete all user home directories with:

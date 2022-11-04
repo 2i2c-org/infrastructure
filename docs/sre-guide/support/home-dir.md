@@ -9,7 +9,7 @@ The
 subcommand of the deployer can help us here.
 
 ```bash
-python3 deployer exec-homes-shell <cluster-name> <hub-name>
+python3 deployer.debug exec-homes-shell <cluster-name> <hub-name>
 ```
 
 Will open a bash shell with all the home directories of all the users of `<hub-name>`

@@ -30,12 +30,12 @@ $ python deployer [sub-command]
 **Command line usage:**
 
 ```bash
-usage: deployer [-h] {deploy,validate,deploy-support,deploy-grafana-dashboards,use-cluster-credentials,generate-helm-upgrade-jobs,run-hub-health-check,exec-homes-shell,generate-cluster} ...
+usage: deployer [-h] {deploy,validate,deploy-support,deploy-grafana-dashboards,use-cluster-credentials,generate-helm-upgrade-jobs,run-hub-health-check,generate-cluster} ...
 
 A command line tool to perform various functions related to deploying and maintaining a JupyterHub running on kubernetes infrastructure
 
 positional arguments:
-  {deploy,validate,deploy-support,deploy-grafana-dashboards,use-cluster-credentials,generate-helm-upgrade-jobs,run-hub-health-check,exec-homes-shell,generate-cluster}
+  {deploy,validate,deploy-support,deploy-grafana-dashboards,use-cluster-credentials,generate-helm-upgrade-jobs,run-hub-health-check,generate-cluster}
                         Available subcommands
     deploy              Install/upgrade the helm charts of JupyterHubs on a cluster
     validate            Validate the cluster.yaml configuration itself, as well as the provided non-encrypted helm chart values files for each hub or the specified hub.
@@ -49,7 +49,6 @@ positional arguments:
                         workflow.
     run-hub-health-check
                         Run a health check against a given hub deployed on a given cluster
-    exec-homes-shell    Pop a shell with home directories of given hub mounted
     generate-cluster    Generate files for a new cluster
 
 options:
@@ -151,27 +150,6 @@ optional arguments:
   -h, --help    show this help message and exit
 ```
 
-### `exec-homes-shell`
-
-This function gives you a shell with the home directories of all the
-users on the given hub in the given cluster mounted under `/home`.
-Very helpful when doing (rare) manual operations on user home directories,
-such as renames.
-
-When you exit the shell, the temporary pod spun up is removed.
-
-**Command line usage:**
-
-```bash
-usage: deployer exec-homes-shell [-h] cluster_name hub_name
-
-positional arguments:
-  cluster_name  The name of the cluster to perform actions on
-  hub_name      The deployed hub whose home directories are to be examined
-
-optional arguments:
-  -h, --help    show this help message and exit
-```
 
 ### `generate-helm-upgrade-jobs`
 
@@ -215,6 +193,114 @@ positional arguments:
 optional arguments:
   -h, --help            show this help message and exit
   --check-dask-scaling  For daskhubs, optionally check that dask workers can be scaled
+```
+
+## Debugging helpers
+
+We also have some debug helpers commands that can be invoked as subcommands
+of `python3 -m deployer.debug`. These are primarily helpful for manual actions
+when debugging issues (during setup or an outage), or when taking down a hub.
+`python3 -m deployer.debug --help` is the authoritative help document for all
+the options available, but they are also documented here.
+
+All these commands take a cluster and hub name as parameters, and perform appropriate
+authentication before performing their function.
+
+### `component-logs`
+
+This subcommand displays live updating logs of a particular core component of a particular
+JupyterHub on a given cluster. You can pass `--no-follow` to provide just
+logs upto the current point in time and then stop. If the component pod has restarted
+due to an error, you can pass `--previous` to look at the logs of the pod
+prior to the last restart.
+
+```
+Usage: python3 deployer.debug component-logs [OPTIONS] CLUSTER_NAME HUB_NAME
+                               COMPONENT:[hub|proxy|dask-gateway-api|dask-
+                               gateway-controller|dask-gateway-traefik]
+
+  Display logs from a particular component on a hub on a cluster
+
+Arguments:
+  CLUSTER_NAME                    Name of cluster to operate on  [required]
+  HUB_NAME                        Name of hub to operate on  [required]
+  COMPONENT:[hub|proxy|dask-gateway-api|dask-gateway-controller|dask-gateway-traefik]
+                                  Component to display logs of  [required]
+
+Options:
+  --follow / --no-follow      Live update new logs as they show up  [default:
+                              True]
+
+  --previous / --no-previous  If component pod has restarted, show logs from
+                              just before the restart  [default: False]
+
+  --help                      Show this message and exit.
+```
+
+### `user-logs`
+
+This subcommand displays live updating logs of a prticular user on a hub if
+it is currently running. If sidecar containers are present (such as per-user db),
+they are ignored and only the notebook logs are provided. You can pass
+`--no-follow` to provide logs upto the current point only.
+
+```
+Usage: python3 deployer.debug user-logs [OPTIONS] CLUSTER_NAME HUB_NAME USERNAME
+
+  Display logs from the notebook pod of a given user
+
+Arguments:
+  CLUSTER_NAME  Name of cluster to operate on  [required]
+  HUB_NAME      Name of hub to operate on  [required]
+  USERNAME      Name of the JupyterHub user to get logs for  [required]
+
+Options:
+  --follow / --no-follow  Live update new logs as they show up  [default:
+                          True]
+
+  --help                  Show this message and exit.
+```
+
+### `exec-hub-shell`
+
+This subcommand gives you an interactive shell on the hub pod itself, so you
+can poke around to see what's going on. Particularly useful if you want to peek
+at the hub db with the `sqlite` command.
+
+```
+Usage: python3 deployer.debug exec-hub-shell [OPTIONS] CLUSTER_NAME HUB_NAME
+
+  Pop an interactive shell in the hub pod
+
+Arguments:
+  CLUSTER_NAME  Name of cluster to operate on  [required]
+  HUB_NAME      Name of hub to operate on  [required]
+
+Options:
+  --help  Show this message and exit.
+```
+
+### `exec-homes-shell`
+
+This subcommand gives you a shell with the home directories of all the
+users on the given hub in the given cluster mounted under `/home`.
+Very helpful when doing (rare) manual operations on user home directories,
+such as renames.
+
+When you exit the shell, the temporary pod spun up is removed.
+
+```bash
+Usage: debug.py exec-homes-shell [OPTIONS] CLUSTER_NAME HUB_NAME
+
+  Pop an interactive shell with the home directories of the given hub
+  mounted on /home
+
+Arguments:
+  CLUSTER_NAME  Name of cluster to operate on  [required]
+  HUB_NAME      Name of hub to operate on  [required]
+
+Options:
+  --help  Show this message and exit.
 ```
 
 ## Sub-scripts

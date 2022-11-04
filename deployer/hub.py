@@ -4,10 +4,11 @@ import tempfile
 from pathlib import Path
 from textwrap import dedent
 
-from auth import KeyProvider
-from file_acquisition import get_decrypted_file, get_decrypted_files
 from ruamel.yaml import YAML
-from utils import print_colour
+
+from .auth import KeyProvider
+from .file_acquisition import get_decrypted_file, get_decrypted_files
+from .utils import print_colour
 
 # Without `pure=True`, I get an exception about str / byte issues
 yaml = YAML(typ="safe", pure=True)
@@ -218,64 +219,6 @@ class Hub:
             generated_config = {"basehub": generated_config}
 
         return generated_config
-
-    def exec_homes_shell(self):
-        """
-        Pop a shell with the home directories of the given hub mounted
-
-        Homes will be mounter under /home
-        """
-        # Name pod to include hub name so we don't end up in wrong one
-        pod_name = f'{self.spec["name"]}-shell'
-        pod = {
-            "apiVersion": "v1",
-            "kind": "Pod",
-            "spec": {
-                "terminationGracePeriodSeconds": 1,
-                "automountServiceAccountToken": False,
-                "volumes": [
-                    # This PVC is created by basehub
-                    {"name": "home", "persistentVolumeClaim": {"claimName": "home-nfs"}}
-                ],
-                "containers": [
-                    {
-                        "name": pod_name,
-                        # Use ubuntu image so we get better gnu rm
-                        "image": "ubuntu:jammy",
-                        "stdin": True,
-                        "stdinOnce": True,
-                        "tty": True,
-                        "volumeMounts": [
-                            {
-                                "name": "home",
-                                "mountPath": "/home",
-                            }
-                        ],
-                    }
-                ],
-            },
-        }
-
-        cmd = [
-            "kubectl",
-            "-n",
-            self.spec["name"],
-            "run",
-            "--rm",  # Remove pod when we're done
-            "-it",  # Give us a shell!
-            "--overrides",
-            json.dumps(pod),
-            "--image",
-            # Use ubuntu image so we get GNU rm and other tools
-            # Should match what we have in our pod definition
-            "ubuntu:jammy",
-            pod_name,
-            "--",
-            "/bin/bash",
-            "-l",
-        ]
-
-        subprocess.check_call(cmd)
 
     def deploy(self, auth_provider, dask_gateway_version):
         """
