@@ -43,11 +43,11 @@ app = typer.Typer(help="Deploy many JupyterHubs on many Kubernetes Clusters")
 
 
 @app.command()
-def use_cluster_credentials(cluster_name: str):
+def use_cluster_credentials(
+    cluster_name: str = typer.Argument(..., help="Name of cluster to operate on"),
+):
     """
-    Quickly gain command-line access to a cluster by updating the current
-    kubeconfig file to include the deployer's access credentials for the named
-    cluster and mark it as the cluster to work against by default.
+    Pop a new shell authenticated to the given cluster using the deployer's credentials
     """
     # This function is to be used with the `use-cluster-credentials` CLI
     # command only - it is not used by the rest of the deployer codebase.
@@ -72,7 +72,7 @@ def use_cluster_credentials(cluster_name: str):
 
 @app.command()
 def deploy_support(
-    cluster_name: str,
+    cluster_name: str = typer.Argument(..., help="Name of cluster to operate on"),
     cert_manager_version: str = typer.Option(
         "v1.8.2", help="Version of cert-manager to install"
     ),
@@ -93,13 +93,14 @@ def deploy_support(
 
 
 @app.command()
-def deploy_grafana_dashboards(cluster_name: str):
+def deploy_grafana_dashboards(
+    cluster_name: str = typer.Argument(..., help="Name of cluster to operate on")
+):
     """
-    Deploy grafana dashboards to a cluster that provide useful metrics
-    for operating a JupyterHub
+    Deploy JupyterHub dashboards to grafana set up in the given cluster
 
-    Grafana dashboards and deployment mechanism in question are maintained in
-    this repo: https://github.com/jupyterhub/grafana-dashboards
+    Grafana dashboards and deployment mechanism are maintained at
+    https://github.com/jupyterhub/grafana-dashboards
     """
     validate_cluster_config(cluster_name)
     validate_support_config(cluster_name)
@@ -189,8 +190,11 @@ def deploy_grafana_dashboards(cluster_name: str):
 
 @app.command()
 def deploy(
-    cluster_name: str,
-    hub_name: str,
+    cluster_name: str = typer.Argument(..., help="Name of cluster to operate on"),
+    hub_name: str = typer.Argument(
+        None,
+        help="Name of hub to operate deploy. Omit to deploy all hubs on the cluster",
+    ),
     config_path: str = typer.Option(
         "shared/deployer/enc-auth-providers-credentials.secret.yaml",
         help="File to read secret deployment config from",
@@ -366,8 +370,8 @@ def generate_helm_upgrade_jobs(
 
 @app.command()
 def run_hub_health_check(
-    cluster_name: str,
-    hub_name: str,
+    cluster_name: str = typer.Argument(..., help="Name of cluster to operate on"),
+    hub_name: str = typer.Argument(..., help="Name of hub to operate on"),
     check_dask_scaling: bool = typer.Option(
         False, help="Check that dask workers can be scaled"
     ),
@@ -463,8 +467,13 @@ def run_hub_health_check(
 
 
 @app.command
-def validate(cluster_name: str, hub_name: str):
-    """ """
+def validate(
+    cluster_name: str = typer.Argument(..., help="Name of cluster to operate on"),
+    hub_name: str = typer.Argument(..., help="Name of hub to operate on"),
+):
+    """
+    Validate cluster.yaml and non-encrypted helm config for given hub
+    """
     validate_cluster_config(cluster_name)
     validate_support_config(cluster_name)
     validate_hub_config(cluster_name, hub_name)
