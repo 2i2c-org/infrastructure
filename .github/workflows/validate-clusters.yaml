@@ -195,8 +195,8 @@ jobs:
         run: |
           pip install -r requirements.txt
 
-      - name: "Validate cluster: ${{ matrix.cluster_name }}"
+      - name: "Validate cluster: ${{ matrix.jobs.cluster_name }}"
         env:
           TERM: xterm
         run: |
-          python deployer validate ${{ matrix.cluster_name }}
+          python deployer validate ${{ matrix.jobs.cluster_name }}
