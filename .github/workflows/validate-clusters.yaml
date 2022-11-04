@@ -55,7 +55,7 @@ jobs:
       pull-requests: read
     outputs:
       continue_workflow: |
-        ${{ github.event_name == 'workflow_dispatch' }} ||  # Continue the workflow if it was manually triggered
+        ${{ github.event_name == 'workflow_dispatch' }} ||
         (${{ steps.file_changes.outputs.common == 'true' }} ||
         ${{ steps.file_changes.outputs.cluster_specific == 'true' }})
       cluster_matrix: ${{ env.MATRIX }}
@@ -154,6 +154,12 @@ jobs:
           env_file = os.getenv("GITHUB_ENV")
           with open(env_file, "a") as f:
               f.write(f"matrix={matrix}")
+
+      - name: Test outputs
+        run: |
+          echo ${{ steps.file_changes.outputs.common }}
+          echo ${{ steps.file_changes.outputs.cluster_specific }}
+          echo ${{ github.event_name == 'workflow_dispatch' }} || (${{ steps.file_changes.outputs.common == 'true' }} || ${{ steps.file_changes.outputs.cluster_specific == 'true' }})
 
   # This job runs the 'deployer validate' subcommand across a matrix of
   # cluster names.
