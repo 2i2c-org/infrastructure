@@ -10,7 +10,7 @@ ruamel.yaml==0.17.21
 auth0-python==3.24.0
 
 # jsonschema is used for validating cluster.yaml configurations
-jsonschema==4.16.0
+jsonschema==4.17.0
 
 # rich and py-markdown-table are used for pretty printing outputs that would otherwise
 # be difficult to parse by a human
