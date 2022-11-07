@@ -1,7 +1,8 @@
 """Pull latest list of hubs served by infrastructure/ and save as a CSV table."""
-from yaml import safe_load
 from pathlib import Path
+
 import pandas as pd
+from yaml import safe_load
 
 path_root = Path(__file__).parent.parent
 path_tmp = path_root / "tmp"
