@@ -12,7 +12,7 @@ More information on these terms can be found in [](cloud-access:aws).
    We try to keep the word '2i2c' out
    of the project name, in case the user decide to exercise their [right to
    replicate](https://2i2c.org/right-to-replicate/) at some point.
-4. Set the email address of the account owner to an email address that doesn't have already an aws account associated with it (reference https://github.com/2i2c-org/infrastructure/issues/1816).
+4. Set the email address of the account owner to an email address that doesn't already have an AWS account associated with it (reference https://github.com/2i2c-org/infrastructure/issues/1816).
 5. Click "Create AWS account" and wait for the account to be created.
    A verification email should be sent to `support@2i2c.org` to verify the new account.
 6. Once the new account is created and verified, visit the [AWS accounts section of the IAM Identity Center](https://us-east-1.console.aws.amazon.com/iamv2/home?region=us-east-1#/organization/accounts)
