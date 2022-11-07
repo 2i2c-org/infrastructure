@@ -6,6 +6,13 @@
 Here's a list of running hubs and some statistics about them.
 It is automatically generated from the config stored in the [`config/clusters` folder of the `infrastructure` repository](https://github.com/2i2c-org/infrastructure/tree/HEAD/config/clusters) and can therefore be limited in the information it provides.
 
+```{admonition} Missing information for Azure hubs
+Hubs that have `kubeconfig` listed as their provider are most likely running on Azure.
+The reason `kubeconfig` is listed as a provider is because that is the mechanism we are using to authenticate to that cluster in the case where we do not have a Service Principal.
+
+Unlike GCP and AWS, Azure does not require the location for authentication and it is therefore not listed in our config files and hence cannot be populated in this table.
+```
+
 ## Table of all running hubs
 
 A table of all running hubs across all of our clusters.

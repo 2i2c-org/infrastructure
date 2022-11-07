@@ -1,7 +1,8 @@
 """Pull latest list of hubs served by infrastructure/ and save as a CSV table."""
-from yaml import safe_load
 from pathlib import Path
+
 import pandas as pd
+from yaml import safe_load
 
 path_root = Path(__file__).parent.parent
 path_tmp = path_root / "tmp"
@@ -55,8 +56,15 @@ for cluster_info in clusters:
                 grafana_url = f"[{grafana_url}](http://{grafana_url})"
                 break
 
-    # Track the provider for this cluster for use later
-    provider = cluster["provider"] if cluster["provider"] != "kubeconfig" else "azure"
+    # Define the cloud provider for this cluster which we'll insert into the table below
+    # For clusters where we know the provider but can't guess it from the YAML file,
+    # we define a few custom mappings.
+    custom_providers = {"utoronto": "azure"}
+    for clustername, provider in custom_providers.items():
+        if cluster["name"] == clustername:
+            provider = provider
+        else:
+            provider = cluster["provider"]
 
     # For each hub in cluster, grab its metadata and add it to the list
     for hub in cluster["hubs"]:
