@@ -19,7 +19,7 @@ terraform to provision supporting infrastructure, such as storage buckets.
 
 ## Create a new cluster
 
-(new-cluster:aws-setup-credentials)
+(new-cluster:aws-setup-credentials)=
 ### Setup credentials
 
 Depending on wether this project is using AWS SSO or not, you can use the following
