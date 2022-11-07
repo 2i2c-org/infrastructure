@@ -14,10 +14,14 @@ More information on these terms can be found in [](cloud-access:aws).
    of the project name, in case the user decide to exercise their [right to
    replicate](https://2i2c.org/right-to-replicate/) at some point.
 1. Set the email address of the account owner
+
+   ```{tip}
    We should respect two conditions when setting up this email address:
       - don’t bottleneck on an individual’s inbox
       - use an email address that doesn't already have an AWS account associated with it (reference https://github.com/2i2c-org/infrastructure/issues/1816)
-   This means that we cannot use the `support.2i2c.org` email address for all the AWS accounts we create (which would have been ideal).
+   ```
+
+   Because of the two conditions above, we cannot use the `support.2i2c.org` email address for all the AWS accounts we create (which would have been ideal).
 
    Instead, we  can use the following set of steps:
       1. Use [this freshdesk guide](https://support.freshdesk.com/en/support/solutions/articles/37637-adding-multiple-email-addresses-to-freshdesk)
