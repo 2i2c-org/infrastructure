@@ -194,6 +194,15 @@ jupyterhub:
       # Most people do not expect this, so let's match expectation
       SHELL: /bin/bash
     extraFiles:
+      ipython_kernel_config.json:
+        mountPath: /usr/local/etc/ipython/ipython_kernel_config.json
+        data:
+          # This keeps a history of all executed code under $HOME, which is almost always on
+          # NFS. This file is kept as a sqlite file, and sqlite and NFS do not go together very
+          # well! Disable this to save ourselves from debugging random NFS oddities that are caused
+          # by this unholy sqlite + NFS mixture.
+          HistoryManager:
+            enabled: false
       jupyter_notebook_config.json:
         mountPath: /usr/local/etc/jupyter/jupyter_notebook_config.json
         # if a user leaves a notebook with a running kernel,
