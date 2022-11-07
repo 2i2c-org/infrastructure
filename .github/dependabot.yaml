@@ -22,9 +22,24 @@
 
 version: 2
 updates:
-  # Maintain dependencies for GitHub Actions
+  # Maintain dependencies for GitHub Actions in workflow files
+  # By default, the directory to be checked is .github/workflows for the github-actions
+  # package ecosystem
+  # ref: https://docs.github.com/en/code-security/dependabot/working-with-dependabot/keeping-your-actions-up-to-date-with-dependabot
   - package-ecosystem: "github-actions"
     directory: "/"
+    schedule:
+      # Check for updates once a week. By default, this check happens on a Monday.
+      interval: "weekly"
+    ignore:
+      # Ignore patch upgrades to further reduce noise
+      - update-types: ["version-update:semver-patch"]
+        dependency-name: "*" # Match all packages
+    reviewers:
+      - "2i2c-org/tech-team"
+  # Maintain dependencies for GitHub Actions in our setup-deploy action
+  - package-ecosystem: "github-actions"
+    directory: "/.github/actions/setup-deploy/"
     schedule:
       # Check for updates once a week. By default, this check happens on a Monday.
       interval: "weekly"
