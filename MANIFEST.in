@@ -1,0 +1,4 @@
+# Include everything we put in the deployer/ dir
+recursive-include deployer *
+# But exclude .pyc files, as these are just compiled caches
+recursive-exclude deployer *.pyc

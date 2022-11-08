@@ -19,6 +19,7 @@ setup(
     long_description_content_type="text/markdown",
     license="3-BSD",
     packages=find_packages(),
+    include_package_data=True,
     entry_points={
         "console_scripts": [
             "deployer = deployer.__main__:main",
