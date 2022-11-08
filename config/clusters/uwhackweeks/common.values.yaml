@@ -78,30 +78,9 @@ basehub:
               node.kubernetes.io/instance-type: m5.8xlarge
 
         - display_name: "GPU"
-          # P2.xlarge has 64G of RAM per GPU while g4dn has 16?!
           description: |
-            ~4CPUs, Nvidia K80 or T4 GPU.
-
-            K80 comes with 55G of RAM, while T4 comes with about 14G
+            ~4CPUs, Nvidia T4 GPU, 14G of RAM.
           profile_options:
-            gpu:
-              display_name: GPU
-              choices:
-                k80:
-                  display_name: NVidia Tesla K80
-                  slug: k80
-                  kubespawner_override:
-                    mem_guarantee: 55G
-                    node_selector:
-                      node.kubernetes.io/instance-type: p2.xlarge
-                t4:
-                  display_name: NVidia Tesla T4
-                  slug: t4
-                  default: true
-                  kubespawner_override:
-                    mem_guarantee: 14G
-                    node_selector:
-                      node.kubernetes.io/instance-type: g4dn.xlarge
             image:
               display_name: Image
               choices:
@@ -109,17 +88,20 @@ basehub:
                   display_name: Pangeo Tensorflow ML Notebook
                   slug: "tensorflow"
                   kubespawner_override:
-                    image: "pangeo/ml-notebook:2022.10.13"
+                    image: "pangeo/ml-notebook:2022.10.18"
                 pytorch:
                   display_name: Pangeo PyTorch ML Notebook
                   default: true
                   slug: "pytorch"
                   kubespawner_override:
-                    image: "pangeo/pytorch-notebook:2022.10.13"
+                    image: "pangeo/pytorch-notebook:2022.10.18"
           kubespawner_override:
             mem_limit: null
             extra_resource_limits:
               nvidia.com/gpu: "1"
+            mem_guarantee: 14G
+            node_selector:
+              node.kubernetes.io/instance-type: g4dn.xlarge
     scheduling:
       userPlaceholder:
         enabled: false
