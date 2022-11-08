@@ -252,7 +252,7 @@ def generate_helm_upgrade_jobs(
     clusters and/or hubs require helm upgrades to be performed for their *hub helm
     charts or the support helm chart.
     """
-    changed_filepaths = changed_filepaths.split(" ")
+    changed_filepaths = changed_filepaths.split(",")
     (
         upgrade_support_on_all_clusters,
         upgrade_all_hubs_on_all_clusters,
