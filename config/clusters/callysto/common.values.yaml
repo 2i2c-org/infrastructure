@@ -62,6 +62,11 @@ jupyterhub:
         allowed_users: &callysto_users
           - "117859169473992122769" #Georgiana
           - "115722756968212778437" #Sarah
+          - "111953611001323379758"
+          - "102749090965437723445"
+          - "115722928381445142802"
+          - "114566345249857937398"
+          - "106951135662332329542"
         admin_users: *callysto_users
         # Only show the option to login with Google and Mirosoft
         shown_idps:
