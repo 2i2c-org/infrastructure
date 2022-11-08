@@ -201,17 +201,6 @@ def deploy(cluster_name, hub_name, config_path, dask_gateway_version):
 
     k = KeyProvider(auth0["domain"], auth0["client_id"], auth0["client_secret"])
 
-    # Each hub needs a unique proxy.secretToken. However, we don't want
-    # to manually generate & save it. We also don't want it to change with
-    # each deploy - that causes a pod restart with downtime. So instead,
-    # we generate it based on a single secret key (`PROXY_SECRET_KEY`)
-    # combined with the name of each hub. This way, we get unique,
-    # cryptographically secure proxy.secretTokens without having to
-    # keep much state. We can rotate them by changing `PROXY_SECRET_KEY`.
-    # However, if `PROXY_SECRET_KEY` leaks, that means all the hub's
-    # proxy.secretTokens have leaked. So let's be careful with that!
-    SECRET_KEY = bytes.fromhex(config["secret_key"])
-
     config_file_path = find_absolute_path_to_cluster_file(cluster_name)
     with open(config_file_path) as f:
         cluster = Cluster(yaml.load(f), config_file_path.parent)
@@ -221,13 +210,13 @@ def deploy(cluster_name, hub_name, config_path, dask_gateway_version):
         if hub_name:
             hub = next((hub for hub in hubs if hub.spec["name"] == hub_name), None)
             print_colour(f"Deploying hub {hub.spec['name']}...")
-            hub.deploy(k, SECRET_KEY, dask_gateway_version)
+            hub.deploy(k, dask_gateway_version)
         else:
             for i, hub in enumerate(hubs):
                 print_colour(
                     f"{i+1} / {len(hubs)}: Deploying hub {hub.spec['name']}..."
                 )
-                hub.deploy(k, SECRET_KEY, dask_gateway_version)
+                hub.deploy(k, dask_gateway_version)
 
 
 def generate_helm_upgrade_jobs(changed_filepaths):

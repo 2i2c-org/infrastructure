@@ -277,7 +277,7 @@ class Hub:
 
         subprocess.check_call(cmd)
 
-    def deploy(self, auth_provider, secret_key, dask_gateway_version):
+    def deploy(self, auth_provider, dask_gateway_version):
         """
         Deploy this hub
         """
