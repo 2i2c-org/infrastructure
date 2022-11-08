@@ -153,3 +153,61 @@ If this community has a staging and prod hub, you will need to repeat this proce
    ```
 
 The OAuth app will now have the correct permissions to read the org info and hence users should be able to successfully log into their hub.
+
+## Accessing the job matrices generated in CI/CD
+
+```{seealso}
+Read more about [](cicd)
+```
+
+Sometimes we need to inspect the job matrices the deployer generates for correctness.
+We can do this either by [inspecting the deployment plan that is posted to PRs](cicd/hub/pr-comment)
+or by running the `generate-helm-upgrade-jobs` command of the deployer [locally](tutorials:setup).
+
+This will output the same deployment plan that is used in the PR comment, which is
+a table formatted by [`rich`](https://rich.readthedocs.io). However, we sometimes
+need to check the JSON itself for correctness, for example, in cases when our
+CI workflow fails with JSON issues. To achieve that, we need to set some environment
+variables.
+
+```bash
+export CI=true
+```
+
+This will trigger the deployer to behave as if it is running in a CI environment.
+Principally, this means that executing `generate-helm-upgrade-jobs` will write
+two files to your local environment. The first file is called `pr-number.txt`
+and can be ignored (it is used by the workflow that posts the deployment plan
+as a comment and therefore requires the PR number). The second file we set the
+name of with our second environment variable.
+
+```bash
+export GITHUB_ENV=test.txt  # You can call this file anything you like, it's the setting of GITHUB_ENV that's important
+```
+
+This mimicks the GitHub Actions environment where a `GITHUB_ENV` file is available
+to store and share environment variables across steps/jobs, and this will be where
+our JSON formatted job matrices will be written to.
+
+Now we're setup, we can run:
+
+```bash
+deployer generate-helm-update-jobs {comma separated list of changed files}
+```
+
+where the list of changed files you can either provide yourself or you can copy-paste
+from the GitHub Actions logs by visiting an executed run of the "Deploy and test hubs"
+workflow at a URL such as <https://github.com/2i2c-org/infrastructure/actions/runs/3417540519>,
+selecting the `generate-jobs` job, and then expanding the "Generate matrix jobs" step logs.
+
+```{figure} ../images/changed-files-from-logs.png
+Where to find a list of changed files from GitHub Actions logs
+```
+
+Once you have executed the command, the JSON formatted job matrices will be available
+in the file set by `GITHUB_ENV` in the following form:
+
+```text
+prod-hub-matrix-jobs=<JSON formatted array>
+support-and-staging-matrix-jobs=<JSON formatted array>
+```
