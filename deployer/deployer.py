@@ -15,6 +15,7 @@ import typer
 from ruamel.yaml import YAML
 
 from .auth import KeyProvider
+from .cli_app import app
 from .cluster import Cluster
 from .config_validation import (
     validate_authenticator_config,
@@ -38,8 +39,6 @@ from .utils import create_markdown_comment, print_colour
 # Without `pure=True`, I get an exception about str / byte issues
 yaml = YAML(typ="safe", pure=True)
 helm_charts_dir = Path(__file__).parent.parent.joinpath("helm-charts")
-
-app = typer.Typer(help="Deploy many JupyterHubs on many Kubernetes Clusters")
 
 
 @app.command()
@@ -244,7 +243,7 @@ def deploy(
 @app.command()
 def generate_helm_upgrade_jobs(
     changed_filepaths: str = typer.Argument(
-        ..., help="Space delimited list of files that have changed"
+        ..., help="Comma delimited list of files that have changed"
     )
 ):
     """
@@ -466,7 +465,7 @@ def run_hub_health_check(
         print_colour("Health check succeeded!")
 
 
-@app.command
+@app.command()
 def validate(
     cluster_name: str = typer.Argument(..., help="Name of cluster to operate on"),
     hub_name: str = typer.Argument(..., help="Name of hub to operate on"),
@@ -478,7 +477,3 @@ def validate(
     validate_support_config(cluster_name)
     validate_hub_config(cluster_name, hub_name)
     validate_authenticator_config(cluster_name, hub_name)
-
-
-def main():
-    app()

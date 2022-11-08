@@ -17,46 +17,37 @@ pip install --editable .
 The `--editable` makes sure any changes you make to the deployer itself are
 immediately effected.
 
-## Functions
+## Deployment Commands
 
-This section describes the functions the `deployer` can carry out, their purpose, and their command line usage.
 
-**Note:** The `deployer` must currently be invoked from the root of this repository, i.e.:
+This section descripts all the deployment related subcommands the `deployer` can carry out and their commandline parameters.
 
-```bash
-$ pwd
-[...]/infrastructure/deployer
-$ cd .. && pwd
-[...]/infrastructure
-$ python deployer [sub-command]
-```
 
 **Command line usage:**
 
 ```bash
-usage: deployer [-h] {deploy,validate,deploy-support,deploy-grafana-dashboards,use-cluster-credentials,generate-helm-upgrade-jobs,run-hub-health-check,generate-cluster} ...
-
-A command line tool to perform various functions related to deploying and maintaining a JupyterHub running on kubernetes infrastructure
-
-positional arguments:
-  {deploy,validate,deploy-support,deploy-grafana-dashboards,use-cluster-credentials,generate-helm-upgrade-jobs,run-hub-health-check,generate-cluster}
-                        Available subcommands
-    deploy              Install/upgrade the helm charts of JupyterHubs on a cluster
-    validate            Validate the cluster.yaml configuration itself, as well as the provided non-encrypted helm chart values files for each hub or the specified hub.
-    deploy-support      Install/upgrade the support helm release on a given cluster
-    deploy-grafana-dashboards
-                        Deploy grafana dashboards to a cluster for monitoring JupyterHubs. deploy-support must be run first!
-    use-cluster-credentials
-                        Modify the current kubeconfig with the deployer's access credentials for the named cluster
-    generate-helm-upgrade-jobs
-                        Generate a set of matrix jobs to perform a helm upgrade in parallel across clusters and hubs. Emit JSON to stdout that can be read by the strategy.matrix field of a GitHub Actions
-                        workflow.
-    run-hub-health-check
-                        Run a health check against a given hub deployed on a given cluster
-    generate-cluster    Generate files for a new cluster
-
-options:
-  -h, --help            show this help message and exit
+ Usage: deployer [OPTIONS] COMMAND [ARGS]...                                                                            
+                                                                                                                        
+╭─ Options ────────────────────────────────────────────────────────────────────────────────────────────────────────────╮
+│ --install-completion          Install completion for the current shell.                                              │
+│ --show-completion             Show completion for the current shell, to copy it or customize the installation.       │
+│ --help                        Show this message and exit.                                                            │
+╰──────────────────────────────────────────────────────────────────────────────────────────────────────────────────────╯
+╭─ Commands ───────────────────────────────────────────────────────────────────────────────────────────────────────────╮
+│ component-logs              Display logs from a particular component on a hub on a cluster                           │
+│ deploy                      Deploy one or more hubs in a given cluster                                               │
+│ deploy-grafana-dashboards   Deploy JupyterHub dashboards to grafana set up in the given cluster                      │
+│ deploy-support              Deploy support components to a cluster                                                   │
+│ exec-homes-shell            Pop an interactive shell with the home directories of the given hub mounted on /home     │
+│ exec-hub-shell              Pop an interactive shell in the hub pod                                                  │
+│ generate-helm-upgrade-jobs  Analyse added or modified files from a GitHub Pull Request and decide which clusters     │
+│                             and/or hubs require helm upgrades to be performed for their *hub helm charts or the      │
+│                             support helm chart.                                                                      │
+│ run-hub-health-check        Run a health check on a given hub on a given cluster. Optionally check scaling of dask   │
+│                             workers if the hub is a daskhub.                                                         │
+│ use-cluster-credentials     Pop a new shell authenticated to the given cluster using the deployer's credentials      │
+│ user-logs                   Display logs from the notebook pod of a given user                                       │
+╰──────────────────────────────────────────────────────────────────────────────────────────────────────────────────────╯
 ```
 
 ### `deploy`
@@ -67,18 +58,21 @@ It takes a name of a cluster and a name of a hub (or list of names) as arguments
 **Command line usage:**
 
 ```bash
-usage: python deployer deploy [-h] [--config-path CONFIG_PATH] [--dask-gateway-version DASK_GATEWAY_VERSION] cluster_name [hub_name]
-
-positional arguments:
-  cluster_name          The name of the cluster to perform actions on
-  hub_name              The hub, or list of hubs, to install/upgrade the helm chart for
-
-optional arguments:
-  -h, --help            show this help message and exit
-  --config-path CONFIG_PATH
-                        File to read secret deployment configuration from
-  --dask-gateway-version DASK_GATEWAY_VERSION
-                        For daskhubs, the version of dask-gateway to install for the CRDs. Default: 2022.10.0
+ Usage: deployer deploy [OPTIONS] CLUSTER_NAME [HUB_NAME]                                                               
+                                                                                                                        
+ Deploy one or more hubs in a given cluster                                                                             
+                                                                                                                        
+╭─ Arguments ──────────────────────────────────────────────────────────────────────────────────────────────────────────╮
+│ *    cluster_name      TEXT        Name of cluster to operate on [default: None] [required]                          │
+│      hub_name          [HUB_NAME]  Name of hub to operate deploy. Omit to deploy all hubs on the cluster             │
+│                                    [default: None]                                                                   │
+╰──────────────────────────────────────────────────────────────────────────────────────────────────────────────────────╯
+╭─ Options ────────────────────────────────────────────────────────────────────────────────────────────────────────────╮
+│ --config-path                 TEXT  File to read secret deployment config from                                       │
+│                                     [default: shared/deployer/enc-auth-providers-credentials.secret.yaml]            │
+│ --dask-gateway-version        TEXT  Version of dask-gateway to install CRDs for [default: v2022.10.0]                │
+│ --help                              Show this message and exit.                                                      │
+╰──────────────────────────────────────────────────────────────────────────────────────────────────────────────────────╯
 ```
 
 ### `validate`
@@ -89,14 +83,17 @@ This allows us to validate that all required values are present and have the cor
 **Command line usage:**
 
 ```bash
-usage: python deployer validate [-h] cluster_name [hub_name]
-
-positional arguments:
-  cluster_name  The name of the cluster to perform actions on
-  hub_name      The hub, or list of hubs, to validate provided non-encrypted helm chart values for.
-
-optional arguments:
-  -h, --help    show this help message and exit
+ Usage: deployer validate [OPTIONS] CLUSTER_NAME HUB_NAME                                                               
+                                                                                                                        
+ Validate cluster.yaml and non-encrypted helm config for given hub                                                      
+                                                                                                                        
+╭─ Arguments ──────────────────────────────────────────────────────────────────────────────────────────────────────────╮
+│ *    cluster_name      TEXT  Name of cluster to operate on [default: None] [required]                                │
+│ *    hub_name          TEXT  Name of hub to operate on [default: None] [required]                                    │
+╰──────────────────────────────────────────────────────────────────────────────────────────────────────────────────────╯
+╭─ Options ────────────────────────────────────────────────────────────────────────────────────────────────────────────╮
+│ --help          Show this message and exit.                                                                          │
+╰──────────────────────────────────────────────────────────────────────────────────────────────────────────────────────╯
 ```
 
 ### `deploy-support`
@@ -107,15 +104,17 @@ This command only needs to be run once per cluster, not once per hub.
 **Command line usage:**
 
 ```bash
-usage: python deployer deploy-support [-h] [--cert-manager-version CERT_MANAGER_VERSION] cluster_name
-
-positional arguments:
-  cluster_name          The name of the cluster to perform actions on
-
-optional arguments:
-  -h, --help            show this help message and exit
-  --cert-manager-version CERT_MANAGER_VERSION
-                        The version of cert-manager to deploy in the form vX.Y.Z. Defaults to v1.3.1
+ Usage: deployer deploy-support [OPTIONS] CLUSTER_NAME                                                                  
+                                                                                                                        
+ Deploy support components to a cluster                                                                                 
+                                                                                                                        
+╭─ Arguments ──────────────────────────────────────────────────────────────────────────────────────────────────────────╮
+│ *    cluster_name      TEXT  Name of cluster to operate on [default: None] [required]                                │
+╰──────────────────────────────────────────────────────────────────────────────────────────────────────────────────────╯
+╭─ Options ────────────────────────────────────────────────────────────────────────────────────────────────────────────╮
+│ --cert-manager-version        TEXT  Version of cert-manager to install [default: v1.8.2]                             │
+│ --help                              Show this message and exit.                                                      │
+╰──────────────────────────────────────────────────────────────────────────────────────────────────────────────────────╯
 ```
 
 ### `deploy-grafana-dashboards`
@@ -126,13 +125,17 @@ The support chart **must** be deployed before trying to install the dashboards, 
 **Command line usage:**
 
 ```bash
-usage: python deployer deploy-grafana-dashboards [-h] cluster_name
-
-positional arguments:
-  cluster_name  The name of the cluster to perform actions on
-
-optional arguments:
-  -h, --help    show this help message and exit
+ Usage: deployer deploy-grafana-dashboards [OPTIONS] CLUSTER_NAME                                                       
+                                                                                                                        
+ Deploy JupyterHub dashboards to grafana set up in the given cluster                                                    
+ Grafana dashboards and deployment mechanism are maintained at https://github.com/jupyterhub/grafana-dashboards         
+                                                                                                                        
+╭─ Arguments ──────────────────────────────────────────────────────────────────────────────────────────────────────────╮
+│ *    cluster_name      TEXT  Name of cluster to operate on [default: None] [required]                                │
+╰──────────────────────────────────────────────────────────────────────────────────────────────────────────────────────╯
+╭─ Options ────────────────────────────────────────────────────────────────────────────────────────────────────────────╮
+│ --help          Show this message and exit.                                                                          │
+╰──────────────────────────────────────────────────────────────────────────────────────────────────────────────────────╯
 ```
 
 ### `use-cluster-credentials`
@@ -145,13 +148,16 @@ Remember to close the opened shell after you've finished by using the `exit` com
 **Command line usage:**
 
 ```bash
-usage: python deployer use-cluster-credentials [-h] cluster_name
-
-positional arguments:
-  cluster_name  The name of the cluster to perform actions on
-
-optional arguments:
-  -h, --help    show this help message and exit
+ Usage: deployer use-cluster-credentials [OPTIONS] CLUSTER_NAME                                                         
+                                                                                                                        
+ Pop a new shell authenticated to the given cluster using the deployer's credentials                                    
+                                                                                                                        
+╭─ Arguments ──────────────────────────────────────────────────────────────────────────────────────────────────────────╮
+│ *    cluster_name      TEXT  Name of cluster to operate on [default: None] [required]                                │
+╰──────────────────────────────────────────────────────────────────────────────────────────────────────────────────────╯
+╭─ Options ────────────────────────────────────────────────────────────────────────────────────────────────────────────╮
+│ --help          Show this message and exit.                                                                          │
+╰──────────────────────────────────────────────────────────────────────────────────────────────────────────────────────╯
 ```
 
 
@@ -166,13 +172,17 @@ This allows us to optimise and parallelise the automatic deployment of our hubs.
 **Command line usage:**
 
 ```bash
-usage: python deployer generate-helm-upgrade-jobs [-h] [filepaths]
-
-positional arguments:
-  filepaths   A singular or space-delimited list of added or modified filepaths in the repo
-
-optional arguments:
-  -h, --help  show this help message and exit
+ Usage: deployer generate-helm-upgrade-jobs [OPTIONS] CHANGED_FILEPATHS                                                 
+                                                                                                                        
+ Analyse added or modified files from a GitHub Pull Request and decide which clusters and/or hubs require helm upgrades 
+ to be performed for their *hub helm charts or the support helm chart.                                                  
+                                                                                                                        
+╭─ Arguments ──────────────────────────────────────────────────────────────────────────────────────────────────────────╮
+│ *    changed_filepaths      TEXT  Space delimited list of files that have changed [default: None] [required]         │
+╰──────────────────────────────────────────────────────────────────────────────────────────────────────────────────────╯
+╭─ Options ────────────────────────────────────────────────────────────────────────────────────────────────────────────╮
+│ --help          Show this message and exit.                                                                          │
+╰──────────────────────────────────────────────────────────────────────────────────────────────────────────────────────╯
 ```
 
 ### `run-hub-health-check`
@@ -188,24 +198,27 @@ For daskhubs, there is an optional check to verify that the user can scale dask 
 **Command line usage:**
 
 ```bash
-usage: python deployer run-hub-health-check [-h] [--check-dask-scaling] cluster_name hub_name
-
-positional arguments:
-  cluster_name          The name of the cluster to perform actions on
-  hub_name              The hub to run health checks against.
-
-optional arguments:
-  -h, --help            show this help message and exit
-  --check-dask-scaling  For daskhubs, optionally check that dask workers can be scaled
+ Usage: deployer run-hub-health-check [OPTIONS] CLUSTER_NAME HUB_NAME                                                   
+                                                                                                                        
+ Run a health check on a given hub on a given cluster. Optionally check scaling of dask workers if the hub is a         
+ daskhub.                                                                                                               
+                                                                                                                        
+╭─ Arguments ──────────────────────────────────────────────────────────────────────────────────────────────────────────╮
+│ *    cluster_name      TEXT  Name of cluster to operate on [default: None] [required]                                │
+│ *    hub_name          TEXT  Name of hub to operate on [default: None] [required]                                    │
+╰──────────────────────────────────────────────────────────────────────────────────────────────────────────────────────╯
+╭─ Options ────────────────────────────────────────────────────────────────────────────────────────────────────────────╮
+│ --check-dask-scaling    --no-check-dask-scaling      Check that dask workers can be scaled                           │
+│                                                      [default: no-check-dask-scaling]                                │
+│ --help                                               Show this message and exit.                                     │
+╰──────────────────────────────────────────────────────────────────────────────────────────────────────────────────────╯
 ```
 
 ## Debugging helpers
 
-We also have some debug helpers commands that can be invoked as subcommands
-of `python3 -m deployer.debug`. These are primarily helpful for manual actions
-when debugging issues (during setup or an outage), or when taking down a hub.
-`python3 -m deployer.debug --help` is the authoritative help document for all
-the options available, but they are also documented here.
+We also have some debug helpers commands that can be invoked as subcommands.
+These are primarily helpful for manual actions when debugging issues (during
+setup or an outage), or when taking down a hub. 
 
 All these commands take a cluster and hub name as parameters, and perform appropriate
 authentication before performing their function.
@@ -219,26 +232,26 @@ due to an error, you can pass `--previous` to look at the logs of the pod
 prior to the last restart.
 
 ```
-Usage: python3 deployer.debug component-logs [OPTIONS] CLUSTER_NAME HUB_NAME
-                               COMPONENT:[hub|proxy|dask-gateway-api|dask-
-                               gateway-controller|dask-gateway-traefik]
-
-  Display logs from a particular component on a hub on a cluster
-
-Arguments:
-  CLUSTER_NAME                    Name of cluster to operate on  [required]
-  HUB_NAME                        Name of hub to operate on  [required]
-  COMPONENT:[hub|proxy|dask-gateway-api|dask-gateway-controller|dask-gateway-traefik]
-                                  Component to display logs of  [required]
-
-Options:
-  --follow / --no-follow      Live update new logs as they show up  [default:
-                              True]
-
-  --previous / --no-previous  If component pod has restarted, show logs from
-                              just before the restart  [default: False]
-
-  --help                      Show this message and exit.
+ Usage: deployer component-logs [OPTIONS] CLUSTER_NAME HUB_NAME                                                         
+                                COMPONENT:{hub|proxy|dask-gateway-api|dask-                                             
+                                gateway-controller|dask-gateway-traefik}                                                
+                                                                                                                        
+ Display logs from a particular component on a hub on a cluster                                                         
+                                                                                                                        
+╭─ Arguments ──────────────────────────────────────────────────────────────────────────────────────────────────────────╮
+│ *    cluster_name      TEXT                                           Name of cluster to operate on [default: None]  │
+│                                                                       [required]                                     │
+│ *    hub_name          TEXT                                           Name of hub to operate on [default: None]      │
+│                                                                       [required]                                     │
+│ *    component         COMPONENT:{hub|proxy|dask-gateway-api|dask-ga  Component to display logs of [default: None]   │
+│                        teway-controller|dask-gateway-traefik}         [required]                                     │
+╰──────────────────────────────────────────────────────────────────────────────────────────────────────────────────────╯
+╭─ Options ────────────────────────────────────────────────────────────────────────────────────────────────────────────╮
+│ --follow      --no-follow        Live update new logs as they show up [default: follow]                              │
+│ --previous    --no-previous      If component pod has restarted, show logs from just before the restart              │
+│                                  [default: no-previous]                                                              │
+│ --help                           Show this message and exit.                                                         │
+╰──────────────────────────────────────────────────────────────────────────────────────────────────────────────────────╯
 ```
 
 ### `user-logs`
@@ -249,20 +262,20 @@ they are ignored and only the notebook logs are provided. You can pass
 `--no-follow` to provide logs upto the current point only.
 
 ```
-Usage: python3 deployer.debug user-logs [OPTIONS] CLUSTER_NAME HUB_NAME USERNAME
+ Usage: deployer user-logs [OPTIONS] CLUSTER_NAME HUB_NAME USERNAME                                                     
+                                                                                                                        
+ Display logs from the notebook pod of a given user                                                                     
+                                                                                                                        
+╭─ Arguments ──────────────────────────────────────────────────────────────────────────────────────────────────────────╮
+│ *    cluster_name      TEXT  Name of cluster to operate on [default: None] [required]                                │
+│ *    hub_name          TEXT  Name of hub to operate on [default: None] [required]                                    │
+│ *    username          TEXT  Name of the JupyterHub user to get logs for [default: None] [required]                  │
+╰──────────────────────────────────────────────────────────────────────────────────────────────────────────────────────╯
+╭─ Options ────────────────────────────────────────────────────────────────────────────────────────────────────────────╮
+│ --follow    --no-follow      Live update new logs as they show up [default: follow]                                  │
+│ --help                       Show this message and exit.                                                             │
+╰──────────────────────────────────────────────────────────────────────────────────────────────────────────────────────╯
 
-  Display logs from the notebook pod of a given user
-
-Arguments:
-  CLUSTER_NAME  Name of cluster to operate on  [required]
-  HUB_NAME      Name of hub to operate on  [required]
-  USERNAME      Name of the JupyterHub user to get logs for  [required]
-
-Options:
-  --follow / --no-follow  Live update new logs as they show up  [default:
-                          True]
-
-  --help                  Show this message and exit.
 ```
 
 ### `exec-hub-shell`
@@ -272,16 +285,17 @@ can poke around to see what's going on. Particularly useful if you want to peek
 at the hub db with the `sqlite` command.
 
 ```
-Usage: python3 deployer.debug exec-hub-shell [OPTIONS] CLUSTER_NAME HUB_NAME
-
-  Pop an interactive shell in the hub pod
-
-Arguments:
-  CLUSTER_NAME  Name of cluster to operate on  [required]
-  HUB_NAME      Name of hub to operate on  [required]
-
-Options:
-  --help  Show this message and exit.
+ Usage: deployer exec-hub-shell [OPTIONS] CLUSTER_NAME HUB_NAME                                                         
+                                                                                                                        
+ Pop an interactive shell in the hub pod                                                                                
+                                                                                                                        
+╭─ Arguments ──────────────────────────────────────────────────────────────────────────────────────────────────────────╮
+│ *    cluster_name      TEXT  Name of cluster to operate on [default: None] [required]                                │
+│ *    hub_name          TEXT  Name of hub to operate on [default: None] [required]                                    │
+╰──────────────────────────────────────────────────────────────────────────────────────────────────────────────────────╯
+╭─ Options ────────────────────────────────────────────────────────────────────────────────────────────────────────────╮
+│ --help          Show this message and exit.                                                                          │
+╰──────────────────────────────────────────────────────────────────────────────────────────────────────────────────────╯
 ```
 
 ### `exec-homes-shell`
@@ -294,17 +308,17 @@ such as renames.
 When you exit the shell, the temporary pod spun up is removed.
 
 ```bash
-Usage: debug.py exec-homes-shell [OPTIONS] CLUSTER_NAME HUB_NAME
-
-  Pop an interactive shell with the home directories of the given hub
-  mounted on /home
-
-Arguments:
-  CLUSTER_NAME  Name of cluster to operate on  [required]
-  HUB_NAME      Name of hub to operate on  [required]
-
-Options:
-  --help  Show this message and exit.
+ Usage: deployer exec-homes-shell [OPTIONS] CLUSTER_NAME HUB_NAME                                                       
+                                                                                                                        
+ Pop an interactive shell with the home directories of the given hub mounted on /home                                   
+                                                                                                                        
+╭─ Arguments ──────────────────────────────────────────────────────────────────────────────────────────────────────────╮
+│ *    cluster_name      TEXT  Name of cluster to operate on [default: None] [required]                                │
+│ *    hub_name          TEXT  Name of hub to operate on [default: None] [required]                                    │
+╰──────────────────────────────────────────────────────────────────────────────────────────────────────────────────────╯
+╭─ Options ────────────────────────────────────────────────────────────────────────────────────────────────────────────╮
+│ --help          Show this message and exit.                                                                          │
+╰──────────────────────────────────────────────────────────────────────────────────────────────────────────────────────╯
 ```
 
 ## Sub-scripts

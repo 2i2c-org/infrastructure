@@ -10,10 +10,9 @@ import escapism
 import typer
 from ruamel.yaml import YAML
 
+from .cli_app import app
 from .cluster import Cluster
 from .file_acquisition import find_absolute_path_to_cluster_file
-
-app = typer.Typer()
 
 # Without `pure=True`, I get an exception about str / byte issues
 yaml = YAML(typ="safe", pure=True)
