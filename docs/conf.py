@@ -76,7 +76,6 @@ def setup(app):
 import subprocess
 from pathlib import Path
 
-import pandas as pd
 
 # -- Custom scripts -----------------------------------------
 subprocess.run(["python", "scripts/render_hubs.py"])
