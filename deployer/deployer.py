@@ -468,7 +468,7 @@ def run_hub_health_check(
 @app.command()
 def validate(
     cluster_name: str = typer.Argument(..., help="Name of cluster to operate on"),
-    hub_name: str = typer.Argument(..., help="Name of hub to operate on"),
+    hub_name: str = typer.Argument(None, help="Name of hub to operate on"),
 ):
     """
     Validate cluster.yaml and non-encrypted helm config for given hub
