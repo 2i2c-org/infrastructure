@@ -60,11 +60,10 @@ for cluster_info in clusters:
     # For clusters where we know the provider but can't guess it from the YAML file,
     # we define a few custom mappings.
     custom_providers = {"utoronto": "azure"}
-    for clustername, provider in custom_providers.items():
-        if cluster["name"] == clustername:
-            provider = provider
-        else:
-            provider = cluster["provider"]
+    if cluster["name"] in custom_providers.keys():
+        provider = custom_providers[cluster["name"]]
+    else:
+        provider = cluster["provider"]
 
     # For each hub in cluster, grab its metadata and add it to the list
     for hub in cluster["hubs"]:
