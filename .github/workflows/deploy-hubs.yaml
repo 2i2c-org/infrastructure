@@ -161,6 +161,7 @@ jobs:
       failure_callysto: "${{ env.failure_callysto }}"
       failure_nasa-cryo: "${{ env.failure_nasa-cryo }}"
       failure_gridsst: "${{ env.failure_gridsst }}"
+      failure_victor: "${{ env.failure_victor }}"
 
     # Only run this job on pushes to the default branch and when the job output is not
     # an empty list
