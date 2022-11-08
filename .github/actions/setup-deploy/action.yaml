@@ -64,7 +64,7 @@ runs:
 
     - name: Install the deployer
       run: |
-        pip install .
+        pip install --editable .
         pip list
       shell: bash
 

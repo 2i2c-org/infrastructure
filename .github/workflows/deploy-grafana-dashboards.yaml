@@ -33,7 +33,7 @@ jobs:
 
       - name: Setup dependencies
         run: |
-          python3 -m pip install .
+          python3 -m pip install --editable .
           sudo apt install jsonnet
 
       - name: Setup gcloud

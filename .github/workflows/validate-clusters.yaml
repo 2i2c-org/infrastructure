@@ -186,7 +186,7 @@ jobs:
 
       - name: Install deployer module dependencies
         run: |
-          pip install .
+          pip install --editable .
 
       - name: "Validate cluster: ${{ matrix.jobs.cluster_name }}"
         env:
