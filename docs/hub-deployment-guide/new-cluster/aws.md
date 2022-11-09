@@ -181,13 +181,6 @@ have least amount of permissions possible.
    cat ../../config/clusters/<your-cluster-name>/enc-deployer-credentials.secret.json
    ```
 
-1. Delete the unencrypted file and check the encrypted credentials into our repository so they are accessible from our automatic deployment.
-
-   ```bash
-   rm ../../config/clusters/<your-cluster-name>/deployer-credentials.secret.json
-   git add ../../config/clusters/<your-cluster-name>/enc-deployer-credentials.secret.json
-   ```
-
 1. Grant the freshly created IAM user access to the kubernetes cluster.
 
    1. As this requires passing in some parameters that match the created cluster,
