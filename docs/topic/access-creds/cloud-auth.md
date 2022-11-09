@@ -36,14 +36,14 @@ We have two ways to access AWS accounts.
 
 There are three units of organization in AWS that are relevant to 2i2c.
 
-#### AWS Accounts
+AWS Accounts
 : Collections of services and infrastructure that generated their own bills. Kind-of like `projects` in Google Cloud Platform. For example, the Kubernetes cluster we run for `uwhackweeks` runs in an Account dedicated for this.
 
-#### AWS Organizations
+AWS Organizations
 : Organizations are basically collections of accounts. They make it easy to group **access** to multiple accounts via things like [AWS Single Sign On](cloud-access:aws-sso). Every AWS Organization has a "Management Account" that defines all of the other accounts in the organization.
 
 (cloud-access:aws-management-account)=
-#### AWS Management Account
+AWS Management Account
 : A special account that is a centralized place for configuration for an AWS Organization and other accounts that might be in it. Our AWS Management account is `2i2c-sandbox`. It defines our **payment methods** for centralized payment across all of our accounts. So each of our AWS Accounts generates a bill, and these are consolidated into `2i2c-sandbox` and payed with a single credit card.
 
 (cloud-access:aws-sso)=
