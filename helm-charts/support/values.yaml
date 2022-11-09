@@ -8,11 +8,18 @@ cluster-autoscaler:
 ingress-nginx:
   controller:
     podLabels:
+      # nginx-ingress controllers need to communicate with the proxy pod (and only the proxy pod)
+      # in clusters with networkpolicy enforcement enabled. Adding this label on the controller pod
+      # allows that. https://z2jh.jupyter.org/en/stable/administrator/security.html#introduction-to-the-chart-s-four-network-policies
+      # has more information.
       hub.jupyter.org/network-access-proxy-http: "true"
 prometheus:
   networkPolicy:
     enabled: true
   alertmanager:
+    # We do not use the Prometheus alertmanager component, as we already have Grafana
+    # Grafana also has alerts, and the UI of grafana is much better than that of alertmanager
+    # We also expose Grafana publicly behind auth anyway, so we can consolidate alerting with Grafana too
     enabled: false
   nodeExporter:
     tolerations:
@@ -64,18 +71,24 @@ prometheus:
     retention: 366d
     service:
       type: ClusterIP
-  # make sure we collect metrics on pods by app/component at least
   kube-state-metrics:
+    # kube-state-metrics stopped collecting *all* labels on all kubernetes objects as
+    # prometheus labels, as it exploded the total number of metrics being collected. We
+    # have to explicitly allow-list the labels we want. These are the ones needed for
+    # the graphs from https://github.com/jupyterhub/grafana-dashboards to work
     metricLabelsAllowlist:
       - pods=[app,component,hub.jupyter.org/username,app.kubernetes.io/component]
       - nodes=[*]
 
 grafana:
   persistence:
+    # Attach a tiny 1G PVC with grafana for auth db as well as dashboard definition (not data) storage.
+    # Matches what we do with JupyterHub
     enabled: true
   deploymentStrategy:
     type: Recreate
   service:
+    # Grafana is exposed to the world via ingress
     type: ClusterIP
 
   ingress:
@@ -88,15 +101,18 @@ grafana:
     datasources.yaml:
       apiVersion: 1
       datasources:
+        # Automatically add the prometheus server in the same namespace as the grafana as a datasource
         - name: prometheus
           orgId: 1
           type: prometheus
+          # This is the name of the kubernetes service exposed by the prometheus server
           url: http://support-prometheus-server
           access: proxy
           isDefault: true
           editable: false
 
 # Enable a daemonset to install nvidia device plugin to GPU nodes
+# AWS does not require this to be set, as eksctl sets this up automatically
 nvidiaDevicePlugin:
   # For Azure-specific image, default to false
   azure:
