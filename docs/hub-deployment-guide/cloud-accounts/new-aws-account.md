@@ -11,7 +11,7 @@ More information on these terms can be found in [](cloud-access:aws).
    ```
 1. Pick a name for the new account.
    We try to keep the word '2i2c' out
-   of the project name, in case the user decide to exercise their [right to
+   of the project name, in case the user decides to exercise their [right to
    replicate](https://2i2c.org/right-to-replicate/) at some point.
 1. Set the email address of the account owner
 
