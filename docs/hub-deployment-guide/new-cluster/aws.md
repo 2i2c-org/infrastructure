@@ -10,9 +10,8 @@ terraform to provision supporting infrastructure, such as storage buckets.
    prepare `sops` to encrypt and decrypt files.
 
 2. Install the `awscli` tool (you can use pip or conda to install it in the
-   environment) and configure it to use the provided AWS user credentials.  [Follow
-   this guide](https://docs.aws.amazon.com/cli/latest/userguide/cli-configure-quickstart.html#cli-configure-quickstart-config)
-   for a quick configuration process.
+   environment) and configure it to use the provided AWS user credentials.
+   More about setting out the credentials in [](new-cluster:aws-setup-credentials).
 
 3. Install the latest version of [eksctl](https://eksctl.io/introduction/#installation). Mac users
    can get it from homebrew with `brew install eksctl`. Make sure the version is at least 0.97 -
@@ -20,6 +19,7 @@ terraform to provision supporting infrastructure, such as storage buckets.
 
 ## Create a new cluster
 
+(new-cluster:aws-setup-credentials)=
 ### Setup credentials
 
 Depending on wether this project is using AWS SSO or not, you can use the following
@@ -86,7 +86,7 @@ There's no requirement to commit the `*.eksctl.yaml` file to the repository sinc
 Now you're ready to create the cluster!
 
 ```bash
-eksctl create cluster  --config-file <your-cluster>.eksctl.yaml
+eksctl create cluster --config-file <your-cluster>.eksctl.yaml
 ```
 
 ```{tip}
@@ -139,10 +139,14 @@ in GCP, so you also need to have `gcloud` set up and authenticated already.
 4. Deploy the terraform-managed infrastructure
 
    ```bash
-   terraform apply -var-file projects/<your-cluster-name>.tfvars
+   terraform plan -var-file projects/<your-cluster-name>.tfvars
    ```
 
    Observe the plan carefully, and accept it.
+
+   ```bash
+   terraform apply -var-file projects/<your-cluster-name>.tfvars
+   ```
 
 (new-cluster:aws:terraform:cicd)=
 ### Export account credentials with finely scoped permissions for automatic deployment
@@ -152,37 +156,54 @@ enough permissions for automatic deployment of hubs from CI/CD. Since these
 credentials are checked-in to our git repository and made public, they should
 have least amount of permissions possible.
 
-1. Fetch credentials we can encrypt and check-in to our repository so
-   they are accessible from our automatic deployment.
+1. First, make sure you are in the right terraform directory:
+
+   ```bash
+   cd terraform/aws
+   ```
+
+1. Fetch credentials for automatic deployment
 
    ```bash
    terraform output -raw continuous_deployer_creds > ../../config/clusters/<your-cluster-name>/deployer-credentials.secret.json
-   cd ../..  # sops commands must be run from the root of the repo
-   sops --output config/clusters/<your-cluster-name>/enc-deployer-credentials.secret.json --encrypt config/clusters/<your-cluster-name>/deployer-credentials.secret.json
    ```
 
-   Double check to make sure that the `config/clusters/<your-cluster-name>/enc-deployer-credentials.secret.json` file is
-   actually encrypted by `sops` before checking it in to the git repo. Otherwise
-   this can be a serious security leak!
-
-2. Grant the freshly created IAM user access to the kubernetes cluster. As this requires
-   passing in some parameters that match the created cluster, we have a `terraform output`
-   that can give you the exact command to run.
+1. Encrypt the file storing the credentials
 
    ```bash
-   $ terraform output -raw eksctl_iam_command
-   eksctl create iamidentitymapping \
-      --cluster <your-cluster-name> \
-      --region <your-cluster-region> \
-      --arn arn:aws:iam::<your-org-id>:user/hub-continuous-deployer \
-      --username hub-continuous-deployer \
-      --group system:masters
+   sops --output ../../config/clusters/<your-cluster-name>/enc-deployer-credentials.secret.json --encrypt ../../config/clusters/<your-cluster-name>/deployer-credentials.secret.json
    ```
 
-   Run the command output by `terraform output -raw eksctl_iam_command`, and that should
-   give the continuous deployer user access.
+1. Double check to make sure that the `config/clusters/<your-cluster-name>/enc-deployer-credentials.secret.json` file is
+   actually encrypted by `sops` before checking it in to the git repo. Otherwise this can be a serious security leak!
 
-3. Create a minimal `cluster.yaml` file (`config/clusters/<your-cluster-name>/cluster.yaml`),
+    ```bash
+   cat ../../config/clusters/<your-cluster-name>/enc-deployer-credentials.secret.json
+   ```
+
+1. Grant the freshly created IAM user access to the kubernetes cluster.
+
+   1. As this requires passing in some parameters that match the created cluster,
+     we have a `terraform output` that can give you the exact command to run.
+
+      ```bash
+      terraform output -raw eksctl_iam_command
+      ```
+   2. Run the `eksctl create iamidentitymapping` command returned by `terraform output`.
+      That should give the continuous deployer user access.
+
+      The command should look like this:
+
+      ```bash
+      eksctl create iamidentitymapping \
+         --cluster <your-cluster-name> \
+         --region <your-cluster-region> \
+         --arn arn:aws:iam::<aws-accout-id>:user/hub-continuous-deployer \
+         --username hub-continuous-deployer \
+         --group system:masters
+      ```
+
+1. Create a minimal `cluster.yaml` file (`config/clusters/<your-cluster-name>/cluster.yaml`),
    and provide enough information for the deployer to find the correct credentials.
 
    ```yaml
@@ -193,13 +214,14 @@ have least amount of permissions possible.
       clusterType: eks
       clusterName: <your-cluster-name>
       region: <your-region>
+   hubs: []
    ```
 
    ```{note}
    The `aws.key` file is defined _relative_ to the location of the `cluster.yaml` file.
    ```
 
-4. Test the access by running `deployer use-cluster-credentials <cluster-name>` and
+1. Test the access by running `deployer use-cluster-credentials <cluster-name>` and
    running `kubectl get node`. It should show you the provisioned node on the cluster if
    everything works out ok.
 
