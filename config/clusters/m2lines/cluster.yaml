@@ -1,6 +1,5 @@
 name: m2lines
 provider: gcp
-account: columbia
 gcp:
   key: enc-deployer-credentials.secret.json
   project: m2lines-hub
