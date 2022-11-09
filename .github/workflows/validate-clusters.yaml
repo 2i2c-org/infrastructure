@@ -132,7 +132,7 @@ jobs:
 
           # Consume list of changed cluster files and convert to list by splitting
           # on the comma character
-          cluster_files = r"""${{ steps.cluster_specific_files.outputs.cluster_specific_files }}"""
+          cluster_files = r"""${{ steps.file_changes.outputs.cluster_specific_files }}"""
           cluster_files = cluster_files.split(",")
           assert isinstance(cluster_files, list)
 
