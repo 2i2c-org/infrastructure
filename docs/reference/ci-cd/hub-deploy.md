@@ -64,6 +64,7 @@ This job reads in the production hub job definitions generated in job 1 and the 
 
 This last job deploys all production hubs that require it in parallel to the clusters that successfully completed job 2.
 
+(cicd/hub/pr-comment)=
 ## Posting the deployment plan as a comment on a Pull Request
 
 The [`generate-jobs`](cicd/hub/generate-jobs) job outputs tables of all the hubs across all the clusters that will be upgraded as a result of changes in the repository.
