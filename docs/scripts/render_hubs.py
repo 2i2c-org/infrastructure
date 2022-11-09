@@ -65,6 +65,34 @@ for cluster_info in clusters:
     else:
         provider = cluster["provider"]
 
+    cluster_name = cluster["name"]
+    # Don't display anything about Console UI if no info about datacentre available
+    cluster_console_url = None
+
+    # We mostly use our 2i2c account to login into cloud provider UI's
+    # with a few exceptions
+    account = cluster.get("account", "2i2c")
+
+    if provider == "gcp":
+        gcp_cluster = cluster["gcp"]["cluster"]
+        gcp_project = cluster["gcp"]["project"]
+        cluster_console_url = (
+            f"https://console.cloud.google.com/kubernetes/clusters/details/{datacentre_loc}/{gcp_cluster}/details?project={gcp_project}"
+            if datacentre_loc
+            else None
+        )
+    elif provider == "aws":
+        if account == "2i2c":
+            cluster_console_url = "https://2i2c.awsapps.com/start#/"
+        else:
+            cluster_console_url = (
+                f"https://{account}.signin.aws.amazon.com/console"
+                if account
+                else None
+            )
+    elif provider == "azure":
+        cluster_console_url = "https://portal.azure.com"
+
     # For each hub in cluster, grab its metadata and add it to the list
     for hub in cluster["hubs"]:
         # Domain can be a list
@@ -82,6 +110,7 @@ for cluster_info in clusters:
                 "cluster": cluster["name"],
                 "provider": provider,
                 "data center location": datacentre_loc,  # Americanising for you ;)
+                "UI console link": f"[Use with **{account}** account]({cluster_console_url})" if cluster_console_url else None,
             }
         )
 
