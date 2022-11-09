@@ -86,9 +86,7 @@ for cluster_info in clusters:
             cluster_console_url = "https://2i2c.awsapps.com/start#/"
         else:
             cluster_console_url = (
-                f"https://{account}.signin.aws.amazon.com/console"
-                if account
-                else None
+                f"https://{account}.signin.aws.amazon.com/console" if account else None
             )
     elif provider == "azure":
         cluster_console_url = "https://portal.azure.com"
@@ -110,7 +108,9 @@ for cluster_info in clusters:
                 "cluster": cluster["name"],
                 "provider": provider,
                 "data center location": datacentre_loc,  # Americanising for you ;)
-                "UI console link": f"[Use with **{account}** account]({cluster_console_url})" if cluster_console_url else None,
+                "UI console link": f"[Use with **{account}** account]({cluster_console_url})"
+                if cluster_console_url
+                else None,
             }
         )
 
