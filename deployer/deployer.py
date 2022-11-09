@@ -199,7 +199,7 @@ def deploy(
         help="File to read secret deployment config from",
     ),
     dask_gateway_version: str = typer.Option(
-        "v2022.10.0", help="Version of dask-gateway to install CRDs for"
+        "2022.10.0", help="Version of dask-gateway to install CRDs for"
     ),
 ):
     """
