@@ -11,14 +11,16 @@ $ python deployer/grafana_datasources_manager.py
 
 """
 
-import argparse
 import json
 
 import requests
-from file_acquisition import find_absolute_path_to_cluster_file, get_decrypted_file
-from helm_upgrade_decision import get_all_cluster_yaml_files
+import typer
 from ruamel.yaml import YAML
-from utils import print_colour
+
+from .cli_app import app
+from .file_acquisition import find_absolute_path_to_cluster_file, get_decrypted_file
+from .helm_upgrade_decision import get_all_cluster_yaml_files
+from .utils import print_colour
 
 yaml = YAML(typ="safe")
 
@@ -179,28 +181,22 @@ def get_clusters_used_as_datasources(cluster_name, datasource_endpoint):
     return [datasource["name"] for datasource in datasources]
 
 
-def main():
-    argparser = argparse.ArgumentParser(
-        description="""A command line tool to update Grafana
-        datasources.
-        """
+@app.command()
+def update_central_grafana(
+    central_grafana_cluster=typer.Argument(
+        "2i2c", help="Name of cluster where the central grafana lives"
     )
-
-    argparser.add_argument(
-        "cluster_name",
-        type=str,
-        nargs="?",
-        help="The name of the cluster where the Grafana lives",
-        default="2i2c",
-    )
-
-    args = argparser.parse_args()
-    central_cluster = args.cluster_name
-    grafana_host = get_central_grafana_url(central_cluster)
+):
+    """
+    Update a central grafana with datasources for all our prometheuses
+    """
+    grafana_host = get_central_grafana_url(central_grafana_cluster)
     datasource_endpoint = f"https://{grafana_host}/api/datasources"
 
     # Get a list of the clusters that already have their prometheus instances used as datasources
-    datasources = get_clusters_used_as_datasources(central_cluster, datasource_endpoint)
+    datasources = get_clusters_used_as_datasources(
+        central_grafana_cluster, datasource_endpoint
+    )
 
     # Get a list of filepaths to all cluster.yaml files in the repo
     cluster_files = get_all_cluster_yaml_files()
@@ -223,7 +219,7 @@ def main():
                 req_body = json.dumps(datasource_details)
 
                 # Tell Grafana to create and register a datasource for this cluster
-                headers = build_request_headers(central_cluster)
+                headers = build_request_headers(central_grafana_cluster)
                 response = requests.post(
                     datasource_endpoint, data=req_body, headers=headers
                 )
@@ -251,7 +247,3 @@ def main():
     print_colour(
         f"Successfully retrieved {len(datasources)} existing datasources! {datasources}"
     )
-
-
-if __name__ == "__main__":
-    main()
