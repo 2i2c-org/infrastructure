@@ -10,10 +10,11 @@ import sys
 from pathlib import Path
 
 import jsonschema
-from cluster import Cluster
-from file_acquisition import find_absolute_path_to_cluster_file
 from ruamel.yaml import YAML
-from utils import print_colour
+
+from .cluster import Cluster
+from .file_acquisition import find_absolute_path_to_cluster_file
+from .utils import print_colour
 
 yaml = YAML(typ="safe", pure=True)
 helm_charts_dir = Path(__file__).parent.parent.joinpath("helm-charts")
@@ -68,8 +69,8 @@ def validate_cluster_config(cluster_name):
     """
     Validates cluster.yaml configuration against a JSONSchema.
     """
-    root_dir = Path(__file__).parent.parent
-    cluster_schema_file = root_dir.joinpath("shared", "deployer", "cluster.schema.yaml")
+    cur_dir = Path(__file__).parent
+    cluster_schema_file = cur_dir.joinpath("cluster.schema.yaml")
     cluster_file = find_absolute_path_to_cluster_file(cluster_name)
 
     with open(cluster_file) as cf, open(cluster_schema_file) as sf:

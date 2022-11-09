@@ -19,7 +19,7 @@ of this repository, and can deploy one or more hubs to our clusters.
 3. Deploy just a single hub:
 
    ```bash
-   python3 deployer deploy <cluster-name> <hub-name>
+   deployer deploy <cluster-name> <hub-name>
    ```
 
    The script will look for a hub named `<hub-name>` in the cluster config
@@ -28,7 +28,7 @@ of this repository, and can deploy one or more hubs to our clusters.
 4. You can deploy to *all* hubs on a given cluster by omitting the hub name.
 
    ```bash
-   python3 deployer deploy <cluster-name>
+   deployer deploy <cluster-name>
    ```
 
 ```{note}
@@ -53,14 +53,14 @@ runs to completion and the output cells have the expected value.
 To run the automated health check on a hub, run
 
 ```bash
-python3 deployer run-hub-health-check <cluster-name> <hub-name>
+deployer run-hub-health-check <cluster-name> <hub-name>
 ```
 
 This will test a simple notebook, but not any dask functionality. To test dask
 functionality as well, run
 
 ```bash
-python3 deployer run-hub-health-check --check-dask-scaling <cluster-name> <hub-name>
+deployer run-hub-health-check --check-dask-scaling <cluster-name> <hub-name>
 ```
 
 These tests are automatically run when you deploy via CI.

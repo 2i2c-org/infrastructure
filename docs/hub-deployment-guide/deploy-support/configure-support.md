@@ -72,7 +72,7 @@ Use the `deployer` tool to deploy the support chart to the cluster.
 See [](hubs:manual-deploy) for details on how to setup the tool locally.
 
 ```bash
-python3 deployer deploy-support CLUSTER_NAME
+deployer deploy-support CLUSTER_NAME
 ```
 
 (deploy-support-chart:dns-records)=

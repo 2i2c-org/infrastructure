@@ -33,7 +33,7 @@ jobs:
 
       - name: Setup dependencies
         run: |
-          python3 -m pip install -r requirements.txt
+          python3 -m pip install --editable .
           sudo apt install jsonnet
 
       - name: Setup gcloud
@@ -52,4 +52,4 @@ jobs:
 
       - name: Deploy grafana dashboards for ${{ matrix.cluster_name }}
         run: |
-          python3 deployer deploy-grafana-dashboards ${{ matrix.cluster_name }}
+          deployer deploy-grafana-dashboards ${{ matrix.cluster_name }}

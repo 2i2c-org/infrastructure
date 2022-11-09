@@ -199,7 +199,7 @@ have least amount of permissions possible.
    The `aws.key` file is defined _relative_ to the location of the `cluster.yaml` file.
    ```
 
-4. Test the access by running `python deployer use-cluster-credentials <cluster-name>` and
+4. Test the access by running `deployer use-cluster-credentials <cluster-name>` and
    running `kubectl get node`. It should show you the provisioned node on the cluster if
    everything works out ok.
 
