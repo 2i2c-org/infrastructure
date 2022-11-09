@@ -25,7 +25,8 @@ This section descripts all the deployment related subcommands the `deployer` can
 
 **Command line usage:**
 
-```bash
+``` bash
+                                                                                                                        
  Usage: deployer [OPTIONS] COMMAND [ARGS]...                                                                            
                                                                                                                         
 ╭─ Options ────────────────────────────────────────────────────────────────────────────────────────────────────────────╮
@@ -34,19 +35,23 @@ This section descripts all the deployment related subcommands the `deployer` can
 │ --help                        Show this message and exit.                                                            │
 ╰──────────────────────────────────────────────────────────────────────────────────────────────────────────────────────╯
 ╭─ Commands ───────────────────────────────────────────────────────────────────────────────────────────────────────────╮
-│ component-logs              Display logs from a particular component on a hub on a cluster                           │
-│ deploy                      Deploy one or more hubs in a given cluster                                               │
-│ deploy-grafana-dashboards   Deploy JupyterHub dashboards to grafana set up in the given cluster                      │
-│ deploy-support              Deploy support components to a cluster                                                   │
-│ exec-homes-shell            Pop an interactive shell with the home directories of the given hub mounted on /home     │
-│ exec-hub-shell              Pop an interactive shell in the hub pod                                                  │
-│ generate-helm-upgrade-jobs  Analyse added or modified files from a GitHub Pull Request and decide which clusters     │
-│                             and/or hubs require helm upgrades to be performed for their *hub helm charts or the      │
-│                             support helm chart.                                                                      │
-│ run-hub-health-check        Run a health check on a given hub on a given cluster. Optionally check scaling of dask   │
-│                             workers if the hub is a daskhub.                                                         │
-│ use-cluster-credentials     Pop a new shell authenticated to the given cluster using the deployer's credentials      │
-│ user-logs                   Display logs from the notebook pod of a given user                                       │
+│ component-logs                      Display logs from a particular component on a hub on a cluster                   │
+│ deploy                              Deploy one or more hubs in a given cluster                                       │
+│ deploy-grafana-dashboards           Deploy JupyterHub dashboards to grafana set up in the given cluster              │
+│ deploy-support                      Deploy support components to a cluster                                           │
+│ exec-homes-shell                    Pop an interactive shell with the home directories of the given hub mounted on   │
+│                                     /home                                                                            │
+│ exec-hub-shell                      Pop an interactive shell in the hub pod                                          │
+│ generate-helm-upgrade-jobs          Analyse added or modified files from a GitHub Pull Request and decide which      │
+│                                     clusters and/or hubs require helm upgrades to be performed for their *hub helm   │
+│                                     charts or the support helm chart.                                                │
+│ run-hub-health-check                Run a health check on a given hub on a given cluster. Optionally check scaling   │
+│                                     of dask workers if the hub is a daskhub.                                         │
+│ update-central-grafana-datasources  Update a central grafana with datasources for all our prometheuses               │
+│ use-cluster-credentials             Pop a new shell authenticated to the given cluster using the deployer's          │
+│                                     credentials                                                                      │
+│ user-logs                           Display logs from the notebook pod of a given user                               │
+│ validate                            Validate cluster.yaml and non-encrypted helm config for given hub                │
 ╰──────────────────────────────────────────────────────────────────────────────────────────────────────────────────────╯
 ```
 
@@ -214,6 +219,30 @@ For daskhubs, there is an optional check to verify that the user can scale dask 
 ╰──────────────────────────────────────────────────────────────────────────────────────────────────────────────────────╯
 ```
 
+### `update-central-grafana-datasources`
+
+Ensures that the central grafana at https://grafana.pilot.2i2c.cloud is
+configured to use as datasource the authenticated prometheus instances of all
+the clusters that we run.
+
+**Command line usage:**
+```
+                                                                                                                        
+ Usage: deployer update-central-grafana-datasources [OPTIONS]                                                           
+                                                    [CENTRAL_GRAFANA_CLUSTER]                                           
+                                                                                                                        
+ Update a central grafana with datasources for all our prometheuses                                                     
+                                                                                                                        
+╭─ Arguments ──────────────────────────────────────────────────────────────────────────────────────────────────────────╮
+│   central_grafana_cluster      [CENTRAL_GRAFANA_CLUSTER]  Name of cluster where the central grafana lives            │
+│                                                           [default: 2i2c]                                            │
+╰──────────────────────────────────────────────────────────────────────────────────────────────────────────────────────╯
+╭─ Options ────────────────────────────────────────────────────────────────────────────────────────────────────────────╮
+│ --help          Show this message and exit.                                                                          │
+╰──────────────────────────────────────────────────────────────────────────────────────────────────────────────────────╯
+
+```
+
 ## Debugging helpers
 
 We also have some debug helpers commands that can be invoked as subcommands.
@@ -359,23 +388,6 @@ optional arguments:
   -h, --help            show this help message and exit
 ```
 
-### `update_central_grafana_datasources.py`
-
-Ensures that the central grafana at https://grafana.pilot.2i2c.cloud is configured to use as datasource the authenticated prometheus instances of all the clusters that we run.
-
-**Command line usage:**
-
-```bash
-usage: update_central_grafana_datasources.py [-h] [cluster_name]
-
-A command line tool to update Grafana datasources.
-
-positional arguments:
-  cluster_name  The name of the cluster where the Grafana lives
-
-optional arguments:
-  -h, --help    show this help message and exit
-```
 
 ## Running Tests
 

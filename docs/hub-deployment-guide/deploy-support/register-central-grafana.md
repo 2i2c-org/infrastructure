@@ -45,10 +45,4 @@ deployer deploy-support <cluster-name>
 
 ## Link the cluster's Prometheus server to the central Grafana
 
-Run the `update_central_grafana_datasources.py` script in the deployer to let the central Grafana know about this new prometheus server:
-
-```bash
-deployer/update_central_grafana_datasources.py <grafana-cluster-name>
-```
-
-Where `<grafana-cluster-name>` is the name of the cluster where the central Grafana lives. Right now, this defaults to "2i2c".
+Run `deployer update-central-grafana-datasources` to register the new prometheus with the default central grafana.`
