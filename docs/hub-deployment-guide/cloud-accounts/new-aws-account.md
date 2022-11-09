@@ -26,7 +26,7 @@ More information on these terms can be found in [](cloud-access:aws).
    Instead, we  can use the following set of steps:
       1. Use [this freshdesk guide](https://support.freshdesk.com/en/support/solutions/articles/37637-adding-multiple-email-addresses-to-freshdesk)
         to create a new freshdesk alias for the support@2i2c.org email
-      2. Temporarly set the AWS account owner email address to your personal email address and follow the steps below
+      2. Temporarily set the AWS account owner email address to your personal email address and follow the steps below
       3. Follow [this aws guide](https://aws.amazon.com/premiumsupport/knowledge-center/change-email-address/) to change
          the address of the account to the freshdesk alias you created in step 1.
 
