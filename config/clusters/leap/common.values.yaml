@@ -42,6 +42,7 @@ basehub:
           # the listed teams. These people should have admin access though.
           admin_users:
             - rabernat
+            - jbusecke
         JupyterHub:
           authenticator_class: github
         GitHubOAuthenticator:
