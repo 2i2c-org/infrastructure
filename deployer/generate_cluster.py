@@ -3,6 +3,9 @@ import subprocess
 from pathlib import Path
 
 import jinja2
+import typer
+
+from .cli_app import app
 
 REPO_ROOT = Path(__file__).parent.parent
 
@@ -70,8 +73,14 @@ def aws(cluster_name):
         ]
     )
 
-
-def generate_cluster(cloud_provider, cluster_name):
+@app.command()
+def generate_cluster(
+    cloud_provider: str=typer.Argument(..., help="Name of the cloud provider the cluster will be deployed to"),
+    cluster_name: str=typer.Argument(..., help="Name of the cluster to deploy"),
+):
+    """
+    Automatically generate the files required to setup a new cluster on a specific cloud provider
+    """
     if cloud_provider == "aws":
         aws(cluster_name)
     else:
