@@ -37,7 +37,7 @@ def aws(cluster_name, hub_type, cluster_region):
     vars = {
         "cluster_name": cluster_name,
         "hub_type": hub_type,
-        "cluster_region": cluster_region
+        "cluster_region": cluster_region,
     }
 
     with open(REPO_ROOT / "eksctl" / f"{cluster_name}.jsonnet", "w") as f:
@@ -75,6 +75,7 @@ def aws(cluster_name, hub_type, cluster_region):
         ]
     )
 
+
 def gcp(cluster_name, hub_type, cluster_region):
     """
     Generate required files for an GCP cluster
@@ -86,10 +87,7 @@ def gcp(cluster_name, hub_type, cluster_region):
     with open(REPO_ROOT / f"terraform/gcp/projects/{hub_type}-template.tfvars") as f:
         tfvars_template = jinja2.Template(f.read())
 
-    vars = {
-        "cluster_name": cluster_name,
-        "cluster_region": cluster_region
-    }
+    vars = {"cluster_name": cluster_name, "cluster_region": cluster_region}
 
     with open(
         REPO_ROOT / "terraform/gcp/projects" / f"{cluster_name}.tfvars", "w"
@@ -99,10 +97,16 @@ def gcp(cluster_name, hub_type, cluster_region):
 
 @app.command()
 def generate_cluster(
-    cloud_provider: str=typer.Option(..., prompt="Name of the cloud provider the cluster will be deployed to"),
-    cluster_name: str=typer.Option(..., prompt="Name of the cluster to deploy"),
-    hub_type: str=typer.Option(..., prompt="Type of hub. Choose from `basehub` or `daskhub`"),
-    cluster_region: str=typer.Option(..., prompt="The region where to deploy the cluster")
+    cloud_provider: str = typer.Option(
+        ..., prompt="Name of the cloud provider the cluster will be deployed to"
+    ),
+    cluster_name: str = typer.Option(..., prompt="Name of the cluster to deploy"),
+    hub_type: str = typer.Option(
+        ..., prompt="Type of hub. Choose from `basehub` or `daskhub`"
+    ),
+    cluster_region: str = typer.Option(
+        ..., prompt="The region where to deploy the cluster"
+    ),
 ):
     """
     Automatically generate the files required to setup a new cluster on a specific cloud provider
