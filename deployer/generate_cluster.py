@@ -10,7 +10,7 @@ from .cli_app import app
 REPO_ROOT = Path(__file__).parent.parent
 
 
-def aws(cluster_name, hub_type):
+def aws(cluster_name, hub_type, cluster_region):
     """
     Generate required files for an AWS cluster
 
@@ -36,7 +36,8 @@ def aws(cluster_name, hub_type):
 
     vars = {
         "cluster_name": cluster_name,
-        "hub_type": hub_type
+        "hub_type": hub_type,
+        "cluster_region": cluster_region
     }
 
     with open(REPO_ROOT / "eksctl" / f"{cluster_name}.jsonnet", "w") as f:
@@ -78,12 +79,13 @@ def aws(cluster_name, hub_type):
 def generate_cluster(
     cloud_provider: str=typer.Option(..., prompt="Name of the cloud provider the cluster will be deployed to"),
     cluster_name: str=typer.Option(..., prompt="Name of the cluster to deploy"),
-    hub_type: str=typer.Option(..., prompt="Type of hub: basehub/daskhub")
+    hub_type: str=typer.Option(..., prompt="Type of hub. Choose from `basehub` or `daskhub`"),
+    cluster_region: str=typer.Option(..., prompt="The region where to deploy the cluster")
 ):
     """
     Automatically generate the files required to setup a new cluster on a specific cloud provider
     """
     if cloud_provider == "aws":
-        aws(cluster_name, hub_type)
+        aws(cluster_name, hub_type, cluster_region)
     else:
         raise ValueError(f"Cloud Provider {cloud_provider} not supported")

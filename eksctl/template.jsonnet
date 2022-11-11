@@ -2,9 +2,9 @@
 local ng = import "./libsonnet/nodegroup.jsonnet";
 
 // place all cluster nodes here
-local clusterRegion = "us-west-2";
-local masterAzs = ["us-west-2a", "us-west-2b", "us-west-2c"];
-local nodeAz = "us-west-2a";
+local clusterRegion = "<< cluster_region >>";
+local masterAzs = ["<< cluster_region >>a", "<< cluster_region >>b", "<< cluster_region >>c"];
+local nodeAz = "<< cluster_region >>a";
 
 // Node definitions for notebook nodes. Config here is merged
 // with our notebook node definition.
