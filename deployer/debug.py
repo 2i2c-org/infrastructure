@@ -79,6 +79,10 @@ def user_logs(
         ..., help="Name of the JupyterHub user to get logs for"
     ),
     follow: bool = typer.Option(True, help="Live update new logs as they show up"),
+    previous: bool = typer.Option(
+        False,
+        help="If user pod has restarted, show logs from just before the restart",
+    ),
 ):
     """
     Display logs from the notebook pod of a given user
@@ -106,6 +110,8 @@ def user_logs(
 
     if follow:
         cmd += ["-f"]
+    if previous:
+        cmd += ["--previous"]
     config_file_path = find_absolute_path_to_cluster_file(cluster_name)
     with open(config_file_path) as f:
         cluster = Cluster(yaml.load(f), config_file_path.parent)
