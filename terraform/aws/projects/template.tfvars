@@ -1,8 +1,8 @@
-region = "us-west-2"
+region = "{{ cluster_region }}"
 
 cluster_name = "{{ cluster_name }}"
 
-cluster_nodes_location = "us-west-2a"
+cluster_nodes_location = "{{ cluster_region }}a"
 
 user_buckets = {
     "scratch-staging": {
