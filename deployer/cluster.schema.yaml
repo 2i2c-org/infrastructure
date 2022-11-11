@@ -32,6 +32,12 @@ properties:
       - kubeconfig
       - aws
       - azure
+  account:
+    type: string
+    description: |
+      Account used to access the provider console UI. Most often we use our 2i2c accounts for this,
+      but there are a few exceptional clusters and we should mark those.
+      If no account is specified, 2i2c will be assumed.
   kubeconfig:
     type: object
     description: |

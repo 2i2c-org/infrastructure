@@ -1,5 +1,6 @@
 name: utoronto
 provider: kubeconfig
+account: UTORid
 kubeconfig:
   file: enc-deployer-credentials.secret.yaml
 support:
