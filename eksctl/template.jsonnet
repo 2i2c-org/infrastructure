@@ -17,19 +17,19 @@ local notebookNodes = [
     { instanceType: "m5.8xlarge" },
 ];
 
-// Node definitions for dask worker nodes. Config here is merged
-// with our dask worker node definition, which uses spot instances.
-// A `node.kubernetes.io/instance-type label is set to the name of the
-// *first* item in instanceDistribution.instanceTypes, to match
-// what we do with notebook nodes. Pods can request a particular
-// kind of node with a nodeSelector
-local daskNodes = [
-    { instancesDistribution+: { instanceTypes: ["m5.large"] }},
-    { instancesDistribution+: { instanceTypes: ["m5.xlarge"] }},
-    { instancesDistribution+: { instanceTypes: ["m5.2xlarge"] }},
-    { instancesDistribution+: { instanceTypes: ["m5.8xlarge"] }},
-];
-
+local daskNodes =
+    if "<< hub_type >>" == "daskhub" then [
+    // Node definitions for dask worker nodes. Config here is merged
+    // with our dask worker node definition, which uses spot instances.
+    // A `node.kubernetes.io/instance-type label is set to the name of the
+    // *first* item in instanceDistribution.instanceTypes, to match
+    // what we do with notebook nodes. Pods can request a particular
+    // kind of node with a nodeSelector
+        { instancesDistribution+: { instanceTypes: ["m5.large"] }},
+        { instancesDistribution+: { instanceTypes: ["m5.xlarge"] }},
+        { instancesDistribution+: { instanceTypes: ["m5.2xlarge"] }},
+        { instancesDistribution+: { instanceTypes: ["m5.8xlarge"] }},
+    ];
 {
     apiVersion: 'eksctl.io/v1alpha5',
     kind: 'ClusterConfig',
@@ -82,7 +82,8 @@ local daskNodes = [
             },
 
         } + n for n in notebookNodes
-    ] + [
+    ] + ( if "<< hub_type >>" == "daskhub" then
+        [
         ng {
             // NodeGroup names can't have a '.' in them, while
             // instanceTypes always have a .
@@ -106,7 +107,6 @@ local daskNodes = [
                 spotAllocationStrategy: "capacity-optimized",
             },
         } + n for n in daskNodes
-    ]
-
-
+        ] else []
+    )
 }
