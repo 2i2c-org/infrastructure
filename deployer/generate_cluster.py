@@ -75,6 +75,28 @@ def aws(cluster_name, hub_type, cluster_region):
         ]
     )
 
+def gcp(cluster_name, hub_type, cluster_region):
+    """
+    Generate required files for an GCP cluster
+
+    Generates:
+    - a .tfvars file
+    """
+
+    with open(REPO_ROOT / f"terraform/gcp/projects/{hub_type}-template.tfvars") as f:
+        tfvars_template = jinja2.Template(f.read())
+
+    vars = {
+        "cluster_name": cluster_name,
+        "cluster_region": cluster_region
+    }
+
+    with open(
+        REPO_ROOT / "terraform/gcp/projects" / f"{cluster_name}.tfvars", "w"
+    ) as f:
+        f.write(tfvars_template.render(**vars))
+
+
 @app.command()
 def generate_cluster(
     cloud_provider: str=typer.Option(..., prompt="Name of the cloud provider the cluster will be deployed to"),
@@ -87,5 +109,9 @@ def generate_cluster(
     """
     if cloud_provider == "aws":
         aws(cluster_name, hub_type, cluster_region)
+    elif cloud_provider == "gcp":
+        if hub_type == "basehub":
+            hub_type = "edu"
+        gcp(cluster_name, hub_type, cluster_region)
     else:
         raise ValueError(f"Cloud Provider {cloud_provider} not supported")
