@@ -26,5 +26,5 @@ pytest-asyncio>=0.17
 jinja2==3.1.2
 
 # Used for the debug CLI
-typer==0.6.1
+typer==0.7.0
 escapism==1.0.1
