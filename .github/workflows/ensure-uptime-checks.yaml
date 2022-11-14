@@ -41,14 +41,10 @@ jobs:
         uses: mdgreenwald/mozilla-sops-action@v1
 
       # Authenticate with the correct KMS key that sops will use.
-      - name: Setup gcloud
-        uses: google-github-actions/setup-gcloud@v1
+      - name: Setup sops credentials to decrypt repo secrets
+        uses: google-github-actions/auth@v1
         with:
-          version: "290.0.1"
-          # This is used for KMS only
-          project_id: two-eye-two-see
-          service_account_key: ${{ secrets.GCP_KMS_DECRYPTOR_KEY }}
-          export_default_credentials: true
+          credentials_json: "${{ inputs.GCP_KMS_DECRYPTOR_KEY }}"
 
       - name: ensure uptime checks are set up
         run: |
