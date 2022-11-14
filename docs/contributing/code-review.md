@@ -33,6 +33,7 @@ Here are some guidelines for merging and reviewing in this case:
   - Updating admin users for a hub
   - Changing basic hub configuration such as the URL of its landing page image
   - Updating the user image of a hub.
+  - Updating the max number of nodes for nodepools in a cluster
   :::
 - **Be careful when changing config of a hub *during* an event**
   Sometimes, a hub config change needs to happen *immediately*, to help debug something
