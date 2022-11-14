@@ -89,6 +89,6 @@ runs:
         version: v3.7.2
 
     - name: Setup sops credentials to decrypt repo secrets
-      uses: google-github-actions/auth@v0
+      uses: google-github-actions/auth@v1
       with:
         credentials_json: "${{ inputs.GCP_KMS_DECRYPTOR_KEY }}"
