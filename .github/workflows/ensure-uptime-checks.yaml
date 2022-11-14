@@ -44,7 +44,7 @@ jobs:
       - name: Setup sops credentials to decrypt repo secrets
         uses: google-github-actions/auth@v1
         with:
-          credentials_json: "${{ inputs.GCP_KMS_DECRYPTOR_KEY }}"
+          credentials_json: "${{ secrets.GCP_KMS_DECRYPTOR_KEY }}"
 
       - name: ensure uptime checks are set up
         run: |
