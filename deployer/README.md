@@ -42,6 +42,8 @@ This section descripts all the deployment related subcommands the `deployer` can
 │ exec-homes-shell                    Pop an interactive shell with the home directories of the given hub mounted on   │
 │                                     /home                                                                            │
 │ exec-hub-shell                      Pop an interactive shell in the hub pod                                          │
+│ generate-cluster                    Automatically generate the files required to setup a new cluster on a specific   │
+│                                     cloud provider                                                                   │
 │ generate-helm-upgrade-jobs          Analyse added or modified files from a GitHub Pull Request and decide which      │
 │                                     clusters and/or hubs require helm upgrades to be performed for their *hub helm   │
 │                                     charts or the support helm chart.                                                │
