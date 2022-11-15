@@ -114,8 +114,6 @@ def generate_cluster(
     if cloud_provider == "aws":
         aws(cluster_name, hub_type, cluster_region)
     elif cloud_provider == "gcp":
-        if hub_type == "basehub":
-            hub_type = "edu"
         gcp(cluster_name, hub_type, cluster_region)
     else:
         raise ValueError(f"Cloud Provider {cloud_provider} not supported")
