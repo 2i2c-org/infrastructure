@@ -55,19 +55,65 @@ jupyterhub:
             <img src="https://www.callysto.ca/wp-content/uploads/2022/08/Callysto-HUB_horizontal.png" alt="CallystoHub"/>
           {% endblock %}
   hub:
+    extraConfig:
+      001-cilogon-email-auth: |
+        # Custom override of CILogonOAuthenticator to allow access control via one
+        # property (email) while the username itself is a different property (oidc).
+        # This allows us to restrict access based on the *email* of the authenticated
+        # user without having to store the actual email in our servers.
+        from oauthenticator.cilogon import CILogonOAuthenticator
+        from fnmatch import fnmatch
+        from traitlets import List, Unicode
+
+        class EmailAuthenticatingCILogonOAuthenticator(CILogonOAuthenticator):
+          allowed_domains = List(
+            Unicode,
+            default=None,
+            # This must always be set!
+            allow_none=False,
+            help="""
+            Allow access to users with verified emails belonging to these domains.
+
+            Allows glob patterns but not regexes. So you can allow access to
+            *.edu, for example. See https://docs.python.org/3/library/fnmatch.html for
+            list of allowed patterns.
+            """,
+            config=True
+          )
+
+          async def authenticate(self, *args, **kwargs):
+            authenticated_user = await super().authenticate(*args, **kwargs)
+            print(authenticated_user, flush=True)
+
+            email = authenticated_user['auth_state']['cilogon_user']['email']
+
+            domain = email.rsplit('@', 1)[1]
+            for ad in self.allowed_domains:
+              # fnmatch will allow us to use wildcards like * and ?, but not the full
+              # regex. For simple domain matching this is good enough. If we were to
+              # use regexes instead, people will have to escape all their '.'s, and since
+              # that is actually going to match 'any character' it is a possible security hole.
+              if fnmatch(domain, ad):
+                return authenticated_user
+
+            return None
+
+        c.JupyterHub.authenticator_class = EmailAuthenticatingCILogonOAuthenticator
     config:
-      JupyterHub:
-        authenticator_class: cilogon
+      EmailAuthenticatingCILogonOAuthenticator:
+        allowed_domains:
+          - "*.edu"
+          - 2i2c.org
       CILogonOAuthenticator:
-        allowed_users: &callysto_users
-          - "117859169473992122769" #Georgiana
-          - "115722756968212778437" #Sarah
+        # We set up admin_users, but *not* allowed users. Those are set up via the extraConfig
+        admin_users: &callysto_users
+          - "117859169473992122769" # Georgiana
+          - "115722756968212778437" # Sarah
           - "111953611001323379758"
           - "102749090965437723445"
           - "115722928381445142802"
           - "114566345249857937398"
           - "106951135662332329542"
-        admin_users: *callysto_users
         # Only show the option to login with Google and Mirosoft
         shown_idps:
           - https://accounts.google.com/o/oauth2/auth
