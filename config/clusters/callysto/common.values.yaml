@@ -83,7 +83,6 @@ jupyterhub:
 
           async def authenticate(self, *args, **kwargs):
             authenticated_user = await super().authenticate(*args, **kwargs)
-            print(authenticated_user, flush=True)
 
             email = authenticated_user['auth_state']['cilogon_user']['email']
 
