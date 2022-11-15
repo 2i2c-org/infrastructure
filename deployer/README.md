@@ -301,10 +301,11 @@ they are ignored and only the notebook logs are provided. You can pass
 │ *    username          TEXT  Name of the JupyterHub user to get logs for [default: None] [required]                  │
 ╰──────────────────────────────────────────────────────────────────────────────────────────────────────────────────────╯
 ╭─ Options ────────────────────────────────────────────────────────────────────────────────────────────────────────────╮
-│ --follow    --no-follow      Live update new logs as they show up [default: follow]                                  │
-│ --help                       Show this message and exit.                                                             │
+│ --follow      --no-follow        Live update new logs as they show up [default: follow]                              │
+│ --previous    --no-previous      If user pod has restarted, show logs from just before the restart                   │
+│                                  [default: no-previous]                                                              │
+│ --help                           Show this message and exit.                                                         │
 ╰──────────────────────────────────────────────────────────────────────────────────────────────────────────────────────╯
-
 ```
 
 ### `exec-hub-shell`
