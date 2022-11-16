@@ -1,4 +1,10 @@
-# This template assumes a single-tenant cluster
+/*
+ Some of the assumptions this template makes about the cluster:
+   - single-tenant with staging & prod hubs
+   - regional
+   - scratch buckets support
+   - notebook and dask dedicated nodes of different types
+*/
 
 prefix                 = "{{ cluster_name }}"
 project_id             = "{{ cluster_name }}"
@@ -9,7 +15,6 @@ region                 = "{{ cluster_region }}"
 # Default to a HA cluster for reliability
 regional_cluster = true
 
-# Default
 core_node_machine_type = "n1-highmem-4"
 
 # Network policy is required to enforce separation between hubs on multi-tenant clusters

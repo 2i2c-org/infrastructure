@@ -78,10 +78,8 @@ def aws(cluster_name, hub_type, cluster_region):
 
 def gcp(cluster_name, hub_type, cluster_region, cluster_zone):
     """
-    Generate required files for an GCP cluster
-
-    Generates:
-    - a .tfvars file
+    Generates the cluster_name.tfvars terraform file
+    required to create a GCP cluster
     """
 
     with open(REPO_ROOT / f"terraform/gcp/projects/{hub_type}-template.tfvars") as f:
@@ -129,6 +127,6 @@ def generate_gcp_cluster(
     ),
 ):
     """
-    Automatically generate the files required to setup a new cluster on GCP
+    Automatically generate the terraform config file required to setup a new cluster on GCP
     """
     gcp(cluster_name, hub_type, cluster_region, cluster_zone)

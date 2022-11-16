@@ -1,4 +1,10 @@
-# This template assumes a multi-tenant cluster
+/*
+ Some of the assumptions this template makes about the cluster:
+   - multi-tenant with staging & prod hubs
+   - regional
+   - no scratch buckets support
+   - notebook nodes of same type with core nodes
+*/
 
 prefix                 = "{{ cluster_name }}"
 project_id             = "{{ cluster_name }}"
