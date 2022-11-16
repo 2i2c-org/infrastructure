@@ -11,9 +11,6 @@ enable_network_policy  = true
 enable_filestore       = true
 filestore_capacity_gb  = 1024
 
-# No plans to provide storage buckets to users on this hub, so no need to deploy config connector
-config_connector_enabled = false
-
 notebook_nodes = {
   "user" : {
     min : 0,
