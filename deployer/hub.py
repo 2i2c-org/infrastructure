@@ -58,7 +58,6 @@ class Hub:
         else:
             generated_config = {
                 "jupyterhub": {
-                    "proxy": {"https": {"hosts": [self.spec["domain"]]}},
                     "ingress": {
                         "hosts": [self.spec["domain"]],
                         "tls": [
