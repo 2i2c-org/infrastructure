@@ -82,7 +82,7 @@ local daskNodes =
             },
 
         } + n for n in notebookNodes
-    ] + ( if "<< hub_type >>" == "daskhub" then
+    ] + ( if daskNodes != null then
         [
         ng {
             // NodeGroup names can't have a '.' in them, while
