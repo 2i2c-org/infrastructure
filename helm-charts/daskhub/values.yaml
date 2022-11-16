@@ -46,10 +46,9 @@ basehub:
         # variables be copied over to the worker nodes from the user nodes.
         DASK_GATEWAY__CLUSTER__OPTIONS__ENVIRONMENT: '{"SCRATCH_BUCKET": "$(SCRATCH_BUCKET)", "PANGEO_SCRATCH": "$(PANGEO_SCRATCH)"}'
         # DASK_DISTRIBUTED__DASHBOARD__LINK makes the suggested link to the
-        # dashboard account for the /user/<username> prefix in the path. Note
-        # that this still misbehave if you have a named server but now its at
-        # least functional for non-named servers.
-        DASK_DISTRIBUTED__DASHBOARD__LINK: "/user/{JUPYTERHUB_USER}/proxy/{port}/status"
+        # dashboard account for the /user/<username>/<server-name> prefix in the path.
+        # JUPYTERHUB_SERVICE_PREFIX has leading and trailing slashes as appropriate
+        DASK_DISTRIBUTED__DASHBOARD__LINK: "{JUPYTERHUB_SERVICE_PREFIX}proxy/{port}/status"
 
     hub:
       services:
