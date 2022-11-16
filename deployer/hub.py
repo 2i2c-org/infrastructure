@@ -31,32 +31,8 @@ class Hub:
         WARNING: MIGHT CONTAINS SECRET VALUES!
         """
         if self.spec["helm_chart"] == "binderhub":
-            # For Google Artifact registry, this takes the following form:
-            # {LOCATION}-docker.pkg.dev
-            # If the zone of the cluster is us-central1-b, then the location is us-central1
-            registry_url = f"{'-'.join(self.cluster.spec['gcp']['zone'].split('-')[:2])}-docker.pkg.dev"
-
-            # NOTE: We are hard-coding config for using Google Artifact Registry here.
-            # We should not. Instead we should provide a way to support as many container
-            # registries as BinderHub supports. We are hard-coding this config here
-            # because we need to generate parts of it from the cluster object spec,
-            # so to generalise, we may have to live with some copy-pasting of certain
-            # values such as cluster project and location.
             generated_config = {
                 "binderhub": {
-                    "registry": {"url": f"https://{registry_url}"},
-                    "config": {
-                        "BinderHub": {
-                            "hub_url": f"https://hub.{self.spec['domain']}",
-                            # For Google Artifact registry, this takes the following form:
-                            # {registry_url}/{PROJECT_ID}/{REPOSITORY}-registry/{IMAGE}-
-                            # REPOSITORY and IMAGE will both be the hub namespace
-                            "image_prefix": f"{registry_url}/{self.cluster.spec['gcp']['project']}/{self.spec['name']}-registry/{self.spec['name']}-",
-                        },
-                        "DockerRegistry": {
-                            "token_url": f"https://{registry_url}/v2/token?service="
-                        },
-                    },
                     "ingress": {
                         "hosts": [self.spec["domain"]],
                         "tls": [
