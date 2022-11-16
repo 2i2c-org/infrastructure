@@ -76,7 +76,7 @@ def aws(cluster_name, hub_type, cluster_region):
     )
 
 
-def gcp(cluster_name, hub_type, cluster_region):
+def gcp(cluster_name, hub_type, cluster_region, cluster_zone):
     """
     Generate required files for an GCP cluster
 
@@ -87,7 +87,11 @@ def gcp(cluster_name, hub_type, cluster_region):
     with open(REPO_ROOT / f"terraform/gcp/projects/{hub_type}-template.tfvars") as f:
         tfvars_template = jinja2.Template(f.read())
 
-    vars = {"cluster_name": cluster_name, "cluster_region": cluster_region}
+    vars = {
+        "cluster_name": cluster_name,
+        "cluster_region": cluster_region,
+        "cluster_zone": cluster_zone,
+    }
 
     with open(
         REPO_ROOT / "terraform/gcp/projects" / f"{cluster_name}.tfvars", "w"
@@ -96,10 +100,7 @@ def gcp(cluster_name, hub_type, cluster_region):
 
 
 @app.command()
-def generate_cluster(
-    cloud_provider: str = typer.Option(
-        ..., prompt="Name of the cloud provider the cluster will be deployed to"
-    ),
+def generate_aws_cluster(
     cluster_name: str = typer.Option(..., prompt="Name of the cluster to deploy"),
     hub_type: str = typer.Option(
         ..., prompt="Type of hub. Choose from `basehub` or `daskhub`"
@@ -109,11 +110,25 @@ def generate_cluster(
     ),
 ):
     """
-    Automatically generate the files required to setup a new cluster on a specific cloud provider
+    Automatically generate the files required to setup a new cluster on AWS
     """
-    if cloud_provider == "aws":
-        aws(cluster_name, hub_type, cluster_region)
-    elif cloud_provider == "gcp":
-        gcp(cluster_name, hub_type, cluster_region)
-    else:
-        raise ValueError(f"Cloud Provider {cloud_provider} not supported")
+    aws(cluster_name, hub_type, cluster_region)
+
+
+@app.command()
+def generate_gcp_cluster(
+    cluster_name: str = typer.Option(..., prompt="Name of the cluster to deploy"),
+    hub_type: str = typer.Option(
+        ..., prompt="Type of hub. Choose from `basehub` or `daskhub`"
+    ),
+    cluster_region: str = typer.Option(
+        ..., prompt="The region where to deploy the cluster"
+    ),
+    cluster_zone: str = typer.Option(
+        ..., prompt="The zone where to deploy the cluster, eg. us-west2-b"
+    ),
+):
+    """
+    Automatically generate the files required to setup a new cluster on GCP
+    """
+    gcp(cluster_name, hub_type, cluster_region, cluster_zone)

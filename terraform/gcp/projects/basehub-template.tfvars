@@ -1,7 +1,7 @@
 prefix                 = "{{ cluster_name }}"
 project_id             = "{{ cluster_name }}"
 
-zone                   = "{{ cluster_region }}-b"
+zone                   = "{{ cluster_zone }}"
 region                 = "{{ cluster_region }}"
 
 core_node_machine_type = "n1-highmem-4"
