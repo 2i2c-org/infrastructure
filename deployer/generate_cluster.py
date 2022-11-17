@@ -76,7 +76,7 @@ def aws(cluster_name, hub_type, cluster_region):
     )
 
 
-def gcp(cluster_name, hub_type, cluster_region, cluster_zone):
+def gcp(cluster_name, cluster_region, cluster_zone, project_id, hub_type):
     """
     Generates the cluster_name.tfvars terraform file
     required to create a GCP cluster
@@ -89,6 +89,7 @@ def gcp(cluster_name, hub_type, cluster_region, cluster_zone):
         "cluster_name": cluster_name,
         "cluster_region": cluster_region,
         "cluster_zone": cluster_zone,
+        "project_id": project_id,
     }
 
     with open(
@@ -116,17 +117,20 @@ def generate_aws_cluster(
 @app.command()
 def generate_gcp_cluster(
     cluster_name: str = typer.Option(..., prompt="Name of the cluster to deploy"),
-    hub_type: str = typer.Option(
-        ..., prompt="Type of hub. Choose from `basehub` or `daskhub`"
-    ),
     cluster_region: str = typer.Option(
         ..., prompt="The region where to deploy the cluster"
     ),
     cluster_zone: str = typer.Option(
         ..., prompt="The zone where to deploy the cluster, eg. us-west2-b"
     ),
+    project_id: str = typer.Option(
+        ..., prompt="The GCP Project ID to create resources in"
+    ),
+    hub_type: str = typer.Option(
+        ..., prompt="Type of hub. Choose from `basehub` or `daskhub`"
+    ),
 ):
     """
     Automatically generate the terraform config file required to setup a new cluster on GCP
     """
-    gcp(cluster_name, hub_type, cluster_region, cluster_zone)
+    gcp(cluster_name, cluster_region, cluster_zone, project_id, hub_type)

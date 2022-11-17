@@ -7,7 +7,7 @@
 */
 
 prefix                 = "{{ cluster_name }}"
-project_id             = "{{ cluster_name }}"
+project_id             = "{{ project_id }}"
 
 zone                   = "{{ cluster_zone }}"
 region                 = "{{ cluster_region }}"
