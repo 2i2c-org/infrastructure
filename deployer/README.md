@@ -42,6 +42,8 @@ This section descripts all the deployment related subcommands the `deployer` can
 │ exec-homes-shell                    Pop an interactive shell with the home directories of the given hub mounted on   │
 │                                     /home                                                                            │
 │ exec-hub-shell                      Pop an interactive shell in the hub pod                                          │
+│ generate-aws-cluster                Automatically generate the files required to setup a new cluster on AWS          │
+│ generate-gcp-cluster                Automatically generate the files required to setup a new cluster on GCP          │
 │ generate-helm-upgrade-jobs          Analyse added or modified files from a GitHub Pull Request and decide which      │
 │                                     clusters and/or hubs require helm upgrades to be performed for their *hub helm   │
 │                                     charts or the support helm chart.                                                │
@@ -189,6 +191,65 @@ This allows us to optimise and parallelise the automatic deployment of our hubs.
 │ --help          Show this message and exit.                                                                          │
 ╰──────────────────────────────────────────────────────────────────────────────────────────────────────────────────────╯
 ```
+
+
+### `generate-aws-cluster`
+
+This function generates the required files for an AWS cluster based on a few input fields,
+the name of the cluster, the region where the cluster will be deployed and whether the hub deployed there would need dask or not.
+
+  Generates:
+  - an eksctl jsonnet file
+  - a .tfvars file
+  - An ssh-key (the private part is encrypted)
+
+The files are generated based on the jsonnet templates in:
+  - (`eksctl/template.json`)[https://github.com/2i2c-org/infrastructure/blob/master/eksctl/template.jsonnet]
+  - (`terraform/aws/projects/basehub-template.tfvars`)[https://github.com/2i2c-org/infrastructure/blob/master/terraform/aws/projects/basehub-template.tfvars]
+
+**Command line usage:**
+
+```bash
+ Usage: deployer generate-aws-cluster [OPTIONS]                                                                         
+                                                                                                                        
+ Automatically generate the files required to setup a new cluster on AWS                                                
+                                                                                                                        
+╭─ Options ────────────────────────────────────────────────────────────────────────────────────────────────────────────╮
+│ *  --cluster-name          TEXT  [default: None] [required]                                                          │
+│ *  --hub-type              TEXT  [default: None] [required]                                                          │
+│ *  --cluster-region        TEXT  [default: None] [required]                                                          │
+│    --help                        Show this message and exit.                                                         │
+╰──────────────────────────────────────────────────────────────────────────────────────────────────────────────────────╯
+```
+
+### `generate-gcp-cluster`
+
+This function generates the terraform config file for a GCP cluster, based on a few input fields, 
+the name of the cluster, the region where the cluster will be deployed and whether the hub deployed there would need dask or not.
+
+  Generates:
+  - a .tfvars file
+
+The terraform config is generated based on the terraform templates in:
+  - (`terraform/basehub-template.tfvars`)[https://github.com/2i2c-org/infrastructure/blob/master/terraform/gcp/projects/basehub-template.tfvars]
+  - (`terraform/daskhub-template.tfvars`)[https://github.com/2i2c-org/infrastructure/blob/master/terraform/gcp/projects/daskhub-template.tfvars]
+
+**Command line usage:**
+
+```bash
+ Usage: deployer generate-gcp-cluster [OPTIONS]                                                                         
+                                                                                                                        
+ Automatically generate the files required to setup a new cluster on GCP                                                
+                                                                                                                        
+╭─ Options ────────────────────────────────────────────────────────────────────────────────────────────────────────────╮
+│ *  --cluster-name          TEXT  [default: None] [required]                                                          │
+│ *  --hub-type              TEXT  [default: None] [required]                                                          │
+│ *  --cluster-region        TEXT  [default: None] [required]                                                          │
+│ *  --cluster-zone          TEXT  [default: None] [required]                                                          │
+│    --help                        Show this message and exit.                                                         │
+╰──────────────────────────────────────────────────────────────────────────────────────────────────────────────────────╯
+```
+
 
 ### `run-hub-health-check`
 
