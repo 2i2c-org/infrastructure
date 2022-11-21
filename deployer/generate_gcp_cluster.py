@@ -35,22 +35,20 @@ def generate_terraform_file(cluster_name, cluster_region, project_id, hub_type):
         f.write(tfvars_template.render(**vars))
     print_colour(f"{REPO_ROOT}/terraform/gcp/projects/{cluster_name}.tfvars created")
 
+
 def generate_cluster_config_file(cluster_config_directory, vars):
     with open(REPO_ROOT / "config/clusters/templates/gcp/cluster.yaml") as f:
         cluster_yaml_template = jinja2.Template(f.read())
-    with open(
-        cluster_config_directory / "cluster.yaml", "w"
-    ) as f:
+    with open(cluster_config_directory / "cluster.yaml", "w") as f:
         f.write(cluster_yaml_template.render(**vars))
+
 
 def generate_support_files(cluster_config_directory, vars):
     # Generate the suppport values file `support.values.yaml`
     print_colour("Generating the support values file...", "yellow")
     with open(REPO_ROOT / "config/clusters/templates/gcp/support.values.yaml") as f:
         support_values_yaml_template = jinja2.Template(f.read())
-    with open(
-        cluster_config_directory / "support.values.yaml", "w"
-    ) as f:
+    with open(cluster_config_directory / "support.values.yaml", "w") as f:
         f.write(support_values_yaml_template.render(**vars))
     print_colour(f"{cluster_config_directory}/support.values.yaml created")
 
@@ -58,14 +56,14 @@ def generate_support_files(cluster_config_directory, vars):
     print_colour("Generating the prometheus credentials encrypted file...", "yellow")
     alphabet = string.ascii_letters + string.digits
     credentials = {
-        "username": ''.join(secrets.choice(alphabet) for i in range(64)),
-        "password": ''.join(secrets.choice(alphabet) for i in range(64))
+        "username": "".join(secrets.choice(alphabet) for i in range(64)),
+        "password": "".join(secrets.choice(alphabet) for i in range(64)),
     }
-    with open(REPO_ROOT / "config/clusters/templates/gcp/support.secret.values.yaml") as f:
-        support_secret_values_yaml_template = jinja2.Template(f.read())
     with open(
-        cluster_config_directory / "enc-support.secret.values.yaml", "w"
+        REPO_ROOT / "config/clusters/templates/gcp/support.secret.values.yaml"
     ) as f:
+        support_secret_values_yaml_template = jinja2.Template(f.read())
+    with open(cluster_config_directory / "enc-support.secret.values.yaml", "w") as f:
         f.write(support_secret_values_yaml_template.render(**credentials))
 
     # Encrypt the private key
@@ -74,13 +72,17 @@ def generate_support_files(cluster_config_directory, vars):
             "sops",
             "--in-place",
             "--encrypt",
-            cluster_config_directory / "enc-support.secret.values.yaml"
+            cluster_config_directory / "enc-support.secret.values.yaml",
         ]
     )
-    print_colour(f"{cluster_config_directory}/enc-support.values.yaml created and encrypted")
+    print_colour(
+        f"{cluster_config_directory}/enc-support.values.yaml created and encrypted"
+    )
 
 
-def generate_config_directory(cluster_name, cluster_region, project_id, hub_type, hub_name):
+def generate_config_directory(
+    cluster_name, cluster_region, project_id, hub_type, hub_name
+):
     """
     Generates the required `config` directory and files for hubs on a GCP cluster
 
@@ -97,10 +99,13 @@ def generate_config_directory(cluster_name, cluster_region, project_id, hub_type
         "hub_type": hub_type,
         "cluster_region": cluster_region,
         "project_id": project_id,
-        "hub_name": hub_name
+        "hub_name": hub_name,
     }
 
-    print_colour("Checking if cluster config directory {cluster_config_directory} exists...", "yellow")
+    print_colour(
+        "Checking if cluster config directory {cluster_config_directory} exists...",
+        "yellow",
+    )
     if os.path.exists(cluster_config_directory):
         print_colour(f"{cluster_config_directory} already exists.")
         return
@@ -113,21 +118,16 @@ def generate_config_directory(cluster_name, cluster_region, project_id, hub_type
     # Generate the support files
     generate_support_files(cluster_config_directory, vars)
 
+
 @app.command()
 def generate_gcp_cluster(
     cluster_name: str = typer.Option(..., prompt="Name of the cluster"),
-    cluster_region: str = typer.Option(
-        ..., prompt="Cluster region"
-    ),
-    project_id: str = typer.Option(
-        ..., prompt="Project ID of the GCP project"
-    ),
+    cluster_region: str = typer.Option(..., prompt="Cluster region"),
+    project_id: str = typer.Option(..., prompt="Project ID of the GCP project"),
     hub_type: str = typer.Option(
         ..., prompt="Type of hub. Choose from `basehub` or `daskhub`"
     ),
-    hub_name: str = typer.Option(
-        ..., prompt="Name of the first hub"
-    ),
+    hub_name: str = typer.Option(..., prompt="Name of the first hub"),
 ):
     """
     Automatically generates the default intitial files required to setup a new cluster on GCP
@@ -136,4 +136,6 @@ def generate_gcp_cluster(
     generate_terraform_file(cluster_name, cluster_region, project_id, hub_type)
 
     # Automatically generate the config directory
-    generate_config_directory(cluster_name, cluster_region, project_id, hub_type, hub_name)
+    generate_config_directory(
+        cluster_name, cluster_region, project_id, hub_type, hub_name
+    )
