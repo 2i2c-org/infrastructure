@@ -8,4 +8,5 @@ deployer.py, debug related stuff under debug.py, etc
 import typer
 
 # The typer app to which all subcommands are attached
-app = typer.Typer()
+# Disable 'pretty' exception handling
+app = typer.Typer(pretty_exceptions_show_locals=False)
