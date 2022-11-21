@@ -28,10 +28,12 @@ def gcp_infrastructure_files(cluster_name, cluster_region, project_id, hub_type)
         "project_id": project_id,
     }
 
+    print_colour("Generating the terraform infrastructure file...", "yellow")
     with open(
         REPO_ROOT / "terraform/gcp/projects" / f"{cluster_name}.tfvars", "w"
     ) as f:
         f.write(tfvars_template.render(**vars))
+    print_colour(f"{REPO_ROOT}/terraform/gcp/projects/{cluster_name}.tfvars created")
 
 
 def gcp_config_files(cluster_name, cluster_region, project_id, hub_type, hub_name):
@@ -54,10 +56,11 @@ def gcp_config_files(cluster_name, cluster_region, project_id, hub_type, hub_nam
         "hub_name": hub_name
     }
 
+    # Create the cluster config directory and initial `cluster.yaml` file
     print_colour("Checking if cluster config directory {cluster_config_directory} exists...", "yellow")
     if not os.path.exists(cluster_config_directory):
         os.makedirs(cluster_config_directory)
-        print_colour(f"Done!")
+        print_colour(f"{cluster_config_directory} created")
 
         with open(REPO_ROOT / "config/clusters/templates/gcp/cluster.yaml") as f:
             cluster_yaml_template = jinja2.Template(f.read())
@@ -66,9 +69,10 @@ def gcp_config_files(cluster_name, cluster_region, project_id, hub_type, hub_nam
         ) as f:
             f.write(cluster_yaml_template.render(**vars))
     else:
-        print_colour(f"Cluster config directory already exists -> {cluster_config_directory}.", "yellow")
+        print_colour(f"{cluster_config_directory} already exists.")
         return
 
+    # Generate the suppport values file `support.values.yaml`
     print_colour("Generating the support values file...", "yellow")
     with open(REPO_ROOT / "config/clusters/templates/gcp/support.values.yaml") as f:
         support_values_yaml_template = jinja2.Template(f.read())
@@ -76,8 +80,9 @@ def gcp_config_files(cluster_name, cluster_region, project_id, hub_type, hub_nam
         cluster_config_directory / "support.values.yaml", "w"
     ) as f:
         f.write(support_values_yaml_template.render(**vars))
-    print_colour("Done!")
+    print_colour(f"{cluster_config_directory}/support.values.yaml created")
 
+    # Generate and encrypt prometheus credentials into `enc-support.secret.values.yaml`
     print_colour("Generating the prometheus credentials encrypted file...", "yellow")
     alphabet = string.ascii_letters + string.digits
     credentials = {
@@ -100,27 +105,29 @@ def gcp_config_files(cluster_name, cluster_region, project_id, hub_type, hub_nam
             cluster_config_directory / "enc-support.secret.values.yaml"
         ]
     )
+    print_colour(f"{cluster_config_directory}/enc-support.values.yaml created and encrypted")
 
 @app.command()
 def generate_gcp_cluster(
-    cluster_name: str = typer.Option(..., prompt="Name of the cluster where the hub will be deployed"),
+    cluster_name: str = typer.Option(..., prompt="Name of the cluster"),
     cluster_region: str = typer.Option(
-        ..., prompt="The region the cluster is or will be in"
+        ..., prompt="Cluster region"
     ),
     project_id: str = typer.Option(
-        ..., prompt="Project ID of the GCP project that contains this cluster"
+        ..., prompt="Project ID of the GCP project"
     ),
     hub_type: str = typer.Option(
         ..., prompt="Type of hub. Choose from `basehub` or `daskhub`"
     ),
     hub_name: str = typer.Option(
-        ..., prompt="Name of the hub"
+        ..., prompt="Name of the first hub"
     ),
 ):
     """
+    Automatically generates the default intitial files required to setup a new cluster on GCP
     """
-    # Automatically generate the terraform config file required to setup a new cluster on GCP
+    # Automatically generate the terraform config file
     gcp_infrastructure_files(cluster_name, cluster_region, project_id, hub_type)
 
-    # Automatically generate the config directory required to setup a new cluster on GCP
+    # Automatically generate the config directory
     gcp_config_files(cluster_name, cluster_region, project_id, hub_type, hub_name)
