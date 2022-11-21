@@ -1,15 +1,15 @@
 import os
 import subprocess
+
 from ruamel.yaml import YAML
 
 from .file_acquisition import find_absolute_path_to_cluster_file, get_decrypted_file
 
 yaml = YAML(typ="safe")
 
+
 def get_grafana_url(cluster_name):
-    cluster_config_dir_path = find_absolute_path_to_cluster_file(
-        cluster_name
-    ).parent
+    cluster_config_dir_path = find_absolute_path_to_cluster_file(cluster_name).parent
 
     config_file = cluster_config_dir_path.joinpath("support.values.yaml")
     with open(config_file) as f:
@@ -26,6 +26,7 @@ def get_grafana_url(cluster_name):
 
     # We only have one tls host right now. Modify this when things change.
     return grafana_tls_config[0]["hosts"][0]
+
 
 def get_cluster_prometheus_address(cluster_name):
     """Retrieves the address of the prometheus instance running on the `cluster_name` cluster.
@@ -105,6 +106,7 @@ def get_central_grafana_token(cluster_name):
 
     return config["grafana_token"]
 
+
 def update_central_grafana_token(cluster_name, token):
     # Get the location of the file that stores the central grafana token
     cluster_config_dir_path = find_absolute_path_to_cluster_file(cluster_name).parent
@@ -118,17 +120,8 @@ def update_central_grafana_token(cluster_name, token):
     if os.path.exists(grafana_token_file):
         os.remove(grafana_token_file)
 
-    with open(
-        grafana_token_file, "w"
-    ) as f:
+    with open(grafana_token_file, "w") as f:
         f.write(f"grafana_token: {token}")
 
     # Encrypt the private key
-    subprocess.check_call(
-        [
-            "sops",
-            "--in-place",
-            "--encrypt",
-            grafana_token_file
-        ]
-    )
+    subprocess.check_call(["sops", "--in-place", "--encrypt", grafana_token_file])
