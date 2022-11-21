@@ -13,7 +13,7 @@ from .utils import print_colour
 REPO_ROOT = Path(__file__).parent.parent
 
 
-def gcp_infrastructure_files(cluster_name, cluster_region, project_id, hub_type):
+def generate_terraform_file(cluster_name, cluster_region, project_id, hub_type):
     """
     Generates the cluster_name.tfvars terraform file
     required to create a GCP cluster
@@ -35,43 +35,15 @@ def gcp_infrastructure_files(cluster_name, cluster_region, project_id, hub_type)
         f.write(tfvars_template.render(**vars))
     print_colour(f"{REPO_ROOT}/terraform/gcp/projects/{cluster_name}.tfvars created")
 
+def generate_cluster_config_file(cluster_config_directory, vars):
+    with open(REPO_ROOT / "config/clusters/templates/gcp/cluster.yaml") as f:
+        cluster_yaml_template = jinja2.Template(f.read())
+    with open(
+        cluster_config_directory / "cluster.yaml", "w"
+    ) as f:
+        f.write(cluster_yaml_template.render(**vars))
 
-def gcp_config_files(cluster_name, cluster_region, project_id, hub_type, hub_name):
-    """
-    Generates the required `config` directory and files for hubs on a GCP cluster
-
-    Generates the following files, in the <cluster_name> directory:
-    - cluster.yaml file
-    - support.values.yaml file
-    - enc-support.secret.values.yaml file
-    """
-
-    cluster_config_directory = REPO_ROOT / "config/clusters" / cluster_name
-
-    vars = {
-        "cluster_name": cluster_name,
-        "hub_type": hub_type,
-        "cluster_region": cluster_region,
-        "project_id": project_id,
-        "hub_name": hub_name
-    }
-
-    # Create the cluster config directory and initial `cluster.yaml` file
-    print_colour("Checking if cluster config directory {cluster_config_directory} exists...", "yellow")
-    if not os.path.exists(cluster_config_directory):
-        os.makedirs(cluster_config_directory)
-        print_colour(f"{cluster_config_directory} created")
-
-        with open(REPO_ROOT / "config/clusters/templates/gcp/cluster.yaml") as f:
-            cluster_yaml_template = jinja2.Template(f.read())
-        with open(
-            cluster_config_directory / "cluster.yaml", "w"
-        ) as f:
-            f.write(cluster_yaml_template.render(**vars))
-    else:
-        print_colour(f"{cluster_config_directory} already exists.")
-        return
-
+def generate_support_files(cluster_config_directory, vars):
     # Generate the suppport values file `support.values.yaml`
     print_colour("Generating the support values file...", "yellow")
     with open(REPO_ROOT / "config/clusters/templates/gcp/support.values.yaml") as f:
@@ -107,6 +79,40 @@ def gcp_config_files(cluster_name, cluster_region, project_id, hub_type, hub_nam
     )
     print_colour(f"{cluster_config_directory}/enc-support.values.yaml created and encrypted")
 
+
+def generate_config_directory(cluster_name, cluster_region, project_id, hub_type, hub_name):
+    """
+    Generates the required `config` directory and files for hubs on a GCP cluster
+
+    Generates the following files, in the <cluster_name> directory:
+    - cluster.yaml file
+    - support.values.yaml file
+    - enc-support.secret.values.yaml file
+    """
+
+    cluster_config_directory = REPO_ROOT / "config/clusters" / cluster_name
+
+    vars = {
+        "cluster_name": cluster_name,
+        "hub_type": hub_type,
+        "cluster_region": cluster_region,
+        "project_id": project_id,
+        "hub_name": hub_name
+    }
+
+    print_colour("Checking if cluster config directory {cluster_config_directory} exists...", "yellow")
+    if os.path.exists(cluster_config_directory):
+        print_colour(f"{cluster_config_directory} already exists.")
+        return
+
+    # Create the cluster config directory and initial `cluster.yaml` file
+    os.makedirs(cluster_config_directory)
+    print_colour(f"{cluster_config_directory} created")
+    generate_cluster_config_file(cluster_config_directory, vars)
+
+    # Generate the support files
+    generate_support_files(cluster_config_directory, vars)
+
 @app.command()
 def generate_gcp_cluster(
     cluster_name: str = typer.Option(..., prompt="Name of the cluster"),
@@ -127,7 +133,7 @@ def generate_gcp_cluster(
     Automatically generates the default intitial files required to setup a new cluster on GCP
     """
     # Automatically generate the terraform config file
-    gcp_infrastructure_files(cluster_name, cluster_region, project_id, hub_type)
+    generate_terraform_file(cluster_name, cluster_region, project_id, hub_type)
 
     # Automatically generate the config directory
-    gcp_config_files(cluster_name, cluster_region, project_id, hub_type, hub_name)
+    generate_config_directory(cluster_name, cluster_region, project_id, hub_type, hub_name)
