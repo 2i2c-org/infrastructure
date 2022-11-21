@@ -13,11 +13,32 @@ from .utils import print_colour
 REPO_ROOT = Path(__file__).parent.parent
 
 
+def gcp_infrastructure_files(cluster_name, cluster_region, project_id, hub_type):
+    """
+    Generates the cluster_name.tfvars terraform file
+    required to create a GCP cluster
+    """
+
+    with open(REPO_ROOT / f"terraform/gcp/projects/{hub_type}-template.tfvars") as f:
+        tfvars_template = jinja2.Template(f.read())
+
+    vars = {
+        "cluster_name": cluster_name,
+        "cluster_region": cluster_region,
+        "project_id": project_id,
+    }
+
+    with open(
+        REPO_ROOT / "terraform/gcp/projects" / f"{cluster_name}.tfvars", "w"
+    ) as f:
+        f.write(tfvars_template.render(**vars))
+
+
 def gcp_config_files(cluster_name, cluster_region, project_id, hub_type, hub_name):
     """
-    Generate the required `config` directory and files for hubs on a GCP cluster
+    Generates the required `config` directory and files for hubs on a GCP cluster
 
-    Generates in the <cluster_name> directory:
+    Generates the following files, in the <cluster_name> directory:
     - cluster.yaml file
     - support.values.yaml file
     - enc-support.secret.values.yaml file
@@ -81,7 +102,7 @@ def gcp_config_files(cluster_name, cluster_region, project_id, hub_type, hub_nam
     )
 
 @app.command()
-def generate_gcp_config_files(
+def generate_gcp_cluster(
     cluster_name: str = typer.Option(..., prompt="Name of the cluster where the hub will be deployed"),
     cluster_region: str = typer.Option(
         ..., prompt="The region the cluster is or will be in"
@@ -97,6 +118,9 @@ def generate_gcp_config_files(
     ),
 ):
     """
-    Automatically generate the terraform config file required to setup a new cluster on GCP
     """
+    # Automatically generate the terraform config file required to setup a new cluster on GCP
+    gcp_infrastructure_files(cluster_name, cluster_region, project_id, hub_type)
+
+    # Automatically generate the config directory required to setup a new cluster on GCP
     gcp_config_files(cluster_name, cluster_region, project_id, hub_type, hub_name)
