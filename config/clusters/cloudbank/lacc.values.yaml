@@ -33,4 +33,3 @@ jupyterhub:
           - k_usovich@berkeley.edu
           - sean.smorris@berkeley.edu
         username_pattern: '^(.+@2i2c\.org|.+@berkeley\.edu|.+@lacitycollege\.edu|deployment-service-check)$'
-
