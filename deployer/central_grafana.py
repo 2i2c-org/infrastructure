@@ -11,18 +11,28 @@ $ python deployer/grafana_datasources_manager.py
 
 """
 
+from base64 import b64encode
 import json
+from pathlib import Path
+import subprocess
 
 import requests
 import typer
 from ruamel.yaml import YAML
 
 from .cli_app import app
-from .file_acquisition import find_absolute_path_to_cluster_file, get_decrypted_file
 from .helm_upgrade_decision import get_all_cluster_yaml_files
 from .utils import print_colour
+from .grafana_manager_utils import (
+    get_grafana_url,
+    get_cluster_prometheus_address,
+    get_cluster_prometheus_creds,
+    get_central_grafana_token,
+    update_central_grafana_token,
+)
 
 yaml = YAML(typ="safe")
+REPO_ROOT = Path(__file__).parent.parent
 
 
 def build_datasource_details(cluster_name):
@@ -52,108 +62,7 @@ def build_datasource_details(cluster_name):
     return datasource_details
 
 
-def get_central_grafana_url(central_cluster_name):
-    cluster_config_dir_path = find_absolute_path_to_cluster_file(
-        central_cluster_name
-    ).parent
-
-    config_file = cluster_config_dir_path.joinpath("support.values.yaml")
-    with open(config_file) as f:
-        support_config = yaml.load(f)
-
-    grafana_tls_config = (
-        support_config.get("grafana", {}).get("ingress", {}).get("tls", [])
-    )
-
-    if not grafana_tls_config:
-        raise ValueError(
-            f"No tls config was found for the Grafana instance of {central_cluster_name}. Please consider enable it before using it as the central Grafana."
-        )
-
-    # We only have one tls host right now. Modify this when things change.
-    return grafana_tls_config[0]["hosts"][0]
-
-
-def get_cluster_prometheus_address(cluster_name):
-    """Retrieves the address of the prometheus instance running on the `cluster_name` cluster.
-    This address is stored in the `support.values.yaml` file of each cluster config directory.
-
-    Args:
-        cluster_name: name of the cluster
-    Returns:
-        string object: https address of the prometheus instance
-    Raises ValueError if
-        - `prometheusIngressAuthSecret` isn't configured
-        - `support["prometheus"]["server"]["ingress"]["tls"]` doesn't exist
-    """
-    cluster_config_dir_path = find_absolute_path_to_cluster_file(cluster_name).parent
-
-    config_file = cluster_config_dir_path.joinpath("support.values.yaml")
-    with open(config_file) as f:
-        support_config = yaml.load(f)
-
-    # Don't return the address if the prometheus instance wasn't securely exposed to the outside.
-    if not support_config.get("prometheusIngressAuthSecret", {}).get("enabled", False):
-        raise ValueError(
-            f"`prometheusIngressAuthSecret` wasn't configured for {cluster_name}"
-        )
-
-    tls_config = (
-        support_config.get("prometheus", {})
-        .get("server", {})
-        .get("ingress", {})
-        .get("tls", [])
-    )
-
-    if not tls_config:
-        raise ValueError(
-            f"No tls config was found for the prometheus instance of {cluster_name}"
-        )
-
-    # We only have one tls host right now. Modify this when things change.
-    return tls_config[0]["hosts"][0]
-
-
-def get_cluster_prometheus_creds(cluster_name):
-    """Retrieves the credentials of the prometheus instance running on the `cluster_name` cluster.
-    These credentials are stored in `enc-support.secret.values.yaml` file of each cluster config directory.
-
-    Args:
-        cluster_name: name of the cluster
-    Returns:
-        dict object: {username: `username`, password: `password`}
-    """
-    cluster_config_dir_path = find_absolute_path_to_cluster_file(cluster_name).parent
-
-    config_filename = cluster_config_dir_path.joinpath("enc-support.secret.values.yaml")
-
-    with get_decrypted_file(config_filename) as decrypted_path:
-        with open(decrypted_path) as f:
-            prometheus_config = yaml.load(f)
-
-    return prometheus_config.get("prometheusIngressAuthSecret", {})
-
-
-def get_central_grafana_token(cluster_name):
-    """Returns the access token of the Grafana located in `cluster_name` cluster.
-    This access token should have enough permissions to create datasources.
-    """
-    # Get the location of the file that stores the central grafana token
-    cluster_config_dir_path = find_absolute_path_to_cluster_file(cluster_name).parent
-
-    grafana_token_file = (cluster_config_dir_path).joinpath(
-        "enc-grafana-token.secret.yaml"
-    )
-
-    # Read the secret grafana token file
-    with get_decrypted_file(grafana_token_file) as decrypted_file_path:
-        with open(decrypted_file_path) as f:
-            config = yaml.load(f)
-
-    return config["grafana_token"]
-
-
-def build_request_headers(cluster_name):
+def build_datasource_request_headers(cluster_name):
     token = get_central_grafana_token(cluster_name)
 
     headers = {
@@ -167,7 +76,7 @@ def build_request_headers(cluster_name):
 
 def get_clusters_used_as_datasources(cluster_name, datasource_endpoint):
     """Returns a list of cluster names that have prometheus instances already defined as datasources of the centralized Grafana."""
-    headers = build_request_headers(cluster_name)
+    headers = build_datasource_request_headers(cluster_name)
     # Get a list of all the currently existing datasources
     response = requests.get(datasource_endpoint, headers=headers)
 
@@ -190,7 +99,7 @@ def update_central_grafana_datasources(
     """
     Update a central grafana with datasources for all our prometheuses
     """
-    grafana_host = get_central_grafana_url(central_grafana_cluster)
+    grafana_host = get_grafana_url(central_grafana_cluster)
     datasource_endpoint = f"https://{grafana_host}/api/datasources"
 
     # Get a list of the clusters that already have their prometheus instances used as datasources
@@ -219,7 +128,7 @@ def update_central_grafana_datasources(
                 req_body = json.dumps(datasource_details)
 
                 # Tell Grafana to create and register a datasource for this cluster
-                headers = build_request_headers(central_grafana_cluster)
+                headers = build_datasource_request_headers(central_grafana_cluster)
                 response = requests.post(
                     datasource_endpoint, data=req_body, headers=headers
                 )
@@ -247,3 +156,67 @@ def update_central_grafana_datasources(
     print_colour(
         f"Successfully retrieved {len(datasources)} existing datasources! {datasources}"
     )
+
+
+@app.command()
+def generate_grafana_token_file(
+    cluster=typer.Argument(..., help="Name of cluster where the central grafana lives")
+):
+    # Dencrypt grafana creds
+    grafana_username = "admin"
+    grafana_password_string = subprocess.check_output(
+        [
+            "sops",
+            "--decrypt",
+            REPO_ROOT / "helm-charts/support/enc-support.secret.values.yaml",
+        ]
+    ).decode("utf-8")
+
+    # Find the admin username inside the sops output
+    keyword = "adminPassword: "
+    pass_idx = grafana_password_string.find(keyword) + len(keyword)
+    grafana_password = grafana_password_string[pass_idx:-1]
+    credentials = f"{grafana_username}:{grafana_password}"
+    basic_auth_credentials = b64encode(credentials.encode("utf-8"))
+
+    headers = {
+        "Accept": "application/json",
+        "Content-Type": "application/json",
+        "Authorization": "Basic " + basic_auth_credentials.decode("utf-8"),
+    }
+
+    request_body = {"name": "Deployer", "role": "Admin", "isDisabled": False}
+
+    # Create a service account called "deployer in this cluster"
+    grafana_host = get_grafana_url(cluster)
+    print(request_body)
+    response = requests.post(
+        f"https://{grafana_host}/api/serviceaccounts",
+        data=json.dumps(request_body),
+        headers=headers,
+    )
+    if response.status_code != 201:
+        print(
+            f"An error occured when creating the service account for the deployer. \nError was {response.text}."
+        )
+        response.raise_for_status()
+    print_colour(f"Successfully created a service account for the deployer!")
+
+    sa_id = response.json()["id"]
+    token_request_body = {"name": "deployer", "role": "Admin"}
+    response = requests.post(
+        f"https://{grafana_host}/api/serviceaccounts/{sa_id}/tokens",
+        data=json.dumps(token_request_body),
+        headers=headers,
+    )
+
+    if response.status_code != 201:
+        print(
+            f"An error occured when creating the token for the deployer service account. \nError was {response.text}."
+        )
+        response.raise_for_status()
+
+    print_colour(f"Successfully generated a token for the deployer service account")
+    token = response.json()["key"]
+
+    update_central_grafana_token(cluster, token)
