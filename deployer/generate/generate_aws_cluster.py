@@ -5,7 +5,7 @@ from pathlib import Path
 import jinja2
 import typer
 
-from .cli_app import app
+from deployer.cli_app import app
 
 REPO_ROOT = Path(__file__).parent.parent
 

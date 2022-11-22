@@ -7,8 +7,8 @@ from pathlib import Path
 import jinja2
 import typer
 
-from .cli_app import app
-from .utils import print_colour
+from deployer.cli_app import app
+from deployer.utils import print_colour
 
 REPO_ROOT = Path(__file__).parent.parent
 
