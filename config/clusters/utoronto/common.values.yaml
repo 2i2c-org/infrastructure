@@ -14,9 +14,8 @@ jupyterhub:
     userScheduler:
       enabled: true
   # pre-puller is necessary as the image is pretty big, and
-  # pulling during first user spawn might cause timeouts.
-  # Only required on staging hub though, as they share the same
-  # cluster, and staging is always deployed before prod
+  # pulling during first user spawn might cause timeouts and poor user
+  # experience. Also helps with node pre-warming.
   prePuller:
     continuous:
       enabled: true
