@@ -18,6 +18,8 @@ on:
       - deployer/**
       - requirements.txt
       - .github/workflows/validate-clusters.yaml
+    paths-ignore:
+      - config/clusters/templates
   push:
     branches:
       - master
@@ -27,6 +29,8 @@ on:
       - deployer/**
       - requirements.txt
       - .github/workflows/validate-clusters.yaml
+    paths-ignore:
+      - config/clusters/templates
     tags:
       - "**"
   workflow_dispatch:
