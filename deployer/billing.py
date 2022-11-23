@@ -146,14 +146,15 @@ def generate_cost_table():
                 project = f"{a['id']} non-project"
             else:
                 project = r.project
+
+            if last_month != None and r.month != last_month:
+                table.add_section()
             table.add_row(
                 f"{year}-{month}",
                 project,
                 str(round(r.total_without_credits, 2)),
                 str(round(r.total_with_credits, 2)),
             )
-            if last_month != None and r.month != last_month:
-                table.add_section()
             last_month = r.month
 
     console = Console()
