@@ -5,9 +5,9 @@ from pathlib import Path
 import jinja2
 import typer
 
-from deployer.cli_app import app
+from ..cli_app import app
 
-REPO_ROOT = Path(__file__).parent.parent
+REPO_ROOT = Path(__file__).parent.parent.parent
 
 
 def aws(cluster_name, hub_type, cluster_region):
