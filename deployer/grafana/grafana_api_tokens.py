@@ -55,7 +55,7 @@ def generate_grafana_token_file(
             f"An error occured when creating the service account for the deployer. \nError was {response.text}."
         )
         response.raise_for_status()
-    print_colour(f"Successfully created a service account for the deployer!")
+    print_colour("Successfully created a service account for the deployer!")
 
     sa_id = response.json()["id"]
     token_request_body = {"name": "deployer", "role": "Admin"}
@@ -71,7 +71,7 @@ def generate_grafana_token_file(
         )
         response.raise_for_status()
 
-    print_colour(f"Successfully generated a token for the deployer service account")
+    print_colour("Successfully generated a token for the deployer service account")
     token = response.json()["key"]
 
     update_central_grafana_token(cluster, token)
