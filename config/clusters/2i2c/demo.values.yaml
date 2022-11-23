@@ -34,3 +34,5 @@ jupyterhub:
             allowed_domains:
               - "2i2c.org"
               - "rmbl.org"
+              - "ischool.utexas.edu"
+              - "utexas.edu"
