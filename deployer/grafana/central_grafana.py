@@ -21,10 +21,10 @@ from ..cli_app import app
 from ..helm_upgrade_decision import get_all_cluster_yaml_files
 from ..utils import print_colour
 from .grafana_utils import (
-    get_grafana_url,
+    get_central_grafana_token,
     get_cluster_prometheus_address,
     get_cluster_prometheus_creds,
-    get_central_grafana_token,
+    get_grafana_url,
 )
 
 yaml = YAML(typ="safe")
