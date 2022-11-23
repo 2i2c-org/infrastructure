@@ -15,10 +15,9 @@ REPO_ROOT = Path(__file__).parent.parent.parent
 
 def generate_terraform_file(cluster_name, cluster_region, project_id, hub_type):
     """
-    Generates the cluster_name.tfvars terraform file
+    Generates the `terraform/gcp/projects/<cluster_name>.tfvars` terraform file
     required to create a GCP cluster
     """
-
     with open(REPO_ROOT / f"terraform/gcp/projects/{hub_type}-template.tfvars") as f:
         tfvars_template = jinja2.Template(f.read())
 
@@ -37,6 +36,9 @@ def generate_terraform_file(cluster_name, cluster_region, project_id, hub_type):
 
 
 def generate_cluster_config_file(cluster_config_directory, vars):
+    """
+    Generates the `config/<cluster_name>/cluster.yaml` config
+    """
     with open(REPO_ROOT / "config/clusters/templates/gcp/cluster.yaml") as f:
         cluster_yaml_template = jinja2.Template(f.read())
     with open(cluster_config_directory / "cluster.yaml", "w") as f:
@@ -44,10 +46,21 @@ def generate_cluster_config_file(cluster_config_directory, vars):
 
 
 def generate_support_files(cluster_config_directory, vars):
+    """
+    Generates files related to support components.
+
+    They are required to deploy the support chart for the cluster
+    and to configure the Prometheus instance.
+
+    Generates:
+        - `config/<cluster_name>/support.values.yaml`
+        - `config/<cluster_name>/enc-support.secret.values.yaml`
+    """
     # Generate the suppport values file `support.values.yaml`
     print_colour("Generating the support values file...", "yellow")
     with open(REPO_ROOT / "config/clusters/templates/gcp/support.values.yaml") as f:
         support_values_yaml_template = jinja2.Template(f.read())
+
     with open(cluster_config_directory / "support.values.yaml", "w") as f:
         f.write(support_values_yaml_template.render(**vars))
     print_colour(f"{cluster_config_directory}/support.values.yaml created")
@@ -84,12 +97,12 @@ def generate_config_directory(
     cluster_name, cluster_region, project_id, hub_type, hub_name
 ):
     """
-    Generates the required `config` directory and files for hubs on a GCP cluster
+    Generates the required `config` directory for hubs on a GCP cluster
 
-    Generates the following files, in the <cluster_name> directory:
-    - cluster.yaml file
-    - support.values.yaml file
-    - enc-support.secret.values.yaml file
+    Generates the following files:
+    - `config/<cluster_name>/cluster.yaml`
+    - `config/<cluster_name>/support.values.yaml`
+    - `config/<cluster_name>/enc-support.secret.values.yaml`
     """
 
     cluster_config_directory = REPO_ROOT / "config/clusters" / cluster_name
