@@ -24,15 +24,18 @@ jupyterhub:
         authenticator_class: cilogon
       CILogonOAuthenticator:
         oauth_callback_url: https://demo.2i2c.cloud/hub/oauth_callback
-        # Only show the option to login with Google
         shown_idps:
+          # Allow Google for 2i2c.org anr dmbl
           - https://accounts.google.com/o/oauth2/auth
+          - https://enterprise.login.utexas.edu/idp/shibboleth
         allowed_idps:
+          # UTexas hub
+          https://enterprise.login.utexas.edu/idp/shibboleth:
+            username_derivation:
+              username_claim: "eppn"
           http://google.com/accounts/o8/id:
             username_derivation:
               username_claim: "email"
             allowed_domains:
               - "2i2c.org"
               - "rmbl.org"
-              - "ischool.utexas.edu"
-              - "utexas.edu"
