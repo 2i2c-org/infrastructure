@@ -112,7 +112,8 @@ jobs:
           # Construct a matrix of all clusters
           matrix = []
           for cluster in cluster_folders:
-              matrix.append({"cluster_name": cluster})
+              if cluster != "templates":
+                matrix.append({"cluster_name": cluster})
 
           # Write matrix to the GITHUB_ENV file in GitHub Actions
           env_file = os.getenv("GITHUB_ENV")
