@@ -13,22 +13,22 @@ on:
     branches:
       - master
     paths:
-      - config/clusters/**
-      - !config/clusters/templates
-      - helm-charts/**
-      - deployer/**
-      - requirements.txt
-      - .github/workflows/validate-clusters.yaml
+      - "config/clusters/**"
+      - "!config/clusters/templates"
+      - "helm-charts/**"
+      - "deployer/**"
+      - "requirements.txt"
+      - ".github/workflows/validate-clusters.yaml"
   push:
     branches:
       - master
     paths:
-      - config/clusters/**
-      - !config/clusters/templates
-      - helm-charts/**
-      - deployer/**
-      - requirements.txt
-      - .github/workflows/validate-clusters.yaml
+      - "config/clusters/**"
+      - "!config/clusters/templates"
+      - "helm-charts/**"
+      - "deployer/**"
+      - "requirements.txt"
+      - ".github/workflows/validate-clusters.yaml"
     tags:
       - "**"
   workflow_dispatch:
