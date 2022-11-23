@@ -26,8 +26,6 @@ from .grafana_utils import (
     get_cluster_prometheus_creds,
     get_central_grafana_token,
 )
-from .helm_upgrade_decision import get_all_cluster_yaml_files
-from .utils import print_colour
 
 yaml = YAML(typ="safe")
 
