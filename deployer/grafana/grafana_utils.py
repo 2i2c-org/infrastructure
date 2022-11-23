@@ -3,7 +3,7 @@ import subprocess
 
 from ruamel.yaml import YAML
 
-from .file_acquisition import find_absolute_path_to_cluster_file, get_decrypted_file
+from ..file_acquisition import find_absolute_path_to_cluster_file, get_decrypted_file
 
 yaml = YAML(typ="safe")
 
