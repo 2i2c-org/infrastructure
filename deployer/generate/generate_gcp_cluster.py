@@ -104,7 +104,6 @@ def generate_config_directory(
     - `config/<cluster_name>/support.values.yaml`
     - `config/<cluster_name>/enc-support.secret.values.yaml`
     """
-
     cluster_config_directory = REPO_ROOT / "config/clusters" / cluster_name
 
     vars = {
