@@ -7,10 +7,10 @@ from pathlib import Path
 import jinja2
 import typer
 
-from deployer.cli_app import app
-from deployer.utils import print_colour
+from ..cli_app import app
+from ..utils import print_colour
 
-REPO_ROOT = Path(__file__).parent.parent
+REPO_ROOT = Path(__file__).parent.parent.parent
 
 
 def generate_terraform_file(cluster_name, cluster_region, project_id, hub_type):
