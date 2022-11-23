@@ -14,23 +14,21 @@ on:
       - master
     paths:
       - config/clusters/**
+      - !config/clusters/templates
       - helm-charts/**
       - deployer/**
       - requirements.txt
       - .github/workflows/validate-clusters.yaml
-    paths-ignore:
-      - config/clusters/templates
   push:
     branches:
       - master
     paths:
       - config/clusters/**
+      - !config/clusters/templates
       - helm-charts/**
       - deployer/**
       - requirements.txt
       - .github/workflows/validate-clusters.yaml
-    paths-ignore:
-      - config/clusters/templates
     tags:
       - "**"
   workflow_dispatch:
