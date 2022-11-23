@@ -39,7 +39,7 @@ jupyterhub:
   singleuser:
     image:
       name: callysto/2i2c
-      tag: 0.1.0
+      tag: 0.1.1
     extraFiles:
       tree.html:
         mountPath: /usr/local/share/jupyter/custom_template/tree.html
@@ -130,11 +130,10 @@ jupyterhub:
         admin_users: &callysto_users
           - "117859169473992122769" # Georgiana
           - "115722756968212778437" # Sarah
-          - "111953611001323379758"
-          - "102749090965437723445"
-          - "115722928381445142802"
-          - "114566345249857937398"
-          - "106951135662332329542"
+          - "115240156849150087300" # Ian Allison (PIMS)
+          - "102749090965437723445" # Byron Chu (Cybera)
+          - "115909958579864751636" # Michael Jones (Cybera)
+          - "106951135662332329542" # Elmar Bouwer (Cybera)
         # Only show the option to login with Google and Mirosoft
         shown_idps:
           - https://accounts.google.com/o/oauth2/auth
