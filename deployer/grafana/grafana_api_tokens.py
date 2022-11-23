@@ -38,6 +38,7 @@ def build_service_account_request_headers():
         "Authorization": "Basic " + basic_auth_credentials.decode("utf-8"),
     }
 
+
 def create_deployer_service_account(sa_endpoint, headers):
     """
     Creates a Grafana service account with `deployer` name
@@ -62,6 +63,7 @@ def create_deployer_service_account(sa_endpoint, headers):
 
     return response.json()["id"]
 
+
 def get_deployer_service_account_id(sa_endpoint, headers):
     # Assumes we don't have more than 10 service accounts created for a grafana
     # FIXME if this changes
@@ -81,6 +83,7 @@ def get_deployer_service_account_id(sa_endpoint, headers):
 
     service_accounts = response.json()["serviceAccounts"]
     return next(sa["id"] for sa in service_accounts if sa["name"] == "deployer")
+
 
 def get_deployer_token(sa_endpoint, sa_id, headers):
     """
@@ -104,6 +107,7 @@ def get_deployer_token(sa_endpoint, sa_id, headers):
             return token
     return False
 
+
 @app.command()
 def generate_grafana_token(
     cluster=typer.Argument(..., help="Name of cluster where the central grafana lives")
@@ -124,9 +128,11 @@ def generate_grafana_token(
         print_colour(
             "Token already exists!\n"
             f'Checking if has expired: {token["hasExpired"]}\n',
-            "yellow"
+            "yellow",
         )
-        print_colour("Type `yes` if you want to overwrite or anything else to abort...",)
+        print_colour(
+            "Type `yes` if you want to overwrite or anything else to abort...",
+        )
         overwrite = input()
 
         if overwrite != "yes":
@@ -134,7 +140,9 @@ def generate_grafana_token(
             return
 
     # Create a token called `deployer` for the newly created `deployer` service account
-    print_colour("Regenerating a token for the Grafana `deployer` service account", "yellow")
+    print_colour(
+        "Regenerating a token for the Grafana `deployer` service account", "yellow"
+    )
     token_request_body = {"name": "deployer", "role": "Admin"}
     response = requests.post(
         f"https://{grafana_host}/api/serviceaccounts/{sa_id}/tokens",
