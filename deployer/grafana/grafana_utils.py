@@ -15,7 +15,7 @@ def get_grafana_url(cluster_name):
 
     cluster_config_dir_path = find_absolute_path_to_cluster_file(cluster_name).parent
 
-    config_file = cluster_config_dir_path.joinpath()
+    config_file = cluster_config_dir_path.joinpath("support.values.yaml")
     with open(config_file) as f:
         support_config = yaml.load(f)
 
