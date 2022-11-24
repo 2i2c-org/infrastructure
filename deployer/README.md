@@ -214,10 +214,10 @@ The Grafana token is then stored encrypted inside the `enc-grafana-token.secret.
 If such a file doesn't already exist, it will be created by this function.
 
   Generates:
-    - an `enc-grafana-token.secret.yaml` file if not already present
+  - an `enc-grafana-token.secret.yaml` file if not already present
 
   Updates:
-    - the content of `enc-grafana-token.secret.yaml` with the new token if one already existed
+  - the content of `enc-grafana-token.secret.yaml` with the new token if one already existed
 
 ### `generate-aws-cluster`
 
