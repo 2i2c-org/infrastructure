@@ -61,7 +61,7 @@ def create_deployer_service_account(sa_endpoint, headers):
         data=json.dumps(request_body),
         headers=headers,
     )
-    if response.status_code != 200:
+    if not response.ok:
         print(
             "An error occured while creating the service account for the deployer.\n"
             f"Error was {response.text}."
@@ -91,7 +91,7 @@ def get_deployer_service_account_id(sa_endpoint, headers):
     sa_first_page_endpoint = f"{sa_endpoint}/search?perpage={max_sa}&page=1"
     response = requests.get(sa_first_page_endpoint, headers=headers)
 
-    if response.status_code != 200:
+    if not response.ok:
         print(
             f"An error occured when retrieving the service accounts from {sa_first_page_endpoint}.\n"
             f"Error was {response.text}."
@@ -119,7 +119,7 @@ def get_deployer_token(sa_endpoint, sa_id, headers):
         f"{sa_endpoint}/{sa_id}/tokens",
         headers=headers,
     )
-    if response.status_code != 200:
+    if not response.ok:
         print(
             f"An error occured when retrieving the tokens the service account with id {sa_id}.\n"
             f"Error was {response.text}."
@@ -141,7 +141,7 @@ def create_deployer_token(sa_endpoint, sa_id, headers):
         headers=headers,
     )
 
-    if response.status_code != 200:
+    if not response.ok:
         print(
             "An error occured when creating the token for the deployer service account.\n"
             f"Error was {response.text}."
