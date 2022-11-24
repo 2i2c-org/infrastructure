@@ -139,14 +139,11 @@ def generate_grafana_token(
             print_colour("Aborting...", "red")
             return
         # Create a token called `deployer` for the newly created `deployer` service account
-        print_colour(
-            "Deleting previous `deployer` token...", "yellow"
-        )
+        print_colour("Deleting previous `deployer` token...", "yellow")
         response = requests.delete(
             f'{sa_endpoint}/{sa_id}/tokens/{token["id"]}',
             headers=headers,
         )
-
 
     # Create a token called `deployer` for the newly created `deployer` service account
     print_colour(
