@@ -67,7 +67,7 @@ def create_deployer_service_account(sa_endpoint, headers):
             f"Error was {response.text}."
         )
         response.raise_for_status()
-    print_colour("Successfully created a service account for the deployer!")
+    print_colour("Successfully created the `deployer` sa!")
 
     return response.json()["id"]
 
@@ -148,7 +148,7 @@ def create_deployer_token(sa_endpoint, sa_id, headers):
         )
         response.raise_for_status()
 
-    print_colour("Successfully generated a token for the deployer service account")
+    print_colour("Successfully generated the `deployer` token!")
 
     return response.json()["key"]
 
@@ -174,6 +174,9 @@ def new_grafana_token(
     # Check if there's a service account called "deployer" already
     sa_id = get_deployer_service_account_id(sa_endpoint, headers)
     if not sa_id:
+        print_colour(
+            "Creating a `deployer` service account...", "yellow"
+        )
         sa_id = create_deployer_service_account(sa_endpoint, headers)
     else:
         # Check if there's a "deployer" token for the "deployer service account" already
