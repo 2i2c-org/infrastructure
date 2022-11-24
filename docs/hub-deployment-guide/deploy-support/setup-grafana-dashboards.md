@@ -33,14 +33,15 @@ deployer new-grafana-token <cluster_name>
 ```
 
 If the command succeded, it should have created:
-    - a [Grafana service account](https://grafana.com/docs/grafana/latest/administration/service-accounts/ ) named `deployer`
-    - a token named `deployer` for this service account
-    - the following sops-ecrypted file `config/clusters/<cluster>/enc-grafana-token.secret.yaml`,
-      with a content similar to:
 
-        ```yaml
-        grafana_token: token
-        ```
+- a [Grafana service account](https://grafana.com/docs/grafana/latest/administration/service-accounts/) named `deployer`
+- a token named `deployer` for this service account
+- the following sops-ecrypted file `config/clusters/<cluster>/enc-grafana-token.secret.yaml`,
+  with a content similar to:
+
+```yaml
+grafana_token: token
+```
 
 The encrypted file can now be committed to the repository.
 
