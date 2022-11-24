@@ -138,14 +138,23 @@ def generate_grafana_token(
         if overwrite != "yes":
             print_colour("Aborting...", "red")
             return
+        # Create a token called `deployer` for the newly created `deployer` service account
+        print_colour(
+            "Deleting previous `deployer` token...", "yellow"
+        )
+        response = requests.delete(
+            f'{sa_endpoint}/{sa_id}/tokens/{token["id"]}',
+            headers=headers,
+        )
+
 
     # Create a token called `deployer` for the newly created `deployer` service account
     print_colour(
-        "Regenerating a token for the Grafana `deployer` service account", "yellow"
+        "Generating a token for the Grafana `deployer` service account", "yellow"
     )
     token_request_body = {"name": "deployer", "role": "Admin"}
     response = requests.post(
-        f"https://{grafana_host}/api/serviceaccounts/{sa_id}/tokens",
+        f"{sa_endpoint}/{sa_id}/tokens",
         data=json.dumps(token_request_body),
         headers=headers,
     )
