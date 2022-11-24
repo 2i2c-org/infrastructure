@@ -203,13 +203,14 @@ This allows us to optimise and parallelise the automatic deployment of our hubs.
 ```
 
 ### `new-grafana-token`
-
-This function checks if a service account named `deployer` exists for a cluster's Grafana, and creates it if it doesn't.
-For this service account, it then generates an API token named `deployer`.
+This function uses the admin credentials located in `helm-charts/support/enc-support.secret.values.yaml` to check if a [Grafana Service Account](https://grafana.com/docs/grafana/latest/administration/service-accounts/) named `deployer` exists for a cluster's Grafana, and creates it if it doesn't.
+For this service account, it then generates a Grafana token named `deployer`.
+This token will be used by the [`deploy-grafana-dashboards` workflow](https://github.com/2i2c-org/infrastructure/tree/HEAD/.github/workflows/deploy-grafana-dashboards.yaml) to authenticate with Grafana’s HTTP API
+and deploy some default grafana dashboards for JupyterHub using [`jupyterhub/grafana-dashboards`](https://github.com/jupyterhub/grafana-dashboards).
 If a token with this name already exists, it will show whether or not the token is expired
 and wait for cli input about whether to generate a new one or not.
 
-The API token is stored encrypted inside the `enc-grafana-token.secret.yaml` file of the cluster.
+The Grafana token is then stored encrypted inside the `enc-grafana-token.secret.yaml` file in the cluster's configuration directory.
 If such a file doesn't already exist, it will be created by this function.
 
   Generates:
