@@ -231,5 +231,33 @@ def exec_hub_shell(
         subprocess.check_call(cmd)
 
 
+@app.command()
+def start_docker_proxy(
+    docker_daemon_cluster: str = typer.Argument(
+        "2i2c", help="Name of cluster where the docker daemon lives"
+    )
+):
+    """
+    Proxy a docker daemon from a remote cluster to local port 23760.
+    """
+
+    print(
+        "Run `export DOCKER_HOST=tcp://localhoost:23760` on another terminal to use the remote docker daemon"
+    )
+    config_file_path = find_absolute_path_to_cluster_file(docker_daemon_cluster)
+    with open(config_file_path) as f:
+        cluster = Cluster(yaml.load(f), config_file_path.parent)
+    with cluster.auth():
+        cmd = [
+            "kubectl",
+            "--namespace=default",
+            "port-forward",
+            "deployment/dind",
+            "23760:2376",
+        ]
+
+        subprocess.check_call(cmd)
+
+
 if __name__ == "__main__":
     app()

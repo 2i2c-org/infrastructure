@@ -26,7 +26,7 @@ This section descripts all the deployment related subcommands the `deployer` can
 **Command line usage:**
 
 ``` bash
-                                                                                                                        
+                                                                                                                                              
  Usage: deployer [OPTIONS] COMMAND [ARGS]...                                                                            
                                                                                                                         
 ╭─ Options ────────────────────────────────────────────────────────────────────────────────────────────────────────────╮
@@ -43,12 +43,14 @@ This section descripts all the deployment related subcommands the `deployer` can
 │                                     /home                                                                            │
 │ exec-hub-shell                      Pop an interactive shell in the hub pod                                          │
 │ generate-aws-cluster                Automatically generate the files required to setup a new cluster on AWS          │
-│ generate-gcp-cluster                Automatically generate the files required to setup a new cluster on GCP          │
+│ generate-gcp-cluster                Automatically generate the terraform config file required to setup a new cluster │
+│                                     on GCP                                                                           │
 │ generate-helm-upgrade-jobs          Analyse added or modified files from a GitHub Pull Request and decide which      │
 │                                     clusters and/or hubs require helm upgrades to be performed for their *hub helm   │
 │                                     charts or the support helm chart.                                                │
 │ run-hub-health-check                Run a health check on a given hub on a given cluster. Optionally check scaling   │
 │                                     of dask workers if the hub is a daskhub.                                         │
+│ start-docker-proxy                  Proxy a docker daemon from a remote cluster to local port 23760.                 │
 │ update-central-grafana-datasources  Update a central grafana with datasources for all our prometheuses               │
 │ use-cluster-credentials             Pop a new shell authenticated to the given cluster using the deployer's          │
 │                                     credentials                                                                      │
@@ -411,6 +413,28 @@ When you exit the shell, the temporary pod spun up is removed.
 │ --help          Show this message and exit.                                                                          │
 ╰──────────────────────────────────────────────────────────────────────────────────────────────────────────────────────╯
 ```
+
+
+### `start-docker-proxy`
+
+Building docker images locally can be *extremely* slow and frustrating. We run a central docker daemon
+in our 2i2c cluster that can be accessed via this command, and speeds up image builds quite a bit!
+Once you run this command, run `export DOCKER_HOST=tcp://localhost:23760` in another terminal to use the faster remote
+docker daemon.
+
+```
+ Usage: deployer start-docker-proxy [OPTIONS] [DOCKER_DAEMON_CLUSTER]                                                   
+                                                                                                                        
+ Proxy a docker daemon from a remote cluster to local port 23760.                                                       
+                                                                                                                        
+╭─ Arguments ──────────────────────────────────────────────────────────────────────────────────────────────────────────╮
+│   docker_daemon_cluster      [DOCKER_DAEMON_CLUSTER]  Name of cluster where the docker daemon lives [default: 2i2c]  │
+╰──────────────────────────────────────────────────────────────────────────────────────────────────────────────────────╯
+╭─ Options ────────────────────────────────────────────────────────────────────────────────────────────────────────────╮
+│ --help          Show this message and exit.                                                                          │
+╰──────────────────────────────────────────────────────────────────────────────────────────────────────────────────────╯
+```
+
 
 ## Sub-scripts
 
