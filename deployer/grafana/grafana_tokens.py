@@ -1,8 +1,8 @@
 import json
-from re import T
 import subprocess
 from base64 import b64encode
 from pathlib import Path
+from re import T
 
 import requests
 import typer
@@ -156,7 +156,10 @@ def create_deployer_token(sa_endpoint, sa_id, headers):
 
 @app.command()
 def generate_grafana_token(
-    cluster=typer.Argument(..., help="Name of cluster for who's Grafana deployment to generate a new deployer token")
+    cluster=typer.Argument(
+        ...,
+        help="Name of cluster for who's Grafana deployment to generate a new deployer token",
+    )
 ):
     grafana_host = get_grafana_url(cluster)
     sa_endpoint = f"https://{grafana_host}/api/serviceaccounts"
