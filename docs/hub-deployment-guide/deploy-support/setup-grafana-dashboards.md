@@ -23,23 +23,24 @@ Here are the credentials for logging in:
 
 ## Create an API key to auto-deploy the dashboards
 
-Once you have logged into grafana as the admin user, create a new API key.
-You can do this by selecting the gear icon from the left-hand menu, and then selecting API keys.
-The key you create needs admin permissions.
+Once the deploy chart was deployed and you were able to log into grafana as the admin user,
+you can generate an API key.
 
-**Keep this key safe as you won't be able to retrieve it!**
-
-Create the file `config/clusters/<cluster>/grafana-token.secret.yaml` with the following content.
-
-```yaml
-grafana_token: PASTE_YOUR_API_KEY_HERE
-```
-
-Then encrypt this file using `sops` like so:
+You can do this by running a deployer command:
 
 ```bash
-sops --output config/clusters/<cluster>/enc-grafana-token.secret.yaml --encrypt config/clusters/<cluster>/grafana-token.secret.yaml
+deployer new-grafana-token <cluster_name>
 ```
+
+If the command succeded, it should have created:
+    - a Grafana service account named `deployer`
+    - a token named `deployer` for this service account
+    - the following sops-ecrypted file `config/clusters/<cluster>/enc-grafana-token.secret.yaml`,
+      with a content similar to:
+
+        ```yaml
+        grafana_token: token
+        ```
 
 The encrypted file can now be committed to the repository.
 
