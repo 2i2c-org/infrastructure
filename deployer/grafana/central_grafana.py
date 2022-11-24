@@ -1,14 +1,7 @@
 """
-### Summary
-
-Ensures that the central grafana at https://grafana.pilot.2i2c.cloud is configured to use as datasource the authenticated prometheus instances of all the clusters that we run.
-
-### How to use
-
-This is meant to by run as a script from the command line, like so:
-
-$ python deployer/grafana_datasources_manager.py
-
+Ensures that the central grafana at https://grafana.pilot.2i2c.cloud
+is configured to use as datasource the authenticated prometheus instances
+of all the clusters that we run.
 """
 
 import json
@@ -31,7 +24,8 @@ yaml = YAML(typ="safe")
 
 
 def build_datasource_details(cluster_name):
-    """Builds the payload needed to create an authenticated datasource in Grafana for `cluster_name`.
+    """
+    Build the payload needed to create an authenticated datasource in Grafana for `cluster_name`.
 
     Args:
         cluster_name: name of the cluster
@@ -58,30 +52,44 @@ def build_datasource_details(cluster_name):
 
 
 def build_datasource_request_headers(cluster_name):
+    """
+    Build the headers needed to send requests to the Grafana datasource endpoint.
+
+    Returns:
+        dict: "Accept", "Content-Type", "Authorization" headers
+    """
     token = get_central_grafana_token(cluster_name)
 
     headers = {
         "Accept": "application/json",
-        "Authorization": f"Bearer {token}",
         "Content-Type": "application/json",
+        "Authorization": f"Bearer {token}",
     }
 
     return headers
 
 
 def get_clusters_used_as_datasources(cluster_name, datasource_endpoint):
-    """Returns a list of cluster names that have prometheus instances already defined as datasources of the centralized Grafana."""
+    """
+    Get the list of cluster names that have prometheus instances
+    already defined as datasources of the central Grafana.
+
+    Returns:
+        list: the name of the clusters registered as central Grafana datasources
+    """
     headers = build_datasource_request_headers(cluster_name)
-    # Get a list of all the currently existing datasources
+
+    # Get the list of all the currently existing datasources
     response = requests.get(datasource_endpoint, headers=headers)
 
     if response.status_code != 200:
         print(
-            f"An error occured when retrieving the datasources from {datasource_endpoint}. \n Error was {response.text}."
+            f"An error occured when retrieving the datasources from {datasource_endpoint}.\n"
+            f"Error was {response.text}."
         )
         response.raise_for_status()
-
     datasources = response.json()
+
     return [datasource["name"] for datasource in datasources]
 
 
@@ -92,7 +100,7 @@ def update_central_grafana_datasources(
     )
 ):
     """
-    Update a central grafana with datasources for all our prometheuses
+    Update the central grafana with datasources for all clusters prometheus instances
     """
     grafana_host = get_grafana_url(central_grafana_cluster)
     datasource_endpoint = f"https://{grafana_host}/api/datasources"

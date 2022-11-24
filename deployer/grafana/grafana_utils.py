@@ -9,9 +9,13 @@ yaml = YAML(typ="safe")
 
 
 def get_grafana_url(cluster_name):
+    """
+    Retrieve the URL of the Grafana running for <cluster_name> from the "support.values.yaml" file.
+    """
+
     cluster_config_dir_path = find_absolute_path_to_cluster_file(cluster_name).parent
 
-    config_file = cluster_config_dir_path.joinpath("support.values.yaml")
+    config_file = cluster_config_dir_path.joinpath()
     with open(config_file) as f:
         support_config = yaml.load(f)
 
@@ -29,14 +33,15 @@ def get_grafana_url(cluster_name):
 
 
 def get_cluster_prometheus_address(cluster_name):
-    """Retrieves the address of the prometheus instance running on the `cluster_name` cluster.
+    """
+    Retrieve the address of the prometheus instance running on the `cluster_name` cluster.
     This address is stored in the `support.values.yaml` file of each cluster config directory.
 
     Args:
         cluster_name: name of the cluster
     Returns:
         string object: https address of the prometheus instance
-    Raises ValueError if
+    Raises ValueError if:
         - `prometheusIngressAuthSecret` isn't configured
         - `support["prometheus"]["server"]["ingress"]["tls"]` doesn't exist
     """
@@ -69,7 +74,8 @@ def get_cluster_prometheus_address(cluster_name):
 
 
 def get_cluster_prometheus_creds(cluster_name):
-    """Retrieves the credentials of the prometheus instance running on the `cluster_name` cluster.
+    """
+    Retrieve the credentials of the prometheus instance running on the `cluster_name` cluster.
     These credentials are stored in `enc-support.secret.values.yaml` file of each cluster config directory.
 
     Args:
@@ -89,8 +95,13 @@ def get_cluster_prometheus_creds(cluster_name):
 
 
 def get_central_grafana_token(cluster_name):
-    """Returns the access token of the Grafana located in `cluster_name` cluster.
+    """
+    Get the access token stored in the `enc-grafana-token.secret.yaml`file
+    for the <cluster_name>'s Grafana.
     This access token should have enough permissions to create datasources.
+
+    Returns:
+        token: the grafana_token stored in the `enc-grafana-token.secret.yaml` file
     """
     # Get the location of the file that stores the central grafana token
     cluster_config_dir_path = find_absolute_path_to_cluster_file(cluster_name).parent
@@ -108,6 +119,17 @@ def get_central_grafana_token(cluster_name):
 
 
 def update_central_grafana_token(cluster_name, token):
+    """
+    Update the API token stored in the `enc-grafana-token.secret.yaml` file
+    for the <cluster_name>'s Grafana.
+    This access token should have enough permissions to create datasources.
+
+    - If the file `enc-grafana-token.secret.yaml` doesn't exist, it creates one and
+      writes the `token` under `grafana_token` key.
+    - If the file `enc-grafana-token.secret.yaml` already exists, it updates the token in it by
+      first deleting the file and then creating a new (encrypted) one
+      where it writes the `token` under `grafana_token` key.
+    """
     # Get the location of the file that stores the central grafana token
     cluster_config_dir_path = find_absolute_path_to_cluster_file(cluster_name).parent
 

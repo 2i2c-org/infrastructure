@@ -155,7 +155,7 @@ def create_deployer_token(sa_endpoint, sa_id, headers):
 
 
 @app.command()
-def generate_grafana_token(
+def new_grafana_token(
     cluster=typer.Argument(
         ...,
         help="Name of cluster for who's Grafana deployment to generate a new deployer token",
