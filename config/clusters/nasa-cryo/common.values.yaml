@@ -64,7 +64,7 @@ basehub:
       # Image repo: https://github.com/CryoInTheCloud/hub-image
       image:
         name: quay.io/cryointhecloud/cryo-hub-image
-        tag: "2df166fe1c87"
+        tag: "3e7ad15ad39d"
       storage:
         extraVolumeMounts:
           - name: home
