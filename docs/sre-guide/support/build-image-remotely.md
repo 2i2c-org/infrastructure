@@ -9,20 +9,10 @@ scale upload / download speeds.
 
 ## Building images remotely
 
-1. From a clone of the `infrastructure` repository, get yourself appropriate credentials
-   for the `2i2c` cluster.
+1. From a clone of the `infrastructure` repository, use the `start-docker-proxy` command.
 
    ```bash
-   deployer use-cluster-credentials 2i2c
-   ```
-
-   This should set your current context to be that of the 2i2c cluster.
-
-2. Port-forward to the docker daemon running in the `default` namespace. This is a
-   `kubectl apply` of the contents of [this gist](https://gist.github.com/yuvipanda/48100eb9e15dae808052c7dc9fb22edb).
-
-   ```bash
-   kubectl port-forward deployment/dind 23760:2376
+   deployer start-docker-proxy
    ```
 
    This will forward your *local* computer's port `23760` to the port `2376` running
@@ -34,19 +24,28 @@ scale upload / download speeds.
    This command will block, and you will have to start it again if you have a network
    interruption.
 
-3. In another terminal, you need to tell tools to use this new port-forwarded port
+2. In another terminal, you need to tell tools to use this new port-forwarded port
    as the docker daemon. You can do this by setting the `DOCKER_HOST` environment variable.
 
    ```bash
    export DOCKER_HOST=tcp://localhost:23760
    ```
 
-4. Verify that the remote docker daemon is what is used by running `docker
+3. Verify that the remote docker daemon is what is used by running `docker
    info`. You should see something like `Name: dind-<random-chars>` - this verifies
    it's running on the remote cluster!
 
-5. Now you can run any tool (like `repo2docker`, `chartpress` or just `docker build`) as you
+4. Now you can run any tool (like `repo2docker`, `chartpress` or just `docker build`) as you
    wish, and they will all automatically talk to this remote docker instance! Hurrah!
+   
+5. If using `repo2docker`, the following command approximates most of the settings we use with
+   [repo2docker-action]:
+   
+   ```bash
+   repo2docker --image-name='<some-name>' --user-id=1000  --user-name=jovyan  --target-repo-dir /srv/repo .
+   ```
+   
+   This should be run from within the directory you are trying to build into an image.
 
 ## Testing images remotely
 
