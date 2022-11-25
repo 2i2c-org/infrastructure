@@ -61,12 +61,10 @@ basehub:
             - read:org
     singleuser:
       defaultUrl: /lab
-      # User image repo: https://github.com/CryoInTheCloud/CryoCloudWebsite/tree/main/conda
+      # Image repo: https://github.com/CryoInTheCloud/hub-image
       image:
-        # This image is available on both Docker Hub and quay.io. We use quay.io
-        # here due to its more generous pull rate limits.
-        name: quay.io/cryointhecloud/cryocloudwebsite
-        tag: "2022.10.12"
+        name: quay.io/cryointhecloud/cryo-hub-image
+        tag: "3e7ad15ad39d"
       storage:
         extraVolumeMounts:
           - name: home
