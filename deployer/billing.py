@@ -2,9 +2,9 @@
 +TODO: Validate billing export is setup for all clusters we 'manage'
 +TODO: Write a JSON Schema for the billing source of truth
 +TODO: Differentiate between billing accounts we should *invoice* and ones we don't need to *invoice*
-+TODO: Provide optional CSV output
 +TODO: Write documentation on when to use this and who uses it
 """
+import csv
 import re
 import sys
 from datetime import datetime, timedelta
@@ -119,6 +119,7 @@ def generate_cost_table(
         help="Ending month (as YYYY-MM) to produce cost data for. Defaults to current invoicing month",
         callback=month_validate,
     ),
+    output_csv: bool = typer.Option(False, help="Write to stdout in csv format"),
 ):
 
     with open(HERE.joinpath("config/billing-accounts.yaml")) as f:
@@ -126,17 +127,31 @@ def generate_cost_table(
 
     client = bigquery.Client()
 
-    table = Table(title="Project Costs")
+    if output_csv:
+        writer = csv.writer(sys.stdout)
+        writer.writerow(
+            [
+                "Period",
+                "Project",
+                "Cost (before Credits)",
+                "Cost (after Credits)",
+                "Billing Account ID",
+            ]
+        )
+    else:
+        table = Table(title="Project Costs")
 
-    table.add_column("Period", justify="right", style="cyan", no_wrap=True)
-    table.add_column("Project", style="white")
-    table.add_column("Cost (before credits)", justify="right", style="green")
-    table.add_column("Cost (after credits)", justify="right", style="green")
+        table.add_column("Period", justify="right", style="cyan", no_wrap=True)
+        table.add_column("Project", style="white")
+        table.add_column("Cost (before credits)", justify="right", style="white")
+        table.add_column("Cost (after credits)", justify="right", style="green")
+        table.add_column("Billing Account ID")
 
     for a in accounts["gcp"]["billing_accounts"]:
         if "bigquery" not in a:
             print(
-                f'No bigquery table specified for billing account {a["id"]}, skipping'
+                f'No bigquery table specified for billing account {a["id"]}, skipping',
+                file=sys.stderr,
             )
             continue
         bq = a["bigquery"]
@@ -180,21 +195,35 @@ def generate_cost_table(
         rows = client.query(query, job_config=job_config).result()
         last_month = None
         for r in rows:
-            year = r.month[:4]
-            month = r.month[4:]
             if not r.project and round(r.total_without_credits) == 0.0:
                 # Non-project number is 0$, let's declutter by not showing it
                 continue
+            year = r.month[:4]
+            month = r.month[4:]
+            period = f"{year}-{month}"
 
-            if last_month != None and r.month != last_month:
-                table.add_section()
-            table.add_row(
-                f"{year}-{month}",
-                r.project,
-                str(round(r.total_without_credits, 2)),
-                str(round(r.total_with_credits, 2)),
-            )
-            last_month = r.month
+            if output_csv:
+                writer.writerow(
+                    [
+                        period,
+                        r.project,
+                        r.total_without_credits,
+                        r.total_with_credits,
+                        a["id"],
+                    ]
+                )
+            else:
+                if last_month != None and r.month != last_month:
+                    table.add_section()
+                table.add_row(
+                    period,
+                    r.project,
+                    str(round(r.total_without_credits, 2)),
+                    str(round(r.total_with_credits, 2)),
+                    a["id"],
+                )
+                last_month = r.month
 
-    console = Console()
-    console.print(table)
+    if not output_csv:
+        console = Console()
+        console.print(table)
