@@ -47,6 +47,7 @@ basehub:
             - tsnow03
             - JessicaS11
             - dfelikson
+            - fperez
         JupyterHub:
           authenticator_class: github
         GitHubOAuthenticator:
