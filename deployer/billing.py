@@ -1,7 +1,16 @@
+"""
++TODO: Validate billing export is setup for all clusters we 'manage'
++TODO: Write a JSON Schema for the billing source of truth
++TODO: Differentiate between billing accounts we should *invoice* and ones we don't need to *invoice*
++TODO: Provide optional CSV output
++TODO: Write documentation on when to use this and who uses it
+"""
 import re
 import sys
+from datetime import datetime, timedelta
 from pathlib import PosixPath
 
+import typer
 from google.cloud import bigquery, billing_v1
 from google.cloud.logging_v2.services.config_service_v2 import ConfigServiceV2Client
 from rich.console import Console
@@ -86,8 +95,31 @@ def validate_billing_export():
         print(sinks)
 
 
+def month_validate(month_str: str):
+    """
+    Validate passed string matches YYYY-MM format.
+
+    Returns values in YYYYMM format, which is used by bigquery
+    """
+    match = re.match(r"(\d\d\d\d)-(\d\d)", month_str)
+    if not match:
+        raise typer.BadParameter(f"{month_str} should be formatted as YYYY-MM")
+    return f"{match.group(1)}{match.group(2)}"
+
+
 @app.command()
-def generate_cost_table():
+def generate_cost_table(
+    start_month: str = typer.Option(
+        (datetime.utcnow().replace(day=1) - timedelta(days=1)).strftime("%Y-%m"),
+        help="Starting month (as YYYY-MM) to produce cost data for. Defaults to last invoicing month.",
+        callback=month_validate,
+    ),
+    end_month: str = typer.Option(
+        datetime.utcnow().replace(day=1).strftime("%Y-%m"),
+        help="Ending month (as YYYY-MM) to produce cost data for. Defaults to current invoicing month",
+        callback=month_validate,
+    ),
+):
 
     with open(HERE.joinpath("config/billing-accounts.yaml")) as f:
         accounts = yaml.load(f)
@@ -131,13 +163,21 @@ def generate_cost_table():
                         FROM UNNEST(credits) AS c), 0)))
             AS total_with_credits
         FROM `{table_name}`
+        WHERE invoice.month >= @start_month AND invoice.month <= @end_month
         GROUP BY 1, 2
         ORDER BY 1 ASC
         ;
 
         """
 
-        rows = client.query(query).result()
+        job_config = bigquery.QueryJobConfig(
+            query_parameters=[
+                bigquery.ScalarQueryParameter("start_month", "STRING", start_month),
+                bigquery.ScalarQueryParameter("end_month", "STRING", end_month),
+            ]
+        )
+
+        rows = client.query(query, job_config=job_config).result()
         last_month = None
         for r in rows:
             year = r.month[:4]
