@@ -3,6 +3,12 @@
 
 These sections describe a few common problems we face on our infrastructure and tips on how to solve them.
 
+```{seealso}
+The JupyterHub project maintains documentation on
+[interpreting common log messages](https://jupyterhub.readthedocs.io/en/stable/admin/log-messages.html)
+it produces, which is an incredibly useful resource when debugging problems.
+```
+
 ```{contents}
 :local:
 ```
