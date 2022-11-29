@@ -61,6 +61,7 @@ basehub:
           scope:
             - read:org
     singleuser:
+      allowNamedServers: true
       defaultUrl: /lab
       # Image repo: https://github.com/CryoInTheCloud/hub-image
       image:
