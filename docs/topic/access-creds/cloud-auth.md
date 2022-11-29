@@ -148,7 +148,7 @@ are used to provide access to the AWS account from your terminal.
    ```ini
    [your-cluster-name]
    aws_access_key_id = <key-id>
-   aws_access_secret_key = <access-key>
+   aws_secret_access_key = <access-key>
    ```
 
    When you want to use these credentials, you can simply run `export AWS_PROFILE=<your-cluster-name>`.
