@@ -23,19 +23,6 @@ hubs:
       # to the helm upgrade command in, and that has meaning. Please check
       # that you intend for these files to be applied in this order.
       - staging.values.yaml
-  - name: spelman
-    display_name: "Spelman College"
-    domain: spelman.cloudbank.2i2c.cloud
-    helm_chart: basehub
-    auth0:
-      # connection update? Also ensure the basehub Helm chart is provided a
-      # matching value for jupyterhub.custom.2i2c.add_staff_user_ids_of_type!
-      connection: google-oauth2
-    helm_chart_values_files:
-      # The order in which you list files here is the order the will be passed
-      # to the helm upgrade command in, and that has meaning. Please check
-      # that you intend for these files to be applied in this order.
-      - spelman.values.yaml
   - name: ccsf
     display_name: "City College SF"
     domain: ccsf.cloudbank.2i2c.cloud
@@ -116,19 +103,6 @@ hubs:
       # to the helm upgrade command in, and that has meaning. Please check
       # that you intend for these files to be applied in this order.
       - skyline.values.yaml
-  - name: canada
-    display_name: "Canada College"
-    domain: canada.cloudbank.2i2c.cloud
-    helm_chart: basehub
-    auth0:
-      # connection update? Also ensure the basehub Helm chart is provided a
-      # matching value for jupyterhub.custom.2i2c.add_staff_user_ids_of_type!
-      connection: google-oauth2
-    helm_chart_values_files:
-      # The order in which you list files here is the order the will be passed
-      # to the helm upgrade command in, and that has meaning. Please check
-      # that you intend for these files to be applied in this order.
-      - canada.values.yaml
   - name: demo
     display_name: "Cloudbank demo"
     domain: demo.cloudbank.2i2c.cloud
@@ -168,19 +142,6 @@ hubs:
       # to the helm upgrade command in, and that has meaning. Please check
       # that you intend for these files to be applied in this order.
       - lassen.values.yaml
-  - name: clovis
-    display_name: "Clovis College"
-    domain: clovis.cloudbank.2i2c.cloud
-    helm_chart: basehub
-    auth0:
-      # connection update? Also ensure the basehub Helm chart is provided a
-      # matching value for jupyterhub.custom.2i2c.add_staff_user_ids_of_type!
-      connection: google-oauth2
-    helm_chart_values_files:
-      # The order in which you list files here is the order the will be passed
-      # to the helm upgrade command in, and that has meaning. Please check
-      # that you intend for these files to be applied in this order.
-      - clovis.values.yaml
   - name: sbcc
     display_name: "Santa Barbara City College"
     domain: sbcc.cloudbank.2i2c.cloud
