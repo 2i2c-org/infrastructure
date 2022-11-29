@@ -27,9 +27,9 @@ jupyterhub:
         username_claim: email
       Authenticator:
         admin_users:
-          - PINEDAEM@lacitycollege.edu
-          - LAMKT@lacitycollege.edu
+          - PINEDAEM@laccd.edu
+          - LAMKT@laccd.edu
           - ericvd@berkeley.edu
           - k_usovich@berkeley.edu
           - sean.smorris@berkeley.edu
-        username_pattern: '^(.+@2i2c\.org|.+@berkeley\.edu|.+@lacitycollege\.edu|deployment-service-check)$'
+        username_pattern: '^(.+@2i2c\.org|.+@berkeley\.edu|.+@laccd\.edu|deployment-service-check)$'
