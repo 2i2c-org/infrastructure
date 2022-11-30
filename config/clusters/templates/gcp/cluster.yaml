@@ -17,10 +17,6 @@ hubs:
     domain: {{ hub_name }}.{{ cluster_name }}.2i2c.cloud
     helm_chart: {{ hub_type }}
     auth0:
-      # Tip: Uncomment the line below and enable auth0
-      #      if you want to use it for this hub.
-      #      By default, it is disabled
-      # connection: github/google
       enabled: false
     helm_chart_values_files:
       - common.values.yaml
