@@ -67,7 +67,7 @@ def generate_support_files(cluster_config_directory, vars):
 
     # Generate and encrypt prometheus credentials into `enc-support.secret.values.yaml`
     print_colour("Generating the prometheus credentials encrypted file...", "yellow")
-    alphabet = string.ascii_letters + string.digits
+    alphabet = string.ascii_letters + string.digits + string.punctuation
     credentials = {
         "username": "".join(secrets.choice(alphabet) for i in range(64)),
         "password": "".join(secrets.choice(alphabet) for i in range(64)),
