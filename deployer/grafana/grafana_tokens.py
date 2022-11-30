@@ -170,20 +170,24 @@ def new_grafana_token(
         token = get_deployer_token(sa_endpoint, sa_id, headers)
 
     if token:
-        print_colour(
-            "Token already exists!\n"
-            f'Checking if has expired: {token["hasExpired"]}\n',
-            "yellow",
-        )
-        print_colour(
-            "Type `yes` if you want to overwrite the existing token or anything else to abort...",
-        )
-        overwrite = input()
-        if overwrite != "yes":
-            print_colour("Aborting...", "red")
-            return
-        # Create a token called `deployer` for the newly created `deployer` service account
-        print_colour("Deleting previous `deployer` token...", "yellow")
+        has_expired = token["hasExpired"]
+        if has_expired:
+            print_colour(
+                "A token with the name `deployer` already exists but it has expired!", "red",
+            )
+        else:
+            print_colour(
+                "A token with the name `deployer` already exists!", "yellow",
+            )
+            print_colour(
+                "Type `yes` if you want to overwrite it or anything else to abort...",
+            )
+            overwrite = input()
+            if overwrite != "yes":
+                print_colour("Aborting...", "red")
+                return
+
+        print_colour("Deleting the token...", "yellow")
         response = requests.delete(
             f'{sa_endpoint}/{sa_id}/tokens/{token["id"]}',
             headers=headers,
@@ -192,7 +196,7 @@ def new_grafana_token(
 
     # Create a token called `deployer` for the newly created `deployer` service account
     print_colour(
-        "Generating a token for the Grafana `deployer` service account...", "yellow"
+        "Generating a new token for the Grafana `deployer` service account...", "yellow"
     )
     token = create_deployer_token(sa_endpoint, sa_id, headers)
 
