@@ -96,13 +96,11 @@ def get_cluster_prometheus_creds(cluster_name):
 
 def get_grafana_admin_password():
     """
-    Retrieve the credentials of the prometheus instance running on the `cluster_name` cluster.
-    These credentials are stored in `enc-support.secret.values.yaml` file of each cluster config directory.
+    Retrieve the password of the grafana `admin` user
+    stored in "helm-charts/support/enc-support.secret.values.yaml"
 
-    Args:
-        cluster_name: name of the cluster
     Returns:
-        dict object: {username: `username`, password: `password`}
+        string object: password of the admin user
     """
     repo_root = Path(__file__).parent.parent.parent
 
