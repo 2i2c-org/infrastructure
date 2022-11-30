@@ -8,7 +8,11 @@ import typer
 
 from ..cli_app import app
 from ..utils import print_colour
-from .grafana_utils import get_grafana_url, update_central_grafana_token, get_grafana_admin_password
+from .grafana_utils import (
+    get_grafana_admin_password,
+    get_grafana_url,
+    update_central_grafana_token,
+)
 
 REPO_ROOT = Path(__file__).parent.parent.parent
 
@@ -173,11 +177,13 @@ def new_grafana_token(
         has_expired = token["hasExpired"]
         if has_expired:
             print_colour(
-                "A token with the name `deployer` already exists but it has expired!", "red",
+                "A token with the name `deployer` already exists but it has expired!",
+                "red",
             )
         else:
             print_colour(
-                "A token with the name `deployer` already exists!", "yellow",
+                "A token with the name `deployer` already exists!",
+                "yellow",
             )
             print_colour(
                 "Type `yes` if you want to overwrite it or anything else to abort...",

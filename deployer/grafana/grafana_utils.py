@@ -1,6 +1,6 @@
 import os
-from pathlib import Path
 import subprocess
+from pathlib import Path
 
 from ruamel.yaml import YAML
 
@@ -94,6 +94,7 @@ def get_cluster_prometheus_creds(cluster_name):
 
     return prometheus_config.get("prometheusIngressAuthSecret", {})
 
+
 def get_grafana_admin_password():
     """
     Retrieve the password of the grafana `admin` user
@@ -104,13 +105,16 @@ def get_grafana_admin_password():
     """
     repo_root = Path(__file__).parent.parent.parent
 
-    grafana_credentials_filename = repo_root.joinpath("helm-charts/support/enc-support.secret.values.yaml")
+    grafana_credentials_filename = repo_root.joinpath(
+        "helm-charts/support/enc-support.secret.values.yaml"
+    )
 
     with get_decrypted_file(grafana_credentials_filename) as decrypted_path:
         with open(decrypted_path) as f:
             grafana_creds = yaml.load(f)
 
     return grafana_creds.get("grafana", {}).get("adminPassword", None)
+
 
 def get_central_grafana_token(cluster_name):
     """
