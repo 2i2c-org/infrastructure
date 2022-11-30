@@ -1,5 +1,4 @@
 import json
-import subprocess
 from base64 import b64encode
 from pathlib import Path
 
