@@ -43,8 +43,8 @@ This section descripts all the deployment related subcommands the `deployer` can
 │                                     /home                                                                            │
 │ exec-hub-shell                      Pop an interactive shell in the hub pod                                          │
 │ generate-aws-cluster                Automatically generate the files required to setup a new cluster on AWS          │
-│ generate-gcp-cluster                Automatically generates the default intitial files required to setup a new       │
-│                                     cluster on GCP                                                                   │
+│ generate-gcp-cluster                Automatically generates the initial files, required to setup a new cluster on    │
+│                                     GCP                                                                              │
 │ generate-helm-upgrade-jobs          Analyse added or modified files from a GitHub Pull Request and decide which      │
 │                                     clusters and/or hubs require helm upgrades to be performed for their *hub helm   │
 │                                     charts or the support helm chart.                                                │
