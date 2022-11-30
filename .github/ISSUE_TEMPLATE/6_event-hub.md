@@ -17,8 +17,11 @@ assignees: ''
 
 - **Community Representative:** <!-- The GitHub ID of the current representative for the Hub and Community, e.g. @octocat -->
 - **Event begin:** <!-- The date that the event will start. -->
+  - **In your timezone:** <!-- Add an https://arewemeetingyet.com/ link or similar so team members can translate to their timezone -->
 - **Event end:** <!-- The date that the event will end. -->
+  - **In your timezone:** <!-- Add an https://arewemeetingyet.com/ link or similar so team members can translate to their timezone -->
 - **Active times:** <!-- What hours of the day will participants be active? (e.g., 5am - 5pm US/Pacific) -->
+  - **In your timezone:** <!-- Add an https://arewemeetingyet.com/ link or similar so team members can translate to their timezone -->
 - **Number of attendees:** <!-- How many attendees should we expect simultaneously each day. -->
 - [**Hub Events Calendar**](https://calendar.google.com/calendar/u/2?cid=Y19rdDg0c2g3YW5tMHNsb2NqczJzdTNqdnNvY0Bncm91cC5jYWxlbmRhci5nb29nbGUuY29t)
 
