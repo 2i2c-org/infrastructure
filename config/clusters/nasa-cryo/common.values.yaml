@@ -35,6 +35,7 @@ basehub:
             name: "NASA ICESat-2 Science Team"
             url: https://icesat-2.gsfc.nasa.gov/science_definition_team
     hub:
+      allowNamedServers: true
       config:
         Authenticator:
           # We are restricting profiles based on GitHub Team membership and
@@ -61,7 +62,6 @@ basehub:
           scope:
             - read:org
     singleuser:
-      allowNamedServers: true
       defaultUrl: /lab
       # Image repo: https://github.com/CryoInTheCloud/hub-image
       image:
