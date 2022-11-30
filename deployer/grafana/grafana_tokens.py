@@ -8,7 +8,7 @@ import typer
 
 from ..cli_app import app
 from ..utils import print_colour
-from .grafana_utils import get_grafana_url, update_central_grafana_token
+from .grafana_utils import get_grafana_url, update_central_grafana_token, get_grafana_admin_password
 
 REPO_ROOT = Path(__file__).parent.parent.parent
 
@@ -20,20 +20,9 @@ def build_service_account_request_headers():
     Returns:
         dict: "Accept", "Content-Type", "Authorization" headers
     """
-    # Dencrypt grafana credentials file
+    # Get grafana credentials
     grafana_username = "admin"
-    grafana_password_string = subprocess.check_output(
-        [
-            "sops",
-            "--decrypt",
-            REPO_ROOT / "helm-charts/support/enc-support.secret.values.yaml",
-        ]
-    ).decode("utf-8")
-
-    # Parse the sops output to find the admin's username password
-    keyword = "adminPassword: "
-    pass_idx = grafana_password_string.find(keyword) + len(keyword)
-    grafana_password = grafana_password_string[pass_idx:-1]
+    grafana_password = get_grafana_admin_password()
     credentials = f"{grafana_username}:{grafana_password}"
     basic_auth_credentials = b64encode(credentials.encode("utf-8"))
 

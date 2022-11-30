@@ -1,4 +1,5 @@
 import os
+from pathlib import Path
 import subprocess
 
 from ruamel.yaml import YAML
@@ -93,6 +94,25 @@ def get_cluster_prometheus_creds(cluster_name):
 
     return prometheus_config.get("prometheusIngressAuthSecret", {})
 
+def get_grafana_admin_password():
+    """
+    Retrieve the credentials of the prometheus instance running on the `cluster_name` cluster.
+    These credentials are stored in `enc-support.secret.values.yaml` file of each cluster config directory.
+
+    Args:
+        cluster_name: name of the cluster
+    Returns:
+        dict object: {username: `username`, password: `password`}
+    """
+    repo_root = Path(__file__).parent.parent.parent
+
+    grafana_credentials_filename = repo_root.joinpath("helm-charts/support/enc-support.secret.values.yaml")
+
+    with get_decrypted_file(grafana_credentials_filename) as decrypted_path:
+        with open(decrypted_path) as f:
+            grafana_creds = yaml.load(f)
+
+    return grafana_creds.get("grafana", {}).get("adminPassword", None)
 
 def get_central_grafana_token(cluster_name):
     """
