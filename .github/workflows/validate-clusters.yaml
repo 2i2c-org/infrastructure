@@ -13,20 +13,26 @@ on:
     branches:
       - master
     paths:
-      - config/clusters/**
-      - helm-charts/**
-      - deployer/**
-      - requirements.txt
-      - .github/workflows/validate-clusters.yaml
+      - "config/clusters/**"
+      # Exclude changes to the templates directory from
+      # triggering this workflow
+      - "!config/clusters/templates"
+      - "helm-charts/**"
+      - "deployer/**"
+      - "requirements.txt"
+      - ".github/workflows/validate-clusters.yaml"
   push:
     branches:
       - master
     paths:
-      - config/clusters/**
-      - helm-charts/**
-      - deployer/**
-      - requirements.txt
-      - .github/workflows/validate-clusters.yaml
+      - "config/clusters/**"
+      # Exclude changes the templates directory from
+      # triggering this workflow
+      - "!config/clusters/templates"
+      - "helm-charts/**"
+      - "deployer/**"
+      - "requirements.txt"
+      - ".github/workflows/validate-clusters.yaml"
     tags:
       - "**"
   workflow_dispatch:
@@ -110,7 +116,12 @@ jobs:
           # Construct a matrix of all clusters
           matrix = []
           for cluster in cluster_folders:
-              matrix.append({"cluster_name": cluster})
+              # The `templates` directory contains template yaml configs
+              # and doesn't represent a "real" cluster.
+              # This is why we need to exclude it from the list of clusters
+              # and hence all workflows, otherwise it will cause them to fail.
+              if cluster != "templates":
+                matrix.append({"cluster_name": cluster})
 
           # Write matrix to the GITHUB_ENV file in GitHub Actions
           env_file = os.getenv("GITHUB_ENV")

@@ -7,9 +7,9 @@
 */
 
 prefix                 = "{{ cluster_name }}"
-project_id             = "{{ cluster_name }}"
+project_id             = "{{ project_id }}"
 
-zone                   = "{{ cluster_zone }}"
+zone                   = "{{ cluster_region }}"
 region                 = "{{ cluster_region }}"
 
 # Default to a HA cluster for reliability

@@ -91,7 +91,11 @@ def get_all_cluster_yaml_files(is_test=False):
         return set(root_path.glob("tests/test-clusters/**/cluster.yaml"))
 
     # We are NOT running a test via pytest. We only care about the clusters under config/clusters
-    return set(root_path.glob("config/clusters/**/cluster.yaml"))
+    return {
+        path
+        for path in root_path.glob("config/clusters/**/cluster.yaml")
+        if "templates" not in path.as_posix()
+    }
 
 
 def generate_hub_matrix_jobs(

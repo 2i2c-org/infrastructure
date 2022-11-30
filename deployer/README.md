@@ -43,8 +43,8 @@ This section descripts all the deployment related subcommands the `deployer` can
 │                                     /home                                                                            │
 │ exec-hub-shell                      Pop an interactive shell in the hub pod                                          │
 │ generate-aws-cluster                Automatically generate the files required to setup a new cluster on AWS          │
-│ generate-gcp-cluster                Automatically generate the terraform config file required to setup a new cluster │
-│                                     on GCP                                                                           │
+│ generate-gcp-cluster                Automatically generates the initial files, required to setup a new cluster on    │
+│                                     GCP                                                                              │
 │ generate-helm-upgrade-jobs          Analyse added or modified files from a GitHub Pull Request and decide which      │
 │                                     clusters and/or hubs require helm upgrades to be performed for their *hub helm   │
 │                                     charts or the support helm chart.                                                │
@@ -226,15 +226,32 @@ The files are generated based on the jsonnet templates in:
 
 ### `generate-gcp-cluster`
 
-This function generates the terraform config file for a GCP cluster, based on a few input fields, 
-the name of the cluster, the region where the cluster will be deployed and whether the hub deployed there would need dask or not.
+This function generates the infrastructure terraform file and the configuration directory
+for a GCP cluster.
 
   Generates:
-  - a .tfvars file
+    - infrastructure file:
+      - `terraform/gcp/projects/<cluster_name>.tfvars`
+    - cluster configuration files:
+      - `config/<cluster_name>/cluster.yaml`
+      - `config/<cluster_name>/support.values.yaml`
+      - `config/<cluster_name>/enc-support.secret.values.yaml`
 
-The terraform config is generated based on the terraform templates in:
-  - (`terraform/basehub-template.tfvars`)[https://github.com/2i2c-org/infrastructure/blob/master/terraform/gcp/projects/basehub-template.tfvars]
-  - (`terraform/daskhub-template.tfvars`)[https://github.com/2i2c-org/infrastructure/blob/master/terraform/gcp/projects/daskhub-template.tfvars]
+  The files are generated based on the content in a set of template files and a few input fields:
+    - `cluster_name` - the name of the cluster
+    - `cluster_region`- the region where the cluster will be deployed
+    - `project_id` - the project ID of the GCP project
+    - `hub_type` (basehub/daskhub) - whether the hub deployed there would need dask or not
+    - `hub_name` - the name of the first hub which will be deployed in the cluster (usually `staging`)
+
+The templates have a set of default features and define some opinionated characteristics for the cluster.
+These defaults are described in each file template.
+
+  The infrastructure terraform config is generated based on the terraform templates in:
+    - (`terraform/basehub-template.tfvars`)[https://github.com/2i2c-org/infrastructure/blob/master/terraform/gcp/projects/basehub-template.tfvars]
+    - (`terraform/daskhub-template.tfvars`)[https://github.com/2i2c-org/infrastructure/blob/master/terraform/gcp/projects/daskhub-template.tfvars]
+  The cluster configuration directory is generated based on the templates in:
+    - (`config/clusters/templates/gcp`)[https://github.com/2i2c-org/infrastructure/blob/master/config/clusters/templates/gcp]
 
 **Command line usage:**
 

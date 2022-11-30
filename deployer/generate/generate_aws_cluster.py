@@ -5,9 +5,9 @@ from pathlib import Path
 import jinja2
 import typer
 
-from .cli_app import app
+from ..cli_app import app
 
-REPO_ROOT = Path(__file__).parent.parent
+REPO_ROOT = Path(__file__).parent.parent.parent
 
 
 def aws(cluster_name, hub_type, cluster_region):
@@ -76,27 +76,6 @@ def aws(cluster_name, hub_type, cluster_region):
     )
 
 
-def gcp(cluster_name, hub_type, cluster_region, cluster_zone):
-    """
-    Generates the cluster_name.tfvars terraform file
-    required to create a GCP cluster
-    """
-
-    with open(REPO_ROOT / f"terraform/gcp/projects/{hub_type}-template.tfvars") as f:
-        tfvars_template = jinja2.Template(f.read())
-
-    vars = {
-        "cluster_name": cluster_name,
-        "cluster_region": cluster_region,
-        "cluster_zone": cluster_zone,
-    }
-
-    with open(
-        REPO_ROOT / "terraform/gcp/projects" / f"{cluster_name}.tfvars", "w"
-    ) as f:
-        f.write(tfvars_template.render(**vars))
-
-
 @app.command()
 def generate_aws_cluster(
     cluster_name: str = typer.Option(..., prompt="Name of the cluster to deploy"),
@@ -111,22 +90,3 @@ def generate_aws_cluster(
     Automatically generate the files required to setup a new cluster on AWS
     """
     aws(cluster_name, hub_type, cluster_region)
-
-
-@app.command()
-def generate_gcp_cluster(
-    cluster_name: str = typer.Option(..., prompt="Name of the cluster to deploy"),
-    hub_type: str = typer.Option(
-        ..., prompt="Type of hub. Choose from `basehub` or `daskhub`"
-    ),
-    cluster_region: str = typer.Option(
-        ..., prompt="The region where to deploy the cluster"
-    ),
-    cluster_zone: str = typer.Option(
-        ..., prompt="The zone where to deploy the cluster, eg. us-west2-b"
-    ),
-):
-    """
-    Automatically generate the terraform config file required to setup a new cluster on GCP
-    """
-    gcp(cluster_name, hub_type, cluster_region, cluster_zone)
