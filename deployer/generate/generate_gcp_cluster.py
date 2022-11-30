@@ -142,7 +142,7 @@ def generate_gcp_cluster(
     hub_name: str = typer.Option(..., prompt="Name of the first hub"),
 ):
     """
-    Automatically generates the default intitial files required to setup a new cluster on GCP
+    Automatically generates the initial files, required to setup a new cluster on GCP
     """
     # Automatically generate the terraform config file
     generate_terraform_file(cluster_name, cluster_region, project_id, hub_type)
