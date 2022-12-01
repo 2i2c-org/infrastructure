@@ -155,3 +155,12 @@ hubs:
     helm_chart_values_files:
       - temple.values.yaml
       - enc-temple.secret.values.yaml
+  - name: ucmerced
+    display_name: "UC Merced"
+    domain: ucmerced.2i2c.cloud
+    helm_chart: basehub
+    auth0:
+      enabled: false
+    helm_chart_values_files:
+      - ucmerced.values.yaml
+      - enc-ucmerced.secret.values.yaml
