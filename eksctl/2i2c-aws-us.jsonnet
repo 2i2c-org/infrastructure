@@ -34,7 +34,7 @@ local daskNodes =
     apiVersion: 'eksctl.io/v1alpha5',
     kind: 'ClusterConfig',
     metadata+: {
-        name: "shared-hubs-cluster",
+        name: "2i2c-aws-us",
         region: clusterRegion,
         // Warning: version 1.23 introduces some breaking changes
         // Checkout the docs before upgrading
@@ -50,7 +50,7 @@ local daskNodes =
             name: 'core-a',
             availabilityZones: [nodeAz],
             ssh: {
-                publicKeyPath: 'ssh-keys/shared-hubs-cluster.key.pub'
+                publicKeyPath: 'ssh-keys/2i2c-aws-us.key.pub'
             },
             instanceType: "m5.xlarge",
             minSize: 1,
@@ -70,7 +70,7 @@ local daskNodes =
             maxSize: 500,
             instanceType: n.instanceType,
             ssh: {
-                publicKeyPath: 'ssh-keys/shared-hubs-cluster.key.pub'
+                publicKeyPath: 'ssh-keys/2i2c-aws-us.key.pub'
             },
             labels+: {
                 "hub.jupyter.org/node-purpose": "user",
@@ -92,7 +92,7 @@ local daskNodes =
             minSize: 0,
             maxSize: 500,
             ssh: {
-                publicKeyPath: 'ssh-keys/shared-hubs-cluster.key.pub'
+                publicKeyPath: 'ssh-keys/2i2c-aws-us.key.pub'
             },
             labels+: {
                 "k8s.dask.org/node-purpose": "worker"

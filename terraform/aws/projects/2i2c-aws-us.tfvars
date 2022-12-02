@@ -1,6 +1,6 @@
 region = "us-west-2"
 
-cluster_name = "shared-hubs-cluster"
+cluster_name = "2i2c-aws-us"
 
 cluster_nodes_location = "us-west-2a"
 
