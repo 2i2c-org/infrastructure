@@ -9,4 +9,13 @@ support:
   helm_chart_values_files:
     - support.values.yaml
     - enc-support.secret.values.yaml
-hubs: []
+hubs:
+  - name: staging
+    display_name: "2i2c AWS staging"
+    domain: staging.aws.2i2c.cloud
+    helm_chart: basehub
+    auth0:
+      connection: google-oauth2
+    helm_chart_values_files:
+      - staging.values.yaml
+
