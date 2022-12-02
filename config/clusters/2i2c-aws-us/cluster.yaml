@@ -5,5 +5,8 @@ aws:
   clusterType: eks
   clusterName: 2i2c-aws-us
   region: us-west-2
-support: []
+support:
+  helm_chart_values_files:
+    - support.values.yaml
+    - enc-support.secret.values.yaml
 hubs: []
