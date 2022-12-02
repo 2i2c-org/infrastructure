@@ -1,3 +1,6 @@
+userServiceAccount:
+  annotations:
+    eks.amazonaws.com/role-arn: arn:aws:iam::790657130469:role/2i2c-aws-us-staging
 nfs:
   pv:
     # from https://docs.aws.amazon.com/efs/latest/ug/mounting-fs-nfs-mount-settings.html
