@@ -11,7 +11,7 @@ user_buckets = {
     "scratch-dask-staging": {
         "delete_after": 7
     },
-    "scratch-research-delight": {
+    "scratch-researchdelight": {
         "delete_after": 7
     },
 }
@@ -28,9 +28,9 @@ hub_cloud_permissions = {
     bucket_admin_access: ["scratch-dask-staging"],
     extra_iam_policy: ""
   },
-  "research-delight" : {
+  "researchdelight" : {
     requestor_pays: true,
-    bucket_admin_access: ["scratch-research-delight"],
+    bucket_admin_access: ["scratch-researchdelight"],
     extra_iam_policy: ""
   },
 }
