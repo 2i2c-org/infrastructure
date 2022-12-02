@@ -27,6 +27,7 @@ jobs:
           - cluster_name: nasa-cryo
           - cluster_name: gridsst
           - cluster_name: victor
+          - cluster-name: 2i2c-aws-us
     steps:
       - name: Checkout repo
         uses: actions/checkout@v3
