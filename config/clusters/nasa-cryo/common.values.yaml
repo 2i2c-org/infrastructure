@@ -12,6 +12,11 @@ basehub:
       serverIP: fs-0872256335d483d5f.efs.us-west-2.amazonaws.com
       baseShareName: /
   jupyterhub:
+    prePuller:
+      continuous:
+        enabled: true
+      hook:
+        enabled: true
     custom:
       2i2c:
         add_staff_user_ids_to_admin_users: true
@@ -66,7 +71,7 @@ basehub:
       # Image repo: https://github.com/CryoInTheCloud/hub-image
       image:
         name: quay.io/cryointhecloud/cryo-hub-image
-        tag: "3e7ad15ad39d"
+        tag: "a1bc0061178a"
       storage:
         extraVolumeMounts:
           - name: home
