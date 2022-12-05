@@ -67,7 +67,7 @@ body:
       description: |
         Please describe how you would prefer to manage your users accessing the hub via GitHub Auth.
       options:
-        - Manually, by adding specific GitHub handles in the [JupyterHub Admin panel](https://docs.2i2c.org/en/latest/admin/howto/manage-users.html#manage-users-from-the-administrator-panel)
+        - Manually, by adding specific GitHub handles in the JupyterHub Admin panel
         - Allowing members of a specific GitHub organization
         - Allowing members of specific GitHub team(s)
 
