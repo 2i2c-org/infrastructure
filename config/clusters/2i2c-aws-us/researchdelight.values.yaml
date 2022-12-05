@@ -1,0 +1,46 @@
+basehub:
+  userServiceAccount:
+    annotations:
+      eks.amazonaws.com/role-arn: arn:aws:iam::790657130469:role/2i2c-aws-us-researchdelight
+  nfs:
+    pv:
+      # from https://docs.aws.amazon.com/efs/latest/ug/mounting-fs-nfs-mount-settings.html
+      mountOptions:
+        - rsize=1048576
+        - wsize=1048576
+        - timeo=600
+        - soft # We pick soft over hard, so NFS lockups don't lead to hung processes
+        - retrans=2
+        - noresvport
+      serverIP: fs-0b70db2b65209a77d.efs.us-west-2.amazonaws.com
+      baseShareName: /
+  jupyterhub:
+    custom:
+      2i2c:
+        add_staff_user_ids_to_admin_users: true
+        add_staff_user_ids_of_type: "github"
+      homepage:
+        templateVars:
+          org:
+            name: 2i2c Research Delight
+            url: https://2i2c.org
+            logo_url: https://2i2c.org/media/logo.png
+          designed_by:
+            name: 2i2c
+            url: https://2i2c.org
+          operated_by:
+            name: 2i2c
+            url: https://2i2c.org
+          funded_by:
+            name: 2i2c
+            url: https://2i2c.org
+    singleuser:
+      image:
+        name: quay.io/2i2c/researchdelight-image
+        tag: "872f0c4578af"
+    hub:
+      config:
+        Authenticator:
+          allowed_users: &allowed_users
+            - jmunroe
+          admin_users: *allowed_users
