@@ -71,6 +71,16 @@ body:
         - Allowing members of a specific GitHub organization
         - Allowing members of specific GitHub team(s)
 
+  - type: textarea
+    attributes: 
+      label: "[GitHub Teams Auth only] Profile restriction based on team membership"
+      description: |
+        If you wish to offer a range of machine sizes/image types but to only a subset of your users, we can facilitate this through GitHub Teams.
+        Please provide a list of GitHub Teams in your org and what resources you'd like each to access.
+      placeholder: |
+        @MyCoolOrg/all-users: Small and Medium sized machines
+        @MyCoolOrg/advanced-users: Small, Medium, Large and GPU machines
+
   - type: markdown
     attributes:
       value: |
