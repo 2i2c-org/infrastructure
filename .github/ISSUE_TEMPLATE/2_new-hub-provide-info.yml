@@ -61,6 +61,15 @@ body:
     validations:
       required: true
 
+  - type: dropdown
+    label: "[GitHub Auth only] How would you like to manage your users?"
+    description: |
+      Please describe how you would prefer to manage your users accessing the hub via GitHub Auth.
+    options:
+      - Manually, by adding specific GitHub handles in the JupyterHub Admin panel
+      - Allowing members of a specific GitHub organization
+      - Allowing members of specific GitHub team(s)
+
   - type: markdown
     attributes:
       value: |
