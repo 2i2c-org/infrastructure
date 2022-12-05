@@ -62,7 +62,7 @@ body:
       required: true
 
   - type: dropdown
-    attributes: 
+    attributes:
       label: "[GitHub Auth only] How would you like to manage your users?"
       description: |
         Please describe how you would prefer to manage your users accessing the hub via GitHub Auth.
@@ -72,7 +72,7 @@ body:
         - Allowing members of specific GitHub team(s)
 
   - type: textarea
-    attributes: 
+    attributes:
       label: "[GitHub Teams Auth only] Profile restriction based on team membership"
       description: |
         If you wish to offer a range of machine sizes/image types but to only a subset of your users, we can facilitate this through GitHub Teams.
