@@ -13,7 +13,7 @@ path_clusters = path_root / "../config/clusters"
 clusters = [
     filepath
     for filepath in path_clusters.glob("**/*cluster.yaml")
-    if "tests/" not in str(filepath)
+    if "tests/" not in str(filepath) and "templates" not in str(filepath)
 ]
 
 hub_list = []
