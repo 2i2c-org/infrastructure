@@ -6,8 +6,8 @@ staticWebsite:
   enabled: true
   source:
     git:
-      repo: https://github.com/2i2c-org/docs
-      branch: main
+      repo: https://github.com/jupyter/try.jupyter.org
+      branch: gh-pages
   ingress:
     host: staging.2i2c.cloud
     path: /textbook
