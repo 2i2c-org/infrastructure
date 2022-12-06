@@ -7,7 +7,7 @@ staticWebsite:
   source:
     git:
       repo: https://github.com/2i2c-org/docs
-      branch: master
+      branch: main
   ingress:
     host: staging.2i2c.cloud
     path: /textbook
