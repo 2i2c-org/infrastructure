@@ -6,7 +6,7 @@ staticWebsite:
   enabled: true
   source:
     git:
-      repo: https://github.com/yuvipanda/test-repo-push
+      repo: https://github.com/2i2c-org/docs
       branch: master
   ingress:
     host: staging.2i2c.cloud
