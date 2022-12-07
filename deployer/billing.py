@@ -4,12 +4,13 @@
 +TODO: Differentiate between billing accounts we should *invoice* and ones we don't need to *invoice*
 +TODO: Write documentation on when to use this and who uses it
 """
-import csv
 import re
 import sys
 from datetime import datetime, timedelta
+from enum import Enum
 from pathlib import PosixPath
 
+import gspread
 import typer
 from google.cloud import bigquery, billing_v1
 from google.cloud.logging_v2.services.config_service_v2 import ConfigServiceV2Client
@@ -18,6 +19,7 @@ from rich.table import Table
 from ruamel.yaml import YAML
 
 from .cli_app import app
+from .file_acquisition import get_decrypted_file
 from .helm_upgrade_decision import get_all_cluster_yaml_files
 
 yaml = YAML(typ="safe")
@@ -107,6 +109,15 @@ def month_validate(month_str: str):
     return f"{match.group(1)}{match.group(2)}"
 
 
+class CostTableOutputFormats(Enum):
+    """
+    Output formats supported by the generate-cost-table command
+    """
+
+    terminal = "terminal"
+    google_sheet = "google-sheet"
+
+
 @app.command()
 def generate_cost_table(
     start_month: str = typer.Option(
@@ -119,7 +130,14 @@ def generate_cost_table(
         help="Ending month (as YYYY-MM) to produce cost data for. Defaults to current invoicing month",
         callback=month_validate,
     ),
-    output_csv: bool = typer.Option(False, help="Write to stdout in csv format"),
+    output: CostTableOutputFormats = typer.Option(
+        CostTableOutputFormats.terminal,
+        help="Where to output the cost table to",
+    ),
+    google_sheet_url: str = typer.Option(
+        "https://docs.google.com/spreadsheets/d/1URYCMap-Lxm4e_pAAC3Esxda7tZzRhCS6d85pxUiVQs/edit#gid=0",
+        help="Write to given Google Sheet URL. Used when --output is google-sheet. billing-spreadsheet-writer@two-eye-two-see.iam.gserviceaccount.com should have Editor rights on this spreadsheet.",
+    ),
 ):
 
     with open(HERE.joinpath("config/billing-accounts.yaml")) as f:
@@ -127,25 +145,7 @@ def generate_cost_table(
 
     client = bigquery.Client()
 
-    if output_csv:
-        writer = csv.writer(sys.stdout)
-        writer.writerow(
-            [
-                "Period",
-                "Project",
-                "Cost (before Credits)",
-                "Cost (after Credits)",
-                "Billing Account ID",
-            ]
-        )
-    else:
-        table = Table(title="Project Costs")
-
-        table.add_column("Period", justify="right", style="cyan", no_wrap=True)
-        table.add_column("Project", style="white")
-        table.add_column("Cost (before credits)", justify="right", style="white")
-        table.add_column("Cost (after credits)", justify="right", style="green")
-        table.add_column("Billing Account ID")
+    rows = []
 
     for a in accounts["gcp"]["billing_accounts"]:
         if "bigquery" not in a:
@@ -180,7 +180,7 @@ def generate_cost_table(
         FROM `{table_name}`
         WHERE invoice.month >= @start_month AND invoice.month <= @end_month
         GROUP BY 1, 2
-        ORDER BY 1 ASC
+        ORDER BY invoice.month ASC
         ;
 
         """
@@ -192,38 +192,87 @@ def generate_cost_table(
             ]
         )
 
-        rows = client.query(query, job_config=job_config).result()
-        last_month = None
-        for r in rows:
+        result = client.query(query, job_config=job_config).result()
+        last_period = None
+        for r in result:
             if not r.project and round(r.total_without_credits) == 0.0:
                 # Non-project number is 0$, let's declutter by not showing it
                 continue
             year = r.month[:4]
             month = r.month[4:]
             period = f"{year}-{month}"
+            rows.append(
+                {
+                    "period": period,
+                    "project": r.project,
+                    "total_without_credits": float(r.total_without_credits),
+                    "total_with_credits": float(r.total_with_credits),
+                }
+            )
 
-            if output_csv:
-                writer.writerow(
-                    [
-                        period,
-                        r.project,
-                        r.total_without_credits,
-                        r.total_with_credits,
-                        a["id"],
-                    ]
-                )
-            else:
-                if last_month != None and r.month != last_month:
-                    table.add_section()
-                table.add_row(
-                    period,
-                    r.project,
-                    str(round(r.total_without_credits, 2)),
-                    str(round(r.total_with_credits, 2)),
-                    a["id"],
-                )
-                last_month = r.month
+    # Sort by period in reverse chronological order
+    rows.sort(key=lambda r: r["period"], reverse=True)
 
-    if not output_csv:
+    if output == CostTableOutputFormats.google_sheet:
+        # A service account (https://console.cloud.google.com/iam-admin/serviceaccounts/details/113674037014124702779?project=two-eye-two-see)
+        # It is created with no permissions, and the google sheet we want to write to
+        # must give write permissions to the email account for the service account
+        # In this case, it is  billing-spreadsheet-writer@two-eye-two-see.iam.gserviceaccount.com .
+        with get_decrypted_file(
+            "config/secrets/enc-billing-gsheets-writer-key.secret.json"
+        ) as f:
+
+            gsheets = gspread.service_account(filename=f)
+
+        spreadsheet = gsheets.open_by_url(google_sheet_url)
+        worksheet = spreadsheet.get_worksheet(0)
+        worksheet.clear()
+
+        worksheet.append_row(
+            [
+                "WARNING: Do not manually modify, this sheet is autogenerated by the generate-cost-table subcommand of the deployer"
+            ]
+        )
+        worksheet.append_row([f"Last Updated: {datetime.utcnow().isoformat()}"])
+
+        worksheet.append_row(
+            [
+                "Period",
+                "Project",
+                "Cost (before Credits)",
+                "Cost (after Credits)",
+            ]
+        )
+
+        worksheet.append_rows(
+            [
+                [
+                    r["period"],
+                    r["project"],
+                    r["total_without_credits"],
+                    r["total_with_credits"],
+                ]
+                for r in rows
+            ]
+        )
+    else:
+        table = Table(title="Project Costs")
+
+        table.add_column("Period", justify="right", style="cyan", no_wrap=True)
+        table.add_column("Project", style="white")
+        table.add_column("Cost (before credits)", justify="right", style="white")
+        table.add_column("Cost (after credits)", justify="right", style="green")
+
+        for r in rows:
+            if last_period != None and r["period"] != last_period:
+                table.add_section()
+            table.add_row(
+                r["period"],
+                r["project"],
+                str(round(r["total_without_credits"], 2)),
+                str(round(r["total_with_credits"], 2)),
+            )
+            last_period = r["period"]
+
         console = Console()
         console.print(table)
