@@ -14,7 +14,7 @@ On AWS, GPUs are provisioned by using P series nodes. Before they
 can be accessed, you need to ask AWS for increased quota of P
 series nodes.
 
-1. Login to the AWS management console of the account the cluster i
+1. Login to the AWS management console of the account the cluster is
    in.
 2. Make sure you are in same region the cluster is in, by checking the
    region selector on the top right. **This is very important**, as getting
