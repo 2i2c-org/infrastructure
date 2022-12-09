@@ -81,16 +81,15 @@ a profile. This should be placed in the hub configuration:
 
 ```yaml
 jupyterhub:
-   extraEnv:
-      # Temporarily set for *all* pods, including pods without any GPUs,
-      # to work around https://github.com/2i2c-org/infrastructure/issues/1530
-      NVIDIA_DRIVER_CAPABILITIES: compute,utility
    singleuser:
+      extraEnv:
+         # Temporarily set for *all* pods, including pods without any GPUs,
+         # to work around https://github.com/2i2c-org/infrastructure/issues/1530
+         NVIDIA_DRIVER_CAPABILITIES: compute,utility
       profileList:
         - display_name: Large + GPU
           description: 14GB RAM, 4 CPUs, T4 GPU
           profile_options:
-            gpu:
             image:
               display_name: Image
               choices:
