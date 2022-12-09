@@ -44,7 +44,6 @@ AWS, and we can configure a node group there to provide us GPUs.
 1. In the `notebookNodes` definition in the appropriate `.jsonnet` file,
    add a node definition for the appropriate GPU node type:
 
-
    ```
     {
         instanceType: "g4dn.xlarge",
@@ -127,7 +126,8 @@ jupyterhub:
    **Do not** use the `latest` or `master` tags - find
    a specific tag listed for the image you want, and use that.
    ```
-3. The [NVIDIA_DRIVER_CAPABILITIES](https://docs.nvidia.com/datacenter/cloud-native/container-toolkit/user-guide.html#driver-capabilities)
+
+3. The [`NVIDIA_DRIVER_CAPABILITIES`](https://docs.nvidia.com/datacenter/cloud-native/container-toolkit/user-guide.html#driver-capabilities)
    environment variable tells the GPU driver what kind of libraries
    and tools to inject into the container. Without setting this,
    GPUs can not be accessed.
@@ -159,6 +159,7 @@ this works!
    ```
 
    If on an image with pytorch instead, try this:
+
    ```python
    import torch
 
