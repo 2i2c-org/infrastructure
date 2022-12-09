@@ -15,6 +15,12 @@ local notebookNodes = [
     { instanceType: "m5.xlarge" },
     { instanceType: "m5.2xlarge" },
     { instanceType: "m5.8xlarge" },
+    {
+        instanceType: "g4dn.xlarge",
+        tags+: {
+            "k8s.io/cluster-autoscaler/node-template/resources/nvidia.com/gpu": "1"
+        },
+    },
 ];
 
 local daskNodes =
