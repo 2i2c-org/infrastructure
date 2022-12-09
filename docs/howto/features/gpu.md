@@ -14,7 +14,7 @@ On AWS, GPUs are provisioned by using P series nodes. Before they
 can be accessed, you need to ask AWS for increased quota of P
 series nodes.
 
-1. Login to the AWS management console of the account the cluster i
+1. Login to the AWS management console of the account the cluster is
    in.
 2. Make sure you are in same region the cluster is in, by checking the
    region selector on the top right. **This is very important**, as getting
@@ -43,7 +43,6 @@ AWS, and we can configure a node group there to provide us GPUs.
 
 1. In the `notebookNodes` definition in the appropriate `.jsonnet` file,
    add a node definition for the appropriate GPU node type:
-
 
    ```
     {
@@ -82,16 +81,15 @@ a profile. This should be placed in the hub configuration:
 
 ```yaml
 jupyterhub:
-   extraEnv:
-      # Temporarily set for *all* pods, including pods without any GPUs,
-      # to work around https://github.com/2i2c-org/infrastructure/issues/1530
-      NVIDIA_DRIVER_CAPABILITIES: compute,utility
    singleuser:
+      extraEnv:
+         # Temporarily set for *all* pods, including pods without any GPUs,
+         # to work around https://github.com/2i2c-org/infrastructure/issues/1530
+         NVIDIA_DRIVER_CAPABILITIES: compute,utility
       profileList:
         - display_name: Large + GPU
           description: 14GB RAM, 4 CPUs, T4 GPU
           profile_options:
-            gpu:
             image:
               display_name: Image
               choices:
@@ -127,7 +125,8 @@ jupyterhub:
    **Do not** use the `latest` or `master` tags - find
    a specific tag listed for the image you want, and use that.
    ```
-3. The [NVIDIA_DRIVER_CAPABILITIES](https://docs.nvidia.com/datacenter/cloud-native/container-toolkit/user-guide.html#driver-capabilities)
+
+3. The [`NVIDIA_DRIVER_CAPABILITIES`](https://docs.nvidia.com/datacenter/cloud-native/container-toolkit/user-guide.html#driver-capabilities)
    environment variable tells the GPU driver what kind of libraries
    and tools to inject into the container. Without setting this,
    GPUs can not be accessed.
@@ -159,6 +158,7 @@ this works!
    ```
 
    If on an image with pytorch instead, try this:
+
    ```python
    import torch
 
