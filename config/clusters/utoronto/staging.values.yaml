@@ -1,4 +1,13 @@
 jupyterhub:
+  # superseeded by https://github.com/2i2c-org/infrastructure/pull/1962/
+  singleuser:
+    memory:
+      # Ensure all students get equal resources during the exam
+      limit: 2G
+      guarantee: 2G
+    cpu:
+      limit: 1
+      guarantee: 1
   hub:
     config:
       AzureAdOAuthenticator:
