@@ -78,7 +78,7 @@ runs:
 
     # Pin kubectl version to 1.23 otherwise interactions with k8s clusters versioned <=1.21 won't work.
     # See https://github.com/2i2c-org/infrastructure/issues/1271.
-    - uses: azure/setup-kubectl@v3.0
+    - uses: azure/setup-kubectl@v3.1
       with:
         version: "v1.23.5"
 
