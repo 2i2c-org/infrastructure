@@ -322,7 +322,7 @@ nodeGroups:
   #     --filter Name=instance-type,Values=g4dn.xlarge \
   #     --location-type=availability-zone
   #
-  # 57 pods, 4 cpu, 16 GB (Intel, 25 GBits network), 1 T4 Tensor Core GPU
+  # 28 pods, 4 cpu, 16 GB (Intel, 25 GBits network), 1 T4 Tensor Core GPU
   - name: user-gpu-a-4
     availabilityZones: &user-gpu-availabilityZones [us-west-2a, us-west-2b]
     instanceType: g4dn.xlarge
@@ -352,7 +352,7 @@ nodeGroups:
         autoScaler: true
         efs: true
 
-  # 233 pods, 16 cpu, 64 GB (Intel, 25 GBits network), 1 T4 Tensor Core GPU
+  # 28 pods, 16 cpu, 64 GB (Intel, 25 GBits network), 1 T4 Tensor Core GPU
   - name: user-gpu-a-16
     availabilityZones: *user-gpu-availabilityZones
     instanceType: g4dn.4xlarge
@@ -369,6 +369,30 @@ nodeGroups:
     tags:
       k8s.io/cluster-autoscaler/node-template/label/hub.jupyter.org/node-purpose: user
       k8s.io/cluster-autoscaler/node-template/label/2i2c.org/node-cpu: "16"
+      k8s.io/cluster-autoscaler/node-template/label/2i2c.org/node-gpu: "1"
+      k8s.io/cluster-autoscaler/node-template/taint/hub.jupyter.org_dedicated: user:NoSchedule
+    iam: &user-iam
+      withAddonPolicies:
+        autoScaler: true
+        efs: true
+
+  # 57 pods, 64 cpu, 256 GB (Intel, 50 GBits network), 1 T4 Tensor Core GPU
+  - name: user-gpu-a-64
+    availabilityZones: *user-gpu-availabilityZones
+    instanceType: g4dn.16xlarge
+    minSize: *user-minSize
+    maxSize: *user-maxSize
+    desiredCapacity: *user-desiredCapacity
+    volumeSize: *user-volumeSize
+    labels:
+      hub.jupyter.org/node-purpose: user
+      2i2c.org/node-cpu: "64"
+      2i2c.org/node-gpu: "1"
+    taints:
+      hub.jupyter.org_dedicated: user:NoSchedule
+    tags:
+      k8s.io/cluster-autoscaler/node-template/label/hub.jupyter.org/node-purpose: user
+      k8s.io/cluster-autoscaler/node-template/label/2i2c.org/node-cpu: "64"
       k8s.io/cluster-autoscaler/node-template/label/2i2c.org/node-gpu: "1"
       k8s.io/cluster-autoscaler/node-template/taint/hub.jupyter.org_dedicated: user:NoSchedule
     iam: &user-iam
