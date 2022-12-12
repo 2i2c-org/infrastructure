@@ -1,0 +1,58 @@
+# Deploy a prometheus node_exporter with the same home directory
+# we have for our hub mounted so we can monitor free space usage.
+{{- if or .Values.nfs.enabled .Values.azureFile.enabled }}
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: jupyterhub
+    component: home-metrics
+  name: home-metrics
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: jupyterhub
+      component: home-metrics
+  template:
+    metadata:
+      annotations:
+        prometheus.io/scrape: "true"
+        prometheus.io/port: "9100"
+      labels:
+        app: jupyterhub
+        component: home-metrics
+    spec:
+      containers:
+      - args:
+        # We only want filesystem stats
+        - --collector.disable-defaults
+        - --collector.filesystem
+        - --web.listen-address=:9100
+        image: quay.io/prometheus/node-exporter:v1.3.1
+        name: home-directory-exporter
+        ports:
+        - containerPort: 9100
+          name: metrics
+          protocol: TCP
+        securityContext:
+          allowPrivilegeEscalation: false
+        volumeMounts:
+          - name: home
+            mountPath: /home
+            # Mount it readonly to prevent accidental writes
+            readOnly: true
+      securityContext:
+        fsGroup: 65534
+        runAsGroup: 65534
+        runAsNonRoot: true
+        runAsUser: 65534
+      volumes:
+        - name: home
+          persistentVolumeClaim:
+            {{- if .Values.azureFile.enabled }}
+            claimName: home-azurefile
+            {{- else }}
+            claimName: home-nfs
+            {{- end }}
+{{- end }}
