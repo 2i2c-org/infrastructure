@@ -10,15 +10,7 @@ from rich.console import Console
 from rich.table import Table
 from ruamel.yaml import YAML
 
-# This try/except block is here because pytest wants to import print_colour from
-# deployer.utils, whereas the deployer wants to call it directly from utils. There is no
-# way to fix this for one without breaking it for the other until we make the deployer
-# an actual pip installable package. See the below issue for discussion on this topic:
-# https://github.com/2i2c-org/infrastructure/issues/970
-try:
-    from utils import print_colour
-except ModuleNotFoundError:
-    pass
+from .utils import print_colour
 
 yaml = YAML(typ="safe", pure=True)
 
