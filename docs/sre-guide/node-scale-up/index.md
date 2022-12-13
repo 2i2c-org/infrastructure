@@ -14,10 +14,11 @@ These sections document how to manually scale a nodepool for each cloud provider
 
 ```{toctree}
 aws.md
+azure.md
 ```
 
 ```{warning}
 Add documentation for how we do this for:
 - GKE
-- Azure
+- Azure (the "terraform way")
 ```
