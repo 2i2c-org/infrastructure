@@ -43,9 +43,9 @@ Here are some guidelines for merging and reviewing in this case:
   are persisted across future deploys. Self merging is acceptable here, although this general
   class of changes should be limited as much as possible.
   
-## Self-merging as a partner
+## Self-merging as a community partner
 
-In some cases, as part of our shared responsibility model, we have granted
+In some cases, as part of our [shared responsibility model](https://docs.2i2c.org/en/latest/about/service/shared-responsibility.html), we grant
 merge rights to partner engineers. Ideally, they would be only allowed to
 merge PRs related to their own cluster - we currently do not have an automatic
 way of enforcing this. 
@@ -64,7 +64,7 @@ They *may* self-merge if they want to, provided the following conditions are met
    - Adding / removing admin users
    - Changing profile options available to the hub
    
-   Here are some examples of *novel* configuration:
+   Here are some examples of *novel* configuration that requires approval from a 2i2c engineer before merging:
    - Adding python code to `hub.extraConfig` to enable new functionality, such as
      adding a postgres database to each user pod.
    - Significant alterations to the shape of the user pod, such as setting
