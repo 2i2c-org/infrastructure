@@ -42,6 +42,38 @@ Here are some guidelines for merging and reviewing in this case:
   make sure you push a PR with the change *and merge it quickly* to make sure that the changes
   are persisted across future deploys. Self merging is acceptable here, although this general
   class of changes should be limited as much as possible.
+  
+## Self-merging as a partner
+
+In some cases, as part of our shared responsibility model, we have granted
+merge rights to partner engineers. Ideally, they would be only allowed to
+merge PRs related to their own cluster - we currently do not have an automatic
+way of enforcing this. 
+
+They *may* self-merge if they want to, provided the following conditions are met:
+
+1. They have cloud access to the cluster, and are confident of being able to either
+   debug the issues that may arise from the *particular* change they are making,
+   or be able to revert it.
+2. The change *only* touches files inside the `config/clusters/<cluster-name>`
+   directory for their cluster.
+3. The change is fairly routine, and not a super novel configuration. This is hard
+   to quantify, but here are some examples of *routine* changes:
+   - Adding a new hub that looks exactly like other hubs in the cluster
+   - Changing resources provided to the hub
+   - Adding / removing admin users
+   - Changing profile options available to the hub
+   
+   Here are some examples of *novel* configuration:
+   - Adding python code to `hub.extraConfig` to enable new functionality, such as
+     adding a postgres database to each user pod.
+   - Significant alterations to the shape of the user pod, such as setting
+     `singleuser.extraContainers`.
+   - Modifications to how NFS home directory storage is managed.
+   
+   The goal here is that 2i2c is ultimately responsible for the configuration, so
+   we do not want it to get too funky without us knowing about it. If you think
+   what you are doing *might* be funky, err on the side of asking for review!
 
 ## Changing authentication related configuration
 
