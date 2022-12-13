@@ -19,9 +19,10 @@ server startup faster.
 
 1. A new window should pop up that looks like this
 
-    ```{figure}
-    ../../images/azure-scale-node-pool-window.png
-    ```
+```{figure}
+../../images/azure-scale-node-pool-window.png
+```
+
 1. If the `Autoscale` option is selected like in the screenshot above (the default, recommended option),
    then in order to scale up the nodepool to an exact number of nodes, temporarily deactivate the autoscaler,
    by selecting the `Manual` option, introduce the desired number of nodes then click `Apply`.
