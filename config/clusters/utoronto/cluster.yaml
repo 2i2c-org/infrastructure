@@ -15,12 +15,10 @@ hubs:
     auth0:
       enabled: false
     helm_chart_values_files:
-      # The order in which you list files here is the order the will be passed
-      # to the helm upgrade command in, and that has meaning. Please check
-      # that you intend for these files to be applied in this order.
       - common.values.yaml
-      - staging.values.yaml
-      - enc-staging.secret.values.yaml
+      - default-common.values.yaml
+      - default-staging.values.yaml
+      - enc-default-staging.secret.values.yaml
   - name: prod
     display_name: "University of Toronto (prod)"
     domain: jupyter.utoronto.ca
@@ -28,9 +26,29 @@ hubs:
     auth0:
       enabled: false
     helm_chart_values_files:
-      # The order in which you list files here is the order the will be passed
-      # to the helm upgrade command in, and that has meaning. Please check
-      # that you intend for these files to be applied in this order.
       - common.values.yaml
-      - prod.values.yaml
-      - enc-prod.secret.values.yaml
+      - default-common.values.yaml
+      - default-prod.values.yaml
+      - enc-default-prod.secret.values.yaml
+  - name: r-staging
+    display_name: "University of Toronto (r-staging)"
+    domain: r-staging.utoronto.2i2c.cloud
+    helm_chart: basehub
+    auth0:
+      enabled: false
+    helm_chart_values_files:
+      - common.values.yaml
+      - r-common.values.yaml
+      - r-staging.values.yaml
+      - enc-r-staging.secret.values.yaml
+  - name: r-prod
+    display_name: "University of Toronto (R)"
+    domain: r.utoronto.2i2c.cloud
+    helm_chart: basehub
+    auth0:
+      enabled: false
+    helm_chart_values_files:
+      - common.values.yaml
+      - r-common.values.yaml
+      - r-prod.values.yaml
+      - enc-r-prod.secret.values.yaml
