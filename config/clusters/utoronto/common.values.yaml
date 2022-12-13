@@ -64,9 +64,6 @@ jupyterhub:
           [credential "https://github.com"]
           helper = !git-credential-github-app --app-key-file /etc/github/github-app-private-key.pem --app-id 93515
           useHttpPath = true
-    image:
-      name: quay.io/2i2c/utoronto-image
-      tag: "445cbd1f113b"
   hub:
     db:
       pvc:
@@ -77,16 +74,12 @@ jupyterhub:
     config:
       Authenticator:
         enable_auth_state: false
-        admin_users:
-          - 7c76d04b-2a80-4db1-b985-a2d2fa2f708c
-          - 09056164-42f5-4113-9fd7-dd852e63ff1d
-          - adb7ebad-9fb8-481a-bc2c-6c0a8b6de670
       JupyterHub:
         authenticator_class: azuread
         concurrent_spawn_limit: 100
         # We wanna keep logs long term, primarily for analytics
         extra_log_file: /srv/jupyterhub/jupyterhub.log
       AzureAdOAuthenticator:
-        username_claim: oid
+        username_claim: email
         login_service: "University of Toronto ID"
         tenant_id: 78aac226-2f03-4b4d-9037-b46d56c55210

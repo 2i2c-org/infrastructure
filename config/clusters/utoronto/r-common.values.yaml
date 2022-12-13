@@ -1,0 +1,9 @@
+jupyterhub:
+  singleuser:
+    storage:
+      # From https://jupyterhub-image.guide/rocker.html#step-7-setup-zero-to-jupyterhub-configuration-for-home-directory
+      homeMountPath: /home/rstudio
+    defaultUrl: /rstudio
+    image:
+      name: quay.io/2i2c/utoronto-r-image
+      tag: "bd1a9c4eea2e"
