@@ -7,6 +7,8 @@ server startup faster.
 
 ## Azure Console UI instructions
 
+### Scaling up a node pool
+
 1. Login to https://portal.azure.com using the appropriate cluster credentials
 
 1. Search the `Kubernetes service` section for the appropriate cluster
@@ -28,10 +30,26 @@ server startup faster.
    by selecting the `Manual` option, introduce the desired number of nodes then click `Apply`.
 
 1. After the Apply succeded, you should see the new nodes coming up.
-   You can then click on `Scale node pool` option again, enable the `Autoscale`,
-   and set the min number of nodes to the desired one the you set in the step before.
+   You can then click on `Scale node pool` option again, **enable the `Autoscale`**,
+   and set the `Min` number of nodes to the desired one the you set in the step before.
 
 ```{warning}
+Don't forget to turn the autoscaler back on after the manual
+modification of the node pool size! This is **really important**, otherwise
+a scale up from the max manual limit, won't be able to happen automatically,
+and the hub won't be able to spawn new user servers.
+```
+
+### Scaling down a node pool
+
+1. Follow the first six steps in the scaling up guide above, until you get to the `Scale node pool` window.
+
+1. This time, **do not activate the `Manual` mode**,
+   and just adjust the `Min` number of nodes for the autoscaler.
+   As users stop their servers after the event, eventually a scale down event will be triggered,
+   and the autoscaler will adjust the node pool size according to the limits that are set.
+
+```{note}
 The cluster autoscaler doesn't enforce the node pool size after updating the `Min` or `Max` counts.
 The limits will be taken into accounts for future scaling decisions.
 A new scaling decision happens after a scale up/down event is triggered.
