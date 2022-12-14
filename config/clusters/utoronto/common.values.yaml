@@ -48,12 +48,8 @@ jupyterhub:
             </div>
   singleuser:
     memory:
-      # Ensure all students get equal resources during the exam
       limit: 2G
-      guarantee: 2G
-    cpu:
-      limit: 1
-      guarantee: 1
+      guarantee: 1G
     extraFiles:
       github-app-private-key.pem:
         mountPath: /etc/github/github-app-private-key.pem
