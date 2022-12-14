@@ -109,6 +109,7 @@ jobs:
         shell: python
         run: |
           import os
+          import json
 
           # List all cluster folders
           cluster_folders = os.listdir("config/clusters")
@@ -126,7 +127,10 @@ jobs:
           # Write matrix to the GITHUB_ENV file in GitHub Actions
           env_file = os.getenv("GITHUB_ENV")
           with open(env_file, "a") as f:
-              f.write(f"MATRIX={matrix}")
+              # Explicitly dump these as JSON, as that is what they are read as
+              # General python object syntax sometimes works but sometimes does
+              # not - for example, single quotes are not valid in JSON.
+              f.write(f"MATRIX={json.dumps(matrix)}")
 
       # Only run this step if there are *NO* changes under the common filter,
       # but *ARE* changes under the cluster_specific filter, *AND* we have not
@@ -139,6 +143,7 @@ jobs:
         shell: python
         run: |
           import os
+          import json
           from pathlib import Path
 
           # Consume list of changed cluster files and convert to list by splitting
@@ -164,7 +169,10 @@ jobs:
           # Write the matrix to the GITHUB_ENV file in GitHub Actions
           env_file = os.getenv("GITHUB_ENV")
           with open(env_file, "a") as f:
-              f.write(f"matrix={matrix}")
+              # Explicitly dump these as JSON, as that is what they are read as
+              # General python object syntax sometimes works but sometimes does
+              # not - for example, single quotes are not valid in JSON.
+              f.write(f"MATRIX={json.dumps(matrix)}")
 
   # This job runs the 'deployer validate' subcommand across a matrix of
   # cluster names.
