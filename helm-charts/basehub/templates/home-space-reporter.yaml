@@ -43,6 +43,9 @@ spec:
             # Mount it readonly to prevent accidental writes
             readOnly: true
       securityContext:
+        # This is the 'nobody' user that the node-exporter image expects
+        # to be run as, and has no privileges.
+        # https://wiki.ubuntu.com/nobody has more info
         fsGroup: 65534
         runAsGroup: 65534
         runAsNonRoot: true
