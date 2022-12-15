@@ -33,6 +33,7 @@ basehub:
             name: M²LInES
             url: https://m2lines.github.io/
     hub:
+      allowNamedServers: true
       config:
         Authenticator:
           # This hub uses GitHub Teams auth and so we don't set
