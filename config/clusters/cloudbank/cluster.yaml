@@ -43,12 +43,13 @@ hubs:
     auth0:
       # connection update? Also ensure the basehub Helm chart is provided a
       # matching value for jupyterhub.custom.2i2c.add_staff_user_ids_of_type!
-      connection: google-oauth2
+      enabled: false
     helm_chart_values_files:
       # The order in which you list files here is the order the will be passed
       # to the helm upgrade command in, and that has meaning. Please check
       # that you intend for these files to be applied in this order.
       - csm.values.yaml
+      - enc-csm.secret.values.yaml
   - name: elcamino
     display_name: "El Camino College"
     domain: elcamino.cloudbank.2i2c.cloud
