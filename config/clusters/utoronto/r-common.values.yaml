@@ -1,4 +1,9 @@
 jupyterhub:
+  custom:
+    homepage:
+      templateVars:
+        # This sets the default selected interface option
+        default_url: /rstudio
   singleuser:
     storage:
       # From https://jupyterhub-image.guide/rocker.html#step-7-setup-zero-to-jupyterhub-configuration-for-home-directory
