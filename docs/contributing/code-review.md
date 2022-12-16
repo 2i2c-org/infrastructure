@@ -50,7 +50,18 @@ merge rights to partner engineers. Ideally, they would be only allowed to
 merge PRs related to their own cluster - we currently do not have an automatic
 way of enforcing this. 
 
-They *may* self-merge if they want to, provided the following conditions are met:
+```{note}
+While our current two partners who have such access (Cloudbank & Callysto)
+are grandparented in, we must have such technical enforcement mechanism
+in place before adding more such partners with merge rights
+```
+
+The goal here is that 2i2c is ultimately responsible for the configuration, so
+we do not want it to get too funky without 2i2c engineers knowing
+about it. As a community partner, if you think what you are doing
+*might* be funky, err on the side of asking for review!
+
+Community partners *may* self-merge if they want to, provided the following conditions are met:
 
 1. They have cloud access to the cluster, and are confident of being able to either
    debug the issues that may arise from the *particular* change they are making,
@@ -67,13 +78,11 @@ They *may* self-merge if they want to, provided the following conditions are met
    Here are some examples of *novel* configuration that requires approval from a 2i2c engineer before merging:
    - Adding python code to `hub.extraConfig` to enable new functionality, such as
      adding a postgres database to each user pod.
-   - Significant alterations to the shape of the user pod, such as setting
+   - Significant alterations to the configuration of the user pod, such as setting
      `singleuser.extraContainers`.
    - Modifications to how NFS home directory storage is managed.
    
-   The goal here is that 2i2c is ultimately responsible for the configuration, so
-   we do not want it to get too funky without us knowing about it. If you think
-   what you are doing *might* be funky, err on the side of asking for review!
+As a general rule, when in doubt, ask for review :)
 
 ## Changing authentication related configuration
 
