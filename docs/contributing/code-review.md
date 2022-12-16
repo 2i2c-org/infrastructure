@@ -56,7 +56,7 @@ Merge rights are only given for partners with which we have built a relationship
 ### Guidelines for community partners
 
 Our goal is to provide trusted communities the ability to more quickly make changes to their infrastructure in order to lead to a better, more collaborative service for their community.
-However, merge rights it a big responsibility, so please be careful in your actions.
+However, merge rights are a big responsibility, so please be careful in your actions.
 
 Community partners *may* self-merge if they want to, provided the following conditions are met:
 
