@@ -1,6 +1,7 @@
 # Deploy a prometheus node_exporter with the same home directory
 # we have for our hub mounted so we can monitor free space usage.
-{{- if or .Values.nfs.enabled .Values.azureFile.enabled }}
+{{- if .Values.nfs.homeSpaceReporter.enabled -}}
+{{- if or .Values.nfs.enabled .Values.azureFile.enabled -}}
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -58,4 +59,5 @@ spec:
             {{- else }}
             claimName: home-nfs
             {{- end }}
+{{- end }}
 {{- end }}

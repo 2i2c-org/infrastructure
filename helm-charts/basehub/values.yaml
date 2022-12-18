@@ -40,6 +40,8 @@ nfs:
   shareCreator:
     enabled: true
     tolerations: []
+  homeSpaceReporter:
+    enabled: true
   pv:
     mountOptions:
       - soft

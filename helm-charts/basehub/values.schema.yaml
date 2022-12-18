@@ -168,6 +168,7 @@ properties:
     required:
       - enabled
       - shareCreator
+      - homeSpaceReporter
       - pv
     properties:
       enabled:
@@ -186,6 +187,14 @@ properties:
             items:
               type: object
               additionalProperties: true
+      homeSpaceReporter:
+        type: object
+        additionalProperties: false
+        required:
+          - enabled
+        properties:
+          enabled:
+            type: boolean
       pv:
         type: object
         additionalProperties: false
