@@ -2,6 +2,10 @@
 # by the cluster.
 # ref: https://eksctl.io/usage/schema/
 #
+# Get cluster credentials:
+#
+#   eksctl utils write-kubeconfig --cluster=jmte
+#
 # Cluster operations:
 # ref: https://eksctl.io/usage/cluster-upgrade/
 #
@@ -51,45 +55,138 @@ metadata:
   #
   #    eksctl upgrade cluster --config-file eksctl-cluster-config.yaml --approve
   #
-  # 2. Deleted all non-core nodegroups
+  # 3. Deleted all non-core nodegroups
   #
   #    eksctl delete nodegroup --config-file=eksctl-cluster-config.yaml --include "user-*,worker-*" --approve
   #
-  # 3. Updated the version field in this config from 1.20 to 1.22
+  # 4. Updated the version field in this config from 1.20 to 1.22
   #
   #    - It is allowed to have a nodegroup +-2 minors away from the control plan version
   #
-  # 4. Created a new core nodepool (core-b)
+  # 5. Created a new core nodepool (core-b)
   #
   #    eksctl create nodegroup --config-file=eksctl-cluster-config.yaml --include "core-b" --install-nvidia-plugin=false
   #
-  # 5. Deleted the old core nodepool (core-a)
+  # 6. Deleted the old core nodepool (core-a)
   #
-  #    eksctl delete nodegroup --config-file=eksctl-cluster-config.yaml --include "core-a" --approve
+  #    eksctl delete nodegroup --config-file=eksctl-cluster-config.yaml --include "core-b" --approve
   #
-  # 6. Upgraded add-ons (takes ~3*5s)
+  # 7. Upgraded add-ons (takes ~3*5s)
   #
   #    eksctl utils update-kube-proxy --cluster=jmte --approve
   #    eksctl utils update-aws-node --cluster=jmte --approve
   #    eksctl utils update-coredns --cluster=jmte --approve
   #
-  # 7. Update the version field in this config from 1.22 to 1.21
+  # 8. Update the version field in this config from 1.22 to 1.21
   #
-  # 8. Upgraded the control plane, as in step 2.
+  # 9. Upgraded the control plane, as in step 2.
   #
-  # 9. Upgraded add-ons, as in step 6.
+  # A. Upgraded add-ons, as in step 7.
   #
-  # A. Update the version field in this config from 1.21 to 1.22
+  # B. Update the version field in this config from 1.21 to 1.22
   #
-  # B. Upgraded the control plane, as in step 2.
+  # C. Upgraded the control plane, as in step 2.
   #
-  # C. Upgraded add-ons, as in step 6.
+  # D. Upgraded add-ons, as in step 7.
   #
-  # D. Recreated all nodegroups
+  # E. Recreated all nodegroups
   #
   #    eksctl create nodegroup --config-file=eksctl-cluster-config.yaml --include "*" --install-nvidia-plugin=false
   #
-  version: "1.22"
+  # For reference, this is the steps I took when upgrading from k8s 1.22 to k8s
+  # 1.24, Dec 18th 2022.
+  #
+  # 1. Performed step 1-7 from above to, but migrated control plane from 1.22 to
+  #    1.23 and node groups from 1.22 to 1.24.
+  #
+  # 2. When performing step 7:
+  #
+  #    - the aws-node daemonset's pods failed to start because of a too
+  #      restrictive container securityContext not running as root.
+  #    - the kube-proxy deamonset's pods failed to pull the image, it was not
+  #      found.
+  #
+  #    I patched the aws-node thing now, but went ahead with the upgrade to k8s
+  #    1.24 in the control plane, hoping another `eksctl utils update-aws-node`
+  #    and `eksctl utils update-kube-proxy` would resolve the issues.
+  #
+  #    Later I concluded the following:
+  #
+  #    - aws-node issue: https://github.com/weaveworks/eksctl/issues/6048.
+  #      Resolved by removing `runAsNonRoot: true` and
+  #      `allowPrivilegeEscalation: false`.
+  #    - kube-proxy issue: it went away when upgrading the plugin in 1.24
+  #    - the cluster-autoscaler failed to start initially, but made it in the
+  #      end when other pods got running.
+  #
+  # 3. I upgraded the control plan to 1.24 (step 2 above) and re-upgraded add-ons
+  #    (step 7 above).
+  #
+  # 4. I recreated all node groups as in step E above.
+  #
+  # 5. My hub pod entered a pending state because
+  #
+  #    - 1 node(s) had no available volume zone
+  #    - I think this is the issue:
+  #      https://docs.aws.amazon.com/eks/latest/userguide/ebs-csi.html, I
+  #      upgraded from v1.22 to v1.23+ without manually activating the plugin
+  #      mentioned there.
+  #    - Looking at
+  #      https://docs.aws.amazon.com/eks/latest/userguide/managing-ebs-csi.html
+  #      and running the command below, I conclude it was not active in my
+  #      cluster.
+  #
+  # 6. (what I should have done) Getting ebs-csi-driver setup:
+  #
+  #    What I think should have been done is to:
+  #
+  #    1. Ensure a service account was setup via this config:
+  #       https://eksctl.io/usage/schema/#iam-serviceAccounts-wellKnownPolicies-ebsCSIController
+  #    2. Ensure that the addon was setup via this config:
+  #       https://eksctl.io/usage/schema/#addons-wellKnownPolicies-ebsCSIController
+  #    3. Ensure that the node pools using ebs storage (core) was configured to use this:
+  #       https://eksctl.io/usage/schema/#nodeGroups-iam-withAddonPolicies-ebs
+  #
+  # 6. (what I actually did) Getting ebs-csi-driver setup:
+  #
+  #   I read the following instructions: https://docs.aws.amazon.com/eks/latest/userguide/managing-ebs-csi.html#adding-ebs-csi-eks-add-on
+  #
+  #   I did pre-requisites to setup permissions via: https://docs.aws.amazon.com/eks/latest/userguide/csi-iam-role.html
+  #
+  #     UPDATE: I think this pre-requites step could be done via this config instead:
+  #             https://eksctl.io/usage/schema/#iam-serviceAccounts-wellKnownPolicies-ebsCSIController
+  #
+  #     eksctl get addon --name aws-ebs-csi-driver --cluster=jmte
+  #
+  #     eksctl create iamserviceaccount \
+  #         --name=ebs-csi-controller-sa \
+  #         --namespace=kube-system \
+  #         --cluster=jmte \
+  #         --attach-policy-arn=arn:aws:iam::aws:policy/service-role/AmazonEBSCSIDriverPolicy \
+  #         --approve \
+  #         --role-only \
+  #         --role-name=AmazonEKS_EBS_CSI_DriverRole
+  #
+  #   I verified I didn't have a EBS driver installed already:
+  #
+  #     eksctl get addon --name=aws-ebs-csi-driver --cluster=jmte
+  #
+  #   I added the ebs driver addon:
+  #
+  #     UPDATE: I think this main step could be done via this config instead:
+  #             https://eksctl.io/usage/schema/#addons-wellKnownPolicies-ebsCSIController
+  #
+  #     eksctl create addon --name=aws-ebs-csi-driver --cluster=jmte --service-account-role-arn=arn:aws:iam::286354552638:role/AmazonEKS_EBS_CSI_DriverRole --force
+  #
+  #   The hub pod that mounted a PVC with ebs storage and got "1 node(s) had no
+  #   available volume zone" was suddenly scheduled successfully!
+  #
+  #   I think maybe we could manage to setup eksctl clusters to directly have
+  #   this plugin via this config. For now, this was done with manual patches
+  #   though.
+  #
+
+  version: "1.24"
   tags:
     2i2c.org/project: jmte
 
@@ -158,7 +255,7 @@ iam:
 #   you have run into a quota issue. Following that, you make a request to AWS using provided link: https://aws.amazon.com/contact-us/ec2-request
 #
 nodeGroups:
-  - name: core-b
+  - name: core-a
     availabilityZones: [us-west-2d] # aws ec2 describe-availability-zones --region <region-name>
     instanceType: m5.large # 28 pods, 2 cpu, 8 GB
     minSize: 0
@@ -172,6 +269,10 @@ nodeGroups:
     iam:
       withAddonPolicies:
         autoScaler: true
+        # ebs: I'm not sure if this was needed because I added it before adding
+        #      the ebs csi driver which was absolutely needed. Maybe this and
+        #      the driver was needed.
+        ebs: true
         efs: true
 
   # 57 pods, 4 cpu, 16 GB (Intel, 10 GBits network)
