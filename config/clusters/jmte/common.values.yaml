@@ -6,6 +6,8 @@ basehub:
     # enabled: true
     shareCreator:
       enabled: true
+    homeSpaceReporter:
+      enabled: false
     pv:
       serverIP: fs-01707b06.efs.us-west-2.amazonaws.com
       # mountOptions from https://docs.aws.amazon.com/efs/latest/ug/mounting-fs-nfs-mount-settings.html
