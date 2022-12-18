@@ -291,10 +291,6 @@ basehub:
             - jonathan-taylor # Jonathan Taylor
           admin_users: *users
       allowNamedServers: true
-      networkPolicy:
-        # FIXME: Required for dask gateway 0.9.0. It is fixed but a Helm
-        #        chart of newer version is not yet released.
-        enabled: false
 
 dask-gateway:
   # dask-gateway notes:
