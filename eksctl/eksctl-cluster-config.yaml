@@ -185,7 +185,16 @@ metadata:
   #   this plugin via this config. For now, this was done with manual patches
   #   though.
   #
-
+  # 7. I realized the ingress -> service coupling didn't work, so
+  #    https://hub.jupytearth.org got stuck.
+  #
+  #    Resolution attempt failing: eksctl utils update-legacy-subnet-settings --cluster=jmte
+  #
+  #    Resolution attempt succeeded: I had also upgraded the deployer and ended
+  #    up without getting proxy.https.hosts set following this:
+  #    https://github.com/2i2c-org/infrastructure/pull/1404/commits/ec6f0aee616cb16d8b8e2e99252bb4110716b5d2#diff-eedaf02b81cd907a3feb5e4389e9825226bf7dc82a0fb582f9ad367c00ba6651L37,
+  #    by adding proxy.https.hosts things started working again.
+  #
   version: "1.24"
   tags:
     2i2c.org/project: jmte

@@ -79,6 +79,9 @@ basehub:
               subPath: _shared_public
 
     proxy:
+      https:
+        hosts:
+          - hub.jupytearth.org
       traefik:
         # jupyterhub-ssh/sftp integration part 3/3:
         #

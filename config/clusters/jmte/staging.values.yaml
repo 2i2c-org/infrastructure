@@ -24,6 +24,11 @@ basehub:
         #
         - --LabApp.collaborative=True
 
+    proxy:
+      https:
+        hosts:
+          - staging.hub.jupytearth.org
+
 jupyterhub-ssh:
   sftp:
     enabled: false
