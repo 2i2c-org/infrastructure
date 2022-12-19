@@ -69,7 +69,7 @@ runs:
       shell: bash
 
     # This action use the github official cache mechanism internally
-    - uses: azure/setup-helm@v3.4
+    - uses: azure/setup-helm@v3.5
       with:
         # version is pinned for helm to avoid an automatic update of its version
         # which would cause something unexpected without an action on our
