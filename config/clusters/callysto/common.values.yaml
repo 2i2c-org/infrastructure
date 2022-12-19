@@ -109,22 +109,22 @@ jupyterhub:
     config:
       EmailAuthenticatingCILogonOAuthenticator:
         allowed_domains:
+          - 2i2c.org
+          - btps.ca
           - callysto.ca
+          - cssd.ab.ca
           - cybera.ca
-          - wsrd.ca
+          - eics.ab.ca
+          - eips.ca
+          - epsb.ca
           - fmpsd.ab.ca
           - fmcsd.ab.ca
-          - eips.ca
-          - g.eips.ca
-          - eics.ab.ca
           - rvschools.ab.ca
-          - cssd.ab.ca
-          - btps.ca
+          - spschools.org
+          - wsrd.ca
           - ucalgary.ca
           - ualberta.ca
-          - spschools.org
           - "*.ca"
-          - 2i2c.org
       CILogonOAuthenticator:
         # We set up admin_users, but *not* allowed users. Those are set up via the extraConfig
         admin_users: &callysto_users
