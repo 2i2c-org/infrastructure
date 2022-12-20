@@ -65,7 +65,7 @@ basehub:
                   display_name: R
                   slug: "rocker"
                   kubespawner_override:
-                    image: openscapes/rocker:b88a034
+                    image: openscapes/rocker:53180c0
                 matlab:
                   display_name: Matlab
                   slug: "matlab"
