@@ -1,49 +1,7 @@
+# Overrides what is in common.values.yaml, used for temporary testing
 basehub:
-  nfs:
-    pv:
-      # from https://docs.aws.amazon.com/efs/latest/ug/mounting-fs-nfs-mount-settings.html
-      mountOptions:
-        - rsize=1048576
-        - wsize=1048576
-        - timeo=600
-        - soft # We pick soft over hard, so NFS lockups don't lead to hung processes
-        - retrans=2
-        - noresvport
-      serverIP: fs-b25253b5.efs.us-west-2.amazonaws.com
-      baseShareName: /
   jupyterhub:
-    custom:
-      2i2c:
-        add_staff_user_ids_to_admin_users: true
-        add_staff_user_ids_of_type: "github"
-      homepage:
-        templateVars:
-          org:
-            name: Openscapes
-            logo_url: https://www.openscapes.org/img/logo.png
-            url: https://www.openscapes.org/
-          designed_by:
-            name: 2i2c
-            url: https://2i2c.org
-          operated_by:
-            name: 2i2c
-            url: https://2i2c.org
-          funded_by:
-            name: Openscapes
-            url: https://www.openscapes.org/
     singleuser:
-      serviceAccountName: cloud-user-sa
-      defaultUrl: /lab
-      # User image repo: https://github.com/NASA-Openscapes/corn
-      image:
-        name: 783616723547.dkr.ecr.us-west-2.amazonaws.com/user-image
-        tag: "d78bb6c"
-      storage:
-        extraVolumeMounts:
-          - name: home
-            mountPath: /home/jovyan/shared
-            subPath: _shared
-            readOnly: false
       profileList:
         # The mem-guarantees are here so k8s doesn't schedule other pods
         # on these nodes.
@@ -102,31 +60,3 @@ basehub:
             mem_guarantee: 115G
             node_selector:
               node.kubernetes.io/instance-type: m5.8xlarge
-    scheduling:
-      userPlaceholder:
-        enabled: false
-        replicas: 0
-      userScheduler:
-        enabled: false
-    hub:
-      allowNamedServers: true
-      networkPolicy:
-        # FIXME: For dask gateway
-        enabled: false
-      readinessProbe:
-        enabled: false
-      config:
-        Authenticator:
-          admin_users: &users
-            - amfriesz
-            - jules32
-            - erinmr
-            - betolink
-          # Without this, any GitHub user can authenticate
-          allowed_users: *users
-dask-gateway:
-  gateway:
-    extraConfig:
-      idle: |-
-        # timeout after 30 minutes of inactivity
-        c.KubeClusterConfig.idle_timeout = 1800
