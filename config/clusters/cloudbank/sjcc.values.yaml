@@ -20,10 +20,16 @@ jupyterhub:
           url: http://cloudbank.org/
   hub:
     config:
+      JupyterHub:
+        authenticator_class: cilogon
+      CILogonOAuthenticator:
+        oauth_callback_url: https://sjcc.cloudbank.2i2c.cloud/hub/oauth_callback
+        username_claim: email
       Authenticator:
-        allowed_users: &sjcc_users
-          - aculich@berkeley.edu
-          - sean.smorris@berkeley.edu
+        admin_users:
           - christiaan.desmond@sjcc.edu
           - sanjay.dorairaj@sjcc.edu
-        admin_users: *sjcc_users
+          - ericvd@berkeley.edu
+          - k_usovich@berkeley.edu
+          - sean.smorris@berkeley.edu
+        username_pattern: '^(.+@2i2c\.org|.+@berkeley\.edu|.+@sjcc\.edu|.+@evc\.edu|deployment-service-check)$'
