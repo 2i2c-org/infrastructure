@@ -14,7 +14,7 @@ jsonschema==4.17.0
 
 # rich and py-markdown-table are used for pretty printing outputs that would otherwise
 # be difficult to parse by a human
-rich==12.6.0
+rich==13.0.0
 py-markdown-table==0.3.1
 
 # jhub_client, pytest, and pytest-asyncio are used for our health checks
