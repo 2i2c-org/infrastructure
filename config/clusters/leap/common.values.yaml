@@ -55,7 +55,7 @@ basehub:
     singleuser:
       image:
         name: pangeo/pangeo-notebook
-        tag: "2022.10.18"
+        tag: "2023.01.03"
       extraEnv:
         GH_SCOPED_CREDS_CLIENT_ID: "Iv1.0c7df3d4b3191b2f"
         GH_SCOPED_CREDS_APP_URL: https://github.com/apps/leap-hub-push-access
@@ -92,17 +92,17 @@ basehub:
                   default: true
                   slug: "pangeo"
                   kubespawner_override:
-                    image: "pangeo/pangeo-notebook:2022.10.18"
+                    image: "pangeo/pangeo-notebook:2023.01.03"
                 tensorflow:
                   display_name: Pangeo Tensorflow ML Notebook
                   slug: "tensorflow"
                   kubespawner_override:
-                    image: "pangeo/ml-notebook:2022.10.18"
+                    image: "pangeo/ml-notebook:2023.01.03"
                 pytorch:
                   display_name: Pangeo PyTorch ML Notebook
                   slug: "pytorch"
                   kubespawner_override:
-                    image: "pangeo/pytorch-notebook:2022.10.18"
+                    image: "pangeo/pytorch-notebook:2023.01.03"
           kubespawner_override:
             mem_limit: 15G
             mem_guarantee: 11G
@@ -144,12 +144,12 @@ basehub:
                   default: true
                   slug: "tensorflow"
                   kubespawner_override:
-                    image: "pangeo/ml-notebook:2022.10.18"
+                    image: "pangeo/ml-notebook:2023.01.03"
                 pytorch:
                   display_name: Pangeo PyTorch ML Notebook
                   slug: "pytorch"
                   kubespawner_override:
-                    image: "pangeo/pytorch-notebook:2022.10.18"
+                    image: "pangeo/pytorch-notebook:2023.01.03"
           kubespawner_override:
             node_selector:
               cloud.google.com/gke-nodepool: nb-gpu-t4
