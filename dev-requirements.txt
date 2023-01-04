@@ -10,4 +10,4 @@ chartpress==2.1.0
 requests==2.28.1
 
 # rich is used by extra_scripts/count-auth0-apps.py
-rich==12.6.0
+rich==13.0.0
