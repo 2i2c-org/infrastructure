@@ -46,7 +46,7 @@ repos:
 
   # Prevent unencrypted files from being committed
   - repo: https://github.com/yuvipanda/pre-commit-hook-ensure-sops
-    rev: v1.0
+    rev: v1.1
     hooks:
       - id: sops-encryption
         # Add files here if they contain the word 'secret' but should not be encrypted
