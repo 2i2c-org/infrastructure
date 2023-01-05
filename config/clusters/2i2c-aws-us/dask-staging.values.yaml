@@ -56,4 +56,4 @@ basehub:
           allowed_organizations:
             - 2i2c-org
           scope:
-            - read:org  
+            - read:org
