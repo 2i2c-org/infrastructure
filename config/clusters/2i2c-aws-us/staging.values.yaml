@@ -17,7 +17,7 @@ jupyterhub:
   custom:
     2i2c:
       add_staff_user_ids_to_admin_users: true
-      add_staff_user_ids_of_type: "google"
+      add_staff_user_ids_of_type: "github"
     homepage:
       templateVars:
         org:
@@ -33,3 +33,13 @@ jupyterhub:
         funded_by:
           name: 2i2c
           url: https://2i2c.org
+  hub:
+    config:
+      JupyterHub:
+        authenticator_class: "github"
+      GitHubOAuthenticator:
+        oauth_callback_url: "https://staging.aws.2i2c.cloud/hub/oauth_callback"
+        allowed_organizations:
+          - 2i2c-org
+        scope:
+          - read:org

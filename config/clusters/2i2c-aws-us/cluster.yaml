@@ -15,9 +15,10 @@ hubs:
     domain: staging.aws.2i2c.cloud
     helm_chart: basehub
     auth0:
-      connection: google-oauth2
+      enabled: false
     helm_chart_values_files:
       - staging.values.yaml
+      - enc-staging.secret.values.yaml
   - name: dask-staging
     display_name: "2i2c AWS dask-staging"
     domain: dask-staging.aws.2i2c.cloud
