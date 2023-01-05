@@ -28,3 +28,11 @@ hubs:
     helm_chart_values_files:
       - dask-staging.values.yaml
       - enc-dask-staging.secret.values.yaml
+  - name: researchdelight
+    display_name: "2i2c Research Delight"
+    domain: researchdelight.2i2c.cloud
+    helm_chart: daskhub
+    auth0:
+      connection: github
+    helm_chart_values_files:
+      - researchdelight.values.yaml
