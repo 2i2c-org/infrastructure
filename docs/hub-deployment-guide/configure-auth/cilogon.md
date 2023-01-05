@@ -136,7 +136,27 @@ The steps to enable the JupyterHub CILogonOAuthenticator for a hub are simmilar 
                         - "2i2c.org"
         ```
 
-    3. **Authenticate using an instutional identity provider for the hub community users and Google for 2i2c staff.**
+    3. **Authenticate using GitHub with CILogon**:
+
+        *This example sets the GitHub nickname as the Hub username using the `username_claim` option*
+
+        ```yaml
+        jupyterhub:
+          hub:
+            config:
+              JupyterHub:
+                authenticator_class: cilogon
+              CILogonOAuthenticator:
+                oauth_callback_url: https://{{ HUB_DOMAIN }}/hub/oauth_callback
+                shown_idps:
+                  - https://github.com/login/oauth/authorize
+                allowed_idps:
+                  http://github.com/login/oauth/authorize:
+                    username_derivation:
+                      username_claim: "preferred_username"
+        ```
+
+    4. **Authenticate using an instutional identity provider for the hub community users and Google for 2i2c staff.**
 
         This example:
           - only shows Shibboleth, the ANU identity provider, and Google as the possible login options through CILogon
