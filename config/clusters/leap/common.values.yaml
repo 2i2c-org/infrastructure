@@ -10,9 +10,14 @@ basehub:
       # Name of Google Filestore share
       baseShareName: /homes/
   jupyterhub:
-    proxy:
-      https:
-        enabled: false
+    prePuller:
+      continuous:
+        enabled: true
+      # Extra images to be pulled on all nodes
+      extraImages:
+        tensorflow-image:
+          name: pangeo/ml-notebook
+          tag: "2023.01.03"
     custom:
       2i2c:
         add_staff_user_ids_to_admin_users: true
