@@ -1,0 +1,11 @@
+name: 2i2c-aws-us
+provider: aws
+aws:
+  key: enc-deployer-credentials.secret.json
+  clusterType: eks
+  clusterName: 2i2c-aws-us
+  region: us-west-2
+support:
+  helm_chart_values_files:
+    - support.values.yaml
+    - enc-support.secret.values.yaml
