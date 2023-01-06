@@ -43,15 +43,18 @@ This section descripts all the deployment related subcommands the `deployer` can
 │                                     /home                                                                            │
 │ exec-hub-shell                      Pop an interactive shell in the hub pod                                          │
 │ generate-aws-cluster                Automatically generate the files required to setup a new cluster on AWS          │
-│ generate-gcp-cluster                Automatically generates the initial files, required to setup a new cluster on    │
-│                                     GCP                                                                              │
+│ generate-gcp-cluster                Automatically generate the terraform config file required to setup a new cluster │
+│                                     on GCP                                                                           │
 │ generate-helm-upgrade-jobs          Analyse added or modified files from a GitHub Pull Request and decide which      │
 │                                     clusters and/or hubs require helm upgrades to be performed for their *hub helm   │
 │                                     charts or the support helm chart.                                                │
+│ new-grafana-token                   Generate an API token for the cluster's Grafana `deployer` service account and   │
+│                                     store it encrypted inside a `enc-grafana-token.secret.yaml` file.                │
 │ run-hub-health-check                Run a health check on a given hub on a given cluster. Optionally check scaling   │
 │                                     of dask workers if the hub is a daskhub.                                         │
 │ start-docker-proxy                  Proxy a docker daemon from a remote cluster to local port 23760.                 │
-│ update-central-grafana-datasources  Update a central grafana with datasources for all our prometheuses               │
+│ update-central-grafana-datasources  Update the central grafana with datasources for all clusters prometheus          │
+│                                     instances                                                                        │
 │ use-cluster-credentials             Pop a new shell authenticated to the given cluster using the deployer's          │
 │                                     credentials                                                                      │
 │ user-logs                           Display logs from the notebook pod of a given user                               │
@@ -194,6 +197,26 @@ This allows us to optimise and parallelise the automatic deployment of our hubs.
 ╰──────────────────────────────────────────────────────────────────────────────────────────────────────────────────────╯
 ```
 
+### `new-grafana-token`
+This function uses the admin credentials located in `helm-charts/support/enc-support.secret.values.yaml` to check if a [Grafana Service Account](https://grafana.com/docs/grafana/latest/administration/service-accounts/) named `deployer` exists for a cluster's Grafana, and creates it if it doesn't.
+For this service account, it then generates a Grafana token named `deployer`.
+This token will be used by the [`deploy-grafana-dashboards` workflow](https://github.com/2i2c-org/infrastructure/tree/HEAD/.github/workflows/deploy-grafana-dashboards.yaml) to authenticate with [Grafana’s HTTP API](https://grafana.com/docs/grafana/latest/developers/http_api/).
+
+```{note}
+More about HTTP vs REST APIs at https://www.programsbuzz.com/article/what-difference-between-rest-api-and-http-api.
+```
+and deploy some default grafana dashboards for JupyterHub using [`jupyterhub/grafana-dashboards`](https://github.com/jupyterhub/grafana-dashboards).
+If a token with this name already exists, it will show whether or not the token is expired
+and wait for cli input about whether to generate a new one or not.
+
+The Grafana token is then stored encrypted inside the `enc-grafana-token.secret.yaml` file in the cluster's configuration directory.
+If such a file doesn't already exist, it will be created by this function.
+
+  Generates:
+  - an `enc-grafana-token.secret.yaml` file if not already present
+
+  Updates:
+  - the content of `enc-grafana-token.secret.yaml` with the new token if one already existed
 
 ### `generate-aws-cluster`
 
