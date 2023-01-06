@@ -32,7 +32,7 @@ You can do this by running a deployer command:
 deployer new-grafana-token <cluster_name>
 ```
 
-If the command succeded, it should have created:
+If the command succeeded, it should have created:
 
 - a [Grafana service account](https://grafana.com/docs/grafana/latest/administration/service-accounts/) named `deployer`
 - a token named `deployer` for this service account
