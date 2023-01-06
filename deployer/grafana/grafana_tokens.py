@@ -55,7 +55,7 @@ def create_deployer_service_account(sa_endpoint, headers):
     )
     if not response.ok:
         print(
-            "An error occured while creating the service account for the deployer.\n"
+            "An error occurred while creating the service account for the deployer.\n"
             f"Error was {response.text}."
         )
         response.raise_for_status()
@@ -66,18 +66,19 @@ def create_deployer_service_account(sa_endpoint, headers):
 
 def get_deployer_service_account_id(sa_endpoint, headers):
     """
-    Iterate the list of service accounts and
+    Iterate the list of service accounts registered for a Grafana host,
+    identified by its service account endpoint (`sa_endpoint`), and
     retrieve the id of the service account which has the name "deployer".
 
     Assumes:
         the maximum number of service accounts created for a grafana is no more than 10.
 
     Returns:
-        id: the id of the service account with the name `deployer`
+        id: the id of the service account with the name `deployer` or
             `None` if no service account with this name was found
     """
 
-    # Assumes we don't have more than 10 service accounts
+    # Assumes we don't have more than 10 service accounts created for a Grafana
     # FIXME if this changes
     max_sa = 10
     sa_first_page_endpoint = f"{sa_endpoint}/search?perpage={max_sa}&page=1"
@@ -85,7 +86,7 @@ def get_deployer_service_account_id(sa_endpoint, headers):
 
     if not response.ok:
         print(
-            f"An error occured when retrieving the service accounts from {sa_first_page_endpoint}.\n"
+            f"An error occurred when retrieving the service accounts from {sa_first_page_endpoint}.\n"
             f"Error was {response.text}."
         )
         response.raise_for_status()
