@@ -156,7 +156,7 @@ The steps to enable the JupyterHub CILogonOAuthenticator for a hub are simmilar 
                       username_claim: "preferred_username"
         ```
 
-    4. **Authenticate using an instutional identity provider for the hub community users and Google for 2i2c staff.**
+    4. **Authenticate using an institutional identity provider for the hub community users and Google for 2i2c staff.**
 
         This example:
           - only shows Shibboleth, the ANU identity provider, and Google as the possible login options through CILogon
