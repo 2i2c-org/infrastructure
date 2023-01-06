@@ -1,3 +1,10 @@
+# The use of ::set-output in this workflow file was deprecated as per:
+# https://github.blog/changelog/2022-10-11-github-actions-deprecating-save-state-and-set-output-commands/
+# We have instead pivoted to writing to the GITHUB_ENV file, either by the
+# method suggested in the above blog post, or by following the below Stack
+# Overflow answer for python code: https://stackoverflow.com/a/70123641
+# More info on GITHUB_ENV: https://docs.github.com/en/actions/learn-github-actions/environment-variables
+
 name: Deploy and test hubs
 
 on:
@@ -10,10 +17,6 @@ on:
       - .github/actions/setup-deploy/**
       - helm-charts/**
       - config/clusters/**
-      # We no longer trigger on this file since it does not contain any logic
-      # concerning setting up the clusters for deploy. This now all lives in the
-      # setup-deploy local action
-      # - .github/workflows/deploy-hubs.yaml
   pull_request:
     branches:
       - master
@@ -23,10 +26,6 @@ on:
       - .github/actions/setup-deploy/**
       - helm-charts/**
       - config/clusters/**
-      # We no longer trigger on this file since it does not contain any logic
-      # concerning setting up the clusters for deploy. This now all lives in the
-      # setup-deploy local action
-      # - .github/workflows/deploy-hubs.yaml
 
 # When multiple PRs triggering this workflow are merged, queue them instead
 # of running them in parallel
@@ -45,22 +44,18 @@ jobs:
   # two lists of dictionaries, which can be read by GitHub Actions as matrix jobs. The
   # first set of jobs describes which clusters need their support chart and/or staging
   # hub upgraded; and the second set of jobs describe which production hubs require
-  # upgrading. These two lists are set as job outputs using ::set-output to be consumed
+  # upgrading. These two lists are set as job outputs via GITHUB_ENV to be consumed
   # by the later jobs. They are also pretty-printed in a human-readable format to the
   # logs, and converted into Markdown tables for posting into GitHub comments.
   generate-jobs:
     runs-on: ubuntu-latest
     outputs:
-      support-and-staging-matrix-jobs: ${{ steps.generate-jobs.outputs.support-and-staging-matrix-jobs }}
-      prod-hub-matrix-jobs: ${{ steps.generate-jobs.outputs.prod-hub-matrix-jobs }}
+      support-and-staging-matrix-jobs: ${{ env.support-and-staging-matrix-jobs }}
+      prod-hub-matrix-jobs: ${{ env.prod-hub-matrix-jobs }}
 
     steps:
       - name: Checkout repo
         uses: actions/checkout@v3
-        with:
-          # Fetch-depth is required for the jitterbit/get-changed-files action
-          # https://github.com/jitterbit/get-changed-files/issues/24#issuecomment-1047442168
-          fetch-depth: 0
 
       - name: Install Python 3.9
         uses: actions/setup-python@v4
@@ -82,23 +77,31 @@ jobs:
 
       - name: Install deployer script's Python dependencies
         run: |
-          pip install -r requirements.txt
+          pip install --editable .
           pip list
 
       - name: Identify files that have been added or modified
-        uses: jitterbit/get-changed-files@v1
+        # Action repo: https://github.com/dorny/paths-filter
+        uses: dorny/paths-filter@v2
         id: changed-files
         with:
-          format: space-delimited
-          token: ${{ secrets.GITHUB_TOKEN }}
+          list-files: csv
+          filters: |
+            changed:
+              - added|modified: deployer/**
+              - added|modified: requirements.txt
+              - added|modified: .github/actions/setup-deploy/**
+              - added|modified: helm-charts/basehub/**
+              - added|modified: helm-charts/daskhub/**
+              - added|modified: helm-charts/support/**
+              - added|modified: config/clusters/**
 
       # This step will create a comment-body.txt file containing the jobs to be run in a
       # Markdown table format to be posted on a Pull Request, if this job is triggered
       # by one
       - name: Generate matrix jobs
-        id: generate-jobs
         run: |
-          python deployer generate-helm-upgrade-jobs "${{ steps.changed-files.outputs.added_modified }}"
+          deployer generate-helm-upgrade-jobs "${{ steps.changed-files.outputs.changed_files }}"
 
       # The comment-deployment-plan-pr.yaml workflow won't have the correct context to
       # know the PR number, so we save it to a file to pass to that workflow
@@ -113,8 +116,8 @@ jobs:
         # Only run this steps in PRs when the matrices are not empty
         if: >
           github.event_name == 'pull_request' &&
-          steps.generate-jobs.outputs.support-and-staging-matrix-jobs != '[]' &&
-          steps.generate-jobs.outputs.prod-hub-matrix-jobs != '[]'
+          env.support-and-staging-matrix-jobs != '[]' &&
+          env.prod-hub-matrix-jobs != '[]'
         uses: actions/upload-artifact@v3.1.0
         with:
           name: pr
@@ -142,19 +145,24 @@ jobs:
     #
     # If you are adding a new cluster, please remember to list it here!
     outputs:
-      failure_2i2c: "${{ steps.declare-failure-status.outputs.failure_2i2c }}"
-      failure_azure-carbonplan: "${{ steps.declare-failure-status.outputs.failure_azure-carbonplan }}"
-      failure_carbonplan: "${{ steps.declare-failure-status.outputs.failure_carbonplan }}"
-      failure_cloudbank: "${{ steps.declare-failure-status.outputs.failure_cloudbank }}"
-      failure_leap: "${{ steps.declare-failure-status.outputs.failure_leap }}"
-      failure_meom-ige: "${{ steps.declare-failure-status.outputs.failure_meom-ige }}"
-      failure_openscapes: "${{ steps.declare-failure-status.outputs.failure_openscapes }}"
-      failure_pangeo-hubs: "${{ steps.declare-failure-status.outputs.failure_pangeo-hubs }}"
-      failure_utoronto: "${{ steps.declare-failure-status.outputs.failure_utoronto }}"
-      failure_uwhackweeks: "${{ steps.declare-failure-status.outputs.failure_uwhackweeks }}"
-      failure_m2lines: "${{ steps.declare-failure-status.outputs.failure_m2lines }}"
-      failure_linked-earth: "${{ steps.declare-failure-status.outputs.failure_linked-earth }}"
-      failure_awi-ciroh: "${{ steps.declare-failure-status.outputs.failure_awi-ciroh }}"
+      failure_2i2c: "${{ env.failure_2i2c }}"
+      failure_2i2c-uk: "${{ env.failure_2i2c-uk }}"
+      failure_carbonplan: "${{ env.failure_carbonplan }}"
+      failure_cloudbank: "${{ env.failure_cloudbank }}"
+      failure_leap: "${{ env.failure_leap }}"
+      failure_meom-ige: "${{ env.failure_meom-ige }}"
+      failure_openscapes: "${{ env.failure_openscapes }}"
+      failure_pangeo-hubs: "${{ env.failure_pangeo-hubs }}"
+      failure_utoronto: "${{ env.failure_utoronto }}"
+      failure_uwhackweeks: "${{ env.failure_uwhackweeks }}"
+      failure_m2lines: "${{ env.failure_m2lines }}"
+      failure_linked-earth: "${{ env.failure_linked-earth }}"
+      failure_awi-ciroh: "${{ env.failure_awi-ciroh }}"
+      failure_callysto: "${{ env.failure_callysto }}"
+      failure_nasa-cryo: "${{ env.failure_nasa-cryo }}"
+      failure_gridsst: "${{ env.failure_gridsst }}"
+      failure_victor: "${{ env.failure_victor }}"
+      failure_2i2c-aws-us: "${{ env.failure_2i2c-aws-us }}"
 
     # Only run this job on pushes to the default branch and when the job output is not
     # an empty list
@@ -180,51 +188,55 @@ jobs:
       - name: Upgrade support chart on cluster ${{ matrix.jobs.cluster_name }}
         if: matrix.jobs.upgrade_support
         run: |
-          python deployer deploy-support ${{ matrix.jobs.cluster_name }}
+          deployer deploy-support ${{ matrix.jobs.cluster_name }}
 
       - name: Upgrade staging hub on cluster ${{ matrix.jobs.cluster_name }}
         if: matrix.jobs.upgrade_staging
         run: |
-          python deployer deploy ${{ matrix.jobs.cluster_name }} staging
+          deployer deploy ${{ matrix.jobs.cluster_name }} staging
 
       # Retry action: https://github.com/marketplace/actions/retry-step
       - name: Run health check for staging hub on cluster ${{ matrix.jobs.cluster_name }}
         if: matrix.jobs.upgrade_staging
-        uses: nick-fields/retry@v2.7.0
+        uses: nick-fields/retry@v2.8.1
         with:
           timeout_minutes: 10
           max_attempts: 2
           command: |
-            python deployer run-hub-health-check ${{ matrix.jobs.cluster_name }} staging
+            deployer run-hub-health-check ${{ matrix.jobs.cluster_name }} staging
 
       - name: Upgrade dask-staging hub on cluster ${{ matrix.jobs.cluster_name }} if it exists
         if: matrix.jobs.upgrade_staging && matrix.jobs.cluster_name == '2i2c'
         run: |
-          python deployer deploy ${{ matrix.jobs.cluster_name }} dask-staging
+          deployer deploy ${{ matrix.jobs.cluster_name }} dask-staging
 
-      - name: Upgrade binder-staging hub on cluster ${{ matrix.jobs.cluster_name }} if it exists
-        if: matrix.jobs.upgrade_staging && matrix.jobs.cluster_name == '2i2c'
-        run: |
-          python deployer deploy ${{ matrix.jobs.cluster_name }} binder-staging
+      # - name: Upgrade binder-staging hub on cluster ${{ matrix.jobs.cluster_name }} if it exists
+      #   if: matrix.jobs.upgrade_staging && matrix.jobs.cluster_name == '2i2c'
+      #   run: |
+      #     deployer deploy ${{ matrix.jobs.cluster_name }} binder-staging
 
       # Retry action: https://github.com/marketplace/actions/retry-step
       - name: Run health check for dask-staging hub on cluster ${{ matrix.jobs.cluster_name }} if it exists
         if: matrix.jobs.upgrade_staging && matrix.jobs.cluster_name == '2i2c'
-        uses: nick-fields/retry@v2.7.0
+        uses: nick-fields/retry@v2.8.1
         with:
           timeout_minutes: 10
           max_attempts: 2
           command: |
-            python deployer run-hub-health-check ${{ matrix.jobs.cluster_name }} dask-staging
+            deployer run-hub-health-check ${{ matrix.jobs.cluster_name }} dask-staging
 
       - name: Declare failure status
-        id: declare-failure-status
         if: always()
         shell: python
         run: |
+          import os
+
           name = "${{ matrix.jobs.cluster_name }}".replace(".", "-")
           failure = "${{ job.status == 'failure' }}"
-          print(f"::set-output name=failure_{name}::{failure}")
+
+          env_file = os.getenv("GITHUB_ENV")
+          with open(env_file, "a") as f:
+              f.write(f"failure_{name}={failure}")
 
   # This jobs reduces the initially planned prod-hub-matrix-jobs deployments by
   # filtering out any deployment to a cluster with a failed support-and-staging
@@ -244,7 +256,7 @@ jobs:
       needs.generate-jobs.outputs.prod-hub-matrix-jobs != '[]'
 
     outputs:
-      filtered-prod-hub-matrix-jobs: ${{ steps.filter-generate-jobs.outputs.filtered-prod-hub-matrix-jobs }}
+      filtered-prod-hub-matrix-jobs: ${{ env.filtered-prod-hub-matrix-jobs }}
 
     steps:
       # This Python script filters out any prod hub deployment job from running
@@ -252,21 +264,26 @@ jobs:
       # just failed. Data is injected to the script before its executed via
       # string literals as rendered GitHub workflow expressions.
       - name: Filter prod deploy jobs to run based on failures in support/staging
-        id: filter-generate-jobs
         shell: python
         run: |
+          import os
           import json
 
           jobs = json.loads(r"""${{ needs.generate-jobs.outputs.prod-hub-matrix-jobs }}""")
           outputs = json.loads(r"""${{ toJson(needs.upgrade-support-and-staging.outputs) }}""")
 
-          filtered_jobs = [
-              job
-              for job in jobs
-              if outputs[f"failure_{job['cluster_name'].replace('.', '-')}"] != "true"
-          ]
+          try:
+            filtered_jobs = [
+                job
+                for job in jobs
+                if outputs[f"failure_{job['cluster_name'].replace('.', '-')}"] != "true"
+            ]
+          except KeyError:
+            print(f"The {cluster_name} cluster wasn't found in the `upgrade-support-and-staging.outputs` list. Please add it before continuing!")
 
-          print(f"::set-output name=filtered-prod-hub-matrix-jobs::{json.dumps(filtered_jobs)}")
+          env_file = os.getenv("GITHUB_ENV")
+          with open(env_file, "a") as f:
+              f.write(f"filtered-prod-hub-matrix-jobs={json.dumps(filtered_jobs)}")
 
   # This job upgrades production hubs on clusters in parallel, if required. This
   # job needs both the `filter-generate-jobs` to have completed to provide its
@@ -307,13 +324,13 @@ jobs:
 
       - name: Upgrade ${{ matrix.jobs.hub_name }} hub on cluster ${{ matrix.jobs.cluster_name }}
         run: |
-          python deployer deploy ${{ matrix.jobs.cluster_name }} ${{ matrix.jobs.hub_name }}
+          deployer deploy ${{ matrix.jobs.cluster_name }} ${{ matrix.jobs.hub_name }}
 
       # Retry action: https://github.com/marketplace/actions/retry-step
       - name: Run health check against ${{ matrix.jobs.hub_name }} hub on cluster ${{ matrix.jobs.cluster_name}}
-        uses: nick-fields/retry@v2.7.0
+        uses: nick-fields/retry@v2.8.1
         with:
           timeout_minutes: 10
           max_attempts: 3
           command: |
-            python deployer run-hub-health-check ${{ matrix.jobs.cluster_name }} ${{ matrix.jobs.hub_name }}
+            deployer run-hub-health-check ${{ matrix.jobs.cluster_name }} ${{ matrix.jobs.hub_name }}

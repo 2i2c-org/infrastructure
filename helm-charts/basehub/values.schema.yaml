@@ -235,9 +235,48 @@ properties:
         additionalProperties: true
         required:
           - singleuserAdmin
+          - singleuser
           - cloudResources
           - 2i2c
         properties:
+          singleuser:
+            type: object
+            additionalProperties: false
+            required:
+              - extraPVCs
+            properties:
+              extraPVCs:
+                type: array
+                items:
+                  type: object
+                  required:
+                    - name
+                    - class
+                    - capacity
+                  properties:
+                    name:
+                      type: string
+                      description: |
+                        Name of the PVC create.
+
+                        `{username}` is expanded to be the name of the user,
+                        as are other variables supported by kubespawner.
+                    class:
+                      type: string
+                      description: |
+                        Name of the StorageClass to use for this PVC
+
+                        Determines what kind of disk (standard, ssd, etc) will
+                        be provisioned automatically for this PVC. Run
+                        `kubectl get storageclass` to see what is available on your
+                        cluster.
+                    capacity:
+                      type: string
+                      description: |
+                        Capacity of the disk to be created.
+
+                        Should be provided in `Gi` units. This can be expanded in the future
+                        if your cluster supports dynamic disk resizing (which many do!)
           homepage:
             type: object
             additionalProperties: false
@@ -253,6 +292,14 @@ properties:
                   - operated_by
                   - funded_by
                 properties:
+                  default_url:
+                    type: string
+                    description: |
+                      Default Interface to be selected in the interface selector
+
+                      /tree -> classic notebook
+                      /rstudio -> RStudio
+                      /lab -> JupyterLab
                   announcements:
                     type: array
                     items:
@@ -311,12 +358,15 @@ properties:
             additionalProperties: false
             required:
               - extraVolumeMounts
+              - extraEnv
             properties:
               extraVolumeMounts:
                 type: array
                 items:
                   type: object
                   additionalProperties: true
+              extraEnv:
+                type: object
           cloudResources:
             type: object
             additionalProperties: false

@@ -1,7 +1,14 @@
-"""
-Main entrypoint for deployer
-"""
-import cli
+# Import the various subcommands here, they will be automatically
+# registered into the app
+import deployer.debug  # noqa: F401
+import deployer.deployer  # noqa: F401
+import deployer.generate.generate_aws_cluster  # noqa: F401
+import deployer.generate.generate_gcp_cluster  # noqa: F401
+import deployer.grafana.central_grafana  # noqa: F401
+import deployer.grafana.grafana_tokens  # noqa: F401
 
-if __name__ == "__main__":
-    cli.main()
+from .cli_app import app
+
+
+def main():
+    app()

@@ -1,0 +1,270 @@
+$schema: "http://json-schema.org/draft-07/schema#"
+type: object
+additionalProperties: false
+properties:
+  name:
+    type: string
+    description: |
+      Name of the cluster, used primarily to identify it in
+      the deploy script. This value should match the parent folder name.
+  support:
+    type: object
+    additionalProperties: false
+    description: |
+      Configuration for support components (ingress, monitoring, etc)
+      to be enabled for this cluster.
+    properties:
+      helm_chart_values_files:
+        type: array
+        description: |
+          A list of *.values.yaml files which, together, describe the complete
+          helm chart values to configure the support chart. These filepaths are defined
+          RELATIVE to the location of the cluster.yaml file. They have the naming
+          convention 'support.values.yaml'.
+  provider:
+    type: string
+    description: |
+      Cloud provider this cluster is running on. Used to perform
+      authentication against the cluster. Currently supports gcp, aws, azure,
+      and raw kubeconfig files.
+    enum:
+      - gcp
+      - kubeconfig
+      - aws
+      - azure
+  account:
+    type: string
+    description: |
+      Account used to access the provider console UI. Most often we use our 2i2c accounts for this,
+      but there are a few exceptional clusters and we should mark those.
+      If no account is specified, 2i2c will be assumed.
+  kubeconfig:
+    type: object
+    description: |
+      Configuration to connect to a cluster purely via a kubeconfig
+      file.
+    additionalProperties: false
+    properties:
+      file:
+        type: string
+        description: |
+          Path to kubeconfig file (encrypted with sops) to use for
+          connecting to the cluster. This path is defined RELATIVE to the
+          location of the cluster.yaml file and has the naming convention
+          'enc-deployer-credentials.secret.{{ json | yaml }}'
+  gcp:
+    type: object
+    additionalProperties: false
+    description: |
+      Configuration to connect to the cluster on GCP. Is used when
+      provider is set to `gcp`
+    properties:
+      key:
+        type: string
+        description: |
+          Path to a `sops` encrypted service account JSON key that
+          can be used by `gcloud` to authenticate to GCP, with
+          enough rights to get full access to the kubernetes cluster.
+          This path is defined RELATIVE to the location of the cluster.yaml
+          file and has the naming convention
+          'enc-deployer-credentials.secret.{{ json | yaml }}'
+      project:
+        type: string
+        description: |
+          Project ID of the GCP project that contains this cluster
+      cluster:
+        type: string
+        description: |
+          Name of the cluster inside this GCP project
+      zone:
+        type: string
+        description: |
+          If the cluster is a zonal cluster, this specifies the zone
+          in which the cluster is. If it's a regional cluster, this
+          specifies the region the cluster is in.
+    required:
+      - key
+      - project
+      - cluster
+      - zone
+  aws:
+    type: object
+    additionalProperties: false
+    description: |
+      Configuration to connect to the cluster on AWS.
+      Is used when provider is set to `aws`.
+    properties:
+      key:
+        type: string
+        description: |
+          Path to a `sops` encrypted JSON file that contains the AWS credentials for the
+          "deployer" user (with enough rights to get full access to the cluster).
+          This path is defined RELATIVE to the location of the cluster.yaml
+          file and has the naming convention
+          'enc-deployer-credentials.secret.{{ json | yaml }}'
+      clusterType:
+        type: string
+        description: |
+          We currently support EKS-based cluster on AWS.
+        enum:
+          - eks
+      clusterName:
+        type: string
+        description: |
+          Name of the cluster.
+      region:
+        type: string
+        description: |
+          The AWS region the cluster is in.
+    required:
+      - key
+      - clusterType
+      - clusterName
+      - region
+  azure:
+    type: object
+    additionalProperties: false
+    description: |
+      Configuration to connect to a cluster on Azure. Is used when
+      provider is set to `azure`
+    properties:
+      key:
+        type: string
+        description: |
+          Path to a `sops` encrypted service principal JSON key that
+          can be used by `az` to authenticate to Azure, with
+          enough rights to get full access to the kubernetes cluster.
+          This path is defined RELATIVE to the location of the cluster.yaml
+          file and has the naming convention
+          'enc-deployer-credentials.secret.{{ json | yaml }}'
+      resource_group:
+        type: string
+        description: |
+          The name of the Azure Resource Group that contains this cluster
+      cluster:
+        type: string
+        description: |
+          Name of the cluster inside this Azure Resource Group
+    required:
+      - key
+      - resource_group
+      - cluster
+  hubs:
+    type: array
+    description: |
+      Each item here is a hub deployed to this cluster.
+    items:
+      - type: object
+        additionalProperties: false
+        required:
+          - name
+          - domain
+          - auth0
+          - helm_chart
+          - helm_chart_values_files
+        properties:
+          name:
+            type: string
+            description: |
+              Name of the hub. This will be used to determine
+              the kubernetes namespace the hub is deployed into.
+          display_name:
+            type: string
+            description: |
+              A long form name for the hub to display on our website. This is usually
+              the name of the community we run the hub for.
+          domain:
+            type: string
+            description: |
+              Domain the hub should be running on. This domain should resolve
+              to the IP of the ingress controller on the cluster - most likely
+              via a wildcard DNS entry.
+
+              For example, there's a entry for '*.pilot.2i2c.cloud' pointing to
+              the ingress controller of the cluster running hubs in `2i2c.cluster.yaml`.
+              Similar for '*.cloudbank.2i2c.cloud', etc.
+          domain_override_file:
+            type: string
+            description: |
+              In some cases, we may want to temporarily change the domain a hub is
+              operational at. For instance, to prevent cheating on an educational hub
+              or hide the hub from miners.
+
+              Provide the filepath to a domain override YAML file here. The YAML should
+              contain the 'domain' key and the new domain to point the hub at. If we do
+              not want the hub to be discoverable, then this file should be sops
+              encrypted, but that is not strictly enforced. This path is defined
+              RELATIVE to the location of the cluster.yaml file and has the naming
+              convention '{{enc-}}HUB_NAME.domain-override{{.secret}}.yaml'
+          helm_chart:
+            type: string
+            description: |
+              Hub helm chart to deploy. This refers to a directory under `helm-charts`
+              containing a helm chart with base values and dependencies that
+              determines the kind of hub deployed.
+            enum:
+              - basehub
+              - daskhub
+          auth0:
+            additionalProperties: false
+            type: object
+            description: |
+              Most hubs use Auth0 for authentication, and we dynamically fetch the credentials
+              needed for each hub - client_id, client_secret, callback_url - on deploy. This
+              block contains configuration on how auth0 should be configured for this hub.
+            properties:
+              enabled:
+                type: boolean
+                default: true
+                description: |
+                  Whether or not to enable Auth0 authentication for this hub.
+                  This should almost always be true. It should only be false if
+                  authenticating against GitHub Orgs or Teams using the
+                  JupyterHub OAuthenticator. Defaults to true.
+              connection:
+                type: string
+                enum:
+                  - google-oauth2
+                  - github
+                  - password
+                  - CILogon
+                description: |
+                  Authentication method users of the hub can use to log in to the hub.
+                  We support a subset of the [connectors](https://auth0.com/docs/identityproviders)
+                  that auth0 supports
+              application_name:
+                type: string
+                description: |
+                  We make use of an OAuth2 applications in Auth0 and this is the
+                  name of that application. Defaults to
+                  "<clustername>-<hubname>".
+
+                  See https://manage.auth0.com/dashboard/us/2i2c/applications.
+              password:
+                type: object
+                description: |
+                  Configuration specific to a connection of type password.
+                properties:
+                  database_name:
+                    type: string
+                    description: |
+                      Username and password authentication requires a Auth0
+                      database to store the username and passwords in. This is
+                      the name of that Auth0 database. Defaults to
+                      "<clustername>-<hubname>".
+
+                      See https://manage.auth0.com/dashboard/us/2i2c/connections/database.
+            if:
+              properties:
+                enabled:
+                  const: true
+            then:
+              required:
+                - connection
+          helm_chart_values_files:
+            type: array
+            description: |
+              A list of *.values.yaml files which, together, describe the complete
+              helm chart values for a single hub deployment. These filepaths are defined
+              RELATIVE to the location of the cluster.yaml file and have the naming
+              convention '{{ hub name }}.values.yaml'.

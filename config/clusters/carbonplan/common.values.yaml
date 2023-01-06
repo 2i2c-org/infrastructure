@@ -33,22 +33,6 @@ basehub:
             url: https://carbonplan.org
     singleuser:
       serviceAccountName: cloud-user-sa
-      initContainers:
-        # Need to explicitly fix ownership here, since EFS doesn't do anonuid
-        - name: volume-mount-ownership-fix
-          image: busybox
-          command:
-            [
-              "sh",
-              "-c",
-              "id && chown 1000:1000 /home/jovyan && ls -lhd /home/jovyan",
-            ]
-          securityContext:
-            runAsUser: 0
-          volumeMounts:
-            - name: home
-              mountPath: /home/jovyan
-              subPath: "{username}"
       image:
         name: carbonplan/trace-python-notebook
         # pullPolicy set to "Always" because we use the changing over time tag
@@ -60,6 +44,28 @@ basehub:
         # on these nodes.
         - display_name: "Small: r5.large"
           description: "~2 CPU, ~15G RAM"
+          slug: "small"
+          default: true
+          profile_options: &profile_options
+            image:
+              display_name: Image
+              choices:
+                python:
+                  display_name: Trace Python Notebook
+                  default: true
+                  slug: "python"
+                  kubespawner_override:
+                    image: carbonplan/trace-python-notebook:latest
+                main:
+                  display_name: Main Single User
+                  slug: "main"
+                  kubespawner_override:
+                    image: carbonplan/main-single-user:latest
+                cmip6:
+                  display_name: CMIP6 Downscaling
+                  slug: "cmip6"
+                  kubespawner_override:
+                    image: carbonplan/cmip6-downscaling-single-user:latest
           kubespawner_override:
             # Expllicitly unset mem_limit, so it overrides the default memory limit we set in
             # basehub/values.yaml
@@ -69,6 +75,7 @@ basehub:
               node.kubernetes.io/instance-type: r5.large
         - display_name: "Medium: r5.xlarge"
           description: "~4 CPU, ~30G RAM"
+          profile_options: *profile_options
           kubespawner_override:
             mem_limit: null
             mem_guarantee: 29G
@@ -76,6 +83,7 @@ basehub:
               node.kubernetes.io/instance-type: r5.xlarge
         - display_name: "Large: r5.2xlarge"
           description: "~8 CPU, ~60G RAM"
+          profile_options: *profile_options
           kubespawner_override:
             mem_limit: null
             mem_guarantee: 60G
@@ -83,6 +91,7 @@ basehub:
               node.kubernetes.io/instance-type: r5.2xlarge
         - display_name: "Huge: r5.8xlarge"
           description: "~32 CPU, ~256G RAM"
+          profile_options: *profile_options
           kubespawner_override:
             mem_limit: null
             mem_guarantee: 240G
@@ -90,6 +99,7 @@ basehub:
               node.kubernetes.io/instance-type: r5.8xlarge
         - display_name: "Very Huge: x1.16xlarge"
           description: "~64 CPU, ~976G RAM"
+          profile_options: *profile_options
           kubespawner_override:
             mem_limit: null
             mem_guarantee: 940G
@@ -97,6 +107,7 @@ basehub:
               node.kubernetes.io/instance-type: x1.16xlarge
         - display_name: "Very Very Huge: x1.32xlarge"
           description: "~128 CPU, ~1952G RAM"
+          profile_options: *profile_options
           kubespawner_override:
             mem_limit: null
             mem_guarantee: 1900G

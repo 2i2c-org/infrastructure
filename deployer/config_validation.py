@@ -10,10 +10,11 @@ import sys
 from pathlib import Path
 
 import jsonschema
-from cluster import Cluster
-from file_acquisition import find_absolute_path_to_cluster_file
 from ruamel.yaml import YAML
-from utils import print_colour
+
+from .cluster import Cluster
+from .file_acquisition import find_absolute_path_to_cluster_file
+from .utils import print_colour
 
 yaml = YAML(typ="safe", pure=True)
 helm_charts_dir = Path(__file__).parent.parent.joinpath("helm-charts")
@@ -68,9 +69,8 @@ def validate_cluster_config(cluster_name):
     """
     Validates cluster.yaml configuration against a JSONSchema.
     """
-    cluster_schema_file = Path(os.getcwd()).joinpath(
-        "shared", "deployer", "cluster.schema.yaml"
-    )
+    cur_dir = Path(__file__).parent
+    cluster_schema_file = cur_dir.joinpath("cluster.schema.yaml")
     cluster_file = find_absolute_path_to_cluster_file(cluster_name)
 
     with open(cluster_file) as cf, open(cluster_schema_file) as sf:
@@ -194,19 +194,19 @@ def validate_authenticator_config(cluster_name, hub_name):
                 # Check if there's config that specifies an authenticator class
                 try:
                     if hub.spec["helm_chart"] != "basehub":
-                        authenticator_class = config["basehub"]["jupyterhub"]["hub"][
-                            "config"
-                        ]["JupyterHub"]["authenticator_class"]
-                        allowed_users = config["basehub"]["jupyterhub"]["hub"][
-                            "config"
-                        ]["Authenticator"]["allowed_users"]
+                        hub_config = config["basehub"]["jupyterhub"]["hub"]["config"]
                     else:
-                        authenticator_class = config["jupyterhub"]["hub"]["config"][
-                            "JupyterHub"
-                        ]["authenticator_class"]
-                        allowed_users = config["jupyterhub"]["hub"]["config"][
-                            "Authenticator"
-                        ]["allowed_users"]
+                        hub_config = config["jupyterhub"]["hub"]["config"]
+
+                    authenticator_class = hub_config["JupyterHub"][
+                        "authenticator_class"
+                    ]
+                    allowed_users = hub_config["Authenticator"]["allowed_users"]
+                    org_based_github_auth = False
+                    if hub_config.get("GitHubOAuthenticator", None):
+                        org_based_github_auth = hub_config["GitHubOAuthenticator"].get(
+                            "allowed_organizations", False
+                        )
                 except KeyError:
                     pass
 
@@ -219,7 +219,7 @@ def validate_authenticator_config(cluster_name, hub_name):
 
         # If the authenticator class is github, then raise an error
         # if `Authenticator.allowed_users` is set
-        if authenticator_class == "github" and allowed_users:
+        if authenticator_class == "github" and allowed_users and org_based_github_auth:
             raise ValueError(
                 f"""
                     Please unset `Authenticator.allowed_users` for {hub.spec['name']} when GitHub Orgs/Teams is

@@ -61,7 +61,10 @@ global: {}
 
 jupyterhub:
   custom:
+    singleuser:
+      extraPVCs: []
     singleuserAdmin:
+      extraEnv: {}
       extraVolumeMounts:
         - name: home
           mountPath: /home/jovyan/shared-readwrite
@@ -150,6 +153,27 @@ jupyterhub:
         limits:
           memory: 1Gi
   singleuser:
+    # Need to explicitly fix ownership here, as otherwise these directories will be owned
+    # by root on most NFS filesystems - neither EFS nor Google Filestore support anonuid
+    initContainers:
+      - name: volume-mount-ownership-fix
+        image: busybox
+        command:
+          [
+            "sh",
+            "-c",
+            "id && chown 1000:1000 /home/jovyan && chown 1000:1000 /home/jovyan/shared-readwrite && ls -lhd /home/jovyan ",
+          ]
+        securityContext:
+          runAsUser: 0
+        volumeMounts:
+          - name: home
+            mountPath: /home/jovyan
+            subPath: "{username}"
+          # Here so we can chown it appropriately
+          - name: home
+            mountPath: /home/jovyan/shared-readwrite
+            subPath: _shared
     cmd:
       # Explicitly define this, as it's no longer set by z2jh
       # https://github.com/jupyterhub/zero-to-jupyterhub-k8s/pull/2449
@@ -157,6 +181,8 @@ jupyterhub:
     extraEnv:
       # until https://github.com/jupyterhub/jupyterhub/pull/3918 or equivalent lands,
       # and we upgrade to jupyterhub >= 2.3.1 on all images.
+      # Note: please checkout all occurences of `NotebookApp` configurations
+      # when moving away from it.
       JUPYTERHUB_SINGLEUSER_APP: "notebook.notebookapp.NotebookApp"
       # notebook writes secure files that don't need to survive a
       # restart here. Writing 'secure' files on some file systems (like
@@ -168,6 +194,15 @@ jupyterhub:
       # Most people do not expect this, so let's match expectation
       SHELL: /bin/bash
     extraFiles:
+      ipython_kernel_config.json:
+        mountPath: /usr/local/etc/ipython/ipython_kernel_config.json
+        data:
+          # This keeps a history of all executed code under $HOME, which is almost always on
+          # NFS. This file is kept as a sqlite file, and sqlite and NFS do not go together very
+          # well! Disable this to save ourselves from debugging random NFS oddities that are caused
+          # by this unholy sqlite + NFS mixture.
+          HistoryManager:
+            enabled: false
       jupyter_notebook_config.json:
         mountPath: /usr/local/etc/jupyter/jupyter_notebook_config.json
         # if a user leaves a notebook with a running kernel,
@@ -185,6 +220,11 @@ jupyterhub:
             # this is what allows us to shutdown servers
             # when people leave a notebook open and wander off
             cull_connected: true
+          # If we switch from setting `JUPYTERHUB_SINGLEUSER_APP` to be the NotebookApp
+          # this config kere might need to go under ServerApp instead
+          NotebookApp:
+            extra_template_paths:
+              - /usr/local/share/jupyter/custom_template
     startTimeout: 600 # 10 mins, because sometimes we have too many new nodes coming up together
     defaultUrl: /tree
     nodeSelector:
@@ -286,10 +326,6 @@ jupyterhub:
       KubeSpawner:
         # Make sure working directory is ${HOME}
         working_dir: /home/jovyan
-        extra_container_config:
-          securityContext:
-            # Explicitly disallow setuid binaries from working inside the container
-            allowPrivilegeEscalation: false
       Authenticator:
         # Don't allow test username to login into the hub
         # The test service will still be able to create this hub username
@@ -352,7 +388,7 @@ jupyterhub:
         admin: true
     image:
       name: quay.io/2i2c/pilot-hub
-      tag: "0.0.1-n3636.h5f27d655"
+      tag: "0.0.1-n4497.haed80ebb"
     nodeSelector:
       hub.jupyter.org/node-purpose: core
     networkPolicy:
@@ -415,9 +451,11 @@ jupyterhub:
                 if custom_admin and self.user.admin:
                     extra_init_containers = custom_admin.get('initContainers', [])
                     extra_volume_mounts = custom_admin.get('extraVolumeMounts', [])
+                    extra_env = custom_admin.get('extraEnv', {})
 
                     self.init_containers += [container for container in extra_init_containers if container not in self.init_containers]
                     self.volume_mounts += [volume for volume in extra_volume_mounts if volume not in self.volume_mounts]
+                    self.environment.update(extra_env)
 
                 return super().start(*args, **kwargs)
 
@@ -455,6 +493,60 @@ jupyterhub:
             user_id_type = get_config("custom.2i2c.add_staff_user_ids_of_type")
             staff_user_ids = get_config(f"custom.2i2c.staff_{user_id_type}_ids", [])
             c.Authenticator.admin_users.extend(staff_user_ids)
+
+      05-per-user-disk: |
+        # Optionally, create a PVC per user - useful for per-user databases
+        from jupyterhub.utils import exponential_backoff
+        from z2jh import get_config
+        from kubespawner.objects import make_pvc
+        from functools import partial
+
+        def make_extra_pvc(component, name_template, storage_class, storage_capacity, spawner):
+          """
+          Create a PVC object with given spec
+          """
+          labels = spawner._build_common_labels({})
+          labels.update({
+              'component': component
+          })
+          annotations = spawner._build_common_annotations({})
+          storage_selector = spawner._expand_all(spawner.storage_selector)
+          return make_pvc(
+              name=spawner._expand_all(name_template),
+              storage_class=storage_class,
+              access_modes=['ReadWriteOnce'],
+              selector={},
+              storage=storage_capacity,
+              labels=labels,
+              annotations=annotations
+          )
+
+        extra_user_pvcs = get_config('custom.singleuser.extraPVCs', {})
+        if extra_user_pvcs:
+          make_db_pvc = partial(make_extra_pvc, 'db-storage', 'db-{username}', 'standard', '1G')
+
+          pvc_makers = [partial(
+            make_extra_pvc,
+            "extra-pvc",
+            p["name"],
+            p["class"],
+            p["capacity"]
+          ) for p in extra_user_pvcs]
+
+          async def ensure_db_pvc(spawner):
+            """"
+            Ensure a PVC is created for this user's database volume
+            """
+            for pvc_maker in pvc_makers:
+              pvc = pvc_maker(spawner)
+              # If there's a timeout, just let it propagate
+              await exponential_backoff(
+                  partial(spawner._make_create_pvc_request, pvc, spawner.k8s_api_request_timeout),
+                  f'Could not create pvc {pvc.metadata.name}',
+                  # Each req should be given k8s_api_request_timeout seconds.
+                  timeout=spawner.k8s_api_request_retry_timeout
+              )
+          c.Spawner.pre_spawn_hook = ensure_db_pvc
       05-gh-teams: |
         from textwrap import dedent
         from tornado import gen, web
@@ -500,14 +592,31 @@ jupyterhub:
             # This is the same syntax used by allowed_organizations traitlet of GitHubOAuthenticator
             teams = set([f'{team_info["organization"]["login"]}:{team_info["slug"]}' for team_info in auth_state["teams"]])
 
+
+            print(f"User {spawner.user.name} is part of teams {' '.join(teams)}")
             allowed_profiles = []
 
+
             for profile in original_profile_list:
+              # If there is no ':' in allowed_teams, it's an org and we should check that
+              # differently
+              allowed_orgs = set([o for o in profile.get('allowed_teams', []) if ':' not in o])
+              allowed_teams = set([t for t in profile.get('allowed_teams', []) if ':' in t])
+
               # Keep the profile is the user is part of *any* team listed in allowed_teams
               # If allowed_teams is empty or not set, it'll not be accessible to *anyone*
-              if set(profile.get('allowed_teams', [])) & teams:
+              if allowed_teams & teams:
                 allowed_profiles.append(profile)
-                print(f"Allowing profile {profile['display_name']} for user {spawner.user.name}")
+                print(f"Allowing profile {profile['display_name']} for user {spawner.user.name} based on team membership")
+              elif allowed_orgs:
+                for org in allowed_orgs:
+                  user_in_org = yield spawner.authenticator._check_membership_allowed_organizations(
+                      org, spawner.user.name, auth_state['access_token']
+                  )
+                  if user_in_org:
+                    allowed_profiles.append(profile)
+                    print(f"Allowing profile {profile['display_name']} for user {spawner.user.name} based on org membership")
+                    break
               else:
                 print(f"Dropping profile {profile['display_name']} for user {spawner.user.name}")
 

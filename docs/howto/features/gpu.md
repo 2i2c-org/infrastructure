@@ -14,23 +14,27 @@ On AWS, GPUs are provisioned by using P series nodes. Before they
 can be accessed, you need to ask AWS for increased quota of P
 series nodes.
 
-1. Login to the AWS management console of the account the cluster i
+1. Login to the AWS management console of the account the cluster is
    in.
 2. Make sure you are in same region the cluster is in, by checking the
-   region selector on the top right.
+   region selector on the top right. **This is very important**, as getting
+   a quota increase in the wrong region means we have to do this all over
+   again.
 3. Open the [EC2 Service Quotas](https://us-west-2.console.aws.amazon.com/servicequotas/home/services/ec2/quotas)
    page
-4. Select 'Running On-Demand P Instances' quota
+4. Select 'Running On-Demand G and VT Instances' quota - this provisions NVidia T4
+   GPUs (which are the `G4dn` instance type).
 5. Select 'Request Quota Increase'.
 6. Input the *number of vCPUs* needed. This translates to a total
    number of GPU nodes based on how many CPUs the nodes we want have.
-   For example, if we are using [P2 nodes](https://aws.amazon.com/ec2/instance-types/p2/)
-   with NVIDIA K80 GPUs, each `p2.xlarge` node gives us 1 GPU and
+   For example, if we are using [G4 nodes](https://aws.amazon.com/ec2/instance-types/g4/)
+   with NVIDIA T4 GPUs, each `g4dn.xlarge` node gives us 1 GPU and
    4 vCPUs, so a quota of 8 vCPUs will allow us to spawn 2 GPU nodes.
    We should fine tune this calculation for later, but for now, the
-   recommendation is to give users a `p2.xlarge` each, so the number
+   recommendation is to give users a single `g4dn.xlarge` each, so the number
    of vCPUs requested should be `4 * max number of GPU nodes`.
-7. Ask for the increase, and wait. This can take *several working days*.
+7. Ask for the increase, and wait. This can take *several working days*,
+   so do it as early as possible!
 
 #### Setup GPU nodegroup on eksctl
 
@@ -40,17 +44,16 @@ AWS, and we can configure a node group there to provide us GPUs.
 1. In the `notebookNodes` definition in the appropriate `.jsonnet` file,
    add a node definition for the appropriate GPU node type:
 
-
    ```
     {
-        instanceType: "p2.xlarge",
+        instanceType: "g4dn.xlarge",
         tags+: {
             "k8s.io/cluster-autoscaler/node-template/resources/nvidia.com/gpu": "1"
         },
     }
    ```
 
-   `p2.xlarge` gives us 1 K80 GPU and ~4 CPUs. The `tags` definition
+   `g4dn.xlarge` gives us 1 Nvidia T4 GPU and ~4 CPUs. The `tags` definition
    is necessary to let the autoscaler know that this nodegroup has
    1 GPU per node. If you're using a different machine type with
    more GPUs, adjust this definition accordingly.
@@ -64,15 +67,12 @@ AWS, and we can configure a node group there to provide us GPUs.
 3. Create the nodegroup
 
    ```bash
-   eksctl create nodegroup -f <your-cluster>.eksctl.yaml --install-nvidia-plugin=false
+   eksctl create nodegroup -f <your-cluster>.eksctl.yaml
    ```
 
-   The `--install-nvidia-plugin=false` is required until
-   [this bug](https://github.com/weaveworks/eksctl/issues/5277)
-   is fixed.
-
    This should create the nodegroup with 0 nodes in it, and the
-   autoscaler should recognize this!
+   autoscaler should recognize this! `eksctl` will also setup the
+   appropriate driver installer, so you won't have to.
 
 #### Setting up a GPU user profile
 
@@ -81,30 +81,52 @@ a profile. This should be placed in the hub configuration:
 
 ```yaml
 jupyterhub:
-    singleuser:
-        profileList:
-        - display_name: "Large + GPU: p2.xlarge"
-          description: "~4CPUs, 60G RAM, 1 NVIDIA K80 GPU"
+   singleuser:
+      extraEnv:
+         # Temporarily set for *all* pods, including pods without any GPUs,
+         # to work around https://github.com/2i2c-org/infrastructure/issues/1530
+         NVIDIA_DRIVER_CAPABILITIES: compute,utility
+      profileList:
+        - display_name: Large + GPU
+          description: 14GB RAM, 4 CPUs, T4 GPU
+          profile_options:
+            image:
+              display_name: Image
+              choices:
+                tensorflow:
+                  display_name: Pangeo Tensorflow ML Notebook
+                  slug: "tensorflow"
+                  kubespawner_override:
+                    node.kubernetes.io/instance-type: g4dn.xlarge
+                    image: "pangeo/ml-notebook:<tag>"
+                pytorch:
+                  display_name: Pangeo PyTorch ML Notebook
+                  default: true
+                  slug: "pytorch"
+                  kubespawner_override:
+                    node.kubernetes.io/instance-type: g4dn.xlarge
+                    image: "pangeo/pytorch-notebook:<tag>"
           kubespawner_override:
             mem_limit: null
-            mem_guarantee: 55G
-            image: "pangeo/ml-notebook:<tag>"
-            environment:
-              NVIDIA_DRIVER_CAPABILITIES: compute,utility
+            mem_guarantee: 14G
             extra_resource_limits:
               nvidia.com/gpu: "1"
-            node_selector:
-              node.kubernetes.io/instance-type: p2.xlarge
 ```
 
 1. If using a `daskhub`, place this under the `basehub` key.
 2. The image used should have ML tools (pytorch, cuda, etc)
-   installed. The recommendation is to use Pangeo's
+   installed. The recommendation is to provide Pangeo's
    [ml-notebook](https://hub.docker.com/r/pangeo/ml-notebook)
    for tensorflow and [pytorch-notebook](https://hub.docker.com/r/pangeo/pytorch-notebook)
-   for pytorch. **Do not** use the `latest` or `master` tags - find
+   for pytorch. We expose these as options so users can pick what they want
+   to use.
+
+   ```{warning}
+   **Do not** use the `latest` or `master` tags - find
    a specific tag listed for the image you want, and use that.
-3. The [NVIDIA_DRIVER_CAPABILITIES](https://docs.nvidia.com/datacenter/cloud-native/container-toolkit/user-guide.html#driver-capabilities)
+   ```
+
+3. The [`NVIDIA_DRIVER_CAPABILITIES`](https://docs.nvidia.com/datacenter/cloud-native/container-toolkit/user-guide.html#driver-capabilities)
    environment variable tells the GPU driver what kind of libraries
    and tools to inject into the container. Without setting this,
    GPUs can not be accessed.
@@ -134,6 +156,16 @@ this works!
    ```
    [PhysicalDevice(name='/physical_device:GPU:0', device_type='GPU')]
    ```
+
+   If on an image with pytorch instead, try this:
+
+   ```python
+   import torch
+
+   torch.cuda.is_available()
+   ```
+
+   This should return `True`.
 4. Remember to explicitly shut down your server after testing,
    as GPU instances can get expensive!
 

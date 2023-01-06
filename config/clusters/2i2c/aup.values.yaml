@@ -20,8 +20,8 @@ jupyterhub:
           url: https://www.aup.edu/
   singleuser:
     memory:
-      limit: 2G
-      guarantee: 2G
+      limit: 8G
+      guarantee: 6G
   hub:
     config:
       Authenticator:

@@ -1,10 +1,6 @@
 prometheusIngressAuthSecret:
   enabled: true
 
-nvidiaDevicePlugin:
-  aws:
-    enabled: true
-
 prometheus:
   server:
     ingress:
@@ -28,6 +24,9 @@ cluster-autoscaler:
     clusterName: uwhackweeks
   awsRegion: us-west-2
 grafana:
+  grafana.ini:
+    server:
+      root_url: https://grafana.uwhackweeks.2i2c.cloud/
   ingress:
     hosts:
       - grafana.uwhackweeks.2i2c.cloud

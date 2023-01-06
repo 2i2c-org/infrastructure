@@ -1,19 +1,7 @@
-dask-gateway:
-  gateway:
-    backend:
-      scheduler:
-        extraPodConfig:
-          nodeSelector:
-            2i2c.org/community: ohw
-      worker:
-        extraPodConfig:
-          nodeSelector:
-            2i2c.org/community: ohw
 basehub:
   userServiceAccount:
     annotations:
       iam.gke.io/gcp-service-account: pilot-hubs-ohw@two-eye-two-see.iam.gserviceaccount.com
-
   jupyterhub:
     prePuller:
       continuous:
@@ -47,7 +35,7 @@ basehub:
           description: "~2 CPU, ~8G RAM"
           default: true
           kubespawner_override:
-            image: "ghcr.io/oceanhackweek/python:f6f8b9f"
+            image: "ghcr.io/oceanhackweek/python:99b6ab5"
             default_url: "/lab"
             mem_limit: 8G
             mem_guarantee: 4G
@@ -56,14 +44,12 @@ basehub:
         - display_name: "R image"
           description: "~2 CPU, ~8G RAM"
           kubespawner_override:
-            image: "ghcr.io/oceanhackweek/r:f6f8b9f"
+            image: "ghcr.io/oceanhackweek/r:39ba006"
             default_url: "/rstudio"
             mem_limit: 8G
             mem_guarantee: 4G
             cpu_limit: 2
             cpu_guarantee: 0.5
-      nodeSelector:
-        2i2c.org/community: ohw
     custom:
       cloudResources:
         provider: gcp

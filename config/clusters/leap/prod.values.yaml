@@ -5,8 +5,9 @@ basehub:
   jupyterhub:
     singleuser:
       extraEnv:
-        SCRATCH_BUCKET: gcs://leap-scratch/$(JUPYTERHUB_USER)
-        PANGEO_SCRATCH: gcs://leap-scratch/$(JUPYTERHUB_USER)
+        SCRATCH_BUCKET: gs://leap-scratch/$(JUPYTERHUB_USER)
+        PERSISTENT_BUCKET: gs://leap-persistent/$(JUPYTERHUB_USER)
+        PANGEO_SCRATCH: gs://leap-scratch/$(JUPYTERHUB_USER)
     hub:
       config:
         GitHubOAuthenticator:

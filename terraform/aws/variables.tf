@@ -62,3 +62,83 @@ variable "extra_user_iam_policy" {
   user pods when making requests to AWS services (such as S3)
   EOT
 }
+
+variable "db_enabled" {
+  default     = false
+  type        = bool
+  description = <<-EOT
+  Run a database for the hub with AWS RDS
+  EOT
+}
+
+variable "db_instance_class" {
+  default     = "db.t3.micro"
+  description = <<-EOT
+  Size (memory & CPU) of the db instance to provision.
+
+  See list in https://aws.amazon.com/rds/instance-types/
+  EOT
+}
+
+variable "db_storage_size" {
+  default     = 10
+  description = <<-EOT
+  Size (in GiB) of storage to provision for the RDS instance
+  EOT
+}
+
+variable "db_engine" {
+  default     = "mysql"
+  description = <<-EOT
+  AWS RDS database engine to use.
+
+  We should really only support mysql or postgres here, with a
+  preference for postgres.
+  EOT
+}
+
+
+variable "db_engine_version" {
+  default     = "8.0"
+  description = <<-EOT
+  Version of database engine to provision.
+
+  See https://awscli.amazonaws.com/v2/documentation/api/latest/reference/rds/describe-db-engine-versions.html
+  for more info on how to get list of allowed versions.
+  EOT
+}
+
+variable "db_instance_identifier" {
+  default     = "shared-db"
+  description = <<-EOT
+  Human readable instance name to give the database server.
+
+  This is used in the hostname, but otherwise doesn't have much of
+  an effect.
+  EOT
+}
+
+variable "db_mysql_user_grants" {
+  default     = ["SELECT", "SHOW VIEW", "SHOW DATABASES", "PROCESS"]
+  description = <<-EOT
+  List of privileges to grant the default non-root hub db user if using mysql
+  EOT
+}
+
+variable "db_params" {
+  default     = {}
+  description = <<-EOT
+  Mapping of parameters to set on the RDS instance.
+
+  This is specific to the type of database (postgres, mysql) being
+  used. You can find the list of available options based on
+  documentation here: https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/USER_WorkingWithDBInstanceParamGroups.html#USER_WorkingWithParamGroups.Listing
+  EOT
+}
+
+variable "db_user_password_special_chars" {
+  default     = true
+  description = <<-EOT
+  Set to True if you don't want special characters in generated user password
+  EOT
+}

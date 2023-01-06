@@ -34,26 +34,6 @@ basehub:
     singleuser:
       serviceAccountName: cloud-user-sa
       defaultUrl: /lab
-      initContainers:
-        # Need to explicitly fix ownership here, since EFS doesn't do anonuid
-        - name: volume-mount-ownership-fix
-          image: busybox
-          command:
-            [
-              "sh",
-              "-c",
-              "id && chown 1000:1000 /home/jovyan /home/jovyan/shared && ls -lhd /home/jovyan",
-            ]
-          securityContext:
-            runAsUser: 0
-          volumeMounts:
-            - name: home
-              mountPath: /home/jovyan
-              subPath: "{username}"
-            - name: home
-              mountPath: /home/jovyan/shared
-              subPath: _shared
-
       # User image repo: https://github.com/NASA-Openscapes/corn
       image:
         name: 783616723547.dkr.ecr.us-west-2.amazonaws.com/user-image
@@ -69,6 +49,8 @@ basehub:
         # on these nodes.
         - display_name: "Small: m5.large"
           description: "~2 CPU, ~8G RAM"
+          slug: "small"
+          default: true
           profile_options: &profile_options
             image:
               display_name: Image
@@ -76,14 +58,17 @@ basehub:
                 python:
                   display_name: Python
                   default: true
+                  slug: "python"
                   kubespawner_override:
-                    image: openscapes/python:8c7d33e
+                    image: openscapes/python:431a94c
                 rocker:
                   display_name: R
+                  slug: "rocker"
                   kubespawner_override:
                     image: openscapes/rocker:b88a034
                 matlab:
                   display_name: Matlab
+                  slug: "matlab"
                   kubespawner_override:
                     image: openscapes/matlab:fb41496
           kubespawner_override:
@@ -142,6 +127,6 @@ basehub:
 dask-gateway:
   gateway:
     extraConfig:
-      idle: |
+      idle: |-
         # timeout after 30 minutes of inactivity
         c.KubeClusterConfig.idle_timeout = 1800

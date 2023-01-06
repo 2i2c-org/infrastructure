@@ -1,0 +1,58 @@
+name: Ensure Uptime Checks
+
+on:
+  push:
+    branches:
+      - master
+    paths:
+      # Config of prometheus or hubs might have changed
+      - helm-charts/**
+      # Hubs & clusters might be added or removed
+      - config/clusters/**
+      # The terraform code for the checks might have changed
+      - terraform/uptime-checks/**
+      # The way terraform is deployed might have changed!
+      - .github/workflows/ensure-uptime-checks.yaml
+
+# When multiple PRs triggering this workflow are merged, queue them instead
+# of running them in parallel
+# https://github.blog/changelog/2021-04-19-github-actions-limit-workflow-run-or-job-concurrency/
+concurrency: uptime-checks
+
+# This environment variable triggers the deployer to colourise print statments in the
+# GitHub Actions logs for easy reading
+env:
+  TERM: xterm
+
+jobs:
+  ensure-uptime-checks:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v3
+
+      # Uptime checks are set up and managed via terraform
+      - uses: hashicorp/setup-terraform@v2
+
+      # We use sops to store encrypted GCP ServiceAccount Key that terraform uses
+      # to run, as well as PagerDuty config terraform uses
+      - name: Install sops
+        uses: mdgreenwald/mozilla-sops-action@v1
+
+      # Authenticate with the correct KMS key that sops will use.
+      - name: Setup sops credentials to decrypt repo secrets
+        uses: google-github-actions/auth@v1
+        with:
+          credentials_json: "${{ secrets.GCP_KMS_DECRYPTOR_KEY }}"
+
+      - name: ensure uptime checks are set up
+        run: |
+          cd terraform/uptime-checks
+          # Decrypt the GCP ServiceAccount key with permissions to run terraform
+          sops -d secret/enc-service-account-key.secret.json > service-account-key.json
+          export GOOGLE_APPLICATION_CREDENTIALS=service-account-key.json
+          # Setup Terraform
+          terraform init
+          # Run terraform automatically
+          terraform apply -auto-approve

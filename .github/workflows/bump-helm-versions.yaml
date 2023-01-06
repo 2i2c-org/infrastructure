@@ -2,6 +2,14 @@ name: Bump Helm Chart Versions
 
 on:
   workflow_dispatch:
+    inputs:
+      dry_run:
+        type: boolean
+        description: |
+          Perform a dry-run of the action and don't open a Pull Request. Information
+          as to which subcharts need bumping to which versions will be printed to stdout.
+        default: false
+        required: false
   schedule:
     - cron: "0 0 * * 1" # Run every Monday at 00:00 UTC
 
@@ -23,9 +31,9 @@ jobs:
             # To bump multiple subchart versions, provide the chart name and a URL to
             # a published list of versions in this dictionary.
             chart_urls: '{"binderhub": "https://raw.githubusercontent.com/jupyterhub/helm-chart/gh-pages/index.yaml"}'
-          - name: "cryptnono"
+          - name: "support"
             chart_path: "helm-charts/support/Chart.yaml"
-            chart_urls: '{"cryptnono": "https://yuvipanda.github.io/cryptnono/index.yaml"}'
+            chart_urls: '{"cryptnono": "https://yuvipanda.github.io/cryptnono/index.yaml", "ingress-nginx": "https://kubernetes.github.io/ingress-nginx/index.yaml", "grafana": "https://grafana.github.io/helm-charts/index.yaml", "prometheus": "https://prometheus-community.github.io/helm-charts/index.yaml"}'
 
     steps:
       # We want tests to be run on the Pull Request that gets opened by the next step,
@@ -36,7 +44,7 @@ jobs:
       # Action: https://github.com/marketplace/actions/github-app-token
       - name: Fetch a token from GitHub App
         id: generate_token
-        uses: tibdex/github-app-token@v1.6
+        uses: tibdex/github-app-token@v1.7
         with:
           app_id: ${{ secrets.APP_ID }}
           private_key: ${{ secrets.PRIVATE_KEY }}
@@ -50,3 +58,4 @@ jobs:
           github_token: ${{ steps.generate_token.outputs.token }}
           # team_reviewers: ${{ env.team_reviewers }}
           base_branch: "master"
+          dry_run: ${{ github.event.inputs.dry_run || true }}

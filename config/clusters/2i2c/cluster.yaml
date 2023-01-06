@@ -1,5 +1,4 @@
 name: 2i2c
-image_repo: "quay.io/2i2c/2i2c-hubs-image"
 provider: gcp
 gcp:
   key: enc-deployer-credentials.secret.json
@@ -57,20 +56,6 @@ hubs:
       # that you intend for these files to be applied in this order.
       - enc-demo.secret.values.yaml
       - demo.values.yaml
-  - name: neurohackademy
-    display_name: "NeuroHackademy"
-    domain: neurohackademy.2i2c.cloud
-    helm_chart: basehub
-    auth0:
-      # connection update? Also ensure the basehub Helm chart is provided a
-      # matching value for jupyterhub.custom.2i2c.add_staff_user_ids_of_type!
-      enabled: false
-    helm_chart_values_files:
-      # The order in which you list files here is the order the will be passed
-      # to the helm upgrade command in, and that has meaning. Please check
-      # that you intend for these files to be applied in this order.
-      - enc-neurohackademy.secret.values.yaml
-      - neurohackademy.values.yaml
   - name: ohw
     display_name: "Ocean Hack Week"
     domain: oceanhackweek.2i2c.cloud
@@ -161,16 +146,21 @@ hubs:
       # to the helm upgrade command in, and that has meaning. Please check
       # that you intend for these files to be applied in this order.
       - aup.values.yaml
-  - name: utexas
-    display_name: "University of Texas"
-    domain: utexas.pilot.2i2c.cloud
+  - name: temple
+    display_name: "Temple University"
+    domain: temple.2i2c.cloud
     helm_chart: basehub
     auth0:
-      # connection update? Also ensure the basehub Helm chart is provided a
-      # matching value for jupyterhub.custom.2i2c.add_staff_user_ids_of_type!
-      connection: github
+      enabled: false
     helm_chart_values_files:
-      # The order in which you list files here is the order the will be passed
-      # to the helm upgrade command in, and that has meaning. Please check
-      # that you intend for these files to be applied in this order.
-      - utexas.values.yaml
+      - temple.values.yaml
+      - enc-temple.secret.values.yaml
+  - name: ucmerced
+    display_name: "UC Merced"
+    domain: ucmerced.2i2c.cloud
+    helm_chart: basehub
+    auth0:
+      enabled: false
+    helm_chart_values_files:
+      - ucmerced.values.yaml
+      - enc-ucmerced.secret.values.yaml

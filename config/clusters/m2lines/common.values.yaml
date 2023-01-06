@@ -33,6 +33,7 @@ basehub:
             name: M²LInES
             url: https://m2lines.github.io/
     hub:
+      allowNamedServers: true
       config:
         Authenticator:
           # This hub uses GitHub Teams auth and so we don't set
@@ -50,13 +51,24 @@ basehub:
           scope:
             - read:org
     singleuser:
+      extraFiles:
+        jupyter_notebook_config.json:
+          data:
+            MappingKernelManager:
+              # Cull idle kernels after 24h (24 * 60 * 60), to see if that
+              # makes the experience better for research hubs.
+              # Ref https://2i2c.freshdesk.com/a/tickets/243
+              cull_idle_timeout: 86400
       extraEnv:
         GH_SCOPED_CREDS_CLIENT_ID: "Iv1.1c4d967ffc205f98"
         GH_SCOPED_CREDS_APP_URL: https://github.com/apps/m2lines-pangeo-hub-push-access
+        # Temporarily set for *all* pods, including pods without any GPUs,
+        # to work around https://github.com/2i2c-org/infrastructure/issues/1530
+        NVIDIA_DRIVER_CAPABILITIES: compute,utility
       # User image repo: https://github.com/pangeo-data/pangeo-docker-images
       image:
         name: pangeo/pangeo-notebook
-        tag: "2022.06.02"
+        tag: "2022.10.18"
       profileList:
         # The mem-guarantees are here so k8s doesn't schedule other pods
         # on these nodes. They need to be just under total allocatable
@@ -91,46 +103,30 @@ basehub:
             mem_guarantee: 52G
             node_selector:
               node.kubernetes.io/instance-type: n1-standard-16
-        - display_name: Large + Nvidia K80 GPU + Tensorflow
+        - display_name: Large + GPU
           description: 24GB RAM, 8 CPUs
+          profile_options:
+            image:
+              display_name: Image
+              choices:
+                tensorflow:
+                  display_name: Pangeo Tensorflow ML Notebook
+                  slug: "tensorflow"
+                  kubespawner_override:
+                    image: "pangeo/ml-notebook:2022.10.18"
+                pytorch:
+                  display_name: Pangeo PyTorch ML Notebook
+                  default: true
+                  slug: "pytorch"
+                  kubespawner_override:
+                    image: "pangeo/pytorch-notebook:2022.10.18"
           kubespawner_override:
-            image: "pangeo/ml-notebook:7181f87"
+            node_selector:
+              cloud.google.com/gke-nodepool: nb-gpu-t4
             mem_limit: 30G
             mem_guarantee: 24G
-            node_selector:
-              node.kubernetes.io/instance-type: n1-standard-8
-            environment:
-              NVIDIA_DRIVER_CAPABILITIES: compute,utility
             extra_resource_limits:
               nvidia.com/gpu: "1"
-        - display_name: Large + Nvidia K80 GPU + PyTorch
-          description: 24GB RAM, 8 CPUs
-          kubespawner_override:
-            image: "pangeo/pytorch-notebook:7181f87"
-            mem_limit: 30G
-            mem_guarantee: 24G
-            node_selector:
-              node.kubernetes.io/instance-type: n1-standard-8
-            environment:
-              NVIDIA_DRIVER_CAPABILITIES: compute,utility
-            extra_resource_limits:
-              nvidia.com/gpu: "1"
-      initContainers:
-        # Need to explicitly fix ownership here, since EFS doesn't do anonuid
-        - name: volume-mount-ownership-fix
-          image: busybox
-          command:
-            [
-              "sh",
-              "-c",
-              "id && chown 1000:1000 /home/jovyan && ls -lhd /home/jovyan",
-            ]
-          securityContext:
-            runAsUser: 0
-          volumeMounts:
-            - name: home
-              mountPath: /home/jovyan
-              subPath: "{username}"
 dask-gateway:
   gateway:
     backend:

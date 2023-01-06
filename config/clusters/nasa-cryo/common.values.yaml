@@ -1,0 +1,134 @@
+basehub:
+  nfs:
+    pv:
+      # from https://docs.aws.amazon.com/efs/latest/ug/mounting-fs-nfs-mount-settings.html
+      mountOptions:
+        - rsize=1048576
+        - wsize=1048576
+        - timeo=600
+        - soft # We pick soft over hard, so NFS lockups don't lead to hung processes
+        - retrans=2
+        - noresvport
+      serverIP: fs-0872256335d483d5f.efs.us-west-2.amazonaws.com
+      baseShareName: /
+  jupyterhub:
+    prePuller:
+      continuous:
+        enabled: true
+      hook:
+        enabled: true
+    custom:
+      2i2c:
+        add_staff_user_ids_to_admin_users: true
+        add_staff_user_ids_of_type: "github"
+      homepage:
+        templateVars:
+          org:
+            name: Cryo in the Cloud
+            logo_url: https://raw.githubusercontent.com/CryoInTheCloud/CryoCloudWebsite/main/cryocloud.png
+            url: https://github.com/CryoInTheCloud
+          designed_by:
+            name: 2i2c
+            url: https://2i2c.org
+          operated_by:
+            name: 2i2c
+            url: https://2i2c.org
+          # Ideally, this community would like to list more than one funder
+          # Issue tracking implementation of this feature:
+          # https://github.com/2i2c-org/default-hub-homepage/issues/16
+          funded_by:
+            name: "NASA ICESat-2 Science Team"
+            url: https://icesat-2.gsfc.nasa.gov/science_definition_team
+    hub:
+      allowNamedServers: true
+      config:
+        Authenticator:
+          # We are restricting profiles based on GitHub Team membership and
+          # so need to persist auth state
+          enable_auth_state: true
+          # This hub uses GitHub Teams auth and so we don't set
+          # allowed_users in order to not deny access to valid members of
+          # the listed teams. These people should have admin access though.
+          admin_users:
+            - tsnow03
+            - JessicaS11
+            - dfelikson
+            - fperez
+        JupyterHub:
+          authenticator_class: github
+        GitHubOAuthenticator:
+          # We are restricting profiles based on GitHub Team membership and
+          # so need to populate the teams in the auth state
+          populate_teams_in_auth_state: true
+          allowed_organizations:
+            - 2i2c-org:tech-team
+            - CryoInTheCloud:cryoclouduser
+            - CryoInTheCloud:cryocloudadvanced
+          scope:
+            - read:org
+    singleuser:
+      defaultUrl: /lab
+      # Image repo: https://github.com/CryoInTheCloud/hub-image
+      image:
+        name: quay.io/cryointhecloud/cryo-hub-image
+        tag: "a1bc0061178a"
+      storage:
+        extraVolumeMounts:
+          - name: home
+            mountPath: /home/jovyan/shared
+            subPath: _shared
+            readOnly: true
+      profileList:
+        # The mem-guarantees are here so k8s doesn't schedule other pods
+        # on these nodes.
+        - display_name: "Small: m5.large"
+          description: "~2 CPU, ~8G RAM"
+          default: true
+          allowed_teams:
+            - 2i2c-org:tech-team
+            - CryoInTheCloud:cryoclouduser
+            - CryoInTheCloud:cryocloudadvanced
+          kubespawner_override:
+            # Explicitly unset mem_limit, so it overrides the default memory limit we set in
+            # basehub/values.yaml
+            mem_limit: null
+            mem_guarantee: 6.5G
+            node_selector:
+              node.kubernetes.io/instance-type: m5.large
+        - display_name: "Medium: m5.xlarge"
+          description: "~4 CPU, ~15G RAM"
+          allowed_teams:
+            - 2i2c-org:tech-team
+            - CryoInTheCloud:cryoclouduser
+            - CryoInTheCloud:cryocloudadvanced
+          kubespawner_override:
+            mem_limit: null
+            mem_guarantee: 12G
+            node_selector:
+              node.kubernetes.io/instance-type: m5.xlarge
+        - display_name: "Large: m5.2xlarge"
+          description: "~8 CPU, ~30G RAM"
+          allowed_teams:
+            - 2i2c-org:tech-team
+            - CryoInTheCloud:cryocloudadvanced
+          kubespawner_override:
+            mem_limit: null
+            mem_guarantee: 26G
+            node_selector:
+              node.kubernetes.io/instance-type: m5.2xlarge
+        - display_name: "Huge: m5.8xlarge"
+          description: "~32 CPU, ~128G RAM"
+          allowed_teams:
+            - 2i2c-org:tech-team
+            - CryoInTheCloud:cryocloudadvanced
+          kubespawner_override:
+            mem_limit: null
+            mem_guarantee: 115G
+            node_selector:
+              node.kubernetes.io/instance-type: m5.8xlarge
+    scheduling:
+      userPlaceholder:
+        enabled: false
+        replicas: 0
+      userScheduler:
+        enabled: false

@@ -8,11 +8,18 @@ cluster-autoscaler:
 ingress-nginx:
   controller:
     podLabels:
+      # nginx-ingress controllers need to communicate with the proxy pod (and only the proxy pod)
+      # in clusters with networkpolicy enforcement enabled. Adding this label on the controller pod
+      # allows that. https://z2jh.jupyter.org/en/stable/administrator/security.html#introduction-to-the-chart-s-four-network-policies
+      # has more information.
       hub.jupyter.org/network-access-proxy-http: "true"
 prometheus:
   networkPolicy:
     enabled: true
   alertmanager:
+    # We do not use the Prometheus alertmanager component, as we already have Grafana
+    # Grafana also has alerts, and the UI of grafana is much better than that of alertmanager
+    # We also expose Grafana publicly behind auth anyway, so we can consolidate alerting with Grafana too
     enabled: false
   nodeExporter:
     tolerations:
@@ -60,21 +67,28 @@ prometheus:
       hub.jupyter.org/network-access-hub: "true"
     persistentVolume:
       size: 100Gi
-    retention: 90d
+    # Keep data for at least 1 year
+    retention: 366d
     service:
       type: ClusterIP
-  # make sure we collect metrics on pods by app/component at least
   kube-state-metrics:
+    # kube-state-metrics stopped collecting *all* labels on all kubernetes objects as
+    # prometheus labels, as it exploded the total number of metrics being collected. We
+    # have to explicitly allow-list the labels we want. These are the ones needed for
+    # the graphs from https://github.com/jupyterhub/grafana-dashboards to work
     metricLabelsAllowlist:
       - pods=[app,component,hub.jupyter.org/username,app.kubernetes.io/component]
       - nodes=[*]
 
 grafana:
   persistence:
+    # Attach a tiny 1G PVC with grafana for auth db as well as dashboard definition (not data) storage.
+    # Matches what we do with JupyterHub
     enabled: true
   deploymentStrategy:
     type: Recreate
   service:
+    # Grafana is exposed to the world via ingress
     type: ClusterIP
 
   ingress:
@@ -87,46 +101,18 @@ grafana:
     datasources.yaml:
       apiVersion: 1
       datasources:
+        # Automatically add the prometheus server in the same namespace as the grafana as a datasource
         - name: prometheus
           orgId: 1
           type: prometheus
+          # This is the name of the kubernetes service exposed by the prometheus server
           url: http://support-prometheus-server
           access: proxy
           isDefault: true
           editable: false
 
-# Values reference for nfs-server-provisioner
-# https://github.com/kubernetes-sigs/nfs-ganesha-server-and-external-provisioner/blob/master/deploy/helm/values.yaml
-nfs-server-provisioner:
-  enabled: false
-  storageClass:
-    # Users will have to opt-in to using NFS-type storage under
-    # singleuser.storage.dynamic.storageClass
-    name: incluster-nfs
-    create: true
-    defaultClass: false
-    mountOptions:
-      - vers=4.2
-      - soft
-      - noatime
-  persistence:
-    enabled: true
-    accessMode: ReadWriteOnce
-    # Ideally, this *must* be set by each cluster's config. But there's no
-    # easy way for us to force this.
-    # This is the total size of the disk to contain *all* the home directories
-    # of *all* the hubs on the cluster. Each hub gets a directory, with quotas
-    # enforced by XFS. If the size here is lower than the sum of all the requests
-    # for all the home directories PVCs on the cluster, hub deployment will
-    # fail with an error. You have to increase the size here, do a deploy-support,
-    # and try again.
-    size: 100Gi
-    # Selects for SSD vs HDD for base storage of the files.
-    # On Google cloud, this is `standard-rwo` for HDD and `premium-rwo` for ssds.
-    # Standard will do for most use cases.
-    storageClass: standard-rwo
-
 # Enable a daemonset to install nvidia device plugin to GPU nodes
+# AWS does not require this to be set, as eksctl sets this up automatically
 nvidiaDevicePlugin:
   # For Azure-specific image, default to false
   azure:
@@ -134,9 +120,7 @@ nvidiaDevicePlugin:
   # For GKE specific image, defaults to false
   gke:
     enabled: false
-  # For eksctl / AWS specific daemonset, defaults to false
-  aws:
-    enabled: false
+    version: "stable"
 
 # Enables  https://github.com/yuvipanda/cryptnono/ to prevent cryptomining
 cryptnono:

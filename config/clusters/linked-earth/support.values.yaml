@@ -13,6 +13,9 @@ prometheus:
             - prometheus.linkedearth.2i2c.cloud
 
 grafana:
+  grafana.ini:
+    server:
+      root_url: https://grafana.linkedearth.2i2c.cloud/
   ingress:
     hosts:
       - grafana.linkedearth.2i2c.cloud

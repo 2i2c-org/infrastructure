@@ -4,22 +4,13 @@ support helm chart upgrading depending on an input list of filenames that have b
 added or modified in a GitHub Pull Request.
 """
 import fnmatch
-import os
 from pathlib import Path
 
 from rich.console import Console
 from rich.table import Table
 from ruamel.yaml import YAML
 
-# This try/except block is here because pytest wants to import print_colour from
-# deployer.utils, whereas the deployer wants to call it directly from utils. There is no
-# way to fix this for one without breaking it for the other until we make the deployer
-# an actual pip installable package. See the below issue for discussion on this topic:
-# https://github.com/2i2c-org/infrastructure/issues/970
-try:
-    from utils import print_colour
-except ModuleNotFoundError:
-    pass
+from .utils import print_colour
 
 yaml = YAML(typ="safe", pure=True)
 
@@ -84,26 +75,19 @@ def get_all_cluster_yaml_files(is_test=False):
     Returns:
         set[path obj]: A set of absolute paths to all cluster.yaml files in the repo
     """
+    root_path = Path(__file__).parent.parent
     # Get absolute paths
     if is_test:
         # We are running a test via pytest. We only want to focus on the cluster
         # folders nested under the `tests/` folder.
-        cluster_files = [
-            filepath
-            for filepath in Path(os.getcwd()).glob("**/cluster.yaml")
-            if "tests" in str(filepath)
-        ]
-    else:
-        # We are NOT running a test via pytest. We want to explicitly ignore the
-        # cluster folders nested under the `tests/` folder.
-        cluster_files = [
-            filepath
-            for filepath in Path(os.getcwd()).glob("**/cluster.yaml")
-            if "tests" not in str(filepath)
-        ]
+        return set(root_path.glob("tests/test-clusters/**/cluster.yaml"))
 
-    # Return unique absolute paths
-    return set(cluster_files)
+    # We are NOT running a test via pytest. We only care about the clusters under config/clusters
+    return {
+        path
+        for path in root_path.glob("config/clusters/**/cluster.yaml")
+        if "templates" not in path.as_posix()
+    }
 
 
 def generate_hub_matrix_jobs(

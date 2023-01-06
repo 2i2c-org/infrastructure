@@ -18,6 +18,8 @@ prometheusIngressAuthSecret:
 
 prometheus:
   server:
+    persistentVolume:
+      size: 200Gi
     ingress:
       enabled: true
       hosts:
@@ -27,6 +29,16 @@ prometheus:
           hosts:
             - prometheus.gcp.pangeo.2i2c.cloud
     resources:
+      requests:
+        # Set requests here as well, to make sure we don't trample on the other pods (hub, proxy, etc)
+        # too much
+        cpu: 1
+        memory: 2Gi
       limits:
         cpu: 2
-        memory: 16Gi
+        # Specifically set a really high memory limit,
+        # as prometheus memory can sometimes spike up to 2x regular use or more when replaying
+        # WAL after a restart (https://github.com/prometheus/prometheus/issues/6934). This was
+        # causing prometheus to crash forever, as the memory spike would get it killed. The
+        # higher limit helps with this
+        memory: 8Gi

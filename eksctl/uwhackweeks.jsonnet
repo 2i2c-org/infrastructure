@@ -21,7 +21,7 @@ local notebookNodes = [
     { instanceType: "m5.2xlarge", minSize: 0 },
     { instanceType: "m5.8xlarge", minSize: 0 },
     {
-        instanceType: "p2.xlarge", minSize: 0,
+        instanceType: "g4dn.xlarge", minSize: 0,
         tags+: {
             "k8s.io/cluster-autoscaler/node-template/resources/nvidia.com/gpu": "1"
         },

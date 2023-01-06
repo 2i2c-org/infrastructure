@@ -12,7 +12,6 @@ jobs:
         include:
           # The grafana for 2i2c cluster holds also info about all other clusters
           - cluster_name: 2i2c
-          - cluster_name: azure.carbonplan
           - cluster_name: carbonplan
           - cluster_name: cloudbank
           - cluster_name: leap
@@ -23,29 +22,32 @@ jobs:
           - cluster_name: utoronto
           - cluster_name: uwhackweeks
           - cluster_name: awi-ciroh
+          - cluster_name: callysto
+          - cluster_name: 2i2c-uk
+          - cluster_name: nasa-cryo
+          - cluster_name: gridsst
+          - cluster_name: victor
+          - cluster_name: 2i2c-aws-us
+
     steps:
       - name: Checkout repo
         uses: actions/checkout@v3
 
-      - name: Setup dependencies
+      - name: Install deployer
         run: |
-          python3 -m pip install -r requirements.txt
+          python3 -m pip install --editable .
           sudo apt install jsonnet
 
-      - name: Setup gcloud
-        uses: google-github-actions/setup-gcloud@v0
-        with:
-          version: "290.0.1"
-          # This is used for KMS only
-          project_id: two-eye-two-see
-          service_account_key: ${{ secrets.GCP_KMS_DECRYPTOR_KEY }}
-          export_default_credentials: true
-
-      - name: Setup sops
+      - name: Install sops
         uses: mdgreenwald/mozilla-sops-action@v1
         with:
           version: v3.7.1
 
+      - name: Setup sops credentials to decrypt repo secrets
+        uses: google-github-actions/auth@v1
+        with:
+          credentials_json: "${{ secrets.GCP_KMS_DECRYPTOR_KEY }}"
+
       - name: Deploy grafana dashboards for ${{ matrix.cluster_name }}
         run: |
-          python3 deployer deploy-grafana-dashboards ${{ matrix.cluster_name }}
+          deployer deploy-grafana-dashboards ${{ matrix.cluster_name }}

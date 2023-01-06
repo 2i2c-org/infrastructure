@@ -1,0 +1,28 @@
+prometheusIngressAuthSecret:
+  enabled: true
+
+cluster-autoscaler:
+  enabled: true
+  autoDiscovery:
+    clusterName: nasa-cryo
+  awsRegion: us-west-2
+
+grafana:
+  ingress:
+    hosts:
+      - grafana.cryointhecloud.2i2c.cloud
+    tls:
+      - secretName: grafana-tls
+        hosts:
+          - grafana.cryointhecloud.2i2c.cloud
+
+prometheus:
+  server:
+    ingress:
+      enabled: true
+      hosts:
+        - prometheus.cryointhecloud.2i2c.cloud
+      tls:
+        - secretName: prometheus-tls
+          hosts:
+            - prometheus.cryointhecloud.2i2c.cloud

@@ -11,7 +11,7 @@ config_connector_enabled = false
 
 # Setup a filestore for in-cluster NFS
 enable_filestore = true
-filestore_capacity_gb = 2048
+filestore_capacity_gb = 4096
 
 regional_cluster = false
 

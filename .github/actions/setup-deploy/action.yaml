@@ -46,7 +46,7 @@ inputs:
 runs:
   using: "composite"
   steps:
-    - uses: actions/setup-python@v3
+    - uses: actions/setup-python@v4
       with:
         python-version: "3.9"
 
@@ -62,14 +62,14 @@ runs:
         # between workflow runs.
         key: "${{ github.run_id }}"
 
-    - name: Install deployer script's Python dependencies
+    - name: Install the deployer
       run: |
-        pip install -r requirements.txt
+        pip install --editable .
         pip list
       shell: bash
 
     # This action use the github official cache mechanism internally
-    - uses: azure/setup-helm@v2.0
+    - uses: azure/setup-helm@v3.5
       with:
         # version is pinned for helm to avoid an automatic update of its version
         # which would cause something unexpected without an action on our
@@ -78,7 +78,7 @@ runs:
 
     # Pin kubectl version to 1.23 otherwise interactions with k8s clusters versioned <=1.21 won't work.
     # See https://github.com/2i2c-org/infrastructure/issues/1271.
-    - uses: azure/setup-kubectl@v2.0
+    - uses: azure/setup-kubectl@v3.1
       with:
         version: "v1.23.5"
 
@@ -89,6 +89,6 @@ runs:
         version: v3.7.2
 
     - name: Setup sops credentials to decrypt repo secrets
-      uses: google-github-actions/auth@v0
+      uses: google-github-actions/auth@v1
       with:
         credentials_json: "${{ inputs.GCP_KMS_DECRYPTOR_KEY }}"

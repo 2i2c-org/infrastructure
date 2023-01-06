@@ -33,7 +33,15 @@ Here are some guidelines for merging and reviewing in this case:
   - Updating admin users for a hub
   - Changing basic hub configuration such as the URL of its landing page image
   - Updating the user image of a hub.
+  - Updating the max number of nodes for nodepools in a cluster
   :::
+- **Be careful when changing config of a hub *during* an event**
+  Sometimes, a hub config change needs to happen *immediately*, to help debug something
+  or change behavior during a time sensitive event. Local deploys are ok to make sure that
+  users see the benefit immediately and we aren't blocking the progress of the event. However,
+  make sure you push a PR with the change *and merge it quickly* to make sure that the changes
+  are persisted across future deploys. Self merging is acceptable here, although this general
+  class of changes should be limited as much as possible.
 
 ## Changing authentication related configuration
 

@@ -71,6 +71,7 @@ Helm is used in two ways:
   the rendered templates with a k8s api-server. This is an excellent lightweight
   test of a Helm chart in a CI system.
 
+(tools:sops)=
 ### [`sops`](https://github.com/mozilla/sops/)
 
 In line with 2i2c's [Customer Right to Replicate](https://2i2c.org/right-to-replicate/),
@@ -95,15 +96,18 @@ new files.
 We use terraform to provision cloud infrastructure and modify it directly.
 We then deploy applications on top of that infrastructure via [Helm](tools:helm).
 
+The minimum required version is `1.3`.
+
 ## Google Cloud tools
 
 [`google-cloud-sdk`](https://cloud.google.com/sdk/docs/install) is the primary
 commandline tool used to interact with Google Cloud Platform (GCP). Our deployment
 scripts use it to authenticate to GCP, and it is very helpful in [debugging node
-issues](../howto/k8s/node-administration.md).
+issues](../sre-guide/manage-k8s/node-administration.md).
 
 ### Tips
 
+(tools:gcloud:auth)=
 #### Authentication
 
 `gcloud` has two authentication flows, and that can get quite confusing since we
@@ -132,5 +136,5 @@ With just one tool to download and configure, you can control multiple AWS servi
 `eksctl` is a simple CLI tool for creating and managing clusters on EKS - Amazon's
 managed Kubernetes service for EC2. See [the `eksctl` documentation for more information](https://docs.aws.amazon.com/eks/latest/userguide/getting-started-eksctl.html).
 
-Make sure you are using at least version 0.97. You
+Make sure you are using at least version 0.115. You
 can check the installed version with `eksctl version`

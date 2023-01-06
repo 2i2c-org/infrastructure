@@ -24,6 +24,9 @@ cluster-autoscaler:
     clusterName: carbonplanhub
   awsRegion: us-west-2
 grafana:
+  grafana.ini:
+    server:
+      root_url: https://grafana.carbonplan.2i2c.cloud/
   ingress:
     hosts:
       - grafana.carbonplan.2i2c.cloud

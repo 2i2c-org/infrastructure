@@ -1,3 +1,10 @@
+# The use of ::set-output in this workflow file was deprecated as per:
+# https://github.blog/changelog/2022-10-11-github-actions-deprecating-save-state-and-set-output-commands/
+# We have instead pivoted to writing to the GITHUB_ENV file, either by the
+# method suggested in the above blog post, or by following the below Stack
+# Overflow answer for python code: https://stackoverflow.com/a/70123641
+# More info on GITHUB_ENV: https://docs.github.com/en/actions/learn-github-actions/environment-variables
+
 name: Comment GitHub Actions link on a merged PR
 
 on:
@@ -22,35 +29,125 @@ jobs:
   get-pr-number:
     runs-on: ubuntu-latest
     outputs:
-      continue-workflow: ${{ steps.get-pr-number.outputs.continue-workflow }}
-      pr-number: ${{ steps.get-pr-number.outputs.pr-number }}
+      continue-workflow: ${{ env.continue-workflow }}
+      pr-number: ${{ env.pr-number }}
     steps:
       - name: Extract Pull Request number
-        id: get-pr-number
         shell: python
         run: |
+          import os
           import re
 
+          # Get GITHUB_ENV file in GitHub Actions
+          env_file = os.getenv("GITHUB_ENV")
+
+          # Retrieve the commit message from GitHub Actions context
           commit_msg = r"""${{ github.event.head_commit.message }}"""
-          print(f"::set-output name=continue-workflow::{'Merge pull request' in commit_msg}")
 
+          # Use regex to extract the PR number from the commit message
           match = re.search('(?<=#)[0-9]*', commit_msg)
-          if match is not None:
-              pr_number = match.group(0)
-              print(f"::set-output name=pr-number::{pr_number}")
-          else:
-              print(f"::set-output name=pr-number::{None}")
+          pr_number = None if match is None else match.group(0)
 
-  add-pr-comment:
-    # This job depends on the get-pr-number job to have completed successfully and set
-    # the continue-workflow variable to True. It consumes the pr-number variable to
-    # comment on that Pull Request with a link to the deploy-hubs.yaml wiorkflow running
-    # on the master branch.
+          # Write the continue_workflow and pr_number variables to the
+          # GITHUB_ENV file in GitHub Actions
+          with open(env_file, "a") as f:
+              f.write(f"continue-workflow={'Merge pull request' in commit_msg}")
+              f.write("\n")
+              f.write(f"pr-number={pr_number}")
+
+  # The other piece of information we require is the URL of the running workflow
+  # triggered by merging the Pull Request. We use the ghapi Python package to interact
+  # with the GitHub REST API and pull a list of workflow runs for the repository.
+  # We filter these runs by the following criteria: event that triggered the workflow,
+  # branch the workflow run is associated with, workflows that were created within a
+  # given date-time period, the head commit of the workflow run contains the relevant
+  # Pull Request number, and the name of the *other* workflow that we want to provide
+  # a link to. The URL for the matching workflow run is set as an output.
+  #
+  # This job depends on the get-pr-number job to have completed successfully and set
+  # the continue-workflow variable to True.
+  get-workflow-url:
     runs-on: ubuntu-latest
-    needs: [get-pr-number]
-    permissions:
-      pull-requests: write
+    needs: get-pr-number
     if: needs.get-pr-number.outputs.continue-workflow == 'True'
+    permissions:
+      # Grant GITHUB_TOKEN permissions to read a list of workflows for the repo
+      actions: read
+    outputs:
+      workflow-url: ${{ env.workflow-url }}
+    steps:
+      - name: Install ghapi to interact with the GitHub REST API via Python
+        run: pip install ghapi
+
+      - name: Find workflow URL
+        shell: python
+        run: |
+          import os
+          from datetime import datetime
+          from ghapi.all import GhApi, paged
+
+          # Get today's date in ISO format
+          today = datetime.now().strftime("%Y-%m-%d")
+
+          # Get variables from the environment
+          owner, repo = r"""${{ github.repository }}""".split("/")
+
+          # Authenticate against the REST API
+          api = GhApi(token=r"""${{ secrets.GITHUB_TOKEN }}""")
+
+          # List workflow runs for the repository. Filtered by event, branch, and
+          # creation time.
+          all_workflow_runs = paged(
+              api.actions.list_workflow_runs_for_repo,
+              owner=owner,
+              repo=repo,
+              branch=r"""${{ env.BRANCH }}""",
+              event=r"""${{ env.EVENT }}""",
+              per_page=100,
+              # Reduce the number of results by only checking workflow runs that were
+              # created today
+              created=f">={today}",
+          )
+
+          for wf_runs in all_workflow_runs:
+              workflow_url = next(
+                  (
+                      workflow_run.html_url
+                      for workflow_run in wf_runs.workflow_runs
+                      if workflow_run.name == r"""${{ env.WORKFLOW_NAME }}"""
+                      and workflow_run.head_commit.message == r"""${{ github.event.head_commit.message }}"""
+                  ),
+                  False,
+              )
+              if workflow_url:
+                  break
+
+          # Write the workflow URL to the GITHUB_ENV file in GitHub Actions
+          env_file = os.getenv("GITHUB_ENV")
+          with open(env_file, "a") as f:
+              f.write(f"workflow-url={workflow_url}")
+        env:
+          BRANCH: "master"
+          EVENT: "push"
+          # WORKFLOW_NAME *MUST* match what is set in the name field in the
+          # deploy-hubs.yaml workflow file
+          # https://github.com/2i2c-org/infrastructure/blob/HEAD/.github/workflows/deploy-hubs.yaml
+          WORKFLOW_NAME: "Deploy and test hubs"
+
+  # This job depends on the get-pr-number and get-workflow-url jobs to have completed
+  # successfully and set the get-pr-number.outputs.continue-workflow variable to 'True'
+  # and the get-workflow-url.outputs.workflow-url variable to something other than 'False'. This
+  # job consumes the pr-number and workflow-url variables to comment on the matching
+  # Pull Request with the workflow URL to the running deployment workflow.
+  add-pr-comment:
+    runs-on: ubuntu-latest
+    needs: [get-pr-number, get-workflow-url]
+    permissions:
+      # Grant GITHUB_TOKEN enough permissions to comment on Pull Requests
+      pull-requests: write
+    if: |
+      (needs.get-pr-number.outputs.continue-workflow == 'True')
+      && (needs.get-workflow-url.outputs.workflow-url != 'False')
     steps:
       - name: Comment on merged PR with GitHub Actions link
         uses: actions/github-script@v6
@@ -58,16 +155,14 @@ jobs:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           script: |
             var PR_NUMBER = process.env.PR_NUMBER;
-            var WORKFLOW_FILENAME = process.env.WORKFLOW_FILENAME;
-            var BRANCH = process.env.BRANCH;
+            var WORKFLOW_URL = process.env.WORKFLOW_URL;
 
             github.rest.issues.createComment({
               issue_number: `${PR_NUMBER}`,
               owner: context.repo.owner,
               repo: context.repo.repo,
-              body: `:tada::tada::tada::tada:\n\nMonitor the deployment of the hubs here :point_right: https://github.com/${context.repo.owner}/${context.repo.repo}/actions/workflows/${WORKFLOW_FILENAME}?query=branch%3A${BRANCH}`
+              body: `:tada::tada::tada::tada:\n\nMonitor the deployment of the hubs here :point_right: ${WORKFLOW_URL}`
             })
         env:
           PR_NUMBER: "${{ needs.get-pr-number.outputs.pr-number }}"
-          WORKFLOW_FILENAME: deploy-hubs.yaml
-          BRANCH: master
+          WORKFLOW_URL: "${{ needs.get-workflow-url.outputs.workflow-url }}"

@@ -1,7 +1,13 @@
 binderhub:
+  registry:
+    url: https://us-central1-docker.pkg.dev
   config:
+    DockerRegistry:
+      token_url: https://us-central1-docker.pkg.dev/v2/token?service=
     BinderHub:
       auth_enabled: true
+      hub_url: https://hub.binder-staging.2i2c.cloud
+      image_prefix: us-central1-docker.pkg.dev/two-eye-two-see/binder-staging-registry/binder-staging-
       template_path: /etc/binderhub/custom/templates
       extra_static_path: /etc/binderhub/custom/static
       extra_static_url_prefix: /extra_static/

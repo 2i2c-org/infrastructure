@@ -29,5 +29,5 @@ This workflow is only triggered when related configuration has changed.
 
 GitHub's UI is slightly confusing for distinguishing between _workflows that ran on a Pull Request_ and _workflows that ran on the merge commit to the default branch_.
 
-To help contributors to our `infrastructure` repository find the right workflow run, we have a GitHub Actions workflow that [posts a comment on a just merged Pull Request](https://github.com/2i2c-org/infrastructure/blob/HEAD/.github/workflows/comment-test-link-merged-pr.yaml) with a link to the GitHub Actions UI filtered for the `deploy-hubs.yaml` workflow (described above) running on the default branch.
-Hence, it should be much easier to find the current deployments happening on `master` than just following GitHub's UI.
+To help contributors to our `infrastructure` repository find the right workflow run, we have a GitHub Actions workflow that [posts a comment on a just merged Pull Request](https://github.com/2i2c-org/infrastructure/blob/HEAD/.github/workflows/comment-test-link-merged-pr.yaml) with a link to the GitHub Actions run of the `deploy-hubs.yaml` workflow (described in [](cicd/hub)) that the merge triggered.
+Hence, it should be much easier to find the current deployments caused by merges than just following GitHub's UI.

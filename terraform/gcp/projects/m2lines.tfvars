@@ -19,7 +19,15 @@ user_buckets = {
   },
   "scratch": {
     "delete_after": 7
+  },
+  # For https://2i2c.freshdesk.com/a/tickets/218
+  "persistent": {
+    "delete_after": null
+  },
+  "persistent-staging": {
+    "delete_after": null
   }
+
 }
 
 # Setup notebook node pools
@@ -68,14 +76,14 @@ notebook_nodes = {
       count: 0
     }
   },
-  "gpu-k80" : {
+  "gpu-t4" : {
     min : 0,
     max : 100,
     machine_type : "n1-standard-8",
     labels: {},
     gpu: {
       enabled: true,
-      type: "nvidia-tesla-k80",
+      type: "nvidia-tesla-t4",
       count: 1
     }
   },
@@ -131,12 +139,12 @@ dask_nodes = {
 hub_cloud_permissions = {
   "staging" : {
     requestor_pays : true,
-    bucket_admin_access: ["scratch-staging"],
+    bucket_admin_access: ["scratch-staging", "persistent-staging"],
     hub_namespace: "staging"
   },
   "prod" : {
     requestor_pays : true,
-    bucket_admin_access: ["scratch"],
+    bucket_admin_access: ["scratch", "persistent"],
     hub_namespace: "prod"
   },
 }

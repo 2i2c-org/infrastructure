@@ -1,7 +1,7 @@
 # This is a GitHub workflow defining a set of jobs with a set of steps. ref:
 # https://docs.github.com/en/actions/learn-github-actions/workflow-syntax-for-github-actions
 #
-# Runs the deployer script to validate clusters. This will both validate
+# Runs the deployer module to validate clusters. This will both validate
 # cluster.yaml files, any non-encrypted values files for the support chart (if they
 # exist), as well as each hubs passed non-encrypted values files against the Helm
 # charts' values schema.
@@ -10,89 +10,205 @@ name: Validate clusters
 
 on:
   pull_request:
+    branches:
+      - master
     paths:
-      - config/clusters/**
-      - helm-charts/**
-      - deployer/**
-      - requirements.txt
-      - .github/workflows/validate-hubs.yaml
+      - "config/clusters/**"
+      # Exclude changes to the templates directory from
+      # triggering this workflow
+      - "!config/clusters/templates"
+      - "helm-charts/**"
+      - "deployer/**"
+      - "requirements.txt"
+      - ".github/workflows/validate-clusters.yaml"
   push:
+    branches:
+      - master
     paths:
-      - config/clusters/**
-      - helm-charts/**
-      - deployer/**
-      - requirements.txt
-      - .github/workflows/validate-hubs.yaml
-    branches-ignore:
-      - "dependabot/**"
-      - "pre-commit-ci-update-config"
+      - "config/clusters/**"
+      # Exclude changes the templates directory from
+      # triggering this workflow
+      - "!config/clusters/templates"
+      - "helm-charts/**"
+      - "deployer/**"
+      - "requirements.txt"
+      - ".github/workflows/validate-clusters.yaml"
     tags:
       - "**"
   workflow_dispatch:
 
 jobs:
-  validate-helm-charts-values-files:
+  # This job inspects changed files in order to determine which cluster files
+  # should be validated. If helm-chart files change, then all clusters will be
+  # validated. The output of this job is a json-encoded dictionary of the
+  # cluster names to be validated. This is passed to the
+  # validate-helm-charts-values-files job to define a matrix strategy.
+  # We also set a continue_workflow job output that determines if either the
+  # common or cluster_specific files have changed and whether the next job
+  # should be run. We always run the next job if the workflow was manually
+  # triggered.
+  #
+  # === Notes on dorny/paths-filter syntax ===
+  # 1. Setting 'list-files: csv' sets an output called '${FILTER_NAME}_files'
+  #    that we use to determine which specific clusters have file changes
+  # 2. The 'added|modified:' syntax before a path glob pattern means that we
+  #    only care about files that have been added or modified, not deleted
+  # 3. We can also group filters together and hence only need to run the action
+  #    step *once* with the 'common' and 'cluster-specific' filters together
+  generate-clusters-to-validate:
     runs-on: ubuntu-latest
-    strategy:
-      fail-fast: false
-      matrix:
-        include:
-          - cluster_name: 2i2c
-          - cluster_name: azure.carbonplan
-          - cluster_name: carbonplan
-          - cluster_name: cloudbank
-          - cluster_name: meom-ige
-          - cluster_name: openscapes
-          - cluster_name: pangeo-hubs
-          - cluster_name: m2lines
-          - cluster_name: utoronto
-          - cluster_name: uwhackweeks
-          - cluster_name: linked-earth
-          - cluster_name: awi-ciroh
+    permissions:
+      pull-requests: read
+    outputs:
+      continue_workflow: |
+        ${{ github.event_name == 'workflow_dispatch' ||
+        (steps.file_changes.outputs.common == 'true' ||
+        steps.file_changes.outputs.cluster_specific == 'true') }}
+      cluster_matrix: ${{ env.MATRIX }}
+    # Only run this job if one of the following conditions is true:
+    # - The workflow was manually triggered
+    # - The event is a push to the master branch
+    # - The event is a pull request where the head branch is *NOT* a dependabot
+    #   or pre-commit generated branch
+    if: |
+      github.event_name == 'workflow_dispatch' ||
+      (github.event_name == 'push' && contains(github.ref, 'master')) ||
+      (github.event_name == 'pull_request' && contains(github.head_ref, fromJson('["dependabot", "pre-commit"]')) == false)
 
     steps:
       - uses: actions/checkout@v3
-
-      - name: Check if any cluster common files has changed
-        uses: dorny/paths-filter@v2
-        id: cluster_common_files
-        with:
-          filters: |
-            files:
-              - deployer/**
-              - helm-charts/basehub/**
-              - helm-charts/daskhub/**
-              - helm-charts/support/**
-              - requirements.txt
-              - .github/workflows/validate-hubs.yaml
-
-      - name: Check if cluster specific files has changes
-        uses: dorny/paths-filter@v2
-        id: cluster_specific_files
-        with:
-          filters: |
-            changes:
-              - config/clusters/${{ matrix.cluster_name }}/**
-
-      # To continue this cluster specific job we must either have manually
-      # invoked this workflow to run for all clusters, or there should have been
-      # changes to the cluster common files or cluster specific files.
-      - name: Decide if the job should continue
-        id: decision
-        run: |
-          echo ::set-output name=continue-job::${{ github.event_name == 'workflow_dispatch' || (steps.cluster_common_files.outputs.files == 'true' || steps.cluster_specific_files.outputs.changes == 'true') }}
-
       - uses: actions/setup-python@v4
         with:
-          python-version: "3.9"
+          python-version: "3.10"
 
-      - name: Install deployer script dependencies
+      - name: Check for file changes
+        # Don't run this step when we manually trigger the workflow
+        if: github.event_name != 'workflow_dispatch'
+        # Action repo: https://github.com/dorny/paths-filter
+        uses: dorny/paths-filter@v2
+        id: file_changes
+        with:
+          list-files: csv
+          filters: |
+            common:
+              - added|modified: deployer/**
+              - added|modified: helm-charts/basehub/**
+              - added|modified: helm-charts/daskhub/**
+              - added|modified: helm-charts/support/**
+              - added|modified: requirements.txt
+              - added|modified: .github/workflows/validate-clusters.yaml
+            cluster_specific:
+              - added|modified: config/clusters/**
+
+      # Only run this step if there *ARE* changes under the common filter, *OR*
+      # we have manually triggered the workflow
+      - name: Generate a matrix containing all clusters
+        if: |
+          github.event_name == 'workflow_dispatch' ||
+          steps.file_changes.outputs.common == 'true'
+        shell: python
         run: |
-          pip install -r requirements.txt
+          import os
+          import json
 
-      - name: "Validate cluster: ${{ matrix.cluster_name }}"
-        if: steps.decision.outputs.continue-job == 'true'
+          # List all cluster folders
+          cluster_folders = os.listdir("config/clusters")
+
+          # Construct a matrix of all clusters
+          matrix = []
+          for cluster in cluster_folders:
+              # The `templates` directory contains template yaml configs
+              # and doesn't represent a "real" cluster.
+              # This is why we need to exclude it from the list of clusters
+              # and hence all workflows, otherwise it will cause them to fail.
+              if cluster != "templates":
+                matrix.append({"cluster_name": cluster})
+
+          # Write matrix to the GITHUB_ENV file in GitHub Actions
+          env_file = os.getenv("GITHUB_ENV")
+          with open(env_file, "a") as f:
+              # Explicitly dump these as JSON, as that is what they are read as
+              # General python object syntax sometimes works but sometimes does
+              # not - for example, single quotes are not valid in JSON.
+              f.write(f"MATRIX={json.dumps(matrix)}")
+
+      # Only run this step if there are *NO* changes under the common filter,
+      # but *ARE* changes under the cluster_specific filter, *AND* we have not
+      # manually triggered the workflow
+      - name: Generate a matrix containing only clusters that have changes
+        if: |
+          github.event_name != 'workflow_dispatch' &&
+          steps.file_changes.outputs.common != 'true' &&
+          steps.file_changes.outputs.cluster_specific == 'true'
+        shell: python
+        run: |
+          import os
+          import json
+          from pathlib import Path
+
+          # Consume list of changed cluster files and convert to list by splitting
+          # on the comma character
+          cluster_files = r"""${{ steps.file_changes.outputs.cluster_specific_files }}"""
+          cluster_files = cluster_files.split(",")
+          assert isinstance(cluster_files, list)
+
+          # Extract the cluster names from the paths of the changed files
+          clusters = []
+          for cluster_file in cluster_files:
+              clusters.append(Path(cluster_file).parent.stem)
+
+          # Ensure each cluster name only appears once by transforming the list
+          # into a set
+          clusters = set(clusters)
+
+          # Construct a matrix of clusters that have changes
+          matrix = []
+          for cluster in clusters:
+              matrix.append({"cluster_name": cluster})
+
+          # Write the matrix to the GITHUB_ENV file in GitHub Actions
+          env_file = os.getenv("GITHUB_ENV")
+          with open(env_file, "a") as f:
+              # Explicitly dump these as JSON, as that is what they are read as
+              # General python object syntax sometimes works but sometimes does
+              # not - for example, single quotes are not valid in JSON.
+              f.write(f"MATRIX={json.dumps(matrix)}")
+
+  # This job runs the 'deployer validate' subcommand across a matrix of
+  # cluster names.
+  #
+  # It relies on the generate-clusters-to-validate job to have completed and
+  # set the following outputs:
+  # - continue_workflow (bool): This job will only run if this output is set to
+  #     'true'. The value of this output is calculated based on detected file
+  #     changes.
+  # - cluster_matrix (json obj): A matrix of cluster names that require validation
+  #     due to detected changes. This job will not run if this output is empty,
+  #     i.e., '[]'.
+  #
+  validate-helm-charts-values-files:
+    runs-on: ubuntu-latest
+    needs: [generate-clusters-to-validate]
+    if: |
+      needs.generate-clusters-to-validate.outputs.continue_workflow &&
+      needs.generate-clusters-to-validate.outputs.cluster_matrix != '[]'
+    strategy:
+      fail-fast: false
+      matrix:
+        jobs: ${{ fromJson(needs.generate-clusters-to-validate.outputs.cluster_matrix) }}
+
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-python@v4
+        with:
+          python-version: "3.10"
+
+      - name: Install deployer module dependencies
+        run: |
+          pip install --editable .
+
+      - name: "Validate cluster: ${{ matrix.jobs.cluster_name }}"
         env:
           TERM: xterm
         run: |
-          python deployer validate ${{ matrix.cluster_name }}
+          deployer validate ${{ matrix.jobs.cluster_name }}

@@ -14,7 +14,7 @@ extensions = [
     "myst_parser",
     "sphinx.ext.intersphinx",
     "sphinx_copybutton",
-    "sphinx_panels",
+    "sphinx_design",
 ]
 
 intersphinx_mapping = {
@@ -76,75 +76,8 @@ def setup(app):
 import subprocess
 from pathlib import Path
 
-import pandas as pd
-
 # -- Custom scripts -----------------------------------------
-# Pull latest list of communities served by infrastructure/
-from yaml import safe_load
-
-
-def render_hubs():
-    # Grab the latest list of clusters defined in infrastructure/ explicitly ignoring
-    # the test clusters in the ./tests directory
-    clusters = [
-        filepath
-        for filepath in Path("../config/clusters").glob("**/*cluster.yaml")
-        if "tests/" not in str(filepath)
-    ]
-
-    hub_list = []
-    for cluster_info in clusters:
-        cluster_path = cluster_info.parent
-        if "schema" in cluster_info.name or "staff" in cluster_info.name:
-            continue
-        # For each cluster, grab it's YAML w/ the config for each hub
-        yaml = cluster_info.read_text()
-        cluster = safe_load(yaml)
-
-        # Pull support chart information to populate fields (if it exists)
-        support_files = cluster.get("support", {}).get("helm_chart_values_files", None)
-
-        # Incase we don't find any Grafana config, use an empty string as default
-        grafana_url = ""
-
-        # Loop through support files, look for Grafana config, and grab the URL
-        if support_files is not None:
-            for support_file in support_files:
-                with open(cluster_path.joinpath(support_file)) as f:
-                    support_config = safe_load(f)
-
-                grafana_url = (
-                    support_config.get("grafana", {})
-                    .get("ingress", {})
-                    .get("hosts", "")
-                )
-                # If we find a grafana url, set it here and break the loop, we are done
-                if isinstance(grafana_url, list):
-                    grafana_url = grafana_url[0]
-                    grafana_url = f"[{grafana_url}](http://{grafana_url})"
-                    break
-
-        # For each hub in cluster, grab its metadata and add it to the list
-        for hub in cluster["hubs"]:
-            # Domain can be a list
-            if isinstance(hub["domain"], list):
-                hub["domain"] = hub["domain"][0]
-
-            hub_list.append(
-                {
-                    # Fallback to name if display_name isn't available
-                    "name": hub.get("display_name", "name"),
-                    "domain": f"[{hub['domain']}](https://{hub['domain']})",
-                    "id": hub["name"],
-                    "hub_type": hub["helm_chart"],
-                    "grafana": grafana_url,
-                }
-            )
-    df = pd.DataFrame(hub_list)
-    path_tmp = Path("tmp")
-    path_tmp.mkdir(exist_ok=True)
-    path_table = path_tmp / "hub-table.csv"
-    df.to_csv(path_table, index=None)
+subprocess.run(["python", "scripts/render_hubs.py"])
 
 
 def render_tfdocs():
@@ -164,5 +97,4 @@ def render_tfdocs():
     )
 
 
-render_hubs()
 render_tfdocs()

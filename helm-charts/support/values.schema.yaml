@@ -15,7 +15,6 @@ required:
   - ingress-nginx
   - prometheus
   - grafana
-  - nfs-server-provisioner
   - nvidiaDevicePlugin
   - prometheusIngressAuthSecret
   - cryptnono
@@ -45,12 +44,6 @@ properties:
   grafana:
     type: object
     additionalProperties: true
-  # nfs-server-provisioner is a dependent helm chart, we rely on its schema
-  # validation for values passed to it and are not imposing restrictions on them
-  # in this helm chart.
-  nfs-server-provisioner:
-    type: object
-    additionalProperties: true
   # Enables  https://github.com/yuvipanda/cryptnono/ to prevent cryptomining
   cryptnono:
     type: object
@@ -67,17 +60,8 @@ properties:
     required:
       - azure
       - gke
-      - aws
     properties:
       azure:
-        type: object
-        additionalProperties: false
-        required:
-          - enabled
-        properties:
-          enabled:
-            type: boolean
-      aws:
         type: object
         additionalProperties: false
         required:
@@ -90,9 +74,22 @@ properties:
         additionalProperties: false
         required:
           - enabled
+          - version
         properties:
           enabled:
             type: boolean
+          version:
+            type: string
+            enum:
+              - stable
+              - latest
+            description: |
+              Install the stable or latest version of nvidia GPU drivers for the node.
+
+              See table in https://cloud.google.com/kubernetes-engine/docs/how-to/gpus#installing_drivers
+              to determine what versions would be installed. Might need to be matched with appropriate
+              version of the CUDA libraries used in the images users use.
+
   prometheusIngressAuthSecret:
     type: object
     # prometheusIngressAuthSecret is _not a dependent helm chart_. It is values directly

@@ -22,20 +22,56 @@ structure
 tutorials/setup.md
 ```
 
+(sre-guide)=
+## Site reliability engineering guide
+
+The SRE guide covers day-to-day tasks undertaken by engineers as well as tasks that may need to be completed as part of our [support process](https://team-compass.2i2c.org/en/latest/projects/managed-hubs/support.html).
+We also document common problems and their solutions within these sections, where a permanent solution has not been developed (yet).
+
+```{toctree}
+:maxdepth: 1
+:caption: SRE guide
+sre-guide/support/index.md
+sre-guide/manage-k8s/index.md
+sre-guide/node-scale-up/index.md
+sre-guide/common-problems-solutions.md
+```
+
+(hub-deployment-guide)=
+## Hub deployment guide
+
+These sections walk an engineer step-by-step through the workflow of setting up a new 2i2c-managed JupyterHub.
+
+- If there isn't a cloud account setup yet, start with [](new-cloud-account)
+- If there isn't a Kubernetes cluster setup yet, start with [](new-cluster)
+- If all you need to do is deploy the hub, start with [](new-hub)
+
+```{toctree}
+:maxdepth: 1
+:caption: Hub deployment guide
+hub-deployment-guide/cloud-accounts/index.md
+hub-deployment-guide/new-cluster/index.md
+hub-deployment-guide/deploy-support/index.md
+hub-deployment-guide/hubs/new-hub.md
+hub-deployment-guide/configure-auth/index.md
+hub-deployment-guide/hubs/other-hub-ops/index.md
+```
+
 ## How-to guides
 
 How-To guides answer the question 'How do I...?' for a lot of topics.
+These operations do not fall into day-to-day tasks of the [](sre-guide), nor the
+standard operations of [deploying a new hub](hub-deployment-guide), but may be
+deployed occasionally as a specific addition.
 
 ```{toctree}
-:maxdepth: 2
+:maxdepth: 1
 :caption: How-to guides
-howto/operate/index.md
-howto/hubs/index.md
-howto/features/index
-howto/k8s/index.md
-howto/configure/auth-management
-howto/configure/update-env
-howto/cloud/new-gcp-project
+howto/features/index.md
+howto/manage-domains/index.md
+howto/grafana-github-auth.md
+howto/update-env.md
+howto/manual-nfs-setup.md
 ```
 
 ## Topic guides
@@ -45,18 +81,10 @@ Topic guides go more in-depth on a particular topic.
 ```{toctree}
 :caption: Topic guides
 :maxdepth: 2
-topic/config.md
-topic/cloud-auth.md
+topic/access-creds/index.md
+topic/infrastructure/index.md
+topic/monitoring-alerting/index.md
 topic/features.md
-topic/credits.md
-topic/hub-helm-charts.md
-topic/hub-image.md
-topic/storage-layer.md
-topic/network.md
-topic/terraform.md
-topic/cluster-design.md
-topic/secrets.md
-topic/troubleshooting.md
 ```
 
 ## Reference
@@ -65,13 +93,12 @@ Reference information about our infrastructure.
 
 ```{toctree}
 :caption: Reference
-:maxdepth: 2
+:maxdepth: 1
 
 reference/hubs
 reference/ci-cd/index
 reference/terraform.md
 reference/tools
-incidents/index
 ```
 
 ## Contributing

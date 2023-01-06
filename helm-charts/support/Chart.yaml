@@ -7,13 +7,13 @@ dependencies:
   # Prometheus for collection of metrics.
   # https://github.com/prometheus-community/helm-charts/tree/main/charts/prometheus
   - name: prometheus
-    version: 15.10.1
+    version: 15.16.1
     repository: https://prometheus-community.github.io/helm-charts
 
   # Grafana for dashboarding of metrics.
   # https://github.com/grafana/helm-charts/tree/main/charts/grafana
   - name: grafana
-    version: 6.11.0
+    version: 6.42.2
     repository: https://grafana.github.io/helm-charts
 
   # ingress-nginx for a k8s Ingress resource controller that routes traffic from
@@ -29,12 +29,6 @@ dependencies:
     version: 9.10.3
     repository: https://kubernetes.github.io/autoscaler
     condition: cluster-autoscaler.enabled
-
-  # In-cluster NFS server provisioner
-  - name: nfs-server-provisioner
-    version: 1.3.1
-    repository: https://kvaps.github.io/charts
-    condition: nfs-server-provisioner.enabled
 
   # cryptnono, counters crypto mining
   # Source code: https://github.com/yuvipanda/cryptnono/

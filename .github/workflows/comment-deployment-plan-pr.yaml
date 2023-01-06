@@ -122,23 +122,29 @@ jobs:
               per_page=100,
           )
 
+          # Otherwise, if no `issue_comments`, this will be undefined
+          comment_id = None
           # Find if a deployment-plan comment has been previously posted
-          comment = next(
-              (
-                  comment[0]
-                  for comment in issue_comments
-                  if comment[0].user.login == "github-actions[bot]"
-                  and "<!-- deployment-plan -->" in comment[0].body
-              ),
-              False,
-          )
+          for page in issue_comments:
+              comment_id = next(
+                  (
+                      comment["id"]
+                      for comment in page
+                      if comment["user"]["login"] == "github-actions[bot]"
+                      and "<!-- deployment-plan -->" in comment["body"]
+                  ),
+                  None,
+              )
 
-          if comment:
+              if comment_id is not None:
+                  break
+
+          if comment_id is not None:
               # Comment exists - update it
               api.issues.update_comment(
                   owner=owner,
                   repo=repo,
-                  comment_id=comment.id,
+                  comment_id=comment_id,
                   body=comment_body,
               )
           else:

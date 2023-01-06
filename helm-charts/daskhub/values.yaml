@@ -46,10 +46,9 @@ basehub:
         # variables be copied over to the worker nodes from the user nodes.
         DASK_GATEWAY__CLUSTER__OPTIONS__ENVIRONMENT: '{"SCRATCH_BUCKET": "$(SCRATCH_BUCKET)", "PANGEO_SCRATCH": "$(PANGEO_SCRATCH)"}'
         # DASK_DISTRIBUTED__DASHBOARD__LINK makes the suggested link to the
-        # dashboard account for the /user/<username> prefix in the path. Note
-        # that this still misbehave if you have a named server but now its at
-        # least functional for non-named servers.
-        DASK_DISTRIBUTED__DASHBOARD__LINK: "/user/{JUPYTERHUB_USER}/proxy/{port}/status"
+        # dashboard account for the /user/<username>/<server-name> prefix in the path.
+        # JUPYTERHUB_SERVICE_PREFIX has leading and trailing slashes as appropriate
+        DASK_DISTRIBUTED__DASHBOARD__LINK: "{JUPYTERHUB_SERVICE_PREFIX}proxy/{port}/status"
 
     hub:
       services:
@@ -57,9 +56,6 @@ basehub:
           # Don't display a dask-gateway entry under 'services',
           # as dask-gateway has no UI
           display: false
-      networkPolicy:
-        # FIXME: Enable this when dask-gateway chart v0.9.1 or higher is used
-        enabled: false
       extraConfig:
         daskhub-01-add-dask-gateway-values: |
           # 1. Sets `DASK_GATEWAY__PROXY_ADDRESS` in the singleuser environment.
@@ -96,7 +92,7 @@ basehub:
                       service.setdefault("url", service_url)
                   break
           else:
-              print("dask-gateway service not found. Did you set jupyterhub.hub.services.dask-gateway.apiToken?")
+              print("dask-gateway service not found, this should not happen!")
 
 dask-gateway:
   enabled: true # Enabling dask-gateway will install Dask Gateway as a dependency.

@@ -1,0 +1,10 @@
+basehub:
+  userServiceAccount:
+    annotations:
+      eks.amazonaws.com/role-arn: arn:aws:iam::129856558350:role/victor-staging
+
+  jupyterhub:
+    hub:
+      config:
+        GitHubOAuthenticator:
+          oauth_callback_url: https://staging.victor.2i2c.cloud/hub/oauth_callback

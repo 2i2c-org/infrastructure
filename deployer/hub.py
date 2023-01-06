@@ -1,15 +1,14 @@
-import hashlib
-import hmac
 import json
 import subprocess
 import tempfile
 from pathlib import Path
 from textwrap import dedent
 
-from auth import KeyProvider
-from file_acquisition import get_decrypted_file, get_decrypted_files
 from ruamel.yaml import YAML
-from utils import print_colour
+
+from .auth import KeyProvider
+from .file_acquisition import get_decrypted_file, get_decrypted_files
+from .utils import print_colour
 
 # Without `pure=True`, I get an exception about str / byte issues
 yaml = YAML(typ="safe", pure=True)
@@ -25,39 +24,15 @@ class Hub:
         self.cluster = cluster
         self.spec = spec
 
-    def get_generated_config(self, auth_provider: KeyProvider, secret_key):
+    def get_generated_config(self, auth_provider: KeyProvider):
         """
         Generate config automatically for each hub
 
         WARNING: MIGHT CONTAINS SECRET VALUES!
         """
         if self.spec["helm_chart"] == "binderhub":
-            # For Google Artifact registry, this takes the following form:
-            # {LOCATION}-docker.pkg.dev
-            # If the zone of the cluster is us-central1-b, then the location is us-central1
-            registry_url = f"{'-'.join(self.cluster.spec['gcp']['zone'].split('-')[:2])}-docker.pkg.dev"
-
-            # NOTE: We are hard-coding config for using Google Artifact Registry here.
-            # We should not. Instead we should provide a way to support as many container
-            # registries as BinderHub supports. We are hard-coding this config here
-            # because we need to generate parts of it from the cluster object spec,
-            # so to generalise, we may have to live with some copy-pasting of certain
-            # values such as cluster project and location.
             generated_config = {
                 "binderhub": {
-                    "registry": {"url": f"https://{registry_url}"},
-                    "config": {
-                        "BinderHub": {
-                            "hub_url": f"https://hub.{self.spec['domain']}",
-                            # For Google Artifact registry, this takes the following form:
-                            # {registry_url}/{PROJECT_ID}/{REPOSITORY}-registry/{IMAGE}-
-                            # REPOSITORY and IMAGE will both be the hub namespace
-                            "image_prefix": f"{registry_url}/{self.cluster.spec['gcp']['project']}/{self.spec['name']}-registry/{self.spec['name']}-",
-                        },
-                        "DockerRegistry": {
-                            "token_url": f"https://{registry_url}/v2/token?service="
-                        },
-                    },
                     "ingress": {
                         "hosts": [self.spec["domain"]],
                         "tls": [
@@ -83,7 +58,6 @@ class Hub:
         else:
             generated_config = {
                 "jupyterhub": {
-                    "proxy": {"https": {"hosts": [self.spec["domain"]]}},
                     "ingress": {
                         "hosts": [self.spec["domain"]],
                         "tls": [
@@ -92,12 +66,6 @@ class Hub:
                                 "hosts": [self.spec["domain"]],
                             }
                         ],
-                    },
-                    "singleuser": {
-                        # If image_repo isn't set, just have an empty image dict
-                        "image": {"name": self.cluster.spec["image_repo"]}
-                        if "image_repo" in self.cluster.spec
-                        else {},
                     },
                     "hub": {
                         "config": {},
@@ -113,6 +81,7 @@ class Hub:
                                 ],
                                 "securityContext": {
                                     "runAsUser": 1000,
+                                    "runAsGroup": 1000,
                                     "allowPrivilegeEscalation": False,
                                     "readOnlyRootFilesystem": True,
                                 },
@@ -122,7 +91,23 @@ class Hub:
                                         "mountPath": "/srv/repo",
                                     }
                                 ],
-                            }
+                            },
+                            {
+                                "name": "templates-ownership-fix",
+                                "image": "alpine/git",
+                                "command": ["/bin/sh"],
+                                "args": [
+                                    "-c",
+                                    "ls -lhd /srv/repo && chown 1000:1000 /srv/repo && ls -lhd /srv/repo",
+                                ],
+                                "securityContext": {"runAsUser": 0},
+                                "volumeMounts": [
+                                    {
+                                        "name": "custom-templates",
+                                        "mountPath": "/srv/repo",
+                                    }
+                                ],
+                            },
                         ],
                         "extraContainers": [
                             {
@@ -134,6 +119,7 @@ class Hub:
                                     "-c",
                                     dedent(
                                         f"""\
+                                        ls -lhd /srv/repo;
                                         while true; do git fetch origin;
                                         if [[ $(git ls-remote --heads origin {self.cluster.spec["name"]}-{self.spec["name"]} | wc -c) -ne 0 ]]; then
                                             git reset --hard origin/{self.cluster.spec["name"]}-{self.spec["name"]};
@@ -146,6 +132,7 @@ class Hub:
                                 ],
                                 "securityContext": {
                                     "runAsUser": 1000,
+                                    "runAsGroup": 1000,
                                     "allowPrivilegeEscalation": False,
                                     "readOnlyRootFilesystem": True,
                                 },
@@ -201,112 +188,14 @@ class Hub:
                 "Auth0OAuthenticator"
             ] = auth_provider.get_client_creds(client, self.spec["auth0"]["connection"])
 
-        return self.apply_hub_helm_chart_fixes(generated_config, secret_key)
-
-    def apply_hub_helm_chart_fixes(self, generated_config, secret_key):
-        """
-        Modify generated_config based on what hub helm chart we're using.
-
-        Different hub helm charts require different pre-set config. For example,
-        anything deriving from 'basehub' needs all config to be under a 'basehub'
-        config. dask hubs require apiTokens, etc.
-
-        Ideally, these would be done declaratively. Until then, let's put all of
-        them in this function.
-        """
-        # FIXME: This section can be removed upon resolution of the below linked issue, where we would
-        #        instead just define a JupyterHub service under hub.services and
-        #        rely on the JupyterHub Helm chart to generate an api token if
-        #        needed.
-        #
-        #        Blocked by https://github.com/dask/dask-gateway/issues/473 and a
-        #        release including it.
-        #
+        # Due to nesting of charts on top of the basehub, our generated basehub
+        # config may need to be nested as well.
         if self.spec["helm_chart"] == "daskhub":
             generated_config = {"basehub": generated_config}
 
-            gateway_token = hmac.new(
-                secret_key, b"gateway-" + self.spec["name"].encode(), hashlib.sha256
-            ).hexdigest()
-            generated_config["dask-gateway"] = {
-                "gateway": {"auth": {"jupyterhub": {"apiToken": gateway_token}}}
-            }
-            generated_config["basehub"].setdefault("jupyterhub", {}).setdefault(
-                "hub", {}
-            ).setdefault("services", {})["dask-gateway"] = {"apiToken": gateway_token}
-
-        elif self.spec["helm_chart"] == "binderhub":
-            gateway_token = hmac.new(
-                secret_key, b"gateway-" + self.spec["name"].encode(), hashlib.sha256
-            ).hexdigest()
-            generated_config["dask-gateway"] = {
-                "gateway": {"auth": {"jupyterhub": {"apiToken": gateway_token}}}
-            }
-            generated_config["binderhub"].setdefault("jupyterhub", {}).setdefault(
-                "hub", {}
-            ).setdefault("services", {})["dask-gateway"] = {"apiToken": gateway_token}
-
         return generated_config
 
-    def exec_homes_shell(self):
-        """
-        Pop a shell with the home directories of the given hub mounted
-
-        Homes will be mounter under /home
-        """
-        # Name pod to include hub name so we don't end up in wrong one
-        pod_name = f'{self.spec["name"]}-shell'
-        pod = {
-            "apiVersion": "v1",
-            "kind": "Pod",
-            "spec": {
-                "terminationGracePeriodSeconds": 1,
-                "automountServiceAccountToken": False,
-                "volumes": [
-                    # This PVC is created by basehub
-                    {"name": "home", "persistentVolumeClaim": {"claimName": "home-nfs"}}
-                ],
-                "containers": [
-                    {
-                        "name": pod_name,
-                        # Use ubuntu image so we get better gnu rm
-                        "image": "ubuntu:jammy",
-                        "stdin": True,
-                        "stdinOnce": True,
-                        "tty": True,
-                        "volumeMounts": [
-                            {
-                                "name": "home",
-                                "mountPath": "/home",
-                            }
-                        ],
-                    }
-                ],
-            },
-        }
-
-        cmd = [
-            "kubectl",
-            "-n",
-            self.spec["name"],
-            "run",
-            "--rm",  # Remove pod when we're done
-            "-it",  # Give us a shell!
-            "--overrides",
-            json.dumps(pod),
-            "--image",
-            # Use ubuntu image so we get GNU rm and other tools
-            # Should match what we have in our pod definition
-            "ubuntu:jammy",
-            pod_name,
-            "--",
-            "/bin/bash",
-            "-l",
-        ]
-
-        subprocess.check_call(cmd)
-
-    def deploy(self, auth_provider, secret_key, dask_gateway_version):
+    def deploy(self, auth_provider, dask_gateway_version):
         """
         Deploy this hub
         """
@@ -332,7 +221,7 @@ class Hub:
 
             self.spec["domain"] = domain_override_config["domain"]
 
-        generated_values = self.get_generated_config(auth_provider, secret_key)
+        generated_values = self.get_generated_config(auth_provider)
 
         if self.spec["helm_chart"] == "daskhub":
             # Install CRDs for daskhub before deployment

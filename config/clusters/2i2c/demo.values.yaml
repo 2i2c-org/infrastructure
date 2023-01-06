@@ -22,10 +22,20 @@ jupyterhub:
     config:
       JupyterHub:
         authenticator_class: cilogon
-      Authenticator:
-        # We do not define allowed_users here since only usernames matching this regex will be allowed to login into the hub.
-        # Ref: https://jupyterhub.readthedocs.io/en/stable/api/auth.html#jupyterhub.auth.Authenticator.username_pattern
-        username_pattern: '^(.+@2i2c\.org|.+@rmbl\.org|deployment-service-check)$'
       CILogonOAuthenticator:
         oauth_callback_url: https://demo.2i2c.cloud/hub/oauth_callback
-        username_claim: email
+        shown_idps:
+          # Allow Google for 2i2c.org anr dmbl
+          - https://accounts.google.com/o/oauth2/auth
+          - https://enterprise.login.utexas.edu/idp/shibboleth
+        allowed_idps:
+          # UTexas hub
+          https://enterprise.login.utexas.edu/idp/shibboleth:
+            username_derivation:
+              username_claim: "eppn"
+          http://google.com/accounts/o8/id:
+            username_derivation:
+              username_claim: "email"
+            allowed_domains:
+              - "2i2c.org"
+              - "rmbl.org"

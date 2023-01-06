@@ -7,6 +7,8 @@ on:
     paths:
       - deployer/**
       - tests/**
+      - requirements.txt
+      - dev-requirements.txt
     tags:
       - "**"
   pull_request:
@@ -15,6 +17,8 @@ on:
     paths:
       - deployer/**
       - tests/**
+      - requirements.txt
+      - dev-requirements.txt
   workflow_dispatch:
 
 jobs:
@@ -28,7 +32,7 @@ jobs:
       - name: Install dependencies
         run: |
           pip install -U pip
-          pip install -r requirements.txt
+          pip install --editable .
       - name: Run tests
         run: |
           python -m pytest -vvv --color=yes

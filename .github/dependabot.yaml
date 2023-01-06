@@ -15,10 +15,17 @@
 #
 # Full configuration options can be found here:
 # https://docs.github.com/en/code-security/supply-chain-security/keeping-your-dependencies-updated-automatically/configuration-options-for-dependency-updates
+#
+# `directory` is a required field that can only take one value. Therefore, to
+# locate the different requirements.txt files throughout the repo, we must define
+# multiple rules with a specific path for `directory`
 
 version: 2
 updates:
-  # Maintain dependencies for GitHub Actions
+  # Maintain dependencies for GitHub Actions in workflow files
+  # By default, the directory to be checked is .github/workflows for the github-actions
+  # package ecosystem
+  # ref: https://docs.github.com/en/code-security/dependabot/working-with-dependabot/keeping-your-actions-up-to-date-with-dependabot
   - package-ecosystem: "github-actions"
     directory: "/"
     schedule:
@@ -30,7 +37,19 @@ updates:
         dependency-name: "*" # Match all packages
     reviewers:
       - "2i2c-org/tech-team"
-  # Maintain dependencies for pip
+  # Maintain dependencies for GitHub Actions in our setup-deploy action
+  - package-ecosystem: "github-actions"
+    directory: "/.github/actions/setup-deploy/"
+    schedule:
+      # Check for updates once a week. By default, this check happens on a Monday.
+      interval: "weekly"
+    ignore:
+      # Ignore patch upgrades to further reduce noise
+      - update-types: ["version-update:semver-patch"]
+        dependency-name: "*" # Match all packages
+    reviewers:
+      - "2i2c-org/tech-team"
+  # Maintain dependencies for pip defined in project root (deployer module)
   - package-ecosystem: "pip"
     directory: "/"
     schedule:
@@ -42,3 +61,31 @@ updates:
         dependency-name: "*" # Match all packages
     reviewers:
       - "2i2c-org/tech-team"
+  # Maintain dependencies for pip defined in docs folder (documentation)
+  - package-ecosystem: "pip"
+    directory: "/docs"
+    schedule:
+      # Check for updates once a week. By default, this check happens on a Monday.
+      interval: "weekly"
+    ignore:
+      # Ignore patch upgrades to further reduce noise
+      - update-types: ["version-update:semver-patch"]
+        dependency-name: "*" # Match all packages
+    reviewers:
+      - "2i2c-org/tech-team"
+  # Signal pip dependencies updates in helm-charts/images/hub folder (default hub image)
+  - package-ecosystem: "pip"
+    directory: "/helm-charts/images/hub"
+    schedule:
+      # Check for updates once a week. By default, this check happens on a Monday.
+      interval: "weekly"
+    ignore:
+      # Ignore patch upgrades to further reduce noise
+      - update-types: ["version-update:semver-patch"]
+        dependency-name: "*" # Match all packages
+    reviewers:
+      - "2i2c-org/tech-team"
+    labels:
+      # This dependabot PRs should not be merged as is, because additional manual steps are required also.
+      # Checkout https://infrastructure.2i2c.org/en/latest/topic/infrastructure/hub-image.html#updating-the-hub-image
+      - "requires follow-up"

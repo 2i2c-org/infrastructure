@@ -42,14 +42,8 @@ basehub:
           shown_idps:
             - https://accounts.google.com/o/oauth2/auth
           allowed_idps:
-            # CILogon still uses the old google oidc enpoint instead of the new one listed in `shown_idps`.
-            # Ref https://github.com/ncsa/OA4MP/issues/45
             http://google.com/accounts/o8/id:
               username_derivation:
                 username_claim: "email"
-        Authenticator:
-          # We only want 2i2c users to sign up
-          # Protects against cryptominers - https://github.com/2i2c-org/infrastructure/issues/1216
-          username_pattern: '^(.+@2i2c\.org|deployment-service-check)$'
-          # Delete any prior existing users in the db that don't pass username_pattern
-          delete_invalid_users: true
+              allowed_domains:
+                - "2i2c.org"

@@ -1,0 +1,23 @@
+jupyterhub:
+  scheduling:
+    userPlaceholder:
+      # Keep at least one spare node around
+      replicas: 1
+      resources:
+        requests:
+          # Each node on the UToronto cluster has 59350076Ki of RAM
+          # You can find this out by looking at the output of `kubectl get node <node-name> -o yaml`
+          # Look under `allocatable`, not `capacity`. Unfortunately then you have to fiddle with it to
+          # find the right number that's big enough that no user pods will schedule here, but small enough
+          # that pods in `kube-system` will still schedule.
+          # So even though this is under `userPlaceholder`, it really is operating as a `nodePlaceholder`
+          memory: 57350076Ki
+  hub:
+    db:
+      pvc:
+        # prod stores logs, so let's make it big
+        storage: 60Gi
+    config:
+      AzureAdOAuthenticator:
+        oauth_callback_url: https://jupyter.utoronto.ca/hub/oauth_callback
+        logout_redirect_url: https://login.microsoftonline.com/common/oauth2/logout?post_logout_redirect_uri=https://jupyter.utoronto.ca

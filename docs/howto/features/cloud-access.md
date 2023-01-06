@@ -63,7 +63,7 @@ This AWS IAM Role is managed via terraform.
       access to. Used along with the [user_buckets](howto:features:cloud-access:storage-buckets)
       terraform variable to enable the [scratch buckets](topic:features:cloud:scratch-buckets)
       feature.
-   3. (GCP only) `hub_namespace` is the full name of the hub, as hubs are put in Kubernetes
+   4. (GCP only) `hub_namespace` is the full name of the hub, as hubs are put in Kubernetes
       Namespaces that are the same as their names. This is explicitly specified here
       because `<hub-name-slug>` could possibly be truncated on GCP.
 
@@ -80,25 +80,29 @@ This AWS IAM Role is managed via terraform.
 4. Run `terraform output kubernetes_sa_annotations`, this should
    show you a list of hubs and the annotation required to be set on them:
 
-   ```{tabbed} GCP
-   <pre>
+   `````{tab-set}
+   ````{tab-item} GCP
+   :sync: gcp-key
+   ```bash
    $ terraform output kubernetes_sa_annotations
    {
      "prod" = "iam.gke.io/gcp-service-account: meom-ige-prod@meom-ige-cnrs.iam.gserviceaccount.com"
      "staging" = "iam.gke.io/gcp-service-account: meom-ige-staging@meom-ige-cnrs.iam.gserviceaccount.com"
    }
-   </pre>
    ```
+   ````
 
-   ```{tabbed} AWS
-   <pre>
+   ````{tab-item} AWS
+   :sync: aws-key
+   ```bash
    $ terraform output kubernetes_sa_annotations
    {
      "prod" = "eks.amazonaws.com/role-arn: arn:aws:iam::740010314650:role/uwhackweeks-prod"
      "staging" = "eks.amazonaws.com/role-arn: arn:aws:iam::740010314650:role/uwhackweeks-staging"
    }
-   </pre>
    ```
+   ````
+   `````
 
    This shows all the annotations for all the hubs configured to provide cloud access
    in this cluster. You only need to care about the hub you are currently dealing with.
@@ -108,21 +112,25 @@ This AWS IAM Role is managed via terraform.
 
 6. Specify the annotation from step 4, nested under `userServiceAccount.annotations`.
 
-   ```{tabbed} GCP
-    <pre>
-    userServiceAccount:
-        annotations:
-            iam.gke.io/gcp-service-account: meom-ige-staging@meom-ige-cnrs.iam.gserviceaccount.com"
-   </pre>
-    ```
+   `````{tab-set}
+   ````{tab-item} GCP
+   :sync: gcp-key
+   ```yaml
+   userServiceAccount:
+     annotations:
+       iam.gke.io/gcp-service-account: meom-ige-staging@meom-ige-cnrs.iam.gserviceaccount.com"
+   ```
+   ````
 
-   ```{tabbed} AWS
-    <pre>
-    userServiceAccount:
-        annotations:
-            eks.amazonaws.com/role-arn: arn:aws:iam::740010314650:role/uwhackweeks-staging
-   </pre>
-    ```
+   ````{tab-item} AWS
+   :sync: aws-key
+   ```yaml
+   userServiceAccount:
+     annotations:
+       eks.amazonaws.com/role-arn: arn:aws:iam::740010314650:role/uwhackweeks-staging
+   ```
+   ````
+   `````
 
     ```{note}
     If the hub is a `daskhub`, nest the config under a `basehub` key
@@ -130,77 +138,6 @@ This AWS IAM Role is managed via terraform.
 
 7. Get this change deployed, and users should now be able to use the requestor pays feature!
    Currently running users might have to restart their pods for the change to take effect.
-
-(howto:features:cloud-access:storage-buckets)=
-## Creating storage buckets for use with the hub
-
-See [the relevant topic page](topic:features:cloud:scratch-buckets) for more information
-on why users want this!
-
-1. In the `.tfvars` file for the project in which this hub is based off
-   create (or modify) the `user_buckets` variable. The config is
-   like:
-
-   ```terraform
-   user_buckets = {
-      "bucket1": {
-         "delete_after": 7
-      },
-      "bucket2": {
-         "delete_after": null
-      }
-   }
-   ```
-
-   Since storage buckets need to be globally unique across all of Google Cloud,
-   the actual created names are `<prefix>-<bucket-name>`, where `<prefix>` is
-   set by the `prefix` variable in the `.tfvars` file
-
-   `delete_after` specifies the number of days after *object creation
-   time* the object will be automatically cleaned up - this is
-   very helpful for 'scratch' buckets that are temporary. Set to
-   `null` to prevent this cleaning up process from happening.
-
-2. Enable access to these buckets from the hub by [editing `hub_cloud_permissions`](howto:features:cloud-access:access-perms)
-   in the same `.tfvars` file. Follow all the steps listed there - this
-   should create the storage buckets and provide all users access to them!
-
-3. You can set the `SCRATCH_BUCKET` (and the deprecated `PANGEO_SCRATCH`)
-   env vars on all user pods so users can use the created bucket without
-   having to hard-code the bucket name in their code. In the hub-specific
-   `.values.yaml` file in `config/clusters/<cluster-name>`,
-   set:
-
-   ```yaml
-    jupyterhub:
-      singleuser:
-         extraEnv:
-            SCRATCH_BUCKET: <s3 or gcs>://<bucket-full-name>/$(JUPYTERHUB_USER)
-            PANGEO_SCRATCH: <s3 or gcs>://<bucket-full-name>/$(JUPYTERHUB_USER)
-   ```
-
-   ```{note}
-   Use s3 on AWS and gcs on GCP for the protocol part
-   ```
-   ```{note}
-   If the hub is a `daskhub`, nest the config under a `basehub` key
-   ```
-
-   The `$(JUPYTERHUB_USER)` expands to the name of the current user for
-   each user, so everyone gets a little prefix inside the bucket to store
-   their own stuff without stepping on other people's objects. But this is
-   **not a security mechanism** - everyone can access everyone else's objects!
-
-   `<bucket-full-name>` is the *full* name of the bucket, which is formed by
-   `<prefix>-<bucket-name>`, where `<prefix>` is also set in the `.tfvars` file.
-   You can see the full names of created buckets with `terraform output buckets`
-   too.
-
-   You can also add other env vars pointing to other buckets users requested.
-
-4. Get this change deployed, and users should now be able to use the buckets!
-   Currently running users might have to restart their pods for the change to take effect.
-
 
 ## Granting access to cloud buckets in other cloud accounts / projects
 

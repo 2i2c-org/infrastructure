@@ -1,0 +1,59 @@
+nfs:
+  enabled: true
+  pv:
+    mountOptions:
+      - soft
+      - noatime
+    # Google FileStore IP
+    serverIP: 10.65.88.114
+    # Name of Google Filestore share
+    baseShareName: /homes/
+jupyterhub:
+  custom:
+    2i2c:
+      add_staff_user_ids_to_admin_users: true
+      add_staff_user_ids_of_type: "github"
+    homepage:
+      templateVars:
+        org:
+          name: London Interdisciplinary School
+          url: https://www.lis.ac.uk
+          logo_url: https://avatars.githubusercontent.com/u/95037064?s=200&v=4
+        designed_by:
+          name: 2i2c
+          url: https://2i2c.org
+        operated_by:
+          name: 2i2c
+          url: https://2i2c.org
+        funded_by:
+          name: London Interdisciplinary School
+          url: https://www.lis.ac.uk
+    # Extra mount point for admins to access to all users' home dirs
+    # Ref https://2i2c.freshdesk.com/a/tickets/228
+    singleuserAdmin:
+      extraVolumeMounts:
+        - name: home
+          mountPath: /home/jovyan/allusers
+  singleuser:
+    image:
+      # https://hub.docker.com/r/lisacuk/lishub-base
+      name: "lisacuk/lishub-base"
+      tag: "b183052"
+  hub:
+    config:
+      JupyterHub:
+        authenticator_class: github
+      Authenticator:
+        # This hub uses GitHub Orgs auth and so we don't set
+        # allowed_users in order to not deny access to valid members of
+        # the listed orgs. These people should have admin access though.
+        admin_users:
+          - LaCrecerelle
+          - matthew-brett
+      GitHubOAuthenticator:
+        allowed_organizations:
+          - 2i2c-org
+          - lisacuk
+        scope:
+          - read:org
+        oauth_callback_url: "https://ds.lis.2i2c.cloud/hub/oauth_callback"

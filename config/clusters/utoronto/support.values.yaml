@@ -19,6 +19,9 @@ prometheus:
         cpu: 2
         memory: 16Gi
 grafana:
+  grafana.ini:
+    server:
+      root_url: https://grafana.utoronto.2i2c.cloud/
   ingress:
     hosts:
       - grafana.utoronto.2i2c.cloud

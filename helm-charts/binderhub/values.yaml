@@ -4,7 +4,7 @@ binderhub:
   config:
     BinderHub:
       use_registry: true
-      build_image: "quay.io/jupyterhub/repo2docker:2022.02.0-62.g484b29b"
+      build_image: "quay.io/jupyterhub/repo2docker:2022.02.0-75.gd415115"
       per_repo_quota: 150
       build_node_selector:
         # Build user images only on user nodes, not dask or core nodes
@@ -201,9 +201,6 @@ binderhub:
           admin: true
       nodeSelector:
         hub.jupyter.org/node-purpose: core
-      networkPolicy:
-        # FIXME: Enable this when dask-gateway chart v0.9.1 or higher is used
-        enabled: false
       extraConfig:
         daskhub-01-add-dask-gateway-values: |
           # 1. Sets `DASK_GATEWAY__PROXY_ADDRESS` in the singleuser environment.
@@ -240,7 +237,7 @@ binderhub:
                       service.setdefault("url", service_url)
                   break
           else:
-              print("dask-gateway service not found. Did you set jupyterhub.hub.services.dask-gateway.apiToken?")
+              print("dask-gateway service not found, this should not happen!")
 dask-gateway:
   #=== VALUES BELOW HERE ARE COPIED FROM DASKHUB VALUES AND SHOULD BE UPDATED ===#
   #=== IF DASKHUB CHANGES ===#
@@ -295,24 +292,49 @@ dask-gateway:
           nodeSelector:
             # Dask workers get their own pre-emptible pool
             k8s.dask.org/node-purpose: worker
+
     # TODO: figure out a replacement for userLimits.
     extraConfig:
       optionHandler: |
         from dask_gateway_server.options import Options, Integer, Float, String, Mapping
+        import string
+
+        # Escape a string to be dns-safe in the same way that KubeSpawner does it.
+        # Reference https://github.com/jupyterhub/kubespawner/blob/616f72c4aee26c3d2127c6af6086ec50d6cda383/kubespawner/spawner.py#L1828-L1835
+        # Adapted from https://github.com/minrk/escapism to avoid installing the package
+        # in the dask-gateway api pod which would have been problematic.
+        def escape_string_label_safe(to_escape):
+            safe_chars = set(string.ascii_lowercase + string.digits)
+            escape_char = "-"
+            chars = []
+            for c in to_escape:
+                if c in safe_chars:
+                    chars.append(c)
+                else:
+                    # escape one character
+                    buf = []
+                    # UTF-8 uses 1 to 4 bytes per character, depending on the Unicode symbol
+                    # so we need to transform each byte to its hex value
+                    for byte in c.encode("utf8"):
+                        buf.append(escape_char)
+                        # %X is the hex value of the byte
+                        buf.append('%X' % byte)
+                    escaped_hex_char = "".join(buf)
+                    chars.append(escaped_hex_char)
+            return u''.join(chars)
 
         def cluster_options(user):
+            safe_username = escape_string_label_safe(user.name)
             def option_handler(options):
                 if ":" not in options.image:
                     raise ValueError("When specifying an image you must also provide a tag")
-                # FIXME: No user labels or annotations, until https://github.com/pangeo-data/pangeo-cloud-federation/issues/879
-                # is fixed.
                 extra_annotations = {
-                    # "hub.jupyter.org/username": safe_username,
+                    "hub.jupyter.org/username": safe_username,
                     "prometheus.io/scrape": "true",
                     "prometheus.io/port": "8787",
                 }
                 extra_labels = {
-                    # "hub.jupyter.org/username": safe_username,
+                    "hub.jupyter.org/username": safe_username,
                 }
                 return {
                     "worker_cores_limit": options.worker_cores,
@@ -345,6 +367,7 @@ dask-gateway:
       k8s.dask.org/node-purpose: core
     service:
       type: ClusterIP # Access Dask Gateway through JupyterHub. To access the Gateway from outside JupyterHub, this must be changed to a `LoadBalancer`.
+
 # A placeholder as global values that can be referenced from the same location
 # of any chart should be possible to provide, but aren't necessarily provided or
 # used.
