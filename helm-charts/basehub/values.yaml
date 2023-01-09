@@ -370,6 +370,8 @@ jupyterhub:
     services:
       configurator:
         url: http://configurator:10101
+        # Don't require users to explicitly 'confirm' before sending them to configurator
+        oauth_no_confirm: true
         command:
           - python3
           - -m
