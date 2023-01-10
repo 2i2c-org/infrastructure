@@ -61,7 +61,7 @@ basehub:
           # so need to populate the teams in the auth state
           populate_teams_in_auth_state: true
           allowed_organizations:
-            - 2i2c-org:tech-team
+            - 2i2c-org:hub-access-for-2i2c-staff
             - CryoInTheCloud:cryoclouduser
             - CryoInTheCloud:cryocloudadvanced
           scope:
@@ -85,7 +85,7 @@ basehub:
           description: "~2 CPU, ~8G RAM"
           default: true
           allowed_teams:
-            - 2i2c-org:tech-team
+            - 2i2c-org:hub-access-for-2i2c-staff
             - CryoInTheCloud:cryoclouduser
             - CryoInTheCloud:cryocloudadvanced
           kubespawner_override:
@@ -98,7 +98,7 @@ basehub:
         - display_name: "Medium: m5.xlarge"
           description: "~4 CPU, ~15G RAM"
           allowed_teams:
-            - 2i2c-org:tech-team
+            - 2i2c-org:hub-access-for-2i2c-staff
             - CryoInTheCloud:cryoclouduser
             - CryoInTheCloud:cryocloudadvanced
           kubespawner_override:
@@ -109,7 +109,7 @@ basehub:
         - display_name: "Large: m5.2xlarge"
           description: "~8 CPU, ~30G RAM"
           allowed_teams:
-            - 2i2c-org:tech-team
+            - 2i2c-org:hub-access-for-2i2c-staff
             - CryoInTheCloud:cryocloudadvanced
           kubespawner_override:
             mem_limit: null
@@ -119,7 +119,7 @@ basehub:
         - display_name: "Huge: m5.8xlarge"
           description: "~32 CPU, ~128G RAM"
           allowed_teams:
-            - 2i2c-org:tech-team
+            - 2i2c-org:hub-access-for-2i2c-staff
             - CryoInTheCloud:cryocloudadvanced
           kubespawner_override:
             mem_limit: null

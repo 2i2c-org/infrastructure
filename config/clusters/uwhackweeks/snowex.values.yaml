@@ -24,6 +24,6 @@ basehub:
       config:
         GitHubOAuthenticator:
           allowed_organizations:
-            - 2i2c-org:tech-team
+            - 2i2c-org:hub-access-for-2i2c-staff
             - snowex-hackweek:participants-2022
           oauth_callback_url: https://snowex.uwhackweeks.2i2c.cloud/hub/oauth_callback
