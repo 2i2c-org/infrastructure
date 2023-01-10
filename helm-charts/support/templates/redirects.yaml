@@ -1,0 +1,19 @@
+{{ range .Values.redirects.rules }}
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  annotations:
+    cert-manager.io/cluster-issuer: letsencrypt-prod
+    nginx.ingress.kubernetes.io/server-snippet: |
+      return {{ .code | default 302 }} $scheme://{{ .to }}$request_uri;
+  name: ingress-redirect
+spec:
+  ingressClassName: nginx
+  tls:
+  - hosts:
+    - {{ .from }}
+    # .from is a DNS name, but dots aren't allo
+    secretName: redirect-{{ .from }}-tls
+  rules:
+  - host: {{ .from }}
+{{ end }}

@@ -1,6 +1,13 @@
 prometheusIngressAuthSecret:
   enabled: true
 
+redirects:
+  rules:
+    - from: r-staging.utoronto.2i2c.cloud
+      to: r-staging.datatools.utoronto.ca
+    - from: r.utoronto.2i2c.cloud
+      to: r.datatools.utoronto.ca
+
 prometheus:
   server:
     ingress:
