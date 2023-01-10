@@ -18,6 +18,7 @@ required:
   - nvidiaDevicePlugin
   - prometheusIngressAuthSecret
   - cryptnono
+  - redirects
   - global
 properties:
   # cluster-autoscaler is a dependent helm chart, we rely on its schema
@@ -48,6 +49,34 @@ properties:
   cryptnono:
     type: object
     additionalProperties: true
+  redirects:
+    type: object
+    required:
+      - rules
+    properties:
+      rules:
+        type: array
+        items:
+          type: object
+          required:
+            - from
+            - to
+          properties:
+            from:
+              type: string
+              description: |
+                Domain to redirect from
+            to:
+              type: string
+              description: |
+                Domain to redirect to
+            code:
+              type: integer
+              description: |
+                HTTP Status code to use for the redirect.
+
+                302 (Temporary Redirect) is used if none is specified
+
   # nvidiaDevicePlugin is _not a dependent helm chart_. It is values directly
   # coupled with this helm chart and are influencing the rendering of templates
   # we provide as part of this helm chart.

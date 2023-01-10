@@ -3,6 +3,9 @@ prometheusIngressAuthSecret:
   username: ""
   password: ""
 
+redirects:
+  rules: []
+
 cluster-autoscaler:
   enabled: false
 ingress-nginx:
