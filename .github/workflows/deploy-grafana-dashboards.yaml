@@ -28,6 +28,7 @@ jobs:
           - cluster_name: gridsst
           - cluster_name: victor
           - cluster_name: 2i2c-aws-us
+          - cluster_name: ubc-eoas
 
     steps:
       - name: Checkout repo
