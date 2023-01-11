@@ -13,20 +13,26 @@ on:
     branches:
       - master
     paths:
-      - config/clusters/**
-      - helm-charts/**
-      - deployer/**
-      - requirements.txt
-      - .github/workflows/validate-clusters.yaml
+      - "config/clusters/**"
+      # Exclude changes to the templates directory from
+      # triggering this workflow
+      - "!config/clusters/templates"
+      - "helm-charts/**"
+      - "deployer/**"
+      - "requirements.txt"
+      - ".github/workflows/validate-clusters.yaml"
   push:
     branches:
       - master
     paths:
-      - config/clusters/**
-      - helm-charts/**
-      - deployer/**
-      - requirements.txt
-      - .github/workflows/validate-clusters.yaml
+      - "config/clusters/**"
+      # Exclude changes the templates directory from
+      # triggering this workflow
+      - "!config/clusters/templates"
+      - "helm-charts/**"
+      - "deployer/**"
+      - "requirements.txt"
+      - ".github/workflows/validate-clusters.yaml"
     tags:
       - "**"
   workflow_dispatch:
@@ -103,6 +109,7 @@ jobs:
         shell: python
         run: |
           import os
+          import json
 
           # List all cluster folders
           cluster_folders = os.listdir("config/clusters")
@@ -110,12 +117,20 @@ jobs:
           # Construct a matrix of all clusters
           matrix = []
           for cluster in cluster_folders:
-              matrix.append({"cluster_name": cluster})
+              # The `templates` directory contains template yaml configs
+              # and doesn't represent a "real" cluster.
+              # This is why we need to exclude it from the list of clusters
+              # and hence all workflows, otherwise it will cause them to fail.
+              if cluster != "templates":
+                matrix.append({"cluster_name": cluster})
 
           # Write matrix to the GITHUB_ENV file in GitHub Actions
           env_file = os.getenv("GITHUB_ENV")
           with open(env_file, "a") as f:
-              f.write(f"MATRIX={matrix}")
+              # Explicitly dump these as JSON, as that is what they are read as
+              # General python object syntax sometimes works but sometimes does
+              # not - for example, single quotes are not valid in JSON.
+              f.write(f"MATRIX={json.dumps(matrix)}")
 
       # Only run this step if there are *NO* changes under the common filter,
       # but *ARE* changes under the cluster_specific filter, *AND* we have not
@@ -128,6 +143,7 @@ jobs:
         shell: python
         run: |
           import os
+          import json
           from pathlib import Path
 
           # Consume list of changed cluster files and convert to list by splitting
@@ -153,7 +169,10 @@ jobs:
           # Write the matrix to the GITHUB_ENV file in GitHub Actions
           env_file = os.getenv("GITHUB_ENV")
           with open(env_file, "a") as f:
-              f.write(f"matrix={matrix}")
+              # Explicitly dump these as JSON, as that is what they are read as
+              # General python object syntax sometimes works but sometimes does
+              # not - for example, single quotes are not valid in JSON.
+              f.write(f"MATRIX={json.dumps(matrix)}")
 
   # This job runs the 'deployer validate' subcommand across a matrix of
   # cluster names.

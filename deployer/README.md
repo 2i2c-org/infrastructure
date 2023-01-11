@@ -26,7 +26,7 @@ This section descripts all the deployment related subcommands the `deployer` can
 **Command line usage:**
 
 ``` bash
-                                                                                                                        
+                                                                                                                                              
  Usage: deployer [OPTIONS] COMMAND [ARGS]...                                                                            
                                                                                                                         
 ╭─ Options ────────────────────────────────────────────────────────────────────────────────────────────────────────────╮
@@ -42,12 +42,19 @@ This section descripts all the deployment related subcommands the `deployer` can
 │ exec-homes-shell                    Pop an interactive shell with the home directories of the given hub mounted on   │
 │                                     /home                                                                            │
 │ exec-hub-shell                      Pop an interactive shell in the hub pod                                          │
+│ generate-aws-cluster                Automatically generate the files required to setup a new cluster on AWS          │
+│ generate-gcp-cluster                Automatically generate the terraform config file required to setup a new cluster │
+│                                     on GCP                                                                           │
 │ generate-helm-upgrade-jobs          Analyse added or modified files from a GitHub Pull Request and decide which      │
 │                                     clusters and/or hubs require helm upgrades to be performed for their *hub helm   │
 │                                     charts or the support helm chart.                                                │
+│ new-grafana-token                   Generate an API token for the cluster's Grafana `deployer` service account and   │
+│                                     store it encrypted inside a `enc-grafana-token.secret.yaml` file.                │
 │ run-hub-health-check                Run a health check on a given hub on a given cluster. Optionally check scaling   │
 │                                     of dask workers if the hub is a daskhub.                                         │
-│ update-central-grafana-datasources  Update a central grafana with datasources for all our prometheuses               │
+│ start-docker-proxy                  Proxy a docker daemon from a remote cluster to local port 23760.                 │
+│ update-central-grafana-datasources  Update the central grafana with datasources for all clusters prometheus          │
+│                                     instances                                                                        │
 │ use-cluster-credentials             Pop a new shell authenticated to the given cluster using the deployer's          │
 │                                     credentials                                                                      │
 │ user-logs                           Display logs from the notebook pod of a given user                               │
@@ -189,6 +196,102 @@ This allows us to optimise and parallelise the automatic deployment of our hubs.
 │ --help          Show this message and exit.                                                                          │
 ╰──────────────────────────────────────────────────────────────────────────────────────────────────────────────────────╯
 ```
+
+### `new-grafana-token`
+This function uses the admin credentials located in `helm-charts/support/enc-support.secret.values.yaml` to check if a [Grafana Service Account](https://grafana.com/docs/grafana/latest/administration/service-accounts/) named `deployer` exists for a cluster's Grafana, and creates it if it doesn't.
+For this service account, it then generates a Grafana token named `deployer`.
+This token will be used by the [`deploy-grafana-dashboards` workflow](https://github.com/2i2c-org/infrastructure/tree/HEAD/.github/workflows/deploy-grafana-dashboards.yaml) to authenticate with [Grafana’s HTTP API](https://grafana.com/docs/grafana/latest/developers/http_api/).
+
+```{note}
+More about HTTP vs REST APIs at https://www.programsbuzz.com/article/what-difference-between-rest-api-and-http-api.
+```
+and deploy some default grafana dashboards for JupyterHub using [`jupyterhub/grafana-dashboards`](https://github.com/jupyterhub/grafana-dashboards).
+If a token with this name already exists, it will show whether or not the token is expired
+and wait for cli input about whether to generate a new one or not.
+
+The Grafana token is then stored encrypted inside the `enc-grafana-token.secret.yaml` file in the cluster's configuration directory.
+If such a file doesn't already exist, it will be created by this function.
+
+  Generates:
+  - an `enc-grafana-token.secret.yaml` file if not already present
+
+  Updates:
+  - the content of `enc-grafana-token.secret.yaml` with the new token if one already existed
+
+### `generate-aws-cluster`
+
+This function generates the required files for an AWS cluster based on a few input fields,
+the name of the cluster, the region where the cluster will be deployed and whether the hub deployed there would need dask or not.
+
+  Generates:
+  - an eksctl jsonnet file
+  - a .tfvars file
+  - An ssh-key (the private part is encrypted)
+
+The files are generated based on the jsonnet templates in:
+  - (`eksctl/template.json`)[https://github.com/2i2c-org/infrastructure/blob/master/eksctl/template.jsonnet]
+  - (`terraform/aws/projects/basehub-template.tfvars`)[https://github.com/2i2c-org/infrastructure/blob/master/terraform/aws/projects/basehub-template.tfvars]
+
+**Command line usage:**
+
+```bash
+ Usage: deployer generate-aws-cluster [OPTIONS]                                                                         
+                                                                                                                        
+ Automatically generate the files required to setup a new cluster on AWS                                                
+                                                                                                                        
+╭─ Options ────────────────────────────────────────────────────────────────────────────────────────────────────────────╮
+│ *  --cluster-name          TEXT  [default: None] [required]                                                          │
+│ *  --hub-type              TEXT  [default: None] [required]                                                          │
+│ *  --cluster-region        TEXT  [default: None] [required]                                                          │
+│    --help                        Show this message and exit.                                                         │
+╰──────────────────────────────────────────────────────────────────────────────────────────────────────────────────────╯
+```
+
+### `generate-gcp-cluster`
+
+This function generates the infrastructure terraform file and the configuration directory
+for a GCP cluster.
+
+  Generates:
+    - infrastructure file:
+      - `terraform/gcp/projects/<cluster_name>.tfvars`
+    - cluster configuration files:
+      - `config/<cluster_name>/cluster.yaml`
+      - `config/<cluster_name>/support.values.yaml`
+      - `config/<cluster_name>/enc-support.secret.values.yaml`
+
+  The files are generated based on the content in a set of template files and a few input fields:
+    - `cluster_name` - the name of the cluster
+    - `cluster_region`- the region where the cluster will be deployed
+    - `project_id` - the project ID of the GCP project
+    - `hub_type` (basehub/daskhub) - whether the hub deployed there would need dask or not
+    - `hub_name` - the name of the first hub which will be deployed in the cluster (usually `staging`)
+
+The templates have a set of default features and define some opinionated characteristics for the cluster.
+These defaults are described in each file template.
+
+  The infrastructure terraform config is generated based on the terraform templates in:
+    - (`terraform/basehub-template.tfvars`)[https://github.com/2i2c-org/infrastructure/blob/master/terraform/gcp/projects/basehub-template.tfvars]
+    - (`terraform/daskhub-template.tfvars`)[https://github.com/2i2c-org/infrastructure/blob/master/terraform/gcp/projects/daskhub-template.tfvars]
+  The cluster configuration directory is generated based on the templates in:
+    - (`config/clusters/templates/gcp`)[https://github.com/2i2c-org/infrastructure/blob/master/config/clusters/templates/gcp]
+
+**Command line usage:**
+
+```bash
+ Usage: deployer generate-gcp-cluster [OPTIONS]                                                                         
+                                                                                                                        
+ Automatically generate the files required to setup a new cluster on GCP                                                
+                                                                                                                        
+╭─ Options ────────────────────────────────────────────────────────────────────────────────────────────────────────────╮
+│ *  --cluster-name          TEXT  [default: None] [required]                                                          │
+│ *  --hub-type              TEXT  [default: None] [required]                                                          │
+│ *  --cluster-region        TEXT  [default: None] [required]                                                          │
+│ *  --cluster-zone          TEXT  [default: None] [required]                                                          │
+│    --help                        Show this message and exit.                                                         │
+╰──────────────────────────────────────────────────────────────────────────────────────────────────────────────────────╯
+```
+
 
 ### `run-hub-health-check`
 
@@ -350,6 +453,28 @@ When you exit the shell, the temporary pod spun up is removed.
 │ --help          Show this message and exit.                                                                          │
 ╰──────────────────────────────────────────────────────────────────────────────────────────────────────────────────────╯
 ```
+
+
+### `start-docker-proxy`
+
+Building docker images locally can be *extremely* slow and frustrating. We run a central docker daemon
+in our 2i2c cluster that can be accessed via this command, and speeds up image builds quite a bit!
+Once you run this command, run `export DOCKER_HOST=tcp://localhost:23760` in another terminal to use the faster remote
+docker daemon.
+
+```
+ Usage: deployer start-docker-proxy [OPTIONS] [DOCKER_DAEMON_CLUSTER]                                                   
+                                                                                                                        
+ Proxy a docker daemon from a remote cluster to local port 23760.                                                       
+                                                                                                                        
+╭─ Arguments ──────────────────────────────────────────────────────────────────────────────────────────────────────────╮
+│   docker_daemon_cluster      [DOCKER_DAEMON_CLUSTER]  Name of cluster where the docker daemon lives [default: 2i2c]  │
+╰──────────────────────────────────────────────────────────────────────────────────────────────────────────────────────╯
+╭─ Options ────────────────────────────────────────────────────────────────────────────────────────────────────────────╮
+│ --help          Show this message and exit.                                                                          │
+╰──────────────────────────────────────────────────────────────────────────────────────────────────────────────────────╯
+```
+
 
 ## Sub-scripts
 

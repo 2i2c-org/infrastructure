@@ -162,6 +162,7 @@ jobs:
       failure_nasa-cryo: "${{ env.failure_nasa-cryo }}"
       failure_gridsst: "${{ env.failure_gridsst }}"
       failure_victor: "${{ env.failure_victor }}"
+      failure_2i2c-aws-us: "${{ env.failure_2i2c-aws-us }}"
 
     # Only run this job on pushes to the default branch and when the job output is not
     # an empty list

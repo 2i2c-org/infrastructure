@@ -7,7 +7,7 @@
    of the project name, in case the user decide to exercise their [right to
    replicate](https://2i2c.org/right-to-replicate/) at some point.
 3. Keep it inside the 2i2c organization, and locate inside the 2i2c folder.
-4. Use the two-eye-two-see billing account.
+4. Use the `2i2c Billing` billing account, with id `0157F7-E3EA8C-25AC3C`.
 5. Hit the 'Create' button
 6. You should see a notification as soon as the project is created. Switch to the freshly
    created project

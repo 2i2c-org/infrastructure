@@ -39,6 +39,7 @@ basehub:
             name: NSF EarthCube Program (Award ICER-2026932)
             url: "https://www.nsf.gov/awardsearch/showAward?AWD_ID=2026932"
     hub:
+      allowNamedServers: true
       config:
         Authenticator:
           # This hub uses GitHub Teams auth and so we don't set
@@ -64,7 +65,7 @@ basehub:
       # User image repo: https://github.com/pangeo-data/pangeo-docker-images
       image:
         name: pangeo/pangeo-notebook
-        tag: "2022.09.21"
+        tag: "2023.01.03"
       profileList:
         # The mem-guarantees are here so k8s doesn't schedule other pods
         # on these nodes. They need to be just under total allocatable

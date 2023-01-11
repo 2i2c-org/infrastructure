@@ -292,6 +292,14 @@ properties:
                   - operated_by
                   - funded_by
                 properties:
+                  default_url:
+                    type: string
+                    description: |
+                      Default Interface to be selected in the interface selector
+
+                      /tree -> classic notebook
+                      /rstudio -> RStudio
+                      /lab -> JupyterLab
                   announcements:
                     type: array
                     items:

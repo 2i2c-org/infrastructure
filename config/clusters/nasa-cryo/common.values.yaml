@@ -12,6 +12,11 @@ basehub:
       serverIP: fs-0872256335d483d5f.efs.us-west-2.amazonaws.com
       baseShareName: /
   jupyterhub:
+    prePuller:
+      continuous:
+        enabled: true
+      hook:
+        enabled: true
     custom:
       2i2c:
         add_staff_user_ids_to_admin_users: true
@@ -35,6 +40,7 @@ basehub:
             name: "NASA ICESat-2 Science Team"
             url: https://icesat-2.gsfc.nasa.gov/science_definition_team
     hub:
+      allowNamedServers: true
       config:
         Authenticator:
           # We are restricting profiles based on GitHub Team membership and
@@ -47,6 +53,7 @@ basehub:
             - tsnow03
             - JessicaS11
             - dfelikson
+            - fperez
         JupyterHub:
           authenticator_class: github
         GitHubOAuthenticator:
@@ -61,12 +68,10 @@ basehub:
             - read:org
     singleuser:
       defaultUrl: /lab
-      # User image repo: https://github.com/CryoInTheCloud/CryoCloudWebsite/tree/main/conda
+      # Image repo: https://github.com/CryoInTheCloud/hub-image
       image:
-        # This image is available on both Docker Hub and quay.io. We use quay.io
-        # here due to its more generous pull rate limits.
-        name: quay.io/cryointhecloud/cryocloudwebsite
-        tag: "2022.10.12"
+        name: quay.io/cryointhecloud/cryo-hub-image
+        tag: "a1bc0061178a"
       storage:
         extraVolumeMounts:
           - name: home

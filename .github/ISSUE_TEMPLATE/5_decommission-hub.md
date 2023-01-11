@@ -29,7 +29,8 @@ Usually, it is because it was a hub that we created for a workshop/conference an
   - [ ] If no, confirm it is ok to delete all the data stored in the user home directories
 
 #### Phase II - Hub Removal
-(These steps are decribed in more detail in the docs at https://infrastructure.2i2c.org/en/latest/howto/hubs/delete-hub.html.)
+
+(These steps are described in more detail in the docs at https://infrastructure.2i2c.org/en/latest/hub-deployment-guide/hubs/other-hub-ops/delete-hub.html)
 
 - [ ] Manage existing data (migrate data from the hub or delete it)
 - [ ] Remove the appropriate `config/clusters/<cluster_name>/<hub_name>.values.yaml` files. A complete list of relevant files can be found under the appropriate entry in the associated `cluster.yaml` file.

@@ -18,6 +18,7 @@ github.md
 :caption: Configuring pages
 login-page.md
 static-sites.md
+redirects.md
 ```
 
 ```{toctree}

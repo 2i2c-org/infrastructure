@@ -9,4 +9,5 @@ home-dir
 decrypt-age
 build-image-remotely
 credits
+grafana-account
 ```

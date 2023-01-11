@@ -69,7 +69,7 @@ runs:
       shell: bash
 
     # This action use the github official cache mechanism internally
-    - uses: azure/setup-helm@v3.4
+    - uses: azure/setup-helm@v3.5
       with:
         # version is pinned for helm to avoid an automatic update of its version
         # which would cause something unexpected without an action on our
@@ -78,7 +78,7 @@ runs:
 
     # Pin kubectl version to 1.23 otherwise interactions with k8s clusters versioned <=1.21 won't work.
     # See https://github.com/2i2c-org/infrastructure/issues/1271.
-    - uses: azure/setup-kubectl@v3.0
+    - uses: azure/setup-kubectl@v3.1
       with:
         version: "v1.23.5"
 

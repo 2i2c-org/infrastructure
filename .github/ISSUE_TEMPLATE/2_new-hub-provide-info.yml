@@ -61,6 +61,26 @@ body:
     validations:
       required: true
 
+  - type: dropdown
+    attributes:
+      label: "[GitHub Auth only] How would you like to manage your users?"
+      description: |
+        Please describe how you would prefer to manage your users accessing the hub via GitHub Auth.
+      options:
+        - Manually, by adding specific GitHub handles in the JupyterHub Admin panel
+        - Allowing members of a specific GitHub organization
+        - Allowing members of specific GitHub team(s)
+
+  - type: textarea
+    attributes:
+      label: "[GitHub Teams Auth only] Profile restriction based on team membership"
+      description: |
+        If you wish to offer a range of machine sizes/image types but to only a subset of your users, we can facilitate this through GitHub Teams.
+        Please provide a list of GitHub Teams in your org and what resources you'd like each to access.
+      placeholder: |
+        @MyCoolOrg/all-users: Small and Medium sized machines
+        @MyCoolOrg/advanced-users: Small, Medium, Large and GPU machines
+
   - type: markdown
     attributes:
       value: |
@@ -189,7 +209,8 @@ body:
       options:
         - label: 1. Deploy information filled in above
         - label: 2. Engineer who will deploy the hub is assigned
-        - label: 3. Initial Hub deployment PR <link to PR>
-        - label: 4. Administrators able to log on -> Hub now in steady-state
+        - label: 3. If using GitHub Orgs/Teams Auth, Engineer is given Owner rights to the org to set this up.
+        - label: 4. Initial Hub deployment PR <link to PR>
+        - label: 5. Administrators able to log on -> Hub now in steady-state
     validations:
       required: false
