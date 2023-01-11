@@ -32,10 +32,9 @@ jupyterhub:
   hub:
     config:
       Authenticator:
-        allowed_users: &ubc_eoas_users
+        admin_users:
           - ckrzysik # Primary technical representative, Charles Krzysik
           - lheagy # Secondary technical representative, Lindsey Heagy
-        admin_users: *ubc_eoas_users
       JupyterHub:
         authenticator_class: cilogon
       CILogonOAuthenticator:
