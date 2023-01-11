@@ -42,6 +42,14 @@ local daskNodes =
     iam: {
         withOIDC: true,
     },
+    addons: [
+        {
+            name: 'aws-ebs-csi-driver',
+            wellKnownPolicies: {
+                ebsCSIController: true,
+            },
+        },
+    ],
     nodeGroups: [
         ng {
             name: 'core-a',
