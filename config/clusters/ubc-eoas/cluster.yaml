@@ -1,0 +1,8 @@
+name: ubc-eoas
+provider: aws
+aws:
+  key: enc-deployer-credentials.secret.json
+  clusterType: eks
+  clusterName: ubc-eoas
+  region: ca-central-1
+hubs: []
