@@ -1,0 +1,90 @@
+nfs:
+  pv:
+    # from https://docs.aws.amazon.com/efs/latest/ug/mounting-fs-nfs-mount-settings.html
+    mountOptions:
+      - rsize=1048576
+      - wsize=1048576
+      - timeo=600
+      - soft # We pick soft over hard, so NFS lockups don't lead to hung processes
+      - retrans=2
+      - noresvport
+    serverIP: fs-08652322ea83653b1.efs.ca-central-1.amazonaws.com
+    baseShareName: /
+
+jupyterhub:
+  custom:
+    homepage:
+      templateVars:
+        org:
+          name: UBC EOAS
+          logo_url: https://brand.ubc.ca/files/2018/09/Logos_1_2CrestDownload_768px.jpg
+          url: https://www.eoas.ubc.ca/
+        designed_by:
+          name: 2i2c
+          url: https://2i2c.org
+        operated_by:
+          name: 2i2c
+          url: https://2i2c.org
+        funded_by:
+          name: UBC EOAS
+          url: https://www.eoas.ubc.ca/
+
+  hub:
+    config:
+      Authenticator:
+        allowed_users: &ubc_eoas_users
+          - ckrzysik # Primary technical representative, Charles Krzysik
+          - lheagy # Secondary technical representative, Lindsey Heagy
+        admin_users: *ubc_eoas_users
+      JupyterHub:
+        authenticator_class: cilogon
+      CILogonOAuthenticator:
+        allowed_idps:
+          https://authentication.ubc.ca:
+            username_derivation:
+              username_claim: email
+              action: strip_idp_domain
+              domain: eoas.ubc.ca
+            allowed_domains:
+              - eoas.ubc.ca
+          http://google.com/accounts/o8/id:
+            username_derivation:
+              username_claim: email
+            allowed_domains:
+              - 2i2c.org
+        shown_idps:
+          - https://authentication.ubc.ca
+          - http://google.com/accounts/o8/id
+
+  singleuser:
+    defaultUrl: /lab
+    profileList:
+      - display_name: "Small: m5.large"
+        description: "~2 CPU, ~8G RAM"
+        default: true
+        kubespawner_override:
+          mem_limit: 8G
+          mem_guarantee: 6.5G
+          node_selector:
+            node.kubernetes.io/instance-type: m5.large
+      - display_name: "Medium: m5.xlarge"
+        description: "~4 CPU, ~15G RAM"
+        kubespawner_override:
+          mem_limit: 15G
+          mem_guarantee: 12G
+          node_selector:
+            node.kubernetes.io/instance-type: m5.xlarge
+      - display_name: "Large: m5.2xlarge"
+        description: "~8 CPU, ~30G RAM"
+        kubespawner_override:
+          mem_limit: 30G
+          mem_guarantee: 25G
+          node_selector:
+            node.kubernetes.io/instance-type: m5.2xlarge
+      - display_name: "Huge: m5.8xlarge"
+        description: "~16 CPU, ~60G RAM"
+        kubespawner_override:
+          mem_limit: 60G
+          mem_guarantee: 50G
+          node_selector:
+            node.kubernetes.io/instance-type: m5.8xlarge
