@@ -3,7 +3,7 @@ local ng = import "./libsonnet/nodegroup.jsonnet";
 
 // place all cluster nodes here
 local clusterRegion = "ca-central-1";
-local masterAzs = ["ca-central-1a", "ca-central-1b", "ca-central-1c"];
+local masterAzs = ["ca-central-1a", "ca-central-1b", "ca-central-1d"];
 local nodeAz = "ca-central-1a";
 
 // Node definitions for notebook nodes. Config here is merged
