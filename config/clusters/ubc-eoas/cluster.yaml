@@ -5,4 +5,7 @@ aws:
   clusterType: eks
   clusterName: ubc-eoas
   region: ca-central-1
+support:
+  helm_chart_values_files:
+    - support.values.yaml
 hubs: []

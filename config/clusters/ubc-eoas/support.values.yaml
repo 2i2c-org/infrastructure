@@ -1,0 +1,31 @@
+cluster-autoscaler:
+  enabled: true
+  autoDiscovery:
+    clusterName: ubc-eoas
+  awsRegion: ca-central-1
+
+prometheusIngressAuthSecret:
+  enabled: true
+
+grafana:
+  grafana.ini:
+    server:
+      root_url: https://grafana.ubc-eoas.2i2c.cloud/
+  ingress:
+    hosts:
+      - grafana.ubc-eoas.2i2c.cloud
+    tls:
+      - secretName: grafana-tls
+        hosts:
+          - grafana.ubc-eoas.2i2c.cloud
+
+prometheus:
+  server:
+    ingress:
+      enabled: true
+      hosts:
+        - prometheus.ubc-eoas.2i2c.cloud
+      tls:
+        - secretName: prometheus-tls
+          hosts:
+            - prometheus.ubc-eoas.2i2c.cloud
