@@ -3,7 +3,7 @@ binderhub:
     hosts:
       - binder-staging.2i2c.cloud
     tls:
-      - secretName: https-auto-tls-binde
+      - secretName: https-auto-tls-binder
         hosts:
           - binder-staging.2i2c.cloud
   registry:
@@ -49,6 +49,6 @@ binderhub:
       hosts:
         - hub.binder-staging.2i2c.cloud
       tls:
-        - secretName: https-auto-tls-binde
+        - secretName: https-auto-tls-binder
           hosts:
             - hub.binder-staging.2i2c.cloud
