@@ -55,7 +55,7 @@ basehub:
         GitHubOAuthenticator:
           allowed_organizations:
             - pangeo-data:us-central1-b-gcp
-            - 2i2c-org:tech-team
+            - 2i2c-org:hub-access-for-2i2c-staff
           scope:
             - read:org
     singleuser:
@@ -76,7 +76,7 @@ basehub:
           default: true
           allowed_teams:
             - pangeo-data:us-central1-b-gcp
-            - 2i2c-org:tech-team
+            - 2i2c-org:hub-access-for-2i2c-staff
           kubespawner_override:
             mem_limit: 7G
             mem_guarantee: 4.5G
@@ -86,7 +86,7 @@ basehub:
           description: 11GB RAM, 4 CPUs
           allowed_teams:
             - pangeo-data:us-central1-b-gcp
-            - 2i2c-org:tech-team
+            - 2i2c-org:hub-access-for-2i2c-staff
           kubespawner_override:
             mem_limit: 15G
             mem_guarantee: 11G
@@ -96,7 +96,7 @@ basehub:
           description: 24GB RAM, 8 CPUs
           allowed_teams:
             - pangeo-data:cds-lab
-            - 2i2c-org:tech-team
+            - 2i2c-org:hub-access-for-2i2c-staff
           kubespawner_override:
             mem_limit: 30G
             mem_guarantee: 24G
@@ -106,7 +106,7 @@ basehub:
           description: 52GB RAM, 16 CPUs
           allowed_teams:
             - pangeo-data:cds-lab
-            - 2i2c-org:tech-team
+            - 2i2c-org:hub-access-for-2i2c-staff
           kubespawner_override:
             mem_limit: 60G
             mem_guarantee: 52G
