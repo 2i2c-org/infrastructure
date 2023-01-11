@@ -36,10 +36,7 @@ local daskNodes =
     metadata+: {
         name: "ubc-eoas",
         region: clusterRegion,
-        // Warning: version 1.23 introduces some breaking changes
-        // Checkout the docs before upgrading
-        // ref: https://docs.aws.amazon.com/eks/latest/userguide/ebs-csi-migration-faq.html
-        version: '1.22'
+        version: '1.24'
     },
     availabilityZones: masterAzs,
     iam: {
