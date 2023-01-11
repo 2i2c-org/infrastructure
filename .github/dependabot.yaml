@@ -36,7 +36,7 @@ updates:
       - update-types: ["version-update:semver-patch"]
         dependency-name: "*" # Match all packages
     reviewers:
-      - "2i2c-org/tech-team"
+      - "2i2c-org/engineering"
   # Maintain dependencies for GitHub Actions in our setup-deploy action
   - package-ecosystem: "github-actions"
     directory: "/.github/actions/setup-deploy/"
@@ -48,7 +48,7 @@ updates:
       - update-types: ["version-update:semver-patch"]
         dependency-name: "*" # Match all packages
     reviewers:
-      - "2i2c-org/tech-team"
+      - "2i2c-org/engineering"
   # Maintain dependencies for pip defined in project root (deployer module)
   - package-ecosystem: "pip"
     directory: "/"
@@ -60,7 +60,7 @@ updates:
       - update-types: ["version-update:semver-patch"]
         dependency-name: "*" # Match all packages
     reviewers:
-      - "2i2c-org/tech-team"
+      - "2i2c-org/engineering"
   # Maintain dependencies for pip defined in docs folder (documentation)
   - package-ecosystem: "pip"
     directory: "/docs"
@@ -72,7 +72,7 @@ updates:
       - update-types: ["version-update:semver-patch"]
         dependency-name: "*" # Match all packages
     reviewers:
-      - "2i2c-org/tech-team"
+      - "2i2c-org/engineering"
   # Signal pip dependencies updates in helm-charts/images/hub folder (default hub image)
   - package-ecosystem: "pip"
     directory: "/helm-charts/images/hub"
@@ -84,7 +84,7 @@ updates:
       - update-types: ["version-update:semver-patch"]
         dependency-name: "*" # Match all packages
     reviewers:
-      - "2i2c-org/tech-team"
+      - "2i2c-org/engineering"
     labels:
       # This dependabot PRs should not be merged as is, because additional manual steps are required also.
       # Checkout https://infrastructure.2i2c.org/en/latest/topic/infrastructure/hub-image.html#updating-the-hub-image
