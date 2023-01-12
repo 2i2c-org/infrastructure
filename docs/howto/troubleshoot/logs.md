@@ -96,3 +96,21 @@ show logs from specific schedulers or worker pods a user might have started.
 labels.k8s-pod/app_kubernetes_io/name="dask-gateway"
 resource.labels.namespace_name="<namespace>"
 ```
+
+#### Full-text search across logs
+
+If you are looking for a specific string across *all* logs, you can
+use `textPayload` as a field to search for.
+
+```
+textPayload=~"some-string"
+```
+
+This is most useful when *combined* with any of the other queries here. For
+example, the following query will search across all user notebook pod logs:
+
+```
+labels.k8s-pod/component="singleuser-server"
+resource.labels.namespace_name="<namespace>"
+textPayload=~"some-string"
+```
