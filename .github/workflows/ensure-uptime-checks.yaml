@@ -38,7 +38,7 @@ jobs:
       # We use sops to store encrypted GCP ServiceAccount Key that terraform uses
       # to run, as well as PagerDuty config terraform uses
       - name: Install sops
-        uses: mdgreenwald/mozilla-sops-action@v1
+        uses: mdgreenwald/mozilla-sops-action@v1.4.1
 
       # Authenticate with the correct KMS key that sops will use.
       - name: Setup sops credentials to decrypt repo secrets
