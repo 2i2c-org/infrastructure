@@ -326,6 +326,9 @@ jupyterhub:
       KubeSpawner:
         # Make sure working directory is ${HOME}
         working_dir: /home/jovyan
+        # Increase timeout for Jupyter server to become 'ready', until
+        # https://github.com/2i2c-org/infrastructure/issues/2047 is fixed
+        http_timeout: 120
       Authenticator:
         # Don't allow test username to login into the hub
         # The test service will still be able to create this hub username
