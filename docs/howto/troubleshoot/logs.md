@@ -88,7 +88,7 @@ errors can be frustrating!
 
 #### Look at dask-gateway logs
 
-The following query will show logs from all the components of dask-gateay
+The following query will show logs from all the components of dask-gateway
 infrastructure - the controller, api and the proxy. Note that this does *not*
 show logs from specific schedulers or worker pods a user might have started.
 
