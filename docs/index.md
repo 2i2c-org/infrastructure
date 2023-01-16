@@ -72,6 +72,7 @@ howto/manage-domains/index.md
 howto/grafana-github-auth.md
 howto/update-env.md
 howto/manual-nfs-setup.md
+howto/troubleshoot/index.md
 ```
 
 ## Topic guides
