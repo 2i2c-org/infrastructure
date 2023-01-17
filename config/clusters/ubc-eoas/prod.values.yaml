@@ -1,0 +1,5 @@
+jupyterhub:
+  hub:
+    config:
+      CILogonOAuthenticator:
+        oauth_callback_url: https://ubc-eoas.2i2c.cloud/hub/oauth_callback
