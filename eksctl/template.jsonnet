@@ -59,10 +59,6 @@ local daskNodes =
             // mounting a PVC failing to schedule and PVC resources that are
             // unbound.
             //
-            // For this to work well, the nodeGroups scheduling nodes referencing
-            // PVCs with persistent storage from EBS (prometheus, etc.), need to
-            // have iam.withAddonPolicies.ebs=true as well.
-            //
             // Related docs: https://docs.aws.amazon.com/eks/latest/userguide/managing-ebs-csi.html
             //
             name: 'aws-ebs-csi-driver',
