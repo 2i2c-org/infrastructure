@@ -1,4 +1,14 @@
-// Exports an eksctl config file for carbonplan cluster
+// This file is a jinja2 template of a jsonnet template of a eksctl's cluster
+// configuration file, which is in turn can be used with the `eksctl` CLI to both
+// update and initialize a AWS EKS based cluster.
+//
+// This jinja2 template is only used by the deployer script as part of creating
+// new clusters. If a relevant change is made here or the dependent file
+// libsonnet/nodegroup.jsonnet, one may consider if we should manually update
+// already generated jsonnet files in this folder.
+//
+// Configuration reference: https://eksctl.io/usage/schema/
+//
 local ng = import "./libsonnet/nodegroup.jsonnet";
 
 // place all cluster nodes here
@@ -36,15 +46,31 @@ local daskNodes =
     metadata+: {
         name: "<< cluster_name >>",
         region: clusterRegion,
-        // Warning: version 1.23 introduces some breaking changes
-        // Checkout the docs before upgrading
-        // ref: https://docs.aws.amazon.com/eks/latest/userguide/ebs-csi-migration-faq.html
-        version: '1.22'
+        version: '1.24'
     },
     availabilityZones: masterAzs,
     iam: {
         withOIDC: true,
     },
+    addons: [
+        {
+            // aws-ebs-csi-driver ensures that our PVCs are bound to PVs that
+            // couple to AWS EBS based storage, without it expect to see pods
+            // mounting a PVC failing to schedule and PVC resources that are
+            // unbound.
+            //
+            // For this to work well, the nodeGroups scheduling nodes referencing
+            // PVCs with persistent storage from EBS (prometheus, etc.), need to
+            // have iam.withAddonPolicies.ebs=true as well.
+            //
+            // Related docs: https://docs.aws.amazon.com/eks/latest/userguide/managing-ebs-csi.html
+            //
+            name: 'aws-ebs-csi-driver',
+            wellKnownPolicies: {
+                ebsCSIController: true,
+            },
+        },
+    ],
     nodeGroups: [
         ng {
             name: 'core-a',
@@ -80,7 +106,6 @@ local daskNodes =
                 "hub.jupyter.org_dedicated": "user:NoSchedule",
                 "hub.jupyter.org/dedicated": "user:NoSchedule"
             },
-
         } + n for n in notebookNodes
     ] + ( if daskNodes != null then
         [
