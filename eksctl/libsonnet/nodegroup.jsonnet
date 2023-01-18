@@ -32,9 +32,6 @@ local makeCloudTaints(taints) = {
   iam: {
     withAddonPolicies: {
       autoScaler: true,
-      // ebs: true is believed by Erik to be required for all nodes that should
-      // be able to schedule a pod mounting a PVC bound to a EBS based PV.
-      ebs: true,
     },
   },
 }
