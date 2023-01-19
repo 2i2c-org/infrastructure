@@ -31,7 +31,13 @@ prometheus:
         key: hub.jupyter.org_dedicated
         value: user
       - effect: NoSchedule
-        # Deploy onto user nodes
+        key: hub.jupyter.org/dedicated
+        value: user
+      # Deploy onto dask worker nodes
+      - effect: NoSchedule
+        key: k8s.dask.org_dedicated
+        value: worker
+      - effect: NoSchedule
         key: k8s.dask.org_dedicated
         value: worker
     updateStrategy:
