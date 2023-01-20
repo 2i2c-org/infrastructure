@@ -60,7 +60,7 @@ However, merge rights are a big responsibility, so please be careful in your act
 
 Community partners *may* self-merge if they want to, provided the following conditions are met:
 
-1. **They are confident debugging any issues that arise from the issue**.
+1. **They are confident debugging any issues that arise from the self-merged PR**.
    If any issues arise from your self-merge, **you are responsible for resolving them, or reverting the change**.
    You should understand the potential repurcussions of your change, and be ready to fix things if they break.
 2. **They have access to their cloud cluster to debug changes**.
