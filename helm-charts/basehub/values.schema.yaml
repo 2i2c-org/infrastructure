@@ -414,3 +414,19 @@ properties:
                 type: array
                 items:
                   type: string
+              temp_folder:
+                type: object
+                additionalProperties: false
+                required:
+                  - enabled
+                  - mountPath
+                  - emptyDir
+                properties:
+                  enabled:
+                    type: boolean
+                  mountPath:
+                    type: string
+                  emptyDir:
+                    type: object
+                    # k8s schema: https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.26/#emptydirvolumesource-v1-core
+                    additionalProperties: true

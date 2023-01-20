@@ -99,6 +99,10 @@ jupyterhub:
         - jmunroe@2i2c.org
         - sgibson@2i2c.org
         - yuvipanda@2i2c.org
+      temp_folder:
+        enabled: false
+        mountPath: /home/jovyan/temp
+        emptyDir: {}
   ingress:
     enabled: true
     annotations:
@@ -648,3 +652,48 @@ jupyterhub:
             # Customize list of profiles dynamically, rather than override options form.
             # This is more secure, as users can't override the options available to them via the hub API
             c.KubeSpawner.profile_list = custom_profile_list
+
+      # About temp_folder:
+      #
+      # This config snippet provides users with a ~/temp directory in the home
+      # folder to put ephemeral data.
+      #
+      # It is enabled/disabled via custom.2i2c.temp_folder.enabled, where
+      # emptyDir (medium, sizeLimit) and mountPath are other configuration
+      # options.
+      #
+      # Technical notes:
+      # - The folders file permissions will be root:root unless the pod's
+      #   securityContext includes fsGroup to influence this, which it does by
+      #   default in the jupyterhub chart via singleuser.fsGid. Due to this,
+      #   users will have read/write permissions on this folder.
+      #
+      # - Unless emptyDir.medium="Memory", this storage space counts towards the
+      #   k8s node's ephemeral storage and could run out just like as if a user
+      #   was filling up the /tmp folder.
+      #
+      # - The jupyterhub chart configurations singleuser.extraVolumes and
+      #   singleuser.extraVolumeMounts are not used as lists aren't merged but
+      #   instead replaces each other.
+      #
+      # References:
+      # - emptyDir volumes: https://kubernetes.io/docs/concepts/storage/volumes/#emptydir
+      # - ephemeral storage: https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/#setting-requests-and-limits-for-local-ephemeral-storage
+      # - feature request: https://2i2c.freshdesk.com/a/tickets/375
+      #
+      2i2c_temp_folder: |
+        from z2jh import get_config
+        temp_folder = get_config("custom.2i2c.temp_folder")
+
+        if temp_folder["enabled"]:
+            temp_folder_volume = {
+                "name": "2i2c-temp-folder-volume",
+                "emptyDir": temp_folder["emptyDir"],
+            }
+            c.KubeSpawner.volumes.append(temp_folder_volume)
+
+            temp_folder_volume_mount = {
+                "name": "2i2c-temp-folder-volume",
+                "mountPath": temp_folder["mountPath"],
+            }
+            c.KubeSpawner.volume_mounts.append(temp_folder_volume_mount)
