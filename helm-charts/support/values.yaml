@@ -26,14 +26,20 @@ prometheus:
     enabled: false
   nodeExporter:
     tolerations:
-      - effect: NoSchedule
-        # Deploy onto user nodes
-        key: hub.jupyter.org_dedicated
+      # Tolerate tainted jupyterhub user nodes
+      - key: hub.jupyter.org_dedicated
         value: user
-      - effect: NoSchedule
-        # Deploy onto user nodes
-        key: k8s.dask.org_dedicated
+        effect: NoSchedule
+      - key: hub.jupyter.org/dedicated
+        value: user
+        effect: NoSchedule
+      # Tolerate tainted dask worker nodes
+      - key: k8s.dask.org_dedicated
         value: worker
+        effect: NoSchedule
+      - key: k8s.dask.org/dedicated
+        value: worker
+        effect: NoSchedule
     updateStrategy:
       type: RollingUpdate
   pushgateway:
