@@ -22,6 +22,10 @@
    Make sure the correct project is selected while enabling these!
    ```
 
+7. If we have direct access to the billing account used, we must set up
+   [billing export to BigQuery](https://cloud.google.com/billing/docs/how-to/export-data-bigquery#setup).
+   This allows us to figure out how much this project is costing over a period of time.
+   
 8. [Setup a new cluster](new-cluster:new-cluster) inside it via Terraform
 
 ## Checking quotas and requesting increases
