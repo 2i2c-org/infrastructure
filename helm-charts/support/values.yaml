@@ -24,7 +24,7 @@ prometheus:
     # Grafana also has alerts, and the UI of grafana is much better than that of alertmanager
     # We also expose Grafana publicly behind auth anyway, so we can consolidate alerting with Grafana too
     enabled: false
-  prometheus-node-exporter:
+  nodeExporter:
     tolerations:
       # Tolerate tainted jupyterhub user nodes
       - key: hub.jupyter.org_dedicated
@@ -42,7 +42,7 @@ prometheus:
         effect: NoSchedule
     updateStrategy:
       type: RollingUpdate
-  prometheus-pushgateway:
+  pushgateway:
     enabled: false
   server:
     ingress:
