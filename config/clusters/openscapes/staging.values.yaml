@@ -18,7 +18,7 @@ basehub:
                   default: true
                   slug: "python"
                   kubespawner_override:
-                    image: openscapes/python:11de2c5
+                    image: openscapes/python:7bc507a
                 rocker:
                   display_name: R
                   slug: "rocker"
