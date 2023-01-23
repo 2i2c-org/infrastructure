@@ -61,19 +61,6 @@ class Cluster:
         )
         print_colour("Done!")
 
-        # FIXME: Revert this addition after one upgrade is made
-        print_colour("Preparing for prometheus v16 v19 migration...")
-        subprocess.check_call(
-            [
-                "kubectl",
-                "delete",
-                "daemonset",
-                "--namespace=support",
-                "support-prometheus-node-exporter",
-            ]
-        )
-        print_colour("Done!")
-
         print_colour("Provisioning support charts...")
 
         support_dir = (Path(__file__).parent.parent).joinpath("helm-charts", "support")
