@@ -4,7 +4,7 @@ binderhub:
   config:
     BinderHub:
       use_registry: true
-      build_image: "quay.io/jupyterhub/repo2docker:2022.02.0-75.gd415115"
+      build_image: "quay.io/jupyterhub/repo2docker:2022.10.0-91.g326dc92"
       per_repo_quota: 150
       build_node_selector:
         # Build user images only on user nodes, not dask or core nodes
@@ -292,7 +292,6 @@ dask-gateway:
           nodeSelector:
             # Dask workers get their own pre-emptible pool
             k8s.dask.org/node-purpose: worker
-
     # TODO: figure out a replacement for userLimits.
     extraConfig:
       optionHandler: |
@@ -367,7 +366,6 @@ dask-gateway:
       k8s.dask.org/node-purpose: core
     service:
       type: ClusterIP # Access Dask Gateway through JupyterHub. To access the Gateway from outside JupyterHub, this must be changed to a `LoadBalancer`.
-
 # A placeholder as global values that can be referenced from the same location
 # of any chart should be possible to provide, but aren't necessarily provided or
 # used.
