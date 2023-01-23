@@ -31,37 +31,38 @@ deployer exec-homes-shell <cluster_name> <hub_name>
 This should get you a shell with the home directories of all the users on the given hub. Delete all user home directories with:
 
 ```bash
-cd home
-rm -rf *
+# list the folders before running the command to delete them all
+ls -lh /home
+
+# this can take tens of minutes
+rm -rf /home/*
 ```
 
 ## 2. Remove the hub values file
 
-Without removing the values file from the repository first, the hub could be redeployed by any merged PR that triggers our CI/CD pipeline.
+If the hub remains listed in its cluster's `cluster.yaml` file, the hub could be
+redeployed by any merged PR triggering our CI/CD pipeline.
 
-Open a PR that removes the appropriate `config/clusters/<cluster_name>/<hub_name>.values.yaml` file, and removes the associated hub entry from the `config/clusters/<cluster_name>/cluster.yaml` file. A complete list of relevant files can be found under the appropriate entry in the associated `cluster.yaml` file.
+Open a decomissioning PR that removes the appropriate hub entry from the
+`config/clusters/<cluster_name>/cluster.yaml` file and associated
+`*.values.yaml` files no longer referenced in the `cluster.yaml` file.
 
-Steps 3 and 4 can be actioned while this PR is reviewed and merged.
+You can continue with the steps below before the PR is merged, but be ready to
+re-do them if the CI/CD pipeline was triggered before the decomissioning PR was
+merged.
 
-## 3. Delete the Helm release
-
-In the appropriate cluster, run:
-
-```bash
-helm --namespace <hub-name> delete <hub-name>
-```
-
-## 4. Delete the kubernetes namespace
+## 3. Delete the Helm release and namespace
 
 In the appropriate cluster, run:
 
 ```bash
+deployer use-cluster-credentials <cluster-name>
+
+helm --namespace=<hub-name> delete <hub-name>
 kubectl delete namespace <hub-name>
 ```
 
-to cleanup any possible leftovers that step (4) missed
-
-## 5. Delete the OAuth application
+## 4. Delete the OAuth application
 
 ### Auth0 OAuth application
 
@@ -69,9 +70,9 @@ For each hub that uses Auth0, we create an [Application](https://auth0.com/docs/
 
 ### GitHub OAuth application
 
-For each hub that uses the JupyterHub GitHubOAuthenticator, we create a GitHub [OAuth Application](https://docs.github.com/en/developers/apps/building-oauth-apps/creating-an-oauth-app). You should be able to see the list of applications created under the `2i2c` GitHub org and delete the one created for the hub that's being decommissioned.
+For each hub that uses the JupyterHub GitHubOAuthenticator, we create a GitHub [OAuth Application](https://docs.github.com/en/developers/apps/building-oauth-apps/creating-an-oauth-app). You should be able to see the [list of applications created under the `2i2c` GitHub org](https://github.com/organizations/2i2c-org/settings/applications) and delete the one created for the hub that's being decommissioned.
 
-The naming convention followed when creating these apps is: `<cluster_name>-<hub_name>.
+The naming convention followed when creating these apps is: `<cluster_name>-<hub_name>`.
 
 ### CILogon OAuth application
 
@@ -84,7 +85,7 @@ You'll need to get all clients with:
 python3 deployer/cilogon_app.py get-all
 ```
 
-And then identitify the client of the hub and delete based on its id with:
+And then identify the client of the hub and delete based on its id with:
 
 ```bash
 python3 deployer/cilogon_app.py delete --id cilogon:/client_id/<id>

@@ -31,7 +31,7 @@ User account
 
 ## JupyterHub CILogonOAuthenticator
 
-The steps to enable the JupyterHub CILogonOAuthenticator for a hub are simmilar with the ones for enabling [GitHubOAuthenticator](auth:github-orgs):
+The steps to enable the JupyterHub CILogonOAuthenticator for a hub are similar with the ones for enabling [GitHubOAuthenticator](auth:github-orgs):
 
 1. **Create a CILogon OAuth client**
    This can be achieved by using the [cilogon_app.py](https://github.com/2i2c-org/infrastructure/blob/HEAD/deployer/cilogon_app.py) script.
@@ -149,7 +149,7 @@ The steps to enable the JupyterHub CILogonOAuthenticator for a hub are simmilar 
               CILogonOAuthenticator:
                 oauth_callback_url: https://{{ HUB_DOMAIN }}/hub/oauth_callback
                 shown_idps:
-                  - https://github.com/login/oauth/authorize
+                  - http://github.com/login/oauth/authorize
                 allowed_idps:
                   http://github.com/login/oauth/authorize:
                     username_derivation:
@@ -184,7 +184,7 @@ The steps to enable the JupyterHub CILogonOAuthenticator for a hub are simmilar 
               # Only show the option to login with Google and Shibboleth
               shown_idps:
                 - https://idp2.anu.edu.au/idp/shibboleth
-                - https://accounts.google.com/o/oauth2/auth
+                - http://google.com/accounts/o8/id
               allowed_idps:
                 http://google.com/accounts/o8/id:
                   username_derivation:
