@@ -40,7 +40,7 @@ We automatically generate the files required to setup a new cluster:
 You can generate these with:
 
 ```bash
-python3 deployer generate-cluster <cluster-name> aws
+deployer generate-aws-cluster --cluster-name=<...> --cluster-region=<like ca-central-1> --hub-type=<like basehub>
 ```
 
 This will generate the following files:
@@ -64,7 +64,15 @@ The previous step should've created a baseline `.jsonnet` file you can modify as
 you like. The eksctl docs have a [reference](https://eksctl.io/usage/schema/)
 for all the possible options. You'd want to make sure to change at least the following:
 
-- Region / Zone - make sure you are creating your cluster in the correct region!
+- Region / Zone - make sure you are creating your cluster in the correct region
+  and verify the suggested zones 1a, 1b, and 1c actually are available in that
+  region.
+
+  ```shell
+  # a command to list availability zones, for example
+  # ca-central-1 doesn't have 1c, but 1d instead
+  aws ec2 describe-availability-zones --region=<like ca-central-1>
+  ```
 - Size of nodes in instancegroups, for both notebook nodes and dask nodes. In particular,
   make sure you have enough quota to launch these instances in your selected regions.
 - Kubernetes version - older `.jsonnet` files might be on older versions, but you should
@@ -78,7 +86,7 @@ jsonnet <your-cluster>.jsonnet > <your-cluster>.eksctl.yaml
 ```
 
 ```{tip}
-There's no requirement to commit the `*.eksctl.yaml` file to the repository since we can regenerate it using the above `jsonnet` command.
+The `*.eksctl.yaml` file is git ignored as we can regenerate it, so work against the `*.jsonnet` file and regenerate the YAML file when needed by a `eksctl` command.
 ```
 
 ### Create the cluster
@@ -229,7 +237,7 @@ have least amount of permissions possible.
 
 ```{note}
 This section is still required even if the account is managed by SSO.
-Though a user could run `python deployer use-cluster-credentials` to gain access as well.
+Though a user could run `deployer use-cluster-credentials <cluster-name>` to gain access as well.
 ```
 
 AWS EKS has a strange access control problem, where the IAM user who creates
@@ -273,10 +281,10 @@ Get the address a hub on this cluster should use for connecting to NFS with
 
 ## Add the cluster to be automatically deployed
 
-The [CI deploy-hubs
-workflow](https://github.com/2i2c-org/infrastructure/tree/HEAD/.github/workflows/deploy-hubs.yaml#L31-L36)
-contains the list of clusters being automatically deployed by our CI/CD system.
-Make sure there is an entry for new AWS cluster.
+The `deploy-hubs` GitHub workflow has a job named
+[`upgrade-support-and-staging`](https://github.com/2i2c-org/infrastructure/blob/18f5a4f8f39ed98c2f5c99091ae9f19a1075c988/.github/workflows/deploy-hubs.yaml#L128-L166)
+that need to list of clusters being automatically deployed by our CI/CD system.
+Add an entry for the new cluster here.
 
 ## A note on the support chart for AWS clusters
 
@@ -284,7 +292,7 @@ Make sure there is an entry for new AWS cluster.
 When you deploy the support chart on an AWS cluster, you **must** enable the `cluster-autoscaler` sub-chart, otherwise the node groups will not automatically scale.
 Include the following in your `support.values.yaml` file:
 
-```
+```yaml
 cluster-autoscaler:
   enabled: true
   autoDiscovery:
