@@ -98,7 +98,8 @@ binderhub:
         DASK_GATEWAY__CLUSTER__OPTIONS__IMAGE: "{JUPYTER_IMAGE_SPEC}"
         # DASK_GATEWAY__CLUSTER__OPTIONS__ENVIRONMENT makes some environment
         # variables be copied over to the worker nodes from the user nodes.
-        DASK_GATEWAY__CLUSTER__OPTIONS__ENVIRONMENT: '{"SCRATCH_BUCKET": "$(SCRATCH_BUCKET)",
+        DASK_GATEWAY__CLUSTER__OPTIONS__ENVIRONMENT:
+          '{"SCRATCH_BUCKET": "$(SCRATCH_BUCKET)",
           "PANGEO_SCRATCH": "$(PANGEO_SCRATCH)"}'
         # DASK_DISTRIBUTED__DASHBOARD__LINK makes the suggested link to the
         # dashboard account for the /user/<username> prefix in the path. Note
