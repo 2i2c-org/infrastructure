@@ -113,7 +113,7 @@ The steps to enable the JupyterHub CILogonOAuthenticator for a hub are similar w
               CILogonOAuthenticator:
                 # This config option will only display GitHub as the only identity provider option
                 shown_idps:
-                  - http://google.com/accounts/o8/id
+                  - https://github.com/login/oauth/authorize
         ```
 
     2. **Authenticate using Google with CILogon, allowing only a certain domain**:
