@@ -80,7 +80,7 @@ runs:
     # See https://github.com/2i2c-org/infrastructure/issues/1271.
     - uses: azure/setup-kubectl@v3
       with:
-        version: "v1.23.5"
+        version: "v1.23.16"
 
     # This action use the github official cache mechanism internally
     - name: Install sops
