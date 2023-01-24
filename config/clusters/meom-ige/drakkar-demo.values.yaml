@@ -1,0 +1,93 @@
+nfs:
+  pv:
+    # from https://docs.aws.amazon.com/efs/latest/ug/mounting-fs-nfs-mount-settings.html
+    mountOptions:
+      - rsize=1048576
+      - wsize=1048576
+      - timeo=600
+      - soft # We pick soft over hard, so NFS lockups don't lead to hung processes
+      - retrans=2
+      - noresvport
+    serverIP: nfs-server-01
+    baseShareName: /export/home-01/homes/
+jupyterhub:
+  custom:
+    2i2c:
+      add_staff_user_ids_to_admin_users: true
+      add_staff_user_ids_of_type: "github"
+    homepage:
+      templateVars:
+        org:
+          name: "2023 DRAKKAR Ocean Modelling Workshop"
+          logo_url: https://drakkar2023.sciencesconf.org/data/header/DrakkarOcean.png
+          url: https://drakkar2023.sciencesconf.org/
+        designed_by:
+          name: 2i2c
+          url: https://2i2c.org
+        operated_by:
+          name: 2i2c
+          url: https://2i2c.org
+        funded_by:
+          name: SWOT Ocean Pangeo Team
+          url: https://meom-group.github.io/
+  singleuser:
+    profileList:
+      # The mem-guarantees are here so k8s doesn't schedule other pods
+      # on these nodes. They need to be just under total allocatable
+      # RAM on a node, not total node capacity
+      - display_name: "Small"
+        default: true
+        description: "~2 CPU, ~8G RAM"
+        kubespawner_override:
+          mem_limit: 8G
+          mem_guarantee: 5G
+          node_selector:
+            node.kubernetes.io/instance-type: n1-standard-2
+      - display_name: "Medium"
+        description: "~8 CPU, ~32G RAM"
+        kubespawner_override:
+          mem_limit: 32G
+          mem_guarantee: 25G
+          node_selector:
+            node.kubernetes.io/instance-type: n1-standard-8
+      - display_name: "Large"
+        description: "~16 CPU, ~64G RAM"
+        kubespawner_override:
+          mem_limit: 64G
+          mem_guarantee: 50G
+          node_selector:
+            node.kubernetes.io/instance-type: n1-standard-16
+      - display_name: "Very Large"
+        description: "~32 CPU, ~128G RAM"
+        kubespawner_override:
+          mem_limit: 128G
+          mem_guarantee: 100G
+          node_selector:
+            node.kubernetes.io/instance-type: n1-standard-32
+      - display_name: "Huge"
+        description: "~64 CPU, ~256G RAM"
+        kubespawner_override:
+          mem_limit: 256G
+          mem_guarantee: 220G
+          node_selector:
+            node.kubernetes.io/instance-type: n1-standard-64
+    defaultUrl: /lab
+  scheduling:
+    userPlaceholder:
+      enabled: false
+      replicas: 0
+    userScheduler:
+      enabled: false
+  hub:
+    allowNamedServers: true
+    config:
+      Authenticator:
+        allowed_users: &users
+          - roxyboy
+          - lesommer
+          - auraoupa
+        admin_users: *users
+      JupyterHub:
+        authenticator_class: github
+      GitHubOAuthenticator:
+        oauth_callback_url: https://drakkar-demo.meom-ige.2i2c.cloud/hub/oauth_callback
