@@ -72,10 +72,6 @@ jupyterhub:
           node_selector:
             node.kubernetes.io/instance-type: n1-standard-64
     defaultUrl: /lab
-    image:
-      # image repo: https://github.com/auraoupa/hub-user-image-drakkar-demo
-      name: quay.io/auraoupa/drakkar-demo
-      tag: "62fa0b23aca5"
   scheduling:
     userPlaceholder:
       enabled: false
@@ -83,6 +79,7 @@ jupyterhub:
     userScheduler:
       enabled: false
   hub:
+    allowNamedServers: true
     config:
       Authenticator:
         allowed_users: &users
@@ -90,4 +87,7 @@ jupyterhub:
           - lesommer
           - auraoupa
         admin_users: *users
-    allowNamedServers: true
+      JupyterHub:
+        authenticator_class: github
+      GitHubOAuthenticator:
+        oauth_callback_url: https://drakkar-demo.meom-ige.2i2c.cloud/hub/oauth_callback

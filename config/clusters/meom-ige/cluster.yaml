@@ -43,8 +43,7 @@ hubs:
     domain: drakkar-demo.meom-ige.2i2c.cloud
     helm_chart: basehub
     auth0:
-      # connection update? Also ensure the basehub Helm chart is provided a
-      # matching value for jupyterhub.custom.2i2c.add_staff_user_ids_of_type!
-      connection: github
+      enabled: false
     helm_chart_values_files:
       - drakkar-demo.values.yaml
+      - enc-drakkar-demo.secret.values.yaml
