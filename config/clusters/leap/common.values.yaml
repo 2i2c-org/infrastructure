@@ -83,12 +83,12 @@ basehub:
             mem_guarantee: 4.5G
             node_selector:
               node.kubernetes.io/instance-type: n1-standard-2
-         - display_name: Medium Admin Test
-           description: 11GB RAM, 4 CPUs
-           allowed_teams:
+        - display_name: Medium Admin Test
+          description: 11GB RAM, 4 CPUs
+          allowed_teams:
             - leap-stc:webmasters # basically just julius and ryan for testing things. I could make a separate admin group?
             - 2i2c-org:hub-access-for-2i2c-staff
-           profile_options:
+          profile_options:
             image:
               display_name: Image
               choices:
@@ -102,8 +102,7 @@ basehub:
                   display_name: Prototype Education Notebook
                   slug: "leap_edu"
                   kubespawner_override:
-                    image: "quay.io/jbusecke/leap-edu-image:e8cf3f0ccb57"
-                  
+                    image: "quay.io/jbusecke/leap-edu-image:e8cf3f0ccb57"    
         - display_name: Medium
           description: 11GB RAM, 4 CPUs
           allowed_teams:
