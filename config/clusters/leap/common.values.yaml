@@ -86,7 +86,7 @@ basehub:
         - display_name: Medium Admin Test
           description: 11GB RAM, 4 CPUs
           allowed_teams:
-            - leap-stc:webmasters # basically just julius and ryan for testing things. I could make a separate admin group?
+            - leap-stc:leap-pangeo-testers
             - 2i2c-org:hub-access-for-2i2c-staff
           profile_options:
             image:
