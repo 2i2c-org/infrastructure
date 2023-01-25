@@ -102,7 +102,7 @@ basehub:
                   display_name: Prototype Education Notebook
                   slug: "leap_edu"
                   kubespawner_override:
-                    image: "quay.io/jbusecke/leap-edu-image:e8cf3f0ccb57"    
+                    image: "quay.io/jbusecke/leap-edu-image:e8cf3f0ccb57"
         - display_name: Medium
           description: 11GB RAM, 4 CPUs
           allowed_teams:
