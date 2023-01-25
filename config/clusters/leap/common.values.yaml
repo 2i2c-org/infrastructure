@@ -112,7 +112,7 @@ basehub:
                   display_name: LEAP Education Notebook (Testing Prototype)
                   slug: "leap_edu"
                   kubespawner_override:
-                    image: "quay.io/jbusecke/leap-edu-image:e8cf3f0ccb57"
+                    image: "quay.io/jbusecke/leap-edu-image:9896814442a9"
           kubespawner_override:
             mem_limit: 15G
             mem_guarantee: 11G
