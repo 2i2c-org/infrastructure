@@ -1,0 +1,8 @@
+name: nasa-veda
+provider: aws
+aws:
+   key: enc-deployer-credentials.secret.json
+   clusterType: eks
+   clusterName: nasa-veda
+   region: us-west-2
+hubs: []
