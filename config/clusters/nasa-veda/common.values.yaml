@@ -1,0 +1,61 @@
+basehub:
+  nfs:
+    pv:
+      # from https://docs.aws.amazon.com/efs/latest/ug/mounting-fs-nfs-mount-settings.html
+      mountOptions:
+        - rsize=1048576
+        - wsize=1048576
+        - timeo=600
+        - soft # We pick soft over hard, so NFS lockups don't lead to hung processes
+        - retrans=2
+        - noresvport
+      serverIP: fs-029a8973da2b1ef5f.efs.us-west-2.amazonaws.com
+      baseShareName: /
+  jupyterhub:
+    prePuller:
+      continuous:
+        enabled: true
+      hook:
+        enabled: true
+    custom:
+      2i2c:
+        add_staff_user_ids_to_admin_users: true
+        add_staff_user_ids_of_type: "github"
+      homepage:
+        templateVars:
+          org:
+            name: "The Visualization, Exploration, and Data Analysis (VEDA) Project"
+            logo_url: https://www.earthdata.nasa.gov/s3fs-public/2022-08/veda_logo_lp.png
+            url: https://www.earthdata.nasa.gov/esds/veda
+          designed_by:
+            name: "2i2c"
+            url: https://2i2c.org
+          operated_by:
+            name: "2i2c"
+            url: https://2i2c.org
+          funded_by:
+            name: "TODO"
+            url: https://www.earthdata.nasa.gov/esds/veda
+    hub:
+      allowNamedServers: true
+      config:
+        Authenticator:
+          admin_users:
+            - abarciauskas-bgse
+            - freitagb
+            - j08lue
+            - rezuma
+        JupyterHub:
+          authenticator_class: github
+        GitHubOAuthenticator:
+          allowed_organizations:
+            - veda-analytics-access:all-users
+            - 2i2c-org:hub-access-for-2i2c-staff
+          scope:
+            - read:org
+    singleuser:
+      defaultUrl: /lab
+      image:
+        name: pangeo/pangeo-notebook
+        tag: "2023.01.13"
+
