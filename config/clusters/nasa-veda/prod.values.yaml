@@ -1,0 +1,9 @@
+basehub:
+  userServiceAccount:
+    annotations:
+      eks.amazonaws.com/role-arn: arn:aws:iam::444055461661:role/nasa-veda-prod
+  jupyterhub:
+    hub:
+      config:
+        GitHubOAuthenticator:
+          oauth_callback_url: https://nasa-veda.2i2c.cloud/hub/oauth_callback
