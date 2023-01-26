@@ -474,13 +474,17 @@ nodeGroups:
       hub.jupyter.org/node-purpose: user
       2i2c.org/node-cpu: "16"
       2i2c.org/node-gpu: "1"
+      k8s.amazonaws.com/accelerator: "nvidia-tesla-t4"
     taints:
       hub.jupyter.org_dedicated: user:NoSchedule
+      nvidia.com/gpu: NoSchedule
     tags:
+      k8s.io/cluster-autoscaler/node-template/label/k8s.amazonaws.com/accelerator: "nvidia-tesla-t4"
       k8s.io/cluster-autoscaler/node-template/label/hub.jupyter.org/node-purpose: user
       k8s.io/cluster-autoscaler/node-template/label/2i2c.org/node-cpu: "16"
       k8s.io/cluster-autoscaler/node-template/label/2i2c.org/node-gpu: "1"
       k8s.io/cluster-autoscaler/node-template/taint/hub.jupyter.org_dedicated: user:NoSchedule
+      k8s.io/cluster-autoscaler/node-template/taint/nvidia.com/gpu: NoSchedule
     iam: &user-iam
       withAddonPolicies:
         autoScaler: true
@@ -498,13 +502,17 @@ nodeGroups:
       hub.jupyter.org/node-purpose: user
       2i2c.org/node-cpu: "64"
       2i2c.org/node-gpu: "1"
+      k8s.amazonaws.com/accelerator: "nvidia-tesla-t4"
     taints:
       hub.jupyter.org_dedicated: user:NoSchedule
+      nvidia.com/gpu: NoSchedule
     tags:
+      k8s.io/cluster-autoscaler/node-template/label/k8s.amazonaws.com/accelerator: "nvidia-tesla-t4"
       k8s.io/cluster-autoscaler/node-template/label/hub.jupyter.org/node-purpose: user
       k8s.io/cluster-autoscaler/node-template/label/2i2c.org/node-cpu: "64"
       k8s.io/cluster-autoscaler/node-template/label/2i2c.org/node-gpu: "1"
       k8s.io/cluster-autoscaler/node-template/taint/hub.jupyter.org_dedicated: user:NoSchedule
+      k8s.io/cluster-autoscaler/node-template/taint/nvidia.com/gpu: NoSchedule
     iam: &user-iam
       withAddonPolicies:
         autoScaler: true
