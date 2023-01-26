@@ -58,4 +58,3 @@ basehub:
       image:
         name: pangeo/pangeo-notebook
         tag: "2023.01.13"
-
