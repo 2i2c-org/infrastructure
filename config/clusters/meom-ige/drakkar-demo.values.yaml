@@ -34,6 +34,13 @@ jupyterhub:
           name: SWOT Ocean Pangeo Team
           url: https://meom-group.github.io/
   singleuser:
+    cloudMetadata:
+      # Don't block access to AWS/GCP cloud metadata!
+      #
+      # If this workaround isn't provided, users can't access GCP/AWS buckets or
+      # other AWS services without an explicit identity.
+      #
+      blockWithIptables: false
     serviceAccountName: user-sa
     extraEnv:
       SCRATCH_BUCKET: "gs://meom-ige-scratch-drakkar-demo/$(JUPYTERHUB_USER)"
