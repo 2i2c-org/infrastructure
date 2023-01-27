@@ -34,6 +34,7 @@ jupyterhub:
           name: SWOT Ocean Pangeo Team
           url: https://meom-group.github.io/
   singleuser:
+    serviceAccountName: user-sa
     extraEnv:
       SCRATCH_BUCKET: "gs://meom-ige-scratch-drakkar-demo/$(JUPYTERHUB_USER)"
     profileList:
