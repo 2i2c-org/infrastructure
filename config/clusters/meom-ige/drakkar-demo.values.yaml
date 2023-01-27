@@ -1,3 +1,6 @@
+userServiceAccount:
+  annotations:
+    iam.gke.io/gcp-service-account: meom-ige-drakkar-demo@meom-ige-cnrs.iam.gserviceaccount.com
 nfs:
   pv:
     # from https://docs.aws.amazon.com/efs/latest/ug/mounting-fs-nfs-mount-settings.html
@@ -31,6 +34,8 @@ jupyterhub:
           name: SWOT Ocean Pangeo Team
           url: https://meom-group.github.io/
   singleuser:
+    extraEnv:
+      SCRATCH_BUCKET: "gs://meom-ige-scratch-drakkar-demo/$(JUPYTERHUB_USER)"
     profileList:
       # The mem-guarantees are here so k8s doesn't schedule other pods
       # on these nodes. They need to be just under total allocatable
