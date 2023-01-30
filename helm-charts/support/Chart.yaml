@@ -7,13 +7,13 @@ dependencies:
   # Prometheus for collection of metrics.
   # https://github.com/prometheus-community/helm-charts/tree/main/charts/prometheus
   - name: prometheus
-    version: 19.3.1
+    version: 19.3.3
     repository: https://prometheus-community.github.io/helm-charts
 
   # Grafana for dashboarding of metrics.
   # https://github.com/grafana/helm-charts/tree/main/charts/grafana
   - name: grafana
-    version: 6.50.1
+    version: 6.50.5
     repository: https://grafana.github.io/helm-charts
 
   # ingress-nginx for a k8s Ingress resource controller that routes traffic from
