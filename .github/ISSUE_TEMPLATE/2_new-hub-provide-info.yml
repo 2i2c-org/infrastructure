@@ -12,8 +12,20 @@ body:
 
         # Community Information
 
+  - type: input
+    id: community_representative_handle
+    attributes:
+      label: The GitHub handle of the community representative
+      description: |
+        Type the GitHub handle of the community representative
+
+        **If this info is not known yet, please write "pending" in the text area below.**
+    validations:
+      required: true
+
+
   - type: textarea
-    id: important_dates
+    id: hub_important_dates
     attributes:
       label: Important dates
       description: |
@@ -33,12 +45,12 @@ body:
         # Infrastructure customization
 
   - type: dropdown
-    id: auth_type
+    id: hub_authentication_type
     attributes:
       label: Hub Authentication Type
       description: |
         What kind of authentication service will be used for this community. This is the type of "log-in username" users will use on the hub.
-        **If this info is not known yet, please select "pending" in the dropdown below.**
+        **If this info is not known yet, please select "pending" or None in the dropdown below.**
       options:
         - GitHub (e.g., @mygithubhandle)
         - Google (e.g., myemailaddress@gmail.org, or a Google-backed domain)
@@ -49,7 +61,7 @@ body:
       required: true
 
   - type: textarea
-    id: hub_admins
+    id: initial_hub_admins
     attributes:
       label: First Hub Administrators
       description: |
@@ -72,7 +84,7 @@ body:
       description: |
         Please describe how you would prefer to manage your users accessing the hub via GitHub Auth.
 
-        **If this info is not known yet, please select "pending" in the dropdown below.**
+        **If this info is not known yet, please select "pending" or None in the dropdown below.**
       options:
         - Manually, by adding specific GitHub handles in the JupyterHub Admin panel
         - Allowing members of a specific GitHub organization
@@ -109,7 +121,7 @@ body:
       required: true
 
   - type: input
-    id: hub_logo_info
+    id: hub_logo_website_url
     attributes:
       label: Hub logo website URL
       description: |
@@ -151,7 +163,7 @@ body:
       required: true
 
   - type: checkboxes
-    id: features
+    id: extra_features
     attributes:
       label: Extra features you'd like to enable
       description: |
@@ -159,25 +171,24 @@ body:
         These generally come with added complexity and cost, so make sure you've discussed these options with somebody at 2i2c before selecting them here.
 
         **Explanation of options**:
-        - **Specific cloud provider or datacenter**: If you have restrictions about which cloud provider to use, and which data center the hub should live in (e.g. if it is next to a specific dataset).
         - **Dedicated Scalable Dask Cluster** with [Dask Gateway](https://gateway.dask.org/): if you have very large datasets or otherwise need high-performance parallelizable computing via the cloud.
         - **Dedicated Kubernetes cluster**: If you need to run the infrastructure on your own cloud account, or otherwise wish to have a dedicated cluster.
       options:
-        - label: Specific cloud provider or datacenter (otherwise GCP)
         - label: Dedicated Kubernetes cluster
         - label: Scalable Dask Cluster
     validations:
       required: false
 
   - type: dropdown
-    id: cloud_provider
+    id: preferred_cloud_provider
     attributes:
       label: (Optional) Preferred cloud provider
       description: |
-        If you selected the `Specific cloud provider or datacenter` extra option above, please select which one do you prefer.
+        If you have restrictions about which cloud provider to use, and which data center the hub should live in (e.g. if it is next to a specific dataset),
+        please select which one do you prefer.
       options:
         - No preference
-        - GCP (preferred)
+        - GCP (default and preferred)
         - AWS
         - Azure
     validations:
