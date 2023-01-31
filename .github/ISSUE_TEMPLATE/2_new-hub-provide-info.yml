@@ -23,7 +23,6 @@ body:
     validations:
       required: true
 
-
   - type: textarea
     attributes:
       label: Hub important dates
