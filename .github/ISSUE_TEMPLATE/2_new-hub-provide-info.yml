@@ -25,9 +25,8 @@ body:
 
 
   - type: textarea
-    id: hub_important_dates
     attributes:
-      label: Important dates
+      label: Hub important dates
       description: |
         Any important dates that we should consider for this hub.
         For example, if it will be used for a class, the starting day of class and any days with tests.
@@ -45,7 +44,6 @@ body:
         # Infrastructure customization
 
   - type: dropdown
-    id: hub_authentication_type
     attributes:
       label: Hub Authentication Type
       description: |
@@ -61,7 +59,6 @@ body:
       required: true
 
   - type: textarea
-    id: initial_hub_admins
     attributes:
       label: First Hub Administrators
       description: |
@@ -79,6 +76,7 @@ body:
       required: true
 
   - type: dropdown
+    id: optional_user_management
     attributes:
       label: "[GitHub Auth only] How would you like to manage your users?"
       description: |
@@ -92,6 +90,7 @@ body:
         - pending
 
   - type: textarea
+    id: optional_profile_restriction_based_on_team_membership
     attributes:
       label: "[GitHub Teams Auth only] Profile restriction based on team membership"
       description: |
@@ -110,7 +109,6 @@ body:
         The hub landing page can have a specific logo and a link attached to it.
 
   - type: input
-    id: hub_logo_url
     attributes:
       label: Hub logo image URL
       description: |
@@ -121,7 +119,6 @@ body:
       required: true
 
   - type: input
-    id: hub_logo_website_url
     attributes:
       label: Hub logo website URL
       description: |
@@ -141,7 +138,6 @@ body:
         Use this section to fill in relevant information:
 
   - type: input
-    id: hub_image_repo
     attributes:
       label: Hub user image GitHub repository
       description: |
@@ -152,7 +148,6 @@ body:
       required: false
 
   - type: input
-    id: hub_image_registry
     attributes:
       label: Hub user image tag and name
       description: |
@@ -163,9 +158,8 @@ body:
       required: true
 
   - type: checkboxes
-    id: extra_features
     attributes:
-      label: Extra features you'd like to enable
+      label: Extra features you would like to enable
       description: |
         In addition to a base JupyterHub, there are a few extra features that are possible. Use the checkboxes below to ask for them.
         These generally come with added complexity and cost, so make sure you've discussed these options with somebody at 2i2c before selecting them here.
@@ -180,7 +174,6 @@ body:
       required: false
 
   - type: dropdown
-    id: preferred_cloud_provider
     attributes:
       label: (Optional) Preferred cloud provider
       description: |
@@ -195,7 +188,6 @@ body:
       required: false
 
   - type: dropdown
-    id: billing_account
     attributes:
       label: (Optional) Billing and Cloud account
       description: |
@@ -208,7 +200,6 @@ body:
         - I need help figuring out the billing and cloud accounts
 
   - type: textarea
-    id: other_information
     attributes:
       label: Other relevant information to the features above
       description: |
