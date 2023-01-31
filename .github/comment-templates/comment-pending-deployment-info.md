@@ -1,4 +1,4 @@
-Hey @{{ .community_rep }} and @{{ .issue_author }}! :wave
+Hey @{{ .community_rep }} and @{{ .issue_author }}! 👋
 I noticed there is still pending information about the new hub deployment.
 Can you please help us fill it in?
 
