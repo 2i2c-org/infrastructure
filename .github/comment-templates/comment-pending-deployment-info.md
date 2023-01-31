@@ -1,6 +1,6 @@
-Hey {{ .community_rep }} and @{{ .issue_author }}! :wave
+Hey @{{ .community_rep }} and @{{ .issue_author }}! :wave
 I noticed there is still pending information about the new hub deployment.
-Can you please help us fill them in?
+Can you please help us fill it in?
 
 The information pieces still missing, are: **{{ .pending_info }}**
 
