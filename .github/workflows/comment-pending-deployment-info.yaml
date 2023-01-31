@@ -20,20 +20,27 @@ jobs:
         id: find-missing-info
         run: |
           import os
-          import sys
 
           form = ${{ steps.issue-parser.outputs.jsonString }}
+          # This will hold a string with all the pending information in the form
           pending_info = ""
           community_rep = form.get("community_representative_handle", None)
+
+          # Parse the form entries
           for form_entry_id, form_entry_value in form.items():
-            if not form_entry_value or form_entry_value == "pending":
-                pending_info += f'{form_entry_id.replace("_", " ")}, '
+            # Add the form entry ids that were empty or marked as pending
+            # to a string, comma separated
+            if not form_entry_value or
+               form_entry_value == "pending" or
+               form_entry_value != "tasks_to_deploy":
+              # Form ids have `_` in them, so replace their occurrences with a space
+              # to improve readability
+              pending_info += f'{form_entry_id.replace("_", " ")},
+          # Export the `pending_info` string to GITHUB_OUTPUT to be used in following steps
           with open(os.environ["GITHUB_OUTPUT"], "a") as f :
               print(f"pending_info={pending_info[:-2]}", file=f)
               print(f"community_rep={community_rep}", file=f)
-      - run: echo ${{ steps.find-missing-info.outputs.pending_info }}
-      - run: echo ${{ steps.find-missing-info.outputs.community_rep }}
-      - name: Render comment template using the form information
+      - name: Render comment template using information from the `find-missing-info` step before
         id: template
         uses: chuhlomin/render-template@v1.6
         with:
