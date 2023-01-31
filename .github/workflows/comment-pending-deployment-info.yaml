@@ -29,7 +29,8 @@ jobs:
           # Parse the form entries
           for form_entry_id, form_entry_value in form.items():
               # Add the form entry ids that were empty or marked as pending
-              # to a string, comma separated
+              # to a string separated by `<br>-`
+              # where <br> is HTML line break for a better readability when rendered.
               if (
                   form_entry_id != "tasks_to_deploy"
                   and "optional" not in form_entry_id
@@ -37,10 +38,10 @@ jobs:
               ):
                   # Form ids have `_` in them, so replace their occurrences with a space
                   # to improve readability
-                  pending_info += f'{form_entry_id.replace("_", " ")}, '
+                  pending_info += f'- {form_entry_id.replace("_", " ")}<br>'
           # Export the `pending_info` string to GITHUB_OUTPUT to be used in following steps
           with open(os.environ["GITHUB_OUTPUT"], "a") as f :
-              print(f"pending_info={pending_info[:-2]}", file=f)
+              print(f"pending_info={pending_info}", file=f)
               print(f"community_rep={community_rep}", file=f)
       - name: Render comment template using information from the `find-missing-info` step before
         id: template
