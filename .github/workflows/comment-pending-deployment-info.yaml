@@ -1,5 +1,5 @@
 # Inspired from https://stefanbuck.com/blog/codeless-contributions-with-github-issue-forms
-name: Comment on issues requesting deployment with pending information
+name: Comment on issues with `new hub` label that are requesting a deployment with the pending information
 on:
   issues:
     types:
@@ -54,4 +54,3 @@ jobs:
         with:
           issue-number: ${{ github.event.issue.number }}
           body: ${{ steps.template.outputs.result }}
-
