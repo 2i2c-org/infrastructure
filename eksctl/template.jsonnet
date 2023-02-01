@@ -26,20 +26,24 @@ local notebookNodes = [
     { instanceType: "m5.2xlarge" },
     { instanceType: "m5.8xlarge" },
 ];
-
-local daskNodes =
-    if "<< hub_type >>" == "daskhub" then [
+<% if hub_type == "daskhub" %>
+local daskNodes = [
     // Node definitions for dask worker nodes. Config here is merged
     // with our dask worker node definition, which uses spot instances.
     // A `node.kubernetes.io/instance-type label is set to the name of the
     // *first* item in instanceDistribution.instanceTypes, to match
     // what we do with notebook nodes. Pods can request a particular
     // kind of node with a nodeSelector
-        { instancesDistribution+: { instanceTypes: ["m5.large"] }},
-        { instancesDistribution+: { instanceTypes: ["m5.xlarge"] }},
-        { instancesDistribution+: { instanceTypes: ["m5.2xlarge"] }},
-        { instancesDistribution+: { instanceTypes: ["m5.8xlarge"] }},
-    ];
+    { instancesDistribution+: { instanceTypes: ["m5.large"] }},
+    { instancesDistribution+: { instanceTypes: ["m5.xlarge"] }},
+    { instancesDistribution+: { instanceTypes: ["m5.2xlarge"] }},
+    { instancesDistribution+: { instanceTypes: ["m5.8xlarge"] }},
+];
+<% else %>
+local daskNodes = [];
+<% endif %>
+
+
 {
     apiVersion: 'eksctl.io/v1alpha5',
     kind: 'ClusterConfig',
