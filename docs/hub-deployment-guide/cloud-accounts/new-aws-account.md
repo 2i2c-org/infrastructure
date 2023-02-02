@@ -66,7 +66,7 @@ Now, [setup a new cluster](new-cluster:new-cluster-aws) inside it via Terraform.
 ## Checking quotas and requesting increases
 
 Cloud providers like AWS require their users to request a _Service Quota
-increase_[^3] for any substantial use of their services. Quotas acts as an upper
+increase_[^3] for any substantial use of their services. Quotas act as an upper
 bound of for example the number of CPUs from a certain machine type and the
 amount of public IPs that the account can acquire.
 
