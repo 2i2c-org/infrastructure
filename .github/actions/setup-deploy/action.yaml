@@ -85,8 +85,6 @@ runs:
     # This action use the github official cache mechanism internally
     - name: Install sops
       uses: mdgreenwald/mozilla-sops-action@v1.4.1
-      with:
-        version: v3.7.2
 
     # Install pre-requisite for "gcloud container clusters get-credentials"
     # command with a modern k8s client.
