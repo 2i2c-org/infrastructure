@@ -9,11 +9,16 @@ The
 subcommand of the deployer can help us here.
 
 ```bash
-deployer exec-homes-shell <cluster-name> <hub-name>
+export CLUSTER_NAME=<cluster-name>
+export HUB_NAME=<hub-name>
 ```
 
-Will open a bash shell with all the home directories of all the users of `<hub-name>`
-in `<cluster-name>` mounted in read-write fashion under `/home/`.
+```bash
+deployer exec-homes-shell $CLUSTER_NAME $HUB_NAME
+```
+
+Will open a bash shell with all the home directories of all the users of `$HUB_NAME`
+in `$CLUSTER_NAME  ` mounted in read-write fashion under `/home/`.
 
 ```{warning}
 BE CAREFUL! DO NOT DELETE THINGS HERE WITHOUT BEING SURE YOU WANT THEM GONE.
