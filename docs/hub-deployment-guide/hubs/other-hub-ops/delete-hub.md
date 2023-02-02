@@ -25,7 +25,12 @@ Especially if we think that users will want this information in the future (or i
 Delete user home directories using the [deployer `exec-homes-shell`](https://github.com/2i2c-org/infrastructure/blob/master/deployer/README.md#exec-homes-shell) option.
 
 ```bash
-deployer exec-homes-shell <cluster_name> <hub_name>
+export CLUSTER_NAME=<cluster-name>
+export HUB_NAME=<hub-name>
+```
+
+```bash
+deployer exec-homes-shell $CLUSTER_NAME $HUB_NAME
 ```
 
 This should get you a shell with the home directories of all the users on the given hub. Delete all user home directories with:
@@ -44,7 +49,7 @@ If the hub remains listed in its cluster's `cluster.yaml` file, the hub could be
 redeployed by any merged PR triggering our CI/CD pipeline.
 
 Open a decomissioning PR that removes the appropriate hub entry from the
-`config/clusters/<cluster_name>/cluster.yaml` file and associated
+`config/clusters/$CLUSTER_NAME/cluster.yaml` file and associated
 `*.values.yaml` files no longer referenced in the `cluster.yaml` file.
 
 You can continue with the steps below before the PR is merged, but be ready to
@@ -56,10 +61,10 @@ merged.
 In the appropriate cluster, run:
 
 ```bash
-deployer use-cluster-credentials <cluster-name>
+deployer use-cluster-credentials $CLUSTER_NAME
 
-helm --namespace=<hub-name> delete <hub-name>
-kubectl delete namespace <hub-name>
+helm --namespace=$HUB_NAME delete $HUB_NAME
+kubectl delete namespace $HUB_NAME
 ```
 
 ## 4. Delete the OAuth application
@@ -72,7 +77,7 @@ For each hub that uses Auth0, we create an [Application](https://auth0.com/docs/
 
 For each hub that uses the JupyterHub GitHubOAuthenticator, we create a GitHub [OAuth Application](https://docs.github.com/en/developers/apps/building-oauth-apps/creating-an-oauth-app). You should be able to see the [list of applications created under the `2i2c` GitHub org](https://github.com/organizations/2i2c-org/settings/applications) and delete the one created for the hub that's being decommissioned.
 
-The naming convention followed when creating these apps is: `<cluster_name>-<hub_name>`.
+The naming convention followed when creating these apps is: `$CLUSTER_NAME-$HUB_NAME`.
 
 ### CILogon OAuth application
 
