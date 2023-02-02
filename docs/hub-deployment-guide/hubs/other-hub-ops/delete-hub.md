@@ -25,8 +25,8 @@ Especially if we think that users will want this information in the future (or i
 Delete user home directories using the [deployer `exec-homes-shell`](https://github.com/2i2c-org/infrastructure/blob/master/deployer/README.md#exec-homes-shell) option.
 
 ```bash
-export CLUSTER_NAME=$CLUSTER_NAME
-export HUB_NAME=$HUB_NAME
+export CLUSTER_NAME=<cluster-name>
+export HUB_NAME=<hub-name>
 ```
 
 ```bash
