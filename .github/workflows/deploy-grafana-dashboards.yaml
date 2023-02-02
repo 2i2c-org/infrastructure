@@ -35,6 +35,10 @@ jobs:
       - name: Checkout repo
         uses: actions/checkout@v3
 
+      - uses: actions/setup-python@v4
+        with:
+          python-version: "3.9"
+
       - name: Install deployer
         run: |
           python3 -m pip install --editable .
