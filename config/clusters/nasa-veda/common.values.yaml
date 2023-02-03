@@ -34,8 +34,8 @@ basehub:
             name: "2i2c"
             url: https://2i2c.org
           funded_by:
-            name: "TODO"
-            url: https://www.earthdata.nasa.gov/esds/veda
+            name: "NASA"
+            url: https://www.earthdata.nasa.gov/esds
     hub:
       allowNamedServers: true
       config:
@@ -45,6 +45,8 @@ basehub:
             - freitagb
             - j08lue
             - rezuma
+            - ranchodeluxe
+            - jsignell
         JupyterHub:
           authenticator_class: github
         GitHubOAuthenticator:
