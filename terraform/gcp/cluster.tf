@@ -163,6 +163,18 @@ resource "google_container_node_pool" "core" {
     max_node_count = var.core_node_max_count
   }
 
+  lifecycle {
+    # Even though it says 'initial'_node_count, it actually represents 'current' node count!
+    # So if the current number of nodes is different than the initial number (due to autoscaling),
+    # terraform will destroy & recreate the nodepool unnecessarily! Hence, we ignore any changes to
+    # this number after initial creation.
+    # See https://github.com/hashicorp/terraform-provider-google/issues/6901#issuecomment-667369691 for
+    # more details.
+    ignore_changes = [
+      initial_node_count
+    ]
+  }
+
   management {
     auto_repair = true
     # Auto upgrade will drain and setup nodes without us knowing,
@@ -201,14 +213,22 @@ resource "google_container_node_pool" "notebook" {
 
   for_each = var.notebook_nodes
 
-  # WARNING: Do not change this value, it will cause the nodepool
-  # to be destroyed & re-created. If you want to increase number of
-  # nodes in a node pool, set the min count to that number and then
-  # scale the pool manually.
   initial_node_count = each.value.min
   autoscaling {
     min_node_count = each.value.min
     max_node_count = each.value.max
+  }
+
+  lifecycle {
+    # Even though it says 'initial'_node_count, it actually represents 'current' node count!
+    # So if the current number of nodes is different than the initial number (due to autoscaling),
+    # terraform will destroy & recreate the nodepool unnecessarily! Hence, we ignore any changes to
+    # this number after initial creation.
+    # See https://github.com/hashicorp/terraform-provider-google/issues/6901#issuecomment-667369691 for
+    # more details.
+    ignore_changes = [
+      initial_node_count
+    ]
   }
 
   management {
