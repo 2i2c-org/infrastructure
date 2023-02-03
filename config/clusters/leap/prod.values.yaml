@@ -1,12 +1,13 @@
 dask-gateway:
   gateway:
     backend:
-      cores:
-        request: 1
-        limit: 2
-      memory:
-        request: 2G
-        limit: 4G
+      scheduler:
+        cores:
+          request: 1
+          limit: 2
+        memory:
+          request: 2G
+          limit: 4G
 basehub:
   userServiceAccount:
     annotations:
