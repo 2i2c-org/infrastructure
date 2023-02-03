@@ -1,14 +1,33 @@
+dask-gateway:
+  gateway:
+    backend:
+      cores:
+        request: 1
+        limit: 2
+      memory:
+        request: 2G
+        limit: 4G
 basehub:
   userServiceAccount:
     annotations:
       iam.gke.io/gcp-service-account: leap-prod@leap-pangeo.iam.gserviceaccount.com
   jupyterhub:
+    proxy:
+      chp:
+        resources:
+          requests:
+            cpu: 1
+            memory: 1Gi
     singleuser:
       extraEnv:
         SCRATCH_BUCKET: gs://leap-scratch/$(JUPYTERHUB_USER)
         PERSISTENT_BUCKET: gs://leap-persistent/$(JUPYTERHUB_USER)
         PANGEO_SCRATCH: gs://leap-scratch/$(JUPYTERHUB_USER)
     hub:
+      resources:
+        requests:
+          cpu: 1
+          memory: 2Gi
       config:
         GitHubOAuthenticator:
           oauth_callback_url: https://leap.2i2c.cloud/hub/oauth_callback
