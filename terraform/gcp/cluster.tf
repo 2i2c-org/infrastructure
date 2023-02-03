@@ -137,6 +137,15 @@ resource "google_container_cluster" "cluster" {
     service_account = google_service_account.cluster_sa.email
   }
 
+  monitoring_config {
+    managed_prometheus {
+      # We do not use GCP managed Prometheus, but our own installation.
+      # So we do not install the managed prometheus collector on every node,
+      # saving some resources on each node.
+      enabled = false
+    }
+  }
+
   // Set these values explicitly so they don't "change outside terraform"
   resource_labels = {}
 }
