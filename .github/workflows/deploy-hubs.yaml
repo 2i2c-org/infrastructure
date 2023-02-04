@@ -36,6 +36,9 @@ concurrency: deploy
 # GitHug Actions logs for easy reading
 env:
   TERM: xterm
+  # This may not be required any more, and it may depend on the kubectl version
+  # we use etc as well. For now, we have it added to avoid issues.
+  USE_GKE_GCLOUD_AUTH_PLUGIN: "True"
 
 jobs:
   # This job runs in Pull Requests and on pushes to the default branch. It identifies
@@ -164,6 +167,7 @@ jobs:
       failure_victor: "${{ env.failure_victor }}"
       failure_2i2c-aws-us: "${{ env.failure_2i2c-aws-us }}"
       failure_ubc-eoas: "${{ env.failure_ubc-eoas }}"
+      failure_nasa-veda: "${{ env.failure_nasa-veda }}"
 
     # Only run this job on pushes to the default branch and when the job output is not
     # an empty list

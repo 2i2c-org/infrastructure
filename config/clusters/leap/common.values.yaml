@@ -19,6 +19,12 @@ basehub:
           name: pangeo/ml-notebook
           tag: "2023.01.03"
     custom:
+      # Extra mount point for admins to access to all users' home dirs
+      # Ref https://github.com/2i2c-org/infrastructure/issues/2105
+      singleuserAdmin:
+        extraVolumeMounts:
+          - name: home
+            mountPath: /home/jovyan/allusers
       2i2c:
         add_staff_user_ids_to_admin_users: true
         add_staff_user_ids_of_type: "github"
@@ -108,6 +114,11 @@ basehub:
                   slug: "pytorch"
                   kubespawner_override:
                     image: "pangeo/pytorch-notebook:2023.01.03"
+                leap-pangeo-edu:
+                  display_name: LEAP Education Notebook (Testing Prototype)
+                  slug: "leap_edu"
+                  kubespawner_override:
+                    image: "quay.io/jbusecke/leap-edu-image:fa442ab4851c"
           kubespawner_override:
             mem_limit: 15G
             mem_guarantee: 11G

@@ -1,0 +1,78 @@
+userServiceAccount:
+  annotations:
+    iam.gke.io/gcp-service-account: meom-ige-drakkar-demo@meom-ige-cnrs.iam.gserviceaccount.com
+nfs:
+  pv:
+    # from https://docs.aws.amazon.com/efs/latest/ug/mounting-fs-nfs-mount-settings.html
+    mountOptions:
+      - rsize=1048576
+      - wsize=1048576
+      - timeo=600
+      - soft # We pick soft over hard, so NFS lockups don't lead to hung processes
+      - retrans=2
+      - noresvport
+    serverIP: nfs-server-01
+    baseShareName: /export/home-01/homes/
+jupyterhub:
+  custom:
+    2i2c:
+      add_staff_user_ids_to_admin_users: true
+      add_staff_user_ids_of_type: "github"
+    homepage:
+      templateVars:
+        org:
+          name: "2023 DRAKKAR Ocean Modelling Workshop"
+          logo_url: https://drakkar2023.sciencesconf.org/data/header/DrakkarOcean.png
+          url: https://drakkar2023.sciencesconf.org/
+        designed_by:
+          name: 2i2c
+          url: https://2i2c.org
+        operated_by:
+          name: 2i2c
+          url: https://2i2c.org
+        funded_by:
+          name: SWOT Ocean Pangeo Team
+          url: https://meom-group.github.io/
+  singleuser:
+    cloudMetadata:
+      # Don't block access to AWS/GCP cloud metadata!
+      #
+      # If this workaround isn't provided, users can't access GCP/AWS buckets or
+      # other AWS services without an explicit identity.
+      #
+      blockWithIptables: false
+    serviceAccountName: user-sa
+    extraEnv:
+      SCRATCH_BUCKET: "gs://meom-ige-scratch-drakkar-demo/$(JUPYTERHUB_USER)"
+    profileList:
+      # The mem-guarantees are here so k8s doesn't schedule other pods
+      # on these nodes. They need to be just under total allocatable
+      # RAM on a node, not total node capacity
+      - display_name: "Large"
+        default: true
+        description: "~16 CPU, ~64G RAM"
+        kubespawner_override:
+          mem_limit: 64G
+          mem_guarantee: 50G
+          node_selector:
+            node.kubernetes.io/instance-type: n1-standard-16
+    defaultUrl: /lab
+  scheduling:
+    userPlaceholder:
+      enabled: false
+      replicas: 0
+    userScheduler:
+      enabled: false
+  hub:
+    allowNamedServers: true
+    config:
+      Authenticator:
+        allowed_users: &users
+          - roxyboy
+          - lesommer
+          - auraoupa
+        admin_users: *users
+      JupyterHub:
+        authenticator_class: github
+      GitHubOAuthenticator:
+        oauth_callback_url: https://drakkar-demo.meom-ige.2i2c.cloud/hub/oauth_callback

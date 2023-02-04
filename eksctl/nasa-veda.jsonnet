@@ -12,9 +12,9 @@
 local ng = import "./libsonnet/nodegroup.jsonnet";
 
 // place all cluster nodes here
-local clusterRegion = "<< cluster_region >>";
-local masterAzs = ["<< cluster_region >>a", "<< cluster_region >>b", "<< cluster_region >>c"];
-local nodeAz = "<< cluster_region >>a";
+local clusterRegion = "us-west-2";
+local masterAzs = ["us-west-2a", "us-west-2b", "us-west-2c"];
+local nodeAz = "us-west-2a";
 
 // Node definitions for notebook nodes. Config here is merged
 // with our notebook node definition.
@@ -26,7 +26,6 @@ local notebookNodes = [
     { instanceType: "m5.2xlarge" },
     { instanceType: "m5.8xlarge" },
 ];
-<% if hub_type == "daskhub" %>
 local daskNodes = [
     // Node definitions for dask worker nodes. Config here is merged
     // with our dask worker node definition, which uses spot instances.
@@ -39,16 +38,14 @@ local daskNodes = [
     { instancesDistribution+: { instanceTypes: ["m5.2xlarge"] }},
     { instancesDistribution+: { instanceTypes: ["m5.8xlarge"] }},
 ];
-<% else %>
-local daskNodes = [];
-<% endif %>
+ 
 
-
+                       
 {
     apiVersion: 'eksctl.io/v1alpha5',
     kind: 'ClusterConfig',
     metadata+: {
-        name: "<< cluster_name >>",
+        name: "nasa-veda",
         region: clusterRegion,
         version: '1.24'
     },
@@ -76,7 +73,7 @@ local daskNodes = [];
             name: 'core-a',
             availabilityZones: [nodeAz],
             ssh: {
-                publicKeyPath: 'ssh-keys/<< cluster_name >>.key.pub'
+                publicKeyPath: 'ssh-keys/nasa-veda.key.pub'
             },
             instanceType: "m5.xlarge",
             minSize: 1,
@@ -96,7 +93,7 @@ local daskNodes = [];
             maxSize: 500,
             instanceType: n.instanceType,
             ssh: {
-                publicKeyPath: 'ssh-keys/<< cluster_name >>.key.pub'
+                publicKeyPath: 'ssh-keys/nasa-veda.key.pub'
             },
             labels+: {
                 "hub.jupyter.org/node-purpose": "user",
@@ -117,7 +114,7 @@ local daskNodes = [];
             minSize: 0,
             maxSize: 500,
             ssh: {
-                publicKeyPath: 'ssh-keys/<< cluster_name >>.key.pub'
+                publicKeyPath: 'ssh-keys/nasa-veda.key.pub'
             },
             labels+: {
                 "k8s.dask.org/node-purpose": "worker"

@@ -3,11 +3,11 @@ terraform {
   required_providers {
     google = {
       source  = "google"
-      version = "4.11.0"
+      version = "4.51.0"
     }
     google-beta = {
       source  = "google-beta"
-      version = "4.11.0"
+      version = "4.51.0"
     }
     kubernetes = {
       version = "2.8.0"

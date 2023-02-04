@@ -6,4 +6,5 @@ issues that may arise.
 ```{toctree}
 :maxdepth: 2
 logs.md
+ssh.md
 ```

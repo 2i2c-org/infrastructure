@@ -29,10 +29,15 @@ jobs:
           - cluster_name: victor
           - cluster_name: 2i2c-aws-us
           - cluster_name: ubc-eoas
+          - cluster_name: nasa-veda
 
     steps:
       - name: Checkout repo
         uses: actions/checkout@v3
+
+      - uses: actions/setup-python@v4
+        with:
+          python-version: "3.9"
 
       - name: Install deployer
         run: |
@@ -41,8 +46,6 @@ jobs:
 
       - name: Install sops
         uses: mdgreenwald/mozilla-sops-action@v1.4.1
-        with:
-          version: v3.7.1
 
       - name: Setup sops credentials to decrypt repo secrets
         uses: google-github-actions/auth@v1

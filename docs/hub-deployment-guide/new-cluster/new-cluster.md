@@ -223,13 +223,17 @@ terraform workspace list  # List all available workspaces
 terraform workspace select WORKSPACE_NAME
 ```
 
-Then, output the credentials created by terraform to a file under the appropriate cluster directory: `/config/clusters/<cluster-name>`.
+Then, output the credentials created by terraform to a file under the appropriate cluster directory: `/config/clusters/$CLUSTER_NAME`.
 
 ````{note}
 Create the cluster directory if it doesn't already exist with:
 
 ```bash
-mkdir -p ../../config/clusters/<cluster-name>
+export CLUSTER_NAME=<cluster-name>
+```
+
+```bash
+mkdir -p ../../config/clusters/$CLUSTER_NAME
 ```
 ````
 
@@ -269,13 +273,13 @@ We use `cluster.yaml` files to describe a specific cluster and all the hubs depl
 See [](config:structure) for more information.
 ```
 
-Create a `cluster.yaml` file under the `config/cluster/<cluster-name>` folder and populate it with the following info:
+Create a `cluster.yaml` file under the `config/cluster/$CLUSTER_NAME>` folder and populate it with the following info:
 
 `````{tab-set}
 ````{tab-item} Google Cloud
 :sync: gcp-key
 ```yaml
-name: <cluster-name>  # This should also match the name of the folder: config/clusters/<cluster-name>
+name: <cluster-name>  # This should also match the name of the folder: config/clusters/$CLUSTER_NAME>
 provider: gcp
 gcp:
   # The location of the *encrypted* key we exported from terraform
@@ -298,7 +302,7 @@ to create a [Service Principal](https://learn.microsoft.com/en-us/azure/active-d
 with terraform.
 ```
 ```yaml
-name: <cluster-name>  # This should also match the name of the folder: config/clusters/<cluster-name>
+name: <cluster-name>  # This should also match the name of the folder: config/clusters/$CLUSTER_NAME
 provider: kubeconfig
 kubeconfig:
   # The location of the *encrypted* key we exported from terraform
@@ -307,7 +311,7 @@ kubeconfig:
 ````
 ````{tab-item} Azure (Service Principal)
 ```yaml
-name: <cluster-name>  # This should also match the name of the folder: config/clusters/<cluster-name>
+name: <cluster-name>  # This should also match the name of the folder: config/clusters/$CLUSTER_NAME
 provider: azure
 azure:
   # The location of the *encrypted* key we exported from terraform
