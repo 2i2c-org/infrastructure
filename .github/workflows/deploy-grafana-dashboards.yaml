@@ -46,8 +46,6 @@ jobs:
 
       - name: Install sops
         uses: mdgreenwald/mozilla-sops-action@v1.4.1
-        with:
-          version: v3.7.1
 
       - name: Setup sops credentials to decrypt repo secrets
         uses: google-github-actions/auth@v1
