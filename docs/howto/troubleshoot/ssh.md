@@ -41,13 +41,17 @@ issue. This document describes how to do that on various cloud providers.
    You can get the entire object's definition with `kubectl get node <node-name> -o yaml`, and
    pick out the `alpha.eksctl.io/instance-id` from there. This is of the form `i-<some-string>`.
    
-4. You can now ssh with:
+4. Get the *region* of the node. From the output you got in step 3, you can look at the label
+   `topology.kubernetes.io/region` to get the region. For us, it's often `us-west-2` (as that is
+   where a lot of scientific data is stored)
+   
+5. You can now ssh with:
 
    ```bash
-   aws ssm start-session --target <instance-id>
+   aws ssm start-session --target <instance-id> --region <region>
    ```
    
-5. This will put you on the node with the `sh` shell, which is missing a lot of the features we
+6. This will put you on the node with the `sh` shell, which is missing a lot of the features we
    expect from interactive shells today. You can get on bash with `bash -l`.
    
-6. You will be a user with full `sudo` access, so you can troubleshoot to your heart's content.
+7. You will be a user with full `sudo` access, so you can troubleshoot to your heart's content.
