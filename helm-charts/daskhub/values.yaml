@@ -1,6 +1,4 @@
 basehub:
-  # Copied from https://github.com/dask/helm-chart/blob/master/daskhub/values.yaml
-  # FIXME: Properly use the upstream chart.
   jupyterhub:
     singleuser:
       # Almost everyone using dask by default wants JupyterLab
@@ -61,6 +59,7 @@ basehub:
           # as dask-gateway has no UI
           display: false
       extraConfig:
+        # Initially copied from https://github.com/dask/helm-chart/blob/master/daskhub/values.yaml
         daskhub-01-add-dask-gateway-values: |
           # 1. Sets `DASK_GATEWAY__PROXY_ADDRESS` in the singleuser environment.
           # 2. Adds the URL for the Dask Gateway JupyterHub service.
