@@ -8,10 +8,14 @@ basehub:
       extraLabels:
         hub.jupyter.org/network-access-proxy-http: "true"
       cloudMetadata:
-        # Don't block access to AWS cloud metadata
-        # If we don't, our users can't access S3 buckets / other AWS services
-        # without an explicit identity
-        # FIXME: Provide an explicit identity for users instead
+        # Don't block access to the cloud provider's metadata server!
+        #
+        # If we do the coupling between the cloud providers IAM permissions and
+        # the credentials provided to pod's by mounting a k8s ServiceAccount
+        # with certain annotations on breaks (AWS IRSA, GCP workload identity).
+        # This in turn results in users unable to able to access AWS/GCP object
+        # storage buckets.
+        #
         blockWithIptables: false
       serviceAccountName: user-sa
       extraEnv:
