@@ -30,7 +30,10 @@ jobs:
           # Bump repo2docker image in BinderHub helm chart
           - name: "BinderHub/repo2docker bump"
             config_path: "helm-charts/binderhub/values.yaml"
-            images_info: '[{"values_path": ".binderhub.config.BinderHub.build_image"}]'
+            # We use regex to select any image tag that begins with a number since
+            # repo2docker is tagged something like YYYY.MM.N-NN.hash. This will
+            # explicitly ignore the 'main' tag.
+            images_info: '[{"values_path": ".binderhub.config.BinderHub.build_image", "regexpr": "^[0-9].*"}]'
 
           # Bump images in openscapes cluster
           - name: "OpenScapes profiles"
