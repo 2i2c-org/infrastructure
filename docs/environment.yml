@@ -2,7 +2,7 @@ name: infrastructure-docs
 channels:
   - conda-forge
 dependencies:
-  - go-terraform-docs=0.15.0
+  - go-terraform-docs
   - python=3.10
   - pip:
       - -r requirements.txt
