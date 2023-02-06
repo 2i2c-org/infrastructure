@@ -1,14 +1,18 @@
-// This file is a jinja2 template of a jsonnet template of a eksctl's cluster
-// configuration file, which is in turn can be used with the `eksctl` CLI to both
-// update and initialize a AWS EKS based cluster.
-//
-// This jinja2 template is only used by the deployer script as part of creating
-// new clusters. If a relevant change is made here or the dependent file
-// libsonnet/nodegroup.jsonnet, one may consider if we should manually update
-// already generated jsonnet files in this folder.
-//
-// Configuration reference: https://eksctl.io/usage/schema/
-//
+/*
+    This file is a jsonnet template of a eksctl's cluster configuration file,
+    that is used with the eksctl CLI to both update and initialize an AWS EKS
+    based cluster.
+
+    This file has in turn been generated from eksctl/template.jsonnet which is
+    relevant to compare with for changes over time.
+
+    To use jsonnet to generate an eksctl configuration file from this, do:
+
+        jsonnet nasa-veda.jsonnet > eksctl-config.yaml
+
+    References:
+    - https://eksctl.io/usage/schema/
+*/
 local ng = import "./libsonnet/nodegroup.jsonnet";
 
 // place all cluster nodes here
@@ -26,6 +30,7 @@ local notebookNodes = [
     { instanceType: "m5.2xlarge" },
     { instanceType: "m5.8xlarge" },
 ];
+
 local daskNodes = [
     // Node definitions for dask worker nodes. Config here is merged
     // with our dask worker node definition, which uses spot instances.
@@ -38,9 +43,8 @@ local daskNodes = [
     { instancesDistribution+: { instanceTypes: ["m5.2xlarge"] }},
     { instancesDistribution+: { instanceTypes: ["m5.8xlarge"] }},
 ];
- 
 
-                       
+
 {
     apiVersion: 'eksctl.io/v1alpha5',
     kind: 'ClusterConfig',
@@ -53,6 +57,10 @@ local daskNodes = [
     iam: {
         withOIDC: true,
     },
+    // If you add an addon to this config, run the create addon command.
+    //
+    //    eksctl create addon --config-file=eksctl-config.yaml
+    //
     addons: [
         {
             // aws-ebs-csi-driver ensures that our PVCs are bound to PVs that
