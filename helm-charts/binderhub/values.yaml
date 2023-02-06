@@ -4,7 +4,7 @@ binderhub:
   config:
     BinderHub:
       use_registry: true
-      build_image: "quay.io/jupyterhub/repo2docker:2022.10.0-91.g326dc92"
+      build_image: "quay.io/jupyterhub/repo2docker:main"
       per_repo_quota: 150
       build_node_selector:
         # Build user images only on user nodes, not dask or core nodes
@@ -95,8 +95,7 @@ binderhub:
         DASK_GATEWAY__CLUSTER__OPTIONS__IMAGE: "{JUPYTER_IMAGE_SPEC}"
         # DASK_GATEWAY__CLUSTER__OPTIONS__ENVIRONMENT makes some environment
         # variables be copied over to the worker nodes from the user nodes.
-        DASK_GATEWAY__CLUSTER__OPTIONS__ENVIRONMENT:
-          '{"SCRATCH_BUCKET": "$(SCRATCH_BUCKET)",
+        DASK_GATEWAY__CLUSTER__OPTIONS__ENVIRONMENT: '{"SCRATCH_BUCKET": "$(SCRATCH_BUCKET)",
           "PANGEO_SCRATCH": "$(PANGEO_SCRATCH)"}'
         # DASK_DISTRIBUTED__DASHBOARD__LINK makes the suggested link to the
         # dashboard account for the /user/<username> prefix in the path. Note
