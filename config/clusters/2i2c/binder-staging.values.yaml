@@ -1,10 +1,18 @@
 binderhub:
+  ingress:
+    hosts:
+      - binder-staging.2i2c.cloud
+    tls:
+      - secretName: https-auto-tls-binder
+        hosts:
+          - binder-staging.2i2c.cloud
   registry:
     url: https://us-central1-docker.pkg.dev
   config:
     DockerRegistry:
       token_url: https://us-central1-docker.pkg.dev/v2/token?service=
     BinderHub:
+      # The URL set as jupyterhub.ingress.hosts[0] in this config
       hub_url: https://hub.binder-staging.2i2c.cloud
       image_prefix: us-central1-docker.pkg.dev/two-eye-two-see/binder-staging-registry/binder-staging-
 
@@ -35,3 +43,12 @@ binderhub:
   extraVolumeMounts:
     - name: custom-templates
       mountPath: /etc/binderhub/custom
+
+  jupyterhub:
+    ingress:
+      hosts:
+        - hub.binder-staging.2i2c.cloud
+      tls:
+        - secretName: https-auto-tls-binder
+          hosts:
+            - hub.binder-staging.2i2c.cloud

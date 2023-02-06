@@ -32,7 +32,7 @@ hubs:
       - enc-default-prod.secret.values.yaml
   - name: r-staging
     display_name: "University of Toronto (r-staging)"
-    domain: r-staging.utoronto.2i2c.cloud
+    domain: r-staging.datatools.utoronto.ca
     helm_chart: basehub
     auth0:
       enabled: false
@@ -43,7 +43,7 @@ hubs:
       - enc-r-staging.secret.values.yaml
   - name: r-prod
     display_name: "University of Toronto (R)"
-    domain: r.utoronto.2i2c.cloud
+    domain: r.datatools.utoronto.ca
     helm_chart: basehub
     auth0:
       enabled: false

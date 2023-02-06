@@ -38,3 +38,12 @@ hubs:
       # that you intend for these files to be applied in this order.
       - common.values.yaml
       - prod.values.yaml
+  - name: drakkar-demo
+    display_name: "2023 DRAKKAR Ocean Modelling Workshop"
+    domain: drakkar-demo.meom-ige.2i2c.cloud
+    helm_chart: basehub
+    auth0:
+      enabled: false
+    helm_chart_values_files:
+      - drakkar-demo.values.yaml
+      - enc-drakkar-demo.secret.values.yaml

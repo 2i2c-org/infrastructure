@@ -2,5 +2,5 @@ jupyterhub:
   hub:
     config:
       AzureAdOAuthenticator:
-        oauth_callback_url: https://r-staging.utoronto.2i2c.cloud/hub/oauth_callback
-        logout_redirect_url: https://login.microsoftonline.com/common/oauth2/logout?post_logout_redirect_uri=https://r-staging.utoronto.2i2c.cloud
+        oauth_callback_url: https://r-staging.datatools.utoronto.ca/hub/oauth_callback
+        logout_redirect_url: https://login.microsoftonline.com/common/oauth2/logout?post_logout_redirect_uri=https://r-staging.datatools.utoronto.ca

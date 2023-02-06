@@ -10,10 +10,21 @@ basehub:
       # Name of Google Filestore share
       baseShareName: /homes/
   jupyterhub:
-    proxy:
-      https:
-        enabled: false
+    prePuller:
+      continuous:
+        enabled: true
+      # Extra images to be pulled on all nodes
+      extraImages:
+        tensorflow-image:
+          name: pangeo/ml-notebook
+          tag: "2023.01.03"
     custom:
+      # Extra mount point for admins to access to all users' home dirs
+      # Ref https://github.com/2i2c-org/infrastructure/issues/2105
+      singleuserAdmin:
+        extraVolumeMounts:
+          - name: home
+            mountPath: /home/jovyan/allusers
       2i2c:
         add_staff_user_ids_to_admin_users: true
         add_staff_user_ids_of_type: "github"
@@ -49,13 +60,13 @@ basehub:
           populate_teams_in_auth_state: true
           allowed_organizations:
             - leap-stc:leap-pangeo-users
-            - 2i2c-org:tech-team
+            - 2i2c-org:hub-access-for-2i2c-staff
           scope:
             - read:org
     singleuser:
       image:
         name: pangeo/pangeo-notebook
-        tag: "2022.10.18"
+        tag: "2023.01.03"
       extraEnv:
         GH_SCOPED_CREDS_CLIENT_ID: "Iv1.0c7df3d4b3191b2f"
         GH_SCOPED_CREDS_APP_URL: https://github.com/apps/leap-hub-push-access
@@ -72,7 +83,7 @@ basehub:
           default: true
           allowed_teams:
             - leap-stc:leap-pangeo-users
-            - 2i2c-org:tech-team
+            - 2i2c-org:hub-access-for-2i2c-staff
           kubespawner_override:
             mem_limit: 7G
             mem_guarantee: 4.5G
@@ -82,7 +93,32 @@ basehub:
           description: 11GB RAM, 4 CPUs
           allowed_teams:
             - leap-stc:leap-pangeo-users
-            - 2i2c-org:tech-team
+            - 2i2c-org:hub-access-for-2i2c-staff
+          profile_options:
+            image:
+              display_name: Image
+              choices:
+                pangeo:
+                  display_name: Base Pangeo Notebook
+                  default: true
+                  slug: "pangeo"
+                  kubespawner_override:
+                    image: "pangeo/pangeo-notebook:2023.01.03"
+                tensorflow:
+                  display_name: Pangeo Tensorflow ML Notebook
+                  slug: "tensorflow"
+                  kubespawner_override:
+                    image: "pangeo/ml-notebook:2023.01.03"
+                pytorch:
+                  display_name: Pangeo PyTorch ML Notebook
+                  slug: "pytorch"
+                  kubespawner_override:
+                    image: "pangeo/pytorch-notebook:2023.01.03"
+                leap-pangeo-edu:
+                  display_name: LEAP Education Notebook (Testing Prototype)
+                  slug: "leap_edu"
+                  kubespawner_override:
+                    image: "quay.io/jbusecke/leap-edu-image:fa442ab4851c"
           kubespawner_override:
             mem_limit: 15G
             mem_guarantee: 11G
@@ -93,7 +129,7 @@ basehub:
           allowed_teams:
             - leap-stc:leap-pangeo-education
             - leap-stc:leap-pangeo-research
-            - 2i2c-org:tech-team
+            - 2i2c-org:hub-access-for-2i2c-staff
           kubespawner_override:
             mem_limit: 30G
             mem_guarantee: 24G
@@ -103,7 +139,7 @@ basehub:
           description: 52GB RAM, 16 CPUs
           allowed_teams:
             - leap-stc:leap-pangeo-research
-            - 2i2c-org:tech-team
+            - 2i2c-org:hub-access-for-2i2c-staff
           kubespawner_override:
             mem_limit: 60G
             mem_guarantee: 52G
@@ -114,7 +150,7 @@ basehub:
           description: 24GB RAM, 8 CPUs
           allowed_teams:
             - leap-stc:leap-pangeo-research
-            - 2i2c-org:tech-team
+            - 2i2c-org:hub-access-for-2i2c-staff
           profile_options:
             image:
               display_name: Image
@@ -124,12 +160,12 @@ basehub:
                   default: true
                   slug: "tensorflow"
                   kubespawner_override:
-                    image: "pangeo/ml-notebook:2022.10.18"
+                    image: "pangeo/ml-notebook:2023.01.03"
                 pytorch:
                   display_name: Pangeo PyTorch ML Notebook
                   slug: "pytorch"
                   kubespawner_override:
-                    image: "pangeo/pytorch-notebook:2022.10.18"
+                    image: "pangeo/pytorch-notebook:2023.01.03"
           kubespawner_override:
             node_selector:
               cloud.google.com/gke-nodepool: nb-gpu-t4

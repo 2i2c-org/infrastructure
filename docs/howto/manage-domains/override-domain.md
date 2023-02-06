@@ -16,7 +16,7 @@ This is generally a temporary fix to rapidly make a hub undiscoverable and shoul
 
 ## How-to guide
 
-1. Create a new file with the path `config/clusters/<cluster_name>/<hub_name>.domain_override.secret.yaml` where `<hub_name>` is the name of the hub we are targeting, and `<cluster_name>` is the name of the cluster upon which the hub is running.
+1. Create a new file with the path `config/clusters/$CLUSTER_NAME/<hub_name>.domain_override.secret.yaml` where `<hub_name>` is the name of the hub we are targeting, and `$CLUSTER_NAME` is the name of the cluster upon which the hub is running.
    ```{note}
    We have included `secret` in the filename since we will be encrypting this file with `sops` so that the new domain name cannot be discovered by someone checking the GitHub repository.
    However, it is worth noting that our deployment infrastructure does not _enforce_ the domain override file to be encrypted and an unencrypted file can be provided, if necessary.
@@ -28,13 +28,18 @@ This is generally a temporary fix to rapidly make a hub undiscoverable and shoul
    ```
 
    ```{note}
-   The new domain still still follow the convention `foo.<cluster_name>.2i2c.cloud`, but `foo` can be replaced with anything that is not the current top-level domain of the hub.
+   The new domain still still follow the convention `foo.$CLUSTER_NAME.2i2c.cloud`, but `foo` can be replaced with anything that is not the current top-level domain of the hub.
    A randomly generated string is probably best to avoid the new domain being guessable.
    ```
 3. (Optional) Encrypt the file with `sops`.
 
    ```bash
-   sops --output config/clusters/<cluster_name>/enc-<hub_name>.domain_override.secret.yaml --encrypt config/clusters/<cluster_name>/<hub_name>.domain_override.secret.yaml
+   export CLUSTER_NAME=<cluster-name>
+   export HUB_NAME=<hub-name>
+   ```
+
+   ```bash
+   sops --output config/clusters/$CLUSTER_NAME/enc-$HUB_NAME.domain_override.secret.yaml --encrypt config/clusters/$CLUSTER_NAME/$HUB_NAME.domain_override.secret.yaml
    ```
 
    The file can now be safely committed to the repository.
@@ -43,9 +48,9 @@ This is generally a temporary fix to rapidly make a hub undiscoverable and shoul
    ```yaml
    hubs:
      ...
-     - name: <hub_name>
+     - name: <hub-name>
        domain: original.domain.2i2c.cloud
-       domain_override_file: enc-<hub_name>.domain-override.secret.yaml
+       domain_override_file: enc-<hub-name>.domain-override.secret.yaml
    ```
 
    ```{note}
@@ -55,5 +60,5 @@ This is generally a temporary fix to rapidly make a hub undiscoverable and shoul
 5. Run the deployer for the hub!
 
    ```bash
-   deployer deploy <cluster_name> <hub_name>
+   deployer deploy $CLUSTER_NAME $HUB_NAME
    ```

@@ -28,7 +28,7 @@ repos:
 
   # Autoformat: Python code
   - repo: https://github.com/pycqa/isort
-    rev: "5.11.0"
+    rev: "5.12.0"
     hooks:
       - id: isort
 
@@ -46,7 +46,7 @@ repos:
 
   # Prevent unencrypted files from being committed
   - repo: https://github.com/yuvipanda/pre-commit-hook-ensure-sops
-    rev: v1.0
+    rev: v1.1
     hooks:
       - id: sops-encryption
         # Add files here if they contain the word 'secret' but should not be encrypted

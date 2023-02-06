@@ -1,10 +1,15 @@
-// Make ASG tags for given set of k8s labels
+// This file is referenced by ../template.jsonnet. It declares an object
+// representing a node group that is used as a common foundation for all
+// our node groups.
+//
+
+// Make Auto Scaling Group (ASG) tags for given set of k8s labels
 local makeCloudLabels(labels) = {
   ['k8s.io/cluster-autoscaler/node-template/label/%s' % key]: labels[key]
   for key in std.objectFields(labels)
 };
 
-# Make asg tags for given set of k8s taints
+# Make ASG tags for given set of k8s taints
 local makeCloudTaints(taints) = {
   ['k8s.io/cluster-autoscaler/node-template/taint/%s' % key]: taints[key]
   for key in std.objectFields(taints)

@@ -30,136 +30,111 @@ class Hub:
 
         WARNING: MIGHT CONTAINS SECRET VALUES!
         """
-        if self.spec["helm_chart"] == "binderhub":
-            generated_config = {
-                "binderhub": {
-                    "ingress": {
-                        "hosts": [self.spec["domain"]],
-                        "tls": [
-                            {
-                                "secretName": "https-auto-tls-binder",
-                                "hosts": [self.spec["domain"]],
-                            }
-                        ],
-                    },
-                    "jupyterhub": {
-                        "ingress": {
-                            "hosts": [f"hub.{self.spec['domain']}"],
-                            "tls": [
+        generated_config = {
+            "jupyterhub": {
+                "proxy": {"https": {"hosts": [self.spec["domain"]]}},
+                "ingress": {
+                    "hosts": [self.spec["domain"]],
+                    "tls": [
+                        {
+                            "secretName": "https-auto-tls",
+                            "hosts": [self.spec["domain"]],
+                        }
+                    ],
+                },
+                "hub": {
+                    "config": {},
+                    "initContainers": [
+                        {
+                            "name": "templates-clone",
+                            "image": "alpine/git",
+                            "args": [
+                                "clone",
+                                "--",
+                                "https://github.com/2i2c-org/default-hub-homepage",
+                                "/srv/repo",
+                            ],
+                            "securityContext": {
+                                "runAsUser": 1000,
+                                "runAsGroup": 1000,
+                                "allowPrivilegeEscalation": False,
+                                "readOnlyRootFilesystem": True,
+                            },
+                            "volumeMounts": [
                                 {
-                                    "secretName": "https-auto-tls-hub",
-                                    "hosts": [f"hub.{self.spec['domain']}"],
+                                    "name": "custom-templates",
+                                    "mountPath": "/srv/repo",
+                                }
+                            ],
+                        },
+                        {
+                            "name": "templates-ownership-fix",
+                            "image": "alpine/git",
+                            "command": ["/bin/sh"],
+                            "args": [
+                                "-c",
+                                "ls -lhd /srv/repo && chown 1000:1000 /srv/repo && ls -lhd /srv/repo",
+                            ],
+                            "securityContext": {"runAsUser": 0},
+                            "volumeMounts": [
+                                {
+                                    "name": "custom-templates",
+                                    "mountPath": "/srv/repo",
+                                }
+                            ],
+                        },
+                    ],
+                    "extraContainers": [
+                        {
+                            "name": "templates-sync",
+                            "image": "alpine/git",
+                            "workingDir": "/srv/repo",
+                            "command": ["/bin/sh"],
+                            "args": [
+                                "-c",
+                                dedent(
+                                    f"""\
+                                    ls -lhd /srv/repo;
+                                    while true; do git fetch origin;
+                                    if [[ $(git ls-remote --heads origin {self.cluster.spec["name"]}-{self.spec["name"]} | wc -c) -ne 0 ]]; then
+                                        git reset --hard origin/{self.cluster.spec["name"]}-{self.spec["name"]};
+                                    else
+                                        git reset --hard origin/master;
+                                    fi
+                                    sleep 5m; done
+                                    """
+                                ),
+                            ],
+                            "securityContext": {
+                                "runAsUser": 1000,
+                                "runAsGroup": 1000,
+                                "allowPrivilegeEscalation": False,
+                                "readOnlyRootFilesystem": True,
+                            },
+                            "volumeMounts": [
+                                {
+                                    "name": "custom-templates",
+                                    "mountPath": "/srv/repo",
                                 }
                             ],
                         }
-                    },
-                }
-            }
-        else:
-            generated_config = {
-                "jupyterhub": {
-                    "ingress": {
-                        "hosts": [self.spec["domain"]],
-                        "tls": [
-                            {
-                                "secretName": "https-auto-tls",
-                                "hosts": [self.spec["domain"]],
-                            }
-                        ],
-                    },
-                    "hub": {
-                        "config": {},
-                        "initContainers": [
-                            {
-                                "name": "templates-clone",
-                                "image": "alpine/git",
-                                "args": [
-                                    "clone",
-                                    "--",
-                                    "https://github.com/2i2c-org/default-hub-homepage",
-                                    "/srv/repo",
-                                ],
-                                "securityContext": {
-                                    "runAsUser": 1000,
-                                    "runAsGroup": 1000,
-                                    "allowPrivilegeEscalation": False,
-                                    "readOnlyRootFilesystem": True,
-                                },
-                                "volumeMounts": [
-                                    {
-                                        "name": "custom-templates",
-                                        "mountPath": "/srv/repo",
-                                    }
-                                ],
-                            },
-                            {
-                                "name": "templates-ownership-fix",
-                                "image": "alpine/git",
-                                "command": ["/bin/sh"],
-                                "args": [
-                                    "-c",
-                                    "ls -lhd /srv/repo && chown 1000:1000 /srv/repo && ls -lhd /srv/repo",
-                                ],
-                                "securityContext": {"runAsUser": 0},
-                                "volumeMounts": [
-                                    {
-                                        "name": "custom-templates",
-                                        "mountPath": "/srv/repo",
-                                    }
-                                ],
-                            },
-                        ],
-                        "extraContainers": [
-                            {
-                                "name": "templates-sync",
-                                "image": "alpine/git",
-                                "workingDir": "/srv/repo",
-                                "command": ["/bin/sh"],
-                                "args": [
-                                    "-c",
-                                    dedent(
-                                        f"""\
-                                        ls -lhd /srv/repo;
-                                        while true; do git fetch origin;
-                                        if [[ $(git ls-remote --heads origin {self.cluster.spec["name"]}-{self.spec["name"]} | wc -c) -ne 0 ]]; then
-                                            git reset --hard origin/{self.cluster.spec["name"]}-{self.spec["name"]};
-                                        else
-                                            git reset --hard origin/master;
-                                        fi
-                                        sleep 5m; done
-                                        """
-                                    ),
-                                ],
-                                "securityContext": {
-                                    "runAsUser": 1000,
-                                    "runAsGroup": 1000,
-                                    "allowPrivilegeEscalation": False,
-                                    "readOnlyRootFilesystem": True,
-                                },
-                                "volumeMounts": [
-                                    {
-                                        "name": "custom-templates",
-                                        "mountPath": "/srv/repo",
-                                    }
-                                ],
-                            }
-                        ],
-                        "extraVolumes": [{"name": "custom-templates", "emptyDir": {}}],
-                        "extraVolumeMounts": [
-                            {
-                                "mountPath": "/usr/local/share/jupyterhub/custom_templates",
-                                "name": "custom-templates",
-                                "subPath": "templates",
-                            },
-                            {
-                                "mountPath": "/usr/local/share/jupyterhub/static/extra-assets",
-                                "name": "custom-templates",
-                                "subPath": "extra-assets",
-                            },
-                        ],
-                    },
+                    ],
+                    "extraVolumes": [{"name": "custom-templates", "emptyDir": {}}],
+                    "extraVolumeMounts": [
+                        {
+                            "mountPath": "/usr/local/share/jupyterhub/custom_templates",
+                            "name": "custom-templates",
+                            "subPath": "templates",
+                        },
+                        {
+                            "mountPath": "/usr/local/share/jupyterhub/static/extra-assets",
+                            "name": "custom-templates",
+                            "subPath": "extra-assets",
+                        },
+                    ],
                 },
-            }
+            },
+        }
         #
         # Allow explicilty ignoring auth0 setup
         if self.spec["auth0"].get("enabled", True):

@@ -1,40 +1,102 @@
-prometheusIngressAuthSecret:
-  enabled: false
-  username: ""
-  password: ""
+# Configuration of dependency charts
+# -------------------------------------------------------------------------------
+#
 
+# cluster-autoscaler is responsible for understanding if k8s nodes needs to be
+# added or removed. A pending pod is a sign that another node should be added,
+# and an underused node is a sign that a node should be removed.
+#
+# We always need a cluster-autoscaler, but only deploy it ourselves if its not
+# provided as part of the k8s cluster.
+#
+# values ref: https://github.com/kubernetes/autoscaler/blob/master/charts/cluster-autoscaler/values.yaml
+#
 cluster-autoscaler:
   enabled: false
+
+# ingress-nginx is responsible for proxying traffic based on k8s Ingress
+# resources defined in the k8s cluster.
+#
+# Typically, all inbound traffic arrives to some ingress-nginx controller pod
+# via a k8s Service that has a public IP, and is thereafter proxied to a k8s
+# Service (a Pod selected by a k8s Service) that doesn't have a public IP.
+#
+# values ref: https://github.com/kubernetes/ingress-nginx/blob/main/charts/ingress-nginx/values.yaml
+#
 ingress-nginx:
   controller:
     podLabels:
-      # nginx-ingress controllers need to communicate with the proxy pod (and only the proxy pod)
-      # in clusters with networkpolicy enforcement enabled. Adding this label on the controller pod
-      # allows that. https://z2jh.jupyter.org/en/stable/administrator/security.html#introduction-to-the-chart-s-four-network-policies
-      # has more information.
+      # nginx-ingress controllers need to be allowed proxy traffic onwards to
+      # JupyterHub's proxy pod (and only the proxy pod) in clusters with
+      # NetworkPolicy enforcement enabled. Adding this label on the controller
+      # pod allows that.
+      #
+      # ref: https://z2jh.jupyter.org/en/stable/administrator/security.html#introduction-to-the-chart-s-four-network-policies
+      #
       hub.jupyter.org/network-access-proxy-http: "true"
+
+# prometheus is responsible for collecting metrics and informing grafana about
+# the metrics on request. It comes with several dependency charts, where we
+# opt-out of a few.
+#
+# values ref: https://github.com/prometheus-community/helm-charts/blob/main/charts/prometheus/values.yaml
+#
 prometheus:
+  # alertmanager is an optional prometheus chart dependency that we opt-out from
+  # as we favor Grafana for this functionality. Grafana provides alerts and does
+  # so with a better UI that we expose publicly behind auth anyhow.
+  #
+  alertmanager:
+    enabled: false
+
+  # prometheus-pushgateway is an optional prometheus chart dependency that we
+  # opt-out from. pushgateway provides a way to complement prometheus server's
+  # behavior of scraping metrics from services by allowing services to push
+  # metrics to prometheus.
+  #
+  prometheus-pushgateway:
+    enabled: false
+
+  # kube-state-metrics is an optional prometheus chart dependency that we rely
+  # on to collect metrics about the k8s cluster's pods and nodes as reported by
+  # the k8s api-server.
+  #
+  # values ref: https://github.com/prometheus-community/helm-charts/blob/main/charts/kube-state-metrics/values.yaml
+  #
+  kube-state-metrics:
+    # kube-state-metrics stopped collecting *all* labels on all kubernetes objects as
+    # prometheus labels, as it exploded the total number of metrics being collected. We
+    # have to explicitly allow-list the labels we want. These are the ones needed for
+    # the graphs from https://github.com/jupyterhub/grafana-dashboards to work
+    metricLabelsAllowlist:
+      - pods=[app,component,hub.jupyter.org/username,app.kubernetes.io/component]
+      - nodes=[*]
+
+  # prometheus-node-exporter is an optional prometheus chart dependency that we
+  # rely on to collect metrics about the nodes
+  #
+  # values ref: https://github.com/prometheus-community/helm-charts/blob/main/charts/prometheus-node-exporter/values.yaml
+  #
+  prometheus-node-exporter:
+    tolerations:
+      # Tolerate tainted jupyterhub user nodes
+      - key: hub.jupyter.org_dedicated
+        value: user
+        effect: NoSchedule
+      - key: hub.jupyter.org/dedicated
+        value: user
+        effect: NoSchedule
+      # Tolerate tainted dask worker nodes
+      - key: k8s.dask.org_dedicated
+        value: worker
+        effect: NoSchedule
+      - key: k8s.dask.org/dedicated
+        value: worker
+        effect: NoSchedule
+
   networkPolicy:
     enabled: true
-  alertmanager:
-    # We do not use the Prometheus alertmanager component, as we already have Grafana
-    # Grafana also has alerts, and the UI of grafana is much better than that of alertmanager
-    # We also expose Grafana publicly behind auth anyway, so we can consolidate alerting with Grafana too
-    enabled: false
-  nodeExporter:
-    tolerations:
-      - effect: NoSchedule
-        # Deploy onto user nodes
-        key: hub.jupyter.org_dedicated
-        value: user
-      - effect: NoSchedule
-        # Deploy onto user nodes
-        key: k8s.dask.org_dedicated
-        value: worker
-    updateStrategy:
-      type: RollingUpdate
-  pushgateway:
-    enabled: false
+
   server:
     ingress:
       annotations:
@@ -71,15 +133,14 @@ prometheus:
     retention: 366d
     service:
       type: ClusterIP
-  kube-state-metrics:
-    # kube-state-metrics stopped collecting *all* labels on all kubernetes objects as
-    # prometheus labels, as it exploded the total number of metrics being collected. We
-    # have to explicitly allow-list the labels we want. These are the ones needed for
-    # the graphs from https://github.com/jupyterhub/grafana-dashboards to work
-    metricLabelsAllowlist:
-      - pods=[app,component,hub.jupyter.org/username,app.kubernetes.io/component]
-      - nodes=[*]
 
+# grafana presents dashboards based on metrics from a prometheus server.
+#
+# We setup dashboards programmatically via a grafana REST API based on
+# https://github.com/jupyterhub/grafana-dashboards.
+#
+# values ref: https://github.com/grafana/helm-charts/blob/main/charts/grafana/values.yaml
+#
 grafana:
   persistence:
     # Attach a tiny 1G PVC with grafana for auth db as well as dashboard definition (not data) storage.
@@ -111,6 +172,26 @@ grafana:
           isDefault: true
           editable: false
 
+# cryptnono kills processes attempting to mine the cryptocurrency Monero in the
+# k8s cluster.
+#
+# values ref: https://github.com/yuvipanda/cryptnono/blob/main/cryptnono/values.yaml
+#
+cryptnono:
+  enabled: true
+
+# Configuration of templates provided directly by this chart
+# -------------------------------------------------------------------------------
+#
+
+prometheusIngressAuthSecret:
+  enabled: false
+  username: ""
+  password: ""
+
+redirects:
+  rules: []
+
 # Enable a daemonset to install nvidia device plugin to GPU nodes
 # AWS does not require this to be set, as eksctl sets this up automatically
 nvidiaDevicePlugin:
@@ -121,10 +202,6 @@ nvidiaDevicePlugin:
   gke:
     enabled: false
     version: "stable"
-
-# Enables  https://github.com/yuvipanda/cryptnono/ to prevent cryptomining
-cryptnono:
-  enabled: true
 
 # A placeholder as global values that can be referenced from the same location
 # of any chart should be possible to provide, but aren't necessarily provided or

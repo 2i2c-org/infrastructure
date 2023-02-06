@@ -14,7 +14,7 @@ on:
     - cron: "0 0 * * 1" # Run at 00:00 UTC every Monday
 
 env:
-  team_reviewers: tech-team
+  team_reviewers: engineering
 
 jobs:
   bump-image-tags:
@@ -30,7 +30,10 @@ jobs:
           # Bump repo2docker image in BinderHub helm chart
           - name: "BinderHub/repo2docker bump"
             config_path: "helm-charts/binderhub/values.yaml"
-            images_info: '[{"values_path": ".binderhub.config.BinderHub.build_image"}]'
+            # We use regex to select any image tag that begins with a number since
+            # repo2docker is tagged something like YYYY.MM.N-NN.hash. This will
+            # explicitly ignore the 'main' tag.
+            images_info: '[{"values_path": ".binderhub.config.BinderHub.build_image", "regexpr": "^[0-9].*"}]'
 
           # Bump images in openscapes cluster
           - name: "OpenScapes profiles"
@@ -52,7 +55,7 @@ jobs:
       # Action: https://github.com/marketplace/actions/github-app-token
       - name: Fetch a token from GitHub App
         id: generate_token
-        uses: tibdex/github-app-token@v1.7
+        uses: tibdex/github-app-token@v1.8
         with:
           app_id: ${{ secrets.APP_ID }}
           private_key: ${{ secrets.PRIVATE_KEY }}
@@ -66,4 +69,4 @@ jobs:
           github_token: ${{ steps.generate_token.outputs.token }}
           # team_reviewers: ${{ env.team_reviewers }}
           base_branch: "master"
-          dry_run: ${{ github.event.inputs.dry_run || true}}
+          dry_run: ${{ github.event.inputs.dry_run || false }}

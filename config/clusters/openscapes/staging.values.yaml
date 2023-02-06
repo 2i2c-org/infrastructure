@@ -1,0 +1,62 @@
+# Overrides what is in common.values.yaml, used for temporary testing
+basehub:
+  jupyterhub:
+    singleuser:
+      profileList:
+        # The mem-guarantees are here so k8s doesn't schedule other pods
+        # on these nodes.
+        - display_name: "Small: m5.large"
+          description: "~2 CPU, ~8G RAM"
+          slug: "small"
+          default: true
+          profile_options: &profile_options
+            image:
+              display_name: Image
+              choices:
+                python:
+                  display_name: Python
+                  default: true
+                  slug: "python"
+                  kubespawner_override:
+                    image: openscapes/python:7a02c71
+                rocker:
+                  display_name: R
+                  slug: "rocker"
+                  kubespawner_override:
+                    image: openscapes/rocker:53180c0
+                matlab:
+                  display_name: Matlab
+                  slug: "matlab"
+                  kubespawner_override:
+                    image: openscapes/matlab:fb41496
+          kubespawner_override:
+            # Expllicitly unset mem_limit, so it overrides the default memory limit we set in
+            # basehub/values.yaml
+            mem_limit: null
+            mem_guarantee: 6.5G
+            node_selector:
+              node.kubernetes.io/instance-type: m5.large
+        - display_name: "Medium: m5.xlarge"
+          description: "~4 CPU, ~15G RAM"
+          profile_options: *profile_options
+          kubespawner_override:
+            mem_limit: null
+            mem_guarantee: 12G
+            node_selector:
+              node.kubernetes.io/instance-type: m5.xlarge
+        - display_name: "Large: m5.2xlarge"
+          description: "~8 CPU, ~30G RAM"
+          profile_options: *profile_options
+          kubespawner_override:
+            mem_limit: null
+            mem_guarantee: 26G
+            node_selector:
+              node.kubernetes.io/instance-type: m5.2xlarge
+        - display_name: "Huge: m5.8xlarge"
+          description: "~32 CPU, ~128G RAM"
+          profile_options: *profile_options
+          kubespawner_override:
+            mem_limit: null
+            mem_guarantee: 115G
+            node_selector:
+              node.kubernetes.io/instance-type: m5.8xlarge

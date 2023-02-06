@@ -114,7 +114,7 @@ You can remove yourself from the org once you have confirmed that login is worki
           GitHubOAuthenticator:
             oauth_callback_url: https://{{ HUB_DOMAIN }}/hub/oauth_callback
             allowed_organizations:
-              - 2i2c-org:tech-team
+              - 2i2c-org:hub-access-for-2i2c-staff
               - ORG_NAME:TEAM_NAME
             scope:
               - read:org
@@ -220,7 +220,7 @@ To enable this access,
             default: true
             allowed_teams:
               - <org-name>:<team-name>
-              - 2i2c-org:tech-team
+              - 2i2c-org:hub-access-for-2i2c-staff
             kubespawner_override:
               mem_limit: 7G
               mem_guarantee: 4.5G
@@ -230,7 +230,7 @@ To enable this access,
             description: 11GB RAM, 4 CPUs
             allowed_teams:
               - <org-name>:<team-name>
-              - 2i2c-org:tech-team
+              - 2i2c-org:hub-access-for-2i2c-staff
             kubespawner_override:
               mem_limit: 15G
               mem_guarantee: 11G

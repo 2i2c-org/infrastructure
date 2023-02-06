@@ -1,4 +1,18 @@
-// Exports an eksctl config file for carbonplan cluster
+/*
+    This file is a jsonnet template of a eksctl's cluster configuration file,
+    that is used with the eksctl CLI to both update and initialize an AWS EKS
+    based cluster.
+
+    This file has in turn been generated from eksctl/template.jsonnet which is
+    relevant to compare with for changes over time.
+
+    To use jsonnet to generate an eksctl configuration file from this, do:
+
+        jsonnet carbonplan.jsonnet > eksctl-config.yaml
+
+    References:
+    - https://eksctl.io/usage/schema/
+*/
 local ng = import "./libsonnet/nodegroup.jsonnet";
 
 // place all cluster nodes here
@@ -43,7 +57,7 @@ local daskNodes = [
     metadata+: {
         name: "carbonplanhub",
         region: clusterRegion,
-        version: '1.19'
+        version: '1.24'
     },
     availabilityZones: masterAzs,
     iam: {
@@ -59,6 +73,25 @@ local daskNodes = [
             ],
         } for namespace in namespaces],
     },
+    // If you add an addon to this config, run the create addon command.
+    //
+    //    eksctl create addon --config-file=eksctl-config.yaml
+    //
+    addons: [
+        {
+            // aws-ebs-csi-driver ensures that our PVCs are bound to PVs that
+            // couple to AWS EBS based storage, without it expect to see pods
+            // mounting a PVC failing to schedule and PVC resources that are
+            // unbound.
+            //
+            // Related docs: https://docs.aws.amazon.com/eks/latest/userguide/managing-ebs-csi.html
+            //
+            name: 'aws-ebs-csi-driver',
+            wellKnownPolicies: {
+                ebsCSIController: true,
+            },
+        },
+    ],
     nodeGroups: [
         ng {
             name: 'core-a',

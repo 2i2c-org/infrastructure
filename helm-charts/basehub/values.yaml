@@ -326,6 +326,9 @@ jupyterhub:
       KubeSpawner:
         # Make sure working directory is ${HOME}
         working_dir: /home/jovyan
+        # Increase timeout for Jupyter server to become 'ready', until
+        # https://github.com/2i2c-org/infrastructure/issues/2047 is fixed
+        http_timeout: 120
       Authenticator:
         # Don't allow test username to login into the hub
         # The test service will still be able to create this hub username
@@ -370,6 +373,8 @@ jupyterhub:
     services:
       configurator:
         url: http://configurator:10101
+        # Don't require users to explicitly 'confirm' before sending them to configurator
+        oauth_no_confirm: true
         command:
           - python3
           - -m
@@ -388,7 +393,7 @@ jupyterhub:
         admin: true
     image:
       name: quay.io/2i2c/pilot-hub
-      tag: "0.0.1-n4497.haed80ebb"
+      tag: "0.0.1-0.dev.git.4978.h858bd17c"
     nodeSelector:
       hub.jupyter.org/node-purpose: core
     networkPolicy:

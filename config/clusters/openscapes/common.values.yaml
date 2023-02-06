@@ -60,12 +60,12 @@ basehub:
                   default: true
                   slug: "python"
                   kubespawner_override:
-                    image: openscapes/python:431a94c
+                    image: openscapes/python:7a02c71
                 rocker:
                   display_name: R
                   slug: "rocker"
                   kubespawner_override:
-                    image: openscapes/rocker:b88a034
+                    image: openscapes/rocker:53180c0
                 matlab:
                   display_name: Matlab
                   slug: "matlab"

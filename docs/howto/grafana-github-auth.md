@@ -24,21 +24,21 @@ To enable logging into Grafana using GitHub, follow these steps:
 
 3. Edit the `support.values.yaml` file in your chosen cluster directory and add the Grafana GitHub auth config, allowing the specific GitHub organization you wish to allow login.
 
-  ```yaml
-  grafana:
-    grafana.ini:
-      server:
-        root_url: https://<grafana.ingress.hosts[0]>
-      auth.github:
-        enabled: true
-        allow_sign_up: false
-        scopes: user:email,read:org
-        auth_url: https://github.com/login/oauth/authorize
-        token_url: https://github.com/login/oauth/access_token
-        api_url: https://api.github.com/user
-        allowed_organizations: 2i2c-org
-  ```
+   ```yaml
+   grafana:
+     grafana.ini:
+       server:
+         root_url: https://<grafana.ingress.hosts[0]>
+       auth.github:
+         enabled: true
+         allow_sign_up: false
+         scopes: user:email,read:org
+         auth_url: https://github.com/login/oauth/authorize
+         token_url: https://github.com/login/oauth/access_token
+         api_url: https://api.github.com/user
+         allowed_organizations: 2i2c-org
+   ```
 
-  ```{note}
-  Checkout the [Grafana documentation](https://grafana.com/docs/grafana/latest/setup-grafana/configure-security/configure-authentication/github) for more info about authorizing users using other types of membership than GitHub organizations.
-  ```
+   ```{note}
+   Checkout the [Grafana documentation](https://grafana.com/docs/grafana/latest/setup-grafana/configure-security/configure-authentication/github) for more info about authorizing users using other types of membership than GitHub organizations.
+   ```
