@@ -7,7 +7,7 @@ jupyterhub:
       templateVars:
         org:
           name: Los Angeles City College
-          logo_url: https://lacitycollege.edu/About/Communications-Media/documents/OfficialLogo/LACC_logo_BR_RGB-01
+          logo_url: https://www.lacitycollege.edu/sites/lacc.edu/files/lacc-logo.svg
           url: https://www.lacitycollege.edu/
         designed_by:
           name: 2i2c
@@ -32,4 +32,4 @@ jupyterhub:
           - ericvd@berkeley.edu
           - k_usovich@berkeley.edu
           - sean.smorris@berkeley.edu
-        username_pattern: '^(.+@2i2c\.org|.+@berkeley\.edu|.+@laccd\.edu|.+@lacitycollege\.edu|deployment-service-check)$'
+        username_pattern: '^(.+@2i2c\.org|.+@berkeley\.edu|.+@student\.laccd\.edu|.+@laccd\.edu|.+@lacitycollege\.edu|deployment-service-check)$'
