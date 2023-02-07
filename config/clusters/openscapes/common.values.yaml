@@ -108,6 +108,9 @@ basehub:
         replicas: 0
       userScheduler:
         enabled: false
+      userPods:
+        nodeAffinity:
+          matchNodePurpose: require
     hub:
       allowNamedServers: true
       networkPolicy:
