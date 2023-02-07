@@ -282,7 +282,7 @@ variable "max_cpu" {
 }
 
 variable "hub_cloud_permissions" {
-  type        = map(object({ requestor_pays : bool, bucket_admin_access : set(string), hub_namespace : string }))
+  type        = map(object({ requestor_pays : bool, bucket_admin_access : set(string), public_buckets : set(string), hub_namespace : string }))
   default     = {}
   description = <<-EOT
   Map of cloud permissions given to a particular hub

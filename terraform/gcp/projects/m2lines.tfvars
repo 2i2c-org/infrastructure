@@ -26,7 +26,10 @@ user_buckets = {
   },
   "persistent-staging": {
     "delete_after": null
-  }
+  },
+  "persistent-public": {
+    "delete_after": null
+  },
 
 }
 
@@ -140,11 +143,13 @@ hub_cloud_permissions = {
   "staging" : {
     requestor_pays : true,
     bucket_admin_access: ["scratch-staging", "persistent-staging"],
+    public_buckets: [],
     hub_namespace: "staging"
   },
   "prod" : {
     requestor_pays : true,
     bucket_admin_access: ["scratch", "persistent"],
+    public_buckets: ["persistent-public"],
     hub_namespace: "prod"
   },
 }

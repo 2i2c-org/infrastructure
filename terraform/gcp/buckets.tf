@@ -38,11 +38,30 @@ locals {
   ]))
 }
 
+locals {
+  # Get mapping of public buckets and their associated hub names
+  public_buckets = distinct(flatten([
+    for hub_name, permissions in var.hub_cloud_permissions : [
+      for bucket_name in permissions.public_buckets : {
+        hub_name    = hub_name
+        bucket_name = bucket_name
+      }
+    ]
+  ]))
+}
+
 resource "google_storage_bucket_iam_member" "member" {
   for_each = { for bp in local.bucket_permissions : "${bp.hub_name}.${bp.bucket_name}" => bp }
   bucket   = google_storage_bucket.user_buckets[each.value.bucket_name].name
   role     = "roles/storage.admin"
   member   = "serviceAccount:${google_service_account.workload_sa[each.value.hub_name].email}"
+}
+
+resource "google_storage_default_object_access_control" "public_rule" {
+  for_each = { for bp in local.public_buckets : "${bp.hub_name}.${bp.bucket_name}" => bp }
+  bucket   = google_storage_bucket.user_buckets[each.value.bucket_name].name
+  role   = "READER"
+  entity = "allUsers"
 }
 
 output "buckets" {
