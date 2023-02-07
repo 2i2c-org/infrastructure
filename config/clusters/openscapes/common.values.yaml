@@ -45,69 +45,186 @@ basehub:
             subPath: _shared
             readOnly: false
       profileList:
-        # The mem-guarantees are here so k8s doesn't schedule other pods
-        # on these nodes.
-        - display_name: "Small: m5.large"
-          description: "~2 CPU, ~8G RAM"
-          slug: "small"
-          default: true
-          profile_options: &profile_options
-            image:
+        - display_name: "Small: up to 4 CPU / 32 GB RAM"
+          description: &profile_list_description "Start a container with at least a chosen share of capacity on a node of this type"
+          slug: small
+          profile_options:
+            image: &profile_options_image
               display_name: Image
               choices:
                 python:
                   display_name: Python
                   default: true
-                  slug: "python"
+                  slug: python
                   kubespawner_override:
                     image: openscapes/python:7a02c71
                 rocker:
                   display_name: R
-                  slug: "rocker"
+                  slug: rocker
                   kubespawner_override:
                     image: openscapes/rocker:53180c0
                 matlab:
                   display_name: Matlab
-                  slug: "matlab"
+                  slug: matlab
                   kubespawner_override:
                     image: openscapes/matlab:fb41496
+            requests:
+              display_name: Node share
+              choices:
+                mem_1:
+                  default: true
+                  display_name: ~1 GB, ~0.125 CPU
+                  kubespawner_override:
+                    mem_guarantee: 0.875
+                    cpu_guarantee: 0.013
+                mem_2:
+                  display_name: ~2 GB, ~0.25 CPU
+                  kubespawner_override:
+                    mem_guarantee: 1.75
+                    cpu_guarantee: 0.025
+                mem_4:
+                  display_name: ~4 GB, ~0.5 CPU
+                  kubespawner_override:
+                    mem_guarantee: 3.5
+                    cpu_guarantee: 0.05
+                mem_8:
+                  display_name: ~8 GB, ~1.0 CPU
+                  kubespawner_override:
+                    mem_guarantee: 7.0
+                    cpu_guarantee: 0.1
+                mem_16:
+                  display_name: ~16 GB, ~2.0 CPU
+                  kubespawner_override:
+                    mem_guarantee: 14.0
+                    cpu_guarantee: 0.2
+                mem_32:
+                  display_name: ~32 GB, ~4.0 CPU
+                  kubespawner_override:
+                    mem_guarantee: 28.0
+                    cpu_guarantee: 0.4
           kubespawner_override:
-            # Expllicitly unset mem_limit, so it overrides the default memory limit we set in
-            # basehub/values.yaml
+            cpu_limit: null
             mem_limit: null
-            mem_guarantee: 6.5G
             node_selector:
-              node.kubernetes.io/instance-type: m5.large
-        - display_name: "Medium: m5.xlarge"
-          description: "~4 CPU, ~15G RAM"
-          profile_options: *profile_options
+              node.kubernetes.io/instance-type: r5.xlarge
+        - display_name: "Medium: up to 16 CPU / 128 GB RAM"
+          description: *profile_list_description
+          slug: medium
+          profile_options:
+            image: *profile_options_image
+            requests:
+              display_name: Node share
+              choices:
+                mem_1:
+                  display_name: ~1 GB, ~0.125 CPU
+                  kubespawner_override:
+                    mem_guarantee: 0.969
+                    cpu_guarantee: 0.013
+                mem_2:
+                  display_name: ~2 GB, ~0.25 CPU
+                  kubespawner_override:
+                    mem_guarantee: 1.938
+                    cpu_guarantee: 0.025
+                mem_4:
+                  default: true
+                  display_name: ~4 GB, ~0.5 CPU
+                  kubespawner_override:
+                    mem_guarantee: 3.875
+                    cpu_guarantee: 0.05
+                mem_8:
+                  display_name: ~8 GB, ~1.0 CPU
+                  kubespawner_override:
+                    mem_guarantee: 7.75
+                    cpu_guarantee: 0.1
+                mem_16:
+                  display_name: ~16 GB, ~2.0 CPU
+                  kubespawner_override:
+                    mem_guarantee: 15.5
+                    cpu_guarantee: 0.2
+                mem_32:
+                  display_name: ~32 GB, ~4.0 CPU
+                  kubespawner_override:
+                    mem_guarantee: 31.0
+                    cpu_guarantee: 0.4
+                mem_64:
+                  display_name: ~64 GB, ~8.0 CPU
+                  kubespawner_override:
+                    mem_guarantee: 62.0
+                    cpu_guarantee: 0.8
+                mem_128:
+                  display_name: ~128 GB, ~16.0 CPU
+                  kubespawner_override:
+                    mem_guarantee: 124.0
+                    cpu_guarantee: 1.6
           kubespawner_override:
+            cpu_limit: null
             mem_limit: null
-            mem_guarantee: 12G
             node_selector:
-              node.kubernetes.io/instance-type: m5.xlarge
-        - display_name: "Large: m5.2xlarge"
-          description: "~8 CPU, ~30G RAM"
-          profile_options: *profile_options
+              node.kubernetes.io/instance-type: r5.4xlarge
+        - display_name: "Large: up to 64 CPU / 512 GB RAM"
+          description: *profile_list_description
+          slug: large
+          default: true
+          profile_options:
+            image: *profile_options_image
+            requests:
+              display_name: Node share
+              choices:
+                mem_4:
+                  display_name: ~4 GB, ~0.5 CPU
+                  kubespawner_override:
+                    mem_guarantee: 3.969
+                    cpu_guarantee: 0.05
+                mem_8:
+                  display_name: ~8 GB, ~1.0 CPU
+                  kubespawner_override:
+                    mem_guarantee: 7.938
+                    cpu_guarantee: 0.1
+                mem_16:
+                  default: true
+                  display_name: ~16 GB, ~2.0 CPU
+                  kubespawner_override:
+                    mem_guarantee: 15.875
+                    cpu_guarantee: 0.2
+                mem_32:
+                  display_name: ~32 GB, ~4.0 CPU
+                  kubespawner_override:
+                    mem_guarantee: 31.75
+                    cpu_guarantee: 0.4
+                mem_64:
+                  display_name: ~64 GB, ~8.0 CPU
+                  kubespawner_override:
+                    mem_guarantee: 63.5
+                    cpu_guarantee: 0.8
+                mem_128:
+                  display_name: ~128 GB, ~16.0 CPU
+                  kubespawner_override:
+                    mem_guarantee: 127.0
+                    cpu_guarantee: 1.6
+                mem_256:
+                  display_name: ~256 GB, ~32.0 CPU
+                  kubespawner_override:
+                    mem_guarantee: 254.0
+                    cpu_guarantee: 3.2
+                mem_512:
+                  display_name: ~512 GB, ~64.0 CPU
+                  kubespawner_override:
+                    mem_guarantee: 508.0
+                    cpu_guarantee: 6.4
           kubespawner_override:
+            cpu_limit: null
             mem_limit: null
-            mem_guarantee: 26G
             node_selector:
-              node.kubernetes.io/instance-type: m5.2xlarge
-        - display_name: "Huge: m5.8xlarge"
-          description: "~32 CPU, ~128G RAM"
-          profile_options: *profile_options
-          kubespawner_override:
-            mem_limit: null
-            mem_guarantee: 115G
-            node_selector:
-              node.kubernetes.io/instance-type: m5.8xlarge
+              node.kubernetes.io/instance-type: r5.16xlarge
     scheduling:
       userPlaceholder:
         enabled: false
         replicas: 0
       userScheduler:
         enabled: false
+      userPods:
+        nodeAffinity:
+          matchNodePurpose: require
     hub:
       allowNamedServers: true
       networkPolicy:
