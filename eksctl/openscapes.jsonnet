@@ -30,10 +30,9 @@ local namespaces = ['staging', 'prod'];
 // A `node.kubernetes.io/instance-type label is added, so pods
 // can request a particular kind of node with a nodeSelector
 local notebookNodes = [
-    { instanceType: "m5.large" },
-    { instanceType: "m5.xlarge" },
-    { instanceType: "m5.2xlarge" },
-    { instanceType: "m5.8xlarge" },
+    { instanceType: "r5.xlarge" },
+    { instanceType: "r5.4xlarge" },
+    { instanceType: "r5.16xlarge" },
 ];
 local daskNodes = [
     // Node definitions for dask worker nodes. Config here is merged
@@ -42,10 +41,9 @@ local daskNodes = [
     // *first* item in instanceDistribution.instanceTypes, to match
     // what we do with notebook nodes. Pods can request a particular
     // kind of node with a nodeSelector
-    { instancesDistribution+: { instanceTypes: ["m5.large"] }},
-    { instancesDistribution+: { instanceTypes: ["m5.xlarge"] }},
-    { instancesDistribution+: { instanceTypes: ["m5.2xlarge"] }},
-    { instancesDistribution+: { instanceTypes: ["m5.8xlarge"] }},
+    { instancesDistribution+: { instanceTypes: ["r5.xlarge"] }},
+    { instancesDistribution+: { instanceTypes: ["r5.4xlarge"] }},
+    { instancesDistribution+: { instanceTypes: ["r5.16xlarge"] }},
 ];
 
 
@@ -92,12 +90,12 @@ local daskNodes = [
     ],
     nodeGroups: [n + {clusterName:: $.metadata.name} for n in [
         ng {
-            name: 'core-a',
+            name: 'core-b',
             availabilityZones: [nodeAz],
             ssh: {
                 publicKeyPath: 'ssh-keys/openscapes.key.pub'
             },
-            instanceType: "m5.xlarge",
+            instanceType: "r5.xlarge",
             minSize: 1,
             maxSize: 6,
             labels+: {
@@ -130,7 +128,6 @@ local daskNodes = [
                 "hub.jupyter.org_dedicated": "user:NoSchedule",
                 "hub.jupyter.org/dedicated": "user:NoSchedule"
             },
-
         } + n for n in notebookNodes
     ] + [
         ng {
