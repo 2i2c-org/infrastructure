@@ -3,9 +3,15 @@
 # Upgrade Kubernetes cluster on AWS
 
 ```{warning}
-This upgrade will cause disruptions for users and trigger pager-duty alerts.
-Make sure the cluster isn't used or that the maintenance is planned ahead of
-time.
+This upgrade will cause disruptions for users and trigger alerts for
+[](uptime-checks). To help other engineers, communicate that your are starting a
+cluster upgrade in the `#maintenance-notices` Slack channel.
+```
+
+```{warning}
+We haven't yet established a policy for planning and communicating maintenance
+procedures to users. So preliminary, only make a k8s cluster upgrade while the
+cluster is unused or that the maintenance is communicated ahead of time.
 ```
 
 ## Pre-requisites
