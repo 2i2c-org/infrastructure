@@ -8,6 +8,12 @@ cluster-autoscaler:
   awsRegion: us-west-2
 
 grafana:
+  grafana.ini:
+    server:
+      root_url: https://grafana.cryointhecloud.2i2c.cloud/
+    auth.github:
+      enabled: true
+      allowed_organizations: 2i2c-org
   ingress:
     hosts:
       - grafana.cryointhecloud.2i2c.cloud

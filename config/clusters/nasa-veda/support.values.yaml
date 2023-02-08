@@ -10,7 +10,10 @@ cluster-autoscaler:
 grafana:
   grafana.ini:
     server:
-      root_url: https://grafana.nasa-veda.2i2c.cloud
+      root_url: https://grafana.nasa-veda.2i2c.cloud/
+    auth.github:
+      enabled: true
+      allowed_organizations: 2i2c-org
   ingress:
     hosts:
       - grafana.nasa-veda.2i2c.cloud
