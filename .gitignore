@@ -34,7 +34,6 @@ docs/reference/terraform.md
 
 # Don't check-in YAML files for eksctl config generated from jsonnet files
 **.eksctl.yaml
-eksctl-config.yaml
 
 # Don't version control any terraform state
 **.terraform.lock.hcl

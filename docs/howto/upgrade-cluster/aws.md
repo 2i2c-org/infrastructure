@@ -64,17 +64,19 @@ cluster is unused or that the maintenance is communicated ahead of time.
    Finally if you identify changes you think should be retained, add and commit
    them. Discard the remaining changes with a `git checkout .` command.
 
-3. *Learn how to generate `eksctl-config.yaml`*
+3. *Learn how to generate an `eksctl` config file*
 
    When upgrading an EKS cluster, we will use `eksctl` extensively and reference
-   a `eksctl-config.yaml` generated from the the `$CLUTER_NAME.jsonnet` file. If
-   you update the .jsonnet file, make sure to re-generate the .yaml file that
-   we'll actually reference on with `eksctl`. If you update `eksctl-config.yaml`
-   manually, remember to update the .jsonnet file so they don't get out of sync.
+   a generated config file, `$CLUSTER_NAME.eksctl.yaml`. It's generated from the
+   the `$CLUTER_NAME.jsonnet` file.
+
+   If you update the .jsonnet file, make sure to re-generate the .yaml file
+   before using `eksctl`. Respectively if you update the .yaml file directly,
+   remember to update the .jsonnet file.
 
    ```bash
-   # re-generate a eksctl-config.yaml for use with eksctl
-   jsonnet $CLUSTER_NAME.jsonnet > eksctl-config.yaml
+   # re-generate an eksctl config file for use with eksctl
+   jsonnet $CLUSTER_NAME.jsonnet > $CLUSTER_NAME.eksctl.yaml
    ```
 
 ## Cluster upgrade
@@ -120,7 +122,7 @@ cluster is unused or that the maintenance is communicated ahead of time.
    Then, perform the upgrade which typically takes ~10 minutes.
 
    ```bash
-   eksctl upgrade cluster --config-file=eksctl-config.yaml --approve
+   eksctl upgrade cluster --config-file=$CLUSTER_NAME.eksctl.yaml --approve
    ```
 
    ```{note}
@@ -155,7 +157,7 @@ cluster is unused or that the maintenance is communicated ahead of time.
       the other way around.
 
       ```bash
-      eksctl create nodegroup --config-file=eksctl-config.yaml --include="core-b"
+      eksctl create nodegroup --config-file=$CLUSTER_NAME.eksctl.yaml --include="core-b"
       ```
 
    3. Delete all old node groups (like `core-a,nb-*,dask-*`)
@@ -164,7 +166,7 @@ cluster is unused or that the maintenance is communicated ahead of time.
       name, so the old node group can be deleted with the following command.
 
       ```bash
-      eksctl delete nodegroup --config-file=eksctl-config.yaml --include="core-b,nb-*,dask-*" --approve --drain=false
+      eksctl delete nodegroup --config-file=$CLUSTER_NAME.eksctl.yaml --include="core-b,nb-*,dask-*" --approve --drain=false
       ```
 
       Rename (part 3/3) the core node group one final time in the config to its
@@ -173,7 +175,7 @@ cluster is unused or that the maintenance is communicated ahead of time.
    4. Re-create all non-core node groups (like `nb-*,dask-*`)
 
       ```bash
-      eksctl create nodegroup --config-file=eksctl-config.yaml --include="nb-*,dask-*"
+      eksctl create nodegroup --config-file=$CLUSTER_NAME.eksctl.yaml --include="nb-*,dask-*"
       ```
 
    5. Restore the k8s version in the config
@@ -189,14 +191,14 @@ cluster is unused or that the maintenance is communicated ahead of time.
 
    ```bash
    # upgrade the kube-proxy daemonset
-   eksctl utils update-kube-proxy --config-file=eksctl-config.yaml --approve
+   eksctl utils update-kube-proxy --config-file=$CLUSTER_NAME.eksctl.yaml --approve
 
    # upgrade the aws-node daemonset
-   eksctl utils update-aws-node --config-file=eksctl-config.yaml --approve
+   eksctl utils update-aws-node --config-file=$CLUSTER_NAME.eksctl.yaml --approve
    kubectl patch daemonset -n kube-system aws-node --patch='{"spec":{"template":{"spec":{"$setElementOrder/containers":[{"name":"aws-node"}],"containers":[{"name":"aws-node","securityContext":{"allowPrivilegeEscalation":null,"runAsNonRoot":null}}]}}}}'
 
    # upgrade the coredns deployment
-   eksctl utils update-coredns --config-file=eksctl-config.yaml --approve
+   eksctl utils update-coredns --config-file=$CLUSTER_NAME.eksctl.yaml --approve
    ```
 
    ```{note} Ignore these failures

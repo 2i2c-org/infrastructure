@@ -8,7 +8,7 @@
 
     To use jsonnet to generate an eksctl configuration file from this, do:
 
-        jsonnet openscapes.jsonnet > eksctl-config.yaml
+        jsonnet openscapes.jsonnet > openscapes.eksctl.yaml
 
     References:
     - https://eksctl.io/usage/schema/
@@ -71,7 +71,7 @@ local daskNodes = [
     },
     // If you add an addon to this config, run the create addon command.
     //
-    //    eksctl create addon --config-file=eksctl-config.yaml
+    //    eksctl create addon --config-file=openscapes.eksctl.yaml
     //
     addons: [
         {

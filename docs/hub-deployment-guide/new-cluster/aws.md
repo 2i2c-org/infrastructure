@@ -101,11 +101,11 @@ Once you have a `.jsonnet` file, you can render it into a config file that eksct
 can read.
 
 ```bash
-jsonnet $CLUSTER_NAME.jsonnet > eksctl-config.yaml
+jsonnet $CLUSTER_NAME.jsonnet > $CLUSTER_NAME.eksctl.yaml
 ```
 
 ```{tip}
-The `eksctl-config.yaml` file is git ignored as we can regenerate it, so work
+The `*.eksctl.yaml` files are git ignored as we can regenerate it, so work
 against the `*.jsonnet` file and regenerate the YAML file when needed by a
 `eksctl` command.
 ```
@@ -115,7 +115,7 @@ against the `*.jsonnet` file and regenerate the YAML file when needed by a
 Now you're ready to create the cluster!
 
 ```bash
-eksctl create cluster --config-file=eksctl-config.yaml
+eksctl create cluster --config-file=$CLUSTER_NAME.eksctl.yaml
 ```
 
 ```{tip}
