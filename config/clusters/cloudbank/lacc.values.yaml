@@ -27,4 +27,5 @@ jupyterhub:
           - ericvd@berkeley.edu
           - k_usovich@berkeley.edu
           - sean.smorris@berkeley.edu
+          - sean.smorris@gmail.com
         admin_users: *lacc_users
