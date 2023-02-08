@@ -51,7 +51,6 @@ These sections walk an engineer step-by-step through the workflow of setting up 
 :caption: Hub deployment guide
 hub-deployment-guide/cloud-accounts/index.md
 hub-deployment-guide/new-cluster/index.md
-hub-deployment-guide/upgrade-cluster/index.md
 hub-deployment-guide/deploy-support/index.md
 hub-deployment-guide/hubs/new-hub.md
 hub-deployment-guide/configure-auth/index.md
@@ -73,6 +72,7 @@ howto/manage-domains/index.md
 howto/grafana-github-auth.md
 howto/update-env.md
 howto/manual-nfs-setup.md
+howto/upgrade-cluster/index.md
 howto/troubleshoot/index.md
 ```
 
