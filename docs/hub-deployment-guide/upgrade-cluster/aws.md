@@ -148,7 +148,7 @@ time.
       the other way around.
 
       ```bash
-      eksctl create nodegroup --config-file=eksctl-config.yaml --include="core-b" --install-nvidia-plugin=false
+      eksctl create nodegroup --config-file=eksctl-config.yaml --include="core-b"
       ```
 
    3. Delete all old node pools (like `core-a,nb-*,dask-*`)
@@ -166,7 +166,7 @@ time.
    4. Re-create all non-core node pools (like `nb-*,dask-*`)
 
       ```bash
-      eksctl create nodegroup --config-file=eksctl-config.yaml --include="nb-*,dask-*" --install-nvidia-plugin=false
+      eksctl create nodegroup --config-file=eksctl-config.yaml --include="nb-*,dask-*"
       ```
 
    5. Restore the k8s version in the config
