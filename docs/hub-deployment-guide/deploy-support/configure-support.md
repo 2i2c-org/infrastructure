@@ -22,6 +22,9 @@ grafana:
   grafana.ini:
     server:
       root_url: https://<grafana-domain>/
+    auth.github:
+      enabled: true
+      allowed_organizations: 2i2c-org
   ingress:
     hosts:
       - <grafana-domain>

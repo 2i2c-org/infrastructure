@@ -11,6 +11,9 @@ grafana:
   grafana.ini:
     server:
       root_url: https://grafana.ubc-eoas.2i2c.cloud/
+    auth.github:
+      enabled: true
+      allowed_organizations: 2i2c-org
   ingress:
     hosts:
       - grafana.ubc-eoas.2i2c.cloud
