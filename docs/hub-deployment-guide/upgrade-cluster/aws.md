@@ -79,15 +79,16 @@ time.
    a mapping between the AWS user to a k8s user, and `eksctl` needs to make some
    commands behind the scenes.
 
-   This mapping is done from a ConfigMap in kube-system called `aws-auth`.
+   This mapping is done from a ConfigMap in kube-system called `aws-auth`, and
+   we can use an `eksctl` command to influence it.
 
    ```bash
-   # acquire the deployer's credentials to the k8s cluster
-   deployer use-cluster-credentials $CLUSTER_NAME
-
-   # add a new entry for your AWS IAM user mimicking other entries you will find
-   # under mapUsers
-   kubectl edit cm -n kube-system aws-auth
+   eksctl create iamidentitymapping \
+      --cluster=$CLUSTER_NAME \
+      --region=$CLUSTER_REGION \
+      --arn=arn:aws:iam::<aws-account-id>:user/<iam-user-name> \
+      --username=<iam-user-name> \
+      --group=system:masters
    ```
 
 2. *Acquire and configure AWS credentials*

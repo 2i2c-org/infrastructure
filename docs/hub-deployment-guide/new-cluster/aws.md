@@ -230,7 +230,7 @@ have least amount of permissions possible.
       eksctl create iamidentitymapping \
          --cluster $CLUSTER_NAME \
          --region $CLUSTER_REGION \
-         --arn arn:aws:iam::<aws-accout-id>:user/hub-continuous-deployer \
+         --arn arn:aws:iam::<aws-account-id>:user/hub-continuous-deployer \
          --username hub-continuous-deployer \
          --group system:masters
       ```
@@ -290,7 +290,7 @@ You can modify the command output by running `terraform output -raw eksctl_iam_c
 eksctl create iamidentitymapping \
    --cluster $CLUSTER_NAME \
    --region $CLUSTER_REGION \
-   --arn arn:aws:iam::<your-org-id>:user/<iam-user-name> \
+   --arn arn:aws:iam::<aws-account-id>:user/<iam-user-name> \
    --username <iam-user-name> \
    --group system:masters
 ```
