@@ -63,9 +63,9 @@ basehub:
       homepage:
         templateVars:
           org:
-            name: Ocean Hack Week
+            name: OceanHackWeek
             logo_url: https://avatars.githubusercontent.com/u/33128979
-            url: https://oceanhackweek.github.io/
+            url: https://oceanhackweek.org/
           designed_by:
             name: 2i2c
             url: https://2i2c.org
@@ -83,6 +83,9 @@ basehub:
           oauth_callback_url: https://oceanhackweek.2i2c.cloud/hub/oauth_callback
           allowed_organizations:
             - 2i2c-org:hub-access-for-2i2c-staff
+            - Intercoonecta:ohwes23-organizers
+            - Intercoonecta:ohwes23-mentor-helper-presenter
+            - Intercoonecta:ohwes23-participants
             - oceanhackweek:participants_2022
             - oceanhackweek:ohw22-organizers
             - oceanhackweek:ohw22-mentor-helper-presenter
