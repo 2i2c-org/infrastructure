@@ -114,8 +114,8 @@ cluster is unused or that the maintenance is communicated ahead of time.
 
 3. *Upgrade the k8s control plane's one minor version*
 
-   It is not allowed to upgrade the k8s control plane more than one minor at the
-   time. So, update the eksctl config's version field one minor version.
+   The k8s control plane can only be upgraded one minor version at the time.[^1]
+   So, update the eksctl config's version field one minor version.
 
    Then, perform the upgrade which typically takes ~10 minutes.
 
@@ -127,20 +127,20 @@ cluster is unused or that the maintenance is communicated ahead of time.
    If you see the error `Error: the server has asked for the client to provide credentials` don't worry, if you try it again you will find that the cluster is now upgraded.
    ```
 
-4. *Upgrade node pools up to two minor versions above the k8s control plane*
+4. *Upgrade node groups up to two minor versions above the k8s control plane*
 
-   Its documented that a node pools's k8s software components (`kubelet`) should
-   support being two minor versions out of sync from the control plane, so
-   consider if and what node pools you upgrade to avoid doing more operations
-   than needed.
+   A node's k8s software (`kubelet`) can be up to two minor versions ahead or
+   behind the control plane version.[^1] Due to this, you can plan your cluster
+   upgrade to only involve one node group upgrade even if you increment the
+   control plane four minor versions.
 
-   If you upgrade from k8s 1.21 to 1.24, you can for example upgrade the k8s
-   control plane from 1.21 to 1.22, then upgrade the node pools from 1.21 to
+   So if you upgrade from k8s 1.21 to 1.24, you can for example upgrade the k8s
+   control plane from 1.21 to 1.22, then upgrade the node groups from 1.21 to
    1.24, followed by upgrading the control plane two steps in a row.
 
-   To upgrade (unmanaged) node pools, you delete them and then them back. When
+   To upgrade (unmanaged) node groups, you delete them and then them back. When
    adding them back, make sure your cluster config's k8s version is what you
-   want the node pools to be added back as.
+   want the node groups to be added back as.
 
    1. Update the k8s version in the config temporarily
 
@@ -148,9 +148,9 @@ cluster is unused or that the maintenance is communicated ahead of time.
       create only. We can choose something two minor versions of the current k8s
       control plane version.
 
-   2. Add a new core node pool (like `core-b`)
+   2. Add a new core node group (like `core-b`)
 
-      Rename (part 1/3) the config file's entry for the core node pool
+      Rename (part 1/3) the config file's entry for the core node group
       temporarily when running this command, either from `core-a` to `core-b` or
       the other way around.
 
@@ -158,19 +158,19 @@ cluster is unused or that the maintenance is communicated ahead of time.
       eksctl create nodegroup --config-file=eksctl-config.yaml --include="core-b"
       ```
 
-   3. Delete all old node pools (like `core-a,nb-*,dask-*`)
+   3. Delete all old node groups (like `core-a,nb-*,dask-*`)
 
-      Rename (part 2/3) the core node pool again in the config to its previous
-      name, so the old node pool can be deleted with the following command.
+      Rename (part 2/3) the core node group again in the config to its previous
+      name, so the old node group can be deleted with the following command.
 
       ```bash
       eksctl delete nodegroup --config-file=eksctl-config.yaml --include="core-b,nb-*,dask-*" --approve --drain=false
       ```
 
-      Rename (part 3/3) the core node pool one final time in the config to its
+      Rename (part 3/3) the core node group one final time in the config to its
       new name, as that represents the state of the EKS cluster.
 
-   4. Re-create all non-core node pools (like `nb-*,dask-*`)
+   4. Re-create all non-core node groups (like `nb-*,dask-*`)
 
       ```bash
       eksctl create nodegroup --config-file=eksctl-config.yaml --include="nb-*,dask-*"
@@ -183,6 +183,9 @@ cluster is unused or that the maintenance is communicated ahead of time.
       currently have.
 
 5. *Upgrad EKS add-ons (takes ~3*5s)*
+
+   As documented in `eksctl`'s documentation[^1], we also need to upgrade three
+   EKS add-ons enabled by default.
 
    ```bash
    # upgrade the kube-proxy daemonset
@@ -213,3 +216,7 @@ cluster is unused or that the maintenance is communicated ahead of time.
 
    If you upgrade k8s multiple minor versions, repeat step 3 and 5, where you
    increment it one minor version at the time.
+
+## References
+
+[^1]: `eksctl`'s cluster upgrade documentation: <https://eksctl.io/usage/cluster-upgrade/>
