@@ -1,4 +1,10 @@
 grafana:
+  grafana.ini:
+    server:
+      root_url: https://grafana.gcp.pangeo.2i2c.cloud/
+    auth.github:
+      enabled: true
+      allowed_organizations: 2i2c-org
   ingress:
     hosts:
       - grafana.gcp.pangeo.2i2c.cloud
@@ -6,6 +12,7 @@ grafana:
       - secretName: grafana-tls
         hosts:
           - grafana.gcp.pangeo.2i2c.cloud
+
 # Disable the Admissions Validation Webhook and the port is not
 # permitted on private GKE clusters
 ingress-nginx:

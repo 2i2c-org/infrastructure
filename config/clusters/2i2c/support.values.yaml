@@ -18,7 +18,14 @@ prometheus:
       limits:
         cpu: 2
         memory: 4Gi
+
 grafana:
+  grafana.ini:
+    server:
+      root_url: https://grafana.pilot.2i2c.cloud/
+    auth.github:
+      enabled: true
+      allowed_organizations: 2i2c-org
   ingress:
     hosts:
       - grafana.pilot.2i2c.cloud
@@ -26,14 +33,3 @@ grafana:
       - secretName: grafana-tls
         hosts:
           - grafana.pilot.2i2c.cloud
-  grafana.ini:
-    server:
-      root_url: https://grafana.pilot.2i2c.cloud/
-    auth.github:
-      enabled: true
-      allow_sign_up: true
-      scopes: user:email,read:org
-      auth_url: https://github.com/login/oauth/authorize
-      token_url: https://github.com/login/oauth/access_token
-      api_url: https://api.github.com/user
-      allowed_organizations: 2i2c-org

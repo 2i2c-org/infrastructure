@@ -33,7 +33,7 @@ jobs:
             chart_urls: '{"binderhub": "https://raw.githubusercontent.com/jupyterhub/helm-chart/gh-pages/index.yaml"}'
           - name: "support"
             chart_path: "helm-charts/support/Chart.yaml"
-            chart_urls: '{"cryptnono": "https://yuvipanda.github.io/cryptnono/index.yaml", "ingress-nginx": "https://kubernetes.github.io/ingress-nginx/index.yaml", "grafana": "https://grafana.github.io/helm-charts/index.yaml", "prometheus": "https://prometheus-community.github.io/helm-charts/index.yaml"}'
+            chart_urls: '{"cryptnono": "https://yuvipanda.github.io/cryptnono/index.yaml", "cluster-autoscaler": "https://kubernetes.github.io/autoscaler/index.yaml", "ingress-nginx": "https://kubernetes.github.io/ingress-nginx/index.yaml", "grafana": "https://grafana.github.io/helm-charts/index.yaml", "prometheus": "https://prometheus-community.github.io/helm-charts/index.yaml"}'
 
     steps:
       # We want tests to be run on the Pull Request that gets opened by the next step,

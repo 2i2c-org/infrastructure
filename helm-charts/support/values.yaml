@@ -158,6 +158,32 @@ grafana:
       kubernetes.io/ingress.class: nginx
       cert-manager.io/cluster-issuer: letsencrypt-prod
 
+  # grafana is partially configured for GitHub authentication here, but the
+  # following values need to be set as well, where client_secret should be kept
+  # secret:
+  #
+  #     server:
+  #       root_url: https://grafana.<cluster_name>.2i2c.cloud
+  #     auth.github:
+  #       enabled: true
+  #       allowed_organizations: "2i2c-org some-other-gh-org"
+  #       client_id: ""
+  #       client_secret: ""
+  #
+  grafana.ini:
+    server:
+      root_url: ""
+    auth.github:
+      enabled: false
+      allowed_organizations: ""
+      client_id: ""
+      client_secret: ""
+      allow_sign_up: true
+      scopes: user:email,read:org
+      auth_url: https://github.com/login/oauth/authorize
+      token_url: https://github.com/login/oauth/access_token
+      api_url: https://api.github.com/user
+
   datasources:
     datasources.yaml:
       apiVersion: 1

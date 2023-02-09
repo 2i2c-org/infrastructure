@@ -18,11 +18,13 @@ prometheus:
       limits:
         cpu: 4
         memory: 8Gi
+
 cluster-autoscaler:
   enabled: true
   autoDiscovery:
     clusterName: openscapeshub
   awsRegion: us-west-2
+
 grafana:
   ingress:
     hosts:
@@ -31,3 +33,9 @@ grafana:
       - secretName: grafana-tls
         hosts:
           - grafana.openscapes.2i2c.cloud
+  grafana.ini:
+    server:
+      root_url: https://grafana.openscapes.2i2c.cloud/
+    auth.github:
+      enabled: true
+      allowed_organizations: 2i2c-org NASA-Openscapes

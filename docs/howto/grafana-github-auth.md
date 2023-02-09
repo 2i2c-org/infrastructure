@@ -31,11 +31,6 @@ To enable logging into Grafana using GitHub, follow these steps:
          root_url: https://<grafana.ingress.hosts[0]>
        auth.github:
          enabled: true
-         allow_sign_up: true
-         scopes: user:email,read:org
-         auth_url: https://github.com/login/oauth/authorize
-         token_url: https://github.com/login/oauth/access_token
-         api_url: https://api.github.com/user
          # allowed_organizations should be a space separated list
          allowed_organizations: 2i2c-org
    ```

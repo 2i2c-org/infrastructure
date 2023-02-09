@@ -17,7 +17,7 @@ basehub:
       extraImages:
         tensorflow-image:
           name: pangeo/ml-notebook
-          tag: "2023.01.03"
+          tag: "2023.02.08"
     custom:
       # Extra mount point for admins to access to all users' home dirs
       # Ref https://github.com/2i2c-org/infrastructure/issues/2105
@@ -25,6 +25,7 @@ basehub:
         extraVolumeMounts:
           - name: home
             mountPath: /home/jovyan/allusers
+            readOnly: true
       2i2c:
         add_staff_user_ids_to_admin_users: true
         add_staff_user_ids_of_type: "github"
@@ -66,13 +67,17 @@ basehub:
     singleuser:
       image:
         name: pangeo/pangeo-notebook
-        tag: "2023.01.03"
+        tag: "2023.02.08"
       extraEnv:
         GH_SCOPED_CREDS_CLIENT_ID: "Iv1.0c7df3d4b3191b2f"
         GH_SCOPED_CREDS_APP_URL: https://github.com/apps/leap-hub-push-access
         # Temporarily set for *all* pods, including pods without any GPUs,
         # to work around https://github.com/2i2c-org/infrastructure/issues/1530
         NVIDIA_DRIVER_CAPABILITIES: compute,utility
+        # Latest version of JupyterLab no longer works with NotebookApp, requires ServerApp.
+        # Latest version of the pangeo image requires this now.
+        # Can be removed once https://github.com/2i2c-org/infrastructure/pull/2160 is merged
+        JUPYTERHUB_SINGLEUSER_APP: "jupyter_server.serverapp.ServerApp"
       profileList:
         # The mem-guarantees are here so k8s doesn't schedule other pods
         # on these nodes. They need to be just under total allocatable
@@ -103,17 +108,17 @@ basehub:
                   default: true
                   slug: "pangeo"
                   kubespawner_override:
-                    image: "pangeo/pangeo-notebook:2023.01.03"
+                    image: "pangeo/pangeo-notebook:2023.02.08"
                 tensorflow:
                   display_name: Pangeo Tensorflow ML Notebook
                   slug: "tensorflow"
                   kubespawner_override:
-                    image: "pangeo/ml-notebook:2023.01.03"
+                    image: "pangeo/ml-notebook:2023.02.08"
                 pytorch:
                   display_name: Pangeo PyTorch ML Notebook
                   slug: "pytorch"
                   kubespawner_override:
-                    image: "pangeo/pytorch-notebook:2023.01.03"
+                    image: "pangeo/pytorch-notebook:2023.02.08"
                 leap-pangeo-edu:
                   display_name: LEAP Education Notebook (Testing Prototype)
                   slug: "leap_edu"
