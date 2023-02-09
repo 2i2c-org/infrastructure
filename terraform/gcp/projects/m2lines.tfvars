@@ -148,7 +148,7 @@ hub_cloud_permissions = {
   },
   "prod" : {
     requestor_pays : true,
-    bucket_admin_access: ["scratch", "persistent"],
+    bucket_admin_access: ["scratch", "persistent", "persistent-public"],
     public_buckets: ["persistent-public"],
     hub_namespace: "prod"
   },
