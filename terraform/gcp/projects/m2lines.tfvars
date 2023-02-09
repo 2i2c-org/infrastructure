@@ -143,13 +143,15 @@ hub_cloud_permissions = {
   "staging" : {
     requestor_pays : true,
     bucket_admin_access: ["scratch-staging", "persistent-staging"],
-    public_buckets: [],
     hub_namespace: "staging"
   },
   "prod" : {
     requestor_pays : true,
     bucket_admin_access: ["scratch", "persistent", "persistent-public"],
-    public_buckets: ["persistent-public"],
     hub_namespace: "prod"
   },
 }
+
+bucket_public_access = [
+  "persistent-public"
+]

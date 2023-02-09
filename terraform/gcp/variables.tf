@@ -282,7 +282,7 @@ variable "max_cpu" {
 }
 
 variable "hub_cloud_permissions" {
-  type        = map(object({ requestor_pays : bool, bucket_admin_access : set(string), public_buckets : set(string), hub_namespace : string }))
+  type        = map(object({ requestor_pays : bool, bucket_admin_access : set(string), hub_namespace : string }))
   default     = {}
   description = <<-EOT
   Map of cloud permissions given to a particular hub
@@ -295,6 +295,15 @@ variable "hub_cloud_permissions" {
      This *potentially* incurs cost for us, the originating project, so opt-in.
   2. bucket_admin_access: List of GCS storage buckets that users on this hub should have read
      and write permissions for.
+  EOT
+}
+
+variable "bucket_public_access" {
+  type        = list
+  default     = []
+  description = <<-EOT
+  A list of GCS storage buckets with public read access.
+
   EOT
 }
 
