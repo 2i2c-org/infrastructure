@@ -34,7 +34,7 @@ jupyterhub:
       extraVolumeMounts:
         - name: home
           mountPath: /home/jovyan/allusers
-          readOnly: true
+          readOnly: false
   singleuser:
     image:
       # https://hub.docker.com/r/lisacuk/lishub-base
