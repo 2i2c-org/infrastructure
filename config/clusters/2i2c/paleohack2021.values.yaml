@@ -1,10 +1,6 @@
 jupyterhub:
   scheduling:
-    userPlaceholder:
-      # Not needed anymore, hackathon is over
-      replicas: 0
     userScheduler:
-      # Each user gets almost 1 anyway
       enabled: true
   custom:
     2i2c:

@@ -58,9 +58,6 @@ jupyterhub:
             node.kubernetes.io/instance-type: n1-standard-16
     defaultUrl: /lab
   scheduling:
-    userPlaceholder:
-      enabled: false
-      replicas: 0
     userScheduler:
       enabled: false
   hub:

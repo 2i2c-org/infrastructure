@@ -120,11 +120,11 @@ jupyterhub:
     userPods:
       nodeAffinity:
         matchNodePurpose: require
+    podPriority:
+      enabled: true
     userPlaceholder:
       enabled: true
       replicas: 0
-    podPriority:
-      enabled: true
     userScheduler:
       enabled: false
       resources:

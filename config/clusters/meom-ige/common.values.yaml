@@ -79,9 +79,6 @@ basehub:
         name: pangeo/pangeo-notebook
         tag: "2022.06.13"
     scheduling:
-      userPlaceholder:
-        enabled: false
-        replicas: 0
       userScheduler:
         enabled: false
     proxy:
