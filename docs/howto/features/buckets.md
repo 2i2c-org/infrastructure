@@ -56,7 +56,7 @@ on why users want this!
             # If we have a bucket that does not have a `delete_after`
             PERSISTENT_BUCKET: <s3 or gs>://<bucket-full-name>/$(JUPYTERHUB_USER)
             # If we have a bucket defined in user_buckets that should be granted public read access.
-            PUBLIC_BUCKET: <s3 or gs>://<bucket-full-name>/$(JUPYTERHUB_USER)
+            PERSISTENT_PUBLIC_BUCKET: <s3 or gs>://<bucket-full-name>/$(JUPYTERHUB_USER)
 
    ```
 

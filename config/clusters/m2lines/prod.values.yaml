@@ -8,7 +8,7 @@ basehub:
         SCRATCH_BUCKET: gs://m2lines-scratch/$(JUPYTERHUB_USER)
         PANGEO_SCRATCH: gs://m2lines-scratch/$(JUPYTERHUB_USER)
         PERSISTENT_BUCKET: gs://m2lines-persistent/$(JUPYTERHUB_USER)
-        PUBLIC_BUCKET: gs://m2lines-public/$(JUPYTERHUB_USER)
+        PERSISTENT_PUBLIC_BUCKET: gs://m2lines-persistent-public/$(JUPYTERHUB_USER)
     hub:
       config:
         GitHubOAuthenticator:
