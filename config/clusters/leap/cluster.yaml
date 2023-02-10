@@ -1,5 +1,5 @@
 name: leap
-provider: gcp
+provider: gcp # https://console.cloud.google.com/kubernetes/clusters/details/us-central1/leap-cluster/nodes?project=leap-pangeo
 gcp:
   key: enc-deployer-credentials.secret.json
   project: leap-pangeo

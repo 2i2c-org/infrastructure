@@ -1,5 +1,5 @@
 name: awi-ciroh
-provider: gcp
+provider: gcp # https://console.cloud.google.com/kubernetes/clusters/details/us-central1/awi-ciroh-cluster/details?project=awi-ciroh
 gcp:
   key: enc-deployer-credentials.secret.json
   project: awi-ciroh
