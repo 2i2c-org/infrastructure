@@ -1,0 +1,5 @@
+basehub:
+  jupyterhub:
+    scheduling:
+      userScheduler:
+        enabled: true
