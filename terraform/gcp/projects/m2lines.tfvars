@@ -27,7 +27,7 @@ user_buckets = {
   "persistent-staging": {
     "delete_after": null
   },
-  "persistent-public": {
+  "public-persistent": {
     "delete_after": null
   },
 
@@ -147,11 +147,11 @@ hub_cloud_permissions = {
   },
   "prod" : {
     requestor_pays : true,
-    bucket_admin_access: ["scratch", "persistent", "persistent-public"],
+    bucket_admin_access: ["scratch", "persistent", "public-persistent"],
     hub_namespace: "prod"
   },
 }
 
 bucket_public_access = [
-  "persistent-public"
+  "public-persistent"
 ]
