@@ -34,6 +34,7 @@ from yarl import URL
 
 from .cli_app import app
 from .file_acquisition import find_absolute_path_to_cluster_file, get_decrypted_file
+from .utils import print_colour
 
 yaml = YAML(typ="safe")
 
@@ -82,12 +83,14 @@ class CILogonAdmin:
         client_name = body["client_name"]
 
         if not response.ok:
-            print(
-                f"An error occured when creating the {client_name} client. \n Error was {response.text}"
+            print_colour(
+                f"Creating the {id} client returned a {response.status_code} status code.",
+                "red",
             )
-            response.raise_for_status()
+            print_colour(f"{response.text}", "yellow")
+            return
 
-        print(f"Successfully created a new CILogon client for {client_name}!")
+        print_colour(f"Successfully created a new CILogon client for {client_name}!")
         return response.json()
 
     def get(self, id=None):
@@ -107,12 +110,14 @@ class CILogonAdmin:
         )
 
         if not response.ok:
-            print(
-                f"An error ocurred when getting the details of {id} client. \n Error was {response.text}."
+            print_colour(
+                f"Getting the details of {id} client returned a {response.status_code} status code.",
+                "red",
             )
+            print_colour(f"{response.text}", "yellow")
             return
 
-        print(f"Successfully got the details for {id} client!")
+        print_colour(f"Successfully got the details for {id} client!")
         return response.json()
 
     def update(self, id, body):
@@ -136,12 +141,15 @@ class CILogonAdmin:
         client_name = body["client_name"]
 
         if not response.ok:
-            print(
-                f"An error occured when updating the {client_name} client. \n Error was {response.text}."
-            )
-            response.raise_for_status()
+            if not response.ok:
+                print_colour(
+                    f"Updating the details of {id} client returned a {response.status_code} status code.",
+                    "red",
+                )
+                print_colour(f"{response.text}", "yellow")
+                return
 
-        print("Client updated succesfuly!")
+        print_colour("Client updated successfully!")
         return response.status_code
 
     def delete(self, id):
@@ -159,12 +167,14 @@ class CILogonAdmin:
         response = requests.delete(self._url(id), headers=headers, timeout=self.timeout)
 
         if not response.ok:
-            print(
-                f"An error occured when deleting the {id} client. \n Error was {response.text}."
+            print_colour(
+                f"Deleting the {id} client returned a {response.status_code} status code.",
+                "red",
             )
-            response.raise_for_status()
+            print_colour(f"{response.text}", "yellow")
+            return
 
-        print(f"Successfully deleted the {id} client!")
+        print_colour(f"Successfully deleted the {id} client!")
         return response.status_code
 
 
@@ -239,8 +249,9 @@ class CILogonClientManager:
                 "client_id"
             ]
         except FileNotFoundError:
-            print(
-                "Oops! The CILogon client you requested to doesn't exist! Please create it first."
+            print_colour(
+                "Oops! The CILogon client you requested to doesn't exist! Please create it first.",
+                "yellow",
             )
             return
 
@@ -251,11 +262,12 @@ class CILogonClientManager:
         config_filename = self._build_config_filename(cluster_name, hub_name)
 
         if Path(config_filename).is_file():
-            print(
+            print_colour(
                 f"""
                 Oops! A CILogon client already exists for this hub!
                 Use the update subcommand to update it or delete {config_filename} if you want to generate a new one.
-                """
+                """,
+                "yellow",
             )
             return
 
@@ -301,8 +313,9 @@ class CILogonClientManager:
     def delete_client(self, cluster_name, hub_name, client_id=None):
         if not client_id:
             if not cluster_name or not hub_name:
-                print(
-                    "Please provide either the client id to delete or the cluster and hub name."
+                print_colour(
+                    "Please provide either the client id to delete or the cluster and hub name.",
+                    "red",
                 )
                 return
 
