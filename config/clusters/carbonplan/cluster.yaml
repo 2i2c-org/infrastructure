@@ -1,5 +1,5 @@
 name: carbonplan
-provider: aws
+provider: aws # https://631969445205.signin.aws.amazon.com/console
 account: "631969445205"
 aws:
   key: enc-deployer-credentials.secret.json

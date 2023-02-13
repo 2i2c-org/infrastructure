@@ -1,5 +1,5 @@
 name: nasa-veda
-provider: aws
+provider: aws # https://smce-veda.signin.aws.amazon.com/console
 aws:
   key: enc-deployer-credentials.secret.json
   clusterType: eks

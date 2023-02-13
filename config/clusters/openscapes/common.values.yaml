@@ -217,11 +217,8 @@ basehub:
             node_selector:
               node.kubernetes.io/instance-type: r5.16xlarge
     scheduling:
-      userPlaceholder:
-        enabled: false
-        replicas: 0
       userScheduler:
-        enabled: false
+        enabled: true
       userPods:
         nodeAffinity:
           matchNodePurpose: require

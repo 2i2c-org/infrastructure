@@ -114,11 +114,8 @@ basehub:
             node_selector:
               node.kubernetes.io/instance-type: x1.32xlarge
     scheduling:
-      userPlaceholder:
-        enabled: false
-        replicas: 0
       userScheduler:
-        enabled: false
+        enabled: true
     proxy:
       chp:
         resources:

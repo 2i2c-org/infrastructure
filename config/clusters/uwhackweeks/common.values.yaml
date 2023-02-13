@@ -103,9 +103,6 @@ basehub:
             node_selector:
               node.kubernetes.io/instance-type: g4dn.xlarge
     scheduling:
-      userPlaceholder:
-        enabled: false
-        replicas: 0
       userScheduler:
         enabled: false
     hub:

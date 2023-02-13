@@ -1,5 +1,5 @@
 name: ubc-eoas
-provider: aws
+provider: aws # https://2i2c.awsapps.com/start#/
 aws:
   key: enc-deployer-credentials.secret.json
   clusterType: eks
