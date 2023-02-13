@@ -81,9 +81,9 @@ class CILogonAdmin:
 
         client_name = body["client_name"]
 
-        if response.status_code != 200:
+        if not response.ok:
             print(
-                f"An error occured when creating the {client_name} client. \n Error was {response.text}."
+                f"An error occured when creating the {client_name} client. \n Error was {response.text}"
             )
             response.raise_for_status()
 
@@ -106,11 +106,11 @@ class CILogonAdmin:
             self._url(id), params=None, headers=headers, timeout=self.timeout
         )
 
-        if response.status_code != 200:
+        if not response.ok:
             print(
-                f"An error occured when getting the details of {id} client. \n Error was {response.text}."
+                f"An error ocurred when getting the details of {id} client. \n Error was {response.text}."
             )
-            response.raise_for_status()
+            return
 
         print(f"Successfully got the details for {id} client!")
         return response.json()
@@ -124,7 +124,7 @@ class CILogonAdmin:
            id (str): Id of the client to modify
            body (dict): Attributes to modify.
 
-        Returns 200 OK or raises an error if the update request returned anything other than 200..
+        Returns status code if response.ok or raises an error if the delete request returned anything not in the range 200-299.
 
         See: https://github.com/ncsa/OA4MP/blob/HEAD/oa4mp-server-admin-oauth2/src/main/scripts/oidc-cm-scripts/cm-put.sh
         """
@@ -135,7 +135,7 @@ class CILogonAdmin:
 
         client_name = body["client_name"]
 
-        if response.status_code != 200:
+        if not response.ok:
             print(
                 f"An error occured when updating the {client_name} client. \n Error was {response.text}."
             )
@@ -150,7 +150,7 @@ class CILogonAdmin:
         Args:
            id (str): Id of the client to delete
 
-        Returns 200 OK or raises an error if the delete request returned anything other than 200.
+        Returns status code if response.ok or raises an error if the delete request returned anything not in the range 200-299.
 
         See: https://github.com/ncsa/OA4MP/blob/HEAD/oa4mp-server-admin-oauth2/src/main/scripts/oidc-cm-scripts/cm-delete.sh
         """
@@ -158,7 +158,7 @@ class CILogonAdmin:
         headers = self.base_headers.copy()
         response = requests.delete(self._url(id), headers=headers, timeout=self.timeout)
 
-        if response.status_code != 200:
+        if not response.ok:
             print(
                 f"An error occured when deleting the {id} client. \n Error was {response.text}."
             )
@@ -294,7 +294,9 @@ class CILogonClientManager:
         print(
             f"Getting the stored CILogon client details for {cluster_name}-{hub_name}..."
         )
-        print(self.admin_client.get(client_id))
+        client_details = self.admin_client.get(client_id)
+        if client_details:
+            print(client_details)
 
     def delete_client(self, cluster_name, hub_name, client_id=None):
         if not client_id:

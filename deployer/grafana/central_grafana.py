@@ -82,7 +82,7 @@ def get_clusters_used_as_datasources(cluster_name, datasource_endpoint):
     # Get the list of all the currently existing datasources
     response = requests.get(datasource_endpoint, headers=headers)
 
-    if response.status_code != 200:
+    if not response.ok:
         print(
             f"An error occured when retrieving the datasources from {datasource_endpoint}.\n"
             f"Error was {response.text}."
@@ -135,7 +135,7 @@ def update_central_grafana_datasources(
                 response = requests.post(
                     datasource_endpoint, data=req_body, headers=headers
                 )
-                if response.status_code != 200:
+                if not response.ok:
                     print(
                         f"An error occured when creating the datasource. \nError was {response.text}."
                     )
