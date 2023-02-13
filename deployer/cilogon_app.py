@@ -1,26 +1,18 @@
 """
 ### Summary
 
-This is a helper script that can create/update/get/delete CILogon clients
-using the 2i2c administrative client provided by CILogon.
+Create/update/get/delete CILogon clients using the 2i2c administrative client provided by CILogon.
 More details here: https://cilogon.github.io/oa4mp/server/manuals/dynamic-client-registration.html
 
 ### Use cases
 
-The script can be used to:
+The commands in this file can be used to:
 
 - `create` a CILogon OAuth application for a hub and store the credentials safely
 - `update` the callback urls of an existing hub CILogon client
 - `delete` a CILogon OAuth application when a hub is removed or changes auth methods
 - `get` details about an existing hub CILogon client
 - `get-all` existing 2i2c CILogon OAuth applications
-
-### Running the script
-
-Get usage instructions about each of the available subcommands (create/update/get/get-all/delete)
-by executing the script with `--help` flag, from the root of the repository:
-
-- python deployer/cilogon_app.py create --help
 """
 
 import base64
