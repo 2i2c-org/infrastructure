@@ -109,7 +109,9 @@ class CILogonAdmin:
             print_colour(f"{response.text}", "yellow")
             return
 
-        print_colour(f"Successfully got the details for {id} client!")
+        if id:
+            print_colour(f"Successfully got the details for {id} client!")
+
         return response.json()
 
     def update(self, id, body):
