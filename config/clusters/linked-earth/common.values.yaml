@@ -53,40 +53,127 @@ basehub:
         # User image repo: https://quay.io/repository/linkedearth/pyleoclim
         name: quay.io/linkedearth/pyleoclim
         tag: "latest"
+
+      # FIXME: extraFiles and extraEnv has been updated since the combination of
+      #        jupyter_server 2 and jupyterlab doesn't work with a classical
+      #        notebook server.
+      #
+      #        This can probably be removed with this PR that is meant to transition
+      #        the default to jupyter_server from notebook:
+      #        https://github.com/2i2c-org/infrastructure/pull/2160
+      #
+      extraFiles:
+        jupyter_server_config.json:
+          mountPath: /usr/local/etc/jupyter/jupyter_server_config.json
+          data:
+            MappingKernelManager:
+              cull_idle_timeout: 3600
+              cull_interval: 300
+              cull_connected: true
+            ServerApp:
+              extra_template_paths:
+                - /usr/local/share/jupyter/custom_template
+      extraEnv:
+        JUPYTERHUB_SINGLEUSER_APP: "jupyter_server.serverapp.ServerApp"
+
       profileList:
-        # The mem-guarantees are here so k8s doesn't schedule other pods
-        # on these nodes. They need to be just under total allocatable
-        # RAM on a node, not total node capacity. Values calculated using
-        # https://learnk8s.io/kubernetes-instance-calculator
-        - display_name: "Small"
-          description: 5GB RAM, 2 CPUs
+        - display_name: "Small: up to 4 CPU / 32 GB RAM"
+          description: &profile_list_description "Start a container with at least a chosen share of capacity on a node of this type"
+          slug: small
+          profile_options:
+            requests:
+              display_name: Node share
+              choices:
+                mem_1:
+                  default: true
+                  display_name: ~1 GB, ~0.125 CPU
+                  kubespawner_override:
+                    mem_guarantee: 0.875
+                    cpu_guarantee: 0.013
+                mem_2:
+                  display_name: ~2 GB, ~0.25 CPU
+                  kubespawner_override:
+                    mem_guarantee: 1.75
+                    cpu_guarantee: 0.025
+                mem_4:
+                  display_name: ~4 GB, ~0.5 CPU
+                  kubespawner_override:
+                    mem_guarantee: 3.5
+                    cpu_guarantee: 0.05
+                mem_8:
+                  display_name: ~8 GB, ~1.0 CPU
+                  kubespawner_override:
+                    mem_guarantee: 7.0
+                    cpu_guarantee: 0.1
+                mem_16:
+                  display_name: ~16 GB, ~2.0 CPU
+                  kubespawner_override:
+                    mem_guarantee: 14.0
+                    cpu_guarantee: 0.2
+                mem_32:
+                  display_name: ~32 GB, ~4.0 CPU
+                  kubespawner_override:
+                    mem_guarantee: 28.0
+                    cpu_guarantee: 0.4
+          kubespawner_override:
+            cpu_limit: null
+            mem_limit: null
+            node_selector:
+              node.kubernetes.io/instance-type: e2-highmem-4
+        - display_name: "Medium: up to 16 CPU / 128 GB RAM"
+          description: *profile_list_description
+          slug: medium
           default: true
+          profile_options:
+            requests:
+              display_name: Node share
+              choices:
+                mem_1:
+                  display_name: ~1 GB, ~0.125 CPU
+                  kubespawner_override:
+                    mem_guarantee: 0.969
+                    cpu_guarantee: 0.013
+                mem_2:
+                  display_name: ~2 GB, ~0.25 CPU
+                  kubespawner_override:
+                    mem_guarantee: 1.938
+                    cpu_guarantee: 0.025
+                mem_4:
+                  default: true
+                  display_name: ~4 GB, ~0.5 CPU
+                  kubespawner_override:
+                    mem_guarantee: 3.875
+                    cpu_guarantee: 0.05
+                mem_8:
+                  display_name: ~8 GB, ~1.0 CPU
+                  kubespawner_override:
+                    mem_guarantee: 7.75
+                    cpu_guarantee: 0.1
+                mem_16:
+                  display_name: ~16 GB, ~2.0 CPU
+                  kubespawner_override:
+                    mem_guarantee: 15.5
+                    cpu_guarantee: 0.2
+                mem_32:
+                  display_name: ~32 GB, ~4.0 CPU
+                  kubespawner_override:
+                    mem_guarantee: 31.0
+                    cpu_guarantee: 0.4
+                mem_64:
+                  display_name: ~64 GB, ~8.0 CPU
+                  kubespawner_override:
+                    mem_guarantee: 62.0
+                    cpu_guarantee: 0.8
+                mem_128:
+                  display_name: ~128 GB, ~16.0 CPU
+                  kubespawner_override:
+                    mem_guarantee: 124.0
+                    cpu_guarantee: 1.6
           kubespawner_override:
-            mem_limit: 7G
-            mem_guarantee: 4.5G
+            cpu_limit: null
+            mem_limit: null
             node_selector:
-              node.kubernetes.io/instance-type: n1-standard-2
-        - display_name: Medium
-          description: 11GB RAM, 4 CPUs
-          kubespawner_override:
-            mem_limit: 15G
-            mem_guarantee: 11G
-            node_selector:
-              node.kubernetes.io/instance-type: n1-standard-4
-        - display_name: Large
-          description: 24GB RAM, 8 CPUs
-          kubespawner_override:
-            mem_limit: 30G
-            mem_guarantee: 24G
-            node_selector:
-              node.kubernetes.io/instance-type: n1-standard-8
-        - display_name: Huge
-          description: 52GB RAM, 16 CPUs
-          kubespawner_override:
-            mem_limit: 60G
-            mem_guarantee: 52G
-            node_selector:
-              node.kubernetes.io/instance-type: n1-standard-16
+              node.kubernetes.io/instance-type: e2-highmem-16
 dask-gateway:
   gateway:
     backend:
