@@ -17,7 +17,9 @@ def decrypt_age_private_key():
     """
     Decrypt our age private key, which is encrypted with sops
     """
-    age_private_key = pathlib.Path(__file__).parent.joinpath("enc-age-private.key")
+    age_private_key = pathlib.Path(__file__).parent.joinpath(
+        "enc-age-secret-private.key"
+    )
 
     with tempfile.NamedTemporaryFile() as f:
         subprocess.check_call(
