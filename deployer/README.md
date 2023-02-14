@@ -35,6 +35,11 @@ This section descripts all the deployment related subcommands the `deployer` can
 │ --help                        Show this message and exit.                                                            │
 ╰──────────────────────────────────────────────────────────────────────────────────────────────────────────────────────╯
 ╭─ Commands ───────────────────────────────────────────────────────────────────────────────────────────────────────────╮
+│ cilogon-client-create               Create a CILogon OAuth client for a hub.                                         │
+│ cilogon-client-delete               Delete an existing CILogon client.                                               │
+│ cilogon-client-get                  Retrieve details about an existing CILogon client.                               │
+│ cilogon-client-get-all              Retrieve details about all existing 2i2c CILogon OAuth clients.                  │
+│ cilogon-client-update               Update the CILogon OAuth client of a hub.                                        │
 │ component-logs                      Display logs from a particular component on a hub on a cluster                   │
 │ deploy                              Deploy one or more hubs in a given cluster                                       │
 │ deploy-grafana-dashboards           Deploy JupyterHub dashboards to grafana set up in the given cluster              │
@@ -43,8 +48,8 @@ This section descripts all the deployment related subcommands the `deployer` can
 │                                     /home                                                                            │
 │ exec-hub-shell                      Pop an interactive shell in the hub pod                                          │
 │ generate-aws-cluster                Automatically generate the files required to setup a new cluster on AWS          │
-│ generate-gcp-cluster                Automatically generate the terraform config file required to setup a new cluster │
-│                                     on GCP                                                                           │
+│ generate-gcp-cluster                Automatically generates the initial files, required to setup a new cluster on    │
+│                                     GCP                                                                              │
 │ generate-helm-upgrade-jobs          Analyse added or modified files from a GitHub Pull Request and decide which      │
 │                                     clusters and/or hubs require helm upgrades to be performed for their *hub helm   │
 │                                     charts or the support helm chart.                                                │
@@ -346,6 +351,99 @@ the clusters that we run.
 
 ```
 
+### `cilogon_client_create/delete/get/get-all/update`
+
+create/delete/get/get-all/update/ CILogon clients using the 2i2c administrative client provided by CILogon.
+
+**Command line usage:**
+
+- `cilogon-client-create`
+
+  ```bash
+  Usage: deployer cilogon-client-create [OPTIONS] CLUSTER_NAME HUB_NAME                                                  
+                                        [HUB_TYPE] CALLBACK_URL                                                          
+                                                                                                                          
+  Create a CILogon OAuth client for a hub.                                                                               
+                                                                                                                          
+  ╭─ Arguments ──────────────────────────────────────────────────────────────────────────────────────────────────────────╮
+  │ *    cluster_name      TEXT        Name of cluster to operate on [default: None] [required]                          │
+  │ *    hub_name          TEXT        Name of the hub for which we'll create a CILogon client [default: None]           │
+  │                                    [required]                                                                        │
+  │      hub_type          [HUB_TYPE]  Type of hub for which we'll create a CILogon client (ex: basehub, daskhub)        │
+  │                                    [default: basehub]                                                                │
+  │ *    callback_url      TEXT        URL that is invoked after OAuth authorization [default: None] [required]          │
+  ╰──────────────────────────────────────────────────────────────────────────────────────────────────────────────────────╯
+  ╭─ Options ────────────────────────────────────────────────────────────────────────────────────────────────────────────╮
+  │ --help          Show this message and exit.                                                                          │
+  ╰──────────────────────────────────────────────────────────────────────────────────────────────────────────────────────╯
+  ```
+
+- `cilogon-client-delete`
+
+  ```bash
+  Usage: deployer cilogon-client-delete [OPTIONS] [CLUSTER_NAME] [HUB_NAME]                                              
+                                                                                                                          
+  Delete an existing CILogon client.                                                                                     
+                                                                                                                          
+  ╭─ Arguments ──────────────────────────────────────────────────────────────────────────────────────────────────────────╮
+  │   cluster_name      [CLUSTER_NAME]  Name of cluster to operate or none if --client_id is passed                      │
+  │   hub_name          [HUB_NAME]      Name of the hub for which we'll delete the CILogon client details or none if     │
+  │                                     --client_id is passed                                                            │
+  ╰──────────────────────────────────────────────────────────────────────────────────────────────────────────────────────╯
+  ╭─ Options ────────────────────────────────────────────────────────────────────────────────────────────────────────────╮
+  │ --client-id        TEXT  Id of the CILogon OAuth client to delete of the form cilogon:/client_id/<id>                │
+  │ --help                   Show this message and exit.                                                                 │
+  ╰──────────────────────────────────────────────────────────────────────────────────────────────────────────────────────╯
+  ```
+
+- `cilogon-client-get`
+
+  ```bash
+  Usage: deployer cilogon-client-get [OPTIONS] CLUSTER_NAME HUB_NAME                                                     
+                                                                                                                          
+  Retrieve details about an existing CILogon client.                                                                     
+                                                                                                                          
+  ╭─ Arguments ──────────────────────────────────────────────────────────────────────────────────────────────────────────╮
+  │ *    cluster_name      TEXT  Name of cluster to operate on [default: None] [required]                                │
+  │ *    hub_name          TEXT  Name of the hub for which we'll retrieve the CILogon client details [default: None]     │
+  │                              [required]                                                                              │
+  ╰──────────────────────────────────────────────────────────────────────────────────────────────────────────────────────╯
+  ╭─ Options ────────────────────────────────────────────────────────────────────────────────────────────────────────────╮
+  │ --help          Show this message and exit.                                                                          │
+  ╰──────────────────────────────────────────────────────────────────────────────────────────────────────────────────────╯
+  ```
+
+- `cilogon-client-get-all`
+  ```bash
+  Usage: deployer cilogon-client-get-all [OPTIONS]                                                                       
+                                                                                                                          
+  Retrieve details about all existing 2i2c CILogon OAuth clients.                                                        
+                                                                                                                          
+  ╭─ Options ────────────────────────────────────────────────────────────────────────────────────────────────────────────╮
+  │ --help          Show this message and exit.                                                                          │
+  ╰──────────────────────────────────────────────────────────────────────────────────────────────────────────────────────╯
+  ```
+
+- `cilogon-client-update`
+  ```bash
+  Usage: deployer cilogon-client-update [OPTIONS] CLUSTER_NAME HUB_NAME                                                  
+                                        CALLBACK_URL                                                                     
+                                                                                                                          
+  Update the CILogon OAuth client of a hub.                                                                              
+                                                                                                                          
+  ╭─ Arguments ──────────────────────────────────────────────────────────────────────────────────────────────────────────╮
+  │ *    cluster_name      TEXT  Name of cluster to operate on [default: None] [required]                                │
+  │ *    hub_name          TEXT  Name of the hub for which we'll update a CILogon client [default: None] [required]      │
+  │ *    callback_url      TEXT  New callback_url to associate with the client. This URL is invoked after OAuth          │
+  │                              authorization                                                                           │
+  │                              [default: None]                                                                         │
+  │                              [required]                                                                              │
+  ╰──────────────────────────────────────────────────────────────────────────────────────────────────────────────────────╯
+  ╭─ Options ────────────────────────────────────────────────────────────────────────────────────────────────────────────╮
+  │ --help          Show this message and exit.                                                                          │
+  ╰──────────────────────────────────────────────────────────────────────────────────────────────────────────────────────╯
+  ```
+
 ## Debugging helpers
 
 We also have some debug helpers commands that can be invoked as subcommands.
@@ -489,31 +587,6 @@ $ cd .. && pwd
 [...]/infrastructure
 $ python deployer/[sub-script].py
 ```
-
-### `cilogon_app`
-
-This is a helper script that can create/update/get/delete CILogon clients using the 2i2c administrative client provided by CILogon.
-
-**Command line usage:**
-
-```bash
-usage: cilogon_app.py [-h] {create,update,get,get-all,delete} ...
-
-A command line tool to create/update/delete CILogon clients.
-
-positional arguments:
-  {create,update,get,get-all,delete}
-                        Available subcommands
-    create              Create a CILogon client
-    update              Update a CILogon client
-    get                 Retrieve details about an existing CILogon client
-    get-all             Retrieve details about an existing CILogon client
-    delete              Delete an existing CILogon client
-
-optional arguments:
-  -h, --help            show this help message and exit
-```
-
 
 ## Running Tests
 
