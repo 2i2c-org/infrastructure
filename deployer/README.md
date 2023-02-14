@@ -356,7 +356,7 @@ the clusters that we run.
 
 ### `decrypt-age`
 
-Decrypts information sent to 2i2c by community representatives using [age](https://age-encryption.org/).
+Decrypts information sent to 2i2c by community representatives using [age](https://age-encryption.org/) according to instructions in [2i2c documentation](https://docs.2i2c.org/en/latest/support.html?highlight=decrypt#send-us-encrypted-content).
 
 **Command line usage:**
 ```
