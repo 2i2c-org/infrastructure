@@ -33,10 +33,10 @@ xQemDwYveQVheTyc9zA=
 
 Once you have the encrypted contents, you can decrypt it by:
 
-1. Run `./shared/keys/decrypt-age.py` from the infrastructure repo checkout
+1. Run `deployer decrypt-age` from the infrastructure repo checkout
 2. Paste the encrypted message in your terminal
 3. Press enter, and then `Ctrl+D`
 4. You'll see the decrypted output!
 
-Alternatively, you can also run `./shared/keys/decrypt-age.py <path-to-encrypted-file>`
+Alternatively, you can also run `deployer decrypt-age --encrypted-file-path <path-to-encrypted-file>`
 if the encrypted message is stored in a file

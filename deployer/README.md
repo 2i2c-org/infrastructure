@@ -41,6 +41,7 @@ This section descripts all the deployment related subcommands the `deployer` can
 │ cilogon-client-get-all              Retrieve details about all existing 2i2c CILogon OAuth clients.                  │
 │ cilogon-client-update               Update the CILogon OAuth client of a hub.                                        │
 │ component-logs                      Display logs from a particular component on a hub on a cluster                   │
+│ decrypt-age                         Decrypt secrets sent to `support@2i2c.org` via `age`                             │
 │ deploy                              Deploy one or more hubs in a given cluster                                       │
 │ deploy-grafana-dashboards           Deploy JupyterHub dashboards to grafana set up in the given cluster              │
 │ deploy-support                      Deploy support components to a cluster                                           │
@@ -351,6 +352,27 @@ the clusters that we run.
 
 ```
 
+## Support helper tools
+
+### `decrypt-age`
+
+Decrypts information sent to 2i2c by community representatives using [age](https://age-encryption.org/) according to instructions in [2i2c documentation](https://docs.2i2c.org/en/latest/support.html?highlight=decrypt#send-us-encrypted-content).
+
+**Command line usage:**
+```
+                                                                                                                        
+ Usage: deployer decrypt-age [OPTIONS]                                                                                  
+                                                                                                                        
+ Decrypt secrets sent to `support@2i2c.org` via `age`                                                                   
+                                                                                                                        
+╭─ Options ────────────────────────────────────────────────────────────────────────────────────────────────────────────╮
+│ --encrypted-file-path        TEXT  Path to age-encrypted file sent by user. Leave empty to read from stdin.          │
+│ --help                             Show this message and exit.                                                       │
+╰──────────────────────────────────────────────────────────────────────────────────────────────────────────────────────╯
+```
+
+## CILogon OAuth clients management tools
+
 ### `cilogon_client_create/delete/get/get-all/update`
 
 create/delete/get/get-all/update/ CILogon clients using the 2i2c administrative client provided by CILogon.
@@ -571,21 +593,6 @@ docker daemon.
 ╭─ Options ────────────────────────────────────────────────────────────────────────────────────────────────────────────╮
 │ --help          Show this message and exit.                                                                          │
 ╰──────────────────────────────────────────────────────────────────────────────────────────────────────────────────────╯
-```
-
-
-## Sub-scripts
-
-This section describes the utility scripts that are present in the `deployer` module, what is their purpose, and their command line usage.\
-
-**Note:** The `deployer` sub-scripts must currently be invoked from the root of this repository, i.e.:
-
-```bash
-$ pwd
-[...]/infrastructure/deployer
-$ cd .. && pwd
-[...]/infrastructure
-$ python deployer/[sub-script].py
 ```
 
 ## Running Tests
