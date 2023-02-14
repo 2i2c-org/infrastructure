@@ -62,7 +62,8 @@ class CILogonAdmin:
         Args:
            body (dict): Attributes for the new client
 
-        Returns a dict containing the client details.
+        Returns a dict containing the client details
+        or None if the `create` request returned a status code not in the range 200-299.
 
         See: https://github.com/ncsa/OA4MP/blob/HEAD/oa4mp-server-admin-oauth2/src/main/scripts/oidc-cm-scripts/cm-post.sh
         """
@@ -91,7 +92,8 @@ class CILogonAdmin:
         Args:
            id (str): Id of the client to get
 
-        Returns a dict containing the client details.
+        Returns a dict containing the client details
+        or None if the `get` request returned a status code not in the range 200-299.
 
         See: https://github.com/ncsa/OA4MP/blob/HEAD/oa4mp-server-admin-oauth2/src/main/scripts/oidc-cm-scripts/cm-get.sh
         """
@@ -117,13 +119,15 @@ class CILogonAdmin:
     def update(self, id, body):
         """Modifies a client by its id.
 
-        The client_secret attribute cannot be updated.
-        Note that any values missing will be deleted from the information for the server!
+        The `client_secret` attribute cannot be updated.
+
+        Note that any missing attribute values will be deleted from the client's stored information!
         Args:
            id (str): Id of the client to modify
            body (dict): Attributes to modify.
 
-        Returns status code if response.ok or raises an error if the delete request returned anything not in the range 200-299.
+        Returns status code if response.ok
+        or None if the `update` request returned a status code not in the range 200-299.
 
         See: https://github.com/ncsa/OA4MP/blob/HEAD/oa4mp-server-admin-oauth2/src/main/scripts/oidc-cm-scripts/cm-put.sh
         """
@@ -132,16 +136,13 @@ class CILogonAdmin:
             self._url(id), json=body, headers=headers, timeout=self.timeout
         )
 
-        client_name = body["client_name"]
-
         if not response.ok:
-            if not response.ok:
-                print_colour(
-                    f"Updating the details of {id} client returned a {response.status_code} status code.",
-                    "red",
-                )
-                print_colour(f"{response.text}", "yellow")
-                return
+            print_colour(
+                f"Updating the details of {id} client returned a {response.status_code} status code.",
+                "red",
+            )
+            print_colour(f"{response.text}", "yellow")
+            return
 
         print_colour("Client updated successfully!")
         return response.status_code
@@ -152,7 +153,8 @@ class CILogonAdmin:
         Args:
            id (str): Id of the client to delete
 
-        Returns status code if response.ok or raises an error if the delete request returned anything not in the range 200-299.
+        Returns status code if response.ok
+        or None if the `delete` request returned a status code not in the range 200-299.
 
         See: https://github.com/ncsa/OA4MP/blob/HEAD/oa4mp-server-admin-oauth2/src/main/scripts/oidc-cm-scripts/cm-delete.sh
         """
@@ -321,7 +323,7 @@ class CILogonClientManager:
                 return
 
         print(f"Deleting the CILogon client details for {client_id}...")
-        print(self.admin_client.delete(client_id))
+        return self.admin_client.delete(client_id)
 
     def get_all_clients(self):
         print("Getting all existing OAauth client applications...")
