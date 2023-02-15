@@ -186,11 +186,6 @@ jupyterhub:
       # https://github.com/jupyterhub/zero-to-jupyterhub-k8s/pull/2449
       - jupyterhub-singleuser
     extraEnv:
-      # until https://github.com/jupyterhub/jupyterhub/pull/3918 or equivalent lands,
-      # and we upgrade to jupyterhub >= 2.3.1 on all images.
-      # Note: please checkout all occurences of `NotebookApp` configurations
-      # when moving away from it.
-      JUPYTERHUB_SINGLEUSER_APP: "notebook.notebookapp.NotebookApp"
       # notebook writes secure files that don't need to survive a
       # restart here. Writing 'secure' files on some file systems (like
       # Azure Files with SMB) seems buggy, so we just put runtime dir on
@@ -210,28 +205,42 @@ jupyterhub:
           # by this unholy sqlite + NFS mixture.
           HistoryManager:
             enabled: false
-      jupyter_notebook_config.json:
-        mountPath: /usr/local/etc/jupyter/jupyter_notebook_config.json
+      # jupyter_server and notebook are different jupyter servers providing
+      # similar configuration options. Since we have user images that may
+      # provide either, we provide the same configuration for both via
+      # jupyter_server_config.json and jupyter_notebook_config.json.
+      #
+      # A hub can force a choice with singleuser.extraEnv via:
+      #
+      #     JUPYTERHUB_SINGLEUSER_APP: "notebook.notebookapp.NotebookApp"
+      #     JUPYTERHUB_SINGLEUSER_APP: "jupyter_server.serverapp.ServerApp"
+      #
+      jupyter_server_config.json:
+        mountPath: /usr/local/etc/jupyter/jupyter_server_config.json
         # if a user leaves a notebook with a running kernel,
         # the effective idle timeout will typically be cull idle timeout
         # of the server + the cull idle timeout of the kernel,
         # as culling the kernel will register activity,
         # resetting the no_activity timer for the server as a whole
         data:
-          MappingKernelManager:
-            # shutdown kernels after no activity
+          # MappingKernelManager configuration reference:
+          # https://jupyter-server.readthedocs.io/en/latest/api/jupyter_server.services.kernels.html#jupyter_server.services.kernels.kernelmanager.MappingKernelManager
+          #
+          MappingKernelManager: &server_config_mapping_kernel_manager
             cull_idle_timeout: 3600
-            # check for idle kernels this often
             cull_interval: 300
-            # a kernel with open connections but no activity still counts as idle
-            # this is what allows us to shutdown servers
-            # when people leave a notebook open and wander off
             cull_connected: true
-          # If we switch from setting `JUPYTERHUB_SINGLEUSER_APP` to be the NotebookApp
-          # this config kere might need to go under ServerApp instead
-          NotebookApp:
+          # ServerApp configuration reference:
+          # https://jupyter-server.readthedocs.io/en/latest/api/jupyter_server.html#jupyter_server.serverapp.ServerApp
+          #
+          ServerApp: &server_config_server_app
             extra_template_paths:
               - /usr/local/share/jupyter/custom_template
+      jupyter_notebook_config.json:
+        mountPath: /usr/local/etc/jupyter/jupyter_notebook_config.json
+        data:
+          MappingKernelManager: *server_config_mapping_kernel_manager
+          NotebookApp: *server_config_server_app
     startTimeout: 600 # 10 mins, because sometimes we have too many new nodes coming up together
     defaultUrl: /tree
     image:
