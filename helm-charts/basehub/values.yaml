@@ -88,6 +88,7 @@ jupyterhub:
         - damianavila
         - GeorgianaElena
         - jmunroe
+        - pnasrat
         - sgibson91
         - yuvipanda
       staff_google_ids:
@@ -97,6 +98,7 @@ jupyterhub:
         - damianavila@2i2c.org
         - georgianaelena@2i2c.org
         - jmunroe@2i2c.org
+        - pnasrat@2i2c.org
         - sgibson@2i2c.org
         - yuvipanda@2i2c.org
   ingress:
