@@ -113,7 +113,7 @@ def get_grafana_admin_password():
     return grafana_creds.get("grafana", {}).get("adminPassword", None)
 
 
-def get_central_grafana_token(cluster_name):
+def get_grafana_token(cluster_name):
     """
     Get the access token stored in the `enc-grafana-token.secret.yaml` file for
     the <cluster_name>'s Grafana.

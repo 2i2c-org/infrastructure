@@ -24,7 +24,7 @@ from .config_validation import (
     validate_support_config,
 )
 from .file_acquisition import find_absolute_path_to_cluster_file, get_decrypted_file
-from .grafana.grafana_utils import get_central_grafana_token, get_grafana_url
+from .grafana.grafana_utils import get_grafana_token, get_grafana_url
 from .helm_upgrade_decision import (
     assign_staging_jobs_for_missing_clusters,
     discover_modified_common_files,
@@ -106,7 +106,7 @@ def deploy_grafana_dashboards(
     to deploy them to Grafana via a REST API.
     """
     grafana_url = get_grafana_url(cluster_name)
-    grafana_token = get_central_grafana_token(cluster_name)
+    grafana_token = get_grafana_token(cluster_name)
 
     print_colour("Cloning jupyterhub/grafana-dashboards...")
     subprocess.check_call(
@@ -197,7 +197,7 @@ def generate_helm_upgrade_jobs(
     )
 ):
     """
-    Analyse added or modified files from a GitHub Pull Request and decide which
+    Analyze added or modified files from a GitHub Pull Request and decide which
     clusters and/or hubs require helm upgrades to be performed for their *hub helm
     charts or the support helm chart.
     """
