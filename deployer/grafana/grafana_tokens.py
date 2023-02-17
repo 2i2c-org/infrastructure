@@ -157,8 +157,8 @@ def new_grafana_token(
     Generate an API token for the cluster's Grafana `deployer` service account
     and store it encrypted inside a `enc-grafana-token.secret.yaml` file.
     """
-    grafana_host = get_grafana_url(cluster)
-    sa_endpoint = f"https://{grafana_host}/api/serviceaccounts"
+    grafana_url = get_grafana_url(cluster)
+    sa_endpoint = f"{grafana_url}/api/serviceaccounts"
     headers = build_service_account_request_headers()
 
     overwrite = False

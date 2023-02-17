@@ -102,8 +102,8 @@ def update_central_grafana_datasources(
     """
     Update the central grafana with datasources for all clusters prometheus instances
     """
-    grafana_host = get_grafana_url(central_grafana_cluster)
-    datasource_endpoint = f"https://{grafana_host}/api/datasources"
+    grafana_url = get_grafana_url(central_grafana_cluster)
+    datasource_endpoint = f"{grafana_url}/api/datasources"
 
     # Get a list of the clusters that already have their prometheus instances used as datasources
     datasources = get_clusters_used_as_datasources(
