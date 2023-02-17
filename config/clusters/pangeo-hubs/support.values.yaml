@@ -48,4 +48,4 @@ prometheus:
         # WAL after a restart (https://github.com/prometheus/prometheus/issues/6934). This was
         # causing prometheus to crash forever, as the memory spike would get it killed. The
         # higher limit helps with this
-        memory: 12Gi
+        memory: 16Gi
