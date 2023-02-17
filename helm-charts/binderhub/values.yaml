@@ -4,7 +4,6 @@ binderhub:
   config:
     BinderHub:
       use_registry: true
-      build_image: "quay.io/jupyterhub/repo2docker:2022.10.0-91.g326dc92"
       per_repo_quota: 150
       build_node_selector:
         # Build user images only on user nodes, not dask or core nodes
