@@ -36,16 +36,22 @@ prometheus:
           hosts:
             - prometheus.gcp.pangeo.2i2c.cloud
     resources:
+      # This prometheus instance has required 13+ GB to startup successfully in
+      # the past (2023-02-17) when replaying the "write-ahead log" (WAL) stored
+      # on on disk when it starts up.
+      #
+      # We declare request to match limit for memory as otherwise we depend on
+      # other pods on the node to not take up required memory during startup.
+      #
+      # We declare a limit on the CPU below the node capacity (assumed to be 4),
+      # so the high request won't eat up all available CPU capacity for low
+      # request pods on the node.
+      #
+      # https://github.com/prometheus/prometheus/issues/6934.
+      #
       requests:
-        # Set requests here as well, to make sure we don't trample on the other pods (hub, proxy, etc)
-        # too much
         cpu: 1
-        memory: 2Gi
+        memory: 16Gi
       limits:
         cpu: 2
-        # Specifically set a really high memory limit,
-        # as prometheus memory can sometimes spike up to 2x regular use or more when replaying
-        # WAL after a restart (https://github.com/prometheus/prometheus/issues/6934). This was
-        # causing prometheus to crash forever, as the memory spike would get it killed. The
-        # higher limit helps with this
         memory: 16Gi
