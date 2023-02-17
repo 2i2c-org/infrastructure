@@ -49,4 +49,4 @@ deployer deploy-support $CLUSTER_NAME
 
 ## Link the cluster's Prometheus server to the central Grafana
 
-Run `deployer update-central-grafana-datasources` to register the new prometheus with the default central grafana.`
+Run `deployer update-central-grafana-datasources` to register the new prometheus with the default central grafana.

@@ -1,7 +1,11 @@
 """
-Ensures that the central grafana at https://grafana.pilot.2i2c.cloud
-is configured to use as datasource the authenticated prometheus instances
-of all the clusters that we run.
+Each cluster deployed should have a Grafana and Prometheus instance running via
+the support chart, but the 2i2c cluster's Grafana instance is special, and we
+refer it as the central Grafana instance at https://grafana.pilot.2i2c.cloud.
+
+This code provides the deployer's update-central-grafana-datasources command,
+that ensures that the central grafana instance is able to access datasources the
+other clusters.
 """
 
 import json
