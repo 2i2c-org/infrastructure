@@ -47,13 +47,13 @@ Helm is used in two ways:
 
 - The `--repo` flag allow you to specify a Helm repo directly instead of needing
   to do `helm repo add` and `helm repo update` first.
-  ```shell
+  ```bash
   helm template --repo https://jupyterhub.github.io/helm-chart/ jupyterhub
   ```
 - The `helm template` command can quickly render templates for you which is a
   big part of developing a helm chart.
 - The `helm template --show-only` flag can help you review a specific template.
-  ```shell
+  ```bash
   # 1. An example on how to access a specific template
   helm template --repo https://jupyterhub.github.io/helm-chart/ jupyterhub \
       --show-only templates/hub/deployment.yaml
