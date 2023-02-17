@@ -2,7 +2,7 @@ jupyterhub:
   scheduling:
     userPlaceholder:
       # Keep at least one spare node around
-      replicas: 1
+      replicas: 2
       resources:
         requests:
           # Each node on the UToronto cluster has 59350076Ki of RAM
