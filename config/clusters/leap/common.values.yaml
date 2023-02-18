@@ -17,7 +17,7 @@ basehub:
       extraImages:
         tensorflow-image:
           name: pangeo/ml-notebook
-          tag: "2023.02.08"
+          tag: "ebeb9dd"
     custom:
       # Extra mount point for admins to access to all users' home dirs
       # Ref https://github.com/2i2c-org/infrastructure/issues/2105
@@ -94,12 +94,13 @@ basehub:
             mem_guarantee: 4.5G
             node_selector:
               node.kubernetes.io/instance-type: n1-standard-2
+          profile_options: &profile_options
         - display_name: Medium
           description: 11GB RAM, 4 CPUs
           allowed_teams:
             - leap-stc:leap-pangeo-users
             - 2i2c-org:hub-access-for-2i2c-staff
-          profile_options:
+          profile_options: &profile_options
             image:
               display_name: Image
               choices:
@@ -108,17 +109,17 @@ basehub:
                   default: true
                   slug: "pangeo"
                   kubespawner_override:
-                    image: "pangeo/pangeo-notebook:2023.02.08"
+                    image: "pangeo/pangeo-notebook:ebeb9dd"
                 tensorflow:
                   display_name: Pangeo Tensorflow ML Notebook
                   slug: "tensorflow"
                   kubespawner_override:
-                    image: "pangeo/ml-notebook:2023.02.08"
+                    image: "pangeo/ml-notebook:ebeb9dd"
                 pytorch:
                   display_name: Pangeo PyTorch ML Notebook
                   slug: "pytorch"
                   kubespawner_override:
-                    image: "pangeo/pytorch-notebook:2023.02.08"
+                    image: "pangeo/pytorch-notebook:ebeb9dd"
                 leap-pangeo-edu:
                   display_name: LEAP Education Notebook (Testing Prototype)
                   slug: "leap_edu"
@@ -140,6 +141,7 @@ basehub:
             mem_guarantee: 24G
             node_selector:
               node.kubernetes.io/instance-type: n1-standard-8
+          profile_options: *profile_options
         - display_name: Huge
           description: 52GB RAM, 16 CPUs
           allowed_teams:
@@ -150,7 +152,7 @@ basehub:
             mem_guarantee: 52G
             node_selector:
               node.kubernetes.io/instance-type: n1-standard-16
-
+          profile_options: *profile_options
         - display_name: Large + GPU
           description: 24GB RAM, 8 CPUs
           allowed_teams:
@@ -165,12 +167,12 @@ basehub:
                   default: true
                   slug: "tensorflow"
                   kubespawner_override:
-                    image: "pangeo/ml-notebook:2023.01.03"
+                    image: "pangeo/ml-notebook:ebeb9dd"
                 pytorch:
                   display_name: Pangeo PyTorch ML Notebook
                   slug: "pytorch"
                   kubespawner_override:
-                    image: "pangeo/pytorch-notebook:2023.01.03"
+                    image: "pangeo/pytorch-notebook:ebeb9dd"
           kubespawner_override:
             node_selector:
               cloud.google.com/gke-nodepool: nb-gpu-t4
