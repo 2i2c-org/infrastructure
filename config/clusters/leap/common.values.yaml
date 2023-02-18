@@ -95,12 +95,6 @@ basehub:
             node_selector:
               node.kubernetes.io/instance-type: n1-standard-2
           profile_options: &profile_options
-        - display_name: Medium
-          description: 11GB RAM, 4 CPUs
-          allowed_teams:
-            - leap-stc:leap-pangeo-users
-            - 2i2c-org:hub-access-for-2i2c-staff
-          profile_options: &profile_options
             image:
               display_name: Image
               choices:
@@ -125,6 +119,12 @@ basehub:
                   slug: "leap_edu"
                   kubespawner_override:
                     image: "quay.io/jbusecke/leap-edu-image:fa442ab4851c"
+        - display_name: Medium
+          description: 11GB RAM, 4 CPUs
+          allowed_teams:
+            - leap-stc:leap-pangeo-users
+            - 2i2c-org:hub-access-for-2i2c-staff
+          profile_options: *profile_options
           kubespawner_override:
             mem_limit: 15G
             mem_guarantee: 11G

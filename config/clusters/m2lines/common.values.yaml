@@ -82,14 +82,6 @@ basehub:
             mem_guarantee: 4.5G
             node_selector:
               node.kubernetes.io/instance-type: n1-standard-2
-          profile_options: *profile_options
-        - display_name: Medium
-          description: 11GB RAM, 4 CPUs
-          kubespawner_override:
-            mem_limit: 15G
-            mem_guarantee: 11G
-            node_selector:
-              node.kubernetes.io/instance-type: n1-standard-4
           profile_options: &profile_options
             image:
               display_name: Image
@@ -110,6 +102,14 @@ basehub:
                   slug: "pytorch"
                   kubespawner_override:
                     image: "pangeo/pytorch-notebook:ebeb9dd"
+        - display_name: Medium
+          description: 11GB RAM, 4 CPUs
+          kubespawner_override:
+            mem_limit: 15G
+            mem_guarantee: 11G
+            node_selector:
+              node.kubernetes.io/instance-type: n1-standard-4
+          profile_options: *profile_options
         - display_name: Large
           description: 24GB RAM, 8 CPUs
           kubespawner_override:
