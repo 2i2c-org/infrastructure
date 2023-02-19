@@ -54,28 +54,6 @@ basehub:
         name: quay.io/linkedearth/pyleoclim
         tag: "latest"
 
-      # FIXME: extraFiles and extraEnv has been updated since the combination of
-      #        jupyter_server 2 and jupyterlab doesn't work with a classical
-      #        notebook server.
-      #
-      #        This can probably be removed with this PR that is meant to transition
-      #        the default to jupyter_server from notebook:
-      #        https://github.com/2i2c-org/infrastructure/pull/2160
-      #
-      extraFiles:
-        jupyter_server_config.json:
-          mountPath: /usr/local/etc/jupyter/jupyter_server_config.json
-          data:
-            MappingKernelManager:
-              cull_idle_timeout: 3600
-              cull_interval: 300
-              cull_connected: true
-            ServerApp:
-              extra_template_paths:
-                - /usr/local/share/jupyter/custom_template
-      extraEnv:
-        JUPYTERHUB_SINGLEUSER_APP: "jupyter_server.serverapp.ServerApp"
-
       profileList:
         - display_name: "Small: up to 4 CPU / 32 GB RAM"
           description: &profile_list_description "Start a container with at least a chosen share of capacity on a node of this type"
