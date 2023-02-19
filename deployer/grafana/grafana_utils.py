@@ -11,9 +11,9 @@ yaml = YAML(typ="safe")
 
 def get_grafana_url(cluster_name):
     """
-    Retrieve the URL of the Grafana running for <cluster_name> from the "support.values.yaml" file.
+    Return a Grafana instance URL using the cluster's "support.values.yaml"
+    file's grafana.ingress.tls[0].hosts[0] config.
     """
-
     cluster_config_dir_path = find_absolute_path_to_cluster_file(cluster_name).parent
 
     config_file = cluster_config_dir_path.joinpath("support.values.yaml")
@@ -23,14 +23,11 @@ def get_grafana_url(cluster_name):
     grafana_tls_config = (
         support_config.get("grafana", {}).get("ingress", {}).get("tls", [])
     )
-
     if not grafana_tls_config:
-        raise ValueError(
-            f"No tls config was found for the Grafana instance of {cluster_name}. Please consider enable it before using it as the central Grafana."
-        )
+        raise ValueError(f"grafana.ingress.tls config for {cluster_name} missing!")
 
     # We only have one tls host right now. Modify this when things change.
-    return grafana_tls_config[0]["hosts"][0]
+    return "https://" + grafana_tls_config[0]["hosts"][0]
 
 
 def get_cluster_prometheus_address(cluster_name):
@@ -116,10 +113,11 @@ def get_grafana_admin_password():
     return grafana_creds.get("grafana", {}).get("adminPassword", None)
 
 
-def get_central_grafana_token(cluster_name):
+def get_grafana_token(cluster_name):
     """
-    Get the access token stored in the `enc-grafana-token.secret.yaml`file
-    for the <cluster_name>'s Grafana.
+    Get the access token stored in the `enc-grafana-token.secret.yaml` file for
+    the <cluster_name>'s Grafana.
+
     This access token should have enough permissions to create datasources.
 
     Returns:
@@ -128,7 +126,7 @@ def get_central_grafana_token(cluster_name):
     # Get the location of the file that stores the central grafana token
     cluster_config_dir_path = find_absolute_path_to_cluster_file(cluster_name).parent
 
-    grafana_token_file = (cluster_config_dir_path).joinpath(
+    grafana_token_file = cluster_config_dir_path.joinpath(
         "enc-grafana-token.secret.yaml"
     )
 
@@ -136,6 +134,10 @@ def get_central_grafana_token(cluster_name):
     with get_decrypted_file(grafana_token_file) as decrypted_file_path:
         with open(decrypted_file_path) as f:
             config = yaml.load(f)
+    if "grafana_token" not in config.keys():
+        raise ValueError(
+            f"Grafana service account token not found, use `deployer new-grafana-token {cluster_name}`"
+        )
 
     return config["grafana_token"]
 

@@ -1,7 +1,11 @@
 """
-Ensures that the central grafana at https://grafana.pilot.2i2c.cloud
-is configured to use as datasource the authenticated prometheus instances
-of all the clusters that we run.
+Each cluster deployed should have a Grafana and Prometheus instance running via
+the support chart, but the 2i2c cluster's Grafana instance is special, and we
+refer it as the central Grafana instance at https://grafana.pilot.2i2c.cloud.
+
+This code provides the deployer's update-central-grafana-datasources command,
+that ensures that the central grafana instance is able to access datasources the
+other clusters.
 """
 
 import json
@@ -14,9 +18,9 @@ from ..cli_app import app
 from ..helm_upgrade_decision import get_all_cluster_yaml_files
 from ..utils import print_colour
 from .grafana_utils import (
-    get_central_grafana_token,
     get_cluster_prometheus_address,
     get_cluster_prometheus_creds,
+    get_grafana_token,
     get_grafana_url,
 )
 
@@ -58,7 +62,7 @@ def build_datasource_request_headers(cluster_name):
     Returns:
         dict: "Accept", "Content-Type", "Authorization" headers
     """
-    token = get_central_grafana_token(cluster_name)
+    token = get_grafana_token(cluster_name)
 
     headers = {
         "Accept": "application/json",
@@ -102,8 +106,8 @@ def update_central_grafana_datasources(
     """
     Update the central grafana with datasources for all clusters prometheus instances
     """
-    grafana_host = get_grafana_url(central_grafana_cluster)
-    datasource_endpoint = f"https://{grafana_host}/api/datasources"
+    grafana_url = get_grafana_url(central_grafana_cluster)
+    datasource_endpoint = f"{grafana_url}/api/datasources"
 
     # Get a list of the clusters that already have their prometheus instances used as datasources
     datasources = get_clusters_used_as_datasources(
