@@ -152,6 +152,10 @@ grafana:
     # Grafana is exposed to the world via ingress
     type: ClusterIP
 
+  rbac:
+    namespaced: true
+    pspEnabled: false
+
   ingress:
     enabled: true
     annotations:
