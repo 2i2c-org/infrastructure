@@ -7,7 +7,7 @@ dependencies:
   # Prometheus for collection of metrics.
   # https://github.com/prometheus-community/helm-charts/tree/main/charts/prometheus
   - name: prometheus
-    version: 19.4.0
+    version: 19.6.1
     repository: https://prometheus-community.github.io/helm-charts
 
   # Grafana for dashboarding of metrics.
@@ -20,19 +20,19 @@ dependencies:
   # a single IP entrypoint to various services exposed via k8s Ingress resources
   # that references this controller.
   - name: ingress-nginx
-    version: 4.4.2
+    version: 4.5.2
     repository: https://kubernetes.github.io/ingress-nginx
 
   # cluster-autoscaler for k8s clusters where it doesn't come out of the box (EKS)
   # https://github.com/kubernetes/autoscaler/tree/master/charts/cluster-autoscaler
   - name: cluster-autoscaler
-    version: 9.23.0
+    version: 9.24.0
     repository: https://kubernetes.github.io/autoscaler
     condition: cluster-autoscaler.enabled
 
   # cryptnono, counters crypto mining
   # Source code: https://github.com/yuvipanda/cryptnono/
   - name: cryptnono
-    version: "0.0.1-n025.h28f473f"
+    version: "0.0.1-0.dev.git.27.h01b4f25"
     repository: https://yuvipanda.github.io/cryptnono/
     condition: cryptnono.enabled
