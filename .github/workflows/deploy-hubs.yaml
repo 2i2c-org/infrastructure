@@ -157,7 +157,6 @@ jobs:
       failure_openscapes: "${{ env.failure_openscapes }}"
       failure_pangeo-hubs: "${{ env.failure_pangeo-hubs }}"
       failure_utoronto: "${{ env.failure_utoronto }}"
-      failure_uwhackweeks: "${{ env.failure_uwhackweeks }}"
       failure_m2lines: "${{ env.failure_m2lines }}"
       failure_linked-earth: "${{ env.failure_linked-earth }}"
       failure_awi-ciroh: "${{ env.failure_awi-ciroh }}"
