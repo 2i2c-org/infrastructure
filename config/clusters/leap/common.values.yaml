@@ -130,7 +130,7 @@ basehub:
             mem_guarantee: 11G
             node_selector:
               node.kubernetes.io/instance-type: n1-standard-4
-        - display_name: Large
+        - display_name: Large: n1-standard-8
           description: 24GB RAM, 8 CPUs
           allowed_teams:
             - leap-stc:leap-pangeo-education
