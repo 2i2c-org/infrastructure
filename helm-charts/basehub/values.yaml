@@ -236,11 +236,18 @@ jupyterhub:
           ServerApp: &server_config_server_app
             extra_template_paths:
               - /usr/local/share/jupyter/custom_template
+          # Move the sqlite file used by https://github.com/jupyter-server/jupyter_server_fileid
+          # off the default path, which is under ~/.local/share/jupyter.
+          # That is NFS, and sqlite + NFS don't go well together. In addition,
+          # it uses WAL mode of sqlite, and that is completely unsupported on NFS
+          BaseFileIdManager: &server_config_base_file_id_manager
+            db_path: /tmp/file_id_manager.db
       jupyter_notebook_config.json:
         mountPath: /usr/local/etc/jupyter/jupyter_notebook_config.json
         data:
           MappingKernelManager: *server_config_mapping_kernel_manager
           NotebookApp: *server_config_server_app
+          BaseFileIdManager: *server_config_base_file_id_manager
     startTimeout: 600 # 10 mins, because sometimes we have too many new nodes coming up together
     defaultUrl: /tree
     image:
