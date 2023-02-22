@@ -127,6 +127,7 @@ basehub:
               node.kubernetes.io/instance-type: n1-standard-16
           profile_options: *profile_options
         - display_name: Large + GPU
+          slug: gpu
           description: 24GB RAM, 8 CPUs
           profile_options:
             image:
