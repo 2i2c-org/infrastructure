@@ -4,3 +4,5 @@ charts:
     images:
       hub:
         valuesPath: jupyterhub.hub.image
+      templates-sync:
+        imageName: quay.io/2i2c/templates-sync
