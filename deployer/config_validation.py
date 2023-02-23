@@ -160,9 +160,6 @@ def validate_support_config(cluster_name):
 def validate_authenticator_config(cluster_name, hub_name):
     """
     For each hub of a specific cluster:
-     - It asserts that only a single auth method is enabled.
-       An error is raised when an authenticator other than Auth0
-       is enabled and `auth0` is not explicitly disabled.
      - It asserts that when the JupyterHub GitHubOAuthenticator is used,
        then `Authenticator.allowed_users` is not set.
        An error is raised otherwise.
@@ -184,7 +181,7 @@ def validate_authenticator_config(cluster_name, hub_name):
             f"{i+1} / {len(hubs)}: Validating authenticator config for {hub.spec['name']}..."
         )
 
-        authenticator_class = "auth0"
+        authenticator_class = ""
         allowed_users = []
         for values_file_name in hub.spec["helm_chart_values_files"]:
             if "secret" not in os.path.basename(values_file_name):
@@ -209,13 +206,6 @@ def validate_authenticator_config(cluster_name, hub_name):
                         )
                 except KeyError:
                     pass
-
-        # If the authenticator class is other than auth0, then raise an error
-        # if auth0 is not explicitly disabled from the cluster config
-        if authenticator_class != "auth0" and hub.spec["auth0"].get("enabled", True):
-            raise ValueError(
-                f"Please disable auth0 for {hub.spec['name']} hub before using another authenticator class!"
-            )
 
         # If the authenticator class is github, then raise an error
         # if `Authenticator.allowed_users` is set

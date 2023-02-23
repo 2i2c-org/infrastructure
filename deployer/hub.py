@@ -6,7 +6,6 @@ from textwrap import dedent
 
 from ruamel.yaml import YAML
 
-from .auth import KeyProvider
 from .file_acquisition import get_decrypted_file, get_decrypted_files
 from .utils import print_colour
 
@@ -24,7 +23,7 @@ class Hub:
         self.cluster = cluster
         self.spec = spec
 
-    def get_generated_config(self, auth_provider: KeyProvider):
+    def get_generated_config(self):
         """
         Generate config automatically for each hub
 
@@ -135,33 +134,6 @@ class Hub:
                 },
             },
         }
-        #
-        # Allow explicilty ignoring auth0 setup
-        if self.spec["auth0"].get("enabled", True):
-            # Auth0 sends users back to this URL after they authenticate
-            callback_url = f"https://{self.spec['domain']}/hub/oauth_callback"
-            # Users are redirected to this URL after they log out
-            logout_url = f"https://{self.spec['domain']}"
-            client = auth_provider.ensure_client(
-                name=self.spec["auth0"].get(
-                    "application_name",
-                    f"{self.cluster.spec['name']}-{self.spec['name']}",
-                ),
-                callback_url=callback_url,
-                logout_url=logout_url,
-                connection_name=self.spec["auth0"]["connection"],
-                connection_config=self.spec["auth0"].get(
-                    self.spec["auth0"]["connection"], {}
-                ),
-            )
-            # NOTE: Some dictionary merging might make these lines prettier/more readable.
-            # Since Auth0 is enabled, we set the authenticator_class to the Auth0OAuthenticator class
-            generated_config["jupyterhub"]["hub"]["config"]["JupyterHub"] = {
-                "authenticator_class": "oauthenticator.auth0.Auth0OAuthenticator"
-            }
-            generated_config["jupyterhub"]["hub"]["config"][
-                "Auth0OAuthenticator"
-            ] = auth_provider.get_client_creds(client, self.spec["auth0"]["connection"])
 
         # Due to nesting of charts on top of the basehub, our generated basehub
         # config may need to be nested as well.
@@ -170,7 +142,7 @@ class Hub:
 
         return generated_config
 
-    def deploy(self, auth_provider, dask_gateway_version):
+    def deploy(self, dask_gateway_version):
         """
         Deploy this hub
         """
@@ -196,7 +168,7 @@ class Hub:
 
             self.spec["domain"] = domain_override_config["domain"]
 
-        generated_values = self.get_generated_config(auth_provider)
+        generated_values = self.get_generated_config()
 
         if self.spec["helm_chart"] == "daskhub":
             # Install CRDs for daskhub before deployment
