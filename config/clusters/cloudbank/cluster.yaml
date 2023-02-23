@@ -40,10 +40,6 @@ hubs:
     display_name: "College of San Mateo"
     domain: csm.cloudbank.2i2c.cloud
     helm_chart: basehub
-    auth0:
-      # connection update? Also ensure the basehub Helm chart is provided a
-      # matching value for jupyterhub.custom.2i2c.add_staff_user_ids_of_type!
-      enabled: false
     helm_chart_values_files:
       # The order in which you list files here is the order the will be passed
       # to the helm upgrade command in, and that has meaning. Please check
@@ -67,10 +63,6 @@ hubs:
     display_name: "Glendale Community College"
     domain: glendale.cloudbank.2i2c.cloud
     helm_chart: basehub
-    auth0:
-      # connection update? Also ensure the basehub Helm chart is provided a
-      # matching value for jupyterhub.custom.2i2c.add_staff_user_ids_of_type!
-      enabled: false
     helm_chart_values_files:
       # The order in which you list files here is the order the will be passed
       # to the helm upgrade command in, and that has meaning. Please check
@@ -94,10 +86,6 @@ hubs:
     display_name: "MiraCosta College"
     domain: miracosta.cloudbank.2i2c.cloud
     helm_chart: basehub
-    auth0:
-      # connection update? Also ensure the basehub Helm chart is provided a
-      # matching value for jupyterhub.custom.2i2c.add_staff_user_ids_of_type!
-      enabled: false
     helm_chart_values_files:
       # The order in which you list files here is the order the will be passed
       # to the helm upgrade command in, and that has meaning. Please check
@@ -121,8 +109,6 @@ hubs:
     display_name: "Cloudbank demo"
     domain: demo.cloudbank.2i2c.cloud
     helm_chart: basehub
-    auth0:
-      enabled: false
     helm_chart_values_files:
       # The order in which you list files here is the order the will be passed
       # to the helm upgrade command in, and that has meaning. Please check
@@ -133,10 +119,6 @@ hubs:
     display_name: "Fresno City College"
     domain: fresno.cloudbank.2i2c.cloud
     helm_chart: basehub
-    auth0:
-      # connection update? Also ensure the basehub Helm chart is provided a
-      # matching value for jupyterhub.custom.2i2c.add_staff_user_ids_of_type!
-      enabled: false
     helm_chart_values_files:
       # The order in which you list files here is the order the will be passed
       # to the helm upgrade command in, and that has meaning. Please check
@@ -212,10 +194,6 @@ hubs:
     display_name: "Pasadena City College"
     domain: pasadena.cloudbank.2i2c.cloud
     helm_chart: basehub
-    auth0:
-      # connection update? Also ensure the basehub Helm chart is provided a
-      # matching value for jupyterhub.custom.2i2c.add_staff_user_ids_of_type!
-      enabled: false
     helm_chart_values_files:
       # The order in which you list files here is the order the will be passed
       # to the helm upgrade command in, and that has meaning. Please check
@@ -226,10 +204,6 @@ hubs:
     display_name: "San Jose Community College"
     domain: sjcc.cloudbank.2i2c.cloud
     helm_chart: basehub
-    auth0:
-      # connection update? Also ensure the basehub Helm chart is provided a
-      # matching value for jupyterhub.custom.2i2c.add_staff_user_ids_of_type!
-      enabled: false
     helm_chart_values_files:
       # The order in which you list files here is the order the will be passed
       # to the helm upgrade command in, and that has meaning. Please check
@@ -266,10 +240,6 @@ hubs:
     display_name: "California State University"
     domain: csu.cloudbank.2i2c.cloud
     helm_chart: basehub
-    auth0:
-      # connection update? Also ensure the basehub Helm chart is provided a
-      # matching value for jupyterhub.custom.2i2c.add_staff_user_ids_of_type!
-      enabled: false
     helm_chart_values_files:
       # The order in which you list files here is the order the will be passed
       # to the helm upgrade command in, and that has meaning. Please check

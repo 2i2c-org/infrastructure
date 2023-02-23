@@ -22,8 +22,6 @@ hubs:
     display_name: "London Interdisciplinary School"
     domain: ds.lis.2i2c.cloud
     helm_chart: basehub
-    auth0:
-      enabled: false
     helm_chart_values_files:
       - lis.values.yaml
       - enc-lis.secret.values.yaml

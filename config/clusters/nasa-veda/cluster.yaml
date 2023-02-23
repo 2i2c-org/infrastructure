@@ -14,8 +14,6 @@ hubs:
     display_name: "NASA VEDA (staging)"
     domain: staging.nasa-veda.2i2c.cloud
     helm_chart: daskhub
-    auth0:
-      enabled: false
     helm_chart_values_files:
       # The order in which you list files here is the order the will be passed
       # to the helm upgrade command in, and that has meaning. Please check
@@ -27,8 +25,6 @@ hubs:
     display_name: "NASA VEDA (prod)"
     domain: nasa-veda.2i2c.cloud
     helm_chart: daskhub
-    auth0:
-      enabled: false
     helm_chart_values_files:
       # The order in which you list files here is the order the will be passed
       # to the helm upgrade command in, and that has meaning. Please check
