@@ -31,20 +31,20 @@ basehub:
               - port: 22
                 protocol: TCP
       profileList:
-        - display_name: "Imagen Python"
+        - display_name: "Python en JupyterLab"
           description: "~2 CPU, ~8G RAM"
           default: true
           kubespawner_override:
-            image: "ghcr.io/oceanhackweek/python:082c693"
+            image: "ghcr.io/oceanhackweek/python:661c517"
             default_url: "/lab"
             mem_limit: 8G
             mem_guarantee: 4G
             cpu_limit: 2
             cpu_guarantee: 0.5
-        - display_name: "Imagen R"
+        - display_name: "R en RStudio"
           description: "~2 CPU, ~8G RAM"
           kubespawner_override:
-            image: "ghcr.io/oceanhackweek/r:39ba006"
+            image: "ghcr.io/oceanhackweek/r:cf019b7"
             default_url: "/rstudio"
             mem_limit: 8G
             mem_guarantee: 4G
@@ -64,7 +64,8 @@ basehub:
         templateVars:
           org:
             name: OceanHackWeek
-            logo_url: https://avatars.githubusercontent.com/u/33128979
+            # logo_url: https://avatars.githubusercontent.com/u/33128979
+            logo_url: https://intercoonecta.github.io/_static/OHWe.png
             url: https://oceanhackweek.org/
           designed_by:
             name: 2i2c
