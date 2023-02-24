@@ -206,7 +206,19 @@ class CILogonClientManager:
 
         return cluster_config_dir_path.joinpath(f"enc-{hub_name}.secret.values.yaml")
 
-    def _persist_client_credentials(self, client, hub_type, config_filename):
+    def _config_file_exists(self, config_filename):
+        if not Path(config_filename).is_file():
+            print_colour(
+                "Oops! A CILogon client for this hub doesn't exist.",
+                "yellow",
+            )
+            return False
+
+        return True
+
+    def _persist_client_credentials_in_config_file(
+        self, client, hub_type, config_filename
+    ):
         auth_config = {}
         jupyterhub_config = {
             "jupyterhub": {
@@ -226,30 +238,72 @@ class CILogonClientManager:
         else:
             auth_config = jupyterhub_config
 
-        with open(config_filename, "w+") as f:
+        with open(config_filename, "a+") as f:
             yaml.dump(auth_config, f)
         subprocess.check_call(["sops", "--encrypt", "--in-place", config_filename])
 
     def _load_client_id(self, config_filename):
-        try:
-            with get_decrypted_file(config_filename) as decrypted_path:
-                with open(decrypted_path) as f:
-                    auth_config = yaml.load(f)
+        if not self._config_file_exists(config_filename):
+            return
+        with get_decrypted_file(config_filename) as decrypted_path:
+            with open(decrypted_path) as f:
+                auth_config = yaml.load(f)
 
-            basehub = auth_config.get("basehub", None)
+        basehub = auth_config.get("basehub", None)
+        try:
             if basehub:
                 return auth_config["basehub"]["jupyterhub"]["hub"]["config"][
                     "CILogonOAuthenticator"
                 ]["client_id"]
+
             return auth_config["jupyterhub"]["hub"]["config"]["CILogonOAuthenticator"][
                 "client_id"
             ]
-        except FileNotFoundError:
+        # The config_file might contain other config too, not just CILogon credentials
+        except KeyError:
             print_colour(
                 "Oops! The CILogon client you requested to doesn't exist! Please create it first.",
                 "yellow",
             )
             return
+
+    def _remove_client_credentials_from_config_file(self, config_filename):
+        if not self._config_file_exists(config_filename):
+            return
+        with get_decrypted_file(config_filename) as decrypted_path:
+            with open(decrypted_path) as f:
+                auth_config = yaml.load(f)
+
+        basehub = auth_config.get("basehub", None)
+        if basehub:
+            auth_config["basehub"]["jupyterhub"]["hub"]["config"].pop(
+                "CILogonOAuthenticator", None
+            )
+        else:
+            auth_config["jupyterhub"]["hub"]["config"].pop(
+                "CILogonOAuthenticator", None
+            )
+
+        def clean_empty_nested_dicts(d):
+            if isinstance(d, dict):
+                return {
+                    key: value
+                    for key, value in (
+                        (key, clean_empty_nested_dicts(value))
+                        for key, value in d.items()
+                    )
+                    if value
+                }
+            return d
+
+        remaining_config = clean_empty_nested_dicts(auth_config)
+        if remaining_config:
+            with open(config_filename, "w+") as f:
+                yaml.dump(auth_config, f)
+            subprocess.check_call(["sops", "--encrypt", "--in-place", config_filename])
+            return
+        # If the file only contained the CILogon creds, then we can safely delete it
+        Path(config_filename).unlink()
 
     def create_client(self, cluster_name, hub_name, hub_type, callback_url):
         client_details = self._build_client_details(
@@ -257,22 +311,28 @@ class CILogonClientManager:
         )
         config_filename = self._build_config_filename(cluster_name, hub_name)
 
-        if Path(config_filename).is_file():
+        # Check if a client id already exists for this hub
+        client_id = self._load_client_id(config_filename)
+        if client_id:
             print_colour(
-                f"""
+                """
                 Oops! A CILogon client already exists for this hub!
-                Use the update subcommand to update it or delete {config_filename} if you want to generate a new one.
+                Use the update subcommand to update it or the delete on first, if you want to generate a new one.
                 """,
                 "yellow",
             )
             return
 
         # Ask CILogon to create the client
-        print(f"Creating client with details {client_details}...")
+        print(
+            f"No existing client has been found. Creating a new one with details {client_details}..."
+        )
         client = self.admin_client.create(client_details)
 
         # Persist and encrypt the client credentials
-        self._persist_client_credentials(client, hub_type, config_filename)
+        self._persist_client_credentials_in_config_file(
+            client, hub_type, config_filename
+        )
         print(f"Client credentials encrypted and stored to {config_filename}.")
 
     def update_client(self, cluster_name, hub_name, callback_url):
@@ -315,15 +375,17 @@ class CILogonClientManager:
                 )
                 return
 
-            config_filename = self._build_config_filename(cluster_name, hub_name)
-            client_id = self._load_client_id(config_filename)
+        config_filename = self._build_config_filename(cluster_name, hub_name)
+        client_id = self._load_client_id(config_filename)
 
-            # No client has been found
-            if not client_id:
-                return
+        # No client has been found
+        if not client_id:
+            return
 
         print(f"Deleting the CILogon client details for {client_id}...")
-        return self.admin_client.delete(client_id)
+        self.admin_client.delete(client_id)
+        # Delete client credentials from file also
+        self._remove_client_credentials_from_config_file(config_filename)
 
     def get_all_clients(self):
         print("Getting all existing OAauth client applications...")
