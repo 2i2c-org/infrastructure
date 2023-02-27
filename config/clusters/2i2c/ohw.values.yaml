@@ -35,7 +35,7 @@ basehub:
           description: "~2 CPU, ~8G RAM"
           default: true
           kubespawner_override:
-            image: "ghcr.io/oceanhackweek/python:661c517"
+            image: "ghcr.io/oceanhackweek/python:5c98268"
             default_url: "/lab"
             mem_limit: 8G
             mem_guarantee: 4G
