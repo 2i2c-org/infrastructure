@@ -1,4 +1,11 @@
 jupyterhub:
+  singleuser:
+    memory:
+      # Increased from 256M/1G granted to everyone else, to try handle cases of user
+      # kernels being killed - see https://github.com/2i2c-org/infrastructure/issues/2273
+      # Should be reverted down after their project is done.
+      guarantee: 512M
+      limit: 2G
   custom:
     2i2c:
       add_staff_user_ids_to_admin_users: true
