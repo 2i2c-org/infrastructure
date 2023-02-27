@@ -46,7 +46,8 @@ basehub:
             readOnly: false
       profileList:
         - display_name: "Small: up to 4 CPU / 32 GB RAM"
-          description: &profile_list_description "Start a container with at least a chosen share of capacity on a node of this type"
+          description: &profile_list_description "Start a container with at least\
+            \ a chosen share of capacity on a node of this type"
           slug: small
           profile_options:
             image: &profile_options_image
@@ -57,12 +58,12 @@ basehub:
                   default: true
                   slug: python
                   kubespawner_override:
-                    image: openscapes/python:7a02c71
+                    image: openscapes/python:2d9c952
                 rocker:
                   display_name: R
                   slug: rocker
                   kubespawner_override:
-                    image: openscapes/rocker:53180c0
+                    image: openscapes/rocker:a7596b5
                 matlab:
                   display_name: Matlab
                   slug: matlab
