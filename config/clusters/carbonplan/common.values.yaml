@@ -154,7 +154,6 @@ basehub:
         KubeSpawner:
           http_timeout: 600
 
-
 dask-gateway:
   traefik:
     resources:
