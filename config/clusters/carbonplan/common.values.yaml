@@ -32,6 +32,9 @@ basehub:
             name: Carbon Plan
             url: https://carbonplan.org
     singleuser:
+      # Temporarily override startTimeout to see if can diagnose scheduling error
+      # https://github.com/2i2c-org/infrastructure/issues/2271
+      startTimeout: 600
       serviceAccountName: cloud-user-sa
       image:
         name: carbonplan/trace-python-notebook
@@ -146,6 +149,10 @@ basehub:
           allowed_users: &users
             - jhamman
           admin_users: *users
+        # Temporarily increase timeout to debug #2271
+        # TODO(pnasrat): remove
+        KubeSpawner:
+          http_timeout: 600
 
 dask-gateway:
   traefik:
