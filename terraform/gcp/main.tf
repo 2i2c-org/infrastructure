@@ -2,15 +2,18 @@ terraform {
   backend "gcs" {}
   required_providers {
     google = {
+      # ref: https://registry.terraform.io/providers/hashicorp/google/latest
       source  = "google"
-      version = "4.51.0"
+      version = "~> 4.55"
     }
     google-beta = {
+      # ref: https://registry.terraform.io/providers/hashicorp/google-beta/latest
       source  = "google-beta"
-      version = "4.51.0"
+      version = "~> 4.55"
     }
     kubernetes = {
-      version = "2.8.0"
+      # ref: https://registry.terraform.io/providers/hashicorp/kubernetes/latest
+      version = "~> 2.18"
     }
   }
 }
