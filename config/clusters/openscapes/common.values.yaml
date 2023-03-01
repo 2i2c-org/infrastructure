@@ -45,6 +45,17 @@ basehub:
             subPath: _shared
             readOnly: false
       profileList:
+        # NOTE: About node sharing
+        #
+        #       CPU/Memory requests/limits are actively considered still. This
+        #       profile list is setup to involve node sharing as considered in
+        #       https://github.com/2i2c-org/infrastructure/issues/2121.
+        #
+        #       - Memory requests are lower than the description, with a factor
+        #         of (node_max_mem - 4GB) / node_max_mem.
+        #       - CPU requests are lower than the description, with a factor of
+        #         10%.
+        #
         - display_name: "Small: up to 4 CPU / 32 GB RAM"
           description: &profile_list_description "Start a container with at least a chosen share of capacity on a node of this type"
           slug: small
@@ -70,6 +81,8 @@ basehub:
                   kubespawner_override:
                     image: openscapes/matlab:fb41496
             requests:
+              # NOTE: Node share choices are in active development, see comment
+              #       next to profileList: above.
               display_name: Node share
               choices:
                 mem_1:
@@ -114,6 +127,8 @@ basehub:
           profile_options:
             image: *profile_options_image
             requests:
+              # NOTE: Node share choices are in active development, see comment
+              #       next to profileList: above.
               display_name: Node share
               choices:
                 mem_1:
@@ -168,6 +183,8 @@ basehub:
           profile_options:
             image: *profile_options_image
             requests:
+              # NOTE: Node share choices are in active development, see comment
+              #       next to profileList: above.
               display_name: Node share
               choices:
                 mem_4:
