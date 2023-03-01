@@ -48,6 +48,7 @@ basehub:
         - display_name: "Small: up to 4 CPU / 32 GB RAM"
           description: &profile_list_description "Start a container with at least a chosen share of capacity on a node of this type"
           slug: small
+          default: true
           profile_options:
             image: &profile_options_image
               display_name: Image
@@ -164,7 +165,6 @@ basehub:
         - display_name: "Large: up to 64 CPU / 512 GB RAM"
           description: *profile_list_description
           slug: large
-          default: true
           profile_options:
             image: *profile_options_image
             requests:
