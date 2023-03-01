@@ -1,8 +1,14 @@
 # Access home directories of users of a hub
 
-Sometimes, it is necessary to access the home directories of users on a hub.
-Perhaps they've modified a dotfile (like `.bash_profile`) that prevents their
+Sometimes, it is necessary to access the NFS home directories of users on a hub.
+Perhaps they've modified a dotfile (like `.bash_profile` or `.bashrc`) that prevents their
 server from starting, or we need to archive a large file there.
+
+Sample notebook log from non-starting pod due to a dotfile that doesn't have correct `PATH`:w
+
+```
+/srv/start: line 23: exec: jupyterhub-singleuser: not found
+```
 
 The
 [`exec-homes-shell`](https://github.com/2i2c-org/infrastructure/blob/master/deployer/README.md#exec-homes-shell)
