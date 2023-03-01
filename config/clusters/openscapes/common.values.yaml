@@ -45,6 +45,17 @@ basehub:
             subPath: _shared
             readOnly: false
       profileList:
+        # NOTE: About node sharing
+        #
+        #       CPU/Memory requests/limits are actively considered still. This
+        #       profile list is setup to involve node sharing as considered in
+        #       https://github.com/2i2c-org/infrastructure/issues/2121.
+        #
+        #       - Memory requests are lower than the description, with a factor
+        #         of (node_max_mem - 4GB) / node_max_mem.
+        #       - CPU requests are lower than the description, with a factor of
+        #         10%.
+        #
         - display_name: "Small: up to 4 CPU / 32 GB RAM"
           description: &profile_list_description "Start a container with at least a chosen share of capacity on a node of this type"
           slug: small
@@ -70,39 +81,41 @@ basehub:
                   kubespawner_override:
                     image: openscapes/matlab:fb41496
             requests:
+              # NOTE: Node share choices are in active development, see comment
+              #       next to profileList: above.
               display_name: Node share
               choices:
                 mem_1:
                   default: true
                   display_name: ~1 GB, ~0.125 CPU
                   kubespawner_override:
-                    mem_guarantee: 0.875
-                    cpu_guarantee: 0.13
+                    mem_guarantee: 0.875G
+                    cpu_guarantee: 0.013
                 mem_2:
                   display_name: ~2 GB, ~0.25 CPU
                   kubespawner_override:
-                    mem_guarantee: 1.75
-                    cpu_guarantee: 0.25
+                    mem_guarantee: 1.75G
+                    cpu_guarantee: 0.025
                 mem_4:
                   display_name: ~4 GB, ~0.5 CPU
                   kubespawner_override:
-                    mem_guarantee: 3.5
-                    cpu_guarantee: 0.5
+                    mem_guarantee: 3.5G
+                    cpu_guarantee: 0.05
                 mem_8:
                   display_name: ~8 GB, ~1.0 CPU
                   kubespawner_override:
-                    mem_guarantee: 7.0
-                    cpu_guarantee: 1
+                    mem_guarantee: 7.0G
+                    cpu_guarantee: 0.1
                 mem_16:
                   display_name: ~16 GB, ~2.0 CPU
                   kubespawner_override:
-                    mem_guarantee: 14.0
-                    cpu_guarantee: 2
+                    mem_guarantee: 14.0G
+                    cpu_guarantee: 0.2
                 mem_32:
                   display_name: ~32 GB, ~4.0 CPU
                   kubespawner_override:
-                    mem_guarantee: 28.0
-                    cpu_guarantee: 4
+                    mem_guarantee: 28.0G
+                    cpu_guarantee: 0.4
           kubespawner_override:
             cpu_limit: null
             mem_limit: null
@@ -114,49 +127,51 @@ basehub:
           profile_options:
             image: *profile_options_image
             requests:
+              # NOTE: Node share choices are in active development, see comment
+              #       next to profileList: above.
               display_name: Node share
               choices:
                 mem_1:
                   display_name: ~1 GB, ~0.125 CPU
                   kubespawner_override:
                     mem_guarantee: 0.969G
-                    cpu_guarantee: 0.13
+                    cpu_guarantee: 0.013
                 mem_2:
                   display_name: ~2 GB, ~0.25 CPU
                   kubespawner_override:
                     mem_guarantee: 1.938G
-                    cpu_guarantee: 0.25
+                    cpu_guarantee: 0.025
                 mem_4:
                   default: true
                   display_name: ~4 GB, ~0.5 CPU
                   kubespawner_override:
                     mem_guarantee: 3.875G
-                    cpu_guarantee: 0.5
+                    cpu_guarantee: 0.05
                 mem_8:
                   display_name: ~8 GB, ~1.0 CPU
                   kubespawner_override:
                     mem_guarantee: 7.75G
-                    cpu_guarantee: 1
+                    cpu_guarantee: 0.1
                 mem_16:
                   display_name: ~16 GB, ~2.0 CPU
                   kubespawner_override:
                     mem_guarantee: 15.5G
-                    cpu_guarantee: 2
+                    cpu_guarantee: 0.2
                 mem_32:
                   display_name: ~32 GB, ~4.0 CPU
                   kubespawner_override:
                     mem_guarantee: 31.0G
-                    cpu_guarantee: 4
+                    cpu_guarantee: 0.4
                 mem_64:
                   display_name: ~64 GB, ~8.0 CPU
                   kubespawner_override:
                     mem_guarantee: 62.0G
-                    cpu_guarantee: 8
+                    cpu_guarantee: 0.8
                 mem_128:
                   display_name: ~128 GB, ~16.0 CPU
                   kubespawner_override:
                     mem_guarantee: 124.0G
-                    cpu_guarantee: 16
+                    cpu_guarantee: 1.6
           kubespawner_override:
             cpu_limit: null
             mem_limit: null
@@ -168,49 +183,51 @@ basehub:
           profile_options:
             image: *profile_options_image
             requests:
+              # NOTE: Node share choices are in active development, see comment
+              #       next to profileList: above.
               display_name: Node share
               choices:
                 mem_4:
                   display_name: ~4 GB, ~0.5 CPU
                   kubespawner_override:
                     mem_guarantee: 3.969G
-                    cpu_guarantee: 0.5
+                    cpu_guarantee: 0.05
                 mem_8:
                   display_name: ~8 GB, ~1.0 CPU
                   kubespawner_override:
                     mem_guarantee: 7.938G
-                    cpu_guarantee: 1
+                    cpu_guarantee: 0.1
                 mem_16:
                   default: true
                   display_name: ~16 GB, ~2.0 CPU
                   kubespawner_override:
                     mem_guarantee: 15.875G
-                    cpu_guarantee: 2
+                    cpu_guarantee: 0.2
                 mem_32:
                   display_name: ~32 GB, ~4.0 CPU
                   kubespawner_override:
                     mem_guarantee: 31.75G
-                    cpu_guarantee: 4
+                    cpu_guarantee: 0.4
                 mem_64:
                   display_name: ~64 GB, ~8.0 CPU
                   kubespawner_override:
                     mem_guarantee: 63.5G
-                    cpu_guarantee: 8
+                    cpu_guarantee: 0.8
                 mem_128:
                   display_name: ~128 GB, ~16.0 CPU
                   kubespawner_override:
                     mem_guarantee: 127.0G
-                    cpu_guarantee: 16
+                    cpu_guarantee: 1.6
                 mem_256:
                   display_name: ~256 GB, ~32.0 CPU
                   kubespawner_override:
                     mem_guarantee: 254.0G
-                    cpu_guarantee: 32
+                    cpu_guarantee: 3.2
                 mem_512:
                   display_name: ~512 GB, ~64.0 CPU
                   kubespawner_override:
                     mem_guarantee: 508.0G
-                    cpu_guarantee: 64
+                    cpu_guarantee: 6.4
           kubespawner_override:
             cpu_limit: null
             mem_limit: null
