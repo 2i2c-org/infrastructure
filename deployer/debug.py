@@ -242,7 +242,7 @@ def start_docker_proxy(
     """
 
     print(
-        "Run `export DOCKER_HOST=tcp://localhoost:23760` on another terminal to use the remote docker daemon"
+        "Run `export DOCKER_HOST=tcp://localhost:23760` on another terminal to use the remote docker daemon"
     )
     config_file_path = find_absolute_path_to_cluster_file(docker_daemon_cluster)
     with open(config_file_path) as f:
