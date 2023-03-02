@@ -1,4 +1,4 @@
 basehub:
   userServiceAccount:
     annotations:
-      iam.gke.io/gcp-service-account: iam.gke.io/gcp-service-account: qcl-staging@qcl-hub.iam.gserviceaccount.com
+      iam.gke.io/gcp-service-account: qcl-staging@qcl-hub.iam.gserviceaccount.com
