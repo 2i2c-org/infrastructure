@@ -15,14 +15,14 @@ prometheus:
 grafana:
   grafana.ini:
     server:
-      root_url: https://grafana.qcl.2i2c.cloud/
+      root_url: https://grafana.quantifiedcarbon.com/
   auth.github:
     enabled: true
     allowed_organizations: 2i2c-org
   ingress:
     hosts:
-      - grafana.qcl.2i2c.cloud
+      - grafana.quantifiedcarbon.com
     tls:
       - secretName: grafana-tls
         hosts:
-          - grafana.qcl.2i2c.cloud
+          - grafana.quantifiedcarbon.com
