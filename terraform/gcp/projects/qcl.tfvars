@@ -21,7 +21,7 @@ user_buckets = {
 }
 
 notebook_nodes = {
-  "medium" : {
+  "small" : {
     min : 0,
     max : 100,
     machine_type : "n2-highmem-4",
@@ -32,7 +32,7 @@ notebook_nodes = {
       count: 0
     }
   },
-  "large" : {
+  "medium" : {
     min : 0,
     max : 100,
     machine_type : "n2-highmem-16",
@@ -43,7 +43,7 @@ notebook_nodes = {
       count: 0
     }
   },
-  "very-large-highcpu" : {
+  "large-highcpu" : {
     min : 0,
     max : 100,
     machine_type : "n2-highcpu-32",
