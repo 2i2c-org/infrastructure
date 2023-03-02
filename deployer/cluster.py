@@ -18,7 +18,7 @@ class Cluster:
     def __init__(self, spec, config_path):
         self.spec = spec
         self.config_path = config_path
-        self.hubs = [Hub(self, hub_spec) for hub_spec in self.spec["hubs"]]
+        self.hubs = [Hub(self, hub_spec) for hub_spec in self.spec.get("hubs",[])]
         self.support = self.spec.get("support", {})
 
     @contextmanager
