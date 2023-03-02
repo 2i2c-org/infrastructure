@@ -4,4 +4,21 @@ gcp:
   key: enc-deployer-credentials.secret.json
   project: qcl-hub
   cluster: qcl-cluster
+  # We default to a regional cluster
   zone: europe-west1
+support:
+  helm_chart_values_files:
+    - support.values.yaml
+    - enc-support.secret.values.yaml
+hubs:
+  - name: staging
+    # Tip: consider changing this to something more human friendly
+    display_name: "qcl - staging"
+    domain: staging.qcl.2i2c.cloud
+    helm_chart: basehub
+    auth0:
+      enabled: false
+    helm_chart_values_files:
+      - common.values.yaml
+      - staging.values.yaml
+      - enc-staging.secret.values.yaml
