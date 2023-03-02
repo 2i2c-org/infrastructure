@@ -241,14 +241,14 @@ mkdir -p ../../config/clusters/$CLUSTER_NAME
 ````{tab-item} Google Cloud
 :sync: gcp-key
 ```bash
-terraform output -raw ci_deployer_key > ../../config/clusters/<cluster_name>/deployer-credentials.secret.json
+terraform output -raw ci_deployer_key > ../../config/clusters/$CLUSTER_NAME/deployer-credentials.secret.json
 ```
 ````
 
 ````{tab-item} Azure
 :sync: azure-key
 ```bash
-terraform output -raw kubeconfig > ../../config/clusters/<cluster_name>/deployer-credentials.secret.yaml
+terraform output -raw kubeconfig > ../../config/clusters/$CLUSTER_NAME/deployer-credentials.secret.yaml
 ```
 ````
 `````
@@ -261,7 +261,7 @@ You must be logged into Google with your `@2i2c.org` account at this point so `s
 
 ```bash
 cd ../..  # Make sure you are in the root of the repository
-sops --output config/clusters/<cluster_name>/enc-deployer-credentials.secret.{{ json | yaml }} --encrypt config/clusters/<cluster_name>/deployer-credentials.secret.{{ json | yaml }}
+sops --output config/clusters/$CLUSTER_NAME/enc-deployer-credentials.secret.{{ json | yaml }} --encrypt config/clusters/$CLUSTER_NAME/deployer-credentials.secret.{{ json | yaml }}
 ```
 
 This key can now be committed to the `infrastructure` repo and used to deploy and manage hubs hosted on that cluster.
