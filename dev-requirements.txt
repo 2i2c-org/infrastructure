@@ -4,10 +4,10 @@
 
 # chartpress is relevant to build and push helm-charts/images/hub/Dockerfile and
 # update basehub's default values to reference the new image.
-chartpress
+chartpress==2.*
 
 # requests is used by extra_scripts/rsync-active-users.py
-requests
+requests==2.*
 
 # rich is used by extra_scripts/count-auth0-apps.py
 rich==13.*
