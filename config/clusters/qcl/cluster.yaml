@@ -1,0 +1,7 @@
+name: qcl
+provider: gcp # https://console.cloud.google.com/kubernetes/clusters/details/europe-west1/qcl-cluster/observability?project=qcl-hub
+gcp:
+  key: enc-deployer-credentials.secret.json
+  project: qcl-hub
+  cluster: qcl-cluster
+  zone: europe-west1
