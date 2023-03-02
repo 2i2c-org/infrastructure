@@ -21,8 +21,8 @@ grafana:
     allowed_organizations: 2i2c-org
   ingress:
     hosts:
-      - grafana.quantifiedcarbon.com
+      - grafana.qcl.2i2c.cloud
     tls:
       - secretName: grafana-tls
         hosts:
-          - grafana.quantifiedcarbon.com
+          - grafana.qcl.2i2c.cloud
