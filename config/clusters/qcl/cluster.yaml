@@ -14,7 +14,7 @@ hubs:
   - name: staging
     # Tip: consider changing this to something more human friendly
     display_name: "qcl - staging"
-    domain: staging.qcl.2i2c.cloud
+    domain: staging.quantifiedcarbon.com
     helm_chart: basehub
     auth0:
       enabled: false
