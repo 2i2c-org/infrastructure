@@ -33,15 +33,21 @@ jupyterhub:
         funded_by:
           name: ""
           url: ""
-    hub:
-      allowNamedServers: true
-      config:
-        Authenticator:
-          enable_auth_state: true
-        JupyterHub:
-          authenticator_class: github
-        GitHubOAuthenticator:
-          populate_teams_in_auth_state: true
-          allowed_organizations:
-            - 2i2c-org:hub-access-for-2i2c-staff
-          scope:
+  hub:
+    allowNamedServers: true
+    config:
+      Authenticator:
+        enable_auth_state: true
+        # This hub uses GitHub Teams auth and so we don't set
+        # allowed_users in order to not deny access to valid members of
+        # the listed teams. These people should have admin access though.
+        admin_users:
+          - pnasrat
+      JupyterHub:
+        authenticator_class: github
+      GitHubOAuthenticator:
+        populate_teams_in_auth_state: true
+        allowed_organizations:
+          - 2i2c-org:hub-access-for-2i2c-staff
+        scope:
+          - read:org
