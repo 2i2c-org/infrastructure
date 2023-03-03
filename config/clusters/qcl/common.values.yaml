@@ -33,3 +33,15 @@ jupyterhub:
         funded_by:
           name: ""
           url: ""
+    hub:
+      allowNamedServers: true
+      config:
+        Authenticator:
+          enable_auth_state: true
+        JupyterHub:
+          authenticator_class: github
+        GitHubOAuthenticator:
+          populate_teams_in_auth_state: true
+          allowed_organizations:
+            - 2i2c-org:hub-access-for-2i2c-staff
+          scope:
