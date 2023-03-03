@@ -517,7 +517,11 @@ jupyterhub:
         if add_staff_user_ids_to_admin_users:
             user_id_type = get_config("custom.2i2c.add_staff_user_ids_of_type")
             staff_user_ids = get_config(f"custom.2i2c.staff_{user_id_type}_ids", [])
-            c.Authenticator.admin_users.extend(staff_user_ids)
+            # `c.Authenticator.admin_users` can contain additional admins, can be an empty list,
+            # or it cannot be defined at all.
+            # This should cover all these cases.
+            staff_user_ids.extend(get_config("hub.config.Authenticator.admin_users", []))
+            c.Authenticator.admin_users = staff_user_ids
 
       05-per-user-disk: |
         # Optionally, create a PVC per user - useful for per-user databases
