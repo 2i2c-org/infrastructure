@@ -1,3 +1,13 @@
+nfs:
+  enabled: true
+  pv:
+    mountOptions:
+      - soft
+      - noatime
+    # Google FileStore IP
+    serverIP: 10.155.184.90
+    # Name of Google Filestore share
+    baseShareName: /homes/
 jupyterhub:
   prePuller:
     continuous:
