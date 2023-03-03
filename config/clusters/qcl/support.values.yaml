@@ -1,6 +1,12 @@
 prometheusIngressAuthSecret:
   enabled: true
 
+redirects:
+  rules:
+    - from: staging.qcl.2i2c.cloud
+      to: staging.quantifiedcarbon.com
+
+
 prometheus:
   server:
     ingress:
@@ -22,7 +28,9 @@ grafana:
   ingress:
     hosts:
       - grafana.qcl.2i2c.cloud
+      - grafana.quantifiedcarbon.com
     tls:
       - secretName: grafana-tls
         hosts:
           - grafana.qcl.2i2c.cloud
+          - grafana.quantifiedcarbon.com
