@@ -6,7 +6,6 @@ redirects:
     - from: staging.qcl.2i2c.cloud
       to: staging.quantifiedcarbon.com
 
-
 prometheus:
   server:
     ingress:
