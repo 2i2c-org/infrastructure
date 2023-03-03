@@ -1,3 +1,8 @@
 userServiceAccount:
   annotations:
     iam.gke.io/gcp-service-account: qcl-staging@qcl-hub.iam.gserviceaccount.com
+jupyterhub:
+  hub:
+    config:
+      GitHubOAuthenticator:
+        oauth_callback_url: https://staging.quantifiedcarbon.com/hub/oauth_callback
