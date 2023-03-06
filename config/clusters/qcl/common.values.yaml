@@ -53,4 +53,4 @@ jupyterhub:
           - 2i2c-org:hub-access-for-2i2c-staff
           - quantifiedcarbon:JupyterHub
         scope:
-          - read:user
+          - read:org
