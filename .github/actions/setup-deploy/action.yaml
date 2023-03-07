@@ -71,16 +71,41 @@ runs:
     # This action use the github official cache mechanism internally
     - uses: azure/setup-helm@v3
       with:
-        # version is pinned for helm to avoid an automatic update of its version
-        # which would cause something unexpected without an action on our
-        # behalf.
-        version: v3.8.2
+        # Manually update a pinning of helm to a minor version based on:
+        #
+        # - it seems to work
+        # - to avoid falling behind
+        #
+        # Related:
+        #
+        # - helm versions: https://github.com/helm/helm/releases
+        #
+        version: v3.11.1
 
-    # Pin kubectl version to 1.23 otherwise interactions with k8s clusters versioned <=1.21 won't work.
-    # See https://github.com/2i2c-org/infrastructure/issues/1271.
+    # Manually update a pinning of kubectl to a minor version based on:
+    #
+    # - the current range of k8s version in our k8s clusters, as of 2023-03-07,
+    #   this is k8s 1.22 - 1.24
+    # - the expected change in this range, as of 2023-03-07, is to expand to
+    #   1.22 - 1.25
+    # - the kubectl <-> k8s api-server skew policy of +/- one minor version
+    # - the policy of attempting to update our kubectl version here to be +/-
+    #   one minor versions of future k8s clusters additions or upgrades, so that
+    #   additions or upgrades of k8s clusters aren't unexpectedly held back
+    #
+    # As an example, we upgraded to kubectl to version 1.24 before we
+    # added/upgraded a k8s cluster to version 1.25.
+    #
+    # Related:
+    #
+    # - k8s versions: https://kubernetes.io/releases/
+    # - Kubectl version skew policy: https://kubernetes.io/releases/version-skew-policy/#kubectl
+    # - 2i2c, k8s upgrades tracked: https://github.com/2i2c-org/infrastructure/issues/2293
+    # - 2i2c, historical issue: https://github.com/2i2c-org/infrastructure/issues/1271
+    #
     - uses: azure/setup-kubectl@v3
       with:
-        version: "v1.23.16"
+        version: "v1.24.10"
 
     # This action use the github official cache mechanism internally
     - name: Install sops
