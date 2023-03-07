@@ -51,7 +51,7 @@ basehub:
               display_name: Image
               choices:
                 python:
-                  display_name: Trace Python Notebook
+                  display_name: DEPRECATED Trace Python Notebook
                   default: true
                   slug: "python"
                   kubespawner_override:
@@ -62,7 +62,7 @@ basehub:
                   kubespawner_override:
                     image: carbonplan/main-single-user:latest
                 cmip6:
-                  display_name: CMIP6 Downscaling
+                  display_name: DEPRECATED CMIP6 Downscaling
                   slug: "cmip6"
                   kubespawner_override:
                     image: carbonplan/cmip6-downscaling-single-user:latest
