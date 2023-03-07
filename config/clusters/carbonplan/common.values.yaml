@@ -66,6 +66,16 @@ basehub:
                   slug: "cmip6"
                   kubespawner_override:
                     image: carbonplan/cmip6-downscaling-single-user:latest
+                tensorflow:
+                  display_name: Pangeo Tensorflow ML Notebook
+                  slug: "tensorflow"
+                  kubespawner_override:
+                    image: "pangeo/ml-notebook:ebeb9dd"
+                edge:
+                  display_name: Edge Single User
+                  slug: "edge"
+                  kubespawner_override:
+                    image: "carbonplan/edge-single-user:latest"
           kubespawner_override:
             # Expllicitly unset mem_limit, so it overrides the default memory limit we set in
             # basehub/values.yaml
