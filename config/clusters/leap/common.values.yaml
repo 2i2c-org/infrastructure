@@ -57,6 +57,24 @@ basehub:
             - jbusecke
         JupyterHub:
           authenticator_class: github
+          # Announcement is a JupyterHub feature to present messages to users in
+          # pages under the /hub path, but not via the /user.
+          #
+          # This specific maintenance announcement was requested via
+          # https://2i2c.freshdesk.com/a/tickets/525.
+          #
+          # ref: https://github.com/2i2c-org/infrastructure/issues/1501
+          # ref: https://jupyterhub.readthedocs.io/en/stable/reference/templates.html#announcement-configuration-variables
+          #
+          template_vars:
+            announcement: >-
+              <strong>
+              Service maintenance is scheduled Sunday March 12, to Monday 8AM
+              EST.
+              </strong>
+              <br/>
+              Running servers may be forcefully stopped and service disruption
+              is expected.
         GitHubOAuthenticator:
           populate_teams_in_auth_state: true
           allowed_organizations:
