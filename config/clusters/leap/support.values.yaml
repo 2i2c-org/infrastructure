@@ -18,10 +18,8 @@ prometheus:
             - prometheus.leap.2i2c.cloud
     resources:
       requests:
-        cpu: 3
-        memory: 20Gi
+        memory: 22Gi
       limits:
-        cpu: 3.9
         memory: 22Gi
 
 grafana:
