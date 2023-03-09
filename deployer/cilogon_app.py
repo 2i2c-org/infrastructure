@@ -187,9 +187,13 @@ def remove_client_credentials_from_config_file(config_filename):
     Path(config_filename).unlink()
 
 
-def stored_client_id_same_with_cilogon_records(cluster_name, hub_name, client_id):
-    stored_client_id = get_client(cluster_name, hub_name)["client_id"]
-    if stored_client_id is not client_id:
+def stored_client_id_same_with_cilogon_records(
+    admin_id, admin_secret, cluster_name, hub_name, client_id
+):
+    stored_client_id = get_client(admin_id, admin_secret, cluster_name, hub_name)[
+        "client_id"
+    ]
+    if stored_client_id != client_id:
         print_colour(
             "CILogon records are different than the OAuth client app stored in the configuration file. Consider updating the file.",
             "red",
@@ -226,12 +230,12 @@ def create_client(
     client_id = load_client_id_from_file(config_filename)
     if client_id:
         print_colour(
-            "Found existing CILogon OAuth client app in {config_filename}.", "yellow"
+            f"Found existing CILogon OAuth client app in {config_filename}.", "yellow"
         )
         # Also check if what's in the file matches CILogon records in case the file was not updated accordingly
         # Exit anyway since manual intervention is required if different
         return stored_client_id_same_with_cilogon_records(
-            cluster_name, hub_name, client_id
+            admin_id, admin_secret, cluster_name, hub_name, client_id
         )
 
     # Ask CILogon to create the client
@@ -302,7 +306,7 @@ def get_client(admin_id, admin_secret, cluster_name, hub_name, client_id=None):
 
     if client_id:
         if not stored_client_id_same_with_cilogon_records(
-            cluster_name, hub_name, client_id
+            admin_id, admin_secret, cluster_name, hub_name, client_id
         ):
             return
     else:
@@ -339,7 +343,13 @@ def delete_client(admin_id, admin_secret, cluster_name, hub_name, client_id=None
 
     if client_id:
         if not stored_client_id_same_with_cilogon_records(
-            cluster_name, hub_name, client_id
+            admin_id,
+            admin_secret,
+            admin_id,
+            admin_secret,
+            cluster_name,
+            hub_name,
+            client_id,
         ):
             return
     else:
