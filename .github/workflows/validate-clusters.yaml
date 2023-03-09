@@ -96,7 +96,6 @@ jobs:
               - added|modified: helm-charts/daskhub/**
               - added|modified: helm-charts/support/**
               - added|modified: requirements.txt
-              - added|modified: .github/workflows/validate-clusters.yaml
             cluster_specific:
               - added|modified: config/clusters/**
 
