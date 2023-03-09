@@ -81,21 +81,7 @@ basehub:
     scheduling:
       userScheduler:
         enabled: false
-    proxy:
-      chp:
-        resources:
-          requests:
-            # FIXME: We want no guarantees here!!!
-            # This is lowest possible value
-            cpu: 0.01
-            memory: 1Mi
     hub:
-      resources:
-        requests:
-          # FIXME: We want no guarantees here!!!
-          # This is lowest possible value
-          cpu: 0.01
-          memory: 1Mi
       config:
         Authenticator:
           allowed_users: &users
