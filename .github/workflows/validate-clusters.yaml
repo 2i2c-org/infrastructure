@@ -64,7 +64,7 @@ jobs:
         ${{ github.event_name == 'workflow_dispatch' ||
         (steps.file_changes.outputs.common == 'true' ||
         steps.file_changes.outputs.cluster_specific == 'true') }}
-      cluster_matrix: ${{ env.MATRIX }}
+      cluster_matrix: ${{ env.MATRIX || '[]' }}
     # Only run this job if one of the following conditions is true:
     # - The workflow was manually triggered
     # - The event is a push to the master branch
@@ -191,7 +191,7 @@ jobs:
     needs: [generate-clusters-to-validate]
     if: |
       needs.generate-clusters-to-validate.outputs.continue_workflow &&
-      needs.generate-clusters-to-validate.outputs.cluster_matrix != '[]'
+      (needs.generate-clusters-to-validate.outputs.cluster_matrix != '[]')
     strategy:
       fail-fast: false
       matrix:
