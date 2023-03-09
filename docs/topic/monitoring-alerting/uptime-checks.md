@@ -19,9 +19,19 @@ has a few advantages:
 You can browse the existing checks [on the GCP Console](https://console.cloud.google.com/monitoring/uptime?project=two-eye-two-see)
 as well.
 
+## Cost
+
+Note that as of October 2022 [Google Stackdriver
+Pricing](https://cloud.google.com/stackdriver/pricing) the free monthly quota is
+1 million executions of uptime checks per project. 
+
+| Feature | Price | Free allotment per month | Effective date |
+| --- | --- | --- | --- |
+| Execution of Monitoring uptime checks| $0.30/1,000 executions| 1 million executions per Google Cloud project|	October 1, 2022 |
+
 ## When are notifications triggered?
 
-Our uptime checks are performed every 5 minutes, and we alert if checks have failed for 11 minutes.
+Our uptime checks are performed every 15 minutes, and we alert if checks have failed for 31 minutes.
 This make sure there are at least 2 failed checks before we alert.
 
 We are optimizing for *actionable alerts* that we can completely *trust*,
