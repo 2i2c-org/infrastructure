@@ -33,6 +33,16 @@ jupyterhub:
       tag: "9d557294938e"
   hub:
     config:
+      JupyterHub:
+        authenticator_class: cilogon
+      CILogonOAuthenticator:
+        scope:
+          - "profile"
+        username_claim: "preferred_username"
+        oauth_callback_url: "https://paleohack2021.hackathon.2i2c.cloud/hub/oauth_callback"
+        # Only show the option to login with GitHub
+        shown_idps:
+          - http://github.com/login/oauth/authorize
       Authenticator:
         allowed_users: &paleohack_users
           - CommonClimate

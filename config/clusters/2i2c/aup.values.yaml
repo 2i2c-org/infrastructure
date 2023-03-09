@@ -24,6 +24,16 @@ jupyterhub:
       guarantee: 6G
   hub:
     config:
+      JupyterHub:
+        authenticator_class: cilogon
+      CILogonOAuthenticator:
+        scope:
+          - "profile"
+        username_claim: "preferred_username"
+        oauth_callback_url: "https://aup.pilot.2i2c.cloud/hub/oauth_callback"
+        # Only show the option to login with GitHub
+        shown_idps:
+          - http://github.com/login/oauth/authorize
       Authenticator:
         allowed_users: &aup_users
           - swalker
