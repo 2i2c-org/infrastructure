@@ -152,10 +152,10 @@ prometheus:
       #
       requests:
         cpu: 0.1
-        memory: 2Gi
+        memory: 4Gi
       limits:
         cpu: 4
-        memory: 2Gi
+        memory: 4Gi
     labels:
       # For HTTP access to the hub, to scrape metrics
       hub.jupyter.org/network-access-hub: "true"
