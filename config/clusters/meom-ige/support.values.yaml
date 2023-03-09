@@ -11,13 +11,7 @@ prometheus:
         - secretName: prometheus-tls
           hosts:
             - prometheus.meom-ige.2i2c.cloud
-    resources:
-      requests:
-        cpu: 500m
-        memory: 512Mi
-      limits:
-        cpu: 500m
-        memory: 2G
+
 grafana:
   ingress:
     hosts:

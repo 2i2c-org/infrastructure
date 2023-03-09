@@ -38,20 +38,10 @@ prometheus:
     resources:
       # This prometheus instance has required 13+ GB to startup successfully in
       # the past (2023-02-17) when replaying the "write-ahead log" (WAL) stored
-      # on on disk when it starts up.
-      #
-      # We declare request to match limit for memory as otherwise we depend on
-      # other pods on the node to not take up required memory during startup.
-      #
-      # We declare a limit on the CPU below the node capacity (assumed to be 4),
-      # so the high request won't eat up all available CPU capacity for low
-      # request pods on the node.
-      #
-      # https://github.com/prometheus/prometheus/issues/6934.
+      # on on disk when it starts up. For more details, see the comments next to
+      # the default values in helm-charts/support/values.yaml.
       #
       requests:
-        cpu: 1
-        memory: 16Gi
+        memory: 20Gi
       limits:
-        cpu: 2
-        memory: 16Gi
+        memory: 20Gi

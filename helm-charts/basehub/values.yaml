@@ -129,9 +129,11 @@ jupyterhub:
       replicas: 0
     userScheduler:
       enabled: false
+      # FIXME: We should think about these resource requests/limits, see
+      #        https://github.com/2i2c-org/infrastructure/issues/2127.
+      #
       resources:
         requests:
-          # FIXME: Just unset this?
           cpu: 0.01
           memory: 64Mi
         limits:
@@ -145,15 +147,22 @@ jupyterhub:
     service:
       type: ClusterIP
     chp:
+      # FIXME: We should think about these resource requests/limits, see
+      #        https://github.com/2i2c-org/infrastructure/issues/2127.
+      #
       resources:
         requests:
-          # FIXME: We want no guarantees here!!!
-          # This is lowest possible value
           cpu: 0.01
           memory: 64Mi
         limits:
           memory: 1Gi
     traefik:
+      # FIXME: We should think about these resource requests/limits, see
+      #        https://github.com/2i2c-org/infrastructure/issues/2127.
+      #
+      #        Note if autohttps pod's aren't used anywhere by our basehub
+      #        deployments, we should simply remove this traefik configuration.
+      #
       resources:
         requests:
           memory: 64Mi
@@ -450,9 +459,11 @@ jupyterhub:
           ports:
             - port: http
               protocol: TCP
+    # FIXME: We should think about these resource requests/limits, see
+    #        https://github.com/2i2c-org/infrastructure/issues/2127.
+    #
     resources:
       requests:
-        # Very small unit, since we don't want any CPU guarantees
         cpu: 0.01
         memory: 128Mi
       limits:
