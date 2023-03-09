@@ -124,7 +124,32 @@ prometheus:
       # can sometimes get 'stuck' and require pods to be manually deleted.
       type: Recreate
     resources:
-      # Without this, prometheus can easily starve users
+      # Prometheus cpu/memory requests/limits needs to be carefully considered based on:
+      #
+      # CPU:
+      #
+      #   During startup prometheus-server can compete for ~all of the node's
+      #   CPU unless its bounded by a limit. The key to avoiding this isn't to
+      #   provide a low limit as what's low is relative to the node's capacity,
+      #   which could for example be 2, 4, or 8 CPU.
+      #
+      #   The avoid starving other pods, the key is to have a sufficiently low
+      #   CPU request so that this pod doesn't get far higher priority to use
+      #   the available CPU on the node when in competition with the other pods
+      #   for CPU.
+      #
+      # Memory:
+      #
+      #   During startup prometheus-server will use up a lot of memory, up to X
+      #   where X grows are more metrics has been collected. Over time,
+      #   prometheus-server may run into its memory limit and get OOMKilled, or
+      #   the node it runs on may run out of memory before that happens and
+      #   prometheus-server or other pods exceeding their memory limit will get
+      #   evicted.
+      #
+      #   To fail reliably in prometheus-server without influencing other pods,
+      #   we should put the memory request to match the limit.
+      #
       requests:
         cpu: 0.2
         memory: 512Mi
