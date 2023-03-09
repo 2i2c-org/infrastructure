@@ -110,7 +110,7 @@ jobs:
           echo "${{ steps.file_changes.outputs.cluster_specific == 'true' }}"
           echo "whole statement"
           echo ${{ github.event_name == 'workflow_dispatch' || (steps.file_changes.outputs.common == 'true' || steps.file_changes.outputs.cluster_specific == 'true') }}
-          echo ${{ (github.event_name == 'workflow_dispatch' || (steps.file_changes.outputs.common == 'true' || steps.file_changes.outputs.cluster_specific == 'true')) == 'true' }} 
+          echo ${{ (github.event_name == 'workflow_dispatch' || (steps.file_changes.outputs.common == 'true' || steps.file_changes.outputs.cluster_specific == 'true')) == true }} 
 
       # Only run this step if there *ARE* changes under the common filter, *OR*
       # we have manually triggered the workflow
@@ -185,6 +185,10 @@ jobs:
               # General python object syntax sometimes works but sometimes does
               # not - for example, single quotes are not valid in JSON.
               f.write(f"MATRIX={json.dumps(matrix)}")
+
+      - name: Echo matrix env var
+        run: |
+          echo "${{ env.MATRIX }}"
 
   # This job runs the 'deployer validate' subcommand across a matrix of
   # cluster names.
