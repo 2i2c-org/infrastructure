@@ -190,7 +190,7 @@ jobs:
     runs-on: ubuntu-latest
     needs: [generate-clusters-to-validate]
     if: |
-      needs.generate-clusters-to-validate.outputs.continue_workflow &&
+      needs.generate-clusters-to-validate.outputs.continue_workflow == 'true' &&
       needs.generate-clusters-to-validate.outputs.cluster_matrix != '[]'
     strategy:
       fail-fast: false
