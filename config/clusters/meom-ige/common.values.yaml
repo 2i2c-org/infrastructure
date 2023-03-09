@@ -91,11 +91,6 @@ basehub:
           admin_users: *users
 
       allowNamedServers: true
-      networkPolicy:
-        # FIXME: For dask gateway
-        enabled: false
-      readinessProbe:
-        enabled: false
 dask-gateway:
   gateway:
     extraConfig:
