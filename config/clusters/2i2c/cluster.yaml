@@ -14,8 +14,6 @@ hubs:
     display_name: "2i2c staging"
     domain: staging.2i2c.cloud
     helm_chart: basehub
-    auth0:
-      connection: google-oauth2
     helm_chart_values_files:
       - staging.values.yaml
       - enc-staging.secret.values.yaml

@@ -12,7 +12,7 @@ staticWebsite:
     host: staging.2i2c.cloud
     path: /textbook
   githubAuth:
-    enabled: true
+    enabled: false
 
 jupyterhub:
   custom:
@@ -45,7 +45,11 @@ jupyterhub:
         url: http://dex:9000
         display: false
     config:
-      Authenticator:
-        allowed_users: &staging_users
-          - colliand@gmail.com
-        admin_users: *staging_users
+      JupyterHub:
+        authenticator_class: cilogon
+      CILogonOAuthenticator:
+        oauth_callback_url: "https://staging.2i2c.cloud/hub/oauth_callback"
+        username_claim: "email"
+        # Only show the option to login with Google
+        shown_idps:
+          - http://google.com/accounts/o8/id
