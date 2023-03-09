@@ -7,7 +7,7 @@ locals {
     helm_chart = h["helm_chart"]
     cluster    = cy["name"]
     provider   = cy["provider"]
-  }]]))
+  } if lookup(h, "uptime_check", true)]]))
   # A list of all prometheus servers
   prometheuses = flatten([
     for cy in local.cluster_yamls : [
