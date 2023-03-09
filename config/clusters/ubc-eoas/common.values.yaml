@@ -87,3 +87,7 @@ jupyterhub:
           mem_guarantee: 50G
           node_selector:
             node.kubernetes.io/instance-type: m5.8xlarge
+
+  scheduling:
+    userScheduler:
+      enabled: true

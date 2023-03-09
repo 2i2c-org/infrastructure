@@ -4,18 +4,31 @@
 We use [eksctl](https://eksctl.io/) to provision our k8s clusters on AWS and
 terraform to provision supporting infrastructure, such as storage buckets.
 
+(new-cluster:aws-required-tools)=
 ## Install required tools locally
 
-1. Follow the instructions outlined in [](hubs:manual-deploy) to set up the local environment and
-   prepare `sops` to encrypt and decrypt files.
+1. Install `kubectl`, `helm`, `sops`, etc.
 
-2. Install the `awscli` tool (you can use pip or conda to install it in the
-   environment) and configure it to use the provided AWS user credentials.
-   More about setting out the credentials in [](new-cluster:aws-setup-credentials).
+   In [](tutorials:setup-deploy) you find instructions on how to setup `sops` to
+   encrypt and decrypt files.
 
-3. Install the latest version of [eksctl](https://eksctl.io/introduction/#installation). Mac users
-   can get it from homebrew with `brew install eksctl`. Make sure the version is at least 0.97 -
-   you can check by running `eksctl version`
+2. Install [`aws`](https://docs.aws.amazon.com/cli/latest/userguide/getting-started-install.html#getting-started-install-instructions)
+
+   Verify install and version with `aws --version`. You should have at least
+   version 2.
+
+3. Install or upgrade [eksctl](https://eksctl.io/introduction/#installation)
+
+   Mac users with homebrew can run `brew install eksctl`.
+
+   Verify install and version with `eksctl version`. You typically need a very
+   recent version of this CLI.
+
+4. Install `jsonnet`
+
+   Mac users with homebrew can run `brew install jsonnet`.
+
+   Verify install and version with `jsonnet --version`.
 
 ## Create a new cluster
 
@@ -74,10 +87,10 @@ for all the possible options. You'd want to make sure to change at least the fol
   and verify the suggested zones 1a, 1b, and 1c actually are available in that
   region.
 
-  ```shell
+  ```bash
   # a command to list availability zones, for example
   # ca-central-1 doesn't have 1c, but 1d instead
-  aws ec2 describe-availability-zones --region=<like ca-central-1>
+  aws ec2 describe-availability-zones --region=$CLUSTER_REGION
   ```
 - Size of nodes in instancegroups, for both notebook nodes and dask nodes. In particular,
   make sure you have enough quota to launch these instances in your selected regions.
@@ -88,11 +101,13 @@ Once you have a `.jsonnet` file, you can render it into a config file that eksct
 can read.
 
 ```bash
-jsonnet <your-cluster>.jsonnet > <your-cluster>.eksctl.yaml
+jsonnet $CLUSTER_NAME.jsonnet > $CLUSTER_NAME.eksctl.yaml
 ```
 
 ```{tip}
-The `*.eksctl.yaml` file is git ignored as we can regenerate it, so work against the `*.jsonnet` file and regenerate the YAML file when needed by a `eksctl` command.
+The `*.eksctl.yaml` files are git ignored as we can regenerate it, so work
+against the `*.jsonnet` file and regenerate the YAML file when needed by a
+`eksctl` command.
 ```
 
 ### Create the cluster
@@ -100,7 +115,7 @@ The `*.eksctl.yaml` file is git ignored as we can regenerate it, so work against
 Now you're ready to create the cluster!
 
 ```bash
-eksctl create cluster --config-file <your-cluster>.eksctl.yaml
+eksctl create cluster --config-file=$CLUSTER_NAME.eksctl.yaml
 ```
 
 ```{tip}
@@ -136,7 +151,9 @@ We still store [terraform state](https://www.terraform.io/docs/language/state/in
 in GCP, so you also need to have `gcloud` set up and authenticated already.
 
 1. The steps in [](new-cluster:aws:generate-cluster-files) will have created a default `.tfvars` file.
+
    This file can either be used as-is or edited to enable the optional features listed above.
+
 2. Initialise terraform for use with AWS:
 
    ```bash
@@ -147,7 +164,7 @@ in GCP, so you also need to have `gcloud` set up and authenticated already.
 3. Create a new [terraform workspace](topic:terraform:workspaces)
 
    ```bash
-   terraform workspace new $CLUSTER_NAMEF
+   terraform workspace new $CLUSTER_NAME
    ```
 
 4. Deploy the terraform-managed infrastructure
@@ -198,11 +215,12 @@ have least amount of permissions possible.
 1. Grant the freshly created IAM user access to the kubernetes cluster.
 
    1. As this requires passing in some parameters that match the created cluster,
-     we have a `terraform output` that can give you the exact command to run.
+      we have a `terraform output` that can give you the exact command to run.
 
       ```bash
       terraform output -raw eksctl_iam_command
       ```
+
    2. Run the `eksctl create iamidentitymapping` command returned by `terraform output`.
       That should give the continuous deployer user access.
 
@@ -212,12 +230,12 @@ have least amount of permissions possible.
       eksctl create iamidentitymapping \
          --cluster $CLUSTER_NAME \
          --region $CLUSTER_REGION \
-         --arn arn:aws:iam::<aws-accout-id>:user/hub-continuous-deployer \
+         --arn arn:aws:iam::<aws-account-id>:user/hub-continuous-deployer \
          --username hub-continuous-deployer \
          --group system:masters
       ```
 
-1. Create a minimal `cluster.yaml` file (`config/clusters/$CLUSTER_NAME/cluster.yaml`),
+2. Create a minimal `cluster.yaml` file (`config/clusters/$CLUSTER_NAME/cluster.yaml`),
    and provide enough information for the deployer to find the correct credentials.
 
    ```yaml
@@ -235,7 +253,7 @@ have least amount of permissions possible.
    The `aws.key` file is defined _relative_ to the location of the `cluster.yaml` file.
    ```
 
-1. Test the access by running:
+3. Test the access by running:
 
    ```bash
    deployer use-cluster-credentials $CLUSTER_NAME
@@ -246,13 +264,15 @@ have least amount of permissions possible.
    ```bash
    kubectl get node
    ```
+
    It should show you the provisioned node on the cluster if everything works out ok.
 
 ## Grant `eksctl` access to other users
 
 ```{note}
-This section is still required even if the account is managed by SSO.
-Though a user could run `deployer use-cluster-credentials $CLUSTER_NAME` to gain access as well.
+This section is still required even if the account is managed by SSO. Though a
+user could run `deployer use-cluster-credentials $CLUSTER_NAME` to gain access
+as well.
 ```
 
 AWS EKS has a strange access control problem, where the IAM user who creates
@@ -270,7 +290,7 @@ You can modify the command output by running `terraform output -raw eksctl_iam_c
 eksctl create iamidentitymapping \
    --cluster $CLUSTER_NAME \
    --region $CLUSTER_REGION \
-   --arn arn:aws:iam::<your-org-id>:user/<iam-user-name> \
+   --arn arn:aws:iam::<aws-account-id>:user/<iam-user-name> \
    --username <iam-user-name> \
    --group system:masters
 ```
@@ -282,9 +302,11 @@ After this step is done, they can fetch local config with:
 aws eks update-kubeconfig --name=$CLUSTER_NAME --region=$CLUSTER_REGION
 ```
 
-This should eventually be converted to use an [IAM Role](https://docs.aws.amazon.com/IAM/latest/UserGuide/id_roles.html)
-instead, so we need not give each individual user access, but just grant access to the
-role - and users can modify them as they wish.
+This should eventually be converted to use an [IAM Role] instead, so we need not
+give each individual user access, but just grant access to the role - and users
+can modify them as they wish.
+
+[iam role]: https://docs.aws.amazon.com/IAM/latest/UserGuide/id_roles.html
 
 ## Export the EFS IP address for home directories
 
@@ -300,15 +322,18 @@ Get the address a hub on this cluster should use for connecting to NFS with
 ## Add the cluster to be automatically deployed
 
 The `deploy-hubs` GitHub workflow has a job named
-[`upgrade-support-and-staging`](https://github.com/2i2c-org/infrastructure/blob/18f5a4f8f39ed98c2f5c99091ae9f19a1075c988/.github/workflows/deploy-hubs.yaml#L128-L166)
-that need to list of clusters being automatically deployed by our CI/CD system.
-Add an entry for the new cluster here.
+[`upgrade-support-and-staging`] that need to list of clusters being
+automatically deployed by our CI/CD system. Add an entry for the new cluster
+here.
+
+[`upgrade-support-and-staging`]: https://github.com/2i2c-org/infrastructure/blob/18f5a4f8f39ed98c2f5c99091ae9f19a1075c988/.github/workflows/deploy-hubs.yaml#L128-L166
 
 ## A note on the support chart for AWS clusters
 
 ````{warning}
-When you deploy the support chart on an AWS cluster, you **must** enable the `cluster-autoscaler` sub-chart, otherwise the node groups will not automatically scale.
-Include the following in your `support.values.yaml` file:
+When you deploy the support chart on an AWS cluster, you **must** enable the
+`cluster-autoscaler` sub-chart, otherwise the node groups will not automatically
+scale. Include the following in your `support.values.yaml` file:
 
 ```yaml
 cluster-autoscaler:

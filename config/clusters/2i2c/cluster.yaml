@@ -1,5 +1,5 @@
 name: 2i2c
-provider: gcp
+provider: gcp # https://console.cloud.google.com/kubernetes/clusters/details/us-central1-b/pilot-hubs-cluster/details?project=two-eye-two-see
 gcp:
   key: enc-deployer-credentials.secret.json
   project: two-eye-two-see

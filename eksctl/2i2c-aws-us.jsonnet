@@ -8,7 +8,7 @@
 
     To use jsonnet to generate an eksctl configuration file from this, do:
 
-        jsonnet 2i2c-aws-us.jsonnet > eksctl-config.yaml
+        jsonnet 2i2c-aws-us.jsonnet > 2i2c-aws-us.eksctl.yaml
 
     References:
     - https://eksctl.io/usage/schema/
@@ -68,7 +68,7 @@ local daskNodes = [
     },
     // If you add an addon to this config, run the create addon command.
     //
-    //    eksctl create addon --config-file=eksctl-config.yaml
+    //    eksctl create addon --config-file=2i2c-aws-us.eksctl.yaml
     //
     addons: [
         {

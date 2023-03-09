@@ -25,7 +25,7 @@ basehub:
         templateVars:
           org:
             name: "The Visualization, Exploration, and Data Analysis (VEDA) Project"
-            logo_url: https://www.earthdata.nasa.gov/s3fs-public/2022-08/veda_logo_lp.png
+            logo_url: https://visex.netlify.app/graphics/nasa-veda-logo-pos.svg
             url: https://www.earthdata.nasa.gov/esds/veda
           designed_by:
             name: "2i2c"
@@ -60,3 +60,6 @@ basehub:
       image:
         name: pangeo/pangeo-notebook
         tag: "2023.01.13"
+    scheduling:
+      userScheduler:
+        enabled: true

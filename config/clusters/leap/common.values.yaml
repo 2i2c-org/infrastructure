@@ -17,7 +17,7 @@ basehub:
       extraImages:
         tensorflow-image:
           name: pangeo/ml-notebook
-          tag: "2023.02.08"
+          tag: "ebeb9dd"
     custom:
       # Extra mount point for admins to access to all users' home dirs
       # Ref https://github.com/2i2c-org/infrastructure/issues/2105
@@ -25,6 +25,7 @@ basehub:
         extraVolumeMounts:
           - name: home
             mountPath: /home/jovyan/allusers
+            readOnly: true
       2i2c:
         add_staff_user_ids_to_admin_users: true
         add_staff_user_ids_of_type: "github"
@@ -56,6 +57,24 @@ basehub:
             - jbusecke
         JupyterHub:
           authenticator_class: github
+          # Announcement is a JupyterHub feature to present messages to users in
+          # pages under the /hub path, but not via the /user.
+          #
+          # This specific maintenance announcement was requested via
+          # https://2i2c.freshdesk.com/a/tickets/525.
+          #
+          # ref: https://github.com/2i2c-org/infrastructure/issues/1501
+          # ref: https://jupyterhub.readthedocs.io/en/stable/reference/templates.html#announcement-configuration-variables
+          #
+          template_vars:
+            announcement: >-
+              <strong>
+              Service maintenance is scheduled Sunday March 12, to Monday 8AM
+              EST.
+              </strong>
+              <br/>
+              Running servers may be forcefully stopped and service disruption
+              is expected.
         GitHubOAuthenticator:
           populate_teams_in_auth_state: true
           allowed_organizations:
@@ -93,12 +112,7 @@ basehub:
             mem_guarantee: 4.5G
             node_selector:
               node.kubernetes.io/instance-type: n1-standard-2
-        - display_name: Medium
-          description: 11GB RAM, 4 CPUs
-          allowed_teams:
-            - leap-stc:leap-pangeo-users
-            - 2i2c-org:hub-access-for-2i2c-staff
-          profile_options:
+          profile_options: &profile_options
             image:
               display_name: Image
               choices:
@@ -107,22 +121,28 @@ basehub:
                   default: true
                   slug: "pangeo"
                   kubespawner_override:
-                    image: "pangeo/pangeo-notebook:2023.02.08"
+                    image: "pangeo/pangeo-notebook:ebeb9dd"
                 tensorflow:
                   display_name: Pangeo Tensorflow ML Notebook
                   slug: "tensorflow"
                   kubespawner_override:
-                    image: "pangeo/ml-notebook:2023.02.08"
+                    image: "pangeo/ml-notebook:ebeb9dd"
                 pytorch:
                   display_name: Pangeo PyTorch ML Notebook
                   slug: "pytorch"
                   kubespawner_override:
-                    image: "pangeo/pytorch-notebook:2023.02.08"
+                    image: "pangeo/pytorch-notebook:ebeb9dd"
                 leap-pangeo-edu:
                   display_name: LEAP Education Notebook (Testing Prototype)
                   slug: "leap_edu"
                   kubespawner_override:
                     image: "quay.io/jbusecke/leap-edu-image:fa442ab4851c"
+        - display_name: Medium
+          description: 11GB RAM, 4 CPUs
+          allowed_teams:
+            - leap-stc:leap-pangeo-users
+            - 2i2c-org:hub-access-for-2i2c-staff
+          profile_options: *profile_options
           kubespawner_override:
             mem_limit: 15G
             mem_guarantee: 11G
@@ -139,6 +159,7 @@ basehub:
             mem_guarantee: 24G
             node_selector:
               node.kubernetes.io/instance-type: n1-standard-8
+          profile_options: *profile_options
         - display_name: Huge
           description: 52GB RAM, 16 CPUs
           allowed_teams:
@@ -149,8 +170,9 @@ basehub:
             mem_guarantee: 52G
             node_selector:
               node.kubernetes.io/instance-type: n1-standard-16
-
+          profile_options: *profile_options
         - display_name: Large + GPU
+          slug: gpu
           description: 24GB RAM, 8 CPUs
           allowed_teams:
             - leap-stc:leap-pangeo-research
@@ -164,12 +186,12 @@ basehub:
                   default: true
                   slug: "tensorflow"
                   kubespawner_override:
-                    image: "pangeo/ml-notebook:2023.01.03"
+                    image: "pangeo/ml-notebook:ebeb9dd"
                 pytorch:
                   display_name: Pangeo PyTorch ML Notebook
                   slug: "pytorch"
                   kubespawner_override:
-                    image: "pangeo/pytorch-notebook:2023.01.03"
+                    image: "pangeo/pytorch-notebook:ebeb9dd"
           kubespawner_override:
             node_selector:
               cloud.google.com/gke-nodepool: nb-gpu-t4

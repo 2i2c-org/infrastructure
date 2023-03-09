@@ -20,7 +20,6 @@ jobs:
           - cluster_name: openscapes
           - cluster_name: pangeo-hubs
           - cluster_name: utoronto
-          - cluster_name: uwhackweeks
           - cluster_name: awi-ciroh
           - cluster_name: callysto
           - cluster_name: 2i2c-uk

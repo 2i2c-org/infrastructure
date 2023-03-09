@@ -5,11 +5,15 @@
 version: 2
 
 build:
-  os: ubuntu-20.04
+  os: ubuntu-22.04
   tools:
-    # NOTE: This must be miniconda or it will mistakenly try to invoke `python` to do a conda install
-    # ref: https://stackoverflow.com/questions/69774313/why-does-rtd-run-python-env-create-instead-of-conda-env-create-when-building
-    python: "miniconda3-4.7"
+    # We need to specify that we require Python to be setup with conda/mamba to
+    # work against an `conda.environment` file, so we specify mambaforge here.
+    #
+    # ref: https://github.com/readthedocs/readthedocs.org/issues/8595
+    # ref: https://docs.readthedocs.io/en/stable/config-file/v2.html#build-tools-python
+    #
+    python: "mambaforge-4.10"
 
 sphinx:
   configuration: docs/conf.py

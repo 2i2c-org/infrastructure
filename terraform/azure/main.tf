@@ -2,13 +2,19 @@
 terraform {
   required_providers {
     azurerm = {
+      # ref: https://registry.terraform.io/providers/hashicorp/azurerm/latest
+      #
+      # FIXME: v3 has been released and we are still at v2, see release notes:
+      #        https://github.com/hashicorp/terraform-provider-azurerm/releases/tag/v3.0.0
+      #
       source = "hashicorp/azurerm"
-      version = "2.87.0"
+      version = "~> 2.99"
     }
 
     azuread = {
+      # ref: https://registry.terraform.io/providers/hashicorp/azuread/latest
       source = "hashicorp/azuread"
-      version = "2.10.0"
+      version = "~> 2.35"
     }
   }
   backend "gcs" {

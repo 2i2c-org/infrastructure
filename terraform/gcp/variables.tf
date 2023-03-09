@@ -298,6 +298,15 @@ variable "hub_cloud_permissions" {
   EOT
 }
 
+variable "bucket_public_access" {
+  type        = list
+  default     = []
+  description = <<-EOT
+  A list of GCS storage buckets defined in user_buckets that should be granted public read access.
+
+  EOT
+}
+
 variable "container_repos" {
   type        = list
   default     = []

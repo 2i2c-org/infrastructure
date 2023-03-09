@@ -81,17 +81,17 @@ The naming convention followed when creating these apps is: `$CLUSTER_NAME-$HUB_
 
 ### CILogon OAuth application
 
-Similarly, for each hub that uses CILogon, we dynamically create an OAuth [client application](https://cilogon.github.io/oa4mp/server/manuals/dynamic-client-registration.html) in CILogon using the [cilogon_app.py](https://github.com/2i2c-org/infrastructure/blob/HEAD/deployer/cilogon_app.py)
-script. Use the script to delete this CILogon client when a hub is removed:
+Similarly, for each hub that uses CILogon, we dynamically create an OAuth [client application](https://cilogon.github.io/oa4mp/server/manuals/dynamic-client-registration.html) in CILogon using the `deployer cilogon-client-create` command.
+Use the `deployer cilogon-client-delete` command to delete this CILogon client when a hub is removed:
 
 You'll need to get all clients with:
 
 ```bash
-python3 deployer/cilogon_app.py get-all
+deployer cilogon-client-get-all
 ```
 
 And then identify the client of the hub and delete based on its id with:
 
 ```bash
-python3 deployer/cilogon_app.py delete --id cilogon:/client_id/<id>
+deployer cilogon-client-delete --client_id cilogon:/client_id/<id>
 ```

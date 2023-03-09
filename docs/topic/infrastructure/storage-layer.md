@@ -9,6 +9,13 @@ This is made available through cloud-specific filestores and **sometimes** throu
 
 % The editable version of the diagram is here: https://docs.google.com/presentation/d/1zu7d1mXN6R32i124vtohNXVIpqO-goiY01KzWQsZsas/edit?usp=sharing
 
+## NFS Server provisioned setup
+
+[Terraform](topic:terraform) is setup to provision the in-cluster NFS server using the following cloud specific implementations.
+
+* GCP: Google Filestore
+* Azure: Files
+* AWS: Elastic File System
 
 ## NFS Server setup - only for manually managed servers
 
@@ -18,7 +25,7 @@ No longer the default option!
 Use this as a last resort only on GCP clusters that are very price sensitive.
 Use the cloud-specific filestore as default instead.
 
-Checkout https://infrastructure.2i2c.org/en/latest/howto/operate/manual-nfs-setup.html#manually-setup-an-nfs-server.
+Checkout [](howto:manual-nfs-setup)
 ```
 
 Some of the 2i2c clusters has a NFS server that is usually located at `nfs-server-01`. This is currently hand configured, so it might change in the future. This NFS Server has a [persistent disk](https://cloud.google.com/persistent-disk) that's independent from rest of the VM (it can be grown / snapshotted independently). This disk is mounted inside the NFS server at `/export/home-01` (for the home directories of users) and is made available via NFS to be mounted by everything in the cluster, via [`/etc/exports`](https://access.redhat.com/documentation/en-us/red_hat_enterprise_linux/5/html/deployment_guide/s1-nfs-server-config-exports):

@@ -127,8 +127,5 @@ basehub:
             node_selector:
               node.kubernetes.io/instance-type: m5.8xlarge
     scheduling:
-      userPlaceholder:
-        enabled: false
-        replicas: 0
       userScheduler:
-        enabled: false
+        enabled: true

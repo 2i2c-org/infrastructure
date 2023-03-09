@@ -117,8 +117,5 @@ basehub:
         name: quay.io/uwhackweek/snowex
         tag: "2022.07.07"
     scheduling:
-      userPlaceholder:
-        enabled: false
-        replicas: 0
       userScheduler:
-        enabled: false
+        enabled: true

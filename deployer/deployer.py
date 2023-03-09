@@ -24,6 +24,7 @@ from .config_validation import (
     validate_support_config,
 )
 from .file_acquisition import find_absolute_path_to_cluster_file, get_decrypted_file
+from .grafana.grafana_utils import get_grafana_token, get_grafana_url
 from .helm_upgrade_decision import (
     assign_staging_jobs_for_missing_clusters,
     discover_modified_common_files,
@@ -96,95 +97,44 @@ def deploy_grafana_dashboards(
     cluster_name: str = typer.Argument(..., help="Name of cluster to operate on")
 ):
     """
-    Deploy JupyterHub dashboards to grafana set up in the given cluster
+    Deploy the latest official JupyterHub dashboards to a cluster's grafana
+    instance. This is done via Grafana's REST API, authorized by using a
+    previously generated Grafana service account's access token.
 
-    Grafana dashboards and deployment mechanism are maintained at
-    https://github.com/jupyterhub/grafana-dashboards
+    The official JupyterHub dashboards are maintained in
+    https://github.com/jupyterhub/grafana-dashboards along with a python script
+    to deploy them to Grafana via a REST API.
     """
-    validate_cluster_config(cluster_name)
-    validate_support_config(cluster_name)
+    grafana_url = get_grafana_url(cluster_name)
+    grafana_token = get_grafana_token(cluster_name)
 
-    config_file_path = find_absolute_path_to_cluster_file(cluster_name)
-    with open(config_file_path) as f:
-        cluster = Cluster(yaml.load(f), config_file_path.parent)
-
-    # If grafana support chart is not deployed, then there's nothing to do
-    if not cluster.support:
-        print_colour(
-            "Support chart has not been deployed. Skipping Grafana dashboards deployment..."
-        )
-        return
-
-    grafana_token_file = (config_file_path.parent).joinpath(
-        "enc-grafana-token.secret.yaml"
-    )
-
-    # Read the cluster specific secret grafana token file
-    with get_decrypted_file(grafana_token_file) as decrypted_file_path:
-        with open(decrypted_file_path) as f:
-            config = yaml.load(f)
-
-    # Check GRAFANA_TOKEN exists in the secret config file before continuing
-    if "grafana_token" not in config.keys():
-        raise ValueError(
-            f"`grafana_token` not provided in secret file! Please add it and try again: {grafana_token_file}"
-        )
-
-    # FIXME: We assume grafana_url and uses_tls config will be defined in the first
-    #        file listed under support.helm_chart_values_files.
-    support_values_file = cluster.support.get("helm_chart_values_files", [])[0]
-    with open(config_file_path.parent.joinpath(support_values_file)) as f:
-        support_values_config = yaml.load(f)
-
-    # Get the url where grafana is running from the support values file
-    grafana_url = (
-        support_values_config.get("grafana", {}).get("ingress", {}).get("hosts", {})
-    )
-    uses_tls = (
-        support_values_config.get("grafana", {}).get("ingress", {}).get("tls", {})
-    )
-
-    if not grafana_url:
-        print_colour(
-            "Couldn't find `config.grafana.ingress.hosts`. Skipping Grafana dashboards deployment..."
-        )
-        return
-
-    grafana_url = (
-        f"https://{grafana_url[0]}" if uses_tls else f"http://{grafana_url[0]}"
-    )
-
-    # Use the jupyterhub/grafana-dashboards deployer to deploy the dashboards to this cluster's grafana
     print_colour("Cloning jupyterhub/grafana-dashboards...")
-
-    dashboards_dir = "grafana_dashboards"
-
     subprocess.check_call(
         [
             "git",
             "clone",
             "https://github.com/jupyterhub/grafana-dashboards",
-            dashboards_dir,
         ]
     )
 
-    # We need the existing env too for the deployer to be able to find jssonnet and grafonnet
-    deploy_env = os.environ.copy()
-    deploy_env.update({"GRAFANA_TOKEN": config["grafana_token"]})
-
+    # Add GRAFANA_TOKEN to the environment variables for
+    # jupyterhub/grafana-dashboards' deploy.py script
+    deploy_script_env = os.environ.copy()
+    deploy_script_env.update({"GRAFANA_TOKEN": grafana_token})
     try:
         print_colour(f"Deploying grafana dashboards to {cluster_name}...")
         subprocess.check_call(
-            ["./deploy.py", grafana_url], env=deploy_env, cwd=dashboards_dir
+            ["./deploy.py", grafana_url],
+            env=deploy_script_env,
+            cwd="grafana-dashboards",
         )
-
         print_colour(f"Done! Dashboards deployed to {grafana_url}.")
     finally:
         # Delete the directory where we cloned the repo.
         # The deployer cannot call jsonnet to deploy the dashboards if using a temp directory here.
         # Might be because opening more than once of a temp file is tried
         # (https://docs.python.org/3.8/library/tempfile.html#tempfile.NamedTemporaryFile)
-        shutil.rmtree(dashboards_dir)
+        shutil.rmtree("grafana-dashboards")
 
 
 @app.command()
@@ -247,7 +197,7 @@ def generate_helm_upgrade_jobs(
     )
 ):
     """
-    Analyse added or modified files from a GitHub Pull Request and decide which
+    Analyze added or modified files from a GitHub Pull Request and decide which
     clusters and/or hubs require helm upgrades to be performed for their *hub helm
     charts or the support helm chart.
     """

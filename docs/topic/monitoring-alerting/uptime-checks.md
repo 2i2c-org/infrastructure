@@ -1,3 +1,4 @@
+(uptime-checks)=
 # Simple HTTPS uptime checks
 
 Ideally, when a hub is down, a machine alerts us - we do not have to wait for a user

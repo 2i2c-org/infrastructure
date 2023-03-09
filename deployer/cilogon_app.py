@@ -1,37 +1,32 @@
 """
 ### Summary
 
-This is a helper script that can create/update/get/delete CILogon clients
-using the 2i2c administrative client provided by CILogon.
+Create/update/get/delete CILogon clients using the 2i2c administrative client provided by CILogon.
 More details here: https://cilogon.github.io/oa4mp/server/manuals/dynamic-client-registration.html
 
 ### Use cases
 
-The script can be used to:
+The commands in this file can be used to:
 
 - `create` a CILogon OAuth application for a hub and store the credentials safely
 - `update` the callback urls of an existing hub CILogon client
 - `delete` a CILogon OAuth application when a hub is removed or changes auth methods
 - `get` details about an existing hub CILogon client
 - `get-all` existing 2i2c CILogon OAuth applications
-
-### Running the script
-
-Get usage instructions about each of the available subcommands (create/update/get/get-all/delete)
-by executing the script with `--help` flag, from the root of the repository:
-
-- python deployer/cilogon_app.py create --help
 """
 
-import argparse
 import base64
 import subprocess
 from pathlib import Path
 
 import requests
-from file_acquisition import find_absolute_path_to_cluster_file, get_decrypted_file
+import typer
 from ruamel.yaml import YAML
 from yarl import URL
+
+from .cli_app import app
+from .file_acquisition import find_absolute_path_to_cluster_file, get_decrypted_file
+from .utils import print_colour
 
 yaml = YAML(typ="safe")
 
@@ -67,7 +62,8 @@ class CILogonAdmin:
         Args:
            body (dict): Attributes for the new client
 
-        Returns a dict containing the client details.
+        Returns a dict containing the client details
+        or None if the `create` request returned a status code not in the range 200-299.
 
         See: https://github.com/ncsa/OA4MP/blob/HEAD/oa4mp-server-admin-oauth2/src/main/scripts/oidc-cm-scripts/cm-post.sh
         """
@@ -79,13 +75,15 @@ class CILogonAdmin:
 
         client_name = body["client_name"]
 
-        if response.status_code != 200:
-            print(
-                f"An error occured when creating the {client_name} client. \n Error was {response.text}."
+        if not response.ok:
+            print_colour(
+                f"Creating the {id} client returned a {response.status_code} status code.",
+                "red",
             )
-            response.raise_for_status()
+            print_colour(f"{response.text}", "yellow")
+            return
 
-        print(f"Successfully created a new CILogon client for {client_name}!")
+        print_colour(f"Successfully created a new CILogon client for {client_name}!")
         return response.json()
 
     def get(self, id=None):
@@ -94,7 +92,8 @@ class CILogonAdmin:
         Args:
            id (str): Id of the client to get
 
-        Returns a dict containing the client details.
+        Returns a dict containing the client details
+        or None if the `get` request returned a status code not in the range 200-299.
 
         See: https://github.com/ncsa/OA4MP/blob/HEAD/oa4mp-server-admin-oauth2/src/main/scripts/oidc-cm-scripts/cm-get.sh
         """
@@ -104,25 +103,31 @@ class CILogonAdmin:
             self._url(id), params=None, headers=headers, timeout=self.timeout
         )
 
-        if response.status_code != 200:
-            print(
-                f"An error occured when getting the details of {id} client. \n Error was {response.text}."
+        if not response.ok:
+            print_colour(
+                f"Getting the details of {id} client returned a {response.status_code} status code.",
+                "red",
             )
-            response.raise_for_status()
+            print_colour(f"{response.text}", "yellow")
+            return
 
-        print(f"Successfully got the details for {id} client!")
+        if id:
+            print_colour(f"Successfully got the details for {id} client!")
+
         return response.json()
 
     def update(self, id, body):
         """Modifies a client by its id.
 
-        The client_secret attribute cannot be updated.
-        Note that any values missing will be deleted from the information for the server!
+        The `client_secret` attribute cannot be updated.
+
+        Note that any missing attribute values will be deleted from the client's stored information!
         Args:
            id (str): Id of the client to modify
            body (dict): Attributes to modify.
 
-        Returns 200 OK or raises an error if the update request returned anything other than 200..
+        Returns status code if response.ok
+        or None if the `update` request returned a status code not in the range 200-299.
 
         See: https://github.com/ncsa/OA4MP/blob/HEAD/oa4mp-server-admin-oauth2/src/main/scripts/oidc-cm-scripts/cm-put.sh
         """
@@ -131,15 +136,15 @@ class CILogonAdmin:
             self._url(id), json=body, headers=headers, timeout=self.timeout
         )
 
-        client_name = body["client_name"]
-
-        if response.status_code != 200:
-            print(
-                f"An error occured when updating the {client_name} client. \n Error was {response.text}."
+        if not response.ok:
+            print_colour(
+                f"Updating the details of {id} client returned a {response.status_code} status code.",
+                "red",
             )
-            response.raise_for_status()
+            print_colour(f"{response.text}", "yellow")
+            return
 
-        print("Client updated succesfuly!")
+        print_colour("Client updated successfully!")
         return response.status_code
 
     def delete(self, id):
@@ -148,7 +153,8 @@ class CILogonAdmin:
         Args:
            id (str): Id of the client to delete
 
-        Returns 200 OK or raises an error if the delete request returned anything other than 200.
+        Returns status code if response.ok
+        or None if the `delete` request returned a status code not in the range 200-299.
 
         See: https://github.com/ncsa/OA4MP/blob/HEAD/oa4mp-server-admin-oauth2/src/main/scripts/oidc-cm-scripts/cm-delete.sh
         """
@@ -156,17 +162,19 @@ class CILogonAdmin:
         headers = self.base_headers.copy()
         response = requests.delete(self._url(id), headers=headers, timeout=self.timeout)
 
-        if response.status_code != 200:
-            print(
-                f"An error occured when deleting the {id} client. \n Error was {response.text}."
+        if not response.ok:
+            print_colour(
+                f"Deleting the {id} client returned a {response.status_code} status code.",
+                "red",
             )
-            response.raise_for_status()
+            print_colour(f"{response.text}", "yellow")
+            return
 
-        print(f"Successfully deleted the {id} client!")
+        print_colour(f"Successfully deleted the {id} client!")
         return response.status_code
 
 
-class CILogonClientProvider:
+class CILogonClientManager:
     def __init__(self, admin_id, admin_secret):
         self.admin_id = admin_id
         self.admin_secret = admin_secret
@@ -237,8 +245,9 @@ class CILogonClientProvider:
                 "client_id"
             ]
         except FileNotFoundError:
-            print(
-                "Oops! The CILogon client you requested to doesn't exist! Please create it first."
+            print_colour(
+                "Oops! The CILogon client you requested to doesn't exist! Please create it first.",
+                "yellow",
             )
             return
 
@@ -249,11 +258,12 @@ class CILogonClientProvider:
         config_filename = self._build_config_filename(cluster_name, hub_name)
 
         if Path(config_filename).is_file():
-            print(
+            print_colour(
                 f"""
                 Oops! A CILogon client already exists for this hub!
                 Use the update subcommand to update it or delete {config_filename} if you want to generate a new one.
-                """
+                """,
+                "yellow",
             )
             return
 
@@ -292,13 +302,16 @@ class CILogonClientProvider:
         print(
             f"Getting the stored CILogon client details for {cluster_name}-{hub_name}..."
         )
-        print(self.admin_client.get(client_id))
+        client_details = self.admin_client.get(client_id)
+        if client_details:
+            print(client_details)
 
     def delete_client(self, cluster_name, hub_name, client_id=None):
         if not client_id:
             if not cluster_name or not hub_name:
-                print(
-                    "Please provide either the client id to delete or the cluster and hub name."
+                print_colour(
+                    "Please provide either the client id to delete or the cluster and hub name.",
+                    "red",
                 )
                 return
 
@@ -310,7 +323,7 @@ class CILogonClientProvider:
                 return
 
         print(f"Deleting the CILogon client details for {client_id}...")
-        print(self.admin_client.delete(client_id))
+        return self.admin_client.delete(client_id)
 
     def get_all_clients(self):
         print("Getting all existing OAauth client applications...")
@@ -318,162 +331,97 @@ class CILogonClientProvider:
         for c in clients["clients"]:
             print(c)
 
-
-def main():
-    argparser = argparse.ArgumentParser(
-        description="""A command line tool to create/update/delete
-        CILogon clients.
+    @staticmethod
+    def get_2i2c_cilogon_client_provider():
         """
-    )
-    subparsers = argparser.add_subparsers(
-        required=True, dest="action", help="Available subcommands"
-    )
-
-    # Create subcommand
-    create_parser = subparsers.add_parser(
-        "create",
-        help="Create a CILogon client",
-    )
-
-    create_parser.add_argument(
-        "cluster_name",
-        type=str,
-        help="The name of the cluster where the hub lives",
-    )
-
-    create_parser.add_argument(
-        "hub_name",
-        type=str,
-        help="The hub for which we'll create a CILogon client",
-    )
-
-    create_parser.add_argument(
-        "hub_type",
-        type=str,
-        help="The type of hub for which we'll create a CILogon client.",
-        default="basehub",
-    )
-
-    create_parser.add_argument(
-        "callback_url",
-        type=str,
-        help="URL that is invoked after OAuth authorization",
-    )
-
-    # Update subcommand
-    update_parser = subparsers.add_parser(
-        "update",
-        help="Update a CILogon client",
-    )
-
-    update_parser.add_argument(
-        "cluster_name",
-        type=str,
-        help="The name of the cluster where the hub lives",
-    )
-
-    update_parser.add_argument(
-        "hub_name",
-        type=str,
-        help="The hub for which we'll update the CILogon client",
-    )
-
-    update_parser.add_argument(
-        "callback_url",
-        type=str,
-        help="""
-        New callback_url to associate with the client.
-        This URL is invoked after OAuth authorization
-        """,
-    )
-
-    # Get subcommand
-    get_parser = subparsers.add_parser(
-        "get",
-        help="Retrieve details about an existing CILogon client",
-    )
-
-    get_parser.add_argument(
-        "cluster_name",
-        type=str,
-        help="The name of the cluster where the hub lives",
-    )
-
-    get_parser.add_argument(
-        "hub_name",
-        type=str,
-        help="The hub for which we'll retrieve the CILogon client details",
-    )
-
-    # Get all subcommand
-    subparsers.add_parser(
-        "get-all",
-        help="Retrieve details about an existing CILogon client",
-    )
-
-    # Delete subcommand
-    delete_parser = subparsers.add_parser(
-        "delete",
-        help="Delete an existing CILogon client",
-    )
-
-    delete_parser.add_argument(
-        "cluster_name",
-        type=str,
-        help="The name of the cluster where the hub lives or none if --id is present",
-        default="",
-        nargs="?",
-    )
-
-    delete_parser.add_argument(
-        "hub_name",
-        type=str,
-        help="The hub for which we'll delete the CILogon client details or none if --id is present",
-        default="",
-        nargs="?",
-    )
-
-    delete_parser.add_argument(
-        "--id",
-        type=str,
-        help="The id of the client to delete of the form cilogon:/client_id/<id>",
-    )
-
-    args = argparser.parse_args()
-
-    # This filepath is relative to the PROJECT ROOT
-    general_auth_config = "shared/deployer/enc-auth-providers-credentials.secret.yaml"
-    with get_decrypted_file(general_auth_config) as decrypted_file_path:
-        with open(decrypted_file_path) as f:
-            config = yaml.load(f)
-
-    cilogon = CILogonClientProvider(
-        config["cilogon_admin"]["client_id"], config["cilogon_admin"]["client_secret"]
-    )
-
-    if args.action == "create":
-        cilogon.create_client(
-            args.cluster_name,
-            args.hub_name,
-            args.hub_type,
-            args.callback_url,
+        Create an instance of a `CILogonClientManager` using the 2i2c administrative client credentials
+        stored in `shared/deployer/enc-auth-providers-credentials.secret.yaml`.
+        """
+        # This filepath is relative to the PROJECT ROOT
+        general_auth_config = (
+            "shared/deployer/enc-auth-providers-credentials.secret.yaml"
         )
-    elif args.action == "update":
-        cilogon.update_client(
-            args.cluster_name,
-            args.hub_name,
-            args.callback_url,
+        with get_decrypted_file(general_auth_config) as decrypted_file_path:
+            with open(decrypted_file_path) as f:
+                config = yaml.load(f)
+
+        return CILogonClientManager(
+            config["cilogon_admin"]["client_id"],
+            config["cilogon_admin"]["client_secret"],
         )
-    elif args.action == "get":
-        cilogon.get_client(
-            args.cluster_name,
-            args.hub_name,
-        )
-    elif args.action == "delete":
-        cilogon.delete_client(args.cluster_name, args.hub_name, args.id)
-    elif args.action == "get-all":
-        cilogon.get_all_clients()
 
 
-if __name__ == "__main__":
-    main()
+@app.command()
+def cilogon_client_create(
+    cluster_name: str = typer.Argument(..., help="Name of cluster to operate on"),
+    hub_name: str = typer.Argument(
+        ..., help="Name of the hub for which we'll create a CILogon client"
+    ),
+    hub_type: str = typer.Argument(
+        "basehub",
+        help="Type of hub for which we'll create a CILogon client (ex: basehub, daskhub)",
+    ),
+    callback_url: str = typer.Argument(
+        ..., help="URL that is invoked after OAuth authorization"
+    ),
+):
+    """Create a CILogon OAuth client for a hub."""
+    CILogonClientManager.get_2i2c_cilogon_client_provider().create_client(
+        cluster_name, hub_name, hub_type, callback_url
+    )
+
+
+@app.command()
+def cilogon_client_update(
+    cluster_name: str = typer.Argument(..., help="Name of cluster to operate on"),
+    hub_name: str = typer.Argument(
+        ..., help="Name of the hub for which we'll update a CILogon client"
+    ),
+    callback_url: str = typer.Argument(
+        ...,
+        help="New callback_url to associate with the client. This URL is invoked after OAuth authorization",
+    ),
+):
+    """Update the CILogon OAuth client of a hub."""
+    CILogonClientManager.get_2i2c_cilogon_client_provider().update_client(
+        cluster_name, hub_name, callback_url
+    )
+
+
+@app.command()
+def cilogon_client_get(
+    cluster_name: str = typer.Argument(..., help="Name of cluster to operate on"),
+    hub_name: str = typer.Argument(
+        ..., help="Name of the hub for which we'll retrieve the CILogon client details"
+    ),
+):
+    """Retrieve details about an existing CILogon client."""
+    CILogonClientManager.get_2i2c_cilogon_client_provider().get_client(
+        cluster_name, hub_name
+    )
+
+
+@app.command()
+def cilogon_client_get_all():
+    """Retrieve details about all existing 2i2c CILogon OAuth clients."""
+    CILogonClientManager.get_2i2c_cilogon_client_provider().get_all_clients()
+
+
+@app.command()
+def cilogon_client_delete(
+    cluster_name: str = typer.Argument(
+        "", help="Name of cluster to operate or none if --client_id is passed"
+    ),
+    hub_name: str = typer.Argument(
+        "",
+        help="Name of the hub for which we'll delete the CILogon client details or none if --client_id is passed",
+    ),
+    client_id: str = typer.Option(
+        "",
+        help="Id of the CILogon OAuth client to delete of the form cilogon:/client_id/<id>",
+    ),
+):
+    """Delete an existing CILogon client."""
+    CILogonClientManager.get_2i2c_cilogon_client_provider().delete_client(
+        cluster_name, hub_name, client_id
+    )

@@ -3,5 +3,5 @@ creation_rules:
     gcp_kms: projects/two-eye-two-see/locations/global/keyRings/sops-keys/cryptoKeys/similar-hubs
   - path_regex: .*/eksctl/ssh-keys/.*
     gcp_kms: projects/two-eye-two-see/locations/global/keyRings/sops-keys/cryptoKeys/similar-hubs
-  - path_regex: shared/keys/.*key.*
+  - path_regex: deployer/keys/.*key.*
     gcp_kms: projects/two-eye-two-see/locations/global/keyRings/sops-keys/cryptoKeys/similar-hubs

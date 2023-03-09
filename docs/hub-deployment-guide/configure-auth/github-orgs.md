@@ -154,6 +154,8 @@ For each user, GitHub will list _all organizations of which they are a member_.
   This will notify the org admins to grant access to this app on your behalf.
 - Organisations that you are an admin of will have a "Grant" button next to them
 
+If you have already logged in to the hub prior to adding the organization authentication you can perform the grant on the Authorized Oauth Apps tab of your accounts GitHub [Applications](https://github.com/settings/connections/applications/) Settings.
+
 **You must grant access to the organization that is added to `allowed_organizations` in the config**, but do not need to grant access to any other organizations.
 In this case, "granting access" only means that the JupyterHub can view whether a user is a member of the GitHub organization.
 

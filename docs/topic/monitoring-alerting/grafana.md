@@ -20,7 +20,7 @@ To access the Grafana dashboards you have two options:
 
 - Use a **username** and **password** to get `Admin` access into the Grafana.
 
-  These credentials can be accessed using `sops` (see {ref `tc:secrets:sops` for how to set up `sops` on your machine). See [](setup-grafana:log-in) for how to find the credentials information.
+  These credentials can be accessed using `sops` (see  [the team compass documentation](tc:secrets:sops) for how to set up `sops` on your machine). See [](setup-grafana:log-in) for how to find the credentials information.
 
 (grafana-dashboards:central)=
 ## The Central Grafana
