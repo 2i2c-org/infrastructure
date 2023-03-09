@@ -186,10 +186,6 @@ jobs:
               # not - for example, single quotes are not valid in JSON.
               f.write(f"MATRIX={json.dumps(matrix)}")
 
-      - name: Echo matrix env var
-        run: |
-          echo "${{ env.MATRIX }}"
-
   # This job runs the 'deployer validate' subcommand across a matrix of
   # cluster names.
   #
