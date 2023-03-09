@@ -24,6 +24,7 @@ resource "google_monitoring_uptime_check_config" "hub_simple_uptime_check" {
   for_each = { for h in local.hubs : h.domain => h }
 
   display_name = "${each.value.domain} on ${each.value.cluster}"
+  selected_regions = ["USA",]
   timeout      = "30s"
 
   # Check every 5 minutes
