@@ -152,7 +152,7 @@ prometheus:
       #
       requests:
         cpu: 0.2
-        memory: 512Mi
+        memory: 2Gi
       limits:
         cpu: 1
         memory: 2Gi
