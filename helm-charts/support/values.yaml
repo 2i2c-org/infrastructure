@@ -34,6 +34,13 @@ ingress-nginx:
       # ref: https://z2jh.jupyter.org/en/stable/administrator/security.html#introduction-to-the-chart-s-four-network-policies
       #
       hub.jupyter.org/network-access-proxy-http: "true"
+    resources:
+      requests:
+        cpu: 100m # chart's default is 100m
+        # This pod has been observed at 104-131Mi so far in 2i2c clusters, above
+        # the default request of 90Mi. To protect it from being evicted by using
+        # more memory than requested, we have increased the memory request.
+        memory: 250Mi # chart's default is 90Mi
 
 # prometheus is responsible for collecting metrics and informing grafana about
 # the metrics on request. It comes with several dependency charts, where we
