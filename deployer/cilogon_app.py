@@ -58,7 +58,7 @@ def build_client_details(cluster_name, hub_name, callback_url):
         "client_name": f"{cluster_name}-{hub_name}",
         "app_type": "web",
         "redirect_uris": [callback_url],
-        "scope": "openid email org.cilogon.userinfo",
+        "scope": "openid email org.cilogon.userinfo profile",
     }
 
 
@@ -111,7 +111,7 @@ def persist_client_credentials_in_config_file(client, hub_type, config_filename)
         yaml.dump(auth_config, f)
     subprocess.check_call(["sops", "--encrypt", "--in-place", config_filename])
     print_colour(
-        "Successfully persisted the encrypted CILogon OAuth client app credentials to file {config_filename}"
+        f"Successfully persisted the encrypted CILogon OAuth client app credentials to file {config_filename}"
     )
 
 
