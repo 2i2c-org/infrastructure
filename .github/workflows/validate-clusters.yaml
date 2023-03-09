@@ -100,6 +100,18 @@ jobs:
             cluster_specific:
               - added|modified: config/clusters/**
 
+      - name: Test outputs
+        run: |
+          echo "event name"
+          echo ${{ github.event_name == 'workflow_dispatch' }}
+          echo "common file changes"
+          echo "${{ steps.file_changes.outputs.common == 'true' }}"
+          echo "specific file changes"
+          echo "${{ steps.file_changes.outputs.cluster_specific == 'true' }}"
+          echo "whole statement"
+          echo ${{ github.event_name == 'workflow_dispatch' || (steps.file_changes.outputs.common == 'true' || steps.file_changes.outputs.cluster_specific == 'true') }}
+          echo ${{ github.event_name == 'workflow_dispatch' || (steps.file_changes.outputs.common == 'true' || steps.file_changes.outputs.cluster_specific == 'true') }} == 'true'
+
       # Only run this step if there *ARE* changes under the common filter, *OR*
       # we have manually triggered the workflow
       - name: Generate a matrix containing all clusters
