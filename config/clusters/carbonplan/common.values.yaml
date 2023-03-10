@@ -52,13 +52,13 @@ basehub:
               choices:
                 python:
                   display_name: DEPRECATED Trace Python Notebook
+                  default: true
                   slug: "python"
                   kubespawner_override:
                     image: carbonplan/trace-python-notebook:latest
                 main:
                   display_name: Main Single User
                   slug: "main"
-                  default: true
                   kubespawner_override:
                     image: carbonplan/main-single-user:latest
                 cmip6:
