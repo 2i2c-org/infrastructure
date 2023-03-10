@@ -21,7 +21,7 @@ hubs:
       # that you intend for these files to be applied in this order.
       - common.values.yaml
       - staging.values.yaml
-      - enc-staging.values.yaml
+      - enc-staging.secret.values.yaml
   - name: prod
     display_name: "Carbon Plan (AWS, prod)"
     domain: carbonplan.2i2c.cloud
@@ -32,4 +32,4 @@ hubs:
       # that you intend for these files to be applied in this order.
       - common.values.yaml
       - prod.values.yaml
-      - enc-prod.values.yaml
+      - enc-prod.secret.values.yaml
