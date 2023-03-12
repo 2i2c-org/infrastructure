@@ -12,11 +12,6 @@ basehub:
       serverIP: fs-029a8973da2b1ef5f.efs.us-west-2.amazonaws.com
       baseShareName: /
   jupyterhub:
-    prePuller:
-      continuous:
-        enabled: true
-      hook:
-        enabled: true
     custom:
       2i2c:
         add_staff_user_ids_to_admin_users: true
@@ -55,9 +50,20 @@ basehub:
             - 2i2c-org:hub-access-for-2i2c-staff
           scope:
             - read:org
+    prePuller:
+      continuous:
+        enabled: true
+      hook:
+        enabled: true
     singleuser:
       defaultUrl: /lab
       image:
+        # NOTE: To have prePuller enabled makes sense as long as we stick with a
+        #       single image option configured from here. If the configurator is
+        #       used, or a list of images is chosen from, then prePuller should
+        #       be disabled to avoid pulling images not to be used, which could
+        #       potentially delay startup of a user pod wanting to pull another
+        #       image.
         name: pangeo/pangeo-notebook
         tag: "2023.01.13"
       profileList:
