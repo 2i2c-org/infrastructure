@@ -1,9 +1,34 @@
+# This data resource and output provides information on the latest available k8s
+# versions in GCP's regular release channel. This can be used when specifying
+# versions to upgrade to via the k8s_versions variable.
+#
+# To get get the output of relevance, run:
+#
+#   terraform plan -var-file=projects/$CLUSTER_NAME.tfvars
+#   terraform output regular_channel_latest_k8s_versions
+#
+# data ref: https://registry.terraform.io/providers/hashicorp/google/latest/docs/data-sources/container_engine_versions
+data "google_container_engine_versions" "k8s_version_prefixes" {
+  project  = var.project_id
+  location = var.zone
+
+  for_each = var.k8s_version_prefixes
+  version_prefix = each.value
+}
+output "regular_channel_latest_k8s_versions" {
+  value = {
+    for k, v in data.google_container_engine_versions.k8s_version_prefixes : k => v.release_channel_latest_version["REGULAR"]
+  }
+}
+
+# resource ref: https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/google_service_account
 resource "google_service_account" "cluster_sa" {
   account_id   = "${var.prefix}-cluster-sa"
   display_name = "Service account used by nodes of cluster ${var.prefix}"
   project      = var.project_id
 }
 
+# resource ref: https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/google_project_iam#google_project_iam_member
 resource "google_project_iam_member" "cluster_sa_roles" {
   # https://cloud.google.com/kubernetes-engine/docs/how-to/hardening-your-cluster
   # has information on why the cluster SA needs these rights
@@ -20,14 +45,16 @@ resource "google_project_iam_member" "cluster_sa_roles" {
   member  = "serviceAccount:${google_service_account.cluster_sa.email}"
 }
 
+# resource ref: https://registry.terraform.io/providers/hashicorp/google-beta/latest/docs/resources/google_container_cluster
 resource "google_container_cluster" "cluster" {
   # Setting cluster autoscaling profile is in google-beta
   provider = google-beta
 
-  name           = "${var.prefix}-cluster"
-  location       = var.regional_cluster ? var.region : var.zone
-  node_locations = var.regional_cluster ? [var.zone] : null
-  project        = var.project_id
+  name               = "${var.prefix}-cluster"
+  location           = var.regional_cluster ? var.region : var.zone
+  node_locations     = var.regional_cluster ? [var.zone] : null
+  project            = var.project_id
+  min_master_version = var.k8s_versions.min_master_version
 
   initial_node_count       = 1
   remove_default_node_pool = true
@@ -150,11 +177,13 @@ resource "google_container_cluster" "cluster" {
   resource_labels = {}
 }
 
+# resource ref: https://registry.terraform.io/providers/hashicorp/google-beta/latest/docs/resources/container_node_pool
 resource "google_container_node_pool" "core" {
   name     = "core-pool"
   cluster  = google_container_cluster.cluster.name
   project  = google_container_cluster.cluster.project
   location = google_container_cluster.cluster.location
+  version  = var.k8s_versions.core_nodes_version
 
 
   initial_node_count = 1
@@ -205,11 +234,13 @@ resource "google_container_node_pool" "core" {
   }
 }
 
+# resource ref: https://registry.terraform.io/providers/hashicorp/google-beta/latest/docs/resources/container_node_pool
 resource "google_container_node_pool" "notebook" {
   name     = "nb-${each.key}"
   cluster  = google_container_cluster.cluster.name
   project  = google_container_cluster.cluster.project
   location = google_container_cluster.cluster.location
+  version  = var.k8s_versions.notebook_nodes_version
 
   for_each = var.notebook_nodes
 
@@ -299,11 +330,13 @@ resource "google_container_node_pool" "notebook" {
   }
 }
 
+# resource ref: https://registry.terraform.io/providers/hashicorp/google-beta/latest/docs/resources/container_node_pool
 resource "google_container_node_pool" "dask_worker" {
   name     = "dask-${each.key}"
   cluster  = google_container_cluster.cluster.name
   project  = google_container_cluster.cluster.project
   location = google_container_cluster.cluster.location
+  version  = var.k8s_versions.dask_nodes_version
 
   # Default to same config as notebook nodepools config
   for_each = var.dask_nodes
