@@ -87,23 +87,96 @@ basehub:
         # Can be removed once https://github.com/2i2c-org/infrastructure/pull/2160 is merged
         JUPYTERHUB_SINGLEUSER_APP: "jupyter_server.serverapp.ServerApp"
       profileList:
-        # The mem-guarantees are here so k8s doesn't schedule other pods
-        # on these nodes. They need to be just under total allocatable
-        # RAM on a node, not total node capacity. Values calculated using
-        # https://learnk8s.io/kubernetes-instance-calculator
-        - display_name: "Small"
-          description: 5GB RAM, 2 CPUs
+        # NOTE: About node sharing
+        #
+        #       CPU/Memory requests/limits are actively considered still. This
+        #       profile list is setup to involve node sharing as considered in
+        #       https://github.com/2i2c-org/infrastructure/issues/2121.
+        #
+        #       - Memory requests are lower than the description, with a factor
+        #         of (node_max_mem - 4GB) / node_max_mem.
+        #       - CPU requests are lower than the description, with a factor of
+        #         10%.
+        #
+        # NOTE: This is not a standard node sharing setup, don't copy it!
+        #
+        #       LEAP has explicitly requested the following adjustments from the
+        #       standardized "medium" instance.
+        #
+        #       - The standardized "medium" instance is declared twice, once for
+        #         a github team with base access, and once for a github team with
+        #         full access.
+        #       - Limits for CPU and Memory are set to match the node share
+        #         description. Expected consequences of this is: significant CPU
+        #         under-utilization, OOMKilled processes when limit is reached, no
+        #         pod evictions due to node memory pressure.
+        #
+        # FIXME: Erik advocates putting a CPU limit is reconsidered, as its seen
+        #        as almost as a pure loss:
+        #
+        #        - The only win I think of is an possible edge case related to
+        #          inefficient spread CPU workload of workload across CPU cores
+        #          that can only be partially used.
+        #        - The losses I think of are: less performance for users overall,
+        #          fewer users per node without being constrained by the node's
+        #          actual capacity, more frequent need to startup new nodes which
+        #          causes more frequent need to wait on startups, increased cost,
+        #          wasted energy.
+        #
+        - display_name: "Medium: up to 16 CPU / 128 GB RAM"
+          description: &profile_list_description "Start a container limited to a chosen share of capacity on a node of this type"
+          slug: medium-full
           default: true
           allowed_teams:
-            - leap-stc:leap-pangeo-users
             - 2i2c-org:hub-access-for-2i2c-staff
-          kubespawner_override:
-            mem_limit: 7G
-            mem_guarantee: 4.5G
-            node_selector:
-              node.kubernetes.io/instance-type: n1-standard-2
-          profile_options: &profile_options
-            image:
+            - leap-stc:leap-pangeo-full-access
+          profile_options:
+            requests:
+              # NOTE: Node share choices are in active development, see comment
+              #       next to profileList: above.
+              #
+              #       This specific setup is not a standard node sharing setup,
+              #       don't copy it!
+              #
+              display_name: Node share
+              choices:
+                mem_8: &medium_mem_8
+                  display_name: ~8 GB, ~1.0 CPU
+                  default: true
+                  kubespawner_override:
+                    mem_guarantee: 7.75G
+                    cpu_guarantee: 0.1
+                    mem_limit: 8G
+                    cpu_limit: 1
+                mem_16: &medium_mem_16
+                  display_name: ~16 GB, ~2.0 CPU
+                  kubespawner_override:
+                    mem_guarantee: 15.5G
+                    cpu_guarantee: 0.2
+                    mem_limit: 16G
+                    cpu_limit: 2
+                mem_32: &medium_mem_32
+                  display_name: ~32 GB, ~4.0 CPU
+                  kubespawner_override:
+                    mem_guarantee: 31.0G
+                    cpu_guarantee: 0.4
+                    mem_limit: 32G
+                    cpu_limit: 4
+                mem_64:
+                  display_name: ~64 GB, ~8.0 CPU
+                  kubespawner_override:
+                    mem_guarantee: 62.0G
+                    cpu_guarantee: 0.8
+                    mem_limit: 64G
+                    cpu_limit: 8
+                mem_128:
+                  display_name: ~128 GB, ~16.0 CPU
+                  kubespawner_override:
+                    mem_guarantee: 124.0G
+                    cpu_guarantee: 1.6
+                    mem_limit: 128G
+                    cpu_limit: 16
+            image: &profile_list_profile_options_image
               display_name: Image
               choices:
                 pangeo:
@@ -127,46 +200,44 @@ basehub:
                   slug: "leap_edu"
                   kubespawner_override:
                     image: "quay.io/jbusecke/leap-edu-image:fa442ab4851c"
-        - display_name: Medium
-          description: 11GB RAM, 4 CPUs
-          allowed_teams:
-            - leap-stc:leap-pangeo-users
-            - 2i2c-org:hub-access-for-2i2c-staff
-          profile_options: *profile_options
-          kubespawner_override:
-            mem_limit: 15G
-            mem_guarantee: 11G
+          kubespawner_override: &medium_kubespawner_override
+            cpu_limit: null
+            mem_limit: null
             node_selector:
-              node.kubernetes.io/instance-type: n1-standard-4
-        - display_name: Large
-          description: 24GB RAM, 8 CPUs
+              node.kubernetes.io/instance-type: n2-highmem-16
+
+        # NOTE: This is the second medium profile list entry, with less node
+        #       share options for a different subset of users via the basehub
+        #       specific allowed_teams configuration.
+        #
+        - display_name: "Medium: up to 16 CPU / 128 GB RAM"
+          description: *profile_list_description
+          slug: medium-base
+          default: true
           allowed_teams:
-            - leap-stc:leap-pangeo-education
-            - leap-stc:leap-pangeo-research
-            - 2i2c-org:hub-access-for-2i2c-staff
-          kubespawner_override:
-            mem_limit: 30G
-            mem_guarantee: 24G
-            node_selector:
-              node.kubernetes.io/instance-type: n1-standard-8
-          profile_options: *profile_options
-        - display_name: Huge
-          description: 52GB RAM, 16 CPUs
-          allowed_teams:
-            - leap-stc:leap-pangeo-research
-            - 2i2c-org:hub-access-for-2i2c-staff
-          kubespawner_override:
-            mem_limit: 60G
-            mem_guarantee: 52G
-            node_selector:
-              node.kubernetes.io/instance-type: n1-standard-16
-          profile_options: *profile_options
-        - display_name: Large + GPU
+            - leap-stc:leap-pangeo-base-access
+          profile_options:
+            requests:
+              # NOTE: Node share choices are in active development, see comment
+              #       next to profileList: above.
+              #
+              #       This specific setup is not a standard node sharing setup,
+              #       don't copy it!
+              #
+              display_name: Node share
+              choices:
+                mem_8: *medium_mem_8
+                mem_16: *medium_mem_16
+                mem_32: *medium_mem_32
+            image: *profile_list_profile_options_image
+          kubespawner_override: *medium_kubespawner_override
+
+        - display_name: GPU
           slug: gpu
-          description: 24GB RAM, 8 CPUs
+          description: NVIDIA Tesla T4, 24GB RAM, 8 CPUs
           allowed_teams:
-            - leap-stc:leap-pangeo-research
             - 2i2c-org:hub-access-for-2i2c-staff
+            - leap-stc:leap-pangeo-full-access
           profile_options:
             image:
               display_name: Image
@@ -189,6 +260,7 @@ basehub:
             mem_guarantee: 24G
             extra_resource_limits:
               nvidia.com/gpu: "1"
+
 dask-gateway:
   gateway:
     backend:
