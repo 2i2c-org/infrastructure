@@ -166,7 +166,7 @@ cluster is unused or that the maintenance is communicated ahead of time.
       name, so the old node group can be deleted with the following command.
 
       ```bash
-      eksctl delete nodegroup --config-file=$CLUSTER_NAME.eksctl.yaml --include="core-b,nb-*,dask-*" --approve --drain=false
+      eksctl delete nodegroup --config-file=$CLUSTER_NAME.eksctl.yaml --include="core-a,nb-*,dask-*" --approve --drain=false
       ```
 
       Rename (part 3/3) the core node group one final time in the config to its
@@ -195,24 +195,30 @@ cluster is unused or that the maintenance is communicated ahead of time.
 
    # upgrade the aws-node daemonset
    eksctl utils update-aws-node --config-file=$CLUSTER_NAME.eksctl.yaml --approve
-   kubectl patch daemonset -n kube-system aws-node --patch='{"spec":{"template":{"spec":{"$setElementOrder/containers":[{"name":"aws-node"}],"containers":[{"name":"aws-node","securityContext":{"allowPrivilegeEscalation":null,"runAsNonRoot":null}}]}}}}'
 
    # upgrade the coredns deployment
    eksctl utils update-coredns --config-file=$CLUSTER_NAME.eksctl.yaml --approve
    ```
 
-   ```{note} Ignore these failures
+   ````{note} Common failures
    You may find that the aws-node daemonset's pods fail to start because of a
    too restrictive container securityContext not running as root.
 
    This is https://github.com/weaveworks/eksctl/issues/6048 and can be resolved
    by removing `runAsNonRoot: true` and `allowPrivilegeEscalation: false`. Using
-   `kubectl edit daemonset aws-node --output-patch=true` led to the `kubectl
-   patch` snippet we use above.
+   `kubectl edit daemonset aws-node --output-patch=true` led to this `kubectl
+   patch` snippet:
 
-   The kube-proxy deamonset's pods may fail to pull the image, but its an issue
-   that goes away when upgrading to or beyond k8s 1.23.
+   ```bash
+   kubectl patch daemonset -n kube-system aws-node --patch='{"spec":{"template":{"spec":{"$setElementOrder/containers":[{"name":"aws-node"}],"containers":[{"name":"aws-node","securityContext":{"allowPrivilegeEscalation":null,"runAsNonRoot":null}}]}}}}'
    ```
+
+   The kube-proxy deamonset's pods may fail to pull the image, to resolve this visit AWS EKS docs on [managing coredns](https://docs.aws.amazon.com/eks/latest/userguide/managing-coredns.html) to identify the version to use and update the coredns deployment's container image to match it.
+
+   ```bash
+   kubectl edit daemonset coredns -n kube-system
+   ```
+   ````
 
 6. *Repeat steps 3 and 5 if needed*
 
