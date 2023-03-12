@@ -25,10 +25,9 @@ local nodeAz = "us-west-2a";
 // A `node.kubernetes.io/instance-type label is added, so pods
 // can request a particular kind of node with a nodeSelector
 local notebookNodes = [
-    { instanceType: "m5.large" },
-    { instanceType: "m5.xlarge" },
-    { instanceType: "m5.2xlarge" },
-    { instanceType: "m5.8xlarge" },
+    { instanceType: "r5.xlarge" },
+    { instanceType: "r5.4xlarge" },
+    { instanceType: "r5.16xlarge" },
 ];
 
 local daskNodes = [
@@ -38,10 +37,7 @@ local daskNodes = [
     // *first* item in instanceDistribution.instanceTypes, to match
     // what we do with notebook nodes. Pods can request a particular
     // kind of node with a nodeSelector
-    { instancesDistribution+: { instanceTypes: ["m5.large"] }},
-    { instancesDistribution+: { instanceTypes: ["m5.xlarge"] }},
-    { instancesDistribution+: { instanceTypes: ["m5.2xlarge"] }},
-    { instancesDistribution+: { instanceTypes: ["m5.8xlarge"] }},
+    { instancesDistribution+: { instanceTypes: ["r5.4xlarge"] }},
 ];
 
 
@@ -51,7 +47,7 @@ local daskNodes = [
     metadata+: {
         name: "nasa-veda",
         region: clusterRegion,
-        version: '1.24'
+        version: '1.25'
     },
     availabilityZones: masterAzs,
     iam: {
@@ -78,12 +74,12 @@ local daskNodes = [
     ],
     nodeGroups: [
         ng {
-            name: 'core-a',
+            name: 'core-b',
             availabilityZones: [nodeAz],
             ssh: {
                 publicKeyPath: 'ssh-keys/nasa-veda.key.pub'
             },
-            instanceType: "m5.xlarge",
+            instanceType: "r5.xlarge",
             minSize: 1,
             maxSize: 6,
             labels+: {
