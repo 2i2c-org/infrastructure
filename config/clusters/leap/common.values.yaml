@@ -67,7 +67,8 @@ basehub:
         GitHubOAuthenticator:
           populate_teams_in_auth_state: true
           allowed_organizations:
-            - leap-stc:leap-pangeo-users
+            - leap-stc:leap-pangeo-base-access
+            - leap-stc:leap-pangeo-full-access
             - 2i2c-org:hub-access-for-2i2c-staff
           scope:
             - read:org
