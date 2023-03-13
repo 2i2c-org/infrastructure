@@ -51,6 +51,12 @@ basehub:
           scope:
             - read:org
     prePuller:
+      # NOTE: To have prePuller enabled makes sense as long as we stick with a
+      #       single image option configured. Disable prePuller if the
+      #       configurator is used or a list of images is chosen from in the
+      #       profileList. Otherwise its likely to delay delay startup of a user
+      #       pod wanting to getting to wait for the pulling of another image.
+      #
       continuous:
         enabled: true
       hook:
@@ -58,12 +64,6 @@ basehub:
     singleuser:
       defaultUrl: /lab
       image:
-        # NOTE: To have prePuller enabled makes sense as long as we stick with a
-        #       single image option configured from here. If the configurator is
-        #       used, or a list of images is chosen from, then prePuller should
-        #       be disabled to avoid pulling images not to be used, which could
-        #       potentially delay startup of a user pod wanting to pull another
-        #       image.
         name: pangeo/pangeo-notebook
         tag: "2023.01.13"
       profileList:
