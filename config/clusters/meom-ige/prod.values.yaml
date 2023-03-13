@@ -2,3 +2,24 @@ basehub:
   userServiceAccount:
     annotations:
       iam.gke.io/gcp-service-account: meom-ige-prod@meom-ige-cnrs.iam.gserviceaccount.com
+  jupyterhub:
+    hub:
+      config:
+        JupyterHub:
+          authenticator_class: cilogon
+        CILogonOAuthenticator:
+          scope:
+            - "profile"
+          username_claim: "preferred_username"
+          oauth_callback_url: "https://meom-ige.2i2c.cloud/hub/oauth_callback"
+          # Only show the option to login with GitHub
+          shown_idps:
+            - http://github.com/login/oauth/authorize
+        Authenticator:
+          admin_users: &users
+            - amfriesz
+            - jules32
+            - erinmr
+            - betolink
+          # Without this, any GitHub user can authenticate
+          allowed_users: *users
