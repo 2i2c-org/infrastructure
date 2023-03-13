@@ -74,10 +74,10 @@ As the checks are all in GCP in the [monitoring console](https://console.cloud.g
  The `alpha` gcloud compnent also supports setting snoozes from the command line. For further documentation see the [Google Cloud Monitoring docs](https://cloud.google.com/monitoring/alerts/manage-snooze#gcloud-cli) or the [gcloud alpha monitoring snoozes](https://cloud.google.com/sdk/gcloud/reference/alpha/monitoring/snoozes) reference. You may need to add the `alpha` component to your `gcloud` install.
 
 
-Example CLI use below.
+Example CLI use that snoozes binder-staging check for 7 days:
 
  ```
- HUB=binder-staging
+HUB=binder-staging
 POLICY=$(gcloud alpha monitoring policies list  --filter "displayName ~ binder-staging" --format='value(name)')
 # echo $POLICY 
 # projects/two-eye-two-see/alertPolicies/12673409021288629743
