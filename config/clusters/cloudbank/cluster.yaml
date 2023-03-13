@@ -29,7 +29,7 @@ hubs:
       # to the helm upgrade command in, and that has meaning. Please check
       # that you intend for these files to be applied in this order.
       - ccsf.values.yaml
-      - enc-ccsf.values.yaml
+      - enc-ccsf.secret.values.yaml
   - name: csm
     display_name: "College of San Mateo"
     domain: csm.cloudbank.2i2c.cloud
@@ -49,7 +49,7 @@ hubs:
       # to the helm upgrade command in, and that has meaning. Please check
       # that you intend for these files to be applied in this order.
       - elcamino.values.yaml
-      - enc-elcamino.values.yaml
+      - enc-elcamino.secret.values.yaml
   - name: glendale
     display_name: "Glendale Community College"
     domain: glendale.cloudbank.2i2c.cloud
@@ -69,7 +69,7 @@ hubs:
       # to the helm upgrade command in, and that has meaning. Please check
       # that you intend for these files to be applied in this order.
       - howard.values.yaml
-      - enc-howard.values.yaml
+      - enc-howard.secret.values.yaml
   - name: miracosta
     display_name: "MiraCosta College"
     domain: miracosta.cloudbank.2i2c.cloud
@@ -89,7 +89,7 @@ hubs:
       # to the helm upgrade command in, and that has meaning. Please check
       # that you intend for these files to be applied in this order.
       - skyline.values.yaml
-      - enc-skyline.values.yaml
+      - enc-skyline.secret.values.yaml
   - name: demo
     display_name: "Cloudbank demo"
     domain: demo.cloudbank.2i2c.cloud
