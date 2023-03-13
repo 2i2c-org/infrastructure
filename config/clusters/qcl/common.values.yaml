@@ -190,6 +190,7 @@ jupyterhub:
         description: "Start a container on a dedicated node"
         slug: "n2_highcpu_96"
         kubespawner_override:
-          node.kubernetes.io/instance-type: n2-highcpu-96
+          node_selector:
+            node.kubernetes.io/instance-type: n2-highcpu-96
           mem_guarantee: 86.662G
           cpu_guarantee: 9.6
