@@ -56,7 +56,7 @@ jupyterhub:
           - read:org
   singleuser:
     image:
-      # User image repo: https://quay.io/repository/linkedearth/pyleoclim
+      # pangeo/pangeo-notebook is maintained at: https://github.com/pangeo-data/pangeo-docker-images
       name: pangeo/pangeo-notebook
       # pullPolicy set to "Always" because we use the changing over time tag
       # "latest".
