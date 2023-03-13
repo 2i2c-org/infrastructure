@@ -13,7 +13,7 @@ dependencies:
   # Grafana for dashboarding of metrics.
   # https://github.com/grafana/helm-charts/tree/main/charts/grafana
   - name: grafana
-    version: 6.51.5
+    version: 6.52.3
     repository: https://grafana.github.io/helm-charts
 
   # ingress-nginx for a k8s Ingress resource controller that routes traffic from
@@ -26,7 +26,7 @@ dependencies:
   # cluster-autoscaler for k8s clusters where it doesn't come out of the box (EKS)
   # https://github.com/kubernetes/autoscaler/tree/master/charts/cluster-autoscaler
   - name: cluster-autoscaler
-    version: 9.25.0
+    version: 9.26.0
     repository: https://kubernetes.github.io/autoscaler
     condition: cluster-autoscaler.enabled
 
