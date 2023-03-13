@@ -69,9 +69,9 @@ steps required.
 (uptime-checks:snoozes)=
  ## How do I snoooze a check?
 
-As the checks are all in GCP in the [monitoring console](https://console.cloud.google.com/monitoring/alerting?project=two-eye-two-se) 
+As the checks are all in GCP they can be created through the [monitoring console](https://console.cloud.google.com/monitoring/alerting?project=two-eye-two-see).
 
- The `alpha` gcloud component also supports setting snoozes from the command line. For further documentation see the [Google Cloud Monitoring docs](https://cloud.google.com/monitoring/alerts/manage-snooze#gcloud-cli) or the [gcloud alpha monitoring snoozes](https://cloud.google.com/sdk/gcloud/reference/alpha/monitoring/snoozes) reference. You may need to add the `alpha` component to your `gcloud` install.
+The `alpha` gcloud component also supports setting snoozes from the command line. For further documentation see the [Google Cloud Monitoring docs](https://cloud.google.com/monitoring/alerts/manage-snooze#gcloud-cli) or the [gcloud alpha monitoring snoozes](https://cloud.google.com/sdk/gcloud/reference/alpha/monitoring/snoozes) reference. You may need to add the `alpha` component to your `gcloud` install.
 
 
 Example CLI use that snoozes binder-staging check for 7 days:
