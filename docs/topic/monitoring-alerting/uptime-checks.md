@@ -67,7 +67,7 @@ steps required.
  wrong, so it is alright to run this without human supervision on GitHub Actions
 
 (uptime-checks:snoozes)=
- ## How do I snoooze a check?
+## How do I snoooze a check?
 
 As the checks are all in GCP they can be created through the [monitoring console](https://console.cloud.google.com/monitoring/alerting?project=two-eye-two-see).
 
@@ -76,7 +76,7 @@ The `alpha` gcloud component also supports setting snoozes from the command line
 
 Example CLI use that snoozes binder-staging check for 7 days:
 
- ```
+```
 HUB=binder-staging
 POLICY=$(gcloud alpha monitoring policies list  --filter "displayName ~ binder-staging" --format='value(name)')
 # echo $POLICY 
