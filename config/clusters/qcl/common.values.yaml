@@ -58,7 +58,10 @@ jupyterhub:
     image:
       # User image repo: https://quay.io/repository/linkedearth/pyleoclim
       name: pangeo/pangeo-notebook
-      tag: "2023.02.08"
+      # pullPolicy set to "Always" because we use the changing over time tag
+      # "latest".
+      pullPolicy: Always
+      tag: "latest"
     profileList:
       # NOTE: About node sharing
       #
