@@ -182,7 +182,8 @@ jupyterhub:
         description: "Start a container on a dedicated node"
         slug: "n2_highcpu_32"
         kubespawner_override:
-          node.kubernetes.io/instance-type: n2-highcpu-32
+          node_selector:
+            node.kubernetes.io/instance-type: n2-highcpu-32
           mem_guarantee: 28.887G
           cpu_guarantee: 3.2
       # TODO(pnasrat): check on value once node running
