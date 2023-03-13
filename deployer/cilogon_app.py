@@ -8,11 +8,11 @@ More details here: https://cilogon.github.io/oa4mp/server/manuals/dynamic-client
 
 The commands in this file can be used to:
 
-- `create` a CILogon OAuth application for a hub and store the credentials safely
+- `create` a CILogon client application for a hub and store the credentials safely
 - `update` the callback urls of an existing hub CILogon client
-- `delete` a CILogon OAuth application when a hub is removed or changes auth methods
+- `delete` a CILogon client application when a hub is removed or changes auth methods
 - `get` details about an existing hub CILogon client
-- `get-all` existing 2i2c CILogon OAuth applications
+- `get-all` existing 2i2c CILogon client applications
 """
 
 import base64
@@ -103,7 +103,7 @@ def persist_client_credentials_in_config_file(client, hub_type, config_filename)
             f.truncate()
         subprocess.check_call(["sops", "--encrypt", "--in-place", config_filename])
         print_colour(
-            f"Successfully updated the {config_filename} file with the encrypted CILogon OAuth client app credentials."
+            f"Successfully updated the {config_filename} file with the encrypted CILogon client app credentials."
         )
         return
 
@@ -111,7 +111,7 @@ def persist_client_credentials_in_config_file(client, hub_type, config_filename)
         yaml.dump(auth_config, f)
     subprocess.check_call(["sops", "--encrypt", "--in-place", config_filename])
     print_colour(
-        f"Successfully persisted the encrypted CILogon OAuth client app credentials to file {config_filename}"
+        f"Successfully persisted the encrypted CILogon client app credentials to file {config_filename}"
     )
 
 
@@ -155,7 +155,7 @@ def remove_client_credentials_from_config_file(config_filename):
         else:
             config["jupyterhub"]["hub"]["config"].pop("CILogonOAuthenticator")
     except KeyError:
-        print_colour("No CILogon OAuth client app to delete from {config_filename}")
+        print_colour("No CILogon client app to delete from {config_filename}")
         return
 
     def clean_empty_nested_dicts(d):
@@ -177,12 +177,12 @@ def remove_client_credentials_from_config_file(config_filename):
             f.truncate()
 
         subprocess.check_call(["sops", "--encrypt", "--in-place", config_filename])
-        print_colour(f"CILogon OAuth client app removed from {config_filename}")
+        print_colour(f"CILogon client app removed from {config_filename}")
         return
 
     # If the file only contained the CILogon credentials, then we can safely delete it
     print_colour(
-        f"Deleted empty {config_filename} file after CILogon OAuth client app was removed."
+        f"Deleted empty {config_filename} file after CILogon client app was removed."
     )
     Path(config_filename).unlink()
 
@@ -195,7 +195,7 @@ def stored_client_id_same_with_cilogon_records(
     ]
     if stored_client_id != client_id:
         print_colour(
-            "CILogon records are different than the OAuth client app stored in the configuration file. Consider updating the file.",
+            "CILogon records are different than the client app stored in the configuration file. Consider updating the file.",
             "red",
         )
         return False
@@ -230,7 +230,7 @@ def create_client(
     client_id = load_client_id_from_file(config_filename)
     if client_id:
         print_colour(
-            f"Found existing CILogon OAuth client app in {config_filename}.", "yellow"
+            f"Found existing CILogon client app in {config_filename}.", "yellow"
         )
         # Also check if what's in the file matches CILogon records in case the file was not updated accordingly
         # Exit anyway since manual intervention is required if different
@@ -239,7 +239,7 @@ def create_client(
         )
 
     # Ask CILogon to create the client
-    print(f"Creating a new CILogon OAuth client app with details {client_details}...")
+    print(f"Creating a new CILogon client app with details {client_details}...")
     headers = build_request_headers(admin_id, admin_secret)
     response = requests.post(
         build_request_url(), json=client_details, headers=headers, timeout=5
@@ -250,7 +250,7 @@ def create_client(
         return
 
     client = response.json()
-    print_colour("Done! Successfully created a new CILogon OAuth client app.")
+    print_colour("Done! Successfully created a new CILogon client app.")
 
     # Persist and encrypt the client credentials
     return persist_client_credentials_in_config_file(client, hub_type, config_filename)
@@ -309,11 +309,12 @@ def get_client(admin_id, admin_secret, cluster_name, hub_name, client_id=None):
             admin_id, admin_secret, cluster_name, hub_name, client_id
         ):
             return
-    else:
-        client_id = load_client_id_from_file(config_filename)
-        # No client has been found
-        if not client_id:
-            return
+
+    client_id = load_client_id_from_file(config_filename)
+    # No client has been found
+    if not client_id:
+        return
+
     headers = build_request_headers(admin_id, admin_secret)
     response = requests.get(
         build_request_url(client_id), params=None, headers=headers, timeout=5
@@ -352,11 +353,11 @@ def delete_client(admin_id, admin_secret, cluster_name, hub_name, client_id=None
             client_id,
         ):
             return
-    else:
-        client_id = load_client_id_from_file(config_filename)
-        # Nothing to do if no client has been found
-        if not client_id:
-            return
+
+    client_id = load_client_id_from_file(config_filename)
+    # Nothing to do if no client has been found
+    if not client_id:
+        return
 
     print(f"Deleting the CILogon client details for {client_id}...")
     headers = build_request_headers(admin_id, admin_secret)
@@ -372,7 +373,7 @@ def delete_client(admin_id, admin_secret, cluster_name, hub_name, client_id=None
 
 
 def get_all_clients(admin_id, admin_secret):
-    print("Getting all existing OAauth client applications...")
+    print("Getting all existing CILogon client applications...")
     headers = build_request_headers(admin_id, admin_secret)
     response = requests.get(
         build_request_url(), params=None, headers=headers, timeout=5
@@ -419,7 +420,7 @@ def cilogon_client_create(
         help="The hub domain, as specified in `cluster.yaml` (ex: staging.2i2c.cloud)",
     ),
 ):
-    """Create a CILogon OAuth client for a hub."""
+    """Create a CILogon client for a hub."""
     admin_id, admin_secret = get_2i2c_cilogon_admin_credentials()
     callback_url = f"https://{hub_domain}/hub/oauth_callback"
     create_client(
@@ -438,7 +439,7 @@ def cilogon_client_update(
         help="The hub domain, as specified in `cluster.yaml` (ex: staging.2i2c.cloud)",
     ),
 ):
-    """Update the CILogon OAuth client of a hub."""
+    """Update the CILogon client of a hub."""
     admin_id, admin_secret = get_2i2c_cilogon_admin_credentials()
     callback_url = f"https://{hub_domain}/hub/oauth_callback"
     update_client(admin_id, admin_secret, cluster_name, hub_name, callback_url)
@@ -458,7 +459,7 @@ def cilogon_client_get(
 
 @app.command()
 def cilogon_client_get_all():
-    """Retrieve details about all existing 2i2c CILogon OAuth clients."""
+    """Retrieve details about all existing 2i2c CILogon clients."""
     admin_id, admin_secret = get_2i2c_cilogon_admin_credentials()
     get_all_clients(admin_id, admin_secret)
 
@@ -472,12 +473,12 @@ def cilogon_client_delete(
     ),
     client_id: str = typer.Option(
         "",
-        help="""(Optional) Id of the CILogon OAuth client to delete of the form `cilogon:/client_id/<id>`.
+        help="""(Optional) Id of the CILogon client to delete of the form `cilogon:/client_id/<id>`.
         If the id is not passed, it will be retrieved from the configuration file
         """,
     ),
 ):
-    """Delete an existing CILogon client. This deletes both the CILogon OAuth application,
+    """Delete an existing CILogon client. This deletes both the CILogon client application,
     and the client credentials from the configuration file."""
     admin_id, admin_secret = get_2i2c_cilogon_admin_credentials()
     delete_client(admin_id, admin_secret, cluster_name, hub_name, client_id)
