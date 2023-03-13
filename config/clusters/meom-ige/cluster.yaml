@@ -20,6 +20,7 @@ hubs:
       # that you intend for these files to be applied in this order.
       - common.values.yaml
       - staging.values.yaml
+      - enc-staging.secret.values.yaml
   - name: prod
     display_name: "SWOT Ocean Pangeo Team (prod)"
     domain: meom-ige.2i2c.cloud
@@ -30,6 +31,7 @@ hubs:
       # that you intend for these files to be applied in this order.
       - common.values.yaml
       - prod.values.yaml
+      - enc-prod.secret.values.yaml
   - name: drakkar-demo
     display_name: "2023 DRAKKAR Ocean Modelling Workshop"
     domain: drakkar-demo.meom-ige.2i2c.cloud
