@@ -44,7 +44,13 @@ basehub:
         NVIDIA_DRIVER_CAPABILITIES: compute,utility
     hub:
       config:
-        Authenticator:
-          allowed_users: &allowed_users
-            - jmunroe
-          admin_users: *allowed_users
+        JupyterHub:
+          authenticator_class: cilogon
+        CILogonOAuthenticator:
+          scope:
+            - "profile"
+          username_claim: "preferred_username"
+          oauth_callback_url: "https://researchdelight.2i2c.cloud/hub/oauth_callback"
+          # Only show the option to login with GitHub
+          shown_idps:
+            - http://github.com/login/oauth/authorize
