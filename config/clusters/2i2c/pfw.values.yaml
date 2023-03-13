@@ -32,7 +32,6 @@ jupyterhub:
           - http://github.com/login/oauth/authorize
       Authenticator:
         allowed_users: &pfw_users
-          - colliand
           - alessandromariaselvitella
           - fosterk86
         admin_users: *pfw_users

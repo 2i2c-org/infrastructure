@@ -30,6 +30,5 @@ jupyterhub:
           - http://google.com/accounts/o8/id
       Authenticator:
         allowed_users: &staging_users
-          - colliand@gmail.com
           - sean.smorris@berkeley.edu
         admin_users: *staging_users

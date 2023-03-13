@@ -50,5 +50,4 @@ basehub:
           allowed_users: &catalyst_users
             - zane.selvans@catalyst.coop
             - cgosnell@catalyst.coop
-            - colliand@gmail.com
           admin_users: *catalyst_users
