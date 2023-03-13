@@ -414,12 +414,14 @@ def cilogon_client_create(
         "basehub",
         help="Type of hub for which we'll create a CILogon client (ex: basehub, daskhub)",
     ),
-    callback_url: str = typer.Argument(
-        ..., help="URL that is invoked after OAuth authorization"
+    hub_domain: str = typer.Argument(
+        ...,
+        help="The hub domain, as specified in `cluster.yaml` (ex: staging.2i2c.cloud)",
     ),
 ):
     """Create a CILogon OAuth client for a hub."""
     admin_id, admin_secret = get_2i2c_cilogon_admin_credentials()
+    callback_url = f"https://{hub_domain}/hub/oauth_callback"
     create_client(
         admin_id, admin_secret, cluster_name, hub_name, hub_type, callback_url
     )
@@ -431,13 +433,14 @@ def cilogon_client_update(
     hub_name: str = typer.Argument(
         ..., help="Name of the hub for which we'll update a CILogon client"
     ),
-    callback_url: str = typer.Argument(
+    hub_domain: str = typer.Argument(
         ...,
-        help="New callback_url to associate with the client. This URL is invoked after OAuth authorization",
+        help="The hub domain, as specified in `cluster.yaml` (ex: staging.2i2c.cloud)",
     ),
 ):
     """Update the CILogon OAuth client of a hub."""
     admin_id, admin_secret = get_2i2c_cilogon_admin_credentials()
+    callback_url = f"https://{hub_domain}/hub/oauth_callback"
     update_client(admin_id, admin_secret, cluster_name, hub_name, callback_url)
 
 
