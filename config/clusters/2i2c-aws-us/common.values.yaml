@@ -175,8 +175,9 @@ basehub:
             node_selector:
               node.kubernetes.io/instance-type: r5.16xlarge
 
-        - display_name: "Large + GPU"
-          description: "14GB RAM, 4 CPUs, T4 GPU"
+        - display_name: NVIDIA Tesla T4, ~16 GB, ~4 CPUs
+          slug: gpu
+          description: "Start a container on a dedicated node with a GPU"
           profile_options:
             image:
               display_name: Image
