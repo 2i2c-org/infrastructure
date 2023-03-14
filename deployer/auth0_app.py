@@ -244,6 +244,7 @@ def auth0_client_create(
             }
         }
     }
+
     print(json.dumps(jupyterhub_config, sort_keys=True, indent=4))
 
 

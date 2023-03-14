@@ -17,7 +17,6 @@ The commands in this file can be used to:
 
 import base64
 import json
-import subprocess
 from pathlib import Path
 
 import requests
@@ -26,7 +25,12 @@ from ruamel.yaml import YAML
 from yarl import URL
 
 from .cli_app import app
-from .file_acquisition import find_absolute_path_to_cluster_file, get_decrypted_file
+from .file_acquisition import (
+    build_absolute_path_to_hub_encrypted_config_file,
+    get_decrypted_file,
+    persist_config_in_encrypted_file,
+    remove_jupyterhub_hub_config_key_from_encrypted_file,
+)
 from .utils import print_colour
 
 yaml = YAML(typ="safe")
@@ -62,17 +66,6 @@ def build_client_details(cluster_name, hub_name, callback_url):
     }
 
 
-def build_config_filename(cluster_name, hub_name):
-    cluster_config_dir_path = find_absolute_path_to_cluster_file(cluster_name).parent
-    return cluster_config_dir_path.joinpath(f"enc-{hub_name}.secret.values.yaml")
-
-
-def config_file_exists(config_filename):
-    if not Path(config_filename).is_file():
-        return False
-    return True
-
-
 def persist_client_credentials_in_config_file(client, hub_type, config_filename):
     auth_config = {}
     jupyterhub_config = {
@@ -93,32 +86,13 @@ def persist_client_credentials_in_config_file(client, hub_type, config_filename)
     else:
         auth_config = jupyterhub_config
 
-    if config_file_exists(config_filename):
-        subprocess.check_call(["sops", "--decrypt", "--in-place", config_filename])
-        with open(config_filename, "r+") as f:
-            config = yaml.load(f)
-            config.update(auth_config)
-            f.seek(0)
-            yaml.dump(config, f)
-            f.truncate()
-        subprocess.check_call(["sops", "--encrypt", "--in-place", config_filename])
-        print_colour(
-            f"Successfully updated the {config_filename} file with the encrypted CILogon client app credentials."
-        )
-        return
-
-    with open(config_filename, "a+") as f:
-        yaml.dump(auth_config, f)
-    subprocess.check_call(["sops", "--encrypt", "--in-place", config_filename])
+    persist_config_in_encrypted_file(config_filename, auth_config)
     print_colour(
         f"Successfully persisted the encrypted CILogon client app credentials to file {config_filename}"
     )
 
 
 def load_client_id_from_file(config_filename):
-    if not config_file_exists(config_filename):
-        return
-
     with get_decrypted_file(config_filename) as decrypted_path:
         with open(decrypted_path) as f:
             auth_config = yaml.load(f)
@@ -133,72 +107,21 @@ def load_client_id_from_file(config_filename):
         return auth_config["jupyterhub"]["hub"]["config"]["CILogonOAuthenticator"][
             "client_id"
         ]
-    # Event if it exists, the config_file might contain other config too, not just CILogon credentials
     except KeyError:
         return
-
-
-def remove_client_credentials_from_config_file(config_filename):
-    if not config_file_exists(config_filename):
-        return
-
-    with get_decrypted_file(config_filename) as decrypted_path:
-        with open(decrypted_path) as f:
-            config = yaml.load(f)
-
-    basehub = config.get("basehub", None)
-    try:
-        if basehub:
-            config["basehub"]["jupyterhub"]["hub"]["config"].pop(
-                "CILogonOAuthenticator"
-            )
-        else:
-            config["jupyterhub"]["hub"]["config"].pop("CILogonOAuthenticator")
-    except KeyError:
-        print_colour("No CILogon client app to delete from {config_filename}")
-        return
-
-    def clean_empty_nested_dicts(d):
-        if isinstance(d, dict):
-            return {
-                key: value
-                for key, value in (
-                    (key, clean_empty_nested_dicts(value)) for key, value in d.items()
-                )
-                if value
-            }
-        return d
-
-    remaining_config = clean_empty_nested_dicts(config)
-
-    if remaining_config:
-        with open(config_filename, "w") as f:
-            yaml.dump(remaining_config, f)
-            f.truncate()
-
-        subprocess.check_call(["sops", "--encrypt", "--in-place", config_filename])
-        print_colour(f"CILogon client app removed from {config_filename}")
-        return
-
-    # If the file only contained the CILogon credentials, then we can safely delete it
-    print_colour(
-        f"Deleted empty {config_filename} file after CILogon client app was removed."
-    )
-    Path(config_filename).unlink()
 
 
 def stored_client_id_same_with_cilogon_records(
-    admin_id, admin_secret, cluster_name, hub_name, client_id
+    admin_id, admin_secret, cluster_name, hub_name, stored_client_id
 ):
-    stored_client_id = get_client(admin_id, admin_secret, cluster_name, hub_name)[
-        "client_id"
-    ]
-    if stored_client_id != client_id:
-        print_colour(
-            "CILogon records are different than the client app stored in the configuration file. Consider updating the file.",
-            "red",
-        )
+    cilogon_client = get_client(admin_id, admin_secret, cluster_name, hub_name)
+    if not cilogon_client:
         return False
+
+    cilogon_client_id = cilogon_client.get("client_id", None)
+    if cilogon_client_id != stored_client_id:
+        return False
+
     return True
 
 
@@ -224,19 +147,27 @@ def create_client(
     See: https://github.com/ncsa/OA4MP/blob/HEAD/oa4mp-server-admin-oauth2/src/main/scripts/oidc-cm-scripts/cm-post.sh
     """
     client_details = build_client_details(cluster_name, hub_name, callback_url)
-    config_filename = build_config_filename(cluster_name, hub_name)
+    config_filename = build_absolute_path_to_hub_encrypted_config_file(
+        cluster_name, hub_name
+    )
 
     # Check if there's a client id already stored in the config file for this hub
-    client_id = load_client_id_from_file(config_filename)
-    if client_id:
-        print_colour(
-            f"Found existing CILogon client app in {config_filename}.", "yellow"
-        )
-        # Also check if what's in the file matches CILogon records in case the file was not updated accordingly
-        # Exit anyway since manual intervention is required if different
-        return stored_client_id_same_with_cilogon_records(
-            admin_id, admin_secret, cluster_name, hub_name, client_id
-        )
+    if Path(config_filename).is_file():
+        client_id = load_client_id_from_file(config_filename)
+        if client_id:
+            print_colour(
+                f"Found existing CILogon client app in {config_filename}.", "yellow"
+            )
+            # Also check if what's in the file matches CILogon records in case the file was not updated accordingly
+            # Exit anyway since manual intervention is required if different
+            if not stored_client_id_same_with_cilogon_records(
+                admin_id, admin_secret, cluster_name, hub_name, client_id
+            ):
+                print_colour(
+                    "CILogon records are different than the client app stored in the configuration file. Consider updating the file.",
+                    "red",
+                )
+            return
 
     # Ask CILogon to create the client
     print(f"Creating a new CILogon client app with details {client_details}...")
@@ -272,9 +203,14 @@ def update_client(admin_id, admin_secret, cluster_name, hub_name, callback_url):
     See: https://github.com/ncsa/OA4MP/blob/HEAD/oa4mp-server-admin-oauth2/src/main/scripts/oidc-cm-scripts/cm-put.sh
     """
     client_details = build_client_details(cluster_name, hub_name, callback_url)
-    config_filename = build_config_filename(cluster_name, hub_name)
-    client_id = load_client_id_from_file(config_filename)
+    config_filename = build_absolute_path_to_hub_encrypted_config_file(
+        cluster_name, hub_name
+    )
+    if not Path(config_filename).is_file():
+        print_colour("Can't update a client that doesn't exist", "red")
+        return
 
+    client_id = load_client_id_from_file(config_filename)
     if not client_id:
         print_colour("Can't update a client that doesn't exist", "red")
         return
@@ -302,12 +238,20 @@ def get_client(admin_id, admin_secret, cluster_name, hub_name, client_id=None):
 
     See: https://github.com/ncsa/OA4MP/blob/HEAD/oa4mp-server-admin-oauth2/src/main/scripts/oidc-cm-scripts/cm-get.sh
     """
-    config_filename = build_config_filename(cluster_name, hub_name)
+    config_filename = build_absolute_path_to_hub_encrypted_config_file(
+        cluster_name, hub_name
+    )
+    if not Path(config_filename).is_file():
+        return
 
     if client_id:
         if not stored_client_id_same_with_cilogon_records(
             admin_id, admin_secret, cluster_name, hub_name, client_id
         ):
+            print_colour(
+                "CILogon records are different than the client app stored in the configuration file. Consider updating the file.",
+                "red",
+            )
             return
 
     client_id = load_client_id_from_file(config_filename)
@@ -340,9 +284,27 @@ def delete_client(admin_id, admin_secret, cluster_name, hub_name, client_id=None
 
     See: https://github.com/ncsa/OA4MP/blob/HEAD/oa4mp-server-admin-oauth2/src/main/scripts/oidc-cm-scripts/cm-delete.sh
     """
-    config_filename = build_config_filename(cluster_name, hub_name)
+    config_filename = build_absolute_path_to_hub_encrypted_config_file(
+        cluster_name, hub_name
+    )
 
-    if client_id:
+    if not client_id:
+        if Path(config_filename).is_file():
+            client_id = load_client_id_from_file(config_filename)
+            # Nothing to do if no client has been found
+            if not client_id:
+                print_colour(
+                    "No `client_id` to delete was provided and couldn't find any in `config_filename`",
+                    "red",
+                )
+                return
+        else:
+            print_colour(
+                f"No `client_id` to delete was provided and couldn't find any {config_filename} file",
+                "red",
+            )
+            return
+    else:
         if not stored_client_id_same_with_cilogon_records(
             admin_id,
             admin_secret,
@@ -352,12 +314,11 @@ def delete_client(admin_id, admin_secret, cluster_name, hub_name, client_id=None
             hub_name,
             client_id,
         ):
+            print_colour(
+                "CILogon records are different than the client app stored in the configuration file. Consider updating the file.",
+                "red",
+            )
             return
-
-    client_id = load_client_id_from_file(config_filename)
-    # Nothing to do if no client has been found
-    if not client_id:
-        return
 
     print(f"Deleting the CILogon client details for {client_id}...")
     headers = build_request_headers(admin_id, admin_secret)
@@ -368,8 +329,18 @@ def delete_client(admin_id, admin_secret, cluster_name, hub_name, client_id=None
 
     print_colour("Done!")
 
-    # Delete client credentials from file also
-    remove_client_credentials_from_config_file(config_filename)
+    # Delete client credentials from config file also if file exists
+    if Path(config_filename).is_file():
+        print(f"Deleting the CILogon client details from the {config_filename} also...")
+        key = "CILogonOAuthenticator"
+        try:
+            remove_jupyterhub_hub_config_key_from_encrypted_file(config_filename, key)
+        except KeyError:
+            print_colour(f"No {key} found to delete from {config_filename}", "yellow")
+            return
+        print_colour(f"CILogonAuthenticator config removed from {config_filename}")
+        if not Path(config_filename).is_file():
+            print_colour(f"Empty {config_filename} file also deleted.", "yellow")
 
 
 def get_all_clients(admin_id, admin_secret):
