@@ -19,6 +19,40 @@ jupyterhub:
           name: CloudBank
           url: http://cloudbank.org/
   hub:
+    loadGroups:
+        section1:
+          - sean.smorris@gmail.com
+          - sean@gmail.com
+          - jen@gmail.com
+        section2:
+          - smorris@ausdk12.org
+          - kae@gmail.com
+          - ciara@gmail.com
+    loadRoles:
+      # Should use this, not hub.config.JupyterHub.load_roles - that will
+      # override any existing load_roles set by z2jh
+      section1-student:
+        name: section1-student
+        scopes:
+          # Allow all users access to 'services', which includes dask-gateway & configurator
+          - read:groups!group=section1
+        groups:
+          - section1
+      section2-student:
+        name: section2-student
+        scopes:
+          # Allow all users access to 'services', which includes dask-gateway & configurator
+          - read:groups!group=section2
+        groups:
+          - section2
+      section1-teacher:
+        name: section1-teacher
+        scopes:
+          # Allow all users access to 'services', which includes dask-gateway & configurator
+          - read:users!group=section1
+          - servers!group=section2'
+        users:
+          - sean.smorris@gmail.com
     config:
       Authenticator:
         allowed_users: &avc_users
