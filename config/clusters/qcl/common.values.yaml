@@ -190,7 +190,7 @@ jupyterhub:
         slug: "n2_highcpu_32"
         allowed_teams:
           - 2i2c-org:hub-access-for-2i2c-staff
-          - quantifiedcarbon:JupyterHub        
+          - quantifiedcarbon:JupyterHub
         kubespawner_override:
           node_selector:
             node.kubernetes.io/instance-type: n2-highcpu-32
@@ -204,7 +204,7 @@ jupyterhub:
         slug: "n2_highcpu_96"
         allowed_teams:
           - 2i2c-org:hub-access-for-2i2c-staff
-          - quantifiedcarbon:JupyterHub        
+          - quantifiedcarbon:JupyterHub
         kubespawner_override:
           node_selector:
             node.kubernetes.io/instance-type: n2-highcpu-96
