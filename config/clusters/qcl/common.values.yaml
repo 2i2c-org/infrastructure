@@ -194,7 +194,7 @@ jupyterhub:
         kubespawner_override:
           node_selector:
             node.kubernetes.io/instance-type: n2-highcpu-32
-          mem_guarantee: 27.13G
+          mem_guarantee: 27G
           cpu_guarantee: 3.2
           cpu_limit: null
           mem_limit: null
@@ -210,5 +210,5 @@ jupyterhub:
             node.kubernetes.io/instance-type: n2-highcpu-96
           cpu_limit: null
           mem_limit: null
-          mem_guarantee: 86.92G
+          mem_guarantee: 86G
           cpu_guarantee: 9.6
