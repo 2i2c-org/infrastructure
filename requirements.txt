@@ -27,3 +27,6 @@ escapism==1.*
 
 # requests is used by deployer/cilogon_app.py
 requests==2.*
+
+# auth0 is used to communicate with Auth0's REST API that we support as a deployer sub-cmd
+auth0-python==3.*
