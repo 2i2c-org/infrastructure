@@ -27,8 +27,8 @@ resource "google_monitoring_uptime_check_config" "hub_simple_uptime_check" {
   selected_regions = ["USA",]
   timeout      = "30s"
 
-  # Check every 5 minutes
-  period = "300s"
+  # Check every 15 minutes
+  period = "900s"
 
   http_check {
     # BinderHub has a different health check URL
@@ -69,18 +69,18 @@ resource "google_monitoring_alert_policy" "hub_simple_uptime_alert" {
       AND metric.type = "monitoring.googleapis.com/uptime_check/check_passed"
       AND metric.labels.check_id = "${google_monitoring_uptime_check_config.hub_simple_uptime_check[each.key].uptime_check_id}"
       EOT
-      # Alert if we have a failure condition for 11 minutes - given we do checks
-      # every 5 minutes, this means we alert if two checks have failed. This shoulod
+      # Alert if we have a failure condition for 31 minutes - given we do checks
+      # every 15 minutes, this means we alert if two checks have failed. This shoulod
       # prevent alerts if the hub is momentarily down during a deployment. All alerts
       # *must* be actionable, so we trade-off some latency here for resiliency.
-      duration        = "660s"
+      duration        = "1860s"
       threshold_value = 1 # 1 means 'a check failed', 0 means 'a check succeeded'
       comparison      = "COMPARISON_GT"
       aggregations {
         group_by_fields = ["resource.label.host"]
         # https://cloud.google.com/monitoring/alerts/concepts-indepth#duration has
         # more info on alignment
-        alignment_period   = "300s"
+        alignment_period   = "900s"
         per_series_aligner = "ALIGN_NEXT_OLDER"
         # Count each failure as a "1"
         cross_series_reducer = "REDUCE_COUNT_FALSE"
