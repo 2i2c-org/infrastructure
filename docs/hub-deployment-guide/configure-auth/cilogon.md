@@ -54,17 +54,7 @@ The steps to enable the JupyterHub CILogonOAuthenticator for a hub are similar w
                 client_secret: CLIENT_SECRET
         ```
 
-2. **Set the hub to _not_ configure Auth0 in the `config/clusters/<cluster_name>/cluster.yaml` file.**
-   To ensure the deployer does not provision and configure an OAuth app from Auth0, the following config should be added to the appropriate hub in the cluster's `cluster.yaml` file.
-
-   ```yaml
-   hubs:
-     - name: <hub_name>
-       auth0:
-         enabled: false
-   ```
-
-3. **If not already present, add the secret hub config file to the list of helm chart values file in `config/clusters<cluster_name>/cluster.yaml`.**
+2. **If not already present, add the secret hub config file to the list of helm chart values file in `config/clusters<cluster_name>/cluster.yaml`.**
    If you created the `enc-<hub_name>.secret.values.yaml` file in step 2, add it the the `cluster.yaml` file like so:
 
    ```yaml
@@ -78,9 +68,9 @@ The steps to enable the JupyterHub CILogonOAuthenticator for a hub are similar w
      ...
    ```
 
-4. **Edit the non-secret config under `config/clusters/<cluster_name>/<hub_name>.values.yaml`.**
+3. **Edit the non-secret config under `config/clusters/<cluster_name>/<hub_name>.values.yaml`.**
 
-   4.1. **A few rules of thumb when using this method of authentication:**
+   3.1. **A few rules of thumb when using this method of authentication:**
 
     - The `admin_users` list need to match `allowed_idps` rules too.
 
@@ -98,7 +88,7 @@ The steps to enable the JupyterHub CILogonOAuthenticator for a hub are similar w
       You can check the [CILogon scopes section](https://www.cilogon.org/oidc#h.p_PEQXL8QUjsQm) to checkout available values for `username_claim`. This *cannot* be changed afterwards without manual migration of user names, so choose this carefully.
       ```
 
-   4.2. **Most common configurations for 2i2c clusters:**
+   3.2. **Most common configurations for 2i2c clusters:**
 
     1. **Only display specific identity provider as a login options**
 
@@ -206,7 +196,7 @@ The steps to enable the JupyterHub CILogonOAuthenticator for a hub are similar w
    To learn about all the possible config options of the `CILogonOAuthenticator` dict, checkout [the docs](https://oauthenticator.readthedocs.io/en/latest/api/gen/oauthenticator.cilogon.html#oauthenticator.cilogon.CILogonOAuthenticator.allowed_idps).
    ```
 
-5. Run the deployer as normal to apply the config.
+4. Run the deployer as normal to apply the config.
 
 
 ## Switch Identity Providers or user accounts
