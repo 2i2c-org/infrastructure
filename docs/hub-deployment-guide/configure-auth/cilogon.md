@@ -129,7 +129,6 @@ The steps to enable the JupyterHub CILogonOAuthenticator for a hub are similar w
     3. **Authenticate using GitHub with CILogon**:
 
         *This example sets the GitHub nickname as the Hub username using the `username_claim` option*
-
         ```yaml
         jupyterhub:
           hub:
@@ -137,6 +136,8 @@ The steps to enable the JupyterHub CILogonOAuthenticator for a hub are similar w
               JupyterHub:
                 authenticator_class: cilogon
               CILogonOAuthenticator:
+                scope:
+                  - "profile"
                 oauth_callback_url: https://{{ HUB_DOMAIN }}/hub/oauth_callback
                 shown_idps:
                   - http://github.com/login/oauth/authorize
