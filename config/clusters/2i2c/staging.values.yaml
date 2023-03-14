@@ -15,6 +15,17 @@ staticWebsite:
     enabled: false
 
 jupyterhub:
+  proxy:
+    https:
+      hosts:
+        - staging.2i2c.cloud
+  ingress:
+    hosts:
+      - staging.2i2c.cloud
+    tls:
+      - secretName: https-auto-tls
+        hosts:
+          - staging.2i2c.cloud
   custom:
     2i2c:
       add_staff_user_ids_to_admin_users: true
@@ -53,3 +64,66 @@ jupyterhub:
         # Only show the option to login with Google
         shown_idps:
           - http://google.com/accounts/o8/id
+    initContainers:
+      - name: templates-clone
+        image: alpine/git
+        args:
+          - clone
+          - --
+          - https://github.com/2i2c-org/default-hub-homepage
+          - /srv/repo
+        securityContext:
+          runAsUser: 1000
+          runAsGroup: 1000
+          allowPrivilegeEscalation: False
+          readOnlyRootFilesystem: True
+        volumeMounts:
+          - name: custom-templates
+            mountPath: /srv/repo
+      - name: templates-ownership-fix
+        image: alpine/git
+        command:
+          - /bin/sh
+        args:
+          - -c
+          - ls -lhd /srv/repo && chown 1000:1000 /srv/repo && ls -lhd /srv/repo
+        securityContext:
+          runAsUser: 0
+        volumeMounts:
+          - name: custom-templates
+            mountPath: /srv/repo
+    extraContainers:
+      - name: templates-sync
+        image: alpine/git
+        workingDir: /srv/repo
+        command:
+          - /bin/sh
+        args:
+          - -c
+          - |
+            ls -lhd /srv/repo;
+            while true; do git fetch origin;
+            if [[ $(git ls-remote --heads origin 2i2c-staging | wc -c) -ne 0 ]]; then
+                git reset --hard origin/2i2c-staging;
+            else
+                git reset --hard origin/master;
+            fi
+            sleep 5m; done
+        securityContext:
+          runAsUser: 1000
+          runAsGroup: 1000
+          allowPrivilegeEscalation: False
+          readOnlyRootFilesystem: True
+        volumeMounts:
+          - name: custom-templates
+            mountPath: /srv/repo
+    extraVolumes:
+      - name: custom-templates
+        emptyDir: {}
+    extraVolumeMounts:
+      - mountPath: /usr/local/share/jupyterhub/custom_templates
+        name: custom-templates
+        subPath: templates
+      - mountPath: /usr/local/share/jupyterhub/static/extra-assets
+        name: custom-templates
+        subPath: extra-assets
