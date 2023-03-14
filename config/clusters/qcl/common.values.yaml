@@ -46,6 +46,7 @@ jupyterhub:
           - jtkmckenna
           - pnasrat
       JupyterHub:
+        enable_auth_state: true
         authenticator_class: github
       GitHubOAuthenticator:
         populate_teams_in_auth_state: true
@@ -81,6 +82,9 @@ jupyterhub:
         description: &profile_list_description "Start a container with at least a chosen share of capacity on a node of this type"
         slug: small
         default: true
+        allowed_teams:
+          - 2i2c-org:hub-access-for-2i2c-staff
+          - quantifiedcarbon:JupyterHub
         profile_options:
           requests:
             # NOTE: Node share choices are in active development, see comment
@@ -126,6 +130,9 @@ jupyterhub:
       - display_name: "Medium: up to 16 CPU / 128 GB RAM"
         description: *profile_list_description
         slug: medium
+        allowed_teams:
+          - 2i2c-org:hub-access-for-2i2c-staff
+          - quantifiedcarbon:JupyterHub
         profile_options:
           requests:
             # NOTE: Node share choices are in active development, see comment
@@ -181,17 +188,27 @@ jupyterhub:
       - display_name: "n2-highcpu-32: 32 CPU / 32 GB RAM"
         description: "Start a container on a dedicated node"
         slug: "n2_highcpu_32"
+        allowed_teams:
+          - 2i2c-org:hub-access-for-2i2c-staff
+          - quantifiedcarbon:JupyterHub        
         kubespawner_override:
           node_selector:
             node.kubernetes.io/instance-type: n2-highcpu-32
-          mem_guarantee: 28.887G
+          mem_guarantee: 27.13G
           cpu_guarantee: 3.2
+          cpu_limit: null
+          mem_limit: null
       # TODO(pnasrat): check on value once node running
       - display_name: "n2-highcpu-96: 96 CPU / 96 GB RAM"
         description: "Start a container on a dedicated node"
         slug: "n2_highcpu_96"
+        allowed_teams:
+          - 2i2c-org:hub-access-for-2i2c-staff
+          - quantifiedcarbon:JupyterHub        
         kubespawner_override:
           node_selector:
             node.kubernetes.io/instance-type: n2-highcpu-96
-          mem_guarantee: 86.662G
+          cpu_limit: null
+          mem_limit: null
+          mem_guarantee: 86.92G
           cpu_guarantee: 9.6
