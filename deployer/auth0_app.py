@@ -1,4 +1,3 @@
-import json
 import re
 
 import typer
@@ -8,7 +7,11 @@ from ruamel.yaml import YAML
 from yarl import URL
 
 from .cli_app import app
-from .file_acquisition import get_decrypted_file
+from .file_acquisition import (
+    build_absolute_path_to_hub_encrypted_config_file,
+    get_decrypted_file,
+    persist_config_in_encrypted_file,
+)
 
 yaml = YAML(typ="safe")
 
@@ -208,6 +211,10 @@ def auth0_client_create(
         ...,
         help="Name of the hub for which a new Auth0 client will be created",
     ),
+    hub_type: str = typer.Argument(
+        "basehub",
+        help="Type of hub for which we'll create an Auth0 client (ex: basehub, daskhub)",
+    ),
     hub_domain: str = typer.Argument(
         ...,
         help="The hub domain, as specified in `cluster.yaml` (ex: staging.2i2c.cloud)",
@@ -219,6 +226,9 @@ def auth0_client_create(
 ):
     """Create an Auth0 client app for a hub."""
     domain, admin_id, admin_secret = get_2i2c_auth0_admin_credentials()
+    config_filename = build_absolute_path_to_hub_encrypted_config_file(
+        cluster_name, hub_name
+    )
     auth_provider = KeyProvider(domain, admin_id, admin_secret)
     # Users will be redirected to this URL after they log out
     logout_url = f"https://{hub_domain}"
@@ -232,6 +242,7 @@ def auth0_client_create(
         connection_name=connection_type,
     )
 
+    auth_config = {}
     jupyterhub_config = {
         "jupyterhub": {
             "hub": {
@@ -245,7 +256,15 @@ def auth0_client_create(
         }
     }
 
-    print(json.dumps(jupyterhub_config, sort_keys=True, indent=4))
+    if hub_type != "basehub":
+        auth_config["basehub"] = jupyterhub_config
+    else:
+        auth_config = jupyterhub_config
+
+    persist_config_in_encrypted_file(config_filename, auth_config)
+    print(
+        f"Successfully persisted the encrypted Auth0 client app credentials to file {config_filename}"
+    )
 
 
 @app.command()

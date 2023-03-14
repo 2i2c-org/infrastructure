@@ -92,7 +92,7 @@ def build_absolute_path_to_hub_encrypted_config_file(cluster_name, hub_name):
     return encrypted_file_path
 
 
-def persist_config_in_encrypted_file(encrypted_file, config):
+def persist_config_in_encrypted_file(encrypted_file, new_config):
     """
     Write `config` to `encrypted_file` file.
     If `encrypted_file` doesn't exist, create it first.
@@ -102,7 +102,7 @@ def persist_config_in_encrypted_file(encrypted_file, config):
         subprocess.check_call(["sops", "--decrypt", "--in-place", encrypted_file])
         with open(encrypted_file, "r+") as f:
             config = yaml.load(f)
-            config.update(config)
+            config.update(new_config)
             f.seek(0)
             yaml.dump(config, f)
             f.truncate()
@@ -111,7 +111,7 @@ def persist_config_in_encrypted_file(encrypted_file, config):
         )
 
     with open(encrypted_file, "a+") as f:
-        yaml.dump(config, f)
+        yaml.dump(new_config, f)
     return subprocess.check_call(["sops", "--encrypt", "--in-place", encrypted_file])
 
 
