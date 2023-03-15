@@ -19,7 +19,28 @@ jupyterhub:
           name: CloudBank
           url: http://cloudbank.org/
   hub:
+    loadRoles:
+      # Should use this, not hub.config.JupyterHub.load_roles - that will
+      # override any existing load_roles set by z2jh
+      section1-student:
+        scopes: [read:groups!group=section1]
+        groups: [section1]
+      section2-student:
+        scopes: [read:groups!group=section2]
+        groups: [section2]
+      section1-teacher:
+        scopes: [read:users!group=section1, servers!group=section2]
+        users: [sean.smorris@gmail.com]
     config:
+      loadGroups:
+        section1:
+          - sean.smorris@gmail.com
+          - sean@gmail.com
+          - jen@gmail.com
+        section2:
+          - smorris@ausdk12.org
+          - kae@gmail.com
+          - ciara@gmail.com
       Authenticator:
         allowed_users: &avc_users
           - aculich@berkeley.edu
