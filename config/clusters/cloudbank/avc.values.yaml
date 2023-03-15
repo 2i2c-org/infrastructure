@@ -32,7 +32,6 @@ jupyterhub:
         scopes: [read:users!group=section1, servers!group=section2]
         users: [sean.smorris@gmail.com]
     config:
-<<<<<<< HEAD
       loadGroups:
         section1:
           - sean.smorris@gmail.com
@@ -42,7 +41,6 @@ jupyterhub:
           - smorris@ausdk12.org
           - kae@gmail.com
           - ciara@gmail.com
-=======
       JupyterHub:
         authenticator_class: cilogon
       CILogonOAuthenticator:
@@ -51,7 +49,6 @@ jupyterhub:
         # Only show the option to login with Google
         shown_idps:
           - http://google.com/accounts/o8/id
->>>>>>> 1bf0e48c (Move cloudbank hubs from auth0 to cilogon)
       Authenticator:
         allowed_users: &avc_users
           - aculich@berkeley.edu
