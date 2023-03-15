@@ -1,6 +1,6 @@
 # Auth0
 
-```warning
+```{warning}
 This authentication method is now deprecated and should only be used if absolutely necessary.
 Please use [](auth:cilogon) instead.
 ```
