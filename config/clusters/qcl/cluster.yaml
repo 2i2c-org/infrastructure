@@ -12,8 +12,7 @@ support:
     - enc-support.secret.values.yaml
 hubs:
   - name: staging
-    # Tip: consider changing this to something more human friendly
-    display_name: "qcl - staging"
+    display_name: "QuantifiedCarbon (QCL) - staging"
     domain: staging.quantifiedcarbon.com
     helm_chart: basehub
     auth0:
@@ -22,3 +21,13 @@ hubs:
       - common.values.yaml
       - staging.values.yaml
       - enc-staging.secret.values.yaml
+  - name: prod
+    display_name: "QuantifiedCarbon (QCL)"
+    domain: jupyter.quantifiedcarbon.com
+    helm_chart: basehub
+    auth0:
+      enabled: false
+    helm_chart_values_files:
+      - common.values.yaml
+      - prod.values.yaml
+      - enc-prod.secret.values.yaml

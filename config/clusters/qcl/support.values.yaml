@@ -5,6 +5,8 @@ redirects:
   rules:
     - from: staging.qcl.2i2c.cloud
       to: staging.quantifiedcarbon.com
+    - from: qcl.2i2c.cloud
+      to: jupyter.quantifiedcarbon.com
 
 prometheus:
   server:
