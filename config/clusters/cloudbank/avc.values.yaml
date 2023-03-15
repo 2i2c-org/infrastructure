@@ -34,13 +34,13 @@ jupyterhub:
     config:
       loadGroups:
         section1:
-        - sean.smorris@gmail.com
-        - sean@gmail.com
-        - jen@gmail.com
+          - sean.smorris@gmail.com
+          - sean@gmail.com
+          - jen@gmail.com
         section2:
-        - smorris@ausdk12.org
-        - kae@gmail.com
-        - ciara@gmail.com
+          - smorris@ausdk12.org
+          - kae@gmail.com
+          - ciara@gmail.com
       Authenticator:
         allowed_users: &avc_users
           - aculich@berkeley.edu
