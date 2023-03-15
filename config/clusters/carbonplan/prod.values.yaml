@@ -12,7 +12,3 @@ basehub:
           # Only show the option to login with GitHub
           shown_idps:
             - http://github.com/login/oauth/authorize
-        Authenticator:
-          allowed_users: &users
-            - jhamman
-          admin_users: *users

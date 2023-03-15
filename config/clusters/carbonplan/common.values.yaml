@@ -151,6 +151,11 @@ basehub:
       readinessProbe:
         enabled: false
       nodeSelector: {}
+      config:
+        Authenticator:
+          allowed_users: &users
+            - jhamman
+          admin_users: *users
 
 dask-gateway:
   traefik:
