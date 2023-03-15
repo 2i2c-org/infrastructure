@@ -26,8 +26,6 @@ class Hub:
     def get_generated_config(self):
         """
         Generate config automatically for each hub
-
-        WARNING: MIGHT CONTAINS SECRET VALUES!
         """
         generated_config = {
             "jupyterhub": {
