@@ -37,19 +37,15 @@ jupyterhub:
     allowNamedServers: true
     config:
       Authenticator:
-        enable_auth_state: true
         # This hub uses GitHub Teams auth and so we don't set
         # allowed_users in order to not deny access to valid members of
         # the listed teams. These people should have admin access though.
         admin_users:
           - gizmo404
           - jtkmckenna
-          - pnasrat
       JupyterHub:
-        enable_auth_state: true
         authenticator_class: github
       GitHubOAuthenticator:
-        populate_teams_in_auth_state: true
         allowed_organizations:
           - 2i2c-org:hub-access-for-2i2c-staff
           - QuantifiedCarbon:jupyterhub
@@ -82,9 +78,6 @@ jupyterhub:
         description: &profile_list_description "Start a container with at least a chosen share of capacity on a node of this type"
         slug: small
         default: true
-        allowed_teams:
-          - 2i2c-org:hub-access-for-2i2c-staff
-          - QuantifiedCarbon:jupyterhub
         profile_options:
           requests:
             # NOTE: Node share choices are in active development, see comment
@@ -130,9 +123,6 @@ jupyterhub:
       - display_name: "Medium: up to 16 CPU / 128 GB RAM"
         description: *profile_list_description
         slug: medium
-        allowed_teams:
-          - 2i2c-org:hub-access-for-2i2c-staff
-          - QuantifiedCarbon:jupyterhub
         profile_options:
           requests:
             # NOTE: Node share choices are in active development, see comment
@@ -188,9 +178,6 @@ jupyterhub:
       - display_name: "n2-highcpu-32: 32 CPU / 32 GB RAM"
         description: "Start a container on a dedicated node"
         slug: "n2_highcpu_32"
-        allowed_teams:
-          - 2i2c-org:hub-access-for-2i2c-staff
-          - QuantifiedCarbon:jupyterhub
         kubespawner_override:
           node_selector:
             node.kubernetes.io/instance-type: n2-highcpu-32
@@ -202,9 +189,6 @@ jupyterhub:
       - display_name: "n2-highcpu-96: 96 CPU / 96 GB RAM"
         description: "Start a container on a dedicated node"
         slug: "n2_highcpu_96"
-        allowed_teams:
-          - 2i2c-org:hub-access-for-2i2c-staff
-          - QuantifiedCarbon:jupyterhub
         kubespawner_override:
           node_selector:
             node.kubernetes.io/instance-type: n2-highcpu-96
