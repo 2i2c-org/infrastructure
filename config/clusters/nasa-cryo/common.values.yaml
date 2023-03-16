@@ -56,6 +56,22 @@ basehub:
             - fperez
         JupyterHub:
           authenticator_class: github
+          # Announcement is a JupyterHub feature to present messages to users in
+          # web pages under the /hub path (JupyterHub responds), but not via the
+          # /user path (single-user server responds).
+          #
+          # ref: https://github.com/2i2c-org/infrastructure/issues/1501
+          # ref: https://jupyterhub.readthedocs.io/en/stable/reference/templates.html#announcement-configuration-variables
+          #
+          template_vars:
+            announcement: >-
+              <strong>
+              Service maintenance is scheduled Sunday March 19, to Monday 8AM
+              EST.
+              </strong>
+              <br/>
+              Running servers may be forcefully stopped and service disruption
+              is expected.
         GitHubOAuthenticator:
           # We are restricting profiles based on GitHub Team membership and
           # so need to populate the teams in the auth state

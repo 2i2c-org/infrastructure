@@ -50,7 +50,8 @@ basehub:
         JupyterHub:
           authenticator_class: github
           # Announcement is a JupyterHub feature to present messages to users in
-          # pages under the /hub path, but not via the /user.
+          # web pages under the /hub path (JupyterHub responds), but not via the
+          # /user path (single-user server responds).
           #
           # ref: https://github.com/2i2c-org/infrastructure/issues/1501
           # ref: https://jupyterhub.readthedocs.io/en/stable/reference/templates.html#announcement-configuration-variables
