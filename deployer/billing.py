@@ -79,7 +79,6 @@ def validate_billing_export():
 
     # Handle the response
     for ba in managed_billing_accounts:
-
         # Make the request
         response = billing_client.get_billing_account(
             name=f"billingAccounts/{ba}",
@@ -139,7 +138,6 @@ def generate_cost_table(
         help="Write to given Google Sheet URL. Used when --output is google-sheet. billing-spreadsheet-writer@two-eye-two-see.iam.gserviceaccount.com should have Editor rights on this spreadsheet.",
     ),
 ):
-
     with open(HERE.joinpath("config/billing-accounts.yaml")) as f:
         accounts = yaml.load(f)
 
@@ -221,7 +219,6 @@ def generate_cost_table(
         with get_decrypted_file(
             "config/secrets/enc-billing-gsheets-writer-key.secret.json"
         ) as f:
-
             gsheets = gspread.service_account(filename=f)
 
         spreadsheet = gsheets.open_by_url(google_sheet_url)
