@@ -23,13 +23,17 @@ Here are the credentials for logging in:
 
 ## Create an API key to auto-deploy the dashboards
 
-Once the deploy chart was deployed and you were able to log into grafana as the admin user,
-you can generate an API key.
+Once the support chart is deployed and you are able to log into grafana as the
+admin user, you can generate an API key.
 
 You can do this by running a deployer command:
 
 ```bash
-deployer new-grafana-token <cluster_name>
+export CLUSTER_NAME=<cluster-name>
+```
+
+```bash
+deployer new-grafana-token $CLUSTER_NAME
 ```
 
 If the command succeeded, it should have created:
@@ -39,9 +43,9 @@ If the command succeeded, it should have created:
 - the following sops-ecrypted file `config/clusters/<cluster>/enc-grafana-token.secret.yaml`,
   with a content similar to:
 
-```yaml
-grafana_token: token
-```
+  ```yaml
+  grafana_token: token
+  ```
 
 The encrypted file can now be committed to the repository.
 
@@ -54,7 +58,7 @@ This key will be used by the [`deploy-grafana-dashboards` workflow](https://gith
 You can deploy the dashboards locally using the deployer:
 
 ```bash
-deployer deploy-grafana-dashboards <CLUSTER_NAME>
+deployer deploy-grafana-dashboards $CLUSTER_NAME
 ```
 
 ## Deploying the Grafana Dashboards from CI/CD

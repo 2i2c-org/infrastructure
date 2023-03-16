@@ -31,20 +31,20 @@ User account
 
 ## JupyterHub CILogonOAuthenticator
 
-The steps to enable the JupyterHub CILogonOAuthenticator for a hub are simmilar with the ones for enabling [GitHubOAuthenticator](auth:github-orgs):
+The steps to enable the JupyterHub CILogonOAuthenticator for a hub are similar with the ones for enabling [GitHubOAuthenticator](auth:github-orgs):
 
 1. **Create a CILogon OAuth client**
-   This can be achieved by using the [cilogon_app.py](https://github.com/2i2c-org/infrastructure/blob/HEAD/deployer/cilogon_app.py) script.
+   This can be achieved by using the `deployer cilogon-client-create` command.
 
-   - The script needs to be passed the cluster and hub name for which a client id and secret will be generated, but also the hub type, and the authorisation callback URL.
-   - The authorisation callback URL is the homepage url appended with `/hub/oauth_callback`. For example, `staging.2i2c.cloud/hub/oauth_callback`.
+   - The command needs to be passed the cluster and hub name for which a client id and secret will be generated, but also the hub type, and the authorization callback URL.
+   - The authorization callback URL is the homepage url appended with `/hub/oauth_callback`. For example, `https://staging.2i2c.cloud/hub/oauth_callback`.
    - Example script invocation that creates a CILogon OAuth client for the 2i2c dask-staging hub:
       ```bash
-      python3 ./deployer/cilogon_app.py create 2i2c dask-staging daskhub https://dask-staging.2i2c.cloud/hub/oauth_callback
+      deployer cilogon-client-create create 2i2c dask-staging daskhub https://dask-staging.2i2c.cloud/hub/oauth_callback
       ```
-   - If successfull, the script will have created a secret values file under `config/clusters/<cluster_name>/enc-<hub_name>.secret.values.yaml`. This file
+   - If successful, the script will have created a secret values file under `config/clusters/<cluster_name>/enc-<hub_name>.secret.values.yaml`. This file
    holds the encrypted OAuth client id and secret that have been created for this hub.
-   - The unecrypted file contents should look like this:
+   - The unencrypted file contents should look like this:
       ```yaml
         jupyterhub:
           hub:
@@ -149,7 +149,7 @@ The steps to enable the JupyterHub CILogonOAuthenticator for a hub are simmilar 
               CILogonOAuthenticator:
                 oauth_callback_url: https://{{ HUB_DOMAIN }}/hub/oauth_callback
                 shown_idps:
-                  - https://github.com/login/oauth/authorize
+                  - http://github.com/login/oauth/authorize
                 allowed_idps:
                   http://github.com/login/oauth/authorize:
                     username_derivation:
@@ -184,7 +184,7 @@ The steps to enable the JupyterHub CILogonOAuthenticator for a hub are simmilar 
               # Only show the option to login with Google and Shibboleth
               shown_idps:
                 - https://idp2.anu.edu.au/idp/shibboleth
-                - https://accounts.google.com/o/oauth2/auth
+                - http://google.com/accounts/o8/id
               allowed_idps:
                 http://google.com/accounts/o8/id:
                   username_derivation:

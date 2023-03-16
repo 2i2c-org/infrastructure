@@ -1,5 +1,5 @@
 name: callysto
-provider: gcp
+provider: gcp # https://console.cloud.google.com/kubernetes/clusters/details/northamerica-northeast1/callysto-cluster/details?project=callysto-202316
 gcp:
   key: enc-deployer-credentials.secret.json
   project: callysto-202316

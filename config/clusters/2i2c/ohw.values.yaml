@@ -1,3 +1,14 @@
+dask-gateway:
+  gateway:
+    backend:
+      scheduler:
+        extraPodConfig:
+          nodeSelector:
+            2i2c.org/community: ohw
+      worker:
+        extraPodConfig:
+          nodeSelector:
+            2i2c.org/community: ohw
 basehub:
   userServiceAccount:
     annotations:
@@ -31,25 +42,27 @@ basehub:
               - port: 22
                 protocol: TCP
       profileList:
-        - display_name: "Python image"
+        - display_name: "Python en JupyterLab"
           description: "~2 CPU, ~8G RAM"
           default: true
           kubespawner_override:
-            image: "ghcr.io/oceanhackweek/python:99b6ab5"
+            image: "ghcr.io/oceanhackweek/python:5c98268"
             default_url: "/lab"
             mem_limit: 8G
             mem_guarantee: 4G
             cpu_limit: 2
             cpu_guarantee: 0.5
-        - display_name: "R image"
+        - display_name: "R en RStudio"
           description: "~2 CPU, ~8G RAM"
           kubespawner_override:
-            image: "ghcr.io/oceanhackweek/r:39ba006"
+            image: "ghcr.io/oceanhackweek/r:2b505d5"
             default_url: "/rstudio"
             mem_limit: 8G
             mem_guarantee: 4G
             cpu_limit: 2
             cpu_guarantee: 0.5
+      nodeSelector:
+        2i2c.org/community: ohw
     custom:
       cloudResources:
         provider: gcp
@@ -63,9 +76,10 @@ basehub:
       homepage:
         templateVars:
           org:
-            name: Ocean Hack Week
-            logo_url: https://avatars.githubusercontent.com/u/33128979
-            url: https://oceanhackweek.github.io/
+            name: OceanHackWeek
+            # logo_url: https://avatars.githubusercontent.com/u/33128979
+            logo_url: https://intercoonecta.github.io/_static/OHWe.png
+            url: https://oceanhackweek.org/
           designed_by:
             name: 2i2c
             url: https://2i2c.org
@@ -73,8 +87,8 @@ basehub:
             name: 2i2c
             url: https://2i2c.org
           funded_by:
-            name: 2i2c
-            url: https://2i2c.org
+            name: AECID
+            url: https://www.aecid.es
     hub:
       config:
         JupyterHub:
@@ -83,6 +97,9 @@ basehub:
           oauth_callback_url: https://oceanhackweek.2i2c.cloud/hub/oauth_callback
           allowed_organizations:
             - 2i2c-org:hub-access-for-2i2c-staff
+            - Intercoonecta:ohwes23-organizers
+            - Intercoonecta:ohwes23-mentor-helper-presenter
+            - Intercoonecta:ohwes23-participants
             - oceanhackweek:participants_2022
             - oceanhackweek:ohw22-organizers
             - oceanhackweek:ohw22-mentor-helper-presenter

@@ -34,11 +34,12 @@ jupyterhub:
       extraVolumeMounts:
         - name: home
           mountPath: /home/jovyan/allusers
+          readOnly: false
   singleuser:
     image:
       # https://hub.docker.com/r/lisacuk/lishub-base
       name: "lisacuk/lishub-base"
-      tag: "b183052"
+      tag: "581a714"
   hub:
     config:
       JupyterHub:

@@ -1,9 +1,9 @@
-name: uwhackweeks
-provider: aws
+name: nasa-veda
+provider: aws # https://smce-veda.signin.aws.amazon.com/console
 aws:
   key: enc-deployer-credentials.secret.json
   clusterType: eks
-  clusterName: uwhackweeks
+  clusterName: nasa-veda
   region: us-west-2
 support:
   helm_chart_values_files:
@@ -11,8 +11,8 @@ support:
     - enc-support.secret.values.yaml
 hubs:
   - name: staging
-    display_name: "Staging"
-    domain: staging.uwhackweeks.2i2c.cloud
+    display_name: "NASA VEDA (staging)"
+    domain: staging.nasa-veda.2i2c.cloud
     helm_chart: daskhub
     auth0:
       enabled: false
@@ -23,13 +23,16 @@ hubs:
       - common.values.yaml
       - staging.values.yaml
       - enc-staging.secret.values.yaml
-  - name: snowex
-    display_name: "SnowEx Hackweek"
-    domain: snowex.uwhackweeks.2i2c.cloud
+  - name: prod
+    display_name: "NASA VEDA (prod)"
+    domain: nasa-veda.2i2c.cloud
     helm_chart: daskhub
     auth0:
       enabled: false
     helm_chart_values_files:
+      # The order in which you list files here is the order the will be passed
+      # to the helm upgrade command in, and that has meaning. Please check
+      # that you intend for these files to be applied in this order.
       - common.values.yaml
-      - snowex.values.yaml
-      - enc-snowex.secret.values.yaml
+      - prod.values.yaml
+      - enc-prod.secret.values.yaml

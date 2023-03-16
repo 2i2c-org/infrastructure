@@ -1,5 +1,5 @@
 name: 2i2c-aws-us
-provider: aws
+provider: aws # https://2i2c.awsapps.com/start#/
 aws:
   key: enc-deployer-credentials.secret.json
   clusterType: eks
@@ -26,6 +26,7 @@ hubs:
     auth0:
       enabled: false
     helm_chart_values_files:
+      - common.values.yaml
       - dask-staging.values.yaml
       - enc-dask-staging.secret.values.yaml
   - name: researchdelight
@@ -35,4 +36,5 @@ hubs:
     auth0:
       connection: github
     helm_chart_values_files:
+      - common.values.yaml
       - researchdelight.values.yaml

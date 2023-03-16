@@ -1,5 +1,5 @@
 name: cloudbank
-provider: gcp
+provider: gcp # https://console.cloud.google.com/kubernetes/clusters/details/us-central1-b/cb-cluster/nodes?project=cb-1003-1696
 gcp:
   key: enc-deployer-credentials.secret.json
   project: cb-1003-1696
@@ -176,13 +176,12 @@ hubs:
     auth0:
       # connection update? Also ensure the basehub Helm chart is provided a
       # matching value for jupyterhub.custom.2i2c.add_staff_user_ids_of_type!
-      enabled: false
+      connection: google-oauth2
     helm_chart_values_files:
       # The order in which you list files here is the order the will be passed
       # to the helm upgrade command in, and that has meaning. Please check
       # that you intend for these files to be applied in this order.
       - lacc.values.yaml
-      - enc-lacc.secret.values.yaml
   - name: mills
     display_name: "Mills College"
     domain: datahub.mills.edu

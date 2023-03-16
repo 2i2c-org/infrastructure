@@ -18,7 +18,7 @@ class Cluster:
     def __init__(self, spec, config_path):
         self.spec = spec
         self.config_path = config_path
-        self.hubs = [Hub(self, hub_spec) for hub_spec in self.spec["hubs"]]
+        self.hubs = [Hub(self, hub_spec) for hub_spec in self.spec.get("hubs", [])]
         self.support = self.spec.get("support", {})
 
     @contextmanager
@@ -130,7 +130,6 @@ class Cluster:
 
         with tempfile.NamedTemporaryFile() as kubeconfig, unset_env_vars(unset_envs):
             with get_decrypted_file(key_path) as decrypted_key_path:
-
                 decrypted_key_abspath = os.path.abspath(decrypted_key_path)
                 if not os.path.isfile(decrypted_key_abspath):
                     raise FileNotFoundError("The decrypted key file does not exist")
@@ -173,7 +172,6 @@ class Cluster:
             os.environ["KUBECONFIG"] = kubeconfig.name
 
             with get_decrypted_file(key_path) as decrypted_key_path:
-
                 decrypted_key_abspath = os.path.abspath(decrypted_key_path)
                 if not os.path.isfile(decrypted_key_abspath):
                     raise FileNotFoundError("The decrypted key file does not exist")

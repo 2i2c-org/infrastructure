@@ -1,3 +1,13 @@
+"""
+This code is responsible for providing the deployer script's new-grafana-token
+command meant to be run once as part of setting up a new cluster.
+
+The new-grafana-token command makes use of a hardcoded admin password to create
+a grafana service account named "deployer" and an access token for it. This
+access token is written to a enc-grafana-token.secret.yaml file for use by the
+deployer command going forward.
+"""
+
 import json
 from base64 import b64encode
 from pathlib import Path
@@ -157,8 +167,8 @@ def new_grafana_token(
     Generate an API token for the cluster's Grafana `deployer` service account
     and store it encrypted inside a `enc-grafana-token.secret.yaml` file.
     """
-    grafana_host = get_grafana_url(cluster)
-    sa_endpoint = f"https://{grafana_host}/api/serviceaccounts"
+    grafana_url = get_grafana_url(cluster)
+    sa_endpoint = f"{grafana_url}/api/serviceaccounts"
     headers = build_service_account_request_headers()
 
     overwrite = False

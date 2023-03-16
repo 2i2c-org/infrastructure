@@ -60,10 +60,12 @@ resource.labels.namespace_name="<namespace>"
 To look at a specific user's pod logs:
 
 ```
+labels.k8s-pod/component="singleuser-server"
 labels.k8s-pod/hub_jupyter_org/username="<escaped-username>"
 resource.labels.namespace_name="<namespace>"
 ```
 
+(howto:troubleshoot:logs:username)=
 Note that you need the *escaped* username, rather than just the username. You can
 either spot it by taking a quick look at *all* the logs and finding out, or by
 using the following python code snippet:
@@ -88,14 +90,25 @@ errors can be frustrating!
 
 #### Look at dask-gateway logs
 
-The following query will show logs from all the components of dask-gateway
-infrastructure - the controller, api and the proxy. Note that this does *not*
-show logs from specific schedulers or worker pods a user might have started.
+The following query will show logs from all the components of dask-gateway -
+the controller, API, proxy, individual schedulers and workers.
 
 ```
 labels.k8s-pod/app_kubernetes_io/name="dask-gateway"
 resource.labels.namespace_name="<namespace>"
 ```
+
+To look at just the *scheduler* and *worker* logs of a specific user, you can
+try:
+
+```
+labels.k8s-pod/app_kubernetes_io/name="dask-gateway"
+resource.labels.namespace_name="<namespace>"
+labels.k8s-pod/hub_jupyter_org/username="<escaped-username>"
+```
+
+You must pass the [escaped username](howto:troubleshoot:logs:username) to the
+query.
 
 #### Full-text search across logs
 

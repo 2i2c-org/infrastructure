@@ -35,6 +35,9 @@ docs/reference/terraform.md
 # Don't check-in YAML files for eksctl config generated from jsonnet files
 **.eksctl.yaml
 
+# Don't version control any terraform state
+**.terraform.lock.hcl
+
 # Python.gitignore below - Add exceptions above for easier maintenance
 # https://github.com/github/gitignore/blob/main/Python.gitignore
 # --------------------------------------------------------------------

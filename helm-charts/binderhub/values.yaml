@@ -4,7 +4,6 @@ binderhub:
   config:
     BinderHub:
       use_registry: true
-      build_image: "quay.io/jupyterhub/repo2docker:2022.02.0-75.gd415115"
       per_repo_quota: 150
       build_node_selector:
         # Build user images only on user nodes, not dask or core nodes
@@ -17,16 +16,13 @@ binderhub:
       nginx.ingress.kubernetes.io/proxy-body-size: 256m
       kubernetes.io/ingress.class: nginx
       cert-manager.io/cluster-issuer: letsencrypt-prod
-  dind:
-    enabled: true
+  imageBuilderType: dind
   imageCleaner:
     enabled: true
     # when 80% of inodes are used,
     # cull images until only 40% are used.
     imageGCThresholdHigh: 80
     imageGCThresholdLow: 40
-    host:
-      enabled: false
   jupyterhub:
     ingress:
       enabled: true
@@ -42,8 +38,16 @@ binderhub:
           hub.jupyter.org/node-purpose: core
         resources:
           requests:
-            # FIXME: We want no guarantees here!!!
-            # This is lowest possible value
+            # FIXME: These are basehub's defaults that may very well be worth
+            #        deviating from.
+            #
+            #        For example, we want to avoid the proxy pod gets evicted
+            #        if the node is under memory pressure and the proxy pod is
+            #        using more memory than requested. We also want to avoid
+            #        having the proxy pod starved of CPU by a minimal request if
+            #        other pods make significant requests and get a far greater
+            #        ratio of the node's available CPU.
+            #
             cpu: 0.01
             memory: 64Mi
           limits:
@@ -292,7 +296,6 @@ dask-gateway:
           nodeSelector:
             # Dask workers get their own pre-emptible pool
             k8s.dask.org/node-purpose: worker
-
     # TODO: figure out a replacement for userLimits.
     extraConfig:
       optionHandler: |
@@ -367,7 +370,6 @@ dask-gateway:
       k8s.dask.org/node-purpose: core
     service:
       type: ClusterIP # Access Dask Gateway through JupyterHub. To access the Gateway from outside JupyterHub, this must be changed to a `LoadBalancer`.
-
 # A placeholder as global values that can be referenced from the same location
 # of any chart should be possible to provide, but aren't necessarily provided or
 # used.

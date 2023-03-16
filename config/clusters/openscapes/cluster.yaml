@@ -1,5 +1,5 @@
 name: openscapes
-provider: aws
+provider: aws # https://783616723547.signin.aws.amazon.com/console
 account: "783616723547"
 aws:
   key: enc-deployer-credentials.secret.json
@@ -24,7 +24,6 @@ hubs:
       # to the helm upgrade command in, and that has meaning. Please check
       # that you intend for these files to be applied in this order.
       - common.values.yaml
-      - staging.values.yaml
   - name: prod
     display_name: "Openscapes (prod)"
     domain: openscapes.2i2c.cloud

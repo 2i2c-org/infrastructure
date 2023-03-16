@@ -32,4 +32,4 @@ jupyterhub:
           - ericvd@berkeley.edu
           - k_usovich@berkeley.edu
           - sean.smorris@berkeley.edu
-        username_pattern: '^(.+@2i2c\.org|.+@berkeley\.edu|.+@sjcc\.edu|.+@evc\.edu|deployment-service-check)$'
+        username_pattern: '^(.+@2i2c\.org|.+@berkeley\.edu|.+@stu\.evc\.edu|.+@stu\.sjcc\.edu|.+@sjcc\.edu|.+@evc\.edu|deployment-service-check)$'

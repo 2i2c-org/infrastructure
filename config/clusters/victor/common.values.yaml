@@ -34,12 +34,20 @@ basehub:
     hub:
       config:
         Authenticator:
-          allowed_users: &victor_users
+          # This hub uses GitHub Teams auth and so we don't set
+          # allowed_users in order to not deny access to valid members of
+          # the listed teams. These people should have admin access though.
+          admin_users:
             - einatlev-ldeo
             - SamKrasnoff
-          admin_users: *victor_users
         JupyterHub:
           authenticator_class: github
+        GitHubOAuthenticator:
+          allowed_organizations:
+            - 2i2c-org:hub-access-for-2i2c-staff
+            - VICTOR-Community:victoraccess
+          scope:
+            - read:org
     singleuser:
       profileList:
         # The mem-guarantees are here so k8s doesn't schedule other pods
@@ -80,8 +88,5 @@ basehub:
         name: pangeo/pangeo-notebook
         tag: "2022.09.21"
     scheduling:
-      userPlaceholder:
-        enabled: false
-        replicas: 0
       userScheduler:
-        enabled: false
+        enabled: true

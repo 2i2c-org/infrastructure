@@ -1,6 +1,4 @@
 basehub:
-  # Copied from https://github.com/dask/helm-chart/blob/master/daskhub/values.yaml
-  # FIXME: Properly use the upstream chart.
   jupyterhub:
     singleuser:
       # Almost everyone using dask by default wants JupyterLab
@@ -8,10 +6,14 @@ basehub:
       extraLabels:
         hub.jupyter.org/network-access-proxy-http: "true"
       cloudMetadata:
-        # Don't block access to AWS cloud metadata
-        # If we don't, our users can't access S3 buckets / other AWS services
-        # without an explicit identity
-        # FIXME: Provide an explicit identity for users instead
+        # Don't block access to the cloud provider's metadata server!
+        #
+        # If we do the coupling between the cloud providers IAM permissions and
+        # the credentials provided to pod's by mounting a k8s ServiceAccount
+        # with certain annotations on breaks (AWS IRSA, GCP workload identity).
+        # This in turn results in users unable to able to access AWS/GCP object
+        # storage buckets.
+        #
         blockWithIptables: false
       serviceAccountName: user-sa
       extraEnv:
@@ -57,6 +59,7 @@ basehub:
           # as dask-gateway has no UI
           display: false
       extraConfig:
+        # Initially copied from https://github.com/dask/helm-chart/blob/master/daskhub/values.yaml
         daskhub-01-add-dask-gateway-values: |
           # 1. Sets `DASK_GATEWAY__PROXY_ADDRESS` in the singleuser environment.
           # 2. Adds the URL for the Dask Gateway JupyterHub service.
@@ -98,12 +101,7 @@ dask-gateway:
   enabled: true # Enabling dask-gateway will install Dask Gateway as a dependency.
   # Futher Dask Gateway configuration goes here
   # See https://github.com/dask/dask-gateway/blob/master/resources/helm/dask-gateway/values.yaml
-  controller:
-    nodeSelector:
-      k8s.dask.org/node-purpose: core
   gateway:
-    nodeSelector:
-      k8s.dask.org/node-purpose: core
     backend:
       scheduler:
         extraPodConfig:

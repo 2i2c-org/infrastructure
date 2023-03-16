@@ -7,7 +7,7 @@ jupyterhub:
       templateVars:
         org:
           name: Los Angeles City College
-          logo_url: https://lacitycollege.edu/About/Communications-Media/documents/OfficialLogo/LACC_logo_BR_RGB-01
+          logo_url: https://www.lacitycollege.edu/sites/lacc.edu/files/lacc-logo.svg
           url: https://www.lacitycollege.edu/
         designed_by:
           name: 2i2c
@@ -20,16 +20,11 @@ jupyterhub:
           url: http://cloudbank.org/
   hub:
     config:
-      JupyterHub:
-        authenticator_class: cilogon
-      CILogonOAuthenticator:
-        oauth_callback_url: https://lacc.cloudbank.2i2c.cloud/hub/oauth_callback
-        username_claim: email
       Authenticator:
-        admin_users:
+        allowed_users: &lacc_users
           - PINEDAEM@laccd.edu
           - LAMKT@laccd.edu
           - ericvd@berkeley.edu
           - k_usovich@berkeley.edu
           - sean.smorris@berkeley.edu
-        username_pattern: '^(.+@2i2c\.org|.+@berkeley\.edu|.+@laccd\.edu|deployment-service-check)$'
+        admin_users: *lacc_users

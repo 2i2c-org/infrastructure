@@ -1,4 +1,18 @@
-// Exports an eksctl config file for carbonplan cluster
+/*
+    This file is a jsonnet template of a eksctl's cluster configuration file,
+    that is used with the eksctl CLI to both update and initialize an AWS EKS
+    based cluster.
+
+    This file has in turn been generated from eksctl/template.jsonnet which is
+    relevant to compare with for changes over time.
+
+    To use jsonnet to generate an eksctl configuration file from this, do:
+
+        jsonnet openscapes.jsonnet > openscapes.eksctl.yaml
+
+    References:
+    - https://eksctl.io/usage/schema/
+*/
 local ng = import "./libsonnet/nodegroup.jsonnet";
 
 // place all cluster nodes here
@@ -16,24 +30,22 @@ local namespaces = ['staging', 'prod'];
 // A `node.kubernetes.io/instance-type label is added, so pods
 // can request a particular kind of node with a nodeSelector
 local notebookNodes = [
-    { instanceType: "m5.large" },
-    { instanceType: "m5.xlarge" },
-    { instanceType: "m5.2xlarge" },
-    { instanceType: "m5.8xlarge" },
+    { instanceType: "r5.xlarge" },
+    { instanceType: "r5.4xlarge" },
+    { instanceType: "r5.16xlarge" },
+];
+local daskNodes = [
+    // Node definitions for dask worker nodes. Config here is merged
+    // with our dask worker node definition, which uses spot instances.
+    // A `node.kubernetes.io/instance-type label is set to the name of the
+    // *first* item in instanceDistribution.instanceTypes, to match
+    // what we do with notebook nodes. Pods can request a particular
+    // kind of node with a nodeSelector
+    { instancesDistribution+: { instanceTypes: ["r5.xlarge"] }},
+    { instancesDistribution+: { instanceTypes: ["r5.4xlarge"] }},
+    { instancesDistribution+: { instanceTypes: ["r5.16xlarge"] }},
 ];
 
-// Node definitions for dask worker nodes. Config here is merged
-// with our dask worker node definition, which uses spot instances.
-// A `node.kubernetes.io/instance-type label is set to the name of the
-// *first* item in instanceDistribution.instanceTypes, to match
-// what we do with notebook nodes. Pods can request a particular
-// kind of node with a nodeSelector
-local daskNodes = [
-    { instancesDistribution+: { instanceTypes: ["m5.large"] }},
-    { instancesDistribution+: { instanceTypes: ["m5.xlarge"] }},
-    { instancesDistribution+: { instanceTypes: ["m5.2xlarge"] }},
-    { instancesDistribution+: { instanceTypes: ["m5.8xlarge"] }},
-];
 
 {
     apiVersion: 'eksctl.io/v1alpha5',
@@ -41,7 +53,7 @@ local daskNodes = [
     metadata+: {
         name: "openscapeshub",
         region: clusterRegion,
-        version: '1.21'
+        version: '1.24'
     },
     availabilityZones: masterAzs,
     iam: {
@@ -57,6 +69,25 @@ local daskNodes = [
             ],
         } for namespace in namespaces],
     },
+    // If you add an addon to this config, run the create addon command.
+    //
+    //    eksctl create addon --config-file=openscapes.eksctl.yaml
+    //
+    addons: [
+        {
+            // aws-ebs-csi-driver ensures that our PVCs are bound to PVs that
+            // couple to AWS EBS based storage, without it expect to see pods
+            // mounting a PVC failing to schedule and PVC resources that are
+            // unbound.
+            //
+            // Related docs: https://docs.aws.amazon.com/eks/latest/userguide/managing-ebs-csi.html
+            //
+            name: 'aws-ebs-csi-driver',
+            wellKnownPolicies: {
+                ebsCSIController: true,
+            },
+        },
+    ],
     nodeGroups: [n + {clusterName:: $.metadata.name} for n in [
         ng {
             name: 'core-b',
@@ -64,7 +95,7 @@ local daskNodes = [
             ssh: {
                 publicKeyPath: 'ssh-keys/openscapes.key.pub'
             },
-            instanceType: "m5.xlarge",
+            instanceType: "r5.xlarge",
             minSize: 1,
             maxSize: 6,
             labels+: {
@@ -97,7 +128,6 @@ local daskNodes = [
                 "hub.jupyter.org_dedicated": "user:NoSchedule",
                 "hub.jupyter.org/dedicated": "user:NoSchedule"
             },
-
         } + n for n in notebookNodes
     ] + [
         ng {

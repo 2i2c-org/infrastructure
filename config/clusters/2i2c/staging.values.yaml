@@ -1,9 +1,9 @@
 dex:
-  enabled: true
+  enabled: false
   hubHostName: staging.2i2c.cloud
 
 staticWebsite:
-  enabled: true
+  enabled: false
   source:
     git:
       repo: https://github.com/jupyter/try.jupyter.org

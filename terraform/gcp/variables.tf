@@ -23,6 +23,37 @@ variable "project_id" {
   EOT
 }
 
+variable "k8s_version_prefixes" {
+  type        = set(string)
+  default     = [
+    "1.22.",
+    "1.23.",
+    "1.24.",
+    "1.25.",
+    "1.",
+  ]
+  description = <<-EOT
+  A list of k8s version prefixes that can be evaluated to their latest version by
+  the output defined in cluster.tf called regular_channel_latest_k8s_versions.
+  EOT
+}
+
+variable "k8s_versions" {
+  type        = object({
+    min_master_version: optional(string, null),
+    core_nodes_version: optional(string, null),
+    notebook_nodes_version: optional(string, null),
+    dask_nodes_version: optional(string, null),
+  })
+  default     = {}
+  description = <<-EOT
+  Configuration of the k8s cluster's version and node pools' versions. To specify these
+
+  - min_master_nodes is passthrough configuration of google_container_cluster's min_master_version, documented in https://registry.terraform.io/providers/hashicorp/google-beta/latest/docs/resources/container_cluster#min_master_version
+  - [core|notebook|dask]_nodes_version is passthrough configuration of container_node_pool's version, documented in https://registry.terraform.io/providers/hashicorp/google-beta/latest/docs/resources/container_node_pool#version
+  EOT
+}
+
 variable "notebook_nodes" {
   type        = map(object({ min : number, max : number, machine_type : string, labels : map(string), gpu : object({ enabled : bool, type : string, count : number }) }))
   description = "Notebook node pools to create"
@@ -295,6 +326,15 @@ variable "hub_cloud_permissions" {
      This *potentially* incurs cost for us, the originating project, so opt-in.
   2. bucket_admin_access: List of GCS storage buckets that users on this hub should have read
      and write permissions for.
+  EOT
+}
+
+variable "bucket_public_access" {
+  type        = list
+  default     = []
+  description = <<-EOT
+  A list of GCS storage buckets defined in user_buckets that should be granted public read access.
+
   EOT
 }
 

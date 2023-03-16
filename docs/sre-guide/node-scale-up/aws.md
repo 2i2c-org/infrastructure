@@ -19,15 +19,18 @@ server startup faster.
    ```
 
 2. Render the `.jsonnet` file into a YAML file with:
+   ```bash
+   export CLUSTER_NAME=<your_cluster>
+   ```
 
    ```bash
-   jsonnet <your-cluster>.jsonnet > <your-cluster>.eksctl.yaml
+   jsonnet $CLUSTER_NAME.jsonnet > $CLUSTER_NAME.eksctl.yaml
    ```
 
 3. Use `eksctl` to scale the cluster.
 
    ```bash
-   eksctl scale nodegroup --config-file=<your-cluster>.eksctl.yaml
+   eksctl scale nodegroup --config-file=$CLUSTER_NAME.eksctl.yaml
    ```
 
    ```{note}

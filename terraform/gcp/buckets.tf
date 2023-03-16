@@ -45,6 +45,13 @@ resource "google_storage_bucket_iam_member" "member" {
   member   = "serviceAccount:${google_service_account.workload_sa[each.value.hub_name].email}"
 }
 
+resource "google_storage_default_object_access_control" "public_rule" {
+  for_each = toset(var.bucket_public_access)
+  bucket   = google_storage_bucket.user_buckets[each.key].name
+  role   = "READER"
+  entity = "allUsers"
+}
+
 output "buckets" {
   value       = { for b, _ in var.user_buckets : b => google_storage_bucket.user_buckets[b].name }
   description = <<-EOT

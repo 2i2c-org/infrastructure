@@ -3,31 +3,31 @@
 #
 
 # ruamel.yaml is used to read and write .yaml files.
-ruamel.yaml==0.17.21
+ruamel.yaml==0.17.*
 
 # auth0 is used to communicate with Auth0's REST API that we integrate with in
 # various ways.
-auth0-python==3.24.0
+auth0-python==3.*
 
 # jsonschema is used for validating cluster.yaml configurations
-jsonschema==4.17.0
+jsonschema==4.*
 
 # rich and py-markdown-table are used for pretty printing outputs that would otherwise
 # be difficult to parse by a human
-rich==13.1.0
-py-markdown-table==0.3.1
+rich==13.*
+py-markdown-table==0.3.*
 
 # jhub_client, pytest, and pytest-asyncio are used for our health checks
-jhub-client==0.1.6
-pytest==7.2.0
-pytest-asyncio>=0.17
+jhub-client==0.1.*
+pytest
+pytest-asyncio
 
 # Used to generate templates
-jinja2==3.1.2
+jinja2==3.*
 
 # Used for the debug CLI
-typer==0.7.0
-escapism==1.0.1
+typer==0.7.*
+escapism==1.*
 
 # Used for GCP billing info
 google-cloud-bigquery

@@ -1,5 +1,5 @@
 name: m2lines
-provider: gcp
+provider: gcp # https://console.cloud.google.com/kubernetes/clusters/details/us-central1/m2lines-cluster/details?project=m2lines-hub
 gcp:
   key: enc-deployer-credentials.secret.json
   project: m2lines-hub

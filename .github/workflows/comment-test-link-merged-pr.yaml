@@ -42,7 +42,7 @@ jobs:
           env_file = os.getenv("GITHUB_ENV")
 
           # Retrieve the commit message from GitHub Actions context
-          commit_msg = r"""${{ github.event.head_commit.message }}"""
+          commit_msg = r'''${{ github.event.head_commit.message }}'''
 
           # Use regex to extract the PR number from the commit message
           match = re.search('(?<=#)[0-9]*', commit_msg)

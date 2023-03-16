@@ -1,3 +1,4 @@
+(uptime-checks)=
 # Simple HTTPS uptime checks
 
 Ideally, when a hub is down, a machine alerts us - we do not have to wait for a user
@@ -18,9 +19,19 @@ has a few advantages:
 You can browse the existing checks [on the GCP Console](https://console.cloud.google.com/monitoring/uptime?project=two-eye-two-see)
 as well.
 
+## Cost
+
+Note that as of October 2022 [Google Stackdriver
+Pricing](https://cloud.google.com/stackdriver/pricing) the free monthly quota is
+1 million executions of uptime checks per project.
+
+| Feature | Price | Free allotment per month | Effective date |
+| --- | --- | --- | --- |
+| Execution of Monitoring uptime checks| $0.30/1,000 executions| 1 million executions per Google Cloud project|	October 1, 2022 |
+
 ## When are notifications triggered?
 
-Our uptime checks are performed every 5 minutes, and we alert if checks have failed for 11 minutes.
+Our uptime checks are performed every 15 minutes, and we alert if checks have failed for 31 minutes.
 This make sure there are at least 2 failed checks before we alert.
 
 We are optimizing for *actionable alerts* that we can completely *trust*,
@@ -64,3 +75,22 @@ steps required.
  terraform state (on GCS), the uptime checks, notification channels and alert
  policies. *Nothing destructive* can happen if this `terraform apply` goes
  wrong, so it is alright to run this without human supervision on GitHub Actions
+
+(uptime-checks:snoozes)=
+## How do I snoooze a check?
+
+As the checks are all in GCP they can be created through the [monitoring console](https://console.cloud.google.com/monitoring/alerting?project=two-eye-two-see).
+
+The `alpha` gcloud component also supports setting snoozes from the command line. For further documentation see the [Google Cloud Monitoring docs](https://cloud.google.com/monitoring/alerts/manage-snooze#gcloud-cli) or the [gcloud alpha monitoring snoozes](https://cloud.google.com/sdk/gcloud/reference/alpha/monitoring/snoozes) reference. You may need to add the `alpha` component to your `gcloud` install.
+
+
+Example CLI use that snoozes binder-staging check for 7 days:
+
+```
+HUB=binder-staging
+POLICY=$(gcloud alpha monitoring policies list  --filter "displayName ~ binder-staging" --format='value(name)')
+# echo $POLICY 
+# projects/two-eye-two-see/alertPolicies/12673409021288629743
+gcloud alpha monitoring snoozes create --display-name="Uptime Check Disabled $HUB" --criteria-policies="$POLICY" --start-time="$(date -Iseconds)" --end-time="+PT7D"
+# Created snooze [projects/two-eye-two-see/snoozes/3009021608334458880].
+```

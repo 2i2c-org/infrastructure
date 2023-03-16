@@ -1,5 +1,5 @@
 name: linked-earth
-provider: gcp
+provider: gcp # https://console.cloud.google.com/kubernetes/clusters/details/us-central1/linked-earth-cluster/nodes?project=linked-earth-hubs
 gcp:
   key: enc-deployer-credentials.secret.json
   project: linked-earth-hubs

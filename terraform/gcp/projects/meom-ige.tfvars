@@ -130,6 +130,9 @@ user_buckets = {
   "scratch": {
     "delete_after": null
   },
+  "scratch-drakkar-demo": {
+    "delete_after" : 7
+  },
   "data": {
     "delete_after": null
   }
@@ -145,5 +148,10 @@ hub_cloud_permissions = {
     requestor_pays : true,
     bucket_admin_access: ["scratch", "data"],
     hub_namespace: "prod"
+  },
+  "drakkar-demo" : {
+    requestor_pays : true,
+    bucket_admin_access: ["scratch-drakkar-demo"],
+    hub_namespace: "drakkar-demo"
   }
 }

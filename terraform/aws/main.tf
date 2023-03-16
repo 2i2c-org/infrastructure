@@ -1,13 +1,15 @@
 terraform {
   required_providers {
     aws = {
+      # ref: https://registry.terraform.io/providers/hashicorp/aws/latest
       source  = "hashicorp/aws"
-      version = "~> 4.15"
+      version = "~> 4.52"
     }
 
     mysql = {
+      # ref: https://registry.terraform.io/providers/petoju/mysql/latest
       source  = "petoju/mysql"
-      version = "3.0.20"
+      version = "~> 3.0"
     }
 
   }
