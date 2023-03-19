@@ -38,10 +38,7 @@ local daskNodes = [
     // *first* item in instanceDistribution.instanceTypes, to match
     // what we do with notebook nodes. Pods can request a particular
     // kind of node with a nodeSelector
-    { instancesDistribution+: { instanceTypes: ["m5.large"] }},
-    { instancesDistribution+: { instanceTypes: ["m5.xlarge"] }},
-    { instancesDistribution+: { instanceTypes: ["m5.2xlarge"] }},
-    { instancesDistribution+: { instanceTypes: ["m5.8xlarge"] }},
+    { instancesDistribution+: { instanceTypes: ["r5.4xlarge"] }},
 ];
 
 
@@ -54,7 +51,7 @@ local daskNodes = [
         // Warning: version 1.23 introduces some breaking changes
         // Checkout the docs before upgrading
         // ref: https://docs.aws.amazon.com/eks/latest/userguide/ebs-csi-migration-faq.html
-        version: '1.22'
+        version: '1.25'
     },
     availabilityZones: masterAzs,
     iam: {
@@ -81,12 +78,12 @@ local daskNodes = [
     ],
     nodeGroups: [
         ng {
-            name: 'core-a',
+            name: 'core-b',
             availabilityZones: [nodeAz],
             ssh: {
                 publicKeyPath: 'ssh-keys/victor.key.pub'
             },
-            instanceType: "m5.xlarge",
+            instanceType: "r5.xlarge",
             minSize: 1,
             maxSize: 6,
             labels+: {
@@ -141,6 +138,4 @@ local daskNodes = [
             },
         } + n for n in daskNodes
     ]
-
-
 }
