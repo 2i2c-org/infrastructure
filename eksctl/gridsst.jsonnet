@@ -57,7 +57,7 @@ local daskNodes = [
     metadata+: {
         name: "gridsst",
         region: clusterRegion,
-        version: '1.22'
+        version: '1.25'
     },
     availabilityZones: masterAzs,
     iam: {
@@ -89,7 +89,7 @@ local daskNodes = [
             ssh: {
                 publicKeyPath: 'ssh-keys/gridsst.key.pub'
             },
-            instanceType: "m5.xlarge",
+            instanceType: "r5.xlarge",
             minSize: 1,
             maxSize: 6,
             labels+: {
@@ -144,6 +144,4 @@ local daskNodes = [
             },
         } + n for n in daskNodes
     ]
-
-
 }
