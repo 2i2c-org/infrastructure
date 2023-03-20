@@ -262,7 +262,7 @@ jupyterhub:
     defaultUrl: /tree
     image:
       name: quay.io/2i2c/2i2c-hubs-image
-      tag: "05c6a27dc942"
+      tag: "b16f88c26490"
     storage:
       type: static
       static:
