@@ -74,10 +74,39 @@ basehub:
         tag: "a1bc0061178a"
       storage:
         extraVolumeMounts:
+          # A shared folder readable & writeable by everyone
+          # https://github.com/CryoInTheCloud/hub-image/issues/43#issuecomment-1466392517
+          - name: home
+            mountPath: /home/jovyan/shared-public
+            subPath: _shared-public
+            readOnly: false
           - name: home
             mountPath: /home/jovyan/shared
             subPath: _shared
             readOnly: true
+      initContainers:
+        - name: volume-mount-ownership-fix
+          image: busybox
+          command:
+            [
+              "sh",
+              "-c",
+              "id && chown 1000:1000 /home/jovyan && chown 1000:1000 /home/jovyan/shared-readwrite && chown 1000:1000 /home/jovyan/shared-public && ls -lhd /home/jovyan ",
+            ]
+          securityContext:
+            runAsUser: 0
+          volumeMounts:
+            - name: home
+              mountPath: /home/jovyan
+              subPath: "{username}"
+            # Mounted without readonly attribute here,
+            # so we can chown it appropriately
+            - name: home
+              mountPath: /home/jovyan/shared-readwrite
+              subPath: _shared
+            - name: home
+              mountPath: /home/jovyan/shared-public
+              subPath: _shared-public
       profileList:
         # NOTE: About node sharing
         #
