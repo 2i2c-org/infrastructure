@@ -52,6 +52,7 @@ basehub:
           admin_users:
             - tsnow03
             - JessicaS11
+            - jdmillstein
             - dfelikson
             - fperez
         JupyterHub:
