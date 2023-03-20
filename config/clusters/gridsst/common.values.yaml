@@ -54,6 +54,9 @@ basehub:
         # on these nodes.
         - display_name: "Small: m5.large"
           description: "~2 CPU, ~8G RAM"
+          # default set to small because that node pool is configured with
+          # min_nodes 1, so we should make use of it.
+          default: true
           kubespawner_override:
             # Expllicitly unset mem_limit, so it overrides the default memory limit we set in
             # basehub/values.yaml
@@ -63,7 +66,6 @@ basehub:
               node.kubernetes.io/instance-type: m5.large
         - display_name: "Medium: m5.xlarge"
           description: "~4 CPU, ~15G RAM"
-          default: true
           kubespawner_override:
             mem_limit: null
             mem_guarantee: 12G
