@@ -44,10 +44,7 @@ local daskNodes = [
     // *first* item in instanceDistribution.instanceTypes, to match
     // what we do with notebook nodes. Pods can request a particular
     // kind of node with a nodeSelector
-    { instancesDistribution+: { instanceTypes: ["m5.large"] }},
-    { instancesDistribution+: { instanceTypes: ["m5.xlarge"] }},
-    { instancesDistribution+: { instanceTypes: ["m5.2xlarge"] }},
-    { instancesDistribution+: { instanceTypes: ["m5.8xlarge"] }},
+    { instancesDistribution+: { instanceTypes: ["r5.4xlarge"] }},
 ];
 
 
@@ -57,7 +54,7 @@ local daskNodes = [
     metadata+: {
         name: "gridsst",
         region: clusterRegion,
-        version: '1.22'
+        version: '1.25'
     },
     availabilityZones: masterAzs,
     iam: {
@@ -89,7 +86,7 @@ local daskNodes = [
             ssh: {
                 publicKeyPath: 'ssh-keys/gridsst.key.pub'
             },
-            instanceType: "m5.xlarge",
+            instanceType: "r5.xlarge",
             minSize: 1,
             maxSize: 6,
             labels+: {
@@ -144,6 +141,4 @@ local daskNodes = [
             },
         } + n for n in daskNodes
     ]
-
-
 }
