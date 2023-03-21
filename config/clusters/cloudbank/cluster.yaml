@@ -169,7 +169,7 @@ hubs:
       # to the helm upgrade command in, and that has meaning. Please check
       # that you intend for these files to be applied in this order.
       - enc-pasadena.secret.values.yaml
-      - pasadena.secret.values.yaml
+      - pasadena.values.yaml
   - name: sjcc
     display_name: "San Jose Community College"
     domain: sjcc.cloudbank.2i2c.cloud
