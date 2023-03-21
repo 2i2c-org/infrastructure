@@ -180,7 +180,7 @@ If you can't find the workspace you're looking for, double check you've enabled 
 ## Plan and Apply Changes
 
 ```{note}
-When deploying to Google Cloud, make sure the [Compute Engine](https://console.cloud.google.com/apis/library/compute.googleapis.com), [Kubernetes Engine](https://console.cloud.google.com/apis/library/container.googleapis.com), and [Artifact Registry](https://console.cloud.google.com/apis/library/artifactregistry.googleapis.com) APIs are enabled on the project before deploying!
+When deploying to Google Cloud, make sure the [Compute Engine](https://console.cloud.google.com/apis/library/compute.googleapis.com), [Kubernetes Engine](https://console.cloud.google.com/apis/library/container.googleapis.com), [Artifact Registry](https://console.cloud.google.com/apis/library/artifactregistry.googleapis.com), and [Cloud Logging](https://console.cloud.google.com/apis/library/logging.googleapis.com) APIs are enabled on the project before deploying!
 ```
 
 First, make sure you are in the new workspace that you just created.
