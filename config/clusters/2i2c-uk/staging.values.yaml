@@ -28,3 +28,15 @@ jupyterhub:
         funded_by:
           name: 2i2c
           url: https://2i2c.org
+  hub:
+    config:
+      JupyterHub:
+        authenticator_class: cilogon
+      CILogonOAuthenticator:
+        scope:
+          - "profile"
+        username_claim: "preferred_username"
+        oauth_callback_url: "https://staging.uk.2i2c.cloud/hub/oauth_callback"
+        # Only show the option to login with GitHub
+        shown_idps:
+          - http://github.com/login/oauth/authorize

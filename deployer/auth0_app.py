@@ -1,8 +1,20 @@
 import re
 
+import typer
 from auth0.v3.authentication import GetToken
 from auth0.v3.management import Auth0
+from ruamel.yaml import YAML
 from yarl import URL
+
+from .cli_app import app
+from .file_acquisition import (
+    build_absolute_path_to_hub_encrypted_config_file,
+    get_decrypted_file,
+    persist_config_in_encrypted_file,
+)
+
+yaml = YAML(typ="safe")
+
 
 # What key in the authenticated user's profile to use as hub username
 # This shouldn't be changeable by the user!
@@ -94,7 +106,6 @@ class KeyProvider:
         callback_url,
         logout_url,
         connection_name,
-        connection_config,
     ):
         current_clients = self._get_clients()
         if name not in current_clients:
@@ -112,7 +123,7 @@ class KeyProvider:
             # should have its own username / password database.
             # So we create a new 'database connection' per hub,
             # instead of sharing one across hubs.
-            db_connection_name = connection_config.get("database_name", name)
+            db_connection_name = name
 
             if db_connection_name not in current_connections:
                 # connection doesn't exist yet, create it
@@ -173,3 +184,95 @@ class KeyProvider:
         }
 
         return auth
+
+
+def get_2i2c_auth0_admin_credentials():
+    """
+    Retrieve the 2i2c Auth0 administrative client credentials
+    stored in `shared/deployer/enc-auth-providers-credentials.secret.yaml`.
+    """
+    # This filepath is relative to the PROJECT ROOT
+    general_auth_config = "shared/deployer/enc-auth-providers-credentials.secret.yaml"
+    with get_decrypted_file(general_auth_config) as decrypted_file_path:
+        with open(decrypted_file_path) as f:
+            config = yaml.load(f)
+
+    return (
+        config["auth0"]["domain"],
+        config["auth0"]["client_id"],
+        config["auth0"]["client_secret"],
+    )
+
+
+@app.command()
+def auth0_client_create(
+    cluster_name: str = typer.Argument(..., help="Name of cluster to operate"),
+    hub_name: str = typer.Argument(
+        ...,
+        help="Name of the hub for which a new Auth0 client will be created",
+    ),
+    hub_type: str = typer.Argument(
+        "basehub",
+        help="Type of hub for which we'll create an Auth0 client (ex: basehub, daskhub)",
+    ),
+    hub_domain: str = typer.Argument(
+        ...,
+        help="The hub domain, as specified in `cluster.yaml` (ex: staging.2i2c.cloud)",
+    ),
+    connection_type: str = typer.Argument(
+        ...,
+        help=f"Auth0 connection type. One of {USERNAME_KEYS.keys()}",
+    ),
+):
+    """Create an Auth0 client app for a hub."""
+    domain, admin_id, admin_secret = get_2i2c_auth0_admin_credentials()
+    config_filename = build_absolute_path_to_hub_encrypted_config_file(
+        cluster_name, hub_name
+    )
+    auth_provider = KeyProvider(domain, admin_id, admin_secret)
+    # Users will be redirected to this URL after they log out
+    logout_url = f"https://{hub_domain}"
+    # This URL is invoked after OAuth authorization"
+    callback_url = f"https://{hub_domain}/hub/oauth_callback"
+
+    client = auth_provider.ensure_client(
+        name=f"{cluster_name}-{hub_name}",
+        callback_url=callback_url,
+        logout_url=logout_url,
+        connection_name=connection_type,
+    )
+
+    auth_config = {}
+    jupyterhub_config = {
+        "jupyterhub": {
+            "hub": {
+                "config": {
+                    "JupyterHub": {"authenticator_class": "auth0"},
+                    "Auth0OAuthenticator": auth_provider.get_client_creds(
+                        client, connection_type
+                    ),
+                }
+            }
+        }
+    }
+
+    if hub_type != "basehub":
+        auth_config["basehub"] = jupyterhub_config
+    else:
+        auth_config = jupyterhub_config
+
+    persist_config_in_encrypted_file(config_filename, auth_config)
+    print(
+        f"Successfully persisted the encrypted Auth0 client app credentials to file {config_filename}"
+    )
+
+
+@app.command()
+def auth0_client_get_all():
+    """Retrieve details about all existing 2i2c CILogon clients."""
+    domain, admin_id, admin_secret = get_2i2c_auth0_admin_credentials()
+    auth_provider = KeyProvider(domain, admin_id, admin_secret)
+    clients = auth_provider._get_clients()
+
+    for _, v in sorted(clients.items()):
+        print(f'{v["name"]}: {v.get("callbacks", None)}')

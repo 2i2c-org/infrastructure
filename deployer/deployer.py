@@ -14,7 +14,6 @@ import pytest
 import typer
 from ruamel.yaml import YAML
 
-from .auth import KeyProvider
 from .cli_app import app
 from .cluster import Cluster
 from .config_validation import (
@@ -163,15 +162,6 @@ def deploy(
         with open(decrypted_file_path) as f:
             config = yaml.load(f)
 
-    # Most of our hubs use Auth0 for Authentication. This lets us programmatically
-    # determine what auth provider each hub uses - GitHub, Google, etc. Without
-    # this, we'd have to manually generate credentials for each hub - and we
-    # don't want to do that. Auth0 domains are tied to a account, and
-    # this is our auth0 domain for the paid account that 2i2c has.
-    auth0 = config["auth0"]
-
-    k = KeyProvider(auth0["domain"], auth0["client_id"], auth0["client_secret"])
-
     config_file_path = find_absolute_path_to_cluster_file(cluster_name)
     with open(config_file_path) as f:
         cluster = Cluster(yaml.load(f), config_file_path.parent)
@@ -181,13 +171,13 @@ def deploy(
         if hub_name:
             hub = next((hub for hub in hubs if hub.spec["name"] == hub_name), None)
             print_colour(f"Deploying hub {hub.spec['name']}...")
-            hub.deploy(k, dask_gateway_version)
+            hub.deploy(dask_gateway_version)
         else:
             for i, hub in enumerate(hubs):
                 print_colour(
                     f"{i+1} / {len(hubs)}: Deploying hub {hub.spec['name']}..."
                 )
-                hub.deploy(k, dask_gateway_version)
+                hub.deploy(dask_gateway_version)
 
 
 @app.command()
