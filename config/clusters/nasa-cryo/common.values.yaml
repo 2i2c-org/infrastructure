@@ -64,6 +64,7 @@ basehub:
             - read:org
     singleuser:
       extraFiles:
+        # jupyter_server_config.json is defined by basehub, this entry adds to it
         jupyter_server_config.json:
           data:
             ContentsManager:
