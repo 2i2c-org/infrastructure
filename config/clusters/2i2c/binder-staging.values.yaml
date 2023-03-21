@@ -13,7 +13,8 @@ binderhub:
       token_url: https://us-central1-docker.pkg.dev/v2/token?service=
     BinderHub:
       # The URL set as jupyterhub.ingress.hosts[0] in this config
-      hub_url: https://hub.binder-staging.2i2c.cloud
+      auth_enabled: True
+      hub_url: https://binder-staging.hub.2i2c.cloud
       image_prefix: us-central1-docker.pkg.dev/two-eye-two-see/binder-staging-registry/binder-staging-
       auth_enabled: true
       template_path: /etc/binderhub/custom/templates
@@ -69,9 +70,32 @@ binderhub:
 
   jupyterhub:
     ingress:
+      enabled: true
       hosts:
-        - hub.binder-staging.2i2c.cloud
+        - binder-staging.hub.2i2c.cloud
       tls:
-        - secretName: https-auto-tls-binder
+        - secretName: https-auto-tls-hub-binder
           hosts:
-            - hub.binder-staging.2i2c.cloud
+            - binder-staging.hub.2i2c.cloud
+    hub:
+      redirectToServer: false
+      services:
+        binder:
+          oauth_client_id: service-binderhub
+          oauth_no_confirm: true
+          oauth_redirect_uri: "https://binder-staging.2i2c.cloud/oauth_callback"
+      config:
+        BinderSpawner:
+          auth_enabled: true
+        JupyterHub:
+          authenticator_class: cilogon
+        CILogonOAuthenticator:
+          oauth_callback_url: "https://binder-staging.hub.2i2c.cloud/hub/oauth_callback"
+          username_claim: "email"
+          # Only show the option to login with Google
+          shown_idps:
+            - http://google.com/accounts/o8/id
+        Authenticator:
+          allowed_users: &binder_staging_users
+            - georgianaelena@2i2c.org
+          admin_users: *binder_staging_users
