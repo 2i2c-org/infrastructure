@@ -63,6 +63,13 @@ basehub:
           scope:
             - read:org
     singleuser:
+      extraFiles:
+        jupyter_server_config.json:
+          data:
+            ContentsManager:
+              # Enable showing hidden files in JupyterLab
+              # https://github.com/CryoInTheCloud/hub-image/issues/3
+              allow_hidden: true
       defaultUrl: /lab
       storage:
         extraVolumeMounts:
