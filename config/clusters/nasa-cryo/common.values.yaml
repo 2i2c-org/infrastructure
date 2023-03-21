@@ -147,7 +147,6 @@ basehub:
                     # Image repo: https://github.com/CryoInTheCloud/hub-Rstudio-image
                     image: "quay.io/cryointhecloud/cryo-hub-r-image:c2ee1f933030"
 
-                    default_url: /rstudio
                 matlab:
                   display_name: Matlab
                   slug: "matlab"
