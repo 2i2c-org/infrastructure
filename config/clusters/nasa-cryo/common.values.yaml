@@ -102,6 +102,27 @@ basehub:
             - CryoInTheCloud:cryoclouduser
             - CryoInTheCloud:cryocloudadvanced
           profile_options:
+            image: &profile_list_profile_options_image
+              display_name: Image
+              choices:
+                python:
+                  display_name: Python
+                  default: true
+                  slug: "python"
+                  kubespawner_override:
+                    image: "quay.io/cryointhecloud/cryo-hub-image:a1bc0061178a"
+                rocker:
+                  display_name: R
+                  slug: "rocker"
+                  kubespawner_override:
+                    image: "quay.io/cryointhecloud/cryo-hub-r-image:c2ee1f933030"
+
+                    default_url: /rstudio
+                matlab:
+                  display_name: Matlab
+                  slug: "matlab"
+                  kubespawner_override:
+                    image: "quay.io/cryointhecloud/cryo-hub-matlab-image:113755d00366"
             requests:
               # NOTE: Node share choices are in active development, see comment
               #       next to profileList: above.
@@ -151,6 +172,7 @@ basehub:
             - 2i2c-org:hub-access-for-2i2c-staff
             - CryoInTheCloud:cryocloudadvanced
           profile_options:
+            image: *profile_list_profile_options_image
             requests:
               # NOTE: Node share choices are in active development, see comment
               #       next to profileList: above.
@@ -217,6 +239,7 @@ basehub:
         #     - 2i2c-org:hub-access-for-2i2c-staff
         #     - CryoInTheCloud:cryocloudadvanced
         #   profile_options:
+        #     image: *profile_list_profile_options_image
         #     requests:
         #       # NOTE: Node share choices are in active development, see comment
         #       #       next to profileList: above.
