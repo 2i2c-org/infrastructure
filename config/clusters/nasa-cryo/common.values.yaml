@@ -12,11 +12,6 @@ basehub:
       serverIP: fs-0872256335d483d5f.efs.us-west-2.amazonaws.com
       baseShareName: /
   jupyterhub:
-    prePuller:
-      continuous:
-        enabled: true
-      hook:
-        enabled: true
     custom:
       2i2c:
         add_staff_user_ids_to_admin_users: true
@@ -69,10 +64,6 @@ basehub:
             - read:org
     singleuser:
       defaultUrl: /lab
-      # Image repo: https://github.com/CryoInTheCloud/hub-image
-      image:
-        name: quay.io/cryointhecloud/cryo-hub-image
-        tag: "a1bc0061178a"
       storage:
         extraVolumeMounts:
           # A shared folder readable & writeable by everyone
@@ -131,6 +122,30 @@ basehub:
             - CryoInTheCloud:cryoclouduser
             - CryoInTheCloud:cryocloudadvanced
           profile_options:
+            image: &profile_list_profile_options_image
+              display_name: Image
+              choices:
+                python:
+                  display_name: Python
+                  default: true
+                  slug: "python"
+                  kubespawner_override:
+                    # Image repo: https://github.com/CryoInTheCloud/hub-image
+                    image: "quay.io/cryointhecloud/cryo-hub-image:a1bc0061178a"
+                rocker:
+                  display_name: R
+                  slug: "rocker"
+                  kubespawner_override:
+                    # Image repo: https://github.com/CryoInTheCloud/hub-Rstudio-image
+                    image: "quay.io/cryointhecloud/cryo-hub-r-image:c2ee1f933030"
+
+                    default_url: /rstudio
+                matlab:
+                  display_name: Matlab
+                  slug: "matlab"
+                  kubespawner_override:
+                    # Image repo: https://github.com/CryoInTheCloud/hub-matlab-image
+                    image: "quay.io/cryointhecloud/cryo-hub-matlab-image:113755d00366"
             requests:
               # NOTE: Node share choices are in active development, see comment
               #       next to profileList: above.
@@ -180,6 +195,7 @@ basehub:
             - 2i2c-org:hub-access-for-2i2c-staff
             - CryoInTheCloud:cryocloudadvanced
           profile_options:
+            image: *profile_list_profile_options_image
             requests:
               # NOTE: Node share choices are in active development, see comment
               #       next to profileList: above.
@@ -246,6 +262,7 @@ basehub:
         #     - 2i2c-org:hub-access-for-2i2c-staff
         #     - CryoInTheCloud:cryocloudadvanced
         #   profile_options:
+        #     image: *profile_list_profile_options_image
         #     requests:
         #       # NOTE: Node share choices are in active development, see comment
         #       #       next to profileList: above.
