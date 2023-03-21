@@ -126,7 +126,7 @@ resource.labels.namespace_name="<namespace>"
 labels.k8s-pod/hub_jupyter_org/username="<escaped-username>"
 ```
 
-You can als look by container name such as the below query for dask-worker and distributed.nanny. 
+You can also look by container name such as the below query for dask-worker and distributed.nanny. 
 
 ```
 resource.type="k8s_container"
