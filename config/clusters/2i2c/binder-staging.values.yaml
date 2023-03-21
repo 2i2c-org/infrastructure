@@ -91,19 +91,12 @@ binderhub:
           authenticator_class: cilogon
         CILogonOAuthenticator:
           oauth_callback_url: "https://binder-staging.hub.2i2c.cloud/hub/oauth_callback"
-          username_claim: "email"
           # Only show the option to login with Google
           shown_idps:
             - http://google.com/accounts/o8/id
-        Authenticator:
-          allowed_users: &binder_staging_users
-            - choldgraf@2i2c.org
-            - colliand@2i2c.org
-            - erik@2i2c.org
-            - damianavila@2i2c.org
-            - georgianaelena@2i2c.org
-            - jmunroe@2i2c.org
-            - pnasrat@2i2c.org
-            - sgibson@2i2c.org
-            - yuvipanda@2i2c.org
-          admin_users: *binder_staging_users
+          allowed_idps:
+            http://google.com/accounts/o8/id:
+              username_derivation:
+                username_claim: "email"
+              allowed_domains:
+                - "2i2c.org"
