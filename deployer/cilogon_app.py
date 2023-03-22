@@ -83,7 +83,7 @@ def persist_client_credentials_in_config_file(client, hub_type, config_filename)
 
     if hub_type == "daskhub":
         auth_config["basehub"] = jupyterhub_config
-    elif hub_type == "hub_type":
+    elif hub_type == "binderhub":
         auth_config["binderhub"] = jupyterhub_config
     else:
         auth_config = jupyterhub_config
