@@ -198,7 +198,7 @@ variable "enable_network_policy" {
 }
 
 variable "user_buckets" {
-  type        = map(object({ delete_after : number }))
+  type        = map(object({ delete_after : number, extra_admin_members: list(string) }))
   default     = {}
   description = <<-EOT
   GCS Buckets to be created.
@@ -206,9 +206,16 @@ variable "user_buckets" {
   The key for each entry will be prefixed with {var.prefix}- to form
   the name of the bucket.
 
-  The value is a map, with 'delete_after' the only accepted key in that
-  map - it lists the number of days after which any content in the
-  bucket will be deleted. Set to null to not delete data.
+  The value is a map, accepting the following keys:
+
+  'delete_after' specifies the number of days after which any content
+  in the bucket will be deleted. Set to null to not delete data.
+
+  'extra_admin_members' describes extra identies (user groups, user accounts,
+  service accounts, etc) that will have *full* access to this bucket. This
+  is primarily useful for moving data into and out of buckets from outside
+  the cloud. See https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/storage_bucket_iam#member/members
+  for the format this would be specified in.
   EOT
 }
 

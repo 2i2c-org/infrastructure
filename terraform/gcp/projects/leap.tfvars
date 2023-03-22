@@ -25,17 +25,21 @@ filestore_capacity_gb = 2048
 
 user_buckets = {
   "scratch-staging" : {
-    "delete_after" : 7
+    "delete_after" : 7,
+    "extra_admin_members": []
   },
   "scratch" : {
-    "delete_after" : 7
+    "delete_after" : 7,
+    "extra_admin_members": []
   }
   # For https://github.com/2i2c-org/infrastructure/issues/1230#issuecomment-1278183441
   "persistent" : {
-    "delete_after" : null
+    "delete_after" : null,
+    "extra_admin_members": ["group:leap-external-bucket-users@2i2c.org"]
   },
   "persistent-staging" : {
-    "delete_after" : null
+    "delete_after" : null,
+    "extra_admin_members": ["group:leap-external-bucket-users@2i2c.org"]
   }
 }
 

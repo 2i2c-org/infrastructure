@@ -36,6 +36,15 @@ locals {
       }
     ]
   ]))
+
+  bucket_extra_admin_members = distinct(flatten([
+    for bucket_name, properties in var.user_buckets : [
+      for extra_member in properties.extra_admin_members : {
+        bucket_name = bucket_name
+        member = extra_member
+      }
+    ]
+  ]))
 }
 
 resource "google_storage_bucket_iam_member" "member" {
@@ -43,6 +52,13 @@ resource "google_storage_bucket_iam_member" "member" {
   bucket   = google_storage_bucket.user_buckets[each.value.bucket_name].name
   role     = "roles/storage.admin"
   member   = "serviceAccount:${google_service_account.workload_sa[each.value.hub_name].email}"
+}
+
+resource "google_storage_bucket_iam_member" "extra_admin_members" {
+  for_each = { for bm in local.bucket_extra_admin_members : "${bm.bucket_name}.${bm.member}" => bm }
+  bucket   = google_storage_bucket.user_buckets[each.value.bucket_name].name
+  role     = "roles/storage.admin"
+  member   = each.value.member
 }
 
 resource "google_storage_default_object_access_control" "public_rule" {
