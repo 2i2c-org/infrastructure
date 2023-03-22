@@ -137,6 +137,8 @@ class Hub:
         # config may need to be nested as well.
         if self.spec["helm_chart"] == "daskhub":
             generated_config = {"basehub": generated_config}
+        elif self.spec["helm_chart"] == "binderhub":
+            generated_config = {}
 
         return generated_config
 
