@@ -1,8 +1,12 @@
 jupyterhub:
   singleuser:
+    extraEnv:
+      # Required to get jupyter-contrib-nbextensions to work
+      # See https://github.com/2i2c-org/infrastructure/issues/2380
+      JUPYTERHUB_SINGLEUSER_APP: "notebook.notebookapp.NotebookApp"
     image:
       name: quay.io/2i2c/utoronto-image
-      tag: "dfd2313d2617"
+      tag: "c68f2eb785f9"
   hub:
     config:
       Authenticator:
