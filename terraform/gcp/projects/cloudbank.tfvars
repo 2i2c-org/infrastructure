@@ -8,10 +8,6 @@ enable_network_policy    = true
 
 regional_cluster = false
 
-# No plans to provide storage buckets to users on this hub, so no need to deploy
-# config connector
-config_connector_enabled = false
-
 notebook_nodes = {
   "user" : {
     min : 0,
