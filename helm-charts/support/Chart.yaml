@@ -6,6 +6,11 @@ description: Cluster wide depdencies for deployed hubs
 dependencies:
   # Prometheus for collection of metrics.
   # https://github.com/prometheus-community/helm-charts/tree/main/charts/prometheus
+  # We have deliberately chosen to use the helm chart rather than the prometheus
+  # operator, as we will never have more than one prometheus installation per
+  # cluster. The operator thus adds functionality we will not use, at a complexity
+  # cost. If we ever have multiple prometheii on the same cluster, we can
+  # reconsider using the operator.
   - name: prometheus
     version: 19.7.2
     repository: https://prometheus-community.github.io/helm-charts
