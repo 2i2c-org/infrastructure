@@ -6,9 +6,6 @@ enable_private_cluster = true
 # Multi-tenant cluster, network policy is required to enforce separation between hubs
 enable_network_policy  = true
 
-# Some hubs want a storage bucket, so we need to have config connector enabled
-config_connector_enabled = false
-
 # Setup a filestore for in-cluster NFS
 enable_filestore = true
 filestore_capacity_gb = 4096
