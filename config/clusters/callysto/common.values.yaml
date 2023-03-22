@@ -107,26 +107,6 @@ jupyterhub:
 
         c.JupyterHub.authenticator_class = EmailAuthenticatingCILogonOAuthenticator
     config:
-      JupyterHub:
-        # Announcement is a JupyterHub feature to present messages to users in
-        # web pages under the /hub path (JupyterHub responds), but not via the
-        # /user path (single-user server responds).
-        #
-        # ref: https://github.com/2i2c-org/infrastructure/issues/1501
-        # ref: https://jupyterhub.readthedocs.io/en/stable/reference/templates.html#announcement-configuration-variables
-        #
-        # This maintenance was planned with Ian in
-        # https://2i2c.freshdesk.com/a/tickets/562.
-        #
-        template_vars:
-          announcement: >-
-            <strong>
-            Service maintenance is scheduled Wednesday March 22 between 0 AM and
-            4 AM PDT.
-            </strong>
-            <br/>
-            Running servers may be forcefully stopped and service disruption is
-            expected.
       EmailAuthenticatingCILogonOAuthenticator:
         allowed_domains:
           - 2i2c.org
