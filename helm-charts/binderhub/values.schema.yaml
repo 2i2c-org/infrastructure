@@ -54,6 +54,3 @@ properties:
   global:
     type: object
     additionalProperties: true
-  jupyterhub:
-    type: object
-    additionalProperties: true
