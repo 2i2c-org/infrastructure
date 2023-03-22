@@ -8,5 +8,5 @@ dependencies:
     version: "1.0.0-0.dev.git.3009.h9046454"
     repository: "https://jupyterhub.github.io/helm-chart/"
   - name: dask-gateway
-    version: "2022.10.0"
+    version: "2023.1.0"
     repository: "https://helm.dask.org/"
