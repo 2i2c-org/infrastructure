@@ -3,6 +3,7 @@ jupyterhub:
     extraEnv:
       # Required to get jupyter-contrib-nbextensions to work
       # See https://github.com/2i2c-org/infrastructure/issues/2380
+      # Upstream issue at https://github.com/Jupyter-contrib/jupyter_nbextensions_configurator/issues/153
       JUPYTERHUB_SINGLEUSER_APP: "notebook.notebookapp.NotebookApp"
     image:
       name: quay.io/2i2c/utoronto-image
