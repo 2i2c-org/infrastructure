@@ -143,10 +143,6 @@ def deploy(
         None,
         help="Name of hub to operate deploy. Omit to deploy all hubs on the cluster",
     ),
-    config_path: str = typer.Option(
-        "shared/deployer/enc-auth-providers-credentials.secret.yaml",
-        help="File to read secret deployment config from",
-    ),
     dask_gateway_version: str = typer.Option(
         "2023.1.0", help="Version of dask-gateway to install CRDs for"
     ),
@@ -157,10 +153,6 @@ def deploy(
     validate_cluster_config(cluster_name)
     validate_hub_config(cluster_name, hub_name)
     validate_authenticator_config(cluster_name, hub_name)
-
-    with get_decrypted_file(config_path) as decrypted_file_path:
-        with open(decrypted_file_path) as f:
-            config = yaml.load(f)
 
     config_file_path = find_absolute_path_to_cluster_file(cluster_name)
     with open(config_file_path) as f:
