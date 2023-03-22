@@ -60,11 +60,27 @@ binderhub:
           oauth_client_id: service-binderhub
           oauth_no_confirm: true
           oauth_redirect_uri: "https://binder-staging.2i2c.cloud/oauth_callback"
+      loadRoles:
+        user:
+          scopes:
+            - self
+            - "access:services"
       config:
         BinderSpawner:
           auth_enabled: true
         JupyterHub:
           authenticator_class: cilogon
+        Authenticator:
+          admin_users:
+            - choldgraf@2i2c.org
+            - colliand@2i2c.org
+            - erik@2i2c.org
+            - damianavila@2i2c.org
+            - georgianaelena@2i2c.org
+            - jmunroe@2i2c.org
+            - pnasrat@2i2c.org
+            - sgibson@2i2c.org
+            - yuvipanda@2i2c.org
         CILogonOAuthenticator:
           oauth_callback_url: "https://binder-staging.hub.2i2c.cloud/hub/oauth_callback"
           # Only show the option to login with Google
@@ -76,3 +92,6 @@ binderhub:
                 username_claim: "email"
               allowed_domains:
                 - "2i2c.org"
+    singleuser:
+      # to make notebook servers aware of hub
+      cmd: jupyterhub-singleuser
