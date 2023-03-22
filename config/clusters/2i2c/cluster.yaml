@@ -25,8 +25,8 @@ hubs:
       # The order in which you list files here is the order the will be passed
       # to the helm upgrade command in, and that has meaning. Please check
       # that you intend for these files to be applied in this order.
-      - enc-dask-staging.secret.values.yaml
       - dask-staging.values.yaml
+      - enc-dask-staging.secret.values.yaml
   - name: binder-staging
     display_name: "2i2c binder staging"
     domain: binder-staging.2i2c.cloud
@@ -42,8 +42,8 @@ hubs:
       # The order in which you list files here is the order the will be passed
       # to the helm upgrade command in, and that has meaning. Please check
       # that you intend for these files to be applied in this order.
-      - enc-demo.secret.values.yaml
       - demo.values.yaml
+      - enc-demo.secret.values.yaml
   - name: ohw
     display_name: "Ocean Hack Week"
     domain: oceanhackweek.2i2c.cloud
@@ -52,8 +52,8 @@ hubs:
       # The order in which you list files here is the order the will be passed
       # to the helm upgrade command in, and that has meaning. Please check
       # that you intend for these files to be applied in this order.
-      - enc-ohw.secret.values.yaml
       - ohw.values.yaml
+      - enc-ohw.secret.values.yaml
   - name: pfw
     display_name: "Purdue Fort Wayne"
     domain: pfw.pilot.2i2c.cloud
