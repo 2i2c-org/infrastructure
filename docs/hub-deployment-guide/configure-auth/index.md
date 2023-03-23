@@ -10,7 +10,7 @@ Switching authentication providers (e.g. from GitHub to Google) for a pre-existi
 ```{toctree}
 :maxdepth: 2
 :caption: Authentication Providers
-auth0
 github-orgs
 cilogon
+auth0
 ```
