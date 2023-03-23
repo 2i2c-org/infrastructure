@@ -104,7 +104,7 @@ jupyterhub:
     hubTemplateRepoDetails:
       repo_url: "https://github.com/2i2c-org/default-hub-homepage"
       # TODO: make main the default branch in the repo above
-      repo_branch: "main"
+      repo_branch: "master"
   ingress:
     enabled: true
     annotations:
@@ -449,11 +449,7 @@ jupyterhub:
           - |
             ls -lhd /srv/repo;
             while true; do git fetch origin;
-            if [[ $(git ls-remote --heads origin $(HUB_TEMPLATES_REPO_BRANCH) | wc -c) -ne 0 ]]; then
-                git reset --hard origin/$(HUB_TEMPLATES_REPO_BRANCH);
-            else
-                git reset --hard origin/master;
-            fi
+            git reset --hard origin/$(HUB_TEMPLATES_REPO_BRANCH);
             sleep 5m; done
         env:
           - name: HUB_TEMPLATES_REPO_BRANCH
