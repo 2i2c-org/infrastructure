@@ -146,6 +146,11 @@ def deploy(
     dask_gateway_version: str = typer.Option(
         "2023.1.0", help="Version of dask-gateway to install CRDs for"
     ),
+    debug: bool = typer.Option(
+        False,
+        "--debug",
+        help="""When present, the `--debug` flag will be passed to the `helm upgrade` command.""",
+    ),
 ):
     """
     Deploy one or more hubs in a given cluster
@@ -163,13 +168,13 @@ def deploy(
         if hub_name:
             hub = next((hub for hub in hubs if hub.spec["name"] == hub_name), None)
             print_colour(f"Deploying hub {hub.spec['name']}...")
-            hub.deploy(dask_gateway_version)
+            hub.deploy(dask_gateway_version, debug)
         else:
             for i, hub in enumerate(hubs):
                 print_colour(
                     f"{i+1} / {len(hubs)}: Deploying hub {hub.spec['name']}..."
                 )
-                hub.deploy(dask_gateway_version)
+                hub.deploy(dask_gateway_version, debug)
 
 
 @app.command()

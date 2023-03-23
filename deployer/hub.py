@@ -142,7 +142,7 @@ class Hub:
 
         return generated_config
 
-    def deploy(self, dask_gateway_version):
+    def deploy(self, dask_gateway_version, debug):
         """
         Deploy this hub
         """
@@ -203,6 +203,9 @@ class Hub:
                 # we should put the config from cluster.yaml last.
                 f"--values={generated_values_file.name}",
             ]
+
+            if debug:
+                cmd.append("--debug")
 
             # Add on the values files
             for values_file in values_files:
