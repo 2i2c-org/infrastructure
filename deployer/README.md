@@ -91,9 +91,9 @@ It takes a name of a cluster and a name of a hub (or list of names) as arguments
 │                                    [default: None]                                                                   │
 ╰──────────────────────────────────────────────────────────────────────────────────────────────────────────────────────╯
 ╭─ Options ────────────────────────────────────────────────────────────────────────────────────────────────────────────╮
-│ --config-path                 TEXT  File to read secret deployment config from                                       │
-│                                     [default: shared/deployer/enc-auth-providers-credentials.secret.yaml]            │
-│ --dask-gateway-version        TEXT  Version of dask-gateway to install CRDs for [default: v2022.10.0]                │
+│ --dask-gateway-version        TEXT  Version of dask-gateway to install CRDs for [default: 2023.1.0]                  │
+│ --debug                             When present, the `--debug` flag will be passed to the `helm upgrade` command.   │
+│ --dry-run                           When present, the `--dry-run` flag will be passed to the `helm upgrade` command. │
 │ --help                              Show this message and exit.                                                      │
 ╰──────────────────────────────────────────────────────────────────────────────────────────────────────────────────────╯
 ```
