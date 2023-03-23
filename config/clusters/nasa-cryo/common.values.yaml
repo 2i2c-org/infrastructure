@@ -139,7 +139,7 @@ basehub:
                   slug: "python"
                   kubespawner_override:
                     # Image repo: https://github.com/CryoInTheCloud/hub-image
-                    image: "quay.io/cryointhecloud/cryo-hub-image:a1bc0061178a"
+                    image: "quay.io/cryointhecloud/cryo-hub-image:98e6196ee90a"
                 rocker:
                   display_name: R
                   slug: "rocker"
