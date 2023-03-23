@@ -142,7 +142,7 @@ class Hub:
 
         return generated_config
 
-    def deploy(self, dask_gateway_version, debug):
+    def deploy(self, dask_gateway_version, debug, dry_run):
         """
         Deploy this hub
         """
@@ -203,6 +203,9 @@ class Hub:
                 # we should put the config from cluster.yaml last.
                 f"--values={generated_values_file.name}",
             ]
+
+            if dry_run:
+                cmd.append("--dry-run")
 
             if debug:
                 cmd.append("--debug")
