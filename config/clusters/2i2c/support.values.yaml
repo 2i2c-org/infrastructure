@@ -54,4 +54,5 @@ opencost:
       # Note the external config supports basic auth but unsure if supports multiple prometheuses
       internal:
         namespaceName: support
-        serviceName: prometheus
+        serviceName: support-prometheus-server
+        port: 80
