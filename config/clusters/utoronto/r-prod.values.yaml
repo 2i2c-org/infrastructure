@@ -1,4 +1,12 @@
 jupyterhub:
+  ingress:
+    hosts: [r.datatools.utoronto.ca]
+    tls:
+      - hosts: [r.datatools.utoronto.ca]
+        secretName: https-auto-tls
+  proxy:
+    https:
+      hosts: [r.datatools.utoronto.ca]
   hub:
     db:
       pvc:

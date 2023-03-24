@@ -3,6 +3,14 @@ basehub:
     annotations:
       eks.amazonaws.com/role-arn: arn:aws:iam::993998403439:role/gridsst-prod
   jupyterhub:
+    ingress:
+      hosts: [gridsst.2i2c.cloud]
+      tls:
+        - hosts: [gridsst.2i2c.cloud]
+          secretName: https-auto-tls
+    proxy:
+      https:
+        hosts: [gridsst.2i2c.cloud]
     hub:
       config:
         GitHubOAuthenticator:

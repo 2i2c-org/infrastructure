@@ -3,6 +3,14 @@ basehub:
     annotations:
       iam.gke.io/gcp-service-account: meom-ige-prod@meom-ige-cnrs.iam.gserviceaccount.com
   jupyterhub:
+    ingress:
+      hosts: [meom-ige.2i2c.cloud]
+      tls:
+        - hosts: [meom-ige.2i2c.cloud]
+          secretName: https-auto-tls
+    proxy:
+      https:
+        hosts: [meom-ige.2i2c.cloud]
     hub:
       config:
         JupyterHub:

@@ -3,6 +3,14 @@ basehub:
     annotations:
       iam.gke.io/gcp-service-account: awi-ciroh-prod@awi-ciroh.iam.gserviceaccount.com
   jupyterhub:
+    ingress:
+      hosts: [ciroh.awi.2i2c.cloud]
+      tls:
+        - hosts: [ciroh.awi.2i2c.cloud]
+          secretName: https-auto-tls
+    proxy:
+      https:
+        hosts: [ciroh.awi.2i2c.cloud]
     singleuser:
       extraEnv:
         SCRATCH_BUCKET: gs://awi-ciroh-scratch/$(JUPYTERHUB_USER)
