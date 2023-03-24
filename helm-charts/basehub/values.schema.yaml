@@ -229,7 +229,34 @@ properties:
     additionalProperties: true
     required:
       - custom
+      - proxy
+      - ingress
     properties:
+      proxy:
+        type: object
+        additionalProperties: true
+        required:
+          - https
+        properties:
+          hosts:
+            type: array
+            items:
+              type: string
+      ingress:
+        type: object
+        additionalProperties: true
+        required:
+          - hosts
+          - tls
+        properties:
+          hosts:
+            type: array
+            items:
+              type: string
+          tls:
+            type: array
+            items:
+              type: object
       custom:
         type: object
         additionalProperties: true
@@ -282,6 +309,8 @@ properties:
             additionalProperties: false
             required:
               - templateVars
+              - gitRepoUrl
+              - gitRepoBranch
             properties:
               gitRepoUrl:
                 type: string
