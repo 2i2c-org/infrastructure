@@ -19,6 +19,7 @@ required:
   - prometheusIngressAuthSecret
   - cryptnono
   - redirects
+  - opencost
   - global
 properties:
   # cluster-autoscaler is a dependent helm chart, we rely on its schema
@@ -47,6 +48,13 @@ properties:
     additionalProperties: true
   # Enables  https://github.com/yuvipanda/cryptnono/ to prevent cryptomining
   cryptnono:
+    type: object
+    additionalProperties: true
+  # opencost is a dependent helm chart.
+  # TODO(pnasrat): Experimental
+  # Testing OpenCost to display and report on shared costs
+  # https://github.com/2i2c-org/infrastructure/issues/1923
+  opencost:
     type: object
     additionalProperties: true
   redirects:
