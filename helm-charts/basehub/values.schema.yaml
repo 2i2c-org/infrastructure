@@ -216,12 +216,15 @@ properties:
   global:
     type: object
     additionalProperties: true
-  # jupyterhub is a dependent helm chart, we rely _mostly_ on its schema
-  # validation for values passed to it and are not imposing restrictions on them
-  # in this helm chart. But, we do we provide custom configuration (`custom`)
-  # that is read by custom jupyterhub configuration (`hub.config`).
-  #
-  # Due to that, we provide a strict schema for the `jupyterhub.custom` values
+  # jupyterhub is a dependent helm chart and we rely _mostly_ on its schema
+  # validation for values passed to it and are not imposing restrictions on
+  # most of them in this helm chart.
+  # But in this helm chart, we do tighten some of the validations done in
+  # the jupyterhub helm chart (like item types and not allowing empty fields)
+  # to ensure a functional setup.
+  # Also, because we provide custom configuration (`custom`)
+  # that is read by custom jupyterhub configuration (`hub.config`),
+  # we provide a strict schema for the `jupyterhub.custom` values
   # passed to this helm chart.
   #
   jupyterhub:
@@ -240,6 +243,7 @@ properties:
         properties:
           hosts:
             type: array
+            minItems: 1
             items:
               type: string
       ingress:
@@ -251,10 +255,12 @@ properties:
         properties:
           hosts:
             type: array
+            minItems: 1
             items:
               type: string
           tls:
             type: array
+            minItems: 1
             items:
               type: object
       custom:
