@@ -101,10 +101,11 @@ jupyterhub:
         - pnasrat@2i2c.org
         - sgibson@2i2c.org
         - yuvipanda@2i2c.org
-    hubTemplateRepoDetails:
-      repo_url: "https://github.com/2i2c-org/default-hub-homepage"
-      # TODO: make main the default branch in the repo above
-      repo_branch: "master"
+    homepage:
+      hubTemplateRepoDetails:
+        repo_url: "https://github.com/2i2c-org/default-hub-homepage"
+        # TODO: make main the default branch in the repo above
+        repo_branch: "master"
   ingress:
     enabled: true
     annotations:
@@ -410,14 +411,14 @@ jupyterhub:
         args:
           - clone
           - --
-          - $(HUB_TEMPLATES_REPO)
+          - $(HUB_TEMPLATES_REPO_URL)
           - /srv/repo
         env:
-          - name: HUB_TEMPLATES_REPO
+          - name: HUB_TEMPLATES_REPO_URL
             valueFrom:
               configMapKeyRef:
                 name: hub-custom-templates-config
-                key: HUB_TEMPLATES_REPO
+                key: HUB_TEMPLATES_REPO_URL
         securityContext:
           runAsUser: 1000
           runAsGroup: 1000

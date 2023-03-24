@@ -5,5 +5,7 @@ metadata:
   labels:
     app: jupyterhub
 data:
-  HUB_TEMPLATES_REPO: {{ .Values.jupyterhub.custom.hubTemplateRepoDetails.repo_url }}
-  HUB_TEMPLATES_REPO_BRANCH: {{ .Values.jupyterhub.custom.hubTemplateRepoDetails.repo_branch }}
+  {{- with .Values.jupyterhub.custom.homepage.hubTemplateRepoDetails }}
+  HUB_TEMPLATES_REPO_URL: {{ .repo_url | quote }}
+  HUB_TEMPLATES_REPO_BRANCH: {{ .repo_branch | quote }}
+  {{- end }}
