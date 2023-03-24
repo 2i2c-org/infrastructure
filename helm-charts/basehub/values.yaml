@@ -102,10 +102,9 @@ jupyterhub:
         - sgibson@2i2c.org
         - yuvipanda@2i2c.org
     homepage:
-      hubTemplateRepoDetails:
-        repo_url: "https://github.com/2i2c-org/default-hub-homepage"
-        # TODO: make main the default branch in the repo above
-        repo_branch: "master"
+      gitRepoUrl: "https://github.com/2i2c-org/default-hub-homepage"
+      # TODO: make main the default branch in the repo above
+      gitRepoBranch: "master"
   ingress:
     enabled: true
     annotations:

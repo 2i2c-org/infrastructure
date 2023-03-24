@@ -85,8 +85,7 @@ basehub:
         add_staff_user_ids_to_admin_users: true
         add_staff_user_ids_of_type: "github"
       homepage:
-        hubTemplateRepoDetails:
-          repo_branch: "2i2c-ohw"
+        gitRepoBranch: "2i2c-ohw"
         templateVars:
           org:
             name: OceanHackWeek

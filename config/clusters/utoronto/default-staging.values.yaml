@@ -1,8 +1,7 @@
 jupyterhub:
   custom:
     homepage:
-      hubTemplateRepoDetails:
-        repo_branch: "utoronto-staging"
+      gitRepoBranch: "utoronto-staging"
   hub:
     config:
       AzureAdOAuthenticator:

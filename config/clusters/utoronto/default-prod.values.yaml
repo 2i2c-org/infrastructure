@@ -14,8 +14,7 @@ jupyterhub:
           memory: 57350076Ki
   custom:
     homepage:
-      hubTemplateRepoDetails:
-        repo_branch: "utoronto-prod"
+      gitRepoBranch: "utoronto-prod"
   hub:
     db:
       pvc:

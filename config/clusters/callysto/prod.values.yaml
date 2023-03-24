@@ -5,5 +5,4 @@ jupyterhub:
         oauth_callback_url: https://2i2c.callysto.ca/hub/oauth_callback
   custom:
     homepage:
-      hubTemplateRepoDetails:
-        repo_branch: "callysto-prod"
+      gitRepoBranch: "callysto-prod"

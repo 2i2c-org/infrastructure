@@ -283,25 +283,21 @@ properties:
             required:
               - templateVars
             properties:
-              hubTemplateRepoDetails:
-                type: object
-                additionalProperties: false
-                properties:
-                  repo_url:
-                    type: string
-                    description: |
-                      The URL of the repository hosting custom hub templates
-                      that should override the hub homepage default ones.
+              gitRepoUrl:
+                type: string
+                description: |
+                  The URL of the repository hosting custom hub templates
+                  that should override the hub homepage default ones.
 
-                      Example: https://github.com/2i2c-org/default-hub-homepage
-                  repo_branch:
-                    type: string
-                    description: |
-                      The name of the branch of the repository at `hubTemplateRepoDetails.repo_url`
-                      to pull the custom templates from.
-                      Should be used to customize the homepage of a hub.
+                  Example: https://github.com/2i2c-org/default-hub-homepage
+              gitRepoBranch:
+                type: string
+                description: |
+                  The name of the branch of the repository at `hubTemplateRepoDetails.repo_url`
+                  to pull the custom templates from.
+                  Should be used to customize the homepage of a hub.
 
-                      The convention for the name of this branch is `<cluster-name>-<hub-name>`.
+                  The convention for the name of this branch is `<cluster-name>-<hub-name>`.
               templateVars:
                 type: object
                 additionalProperties: false
