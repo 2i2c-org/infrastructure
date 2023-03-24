@@ -410,14 +410,14 @@ jupyterhub:
         args:
           - clone
           - --
-          - $(HUB_TEMPLATES_REPO_URL)
+          - $(GIT_REPO_URL)
           - /srv/repo
         env:
-          - name: HUB_TEMPLATES_REPO_URL
+          - name: GIT_REPO_URL
             valueFrom:
               configMapKeyRef:
                 name: hub-custom-templates-config
-                key: HUB_TEMPLATES_REPO_URL
+                key: GIT_REPO_URL
         securityContext:
           runAsUser: 1000
           runAsGroup: 1000
@@ -449,14 +449,14 @@ jupyterhub:
           - |
             ls -lhd /srv/repo;
             while true; do git fetch origin;
-            git reset --hard origin/$(HUB_TEMPLATES_REPO_BRANCH);
+            git reset --hard origin/$(GIT_REPO_BRANCH);
             sleep 5m; done
         env:
-          - name: HUB_TEMPLATES_REPO_BRANCH
+          - name: GIT_REPO_BRANCH
             valueFrom:
               configMapKeyRef:
                 name: hub-custom-templates-config
-                key: HUB_TEMPLATES_REPO_BRANCH
+                key: GIT_REPO_BRANCH
         securityContext:
           runAsUser: 1000
           runAsGroup: 1000

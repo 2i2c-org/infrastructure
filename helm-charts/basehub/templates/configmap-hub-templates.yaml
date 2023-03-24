@@ -6,6 +6,6 @@ metadata:
     app: jupyterhub
 data:
   {{- with .Values.jupyterhub.custom.homepage }}
-  HUB_TEMPLATES_REPO_URL: {{ .gitRepoUrl | quote }}
-  HUB_TEMPLATES_REPO_BRANCH: {{ .gitRepoBranch | quote }}
+  GIT_REPO_URL: {{ .gitRepoUrl | quote }}
+  GIT_REPO_BRANCH: {{ .gitRepoBranch | quote }}
   {{- end }}
