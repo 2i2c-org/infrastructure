@@ -20,7 +20,7 @@ class Hub:
         self.cluster = cluster
         self.spec = spec
 
-    def deploy(self, dask_gateway_version):
+    def deploy(self, dask_gateway_version, debug, dry_run):
         """
         Deploy this hub
         """
