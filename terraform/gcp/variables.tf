@@ -61,7 +61,14 @@ variable "notebook_nodes" {
 }
 
 variable "dask_nodes" {
-  type        = map(object({ min : number, max : number, machine_type : string, labels : map(string), gpu : object({ enabled : bool, type : string, count : number }) }))
+  type        = map(object({
+    min : number,
+    max : number,
+    preemptible: optional(bool, true),
+    machine_type : string,
+    labels : map(string),
+    gpu : object({ enabled : bool, type : string, count : number })
+  }))
   description = "Dask node pools to create. Defaults to notebook_nodes"
   default     = {}
 }

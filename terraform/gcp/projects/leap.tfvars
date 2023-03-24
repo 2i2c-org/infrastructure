@@ -84,6 +84,7 @@ dask_nodes = {
   "medium" : {
     min : 0,
     max : 200,
+    preemptible: false,
     machine_type : "n2-highmem-16",
     labels : {},
     gpu : {
