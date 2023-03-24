@@ -3,3 +3,7 @@ jupyterhub:
     config:
       CILogonOAuthenticator:
         oauth_callback_url: https://staging.callysto.2i2c.cloud/hub/oauth_callback
+  custom:
+    homepage:
+      hubTemplateRepoDetails:
+        repo_branch: "callysto-staging"
