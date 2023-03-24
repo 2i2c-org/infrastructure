@@ -7,7 +7,6 @@ jupyterhub:
   proxy:
     https:
       hosts: [r-staging.datatools.utoronto.ca]
-
   hub:
     config:
       AzureAdOAuthenticator:
