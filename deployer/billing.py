@@ -27,42 +27,6 @@ yaml = YAML(typ="safe")
 HERE = PosixPath(__file__).parent.parent
 
 
-@app.command()
-def validate_billing_info():
-    """
-    Validate our billing accounts information
-
-    - All GCP projects mentioned in any hub cluster have an appropriate entry in billing-accounts.yaml
-    """
-
-    # Get a list of filepaths to all cluster.yaml files in the repo
-    cluster_files = get_all_cluster_yaml_files()
-
-    gcp_projects = set()
-    for cf in cluster_files:
-        with open(cf) as f:
-            cluster = yaml.load(f)
-        if cluster["provider"] == "gcp":
-            gcp_projects.add(cluster["gcp"]["project"])
-
-    with open(HERE.joinpath("config/billing-accounts.yaml")) as f:
-        accounts = yaml.load(f)
-
-    accounts_projects = set()
-
-    for account in accounts["gcp"]["billing_accounts"]:
-        for project in account["projects"]:
-            accounts_projects.add(project)
-
-    if accounts_projects != gcp_projects:
-        print(accounts_projects)
-        print("Not all projects in use have invoicing information specified!")
-        print(
-            f"{','.join(gcp_projects - accounts_projects)} are missing invoicing information"
-        )
-        sys.exit(1)
-
-
 # FIXME: This doesn't actually work yet correctly
 def validate_billing_export():
     # Get billing accounts info
@@ -138,23 +102,29 @@ def generate_cost_table(
         help="Write to given Google Sheet URL. Used when --output is google-sheet. billing-spreadsheet-writer@two-eye-two-see.iam.gserviceaccount.com should have Editor rights on this spreadsheet.",
     ),
 ):
-    with open(HERE.joinpath("config/billing-accounts.yaml")) as f:
-        accounts = yaml.load(f)
+    """
+    Generate table with cloud costs for all GCP projects we pass costs through for.
+    """
 
+    cluster_files = get_all_cluster_yaml_files()
     client = bigquery.Client()
-
     rows = []
 
-    for a in accounts["gcp"]["billing_accounts"]:
-        if "bigquery" not in a:
-            print(
-                f'No bigquery table specified for billing account {a["id"]}, skipping',
-                file=sys.stderr,
-            )
+    for cf in cluster_files:
+        with open(cf) as f:
+            cluster = yaml.load(f)
+        if cluster["provider"] != "gcp":
+            # We only support GCP for now
             continue
-        bq = a["bigquery"]
 
-        # FIXME: We are using string interpolation here to construct a sql-like query, which
+        if not cluster["gcp"]["billing"]["paid_by_us"]:
+            continue
+
+        cluster_project_name = cluster["gcp"]["project"]
+        
+        bq = cluster["gcp"]["billing"]["bigquery"]
+
+        # WARN: We are using string interpolation here to construct a sql-like query, which
         # IS GENERALLY VERY VERY BAD AND NO GOOD AND WE SHOULD NOT DO IT NO EVER.
         # HOWEVER, I can't seem to find a way to parameterize the *table name* as we must do here,
         # rather than just query parameters. So we *very* carefully construct the name of the table here,
@@ -162,7 +132,7 @@ def generate_cost_table(
         # well - and fail hard if something is fishy. This shouldn't really be a problem, as we control the
         # input to this function (via our YAML file). However, SQL Injections are likely to happen in places
         # where you least expect them to happen, so the extra layer of protection is nice.
-        table_name = f'{bq["project"]}.{bq["dataset"]}.gcp_billing_export_resource_v1_{a["id"].replace("-", "_")}'
+        table_name = f'{bq["project"]}.{bq["dataset"]}.gcp_billing_export_resource_v1_{bq["billing_id"].replace("-", "_")}'
         # Make sure the table name only has alphanumeric characters, _ and -
         assert re.match(r"^[a-zA-Z0-9._-]+$", table_name)
         query = f"""

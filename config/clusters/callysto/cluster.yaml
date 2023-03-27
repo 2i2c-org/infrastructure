@@ -5,6 +5,8 @@ gcp:
   project: callysto-202316
   cluster: callysto-cluster
   zone: northamerica-northeast1
+  billing:
+    paid_by_us: false
 support:
   helm_chart_values_files:
     - support.values.yaml

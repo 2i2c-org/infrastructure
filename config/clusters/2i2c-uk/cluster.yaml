@@ -5,6 +5,12 @@ gcp:
   project: two-eye-two-see-uk
   cluster: two-eye-two-see-uk-cluster
   zone: europe-west2
+  billing:
+    paid_by_us: true
+    bigquery:
+      project: two-eye-two-see
+      dataset: cloud_costs
+      billing_id: 0157F7-E3EA8C-25AC3C
 support:
   helm_chart_values_files:
     - support.values.yaml

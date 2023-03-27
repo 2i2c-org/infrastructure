@@ -59,6 +59,40 @@ properties:
       Configuration to connect to the cluster on GCP. Is used when
       provider is set to `gcp`
     properties:
+      billing:
+        type: object
+        additionalProperties: false
+        required:
+          - paid_by_us
+        description: |
+          Billing information for this cluster
+        properties:
+          paid_by_us:
+            type: boolean
+            description: |
+              Set to true if the cloud cost is paid by us, and expected to be
+              recovered from actual users.
+          bigquery:
+            type: object
+            additionalProperties: false
+            required:
+              - project
+              - dataset
+              - billing_id
+            properties:
+              project:
+                type: string
+                description: |
+                  Name of the project the bigquery dataset where billing details is
+                  exported to.
+              dataset:
+                type: string
+                description: |
+                  Name of the dataset in bigquery where billing is exported to.
+              billing_id:
+                type: string
+                 description: |
+                   ID of the billing account (of form XXXXXX-XXXXXX-XXXXXX) the project is connected to.
       key:
         type: string
         description: |
@@ -87,6 +121,7 @@ properties:
       - project
       - cluster
       - zone
+      - billing
   aws:
     type: object
     additionalProperties: false

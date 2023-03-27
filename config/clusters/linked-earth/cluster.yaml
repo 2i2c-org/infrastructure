@@ -10,6 +10,8 @@ gcp:
   # Could not find [linked-earth-cluster] in [us-central1-c].
   # Did you mean [linked-earth-cluster] in [us-central1]?
   zone: us-central1
+  billing:
+    paid_by_us: false
 support:
   helm_chart_values_files:
     - support.values.yaml

@@ -6,6 +6,8 @@ gcp:
   project: pangeo-integration-te-3eea
   cluster: pangeo-hubs-cluster
   zone: us-central1-b
+  billing:
+    paid_by_us: false
 support:
   helm_chart_values_files:
     - support.values.yaml

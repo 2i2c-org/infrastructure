@@ -5,6 +5,8 @@ gcp:
   project: cb-1003-1696
   cluster: cb-cluster
   zone: us-central1-b
+  billing:
+    paid_by_us: false
 support:
   helm_chart_values_files:
     - support.values.yaml
