@@ -1,12 +1,12 @@
 jupyterhub:
   ingress:
-    hosts: [glendale.cloudbank.2i2c.cloud]
+    hosts: [laney.cloudbank.2i2c.cloud]
     tls:
-      - hosts: [glendale.cloudbank.2i2c.cloud]
+      - hosts: [laney.cloudbank.2i2c.cloud]
         secretName: https-auto-tls
   proxy:
     https:
-      hosts: [glendale.cloudbank.2i2c.cloud]
+      hosts: [laney.cloudbank.2i2c.cloud]
   custom:
     2i2c:
       add_staff_user_ids_to_admin_users: true
@@ -14,9 +14,9 @@ jupyterhub:
     homepage:
       templateVars:
         org:
-          name: Glendale Community College
-          logo_url: https://www.glendale.edu/home/showpublishedimage/33622/637538639301600000
-          url: https://www.glendale.edu/
+          name: Laney College
+          logo_url: https://laney.edu/wp-content/themes/laneycollegesixteen/images/Laney%20College%20Coin.png
+          url: https://laney.edu/
         designed_by:
           name: 2i2c
           url: https://2i2c.org
@@ -31,11 +31,12 @@ jupyterhub:
       JupyterHub:
         authenticator_class: cilogon
       CILogonOAuthenticator:
-        oauth_callback_url: https://glendale.cloudbank.2i2c.cloud/hub/oauth_callback
-        username_claim: email
+        oauth_callback_url: "https://laney.cloudbank.2i2c.cloud/hub/oauth_callback"
+        username_claim: "email"
       Authenticator:
-        admin_users:
-          - simon@glendale.edu
+        allowed_users: &laney_users
           - ericvd@berkeley.edu
           - sean.smorris@berkeley.edu
-        username_pattern: '^(.+@2i2c\.org|.+@berkeley\.edu|.+@glendale\.edu|.+@student\.glendale\.edu|deployment-service-check)$'
+          - koh@peralta.edu
+          - dsmith@peralta.edu
+        admin_users: *laney_users

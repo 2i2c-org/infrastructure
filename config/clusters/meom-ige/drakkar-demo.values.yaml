@@ -14,6 +14,14 @@ nfs:
     serverIP: nfs-server-01
     baseShareName: /export/home-01/homes/
 jupyterhub:
+  ingress:
+    hosts: [drakkar-demo.meom-ige.2i2c.cloud]
+    tls:
+      - hosts: [drakkar-demo.meom-ige.2i2c.cloud]
+        secretName: https-auto-tls
+  proxy:
+    https:
+      hosts: [drakkar-demo.meom-ige.2i2c.cloud]
   custom:
     2i2c:
       add_staff_user_ids_to_admin_users: true

@@ -1,5 +1,13 @@
 basehub:
   jupyterhub:
+    ingress:
+      hosts: [openscapes.2i2c.cloud]
+      tls:
+        - hosts: [openscapes.2i2c.cloud]
+          secretName: https-auto-tls
+    proxy:
+      https:
+        hosts: [openscapes.2i2c.cloud]
     hub:
       config:
         JupyterHub:

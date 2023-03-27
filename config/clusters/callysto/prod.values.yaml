@@ -1,5 +1,16 @@
 jupyterhub:
+  ingress:
+    hosts: [2i2c.callysto.ca]
+    tls:
+      - hosts: [2i2c.callysto.ca]
+        secretName: https-auto-tls
+  proxy:
+    https:
+      hosts: [2i2c.callysto.ca]
   hub:
     config:
       CILogonOAuthenticator:
         oauth_callback_url: https://2i2c.callysto.ca/hub/oauth_callback
+  custom:
+    homepage:
+      gitRepoBranch: "callysto-prod"

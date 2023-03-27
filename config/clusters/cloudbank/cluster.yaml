@@ -110,6 +110,16 @@ hubs:
       # that you intend for these files to be applied in this order.
       - fresno.values.yaml
       - enc-fresno.secret.values.yaml
+  - name: laney
+    display_name: "Laney College"
+    domain: laney.cloudbank.2i2c.cloud
+    helm_chart: basehub
+    helm_chart_values_files:
+      # The order in which you list files here is the order the will be passed
+      # to the helm upgrade command in, and that has meaning. Please check
+      # that you intend for these files to be applied in this order.
+      - laney.values.yaml
+      - enc-laney.secret.values.yaml
   - name: lassen
     display_name: "Lassen College"
     domain: lassen.cloudbank.2i2c.cloud

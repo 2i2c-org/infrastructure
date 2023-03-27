@@ -216,12 +216,15 @@ properties:
   global:
     type: object
     additionalProperties: true
-  # jupyterhub is a dependent helm chart, we rely _mostly_ on its schema
-  # validation for values passed to it and are not imposing restrictions on them
-  # in this helm chart. But, we do we provide custom configuration (`custom`)
-  # that is read by custom jupyterhub configuration (`hub.config`).
-  #
-  # Due to that, we provide a strict schema for the `jupyterhub.custom` values
+  # jupyterhub is a dependent helm chart and we rely _mostly_ on its schema
+  # validation for values passed to it and are not imposing restrictions on
+  # most of them in this helm chart.
+  # But in this helm chart, we do tighten some of the validations done in
+  # the jupyterhub helm chart (like item types and not allowing empty fields)
+  # to ensure a functional setup.
+  # Also, because we provide custom configuration (`custom`)
+  # that is read by custom jupyterhub configuration (`hub.config`),
+  # we provide a strict schema for the `jupyterhub.custom` values
   # passed to this helm chart.
   #
   jupyterhub:
@@ -229,7 +232,37 @@ properties:
     additionalProperties: true
     required:
       - custom
+      - proxy
+      - ingress
     properties:
+      proxy:
+        type: object
+        additionalProperties: true
+        required:
+          - https
+        properties:
+          hosts:
+            type: array
+            minItems: 1
+            items:
+              type: string
+      ingress:
+        type: object
+        additionalProperties: true
+        required:
+          - hosts
+          - tls
+        properties:
+          hosts:
+            type: array
+            minItems: 1
+            items:
+              type: string
+          tls:
+            type: array
+            minItems: 1
+            items:
+              type: object
       custom:
         type: object
         additionalProperties: true
@@ -282,7 +315,24 @@ properties:
             additionalProperties: false
             required:
               - templateVars
+              - gitRepoUrl
+              - gitRepoBranch
             properties:
+              gitRepoUrl:
+                type: string
+                description: |
+                  The URL of the repository hosting custom hub templates
+                  that should override the hub homepage default ones.
+
+                  Example: https://github.com/2i2c-org/default-hub-homepage
+              gitRepoBranch:
+                type: string
+                description: |
+                  The name of the branch of the repository at `hubTemplateRepoDetails.repo_url`
+                  to pull the custom templates from.
+                  Should be used to customize the homepage of a hub.
+
+                  The convention for the name of this branch is `<cluster-name>-<hub-name>`.
               templateVars:
                 type: object
                 additionalProperties: false

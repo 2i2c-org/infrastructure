@@ -1,8 +1,5 @@
-import json
 import subprocess
-import tempfile
 from pathlib import Path
-from textwrap import dedent
 
 from ruamel.yaml import YAML
 
@@ -23,126 +20,7 @@ class Hub:
         self.cluster = cluster
         self.spec = spec
 
-    def get_generated_config(self):
-        """
-        Generate config automatically for each hub
-        """
-        generated_config = {
-            "jupyterhub": {
-                "proxy": {"https": {"hosts": [self.spec["domain"]]}},
-                "ingress": {
-                    "hosts": [self.spec["domain"]],
-                    "tls": [
-                        {
-                            "secretName": "https-auto-tls",
-                            "hosts": [self.spec["domain"]],
-                        }
-                    ],
-                },
-                "hub": {
-                    "config": {},
-                    "initContainers": [
-                        {
-                            "name": "templates-clone",
-                            "image": "alpine/git",
-                            "args": [
-                                "clone",
-                                "--",
-                                "https://github.com/2i2c-org/default-hub-homepage",
-                                "/srv/repo",
-                            ],
-                            "securityContext": {
-                                "runAsUser": 1000,
-                                "runAsGroup": 1000,
-                                "allowPrivilegeEscalation": False,
-                                "readOnlyRootFilesystem": True,
-                            },
-                            "volumeMounts": [
-                                {
-                                    "name": "custom-templates",
-                                    "mountPath": "/srv/repo",
-                                }
-                            ],
-                        },
-                        {
-                            "name": "templates-ownership-fix",
-                            "image": "alpine/git",
-                            "command": ["/bin/sh"],
-                            "args": [
-                                "-c",
-                                "ls -lhd /srv/repo && chown 1000:1000 /srv/repo && ls -lhd /srv/repo",
-                            ],
-                            "securityContext": {"runAsUser": 0},
-                            "volumeMounts": [
-                                {
-                                    "name": "custom-templates",
-                                    "mountPath": "/srv/repo",
-                                }
-                            ],
-                        },
-                    ],
-                    "extraContainers": [
-                        {
-                            "name": "templates-sync",
-                            "image": "alpine/git",
-                            "workingDir": "/srv/repo",
-                            "command": ["/bin/sh"],
-                            "args": [
-                                "-c",
-                                dedent(
-                                    f"""\
-                                    ls -lhd /srv/repo;
-                                    while true; do git fetch origin;
-                                    if [[ $(git ls-remote --heads origin {self.cluster.spec["name"]}-{self.spec["name"]} | wc -c) -ne 0 ]]; then
-                                        git reset --hard origin/{self.cluster.spec["name"]}-{self.spec["name"]};
-                                    else
-                                        git reset --hard origin/master;
-                                    fi
-                                    sleep 5m; done
-                                    """
-                                ),
-                            ],
-                            "securityContext": {
-                                "runAsUser": 1000,
-                                "runAsGroup": 1000,
-                                "allowPrivilegeEscalation": False,
-                                "readOnlyRootFilesystem": True,
-                            },
-                            "volumeMounts": [
-                                {
-                                    "name": "custom-templates",
-                                    "mountPath": "/srv/repo",
-                                }
-                            ],
-                        }
-                    ],
-                    "extraVolumes": [{"name": "custom-templates", "emptyDir": {}}],
-                    "extraVolumeMounts": [
-                        {
-                            "mountPath": "/usr/local/share/jupyterhub/custom_templates",
-                            "name": "custom-templates",
-                            "subPath": "templates",
-                        },
-                        {
-                            "mountPath": "/usr/local/share/jupyterhub/static/extra-assets",
-                            "name": "custom-templates",
-                            "subPath": "extra-assets",
-                        },
-                    ],
-                },
-            },
-        }
-
-        # Due to nesting of charts on top of the basehub, our generated basehub
-        # config may need to be nested as well.
-        if self.spec["helm_chart"] == "daskhub":
-            generated_config = {"basehub": generated_config}
-        elif self.spec["helm_chart"] == "binderhub":
-            generated_config = {}
-
-        return generated_config
-
-    def deploy(self, dask_gateway_version):
+    def deploy(self, dask_gateway_version, debug, dry_run):
         """
         Deploy this hub
         """
@@ -168,8 +46,6 @@ class Hub:
 
             self.spec["domain"] = domain_override_config["domain"]
 
-        generated_values = self.get_generated_config()
-
         if self.spec["helm_chart"] == "daskhub":
             # Install CRDs for daskhub before deployment
             manifest_urls = [
@@ -180,15 +56,10 @@ class Hub:
             for manifest_url in manifest_urls:
                 subprocess.check_call(["kubectl", "apply", "-f", manifest_url])
 
-        with tempfile.NamedTemporaryFile(
-            mode="w"
-        ) as generated_values_file, get_decrypted_files(
+        with get_decrypted_files(
             self.cluster.config_path.joinpath(p)
             for p in self.spec["helm_chart_values_files"]
         ) as values_files:
-            json.dump(generated_values, generated_values_file)
-            generated_values_file.flush()
-
             cmd = [
                 "helm",
                 "upgrade",
@@ -198,11 +69,13 @@ class Hub:
                 f"--namespace={self.spec['name']}",
                 self.spec["name"],
                 helm_charts_dir.joinpath(self.spec["helm_chart"]),
-                # Ordering matters here - config explicitly mentioned in cli should take
-                # priority over our generated values. Based on how helm does overrides, this means
-                # we should put the config from cluster.yaml last.
-                f"--values={generated_values_file.name}",
             ]
+
+            if dry_run:
+                cmd.append("--dry-run")
+
+            if debug:
+                cmd.append("--debug")
 
             # Add on the values files
             for values_file in values_files:

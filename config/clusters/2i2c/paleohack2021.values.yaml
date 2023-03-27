@@ -1,4 +1,15 @@
 jupyterhub:
+  proxy:
+    https:
+      hosts:
+        - paleohack2021.hackathon.2i2c.cloud
+  ingress:
+    hosts:
+      - paleohack2021.hackathon.2i2c.cloud
+    tls:
+      - secretName: https-auto-tls
+        hosts:
+          - paleohack2021.hackathon.2i2c.cloud
   scheduling:
     userScheduler:
       enabled: true
