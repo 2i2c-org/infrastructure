@@ -146,7 +146,9 @@ def generate_cost_table(
                         FROM UNNEST(credits) AS c), 0)))
             AS total_with_credits
         FROM `{table_name}`
-        WHERE invoice.month >= @start_month AND invoice.month <= @end_month
+        WHERE invoice.month >= @start_month
+              AND invoice.month <= @end_month
+              AND project.id = @project
         GROUP BY 1, 2
         ORDER BY invoice.month ASC
         ;
@@ -157,6 +159,7 @@ def generate_cost_table(
             query_parameters=[
                 bigquery.ScalarQueryParameter("start_month", "STRING", start_month),
                 bigquery.ScalarQueryParameter("end_month", "STRING", end_month),
+                bigquery.ScalarQueryParameter("project", "STRING", cluster_project_name)
             ]
         )
 
