@@ -6,7 +6,7 @@
 """
 import re
 import sys
-from datetime import datetime, timedelta
+from datetime import datetime
 from enum import Enum
 from pathlib import PosixPath
 
