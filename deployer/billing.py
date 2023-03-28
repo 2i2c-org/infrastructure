@@ -184,6 +184,7 @@ def generate_cost_table(
     # Sort by period in reverse chronological order
     rows.sort(key=lambda r: r["period"], reverse=True)
 
+    # TODO: Split these output formats out into their own functions
     if output == CostTableOutputFormats.google_sheet:
         # A service account (https://console.cloud.google.com/iam-admin/serviceaccounts/details/113674037014124702779?project=two-eye-two-see)
         # It is created with no permissions, and the google sheet we want to write to
