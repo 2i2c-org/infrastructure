@@ -91,8 +91,8 @@ properties:
                   Name of the dataset in bigquery where billing is exported to.
               billing_id:
                 type: string
-                 description: |
-                   ID of the billing account (of form XXXXXX-XXXXXX-XXXXXX) the project is connected to.
+                description: |
+                  ID of the billing account (of form XXXXXX-XXXXXX-XXXXXX) the project is connected to.
       key:
         type: string
         description: |
