@@ -26,3 +26,5 @@ grafana:
       - secretName: grafana-tls
         hosts:
           - grafana.pilot.2i2c.cloud
+  plugins:
+    - grafana-bigquery-datasource
