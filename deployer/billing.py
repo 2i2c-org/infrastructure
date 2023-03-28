@@ -7,6 +7,7 @@
 import re
 import sys
 from datetime import datetime, timedelta
+from dateutil.relativedelta import relativedelta
 from enum import Enum
 from pathlib import PosixPath
 
@@ -81,11 +82,12 @@ class CostTableOutputFormats(Enum):
     google_sheet = "google-sheet"
 
 
+
 @app.command()
 def generate_cost_table(
     start_month: str = typer.Option(
-        (datetime.utcnow().replace(day=1) - timedelta(days=1)).strftime("%Y-%m"),
-        help="Starting month (as YYYY-MM) to produce cost data for. Defaults to last invoicing month.",
+        (datetime.today() - relativedelta(months=6)).replace(day=1).strftime("%Y-%m"),
+        help="Starting month (as YYYY-MM) to produce cost data for. Defaults to 6 invoicing months ago.",
         callback=month_validate,
     ),
     end_month: str = typer.Option(
