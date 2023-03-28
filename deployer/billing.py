@@ -139,8 +139,6 @@ def generate_cost_table(
         SELECT
         invoice.month as month,
         project.id as project,
-        SUM(cost)
-            AS total_without_credits,
         (SUM(CAST(cost AS NUMERIC))
             + SUM(IFNULL((SELECT SUM(CAST(c.amount AS NUMERIC))
                         FROM UNNEST(credits) AS c), 0)))
@@ -166,7 +164,7 @@ def generate_cost_table(
         result = client.query(query, job_config=job_config).result()
         last_period = None
         for r in result:
-            if not r.project and round(r.total_without_credits) == 0.0:
+            if not r.project:
                 # Non-project number is 0$, let's declutter by not showing it
                 continue
             year = r.month[:4]
@@ -176,7 +174,6 @@ def generate_cost_table(
                 {
                     "period": period,
                     "project": r.project,
-                    "total_without_credits": float(r.total_without_credits),
                     "total_with_credits": float(r.total_with_credits),
                 }
             )
@@ -209,7 +206,6 @@ def generate_cost_table(
             [
                 "Period",
                 "Project",
-                "Cost (before Credits)",
                 "Cost (after Credits)",
             ]
         )
@@ -219,7 +215,6 @@ def generate_cost_table(
                 [
                     r["period"],
                     r["project"],
-                    r["total_without_credits"],
                     r["total_with_credits"],
                 ]
                 for r in rows
@@ -230,7 +225,6 @@ def generate_cost_table(
 
         table.add_column("Period", justify="right", style="cyan", no_wrap=True)
         table.add_column("Project", style="white")
-        table.add_column("Cost (before credits)", justify="right", style="white")
         table.add_column("Cost (after credits)", justify="right", style="green")
 
         for r in rows:
@@ -239,7 +233,6 @@ def generate_cost_table(
             table.add_row(
                 r["period"],
                 r["project"],
-                str(round(r["total_without_credits"], 2)),
                 str(round(r["total_with_credits"], 2)),
             )
             last_period = r["period"]
