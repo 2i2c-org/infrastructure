@@ -5,7 +5,6 @@
 +TODO: Write documentation on when to use this and who uses it
 """
 import re
-import sys
 from datetime import datetime
 from enum import Enum
 from pathlib import PosixPath
@@ -13,8 +12,7 @@ from pathlib import PosixPath
 import gspread
 import typer
 from dateutil.relativedelta import relativedelta
-from google.cloud import bigquery, billing_v1
-from google.cloud.logging_v2.services.config_service_v2 import ConfigServiceV2Client
+from google.cloud import bigquery
 from rich.console import Console
 from rich.table import Table
 from ruamel.yaml import YAML
@@ -26,39 +24,6 @@ from .helm_upgrade_decision import get_all_cluster_yaml_files
 yaml = YAML(typ="safe")
 
 HERE = PosixPath(__file__).parent.parent
-
-
-# FIXME: This doesn't actually work yet correctly
-def validate_billing_export():
-    # Get billing accounts info
-    with open(HERE.joinpath("config/billing-accounts.yaml")) as f:
-        accounts = yaml.load(f)
-
-    # Create a client
-    billing_client = billing_v1.CloudBillingClient()
-
-    managed_billing_accounts = {
-        a["id"] for a in accounts["gcp"]["billing_accounts"] if a["managed"]
-    }
-    logging_client = ConfigServiceV2Client()
-
-    # Handle the response
-    for ba in managed_billing_accounts:
-        # Make the request
-        response = billing_client.get_billing_account(
-            name=f"billingAccounts/{ba}",
-        )
-        if not response.open_:
-            print(f"Billing account {ba} is closed!")
-            sys.exit(1)
-
-        print(f"trying for {ba}")
-
-        # Make the request
-        sinks = list(logging_client.list_sinks(parent=f"billingAccounts/{ba}"))
-
-        # Handle the response
-        print(sinks)
 
 
 def month_validate(month_str: str):
