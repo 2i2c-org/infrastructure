@@ -62,6 +62,15 @@ properties:
       billing:
         type: object
         additionalProperties: false
+        # if paid_by_us is true, we *must* provide bigquery information
+        # on where to find the costs export for this project
+        if:
+          properties:
+            paid_by_us:
+              const: true
+        then:
+          required:
+            - bigquery
         required:
           - paid_by_us
         description: |
