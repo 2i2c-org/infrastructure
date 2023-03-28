@@ -7,12 +7,12 @@
 import re
 import sys
 from datetime import datetime, timedelta
-from dateutil.relativedelta import relativedelta
 from enum import Enum
 from pathlib import PosixPath
 
 import gspread
 import typer
+from dateutil.relativedelta import relativedelta
 from google.cloud import bigquery, billing_v1
 from google.cloud.logging_v2.services.config_service_v2 import ConfigServiceV2Client
 from rich.console import Console
@@ -82,7 +82,6 @@ class CostTableOutputFormats(Enum):
     google_sheet = "google-sheet"
 
 
-
 @app.command()
 def generate_cost_table(
     start_month: str = typer.Option(
@@ -123,7 +122,7 @@ def generate_cost_table(
             continue
 
         cluster_project_name = cluster["gcp"]["project"]
-        
+
         bq = cluster["gcp"]["billing"]["bigquery"]
 
         # WARN: We are using string interpolation here to construct a sql-like query, which
@@ -159,7 +158,9 @@ def generate_cost_table(
             query_parameters=[
                 bigquery.ScalarQueryParameter("start_month", "STRING", start_month),
                 bigquery.ScalarQueryParameter("end_month", "STRING", end_month),
-                bigquery.ScalarQueryParameter("project", "STRING", cluster_project_name)
+                bigquery.ScalarQueryParameter(
+                    "project", "STRING", cluster_project_name
+                ),
             ]
         )
 
