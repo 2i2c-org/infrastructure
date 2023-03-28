@@ -12,7 +12,7 @@ On GCP, by default, all logs produced by all containers and other components
 are sent to [Google Cloud Logging](https://cloud.google.com/logging). These
 logs are kept for 30 days, and are searchable.
 
-### Accessing the log explorer
+### Accessing the Logs Explorer
 
 1. Go to [the log explorer](https://console.cloud.google.com/logs/query)
    on your browser.
@@ -27,8 +27,27 @@ logs are kept for 30 days, and are searchable.
    as time sliders. However, for most of our logs, the 'log levels' (error, warning, etc)
    are not parsed correctly, and hence are useless.
 
+4. Google provies a [query library](https://cloud.google.com/logging/docs/view/query-library) set of [sample queries](https://cloudlogging.app.goo.gl/Ad7B8hjFHpj6X7rT8) that you can access via the Library tab in Logs Explorer.
+
 
 ### Common queries
+
+#### Kubernetes autoscaler logs
+
+You can find scale up or scale down events by looking for decision events
+
+```
+logName="projects/<project-name>/logs/container.googleapis.com%2Fcluster-autoscaler-visibility" severity>=DEFAULT
+jsonPayload.decision: *
+```
+
+#### Kubernetes node event logs for a particular node
+
+```
+resource.type="k8s_node"
+log_id("events")
+resource.labels.node_name="<node_name>"
+```
 
 #### Look at hub logs
 
@@ -107,13 +126,20 @@ resource.labels.namespace_name="<namespace>"
 labels.k8s-pod/hub_jupyter_org/username="<escaped-username>"
 ```
 
+You can also look by container name such as the below query for dask-worker and distributed.nanny. 
+
+```
+resource.type="k8s_container"
+resource.labels.container_name="dask-worker" OR resource.labels.container_name="distributed.nanny"
+```
+
 You must pass the [escaped username](howto:troubleshoot:logs:username) to the
 query.
 
 #### Full-text search across logs
 
 If you are looking for a specific string across *all* logs, you can
-use `textPayload` as a field to search for.
+use `textPayload` or `jsonPayload` as a field to search for depending on the log.
 
 ```
 textPayload=~"some-string"

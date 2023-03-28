@@ -3,6 +3,14 @@ basehub:
     annotations:
       iam.gke.io/gcp-service-account: pangeo-hubs-prod@pangeo-integration-te-3eea.iam.gserviceaccount.com
   jupyterhub:
+    ingress:
+      hosts: [us-central1-b.gcp.pangeo.io]
+      tls:
+        - hosts: [us-central1-b.gcp.pangeo.io]
+          secretName: https-auto-tls
+    proxy:
+      https:
+        hosts: [us-central1-b.gcp.pangeo.io]
     hub:
       config:
         GitHubOAuthenticator:

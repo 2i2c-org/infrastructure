@@ -1,4 +1,15 @@
 jupyterhub:
+  proxy:
+    https:
+      hosts:
+        - earthlab.pilot.2i2c.cloud
+  ingress:
+    hosts:
+      - earthlab.pilot.2i2c.cloud
+    tls:
+      - secretName: https-auto-tls
+        hosts:
+          - earthlab.pilot.2i2c.cloud
   custom:
     2i2c:
       add_staff_user_ids_to_admin_users: true
@@ -20,6 +31,16 @@ jupyterhub:
           url: https://investinopen.org/blog/jrost-rapid-response-fund-awardees
   hub:
     config:
+      JupyterHub:
+        authenticator_class: cilogon
+      CILogonOAuthenticator:
+        scope:
+          - "profile"
+        username_claim: "preferred_username"
+        oauth_callback_url: "https://earthlab.pilot.2i2c.cloud/hub/oauth_callback"
+        # Only show the option to login with GitHub
+        shown_idps:
+          - http://github.com/login/oauth/authorize
       Authenticator:
         allowed_users: &earthlab_users
           - lwasser

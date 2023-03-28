@@ -194,7 +194,6 @@ properties:
         required:
           - name
           - domain
-          - auth0
           - helm_chart
           - helm_chart_values_files
         properties:
@@ -240,62 +239,6 @@ properties:
             enum:
               - basehub
               - daskhub
-          auth0:
-            additionalProperties: false
-            type: object
-            description: |
-              Most hubs use Auth0 for authentication, and we dynamically fetch the credentials
-              needed for each hub - client_id, client_secret, callback_url - on deploy. This
-              block contains configuration on how auth0 should be configured for this hub.
-            properties:
-              enabled:
-                type: boolean
-                default: true
-                description: |
-                  Whether or not to enable Auth0 authentication for this hub.
-                  This should almost always be true. It should only be false if
-                  authenticating against GitHub Orgs or Teams using the
-                  JupyterHub OAuthenticator. Defaults to true.
-              connection:
-                type: string
-                enum:
-                  - google-oauth2
-                  - github
-                  - password
-                  - CILogon
-                description: |
-                  Authentication method users of the hub can use to log in to the hub.
-                  We support a subset of the [connectors](https://auth0.com/docs/identityproviders)
-                  that auth0 supports
-              application_name:
-                type: string
-                description: |
-                  We make use of an OAuth2 applications in Auth0 and this is the
-                  name of that application. Defaults to
-                  "<clustername>-<hubname>".
-
-                  See https://manage.auth0.com/dashboard/us/2i2c/applications.
-              password:
-                type: object
-                description: |
-                  Configuration specific to a connection of type password.
-                properties:
-                  database_name:
-                    type: string
-                    description: |
-                      Username and password authentication requires a Auth0
-                      database to store the username and passwords in. This is
-                      the name of that Auth0 database. Defaults to
-                      "<clustername>-<hubname>".
-
-                      See https://manage.auth0.com/dashboard/us/2i2c/connections/database.
-            if:
-              properties:
-                enabled:
-                  const: true
-            then:
-              required:
-                - connection
           helm_chart_values_files:
             type: array
             description: |

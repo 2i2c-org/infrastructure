@@ -3,6 +3,14 @@ basehub:
     annotations:
       eks.amazonaws.com/role-arn: arn:aws:iam::574251165169:role/nasa-cryo-staging
   jupyterhub:
+    ingress:
+      hosts: [staging.hub.cryointhecloud.com]
+      tls:
+        - hosts: [staging.hub.cryointhecloud.com]
+          secretName: https-auto-tls
+    proxy:
+      https:
+        hosts: [staging.hub.cryointhecloud.com]
     hub:
       config:
         GitHubOAuthenticator:

@@ -50,7 +50,8 @@ basehub:
         JupyterHub:
           authenticator_class: github
           # Announcement is a JupyterHub feature to present messages to users in
-          # pages under the /hub path, but not via the /user.
+          # web pages under the /hub path (JupyterHub responds), but not via the
+          # /user path (single-user server responds).
           #
           # ref: https://github.com/2i2c-org/infrastructure/issues/1501
           # ref: https://jupyterhub.readthedocs.io/en/stable/reference/templates.html#announcement-configuration-variables
@@ -121,7 +122,7 @@ basehub:
         #          causes more frequent need to wait on startups, increased cost,
         #          wasted energy.
         #
-        - display_name: "Medium: up to 16 CPU / 128 GB RAM"
+        - display_name: "CPU only"
           description: &profile_list_description "Start a container limited to a chosen share of capacity on a node of this type"
           slug: medium-full
           default: true
@@ -223,7 +224,7 @@ basehub:
         #       share options for a different subset of users via the basehub
         #       specific allowed_teams configuration.
         #
-        - display_name: "Medium: up to 16 CPU / 128 GB RAM"
+        - display_name: "CPU only"
           description: *profile_list_description
           slug: medium-base
           default: true

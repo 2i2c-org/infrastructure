@@ -1,4 +1,12 @@
 jupyterhub:
+  ingress:
+    hosts: [jupyter.utoronto.ca]
+    tls:
+      - hosts: [jupyter.utoronto.ca]
+        secretName: https-auto-tls
+  proxy:
+    https:
+      hosts: [jupyter.utoronto.ca]
   scheduling:
     userPlaceholder:
       # Keep at least one spare node around
@@ -12,6 +20,9 @@ jupyterhub:
           # that pods in `kube-system` will still schedule.
           # So even though this is under `userPlaceholder`, it really is operating as a `nodePlaceholder`
           memory: 57350076Ki
+  custom:
+    homepage:
+      gitRepoBranch: "utoronto-prod"
   hub:
     db:
       pvc:

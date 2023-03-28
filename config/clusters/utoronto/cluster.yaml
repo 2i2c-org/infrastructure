@@ -12,8 +12,6 @@ hubs:
     display_name: "University of Toronto (staging)"
     domain: staging.utoronto.2i2c.cloud
     helm_chart: basehub
-    auth0:
-      enabled: false
     helm_chart_values_files:
       - common.values.yaml
       - default-common.values.yaml
@@ -23,8 +21,6 @@ hubs:
     display_name: "University of Toronto (prod)"
     domain: jupyter.utoronto.ca
     helm_chart: basehub
-    auth0:
-      enabled: false
     helm_chart_values_files:
       - common.values.yaml
       - default-common.values.yaml
@@ -34,8 +30,6 @@ hubs:
     display_name: "University of Toronto (r-staging)"
     domain: r-staging.datatools.utoronto.ca
     helm_chart: basehub
-    auth0:
-      enabled: false
     helm_chart_values_files:
       - common.values.yaml
       - r-common.values.yaml
@@ -45,8 +39,6 @@ hubs:
     display_name: "University of Toronto (R)"
     domain: r.datatools.utoronto.ca
     helm_chart: basehub
-    auth0:
-      enabled: false
     helm_chart_values_files:
       - common.values.yaml
       - r-common.values.yaml

@@ -13,9 +13,9 @@ binderhub:
       token_url: https://us-central1-docker.pkg.dev/v2/token?service=
     BinderHub:
       # The URL set as jupyterhub.ingress.hosts[0] in this config
-      hub_url: https://hub.binder-staging.2i2c.cloud
+      auth_enabled: true
+      hub_url: https://binder-staging.hub.2i2c.cloud
       image_prefix: us-central1-docker.pkg.dev/two-eye-two-see/binder-staging-registry/binder-staging-
-
       template_path: /etc/binderhub/custom/templates
       extra_static_path: /etc/binderhub/custom/static
       extra_static_url_prefix: /extra_static/
@@ -46,9 +46,52 @@ binderhub:
 
   jupyterhub:
     ingress:
+      enabled: true
       hosts:
-        - hub.binder-staging.2i2c.cloud
+        - binder-staging.hub.2i2c.cloud
       tls:
-        - secretName: https-auto-tls-binder
+        - secretName: https-auto-tls-hub-binder
           hosts:
-            - hub.binder-staging.2i2c.cloud
+            - binder-staging.hub.2i2c.cloud
+    hub:
+      redirectToServer: false
+      services:
+        binder:
+          oauth_client_id: service-binderhub
+          oauth_no_confirm: true
+          oauth_redirect_uri: "https://binder-staging.2i2c.cloud/oauth_callback"
+      loadRoles:
+        user:
+          scopes:
+            - self
+            - "access:services"
+      config:
+        BinderSpawner:
+          auth_enabled: true
+        JupyterHub:
+          authenticator_class: cilogon
+        Authenticator:
+          admin_users:
+            - choldgraf@2i2c.org
+            - colliand@2i2c.org
+            - erik@2i2c.org
+            - damianavila@2i2c.org
+            - georgianaelena@2i2c.org
+            - jmunroe@2i2c.org
+            - pnasrat@2i2c.org
+            - sgibson@2i2c.org
+            - yuvipanda@2i2c.org
+        CILogonOAuthenticator:
+          oauth_callback_url: "https://binder-staging.hub.2i2c.cloud/hub/oauth_callback"
+          # Only show the option to login with Google
+          shown_idps:
+            - http://google.com/accounts/o8/id
+          allowed_idps:
+            http://google.com/accounts/o8/id:
+              username_derivation:
+                username_claim: "email"
+              allowed_domains:
+                - "2i2c.org"
+    singleuser:
+      # to make notebook servers aware of hub
+      cmd: jupyterhub-singleuser

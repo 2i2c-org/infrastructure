@@ -1,0 +1,22 @@
+basehub:
+  jupyterhub:
+    ingress:
+      hosts: [staging.openscapes.2i2c.cloud]
+      tls:
+        - hosts: [staging.openscapes.2i2c.cloud]
+          secretName: https-auto-tls
+    proxy:
+      https:
+        hosts: [staging.openscapes.2i2c.cloud]
+    hub:
+      config:
+        JupyterHub:
+          authenticator_class: cilogon
+        CILogonOAuthenticator:
+          scope:
+            - "profile"
+          username_claim: "preferred_username"
+          oauth_callback_url: "https://staging.openscapes.2i2c.cloud/hub/oauth_callback"
+          # Only show the option to login with GitHub
+          shown_idps:
+            - http://github.com/login/oauth/authorize

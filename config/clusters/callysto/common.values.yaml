@@ -128,8 +128,9 @@ jupyterhub:
       CILogonOAuthenticator:
         # We set up admin_users, but *not* allowed users. Those are set up via the extraConfig
         admin_users: &callysto_users
-          - "117859169473992122769" # Georgiana
-          - "115722756968212778437" # Sarah
+          - "117859169473992122769" # Georgiana (2i2c)
+          - "115722756968212778437" # Sarah (2i2c)
+          - "103849660365364958119" # Erik (2i2c)
           - "115240156849150087300" # Ian Allison (PIMS)
           - "102749090965437723445" # Byron Chu (Cybera)
           - "115909958579864751636" # Michael Jones (Cybera)

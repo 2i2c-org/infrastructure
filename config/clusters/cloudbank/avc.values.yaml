@@ -1,4 +1,12 @@
 jupyterhub:
+  ingress:
+    hosts: [avc.cloudbank.2i2c.cloud]
+    tls:
+      - hosts: [avc.cloudbank.2i2c.cloud]
+        secretName: https-auto-tls
+  proxy:
+    https:
+      hosts: [avc.cloudbank.2i2c.cloud]
   custom:
     2i2c:
       add_staff_user_ids_to_admin_users: true
@@ -41,6 +49,14 @@ jupyterhub:
           - smorris@ausdk12.org
           - kae@gmail.com
           - ciara@gmail.com
+      JupyterHub:
+        authenticator_class: cilogon
+      CILogonOAuthenticator:
+        oauth_callback_url: "https://avc.cloudbank.2i2c.cloud/hub/oauth_callback"
+        username_claim: "email"
+        # Only show the option to login with Google
+        shown_idps:
+          - http://google.com/accounts/o8/id
       Authenticator:
         allowed_users: &avc_users
           - aculich@berkeley.edu

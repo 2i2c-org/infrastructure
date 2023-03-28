@@ -14,7 +14,6 @@ import pytest
 import typer
 from ruamel.yaml import YAML
 
-from .auth import KeyProvider
 from .cli_app import app
 from .cluster import Cluster
 from .config_validation import (
@@ -144,12 +143,18 @@ def deploy(
         None,
         help="Name of hub to operate deploy. Omit to deploy all hubs on the cluster",
     ),
-    config_path: str = typer.Option(
-        "shared/deployer/enc-auth-providers-credentials.secret.yaml",
-        help="File to read secret deployment config from",
-    ),
     dask_gateway_version: str = typer.Option(
         "2023.1.0", help="Version of dask-gateway to install CRDs for"
+    ),
+    debug: bool = typer.Option(
+        False,
+        "--debug",
+        help="""When present, the `--debug` flag will be passed to the `helm upgrade` command.""",
+    ),
+    dry_run: bool = typer.Option(
+        False,
+        "--dry-run",
+        help="""When present, the `--dry-run` flag will be passed to the `helm upgrade` command.""",
     ),
 ):
     """
@@ -158,19 +163,6 @@ def deploy(
     validate_cluster_config(cluster_name)
     validate_hub_config(cluster_name, hub_name)
     validate_authenticator_config(cluster_name, hub_name)
-
-    with get_decrypted_file(config_path) as decrypted_file_path:
-        with open(decrypted_file_path) as f:
-            config = yaml.load(f)
-
-    # Most of our hubs use Auth0 for Authentication. This lets us programmatically
-    # determine what auth provider each hub uses - GitHub, Google, etc. Without
-    # this, we'd have to manually generate credentials for each hub - and we
-    # don't want to do that. Auth0 domains are tied to a account, and
-    # this is our auth0 domain for the paid account that 2i2c has.
-    auth0 = config["auth0"]
-
-    k = KeyProvider(auth0["domain"], auth0["client_id"], auth0["client_secret"])
 
     config_file_path = find_absolute_path_to_cluster_file(cluster_name)
     with open(config_file_path) as f:
@@ -181,13 +173,13 @@ def deploy(
         if hub_name:
             hub = next((hub for hub in hubs if hub.spec["name"] == hub_name), None)
             print_colour(f"Deploying hub {hub.spec['name']}...")
-            hub.deploy(k, dask_gateway_version)
+            hub.deploy(dask_gateway_version, debug, dry_run)
         else:
             for i, hub in enumerate(hubs):
                 print_colour(
                     f"{i+1} / {len(hubs)}: Deploying hub {hub.spec['name']}..."
                 )
-                hub.deploy(k, dask_gateway_version)
+                hub.deploy(dask_gateway_version, debug, dry_run)
 
 
 @app.command()

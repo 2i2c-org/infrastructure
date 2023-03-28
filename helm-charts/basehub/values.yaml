@@ -101,6 +101,10 @@ jupyterhub:
         - pnasrat@2i2c.org
         - sgibson@2i2c.org
         - yuvipanda@2i2c.org
+    homepage:
+      gitRepoUrl: "https://github.com/2i2c-org/default-hub-homepage"
+      # TODO: make main the default branch in the repo above
+      gitRepoBranch: "master"
   ingress:
     enabled: true
     annotations:
@@ -262,7 +266,7 @@ jupyterhub:
     defaultUrl: /tree
     image:
       name: quay.io/2i2c/2i2c-hubs-image
-      tag: "05c6a27dc942"
+      tag: "b16f88c26490"
     storage:
       type: static
       static:
@@ -400,7 +404,77 @@ jupyterhub:
                   - value: "/rstudio"
                     title: RStudio
                     description: An IDE For R, created by the RStudio company
-
+    initContainers:
+      - name: templates-clone
+        image: alpine/git
+        args:
+          - clone
+          - --
+          - $(GIT_REPO_URL)
+          - /srv/repo
+        env:
+          - name: GIT_REPO_URL
+            valueFrom:
+              configMapKeyRef:
+                name: hub-custom-templates-config
+                key: GIT_REPO_URL
+        securityContext:
+          runAsUser: 1000
+          runAsGroup: 1000
+          allowPrivilegeEscalation: False
+          readOnlyRootFilesystem: True
+        volumeMounts:
+          - name: custom-templates
+            mountPath: /srv/repo
+      - name: templates-ownership-fix
+        image: alpine/git
+        command:
+          - /bin/sh
+        args:
+          - -c
+          - ls -lhd /srv/repo && chown 1000:1000 /srv/repo && ls -lhd /srv/repo
+        securityContext:
+          runAsUser: 0
+        volumeMounts:
+          - name: custom-templates
+            mountPath: /srv/repo
+    extraContainers:
+      - name: templates-sync
+        image: alpine/git
+        workingDir: /srv/repo
+        command:
+          - /bin/sh
+        args:
+          - -c
+          - |
+            ls -lhd /srv/repo;
+            while true; do git fetch origin;
+            git reset --hard origin/$(GIT_REPO_BRANCH);
+            sleep 5m; done
+        env:
+          - name: GIT_REPO_BRANCH
+            valueFrom:
+              configMapKeyRef:
+                name: hub-custom-templates-config
+                key: GIT_REPO_BRANCH
+        securityContext:
+          runAsUser: 1000
+          runAsGroup: 1000
+          allowPrivilegeEscalation: False
+          readOnlyRootFilesystem: True
+        volumeMounts:
+          - name: custom-templates
+            mountPath: /srv/repo
+    extraVolumes:
+      - name: custom-templates
+        emptyDir: {}
+    extraVolumeMounts:
+      - mountPath: /usr/local/share/jupyterhub/custom_templates
+        name: custom-templates
+        subPath: templates
+      - mountPath: /usr/local/share/jupyterhub/static/extra-assets
+        name: custom-templates
+        subPath: extra-assets
     services:
       configurator:
         url: http://configurator:10101

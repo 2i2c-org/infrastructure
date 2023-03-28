@@ -1,4 +1,12 @@
 jupyterhub:
+  ingress:
+    hosts: [elcamino.cloudbank.2i2c.cloud]
+    tls:
+      - hosts: [elcamino.cloudbank.2i2c.cloud]
+        secretName: https-auto-tls
+  proxy:
+    https:
+      hosts: [elcamino.cloudbank.2i2c.cloud]
   custom:
     2i2c:
       add_staff_user_ids_to_admin_users: true
@@ -25,6 +33,14 @@ jupyterhub:
       guarantee: 2G
   hub:
     config:
+      JupyterHub:
+        authenticator_class: cilogon
+      CILogonOAuthenticator:
+        oauth_callback_url: "https://elcamino.cloudbank.2i2c.cloud/hub/oauth_callback"
+        username_claim: "email"
+        # Only show the option to login with Google
+        shown_idps:
+          - http://google.com/accounts/o8/id
       Authenticator:
         allowed_users: &elcamino_users
           - ericvd@gmail.com

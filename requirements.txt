@@ -5,10 +5,6 @@
 # ruamel.yaml is used to read and write .yaml files.
 ruamel.yaml==0.17.*
 
-# auth0 is used to communicate with Auth0's REST API that we integrate with in
-# various ways.
-auth0-python==3.*
-
 # jsonschema is used for validating cluster.yaml configurations
 jsonschema==4.*
 
@@ -29,8 +25,14 @@ jinja2==3.*
 typer==0.7.*
 escapism==1.*
 
-# Used for GCP billing info
-google-cloud-bigquery
-google-cloud-billing
-google-cloud-logging
-gspread
+# Used for GCP billing management
+google-cloud-bigquery==3.8.*
+google-cloud-billing==1.10.*
+google-cloud-logging==3.5.*
+gspread==5.7.*
+
+# requests is used by deployer/cilogon_app.py
+requests==2.*
+
+# auth0 is used to communicate with Auth0's REST API that we support as a deployer sub-cmd
+auth0-python==3.*

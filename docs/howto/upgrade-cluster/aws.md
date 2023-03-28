@@ -21,6 +21,11 @@ cluster is unused or that the maintenance is communicated ahead of time.
    Install required tools as documented in [](new-cluster:aws-required-tools),
    and ensure you have a recent version of eksctl.
 
+   ```{warning}
+   Using a modern version of `eksctl` has been found important historically, make
+   sure to use the latest version to avoid debugging an already fixed bug!
+   ```
+
 2. *Consider changes to `template.jsonnet`*
 
    The eksctl config jinja2 template `eksctl/template.jsonnet` was once used to
@@ -166,7 +171,7 @@ cluster is unused or that the maintenance is communicated ahead of time.
       name, so the old node group can be deleted with the following command.
 
       ```bash
-      eksctl delete nodegroup --config-file=$CLUSTER_NAME.eksctl.yaml --include="core-a,nb-*,dask-*" --approve --drain=false
+      eksctl delete nodegroup --config-file=$CLUSTER_NAME.eksctl.yaml --include="core-a,nb-*,dask-*" --approve --drain=true
       ```
 
       Rename (part 3/3) the core node group one final time in the config to its
@@ -187,7 +192,7 @@ cluster is unused or that the maintenance is communicated ahead of time.
 5. *Upgrad EKS add-ons (takes ~3*5s)*
 
    As documented in `eksctl`'s documentation[^1], we also need to upgrade three
-   EKS add-ons enabled by default.
+   EKS add-ons enabled by default, and one we have added manually.
 
    ```bash
    # upgrade the kube-proxy daemonset
@@ -198,21 +203,12 @@ cluster is unused or that the maintenance is communicated ahead of time.
 
    # upgrade the coredns deployment
    eksctl utils update-coredns --config-file=$CLUSTER_NAME.eksctl.yaml --approve
+
+   # upgrade the aws-ebs-csi-driver addon's deployment and daemonset
+   eksctl update addon --config-file=$CLUSTER_NAME.eksctl.yaml
    ```
 
    ````{note} Common failures
-   You may find that the aws-node daemonset's pods fail to start because of a
-   too restrictive container securityContext not running as root.
-
-   This is https://github.com/weaveworks/eksctl/issues/6048 and can be resolved
-   by removing `runAsNonRoot: true` and `allowPrivilegeEscalation: false`. Using
-   `kubectl edit daemonset aws-node --output-patch=true` led to this `kubectl
-   patch` snippet:
-
-   ```bash
-   kubectl patch daemonset -n kube-system aws-node --patch='{"spec":{"template":{"spec":{"$setElementOrder/containers":[{"name":"aws-node"}],"containers":[{"name":"aws-node","securityContext":{"allowPrivilegeEscalation":null,"runAsNonRoot":null}}]}}}}'
-   ```
-
    The kube-proxy deamonset's pods may fail to pull the image, to resolve this visit AWS EKS docs on [managing coredns](https://docs.aws.amazon.com/eks/latest/userguide/managing-coredns.html) to identify the version to use and update the coredns deployment's container image to match it.
 
    ```bash
