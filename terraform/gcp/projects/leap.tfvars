@@ -84,6 +84,10 @@ dask_nodes = {
   "medium" : {
     min : 0,
     max : 200,
+    # Disable preemptive nodes for dask so we can remove possible complications
+    # on why some dask computations are dying off.
+    # See https://github.com/2i2c-org/infrastructure/issues/2396
+    preemptible: false,
     machine_type : "n2-highmem-16",
     labels : {},
     gpu : {
