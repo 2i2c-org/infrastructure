@@ -2,6 +2,7 @@ import os
 import subprocess
 from pathlib import Path
 
+import requests
 from ruamel.yaml import YAML
 
 from ..file_acquisition import find_absolute_path_to_cluster_file, get_decrypted_file
@@ -90,6 +91,33 @@ def get_cluster_prometheus_creds(cluster_name):
             prometheus_config = yaml.load(f)
 
     return prometheus_config.get("prometheusIngressAuthSecret", {})
+
+
+def get_cluster_prometheus(cluster_name):
+    """
+    Retrieve an http session of the prometheus instance running on the `cluster_name` cluster.
+    The HTTP Session can be queried https://prometheus.io/docs/prometheus/latest/querying/api/
+
+    Example:
+        with get_cluster_prometheus("2i2c) as s:
+             r = s.get(f"{url}/api/v1/query", params={'query': 'container_cpu_user_seconds_total'})
+             print(r.json())
+    Args:
+        cluster_name: name of the cluster
+    Returns:
+        string object: https address of the prometheus instance without a trailing slash.
+        requests.Session object: http session on the prometheus instance
+    """
+    # Get the prometheus address for cluster_name
+    prometheus_url = get_cluster_prometheus_address(cluster_name)
+
+    # Get the credentials of this prometheus instance
+    prometheus_creds = get_cluster_prometheus_creds(cluster_name)
+    session = requests.Session()
+    session.auth = requests.auth.HTTPBasicAuth(
+        prometheus_creds["username"], prometheus_creds["password"]
+    )
+    return (f"https://{prometheus_url}", session)
 
 
 def get_grafana_admin_password():

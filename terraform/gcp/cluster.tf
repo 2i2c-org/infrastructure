@@ -358,7 +358,7 @@ resource "google_container_node_pool" "dask_worker" {
 
   node_config {
 
-    preemptible = true
+    preemptible = each.value.preemptible
 
     # Balanced disks are much faster than standard disks, and much cheaper
     # than SSD disks. It contributes heavily to how fast new nodes spin up,
