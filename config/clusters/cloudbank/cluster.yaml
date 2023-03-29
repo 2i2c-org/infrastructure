@@ -14,10 +14,7 @@ hubs:
     display_name: "Cloudbank Staging"
     domain: staging.cloudbank.2i2c.cloud
     helm_chart: basehub
-    helm_chart_values_files:
-      # The order in which you list files here is the order the will be passed
-      # to the helm upgrade command in, and that has meaning. Please check
-      # that you intend for these files to be applied in this order.
+      - common.values.yaml
       - staging.values.yaml
       - enc-staging.secret.values.yaml
   - name: ccsf
@@ -25,9 +22,7 @@ hubs:
     domain: ccsf.cloudbank.2i2c.cloud
     helm_chart: basehub
     helm_chart_values_files:
-      # The order in which you list files here is the order the will be passed
-      # to the helm upgrade command in, and that has meaning. Please check
-      # that you intend for these files to be applied in this order.
+      - common.values.yaml
       - ccsf.values.yaml
       - enc-ccsf.secret.values.yaml
   - name: csm
@@ -35,9 +30,7 @@ hubs:
     domain: csm.cloudbank.2i2c.cloud
     helm_chart: basehub
     helm_chart_values_files:
-      # The order in which you list files here is the order the will be passed
-      # to the helm upgrade command in, and that has meaning. Please check
-      # that you intend for these files to be applied in this order.
+      - common.values.yaml
       - csm.values.yaml
       - enc-csm.secret.values.yaml
   - name: elcamino
@@ -45,9 +38,7 @@ hubs:
     domain: elcamino.cloudbank.2i2c.cloud
     helm_chart: basehub
     helm_chart_values_files:
-      # The order in which you list files here is the order the will be passed
-      # to the helm upgrade command in, and that has meaning. Please check
-      # that you intend for these files to be applied in this order.
+      - common.values.yaml
       - elcamino.values.yaml
       - enc-elcamino.secret.values.yaml
   - name: glendale
@@ -55,9 +46,7 @@ hubs:
     domain: glendale.cloudbank.2i2c.cloud
     helm_chart: basehub
     helm_chart_values_files:
-      # The order in which you list files here is the order the will be passed
-      # to the helm upgrade command in, and that has meaning. Please check
-      # that you intend for these files to be applied in this order.
+      - common.values.yaml
       - glendale.values.yaml
       - enc-glendale.secret.values.yaml
   - name: howard
@@ -65,9 +54,7 @@ hubs:
     domain: howard.cloudbank.2i2c.cloud
     helm_chart: basehub
     helm_chart_values_files:
-      # The order in which you list files here is the order the will be passed
-      # to the helm upgrade command in, and that has meaning. Please check
-      # that you intend for these files to be applied in this order.
+      - common.values.yaml
       - howard.values.yaml
       - enc-howard.secret.values.yaml
   - name: miracosta
@@ -75,9 +62,7 @@ hubs:
     domain: miracosta.cloudbank.2i2c.cloud
     helm_chart: basehub
     helm_chart_values_files:
-      # The order in which you list files here is the order the will be passed
-      # to the helm upgrade command in, and that has meaning. Please check
-      # that you intend for these files to be applied in this order.
+      - common.values.yaml
       - miracosta.values.yaml
       - enc-miracosta.secret.values.yaml
   - name: skyline
@@ -85,9 +70,7 @@ hubs:
     domain: skyline.cloudbank.2i2c.cloud
     helm_chart: basehub
     helm_chart_values_files:
-      # The order in which you list files here is the order the will be passed
-      # to the helm upgrade command in, and that has meaning. Please check
-      # that you intend for these files to be applied in this order.
+      - common.values.yaml
       - skyline.values.yaml
       - enc-skyline.secret.values.yaml
   - name: demo
@@ -95,9 +78,7 @@ hubs:
     domain: demo.cloudbank.2i2c.cloud
     helm_chart: basehub
     helm_chart_values_files:
-      # The order in which you list files here is the order the will be passed
-      # to the helm upgrade command in, and that has meaning. Please check
-      # that you intend for these files to be applied in this order.
+      - common.values.yaml
       - demo.values.yaml
       - enc-demo.secret.values.yaml
   - name: fresno
@@ -105,9 +86,7 @@ hubs:
     domain: fresno.cloudbank.2i2c.cloud
     helm_chart: basehub
     helm_chart_values_files:
-      # The order in which you list files here is the order the will be passed
-      # to the helm upgrade command in, and that has meaning. Please check
-      # that you intend for these files to be applied in this order.
+      - common.values.yaml
       - fresno.values.yaml
       - enc-fresno.secret.values.yaml
   - name: laney
@@ -115,9 +94,7 @@ hubs:
     domain: laney.cloudbank.2i2c.cloud
     helm_chart: basehub
     helm_chart_values_files:
-      # The order in which you list files here is the order the will be passed
-      # to the helm upgrade command in, and that has meaning. Please check
-      # that you intend for these files to be applied in this order.
+      - common.values.yaml
       - laney.values.yaml
       - enc-laney.secret.values.yaml
   - name: lassen
@@ -125,9 +102,7 @@ hubs:
     domain: lassen.cloudbank.2i2c.cloud
     helm_chart: basehub
     helm_chart_values_files:
-      # The order in which you list files here is the order the will be passed
-      # to the helm upgrade command in, and that has meaning. Please check
-      # that you intend for these files to be applied in this order.
+      - common.values.yaml
       - lassen.values.yaml
       - enc-lassen.secret.values.yaml
   - name: sbcc
@@ -135,9 +110,7 @@ hubs:
     domain: sbcc.cloudbank.2i2c.cloud
     helm_chart: basehub
     helm_chart_values_files:
-      # The order in which you list files here is the order the will be passed
-      # to the helm upgrade command in, and that has meaning. Please check
-      # that you intend for these files to be applied in this order.
+      - common.values.yaml
       - sbcc.values.yaml
       - enc-sbcc.secret.values.yaml
   - name: lacc
@@ -145,9 +118,7 @@ hubs:
     domain: lacc.cloudbank.2i2c.cloud
     helm_chart: basehub
     helm_chart_values_files:
-      # The order in which you list files here is the order the will be passed
-      # to the helm upgrade command in, and that has meaning. Please check
-      # that you intend for these files to be applied in this order.
+      - common.values.yaml
       - lacc.values.yaml
       - enc-lacc.secret.values.yaml
   - name: mills
@@ -155,9 +126,7 @@ hubs:
     domain: datahub.mills.edu
     helm_chart: basehub
     helm_chart_values_files:
-      # The order in which you list files here is the order the will be passed
-      # to the helm upgrade command in, and that has meaning. Please check
-      # that you intend for these files to be applied in this order.
+      - common.values.yaml
       - mills.values.yaml
       - enc-mills.secret.values.yaml
   - name: palomar
@@ -165,9 +134,7 @@ hubs:
     domain: palomar.cloudbank.2i2c.cloud
     helm_chart: basehub
     helm_chart_values_files:
-      # The order in which you list files here is the order the will be passed
-      # to the helm upgrade command in, and that has meaning. Please check
-      # that you intend for these files to be applied in this order.
+      - common.values.yaml
       - palomar.values.yaml
       - enc-palomar.secret.values.yaml
   - name: pasadena
@@ -175,9 +142,7 @@ hubs:
     domain: pasadena.cloudbank.2i2c.cloud
     helm_chart: basehub
     helm_chart_values_files:
-      # The order in which you list files here is the order the will be passed
-      # to the helm upgrade command in, and that has meaning. Please check
-      # that you intend for these files to be applied in this order.
+      - common.values.yaml
       - pasadena.values.yaml
       - enc-pasadena.secret.values.yaml
   - name: sjcc
@@ -185,9 +150,7 @@ hubs:
     domain: sjcc.cloudbank.2i2c.cloud
     helm_chart: basehub
     helm_chart_values_files:
-      # The order in which you list files here is the order the will be passed
-      # to the helm upgrade command in, and that has meaning. Please check
-      # that you intend for these files to be applied in this order.
+      - common.values.yaml
       - sjcc.values.yaml
       - enc-sjcc.secret.values.yaml
   - name: tuskegee
@@ -195,9 +158,7 @@ hubs:
     domain: tuskegee.cloudbank.2i2c.cloud
     helm_chart: basehub
     helm_chart_values_files:
-      # The order in which you list files here is the order the will be passed
-      # to the helm upgrade command in, and that has meaning. Please check
-      # that you intend for these files to be applied in this order.
+      - common.values.yaml
       - tuskegee.values.yaml
       - enc-tuskegee.secret.values.yaml
   - name: avc
@@ -205,9 +166,7 @@ hubs:
     domain: avc.cloudbank.2i2c.cloud
     helm_chart: basehub
     helm_chart_values_files:
-      # The order in which you list files here is the order the will be passed
-      # to the helm upgrade command in, and that has meaning. Please check
-      # that you intend for these files to be applied in this order.
+      - common.values.yaml
       - avc.values.yaml
       - enc-avc.secret.values.yaml
   - name: csu
@@ -215,8 +174,6 @@ hubs:
     domain: csu.cloudbank.2i2c.cloud
     helm_chart: basehub
     helm_chart_values_files:
-      # The order in which you list files here is the order the will be passed
-      # to the helm upgrade command in, and that has meaning. Please check
-      # that you intend for these files to be applied in this order.
+      - common.values.yaml
       - csu.values.yaml
       - enc-csu.secret.values.yaml
