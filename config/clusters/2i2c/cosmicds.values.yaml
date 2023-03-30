@@ -1,0 +1,50 @@
+jupyterhub:
+  proxy:
+    https:
+      hosts:
+        - cosmicds.2i2c.cloud
+  ingress:
+    hosts:
+      - cosmicds.2i2c.cloud
+    tls:
+      - secretName: https-auto-tls
+        hosts:
+          - cosmicds.2i2c.cloud
+  custom:
+    2i2c:
+      add_staff_user_ids_to_admin_users: true
+      add_staff_user_ids_of_type: "github"
+    homepage:
+      templateVars:
+        org:
+          name: Cosmic DS, Harvard
+          url: https://www.cosmicds.cfa.harvard.edu/
+          logo_url: https://pweb.cfa.harvard.edu/sites/default/files/styles/max_650x650/public/2021-02/CosmicDS_Logo_NoNASA_logo---Allison-Blackwell.jpg?itok=Y44JjtDv
+        designed_by:
+          name: 2i2c
+          url: https://2i2c.org
+        operated_by:
+          name: 2i2c
+          url: https://2i2c.org
+        funded_by:
+          name: Cosmic DS, Harvard
+          url: https://www.cosmicds.cfa.harvard.edu/
+  hub:
+    config:
+      Authenticator:
+        admin_users:
+          - nmearl
+          - patudom
+      JupyterHub:
+        authenticator_class: cilogon
+      CILogonOAuthenticator:
+        scope:
+          - "email"
+          - "profile"
+        oauth_callback_url: https://cosmicds.2i2c.cloud/hub/oauth_callback
+        shown_idps:
+          - http://github.com/login/oauth/authorize
+        allowed_idps:
+          http://github.com/login/oauth/authorize:
+            username_derivation:
+              username_claim: "preferred_username"
