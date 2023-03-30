@@ -5,6 +5,12 @@ gcp:
   project: leap-pangeo
   cluster: leap-cluster
   zone: us-central1
+  billing:
+    paid_by_us: true
+    bigquery:
+      project: leap-pangeo
+      dataset: cloud_costs
+      billing_id: 01A164-923D17-3199D9
 support:
   helm_chart_values_files:
     - support.values.yaml

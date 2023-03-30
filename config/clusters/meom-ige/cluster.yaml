@@ -5,6 +5,8 @@ gcp:
   project: meom-ige-cnrs
   cluster: meom-ige-cluster
   zone: us-central1-b
+  billing:
+    paid_by_us: false
 support:
   helm_chart_values_files:
     - support.values.yaml

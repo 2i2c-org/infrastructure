@@ -22,6 +22,10 @@
    Make sure the correct project is selected while enabling these!
    ```
 
+7. If we have direct access to the billing account used, we must set up
+   [billing export to BigQuery](new-gcp-project:billing-export).
+   This allows us to figure out how much this project is costing over a period of time.
+   
 8. [Setup a new cluster](new-cluster:new-cluster) inside it via Terraform
 
 ## Checking quotas and requesting increases
@@ -42,3 +46,43 @@ Finally, we should check what quotas are enforced on the project and increase th
    It is not possible to provide the `support@2i2c.org` email here, or even cc it.
    You have to provide then email you are signed in with.
    ```
+
+(new-gcp-project:billing-export)=
+## Set up project cost export to bigquery
+
+Each time we set up a *new billing account*, we need to set it up to export detailed
+usage costs to a GCP BigQuery dataset, so we can automatically figure out how much each
+project costs us. Ideally this would be doable with the GCP billing API, as we do not
+need detailed metrics - just total cost. However, the GCP billing API is super limited,
+and does not allow for this. So we need to use bigquery instead.
+
+1. Go to the [Billing Console](https://console.cloud.google.com/billing/linkedaccount), and
+   make sure you have selected the correct project in the projects drop down in the top bar.
+
+   ```{tip}
+   If you can't find the project you're looking for, click the "All" tab to see all projects that you have access to.
+   ```
+
+2. Select "Go to Linked Billing account".
+
+3. Select "Billing Export" in the left sidebar.
+
+4. Under "Detailed cost usage", select "Edit Settings".
+
+5. Select the project under which the bigquery dataset should be created. If the same
+   billing account is used for multiple projects, it is alright to centralize them in
+   a single project, *if* it is ok for users of one project to know the costs of the other.
+
+6. Select the "dataset" field, and select "Create a new dataset".
+
+7. Provide a name (defaulting to `cloud_costs`) for the name of the datasets.
+
+8. Select "Region" as the location type, and `us-central1` as the region.
+
+9. Select the "Create dataset" button
+
+10. Select the created dataset in the "Data set" field now.
+
+11. Click "Save".
+
+Bigquery export is now set up!

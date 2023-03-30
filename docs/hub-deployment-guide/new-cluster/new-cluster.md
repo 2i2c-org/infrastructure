@@ -292,7 +292,34 @@ gcp:
   # The GCP zone the cluster in deployed in. For multi-regional clusters, you
   # may have to strip the last identifier, i.e., 'us-central1-a' becomes 'us-central1'
   zone: <gcp-zone>
+  billing:
+   # Set to true if billing for this cluster is paid for by the 2i2c card
+   paid_by_us: true
+   bigquery:
+    # contains information about bigquery billing export (https://cloud.google.com/billing/docs/how-to/export-data-bigquery)
+    # for calculating how much this cluster costs us. Required if `paid_by_us` is
+    # set to true.
+    project: <id-of-gcp-project-where-bigquery-dataset-lives>
+    dataset: <id-of-bigquery-dataset>
+    billing_id: <id-of-billing-account-associated-with-this-project>
 ```
+
+### Billing information
+
+For projects where we are paying the cloud bill & then passing costs through, you need to fill
+in information under` gcp.billing.bigquery` and set `gcp.billing.paid_by_us` to `true`. Partnerships
+should be able to tell you if we are doing cloud costs pass through or not, and eventually this should
+be provided by a single source of truth for all contracts.
+
+1. Going to the [Billing Tab](https://console.cloud.google.com/billing/linkedaccount) on Google Cloud Console
+2. Make sure the correct project is selected in the top bar. You might have to select the 'All' tab in the
+   project chooser if you do not see the project right away.
+3. Click 'Go to billing account'
+4. In the default view (Overview) that opens, you can find the value for `billing_id` in the right sidebar,
+   under "Billing Account". It should be of the form `XXXXXX-XXXXXX-XXXXXX`.
+5. Select "Billing export" on the left navigation bar, and you will find the values for `project` and
+   `dataset` under "Detailed cost usage".
+6. If "Detailed cost usage" is not set up, you should [enable it](new-gcp-project:billing-export)
 ````
 ````{tab-item} Azure (kubeconfig)
 :sync: azure-key

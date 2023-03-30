@@ -25,6 +25,10 @@ jinja2==3.*
 typer==0.7.*
 escapism==1.*
 
+# Used for GCP billing management
+google-cloud-bigquery==3.8.*
+gspread==5.7.*
+
 # requests is used by deployer/cilogon_app.py
 requests==2.*
 
