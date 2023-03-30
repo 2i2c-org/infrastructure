@@ -1,9 +1,3 @@
-"""
-+TODO: Validate billing export is setup for all clusters we 'manage'
-+TODO: Write a JSON Schema for the billing source of truth
-+TODO: Differentiate between billing accounts we should *invoice* and ones we don't need to *invoice*
-+TODO: Write documentation on when to use this and who uses it
-"""
 import re
 from datetime import datetime
 from enum import Enum
