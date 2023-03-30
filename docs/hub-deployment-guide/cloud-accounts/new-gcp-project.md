@@ -23,7 +23,7 @@
    ```
 
 7. If we have direct access to the billing account used, we must set up
-   [billing export to BigQuery](https://cloud.google.com/billing/docs/how-to/export-data-bigquery#setup).
+   [billing export to BigQuery](new-gcp-project:billing-export).
    This allows us to figure out how much this project is costing over a period of time.
    
 8. [Setup a new cluster](new-cluster:new-cluster) inside it via Terraform
@@ -47,6 +47,7 @@ Finally, we should check what quotas are enforced on the project and increase th
    You have to provide then email you are signed in with.
    ```
 
+(new-gcp-project:billing-export)=
 ## Set up project cost export to bigquery
 
 Each time we set up a *new billing account*, we need to set it up to export detailed
