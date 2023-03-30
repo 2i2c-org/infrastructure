@@ -292,6 +292,16 @@ gcp:
   # The GCP zone the cluster in deployed in. For multi-regional clusters, you
   # may have to strip the last identifier, i.e., 'us-central1-a' becomes 'us-central1'
   zone: <gcp-zone>
+  billing:
+   # Set to true if billing for this cluster is paid for by the 2i2c card
+   paid_by_us: true
+   bigquery:
+    # contains information about bigquery billing export (https://cloud.google.com/billing/docs/how-to/export-data-bigquery)
+    # for calculating how much this cluster costs us. Required if `paid_by_us` is
+    # set to true
+    project: <id-of-gcp-project-where-bigquery-dataset-lives>
+    dataset: <id-of-bigquery-dataset>
+    billing_id: <id-of-billing-account-associated-with-this-project>
 ```
 ````
 ````{tab-item} Azure (kubeconfig)
