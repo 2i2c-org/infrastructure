@@ -50,8 +50,8 @@ class CostTableOutputFormats(Enum):
 @app.command()
 def generate_cost_table(
     start_month: str = typer.Option(
-        (datetime.today() - relativedelta(months=6)).replace(day=1).strftime("%Y-%m"),
-        help="Starting month (as YYYY-MM) to produce cost data for. Defaults to 6 invoicing months ago.",
+        (datetime.today() - relativedelta(months=12)).replace(day=1).strftime("%Y-%m"),
+        help="Starting month (as YYYY-MM) to produce cost data for. Defaults to 12 invoicing months ago.",
         callback=month_validate,
     ),
     end_month: str = typer.Option(
