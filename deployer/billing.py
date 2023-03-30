@@ -28,7 +28,9 @@ def month_validate(month_str: str):
     """
     match = re.match(r"(\d\d\d\d)-(\d\d)", month_str)
     if not match:
-        raise typer.BadParameter(f"{month_str} should be formatted as YYYY-MM")
+        raise typer.BadParameter(
+            f"{month_str} should be formatted as YYYY-MM (eg: 2023-02)"
+        )
     return f"{match.group(1)}{match.group(2)}"
 
 
