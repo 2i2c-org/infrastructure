@@ -134,3 +134,10 @@ hubs:
     helm_chart_values_files:
       - ucmerced.values.yaml
       - enc-ucmerced.secret.values.yaml
+  - name: cosmicds
+    display_name: "Cosmic DS"
+    domain: cosmicds.2i2c.cloud
+    helm_chart: basehub
+    helm_chart_values_files:
+      - cosmicds.values.yaml
+      - enc-cosmicds.secret.values.yaml

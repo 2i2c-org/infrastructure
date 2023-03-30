@@ -19,6 +19,8 @@ grafana:
     auth.github:
       enabled: true
       allowed_organizations: 2i2c-org
+    feature_toggles:
+      enable: exploreMixedDatasource
   ingress:
     hosts:
       - grafana.pilot.2i2c.cloud
