@@ -100,6 +100,22 @@ prometheus:
       - key: k8s.dask.org/dedicated
         value: worker
         effect: NoSchedule
+    # resources for the node-exporter was set after inspecting cpu and memory
+    # use via prometheus and grafana.
+    #
+    # node-exporter is typically found using between 0-3m CPU and 2-22Mi memory.
+    #
+    # PromQL queries for CPU and memory use:
+    # - CPU:    sum(rate(container_cpu_usage_seconds_total{container="node-exporter", namespace="support"}[5m])) by (pod)
+    # - Memory: sum(container_memory_usage_bytes{container="node-exporter", namespace="support"}) by (pod)
+    #
+    resources:
+      limits:
+        cpu: 5m
+        memory: 30Mi
+      requests:
+        cpu: 5m
+        memory: 30Mi
 
   networkPolicy:
     enabled: true
