@@ -241,6 +241,33 @@ grafana:
 #
 cryptnono:
   enabled: true
+  # resources for cryptnono was set after inspecting cpu and memory use via
+  # prometheus and grafana.
+  #
+  # cryptnono has an init container (kubectl-trace-init) and another container
+  # (trace). The init container has been found using up to 1.6Gi and up to about
+  # 600m for 4 minutes. The main container has been found using up to 150Mi but
+  # typically below 100Mi, and miniscule amounts of CPU (0-3m).
+  #
+  # Since cryptnono is a non-critical service, we are at the moment allowing it
+  # to be evicted during node memory pressure by providing a low memory request
+  # compared to the limit. We are also not requesting significant amounts of CPU
+  # so that it doesn't compete well with others initially.
+  #
+  # Note that as of now 2023-03-31 (8367fa5 in yuvipanda/cryptnono), the
+  # resources configuration configure both containers.
+  #
+  # PromQL queries for CPU and memory use:
+  # - CPU:    sum(rate(container_cpu_usage_seconds_total{container="kube-trace-init", namespace="support"}[5m])) by (pod)
+  # - Memory: sum(container_memory_usage_bytes{container="kube-trace-init", namespace="support"}) by (pod)
+  #
+  resources:
+    limits:
+      cpu: 800m
+      memory: 2Gi
+    requests:
+      cpu: 5m
+      memory: 100Mi
 
 # Configuration of templates provided directly by this chart
 # -------------------------------------------------------------------------------
