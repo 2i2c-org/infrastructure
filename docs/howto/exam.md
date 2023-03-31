@@ -22,7 +22,7 @@ This page documents what we do to prep, based on our prior experiences.
    is done.
 
 3. The instructor running the exam should test out their exam on the hub,
-   ane make sure that it will complete within the amount of resources assigned
+   and make sure that it will complete within the amount of resources assigned
    to it. They should also make sure that the environment (packages, python
    versions, etc) are set up appropriately. From the time they test this until
    the exam is over, new environment changes are put on hold.
