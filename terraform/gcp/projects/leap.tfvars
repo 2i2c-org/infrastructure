@@ -35,11 +35,11 @@ user_buckets = {
   # For https://github.com/2i2c-org/infrastructure/issues/1230#issuecomment-1278183441
   "persistent" : {
     "delete_after" : null,
-    "extra_admin_members": ["group:leap-external-bucket-users@2i2c.org"]
+    "extra_admin_members": ["group:leap-persistent-bucket-writers@googlegroups.com"]
   },
   "persistent-staging" : {
     "delete_after" : null,
-    "extra_admin_members": ["group:leap-external-bucket-users@2i2c.org"]
+    "extra_admin_members": ["group:leap-persistent-bucket-writers@googlegroups.com"]
   }
 }
 
