@@ -19,7 +19,27 @@ required:
   - userServiceAccount
   - dex
   - staticWebsite
+  - ingressBasicAuth
 properties:
+  ingressBasicAuth:
+    type: object
+    additionalProperties: true
+    required:
+      - enabled
+    properties:
+      enabled:
+        type: boolean
+        description: |
+          Enable setting up secret with username & password for basic auth
+          to protect the entire hub
+      username:
+        type: string
+        description: |
+          Username for basic authentication
+      password:
+        type: string
+        description: |
+          Password for basic authentication
   staticWebsite:
     type: object
     additionalProperties: false
