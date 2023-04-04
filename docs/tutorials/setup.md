@@ -98,7 +98,7 @@ time you use any of our scripts.
 
 Install pre-commit [pre-commit installation instruction](https://pre-commit.com/#introduction)
 
-In the root of the checked out `infrastructure` repo run the below ton install
+In the root of the checked out `infrastructure` repo run the below to install
 the local pre-commit hooks.
 
 ```
