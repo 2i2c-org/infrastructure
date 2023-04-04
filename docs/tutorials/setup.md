@@ -96,12 +96,14 @@ time you use any of our scripts.
 
 ## Step 3: Setup the git pre-commit hooks
 
-In the root of the checked out `infrastructure` repo, with your choice of Python virtual
-environment activated install `pre-commit` with your Python package manager.
+Install pre-commit [pre-commit installation instruction](https://pre-commit.com/#introduction)
 
-See [pre-commit installation instruction](https://pre-commit.com/#introduction)
+In the root of the checked out `infrastructure` repo run the below ton install
+the local pre-commit hooks.
 
-Run `pre-commit install --install-hooks` to install the local pre-commit hooks.
+```
+pre-commit install --install-hooks
+``` 
 
 ## Step 4: Authenticate with Google Cloud to decrypt our secret files
 
