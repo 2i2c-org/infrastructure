@@ -109,6 +109,8 @@ jupyterhub:
     config:
       EmailAuthenticatingCILogonOAuthenticator:
         allowed_domains:
+          # Email addresses must originate in one of these domains
+          # to log in to the callysto hub
           - 2i2c.org
           - btps.ca
           - callysto.ca
