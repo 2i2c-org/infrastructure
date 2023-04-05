@@ -33,3 +33,9 @@ shared-db.md
 :caption: User image
 image.md
 ```
+
+```{toctree}
+:maxdepth: 2
+:caption: Hub Types
+ephemeral.md
+```
