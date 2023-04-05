@@ -30,7 +30,8 @@ user_buckets = {
     "extra_admin_members": ["group:m2lines-persistent-bucket-writers@googlegroups.com"]
   },
   "public-persistent": {
-    "delete_after": null
+    "delete_after": null,
+    "extra_admin_members": ["group:m2lines-persistent-bucket-writers@googlegroups.com"]
   },
 
 }
