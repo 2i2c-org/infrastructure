@@ -22,6 +22,9 @@ The limitations of this set up are:
 1. No users means no *admin users*, so the JupyterHub configurator is unavailable.
    All config must be set in our config files, and deployed via GitHub.
 2. No home page is visible, so our home page customizations do not work.
+3. We do *not* cull users, because that would [cause problems](https://blog.jupyter.org/accurately-counting-daily-weekly-monthly-active-users-on-jupyterhub-6fbec6c6ce2f)
+   with counting active users. This is a trade-off, as if we end up with a *huge*
+   list of users, it might slow down hub deployments.
 
 ## Authentication with `tmpauthenticator`
 
