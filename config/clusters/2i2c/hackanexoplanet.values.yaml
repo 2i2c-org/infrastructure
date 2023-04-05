@@ -3,11 +3,6 @@ ingressBasicAuth:
   # Password and username in enc-ephemeral-demo.secret.values.yaml
 
 jupyterhub:
-  cull:
-    # We are using tmpauthenticator, which creates brand new users
-    # each time someone starts a server. We want to clear those out
-    # when they are no longer in use.
-    users: true
   prePuller:
     # Startup performance is important for this event, and so we use
     # pre-puller to make sure the images are already present on the
