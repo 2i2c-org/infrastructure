@@ -198,7 +198,7 @@ variable "enable_network_policy" {
 }
 
 variable "user_buckets" {
-  type        = map(object({ delete_after : number, extra_admin_members: list(string) }))
+  type        = map(object({ delete_after : number, extra_admin_members: optional(list(string), []) }))
   default     = {}
   description = <<-EOT
   GCS Buckets to be created.
