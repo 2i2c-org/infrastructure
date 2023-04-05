@@ -207,6 +207,12 @@ grafana:
   ingress:
     enabled: true
     annotations:
+      # nginx.ingress.kubernetes.io/proxy-body-size increased from the default
+      # of 1m to avoid HTTP 413 (Request Entity Too Large) when making POST
+      # request (via jupyterhub/grafana-dashboard's deploy script, from a github
+      # workflow) to update dashboards with json files representing them.
+      #
+      nginx.ingress.kubernetes.io/proxy-body-size: 64m
       kubernetes.io/ingress.class: nginx
       cert-manager.io/cluster-issuer: letsencrypt-prod
 
