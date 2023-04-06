@@ -35,7 +35,13 @@ local notebookNodes = [
     { instanceType: "r5.2xlarge" },
     { instanceType: "r5.8xlarge" },
     { instanceType: "x1.16xlarge" },
-    { instanceType: "x1.32xlarge" }
+    { instanceType: "x1.32xlarge" },
+    {
+        instanceType: "g4dn.xlarge", minSize: 0,
+        tags+: {
+            "k8s.io/cluster-autoscaler/node-template/resources/nvidia.com/gpu": "1"
+        },
+    },
 ];
 
 // Node definitions for dask worker nodes. Config here is merged
