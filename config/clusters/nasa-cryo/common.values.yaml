@@ -159,7 +159,6 @@ basehub:
               display_name: Node share
               choices:
                 mem_1:
-                  default: true
                   display_name: ~1 GB, ~0.125 CPU
                   kubespawner_override:
                     mem_guarantee: 0.904G
@@ -170,6 +169,7 @@ basehub:
                     mem_guarantee: 1.809G
                     cpu_guarantee: 0.025
                 mem_4:
+                  default: true
                   display_name: ~4 GB, ~0.5 CPU
                   kubespawner_override:
                     mem_guarantee: 3.617G
@@ -219,7 +219,6 @@ basehub:
                     mem_guarantee: 1.883G
                     cpu_guarantee: 0.025
                 mem_4:
-                  default: true
                   display_name: ~4 GB, ~0.5 CPU
                   kubespawner_override:
                     mem_guarantee: 3.766G
@@ -230,6 +229,7 @@ basehub:
                     mem_guarantee: 7.532G
                     cpu_guarantee: 0.1
                 mem_16:
+                  default: true
                   display_name: ~16 GB, ~2.0 CPU
                   kubespawner_override:
                     mem_guarantee: 15.064G
