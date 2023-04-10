@@ -1,12 +1,7 @@
 basehub:
   nfs:
-    # enabled is adjusted by staging/prod values
-    # enabled: true
-    shareCreator:
-      enabled: true
     pv:
-      serverIP: fs-01707b06.efs.us-west-2.amazonaws.com
-      # mountOptions from https://docs.aws.amazon.com/efs/latest/ug/mounting-fs-nfs-mount-settings.html
+      # from https://docs.aws.amazon.com/efs/latest/ug/mounting-fs-nfs-mount-settings.html
       mountOptions:
         - rsize=1048576
         - wsize=1048576
@@ -14,11 +9,8 @@ basehub:
         - soft # We pick soft over hard, so NFS lockups don't lead to hung processes
         - retrans=2
         - noresvport
-      # baseShareName is required to be just "/" so that we can create
-      # various sub folders in the filesystem that our PV to access the
-      # NFS server can reference successfully as it isn't supported to
-      # access a not yet existing folder. This creation is automated by
-      # the nfs-share-creator resource part of the basehub Helm chart.
+      serverIP: fs-01707b06.efs.us-west-2.amazonaws.com
+      # This is different from rest of our hubs!
       baseShareName: /
 
   jupyterhub:
@@ -40,9 +32,8 @@ basehub:
             url: https://jupytearth.org
 
     singleuser:
-      # extraFiles ref: https://zero-to-jupyterhub.readthedocs.io/en/latest/resources/reference.html#singleuser-extrafiles
       extraFiles:
-        jupyter_notebook_config.json:
+        jupyter_server_config.json:
           mountPath: /etc/jupyter/jupyter_notebook_config.json
           data:
             # Allow jupyterlab option to show hidden files in browser
@@ -50,7 +41,8 @@ basehub:
             ContentsManager:
               allow_hidden: true
       initContainers:
-        # Need to explicitly fix ownership here, since EFS doesn't do anonuid
+        # Need to explicitly set this up and copy what's in basehub/values.yaml
+        # as we have an extra 'shared-public' directory here.
         - name: volume-mount-ownership-fix
           image: busybox
           command:
@@ -77,7 +69,6 @@ basehub:
       #
       # How to: https://stackoverflow.com/questions/46085748/define-size-for-dev-shm-on-container-engine/46434614#46434614
       # Request for this by Ellie: https://fperezgroup.slack.com/archives/C020XCEFPEH/p1658168872788389
-      #
       storage:
         extraVolumes:
           - name: dev-shm
@@ -260,18 +251,6 @@ dask-gateway:
         memory:
           request: 2G
           limit: 500G
-        extraPodConfig:
-          nodeSelector:
-            hub.jupyter.org/node-purpose: user
-            k8s.dask.org/node-purpose: null
-          # serviceAccountName is adjusted by staging/prod values
-          # serviceAccountName: *user-sa
-      worker:
-        extraPodConfig:
-          nodeSelector:
-            k8s.dask.org/node-purpose: worker
-          # serviceAccountName is adjusted by staging/prod values
-          # serviceAccountName: *user-sa
 
     # Note that we are overriding options provided in 2i2c's helm chart that has
     # default values for these config entries.
