@@ -6,14 +6,16 @@ metadata:
     cert-manager.io/cluster-issuer: letsencrypt-prod
     nginx.ingress.kubernetes.io/server-snippet: |
       return {{ .code | default 302 }} $scheme://{{ .to }}$request_uri;
-  name: ingress-redirect
+  name: ingress-redirect-{{ .from }}
 spec:
   ingressClassName: nginx
   tls:
   - hosts:
     - {{ .from }}
-    # .from is a DNS name, but dots aren't allo
     secretName: redirect-{{ .from }}-tls
   rules:
   - host: {{ .from }}
+# This object separator is required, as we generate multiple k8s
+# objects from this one file.
+---
 {{ end }}
