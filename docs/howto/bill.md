@@ -41,3 +41,9 @@ If you just want to take a look at the costs in the terminal, you can also run
 2. If the script is run before the end of the month, the total costs would not
    be accurate. Run the script once the month has finished to get an accurate
    amount of the previous month's costs.
+
+
+   ## Other Cloud Cost Reporting Exporting
+
+   - [AWS Cost and Usage Report](https://docs.aws.amazon.com/cur/latest/userguide/cur-create.html)
+   - [Azure Cost Export](https://learn.microsoft.com/en-us/azure/cost-management-billing/costs/tutorial-export-acm-data?tabs=azure-portal)
