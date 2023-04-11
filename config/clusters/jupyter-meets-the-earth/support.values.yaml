@@ -1,0 +1,42 @@
+prometheusIngressAuthSecret:
+  enabled: true
+
+cluster-autoscaler:
+  enabled: true
+  autoDiscovery:
+    clusterName: jupyter-meets-the-earth
+  awsRegion: us-west-2
+
+grafana:
+  grafana.ini:
+    server:
+      root_url: https://grafana.jmte.2i2c.cloud/
+    auth.github:
+      enabled: true
+      allowed_organizations: 2i2c-org
+  ingress:
+    hosts:
+      - grafana.jmte.2i2c.cloud
+    tls:
+      - secretName: grafana-tls
+        hosts:
+          - grafana.jmte.2i2c.cloud
+
+redirects:
+  rules:
+    # These are currently managed from https://console.cloud.google.com/net-services/dns/zones/jupytearth-org/details?project=domains-sos
+    - from: hub.jupytearth.org
+      to: jmte.2i2c.cloud
+    - from: staging.hub.jupytearth.org
+      to: staging.jmte.2i2c.cloud
+
+prometheus:
+  server:
+    ingress:
+      enabled: true
+      hosts:
+        - prometheus.jmte.2i2c.cloud
+      tls:
+        - secretName: prometheus-tls
+          hosts:
+            - prometheus.jmte.2i2c.cloud

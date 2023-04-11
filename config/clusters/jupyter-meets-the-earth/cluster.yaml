@@ -1,0 +1,27 @@
+name: jupyter-meets-the-earth
+provider: aws #  https://286354552638.signin.aws.amazon.com/console
+aws:
+  key: enc-deployer-credentials.secret.json
+  clusterType: eks
+  clusterName: jupyter-meets-the-earth
+  region: us-west-2
+support:
+  helm_chart_values_files:
+    - support.values.yaml
+    - enc-support.secret.values.yaml
+hubs:
+  - name: staging
+    domain: staging.jmte.2i2c.cloud
+    helm_chart: daskhub
+    helm_chart_values_files:
+      - common.values.yaml
+      - staging.values.yaml
+      - enc-staging.secret.values.yaml
+  - name: prod
+    display_name: "Jupyter Meets the Earth"
+    domain: jmte.2i2c.cloud
+    helm_chart: daskhub
+    helm_chart_values_files:
+      - common.values.yaml
+      - prod.values.yaml
+      - enc-prod.secret.values.yaml
