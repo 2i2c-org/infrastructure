@@ -11,7 +11,7 @@ support:
     - enc-support.secret.values.yaml
 hubs:
   - name: staging
-    domain: staging.hub.jupytearth.org
+    domain: staging.jmte.2i2c.cloud
     helm_chart: daskhub
     helm_chart_values_files:
       - common.values.yaml
@@ -19,7 +19,7 @@ hubs:
       - enc-staging.secret.values.yaml
   - name: prod
     display_name: "Jupyter Meets the Earth"
-    domain: hub.jupytearth.org
+    domain: jmte.2i2c.cloud
     helm_chart: daskhub
     helm_chart_values_files:
       - common.values.yaml
