@@ -1,5 +1,5 @@
 name: jupyter-meets-the-earth
-provider: aws
+provider: aws #  https://286354552638.signin.aws.amazon.com/console
 aws:
   key: enc-deployer-credentials.secret.json
   clusterType: eks
