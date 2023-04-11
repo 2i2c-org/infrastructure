@@ -25,9 +25,9 @@ grafana:
 redirects:
   rules:
     # These are currently managed from https://console.cloud.google.com/net-services/dns/zones/jupytearth-org/details?project=domains-sos
-    - from: hub.jupyterearth.org
+    - from: hub.jupytearth.org
       to: jmte.2i2c.cloud
-    - from: staging.hub.jupyterearth.org
+    - from: staging.hub.jupytearth.org
       to: staging.jmte.2i2c.cloud
 
 prometheus:
