@@ -1,0 +1,10 @@
+basehub:
+  jupyterhub:
+    ingress:
+      hosts: [staging.smithsonian.2i2c.cloud]
+      tls:
+        - hosts: [staging.smithsonian.2i2c.cloud]
+          secretName: https-auto-tls
+    proxy:
+      https:
+        hosts: [staging.smithsonian.2i2c.cloud]

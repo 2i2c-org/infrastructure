@@ -169,6 +169,7 @@ jobs:
       failure_nasa-veda: "${{ env.failure_nasa-veda }}"
       failure_qcl: "${{ env.failure_qcl }}"
       failure_jupyter-meets-the-earth: "${{ env.failure_jupyter-meets-the-earth }}"
+      failure_smithsonian: "${{ env.failure_smithsonian }}"
 
     # Only run this job on pushes to the default branch and when the job output is not
     # an empty list
