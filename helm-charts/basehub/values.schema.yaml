@@ -23,7 +23,7 @@ required:
 properties:
   ingressBasicAuth:
     type: object
-    additionalProperties: true
+    additionalProperties: false
     required:
       - enabled
     properties:
