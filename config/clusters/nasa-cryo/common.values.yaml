@@ -201,6 +201,7 @@ basehub:
           allowed_teams:
             - 2i2c-org:hub-access-for-2i2c-staff
             - CryoInTheCloud:cryocloudadvanced
+            - CryoInTheCloud:ml-in-glaciology
           profile_options:
             image: *profile_list_profile_options_image
             requests:
