@@ -40,7 +40,7 @@ The steps to enable the JupyterHub CILogonOAuthenticator for a hub are similar w
    - The hub domain, as specified in `cluster.yaml` (ex: staging.2i2c.cloud).
    - Example script invocation that creates a CILogon OAuth client for the 2i2c dask-staging hub:
       ```bash
-      deployer cilogon-client-create create 2i2c dask-staging daskhub dask-staging.2i2c.cloud
+      deployer cilogon-client-create 2i2c dask-staging daskhub dask-staging.2i2c.cloud
       ```
    - If successful, the script will have created a secret values file under `config/clusters/<cluster_name>/enc-<hub_name>.secret.values.yaml`. This file
    holds the encrypted OAuth client id and secret that have been created for this hub.
@@ -54,7 +54,7 @@ The steps to enable the JupyterHub CILogonOAuthenticator for a hub are similar w
                 client_secret: CLIENT_SECRET
         ```
 
-2. **If not already present, add the secret hub config file to the list of helm chart values file in `config/clusters<cluster_name>/cluster.yaml`.**
+2. **If not already present, add the secret hub config file to the list of helm chart values file in `config/clusters/<cluster_name>/cluster.yaml`.**
    If you created the `enc-<hub_name>.secret.values.yaml` file in step 2, add it the the `cluster.yaml` file like so:
 
    ```yaml

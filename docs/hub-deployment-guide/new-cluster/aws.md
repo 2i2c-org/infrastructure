@@ -24,7 +24,7 @@ terraform to provision supporting infrastructure, such as storage buckets.
    Verify install and version with `eksctl version`. You typically need a very
    recent version of this CLI.
 
-4. Install `jsonnet`
+4. Install [`jsonnet`](https://github.com/google/jsonnet)
 
    Mac users with homebrew can run `brew install jsonnet`.
 
@@ -196,6 +196,7 @@ have least amount of permissions possible.
 1. Fetch credentials for automatic deployment
 
    ```bash
+   mkdir -p ../../config/clusters/$CLUSTER_NAME
    terraform output -raw continuous_deployer_creds > ../../config/clusters/$CLUSTER_NAME/deployer-credentials.secret.json
    ```
 
@@ -242,10 +243,10 @@ have least amount of permissions possible.
    name: <your-cluster-name>
    provider: aws
    aws:
-      key: enc-deployer-credentials.secret.json
-      clusterType: eks
-      clusterName: <your-cluster-name>
-      region: <your-region>
+     key: enc-deployer-credentials.secret.json
+     clusterType: eks
+     clusterName: <your-cluster-name>
+     region: <your-region>
    hubs: []
    ```
 
