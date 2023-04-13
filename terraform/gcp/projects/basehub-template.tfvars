@@ -3,7 +3,6 @@
    - multi-tenant with staging & prod hubs
    - regional
    - no scratch buckets support
-   - notebook nodes of same type with core nodes
 */
 
 prefix                 = "{{ cluster_name }}"
@@ -15,7 +14,7 @@ region                 = "{{ cluster_region }}"
 # Default to a HA cluster for reliability
 regional_cluster = true
 
-core_node_machine_type = "n1-highmem-4"
+core_node_machine_type = "n2-highmem-2"
 
 # For multi-tenant cluster, network policy is required to enforce separation between hubs
 enable_network_policy  = true
@@ -25,15 +24,39 @@ enable_filestore       = true
 filestore_capacity_gb  = 1024
 
 notebook_nodes = {
-  "user" : {
+  "small" : {
     min : 0,
-    max : 20,
-    machine_type : core_node_machine_type,
-    labels: {},
-    gpu: {
-      enabled: false,
-      type: "",
-      count: 0
+    max : 100,
+    machine_type : "n2-highmem-4",
+    labels : {},
+    gpu : {
+      # Tip: use this flag to enable GPU on this machine type
+      # if there is GPU availability in the chosen the zone
+      enabled : false,
+      type : "",
+      count : 0
+    }
+  },
+  "medium" : {
+    min : 0,
+    max : 100,
+    machine_type : "n2-highmem-16",
+    labels : {},
+    gpu : {
+      enabled : false,
+      type : "",
+      count : 0
+    }
+  },
+  "large" : {
+    min : 0,
+    max : 100,
+    machine_type : "n2-highmem-64",
+    labels : {},
+    gpu : {
+      enabled : false,
+      type : "",
+      count : 0
     }
   },
 }

@@ -1,6 +1,9 @@
 prefix     = "meom-ige"
 project_id = "meom-ige-cnrs"
 
+zone       = "us-central1-b"
+region     = "us-central1"
+
 core_node_machine_type = "n1-highmem-2"
 
 # Single-tenant cluster, network policy not needed

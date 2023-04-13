@@ -1,6 +1,9 @@
 prefix     = "cb"
 project_id = "cb-1003-1696"
 
+zone       = "us-central1-b"
+region     = "us-central1"
+
 core_node_machine_type = "n1-highmem-4"
 
 # Multi-tenant cluster, network policy is required to enforce separation between hubs

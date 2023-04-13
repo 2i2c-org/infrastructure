@@ -113,7 +113,6 @@ variable "cd_sa_roles" {
 
 variable "region" {
   type        = string
-  default     = "us-central1"
   description = <<-EOT
   GCP Region the cluster & resources will be placed in.
 
@@ -144,7 +143,6 @@ variable "regional_cluster" {
 
 variable "zone" {
   type        = string
-  default     = "us-central1-b"
   description = <<-EOT
   GCP Zone the cluster & nodes will be set up in.
 
@@ -156,7 +154,6 @@ variable "zone" {
 
 variable "core_node_machine_type" {
   type        = string
-  default     = "n1-highmem-2"
   description = <<-EOT
   Machine type to use for core nodes.
 
@@ -164,9 +161,8 @@ variable "core_node_machine_type" {
   for a cluster. We should try to run with as few of them
   as possible.
 
-  For single-tenant clusters, a single n1-highmem-2 node seems
-  enough - if network policy and config connector are not on.
-  For others, please experiment to see what fits.
+  For single-tenant clusters, a single n2-highmem-2 node can be
+  enough.
   EOT
 }
 

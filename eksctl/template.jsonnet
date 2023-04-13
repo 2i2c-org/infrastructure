@@ -36,10 +36,9 @@ local nodeAz = "<< cluster_region >>a";
 // A `node.kubernetes.io/instance-type label is added, so pods
 // can request a particular kind of node with a nodeSelector
 local notebookNodes = [
-    { instanceType: "m5.large" },
-    { instanceType: "m5.xlarge" },
-    { instanceType: "m5.2xlarge" },
-    { instanceType: "m5.8xlarge" },
+    { instanceType: "r5.xlarge" },
+    { instanceType: "r5.4xlarge" },
+    { instanceType: "r5.16xlarge" },
 ];
 <% if hub_type == "daskhub" %>
 local daskNodes = [
@@ -49,10 +48,7 @@ local daskNodes = [
     // *first* item in instanceDistribution.instanceTypes, to match
     // what we do with notebook nodes. Pods can request a particular
     // kind of node with a nodeSelector
-    { instancesDistribution+: { instanceTypes: ["m5.large"] }},
-    { instancesDistribution+: { instanceTypes: ["m5.xlarge"] }},
-    { instancesDistribution+: { instanceTypes: ["m5.2xlarge"] }},
-    { instancesDistribution+: { instanceTypes: ["m5.8xlarge"] }},
+    { instancesDistribution+: { instanceTypes: ["r5.4xlarge"] }},
 ];
 <% else %>
 local daskNodes = [];
@@ -65,7 +61,11 @@ local daskNodes = [];
     metadata+: {
         name: "<< cluster_name >>",
         region: clusterRegion,
-        version: '1.24'
+        {#-
+            version should be the latest support version by the eksctl CLI, see
+            https://eksctl.io/introduction/ for a list of supported versions.
+        #}
+        version: '1.25'
     },
     availabilityZones: masterAzs,
     iam: {
@@ -97,7 +97,7 @@ local daskNodes = [];
             ssh: {
                 publicKeyPath: 'ssh-keys/<< cluster_name >>.key.pub'
             },
-            instanceType: "m5.xlarge",
+            instanceType: "r5.xlarge",
             minSize: 1,
             maxSize: 6,
             labels+: {
