@@ -1,6 +1,9 @@
 prefix     = "pilot-hubs"
 project_id = "two-eye-two-see"
 
+zone       = "us-central1-b"
+region     = "us-central1"
+
 core_node_machine_type = "n1-highmem-4"
 
 # Multi-tenant cluster, network policy is required to enforce separation between hubs

@@ -1,5 +1,7 @@
 prefix                 = "pangeo-hubs"
 project_id             = "pangeo-integration-te-3eea"
+zone                   = "us-central1-b"
+region                 = "us-central1"
 core_node_machine_type = "n1-highmem-4"
 enable_private_cluster = true
 
