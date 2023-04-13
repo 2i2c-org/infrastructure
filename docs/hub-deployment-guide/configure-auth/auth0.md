@@ -24,7 +24,7 @@ So we want to manage authentication by:
    - Example script invocation that creates an Auth0 client for the 2i2c dask-staging hub and configures Auth0 to use GitHub as a connection is:
 
       ```bash
-      deployer cilogon-client-create create 2i2c dask-staging daskhub dask-staging.2i2c.cloud github
+      deployer cilogon-client-create 2i2c dask-staging daskhub dask-staging.2i2c.cloud github
       ```
 
    - If successful, the script will have created a secret values file under `config/clusters/<cluster_name>/enc-<hub_name>.secret.values.yaml`. This file holds the encrypted OAuth client id and secret that have been created for this hub, but also all the other config needed for the hub **for simplicity**.
