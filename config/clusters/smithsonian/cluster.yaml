@@ -1,0 +1,28 @@
+name: smithsonian
+provider: aws # https://2i2c.awsapps.com/start#/
+aws:
+  key: enc-deployer-credentials.secret.json
+  clusterType: eks
+  clusterName: smithsonian
+  region: us-east-2
+support:
+  helm_chart_values_files:
+    - support.values.yaml
+    - enc-support.secret.values.yaml
+hubs:
+  - name: staging
+    display_name: Smithsonian (staging)
+    domain: staging.smithsonian.2i2c.cloud
+    helm_chart: daskhub
+    helm_chart_values_files:
+      - common.values.yaml
+      - staging.values.yaml
+      - enc-staging.secret.values.yaml
+  - name: prod
+    display_name: Smithsonian
+    domain: smithsonian.2i2c.cloud
+    helm_chart: daskhub
+    helm_chart_values_files:
+      - common.values.yaml
+      - prod.values.yaml
+      - enc-prod.secret.values.yaml
