@@ -101,7 +101,7 @@ local daskNodes = [];
             ssh: {
                 publicKeyPath: 'ssh-keys/<< cluster_name >>.key.pub'
             },
-            instanceType: "m5.xlarge",
+            instanceType: "r5.xlarge",
             minSize: 1,
             maxSize: 6,
             labels+: {
