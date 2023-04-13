@@ -55,8 +55,8 @@ jupyterhub:
       limit: 4
       guarantee: 0.01
     memory:
-      limit: 4G
-      guarantee: 2G
+      limit: 2G
+      guarantee: 1G
     extraFiles:
       github-app-private-key.pem:
         mountPath: /etc/github/github-app-private-key.pem
