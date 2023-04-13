@@ -48,10 +48,7 @@ local daskNodes = [
     // *first* item in instanceDistribution.instanceTypes, to match
     // what we do with notebook nodes. Pods can request a particular
     // kind of node with a nodeSelector
-    { instancesDistribution+: { instanceTypes: ["m5.large"] }},
-    { instancesDistribution+: { instanceTypes: ["m5.xlarge"] }},
-    { instancesDistribution+: { instanceTypes: ["m5.2xlarge"] }},
-    { instancesDistribution+: { instanceTypes: ["m5.8xlarge"] }},
+    { instancesDistribution+: { instanceTypes: ["r5.4xlarge"] }},
 ];
 <% else %>
 local daskNodes = [];
