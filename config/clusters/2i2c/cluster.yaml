@@ -23,6 +23,13 @@ hubs:
     helm_chart_values_files:
       - staging.values.yaml
       - enc-staging.secret.values.yaml
+  - name: hackanexoplanet
+    display_name: "ESA Hack An Exoplanet"
+    domain: ephemeral-demo.2i2c.cloud
+    helm_chart: basehub
+    helm_chart_values_files:
+      - hackanexoplanet.values.yaml
+      - enc-hackanexoplanet.secret.values.yaml
   - name: dask-staging
     display_name: "2i2c dask staging"
     domain: dask-staging.2i2c.cloud
