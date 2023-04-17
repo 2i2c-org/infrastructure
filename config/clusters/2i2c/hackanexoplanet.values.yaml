@@ -46,6 +46,10 @@ jupyterhub:
           name: ""
           url: ""
   singleuser:
+    image:
+      # Image repository: https://github.com/2i2c-org/hackanexoplanet-env
+      name: quay.io/2i2c/hackanexoplanet-image
+      tag: "b6b891cb2b30"
     initContainers: null
     storage:
       # No persistent storage should be kept to reduce any potential data
