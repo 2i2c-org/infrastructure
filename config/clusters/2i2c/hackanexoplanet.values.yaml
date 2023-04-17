@@ -1,6 +1,6 @@
 ingressBasicAuth:
   enabled: true
-  # Password and username in enc-ephemeral-demo.secret.values.yaml
+  # Password and username in enc-hackanexoplanet.secret.values.yaml
 
 jupyterhub:
   prePuller:
