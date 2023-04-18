@@ -1,13 +1,10 @@
 # Setup local variables with list of hubs that we want checks for
 locals {
   cluster_yamls = [for f in fileset(path.module, "../../config/clusters/*/cluster.yaml") : yamldecode(file(f))]
-  hubs = toset(flatten([for cy in local.cluster_yamls : [for h in cy["hubs"] : {
-    name       = h["name"],
-    domain     = h["domain"]
-    helm_chart = h["helm_chart"]
-    cluster    = cy["name"]
+  hubs = flatten([for cy in local.cluster_yamls : [for h in cy["hubs"] : merge(h, tomap({
+    cluster    = cy["name"],
     provider   = cy["provider"]
-  }]]))
+  }))]])
   # A list of all prometheus servers
   prometheuses = flatten([
     for cy in local.cluster_yamls : [
@@ -37,8 +34,9 @@ resource "google_monitoring_uptime_check_config" "hub_simple_uptime_check" {
     use_ssl        = true
     request_method = "GET"
     accepted_response_status_codes {
-      # 200 is the only acceptable status code
-      status_value = "200"
+      # Default to looking for 200, but allow overrides in cluster.yaml
+      # This is useful when the entire hub is protected by HTTP Basic Auth
+      status_value = try(each.value.uptime_check.expected_status, "200")
     }
   }
 

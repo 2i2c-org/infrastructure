@@ -162,6 +162,23 @@ jupyterhub:
           url: ""
 ```
 
+
+## Customizing the uptime check to expect a HTTP `401`
+
+Our [uptime checks](uptime-checks) expect a HTTP `200` response to consider a
+hub as live. However, since we protect the entire hub at the Ingress level,
+all endpoints will return a HTTP `401` asking for a password. We can configure
+our uptime checks to allow for `401` as a valid response in the appropriate
+`cluster.yaml` definition for this hub.
+
+```yaml
+  - name: <name-of-hub>
+    display_name: <display-name>
+    uptime_check:
+      # This is an ephemeral hub, fully password protected with HTTP Basic Auth
+      expected_status: 401
+```
+
 ## Use `nbgitpuller` for distributing content
 
 We encourage users to use [nbgitpuller](https://github.com/jupyterhub/nbgitpuller)
