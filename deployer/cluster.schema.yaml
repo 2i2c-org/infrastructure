@@ -216,6 +216,19 @@ properties:
             description: |
               A long form name for the hub to display on our website. This is usually
               the name of the community we run the hub for.
+          uptime_check:
+            type: object
+            description: |
+              Optional configuration for how uptime checks should be performed
+              on this hub.
+            additionalProperties: false
+            properties:
+              expected_status:
+                type: string
+                description: |
+                  Status code expected from hitting the health checkpoint for
+                  this hub. Defaults to 200, can be overriden in case we have
+                  basic auth setup for the entire hub
           domain:
             type: string
             description: |
