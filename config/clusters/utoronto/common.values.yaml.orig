@@ -48,16 +48,15 @@ jupyterhub:
             </div>
   singleuser:
     cpu:
-      # TODO(pnasrat): revert after exams ignore comment below.
       # Each node has about 8 CPUs total, and if we limit users to no more than
       # 4, no single user can take down a full node by themselves. We have to
       # set the guarantee to *something*, otherwise it is set to be equal
       # to the limit!
-      limit: 1
-      guarantee: 1
+      limit: 4
+      guarantee: 0.01
     memory:
-      limit: 4G
-      guarantee: 2G
+      limit: 2G
+      guarantee: 1G
     extraFiles:
       github-app-private-key.pem:
         mountPath: /etc/github/github-app-private-key.pem
