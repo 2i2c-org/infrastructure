@@ -1,14 +1,3 @@
-dask-gateway:
-  gateway:
-    backend:
-      scheduler:
-        extraPodConfig:
-          nodeSelector:
-            2i2c.org/community: ohw
-      worker:
-        extraPodConfig:
-          nodeSelector:
-            2i2c.org/community: ohw
 basehub:
   userServiceAccount:
     annotations:
@@ -72,8 +61,6 @@ basehub:
             mem_guarantee: 4G
             cpu_limit: 2
             cpu_guarantee: 0.5
-      nodeSelector:
-        2i2c.org/community: ohw
     custom:
       cloudResources:
         provider: gcp
