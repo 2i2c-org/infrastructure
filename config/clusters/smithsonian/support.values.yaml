@@ -13,7 +13,7 @@ grafana:
       root_url: https://grafana.smithsonian.2i2c.cloud/
     auth.github:
       enabled: true
-      allowed_organizations: 2i2c-org smithsonian
+      allowed_organizations: 2i2c-org
   ingress:
     hosts:
       - grafana.smithsonian.2i2c.cloud
