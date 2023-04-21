@@ -32,6 +32,14 @@ properties:
       - kubeconfig
       - aws
       - azure
+  tenancy:
+    type: string
+    description: |
+      Type of tenancy this cluster runs. Currently supports dedicated and shared.
+    enum:
+      - dedicated
+      - shared
+    default: dedicated
   account:
     type: string
     description: |

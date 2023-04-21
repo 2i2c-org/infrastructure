@@ -1,6 +1,19 @@
 import re
+from collections import defaultdict
+from datetime import datetime
 
 from google.cloud import bigquery
+
+from ..grafana.grafana_utils import get_cluster_prometheus
+
+
+def get_cluster_costs(cluster, start_month, end_month):
+    tenancy = cluster.get("tenancy", "dedicated")
+    if tenancy == "shared":
+        return get_shared_hub_costs(cluster, start_month, end_month)
+    elif tenancy == "dedicated":
+        return get_dedicated_cluster_costs(cluster, start_month, end_month)
+    return []
 
 
 def get_dedicated_cluster_costs(cluster, start_month, end_month):
@@ -10,10 +23,15 @@ def get_dedicated_cluster_costs(cluster, start_month, end_month):
         cluster (dict): parsed cluster.yaml
         start_month (str): Starting month (as YYYY-MM)
         end_month (str): End month (as YYYY-MM)
+
+    Returns:
+        rows (list of costs per project)
     """
 
-    # TODO(pnasrat): Pass client in?:
+    # TODO(pnasrat): Pass client in or encapsulate in an class?
     client = bigquery.Client()
+
+    # TODO(pnasrat): we are using GCP project name not cluster name.
     cluster_project_name = cluster["gcp"]["project"]
 
     bq = cluster["gcp"]["billing"]["bigquery"]
@@ -56,3 +74,45 @@ def get_dedicated_cluster_costs(cluster, start_month, end_month):
 
     result = client.query(query, job_config=job_config).result()
     return result
+
+
+# TODO(pnasrat): wire in prometheus values
+def get_shared_hub_costs(cluster, start_month, end_month):
+    totals = get_dedicated_cluster_costs(cluster, start_month, end_month)
+    return totals
+
+
+def get_from_prom():
+    url, s = get_cluster_prometheus("2i2c")
+    rows = defaultdict(list)
+    query = """sum(
+      kube_pod_container_resource_requests{resource="memory",unit="byte"}
+    ) by (namespace)
+    """
+    resp = s.get(
+        f"{url}/api/v1/query_range",
+        params={
+            "query": query,
+            "start": "2023-03-01T00:00:00Z",
+            "end": "2023-03-03T00:00:00Z",
+            "step": "24h",
+        },
+    )
+    if resp.status_code != 200:
+        return []
+    results = resp.json()["data"]["result"]
+    for result in results:
+        metric, values = result["metric"], result["values"]
+        namespace = metric.get("namespace")
+        for timestamp, memory in values:
+            timestamp = datetime.fromtimestamp(timestamp)
+            rows[timestamp].append((namespace, memory))
+    return rows
+
+
+def get_support_hub_costs(cluster, start_month, end_month):
+    return []
+
+
+def get_uptime_check_costs(project, start_month, end_month):
+    return []

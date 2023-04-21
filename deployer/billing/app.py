@@ -11,7 +11,7 @@ from ..cli_app import app
 from ..file_acquisition import get_decrypted_file
 from ..helm_upgrade_decision import get_all_cluster_yaml_files
 from . import CostTableOutputFormats, month_validate
-from .cost_importer import get_dedicated_cluster_costs
+from .cost_importer import get_cluster_costs
 
 yaml = YAML(typ="safe", pure=True)
 
@@ -54,7 +54,7 @@ def generate_cost_table(
         if not cluster["gcp"]["billing"]["paid_by_us"]:
             continue
 
-        result = get_dedicated_cluster_costs(cluster, start_month, end_month)
+        result = get_cluster_costs(cluster, start_month, end_month)
 
         for r in result:
             if not r.project:
