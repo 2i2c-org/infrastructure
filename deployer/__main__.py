@@ -1,7 +1,7 @@
 # Import the various subcommands here, they will be automatically
 # registered into the app
 import deployer.auth0_app  # noqa: F401
-import deployer.billing  # noqa: F401
+import deployer.billing.app  # noqa: F401
 import deployer.cilogon_app  # noqa: F401
 import deployer.debug  # noqa: F401
 import deployer.deployer  # noqa: F401

@@ -1,46 +1,19 @@
-import re
 from datetime import datetime
-from enum import Enum
-from pathlib import PosixPath
 
 import gspread
 import typer
 from dateutil.relativedelta import relativedelta
-from google.cloud import bigquery
 from rich.console import Console
 from rich.table import Table
 from ruamel.yaml import YAML
 
-from .cli_app import app
-from .file_acquisition import get_decrypted_file
-from .helm_upgrade_decision import get_all_cluster_yaml_files
+from ..cli_app import app
+from ..file_acquisition import get_decrypted_file
+from ..helm_upgrade_decision import get_all_cluster_yaml_files
+from . import CostTableOutputFormats, month_validate
+from .cost_importer import get_dedicated_cluster_costs
 
-yaml = YAML(typ="safe")
-
-HERE = PosixPath(__file__).parent.parent
-
-
-def month_validate(month_str: str):
-    """
-    Validate passed string matches YYYY-MM format.
-
-    Returns values in YYYYMM format, which is used by bigquery
-    """
-    match = re.match(r"(\d\d\d\d)-(\d\d)", month_str)
-    if not match:
-        raise typer.BadParameter(
-            f"{month_str} should be formatted as YYYY-MM (eg: 2023-02)"
-        )
-    return f"{match.group(1)}{match.group(2)}"
-
-
-class CostTableOutputFormats(Enum):
-    """
-    Output formats supported by the generate-cost-table command
-    """
-
-    terminal = "terminal"
-    google_sheet = "google-sheet"
+yaml = YAML(typ="safe", pure=True)
 
 
 @app.command()
@@ -69,7 +42,6 @@ def generate_cost_table(
     """
 
     cluster_files = get_all_cluster_yaml_files()
-    client = bigquery.Client()
     rows = []
 
     for cf in cluster_files:
@@ -82,51 +54,8 @@ def generate_cost_table(
         if not cluster["gcp"]["billing"]["paid_by_us"]:
             continue
 
-        cluster_project_name = cluster["gcp"]["project"]
+        result = get_dedicated_cluster_costs(cluster, start_month, end_month)
 
-        bq = cluster["gcp"]["billing"]["bigquery"]
-
-        # WARN: We are using string interpolation here to construct a sql-like query, which
-        # IS GENERALLY VERY VERY BAD AND NO GOOD AND WE SHOULD NOT DO IT NO EVER.
-        # HOWEVER, I can't seem to find a way to parameterize the *table name* as we must do here,
-        # rather than just query parameters. So we *very* carefully construct the name of the table here,
-        # and use that in the query. In addition, we allow-list the characters available to the table name as
-        # well - and fail hard if something is fishy. This shouldn't really be a problem, as we control the
-        # input to this function (via our YAML file). However, SQL Injections are likely to happen in places
-        # where you least expect them to happen, so the extra layer of protection is nice.
-        table_name = f'{bq["project"]}.{bq["dataset"]}.gcp_billing_export_resource_v1_{bq["billing_id"].replace("-", "_")}'
-        # Make sure the table name only has alphanumeric characters, _ and -
-        assert re.match(r"^[a-zA-Z0-9._-]+$", table_name)
-        query = f"""
-        SELECT
-        invoice.month as month,
-        project.id as project,
-        (SUM(CAST(cost AS NUMERIC))
-            + SUM(IFNULL((SELECT SUM(CAST(c.amount AS NUMERIC))
-                        FROM UNNEST(credits) AS c), 0)))
-            AS total_with_credits
-        FROM `{table_name}`
-        WHERE invoice.month >= @start_month
-              AND invoice.month <= @end_month
-              AND project.id = @project
-        GROUP BY 1, 2
-        ORDER BY invoice.month ASC
-        ;
-
-        """
-
-        job_config = bigquery.QueryJobConfig(
-            query_parameters=[
-                bigquery.ScalarQueryParameter("start_month", "STRING", start_month),
-                bigquery.ScalarQueryParameter("end_month", "STRING", end_month),
-                bigquery.ScalarQueryParameter(
-                    "project", "STRING", cluster_project_name
-                ),
-            ]
-        )
-
-        result = client.query(query, job_config=job_config).result()
-        last_period = None
         for r in result:
             if not r.project:
                 # Non-project number is 0$, let's declutter by not showing it
@@ -144,8 +73,24 @@ def generate_cost_table(
 
     # Sort by period in reverse chronological order
     rows.sort(key=lambda r: r["period"], reverse=True)
+    output_cost_table(output, google_sheet_url, rows)
 
-    # TODO: Split these output formats out into their own functions
+
+def output_cost_table(output, google_sheet_url, rows):
+    """
+    Writes rows to output
+
+    Args:
+
+        rows: dict of {
+                    "period": period,
+                    "project": r.project,
+                    "total_with_credits": float(r.total_with_credits),
+                }
+
+    """
+    last_period = None
+
     if output == CostTableOutputFormats.google_sheet:
         # A service account (https://console.cloud.google.com/iam-admin/serviceaccounts/details/113674037014124702779?project=two-eye-two-see)
         # It is created with no permissions, and the google sheet we want to write to
