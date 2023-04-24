@@ -1,4 +1,10 @@
-"""Pull latest list of hubs served by infrastructure/ and save as a CSV table."""
+"""Pull latest list of hubs served by infrastructure/ and save as a CSV table.
+
+This is used in two places:
+
+- docs/_static/hub-table.json is published with the docs and meant for re-use in other parts of 2i2c
+- docs/tmp/hub-table.csv is read by reference/hubs.md to create a list of hubs
+"""
 from pathlib import Path
 
 import pandas as pd
