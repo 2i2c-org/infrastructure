@@ -9,9 +9,6 @@
 # - Register git hooks: pre-commit install --install-hooks
 #
 repos:
-  # FIXME: Consider adding more, for example by looking at those configured for
-  #        TLJH in https://github.com/jupyterhub/the-littlest-jupyterhub/blob/main/.pre-commit-config.yaml
-
   # Autoformat: markdown, yaml
   - repo: https://github.com/pre-commit/mirrors-prettier
     rev: v3.0.0-alpha.9-for-vscode
@@ -51,3 +48,7 @@ repos:
       - id: sops-encryption
         # Add files here if they contain the word 'secret' but should not be encrypted
         exclude: secrets\.md|helm-charts/support/templates/prometheus-ingres-auth/secret\.yaml|helm-charts/basehub/templates/dex/secret\.yaml|helm-charts/basehub/templates/static/secret\.yaml|config/clusters/templates/gcp/support\.secret\.values\.yaml|helm-charts/basehub/templates/ingress-auth/secret\.yaml
+
+# pre-commit.ci config reference: https://pre-commit.ci/#configuration
+ci:
+  autoupdate_schedule: monthly
