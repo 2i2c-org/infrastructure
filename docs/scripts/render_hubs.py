@@ -6,6 +6,7 @@ from yaml import safe_load
 
 path_root = Path(__file__).parent.parent
 path_tmp = path_root / "tmp"
+path_static = path_root / "_static"
 path_clusters = path_root / "../config/clusters"
 
 # Grab the latest list of clusters defined in infrastructure/ explicitly ignoring
@@ -118,9 +119,10 @@ for cluster_info in clusters:
 df = pd.DataFrame(hub_list)
 path_tmp.mkdir(exist_ok=True)
 
-# Write raw data
+# Write raw data to CSV and JSON
 path_table = path_tmp / "hub-table.csv"
 df.to_csv(path_table, index=None)
+df.to_json(path_static / "hub-table.json", orient="index")
 
 # Write some quick statistics for display
 # Calculate total number of community hubs by removing staging and demo hubs
@@ -140,6 +142,8 @@ community_hubs_by_cluster.loc[("total", ""), "count"] = community_hubs_by_cluste
 ].sum(0)
 community_hubs_by_cluster["count"] = community_hubs_by_cluster["count"].astype(int)
 
+# Write to CSV and JSON
 path_stats = path_tmp / "hub-stats.csv"
 community_hubs_by_cluster.to_csv(path_stats)
+community_hubs_by_cluster.to_json(path_static / "hub-stats.json", orient="index")
 print("Finished updating list of hubs table...")
