@@ -10,13 +10,6 @@ jupyterhub:
       - secretName: https-auto-tls
         hosts:
           - temple.2i2c.cloud
-  singleuser:
-    memory:
-      # Final projects increase from 256M/1G for finals as per
-      # https://2i2c.freshdesk.com/a/tickets/643
-      # TODO(pnasrat): Remove after 2023-05-02
-      guarantee: 512M
-      limit: 2G
   custom:
     2i2c:
       add_staff_user_ids_to_admin_users: true
