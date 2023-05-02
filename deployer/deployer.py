@@ -44,9 +44,13 @@ helm_charts_dir = Path(__file__).parent.parent.joinpath("helm-charts")
 @app.command()
 def use_cluster_credentials(
     cluster_name: str = typer.Argument(..., help="Name of cluster to operate on"),
+    commandline: str = typer.Argument(
+        ...,
+        help="Optional shell command line to run after authenticating to this cluster",
+    ),
 ):
     """
-    Pop a new shell authenticated to the given cluster using the deployer's credentials
+    Pop a new shell or execute a command after authenticating to the given cluster using the deployer's credentials
     """
     # This function is to be used with the `use-cluster-credentials` CLI
     # command only - it is not used by the rest of the deployer codebase.
@@ -66,7 +70,11 @@ def use_cluster_credentials(
         # to change the prompt to f"cluster-{cluster.spec['name']}". This will
         # make it visually clear that the user is now operating in a different
         # shell.
-        subprocess.check_call([os.environ["SHELL"], "-l"])
+        args = [os.environ["SHELL"], "-l"]
+        # If a command to execute is specified, just execute that and exit.
+        if commandline:
+            args += ["-c", commandline]
+        subprocess.check_call(args)
 
 
 @app.command()
