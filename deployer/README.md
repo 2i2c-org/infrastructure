@@ -170,17 +170,25 @@ Remember to close the opened shell after you've finished by using the `exit` com
 
 **Command line usage:**
 
-```bash
- Usage: deployer use-cluster-credentials [OPTIONS] CLUSTER_NAME                                                         
-                                                                                                                        
- Pop a new shell authenticated to the given cluster using the deployer's credentials                                    
-                                                                                                                        
-╭─ Arguments ──────────────────────────────────────────────────────────────────────────────────────────────────────────╮
-│ *    cluster_name      TEXT  Name of cluster to operate on [default: None] [required]                                │
-╰──────────────────────────────────────────────────────────────────────────────────────────────────────────────────────╯
-╭─ Options ────────────────────────────────────────────────────────────────────────────────────────────────────────────╮
-│ --help          Show this message and exit.                                                                          │
-╰──────────────────────────────────────────────────────────────────────────────────────────────────────────────────────╯
+```
+                                                                                    
+ Usage: deployer use-cluster-credentials [OPTIONS] CLUSTER_NAME COMMANDLINE         
+                                                                                    
+ Pop a new shell or execute a command after authenticating to the given cluster     
+ using the deployer's credentials                                                   
+                                                                                    
+╭─ Arguments ──────────────────────────────────────────────────────────────────────╮
+│ *    cluster_name      TEXT  Name of cluster to operate on [default: None]       │
+│                              [required]                                          │
+│ *    commandline       TEXT  Optional shell command line to run after            │
+│                              authenticating to this cluster                      │
+│                              [default: None]                                     │
+│                              [required]                                          │
+╰──────────────────────────────────────────────────────────────────────────────────╯
+╭─ Options ────────────────────────────────────────────────────────────────────────╮
+│ --help          Show this message and exit.                                      │
+╰──────────────────────────────────────────────────────────────────────────────────╯
+
 ```
 
 
