@@ -1,0 +1,33 @@
+basehub:
+  userServiceAccount:
+    annotations:
+      eks.amazonaws.com/role-arn: arn:aws:iam::286354552638:role/jupyter-meets-the-earth-prod
+  jupyterhub:
+    hub:
+      config:
+        CILogonOAuthenticator:
+          oauth_callback_url: "https://jmte.2i2c.cloud/hub/oauth_callback"
+    ingress:
+      hosts: [jmte.2i2c.cloud]
+      tls:
+        - hosts: [jmte.2i2c.cloud]
+          secretName: https-auto-tls
+    # We want to keep a single m5.xlarge around for *quick* startup of
+    # servers for the shared use case. This is picked up by the placeholder
+    scheduling:
+      userPlaceholder:
+        enabled: true
+        replicas: 1
+        resources:
+          requests:
+            # FIXME: We keep a *full* spare medium node around, is this necessary?
+            memory: 14G
+    singleuser:
+      extraEnv:
+        # FIXME: This is a *pre-existing bucket*, not the one created by
+        # terraform. Either import it properly into our terraform state, or
+        # change the bucket here. **This bucket does not empty every 7 days!**
+        SCRATCH_BUCKET: s3://jmte-scratch/$(JUPYTERHUB_USER)
+        PANGEO_SCRATCH: s3://jmte-scratch/$(JUPYTERHUB_USER)
+      nodeSelector:
+        node.kubernetes.io/instance-type: m5.xlarge

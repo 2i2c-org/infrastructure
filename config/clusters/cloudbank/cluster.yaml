@@ -1,10 +1,12 @@
 name: cloudbank
-provider: gcp
+provider: gcp # https://console.cloud.google.com/kubernetes/clusters/details/us-central1-b/cb-cluster/nodes?project=cb-1003-1696
 gcp:
   key: enc-deployer-credentials.secret.json
   project: cb-1003-1696
   cluster: cb-cluster
   zone: us-central1-b
+  billing:
+    paid_by_us: false
 support:
   helm_chart_values_files:
     - support.values.yaml
@@ -14,266 +16,167 @@ hubs:
     display_name: "Cloudbank Staging"
     domain: staging.cloudbank.2i2c.cloud
     helm_chart: basehub
-    auth0:
-      # connection update? Also ensure the basehub Helm chart is provided a
-      # matching value for jupyterhub.custom.2i2c.add_staff_user_ids_of_type!
-      connection: google-oauth2
     helm_chart_values_files:
-      # The order in which you list files here is the order the will be passed
-      # to the helm upgrade command in, and that has meaning. Please check
-      # that you intend for these files to be applied in this order.
+      - common.values.yaml
       - staging.values.yaml
+      - enc-staging.secret.values.yaml
   - name: ccsf
     display_name: "City College SF"
     domain: ccsf.cloudbank.2i2c.cloud
     helm_chart: basehub
-    auth0:
-      # connection update? Also ensure the basehub Helm chart is provided a
-      # matching value for jupyterhub.custom.2i2c.add_staff_user_ids_of_type!
-      connection: google-oauth2
     helm_chart_values_files:
-      # The order in which you list files here is the order the will be passed
-      # to the helm upgrade command in, and that has meaning. Please check
-      # that you intend for these files to be applied in this order.
+      - common.values.yaml
       - ccsf.values.yaml
+      - enc-ccsf.secret.values.yaml
   - name: csm
     display_name: "College of San Mateo"
     domain: csm.cloudbank.2i2c.cloud
     helm_chart: basehub
-    auth0:
-      # connection update? Also ensure the basehub Helm chart is provided a
-      # matching value for jupyterhub.custom.2i2c.add_staff_user_ids_of_type!
-      enabled: false
     helm_chart_values_files:
-      # The order in which you list files here is the order the will be passed
-      # to the helm upgrade command in, and that has meaning. Please check
-      # that you intend for these files to be applied in this order.
+      - common.values.yaml
       - csm.values.yaml
       - enc-csm.secret.values.yaml
   - name: elcamino
     display_name: "El Camino College"
     domain: elcamino.cloudbank.2i2c.cloud
     helm_chart: basehub
-    auth0:
-      # connection update? Also ensure the basehub Helm chart is provided a
-      # matching value for jupyterhub.custom.2i2c.add_staff_user_ids_of_type!
-      connection: google-oauth2
     helm_chart_values_files:
-      # The order in which you list files here is the order the will be passed
-      # to the helm upgrade command in, and that has meaning. Please check
-      # that you intend for these files to be applied in this order.
+      - common.values.yaml
       - elcamino.values.yaml
+      - enc-elcamino.secret.values.yaml
   - name: glendale
     display_name: "Glendale Community College"
     domain: glendale.cloudbank.2i2c.cloud
     helm_chart: basehub
-    auth0:
-      # connection update? Also ensure the basehub Helm chart is provided a
-      # matching value for jupyterhub.custom.2i2c.add_staff_user_ids_of_type!
-      enabled: false
     helm_chart_values_files:
-      # The order in which you list files here is the order the will be passed
-      # to the helm upgrade command in, and that has meaning. Please check
-      # that you intend for these files to be applied in this order.
+      - common.values.yaml
       - glendale.values.yaml
       - enc-glendale.secret.values.yaml
   - name: howard
     display_name: "Howard University"
     domain: howard.cloudbank.2i2c.cloud
     helm_chart: basehub
-    auth0:
-      # connection update? Also ensure the basehub Helm chart is provided a
-      # matching value for jupyterhub.custom.2i2c.add_staff_user_ids_of_type!
-      connection: google-oauth2
     helm_chart_values_files:
-      # The order in which you list files here is the order the will be passed
-      # to the helm upgrade command in, and that has meaning. Please check
-      # that you intend for these files to be applied in this order.
+      - common.values.yaml
       - howard.values.yaml
+      - enc-howard.secret.values.yaml
   - name: miracosta
     display_name: "MiraCosta College"
     domain: miracosta.cloudbank.2i2c.cloud
     helm_chart: basehub
-    auth0:
-      # connection update? Also ensure the basehub Helm chart is provided a
-      # matching value for jupyterhub.custom.2i2c.add_staff_user_ids_of_type!
-      enabled: false
     helm_chart_values_files:
-      # The order in which you list files here is the order the will be passed
-      # to the helm upgrade command in, and that has meaning. Please check
-      # that you intend for these files to be applied in this order.
+      - common.values.yaml
       - miracosta.values.yaml
       - enc-miracosta.secret.values.yaml
   - name: skyline
     display_name: "Skyline College"
     domain: skyline.cloudbank.2i2c.cloud
     helm_chart: basehub
-    auth0:
-      # connection update? Also ensure the basehub Helm chart is provided a
-      # matching value for jupyterhub.custom.2i2c.add_staff_user_ids_of_type!
-      connection: google-oauth2
     helm_chart_values_files:
-      # The order in which you list files here is the order the will be passed
-      # to the helm upgrade command in, and that has meaning. Please check
-      # that you intend for these files to be applied in this order.
+      - common.values.yaml
       - skyline.values.yaml
+      - enc-skyline.secret.values.yaml
   - name: demo
     display_name: "Cloudbank demo"
     domain: demo.cloudbank.2i2c.cloud
     helm_chart: basehub
-    auth0:
-      enabled: false
     helm_chart_values_files:
-      # The order in which you list files here is the order the will be passed
-      # to the helm upgrade command in, and that has meaning. Please check
-      # that you intend for these files to be applied in this order.
+      - common.values.yaml
       - demo.values.yaml
       - enc-demo.secret.values.yaml
   - name: fresno
     display_name: "Fresno City College"
     domain: fresno.cloudbank.2i2c.cloud
     helm_chart: basehub
-    auth0:
-      # connection update? Also ensure the basehub Helm chart is provided a
-      # matching value for jupyterhub.custom.2i2c.add_staff_user_ids_of_type!
-      enabled: false
     helm_chart_values_files:
-      # The order in which you list files here is the order the will be passed
-      # to the helm upgrade command in, and that has meaning. Please check
-      # that you intend for these files to be applied in this order.
+      - common.values.yaml
       - fresno.values.yaml
       - enc-fresno.secret.values.yaml
+  - name: laney
+    display_name: "Laney College"
+    domain: laney.cloudbank.2i2c.cloud
+    helm_chart: basehub
+    helm_chart_values_files:
+      - common.values.yaml
+      - laney.values.yaml
+      - enc-laney.secret.values.yaml
   - name: lassen
     display_name: "Lassen College"
     domain: lassen.cloudbank.2i2c.cloud
     helm_chart: basehub
-    auth0:
-      # connection update? Also ensure the basehub Helm chart is provided a
-      # matching value for jupyterhub.custom.2i2c.add_staff_user_ids_of_type!
-      connection: google-oauth2
     helm_chart_values_files:
-      # The order in which you list files here is the order the will be passed
-      # to the helm upgrade command in, and that has meaning. Please check
-      # that you intend for these files to be applied in this order.
+      - common.values.yaml
       - lassen.values.yaml
+      - enc-lassen.secret.values.yaml
   - name: sbcc
     display_name: "Santa Barbara City College"
     domain: sbcc.cloudbank.2i2c.cloud
     helm_chart: basehub
-    auth0:
-      # connection update? Also ensure the basehub Helm chart is provided a
-      # matching value for jupyterhub.custom.2i2c.add_staff_user_ids_of_type!
-      connection: google-oauth2
     helm_chart_values_files:
-      # The order in which you list files here is the order the will be passed
-      # to the helm upgrade command in, and that has meaning. Please check
-      # that you intend for these files to be applied in this order.
+      - common.values.yaml
       - sbcc.values.yaml
+      - enc-sbcc.secret.values.yaml
   - name: lacc
     display_name: "Los Angeles City College"
     domain: lacc.cloudbank.2i2c.cloud
     helm_chart: basehub
-    auth0:
-      # connection update? Also ensure the basehub Helm chart is provided a
-      # matching value for jupyterhub.custom.2i2c.add_staff_user_ids_of_type!
-      enabled: false
     helm_chart_values_files:
-      # The order in which you list files here is the order the will be passed
-      # to the helm upgrade command in, and that has meaning. Please check
-      # that you intend for these files to be applied in this order.
+      - common.values.yaml
       - lacc.values.yaml
       - enc-lacc.secret.values.yaml
   - name: mills
     display_name: "Mills College"
     domain: datahub.mills.edu
     helm_chart: basehub
-    auth0:
-      # connection update? Also ensure the basehub Helm chart is provided a
-      # matching value for jupyterhub.custom.2i2c.add_staff_user_ids_of_type!
-      connection: google-oauth2
     helm_chart_values_files:
-      # The order in which you list files here is the order the will be passed
-      # to the helm upgrade command in, and that has meaning. Please check
-      # that you intend for these files to be applied in this order.
+      - common.values.yaml
       - mills.values.yaml
+      - enc-mills.secret.values.yaml
   - name: palomar
     display_name: "Palomar Community College"
     domain: palomar.cloudbank.2i2c.cloud
     helm_chart: basehub
-    auth0:
-      # connection update? Also ensure the basehub Helm chart is provided a
-      # matching value for jupyterhub.custom.2i2c.add_staff_user_ids_of_type!
-      connection: google-oauth2
     helm_chart_values_files:
-      # The order in which you list files here is the order the will be passed
-      # to the helm upgrade command in, and that has meaning. Please check
-      # that you intend for these files to be applied in this order.
+      - common.values.yaml
       - palomar.values.yaml
+      - enc-palomar.secret.values.yaml
   - name: pasadena
     display_name: "Pasadena City College"
     domain: pasadena.cloudbank.2i2c.cloud
     helm_chart: basehub
-    auth0:
-      # connection update? Also ensure the basehub Helm chart is provided a
-      # matching value for jupyterhub.custom.2i2c.add_staff_user_ids_of_type!
-      enabled: false
     helm_chart_values_files:
-      # The order in which you list files here is the order the will be passed
-      # to the helm upgrade command in, and that has meaning. Please check
-      # that you intend for these files to be applied in this order.
-      - enc-pasadena.secret.values.yaml
+      - common.values.yaml
       - pasadena.values.yaml
+      - enc-pasadena.secret.values.yaml
   - name: sjcc
     display_name: "San Jose Community College"
     domain: sjcc.cloudbank.2i2c.cloud
     helm_chart: basehub
-    auth0:
-      # connection update? Also ensure the basehub Helm chart is provided a
-      # matching value for jupyterhub.custom.2i2c.add_staff_user_ids_of_type!
-      enabled: false
     helm_chart_values_files:
-      # The order in which you list files here is the order the will be passed
-      # to the helm upgrade command in, and that has meaning. Please check
-      # that you intend for these files to be applied in this order.
+      - common.values.yaml
       - sjcc.values.yaml
       - enc-sjcc.secret.values.yaml
   - name: tuskegee
     display_name: "Tuskegee University"
     domain: tuskegee.cloudbank.2i2c.cloud
     helm_chart: basehub
-    auth0:
-      # connection update? Also ensure the basehub Helm chart is provided a
-      # matching value for jupyterhub.custom.2i2c.add_staff_user_ids_of_type!
-      connection: google-oauth2
     helm_chart_values_files:
-      # The order in which you list files here is the order the will be passed
-      # to the helm upgrade command in, and that has meaning. Please check
-      # that you intend for these files to be applied in this order.
+      - common.values.yaml
       - tuskegee.values.yaml
+      - enc-tuskegee.secret.values.yaml
   - name: avc
     display_name: "Antelope Valley College"
     domain: avc.cloudbank.2i2c.cloud
     helm_chart: basehub
-    auth0:
-      # connection update? Also ensure the basehub Helm chart is provided a
-      # matching value for jupyterhub.custom.2i2c.add_staff_user_ids_of_type!
-      connection: google-oauth2
     helm_chart_values_files:
-      # The order in which you list files here is the order the will be passed
-      # to the helm upgrade command in, and that has meaning. Please check
-      # that you intend for these files to be applied in this order.
+      - common.values.yaml
       - avc.values.yaml
+      - enc-avc.secret.values.yaml
   - name: csu
     display_name: "California State University"
     domain: csu.cloudbank.2i2c.cloud
     helm_chart: basehub
-    auth0:
-      # connection update? Also ensure the basehub Helm chart is provided a
-      # matching value for jupyterhub.custom.2i2c.add_staff_user_ids_of_type!
-      enabled: false
     helm_chart_values_files:
-      # The order in which you list files here is the order the will be passed
-      # to the helm upgrade command in, and that has meaning. Please check
-      # that you intend for these files to be applied in this order.
+      - common.values.yaml
       - csu.values.yaml
       - enc-csu.secret.values.yaml

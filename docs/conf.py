@@ -19,8 +19,8 @@ extensions = [
 
 intersphinx_mapping = {
     "z2jh": ("https://zero-to-jupyterhub.readthedocs.io/en/latest/", None),
-    "tc": ("https://team-compass.2i2c.org/en/latest/", None),
-    "dc": ("https://docs.2i2c.org/en/latest/", None),
+    "tc": ("https://team-compass.2i2c.org", None),
+    "dc": ("https://docs.2i2c.org", None),
 }
 
 # -- MyST configuration ---------------------------------------------------

@@ -16,8 +16,6 @@ hubs:
     display_name: "{{ cluster_name }} - {{ hub_name }}"
     domain: {{ hub_name }}.{{ cluster_name }}.2i2c.cloud
     helm_chart: {{ hub_type }}
-    auth0:
-      enabled: false
     helm_chart_values_files:
       - common.values.yaml
       - {{ hub_name }}.values.yaml

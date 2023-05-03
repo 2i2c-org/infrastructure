@@ -1,13 +1,10 @@
 # Setup local variables with list of hubs that we want checks for
 locals {
   cluster_yamls = [for f in fileset(path.module, "../../config/clusters/*/cluster.yaml") : yamldecode(file(f))]
-  hubs = toset(flatten([for cy in local.cluster_yamls : [for h in cy["hubs"] : {
-    name       = h["name"],
-    domain     = h["domain"]
-    helm_chart = h["helm_chart"]
-    cluster    = cy["name"]
+  hubs = flatten([for cy in local.cluster_yamls : [for h in cy["hubs"] : merge(h, tomap({
+    cluster    = cy["name"],
     provider   = cy["provider"]
-  }]]))
+  }))]])
   # A list of all prometheus servers
   prometheuses = flatten([
     for cy in local.cluster_yamls : [
@@ -24,10 +21,11 @@ resource "google_monitoring_uptime_check_config" "hub_simple_uptime_check" {
   for_each = { for h in local.hubs : h.domain => h }
 
   display_name = "${each.value.domain} on ${each.value.cluster}"
+  selected_regions = ["USA",]
   timeout      = "30s"
 
-  # Check every 5 minutes
-  period = "300s"
+  # Check every 15 minutes
+  period = "900s"
 
   http_check {
     # BinderHub has a different health check URL
@@ -36,8 +34,9 @@ resource "google_monitoring_uptime_check_config" "hub_simple_uptime_check" {
     use_ssl        = true
     request_method = "GET"
     accepted_response_status_codes {
-      # 200 is the only acceptable status code
-      status_value = "200"
+      # Default to looking for 200, but allow overrides in cluster.yaml
+      # This is useful when the entire hub is protected by HTTP Basic Auth
+      status_value = try(each.value.uptime_check.expected_status, "200")
     }
   }
 
@@ -68,18 +67,18 @@ resource "google_monitoring_alert_policy" "hub_simple_uptime_alert" {
       AND metric.type = "monitoring.googleapis.com/uptime_check/check_passed"
       AND metric.labels.check_id = "${google_monitoring_uptime_check_config.hub_simple_uptime_check[each.key].uptime_check_id}"
       EOT
-      # Alert if we have a failure condition for 11 minutes - given we do checks
-      # every 5 minutes, this means we alert if two checks have failed. This shoulod
+      # Alert if we have a failure condition for 31 minutes - given we do checks
+      # every 15 minutes, this means we alert if two checks have failed. This shoulod
       # prevent alerts if the hub is momentarily down during a deployment. All alerts
       # *must* be actionable, so we trade-off some latency here for resiliency.
-      duration        = "660s"
+      duration        = "1860s"
       threshold_value = 1 # 1 means 'a check failed', 0 means 'a check succeeded'
       comparison      = "COMPARISON_GT"
       aggregations {
         group_by_fields = ["resource.label.host"]
         # https://cloud.google.com/monitoring/alerts/concepts-indepth#duration has
         # more info on alignment
-        alignment_period   = "300s"
+        alignment_period   = "900s"
         per_series_aligner = "ALIGN_NEXT_OLDER"
         # Count each failure as a "1"
         cross_series_reducer = "REDUCE_COUNT_FALSE"
@@ -99,8 +98,9 @@ resource "google_monitoring_uptime_check_config" "prometheus_simple_uptime_check
   display_name = "${each.value.domain} on ${each.value.cluster}"
   timeout      = "30s"
 
-  # Check every 5 minutes
-  period = "300s"
+  # Check every 15 minutes
+  period = "900s"
+  selected_regions = ["USA",]
 
   http_check {
     path           = "/"
@@ -144,14 +144,14 @@ resource "google_monitoring_alert_policy" "prometheus_simple_uptime_alert" {
       # every 5 minutes, this means we alert if two checks have failed. This shoulod
       # prevent alerts if the hub is momentarily down during a deployment. All alerts
       # *must* be actionable, so we trade-off some latency here for resiliency.
-      duration        = "660s"
+      duration        = "1860s"
       threshold_value = 1 # 1 means 'a check failed', 0 means 'a check succeeded'
       comparison      = "COMPARISON_GT"
       aggregations {
         group_by_fields = ["resource.label.host"]
         # https://cloud.google.com/monitoring/alerts/concepts-indepth#duration has
         # more info on alignment
-        alignment_period   = "300s"
+        alignment_period   = "900s"
         per_series_aligner = "ALIGN_NEXT_OLDER"
         # Count each failure as a "1"
         cross_series_reducer = "REDUCE_COUNT_FALSE"

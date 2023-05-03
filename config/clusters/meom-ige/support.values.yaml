@@ -11,14 +11,14 @@ prometheus:
         - secretName: prometheus-tls
           hosts:
             - prometheus.meom-ige.2i2c.cloud
-    resources:
-      requests:
-        cpu: 500m
-        memory: 512Mi
-      limits:
-        cpu: 500m
-        memory: 2G
+
 grafana:
+  grafana.ini:
+    server:
+      root_url: https://grafana.meom-ige.2i2c.cloud/
+    auth.github:
+      enabled: true
+      allowed_organizations: 2i2c-org
   ingress:
     hosts:
       - grafana.meom-ige.2i2c.cloud

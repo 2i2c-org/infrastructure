@@ -1,5 +1,5 @@
 name: victor
-provider: aws
+provider: aws # https://2i2c.awsapps.com/start#/
 aws:
   key: enc-deployer-credentials.secret.json
   clusterType: eks
@@ -14,10 +14,6 @@ hubs:
     display_name: "Victor (staging)"
     domain: staging.victor.2i2c.cloud
     helm_chart: daskhub
-    auth0:
-      # connection update? Also ensure the basehub Helm chart is provided a
-      # matching value for jupyterhub.custom.2i2c.add_staff_user_ids_of_type!
-      enabled: false
     helm_chart_values_files:
       # The order in which you list files here is the order the will be passed
       # to the helm upgrade command in, and that has meaning. Please check
@@ -29,10 +25,6 @@ hubs:
     display_name: "Victor"
     domain: victor.2i2c.cloud
     helm_chart: daskhub
-    auth0:
-      # connection update? Also ensure the basehub Helm chart is provided a
-      # matching value for jupyterhub.custom.2i2c.add_staff_user_ids_of_type!
-      enabled: false
     helm_chart_values_files:
       # The order in which you list files here is the order the will be passed
       # to the helm upgrade command in, and that has meaning. Please check

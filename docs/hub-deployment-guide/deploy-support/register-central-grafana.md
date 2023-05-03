@@ -23,7 +23,11 @@ installed by default in many operating systems, to generate the password.
 Once you create the file, encrypt it with `sops`.
 
 ```bash
-sops --output config/clusters/<cluster-name>/enc-support.secret.values.yaml --encrypt config/clusters/<cluster-name>/support.secret.values.yaml
+export CLUSTER_NAME=<cluster-name>
+```
+
+```bash
+sops --output config/clusters/$CLUSTER_NAME/enc-support.secret.values.yaml --encrypt config/clusters/$CLUSTER_NAME/support.secret.values.yaml
 ```
 
 ## Update your `cluster.yaml` file
@@ -40,9 +44,9 @@ support:
 Then redeploy the `support chart`.
 
 ```bash
-deployer deploy-support <cluster-name>
+deployer deploy-support $CLUSTER_NAME
 ```
 
 ## Link the cluster's Prometheus server to the central Grafana
 
-Run `deployer update-central-grafana-datasources` to register the new prometheus with the default central grafana.`
+Run `deployer update-central-grafana-datasources` to register the new prometheus with the default central grafana.

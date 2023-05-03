@@ -180,7 +180,7 @@ If you can't find the workspace you're looking for, double check you've enabled 
 ## Plan and Apply Changes
 
 ```{note}
-When deploying to Google Cloud, make sure the [Compute Engine](https://console.cloud.google.com/apis/library/compute.googleapis.com), [Kubernetes Engine](https://console.cloud.google.com/apis/library/container.googleapis.com), and [Artifact Registry](https://console.cloud.google.com/apis/library/artifactregistry.googleapis.com) APIs are enabled on the project before deploying!
+When deploying to Google Cloud, make sure the [Compute Engine](https://console.cloud.google.com/apis/library/compute.googleapis.com), [Kubernetes Engine](https://console.cloud.google.com/apis/library/container.googleapis.com), [Artifact Registry](https://console.cloud.google.com/apis/library/artifactregistry.googleapis.com), and [Cloud Logging](https://console.cloud.google.com/apis/library/logging.googleapis.com) APIs are enabled on the project before deploying!
 ```
 
 First, make sure you are in the new workspace that you just created.
@@ -223,13 +223,17 @@ terraform workspace list  # List all available workspaces
 terraform workspace select WORKSPACE_NAME
 ```
 
-Then, output the credentials created by terraform to a file under the appropriate cluster directory: `/config/clusters/<cluster-name>`.
+Then, output the credentials created by terraform to a file under the appropriate cluster directory: `/config/clusters/$CLUSTER_NAME`.
 
 ````{note}
 Create the cluster directory if it doesn't already exist with:
 
 ```bash
-mkdir -p ../../config/clusters/<cluster-name>
+export CLUSTER_NAME=<cluster-name>
+```
+
+```bash
+mkdir -p ../../config/clusters/$CLUSTER_NAME
 ```
 ````
 
@@ -237,14 +241,14 @@ mkdir -p ../../config/clusters/<cluster-name>
 ````{tab-item} Google Cloud
 :sync: gcp-key
 ```bash
-terraform output -raw ci_deployer_key > ../../config/clusters/<cluster_name>/deployer-credentials.secret.json
+terraform output -raw ci_deployer_key > ../../config/clusters/$CLUSTER_NAME/deployer-credentials.secret.json
 ```
 ````
 
 ````{tab-item} Azure
 :sync: azure-key
 ```bash
-terraform output -raw kubeconfig > ../../config/clusters/<cluster_name>/deployer-credentials.secret.yaml
+terraform output -raw kubeconfig > ../../config/clusters/$CLUSTER_NAME/deployer-credentials.secret.yaml
 ```
 ````
 `````
@@ -257,7 +261,7 @@ You must be logged into Google with your `@2i2c.org` account at this point so `s
 
 ```bash
 cd ../..  # Make sure you are in the root of the repository
-sops --output config/clusters/<cluster_name>/enc-deployer-credentials.secret.{{ json | yaml }} --encrypt config/clusters/<cluster_name>/deployer-credentials.secret.{{ json | yaml }}
+sops --output config/clusters/$CLUSTER_NAME/enc-deployer-credentials.secret.{{ json | yaml }} --encrypt config/clusters/$CLUSTER_NAME/deployer-credentials.secret.{{ json | yaml }}
 ```
 
 This key can now be committed to the `infrastructure` repo and used to deploy and manage hubs hosted on that cluster.
@@ -269,13 +273,13 @@ We use `cluster.yaml` files to describe a specific cluster and all the hubs depl
 See [](config:structure) for more information.
 ```
 
-Create a `cluster.yaml` file under the `config/cluster/<cluster-name>` folder and populate it with the following info:
+Create a `cluster.yaml` file under the `config/cluster/$CLUSTER_NAME>` folder and populate it with the following info:
 
 `````{tab-set}
 ````{tab-item} Google Cloud
 :sync: gcp-key
 ```yaml
-name: <cluster-name>  # This should also match the name of the folder: config/clusters/<cluster-name>
+name: <cluster-name>  # This should also match the name of the folder: config/clusters/$CLUSTER_NAME>
 provider: gcp
 gcp:
   # The location of the *encrypted* key we exported from terraform
@@ -288,7 +292,34 @@ gcp:
   # The GCP zone the cluster in deployed in. For multi-regional clusters, you
   # may have to strip the last identifier, i.e., 'us-central1-a' becomes 'us-central1'
   zone: <gcp-zone>
+  billing:
+   # Set to true if billing for this cluster is paid for by the 2i2c card
+   paid_by_us: true
+   bigquery:
+    # contains information about bigquery billing export (https://cloud.google.com/billing/docs/how-to/export-data-bigquery)
+    # for calculating how much this cluster costs us. Required if `paid_by_us` is
+    # set to true.
+    project: <id-of-gcp-project-where-bigquery-dataset-lives>
+    dataset: <id-of-bigquery-dataset>
+    billing_id: <id-of-billing-account-associated-with-this-project>
 ```
+
+### Billing information
+
+For projects where we are paying the cloud bill & then passing costs through, you need to fill
+in information under` gcp.billing.bigquery` and set `gcp.billing.paid_by_us` to `true`. Partnerships
+should be able to tell you if we are doing cloud costs pass through or not, and eventually this should
+be provided by a single source of truth for all contracts.
+
+1. Going to the [Billing Tab](https://console.cloud.google.com/billing/linkedaccount) on Google Cloud Console
+2. Make sure the correct project is selected in the top bar. You might have to select the 'All' tab in the
+   project chooser if you do not see the project right away.
+3. Click 'Go to billing account'
+4. In the default view (Overview) that opens, you can find the value for `billing_id` in the right sidebar,
+   under "Billing Account". It should be of the form `XXXXXX-XXXXXX-XXXXXX`.
+5. Select "Billing export" on the left navigation bar, and you will find the values for `project` and
+   `dataset` under "Detailed cost usage".
+6. If "Detailed cost usage" is not set up, you should [enable it](new-gcp-project:billing-export)
 ````
 ````{tab-item} Azure (kubeconfig)
 :sync: azure-key
@@ -298,7 +329,7 @@ to create a [Service Principal](https://learn.microsoft.com/en-us/azure/active-d
 with terraform.
 ```
 ```yaml
-name: <cluster-name>  # This should also match the name of the folder: config/clusters/<cluster-name>
+name: <cluster-name>  # This should also match the name of the folder: config/clusters/$CLUSTER_NAME
 provider: kubeconfig
 kubeconfig:
   # The location of the *encrypted* key we exported from terraform
@@ -307,7 +338,7 @@ kubeconfig:
 ````
 ````{tab-item} Azure (Service Principal)
 ```yaml
-name: <cluster-name>  # This should also match the name of the folder: config/clusters/<cluster-name>
+name: <cluster-name>  # This should also match the name of the folder: config/clusters/$CLUSTER_NAME
 provider: azure
 azure:
   # The location of the *encrypted* key we exported from terraform

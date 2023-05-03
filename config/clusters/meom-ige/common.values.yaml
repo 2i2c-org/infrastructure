@@ -79,26 +79,9 @@ basehub:
         name: pangeo/pangeo-notebook
         tag: "2022.06.13"
     scheduling:
-      userPlaceholder:
-        enabled: false
-        replicas: 0
       userScheduler:
         enabled: false
-    proxy:
-      chp:
-        resources:
-          requests:
-            # FIXME: We want no guarantees here!!!
-            # This is lowest possible value
-            cpu: 0.01
-            memory: 1Mi
     hub:
-      resources:
-        requests:
-          # FIXME: We want no guarantees here!!!
-          # This is lowest possible value
-          cpu: 0.01
-          memory: 1Mi
       config:
         Authenticator:
           allowed_users: &users
@@ -108,11 +91,6 @@ basehub:
           admin_users: *users
 
       allowNamedServers: true
-      networkPolicy:
-        # FIXME: For dask gateway
-        enabled: false
-      readinessProbe:
-        enabled: false
 dask-gateway:
   gateway:
     extraConfig:

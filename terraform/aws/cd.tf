@@ -16,9 +16,9 @@ resource "aws_iam_user_policy" "continuous_deployer" {
   "Version": "2012-10-17",
   "Statement": [
     {
-			"Effect": "Allow",
-			"Action": "eks:DescribeCluster",
-			"Resource": "*"
+      "Effect": "Allow",
+      "Action": "eks:DescribeCluster",
+      "Resource": "${data.aws_eks_cluster.cluster.arn}"
     }
   ]
 }

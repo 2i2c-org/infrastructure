@@ -1,0 +1,67 @@
+ingressBasicAuth:
+  enabled: true
+  # Password and username in enc-hackanexoplanet.secret.values.yaml
+
+jupyterhub:
+  prePuller:
+    # Startup performance is important for this event, and so we use
+    # pre-puller to make sure the images are already present on the
+    # nodes. This means image *must* be set in config, and not the configurator.
+    # tmpauthenticator doesn't support admin access anyway, so images
+    # must be set in config regardless.
+    hook:
+      enabled: true
+    continuous:
+      enabled: true
+  ingress:
+    annotations:
+      # We protect our entire hub from cryptobros by putting it all
+      # behind a single shared basicauth
+      nginx.ingress.kubernetes.io/auth-type: basic
+      nginx.ingress.kubernetes.io/auth-secret: ingress-basic-auth
+      nginx.ingress.kubernetes.io/auth-realm: "Authentication Required"
+    hosts:
+      - hackanexoplanet.2i2c.cloud
+    tls:
+      - secretName: https-auto-tls
+        hosts:
+          - hackanexoplanet.2i2c.cloud
+  custom:
+    homepage:
+      # tmpauthenticator does *not* show a home page by default,
+      # so these are not visible anywhere. But our schema requires we set
+      # them to strings, so we specify empty strings here.
+      templateVars:
+        org:
+          name: ""
+          url: ""
+          logo_url: ""
+        designed_by:
+          name: ""
+          url: ""
+        operated_by:
+          name: ""
+          url: ""
+        funded_by:
+          name: ""
+          url: ""
+  singleuser:
+    image:
+      # Image repository: https://github.com/2i2c-org/hackanexoplanet-env
+      name: quay.io/2i2c/hackanexoplanet-image
+      tag: "b6b891cb2b30"
+    initContainers: null
+    storage:
+      # No persistent storage should be kept to reduce any potential data
+      # retention & privacy issues.
+      type: none
+      extraVolumeMounts: null
+  hub:
+    config:
+      JupyterHub:
+        authenticator_class: tmpauthenticator.TmpAuthenticator
+      TmpAuthenticator:
+        # This allows users to go to the hub URL directly again to
+        # get a new server, instead of being plopped back into their
+        # older, existing user with a 'start server' button.
+        force_new_server: true

@@ -32,6 +32,10 @@ basehub:
             name: Carbon Plan
             url: https://carbonplan.org
     singleuser:
+      extraEnv:
+        # Temporarily set for *all* pods, including pods without any GPUs,
+        # to work around https://github.com/2i2c-org/infrastructure/issues/1530
+        NVIDIA_DRIVER_CAPABILITIES: compute,utility
       serviceAccountName: cloud-user-sa
       image:
         name: carbonplan/trace-python-notebook
@@ -51,21 +55,31 @@ basehub:
               display_name: Image
               choices:
                 python:
-                  display_name: Trace Python Notebook
-                  default: true
+                  display_name: DEPRECATED Trace Python Notebook
                   slug: "python"
                   kubespawner_override:
                     image: carbonplan/trace-python-notebook:latest
                 main:
                   display_name: Main Single User
+                  default: true
                   slug: "main"
                   kubespawner_override:
                     image: carbonplan/main-single-user:latest
                 cmip6:
-                  display_name: CMIP6 Downscaling
+                  display_name: DEPRECATED CMIP6 Downscaling
                   slug: "cmip6"
                   kubespawner_override:
                     image: carbonplan/cmip6-downscaling-single-user:latest
+                tensorflow:
+                  display_name: Pangeo Tensorflow ML Notebook
+                  slug: "tensorflow"
+                  kubespawner_override:
+                    image: "pangeo/ml-notebook:ebeb9dd"
+                edge:
+                  display_name: Edge Single User
+                  slug: "edge"
+                  kubespawner_override:
+                    image: "carbonplan/edge-single-user:latest"
           kubespawner_override:
             # Expllicitly unset mem_limit, so it overrides the default memory limit we set in
             # basehub/values.yaml
@@ -113,12 +127,34 @@ basehub:
             mem_guarantee: 1900G
             node_selector:
               node.kubernetes.io/instance-type: x1.32xlarge
+        - display_name: "GPU"
+          description: |
+            ~4CPUs, Nvidia T4 GPU, 14G of RAM.
+          profile_options:
+            image:
+              display_name: Image
+              choices:
+                tensorflow:
+                  display_name: Pangeo Tensorflow ML Notebook
+                  slug: "tensorflow"
+                  kubespawner_override:
+                    image: "pangeo/ml-notebook:2023.02.27"
+                pytorch:
+                  display_name: Pangeo PyTorch ML Notebook
+                  default: true
+                  slug: "pytorch"
+                  kubespawner_override:
+                    image: "pangeo/pytorch-notebook:2023.02.27"
+          kubespawner_override:
+            mem_limit: null
+            extra_resource_limits:
+              nvidia.com/gpu: "1"
+            mem_guarantee: 14G
+            node_selector:
+              node.kubernetes.io/instance-type: g4dn.xlarge
     scheduling:
-      userPlaceholder:
-        enabled: false
-        replicas: 0
       userScheduler:
-        enabled: false
+        enabled: true
     proxy:
       chp:
         resources:

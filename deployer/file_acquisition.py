@@ -68,6 +68,101 @@ def find_absolute_path_to_cluster_file(cluster_name: str, is_test: bool = False)
     return cluster_yaml_path
 
 
+def build_absolute_path_to_hub_encrypted_config_file(cluster_name, hub_name):
+    """Builds the absolute path to a `enc-{hub_name}.secret.values.yaml` file
+    for a named cluster and hub
+
+    Args:
+        cluster_name (str): The name of the cluster we wish to perform actions on.
+            This corresponds to a folder name, and that folder should contain a
+            cluster.yaml file.
+        hub_name (str): The name of the hub we wish to perform actions on.
+            This hub name must be listed in the cluster's cluster.yaml file.
+
+    Returns:
+        Path object: The absolute path to the `enc-{hub_name}.secret.values.yaml`
+        in the `cluster_name` named cluster.
+        Note that file doesn't need to exist.
+    """
+    cluster_config_dir_path = find_absolute_path_to_cluster_file(cluster_name).parent
+    encrypted_file_path = cluster_config_dir_path.joinpath(
+        f"enc-{hub_name}.secret.values.yaml"
+    )
+
+    return encrypted_file_path
+
+
+def persist_config_in_encrypted_file(encrypted_file, new_config):
+    """
+    Write `config` to `encrypted_file` file.
+    If `encrypted_file` doesn't exist, create it first.
+    If `encrypted_file` exits, then merge exiting config with `config` and write the merged config to file.
+    """
+    if Path(encrypted_file).is_file():
+        subprocess.check_call(["sops", "--decrypt", "--in-place", encrypted_file])
+        with open(encrypted_file, "r+") as f:
+            config = yaml.load(f)
+            config.update(new_config)
+            f.seek(0)
+            yaml.dump(config, f)
+            f.truncate()
+        return subprocess.check_call(
+            ["sops", "--encrypt", "--in-place", encrypted_file]
+        )
+
+    with open(encrypted_file, "a+") as f:
+        yaml.dump(new_config, f)
+    return subprocess.check_call(["sops", "--encrypt", "--in-place", encrypted_file])
+
+
+def remove_jupyterhub_hub_config_key_from_encrypted_file(encrypted_file, key):
+    """
+    Remove config from the dict `config["jupyterhub"]["hub"]["config"][<key>]`
+    in `encrypted_file` (the config is also searched for under daskhub/binderhub prefixes).
+
+    If after removing this config, the file only contains a config dict with empty leaves,
+    delete the entire file, as it no longer holds any information.
+    """
+    _assert_file_exists(encrypted_file)
+
+    with get_decrypted_file(encrypted_file) as decrypted_path:
+        with open(decrypted_path) as f:
+            config = yaml.load(f)
+
+    daskhub = config.get("basehub", None)
+    binderhub = config.get("binderhub", None)
+    if daskhub:
+        config["basehub"]["jupyterhub"]["hub"]["config"].pop(key)
+    elif binderhub:
+        config["binderhub"]["jupyterhub"]["hub"]["config"].pop(key)
+    else:
+        config["jupyterhub"]["hub"]["config"].pop(key)
+
+    def clean_empty_nested_dicts(d):
+        if isinstance(d, dict):
+            return {
+                key: value
+                for key, value in (
+                    (key, clean_empty_nested_dicts(value)) for key, value in d.items()
+                )
+                if value
+            }
+        return d
+
+    remaining_config = clean_empty_nested_dicts(config)
+
+    if remaining_config:
+        with open(encrypted_file, "w") as f:
+            yaml.dump(remaining_config, f)
+            f.truncate()
+
+        subprocess.check_call(["sops", "--encrypt", "--in-place", encrypted_file])
+        return
+
+    # If the file only contained configuration for `key`, then we can safely delete it
+    Path(encrypted_file).unlink()
+
+
 @contextmanager
 def get_decrypted_file(original_filepath):
     """

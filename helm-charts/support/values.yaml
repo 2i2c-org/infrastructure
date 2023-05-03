@@ -34,6 +34,13 @@ ingress-nginx:
       # ref: https://z2jh.jupyter.org/en/stable/administrator/security.html#introduction-to-the-chart-s-four-network-policies
       #
       hub.jupyter.org/network-access-proxy-http: "true"
+    resources:
+      requests:
+        cpu: 100m # chart's default is 100m
+        # This pod has been observed at 104-131Mi so far in 2i2c clusters, above
+        # the default request of 90Mi. To protect it from being evicted by using
+        # more memory than requested, we have increased the memory request.
+        memory: 250Mi # chart's default is 90Mi
 
 # prometheus is responsible for collecting metrics and informing grafana about
 # the metrics on request. It comes with several dependency charts, where we
@@ -93,6 +100,22 @@ prometheus:
       - key: k8s.dask.org/dedicated
         value: worker
         effect: NoSchedule
+    # resources for the node-exporter was set after inspecting cpu and memory
+    # use via prometheus and grafana.
+    #
+    # node-exporter is typically found using between 0-3m CPU and 2-22Mi memory.
+    #
+    # PromQL queries for CPU and memory use:
+    # - CPU:    sum(rate(container_cpu_usage_seconds_total{container="node-exporter", namespace="support"}[5m])) by (pod)
+    # - Memory: sum(container_memory_usage_bytes{container="node-exporter", namespace="support"}) by (pod)
+    #
+    resources:
+      limits:
+        cpu: 5m
+        memory: 30Mi
+      requests:
+        cpu: 5m
+        memory: 30Mi
 
   networkPolicy:
     enabled: true
@@ -117,13 +140,38 @@ prometheus:
       # can sometimes get 'stuck' and require pods to be manually deleted.
       type: Recreate
     resources:
-      # Without this, prometheus can easily starve users
+      # Prometheus cpu/memory requests/limits needs to be carefully considered based on:
+      #
+      # CPU:
+      #
+      #   During startup prometheus-server can compete for ~all of the node's
+      #   CPU unless its bounded by a limit. The key to avoiding this isn't to
+      #   provide a low limit as what's low is relative to the node's capacity,
+      #   which could for example be 2, 4, or 8 CPU.
+      #
+      #   The avoid starving other pods, the key is to have a sufficiently low
+      #   CPU request so that this pod doesn't get far higher priority to use
+      #   the available CPU on the node when in competition with the other pods
+      #   for CPU.
+      #
+      # Memory:
+      #
+      #   During startup prometheus-server will use up a lot of memory, up to X
+      #   where X grows are more metrics has been collected. Over time,
+      #   prometheus-server may run into its memory limit and get OOMKilled, or
+      #   the node it runs on may run out of memory before that happens and
+      #   prometheus-server or other pods exceeding their memory limit will get
+      #   evicted.
+      #
+      #   To fail reliably in prometheus-server without influencing other pods,
+      #   we should put the memory request to match the limit.
+      #
       requests:
-        cpu: 0.2
-        memory: 512Mi
+        cpu: 0.1
+        memory: 4Gi
       limits:
-        cpu: 1
-        memory: 2Gi
+        cpu: 4
+        memory: 4Gi
     labels:
       # For HTTP access to the hub, to scrape metrics
       hub.jupyter.org/network-access-hub: "true"
@@ -152,11 +200,72 @@ grafana:
     # Grafana is exposed to the world via ingress
     type: ClusterIP
 
+  rbac:
+    namespaced: true
+    pspEnabled: false
+
+  # initChownData refers to an init container enabled by default that isn't
+  # needed as we don't reconfigure the linux user the grafana server will run
+  # as.
+  initChownData:
+    enabled: false
+
+  # resources for grafana was set after inspecting cpu and memory use via
+  # prometheus and grafana.
+  #
+  # Grafana's memory use seems to increase over time but seems reasonable to
+  # stay below 200Mi for years to come. Grafana's CPU use seems miniscule with
+  # peaks at up to 9m CPU from one user is browsing its dashboards.
+  #
+  # PromQL queries for CPU and memory use:
+  # - CPU:    sum(rate(container_cpu_usage_seconds_total{container="grafana", namespace="support"}[5m])) by (pod)
+  # - Memory: sum(container_memory_usage_bytes{container="grafana", namespace="support"}) by (pod)
+  #
+  resources:
+    limits:
+      cpu: 100m
+      memory: 200Mi
+    requests:
+      cpu: 10m
+      memory: 200Mi
+
   ingress:
     enabled: true
     annotations:
+      # nginx.ingress.kubernetes.io/proxy-body-size increased from the default
+      # of 1m to avoid HTTP 413 (Request Entity Too Large) when making POST
+      # request (via jupyterhub/grafana-dashboard's deploy script, from a github
+      # workflow) to update dashboards with json files representing them.
+      #
+      nginx.ingress.kubernetes.io/proxy-body-size: 64m
       kubernetes.io/ingress.class: nginx
       cert-manager.io/cluster-issuer: letsencrypt-prod
+
+  # grafana is partially configured for GitHub authentication here, but the
+  # following values need to be set as well, where client_secret should be kept
+  # secret:
+  #
+  #     server:
+  #       root_url: https://grafana.<cluster_name>.2i2c.cloud
+  #     auth.github:
+  #       enabled: true
+  #       allowed_organizations: "2i2c-org some-other-gh-org"
+  #       client_id: ""
+  #       client_secret: ""
+  #
+  grafana.ini:
+    server:
+      root_url: ""
+    auth.github:
+      enabled: false
+      allowed_organizations: ""
+      client_id: ""
+      client_secret: ""
+      allow_sign_up: true
+      scopes: user:email,read:org
+      auth_url: https://github.com/login/oauth/authorize
+      token_url: https://github.com/login/oauth/access_token
+      api_url: https://api.github.com/user
 
   datasources:
     datasources.yaml:
@@ -179,6 +288,33 @@ grafana:
 #
 cryptnono:
   enabled: true
+  # resources for cryptnono was set after inspecting cpu and memory use via
+  # prometheus and grafana.
+  #
+  # cryptnono has an init container (kubectl-trace-init) and another container
+  # (trace). The init container has been found using up to 1.6Gi and up to about
+  # 600m for 4 minutes. The main container has been found using up to 150Mi but
+  # typically below 100Mi, and miniscule amounts of CPU (0-3m).
+  #
+  # Since cryptnono is a non-critical service, we are at the moment allowing it
+  # to be evicted during node memory pressure by providing a low memory request
+  # compared to the limit. We are also not requesting significant amounts of CPU
+  # so that it doesn't compete well with others initially.
+  #
+  # Note that as of now 2023-03-31 (8367fa5 in yuvipanda/cryptnono), the
+  # resources configuration configure both containers.
+  #
+  # PromQL queries for CPU and memory use:
+  # - CPU:    sum(rate(container_cpu_usage_seconds_total{container="kube-trace-init", namespace="support"}[5m])) by (pod)
+  # - Memory: sum(container_memory_usage_bytes{container="kube-trace-init", namespace="support"}) by (pod)
+  #
+  resources:
+    limits:
+      cpu: 800m
+      memory: 2Gi
+    requests:
+      cpu: 5m
+      memory: 100Mi
 
 # Configuration of templates provided directly by this chart
 # -------------------------------------------------------------------------------

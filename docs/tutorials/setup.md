@@ -86,13 +86,26 @@ libraries we will use. Again this depends on how you installed python, and wheth
 want to use `conda` or `pip`.
 
 Once you have a virtual environment setup and activated, install the libraries
-required with `pip install -r requirements.txt`. Now you are all ready to use our deployer
-scripts!
+required with `pip install -r requirements.txt -r dev-requirements.txt -e .`
+
+Now you are all ready to use our deployer scripts! Note if dependencies get
+added you will to run the installation again.
 
 Remember you need to *activate the environment* you installed these libraries into each
 time you use any of our scripts.
 
-## Step 3: Authenticate with Google Cloud to decrypt our secret files
+## Step 3: Setup the git pre-commit hooks
+
+Install pre-commit [pre-commit installation instruction](https://pre-commit.com/#introduction)
+
+In the root of the checked out `infrastructure` repo run the below to install
+the local pre-commit hooks.
+
+```
+pre-commit install --install-hooks
+``` 
+
+## Step 4: Authenticate with Google Cloud to decrypt our secret files
 
 Permission to decrypt the secret files in this repo is managed via
 Google Cloud's [Key Management Service](https://cloud.google.com/security-key-management),
@@ -108,7 +121,7 @@ your `2i2c.org` Google Account. If you don't have this, please ask a team member
 
 Tada, now you're logged in!
 
-## Step 4: Access kubernetes clusters with the `deployer` module
+## Step 5: Access kubernetes clusters with the `deployer` module
 
 ```{note}
 You should have already been given access to the `two-eye-two-see` Google Cloud

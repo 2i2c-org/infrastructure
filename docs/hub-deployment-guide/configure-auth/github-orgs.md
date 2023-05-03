@@ -52,17 +52,7 @@ You can remove yourself from the org once you have confirmed that login is worki
     `sops --output config/clusters/<cluster_name>/enc-<hub_name>.secret.values.yaml --encrypt config/clusters/<cluster_name>/<hub_name>.secret.values.yaml`
     ```
 
-3. **Set the hub to _not_ configure Auth0 in the `config/clusters/<cluster_name>/cluster.yaml` file.**
-   To ensure the deployer does not provision and configure an OAuth app from Auth0, the following config should be added to the appropriate hub in the cluster's `cluster.yaml` file.
-
-   ```yaml
-   hubs:
-     - name: <hub_name>
-       auth0:
-         enabled: false
-   ```
-
-4. **If not already present, add the secret hub config file to the list of helm chart values file in `config/clusters<cluster_name>/cluster.yaml`.**
+3. **If not already present, add the secret hub config file to the list of helm chart values file in `config/clusters<cluster_name>/cluster.yaml`.**
    If you created the `enc-<hub_name>.secret.values.yaml` file in step 2, add it the the `cluster.yaml` file like so:
 
    ```yaml
@@ -76,7 +66,7 @@ You can remove yourself from the org once you have confirmed that login is worki
      ...
    ```
 
-5. **Edit the non-secret config under `config/clusters/<cluster_name>/<hub_name>.values.yaml`.**
+4. **Edit the non-secret config under `config/clusters/<cluster_name>/<hub_name>.values.yaml`.**
    You should make sure the matching hub config takes one of the following forms.
 
    ```{warning}
@@ -140,7 +130,7 @@ You can remove yourself from the org once you have confirmed that login is worki
     ```
     ````
 
-6. Run the deployer as normal to apply the config.
+5. Run the deployer as normal to apply the config.
 
 ### Granting access to the OAuth app
 
@@ -153,6 +143,8 @@ For each user, GitHub will list _all organizations of which they are a member_.
 - Organisations that you are a member of (but not an admin) have a "Request" button next to them.
   This will notify the org admins to grant access to this app on your behalf.
 - Organisations that you are an admin of will have a "Grant" button next to them
+
+If you have already logged in to the hub prior to adding the organization authentication you can perform the grant on the Authorized Oauth Apps tab of your accounts GitHub [Applications](https://github.com/settings/connections/applications/) Settings.
 
 **You must grant access to the organization that is added to `allowed_organizations` in the config**, but do not need to grant access to any other organizations.
 In this case, "granting access" only means that the JupyterHub can view whether a user is a member of the GitHub organization.

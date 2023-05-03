@@ -1,0 +1,5 @@
+jupyterhub:
+  singleuser:
+    image:
+      name: quay.io/2i2c/2i2c-hubs-image
+      tag: "14107b8a85fb"

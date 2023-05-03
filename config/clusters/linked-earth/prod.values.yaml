@@ -3,6 +3,14 @@ basehub:
     annotations:
       iam.gke.io/gcp-service-account: linked-earth-prod@linked-earth-hubs.iam.gserviceaccount.com
   jupyterhub:
+    ingress:
+      hosts: [linkedearth.2i2c.cloud]
+      tls:
+        - hosts: [linkedearth.2i2c.cloud]
+          secretName: https-auto-tls
+    proxy:
+      https:
+        hosts: [linkedearth.2i2c.cloud]
     singleuser:
       extraEnv:
         SCRATCH_BUCKET: gs://linked-earth-scratch/$(JUPYTERHUB_USER)

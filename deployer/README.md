@@ -35,17 +35,28 @@ This section descripts all the deployment related subcommands the `deployer` can
 │ --help                        Show this message and exit.                                                            │
 ╰──────────────────────────────────────────────────────────────────────────────────────────────────────────────────────╯
 ╭─ Commands ───────────────────────────────────────────────────────────────────────────────────────────────────────────╮
+│ auth0-client-create                 Create an Auth0 client app for a hub.                                            │
+│ auth0-client-get-all                Retrieve details about all existing 2i2c CILogon clients.                        │
+│ cilogon-client-create               Create a CILogon client for a hub.                                               │
+│ cilogon-client-delete               Delete an existing CILogon client. This deletes both the CILogon client          │
+│                                     application, and the client credentials from the configuration file.             │
+│ cilogon-client-get                  Retrieve details about an existing CILogon client.                               │
+│ cilogon-client-get-all              Retrieve details about all existing 2i2c CILogon clients.                        │
+│ cilogon-client-update               Update the CILogon client of a hub.                                              │
 │ component-logs                      Display logs from a particular component on a hub on a cluster                   │
+│ decrypt-age                         Decrypt secrets sent to `support@2i2c.org` via `age`                             │
 │ deploy                              Deploy one or more hubs in a given cluster                                       │
-│ deploy-grafana-dashboards           Deploy JupyterHub dashboards to grafana set up in the given cluster              │
+│ deploy-grafana-dashboards           Deploy the latest official JupyterHub dashboards to a cluster's grafana          │
+│                                     instance. This is done via Grafana's REST API, authorized by using a previously  │
+│                                     generated Grafana service account's access token.                                │
 │ deploy-support                      Deploy support components to a cluster                                           │
 │ exec-homes-shell                    Pop an interactive shell with the home directories of the given hub mounted on   │
 │                                     /home                                                                            │
 │ exec-hub-shell                      Pop an interactive shell in the hub pod                                          │
 │ generate-aws-cluster                Automatically generate the files required to setup a new cluster on AWS          │
-│ generate-gcp-cluster                Automatically generate the terraform config file required to setup a new cluster │
-│                                     on GCP                                                                           │
-│ generate-helm-upgrade-jobs          Analyse added or modified files from a GitHub Pull Request and decide which      │
+│ generate-gcp-cluster                Automatically generates the initial files, required to setup a new cluster on    │
+│                                     GCP                                                                              │
+│ generate-helm-upgrade-jobs          Analyze added or modified files from a GitHub Pull Request and decide which      │
 │                                     clusters and/or hubs require helm upgrades to be performed for their *hub helm   │
 │                                     charts or the support helm chart.                                                │
 │ new-grafana-token                   Generate an API token for the cluster's Grafana `deployer` service account and   │
@@ -80,9 +91,9 @@ It takes a name of a cluster and a name of a hub (or list of names) as arguments
 │                                    [default: None]                                                                   │
 ╰──────────────────────────────────────────────────────────────────────────────────────────────────────────────────────╯
 ╭─ Options ────────────────────────────────────────────────────────────────────────────────────────────────────────────╮
-│ --config-path                 TEXT  File to read secret deployment config from                                       │
-│                                     [default: shared/deployer/enc-auth-providers-credentials.secret.yaml]            │
-│ --dask-gateway-version        TEXT  Version of dask-gateway to install CRDs for [default: v2022.10.0]                │
+│ --dask-gateway-version        TEXT  Version of dask-gateway to install CRDs for [default: 2023.1.0]                  │
+│ --debug                             When present, the `--debug` flag will be passed to the `helm upgrade` command.   │
+│ --dry-run                           When present, the `--dry-run` flag will be passed to the `helm upgrade` command. │
 │ --help                              Show this message and exit.                                                      │
 ╰──────────────────────────────────────────────────────────────────────────────────────────────────────────────────────╯
 ```
@@ -159,17 +170,25 @@ Remember to close the opened shell after you've finished by using the `exit` com
 
 **Command line usage:**
 
-```bash
- Usage: deployer use-cluster-credentials [OPTIONS] CLUSTER_NAME                                                         
-                                                                                                                        
- Pop a new shell authenticated to the given cluster using the deployer's credentials                                    
-                                                                                                                        
-╭─ Arguments ──────────────────────────────────────────────────────────────────────────────────────────────────────────╮
-│ *    cluster_name      TEXT  Name of cluster to operate on [default: None] [required]                                │
-╰──────────────────────────────────────────────────────────────────────────────────────────────────────────────────────╯
-╭─ Options ────────────────────────────────────────────────────────────────────────────────────────────────────────────╮
-│ --help          Show this message and exit.                                                                          │
-╰──────────────────────────────────────────────────────────────────────────────────────────────────────────────────────╯
+```
+                                                                                    
+ Usage: deployer use-cluster-credentials [OPTIONS] CLUSTER_NAME COMMANDLINE         
+                                                                                    
+ Pop a new shell or execute a command after authenticating to the given cluster     
+ using the deployer's credentials                                                   
+                                                                                    
+╭─ Arguments ──────────────────────────────────────────────────────────────────────╮
+│ *    cluster_name      TEXT  Name of cluster to operate on [default: None]       │
+│                              [required]                                          │
+│ *    commandline       TEXT  Optional shell command line to run after            │
+│                              authenticating to this cluster                      │
+│                              [default: None]                                     │
+│                              [required]                                          │
+╰──────────────────────────────────────────────────────────────────────────────────╯
+╭─ Options ────────────────────────────────────────────────────────────────────────╮
+│ --help          Show this message and exit.                                      │
+╰──────────────────────────────────────────────────────────────────────────────────╯
+
 ```
 
 
@@ -346,6 +365,168 @@ the clusters that we run.
 
 ```
 
+## Support helper tools
+
+### `decrypt-age`
+
+Decrypts information sent to 2i2c by community representatives using [age](https://age-encryption.org/) according to instructions in [2i2c documentation](https://docs.2i2c.org/en/latest/support.html?highlight=decrypt#send-us-encrypted-content).
+
+**Command line usage:**
+```
+                                                                                                                        
+ Usage: deployer decrypt-age [OPTIONS]                                                                                  
+                                                                                                                        
+ Decrypt secrets sent to `support@2i2c.org` via `age`                                                                   
+                                                                                                                        
+╭─ Options ────────────────────────────────────────────────────────────────────────────────────────────────────────────╮
+│ --encrypted-file-path        TEXT  Path to age-encrypted file sent by user. Leave empty to read from stdin.          │
+│ --help                             Show this message and exit.                                                       │
+╰──────────────────────────────────────────────────────────────────────────────────────────────────────────────────────╯
+```
+
+## CILogon OAuth clients management tools
+
+### `cilogon_client_create/delete/get/get-all/update`
+
+create/delete/get/get-all/update/ CILogon clients using the 2i2c administrative client provided by CILogon.
+
+**Command line usage:**
+
+- `cilogon-client-create`
+
+  ```bash
+  Usage: deployer cilogon-client-create [OPTIONS] CLUSTER_NAME HUB_NAME                                                  
+                                       [HUB_TYPE] HUB_DOMAIN                                                            
+                                                                                                                        
+  Create a CILogon client for a hub.                                                                                     
+                                                                                                                          
+  ╭─ Arguments ──────────────────────────────────────────────────────────────────────────────────────────────────────────╮
+  │ *    cluster_name      TEXT        Name of cluster to operate on [default: None] [required]                          │
+  │ *    hub_name          TEXT        Name of the hub for which we'll create a CILogon client [default: None]           │
+  │                                    [required]                                                                        │
+  │      hub_type          [HUB_TYPE]  Type of hub for which we'll create a CILogon client (ex: basehub, daskhub)        │
+  │                                    [default: basehub]                                                                │
+  │ *    hub_domain        TEXT        The hub domain, as specified in `cluster.yaml` (ex: staging.2i2c.cloud)           │
+  │                                    [default: None]                                                                   │
+  │                                    [required]                                                                        │
+  ╰──────────────────────────────────────────────────────────────────────────────────────────────────────────────────────╯
+  ╭─ Options ────────────────────────────────────────────────────────────────────────────────────────────────────────────╮
+  │ --help          Show this message and exit.                                                                          │
+  ╰──────────────────────────────────────────────────────────────────────────────────────────────────────────────────────╯
+  ```
+
+- `cilogon-client-delete`
+
+  ```bash
+  Usage: deployer cilogon-client-delete [OPTIONS] CLUSTER_NAME HUB_NAME                                                  
+                                                                                                                          
+  Delete an existing CILogon client. This deletes both the CILogon client application, and the client credentials from   
+  the configuration file.                                                                                                
+                                                                                                                          
+  ╭─ Arguments ──────────────────────────────────────────────────────────────────────────────────────────────────────────╮
+  │ *    cluster_name      TEXT  Name of cluster to operate [default: None] [required]                                   │
+  │ *    hub_name          TEXT  Name of the hub for which we'll delete the CILogon client details [default: None]       │
+  │                              [required]                                                                              │
+  ╰──────────────────────────────────────────────────────────────────────────────────────────────────────────────────────╯
+  ╭─ Options ────────────────────────────────────────────────────────────────────────────────────────────────────────────╮
+  │ --client-id        TEXT  (Optional) Id of the CILogon client to delete of the form `cilogon:/client_id/<id>`. If the │
+  │                          id is not passed, it will be retrieved from the configuration file                          │
+  │ --help                   Show this message and exit.                                                                 │
+  ╰──────────────────────────────────────────────────────────────────────────────────────────────────────────────────────╯
+  ```
+
+- `cilogon-client-get`
+
+  ```bash
+  Usage: deployer cilogon-client-get [OPTIONS] CLUSTER_NAME HUB_NAME                                                     
+                                                                                                                        
+  Retrieve details about an existing CILogon client.                                                                     
+                                                                                                                          
+  ╭─ Arguments ──────────────────────────────────────────────────────────────────────────────────────────────────────────╮
+  │ *    cluster_name      TEXT  Name of cluster to operate on [default: None] [required]                                │
+  │ *    hub_name          TEXT  Name of the hub for which we'll retrieve the CILogon client details [default: None]     │
+  │                              [required]                                                                              │
+  ╰──────────────────────────────────────────────────────────────────────────────────────────────────────────────────────╯
+  ╭─ Options ────────────────────────────────────────────────────────────────────────────────────────────────────────────╮
+  │ --help          Show this message and exit.                                                                          │
+  ╰──────────────────────────────────────────────────────────────────────────────────────────────────────────────────────╯
+  ```
+
+- `cilogon-client-get-all`
+
+  ```bash
+  Usage: deployer cilogon-client-get-all [OPTIONS]                                                                       
+                                                                                                                          
+  Retrieve details about all existing 2i2c CILogon OAuth clients.                                                        
+                                                                                                                          
+  ╭─ Options ────────────────────────────────────────────────────────────────────────────────────────────────────────────╮
+  │ --help          Show this message and exit.                                                                          │
+  ╰──────────────────────────────────────────────────────────────────────────────────────────────────────────────────────╯
+  ```
+
+- `cilogon-client-update`
+  ```bash
+  Usage: deployer cilogon-client-update [OPTIONS] CLUSTER_NAME HUB_NAME                                                  
+                                        HUB_DOMAIN                                                                       
+                                                                                                                          
+  Update the CILogon client of a hub.                                                                                    
+                                                                                                                          
+  ╭─ Arguments ──────────────────────────────────────────────────────────────────────────────────────────────────────────╮
+  │ *    cluster_name      TEXT  Name of cluster to operate on [default: None] [required]                                │
+  │ *    hub_name          TEXT  Name of the hub for which we'll update a CILogon client [default: None] [required]      │
+  │ *    hub_domain        TEXT  The hub domain, as specified in `cluster.yaml` (ex: staging.2i2c.cloud) [default: None] │
+  │                              [required]                                                                              │
+  ╰──────────────────────────────────────────────────────────────────────────────────────────────────────────────────────╯
+  ╭─ Options ────────────────────────────────────────────────────────────────────────────────────────────────────────────╮
+  │ --help          Show this message and exit.                                                                          │
+  ╰──────────────────────────────────────────────────────────────────────────────────────────────────────────────────────╯
+  ```
+
+## Auth0 OAuth clients management tools
+
+create/get-all/ Auth0 clients using the 2i2c Auth0 administrative.
+
+**Command line usage:**
+
+- `auth0-client-create`
+
+  ```bash
+  Usage: deployer auth0-client-create [OPTIONS] CLUSTER_NAME HUB_NAME [HUB_TYPE]                                         
+                                     HUB_DOMAIN CONNECTION_TYPE                                                         
+                                                                                                                        
+  Create an Auth0 client app for a hub.                                                                                  
+                                                                                                                          
+  ╭─ Arguments ──────────────────────────────────────────────────────────────────────────────────────────────────────────╮
+  │ *    cluster_name         TEXT        Name of cluster to operate [default: None] [required]                          │
+  │ *    hub_name             TEXT        Name of the hub for which a new Auth0 client will be created [default: None]   │
+  │                                       [required]                                                                     │
+  │      hub_type             [HUB_TYPE]  Type of hub for which we'll create an Auth0 client (ex: basehub, daskhub)      │
+  │                                       [default: basehub]                                                             │
+  │ *    hub_domain           TEXT        The hub domain, as specified in `cluster.yaml` (ex: staging.2i2c.cloud)        │
+  │                                       [default: None]                                                                │
+  │                                       [required]                                                                     │
+  │ *    connection_type      TEXT        Auth0 connection type. One of dict_keys(['github', 'google-oauth2',            │
+  │                                       'password', 'CILogon'])                                                        │
+  │                                       [default: None]                                                                │
+  │                                       [required]                                                                     │
+  ╰──────────────────────────────────────────────────────────────────────────────────────────────────────────────────────╯
+  ╭─ Options ────────────────────────────────────────────────────────────────────────────────────────────────────────────╮
+  │ --help          Show this message and exit.                                                                          │
+  ╰──────────────────────────────────────────────────────────────────────────────────────────────────────────────────────╯
+  ```
+
+- `auth0-client-get-all`
+
+  ```bash
+  Usage: deployer auth0-client-get-all [OPTIONS]                                                                         
+                                                                                                                        
+  Retrieve details about all existing 2i2c CILogon clients.                                                              
+                                                                                                                          
+  ╭─ Options ────────────────────────────────────────────────────────────────────────────────────────────────────────────╮
+  │ --help          Show this message and exit.                                                                          │
+  ╰──────────────────────────────────────────────────────────────────────────────────────────────────────────────────────╯
+  ```
+
 ## Debugging helpers
 
 We also have some debug helpers commands that can be invoked as subcommands.
@@ -474,46 +655,6 @@ docker daemon.
 │ --help          Show this message and exit.                                                                          │
 ╰──────────────────────────────────────────────────────────────────────────────────────────────────────────────────────╯
 ```
-
-
-## Sub-scripts
-
-This section describes the utility scripts that are present in the `deployer` module, what is their purpose, and their command line usage.\
-
-**Note:** The `deployer` sub-scripts must currently be invoked from the root of this repository, i.e.:
-
-```bash
-$ pwd
-[...]/infrastructure/deployer
-$ cd .. && pwd
-[...]/infrastructure
-$ python deployer/[sub-script].py
-```
-
-### `cilogon_app`
-
-This is a helper script that can create/update/get/delete CILogon clients using the 2i2c administrative client provided by CILogon.
-
-**Command line usage:**
-
-```bash
-usage: cilogon_app.py [-h] {create,update,get,get-all,delete} ...
-
-A command line tool to create/update/delete CILogon clients.
-
-positional arguments:
-  {create,update,get,get-all,delete}
-                        Available subcommands
-    create              Create a CILogon client
-    update              Update a CILogon client
-    get                 Retrieve details about an existing CILogon client
-    get-all             Retrieve details about an existing CILogon client
-    delete              Delete an existing CILogon client
-
-optional arguments:
-  -h, --help            show this help message and exit
-```
-
 
 ## Running Tests
 

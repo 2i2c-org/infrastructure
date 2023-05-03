@@ -1,10 +1,12 @@
 name: callysto
-provider: gcp
+provider: gcp # https://console.cloud.google.com/kubernetes/clusters/details/northamerica-northeast1/callysto-cluster/details?project=callysto-202316
 gcp:
   key: enc-deployer-credentials.secret.json
   project: callysto-202316
   cluster: callysto-cluster
   zone: northamerica-northeast1
+  billing:
+    paid_by_us: false
 support:
   helm_chart_values_files:
     - support.values.yaml
@@ -14,8 +16,6 @@ hubs:
     display_name: "Callysto Staging"
     domain: staging.callysto.2i2c.cloud
     helm_chart: basehub
-    auth0:
-      enabled: false
     helm_chart_values_files:
       - common.values.yaml
       - staging.values.yaml
@@ -24,8 +24,6 @@ hubs:
     display_name: "Callysto Prod"
     domain: 2i2c.callysto.ca
     helm_chart: basehub
-    auth0:
-      enabled: false
     helm_chart_values_files:
       - common.values.yaml
       - prod.values.yaml

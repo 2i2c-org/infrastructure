@@ -14,6 +14,14 @@ nfs:
     serverIP: fs-0b70db2b65209a77d.efs.us-west-2.amazonaws.com
     baseShareName: /
 jupyterhub:
+  ingress:
+    hosts: [staging.aws.2i2c.cloud]
+    tls:
+      - hosts: [staging.aws.2i2c.cloud]
+        secretName: https-auto-tls
+  proxy:
+    https:
+      hosts: [staging.aws.2i2c.cloud]
   custom:
     2i2c:
       add_staff_user_ids_to_admin_users: true

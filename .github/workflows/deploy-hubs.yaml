@@ -157,7 +157,6 @@ jobs:
       failure_openscapes: "${{ env.failure_openscapes }}"
       failure_pangeo-hubs: "${{ env.failure_pangeo-hubs }}"
       failure_utoronto: "${{ env.failure_utoronto }}"
-      failure_uwhackweeks: "${{ env.failure_uwhackweeks }}"
       failure_m2lines: "${{ env.failure_m2lines }}"
       failure_linked-earth: "${{ env.failure_linked-earth }}"
       failure_awi-ciroh: "${{ env.failure_awi-ciroh }}"
@@ -167,6 +166,10 @@ jobs:
       failure_victor: "${{ env.failure_victor }}"
       failure_2i2c-aws-us: "${{ env.failure_2i2c-aws-us }}"
       failure_ubc-eoas: "${{ env.failure_ubc-eoas }}"
+      failure_nasa-veda: "${{ env.failure_nasa-veda }}"
+      failure_qcl: "${{ env.failure_qcl }}"
+      failure_jupyter-meets-the-earth: "${{ env.failure_jupyter-meets-the-earth }}"
+      failure_smithsonian: "${{ env.failure_smithsonian }}"
 
     # Only run this job on pushes to the default branch and when the job output is not
     # an empty list
@@ -214,10 +217,10 @@ jobs:
         run: |
           deployer deploy ${{ matrix.jobs.cluster_name }} dask-staging
 
-      # - name: Upgrade binder-staging hub on cluster ${{ matrix.jobs.cluster_name }} if it exists
-      #   if: matrix.jobs.upgrade_staging && matrix.jobs.cluster_name == '2i2c'
-      #   run: |
-      #     deployer deploy ${{ matrix.jobs.cluster_name }} binder-staging
+      - name: Upgrade binder-staging hub on cluster ${{ matrix.jobs.cluster_name }} if it exists
+        if: matrix.jobs.upgrade_staging && matrix.jobs.cluster_name == '2i2c'
+        run: |
+          deployer deploy ${{ matrix.jobs.cluster_name }} binder-staging
 
       # Retry action: https://github.com/marketplace/actions/retry-step
       - name: Run health check for dask-staging hub on cluster ${{ matrix.jobs.cluster_name }} if it exists

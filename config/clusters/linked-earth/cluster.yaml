@@ -1,5 +1,5 @@
 name: linked-earth
-provider: gcp
+provider: gcp # https://console.cloud.google.com/kubernetes/clusters/details/us-central1/linked-earth-cluster/nodes?project=linked-earth-hubs
 gcp:
   key: enc-deployer-credentials.secret.json
   project: linked-earth-hubs
@@ -10,6 +10,8 @@ gcp:
   # Could not find [linked-earth-cluster] in [us-central1-c].
   # Did you mean [linked-earth-cluster] in [us-central1]?
   zone: us-central1
+  billing:
+    paid_by_us: false
 support:
   helm_chart_values_files:
     - support.values.yaml
@@ -19,10 +21,6 @@ hubs:
     display_name: "LinkedEarth (staging)"
     domain: staging.linkedearth.2i2c.cloud
     helm_chart: daskhub
-    auth0:
-      # connection update? Also ensure the basehub Helm chart is provided a
-      # matching value for jupyterhub.custom.2i2c.add_staff_user_ids_of_type!
-      enabled: false
     helm_chart_values_files:
       # The order in which you list files here is the order the will be passed
       # to the helm upgrade command in, and that has meaning. Please check
@@ -34,10 +32,6 @@ hubs:
     display_name: "LinkedEarth (prod)"
     domain: linkedearth.2i2c.cloud
     helm_chart: daskhub
-    auth0:
-      # connection update? Also ensure the basehub Helm chart is provided a
-      # matching value for jupyterhub.custom.2i2c.add_staff_user_ids_of_type!
-      enabled: false
     helm_chart_values_files:
       # The order in which you list files here is the order the will be passed
       # to the helm upgrade command in, and that has meaning. Please check

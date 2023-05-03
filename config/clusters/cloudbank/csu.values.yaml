@@ -1,4 +1,12 @@
 jupyterhub:
+  ingress:
+    hosts: [csu.cloudbank.2i2c.cloud]
+    tls:
+      - hosts: [csu.cloudbank.2i2c.cloud]
+        secretName: https-auto-tls
+  proxy:
+    https:
+      hosts: [csu.cloudbank.2i2c.cloud]
   prePuller:
     continuous:
       enabled: true

@@ -5,6 +5,14 @@ userServiceAccount:
   enabled: true
   annotations: {}
 
+ingressBasicAuth:
+  enabled: false
+  # Primarily here for validation to 'work',
+  # as these are set in secret config otherwise. I don't like this,
+  # as we won't catch these values missing if they aren't set.
+  username: ""
+  password: ""
+
 dex:
   enabled: false
 
@@ -88,6 +96,7 @@ jupyterhub:
         - damianavila
         - GeorgianaElena
         - jmunroe
+        - pnasrat
         - sgibson91
         - yuvipanda
       staff_google_ids:
@@ -97,8 +106,13 @@ jupyterhub:
         - damianavila@2i2c.org
         - georgianaelena@2i2c.org
         - jmunroe@2i2c.org
+        - pnasrat@2i2c.org
         - sgibson@2i2c.org
         - yuvipanda@2i2c.org
+    homepage:
+      gitRepoUrl: "https://github.com/2i2c-org/default-hub-homepage"
+      # TODO: make main the default branch in the repo above
+      gitRepoBranch: "master"
   ingress:
     enabled: true
     annotations:
@@ -106,21 +120,32 @@ jupyterhub:
       kubernetes.io/ingress.class: nginx
       cert-manager.io/cluster-issuer: letsencrypt-prod
   scheduling:
+    # We declare matchNodePurpose=require to get a nodeAffinity like a
+    # nodeSelector on all core pods and user pods. core pods like hub and proxy
+    # will schedule on nodes with hub.jupyter.org/node-purpose=core and user
+    # pods on nodes with hub.jupyter.org/node-purpose=user.
+    #
+    # Since this setting adds a nodeAffinity, its okay that we configure
+    # KubeSpawner's profile_list to override node_selector.
+    #
+    corePods:
+      nodeAffinity:
+        matchNodePurpose: require
+    userPods:
+      nodeAffinity:
+        matchNodePurpose: require
+    podPriority:
+      enabled: true
     userPlaceholder:
       enabled: true
       replicas: 0
-    podPriority:
-      enabled: true
-      globalDefault: false
-      defaultPriority: 0
-      userPlaceholderPriority: -10
     userScheduler:
       enabled: false
-      nodeSelector:
-        hub.jupyter.org/node-purpose: core
+      # FIXME: We should think about these resource requests/limits, see
+      #        https://github.com/2i2c-org/infrastructure/issues/2127.
+      #
       resources:
         requests:
-          # FIXME: Just unset this?
           cpu: 0.01
           memory: 64Mi
         limits:
@@ -134,19 +159,22 @@ jupyterhub:
     service:
       type: ClusterIP
     chp:
-      nodeSelector:
-        hub.jupyter.org/node-purpose: core
+      # FIXME: We should think about these resource requests/limits, see
+      #        https://github.com/2i2c-org/infrastructure/issues/2127.
+      #
       resources:
         requests:
-          # FIXME: We want no guarantees here!!!
-          # This is lowest possible value
           cpu: 0.01
           memory: 64Mi
         limits:
           memory: 1Gi
     traefik:
-      nodeSelector:
-        hub.jupyter.org/node-purpose: core
+      # FIXME: We should think about these resource requests/limits, see
+      #        https://github.com/2i2c-org/infrastructure/issues/2127.
+      #
+      #        Note if autohttps pod's aren't used anywhere by our basehub
+      #        deployments, we should simply remove this traefik configuration.
+      #
       resources:
         requests:
           memory: 64Mi
@@ -179,11 +207,6 @@ jupyterhub:
       # https://github.com/jupyterhub/zero-to-jupyterhub-k8s/pull/2449
       - jupyterhub-singleuser
     extraEnv:
-      # until https://github.com/jupyterhub/jupyterhub/pull/3918 or equivalent lands,
-      # and we upgrade to jupyterhub >= 2.3.1 on all images.
-      # Note: please checkout all occurences of `NotebookApp` configurations
-      # when moving away from it.
-      JUPYTERHUB_SINGLEUSER_APP: "notebook.notebookapp.NotebookApp"
       # notebook writes secure files that don't need to survive a
       # restart here. Writing 'secure' files on some file systems (like
       # Azure Files with SMB) seems buggy, so we just put runtime dir on
@@ -203,35 +226,55 @@ jupyterhub:
           # by this unholy sqlite + NFS mixture.
           HistoryManager:
             enabled: false
-      jupyter_notebook_config.json:
-        mountPath: /usr/local/etc/jupyter/jupyter_notebook_config.json
+      # jupyter_server and notebook are different jupyter servers providing
+      # similar configuration options. Since we have user images that may
+      # provide either, we provide the same configuration for both via
+      # jupyter_server_config.json and jupyter_notebook_config.json.
+      #
+      # A hub can force a choice with singleuser.extraEnv via:
+      #
+      #     JUPYTERHUB_SINGLEUSER_APP: "notebook.notebookapp.NotebookApp"
+      #     JUPYTERHUB_SINGLEUSER_APP: "jupyter_server.serverapp.ServerApp"
+      #
+      jupyter_server_config.json:
+        mountPath: /usr/local/etc/jupyter/jupyter_server_config.json
         # if a user leaves a notebook with a running kernel,
         # the effective idle timeout will typically be cull idle timeout
         # of the server + the cull idle timeout of the kernel,
         # as culling the kernel will register activity,
         # resetting the no_activity timer for the server as a whole
         data:
-          MappingKernelManager:
-            # shutdown kernels after no activity
+          # MappingKernelManager configuration reference:
+          # https://jupyter-server.readthedocs.io/en/latest/api/jupyter_server.services.kernels.html#jupyter_server.services.kernels.kernelmanager.MappingKernelManager
+          #
+          MappingKernelManager: &server_config_mapping_kernel_manager
             cull_idle_timeout: 3600
-            # check for idle kernels this often
             cull_interval: 300
-            # a kernel with open connections but no activity still counts as idle
-            # this is what allows us to shutdown servers
-            # when people leave a notebook open and wander off
             cull_connected: true
-          # If we switch from setting `JUPYTERHUB_SINGLEUSER_APP` to be the NotebookApp
-          # this config kere might need to go under ServerApp instead
-          NotebookApp:
+          # ServerApp configuration reference:
+          # https://jupyter-server.readthedocs.io/en/latest/api/jupyter_server.html#jupyter_server.serverapp.ServerApp
+          #
+          ServerApp: &server_config_server_app
             extra_template_paths:
               - /usr/local/share/jupyter/custom_template
+          # Move the sqlite file used by https://github.com/jupyter-server/jupyter_server_fileid
+          # off the default path, which is under ~/.local/share/jupyter.
+          # That is NFS, and sqlite + NFS don't go well together. In addition,
+          # it uses WAL mode of sqlite, and that is completely unsupported on NFS
+          # Upstream discussion in https://github.com/jupyter-server/jupyter_server_fileid/issues/60.
+          BaseFileIdManager: &server_config_base_file_id_manager
+            db_path: /tmp/file_id_manager.db
+      jupyter_notebook_config.json:
+        mountPath: /usr/local/etc/jupyter/jupyter_notebook_config.json
+        data:
+          MappingKernelManager: *server_config_mapping_kernel_manager
+          NotebookApp: *server_config_server_app
+          BaseFileIdManager: *server_config_base_file_id_manager
     startTimeout: 600 # 10 mins, because sometimes we have too many new nodes coming up together
     defaultUrl: /tree
-    nodeSelector:
-      hub.jupyter.org/node-purpose: user
     image:
       name: quay.io/2i2c/2i2c-hubs-image
-      tag: 69b1f9dff7c7
+      tag: "14107b8a85fb"
     storage:
       type: static
       static:
@@ -369,7 +412,77 @@ jupyterhub:
                   - value: "/rstudio"
                     title: RStudio
                     description: An IDE For R, created by the RStudio company
-
+    initContainers:
+      - name: templates-clone
+        image: alpine/git
+        args:
+          - clone
+          - --
+          - $(GIT_REPO_URL)
+          - /srv/repo
+        env:
+          - name: GIT_REPO_URL
+            valueFrom:
+              configMapKeyRef:
+                name: hub-custom-templates-config
+                key: GIT_REPO_URL
+        securityContext:
+          runAsUser: 1000
+          runAsGroup: 1000
+          allowPrivilegeEscalation: False
+          readOnlyRootFilesystem: True
+        volumeMounts:
+          - name: custom-templates
+            mountPath: /srv/repo
+      - name: templates-ownership-fix
+        image: alpine/git
+        command:
+          - /bin/sh
+        args:
+          - -c
+          - ls -lhd /srv/repo && chown 1000:1000 /srv/repo && ls -lhd /srv/repo
+        securityContext:
+          runAsUser: 0
+        volumeMounts:
+          - name: custom-templates
+            mountPath: /srv/repo
+    extraContainers:
+      - name: templates-sync
+        image: alpine/git
+        workingDir: /srv/repo
+        command:
+          - /bin/sh
+        args:
+          - -c
+          - |
+            ls -lhd /srv/repo;
+            while true; do git fetch origin;
+            git reset --hard origin/$(GIT_REPO_BRANCH);
+            sleep 5m; done
+        env:
+          - name: GIT_REPO_BRANCH
+            valueFrom:
+              configMapKeyRef:
+                name: hub-custom-templates-config
+                key: GIT_REPO_BRANCH
+        securityContext:
+          runAsUser: 1000
+          runAsGroup: 1000
+          allowPrivilegeEscalation: False
+          readOnlyRootFilesystem: True
+        volumeMounts:
+          - name: custom-templates
+            mountPath: /srv/repo
+    extraVolumes:
+      - name: custom-templates
+        emptyDir: {}
+    extraVolumeMounts:
+      - mountPath: /usr/local/share/jupyterhub/custom_templates
+        name: custom-templates
+        subPath: templates
+      - mountPath: /usr/local/share/jupyterhub/static/extra-assets
+        name: custom-templates
+        subPath: extra-assets
     services:
       configurator:
         url: http://configurator:10101
@@ -393,9 +506,7 @@ jupyterhub:
         admin: true
     image:
       name: quay.io/2i2c/pilot-hub
-      tag: "0.0.1-n4497.haed80ebb"
-    nodeSelector:
-      hub.jupyter.org/node-purpose: core
+      tag: "0.0.1-0.dev.git.4978.h858bd17c"
     networkPolicy:
       enabled: true
       ingress:
@@ -430,9 +541,11 @@ jupyterhub:
           ports:
             - port: http
               protocol: TCP
+    # FIXME: We should think about these resource requests/limits, see
+    #        https://github.com/2i2c-org/infrastructure/issues/2127.
+    #
     resources:
       requests:
-        # Very small unit, since we don't want any CPU guarantees
         cpu: 0.01
         memory: 128Mi
       limits:
@@ -440,11 +553,10 @@ jupyterhub:
     extraConfig:
       01-custom-theme: |
         from z2jh import get_config
-        c.JupyterHub.template_paths = ['/usr/local/share/jupyterhub/custom_templates/']
-
-        c.JupyterHub.template_vars = {
+        c.JupyterHub.template_paths.insert(0,'/usr/local/share/jupyterhub/custom_templates')
+        c.JupyterHub.template_vars.update({
             'custom': get_config('custom.homepage.templateVars')
-        }
+        })
       02-custom-admin: |
         from z2jh import get_config
         from kubespawner import KubeSpawner
@@ -497,7 +609,11 @@ jupyterhub:
         if add_staff_user_ids_to_admin_users:
             user_id_type = get_config("custom.2i2c.add_staff_user_ids_of_type")
             staff_user_ids = get_config(f"custom.2i2c.staff_{user_id_type}_ids", [])
-            c.Authenticator.admin_users.extend(staff_user_ids)
+            # `c.Authenticator.admin_users` can contain additional admins, can be an empty list,
+            # or it cannot be defined at all.
+            # This should cover all these cases.
+            staff_user_ids.extend(get_config("hub.config.Authenticator.admin_users", []))
+            c.Authenticator.admin_users = staff_user_ids
 
       05-per-user-disk: |
         # Optionally, create a PVC per user - useful for per-user databases

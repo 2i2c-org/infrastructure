@@ -1,0 +1,35 @@
+name: qcl
+provider: gcp # https://console.cloud.google.com/kubernetes/clusters/details/europe-west1/qcl-cluster/observability?project=qcl-hub
+gcp:
+  key: enc-deployer-credentials.secret.json
+  project: qcl-hub
+  cluster: qcl-cluster
+  # We default to a regional cluster
+  zone: europe-west1
+  billing:
+    paid_by_us: true
+    bigquery:
+      project: two-eye-two-see
+      dataset: cloud_costs
+      billing_id: 0157F7-E3EA8C-25AC3C
+support:
+  helm_chart_values_files:
+    - support.values.yaml
+    - enc-support.secret.values.yaml
+hubs:
+  - name: staging
+    display_name: "QuantifiedCarbon (QCL) - staging"
+    domain: staging.quantifiedcarbon.com
+    helm_chart: basehub
+    helm_chart_values_files:
+      - common.values.yaml
+      - staging.values.yaml
+      - enc-staging.secret.values.yaml
+  - name: prod
+    display_name: "QuantifiedCarbon (QCL)"
+    domain: jupyter.quantifiedcarbon.com
+    helm_chart: basehub
+    helm_chart_values_files:
+      - common.values.yaml
+      - prod.values.yaml
+      - enc-prod.secret.values.yaml

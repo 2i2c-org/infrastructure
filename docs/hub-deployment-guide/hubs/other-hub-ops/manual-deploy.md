@@ -19,16 +19,21 @@ of this repository, and can deploy one or more hubs to our clusters.
 3. Deploy just a single hub:
 
    ```bash
-   deployer deploy <cluster-name> <hub-name>
+   export CLUSTER_NAME=<cluster-name>
+   export HUB_NAME=<hub-name>
    ```
 
-   The script will look for a hub named `<hub-name>` in the cluster config
-   defined at `config/clusters/<cluster-name>/cluster.yaml` and read in the `*.values.yaml` files associated with that hub.
+   ```bash
+   deployer deploy $CLUSTER_NAME $HUB_NAME
+   ```
+
+   The script will look for a hub named `$HUB_NAME` in the cluster config
+   defined at `config/clusters/$CLUSTER_NAME/cluster.yaml` and read in the `*.values.yaml` files associated with that hub.
 
 4. You can deploy to *all* hubs on a given cluster by omitting the hub name.
 
    ```bash
-   deployer deploy <cluster-name>
+   deployer deploy $CLUSTER_NAME
    ```
 
 ```{note}
@@ -53,14 +58,14 @@ runs to completion and the output cells have the expected value.
 To run the automated health check on a hub, run
 
 ```bash
-deployer run-hub-health-check <cluster-name> <hub-name>
+deployer run-hub-health-check $CLUSTER_NAME $HUB_NAME
 ```
 
 This will test a simple notebook, but not any dask functionality. To test dask
 functionality as well, run
 
 ```bash
-deployer run-hub-health-check --check-dask-scaling <cluster-name> <hub-name>
+deployer run-hub-health-check --check-dask-scaling $CLUSTER_NAME $HUB_NAME
 ```
 
 These tests are automatically run when you deploy via CI.

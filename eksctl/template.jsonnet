@@ -1,14 +1,29 @@
-// This file is a jinja2 template of a jsonnet template of a eksctl's cluster
-// configuration file, which is in turn can be used with the `eksctl` CLI to both
-// update and initialize a AWS EKS based cluster.
-//
-// This jinja2 template is only used by the deployer script as part of creating
-// new clusters. If a relevant change is made here or the dependent file
-// libsonnet/nodegroup.jsonnet, one may consider if we should manually update
-// already generated jsonnet files in this folder.
-//
-// Configuration reference: https://eksctl.io/usage/schema/
-//
+{#-
+    This file is a jinja2 template of a jsonnet template of a eksctl's cluster
+    configuration file, which in turn is to be used with the eksctl CLI to both
+    update and initialize an AWS EKS based cluster.
+
+    This jinja2 template is used by the deployer script's generate-aws-cluster
+    command as part of creating new clusters.
+
+    References:
+    - https://infrastructure.2i2c.org/en/latest/hub-deployment-guide/new-cluster/aws.html#generate-cluster-files
+-#}
+/*
+    This file is a jsonnet template of a eksctl's cluster configuration file,
+    that is used with the eksctl CLI to both update and initialize an AWS EKS
+    based cluster.
+
+    This file has in turn been generated from eksctl/template.jsonnet which is
+    relevant to compare with for changes over time.
+
+    To use jsonnet to generate an eksctl configuration file from this, do:
+
+        jsonnet << cluster_name >>.jsonnet > << cluster_name >>.eksctl.yaml
+
+    References:
+    - https://eksctl.io/usage/schema/
+*/
 local ng = import "./libsonnet/nodegroup.jsonnet";
 
 // place all cluster nodes here
@@ -21,37 +36,45 @@ local nodeAz = "<< cluster_region >>a";
 // A `node.kubernetes.io/instance-type label is added, so pods
 // can request a particular kind of node with a nodeSelector
 local notebookNodes = [
-    { instanceType: "m5.large" },
-    { instanceType: "m5.xlarge" },
-    { instanceType: "m5.2xlarge" },
-    { instanceType: "m5.8xlarge" },
+    { instanceType: "r5.xlarge" },
+    { instanceType: "r5.4xlarge" },
+    { instanceType: "r5.16xlarge" },
 ];
-
-local daskNodes =
-    if "<< hub_type >>" == "daskhub" then [
+<% if hub_type == "daskhub" %>
+local daskNodes = [
     // Node definitions for dask worker nodes. Config here is merged
     // with our dask worker node definition, which uses spot instances.
     // A `node.kubernetes.io/instance-type label is set to the name of the
     // *first* item in instanceDistribution.instanceTypes, to match
     // what we do with notebook nodes. Pods can request a particular
     // kind of node with a nodeSelector
-        { instancesDistribution+: { instanceTypes: ["m5.large"] }},
-        { instancesDistribution+: { instanceTypes: ["m5.xlarge"] }},
-        { instancesDistribution+: { instanceTypes: ["m5.2xlarge"] }},
-        { instancesDistribution+: { instanceTypes: ["m5.8xlarge"] }},
-    ];
+    { instancesDistribution+: { instanceTypes: ["r5.4xlarge"] }},
+];
+<% else %>
+local daskNodes = [];
+<% endif %>
+
+
 {
     apiVersion: 'eksctl.io/v1alpha5',
     kind: 'ClusterConfig',
     metadata+: {
         name: "<< cluster_name >>",
         region: clusterRegion,
-        version: '1.24'
+        {#-
+            version should be the latest support version by the eksctl CLI, see
+            https://eksctl.io/introduction/ for a list of supported versions.
+        #}
+        version: '1.25'
     },
     availabilityZones: masterAzs,
     iam: {
         withOIDC: true,
     },
+    // If you add an addon to this config, run the create addon command.
+    //
+    //    eksctl create addon --config-file=<< cluster_name >>.eksctl.yaml
+    //
     addons: [
         {
             // aws-ebs-csi-driver ensures that our PVCs are bound to PVs that
@@ -74,7 +97,7 @@ local daskNodes =
             ssh: {
                 publicKeyPath: 'ssh-keys/<< cluster_name >>.key.pub'
             },
-            instanceType: "m5.xlarge",
+            instanceType: "r5.xlarge",
             minSize: 1,
             maxSize: 6,
             labels+: {

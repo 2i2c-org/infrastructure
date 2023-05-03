@@ -1,11 +1,13 @@
 name: pangeo-hubs
-provider: gcp
+provider: gcp # https://console.cloud.google.com/kubernetes/clusters/details/us-central1-b/pangeo-hubs-cluster/nodes?project=columbia
 account: columbia
 gcp:
   key: enc-deployer-credentials.secret.json
   project: pangeo-integration-te-3eea
   cluster: pangeo-hubs-cluster
   zone: us-central1-b
+  billing:
+    paid_by_us: false
 support:
   helm_chart_values_files:
     - support.values.yaml
@@ -15,8 +17,6 @@ hubs:
     display_name: "Pangeo (staging)"
     domain: staging.us-central1-b.gcp.pangeo.io
     helm_chart: daskhub
-    auth0:
-      enabled: false
     helm_chart_values_files:
       # The order in which you list files here is the order the will be passed
       # to the helm upgrade command in, and that has meaning. Please check
@@ -28,8 +28,6 @@ hubs:
     display_name: "Pangeo (prod)"
     domain: us-central1-b.gcp.pangeo.io
     helm_chart: daskhub
-    auth0:
-      enabled: false
     helm_chart_values_files:
       # The order in which you list files here is the order the will be passed
       # to the helm upgrade command in, and that has meaning. Please check

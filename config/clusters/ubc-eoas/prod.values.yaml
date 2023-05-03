@@ -1,4 +1,12 @@
 jupyterhub:
+  ingress:
+    hosts: [ubc-eoas.2i2c.cloud]
+    tls:
+      - hosts: [ubc-eoas.2i2c.cloud]
+        secretName: https-auto-tls
+  proxy:
+    https:
+      hosts: [ubc-eoas.2i2c.cloud]
   hub:
     config:
       CILogonOAuthenticator:

@@ -59,6 +59,49 @@ properties:
       Configuration to connect to the cluster on GCP. Is used when
       provider is set to `gcp`
     properties:
+      billing:
+        type: object
+        additionalProperties: false
+        # if paid_by_us is true, we *must* provide bigquery information
+        # on where to find the costs export for this project
+        if:
+          properties:
+            paid_by_us:
+              const: true
+        then:
+          required:
+            - bigquery
+        required:
+          - paid_by_us
+        description: |
+          Billing information for this cluster
+        properties:
+          paid_by_us:
+            type: boolean
+            description: |
+              Set to true if the cloud cost is paid by us, and expected to be
+              recovered from actual users.
+          bigquery:
+            type: object
+            additionalProperties: false
+            required:
+              - project
+              - dataset
+              - billing_id
+            properties:
+              project:
+                type: string
+                description: |
+                  Name of the project the bigquery dataset where billing details is
+                  exported to.
+              dataset:
+                type: string
+                description: |
+                  Name of the dataset in bigquery where billing is exported to.
+              billing_id:
+                type: string
+                description: |
+                  ID of the billing account (of form XXXXXX-XXXXXX-XXXXXX) the project is connected to.
       key:
         type: string
         description: |
@@ -87,6 +130,7 @@ properties:
       - project
       - cluster
       - zone
+      - billing
   aws:
     type: object
     additionalProperties: false
@@ -159,7 +203,6 @@ properties:
         required:
           - name
           - domain
-          - auth0
           - helm_chart
           - helm_chart_values_files
         properties:
@@ -173,6 +216,19 @@ properties:
             description: |
               A long form name for the hub to display on our website. This is usually
               the name of the community we run the hub for.
+          uptime_check:
+            type: object
+            description: |
+              Optional configuration for how uptime checks should be performed
+              on this hub.
+            additionalProperties: false
+            properties:
+              expected_status:
+                type: string
+                description: |
+                  Status code expected from hitting the health checkpoint for
+                  this hub. Defaults to 200, can be overriden in case we have
+                  basic auth setup for the entire hub
           domain:
             type: string
             description: |
@@ -205,62 +261,6 @@ properties:
             enum:
               - basehub
               - daskhub
-          auth0:
-            additionalProperties: false
-            type: object
-            description: |
-              Most hubs use Auth0 for authentication, and we dynamically fetch the credentials
-              needed for each hub - client_id, client_secret, callback_url - on deploy. This
-              block contains configuration on how auth0 should be configured for this hub.
-            properties:
-              enabled:
-                type: boolean
-                default: true
-                description: |
-                  Whether or not to enable Auth0 authentication for this hub.
-                  This should almost always be true. It should only be false if
-                  authenticating against GitHub Orgs or Teams using the
-                  JupyterHub OAuthenticator. Defaults to true.
-              connection:
-                type: string
-                enum:
-                  - google-oauth2
-                  - github
-                  - password
-                  - CILogon
-                description: |
-                  Authentication method users of the hub can use to log in to the hub.
-                  We support a subset of the [connectors](https://auth0.com/docs/identityproviders)
-                  that auth0 supports
-              application_name:
-                type: string
-                description: |
-                  We make use of an OAuth2 applications in Auth0 and this is the
-                  name of that application. Defaults to
-                  "<clustername>-<hubname>".
-
-                  See https://manage.auth0.com/dashboard/us/2i2c/applications.
-              password:
-                type: object
-                description: |
-                  Configuration specific to a connection of type password.
-                properties:
-                  database_name:
-                    type: string
-                    description: |
-                      Username and password authentication requires a Auth0
-                      database to store the username and passwords in. This is
-                      the name of that Auth0 database. Defaults to
-                      "<clustername>-<hubname>".
-
-                      See https://manage.auth0.com/dashboard/us/2i2c/connections/database.
-            if:
-              properties:
-                enabled:
-                  const: true
-            then:
-              required:
-                - connection
           helm_chart_values_files:
             type: array
             description: |

@@ -1,0 +1,131 @@
+basehub:
+  nfs:
+    pv:
+      # from https://docs.aws.amazon.com/efs/latest/ug/mounting-fs-nfs-mount-settings.html
+      mountOptions:
+        - rsize=1048576
+        - wsize=1048576
+        - timeo=600
+        - soft # We pick soft over hard, so NFS lockups don't lead to hung processes
+        - retrans=2
+        - noresvport
+      serverIP: fs-0ba20c6122f4a7236.efs.us-east-2.amazonaws.com
+      baseShareName: /
+
+  jupyterhub:
+    custom:
+      2i2c:
+        add_staff_user_ids_to_admin_users: true
+        add_staff_user_ids_of_type: "github"
+      homepage:
+        templateVars:
+          org:
+            name: Smithsonian
+            logo_url: https://logo.si.edu/wp-content/uploads/2018/07/logo_primary.svg
+            url: https://www.si.edu/
+          designed_by:
+            name: 2i2c
+            url: https://2i2c.org
+          operated_by:
+            name: 2i2c
+            url: https://2i2c.org
+          funded_by:
+            name: Smithsonian
+            url: https://www.si.edu/
+
+    hub:
+      config:
+        JupyterHub:
+          authenticator_class: github
+        GitHubOAuthenticator:
+          allowed_organizations:
+            - 2i2c-org
+            - smithsonian
+          scope:
+            - read:org
+        Authenticator:
+          # This hub uses GitHub Orgs auth and so we don't set allowed_users in
+          # order to not deny access to valid members of the listed orgs. These
+          # people should have admin access though.
+          admin_users:
+            - MikeTrizna # Mike Trizna
+            - rdikow # Rebecca Dikow
+            - aewhite100 # Alex White
+
+    scheduling:
+      userScheduler:
+        enabled: true
+
+    singleuser:
+      image:
+        # Pending information about what image to use in
+        # https://github.com/2i2c-org/infrastructure/issues/2323, the
+        # pangeo/pangeo-notebook image was setup initially as it includes recent
+        # versions of dask/distributed which is relevant for a use with
+        # dask-gateway.
+        #
+        # image source:    https://github.com/pangeo-data/pangeo-docker-images
+        # image published: https://quay.io/repository/pangeo/pangeo-notebook?tab=tags
+        #
+        name: quay.io/pangeo/pangeo-notebook
+        tag: "2023.02.27"
+      profileList:
+        # NOTE: About node sharing
+        #
+        #       CPU/Memory requests/limits are actively considered still. This
+        #       profile list is setup to involve node sharing as considered in
+        #       https://github.com/2i2c-org/infrastructure/issues/2121.
+        #
+        #       - Memory requests are different from the description, based on:
+        #         whats found to remain allocate in k8s, subtracting 1GiB
+        #         overhead for misc system pods, and transitioning from GB in
+        #         description to GiB in mem_guarantee.
+        #       - CPU requests are lower than the description, with a factor of
+        #         10%.
+        #
+        - display_name: "Small: up to 4 CPU / 32 GB RAM"
+          description: &profile_list_description "Start a container with at least a chosen share of capacity on a node of this type"
+          slug: small
+          default: true
+          profile_options:
+            requests:
+              # NOTE: Node share choices are in active development, see comment
+              #       next to profileList: above.
+              display_name: Node share
+              choices:
+                mem_1:
+                  default: true
+                  display_name: ~1 GB, ~0.125 CPU
+                  kubespawner_override:
+                    mem_guarantee: 0.904G
+                    cpu_guarantee: 0.013
+                mem_2:
+                  display_name: ~2 GB, ~0.25 CPU
+                  kubespawner_override:
+                    mem_guarantee: 1.809G
+                    cpu_guarantee: 0.025
+                mem_4:
+                  display_name: ~4 GB, ~0.5 CPU
+                  kubespawner_override:
+                    mem_guarantee: 3.617G
+                    cpu_guarantee: 0.05
+                mem_8:
+                  display_name: ~8 GB, ~1.0 CPU
+                  kubespawner_override:
+                    mem_guarantee: 7.234G
+                    cpu_guarantee: 0.1
+                mem_16:
+                  display_name: ~16 GB, ~2.0 CPU
+                  kubespawner_override:
+                    mem_guarantee: 14.469G
+                    cpu_guarantee: 0.2
+                mem_32:
+                  display_name: ~32 GB, ~4.0 CPU
+                  kubespawner_override:
+                    mem_guarantee: 28.937G
+                    cpu_guarantee: 0.4
+          kubespawner_override:
+            cpu_limit: null
+            mem_limit: null
+            node_selector:
+              node.kubernetes.io/instance-type: r5.xlarge

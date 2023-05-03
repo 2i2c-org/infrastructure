@@ -27,11 +27,6 @@ jobs:
           # For each new config_path to monitor, add a new item in this matrix.
           # The Action can read multiple paths to images, but not multiple config files.
           #
-          # Bump repo2docker image in BinderHub helm chart
-          - name: "BinderHub/repo2docker bump"
-            config_path: "helm-charts/binderhub/values.yaml"
-            images_info: '[{"values_path": ".binderhub.config.BinderHub.build_image"}]'
-
           # Bump images in openscapes cluster
           - name: "OpenScapes profiles"
             config_path: "config/clusters/openscapes/common.values.yaml"
@@ -52,7 +47,7 @@ jobs:
       # Action: https://github.com/marketplace/actions/github-app-token
       - name: Fetch a token from GitHub App
         id: generate_token
-        uses: tibdex/github-app-token@v1.7
+        uses: tibdex/github-app-token@v1.8
         with:
           app_id: ${{ secrets.APP_ID }}
           private_key: ${{ secrets.PRIVATE_KEY }}

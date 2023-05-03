@@ -61,13 +61,17 @@ AWS, and we can configure a node group there to provide us GPUs.
 2. Render the `.jsonnet` file into a `.yaml` file that `eksctl` can use
 
    ```bash
-   jsonnet <your-cluster>.jsonnet > <your-cluster>.eksctl.yaml
+   export CLUSTER_NAME=<your_cluster>
+   ```
+
+   ```bash
+   jsonnet $CLUSTER_NAME.jsonnet > $CLUSTER_NAME.eksctl.yaml
    ```
 
 3. Create the nodegroup
 
    ```bash
-   eksctl create nodegroup -f <your-cluster>.eksctl.yaml
+   eksctl create nodegroup -f $CLUSTER_NAME.eksctl.yaml
    ```
 
    This should create the nodegroup with 0 nodes in it, and the

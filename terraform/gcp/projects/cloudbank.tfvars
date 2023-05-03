@@ -1,16 +1,15 @@
 prefix     = "cb"
 project_id = "cb-1003-1696"
 
+zone       = "us-central1-b"
+region     = "us-central1"
+
 core_node_machine_type = "n1-highmem-4"
 
 # Multi-tenant cluster, network policy is required to enforce separation between hubs
 enable_network_policy    = true
 
 regional_cluster = false
-
-# No plans to provide storage buckets to users on this hub, so no need to deploy
-# config connector
-config_connector_enabled = false
 
 notebook_nodes = {
   "user" : {

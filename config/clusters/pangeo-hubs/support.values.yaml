@@ -1,4 +1,10 @@
 grafana:
+  grafana.ini:
+    server:
+      root_url: https://grafana.gcp.pangeo.2i2c.cloud/
+    auth.github:
+      enabled: true
+      allowed_organizations: 2i2c-org
   ingress:
     hosts:
       - grafana.gcp.pangeo.2i2c.cloud
@@ -6,6 +12,7 @@ grafana:
       - secretName: grafana-tls
         hosts:
           - grafana.gcp.pangeo.2i2c.cloud
+
 # Disable the Admissions Validation Webhook and the port is not
 # permitted on private GKE clusters
 ingress-nginx:
@@ -29,16 +36,12 @@ prometheus:
           hosts:
             - prometheus.gcp.pangeo.2i2c.cloud
     resources:
+      # This prometheus instance has required 13+ GB to startup successfully in
+      # the past (2023-02-17) when replaying the "write-ahead log" (WAL) stored
+      # on on disk when it starts up. For more details, see the comments next to
+      # the default values in helm-charts/support/values.yaml.
+      #
       requests:
-        # Set requests here as well, to make sure we don't trample on the other pods (hub, proxy, etc)
-        # too much
-        cpu: 1
-        memory: 2Gi
+        memory: 20Gi
       limits:
-        cpu: 2
-        # Specifically set a really high memory limit,
-        # as prometheus memory can sometimes spike up to 2x regular use or more when replaying
-        # WAL after a restart (https://github.com/prometheus/prometheus/issues/6934). This was
-        # causing prometheus to crash forever, as the memory spike would get it killed. The
-        # higher limit helps with this
-        memory: 12Gi
+        memory: 20Gi

@@ -1,0 +1,19 @@
+basehub:
+  userServiceAccount:
+    annotations:
+      eks.amazonaws.com/role-arn: arn:aws:iam::286354552638:role/jupyter-meets-the-earth-staging
+  jupyterhub:
+    hub:
+      config:
+        CILogonOAuthenticator:
+          oauth_callback_url: "https://staging.jmte.2i2c.cloud/hub/oauth_callback"
+    ingress:
+      hosts: [staging.jmte.2i2c.cloud]
+      tls:
+        - hosts: [staging.jmte.2i2c.cloud]
+          secretName: https-auto-tls
+
+    singleuser:
+      extraEnv:
+        # This bucket is created via terraform.
+        SCRATCH_BUCKET: s3://jupyter-meets-the-earth-staging-scratch/$(JUPYTERHUB_USER)

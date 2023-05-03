@@ -3,11 +3,20 @@ basehub:
     annotations:
       iam.gke.io/gcp-service-account: m2lines-prod@m2lines-hub.iam.gserviceaccount.com
   jupyterhub:
+    ingress:
+      hosts: [m2lines.2i2c.cloud]
+      tls:
+        - hosts: [m2lines.2i2c.cloud]
+          secretName: https-auto-tls
+    proxy:
+      https:
+        hosts: [m2lines.2i2c.cloud]
     singleuser:
       extraEnv:
         SCRATCH_BUCKET: gs://m2lines-scratch/$(JUPYTERHUB_USER)
         PANGEO_SCRATCH: gs://m2lines-scratch/$(JUPYTERHUB_USER)
         PERSISTENT_BUCKET: gs://m2lines-persistent/$(JUPYTERHUB_USER)
+        PUBLIC_PERSISTENT_BUCKET: gs://m2lines-public-persistent/$(JUPYTERHUB_USER)
     hub:
       config:
         GitHubOAuthenticator:

@@ -1,5 +1,5 @@
 name: ubc-eoas
-provider: aws
+provider: aws # https://2i2c.awsapps.com/start#/
 aws:
   key: enc-deployer-credentials.secret.json
   clusterType: eks
@@ -14,8 +14,6 @@ hubs:
     display_name: UBC EOAS (staging)
     domain: staging.ubc-eoas.2i2c.cloud
     helm_chart: basehub
-    auth0:
-      enabled: false
     helm_chart_values_files:
       - common.values.yaml
       - staging.values.yaml
@@ -24,8 +22,6 @@ hubs:
     display_name: UBC EOAS
     domain: ubc-eoas.2i2c.cloud
     helm_chart: basehub
-    auth0:
-      enabled: false
     helm_chart_values_files:
       - common.values.yaml
       - prod.values.yaml

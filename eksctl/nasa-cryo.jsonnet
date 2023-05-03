@@ -1,4 +1,18 @@
-// Exports an eksctl config file for carbonplan cluster
+/*
+    This file is a jsonnet template of a eksctl's cluster configuration file,
+    that is used with the eksctl CLI to both update and initialize an AWS EKS
+    based cluster.
+
+    This file has in turn been generated from eksctl/template.jsonnet which is
+    relevant to compare with for changes over time.
+
+    To use jsonnet to generate an eksctl configuration file from this, do:
+
+        jsonnet nasa-cryo.jsonnet > nasa-cryo.eksctl.yaml
+
+    References:
+    - https://eksctl.io/usage/schema/
+*/
 local ng = import "./libsonnet/nodegroup.jsonnet";
 
 // place all cluster nodes here
@@ -11,24 +25,21 @@ local nodeAz = "us-west-2a";
 // A `node.kubernetes.io/instance-type label is added, so pods
 // can request a particular kind of node with a nodeSelector
 local notebookNodes = [
-    { instanceType: "m5.large" },
-    { instanceType: "m5.xlarge" },
-    { instanceType: "m5.2xlarge" },
-    { instanceType: "m5.8xlarge" },
+    { instanceType: "r5.xlarge" },
+    { instanceType: "r5.4xlarge" },
+    { instanceType: "r5.16xlarge" },
 ];
 
-// Node definitions for dask worker nodes. Config here is merged
-// with our dask worker node definition, which uses spot instances.
-// A `node.kubernetes.io/instance-type label is set to the name of the
-// *first* item in instanceDistribution.instanceTypes, to match
-// what we do with notebook nodes. Pods can request a particular
-// kind of node with a nodeSelector
 local daskNodes = [
-    { instancesDistribution+: { instanceTypes: ["m5.large"] }},
-    { instancesDistribution+: { instanceTypes: ["m5.xlarge"] }},
-    { instancesDistribution+: { instanceTypes: ["m5.2xlarge"] }},
-    { instancesDistribution+: { instanceTypes: ["m5.8xlarge"] }},
+    // Node definitions for dask worker nodes. Config here is merged
+    // with our dask worker node definition, which uses spot instances.
+    // A `node.kubernetes.io/instance-type label is set to the name of the
+    // *first* item in instanceDistribution.instanceTypes, to match
+    // what we do with notebook nodes. Pods can request a particular
+    // kind of node with a nodeSelector
+    { instancesDistribution+: { instanceTypes: ["r5.4xlarge"] }},
 ];
+
 
 {
     apiVersion: 'eksctl.io/v1alpha5',
@@ -36,12 +47,31 @@ local daskNodes = [
     metadata+: {
         name: "nasa-cryo",
         region: clusterRegion,
-        version: '1.22'
+        version: '1.25'
     },
     availabilityZones: masterAzs,
     iam: {
         withOIDC: true,
     },
+    // If you add an addon to this config, run the create addon command.
+    //
+    //    eksctl create addon --config-file=nasa-cryo.eksctl.yaml
+    //
+    addons: [
+        {
+            // aws-ebs-csi-driver ensures that our PVCs are bound to PVs that
+            // couple to AWS EBS based storage, without it expect to see pods
+            // mounting a PVC failing to schedule and PVC resources that are
+            // unbound.
+            //
+            // Related docs: https://docs.aws.amazon.com/eks/latest/userguide/managing-ebs-csi.html
+            //
+            name: 'aws-ebs-csi-driver',
+            wellKnownPolicies: {
+                ebsCSIController: true,
+            },
+        },
+    ],
     nodeGroups: [
         ng {
             name: 'core-a',
@@ -49,7 +79,7 @@ local daskNodes = [
             ssh: {
                 publicKeyPath: 'ssh-keys/nasa-cryo.key.pub'
             },
-            instanceType: "m5.xlarge",
+            instanceType: "r5.xlarge",
             minSize: 1,
             maxSize: 6,
             labels+: {
@@ -104,6 +134,4 @@ local daskNodes = [
             },
         } + n for n in daskNodes
     ]
-
-
 }

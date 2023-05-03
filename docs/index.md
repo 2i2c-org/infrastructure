@@ -68,10 +68,12 @@ deployed occasionally as a specific addition.
 :maxdepth: 1
 :caption: How-to guides
 howto/features/index.md
+howto/bill.md
 howto/manage-domains/index.md
 howto/grafana-github-auth.md
 howto/update-env.md
 howto/manual-nfs-setup.md
+howto/upgrade-cluster/index.md
 howto/troubleshoot/index.md
 ```
 

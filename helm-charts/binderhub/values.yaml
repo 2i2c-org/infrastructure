@@ -4,7 +4,6 @@ binderhub:
   config:
     BinderHub:
       use_registry: true
-      build_image: "quay.io/jupyterhub/repo2docker:2022.10.0-91.g326dc92"
       per_repo_quota: 150
       build_node_selector:
         # Build user images only on user nodes, not dask or core nodes
@@ -39,8 +38,16 @@ binderhub:
           hub.jupyter.org/node-purpose: core
         resources:
           requests:
-            # FIXME: We want no guarantees here!!!
-            # This is lowest possible value
+            # FIXME: These are basehub's defaults that may very well be worth
+            #        deviating from.
+            #
+            #        For example, we want to avoid the proxy pod gets evicted
+            #        if the node is under memory pressure and the proxy pod is
+            #        using more memory than requested. We also want to avoid
+            #        having the proxy pod starved of CPU by a minimal request if
+            #        other pods make significant requests and get a far greater
+            #        ratio of the node's available CPU.
+            #
             cpu: 0.01
             memory: 64Mi
           limits:

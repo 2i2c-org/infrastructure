@@ -2,6 +2,7 @@ import os
 import subprocess
 from pathlib import Path
 
+import requests
 from ruamel.yaml import YAML
 
 from ..file_acquisition import find_absolute_path_to_cluster_file, get_decrypted_file
@@ -11,9 +12,9 @@ yaml = YAML(typ="safe")
 
 def get_grafana_url(cluster_name):
     """
-    Retrieve the URL of the Grafana running for <cluster_name> from the "support.values.yaml" file.
+    Return a Grafana instance URL using the cluster's "support.values.yaml"
+    file's grafana.ingress.tls[0].hosts[0] config.
     """
-
     cluster_config_dir_path = find_absolute_path_to_cluster_file(cluster_name).parent
 
     config_file = cluster_config_dir_path.joinpath("support.values.yaml")
@@ -23,14 +24,11 @@ def get_grafana_url(cluster_name):
     grafana_tls_config = (
         support_config.get("grafana", {}).get("ingress", {}).get("tls", [])
     )
-
     if not grafana_tls_config:
-        raise ValueError(
-            f"No tls config was found for the Grafana instance of {cluster_name}. Please consider enable it before using it as the central Grafana."
-        )
+        raise ValueError(f"grafana.ingress.tls config for {cluster_name} missing!")
 
     # We only have one tls host right now. Modify this when things change.
-    return grafana_tls_config[0]["hosts"][0]
+    return "https://" + grafana_tls_config[0]["hosts"][0]
 
 
 def get_cluster_prometheus_address(cluster_name):
@@ -95,6 +93,33 @@ def get_cluster_prometheus_creds(cluster_name):
     return prometheus_config.get("prometheusIngressAuthSecret", {})
 
 
+def get_cluster_prometheus(cluster_name):
+    """
+    Retrieve an http session of the prometheus instance running on the `cluster_name` cluster.
+    The HTTP Session can be queried https://prometheus.io/docs/prometheus/latest/querying/api/
+
+    Example:
+        with get_cluster_prometheus("2i2c) as s:
+             r = s.get(f"{url}/api/v1/query", params={'query': 'container_cpu_user_seconds_total'})
+             print(r.json())
+    Args:
+        cluster_name: name of the cluster
+    Returns:
+        string object: https address of the prometheus instance without a trailing slash.
+        requests.Session object: http session on the prometheus instance
+    """
+    # Get the prometheus address for cluster_name
+    prometheus_url = get_cluster_prometheus_address(cluster_name)
+
+    # Get the credentials of this prometheus instance
+    prometheus_creds = get_cluster_prometheus_creds(cluster_name)
+    session = requests.Session()
+    session.auth = requests.auth.HTTPBasicAuth(
+        prometheus_creds["username"], prometheus_creds["password"]
+    )
+    return (f"https://{prometheus_url}", session)
+
+
 def get_grafana_admin_password():
     """
     Retrieve the password of the grafana `admin` user
@@ -116,10 +141,11 @@ def get_grafana_admin_password():
     return grafana_creds.get("grafana", {}).get("adminPassword", None)
 
 
-def get_central_grafana_token(cluster_name):
+def get_grafana_token(cluster_name):
     """
-    Get the access token stored in the `enc-grafana-token.secret.yaml`file
-    for the <cluster_name>'s Grafana.
+    Get the access token stored in the `enc-grafana-token.secret.yaml` file for
+    the <cluster_name>'s Grafana.
+
     This access token should have enough permissions to create datasources.
 
     Returns:
@@ -128,7 +154,7 @@ def get_central_grafana_token(cluster_name):
     # Get the location of the file that stores the central grafana token
     cluster_config_dir_path = find_absolute_path_to_cluster_file(cluster_name).parent
 
-    grafana_token_file = (cluster_config_dir_path).joinpath(
+    grafana_token_file = cluster_config_dir_path.joinpath(
         "enc-grafana-token.secret.yaml"
     )
 
@@ -136,6 +162,10 @@ def get_central_grafana_token(cluster_name):
     with get_decrypted_file(grafana_token_file) as decrypted_file_path:
         with open(decrypted_file_path) as f:
             config = yaml.load(f)
+    if "grafana_token" not in config.keys():
+        raise ValueError(
+            f"Grafana service account token not found, use `deployer new-grafana-token {cluster_name}`"
+        )
 
     return config["grafana_token"]
 

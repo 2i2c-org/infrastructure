@@ -1,0 +1,17 @@
+basehub:
+  userServiceAccount:
+    annotations:
+      eks.amazonaws.com/role-arn: arn:aws:iam::444055461661:role/nasa-veda-prod
+  jupyterhub:
+    ingress:
+      hosts: [nasa-veda.2i2c.cloud]
+      tls:
+        - hosts: [nasa-veda.2i2c.cloud]
+          secretName: https-auto-tls
+    proxy:
+      https:
+        hosts: [nasa-veda.2i2c.cloud]
+    hub:
+      config:
+        GitHubOAuthenticator:
+          oauth_callback_url: https://nasa-veda.2i2c.cloud/hub/oauth_callback

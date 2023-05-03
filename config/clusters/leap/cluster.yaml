@@ -1,10 +1,16 @@
 name: leap
-provider: gcp
+provider: gcp # https://console.cloud.google.com/kubernetes/clusters/details/us-central1/leap-cluster/nodes?project=leap-pangeo
 gcp:
   key: enc-deployer-credentials.secret.json
   project: leap-pangeo
   cluster: leap-cluster
   zone: us-central1
+  billing:
+    paid_by_us: true
+    bigquery:
+      project: leap-pangeo
+      dataset: cloud_costs
+      billing_id: 01A164-923D17-3199D9
 support:
   helm_chart_values_files:
     - support.values.yaml
@@ -14,8 +20,6 @@ hubs:
     display_name: "LEAP Staging"
     domain: staging.leap.2i2c.cloud
     helm_chart: daskhub
-    auth0:
-      enabled: false
     helm_chart_values_files:
       - common.values.yaml
       - staging.values.yaml
@@ -24,8 +28,6 @@ hubs:
     display_name: "LEAP Prod"
     domain: leap.2i2c.cloud
     helm_chart: daskhub
-    auth0:
-      enabled: false
     helm_chart_values_files:
       - common.values.yaml
       - prod.values.yaml

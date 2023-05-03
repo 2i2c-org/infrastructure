@@ -1,0 +1,11 @@
+kind: ConfigMap
+apiVersion: v1
+metadata:
+  name: hub-custom-templates-config
+  labels:
+    app: jupyterhub
+data:
+  {{- with .Values.jupyterhub.custom.homepage }}
+  GIT_REPO_URL: {{ .gitRepoUrl | quote }}
+  GIT_REPO_BRANCH: {{ .gitRepoBranch | quote }}
+  {{- end }}

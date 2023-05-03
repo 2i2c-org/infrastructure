@@ -8,7 +8,7 @@ To enable logging into Grafana using GitHub, follow these steps:
 1. Create a GitHub OAuth application following [Grafana's documentation](https://grafana.com/docs/grafana/latest/setup-grafana/configure-security/configure-authentication/github/#configure-github-oauth-application).
    - Create [a new app](https://github.com/organizations/2i2c-org/settings/applications/new) inside the `2i2c-org`.
    - When naming the application, please follow the convention `<cluster_name>-grafana` for consistency, e.g. `2i2c-grafana` is the OAuth app for the Grafana running in the 2i2c cluster
-   - The Homepage URL should match that in the `grafana.ingress.hosts` field of the appropriate cluster `support.values.yaml` file in the `infrastructure` repo. For example, `ghttps://grafana.pilot.2i2c.cloud`
+   - The Homepage URL should match that in the `grafana.ingress.hosts` field of the appropriate cluster `support.values.yaml` file in the `infrastructure` repo. For example, `https://grafana.pilot.2i2c.cloud`
    - The authorisation callback URL is the homepage url appended with `/login/github`. For example, `https://grafana.pilot.2i2c.cloud/login/github`.
    - Once you have created the OAuth app, create a new client ID, generate a client secret and then hold on to these values for a future step
 
@@ -31,11 +31,7 @@ To enable logging into Grafana using GitHub, follow these steps:
          root_url: https://<grafana.ingress.hosts[0]>
        auth.github:
          enabled: true
-         allow_sign_up: false
-         scopes: user:email,read:org
-         auth_url: https://github.com/login/oauth/authorize
-         token_url: https://github.com/login/oauth/access_token
-         api_url: https://api.github.com/user
+         # allowed_organizations should be a space separated list
          allowed_organizations: 2i2c-org
    ```
 

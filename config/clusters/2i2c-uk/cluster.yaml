@@ -1,10 +1,16 @@
 name: 2i2c-uk
-provider: gcp
+provider: gcp # https://console.cloud.google.com/kubernetes/clusters/details/europe-west2/two-eye-two-see-uk-cluster/nodes?project=two-eye-two-see-uk
 gcp:
   key: enc-deployer-credentials.secret.json
   project: two-eye-two-see-uk
   cluster: two-eye-two-see-uk-cluster
   zone: europe-west2
+  billing:
+    paid_by_us: true
+    bigquery:
+      project: two-eye-two-see
+      dataset: cloud_costs
+      billing_id: 0157F7-E3EA8C-25AC3C
 support:
   helm_chart_values_files:
     - support.values.yaml
@@ -14,16 +20,13 @@ hubs:
     display_name: "2i2c-uk Staging"
     domain: staging.uk.2i2c.cloud
     helm_chart: basehub
-    auth0:
-      connection: github
     helm_chart_values_files:
       - staging.values.yaml
+      - enc-staging.secret.values.yaml
   - name: lis
     display_name: "London Interdisciplinary School"
     domain: ds.lis.2i2c.cloud
     helm_chart: basehub
-    auth0:
-      enabled: false
     helm_chart_values_files:
       - lis.values.yaml
       - enc-lis.secret.values.yaml

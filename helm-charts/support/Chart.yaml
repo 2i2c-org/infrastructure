@@ -6,33 +6,38 @@ description: Cluster wide depdencies for deployed hubs
 dependencies:
   # Prometheus for collection of metrics.
   # https://github.com/prometheus-community/helm-charts/tree/main/charts/prometheus
+  # We have deliberately chosen to use the helm chart rather than the prometheus
+  # operator, as we will never have more than one prometheus installation per
+  # cluster. The operator thus adds functionality we will not use, at a complexity
+  # cost. If we ever have multiple prometheii on the same cluster, we can
+  # reconsider using the operator.
   - name: prometheus
-    version: 19.3.1
+    version: 21.1.2
     repository: https://prometheus-community.github.io/helm-charts
 
   # Grafana for dashboarding of metrics.
   # https://github.com/grafana/helm-charts/tree/main/charts/grafana
   - name: grafana
-    version: 6.50.1
+    version: 6.56.1
     repository: https://grafana.github.io/helm-charts
 
   # ingress-nginx for a k8s Ingress resource controller that routes traffic from
   # a single IP entrypoint to various services exposed via k8s Ingress resources
   # that references this controller.
   - name: ingress-nginx
-    version: 4.4.2
+    version: 4.6.0
     repository: https://kubernetes.github.io/ingress-nginx
 
   # cluster-autoscaler for k8s clusters where it doesn't come out of the box (EKS)
   # https://github.com/kubernetes/autoscaler/tree/master/charts/cluster-autoscaler
   - name: cluster-autoscaler
-    version: 9.10.3
+    version: 9.28.0
     repository: https://kubernetes.github.io/autoscaler
     condition: cluster-autoscaler.enabled
 
   # cryptnono, counters crypto mining
   # Source code: https://github.com/yuvipanda/cryptnono/
   - name: cryptnono
-    version: "0.0.1-n025.h28f473f"
+    version: "0.0.1-0.dev.git.27.h01b4f25"
     repository: https://yuvipanda.github.io/cryptnono/
     condition: cryptnono.enabled

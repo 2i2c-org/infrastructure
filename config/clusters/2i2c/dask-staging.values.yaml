@@ -3,6 +3,17 @@ basehub:
     annotations:
       iam.gke.io/gcp-service-account: pilot-hubs-dask-staging@two-eye-two-see.iam.gserviceaccount.com
   jupyterhub:
+    proxy:
+      https:
+        hosts:
+          - dask-staging.2i2c.cloud
+    ingress:
+      hosts:
+        - dask-staging.2i2c.cloud
+      tls:
+        - secretName: https-auto-tls
+          hosts:
+            - dask-staging.2i2c.cloud
     custom:
       cloudResources:
         provider: gcp
@@ -37,13 +48,20 @@ basehub:
         JupyterHub:
           authenticator_class: cilogon
         CILogonOAuthenticator:
+          scope:
+            - "email"
+            - "profile"
           oauth_callback_url: "https://dask-staging.2i2c.cloud/hub/oauth_callback"
           # Only show the option to login with Google
           shown_idps:
-            - https://accounts.google.com/o/oauth2/auth
+            - http://accounts.google.com/o/oauth2/auth
+            - http://github.com/login/oauth/authorize
           allowed_idps:
             http://google.com/accounts/o8/id:
               username_derivation:
                 username_claim: "email"
               allowed_domains:
                 - "2i2c.org"
+            http://github.com/login/oauth/authorize:
+              username_derivation:
+                username_claim: "preferred_username"
