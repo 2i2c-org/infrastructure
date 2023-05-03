@@ -1,7 +1,7 @@
 name: 💻  New Hub - Request deployment
 description: Request a new hub for 2i2c to operate and provide information to help the engineering team deploy it
 title: "[Request deployment] New Hub: {{ HUB NAME }}"
-labels: ["type: hub"]
+labels: ["new hub"]
 body:
   - type: markdown
     attributes:
@@ -12,13 +12,25 @@ body:
 
         # Community Information
 
-  - type: textarea
-    id: important-dates
+  - type: input
+    id: community_representative_handle
     attributes:
-      label: Important dates
+      label: The GitHub handle of the community representative
       description: |
-        Any important dates that we should consider for this hub. For example, if it will be used for a class, the starting day of class and any days with tests.
-      value: |
+        Type the GitHub handle of the community representative
+
+        **If this info is not known yet, please write "pending" in the text area below.**
+    validations:
+      required: true
+
+  - type: textarea
+    attributes:
+      label: Hub important dates
+      description: |
+        Any important dates that we should consider for this hub.
+        For example, if it will be used for a class, the starting day of class and any days with tests.
+        **If the dates are not yet known, please write "pending" in the text area below.**
+      placeholder: |
         - **Target start date**: <!-- choose a target date ~1 week earlier than the required date -->
         - **Required start date**: <!-- the hub MUST by running as-needed by this date -->
         - **Any important dates for usage**: <!-- For example - exams, periods of heavy usage, etc. -->
@@ -31,22 +43,21 @@ body:
         # Infrastructure customization
 
   - type: dropdown
-    id: auth-type
     attributes:
       label: Hub Authentication Type
       description: |
         What kind of authentication service will be used for this community. This is the type of "log-in username" users will use on the hub.
+        **If this info is not known yet, please select "pending" or None in the dropdown below.**
       options:
         - GitHub (e.g., @mygithubhandle)
         - Google (e.g., myemailaddress@gmail.org, or a Google-backed domain)
         - Institutional Provider via CILogon (e.g., username@institution.org)
-        - Username / Password via auth0
         - Other (may not be possible, please specify in comments)
+        - pending
     validations:
       required: true
 
   - type: textarea
-    id: hub-admins
     attributes:
       label: First Hub Administrators
       description: |
@@ -54,6 +65,8 @@ body:
         The value here should reflect the type of authentication indicated below (e.g., a GitHub handle or email address).
 
         There may be up to 2 community representatives, please provide the **name**, **contact information**, and **hub login** of each.
+
+        **If this info is not known yet, please write "pending" in the text area below.**
       placeholder: |
         Examples:
         - Jo the Jovyan, jo@jupyter.org, @jothejovyan (if you are using GitHub authentication)
@@ -62,21 +75,28 @@ body:
       required: true
 
   - type: dropdown
+    id: optional_user_management
     attributes:
       label: "[GitHub Auth only] How would you like to manage your users?"
       description: |
         Please describe how you would prefer to manage your users accessing the hub via GitHub Auth.
+
+        **If this info is not known yet, please select "pending" or None in the dropdown below.**
       options:
         - Manually, by adding specific GitHub handles in the JupyterHub Admin panel
         - Allowing members of a specific GitHub organization
         - Allowing members of specific GitHub team(s)
+        - pending
 
   - type: textarea
+    id: optional_profile_restriction_based_on_team_membership
     attributes:
       label: "[GitHub Teams Auth only] Profile restriction based on team membership"
       description: |
         If you wish to offer a range of machine sizes/image types but to only a subset of your users, we can facilitate this through GitHub Teams.
         Please provide a list of GitHub Teams in your org and what resources you'd like each to access.
+
+        **If this info is not known yet, please write "pending" in the text area below.**
       placeholder: |
         @MyCoolOrg/all-users: Small and Medium sized machines
         @MyCoolOrg/advanced-users: Small, Medium, Large and GPU machines
@@ -88,20 +108,22 @@ body:
         The hub landing page can have a specific logo and a link attached to it.
 
   - type: input
-    id: hub-logo-url
     attributes:
       label: Hub logo image URL
       description: |
         Insert the URL where to find the logo image.
+
+        **If this info is not known yet, please write "pending" in the text area below.**
     validations:
       required: true
 
   - type: input
-    id: hub-logo-info
     attributes:
       label: Hub logo website URL
       description: |
         Insert the URL where clicking the hub logo should point to. This generally points to a community or institutional website.
+
+        **If this info is not known yet, please write "pending" in the text area below.**
     validations:
       required: true
 
@@ -115,58 +137,56 @@ body:
         Use this section to fill in relevant information:
 
   - type: input
-    id: hub-image-repo
     attributes:
       label: Hub user image GitHub repository
       description: |
-        Insert the link to the GitHub repository for user image (if avaiblable)
+        Insert the link to the GitHub repository for user image (if available)
+
+        **If this info is not known yet, please write "pending" in the text area below.**
     validations:
       required: false
 
   - type: input
-    id: hub-image-registry
     attributes:
       label: Hub user image tag and name
       description: |
         User image tag and name (including the registry). Eg. "quay.io/org/user-image:c4e586ff9240"
+
+        **If this info is not known yet, please write "pending" in the text area below.**
     validations:
       required: true
 
   - type: checkboxes
-    id: features
     attributes:
-      label: Extra features you'd like to enable
+      label: Extra features you would like to enable
       description: |
         In addition to a base JupyterHub, there are a few extra features that are possible. Use the checkboxes below to ask for them.
         These generally come with added complexity and cost, so make sure you've discussed these options with somebody at 2i2c before selecting them here.
 
         **Explanation of options**:
-        - **Specific cloud provider or datacenter**: If you have restrictions about which cloud provider to use, and which data center the hub should live in (e.g. if it is next to a specific dataset).
         - **Dedicated Scalable Dask Cluster** with [Dask Gateway](https://gateway.dask.org/): if you have very large datasets or otherwise need high-performance parallelizable computing via the cloud.
         - **Dedicated Kubernetes cluster**: If you need to run the infrastructure on your own cloud account, or otherwise wish to have a dedicated cluster.
       options:
-        - label: Specific cloud provider or datacenter (otherwise GCP)
         - label: Dedicated Kubernetes cluster
         - label: Scalable Dask Cluster
     validations:
       required: false
 
   - type: dropdown
-    id: cloud-provider
     attributes:
       label: (Optional) Preferred cloud provider
       description: |
-        If you selected the `Specific cloud provider or datacenter` extra option above, please select which one do you prefer.
+        If you have restrictions about which cloud provider to use, and which data center the hub should live in (e.g. if it is next to a specific dataset),
+        please select which one do you prefer.
       options:
         - No preference
-        - GCP (preferred)
+        - GCP (default and preferred)
         - AWS
         - Azure
     validations:
       required: false
 
   - type: dropdown
-    id: billing-account
     attributes:
       label: (Optional) Billing and Cloud account
       description: |
@@ -179,7 +199,6 @@ body:
         - I need help figuring out the billing and cloud accounts
 
   - type: textarea
-    id: other-information
     attributes:
       label: Other relevant information to the features above
       description: |
@@ -200,7 +219,7 @@ body:
       required: false
 
   - type: checkboxes
-    id: tasks-to-deploy
+    id: tasks_to_deploy
     attributes:
       label: Tasks to deploy the hub
       description: |
