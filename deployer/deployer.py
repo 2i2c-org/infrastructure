@@ -45,7 +45,7 @@ helm_charts_dir = Path(__file__).parent.parent.joinpath("helm-charts")
 def use_cluster_credentials(
     cluster_name: str = typer.Argument(..., help="Name of cluster to operate on"),
     commandline: str = typer.Argument(
-        ...,
+        "",
         help="Optional shell command line to run after authenticating to this cluster",
     ),
 ):
