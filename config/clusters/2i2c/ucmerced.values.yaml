@@ -3,10 +3,6 @@ jupyterhub:
     https:
       hosts:
         - ucmerced.2i2c.cloud
-  singleuser:
-    memory:
-      guarantee: 1.5G
-      limit: 1.5G
   ingress:
     hosts:
       - ucmerced.2i2c.cloud
