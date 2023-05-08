@@ -28,7 +28,15 @@ To enable logging into Grafana using GitHub, follow these steps:
    grafana:
      grafana.ini:
        server:
-         root_url: https://<grafana.ingress.hosts[0]>
+         # root_url should point to the domain we redirect to if we have multiple
+         # domain names configured and redirects from one to another
+         #
+         # FIXME: root_url is also required to be the same as the
+         #        grafana.ingress.hosts[0] config specifically until
+         #        https://github.com/2i2c-org/infrastructure/issues/2533 is
+         #        resolved.
+         #
+         root_url: https://<grafana.ingress.hosts[0]>/
        auth.github:
          enabled: true
          # allowed_organizations should be a space separated list
