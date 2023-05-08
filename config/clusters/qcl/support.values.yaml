@@ -7,6 +7,8 @@ redirects:
       to: staging.quantifiedcarbon.com
     - from: qcl.2i2c.cloud
       to: jupyter.quantifiedcarbon.com
+    - from: grafana.qcl.2i2c.cloud
+      to: grafana.quantifiedcarbon.com
 
 prometheus:
   server:
