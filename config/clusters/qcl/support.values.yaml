@@ -23,9 +23,9 @@ grafana:
   grafana.ini:
     server:
       root_url: https://grafana.quantifiedcarbon.com/
-  auth.github:
-    enabled: true
-    allowed_organizations: 2i2c-org
+    auth.github:
+      enabled: true
+      allowed_organizations: 2i2c-org QuantifiedCarbon
   ingress:
     hosts:
       - grafana.qcl.2i2c.cloud
