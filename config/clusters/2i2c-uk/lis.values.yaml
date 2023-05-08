@@ -47,7 +47,7 @@ jupyterhub:
     image:
       # https://hub.docker.com/r/lisacuk/lishub-base
       name: "lisacuk/lishub-base"
-      tag: "4ced070"
+      tag: "07b6b93"
   hub:
     config:
       JupyterHub:
