@@ -76,7 +76,7 @@ basehub:
                   kubespawner_override:
                     image: "pangeo/base-notebook:2023.05.08"
                 pangeo-notebook:
-                  display_name: Pangeo Base Notebook
+                  display_name: Pangeo Notebook
                   slug: "pangeo-notebook"
                   kubespawner_override:
                     image: "pangeo/pangeo-notebook:2023.05.08"
