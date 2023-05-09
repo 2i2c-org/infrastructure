@@ -34,7 +34,6 @@ jobs:
           - cluster_name: utoronto
           - cluster_name: victor
 
-
     steps:
       - name: Checkout repo
         uses: actions/checkout@v3
