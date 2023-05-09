@@ -54,32 +54,32 @@ basehub:
             image:
               display_name: Image
               choices:
-                python:
-                  display_name: DEPRECATED Trace Python Notebook
-                  slug: "python"
-                  kubespawner_override:
-                    image: carbonplan/trace-python-notebook:latest
                 main:
                   display_name: Main Single User
                   default: true
                   slug: "main"
                   kubespawner_override:
                     image: carbonplan/main-single-user:latest
-                cmip6:
-                  display_name: DEPRECATED CMIP6 Downscaling
-                  slug: "cmip6"
-                  kubespawner_override:
-                    image: carbonplan/cmip6-downscaling-single-user:latest
                 tensorflow:
                   display_name: Pangeo Tensorflow ML Notebook
                   slug: "tensorflow"
                   kubespawner_override:
-                    image: "pangeo/ml-notebook:ebeb9dd"
+                    image: "pangeo/ml-notebook:2023.05.08"
                 edge:
                   display_name: Edge Single User
                   slug: "edge"
                   kubespawner_override:
                     image: "carbonplan/edge-single-user:latest"
+                base-notebook:
+                  display_name: Pangeo Base Notebook
+                  slug: "base-notebook"
+                  kubespawner_override:
+                    image: "pangeo/base-notebook:2023.05.08"
+                pangeo-notebook:
+                  display_name: Pangeo Base Notebook
+                  slug: "pangeo-notebook"
+                  kubespawner_override:
+                    image: "pangeo/pangeo-notebook:2023.05.08"
           kubespawner_override:
             # Expllicitly unset mem_limit, so it overrides the default memory limit we set in
             # basehub/values.yaml
@@ -183,7 +183,6 @@ basehub:
       config:
         Authenticator:
           allowed_users: &users
-            - jhamman
           admin_users: *users
 
 dask-gateway:
