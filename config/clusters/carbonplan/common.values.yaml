@@ -183,6 +183,7 @@ basehub:
       config:
         Authenticator:
           allowed_users: &users
+            - maxrjones
           admin_users: *users
 
 dask-gateway:
