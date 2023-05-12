@@ -56,7 +56,6 @@ basehub:
               choices:
                 main:
                   display_name: Main Single User
-                  default: true
                   slug: "main"
                   kubespawner_override:
                     image: carbonplan/main-single-user:latest
@@ -77,6 +76,7 @@ basehub:
                     image: "pangeo/base-notebook:2023.05.08"
                 pangeo-notebook:
                   display_name: Pangeo Notebook
+                  default: true
                   slug: "pangeo-notebook"
                   kubespawner_override:
                     image: "pangeo/pangeo-notebook:2023.05.08"
