@@ -51,11 +51,18 @@ basehub:
             - NOAA-OWP
           scope:
             - read:org
+    # FIXME: The configurator is used, so we should not be using prePuller at
+    #        the same time. This is just used to help pre-warm nodes during an
+    #        event.
+    #
+    prePuller:
+      continuous:
+        enabled: true
     singleuser:
       image:
         # Image build repo: https://github.com/2i2c-org/awi-ciroh-image
         name: "quay.io/2i2c/awi-ciroh-image"
-        tag: "63ecd92f8d84"
+        tag: "584293e50d4c"
       profileList:
         # The mem-guarantees are here so k8s doesn't schedule other pods
         # on these nodes. They need to be just under total allocatable
