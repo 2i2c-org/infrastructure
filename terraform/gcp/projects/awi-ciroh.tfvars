@@ -25,7 +25,7 @@ user_buckets = {
 # Setup notebook node pools
 notebook_nodes = {
   "small" : {
-    min : 0,
+    min : 20,
     max : 100,
     machine_type : "n1-standard-2",
     labels: {},
@@ -36,7 +36,7 @@ notebook_nodes = {
     }
   },
   "medium" : {
-    min : 0,
+    min : 15,
     max : 100,
     machine_type : "n1-standard-4",
     labels: {},
@@ -47,7 +47,7 @@ notebook_nodes = {
     }
   },
   "large" : {
-    min : 0,
+    min : 5,
     max : 100,
     machine_type : "n1-standard-8",
     labels: {},
@@ -58,7 +58,7 @@ notebook_nodes = {
     }
   },
   "huge" : {
-    min : 0,
+    min : 5,
     max : 100,
     machine_type : "n1-standard-16",
     labels: {},
