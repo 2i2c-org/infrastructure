@@ -51,16 +51,13 @@ basehub:
             - NOAA-OWP
           scope:
             - read:org
-    # FIXME: The configurator is used, so we should not be using prePuller at
-    #        the same time. This is just used to help pre-warm nodes during an
-    #        event.
-    #
-    prePuller:
-      continuous:
-        enabled: true
     singleuser:
       image:
         # Image build repo: https://github.com/2i2c-org/awi-ciroh-image
+        #
+        # NOTE: The configurator is used in this cluster, so this is stale
+        #       configuration.
+        #
         name: "quay.io/2i2c/awi-ciroh-image"
         tag: "584293e50d4c"
       profileList:
