@@ -25,7 +25,7 @@ user_buckets = {
 # Setup notebook node pools
 notebook_nodes = {
   "small" : {
-    min : 20,
+    min : 0,
     max : 100,
     machine_type : "n1-standard-2",
     labels: {},
@@ -36,7 +36,7 @@ notebook_nodes = {
     }
   },
   "medium" : {
-    min : 15,
+    min : 0,
     max : 100,
     machine_type : "n1-standard-4",
     labels: {},
@@ -47,7 +47,7 @@ notebook_nodes = {
     }
   },
   "large" : {
-    min : 5,
+    min : 0,
     max : 100,
     machine_type : "n1-standard-8",
     labels: {},
@@ -58,9 +58,26 @@ notebook_nodes = {
     }
   },
   "huge" : {
-    min : 5,
+    min : 0,
     max : 100,
     machine_type : "n1-standard-16",
+    labels: {},
+    gpu: {
+      enabled: false,
+      type: "",
+      count: 0
+    }
+  },
+  # added stressfully before an event where we ran out of ssd quota, see
+  # https://github.com/2i2c-org/infrastructure/pull/2539.
+  #
+  # FIXME: make this cluster have a node sharing setup like in the
+  #        basehub/daskhub template.
+  #
+  "highmem-medium" : {
+    min : 10,
+    max : 100,
+    machine_type : "n2-highmem-16",
     labels: {},
     gpu: {
       enabled: false,
