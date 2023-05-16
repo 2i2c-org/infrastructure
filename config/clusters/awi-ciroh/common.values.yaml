@@ -71,6 +71,9 @@ basehub:
         #        the choices users end up making and avoiding running into
         #        persistent disk quotas.
         #
+        #        Change PR: https://github.com/2i2c-org/infrastructure/pull/2539
+        #        Related event: https://github.com/2i2c-org/infrastructure/issues/2520
+        #
         #        This is an interim setup, trying to balance the experience of
         #        the previous 1:1 user:node setup with a node sharing setup. It
         #        is not meant to be retained long term!
