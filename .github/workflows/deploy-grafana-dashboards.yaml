@@ -12,23 +12,27 @@ jobs:
         include:
           # The grafana for 2i2c cluster holds also info about all other clusters
           - cluster_name: 2i2c
-          - cluster_name: carbonplan
-          - cluster_name: cloudbank
-          - cluster_name: leap
-          - cluster_name: m2lines
-          - cluster_name: meom-ige
-          - cluster_name: openscapes
-          - cluster_name: pangeo-hubs
-          - cluster_name: utoronto
+          - cluster_name: 2i2c-aws-us
+          - cluster_name: 2i2c-uk
           - cluster_name: awi-ciroh
           - cluster_name: callysto
-          - cluster_name: 2i2c-uk
-          - cluster_name: nasa-cryo
+          - cluster_name: carbonplan
+          - cluster_name: cloudbank
           - cluster_name: gridsst
-          - cluster_name: victor
-          - cluster_name: 2i2c-aws-us
-          - cluster_name: ubc-eoas
+          - cluster_name: jupyter-meets-the-earth
+          - cluster_name: leap
+          - cluster_name: linked-earth
+          - cluster_name: m2lines
+          - cluster_name: meom-ige
+          - cluster_name: nasa-cryo
           - cluster_name: nasa-veda
+          - cluster_name: openscapes
+          - cluster_name: pangeo-hubs
+          - cluster_name: qcl
+          - cluster_name: smithsonian
+          - cluster_name: ubc-eoas
+          - cluster_name: utoronto
+          - cluster_name: victor
 
     steps:
       - name: Checkout repo

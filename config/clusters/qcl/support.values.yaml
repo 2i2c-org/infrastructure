@@ -7,6 +7,8 @@ redirects:
       to: staging.quantifiedcarbon.com
     - from: qcl.2i2c.cloud
       to: jupyter.quantifiedcarbon.com
+    - from: grafana.qcl.2i2c.cloud
+      to: grafana.quantifiedcarbon.com
 
 prometheus:
   server:
@@ -23,15 +25,15 @@ grafana:
   grafana.ini:
     server:
       root_url: https://grafana.quantifiedcarbon.com/
-  auth.github:
-    enabled: true
-    allowed_organizations: 2i2c-org
+    auth.github:
+      enabled: true
+      allowed_organizations: 2i2c-org QuantifiedCarbon
   ingress:
     hosts:
-      - grafana.qcl.2i2c.cloud
       - grafana.quantifiedcarbon.com
+      - grafana.qcl.2i2c.cloud
     tls:
       - secretName: grafana-tls
         hosts:
-          - grafana.qcl.2i2c.cloud
           - grafana.quantifiedcarbon.com
+          - grafana.qcl.2i2c.cloud
