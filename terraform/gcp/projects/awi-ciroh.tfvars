@@ -69,7 +69,8 @@ notebook_nodes = {
     }
   },
   # added stressfully before an event where we ran out of ssd quota, see
-  # https://github.com/2i2c-org/infrastructure/pull/2539.
+  # https://github.com/2i2c-org/infrastructure/pull/2539 and the linked
+  # event https://github.com/2i2c-org/infrastructure/issues/2520.
   #
   # FIXME: make this cluster have a node sharing setup like in the
   #        basehub/daskhub template.
