@@ -175,7 +175,7 @@ jupyterhub:
           mem_limit: null
           node_selector:
             node.kubernetes.io/instance-type: n2-highmem-16
-      - display_name: "n2-highcpu-32: 32 CPU / 32 GB RAM"
+      - display_name: "DEPRECATED n2-highcpu-32: 32 CPU / 32 GB RAM"
         description: "Start a container on a dedicated node"
         slug: "n2_highcpu_32"
         kubespawner_override:
@@ -185,8 +185,7 @@ jupyterhub:
           cpu_guarantee: 3.2
           cpu_limit: null
           mem_limit: null
-      # TODO(pnasrat): check on value once node running
-      - display_name: "n2-highcpu-96: 96 CPU / 96 GB RAM"
+      - display_name: "DEPRECATED n2-highcpu-96: 96 CPU / 96 GB RAM"
         description: "Start a container on a dedicated node"
         slug: "n2_highcpu_96"
         kubespawner_override:
@@ -196,3 +195,23 @@ jupyterhub:
           mem_limit: null
           mem_guarantee: 86G
           cpu_guarantee: 9.6
+      - display_name: "n2-standard-48: 48 CPU / 128 GB RAM"
+        description: "Start a container on a dedicated node"
+        slug: "n2_standard_48"
+        kubespawner_override:
+          node_selector:
+            node.kubernetes.io/instance-type: n2-standard-48
+          mem_guarantee: 100G
+          cpu_guarantee: 4.8
+          cpu_limit: null
+          mem_limit: null
+      - display_name: "n2-standard-96: 96 CPU / 285 GB RAM"
+        description: "Start a container on a dedicated node"
+        slug: "n2_standard_96"
+        kubespawner_override:
+          node_selector:
+            node.kubernetes.io/instance-type: n2-standard-96
+          mem_guarantee: 256G
+          cpu_guarantee: 9.6
+          cpu_limit: null
+          mem_limit: null
