@@ -182,7 +182,7 @@ basehub:
         - display_name: "Massive GPU: 64 CPU, 256 GB, 1 T4 Tensor Core GPU"
           description: "A dedicated machine for you with one GPU attached."
           kubespawner_override:
-            mem_guarantee: 224G
+            mem_guarantee: 200G
             mem_limit: null
             node_selector:
               node.kubernetes.io/instance-type: g4dn.16xlarge
