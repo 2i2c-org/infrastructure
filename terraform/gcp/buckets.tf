@@ -64,7 +64,7 @@ resource "google_storage_bucket_iam_member" "member" {
 }
 
 resource "google_storage_bucket_iam_member" "member_readonly" {
-  for_each = { for bp in local.bucket_admin_permissions : "${bp.hub_name}.${bp.bucket_name}" => bp }
+  for_each = { for bp in local.bucket_readonly_permissions : "${bp.hub_name}.${bp.bucket_name}" => bp }
   bucket   = google_storage_bucket.user_buckets[each.value.bucket_name].name
   role     = "roles/storage.objectViewer"
   member   = "serviceAccount:${google_service_account.workload_sa[each.value.hub_name].email}"
