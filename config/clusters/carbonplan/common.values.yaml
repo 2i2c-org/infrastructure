@@ -59,6 +59,11 @@ basehub:
                   slug: "main"
                   kubespawner_override:
                     image: carbonplan/main-single-user:latest
+                forest-offset-fires:
+                  display_name: Forest Offset Fires
+                  slug: forest-offset-fires
+                  kubespawner_override:
+                    image: quay.io/carbonplan/forest-offsets-fires:latest
                 tensorflow:
                   display_name: Pangeo Tensorflow ML Notebook
                   slug: "tensorflow"
