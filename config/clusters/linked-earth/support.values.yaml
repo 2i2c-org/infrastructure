@@ -18,7 +18,7 @@ grafana:
       root_url: https://grafana.linkedearth.2i2c.cloud/
     auth.github:
       enabled: true
-      allowed_organizations: 2i2c-org
+      allowed_organizations: 2i2c-org LinkedEarth
   ingress:
     hosts:
       - grafana.linkedearth.2i2c.cloud
