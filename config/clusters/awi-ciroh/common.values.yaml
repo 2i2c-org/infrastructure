@@ -78,6 +78,9 @@ basehub:
         #        the previous 1:1 user:node setup with a node sharing setup. It
         #        is not meant to be retained long term!
         #
+        #        -[ ] Make this cluster have a node sharing setup like in the
+        #             basehub/daskhub template.
+        #
         - display_name: "Small"
           description: 5GB RAM, 2 CPUs
           default: true

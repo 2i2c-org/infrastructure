@@ -25,6 +25,13 @@ variable "project_id" {
 
 variable "k8s_version_prefixes" {
   type        = set(string)
+  # Available minor versions are picked from the GKE regular release channel. To
+  # see the available versions see
+  # https://cloud.google.com/kubernetes-engine/docs/release-notes-regular
+  #
+  # This list should list all minor versions available in the regular release
+  # channel, so we may want to remove or add minor versions here over time.
+  #
   default     = [
     "1.22.",
     "1.23.",
@@ -35,6 +42,9 @@ variable "k8s_version_prefixes" {
   description = <<-EOT
   A list of k8s version prefixes that can be evaluated to their latest version by
   the output defined in cluster.tf called regular_channel_latest_k8s_versions.
+
+  For details about release channels (rapid, regular, stable), see:
+  https://cloud.google.com/kubernetes-engine/docs/concepts/release-channels#channels
   EOT
 }
 
