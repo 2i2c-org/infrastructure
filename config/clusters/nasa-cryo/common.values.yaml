@@ -13,6 +13,11 @@ basehub:
       baseShareName: /
   jupyterhub:
     custom:
+      singleuser:
+        extraPVCs:
+          - name: qgis-data-{username}
+            class: gp2
+            capacity: 10Gi
       2i2c:
         add_staff_user_ids_to_admin_users: true
         add_staff_user_ids_of_type: "github"
@@ -73,6 +78,11 @@ basehub:
               allow_hidden: true
       defaultUrl: /lab
       storage:
+        extraVolumes:
+          - name: qgis-data
+            persistentVolumeClaim:
+              # This should match what is set as `name` in the earlier step under `custom.singleuser.extraPVCs`
+              claimName: "qgis-data-{username}"
         extraVolumeMounts:
           # A shared folder readable & writeable by everyone
           # https://github.com/CryoInTheCloud/hub-image/issues/43#issuecomment-1466392517
@@ -84,6 +94,8 @@ basehub:
             mountPath: /home/jovyan/shared
             subPath: _shared
             readOnly: true
+          - name: qgis-data
+            mountPath: /home/jovyan/qgis-data
       initContainers:
         - name: volume-mount-ownership-fix
           image: busybox
@@ -91,7 +103,7 @@ basehub:
             [
               "sh",
               "-c",
-              "id && chown 1000:1000 /home/jovyan && chown 1000:1000 /home/jovyan/shared-readwrite && chown 1000:1000 /home/jovyan/shared-public && ls -lhd /home/jovyan ",
+              "id && chown 1000:1000 /home/jovyan && chown 1000:1000 /home/jovyan/shared-readwrite && chown 1000:1000 /home/jovyan/shared-public && chown 1000:1000 /home/jovyan/qgis-data && ls -lhd /home/jovyan ",
             ]
           securityContext:
             runAsUser: 0
@@ -107,6 +119,8 @@ basehub:
             - name: home
               mountPath: /home/jovyan/shared-public
               subPath: _shared-public
+            - name: qgis-data
+              mountPath: /home/jovyan/qgis-data
       profileList:
         # NOTE: About node sharing
         #
