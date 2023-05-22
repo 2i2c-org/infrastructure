@@ -4,6 +4,12 @@ jupyterhub:
       templateVars:
         # This sets the default selected interface option
         default_url: /rstudio
+  hub:
+    config:
+      KubeSpawner:
+        # Ensures container working dir is homedir
+        # https://github.com/2i2c-org/infrastructure/issues/2559
+        working_dir: /home/rstudio
   singleuser:
     storage:
       # From https://jupyterhub-image.guide/rocker.html#step-7-setup-zero-to-jupyterhub-configuration-for-home-directory
