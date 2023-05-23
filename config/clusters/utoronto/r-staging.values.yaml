@@ -12,3 +12,9 @@ jupyterhub:
       AzureAdOAuthenticator:
         oauth_callback_url: https://r-staging.datatools.utoronto.ca/hub/oauth_callback
         logout_redirect_url: https://login.microsoftonline.com/common/oauth2/logout?post_logout_redirect_uri=https://r-staging.datatools.utoronto.ca
+  # Testing R hub + shiny-server.
+  # https://github.com/2i2c-org/infrastructure/issues/2572
+  singleuser:
+    image:
+      name: quay.io/2i2c/utoronto-r-image
+      tag: "fced1ec1eee7"
