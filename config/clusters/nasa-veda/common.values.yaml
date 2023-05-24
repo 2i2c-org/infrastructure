@@ -48,6 +48,8 @@ basehub:
           allowed_organizations:
             - veda-analytics-access:all-users
             - 2i2c-org:hub-access-for-2i2c-staff
+            - veda-analytics-access:HDCRS-2023
+            - HDCRS-HLS-summer-school-2023:participants
           scope:
             - read:org
     prePuller:
