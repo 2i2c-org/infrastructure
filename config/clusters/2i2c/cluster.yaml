@@ -110,16 +110,6 @@ hubs:
       # that you intend for these files to be applied in this order.
       - earthlab.values.yaml
       - enc-earthlab.secret.values.yaml
-  - name: paleohack2021
-    display_name: "PaleoHack"
-    domain: paleohack2021.hackathon.2i2c.cloud
-    helm_chart: basehub
-    helm_chart_values_files:
-      # The order in which you list files here is the order the will be passed
-      # to the helm upgrade command in, and that has meaning. Please check
-      # that you intend for these files to be applied in this order.
-      - paleohack2021.values.yaml
-      - enc-paleohack2021.secret.values.yaml
   - name: aup
     display_name: "The American University of Paris"
     domain: aup.pilot.2i2c.cloud
