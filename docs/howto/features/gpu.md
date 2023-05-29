@@ -91,8 +91,8 @@ jupyterhub:
          # to work around https://github.com/2i2c-org/infrastructure/issues/1530
          NVIDIA_DRIVER_CAPABILITIES: compute,utility
       profileList:
-        - display_name: Large + GPU
-          description: 14GB RAM, 4 CPUs, T4 GPU
+        - display_name: NVIDIA Tesla T4, ~16 GB, ~4 CPUs
+          description: "Start a container on a dedicated node with a GPU"
           profile_options:
             image:
               display_name: Image
