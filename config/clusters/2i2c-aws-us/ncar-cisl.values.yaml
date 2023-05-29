@@ -1,7 +1,7 @@
 basehub:
   userServiceAccount:
     annotations:
-      eks.amazonaws.com/role-arn: arn:aws:iam::790657130469:role/2i2c-aws-us-researchdelight
+      eks.amazonaws.com/role-arn: arn:aws:iam::790657130469:role/2i2c-aws-us-ncar-cisl
   nfs:
     pv:
       # from https://docs.aws.amazon.com/efs/latest/ug/mounting-fs-nfs-mount-settings.html
@@ -16,13 +16,10 @@ basehub:
       baseShareName: /
   jupyterhub:
     ingress:
-      hosts: [researchdelight.2i2c.cloud]
+      hosts: [ncar-cisl.2i2c.cloud]
       tls:
-        - hosts: [researchdelight.2i2c.cloud]
+        - hosts: [ncar-cisl.2i2c.cloud]
           secretName: https-auto-tls
-    proxy:
-      https:
-        hosts: [researchdelight.2i2c.cloud]
     custom:
       2i2c:
         add_staff_user_ids_to_admin_users: true
@@ -30,9 +27,9 @@ basehub:
       homepage:
         templateVars:
           org:
-            name: 2i2c Research Delight
-            url: https://2i2c.org
-            logo_url: https://2i2c.org/media/logo.png
+            name: NCAR-CISL for UCAR
+            url: https://www2.cisl.ucar.edu/
+            logo_url: https://www.vmcdn.ca/f/files/longmontleader/import/2017_06_ncar_highres_transparent.png
           designed_by:
             name: 2i2c
             url: https://2i2c.org
@@ -40,24 +37,32 @@ basehub:
             name: 2i2c
             url: https://2i2c.org
           funded_by:
-            name: 2i2c
-            url: https://2i2c.org
+            name: NCAR-CISL for UCAR
+            url: https://www2.cisl.ucar.edu/
     hub:
       config:
         JupyterHub:
-          authenticator_class: cilogon
-        CILogonOAuthenticator:
+          authenticator_class: github
+        GitHubOAuthenticator:
+          oauth_callback_url: https://ncar-cisl.2i2c.cloud/hub/oauth_callback
+          allowed_organizations:
+            - 2i2c-org
+            - NCAR:2i2c-cloud-users
           scope:
-            - "profile"
-          username_claim: "preferred_username"
-          oauth_callback_url: "https://researchdelight.2i2c.cloud/hub/oauth_callback"
-          # Only show the option to login with GitHub
-          shown_idps:
-            - http://github.com/login/oauth/authorize
+            - read:org
+        Authenticator:
+          admin_users:
+            - kcote-ncar # Ken Cote, Initial adminstrator
+            - NicholasCote # Nicholas Cote, Initial adminstrator
+            - nwehrheim # Nick Wehrheim, Community representative
     singleuser:
       image:
-        name: quay.io/2i2c/researchdelight-image
-        tag: "872f0c4578af"
+        # image choice preliminary and is expected to be setup via
+        # https://ncar-cisl.2i2c.cloud/services/configurator/ by the community
+        #
+        # pangeo/pangeo-notebook is maintained at: https://github.com/pangeo-data/pangeo-docker-images
+        name: pangeo/pangeo-notebook
+        tag: "2023.05.18"
       profileList:
         # NOTE: About node sharing
         #
@@ -240,13 +245,13 @@ basehub:
                   display_name: Pangeo Tensorflow ML Notebook
                   slug: "tensorflow"
                   kubespawner_override:
-                    image: "pangeo/ml-notebook:b9584f6"
+                    image: "pangeo/ml-notebook:2023.05.18"
                 pytorch:
                   display_name: Pangeo PyTorch ML Notebook
                   default: true
                   slug: "pytorch"
                   kubespawner_override:
-                    image: "pangeo/pytorch-notebook:b9584f6"
+                    image: "pangeo/pytorch-notebook:2023.05.18"
           kubespawner_override:
             mem_limit: null
             mem_guarantee: 14G
