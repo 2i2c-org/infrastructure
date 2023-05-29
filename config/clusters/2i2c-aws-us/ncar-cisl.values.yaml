@@ -1,0 +1,65 @@
+basehub:
+  userServiceAccount:
+    annotations:
+      eks.amazonaws.com/role-arn: arn:aws:iam::790657130469:role/2i2c-aws-us-ncar-cisl
+  nfs:
+    pv:
+      # from https://docs.aws.amazon.com/efs/latest/ug/mounting-fs-nfs-mount-settings.html
+      mountOptions:
+        - rsize=1048576
+        - wsize=1048576
+        - timeo=600
+        - soft # We pick soft over hard, so NFS lockups don't lead to hung processes
+        - retrans=2
+        - noresvport
+      serverIP: fs-0b70db2b65209a77d.efs.us-west-2.amazonaws.com
+      baseShareName: /
+  jupyterhub:
+    ingress:
+      hosts: [ncar-cisl.2i2c.cloud]
+      tls:
+        - hosts: [ncar-cisl.2i2c.cloud]
+          secretName: https-auto-tls
+    custom:
+      2i2c:
+        add_staff_user_ids_to_admin_users: true
+        add_staff_user_ids_of_type: "github"
+      homepage:
+        templateVars:
+          org:
+            name: NCAR-CISL for UCAR
+            url: https://www2.cisl.ucar.edu/
+            logo_url: https://www.vmcdn.ca/f/files/longmontleader/import/2017_06_ncar_highres_transparent.png
+          designed_by:
+            name: 2i2c
+            url: https://2i2c.org
+          operated_by:
+            name: 2i2c
+            url: https://2i2c.org
+          funded_by:
+            name: NCAR-CISL for UCAR
+            url: https://www2.cisl.ucar.edu/
+    hub:
+      config:
+        JupyterHub:
+          authenticator_class: github
+        GitHubOAuthenticator:
+          oauth_callback_url: https://ncar-cisl.2i2c.cloud/hub/oauth_callback
+          allowed_organizations:
+            - 2i2c-org
+            - NCAR:2i2c-cloud-users
+          scope:
+            - read:org
+        Authenticator:
+          admin_users:
+            - kcote-ncar # Ken Cote, Initial adminstrator
+            - NicholasCote # Nicholas Cote, Initial adminstrator
+            - nwehrheim # Nick Wehrheim, Community representative
+    singleuser:
+      image:
+        # image choice preliminary and is expected to be setup via
+        # https://ncar-cisl.2i2c.cloud/services/configurator/ by the community
+        #
+        # pangeo/pangeo-notebook is maintained at: https://github.com/pangeo-data/pangeo-docker-images
+        name: pangeo/pangeo-notebook
+        tag: "2023.05.18"
