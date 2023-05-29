@@ -252,20 +252,8 @@ properties:
     additionalProperties: true
     required:
       - custom
-      - proxy
       - ingress
     properties:
-      proxy:
-        type: object
-        additionalProperties: true
-        required:
-          - https
-        properties:
-          hosts:
-            type: array
-            minItems: 1
-            items:
-              type: string
       ingress:
         type: object
         additionalProperties: true

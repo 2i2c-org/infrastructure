@@ -8,9 +8,6 @@ basehub:
       tls:
         - hosts: [staging.ciroh.awi.2i2c.cloud]
           secretName: https-auto-tls
-    proxy:
-      https:
-        hosts: [staging.ciroh.awi.2i2c.cloud]
     singleuser:
       extraEnv:
         SCRATCH_BUCKET: gs://awi-ciroh-scratch-staging/$(JUPYTERHUB_USER)

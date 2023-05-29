@@ -8,9 +8,6 @@ basehub:
       tls:
         - hosts: [meom-ige.2i2c.cloud]
           secretName: https-auto-tls
-    proxy:
-      https:
-        hosts: [meom-ige.2i2c.cloud]
     hub:
       config:
         JupyterHub:

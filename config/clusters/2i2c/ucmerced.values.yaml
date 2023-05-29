@@ -1,8 +1,4 @@
 jupyterhub:
-  proxy:
-    https:
-      hosts:
-        - ucmerced.2i2c.cloud
   ingress:
     hosts:
       - ucmerced.2i2c.cloud

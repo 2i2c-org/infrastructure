@@ -8,9 +8,6 @@ basehub:
       tls:
         - hosts: [staging.m2lines.2i2c.cloud]
           secretName: https-auto-tls
-    proxy:
-      https:
-        hosts: [staging.m2lines.2i2c.cloud]
     singleuser:
       extraEnv:
         SCRATCH_BUCKET: gs://m2lines-scratch-staging/$(JUPYTERHUB_USER)

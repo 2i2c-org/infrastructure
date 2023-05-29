@@ -8,9 +8,6 @@ basehub:
       tls:
         - hosts: [staging.us-central1-b.gcp.pangeo.io]
           secretName: https-auto-tls
-    proxy:
-      https:
-        hosts: [staging.us-central1-b.gcp.pangeo.io]
     hub:
       config:
         GitHubOAuthenticator:

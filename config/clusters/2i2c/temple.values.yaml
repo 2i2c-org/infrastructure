@@ -1,8 +1,4 @@
 jupyterhub:
-  proxy:
-    https:
-      hosts:
-        - temple.2i2c.cloud
   ingress:
     hosts:
       - temple.2i2c.cloud

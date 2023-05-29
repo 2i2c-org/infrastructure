@@ -4,10 +4,6 @@ basehub:
       iam.gke.io/gcp-service-account: pilot-hubs-catalyst-coop@two-eye-two-see.iam.gserviceaccount.com
 
   jupyterhub:
-    proxy:
-      https:
-        hosts:
-          - catalyst-cooperative.pilot.2i2c.cloud
     ingress:
       hosts:
         - catalyst-cooperative.pilot.2i2c.cloud

@@ -3,10 +3,6 @@ basehub:
     annotations:
       iam.gke.io/gcp-service-account: pilot-hubs-dask-staging@two-eye-two-see.iam.gserviceaccount.com
   jupyterhub:
-    proxy:
-      https:
-        hosts:
-          - dask-staging.2i2c.cloud
     ingress:
       hosts:
         - dask-staging.2i2c.cloud

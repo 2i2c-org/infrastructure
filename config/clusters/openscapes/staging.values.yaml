@@ -5,9 +5,6 @@ basehub:
       tls:
         - hosts: [staging.openscapes.2i2c.cloud]
           secretName: https-auto-tls
-    proxy:
-      https:
-        hosts: [staging.openscapes.2i2c.cloud]
     hub:
       config:
         JupyterHub:

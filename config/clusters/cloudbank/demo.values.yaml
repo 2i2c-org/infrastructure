@@ -4,9 +4,6 @@ jupyterhub:
     tls:
       - hosts: [demo.cloudbank.2i2c.cloud]
         secretName: https-auto-tls
-  proxy:
-    https:
-      hosts: [demo.cloudbank.2i2c.cloud]
   prePuller:
     continuous:
       enabled: true

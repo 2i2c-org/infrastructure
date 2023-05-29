@@ -8,9 +8,6 @@ basehub:
       tls:
         - hosts: [nasa-veda.2i2c.cloud]
           secretName: https-auto-tls
-    proxy:
-      https:
-        hosts: [nasa-veda.2i2c.cloud]
     hub:
       config:
         GitHubOAuthenticator:

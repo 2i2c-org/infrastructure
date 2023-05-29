@@ -9,9 +9,6 @@ basehub:
       tls:
         - hosts: [staging.victor.2i2c.cloud]
           secretName: https-auto-tls
-    proxy:
-      https:
-        hosts: [staging.victor.2i2c.cloud]
     hub:
       config:
         GitHubOAuthenticator:

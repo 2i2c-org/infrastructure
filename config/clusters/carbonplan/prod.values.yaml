@@ -5,9 +5,6 @@ basehub:
       tls:
         - hosts: [carbonplan.2i2c.cloud]
           secretName: https-auto-tls
-    proxy:
-      https:
-        hosts: [carbonplan.2i2c.cloud]
     hub:
       config:
         JupyterHub:
