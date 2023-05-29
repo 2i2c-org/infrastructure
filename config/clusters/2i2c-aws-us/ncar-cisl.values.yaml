@@ -237,6 +237,21 @@ basehub:
         - display_name: NVIDIA Tesla T4, ~16 GB, ~4 CPUs
           slug: gpu
           description: "Start a container on a dedicated node with a GPU"
+          profile_options:
+            image:
+              display_name: Image
+              choices:
+                tensorflow:
+                  display_name: Pangeo Tensorflow ML Notebook
+                  slug: "tensorflow"
+                  kubespawner_override:
+                    image: "pangeo/ml-notebook:2023.05.18"
+                pytorch:
+                  display_name: Pangeo PyTorch ML Notebook
+                  default: true
+                  slug: "pytorch"
+                  kubespawner_override:
+                    image: "pangeo/pytorch-notebook:2023.05.18"
           kubespawner_override:
             mem_limit: null
             mem_guarantee: 14G
