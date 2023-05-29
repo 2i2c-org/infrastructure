@@ -101,18 +101,18 @@ jupyterhub:
                   display_name: Pangeo Tensorflow ML Notebook
                   slug: "tensorflow"
                   kubespawner_override:
-                    node.kubernetes.io/instance-type: g4dn.xlarge
                     image: "pangeo/ml-notebook:<tag>"
                 pytorch:
                   display_name: Pangeo PyTorch ML Notebook
                   default: true
                   slug: "pytorch"
                   kubespawner_override:
-                    node.kubernetes.io/instance-type: g4dn.xlarge
                     image: "pangeo/pytorch-notebook:<tag>"
           kubespawner_override:
             mem_limit: null
             mem_guarantee: 14G
+            node_selector:
+              node.kubernetes.io/instance-type: g4dn.xlarge
             extra_resource_limits:
               nvidia.com/gpu: "1"
 ```
