@@ -3,10 +3,6 @@ basehub:
     annotations:
       iam.gke.io/gcp-service-account: pilot-hubs-ohw@two-eye-two-see.iam.gserviceaccount.com
   jupyterhub:
-    proxy:
-      https:
-        hosts:
-          - oceanhackweek.2i2c.cloud
     ingress:
       hosts:
         - oceanhackweek.2i2c.cloud

@@ -4,9 +4,6 @@ jupyterhub:
     tls:
       - hosts: [pasadena.cloudbank.2i2c.cloud]
         secretName: https-auto-tls
-  proxy:
-    https:
-      hosts: [pasadena.cloudbank.2i2c.cloud]
   custom:
     2i2c:
       add_staff_user_ids_to_admin_users: true

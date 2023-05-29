@@ -1,8 +1,4 @@
 jupyterhub:
-  proxy:
-    https:
-      hosts:
-        - earthlab.pilot.2i2c.cloud
   ingress:
     hosts:
       - earthlab.pilot.2i2c.cloud

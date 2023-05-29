@@ -5,9 +5,6 @@ basehub:
       tls:
         - hosts: [staging.carbonplan.2i2c.cloud]
           secretName: https-auto-tls
-    proxy:
-      https:
-        hosts: [staging.carbonplan.2i2c.cloud]
     hub:
       config:
         JupyterHub:

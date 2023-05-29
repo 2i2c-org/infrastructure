@@ -4,9 +4,6 @@ jupyterhub:
     tls:
       - hosts: [jupyter.utoronto.ca]
         secretName: https-auto-tls
-  proxy:
-    https:
-      hosts: [jupyter.utoronto.ca]
   scheduling:
     userPlaceholder:
       # Keep at least one spare node around

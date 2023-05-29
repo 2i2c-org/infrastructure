@@ -8,9 +8,6 @@ basehub:
       tls:
         - hosts: [staging.hub.cryointhecloud.com]
           secretName: https-auto-tls
-    proxy:
-      https:
-        hosts: [staging.hub.cryointhecloud.com]
     hub:
       config:
         GitHubOAuthenticator:

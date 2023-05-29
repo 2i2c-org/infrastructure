@@ -7,9 +7,6 @@ jupyterhub:
     tls:
       - hosts: [staging.quantifiedcarbon.com]
         secretName: https-auto-tls
-  proxy:
-    https:
-      hosts: [staging.quantifiedcarbon.com]
   hub:
     config:
       GitHubOAuthenticator:

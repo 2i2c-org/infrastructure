@@ -1,8 +1,4 @@
 jupyterhub:
-  proxy:
-    https:
-      hosts:
-        - aup.pilot.2i2c.cloud
   ingress:
     hosts:
       - aup.pilot.2i2c.cloud

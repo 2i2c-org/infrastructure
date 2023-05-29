@@ -1,8 +1,4 @@
 jupyterhub:
-  proxy:
-    https:
-      hosts:
-        - cosmicds.2i2c.cloud
   ingress:
     hosts:
       - cosmicds.2i2c.cloud
