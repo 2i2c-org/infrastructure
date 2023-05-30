@@ -33,11 +33,6 @@ jobs:
             # Note: if position of images in profileList changes, update the index in these expressions
             images_info: '[{"values_path": ".basehub.jupyterhub.singleuser.profileList[0].profile_options.image.choices.python.kubespawner_override.image"}, {"values_path": ".basehub.jupyterhub.singleuser.profileList[0].profile_options.image.choices.rocker.kubespawner_override.image"}, {"values_path": ".basehub.jupyterhub.singleuser.profileList[0].profile_options.image.choices.matlab.kubespawner_override.image"}]'
 
-          # Bump user image for the lis hub
-          - name: "LIS user image bump"
-            config_path: "config/clusters/2i2c-uk/lis.values.yaml"
-            images_info: '[{"values_path": ".jupyterhub.singleuser.image"}]'
-
     steps:
       # We want tests to be run on the Pull Request that gets opened by the next step,
       # so we generate a token from a GitHub App that would allow this.
