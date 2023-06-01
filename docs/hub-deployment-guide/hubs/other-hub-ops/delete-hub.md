@@ -69,10 +69,6 @@ kubectl delete namespace $HUB_NAME
 
 ## 4. Delete the OAuth application
 
-### Auth0 OAuth application
-
-For each hub that uses Auth0, we create an [Application](https://auth0.com/docs/applications) in Auth0.  There is a limited number of Auth0 applications available, so we should delete the one used by this hub when it's done. You should be able to see the [list of applications](https://manage.auth0.com/dashboard/us/2i2c/applications) if you login to auth0 with your 2i2c google account.
-
 ### GitHub OAuth application
 
 For each hub that uses the JupyterHub GitHubOAuthenticator, we create a GitHub [OAuth Application](https://docs.github.com/en/developers/apps/building-oauth-apps/creating-an-oauth-app). You should be able to see the [list of applications created under the `2i2c` GitHub org](https://github.com/organizations/2i2c-org/settings/applications) and delete the one created for the hub that's being decommissioned.
