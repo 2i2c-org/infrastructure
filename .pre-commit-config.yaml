@@ -43,6 +43,8 @@ repos:
 
   - repo: https://github.com/antonbabenko/pre-commit-terraform
     rev: v1.80.0
+    additional_dependencies:
+      - terraform
     hooks:
       - id: terraform_fmt
 
