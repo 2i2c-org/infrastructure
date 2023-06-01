@@ -42,7 +42,7 @@ repos:
       - id: flake8
 
   - repo: https://github.com/yuvipanda/terraform-bin
-    rev: 367f73c8086f9e559b7f52c0be73e46d1a5f1cfc
+    rev: c3c7973e77cdf9bbb44730e55a2de0475d683540
     hooks:
       - id: terraform-fmt
 
