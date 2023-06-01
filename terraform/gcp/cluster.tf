@@ -383,9 +383,9 @@ resource "google_container_node_pool" "dask_worker" {
     }, each.value.labels)
 
     taint = concat([{
-        key    = "k8s.dask.org_dedicated"
-        value  = "worker"
-        effect = "NO_SCHEDULE"
+      key    = "k8s.dask.org_dedicated"
+      value  = "worker"
+      effect = "NO_SCHEDULE"
       }],
       each.value.taints
     )

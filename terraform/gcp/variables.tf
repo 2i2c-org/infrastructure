@@ -65,14 +65,14 @@ variable "k8s_versions" {
 }
 
 variable "notebook_nodes" {
-  type        = map(object({
+  type = map(object({
     min : number,
     max : number,
     machine_type : string,
     labels : map(string),
     taints : optional(list(object({
       key : string,
-      value: string,
+      value : string,
       effect : string
     })), [])
     gpu : object({ enabled : bool, type : string, count : number }),
@@ -91,7 +91,7 @@ variable "dask_nodes" {
     labels : map(string),
     taints : optional(list(object({
       key : string,
-      value: string,
+      value : string,
       effect : string
     })), [])
     gpu : object({ enabled : bool, type : string, count : number }),
