@@ -1,0 +1,7 @@
+# This team will be the default owner for everything in
+# the repo. Unless a later match takes precedence,
+# @2i2c-org/engineering will be requested for
+# review when someone opens a pull request.
+# Documentation about how to edit this file is available at
+# https://docs.github.com/en/repositories/managing-your-repositorys-settings-and-features/customizing-your-repository/about-code-owners
+*       @2i2c-org/engineering
