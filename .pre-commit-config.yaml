@@ -41,12 +41,10 @@ repos:
     hooks:
       - id: flake8
 
-  - repo: https://github.com/antonbabenko/pre-commit-terraform
-    rev: v1.80.0
-    additional_dependencies:
-      - terraform
+  - repo: https://github.com/yuvipanda/terraform-bin
+    rev: 367f73c8086f9e559b7f52c0be73e46d1a5f1cfc
     hooks:
-      - id: terraform_fmt
+      - id: terraform-fmt
 
   # Prevent unencrypted files from being committed
   - repo: https://github.com/yuvipanda/pre-commit-hook-ensure-sops
