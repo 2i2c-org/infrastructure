@@ -6,7 +6,7 @@
 resource "google_artifact_registry_repository" "registry" {
   provider = google-beta
 
-  for_each      = toset(var.container_repos)
+  for_each = toset(var.container_repos)
 
   location      = var.region
   repository_id = "${each.key}-registry"
@@ -19,7 +19,7 @@ resource "google_artifact_registry_repository" "registry" {
 
 // Create a service account for the hub to authenticate push/pulls to the GAR with
 resource "google_service_account" "registry_sa" {
-  for_each     = toset(var.container_repos)
+  for_each = toset(var.container_repos)
 
   account_id   = "${each.key}-registry-sa"
   display_name = "Service account to manage images in GAR repo ${each.key}"

@@ -12,12 +12,12 @@ resource "azuread_service_principal_password" "service_principal_password" {
   service_principal_id = azuread_service_principal.service_principal[0].object_id
 }
 
-locals{
+locals {
   service_principal = {
-    "tenant_id": var.tenant_id,
-    "subscription_id": var.subscription_id,
-    "service_principal_id": var.create_service_principal ? azuread_service_principal.service_principal[0].object_id : "",
-    "service_principal_password": var.create_service_principal ? azuread_service_principal_password.service_principal_password[0].value : ""
+    "tenant_id" : var.tenant_id,
+    "subscription_id" : var.subscription_id,
+    "service_principal_id" : var.create_service_principal ? azuread_service_principal.service_principal[0].object_id : "",
+    "service_principal_password" : var.create_service_principal ? azuread_service_principal_password.service_principal_password[0].value : ""
   }
 }
 

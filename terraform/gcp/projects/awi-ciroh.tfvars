@@ -8,24 +8,24 @@ enable_filestore       = true
 filestore_capacity_gb  = 1024
 
 k8s_versions = {
-  min_master_version: "1.25.8-gke.500",
-  core_nodes_version: "1.25.6-gke.1000",
-  notebook_nodes_version: "1.25.6-gke.1000",
-  dask_nodes_version: "1.25.6-gke.1000",
+  min_master_version : "1.25.8-gke.500",
+  core_nodes_version : "1.25.6-gke.1000",
+  notebook_nodes_version : "1.25.6-gke.1000",
+  dask_nodes_version : "1.25.6-gke.1000",
 }
 
 user_buckets = {
-  "scratch-staging": {
-    "delete_after": 7
+  "scratch-staging" : {
+    "delete_after" : 7
   },
-  "scratch": {
-    "delete_after": 7
+  "scratch" : {
+    "delete_after" : 7
   },
-  "persistent-staging": {
-    "delete_after": null
+  "persistent-staging" : {
+    "delete_after" : null
   },
-  "persistent": {
-    "delete_after": null
+  "persistent" : {
+    "delete_after" : null
   }
 }
 
@@ -83,14 +83,14 @@ dask_nodes = {
 hub_cloud_permissions = {
   "staging" : {
     requestor_pays : false,
-    bucket_admin_access: ["scratch-staging", "persistent-staging"],
-    hub_namespace: "staging"
+    bucket_admin_access : ["scratch-staging", "persistent-staging"],
+    hub_namespace : "staging"
   },
   "prod" : {
     requestor_pays : false,
-    bucket_admin_access: ["scratch", "persistent"],
-    hub_namespace: "prod"
+    bucket_admin_access : ["scratch", "persistent"],
+    hub_namespace : "prod"
   }
 }
 
-container_repos = [ ]
+container_repos = []

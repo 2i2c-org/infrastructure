@@ -2,8 +2,8 @@
 locals {
   cluster_yamls = [for f in fileset(path.module, "../../config/clusters/*/cluster.yaml") : yamldecode(file(f))]
   hubs = flatten([for cy in local.cluster_yamls : [for h in cy["hubs"] : merge(h, tomap({
-    cluster    = cy["name"],
-    provider   = cy["provider"]
+    cluster  = cy["name"],
+    provider = cy["provider"]
   }))]])
   # A list of all prometheus servers
   prometheuses = flatten([
@@ -20,9 +20,9 @@ locals {
 resource "google_monitoring_uptime_check_config" "hub_simple_uptime_check" {
   for_each = { for h in local.hubs : h.domain => h }
 
-  display_name = "${each.value.domain} on ${each.value.cluster}"
-  selected_regions = ["USA",]
-  timeout      = "30s"
+  display_name     = "${each.value.domain} on ${each.value.cluster}"
+  selected_regions = ["USA", ]
+  timeout          = "30s"
 
   # Check every 15 minutes
   period = "900s"
@@ -99,8 +99,8 @@ resource "google_monitoring_uptime_check_config" "prometheus_simple_uptime_check
   timeout      = "30s"
 
   # Check every 15 minutes
-  period = "900s"
-  selected_regions = ["USA",]
+  period           = "900s"
+  selected_regions = ["USA", ]
 
   http_check {
     path           = "/"

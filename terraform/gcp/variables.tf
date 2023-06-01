@@ -24,7 +24,7 @@ variable "project_id" {
 }
 
 variable "k8s_version_prefixes" {
-  type        = set(string)
+  type = set(string)
   # Available minor versions are picked from the GKE regular release channel. To
   # see the available versions see
   # https://cloud.google.com/kubernetes-engine/docs/release-notes-regular
@@ -32,7 +32,7 @@ variable "k8s_version_prefixes" {
   # This list should list all minor versions available in the regular release
   # channel, so we may want to remove or add minor versions here over time.
   #
-  default     = [
+  default = [
     "1.22.",
     "1.23.",
     "1.24.",
@@ -49,11 +49,11 @@ variable "k8s_version_prefixes" {
 }
 
 variable "k8s_versions" {
-  type        = object({
-    min_master_version: optional(string, null),
-    core_nodes_version: optional(string, null),
-    notebook_nodes_version: optional(string, null),
-    dask_nodes_version: optional(string, null),
+  type = object({
+    min_master_version : optional(string, null),
+    core_nodes_version : optional(string, null),
+    notebook_nodes_version : optional(string, null),
+    dask_nodes_version : optional(string, null),
   })
   default     = {}
   description = <<-EOT
@@ -71,10 +71,10 @@ variable "notebook_nodes" {
 }
 
 variable "dask_nodes" {
-  type        = map(object({
+  type = map(object({
     min : number,
     max : number,
-    preemptible: optional(bool, true),
+    preemptible : optional(bool, true),
     machine_type : string,
     labels : map(string),
     gpu : object({ enabled : bool, type : string, count : number })
@@ -343,7 +343,7 @@ variable "hub_cloud_permissions" {
 }
 
 variable "bucket_public_access" {
-  type        = list
+  type        = list(any)
   default     = []
   description = <<-EOT
   A list of GCS storage buckets defined in user_buckets that should be granted public read access.
@@ -352,7 +352,7 @@ variable "bucket_public_access" {
 }
 
 variable "container_repos" {
-  type        = list
+  type        = list(any)
   default     = []
   description = <<-EOT
   A list of container repositories to create in Google Artifact Registry to store Docker

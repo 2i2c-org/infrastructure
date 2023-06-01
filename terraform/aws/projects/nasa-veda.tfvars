@@ -5,20 +5,20 @@ cluster_name = "nasa-veda"
 cluster_nodes_location = "us-west-2a"
 
 user_buckets = {
-    "scratch-staging": {
-        "delete_after" : 7
-    },
-    "scratch": {
-        "delete_after": 7
-    },
+  "scratch-staging" : {
+    "delete_after" : 7
+  },
+  "scratch" : {
+    "delete_after" : 7
+  },
 }
 
 
 hub_cloud_permissions = {
   "staging" : {
-    requestor_pays: true,
-    bucket_admin_access: ["scratch-staging"],
-    extra_iam_policy: <<-EOT
+    requestor_pays : true,
+    bucket_admin_access : ["scratch-staging"],
+    extra_iam_policy : <<-EOT
     {
         "Version": "2012-10-17",
         "Statement": [
@@ -51,9 +51,9 @@ hub_cloud_permissions = {
   EOT
   },
   "prod" : {
-    requestor_pays: true,
-    bucket_admin_access: ["scratch"],
-    extra_iam_policy: <<-EOT
+    requestor_pays : true,
+    bucket_admin_access : ["scratch"],
+    extra_iam_policy : <<-EOT
     {
         "Version": "2012-10-17",
         "Statement": [
