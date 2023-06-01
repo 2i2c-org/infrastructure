@@ -1,14 +1,14 @@
-prefix                 = "leap"
-project_id             = "leap-pangeo"
+prefix     = "leap"
+project_id = "leap-pangeo"
 # core_node_machine_type is set to n2-highmem-4 instead of n2-highmem-2 because
 # prometheus requires more memory than a n2-highmem-2 can provide.
 core_node_machine_type = "n2-highmem-4"
 
 k8s_versions = {
-  min_master_version: "1.25.6-gke.1000",
-  core_nodes_version: "1.25.6-gke.1000",
-  notebook_nodes_version: "1.25.6-gke.1000",
-  dask_nodes_version: "1.25.6-gke.1000",
+  min_master_version : "1.25.6-gke.1000",
+  core_nodes_version : "1.25.6-gke.1000",
+  notebook_nodes_version : "1.25.6-gke.1000",
+  dask_nodes_version : "1.25.6-gke.1000",
 }
 
 # GPUs not available in us-central1-b
@@ -87,7 +87,7 @@ dask_nodes = {
     # Disable preemptive nodes for dask so we can remove possible complications
     # on why some dask computations are dying off.
     # See https://github.com/2i2c-org/infrastructure/issues/2396
-    preemptible: false,
+    preemptible : false,
     machine_type : "n2-highmem-16",
     labels : {},
     gpu : {

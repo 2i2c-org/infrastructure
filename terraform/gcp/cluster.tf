@@ -12,7 +12,7 @@ data "google_container_engine_versions" "k8s_version_prefixes" {
   project  = var.project_id
   location = var.zone
 
-  for_each = var.k8s_version_prefixes
+  for_each       = var.k8s_version_prefixes
   version_prefix = each.value
 }
 output "regular_channel_latest_k8s_versions" {

@@ -5,11 +5,11 @@
    - scratch buckets support
 */
 
-prefix                 = "{{ cluster_name }}"
-project_id             = "{{ project_id }}"
+prefix     = "{{ cluster_name }}"
+project_id = "{{ project_id }}"
 
-zone                   = "{{ cluster_region }}"
-region                 = "{{ cluster_region }}"
+zone   = "{{ cluster_region }}"
+region = "{{ cluster_region }}"
 
 # Default to a HA cluster for reliability
 regional_cluster = true
@@ -21,8 +21,8 @@ core_node_machine_type = "n2-highmem-4"
 # enable_network_policy  = true
 
 # Setup a filestore for in-cluster NFS
-enable_filestore       = true
-filestore_capacity_gb  = 1024
+enable_filestore      = true
+filestore_capacity_gb = 1024
 
 # Config connector is needed on multi-tenant clusters for bucket access 
 # Tip: uncomment the line below if this cluster will be multi-tenant

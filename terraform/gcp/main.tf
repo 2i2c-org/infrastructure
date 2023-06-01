@@ -28,7 +28,7 @@ provider "google" {
   # https://registry.terraform.io/providers/hashicorp/google/latest/docs/guides/provider_reference#user_project_override
   #
   user_project_override = true
-  billing_project = "two-eye-two-see"
+  billing_project       = "two-eye-two-see"
 }
 
 data "google_client_config" "default" {}

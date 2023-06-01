@@ -5,11 +5,11 @@
    - no scratch buckets support
 */
 
-prefix                 = "{{ cluster_name }}"
-project_id             = "{{ project_id }}"
+prefix     = "{{ cluster_name }}"
+project_id = "{{ project_id }}"
 
-zone                   = "{{ cluster_region }}"
-region                 = "{{ cluster_region }}"
+zone   = "{{ cluster_region }}"
+region = "{{ cluster_region }}"
 
 # Default to a HA cluster for reliability
 regional_cluster = true
@@ -17,11 +17,11 @@ regional_cluster = true
 core_node_machine_type = "n2-highmem-2"
 
 # For multi-tenant cluster, network policy is required to enforce separation between hubs
-enable_network_policy  = true
+enable_network_policy = true
 
 # Setup a filestore for in-cluster NFS
-enable_filestore       = true
-filestore_capacity_gb  = 1024
+enable_filestore      = true
+filestore_capacity_gb = 1024
 
 notebook_nodes = {
   "small" : {
