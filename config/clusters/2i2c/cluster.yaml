@@ -80,16 +80,6 @@ hubs:
       # that you intend for these files to be applied in this order.
       - pfw.values.yaml
       - enc-pfw.secret.values.yaml
-  - name: peddie
-    display_name: "Peddie Academy"
-    domain: peddie.pilot.2i2c.cloud
-    helm_chart: basehub
-    helm_chart_values_files:
-      # The order in which you list files here is the order the will be passed
-      # to the helm upgrade command in, and that has meaning. Please check
-      # that you intend for these files to be applied in this order.
-      - peddie.values.yaml
-      - enc-peddie.secret.values.yaml
   - name: catalyst-cooperative
     display_name: "Catalyst Cooperative"
     domain: catalyst-cooperative.pilot.2i2c.cloud
