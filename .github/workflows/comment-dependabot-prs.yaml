@@ -1,7 +1,7 @@
 # From https://docs.github.com/en/actions/managing-issues-and-pull-requests/commenting-on-an-issue-when-a-label-is-added
 name: Comment dependabot PRs with specific label
 on:
-  pull_request:
+  pull_request_target:
     types:
       - labeled
 jobs:
@@ -14,6 +14,6 @@ jobs:
       - name: Add comment
         uses: peter-evans/create-or-update-comment@v3
         with:
-          issue-number: ${{ github.event.issue.number }}
+          issue-number: ${{ github.event.number }}
           body: |
             After merging this PR, remember to take the additional manual steps described in https://infrastructure.2i2c.org/en/latest/topic/infrastructure/hub-image.html#updating-the-hub-image
