@@ -59,6 +59,11 @@ basehub:
                   slug: "main"
                   kubespawner_override:
                     image: carbonplan/main-single-user:latest
+                carbonplan-notebook:
+                  display_name: Carbonplan Notebook
+                  slug: "carbonplan"
+                  kubespawner_override:
+                    image: quay.io/carbonplan/carbonplan-notebook:519ccf74350f
                 forest-offset-fires:
                   display_name: Forest Offset Fires
                   slug: forest-offset-fires
