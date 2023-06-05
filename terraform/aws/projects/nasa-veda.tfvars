@@ -36,10 +36,7 @@ hub_cloud_permissions = {
                     "s3:GetBucketLocation",
                     "s3:ListMultipartUploadParts"
                 ],
-                "Resource": [
-                    "arn:aws:s3:::veda-data-store-staging",
-                    "arn:aws:s3:::veda-data-store-staging/*"
-                ]
+                "Resource": "*"
             },
             {
                 "Effect": "Allow",
@@ -71,10 +68,7 @@ hub_cloud_permissions = {
                     "s3:GetBucketLocation",
                     "s3:ListMultipartUploadParts"
                 ],
-                "Resource": [
-                    "arn:aws:s3:::veda-data-store-staging",
-                    "arn:aws:s3:::veda-data-store-staging/*"
-                ]
+                "Resource": "*"
             },
             {
                 "Effect": "Allow",
