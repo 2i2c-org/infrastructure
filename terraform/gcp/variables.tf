@@ -65,7 +65,19 @@ variable "k8s_versions" {
 }
 
 variable "notebook_nodes" {
-  type        = map(object({ min : number, max : number, machine_type : string, labels : map(string), gpu : object({ enabled : bool, type : string, count : number }) }))
+  type = map(object({
+    min : number,
+    max : number,
+    machine_type : string,
+    labels : map(string),
+    taints : optional(list(object({
+      key : string,
+      value : string,
+      effect : string
+    })), [])
+    gpu : object({ enabled : bool, type : string, count : number }),
+    resource_labels : optional(map(string), {})
+  }))
   description = "Notebook node pools to create"
   default     = {}
 }
@@ -77,7 +89,13 @@ variable "dask_nodes" {
     preemptible : optional(bool, true),
     machine_type : string,
     labels : map(string),
-    gpu : object({ enabled : bool, type : string, count : number })
+    taints : optional(list(object({
+      key : string,
+      value : string,
+      effect : string
+    })), [])
+    gpu : object({ enabled : bool, type : string, count : number }),
+    resource_labels : optional(map(string), {})
   }))
   description = "Dask node pools to create. Defaults to notebook_nodes"
   default     = {}

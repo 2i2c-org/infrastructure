@@ -1,0 +1,58 @@
+jupyterhub:
+  singleuser:
+    memory:
+      limit: 2G
+      guarantee: 1G
+    nodeSelector:
+      2i2c.org/community: climatematch
+    extraTolerations:
+      - key: "2i2c.org/community"
+        operator: "Equal"
+        value: "climatematch"
+        effect: "NoSchedule"
+    defaultUrl: /lab
+    image:
+      name: pangeo/pangeo-notebook
+      tag: 2023.05.18
+  ingress:
+    hosts:
+      - climatematch.2i2c.cloud
+    tls:
+      - secretName: https-auto-tls
+        hosts:
+          - climatematch.2i2c.cloud
+  custom:
+    2i2c:
+      add_staff_user_ids_to_admin_users: true
+      add_staff_user_ids_of_type: "github"
+    homepage:
+      templateVars:
+        org:
+          name: ClimateMatch Academy
+          # Logo picked up from https://academy.climatematch.io/
+          logo_url: https://lh5.googleusercontent.com/jiClOwOU8X41s0wnAtRniiTqMXgylAyeXlKGQbzmeeJF8rpU1_CGkaHa6YA6chNcFrKfI0a4m2zNl_Hfy4Dk2JSyBKtrept5Cuwm1m65mkIMRZtUQMQxa7IIEfhSL6fDDg=w1280
+          url: https://academy.climatematch.io/
+        designed_by:
+          name: 2i2c
+          url: https://2i2c.org
+        operated_by:
+          name: 2i2c
+          url: https://2i2c.org
+        funded_by:
+          name: ClimateMatch Academy
+          url: https://academy.climatematch.io/
+  hub:
+    config:
+      JupyterHub:
+        authenticator_class: github
+      GitHubOAuthenticator:
+        oauth_callback_url: https://climatematch.2i2c.cloud/hub/oauth_callback
+        allowed_organizations:
+          - 2i2c-org
+          - ClimateMatchAcademy:2023students
+        scope:
+          - read:org
+      Authenticator:
+        admin_users:
+          - WesleyTheGeolien
+          - abodner

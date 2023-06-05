@@ -25,6 +25,27 @@ notebook_nodes = {
       type : "",
       count : 0
     }
+  },
+  "climatematch": {
+    min: 0,
+    max: 100,
+    machine_type: "n1-highmem-2",
+    labels: {
+      "2i2c.org/community": "climatematch"
+    },
+    taints: [{
+      key: "2i2c.org/community",
+      value: "climatematch",
+      effect: "NO_SCHEDULE"
+    }],
+    gpu: {
+      enabled: false,
+      type: "",
+      count: 0
+    },
+    resource_labels: {
+      "community": "climatematch"
+    }
   }
 }
 
