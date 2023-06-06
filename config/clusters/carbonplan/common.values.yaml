@@ -64,7 +64,7 @@ basehub:
                   slug: "carbonplan"
                   kubespawner_override:
                     # Source: https://github.com/carbonplan/envs/pull/20
-                    image: quay.io/carbonplan/carbonplan-notebook:519ccf74350f
+                    image: quay.io/carbonplan/carbonplan-notebook:latest
                 forest-offset-fires:
                   display_name: Forest Offset Fires
                   slug: forest-offset-fires
