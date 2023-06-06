@@ -36,7 +36,14 @@ hub_cloud_permissions = {
                     "s3:GetBucketLocation",
                     "s3:ListMultipartUploadParts"
                 ],
-                "Resource": "*"
+                "Resource": [
+                    "arn:aws:s3:::veda-data-store-staging",
+                    "arn:aws:s3:::veda-data-store-staging/*",
+                    "arn:aws:s3:::veda-nex-gddp-cmip6-public",
+                    "arn:aws:s3:::veda-nex-gddp-cmip6-public/*",
+                    "arn:aws:s3:::cmip6-staging",
+                    "arn:aws:s3:::cmip6-staging/*"
+                ]
             },
             {
                 "Effect": "Allow",
@@ -68,7 +75,14 @@ hub_cloud_permissions = {
                     "s3:GetBucketLocation",
                     "s3:ListMultipartUploadParts"
                 ],
-                "Resource": "*"
+                "Resource": [
+                    "arn:aws:s3:::veda-data-store-staging",
+                    "arn:aws:s3:::veda-data-store-staging/*",
+                    "arn:aws:s3:::veda-nex-gddp-cmip6-public",
+                    "arn:aws:s3:::veda-nex-gddp-cmip6-public/*",
+                    "arn:aws:s3:::cmip6-staging",
+                    "arn:aws:s3:::cmip6-staging/*"
+                ]
             },
             {
                 "Effect": "Allow",
