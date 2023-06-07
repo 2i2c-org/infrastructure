@@ -38,7 +38,11 @@ hub_cloud_permissions = {
                 ],
                 "Resource": [
                     "arn:aws:s3:::veda-data-store-staging",
-                    "arn:aws:s3:::veda-data-store-staging/*"
+                    "arn:aws:s3:::veda-data-store-staging/*",
+                    "arn:aws:s3:::veda-nex-gddp-cmip6-public",
+                    "arn:aws:s3:::veda-nex-gddp-cmip6-public/*",
+                    "arn:aws:s3:::cmip6-staging",
+                    "arn:aws:s3:::cmip6-staging/*"
                 ]
             },
             {
@@ -73,7 +77,11 @@ hub_cloud_permissions = {
                 ],
                 "Resource": [
                     "arn:aws:s3:::veda-data-store-staging",
-                    "arn:aws:s3:::veda-data-store-staging/*"
+                    "arn:aws:s3:::veda-data-store-staging/*",
+                    "arn:aws:s3:::veda-nex-gddp-cmip6-public",
+                    "arn:aws:s3:::veda-nex-gddp-cmip6-public/*",
+                    "arn:aws:s3:::cmip6-staging",
+                    "arn:aws:s3:::cmip6-staging/*"
                 ]
             },
             {
