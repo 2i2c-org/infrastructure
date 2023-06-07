@@ -39,7 +39,6 @@ variable "location" {
 
 variable "kubernetes_version" {
   type        = string
-  default     = "1.20.7"
   description = <<-EOT
   Version of kubernetes the cluster should use.
 
@@ -48,9 +47,9 @@ variable "kubernetes_version" {
   EOT
 }
 
+
 variable "core_node_vm_size" {
   type        = string
-  default     = "Standard_E4s_v3"
   description = <<-EOT
   VM Size to use for core nodes
 
@@ -94,13 +93,27 @@ variable "ssh_pub_key" {
 }
 
 variable "notebook_nodes" {
-  type        = map(object({ min : number, max : number, vm_size : string, labels : map(string), taints : list(string), kubernetes_version : string }))
+  type = map(object({
+    min : number,
+    max : number,
+    vm_size : string,
+    labels : optional(map(string), {}),
+    taints : optional(list(string), []),
+    kubernetes_version : optional(string, "")
+  }))
   description = "Notebook node pools to create"
   default     = {}
 }
 
 variable "dask_nodes" {
-  type        = map(object({ min : number, max : number, vm_size : string, labels : map(string), taints : list(string), kubernetes_version : string }))
+  type = map(object({
+    min : number,
+    max : number,
+    vm_size : string,
+    labels : optional(map(string), {}),
+    taints : optional(list(string), []),
+    kubernetes_version : optional(string, "")
+  }))
   description = "Dask node pools to create"
   default     = {}
 }
@@ -125,5 +138,12 @@ variable "storage_protocol" {
   The SMB indicates the share can be accessed by SMBv3.0, SMBv2.1 and REST.
   The NFS indicates the share can be accessed by NFSv4.1. Defaults to SMB.
   Changing this forces a new resource to be created.
+  EOT
+}
+
+variable "storage_size" {
+  type        = number
+  description = <<-EOT
+  Size (in GB) of the storage to provision
   EOT
 }

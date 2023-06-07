@@ -21,7 +21,7 @@ resource "azurerm_storage_account" "homes" {
 resource "azurerm_storage_share" "homes" {
   name                 = "homes"
   storage_account_name = azurerm_storage_account.homes.name
-  quota                = 100
+  quota                = var.storage_size
   enabled_protocol     = var.storage_protocol
   lifecycle {
     # Additional safeguard against deleting the share
