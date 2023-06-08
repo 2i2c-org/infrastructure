@@ -92,6 +92,14 @@ hubs:
       - common.values.yaml
       - fresno.values.yaml
       - enc-fresno.secret.values.yaml
+  - name: humboldt
+    display_name: "Cal Poly Humboldt"
+    domain: humboldt.cloudbank.2i2c.cloud
+    helm_chart: basehub
+    helm_chart_values_files:
+      - common.values.yaml
+      - humboldt.values.yaml
+      - enc-humboldt.secret.values.yaml
   - name: laney
     display_name: "Laney College"
     domain: laney.cloudbank.2i2c.cloud
