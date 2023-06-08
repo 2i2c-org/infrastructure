@@ -130,7 +130,8 @@ jobs:
 
       # https://github.com/ravsamhq/notify-slack-action
       # Needs to be added per job
-      # Once https://github.com/integrations/slack/issues/1563 we can use that instead
+      # When https://github.com/integrations/slack/issues/1563 gets implemented,
+      # we can use that instead
       - name: Report Status
         if: always()
         uses: ravsamhq/notify-slack-action@v2
@@ -258,7 +259,8 @@ jobs:
 
       # https://github.com/ravsamhq/notify-slack-action
       # Needs to be added per job
-      # Once https://github.com/integrations/slack/issues/1563 we can use that instead
+      # When https://github.com/integrations/slack/issues/1563 gets implemented,
+      # we can use that instead
       - name: Report Status
         if: always()
         uses: ravsamhq/notify-slack-action@v2
@@ -317,7 +319,8 @@ jobs:
 
       # https://github.com/ravsamhq/notify-slack-action
       # Needs to be added per job
-      # Once https://github.com/integrations/slack/issues/1563 we can use that instead
+      # When https://github.com/integrations/slack/issues/1563 gets implemented,
+      # we can use that instead
       - name: Report Status
         if: always()
         uses: ravsamhq/notify-slack-action@v2
@@ -379,7 +382,8 @@ jobs:
 
       # https://github.com/ravsamhq/notify-slack-action
       # Needs to be added per job
-      # Once https://github.com/integrations/slack/issues/1563 we can use that instead
+      # When https://github.com/integrations/slack/issues/1563 gets implemented,
+      # we can use that instead
       - name: Report Status
         if: always()
         uses: ravsamhq/notify-slack-action@v2
