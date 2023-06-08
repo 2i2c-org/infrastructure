@@ -89,8 +89,8 @@ jobs:
         # In order to take advantage of https://github.com/dorny/paths-filter/pull/133
         uses: frouioui/paths-filter@main
         id: changed-files
-        token: ""
         with:
+          token: ""
           list-files: csv
           filters: |
             changed:
