@@ -6,12 +6,6 @@ on:
     types:
       - opened
       - reopened
-      # Normally, it's enough for this workflow to be triggered only once, on PR opening/reopening.
-      # But because we use this workflow as a required workflow for other repositories
-      # in the 2i2c organization, it is **expected** to run successfully
-      # for each PR commit in those repositories.
-      # So we trigger it for each commit
-      - synchronize
 
 permissions:
   pull-requests: write
