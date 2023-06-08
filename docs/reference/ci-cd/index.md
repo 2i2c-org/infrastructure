@@ -34,15 +34,15 @@ Hence, it should be much easier to find the current deployments caused by merges
 
 ## Required workflows and author auto-assignment
 
-To make the most out of the [Project Boards](https://github.com/orgs/2i2c-org/projects) that 2i2c uses, there is the [`auto-author-assign-pull-request.yaml`](https://github.com/2i2c-org/infrastructure/blob/master/.github/workflows/auto-author-assign-pull-request.yaml) workflow that automatically assigns authors to Pull Requests.
+To make the most out of the [Project Boards](https://github.com/orgs/2i2c-org/projects) that 2i2c uses, the [`auto-author-assign-pull-request.yaml`](https://github.com/2i2c-org/infrastructure/blob/master/.github/workflows/auto-author-assign-pull-request.yaml) workflow automatically assigns authors to Pull Requests.
 
-Because this is a practice that we wish to have across other 2i2c repositories, an equivalent of the `auto-author-assign-pull-request.yaml` workflow in this repository exists in https://github.com/2i2c-org/.github/tree/HEAD/workflows. The workflow in `.github` repository is marked as a [required workflow](https://docs.github.com/en/actions/using-workflows/required-workflows). This means that it will run on every PR in the repositories that it's setup as required for.
+Because this is a practice that we wish to have across other 2i2c repositories, an equivalent of the `auto-author-assign-pull-request.yaml` workflow in [`2i2c/infrastructure`](https://github.com/2i2c-org/infrastructure) exists in https://github.com/2i2c-org/.github/tree/HEAD/workflows. The workflow in the [`2i2c/.github`](https://github.com/2i2c-org/.github) repository is marked as a [required workflow](https://docs.github.com/en/actions/using-workflows/required-workflows). This means that it will run on every PR in the repositories that it's setup as required for.
 
 ```{note}
-An additional, slightly different workflow than the one in this repository is set in the `.github` repository
-because we want to avoid adding up to [GitHub's API rate limits](https://docs.github.com/en/rest/rate-limit) for this repository.
+An additional, slightly different workflow than the one in [`2i2c/infrastructure`](https://github.com/2i2c-org/infrastructure) is set up in the [`2i2c/.github`](https://github.com/2i2c-org/.github) repository
+because we want to avoid adding up to [GitHub's API rate limits](https://docs.github.com/en/rest/rate-limit) for [`2i2c/infrastructure`](https://github.com/2i2c-org/infrastructure).
 
-This is why, the workflow here, will only trigger when PRs are opened/reopened instead of every time they are updated.
+Hence, the workflow in [`2i2c/infrastructure`](https://github.com/2i2c-org/infrastructure), will only trigger when PRs are opened/reopened instead of every time they are updated.
 
 This is because a _GitHub Required Workflow_ is expected to successfully run **for each commit** in that Pull Request, otherwise merging it will be **blocked**.
 ```
