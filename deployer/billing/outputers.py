@@ -61,11 +61,11 @@ def output_cost_table(output, google_sheet_url, rows):
         worksheet.append_rows(
             [
                 [
-                    r["period"],
+                    index.strftime("%Y-%m"),
                     r["project"],
-                    r["total_with_credits"],
+                    round(float(r["total_with_credits"]), 2),
                 ]
-                for r in rows
+                for index, r in rows.iterrows()
             ]
         )
     else:
@@ -75,13 +75,14 @@ def output_cost_table(output, google_sheet_url, rows):
         table.add_column("Project", style="white")
         table.add_column("Cost (after credits)", justify="right", style="green")
 
+        # Note JSON serialization that gspread uses doesn't support decimal.Decimal so use floats below.
         for index, r in rows.iterrows():
             if last_period != None and index != last_period:
                 table.add_section()
             table.add_row(
                 index.strftime("%Y-%m"),
                 r["project"],
-                str(round(r["total_with_credits"], 2)),
+                round(float(r["total_with_credits"]), 2),
             )
             last_period = index
 
