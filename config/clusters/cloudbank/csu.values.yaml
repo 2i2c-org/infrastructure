@@ -45,7 +45,7 @@ jupyterhub:
           - ericvd@berkeley.edu
           - sean.smorris@berkeley.edu
           - rula.khayrallah@sjsu.edu
-          - bonnie.ludka@humboldt.edu 
+          - bonnie.ludka@humboldt.edu
           - fitzgerald@csus.edu
         # We only want 2i2c users and users with .edu emails to sign up
         # Protects against cryptominers - https://github.com/2i2c-org/infrastructure/issues/1216
