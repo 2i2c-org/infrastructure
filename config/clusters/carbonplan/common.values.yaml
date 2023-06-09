@@ -59,6 +59,12 @@ basehub:
                   slug: "main"
                   kubespawner_override:
                     image: carbonplan/main-single-user:latest
+                benchmark-maps:
+                  display_name: Benchmark Maps
+                  slug: "carbonplan"
+                  kubespawner_override:
+                    # Source: https://github.com/carbonplan/envs/pull/20
+                    image: quay.io/carbonplan/benchmark-maps:latest
                 carbonplan-notebook:
                   display_name: Carbonplan Notebook
                   slug: "carbonplan"
