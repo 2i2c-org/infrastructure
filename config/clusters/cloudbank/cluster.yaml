@@ -108,14 +108,6 @@ hubs:
       - common.values.yaml
       - laney.values.yaml
       - enc-laney.secret.values.yaml
-  - name: lassen
-    display_name: "Lassen College"
-    domain: lassen.cloudbank.2i2c.cloud
-    helm_chart: basehub
-    helm_chart_values_files:
-      - common.values.yaml
-      - lassen.values.yaml
-      - enc-lassen.secret.values.yaml
   - name: sbcc
     display_name: "Santa Barbara City College"
     domain: sbcc.cloudbank.2i2c.cloud
