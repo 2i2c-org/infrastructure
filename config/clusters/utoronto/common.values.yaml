@@ -90,3 +90,8 @@ jupyterhub:
         username_claim: email
         login_service: "University of Toronto ID"
         tenant_id: 78aac226-2f03-4b4d-9037-b46d56c55210
+        scopes:
+          # To help offset some potential AzureAD weird errors
+          # https://discourse.jupyter.org/t/problem-logging-in-to-azure-ad-with-mfa-enabled/12488/5?u=yuvipanda
+          - openid
+          - email
