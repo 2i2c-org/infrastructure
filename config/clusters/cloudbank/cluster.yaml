@@ -164,14 +164,6 @@ hubs:
       - common.values.yaml
       - tuskegee.values.yaml
       - enc-tuskegee.secret.values.yaml
-  - name: avc
-    display_name: "Antelope Valley College"
-    domain: avc.cloudbank.2i2c.cloud
-    helm_chart: basehub
-    helm_chart_values_files:
-      - common.values.yaml
-      - avc.values.yaml
-      - enc-avc.secret.values.yaml
   - name: csu
     display_name: "California State University"
     domain: csu.cloudbank.2i2c.cloud
