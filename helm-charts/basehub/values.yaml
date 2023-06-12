@@ -537,17 +537,6 @@ jupyterhub:
           ports:
             - port: 10101
               protocol: TCP
-        - from:
-            - namespaceSelector:
-                matchLabels:
-                  name: support
-              podSelector:
-                matchLabels:
-                  app: prometheus
-                  component: server
-          ports:
-            - port: http
-              protocol: TCP
     # FIXME: We should think about these resource requests/limits, see
     #        https://github.com/2i2c-org/infrastructure/issues/2127.
     #
