@@ -190,9 +190,6 @@ basehub:
           cpu: 1
           memory: 4Gi
       allowNamedServers: true
-      networkPolicy:
-        # FIXME: For dask gateway
-        enabled: false
       config:
         Authenticator:
           allowed_users: &users
