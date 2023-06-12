@@ -43,31 +43,7 @@ ls -lh /home
 rm -rf /home/*
 ```
 
-## 2. Remove the hub values file
-
-If the hub remains listed in its cluster's `cluster.yaml` file, the hub could be
-redeployed by any merged PR triggering our CI/CD pipeline.
-
-Open a decomissioning PR that removes the appropriate hub entry from the
-`config/clusters/$CLUSTER_NAME/cluster.yaml` file and associated
-`*.values.yaml` files no longer referenced in the `cluster.yaml` file.
-
-You can continue with the steps below before the PR is merged, but be ready to
-re-do them if the CI/CD pipeline was triggered before the decomissioning PR was
-merged.
-
-## 3. Delete the Helm release and namespace
-
-In the appropriate cluster, run:
-
-```bash
-deployer use-cluster-credentials $CLUSTER_NAME
-
-helm --namespace=$HUB_NAME delete $HUB_NAME
-kubectl delete namespace $HUB_NAME
-```
-
-## 4. Delete the OAuth application
+## 2. Delete the OAuth application
 
 ### GitHub OAuth application
 
@@ -89,5 +65,33 @@ deployer cilogon-client-get-all
 And then identify the client of the hub and delete based on its id with:
 
 ```bash
-deployer cilogon-client-delete --client_id cilogon:/client_id/<id>
+deployer cilogon-client-delete --client-id cilogon:/client_id/<id> $CLUSTER_NAME $HUB_NAME
 ```
+
+This will clean up some of the hub values related to auth and must be done prior to removing the hub files.
+
+## 4. Remove the hub values file
+
+If the hub remains listed in its cluster's `cluster.yaml` file, the hub could be
+redeployed by any merged PR triggering our CI/CD pipeline.
+
+Open a decomissioning PR that removes the appropriate hub entry from the
+`config/clusters/$CLUSTER_NAME/cluster.yaml` file and associated
+`*.values.yaml` files no longer referenced in the `cluster.yaml` file.
+
+You can continue with the steps below before the PR is merged, but be ready to
+re-do them if the CI/CD pipeline was triggered before the decomissioning PR was
+merged.
+
+## 4. Delete the Helm release and namespace
+
+In the appropriate cluster, run:
+
+```bash
+deployer use-cluster-credentials $CLUSTER_NAME
+
+helm --namespace=$HUB_NAME delete $HUB_NAME
+kubectl delete namespace $HUB_NAME
+```
+
+
