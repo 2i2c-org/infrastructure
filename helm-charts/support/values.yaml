@@ -172,8 +172,13 @@ prometheus:
       limits:
         cpu: 4
         memory: 4Gi
-    labels:
-      # For HTTP access to the hub, to scrape metrics
+    podLabels:
+      # To scrape metrics from a hub pod, prometheus-server needs to be
+      # explicitly allowed network access to hub pods in clusters with
+      # NetworkPolicy enforcement enabled. Adding this label does the trick.
+      #
+      # ref: https://z2jh.jupyter.org/en/stable/administrator/security.html#introduction-to-the-chart-s-four-network-policies
+      #
       hub.jupyter.org/network-access-hub: "true"
     persistentVolume:
       size: 100Gi
