@@ -181,7 +181,6 @@ basehub:
           limits:
             cpu: 1
             memory: 4Gi
-        nodeSelector: {}
     hub:
       resources:
         requests:
@@ -196,7 +195,6 @@ basehub:
         enabled: false
       readinessProbe:
         enabled: false
-      nodeSelector: {}
       config:
         Authenticator:
           allowed_users: &users
