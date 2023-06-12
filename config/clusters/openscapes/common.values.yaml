@@ -243,9 +243,6 @@ basehub:
           matchNodePurpose: require
     hub:
       allowNamedServers: true
-      networkPolicy:
-        # FIXME: For dask gateway
-        enabled: false
       readinessProbe:
         enabled: false
       config:
