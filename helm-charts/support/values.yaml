@@ -103,7 +103,10 @@ prometheus:
     # resources for the node-exporter was set after inspecting cpu and memory
     # use via prometheus and grafana.
     #
-    # node-exporter is typically found using between 0-3m CPU and 2-22Mi memory.
+    # node-exporter is typically found using between 0-3m CPU and 2-22Mi memory,
+    # but we've seen it fail to report cpu/memory use metrics from time to time
+    # when requesting and limiting to 5m, so we've increased requests/limit it
+    # to 10m.
     #
     # PromQL queries for CPU and memory use:
     # - CPU:    sum(rate(container_cpu_usage_seconds_total{container="node-exporter", namespace="support"}[5m])) by (pod)
@@ -111,10 +114,10 @@ prometheus:
     #
     resources:
       limits:
-        cpu: 5m
+        cpu: 10m
         memory: 30Mi
       requests:
-        cpu: 5m
+        cpu: 10m
         memory: 30Mi
 
   networkPolicy:
