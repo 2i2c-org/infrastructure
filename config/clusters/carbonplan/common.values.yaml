@@ -193,8 +193,6 @@ basehub:
       networkPolicy:
         # FIXME: For dask gateway
         enabled: false
-      readinessProbe:
-        enabled: false
       config:
         Authenticator:
           allowed_users: &users
