@@ -509,6 +509,13 @@ jupyterhub:
       tag: "0.0.1-0.dev.git.4978.h858bd17c"
     networkPolicy:
       enabled: true
+      # interNamespaceAccessLabels=accept makes the hub pod's associated
+      # NetworkPolicy accept ingress from pods in other namespaces that has a
+      # hub.jupyter.org/network-access-hub=true label.
+      #
+      # ref: https://z2jh.jupyter.org/en/stable/resources/reference.html#hub-networkpolicy-internamespaceaccesslabels
+      #
+      interNamespaceAccessLabels: accept
       ingress:
         - from:
             - podSelector:
