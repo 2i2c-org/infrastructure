@@ -3,6 +3,21 @@
 Sometimes, you need to directly SSH into a kubernetes node to troubleshoot an
 issue. This document describes how to do that on various cloud providers.
 
+## Kubernetes ephemeral containers
+
+Kubernetes offers a feature to use debug pods to get a [node shell session](https://kubernetes.io/docs/tasks/debug/debug-application/debug-running-pod/#node-shell-session).
+
+This should work across cloud providers.
+
+```
+kubectl debug node/mynode -it --image=ubuntu
+```
+
+This creates a debug pod in the default namespace and drops you into a root
+shell with the node filesystem mounted on `/host`. When finished debugging
+delete the create debugger pod.
+
+
 ## GCP
 
 1. Make sure you are [authenticated with gcloud](tools:gcloud:auth)
