@@ -85,9 +85,12 @@ jobs:
         # Don't run this step when we manually trigger the workflow
         if: github.event_name != 'workflow_dispatch'
         # Action repo: https://github.com/dorny/paths-filter
-        uses: dorny/paths-filter@v2
+        # Fork of the repo above that we use: https://github.com/frouioui/paths-filter/tree/main
+        # In order to take advantage of https://github.com/dorny/paths-filter/pull/133
+        uses: frouioui/paths-filter@main
         id: file_changes
         with:
+          token: ""
           list-files: csv
           filters: |
             common:
