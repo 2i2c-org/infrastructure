@@ -61,6 +61,18 @@ class Cluster:
         )
         print_colour("Done!")
 
+        # FIXME: Revert this addition after one upgrade is made
+        print_colour("Fixing prometheus v22 migration...")
+        subprocess.check_call(
+            [
+                "kubectl",
+                "delete",
+                "--namespace=support",
+                "deploy/support-prometheus-server",
+            ]
+        )
+        print_colour("Done!")
+
         print_colour("Provisioning support charts...")
 
         support_dir = (Path(__file__).parent.parent).joinpath("helm-charts", "support")
