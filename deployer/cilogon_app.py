@@ -314,8 +314,6 @@ def delete_client(admin_id, admin_secret, cluster_name, hub_name, client_id=None
         if not stored_client_id_same_with_cilogon_records(
             admin_id,
             admin_secret,
-            admin_id,
-            admin_secret,
             cluster_name,
             hub_name,
             client_id,
