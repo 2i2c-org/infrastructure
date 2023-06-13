@@ -51,6 +51,7 @@ properties:
     additionalProperties: true
   redirects:
     type: object
+    additionalProperties: false
     required:
       - rules
     properties:
@@ -58,6 +59,7 @@ properties:
         type: array
         items:
           type: object
+          additionalProperties: false
           required:
             - from
             - to
@@ -70,12 +72,13 @@ properties:
               type: string
               description: |
                 Domain to redirect to
-            code:
-              type: integer
+            type:
+              type: string
+              enum: ["redirect", "permanent"]
               description: |
-                HTTP Status code to use for the redirect.
+                Relates to the HTTP Status code to use for the redirect.
 
-                302 (Temporary Redirect) is used if none is specified
+                Specify "redirect" for 302 (default), or "permanent" for 301.
 
   # nvidiaDevicePlugin is _not a dependent helm chart_. It is values directly
   # coupled with this helm chart and are influencing the rendering of templates
