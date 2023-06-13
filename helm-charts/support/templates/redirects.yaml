@@ -1,21 +1,29 @@
-{{ range .Values.redirects.rules }}
+{{- /*
+  The template renders a set of Ingress resources to redirect incoming requests
+  made to one domain (from) to another (to).
+
+  ref: https://kubernetes.github.io/ingress-nginx/examples/rewrite/
+*/}}
+{{- range .Values.redirects.rules }}
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
+  name: ingress-redirect-{{ .from }}
   annotations:
     cert-manager.io/cluster-issuer: letsencrypt-prod
-    nginx.ingress.kubernetes.io/server-snippet: |
-      return {{ .code | default 302 }} $scheme://{{ .to }}$request_uri;
-  name: ingress-redirect-{{ .from }}
+    nginx.ingress.kubernetes.io/configuration-snippet: |
+      rewrite "^\/(?!\.well-known\/acme-challenge)(.*)$" "$scheme://{{ .to }}/$1" {{ .type | default "redirect" }};
 spec:
   ingressClassName: nginx
   tls:
-  - hosts:
-    - {{ .from }}
-    secretName: redirect-{{ .from }}-tls
+    - hosts:
+        - {{ .from }}
+      secretName: redirect-{{ .from }}-tls
   rules:
-  - host: {{ .from }}
-# This object separator is required, as we generate multiple k8s
-# objects from this one file.
+    - host: {{ .from }}
+{{- /*
+  A YAML document separator is used below as the template could render multiple
+  separate k8s resources.
+*/}}
 ---
-{{ end }}
+{{- end }}
