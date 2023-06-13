@@ -4,9 +4,9 @@ jupyterhub:
       # Each node has about 8 CPUs total, and if we limit users to no more than
       # 4, no single user can take down a full node by themselves. We have to
       # set the guarantee to *something*, otherwise it is set to be equal
-      # to the limit!
+      # to the limit! We don't explicitly set a guarantee, because there is
+      # a guarantee of 0.05 set in basehub/values.yaml
       limit: 4
-      guarantee: 0.01
     image:
       name: quay.io/2i2c/2i2c-hubs-image
       tag: "14107b8a85fb"
