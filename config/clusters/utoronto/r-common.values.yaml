@@ -6,20 +6,10 @@ jupyterhub:
         default_url: /rstudio
   hub:
     config:
-      JupyterHub:
-        authenticator_class: cilogon
       KubeSpawner:
         # Ensures container working dir is homedir
         # https://github.com/2i2c-org/infrastructure/issues/2559
         working_dir: /home/rstudio
-      CILogonOAuthenticator:
-        oauth_callback_url: https://r-staging.datatools.utoronto.ca/hub/oauth_callback
-        shown_idps:
-          - https://idpz.utorauth.utoronto.ca/shibboleth
-        allowed_idps:
-          https://idpz.utorauth.utoronto.ca/shibboleth:
-            username_derivation:
-              username_claim: "email"
   singleuser:
     storage:
       # From https://jupyterhub-image.guide/rocker.html#step-7-setup-zero-to-jupyterhub-configuration-for-home-directory
