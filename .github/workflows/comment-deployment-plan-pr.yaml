@@ -35,4 +35,7 @@ jobs:
       - uses: actions/checkout@v3
       - run: pip install requests
       - run: python extra-scripts/comment-deployment-plan-pr.py
-        
+        env:
+          GITHUB_REPOSITORY: ${{ github.repository }}
+          RUN_ID: ${{ github.event.workflow_run.id }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
