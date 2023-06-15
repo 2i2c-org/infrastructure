@@ -19,12 +19,6 @@ notebook_nodes = {
     min : 0,
     max : 20,
     machine_type : "n1-highmem-4",
-    labels : {},
-    gpu : {
-      enabled : false,
-      type : "",
-      count : 0
-    }
   },
   "climatematch": {
     min: 0,
@@ -38,11 +32,6 @@ notebook_nodes = {
       value: "climatematch",
       effect: "NO_SCHEDULE"
     }],
-    gpu: {
-      enabled: false,
-      type: "",
-      count: 0
-    },
     resource_labels: {
       "community": "climatematch"
     }
@@ -54,12 +43,6 @@ dask_nodes = {
     min : 0,
     max : 100,
     machine_type : "n1-highmem-4",
-    labels : {},
-    gpu : {
-      enabled : false,
-      type : "",
-      count : 0
-    }
   }
 }
 

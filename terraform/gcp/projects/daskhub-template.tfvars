@@ -58,36 +58,16 @@ notebook_nodes = {
     min : 0,
     max : 100,
     machine_type : "n2-highmem-4",
-    labels : {},
-    gpu : {
-      # Tip: use this flag to enable GPU on this machine type
-      # if there is GPU availability in the chosen the zone
-      enabled : false,
-      type : "",
-      count : 0
-    }
   },
   "medium" : {
     min : 0,
     max : 100,
     machine_type : "n2-highmem-16",
-    labels : {},
-    gpu : {
-      enabled : false,
-      type : "",
-      count : 0
-    }
   },
   "large" : {
     min : 0,
     max : 100,
     machine_type : "n2-highmem-64",
-    labels : {},
-    gpu : {
-      enabled : false,
-      type : "",
-      count : 0
-    }
   },
 }
 
@@ -96,11 +76,5 @@ dask_nodes = {
     min : 0,
     max : 200,
     machine_type : "n2-highmem-16",
-    labels : {},
-    gpu : {
-      enabled : false,
-      type : "",
-      count : 0
-    }
   },
 }

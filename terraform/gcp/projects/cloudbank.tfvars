@@ -15,13 +15,7 @@ notebook_nodes = {
   "user" : {
     min : 0,
     max : 20,
-    machine_type : "n1-highmem-4",
-    labels : {},
-    gpu : {
-      enabled : false,
-      type : "",
-      count : 0
-    }
+    machine_type : "n1-highmem-4"
   },
 }
 
@@ -29,13 +23,7 @@ dask_nodes = {
   "worker" : {
     min : 0,
     max : 100,
-    machine_type : "n1-highmem-4",
-    labels : {},
-    gpu : {
-      enabled : false,
-      type : "",
-      count : 0
-    }
+    machine_type : "n1-highmem-4"
   },
 }
 
