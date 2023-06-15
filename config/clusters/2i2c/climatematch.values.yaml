@@ -1,8 +1,8 @@
 jupyterhub:
   singleuser:
     memory:
-      limit: 2G
-      guarantee: 1G
+      limit: 7G
+      guarantee: 5G
     nodeSelector:
       2i2c.org/community: climatematch
     extraTolerations:
