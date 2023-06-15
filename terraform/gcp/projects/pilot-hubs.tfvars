@@ -20,20 +20,20 @@ notebook_nodes = {
     max : 20,
     machine_type : "n1-highmem-4",
   },
-  "climatematch": {
-    min: 0,
-    max: 100,
-    machine_type: "n1-highmem-2",
-    labels: {
-      "2i2c.org/community": "climatematch"
+  "climatematch" : {
+    min : 0,
+    max : 100,
+    machine_type : "n1-highmem-2",
+    labels : {
+      "2i2c.org/community" : "climatematch"
     },
-    taints: [{
-      key: "2i2c.org/community",
-      value: "climatematch",
-      effect: "NO_SCHEDULE"
+    taints : [{
+      key : "2i2c.org/community",
+      value : "climatematch",
+      effect : "NO_SCHEDULE"
     }],
-    resource_labels: {
-      "community": "climatematch"
+    resource_labels : {
+      "community" : "climatematch"
     }
   }
 }
