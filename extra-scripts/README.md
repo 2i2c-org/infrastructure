@@ -12,3 +12,6 @@ This folder contains some extra scripts that are either:
 - **[`comment-deployment-plan-pr.py`](./comment-deployment-plan-pr.py):** This script will download a deployment plan from a GitHub Actions workflow artifact and post it to the PR that generated it.
   This helps engineers understand the 'blast radius' of their PRs.
   Executed by the [`comment-deployment-plan-pr.yaml` workflow](../.github/workflows/comment-deployment-plan-pr.yaml).
+- **[`comment-test-link-merged-pr.py`](./comment-test-link-merged-pr.py):** This script will comment a link to a GitHub Actions workflow run, triggered by a merged PR, to the PR that triggered it.
+  This helps engineers locate which workflows they should monitor after merging PRs.
+  Executed by the [`comment-test-link-merged-pr.yaml` workflow](../.github/workflows/comment-test-link-merged-pr.yaml).
