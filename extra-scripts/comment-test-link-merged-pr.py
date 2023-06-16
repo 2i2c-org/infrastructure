@@ -84,11 +84,15 @@ params = {
     "created": f">={today}",
 }
 response = requests.get(url, headers=headers, params=params)
-all_workflow_runs = response["workflow_runs"]
+all_workflow_runs = response.json()["workflow_runs"]
 
-while "Link" in response.headers.keys():
-    reponse = requests.get(response.headers["Link"], headers=headers)
-    all_workflow_runs.extend(response["workflow_runs"])
+# Detect if pagination is required and execute as needed
+while ("Link" in response.headers.keys()) and (
+    'rel="next"' in response.headers["Link"]
+):
+    next_url = re.search(r'(?<=<)([\S]*)(?=>; rel="next")', response.headers["Link"])
+    response = requests.get(next_url.group(0), headers=headers)
+    all_workflow_runs.extend(response.json()["workflow_runs"])
 
 workflow_url = next(
     (

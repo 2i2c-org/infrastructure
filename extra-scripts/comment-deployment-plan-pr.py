@@ -6,6 +6,7 @@ workflow artifact and then post it as a comment on the PR that generated the pla
 """
 import io
 import os
+import re
 import sys
 import zipfile
 
@@ -45,9 +46,12 @@ all_artifacts = response["artifacts"]
 # paginated and we need to loop through them to collect all the results.
 # It is unlikely that we will have more than 100 artifact results for a single
 # worflow ID however.
-while "Link" in response.headers.keys():
-    response = requests.get(response.headers["Link"], headers=headers)
-    all_artifacts.extend(response["artifacts"])
+while ("Link" in response.headers.keys()) and (
+    'rel="next"' in response.headers["Link"]
+):
+    next_url = re.search(r'(?<=<)([\S]*)(?=>; rel="next")', response.headers["Link"])
+    response = requests.get(next_url.group(0), headers=headers)
+    all_artifacts.extend(response.json()["artifacts"])
 
 # Filter for the artifact with the name we want: 'pr'
 artifact_id = next(
@@ -84,8 +88,11 @@ issue_comments = response.json()
 
 # If "Link" is present in the response headers, that means that the results are
 # paginated and we need to loop through them to collect all the results.
-while "Link" in response.headers.keys():
-    response = requests.get(response.headers["Link"], headers=headers)
+while ("Link" in response.headers.keys()) and (
+    'rel="next"' in response.headers["Link"]
+):
+    next_url = re.search(r'(?<=<)([\S]*)(?=>; rel="next")', response.headers["Link"])
+    response = requests.get(next_url.group(0), headers=headers)
     issue_comments.extend(response.json())
 
 # Otherwise, if no `issue_comments`, this will be undefined
