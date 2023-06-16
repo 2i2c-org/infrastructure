@@ -182,7 +182,7 @@ AzureFile needs to be mounted in the source NFS VM in order to copy the data.
 ```{note}
 If the total size of the home directories is considerable, then copying the files from one cluster to another might take a long time. So make sure you have enough time to perform this operation and check the transfer rates once the data transfer starts.
 
-Tip: You can use [this script](https://github.com/2i2c-org/infrastructure/tree/HEAD/extra_scripts/rsync-active-users.py) that performs a parallel `rsync` of home directories for active users only.
+Tip: You can use [this script](https://github.com/2i2c-org/infrastructure/tree/HEAD/extra-scripts/rsync-active-users.py) that performs a parallel `rsync` of home directories for active users only.
 ```
 
 
