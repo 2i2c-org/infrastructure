@@ -40,7 +40,7 @@ headers = {
 url = "/".join([api_url, "repos", repo, "actions", "runs", run_id, "artifacts"])
 params = {"per_page": 100}
 response = requests.get(url, headers=headers, params=params)
-all_artifacts = response["artifacts"]
+all_artifacts = response.json()["artifacts"]
 
 # If "Link" is present in the response headers, that means that the results are
 # paginated and we need to loop through them to collect all the results.
