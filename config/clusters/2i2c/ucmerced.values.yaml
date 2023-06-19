@@ -25,6 +25,10 @@ jupyterhub:
         funded_by:
           name: University of California, Merced
           url: http://www.ucmerced.edu/
+  singleuser:
+    image:
+      name: quay.io/2i2c/2i2c-hubs-image
+      tag: "14107b8a85fb"
   hub:
     config:
       Authenticator:

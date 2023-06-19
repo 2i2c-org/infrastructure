@@ -25,6 +25,10 @@ jupyterhub:
         funded_by:
           name: JROST & IOI
           url: https://investinopen.org/blog/jrost-rapid-response-fund-awardees
+  singleuser:
+    image:
+      name: quay.io/2i2c/2i2c-hubs-image
+      tag: "14107b8a85fb"
   hub:
     config:
       JupyterHub:
