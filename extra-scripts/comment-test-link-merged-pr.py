@@ -96,10 +96,10 @@ while ("Link" in response.headers.keys()) and (
 
 workflow_url = next(
     (
-        workflow_run.html_url
+        workflow_run["html_url"]
         for workflow_run in all_workflow_runs
-        if workflow_run.name == workflow_name
-        and workflow_run.head_commit.message == commit_msg
+        if workflow_run["name"] == workflow_name
+        and workflow_run["head_commit"]["message"] == commit_msg
     ),
     False,
 )
