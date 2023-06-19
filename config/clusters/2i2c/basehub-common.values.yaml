@@ -6,4 +6,4 @@ nfs:
       - noatime
     serverIP: 10.234.45.250
     # MUST HAVE TRAILING SLASH
-    baseShareName: /homes/
+    baseShareName: /homes/homes/
