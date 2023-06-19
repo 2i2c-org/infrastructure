@@ -39,57 +39,32 @@ notebook_nodes = {
     min : 0,
     max : 100,
     machine_type : "n1-standard-2",
-    labels : {},
-    gpu : {
-      enabled : false,
-      type : "",
-      count : 0
-    }
   },
   "medium" : {
     min : 0,
     max : 100,
     machine_type : "n1-standard-4",
-    labels : {},
-    gpu : {
-      enabled : false,
-      type : "",
-      count : 0
-    }
   },
   "large" : {
     min : 0,
     max : 100,
     machine_type : "n1-standard-8",
-    labels : {},
-    gpu : {
-      enabled : false,
-      type : "",
-      count : 0
-    }
   },
   "huge" : {
     min : 0,
     max : 100,
     machine_type : "n1-standard-16",
-    labels : {},
-    gpu : {
-      enabled : false,
-      type : "",
-      count : 0
-    }
   },
   "gpu-t4" : {
     min : 0,
     max : 100,
     machine_type : "n1-standard-8",
-    labels : {},
     gpu : {
       enabled : true,
       type : "nvidia-tesla-t4",
       count : 1
     }
-  },
+  }
 }
 
 dask_nodes = {
@@ -97,45 +72,21 @@ dask_nodes = {
     min : 0,
     max : 100,
     machine_type : "n1-standard-2",
-    labels : {},
-    gpu : {
-      enabled : false,
-      type : "",
-      count : 0
-    }
   },
   "medium" : {
     min : 0,
     max : 100,
     machine_type : "n1-standard-4",
-    labels : {},
-    gpu : {
-      enabled : false,
-      type : "",
-      count : 0
-    }
   },
   "large" : {
     min : 0,
     max : 100,
     machine_type : "n1-standard-8",
-    labels : {},
-    gpu : {
-      enabled : false,
-      type : "",
-      count : 0
-    }
   },
   "huge" : {
     min : 0,
     max : 100,
     machine_type : "n1-standard-16",
-    labels : {},
-    gpu : {
-      enabled : false,
-      type : "",
-      count : 0
-    }
   },
 }
 

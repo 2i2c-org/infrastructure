@@ -34,35 +34,17 @@ notebook_nodes = {
   "small" : {
     min : 0,
     max : 100,
-    machine_type : "n2-highmem-4",
-    labels : {},
-    gpu : {
-      enabled : false,
-      type : "",
-      count : 0
-    }
+    machine_type : "n2-highmem-4"
   },
   "medium" : {
     min : 0,
     max : 100,
-    machine_type : "n2-highmem-16",
-    labels : {},
-    gpu : {
-      enabled : false,
-      type : "",
-      count : 0
-    }
+    machine_type : "n2-highmem-16"
   },
   "large" : {
     min : 0,
     max : 100,
-    machine_type : "n2-highmem-64",
-    labels : {},
-    gpu : {
-      enabled : false,
-      type : "",
-      count : 0
-    }
+    machine_type : "n2-highmem-64"
   },
 }
 
@@ -70,13 +52,7 @@ dask_nodes = {
   "medium" : {
     min : 0,
     max : 200,
-    machine_type : "n2-highmem-16",
-    labels : {},
-    gpu : {
-      enabled : false,
-      type : "",
-      count : 0
-    }
+    machine_type : "n2-highmem-16"
   },
 }
 

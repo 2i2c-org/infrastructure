@@ -60,18 +60,11 @@ notebook_nodes = {
     min : 1,
     max : 100,
     machine_type : "n2-highmem-16",
-    labels : {},
-    gpu : {
-      enabled : false,
-      type : "",
-      count : 0
-    }
   },
   "gpu-t4" : {
     min : 0,
     max : 100,
     machine_type : "n1-standard-8",
-    labels : {},
     gpu : {
       enabled : true,
       type : "nvidia-tesla-t4",
@@ -88,12 +81,6 @@ dask_nodes = {
     # on why some dask computations are dying off.
     # See https://github.com/2i2c-org/infrastructure/issues/2396
     preemptible : false,
-    machine_type : "n2-highmem-16",
-    labels : {},
-    gpu : {
-      enabled : false,
-      type : "",
-      count : 0
-    }
+    machine_type : "n2-highmem-16"
   },
 }

@@ -25,67 +25,31 @@ notebook_nodes = {
     min : 0,
     max : 100,
     machine_type : "n2-highmem-4",
-    labels : {},
-    gpu : {
-      enabled : false,
-      type : "",
-      count : 0
-    }
   },
   "medium" : {
     min : 0,
     max : 100,
     machine_type : "n2-highmem-16",
-    labels : {},
-    gpu : {
-      enabled : false,
-      type : "",
-      count : 0
-    }
   },
   "large" : {
     min : 0,
     max : 100,
     machine_type : "n2-standard-48",
-    labels : {},
-    gpu : {
-      enabled : false,
-      type : "",
-      count : 0
-    }
   },
   "huge" : {
     min : 0,
     max : 100,
     machine_type : "n2-standard-96",
-    labels : {},
-    gpu : {
-      enabled : false,
-      type : "",
-      count : 0
-    }
   },
   "large-highcpu" : {
     min : 0,
     max : 100,
     machine_type : "n2-highcpu-32",
-    labels : {},
-    gpu : {
-      enabled : false,
-      type : "",
-      count : 0
-    }
   },
   "huge-highcpu" : {
     min : 0,
     max : 100,
     machine_type : "n2-highcpu-96",
-    labels : {},
-    gpu : {
-      enabled : false,
-      type : "",
-      count : 0
-    }
   }
 }
 

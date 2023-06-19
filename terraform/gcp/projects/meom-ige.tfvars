@@ -15,57 +15,27 @@ notebook_nodes = {
   "small" : {
     min : 0,
     max : 20,
-    machine_type : "n1-standard-2",
-    labels : {},
-    gpu : {
-      enabled : false,
-      type : "",
-      count : 0
-    }
+    machine_type : "n1-standard-2"
   },
   "medium" : {
     min : 0,
     max : 20,
-    machine_type : "n1-standard-8",
-    labels : {},
-    gpu : {
-      enabled : false,
-      type : "",
-      count : 0
-    }
+    machine_type : "n1-standard-8"
   },
   "large" : {
     min : 0,
     max : 20,
-    machine_type : "n1-standard-16",
-    labels : {},
-    gpu : {
-      enabled : false,
-      type : "",
-      count : 0
-    }
+    machine_type : "n1-standard-16"
   },
   "very-large" : {
     min : 0,
     max : 20,
-    machine_type : "n1-standard-32",
-    labels : {},
-    gpu : {
-      enabled : false,
-      type : "",
-      count : 0
-    }
+    machine_type : "n1-standard-32"
   },
   "huge" : {
     min : 0,
     max : 20,
-    machine_type : "n1-standard-64",
-    labels : {},
-    gpu : {
-      enabled : false,
-      type : "",
-      count : 0
-    }
+    machine_type : "n1-standard-64"
   },
 
 }
@@ -75,56 +45,26 @@ dask_nodes = {
     min : 0,
     max : 20,
     machine_type : "n1-standard-2",
-    labels : {},
-    gpu : {
-      enabled : false,
-      type : "",
-      count : 0
-    }
   },
   "medium" : {
     min : 0,
     max : 20,
     machine_type : "n1-standard-8",
-    labels : {},
-    gpu : {
-      enabled : false,
-      type : "",
-      count : 0
-    }
   },
   "large" : {
     min : 0,
     max : 20,
     machine_type : "n1-standard-16",
-    labels : {},
-    gpu : {
-      enabled : false,
-      type : "",
-      count : 0
-    }
   },
   "very-large" : {
     min : 0,
     max : 20,
     machine_type : "n1-standard-32",
-    labels : {},
-    gpu : {
-      enabled : false,
-      type : "",
-      count : 0
-    }
   },
   "huge" : {
     min : 0,
     max : 20,
     machine_type : "n1-standard-64",
-    labels : {},
-    gpu : {
-      enabled : false,
-      type : "",
-      count : 0
-    }
   },
 
 }

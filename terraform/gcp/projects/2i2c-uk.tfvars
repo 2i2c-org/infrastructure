@@ -15,13 +15,7 @@ notebook_nodes = {
   "user" : {
     min : 0,
     max : 20,
-    machine_type : "n1-highmem-4",
-    labels : {},
-    gpu : {
-      enabled : false,
-      type : "",
-      count : 0
-    }
+    machine_type : "n1-highmem-4"
   },
 }
 

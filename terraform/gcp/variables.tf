@@ -69,13 +69,20 @@ variable "notebook_nodes" {
     min : number,
     max : number,
     machine_type : string,
-    labels : map(string),
+    labels : optional(map(string), {}),
     taints : optional(list(object({
       key : string,
       value : string,
       effect : string
     })), [])
-    gpu : object({ enabled : bool, type : string, count : number }),
+    gpu : optional(
+      object({
+        enabled : optional(bool, false),
+        type : optional(string, ""),
+        count : optional(number, 1)
+      }),
+      {}
+    ),
     resource_labels : optional(map(string), {})
   }))
   description = "Notebook node pools to create"
@@ -88,13 +95,20 @@ variable "dask_nodes" {
     max : number,
     preemptible : optional(bool, true),
     machine_type : string,
-    labels : map(string),
+    labels : optional(map(string), {}),
     taints : optional(list(object({
       key : string,
       value : string,
       effect : string
     })), [])
-    gpu : object({ enabled : bool, type : string, count : number }),
+    gpu : optional(
+      object({
+        enabled : optional(bool, false),
+        type : optional(string, ""),
+        count : optional(number, 1)
+      }),
+      {}
+    ),
     resource_labels : optional(map(string), {})
   }))
   description = "Dask node pools to create. Defaults to notebook_nodes"
