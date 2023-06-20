@@ -1,5 +1,6 @@
 
 terraform {
+  required_version = "~> 1.5"
   required_providers {
     azurerm = {
       # ref: https://registry.terraform.io/providers/hashicorp/azurerm/latest
@@ -16,6 +17,13 @@ terraform {
       source  = "hashicorp/azuread"
       version = "~> 2.35"
     }
+
+    kubernetes = {
+      # ref: https://registry.terraform.io/providers/hashicorp/kubernetes/latest
+      source  = "hashicorp/kubernetes"
+      version = "~> 2.18"
+    }
+
   }
   backend "gcs" {
     bucket = "two-eye-two-see-org-terraform-state"
@@ -54,10 +62,10 @@ resource "azurerm_subnet" "node_subnet" {
 }
 
 provider "kubernetes" {
-  host                   = azurerm_kubernetes_cluster.jupyterhub.kube_config.0.host
-  client_certificate     = base64decode(azurerm_kubernetes_cluster.jupyterhub.kube_config.0.client_certificate)
-  client_key             = base64decode(azurerm_kubernetes_cluster.jupyterhub.kube_config.0.client_key)
-  cluster_ca_certificate = base64decode(azurerm_kubernetes_cluster.jupyterhub.kube_config.0.cluster_ca_certificate)
+  host                   = azurerm_kubernetes_cluster.jupyterhub.kube_config[0].host
+  client_certificate     = base64decode(azurerm_kubernetes_cluster.jupyterhub.kube_config[0].client_certificate)
+  client_key             = base64decode(azurerm_kubernetes_cluster.jupyterhub.kube_config[0].client_key)
+  cluster_ca_certificate = base64decode(azurerm_kubernetes_cluster.jupyterhub.kube_config[0].cluster_ca_certificate)
 }
 
 

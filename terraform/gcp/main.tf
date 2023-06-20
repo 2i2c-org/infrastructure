@@ -1,4 +1,6 @@
 terraform {
+  required_version = "~> 1.5"
+
   backend "gcs" {}
   required_providers {
     google = {
@@ -13,6 +15,7 @@ terraform {
     }
     kubernetes = {
       # ref: https://registry.terraform.io/providers/hashicorp/kubernetes/latest
+      source  = "hashicorp/kubernetes"
       version = "~> 2.18"
     }
   }
@@ -38,7 +41,7 @@ provider "kubernetes" {
   host  = "https://${google_container_cluster.cluster.endpoint}"
   token = data.google_client_config.default.access_token
   cluster_ca_certificate = base64decode(
-    google_container_cluster.cluster.master_auth.0.cluster_ca_certificate
+    google_container_cluster.cluster.master_auth[0].cluster_ca_certificate
   )
 }
 

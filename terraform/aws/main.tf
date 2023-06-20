@@ -1,4 +1,6 @@
 terraform {
+  required_version = "~> 1.5"
+
   required_providers {
     aws = {
       # ref: https://registry.terraform.io/providers/hashicorp/aws/latest
@@ -12,6 +14,10 @@ terraform {
       version = "~> 3.0"
     }
 
+    random = {
+      source  = "hashicorp/random"
+      version = "~> 3.5.1"
+    }
   }
   backend "gcs" {
     bucket = "two-eye-two-see-org-terraform-state"

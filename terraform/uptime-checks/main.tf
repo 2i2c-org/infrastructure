@@ -1,4 +1,5 @@
 terraform {
+  required_version = "~> 1.5"
   backend "gcs" {
     # This is a separate GCS bucket than what we use for our other terraform state
     # This is less sensitive, so let's keep it separate
