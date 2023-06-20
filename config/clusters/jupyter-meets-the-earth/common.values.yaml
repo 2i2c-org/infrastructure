@@ -126,8 +126,34 @@ basehub:
             mem_limit: null
             node_selector:
               node.kubernetes.io/instance-type: m5.xlarge
+          profile_options: &profile_options
+            image: 
+              display_name: Image
+              choices:
+                jmte:
+                  display_name: JMTE all-in-one image (deprecated)
+                  default: true
+                  slug: "jmte"
+                  kubespawner_override:
+                    image: "286354552638.dkr.ecr.us-west-2.amazonaws.com/jmte/user-env:9baee2d"
+                tensorflow:
+                  display_name: Pangeo Tensorflow ML Notebook
+                  slug: "tensorflow"
+                  kubespawner_override:
+                    image: "quay.io/pangeo/ml-notebook:2023.05.18"
+                pytorch:
+                  display_name: Pangeo PyTorch ML Notebook
+                  slug: "pytorch"
+                  kubespawner_override:
+                    image: "quay.io/pangeo/pytorch-notebook:2023.05.18"
+                datascience:
+                  display_name: Jupyter DockerStacks DataScience Image (Python, Julia, R)
+                  slug: "datascience"
+                  kubespawner_override:
+                    image: "jupyter/datascience-notebook:2023-06-19"
         - display_name: "4th of Medium: 1-4 CPU, 4-16 GB"
           description: "A shared machine."
+          profile_options: *profile_options
           kubespawner_override:
             cpu_guarantee: 0.875
             mem_guarantee: 3.5G
@@ -136,6 +162,7 @@ basehub:
               node.kubernetes.io/instance-type: m5.xlarge
         - display_name: "Medium: 4 CPU, 16 GB"
           description: "A dedicated machine for you."
+          profile_options: *profile_options
           kubespawner_override:
             cpu_guarantee: 3.5
             mem_guarantee: 14G
@@ -144,6 +171,7 @@ basehub:
               node.kubernetes.io/instance-type: m5.xlarge
         - display_name: "Large: 16 CPU, 64 GB"
           description: "A dedicated machine for you."
+          profile_options: *profile_options
           kubespawner_override:
             mem_guarantee: 56G
             mem_limit: null
@@ -151,6 +179,7 @@ basehub:
               node.kubernetes.io/instance-type: m5.4xlarge
         - display_name: "Massive: 64 CPU, 256 GB"
           description: "A dedicated machine for you."
+          profile_options: *profile_options
           kubespawner_override:
             mem_guarantee: 224G
             mem_limit: null
@@ -158,6 +187,7 @@ basehub:
               node.kubernetes.io/instance-type: m5.16xlarge
         - display_name: "Massive high-memory: 64 CPU, 976 GB"
           description: "A dedicated machine for you."
+          profile_options: *profile_options
           kubespawner_override:
             mem_guarantee: 900G
             mem_limit: null
@@ -165,6 +195,7 @@ basehub:
               node.kubernetes.io/instance-type: x1.16xlarge
         - display_name: "Medium GPU: 4 CPU, 16 GB, 1 T4 Tensor Core GPU"
           description: "A dedicated machine for you with one GPU attached."
+          profile_options: *profile_options
           kubespawner_override:
             cpu_guarantee: 3.5
             mem_guarantee: 14G
@@ -175,6 +206,7 @@ basehub:
               nvidia.com/gpu: "1"
         - display_name: "Large GPU: 16 CPU, 64 GB, 1 T4 Tensor Core GPU"
           description: "A dedicated machine for you with one GPU attached."
+          profile_options: *profile_options
           kubespawner_override:
             mem_guarantee: 56G
             mem_limit: null
@@ -184,6 +216,7 @@ basehub:
               nvidia.com/gpu: "1"
         - display_name: "Massive GPU: 64 CPU, 256 GB, 1 T4 Tensor Core GPU"
           description: "A dedicated machine for you with one GPU attached."
+          profile_options: *profile_options
           kubespawner_override:
             mem_guarantee: 200G
             mem_limit: null
@@ -193,6 +226,7 @@ basehub:
               nvidia.com/gpu: "1"
         - display_name: "16th of Medium: 0.25-4 CPU, 1-16 GB - Test of latest image"
           description: "Helps us test an image before we make it the default"
+          profile_options: *profile_options
           kubespawner_override:
             image: 286354552638.dkr.ecr.us-west-2.amazonaws.com/jmte/user-env:latest
             image_pull_policy: Always
