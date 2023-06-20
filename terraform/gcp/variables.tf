@@ -115,23 +115,6 @@ variable "dask_nodes" {
   default     = {}
 }
 
-variable "config_connector_enabled" {
-  type        = bool
-  default     = false
-  description = <<-EOT
-  Enable GKE Config Connector to manage GCP resources via kubernetes.
-
-  GKE Config Connector (https://cloud.google.com/config-connector/docs/overview)
-  allows creating GCP resources (like buckets, VMs, etc) via creating Kubernetes
-  Custom Resources. We use this to create buckets on a per-hub level,
-  and could use it for other purposes in the future.
-
-  Enabling this increases base cost, as config connector related pods
-  needs to run on the cluster.
-  EOT
-}
-
-
 variable "cd_sa_roles" {
   type = set(string)
   default = [

@@ -14,9 +14,6 @@ regional_cluster = false
 enable_filestore      = true
 filestore_capacity_gb = 2560
 
-# Some hubs want a storage bucket, so we need to have config connector enabled
-config_connector_enabled = true
-
 notebook_nodes = {
   "user" : {
     min : 0,

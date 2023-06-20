@@ -24,10 +24,6 @@ core_node_machine_type = "n2-highmem-4"
 enable_filestore      = true
 filestore_capacity_gb = 1024
 
-# Config connector is needed on multi-tenant clusters for bucket access 
-# Tip: uncomment the line below if this cluster will be multi-tenant
-# config_connector_enabled = true
-
 user_buckets = {
   "scratch-staging" : {
     "delete_after" : 7
