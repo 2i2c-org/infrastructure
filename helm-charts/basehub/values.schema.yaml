@@ -11,7 +11,6 @@ $schema: http://json-schema.org/draft-07/schema#
 type: object
 additionalProperties: false
 required:
-  - azureFile
   - nfs
   - inClusterNFS
   - global
@@ -154,34 +153,6 @@ properties:
           the annotation with key "iam.gke.io/gcp-service-account" to the
           email address of the Google Service Account whose credentials it
           should have.
-  azureFile:
-    type: object
-    additionalProperties: false
-    required:
-      - enabled
-      - pv
-    properties:
-      enabled:
-        type: boolean
-      pv:
-        type: object
-        additionalProperties: false
-        required:
-          - secretNamespace
-          - secretName
-          - shareName
-          - mountOptions
-        properties:
-          secretNamespace:
-            type: string
-          secretName:
-            type: string
-          shareName:
-            type: string
-          mountOptions:
-            type: array
-            items:
-              type: string
   nfs:
     type: object
     additionalProperties: false

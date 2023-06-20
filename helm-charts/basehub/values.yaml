@@ -30,19 +30,6 @@ staticWebsite:
       id: 0
       privateKey: ""
 
-azureFile:
-  enabled: false
-  pv:
-    secretNamespace: azure-file
-    secretName: access-credentials
-    shareName: homes
-    mountOptions:
-      - uid=1000
-      - forceuid
-      - gid=1000
-      - forcegid
-      - nobrl
-
 nfs:
   enabled: true
   shareCreator:

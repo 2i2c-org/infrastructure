@@ -129,18 +129,6 @@ variable "create_service_principal" {
   EOT
 }
 
-variable "storage_protocol" {
-  type        = string
-  default     = "SMB"
-  description = <<-EOT
-  The protocol used for the share. Possible values are SMB and NFS.
-
-  The SMB indicates the share can be accessed by SMBv3.0, SMBv2.1 and REST.
-  The NFS indicates the share can be accessed by NFSv4.1. Defaults to SMB.
-  Changing this forces a new resource to be created.
-  EOT
-}
-
 variable "storage_size" {
   type        = number
   description = <<-EOT
