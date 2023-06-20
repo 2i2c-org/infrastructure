@@ -63,13 +63,13 @@ basehub:
                   display_name: Benchmark Maps
                   slug: "carbonplan"
                   kubespawner_override:
-                    # Source: https://github.com/carbonplan/envs/pull/20
+                    # Source: https://github.com/carbonplan/benchmark-maps
                     image: quay.io/carbonplan/benchmark-maps:latest
                 carbonplan-notebook:
                   display_name: Carbonplan Notebook
                   slug: "carbonplan"
                   kubespawner_override:
-                    # Source: https://github.com/carbonplan/envs/pull/20
+                    # Source: https://github.com/carbonplan/envs
                     image: quay.io/carbonplan/carbonplan-notebook:latest
                 forest-offset-fires:
                   display_name: Forest Offset Fires
@@ -162,6 +162,12 @@ basehub:
                   slug: "pytorch"
                   kubespawner_override:
                     image: "pangeo/pytorch-notebook:2023.02.27"
+                benchmark-maps:
+                  display_name: Benchmark Maps
+                  slug: "carbonplan"
+                  kubespawner_override:
+                    # Source: https://github.com/carbonplan/benchmark-maps
+                    image: quay.io/carbonplan/benchmark-maps:latest
           kubespawner_override:
             mem_limit: null
             extra_resource_limits:
