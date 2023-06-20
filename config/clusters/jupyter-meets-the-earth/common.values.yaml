@@ -127,7 +127,7 @@ basehub:
             node_selector:
               node.kubernetes.io/instance-type: m5.xlarge
           profile_options: &profile_options
-            image: 
+            image:
               display_name: Image
               choices:
                 jmte:
