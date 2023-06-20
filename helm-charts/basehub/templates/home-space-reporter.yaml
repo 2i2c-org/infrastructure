@@ -1,4 +1,4 @@
-{{- if or .Values.nfs.enabled .Values.azureFile.enabled }}
+{{- if .Values.nfs.enabled }}
 # To provide data for the jupyterhub/grafana-dashboards dashboard about free
 # space in the shared volume, which contains users home folders etc, we deploy
 # prometheus node-exporter to collect this data for prometheus server to scrape.
@@ -63,9 +63,5 @@ spec:
         # bound to a PV referencing a NFS server.
         - name: shared-volume
           persistentVolumeClaim:
-            {{- if .Values.azureFile.enabled }}
-            claimName: home-azurefile
-            {{- else }}
             claimName: home-nfs
-            {{- end }}
 {{- end }}
