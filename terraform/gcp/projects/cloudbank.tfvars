@@ -6,6 +6,9 @@ region = "us-central1"
 
 core_node_machine_type = "n1-highmem-4"
 
+enable_filestore      = true
+filestore_capacity_gb = 1024
+
 # Multi-tenant cluster, network policy is required to enforce separation between hubs
 enable_network_policy = true
 
