@@ -63,6 +63,7 @@ variable "db_enabled" {
 
 variable "db_instance_class" {
   default     = "db.t3.micro"
+  type = string
   description = <<-EOT
   Size (memory & CPU) of the db instance to provision.
 

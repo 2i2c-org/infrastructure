@@ -1,5 +1,6 @@
 
 terraform {
+  required_version = "~> 1.5"
   required_providers {
     azurerm = {
       # ref: https://registry.terraform.io/providers/hashicorp/azurerm/latest
@@ -16,6 +17,13 @@ terraform {
       source  = "hashicorp/azuread"
       version = "~> 2.35"
     }
+
+    kubernetes = {
+      # ref: https://registry.terraform.io/providers/hashicorp/kubernetes/latest
+      source  = "hashicorp/kubernetes"
+      version = "~> 2.18"
+    }
+
   }
   backend "gcs" {
     bucket = "two-eye-two-see-org-terraform-state"
