@@ -56,6 +56,9 @@ jupyterhub:
           - http://google.com/accounts/o8/id
 
   singleuser:
+    image:
+      name: quay.io/2i2c/2i2c-hubs-image
+      tag: "14107b8a85fb"
     defaultUrl: /lab
     profileList:
       - display_name: "Small: m5.large"

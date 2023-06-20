@@ -273,8 +273,8 @@ jupyterhub:
     startTimeout: 600 # 10 mins, because sometimes we have too many new nodes coming up together
     defaultUrl: /tree
     image:
-      name: quay.io/2i2c/2i2c-hubs-image
-      tag: "14107b8a85fb"
+      name: jupyter/scipy-notebook
+      tag: "2023-06-19"
     storage:
       type: static
       static:
