@@ -1,0 +1,10 @@
+basehub:
+  nfs:
+    enabled: true
+    pv:
+      mountOptions:
+        - soft
+        - noatime
+      serverIP: 10.234.45.250
+      # MUST HAVE TRAILING SLASH
+      baseShareName: /homes/homes/

@@ -1,3 +1,9 @@
+nfs:
+  pv:
+    serverIP: nfs-server-01
+    # MUST HAVE TRAILING SLASH
+    baseShareName: /export/home-01/homes/
+
 jupyterhub:
   ingress:
     hosts:

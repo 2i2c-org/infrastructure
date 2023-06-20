@@ -53,9 +53,6 @@ nfs:
       - soft
       - noatime
       - vers=4.2
-    serverIP: nfs-server-01
-    # MUST HAVE TRAILING SLASH
-    baseShareName: /export/home-01/homes/
 
 # Use NFS provided by an in cluster server with the nfs-external-provisioner chart
 inClusterNFS:
