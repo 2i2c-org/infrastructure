@@ -156,6 +156,14 @@ hubs:
       - common.values.yaml
       - sjcc.values.yaml
       - enc-sjcc.secret.values.yaml
+  - name: sacramento
+    display_name: "Sacramento City College"
+    domain: sacramento.cloudbank.2i2c.cloud
+    helm_chart: basehub
+    helm_chart_values_files:
+      - common.values.yaml
+      - sacramento.values.yaml
+      - enc-sacramento.secret.values.yaml
   - name: tuskegee
     display_name: "Tuskegee University"
     domain: tuskegee.cloudbank.2i2c.cloud
