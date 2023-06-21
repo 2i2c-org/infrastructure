@@ -34,6 +34,7 @@ jupyterhub:
         admin_users:
           - yxchang@go.pasadena.edu
           - yccdharma@gmail.com
+          - eshaw4@pasadena.edu
           - ericvd@berkeley.edu
           - k_usovich@berkeley.edu
           - sean.smorris@berkeley.edu
