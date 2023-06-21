@@ -182,7 +182,7 @@ dask-gateway:
             def option_handler(options):
                 if ":" not in options.image:
                     raise ValueError("When specifying an image you must also provide a tag")
-                extra_annotations = {
+                scheduler_extra_pod_annotations = {
                     "hub.jupyter.org/username": safe_username,
                     "prometheus.io/scrape": "true",
                     "prometheus.io/port": "8787",
@@ -195,8 +195,7 @@ dask-gateway:
                     "worker_cores": options.worker_cores,
                     "worker_memory": "%fG" % options.worker_memory,
                     "image": options.image,
-                    "scheduler_extra_pod_annotations": extra_annotations,
-                    "worker_extra_pod_annotations": extra_annotations,
+                    "scheduler_extra_pod_annotations": scheduler_extra_pod_annotations,
                     "scheduler_extra_pod_labels": extra_labels,
                     "worker_extra_pod_labels": extra_labels,
                     "environment": options.environment,
