@@ -1,8 +1,11 @@
 nfs:
   pv:
-    serverIP: nfs-server-01
+    mountOptions:
+      - soft
+      - noatime
+    serverIP: 10.80.94.178
     # MUST HAVE TRAILING SLASH
-    baseShareName: /export/home-01/homes/
+    baseShareName: /homes/homes/
 jupyterhub:
   singleuser:
     cpu:
