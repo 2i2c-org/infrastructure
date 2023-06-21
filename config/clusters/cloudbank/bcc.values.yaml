@@ -1,0 +1,73 @@
+jupyterhub:
+  custom:
+    2i2c:
+      add_staff_user_ids_of_type: google
+      add_staff_user_ids_to_admin_users: true
+    homepage:
+      templateVars:
+        designed_by:
+          name: 2i2c
+          url: https://2i2c.org
+        funded_by:
+          name: CloudBank
+          url: http://cloudbank.org/
+        operated_by:
+          name: CloudBank
+          url: http://cloudbank.org/
+        org:
+          logo_url: https://www.berkeleycitycollege.edu/wp-content/blogs.dir/1/files/2019/02/Berkeley-City-College-Logo-and-name.png
+          name: Berkeley City College
+          url: https://www.berkeleycitycollege.edu/
+  hub:
+    config:
+      Authenticator:
+        admin_users: &bcc_users
+          - ericvd@berkeley.edu
+          - sean.smorris@berkeley.edu
+          - mseidel@peralta.edu
+        allowed_users: *bcc_users
+      CILogonOAuthenticator:
+        oauth_callback_url: https://bcc.cloudbank.2i2c.cloud/hub/oauth_callback
+        shown_idps:
+          - http://google.com/accounts/o8/id
+        username_claim: email
+      JupyterHub:
+        authenticator_class: cilogon
+    extraFiles:
+      configurator-schema-default:
+        data:
+          properties:
+            Spawner.default_url:
+              default: /retro
+              enum:
+                - /tree
+                - /lab
+                - /retro
+              enumMetadata:
+                interfaces:
+                  - description:
+                      The original single-document interface for creating
+                      Jupyter Notebooks.
+                    title: Classic Notebook
+                    value: /tree
+                  - description: A Powerful next generation notebook interface
+                    title: JupyterLab
+                    value: /lab
+                  - description:
+                      A JupyterLab distribution with a retro look and feel,
+                      more similar to the classic Jupyter notebook.
+                    title: RetroLab
+                    value: /retro
+              title: Default User Interface
+              type: string
+  ingress:
+    hosts:
+      - bcc.cloudbank.2i2c.cloud
+    tls:
+      - hosts:
+          - bcc.cloudbank.2i2c.cloud
+        secretName: https-auto-tls
+  singleuser:
+    memory:
+      guarantee: 384M
+      limit: 1.5G
