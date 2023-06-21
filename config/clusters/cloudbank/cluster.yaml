@@ -164,6 +164,14 @@ hubs:
       - common.values.yaml
       - sacramento.values.yaml
       - enc-sacramento.secret.values.yaml
+  - name: srjc
+    display_name: "Santa Rosa Junior College"
+    domain: srjc.cloudbank.2i2c.cloud
+    helm_chart: basehub
+    helm_chart_values_files:
+      - common.values.yaml
+      - srjc.values.yaml
+      - enc-srjc.secret.values.yaml
   - name: tuskegee
     display_name: "Tuskegee University"
     domain: tuskegee.cloudbank.2i2c.cloud
