@@ -38,8 +38,7 @@ jupyterhub:
         username_claim: email
       Authenticator:
         allowed_users: &sacramento_users
-        - ericvd@berkeley.edu
-        - sean.smorris@berkeley.edu
-        - mukarra@scc.losrios.edu
+          - ericvd@berkeley.edu
+          - sean.smorris@berkeley.edu
+          - mukarra@scc.losrios.edu
         admin_users: *sacramento_users
-

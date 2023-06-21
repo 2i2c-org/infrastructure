@@ -42,4 +42,3 @@ jupyterhub:
           - sean.smorris@berkeley.edu
           - mseidel@peralta.edu
         username_pattern: '^(.+@2i2c\.org|.+@berkeley\.edu|.+@peralta\.edu|deployment-service-check)$'
-      
