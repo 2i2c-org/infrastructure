@@ -175,6 +175,14 @@ prometheus:
       limits:
         cpu: 4
         memory: 4Gi
+    # prometheus-server may take a long time to startup when loading large
+    # amounts of previously scraped data. To avoid having a livenessProbe
+    # terminate the starting pod, we opt-in to a more tolerant startupProbe that
+    # is active instead of the livenessProbe during startup.
+    startupProbe:
+      enabled: true
+      periodSeconds: 10
+      failureThreshold: 60
     podLabels:
       # To scrape metrics from a hub pod, prometheus-server needs to be
       # explicitly allowed network access to hub pods in clusters with
