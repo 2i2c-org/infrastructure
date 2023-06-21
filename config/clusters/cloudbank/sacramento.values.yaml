@@ -37,8 +37,9 @@ jupyterhub:
         oauth_callback_url: https://sacramento.cloudbank.2i2c.cloud/hub/oauth_callback
         username_claim: email
       Authenticator:
-        allowed_users: &sacramento_users
+        admin_users:
           - ericvd@berkeley.edu
           - sean.smorris@berkeley.edu
           - mukarra@scc.losrios.edu
-        admin_users: *sacramento_users
+          - w1475529@apps.losrios.edu
+        username_pattern: '^(.+@2i2c\.org|.+@berkeley\.edu|.+@apps\.losrios\.edu|deployment-service-check)$'
