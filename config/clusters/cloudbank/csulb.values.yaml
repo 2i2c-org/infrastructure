@@ -37,8 +37,14 @@ jupyterhub:
         oauth_callback_url: https://csulb.cloudbank.2i2c.cloud/hub/oauth_callback
         username_claim: email
       Authenticator:
-        admin_users:
+        allowed_users: &csulb_users
           - ericvd@gmail.com
           - sean.smorris@berkeley.edu
           - shabnam.sodagari@csulb.edu
-        username_pattern: '^(.+@2i2c\.org|.+@berkeley\.edu|.+@csulb\.edu|deployment-service-check)$'
+        admin_users: *csulb_users
+  cull:
+    # Cull after 30min of inactivity
+    every: 300
+    timeout: 1800
+    # No pods over 12h long
+    maxAge: 43200
