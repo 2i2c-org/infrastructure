@@ -64,7 +64,9 @@ if artifact_id is None:
     sys.exit()
 
 # Download the artifact
-url = "/".join([api_url, "repos", repo, "actions", "artifacts", artifact_id, "zip"])
+url = "/".join(
+    [api_url, "repos", repo, "actions", "artifacts", str(artifact_id), "zip"]
+)
 response = requests.get(url, headers=headers, stream=True)
 
 # Extract the zip archive
