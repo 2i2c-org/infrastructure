@@ -42,4 +42,4 @@ jupyterhub:
           - sean.smorris@berkeley.edu
           - mukarra@scc.losrios.edu
           - w1475529@apps.losrios.edu
-        username_pattern: '^(.+@2i2c\.org|.+@berkeley\.edu|.+@apps\.losrios\.edu|deployment-service-check)$'
+        username_pattern: '^(.+@2i2c\.org|.+@berkeley\.edu|.+@(scc|apps)\.losrios\.edu|deployment-service-check)$'
