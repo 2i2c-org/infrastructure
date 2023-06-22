@@ -16,6 +16,9 @@ ingressBasicAuth:
 dex:
   enabled: false
 
+binderhubService:
+  enabled: false
+
 staticWebsite:
   enabled: false
   source:
