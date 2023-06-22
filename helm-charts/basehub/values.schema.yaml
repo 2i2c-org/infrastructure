@@ -19,6 +19,7 @@ required:
   - dex
   - staticWebsite
   - ingressBasicAuth
+  - binderhubService
 properties:
   ingressBasicAuth:
     type: object
@@ -130,6 +131,16 @@ properties:
           Publicly accessible domain name of the hub.
 
           Used to construct URLs.
+  binderhubService:
+    type: object
+    additionalProperties: false
+    required:
+      - enabled
+    properties:
+      enabled:
+        type: boolean
+        description: |
+          Enable binderhub-service
   userServiceAccount:
     type: object
     additionalProperties: false
@@ -205,6 +216,9 @@ properties:
       size:
         type: string
   global:
+    type: object
+    additionalProperties: true
+  binderhub-service:
     type: object
     additionalProperties: true
   # jupyterhub is a dependent helm chart and we rely _mostly_ on its schema
