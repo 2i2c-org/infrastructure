@@ -19,7 +19,7 @@ required:
   - dex
   - staticWebsite
   - ingressBasicAuth
-  - binderhubService
+  - deployBinderhubService
 properties:
   ingressBasicAuth:
     type: object
@@ -131,7 +131,7 @@ properties:
           Publicly accessible domain name of the hub.
 
           Used to construct URLs.
-  binderhubService:
+  deployBinderhubService:
     type: object
     additionalProperties: false
     required:

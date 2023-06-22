@@ -16,4 +16,4 @@ dependencies:
   - name: binderhub-service
     version: 0.1.0-0.dev.git.46.hb38d259
     repository: https://2i2c.org/binderhub-service/
-    condition: binderhubService.enabled
+    condition: deployBinderhubService.enabled

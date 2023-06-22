@@ -14,7 +14,7 @@ staticWebsite:
   githubAuth:
     enabled: false
 
-binderhubService:
+deployBinderhubService:
   enabled: true
 
 binderhub-service:
