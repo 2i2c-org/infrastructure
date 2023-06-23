@@ -323,7 +323,6 @@ dask-gateway:
                     "scheduler_extra_pod_labels": extra_labels,
                     "scheduler_extra_pod_annotations": scheduler_extra_pod_annotations,
                     "worker_extra_pod_labels": extra_labels,
-                    "worker_extra_pod_annotations": scheduler_extra_pod_annotations,
                     "worker_cores": 0.85 * chosen_worker_cpu,
                     "worker_cores_limit": chosen_worker_cpu,
                     "worker_memory": "%fG" % (0.85 * chosen_worker_memory),
