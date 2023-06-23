@@ -42,6 +42,6 @@ prometheus:
       # the default values in helm-charts/support/values.yaml.
       #
       requests:
-        memory: 32Gi
+        memory: 20Gi
       limits:
-        memory: 32Gi
+        memory: 20Gi
