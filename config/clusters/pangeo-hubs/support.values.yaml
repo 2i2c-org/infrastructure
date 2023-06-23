@@ -25,6 +25,30 @@ prometheusIngressAuthSecret:
 
 prometheus:
   server:
+    extraInitContainers:
+      # Prometheus sometimes seems to run into bugs where the 'write ahead log'
+      # used for recovery from crashes and network failures gets massive, and
+      # requires an order of magnitude more RAM to start up than usual (see
+      # https://github.com/prometheus/prometheus/issues/6934). Deleting the WAL
+      # at each startup means we *might* lose some data during restarts, but
+      # that is far preferable to having the entire prometheus server be down.
+      # This should be only done for prometheus instances that seem to crash
+      # with messages about loading from the WAL in their logs.
+      - name: kill-wal
+        image: busybox
+        command:
+          [
+            "sh",
+            "-c",
+            "rm -rvf /data/wal/*",
+          ]
+        securityContext:
+          runAsGroup: 65534
+          runAsNonRoot: true
+          runAsUser: 65534
+        volumeMounts:
+          - mountPath: /data
+            name: storage-volume
     persistentVolume:
       size: 200Gi
     ingress:
@@ -35,13 +59,3 @@ prometheus:
         - secretName: prometheus-tls
           hosts:
             - prometheus.gcp.pangeo.2i2c.cloud
-    resources:
-      # This prometheus instance has required 13+ GB to startup successfully in
-      # the past (2023-02-17) when replaying the "write-ahead log" (WAL) stored
-      # on on disk when it starts up. For more details, see the comments next to
-      # the default values in helm-charts/support/values.yaml.
-      #
-      requests:
-        memory: 32Gi
-      limits:
-        memory: 32Gi
