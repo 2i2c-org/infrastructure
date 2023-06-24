@@ -5,6 +5,7 @@ on:
   push:
     paths:
       - reports/**
+      - .github/workflows/run-reports.yaml
 
 jobs:
   deploy-reports:
