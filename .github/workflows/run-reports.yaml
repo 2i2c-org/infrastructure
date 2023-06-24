@@ -29,6 +29,12 @@ jobs:
         with:
           credentials_json: "${{ secrets.GCP_KMS_DECRYPTOR_KEY }}"
 
+      - name: Decrypt deploy key and put it in correct place
+        run: |
+          mkdir -p ~/.ssh
+          sops -d reports/enc-deploy-key.secret.key > ~/.ssh/id_rsa
+          chmod 0400 ~/.ssh/id_rsa
+
       - name: Run and publish reports
         run: |
           python3 reports/run.py
