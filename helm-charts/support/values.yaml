@@ -124,6 +124,28 @@ prometheus:
     enabled: true
 
   server:
+    extraInitContainers:
+      # Prometheus sometimes seems to run into bugs where the 'write ahead log'
+      # used for recovery from crashes and network failures gets massive, and
+      # requires an order of magnitude more RAM to start up than usual (see
+      # https://github.com/prometheus/prometheus/issues/6934). Deleting the WAL
+      # at each startup means we *might* lose some data during restarts, but
+      # that is far preferable to having the entire prometheus server be down.
+      - name: kill-wal
+        image: busybox
+        command:
+          [
+            "sh",
+            "-c",
+            "rm -rvf /data/wal/*",
+          ]
+        securityContext:
+          runAsGroup: 65534
+          runAsNonRoot: true
+          runAsUser: 65534
+        volumeMounts:
+          - mountPath: /data
+            name: storage-volume
     ingress:
       annotations:
         # Annotations required to enable basic authentication for any ingress
