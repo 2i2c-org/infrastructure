@@ -3,7 +3,8 @@ name: Run and publish reports
 on:
   workflow_dispatch:
   push:
-  pull_request:
+    paths:
+      - reports/**
 
 jobs:
   deploy-reports:
