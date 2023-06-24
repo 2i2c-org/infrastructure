@@ -28,11 +28,16 @@ def auto_commit_git_repo(clone_url, message):
 
 reports = HERE.glob("*.ipynb")
 
+report_date = datetime.now()
+
 with auto_commit_git_repo(
     "git@github.com:yuvipanda/2i2c-reports.git", "Test commits"
 ) as d:
     output_base = pathlib.Path(d)
     for report in reports:
-        output_file = output_base / report.stem / datetime.now().isoformat()
+        output_file = (output_base / report.stem / report_date.strftime('%Y/%m/%d')).with_suffix('.ipynb')
+        if output_file.exists():
+            # If an output file already exists for today, put the exact time in filename
+            output_file = (output_base / report.stem / report_date.strftime('%Y/%m/%d-%H%M%S%z')).with_suffix('.ipynb')
         os.makedirs(output_file.parent, exist_ok=True)
-        pm.execute_notebook(report, str(output_file) + ".ipynb")
+        pm.execute_notebook(report, str(output_file))
