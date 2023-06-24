@@ -131,6 +131,8 @@ prometheus:
       # https://github.com/prometheus/prometheus/issues/6934). Deleting the WAL
       # at each startup means we *might* lose some data during restarts, but
       # that is far preferable to having the entire prometheus server be down.
+      # This may be fixed by prometheus 2.45 which is not out yet
+      # https://github.com/prometheus/prometheus/issues/6934#issuecomment-1586060255
       - name: kill-wal
         image: busybox
         command:
