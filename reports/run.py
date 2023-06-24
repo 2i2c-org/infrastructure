@@ -6,7 +6,7 @@ import os
 import pathlib
 import subprocess
 from contextlib import contextmanager
-from datetime import datetime
+from datetime import datetime, timezone
 from tempfile import TemporaryDirectory
 
 import papermill as pm
@@ -28,7 +28,7 @@ def auto_commit_git_repo(clone_url, message):
 
 reports = HERE.glob("*.ipynb")
 
-report_date = datetime.now()
+report_date = datetime.now(timezone.utc)
 
 with auto_commit_git_repo(
     "git@github.com:yuvipanda/2i2c-reports.git", "Test commits"
@@ -38,6 +38,6 @@ with auto_commit_git_repo(
         output_file = (output_base / report.stem / report_date.strftime('%Y/%m/%d')).with_suffix('.ipynb')
         if output_file.exists():
             # If an output file already exists for today, put the exact time in filename
-            output_file = (output_base / report.stem / report_date.strftime('%Y/%m/%d-%H%M%S%z')).with_suffix('.ipynb')
+            output_file = (output_base / report.stem / report_date.strftime('%Y/%m/%d-%Hh%Mm%Ss%Z')).with_suffix('.ipynb')
         os.makedirs(output_file.parent, exist_ok=True)
         pm.execute_notebook(report, str(output_file))
