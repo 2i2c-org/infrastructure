@@ -1,5 +1,6 @@
 import json
 import os
+import sys
 import subprocess
 import tempfile
 from contextlib import contextmanager
@@ -143,15 +144,24 @@ class Cluster:
 
             os.environ["KUBECONFIG"] = kubeconfig.name
 
-            subprocess.check_call(
+            proc = subprocess.run(
                 [
                     "aws",
                     "eks",
                     "update-kubeconfig",
                     f"--name={cluster_name}",
                     f"--region={region}",
-                ]
+                ],
+                stderr=subprocess.PIPE,
+                stdout=subprocess.PIPE
             )
+
+            if proc.returncode != 0:
+                # Only print output if the called command fails
+                print(proc.stdout.decode())
+                print(proc.stderr.decode(), file=sys.stderr)
+                proc.check_returncode()
+
 
             yield
 
@@ -234,16 +244,24 @@ class Cluster:
             try:
                 os.environ["KUBECONFIG"] = kubeconfig.name
                 with get_decrypted_file(key_path) as decrypted_key_path:
-                    subprocess.check_call(
+                    proc = subprocess.run(
                         [
                             "gcloud",
                             "auth",
                             "activate-service-account",
                             f"--key-file={os.path.abspath(decrypted_key_path)}",
-                        ]
+                        ],
+                        stderr=subprocess.PIPE,
+                        stdout=subprocess.PIPE,
                     )
+                    if proc.returncode != 0:
+                        # Only print output if the called command fails
+                        print(proc.stdout.decode())
+                        print(proc.stderr.decode(), file=sys.stderr)
+                        proc.check_returncode()
+                        
 
-                subprocess.check_call(
+                proc = subprocess.run(
                     [
                         "gcloud",
                         "container",
@@ -253,8 +271,15 @@ class Cluster:
                         f"--project={project}",
                         "get-credentials",
                         cluster,
-                    ]
+                    ],
+                    stderr=subprocess.PIPE,
+                    stdout=subprocess.PIPE,
                 )
+                if proc.returncode != 0:
+                    # Only print output if the called command fails
+                    print(proc.stdout.decode())
+                    print(proc.stderr.decode(), file=sys.stderr)
+                    proc.check_returncode()
 
                 yield
             finally:

@@ -1,0 +1,34 @@
+name: Run and publish reports
+
+on:
+  workflow_dispatch:
+  push:
+  pull_request:
+
+jobs:
+  deploy-reports:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v3
+
+      - uses: actions/setup-python@v4
+        with:
+          python-version: "3.11"
+
+      - name: Install requirements
+        run: |
+          python3 -m pip install --editable .
+          python3 -m pip install -r reports/requirements.txt
+
+      - name: Install sops
+        uses: mdgreenwald/mozilla-sops-action@v1.4.1
+
+      - name: Setup sops credentials to decrypt repo secrets
+        uses: google-github-actions/auth@v1
+        with:
+          credentials_json: "${{ secrets.GCP_KMS_DECRYPTOR_KEY }}"
+
+      - name: Run and publish reports
+        run: |
+          python3 reports/run.py
