@@ -1,7 +1,7 @@
 import json
 import os
-import sys
 import subprocess
+import sys
 import tempfile
 from contextlib import contextmanager
 from pathlib import Path
@@ -153,7 +153,7 @@ class Cluster:
                     f"--region={region}",
                 ],
                 stderr=subprocess.PIPE,
-                stdout=subprocess.PIPE
+                stdout=subprocess.PIPE,
             )
 
             if proc.returncode != 0:
@@ -161,7 +161,6 @@ class Cluster:
                 print(proc.stdout.decode())
                 print(proc.stderr.decode(), file=sys.stderr)
                 proc.check_returncode()
-
 
             yield
 
@@ -259,7 +258,6 @@ class Cluster:
                         print(proc.stdout.decode())
                         print(proc.stderr.decode(), file=sys.stderr)
                         proc.check_returncode()
-                        
 
                 proc = subprocess.run(
                     [
