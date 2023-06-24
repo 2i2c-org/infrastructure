@@ -7,6 +7,9 @@ on:
       - reports/**
       - .github/workflows/run-reports.yaml
 
+  schedule:
+    - cron: '00 1 * * 1'  # At 01:00 on Mondays.
+
 jobs:
   deploy-reports:
     runs-on: ubuntu-latest
