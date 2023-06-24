@@ -30,6 +30,19 @@ jobs:
         with:
           credentials_json: "${{ secrets.GCP_KMS_DECRYPTOR_KEY }}"
 
+      - uses: azure/setup-kubectl@v3
+        with:
+          version: "v1.25.10"
+
+      - name: Install gke-gcloud-auth-plugin
+        run: |
+          echo "deb [signed-by=/usr/share/keyrings/cloud.google.gpg] https://packages.cloud.google.com/apt cloud-sdk main" | sudo tee -a /etc/apt/sources.list.d/google-cloud-sdk.list
+          curl https://packages.cloud.google.com/apt/doc/apt-key.gpg | sudo apt-key --keyring /usr/share/keyrings/cloud.google.gpg add -
+
+          sudo apt-get update -y
+          sudo apt-get install -y google-cloud-sdk-gke-gcloud-auth-plugin
+        shell: bash
+
       - name: Decrypt deploy key and put it in correct place
         run: |
           mkdir -p ~/.ssh
