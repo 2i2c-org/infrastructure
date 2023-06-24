@@ -35,6 +35,8 @@ with auto_commit_git_repo(
 ) as d:
     output_base = pathlib.Path(d)
     for report in reports:
-        output_file = (output_base / report.stem / report_date.strftime('%Y/%m/%d-%Hh%Mm%Ss%Z')).with_suffix('.ipynb')
+        output_file = (
+            output_base / report.stem / report_date.strftime("%Y/%m/%d-%Hh%Mm%Ss%Z")
+        ).with_suffix(".ipynb")
         os.makedirs(output_file.parent, exist_ok=True)
         pm.execute_notebook(report, str(output_file))
