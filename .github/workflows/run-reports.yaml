@@ -35,6 +35,11 @@ jobs:
           sops -d reports/enc-deploy-key.secret.key > ~/.ssh/id_rsa
           chmod 0400 ~/.ssh/id_rsa
 
+      - name: Setup git user identity
+        run: |
+          git config --global user.email "automated-pusher@github.com.com"
+          git config --global user.name "Automatic GitHub Pusher"
+
       - name: Run and publish reports
         run: |
           python3 reports/run.py
