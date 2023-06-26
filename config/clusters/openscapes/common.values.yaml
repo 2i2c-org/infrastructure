@@ -59,7 +59,8 @@ basehub:
         #         10%.
         #
         - display_name: "Small: up to 4 CPU / 32 GB RAM"
-          description: &profile_list_description "Start a container with at least a chosen share of capacity on a node of this type"
+          description: &profile_list_description "Start a container with at least\
+            \ a chosen share of capacity on a node of this type"
           slug: small
           default: true
           profile_options:
@@ -81,7 +82,7 @@ basehub:
                   display_name: Matlab
                   slug: matlab
                   kubespawner_override:
-                    image: openscapes/matlab:fb41496
+                    image: openscapes/matlab:2023-06-20
             requests:
               # NOTE: Node share choices are in active development, see comment
               #       next to profileList: above.
