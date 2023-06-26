@@ -48,8 +48,7 @@ basehub:
           allowed_organizations:
             - veda-analytics-access:all-users
             - 2i2c-org:hub-access-for-2i2c-staff
-            - veda-analytics-access:HDCRS-2023
-            - HDCRS-HLS-summer-school-2023:participants
+            - nasa-veda-workshops:ieee-grss-webinar-june2023
           scope:
             - read:org
     prePuller:
