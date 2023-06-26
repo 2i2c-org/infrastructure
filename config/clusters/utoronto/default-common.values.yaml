@@ -7,7 +7,7 @@ jupyterhub:
       JUPYTERHUB_SINGLEUSER_APP: "notebook.notebookapp.NotebookApp"
     image:
       name: quay.io/2i2c/utoronto-image
-      tag: "e533070e58f2"
+      tag: "736072886c54"
   hub:
     config:
       Authenticator:
