@@ -60,4 +60,4 @@ jobs:
 
       - name: Run and publish reports
         run: |
-          python3 reports/run.py
+          deployer publish-reports
