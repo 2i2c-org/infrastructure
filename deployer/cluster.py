@@ -34,6 +34,52 @@ class Cluster:
         else:
             raise ValueError(f'Provider {self.spec["provider"]} not supported')
 
+    def _retain_prometheus_pv(self):
+        """
+        Set the deletionPolicy of the PV holding prometheus data to 'Retain'
+
+        We do not want to lose prometheus data, so it would need to be
+        manually deleted even if we accidentally delete the PV.
+        """
+        # Find name of the PV storing prometheus data
+        pvc_info = json.loads(
+            subprocess.check_output([
+                'kubectl',
+                '-n', 'support',
+                'get', 'pvc',
+                'support-prometheus-server',
+                '-o', 'json'
+            ])
+        )
+        pv_name = pvc_info["spec"]["volumeName"]
+
+        pv_info = json.loads(
+            subprocess.check_output([
+                'kubectl',
+                'get', 'pv', pv_name,
+                '-o', 'json'
+            ])
+        )
+        if pv_info["spec"]["persistentVolumeReclaimPolicy"] != "Retain":
+            print("Setting Prometheus Data Volume's ReclaimPolicy to Retain")
+            # Set it to retain only when it is not
+            patch = {
+                "spec": {
+                    "persistentVolumeReclaimPolicy": "Retain"
+                }
+            }
+            with tempfile.NamedTemporaryFile() as f:
+                f.write(json.dumps(patch).encode())
+                f.flush()
+                
+                subprocess.check_call([
+                    'kubectl',
+                    'patch', 'pv', pv_name,
+                    '--patch-file', f.name
+                ])
+
+
+        
     def deploy_support(self, cert_manager_version):
         cert_manager_url = "https://charts.jetstack.io"
 
@@ -90,6 +136,7 @@ class Cluster:
             print_colour(f"Running {' '.join([str(c) for c in cmd])}")
             subprocess.check_call(cmd)
 
+        self._retain_prometheus_pv()
         print_colour("Done!")
 
     def auth_kubeconfig(self):
