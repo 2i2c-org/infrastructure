@@ -143,13 +143,13 @@ prometheus:
     defaultFlagsOverride:
       - -c
       - "rm -rvf /data/wal/* && \
-         /bin/prometheus \
-         --storage.tsdb.retention.time=366d \
-         --config.file=/etc/config/prometheus.yml \
-         --storage.tsdb.path=/data \
-         --web.console.libraries=/etc/prometheus/console_libraries \
-         --web.console.templates=/etc/prometheus/consoles \
-         --web.enable-lifecycle"
+        /bin/prometheus \
+        --storage.tsdb.retention.time=366d \
+        --config.file=/etc/config/prometheus.yml \
+        --storage.tsdb.path=/data \
+        --web.console.libraries=/etc/prometheus/console_libraries \
+        --web.console.templates=/etc/prometheus/consoles \
+        --web.enable-lifecycle"
     ingress:
       annotations:
         # Annotations required to enable basic authentication for any ingress
