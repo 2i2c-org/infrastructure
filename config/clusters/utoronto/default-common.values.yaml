@@ -12,12 +12,8 @@ jupyterhub:
     config:
       Authenticator:
         admin_users:
-          - 7c76d04b-2a80-4db1-b985-a2d2fa2f708c
-          - 09056164-42f5-4113-9fd7-dd852e63ff1d
-          - adb7ebad-9fb8-481a-bc2c-6c0a8b6de670
-          - d6601bd7-eae0-4b84-a918-5356992c976e # David Liu
-          - 2a2d9b48-e6eb-46e1-8434-8aaeb7a98dd8 # Erik Sundell (2i2c)
-
-      AzureAdOAuthenticator:
-        # Everyone else uses email
-        username_claim: oid
+          - "yuvi.panda@utoronto.ca"
+          - "georgiana.elena@utoronto.ca"
+          - "chris.holdgraf@utoronto.ca"
+          - "davidy.liu@utoronto.ca"
+          - "csadminsundelle@utoronto.ca"
