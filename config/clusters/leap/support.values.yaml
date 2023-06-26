@@ -8,6 +8,9 @@ prometheusIngressAuthSecret:
 
 prometheus:
   server:
+    persistentVolume:
+      # 100Gi was too little
+      size: 200Gi
     ingress:
       enabled: true
       hosts:
