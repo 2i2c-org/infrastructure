@@ -11,5 +11,5 @@ dependencies:
     # images/hub/Dockerfile, and will also involve manually building and pushing
     # the Dockerfile to https://quay.io/2i2c/pilot-hub. Details about this can
     # be found in the Dockerfile's comments.
-    version: 2.0.1-0.dev.git.5987.h46a632f5
+    version: 3.0.0-beta.1.git.6208.h7b44299a
     repository: https://jupyterhub.github.io/helm-chart/
