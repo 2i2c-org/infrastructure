@@ -143,7 +143,7 @@ prometheus:
     defaultFlagsOverride:
       - -c
       - "rm -rvf /data/wal/* && \
-        /bin/prometheus \
+        exec /bin/prometheus \
         --storage.tsdb.retention.time=366d \
         --config.file=/etc/config/prometheus.yml \
         --storage.tsdb.path=/data \
