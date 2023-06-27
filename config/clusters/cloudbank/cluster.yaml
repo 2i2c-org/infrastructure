@@ -140,6 +140,14 @@ hubs:
       - common.values.yaml
       - mills.values.yaml
       - enc-mills.secret.values.yaml
+  - name: mission
+    display_name: "Mission College Santa Clara"
+    domain: mission.cloudbank.2i2c.cloud
+    helm_chart: basehub
+    helm_chart_values_files:
+      - common.values.yaml
+      - mission.values.yaml
+      - enc-mission.secret.values.yaml
   - name: palomar
     display_name: "Palomar Community College"
     domain: palomar.cloudbank.2i2c.cloud
