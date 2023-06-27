@@ -41,6 +41,7 @@ basehub:
           allowed_organizations:
             - 2i2c-org
             - smithsonian
+            - sidatasciencelab
           scope:
             - read:org
         Authenticator:
