@@ -6,6 +6,70 @@ GPUs on all major cloud providers.
 
 ## Setting up GPU nodes
 
+### GCP
+
+#### Requesting quota increase
+
+New GCP projects start with no GPU quota, so we must ask for some to enable
+GPUs.
+
+1. Go to the [GCP Quotas page](https://console.cloud.google.com/apis/api/compute.googleapis.com/quotas), 
+   **and make sure you are in the right project**.
+   
+2. Search for "NVIDIA T4 GPU", and find the entry for the **correct region**.
+   This is very important, as getting a quota increase in the wrong region means
+   we have to do this all over again.
+
+3. Check the box next to the correct quota, and click "Edit Quotas" button
+   just above the list.
+
+4. Enter the number of GPUs we want quota for on the right. For a brand new
+   project, 4 is a good starting number. We can consistently ask for more,
+   if these get used. GCP requires we provide a description for this quota
+   increase request - "We need GPUs to work on some ML based research" is
+   a good start. 
+   
+5. Click "Next", and then "Submit Request".
+
+6. Sometimes the request is immediately granted, other times it takes a few
+   days. 
+   
+#### Setting up GPU nodepools with terraform
+
+The `notebook_nodes` variable for our GCP terraform accepts a `gpu`
+parameter, which can be used to provision a GPU nodepool. An example
+would look like:
+
+```terraform
+notebook_nodes = {
+  "gpu-t4": {
+    min: 0,
+    max: 20,
+    machine_type: "n1-highmem-8",
+    gpu: {
+      enabled: true,
+      type: "nvidia-tesla-t4",
+      count: 1
+    },
+    # Optional, in case we run into resource exhaustion in the main zone
+    zones: [
+      "us-central1-a",
+      "us-central1-b",
+      "us-central1-c",
+      "us-central1-f"
+    ]
+  }
+}
+```
+
+This provisions a `n1-highmem-8` node, where each node has 1 NVidia
+T4 GPU.
+
+In addition, we could ask for GPU nodes to be spawned in whatever zone
+available in the same region, rather than just the same zone as the rest
+of our notebook nodes. This should only be used if we run into GPU scarcity
+issues in the zone!
+
 ### AWS
 
 #### Requesting Quota Increase
@@ -78,7 +142,7 @@ AWS, and we can configure a node group there to provide us GPUs.
    autoscaler should recognize this! `eksctl` will also setup the
    appropriate driver installer, so you won't have to.
 
-#### Setting up a GPU user profile
+## Setting up a GPU user profile
 
 Finally, we need to give users the option of using the GPU via
 a profile. This should be placed in the hub configuration:
@@ -141,7 +205,7 @@ jupyterhub:
 Do a deployment with this config, and then we can test to make sure
 this works!
 
-#### Testing
+## Testing
 
 1. Login to the hub, and start a server with the GPU profile you
    just set up.
