@@ -25,17 +25,30 @@ filestore_capacity_gb = 2048
 
 user_buckets = {
   "scratch-staging" : {
-    "delete_after" : 7
+    "delete_after" : 7,
+    "extra_admin_members" : []
   },
   "scratch" : {
-    "delete_after" : 7
+    "delete_after" : 7,
+    "extra_admin_members" : []
   }
   # For https://github.com/2i2c-org/infrastructure/issues/1230#issuecomment-1278183441
   "persistent" : {
-    "delete_after" : null
+    "delete_after" : null,
+    "extra_admin_members" : ["group:leap-persistent-bucket-writers@googlegroups.com"]
   },
   "persistent-staging" : {
-    "delete_after" : null
+    "delete_after" : null,
+    "extra_admin_members" : ["group:leap-persistent-bucket-writers@googlegroups.com"]
+  }
+  # For https://github.com/2i2c-org/infrastructure/issues/1230#issuecomment-1278183441
+  "persistent-ro" : {
+    "delete_after" : null,
+    "extra_admin_members" : ["group:leap-persistent-bucket-writers@googlegroups.com"]
+  },
+  "persistent-ro-staging" : {
+    "delete_after" : null,
+    "extra_admin_members" : ["group:leap-persistent-bucket-writers@googlegroups.com"]
   }
 }
 
@@ -43,11 +56,13 @@ hub_cloud_permissions = {
   "staging" : {
     requestor_pays : true,
     bucket_admin_access : ["scratch-staging", "persistent-staging"],
+    bucket_readonly_access : ["persistent-ro-staging"],
     hub_namespace : "staging"
   },
   "prod" : {
     requestor_pays : true,
     bucket_admin_access : ["scratch", "persistent"],
+    bucket_readonly_access : ["persistent-ro"],
     hub_namespace : "prod"
   }
 }
@@ -69,7 +84,15 @@ notebook_nodes = {
       enabled : true,
       type : "nvidia-tesla-t4",
       count : 1
-    }
+    },
+    zones : [
+      # Get GPUs wherever they are available, as sometimes a single
+      # zone might be out of GPUs.
+      "us-central1-a",
+      "us-central1-b",
+      "us-central1-c",
+      "us-central1-f"
+    ]
   },
 }
 
