@@ -34,9 +34,9 @@ jupyterhub:
         shown_idps:
           - http://google.com/accounts/o8/id
       Authenticator:
-        allowed_users: &skyline_users
+        admin_users:
           - ericvd@gmail.com
           - sean.smorris@berkeley.edu
           - dhum1@my.smccd.edu
           - kayvanm@gmail.com
-        admin_users: *skyline_users
+        username_pattern: '^(.+@2i2c\.org|.+@berkeley\.edu|.+@my\.smccd\.edu|kayvanm@gmail.com|deployment-service-check)$'
