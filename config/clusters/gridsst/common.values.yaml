@@ -45,10 +45,6 @@ basehub:
         JupyterHub:
           authenticator_class: github
     singleuser:
-      extraEnv:
-        # Temporarily set for *all* pods, including pods without any GPUs,
-        # to work around https://github.com/2i2c-org/infrastructure/issues/1530
-        NVIDIA_DRIVER_CAPABILITIES: compute,utility
       profileList:
         # The mem-guarantees are here so k8s doesn't schedule other pods
         # on these nodes.
@@ -105,6 +101,8 @@ basehub:
                   kubespawner_override:
                     image: "pangeo/pytorch-notebook:2022.10.18"
           kubespawner_override:
+            environment:
+              NVIDIA_DRIVER_CAPABILITIES: compute,utility
             mem_limit: null
             extra_resource_limits:
               nvidia.com/gpu: "1"

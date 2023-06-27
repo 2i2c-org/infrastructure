@@ -3,8 +3,3 @@ basehub:
     scheduling:
       userScheduler:
         enabled: true
-    singleuser:
-      extraEnv:
-        # Temporarily set for *all* pods, including pods without any GPUs,
-        # to work around https://github.com/2i2c-org/infrastructure/issues/1530
-        NVIDIA_DRIVER_CAPABILITIES: compute,utility

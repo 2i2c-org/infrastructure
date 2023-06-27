@@ -67,9 +67,6 @@ basehub:
       extraEnv:
         GH_SCOPED_CREDS_CLIENT_ID: "Iv1.1c4d967ffc205f98"
         GH_SCOPED_CREDS_APP_URL: https://github.com/apps/m2lines-pangeo-hub-push-access
-        # Temporarily set for *all* pods, including pods without any GPUs,
-        # to work around https://github.com/2i2c-org/infrastructure/issues/1530
-        NVIDIA_DRIVER_CAPABILITIES: compute,utility
       # User image repo: https://github.com/pangeo-data/pangeo-docker-images
       image:
         name: pangeo/pangeo-notebook
@@ -150,6 +147,8 @@ basehub:
                   kubespawner_override:
                     image: "pangeo/pytorch-notebook:ebeb9dd"
           kubespawner_override:
+            environment:
+              NVIDIA_DRIVER_CAPABILITIES: compute,utility
             node_selector:
               cloud.google.com/gke-nodepool: nb-gpu-t4
             mem_limit: 30G
