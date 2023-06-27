@@ -113,7 +113,7 @@ comment_id = next(
 
 if comment_id is not None:
     # Comment exists - update it
-    url = "/".join([api_url, "repos", repo, "issues", "comments", comment_id])
+    url = "/".join([api_url, "repos", repo, "issues", "comments", str(comment_id)])
     requests.patch(url, headers=headers, json=body)
 else:
     # Comment doesn't exist - create a new one
