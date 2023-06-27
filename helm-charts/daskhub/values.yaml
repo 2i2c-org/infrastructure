@@ -50,7 +50,7 @@ basehub:
         # DASK_DISTRIBUTED__DASHBOARD__LINK makes the suggested link to the
         # dashboard account for the /user/<username>/<server-name> prefix in the path.
         # JUPYTERHUB_SERVICE_PREFIX has leading and trailing slashes as appropriate
-        DASK_DISTRIBUTED__DASHBOARD__LINK: "{JUPYTERHUB_SERVICE_PREFIX}proxy/{port}/status"
+        DASK_DISTRIBUTED__DASHBOARD__LINK: "$(JUPYTERHUB_SERVICE_PREFIX)proxy/{port}/status"
 
     hub:
       services:
