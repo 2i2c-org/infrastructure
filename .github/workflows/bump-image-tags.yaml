@@ -27,6 +27,12 @@ jobs:
           # For each new config_path to monitor, add a new item in this matrix.
           # The Action can read multiple paths to images, but not multiple config files.
           #
+          # Single image: See this example to bump images in the Callysto cluster
+          # - name: "Callysto hub"
+          #   config_path: "config/clusters/callysto/common.values.yaml"
+          #   images_info: '[{"values_path": ".jupyterhub.singleuser.image"}]'
+          #
+          # profileList: See this example to bump images in Openscapes cluster
           # - name: "OpenScapes profiles"
           #   config_path: "config/clusters/openscapes/common.values.yaml"
           #   # Note: if position of images in profileList changes, update the index in these expressions
