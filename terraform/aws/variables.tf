@@ -53,16 +53,6 @@ variable "hub_cloud_permissions" {
   EOT
 }
 
-variable "extra_user_iam_policy" {
-  default     = {}
-  description = <<-EOT
-  Policy JSON to attach to the IAM role assumed by users of the hub.
-
-  Used to grant additional permissions to the IAM role that is assumed by
-  user pods when making requests to AWS services (such as S3)
-  EOT
-}
-
 variable "db_enabled" {
   default     = false
   type        = bool
@@ -73,6 +63,7 @@ variable "db_enabled" {
 
 variable "db_instance_class" {
   default     = "db.t3.micro"
+  type        = string
   description = <<-EOT
   Size (memory & CPU) of the db instance to provision.
 
@@ -82,6 +73,7 @@ variable "db_instance_class" {
 
 variable "db_storage_size" {
   default     = 10
+  type        = number
   description = <<-EOT
   Size (in GiB) of storage to provision for the RDS instance
   EOT
@@ -89,6 +81,7 @@ variable "db_storage_size" {
 
 variable "db_engine" {
   default     = "mysql"
+  type        = string
   description = <<-EOT
   AWS RDS database engine to use.
 
@@ -100,6 +93,7 @@ variable "db_engine" {
 
 variable "db_engine_version" {
   default     = "8.0"
+  type        = string
   description = <<-EOT
   Version of database engine to provision.
 
@@ -110,6 +104,7 @@ variable "db_engine_version" {
 
 variable "db_instance_identifier" {
   default     = "shared-db"
+  type        = string
   description = <<-EOT
   Human readable instance name to give the database server.
 
@@ -120,6 +115,7 @@ variable "db_instance_identifier" {
 
 variable "db_mysql_user_grants" {
   default     = ["SELECT", "SHOW VIEW", "SHOW DATABASES", "PROCESS"]
+  type        = list(string)
   description = <<-EOT
   List of privileges to grant the default non-root hub db user if using mysql
   EOT
@@ -127,6 +123,7 @@ variable "db_mysql_user_grants" {
 
 variable "db_params" {
   default     = {}
+  type        = map(string)
   description = <<-EOT
   Mapping of parameters to set on the RDS instance.
 
@@ -138,6 +135,7 @@ variable "db_params" {
 
 variable "db_user_password_special_chars" {
   default     = true
+  type        = bool
   description = <<-EOT
   Set to True if you don't want special characters in generated user password
   EOT

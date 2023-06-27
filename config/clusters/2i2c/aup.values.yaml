@@ -1,8 +1,4 @@
 jupyterhub:
-  proxy:
-    https:
-      hosts:
-        - aup.pilot.2i2c.cloud
   ingress:
     hosts:
       - aup.pilot.2i2c.cloud
@@ -30,6 +26,9 @@ jupyterhub:
           name: AUP
           url: https://www.aup.edu/
   singleuser:
+    image:
+      name: quay.io/2i2c/2i2c-hubs-image
+      tag: "14107b8a85fb"
     memory:
       limit: 8G
       guarantee: 6G

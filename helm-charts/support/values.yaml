@@ -103,7 +103,10 @@ prometheus:
     # resources for the node-exporter was set after inspecting cpu and memory
     # use via prometheus and grafana.
     #
-    # node-exporter is typically found using between 0-3m CPU and 2-22Mi memory.
+    # node-exporter is typically found using between 0-3m CPU and 2-22Mi memory,
+    # but we've seen it fail to report cpu/memory use metrics from time to time
+    # when requesting and limiting to 5m, so we've increased requests/limit it
+    # to 10m.
     #
     # PromQL queries for CPU and memory use:
     # - CPU:    sum(rate(container_cpu_usage_seconds_total{container="node-exporter", namespace="support"}[5m])) by (pod)
@@ -111,10 +114,10 @@ prometheus:
     #
     resources:
       limits:
-        cpu: 5m
+        cpu: 10m
         memory: 30Mi
       requests:
-        cpu: 5m
+        cpu: 10m
         memory: 30Mi
 
   networkPolicy:
@@ -172,8 +175,21 @@ prometheus:
       limits:
         cpu: 4
         memory: 4Gi
-    labels:
-      # For HTTP access to the hub, to scrape metrics
+    # prometheus-server may take a long time to startup when loading large
+    # amounts of previously scraped data. To avoid having a livenessProbe
+    # terminate the starting pod, we opt-in to a more tolerant startupProbe that
+    # is active instead of the livenessProbe during startup.
+    startupProbe:
+      enabled: true
+      periodSeconds: 10
+      failureThreshold: 60
+    podLabels:
+      # To scrape metrics from a hub pod, prometheus-server needs to be
+      # explicitly allowed network access to hub pods in clusters with
+      # NetworkPolicy enforcement enabled. Adding this label does the trick.
+      #
+      # ref: https://z2jh.jupyter.org/en/stable/administrator/security.html#introduction-to-the-chart-s-four-network-policies
+      #
       hub.jupyter.org/network-access-hub: "true"
     persistentVolume:
       size: 100Gi

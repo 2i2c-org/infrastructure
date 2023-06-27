@@ -59,6 +59,23 @@ basehub:
                   slug: "main"
                   kubespawner_override:
                     image: carbonplan/main-single-user:latest
+                benchmark-maps:
+                  display_name: Benchmark Maps
+                  slug: "carbonplan"
+                  kubespawner_override:
+                    # Source: https://github.com/carbonplan/benchmark-maps
+                    image: quay.io/carbonplan/benchmark-maps:latest
+                carbonplan-notebook:
+                  display_name: Carbonplan Notebook
+                  slug: "carbonplan"
+                  kubespawner_override:
+                    # Source: https://github.com/carbonplan/envs
+                    image: quay.io/carbonplan/carbonplan-notebook:latest
+                forest-offset-fires:
+                  display_name: Forest Offset Fires
+                  slug: forest-offset-fires
+                  kubespawner_override:
+                    image: quay.io/carbonplan/forest-offsets-fires:latest
                 tensorflow:
                   display_name: Pangeo Tensorflow ML Notebook
                   slug: "tensorflow"
@@ -145,6 +162,12 @@ basehub:
                   slug: "pytorch"
                   kubespawner_override:
                     image: "pangeo/pytorch-notebook:2023.02.27"
+                benchmark-maps:
+                  display_name: Benchmark Maps
+                  slug: "carbonplan"
+                  kubespawner_override:
+                    # Source: https://github.com/carbonplan/benchmark-maps
+                    image: quay.io/carbonplan/benchmark-maps:latest
           kubespawner_override:
             mem_limit: null
             extra_resource_limits:
@@ -164,7 +187,6 @@ basehub:
           limits:
             cpu: 1
             memory: 4Gi
-        nodeSelector: {}
     hub:
       resources:
         requests:
@@ -174,12 +196,6 @@ basehub:
           cpu: 1
           memory: 4Gi
       allowNamedServers: true
-      networkPolicy:
-        # FIXME: For dask gateway
-        enabled: false
-      readinessProbe:
-        enabled: false
-      nodeSelector: {}
       config:
         Authenticator:
           allowed_users: &users

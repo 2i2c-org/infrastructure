@@ -30,19 +30,6 @@ staticWebsite:
       id: 0
       privateKey: ""
 
-azureFile:
-  enabled: false
-  pv:
-    secretNamespace: azure-file
-    secretName: access-credentials
-    shareName: homes
-    mountOptions:
-      - uid=1000
-      - forceuid
-      - gid=1000
-      - forcegid
-      - nobrl
-
 nfs:
   enabled: true
   shareCreator:
@@ -53,9 +40,6 @@ nfs:
       - soft
       - noatime
       - vers=4.2
-    serverIP: nfs-server-01
-    # MUST HAVE TRAILING SLASH
-    baseShareName: /export/home-01/homes/
 
 # Use NFS provided by an in cluster server with the nfs-external-provisioner chart
 inClusterNFS:
@@ -273,8 +257,8 @@ jupyterhub:
     startTimeout: 600 # 10 mins, because sometimes we have too many new nodes coming up together
     defaultUrl: /tree
     image:
-      name: quay.io/2i2c/2i2c-hubs-image
-      tag: "14107b8a85fb"
+      name: jupyter/scipy-notebook
+      tag: "2023-06-19"
     storage:
       type: static
       static:
@@ -509,6 +493,13 @@ jupyterhub:
       tag: "0.0.1-0.dev.git.4978.h858bd17c"
     networkPolicy:
       enabled: true
+      # interNamespaceAccessLabels=accept makes the hub pod's associated
+      # NetworkPolicy accept ingress from pods in other namespaces that has a
+      # hub.jupyter.org/network-access-hub=true label.
+      #
+      # ref: https://z2jh.jupyter.org/en/stable/resources/reference.html#hub-networkpolicy-internamespaceaccesslabels
+      #
+      interNamespaceAccessLabels: accept
       ingress:
         - from:
             - podSelector:
@@ -518,6 +509,19 @@ jupyterhub:
           ports:
             - port: 8081
               protocol: TCP
+        # The jupyterhub-configurator is a managed jupyterhub service, which
+        # means it is started by jupyterhub as a separate process in the hub
+        # pod. Users will access it via the proxy pod, and JupyterHub itself is
+        # accessing it via localhost. This rule makes receiving such request on
+        # port 10101 from these destinations accepted.
+        #
+        # Maybe the container internal rule, for jupyterhub ->
+        # jupyterhub-configurator isn't needed, as the request is directly to
+        # 127.0.0.1:10101.
+        #
+        # ref: The extraConfig.02-custom-admin section below
+        # ref: https://github.com/yuvipanda/jupyterhub-configurator/blob/996405d2a7017153d5abe592b8028fed7a1801bb/jupyterhub_configurator/mixins.py#L7C5-L11
+        #
         - from:
             - podSelector:
                 matchLabels:
@@ -529,17 +533,6 @@ jupyterhub:
                   component: hub
           ports:
             - port: 10101
-              protocol: TCP
-        - from:
-            - namespaceSelector:
-                matchLabels:
-                  name: support
-              podSelector:
-                matchLabels:
-                  app: prometheus
-                  component: server
-          ports:
-            - port: http
               protocol: TCP
     # FIXME: We should think about these resource requests/limits, see
     #        https://github.com/2i2c-org/infrastructure/issues/2127.

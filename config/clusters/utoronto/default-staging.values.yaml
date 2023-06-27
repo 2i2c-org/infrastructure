@@ -4,17 +4,13 @@ jupyterhub:
     tls:
       - hosts: [staging.utoronto.2i2c.cloud]
         secretName: https-auto-tls
-  proxy:
-    https:
-      hosts: [staging.utoronto.2i2c.cloud]
   custom:
     homepage:
       gitRepoBranch: "utoronto-staging"
   hub:
     config:
-      AzureAdOAuthenticator:
+      CILogonOAuthenticator:
         oauth_callback_url: https://staging.utoronto.2i2c.cloud/hub/oauth_callback
-        logout_redirect_url: https://login.microsoftonline.com/common/oauth2/logout?post_logout_redirect_uri=https://staging.utoronto.2i2c.cloud
     db:
       pvc:
         # limit was increased because of https://github.com/2i2c-org/infrastructure/issues/2288

@@ -80,8 +80,13 @@ def use_cluster_credentials(
 @app.command()
 def deploy_support(
     cluster_name: str = typer.Argument(..., help="Name of cluster to operate on"),
+    # cert-manager versions at https://cert-manager.io/docs/release-notes/,
+    # update to latest when updating and make sure to read upgrade notes.
+    #
+    # "kubectl apply" will be done on CRDs but sometimes more is needed.
+    #
     cert_manager_version: str = typer.Option(
-        "v1.8.2", help="Version of cert-manager to install"
+        "v1.12.1", help="Version of cert-manager to install"
     ),
 ):
     """

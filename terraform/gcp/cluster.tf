@@ -12,7 +12,7 @@ data "google_container_engine_versions" "k8s_version_prefixes" {
   project  = var.project_id
   location = var.zone
 
-  for_each = var.k8s_version_prefixes
+  for_each       = var.k8s_version_prefixes
   version_prefix = each.value
 }
 output "regular_channel_latest_k8s_versions" {
@@ -314,7 +314,8 @@ resource "google_container_node_pool" "notebook" {
         effect = "NO_SCHEDULE"
         key    = "nvidia.com/gpu"
         value  = "present"
-      }] : []
+      }] : [],
+      each.value.taints
     )
     machine_type = each.value.machine_type
 
@@ -326,6 +327,8 @@ resource "google_container_node_pool" "notebook" {
     oauth_scopes = [
       "https://www.googleapis.com/auth/cloud-platform"
     ]
+
+    resource_labels = each.value.resource_labels
 
     // Set these values explicitly so they don't "change outside terraform"
     tags = []
@@ -381,11 +384,14 @@ resource "google_container_node_pool" "dask_worker" {
       "k8s.dask.org/node-purpose" = "worker",
     }, each.value.labels)
 
-    taint = [{
+    taint = concat([{
       key    = "k8s.dask.org_dedicated"
       value  = "worker"
       effect = "NO_SCHEDULE"
-    }]
+      }],
+      each.value.taints
+    )
+
     machine_type = each.value.machine_type
 
     # Our service account gets all OAuth scopes so it can access
@@ -396,6 +402,8 @@ resource "google_container_node_pool" "dask_worker" {
     oauth_scopes = [
       "https://www.googleapis.com/auth/cloud-platform"
     ]
+
+    resource_labels = each.value.resource_labels
 
     // Set these values explicitly so they don't "change outside terraform"
     tags = []

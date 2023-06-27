@@ -4,9 +4,6 @@ jupyterhub:
     tls:
       - hosts: [ccsf.cloudbank.2i2c.cloud]
         secretName: https-auto-tls
-  proxy:
-    https:
-      hosts: [ccsf.cloudbank.2i2c.cloud]
   singleuser:
     memory:
       # Increased to help deal with possible kernel restarts

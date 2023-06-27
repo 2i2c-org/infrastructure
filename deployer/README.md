@@ -25,52 +25,73 @@ This section descripts all the deployment related subcommands the `deployer` can
 
 **Command line usage:**
 
-``` bash
-                                                                                                                                              
- Usage: deployer [OPTIONS] COMMAND [ARGS]...                                                                            
-                                                                                                                        
-╭─ Options ────────────────────────────────────────────────────────────────────────────────────────────────────────────╮
-│ --install-completion          Install completion for the current shell.                                              │
-│ --show-completion             Show completion for the current shell, to copy it or customize the installation.       │
-│ --help                        Show this message and exit.                                                            │
-╰──────────────────────────────────────────────────────────────────────────────────────────────────────────────────────╯
-╭─ Commands ───────────────────────────────────────────────────────────────────────────────────────────────────────────╮
-│ auth0-client-create                 Create an Auth0 client app for a hub.                                            │
-│ auth0-client-get-all                Retrieve details about all existing 2i2c CILogon clients.                        │
-│ cilogon-client-create               Create a CILogon client for a hub.                                               │
-│ cilogon-client-delete               Delete an existing CILogon client. This deletes both the CILogon client          │
-│                                     application, and the client credentials from the configuration file.             │
-│ cilogon-client-get                  Retrieve details about an existing CILogon client.                               │
-│ cilogon-client-get-all              Retrieve details about all existing 2i2c CILogon clients.                        │
-│ cilogon-client-update               Update the CILogon client of a hub.                                              │
-│ component-logs                      Display logs from a particular component on a hub on a cluster                   │
-│ decrypt-age                         Decrypt secrets sent to `support@2i2c.org` via `age`                             │
-│ deploy                              Deploy one or more hubs in a given cluster                                       │
-│ deploy-grafana-dashboards           Deploy the latest official JupyterHub dashboards to a cluster's grafana          │
-│                                     instance. This is done via Grafana's REST API, authorized by using a previously  │
-│                                     generated Grafana service account's access token.                                │
-│ deploy-support                      Deploy support components to a cluster                                           │
-│ exec-homes-shell                    Pop an interactive shell with the home directories of the given hub mounted on   │
-│                                     /home                                                                            │
-│ exec-hub-shell                      Pop an interactive shell in the hub pod                                          │
-│ generate-aws-cluster                Automatically generate the files required to setup a new cluster on AWS          │
-│ generate-gcp-cluster                Automatically generates the initial files, required to setup a new cluster on    │
-│                                     GCP                                                                              │
-│ generate-helm-upgrade-jobs          Analyze added or modified files from a GitHub Pull Request and decide which      │
-│                                     clusters and/or hubs require helm upgrades to be performed for their *hub helm   │
-│                                     charts or the support helm chart.                                                │
-│ new-grafana-token                   Generate an API token for the cluster's Grafana `deployer` service account and   │
-│                                     store it encrypted inside a `enc-grafana-token.secret.yaml` file.                │
-│ run-hub-health-check                Run a health check on a given hub on a given cluster. Optionally check scaling   │
-│                                     of dask workers if the hub is a daskhub.                                         │
-│ start-docker-proxy                  Proxy a docker daemon from a remote cluster to local port 23760.                 │
-│ update-central-grafana-datasources  Update the central grafana with datasources for all clusters prometheus          │
-│                                     instances                                                                        │
-│ use-cluster-credentials             Pop a new shell authenticated to the given cluster using the deployer's          │
-│                                     credentials                                                                      │
-│ user-logs                           Display logs from the notebook pod of a given user                               │
-│ validate                            Validate cluster.yaml and non-encrypted helm config for given hub                │
-╰──────────────────────────────────────────────────────────────────────────────────────────────────────────────────────╯
+```
+                                                                                    
+ Usage: deployer [OPTIONS] COMMAND [ARGS]...                                        
+                                                                                    
+╭─ Options ────────────────────────────────────────────────────────────────────────╮
+│ --install-completion          Install completion for the current shell.          │
+│ --show-completion             Show completion for the current shell, to copy it  │
+│                               or customize the installation.                     │
+│ --help                        Show this message and exit.                        │
+╰──────────────────────────────────────────────────────────────────────────────────╯
+╭─ Commands ───────────────────────────────────────────────────────────────────────╮
+│ cilogon-client-create               Create a CILogon client for a hub.           │
+│ cilogon-client-delete               Delete an existing CILogon client. This      │
+│                                     deletes both the CILogon client application, │
+│                                     and the client credentials from the          │
+│                                     configuration file.                          │
+│ cilogon-client-get                  Retrieve details about an existing CILogon   │
+│                                     client.                                      │
+│ cilogon-client-get-all              Retrieve details about all existing 2i2c     │
+│                                     CILogon clients.                             │
+│ cilogon-client-update               Update the CILogon client of a hub.          │
+│ component-logs                      Display logs from a particular component on  │
+│                                     a hub on a cluster                           │
+│ decrypt-age                         Decrypt secrets sent to `support@2i2c.org`   │
+│                                     via `age`                                    │
+│ deploy                              Deploy one or more hubs in a given cluster   │
+│ deploy-grafana-dashboards           Deploy the latest official JupyterHub        │
+│                                     dashboards to a cluster's grafana instance.  │
+│                                     This is done via Grafana's REST API,         │
+│                                     authorized by using a previously generated   │
+│                                     Grafana service account's access token.      │
+│ deploy-support                      Deploy support components to a cluster       │
+│ exec-homes-shell                    Pop an interactive shell with the home       │
+│                                     directories of the given hub mounted on      │
+│                                     /home                                        │
+│ exec-hub-shell                      Pop an interactive shell in the hub pod      │
+│ generate-aws-cluster                Automatically generate the files required to │
+│                                     setup a new cluster on AWS                   │
+│ generate-cost-table                 Generate table with cloud costs for all GCP  │
+│                                     projects we pass costs through for.          │
+│ generate-gcp-cluster                Automatically generates the initial files,   │
+│                                     required to setup a new cluster on GCP       │
+│ generate-helm-upgrade-jobs          Analyze added or modified files from a       │
+│                                     GitHub Pull Request and decide which         │
+│                                     clusters and/or hubs require helm upgrades   │
+│                                     to be performed for their *hub helm charts   │
+│                                     or the support helm chart.                   │
+│ new-grafana-token                   Generate an API token for the cluster's      │
+│                                     Grafana `deployer` service account and store │
+│                                     it encrypted inside a                        │
+│                                     `enc-grafana-token.secret.yaml` file.        │
+│ run-hub-health-check                Run a health check on a given hub on a given │
+│                                     cluster. Optionally check scaling of dask    │
+│                                     workers if the hub is a daskhub.             │
+│ start-docker-proxy                  Proxy a docker daemon from a remote cluster  │
+│                                     to local port 23760.                         │
+│ update-central-grafana-datasources  Update the central grafana with datasources  │
+│                                     for all clusters prometheus instances        │
+│ use-cluster-credentials             Pop a new shell or execute a command after   │
+│                                     authenticating to the given cluster using    │
+│                                     the deployer's credentials                   │
+│ user-logs                           Display logs from the notebook pod of a      │
+│                                     given user                                   │
+│ validate                            Validate cluster.yaml and non-encrypted helm │
+│                                     config for given hub                         │
+╰──────────────────────────────────────────────────────────────────────────────────╯
+
 ```
 
 ### `deploy`
@@ -477,51 +498,6 @@ create/delete/get/get-all/update/ CILogon clients using the 2i2c administrative 
   │ *    hub_domain        TEXT  The hub domain, as specified in `cluster.yaml` (ex: staging.2i2c.cloud) [default: None] │
   │                              [required]                                                                              │
   ╰──────────────────────────────────────────────────────────────────────────────────────────────────────────────────────╯
-  ╭─ Options ────────────────────────────────────────────────────────────────────────────────────────────────────────────╮
-  │ --help          Show this message and exit.                                                                          │
-  ╰──────────────────────────────────────────────────────────────────────────────────────────────────────────────────────╯
-  ```
-
-## Auth0 OAuth clients management tools
-
-create/get-all/ Auth0 clients using the 2i2c Auth0 administrative.
-
-**Command line usage:**
-
-- `auth0-client-create`
-
-  ```bash
-  Usage: deployer auth0-client-create [OPTIONS] CLUSTER_NAME HUB_NAME [HUB_TYPE]                                         
-                                     HUB_DOMAIN CONNECTION_TYPE                                                         
-                                                                                                                        
-  Create an Auth0 client app for a hub.                                                                                  
-                                                                                                                          
-  ╭─ Arguments ──────────────────────────────────────────────────────────────────────────────────────────────────────────╮
-  │ *    cluster_name         TEXT        Name of cluster to operate [default: None] [required]                          │
-  │ *    hub_name             TEXT        Name of the hub for which a new Auth0 client will be created [default: None]   │
-  │                                       [required]                                                                     │
-  │      hub_type             [HUB_TYPE]  Type of hub for which we'll create an Auth0 client (ex: basehub, daskhub)      │
-  │                                       [default: basehub]                                                             │
-  │ *    hub_domain           TEXT        The hub domain, as specified in `cluster.yaml` (ex: staging.2i2c.cloud)        │
-  │                                       [default: None]                                                                │
-  │                                       [required]                                                                     │
-  │ *    connection_type      TEXT        Auth0 connection type. One of dict_keys(['github', 'google-oauth2',            │
-  │                                       'password', 'CILogon'])                                                        │
-  │                                       [default: None]                                                                │
-  │                                       [required]                                                                     │
-  ╰──────────────────────────────────────────────────────────────────────────────────────────────────────────────────────╯
-  ╭─ Options ────────────────────────────────────────────────────────────────────────────────────────────────────────────╮
-  │ --help          Show this message and exit.                                                                          │
-  ╰──────────────────────────────────────────────────────────────────────────────────────────────────────────────────────╯
-  ```
-
-- `auth0-client-get-all`
-
-  ```bash
-  Usage: deployer auth0-client-get-all [OPTIONS]                                                                         
-                                                                                                                        
-  Retrieve details about all existing 2i2c CILogon clients.                                                              
-                                                                                                                          
   ╭─ Options ────────────────────────────────────────────────────────────────────────────────────────────────────────────╮
   │ --help          Show this message and exit.                                                                          │
   ╰──────────────────────────────────────────────────────────────────────────────────────────────────────────────────────╯

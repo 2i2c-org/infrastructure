@@ -85,9 +85,12 @@ jobs:
 
       - name: Identify files that have been added or modified
         # Action repo: https://github.com/dorny/paths-filter
-        uses: dorny/paths-filter@v2
+        # Fork of the repo above that we use: https://github.com/frouioui/paths-filter/tree/main
+        # In order to take advantage of https://github.com/dorny/paths-filter/pull/133
+        uses: frouioui/paths-filter@main
         id: changed-files
         with:
+          token: ""
           list-files: csv
           filters: |
             changed:
@@ -128,6 +131,18 @@ jobs:
             pr-number.txt
             comment-body.txt
 
+      # https://github.com/ravsamhq/notify-slack-action
+      # Needs to be added per job
+      # When https://github.com/integrations/slack/issues/1563 gets implemented,
+      # we can use that instead
+      - name: Report Status
+        if: always()
+        uses: ravsamhq/notify-slack-action@v2
+        with:
+          notify_when: "failure"
+          status: ${{ job.status }} # required
+        env:
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_GHA_FAILURES_WEBHOOK_URL }}
   # This job upgrades the support chart, staging hub, and dask-staging hub (if present)
   # for clusters in parallel, if those upgrades are required. This job needs the
   # `generate-jobs` job to have completed and set an output to the
@@ -245,6 +260,19 @@ jobs:
           with open(env_file, "a") as f:
               f.write(f"failure_{name}={failure}")
 
+      # https://github.com/ravsamhq/notify-slack-action
+      # Needs to be added per job
+      # When https://github.com/integrations/slack/issues/1563 gets implemented,
+      # we can use that instead
+      - name: Report Status
+        if: always()
+        uses: ravsamhq/notify-slack-action@v2
+        with:
+          notify_when: "failure"
+          status: ${{ job.status }} # required
+        env:
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_GHA_FAILURES_WEBHOOK_URL }}
+
   # This jobs reduces the initially planned prod-hub-matrix-jobs deployments by
   # filtering out any deployment to a cluster with a failed support-and-staging
   # job.
@@ -291,6 +319,19 @@ jobs:
           env_file = os.getenv("GITHUB_ENV")
           with open(env_file, "a") as f:
               f.write(f"filtered-prod-hub-matrix-jobs={json.dumps(filtered_jobs)}")
+
+      # https://github.com/ravsamhq/notify-slack-action
+      # Needs to be added per job
+      # When https://github.com/integrations/slack/issues/1563 gets implemented,
+      # we can use that instead
+      - name: Report Status
+        if: always()
+        uses: ravsamhq/notify-slack-action@v2
+        with:
+          notify_when: "failure"
+          status: ${{ job.status }} # required
+        env:
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_GHA_FAILURES_WEBHOOK_URL }}
 
   # This job upgrades production hubs on clusters in parallel, if required. This
   # job needs both the `filter-generate-jobs` to have completed to provide its
@@ -341,3 +382,16 @@ jobs:
           max_attempts: 3
           command: |
             deployer run-hub-health-check ${{ matrix.jobs.cluster_name }} ${{ matrix.jobs.hub_name }}
+
+      # https://github.com/ravsamhq/notify-slack-action
+      # Needs to be added per job
+      # When https://github.com/integrations/slack/issues/1563 gets implemented,
+      # we can use that instead
+      - name: Report Status
+        if: always()
+        uses: ravsamhq/notify-slack-action@v2
+        with:
+          notify_when: "failure"
+          status: ${{ job.status }} # required
+        env:
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_GHA_FAILURES_WEBHOOK_URL }}

@@ -7,4 +7,5 @@ issues that may arise.
 :maxdepth: 2
 logs.md
 ssh.md
+prometheus.md
 ```

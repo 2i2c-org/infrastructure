@@ -8,9 +8,6 @@ basehub:
       tls:
         - hosts: [linkedearth.2i2c.cloud]
           secretName: https-auto-tls
-    proxy:
-      https:
-        hosts: [linkedearth.2i2c.cloud]
     singleuser:
       extraEnv:
         SCRATCH_BUCKET: gs://linked-earth-scratch/$(JUPYTERHUB_USER)

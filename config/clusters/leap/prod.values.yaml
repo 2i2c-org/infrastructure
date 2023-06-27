@@ -19,8 +19,6 @@ basehub:
         - hosts: [leap.2i2c.cloud]
           secretName: https-auto-tls
     proxy:
-      https:
-        hosts: [leap.2i2c.cloud]
       chp:
         resources:
           requests:

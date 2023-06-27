@@ -4,9 +4,6 @@ jupyterhub:
     tls:
       - hosts: [2i2c.callysto.ca]
         secretName: https-auto-tls
-  proxy:
-    https:
-      hosts: [2i2c.callysto.ca]
   hub:
     config:
       CILogonOAuthenticator:

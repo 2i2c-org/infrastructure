@@ -13,6 +13,8 @@ jobs:
       - uses: hashicorp/setup-terraform@v2
       - uses: terraform-linters/setup-tflint@v3
       - name: Run terraform linter
-        run: tflint terraform
+        run: |
+          cd terraform
+          tflint --recursive
       - name: Check terraform formatting
         run: terraform fmt -check -diff terraform/

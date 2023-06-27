@@ -4,9 +4,12 @@ jupyterhub:
     tls:
       - hosts: [pasadena.cloudbank.2i2c.cloud]
         secretName: https-auto-tls
-  proxy:
-    https:
-      hosts: [pasadena.cloudbank.2i2c.cloud]
+  singleuser:
+    memory:
+      # Increased to help deal with possible kernel restarts
+      # https://2i2c.freshdesk.com/a/tickets/567
+      guarantee: 384M
+      limit: 1.5G
   custom:
     2i2c:
       add_staff_user_ids_to_admin_users: true
@@ -37,6 +40,8 @@ jupyterhub:
         admin_users:
           - yxchang@go.pasadena.edu
           - yccdharma@gmail.com
+          - eshaw4@go.pasadena.edu
+          - JJASHRAF@go.pasadena.edu
           - ericvd@berkeley.edu
           - k_usovich@berkeley.edu
           - sean.smorris@berkeley.edu

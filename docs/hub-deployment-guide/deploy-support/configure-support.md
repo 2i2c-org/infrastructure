@@ -58,6 +58,27 @@ cluster-autoscaler:
 ```
 ````
 
+````{warning}
+If you are deploying the support chart on an Azure cluster, you **must** set an annotation for `ingress-nginx`'s k8s Service resource.
+Include the following in your `support.values.yaml` file:
+
+```yaml
+ingress-nginx:
+  controller:
+    service:
+      annotations:
+        # This annotation is a requirement for use in Azure provided
+        # LoadBalancer.
+        #
+        # ref: https://learn.microsoft.com/en-us/azure/aks/ingress-basic?tabs=azure-cli#basic-configuration
+        # ref: https://github.com/Azure/AKS/blob/master/CHANGELOG.md#release-2022-09-11
+        # ref: https://github.com/Azure/AKS/issues/2907#issuecomment-1109759262
+        # ref: https://github.com/kubernetes/ingress-nginx/issues/8501#issuecomment-1108428615
+        #
+        service.beta.kubernetes.io/azure-load-balancer-health-probe-request-path: /healthz
+```
+````
+
 ## Edit your `cluster.yaml` file
 
 Add the following config as a top-level key to your `cluster.yaml` file.

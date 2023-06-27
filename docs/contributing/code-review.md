@@ -105,8 +105,7 @@ To deploy changes to the authentication workflow, follow these steps:
 1. **Manually deploy changes to a few kinds of staging hubs**. The hubs use different authentication mechanisms, based on their needs, but testing on the staging hubs listed below should cover all the possible types. The hubs are:
    - cluster: `leap`, hub: `staging` (GitHub)
    - cluster: `utoronto`, hub: `staging` (Azure AD)
-   - cluster: `2i2c`, hub: `staging` (Auth0)
-   - cluster: `2i2c`, hub: `demo`    (CILogon)
+   - cluster: `2i2c`, hub: `staging` (CILogon)
 1. **Login into the staging hubs**. Try logging in into the hubs where you deployed your changes.
 1. **Start a server**. Afer you've logged into the hub, make sure everything works as expected by spinning up a server.
 1. **Post the status of the manual steps above**. In your PR's top comment, post the hubs where you've deployed the changes and whether or not they are functioning properly.

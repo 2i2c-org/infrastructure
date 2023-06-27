@@ -1,0 +1,45 @@
+jupyterhub:
+  ingress:
+    hosts: [sacramento.cloudbank.2i2c.cloud]
+    tls:
+      - hosts: [sacramento.cloudbank.2i2c.cloud]
+        secretName: https-auto-tls
+  singleuser:
+    memory:
+      # Increased to help deal with possible kernel restarts
+      # https://2i2c.freshdesk.com/a/tickets/567
+      guarantee: 384M
+      limit: 1.5G
+  custom:
+    2i2c:
+      add_staff_user_ids_of_type: google
+      add_staff_user_ids_to_admin_users: true
+    homepage:
+      templateVars:
+        designed_by:
+          name: 2i2c
+          url: https://2i2c.org
+        funded_by:
+          name: CloudBank
+          url: http://cloudbank.org/
+        operated_by:
+          name: CloudBank
+          url: http://cloudbank.org/
+        org:
+          logo_url: https://scc.losrios.edu/scc/main/img/sitewide-multi/logo/scc-logo-desktop.svg
+          name: Sacramento City College
+          url: https://scc.losrios.edu/
+  hub:
+    config:
+      JupyterHub:
+        authenticator_class: cilogon
+      CILogonOAuthenticator:
+        oauth_callback_url: https://sacramento.cloudbank.2i2c.cloud/hub/oauth_callback
+        username_claim: email
+      Authenticator:
+        admin_users:
+          - ericvd@berkeley.edu
+          - sean.smorris@berkeley.edu
+          - mukarra@scc.losrios.edu
+          - w1475529@apps.losrios.edu
+        username_pattern: '^(.+@2i2c\.org|.+@berkeley\.edu|.+@(scc|apps)\.losrios\.edu|deployment-service-check)$'

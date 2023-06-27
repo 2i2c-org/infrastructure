@@ -33,12 +33,12 @@ Usually, it is because it was a hub that we created for a workshop/conference an
 (These steps are described in more detail in the docs at https://infrastructure.2i2c.org/en/latest/hub-deployment-guide/hubs/other-hub-ops/delete-hub.html)
 
 - [ ] Manage existing data (migrate data from the hub or delete it)
+- [ ] Delete the hub's authentication application on auth0, GitHub or CILogon (note CILogon removal requires the hub config in place)
 - [ ] Remove the appropriate `config/clusters/<cluster_name>/<hub_name>.values.yaml` files. A complete list of relevant files can be found under the appropriate entry in the associated `cluster.yaml` file.
 - [ ] Remove the associated hub entry from the `config/clusters/<cluster_name>/cluster.yaml` file.
 - [ ] Remove the hub deployment
   - `helm --namespace HUB_NAME delete HUB_NAME`
   - `kubectl delete namespace HUB_NAME`
-- [ ] Delete the hub's authentication application on auth0, GitHub or CILogon
 
 #### Phase III - Cluster Removal
 

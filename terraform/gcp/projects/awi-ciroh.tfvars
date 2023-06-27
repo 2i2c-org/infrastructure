@@ -2,23 +2,30 @@ prefix                 = "awi-ciroh"
 project_id             = "awi-ciroh"
 zone                   = "us-central1-b"
 region                 = "us-central1"
-core_node_machine_type = "n1-highmem-4"
+core_node_machine_type = "n2-highmem-4"
 enable_network_policy  = true
 enable_filestore       = true
 filestore_capacity_gb  = 1024
 
+k8s_versions = {
+  min_master_version : "1.25.8-gke.500",
+  core_nodes_version : "1.25.6-gke.1000",
+  notebook_nodes_version : "1.25.6-gke.1000",
+  dask_nodes_version : "1.25.6-gke.1000",
+}
+
 user_buckets = {
-  "scratch-staging": {
-    "delete_after": 7
+  "scratch-staging" : {
+    "delete_after" : 7
   },
-  "scratch": {
-    "delete_after": 7
+  "scratch" : {
+    "delete_after" : 7
   },
-  "persistent-staging": {
-    "delete_after": null
+  "persistent-staging" : {
+    "delete_after" : null
   },
-  "persistent": {
-    "delete_after": null
+  "persistent" : {
+    "delete_after" : null
   }
 }
 
@@ -27,125 +34,39 @@ notebook_nodes = {
   "small" : {
     min : 0,
     max : 100,
-    machine_type : "n1-standard-2",
-    labels: {},
-    gpu: {
-      enabled: false,
-      type: "",
-      count: 0
-    }
+    machine_type : "n2-highmem-4"
   },
   "medium" : {
     min : 0,
     max : 100,
-    machine_type : "n1-standard-4",
-    labels: {},
-    gpu: {
-      enabled: false,
-      type: "",
-      count: 0
-    }
+    machine_type : "n2-highmem-16"
   },
   "large" : {
     min : 0,
     max : 100,
-    machine_type : "n1-standard-8",
-    labels: {},
-    gpu: {
-      enabled: false,
-      type: "",
-      count: 0
-    }
-  },
-  "huge" : {
-    min : 0,
-    max : 100,
-    machine_type : "n1-standard-16",
-    labels: {},
-    gpu: {
-      enabled: false,
-      type: "",
-      count: 0
-    }
-  },
-  # added stressfully before an event where we ran out of ssd quota, see
-  # https://github.com/2i2c-org/infrastructure/pull/2539 and the linked
-  # event https://github.com/2i2c-org/infrastructure/issues/2520.
-  #
-  # FIXME: make this cluster have a node sharing setup like in the
-  #        basehub/daskhub template.
-  #
-  "highmem-medium" : {
-    min : 10,
-    max : 100,
-    machine_type : "n2-highmem-16",
-    labels: {},
-    gpu: {
-      enabled: false,
-      type: "",
-      count: 0
-    }
+    machine_type : "n2-highmem-64"
   },
 }
 
 dask_nodes = {
-  "small" : {
-    min : 0,
-    max : 100,
-    machine_type : "n1-standard-2",
-    labels: {},
-    gpu: {
-      enabled: false,
-      type: "",
-      count: 0
-    }
-  },
   "medium" : {
     min : 0,
-    max : 100,
-    machine_type : "n1-standard-4",
-    labels: {},
-    gpu: {
-      enabled: false,
-      type: "",
-      count: 0
-    }
-  },
-  "large" : {
-    min : 0,
-    max : 100,
-    machine_type : "n1-standard-8",
-    labels: {},
-    gpu: {
-      enabled: false,
-      type: "",
-      count: 0
-    }
-  },
-  "huge" : {
-    min : 0,
-    max : 100,
-    machine_type : "n1-standard-16",
-    labels: {},
-    gpu: {
-      enabled: false,
-      type: "",
-      count: 0
-    }
+    max : 200,
+    machine_type : "n2-highmem-16"
   },
 }
 
 hub_cloud_permissions = {
   "staging" : {
     requestor_pays : false,
-    bucket_admin_access: ["scratch-staging", "persistent-staging"],
-    hub_namespace: "staging"
+    bucket_admin_access : ["scratch-staging", "persistent-staging"],
+    hub_namespace : "staging"
   },
   "prod" : {
     requestor_pays : false,
-    bucket_admin_access: ["scratch", "persistent"],
-    hub_namespace: "prod"
+    bucket_admin_access : ["scratch", "persistent"],
+    hub_namespace : "prod"
   }
 }
 
-container_repos = [ ]
+container_repos = []

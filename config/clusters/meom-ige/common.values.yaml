@@ -43,21 +43,21 @@ basehub:
           description: "~2 CPU, ~8G RAM"
           kubespawner_override:
             mem_limit: 8G
-            mem_guarantee: 5G
+            mem_guarantee: 4G
             node_selector:
               node.kubernetes.io/instance-type: n1-standard-2
         - display_name: "Medium"
           description: "~8 CPU, ~32G RAM"
           kubespawner_override:
             mem_limit: 32G
-            mem_guarantee: 25G
+            mem_guarantee: 22G
             node_selector:
               node.kubernetes.io/instance-type: n1-standard-8
         - display_name: "Large"
           description: "~16 CPU, ~64G RAM"
           kubespawner_override:
             mem_limit: 64G
-            mem_guarantee: 50G
+            mem_guarantee: 47G
             node_selector:
               node.kubernetes.io/instance-type: n1-standard-16
         - display_name: "Very Large"

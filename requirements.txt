@@ -22,15 +22,13 @@ pytest-asyncio
 jinja2==3.*
 
 # Used for the debug CLI
-typer==0.7.*
+typer==0.9.*
 escapism==1.*
 
 # Used for GCP billing management
-google-cloud-bigquery==3.10.*
-gspread==5.8.*
+google-cloud-bigquery==3.11.*
+gspread==5.9.*
 
 # requests is used by deployer/cilogon_app.py
 requests==2.*
 
-# auth0 is used to communicate with Auth0's REST API that we support as a deployer sub-cmd
-auth0-python==3.*

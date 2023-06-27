@@ -9,6 +9,8 @@ on:
 jobs:
   # ref: https://github.com/2i2c-org/.github/blob/main/.github/workflows/documentation-link-check.yaml
   linkcheck:
+    permissions:
+      issues: write
     uses: 2i2c-org/.github/.github/workflows/documentation-link-check.yaml@main
     with:
       docs_path: docs

@@ -100,7 +100,6 @@ Reference information about our infrastructure.
 
 reference/hubs
 reference/ci-cd/index
-reference/terraform.md
 reference/tools
 ```
 

@@ -4,15 +4,11 @@ jupyterhub:
     tls:
       - hosts: [r.datatools.utoronto.ca]
         secretName: https-auto-tls
-  proxy:
-    https:
-      hosts: [r.datatools.utoronto.ca]
   hub:
     db:
       pvc:
         # prod stores logs, so let's make it big
         storage: 60Gi
     config:
-      AzureAdOAuthenticator:
+      CILogonOAuthenticator:
         oauth_callback_url: https://r.datatools.utoronto.ca/hub/oauth_callback
-        logout_redirect_url: https://login.microsoftonline.com/common/oauth2/logout?post_logout_redirect_uri=https://r.datatools.utoronto.ca

@@ -21,6 +21,7 @@ hubs:
     domain: staging.2i2c.cloud
     helm_chart: basehub
     helm_chart_values_files:
+      - basehub-common.values.yaml
       - staging.values.yaml
       - enc-staging.secret.values.yaml
   - name: hackanexoplanet
@@ -31,6 +32,7 @@ hubs:
       expected_status: 401
     helm_chart: basehub
     helm_chart_values_files:
+      - basehub-common.values.yaml
       - hackanexoplanet.values.yaml
       - enc-hackanexoplanet.secret.values.yaml
   - name: dask-staging
@@ -38,9 +40,7 @@ hubs:
     domain: dask-staging.2i2c.cloud
     helm_chart: daskhub
     helm_chart_values_files:
-      # The order in which you list files here is the order the will be passed
-      # to the helm upgrade command in, and that has meaning. Please check
-      # that you intend for these files to be applied in this order.
+      - daskhub-common.values.yaml
       - dask-staging.values.yaml
       - enc-dask-staging.secret.values.yaml
   - name: binder-staging
@@ -55,9 +55,7 @@ hubs:
     domain: demo.2i2c.cloud
     helm_chart: basehub
     helm_chart_values_files:
-      # The order in which you list files here is the order the will be passed
-      # to the helm upgrade command in, and that has meaning. Please check
-      # that you intend for these files to be applied in this order.
+      - basehub-common.values.yaml
       - demo.values.yaml
       - enc-demo.secret.values.yaml
   - name: ohw
@@ -65,9 +63,7 @@ hubs:
     domain: oceanhackweek.2i2c.cloud
     helm_chart: daskhub
     helm_chart_values_files:
-      # The order in which you list files here is the order the will be passed
-      # to the helm upgrade command in, and that has meaning. Please check
-      # that you intend for these files to be applied in this order.
+      - daskhub-common.values.yaml
       - ohw.values.yaml
       - enc-ohw.secret.values.yaml
   - name: pfw
@@ -75,59 +71,23 @@ hubs:
     domain: pfw.pilot.2i2c.cloud
     helm_chart: basehub
     helm_chart_values_files:
-      # The order in which you list files here is the order the will be passed
-      # to the helm upgrade command in, and that has meaning. Please check
-      # that you intend for these files to be applied in this order.
+      - basehub-common.values.yaml
       - pfw.values.yaml
       - enc-pfw.secret.values.yaml
-  - name: peddie
-    display_name: "Peddie Academy"
-    domain: peddie.pilot.2i2c.cloud
-    helm_chart: basehub
-    helm_chart_values_files:
-      # The order in which you list files here is the order the will be passed
-      # to the helm upgrade command in, and that has meaning. Please check
-      # that you intend for these files to be applied in this order.
-      - peddie.values.yaml
-      - enc-peddie.secret.values.yaml
   - name: catalyst-cooperative
     display_name: "Catalyst Cooperative"
     domain: catalyst-cooperative.pilot.2i2c.cloud
     helm_chart: daskhub
     helm_chart_values_files:
-      # The order in which you list files here is the order the will be passed
-      # to the helm upgrade command in, and that has meaning. Please check
-      # that you intend for these files to be applied in this order.
+      - daskhub-common.values.yaml
       - catalyst-cooperative.values.yaml
       - enc-catalyst-cooperative.secret.values.yaml
-  - name: earthlab
-    display_name: "EarthLab"
-    domain: earthlab.pilot.2i2c.cloud
-    helm_chart: basehub
-    helm_chart_values_files:
-      # The order in which you list files here is the order the will be passed
-      # to the helm upgrade command in, and that has meaning. Please check
-      # that you intend for these files to be applied in this order.
-      - earthlab.values.yaml
-      - enc-earthlab.secret.values.yaml
-  - name: paleohack2021
-    display_name: "PaleoHack"
-    domain: paleohack2021.hackathon.2i2c.cloud
-    helm_chart: basehub
-    helm_chart_values_files:
-      # The order in which you list files here is the order the will be passed
-      # to the helm upgrade command in, and that has meaning. Please check
-      # that you intend for these files to be applied in this order.
-      - paleohack2021.values.yaml
-      - enc-paleohack2021.secret.values.yaml
   - name: aup
     display_name: "The American University of Paris"
     domain: aup.pilot.2i2c.cloud
     helm_chart: basehub
     helm_chart_values_files:
-      # The order in which you list files here is the order the will be passed
-      # to the helm upgrade command in, and that has meaning. Please check
-      # that you intend for these files to be applied in this order.
+      - basehub-common.values.yaml
       - aup.values.yaml
       - enc-aup.secret.values.yaml
   - name: temple
@@ -135,6 +95,7 @@ hubs:
     domain: temple.2i2c.cloud
     helm_chart: basehub
     helm_chart_values_files:
+      - basehub-common.values.yaml
       - temple.values.yaml
       - enc-temple.secret.values.yaml
   - name: ucmerced
@@ -142,6 +103,7 @@ hubs:
     domain: ucmerced.2i2c.cloud
     helm_chart: basehub
     helm_chart_values_files:
+      - basehub-common.values.yaml
       - ucmerced.values.yaml
       - enc-ucmerced.secret.values.yaml
   - name: cosmicds
@@ -149,5 +111,14 @@ hubs:
     domain: cosmicds.2i2c.cloud
     helm_chart: basehub
     helm_chart_values_files:
+      - basehub-common.values.yaml
       - cosmicds.values.yaml
       - enc-cosmicds.secret.values.yaml
+  - name: climatematch
+    display_name: "ClimateMatch"
+    domain: climatematch.2i2c.cloud
+    helm_chart: basehub
+    helm_chart_values_files:
+      - basehub-common.values.yaml
+      - climatematch.values.yaml
+      - enc-climatematch.secret.values.yaml

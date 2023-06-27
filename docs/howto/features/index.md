@@ -39,3 +39,9 @@ image.md
 :caption: Hub Types
 ephemeral.md
 ```
+
+```{toctree}
+:maxdepth: 2
+:caption: Other
+dedicated-nodepool.md
+```

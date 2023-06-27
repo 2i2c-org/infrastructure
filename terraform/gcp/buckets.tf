@@ -80,8 +80,8 @@ resource "google_storage_bucket_iam_member" "extra_admin_members" {
 resource "google_storage_default_object_access_control" "public_rule" {
   for_each = toset(var.bucket_public_access)
   bucket   = google_storage_bucket.user_buckets[each.key].name
-  role   = "READER"
-  entity = "allUsers"
+  role     = "READER"
+  entity   = "allUsers"
 }
 
 output "buckets" {

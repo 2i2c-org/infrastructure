@@ -15,10 +15,6 @@ staticWebsite:
     enabled: false
 
 jupyterhub:
-  proxy:
-    https:
-      hosts:
-        - staging.2i2c.cloud
   ingress:
     hosts:
       - staging.2i2c.cloud

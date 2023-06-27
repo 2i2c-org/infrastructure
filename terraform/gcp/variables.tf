@@ -24,8 +24,15 @@ variable "project_id" {
 }
 
 variable "k8s_version_prefixes" {
-  type        = set(string)
-  default     = [
+  type = set(string)
+  # Available minor versions are picked from the GKE regular release channel. To
+  # see the available versions see
+  # https://cloud.google.com/kubernetes-engine/docs/release-notes-regular
+  #
+  # This list should list all minor versions available in the regular release
+  # channel, so we may want to remove or add minor versions here over time.
+  #
+  default = [
     "1.22.",
     "1.23.",
     "1.24.",
@@ -35,15 +42,18 @@ variable "k8s_version_prefixes" {
   description = <<-EOT
   A list of k8s version prefixes that can be evaluated to their latest version by
   the output defined in cluster.tf called regular_channel_latest_k8s_versions.
+
+  For details about release channels (rapid, regular, stable), see:
+  https://cloud.google.com/kubernetes-engine/docs/concepts/release-channels#channels
   EOT
 }
 
 variable "k8s_versions" {
-  type        = object({
-    min_master_version: optional(string, null),
-    core_nodes_version: optional(string, null),
-    notebook_nodes_version: optional(string, null),
-    dask_nodes_version: optional(string, null),
+  type = object({
+    min_master_version : optional(string, null),
+    core_nodes_version : optional(string, null),
+    notebook_nodes_version : optional(string, null),
+    dask_nodes_version : optional(string, null),
   })
   default     = {}
   description = <<-EOT
@@ -59,13 +69,20 @@ variable "notebook_nodes" {
     min : number,
     max : number,
     machine_type : string,
-    labels : map(string),
+    labels : optional(map(string), {}),
     taints : optional(list(object({
       key : string,
       value : string,
       effect : string
     })), [])
-    gpu : object({ enabled : bool, type : string, count : number }),
+    gpu : optional(
+      object({
+        enabled : optional(bool, false),
+        type : optional(string, ""),
+        count : optional(number, 1)
+      }),
+      {}
+    ),
     resource_labels : optional(map(string), {}),
     zones : optional(list(string), null)
   }))
@@ -74,41 +91,31 @@ variable "notebook_nodes" {
 }
 
 variable "dask_nodes" {
-  type        = map(object({
+  type = map(object({
     min : number,
     max : number,
-    preemptible: optional(bool, true),
+    preemptible : optional(bool, true),
     machine_type : string,
-    labels : map(string),
+    labels : optional(map(string), {}),
     taints : optional(list(object({
       key : string,
       value : string,
       effect : string
     })), [])
-    gpu : object({ enabled : bool, type : string, count : number }),
+    gpu : optional(
+      object({
+        enabled : optional(bool, false),
+        type : optional(string, ""),
+        count : optional(number, 1)
+      }),
+      {}
+    ),
     resource_labels : optional(map(string), {}),
     zones : optional(list(string), null)
   }))
   description = "Dask node pools to create. Defaults to notebook_nodes"
   default     = {}
 }
-
-variable "config_connector_enabled" {
-  type        = bool
-  default     = false
-  description = <<-EOT
-  Enable GKE Config Connector to manage GCP resources via kubernetes.
-
-  GKE Config Connector (https://cloud.google.com/config-connector/docs/overview)
-  allows creating GCP resources (like buckets, VMs, etc) via creating Kubernetes
-  Custom Resources. We use this to create buckets on a per-hub level,
-  and could use it for other purposes in the future.
-
-  Enabling this increases base cost, as config connector related pods
-  needs to run on the cluster.
-  EOT
-}
-
 
 variable "cd_sa_roles" {
   type = set(string)
@@ -367,7 +374,7 @@ variable "hub_cloud_permissions" {
 }
 
 variable "bucket_public_access" {
-  type        = list
+  type        = list(any)
   default     = []
   description = <<-EOT
   A list of GCS storage buckets defined in user_buckets that should be granted public read access.
@@ -376,7 +383,7 @@ variable "bucket_public_access" {
 }
 
 variable "container_repos" {
-  type        = list
+  type        = list(any)
   default     = []
   description = <<-EOT
   A list of container repositories to create in Google Artifact Registry to store Docker

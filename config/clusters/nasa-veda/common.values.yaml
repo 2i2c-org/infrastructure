@@ -48,6 +48,7 @@ basehub:
           allowed_organizations:
             - veda-analytics-access:all-users
             - 2i2c-org:hub-access-for-2i2c-staff
+            - nasa-veda-workshops:ieee-grss-webinar-june2023
           scope:
             - read:org
     prePuller:
