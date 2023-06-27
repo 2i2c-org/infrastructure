@@ -180,6 +180,14 @@ hubs:
       - common.values.yaml
       - srjc.values.yaml
       - enc-srjc.secret.values.yaml
+  - name: saddleback
+    display_name: "Saddleback College"
+    domain: saddleback.cloudbank.2i2c.cloud
+    helm_chart: basehub
+    helm_chart_values_files:
+      - common.values.yaml
+      - saddleback.values.yaml
+      - enc-saddleback.secret.values.yaml
   - name: santiago
     display_name: "Santiago Canyon College"
     domain: santiago.cloudbank.2i2c.cloud
