@@ -32,6 +32,7 @@ shared-db.md
 :maxdepth: 2
 :caption: User image
 image.md
+rocker.md
 ```
 
 ```{toctree}
