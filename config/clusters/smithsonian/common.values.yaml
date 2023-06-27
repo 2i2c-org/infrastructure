@@ -89,6 +89,25 @@ basehub:
           slug: small
           default: true
           profile_options:
+            image: &profile_options_image
+              display_name: Image
+              choices:
+                geospatial:
+                  display_name: Rocker Geospatial
+                  default: true
+                  slug: geospatial
+                  kubespawner_override:
+                    image: rocker/geospatial:4.3
+                scipy:
+                  display_name: Jupyter SciPy Notebook
+                  slug: scipy
+                  kubespawner_override:
+                    image: jupyter/scipy-notebook:2023-06-26
+                pangeo:
+                  display_name: Pangeo Notebook
+                  slug: pangeo
+                  kubespawner_override:
+                    image: quay.io/pangeo/pangeo-notebook:2023.02.27
             requests:
               # NOTE: Node share choices are in active development, see comment
               #       next to profileList: above.
