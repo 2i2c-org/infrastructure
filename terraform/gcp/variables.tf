@@ -225,7 +225,7 @@ variable "enable_network_policy" {
 }
 
 variable "user_buckets" {
-  type        = map(object({ delete_after : number, extra_admin_members: optional(list(string), []) }))
+  type        = map(object({ delete_after : number, extra_admin_members : optional(list(string), []) }))
   default     = {}
   description = <<-EOT
   GCS Buckets to be created.
@@ -350,11 +350,11 @@ variable "max_cpu" {
 }
 
 variable "hub_cloud_permissions" {
-  type        = map(
+  type = map(
     object({
       requestor_pays : bool,
       bucket_admin_access : set(string),
-      bucket_readonly_access: optional(set(string), []),
+      bucket_readonly_access : optional(set(string), []),
       hub_namespace : string
     })
   )

@@ -21,17 +21,17 @@ user_buckets = {
     "delete_after" : 7
   },
   # For https://2i2c.freshdesk.com/a/tickets/218
-  "persistent": {
-    "delete_after": null,
-    "extra_admin_members": ["group:m2lines-persistent-bucket-writers@googlegroups.com"]
+  "persistent" : {
+    "delete_after" : null,
+    "extra_admin_members" : ["group:m2lines-persistent-bucket-writers@googlegroups.com"]
   },
-  "persistent-staging": {
-    "delete_after": null,
-    "extra_admin_members": ["group:m2lines-persistent-bucket-writers@googlegroups.com"]
+  "persistent-staging" : {
+    "delete_after" : null,
+    "extra_admin_members" : ["group:m2lines-persistent-bucket-writers@googlegroups.com"]
   },
-  "public-persistent": {
-    "delete_after": null,
-    "extra_admin_members": ["group:m2lines-persistent-bucket-writers@googlegroups.com"]
+  "public-persistent" : {
+    "delete_after" : null,
+    "extra_admin_members" : ["group:m2lines-persistent-bucket-writers@googlegroups.com"]
   },
 
 }

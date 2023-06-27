@@ -238,10 +238,10 @@ resource "google_container_node_pool" "core" {
 resource "google_container_node_pool" "notebook" {
   for_each = var.notebook_nodes
 
-  name     = "nb-${each.key}"
-  cluster  = google_container_cluster.cluster.name
-  project  = google_container_cluster.cluster.project
-  version  = var.k8s_versions.notebook_nodes_version
+  name    = "nb-${each.key}"
+  cluster = google_container_cluster.cluster.name
+  project = google_container_cluster.cluster.project
+  version = var.k8s_versions.notebook_nodes_version
 
   node_locations = each.value.zones == null ? google_container_cluster.cluster.node_locations : each.value.zones
 
@@ -337,10 +337,10 @@ resource "google_container_node_pool" "notebook" {
 
 # resource ref: https://registry.terraform.io/providers/hashicorp/google-beta/latest/docs/resources/container_node_pool
 resource "google_container_node_pool" "dask_worker" {
-  name     = "dask-${each.key}"
-  cluster  = google_container_cluster.cluster.name
-  project  = google_container_cluster.cluster.project
-  version  = var.k8s_versions.dask_nodes_version
+  name    = "dask-${each.key}"
+  cluster = google_container_cluster.cluster.name
+  project = google_container_cluster.cluster.project
+  version = var.k8s_versions.dask_nodes_version
 
   node_locations = each.value.zones == null ? google_container_cluster.cluster.node_locations : each.value.zones
   # Default to same config as notebook nodepools config

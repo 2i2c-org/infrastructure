@@ -50,7 +50,7 @@ locals {
     for bucket_name, properties in var.user_buckets : [
       for extra_member in properties.extra_admin_members : {
         bucket_name = bucket_name
-        member = extra_member
+        member      = extra_member
       }
     ]
   ]))
