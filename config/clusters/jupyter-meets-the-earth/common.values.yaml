@@ -102,16 +102,6 @@ basehub:
       extraEnv:
         GH_SCOPED_CREDS_APP_URL: https://github.com/apps/hub-jupytearth-org-github-integ
         GH_SCOPED_CREDS_CLIENT_ID: Iv1.a073b1649637af12
-      image:
-        # NOTE: We use the jupyterhub-configurator so this image/tag is not
-        #       relevant. Visit its UI to configure the hub.
-        #
-        #       staging: https://staging.hub.jupytearth.org/services/configurator/
-        #       prod:    https://hub.jupytearth.org/services/configurator/
-        pullPolicy: Always
-        name: 286354552638.dkr.ecr.us-west-2.amazonaws.com/jmte/user-env
-        tag: "latest"
-
       profileList:
         - display_name: "16th of Medium: 0.25-4 CPU, 1-16 GB"
           default: True
