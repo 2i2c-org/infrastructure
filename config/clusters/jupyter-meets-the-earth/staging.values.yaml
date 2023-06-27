@@ -17,3 +17,4 @@ basehub:
       extraEnv:
         # This bucket is created via terraform.
         SCRATCH_BUCKET: s3://jupyter-meets-the-earth-staging-scratch/$(JUPYTERHUB_USER)
+        PANGEO_SCRATCH: s3://jupyter-meets-the-earth-staging-scratch/$(JUPYTERHUB_USER)
