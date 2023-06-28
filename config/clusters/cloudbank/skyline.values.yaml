@@ -35,7 +35,7 @@ jupyterhub:
           - http://google.com/accounts/o8/id
       Authenticator:
         admin_users:
-          - ericvd@gmail.com
+          - ericvd@berkeley.edu
           - sean.smorris@berkeley.edu
           - dhum1@my.smccd.edu
           - kayvanm@gmail.com

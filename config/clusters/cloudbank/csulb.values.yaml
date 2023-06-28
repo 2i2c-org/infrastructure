@@ -38,7 +38,7 @@ jupyterhub:
         username_claim: email
       Authenticator:
         admin_users:
-          - ericvd@gmail.com
+          - ericvd@berkeley.edu
           - sean.smorris@berkeley.edu
           - shabnam.sodagari@csulb.edu
         username_pattern: '^(.+@2i2c\.org|.+@berkeley\.edu|.+@csulb\.edu|deployment-service-check)$'
