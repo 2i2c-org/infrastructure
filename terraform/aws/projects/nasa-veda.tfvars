@@ -42,7 +42,15 @@ hub_cloud_permissions = {
                     "arn:aws:s3:::veda-nex-gddp-cmip6-public",
                     "arn:aws:s3:::veda-nex-gddp-cmip6-public/*",
                     "arn:aws:s3:::cmip6-staging",
-                    "arn:aws:s3:::cmip6-staging/*"
+                    "arn:aws:s3:::cmip6-staging/*",
+                    "arn:aws:s3:::lp-prod-protected",
+                    "arn:aws:s3:::lp-prod-protected/*",
+                    "arn:aws:s3:::gesdisc-cumulus-prod-protected",
+                    "arn:aws:s3:::gesdisc-cumulus-prod-protected/*",
+                    "arn:aws:s3:::nsidc-cumulus-prod-protected",
+                    "arn:aws:s3:::nsidc-cumulus-prod-protected/*",
+                    "arn:aws:s3:::ornl-cumulus-prod-protected",
+                    "arn:aws:s3:::ornl-cumulus-prod-protected/*"
                 ]
             },
             {
@@ -81,7 +89,15 @@ hub_cloud_permissions = {
                     "arn:aws:s3:::veda-nex-gddp-cmip6-public",
                     "arn:aws:s3:::veda-nex-gddp-cmip6-public/*",
                     "arn:aws:s3:::cmip6-staging",
-                    "arn:aws:s3:::cmip6-staging/*"
+                    "arn:aws:s3:::cmip6-staging/*",
+                    "arn:aws:s3:::lp-prod-protected",
+                    "arn:aws:s3:::lp-prod-protected/*",
+                    "arn:aws:s3:::gesdisc-cumulus-prod-protected",
+                    "arn:aws:s3:::gesdisc-cumulus-prod-protected/*",
+                    "arn:aws:s3:::nsidc-cumulus-prod-protected",
+                    "arn:aws:s3:::nsidc-cumulus-prod-protected/*",
+                    "arn:aws:s3:::ornl-cumulus-prod-protected",
+                    "arn:aws:s3:::ornl-cumulus-prod-protected/*"
                 ]
             },
             {
