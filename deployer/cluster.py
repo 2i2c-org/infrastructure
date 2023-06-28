@@ -53,31 +53,19 @@ class Cluster:
         )
         pv_name = pvc_info["spec"]["volumeName"]
 
-        pv_info = json.loads(
-            subprocess.check_output([
-                'kubectl',
-                'get', 'pv', pv_name,
-                '-o', 'json'
-            ])
-        )
-        if pv_info["spec"]["persistentVolumeReclaimPolicy"] != "Retain":
-            print("Setting Prometheus Data Volume's ReclaimPolicy to Retain")
-            # Set it to retain only when it is not
-            patch = {
-                "spec": {
-                    "persistentVolumeReclaimPolicy": "Retain"
-                }
+        print("Setting Prometheus Data Volume's ReclaimPolicy to Retain if necessary...")
+        # Set it to retain only when it is not
+        patch = {
+            "spec": {
+                "persistentVolumeReclaimPolicy": "Retain"
             }
-            with tempfile.NamedTemporaryFile() as f:
-                f.write(json.dumps(patch).encode())
-                f.flush()
-                
-                subprocess.check_call([
-                    'kubectl',
-                    'patch', 'pv', pv_name,
-                    '--patch-file', f.name
-                ])
+        }
 
+        subprocess.check_call([
+            'kubectl',
+            'patch', 'pv', pv_name,
+            '--patch', json.dumps(patch)
+        ])
 
         
     def deploy_support(self, cert_manager_version):
