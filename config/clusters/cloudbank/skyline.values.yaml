@@ -30,9 +30,6 @@ jupyterhub:
       CILogonOAuthenticator:
         oauth_callback_url: "https://skyline.cloudbank.2i2c.cloud/hub/oauth_callback"
         username_claim: "email"
-        # Only show the option to login with Google
-        shown_idps:
-          - http://google.com/accounts/o8/id
       Authenticator:
         admin_users:
           - ericvd@berkeley.edu
