@@ -39,8 +39,8 @@ class Cluster:
         Set the reclaim policy of the PV holding prometheus data to 'Retain'
 
         We do not want to lose prometheus data. With a reclaim policy on the PV
-        set to 'Retain', the only way we would loose the data is by deleting the 
-        storage asset from the cloud console. If the reclaim policy remains the 
+        set to 'Retain', the only way we would loose the data is by deleting the
+        storage asset from the cloud console. If the reclaim policy remains the
         default of 'Delete', a PV controller would delete the storage asset if we
         deleted the PV accidentally.
 
