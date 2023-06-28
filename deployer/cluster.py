@@ -43,31 +43,31 @@ class Cluster:
         """
         # Find name of the PV storing prometheus data
         pvc_info = json.loads(
-            subprocess.check_output([
-                'kubectl',
-                '-n', 'support',
-                'get', 'pvc',
-                'support-prometheus-server',
-                '-o', 'json'
-            ])
+            subprocess.check_output(
+                [
+                    "kubectl",
+                    "-n",
+                    "support",
+                    "get",
+                    "pvc",
+                    "support-prometheus-server",
+                    "-o",
+                    "json",
+                ]
+            )
         )
         pv_name = pvc_info["spec"]["volumeName"]
 
-        print("Setting Prometheus Data Volume's ReclaimPolicy to Retain if necessary...")
+        print(
+            "Setting Prometheus Data Volume's ReclaimPolicy to Retain if necessary..."
+        )
         # Set it to retain only when it is not
-        patch = {
-            "spec": {
-                "persistentVolumeReclaimPolicy": "Retain"
-            }
-        }
+        patch = {"spec": {"persistentVolumeReclaimPolicy": "Retain"}}
 
-        subprocess.check_call([
-            'kubectl',
-            'patch', 'pv', pv_name,
-            '--patch', json.dumps(patch)
-        ])
+        subprocess.check_call(
+            ["kubectl", "patch", "pv", pv_name, "--patch", json.dumps(patch)]
+        )
 
-        
     def deploy_support(self, cert_manager_version):
         cert_manager_url = "https://charts.jetstack.io"
 
