@@ -67,6 +67,10 @@ hub_cloud_permissions = {
   }
 }
 
+bucket_public_access = [
+  "persistent-ro"
+]
+
 # Setup notebook node pools
 notebook_nodes = {
   "medium" : {
