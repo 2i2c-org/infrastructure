@@ -351,7 +351,7 @@ jupyterhub:
         # Otherwise our prometheus server can't get hub metrics
         authenticate_prometheus: false
       KubeSpawner:
-        # Make sure working directory is ${HOME}
+        # Make sure working directory is where we mount the home folder
         working_dir: /home/jovyan
         # Increase timeout for Jupyter server to become 'ready', until
         # https://github.com/2i2c-org/infrastructure/issues/2047 is fixed
