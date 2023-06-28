@@ -32,10 +32,6 @@ basehub:
             name: Carbon Plan
             url: https://carbonplan.org
     singleuser:
-      extraEnv:
-        # Temporarily set for *all* pods, including pods without any GPUs,
-        # to work around https://github.com/2i2c-org/infrastructure/issues/1530
-        NVIDIA_DRIVER_CAPABILITIES: compute,utility
       serviceAccountName: cloud-user-sa
       image:
         name: carbonplan/trace-python-notebook
@@ -169,6 +165,8 @@ basehub:
                     # Source: https://github.com/carbonplan/benchmark-maps
                     image: quay.io/carbonplan/benchmark-maps:latest
           kubespawner_override:
+            environment:
+              NVIDIA_DRIVER_CAPABILITIES: compute,utility
             mem_limit: null
             extra_resource_limits:
               nvidia.com/gpu: "1"

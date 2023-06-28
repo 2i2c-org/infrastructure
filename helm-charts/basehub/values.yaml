@@ -490,7 +490,7 @@ jupyterhub:
         admin: true
     image:
       name: quay.io/2i2c/pilot-hub
-      tag: "0.0.1-0.dev.git.4978.h858bd17c"
+      tag: "0.0.1-0.dev.git.6074.h895181eb"
     networkPolicy:
       enabled: true
       # interNamespaceAccessLabels=accept makes the hub pod's associated

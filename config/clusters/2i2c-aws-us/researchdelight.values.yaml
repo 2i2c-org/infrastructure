@@ -246,6 +246,8 @@ basehub:
                     image: "pangeo/pytorch-notebook:b9584f6"
           kubespawner_override:
             mem_limit: null
+            environment:
+              NVIDIA_DRIVER_CAPABILITIES: compute,utility
             mem_guarantee: 14G
             node_selector:
               node.kubernetes.io/instance-type: g4dn.xlarge

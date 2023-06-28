@@ -1,3 +1,1 @@
-oauthenticator==15.1.0
-jupyterhub-kubespawner==4.3.0
 git+https://github.com/yuvipanda/jupyterhub-configurator@ed7e3a0df1e3d625d10903ef7d7fd9c2fbb548db

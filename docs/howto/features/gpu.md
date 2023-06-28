@@ -150,10 +150,6 @@ a profile. This should be placed in the hub configuration:
 ```yaml
 jupyterhub:
    singleuser:
-      extraEnv:
-         # Temporarily set for *all* pods, including pods without any GPUs,
-         # to work around https://github.com/2i2c-org/infrastructure/issues/1530
-         NVIDIA_DRIVER_CAPABILITIES: compute,utility
       profileList:
         - display_name: NVIDIA Tesla T4, ~16 GB, ~4 CPUs
           description: "Start a container on a dedicated node with a GPU"
@@ -173,6 +169,8 @@ jupyterhub:
                   kubespawner_override:
                     image: "pangeo/pytorch-notebook:<tag>"
           kubespawner_override:
+            environment:
+              NVIDIA_DRIVER_CAPABILITIES: compute,utility
             mem_limit: null
             mem_guarantee: 14G
             node_selector:

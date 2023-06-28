@@ -12,7 +12,7 @@
 # `chartpress --push --builder docker-buildx --platform linux/amd64`
 # Ref: https://cloudolife.com/2022/03/05/Infrastructure-as-Code-IaC/Container/Docker/Docker-buildx-support-multiple-architectures-images/
 #
-FROM jupyterhub/k8s-hub:2.0.1-0.dev.git.5984.h78a29217
+FROM jupyterhub/k8s-hub:3.0.0-beta.1
 
 COPY requirements.txt /tmp/
 

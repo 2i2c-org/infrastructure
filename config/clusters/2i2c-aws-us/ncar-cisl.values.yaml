@@ -255,6 +255,8 @@ basehub:
           kubespawner_override:
             mem_limit: null
             mem_guarantee: 14G
+            environment:
+              NVIDIA_DRIVER_CAPABILITIES: compute,utility
             node_selector:
               node.kubernetes.io/instance-type: g4dn.xlarge
             extra_resource_limits:
