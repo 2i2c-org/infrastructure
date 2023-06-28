@@ -36,10 +36,19 @@ class Cluster:
 
     def _retain_prometheus_pv(self):
         """
-        Set the deletionPolicy of the PV holding prometheus data to 'Retain'
+        Set the reclaim policy of the PV holding prometheus data to 'Retain'
 
-        We do not want to lose prometheus data, so it would need to be
-        manually deleted even if we accidentally delete the PV.
+        We do not want to lose prometheus data. With a reclaim policy on the PV
+        set to 'Retain', the only way we would loose the data is by deleting the 
+        storage asset from the cloud console. If the reclaim policy remains the 
+        default of 'Delete', a PV controller would delete the storage asset if we
+        deleted the PV accidentally.
+
+        Note that the prometheus chart only created the PVC, the PV was created
+        by a controller observing a PVC. Also, the reclaim policy on the PV is
+        determined by its associated StorageClass. This makes us unable to
+        specify the reclaim policy without also specifying an entire StorageClass,
+        so therefore we patch this specific PV instead.
         """
         # Find name of the PV storing prometheus data
         pvc_info = json.loads(
