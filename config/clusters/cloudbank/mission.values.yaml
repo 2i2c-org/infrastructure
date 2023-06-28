@@ -26,7 +26,7 @@ jupyterhub:
           name: CloudBank
           url: http://cloudbank.org/
         org:
-          logo_url: https://missioncollege.edu/marketing/brandbook/logos/logo-white.png
+          logo_url: https://upload.wikimedia.org/wikipedia/commons/thumb/1/1a/Mission_College_Logo.jpg/225px-Mission_College_Logo.jpg
           name: Mission College Santa Clara
           url: https://missioncollege.edu/
   hub:
