@@ -43,4 +43,4 @@ jupyterhub:
           - Max.Sklar@missioncollege.edu
           - Kristen.Purdum@missioncollege.edu
           - Michael.Cao@missioncollege.edu
-        username_pattern: '^(.+@2i2c\.org|.+@berkeley\.edu|.+@missioncollege\.edu|deployment-service-check)$'
+        username_pattern: '^(.+@2i2c\.org|.+@berkeley\.edu|.+@mywvm\.wvm\.edu|.+@missioncollege\.edu|deployment-service-check)$'
