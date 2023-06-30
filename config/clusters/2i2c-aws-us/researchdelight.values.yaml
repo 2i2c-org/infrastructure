@@ -65,24 +65,40 @@ basehub:
                 pangeo:
                   display_name: Pangeo Notebook
                   default: true
-                  slug: "pangeo"
+                  slug: pangeo
                   kubespawner_override:
-                    image: "pangeo/pangeo-notebook:2023.06.20"
+                    image: pangeo/pangeo-notebook:2023.06.20
                 jupyter-scipy:
-                  display_name: Jupyter DockerStacks SciPy Image
-                  slug: "jupyter-scipy"
+                  display_name: Jupyter SciPy
+                  slug: jupyter-scipy
                   kubespawner_override:
-                    image: "jupyter/scipy-notebook:2023-06-27"
+                    image: jupyter/scipy-notebook:2023-06-27
                 jupyter-datascience:
-                  display_name: Jupyter DockerStacks DataScience Image
-                  slug: "jupyter-datascience"
+                  display_name: Jupyter DataScience
+                  slug: jupyter-datascience
                   kubespawner_override:
-                    image: "jupyter/datascience-notebook:2023-06-27"
-                rocker:
-                  display_name: Rocker (R, geospatial)
-                  slug: "rocker"
+                    image: jupyter/datascience-notebook:2023-06-27
+                rocker-geospatial:
+                  display_name: Rocker Geospatial
+                  slug: rocker-geospatial
                   kubespawner_override:
-                    image: "2i2c/rocker-binder:4.3.1"
+                    image: rocker/binder:4.3
+                    # Launch into RStudio after the user logs in
+                    default_url: /rstudio
+                    # Ensures container working dir is homedir
+                    # https://github.com/2i2c-org/infrastructure/issues/2559
+                    working_dir: /home/rstudio
+                    # Because this is a list, it will override our default volume mounts
+                    volume_mounts:
+                      # Mount the user home directory
+                      - name: home
+                        mountPath: /home/rstudio
+                        subPath: "{username}"
+                      # Mount the shared readonly directory
+                      - name: home
+                        mountPath: /home/rstudio/shared
+                        subPath: _shared
+                        readOnly: true
           kubespawner_override:
             mem_guarantee: 7.234G
             cpu_guarantee: 0.1
