@@ -81,7 +81,7 @@ basehub:
                   display_name: Matlab
                   slug: matlab
                   kubespawner_override:
-                    image: openscapes/matlab:fb41496
+                    image: openscapes/matlab:2023-06-29
             requests:
               # NOTE: Node share choices are in active development, see comment
               #       next to profileList: above.
