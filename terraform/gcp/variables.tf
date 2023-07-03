@@ -355,6 +355,7 @@ variable "hub_cloud_permissions" {
       requestor_pays : bool,
       bucket_admin_access : set(string),
       bucket_readonly_access : optional(set(string), []),
+      bucket_public_access : optional(set(string), []),
       hub_namespace : string
     })
   )

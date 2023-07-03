@@ -63,13 +63,10 @@ hub_cloud_permissions = {
     requestor_pays : true,
     bucket_admin_access : ["scratch", "persistent"],
     bucket_readonly_access : ["persistent-ro"],
+    bucket_public_access : ["persistent-ro"],
     hub_namespace : "prod"
   }
 }
-
-bucket_public_access = [
-  "persistent-ro"
-]
 
 # Setup notebook node pools
 notebook_nodes = {
