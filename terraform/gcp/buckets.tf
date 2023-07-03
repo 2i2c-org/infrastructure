@@ -54,6 +54,15 @@ locals {
       }
     ]
   ]))
+
+  bucket_public_permissions = distinct(flatten([
+    for hub_name, permissions in var.hub_cloud_permissions : [
+      for bucket_name in permissions.bucket_public_access : {
+        hub_name    = hub_name
+        bucket_name = bucket_name
+      }
+    ]
+  ]))
 }
 
 resource "google_storage_bucket_iam_member" "member" {
@@ -77,9 +86,9 @@ resource "google_storage_bucket_iam_member" "extra_admin_members" {
   member   = each.value.member
 }
 
-resource "google_storage_default_object_access_control" "public_rule" {
-  for_each = toset(var.bucket_public_access)
-  bucket   = google_storage_bucket.user_buckets[each.key].name
+resource "google_storage_bucket_access_control" "public_rule" {
+  for_each = { for bp in local.bucket_public_permissions : "${bp.hub_name}.${bp.bucket_name}" => bp }
+  bucket   = google_storage_bucket.user_buckets[each.value.bucket_name].name
   role     = "READER"
   entity   = "allUsers"
 }

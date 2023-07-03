@@ -355,6 +355,7 @@ variable "hub_cloud_permissions" {
       requestor_pays : bool,
       bucket_admin_access : set(string),
       bucket_readonly_access : optional(set(string), []),
+      bucket_public_access : optional(set(string), []),
       hub_namespace : string
     })
   )
@@ -370,15 +371,6 @@ variable "hub_cloud_permissions" {
      This *potentially* incurs cost for us, the originating project, so opt-in.
   2. bucket_admin_access: List of GCS storage buckets that users on this hub should have read
      and write permissions for.
-  EOT
-}
-
-variable "bucket_public_access" {
-  type        = list(any)
-  default     = []
-  description = <<-EOT
-  A list of GCS storage buckets defined in user_buckets that should be granted public read access.
-
   EOT
 }
 
