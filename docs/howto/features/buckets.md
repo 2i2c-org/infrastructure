@@ -28,20 +28,12 @@ on why users want this!
    very helpful for 'scratch' buckets that are temporary. Set to
    `null` to prevent this cleaning up process from happening, e.g., if users want a persistent bucket.
 
-2. Enable access to these buckets from the hub by [editing `hub_cloud_permissions`](howto:features:cloud-access:access-perms)
+2. Enable access to these buckets from the hub or make them publicly accessible from outside
+   by [editing `hub_cloud_permissions`](howto:features:cloud-access:access-perms)
    in the same `.tfvars` file. Follow all the steps listed there - this
    should create the storage buckets and provide all users access to them!
 
-3. (If requested) Enable public read access to these buckets by editing the
-   `bucket_public_access` list in the same `.tfvars`:
-
-   ```terraform
-   bucket_public_access = [
-      "public-persistent"
-   ]
-   ```
-
-4. You can set the `SCRATCH_BUCKET` (and the deprecated `PANGEO_SCRATCH`)
+3. You can set the `SCRATCH_BUCKET` (and the deprecated `PANGEO_SCRATCH`)
    env vars on all user pods so users can use the created bucket without
    having to hard-code the bucket name in their code. In the hub-specific
    `.values.yaml` file in `config/clusters/<cluster-name>`,
@@ -79,7 +71,7 @@ on why users want this!
 
    You can also add other env vars pointing to other buckets users requested.
 
-5. Get this change deployed, and users should now be able to use the buckets!
+4. Get this change deployed, and users should now be able to use the buckets!
    Currently running users might have to restart their pods for the change to take effect.
    
    

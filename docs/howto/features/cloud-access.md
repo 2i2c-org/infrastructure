@@ -44,6 +44,7 @@ This AWS IAM Role is managed via terraform.
        "<hub-name-slug>": {
            requestor_pays : true,
            bucket_admin_access : ["bucket-1", "bucket-2"]
+           bucket_public_access : ["bucket-1"]
            hub_namespace : "<hub-name>"
        }
    }
@@ -63,7 +64,9 @@ This AWS IAM Role is managed via terraform.
       access to. Used along with the [user_buckets](howto:features:cloud-access:storage-buckets)
       terraform variable to enable the [scratch buckets](topic:features:cloud:scratch-buckets)
       feature.
-   4. (GCP only) `hub_namespace` is the full name of the hub, as hubs are put in Kubernetes
+   4. `bucket_public_access` lists bucket names (as specified in `user_buckets`
+      terraform variable) that should be publicly accessible.
+   5. (GCP only) `hub_namespace` is the full name of the hub, as hubs are put in Kubernetes
       Namespaces that are the same as their names. This is explicitly specified here
       because `<hub-name-slug>` could possibly be truncated on GCP.
 
