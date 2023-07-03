@@ -30,7 +30,7 @@ jupyterhub:
         org:
           name: ClimateMatch Academy
           # Logo copied from https://academy.climatematch.io/
-          logo_url: https://gist.github.com/jmunroe/e6dad8dd4a64826427f41c83222ac2bf/raw/d7171928dbfb88d82e653ce833e73231ad97a06b/CMA_logo_nameBY_transpoval.png
+          logo_url: https://github.com/2i2c-org/infrastructure/assets/3837114/ac3ec52f-1e62-440a-b2bd-8052e5f38897
           url: https://academy.climatematch.io/
         designed_by:
           name: 2i2c
