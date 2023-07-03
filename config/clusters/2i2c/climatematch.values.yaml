@@ -29,8 +29,8 @@ jupyterhub:
       templateVars:
         org:
           name: ClimateMatch Academy
-          # Logo picked up from https://academy.climatematch.io/
-          logo_url: https://lh4.googleusercontent.com/85uZrx6hg_hiPt7KowTIAbpl8FqQeIMxToKqSnQEzjU8c-ON6EoAzJ3WzOqc3pVr0iUUXIl6GlrxXpFiviGzES2Zt6UNJ4o2Zl-6yNDZa52-YOCBCIVyeWbD6tXeySXL4g=w1280
+          # Logo copied from https://academy.climatematch.io/
+          logo_url: https://github.com/2i2c-org/infrastructure/assets/3837114/ac3ec52f-1e62-440a-b2bd-8052e5f38897
           url: https://academy.climatematch.io/
         designed_by:
           name: 2i2c
