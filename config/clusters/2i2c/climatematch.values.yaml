@@ -30,7 +30,7 @@ jupyterhub:
         org:
           name: ClimateMatch Academy
           # Logo picked up from https://academy.climatematch.io/
-          logo_url: https://lh5.googleusercontent.com/jiClOwOU8X41s0wnAtRniiTqMXgylAyeXlKGQbzmeeJF8rpU1_CGkaHa6YA6chNcFrKfI0a4m2zNl_Hfy4Dk2JSyBKtrept5Cuwm1m65mkIMRZtUQMQxa7IIEfhSL6fDDg=w1280
+          logo_url: https://lh4.googleusercontent.com/85uZrx6hg_hiPt7KowTIAbpl8FqQeIMxToKqSnQEzjU8c-ON6EoAzJ3WzOqc3pVr0iUUXIl6GlrxXpFiviGzES2Zt6UNJ4o2Zl-6yNDZa52-YOCBCIVyeWbD6tXeySXL4g=w1280
           url: https://academy.climatematch.io/
         designed_by:
           name: 2i2c
