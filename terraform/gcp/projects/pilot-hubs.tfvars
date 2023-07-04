@@ -19,6 +19,7 @@ notebook_nodes = {
     min : 0,
     max : 20,
     machine_type : "n1-highmem-4",
+    zones : ["us-central1-b"]
   },
   "climatematch" : {
     min : 0,
@@ -34,7 +35,8 @@ notebook_nodes = {
     }],
     resource_labels : {
       "community" : "climatematch"
-    }
+    },
+    zones : ["us-central1-b"]
   },
   # Nodepool for neurohackademy. Tracking issue: https://github.com/2i2c-org/infrastructure/issues/2681
   "neurohackademy" : {
@@ -55,6 +57,7 @@ dask_nodes = {
     min : 0,
     max : 100,
     machine_type : "n1-highmem-4",
+    zones : ["us-central1-b"]
   }
 }
 
