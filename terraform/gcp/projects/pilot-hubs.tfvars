@@ -36,13 +36,13 @@ notebook_nodes = {
       "community" : "climatematch"
     }
   },
-  "neurohackademy": {
+  "neurohackademy" : {
     # We expect around 120 users
-    min: 1,
-    max: 100,
-    machine_type: "n1-highmem-n16",
-    labels: {
-      "2i2c.org/community": "neurohackademy"
+    min : 1,
+    max : 100,
+    machine_type : "n1-highmem-n16",
+    labels : {
+      "2i2c.org/community" : "neurohackademy"
     },
   }
 }
