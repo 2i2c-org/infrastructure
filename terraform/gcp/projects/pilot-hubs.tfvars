@@ -49,6 +49,7 @@ notebook_nodes = {
     labels : {
       "2i2c.org/community" : "neurohackademy"
     },
+    zones : ["us-central1-b"]
   }
 }
 
