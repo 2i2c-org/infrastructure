@@ -42,6 +42,7 @@ basehub:
             - 2i2c-org
             - smithsonian
             - sidatasciencelab
+            - Smithsonian-SDCH
           scope:
             - read:org
         Authenticator:
