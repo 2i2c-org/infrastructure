@@ -1,0 +1,101 @@
+dex:
+  enabled: true
+  hubHostName: neurohackademy.2i2c.cloud
+
+staticWebsite:
+  enabled: true
+  source:
+    git:
+      repo: https://github.com/neurohackademy/zoom2022
+      branch: master
+  ingress:
+    host: neurohackademy.2i2c.cloud
+    path: /zoom
+  githubAuth:
+    enabled: true
+
+jupyterhub:
+  custom:
+    2i2c:
+      add_staff_user_ids_to_admin_users: true
+      add_staff_user_ids_of_type: "github"
+    homepage:
+      templateVars:
+        org:
+          name: NeuroHackademy
+          url: https://neurohackademy.org/
+          logo_url: https://user-images.githubusercontent.com/118582/178122521-aa5b83e7-f898-415a-89ff-dc288f599b4f.png
+        designed_by:
+          name: 2i2c
+          url: https://2i2c.org
+        operated_by:
+          name: 2i2c
+          url: https://2i2c.org
+        funded_by:
+          name: The National Institutes of Health grant 2R25MH112480-06
+          url: https://reporter.nih.gov/search/ydTvTwXxk0yd6eGdRznbLQ/project-details/10409452
+  singleuser:
+    # User image: https://quay.io/repository/arokem/nh-jhub-2022?tab=tags
+    image:
+      name: quay.io/arokem/nh-jhub-2022
+      tag: "3d441bdb82f6"
+    # Uncomment this section after resolution of PR https://github.com/2i2c-org/infrastructure/pull/2758
+    # nodeSelector:
+    #   2i2c.org/community: neurohackademy
+    cpu:
+      guarantee: 0.5
+      # We're on n2-highmem-16 machines
+      limit: 14
+    memory:
+      guarantee: 4G
+      limit: 8G
+  hub:
+    config:
+      JupyterHub:
+        authenticator_class: cilogon
+      Authenticator:
+        allowed_users: &neurohackademy_users
+          - arokem
+        admin_users: *neurohackademy_users
+      CILogonOAuthenticator:
+        oauth_callback_url: https://neurohackademy.2i2c.cloud/hub/oauth_callback
+        shown_idps:
+          - https://github.com/login/oauth/authorize
+        allowed_idps:
+          http://github.com/login/oauth/authorize:
+            username_derivation:
+              username_claim: "preferred_username"
+    extraFiles:
+      configurator-schema-default:
+        data:
+          properties:
+            Spawner.default_url:
+              type: string
+              title: Default User Interface
+              enum:
+                - "/tree"
+                - "/lab"
+                - "/git-pull?repo=https%3A%2F%2Fgithub.com%2Fneurohackademy%2Fnh2022-curriculum&urlpath=lab&branch=main"
+              default: "/git-pull?repo=https%3A%2F%2Fgithub.com%2Fneurohackademy%2Fnh2022-curriculum&urlpath=lab&branch=main"
+              enumMetadata:
+                interfaces:
+                  - value: "/tree"
+                    title: Classic Notebook
+                    description:
+                      The original single-document interface for creating
+                      Jupyter Notebooks.
+                  - value: "/lab"
+                    title: JupyterLab
+                    description: A Powerful next generation notebook interface
+                  - value: "/git-pull?repo=https%3A%2F%2Fgithub.com%2Fneurohackademy%2Fnh2022-curriculum&urlpath=lab&branch=main"
+                    title: Pull curriculum repo and redirect to /lab
+                    description: Use ngbitpuller to pull https://github.com/neurohackademy/nh2022-curriculum and redirect to /lab afterwards
+    services:
+      dex:
+        url: http://dex:5556
+        oauth_redirect_uri: https://neurohackademy.2i2c.cloud/services/dex/callback
+        oauth_no_confirm: true
+        display: false
+      oauth2-proxy:
+        url: http://dex:9000
+        display: false
