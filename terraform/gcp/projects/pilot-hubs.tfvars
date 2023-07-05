@@ -47,6 +47,14 @@ notebook_nodes = {
     labels : {
       "2i2c.org/community" : "neurohackademy"
     },
+    taints : [{
+      key : "2i2c.org/community",
+      value : "neurohackademy",
+      effect : "NO_SCHEDULE"
+    }],
+    resource_labels : {
+      "community" : "neurohackademy"
+    },
   }
 }
 
