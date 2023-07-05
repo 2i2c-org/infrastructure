@@ -1,4 +1,4 @@
-from datetime import datetime
+from datetime import datetime, timedelta
 
 import pandas as pd
 import typer
@@ -21,8 +21,8 @@ def generate_cost_table(
         formats=["%Y-%m"],
     ),
     end_month: datetime = typer.Option(
-        datetime.utcnow().replace(day=1),
-        help="Ending month (as YYYY-MM) to produce cost data for. Defaults to current invoicing month",
+        datetime.utcnow().replace(day=1) - timedelta(days=1),
+        help="Ending month (as YYYY-MM) to produce cost data for. Defaults to previous invoicing month",
         formats=["%Y-%m"],
     ),
     output: CostTableOutputFormats = typer.Option(

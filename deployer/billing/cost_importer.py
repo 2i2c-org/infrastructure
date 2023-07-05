@@ -20,6 +20,14 @@ def build_gcp_query(cluster: dict, service_id=None):
     """
     bq = cluster["gcp"]["billing"]["bigquery"]
 
+    # WARN: We are using string interpolation here to construct a sql-like query, which
+    # IS GENERALLY VERY VERY BAD AND NO GOOD AND WE SHOULD NOT DO IT NO EVER.
+    # HOWEVER, I can't seem to find a way to parameterize the *table name* as we must do here,
+    # rather than just query parameters. So we *very* carefully construct the name of the table here,
+    # and use that in the query. In addition, we allow-list the characters available to the table name as
+    # well - and fail hard if something is fishy. This shouldn't really be a problem, as we control the
+    # input to this function (via our YAML file). However, SQL Injections are likely to happen in places
+    # where you least expect them to happen, so the extra layer of protection is nice.
     table_name = f'{bq["project"]}.{bq["dataset"]}.gcp_billing_export_resource_v1_{bq["billing_id"].replace("-", "_")}'
     # Make sure the table name only has alphanumeric characters, _ and -
     assert re.match(r"^[a-zA-Z0-9._-]+$", table_name)
@@ -164,7 +172,9 @@ class PrometheusUtilizationImporter:
         return df.drop(columns=["support", "kube-system"], errors="ignore")
 
     def combine_internal_costs(self, df):
-        internal = [
+        # This list was manually created during the Q1 2023 billing consolidation work.
+        # Ideally needs to be in a system that represents contract lifecycle and cost responsibility.
+        internal = {
             "utexas-demo",
             "staging",
             "demo",
@@ -172,9 +182,9 @@ class PrometheusUtilizationImporter:
             "configconnector-operator-system",
             "cnrm-system",
             "binder-staging",
-        ]
+        }
         df["2i2c_costs"] = 0.0
-        for namespace in set(internal).intersection(df.columns):
+        for namespace in internal.intersection(df.columns):
             df["2i2c_costs"] += df[namespace]
         return df.drop(internal, axis=1, errors="ignore")
 
@@ -182,7 +192,7 @@ class PrometheusUtilizationImporter:
 def get_cluster_costs(cluster, start_month, end_month):
     tenancy = cluster.get("tenancy", "dedicated")
     if tenancy == "shared":
-        return calculate_shared_hub_costs(cluster, start_month, end_month)
+        return get_shared_cluster_hub_costs(cluster, start_month, end_month)
     elif tenancy == "dedicated":
         return get_dedicated_cluster_costs(cluster, start_month, end_month)
     return pd.DataFrame()
@@ -223,7 +233,7 @@ def get_shared_cluster_utilization(cluster, start_month, end_month):
     return utilization
 
 
-def calculate_shared_hub_costs(cluster, start_month, end_month):
+def get_shared_cluster_hub_costs(cluster, start_month, end_month):
     """Calculate monthly hub costs in shared cluster.
 
     Args:
@@ -241,7 +251,6 @@ def calculate_shared_hub_costs(cluster, start_month, end_month):
     # Rename project to use hub names
     totals["project"] = totals["hub"]
     totals.drop("hub", axis=1)
-    # TODO TEST ALL THIS
     # Calcluate cost from utilization
     # Needs to account for uptime checks and 2i2c paid for stuff
     totals["cost"] = totals["utilization"].multiply(
