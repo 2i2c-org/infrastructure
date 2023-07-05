@@ -43,7 +43,7 @@ notebook_nodes = {
     max : 100,
     # Swapped to n2 machines (from n1) based on investigations in
     # https://github.com/2i2c-org/infrastructure/issues/2121#issuecomment-1497387131
-    machine_type : "n2-highmem-16",
+    machine_type : "n1-highmem-16",
     labels : {
       "2i2c.org/community" : "neurohackademy"
     },
