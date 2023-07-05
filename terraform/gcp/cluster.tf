@@ -243,7 +243,7 @@ resource "google_container_node_pool" "notebook" {
   project = google_container_cluster.cluster.project
   version = var.k8s_versions.notebook_nodes_version
 
-  node_locations = length(each.value.zones) == 0 ? [ var.zone ] : each.value.zones
+  node_locations = length(each.value.zones) == 0 ? [var.zone] : each.value.zones
 
 
   initial_node_count = each.value.min
