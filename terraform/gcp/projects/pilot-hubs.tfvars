@@ -20,8 +20,10 @@ notebook_nodes = {
     max : 20,
     machine_type : "n1-highmem-4",
   },
+  # Temporarily pre-allocate 10 nodes for intermittent instructor training 2023-07-05 - 2023-07-06
+  # See https://github.com/2i2c-org/infrastructure/issues/2753
   "climatematch" : {
-    min : 0,
+    min : 10,
     max : 100,
     machine_type : "n1-highmem-2",
     labels : {
