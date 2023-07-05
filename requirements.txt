@@ -27,7 +27,7 @@ escapism==1.*
 
 # Used for GCP billing management
 google-cloud-bigquery==3.11.*
-gspread==5.9.*
+gspread==5.10.*
 
 # requests is used by deployer/cilogon_app.py
 requests==2.*
