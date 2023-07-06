@@ -111,7 +111,7 @@ variable "dask_nodes" {
       {}
     ),
     resource_labels : optional(map(string), {}),
-    zones : optional(list(string), null)
+    zones : optional(list(string), [])
   }))
   description = "Dask node pools to create. Defaults to notebook_nodes"
   default     = {}

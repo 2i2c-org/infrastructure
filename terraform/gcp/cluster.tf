@@ -342,7 +342,7 @@ resource "google_container_node_pool" "dask_worker" {
   project = google_container_cluster.cluster.project
   version = var.k8s_versions.dask_nodes_version
 
-  node_locations = each.value.zones == null ? google_container_cluster.cluster.node_locations : each.value.zones
+  node_locations = length(each.value.zones) == 0 ? [var.zone] : each.value.zones
   # Default to same config as notebook nodepools config
   for_each = var.dask_nodes
 
