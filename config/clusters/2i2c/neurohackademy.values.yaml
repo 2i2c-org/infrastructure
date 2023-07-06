@@ -42,10 +42,10 @@ jupyterhub:
           name: The National Institutes of Health grant 2R25MH112480-06
           url: https://reporter.nih.gov/search/ydTvTwXxk0yd6eGdRznbLQ/project-details/10409452
   singleuser:
-    # User image: https://quay.io/repository/arokem/nh-jhub-2022?tab=tags
+    # User image: https://quay.io/repository/arokem/nh2023?tab=tags
     image:
-      name: quay.io/arokem/nh-jhub-2022
-      tag: "3d441bdb82f6"
+      name: quay.io/arokem/nh2023
+      tag: "9aecdbb2881f"
     nodeSelector:
       2i2c.org/community: neurohackademy
     extraTolerations:
