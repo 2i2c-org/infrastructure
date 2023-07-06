@@ -39,7 +39,7 @@ notebook_nodes = {
   # Nodepool for neurohackademy. Tracking issue: https://github.com/2i2c-org/infrastructure/issues/2681
   "neurohackademy" : {
     # We expect around 120 users
-    min : 1,
+    min : 0,
     max : 100,
     machine_type : "n1-highmem-16",
     labels : {
