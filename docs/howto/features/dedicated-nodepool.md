@@ -77,5 +77,5 @@ When setting up a dedicated node pool for a hub, particularly a hub supporting
 an *event*, it's important to consider the node type and minimum node size
 used. As there will likely only be minimal number of users until the event
 starts, it's helpful to set the *minimum node pool size* to 0 until at least
-*a week* before the start of the event. A smaller node type is also adviced
+*a week* before the start of the event. A smaller node type is also advised
 until a week before the event.
