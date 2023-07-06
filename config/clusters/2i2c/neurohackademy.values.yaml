@@ -49,10 +49,10 @@ jupyterhub:
     nodeSelector:
       2i2c.org/community: neurohackademy
     extraTolerations:
-        - key: "2i2c.org/community"
-          operator: "Equal"
-          value: "neurohackademy"
-          effect: "NoSchedule"
+      - key: "2i2c.org/community"
+        operator: "Equal"
+        value: "neurohackademy"
+        effect: "NoSchedule"
     cpu:
       guarantee: 0.5
       # We're on n1-highmem-16 machines
