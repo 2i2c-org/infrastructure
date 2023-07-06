@@ -6,7 +6,7 @@ staticWebsite:
   enabled: true
   source:
     git:
-      repo: https://github.com/neurohackademy/zoom2022
+      repo: https://github.com/NeuroHackademy-2023/zoom/
       branch: master
   ingress:
     host: neurohackademy.2i2c.cloud
