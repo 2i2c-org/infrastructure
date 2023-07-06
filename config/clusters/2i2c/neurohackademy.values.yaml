@@ -46,9 +46,13 @@ jupyterhub:
     image:
       name: quay.io/arokem/nh-jhub-2022
       tag: "3d441bdb82f6"
-    # Uncomment this section after resolution of PR https://github.com/2i2c-org/infrastructure/pull/2758
-    # nodeSelector:
-    #   2i2c.org/community: neurohackademy
+    nodeSelector:
+      2i2c.org/community: neurohackademy
+    extraTolerations:
+        - key: "2i2c.org/community"
+          operator: "Equal"
+          value: "neurohackademy"
+          effect: "NoSchedule"
     cpu:
       guarantee: 0.5
       # We're on n1-highmem-16 machines
