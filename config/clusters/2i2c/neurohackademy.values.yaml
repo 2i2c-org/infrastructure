@@ -69,6 +69,8 @@ jupyterhub:
           - arokem
         admin_users: *neurohackademy_users
       CILogonOAuthenticator:
+        scope:
+          - "profile"
         oauth_callback_url: https://neurohackademy.2i2c.cloud/hub/oauth_callback
         shown_idps:
           - https://github.com/login/oauth/authorize
