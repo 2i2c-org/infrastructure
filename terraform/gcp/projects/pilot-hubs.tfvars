@@ -36,7 +36,25 @@ notebook_nodes = {
     }],
     resource_labels : {
       "community" : "climatematch"
-    }
+    },
+  },
+  # Nodepool for neurohackademy. Tracking issue: https://github.com/2i2c-org/infrastructure/issues/2681
+  "neurohackademy" : {
+    # We expect around 120 users
+    min : 0,
+    max : 100,
+    machine_type : "n1-highmem-16",
+    labels : {
+      "2i2c.org/community" : "neurohackademy"
+    },
+    taints : [{
+      key : "2i2c.org/community",
+      value : "neurohackademy",
+      effect : "NO_SCHEDULE"
+    }],
+    resource_labels : {
+      "community" : "neurohackademy"
+    },
   }
 }
 
