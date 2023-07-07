@@ -26,8 +26,8 @@ jupyterhub:
           name: "2i2c"
           url: https://2i2c.org
         funded_by:
-          name: Catalyst Project
-          url: ""
+          name: Chan Zuckerberg Initiative
+          url: "https://chanzuckerberg.com/science/programs-resources/open-science/educationcapacitybuilding/international-interactive-computing-collaboration-2i2c/"
   hub:
     allowNamedServers: true
     config:
