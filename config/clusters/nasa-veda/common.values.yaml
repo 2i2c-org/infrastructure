@@ -67,7 +67,7 @@ basehub:
       image:
         name: pangeo/pangeo-notebook
         # Uses JupyterLab <4, so jupyterlab-git and dask-dashboard work
-        tag: "2023.05.18"
+        tag: "2023.07.05"
       profileList:
         # NOTE: About node sharing
         #
