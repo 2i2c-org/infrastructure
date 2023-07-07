@@ -1,0 +1,177 @@
+nfs:
+  enabled: true
+  pv:
+    mountOptions:
+      - soft
+      - noatime
+    # Google FileStore IP
+    serverIP: 172.21.82.226
+    # Name of Google Filestore share
+    baseShareName: /homes/
+jupyterhub:
+  custom:
+    2i2c:
+      add_staff_user_ids_to_admin_users: true
+      add_staff_user_ids_of_type: "github"
+    homepage:
+      templateVars:
+        org:
+          name: Catalyst Project
+          url: "https://chanzuckerberg.com/science/programs-resources/open-science/educationcapacitybuilding/international-interactive-computing-collaboration-2i2c/"
+          logo_url: https://github.com/2i2c-org/infrastructure/assets/6181563/0667c576-7dce-4443-afd2-922288530814
+        designed_by:
+          name: "2i2c"
+          url: https://2i2c.org
+        operated_by:
+          name: "2i2c"
+          url: https://2i2c.org
+        funded_by:
+          name: Chan Zuckerberg Initiative - Open Science
+          url: "https://chanzuckerberg.com/science/programs-resources/open-science/"
+  hub:
+    allowNamedServers: true
+    config:
+      # Authenticator:
+      #   admin_users:
+      #     - future-community-champion
+      JupyterHub:
+        authenticator_class: github
+      GitHubOAuthenticator:
+        allowed_organizations:
+          - 2i2c-org:hub-access-for-2i2c-staff
+        scope:
+          - read:org
+  singleuser:
+    image:
+      # This image specification is likeley overridden via the configurator, so
+      # use of prePuller is probably going to pull this instead of the
+      # configured image and just slow users down.
+      #
+      # jupyter/scipy-notebook is maintained at: https://github.com/jupyter/docker-stacks
+      # tags can be viewed at: https://hub.docker.com/r/jupyter/scipy-notebook/tags
+      name: jupyter/scipy-notebook
+      tag: "2023-07-06"
+    profileList:
+      # NOTE: About node sharing
+      #
+      #       CPU/Memory requests/limits are actively considered still. This
+      #       profile list is setup to involve node sharing as considered in
+      #       https://github.com/2i2c-org/infrastructure/issues/2121.
+      #
+      #       - Memory requests are different from the description, based on:
+      #         whats found to remain allocate in k8s, subtracting 1GiB
+      #         overhead for misc system pods, and transitioning from GB in
+      #         description to GiB in mem_guarantee
+      #         https://cloud.google.com/kubernetes-engine/docs/concepts/plan-node-sizes.
+      #
+      #       - CPU requests are lower than the description, with a factor
+      #         that depends on the node's total CPU like: (node_cpu - 1)/node_cpu
+      #
+      #         The purpose of this is to ensure that we manage to schedule pods
+      #         even if system pods have requested up to 1 CPU.
+      #
+      #         4  CPU node: 0.75
+      #         16 CPU node: 0.9375
+      #         64 CPU node: 0.984375
+      #
+      - display_name: "Small: up to 4 CPU / 32 GB RAM"
+        description: &profile_list_description "Start a container with at least a chosen share of capacity on a node of this type"
+        slug: small
+        default: true
+        profile_options:
+          requests:
+            # NOTE: Node share choices are in active development, see comment
+            #       next to profileList: above.
+            display_name: Node share
+            choices:
+              mem_1:
+                default: true
+                display_name: ~1 GB, ~0.125 CPU
+                kubespawner_override:
+                  mem_guarantee: 0.836G
+                  cpu_guarantee: 0.094
+              mem_2:
+                display_name: ~2 GB, ~0.25 CPU
+                kubespawner_override:
+                  mem_guarantee: 1.671G
+                  cpu_guarantee: 0.188
+              mem_4:
+                display_name: ~4 GB, ~0.5 CPU
+                kubespawner_override:
+                  mem_guarantee: 3.342G
+                  cpu_guarantee: 0.375
+              mem_8:
+                display_name: ~8 GB, ~1.0 CPU
+                kubespawner_override:
+                  mem_guarantee: 6.684G
+                  cpu_guarantee: 0.75
+              mem_16:
+                display_name: ~16 GB, ~2.0 CPU
+                kubespawner_override:
+                  mem_guarantee: 13.369G
+                  cpu_guarantee: 1.5
+              mem_32:
+                display_name: ~32 GB, ~4.0 CPU
+                kubespawner_override:
+                  mem_guarantee: 26.738G
+                  cpu_guarantee: 3.0
+        kubespawner_override:
+          cpu_limit: null
+          mem_limit: null
+          node_selector:
+            node.kubernetes.io/instance-type: n2-highmem-4
+      - display_name: "Medium: up to 16 CPU / 128 GB RAM"
+        description: *profile_list_description
+        slug: medium
+        profile_options:
+          requests:
+            # NOTE: Node share choices are in active development, see comment
+            #       next to profileList: above.
+            display_name: Node share
+            choices:
+              mem_1:
+                display_name: ~1 GB, ~0.125 CPU
+                kubespawner_override:
+                  mem_guarantee: 0.903G
+                  cpu_guarantee: 0.117
+              mem_2:
+                display_name: ~2 GB, ~0.25 CPU
+                kubespawner_override:
+                  mem_guarantee: 1.805G
+                  cpu_guarantee: 0.234
+              mem_4:
+                default: true
+                display_name: ~4 GB, ~0.5 CPU
+                kubespawner_override:
+                  mem_guarantee: 3.611G
+                  cpu_guarantee: 0.469
+              mem_8:
+                display_name: ~8 GB, ~1.0 CPU
+                kubespawner_override:
+                  mem_guarantee: 7.222G
+                  cpu_guarantee: 0.938
+              mem_16:
+                display_name: ~16 GB, ~2.0 CPU
+                kubespawner_override:
+                  mem_guarantee: 14.444G
+                  cpu_guarantee: 1.875
+              mem_32:
+                display_name: ~32 GB, ~4.0 CPU
+                kubespawner_override:
+                  mem_guarantee: 28.887G
+                  cpu_guarantee: 3.75
+              mem_64:
+                display_name: ~64 GB, ~8.0 CPU
+                kubespawner_override:
+                  mem_guarantee: 57.775G
+                  cpu_guarantee: 7.5
+              mem_128:
+                display_name: ~128 GB, ~16.0 CPU
+                kubespawner_override:
+                  mem_guarantee: 115.549G
+                  cpu_guarantee: 15.0
+        kubespawner_override:
+          cpu_limit: null
+          mem_limit: null
+          node_selector:
+            node.kubernetes.io/instance-type: n2-highmem-16

@@ -1,0 +1,27 @@
+name: catalystproject-latam
+provider: gcp # https://console.cloud.google.com/kubernetes/clusters/details/southamerica-east1/catalystproject-latam-cluster/details?project=catalystproject-392106
+gcp:
+  key: enc-deployer-credentials.secret.json
+  project: catalystproject-392106
+  cluster: latam-cluster
+  zone: southamerica-east1
+  billing:
+    paid_by_us: true
+    bigquery:
+      project: two-eye-two-see
+      dataset: cloud_costs
+      billing_id: 0157F7-E3EA8C-25AC3C
+support:
+  helm_chart_values_files:
+    - support.values.yaml
+    - enc-support.secret.values.yaml
+hubs:
+  - name: staging
+    # Tip: consider changing this to something more human friendly
+    display_name: "Catalyst Project, LatAm - Staging"
+    domain: staging.latam.catalystproject.2i2c.cloud
+    helm_chart: basehub
+    helm_chart_values_files:
+      - common.values.yaml
+      - staging.values.yaml
+      - enc-staging.secret.values.yaml
