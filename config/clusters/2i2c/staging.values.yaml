@@ -18,6 +18,7 @@ deployBinderhubService:
   enabled: true
 
 binderhub-service:
+  enabled: true
   service:
     port: 8090
 
