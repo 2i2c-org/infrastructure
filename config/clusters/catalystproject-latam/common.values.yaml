@@ -17,7 +17,7 @@ jupyterhub:
       templateVars:
         org:
           name: Catalyst Project
-          url: ""
+          url: "https://chanzuckerberg.com/science/programs-resources/open-science/educationcapacitybuilding/international-interactive-computing-collaboration-2i2c/"
           logo_url: https://github.com/2i2c-org/infrastructure/assets/6181563/0667c576-7dce-4443-afd2-922288530814
         designed_by:
           name: "2i2c"
@@ -26,8 +26,8 @@ jupyterhub:
           name: "2i2c"
           url: https://2i2c.org
         funded_by:
-          name: Chan Zuckerberg Initiative
-          url: "https://chanzuckerberg.com/science/programs-resources/open-science/educationcapacitybuilding/international-interactive-computing-collaboration-2i2c/"
+          name: Chan Zuckerberg Initiative - Open Science
+          url: "https://chanzuckerberg.com/science/programs-resources/open-science/"
   hub:
     allowNamedServers: true
     config:
