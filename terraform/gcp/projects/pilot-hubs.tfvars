@@ -23,9 +23,9 @@ notebook_nodes = {
   # Temporarily pre-allocate 10 nodes for intermittent instructor training 2023-07-05 - 2023-07-06
   # See https://github.com/2i2c-org/infrastructure/issues/2753
   "climatematch" : {
-    min : 10,
+    min : 0,
     max : 100,
-    machine_type : "n1-highmem-2",
+    machine_type : "n1-highmem-32",
     labels : {
       "2i2c.org/community" : "climatematch"
     },
