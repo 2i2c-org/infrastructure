@@ -39,6 +39,7 @@ jupyterhub:
       GitHubOAuthenticator:
         allowed_organizations:
           - 2i2c-org:hub-access-for-2i2c-staff
+          - czi-catalystproject
         scope:
           - read:org
   singleuser:
