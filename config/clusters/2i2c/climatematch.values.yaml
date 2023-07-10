@@ -14,6 +14,41 @@ jupyterhub:
     image:
       name: pangeo/pangeo-notebook
       tag: 2023.05.18
+    # shared-public for collaboration
+    # See https://github.com/2i2c-org/infrastructure/issues/2785
+    storage:
+      extraVolumeMounts:
+        - name: home
+          mountPath: /home/jovyan/shared-public
+          subPath: _shared-public
+          readOnly: false
+        - name: home
+          mountPath: /home/jovyan/shared
+          subPath: _shared
+          readOnly: true
+    initContainers:
+      - name: volume-mount-ownership-fix
+        image: busybox
+        command:
+          [
+            "sh",
+            "-c",
+            "id && chown 1000:1000 /home/jovyan && chown 1000:1000 /home/jovyan/shared-readwrite && chown 1000:1000 /home/jovyan/shared-public && ls -lhd /home/jovyan ",
+          ]
+        securityContext:
+          runAsUser: 0
+        volumeMounts:
+          - name: home
+            mountPath: /home/jovyan
+            subPath: "{username}"
+          # Mounted without readonly attribute here,
+          # so we can chown it appropriately
+          - name: home
+            mountPath: /home/jovyan/shared-readwrite
+            subPath: _shared
+          - name: home
+            mountPath: /home/jovyan/shared-public
+            subPath: _shared-public
   ingress:
     hosts:
       - climatematch.2i2c.cloud
