@@ -1,0 +1,38 @@
+jupyterhub:
+  ingress:
+    hosts: [norco.cloudbank.2i2c.cloud]
+    tls:
+      - hosts: [norco.cloudbank.2i2c.cloud]
+        secretName: https-auto-tls
+  custom:
+    2i2c:
+      add_staff_user_ids_to_admin_users: true
+      add_staff_user_ids_of_type: "google"
+    homepage:
+      templateVars:
+        org:
+          name: Norco College
+          logo_url: https://www.norcocollege.edu/Carousel2/86.jpg?RenditionID=23
+          url: https://www.norcocollege.edu/
+        designed_by:
+          name: 2i2c
+          url: https://2i2c.org
+        operated_by:
+          name: CloudBank
+          url: http://cloudbank.org/
+        funded_by:
+          name: CloudBank
+          url: http://cloudbank.org/
+  hub:
+    config:
+      JupyterHub:
+        authenticator_class: cilogon
+      CILogonOAuthenticator:
+        oauth_callback_url: "https://norco.cloudbank.2i2c.cloud/hub/oauth_callback"
+        username_claim: "email"
+      Authenticator:
+        admin_users:
+          - ericvd@berkeley.edu
+          - sean.smorris@berkeley.edu
+          - caroline.hutchings@norcocollege.edu
+        username_pattern: '^(.+@2i2c\.org|.+@berkeley\.edu|.+@norcocollege\.edu|deployment-service-check)$'
