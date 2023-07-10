@@ -35,4 +35,6 @@ jupyterhub:
           - ericvd@berkeley.edu
           - sean.smorris@berkeley.edu
           - caroline.hutchings@norcocollege.edu
-        username_pattern: '^(.+@2i2c\.org|.+@berkeley\.edu|.+@norcocollege\.edu|deployment-service-check)$'
+          - caroline.hutchings.ncc@gmail.com
+        username_pattern: '^(.+@2i2c\.org|.+@berkeley\.edu|.+@norcocollege\.edu|caroline.hutchings.ncc@gmail.com|deployment-service-check)$'
+        # Only show the option to login with Google
