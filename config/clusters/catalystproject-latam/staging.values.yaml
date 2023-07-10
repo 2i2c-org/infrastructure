@@ -1,0 +1,10 @@
+jupyterhub:
+  ingress:
+    hosts: [staging.latam.catalystproject.2i2c.cloud]
+    tls:
+      - hosts: [staging.latam.catalystproject.2i2c.cloud]
+        secretName: https-auto-tls
+  hub:
+    config:
+      GitHubOAuthenticator:
+        oauth_callback_url: https://staging.latam.catalystproject.2i2c.cloud/hub/oauth_callback

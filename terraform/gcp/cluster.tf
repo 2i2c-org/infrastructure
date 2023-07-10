@@ -238,13 +238,16 @@ resource "google_container_node_pool" "core" {
 resource "google_container_node_pool" "notebook" {
   for_each = var.notebook_nodes
 
-  name    = "nb-${each.key}"
-  cluster = google_container_cluster.cluster.name
-  project = google_container_cluster.cluster.project
-  version = var.k8s_versions.notebook_nodes_version
+  name     = "nb-${each.key}"
+  cluster  = google_container_cluster.cluster.name
+  project  = google_container_cluster.cluster.project
+  location = google_container_cluster.cluster.location
+  version  = var.k8s_versions.notebook_nodes_version
 
-  node_locations = length(each.value.zones) == 0 ? [var.zone] : each.value.zones
-
+  # terraform treats null same as unset, so we only set the node_locations
+  # here if it is explicitly overriden. If not, it will just inherit whatever
+  # is set for the cluster.
+  node_locations = length(each.value.zones) == 0 ? null : each.value.zones
 
   initial_node_count = each.value.min
   autoscaling {
@@ -337,12 +340,17 @@ resource "google_container_node_pool" "notebook" {
 
 # resource ref: https://registry.terraform.io/providers/hashicorp/google-beta/latest/docs/resources/container_node_pool
 resource "google_container_node_pool" "dask_worker" {
-  name    = "dask-${each.key}"
-  cluster = google_container_cluster.cluster.name
-  project = google_container_cluster.cluster.project
-  version = var.k8s_versions.dask_nodes_version
+  name     = "dask-${each.key}"
+  cluster  = google_container_cluster.cluster.name
+  project  = google_container_cluster.cluster.project
+  location = google_container_cluster.cluster.location
+  version  = var.k8s_versions.dask_nodes_version
 
-  node_locations = length(each.value.zones) == 0 ? [var.zone] : each.value.zones
+  # terraform treats null same as unset, so we only set the node_locations
+  # here if it is explicitly overriden. If not, it will just inherit whatever
+  # is set for the cluster.
+  node_locations = length(each.value.zones) == 0 ? null : each.value.zones
+
   # Default to same config as notebook nodepools config
   for_each = var.dask_nodes
 

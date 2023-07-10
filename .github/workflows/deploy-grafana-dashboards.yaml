@@ -17,6 +17,7 @@ jobs:
           - cluster_name: awi-ciroh
           - cluster_name: callysto
           - cluster_name: carbonplan
+          - cluster_name: catalystproject-latam
           - cluster_name: cloudbank
           - cluster_name: gridsst
           - cluster_name: jupyter-meets-the-earth

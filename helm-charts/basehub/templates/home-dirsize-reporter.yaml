@@ -1,0 +1,76 @@
+{{- if .Values.nfs.enabled }}
+# To provide data for the jupyterhub/grafana-dashboards dashboard about free
+# space in the shared volume, which contains users home folders etc, we deploy
+# prometheus node-exporter to collect this data for prometheus server to scrape.
+#
+# This is based on the Deployment manifest in jupyterhub/grafana-dashboards'
+# readme: https://github.com/jupyterhub/grafana-dashboards#additional-collectors
+#
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: shared-dirsize-metrics
+  labels:
+    app: jupyterhub
+    component: shared-dirsize-metrics
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: jupyterhub
+      component: shared-dirsize-metrics
+  template:
+    metadata:
+      annotations:
+        # This enables prometheus to actually scrape metrics from here
+        prometheus.io/scrape: "true"
+        prometheus.io/port: "8000"
+      labels:
+        app: jupyterhub
+        # The component label below should match a grafana dashboard definition
+        # in jupyterhub/grafana-dashboards, do not change it!
+        component: shared-dirsize-metrics
+    spec:
+      containers:
+        - name: dirsize-exporter
+          # From https://github.com/yuvipanda/prometheus-dirsize-exporter
+          image: quay.io/yuvipanda/prometheus-dirsize-exporter:v1.2
+          resources:
+            # Provide *very few* resources for this collector, as it can
+            # baloon up (especially in CPU) quite easily. We are quite ok with
+            # the collection taking a while as long as we aren't costing too much
+            # CPU or RAM
+            requests:
+              memory: 16Mi
+              cpu: 0.01
+            limits:
+              cpu: 0.05
+              memory: 128Mi
+          command:
+            - dirsize-exporter
+            - /shared-volume
+            - "250" # Use only 250 io operations per second at most
+            - "120" # Wait 2h between runs
+            - --port=8000
+          ports:
+            - containerPort: 8000
+              name: dirsize-metrics
+              protocol: TCP
+          securityContext:
+            allowPrivilegeEscalation: false
+            runAsGroup: 0
+            runAsUser: 1000
+          volumeMounts:
+            - name: shared-volume
+              mountPath: /shared-volume
+              readOnly: true
+      securityContext:
+        fsGroup: 65534
+      volumes:
+        # This is the volume that we will mount and monitor. You should reference
+        # a shared volume containing home directories etc. This is often a PVC
+        # bound to a PV referencing a NFS server.
+        - name: shared-volume
+          persistentVolumeClaim:
+            claimName: home-nfs
+{{- end }}
