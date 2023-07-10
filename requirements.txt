@@ -8,10 +8,11 @@ ruamel.yaml==0.17.*
 # jsonschema is used for validating cluster.yaml configurations
 jsonschema==4.*
 
-# rich and py-markdown-table are used for pretty printing outputs that would otherwise
+# rich, py-markdown-table, tabulate are used for pretty printing outputs that would otherwise
 # be difficult to parse by a human
 rich==13.*
 py-markdown-table==0.3.*
+tabulate==0.9.*
 
 # jhub_client, pytest, and pytest-asyncio are used for our health checks
 jhub-client==0.1.*
@@ -26,7 +27,12 @@ typer==0.9.*
 escapism==1.*
 
 # Used for GCP billing management
+pandas
+pandera
+prometheus_pandas
+pytest-mock
 google-cloud-bigquery==3.11.*
+google-cloud-bigquery[pandas]==3.11.*
 gspread==5.10.*
 
 # requests is used by deployer/cilogon_app.py
