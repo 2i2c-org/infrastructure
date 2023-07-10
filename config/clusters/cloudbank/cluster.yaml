@@ -148,6 +148,14 @@ hubs:
       - common.values.yaml
       - mission.values.yaml
       - enc-mission.secret.values.yaml
+  - name: norco
+    display_name: "Norco College"
+    domain: norco.cloudbank.2i2c.cloud
+    helm_chart: basehub
+    helm_chart_values_files:
+      - common.values.yaml
+      - norco.values.yaml
+      - enc-norco.secret.values.yaml
   - name: palomar
     display_name: "Palomar Community College"
     domain: palomar.cloudbank.2i2c.cloud
@@ -212,6 +220,14 @@ hubs:
       - common.values.yaml
       - tuskegee.values.yaml
       - enc-tuskegee.secret.values.yaml
+  - name: wlac
+    display_name: "West Los Angeles College"
+    domain: wlac.cloudbank.2i2c.cloud
+    helm_chart: basehub
+    helm_chart_values_files:
+      - common.values.yaml
+      - wlac.values.yaml
+      - enc-wlac.secret.values.yaml
   - name: csu
     display_name: "California State University"
     domain: csu.cloudbank.2i2c.cloud
