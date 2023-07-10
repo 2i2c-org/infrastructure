@@ -172,7 +172,7 @@ class PrometheusUtilizationImporter:
         return df.drop(columns=["support", "kube-system"], errors="ignore")
 
     def combine_internal_costs(self, df):
-        # This list was manually created during the Q1 2023 billing consolidation work.
+        # FIXME: This list was manually created during the Q1 2023 billing consolidation work.
         # Ideally needs to be in a system that represents contract lifecycle and cost responsibility.
         internal = {
             "utexas-demo",
