@@ -1,6 +1,6 @@
 # User home directory storage
 
-All users on all the hubs get a home directory with persistent storage. 
+All users on all the hubs get a home directory with persistent storage.
 
 This is made available through cloud-specific filestores.
 
@@ -73,3 +73,56 @@ Parts of the *home* volume are mounted in different places for the users:
                     - name: home
                       mountPath: /home/jovyan/allusers
             ```
+
+        * A `shared-public` directory
+
+          Mounted for *all users* in a read/write fashion, for a rough sharing
+          solution. This is put in a different backing directory than what
+          is used for the regular `shared` directory.
+
+          ```{warning}
+          All users can see all other users' contents, modify and delete them!
+          Use this with a lot of caution.
+          ```
+
+          A `shared-public` directory needs to be mounted on all home directories,
+          and we need to modify our `initContainer` to make sure this is owned
+          by the appropriate user.
+
+          ```yaml
+          jupyterhub:
+            singleuser:
+              storage:
+                extraVolumeMounts:
+                - name: home
+                  mountPath: /home/jovyan/shared-public
+                  subPath: _shared-public
+                  readOnly: false
+                - name: home
+                  mountPath: /home/jovyan/shared
+                  subPath: _shared
+                  readOnly: true
+              initContainers:
+                - name: volume-mount-ownership-fix
+                  image: busybox
+                  command:
+                    [
+                      "sh",
+                      "-c",
+                      "id && chown 1000:1000 /home/jovyan && chown 1000:1000 /home/jovyan/shared-readwrite && chown 1000:1000 /home/jovyan/shared-public && ls -lhd /home/jovyan ",
+                    ]
+                  securityContext:
+                    runAsUser: 0
+                  volumeMounts:
+                    - name: home
+                      mountPath: /home/jovyan
+                      subPath: "{username}"
+                    # Mounted without readonly attribute here,
+                    # so we can chown it appropriately
+                    - name: home
+                      mountPath: /home/jovyan/shared-readwrite
+                      subPath: _shared
+                    - name: home
+                      mountPath: /home/jovyan/shared-public
+                      subPath: _shared-public
+              ```
