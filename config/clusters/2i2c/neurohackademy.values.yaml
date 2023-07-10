@@ -1,18 +1,22 @@
-dex:
-  enabled: true
-  hubHostName: neurohackademy.2i2c.cloud
+### Presently the below config does not work. We suspect that network policies
+### are blocking the authentication/OIDC discovery step. We have given
+### ourselves a one week timebox to figure this out, otherwise this config should
+### be removed and an alternative found.
+# dex:
+#   enabled: true
+#   hubHostName: neurohackademy.2i2c.cloud
 
-staticWebsite:
-  enabled: true
-  source:
-    git:
-      repo: https://github.com/NeuroHackademy-2023/zoom/
-      branch: main
-  ingress:
-    host: neurohackademy.2i2c.cloud
-    path: /zoom
-  githubAuth:
-    enabled: true
+# staticWebsite:
+#   enabled: true
+#   source:
+#     git:
+#       repo: https://github.com/NeuroHackademy-2023/zoom/
+#       branch: main
+#   ingress:
+#     host: neurohackademy.2i2c.cloud
+#     path: /zoom
+#   githubAuth:
+#     enabled: true
 
 jupyterhub:
   ingress:
@@ -103,12 +107,16 @@ jupyterhub:
                   - value: "/git-pull?repo=https%3A%2F%2Fgithub.com%2FNeuroHackademy-2023%2Fcurriculum&urlpath=lab&branch=main"
                     title: Pull curriculum repo and redirect to /lab
                     description: Use ngbitpuller to pull https://github.com/NeuroHackademy-2023/curriculum and redirect to /lab afterwards
-    services:
-      dex:
-        url: http://dex:5556
-        oauth_redirect_uri: https://neurohackademy.2i2c.cloud/services/dex/callback
-        oauth_no_confirm: true
-        display: false
-      oauth2-proxy:
-        url: http://dex:9000
-        display: false
+    ### Presently the below config does not work. We suspect that network policies
+    ### are blocking the authentication/OIDC discovery step. We have given
+    ### ourselves a one week timebox to figure this out, otherwise this config should
+    ### be removed and an alternative found.
+    # services:
+    #   dex:
+    #     url: http://dex:5556
+    #     oauth_redirect_uri: https://neurohackademy.2i2c.cloud/services/dex/callback
+    #     oauth_no_confirm: true
+    #     display: false
+    #   oauth2-proxy:
+    #     url: http://dex:9000
+    #     display: false
