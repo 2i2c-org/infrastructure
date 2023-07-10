@@ -18,6 +18,17 @@ binderhub-service:
   enabled: true
   service:
     port: 8090
+  config:
+    DockerRegistry:
+      token_url: https://us-central1-docker.pkg.dev/v2/token?service=
+    BinderHub:
+      use_registry: true
+      image_prefix: us-central1-docker.pkg.dev/two-eye-two-see/binder-staging-registry/binderhub-service-
+    KubernetesBuildExecutor:
+      node_selector:
+        hub.jupyter.org/node-purpose: user
+  buildPodsRegistryCredentials:
+    server: https://us-central1-docker.pkg.dev
 
 jupyterhub:
   ingress:
