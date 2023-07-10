@@ -2,6 +2,7 @@
 ### are blocking the authentication/OIDC discovery step. We have given
 ### ourselves a one week timebox to figure this out, otherwise this config should
 ### be removed and an alternative found.
+### https://github.com/2i2c-org/infrastructure/issues/2681#issuecomment-1629374195
 # dex:
 #   enabled: true
 #   hubHostName: neurohackademy.2i2c.cloud
@@ -111,6 +112,7 @@ jupyterhub:
     ### are blocking the authentication/OIDC discovery step. We have given
     ### ourselves a one week timebox to figure this out, otherwise this config should
     ### be removed and an alternative found.
+    ### https://github.com/2i2c-org/infrastructure/issues/2681#issuecomment-1629374195
     # services:
     #   dex:
     #     url: http://dex:5556
