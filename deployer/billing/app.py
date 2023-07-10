@@ -7,7 +7,7 @@ from ruamel.yaml import YAML
 
 from ..cli_app import app
 from ..helm_upgrade_decision import get_all_cluster_yaml_files
-from .cost_importer import get_cluster_costs
+from .importers import get_cluster_costs
 from .outputers import CostTableOutputFormats, output_cost_table
 
 yaml = YAML(typ="safe", pure=True)

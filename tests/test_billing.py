@@ -7,7 +7,7 @@ import pytest
 from pandera import Check, Column, DataFrameSchema, DateTime, Float, Index, String
 from ruamel.yaml import YAML
 
-from deployer.billing import cost_importer
+from deployer.billing import importers
 
 yaml = YAML(typ="safe", pure=True)
 
@@ -63,18 +63,18 @@ def end_date():
 
 def test_gcp_query_builder_invalid_service(cluster):
     with pytest.raises(AssertionError):
-        cost_importer.build_gcp_query(cluster, service_id="not-a-service-id")
+        importers.build_gcp_query(cluster, service_id="not-a-service-id")
 
 
 def test_gcp_query_builder_invalid_billing_project(cluster):
     cluster["gcp"]["billing"]["bigquery"]["project"] = "$%!?"
     with pytest.raises(AssertionError):
-        cost_importer.build_gcp_query(cluster)
+        importers.build_gcp_query(cluster)
 
 
 def test_cost_schema(cluster, schema, start_date, end_date, mocker):
     mocker.patch("google.cloud.bigquery.Client", autospec=True)
-    bq_importer = cost_importer.BigqueryGCPBillingCostImporter(cluster)
+    bq_importer = importers.BigqueryGCPBillingCostImporter(cluster)
     bq_importer._run_query = MagicMock(
         return_value=pd.DataFrame(
             {
@@ -88,7 +88,7 @@ def test_cost_schema(cluster, schema, start_date, end_date, mocker):
 
 
 def test_shared_cluster_importer_single_hub(shared_cluster, start_date, end_date):
-    shared_importer = cost_importer.PrometheusUtilizationImporter(shared_cluster)
+    shared_importer = importers.PrometheusUtilizationImporter(shared_cluster)
     shared_importer._run_query = MagicMock(
         return_value=pd.DataFrame(
             {'{namespace="hub1"}': np.repeat(4.0, 31)},
@@ -104,7 +104,7 @@ def test_shared_cluster_importer_single_hub(shared_cluster, start_date, end_date
 
 
 def test_shared_cluster_importer_no_support(shared_cluster, start_date, end_date):
-    shared_importer = cost_importer.PrometheusUtilizationImporter(shared_cluster)
+    shared_importer = importers.PrometheusUtilizationImporter(shared_cluster)
     shared_importer._run_query = MagicMock(
         return_value=pd.DataFrame(
             {'{namespace="hub1"}': np.repeat(1.0, 31)},
@@ -120,7 +120,7 @@ def test_shared_cluster_importer_no_support(shared_cluster, start_date, end_date
 
 
 def test_shared_cluster_importer_multiple_hub(shared_cluster, start_date, end_date):
-    shared_importer = cost_importer.PrometheusUtilizationImporter(shared_cluster)
+    shared_importer = importers.PrometheusUtilizationImporter(shared_cluster)
     shared_importer._run_query = MagicMock(
         return_value=pd.DataFrame(
             {
@@ -142,7 +142,7 @@ def test_shared_cluster_importer_multiple_hub(shared_cluster, start_date, end_da
 
 
 def test_shard_cluster_hub_and_support(shared_cluster, start_date, end_date):
-    shared_importer = cost_importer.PrometheusUtilizationImporter(shared_cluster)
+    shared_importer = importers.PrometheusUtilizationImporter(shared_cluster)
     shared_importer._run_query = MagicMock(
         return_value=pd.DataFrame(
             {
@@ -160,7 +160,7 @@ def test_shard_cluster_hub_and_support(shared_cluster, start_date, end_date):
 
 
 def test_shared_cluster_aggregates_support(shared_cluster, start_date, end_date):
-    shared_importer = cost_importer.PrometheusUtilizationImporter(shared_cluster)
+    shared_importer = importers.PrometheusUtilizationImporter(shared_cluster)
     shared_importer._run_query = MagicMock(
         return_value=pd.DataFrame(
             {
@@ -182,7 +182,7 @@ def test_shared_cluster_aggregates_support(shared_cluster, start_date, end_date)
 
 
 def test_shared_cluster_internal(shared_cluster, start_date, end_date):
-    shared_importer = cost_importer.PrometheusUtilizationImporter(shared_cluster)
+    shared_importer = importers.PrometheusUtilizationImporter(shared_cluster)
     shared_importer._run_query = MagicMock(
         return_value=pd.DataFrame(
             {
@@ -202,7 +202,7 @@ def test_shared_cluster_internal(shared_cluster, start_date, end_date):
 
 
 def test_shared_cluster_aggregates_internal(shared_cluster, start_date, end_date):
-    shared_importer = cost_importer.PrometheusUtilizationImporter(shared_cluster)
+    shared_importer = importers.PrometheusUtilizationImporter(shared_cluster)
     shared_importer._run_query = MagicMock(
         return_value=pd.DataFrame(
             {
