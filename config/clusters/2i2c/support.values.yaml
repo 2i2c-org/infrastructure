@@ -4,8 +4,8 @@ prometheusIngressAuthSecret:
 prometheus:
   server:
     persistentVolume:
-      # 100Gi filled up!
-      size: 256Gi
+      # 100Gi filled up, and this is source of our billing data.
+      size: 1Ti
     ingress:
       enabled: true
       hosts:
