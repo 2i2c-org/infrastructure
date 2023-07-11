@@ -75,14 +75,6 @@ hubs:
       - basehub-common.values.yaml
       - pfw.values.yaml
       - enc-pfw.secret.values.yaml
-  - name: catalyst-cooperative
-    display_name: "Catalyst Cooperative"
-    domain: catalyst-cooperative.pilot.2i2c.cloud
-    helm_chart: daskhub
-    helm_chart_values_files:
-      - daskhub-common.values.yaml
-      - catalyst-cooperative.values.yaml
-      - enc-catalyst-cooperative.secret.values.yaml
   - name: aup
     display_name: "The American University of Paris"
     domain: aup.pilot.2i2c.cloud
