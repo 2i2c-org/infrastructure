@@ -39,8 +39,9 @@ jupyterhub:
         shown_idps:
           - http://google.com/accounts/o8/id
       Authenticator:
-        allowed_users: &elcamino_users
-          - ericvd@gmail.com
+        admin_users:
+          - ericvd@berkeley.edu
           - sean.smorris@berkeley.edu
-          - solomonrussell@gmail.com
-        admin_users: *elcamino_users
+          - srussell@elcamino.edu
+          - ammartinez@elcamino.edu
+        username_pattern: '^(.+@2i2c\.org|.+@berkeley\.edu|.+@peralta\.edu|deployment-service-check)$'
