@@ -1,4 +1,4 @@
-# Hub image
+# Modify our custom JupyterHub image
 
 The 2i2c hubs use a custom hub image that is defined in the [helm-charts directory of the infrastructure repository](https://github.com/2i2c-org/infrastructure/tree/HEAD/helm-charts/images/hub).
 

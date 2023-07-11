@@ -10,6 +10,5 @@ cluster-design.md
 terraform.md
 hub-helm-charts.md
 network.md
-hub-image.md
 storage-layer.md
 ```
