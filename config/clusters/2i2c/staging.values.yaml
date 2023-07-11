@@ -19,16 +19,17 @@ binderhub-service:
   service:
     port: 8090
   config:
-    DockerRegistry:
-      token_url: https://us-central1-docker.pkg.dev/v2/token?service=
     BinderHub:
       use_registry: true
+      # Re-uses the registry created for the `binderhub-staging` hub
+      # and pushes images under a different prefix
       image_prefix: us-central1-docker.pkg.dev/two-eye-two-see/binder-staging-registry/binderhub-service-
-    KubernetesBuildExecutor:
-      node_selector:
-        hub.jupyter.org/node-purpose: user
   buildPodsRegistryCredentials:
-    server: https://us-central1-docker.pkg.dev
+    server: "https://us-central1-docker.pkg.dev"
+    username: "_json_key"
+  extraConfig:
+    binderhub_service_01_custom_namespace: |
+      c.BinderHub.build_namespace = "staging"
 
 jupyterhub:
   ingress:
