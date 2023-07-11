@@ -35,4 +35,5 @@ jupyterhub:
           - ericvd@berkeley.edu
           - sean.smorris@berkeley.edu
           - gorfuka@wlac.edu
-        username_pattern: '^(.+@2i2c\.org|.+@berkeley\.edu|.+@wlac\.edu|deployment-service-check)$'
+          - kalkeab@gmail.com
+        username_pattern: '^(.+@2i2c\.org|.+@berkeley\.edu|.+@wlac\.edu|kalkeab@gmail.com|deployment-service-check)$'
