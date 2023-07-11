@@ -44,4 +44,4 @@ jupyterhub:
           - sean.smorris@berkeley.edu
           - srussell@elcamino.edu
           - ammartinez@elcamino.edu
-        username_pattern: '^(.+@2i2c\.org|.+@berkeley\.edu|.+@peralta\.edu|deployment-service-check)$'
+        username_pattern: '^(.+@2i2c\.org|.+@berkeley\.edu|.+@elcamino\.edu|deployment-service-check)$'
