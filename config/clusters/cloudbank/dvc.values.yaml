@@ -41,4 +41,5 @@ jupyterhub:
           - ericvd@berkeley.edu
           - sean.smorris@berkeley.edu
           - namato@dvc.edu
+          - llo@dvc.edu
         username_pattern: '^(.+@2i2c\.org|.+@berkeley\.edu|.+@dvc\.edu|deployment-service-check)$'
