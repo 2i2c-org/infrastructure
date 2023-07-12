@@ -45,4 +45,5 @@ ephemeral.md
 :maxdepth: 2
 :caption: Other
 dedicated-nodepool.md
+custom-jupyterhub-image.md
 ```
