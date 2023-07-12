@@ -43,6 +43,7 @@ jupyterhub:
           - ahs-cs-a
         scope:
           - read:user
+      Authenticator:
         admin_users:
           - sean-morris
       # JupyterHub:
