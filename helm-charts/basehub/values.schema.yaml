@@ -250,7 +250,19 @@ properties:
           - singleuser
           - cloudResources
           - 2i2c
+          - auth
         properties:
+          auth:
+            type: object
+            additionalProperties: false
+            required:
+              - anonymizeUsername
+            properties:
+              anonymizeUsername:
+                type: boolean
+                description: |
+                  Anonymize the username passed in, so no PII is stored at
+                  rest as part of the system.
           singleuser:
             type: object
             additionalProperties: false
