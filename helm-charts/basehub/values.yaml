@@ -53,6 +53,8 @@ global: {}
 
 jupyterhub:
   custom:
+    auth:
+      anonymyzeUsername: false
     singleuser:
       extraPVCs: []
     singleuserAdmin:
