@@ -92,7 +92,15 @@ Currently, only hubs with the following configuration are supported:
    means Google, GitHub and Microsoft. Institutional authentication providers may
    be supported in the future.
 3. All existing user accounts will become invalid.
-4. TODO: Figure out if we can do any *authorization* at all.
+
+## Authorization
+
+We still want to be able to do **authorization** based on user attributes,
+such as domain of email or explicit list of allowed emails. This is still
+possible, as the anonymization step is done in `post_auth_hook` which runs
+*after* the initial authorization steps are done. So `admin_users` and
+`allowed_users` can be used in the same manner as used in CILogon without
+anonymization turned on.
 
 ## Enabling anonymization
 
