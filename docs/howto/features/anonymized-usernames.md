@@ -43,7 +43,7 @@ useful privacy guarantees to be worth it. Those are:
    de-anonymize when the attacker has in their posession the following:
 
    1. List of user identifiers (emails, usernames, numeric user ids,
-      etc) from *other data breaces*.
+      etc) from *other data breaches*.
    2. List of user identifiers *from us*.
    3. Any secret keys we use to hash these identifiers.
    
