@@ -58,4 +58,4 @@ jupyterhub:
               username_claim: "email"
           http://login.microsoftonline.com/common/oauth2/v2.0/authorize:
             username_derivation:
-              username_claim: "emali"
+              username_claim: "email"
