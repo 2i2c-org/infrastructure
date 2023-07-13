@@ -127,3 +127,8 @@ This should be enough configuration changes for this to work.
 
 This is a common problem, and the longer term solution is to get CILogon to
 implement [Pairwise Pseudonymous Identifiers](https://curity.io/resources/learn/ppid-intro/)
+
+## Credit
+
+Thanks to the `#infosec` channel on the [hangops slack](https://signup.hangops.com/)
+for their help in thinking this through.
