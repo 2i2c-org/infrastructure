@@ -123,4 +123,7 @@ Currently, only hubs with the following configuration are supported:
   
 This should be enough configuration changes for this to work.
 
+## Longer term solution
 
+This is a common problem, and the longer term solution is to get CILogon to
+implement [Pairwise Pseudonymous Identifiers](https://curity.io/resources/learn/ppid-intro/)
