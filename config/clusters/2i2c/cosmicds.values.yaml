@@ -27,6 +27,14 @@ jupyterhub:
         funded_by:
           name: Cosmic DS, Harvard
           url: https://www.cosmicds.cfa.harvard.edu/
+  singleuser:
+    # No persistent storage should be kept to reduce any potential data
+    # retention & privacy issues.
+    # Ref https://github.com/2i2c-org/infrastructure/issues/2128#issuecomment-1635107926
+    initContainers: null
+    storage:
+      type: none
+      extraVolumeMounts: null
   hub:
     config:
       Authenticator:
