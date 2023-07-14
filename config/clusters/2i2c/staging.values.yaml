@@ -20,6 +20,11 @@ binderhub-service:
   enabled: true
   service:
     port: 8090
+  # The DaemonSet at https://github.com/2i2c-org/binderhub-service/blob/main/binderhub-service/templates/docker-api/daemonset.yaml
+  # will start a docker-api pod on a user node.
+  # It starts the [dockerd](https://docs.docker.com/engine/reference/commandline/dockerd/) daemon,
+  # that will be accessible via a unix socket, mounted by the build.
+  # The docker-api pod must run on the same node as the builder pods.
   dockerApi:
     nodeSelector:
       hub.jupyter.org/node-purpose: user
@@ -39,7 +44,9 @@ binderhub-service:
       image_prefix: us-central1-docker.pkg.dev/two-eye-two-see/binder-staging-registry/binderhub-service-
     KubernetesBuildExecutor:
       node_selector:
+        # Schedule builder pods to run on user nodes only
         hub.jupyter.org/node-purpose: user
+  # The password to the registry is stored encrypted in the hub's encrypted config file
   buildPodsRegistryCredentials:
     server: "https://us-central1-docker.pkg.dev"
     username: "_json_key"
