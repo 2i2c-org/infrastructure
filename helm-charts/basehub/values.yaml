@@ -809,7 +809,10 @@ jupyterhub:
           #   encoded in kubernetes and puts us over the 63 char limit.
           # - Use blake2 here explicitly as a keyed hash, rather than use
           #   hmac. This is the canonical way to do this, and helps make it
-          #   clearer that we want it to output 32byte hashes
+          #   clearer that we want it to output 32byte hashes. We could have
+          #   used a 16byte hash here for shorter usernames, but it is unclear
+          #   what that does to the security properties. So better safe than
+          #   sorry, and stick to 32bytes (rather than the default 64)
           digested_user_key = base64.b32encode(hashlib.blake2b(
             user_key,
             key=USERNAME_DERIVATION_PEPPER,
