@@ -7,6 +7,9 @@ jupyterhub:
         hosts:
           - cosmicds.2i2c.cloud
   custom:
+    singleuserAdmin:
+      # Disable shared-readwrite mount, as we don't have any mounts enabled
+      extraVolumeMounts: []
     auth:
       anonymizeUsername: true
     2i2c:
@@ -31,10 +34,11 @@ jupyterhub:
     # No persistent storage should be kept to reduce any potential data
     # retention & privacy issues.
     # Ref https://github.com/2i2c-org/infrastructure/issues/2128#issuecomment-1635107926
-    initContainers: null
+    initContainers: []
     storage:
+      # Must set jupyterhub.custom.singleuserAdmin.extraVollumeMounts to [] as well
       type: none
-      extraVolumeMounts: null
+      extraVolumeMounts: []
   hub:
     config:
       Authenticator:
