@@ -93,13 +93,17 @@ provide persistent storage. So we turn it all off.
 
 ```yaml
 jupyterhub:
+  custom:
+    singleuserAdmin:
+      # Turn off trying to mount shared-readwrite folder for admins
+      extraVolumeMounts: []
   singleuser:
-    initContainers: null
+    initContainers: []
     storage:
       # No persistent storage should be kept to reduce any potential data
       # retention & privacy issues.
       type: none
-      extraVolumeMounts: null
+      extraVolumeMounts: []
 ```
 
 
