@@ -45,7 +45,7 @@ jupyterhub:
           - read:org
   singleuser:
     image:
-      # rocker/r-ver is maintained at: https://github.com/rocker-org/rocker-versioned2
+      # rocker/binder is maintained at: https://github.com/rocker-org/rocker-versioned2
       # tags can be viewed at: https://hub.docker.com/r/rocker/binder/tags
       name: rocker/binder
       tag: "4.3"
