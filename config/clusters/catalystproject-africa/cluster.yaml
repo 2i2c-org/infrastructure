@@ -1,0 +1,8 @@
+name: catalystproject-africa
+provider: aws
+aws:
+  key: enc-deployer-credentials.secret.json
+  clusterType: eks
+  clusterName: catalystproject-africa
+  region: af-south-1
+hubs: []
