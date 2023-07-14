@@ -110,6 +110,16 @@ jupyterhub:
         kubespawner_override:
           cpu_limit: null
           mem_limit: null
+          working_dir: /home/rstudio
+          default_url: /rstudio
+          volume_mounts:
+            - name: home
+              mountPath: /home/rstudio
+              subPath: "{username}"
+            - name: home
+              mountPath: /home/rstudio/shared
+              subPath: _shared
+              readOnly: true
           node_selector:
             node.kubernetes.io/instance-type: r5.xlarge
       - display_name: "Medium: up to 16 CPU / 128 GB RAM"
@@ -165,6 +175,16 @@ jupyterhub:
         kubespawner_override:
           cpu_limit: null
           mem_limit: null
+          working_dir: /home/rstudio
+          default_url: /rstudio
+          volume_mounts:
+            - name: home
+              mountPath: /home/rstudio
+              subPath: "{username}"
+            - name: home
+              mountPath: /home/rstudio/shared
+              subPath: _shared
+              readOnly: true
           node_selector:
             node.kubernetes.io/instance-type: r5.4xlarge
       - display_name: "Large: up to 64 CPU / 512 GB RAM"
@@ -220,5 +240,15 @@ jupyterhub:
         kubespawner_override:
           cpu_limit: null
           mem_limit: null
+          working_dir: /home/rstudio
+          default_url: /rstudio
+          volume_mounts:
+            - name: home
+              mountPath: /home/rstudio
+              subPath: "{username}"
+            - name: home
+              mountPath: /home/rstudio/shared
+              subPath: _shared
+              readOnly: true
           node_selector:
             node.kubernetes.io/instance-type: r5.16xlarge
