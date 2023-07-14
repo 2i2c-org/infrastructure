@@ -199,6 +199,7 @@ prometheus:
     retention: 366d # Keep data for at least 1 year
 
     ingress:
+      ingressClassName: nginx
       annotations:
         # Annotations required to enable basic authentication for any ingress
         # into prometheus server from the outside world. This secret is
@@ -210,7 +211,6 @@ prometheus:
         nginx.ingress.kubernetes.io/auth-secret: prometheus-ingress-auth-basic
         nginx.ingress.kubernetes.io/auth-realm: "Authentication Required"
         # If we enable external ingress into prometheus, we must secure it with HTTPS
-        kubernetes.io/ingress.class: nginx
         cert-manager.io/cluster-issuer: letsencrypt-prod
     strategy:
       # type is set to Recreate as we have a persistent disk attached. The
@@ -321,6 +321,7 @@ grafana:
 
   ingress:
     enabled: true
+    ingressClassName: nginx
     annotations:
       # nginx.ingress.kubernetes.io/proxy-body-size increased from the default
       # of 1m to avoid HTTP 413 (Request Entity Too Large) when making POST
@@ -328,7 +329,6 @@ grafana:
       # workflow) to update dashboards with json files representing them.
       #
       nginx.ingress.kubernetes.io/proxy-body-size: 64m
-      kubernetes.io/ingress.class: nginx
       cert-manager.io/cluster-issuer: letsencrypt-prod
 
   # grafana is partially configured for GitHub authentication here, but the

@@ -12,9 +12,9 @@ binderhub:
     type: ClusterIP
   ingress:
     enabled: true
+    ingressClassName: nginx
     annotations:
       nginx.ingress.kubernetes.io/proxy-body-size: 256m
-      kubernetes.io/ingress.class: nginx
       cert-manager.io/cluster-issuer: letsencrypt-prod
   imageBuilderType: dind
   imageCleaner:
@@ -26,9 +26,9 @@ binderhub:
   jupyterhub:
     ingress:
       enabled: true
+      ingressClassName: nginx
       annotations:
         nginx.ingress.kubernetes.io/proxy-body-size: 256m
-        kubernetes.io/ingress.class: nginx
         cert-manager.io/cluster-issuer: letsencrypt-prod
     proxy:
       service:
