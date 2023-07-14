@@ -11,6 +11,7 @@ See the sections below for more details.
 cloud-access.md
 gpu.md
 github.md
+anonymized-usernames.md
 ```
 
 ```{toctree}

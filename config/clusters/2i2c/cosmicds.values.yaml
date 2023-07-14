@@ -7,6 +7,11 @@ jupyterhub:
         hosts:
           - cosmicds.2i2c.cloud
   custom:
+    singleuserAdmin:
+      # Disable shared-readwrite mount, as we don't have any mounts enabled
+      extraVolumeMounts: []
+    auth:
+      anonymizeUsername: true
     2i2c:
       add_staff_user_ids_to_admin_users: true
       add_staff_user_ids_of_type: "github"
@@ -25,6 +30,15 @@ jupyterhub:
         funded_by:
           name: Cosmic DS, Harvard
           url: https://www.cosmicds.cfa.harvard.edu/
+  singleuser:
+    # No persistent storage should be kept to reduce any potential data
+    # retention & privacy issues.
+    # Ref https://github.com/2i2c-org/infrastructure/issues/2128#issuecomment-1635107926
+    initContainers: []
+    storage:
+      # Must set jupyterhub.custom.singleuserAdmin.extraVollumeMounts to [] as well
+      type: none
+      extraVolumeMounts: []
   hub:
     config:
       Authenticator:
@@ -40,7 +54,20 @@ jupyterhub:
         oauth_callback_url: https://cosmicds.2i2c.cloud/hub/oauth_callback
         shown_idps:
           - http://github.com/login/oauth/authorize
+          # Temporarily enable google & microsoft auth, to be reverted
+          # after July 21 2023
+          # Ref https://github.com/2i2c-org/infrastructure/issues/2128#issuecomment-1633128941
+          - http://google.com/accounts/o8/id
+          - http://login.microsoftonline.com/common/oauth2/v2.0/authorize
         allowed_idps:
+          # The username claim here is used to do *authorization*, for both
+          # admin use and any allow listing we want to do.
           http://github.com/login/oauth/authorize:
             username_derivation:
               username_claim: "preferred_username"
+          http://google.com/accounts/o8/id:
+            username_derivation:
+              username_claim: "email"
+          http://login.microsoftonline.com/common/oauth2/v2.0/authorize:
+            username_derivation:
+              username_claim: "email"
