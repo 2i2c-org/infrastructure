@@ -46,9 +46,9 @@ jupyterhub:
   singleuser:
     image:
       # rocker/r-ver is maintained at: https://github.com/rocker-org/rocker-versioned2
-      # tags can be viewed at: https://hub.docker.com/r/rocker/r-ver/tags
-      name: rocker/r-ver
-      tag: "4.3.1"
+      # tags can be viewed at: https://hub.docker.com/r/rocker/binder/tags
+      name: rocker/binder
+      tag: "4.3"
     # Below config was copied from OpenScapes common.values.yaml with choices
     # for images removed
     # https://github.com/2i2c-org/infrastructure/blob/22a2c4b5f80c63d1a06d59bef148da087d339d3b/config/clusters/openscapes/common.values.yaml#L47-L237
