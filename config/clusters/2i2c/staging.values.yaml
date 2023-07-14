@@ -15,12 +15,23 @@ staticWebsite:
     enabled: false
 
 binderhub-service:
+  nodeSelector:
+    hub.jupyter.org/node-purpose: core
   enabled: true
   service:
     port: 8090
   dockerApi:
     nodeSelector:
       hub.jupyter.org/node-purpose: user
+    tolerations:
+      # Tolerate tainted jupyterhub user nodes
+      - key: hub.jupyter.org_dedicated
+        value: user
+        effect: NoSchedule
+      - key: hub.jupyter.org/dedicated
+        value: user
+        effect: NoSchedule
+
   config:
     BinderHub:
       use_registry: true
