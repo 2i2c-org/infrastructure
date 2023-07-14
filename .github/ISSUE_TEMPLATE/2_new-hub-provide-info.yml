@@ -186,6 +186,15 @@ body:
     validations:
       required: false
 
+  - type: input
+    attributes:
+      label: (Optional) Preferred cloud region
+      description: |
+        If you have restrictions on data centre location (e.g. within Europe, or the US), please note this here.
+      placeholder: us-central1-b
+    validations:
+      required: false
+
   - type: dropdown
     attributes:
       label: (Optional) Billing and Cloud account
