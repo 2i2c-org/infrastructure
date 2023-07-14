@@ -18,4 +18,3 @@ hubs:
       - common.values.yaml
       - staging.values.yaml
       - enc-staging.secret.values.yaml
-
