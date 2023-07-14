@@ -9,7 +9,7 @@ terraform to provision supporting infrastructure, such as storage buckets.
 
 1. Install `kubectl`, `helm`, `sops`, etc.
 
-   In [](tutorials:setup-deploy) you find instructions on how to setup `sops` to
+   In [](tutorials:setup) you find instructions on how to setup `sops` to
    encrypt and decrypt files.
 
 2. Install [`aws`](https://docs.aws.amazon.com/cli/latest/userguide/getting-started-install.html#getting-started-install-instructions)
