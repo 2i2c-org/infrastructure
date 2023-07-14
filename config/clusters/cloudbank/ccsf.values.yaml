@@ -40,13 +40,13 @@ jupyterhub:
         shown_idps:
           - http://google.com/accounts/o8/id
       Authenticator:
-        allowed_users: &ccsf_users
-          - ericvd@gmail.com
+        admin_users:
+          - ericvd@berkeley.edu
           - sean.smorris@berkeley.edu
           - shawn.wiggins@mail.ccsf.edu
           - craig.persiko@mail.ccsf.edu
           - efuchs@mail.ccsf.edu
-        admin_users: *ccsf_users
+        username_pattern: '^(.+@2i2c\.org|.+@berkeley\.edu|.+@mail\.ccsf\.edu|deployment-service-check)$'
     extraFiles:
       configurator-schema-default:
         data:
