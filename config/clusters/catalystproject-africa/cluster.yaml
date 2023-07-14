@@ -5,4 +5,8 @@ aws:
   clusterType: eks
   clusterName: catalystproject-africa
   region: af-south-1
+support:
+  helm_chart_values_files:
+    - support.values.yaml
+    - enc-support.secret.values.yaml
 hubs: []
