@@ -794,13 +794,13 @@ jupyterhub:
 
           # The cryptographic choices made here are:
           # - Use blake2, because it's fairly modern
-          # - Set blake2 to output 32 bytes as output, which is good enough for our use cas
+          # - Set blake2 to output 32 bytes as output, which is good enough for our use case
           # - Use base32 encoding, as it will produce maximum of 56 characters
-          #   for 32 bytes output by blake2. We have 63 charcter username
+          #   for 32 bytes output by blake2. We have 63 character username
           #   limits in many parts of our code (particularly, in usernames
           #   being part of labels in kubernetes pods), so this helps
           # - Convert everything to lowercase, as base64.b32encode produces
-          #   all uppercase charcters by default. Our usernames are preferably
+          #   all uppercase characters by default. Our usernames are preferably
           #   lowercase, as uppercase characters must be encoded for kubernetes'
           #   sake
           # - strip the = padding provided by base64.b32encode. This is present
@@ -826,4 +826,5 @@ jupyterhub:
           return auth_model
 
         if get_config('custom.auth.anonymizeUsername', False):
+          # https://jupyterhub.readthedocs.io/en/stable/reference/api/auth.html#jupyterhub.auth.Authenticator.post_auth_hook
           c.Authenticator.post_auth_hook = salt_username
