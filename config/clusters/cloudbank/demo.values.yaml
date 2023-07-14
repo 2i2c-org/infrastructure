@@ -42,7 +42,7 @@ jupyterhub:
           - 2i2c-org
           - ahs-cs-a
         scope:
-          - read:user
+          - read:org
       Authenticator:
         admin_users:
           - sean-morris
