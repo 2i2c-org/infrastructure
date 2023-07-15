@@ -39,7 +39,7 @@ jupyterhub:
   singleuser:
     image:
       name: callysto/2i2c
-      tag: 0.1.2
+      tag: 0.1.3
     extraFiles:
       tree.html:
         mountPath: /usr/local/share/jupyter/custom_template/tree.html
@@ -106,6 +106,7 @@ jupyterhub:
             return None
 
         c.JupyterHub.authenticator_class = EmailAuthenticatingCILogonOAuthenticator
+        c.KubeSpawner.environment = {'PLOTLY_RENDERER': 'notebook_connected'}
     config:
       EmailAuthenticatingCILogonOAuthenticator:
         allowed_domains:
