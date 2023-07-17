@@ -1,0 +1,20 @@
+name: catalystproject-africa
+provider: aws
+aws:
+  key: enc-deployer-credentials.secret.json
+  clusterType: eks
+  clusterName: catalystproject-africa
+  region: af-south-1
+support:
+  helm_chart_values_files:
+    - support.values.yaml
+    - enc-support.secret.values.yaml
+hubs:
+  - name: staging
+    display_name: "Catalyst Project, Africa - Staging"
+    domain: staging.af.catalystproject.2i2c.cloud
+    helm_chart: basehub
+    helm_chart_values_files:
+      - common.values.yaml
+      - staging.values.yaml
+      - enc-staging.secret.values.yaml
