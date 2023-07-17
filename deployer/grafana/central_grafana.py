@@ -99,7 +99,7 @@ def get_clusters_used_as_datasources(cluster_name, datasource_endpoint):
 
 @app.command()
 def update_central_grafana_datasources(
-    central_grafana_cluster=typer.Argument(
+    central_grafana_cluster=typer.Option(
         "2i2c", help="Name of cluster where the central grafana lives"
     )
 ):
