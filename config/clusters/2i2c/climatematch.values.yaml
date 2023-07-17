@@ -13,7 +13,8 @@ jupyterhub:
     defaultUrl: /lab
     image:
       name: pangeo/pangeo-notebook
-      tag: 2023.05.18
+      # Uses JupyterLab <4, so jupyterlab-git and dask-dashboard work
+      tag: "2023.07.05"
     # shared-public for collaboration
     # See https://github.com/2i2c-org/infrastructure/issues/2785
     storage:
