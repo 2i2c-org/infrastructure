@@ -122,8 +122,8 @@ jobs:
         # Only run this steps in PRs when the matrices are not empty
         if: >
           github.event_name == 'pull_request' &&
-          env.support-and-staging-matrix-jobs != '[]' &&
-          env.prod-hub-matrix-jobs != '[]'
+          (env.support-and-staging-matrix-jobs != '[]' ||
+          env.prod-hub-matrix-jobs != '[]')
         uses: actions/upload-artifact@v3.1.0
         with:
           name: pr
