@@ -46,6 +46,7 @@ jupyterhub:
           - shawn.wiggins@mail.ccsf.edu
           - craig.persiko@mail.ccsf.edu
           - efuchs@mail.ccsf.edu
+          - amy.mclanahan@mail.ccsf.edu
         username_pattern: '^(.+@2i2c\.org|.+@berkeley\.edu|.+@mail\.ccsf\.edu|deployment-service-check)$'
     extraFiles:
       configurator-schema-default:
