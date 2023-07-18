@@ -53,7 +53,7 @@ hubs:
       - enc-binder-staging.secret.values.yaml
   - name: imagebuilding-demo
     display_name: "2i2c image building demo"
-    domain: imagebuilding-demo.2i2c.cloud.2i2c.cloud
+    domain: imagebuilding-demo.2i2c.cloud
     helm_chart: basehub
     helm_chart_values_files:
       - basehub-common.values.yaml
