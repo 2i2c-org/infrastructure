@@ -28,6 +28,7 @@ jupyterhub:
       Authenticator:
         admin_users:
           - aquevedo@unc.edu.ar
+          - nicolasw@famaf.unc.edu.ar
       JupyterHub:
         authenticator_class: cilogon
       CILogonOAuthenticator:
@@ -42,4 +43,4 @@ jupyterhub:
           http://google.com/accounts/o8/id:
             username_derivation:
               username_claim: "email"
-            allowed_domains: ["unc.edu.ar", "2i2c.org"]
+            allowed_domains: ["2i2c.org", "unc.edu.ar", "famaf.unc.edu.ar"]
