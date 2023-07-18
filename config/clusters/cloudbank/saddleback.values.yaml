@@ -31,14 +31,22 @@ jupyterhub:
           url: https://www.saddleback.edu/
   hub:
     config:
-      CILogonOAuthenticator:
-        oauth_callback_url: https://saddleback.cloudbank.2i2c.cloud/hub/oauth_callback
-        username_claim: email
       JupyterHub:
         authenticator_class: cilogon
+      CILogonOAuthenticator:
+        oauth_callback_url: https://saddleback.cloudbank.2i2c.cloud/hub/oauth_callback
+        shown_idps:
+          - http://google.com/accounts/o8/id
+        allowed_idps:
+          http://google.com/accounts/o8/id:
+            username_derivation:
+              username_claim: "email"
+            allowed_domains:
+              - "2i2c.org"
+              - "berkeley.edu"
+              - "saddleback.edu"
       Authenticator:
         admin_users:
           - ericvd@berkeley.edu
           - sean.smorris@berkeley.edu
           - afoote@saddleback.edu
-        username_pattern: '^(.+@2i2c\.org|.+@berkeley\.edu|.+@saddleback\.edu|deployment-service-check)$'

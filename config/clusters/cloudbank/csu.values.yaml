@@ -38,7 +38,12 @@ jupyterhub:
         authenticator_class: cilogon
       CILogonOAuthenticator:
         oauth_callback_url: https://csu.cloudbank.2i2c.cloud/hub/oauth_callback
-        username_claim: email
+        shown_idps:
+          - http://google.com/accounts/o8/id
+        allowed_idps:
+          http://google.com/accounts/o8/id:
+            username_derivation:
+              username_claim: "email"
       Authenticator:
         # These folks should still have admin tho
         admin_users:

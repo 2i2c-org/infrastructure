@@ -29,7 +29,12 @@ jupyterhub:
         authenticator_class: cilogon
       CILogonOAuthenticator:
         oauth_callback_url: "https://norco.cloudbank.2i2c.cloud/hub/oauth_callback"
-        username_claim: "email"
+        shown_idps:
+          - http://google.com/accounts/o8/id
+        allowed_idps:
+          http://google.com/accounts/o8/id:
+            username_derivation:
+              username_claim: "email"
       Authenticator:
         admin_users:
           - ericvd@berkeley.edu
@@ -37,4 +42,3 @@ jupyterhub:
           - caroline.hutchings@norcocollege.edu
           - caroline.hutchings.ncc@gmail.com
         username_pattern: '^(.+@2i2c\.org|.+@berkeley\.edu|.+@norcocollege\.edu|caroline.hutchings.ncc@gmail.com|deployment-service-check)$'
-        # Only show the option to login with Google

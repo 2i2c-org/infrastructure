@@ -29,11 +29,21 @@ jupyterhub:
         authenticator_class: cilogon
       CILogonOAuthenticator:
         oauth_callback_url: https://fresno.cloudbank.2i2c.cloud/hub/oauth_callback
-        username_claim: email
+        shown_idps:
+          - http://google.com/accounts/o8/id
+        allowed_idps:
+          http://google.com/accounts/o8/id:
+            username_derivation:
+              username_claim: "email"
+            allowed_domains:
+              - "2i2c.org"
+              - "berkeley.edu"
+              - "fresnocitycollege.edu"
+              - "students.scccd.net"
+              - "my.scccd.edu"
       Authenticator:
         admin_users:
           - joellen.green@fresnocitycollege.edu
           - ericvd@berkeley.edu
           - k_usovich@berkeley.edu
           - sean.smorris@berkeley.edu
-        username_pattern: '^(.+@2i2c\.org|.+@berkeley\.edu|.+@students\.scccd\.net|.+@my\.scccd\.edu|.+@fresnocitycollege\.edu|deployment-service-check)$'

@@ -29,7 +29,19 @@ jupyterhub:
         authenticator_class: cilogon
       CILogonOAuthenticator:
         oauth_callback_url: https://sjcc.cloudbank.2i2c.cloud/hub/oauth_callback
-        username_claim: email
+        shown_idps:
+          - http://google.com/accounts/o8/id
+        allowed_idps:
+          http://google.com/accounts/o8/id:
+            username_derivation:
+              username_claim: "email"
+            allowed_domains:
+              - "2i2c.org"
+              - "berkeley.edu"
+              - "sjcc.edu"
+              - "stu.evc.edu"
+              - "stu.sjcc.edu"
+              - "evc.edu"
       Authenticator:
         admin_users:
           - christiaan.desmond@sjcc.edu
@@ -37,4 +49,3 @@ jupyterhub:
           - ericvd@berkeley.edu
           - k_usovich@berkeley.edu
           - sean.smorris@berkeley.edu
-        username_pattern: '^(.+@2i2c\.org|.+@berkeley\.edu|.+@stu\.evc\.edu|.+@stu\.sjcc\.edu|.+@sjcc\.edu|.+@evc\.edu|deployment-service-check)$'

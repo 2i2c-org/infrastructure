@@ -31,11 +31,16 @@ jupyterhub:
           url: https://www.santarosa.edu/
   hub:
     config:
-      CILogonOAuthenticator:
-        oauth_callback_url: https://srjc.cloudbank.2i2c.cloud/hub/oauth_callback
-        username_claim: email
       JupyterHub:
         authenticator_class: cilogon
+      CILogonOAuthenticator:
+        oauth_callback_url: https://srjc.cloudbank.2i2c.cloud/hub/oauth_callback
+        shown_idps:
+          - http://google.com/accounts/o8/id
+        allowed_idps:
+          http://google.com/accounts/o8/id:
+            username_derivation:
+              username_claim: "email"
       Authenticator:
         admin_users:
           - ericvd@berkeley.edu

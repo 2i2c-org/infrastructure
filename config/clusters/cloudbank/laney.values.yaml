@@ -29,11 +29,19 @@ jupyterhub:
         authenticator_class: cilogon
       CILogonOAuthenticator:
         oauth_callback_url: "https://laney.cloudbank.2i2c.cloud/hub/oauth_callback"
-        username_claim: "email"
+        shown_idps:
+          - http://google.com/accounts/o8/id
+        allowed_idps:
+          http://google.com/accounts/o8/id:
+            username_derivation:
+              username_claim: "email"
+            allowed_domains:
+              - "2i2c.org"
+              - "berkeley.edu"
+              - "peralta.edu"
       Authenticator:
         admin_users:
           - ericvd@berkeley.edu
           - sean.smorris@berkeley.edu
           - koh@peralta.edu
           - dsmith@peralta.edu
-        username_pattern: '^(.+@2i2c\.org|.+@berkeley\.edu|.+@peralta\.edu|deployment-service-check)$'
