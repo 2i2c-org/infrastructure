@@ -33,11 +33,15 @@ jupyterhub:
         shown_idps:
           - http://google.com/accounts/o8/id
           - https://miracosta.fedgw.com/gateway
+          - urn:mace:incommon:berkeley.edu
         allowed_idps:
           http://google.com/accounts/o8/id:
             username_derivation:
               username_claim: "email"
           https://miracosta.fedgw.com/gateway:
+            username_derivation:
+              username_claim: "email"
+          urn:mace:incommon:berkeley.edu:
             username_derivation:
               username_claim: "email"
       Authenticator:

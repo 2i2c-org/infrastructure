@@ -37,8 +37,12 @@ jupyterhub:
         oauth_callback_url: https://srjc.cloudbank.2i2c.cloud/hub/oauth_callback
         shown_idps:
           - http://google.com/accounts/o8/id
+          - urn:mace:incommon:berkeley.edu
         allowed_idps:
           http://google.com/accounts/o8/id:
+            username_derivation:
+              username_claim: "email"
+          urn:mace:incommon:berkeley.edu:
             username_derivation:
               username_claim: "email"
       Authenticator:

@@ -41,6 +41,7 @@ jupyterhub:
         shown_idps:
           - http://google.com/accounts/o8/id
           - urn:mace:incommon:humboldt.edu
+          - urn:mace:incommon:berkeley.edu
         allowed_idps:
           http://google.com/accounts/o8/id:
             username_derivation:
@@ -50,6 +51,9 @@ jupyterhub:
               - "berkeley.edu"
               - "humboldt.edu"
           urn:mace:incommon:humboldt.edu:
+            username_derivation:
+              username_claim: "email"
+          urn:mace:incommon:berkeley.edu:
             username_derivation:
               username_claim: "email"
       Authenticator:

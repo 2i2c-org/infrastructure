@@ -37,6 +37,7 @@ jupyterhub:
         oauth_callback_url: https://saddleback.cloudbank.2i2c.cloud/hub/oauth_callback
         shown_idps:
           - http://google.com/accounts/o8/id
+          - urn:mace:incommon:berkeley.edu
         allowed_idps:
           http://google.com/accounts/o8/id:
             username_derivation:
@@ -45,6 +46,9 @@ jupyterhub:
               - "2i2c.org"
               - "berkeley.edu"
               - "saddleback.edu"
+          urn:mace:incommon:berkeley.edu:
+            username_derivation:
+              username_claim: "email"
       Authenticator:
         admin_users:
           - ericvd@berkeley.edu
