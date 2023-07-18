@@ -32,8 +32,12 @@ jupyterhub:
         # Only show and allow the option to login with Google
         shown_idps:
           - http://google.com/accounts/o8/id
+          - https://idp.sbcc.edu/idp/shibboleth
         allowed_idps:
           http://google.com/accounts/o8/id:
+            username_derivation:
+              username_claim: "email"
+          https://idp.sbcc.edu/idp/shibboleth:
             username_derivation:
               username_claim: "email"
       Authenticator:

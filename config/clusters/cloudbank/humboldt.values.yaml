@@ -40,6 +40,7 @@ jupyterhub:
         oauth_callback_url: https://humboldt.cloudbank.2i2c.cloud/hub/oauth_callback
         shown_idps:
           - http://google.com/accounts/o8/id
+          - urn:mace:incommon:humboldt.edu
         allowed_idps:
           http://google.com/accounts/o8/id:
             username_derivation:
@@ -48,6 +49,9 @@ jupyterhub:
               - "2i2c.org"
               - "berkeley.edu"
               - "humboldt.edu"
+          urn:mace:incommon:humboldt.edu:
+            username_derivation:
+              username_claim: "email"
       Authenticator:
         # These folks should still have admin tho
         admin_users:
