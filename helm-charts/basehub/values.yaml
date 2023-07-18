@@ -5,6 +5,9 @@ userServiceAccount:
   enabled: true
   annotations: {}
 
+binderhub-service:
+  enabled: false
+
 ingressBasicAuth:
   enabled: false
   # Primarily here for validation to 'work',
