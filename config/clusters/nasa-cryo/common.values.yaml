@@ -50,6 +50,8 @@ basehub:
             - jdmillstein
             - dfelikson
             - fperez
+            - scottyhq
+            - jomey
         JupyterHub:
           authenticator_class: github
         GitHubOAuthenticator:
