@@ -35,11 +35,24 @@ jupyterhub:
         authenticator_class: cilogon
       CILogonOAuthenticator:
         oauth_callback_url: https://sacramento.cloudbank.2i2c.cloud/hub/oauth_callback
-        username_claim: email
+        shown_idps:
+          - http://google.com/accounts/o8/id
+          - urn:mace:incommon:berkeley.edu
+        allowed_idps:
+          http://google.com/accounts/o8/id:
+            username_derivation:
+              username_claim: "email"
+            allowed_domains:
+              - "2i2c.org"
+              - "berkeley.edu"
+              - "scc.losrios.edu"
+              - "apps.losrios.edu"
+          urn:mace:incommon:berkeley.edu:
+            username_derivation:
+              username_claim: "email"
       Authenticator:
         admin_users:
           - ericvd@berkeley.edu
           - sean.smorris@berkeley.edu
           - mukarra@scc.losrios.edu
           - w1475529@apps.losrios.edu
-        username_pattern: '^(.+@2i2c\.org|.+@berkeley\.edu|.+@(scc|apps)\.losrios\.edu|deployment-service-check)$'

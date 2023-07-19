@@ -371,18 +371,14 @@ the clusters that we run.
 **Command line usage:**
 ```
                                                                                                                         
- Usage: deployer update-central-grafana-datasources [OPTIONS]                                                           
-                                                    [CENTRAL_GRAFANA_CLUSTER]                                           
-                                                                                                                        
- Update a central grafana with datasources for all our prometheuses                                                     
-                                                                                                                        
-╭─ Arguments ──────────────────────────────────────────────────────────────────────────────────────────────────────────╮
-│   central_grafana_cluster      [CENTRAL_GRAFANA_CLUSTER]  Name of cluster where the central grafana lives            │
-│                                                           [default: 2i2c]                                            │
-╰──────────────────────────────────────────────────────────────────────────────────────────────────────────────────────╯
-╭─ Options ────────────────────────────────────────────────────────────────────────────────────────────────────────────╮
-│ --help          Show this message and exit.                                                                          │
-╰──────────────────────────────────────────────────────────────────────────────────────────────────────────────────────╯
+Usage: deployer update-central-grafana-datasources [OPTIONS]                                                                                                                            
+                                                                                                                                                                                         
+ Update the central grafana with datasources for all clusters prometheus instances                                                                                                       
+                                                                                                                                                                                         
+╭─ Options ─────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────╮
+│ --central-grafana-cluster        TEXT  Name of cluster where the central grafana lives [default: 2i2c]                                                                                │
+│ --help                                 Show this message and exit.                                                                                                                    │
+╰───────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────╯
 
 ```
 

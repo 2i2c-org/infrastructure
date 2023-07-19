@@ -35,33 +35,30 @@ jupyterhub:
   hub:
     config:
       JupyterHub:
-        authenticator_class: github
-      GitHubOAuthenticator:
+        authenticator_class: cilogon
+      CILogonOAuthenticator:
         oauth_callback_url: https://demo.cloudbank.2i2c.cloud/hub/oauth_callback
-        allowed_organizations:
-          - 2i2c-org
-          - ahs-cs-a
-        scope:
-          - read:org
+        shown_idps:
+          - http://google.com/accounts/o8/id
+          - urn:mace:incommon:berkeley.edu
+        allowed_idps:
+          http://google.com/accounts/o8/id:
+            username_derivation:
+              username_claim: "email"
+          urn:mace:incommon:berkeley.edu:
+            username_derivation:
+              username_claim: "email"
       Authenticator:
+        # These folks should still have admin tho
         admin_users:
-          - sean-morris
-      # JupyterHub:
-      #   authenticator_class: cilogon
-      # CILogonOAuthenticator:
-      #   oauth_callback_url: https://demo.cloudbank.2i2c.cloud/hub/oauth_callback
-      #   username_claim: email
-      # Authenticator:
-      #   # These folks should still have admin tho
-      #   admin_users:
-      #     - ericvd@berkeley.edu
-      #     - sean.smorris@berkeley.edu
-      #     - kalkeab@gmail.com
-      #   # We only want 2i2c users and users with .edu emails to sign up
-      #   # Protects against cryptominers - https://github.com/2i2c-org/infrastructure/issues/1216
-      #   # FIXME: This doesn't account for educational institutions that have emails that don't end in .edu,
-      #   # as is the case for some non-euroamerican universities.
-      #   username_pattern: '^(.+@2i2c\.org|.+\.edu|kalkeab@gmail\.com|deployment-service-check)$'
+          - ericvd@berkeley.edu
+          - sean.smorris@berkeley.edu
+          - kalkeab@gmail.com
+        # We only want 2i2c users and users with .edu emails to sign up
+        # Protects against cryptominers - https://github.com/2i2c-org/infrastructure/issues/1216
+        # FIXME: This doesn't account for educational institutions that have emails that don't end in .edu,
+        # as is the case for some non-euroamerican universities.
+        username_pattern: '^(.+@2i2c\.org|.+\.edu|kalkeab@gmail\.com|deployment-service-check)$'
   cull:
     # Cull after 30min of inactivity
     every: 300

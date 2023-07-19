@@ -109,6 +109,12 @@ basehub:
             - oceanhackweek:ohw22-organizers-brazil
             - oceanhackweek:ohw22-organizers-espanol
             - oceanhackweek:ohw22-organizers-virtual
+            - oceanhackweek:ohw23-organizers
+            - oceanhackweek:ohw23-participants-australia
+            - oceanhackweek:ohw23-participants-seattle
+            - oceanhackweek:ohw23-participants-virtual
+            - oceanhackweek:ohw23-project-mentors
+            - oceanhackweek:ohw23-tutorial-presenters
           scope:
             - read:org
         Authenticator:

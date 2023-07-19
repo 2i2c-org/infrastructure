@@ -5,6 +5,9 @@ userServiceAccount:
   enabled: true
   annotations: {}
 
+binderhub-service:
+  enabled: false
+
 ingressBasicAuth:
   enabled: false
   # Primarily here for validation to 'work',
@@ -101,9 +104,9 @@ jupyterhub:
       gitRepoBranch: "master"
   ingress:
     enabled: true
+    ingressClassName: nginx
     annotations:
       nginx.ingress.kubernetes.io/proxy-body-size: 256m
-      kubernetes.io/ingress.class: nginx
       cert-manager.io/cluster-issuer: letsencrypt-prod
   scheduling:
     # We declare matchNodePurpose=require to get a nodeAffinity like a

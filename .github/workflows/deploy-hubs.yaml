@@ -122,8 +122,8 @@ jobs:
         # Only run this steps in PRs when the matrices are not empty
         if: >
           github.event_name == 'pull_request' &&
-          env.support-and-staging-matrix-jobs != '[]' &&
-          env.prod-hub-matrix-jobs != '[]'
+          (env.support-and-staging-matrix-jobs != '[]' ||
+          env.prod-hub-matrix-jobs != '[]')
         uses: actions/upload-artifact@v3.1.0
         with:
           name: pr
@@ -141,6 +141,9 @@ jobs:
         with:
           notify_when: "failure"
           status: ${{ job.status }} # required
+          # Message should look like: "Hey @author! Deploy and test hubs failed for "Add new hub - 9305e08".
+          message_format: '{emoji} Hey @${{ github.event.head_commit.author.name }}! *{workflow}* {status_message} for "${{ github.event.head_commit.message }} - <{commit_url}|{commit_sha}>". Checkout the run at {run_url}.'
+          footer: "<{run_url}|Failing Run>"
         env:
           SLACK_WEBHOOK_URL: ${{ secrets.SLACK_GHA_FAILURES_WEBHOOK_URL }}
   # This job upgrades the support chart, staging hub, and dask-staging hub (if present)
@@ -186,6 +189,7 @@ jobs:
       failure_jupyter-meets-the-earth: "${{ env.failure_jupyter-meets-the-earth }}"
       failure_smithsonian: "${{ env.failure_smithsonian }}"
       failure_catalystproject-latam: "${{ env.failure_catalystproject-latam }}"
+      failure_catalystproject-africa: "${{ env.failure_catalystproject-africa }}"
 
     # Only run this job on pushes to the default branch and when the job output is not
     # an empty list

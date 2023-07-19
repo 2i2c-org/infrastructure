@@ -1,8 +1,8 @@
 jupyterhub:
   ingress:
-    hosts: [staging.latam.catalystproject.2i2c.cloud]
+    hosts: [staging.af.catalystproject.2i2c.cloud]
     tls:
-      - hosts: [staging.latam.catalystproject.2i2c.cloud]
+      - hosts: [staging.af.catalystproject.2i2c.cloud]
         secretName: https-auto-tls
   custom:
     2i2c:
@@ -25,10 +25,13 @@ jupyterhub:
           url: "https://chanzuckerberg.com/science/programs-resources/open-science/"
   hub:
     config:
+      # Authenticator:
+      #   admin_users:
+      #     - future-community-champion
       JupyterHub:
         authenticator_class: github
       GitHubOAuthenticator:
-        oauth_callback_url: https://staging.latam.catalystproject.2i2c.cloud/hub/oauth_callback
+        oauth_callback_url: https://staging.af.catalystproject.2i2c.cloud/hub/oauth_callback
         allowed_organizations:
           - 2i2c-org:hub-access-for-2i2c-staff
           - czi-catalystproject

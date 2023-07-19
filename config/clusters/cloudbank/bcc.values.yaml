@@ -33,7 +33,13 @@ jupyterhub:
     config:
       CILogonOAuthenticator:
         oauth_callback_url: https://bcc.cloudbank.2i2c.cloud/hub/oauth_callback
-        username_claim: email
+        shown_idps:
+          - http://google.com/accounts/o8/id
+        allowed_idps:
+          http://google.com/accounts/o8/id:
+            username_derivation:
+              username_claim: "email"
+            allowed_domains: ["2i2c.org", "berkeley.edu", "peralta.edu"]
       JupyterHub:
         authenticator_class: cilogon
       Authenticator:
@@ -41,4 +47,3 @@ jupyterhub:
           - ericvd@berkeley.edu
           - sean.smorris@berkeley.edu
           - mseidel@peralta.edu
-        username_pattern: '^(.+@2i2c\.org|.+@berkeley\.edu|.+@peralta\.edu|deployment-service-check)$'

@@ -29,7 +29,21 @@ jupyterhub:
         authenticator_class: cilogon
       CILogonOAuthenticator:
         oauth_callback_url: https://miracosta.cloudbank.2i2c.cloud/hub/oauth_callback
-        username_claim: email
+        # Only show and allow option to login with Google and Miracosta institutional provider
+        shown_idps:
+          - http://google.com/accounts/o8/id
+          - https://miracosta.fedgw.com/gateway
+          - urn:mace:incommon:berkeley.edu
+        allowed_idps:
+          http://google.com/accounts/o8/id:
+            username_derivation:
+              username_claim: "email"
+          https://miracosta.fedgw.com/gateway:
+            username_derivation:
+              username_claim: "email"
+          urn:mace:incommon:berkeley.edu:
+            username_derivation:
+              username_claim: "email"
       Authenticator:
         admin_users:
           - sfirouzian@miracosta.edu
