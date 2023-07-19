@@ -115,7 +115,8 @@ for cluster_info in clusters:
                 "cluster": cluster["name"],
                 "provider": provider,
                 "data center location": datacentre_loc,  # Americanising for you ;)
-                "UI console link": f"[Use with **{account}** account]({cluster_console_url})"
+                "UI console link": f"[Use with **{account}** account]({cluster_console_url})",
+                "admin_url": f"[admin](https://{hub['domain']}/hub/admin)"
                 if cluster_console_url
                 else None,
             }
