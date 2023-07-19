@@ -29,10 +29,23 @@ jupyterhub:
         authenticator_class: cilogon
       CILogonOAuthenticator:
         oauth_callback_url: https://glendale.cloudbank.2i2c.cloud/hub/oauth_callback
-        username_claim: email
+        shown_idps:
+          - http://google.com/accounts/o8/id
+          - urn:mace:incommon:berkeley.edu
+        allowed_idps:
+          http://google.com/accounts/o8/id:
+            username_derivation:
+              username_claim: "email"
+            allowed_domains:
+              - "2i2c.org"
+              - "berkeley.edu"
+              - "glendale.edu"
+              - "student.glendale.edu"
+          urn:mace:incommon:berkeley.edu:
+            username_derivation:
+              username_claim: "email"
       Authenticator:
         admin_users:
           - simon@glendale.edu
           - ericvd@berkeley.edu
           - sean.smorris@berkeley.edu
-        username_pattern: '^(.+@2i2c\.org|.+@berkeley\.edu|.+@glendale\.edu|.+@student\.glendale\.edu|deployment-service-check)$'

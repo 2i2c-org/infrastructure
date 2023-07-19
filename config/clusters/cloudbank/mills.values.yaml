@@ -29,16 +29,24 @@ jupyterhub:
         authenticator_class: cilogon
       CILogonOAuthenticator:
         oauth_callback_url: "https://datahub.mills.edu/hub/oauth_callback"
-        username_claim: "email"
         # Only show the option to login with Google
         shown_idps:
           - http://google.com/accounts/o8/id
+          - urn:mace:incommon:berkeley.edu
+        allowed_idps:
+          http://google.com/accounts/o8/id:
+            username_derivation:
+              username_claim: "email"
+            allowed_domains:
+              - "2i2c.org"
+              - "berkeley.edu"
+              - "mills.edu"
+          urn:mace:incommon:berkeley.edu:
+            username_derivation:
+              username_claim: "email"
       Authenticator:
         admin_users: &mills_admins
           - aculich@berkeley.edu
           - sean.smorris@berkeley.edu
           - akonrad@mills.edu
           - wang@mills.edu
-        # We do not define allowed_users here since only usernames matching this regex will be allowed to login into the hub.
-        # Ref: https://jupyterhub.readthedocs.io/en/stable/api/auth.html#jupyterhub.auth.Authenticator.username_pattern
-        username_pattern: '^(.+@mills\.edu|.+@2i2c\.org|aculich@berkeley\.edu|sean.smorris@berkeley\.edu|deployment-service-check)$'

@@ -31,11 +31,26 @@ jupyterhub:
           url: https://missioncollege.edu/
   hub:
     config:
-      CILogonOAuthenticator:
-        oauth_callback_url: https://mission.cloudbank.2i2c.cloud/hub/oauth_callback
-        username_claim: email
       JupyterHub:
         authenticator_class: cilogon
+      CILogonOAuthenticator:
+        oauth_callback_url: https://mission.cloudbank.2i2c.cloud/hub/oauth_callback
+        # Only show the option to login with Google
+        shown_idps:
+          - http://google.com/accounts/o8/id
+          - urn:mace:incommon:berkeley.edu
+        allowed_idps:
+          http://google.com/accounts/o8/id:
+            username_derivation:
+              username_claim: "email"
+            allowed_domains:
+              - "2i2c.org"
+              - "berkeley.edu"
+              - "missioncollege.edu"
+              - "mywvm.wvm.edu"
+          urn:mace:incommon:berkeley.edu:
+            username_derivation:
+              username_claim: "email"
       Authenticator:
         admin_users:
           - ericvd@berkeley.edu
@@ -43,4 +58,3 @@ jupyterhub:
           - Max.Sklar@missioncollege.edu
           - Kristen.Purdum@missioncollege.edu
           - Michael.Cao@missioncollege.edu
-        username_pattern: '^(.+@2i2c\.org|.+@berkeley\.edu|.+@mywvm\.wvm\.edu|.+@missioncollege\.edu|deployment-service-check)$'
