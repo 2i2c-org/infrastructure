@@ -45,3 +45,12 @@ dependencies:
     version: "0.0.1-0.dev.git.27.h01b4f25"
     repository: https://yuvipanda.github.io/cryptnono/
     condition: cryptnono.enabled
+
+  # opencost cost monitoring for kubernetes.
+  # TODO(pnasrat): Experimental
+  # Testing OpenCost to display and report on shared costs
+  # https://github.com/2i2c-org/infrastructure/issues/1923
+  - name: opencost
+    version: 1.7.0
+    repository: https://opencost.github.io/opencost-helm-chart
+    condition: opencost.enabled

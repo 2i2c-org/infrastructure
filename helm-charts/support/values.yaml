@@ -410,6 +410,12 @@ cryptnono:
 # -------------------------------------------------------------------------------
 #
 
+# TODO(pnasrat): Experimental
+# Testing OpenCost to display and report on shared costs
+# https://github.com/2i2c-org/infrastructure/issues/1923
+opencost:
+  enabled: false
+
 prometheusIngressAuthSecret:
   enabled: false
   username: ""

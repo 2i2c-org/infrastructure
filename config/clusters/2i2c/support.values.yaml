@@ -14,6 +14,23 @@ prometheus:
         - secretName: prometheus-tls
           hosts:
             - prometheus.pilot.2i2c.cloud
+    # TODO(pnasrat) figure way to conditionalize
+    # TODO(pnasrat): Experimental
+    # Testing OpenCost to display and report on shared costs
+    # https://github.com/2i2c-org/infrastructure/issues/1923
+    # Source: https://raw.githubusercontent.com/opencost/opencost/develop/kubernetes/prometheus/extraScrapeConfigs.yaml
+    extraScrapeConfigs: |
+      - job_name: opencost
+        honor_labels: true
+        scrape_interval: 1m
+        scrape_timeout: 10s
+        metrics_path: /metrics
+        scheme: http
+        dns_sd_configs:
+        - names:
+          - opencost.support
+          type: 'A'
+          port: 9003
 
 grafana:
   grafana.ini:
@@ -33,3 +50,21 @@ grafana:
           - grafana.pilot.2i2c.cloud
   plugins:
     - grafana-bigquery-datasource
+
+# TODO(pnasrat): Experimental
+# Testing OpenCost to display and report on shared costs
+# https://github.com/2i2c-org/infrastructure/issues/1923
+opencost:
+  enabled: true
+  opencost:
+    # -- The GCP Pricing API provided in secrets.
+    #cloudProviderApiKey: ""
+    # -- Default cluster ID to use if cluster_id is not set in Prometheus metrics.
+    exporter:
+      defaultClusterId: "pilot-hubs-cluster"
+    prometheus:
+      # Note the external config supports basic auth but unsure if supports multiple prometheuses
+      internal:
+        namespaceName: support
+        serviceName: support-prometheus-server
+        port: 80
