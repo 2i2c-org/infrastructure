@@ -61,7 +61,7 @@ This AWS IAM Role is managed via terraform.
       buckets marked as 'requestor pays'. More details [here](topic:features:cloud:gcp:requestor-pays).
    3. `bucket_admin_access` lists bucket names (as specified in `user_buckets`
       terraform variable) all users on this hub should have full read/write
-      access to. Used along with the [user_buckets](howto:features:cloud-access:storage-buckets)
+      access to. Used along with the [user_buckets](howto:features:storage-buckets)
       terraform variable to enable the [scratch buckets](topic:features:cloud:scratch-buckets)
       feature.
    4. `bucket_public_access` lists bucket names (as specified in `user_buckets`

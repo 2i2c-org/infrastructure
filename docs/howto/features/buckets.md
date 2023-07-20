@@ -1,4 +1,4 @@
-(howto:features:cloud-access:storage-buckets)=
+(howto:features:storage-buckets)=
 # Setup object storage buckets
 
 See [the relevant topic page](topic:features:cloud:scratch-buckets) for more information

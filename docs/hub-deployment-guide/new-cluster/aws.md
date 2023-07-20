@@ -145,7 +145,7 @@ Our AWS *terraform* code is now used to deploy supporting infrastructure for the
 - An IAM identity account for use with our CI/CD system
 - Appropriately networked EFS storage to serve as an NFS server for hub home directories
 - Optionally, setup a [shared database](features:shared-db:aws)
-- Optionally, setup [user buckets](howto:features:cloud-access:storage-buckets)
+- Optionally, setup [user buckets](howto:features:storage-buckets)
 
 We still store [terraform state](https://www.terraform.io/docs/language/state/index.html)
 in GCP, so you also need to have `gcloud` set up and authenticated already.
