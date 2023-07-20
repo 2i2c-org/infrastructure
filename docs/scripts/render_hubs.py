@@ -64,29 +64,28 @@ def get_cluster_console_url(cluster, provider, account, datacentre_loc):
     return cluster_console_url
 
 
-def get_hub_authentication(cluster_path, hub_values_files):
-    # Loop through hub values files, look for authenticator_class config, and grab the info
+def get_hub_authentication(hub_config):
     authenticator_info = ""
-    for config_file in hub_values_files:
-        with open(cluster_path.joinpath(config_file)) as f:
-            hub_config = safe_load(f)
 
-        daskhub = hub_config.get("basehub", None)
-        binderhub = hub_config.get("binderhub", None)
-        try:
-            if daskhub:
-                authenticator_info = hub_config["basehub"]["jupyterhub"]["hub"][
-                    "config"
-                ]["JupyterHub"]["authenticator_class"]
-            elif binderhub:
-                authenticator_info = hub_config["binderhub"]["jupyterhub"]["hub"][
-                    "config"
-                ]["JupyterHub"]["authenticator_class"]
-            authenticator_info = hub_config["jupyterhub"]["hub"]["config"][
+    daskhub = hub_config.get("basehub", None)
+    binderhub = hub_config.get("binderhub", None)
+
+    # Return the value of `authenticator_class` from the `hub_config` dictionary
+    # and the empty string if none is found
+    try:
+        if daskhub:
+            authenticator_info = hub_config["basehub"]["jupyterhub"]["hub"]["config"][
                 "JupyterHub"
             ]["authenticator_class"]
-        except KeyError:
-            pass
+        elif binderhub:
+            authenticator_info = hub_config["binderhub"]["jupyterhub"]["hub"]["config"][
+                "JupyterHub"
+            ]["authenticator_class"]
+        authenticator_info = hub_config["jupyterhub"]["hub"]["config"]["JupyterHub"][
+            "authenticator_class"
+        ]
+    except KeyError:
+        pass
 
     return authenticator_info
 
@@ -233,7 +232,13 @@ def main():
                 )
             )
 
-            authenticator = get_hub_authentication(cluster_path, hub_values_files)
+            for config_file in hub_values_files:
+                with open(cluster_path.joinpath(config_file)) as f:
+                    hub_config = safe_load(f)
+                authenticator = get_hub_authentication(cluster_path, hub_config)
+                if authenticator:
+                    break
+
             options_list.append(build_options_list_entry(hub, authenticator))
 
     # Convert to a DataFrame and write it to a CSV file that will be read by Sphinx
