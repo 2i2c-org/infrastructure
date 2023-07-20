@@ -26,6 +26,18 @@ A table of all running hubs across all of our clusters.
 
 </div>
 
+
+## Hub options table
+
+<div class="full-width hubs-table">
+
+```{csv-table}
+:header-rows: 1
+:file: ../tmp/hub-options-table.csv
+```
+
+</div>
+
 ## Community hub statistics
 
 Summary statistics of the communities we are serving with with hubs, broken down by cluster and cloud provider.
