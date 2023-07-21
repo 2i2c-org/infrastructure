@@ -28,7 +28,7 @@ jupyterhub:
   singleuser:
     extraFiles:
       gitconfig:
-        mountPath: /etc/gitconfig
+        mountPath: /srv/conda/envs/notebook/etc/gitconfig
         stringData: |
           [credential "https://github.com"]
           helper = !git-credential-github-app --app-key-file /etc/github/github-app-private-key.pem --app-id 356717
