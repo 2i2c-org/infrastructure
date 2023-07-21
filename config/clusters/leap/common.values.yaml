@@ -194,7 +194,9 @@ basehub:
               display_name: Image
               unlisted_choice:
                 enabled: True
-                display_name: "Custom org/image:tag"
+                display_name: "Custom image"
+                validation_regex: "^.+:.+$"
+                validation_message: "Must be an image location, matching ^.+:.+$"
                 kubespawner_override:
                   image: "{value}"
               choices:
@@ -278,7 +280,9 @@ basehub:
               display_name: Image
               unlisted_choice:
                 enabled: True
-                display_name: "Custom org/image:tag"
+                display_name: "Custom image"
+                validation_regex: "^.+:.+$"
+                validation_message: "Must be an image location, matching ^.+:.+$"
                 kubespawner_override:
                   image: "{value}"
               choices:
