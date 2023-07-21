@@ -36,7 +36,7 @@ jupyterhub:
     # User image: https://quay.io/repository/arokem/nh2023?tab=tags
     image:
       name: quay.io/arokem/nh2023
-      tag: "9aecdbb2881f"
+      tag: "894883dfb3bd"
     nodeSelector:
       2i2c.org/community: neurohackademy
     extraTolerations:
