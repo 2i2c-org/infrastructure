@@ -50,13 +50,24 @@ the app we just created.
      singleuser:
        extraFiles:
          gitconfig:
-           mountPath: /etc/gitconfig
+           mountPath: <path-to-git-config>
            stringData: |
              [credential "https://github.com"]
              helper = !git-credential-github-app --app-key-file /etc/github/github-app-private-key.pem --app-id <app-id>
-          useHttpPath = true
+             useHttpPath = true
    ```
    
+   Unfortunately, the `<path-to-git-config>` depends on *how* `git` is
+   installed inside the image. 
+
+   a. The most common situation is `git` is installed from `apt` or the system
+      package manager, and not `conda`. In this case, `mountPath` is `/etc/gitconfig`.
+      
+   b. If `git` is installed from conda, it will
+      *not* read `/etc/gitconfig` (see [bug](https://github.com/conda-forge/git-feedstock/issues/113),
+      but `${CONDA_PREFIX}/etc/gitconfig`. So, *if* the image installs `git` from
+      conda-forge, you have to start the image, look for the value of the `${CONDA_PREFIX}` environment variable, and construct `mountPath` to be `${CONDA_PREFIX}/etc/gitconfig`
+
    Use the app-id of the GitHub app you just created. This goes in the hub's
    `values.yaml` file. If used for a `daskhub`, next the whole thing under a
    `basehub` key.
