@@ -37,6 +37,9 @@ basehub:
             name: LEAP
             url: https://leap-stc.github.io
     hub:
+      image:
+        name: quay.io/2i2c/experimental-hub
+        tag: "0.0.1-0.dev.git.6406.hc1091b1c"
       allowNamedServers: true
       config:
         Authenticator:
@@ -189,6 +192,11 @@ basehub:
                     cpu_limit: 16
             image: &profile_list_profile_options_image
               display_name: Image
+              unlisted_choice:
+                enabled: True
+                display_name: "Custom org/image:tag"
+                kubespawner_override:
+                  image: "{value}"
               choices:
                 pangeo_new:
                   display_name: Base Pangeo Notebook ("2023.05.18")
@@ -268,6 +276,11 @@ basehub:
           profile_options:
             image:
               display_name: Image
+              unlisted_choice:
+                enabled: True
+                display_name: "Custom org/image:tag"
+                kubespawner_override:
+                  image: "{value}"
               choices:
                 tensorflow_new:
                   display_name: Pangeo Tensorflow ML Notebook ("2023.05.18")
