@@ -138,3 +138,5 @@ which provides fast binary package installs.
 
 They are installed under `/usr/local`, and hence *cleared on server stop*. So installed
 packages will *not* persist across user sessions. 
+
+If users need to have persistent packages installed, we would need a custom image.
