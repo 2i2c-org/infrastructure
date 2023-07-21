@@ -12,6 +12,7 @@ cloud-access.md
 gpu.md
 github.md
 anonymized-usernames.md
+private-nbgitpuller.md
 ```
 
 ```{toctree}
