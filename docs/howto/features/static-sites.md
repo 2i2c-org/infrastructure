@@ -1,5 +1,9 @@
 # Deploy authenticated static websites along the hub
 
+```{warning}
+This feature is currently broken. Tracked in [this issue](https://github.com/2i2c-org/infrastructure/issues/2206).
+```
+
 We can deploy *authenticated* static websites on the same domain as the hub
 that is only accessible to users who have access to the hub. The source
 for these come from git repositories that should contain rendered HTML,
