@@ -235,7 +235,7 @@ def main():
             for config_file in hub_values_files:
                 with open(cluster_path.joinpath(config_file)) as f:
                     hub_config = safe_load(f)
-                authenticator = get_hub_authentication(cluster_path, hub_config)
+                authenticator = get_hub_authentication(hub_config)
                 if authenticator:
                     break
 
