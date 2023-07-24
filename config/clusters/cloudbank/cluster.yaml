@@ -244,14 +244,6 @@ hubs:
       - common.values.yaml
       - wlac.values.yaml
       - enc-wlac.secret.values.yaml
-  - name: csu
-    display_name: "California State University"
-    domain: csu.cloudbank.2i2c.cloud
-    helm_chart: basehub
-    helm_chart_values_files:
-      - common.values.yaml
-      - csu.values.yaml
-      - enc-csu.secret.values.yaml
   - name: csulb
     display_name: "California State University Long Beach"
     domain: csulb.cloudbank.2i2c.cloud
