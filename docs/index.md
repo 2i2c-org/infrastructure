@@ -69,6 +69,7 @@ deployed occasionally as a specific addition.
 :caption: How-to guides
 howto/features/index.md
 howto/bill.md
+howto/custom-jupyterhub-image.md
 howto/manage-domains/index.md
 howto/grafana-github-auth.md
 howto/update-env.md
