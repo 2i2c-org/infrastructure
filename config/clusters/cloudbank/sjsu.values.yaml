@@ -1,0 +1,68 @@
+jupyterhub:
+  ingress:
+    hosts: [sjsu.cloudbank.2i2c.cloud]
+    tls:
+      - hosts: [sjsu.cloudbank.2i2c.cloud]
+        secretName: https-auto-tls
+  prePuller:
+    continuous:
+      enabled: true
+    hook:
+      enabled: true
+  singleuser:
+    memory:
+      guarantee: 512M
+      limit: 1G
+  custom:
+    2i2c:
+      add_staff_user_ids_to_admin_users: true
+      add_staff_user_ids_of_type: "google"
+    homepage:
+      templateVars:
+        org:
+          name: San Jose State University
+          logo_url: https://www.sjsu.edu/aspis/media/brand/icon-spartan-withbackground.svg
+          url: https://www.sjsu.edu/
+        designed_by:
+          name: 2i2c
+          url: https://2i2c.org
+        operated_by:
+          name: CloudBank
+          url: http://cloudbank.org/
+        funded_by:
+          name: CloudBank
+          url: http://cloudbank.org/
+  hub:
+    config:
+      JupyterHub:
+        authenticator_class: cilogon
+      CILogonOAuthenticator:
+        oauth_callback_url: https://sjsu.cloudbank.2i2c.cloud/hub/oauth_callback
+        username_claim: "email"
+        shown_idps:
+          - http://google.com/accounts/o8/id
+          - https://idp01.sjsu.edu/idp/shibboleth
+          - urn:mace:incommon:berkeley.edu
+        allowed_idps:
+          http://google.com/accounts/o8/id:
+            username_derivation:
+              username_claim: "email"
+            allowed_domains:
+              - "2i2c.org"
+          urn:mace:incommon:berkeley.edu:
+            username_derivation:
+              username_claim: "email"
+          https://idp01.sjsu.edu/idp/shibboleth:
+            username_derivation:
+              username_claim: "email"
+      Authenticator:
+        admin_users:
+          - ericvd@berkeley.edu
+          - sean.smorris@berkeley.edu
+          - rula.khayrallah@sjsu.edu
+  cull:
+    # Cull after 30min of inactivity
+    every: 300
+    timeout: 1800
+    # No pods over 12h long
+    maxAge: 43200
