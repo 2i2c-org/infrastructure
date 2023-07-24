@@ -30,12 +30,21 @@ jupyterhub:
       CILogonOAuthenticator:
         oauth_callback_url: "https://norco.cloudbank.2i2c.cloud/hub/oauth_callback"
         shown_idps:
+          - http://login.microsoftonline.com/common/oauth2/v2.0/authorize
           - http://google.com/accounts/o8/id
           - urn:mace:incommon:berkeley.edu
         allowed_idps:
+          http://login.microsoftonline.com/common/oauth2/v2.0/authorize:
+            username_derivation:
+              username_claim: "email"
+            allowed_domains:
+              - "norcocollege.edu"
           http://google.com/accounts/o8/id:
             username_derivation:
               username_claim: "email"
+            allowed_domains:
+              - "2i2c.org"
+              - "berkeley.edu"
           urn:mace:incommon:berkeley.edu:
             username_derivation:
               username_claim: "email"
