@@ -16,6 +16,11 @@ basehub:
             name: COESSING
             url: https://coessing.org/
             logo_url: "https://coessing.files.wordpress.com/2016/08/ghana-logo-21.png?w=262&h=376&zoom=2"
+    ingress:
+      hosts: [coessing.2i2c.cloud]
+      tls:
+        - hosts: [coessing.2i2c.cloud]
+          secretName: https-auto-tls
     singleuser:
       extraEnv:
         SCRATCH_BUCKET: gcs://pangeo-hubs-coessing-scratch/$(JUPYTERHUB_USER)
@@ -48,8 +53,3 @@ basehub:
             http://google.com/accounts/o8/id:
               username_derivation:
                 username_claim: "email"
-# TODO:
-# - setup scratch-bucket
-# - No profiles, just set to medium
-# - Wait on Julia
-# - Push to GitHub
