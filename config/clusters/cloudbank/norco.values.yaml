@@ -38,7 +38,7 @@ jupyterhub:
             username_derivation:
               username_claim: "email"
             allowed_domains:
-              - "norcocollege.edu"          
+              - "norcocollege.edu"
           http://google.com/accounts/o8/id:
             username_derivation:
               username_claim: "email"
