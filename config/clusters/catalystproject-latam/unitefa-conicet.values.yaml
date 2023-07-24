@@ -43,4 +43,8 @@ jupyterhub:
           http://google.com/accounts/o8/id:
             username_derivation:
               username_claim: "email"
-            allowed_domains: ["2i2c.org", "unc.edu.ar", "famaf.unc.edu.ar"]
+            allowed_domains:
+              - "2i2c.org"
+              - "unc.edu.ar"
+              - "mi.unc.edu.ar"
+              - "famaf.unc.edu.ar"
