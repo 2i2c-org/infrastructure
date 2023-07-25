@@ -6,8 +6,18 @@ minimum and maximum number of nodes. In certain cases, it might be helpful to 's
 a nodegroup in a cluster before an event, to test cloud provider quotas or to make user
 server startup faster.
 
-1. Open the appropriate `.jsonnet` file for the cluster in question (located in the `eksctl` folder), and set a
-   `minSize` property of `notebookNodes` to the appropriate number you want.
+1. Open the appropriate `.jsonnet` file for the cluster in question (located in the `eksctl` folder).
+   Depending on how you intend to scale the nodepools, there are two approaches you may take.
+
+   1. **Scale all nodepools.**
+      To scale all nodepools, locate the `minSize` property of the `nb` node group and change the value to what you want.
+      An example can be found here:
+      <https://github.com/2i2c-org/infrastructure/blob/f40cfbc2b5bd236a1f95e406a6f6d9bec99e55d2/eksctl/2i2c-aws-us.jsonnet#L102>
+   
+   2. **Scale a specific nodepool.**
+      If you only wish to scale a specific nodepool, you can add the `minSize` property to the local `notebookNodes` variable next to the `instanceType` that you wish to scale.
+      An example can be found here:
+      <https://github.com/2i2c-org/infrastructure/blob/f40cfbc2b5bd236a1f95e406a6f6d9bec99e55d2/eksctl/carbonplan.jsonnet#L40>
 
    ```{warning}
    It is currently unclear if *lowering* the `minSize` property just allows
