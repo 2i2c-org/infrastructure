@@ -9,6 +9,7 @@ jupyterhub:
       add_staff_user_ids_to_admin_users: true
       add_staff_user_ids_of_type: "google"
     homepage:
+      gitRepoBranch: "catalystproject-ES"
       templateVars:
         org:
           name: Catalyst Project, LatAm - UNITEFA-CONICET
