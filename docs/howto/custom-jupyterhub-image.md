@@ -16,7 +16,7 @@ In addition to the `hub` image, there is also a `hub-experimental` image, that i
 This `hub-experimental` image is very similar to the hub image, but its primary goal is to be used to test changes like new packages, newer package versions, or even unreleased or unmerged versions of them. It can be used to deploy such change just to one or a few specific communities, without having to worry about the instabilities it can generate for other communities.
 
 ```{note}
-Both the 2i2c custom `hub` and the `hub-experimental` images live at [Quay.io](https://quay.io/repository/2i2c/pilot-hub).
+Both the 2i2c custom `hub` and the `hub-experimental` images live at [Quay.io](https://quay.io/organization/2i2c).
 ```
 
 ## When to roll out the changes in `hub-experimental` to `hub`
