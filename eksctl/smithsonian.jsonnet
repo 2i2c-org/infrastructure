@@ -92,7 +92,7 @@ local daskNodes = [
             // instanceTypes always have a .
             name: "nb-%s" % std.strReplace(n.instanceType, ".", "-"),
             availabilityZones: [nodeAz],
-            minSize: 5,
+            minSize: 0,
             maxSize: 500,
             instanceType: n.instanceType,
             ssh: {
