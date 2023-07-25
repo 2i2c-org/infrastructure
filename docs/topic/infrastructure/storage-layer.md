@@ -19,7 +19,7 @@ This is made available through cloud-specific filestores.
 
 ## NFS Client setup
 
-For each hub, there needs to be a:
+For each hub, there needs to be the components described by the following subsections.
 
 ### Hub directory
 
