@@ -42,16 +42,18 @@ jupyterhub:
           http://google.com/accounts/o8/id:
             username_derivation:
               username_claim: "email"
+            allowed_domains:
+              - "2i2c.org"
+              - "berkeley.edu"
+              - "go.pasadena.edu"
           urn:mace:incommon:berkeley.edu:
             username_derivation:
               username_claim: "email"
       Authenticator:
         admin_users:
           - yxchang@go.pasadena.edu
-          - yccdharma@gmail.com
           - eshaw4@go.pasadena.edu
           - JJASHRAF@go.pasadena.edu
           - ericvd@berkeley.edu
           - k_usovich@berkeley.edu
           - sean.smorris@berkeley.edu
-        username_pattern: '^(.+@2i2c\.org|.+@berkeley\.edu|.+@go\.pasadena\.edu|yccdharma@gmail\.com|deployment-service-check)$'
