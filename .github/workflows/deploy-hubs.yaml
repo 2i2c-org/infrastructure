@@ -13,6 +13,9 @@ on:
       - master
     paths:
       - deployer/**
+      # Exclude changes to the tests directory from
+      # triggering this workflow
+      - "!deployer/tests/**"
       - requirements.txt
       - .github/actions/setup-deploy/**
       - helm-charts/**
@@ -22,6 +25,9 @@ on:
       - master
     paths:
       - deployer/**
+      # Exclude changes to the tests directory from
+      # triggering this workflow
+      - "!deployer/tests/**"
       - requirements.txt
       - .github/actions/setup-deploy/**
       - helm-charts/**
