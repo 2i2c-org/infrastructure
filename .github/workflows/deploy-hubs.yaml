@@ -139,6 +139,8 @@ jobs:
         if: always()
         uses: ravsamhq/notify-slack-action@v2
         with:
+          # Warning: there are multiple "Report Status" steps in this file (one per job).
+          # Make sure they are all updated
           notify_when: "failure"
           status: ${{ job.status }} # required
           # Message should look like: "Hey @author! Deploy and test hubs failed for "Add new hub - 9305e08".
@@ -161,7 +163,7 @@ jobs:
     # see this post for feature requests for this to be improved:
     # https://github.community/t/bug-jobs-output-should-return-a-list-for-a-matrix-job/128626/32?u=consideratio
     #
-    # IMPORTANT: names can include alphanumerics, '-', and '_', but not '.', so
+    # Warning: names can include alphanumerics, '-', and '_', but not '.', so
     #            we replace '.' for '-' in cluster names.
     #
     # If you are adding a new cluster, please remember to list it here!
@@ -272,7 +274,7 @@ jobs:
       - name: Report Status
         if: always()
         uses: ravsamhq/notify-slack-action@v2
-        # Important: there are multiple "Report Status" steps in this file (one per job).
+        # Warning: there are multiple "Report Status" steps in this file (one per job).
         # Make sure they are all updated
         with:
           notify_when: "failure"
@@ -338,7 +340,7 @@ jobs:
         if: always()
         uses: ravsamhq/notify-slack-action@v2
         with:
-          # Important: there are multiple "Report Status" steps in this file (one per job).
+          # Warning: there are multiple "Report Status" steps in this file (one per job).
           # Make sure they are all updated
           notify_when: "failure"
           status: ${{ job.status }} # required
@@ -406,7 +408,7 @@ jobs:
         if: always()
         uses: ravsamhq/notify-slack-action@v2
         with:
-          # Important: there are multiple "Report Status" steps in this file (one per job).
+          # Warning: there are multiple "Report Status" steps in this file (one per job).
           # Make sure they are all updated
           notify_when: "failure"
           status: ${{ job.status }} # required
