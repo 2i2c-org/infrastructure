@@ -196,7 +196,7 @@ basehub:
                 enabled: True
                 display_name: "Custom image"
                 validation_regex: "^.+:.+$"
-                validation_message: "Must be an image location, matching ^.+:.+$"
+                validation_message: "Must be a valid public docker image, including a tag"
                 kubespawner_override:
                   image: "{value}"
               choices:
