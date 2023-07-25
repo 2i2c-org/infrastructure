@@ -28,16 +28,16 @@ Our current policy states that a change in `hub-experimental` must be rolled out
 The workflow is the following:
 ```{mermaid}
 flowchart TD
-  build_hub_experimental[Build a new `hub-experimental` image fa:fa-camera-retro]-->configure_hub_with_experiment[Configure the hub of at least one community to use the new image]
+  build_hub_experimental[fa:fa-camera-retro Build a new `hub-experimental` image]-->configure_hub_with_experiment[Configure the hub of at least one community to use the new image]
   configure_hub_with_experiment-->deploy_hub[fa:fa-rocket Deploy]
   -- Watch for one week to see how it goes! ---
   deploy_hub --> condition{{Runs for one week without needing any fixes?}}
   condition -- Yes --- roll_out[Roll out changes from `hub-experimental` into the `hub` image]
-  condition -- No --- fix[Fix issues fa:fa-ban]
+  condition -- No --- fix[fa:fa-ban Fix issues]
   fix --> condition
-  roll_out --> deploy_everywhere[Deploy hub image everywhere fa:fa-rocket]
+  roll_out --> deploy_everywhere[fa:fa-rocket Deploy hub image everywhere]
   -- More testing for hubs that are configured differently ---
-  deploy_everywhere --> end_condition[`hub-experimental` image is the same as `hub` fa:fa-exclamation]
+  deploy_everywhere --> end_condition[fa:fa-exclamation `hub-experimental` image is the same as `hub`]
 ```
 
 ## How to install an unreleased version of a package in the `hub-experimental` image
