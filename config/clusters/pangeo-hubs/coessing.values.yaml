@@ -1,0 +1,55 @@
+basehub:
+  userServiceAccount:
+    annotations:
+      iam.gke.io/gcp-service-account: pangeo-hubs-coessing@pangeo-integration-te-3eea.iam.gserviceaccount.com
+  jupyterhub:
+    custom:
+      cloudResources:
+        scratchBucket:
+          enabled: false
+      2i2c:
+        add_staff_user_ids_to_admin_users: true
+        add_staff_user_ids_of_type: "google"
+      homepage:
+        templateVars:
+          org:
+            name: COESSING
+            url: https://coessing.org/
+            logo_url: "https://coessing.files.wordpress.com/2016/08/ghana-logo-21.png?w=262&h=376&zoom=2"
+    ingress:
+      hosts: [coessing.2i2c.cloud]
+      tls:
+        - hosts: [coessing.2i2c.cloud]
+          secretName: https-auto-tls
+    singleuser:
+      extraEnv:
+        SCRATCH_BUCKET: gcs://pangeo-hubs-coessing-scratch/$(JUPYTERHUB_USER)
+        PANGEO_SCRATCH: gcs://pangeo-hubs-coessing-scratch/$(JUPYTERHUB_USER)
+      # No profiles
+      profileList: null
+      memory:
+        limit: 7G
+        guarantee: 4.5G
+      nodeSelector:
+        node.kubernetes.io/instance-type: n1-standard-2
+    hub:
+      config:
+        Authenticator:
+          admin_users: &admin_users
+            - paigemar@umich.edu
+          allowed_users: *admin_users
+          # Delete any prior existing users in the db that don't pass username_pattern
+          delete_invalid_users: true
+        JupyterHub:
+          authenticator_class: cilogon
+        CILogonOAuthenticator:
+          oauth_callback_url: "https://coessing.2i2c.cloud/hub/oauth_callback"
+          # Only show the option to login with Google
+          shown_idps:
+            - https://accounts.google.com/o/oauth2/auth
+          allowed_idps:
+            # CILogon still uses the old google oidc enpoint instead of the new one listed in `shown_idps`.
+            # Ref https://github.com/ncsa/OA4MP/issues/45
+            http://google.com/accounts/o8/id:
+              username_derivation:
+                username_claim: "email"
