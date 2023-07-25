@@ -44,13 +44,17 @@ flowchart TD
 
 To install an unreleased package, we will need to install directly from GitHub and not from PyPI:
 
-1. Identify the package and commit you wish to install into the hub image. Example:
+1. Identify the package and commit you wish to install into the hub image
+
+   ```{important}
+   Specify a full commit hash after `@`, not a branch name. This way, our builds are more reproducible!
+   ```
 
    ```bash
    https://github.com/jupyterhub/kubespawner@def501f1d60b8e5629745acb0bcc45b151b1decc
    ```
 
-2. Update the [requirements.txt](https://github.com/2i2c-org/infrastructure/blob/HEAD/helm-charts/images/hub-experimental/requirements.txt)) file to add this package and commit, prefixed by a `git+` on a new row. Example:
+2. Update the [requirements.txt](https://github.com/2i2c-org/infrastructure/blob/HEAD/helm-charts/images/hub-experimental/requirements.txt) file to add this package and commit, prefixed by a `git+` on a new row
 
    ```bash
    git+https://github.com/jupyterhub/kubespawner@def501f1d60b8e5629745acb0bcc45b151b1decc
