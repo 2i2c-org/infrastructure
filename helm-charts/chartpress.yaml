@@ -4,3 +4,7 @@ charts:
     images:
       hub:
         valuesPath: jupyterhub.hub.image
+  - name: basehub
+    images:
+      hub-experimental:
+        imageName: quay.io/2i2c/experimental-hub

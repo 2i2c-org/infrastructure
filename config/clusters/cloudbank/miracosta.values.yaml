@@ -38,6 +38,7 @@ jupyterhub:
           http://google.com/accounts/o8/id:
             username_derivation:
               username_claim: "email"
+            allowed_domains: ["2i2c.org"]
           https://miracosta.fedgw.com/gateway:
             username_derivation:
               username_claim: "email"
@@ -47,7 +48,5 @@ jupyterhub:
       Authenticator:
         admin_users:
           - sfirouzian@miracosta.edu
-          - shawnfirouzian@gmail.com
           - ericvd@berkeley.edu
           - sean.smorris@berkeley.edu
-        username_pattern: '^(.+@2i2c\.org|.+@berkeley\.edu|.+@miracosta\.edu|shawnfirouzian@gmail.com|deployment-service-check)$'
