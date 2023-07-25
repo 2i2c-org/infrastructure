@@ -17,7 +17,11 @@ This is made available through cloud-specific filestores.
 * Azure: Files
 * AWS: Elastic File System
 
-## Hub directory
+## NFS Client setup
+
+For each hub, there needs to be a:
+
+### Hub directory
 
 A directory is created under the path defined by the `nfs.pv.baseShareName` cluster config.
 Usually, this is `/homes` - for hubs that use the managed NFS provider for the cloud platform.
