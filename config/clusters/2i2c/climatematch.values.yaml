@@ -12,8 +12,8 @@ jupyterhub:
         effect: "NoSchedule"
     defaultUrl: /lab
     image:
-      name: pangeo/pangeo-notebook
-      tag: 2023.05.18
+      name: wesleyban/climatematch-notebook
+      tag: v0.1
     # shared-public for collaboration
     # See https://github.com/2i2c-org/infrastructure/issues/2785
     storage:
