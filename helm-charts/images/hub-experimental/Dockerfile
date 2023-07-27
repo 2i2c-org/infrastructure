@@ -15,7 +15,7 @@
 FROM jupyterhub/k8s-hub:3.0.0-beta.1
 ARG REQUIREMENTS_FILE
 
-COPY requirements.txt /tmp/
+COPY ${REQUIREMENTS_FILE} /tmp/
 
 RUN pip install -r /tmp/${REQUIREMENTS_FILE}
 
