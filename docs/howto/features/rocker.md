@@ -129,3 +129,14 @@ jupyterhub:
               kubespawner_override:
                 image: jupyter/scipy-notebook:2023-06-26
 ```
+
+## User installed packages
+
+In R, users can install packages with `install.packages` or similar R commands. Rocker
+is configured to automatically install packages from the [Posit Package Manager](https://packagemanager.posit.co/client/#/),
+which provides fast binary package installs.
+
+They are installed under `/usr/local`, and hence *cleared on server stop*. So installed
+packages will *not* persist across user sessions. 
+
+If users need to have persistent packages installed, we would need a custom image.
