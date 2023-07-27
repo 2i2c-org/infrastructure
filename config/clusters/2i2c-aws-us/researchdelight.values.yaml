@@ -40,6 +40,9 @@ basehub:
             name: 2i2c
             url: https://2i2c.org
     hub:
+      image:
+        name: quay.io/2i2c/experimental-hub
+        tag: "0.0.1-0.dev.git.6406.hc1091b1c"
       config:
         JupyterHub:
           authenticator_class: cilogon
@@ -61,6 +64,13 @@ basehub:
           profile_options: &profile_options
             image:
               display_name: Image
+              unlisted_choice: &profile_list_unlisted_choice
+                enabled: True
+                display_name: "Custom image"
+                validation_regex: "^.+:.+$"
+                validation_message: "Must be a valid public docker image, including a tag"
+                kubespawner_override:
+                  image: "{value}"
               choices:
                 pangeo:
                   display_name: Pangeo Notebook
@@ -142,6 +152,7 @@ basehub:
           profile_options:
             image:
               display_name: Image
+              unlisted_choice: *profile_list_unlisted_choice
               choices:
                 tensorflow:
                   display_name: Pangeo Tensorflow ML Notebook
