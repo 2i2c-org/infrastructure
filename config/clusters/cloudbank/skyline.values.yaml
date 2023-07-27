@@ -42,11 +42,6 @@ jupyterhub:
           http://google.com/accounts/o8/id:
             username_derivation:
               username_claim: "email"
-            allowed_domains:
-              - "2i2c.org"
-              - "berkeley.edu"
-              - "my.smccd.edu"
-              - "smccd.edu"
           urn:mace:incommon:berkeley.edu:
             username_derivation:
               username_claim: "email"
@@ -55,4 +50,6 @@ jupyterhub:
           - ericvd@berkeley.edu
           - sean.smorris@berkeley.edu
           - dhum1@my.smccd.edu
-          - momenik@smccd.edu
+          - momenik@my.smccd.edu
+          - kayvanm@gmail.com
+        username_pattern: '^(.+@2i2c\.org|.+@berkeley\.edu|.+@my\.smccd\.edu|kayvanm@gmail.com|deployment-service-check)$'
