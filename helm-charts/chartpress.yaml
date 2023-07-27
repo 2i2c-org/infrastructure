@@ -8,3 +8,9 @@ charts:
     images:
       hub-experimental:
         imageName: quay.io/2i2c/experimental-hub
+        buildArgs:
+          REQUIREMENTS_FILE: "requirements.txt"
+      second-hub-experimental:
+        imageName: quay.io/2i2c/second-hub-experimental
+        buildArgs:
+          REQUIREMENTS_FILE: "second-requirements.txt"
