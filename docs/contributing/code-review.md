@@ -24,18 +24,6 @@ Here are some guidelines for merging and reviewing in this case:
   PR authors are responsible for the infrastructure changes that they make.
   You should generally only make a change to live infrastructure if you'll have the bandwidth to ensure it is fixed if something goes wrong.
   If for some reason you **must** step away, make it clear who else is responsible for shepherding the PR.
-- **Be careful when self-merging without review**.
-  Because changing active infrastructure is potentially confusing or disruptive to users, be extra careful if you self-merge without a review approval.
-  Consider whether your commit will cause a change that might be destructive and ask if you _really_ need to merge now or can wait for review.
-  That said, sometimes the only way to understand the impact of a change is to merge and see how things go, so use your best judgment!
-
-  :::{admonition} Common things that often _don't_ need an approval
-  - Updating admin users for a hub
-  - Changing basic hub configuration such as the URL of its landing page image
-  - Updating the user image of a hub.
-  - Updating the max number of nodes for nodepools in a cluster
-  - Emergency (eg exam, outage) related resource bumps
-  :::
 - **Be careful when changing config of a hub *during* an event**
   Sometimes, a hub config change needs to happen *immediately*, to help debug something
   or change behavior during a time sensitive event. Local deploys are ok to make sure that
@@ -43,6 +31,28 @@ Here are some guidelines for merging and reviewing in this case:
   make sure you push a PR with the change *and merge it quickly* to make sure that the changes
   are persisted across future deploys. Self merging is acceptable here, although this general
   class of changes should be limited as much as possible.
+  
+## Self-merging as a 2i2c engineer
+
+**Be careful when self-merging without review**.
+
+Because changing active infrastructure is potentially confusing or
+disruptive to users, be extra careful if you self-merge without a
+review approval.  Consider whether your commit will cause a change
+that might be destructive and ask if you _really_ need to merge now
+or can wait for review.  That said, sometimes the only way to
+understand the impact of a change is to merge and see how things go,
+so use your best judgment!
+
+Here is a list of things you can clearly, unambigously self merge without
+any approval.
+
+1. Updating admin users for a hub
+2. Changing basic hub configuration such as the URL of its landing page image
+3. Updating the user image of a hub.
+4. Updating the max number of nodes for nodepools in a cluster
+5. Emergency (eg exam, outage) related resource bumps
+6. *Cleanly* reverting a change that failed CI
   
 ## Self-merging as a community partner
 
