@@ -13,10 +13,11 @@
 # Ref: https://cloudolife.com/2022/03/05/Infrastructure-as-Code-IaC/Container/Docker/Docker-buildx-support-multiple-architectures-images/
 #
 FROM jupyterhub/k8s-hub:3.0.0-beta.1
+ARG REQUIREMENTS_FILE
 
-COPY requirements.txt /tmp/
+COPY ${REQUIREMENTS_FILE} /tmp/
 
-RUN pip install -r /tmp/requirements.txt
+RUN pip install -r /tmp/${REQUIREMENTS_FILE}
 
 USER root
 RUN mkdir -p /usr/local/etc/jupyterhub-configurator

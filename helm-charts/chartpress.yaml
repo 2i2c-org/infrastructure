@@ -4,15 +4,17 @@ charts:
     images:
       hub:
         valuesPath: jupyterhub.hub.image
-  - name: basehub
-    images:
-      hub-experimental:
-        imageName: quay.io/2i2c/experimental-hub
         buildArgs:
           REQUIREMENTS_FILE: "requirements.txt"
-      hub-experimental2:
-        imageName: quay.io/2i2c/experimental-hub2
+      unlisted-choice-experiment:
+        imageName: quay.io/2i2c/unlisted-choice-experiment
         buildArgs:
-          REQUIREMENTS_FILE: "second-requirements.txt"
-        contextPath: "./images/hub-experimental"
-        dockerfilePath: images/hub-experimental/Dockerfile
+          REQUIREMENTS_FILE: "unlisted-choice-requirements.txt"
+        contextPath: "images/hub"
+        dockerfilePath: images/hub/Dockerfile
+      dynamic-image-building-experiment:
+        imageName: quay.io/2i2c/dynamic-image-building-experiment
+        buildArgs:
+          REQUIREMENTS_FILE: "dynamic-image-building-requirements.txt"
+        contextPath: "images/hub"
+        dockerfilePath: "images/hub/Dockerfile"
