@@ -22,7 +22,7 @@ hubs:
     domain: dask-staging.aws.2i2c.cloud
     helm_chart: daskhub
     helm_chart_values_files:
-      - common.values.yaml
+      - daskhub-common.values.yaml
       - dask-staging.values.yaml
       - enc-dask-staging.secret.values.yaml
   - name: researchdelight
@@ -30,7 +30,7 @@ hubs:
     domain: researchdelight.2i2c.cloud
     helm_chart: daskhub
     helm_chart_values_files:
-      - common.values.yaml
+      - daskhub-common.values.yaml
       - researchdelight.values.yaml
       - enc-researchdelight.secret.values.yaml
   - name: ncar-cisl
@@ -38,6 +38,6 @@ hubs:
     domain: ncar-cisl.2i2c.cloud
     helm_chart: daskhub
     helm_chart_values_files:
-      - common.values.yaml
+      - daskhub-common.values.yaml
       - ncar-cisl.values.yaml
       - enc-ncar-cisl.secret.values.yaml
