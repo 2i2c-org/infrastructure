@@ -55,6 +55,8 @@ flowchart TD
     dockerfilePath: images/hub/Dockerfile
   ```
 
+3. Go to https://quay.io/new/ and create a new _public_ repository using your `2i2c` organizational account. Name it the same with the suffix of the name set under `imageName` from `chartpress.yaml`. In this example is `new-experiment`.
+
 ## How to install an unreleased version of a package in an experimental hub image
 
 To install an unreleased package, we will need to install directly from GitHub and not from PyPI:
