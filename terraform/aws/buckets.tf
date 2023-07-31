@@ -8,16 +8,12 @@ resource "aws_s3_bucket_lifecycle_configuration" "user_bucket_expiry" {
   for_each = var.user_buckets
   bucket   = lower("${var.cluster_name}-${each.key}")
 
-  dynamic "rule" {
-    for_each = each.value.delete_after != null ? [1] : []
+  rule {
+    id     = "delete-after-expiry"
+    status = each.value.delete_after != null ? "Enabled" : "Disabled"
 
-    content {
-      id     = "delete-after-expiry"
-      status = "Enabled"
-
-      expiration {
-        days = each.value.delete_after
-      }
+    expiration {
+      days = each.value.delete_after
     }
   }
 }
