@@ -8,38 +8,49 @@ This is used in two places:
 from utils import get_clusters_list, write_df_to_json_and_csv_files
 from yaml import safe_load
 
-
-def get_hub_authentication(hub_config):
-    authenticator_info = ""
-
-    daskhub = hub_config.get("basehub", None)
-    binderhub = hub_config.get("binderhub", None)
-
+def get_hub_authentication(hub_config, daskhub_type, binderhub_type):
     # Return the value of `authenticator_class` from the `hub_config` dictionary
     # and the empty string if none is found
     try:
-        if daskhub:
-            authenticator_info = hub_config["basehub"]["jupyterhub"]["hub"]["config"][
-                "JupyterHub"
-            ]["authenticator_class"]
-        elif binderhub:
-            authenticator_info = hub_config["binderhub"]["jupyterhub"]["hub"]["config"][
-                "JupyterHub"
-            ]["authenticator_class"]
-        authenticator_info = hub_config["jupyterhub"]["hub"]["config"]["JupyterHub"][
+        if daskhub_type:
+            return hub_config["basehub"]["jupyterhub"]["hub"]["config"]["JupyterHub"][
+                "authenticator_class"
+            ]
+        elif binderhub_type:
+            return hub_config["binderhub"]["jupyterhub"]["hub"]["config"]["JupyterHub"][
+                "authenticator_class"
+            ]
+        return hub_config["jupyterhub"]["hub"]["config"]["JupyterHub"][
             "authenticator_class"
         ]
     except KeyError:
         pass
 
-    return authenticator_info
+    return ""
 
 
-def build_options_list_entry(hub, authenticator):
+def get_user_anonymization_feature_status(hub_config, daskhub_type, binderhub_type):
+    # Return the value of `anonymizeUsername` from the `hub_config` dictionary
+    # and False if none is found
+    try:
+        if daskhub_type:
+            return hub_config["basehub"]["jupyterhub"]["custom"]["auth"][
+                "anonymizeUsername"
+            ]
+        elif binderhub_type:
+            return hub_config["binderhub"]["jupyterhub"]["custom"]["auth"][
+                "anonymizeUsername"
+            ]
+
+        return hub_config["jupyterhub"]["custom"]["auth"]["anonymizeUsername"]
+    except KeyError:
+        return False
+
+def build_options_list_entry(hub, authenticator, anonymization_status):
     return {
         "domain": f"[{hub['domain']}](https://{hub['domain']})",
         "authenticator": authenticator,
-        # "user id anonymisation": anonymizeUsername
+        "user id anonymisation": anonymization_status
         #         "admin access to all user's home dirs":
         #         "community domain":
         #         "self-configured login page":
@@ -76,14 +87,26 @@ def main():
                 if "enc" not in file_name
             ]
 
+            authenticator = ""
+            anonymization_status = False
             for config_file in hub_values_files:
                 with open(cluster_path.joinpath(config_file)) as f:
                     hub_config = safe_load(f)
-                authenticator = get_hub_authentication(hub_config)
-                if authenticator:
-                    break
+                daskhub_type = hub_config.get("basehub", None)
+                binderhub_type = hub_config.get("binderhub", None)
 
-            options_list.append(build_options_list_entry(hub, authenticator))
+                if not authenticator:
+                    authenticator = get_hub_authentication(
+                        hub_config, daskhub_type, binderhub_type
+                    )
+                if not anonymization_status:
+                    anonymization_status = get_user_anonymization_feature_status(
+                        hub_config, daskhub_type, binderhub_type
+                    )
+
+            options_list.append(
+                build_options_list_entry(hub, authenticator, anonymization_status)
+            )
 
     # Write raw data to CSV and JSON
     write_df_to_json_and_csv_files(options_list, "hub-options-table")
