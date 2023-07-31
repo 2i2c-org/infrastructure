@@ -26,6 +26,9 @@ jupyterhub:
           name: 2i2c
           url: https://2i2c.org
   hub:
+    image:
+      name: quay.io/2i2c/dynamic-image-building-experiment
+      tag: "0.0.1-0.dev.git.6478.h0ab34873"
     config:
       JupyterHub:
         authenticator_class: cilogon

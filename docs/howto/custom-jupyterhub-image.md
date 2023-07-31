@@ -9,20 +9,20 @@ This allows adding and configuring other packages like the [jupyterhub-configura
 More information about this custom image can be found in the [Dockerfile](https://github.com/2i2c-org/infrastructure/blob/HEAD/helm-charts/images/hub/Dockerfile) itself.
 
 
-## The `hub-experimental` image
+## The experimental hub images
 
-In addition to the `hub` image, there is also a `hub-experimental` image, that is defined in the [helm-charts directory of the infrastructure repository](https://github.com/2i2c-org/infrastructure/tree/HEAD/helm-charts/images/hub-experimental).
+In addition to the `hub` image, there are also experimental hub images, that are defined alongside the main `hub` image in the [helm-charts directory of the infrastructure repository](https://github.com/2i2c-org/infrastructure/tree/HEAD/helm-charts/images/hub), through individual `requirements.txt` files, named after the experiment that's being performed.
 
-This `hub-experimental` image is very similar to the hub image, but its primary goal is to be used to test changes like new packages, newer package versions, or even unreleased or unmerged versions of them. It can be used to deploy such change just to one or a few specific communities, without having to worry about the instabilities it can generate for other communities.
+The experimental hub images and the main `hub` image are quite similar. They are based off the same `Dockerfile`, but use different `requirements.txt` files, because their primary goal is to be used to test changes like new packages, newer package versions, or even unreleased or unmerged versions of them. They are used to deploy such changes just to one or a few specific communities, without having to worry about the instabilities they can generate for other communities.
 
 ```{note}
 Both the 2i2c custom `hub` and the `hub-experimental` images live at [Quay.io](https://quay.io/organization/2i2c).
 ```
 
-## When to roll out the changes in `hub-experimental` to `hub`
+## When to roll out the changes in the experimental images to `hub`
 
 ```{important}
-Our current policy states that a change in `hub-experimental` must be rolled out into `hub`, **within  4 weeks**, otherwise it should be removed. Any issues identified within these 4 weeks, must be fixed it until it's good enough to deploy to all hubs.
+Our current policy states that a change in a hub experimental image must be rolled out into `hub`, **within  4 weeks**, otherwise it should be removed. Any issues identified within these 4 weeks, must be fixed it until it's good enough to deploy to all hubs.
 ```
 
 The workflow is the following:
@@ -39,8 +39,25 @@ flowchart TD
   -- More testing for hubs that are configured differently ---
   deploy_everywhere --> end_condition[fa:fa-exclamation `hub-experimental` image is the same as `hub`]
 ```
+## How to create a new hub experimental image
 
-## How to install an unreleased version of a package in the `hub-experimental` image
+1. You will first need to create a new `.txt` file with a name relevant for the experiment, let's say `new-experiment-requirements.txt`.
+
+2. Then, `chartpress` must be instructed to create a new docker image using the `new-experiment-requirements.txt`
+  To do this, edit the `chartpress.yaml` file located at the root of the `helm-chartes/images` directory to add another image under the `basehub` chart:
+
+  ```yaml
+  new-experiment:
+    imageName: quay.io/2i2c/new-experiment
+    buildArgs:
+      REQUIREMENTS_FILE: "new-experiment-requirements.txt"
+    contextPath: "images/hub"
+    dockerfilePath: images/hub/Dockerfile
+  ```
+
+3. Go to https://quay.io/new/ and create a new _public_ repository using your `2i2c` organizational account. Name it the same with the suffix of the name set under `imageName` from `chartpress.yaml`. In this example is `new-experiment`.
+
+## How to install an unreleased version of a package in an experimental hub image
 
 To install an unreleased package, we will need to install directly from GitHub and not from PyPI:
 
@@ -54,7 +71,7 @@ To install an unreleased package, we will need to install directly from GitHub a
    https://github.com/jupyterhub/kubespawner@def501f1d60b8e5629745acb0bcc45b151b1decc
    ```
 
-2. Update the [requirements.txt](https://github.com/2i2c-org/infrastructure/blob/HEAD/helm-charts/images/hub-experimental/requirements.txt) file to add this package and commit, prefixed by a `git+` on a new row
+2. Update the `.txt` file of this specific experiment, let's say `new-experiment-requirements.txt`, to add this package and commit, prefixed by a `git+` on a new row
 
    ```bash
    git+https://github.com/jupyterhub/kubespawner@def501f1d60b8e5629745acb0bcc45b151b1decc
@@ -63,7 +80,7 @@ To install an unreleased package, we will need to install directly from GitHub a
 3. Commit the changes
 
    ```bash
-   git add helm-charts/images/hub/Dockerfile
+   git add helm-charts/images/hub/new-experiment-requirements.txt
    git commit
    ```
 
@@ -71,7 +88,7 @@ To install an unreleased package, we will need to install directly from GitHub a
    The commit SHA with be used to generate the image tag.
    ```
 
-## How to build and push a new version of the hub image (`hub` or `hub-experimental`)
+## How to build and push a new version of the available hub images
 
 Rebuild the Docker image and push it to the [Quay.io registry](https://quay.io/repository/2i2c/pilot-hub)
  
@@ -121,16 +138,16 @@ Rebuild the Docker image and push it to the [Quay.io registry](https://quay.io/r
   git commit
   ```
 
-- **If building and pushing the `hub-experimental` image**, then discard the changes to both `helm-charts/basehub/values.yaml` and `helm-charts/basehub/Chart.yaml`, because we only want to deploy this image to particular hubs
+- **If building and pushing any of the experimental images**, then discard the changes to both `helm-charts/basehub/values.yaml` and `helm-charts/basehub/Chart.yaml`, because we only want to deploy this image to particular hubs
 
-## How to configure a hub to use the new `hub-experimental` image
+## How to configure a hub to use an experimental new image
 
 You will need to put a config similar to the one below in your hub configuration file:
 
 ```
 hub:
   image:
-    name: quay.io/2i2c/experimental-hub
+    name: quay.io/2i2c/new-experiment
     tag: "0.0.1-0.dev.git.6406.hc1091b1c"
 ```
 
