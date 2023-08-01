@@ -27,6 +27,20 @@ jupyterhub:
           name: ""
           url: ""
           custom_html: <a href="https://www.dfg.de/">DFG</a>, <a href="https://www.cessda.eu/">CESSDA</a>, <a href="https://www.gesis.org/">GESIS</a>, FKZ/Project number <a href="https://gepris.dfg.de/gepris/projekt/460234259?language=en">460234259</a>
+  singleuser:
+    profileList:
+      # The mem-guarantees are here so k8s doesn't schedule other pods
+      # on these nodes.
+      - display_name: "Small"
+        description: "~2 CPU, ~2G RAM"
+        # default set to small because that node pool is configured with
+        # min_nodes 1, so we should make use of it.
+        default: true
+        kubespawner_override:
+          # Expllicitly unset mem_limit, so it overrides the default memory limit we set in
+          # basehub/values.yaml
+          mem_limit: 2G
+          cpu_limit: 2
   hub:
     image:
       name: quay.io/2i2c/dynamic-image-building-experiment
@@ -40,6 +54,13 @@ jupyterhub:
         # Only show the option to login with Google
         shown_idps:
           - http://google.com/accounts/o8/id
+    extraConfig:
+      enable-prototype-UI: |
+        from kubespawner_dynamic_building_ui import TEMPLATE_PATHS, STATIC_HANDLER_TUPLE
+        c.KubeSpawner.additional_profile_form_template_paths = TEMPLATE_PATHS
+
+        # Add extra handler to serve JS & CSS assets
+        c.JupyterHub.extra_handlers.append(STATIC_HANDLER_TUPLE)
 
 binderhub-service:
   nodeSelector:
