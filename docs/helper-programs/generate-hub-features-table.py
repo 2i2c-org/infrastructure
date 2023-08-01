@@ -50,9 +50,25 @@ def get_user_anonymization_feature_status(hub_config, daskhub_type, binderhub_ty
     return False
 
 
+def get_custom_homepage_feature_status(hub_config, daskhub_type, binderhub_type):
+    try:
+        if daskhub_type:
+            return hub_config["basehub"]["jupyterhub"]["custom"]["homepage"][
+                "gitRepoBranch"
+            ]
+        elif binderhub_type:
+            return hub_config["binderhub"]["jupyterhub"]["custom"]["homepage"][
+                "gitRepoBranch"
+            ]
+
+        return hub_config["jupyterhub"]["custom"]["homepage"]["gitRepoBranch"]
+    except KeyError:
+        pass
+
+    return False
+
+
 def get_allusers_feature_status(hub_config, daskhub_type, binderhub_type):
-    # Return the value of `anonymizeUsername` from the `hub_config` dictionary
-    # and False if none is found
     extra_volume_mounts = []
     try:
         if daskhub_type:
@@ -76,14 +92,17 @@ def get_allusers_feature_status(hub_config, daskhub_type, binderhub_type):
     return False
 
 
-def build_options_list_entry(hub, authenticator, anonymization, allusers):
+def build_options_list_entry(
+    hub, authenticator, anonymization, allusers, custom_homepage
+):
+    domain = f"[{hub['domain']}](https://{hub['domain']})"
     return {
-        "domain": f"[{hub['domain']}](https://{hub['domain']})",
+        "domain": domain,
         "authenticator": authenticator,
         "user id anonymisation": anonymization,
         "admin access to all user's home dirs": allusers,
-        #         "community domain":
-        #         "self-configured login page":
+        "community domain": False if "2i2c.cloud" in domain else True,
+        "custom login page": custom_homepage,
         #         "custom hub pages":
         #         "static web pages":
         #         "gh-scoped-creds":
@@ -120,9 +139,11 @@ def main():
             authenticator = ""
             anonymization = False
             allusers = False
+            custom_homepage = False
             for config_file in hub_values_files:
                 with open(cluster_path.joinpath(config_file)) as f:
                     hub_config = safe_load(f)
+
                 daskhub_type = hub_config.get("basehub", None)
                 binderhub_type = hub_config.get("binderhub", None)
 
@@ -138,9 +159,15 @@ def main():
                     allusers = get_allusers_feature_status(
                         hub_config, daskhub_type, binderhub_type
                     )
+                if not custom_homepage:
+                    custom_homepage = get_custom_homepage_feature_status(
+                        hub_config, daskhub_type, binderhub_type
+                    )
 
             options_list.append(
-                build_options_list_entry(hub, authenticator, anonymization, allusers)
+                build_options_list_entry(
+                    hub, authenticator, anonymization, allusers, custom_homepage
+                )
             )
 
     # Write raw data to CSV and JSON
