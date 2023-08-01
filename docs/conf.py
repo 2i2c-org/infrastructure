@@ -77,4 +77,5 @@ def setup(app):
 import subprocess
 
 # -- Custom scripts -----------------------------------------
-subprocess.run(["python", "scripts/render_hubs.py"])
+subprocess.run(["python", "helper-programs/generate-general-info-table-about-hubs.py"])
+subprocess.run(["python", "helper-programs/generate-hub-features-table.py"])

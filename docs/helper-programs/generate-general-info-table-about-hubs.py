@@ -5,15 +5,8 @@ This is used in two places:
 - docs/_static/hub-table.json is published with the docs and meant for re-use in other parts of 2i2c
 - docs/tmp/hub-table.csv is read by reference/hubs.md to create a list of hubs
 """
-from pathlib import Path
-
-import pandas as pd
+from utils import get_clusters_list, turn_list_into_df, write_df_to_json_and_csv_files
 from yaml import safe_load
-
-path_root = Path(__file__).parent.parent
-path_tmp = path_root / "tmp"
-path_static = path_root / "_static"
-path_clusters = path_root / "../config/clusters"
 
 
 def get_cluster_grafana_url(cluster, cluster_path):
@@ -64,32 +57,6 @@ def get_cluster_console_url(cluster, provider, account, datacentre_loc):
     return cluster_console_url
 
 
-def get_hub_authentication(hub_config):
-    authenticator_info = ""
-
-    daskhub = hub_config.get("basehub", None)
-    binderhub = hub_config.get("binderhub", None)
-
-    # Return the value of `authenticator_class` from the `hub_config` dictionary
-    # and the empty string if none is found
-    try:
-        if daskhub:
-            authenticator_info = hub_config["basehub"]["jupyterhub"]["hub"]["config"][
-                "JupyterHub"
-            ]["authenticator_class"]
-        elif binderhub:
-            authenticator_info = hub_config["binderhub"]["jupyterhub"]["hub"]["config"][
-                "JupyterHub"
-            ]["authenticator_class"]
-        authenticator_info = hub_config["jupyterhub"]["hub"]["config"]["JupyterHub"][
-            "authenticator_class"
-        ]
-    except KeyError:
-        pass
-
-    return authenticator_info
-
-
 def build_hub_list_entry(
     cluster, hub, grafana_url, provider, datacentre_loc, account, cluster_console_url
 ):
@@ -110,32 +77,16 @@ def build_hub_list_entry(
     }
 
 
-def build_options_list_entry(hub, authenticator):
-    return {
-        "domain": f"[{hub['domain']}](https://{hub['domain']})",
-        "authenticator": authenticator,
-        # "user id anonymisation": anonymizeUsername
-        #         "admin access to all user's home dirs":
-        #         "community domain":
-        #         "self-configured login page":
-        #         "custom hub pages":
-        #         "static web pages":
-        #         "gh-scoped-creds":
-        #         "shared cluster":
-        #         "buckets":
-        #         "dask":
-        #         "GPUs":
-        #         "profile lists":
-    }
-
-
-def build_hub_statistics_df(df):
+def build_hub_statistics_df():
     # Write some quick statistics for display
     # Calculate total number of community hubs by removing staging and demo hubs
     # Remove `staging` hubs to count the total number of communites we serve
+    hubs_general_info_df = turn_list_into_df()
     filter_out = ["staging", "demo"]
-    community_hubs = df.loc[
-        df["name"].map(lambda a: all(ii not in a.lower() for ii in filter_out))
+    community_hubs = hubs_general_info_df.loc[
+        hubs_general_info_df["name"].map(
+            lambda a: all(ii not in a.lower() for ii in filter_out)
+        )
     ]
     community_hubs_by_cluster = (
         community_hubs.groupby(["provider", "cluster"])
@@ -151,23 +102,11 @@ def build_hub_statistics_df(df):
     return community_hubs_by_cluster
 
 
-def write_df_to_json_and_csv_files(df, file_name_prefix):
-    path_table = path_tmp / f"{file_name_prefix}.csv"
-    df.to_csv(path_table, index=None)
-    df.to_json(path_static / f"{file_name_prefix}.json", orient="index")
-
-
 def main():
     # Grab the latest list of clusters defined in infrastructure/ explicitly ignoring
     # the test clusters in the ./tests directory
-    clusters = [
-        filepath
-        for filepath in path_clusters.glob("**/*cluster.yaml")
-        if "tests/" not in str(filepath) and "templates" not in str(filepath)
-    ]
-
+    clusters = get_clusters_list()
     hub_list = []
-    options_list = []
     for cluster_info in clusters:
         cluster_path = cluster_info.parent
         if "schema" in cluster_info.name or "staff" in cluster_info.name:
@@ -214,12 +153,6 @@ def main():
             if isinstance(hub["domain"], list):
                 hub["domain"] = hub["domain"][0]
 
-            hub_values_files = [
-                file_name
-                for file_name in hub["helm_chart_values_files"]
-                if "enc" not in file_name
-            ]
-
             hub_list.append(
                 build_hub_list_entry(
                     cluster,
@@ -232,28 +165,13 @@ def main():
                 )
             )
 
-            for config_file in hub_values_files:
-                with open(cluster_path.joinpath(config_file)) as f:
-                    hub_config = safe_load(f)
-                authenticator = get_hub_authentication(hub_config)
-                if authenticator:
-                    break
-
-            options_list.append(build_options_list_entry(hub, authenticator))
-
-    # Convert to a DataFrame and write it to a CSV file that will be read by Sphinx
-    df = pd.DataFrame(hub_list)
-    options_df = pd.DataFrame(options_list)
-    path_tmp.mkdir(exist_ok=True)
-
     # Write raw data to CSV and JSON
-    write_df_to_json_and_csv_files(df, "hub-table")
-    write_df_to_json_and_csv_files(options_df, "hub-options-table")
+    write_df_to_json_and_csv_files(hub_list, "hub-table")
 
-    community_hubs_by_cluster = build_hub_statistics_df(df)
+    community_hubs_by_cluster = build_hub_statistics_df()
     write_df_to_json_and_csv_files(community_hubs_by_cluster, "hub-stats")
 
-    print("Finished updating list of hubs table...")
+    print("Finished updating list of hubs and statics tables...")
 
 
 if __name__ == "__main__":
