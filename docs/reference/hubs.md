@@ -29,14 +29,10 @@ A table of all running hubs across all of our clusters.
 
 ## Hub options table
 
-<div class="full-width hubs-table">
-
 ```{csv-table}
 :header-rows: 1
 :file: ../tmp/hub-options-table.csv
 ```
-
-</div>
 
 ## Community hub statistics
 
