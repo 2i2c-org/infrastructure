@@ -11,12 +11,19 @@ user_buckets = {
   "scratch" : {
     "delete_after" : 7
   },
+  # For https://2i2c.freshdesk.com/a/tickets/847
+  "persistent-staging" : {
+    "delete_after" : null,
+  },
+  "persistent" : {
+    "delete_after" : null,
+  },
 }
 
 hub_cloud_permissions = {
   "staging" : {
     requestor_pays : true,
-    bucket_admin_access : ["scratch-staging"],
+    bucket_admin_access : ["scratch-staging", "persistent-staging"],
     # Provides readonly requestor-pays access to usgs-landsat bucket
     # FIXME: We should find a way to allow access to *all* requestor pays
     # buckets, without having to explicitly list them. However, we don't want
@@ -51,7 +58,7 @@ hub_cloud_permissions = {
   },
   "prod" : {
     requestor_pays : true,
-    bucket_admin_access : ["scratch"],
+    bucket_admin_access : ["scratch", "persistent"],
     # Provides readonly requestor-pays access to usgs-landsat bucket
     # FIXME: We should find a way to allow access to *all* requestor pays
     # buckets, without having to explicitly list them. However, we don't want
