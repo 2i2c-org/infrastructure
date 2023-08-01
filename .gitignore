@@ -31,6 +31,7 @@ docs/tmp
 docs/reference/terraform.md
 docs/_static/hub-stats.json
 docs/_static/hub-table.json
+docs/_static/hub-options-table.json
 
 # Common editor config
 .vscode
