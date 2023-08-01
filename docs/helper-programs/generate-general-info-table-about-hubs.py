@@ -5,7 +5,7 @@ This is used in two places:
 - docs/_static/hub-table.json is published with the docs and meant for re-use in other parts of 2i2c
 - docs/tmp/hub-table.csv is read by reference/hubs.md to create a list of hubs
 """
-from utils import get_clusters_list, turn_list_into_df, write_df_to_json_and_csv_files
+from utils import get_clusters_list, turn_list_into_df, write_list_to_json_and_csv_files
 from yaml import safe_load
 
 
@@ -77,11 +77,11 @@ def build_hub_list_entry(
     }
 
 
-def build_hub_statistics_df():
+def build_hub_statistics_df(hub_list):
     # Write some quick statistics for display
     # Calculate total number of community hubs by removing staging and demo hubs
     # Remove `staging` hubs to count the total number of communites we serve
-    hubs_general_info_df = turn_list_into_df()
+    hubs_general_info_df = turn_list_into_df(hub_list)
     filter_out = ["staging", "demo"]
     community_hubs = hubs_general_info_df.loc[
         hubs_general_info_df["name"].map(
@@ -166,10 +166,10 @@ def main():
             )
 
     # Write raw data to CSV and JSON
-    write_df_to_json_and_csv_files(hub_list, "hub-table")
+    write_list_to_json_and_csv_files(hub_list, "hub-table")
 
-    community_hubs_by_cluster = build_hub_statistics_df()
-    write_df_to_json_and_csv_files(community_hubs_by_cluster, "hub-stats")
+    community_hubs_by_cluster = build_hub_statistics_df(hub_list)
+    write_list_to_json_and_csv_files(community_hubs_by_cluster, "hub-stats")
 
     print("Finished updating list of hubs and statics tables...")
 
