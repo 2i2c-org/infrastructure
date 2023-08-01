@@ -45,15 +45,43 @@ def get_user_anonymization_feature_status(hub_config, daskhub_type, binderhub_ty
 
         return hub_config["jupyterhub"]["custom"]["auth"]["anonymizeUsername"]
     except KeyError:
-        return False
+        pass
+
+    return False
 
 
-def build_options_list_entry(hub, authenticator, anonymization_status):
+def get_allusers_feature_status(hub_config, daskhub_type, binderhub_type):
+    # Return the value of `anonymizeUsername` from the `hub_config` dictionary
+    # and False if none is found
+    extra_volume_mounts = []
+    try:
+        if daskhub_type:
+            extra_volume_mounts = hub_config["basehub"]["jupyterhub"]["custom"][
+                "singleuserAdmin"
+            ]["extraVolumeMounts"]
+        elif binderhub_type:
+            extra_volume_mounts = hub_config["binderhub"]["jupyterhub"]["custom"][
+                "singleuserAdmin"
+            ]["extraVolumeMounts"]
+
+        extra_volume_mounts = hub_config["jupyterhub"]["custom"]["singleuserAdmin"][
+            "extraVolumeMounts"
+        ]
+    except KeyError:
+        pass
+
+    for vol in extra_volume_mounts:
+        if "allsers" in vol.get("mountPath", ""):
+            return True
+    return False
+
+
+def build_options_list_entry(hub, authenticator, anonymization, allusers):
     return {
         "domain": f"[{hub['domain']}](https://{hub['domain']})",
         "authenticator": authenticator,
-        "user id anonymisation": anonymization_status
-        #         "admin access to all user's home dirs":
+        "user id anonymisation": anonymization,
+        "admin access to all user's home dirs": allusers,
         #         "community domain":
         #         "self-configured login page":
         #         "custom hub pages":
@@ -90,7 +118,8 @@ def main():
             ]
 
             authenticator = ""
-            anonymization_status = False
+            anonymization = False
+            allusers = False
             for config_file in hub_values_files:
                 with open(cluster_path.joinpath(config_file)) as f:
                     hub_config = safe_load(f)
@@ -101,13 +130,17 @@ def main():
                     authenticator = get_hub_authentication(
                         hub_config, daskhub_type, binderhub_type
                     )
-                if not anonymization_status:
-                    anonymization_status = get_user_anonymization_feature_status(
+                if not anonymization:
+                    anonymization = get_user_anonymization_feature_status(
+                        hub_config, daskhub_type, binderhub_type
+                    )
+                if not allusers:
+                    allusers = get_allusers_feature_status(
                         hub_config, daskhub_type, binderhub_type
                     )
 
             options_list.append(
-                build_options_list_entry(hub, authenticator, anonymization_status)
+                build_options_list_entry(hub, authenticator, anonymization, allusers)
             )
 
     # Write raw data to CSV and JSON
