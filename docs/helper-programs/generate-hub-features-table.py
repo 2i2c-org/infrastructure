@@ -53,19 +53,16 @@ def get_user_anonymization_feature_status(hub_config, daskhub_type, binderhub_ty
 def get_custom_homepage_feature_status(hub_config, daskhub_type, binderhub_type):
     try:
         if daskhub_type:
-            return hub_config["basehub"]["jupyterhub"]["custom"]["homepage"][
-                "gitRepoBranch"
-            ]
+            hub_config["basehub"]["jupyterhub"]["custom"]["homepage"]["gitRepoBranch"]
+            return True
         elif binderhub_type:
-            return hub_config["binderhub"]["jupyterhub"]["custom"]["homepage"][
-                "gitRepoBranch"
-            ]
+            hub_config["binderhub"]["jupyterhub"]["custom"]["homepage"]["gitRepoBranch"]
+            return True
 
-        return hub_config["jupyterhub"]["custom"]["homepage"]["gitRepoBranch"]
+        hub_config["jupyterhub"]["custom"]["homepage"]["gitRepoBranch"]
+        return True
     except KeyError:
-        pass
-
-    return False
+        return False
 
 
 def get_allusers_feature_status(hub_config, daskhub_type, binderhub_type):
