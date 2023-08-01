@@ -1,0 +1,14 @@
+basehub:
+  userServiceAccount:
+    annotations:
+      eks.amazonaws.com/role-arn: arn:aws:iam::597746869805:role/nasa-ghg-hub-staging
+  jupyterhub:
+    ingress:
+      hosts: [staging.nasa-ghg.2i2c.cloud]
+      tls:
+        - hosts: [staging.nasa-ghg.2i2c.cloud]
+          secretName: https-auto-tls
+    hub:
+      config:
+        GitHubOAuthenticator:
+          oauth_callback_url: https://staging.nasa-ghg.2i2c.cloud/hub/oauth_callback
