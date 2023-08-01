@@ -26,6 +26,10 @@ prometheus:
         - secretName: prometheus-tls
           hosts:
             - prometheus.aws.2i2c.cloud
+    persistentVolume:
+      # Found to be out of space with at 100Gi disk at 2023-07-31, when it was
+      # increased to 250Gi.
+      size: 250Gi
 
 cluster-autoscaler:
   enabled: true
