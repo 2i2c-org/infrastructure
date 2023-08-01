@@ -34,17 +34,17 @@ basehub:
               - port: 22
                 protocol: TCP
       profileList:
-        - display_name: "Python en JupyterLab"
+        - display_name: "Python using JupyterLab"
           description: "~2 CPU, ~8G RAM"
           default: true
           kubespawner_override:
-            image: "ghcr.io/oceanhackweek/python:5c98268"
+            image: "ghcr.io/oceanhackweek/python:c7938f5"
             default_url: "/lab"
             mem_limit: 8G
             mem_guarantee: 4G
             cpu_limit: 2
             cpu_guarantee: 0.5
-        - display_name: "R en RStudio"
+        - display_name: "R using RStudio"
           description: "~2 CPU, ~8G RAM"
           kubespawner_override:
             image: "ghcr.io/oceanhackweek/r:2b505d5"
@@ -68,8 +68,8 @@ basehub:
         templateVars:
           org:
             name: OceanHackWeek
-            # logo_url: https://avatars.githubusercontent.com/u/33128979
-            logo_url: https://intercoonecta.github.io/_static/OHWe.png
+            logo_url: https://avatars.githubusercontent.com/u/33128979
+            # logo_url: https://intercoonecta.github.io/_static/OHWe.png
             url: https://oceanhackweek.org/
           designed_by:
             name: 2i2c
@@ -78,8 +78,8 @@ basehub:
             name: 2i2c
             url: https://2i2c.org
           funded_by:
-            name: AECID
-            url: https://www.aecid.es
+            name: IOOS
+            url: https://ioos.us/
     hub:
       config:
         JupyterHub:
@@ -88,27 +88,6 @@ basehub:
           oauth_callback_url: https://oceanhackweek.2i2c.cloud/hub/oauth_callback
           allowed_organizations:
             - 2i2c-org:hub-access-for-2i2c-staff
-            - Intercoonecta:ohwes23-organizers
-            - Intercoonecta:ohwes23-mentor-helper-presenter
-            - Intercoonecta:ohwes23-participants
-            - oceanhackweek:participants_2022
-            - oceanhackweek:ohw22-organizers
-            - oceanhackweek:ohw22-mentor-helper-presenter
-            - oceanhackweek:participants_2022_northeast
-            - oceanhackweek:participants_2022_northwest
-            - oceanhackweek:participants_2022_southwest
-            - oceanhackweek:participants_2022_australia
-            - oceanhackweek:participants_2022_brazil
-            - oceanhackweek:participants_2022_espanol
-            - oceanhackweek:participants_2022_virtual
-            - oceanhackweek:participants_2022_northwest_undergrad
-            - oceanhackweek:ohw22-organizers-northeast
-            - oceanhackweek:ohw22-organizers-northwest
-            - oceanhackweek:ohw22-organizers-southwest
-            - oceanhackweek:ohw22-organizers-australia
-            - oceanhackweek:ohw22-organizers-brazil
-            - oceanhackweek:ohw22-organizers-espanol
-            - oceanhackweek:ohw22-organizers-virtual
             - oceanhackweek:ohw23-organizers
             - oceanhackweek:ohw23-participants-australia
             - oceanhackweek:ohw23-participants-seattle
