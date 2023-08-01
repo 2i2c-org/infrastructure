@@ -5,8 +5,9 @@ This is used in two places:
 - docs/_static/hub-options-table.json is published with the docs and meant for re-use in other parts of 2i2c
 - docs/tmp/hub-options-table.csv is read by reference/hubs.md to create a list of hubs
 """
-from utils import get_clusters_list, write_df_to_json_and_csv_files
+from utils import get_clusters_list, write_list_to_json_and_csv_files
 from yaml import safe_load
+
 
 def get_hub_authentication(hub_config, daskhub_type, binderhub_type):
     # Return the value of `authenticator_class` from the `hub_config` dictionary
@@ -26,7 +27,7 @@ def get_hub_authentication(hub_config, daskhub_type, binderhub_type):
     except KeyError:
         pass
 
-    return ""
+    return
 
 
 def get_user_anonymization_feature_status(hub_config, daskhub_type, binderhub_type):
@@ -45,6 +46,7 @@ def get_user_anonymization_feature_status(hub_config, daskhub_type, binderhub_ty
         return hub_config["jupyterhub"]["custom"]["auth"]["anonymizeUsername"]
     except KeyError:
         return False
+
 
 def build_options_list_entry(hub, authenticator, anonymization_status):
     return {
@@ -109,7 +111,7 @@ def main():
             )
 
     # Write raw data to CSV and JSON
-    write_df_to_json_and_csv_files(options_list, "hub-options-table")
+    write_list_to_json_and_csv_files(options_list, "hub-options-table")
     print("Finished updating list of hubs features table...")
 
 
