@@ -85,8 +85,9 @@ def get_allusers_feature_status(hub_config, daskhub_type, binderhub_type):
         pass
 
     for vol in extra_volume_mounts:
-        if "allsers" in vol.get("mountPath", ""):
+        if "allusers" in vol.get("mountPath", ""):
             return True
+
     return False
 
 
