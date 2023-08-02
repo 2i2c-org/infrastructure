@@ -16,6 +16,7 @@ extensions = [
     "sphinx_copybutton",
     "sphinx_design",
     "sphinxcontrib.mermaid",
+    "sphinxcontrib.jquery",
 ]
 
 intersphinx_mapping = {
@@ -77,5 +78,7 @@ def setup(app):
 import subprocess
 
 # -- Custom scripts -----------------------------------------
-subprocess.run(["python", "helper-programs/generate-general-info-table-about-hubs.py"])
-subprocess.run(["python", "helper-programs/generate-hub-features-table.py"])
+subprocess.run(
+    ["python", "helper-programs/generate-general-info-table-about-hubs.py"], check=True
+)
+subprocess.run(["python", "helper-programs/generate-hub-features-table.py"], check=True)

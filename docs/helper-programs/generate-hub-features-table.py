@@ -5,7 +5,8 @@ This is used in two places:
 - docs/_static/hub-options-table.json is published with the docs and meant for re-use in other parts of 2i2c
 - docs/tmp/hub-options-table.csv is read by reference/hubs.md to create a list of hubs
 """
-from utils import get_clusters_list, write_list_to_json_and_csv_files
+import pandas as pd
+from utils import get_clusters_list, write_to_json_and_csv_files
 from yaml import safe_load
 
 
@@ -84,8 +85,9 @@ def get_allusers_feature_status(hub_config, daskhub_type, binderhub_type):
         pass
 
     for vol in extra_volume_mounts:
-        if "allsers" in vol.get("mountPath", ""):
+        if "allusers" in vol.get("mountPath", ""):
             return True
+
     return False
 
 
@@ -168,7 +170,9 @@ def main():
             )
 
     # Write raw data to CSV and JSON
-    write_list_to_json_and_csv_files(options_list, "hub-options-table")
+    df = pd.DataFrame(options_list)
+    df.set_index("domain", inplace=True)
+    write_to_json_and_csv_files(df, "hub-options-table")
     print("Finished updating list of hubs features table...")
 
 

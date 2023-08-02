@@ -29,10 +29,14 @@ A table of all running hubs across all of our clusters.
 
 ## Hub options table
 
+<div class="full-width hub-options-table">
+
 ```{csv-table}
 :header-rows: 1
 :file: ../tmp/hub-options-table.csv
 ```
+
+</div>
 
 ## Community hub statistics
 
@@ -50,10 +54,42 @@ Summary statistics of the communities we are serving with with hubs, broken down
         src="https://cdn.datatables.net/1.10.24/js/jquery.dataTables.min.js"></script>
 
 <script>
+var checkbox = function (data) {
+    var c = data.toString().trim()
+    console.log(c)
+    if (c == "<p>True</p>") {
+        return '<input type="checkbox" class="editor-active" onclick="return false;" checked>';
+    }
+    else {
+        return '<input type="checkbox" onclick="return false;" class="editor-active">';
+    }
+}
+
 $(document).ready( function () {
+    $('.hub-options-table table').DataTable( {
+        "order": [[ 0, "template" ]],
+        "pageLength": 25,
+        "columns": [
+            null, // first column, nothing special configured
+            null, // second column
+            {
+            "render": checkbox
+            },
+            {
+            "render": checkbox
+            },
+            {
+            "render": checkbox
+            },
+            {
+            "render": checkbox
+            }
+        ]
+    });
+
     $('.hubs-table table').DataTable( {
         "order": [[ 0, "template" ]],
-        "pageLength": 25
+        "pageLength": 25,
     });
 } );
 </script>
