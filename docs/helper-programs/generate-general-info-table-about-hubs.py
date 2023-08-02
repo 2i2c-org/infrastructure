@@ -96,7 +96,6 @@ def build_hub_statistics_df(df):
         "count"
     ].sum(0)
     community_hubs_by_cluster["count"] = community_hubs_by_cluster["count"].astype(int)
-    community_hubs_by_cluster = pd.DataFrame(community_hubs_by_cluster)
 
     return community_hubs_by_cluster
 
