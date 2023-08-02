@@ -168,7 +168,7 @@ def main():
     community_hubs_by_cluster = build_hub_statistics_df(df)
 
     df.set_index("name", inplace=True)
-    write_to_json_and_csv_files(df, "hubs-table")
+    write_to_json_and_csv_files(df, "hub-table")
     write_to_json_and_csv_files(community_hubs_by_cluster, "hub-stats")
 
     print("Finished updating list of hubs and statics tables...")

@@ -21,7 +21,7 @@ A table of all running hubs across all of our clusters.
 
 ```{csv-table}
 :header-rows: 1
-:file: ../tmp/hubs-table.csv
+:file: ../tmp/hub-table.csv
 ```
 
 </div>
