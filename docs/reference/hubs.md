@@ -71,23 +71,13 @@ $(document).ready( function () {
         "pageLength": 25,
         "columns": [
             null, // first column, nothing special configured
-            {
-                "render": checkbox
-            },
-
+            {"render": checkbox},
+            {"render": checkbox},
             null, // second column
-            {
-                "render": checkbox
-            },
-            {
-                "render": checkbox
-            },
-            {
-                "render": checkbox
-            },
-            {
-                "render": checkbox
-            },
+            {"render": checkbox},
+            {"render": checkbox},
+            {"render": checkbox},
+            {"render": checkbox},
         ]
     });
 

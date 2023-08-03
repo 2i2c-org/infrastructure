@@ -91,13 +91,41 @@ def get_allusers_feature_status(hub_config, daskhub_type, binderhub_type):
     return False
 
 
+def get_dedicated_nodepool_status(hub_config, daskhub_type, binderhub_type):
+    try:
+        if daskhub_type:
+            hub_config["basehub"]["jupyterhub"]["singleuser"]["nodeSelector"][
+                "2i2c.org/community"
+            ]
+            return True
+        elif binderhub_type:
+            hub_config["binderhub"]["jupyterhub"]["singleuser"]["nodeSelector"][
+                "2i2c.org/community"
+            ]
+            return True
+        print("aci")
+        a = hub_config["jupyterhub"]["singleuser"]["nodeSelector"]
+        print(a)
+        return True
+    except KeyError:
+        # print("False")
+        return False
+
+
 def build_options_list_entry(
-    hub, authenticator, anonymization, allusers, custom_homepage, hub_count
+    hub,
+    authenticator,
+    anonymization,
+    allusers,
+    custom_homepage,
+    hub_count,
+    dedicated_nodepool,
 ):
     domain = f"[{hub['domain']}](https://{hub['domain']})"
     return {
         "domain": domain,
         "dedicated cluster": False if hub_count else True,
+        "dedicated nodepool": dedicated_nodepool,
         "authenticator": authenticator,
         "user id anonymisation": anonymization,
         "admin access to all user's home dirs": allusers,
@@ -140,11 +168,11 @@ def main():
                 for file_name in hub["helm_chart_values_files"]
                 if "enc" not in file_name
             ]
-
             authenticator = ""
-            anonymization = False
-            allusers = False
-            custom_homepage = False
+            anonymization = None
+            allusers = None
+            custom_homepage = None
+            dedicated_nodepool = None
             for config_file in hub_values_files:
                 with open(cluster_path.joinpath(config_file)) as f:
                     hub_config = safe_load(f)
@@ -169,6 +197,11 @@ def main():
                         hub_config, daskhub_type, binderhub_type
                     )
 
+                if not dedicated_nodepool:
+                    dedicated_nodepool = get_dedicated_nodepool_status(
+                        hub_config, daskhub_type, binderhub_type
+                    )
+
             options_list.append(
                 build_options_list_entry(
                     hub,
@@ -177,6 +210,7 @@ def main():
                     allusers,
                     custom_homepage,
                     prod_hub_count,
+                    dedicated_nodepool,
                 )
             )
 
