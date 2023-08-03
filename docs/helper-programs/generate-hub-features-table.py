@@ -92,11 +92,12 @@ def get_allusers_feature_status(hub_config, daskhub_type, binderhub_type):
 
 
 def build_options_list_entry(
-    hub, authenticator, anonymization, allusers, custom_homepage
+    hub, authenticator, anonymization, allusers, custom_homepage, hub_count
 ):
     domain = f"[{hub['domain']}](https://{hub['domain']})"
     return {
         "domain": domain,
+        "dedicated cluster": False if hub_count else True,
         "authenticator": authenticator,
         "user id anonymisation": anonymization,
         "admin access to all user's home dirs": allusers,
@@ -128,7 +129,12 @@ def main():
         cluster = safe_load(yaml)
 
         # For each hub in cluster, grab its metadata and add it to the list
+        # Also count the hubs per cluster to determine if it's a shared cluster
+        prod_hub_count = 0
         for hub in cluster["hubs"]:
+            if hub["name"] not in ["staging", "prod"]:
+                prod_hub_count += 1
+
             hub_values_files = [
                 file_name
                 for file_name in hub["helm_chart_values_files"]
@@ -165,7 +171,12 @@ def main():
 
             options_list.append(
                 build_options_list_entry(
-                    hub, authenticator, anonymization, allusers, custom_homepage
+                    hub,
+                    authenticator,
+                    anonymization,
+                    allusers,
+                    custom_homepage,
+                    prod_hub_count,
                 )
             )
 
