@@ -70,20 +70,16 @@ $(document).ready( function () {
         "order": [[ 0, "template" ]],
         "pageLength": 25,
         "columns": [
-            null, // first column, nothing special configured
-            null, // second column
-            {
-            "render": checkbox
-            },
-            {
-            "render": checkbox
-            },
-            {
-            "render": checkbox
-            },
-            {
-            "render": checkbox
-            }
+            null, // domain column, nothing special configured
+            {"render": checkbox}, // dedicated cluster column
+            {"render": checkbox}, // dedicated nodepool column
+            null, // authenticator column
+            {"render": checkbox}, // user anonymisation column
+            {"render": checkbox}, // allusers access column
+            {"render": checkbox}, // community domain column
+            {"render": checkbox}, // custom login page column
+            {"render": checkbox}, // custom html pages column
+            {"render": checkbox}, // gh-scoped-creds column
         ]
     });
 
