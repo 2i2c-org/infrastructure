@@ -96,7 +96,7 @@ def build_options_list_entry(
         "dedicated nodepool": dedicated_nodepool,
         "authenticator": authenticator,
         "user anonymisation": anonymization,
-        "allusers access": allusers,
+        "admin access to allusers dirs": allusers,
         "community domain": False if "2i2c.cloud" in domain else True,
         "custom login page": custom_homepage,
         "custom html pages": custom_html,
