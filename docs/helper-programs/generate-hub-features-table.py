@@ -60,6 +60,14 @@ def get_dedicated_nodepool_status(jupyterhub_config):
         return False
 
 
+def get_gh_scoped_creds(jupyterhub_config):
+    try:
+        jupyterhub_config["singleuser"]["extraEnv"]["GH_SCOPED_CREDS_CLIENT_ID"]
+        return True
+    except KeyError:
+        return False
+
+
 def build_options_list_entry(
     hub,
     authenticator,
@@ -68,6 +76,7 @@ def build_options_list_entry(
     custom_homepage,
     hub_count,
     dedicated_nodepool,
+    gh_scoped_creds,
 ):
     domain = f"[{hub['domain']}](https://{hub['domain']})"
     return {
@@ -75,13 +84,13 @@ def build_options_list_entry(
         "dedicated cluster": False if hub_count else True,
         "dedicated nodepool": dedicated_nodepool,
         "authenticator": authenticator,
-        "user id anonymisation": anonymization,
-        "admin access to all user's home dirs": allusers,
+        "user anonymisation": anonymization,
+        "allusers access": allusers,
         "community domain": False if "2i2c.cloud" in domain else True,
         "custom login page": custom_homepage,
+        "gh-scoped-creds": gh_scoped_creds,
         #         "custom hub pages":
         #         "static web pages":
-        #         "gh-scoped-creds":
         #         "shared cluster":
         #         "buckets":
         #         "dask":
@@ -135,6 +144,7 @@ def main():
             allusers = None
             custom_homepage = None
             dedicated_nodepool = None
+            gh_scoped_creds = None
             for config_file in hub_values_files:
                 with open(cluster_path.joinpath(config_file)) as f:
                     hub_config = safe_load(f)
@@ -153,11 +163,12 @@ def main():
                         custom_homepage = get_custom_homepage_feature_status(
                             jupyterhub_config
                         )
-
                     if not dedicated_nodepool:
                         dedicated_nodepool = get_dedicated_nodepool_status(
                             jupyterhub_config
                         )
+                    if not gh_scoped_creds:
+                        gh_scoped_creds = get_gh_scoped_creds(jupyterhub_config)
 
             options_list.append(
                 build_options_list_entry(
@@ -168,6 +179,7 @@ def main():
                     custom_homepage,
                     prod_hub_count,
                     dedicated_nodepool,
+                    gh_scoped_creds,
                 )
             )
 

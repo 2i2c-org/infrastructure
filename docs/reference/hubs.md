@@ -78,6 +78,7 @@ $(document).ready( function () {
             {"render": checkbox},
             {"render": checkbox},
             {"render": checkbox},
+            {"render": checkbox},
         ]
     });
 
