@@ -68,6 +68,16 @@ def get_gh_scoped_creds(jupyterhub_config):
         return False
 
 
+def get_custom_pages_html(jupyterhub_config):
+    try:
+        extra_files = jupyterhub_config["singleuser"]["extraFiles"]
+        for file in extra_files.keys():
+            if file.endswith(".html"):
+                return True
+    except KeyError:
+        return False
+
+
 def build_options_list_entry(
     hub,
     authenticator,
@@ -77,6 +87,7 @@ def build_options_list_entry(
     hub_count,
     dedicated_nodepool,
     gh_scoped_creds,
+    custom_html,
 ):
     domain = f"[{hub['domain']}](https://{hub['domain']})"
     return {
@@ -88,8 +99,8 @@ def build_options_list_entry(
         "allusers access": allusers,
         "community domain": False if "2i2c.cloud" in domain else True,
         "custom login page": custom_homepage,
+        "custom html pages": custom_html,
         "gh-scoped-creds": gh_scoped_creds,
-        #         "custom hub pages":
         #         "static web pages":
         #         "shared cluster":
         #         "buckets":
@@ -145,6 +156,7 @@ def main():
             custom_homepage = None
             dedicated_nodepool = None
             gh_scoped_creds = None
+            custom_html = None
             for config_file in hub_values_files:
                 with open(cluster_path.joinpath(config_file)) as f:
                     hub_config = safe_load(f)
@@ -169,6 +181,8 @@ def main():
                         )
                     if not gh_scoped_creds:
                         gh_scoped_creds = get_gh_scoped_creds(jupyterhub_config)
+                    if not custom_html:
+                        custom_html = get_custom_pages_html(jupyterhub_config)
 
             options_list.append(
                 build_options_list_entry(
@@ -180,6 +194,7 @@ def main():
                     prod_hub_count,
                     dedicated_nodepool,
                     gh_scoped_creds,
+                    custom_html,
                 )
             )
 
