@@ -20,7 +20,7 @@ user_buckets = {
   "scratch-go-bgc" : {
     "delete_after" : 7
   },
-  "scratch-itcocean" : {
+  "scratch-itcoocean" : {
     "delete_after" : 7
   },
 }
@@ -52,9 +52,9 @@ hub_cloud_permissions = {
     bucket_admin_access : ["scratch-go-bgc"],
     extra_iam_policy : ""
   },
-  "itcocean" : {
+  "itcoocean" : {
     requestor_pays : true,
-    bucket_admin_access : ["scratch-itcocean"],
+    bucket_admin_access : ["scratch-itcoocean"],
     extra_iam_policy : ""
   },
 }
