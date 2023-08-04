@@ -63,7 +63,8 @@ Parts of the *home* volume are mounted in different places for the users:
           ```
         *  the `allusers` directory - optional
 
-           Can be mounted **just for admins**, showing the contents of `<hub-directory-path>/<hub-name>/`. This volumeMount is **NOT readonly**, so admins can write to it. It's purpose is to give access to the hub admins to all the users home directory to read and modify.
+           Can be mounted **just for admins**, showing the contents of `<hub-directory-path>/<hub-name>/`. This volumeMount can be made readonly if the following volume property is set: `readOnly: true`.
+           If it is not specified, then by default, it is **NOT readonly**, so admins can write to it. It's purpose is to give access to the hub admins to all the users home directory to read and/or modify.
 
            ```yaml
             jupyterhub:
@@ -72,6 +73,8 @@ Parts of the *home* volume are mounted in different places for the users:
                   extraVolumeMounts:
                     - name: home
                       mountPath: /home/jovyan/allusers
+                      # Uncomment the line below to make the directory readonly for admins
+                      # readOnly: true
             ```
 
         * A `shared-public` directory
