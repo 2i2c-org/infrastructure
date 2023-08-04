@@ -1,6 +1,6 @@
 userServiceAccount:
   annotations:
-    eks.amazonaws.com/role-arn: arn:aws:iam::790657130469:role/2i2c-aws-us-go-bgc
+    eks.amazonaws.com/role-arn: arn:aws:iam::790657130469:role/2i2c-aws-us-itcocean
 nfs:
   pv:
     # from https://docs.aws.amazon.com/efs/latest/ug/mounting-fs-nfs-mount-settings.html
@@ -15,9 +15,9 @@ nfs:
     baseShareName: /
 jupyterhub:
   ingress:
-    hosts: [go-bgc.2i2c.cloud]
+    hosts: [itcocean.2i2c.cloud]
     tls:
-      - hosts: [go-bgc.2i2c.cloud]
+      - hosts: [itcocean.2i2c.cloud]
         secretName: https-auto-tls
   custom:
     2i2c:
@@ -26,9 +26,9 @@ jupyterhub:
     homepage:
       templateVars:
         org:
-          name: GO-BGC
-          url: https://www.go-bgc.org/news/2023-float-data-workshop
-          logo_url: https://www.go-bgc.org/wp-content/uploads/2023/04/GO-BGCBGC-Argo-Float-Data-Workshop-Flyer-2023-2-980x656.jpeg
+          name: ITCOocean
+          url: https://incois.gov.in/ITCOocean/index.jsp
+          logo_url: https://user-images.githubusercontent.com/2545978/253672085-ec5ca6fb-147b-4fcd-87f1-431108b62558.png
         designed_by:
           name: 2i2c
           url: https://2i2c.org
@@ -36,34 +36,26 @@ jupyterhub:
           name: 2i2c
           url: https://2i2c.org
         funded_by:
-          name: GO-BGC
-          url: https://2i2c.org
+          name: ESIP
+          url: https://www.esipfed.org/
   hub:
     config:
       JupyterHub:
         authenticator_class: github
       GitHubOAuthenticator:
-        oauth_callback_url: https://go-bgc.2i2c.cloud/hub/oauth_callback
+        oauth_callback_url: https://itcocean.2i2c.cloud/hub/oauth_callback
         allowed_organizations:
           - 2i2c-org:hub-access-for-2i2c-staff
-          - go-bgc
+          - Hackweek-ITCOocean:itcoocean-hackweek-2023
         scope:
           - read:org
       Authenticator:
         admin_users:
-          - AlisonGray # Alison Grey, Community representative
-          - dnicholson # David Nicholson, Community representative
+          - eeholmes # Eli Holmes, Community representative
   singleuser:
-    image:
-      # image choice preliminary and is expected to be setup via
-      # https://go-bgc.2i2c.cloud/services/configurator/ by the community
-      #
-      # pangeo/pangeo-notebook is maintained at: https://github.com/pangeo-data/pangeo-docker-images
-      name: pangeo/pangeo-notebook
-      tag: "2023.07.05"
     extraEnv:
-      SCRATCH_BUCKET: s3://scratch-go-bgc/$(JUPYTERHUB_USER)
-      PANGEO_SCRATCH: s3://scratch-go-bgc/$(JUPYTERHUB_USER)
+      SCRATCH_BUCKET: s3://scratch-itcocean/$(JUPYTERHUB_USER)
+      PANGEO_SCRATCH: s3://scratch-itcocean/$(JUPYTERHUB_USER)
     profileList:
       # NOTE: About node sharing
       #
@@ -92,6 +84,26 @@ jupyterhub:
         slug: medium
         default: true
         profile_options:
+          image:
+            display_name: Image
+            choices:
+              geospatial-python-tensorflow:
+                display_name: Geospatial Python with tensorflow
+                default: true
+                kubespawner_override:
+                  image: eeholmes/iopython:20230714
+              geospatial-python-normal:
+                display_name: Geospatial Python
+                kubespawner_override:
+                  image: openscapes/python:f577786
+              geospatial-r-normal:
+                display_name: Geospatial R
+                kubespawner_override:
+                  image: openscapes/rocker:a7596b5
+              geospatial-r-sdm:
+                display_name: Geospatial R with SDM
+                kubespawner_override:
+                  image: eeholmes/iorocker:20230714
           requests:
             # NOTE: Node share choices are in active development, see comment
             #       next to profileList: above.
@@ -108,12 +120,12 @@ jupyterhub:
                   mem_guarantee: 1.805G
                   cpu_guarantee: 0.234
               mem_4:
-                default: true
                 display_name: ~4 GB, ~0.5 CPU
                 kubespawner_override:
                   mem_guarantee: 3.611G
                   cpu_guarantee: 0.469
               mem_8:
+                default: true
                 display_name: ~8 GB, ~1.0 CPU
                 kubespawner_override:
                   mem_guarantee: 7.222G
