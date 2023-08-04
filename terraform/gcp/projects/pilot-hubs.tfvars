@@ -59,7 +59,7 @@ notebook_nodes = {
     # We expect around 100 users
     min : 0,
     max : 100,
-    machine_type : "n1-highmem-16",
+    machine_type : "n2-highmem-16",
     labels : {
       "2i2c.org/community" : "ohw"
     },
