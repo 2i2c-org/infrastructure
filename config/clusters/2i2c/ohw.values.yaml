@@ -53,6 +53,9 @@ basehub:
             mem_guarantee: 4G
             cpu_limit: 2
             cpu_guarantee: 0.5
+      extraEnv:
+        GH_SCOPED_CREDS_CLIENT_ID: "Iv1.9c20af442fad0d86"
+        GH_SCOPED_CREDS_APP_URL: "https://github.com/apps/ohw-gh-scoped-creds-app"
     custom:
       cloudResources:
         provider: gcp
