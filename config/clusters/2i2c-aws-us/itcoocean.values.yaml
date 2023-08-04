@@ -1,6 +1,6 @@
 userServiceAccount:
   annotations:
-    eks.amazonaws.com/role-arn: arn:aws:iam::790657130469:role/2i2c-aws-us-itcocean
+    eks.amazonaws.com/role-arn: arn:aws:iam::790657130469:role/2i2c-aws-us-itcoocean
 nfs:
   pv:
     # from https://docs.aws.amazon.com/efs/latest/ug/mounting-fs-nfs-mount-settings.html
@@ -15,9 +15,9 @@ nfs:
     baseShareName: /
 jupyterhub:
   ingress:
-    hosts: [itcocean.2i2c.cloud]
+    hosts: [itcoocean.2i2c.cloud]
     tls:
-      - hosts: [itcocean.2i2c.cloud]
+      - hosts: [itcoocean.2i2c.cloud]
         secretName: https-auto-tls
   custom:
     2i2c:
@@ -43,7 +43,7 @@ jupyterhub:
       JupyterHub:
         authenticator_class: github
       GitHubOAuthenticator:
-        oauth_callback_url: https://itcocean.2i2c.cloud/hub/oauth_callback
+        oauth_callback_url: https://itcoocean.2i2c.cloud/hub/oauth_callback
         allowed_organizations:
           - 2i2c-org:hub-access-for-2i2c-staff
           - Hackweek-ITCOocean:itcoocean-hackweek-2023
@@ -54,8 +54,8 @@ jupyterhub:
           - eeholmes # Eli Holmes, Community representative
   singleuser:
     extraEnv:
-      SCRATCH_BUCKET: s3://scratch-itcocean/$(JUPYTERHUB_USER)
-      PANGEO_SCRATCH: s3://scratch-itcocean/$(JUPYTERHUB_USER)
+      SCRATCH_BUCKET: s3://scratch-itcoocean/$(JUPYTERHUB_USER)
+      PANGEO_SCRATCH: s3://scratch-itcoocean/$(JUPYTERHUB_USER)
     profileList:
       # NOTE: About node sharing
       #
@@ -79,9 +79,9 @@ jupyterhub:
       #         16 CPU node: 0.9375
       #         64 CPU node: 0.984375
       #
-      - display_name: "Medium: up to 16 CPU / 128 GB RAM"
-        description: "Start a container with at least a chosen share of capacity on a node of this type"
-        slug: medium
+      - display_name: "Small: up to 4 CPU / 32 GB RAM"
+        description: &profile_list_description "Start a container with at least a chosen share of capacity on a node of this type"
+        slug: small
         default: true
         profile_options:
           image:
@@ -89,7 +89,6 @@ jupyterhub:
             choices:
               geospatial-python-tensorflow:
                 display_name: Geospatial Python with tensorflow
-                default: true
                 kubespawner_override:
                   image: eeholmes/iopython:20230714
               geospatial-python-normal:
@@ -101,6 +100,7 @@ jupyterhub:
                 kubespawner_override:
                   image: openscapes/rocker:a7596b5
               geospatial-r-sdm:
+                default: true
                 display_name: Geospatial R with SDM
                 kubespawner_override:
                   image: eeholmes/iorocker:20230714
@@ -110,48 +110,38 @@ jupyterhub:
             display_name: Node share
             choices:
               mem_1:
+                default: true
                 display_name: ~1 GB, ~0.125 CPU
                 kubespawner_override:
-                  mem_guarantee: 0.903G
-                  cpu_guarantee: 0.117
+                  mem_guarantee: 0.836G
+                  cpu_guarantee: 0.094
               mem_2:
                 display_name: ~2 GB, ~0.25 CPU
                 kubespawner_override:
-                  mem_guarantee: 1.805G
-                  cpu_guarantee: 0.234
+                  mem_guarantee: 1.671G
+                  cpu_guarantee: 0.188
               mem_4:
                 display_name: ~4 GB, ~0.5 CPU
                 kubespawner_override:
-                  mem_guarantee: 3.611G
-                  cpu_guarantee: 0.469
+                  mem_guarantee: 3.342G
+                  cpu_guarantee: 0.375
               mem_8:
-                default: true
                 display_name: ~8 GB, ~1.0 CPU
                 kubespawner_override:
-                  mem_guarantee: 7.222G
-                  cpu_guarantee: 0.938
+                  mem_guarantee: 6.684G
+                  cpu_guarantee: 0.75
               mem_16:
                 display_name: ~16 GB, ~2.0 CPU
                 kubespawner_override:
-                  mem_guarantee: 14.444G
-                  cpu_guarantee: 1.875
+                  mem_guarantee: 13.369G
+                  cpu_guarantee: 1.5
               mem_32:
                 display_name: ~32 GB, ~4.0 CPU
                 kubespawner_override:
-                  mem_guarantee: 28.887G
-                  cpu_guarantee: 3.75
-              mem_64:
-                display_name: ~64 GB, ~8.0 CPU
-                kubespawner_override:
-                  mem_guarantee: 57.775G
-                  cpu_guarantee: 7.5
-              mem_128:
-                display_name: ~128 GB, ~16.0 CPU
-                kubespawner_override:
-                  mem_guarantee: 115.549G
-                  cpu_guarantee: 15.0
+                  mem_guarantee: 26.738G
+                  cpu_guarantee: 3.0
         kubespawner_override:
           cpu_limit: null
           mem_limit: null
           node_selector:
-            node.kubernetes.io/instance-type: r5.4xlarge
+            node.kubernetes.io/instance-type: r5.xlarge

@@ -49,11 +49,11 @@ hubs:
       - basehub-common.values.yaml
       - go-bgc.values.yaml
       - enc-go-bgc.secret.values.yaml
-  - name: itcocean
-    display_name: "ITCOcean"
-    domain: itcocean.2i2c.cloud
+  - name: itcoocean
+    display_name: "ITCOocean"
+    domain: itcoocean.2i2c.cloud
     helm_chart: basehub
     helm_chart_values_files:
       - basehub-common.values.yaml
-      - itcocean.values.yaml
-      - enc-itcocean.secret.values.yaml
+      - itcoocean.values.yaml
+      - enc-itcoocean.secret.values.yaml
