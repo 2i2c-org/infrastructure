@@ -50,7 +50,11 @@ hub_cloud_permissions = {
                     "arn:aws:s3:::nsidc-cumulus-prod-protected",
                     "arn:aws:s3:::nsidc-cumulus-prod-protected/*",
                     "arn:aws:s3:::ornl-cumulus-prod-protected",
-                    "arn:aws:s3:::ornl-cumulus-prod-protected/*"
+                    "arn:aws:s3:::ornl-cumulus-prod-protected/*",
+                    "arn:aws:s3:::podaac-ops-cumulus-public",
+                    "arn:aws:s3:::podaac-ops-cumulus-public/*",
+                    "arn:aws:s3:::podaac-ops-cumulus-protected",
+                    "arn:aws:s3:::podaac-ops-cumulus-protected/*"
                 ]
             },
             {
