@@ -78,38 +78,6 @@ def get_custom_pages_html(jupyterhub_config):
         return False
 
 
-def build_options_list_entry(
-    hub,
-    authenticator,
-    anonymization,
-    allusers,
-    custom_homepage,
-    hub_count,
-    dedicated_nodepool,
-    gh_scoped_creds,
-    custom_html,
-):
-    domain = f"[{hub['domain']}](https://{hub['domain']})"
-    return {
-        "domain": domain,
-        "dedicated cluster": False if hub_count else True,
-        "dedicated nodepool": dedicated_nodepool,
-        "authenticator": authenticator,
-        "user anonymisation": anonymization,
-        "admin access to allusers dirs": allusers,
-        "community domain": False if "2i2c.cloud" in domain else True,
-        "custom login page": custom_homepage,
-        "custom html pages": custom_html,
-        "gh-scoped-creds": gh_scoped_creds,
-        #         "static web pages":
-        #         "shared cluster":
-        #         "buckets":
-        #         "dask":
-        #         "GPUs":
-        #         "profile lists":
-    }
-
-
 def retrieve_jupyterhub_config_dict(hub_config):
     daskhub_type = hub_config.get("basehub", None)
     binderhub_type = hub_config.get("binderhub", None)
@@ -122,6 +90,60 @@ def retrieve_jupyterhub_config_dict(hub_config):
         return hub_config["jupyterhub"]
     except KeyError:
         return
+
+
+def parse_config_values_files_for_features(cluster_path, hub_values_files):
+    features = {}
+    for config_file in hub_values_files:
+        with open(cluster_path.joinpath(config_file)) as f:
+            hub_config = safe_load(f)
+        jupyterhub_config = retrieve_jupyterhub_config_dict(hub_config)
+
+        if jupyterhub_config:
+            if not features.get("authenticator", ""):
+                features["authenticator"] = get_hub_authentication(jupyterhub_config)
+            if not features.get("anonymization", None):
+                features["anonymization"] = get_user_anonymization_feature_status(
+                    jupyterhub_config
+                )
+            if not features.get("allusers", None):
+                features["allusers"] = get_allusers_feature_status(jupyterhub_config)
+            if not features.get("custom_homepage", None):
+                features["custom_homepage"] = get_custom_homepage_feature_status(
+                    jupyterhub_config
+                )
+            if not features.get("dedicated_nodepool", None):
+                features["dedicated_nodepool"] = get_dedicated_nodepool_status(
+                    jupyterhub_config
+                )
+            if not features.get("gh_scoped_creds", None):
+                features["gh_scoped_creds"] = get_gh_scoped_creds(jupyterhub_config)
+            if not features.get("custom_html", None):
+                features["custom_html"] = get_custom_pages_html(jupyterhub_config)
+
+    return features
+
+
+def build_options_list_entry(hub, hub_count, values_files_features):
+    domain = f"[{hub['domain']}](https://{hub['domain']})"
+    return {
+        "domain": domain,
+        "dedicated cluster": False if hub_count else True,
+        "dedicated nodepool": values_files_features["dedicated_nodepool"],
+        "authenticator": values_files_features["authenticator"],
+        "user anonymisation": values_files_features["anonymization"],
+        "admin access to allusers dirs": values_files_features["allusers"],
+        "community domain": False if "2i2c.cloud" in domain else True,
+        "custom login page": values_files_features["custom_homepage"],
+        "custom html pages": values_files_features["custom_html"],
+        "gh-scoped-creds": values_files_features["gh_scoped_creds"],
+        #         "static web pages":
+        #         "shared cluster":
+        #         "buckets":
+        #         "dask":
+        #         "GPUs":
+        #         "profile lists":
+    }
 
 
 def main():
@@ -150,52 +172,13 @@ def main():
                 for file_name in hub["helm_chart_values_files"]
                 if "enc" not in file_name
             ]
-            authenticator = ""
-            anonymization = None
-            allusers = None
-            custom_homepage = None
-            dedicated_nodepool = None
-            gh_scoped_creds = None
-            custom_html = None
-            for config_file in hub_values_files:
-                with open(cluster_path.joinpath(config_file)) as f:
-                    hub_config = safe_load(f)
-                jupyterhub_config = retrieve_jupyterhub_config_dict(hub_config)
 
-                if jupyterhub_config:
-                    if not authenticator:
-                        authenticator = get_hub_authentication(jupyterhub_config)
-                    if not anonymization:
-                        anonymization = get_user_anonymization_feature_status(
-                            jupyterhub_config
-                        )
-                    if not allusers:
-                        allusers = get_allusers_feature_status(jupyterhub_config)
-                    if not custom_homepage:
-                        custom_homepage = get_custom_homepage_feature_status(
-                            jupyterhub_config
-                        )
-                    if not dedicated_nodepool:
-                        dedicated_nodepool = get_dedicated_nodepool_status(
-                            jupyterhub_config
-                        )
-                    if not gh_scoped_creds:
-                        gh_scoped_creds = get_gh_scoped_creds(jupyterhub_config)
-                    if not custom_html:
-                        custom_html = get_custom_pages_html(jupyterhub_config)
+            values_files_features = parse_config_values_files_for_features(
+                cluster_path, hub_values_files
+            )
 
             options_list.append(
-                build_options_list_entry(
-                    hub,
-                    authenticator,
-                    anonymization,
-                    allusers,
-                    custom_homepage,
-                    prod_hub_count,
-                    dedicated_nodepool,
-                    gh_scoped_creds,
-                    custom_html,
-                )
+                build_options_list_entry(hub, prod_hub_count, values_files_features)
             )
 
     # Write raw data to CSV and JSON
