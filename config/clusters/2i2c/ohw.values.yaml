@@ -10,6 +10,12 @@ basehub:
         - secretName: https-auto-tls
           hosts:
             - oceanhackweek.2i2c.cloud
+    # Enabled prepuller for event: https://github.com/2i2c-org/infrastructure/issues/2879
+    prePuller:
+      hook:
+        enabled: true
+      continuous:
+        enabled: true
     singleuser:
       networkPolicy:
         # In clusters with NetworkPolicy enabled, do not
@@ -33,12 +39,6 @@ basehub:
           - ports:
               - port: 22
                 protocol: TCP
-      # Enabled prepuller for event: https://github.com/2i2c-org/infrastructure/issues/2879
-      prePuller:
-        hook:
-          enabled: true
-        continuous:
-          enabled: true
       profileList:
         - display_name: "Python using JupyterLab"
           description: "~2 CPU, ~8G RAM"
