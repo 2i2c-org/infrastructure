@@ -182,8 +182,6 @@ def build_options_list_entry(hub, hub_count, values_files_features, terraform_fe
         "custom html pages": values_files_features["custom_html"],
         "gh-scoped-creds": values_files_features["gh_scoped_creds"],
         #         "static web pages":
-        #         "shared cluster":
-        #         "buckets":
         #         "dask":
         #         "GPUs":
         #         "profile lists":
