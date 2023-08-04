@@ -5,8 +5,14 @@ This is used in two places:
 - docs/_static/hub-options-table.json is published with the docs and meant for re-use in other parts of 2i2c
 - docs/tmp/hub-options-table.csv is read by reference/hubs.md to create a list of hubs
 """
+import hcl2
 import pandas as pd
-from utils import get_clusters_list, write_to_json_and_csv_files
+from utils import (
+    get_cluster_provider,
+    get_clusters_list,
+    path_terraform,
+    write_to_json_and_csv_files,
+)
 from yaml import safe_load
 
 
@@ -92,7 +98,7 @@ def retrieve_jupyterhub_config_dict(hub_config):
         return
 
 
-def parse_config_values_files_for_features(cluster_path, hub_values_files):
+def parse_yaml_config_value_files_for_features(cluster_path, hub_values_files):
     features = {}
     for config_file in hub_values_files:
         with open(cluster_path.joinpath(config_file)) as f:
@@ -124,12 +130,50 @@ def parse_config_values_files_for_features(cluster_path, hub_values_files):
     return features
 
 
-def build_options_list_entry(hub, hub_count, values_files_features):
+def get_cluster_terraform_config(provider, cluster_name):
+    """
+    Return the configuration dict from the terraform file specific to this cluster_name
+    """
+
+    # We're still using the old name for the 2i2c cluster's terraform
+    tfvars_file_name = "pilot-hubs" if cluster_name == "2i2c" else cluster_name
+
+    terraform_file = (
+        path_terraform / provider / "projects" / f"{tfvars_file_name}.tfvars"
+    )
+
+    with open(terraform_file) as f:
+        return hcl2.load(f)
+
+
+def parse_terraform_value_files_for_features(terraform_config):
+    features = {}
+    # Checks whether or not the cluster has any form of user buckets setup
+    if terraform_config.get("user_buckets", False):
+        # Then we check which hubs have buckets enabled
+        hub_cloud_permissions = terraform_config.get("hub_cloud_permissions", None)
+        if hub_cloud_permissions:
+            for hub_slug, permissions in hub_cloud_permissions.items():
+                features[hub_slug] = {
+                    "user_buckets": True,
+                    "requestor_pays": permissions.get("requestor_pays", False),
+                }
+
+    return features
+
+
+def build_options_list_entry(hub, hub_count, values_files_features, terraform_features):
     domain = f"[{hub['domain']}](https://{hub['domain']})"
     return {
         "domain": domain,
         "dedicated cluster": False if hub_count else True,
         "dedicated nodepool": values_files_features["dedicated_nodepool"],
+        "user buckets (scratch/persistent)": terraform_features.get(
+            hub["name"], {}
+        ).get("user_buckets", False),
+        "requestor pays for buckets storage": terraform_features.get(
+            hub["name"], {}
+        ).get("requestor_pays", False),
         "authenticator": values_files_features["authenticator"],
         "user anonymisation": values_files_features["anonymization"],
         "admin access to allusers dirs": values_files_features["allusers"],
@@ -156,13 +200,20 @@ def main():
         cluster_path = cluster_info.parent
         if "schema" in cluster_info.name or "staff" in cluster_info.name:
             continue
+
         # For each cluster, grab it's YAML w/ the config for each hub
         yaml = cluster_info.read_text()
         cluster = safe_load(yaml)
 
+        # Parse the cluster's terraform config for features and save them in a dict
+        provider = get_cluster_provider(cluster)
+        terraform_config = get_cluster_terraform_config(provider, cluster["name"])
+        terraform_features = parse_terraform_value_files_for_features(terraform_config)
+
         # For each hub in cluster, grab its metadata and add it to the list
         # Also count the hubs per cluster to determine if it's a shared cluster
         prod_hub_count = 0
+
         for hub in cluster["hubs"]:
             if hub["name"] not in ["staging", "prod"]:
                 prod_hub_count += 1
@@ -173,12 +224,14 @@ def main():
                 if "enc" not in file_name
             ]
 
-            values_files_features = parse_config_values_files_for_features(
+            yaml_features = parse_yaml_config_value_files_for_features(
                 cluster_path, hub_values_files
             )
 
             options_list.append(
-                build_options_list_entry(hub, prod_hub_count, values_files_features)
+                build_options_list_entry(
+                    hub, prod_hub_count, yaml_features, terraform_features
+                )
             )
 
     # Write raw data to CSV and JSON
