@@ -11,6 +11,9 @@ prometheus:
         - secretName: prometheus-tls
           hosts:
             - prometheus.openscapes.2i2c.cloud
+    persistentVolume:
+      # 100Gi was too little
+      size: 200Gi
     resources:
       requests:
         memory: 8Gi
