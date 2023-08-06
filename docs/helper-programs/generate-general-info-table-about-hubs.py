@@ -6,7 +6,7 @@ This is used in two places:
 - docs/tmp/hub-table.csv is read by reference/hubs.md to create a list of hubs
 """
 import pandas as pd
-from utils import get_clusters_list, write_to_json_and_csv_files
+from utils import get_cluster_provider, get_clusters_list, write_to_json_and_csv_files
 from yaml import safe_load
 
 
@@ -128,11 +128,7 @@ def main():
         # Define the cloud provider for this cluster which we'll insert into the table below
         # For clusters where we know the provider but can't guess it from the YAML file,
         # we define a few custom mappings.
-        custom_providers = {"utoronto": "azure"}
-        if cluster["name"] in custom_providers.keys():
-            provider = custom_providers[cluster["name"]]
-        else:
-            provider = cluster["provider"]
+        provider = get_cluster_provider(cluster)
 
         # Don't display anything about Console UI if no info about datacentre available
         cluster_console_url = None

@@ -73,6 +73,8 @@ $(document).ready( function () {
             null, // domain column, nothing special configured
             {"render": checkbox}, // dedicated cluster column
             {"render": checkbox}, // dedicated nodepool column
+            {"render": checkbox}, // user buckets (scratch/persistent) column
+            {"render": checkbox}, // requestor pays for buckets storage column
             null, // authenticator column
             {"render": checkbox}, // user anonymisation column
             {"render": checkbox}, // allusers access column

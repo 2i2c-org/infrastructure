@@ -2,6 +2,7 @@ from pathlib import Path
 
 path_root = Path(__file__).parent.parent
 path_clusters = path_root / "../config/clusters"
+path_terraform = path_root / "../terraform/"
 
 
 def get_clusters_list():
@@ -15,6 +16,13 @@ def get_clusters_list():
         for filepath in path_clusters.glob("**/*cluster.yaml")
         if "tests/" not in str(filepath) and "templates" not in str(filepath)
     ]
+
+
+def get_cluster_provider(cluster):
+    custom_providers = {"utoronto": "azure"}
+    if cluster["name"] in custom_providers.keys():
+        return custom_providers[cluster["name"]]
+    return cluster["provider"]
 
 
 def write_to_json_and_csv_files(info, file_name_prefix):

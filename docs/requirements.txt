@@ -1,6 +1,7 @@
 myst-parser[sphinx,linkify]
 pandas
 pyyaml
+python-hcl2
 requests
 sphinx-autobuild
 sphinx-copybutton
