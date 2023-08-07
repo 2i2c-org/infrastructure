@@ -1,0 +1,18 @@
+apiVersion: storage.k8s.io/v1
+kind: StorageClass
+metadata:
+  name: gp3
+# Use the AWS EBS CSI provisioner
+provisioner: ebs.csi.aws.com
+parameters:
+  # gp3 is cheaper than gp2
+  type: gp3
+  fsType: ext4
+# Do not delete the underlying EBS volume whenever this PV & PVC
+# are deleted! This allows us recovery in case of accidental deletion
+reclaimPolicy: Retain
+# Create the EBS volume only when the pod consuming it tries to use it.
+# This ensures the EBS volume is created in the correct *zone*, so we
+# don't end up with issues where the volume is in a different zone (but
+# same region) as our pods.
+volumeBindingMode: WaitForFirstConsumer
