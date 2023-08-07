@@ -53,6 +53,41 @@ jupyterhub:
         admin_users:
           - eeholmes # Eli Holmes, Community representative
   singleuser:
+    # shared-public for collaboration
+    # See https://2i2c.freshdesk.com/a/tickets/814
+    storage:
+      extraVolumeMounts:
+        - name: home
+          mountPath: /home/jovyan/shared-public
+          subPath: _shared-public
+          readOnly: false
+        - name: home
+          mountPath: /home/jovyan/shared
+          subPath: _shared
+          readOnly: true
+    initContainers:
+      - name: volume-mount-ownership-fix
+        image: busybox
+        command:
+          [
+            "sh",
+            "-c",
+            "id && chown 1000:1000 /home/jovyan && chown 1000:1000 /home/jovyan/shared-readwrite && chown 1000:1000 /home/jovyan/shared-public && ls -lhd /home/jovyan ",
+          ]
+        securityContext:
+          runAsUser: 0
+        volumeMounts:
+          - name: home
+            mountPath: /home/jovyan
+            subPath: "{username}"
+          # Mounted without readonly attribute here,
+          # so we can chown it appropriately
+          - name: home
+            mountPath: /home/jovyan/shared-readwrite
+            subPath: _shared
+          - name: home
+            mountPath: /home/jovyan/shared-public
+            subPath: _shared-public
     extraEnv:
       SCRATCH_BUCKET: s3://scratch-itcoocean/$(JUPYTERHUB_USER)
       PANGEO_SCRATCH: s3://scratch-itcoocean/$(JUPYTERHUB_USER)
