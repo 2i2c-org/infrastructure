@@ -54,17 +54,17 @@ jupyterhub:
           - eeholmes # Eli Holmes, Community representative
   singleuser:
     # shared-public for collaboration
-    # See https://2i2c.freshdesk.com/a/tickets/814
+    # See https://github.com/2i2c-org/infrastructure/issues/2821#issuecomment-1665642853
     storage:
       extraVolumeMounts:
-        - name: home
-          mountPath: /home/jovyan/shared-public
-          subPath: _shared-public
-          readOnly: false
         - name: home
           mountPath: /home/jovyan/shared
           subPath: _shared
           readOnly: true
+        - name: home
+          mountPath: /home/jovyan/shared-public
+          subPath: _shared-public
+          readOnly: false
     initContainers:
       - name: volume-mount-ownership-fix
         image: busybox
