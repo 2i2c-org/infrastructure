@@ -19,9 +19,9 @@ basehub:
       homepage:
         templateVars:
           org:
-            name: "The Visualization, Exploration, and Data Analysis (VEDA) Project"
-            logo_url: https://visex.netlify.app/graphics/nasa-veda-logo-pos.svg
-            url: https://www.earthdata.nasa.gov/esds/veda
+            name: "NASA Green House Gases Center"
+            logo_url: https://raw.githubusercontent.com/US-GHG-Center/ghgc-docs/87204d4a4e5f29c335a8f905c73de551aabd4845/Logo/ghg-logo.svg
+            url: https://www.nasa.gov/emd/ghg
           designed_by:
             name: "2i2c"
             url: https://2i2c.org
