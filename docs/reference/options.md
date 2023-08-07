@@ -179,8 +179,7 @@ stateDiagram-v2
         FundedBy --> FunderName
         FundedBy --> FunderURL
     }
-
-     state DataLayer {
+    state DataLayer {
         [*] --> data_root_option_one
         [*] --> data_root_option_two
         data_root_option_one: Shared Data Directories
@@ -189,7 +188,7 @@ stateDiagram-v2
         state data_root_option_one {
             shared_readwrite: shared-readwrite
             shared_public: shared-public
-            [*] --> shared: enabled by default
+            [*] --> shared_dir: enabled by default
             [*] --> shared_readwrite: enabled by default
             [*] --> shared_public: optional
             [*] --> allusers: optional
@@ -206,7 +205,7 @@ stateDiagram-v2
             hub_cloud_persmissions: Cloud Permissions
             buckets --> hub_cloud_persmissions
 
-            public: Publicly accessible
+            public_bucket: Publicly accessible
             from_hub: Buckets accessible from the Hub
             outside_hub: Buckets accessible from outside the Hub
             requestor_pays: Requestor Pays
@@ -216,7 +215,7 @@ stateDiagram-v2
             hub_cloud_persmissions --> requestor_pays : GCP only
 
 
-            outside_hub --> public
+            outside_hub --> public_bucket
             gg_membership: Google Groups based membership
             outside_hub --> gg_membership : GCP only
         }
