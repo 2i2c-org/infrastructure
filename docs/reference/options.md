@@ -73,6 +73,7 @@ $(document).ready( function () {
 stateDiagram-v2
     NewHub --> CloudLayer
     CloudLayer --> HubUserAccessLayer
+    HubUserAccessLayer --> CommunityCustomizationsLayer
 
     state CloudLayer {
         Cluster --> shared: default
@@ -141,4 +142,41 @@ stateDiagram-v2
             [*] --> anonymous
         }
     }
+    state CommunityCustomizationsLayer {
+        [*] --> root_option_one
+        [*] --> root_option_two
+        root_option_one: Hub pages
+        root_option_two: Hub domain
+
+        root_option_one --> option_one
+        root_option_one --> option_two : only for straightforward, short HTML
+
+        root_option_two --> community_name.cluster_name.2i2c.cloud
+        root_option_two --> community_name.2i2c.cloud
+        root_option_two --> other: community must set a CNAME that points to the 2i2c domain
+
+        option_one: Hub Login Page
+        option_two: (Optional) Other Hub pages
+        login_page_option_one: Basic configuration of template sections
+        login_page_option_two: Self configuration through own GitHub repo
+
+        state login_options <<join>>
+        option_one --> login_options
+        login_options --> login_page_option_one: mandatory
+        login_options --> login_page_option_two: optional
+
+        login_page_option_one --> OrganizationInfo
+        login_page_option_one --> FundedBy
+
+        login_page_option_two --> RepoURL : default 2i2c-org/default-hub-homepage
+        login_page_option_two --> RepoBranch : default master
+
+        OrganizationInfo --> OrgName
+        OrganizationInfo --> OrgURL
+        OrganizationInfo --> logoURL
+
+        FundedBy --> FunderName
+        FundedBy --> FunderURL
+    }
+
 ```
