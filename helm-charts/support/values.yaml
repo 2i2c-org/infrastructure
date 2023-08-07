@@ -344,6 +344,16 @@ grafana:
   #       client_secret: ""
   #
   grafana.ini:
+    # dataproxy is used to make requests to prometheuses via the backend.
+    # This allows authless access to prometheus server in the same namespace.
+    dataproxy:
+      # Enable logging so we can debug grafana timeouts
+      logging: true
+      # Default prometheus query timeout is 120s, so let's allow grafana to
+      # wait until that much time.
+      # See https://prometheus.io/docs/prometheus/latest/command-line/prometheus/
+      # for default prometheus query timeouts.
+      timeout: 120
     server:
       root_url: ""
     auth.github:
