@@ -57,7 +57,7 @@ notebook_nodes = {
   # Nodepool for OceanHackWeek. Tracking issue: https://github.com/2i2c-org/infrastructure/issues/2879
   "ohw" : {
     # We expect around 100 users
-    min : 0,
+    min : 4,
     max : 100,
     machine_type : "n2-highmem-16",
     labels : {
