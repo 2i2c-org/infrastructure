@@ -97,14 +97,14 @@ Parts of the *home* volume are mounted in different places for the users:
             singleuser:
               storage:
                 extraVolumeMounts:
-                - name: home
-                  mountPath: /home/jovyan/shared-public
-                  subPath: _shared-public
-                  readOnly: false
-                - name: home
-                  mountPath: /home/jovyan/shared
-                  subPath: _shared
-                  readOnly: true
+                  - name: home
+                    mountPath: /home/jovyan/shared
+                    subPath: _shared
+                    readOnly: true
+                  - name: home
+                    mountPath: /home/jovyan/shared-public
+                    subPath: _shared-public
+                    readOnly: false
               initContainers:
                 - name: volume-mount-ownership-fix
                   image: busybox
