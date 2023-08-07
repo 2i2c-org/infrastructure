@@ -212,6 +212,15 @@ prometheus:
         nginx.ingress.kubernetes.io/auth-realm: "Authentication Required"
         # If we enable external ingress into prometheus, we must secure it with HTTPS
         cert-manager.io/cluster-issuer: letsencrypt-prod
+        # Increase timeout for each query made by the grafana frontend to the
+        # grafana backend to 2min, which is the default timeout for prometheus
+        # queries. This also matches the timeout for the dataproxy in grafana,
+        # set under `grafana.grafana.ini` below. These two timeouts are set together
+        # to allow prometheus the best chance of executing queries we care about.
+        # While grafana in the same cluster does not go through nginx to access
+        # prometheus, the central grafana used does go through nginx. So we
+        # increase the timeout here as well.
+        nginx.ingress.kubernetes.io/proxy-read-timeout: "120"
     strategy:
       # type is set to Recreate as we have a persistent disk attached. The
       # default of RollingUpdate would fail by getting stuck waiting for a new
