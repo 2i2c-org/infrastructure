@@ -74,6 +74,7 @@ stateDiagram-v2
     NewHub --> CloudLayer
     CloudLayer --> HubUserAccessLayer
     HubUserAccessLayer --> CommunityCustomizationsLayer
+    CommunityCustomizationsLayer --> DataLayer
 
     state CloudLayer {
         Cluster --> shared: default
@@ -177,6 +178,48 @@ stateDiagram-v2
 
         FundedBy --> FunderName
         FundedBy --> FunderURL
+    }
+
+     state DataLayer {
+        [*] --> data_root_option_one
+        [*] --> data_root_option_two
+        data_root_option_one: Shared Data Directories
+        data_root_option_two: Object Storage Buckets
+
+        state data_root_option_one {
+            shared_readwrite: shared-readwrite
+            shared_public: shared-public
+            [*] --> shared: enabled by default
+            [*] --> shared_readwrite: enabled by default
+            [*] --> shared_public: optional
+            [*] --> allusers: optional
+        }
+
+        state data_root_option_two {
+            [*] --> Scratch
+            [*] --> Persistent
+
+            state buckets <<join>>
+            Scratch --> buckets
+            Persistent --> buckets
+
+            hub_cloud_persmissions: Cloud Permissions
+            buckets --> hub_cloud_persmissions
+
+            public: Publicly accessible
+            from_hub: Buckets accessible from the Hub
+            outside_hub: Buckets accessible from outside the Hub
+            requestor_pays: Requestor Pays
+
+            hub_cloud_persmissions --> outside_hub
+            hub_cloud_persmissions --> from_hub : default
+            hub_cloud_persmissions --> requestor_pays : GCP only
+
+
+            outside_hub --> public
+            gg_membership: Google Groups based membership
+            outside_hub --> gg_membership : GCP only
+        }
     }
 
 ```
