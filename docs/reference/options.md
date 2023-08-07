@@ -75,7 +75,7 @@ stateDiagram-v2
     CloudLayer --> HubUserAccessLayer
 
     state CloudLayer {
-        cluster --> shared: default
+        Cluster --> shared: default
         cluster_one: 2i2c, GCP, us-central1-b
         cluster_two: 2i2c-aws-us, AWS, us-west-2
         cluster_three: 2i2c-uk, GCP, europe-west2
@@ -91,40 +91,54 @@ stateDiagram-v2
         plan_events --> dedicated_nodepool: if events on hub
         plan_events --> shared_nodepool : default no events
 
-        cluster --> dedicated
+        Cluster --> dedicated
         dedicated --> provider
         provider --> GCP: default
         dedicated --> region
         region --> us_west_2: default
     }
     state HubUserAccessLayer {
-        authentication --> CILogonOAuthenticator : default
-        authentication --> GitHubOAuthenticator
+        [*] --> Authentication
+        Authentication--> Username
 
-        state auth <<join>>
-        state cilogon_authorization <<join>>
-        state github_authorization <<join>>
+        state Authentication {
+            [*] --> CILogonOAuthenticator : default
+            [*] --> GitHubOAuthenticator
+            [*] --> TmpAuthenticator : if ephemeral hub
 
-    
-        CILogonOAuthenticator --> auth: authentication
-        CILogonOAuthenticator --> cilogon_authorization: authorization
-        GitHubOAuthenticator --> github_authorization: authorization
+            state auth <<join>>
+            state cilogon_authorization <<join>>
+            state github_authorization <<join>>
 
-        auth --> SocialProvider
-        auth --> InstitutionalProvider: if member of InCommon Federation
-        
-        state options <<join>>
-        SocialProvider --> options: options
-        options --> Microsoft
-        options --> Google
-        options --> GitHub
-    
-        cilogon_authorization --> domain_based: default
-        cilogon_authorization --> username_pattern
-        cilogon_authorization --> allowed_users
 
-        github_authorization --> GitHubTeams_membership: default
-        github_authorization --> GitHubOrgs_membership
-        github_authorization --> allowed_users
+            CILogonOAuthenticator --> auth: authentication
+            CILogonOAuthenticator --> cilogon_authorization: authorization
+            GitHubOAuthenticator --> github_authorization: authorization
+
+            auth --> SocialProvider
+            auth --> InstitutionalProvider: if member of InCommon Federation
+
+            state options <<join>>
+            SocialProvider --> options: options
+            options --> Microsoft
+            options --> Google
+            options --> GitHub
+
+            cilogon_authorization --> domain_based: default
+            cilogon_authorization --> username_pattern
+            cilogon_authorization --> allowed_users
+
+            github_authorization --> GitHubTeams_membership: default
+            github_authorization --> GitHubOrgs_membership
+            github_authorization --> allowed_users
+        }
+
+        state Username {
+            [*] --> public
+            public --> email : default
+            claim: provider specific claim
+            public --> claim
+            [*] --> anonymous
+        }
     }
 ```
