@@ -327,8 +327,13 @@ grafana:
       # of 1m to avoid HTTP 413 (Request Entity Too Large) when making POST
       # request (via jupyterhub/grafana-dashboard's deploy script, from a github
       # workflow) to update dashboards with json files representing them.
-      #
       nginx.ingress.kubernetes.io/proxy-body-size: 64m
+      # Increase timeout for each query made by the grafana frontend to the
+      # grafana backend to 2min, which is the default timeout for prometheus
+      # queries. This also matches the timeout for the dataproxy in grafana,
+      # set under `grafana.ini` below. These two timeouts are set together
+      # to allow prometheus the best chance of executing queries we care about.
+      nginx.ingress.kubernetes.io/proxy-read-timeout: "120"
       cert-manager.io/cluster-issuer: letsencrypt-prod
 
   # grafana is partially configured for GitHub authentication here, but the
@@ -353,6 +358,8 @@ grafana:
       # wait until that much time.
       # See https://prometheus.io/docs/prometheus/latest/command-line/prometheus/
       # for default prometheus query timeouts.
+      # Because our grafana is behind an nginx ingress, this should match the
+      # read timeout set above under `ingress.annotations`.
       timeout: 120
     server:
       root_url: ""
