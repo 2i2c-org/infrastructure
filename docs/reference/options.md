@@ -162,6 +162,7 @@ flowchart TB
             public --> claim[provider specific claim]
         end
     end
+
     subgraph CommunityCustomizationsLayer
         cclayer[*] --> hub_pages
         cclayer --> hub_domain
@@ -197,6 +198,7 @@ flowchart TB
         FundedBy --> FunderName
         FundedBy --> FunderURL
     end
+
     subgraph DataLayer
         data[*] --> data_root_option_one
         data --> data_root_option_two
@@ -229,20 +231,6 @@ flowchart TB
         outside_hub --> public_bucket
         gg_membership[Google Groups based membership]
         outside_hub -- GCP only --> gg_membership
-    end
-
-    subgraph IntegrationsLayer
-        integrations[*] --> gh-scoped-creds[Allow users to push to GitHub from the hub]
-        integrations --> git-credential-helpers[Enable nbgitpuller for private GitHub repos]
-        integrations -- only for dedicated clusters --> Grafana
-        integrations -- currently broken --> static_webs[fa:fa-exclamation Authenticated static websites]
-    end
-
-    subgraph PerformanceLayer
-        perf[*] --> GPUs
-        GPUs -- optional --> profile[GPU user profile]
-        perf --> Dask
-        perf --> KernelCulling 
     end
 
     subgraph IntegrationsLayer
