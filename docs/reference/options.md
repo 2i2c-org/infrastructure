@@ -70,6 +70,7 @@ $(document).ready( function () {
 ## Hub features decision tree
 
 % This is needed in order for tooltips to work in our docs per https://github.com/quarto-dev/quarto-cli/discussions/1054#discussioncomment-2882604
+
 <style>
   .mermaidTooltip {
       position: absolute;
@@ -88,7 +89,6 @@ $(document).ready( function () {
 
 
 ```{mermaid}
-:zoom:
 
 flowchart TB
     NewHub --> CloudLayer
@@ -170,14 +170,14 @@ flowchart TB
         hub_domain[Hub domain]
 
         hub_pages --> option_one
-        hub_pages --  only for straightforward, short HTML --> option_two
+        hub_pages --  optional and only for straightforward, short HTML --> option_two
 
         hub_domain --> community_name.cluster_name.2i2c.cloud
         hub_domain --> community_name.2i2c.cloud
         hub_domain -- community must set a CNAME that points to the 2i2c domain --> other
 
         option_one[Hub Login Page]
-        option_two[Optional:Other Hub pages]
+        option_two[Other Hub pages]
         login_page_option_one[Basic configuration of template sections]
         login_page_option_two[Self configuration through own GitHub repo]
 
