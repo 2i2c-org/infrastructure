@@ -95,6 +95,9 @@ flowchart TB
     CloudLayer --> HubUserAccessLayer
     HubUserAccessLayer --> CommunityCustomizationsLayer
     CommunityCustomizationsLayer --> DataLayer
+    DataLayer --> IntegrationsLayer
+    IntegrationsLayer --> PerformanceLayer
+    PerformanceLayer --> ElasticScaffolding
 
     subgraph CloudLayer
         Cluster -- default --> Shared
@@ -227,5 +230,41 @@ flowchart TB
         gg_membership[Google Groups based membership]
         outside_hub -- GCP only --> gg_membership
     end
+
+    subgraph IntegrationsLayer
+        integrations[*] --> gh-scoped-creds[Allow users to push to GitHub from the hub]
+        integrations --> git-credential-helpers[Enable nbgitpuller for private GitHub repos]
+        integrations -- only for dedicated clusters --> Grafana
+        integrations -- currently broken --> static_webs[fa:fa-exclamation Authenticated static websites]
+    end
+
+    subgraph PerformanceLayer
+        perf[*] --> GPUs
+        GPUs -- optional --> profile[GPU user profile]
+        perf --> Dask
+        perf --> KernelCulling 
+    end
+
+    subgraph IntegrationsLayer
+        integrations[*] --> gh-scoped-creds[Allow users to push to GitHub from the hub]
+        integrations --> git-credential-helpers[Enable nbgitpuller for private GitHub repos]
+        integrations -- only dedicated clusters --> Grafana
+        integrations -- currently broken --> static_webs[fa:fa-exclamation Authenticated static websites]
+        integrations --> Configurator
+    end
+
+    subgraph PerformanceLayer
+        perf[*] --> GPUs
+        GPUs -- optional --> profile[GPU user profile]
+        perf --> Dask
+        perf --> KernelCulling 
+    end
+
+    subgraph ElasticScaffolding
+        ProfileLists --> HardwareProfiles
+        ProfileLists --> UserImageSelectors
+        ProfileLists --> NodeSharing
+    end
+
 ```
 
