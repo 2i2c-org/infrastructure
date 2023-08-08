@@ -69,108 +69,123 @@ $(document).ready( function () {
 
 ## Hub features decision tree
 
+% This is needed in order for tooltips to work in our docs per https://github.com/quarto-dev/quarto-cli/discussions/1054#discussioncomment-2882604
+<style>
+  .mermaidTooltip {
+      position: absolute;
+      text-align: center;
+      max-width: 200px;
+      padding: 2px;
+      font-family: 'trebuchet ms', verdana, arial;
+      font-size: 12px;
+      background: #d9ead3;
+      border: 1px solid #aaaa33;
+      border-radius: 2px;
+      pointer-events: none;
+      z-index: 100;
+    }
+</style>
+
+
 ```{mermaid}
-stateDiagram-v2
+:zoom:
+
+flowchart TB
     NewHub --> CloudLayer
     CloudLayer --> HubUserAccessLayer
     HubUserAccessLayer --> CommunityCustomizationsLayer
     CommunityCustomizationsLayer --> DataLayer
 
-    state CloudLayer {
-        Cluster --> shared: default
-        cluster_one: 2i2c, GCP, us-central1-b
-        cluster_two: 2i2c-aws-us, AWS, us-west-2
-        cluster_three: 2i2c-uk, GCP, europe-west2
-        shared --> cluster_one: default
-        shared --> cluster_two
-        shared --> cluster_three
+    subgraph CloudLayer
+        Cluster -- default --> Shared
+        cluster_one[2i2c, GCP, us-central1-b]
+        cluster_two[2i2c-aws-us, AWS, us-west-2]
+        cluster_three[2i2c-uk, GCP, europe-west2]
+        Shared -- default --> cluster_one
+        Shared --> cluster_two
+        Shared --> cluster_three
 
-        state plan_events <<choice>>
-        cluster_one --> plan_events
+        cluster_one --> plan_events{if events on hub}
         cluster_two --> plan_events
         cluster_three --> plan_events
 
-        plan_events --> dedicated_nodepool: if events on hub
-        plan_events --> shared_nodepool : default no events
+        plan_events -- Yes --> ded_nodepool[Dedicated nodepool in shared cluster]
+        plan_events -- default: No --> shared_nodepool[Shared nodepool]
 
-        Cluster --> dedicated
-        dedicated --> provider
-        provider --> GCP: default
-        dedicated --> region
-        region --> us_west_2: default
-    }
-    state HubUserAccessLayer {
-        [*] --> Authentication
+        Cluster --> Dedicated
+        Dedicated --> Provider
+        Provider -- default --> GCP
+        Dedicated --> Region
+        Region -- default --> us_west_2
+    end
+    subgraph HubUserAccessLayer
+        direction TB
         Authentication--> Username
 
-        state Authentication {
-            [*] --> CILogonOAuthenticator : default
-            [*] --> GitHubOAuthenticator
-            [*] --> TmpAuthenticator : if ephemeral hub
+        subgraph Authentication
+            direction LR
+            root_auth[Authenticator] -- default --> CILogonOAuthenticator
+            root_auth --> GitHubOAuthenticator
+            root_auth -- if ephemeral hub --> TmpAuthenticator
 
-            state auth <<join>>
-            state cilogon_authorization <<join>>
-            state github_authorization <<join>>
-
-
-            CILogonOAuthenticator --> auth: authentication
-            CILogonOAuthenticator --> cilogon_authorization: authorization
-            GitHubOAuthenticator --> github_authorization: authorization
+            CILogonOAuthenticator --> auth[authentication]
+            click auth "https://www.cilogon.org/home" "Depends on the providers supported by CILogon"
+            CILogonOAuthenticator --> cilogon_authorization[authorization]
+            GitHubOAuthenticator --> github_authorization[authorization]
 
             auth --> SocialProvider
-            auth --> InstitutionalProvider: if member of InCommon Federation
+            auth -- if member of InCommon Federation --> InstitutionalProvider
+            click InstitutionalProvider "https://cilogon.org/idplist/" "Click here to check if an institution's provider is supported by CILogon"
 
-            state options <<join>>
-            SocialProvider --> options: options
-            options --> Microsoft
-            options --> Google
-            options --> GitHub
 
-            cilogon_authorization --> domain_based: default
-            cilogon_authorization --> username_pattern
-            cilogon_authorization --> allowed_users
+            SocialProvider --> Microsoft
+            SocialProvider --> Google
+            SocialProvider --> GitHub
+            SocialProvider --> ORCID
 
-            github_authorization --> GitHubTeams_membership: default
-            github_authorization --> GitHubOrgs_membership
+            cilogon_authorization -- default --> domain_based[Domain matching]
+            cilogon_authorization --> username_pattern[Useranem pattern matching]
+            cilogon_authorization --> allowed_users[Membership in allowed users list]
+
+            github_authorization -- default --> teams[GitHub Teams membership status]
+            github_authorization --> org[GitHub Organizations membership status]
             github_authorization --> allowed_users
-        }
+        end
 
-        state Username {
-            [*] --> public
-            public --> email : default
-            claim: provider specific claim
-            public --> claim
-            [*] --> anonymous
-        }
-    }
-    state CommunityCustomizationsLayer {
-        [*] --> root_option_one
-        [*] --> root_option_two
-        root_option_one: Hub pages
-        root_option_two: Hub domain
+        subgraph Username
+            u[ID] --> anonymous
+            u --> public
+            public -- default --> email
+            public --> claim[provider specific claim]
+        end
+    end
+    subgraph CommunityCustomizationsLayer
+        cclayer[*] --> hub_pages
+        cclayer --> hub_domain
+        hub_pages[Hub pages]
+        hub_domain[Hub domain]
 
-        root_option_one --> option_one
-        root_option_one --> option_two : only for straightforward, short HTML
+        hub_pages --> option_one
+        hub_pages --  only for straightforward, short HTML --> option_two
 
-        root_option_two --> community_name.cluster_name.2i2c.cloud
-        root_option_two --> community_name.2i2c.cloud
-        root_option_two --> other: community must set a CNAME that points to the 2i2c domain
+        hub_domain --> community_name.cluster_name.2i2c.cloud
+        hub_domain --> community_name.2i2c.cloud
+        hub_domain -- community must set a CNAME that points to the 2i2c domain --> other
 
-        option_one: Hub Login Page
-        option_two: (Optional) Other Hub pages
-        login_page_option_one: Basic configuration of template sections
-        login_page_option_two: Self configuration through own GitHub repo
+        option_one[Hub Login Page]
+        option_two[Optional:Other Hub pages]
+        login_page_option_one[Basic configuration of template sections]
+        login_page_option_two[Self configuration through own GitHub repo]
 
-        state login_options <<join>>
         option_one --> login_options
-        login_options --> login_page_option_one: mandatory
-        login_options --> login_page_option_two: optional
+        login_options -- mandatory --> login_page_option_one
+        login_options -- optional --> login_page_option_two
 
         login_page_option_one --> OrganizationInfo
         login_page_option_one --> FundedBy
 
-        login_page_option_two --> RepoURL : default 2i2c-org/default-hub-homepage
-        login_page_option_two --> RepoBranch : default master
+        login_page_option_two -- default 2i2c-org/default-hub-homepage --> RepoURL
+        login_page_option_two -- default master --> RepoBranch
 
         OrganizationInfo --> OrgName
         OrganizationInfo --> OrgURL
@@ -178,47 +193,39 @@ stateDiagram-v2
 
         FundedBy --> FunderName
         FundedBy --> FunderURL
-    }
-    state DataLayer {
-        [*] --> data_root_option_one
-        [*] --> data_root_option_two
-        data_root_option_one: Shared Data Directories
-        data_root_option_two: Object Storage Buckets
+    end
+    subgraph DataLayer
+        data[*] --> data_root_option_one
+        data --> data_root_option_two
+        data_root_option_one[Shared Data Directories]
+        data_root_option_two[Object Storage Buckets]
 
-        state data_root_option_one {
-            shared_readwrite: shared-readwrite
-            shared_public: shared-public
-            [*] --> shared_dir: enabled by default
-            [*] --> shared_readwrite: enabled by default
-            [*] --> shared_public: optional
-            [*] --> allusers: optional
-        }
+        shared_readwrite[shared-readwrite]
+        shared_public[shared-public]
+        data_root_option_one -- enabled by default --> shared_dir
+        data_root_option_one -- enabled by default --> shared_readwrite
+        data_root_option_one -- optional --> shared_public
+        data_root_option_one -- optional --> allusers
 
-        state data_root_option_two {
-            [*] --> Scratch
-            [*] --> Persistent
+        data_root_option_two --> Scratch
+        data_root_option_two --> Persistent
 
-            state buckets <<join>>
-            Scratch --> buckets
-            Persistent --> buckets
+        hub_cloud_permissions[Cloud Permissions]
+        Scratch --> hub_cloud_permissions
+        Persistent --> hub_cloud_permissions
 
-            hub_cloud_persmissions: Cloud Permissions
-            buckets --> hub_cloud_persmissions
+        public_bucket[Publicly accessible]
+        from_hub[Buckets accessible from the Hub]
+        outside_hub[Buckets accessible from outside the Hub]
+        requestor_pays[Requestor Pays]
 
-            public_bucket: Publicly accessible
-            from_hub: Buckets accessible from the Hub
-            outside_hub: Buckets accessible from outside the Hub
-            requestor_pays: Requestor Pays
+        hub_cloud_permissions --> outside_hub
+        hub_cloud_permissions -- default --> from_hub
+        hub_cloud_permissions -- GCP only --> requestor_pays
 
-            hub_cloud_persmissions --> outside_hub
-            hub_cloud_persmissions --> from_hub : default
-            hub_cloud_persmissions --> requestor_pays : GCP only
-
-
-            outside_hub --> public_bucket
-            gg_membership: Google Groups based membership
-            outside_hub --> gg_membership : GCP only
-        }
-    }
-
+        outside_hub --> public_bucket
+        gg_membership[Google Groups based membership]
+        outside_hub -- GCP only --> gg_membership
+    end
 ```
+
