@@ -46,19 +46,19 @@ Z2jh then mounts the PVC on each user pod as a [volume named **home**](https://g
 
 Parts of the *home* volume are mounted in different places for the users, as detailed below.
 
-#### [User home directories](https://github.com/2i2c-org/infrastructure/tree/HEAD/helm-charts/basehub/values.yaml#L100)
+#### [User home directories](https://github.com/2i2c-org/infrastructure/blob/341b9408fc7a9a60ea81296d8a0e6eee85bd0498/helm-charts/basehub/values.yaml#L185-L187)
 
 Z2jh will mount into `/home/jovyan` (the mount path) the contents of the path `<hub-directory-path>/<hub-name>/<username>` on the NFS storage server.
 Note that `<username>` is specified as a `subPath` - the *subdirectory* **in the volume to mount** at that given location.
 
 #### Shared directories
 
-##### [`/home/jovyan/shared``](https://github.com/2i2c-org/infrastructure/tree/HEAD/helm-charts/basehub/values.yaml#L106-L109)
+##### [`/home/jovyan/shared`](https://github.com/2i2c-org/infrastructure/blob/341b9408fc7a9a60ea81296d8a0e6eee85bd0498/helm-charts/basehub/values.yaml#L271-L274)
 
 Mounted for **all users**, showing the contents of `<hub-directory-path>/<hub-name>/_shared`.
 This mount is **`readOnly`** and users **can't** write to it.
 
-##### [`/home/jovyan/shared-readwrite``](https://github.com/2i2c-org/infrastructure/tree/HEAD/helm-charts/basehub/values.yaml#L84-L86)
+##### [`/home/jovyan/shared-readwrite`](https://github.com/2i2c-org/infrastructure/blob/341b9408fc7a9a60ea81296d8a0e6eee85bd0498/helm-charts/basehub/values.yaml#L66-L68)
 
 Mounted **just for admins**, showing the contents of `<hub-directory-path>/<hub-name>/_shared`.
 This volumeMount is **NOT `readOnly`**, so admins can write to it.
