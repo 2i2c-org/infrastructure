@@ -42,7 +42,7 @@ basehub:
         GitHubOAuthenticator:
           allowed_organizations:
             - 2i2c-org:hub-access-for-2i2c-staff
-            - US-GHG-Center:ghg-hub-access
+            - US-GHG-Center:ghgc-hub-access
           scope:
             - read:org
     prePuller:
