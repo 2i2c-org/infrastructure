@@ -54,7 +54,7 @@ Parts of the *home* volume are mounted in different places for the users:
 
           Mounted for **all users**, showing the contents of `<hub-directory-path>/<hub-name>/_shared`. This mount is **readOnly** and users **can't** write to it.
 
-        * [/home/jovyan/shared-readwrite](https://github.com/2i2c-org/infrastructure/tree/HEAD/helm-charts/basehub/values.yaml#L84-L86)
+        * [/home/jovyan/shared-readwrite](https://github.com/2i2c-org/infrastructure/blob/341b9408fc7a9a60ea81296d8a0e6eee85bd0498/helm-charts/basehub/values.yaml#L65-L68)
 
           Mounted **just for admins**, showing the contents of `<hub-directory-path>/<hub-name>/_shared`. This volumeMount is **NOT readonly**, so admins can write to it.
 
