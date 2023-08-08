@@ -44,88 +44,93 @@ The volume points to the hub directory created for the hub and user at `<hub-dir
 (this name is dynamically determined as a combination of `nfs.pv.baseShareName` and the current release name).
 Z2jh then mounts the PVC on each user pod as a [volume named **home**](https://github.com/jupyterhub/zero-to-jupyterhub-k8s/tree/HEAD/jupyterhub/files/hub/jupyterhub_config.py#L277).
 
-Parts of the *home* volume are mounted in different places for the users:
-   * [user home directories](https://github.com/2i2c-org/infrastructure/tree/HEAD/helm-charts/basehub/values.yaml#L100)
+Parts of the *home* volume are mounted in different places for the users, as detailed below.
 
-     Z2jh will mount into `/home/jovyan` (the mount path) the contents of the path `<hub-directory-path>/<hub-name>/<username>` on the NFS storage server. Note that `<username>` is specified as a `subPath` - the *subdirectory* **in the volume to mount** at that given location.
+#### [User home directories](https://github.com/2i2c-org/infrastructure/tree/HEAD/helm-charts/basehub/values.yaml#L100)
 
-   * shared directories
-        * [/home/jovyan/shared](https://github.com/2i2c-org/infrastructure/tree/HEAD/helm-charts/basehub/values.yaml#L106-L109)
+Z2jh will mount into `/home/jovyan` (the mount path) the contents of the path `<hub-directory-path>/<hub-name>/<username>` on the NFS storage server.
+Note that `<username>` is specified as a `subPath` - the *subdirectory* **in the volume to mount** at that given location.
 
-          Mounted for **all users**, showing the contents of `<hub-directory-path>/<hub-name>/_shared`. This mount is **readOnly** and users **can't** write to it.
+#### Shared directories
 
-        * [/home/jovyan/shared-readwrite](https://github.com/2i2c-org/infrastructure/tree/HEAD/helm-charts/basehub/values.yaml#L84-L86)
+##### [`/home/jovyan/shared``](https://github.com/2i2c-org/infrastructure/tree/HEAD/helm-charts/basehub/values.yaml#L106-L109)
 
-          Mounted **just for admins**, showing the contents of `<hub-directory-path>/<hub-name>/_shared`. This volumeMount is **NOT readonly**, so admins can write to it.
+Mounted for **all users**, showing the contents of `<hub-directory-path>/<hub-name>/_shared`.
+This mount is **`readOnly`** and users **can't** write to it.
 
-          ```{note}
-          This feature comes from the [custom KubeSpawner](https://github.com/2i2c-org/infrastructure/tree/HEAD/helm-charts/basehub/values.yaml#L182) that the our community hubs use, that allows providing extra configuration for admin users only.
-          ```
-        *  the `allusers` directory - optional
+##### [`/home/jovyan/shared-readwrite``](https://github.com/2i2c-org/infrastructure/tree/HEAD/helm-charts/basehub/values.yaml#L84-L86)
 
-           Can be mounted **just for admins**, showing the contents of `<hub-directory-path>/<hub-name>/`. This volumeMount can be made readonly if the following volume property is set: `readOnly: true`.
-           If it is not specified, then by default, it is **NOT readonly**, so admins can write to it. It's purpose is to give access to the hub admins to all the users home directory to read and/or modify.
+Mounted **just for admins**, showing the contents of `<hub-directory-path>/<hub-name>/_shared`.
+This volumeMount is **NOT `readOnly`**, so admins can write to it.
 
-           ```yaml
-            jupyterhub:
-              custom:
-                singleuserAdmin:
-                  extraVolumeMounts:
-                    - name: home
-                      mountPath: /home/jovyan/allusers
-                      # Uncomment the line below to make the directory readonly for admins
-                      # readOnly: true
-            ```
+```{note}
+This feature comes from the [custom KubeSpawner](https://github.com/2i2c-org/infrastructure/tree/HEAD/helm-charts/basehub/values.yaml#L182) that the our community hubs use, that allows providing extra configuration for admin users only.
+```
 
-        * A `shared-public` directory
+#### (Optional) The `allusers` directory
 
-          Mounted for *all users* in a read/write fashion, for a rough sharing
-          solution. This is put in a different backing directory than what
-          is used for the regular `shared` directory.
+Can be mounted **just for admins**, showing the contents of `<hub-directory-path>/<hub-name>/`.
+This `volumeMount` can be made `readOnly` if the following volume property is set: `readOnly: true`.
+If it is not specified, then by default, it is **NOT `readOnly`**, so admins can write to it.
+It's purpose is to give access to the hub admins to all the users home directory to read and/or modify.
 
-          ```{warning}
-          All users can see all other users' contents, modify and delete them!
-          Use this with a lot of caution.
-          ```
+```yaml
+jupyterhub:
+  custom:
+    singleuserAdmin:
+      extraVolumeMounts:
+        - name: home
+          mountPath: /home/jovyan/allusers
+          # Uncomment the line below to make the directory readonly for admins
+          # readOnly: true
+```
 
-          A `shared-public` directory needs to be mounted on all home directories,
-          and we need to modify our `initContainer` to make sure this is owned
-          by the appropriate user.
+#### A `shared-public` directory
 
-          ```yaml
-          jupyterhub:
-            singleuser:
-              storage:
-                extraVolumeMounts:
-                  - name: home
-                    mountPath: /home/jovyan/shared
-                    subPath: _shared
-                    readOnly: true
-                  - name: home
-                    mountPath: /home/jovyan/shared-public
-                    subPath: _shared-public
-                    readOnly: false
-              initContainers:
-                - name: volume-mount-ownership-fix
-                  image: busybox
-                  command:
-                    [
-                      "sh",
-                      "-c",
-                      "id && chown 1000:1000 /home/jovyan && chown 1000:1000 /home/jovyan/shared-readwrite && chown 1000:1000 /home/jovyan/shared-public && ls -lhd /home/jovyan ",
-                    ]
-                  securityContext:
-                    runAsUser: 0
-                  volumeMounts:
-                    - name: home
-                      mountPath: /home/jovyan
-                      subPath: "{username}"
-                    # Mounted without readonly attribute here,
-                    # so we can chown it appropriately
-                    - name: home
-                      mountPath: /home/jovyan/shared-readwrite
-                      subPath: _shared
-                    - name: home
-                      mountPath: /home/jovyan/shared-public
-                      subPath: _shared-public
-              ```
+Mounted for *all users* in a read/write fashion, for a rough sharing solution.
+This is put in a different backing directory than what is used for the regular `shared` directory.
+
+```{warning}
+All users can see all other users' contents, modify and delete them!
+Use this with a lot of caution.
+```
+
+A `shared-public` directory needs to be mounted on all home directories, and we need to modify our `initContainer` to make sure this is owned by the appropriate user.
+
+```yaml
+jupyterhub:
+  singleuser:
+    storage:
+      extraVolumeMounts:
+        - name: home
+          mountPath: /home/jovyan/shared-public
+          subPath: _shared-public
+          readOnly: false
+        - name: home
+          mountPath: /home/jovyan/shared
+          subPath: _shared
+          readOnly: true
+    initContainers:
+      - name: volume-mount-ownership-fix
+        image: busybox
+        command:
+          [
+            "sh",
+            "-c",
+            "id && chown 1000:1000 /home/jovyan && chown 1000:1000 /home/jovyan/shared-readwrite && chown 1000:1000 /home/jovyan/shared-public && ls -lhd /home/jovyan ",
+          ]
+        securityContext:
+          runAsUser: 0
+        volumeMounts:
+          - name: home
+            mountPath: /home/jovyan
+            subPath: "{username}"
+          # Mounted without readonly attribute here,
+          # so we can chown it appropriately
+          - name: home
+            mountPath: /home/jovyan/shared-readwrite
+            subPath: _shared
+          - name: home
+            mountPath: /home/jovyan/shared-public
+            subPath: _shared-public
+```
