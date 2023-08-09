@@ -8,15 +8,25 @@ BUILD_COMMAND = ["-b", "dirhtml", "docs", "docs/_build/dirhtml"]
 @nox.session(venv_backend="conda")
 def docs(session):
     session.install("-r", "docs/requirements.txt")
-    session.run("sphinx-build", *BUILD_COMMAND)
 
+    if "live" in session.posargs:
+        session.posargs.pop(session.posargs.index("live"))
 
-@nox.session(name="docs-live", venv_backend="conda")
-def docs_live(session):
-    install_deps(session)
+        # Add folders to ignore
+        AUTOBUILD_IGNORE = [
+            "_build",
+            "tmp",
+        ]
 
-    cmd = ["sphinx-autobuild"]
-    for path in ["*/_build/*", "*/tmp/*"]:
-        cmd.extend(["--ignore", path])
-    cmd.extend(BUILD_COMMAND)
+        cmd = ["sphinx-autobuild"]
+        for folder in AUTOBUILD_IGNORE:
+            cmd.extend(["--ignore", f"*/{folder}/*"])
+        
+        # Find an open port to serve on
+        cmd.extend(["--port", "0"])
+    
+    else:
+        cmd = ["sphinx-build"]
+
+    cmd.extend(BUILD_COMMAND + session.posargs)
     session.run(*cmd)
