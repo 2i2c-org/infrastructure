@@ -20,18 +20,19 @@ To do so, follow these steps:
    ```console
    $ pip install nox
    ```
+
 2. Build the documentation:
 
    ```console
    $ nox -s docs
    ```
 
-This should create a local environment in a `.nox` folder, build the documentation (as specified in the `noxfile.py` configuration), and the output will be in `docs/_build/html`.
+This should create a local environment in a `.nox` folder, build the documentation (as specified in the `noxfile.py` configuration), and the output will be in `docs/_build/dirhtml`.
 
 To build live documentation that updates when you update local files, run the following command:
 
 ```console
-$ nox -s docs-live
+$ nox -s docs -- live
 ```
 
 ### Manually with `conda`
@@ -52,11 +53,11 @@ If you wish to manually build the documentation, you can use `conda` to do so.
 
 3. Build the documentation:
 
-   ```
+   ```bash
    make html
    ```
 
-This will generate the HTML for the documentation in the `docs/_build/html` folder.
+This will generate the HTML for the documentation in the `docs/_build/dirhtml` folder.
 You may preview the documentation by opening any of the `.html` files inside.
 
 ### Build the documentation with a live server

@@ -7,6 +7,7 @@ BUILD_COMMAND = ["-b", "dirhtml", "docs", "docs/_build/dirhtml"]
 
 @nox.session(venv_backend="conda")
 def docs(session):
+    """Build the documentation. Use `-- live` for a live server to preview changes."""
     session.install("-r", "docs/requirements.txt")
 
     if "live" in session.posargs:
