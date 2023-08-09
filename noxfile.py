@@ -5,13 +5,9 @@ nox.options.reuse_existing_virtualenvs = True
 BUILD_COMMAND = ["-b", "dirhtml", "docs", "docs/_build/dirhtml"]
 
 
-def install_deps(session):
-    session.install("-r", "docs/requirements.txt")
-
-
 @nox.session(venv_backend="conda")
 def docs(session):
-    install_deps(session)
+    session.install("-r", "docs/requirements.txt")
     session.run("sphinx-build", *BUILD_COMMAND)
 
 
