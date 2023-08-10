@@ -25,7 +25,7 @@ local nodeAz = "us-east-2b";
 // A `node.kubernetes.io/instance-type label is added, so pods
 // can request a particular kind of node with a nodeSelector
 local notebookNodes = [
-    { instanceType: "r5.xlarge", minSize: 5 },
+    { instanceType: "r5.xlarge" },
     { instanceType: "r5.4xlarge" },
     { instanceType: "r5.16xlarge" },
 ];
