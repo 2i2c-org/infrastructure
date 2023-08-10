@@ -50,6 +50,4 @@ jupyterhub:
           - ericvd@berkeley.edu
           - sean.smorris@berkeley.edu
           - dhum1@my.smccd.edu
-          - momenik@my.smccd.edu
-          - kayvanm@gmail.com
-        username_pattern: '^(.+@2i2c\.org|.+@berkeley\.edu|.+@my\.smccd\.edu|kayvanm@gmail.com|deployment-service-check)$'
+          - momenik1@my.smccd.edu
