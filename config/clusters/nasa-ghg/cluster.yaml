@@ -1,4 +1,4 @@
-name: nasa-veda
+name: nasa-ghg
 provider: aws # https://smce-veda.signin.aws.amazon.com/console
 account: "smce-ghg-center"
 aws:
