@@ -193,6 +193,7 @@ jobs:
       failure_2i2c-aws-us: "${{ env.failure_2i2c-aws-us }}"
       failure_ubc-eoas: "${{ env.failure_ubc-eoas }}"
       failure_nasa-veda: "${{ env.failure_nasa-veda }}"
+      failure_nasa-ghg: "${{ env.failure_nasa-ghg }}"
       failure_qcl: "${{ env.failure_qcl }}"
       failure_jupyter-meets-the-earth: "${{ env.failure_jupyter-meets-the-earth }}"
       failure_smithsonian: "${{ env.failure_smithsonian }}"
