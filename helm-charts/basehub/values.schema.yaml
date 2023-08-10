@@ -159,19 +159,10 @@ properties:
     required:
       - enabled
       - shareCreator
-      - dirsizeReporter
       - pv
     properties:
       enabled:
         type: boolean
-      dirsizeReporter:
-        type: object
-        additionalProperties: false
-        required:
-          - enabled
-        properties:
-          enabled:
-            type: boolean
       shareCreator:
         type: object
         additionalProperties: false
