@@ -16,6 +16,8 @@ prometheus:
         - secretName: prometheus-tls
           hosts:
             - prometheus.leap.2i2c.cloud
+    persistentVolume:
+      size: 500Gi
     resources:
       requests:
         memory: 20Gi
