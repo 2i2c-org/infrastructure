@@ -117,7 +117,7 @@ jupyterhub:
           [
             "sh",
             "-c",
-            "id && chown 1000:1000 /home/jovyan && chown 1000:1000 /home/jovyan/shared-readwrite && chown 1000:1000 /home/jovyan/shared-public && ls -lhd /home/jovyan ",
+            "id && chown 1000:1000 /home/jovyan && chown 1000:1000 /home/jovyan/shared && chown 1000:1000 /home/jovyan/shared-public && ls -lhd /home/jovyan ",
           ]
         securityContext:
           runAsUser: 0
@@ -128,7 +128,7 @@ jupyterhub:
           # Mounted without readonly attribute here,
           # so we can chown it appropriately
           - name: home
-            mountPath: /home/jovyan/shared-readwrite
+            mountPath: /home/jovyan/shared
             subPath: _shared
           - name: home
             mountPath: /home/jovyan/shared-public

@@ -63,7 +63,7 @@ jupyterhub:
             [
                 "sh",
                 "-c",
-                "id && chown 1000:1000 /home/jovyan && chown 1000:1000 /home/jovyan/shared-readwrite && chown 1000:1000 /var/lib/postgresql/data && ls -lhd /home/jovyan ",
+                "id && chown 1000:1000 /home/jovyan && chown 1000:1000 /home/jovyan/shared && chown 1000:1000 /var/lib/postgresql/data && ls -lhd /home/jovyan ",
             ]
         securityContext:
             runAsUser: 0
@@ -71,9 +71,10 @@ jupyterhub:
           - name: home
             mountPath: /home/jovyan
             subPath: "{username}"
-          # Here so we can chown it appropriately
+          # Mounted without readonly attribute here,
+          # so we can chown it appropriately
           - name: home
-            mountPath: /home/jovyan/shared-readwrite
+            mountPath: /home/jovyan/shared
             subPath: _shared
           - name: postgres-db
             mountPath: /var/lib/postgresql/data
