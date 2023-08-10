@@ -8,3 +8,4 @@ sphinx-copybutton
 sphinx-design
 git+https://github.com/2i2c-org/sphinx-2i2c-theme
 sphinxcontrib-mermaid
+sphinxcontrib-jquery
