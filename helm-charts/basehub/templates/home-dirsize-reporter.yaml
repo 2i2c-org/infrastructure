@@ -1,5 +1,4 @@
 {{- if .Values.nfs.enabled }}
-{{- if .Values.nfs.dirsizeReporter.enabled }}
 # To provide data for the jupyterhub/grafana-dashboards dashboard about free
 # space in the shared volume, which contains users home folders etc, we deploy
 # prometheus node-exporter to collect this data for prometheus server to scrape.
@@ -74,5 +73,4 @@ spec:
         - name: shared-volume
           persistentVolumeClaim:
             claimName: home-nfs
-{{- end }}
 {{- end }}
