@@ -42,6 +42,9 @@ jupyterhub:
           http://google.com/accounts/o8/id:
             username_derivation:
               username_claim: "email"
+            allowed_domains:
+              - "2i2c.org"
+              - "my.smccd.edu"
           urn:mace:incommon:berkeley.edu:
             username_derivation:
               username_claim: "email"
