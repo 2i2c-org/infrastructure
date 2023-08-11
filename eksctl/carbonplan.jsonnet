@@ -51,10 +51,7 @@ local notebookNodes = [
 // what we do with notebook nodes. Pods can request a particular
 // kind of node with a nodeSelector
 local daskNodes = [
-    { instancesDistribution+: { instanceTypes: ["r5.large"] }},
-    { instancesDistribution+: { instanceTypes: ["r5.xlarge"] }},
-    { instancesDistribution+: { instanceTypes: ["r5.2xlarge"] }},
-    { instancesDistribution+: { instanceTypes: ["r5.8xlarge"] }},
+    { instancesDistribution+: { instanceTypes: ["r5.4xlarge"] }},
 ];
 
 {
