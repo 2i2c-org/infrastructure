@@ -75,6 +75,11 @@ notebook_nodes = {
   },
 }
 
+# TODO: Transition to a single n2-highmem-16 worker node pool to be able to
+#       provide standardized worker pod config for all daskhubs.
+#
+#       Tracked in https://github.com/2i2c-org/infrastructure/issues/2687
+#
 dask_nodes = {
   "small" : {
     min : 0,

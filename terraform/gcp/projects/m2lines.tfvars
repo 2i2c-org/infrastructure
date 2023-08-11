@@ -71,26 +71,11 @@ notebook_nodes = {
 }
 
 dask_nodes = {
-  "small" : {
+  "worker" : {
     min : 0,
     max : 100,
-    machine_type : "n1-standard-2",
-  },
-  "medium" : {
-    min : 0,
-    max : 100,
-    machine_type : "n1-standard-4",
-  },
-  "large" : {
-    min : 0,
-    max : 100,
-    machine_type : "n1-standard-8",
-  },
-  "huge" : {
-    min : 0,
-    max : 100,
-    machine_type : "n1-standard-16",
-  },
+    machine_type : "n2-highmem-16",
+  }
 }
 
 hub_cloud_permissions = {

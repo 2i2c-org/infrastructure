@@ -60,7 +60,7 @@ dask_nodes = {
   "worker" : {
     min : 0,
     max : 100,
-    machine_type : "n1-highmem-4",
+    machine_type : "n2-highmem-16",
   }
 }
 

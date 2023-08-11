@@ -41,32 +41,11 @@ notebook_nodes = {
 }
 
 dask_nodes = {
-  "small" : {
+  "worker" : {
     min : 0,
-    max : 20,
-    machine_type : "n1-standard-2",
-  },
-  "medium" : {
-    min : 0,
-    max : 20,
-    machine_type : "n1-standard-8",
-  },
-  "large" : {
-    min : 0,
-    max : 20,
-    machine_type : "n1-standard-16",
-  },
-  "very-large" : {
-    min : 0,
-    max : 20,
-    machine_type : "n1-standard-32",
-  },
-  "huge" : {
-    min : 0,
-    max : 20,
-    machine_type : "n1-standard-64",
-  },
-
+    max : 100,
+    machine_type : "n2-highmem-16",
+  }
 }
 
 user_buckets = {

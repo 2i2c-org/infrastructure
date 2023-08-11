@@ -33,11 +33,11 @@ notebook_nodes = {
 }
 
 dask_nodes = {
-  "medium" : {
+  "worker" : {
     min : 0,
     max : 100,
-    machine_type : "e2-highmem-16"
-  },
+    machine_type : "n2-highmem-16",
+  }
 }
 
 hub_cloud_permissions = {
