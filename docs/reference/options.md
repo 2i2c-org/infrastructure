@@ -17,20 +17,21 @@ It is automatically generated from the config stored in the [`config/clusters` f
 </div>
 
 % DataTables config to make the table above look nice
-<link rel="stylesheet"
-      href="https://cdn.datatables.net/1.10.24/css/jquery.dataTables.min.css">
-<script type="text/javascript"
-        src="https://cdn.datatables.net/1.10.24/js/jquery.dataTables.min.js"></script>
+<link rel="stylesheet" href="https://cdn.datatables.net/1.10.24/css/jquery.dataTables.min.css">
+<script type="text/javascript" src="https://cdn.datatables.net/1.10.24/js/jquery.dataTables.min.js"></script>
 
 <script>
-var checkbox = function (data) {
-    var c = data.toString().trim()
-    console.log(c)
-    if (c == "<p>True</p>") {
-        return '<input type="checkbox" class="editor-active" onclick="return false;" checked>';
+var checkbox = function (data, type) {
+    if ( type === "sort" || type === 'type' ) {
+      return data;
     }
     else {
-        return '<input type="checkbox" onclick="return false;" class="editor-active">';
+      if (data.toString().trim() == "<p>True</p>") {
+          return '<input type="checkbox" class="editor-active" onclick="return false;" checked>';
+      }
+      else {
+          return '<input type="checkbox" onclick="return false;" class="editor-active">';
+      }
     }
 }
 
