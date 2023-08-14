@@ -50,7 +50,7 @@ jupyterhub:
       limit: 14
     memory:
       guarantee: 4G
-      limit: 8G
+      limit: 16G
   hub:
     config:
       JupyterHub:
