@@ -65,9 +65,9 @@ basehub:
     singleuser:
       defaultUrl: /lab
       image:
-        name: pangeo/pangeo-notebook
+        name: public.ecr.aws/nasa-veda/nasa-veda-singleuser
         # Uses JupyterLab <4, so jupyterlab-git and dask-dashboard work
-        tag: "2023.07.05"
+        tag: "b807c7efa97c8df9ca38779f7e59d09f889fde9299b0d19de80389cf6b064f90"
       profileList:
         # NOTE: About node sharing
         #
