@@ -7,6 +7,10 @@ It is automatically generated from the config stored in the [`config/clusters` f
 
 ## Hub options table
 
+```{warning}
+This is a work in progress and the current list of features is being tracked in the following [table](https://docs.google.com/spreadsheets/d/1ZRCAMyIBOSfPlfHywEKva7WG4-xNVKm18eAWGo_4KJQ/edit?usp=sharing).
+```
+
 <div class="full-width hub-options-table">
 
 ```{csv-table}
@@ -69,6 +73,10 @@ $(document).ready( function () {
 </style>
 
 ## Hub features decision tree
+
+```{warning}
+The following flowchart is a work in progress. There are two more layers that were intentional left out of this initial chart, `Knowledge sharing layer` and `Support and training layer`, as they are more complex and require additional research, that is not tied to infrastructure configurations.
+```
 
 % This is needed in order for tooltips to work in our docs per https://github.com/quarto-dev/quarto-cli/discussions/1054#discussioncomment-2882604
 
