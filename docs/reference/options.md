@@ -147,7 +147,7 @@ flowchart TB
             SocialProvider --> ORCID
 
             cilogon_authorization -- default --> domain_based[Domain matching]
-            cilogon_authorization --> username_pattern[Useranem pattern matching]
+            cilogon_authorization --> username_pattern[Username pattern matching]
             cilogon_authorization --> allowed_users[Membership in allowed users list]
 
             github_authorization -- default --> teams[GitHub Teams membership status]
