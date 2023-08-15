@@ -25,8 +25,8 @@ See the sections below for more details.
 1. Shared data directories
 2. Object storage buckets (persistent/scratch)
   - Cloud Permissions
-    - (default) Buckets accessible from the Hub
-    - Buckets accessible from outside the Hub
+    - (default) Buckets accessible from the Hub's cloud account
+    - Buckets accessible from other cloud accounts
       - Publicly accessible
       - (GCP only) Google groups based membership
     - (GCP only) Requestor pays for buckets
