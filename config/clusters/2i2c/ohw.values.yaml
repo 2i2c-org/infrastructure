@@ -11,13 +11,6 @@ basehub:
           hosts:
             - oceanhackweek.2i2c.cloud
     singleuser:
-      nodeSelector:
-        2i2c.org/community: ohw
-      extraTolerations:
-        - key: "2i2c.org/community"
-          operator: "Equal"
-          value: "ohw"
-          effect: "NoSchedule"
       networkPolicy:
         # In clusters with NetworkPolicy enabled, do not
         # allow outbound internet access that's not DNS, HTTP or HTTPS
