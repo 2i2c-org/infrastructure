@@ -53,24 +53,6 @@ notebook_nodes = {
     resource_labels : {
       "community" : "neurohackademy"
     },
-  },
-  # Nodepool for OceanHackWeek. Tracking issue: https://github.com/2i2c-org/infrastructure/issues/2879
-  "ohw" : {
-    # We expect around 100 users
-    min : 4,
-    max : 100,
-    machine_type : "n2-highmem-16",
-    labels : {
-      "2i2c.org/community" : "ohw"
-    },
-    taints : [{
-      key : "2i2c.org/community",
-      value : "ohw",
-      effect : "NO_SCHEDULE"
-    }],
-    resource_labels : {
-      "community" : "ohw"
-    },
   }
 }
 
