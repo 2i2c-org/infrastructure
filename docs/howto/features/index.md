@@ -10,13 +10,8 @@ See the sections below for more details.
 ### Cloud Layer
 1. Shared/Dedicated Cluster
 2. Dedicated nodepool on a shared cluster (recommended for events)
-3. Performance features (GPU, Dask)
-4. ProfileLists
-  - Hardware Profiles
-  - User Image Selectors
-  - Node Sharing
 
-### Access Layer
+### Hub Access Layer
 1. Authentication + authorization
 2. Anonymisation of users ids
 
@@ -37,7 +32,6 @@ See the sections below for more details.
     - (GCP only) Requestor pays for buckets
 
 ### Integrations Layer
-
 1. Allow users to push to GitHub from the Hub (gh-scoped-creds)
 2. Enable `nbgitpuller` for private repos (git-credential-helper)
 3. Cull resources (jupyterhub-idle-culler)
@@ -45,8 +39,23 @@ See the sections below for more details.
 5. (default enabled) Configurator
 6. (dedicated clusters only) Grafana
 
-### Knowledge sharing Layer
-### Support Layer
+### Performance Layer
+1. Performance features
+  - GPU
+    - GPU user profile
+  - Dask
+  - Kernel Culling
+
+### Elastic scaffolding Layer
+1. ProfileLists
+  - Hardware Profiles
+  - User Image Selectors
+  - Node Sharing
+
+### Other possible layers, but not stabilized yet
+  - Knowledge sharing Layer
+  - Support Layer
+  - Applications Layer
 
 ```{toctree}
 :maxdepth: 2
