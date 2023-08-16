@@ -49,14 +49,9 @@ jupyterhub:
               username_claim: "email"
             allowed_domains:
               - "2i2c.org"
+          # Allow MTU to login via Shibboleth
+          https://sso.mtu.edu/idp/shibboleth:
+            username_derivation:
+              username_claim: "email"
+            allowed_domains:
               - "mtu.edu"
-          # Currently experiencing issues with CAS authorisation
-          # ref: https://2i2c.freshdesk.com/a/tickets/886
-          # # Allow MTU to login via Shibboleth
-          # https://sso.mtu.edu/idp/shibboleth:
-          #   username_derivation:
-          #     username_claim: "email"
-          #     action: "strip_idp_domain"
-          #     domain: "mtu.edu"
-          #   allowed_domains:
-          #     - "mtu.edu"
