@@ -1,5 +1,5 @@
 name: nasa-ghg
-provider: aws # https://smce-veda.signin.aws.amazon.com/console
+provider: aws # https://smce-ghg-center.signin.aws.amazon.com/console
 account: "smce-ghg-center"
 aws:
   key: enc-deployer-credentials.secret.json
