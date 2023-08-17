@@ -51,17 +51,6 @@ basehub:
             - CYGNSS-VEDA:cygnss-iwg
           scope:
             - read:org
-    prePuller:
-      # NOTE: To have prePuller enabled makes sense as long as we stick with a
-      #       single image option configured. Disable prePuller if the
-      #       configurator is used or a list of images is chosen from in the
-      #       profileList. Otherwise its likely to delay delay startup of a user
-      #       pod wanting to getting to wait for the pulling of another image.
-      #
-      continuous:
-        enabled: true
-      hook:
-        enabled: true
     singleuser:
       defaultUrl: /lab
       image:
