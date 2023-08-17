@@ -38,6 +38,7 @@ jupyterhub:
             username_derivation:
               username_claim: "email"
             allowed_domains:
+              - "cc.peralta.edu"
               - "peralta.edu"
           http://google.com/accounts/o8/id:
             username_derivation:
