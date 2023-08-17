@@ -201,11 +201,11 @@ basehub:
                   image: "{value}"
               choices:
                 pangeo_new:
-                  display_name: Base Pangeo Notebook ("2023.05.18")
+                  display_name: Base Pangeo Notebook ("2023.07.05")
                   default: true
                   slug: "pangeo_new"
                   kubespawner_override:
-                    image: "pangeo/pangeo-notebook:2023.05.18"
+                    image: "pangeo/pangeo-notebook:2023.07.05"
                 pangeo:
                   display_name: Base Pangeo Notebook
                   default: true
@@ -213,20 +213,20 @@ basehub:
                   kubespawner_override:
                     image: "pangeo/pangeo-notebook:ebeb9dd"
                 tensorflow_new:
-                  display_name: Pangeo Tensorflow ML Notebook ("2023.05.18")
+                  display_name: Pangeo Tensorflow ML Notebook ("2023.07.05")
                   slug: "tensorflow_new"
                   kubespawner_override:
-                    image: "pangeo/ml-notebook:2023.05.18"
+                    image: "pangeo/ml-notebook:2023.07.05"
                 tensorflow:
                   display_name: Pangeo Tensorflow ML Notebook
                   slug: "tensorflow"
                   kubespawner_override:
                     image: "pangeo/ml-notebook:ebeb9dd"
                 pytorch_new:
-                  display_name: Pangeo PyTorch ML Notebook ("2023.05.18")
+                  display_name: Pangeo PyTorch ML Notebook ("2023.07.05")
                   slug: "pytorch_new"
                   kubespawner_override:
-                    image: "pangeo/pytorch-notebook:2023.05.18"
+                    image: "pangeo/pytorch-notebook:2023.07.05"
                 pytorch:
                   display_name: Pangeo PyTorch ML Notebook
                   slug: "pytorch"
@@ -281,20 +281,20 @@ basehub:
               unlisted_choice: *profile_list_unlisted_choice
               choices:
                 tensorflow_new:
-                  display_name: Pangeo Tensorflow ML Notebook ("2023.05.18")
+                  display_name: Pangeo Tensorflow ML Notebook ("2023.07.05")
                   slug: "tensorflow_new"
                   kubespawner_override:
-                    image: "pangeo/ml-notebook:2023.05.18"
+                    image: "pangeo/ml-notebook:2023.07.05"
                 tensorflow:
                   display_name: Pangeo Tensorflow ML Notebook
                   slug: "tensorflow"
                   kubespawner_override:
                     image: "pangeo/ml-notebook:ebeb9dd"
                 pytorch_new:
-                  display_name: Pangeo PyTorch ML Notebook ("2023.05.18")
+                  display_name: Pangeo PyTorch ML Notebook ("2023.07.05")
                   slug: "pytorch_new"
                   kubespawner_override:
-                    image: "pangeo/pytorch-notebook:2023.05.18"
+                    image: "pangeo/pytorch-notebook:2023.07.05"
                 pytorch:
                   display_name: Pangeo PyTorch ML Notebook
                   slug: "pytorch"
