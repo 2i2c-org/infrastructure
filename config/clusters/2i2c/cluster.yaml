@@ -134,3 +134,11 @@ hubs:
       - basehub-common.values.yaml
       - enc-neurohackademy.secret.values.yaml
       - neurohackademy.values.yaml
+  - name: mtu
+    display_name: "Michigan Technological University"
+    domain: mtu.2i2c.cloud
+    helm_chart: basehub
+    helm_chart_values_files:
+      - basehub-common.values.yaml
+      - mtu.values.yaml
+      - enc-mtu.secret.values.yaml

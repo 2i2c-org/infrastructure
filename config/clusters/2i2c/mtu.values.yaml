@@ -1,0 +1,57 @@
+jupyterhub:
+  ingress:
+    hosts:
+      - mtu.2i2c.cloud
+    tls:
+      - secretName: https-auto-tls
+        hosts:
+          - mtu.2i2c.cloud
+  custom:
+    2i2c:
+      add_staff_user_ids_to_admin_users: true
+      add_staff_user_ids_of_type: "google"
+    homepage:
+      templateVars:
+        org:
+          name: Michigan Technological University
+          url: https://www.mtu.edu/
+          logo_url: https://www.mtu.edu/mtu_resources/images/download-central/logos/tech-vertical/full-color.png
+        designed_by:
+          name: 2i2c
+          url: https://2i2c.org
+        operated_by:
+          name: 2i2c
+          url: https://2i2c.org
+        funded_by:
+          name: 2i2c
+          url: https://2i2c.org
+  singleuser:
+    image:
+      name: quay.io/2i2c/cloudbank-data8-image
+      tag: "6286b77ae45c"
+  hub:
+    config:
+      Authenticator:
+        admin_users:
+          - "dbkc@mtu.edu"
+          - "lebrown@mtu.edu"
+      JupyterHub:
+        authenticator_class: cilogon
+      CILogonOAuthenticator:
+        oauth_callback_url: "https://mtu.2i2c.cloud/hub/oauth_callback"
+        shown_idps:
+          - http://google.com/accounts/o8/id
+          - https://sso.mtu.edu/idp/shibboleth
+        allowed_idps:
+          # Allow 2i2c staff to login with Google
+          http://google.com/accounts/o8/id:
+            username_derivation:
+              username_claim: "email"
+            allowed_domains:
+              - "2i2c.org"
+          # Allow MTU to login via Shibboleth
+          https://sso.mtu.edu/idp/shibboleth:
+            username_derivation:
+              username_claim: "email"
+            allowed_domains:
+              - "mtu.edu"
