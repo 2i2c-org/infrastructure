@@ -106,7 +106,7 @@ basehub:
                       - name: home
                         mountPath: /home/rstudio/shared
                         subPath: _shared
-                        readOnly: true                    
+                        readOnly: true
             requests:
               # NOTE: Node share choices are in active development, see comment
               #       next to profileList: above.
