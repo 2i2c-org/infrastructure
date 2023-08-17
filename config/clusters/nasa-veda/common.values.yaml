@@ -78,8 +78,8 @@ basehub:
           default: true
           profile_options:
             image: &image_options
+              display_name: Image
               choices:
-                display_name: Image
                 pangeo:
                   display_name: Modified Pangeo Notebook
                   default: true
