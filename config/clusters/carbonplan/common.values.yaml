@@ -50,11 +50,6 @@ basehub:
             image:
               display_name: Image
               choices:
-                main:
-                  display_name: Main Single User
-                  slug: "main"
-                  kubespawner_override:
-                    image: carbonplan/main-single-user:latest
                 benchmark-maps:
                   display_name: Benchmark Maps
                   slug: "carbonplan"
@@ -63,6 +58,7 @@ basehub:
                     image: quay.io/carbonplan/benchmark-maps:latest
                 carbonplan-notebook:
                   display_name: Carbonplan Notebook
+                  default: true
                   slug: "carbonplan"
                   kubespawner_override:
                     # Source: https://github.com/carbonplan/envs
@@ -77,11 +73,6 @@ basehub:
                   slug: "tensorflow"
                   kubespawner_override:
                     image: "pangeo/ml-notebook:2023.05.08"
-                edge:
-                  display_name: Edge Single User
-                  slug: "edge"
-                  kubespawner_override:
-                    image: "carbonplan/edge-single-user:latest"
                 base-notebook:
                   display_name: Pangeo Base Notebook
                   slug: "base-notebook"
@@ -89,7 +80,6 @@ basehub:
                     image: "pangeo/base-notebook:2023.05.08"
                 pangeo-notebook:
                   display_name: Pangeo Notebook
-                  default: true
                   slug: "pangeo-notebook"
                   kubespawner_override:
                     image: "pangeo/pangeo-notebook:2023.05.08"
