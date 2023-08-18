@@ -60,6 +60,14 @@ hubs:
       - common.values.yaml
       - elcamino.values.yaml
       - enc-elcamino.secret.values.yaml
+  - name: evc
+    display_name: "Evergreen Valley College"
+    domain: evc.cloudbank.2i2c.cloud
+    helm_chart: basehub
+    helm_chart_values_files:
+      - common.values.yaml
+      - evc.values.yaml
+      - enc-evc.secret.values.yaml
   - name: glendale
     display_name: "Glendale Community College"
     domain: glendale.cloudbank.2i2c.cloud
