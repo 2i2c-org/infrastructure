@@ -23,8 +23,8 @@ jupyterhub:
           name: 2i2c
           url: https://2i2c.org
         funded_by:
-          name: ""
-          url: ""
+          name: "Michigan Technological University - College of Computing"
+          url: "https://www.mtu.edu/computing/"
   singleuser:
     image:
       name: quay.io/2i2c/cloudbank-data8-image
