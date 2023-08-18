@@ -8,37 +8,35 @@ See the sections below for more details.
 ## Layers
 
 ### Cloud Layer
-1. Shared/Dedicated Cluster
-
 ```{toctree}
-:maxdepth: 2
+:maxdepth: 1
+1.1. New Kubernetes cluster on GCP or Azure <../../hub-deployment-guide/new-cluster/new-cluster>
+1.2. New Kubernetes cluster on AWS <../../hub-deployment-guide/new-cluster/aws>
 2. Dedicated nodepool on a shared cluster (recommended for events) <dedicated-nodepool.md>
 ```
 
 ### Access Layer
-1. Authentication + authorization
-
 ```{toctree}
-:maxdepth: 2
-1.1. Ephemeral hub and TmpAuthenticator <ephemeral.md>
-2. Anonymized username <anonymized-usernames.md>
+:maxdepth: 1
+1.1. Authenticate using CILogonOAuthenticator <../../hub-deployment-guide/configure-auth/cilogon>
+1.2. Authenticate using GitHubOAuthenticator <../../hub-deployment-guide/configure-auth/github-orgs>
+1.3. Authenticate using TmpAuthenticator for an Ephemeral hub <ephemeral.md>
+2. Anonymize usernames <anonymized-usernames.md>
 ```
 
 ### Community Customization Layer
-1. Community specific hub domain
-2. (mandatory) Hub login page template sections
-
 ```{toctree}
-:maxdepth: 2
-3. Self-configuration of hub login page from own GitHub repository <login-page.md>
+:maxdepth: 1
+1. Community specific hub domain <../manage-domains/set-cnames>
+2. Configure the hub login page <login-page.md>
 ```
-4. Customizations of hub pages
+3. Customizations of hub pages
 
 ### Data Layer
-1. Shared data directories
 
 ```{toctree}
-:maxdepth: 2
+:maxdepth: 1
+1. Shared data directories <../../topic/infrastructure/storage-layer>
 2. Object storage buckets (persistent/scratch) <buckets.md>
 2.1. Cloud Permissions <cloud-access.md>
 3. Setup a database server per user <per-user-db.md>
@@ -48,21 +46,21 @@ See the sections below for more details.
 ### Integrations Layer
 
 ```{toctree}
-:maxdepth: 2
+:maxdepth: 1
 1. Allow users to push to GitHub from the Hub (gh-scoped-creds) <github.md>
 2. Enable `nbgitpuller` for private repos (git-credential-helper) <private-nbgitpuller.md>
 3. Authenticated static websites <static-sites.md>
+4. (default enabled) Configurator <https://docs.2i2c.org/admin/howto/configurator>
+5. (dedicated clusters only) Grafana <../..//topic/monitoring-alerting/grafana>
 ```
-4. (default enabled) Configurator
-5. (dedicated clusters only) Grafana
 
 ### Performance Layer
 ```{toctree}
-:maxdepth: 2
+:maxdepth: 1
 1. GPU <gpu.md>
+2. Cull resources (jupyterhub-idle-culler) <../../sre-guide/manage-k8s/culling>
 ```
-2. Dask
-3. Cull resources (jupyterhub-idle-culler)
+3. Dask
 
 ### Elastic scaffolding Layer
 1. ProfileLists
@@ -71,14 +69,14 @@ See the sections below for more details.
   - Node Sharing
 
 ```{toctree}
-:maxdepth: 2
+:maxdepth: 1
 2. Allow users to setup custom, free-form user profile choices <allow-unlisted-profile-choice.md>
 ```
 
 ### User image
 
 ```{toctree}
-:maxdepth: 2
+:maxdepth: 1
 image.md
 rocker.md
 ```
