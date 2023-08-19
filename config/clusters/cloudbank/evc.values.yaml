@@ -34,17 +34,22 @@ jupyterhub:
       CILogonOAuthenticator:
         oauth_callback_url: https://evc.cloudbank.2i2c.cloud/hub/oauth_callback
         shown_idps:
+          - https://sso.sjeccd.edu
           - http://google.com/accounts/o8/id
           - urn:mace:incommon:berkeley.edu
         allowed_idps:
+          https://sso.sjeccd.edu:
+            username_derivation:
+              username_claim: "email"
+            allowed_domains:
+              - "stu.evc.edu"
+              - "evc.edu"
           http://google.com/accounts/o8/id:
             username_derivation:
               username_claim: "email"
             allowed_domains:
               - "2i2c.org"
               - "berkeley.edu"
-              - "evc.edu"
-              - "stu.evc.edu"
               - "sjcc.edu"
               - "stu.sjcc.edu"
           urn:mace:incommon:berkeley.edu:
@@ -57,3 +62,4 @@ jupyterhub:
           - ericvd@berkeley.edu
           - sean.smorris@berkeley.edu
           - Henry.Estrada@evc.edu
+          - hestrada@evc.edu
