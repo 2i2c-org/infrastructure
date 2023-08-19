@@ -178,6 +178,9 @@ are used to provide access to the AWS account from your terminal.
    this requires that you have an aws profile set up under `~/.aws/credentials`
    with the profile name matching the name of the cluster (step 3 above).
 
+   Regardless of method used, the commandline authentication with MFA will
+   expire in 12 hours, and you will need to re-authenticate.
+
 ```{note}
 Currently, the only accounts that enforce MFA are some [individual accounts](cloud-access:aws-individual-accnts) not under 2i2c's organisation SSO.
 Though in the future, we may enforce MFA for our orgnisation as well.
