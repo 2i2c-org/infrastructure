@@ -445,10 +445,33 @@ jupyterhub:
         args:
           - -c
           - |
-            ls -lhd /srv/repo;
-            while true; do git fetch origin;
-            git reset --hard origin/$(GIT_REPO_BRANCH);
-            sleep 5m; done
+            handle_sigterm() {
+                echo "SIGTERM received, terminating...";
+                exit;
+            }
+            trap handle_sigterm SIGTERM
+
+            echo "Starting template sync...";
+
+            # print debugging info about commands run and their output using a
+            # temporary subshell with "set -x"
+            (
+                set -x;
+                git remote -v;
+                ls -lhd /srv/repo;
+            )
+
+            echo "Syncing local git repo /srv/repo's against remote origin's branch $GIT_REPO_BRANCH";
+            while true; do
+                git fetch origin;
+                git reset --hard origin/$(GIT_REPO_BRANCH);
+
+                # signal handling can only be done between sleep calls, so this
+                # shouldn't be reduced to the otherwise equivalent "sleep 5m"
+                for i in {1..300}; do
+                    sleep 1s;
+                done
+            done
         env:
           - name: GIT_REPO_BRANCH
             valueFrom:
