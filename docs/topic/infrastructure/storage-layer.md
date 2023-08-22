@@ -53,6 +53,10 @@ Note that `<username>` is specified as a `subPath` - the *subdirectory* **in the
 
 #### Shared directories
 
+Shared directories use the same storage as users' home directories, and are
+not size limited in any other way. If more space is required, [resize the
+home directory storage up](https://infrastructure.2i2c.org/sre-guide/common-problems-solutions/#no-space-left-on-device-error).
+
 ##### [`/home/jovyan/shared`](https://github.com/2i2c-org/infrastructure/blob/341b9408fc7a9a60ea81296d8a0e6eee85bd0498/helm-charts/basehub/values.yaml#L271-L274)
 
 Mounted for **all users**, showing the contents of `<hub-directory-path>/<hub-name>/_shared`.
