@@ -45,23 +45,8 @@ basehub:
             - US-GHG-Center:ghgc-hub-access
           scope:
             - read:org
-    prePuller:
-      # NOTE: To have prePuller enabled makes sense as long as we stick with a
-      #       single image option configured. Disable prePuller if the
-      #       configurator is used or a list of images is chosen from in the
-      #       profileList. Otherwise its likely to delay delay startup of a user
-      #       pod wanting to getting to wait for the pulling of another image.
-      #
-      continuous:
-        enabled: true
-      hook:
-        enabled: true
     singleuser:
       defaultUrl: /lab
-      image:
-        name: pangeo/pangeo-notebook
-        # Uses JupyterLab <4, so jupyterlab-git and dask-dashboard work
-        tag: "2023.07.05"
       profileList:
         # NOTE: About node sharing
         #
@@ -81,6 +66,37 @@ basehub:
           slug: small
           default: true
           profile_options:
+            image: &image_options
+              display_name: Image
+              choices:
+                pangeo:
+                  display_name: Pangeo Notebook
+                  default: true
+                  slug: pangeo
+                  kubespawner_override:
+                    # Uses JupyterLab <4, so jupyterlab-git and dask-dashboard work
+                    image: "pangeo/pangeo-notebook:2023.07.05"
+                rocker:
+                  display_name: Rocker Geospatial with RStudio
+                  slug: rocker
+                  kubespawner_override:
+                    image: rocker/binder:4.3
+                    # Launch RStudio after the user logs in
+                    default_url: /rstudio
+                    # Ensures container working dir is homedir
+                    # https://github.com/2i2c-org/infrastructure/issues/2559
+                    working_dir: /home/rstudio
+                    # Because this is a list, it will override our default volume mounts
+                    volume_mounts:
+                      # Mount the user home directory
+                      - name: home
+                        mountPath: /home/rstudio
+                        subPath: "{username}"
+                      # Mount the shared readonly directory
+                      - name: home
+                        mountPath: /home/rstudio/shared
+                        subPath: _shared
+                        readOnly: true
             requests:
               # NOTE: Node share choices are in active development, see comment
               #       next to profileList: above.
@@ -126,6 +142,7 @@ basehub:
           description: *profile_list_description
           slug: medium
           profile_options:
+            image: *image_options
             requests:
               # NOTE: Node share choices are in active development, see comment
               #       next to profileList: above.
@@ -181,6 +198,7 @@ basehub:
           description: *profile_list_description
           slug: large
           profile_options:
+            image: *image_options
             requests:
               # NOTE: Node share choices are in active development, see comment
               #       next to profileList: above.
