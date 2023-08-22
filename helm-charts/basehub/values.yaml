@@ -474,7 +474,7 @@ jupyterhub:
 
                 # signal handling can only be done between sleep calls, so this
                 # shouldn't be reduced to the otherwise equivalent "sleep 5m"
-                for i in {1..300}; do
+                for i in $(seq 300); do
                     sleep 1s;
                 done
             done
