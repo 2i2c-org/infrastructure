@@ -449,19 +449,25 @@ jupyterhub:
                 echo "SIGTERM received, terminating...";
                 exit;
             }
-            trap handle_sigterm SIGTERM
+            trap handle_sigterm SIGTERM;
 
             echo "Starting template sync...";
 
-            # print debugging info about commands run and their output using a
-            # temporary subshell with "set -x"
+            echo "";
+            echo "Info about local git repo to be synced:";
             (
+                # set -x causes commands run to be printed, helping log readers
+                # understand what the generated output is about. set -x is
+                # configured within a subshell to just print info about the
+                # specific chosen commands and avoid printing info about running
+                # "echo", "sleep", "set +x", or similar commands.
                 set -x;
                 git remote -v;
                 ls -lhd /srv/repo;
             )
 
-            echo "Syncing local git repo /srv/repo's against remote origin's branch $GIT_REPO_BRANCH";
+            echo "";
+            echo "Syncing local git repo /srv/repo against origin's branch $(GIT_REPO_BRANCH) every 5 minutes...";
             while true; do
                 git fetch origin;
                 git reset --hard origin/$(GIT_REPO_BRANCH);
