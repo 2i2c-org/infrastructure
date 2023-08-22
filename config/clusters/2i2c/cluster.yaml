@@ -25,17 +25,6 @@ hubs:
       - basehub-common.values.yaml
       - staging.values.yaml
       - enc-staging.secret.values.yaml
-  - name: hackanexoplanet
-    display_name: "ESA Hack An Exoplanet"
-    domain: hackanexoplanet.2i2c.cloud
-    uptime_check:
-      # This is an ephemeral hub, fully password protected with HTTP Basic Auth
-      expected_status: 401
-    helm_chart: basehub
-    helm_chart_values_files:
-      - basehub-common.values.yaml
-      - hackanexoplanet.values.yaml
-      - enc-hackanexoplanet.secret.values.yaml
   - name: dask-staging
     display_name: "2i2c dask staging"
     domain: dask-staging.2i2c.cloud
