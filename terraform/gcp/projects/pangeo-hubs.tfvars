@@ -1,3 +1,17 @@
+# SETTING UP TO WORK WITH THIS FILE:
+# -------------------------------------------------------------------------------
+#
+# The terraform state associated with this file is stored in a dedicated GCP
+# bucket, so in order to work with this file you need to do the following after
+# clearing a local .terraform folder.
+#
+# terraform init -backend-config backends/pangeo-backend.hcl
+# terraform workspace list
+# terraform workspace select <...>
+#
+# The GCP project having the bucket is https://console.cloud.google.com/?project=columbia
+#
+
 prefix                 = "pangeo-hubs"
 project_id             = "pangeo-integration-te-3eea"
 zone                   = "us-central1-b"
