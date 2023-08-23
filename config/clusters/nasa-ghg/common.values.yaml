@@ -97,6 +97,13 @@ basehub:
                         mountPath: /home/rstudio/shared
                         subPath: _shared
                         readOnly: true
+                qgis:
+                  display_name: QGIS on Linux Desktop
+                  slug: qgis
+                  kubespawner_override:
+                    # Latest until https://github.com/jupyterhub/jupyter-remote-desktop-proxy/pull/51
+                    # is merged
+                    image: "quay.io/jupyter-remote-desktop-proxy/qgis:latest"
             requests:
               # NOTE: Node share choices are in active development, see comment
               #       next to profileList: above.
