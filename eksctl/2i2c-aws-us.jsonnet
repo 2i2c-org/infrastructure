@@ -43,6 +43,10 @@ local daskNodes = [
     // *first* item in instanceDistribution.instanceTypes, to match
     // what we do with notebook nodes. Pods can request a particular
     // kind of node with a nodeSelector
+    //
+    // A not yet fully established policy is being developed about using a single
+    // node pool, see https://github.com/2i2c-org/infrastructure/issues/2687.
+    //
     { instancesDistribution+: { instanceTypes: ["r5.4xlarge"] }},
 ];
 

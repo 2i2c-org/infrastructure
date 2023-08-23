@@ -32,12 +32,17 @@ notebook_nodes = {
   },
 }
 
+# Setup a single node pool for dask workers.
+#
+# A not yet fully established policy is being developed about using a single
+# node pool, see https://github.com/2i2c-org/infrastructure/issues/2687.
+#
 dask_nodes = {
-  "medium" : {
+  "worker" : {
     min : 0,
     max : 100,
-    machine_type : "e2-highmem-16"
-  },
+    machine_type : "n2-highmem-16",
+  }
 }
 
 hub_cloud_permissions = {

@@ -1,3 +1,17 @@
+# SETTING UP TO WORK WITH THIS FILE:
+# -------------------------------------------------------------------------------
+#
+# The terraform state associated with this file is stored in a dedicated GCP
+# bucket, so in order to work with this file you need to do the following after
+# clearing a local .terraform folder.
+#
+# terraform init -backend-config backends/pangeo-backend.hcl
+# terraform workspace list
+# terraform workspace select <...>
+#
+# The GCP project having the bucket is https://console.cloud.google.com/?project=columbia
+#
+
 prefix                 = "pangeo-hubs"
 project_id             = "pangeo-integration-te-3eea"
 zone                   = "us-central1-b"
@@ -75,6 +89,24 @@ notebook_nodes = {
   },
 }
 
+# Setup a single node pool for dask workers.
+#
+# A not yet fully established policy is being developed about using a single
+# node pool, see https://github.com/2i2c-org/infrastructure/issues/2687.
+#
+# TODO: Transition to a single n2-highmem-16 worker node pool to be able to
+#       provide standardized worker pod config for all daskhubs.
+#
+#       Tracked in https://github.com/2i2c-org/infrastructure/issues/2687
+#
+#       The node pool to setup should look like this:
+#
+#       "worker" : {
+#         min : 0,
+#         max : 100,
+#         machine_type : "n2-highmem-16",
+#       },
+#
 dask_nodes = {
   "small" : {
     min : 0,
