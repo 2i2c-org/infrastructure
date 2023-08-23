@@ -85,6 +85,14 @@ notebook_nodes = {
 #
 #       Tracked in https://github.com/2i2c-org/infrastructure/issues/2687
 #
+#       The node pool to setup should look like this:
+#
+#       "worker" : {
+#         min : 0,
+#         max : 100,
+#         machine_type : "n2-highmem-16",
+#       },
+#
 dask_nodes = {
   "small" : {
     min : 0,
