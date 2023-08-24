@@ -111,68 +111,6 @@ basehub:
               mountPath: /home/jovyan/shared-public
               subPath: _shared-public
       profileList:
-        # The ICESAT-2 HackWeek option is added on the top to be the first
-        # option in the list. The event is expecting ~60 participants, and they
-        # should have access to ~16 or ~32 GB of memory options. For this we've
-        # chosen a 512 GB machine type that could house 32 to 16 users per node.
-        - display_name: ICESAT-2 HackWeek
-          description: Select this if you are participating or organizing the event
-          slug: small
-          default: true
-          allowed_teams:
-            - 2i2c-org:hub-access-for-2i2c-staff
-            - CryoInTheCloud:cryoclouduser
-            - CryoInTheCloud:cryocloudadvanced
-          profile_options:
-            # WARNING: The images listed are duplicated so that this profileList
-            #          entry can be removed without changes later. If an image
-            #          update is made, update here and elsewhere.
-            image:
-              display_name: Image
-              choices:
-                python:
-                  display_name: Python
-                  default: true
-                  slug: "python"
-                  kubespawner_override:
-                    # Image repo: https://github.com/CryoInTheCloud/hub-image
-                    image: "quay.io/cryointhecloud/cryo-hub-image:17aa6e2ed1a6"
-                rocker:
-                  display_name: R
-                  slug: "rocker"
-                  kubespawner_override:
-                    # Image repo: https://github.com/CryoInTheCloud/hub-Rstudio-image
-                    image: "quay.io/cryointhecloud/cryo-hub-r-image:c2ee1f933030"
-                matlab:
-                  display_name: Matlab
-                  slug: "matlab"
-                  kubespawner_override:
-                    # Image repo: https://github.com/CryoInTheCloud/hub-matlab-image
-                    image: "quay.io/cryointhecloud/cryo-hub-matlab-image:113755d00366"
-            requests:
-              display_name: Node share
-              choices:
-                mem_16:
-                  default: true
-                  display_name: 16-20 GB, 2-4 CPU
-                  kubespawner_override:
-                    mem_guarantee: 15.186G
-                    mem_limit: 20G
-                    cpu_guarantee: 1.969
-                    cpu_limit: 4
-                mem_32:
-                  display_name: 32-40 GB, 4-8 CPU
-                  kubespawner_override:
-                    mem_guarantee: 30.372G
-                    mem_limit: 40G
-                    cpu_guarantee: 3.938
-                    cpu_limit: 8
-          kubespawner_override:
-            cpu_limit: null
-            mem_limit: null
-            node_selector:
-              node.kubernetes.io/instance-type: r5.16xlarge
-
         # NOTE: About node sharing
         #
         #       CPU/Memory requests/limits are actively considered still. This
