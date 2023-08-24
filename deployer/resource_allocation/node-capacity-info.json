@@ -1,0 +1,32 @@
+{
+    "r5.xlarge": {
+        "capacity": {
+            "cpu": 4.0,
+            "memory": 33186611200
+        },
+        "available": {
+            "cpu": 3.75,
+            "memory": 31883231232
+        }
+    },
+    "r5.16xlarge": {
+        "capacity": {
+            "cpu": 64.0,
+            "memory": 535146246144
+        },
+        "available": {
+            "cpu": 63.6,
+            "memory": 526011052032
+        }
+    },
+    "n2-highmem-4": {
+        "capacity": {
+            "cpu": 4.0,
+            "memory": 33670004736
+        },
+        "available": {
+            "cpu": 3.196,
+            "memory": 28975529984
+        }
+    }
+}
