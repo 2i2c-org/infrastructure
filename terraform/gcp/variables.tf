@@ -27,9 +27,13 @@ variable "billing_project_id" {
   type        = string
   default     = "two-eye-two-see"
   description = <<-EOT
-  GCP Project ID associated with billing.
+  This should be a GCP Project ID, not a GCP Billing Account ID as the name
+  indicates. It should be to a project that has a GCP API called Cloud Resource
+  Manager enabled. That can be enabled on a project via the link below:
+  https://console.cloud.google.com/apis/library/cloudresourcemanager.googleapis.com
 
-  Should be the id, rather than display name of the project.
+  What goes on here is confusing, see the comments about the confusion in main.tf
+  for more details.
   EOT
 }
 

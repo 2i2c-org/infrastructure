@@ -30,6 +30,16 @@ provider "google" {
   # Configuration reference:
   # https://registry.terraform.io/providers/hashicorp/google/latest/docs/guides/provider_reference#user_project_override
   #
+  # FIXME: Erik concluded that billing_project could be set to var.project_id at
+  #        least for one cluster, but it required that the project where the
+  #        cluster lived first enabled the GCP API: https://console.cloud.google.com/apis/library/cloudresourcemanager.googleapis.com
+  #
+  #        So, we should probably not reference a new variable here, but enable
+  #        the API for all our existing GCP projects and new GCP projects, and
+  #        then reference var.project_id instead.
+  #
+  #        But who knows, its hard to understand whats going on.
+  #
   user_project_override = true
   billing_project       = var.billing_project_id
 }
