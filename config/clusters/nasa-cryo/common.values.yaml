@@ -127,7 +127,7 @@ basehub:
         - display_name: "Small: up to 4 CPU / 32 GB RAM"
           description: &profile_list_description "Start a container with at least a chosen share of capacity on a node of this type"
           slug: small
-          # default: true
+          default: true
           allowed_teams:
             - 2i2c-org:hub-access-for-2i2c-staff
             - CryoInTheCloud:cryoclouduser
