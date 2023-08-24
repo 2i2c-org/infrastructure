@@ -23,6 +23,16 @@ variable "project_id" {
   EOT
 }
 
+variable "billing_project_id" {
+  type        = string
+  default     = "two-eye-two-see"
+  description = <<-EOT
+  GCP Project ID associated with billing.
+
+  Should be the id, rather than display name of the project.
+  EOT
+}
+
 variable "k8s_version_prefixes" {
   type = set(string)
   # Available minor versions are picked from the GKE regular release channel. To

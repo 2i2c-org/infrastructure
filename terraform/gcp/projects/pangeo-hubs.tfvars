@@ -2,18 +2,25 @@
 # -------------------------------------------------------------------------------
 #
 # The terraform state associated with this file is stored in a dedicated GCP
-# bucket, so in order to work with this file you need to do the following after
-# clearing a local .terraform folder.
+# bucket, so a new terraform backend has to be chosen. Also, you will need to
+# authenticate with a @columbia.edu account as our @2i2c.org accounts don't have
+# access.
 #
-# terraform init -backend-config backends/pangeo-backend.hcl
-# terraform workspace list
-# terraform workspace select <...>
+# This can look something like this:
 #
-# The GCP project having the bucket is https://console.cloud.google.com/?project=columbia
+#     gcloud auth login --update-adc
 #
-
+#     cd terraform/gcp
+#     rm -rf .terraform
+#
+#     terraform init -backend-config backends/pangeo-backend.hcl
+#     terraform workspace select pangeo-hubs
+#
+#     terraform apply --var-file projects/pangeo-hubs.tfvars
+#
 prefix                 = "pangeo-hubs"
 project_id             = "pangeo-integration-te-3eea"
+billing_project_id     = "pangeo-integration-te-3eea"
 zone                   = "us-central1-b"
 region                 = "us-central1"
 core_node_machine_type = "n2-highmem-4"
