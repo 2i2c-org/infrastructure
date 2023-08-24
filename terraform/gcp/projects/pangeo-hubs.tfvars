@@ -94,52 +94,11 @@ notebook_nodes = {
 # A not yet fully established policy is being developed about using a single
 # node pool, see https://github.com/2i2c-org/infrastructure/issues/2687.
 #
-# TODO: Transition to a single n2-highmem-16 worker node pool to be able to
-#       provide standardized worker pod config for all daskhubs.
-#
-#       Tracked in https://github.com/2i2c-org/infrastructure/issues/2687
-#
-#       The node pool to setup should look like this:
-#
-#       "worker" : {
-#         min : 0,
-#         max : 100,
-#         machine_type : "n2-highmem-16",
-#       },
-#
 dask_nodes = {
-  "small" : {
+  "worker" : {
     min : 0,
     max : 100,
-    machine_type : "n1-standard-4",
-    labels : {},
-    gpu : {
-      enabled : false,
-      type : "",
-      count : 0
-    }
-  },
-  "medium" : {
-    min : 0,
-    max : 100,
-    machine_type : "n1-standard-8",
-    labels : {},
-    gpu : {
-      enabled : false,
-      type : "",
-      count : 0
-    }
-  },
-  "large" : {
-    min : 0,
-    max : 100,
-    machine_type : "n1-standard-16",
-    labels : {},
-    gpu : {
-      enabled : false,
-      type : "",
-      count : 0
-    }
+    machine_type : "n2-highmem-16",
   },
 }
 
