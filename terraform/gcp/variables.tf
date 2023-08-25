@@ -23,6 +23,20 @@ variable "project_id" {
   EOT
 }
 
+variable "billing_project_id" {
+  type        = string
+  default     = "two-eye-two-see"
+  description = <<-EOT
+  This should be a GCP Project ID, not a GCP Billing Account ID as the name
+  indicates. It should be to a project that has a GCP API called Cloud Resource
+  Manager enabled. That can be enabled on a project via the link below:
+  https://console.cloud.google.com/apis/library/cloudresourcemanager.googleapis.com
+
+  What goes on here is confusing, see the comments about the confusion in main.tf
+  for more details.
+  EOT
+}
+
 variable "k8s_version_prefixes" {
   type = set(string)
   # Available minor versions are picked from the GKE regular release channel. To
