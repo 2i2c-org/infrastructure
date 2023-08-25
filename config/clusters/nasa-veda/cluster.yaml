@@ -13,7 +13,7 @@ support:
 hubs:
   - name: staging
     display_name: "NASA VEDA (staging)"
-    domain: staging.nasa-veda.2i2c.cloud
+    domain: staging.veda.2i2c.cloud
     helm_chart: daskhub
     helm_chart_values_files:
       # The order in which you list files here is the order the will be passed

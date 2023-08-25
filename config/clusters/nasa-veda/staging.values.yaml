@@ -4,11 +4,11 @@ basehub:
       eks.amazonaws.com/role-arn: arn:aws:iam::444055461661:role/nasa-veda-staging
   jupyterhub:
     ingress:
-      hosts: [staging.nasa-veda.2i2c.cloud]
+      hosts: [staging.veda.2i2c.cloud]
       tls:
-        - hosts: [staging.nasa-veda.2i2c.cloud]
+        - hosts: [staging.veda.2i2c.cloud]
           secretName: https-auto-tls
     hub:
       config:
         GitHubOAuthenticator:
-          oauth_callback_url: https://staging.nasa-veda.2i2c.cloud/hub/oauth_callback
+          oauth_callback_url: https://staging.veda.2i2c.cloud/hub/oauth_callback
