@@ -74,9 +74,15 @@ def proportional_memory_strategy(
                 # user can starve the node of critical kubelet / systemd resources.
                 # Leaving it unset sets it to same as guarantee, which we do not want.
                 "cpu_limit": available_node_cpu,
+                # Explicitly set node_selector here, so the output can be easily combined
+                # multiple times, with multiple instance types
                 "node_selector": {"node.kubernetes.io/instance-type": instance_type},
             },
         }
+
+        # Use the amount of RAM made available as a slug, to allow combining choices from
+        # multiple instance types in the same profile. This does mean you can not have
+        # the same RAM allocation from multiple node selectors. But that's a feature, not a bug.
         choices[f"mem_{mem_display.replace('.', '_')}"] = choice
 
         # Halve the mem_limit for the next choice
