@@ -44,7 +44,7 @@ jupyterhub:
   hub:
     image:
       name: quay.io/2i2c/dynamic-image-building-experiment
-      tag: "0.0.1-0.dev.git.6758.h4c000253"
+      tag: "0.0.1-0.dev.git.6760.h17ca642b"
     config:
       JupyterHub:
         authenticator_class: cilogon

@@ -24,13 +24,3 @@ RUN mkdir -p /usr/local/etc/jupyterhub-configurator
 
 COPY jupyterhub_configurator_config.py /usr/local/etc/jupyterhub-configurator/jupyterhub_configurator_config.py
 USER $NB_USER
-
-SHELL ["/bin/bash", "--login", "-i", "-c"]
-RUN curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.35.2/install.sh | bash
-RUN source /root/.bashrc && nvm install 12.14.1
-SHELL ["/bin/bash", "--login", "-c"]
-
-RUN node --version
-RUN npm --version
-
-RUN npm install https://github.com/yuvipanda/prototype-kubespawner-dynamic-building-ui.git#078402e89197a336de49477a5fc92321674a7f3d
