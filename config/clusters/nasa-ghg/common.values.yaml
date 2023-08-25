@@ -101,7 +101,7 @@ basehub:
                   display_name: QGIS on Linux Desktop
                   slug: qgis
                   kubespawner_override:
-                    # Launch people directly into the Linux desktop
+                    # Launch people directly into the Linux desktop when they start
                     default_url: /desktop
                     # Built from https://github.com/jupyterhub/jupyter-remote-desktop-proxy/pull/51
                     image: "quay.io/jupyter-remote-desktop-proxy/qgis:2023-08-23"
