@@ -22,6 +22,13 @@ grafana:
         hosts:
           - grafana.nasa-veda.2i2c.cloud
 
+redirects:
+  rules:
+    # nasa-veda.2i2c.cloud was the old URL
+    # Moved due to https://github.com/2i2c-org/infrastructure/issues/3029
+    - from: nasa-veda.2i2c.cloud
+      to: veda.2i2c.cloud
+
 prometheus:
   server:
     ingress:
