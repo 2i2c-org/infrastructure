@@ -44,7 +44,7 @@ jupyterhub:
   hub:
     image:
       name: quay.io/2i2c/dynamic-image-building-experiment
-      tag: "0.0.1-0.dev.git.6478.h0ab34873"
+      tag: "0.0.1-0.dev.git.6758.h4c000253"
     config:
       JupyterHub:
         authenticator_class: cilogon
@@ -58,6 +58,8 @@ jupyterhub:
       enable-prototype-UI: |
         from kubespawner_dynamic_building_ui import TEMPLATE_PATHS, STATIC_HANDLER_TUPLE
         c.KubeSpawner.additional_profile_form_template_paths = TEMPLATE_PATHS
+        print(TEMPLATE_PATHS)
+        print(STATIC_HANDLER_TUPLE)
 
         # Add extra handler to serve JS & CSS assets
         c.JupyterHub.extra_handlers.append(STATIC_HANDLER_TUPLE)
