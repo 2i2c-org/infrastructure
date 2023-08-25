@@ -34,8 +34,6 @@ basehub:
     singleuser:
       serviceAccountName: cloud-user-sa
       defaultUrl: /lab
-      nodeSelector:
-        node.kubernetes.io/instance-type: r5.xlarge
       storage:
         extraVolumeMounts:
           - name: home
