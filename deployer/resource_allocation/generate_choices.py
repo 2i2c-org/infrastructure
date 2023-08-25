@@ -17,7 +17,9 @@ class ResourceAllocationStrategies(str, Enum):
     PROPORTIONAL_MEMORY_STRATEGY = "proportional-memory-strategy"
 
 
-def proportional_memory_strategy(nodeinfo: dict, num_allocations: int):
+def proportional_memory_strategy(
+    instance_type: str, nodeinfo: dict, num_allocations: int
+):
     """
     Generate choices for resource allocation based on proportional changes to memory
 
@@ -58,8 +60,8 @@ def proportional_memory_strategy(nodeinfo: dict, num_allocations: int):
         cpu_guarantee = (mem_limit / available_node_mem) * available_node_cpu
 
         # Memory is in bytes, let's convert it to GB to display
-        mem_display = mem_limit / 1024 / 1024 / 1024
-        display_name = f"{mem_display:.1f} GB RAM"
+        mem_display = f"{mem_limit / 1024 / 1024 / 1024:.1f}"
+        display_name = f"{mem_display} GB RAM, upto {available_node_cpu} CPUs"
 
         choice = {
             "display_name": display_name,
@@ -72,9 +74,10 @@ def proportional_memory_strategy(nodeinfo: dict, num_allocations: int):
                 # user can starve the node of critical kubelet / systemd resources.
                 # Leaving it unset sets it to same as guarantee, which we do not want.
                 "cpu_limit": available_node_cpu,
+                "node_selector": {"node.kubernetes.io/instance-type": instance_type},
             },
         }
-        choices[f"mem_{num_allocations - i}"] = choice
+        choices[f"mem_{mem_display.replace('.', '_')}"] = choice
 
         # Halve the mem_limit for the next choice
         mem_limit = mem_limit / 2
@@ -111,7 +114,9 @@ def generate_resource_allocation_choices(
 
     # Call appropriate function based on what strategy we want to use
     if strategy == ResourceAllocationStrategies.PROPORTIONAL_MEMORY_STRATEGY:
-        choices = proportional_memory_strategy(nodeinfo[instance_type], num_allocations)
+        choices = proportional_memory_strategy(
+            instance_type, nodeinfo[instance_type], num_allocations
+        )
     else:
         raise ValueError(f"Strategy {strategy} is not currently supported")
     yaml.dump(choices, sys.stdout)
