@@ -189,11 +189,22 @@ properties:
       pv:
         type: object
         additionalProperties: false
-        required:
-          - mountOptions
-          - serverIP
-          - baseShareName
+        # Require options to be set *only* if pv is enabled
+        anyOf:
+          - properties:
+              enabled:
+                const: true
+            required:
+              - mountOptions
+              - serverIP
+              - baseShareName
+              - enabled
+          - properties:
+              enabled:
+                const: false
         properties:
+          enabled:
+            type: boolean
           mountOptions:
             type: array
             items:
