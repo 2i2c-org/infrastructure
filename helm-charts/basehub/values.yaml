@@ -577,12 +577,16 @@ jupyterhub:
         memory: 2Gi
     extraConfig:
       01-custom-theme: |
+        # adds a JupyterHub template path and updates template variables
+
         from z2jh import get_config
         c.JupyterHub.template_paths.insert(0,'/usr/local/share/jupyterhub/custom_templates')
         c.JupyterHub.template_vars.update({
             'custom': get_config('custom.homepage.templateVars')
         })
       02-custom-admin: |
+        # adjusts the spawner to add config specific to admin users
+
         from z2jh import get_config
         from kubespawner import KubeSpawner
         from jupyterhub_configurator.mixins import ConfiguratorSpawnerMixin
@@ -593,11 +597,11 @@ jupyterhub:
                 if not (self.user.admin and custom_admin):
                     return super().start(*args, **kwargs)
 
-                extra_volume_mounts = custom_admin.get('extraVolumeMounts', [])
-                extra_env = custom_admin.get('extraEnv', {})
+                admin_volume_mounts = custom_admin.get('extraVolumeMounts', [])
+                self.volume_mounts += [vm for vm in admin_volume_mounts if vm not in self.volume_mounts]
 
-                self.volume_mounts += [volume for volume in extra_volume_mounts if volume not in self.volume_mounts]
-                self.environment.update(extra_env)
+                admin_environment = custom_admin.get('extraEnv', {})
+                self.environment.update(admin_environment)
 
                 return super().start(*args, **kwargs)
 
