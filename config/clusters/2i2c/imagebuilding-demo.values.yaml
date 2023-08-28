@@ -53,7 +53,7 @@ jupyterhub:
                 default: true
                 slug: "pangeo"
         kubespawner_override:
-          # Expllicitly unset mem_limit, so it overrides the default memory limit we set in
+          # Explicitly unset mem_limit, so it overrides the default memory limit we set in
           # basehub/values.yaml
           mem_limit: 2G
           cpu_limit: 2
@@ -74,8 +74,6 @@ jupyterhub:
       enable-prototype-UI: |
         from kubespawner_dynamic_building_ui import TEMPLATE_PATHS, STATIC_HANDLER_TUPLE
         c.KubeSpawner.additional_profile_form_template_paths = TEMPLATE_PATHS
-        print(TEMPLATE_PATHS)
-        print(STATIC_HANDLER_TUPLE)
 
         # Add extra handler to serve JS & CSS assets
         c.JupyterHub.extra_handlers.append(STATIC_HANDLER_TUPLE)
