@@ -593,11 +593,9 @@ jupyterhub:
                 if not (self.user.admin and custom_admin):
                     return super().start(*args, **kwargs)
 
-                extra_init_containers = custom_admin.get('initContainers', [])
                 extra_volume_mounts = custom_admin.get('extraVolumeMounts', [])
                 extra_env = custom_admin.get('extraEnv', {})
 
-                self.init_containers += [container for container in extra_init_containers if container not in self.init_containers]
                 self.volume_mounts += [volume for volume in extra_volume_mounts if volume not in self.volume_mounts]
                 self.environment.update(extra_env)
 
