@@ -58,6 +58,9 @@ inClusterNFS:
 global: {}
 
 jupyterhub:
+  cull:
+    # Don't allow any nodes to run for longer than 7 days
+    maxAge: 604800 # 7 days in seconds
   custom:
     auth:
       anonymizeUsername: false
