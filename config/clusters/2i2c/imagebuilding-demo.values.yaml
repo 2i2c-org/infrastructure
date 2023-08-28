@@ -27,10 +27,40 @@ jupyterhub:
           name: ""
           url: ""
           custom_html: <a href="https://www.dfg.de/">DFG</a>, <a href="https://www.cessda.eu/">CESSDA</a>, <a href="https://www.gesis.org/">GESIS</a>, FKZ/Project number <a href="https://gepris.dfg.de/gepris/projekt/460234259?language=en">460234259</a>
+  singleuser:
+    profileList:
+      - display_name: "Small"
+        description: "~2 CPU, ~2G RAM"
+        profile_options:
+          image:
+            display_name: Image
+            unlisted_choice: &profile_list_unlisted_choice
+              enabled: True
+              display_name: "Custom image"
+              validation_regex: "^.+:.+$"
+              validation_message: "Must be a valid public docker image, including a tag"
+              kubespawner_override:
+                image: "{value}"
+            choices:
+              pangeo_new:
+                display_name: Base Pangeo Notebook ("2023.07.05")
+                default: true
+                slug: "pangeo_new"
+                kubespawner_override:
+                  image: "pangeo/pangeo-notebook:2023.07.05"
+              pangeo:
+                display_name: Base Pangeo Notebook
+                default: true
+                slug: "pangeo"
+        kubespawner_override:
+          # Explicitly unset mem_limit, so it overrides the default memory limit we set in
+          # basehub/values.yaml
+          mem_limit: 2G
+          cpu_limit: 2
   hub:
     image:
       name: quay.io/2i2c/dynamic-image-building-experiment
-      tag: "0.0.1-0.dev.git.6478.h0ab34873"
+      tag: "0.0.1-0.dev.git.6765.h33942a27"
     config:
       JupyterHub:
         authenticator_class: cilogon
@@ -40,6 +70,13 @@ jupyterhub:
         # Only show the option to login with Google
         shown_idps:
           - http://google.com/accounts/o8/id
+    extraConfig:
+      enable-prototype-UI: |
+        from kubespawner_dynamic_building_ui import TEMPLATE_PATHS, STATIC_HANDLER_TUPLE
+        c.KubeSpawner.additional_profile_form_template_paths = TEMPLATE_PATHS
+
+        # Add extra handler to serve JS & CSS assets
+        c.JupyterHub.extra_handlers.append(STATIC_HANDLER_TUPLE)
 
 binderhub-service:
   nodeSelector:
