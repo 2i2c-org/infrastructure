@@ -32,7 +32,7 @@ The unencrypted file contents should look like this:
 ```
 ````
 
-### Add the secret hub config file created in the step above to the list of helm chart values file
+### Add the secret hub config file to the list of helm chart values file
 If not already present, add the secret hub config file to the list of helm chart values file in `config/clusters/<cluster_name>/cluster.yaml`. For example, if you created the `enc-<hub_name>.secret.values.yaml` file in the step above, add it to the `cluster.yaml` file like so:
 
 ```yaml
@@ -94,21 +94,21 @@ jupyterhub:
 
 2. It is recommended to define in the `allowed_idps` dict, all the identity providers we plan to allow to be used for a hub. This way, only these will be allowed to be used.
 
-  ```{note}
-  The keys allowed in the `allowed_idps` dict **must be valid CILogon `EntityIDs`**.
-  Go to https://cilogon.org/idplist for the list of EntityIDs of each IdP.
-  ```
+    ```{note}
+    The keys allowed in the `allowed_idps` dict **must be valid CILogon `EntityIDs`**.
+    Go to https://cilogon.org/idplist for the list of EntityIDs of each IdP.
+    ```
 
 3. All the identity providers must define a `username_derivation` scheme, with their own `username_claim`, that the user *cannot change*. If they can, it can be easily used to impersonate others! For example, if we allow both GitHub and `utoronto.ca` as allowed authentication providers, and only use `email` as `username_claim`, for both providers, any GitHub user can set their email field in their GitHub profile to a `utoronto.ca` email and thus gain access to any `utoronto.ca` user's server! So a very careful choice needs to
 be made here.
 
-  ```{note}
-  You can check the [CILogon scopes section](https://www.cilogon.org/oidc#h.p_PEQXL8QUjsQm) to checkout available values for `username_claim`. This *cannot* be changed afterwards without manual migration of user names, so choose this carefully.
-  ```
+    ```{note}
+    You can check the [CILogon scopes section](https://www.cilogon.org/oidc#h.p_PEQXL8QUjsQm) to checkout available values for `username_claim`. This *cannot* be changed afterwards without manual migration of user names, so choose this carefully.
+    ```
 
-## Other CILogon common configurations across 2i2c clusters
+## Other most common CILogon configurations across 2i2c hubs
 
-### Authenticate using GitHub with CILogon**
+### Authenticate using GitHub
 
 *This example sets the GitHub nickname as the Hub username using the `username_claim` option*
 
@@ -133,49 +133,3 @@ jupyterhub:
 ```{important}
 To learn about all the possible config options of the `CILogonOAuthenticator` dict, checkout [the docs](https://oauthenticator.readthedocs.io/en/latest/api/gen/oauthenticator.cilogon.html#oauthenticator.cilogon.CILogonOAuthenticator.allowed_idps).
 ```
-
-## Switch Identity Providers or user accounts
-
-By default, logging in with a particular user account will persist your credentials in future sessions.
-This means that you'll automatically re-use the same institutional and user account when you access the hub's home page.
-
-### Switch Identity Providers
-
-1. **Logout of the Hub** using the logout button or by going to `https://{hub-name}/hub/logout`.
-2. **Clear browser cookies** (optional). If the user asked CILogon to re-use the same Identity Provider connection when they logged in, they'll need to [clear browser cookies](https://www.lifewire.com/how-to-delete-cookies-2617981) for <https://cilogon.org>.
-
-   ```{figure} ../../images/cilogon-remember-this-selection.png
-   The dialog box that allows you to re-use the same Identity Provider.
-   ```
-
-   Firefox example:
-   ```{figure} ../../images/cilogon-clear-cookies.png
-   An example of clearing cookies with Firefox.
-   ```
-
-3. The next time the user goes to the hub's landing page, they'll be asked to re-authenticate and will be presented with the list of available Identity Providers after choosing the CILogon connection.
-4. They can now choose **another Identity Provider** via CILogon.
-
-```{note}
-If the user choses the same Identity Provider, then they will be automatically logged in with the same user account they've used before. To change the user account, see [](auth:cilogon:switch-user-accounts).
-```
-
-(auth:cilogon:switch-user-accounts)=
-### Switch user account
-
-1. Logout of the Hub using the logout button or by going to `https://{hub-name}/hub/logout`.
-2. Logout of CILogon by going to the [CILogon logout page](https://cilogon.org/logout).
-3. The next time the user goes to the hub's landing page, they'll be asked to re-authenticate and will be presented with the list of available Identity Providers after choosing the CILogon connection.
-4. Choose the **same Identity Provider** to login.
-5. The user can now choose **another user account** to login with.
-
-### 403 - Unauthorized errors
-
-If you see a 403 error page, this means that the account you were using to login hasn't been allowed by the hub administrator.
-
-```{figure} ../../images/403-forbidden.png
-```
-
-If you think this is an error, and the account should have been allowed, then contact the hub adminstrator/s.
-
-If you used the wrong user account, you can log in using another account by following the steps in [](auth:cilogon:switch-user-accounts).
