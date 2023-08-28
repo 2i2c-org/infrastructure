@@ -1,3 +1,7 @@
+nfs:
+  # No persistent storage for cosmicds
+  enabled: false
+
 jupyterhub:
   ingress:
     hosts:
