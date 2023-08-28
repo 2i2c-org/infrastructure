@@ -1,35 +1,6 @@
 (auth:cilogon)=
 # CILogon
-
-[CILogon](https://www.cilogon.org) is a service provider that allows users to login against various identity providers, including campus identity providers. 2i2c can manage CILogon using the JupyterHub CILogonOAuthenticator.
-
-Some key terms about CILogon authentication worth mentioning:
-
-Identity Provider
-: The authentication service available through the CILogon connection.
-
-  When a user logs in via CILogon, they are first presented with a list of various institutions and organizations that they may choose from (e.g. `UC Berkeley` or `Australia National University`).
-
-  The available identity providers are members of [InCommon](https://www.incommon.org/federation/), a federation of universities and other organizations that provide single sign-on access to various resources.
-
-  Example:
-
-  ```{figure} ../../images/cilogon-ipd-list.png
-  A list of Identity Providers the user may select from.
-  ```
-
-User account
-: Within an institution, each user is expected to have their own user account (e.g. `myname@berkeley.edu`). This is the account that is used to give somebody an ID on their JupyterHub. This is entered on an Identity Provider's login screen. For example:
-
-  ```{figure} ../../images/cilogon-berkley-login-page.png
-  The Berkeley authentication screen.
-  ```
-
-  ```{note}
-  The JupyterHub usernames will be the **email address** that users provide when authenticating with an institutional identity provider. It will not be the CILogon `user_id`! This is because the `USERNAME_KEY` used for the CILogon login is the email address.
-  ```
-
-## JupyterHub CILogonOAuthenticator
+2i2c manages CILogon using the JupyterHub CILogonOAuthenticator.
 
 The steps to enable the JupyterHub CILogonOAuthenticator for a hub are similar with the ones for enabling [GitHubOAuthenticator](auth:github-orgs):
 
