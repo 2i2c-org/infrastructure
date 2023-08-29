@@ -106,7 +106,7 @@ be made here.
     You can check the [CILogon scopes section](https://www.cilogon.org/oidc#h.p_PEQXL8QUjsQm) to checkout available values for `username_claim`. This *cannot* be changed afterwards without manual migration of user names, so choose this carefully.
     ```
 
-## Other most common CILogon configurations across 2i2c hubs
+## Other common CILogon configurations across 2i2c hubs
 
 ### Authenticate using GitHub
 
