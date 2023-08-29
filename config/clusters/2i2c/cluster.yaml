@@ -75,14 +75,6 @@ hubs:
       - daskhub-common.values.yaml
       - ohw.values.yaml
       - enc-ohw.secret.values.yaml
-  - name: pfw
-    display_name: "Purdue Fort Wayne"
-    domain: pfw.pilot.2i2c.cloud
-    helm_chart: basehub
-    helm_chart_values_files:
-      - basehub-common.values.yaml
-      - pfw.values.yaml
-      - enc-pfw.secret.values.yaml
   - name: aup
     display_name: "The American University of Paris"
     domain: aup.pilot.2i2c.cloud
