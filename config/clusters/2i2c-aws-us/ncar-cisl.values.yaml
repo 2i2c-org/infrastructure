@@ -2,18 +2,6 @@ basehub:
   userServiceAccount:
     annotations:
       eks.amazonaws.com/role-arn: arn:aws:iam::790657130469:role/2i2c-aws-us-ncar-cisl
-  nfs:
-    pv:
-      # from https://docs.aws.amazon.com/efs/latest/ug/mounting-fs-nfs-mount-settings.html
-      mountOptions:
-        - rsize=1048576
-        - wsize=1048576
-        - timeo=600
-        - soft # We pick soft over hard, so NFS lockups don't lead to hung processes
-        - retrans=2
-        - noresvport
-      serverIP: fs-0b70db2b65209a77d.efs.us-west-2.amazonaws.com
-      baseShareName: /
   jupyterhub:
     ingress:
       hosts: [ncar-cisl.2i2c.cloud]
