@@ -697,6 +697,8 @@ jupyterhub:
               )
           c.Spawner.pre_spawn_hook = ensure_db_pvc
       05-gh-teams: |
+        import copy
+
         from textwrap import dedent
         from tornado import gen, web
         from oauthenticator.github import GitHubOAuthenticator
@@ -745,8 +747,10 @@ jupyterhub:
             print(f"User {spawner.user.name} is part of teams {' '.join(teams)}")
             allowed_profiles = []
 
-
-            for profile in original_profile_list:
+            # Make a copy of the original profile_list dict,
+            # otherwise we might end up modifying it by mistake
+            profile_list_copy = copy.deepcopy(original_profile_list)
+            for profile in profile_list_copy:
               # If there is no ':' in allowed_teams, it's an org and we should check that
               # differently
               allowed_orgs = set([o for o in profile.get('allowed_teams', []) if ':' not in o])
