@@ -8,4 +8,5 @@ issues that may arise.
 logs.md
 ssh.md
 prometheus.md
+cilogon-user-accounts.md
 ```
