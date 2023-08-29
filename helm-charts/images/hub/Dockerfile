@@ -17,9 +17,9 @@ ARG REQUIREMENTS_FILE
 
 COPY ${REQUIREMENTS_FILE} /tmp/
 
+USER root
 RUN pip install -r /tmp/${REQUIREMENTS_FILE}
 
-USER root
 RUN mkdir -p /usr/local/etc/jupyterhub-configurator
 
 COPY jupyterhub_configurator_config.py /usr/local/etc/jupyterhub-configurator/jupyterhub_configurator_config.py
