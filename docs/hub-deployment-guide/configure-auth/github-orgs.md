@@ -162,6 +162,7 @@ You will **still** require admin access to the org to carry out those steps.
 
 Once you have confirmed with the Community Representative that users can login, you can remove yourself from the org.
 
+(auth:github-orgs:profile-list)=
 ## Restricting user profiles based on GitHub Team Membership
 
 JupyterHub has support for using [profileList](https://zero-to-jupyterhub.readthedocs.io/en/latest/jupyterhub/customizing/user-environment.html#using-multiple-profiles-to-let-users-select-their-environment)

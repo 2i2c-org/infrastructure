@@ -32,3 +32,32 @@ jupyterhub:
                     image: "pangeo/pangeo-notebook:2023.05.18"
                 pangeo_old: (...)
 ```
+
+## Allow members of a particular github team only to test custom images
+
+In some hubs, we don't want *everyone* to be able to specify an image - but
+we do want some subset of users to be able to do so, for testing
+purposes. This can be done by coupling `unlisted_choice` with
+[`allowed_teams`](auth:github-orgs:profile-list).
+
+In the `profileList` for the hub in question, add a profile like this:
+
+```yaml
+        - display_name: "Test custom image"
+          description: Test any custom image before rolling it out to rest of your users
+          slug: custom-image-only
+          allowed_teams:
+            - 2i2c-org:hub-access-for-2i2c-staff
+            - <other-github-teams>
+          profile_options:
+            image:
+              display_name: Image
+              unlisted_choice:
+                enabled: True
+                display_name: "Custom image"
+                validation_regex: "^.+:.+$"
+                validation_message: "Must be an image location, matching ^.+:.+$"
+                kubespawner_override:
+                  image: "{value}"
+              choices: {}
+```
