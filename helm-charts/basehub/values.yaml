@@ -41,6 +41,7 @@ nfs:
     enabled: true
     tolerations: []
   pv:
+    enabled: true
     mountOptions:
       - soft
       - noatime
