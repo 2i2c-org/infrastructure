@@ -15,6 +15,7 @@ hubs:
     domain: staging.aws.2i2c.cloud
     helm_chart: basehub
     helm_chart_values_files:
+      - basehub-common.values.yaml
       - staging.values.yaml
       - enc-staging.secret.values.yaml
   - name: dask-staging
