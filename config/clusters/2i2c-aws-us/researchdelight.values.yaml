@@ -40,6 +40,9 @@ basehub:
             name: 2i2c
             url: https://2i2c.org
     hub:
+      image:
+        name: quay.io/2i2c/unlisted-choice-experiment
+        tag: "0.0.1-0.dev.git.6801.h3f4f0c4a"
       config:
         JupyterHub:
           authenticator_class: cilogon
@@ -61,6 +64,13 @@ basehub:
           profile_options: &profile_options
             image:
               display_name: Image
+              unlisted_choice:
+                enabled: True
+                display_name: "Custom image"
+                validation_regex: "^.+:.+$"
+                validation_message: "Must be an image location, matching ^.+:.+$"
+                kubespawner_override:
+                  image: "{value}"
               choices:
                 pangeo:
                   display_name: Pangeo Notebook
