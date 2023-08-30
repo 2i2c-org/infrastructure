@@ -140,6 +140,14 @@ hubs:
       - common.values.yaml
       - sbcc.values.yaml
       - enc-sbcc.secret.values.yaml
+  - name: sbcc-dev
+    display_name: "Santa Barbara City College Dev"
+    domain: sbcc-dev.cloudbank.2i2c.cloud
+    helm_chart: basehub
+    helm_chart_values_files:
+      - common.values.yaml
+      - sbcc-dev.values.yaml
+      - enc-sbcc-dev.secret.values.yaml
   - name: lacc
     display_name: "Los Angeles City College"
     domain: lacc.cloudbank.2i2c.cloud
