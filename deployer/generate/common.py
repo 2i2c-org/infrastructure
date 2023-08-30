@@ -11,11 +11,11 @@ from ..utils import print_colour
 REPO_ROOT = Path(__file__).parent.parent.parent
 
 
-def generate_cluster_config_file(cluster_config_directory, vars):
+def generate_cluster_config_file(cluster_config_directory, provider, vars):
     """
     Generates the `config/<cluster_name>/cluster.yaml` config
     """
-    with open(REPO_ROOT / "config/clusters/templates/gcp/cluster.yaml") as f:
+    with open(REPO_ROOT / f"config/clusters/templates/{provider}/cluster.yaml") as f:
         cluster_yaml_template = jinja2.Template(f.read())
     with open(cluster_config_directory / "cluster.yaml", "w") as f:
         f.write(cluster_yaml_template.render(**vars))
@@ -71,12 +71,8 @@ def generate_support_files(cluster_config_directory, vars):
 
 def generate_config_directory(vars):
     """
-    Generates the required `config` directory for hubs on a GCP cluster
-
-    Generates the following files:
-    - `config/<cluster_name>/cluster.yaml`
-    - `config/<cluster_name>/support.values.yaml`
-    - `config/<cluster_name>/enc-support.secret.values.yaml`
+    Generates the required `config` directory for hubs on a cluster if it doesn't exit
+    and returns its name.
     """
     cluster_config_directory = REPO_ROOT / "config/clusters" / vars["cluster_name"]
 

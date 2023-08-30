@@ -71,7 +71,7 @@ def generate_gcp_cluster(
     cluster_config_directory = generate_config_directory(vars)
 
     # Create the cluster config directory and initial `cluster.yaml` file
-    generate_cluster_config_file(cluster_config_directory, vars)
+    generate_cluster_config_file(cluster_config_directory, "gcp", vars)
 
     # Generate the support files
     generate_support_files(cluster_config_directory, vars)
