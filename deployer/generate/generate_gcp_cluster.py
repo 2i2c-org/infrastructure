@@ -11,6 +11,7 @@ Generates the following files:
 """
 import jinja2
 import typer
+from typing_extensions import Annotated
 
 from ..cli_app import app
 from ..utils import print_colour
@@ -43,20 +44,28 @@ def generate_terraform_file(vars):
 
 @app.command()
 def generate_gcp_cluster(
-    cluster_name: str = typer.Option(..., prompt="Name of the cluster"),
-    cluster_region: str = typer.Option(..., prompt="Cluster region"),
-    project_id: str = typer.Option(..., prompt="Project ID of the GCP project"),
-    hub_type: str = typer.Option(
-        ..., prompt="Type of hub. Choose from `basehub` or `daskhub`"
-    ),
-    hub_name: str = typer.Option(..., prompt="Name of the first hub"),
+    cluster_name: Annotated[
+        str, typer.Option(prompt="Please type the name of the new cluster")
+    ],
+    project_id: Annotated[
+        str, typer.Option(prompt="Please insert the Project ID of the GCP project")
+    ],
+    hub_name: Annotated[
+        str,
+        typer.Option(
+            prompt="Please insert the name of first hub to add to the cluster"
+        ),
+    ],
+    cluster_region: Annotated[
+        str, typer.Option(prompt="Please insert the name of the cluster region")
+    ] = "us-central1",
+    hub_type: Annotated[
+        str, typer.Option(prompt="Please insert the hub type of the first hub")
+    ] = "basehub",
 ):
     """
     Automatically generates the initial files, required to setup a new cluster on GCP
     """
-    # Automatically generate the terraform config file
-    generate_terraform_file(cluster_name, cluster_region, project_id, hub_type)
-
     # These are the variables needed by the templates used to generate the cluster config file
     # and support files
     vars = {
@@ -66,6 +75,9 @@ def generate_gcp_cluster(
         "project_id": project_id,
         "hub_name": hub_name,
     }
+
+    # Automatically generate the terraform config file
+    generate_terraform_file(vars)
 
     # Automatically generate the config directory
     cluster_config_directory = generate_config_directory(vars)
