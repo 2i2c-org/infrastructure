@@ -52,6 +52,8 @@ jupyterhub:
               - "berkeley.edu"
               - "sjcc.edu"
               - "stu.sjcc.edu"
+              - "stu.evc.edu"
+              - "evc.edu"
           urn:mace:incommon:berkeley.edu:
             username_derivation:
               username_claim: "email"
