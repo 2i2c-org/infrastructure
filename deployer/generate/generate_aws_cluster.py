@@ -1,24 +1,24 @@
+"""
+Generate required files for an AWS cluster
+
+Generates:
+- an eksctl jsonnet file
+- a .tfvars file
+- An ssh-key (the private part is encrypted)
+"""
 import os
 import subprocess
-from pathlib import Path
 
 import jinja2
 import typer
 
 from ..cli_app import app
+from ..utils import print_colour
+from .common import REPO_ROOT, generate_config_directory, generate_support_files
 
-REPO_ROOT = Path(__file__).parent.parent.parent
 
-
-def aws(cluster_name, hub_type, cluster_region):
-    """
-    Generate required files for an AWS cluster
-
-    Generates:
-    - an eksctl jsonnet file
-    - a .tfvars file
-    - An ssh-key (the private part is encrypted)
-    """
+def generate_infra_files(vars):
+    cluster_name = vars["cluster_name"]
     with open(REPO_ROOT / "eksctl/template.jsonnet") as f:
         # jsonnet files have `}}` in there, which causes jinja2 to
         # freak out. So we use different delimiters.
@@ -31,22 +31,20 @@ def aws(cluster_name, hub_type, cluster_region):
             variable_end_string=">>",
         )
 
+    print_colour("Generating the eksctl jsonnet file...", "yellow")
+    jsonnet_file_path = REPO_ROOT / "eksctl" / f"{cluster_name}.jsonnet"
+    with open(jsonnet_file_path, "w") as f:
+        f.write(jsonnet_template.render(**vars))
+    print_colour(f"{jsonnet_file_path} created")
+
+    print_colour("Generating the terraform infrastructure file...", "yellow")
     with open(REPO_ROOT / "terraform/aws/projects/template.tfvars") as f:
         tfvars_template = jinja2.Template(f.read())
 
-    vars = {
-        "cluster_name": cluster_name,
-        "hub_type": hub_type,
-        "cluster_region": cluster_region,
-    }
-
-    with open(REPO_ROOT / "eksctl" / f"{cluster_name}.jsonnet", "w") as f:
-        f.write(jsonnet_template.render(**vars))
-
-    with open(
-        REPO_ROOT / "terraform/aws/projects" / f"{cluster_name}.tfvars", "w"
-    ) as f:
+    tfvars_file_path = REPO_ROOT / "terraform/aws/projects" / f"{cluster_name}.tfvars"
+    with open(tfvars_file_path, "w") as f:
         f.write(tfvars_template.render(**vars))
+    print_colour(f"{tfvars_file_path} created")
 
     subprocess.check_call(
         [
@@ -89,4 +87,19 @@ def generate_aws_cluster(
     """
     Automatically generate the files required to setup a new cluster on AWS
     """
-    aws(cluster_name, hub_type, cluster_region)
+
+    # These are the variables needed by the templates used to generate the cluster config file
+    # and support files
+    vars = {
+        "cluster_name": cluster_name,
+        "hub_type": hub_type,
+        "cluster_region": cluster_region,
+    }
+
+    generate_infra_files(vars)
+
+    # Automatically generate the config directory
+    cluster_config_directory = generate_config_directory(vars)
+
+    # Generate the support files
+    generate_support_files(cluster_config_directory, vars)
