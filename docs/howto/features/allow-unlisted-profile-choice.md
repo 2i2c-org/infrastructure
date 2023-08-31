@@ -20,7 +20,7 @@ jupyterhub:
                 enabled: True
                 display_name: "Custom image"
                 validation_regex: "^.+:.+$"
-                validation_message: "Must be an image location, matching ^.+:.+$"
+                validation_message: "Must be a publicly available docker image, of form <image-name>:<tag>"
                 kubespawner_override:
                   image: "{value}"
               choices:
@@ -56,7 +56,7 @@ In the `profileList` for the hub in question, add a profile like this:
                 enabled: True
                 display_name: "Custom image"
                 validation_regex: "^.+:.+$"
-                validation_message: "Must be an image location, matching ^.+:.+$"
+                validation_message: "Must be a publicly available docker image, of form <image-name>:<tag>"
                 kubespawner_override:
                   image: "{value}"
               choices: {}
