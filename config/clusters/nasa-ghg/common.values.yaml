@@ -19,9 +19,9 @@ basehub:
       homepage:
         templateVars:
           org:
-            name: "NASA Green House Gases Center"
-            logo_url: https://raw.githubusercontent.com/US-GHG-Center/ghgc-docs/87204d4a4e5f29c335a8f905c73de551aabd4845/Logo/ghg-logo.svg
-            url: https://www.nasa.gov/emd/ghg
+            name: "U.S. Greenhouse Gas Center"
+            logo_url: https://raw.githubusercontent.com/US-GHG-Center/ghgc-docs/b818ba6fdd3c43ede04b110975bf39d248c40df6/Logo/ghg-logo.svg
+            url: https://www.earthdata.nasa.gov
           designed_by:
             name: "2i2c"
             url: https://2i2c.org
