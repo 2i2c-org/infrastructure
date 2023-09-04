@@ -698,22 +698,27 @@ jupyterhub:
               )
           c.Spawner.pre_spawn_hook = ensure_db_pvc
       05-gh-teams: |
+        # Re-assignes c.KubeSpawner.profile_list to a callable that filters the
+        # initial configuration of profile_list based on the user's github
+        # org/team membership as declared via "allowed_teams" read from
+        # profile_list profiles.
+        #
+        # This is only done if:
+        # - GitHubOAuthenticator is used
+        # - GitHubOAuthenticator.populate_teams_in_auth_state is True
+        #
         import copy
 
         from textwrap import dedent
-        from tornado import gen, web
+        from tornado import web
         from oauthenticator.github import GitHubOAuthenticator
 
-        # Make a copy of the original profile_list, as that is the data we will work with
         original_profile_list = c.KubeSpawner.profile_list
 
-        # This has to be a gen.coroutine, not async def! Kubespawner uses gen.maybe_future to
-        # run this, and that only seems to recognize tornado coroutines, not async functions!
-        # We can convert this to async def once that has been fixed upstream.
-        @gen.coroutine
-        def custom_profile_list(spawner):
+        async def profile_list_allowed_teams_filter(spawner):
             """
-            Dynamically set allowed list of user profiles based on GitHub teams user is part of.
+            Returns the initially configured profile_list filtered based on if
+            the spawning user is part the profiles' specified GitHub org/teams.
 
             Adds a 'allowed_teams' key to profile_list, with a list of GitHub teams (of the form
             org-name:team-name) for which the profile is made available.
@@ -728,17 +733,17 @@ jupyterhub:
             # If populate_teams_in_auth_state is not set, github teams are not fetched
             # So we just don't do any of this filtering, and let anyone into everything
             if spawner.authenticator.populate_teams_in_auth_state == False:
-              return original_profile_list
+                return original_profile_list
 
-            auth_state = yield spawner.user.get_auth_state()
+            auth_state = await spawner.user.get_auth_state()
 
             if not auth_state or "teams" not in auth_state:
-              if spawner.user.name == 'deployment-service-check':
-                # For our hub deployer health checker, ignore all this logic
-                print("Ignoring allowed_teams check for deployment-service-check")
-                return original_profile_list
-              print(f"User {spawner.user.name} does not have any auth_state set")
-              raise web.HTTPError(403)
+                if spawner.user.name == 'deployment-service-check':
+                    # For our hub deployer health checker, ignore all this logic
+                    print("Ignoring allowed_teams check for deployment-service-check")
+                    return original_profile_list
+                print(f"User {spawner.user.name} does not have any auth_state set")
+                raise web.HTTPError(403)
 
             # Make a list of team names of form org-name:team-name
             # This is the same syntax used by allowed_organizations traitlet of GitHubOAuthenticator
@@ -752,41 +757,41 @@ jupyterhub:
             # otherwise we might end up modifying it by mistake
             profile_list_copy = copy.deepcopy(original_profile_list)
             for profile in profile_list_copy:
-              # If there is no ':' in allowed_teams, it's an org and we should check that
-              # differently
-              allowed_orgs = set([o for o in profile.get('allowed_teams', []) if ':' not in o])
-              allowed_teams = set([t for t in profile.get('allowed_teams', []) if ':' in t])
+                # If there is no ':' in allowed_teams, it's an org and we should check that
+                # differently
+                allowed_orgs = set([o for o in profile.get('allowed_teams', []) if ':' not in o])
+                allowed_teams = set([t for t in profile.get('allowed_teams', []) if ':' in t])
 
-              # Keep the profile is the user is part of *any* team listed in allowed_teams
-              # If allowed_teams is empty or not set, it'll not be accessible to *anyone*
-              if allowed_teams & teams:
-                allowed_profiles.append(profile)
-                print(f"Allowing profile {profile['display_name']} for user {spawner.user.name} based on team membership")
-              elif allowed_orgs:
-                for org in allowed_orgs:
-                  user_in_org = yield spawner.authenticator._check_membership_allowed_organizations(
-                      org, spawner.user.name, auth_state['access_token']
-                  )
-                  if user_in_org:
+                # Keep the profile is the user is part of *any* team listed in allowed_teams
+                # If allowed_teams is empty or not set, it'll not be accessible to *anyone*
+                if allowed_teams & teams:
                     allowed_profiles.append(profile)
-                    print(f"Allowing profile {profile['display_name']} for user {spawner.user.name} based on org membership")
-                    break
-              else:
-                print(f"Dropping profile {profile['display_name']} for user {spawner.user.name}")
+                    print(f"Allowing profile {profile['display_name']} for user {spawner.user.name} based on team membership")
+                elif allowed_orgs:
+                    for org in allowed_orgs:
+                      user_in_org = await spawner.authenticator._check_membership_allowed_organizations(
+                          org, spawner.user.name, auth_state['access_token']
+                      )
+                      if user_in_org:
+                          allowed_profiles.append(profile)
+                          print(f"Allowing profile {profile['display_name']} for user {spawner.user.name} based on org membership")
+                          break
+                else:
+                    print(f"Dropping profile {profile['display_name']} for user {spawner.user.name}")
 
             if len(allowed_profiles) == 0:
-              # If no profiles are allowed, user should not be able to spawn anything!
-              # If we don't explicitly stop this, user will be logged into the 'default' settings
-              # set in singleuser, without any profile overrides. Not desired behavior
-              # FIXME: User doesn't actually see this error message, just the generic 403.
-              error_msg = dedent(f"""
-              Your GitHub team membership is insufficient to launch any server profiles.
+                # If no profiles are allowed, user should not be able to spawn anything!
+                # If we don't explicitly stop this, user will be logged into the 'default' settings
+                # set in singleuser, without any profile overrides. Not desired behavior
+                # FIXME: User doesn't actually see this error message, just the generic 403.
+                error_msg = dedent(f"""
+                Your GitHub team membership is insufficient to launch any server profiles.
 
-              GitHub teams you are a member of that this JupyterHub knows about are {', '.join(teams)}.
+                GitHub teams you are a member of that this JupyterHub knows about are {', '.join(teams)}.
 
-              If you are part of additional teams, log out of this JupyterHub and log back in to refresh that information.
-              """)
-              raise web.HTTPError(403, error_msg)
+                If you are part of additional teams, log out of this JupyterHub and log back in to refresh that information.
+                """)
+                raise web.HTTPError(403, error_msg)
 
             return allowed_profiles
 
@@ -796,7 +801,7 @@ jupyterhub:
         if c.KubeSpawner.profile_list:
             # Customize list of profiles dynamically, rather than override options form.
             # This is more secure, as users can't override the options available to them via the hub API
-            c.KubeSpawner.profile_list = custom_profile_list
+            c.KubeSpawner.profile_list = profile_list_allowed_teams_filter
 
       06-salted-username: |
         # Allow anonymizing username to not store *any* PII
