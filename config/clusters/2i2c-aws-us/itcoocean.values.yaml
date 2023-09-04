@@ -113,11 +113,15 @@ jupyterhub:
               geospatial-python-tensorflow:
                 display_name: Geospatial Python with tensorflow
                 kubespawner_override:
-                  image: eeholmes/iopython:20230714
+                  image: eeholmes/iopython-tf:20230901
+              geospatial-python-openscapes:
+                display_name: Openscapes Python
+                kubespawner_override:
+                  image: openscapes/python:f577786
               geospatial-python-normal:
                 display_name: Geospatial Python
                 kubespawner_override:
-                  image: openscapes/python:f577786
+                  image: eeholmes/iopython:20230901
               geospatial-r-normal:
                 display_name: Geospatial R
                 kubespawner_override:
@@ -126,7 +130,7 @@ jupyterhub:
                 default: true
                 display_name: Geospatial R with SDM
                 kubespawner_override:
-                  image: eeholmes/iorocker:20230714
+                  image: eeholmes/iorocker:20230901
           requests:
             # NOTE: Node share choices are in active development, see comment
             #       next to profileList: above.
