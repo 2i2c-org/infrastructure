@@ -12,7 +12,7 @@ enable_network_policy = true
 regional_cluster = false
 
 enable_filestore      = true
-filestore_capacity_gb = 4096
+filestore_capacity_gb = 5120
 
 notebook_nodes = {
   "user" : {
