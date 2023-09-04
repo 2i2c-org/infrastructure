@@ -102,6 +102,11 @@ jupyterhub:
       #         16 CPU node: 0.9375
       #         64 CPU node: 0.984375
       #
+      #       - Memory limits are setup conservatively to protect users from
+      #         acquiring a false belief that what memory request they have made
+      #         has been sufficient. This helps users tune their resource
+      #         requests before events.
+      #
       - display_name: "Small: up to 4 CPU / 32 GB RAM"
         description: &profile_list_description "Start a container with at least a chosen share of capacity on a node of this type"
         slug: small
@@ -141,31 +146,37 @@ jupyterhub:
                 display_name: ~1 GB, ~0.125 CPU
                 kubespawner_override:
                   mem_guarantee: 0.836G
+                  mem_limit: 1G
                   cpu_guarantee: 0.094
               mem_2:
                 display_name: ~2 GB, ~0.25 CPU
                 kubespawner_override:
                   mem_guarantee: 1.671G
+                  mem_limit: 2G
                   cpu_guarantee: 0.188
               mem_4:
                 display_name: ~4 GB, ~0.5 CPU
                 kubespawner_override:
                   mem_guarantee: 3.342G
+                  mem_limit: 4G
                   cpu_guarantee: 0.375
               mem_8:
                 display_name: ~8 GB, ~1.0 CPU
                 kubespawner_override:
                   mem_guarantee: 6.684G
+                  mem_limit: 8G
                   cpu_guarantee: 0.75
               mem_16:
                 display_name: ~16 GB, ~2.0 CPU
                 kubespawner_override:
                   mem_guarantee: 13.369G
+                  mem_limit: 16G
                   cpu_guarantee: 1.5
               mem_32:
                 display_name: ~32 GB, ~4.0 CPU
                 kubespawner_override:
                   mem_guarantee: 26.738G
+                  mem_limit: 32G
                   cpu_guarantee: 3.0
         kubespawner_override:
           cpu_limit: null
@@ -186,42 +197,50 @@ jupyterhub:
                 display_name: ~1 GB, ~0.125 CPU
                 kubespawner_override:
                   mem_guarantee: 0.903G
+                  mem_limit: 1G
                   cpu_guarantee: 0.117
               mem_2:
                 display_name: ~2 GB, ~0.25 CPU
                 kubespawner_override:
                   mem_guarantee: 1.805G
+                  mem_limit: 2G
                   cpu_guarantee: 0.234
               mem_4:
                 default: true
                 display_name: ~4 GB, ~0.5 CPU
                 kubespawner_override:
                   mem_guarantee: 3.611G
+                  mem_limit: 4G
                   cpu_guarantee: 0.469
               mem_8:
                 display_name: ~8 GB, ~1.0 CPU
                 kubespawner_override:
                   mem_guarantee: 7.222G
+                  mem_limit: 8G
                   cpu_guarantee: 0.938
               mem_16:
                 display_name: ~16 GB, ~2.0 CPU
                 kubespawner_override:
                   mem_guarantee: 14.444G
+                  mem_limit: 16G
                   cpu_guarantee: 1.875
               mem_32:
                 display_name: ~32 GB, ~4.0 CPU
                 kubespawner_override:
                   mem_guarantee: 28.887G
+                  mem_limit: 32G
                   cpu_guarantee: 3.75
               mem_64:
                 display_name: ~64 GB, ~8.0 CPU
                 kubespawner_override:
                   mem_guarantee: 57.775G
+                  mem_limit: 64G
                   cpu_guarantee: 7.5
               mem_128:
                 display_name: ~128 GB, ~16.0 CPU
                 kubespawner_override:
                   mem_guarantee: 115.549G
+                  mem_limit: 128G
                   cpu_guarantee: 15.0
         kubespawner_override:
           cpu_limit: null
