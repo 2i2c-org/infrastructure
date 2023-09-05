@@ -10,7 +10,7 @@ basehub:
           secretName: https-auto-tls
     custom:
       homepage:
-        gitRepoBranch: "master"
+        gitRepoBranch: "staging"
         gitRepoUrl: "https://github.com/US-GHG-Center/ghgc-hub-homepage"
     hub:
       config:
