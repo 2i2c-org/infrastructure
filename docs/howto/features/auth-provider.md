@@ -50,7 +50,7 @@ appropriate credentials to them so they can do so themselves.
        services:
          <name-of-service>:
            # This will be the client secret
-           api_key: <output-of-step-2> 
+           api_token: <output-of-step-2> 
    ```
            
 4. Commit and deploy this.
