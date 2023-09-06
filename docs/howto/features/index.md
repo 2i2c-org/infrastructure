@@ -52,6 +52,7 @@ See the sections below for more details.
 3. Authenticated static websites <static-sites.md>
 4. (default enabled) Configurator <https://docs.2i2c.org/admin/howto/configurator>
 5. (dedicated clusters only) Grafana <../..//topic/monitoring-alerting/grafana>
+6. Provide credentials for using the JupyterHub as an auth provider <auth-provider.md>
 ```
 
 ### Performance Layer
