@@ -10,10 +10,23 @@ basehub:
         - display_name: Python
           description: Python datascience environment
           default: true
-          kubespawner_override:
-            image: openscapes/python:06b0503
-          profile_options: &profile_options
-            requests:
+          profile_options:
+            image:
+              display_name: Image and Tag
+              unlisted_choice: &unlisted_choice
+                enabled: true
+                display_name: "Custom image"
+                validation_regex: "^.+:.+$"
+                validation_message: "Must be a publicly available docker image, of form <image-name>:<tag>"
+                kubespawner_override:
+                  image: "{value}"
+              choices:
+                default:
+                  display_name: openscapes/python:b2e79b7
+                  default: true
+                  kubespawner_override:
+                    image: openscapes/python:b2e79b7
+            requests: &requests_profile_options
               display_name: Resource Allocation
               choices:
                 mem_1_9:
@@ -82,15 +95,34 @@ basehub:
                       node.kubernetes.io/instance-type: r5.4xlarge
         - display_name: R
           description: R (with RStudio) + Python environment
-          kubespawner_override:
-            image: openscapes/rocker:a7596b5
-          profile_options: *profile_options
+          profile_options:
+            image:
+              display_name: Image and Tag
+              unlisted_choice: *unlisted_choice
+              choices:
+                default:
+                  display_name: openscapes/rocker:a7596b5
+                  default: true
+                  kubespawner_override:
+                    image: openscapes/rocker:a7596b5
+            requests: *requests_profile_options
         - display_name: Matlab
           description: Matlab environment
-          kubespawner_override:
-            image: openscapes/matlab:2023-06-29
-          profile_options: *profile_options
+          profile_options:
+            image:
+              display_name: Image and Tag
+              unlisted_choice: *unlisted_choice
+              choices:
+                default:
+                  display_name: openscapes/matlab:2023-06-29
+                  default: true
+                  kubespawner_override:
+                    image: openscapes/matlab:2023-06-29
+            requests: *requests_profile_options
     hub:
+      image:
+        name: quay.io/2i2c/unlisted-choice-experiment
+        tag: "0.0.1-0.dev.git.6863.h406a3546"
       config:
         JupyterHub:
           authenticator_class: cilogon
