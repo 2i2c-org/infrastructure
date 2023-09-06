@@ -22,10 +22,10 @@ basehub:
                   image: "{value}"
               choices:
                 default:
-                  display_name: openscapes/python:b2e79b7
+                  display_name: openscapes/python:06b0503
                   default: true
                   kubespawner_override:
-                    image: openscapes/python:b2e79b7
+                    image: openscapes/python:06b0503
             requests: &requests_profile_options
               display_name: Resource Allocation
               choices:
