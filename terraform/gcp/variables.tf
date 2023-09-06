@@ -309,6 +309,15 @@ variable "filestore_tier" {
   EOT
 }
 
+variable "filestore_alert_available_percent" {
+  type        = number
+  default     = 10
+  description = <<-EOT
+  % of free space in filestore available under which to fire an alert to pagerduty.
+  EOT
+}
+
+
 variable "enable_node_autoprovisioning" {
   type        = bool
   default     = false
