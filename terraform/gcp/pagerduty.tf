@@ -1,6 +1,18 @@
-data "sops_file" "pagerduty_integration_key" {
+/**
+* This file defines alerts and notification channels for sending information to
+* PagerDuty in order to trigger incidents. This relies on pre-registered
+* PagerDuty services with "stackdriver" integrations in 2i2c's PagerDuty
+* account.
+*
+* - PagerDuty services in 2i2c's PagerDuty account:
+*   https://2i2c-org.pagerduty.com/service-directory/?direction=asc&query=&team_ids=all
+* - GCP docs about managing notification channels:
+*   https://cloud.google.com/monitoring/support/notification-options
+*
+*/
+data "sops_file" "pagerduty_service_integration_keys" {
   # Read sops encrypted file containing integration key for pagerduty
-  source_file = "secret/enc-pagerduty-service-key.secret.yaml"
+  source_file = "secret/enc-pagerduty-service-integration-keys.secret.yaml"
 }
 
 resource "google_monitoring_notification_channel" "pagerduty_disk_space" {
@@ -8,7 +20,7 @@ resource "google_monitoring_notification_channel" "pagerduty_disk_space" {
   display_name = "PagerDuty Disk Space Alerts"
   type         = "pagerduty"
   sensitive_labels {
-    service_key = data.sops_file.pagerduty_integration_key.data["pagerduty.disk_space"]
+    service_key = data.sops_file.pagerduty_service_integration_keys.data["pagerduty_service_integration_keys.disk_space"]
   }
 }
 
