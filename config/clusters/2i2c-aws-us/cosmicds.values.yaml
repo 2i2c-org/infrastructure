@@ -46,11 +46,33 @@ jupyterhub:
       type: none
       extraVolumeMounts: []
   hub:
+    services:
+      # OAuth2 credentials for the CosmicDS portal, which uses
+      # this JupyterHub as authentication *provider*. So when users hit
+      # "Login" in the CosmicDS portal, they're actually redirected to this
+      # JupyterHub (via auth0). This ensures that the portal knows exactly
+      # the (anonymized) usernames of these users, and can do additional work
+      # on their part to track them as necessary.
+      cosmicds-portal:
+        # Don't display this service under 'services' in control panel
+        display: false
+        # Don't ask end user if they want to authorize this service explicitly
+        # This is a trusted service, and we are being used as *authentication*
+        # in this case.
+        oauth_no_confirm: true
+        name: cosmicds-portal
+        oauth_client_id: service-cosmicds-portal
+        # Callback URL for the auth0 tenant, provided to us by auth0
+        oauth_redirect_uri: https://dev-tbr72rd5whnwlyrg.us.auth0.com/login/callback
     config:
       Authenticator:
         admin_users:
           - nmearl
           - patudom
+        # When using JupyterHub as an auth *provider*, we don't want the
+        # end user to see the JupyterHub home page at all - just redirect
+        # them to the upstream auth provider (CILogon) directly.
+        auto_login_oauth2_authorize: true
       JupyterHub:
         authenticator_class: cilogon
       CILogonOAuthenticator:
