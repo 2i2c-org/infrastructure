@@ -63,7 +63,7 @@ appropriate credentials to them so they can do so themselves.
    client_secret: <api_key_from_step_3>
    authorization_url: https://<hub-domain>/hub/api/oauth2/authorize
    token_url: https://<hub-domain>/hub/api/oauth2/token
-   user_profile_url: https://<hub-domain>/hub/api/user
+   userinfo_url: https://<hub-domain>/hub/api/user
    ```
    
    In addition, the following pieces of information would be useful:
