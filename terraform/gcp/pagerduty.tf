@@ -20,7 +20,7 @@ resource "google_monitoring_notification_channel" "pagerduty_disk_space" {
   display_name = "PagerDuty Disk Space Alerts"
   type         = "pagerduty"
   sensitive_labels {
-    service_key = data.sops_file.pagerduty_service_integration_keys.data["pagerduty_service_integration_keys.disk_space"]
+    service_key = data.sops_file.pagerduty_service_integration_keys.data["disk_space"]
   }
 }
 
