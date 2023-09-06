@@ -5,7 +5,7 @@ often just to use JupyterHub as an OAuth2 provider for user logins. This
 allows them to have the same shared users between the hub and their 
 service.
 
-2i2c can not support such external services, but we will provide
+2i2c can not manage such external services, but we will provide
 appropriate credentials to them so they can do so themselves.
 
 ## Setting up service credentials
