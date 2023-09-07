@@ -19,7 +19,7 @@ on:
 # https://github.blog/changelog/2021-04-19-github-actions-limit-workflow-run-or-job-concurrency/
 concurrency: uptime-checks
 
-# This environment variable triggers the deployer to colourise print statments in the
+# This environment variable triggers the deployer to colourise print statements in the
 # GitHub Actions logs for easy reading
 env:
   TERM: xterm
