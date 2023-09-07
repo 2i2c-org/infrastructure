@@ -60,6 +60,6 @@ of a project. We set the environment variable `PERSISTENT_BUCKET` to the form
 `<s3 or gcs>://<bucket-name>/<user-name>` so users can put stuff in this.
 
 ```{warning}
-Objects put in `PERSISTENT_BUCKET` *must* be deleted by the users when no logner in use
+Objects put in `PERSISTENT_BUCKET` *must* be deleted by the users when no longer in use
 to prevent cost overruns! This *can not* be managed by 2i2c.
 ```

@@ -119,7 +119,7 @@ Namecheap.com](https://ap.www.namecheap.com/Domains/DomainControlPanel/2i2c.clou
 2. `*.<cluster-name>`, for all other hubs, grafana and prometheus
    instances.
 
-Use an `A` record when we point to an external IP addresse (GCP, Azure), and a
+Use an `A` record when we point to an external IP address (GCP, Azure), and a
 `CNAME` record when we point to another domain (AWS).
 
 ```{note}

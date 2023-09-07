@@ -267,7 +267,7 @@ variable "user_buckets" {
   'delete_after' specifies the number of days after which any content
   in the bucket will be deleted. Set to null to not delete data.
 
-  'extra_admin_members' describes extra identies (user groups, user accounts,
+  'extra_admin_members' describes extra identities (user groups, user accounts,
   service accounts, etc) that will have *full* access to this bucket. This
   is primarily useful for moving data into and out of buckets from outside
   the cloud. See https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/storage_bucket_iam#member/members
