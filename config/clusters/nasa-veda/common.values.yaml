@@ -121,7 +121,7 @@ basehub:
                   display_name: Rocker Geospatial with RStudio
                   slug: rocker
                   kubespawner_override:
-                    image: rocker/geospatial:geospatial_unstable
+                    image: rocker/geospatial:unstable
                     # Launch RStudio after the user logs in
                     default_url: /rstudio
                     # Ensures container working dir is homedir
