@@ -15,9 +15,9 @@ from pathlib import Path
 import requests
 import typer
 
-from ..cli_app import app
+from ..cli_app import grafana_app
 from ..utils import print_colour
-from .grafana_utils import (
+from .utils import (
     get_grafana_admin_password,
     get_grafana_url,
     update_central_grafana_token,
@@ -156,8 +156,8 @@ def create_deployer_token(sa_endpoint, sa_id, headers):
     return response.json()["key"]
 
 
-@app.command()
-def new_grafana_token(
+@grafana_app.command()
+def new_token(
     cluster=typer.Argument(
         ...,
         help="Name of cluster for who's Grafana deployment to generate a new deployer token",

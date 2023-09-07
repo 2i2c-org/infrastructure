@@ -4,7 +4,7 @@ import pandas as pd
 from google.cloud import bigquery
 from prometheus_pandas import query
 
-from ...grafana.grafana_utils import get_cluster_prometheus
+from ...grafana.utils import get_cluster_prometheus
 
 
 def build_gcp_query(cluster: dict, service_id=None):

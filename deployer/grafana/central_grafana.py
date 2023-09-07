@@ -14,10 +14,10 @@ import requests
 import typer
 from ruamel.yaml import YAML
 
-from ..cli_app import app
+from ..cli_app import grafana_app
 from ..helm_upgrade_decision import get_all_cluster_yaml_files
 from ..utils import print_colour
-from .grafana_utils import (
+from .utils import (
     get_cluster_prometheus_address,
     get_cluster_prometheus_creds,
     get_grafana_token,
@@ -97,8 +97,8 @@ def get_clusters_used_as_datasources(cluster_name, datasource_endpoint):
     return [datasource["name"] for datasource in datasources]
 
 
-@app.command()
-def update_central_grafana_datasources(
+@grafana_app.command()
+def update_central_datasources(
     central_grafana_cluster=typer.Option(
         "2i2c", help="Name of cluster where the central grafana lives"
     )

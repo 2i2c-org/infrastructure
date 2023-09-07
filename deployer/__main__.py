@@ -9,7 +9,8 @@ import deployer.generate.billing.app  # noqa: F401
 import deployer.generate.dedicated_cluster.aws  # noqa: F401
 import deployer.generate.dedicated_cluster.gcp  # noqa: F401
 import deployer.grafana.central_grafana  # noqa: F401
-import deployer.grafana.grafana_tokens  # noqa: F401
+import deployer.grafana.deploy_dashboards  # noqa: F401
+import deployer.grafana.tokens  # noqa: F401
 import deployer.keys.decrypt_age  # noqa: F401
 
 from .cli_app import app
