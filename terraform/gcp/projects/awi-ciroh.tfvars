@@ -5,7 +5,7 @@ region                 = "us-central1"
 core_node_machine_type = "n2-highmem-4"
 enable_network_policy  = true
 enable_filestore       = true
-filestore_capacity_gb  = 1024
+filestore_capacity_gb  = 1536
 
 k8s_versions = {
   min_master_version : "1.25.8-gke.500",
