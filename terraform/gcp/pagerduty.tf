@@ -26,7 +26,7 @@ resource "google_monitoring_notification_channel" "pagerduty_disk_space" {
 
 resource "google_monitoring_alert_policy" "disk_space_full_alert" {
 
-  display_name = "Disk Space 80% full on ${var.project_id}"
+  display_name = "Available disk space < ${var.filestore_alert_available_percent}% on ${var.project_id}"
   combiner     = "OR"
 
   conditions {
@@ -35,12 +35,12 @@ resource "google_monitoring_alert_policy" "disk_space_full_alert" {
       # Alert based on free bytes left on the filesystem
       filter   = <<-EOT
       resource.type = "filestore_instance"
-      AND metric.type = "file.googleapis.com/nfs/server/free_bytes"
+      AND metric.type = "file.googleapis.com/nfs/server/free_bytes_percent"
       EOT
       duration = "300s"
 
-      # Trigger if free space is < 512GB
-      threshold_value = 549755813888
+      # Trigger if free space is < 10%
+      threshold_value = var.filestore_alert_available_percent
       comparison      = "COMPARISON_LT"
 
       aggregations {
