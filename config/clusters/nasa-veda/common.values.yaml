@@ -61,6 +61,27 @@ basehub:
         # Based off pangeo/pangeo-notebook:2023.07.05 which uses JupyterLab <4, so jupyterlab-git and dask-dashboard work
         # If updating this tag, also update it in the profile_options section below
         tag: "b807c7efa97c8df9ca38779f7e59d09f889fde9299b0d19de80389cf6b064f90"
+      extraFiles:
+        k8s-lifecycle-hook-post-start.sh:
+          mountPath: "/etc/singleuser/k8s-lifecycle-hook-post-start.sh"
+          stringData: |
+            #/bin/bash
+            echo "pulling /veda-docs.."
+            /srv/conda/envs/notebook/bin/gitpuller https://github.com/NASA-IMPACT/veda-docs/ main /home/jovyan/veda-doc-examples || true
+            echo "successfully pulled /veda-docs.."
+      storage:
+        capacity: "10Mi"
+        extraVolumes:
+          - name: user-etc-singleuser
+        extraVolumeMounts:
+          - name: user-etc-singleuser
+            mountPath: /etc/singleuser
+      lifecycleHooks:
+        postStart:
+          exec:
+            command:
+              - "bash"
+              - "/etc/singleuser/k8s-lifecycle-hook-post-start.sh"
       profileList:
         # NOTE: About node sharing
         #
