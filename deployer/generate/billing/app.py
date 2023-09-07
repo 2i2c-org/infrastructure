@@ -5,16 +5,19 @@ import typer
 from dateutil.relativedelta import relativedelta
 from ruamel.yaml import YAML
 
-from ..cli_app import app
-from ..helm_upgrade_decision import get_all_cluster_yaml_files
+from ...cli_app import generate_app
+from ...helm_upgrade_decision import get_all_cluster_yaml_files
 from .importers import get_cluster_costs
 from .outputers import CostTableOutputFormats, output_cost_table
 
 yaml = YAML(typ="safe", pure=True)
 
+cost_app = typer.Typer(pretty_exceptions_show_locals=False)
+generate_app.add_typer(cost_app, name="billing")
 
-@app.command()
-def generate_cost_table(
+
+@cost_app.command()
+def cost_table(
     start_month: datetime = typer.Option(
         (datetime.utcnow() - relativedelta(months=3)).replace(day=1),
         help="Starting month (as YYYY-MM) to produce cost data for. Defaults to 3 invoicing months ago.",

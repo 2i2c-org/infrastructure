@@ -13,8 +13,8 @@ import jinja2
 import typer
 from typing_extensions import Annotated
 
-from ..cli_app import app
-from ..utils import print_colour
+from ...utils import print_colour
+from .app import dedicated_cluster_app
 from .common import (
     REPO_ROOT,
     generate_cluster_config_file,
@@ -42,8 +42,8 @@ def generate_terraform_file(vars):
     print_colour(f"{tfvars_file_path} created")
 
 
-@app.command()
-def generate_gcp_cluster(
+@dedicated_cluster_app.command()
+def gcp(
     cluster_name: Annotated[
         str, typer.Option(prompt="Please type the name of the new cluster")
     ],

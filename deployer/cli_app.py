@@ -10,3 +10,6 @@ import typer
 # The typer app to which all subcommands are attached
 # Disable 'pretty' exception handling
 app = typer.Typer(pretty_exceptions_show_locals=False)
+
+generate_app = typer.Typer(pretty_exceptions_show_locals=False)
+app.add_typer(generate_app, name="generate")

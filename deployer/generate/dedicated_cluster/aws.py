@@ -12,8 +12,8 @@ import subprocess
 import jinja2
 import typer
 
-from ..cli_app import app
-from ..utils import print_colour
+from ...utils import print_colour
+from .app import dedicated_cluster_app
 from .common import REPO_ROOT, generate_config_directory, generate_support_files
 
 
@@ -74,8 +74,8 @@ def generate_infra_files(vars):
     )
 
 
-@app.command()
-def generate_aws_cluster(
+@dedicated_cluster_app.command()
+def aws(
     cluster_name: str = typer.Option(..., prompt="Name of the cluster to deploy"),
     hub_type: str = typer.Option(
         ..., prompt="Type of hub. Choose from `basehub` or `daskhub`"
