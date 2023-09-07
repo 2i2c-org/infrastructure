@@ -5,9 +5,9 @@ import deployer.deployer  # noqa: F401
 import deployer.exec.debug.app_and_commands  # noqa: F401
 import deployer.exec.shell.cloud_commands  # noqa: F401
 import deployer.exec.shell.infra_components_commands  # noqa: F401
-import deployer.generate.billing.app  # noqa: F401
-import deployer.generate.dedicated_cluster.aws  # noqa: F401
-import deployer.generate.dedicated_cluster.gcp  # noqa: F401
+import deployer.generate.billing.app_and_commands  # noqa: F401
+import deployer.generate.dedicated_cluster.aws_commands  # noqa: F401
+import deployer.generate.dedicated_cluster.gcp_commands  # noqa: F401
 import deployer.grafana.central_grafana  # noqa: F401
 import deployer.grafana.deploy_dashboards  # noqa: F401
 import deployer.grafana.tokens  # noqa: F401

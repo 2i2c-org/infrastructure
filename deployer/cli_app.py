@@ -16,7 +16,19 @@ exec_app = typer.Typer(pretty_exceptions_show_locals=False)
 grafana_app = typer.Typer(pretty_exceptions_show_locals=False)
 
 
-app.add_typer(generate_app, name="generate")
-app.add_typer(cilogon_client_app, name="cilogon-client")
-app.add_typer(exec_app, name="exec")
-app.add_typer(grafana_app, name="grafana")
+app.add_typer(
+    generate_app,
+    name="generate",
+    help="Generate various types of assets. It currently supports generating files related to billing or new, dedicated clusters.",
+)
+app.add_typer(
+    cilogon_client_app,
+    name="cilogon-client",
+    help="Manage cilogon clients for hubs' authentication.",
+)
+app.add_typer(
+    exec_app,
+    name="exec",
+    help="Execute a shell in various parts of the infra. It can be used for poking around, or debugging issues.",
+)
+app.add_typer(grafana_app, name="grafana", help="Manages Grafana related workflows.")

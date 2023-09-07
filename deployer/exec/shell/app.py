@@ -1,3 +1,8 @@
+"""
+Creates a new typer application, which is then
+nested as a sub-command named "shell"
+under the `exec` sub-command of the deployer.
+"""
 import typer
 
 from ...cli_app import exec_app
