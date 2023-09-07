@@ -60,7 +60,7 @@ basehub:
         name: public.ecr.aws/nasa-veda/nasa-veda-singleuser
         # Based off pangeo/pangeo-notebook:2023.07.05 which uses JupyterLab <4, so jupyterlab-git and dask-dashboard work
         # If updating this tag, also update it in the profile_options section below
-        tag: "b807c7efa97c8df9ca38779f7e59d09f889fde9299b0d19de80389cf6b064f90"
+        tag: "5068290376e8c3151d97a36ae6485bb7ff79650b94aecc93ffb2ea1b42d76460"
       extraFiles:
         k8s-lifecycle-hook-post-start.sh:
           mountPath: "/etc/singleuser/k8s-lifecycle-hook-post-start.sh"
@@ -121,7 +121,7 @@ basehub:
                   display_name: Rocker Geospatial with RStudio
                   slug: rocker
                   kubespawner_override:
-                    image: rocker/binder:4.3
+                    image: rocker/geospatial:geospatial_unstable
                     # Launch RStudio after the user logs in
                     default_url: /rstudio
                     # Ensures container working dir is homedir
