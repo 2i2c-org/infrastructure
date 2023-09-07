@@ -1,9 +1,10 @@
 # Import the various subcommands here, they will be automatically
 # registered into the app
 import deployer.cilogon.app  # noqa: F401
-import deployer.cloud_access  # noqa: F401
-import deployer.debug  # noqa: F401
 import deployer.deployer  # noqa: F401
+import deployer.exec.debug.app_and_commands  # noqa: F401
+import deployer.exec.shell.cloud_commands  # noqa: F401
+import deployer.exec.shell.infra_components_commands  # noqa: F401
 import deployer.generate.billing.app  # noqa: F401
 import deployer.generate.dedicated_cluster.aws  # noqa: F401
 import deployer.generate.dedicated_cluster.gcp  # noqa: F401

@@ -12,6 +12,8 @@ import typer
 app = typer.Typer(pretty_exceptions_show_locals=False)
 generate_app = typer.Typer(pretty_exceptions_show_locals=False)
 cilogon_client_app = typer.Typer(pretty_exceptions_show_locals=False)
+exec_app = typer.Typer(pretty_exceptions_show_locals=False)
 
 app.add_typer(generate_app, name="generate")
 app.add_typer(cilogon_client_app, name="cilogon-client")
+app.add_typer(exec_app, name="exec")
