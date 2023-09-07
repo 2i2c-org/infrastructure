@@ -12,6 +12,5 @@ testpaths = [
 ]
 
 [tool.codespell]
-skip = '.git,*.pdf,*.svg'
-#
-# ignore-words-list = ''
+skip = '.git,*.pdf,*.svg,*.secret.*,*.key'
+ignore-words-list = 'aks'
