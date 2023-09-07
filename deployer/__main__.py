@@ -1,6 +1,6 @@
 # Import the various subcommands here, they will be automatically
 # registered into the app
-import deployer.cilogon_app  # noqa: F401
+import deployer.cilogon.app  # noqa: F401
 import deployer.cloud_access  # noqa: F401
 import deployer.debug  # noqa: F401
 import deployer.deployer  # noqa: F401

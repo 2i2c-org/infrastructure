@@ -24,14 +24,14 @@ import typer
 from ruamel.yaml import YAML
 from yarl import URL
 
-from .cli_app import app
-from .file_acquisition import (
+from ..cli_app import cilogon_client_app
+from ..file_acquisition import (
     build_absolute_path_to_hub_encrypted_config_file,
     get_decrypted_file,
     persist_config_in_encrypted_file,
     remove_jupyterhub_hub_config_key_from_encrypted_file,
 )
-from .utils import print_colour
+from ..utils import print_colour
 
 yaml = YAML(typ="safe")
 
@@ -380,8 +380,8 @@ def get_2i2c_cilogon_admin_credentials():
     )
 
 
-@app.command()
-def cilogon_client_create(
+@cilogon_client_app.command()
+def create(
     cluster_name: str = typer.Argument(..., help="Name of cluster to operate on"),
     hub_name: str = typer.Argument(
         ..., help="Name of the hub for which we'll create a CILogon client"
@@ -403,8 +403,8 @@ def cilogon_client_create(
     )
 
 
-@app.command()
-def cilogon_client_update(
+@cilogon_client_app.command()
+def update(
     cluster_name: str = typer.Argument(..., help="Name of cluster to operate on"),
     hub_name: str = typer.Argument(
         ..., help="Name of the hub for which we'll update a CILogon client"
@@ -420,8 +420,8 @@ def cilogon_client_update(
     update_client(admin_id, admin_secret, cluster_name, hub_name, callback_url)
 
 
-@app.command()
-def cilogon_client_get(
+@cilogon_client_app.command()
+def get(
     cluster_name: str = typer.Argument(..., help="Name of cluster to operate on"),
     hub_name: str = typer.Argument(
         ..., help="Name of the hub for which we'll retrieve the CILogon client details"
@@ -432,15 +432,15 @@ def cilogon_client_get(
     get_client(admin_id, admin_secret, cluster_name, hub_name)
 
 
-@app.command()
-def cilogon_client_get_all():
+@cilogon_client_app.command()
+def get_all():
     """Retrieve details about all existing 2i2c CILogon clients."""
     admin_id, admin_secret = get_2i2c_cilogon_admin_credentials()
     get_all_clients(admin_id, admin_secret)
 
 
-@app.command()
-def cilogon_client_delete(
+@cilogon_client_app.command()
+def delete(
     cluster_name: str = typer.Argument(..., help="Name of cluster to operate"),
     hub_name: str = typer.Argument(
         ...,
