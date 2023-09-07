@@ -277,7 +277,7 @@ prometheus:
       #
       hub.jupyter.org/network-access-hub: "true"
     persistentVolume:
-      size: 200Gi
+      size: 400Gi
     service:
       type: ClusterIP
 
