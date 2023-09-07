@@ -5,7 +5,7 @@ prometheus:
   server:
     persistentVolume:
       # 100Gi filled up, and this is source of our billing data.
-      size: 512Gi
+      size: 1Ti
     ingress:
       enabled: true
       hosts:
