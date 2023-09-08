@@ -14,9 +14,10 @@ import requests
 import typer
 from ruamel.yaml import YAML
 
-from ...cli_app import grafana_app
-from ...helm_upgrade_decision import get_all_cluster_yaml_files
-from ...utils import print_colour
+from deployer.cli_app import grafana_app
+from deployer.helm_upgrade_decision import get_all_cluster_yaml_files
+from deployer.utils import print_colour
+
 from .utils import (
     get_cluster_prometheus_address,
     get_cluster_prometheus_creds,

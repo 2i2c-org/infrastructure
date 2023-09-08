@@ -13,17 +13,18 @@ import pytest
 import typer
 from ruamel.yaml import YAML
 
-
-from ..cli_app import app
-from ..cluster import Cluster
-from ..config_validation import (
+from deployer.cli_app import app
+from deployer.config_validation import (
     validate_authenticator_config,
     validate_cluster_config,
     validate_hub_config,
     validate_support_config,
 )
-from ..file_acquisition import find_absolute_path_to_cluster_file, get_decrypted_file
-from ..helm_upgrade_decision import (
+from deployer.file_acquisition import (
+    find_absolute_path_to_cluster_file,
+    get_decrypted_file,
+)
+from deployer.helm_upgrade_decision import (
     assign_staging_jobs_for_missing_clusters,
     discover_modified_common_files,
     ensure_support_staging_jobs_have_correct_keys,
@@ -33,7 +34,8 @@ from ..helm_upgrade_decision import (
     move_staging_hubs_to_staging_matrix,
     pretty_print_matrix_jobs,
 )
-from ..utils import create_markdown_comment, print_colour
+from deployer.infra_components.cluster import Cluster
+from deployer.utils import create_markdown_comment, print_colour
 
 # Without `pure=True`, I get an exception about str / byte issues
 yaml = YAML(typ="safe", pure=True)

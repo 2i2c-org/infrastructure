@@ -6,7 +6,7 @@ from pathlib import Path
 
 import jinja2
 
-from ....utils import print_colour
+from deployer.utils import print_colour
 
 REPO_ROOT = Path(__file__).parent.parent.parent
 

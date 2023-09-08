@@ -5,9 +5,10 @@ import tempfile
 from contextlib import contextmanager
 from pathlib import Path
 
-from .file_acquisition import get_decrypted_file, get_decrypted_files
+from deployer.file_acquisition import get_decrypted_file, get_decrypted_files
+from deployer.utils import print_colour, unset_env_vars
+
 from .hub import Hub
-from .utils import print_colour, unset_env_vars
 
 
 class Cluster:

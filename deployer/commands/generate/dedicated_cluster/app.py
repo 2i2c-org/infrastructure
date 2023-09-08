@@ -5,7 +5,7 @@ under the `generate` sub-command of the deployer.
 """
 import typer
 
-from ....cli_app import generate_app
+from deployer.cli_app import generate_app
 
 dedicated_cluster_app = typer.Typer(pretty_exceptions_show_locals=False)
 generate_app.add_typer(dedicated_cluster_app, name="dedicated-cluster")

@@ -9,9 +9,9 @@ import escapism
 import typer
 from ruamel.yaml import YAML
 
-from ....cli_app import exec_app
-from ....cluster import Cluster
-from ....file_acquisition import find_absolute_path_to_cluster_file
+from deployer.cli_app import exec_app
+from deployer.file_acquisition import find_absolute_path_to_cluster_file
+from deployer.infra_components.cluster import Cluster
 
 exec_debug_app = typer.Typer(pretty_exceptions_show_locals=False)
 exec_app.add_typer(exec_debug_app, name="debug")

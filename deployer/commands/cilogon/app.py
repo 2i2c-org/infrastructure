@@ -24,14 +24,14 @@ import typer
 from ruamel.yaml import YAML
 from yarl import URL
 
-from ...cli_app import cilogon_client_app
-from ...file_acquisition import (
+from deployer.cli_app import cilogon_client_app
+from deployer.file_acquisition import (
     build_absolute_path_to_hub_encrypted_config_file,
     get_decrypted_file,
     persist_config_in_encrypted_file,
     remove_jupyterhub_hub_config_key_from_encrypted_file,
 )
-from ...utils import print_colour
+from deployer.utils import print_colour
 
 yaml = YAML(typ="safe")
 

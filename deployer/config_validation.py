@@ -12,9 +12,9 @@ from pathlib import Path
 import jsonschema
 from ruamel.yaml import YAML
 
-from .cluster import Cluster
-from .file_acquisition import find_absolute_path_to_cluster_file
-from .utils import print_colour
+from deployer.file_acquisition import find_absolute_path_to_cluster_file
+from deployer.infra_components.cluster import Cluster
+from deployer.utils import print_colour
 
 yaml = YAML(typ="safe", pure=True)
 helm_charts_dir = Path(__file__).parent.parent.joinpath("helm-charts")
