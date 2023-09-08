@@ -38,7 +38,8 @@ basehub:
         JupyterHub:
           authenticator_class: github
         GitHubOAuthenticator:
-          allowed_organizations:
+          populate_teams_in_auth_state: true
+          allowed_organizations: &allowed_github_orgs
             - 2i2c-org
             - smithsonian
             - sidatasciencelab
@@ -77,6 +78,7 @@ basehub:
           description: &profile_list_description "Start a container with at least a chosen share of capacity on a node of this type"
           slug: small
           default: true
+          allowed_teams: *allowed_github_orgs
           profile_options:
             image: &profile_options_image
               display_name: Image
@@ -163,6 +165,9 @@ basehub:
         - display_name: NVIDIA Tesla T4, ~16 GB, ~4 CPUs
           slug: gpu
           description: "Start a container on a dedicated node with a GPU"
+          allowed_teams:
+            - 2i2c-org:hub-access-for-2i2c-staff
+            - Smithsonian-SDCH:gpu-users
           profile_options:
             image:
               display_name: Image
