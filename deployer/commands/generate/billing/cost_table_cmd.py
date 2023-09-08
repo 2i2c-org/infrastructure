@@ -13,14 +13,8 @@ from .outputers import CostTableOutputFormats, output_cost_table
 
 yaml = YAML(typ="safe", pure=True)
 
-# Create a new typer application, which is then
-# nested under the `generate` sub-command of the deployer
-# under the sub-command name "billing"
-cost_app = typer.Typer(pretty_exceptions_show_locals=False)
-generate_app.add_typer(cost_app, name="billing")
 
-
-@cost_app.command()
+@generate_app.command()
 def cost_table(
     start_month: datetime = typer.Option(
         (datetime.utcnow() - relativedelta(months=3)).replace(day=1),

@@ -9,7 +9,7 @@ from deployer.cli_app import generate_app
 from deployer.utils.file_acquisition import get_all_cluster_yaml_files
 from deployer.utils.rendering import create_markdown_comment, print_colour
 
-from .upgrade_decision import (
+from .decision import (
     assign_staging_jobs_for_missing_clusters,
     discover_modified_common_files,
     ensure_support_staging_jobs_have_correct_keys,
