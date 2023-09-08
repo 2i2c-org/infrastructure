@@ -12,7 +12,7 @@ import subprocess
 import jinja2
 import typer
 
-from deployer.utils import print_colour
+from deployer.rendering import print_colour
 
 from .app import dedicated_cluster_app
 from .common import REPO_ROOT, generate_config_directory, generate_support_files

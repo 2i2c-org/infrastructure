@@ -16,7 +16,7 @@ from ruamel.yaml import YAML
 from deployer.cli_app import validate_app
 from deployer.file_acquisition import find_absolute_path_to_cluster_file
 from deployer.infra_components.cluster import Cluster
-from deployer.utils import print_colour
+from deployer.rendering import print_colour
 
 yaml = YAML(typ="safe", pure=True)
 helm_charts_dir = Path(__file__).parent.parent.parent.parent.joinpath("helm-charts")

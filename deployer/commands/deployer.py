@@ -41,7 +41,7 @@ from deployer.helm_upgrade_decision import (
     pretty_print_matrix_jobs,
 )
 from deployer.infra_components.cluster import Cluster
-from deployer.utils import create_markdown_comment, print_colour
+from deployer.rendering import create_markdown_comment, print_colour
 
 # Without `pure=True`, I get an exception about str / byte issues
 yaml = YAML(typ="safe", pure=True)

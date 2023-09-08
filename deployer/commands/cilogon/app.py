@@ -31,7 +31,7 @@ from deployer.file_acquisition import (
     persist_config_in_encrypted_file,
     remove_jupyterhub_hub_config_key_from_encrypted_file,
 )
-from deployer.utils import print_colour
+from deployer.rendering import print_colour
 
 yaml = YAML(typ="safe")
 

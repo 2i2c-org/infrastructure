@@ -13,7 +13,7 @@ import jinja2
 import typer
 from typing_extensions import Annotated
 
-from deployer.utils import print_colour
+from deployer.rendering import print_colour
 
 from .app import dedicated_cluster_app
 from .common import (
