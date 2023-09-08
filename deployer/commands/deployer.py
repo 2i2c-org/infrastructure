@@ -2,7 +2,6 @@
 Actions available when deploying many JupyterHubs to many Kubernetes clusters
 """
 import base64
-import json
 import os
 import subprocess
 import sys
@@ -28,20 +27,10 @@ from deployer.commands.validate.app_and_commands import (
 )
 from deployer.file_acquisition import (
     find_absolute_path_to_cluster_file,
-    get_all_cluster_yaml_files,
     get_decrypted_file,
 )
-from deployer.helm_upgrade_decision import (
-    assign_staging_jobs_for_missing_clusters,
-    discover_modified_common_files,
-    ensure_support_staging_jobs_have_correct_keys,
-    generate_hub_matrix_jobs,
-    generate_support_matrix_jobs,
-    move_staging_hubs_to_staging_matrix,
-    pretty_print_matrix_jobs,
-)
 from deployer.infra_components.cluster import Cluster
-from deployer.rendering import create_markdown_comment, print_colour
+from deployer.rendering import print_colour
 
 # Without `pure=True`, I get an exception about str / byte issues
 yaml = YAML(typ="safe", pure=True)
@@ -154,133 +143,6 @@ def deploy(
                     f"{i+1} / {len(hubs)}: Deploying hub {hub.spec['name']}..."
                 )
                 hub.deploy(dask_gateway_version, debug, dry_run)
-
-
-@app.command()
-def generate_helm_upgrade_jobs(
-    changed_filepaths: str = typer.Argument(
-        ..., help="Comma delimited list of files that have changed"
-    )
-):
-    """
-    Analyze added or modified files from a GitHub Pull Request and decide which
-    clusters and/or hubs require helm upgrades to be performed for their *hub helm
-    charts or the support helm chart.
-    """
-    changed_filepaths = changed_filepaths.split(",")
-    (
-        upgrade_support_on_all_clusters,
-        upgrade_all_hubs_on_all_clusters,
-    ) = discover_modified_common_files(changed_filepaths)
-
-    # Convert changed filepaths into absolute Posix Paths
-    root_dir = Path(__file__).parent.parent
-    changed_filepaths = [root_dir.joinpath(filepath) for filepath in changed_filepaths]
-
-    # Get a list of filepaths to all cluster.yaml files in the repo
-    cluster_files = get_all_cluster_yaml_files()
-
-    # Empty lists to store job definitions in
-    prod_hub_matrix_jobs = []
-    support_and_staging_matrix_jobs = []
-
-    for cluster_file in cluster_files:
-        # Read in the cluster.yaml file
-        with open(cluster_file) as f:
-            cluster_config = yaml.load(f)
-
-        # Get cluster's name and its cloud provider
-        cluster_name = cluster_config.get("name", {})
-        provider = cluster_config.get("provider", {})
-
-        # Generate template dictionary for all jobs associated with this cluster
-        cluster_info = {
-            "cluster_name": cluster_name,
-            "provider": provider,
-            "reason_for_redeploy": "",
-        }
-
-        # Check if this cluster file has been modified. If so, set boolean flags to True
-        intersection = set(changed_filepaths).intersection([str(cluster_file)])
-        if intersection:
-            print_colour(
-                f"This cluster.yaml file has been modified. Generating jobs to upgrade all hubs and the support chart on THIS cluster: {cluster_name}"
-            )
-            upgrade_all_hubs_on_this_cluster = True
-            upgrade_support_on_this_cluster = True
-            cluster_info["reason_for_redeploy"] = "cluster.yaml file was modified"
-        else:
-            upgrade_all_hubs_on_this_cluster = False
-            upgrade_support_on_this_cluster = False
-
-        # Generate a job matrix of all hubs that need upgrading on this cluster
-        prod_hub_matrix_jobs.extend(
-            generate_hub_matrix_jobs(
-                cluster_file,
-                cluster_config,
-                cluster_info,
-                set(changed_filepaths),
-                upgrade_all_hubs_on_this_cluster=upgrade_all_hubs_on_this_cluster,
-                upgrade_all_hubs_on_all_clusters=upgrade_all_hubs_on_all_clusters,
-            )
-        )
-
-        # Generate a job matrix for support chart upgrades
-        support_and_staging_matrix_jobs.extend(
-            generate_support_matrix_jobs(
-                cluster_file,
-                cluster_config,
-                cluster_info,
-                set(changed_filepaths),
-                upgrade_support_on_this_cluster=upgrade_support_on_this_cluster,
-                upgrade_support_on_all_clusters=upgrade_support_on_all_clusters,
-            )
-        )
-
-    # Clean up the matrix jobs
-    (
-        prod_hub_matrix_jobs,
-        support_and_staging_matrix_jobs,
-    ) = move_staging_hubs_to_staging_matrix(
-        prod_hub_matrix_jobs, support_and_staging_matrix_jobs
-    )
-    support_and_staging_matrix_jobs = ensure_support_staging_jobs_have_correct_keys(
-        support_and_staging_matrix_jobs, prod_hub_matrix_jobs
-    )
-    support_and_staging_matrix_jobs = assign_staging_jobs_for_missing_clusters(
-        support_and_staging_matrix_jobs, prod_hub_matrix_jobs
-    )
-
-    # Pretty print the jobs using rich
-    pretty_print_matrix_jobs(prod_hub_matrix_jobs, support_and_staging_matrix_jobs)
-
-    # The existence of the CI environment variable is an indication that we are running
-    # in an GitHub Actions workflow
-    # https://docs.github.com/en/actions/using-workflows/workflow-syntax-for-github-actions#example-defining-outputs-for-a-job
-    # This will avoid errors trying to set CI output variables in an environment that
-    # doesn't exist.
-    ci_env = os.environ.get("CI", False)
-    # The use of ::set-output was deprecated as per the below blog post and
-    # instead we share variables between steps/jobs by writing them to GITHUB_ENV:
-    # https://github.blog/changelog/2022-10-11-github-actions-deprecating-save-state-and-set-output-commands/
-    # More info on GITHUB_ENV: https://docs.github.com/en/actions/learn-github-actions/environment-variables
-    env_file = os.getenv("GITHUB_ENV")
-    if ci_env:
-        # Add these matrix jobs as environment variables for use in another job
-        with open(env_file, "a") as f:
-            f.write(f"prod-hub-matrix-jobs={json.dumps(prod_hub_matrix_jobs)}")
-            f.write("\n")
-            f.write(
-                f"support-and-staging-matrix-jobs={json.dumps(support_and_staging_matrix_jobs)}"
-            )
-
-        # Don't bother generating a comment if both of the matrices are empty
-        if support_and_staging_matrix_jobs or prod_hub_matrix_jobs:
-            # Generate Markdown tables from the job matrices and write them to a file
-            # for use in another job
-            create_markdown_comment(
-                support_and_staging_matrix_jobs, prod_hub_matrix_jobs
-            )
 
 
 @app.command()
