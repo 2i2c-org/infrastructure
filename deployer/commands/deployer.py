@@ -28,6 +28,7 @@ from deployer.commands.validate.app_and_commands import (
 )
 from deployer.file_acquisition import (
     find_absolute_path_to_cluster_file,
+    get_all_cluster_yaml_files,
     get_decrypted_file,
 )
 from deployer.helm_upgrade_decision import (
@@ -36,7 +37,6 @@ from deployer.helm_upgrade_decision import (
     ensure_support_staging_jobs_have_correct_keys,
     generate_hub_matrix_jobs,
     generate_support_matrix_jobs,
-    get_all_cluster_yaml_files,
     move_staging_hubs_to_staging_matrix,
     pretty_print_matrix_jobs,
 )

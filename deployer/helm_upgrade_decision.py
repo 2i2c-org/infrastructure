@@ -4,7 +4,6 @@ support helm chart upgrading depending on an input list of filenames that have b
 added or modified in a GitHub Pull Request.
 """
 import fnmatch
-from pathlib import Path
 
 from rich.console import Console
 from rich.table import Table
@@ -61,33 +60,6 @@ def discover_modified_common_files(modified_paths):
             break
 
     return upgrade_support_on_all_clusters, upgrade_all_hubs_on_all_clusters
-
-
-def get_all_cluster_yaml_files(is_test=False):
-    """Get a set of absolute paths to all cluster.yaml files in the repository
-
-    Args:
-        is_test (bool, optional): A flag to determine whether we are running a test
-            suite or not. If True, only return the paths to cluster.yaml files under the
-            'tests/' directory. If False, explicitly exclude the cluster.yaml files
-            nested under the 'tests/' directory. Defaults to False.
-
-    Returns:
-        set[path obj]: A set of absolute paths to all cluster.yaml files in the repo
-    """
-    root_path = Path(__file__).parent.parent
-    # Get absolute paths
-    if is_test:
-        # We are running a test via pytest. We only want to focus on the cluster
-        # folders nested under the `tests/` folder.
-        return set(root_path.glob("tests/test-clusters/**/cluster.yaml"))
-
-    # We are NOT running a test via pytest. We only care about the clusters under config/clusters
-    return {
-        path
-        for path in root_path.glob("config/clusters/**/cluster.yaml")
-        if "templates" not in path.as_posix()
-    }
 
 
 def generate_hub_matrix_jobs(

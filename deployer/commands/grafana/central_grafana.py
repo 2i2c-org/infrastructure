@@ -15,7 +15,7 @@ import typer
 from ruamel.yaml import YAML
 
 from deployer.cli_app import grafana_app
-from deployer.helm_upgrade_decision import get_all_cluster_yaml_files
+from deployer.file_acquisition import get_all_cluster_yaml_files
 from deployer.rendering import print_colour
 
 from .utils import (
