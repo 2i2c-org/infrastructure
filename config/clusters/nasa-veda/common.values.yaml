@@ -60,7 +60,7 @@ basehub:
         name: public.ecr.aws/nasa-veda/nasa-veda-singleuser
         # Based off pangeo/pangeo-notebook:2023.07.05 which uses JupyterLab <4, so jupyterlab-git and dask-dashboard work
         # If updating this tag, also update it in the profile_options section below
-        tag: "b807c7efa97c8df9ca38779f7e59d09f889fde9299b0d19de80389cf6b064f90"
+        tag: "ff1d8629d2e646942a11ba5af4f078f3a3edb06962e7da9903e7f321f2c08cbe"
       profileList:
         # NOTE: About node sharing
         #
