@@ -59,29 +59,14 @@ basehub:
       image:
         name: public.ecr.aws/nasa-veda/nasa-veda-singleuser
         # Based off pangeo/pangeo-notebook:2023.07.05 which uses JupyterLab <4, so jupyterlab-git and dask-dashboard work
-        # If updating this tag, also update it in the profile_options section below
+        # If updating this tag, also update it in the `profile_options.image.options.pangeo.kubespawner_override.image`below
         tag: "5068290376e8c3151d97a36ae6485bb7ff79650b94aecc93ffb2ea1b42d76460"
-      extraFiles:
-        k8s-lifecycle-hook-post-start.sh:
-          mountPath: "/etc/singleuser/k8s-lifecycle-hook-post-start.sh"
-          stringData: |
-            #/bin/bash
-            echo "pulling /veda-docs.."
-            /srv/conda/envs/notebook/bin/gitpuller https://github.com/NASA-IMPACT/veda-docs/ main /home/jovyan/veda-doc-examples || true
-            echo "successfully pulled /veda-docs.."
-      storage:
-        capacity: "10Mi"
-        extraVolumes:
-          - name: user-etc-singleuser
-        extraVolumeMounts:
-          - name: user-etc-singleuser
-            mountPath: /etc/singleuser
       lifecycleHooks:
         postStart:
           exec:
             command:
-              - "bash"
-              - "/etc/singleuser/k8s-lifecycle-hook-post-start.sh"
+              - "python3"
+              - "/opt/k8s-lifecycle-hook-post-start.py"
       profileList:
         # NOTE: About node sharing
         #
@@ -116,12 +101,12 @@ basehub:
                   default: true
                   slug: pangeo
                   kubespawner_override:
-                    image: public.ecr.aws/nasa-veda/nasa-veda-singleuser:b807c7efa97c8df9ca38779f7e59d09f889fde9299b0d19de80389cf6b064f90
+                    image: public.ecr.aws/nasa-veda/nasa-veda-singleuser:5068290376e8c3151d97a36ae6485bb7ff79650b94aecc93ffb2ea1b42d76460
                 rocker:
                   display_name: Rocker Geospatial with RStudio
                   slug: rocker
                   kubespawner_override:
-                    image: rocker/geospatial:unstable
+                    image: rocker/binder:4.3
                     # Launch RStudio after the user logs in
                     default_url: /rstudio
                     # Ensures container working dir is homedir
