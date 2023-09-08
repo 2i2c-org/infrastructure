@@ -59,18 +59,6 @@ basehub:
         enabled: true
 
     singleuser:
-      image:
-        # Pending information about what image to use in
-        # https://github.com/2i2c-org/infrastructure/issues/2323, the
-        # pangeo/pangeo-notebook image was setup initially as it includes recent
-        # versions of dask/distributed which is relevant for a use with
-        # dask-gateway.
-        #
-        # image source:    https://github.com/pangeo-data/pangeo-docker-images
-        # image published: https://quay.io/repository/pangeo/pangeo-notebook?tab=tags
-        #
-        name: quay.io/pangeo/pangeo-notebook
-        tag: "2023.02.27"
       profileList:
         # NOTE: About node sharing
         #
@@ -113,12 +101,23 @@ basehub:
                   display_name: Jupyter SciPy Notebook
                   slug: scipy
                   kubespawner_override:
-                    image: jupyter/scipy-notebook:2023-06-26
+                    image: "jupyter/scipy-notebook:2023-09-04"
                 pangeo:
                   display_name: Pangeo Notebook
                   slug: pangeo
                   kubespawner_override:
-                    image: quay.io/pangeo/pangeo-notebook:2023.02.27
+                    image: "quay.io/pangeo/pangeo-notebook:2023.08.29"
+                tensorflow: &image_tensorflow
+                  display_name: Pangeo Tensorflow ML Notebook
+                  slug: tensorflow
+                  kubespawner_override:
+                    image: "pangeo/ml-notebook:2023.08.29"
+                pytorch: &image_pytorch
+                  display_name: Pangeo PyTorch ML Notebook
+                  default: true
+                  slug: pytorch
+                  kubespawner_override:
+                    image: "pangeo/pytorch-notebook:2023.08.29"
             requests:
               # NOTE: Node share choices are in active development, see comment
               #       next to profileList: above.
@@ -160,3 +159,22 @@ basehub:
             mem_limit: null
             node_selector:
               node.kubernetes.io/instance-type: r5.xlarge
+
+        - display_name: NVIDIA Tesla T4, ~16 GB, ~4 CPUs
+          slug: gpu
+          description: "Start a container on a dedicated node with a GPU"
+          profile_options:
+            image:
+              display_name: Image
+              choices:
+                tensorflow: *image_tensorflow
+                pytorch: *image_pytorch
+          kubespawner_override:
+            mem_limit: null
+            environment:
+              NVIDIA_DRIVER_CAPABILITIES: compute,utility
+            mem_guarantee: 14G
+            node_selector:
+              node.kubernetes.io/instance-type: g4dn.xlarge
+            extra_resource_limits:
+              nvidia.com/gpu: "1"
