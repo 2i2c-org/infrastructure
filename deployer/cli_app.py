@@ -14,7 +14,7 @@ generate_app = typer.Typer(pretty_exceptions_show_locals=False)
 cilogon_client_app = typer.Typer(pretty_exceptions_show_locals=False)
 exec_app = typer.Typer(pretty_exceptions_show_locals=False)
 grafana_app = typer.Typer(pretty_exceptions_show_locals=False)
-
+validate_app = typer.Typer(pretty_exceptions_show_locals=False)
 
 app.add_typer(
     generate_app,
@@ -32,3 +32,8 @@ app.add_typer(
     help="Execute a shell in various parts of the infra. It can be used for poking around, or debugging issues.",
 )
 app.add_typer(grafana_app, name="grafana", help="Manages Grafana related workflows.")
+app.add_typer(
+    validate_app,
+    name="validate",
+    help="Validate configuration files such as helm chart values and cluster.yaml files.",
+)

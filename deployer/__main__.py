@@ -11,6 +11,7 @@ import deployer.commands.generate.dedicated_cluster.gcp_commands  # noqa: F401
 import deployer.commands.grafana.central_grafana  # noqa: F401
 import deployer.commands.grafana.deploy_dashboards  # noqa: F401
 import deployer.commands.grafana.tokens  # noqa: F401
+import deployer.commands.validate.app_and_commands  # noqa: F401
 import deployer.keys.decrypt_age  # noqa: F401
 
 from .cli_app import app

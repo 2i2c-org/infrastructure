@@ -14,11 +14,17 @@ import typer
 from ruamel.yaml import YAML
 
 from deployer.cli_app import app
-from deployer.config_validation import (
-    validate_authenticator_config,
-    validate_cluster_config,
-    validate_hub_config,
-    validate_support_config,
+from deployer.commands.validate.app_and_commands import (
+    authenticator_config as validate_authenticator_config,
+)
+from deployer.commands.validate.app_and_commands import (
+    cluster_config as validate_cluster_config,
+)
+from deployer.commands.validate.app_and_commands import (
+    hub_config as validate_hub_config,
+)
+from deployer.commands.validate.app_and_commands import (
+    support_config as validate_support_config,
 )
 from deployer.file_acquisition import (
     find_absolute_path_to_cluster_file,
@@ -373,16 +379,3 @@ def run_hub_health_check(
         sys.exit(exit_code)
     else:
         print_colour("Health check succeeded!")
-
-
-@app.command()
-def validate(
-    cluster_name: str = typer.Argument(..., help="Name of cluster to operate on"),
-    hub_name: str = typer.Argument(None, help="Name of hub to operate on"),
-):
-    """
-    Validate cluster.yaml and non-encrypted helm config for given hub
-    """
-    validate_cluster_config(cluster_name)
-    validate_support_config(cluster_name)
-    validate_hub_config(cluster_name, hub_name)

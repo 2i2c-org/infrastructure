@@ -10,14 +10,16 @@ import sys
 from pathlib import Path
 
 import jsonschema
+import typer
 from ruamel.yaml import YAML
 
+from deployer.cli_app import validate_app
 from deployer.file_acquisition import find_absolute_path_to_cluster_file
 from deployer.infra_components.cluster import Cluster
 from deployer.utils import print_colour
 
 yaml = YAML(typ="safe", pure=True)
-helm_charts_dir = Path(__file__).parent.parent.joinpath("helm-charts")
+helm_charts_dir = Path(__file__).parent.parent.parent.parent.joinpath("helm-charts")
 
 
 @functools.lru_cache
@@ -65,7 +67,10 @@ def _prepare_helm_charts_dependencies_and_schemas():
     subprocess.check_call(["helm", "dep", "up", support_dir])
 
 
-def validate_cluster_config(cluster_name):
+@validate_app.command()
+def cluster_config(
+    cluster_name: str = typer.Argument(..., help="Name of cluster to operate on"),
+):
     """
     Validates cluster.yaml configuration against a JSONSchema.
     """
@@ -80,7 +85,11 @@ def validate_cluster_config(cluster_name):
         jsonschema.validate(cluster_config, schema)
 
 
-def validate_hub_config(cluster_name, hub_name):
+@validate_app.command()
+def hub_config(
+    cluster_name: str = typer.Argument(..., help="Name of cluster to operate on"),
+    hub_name: str = typer.Argument(None, help="Name of hub to operate on"),
+):
     """
     Validates the provided non-encrypted helm chart values files for each hub of
     a specific cluster.
@@ -122,7 +131,10 @@ def validate_hub_config(cluster_name, hub_name):
             sys.exit(1)
 
 
-def validate_support_config(cluster_name):
+@validate_app.command()
+def support_config(
+    cluster_name: str = typer.Argument(..., help="Name of cluster to operate on"),
+):
     """
     Validates the provided non-encrypted helm chart values files for the support chart
     of a specific cluster.
@@ -155,3 +167,82 @@ def validate_support_config(cluster_name):
                 sys.exit(1)
     else:
         print_colour(f"No support defined for {cluster_name}. Nothing to validate!")
+
+
+@validate_app.command()
+def authenticator_config(
+    cluster_name: str = typer.Argument(..., help="Name of cluster to operate on"),
+    hub_name: str = typer.Argument(None, help="Name of hub to operate on"),
+):
+    """
+    For each hub of a specific cluster:
+     - It asserts that when the JupyterHub GitHubOAuthenticator is used,
+       then `Authenticator.allowed_users` is not set.
+       An error is raised otherwise.
+    """
+    _prepare_helm_charts_dependencies_and_schemas()
+
+    config_file_path = find_absolute_path_to_cluster_file(cluster_name)
+    with open(config_file_path) as f:
+        cluster = Cluster(yaml.load(f), config_file_path.parent)
+
+    hubs = []
+    if hub_name:
+        hubs = [h for h in cluster.hubs if h.spec["name"] == hub_name]
+    else:
+        hubs = cluster.hubs
+
+    for i, hub in enumerate(hubs):
+        print_colour(
+            f"{i+1} / {len(hubs)}: Validating authenticator config for {hub.spec['name']}..."
+        )
+
+        authenticator_class = ""
+        allowed_users = []
+        for values_file_name in hub.spec["helm_chart_values_files"]:
+            if "secret" not in os.path.basename(values_file_name):
+                values_file = config_file_path.parent.joinpath(values_file_name)
+                # Load the hub extra config from its specific values files
+                config = yaml.load(values_file)
+                # Check if there's config that specifies an authenticator class
+                try:
+                    if hub.spec["helm_chart"] != "basehub":
+                        hub_config = config["basehub"]["jupyterhub"]["hub"]["config"]
+                    else:
+                        hub_config = config["jupyterhub"]["hub"]["config"]
+
+                    authenticator_class = hub_config["JupyterHub"][
+                        "authenticator_class"
+                    ]
+                    allowed_users = hub_config["Authenticator"]["allowed_users"]
+                    org_based_github_auth = False
+                    if hub_config.get("GitHubOAuthenticator", None):
+                        org_based_github_auth = hub_config["GitHubOAuthenticator"].get(
+                            "allowed_organizations", False
+                        )
+                except KeyError:
+                    pass
+
+        # If the authenticator class is github, then raise an error
+        # if `Authenticator.allowed_users` is set
+        if authenticator_class == "github" and allowed_users and org_based_github_auth:
+            raise ValueError(
+                f"""
+                    Please unset `Authenticator.allowed_users` for {hub.spec['name']} when GitHub Orgs/Teams is
+                    being used for auth so valid members are not refused access.
+                """
+            )
+
+
+@validate_app.command()
+def all(
+    cluster_name: str = typer.Argument(..., help="Name of cluster to operate on"),
+    hub_name: str = typer.Argument(None, help="Name of hub to operate on"),
+):
+    """
+    Validate cluster.yaml and non-encrypted helm config for given hub
+    """
+    cluster_config(cluster_name)
+    support_config(cluster_name)
+    hub_config(cluster_name, hub_name)
+    authenticator_config(cluster_name, hub_name)
