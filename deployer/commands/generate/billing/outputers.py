@@ -5,7 +5,7 @@ import gspread
 from rich.console import Console
 from rich.table import Table
 
-from deployer.file_acquisition import get_decrypted_file
+from deployer.utils.file_acquisition import get_decrypted_file
 
 
 class CostTableOutputFormats(Enum):

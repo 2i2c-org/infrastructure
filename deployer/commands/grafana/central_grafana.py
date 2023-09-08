@@ -15,8 +15,8 @@ import typer
 from ruamel.yaml import YAML
 
 from deployer.cli_app import grafana_app
-from deployer.file_acquisition import get_all_cluster_yaml_files
-from deployer.rendering import print_colour
+from deployer.utils.file_acquisition import get_all_cluster_yaml_files
+from deployer.utils.rendering import print_colour
 
 from .utils import (
     get_cluster_prometheus_address,

@@ -4,8 +4,8 @@ import subprocess
 import typer
 from ruamel.yaml import YAML
 
-from deployer.file_acquisition import find_absolute_path_to_cluster_file
 from deployer.infra_components.cluster import Cluster
+from deployer.utils.file_acquisition import find_absolute_path_to_cluster_file
 
 from .app import exec_shell_app
 

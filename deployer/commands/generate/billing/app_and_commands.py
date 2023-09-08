@@ -6,7 +6,7 @@ from dateutil.relativedelta import relativedelta
 from ruamel.yaml import YAML
 
 from deployer.cli_app import generate_app
-from deployer.file_acquisition import get_all_cluster_yaml_files
+from deployer.utils.file_acquisition import get_all_cluster_yaml_files
 
 from .importers import get_cluster_costs
 from .outputers import CostTableOutputFormats, output_cost_table

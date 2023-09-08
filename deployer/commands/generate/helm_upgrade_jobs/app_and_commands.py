@@ -6,8 +6,8 @@ import typer
 from ruamel.yaml import YAML
 
 from deployer.cli_app import generate_app
-from deployer.file_acquisition import get_all_cluster_yaml_files
-from deployer.rendering import create_markdown_comment, print_colour
+from deployer.utils.file_acquisition import get_all_cluster_yaml_files
+from deployer.utils.rendering import create_markdown_comment, print_colour
 
 from .upgrade_decision import (
     assign_staging_jobs_for_missing_clusters,

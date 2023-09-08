@@ -3,8 +3,8 @@ from pathlib import Path
 
 from ruamel.yaml import YAML
 
-from deployer.file_acquisition import get_decrypted_file, get_decrypted_files
-from deployer.rendering import print_colour
+from deployer.utils.file_acquisition import get_decrypted_file, get_decrypted_files
+from deployer.utils.rendering import print_colour
 
 # Without `pure=True`, I get an exception about str / byte issues
 yaml = YAML(typ="safe", pure=True)

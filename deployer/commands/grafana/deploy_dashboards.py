@@ -5,7 +5,7 @@ import subprocess
 import typer
 
 from deployer.cli_app import grafana_app
-from deployer.rendering import print_colour
+from deployer.utils.rendering import print_colour
 
 from .utils import get_grafana_token, get_grafana_url
 

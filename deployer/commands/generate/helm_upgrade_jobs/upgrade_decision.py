@@ -9,7 +9,7 @@ from rich.console import Console
 from rich.table import Table
 from ruamel.yaml import YAML
 
-from deployer.rendering import print_colour
+from deployer.utils.rendering import print_colour
 
 yaml = YAML(typ="safe", pure=True)
 

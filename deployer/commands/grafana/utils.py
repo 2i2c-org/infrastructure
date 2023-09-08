@@ -5,7 +5,7 @@ from pathlib import Path
 import requests
 from ruamel.yaml import YAML
 
-from deployer.file_acquisition import (
+from deployer.utils.file_acquisition import (
     find_absolute_path_to_cluster_file,
     get_decrypted_file,
 )

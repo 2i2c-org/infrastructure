@@ -25,12 +25,12 @@ from deployer.commands.validate.app_and_commands import (
 from deployer.commands.validate.app_and_commands import (
     support_config as validate_support_config,
 )
-from deployer.file_acquisition import (
+from deployer.infra_components.cluster import Cluster
+from deployer.utils.file_acquisition import (
     find_absolute_path_to_cluster_file,
     get_decrypted_file,
 )
-from deployer.infra_components.cluster import Cluster
-from deployer.rendering import print_colour
+from deployer.utils.rendering import print_colour
 
 # Without `pure=True`, I get an exception about str / byte issues
 yaml = YAML(typ="safe", pure=True)
