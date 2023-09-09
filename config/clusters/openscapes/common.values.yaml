@@ -51,6 +51,17 @@ basehub:
       readinessProbe:
         enabled: false
       config:
+        JupyterHub:
+          authenticator_class: cilogon
+        CILogonOAuthenticator:
+          scope:
+            - "profile"
+          shown_idps:
+            - http://github.com/login/oauth/authorize
+          allowed_idps:
+            http://github.com/login/oauth/authorize:
+              username_derivation:
+                username_claim: "preferred_username"
         Authenticator:
           admin_users: &users
             - amfriesz
