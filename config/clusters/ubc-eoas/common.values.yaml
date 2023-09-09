@@ -36,8 +36,9 @@ jupyterhub:
     config:
       Authenticator:
         admin_users:
-          - ckrzysik # Primary technical representative, Charles Krzysik
-          - lheagy # Secondary technical representative, Lindsey Heagy
+          - ckrzysik # Technical representative, Charles Krzysik
+          - lheagy # Technical representative, Lindsey Heagy
+          - hmodzelewski # Technical representative, Henryk Modzelewski
       JupyterHub:
         authenticator_class: cilogon
       CILogonOAuthenticator:
