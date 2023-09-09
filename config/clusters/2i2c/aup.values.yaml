@@ -41,10 +41,13 @@ jupyterhub:
           - "profile"
         username_claim: "preferred_username"
         oauth_callback_url: "https://aup.pilot.2i2c.cloud/hub/oauth_callback"
-        # Only show the option to login with GitHub
         shown_idps:
           - http://github.com/login/oauth/authorize
       Authenticator:
+        # FIXME: In z2jh 3.0.0-beta.1, a truthy allowed_users implies
+        #        allow_existing_users=True, while in z3jh 3.0.0 this needs to be
+        #        configured explicitly.
+        #
         allowed_users: &aup_users
           - swalker
           - shaolintl

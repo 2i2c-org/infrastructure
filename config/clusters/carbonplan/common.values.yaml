@@ -186,6 +186,10 @@ basehub:
       allowNamedServers: true
       config:
         Authenticator:
+          # FIXME: In z2jh 3.0.0-beta.1, a truthy allowed_users implies
+          #        allow_existing_users=True, while in z3jh 3.0.0 this needs to
+          #        be configured explicitly.
+          #
           allowed_users: &users
             - maxrjones
           admin_users: *users

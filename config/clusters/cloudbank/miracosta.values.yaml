@@ -29,7 +29,6 @@ jupyterhub:
         authenticator_class: cilogon
       CILogonOAuthenticator:
         oauth_callback_url: https://miracosta.cloudbank.2i2c.cloud/hub/oauth_callback
-        # Only show and allow option to login with Google and Miracosta institutional provider
         shown_idps:
           - http://google.com/accounts/o8/id
           - https://miracosta.fedgw.com/gateway
