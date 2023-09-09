@@ -144,8 +144,8 @@ basehub:
         - display_name: NVIDIA Tesla T4, ~16 GB, ~4 CPUs
           slug: gpu
           allowed_teams:
-            # Just 2i2c folks for now
             - 2i2c-org:hub-access-for-2i2c-staff
+            - 2i2c-org:research-delight-gpu-team
           description: "Start a container on a dedicated node with a GPU"
           profile_options:
             image:
