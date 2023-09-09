@@ -162,7 +162,15 @@ def validate_authenticator_config(cluster_name, hub_name):
     For each hub of a specific cluster:
      - It asserts that when the JupyterHub GitHubOAuthenticator is used,
        then `Authenticator.allowed_users` is not set.
-       An error is raised otherwise.
+
+       Before oauthenticator 16 / z2jh 3.0.0-beta.3+, allowed_users was an
+       additional requirement besides being part of an allowed github
+       organization or team, which made the config likely to not be what we
+       intended.
+
+       FIXME: Remove this after we have upgraded to oauthenticator 16 / z2jh
+              3.0.0-beta.3+, as that makes this config reasonable again, where a
+              user can be allowed independently from allowing an organization.
     """
     _prepare_helm_charts_dependencies_and_schemas()
 
