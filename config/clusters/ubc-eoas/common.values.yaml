@@ -68,9 +68,9 @@ jupyterhub:
           mem_guarantee: 6.5G
           node_selector:
             node.kubernetes.io/instance-type: m5.large
-            # Using 'latest' for now so updates do not require 2i2c
-            # involvement.
-            image: quay.io/henrykmodzelewski/2i2c-eosc211:latest
+          # Using 'latest' for now so updates do not require 2i2c
+          # involvement.
+          image: quay.io/henrykmodzelewski/2i2c-eosc211:latest
       - display_name: EOSC350
         description: "For class EOSC350, provides ~2 CPU and ~8G RAM"
         kubespawner_override:
@@ -78,9 +78,9 @@ jupyterhub:
           mem_guarantee: 6.5G
           node_selector:
             node.kubernetes.io/instance-type: m5.large
-            # Using 'latest' for now so updates do not require 2i2c
-            # involvement.
-            image: quay.io/henrykmodzelewski/2i2c-eosc350:latest
+          # Using 'latest' for now so updates do not require 2i2c
+          # involvement.
+          image: quay.io/henrykmodzelewski/2i2c-eosc350:latest
   scheduling:
     userScheduler:
       enabled: true
