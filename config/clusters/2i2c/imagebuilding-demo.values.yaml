@@ -66,10 +66,15 @@ jupyterhub:
         authenticator_class: cilogon
       CILogonOAuthenticator:
         oauth_callback_url: "https://imagebuilding-demo.2i2c.cloud/hub/oauth_callback"
-        username_claim: "email"
-        # Only show the option to login with Google
         shown_idps:
           - http://google.com/accounts/o8/id
+        allowed_idps:
+          http://google.com/accounts/o8/id:
+            username_derivation:
+              username_claim: "email"
+            allowed_domains:
+              - "2i2c.org"
+
     extraConfig:
       enable-prototype-UI: |
         from kubespawner_dynamic_building_ui import TEMPLATE_PATHS, STATIC_HANDLER_TUPLE
