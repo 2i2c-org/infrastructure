@@ -38,10 +38,12 @@ jupyterhub:
       JupyterHub:
         authenticator_class: cilogon
       CILogonOAuthenticator:
-        scope:
-          - "profile"
-        username_claim: "preferred_username"
         oauth_callback_url: "https://staging.uk.2i2c.cloud/hub/oauth_callback"
-        # Only show the option to login with GitHub
         shown_idps:
-          - http://github.com/login/oauth/authorize
+          - http://google.com/accounts/o8/id
+        allowed_idps:
+          http://google.com/accounts/o8/id:
+            username_derivation:
+              username_claim: "email"
+            allowed_domains:
+              - "2i2c.org"
