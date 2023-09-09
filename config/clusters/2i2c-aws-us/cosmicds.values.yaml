@@ -82,20 +82,9 @@ jupyterhub:
         oauth_callback_url: https://cosmicds.2i2c.cloud/hub/oauth_callback
         shown_idps:
           - http://github.com/login/oauth/authorize
-          # Temporarily enable google & microsoft auth, to be reverted
-          # after July 21 2023
-          # Ref https://github.com/2i2c-org/infrastructure/issues/2128#issuecomment-1633128941
-          - http://google.com/accounts/o8/id
-          - http://login.microsoftonline.com/common/oauth2/v2.0/authorize
         allowed_idps:
           # The username claim here is used to do *authorization*, for both
           # admin use and any allow listing we want to do.
           http://github.com/login/oauth/authorize:
             username_derivation:
               username_claim: "preferred_username"
-          http://google.com/accounts/o8/id:
-            username_derivation:
-              username_claim: "email"
-          http://login.microsoftonline.com/common/oauth2/v2.0/authorize:
-            username_derivation:
-              username_claim: "email"
