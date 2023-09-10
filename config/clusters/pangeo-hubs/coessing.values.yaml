@@ -73,5 +73,3 @@ basehub:
           #
           admin_users:
             - paigemar@umich.edu
-          # Delete any prior existing users in the db that don't pass username_pattern
-          delete_invalid_users: true
