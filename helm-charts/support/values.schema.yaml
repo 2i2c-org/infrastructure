@@ -143,6 +143,49 @@ properties:
         type: string
         description: |
           Password for basic auth protecting prometheus
+
+  prometheusStorageClass:
+    type: object
+    additionalProperties: false
+    description: |
+      Provision a separate storageClass specifically for storing prometheus
+      data. Lets us control retentionPolicy (so we do not lose the data
+      when the cluster is deleted) and type of disk used (for performance
+      tuning)
+    required:
+      - gke
+    properties:
+      gke:
+        type: object
+        additionalProperties: false
+        description: |
+          Provision storageClass in a GKE environment, with the appropriate
+          GCP PD CSI provisioner.
+
+          https://cloud.google.com/kubernetes-engine/docs/how-to/persistent-volumes/gce-pd-csi-driver has
+          more information about this provisioner.
+        required:
+          - enabled
+          - parameters
+          - name
+        properties:
+          enabled:
+            type: boolean
+            description: |
+              Enable creating this StorageClass
+          parameters:
+            type: object
+            additionalProperties: true
+            description: |
+              Parameters defining properties of the volume provisioned by this
+              StorageClass.
+
+              For the GCP CSI driver in use here, the parameters are documented at
+              https://cloud.google.com/kubernetes-engine/docs/how-to/persistent-volumes/gce-pd-csi-driver
+          name:
+            type: string
+            description: |
+              Name of the StorageClass to create
   global:
     type: object
     additionalProperties: true

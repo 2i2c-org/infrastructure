@@ -444,6 +444,19 @@ nvidiaDevicePlugin:
     enabled: false
     version: "stable"
 
+# Setup a separate storageClass specifically for prometheus data
+prometheusStorageClass:
+  gke:
+    # Defaults to false, until all GKE clusters have been manually
+    # migrated. Could default to true after that.
+    enabled: false
+    # pd-balanced is SSD backed, much faster than spinning standard disks and
+    # cheaper than pd-ssd. We add the -retain to indicate the retainPolicy
+    # of Retain, rather than the default of Delete
+    name: balanced-rwo-retain
+    parameters:
+      type: pd-balanced
+
 # A placeholder as global values that can be referenced from the same location
 # of any chart should be possible to provide, but aren't necessarily provided or
 # used.

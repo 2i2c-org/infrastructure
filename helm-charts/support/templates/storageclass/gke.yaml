@@ -1,0 +1,15 @@
+# https://cloud.google.com/kubernetes-engine/docs/how-to/persistent-volumes/gce-pd-csi-driver#create_a_storageclass
+# has more information about setting up StorageClass for GCP PD CSI Driver,
+# for use in GKE environments.
+{{- if .Values.prometheusStorageClass.gke.enabled }}
+allowVolumeExpansion: true
+apiVersion: storage.k8s.io/v1
+kind: StorageClass
+metadata:
+  name: {{ .Values.prometheusStorageClass.gke.name }}
+parameters: {{ .Values.prometheusStorageClass.gke.parameters | toJson }}
+provisioner: pd.csi.storage.gke.io
+# Don't delete the backing disk when the PVC is deleted
+reclaimPolicy: Retain
+volumeBindingMode: WaitForFirstConsumer
+{{- end }}

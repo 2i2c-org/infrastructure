@@ -1,11 +1,16 @@
 prometheusIngressAuthSecret:
   enabled: true
 
+prometheusStorageClass:
+  gke:
+    enabled: true
+
 prometheus:
   server:
     persistentVolume:
       # 100Gi filled up, and this is source of our billing data.
-      size: 1Ti
+      size: 512Gi
+      storageClass: balanced-rwo-retain
     ingress:
       enabled: true
       hosts:
