@@ -67,8 +67,6 @@ jupyterhub:
         scope:
           - "profile"
         oauth_callback_url: https://neurohackademy.2i2c.cloud/hub/oauth_callback
-        shown_idps:
-          - https://github.com/login/oauth/authorize
         allowed_idps:
           http://github.com/login/oauth/authorize:
             username_derivation:

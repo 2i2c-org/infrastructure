@@ -39,9 +39,6 @@ jupyterhub:
         authenticator_class: cilogon
       CILogonOAuthenticator:
         oauth_callback_url: "https://mtu.2i2c.cloud/hub/oauth_callback"
-        shown_idps:
-          - http://google.com/accounts/o8/id
-          - https://sso.mtu.edu/idp/shibboleth
         allowed_idps:
           # Allow 2i2c staff to login with Google
           http://google.com/accounts/o8/id:

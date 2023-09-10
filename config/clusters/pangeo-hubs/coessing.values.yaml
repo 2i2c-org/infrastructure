@@ -48,8 +48,6 @@ basehub:
           authenticator_class: cilogon
         CILogonOAuthenticator:
           oauth_callback_url: "https://coessing.2i2c.cloud/hub/oauth_callback"
-          shown_idps:
-            - https://accounts.google.com/o/oauth2/auth
           allowed_idps:
             http://google.com/accounts/o8/id:
               username_derivation:

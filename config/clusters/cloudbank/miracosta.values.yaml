@@ -29,10 +29,6 @@ jupyterhub:
         authenticator_class: cilogon
       CILogonOAuthenticator:
         oauth_callback_url: https://miracosta.cloudbank.2i2c.cloud/hub/oauth_callback
-        shown_idps:
-          - http://google.com/accounts/o8/id
-          - https://miracosta.fedgw.com/gateway
-          - urn:mace:incommon:berkeley.edu
         allowed_idps:
           http://google.com/accounts/o8/id:
             username_derivation:

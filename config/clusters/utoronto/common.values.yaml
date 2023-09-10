@@ -81,8 +81,6 @@ jupyterhub:
     config:
       CILogonOAuthenticator:
         oauth_callback_url: https://r-staging.datatools.utoronto.ca/hub/oauth_callback
-        shown_idps:
-          - https://idpz.utorauth.utoronto.ca/shibboleth
         allowed_idps:
           https://idpz.utorauth.utoronto.ca/shibboleth:
             username_derivation:

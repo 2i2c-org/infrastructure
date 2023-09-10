@@ -83,8 +83,6 @@ binderhub:
             - yuvipanda@2i2c.org
         CILogonOAuthenticator:
           oauth_callback_url: "https://binder-staging.hub.2i2c.cloud/hub/oauth_callback"
-          shown_idps:
-            - http://google.com/accounts/o8/id
           allowed_idps:
             http://google.com/accounts/o8/id:
               username_derivation:
