@@ -41,8 +41,3 @@ basehub:
             - 2i2c-org
           scope:
             - read:org
-        Authenticator:
-          # You must always set admin_users, even if it is an empty list,
-          # otherwise `add_staff_user_ids_to_admin_users: true` will fail
-          # silently and no staff members will have admin access.
-          admin_users: []
