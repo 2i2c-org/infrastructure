@@ -36,11 +36,9 @@ jupyterhub:
           urn:mace:incommon:berkeley.edu:
             username_derivation:
               username_claim: "email"
+      OAuthenticator:
+        allow_existing_users: True
       Authenticator:
-        # FIXME: In z2jh 3.0.0-beta.1, a truthy allowed_users implies
-        #        allow_existing_users=True, while in z3jh 3.0.0 this needs to be
-        #        configured explicitly.
-        #
         allowed_users: &staging_users
           - sean.smorris@berkeley.edu
         admin_users: *staging_users

@@ -58,16 +58,14 @@ basehub:
             http://github.com/login/oauth/authorize:
               username_derivation:
                 username_claim: "preferred_username"
+        OAuthenticator:
+          allow_existing_users: True
         Authenticator:
           admin_users: &users
             - amfriesz
             - jules32
             - erinmr
             - betolink
-          # FIXME: In z2jh 3.0.0-beta.1, a truthy allowed_users implies
-          #        allow_existing_users=True, while in z3jh 3.0.0 this needs to be
-          #        configured explicitly.
-          #
           allowed_users: *users
 dask-gateway:
   gateway:

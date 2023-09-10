@@ -34,16 +34,6 @@ basehub:
         node.kubernetes.io/instance-type: n1-standard-2
     hub:
       config:
-        Authenticator:
-          admin_users: &admin_users
-            - paigemar@umich.edu
-          # FIXME: In z2jh 3.0.0-beta.1, a truthy allowed_users implies
-          #        allow_existing_users=True, while in z3jh 3.0.0 this needs to be
-          #        configured explicitly.
-          #
-          allowed_users: *admin_users
-          # Delete any prior existing users in the db that don't pass username_pattern
-          delete_invalid_users: true
         JupyterHub:
           authenticator_class: cilogon
         CILogonOAuthenticator:
@@ -52,3 +42,11 @@ basehub:
             http://google.com/accounts/o8/id:
               username_derivation:
                 username_claim: "email"
+        OAuthenticator:
+          allow_existing_users: True
+        Authenticator:
+          admin_users: &admin_users
+            - paigemar@umich.edu
+          allowed_users: *admin_users
+          # Delete any prior existing users in the db that don't pass username_pattern
+          delete_invalid_users: true
