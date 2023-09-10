@@ -34,13 +34,6 @@ basehub:
             url: https://people.climate.columbia.edu/projects/sponsor/National%20Science%20Foundation
     hub:
       config:
-        Authenticator:
-          # This hub uses GitHub Teams auth and so we don't set
-          # allowed_users in order to not deny access to valid members of
-          # the listed teams. These people should have admin access though.
-          admin_users:
-            - einatlev-ldeo
-            - SamKrasnoff
         JupyterHub:
           authenticator_class: github
         GitHubOAuthenticator:
@@ -49,6 +42,10 @@ basehub:
             - VICTOR-Community:victoraccess
           scope:
             - read:org
+        Authenticator:
+          admin_users:
+            - einatlev-ldeo
+            - SamKrasnoff
     singleuser:
       profileList:
         # The mem-guarantees are here so k8s doesn't schedule other pods
