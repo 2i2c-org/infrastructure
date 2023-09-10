@@ -115,8 +115,6 @@ jupyterhub:
       JupyterHub:
         authenticator_class: cilogon
       CILogonOAuthenticator:
-        scope:
-          - "profile"
         oauth_callback_url: https://{{ HUB_DOMAIN }}/hub/oauth_callback
         allowed_idps:
           http://github.com/login/oauth/authorize:
