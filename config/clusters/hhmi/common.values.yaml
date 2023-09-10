@@ -49,8 +49,6 @@ basehub:
           scope:
             - "profile"
             - "email"
-          shown_idps:
-            - http://github.com/login/oauth/authorize
           allowed_idps:
             http://github.com/login/oauth/authorize:
               username_derivation:

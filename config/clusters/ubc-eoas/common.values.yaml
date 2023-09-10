@@ -42,9 +42,6 @@ jupyterhub:
       JupyterHub:
         authenticator_class: cilogon
       CILogonOAuthenticator:
-        shown_idps:
-          - https://authentication.ubc.ca
-          - http://google.com/accounts/o8/id
         allowed_idps:
           https://authentication.ubc.ca:
             username_derivation:

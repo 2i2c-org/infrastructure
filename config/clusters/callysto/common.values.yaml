@@ -136,9 +136,6 @@ jupyterhub:
           - "102749090965437723445" # Byron Chu (Cybera)
           - "115909958579864751636" # Michael Jones (Cybera)
           - "106951135662332329542" # Elmar Bouwer (Cybera)
-        shown_idps:
-          - https://accounts.google.com/o/oauth2/auth
-          - https://login.microsoftonline.com/common/oauth2/v2.0/authorize
         allowed_idps:
           http://google.com/accounts/o8/id:
             username_derivation:

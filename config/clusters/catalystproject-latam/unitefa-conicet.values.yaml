@@ -33,8 +33,6 @@ jupyterhub:
         authenticator_class: cilogon
       CILogonOAuthenticator:
         oauth_callback_url: "https://unitefa-conicet.latam.catalystproject.2i2c.cloud/hub/oauth_callback"
-        shown_idps:
-          - http://google.com/accounts/o8/id
         allowed_idps:
           # The username claim here is used to do *authorization*, for both
           # admin use and any allow listing we want to do.
