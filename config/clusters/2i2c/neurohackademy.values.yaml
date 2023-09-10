@@ -55,20 +55,18 @@ jupyterhub:
     config:
       JupyterHub:
         authenticator_class: cilogon
-      Authenticator:
-        # FIXME: In z2jh 3.0.0-beta.1, a truthy allowed_users implies
-        #        allow_existing_users=True, while in z3jh 3.0.0 this needs to be
-        #        configured explicitly.
-        #
-        allowed_users: &neurohackademy_users
-          - arokem
-        admin_users: *neurohackademy_users
       CILogonOAuthenticator:
         oauth_callback_url: https://neurohackademy.2i2c.cloud/hub/oauth_callback
         allowed_idps:
           http://github.com/login/oauth/authorize:
             username_derivation:
               username_claim: "preferred_username"
+      OAuthenticator:
+        allow_existing_users: True
+      Authenticator:
+        allowed_users: &neurohackademy_users
+          - arokem
+        admin_users: *neurohackademy_users
     extraFiles:
       configurator-schema-default:
         data:

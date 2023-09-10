@@ -36,18 +36,16 @@ basehub:
             url: https://science.nasa.gov/earth-science/focus-areas/climate-variability-and-change/ocean-physics
     hub:
       config:
+        JupyterHub:
+          authenticator_class: github
+        OAuthenticator:
+          allow_existing_users: True
         Authenticator:
-          # FIXME: In z2jh 3.0.0-beta.1, a truthy allowed_users implies
-          #        allow_existing_users=True, while in z3jh 3.0.0 this needs to
-          #        be configured explicitly.
-          #
           allowed_users: &gridsst_users
             - alisonrgray
             - nikki-t
             - dgumustel
           admin_users: *gridsst_users
-        JupyterHub:
-          authenticator_class: github
     singleuser:
       profileList:
         # The mem-guarantees are here so k8s doesn't schedule other pods
