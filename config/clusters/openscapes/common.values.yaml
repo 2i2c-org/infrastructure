@@ -51,8 +51,6 @@ basehub:
         JupyterHub:
           authenticator_class: cilogon
         CILogonOAuthenticator:
-          scope:
-            - "profile"
           allowed_idps:
             http://github.com/login/oauth/authorize:
               username_derivation:
