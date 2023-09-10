@@ -49,11 +49,9 @@ basehub:
         - name: volume-mount-ownership-fix
           image: busybox
           command:
-            [
-              "sh",
-              "-c",
-              "id && chown 1000:1000 /home/jovyan /home/jovyan/shared /home/jovyan/shared-public && ls -lhd /home/jovyan",
-            ]
+            - sh
+            - -c
+            - id && chown 1000:1000 /home/jovyan /home/jovyan/shared /home/jovyan/shared-public && ls -lhd /home/jovyan
           securityContext:
             runAsUser: 0
           volumeMounts:
