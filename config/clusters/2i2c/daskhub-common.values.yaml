@@ -1,6 +1,8 @@
 basehub:
   nfs:
     enabled: true
+    dirsizeReporter:
+      enabled: true
     pv:
       mountOptions:
         - soft
