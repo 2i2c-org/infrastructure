@@ -38,15 +38,6 @@ basehub:
     hub:
       allowNamedServers: true
       config:
-        Authenticator:
-          # This hub uses GitHub Teams auth and so we don't set
-          # allowed_users in order to not deny access to valid members of
-          # the listed teams. These people should have admin access though.
-          admin_users:
-            - rabernat
-            - jhamman
-            - scottyhq
-            - TomAugspurger
         JupyterHub:
           authenticator_class: github
         GitHubOAuthenticator:
@@ -55,6 +46,12 @@ basehub:
             - 2i2c-org:hub-access-for-2i2c-staff
           scope:
             - read:org
+        Authenticator:
+          admin_users:
+            - rabernat
+            - jhamman
+            - scottyhq
+            - TomAugspurger
     singleuser:
       extraEnv:
         GH_SCOPED_CREDS_CLIENT_ID: "Iv1.c90ee430400a347f"
