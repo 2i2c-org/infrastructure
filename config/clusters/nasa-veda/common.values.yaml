@@ -61,12 +61,6 @@ basehub:
         # Based off pangeo/pangeo-notebook:2023.07.05 which uses JupyterLab <4, so jupyterlab-git and dask-dashboard work
         # If updating this tag, also update it in the `profile_options.image.options.pangeo.kubespawner_override.image`below
         tag: "5068290376e8c3151d97a36ae6485bb7ff79650b94aecc93ffb2ea1b42d76460"
-      lifecycleHooks:
-        postStart:
-          exec:
-            command:
-              - "python3"
-              - "/opt/k8s-lifecycle-hook-post-start.py"
       profileList:
         # NOTE: About node sharing
         #
