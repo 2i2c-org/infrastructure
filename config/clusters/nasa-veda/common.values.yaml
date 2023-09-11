@@ -96,6 +96,18 @@ basehub:
                   slug: pangeo
                   kubespawner_override:
                     image: public.ecr.aws/nasa-veda/nasa-veda-singleuser:5068290376e8c3151d97a36ae6485bb7ff79650b94aecc93ffb2ea1b42d76460
+                    init_containers:
+                      - name: nasa-veda-singleuser-init
+                        image: public.ecr.aws/nasa-veda/nasa-veda-singleuser-init:1fd99797107550a50d58ce7e5dd4042e37a065ac2f88576bd32c8b7211e445e3
+                        command:
+                          - "python3"
+                          - "/opt/k8s-init-container-nb-docs.py"
+                          - "/home/jovyan/shared"
+                    volume_mounts:
+                      # Mount the shared readonly directory
+                      - name: home
+                        mountPath: /home/jovyan/shared
+                        subPath: _shared
                 rocker:
                   display_name: Rocker Geospatial with RStudio
                   slug: rocker
@@ -107,6 +119,13 @@ basehub:
                     # https://github.com/2i2c-org/infrastructure/issues/2559
                     working_dir: /home/rstudio
                     # Because this is a list, it will override our default volume mounts
+                    init_containers:
+                      - name: nasa-veda-singleuser-init
+                        image: public.ecr.aws/nasa-veda/nasa-veda-singleuser-init:1fd99797107550a50d58ce7e5dd4042e37a065ac2f88576bd32c8b7211e445e3
+                        command:
+                          - "python3"
+                          - "/opt/k8s-init-container-nb-docs.py"
+                          - "/home/rstudio/shared"
                     volume_mounts:
                       # Mount the user home directory
                       - name: home
