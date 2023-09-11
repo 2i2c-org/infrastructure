@@ -135,7 +135,7 @@ basehub:
                           - "python3"
                           - "/opt/k8s-init-container-nb-docs.py"
                           - "/home/rstudio"
-                        volume_mounts:
+                        volumeMounts:
                           - name: home
                             mountPath: /home/rstudio
                             subPath: "{username}"
