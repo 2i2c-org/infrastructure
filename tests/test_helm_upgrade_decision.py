@@ -4,7 +4,7 @@ from unittest import TestCase
 
 from ruamel.yaml import YAML
 
-from deployer.helm_upgrade_decision import (
+from deployer.commands.generate.helm_upgrade.decision import (
     assign_staging_jobs_for_missing_clusters,
     discover_modified_common_files,
     ensure_support_staging_jobs_have_correct_keys,

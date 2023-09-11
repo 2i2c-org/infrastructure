@@ -15,11 +15,13 @@ from ruamel.yaml import YAML
 
 from deployer.cli_app import validate_app
 from deployer.infra_components.cluster import Cluster
-from deployer.utils.file_acquisition import find_absolute_path_to_cluster_file
+from deployer.utils.file_acquisition import (
+    HELM_CHARTS_DIR,
+    find_absolute_path_to_cluster_file,
+)
 from deployer.utils.rendering import print_colour
 
 yaml = YAML(typ="safe", pure=True)
-helm_charts_dir = Path(__file__).parent.parent.parent.parent.joinpath("helm-charts")
 
 
 @functools.lru_cache
@@ -50,19 +52,19 @@ def _prepare_helm_charts_dependencies_and_schemas():
     dependencies updated and .json schema files generated so that they can be
     rendered during validation or deployment.
     """
-    basehub_dir = helm_charts_dir.joinpath("basehub")
+    basehub_dir = HELM_CHARTS_DIR.joinpath("basehub")
     _generate_values_schema_json(basehub_dir)
     subprocess.check_call(["helm", "dep", "up", basehub_dir])
 
-    daskhub_dir = helm_charts_dir.joinpath("daskhub")
+    daskhub_dir = HELM_CHARTS_DIR.joinpath("daskhub")
     _generate_values_schema_json(daskhub_dir)
     subprocess.check_call(["helm", "dep", "up", daskhub_dir])
 
-    binderhub_dir = helm_charts_dir.joinpath("binderhub")
+    binderhub_dir = HELM_CHARTS_DIR.joinpath("binderhub")
     _generate_values_schema_json(binderhub_dir)
     subprocess.check_call(["helm", "dep", "up", binderhub_dir])
 
-    support_dir = helm_charts_dir.joinpath("support")
+    support_dir = HELM_CHARTS_DIR.joinpath("support")
     _generate_values_schema_json(support_dir)
     subprocess.check_call(["helm", "dep", "up", support_dir])
 
@@ -114,7 +116,7 @@ def hub_config(
         cmd = [
             "helm",
             "template",
-            str(helm_charts_dir.joinpath(hub.spec["helm_chart"])),
+            str(HELM_CHARTS_DIR.joinpath(hub.spec["helm_chart"])),
         ]
         for values_file in hub.spec["helm_chart_values_files"]:
             if "secret" not in os.path.basename(values_file):
@@ -153,7 +155,7 @@ def support_config(
         cmd = [
             "helm",
             "template",
-            str(helm_charts_dir.joinpath("support")),
+            str(HELM_CHARTS_DIR.joinpath("support")),
         ]
 
         for values_file in cluster.support["helm_chart_values_files"]:

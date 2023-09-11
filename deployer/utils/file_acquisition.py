@@ -15,6 +15,11 @@ from ruamel.yaml.scanner import ScannerError
 
 yaml = YAML(typ="safe", pure=True)
 
+REPO_ROOT_PATH = Path(__file__).parent.parent.parent
+HELM_CHARTS_DIR = REPO_ROOT_PATH.joinpath("helm-charts")
+
+print(f"repo_root_path from file_aquisition {REPO_ROOT_PATH}")
+
 
 def _assert_file_exists(filepath):
     """Assert a filepath exists, raise an error if not. This function is to be used for
@@ -44,11 +49,9 @@ def find_absolute_path_to_cluster_file(cluster_name: str, is_test: bool = False)
     Returns:
         Path object: The absolute path to the cluster.yaml file for the named cluster
     """
-    root_dir = Path(__file__).parent.parent
-    cluster_yaml_path = root_dir.joinpath(
+    cluster_yaml_path = REPO_ROOT_PATH.joinpath(
         f"config/clusters/{cluster_name}/cluster.yaml"
     )
-
     if not cluster_yaml_path.exists():
         raise FileNotFoundError(
             f"No cluster.yaml file exists for cluster {cluster_name}. "
@@ -251,16 +254,15 @@ def get_all_cluster_yaml_files(is_test=False):
     Returns:
         set[path obj]: A set of absolute paths to all cluster.yaml files in the repo
     """
-    root_path = Path(__file__).parent.parent
     # Get absolute paths
     if is_test:
         # We are running a test via pytest. We only want to focus on the cluster
         # folders nested under the `tests/` folder.
-        return set(root_path.glob("tests/test-clusters/**/cluster.yaml"))
+        return set(REPO_ROOT_PATH.glob("tests/test-clusters/**/cluster.yaml"))
 
     # We are NOT running a test via pytest. We only care about the clusters under config/clusters
     return {
         path
-        for path in root_path.glob("config/clusters/**/cluster.yaml")
+        for path in REPO_ROOT_PATH.glob("config/clusters/**/cluster.yaml")
         if "templates" not in path.as_posix()
     }

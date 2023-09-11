@@ -13,10 +13,10 @@ import jinja2
 import typer
 from typing_extensions import Annotated
 
+from deployer.utils.file_acquisition import REPO_ROOT_PATH
 from deployer.utils.rendering import print_colour
 
 from .common import (
-    REPO_ROOT,
     generate_cluster_config_file,
     generate_config_directory,
     generate_support_files,
@@ -30,13 +30,13 @@ def generate_terraform_file(vars):
     required to create a GCP cluster
     """
     with open(
-        REPO_ROOT / f'terraform/gcp/projects/{vars["hub_type"]}-template.tfvars'
+        REPO_ROOT_PATH / f'terraform/gcp/projects/{vars["hub_type"]}-template.tfvars'
     ) as f:
         tfvars_template = jinja2.Template(f.read())
 
     print_colour("Generating the terraform infrastructure file...", "yellow")
     tfvars_file_path = (
-        REPO_ROOT / "terraform/gcp/projects" / f'{vars["cluster_name"]}.tfvars'
+        REPO_ROOT_PATH / "terraform/gcp/projects" / f'{vars["cluster_name"]}.tfvars'
     )
     with open(tfvars_file_path, "w") as f:
         f.write(tfvars_template.render(**vars))

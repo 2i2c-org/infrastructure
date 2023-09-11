@@ -2,20 +2,20 @@ import os
 import secrets
 import string
 import subprocess
-from pathlib import Path
 
 import jinja2
 
+from deployer.utils.file_acquisition import REPO_ROOT_PATH
 from deployer.utils.rendering import print_colour
-
-REPO_ROOT = Path(__file__).parent.parent.parent
 
 
 def generate_cluster_config_file(cluster_config_directory, provider, vars):
     """
     Generates the `config/<cluster_name>/cluster.yaml` config
     """
-    with open(REPO_ROOT / f"config/clusters/templates/{provider}/cluster.yaml") as f:
+    with open(
+        REPO_ROOT_PATH / f"config/clusters/templates/{provider}/cluster.yaml"
+    ) as f:
         cluster_yaml_template = jinja2.Template(f.read())
     with open(cluster_config_directory / "cluster.yaml", "w") as f:
         f.write(cluster_yaml_template.render(**vars))
@@ -34,7 +34,9 @@ def generate_support_files(cluster_config_directory, vars):
     """
     # Generate the suppport values file `support.values.yaml`
     print_colour("Generating the support values file...", "yellow")
-    with open(REPO_ROOT / "config/clusters/templates/common/support.values.yaml") as f:
+    with open(
+        REPO_ROOT_PATH / "config/clusters/templates/common/support.values.yaml"
+    ) as f:
         support_values_yaml_template = jinja2.Template(f.read())
 
     with open(cluster_config_directory / "support.values.yaml", "w") as f:
@@ -49,7 +51,7 @@ def generate_support_files(cluster_config_directory, vars):
         "password": "".join(secrets.choice(alphabet) for i in range(64)),
     }
     with open(
-        REPO_ROOT / "config/clusters/templates/common/support.secret.values.yaml"
+        REPO_ROOT_PATH / "config/clusters/templates/common/support.secret.values.yaml"
     ) as f:
         support_secret_values_yaml_template = jinja2.Template(f.read())
     with open(cluster_config_directory / "enc-support.secret.values.yaml", "w") as f:
@@ -74,7 +76,7 @@ def generate_config_directory(vars):
     Generates the required `config` directory for hubs on a cluster if it doesn't exit
     and returns its name.
     """
-    cluster_config_directory = REPO_ROOT / "config/clusters" / vars["cluster_name"]
+    cluster_config_directory = REPO_ROOT_PATH / "config/clusters" / vars["cluster_name"]
 
     print_colour(
         f"Checking if cluster config directory {cluster_config_directory} exists...",

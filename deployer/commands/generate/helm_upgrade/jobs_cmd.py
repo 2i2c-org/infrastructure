@@ -1,12 +1,11 @@
 import json
 import os
-from pathlib import Path
 
 import typer
 from ruamel.yaml import YAML
 
 from deployer.cli_app import generate_app
-from deployer.utils.file_acquisition import get_all_cluster_yaml_files
+from deployer.utils.file_acquisition import REPO_ROOT_PATH, get_all_cluster_yaml_files
 from deployer.utils.rendering import create_markdown_comment, print_colour
 
 from .decision import (
@@ -41,8 +40,9 @@ def helm_upgrade_jobs(
     ) = discover_modified_common_files(changed_filepaths)
 
     # Convert changed filepaths into absolute Posix Paths
-    root_dir = Path(__file__).parent.parent
-    changed_filepaths = [root_dir.joinpath(filepath) for filepath in changed_filepaths]
+    changed_filepaths = [
+        REPO_ROOT_PATH.joinpath(filepath) for filepath in changed_filepaths
+    ]
 
     # Get a list of filepaths to all cluster.yaml files in the repo
     cluster_files = get_all_cluster_yaml_files()

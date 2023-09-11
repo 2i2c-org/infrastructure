@@ -1,14 +1,16 @@
 import subprocess
-from pathlib import Path
 
 from ruamel.yaml import YAML
 
-from deployer.utils.file_acquisition import get_decrypted_file, get_decrypted_files
+from deployer.utils.file_acquisition import (
+    HELM_CHARTS_DIR,
+    get_decrypted_file,
+    get_decrypted_files,
+)
 from deployer.utils.rendering import print_colour
 
 # Without `pure=True`, I get an exception about str / byte issues
 yaml = YAML(typ="safe", pure=True)
-helm_charts_dir = Path(__file__).parent.parent.joinpath("helm-charts")
 
 
 class Hub:
@@ -68,7 +70,7 @@ class Hub:
                 "--wait",
                 f"--namespace={self.spec['name']}",
                 self.spec["name"],
-                helm_charts_dir.joinpath(self.spec["helm_chart"]),
+                HELM_CHARTS_DIR.joinpath(self.spec["helm_chart"]),
             ]
 
             if dry_run:

@@ -10,7 +10,6 @@ deployer command going forward.
 
 import json
 from base64 import b64encode
-from pathlib import Path
 
 import requests
 import typer
@@ -23,8 +22,6 @@ from .utils import (
     get_grafana_url,
     update_central_grafana_token,
 )
-
-REPO_ROOT = Path(__file__).parent.parent.parent
 
 
 def build_service_account_request_headers():

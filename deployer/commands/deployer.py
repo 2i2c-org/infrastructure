@@ -6,7 +6,6 @@ import os
 import subprocess
 import sys
 from contextlib import redirect_stderr, redirect_stdout
-from pathlib import Path
 
 import pytest
 import typer
@@ -32,7 +31,6 @@ from deployer.utils.rendering import print_colour
 
 # Without `pure=True`, I get an exception about str / byte issues
 yaml = YAML(typ="safe", pure=True)
-helm_charts_dir = Path(__file__).parent.parent.joinpath("helm-charts")
 
 
 @app.command()

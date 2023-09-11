@@ -1,11 +1,11 @@
 import os
 import subprocess
-from pathlib import Path
 
 import requests
 from ruamel.yaml import YAML
 
 from deployer.utils.file_acquisition import (
+    REPO_ROOT_PATH,
     find_absolute_path_to_cluster_file,
     get_decrypted_file,
 )
@@ -131,9 +131,7 @@ def get_grafana_admin_password():
     Returns:
         string object: password of the admin user
     """
-    repo_root = Path(__file__).parent.parent.parent
-
-    grafana_credentials_filename = repo_root.joinpath(
+    grafana_credentials_filename = REPO_ROOT_PATH.joinpath(
         "helm-charts/support/enc-support.secret.values.yaml"
     )
 
