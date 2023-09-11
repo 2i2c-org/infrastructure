@@ -103,7 +103,7 @@ basehub:
                           - "python3"
                           - "/opt/k8s-init-container-nb-docs.py"
                           - "/home/jovyan"
-                        volume_mounts:
+                        volumeMounts:
                           - name: home
                             mountPath: /home/jovyan
                             subPath: "{username}"
