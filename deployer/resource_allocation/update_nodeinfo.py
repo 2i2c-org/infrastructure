@@ -102,6 +102,23 @@ def get_node_capacity_info(instance_type: str):
         cpu_available -= cpu_request
         mem_available -= mem_request
 
+    # Add a little bit of wiggle room, to account for:
+    # 1. Changes in requests for system components as k8s versions upgrade or
+    #    cloud providers roll out new components
+    # 2. We deploy support components but forget to update node capacity info
+    # 3. Whatever other things we aren't currently thinking of.
+    # A small amount of memory and CPU to sacrifice for the sake of
+    # operational flexibility. However, we *must* regenerate and update node
+    # information each time the following events occur:
+    # 1. We upgrade kubernetes versions
+    # 2. We change resource requirements for *daemonsets* in our support chart.
+    # 3. We upgrade z2jh version
+
+    # 128 MiB memory buffer
+    mem_available = mem_available - (128 * 1024 * 1024)
+    # 0.05 CPU overhead
+    cpu_available = cpu_available - 0.05
+
     return {
         # CPU units are  in fractions, while memory units are bytes
         "capacity": {"cpu": float(cpu_capacity), "memory": int(mem_capacity)},
