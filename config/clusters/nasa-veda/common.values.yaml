@@ -89,6 +89,19 @@ basehub:
                 validation_message: "Must be a publicly available docker image, of form <image-name>:<tag>"
                 kubespawner_override:
                   image: "{value}"
+                  init_containers:
+                    # this container uses nbgitpuller to mount https://github.com/NASA-IMPACT/veda-docs/ for user pods
+                    # image source: https://github.com/NASA-IMPACT/veda-jh-environments/tree/main/docker-images/base/nasa-veda-singleuser-init
+                    - name: nasa-veda-singleuser-init
+                      image: public.ecr.aws/nasa-veda/nasa-veda-singleuser-init:1fd99797107550a50d58ce7e5dd4042e37a065ac2f88576bd32c8b7211e445e3
+                      command:
+                        - "python3"
+                        - "/opt/k8s-init-container-nb-docs.py"
+                        - "/home/jovyan"
+                      volumeMounts:
+                        - name: home
+                          mountPath: /home/jovyan
+                          subPath: "{username}"
               choices:
                 pangeo:
                   display_name: Modified Pangeo Notebook
@@ -97,8 +110,8 @@ basehub:
                   kubespawner_override:
                     image: public.ecr.aws/nasa-veda/nasa-veda-singleuser:5068290376e8c3151d97a36ae6485bb7ff79650b94aecc93ffb2ea1b42d76460
                     init_containers:
-                      # this container loads uses nbgitpuller to mount https://github.com/NASA-IMPACT/veda-docs/ for user pods
-                      # source: https://github.com/NASA-IMPACT/veda-jh-environments/tree/main/docker-images/base/nasa-veda-singleuser-init
+                      # this container uses nbgitpuller to mount https://github.com/NASA-IMPACT/veda-docs/ for user pods
+                      # image source: https://github.com/NASA-IMPACT/veda-jh-environments/tree/main/docker-images/base/nasa-veda-singleuser-init
                       - name: nasa-veda-singleuser-init
                         image: public.ecr.aws/nasa-veda/nasa-veda-singleuser-init:1fd99797107550a50d58ce7e5dd4042e37a065ac2f88576bd32c8b7211e445e3
                         command:
@@ -131,8 +144,8 @@ basehub:
                         subPath: _shared
                         readOnly: true
                     init_containers:
-                      # this container loads uses nbgitpuller to mount https://github.com/NASA-IMPACT/veda-docs/ for user pods
-                      # source: https://github.com/NASA-IMPACT/veda-jh-environments/tree/main/docker-images/base/nasa-veda-singleuser-init
+                      # this container uses nbgitpuller to mount https://github.com/NASA-IMPACT/veda-docs/ for user pods
+                      # image source: https://github.com/NASA-IMPACT/veda-jh-environments/tree/main/docker-images/base/nasa-veda-singleuser-init
                       - name: nasa-veda-singleuser-init
                         image: public.ecr.aws/nasa-veda/nasa-veda-singleuser-init:1fd99797107550a50d58ce7e5dd4042e37a065ac2f88576bd32c8b7211e445e3
                         command:
