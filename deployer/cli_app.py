@@ -1,5 +1,5 @@
 """
-Export the typer app we use throughout our codebase.
+Export the typer apps we use throughout our codebase.
 
 Having this in a single file allows multiple files to provide subcommands
 for the same CLI application. So we can put deployment related stuff under

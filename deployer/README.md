@@ -17,11 +17,110 @@ pip install --editable .
 The `--editable` makes sure any changes you make to the deployer itself are
 immediately effected.
 
+## Package directory structure
+
+The deployer has the following directory structure:
+
+```bash
+├── README.md
+├── __init__.py
+├── __main__.py
+├── cli_app.py
+├── commands
+├── infra_components
+├── keys
+├── tests
+└── utils
+```
+
+### The `cli_app.py` file
+The `cli_app.py` file is the file that contains the main `deployer` typer app and all of the main sub-apps "attached" to it, each corresponding to a `deployer` sub-command. These apps are used throughout the codebase.
+
+### The `infra_components` directory
+
+This is the directory where the files that define the `Hub` and `Cluster` classes are stored. These files are imported and used throughout the deployer's codebase to emulate these objects programmatically.
+
+```bash
+├── infra_components
+│   ├── cluster.py
+│   └── hub.py
+```
+
+### The `utils` directory
+This is where utility functions are stored. They are to be imported and used throughout the entire codebase of the deployer.
+
+```bash
+└── utils
+    ├── file_acquisition.py
+    └── rendering.py
+```
+
+### The `commands` directory
+
+This is the directory where all of the code related to the main `deployer` sub-commands is stored.
+
+Each sub-commands's functions are stored:
+- either in a single Python file that ends in `_cmd` or `_commands`
+- or in a directory that matches the name of the sub-command, if it is more complex and required additional helper files.
+
+```{note}
+The `deployer.py` file is the main file, that contains all of the commands registered directly on the `deployer` main typer app, that could not or were not yet categorized in sub-commands.
+```
+
+```bash
+├── commands
+│   ├── cilogon_client_cmd.py
+│   ├── deployer.py
+│   ├── exec
+│   │   ├── debug_app_and_commands.py
+│   │   └── shell
+│   │       ├── app.py
+│   │       ├── cloud_commands.py
+│   │       └── infra_components_commands.py
+│   ├── generate
+│   │   ├── __init__.py
+│   │   ├── billing
+│   │   │   ├── cost_table_cmd.py
+│   │   │   ├── importers.py
+│   │   │   └── outputers.py
+│   │   ├── dedicated_cluster
+│   │   │   ├── aws_commands.py
+│   │   │   ├── common.py
+│   │   │   ├── dedicate_cluster_app.py
+│   │   │   └── gcp_commands.py
+│   │   └── helm_upgrade
+│   │       ├── decision.py
+│   │       └── jobs_cmd.py
+│   ├── grafana
+│   │   ├── central_grafana.py
+│   │   ├── deploy_dashboards_cmd.py
+│   │   ├── tokens_cmd.py
+│   │   └── utils.py
+│   └── validate
+│       ├── cluster.schema.yaml
+│       └── config_cmd.py
+```
+
+### The `tests` directory
+
+This directory contains the tests and assets used by these tests and called by `deployer run-hub-health-check` command to determine whether a hub should be marked as healthy or not.
+
+```bash
+├── tests
+│   ├── __init__.py
+│   ├── conftest.py
+│   ├── test-notebooks
+│   │   ├── basehub
+│   │   │   └── simple.ipynb
+│   │   └── daskhub
+│   │       ├── dask_test_notebook.ipynb
+│   │       └── scale_dask_workers.ipynb
+│   └── test_hub_health.py
+```
+
 ## Deployment Commands
 
-
 This section descripts all the deployment related subcommands the `deployer` can carry out and their commandline parameters.
-
 
 **Command line usage:**
 
