@@ -18,8 +18,6 @@ yaml = YAML(typ="safe", pure=True)
 REPO_ROOT_PATH = Path(__file__).parent.parent.parent
 HELM_CHARTS_DIR = REPO_ROOT_PATH.joinpath("helm-charts")
 
-print(f"repo_root_path from file_aquisition {REPO_ROOT_PATH}")
-
 
 def _assert_file_exists(filepath):
     """Assert a filepath exists, raise an error if not. This function is to be used for

@@ -10,9 +10,9 @@ from deployer.commands.generate.helm_upgrade.decision import (
     ensure_support_staging_jobs_have_correct_keys,
     generate_hub_matrix_jobs,
     generate_support_matrix_jobs,
-    get_all_cluster_yaml_files,
     move_staging_hubs_to_staging_matrix,
 )
+from deployer.utils.file_acquisition import get_all_cluster_yaml_files
 
 yaml = YAML(typ="safe", pure=True)
 case = TestCase()
