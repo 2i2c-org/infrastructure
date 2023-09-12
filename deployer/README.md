@@ -17,7 +17,7 @@ pip install --editable .
 The `--editable` makes sure any changes you make to the deployer itself are
 immediately effected.
 
-## Package directory structure
+## The directory structure of the deployer package
 
 The deployer has the following directory structure:
 
@@ -63,9 +63,7 @@ Each sub-commands's functions are stored:
 - either in a single Python file that ends in `_cmd` or `_commands`
 - or in a directory that matches the name of the sub-command, if it is more complex and required additional helper files.
 
-```{note}
 The `deployer.py` file is the main file, that contains all of the commands registered directly on the `deployer` main typer app, that could not or were not yet categorized in sub-commands.
-```
 
 ```bash
 ├── commands
@@ -118,9 +116,8 @@ This directory contains the tests and assets used by these tests and called by `
 │   └── test_hub_health.py
 ```
 
-## Deployment Commands
-
-This section descripts all the deployment related subcommands the `deployer` can carry out and their commandline parameters.
+## The deployer's main sub-commands commandline usage
+This section descripts all the subcommands the `deployer` can carry out and their commandline parameters.
 
 **Command line usage:**
 
@@ -154,7 +151,11 @@ This section descripts all the deployment related subcommands the `deployer` can
 ╰──────────────────────────────────────────────────────────────────────────────────────────────────────────────────────╯
 ```
 
-### `deploy`
+### Standalone sub-commands related to deployment
+
+These deployment related commands are all stored in `deployer/commands/deployer.py` file and are registered on the main `deployer` typer app.
+
+#### `deploy`
 
 This function is used to deploy changes to a hub (or list of hubs), or install it if it does not yet exist.
 It takes a name of a cluster and a name of a hub (or list of names) as arguments, gathers together the config files under `/config/clusters` that describe the individual hub(s), and runs `helm upgrade` with these files passed as `--values` arguments.
@@ -179,33 +180,7 @@ It takes a name of a cluster and a name of a hub (or list of names) as arguments
 ╰──────────────────────────────────────────────────────────────────────────────────────────────────────────────────────╯
 ```
 
-### `validate`
-
-This function is used to validate the values files for each of our hubs against their helm chart's values schema.
-This allows us to validate that all required values are present and have the correct type before we attempt a deployment.
-
-**Command line usage:**
-
-```bash
-                                                                                                                        
- Validate configuration files such as helm chart values and cluster.yaml files.                                         
-                                                                                                                        
-╭─ Options ────────────────────────────────────────────────────────────────────────────────────────────────────────────╮
-│ --help          Show this message and exit.                                                                          │
-╰──────────────────────────────────────────────────────────────────────────────────────────────────────────────────────╯
-╭─ Commands ───────────────────────────────────────────────────────────────────────────────────────────────────────────╮
-│ all                   Validate cluster.yaml and non-encrypted helm config for given hub                              │
-│ authenticator-config  For each hub of a specific cluster: - It asserts that when the JupyterHub GitHubOAuthenticator │
-│                       is used,   then `Authenticator.allowed_users` is not set.   An error is raised otherwise.      │
-│ cluster-config        Validates cluster.yaml configuration against a JSONSchema.                                     │
-│ hub-config            Validates the provided non-encrypted helm chart values files for each hub of a specific        │
-│                       cluster.                                                                                       │
-│ support-config        Validates the provided non-encrypted helm chart values files for the support chart of a        │
-│                       specific cluster.                                                                              │
-╰──────────────────────────────────────────────────────────────────────────────────────────────────────────────────────╯
-```
-
-### `deploy-support`
+#### `deploy-support`
 
 This function deploys changes to the support helm chart on a cluster, or installs it if it's not already present.
 This command only needs to be run once per cluster, not once per hub.
@@ -226,108 +201,7 @@ This command only needs to be run once per cluster, not once per hub.
 ╰──────────────────────────────────────────────────────────────────────────────────────────────────────────────────────╯
 ```
 
-### `grafana`
-This deployer sub-command manages all of the available functions related to Grafana.    
-
-**Command line usage:**
-```bash
-                                                                                                                        
- Manages Grafana related workflows.                                                                                     
-                                                                                                                        
-╭─ Options ────────────────────────────────────────────────────────────────────────────────────────────────────────────╮
-│ --help          Show this message and exit.                                                                          │
-╰──────────────────────────────────────────────────────────────────────────────────────────────────────────────────────╯
-╭─ Commands ───────────────────────────────────────────────────────────────────────────────────────────────────────────╮
-│ deploy-dashboards           Deploy the latest official JupyterHub dashboards to a cluster's grafana instance. This   │
-│                             is done via Grafana's REST API, authorized by using a previously generated Grafana       │
-│                             service account's access token.                                                          │
-│ new-token                   Generate an API token for the cluster's Grafana `deployer` service account and store it  │
-│                             encrypted inside a `enc-grafana-token.secret.yaml` file.                                 │
-│ update-central-datasources  Update the central grafana with datasources for all clusters prometheus instances        │
-╰──────────────────────────────────────────────────────────────────────────────────────────────────────────────────────╯
-```
-
-#### `grafana `deploy-dashboards`
-
-This function uses [`jupyterhub/grafana-dashboards`](https://github.com/jupyterhub/grafana-dashboards) to create a set of grafana dashboards for monitoring hub usage across all hubs on a cluster.
-The support chart **must** be deployed before trying to install the dashboards, since the support chart installs prometheus and grafana.
-
-**Command line usage:**
-
-```bash
-                                                                                                                        
- Usage: deployer grafana deploy-dashboards [OPTIONS] CLUSTER_NAME                                                       
-                                                                                                                        
- Deploy the latest official JupyterHub dashboards to a cluster's grafana instance. This is done via Grafana's REST API, 
- authorized by using a previously generated Grafana service account's access token.                                     
- The official JupyterHub dashboards are maintained in https://github.com/jupyterhub/grafana-dashboards along with a     
- python script to deploy them to Grafana via a REST API.                                                                
-                                                                                                                        
-╭─ Arguments ──────────────────────────────────────────────────────────────────────────────────────────────────────────╮
-│ *    cluster_name      TEXT  Name of cluster to operate on [default: None] [required]                                │
-╰──────────────────────────────────────────────────────────────────────────────────────────────────────────────────────╯
-╭─ Options ────────────────────────────────────────────────────────────────────────────────────────────────────────────╮
-│ --help          Show this message and exit.                                                                          │
-╰──────────────────────────────────────────────────────────────────────────────────────────────────────────────────────╯
-```
-#### `grafana new-token`
-This function uses the admin credentials located in `helm-charts/support/enc-support.secret.values.yaml` to check if a [Grafana Service Account](https://grafana.com/docs/grafana/latest/administration/service-accounts/) named `deployer` exists for a cluster's Grafana, and creates it if it doesn't.
-For this service account, it then generates a Grafana token named `deployer`.
-This token will be used by the [`deploy-grafana-dashboards` workflow](https://github.com/2i2c-org/infrastructure/tree/HEAD/.github/workflows/deploy-grafana-dashboards.yaml) to authenticate with [Grafana’s HTTP API](https://grafana.com/docs/grafana/latest/developers/http_api/).
-
-```{note}
-More about HTTP vs REST APIs at https://www.programsbuzz.com/article/what-difference-between-rest-api-and-http-api.
-```
-and deploy some default grafana dashboards for JupyterHub using [`jupyterhub/grafana-dashboards`](https://github.com/jupyterhub/grafana-dashboards).
-If a token with this name already exists, it will show whether or not the token is expired
-and wait for cli input about whether to generate a new one or not.
-
-The Grafana token is then stored encrypted inside the `enc-grafana-token.secret.yaml` file in the cluster's configuration directory.
-If such a file doesn't already exist, it will be created by this function.
-
-  Generates:
-  - an `enc-grafana-token.secret.yaml` file if not already present
-
-  Updates:
-  - the content of `enc-grafana-token.secret.yaml` with the new token if one already existed
-
-**Command line usage:**
-```bash
-                                                                                                                        
- Usage: deployer grafana new-token [OPTIONS] CLUSTER                                                                    
-                                                                                                                        
- Generate an API token for the cluster's Grafana `deployer` service account and store it encrypted inside a             
- `enc-grafana-token.secret.yaml` file.                                                                                  
-                                                                                                                        
-╭─ Arguments ──────────────────────────────────────────────────────────────────────────────────────────────────────────╮
-│ *    cluster      TEXT  Name of cluster for who's Grafana deployment to generate a new deployer token                │
-│                         [default: None]                                                                              │
-│                         [required]                                                                                   │
-╰──────────────────────────────────────────────────────────────────────────────────────────────────────────────────────╯
-╭─ Options ────────────────────────────────────────────────────────────────────────────────────────────────────────────╮
-│ --help          Show this message and exit.                                                                          │
-╰──────────────────────────────────────────────────────────────────────────────────────────────────────────────────────╯
-```
-#### `grafana update-central-datasources`
-
-Ensures that the central grafana at https://grafana.pilot.2i2c.cloud is
-configured to use as datasource the authenticated prometheus instances of all
-the clusters that we run.
-
-**Command line usage:**
-```bash
-                                                                                                                        
- Usage: deployer grafana update-central-datasources [OPTIONS]                                                           
-                                                                                                                        
- Update the central grafana with datasources for all clusters prometheus instances                                      
-                                                                                                                        
-╭─ Options ────────────────────────────────────────────────────────────────────────────────────────────────────────────╮
-│ --central-grafana-cluster        TEXT  Name of cluster where the central grafana lives [default: 2i2c]               │
-│ --help                                 Show this message and exit.                                                   │
-╰──────────────────────────────────────────────────────────────────────────────────────────────────────────────────────╯
-```
-
-### `use-cluster-credentials`
+#### `use-cluster-credentials`
 
 This function provides quick command line/`kubectl` access to a cluster.
 Running this command will spawn a new shell with all the appropriate environment variables and `KUBECONFIG` contexts set to allow `kubectl` commands to be run against a cluster.
@@ -357,8 +231,53 @@ Remember to close the opened shell after you've finished by using the `exit` com
 
 ```
 
+#### `run-hub-health-check`
 
-### `generate`
+This function checks that a given hub is healthy by:
+
+1. Creating a user
+2. Starting a server
+3. Executing a Notebook on that server
+
+For daskhubs, there is an optional check to verify that the user can scale dask workers.
+
+**Command line usage:**
+
+```bash
+ Usage: deployer run-hub-health-check [OPTIONS] CLUSTER_NAME HUB_NAME                                                   
+                                                                                                                        
+ Run a health check on a given hub on a given cluster. Optionally check scaling of dask workers if the hub is a         
+ daskhub.                                                                                                               
+                                                                                                                        
+╭─ Arguments ──────────────────────────────────────────────────────────────────────────────────────────────────────────╮
+│ *    cluster_name      TEXT  Name of cluster to operate on [default: None] [required]                                │
+│ *    hub_name          TEXT  Name of hub to operate on [default: None] [required]                                    │
+╰──────────────────────────────────────────────────────────────────────────────────────────────────────────────────────╯
+╭─ Options ────────────────────────────────────────────────────────────────────────────────────────────────────────────╮
+│ --check-dask-scaling    --no-check-dask-scaling      Check that dask workers can be scaled                           │
+│                                                      [default: no-check-dask-scaling]                                │
+│ --help                                               Show this message and exit.                                     │
+╰──────────────────────────────────────────────────────────────────────────────────────────────────────────────────────╯
+```
+
+#### Support helper tools: `decrypt-age`
+
+Decrypts information sent to 2i2c by community representatives using [age](https://age-encryption.org/) according to instructions in [2i2c documentation](https://docs.2i2c.org/en/latest/support.html?highlight=decrypt#send-us-encrypted-content).
+
+**Command line usage:**
+```
+ Usage: deployer decrypt-age [OPTIONS]                                                                                  
+                                                                                                                        
+ Decrypt secrets sent to `support@2i2c.org` via `age`                                                                   
+                                                                                                                        
+╭─ Options ────────────────────────────────────────────────────────────────────────────────────────────────────────────╮
+│ --encrypted-file-path        TEXT  Path to age-encrypted file sent by user. Leave empty to read from stdin.          │
+│ --help                             Show this message and exit.                                                       │
+╰──────────────────────────────────────────────────────────────────────────────────────────────────────────────────────╯
+```
+
+### The `generate` sub-command
+
 This deployer sub-command is used to generate various types of file assets. Currently, it can generate the cost billing table, initial cluster infrastructure files and the helm upgrade jobs.
 
 **Command line usage:**
@@ -506,57 +425,134 @@ These defaults are described in each file template.
 ```
 
 
-### `run-hub-health-check`
+### The `grafana` sub-command
+This deployer sub-command manages all of the available functions related to Grafana.
 
-This function checks that a given hub is healthy by:
+**Command line usage:**
+```bash
+                                                                                                                        
+ Manages Grafana related workflows.                                                                                     
+                                                                                                                        
+╭─ Options ────────────────────────────────────────────────────────────────────────────────────────────────────────────╮
+│ --help          Show this message and exit.                                                                          │
+╰──────────────────────────────────────────────────────────────────────────────────────────────────────────────────────╯
+╭─ Commands ───────────────────────────────────────────────────────────────────────────────────────────────────────────╮
+│ deploy-dashboards           Deploy the latest official JupyterHub dashboards to a cluster's grafana instance. This   │
+│                             is done via Grafana's REST API, authorized by using a previously generated Grafana       │
+│                             service account's access token.                                                          │
+│ new-token                   Generate an API token for the cluster's Grafana `deployer` service account and store it  │
+│                             encrypted inside a `enc-grafana-token.secret.yaml` file.                                 │
+│ update-central-datasources  Update the central grafana with datasources for all clusters prometheus instances        │
+╰──────────────────────────────────────────────────────────────────────────────────────────────────────────────────────╯
+```
 
-1. Creating a user
-2. Starting a server
-3. Executing a Notebook on that server
+#### `grafana deploy-dashboards`
 
-For daskhubs, there is an optional check to verify that the user can scale dask workers.
+This function uses [`jupyterhub/grafana-dashboards`](https://github.com/jupyterhub/grafana-dashboards) to create a set of grafana dashboards for monitoring hub usage across all hubs on a cluster.
+The support chart **must** be deployed before trying to install the dashboards, since the support chart installs prometheus and grafana.
 
 **Command line usage:**
 
 ```bash
- Usage: deployer run-hub-health-check [OPTIONS] CLUSTER_NAME HUB_NAME                                                   
                                                                                                                         
- Run a health check on a given hub on a given cluster. Optionally check scaling of dask workers if the hub is a         
- daskhub.                                                                                                               
+ Usage: deployer grafana deploy-dashboards [OPTIONS] CLUSTER_NAME                                                       
+                                                                                                                        
+ Deploy the latest official JupyterHub dashboards to a cluster's grafana instance. This is done via Grafana's REST API, 
+ authorized by using a previously generated Grafana service account's access token.                                     
+ The official JupyterHub dashboards are maintained in https://github.com/jupyterhub/grafana-dashboards along with a     
+ python script to deploy them to Grafana via a REST API.                                                                
                                                                                                                         
 ╭─ Arguments ──────────────────────────────────────────────────────────────────────────────────────────────────────────╮
 │ *    cluster_name      TEXT  Name of cluster to operate on [default: None] [required]                                │
-│ *    hub_name          TEXT  Name of hub to operate on [default: None] [required]                                    │
 ╰──────────────────────────────────────────────────────────────────────────────────────────────────────────────────────╯
 ╭─ Options ────────────────────────────────────────────────────────────────────────────────────────────────────────────╮
-│ --check-dask-scaling    --no-check-dask-scaling      Check that dask workers can be scaled                           │
-│                                                      [default: no-check-dask-scaling]                                │
-│ --help                                               Show this message and exit.                                     │
+│ --help          Show this message and exit.                                                                          │
 ╰──────────────────────────────────────────────────────────────────────────────────────────────────────────────────────╯
 ```
+#### `grafana new-token`
+This function uses the admin credentials located in `helm-charts/support/enc-support.secret.values.yaml` to check if a [Grafana Service Account](https://grafana.com/docs/grafana/latest/administration/service-accounts/) named `deployer` exists for a cluster's Grafana, and creates it if it doesn't.
+For this service account, it then generates a Grafana token named `deployer`.
+This token will be used by the [`deploy-grafana-dashboards` workflow](https://github.com/2i2c-org/infrastructure/tree/HEAD/.github/workflows/deploy-grafana-dashboards.yaml) to authenticate with [Grafana’s HTTP API](https://grafana.com/docs/grafana/latest/developers/http_api/).
 
-## Support helper tools
+```{note}
+More about HTTP vs REST APIs at https://www.programsbuzz.com/article/what-difference-between-rest-api-and-http-api.
+```
+and deploy some default grafana dashboards for JupyterHub using [`jupyterhub/grafana-dashboards`](https://github.com/jupyterhub/grafana-dashboards).
+If a token with this name already exists, it will show whether or not the token is expired
+and wait for cli input about whether to generate a new one or not.
 
-### `decrypt-age`
+The Grafana token is then stored encrypted inside the `enc-grafana-token.secret.yaml` file in the cluster's configuration directory.
+If such a file doesn't already exist, it will be created by this function.
 
-Decrypts information sent to 2i2c by community representatives using [age](https://age-encryption.org/) according to instructions in [2i2c documentation](https://docs.2i2c.org/en/latest/support.html?highlight=decrypt#send-us-encrypted-content).
+  Generates:
+  - an `enc-grafana-token.secret.yaml` file if not already present
+
+  Updates:
+  - the content of `enc-grafana-token.secret.yaml` with the new token if one already existed
 
 **Command line usage:**
+```bash
+                                                                                                                        
+ Usage: deployer grafana new-token [OPTIONS] CLUSTER                                                                    
+                                                                                                                        
+ Generate an API token for the cluster's Grafana `deployer` service account and store it encrypted inside a             
+ `enc-grafana-token.secret.yaml` file.                                                                                  
+                                                                                                                        
+╭─ Arguments ──────────────────────────────────────────────────────────────────────────────────────────────────────────╮
+│ *    cluster      TEXT  Name of cluster for who's Grafana deployment to generate a new deployer token                │
+│                         [default: None]                                                                              │
+│                         [required]                                                                                   │
+╰──────────────────────────────────────────────────────────────────────────────────────────────────────────────────────╯
+╭─ Options ────────────────────────────────────────────────────────────────────────────────────────────────────────────╮
+│ --help          Show this message and exit.                                                                          │
+╰──────────────────────────────────────────────────────────────────────────────────────────────────────────────────────╯
 ```
+#### `grafana update-central-datasources`
+
+Ensures that the central grafana at https://grafana.pilot.2i2c.cloud is
+configured to use as datasource the authenticated prometheus instances of all
+the clusters that we run.
+
+**Command line usage:**
+```bash
                                                                                                                         
- Usage: deployer decrypt-age [OPTIONS]                                                                                  
+ Usage: deployer grafana update-central-datasources [OPTIONS]                                                           
                                                                                                                         
- Decrypt secrets sent to `support@2i2c.org` via `age`                                                                   
+ Update the central grafana with datasources for all clusters prometheus instances                                      
                                                                                                                         
 ╭─ Options ────────────────────────────────────────────────────────────────────────────────────────────────────────────╮
-│ --encrypted-file-path        TEXT  Path to age-encrypted file sent by user. Leave empty to read from stdin.          │
-│ --help                             Show this message and exit.                                                       │
+│ --central-grafana-cluster        TEXT  Name of cluster where the central grafana lives [default: 2i2c]               │
+│ --help                                 Show this message and exit.                                                   │
 ╰──────────────────────────────────────────────────────────────────────────────────────────────────────────────────────╯
 ```
 
-## CILogon OAuth clients management tools
 
-### `cilogon-client`
+### The `validate` sub-command
+
+This function is used to validate the values files for each of our hubs against their helm chart's values schema.
+This allows us to validate that all required values are present and have the correct type before we attempt a deployment.
+
+**Command line usage:**
+
+```bash
+ Validate configuration files such as helm chart values and cluster.yaml files.                                         
+                                                                                                                        
+╭─ Options ────────────────────────────────────────────────────────────────────────────────────────────────────────────╮
+│ --help          Show this message and exit.                                                                          │
+╰──────────────────────────────────────────────────────────────────────────────────────────────────────────────────────╯
+╭─ Commands ───────────────────────────────────────────────────────────────────────────────────────────────────────────╮
+│ all                   Validate cluster.yaml and non-encrypted helm config for given hub                              │
+│ authenticator-config  For each hub of a specific cluster: - It asserts that when the JupyterHub GitHubOAuthenticator │
+│                       is used,   then `Authenticator.allowed_users` is not set.   An error is raised otherwise.      │
+│ cluster-config        Validates cluster.yaml configuration against a JSONSchema.                                     │
+│ hub-config            Validates the provided non-encrypted helm chart values files for each hub of a specific        │
+│                       cluster.                                                                                       │
+│ support-config        Validates the provided non-encrypted helm chart values files for the support chart of a        │
+│                       specific cluster.                                                                              │
+╰──────────────────────────────────────────────────────────────────────────────────────────────────────────────────────╯
+```
+
+### The `cilogon-client` sub-command for CILogon OAuth client management
 Deployer sub-command for managing CILogon clients for 2i2c hubs.
 
 **Command line usage:**
@@ -673,9 +669,9 @@ create/delete/get/get-all/update/ CILogon clients using the 2i2c administrative 
   ╰──────────────────────────────────────────────────────────────────────────────────────────────────────────────────────╯
   ```
 
-## Debugging helpers, `deployer exec`
+### The `exec` sub-command for executing shells and debugging commands
 
-We also have a deployer `exec` sub-command that can be used to
+This deployer `exec` sub-command can be used to
 exec a shell in various parts of the infrastructure.
 It can be used for poking around, or debugging issues.
 
@@ -700,7 +696,7 @@ authentication before performing their function.
 │ shell                                                                                                                │
 ╰──────────────────────────────────────────────────────────────────────────────────────────────────────────────────────╯
 ```
-### `exec debug`
+#### `exec debug`
 
 This sub-command is useful for debugging.
 **Command line usage:**
@@ -718,7 +714,7 @@ This sub-command is useful for debugging.
 ╰──────────────────────────────────────────────────────────────────────────────────────────────────────────────────────╯
 ```
 
-#### `exec debug component-logs`
+##### `exec debug component-logs`
 
 This subcommand displays live updating logs of a particular core component of a particular
 JupyterHub on a given cluster. You can pass `--no-follow` to provide just
@@ -750,7 +746,7 @@ prior to the last restart.
 ╰──────────────────────────────────────────────────────────────────────────────────────────────────────────────────────╯
 ```
 
-#### `exec debug user-logs`
+##### `exec debug user-logs`
 
 This subcommand displays live updating logs of a prticular user on a hub if
 it is currently running. If sidecar containers are present (such as per-user db),
@@ -775,7 +771,7 @@ they are ignored and only the notebook logs are provided. You can pass
 ╰──────────────────────────────────────────────────────────────────────────────────────────────────────────────────────╯
 ```
 
-#### `exec debug start-docker-proxy`
+##### `exec debug start-docker-proxy`
 
 Building docker images locally can be *extremely* slow and frustrating. We run a central docker daemon
 in our 2i2c cluster that can be accessed via this command, and speeds up image builds quite a bit!
@@ -796,7 +792,7 @@ docker daemon.
 ╰──────────────────────────────────────────────────────────────────────────────────────────────────────────────────────╯
 ```
 
-## `exec shell`
+#### `exec shell`
 This exec sub-command can be used to aquire a shell in various places of the infrastructure.
 
 ```bash
@@ -812,7 +808,7 @@ Usage: deployer exec shell [OPTIONS] COMMAND [ARGS]...
 ╰──────────────────────────────────────────────────────────────────────────────────────────────────────────────────────╯
 ```
 
-#### `exec shell hub`
+##### `exec shell hub`
 
 This subcommand gives you an interactive shell on the hub pod itself, so you
 can poke around to see what's going on. Particularly useful if you want to peek
@@ -832,7 +828,7 @@ at the hub db with the `sqlite` command.
 ╰──────────────────────────────────────────────────────────────────────────────────────────────────────────────────────╯
 ```
 
-#### `exec shell homes`
+##### `exec shell homes`
 
 This subcommand gives you a shell with the home directories of all the
 users on the given hub in the given cluster mounted under `/home`.
@@ -855,7 +851,7 @@ When you exit the shell, the temporary pod spun up is removed.
 ╰──────────────────────────────────────────────────────────────────────────────────────────────────────────────────────╯
 ```
 
-#### `exec shell aws`
+##### `exec shell aws`
 
 This sub-command can exec into a shall with appropriate AWS credentials (including MFA).
 
