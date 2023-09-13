@@ -97,10 +97,26 @@ basehub:
                   kubespawner_override:
                     image: public.ecr.aws/nasa-veda/nasa-veda-singleuser:5068290376e8c3151d97a36ae6485bb7ff79650b94aecc93ffb2ea1b42d76460
                     init_containers:
+                      # Need to explicitly fix ownership here, as otherwise these directories will be owned
+                      # by root on most NFS filesystems - neither EFS nor Google Filestore support anonuid
+                      - name: volume-mount-ownership-fix
+                        image: busybox
+                        command:
+                          [
+                              "sh",
+                              "-c",
+                              "id && chown 1000:1000 /home/jovyan && chown 1000:1000 && ls -lhd /home/jovyan ",
+                          ]
+                        securityContext:
+                          runAsUser: 0
+                        volumeMounts:
+                          - name: home
+                            mountPath: /home/jovyan
+                            subPath: "{username}"
                       # this container uses nbgitpuller to mount https://github.com/NASA-IMPACT/veda-docs/ for user pods
                       # image source: https://github.com/NASA-IMPACT/veda-jh-environments/tree/main/docker-images/base/nasa-veda-singleuser-init
                       - name: nasa-veda-singleuser-init
-                        image: public.ecr.aws/nasa-veda/nasa-veda-singleuser-init:df12447f4a0194e107c7f32cb2486cf4034f89198906aba08ce48967a644f153
+                        image: public.ecr.aws/nasa-veda/nasa-veda-singleuser-init:d78dd50564f562fd6879256a589db5334963f0d6ecd28266a4cf0a8d2aaccca9
                         command:
                           - "python3"
                           - "/opt/k8s-init-container-nb-docs.py"
@@ -134,10 +150,26 @@ basehub:
                         subPath: _shared
                         readOnly: true
                     init_containers:
+                      # Need to explicitly fix ownership here, as otherwise these directories will be owned
+                      # by root on most NFS filesystems - neither EFS nor Google Filestore support anonuid
+                      - name: volume-mount-ownership-fix
+                        image: busybox
+                        command:
+                          [
+                              "sh",
+                              "-c",
+                              "id && chown 1000:1000 /home/rstudio && chown 1000:1000 && ls -lhd /home/rstudio ",
+                          ]
+                        securityContext:
+                          runAsUser: 0
+                        volumeMounts:
+                          - name: home
+                            mountPath: /home/rstudio
+                            subPath: "{username}"
                       # this container uses nbgitpuller to mount https://github.com/NASA-IMPACT/veda-docs/ for user pods
                       # image source: https://github.com/NASA-IMPACT/veda-jh-environments/tree/main/docker-images/base/nasa-veda-singleuser-init
                       - name: nasa-veda-singleuser-init
-                        image: public.ecr.aws/nasa-veda/nasa-veda-singleuser-init:df12447f4a0194e107c7f32cb2486cf4034f89198906aba08ce48967a644f153
+                        image: public.ecr.aws/nasa-veda/nasa-veda-singleuser-init:d78dd50564f562fd6879256a589db5334963f0d6ecd28266a4cf0a8d2aaccca9
                         command:
                           - "python3"
                           - "/opt/k8s-init-container-nb-docs.py"
