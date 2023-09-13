@@ -1,13 +1,21 @@
-prefix                 = "m2lines"
-project_id             = "m2lines-hub"
-core_node_machine_type = "n1-highmem-4"
-
-enable_network_policy = true
+prefix     = "m2lines"
+project_id = "m2lines-hub"
 
 # GPUs not available in us-central1-b
 zone             = "us-central1-c"
 region           = "us-central1"
 regional_cluster = true
+
+k8s_versions = {
+  min_master_version : "1.27.4-gke.900",
+  core_nodes_version : "1.27.4-gke.900",
+  notebook_nodes_version : "1.27.4-gke.900",
+  dask_nodes_version : "1.27.4-gke.900",
+}
+
+core_node_machine_type = "n2-highmem-4"
+enable_network_policy  = true
+
 
 # Setup a filestore for in-cluster NFS
 enable_filestore      = true

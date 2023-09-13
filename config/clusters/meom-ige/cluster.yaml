@@ -1,5 +1,5 @@
 name: meom-ige
-provider: gcp # https://console.cloud.google.com/kubernetes/clusters/details/us-central1-b/pangeo-hubs-cluster/nodes?project=columbia
+provider: gcp # https://console.cloud.google.com/kubernetes/clusters/details/us-central1-b/meom-ige-cluster/details?authuser=3&project=meom-ige-cnrs
 gcp:
   key: enc-deployer-credentials.secret.json
   project: meom-ige-cnrs

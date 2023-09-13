@@ -185,7 +185,6 @@ resource "google_container_node_pool" "core" {
   location = google_container_cluster.cluster.location
   version  = var.k8s_versions.core_nodes_version
 
-
   initial_node_count = 1
   autoscaling {
     min_node_count = 1
@@ -213,6 +212,12 @@ resource "google_container_node_pool" "core" {
 
 
   node_config {
+    # Balanced disks are much faster than standard disks, and much cheaper
+    # than SSD disks. It contributes heavily to how fast new nodes spin up,
+    # as images being pulled takes up a lot of new node spin up time.
+    # Faster disks provide faster image pulls!
+    disk_type = "pd-balanced"
+
     labels = {
       "hub.jupyter.org/node-purpose" = "core",
       "k8s.dask.org/node-purpose"    = "core"
