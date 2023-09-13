@@ -41,6 +41,7 @@ basehub:
         # RAM on a node, not total node capacity
         - display_name: "Small"
           description: "~2 CPU, ~8G RAM"
+          default: true
           kubespawner_override:
             mem_limit: 8G
             mem_guarantee: 4G
