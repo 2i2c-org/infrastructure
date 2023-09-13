@@ -62,8 +62,10 @@ jupyterhub:
         #          allowed_users or admin_users, as such users are added to
         #          JupyterHub's database on startup.
         #
-        #          To properly revoke access, remove the user from the list,
-        #          deploy the change, and finally delete the user via the
+        #          To revoke admin status or access for a user when
+        #          allow_existing_users is enabled, first remove the user from
+        #          admin_users or allowed_users, then deploy the change, and
+        #          finally revoke the admin status or delete the user via the
         #          /hub/admin panel.
         #
         admin_users:
