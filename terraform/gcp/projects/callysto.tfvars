@@ -1,13 +1,14 @@
 prefix     = "callysto"
 project_id = "callysto-202316"
 
-zone   = "northamerica-northeast1-b"
-region = "northamerica-northeast1"
+zone             = "northamerica-northeast1-b"
+region           = "northamerica-northeast1"
+regional_cluster = true
 
 k8s_versions = {
-  min_master_version : "1.25.6-gke.1000",
-  core_nodes_version : "1.25.6-gke.1000",
-  notebook_nodes_version : "1.25.6-gke.1000",
+  min_master_version : "1.27.4-gke.900",
+  core_nodes_version : "1.27.4-gke.900",
+  notebook_nodes_version : "1.27.4-gke.900",
 }
 
 core_node_machine_type = "n2-highmem-2"
