@@ -222,26 +222,16 @@ class Cluster:
         # Else, it'll just have a `zone` key set. Let's respect either.
         location = config.get("zone", config.get("region"))
         cluster = config["cluster"]
-        with tempfile.NamedTemporaryFile() as kubeconfig:
-            # CLOUDSDK_AUTH_CREDENTIAL_FILE_OVERRIDE is removed as the action of
-            # "gcloud auth activate-server-account" will be secondary to it
-            # otherwise, and this env var can be set by GitHub Actions we use
-            # before using this deployer script to deploy hubs to clusters.
-            orig_cloudsdk_auth_credential_file_override = os.environ.pop(
-                "CLOUDSDK_AUTH_CREDENTIAL_FILE_OVERRIDE", None
-            )
-            orig_kubeconfig = os.environ.get("KUBECONFIG")
-            try:
+
+        orig_file = os.environ.get("CLOUDSDK_AUTH_CREDENTIAL_FILE_OVERRIDE")
+        orig_kubeconfig = os.environ.get("KUBECONFIG")
+        try:
+            with (
+                tempfile.NamedTemporaryFile() as kubeconfig,
+                get_decrypted_file(key_path) as decrypted_file,
+            ):
                 os.environ["KUBECONFIG"] = kubeconfig.name
-                with get_decrypted_file(key_path) as decrypted_key_path:
-                    subprocess.check_call(
-                        [
-                            "gcloud",
-                            "auth",
-                            "activate-service-account",
-                            f"--key-file={os.path.abspath(decrypted_key_path)}",
-                        ]
-                    )
+                os.environ["CLOUDSDK_AUTH_CREDENTIAL_FILE_OVERRIDE"] = decrypted_file
 
                 subprocess.check_call(
                     [
@@ -257,10 +247,13 @@ class Cluster:
                 )
 
                 yield
-            finally:
-                if orig_kubeconfig is not None:
-                    os.environ["KUBECONFIG"] = orig_kubeconfig
-                if orig_cloudsdk_auth_credential_file_override is not None:
-                    os.environ[
-                        "CLOUDSDK_AUTH_CREDENTIAL_FILE_OVERRIDE"
-                    ] = orig_cloudsdk_auth_credential_file_override
+        finally:
+            # restore modified environment variables to its previous state
+            if orig_kubeconfig is not None:
+                os.environ["KUBECONFIG"] = orig_kubeconfig
+            else:
+                os.environ.pop("KUBECONFIG")
+            if orig_file is not None:
+                os.environ["CLOUDSDK_AUTH_CREDENTIAL_FILE_OVERRIDE"] = orig_file
+            else:
+                os.environ.pop("CLOUDSDK_AUTH_CREDENTIAL_FILE_OVERRIDE")
