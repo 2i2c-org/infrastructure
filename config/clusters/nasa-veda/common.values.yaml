@@ -100,7 +100,7 @@ basehub:
                       # this container uses nbgitpuller to mount https://github.com/NASA-IMPACT/veda-docs/ for user pods
                       # image source: https://github.com/NASA-IMPACT/veda-jh-environments/tree/main/docker-images/base/nasa-veda-singleuser-init
                       - name: nasa-veda-singleuser-init
-                        image: public.ecr.aws/nasa-veda/nasa-veda-singleuser-init:1fd99797107550a50d58ce7e5dd4042e37a065ac2f88576bd32c8b7211e445e3
+                        image: public.ecr.aws/nasa-veda/nasa-veda-singleuser-init:a6db72110a0dfed84b8926a9b7e9d5ad0f1b4861490a2d6b36c87ac2d4f89064
                         command:
                           - "python3"
                           - "/opt/k8s-init-container-nb-docs.py"
@@ -109,6 +109,9 @@ basehub:
                           - name: home
                             mountPath: /home/jovyan
                             subPath: "{username}"
+                        securityContext:
+                          runAsUser: 1000
+                          runAsGroup: 1000
                 rocker:
                   display_name: Rocker Geospatial with RStudio
                   slug: rocker
@@ -134,7 +137,7 @@ basehub:
                       # this container uses nbgitpuller to mount https://github.com/NASA-IMPACT/veda-docs/ for user pods
                       # image source: https://github.com/NASA-IMPACT/veda-jh-environments/tree/main/docker-images/base/nasa-veda-singleuser-init
                       - name: nasa-veda-singleuser-init
-                        image: public.ecr.aws/nasa-veda/nasa-veda-singleuser-init:1fd99797107550a50d58ce7e5dd4042e37a065ac2f88576bd32c8b7211e445e3
+                        image: public.ecr.aws/nasa-veda/nasa-veda-singleuser-init:a6db72110a0dfed84b8926a9b7e9d5ad0f1b4861490a2d6b36c87ac2d4f89064
                         command:
                           - "python3"
                           - "/opt/k8s-init-container-nb-docs.py"
@@ -143,6 +146,9 @@ basehub:
                           - name: home
                             mountPath: /home/rstudio
                             subPath: "{username}"
+                        securityContext:
+                          runAsUser: 1000
+                          runAsGroup: 1000
             requests:
               # NOTE: Node share choices are in active development, see comment
               #       next to profileList: above.
