@@ -1,15 +1,18 @@
 prefix     = "meom-ige"
 project_id = "meom-ige-cnrs"
 
-zone   = "us-central1-b"
-region = "us-central1"
-
-core_node_machine_type = "n1-highmem-2"
-
-# Single-tenant cluster, network policy not needed
-enable_network_policy = false
-
+zone             = "us-central1-b"
+region           = "us-central1"
 regional_cluster = false
+
+k8s_versions = {
+  min_master_version : "1.27.4-gke.900",
+  core_nodes_version : "1.27.4-gke.900",
+  notebook_nodes_version : "1.27.4-gke.900",
+}
+
+core_node_machine_type = "n2-highmem-4"
+enable_network_policy  = false
 
 notebook_nodes = {
   "small" : {
@@ -37,7 +40,6 @@ notebook_nodes = {
     max : 20,
     machine_type : "n1-standard-64"
   },
-
 }
 
 # Setup a single node pool for dask workers.
