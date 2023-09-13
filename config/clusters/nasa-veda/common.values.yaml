@@ -100,7 +100,7 @@ basehub:
                       # this container uses nbgitpuller to mount https://github.com/NASA-IMPACT/veda-docs/ for user pods
                       # image source: https://github.com/NASA-IMPACT/veda-jh-environments/tree/main/docker-images/base/nasa-veda-singleuser-init
                       - name: nasa-veda-singleuser-init
-                        image: public.ecr.aws/nasa-veda/nasa-veda-singleuser-init:a6db72110a0dfed84b8926a9b7e9d5ad0f1b4861490a2d6b36c87ac2d4f89064
+                        image: public.ecr.aws/nasa-veda/nasa-veda-singleuser-init:c91ebe0a1fc531ca00c1f8f17d91c82edc0c6b88235d94ab47e6fc33af7c0b7f
                         command:
                           - "python3"
                           - "/opt/k8s-init-container-nb-docs.py"
@@ -137,7 +137,7 @@ basehub:
                       # this container uses nbgitpuller to mount https://github.com/NASA-IMPACT/veda-docs/ for user pods
                       # image source: https://github.com/NASA-IMPACT/veda-jh-environments/tree/main/docker-images/base/nasa-veda-singleuser-init
                       - name: nasa-veda-singleuser-init
-                        image: public.ecr.aws/nasa-veda/nasa-veda-singleuser-init:a6db72110a0dfed84b8926a9b7e9d5ad0f1b4861490a2d6b36c87ac2d4f89064
+                        image: public.ecr.aws/nasa-veda/nasa-veda-singleuser-init:c91ebe0a1fc531ca00c1f8f17d91c82edc0c6b88235d94ab47e6fc33af7c0b7f
                         command:
                           - "python3"
                           - "/opt/k8s-init-container-nb-docs.py"
