@@ -185,7 +185,22 @@ basehub:
           memory: 4Gi
       allowNamedServers: true
       config:
+        JupyterHub:
+          authenticator_class: cilogon
+        CILogonOAuthenticator:
+          scope:
+            - "profile"
+          shown_idps:
+            - http://github.com/login/oauth/authorize
+          allowed_idps:
+            http://github.com/login/oauth/authorize:
+              username_derivation:
+                username_claim: "preferred_username"
         Authenticator:
+          # FIXME: In z2jh 3.0.0-beta.1, a truthy allowed_users implies
+          #        allow_existing_users=True, while in z3jh 3.0.0 this needs to
+          #        be configured explicitly.
+          #
           allowed_users: &users
             - maxrjones
           admin_users: *users

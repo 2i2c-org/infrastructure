@@ -37,6 +37,10 @@ basehub:
         Authenticator:
           admin_users: &admin_users
             - paigemar@umich.edu
+          # FIXME: In z2jh 3.0.0-beta.1, a truthy allowed_users implies
+          #        allow_existing_users=True, while in z3jh 3.0.0 this needs to be
+          #        configured explicitly.
+          #
           allowed_users: *admin_users
           # Delete any prior existing users in the db that don't pass username_pattern
           delete_invalid_users: true
@@ -44,12 +48,9 @@ basehub:
           authenticator_class: cilogon
         CILogonOAuthenticator:
           oauth_callback_url: "https://coessing.2i2c.cloud/hub/oauth_callback"
-          # Only show the option to login with Google
           shown_idps:
             - https://accounts.google.com/o/oauth2/auth
           allowed_idps:
-            # CILogon still uses the old google oidc enpoint instead of the new one listed in `shown_idps`.
-            # Ref https://github.com/ncsa/OA4MP/issues/45
             http://google.com/accounts/o8/id:
               username_derivation:
                 username_claim: "email"
