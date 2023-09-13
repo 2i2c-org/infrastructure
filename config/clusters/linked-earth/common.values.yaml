@@ -109,7 +109,7 @@ basehub:
             cpu_limit: null
             mem_limit: null
             node_selector:
-              node.kubernetes.io/instance-type: e2-highmem-4
+              node.kubernetes.io/instance-type: n2-highmem-4
         - display_name: "Medium: up to 16 CPU / 128 GB RAM"
           description: *profile_list_description
           slug: medium
@@ -165,7 +165,7 @@ basehub:
             cpu_limit: null
             mem_limit: null
             node_selector:
-              node.kubernetes.io/instance-type: e2-highmem-16
+              node.kubernetes.io/instance-type: n2-highmem-16
 dask-gateway:
   gateway:
     backend:
