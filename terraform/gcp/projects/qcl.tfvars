@@ -1,13 +1,19 @@
 prefix     = "qcl"
 project_id = "qcl-hub"
 
-zone   = "europe-west1-d"
-region = "europe-west1"
+zone             = "europe-west1-d"
+region           = "europe-west1"
+regional_cluster = true
+
+k8s_versions = {
+  min_master_version : "1.25.10-gke.2700",
+  core_nodes_version : "1.24.9-gke.3200",
+  notebook_nodes_version : "1.24.9-gke.3200",
+}
 
 core_node_machine_type = "n2-highmem-2"
 enable_network_policy  = true
 
-# Setup a filestore for in-cluster NFS
 enable_filestore      = true
 filestore_capacity_gb = 2048
 
