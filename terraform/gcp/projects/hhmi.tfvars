@@ -1,15 +1,8 @@
-/*
- Some of the assumptions this template makes about the cluster:
-   - single-tenant with staging & prod hubs
-   - regional
-   - scratch buckets support
-*/
+prefix     = "hhmi"
+project_id = "hhmi"
 
-prefix     = "{{ cluster_name }}"
-project_id = "{{ project_id }}"
-
-zone   = "{{ cluster_region }}"
-region = "{{ cluster_region }}"
+zone   = "us-west2"
+region = "us-west2"
 
 # Default to a HA cluster for reliability
 regional_cluster = true
@@ -24,21 +17,8 @@ core_node_machine_type = "n2-highmem-4"
 enable_filestore      = true
 filestore_capacity_gb = 1024
 
-user_buckets = {
-  "scratch-{{ hub_name }}" : {
-    "delete_after" : 7
-  },
-  # Tip: add more scratch buckets below, if this cluster will be multi-tenant
-}
-
-hub_cloud_permissions = {
-  "{{ hub_name }}" : {
-    requestor_pays : true,
-    bucket_admin_access : ["scratch-{{ hub_name }}"],
-    hub_namespace : "{{ hub_name }}"
-  },
-  # Tip: add more namespaces below, if this cluster will be multi-tenant
-}
+user_buckets          = {}
+hub_cloud_permissions = {}
 
 # Setup notebook node pools
 notebook_nodes = {
