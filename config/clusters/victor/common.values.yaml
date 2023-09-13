@@ -20,9 +20,9 @@ basehub:
         gitRepoBranch: "victor"
         templateVars:
           org:
-            name: Victor
-            logo_url: https://lh3.googleusercontent.com/drive-viewer/AFDK6gOSmgurudnSJrUNMaIdOIEeu8aXUzWS9qZ0Oi3XO3_fFYdfjksmrPQrjv542v_81TCkVPlRT_Acf5BAojMEeYlEzF8nmw=w2880-h1368
-            url: https://people.climate.columbia.edu/projects/view/2387
+            name: VICTOR
+            logo_url: https://i.imgur.com/D2vXQ5k.png
+            url: https://victor.ldeo.columbia.edu
           designed_by:
             name: 2i2c
             url: https://2i2c.org
