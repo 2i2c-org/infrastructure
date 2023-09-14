@@ -36,6 +36,13 @@ jupyterhub:
   hub:
     allowNamedServers: true
     config:
+      Authenticator:
+        # This hub uses GitHub Teams auth and so we don't set
+        # allowed_users in order to not deny access to valid members of
+        # the listed teams. These people should have admin access though.
+        admin_users:
+          - gizmo404
+          - jtkmckenna
       JupyterHub:
         authenticator_class: github
       GitHubOAuthenticator:
@@ -44,10 +51,6 @@ jupyterhub:
           - QuantifiedCarbon:jupyterhub
         scope:
           - read:org
-      Authenticator:
-        admin_users:
-          - gizmo404
-          - jtkmckenna
   singleuser:
     image:
       # pangeo/pangeo-notebook is maintained at: https://github.com/pangeo-data/pangeo-docker-images
@@ -228,9 +231,11 @@ jupyterhub:
       - name: volume-mount-ownership-fix
         image: busybox
         command:
-          - sh
-          - -c
-          - id && chown 1000:1000 /home/jovyan /home/jovyan/shared /home/jovyan/shared-public && ls -lhd /home/jovyan
+          [
+            "sh",
+            "-c",
+            "id && chown 1000:1000 /home/jovyan && chown 1000:1000 /home/jovyan/shared && chown 1000:1000 /home/jovyan/shared-public && ls -lhd /home/jovyan ",
+          ]
         securityContext:
           runAsUser: 0
         volumeMounts:

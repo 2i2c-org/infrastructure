@@ -177,9 +177,11 @@ jupyterhub:
       - name: volume-mount-ownership-fix
         image: busybox
         command:
-          - sh
-          - -c
-          - id && chown 1000:1000 /home/jovyan /home/jovyan/shared && ls -lhd /home/jovyan
+          [
+            "sh",
+            "-c",
+            "id && chown 1000:1000 /home/jovyan && chown 1000:1000 /home/jovyan/shared && ls -lhd /home/jovyan ",
+          ]
         securityContext:
           runAsUser: 0
         volumeMounts:
@@ -392,7 +394,7 @@ jupyterhub:
                 interfaces:
                   - value: "/tree"
                     title: Classic Notebook
-                    description: >-
+                    description:
                       The original single-document interface for creating
                       Jupyter Notebooks.
                   - value: "/lab"
@@ -418,8 +420,8 @@ jupyterhub:
         securityContext:
           runAsUser: 1000
           runAsGroup: 1000
-          allowPrivilegeEscalation: false
-          readOnlyRootFilesystem: true
+          allowPrivilegeEscalation: False
+          readOnlyRootFilesystem: True
         volumeMounts:
           - name: custom-templates
             mountPath: /srv/repo
@@ -486,8 +488,8 @@ jupyterhub:
         securityContext:
           runAsUser: 1000
           runAsGroup: 1000
-          allowPrivilegeEscalation: false
-          readOnlyRootFilesystem: true
+          allowPrivilegeEscalation: False
+          readOnlyRootFilesystem: True
         volumeMounts:
           - name: custom-templates
             mountPath: /srv/repo
@@ -524,7 +526,7 @@ jupyterhub:
         admin: true
     image:
       name: quay.io/2i2c/pilot-hub
-      tag: "0.0.1-0.dev.git.6935.h7141d766"
+      tag: "0.0.1-0.dev.git.6074.h895181eb"
     networkPolicy:
       enabled: true
       # interNamespaceAccessLabels=accept makes the hub pod's associated
