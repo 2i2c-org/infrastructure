@@ -1,7 +1,7 @@
 prefix     = "hhmi"
-project_id = "hhmi"
+project_id = "hhmi-398911"
 
-zone   = "us-west2"
+zone   = "us-west2-b"
 region = "us-west2"
 
 # Default to a HA cluster for reliability
