@@ -78,9 +78,18 @@ jupyterhub:
         storageClassName: managed-premium
     readinessProbe:
       enabled: false
+    image:
+      # FIXME: This is from a 3.0.0-beta.1 based hub image build, not the 3.0.2
+      #        based image build with oauthenticator 16, but with oauthenticator
+      #        15.1. This practically reverts the z2jh upgrade for utoronto made
+      #        in https://github.com/2i2c-org/infrastructure/pull/3118.
+      #
+      name: quay.io/2i2c/pilot-hub
+      tag: "0.0.1-0.dev.git.6074.h895181eb"
     config:
       CILogonOAuthenticator:
-        oauth_callback_url: https://r-staging.datatools.utoronto.ca/hub/oauth_callback
+        shown_idps:
+          - https://idpz.utorauth.utoronto.ca/shibboleth
         allowed_idps:
           https://idpz.utorauth.utoronto.ca/shibboleth:
             username_derivation:
