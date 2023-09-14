@@ -105,14 +105,18 @@ deployer deploy-support $CLUSTER_NAME
 Once the `support` chart has been successfully deployed, retrieve the external IP address for the `ingress-nginx` load balancer.
 
 ```bash
+deployer use-cluster-credentials $CLUSTER_NAME
+```
+
+```bash
 kubectl --namespace=support get service support-ingress-nginx-controller
 ```
 
 Add DNS records for the `2i2c.cloud` domain [under "Advanced DNS" in
 Namecheap.com](https://ap.www.namecheap.com/Domains/DomainControlPanel/2i2c.cloud/advancedns):
 
-1. `<cluster-name>.2i2c.cloud.`, used for the primary hub (if it exists).
-2. `*.<cluster-name>.2i2c.cloud.`, for all other hubs, grafana and prometheus
+1. `<cluster-name>`, used for the primary hub (if it exists).
+2. `*.<cluster-name>`, for all other hubs, grafana and prometheus
    instances.
 
 Use an `A` record when we point to an external IP addresse (GCP, Azure), and a
