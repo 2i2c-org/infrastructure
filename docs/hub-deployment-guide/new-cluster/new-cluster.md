@@ -364,3 +364,11 @@ Commit this file to the repo.
 To ensure the new cluster is appropriately handled by our CI/CD system, please add it as an entry in the following places:
 
 - The [`deploy-hubs.yaml`](https://github.com/2i2c-org/infrastructure/blob/008ae2c1deb3f5b97d0c334ed124fa090df1f0c6/.github/workflows/deploy-hubs.yaml#L121) workflow file
+
+## Cluster is now ready, what are the next steps
+
+```{important}
+Cluster is now ready to perform the next steps:
+1. [](support-components).
+2. [](new-hub)
+```
