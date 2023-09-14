@@ -3,7 +3,7 @@ provider: gcp
 gcp:
   key: enc-deployer-credentials.secret.json
   project: {{ project_id }}
-  cluster: {{ cluster_name }}
+  cluster: {{ cluster_name }}-cluster
   # We default to a regional cluster
   zone: {{ cluster_region }}
 support:
