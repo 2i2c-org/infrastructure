@@ -1,0 +1,66 @@
+basehub:
+  nfs:
+    enabled: true
+    dirsizeReporter:
+      enabled: true
+    pv:
+      mountOptions:
+        - soft
+        - noatime
+      serverIP: 10.55.112.74
+      baseShareName: /homes/
+  jupyterhub:
+    custom:
+      2i2c:
+        add_staff_user_ids_to_admin_users: true
+        add_staff_user_ids_of_type: "github"
+      homepage:
+        templateVars:
+          org:
+            url: https://www.hhmi.org/
+            logo_url: https://www.hhmi.org/sites/default/files/Logos/JPG/HHMI-vertical-signature-color.jpg
+          designed_by:
+            name: 2i2c
+            url: https://2i2c.org
+          operated_by:
+            name: 2i2c
+            url: https://2i2c.org
+          funded_by:
+            name: TODO
+            url: https://www.hhmi.org/
+    singleuser:
+      # User image: https://quay.io/repository/arokem/nh2023?tab=tags
+      image:
+        name: pangeo/pangeo-notebook
+        tag: "2023.09.11"
+      nodeSelector:
+        node.kubernetes.io/instance-type: n2-highmem-16
+      cpu:
+        guarantee: 0.5
+        # We're on n1-highmem-16 machines
+        limit: 14
+      memory:
+        guarantee: 4G
+        limit: 16G
+    hub:
+      config:
+        JupyterHub:
+          authenticator_class: cilogon
+        CILogonOAuthenticator:
+          allowed_idps:
+            http://github.com/login/oauth/authorize:
+              username_derivation:
+                username_claim: "preferred_username"
+        OAuthenticator:
+          # WARNING: Don't use allow_existing_users with config to allow an
+          #          externally managed group of users, such as
+          #          GitHubOAuthenticator.allowed_organizations, as it breaks a
+          #          common expectations for an admin user.
+          #
+          #          The broken expectation is that removing a user from the
+          #          externally managed group implies that the user won't have
+          #          access any more. In practice the user will still have
+          #          access if it had logged in once before, as it then exists
+          #          in JupyterHub's database of users.
+          #
+          allow_existing_users: True

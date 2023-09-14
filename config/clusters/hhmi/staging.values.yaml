@@ -1,0 +1,19 @@
+basehub:
+  jupyterhub:
+    ingress:
+      hosts:
+        - staging.hhmi.2i2c.cloud
+      tls:
+        - secretName: https-auto-tls
+          hosts:
+            - staging.hhmi.2i2c.cloud
+    custom:
+      2i2c:
+      homepage:
+        templateVars:
+          org:
+            name: "HHMI - Staging"
+    hub:
+      config:
+        CILogonOAuthenticator:
+          oauth_callback_url: https://staging.hhmi.2i2c.cloud/hub/oauth_callback
