@@ -39,17 +39,9 @@ basehub:
     hub:
       image:
         name: quay.io/2i2c/unlisted-choice-experiment
-        tag: "0.0.1-0.dev.git.6863.h406a3546"
+        tag: "0.0.1-0.dev.git.6935.h7141d766"
       allowNamedServers: true
       config:
-        Authenticator:
-          enable_auth_state: true
-          # This hub uses GitHub Teams auth and so we don't set
-          # allowed_users in order to not deny access to valid members of
-          # the listed teams. These people should have admin access though.
-          admin_users:
-            - rabernat
-            - jbusecke
         JupyterHub:
           authenticator_class: github
           # Announcement is a JupyterHub feature to present messages to users in
@@ -76,6 +68,11 @@ basehub:
             - 2i2c-org:hub-access-for-2i2c-staff
           scope:
             - read:org
+        Authenticator:
+          enable_auth_state: true
+          admin_users:
+            - rabernat
+            - jbusecke
     singleuser:
       image:
         name: pangeo/pangeo-notebook

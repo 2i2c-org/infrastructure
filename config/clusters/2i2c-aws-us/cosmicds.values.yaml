@@ -76,12 +76,7 @@ jupyterhub:
       JupyterHub:
         authenticator_class: cilogon
       CILogonOAuthenticator:
-        scope:
-          - "email"
-          - "profile"
         oauth_callback_url: https://cosmicds.2i2c.cloud/hub/oauth_callback
-        shown_idps:
-          - http://github.com/login/oauth/authorize
         allowed_idps:
           # The username claim here is used to do *authorization*, for both
           # admin use and any allow listing we want to do.

@@ -60,14 +60,12 @@ jupyterhub:
   hub:
     image:
       name: quay.io/2i2c/dynamic-image-building-experiment
-      tag: "0.0.1-0.dev.git.6765.h33942a27"
+      tag: "0.0.1-0.dev.git.6935.h7141d766"
     config:
       JupyterHub:
         authenticator_class: cilogon
       CILogonOAuthenticator:
         oauth_callback_url: "https://imagebuilding-demo.2i2c.cloud/hub/oauth_callback"
-        shown_idps:
-          - http://google.com/accounts/o8/id
         allowed_idps:
           http://google.com/accounts/o8/id:
             username_derivation:

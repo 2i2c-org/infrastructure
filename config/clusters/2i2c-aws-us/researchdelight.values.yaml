@@ -30,12 +30,10 @@ basehub:
     hub:
       image:
         name: quay.io/2i2c/unlisted-choice-experiment
-        tag: "0.0.1-0.dev.git.6863.h406a3546"
+        tag: "0.0.1-0.dev.git.6935.h7141d766"
       config:
         JupyterHub:
           authenticator_class: github
-        Authenticator:
-          enable_auth_state: true
         GitHubOAuthenticator:
           populate_teams_in_auth_state: true
           allowed_organizations:
@@ -43,6 +41,8 @@ basehub:
             - 2i2c-org:research-delight-team
           scope:
             - read:org
+        Authenticator:
+          enable_auth_state: true
     singleuser:
       image:
         name: quay.io/2i2c/researchdelight-image

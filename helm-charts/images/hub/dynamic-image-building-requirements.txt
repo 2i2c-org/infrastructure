@@ -1,6 +1,6 @@
 # Image lives at quay.io/2i2c/second-hub-experimental
 git+https://github.com/yuvipanda/jupyterhub-configurator@ed7e3a0df1e3d625d10903ef7d7fd9c2fbb548db
 # Brings on using `unlisted_choice` in profile options per https://github.com/2i2c-org/infrastructure/issues/2146
-git+https://github.com/jupyterhub/kubespawner@5a90351adba7d65286bd5e00e82f156011bf7b83
+git+https://github.com/jupyterhub/kubespawner@8cc569c78bcdb342e694f7344219e43d522f4809
 # Brings in https://github.com/yuvipanda/prototype-kubespawner-dynamic-building-ui
 git+https://github.com/yuvipanda/prototype-kubespawner-dynamic-building-ui.git@b36ece00b5e7fcba5d4485e7ab70992705601c3c

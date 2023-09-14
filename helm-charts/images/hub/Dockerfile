@@ -12,7 +12,11 @@
 # `chartpress --push --builder docker-buildx --platform linux/amd64`
 # Ref: https://cloudolife.com/2022/03/05/Infrastructure-as-Code-IaC/Container/Docker/Docker-buildx-support-multiple-architectures-images/
 #
-FROM jupyterhub/k8s-hub:3.0.0-beta.1
+FROM jupyterhub/k8s-hub:3.0.2
+
+# chartpress.yaml defines multiple hub images differentiated only by a
+# requirements.txt file with dependencies, this build argument allows us to
+# re-use this Dockerfile for all images.
 ARG REQUIREMENTS_FILE
 
 COPY ${REQUIREMENTS_FILE} /tmp/

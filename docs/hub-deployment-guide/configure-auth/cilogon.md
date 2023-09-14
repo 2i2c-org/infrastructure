@@ -69,10 +69,6 @@ jupyterhub:
           - admin@anu.edu.au
       CILogonOAuthenticator:
         oauth_callback_url: https://{{ HUB_DOMAIN }}/hub/oauth_callback
-        # Show only the option to login with Google and ANU's provider
-        shown_idps:
-          - http://google.com/accounts/o8/id
-          - https://idp2.anu.edu.au/idp/shibboleth
         # Allow to only login into the hub using Google or ANU's provider
         allowed_idps:
           http://google.com/accounts/o8/id:
@@ -119,11 +115,7 @@ jupyterhub:
       JupyterHub:
         authenticator_class: cilogon
       CILogonOAuthenticator:
-        scope:
-          - "profile"
         oauth_callback_url: https://{{ HUB_DOMAIN }}/hub/oauth_callback
-        shown_idps:
-          - http://github.com/login/oauth/authorize
         allowed_idps:
           http://github.com/login/oauth/authorize:
             username_derivation:

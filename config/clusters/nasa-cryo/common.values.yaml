@@ -37,21 +37,6 @@ basehub:
     hub:
       allowNamedServers: true
       config:
-        Authenticator:
-          # We are restricting profiles based on GitHub Team membership and
-          # so need to persist auth state
-          enable_auth_state: true
-          # This hub uses GitHub Teams auth and so we don't set
-          # allowed_users in order to not deny access to valid members of
-          # the listed teams. These people should have admin access though.
-          admin_users:
-            - tsnow03
-            - JessicaS11
-            - jdmillstein
-            - dfelikson
-            - fperez
-            - scottyhq
-            - jomey
         JupyterHub:
           authenticator_class: github
         GitHubOAuthenticator:
@@ -64,6 +49,19 @@ basehub:
             - CryoInTheCloud:cryocloudadvanced
           scope:
             - read:org
+        Authenticator:
+          # We are restricting profiles based on GitHub Team membership and
+          # so need to persist auth state
+          enable_auth_state: true
+          admin_users:
+            - tsnow03
+            - JessicaS11
+            - jdmillstein
+            - dfelikson
+            - fperez
+            - scottyhq
+            - jomey
+
     singleuser:
       extraFiles:
         # jupyter_server_config.json is defined by basehub, this entry adds to it
@@ -91,11 +89,9 @@ basehub:
         - name: volume-mount-ownership-fix
           image: busybox
           command:
-            [
-              "sh",
-              "-c",
-              "id && chown 1000:1000 /home/jovyan && chown 1000:1000 /home/jovyan/shared && chown 1000:1000 /home/jovyan/shared-public && ls -lhd /home/jovyan ",
-            ]
+            - sh
+            - -c
+            - id && chown 1000:1000 /home/jovyan /home/jovyan/shared /home/jovyan/shared-public && ls -lhd /home/jovyan
           securityContext:
             runAsUser: 0
           volumeMounts:

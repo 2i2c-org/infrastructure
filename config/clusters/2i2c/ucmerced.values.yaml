@@ -38,9 +38,6 @@ jupyterhub:
         authenticator_class: cilogon
       CILogonOAuthenticator:
         oauth_callback_url: https://ucmerced.2i2c.cloud/hub/oauth_callback
-        shown_idps:
-          - urn:mace:incommon:ucmerced.edu
-          - https://accounts.google.com/o/oauth2/auth
         allowed_idps:
           urn:mace:incommon:ucmerced.edu:
             username_derivation:
