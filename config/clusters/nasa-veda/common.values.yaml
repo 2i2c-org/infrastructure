@@ -103,9 +103,9 @@ basehub:
                         image: busybox
                         command:
                           [
-                              "sh",
-                              "-c",
-                              "id && chown 1000:1000 /home/jovyan && chown 1000:1000 /home/jovyan/shared && ls -lhd /home/jovyan ",
+                            "sh",
+                            "-c",
+                            "id && chown 1000:1000 /home/jovyan && chown 1000:1000 /home/jovyan/shared && ls -lhd /home/jovyan ",
                           ]
                         securityContext:
                           runAsUser: 0
@@ -161,9 +161,9 @@ basehub:
                         image: busybox
                         command:
                           [
-                              "sh",
-                              "-c",
-                              "id && chown 1000:1000 /home/rstudio && ls -lhd /home/rstudio ",
+                            "sh",
+                            "-c",
+                            "id && chown 1000:1000 /home/rstudio && ls -lhd /home/rstudio ",
                           ]
                         securityContext:
                           runAsUser: 0
