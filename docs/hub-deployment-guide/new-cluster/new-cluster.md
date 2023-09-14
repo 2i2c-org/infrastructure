@@ -259,8 +259,12 @@ Then encrypt the key using `sops`.
 You must be logged into Google with your `@2i2c.org` account at this point so `sops` can read the encryption key from the `two-eye-two-see` project.
 ```
 
+First, make sure you are in the root of the repository
 ```bash
-cd ../..  # Make sure you are in the root of the repository
+cd ../..
+```
+
+```bash
 sops --output config/clusters/$CLUSTER_NAME/enc-deployer-credentials.secret.{{ json | yaml }} --encrypt config/clusters/$CLUSTER_NAME/deployer-credentials.secret.{{ json | yaml }}
 ```
 
