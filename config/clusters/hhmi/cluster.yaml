@@ -5,15 +5,12 @@ gcp:
   project: hhmi-398911
   cluster: hhmi-cluster
   zone: us-west2
-billing:
-  paid_by_us: true
-  bigquery:
-    # contains information about bigquery billing export (https://cloud.google.com/billing/docs/how-to/export-data-bigquery)
-    # for calculating how much this cluster costs us. Required if `paid_by_us` is
-    # set to true.
-    project: hhmi
-    dataset: cloud_costs
-    billing_id: 0157F7-E3EA8C-25AC3C
+  billing:
+    paid_by_us: true
+    bigquery:
+      project: hhmi
+      dataset: cloud_costs
+      billing_id: 0157F7-E3EA8C-25AC3C
 support:
   helm_chart_values_files:
     - support.values.yaml
