@@ -85,7 +85,6 @@ jupyterhub:
         # We wanna keep logs long term, primarily for analytics
         extra_log_file: /srv/jupyterhub/jupyterhub.log
       CILogonOAuthenticator:
-        oauth_callback_url: https://r-staging.datatools.utoronto.ca/hub/oauth_callback
         allowed_idps:
           https://idpz.utorauth.utoronto.ca/shibboleth:
             username_derivation:
