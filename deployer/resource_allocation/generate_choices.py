@@ -47,6 +47,8 @@ def proportional_memory_strategy(
     # We operate on *available* memory, which already accounts for system components (like kubelet & systemd)
     # as well as daemonsets we run on every node. This represents the resources that are available
     # for user pods.
+
+    # FIXME: Add some more more wiggle room here
     available_node_mem = nodeinfo["available"]["memory"]
     available_node_cpu = nodeinfo["available"]["cpu"]
 
