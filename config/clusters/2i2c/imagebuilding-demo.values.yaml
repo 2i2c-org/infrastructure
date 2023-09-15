@@ -42,21 +42,77 @@ jupyterhub:
               kubespawner_override:
                 image: "{value}"
             choices:
-              pangeo_new:
-                display_name: Base Pangeo Notebook ("2023.07.05")
-                default: true
-                slug: "pangeo_new"
-                kubespawner_override:
-                  image: "pangeo/pangeo-notebook:2023.07.05"
               pangeo:
-                display_name: Base Pangeo Notebook
+                display_name: Pangeo Notebook Image
+                kubespawner_override:
+                  image: pangeo/pangeo-notebook:2023.09.11
+              geospatial:
+                display_name: Rocker Geospatial
                 default: true
-                slug: "pangeo"
-        kubespawner_override:
-          # Explicitly unset mem_limit, so it overrides the default memory limit we set in
-          # basehub/values.yaml
-          mem_limit: 2G
-          cpu_limit: 2
+                slug: geospatial
+                kubespawner_override:
+                  image: rocker/binder:4.3
+                  # Launch into RStudio after the user logs in
+                  default_url: /rstudio
+                  # Ensures container working dir is homedir
+                  # https://github.com/2i2c-org/infrastructure/issues/2559
+                  working_dir: /home/rstudio
+                  # Because this is a list, it will override our default volume mounts
+                  volume_mounts:
+                    # Mount the user home directory
+                    - name: home
+                      mountPath: /home/rstudio
+                      subPath: "{username}"
+                    # Mount the shared readonly directory
+                    - name: home
+                      mountPath: /home/rstudio/shared
+                      subPath: _shared
+                      readOnly: true
+              scipy:
+                display_name: Jupyter SciPy Notebook
+                slug: scipy
+                kubespawner_override:
+                  image: jupyter/scipy-notebook:2023-06-26
+          resources:
+            display_name: Resource Allocation
+            choices:
+              mem_2_7:
+                display_name: 2.7 GB RAM, upto 3.479 CPUs
+                kubespawner_override:
+                  mem_guarantee: 2904451072
+                  mem_limit: 2904451072
+                  cpu_guarantee: 0.434875
+                  cpu_limit: 3.479
+                  node_selector:
+                    node.kubernetes.io/instance-type: n1-highmem-4
+                default: true
+              mem_5_4:
+                display_name: 5.4 GB RAM, upto 3.479 CPUs
+                kubespawner_override:
+                  mem_guarantee: 5808902144
+                  mem_limit: 5808902144
+                  cpu_guarantee: 0.86975
+                  cpu_limit: 3.479
+                  node_selector:
+                    node.kubernetes.io/instance-type: n1-highmem-4
+              mem_10_8:
+                display_name: 10.8 GB RAM, upto 3.479 CPUs
+                kubespawner_override:
+                  mem_guarantee: 11617804288
+                  mem_limit: 11617804288
+                  cpu_guarantee: 1.7395
+                  cpu_limit: 3.479
+                  node_selector:
+                    node.kubernetes.io/instance-type: n1-highmem-4
+              mem_21_6:
+                display_name: 21.6 GB RAM, upto 3.479 CPUs
+                kubespawner_override:
+                  mem_guarantee: 23235608576
+                  mem_limit: 23235608576
+                  cpu_guarantee: 3.479
+                  cpu_limit: 3.479
+                node_selector:
+                  node.kubernetes.io/instance-type: n1-highmem-4
   hub:
     services:
       binder:
