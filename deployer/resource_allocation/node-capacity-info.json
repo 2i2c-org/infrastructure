@@ -4,6 +4,14 @@
             "cpu": 4.0,
             "memory": 33186611200
         },
+        "allocatable": {
+            "cpu": 3.92,
+            "memory": 32145375232
+        },
+        "measured_overhead": {
+            "cpu": 0.17,
+            "memory": 262144000.0
+        },
         "available": {
             "cpu": 3.75,
             "memory": 31883231232
@@ -34,9 +42,17 @@
             "cpu": 16.0,
             "memory": 133545017344
         },
+        "allocatable": {
+            "cpu": 15.89,
+            "memory": 130473738240
+        },
+        "measured_overhead": {
+            "cpu": 0.155,
+            "memory": 125829120.0
+        },
         "available": {
-            "cpu": 15.72,
-            "memory": 130211594240
+            "cpu": 15.735,
+            "memory": 130347909120
         }
     }
 }
