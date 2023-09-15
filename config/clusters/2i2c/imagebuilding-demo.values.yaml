@@ -58,9 +58,14 @@ jupyterhub:
           mem_limit: 2G
           cpu_limit: 2
   hub:
+    services:
+      binder:
+        # FIXME: ref https://github.com/2i2c-org/binderhub-service/issues/57
+        # for something more readable and requiring less copy-pasting
+        url: http://imagebuilding-demo-binderhub-service:8090
     image:
       name: quay.io/2i2c/dynamic-image-building-experiment
-      tag: "0.0.1-0.dev.git.6765.h33942a27"
+      tag: "0.0.1-0.dev.git.7001.hf02ed7a1"
     config:
       JupyterHub:
         authenticator_class: cilogon
@@ -107,6 +112,7 @@ binderhub-service:
         effect: NoSchedule
   config:
     BinderHub:
+      base_url: /services/binder
       use_registry: true
       # Re-uses the registry created for the `binderhub-staging` hub
       # but pushes images under a different prefix
