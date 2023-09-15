@@ -30,11 +30,19 @@
     "n2-highmem-4": {
         "capacity": {
             "cpu": 4.0,
-            "memory": 33670004736
+            "memory": 33669984256
+        },
+        "allocatable": {
+            "cpu": 3.92,
+            "memory": 29783961600
+        },
+        "measured_overhead": {
+            "cpu": 0.491,
+            "memory": 724566016
         },
         "available": {
-            "cpu": 3.196,
-            "memory": 28975529984
+            "cpu": 3.429,
+            "memory": 29059395584
         }
     },
     "r5.4xlarge": {
@@ -53,6 +61,42 @@
         "available": {
             "cpu": 15.735,
             "memory": 130347909120
+        }
+    },
+    "n2-highmem-32": {
+        "capacity": {
+            "cpu": 32.0,
+            "memory": 270473359360
+        },
+        "allocatable": {
+            "cpu": 31.85,
+            "memory": 257783492608
+        },
+        "measured_overhead": {
+            "cpu": 0.426,
+            "memory": 457179136
+        },
+        "available": {
+            "cpu": 31.424,
+            "memory": 257326313472
+        }
+    },
+    "n1-highmem-4": {
+        "capacity": {
+            "cpu": 4.0,
+            "memory": 27328200704
+        },
+        "allocatable": {
+            "cpu": 3.92,
+            "memory": 23829102592
+        },
+        "measured_overhead": {
+            "cpu": 0.441,
+            "memory": 593494016
+        },
+        "available": {
+            "cpu": 3.479,
+            "memory": 23235608576
         }
     }
 }
