@@ -1,8 +1,10 @@
 import json
 import subprocess
+from datetime import datetime, timedelta, timezone
 from pathlib import Path
 
 import typer
+from dateutil.parser import parse
 from kubernetes.utils.quantity import parse_quantity
 from ruamel.yaml import YAML
 
@@ -39,6 +41,22 @@ def get_node_capacity_info(instance_type: str):
             f"No nodes with instance-type={instance_type} found in current kubernetes cluster"
         )
 
+    # Let's just make sure it is at least 3 minutes old, to give all pods a
+    # chance to actually schedule on this.
+    nodes["items"] = [
+        n
+        for n in nodes["items"]
+        if datetime.now(timezone.utc) - parse(n["metadata"]["creationTimestamp"])
+        > timedelta(minutes=3)
+    ]
+
+    if not nodes.get("items"):
+        # A node was found, but it was not old enough.
+        # We want to wait a while before using it, so daemonsets get time to
+        # be scheduled
+        raise ValueError(
+            f"Node with instance-type={instance_type} found in current kubernetes cluster is not 3 minutes old yet. Wait and try again"
+        )
     # Just pick one node
     node = nodes["items"][0]
 
