@@ -27,7 +27,7 @@ jupyterhub:
         interface_selector: true
         org:
           name: University of Toronto
-          logo_url: https://raw.githubusercontent.com/utoronto-2i2c/homepage/master/extra-assets/images/home-hero.png
+          logo_url: https://raw.githubusercontent.com/2i2c-org/default-hub-homepage/utoronto-prod/extra-assets/images/home-hero.png
           url: https://www.utoronto.ca/
         designed_by:
           name: 2i2c
