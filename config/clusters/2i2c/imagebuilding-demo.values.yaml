@@ -121,7 +121,7 @@ jupyterhub:
         url: http://imagebuilding-demo-binderhub-service:8090
     image:
       name: quay.io/2i2c/dynamic-image-building-experiment
-      tag: "0.0.1-0.dev.git.7018.h27963022"
+      tag: "0.0.1-0.dev.git.7020.had7889bc"
     config:
       JupyterHub:
         authenticator_class: cilogon
