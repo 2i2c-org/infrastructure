@@ -30,7 +30,7 @@ jupyterhub:
   singleuser:
     profileList:
       - display_name: "Only Profile Available, this info is not shown in the UI"
-        slug: only-profile
+        slug: only
         profile_options:
           image:
             display_name: Image
