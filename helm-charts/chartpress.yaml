@@ -18,3 +18,9 @@ charts:
           REQUIREMENTS_FILE: "dynamic-image-building-requirements.txt"
         contextPath: "images/hub"
         dockerfilePath: "images/hub/Dockerfile"
+      culler-failure:
+        imageName: quay.io/2i2c/culler-failure
+        buildArgs:
+          REQUIREMENTS_FILE: "culler-failure-requirements.txt"
+        contextPath: "images/hub"
+        dockerfilePath: "images/hub/Dockerfile"
