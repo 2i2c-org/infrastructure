@@ -22,7 +22,8 @@ def get_node_capacity_info(instance_type: str):
                 "get",
                 "node",
                 "-l",
-                f"node.kubernetes.io/instance-type={instance_type}",
+                # Let's make sure we don't accidentally pick up a core node
+                f"node.kubernetes.io/instance-type={instance_type},hub.jupyter.org/node-purpose=user",
                 "-o",
                 "json",
             ]
