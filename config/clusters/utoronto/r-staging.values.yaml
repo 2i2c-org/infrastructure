@@ -5,6 +5,10 @@ jupyterhub:
       - hosts: [r-staging.datatools.utoronto.ca]
         secretName: https-auto-tls
   hub:
+    db:
+      pvc:
+        # prod stores logs, so let's make it big
+        storage: 10Gi
     config:
       CILogonOAuthenticator:
         oauth_callback_url: https://r-staging.datatools.utoronto.ca/hub/oauth_callback
