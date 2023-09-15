@@ -95,7 +95,7 @@ basehub:
                   default: true
                   slug: pangeo
                   kubespawner_override:
-                    image: public.ecr.aws/nasa-veda/nasa-veda-singleuser:38e8998f9be64b0a59ac6c4d6d152d3403121dfc4be6d49bdf52ddc92827af8a
+                    image: public.ecr.aws/nasa-veda/nasa-veda-singleuser:5068290376e8c3151d97a36ae6485bb7ff79650b94aecc93ffb2ea1b42d76460
                     init_containers:
                       # Need to explicitly fix ownership here, as otherwise these directories will be owned
                       # by root on most NFS filesystems - neither EFS nor Google Filestore support anonuid
@@ -174,7 +174,7 @@ basehub:
                       # this container uses nbgitpuller to mount https://github.com/NASA-IMPACT/veda-docs/ for user pods
                       # image source: https://github.com/NASA-IMPACT/veda-jh-environments/tree/main/docker-images/base/nasa-veda-singleuser-init
                       - name: nasa-veda-singleuser-init
-                        image: public.ecr.aws/nasa-veda/nasa-veda-singleuser-init:53e93ca4fa8b0f979f9bd42fc84ad642deb9851ee449f0b273775b1a367e2ecf
+                        image: public.ecr.aws/nasa-veda/nasa-veda-singleuser-init:38e8998f9be64b0a59ac6c4d6d152d3403121dfc4be6d49bdf52ddc92827af8a
                         command:
                           - "python3"
                           - "/opt/k8s-init-container-nb-docs.py"
