@@ -3,4 +3,4 @@ git+https://github.com/yuvipanda/jupyterhub-configurator@ed7e3a0df1e3d625d10903e
 # Brings on using `unlisted_choice` in profile options per https://github.com/2i2c-org/infrastructure/issues/2146
 git+https://github.com/jupyterhub/kubespawner@9663b7e0f0d3942962c99a39c375358f19e0718e
 # Brings in https://github.com/yuvipanda/prototype-kubespawner-dynamic-building-ui
-git+https://github.com/yuvipanda/prototype-kubespawner-dynamic-building-ui.git@512e16082994ca513f34cc12c486714c9e5ad42c
+git+https://github.com/yuvipanda/prototype-kubespawner-dynamic-building-ui.git@ad5d844a50943df18b08f0b368d31f9f8441b1a0
