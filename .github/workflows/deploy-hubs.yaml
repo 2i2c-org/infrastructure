@@ -199,6 +199,7 @@ jobs:
       failure_smithsonian: "${{ env.failure_smithsonian }}"
       failure_catalystproject-latam: "${{ env.failure_catalystproject-latam }}"
       failure_catalystproject-africa: "${{ env.failure_catalystproject-africa }}"
+      failure_hhmi: "${{ env.failure_hhmi }}"
 
     # Only run this job on pushes to the default branch and when the job output is not
     # an empty list

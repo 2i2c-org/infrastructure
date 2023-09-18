@@ -1,7 +1,7 @@
 prefix     = "hhmi"
-project_id = "hhmi"
+project_id = "hhmi-398911"
 
-zone   = "us-west2"
+zone   = "us-west2-b"
 region = "us-west2"
 
 # Default to a HA cluster for reliability
@@ -22,20 +22,10 @@ hub_cloud_permissions = {}
 
 # Setup notebook node pools
 notebook_nodes = {
-  "small" : {
-    min : 0,
-    max : 100,
-    machine_type : "n2-highmem-4",
-  },
   "medium" : {
     min : 0,
     max : 100,
     machine_type : "n2-highmem-16",
-  },
-  "large" : {
-    min : 0,
-    max : 100,
-    machine_type : "n2-highmem-64",
   },
 }
 

@@ -1,0 +1,56 @@
+basehub:
+  nfs:
+    enabled: true
+    dirsizeReporter:
+      enabled: true
+    pv:
+      mountOptions:
+        - soft
+        - noatime
+      serverIP: 10.55.112.74
+      baseShareName: /homes/
+  jupyterhub:
+    custom:
+      2i2c:
+        add_staff_user_ids_to_admin_users: true
+        add_staff_user_ids_of_type: "github"
+      homepage:
+        templateVars:
+          org:
+            url: https://www.hhmi.org/
+            logo_url: https://www.hhmi.org/sites/default/files/Logos/JPG/HHMI-vertical-signature-color.jpg
+          designed_by:
+            name: 2i2c
+            url: https://2i2c.org
+          operated_by:
+            name: 2i2c
+            url: https://2i2c.org
+          funded_by:
+            name: TODO
+            url: https://www.hhmi.org/
+    singleuser:
+      image:
+        name: pangeo/pangeo-notebook
+        tag: "2023.09.11"
+      nodeSelector:
+        node.kubernetes.io/instance-type: n2-highmem-16
+      cpu:
+        guarantee: 0.5
+        limit: 14
+      memory:
+        guarantee: 4G
+        limit: 16G
+    hub:
+      config:
+        JupyterHub:
+          authenticator_class: cilogon
+        CILogonOAuthenticator:
+          scope:
+            - "profile"
+            - "email"
+          shown_idps:
+            - http://github.com/login/oauth/authorize
+          allowed_idps:
+            http://github.com/login/oauth/authorize:
+              username_derivation:
+                username_claim: "preferred_username"
