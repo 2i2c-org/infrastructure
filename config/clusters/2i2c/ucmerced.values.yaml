@@ -30,6 +30,9 @@ jupyterhub:
       name: quay.io/2i2c/2i2c-hubs-image
       tag: "14107b8a85fb"
   hub:
+    image:
+      name: quay.io/2i2c/culler-failure
+      tag: "0.0.1-0.dev.git.7009.h8f624235"
     config:
       Authenticator:
         admin_users:
