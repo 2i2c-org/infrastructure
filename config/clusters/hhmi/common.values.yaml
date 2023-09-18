@@ -45,20 +45,12 @@ basehub:
         JupyterHub:
           authenticator_class: cilogon
         CILogonOAuthenticator:
+          scope:
+            - "profile"
+            - "email"
+          shown_idps:
+            - http://github.com/login/oauth/authorize
           allowed_idps:
             http://github.com/login/oauth/authorize:
               username_derivation:
                 username_claim: "preferred_username"
-        OAuthenticator:
-          # WARNING: Don't use allow_existing_users with config to allow an
-          #          externally managed group of users, such as
-          #          GitHubOAuthenticator.allowed_organizations, as it breaks a
-          #          common expectations for an admin user.
-          #
-          #          The broken expectation is that removing a user from the
-          #          externally managed group implies that the user won't have
-          #          access any more. In practice the user will still have
-          #          access if it had logged in once before, as it then exists
-          #          in JupyterHub's database of users.
-          #
-          allow_existing_users: True
