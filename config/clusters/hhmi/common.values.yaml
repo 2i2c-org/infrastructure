@@ -29,7 +29,6 @@ basehub:
             name: TODO
             url: https://www.hhmi.org/
     singleuser:
-      # User image: https://quay.io/repository/arokem/nh2023?tab=tags
       image:
         name: pangeo/pangeo-notebook
         tag: "2023.09.11"
