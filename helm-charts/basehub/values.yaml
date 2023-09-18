@@ -36,7 +36,7 @@ staticWebsite:
 nfs:
   enabled: true
   dirsizeReporter:
-    enabled: false
+    enabled: true
   shareCreator:
     enabled: true
     tolerations: []
