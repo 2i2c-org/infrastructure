@@ -9,7 +9,7 @@ jupyterhub:
   custom:
     2i2c:
       add_staff_user_ids_to_admin_users: true
-      add_staff_user_ids_of_type: "google"
+      add_staff_user_ids_of_type: "github"
 
     homepage:
       templateVars:
@@ -124,17 +124,14 @@ jupyterhub:
       tag: "0.0.1-0.dev.git.7029.h44cd314e"
     config:
       JupyterHub:
-        authenticator_class: cilogon
-      CILogonOAuthenticator:
-        oauth_callback_url: "https://imagebuilding-demo.2i2c.cloud/hub/oauth_callback"
-        shown_idps:
-          - http://google.com/accounts/o8/id
-        allowed_idps:
-          http://google.com/accounts/o8/id:
-            username_derivation:
-              username_claim: "email"
-            allowed_domains:
-              - "2i2c.org"
+        authenticator_class: github
+      GitHubOAuthenticator:
+        oauth_callback_url: https://imagebuilding-demo.2i2c.cloud/hub/oauth_callback
+        allowed_organizations:
+          - 2i2c-org:hub-access-for-2i2c-staff
+          - 2i2c-imagebuilding-hub-access
+        scope:
+          - read:org
 
     extraConfig:
       enable-prototype-UI: |
