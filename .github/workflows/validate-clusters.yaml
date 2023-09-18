@@ -16,7 +16,7 @@ on:
       - "config/clusters/**"
       # Exclude changes to the templates directory from
       # triggering this workflow
-      - "!config/clusters/templates"
+      - "!config/clusters/templates/**"
       - "helm-charts/**"
       - "deployer/**"
       - "requirements.txt"
