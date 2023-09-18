@@ -8,7 +8,6 @@ basehub:
           hosts:
             - staging.hhmi.2i2c.cloud
     custom:
-      2i2c:
       homepage:
         templateVars:
           org:
