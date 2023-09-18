@@ -37,7 +37,6 @@ basehub:
         node.kubernetes.io/instance-type: n2-highmem-16
       cpu:
         guarantee: 0.5
-        # We're on n1-highmem-16 machines
         limit: 14
       memory:
         guarantee: 4G
