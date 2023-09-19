@@ -42,7 +42,6 @@ jupyterhub:
           http://google.com/accounts/o8/id:
             username_derivation:
               username_claim: "email"
-            allowed_domains: ["2i2c.org", "berkeley.edu", "mail.ccsf.edu"]
           urn:mace:incommon:berkeley.edu:
             username_derivation:
               username_claim: "email"
@@ -54,6 +53,7 @@ jupyterhub:
           - craig.persiko@mail.ccsf.edu
           - efuchs@mail.ccsf.edu
           - amy.mclanahan@mail.ccsf.edu
+        username_pattern: '^(.+@2i2c\.org|.+@berkeley\.edu|.+@mail\.ccsf\.edu|clare.alice.heimer@gmail.com|deployment-service-check)$'
     extraFiles:
       configurator-schema-default:
         data:
