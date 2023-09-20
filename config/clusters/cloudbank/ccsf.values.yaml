@@ -53,7 +53,7 @@ jupyterhub:
           - craig.persiko@mail.ccsf.edu
           - efuchs@mail.ccsf.edu
           - amy.mclanahan@mail.ccsf.edu
-        username_pattern: '^(.+@2i2c\.org|.+@berkeley\.edu|.+@mail\.ccsf\.edu|clare.alice.heimer@gmail.com|deployment-service-check)$'
+        username_pattern: '^(.+@2i2c\.org|.+@berkeley\.edu|.+@mail\.ccsf\.edu|clare\.alice\.heimer@gmail\.com|deployment-service-check)$'
     extraFiles:
       configurator-schema-default:
         data:
