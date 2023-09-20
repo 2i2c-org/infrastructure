@@ -45,6 +45,7 @@ basehub:
             - rezuma
             - ranchodeluxe
             - jsignell
+            - slesaad
         JupyterHub:
           authenticator_class: github
         GitHubOAuthenticator:
