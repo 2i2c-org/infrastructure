@@ -45,11 +45,13 @@ basehub:
             - rezuma
             - ranchodeluxe
             - jsignell
+            - slesaad
         JupyterHub:
           authenticator_class: github
         GitHubOAuthenticator:
           allowed_organizations:
             - veda-analytics-access:all-users
+            - veda-analytics-access:collaborator-access
             - 2i2c-org:hub-access-for-2i2c-staff
             - CYGNSS-VEDA:cygnss-iwg
           scope:
