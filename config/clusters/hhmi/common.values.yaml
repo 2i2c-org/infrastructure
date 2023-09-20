@@ -26,8 +26,9 @@ basehub:
             name: 2i2c
             url: https://2i2c.org
           funded_by:
-            name: TODO
-            url: https://www.hhmi.org/
+            name: ""
+            url: ""
+            custom_html: <a href="https://www.hhmi.org/">HHMI</a> and <a href="https://strategiesos.org/about/">Stratos</a>
     singleuser:
       image:
         name: pangeo/pangeo-notebook
