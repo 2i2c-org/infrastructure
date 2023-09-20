@@ -51,4 +51,4 @@ jupyterhub:
           - sean.smorris@berkeley.edu
           - mmckeever@santarosa.edu
           - mjmckeever496@gmail.com
-        username_pattern: '^(.+@2i2c\.org|.+@berkeley\.edu|.+@santarosa\.edu|mjmckeever496@gmail.com|deployment-service-check)$'
+        username_pattern: '^(.+@2i2c\.org|.+@berkeley\.edu|.+@santarosa\.edu|mjmckeever496@gmail\.com|deployment-service-check)$'
