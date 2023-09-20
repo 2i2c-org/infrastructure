@@ -25,6 +25,14 @@ jupyterhub:
         funded_by:
           name: Temple University
           url: https://www.temple.edu/
+  singleuser:
+    nodeSelector:
+      2i2c.org/community: temple
+    extraTolerations:
+      - key: "2i2c.org/community"
+        operator: "Equal"
+        value: "temple"
+        effect: "NoSchedule"
   hub:
     config:
       Authenticator:
