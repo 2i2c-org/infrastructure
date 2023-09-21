@@ -125,7 +125,7 @@ jupyterhub:
         url: http://imagebuilding-demo-binderhub-service:8090
     image:
       name: quay.io/2i2c/dynamic-image-building-experiment
-      tag: "0.0.1-0.dev.git.7060.h0593e80c"
+      tag: "0.0.1-0.dev.git.7067.hdae5e902"
     config:
       JupyterHub:
         authenticator_class: github
@@ -138,12 +138,9 @@ jupyterhub:
           - read:org
 
     extraConfig:
-      enable-prototype-UI: |
-        from kubespawner_dynamic_building_ui import TEMPLATE_PATHS, STATIC_HANDLER_TUPLE
-        c.KubeSpawner.additional_profile_form_template_paths = TEMPLATE_PATHS
-
-        # Add extra handler to serve JS & CSS assets
-        c.JupyterHub.extra_handlers.append(STATIC_HANDLER_TUPLE)
+      enable-fancy-profiles: |
+        from jupyterhub_fancy_profiles import setup_ui
+        setup_ui(c)
 
 binderhub-service:
   nodeSelector:
