@@ -30,7 +30,7 @@ basehub:
     hub:
       image:
         name: quay.io/2i2c/unlisted-choice-experiment
-        tag: "0.0.1-0.dev.git.6863.h406a3546"
+        tag: "0.0.1-0.dev.git.7080.h0da36d1e"
       config:
         JupyterHub:
           authenticator_class: github
