@@ -83,30 +83,24 @@ basehub:
       userScheduler:
         enabled: false
     hub:
+      allowNamedServers: true
       config:
         JupyterHub:
-          authenticator_class: cilogon
-        CILogonOAuthenticator:
+          authenticator_class: github
+        GitHubOAuthenticator:
+          populate_teams_in_auth_state: true
+          allowed_organizations:
+            - 2i2c-org:hub-access-for-2i2c-staff
+            - meom-group:hub-users # long term users
+            - demo-dask-grenoble2023:demo # temporary users for event
           scope:
-            - "profile"
-          shown_idps:
-            - http://github.com/login/oauth/authorize
-          allowed_idps:
-            http://github.com/login/oauth/authorize:
-              username_derivation:
-                username_claim: "preferred_username"
+            - read:org
         Authenticator:
-          # FIXME: In z2jh 3.0.0-beta.1, a truthy allowed_users implies
-          #        allow_existing_users=True, while in z3jh 3.0.0 this needs to be
-          #        configured explicitly.
-          #
-          allowed_users: &users
+          enable_auth_state: true
+          admin_users:
             - roxyboy
             - lesommer
             - auraoupa
-          admin_users: *users
-
-      allowNamedServers: true
 dask-gateway:
   gateway:
     extraConfig:
