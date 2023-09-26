@@ -405,7 +405,8 @@ jupyterhub:
                     description: An IDE For R, created by the RStudio company
     initContainers:
       - name: templates-clone
-        image: alpine/git
+        image: alpine/git:2.40.1
+        imagePullPolicy: IfNotPresent
         args:
           - clone
           - --
@@ -426,7 +427,8 @@ jupyterhub:
           - name: custom-templates
             mountPath: /srv/repo
       - name: templates-ownership-fix
-        image: alpine/git
+        image: alpine/git:2.40.1
+        imagePullPolicy: IfNotPresent
         command:
           - /bin/sh
         args:
@@ -439,7 +441,8 @@ jupyterhub:
             mountPath: /srv/repo
     extraContainers:
       - name: templates-sync
-        image: alpine/git
+        image: alpine/git:2.40.1
+        imagePullPolicy: IfNotPresent
         workingDir: /srv/repo
         command:
           - /bin/sh
