@@ -26,9 +26,7 @@ local nodeAz = "ca-central-1a";
 // can request a particular kind of node with a nodeSelector
 local notebookNodes = [
     { instanceType: "m5.large" },
-    { instanceType: "m5.xlarge" },
-    { instanceType: "m5.2xlarge" },
-    { instanceType: "m5.8xlarge" },
+    { instanceType: "r5.2xlarge" },
 ];
 
 local daskNodes = []
