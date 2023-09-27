@@ -71,14 +71,14 @@ jupyterhub:
       node.kubernetes.io/instance-type: r5.2xlarge
     profileList:
       - display_name: EOSC211
-        description: "For class EOSC211, provides ~2 CPU and ~8G RAM"
+        description: "For class EOSC211, provides upto 4 CPU and ~1G RAM"
         default: true
         kubespawner_override:
           # Using 'latest' for now so updates do not require 2i2c
           # involvement.
           image: quay.io/henrykmodzelewski/2i2c-eosc211:latest
       - display_name: EOSC350
-        description: "For class EOSC350, provides ~2 CPU and ~8G RAM"
+        description: "For class EOSC350, provides upto 4 CPU and ~1G RAM"
         kubespawner_override:
           # Using 'latest' for now so updates do not require 2i2c
           # involvement.
