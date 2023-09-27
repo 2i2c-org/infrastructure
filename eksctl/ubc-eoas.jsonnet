@@ -29,7 +29,7 @@ local notebookNodes = [
     { instanceType: "r5.2xlarge" },
 ];
 
-local daskNodes = []
+local daskNodes = [];
 
 
 {
