@@ -27,7 +27,7 @@ spec:
 
       containers:
         - name: dummy
-          image: busybox
+          image: busybox:1.36
           env:
             - name: NFS_SHARE_NAME
               value: "{{ .Values.nfs.pv.baseShareName }}{{ .Release.Name }}"
