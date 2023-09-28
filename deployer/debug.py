@@ -13,6 +13,7 @@ from ruamel.yaml import YAML
 from .cli_app import app
 from .cluster import Cluster
 from .file_acquisition import find_absolute_path_to_cluster_file
+from .utils import print_colour
 
 # Without `pure=True`, I get an exception about str / byte issues
 yaml = YAML(typ="safe", pure=True)
@@ -120,18 +121,8 @@ def user_logs(
         subprocess.check_call(cmd)
 
 
-@app.command()
-def exec_homes_shell(
-    cluster_name: str = typer.Argument(..., help="Name of cluster to operate on"),
-    hub_name: str = typer.Argument(..., help="Name of hub to operate on"),
-):
-    """
-    Pop an interactive shell with the home directories of the given hub mounted on /home
-    """
-    # Name pod to include hub name so it is displayed as part of the default prompt
-    # This makes sure we don't end up deleting the wrong thing
-    pod_name = f"{cluster_name}-{hub_name}-shell"
-    pod = {
+def generate_pod_definition_with_home_mount(pod_name):
+    return {
         "apiVersion": "v1",
         "kind": "Pod",
         "spec": {
@@ -159,6 +150,20 @@ def exec_homes_shell(
             ],
         },
     }
+
+
+@app.command()
+def exec_homes_shell(
+    cluster_name: str = typer.Argument(..., help="Name of cluster to operate on"),
+    hub_name: str = typer.Argument(..., help="Name of hub to operate on"),
+):
+    """
+    Pop an interactive shell with the home directories of the given hub mounted on /home
+    """
+    # Name pod to include hub name so it is displayed as part of the default prompt
+    # This makes sure we don't end up deleting the wrong thing
+    pod_name = f"{cluster_name}-{hub_name}-shell"
+    pod = generate_pod_definition_with_home_mount(pod_name)
 
     cmd = [
         "kubectl",
@@ -257,6 +262,129 @@ def start_docker_proxy(
         ]
 
         subprocess.check_call(cmd)
+
+
+@app.command()
+def transfer_old_home_dir_to_new_location(
+    cluster_name: str = typer.Argument(..., help="Name of cluster to operate on"),
+    hub_name: str = typer.Argument(..., help="Name of hub to operate on"),
+    source_user: str = typer.Option(
+        prompt=True,
+        confirmation_prompt=True,
+        help="Name of source user who's home dir files we are transferring",
+    ),
+    destination_user: str = typer.Option(
+        prompt=True,
+        confirmation_prompt=True,
+        help="Name of destination user in who's home dir we will be moving the files",
+    ),
+):
+    """
+    Copy all the files from a user's old home dir to the new home directory
+    """
+    # Name pod to include hub name so it is displayed as part of the default prompt
+    # This makes sure we don't end up deleting the wrong thing
+    pod_name = f"{cluster_name}-{hub_name}-transfer-shell"
+    pod = generate_pod_definition_with_home_mount(pod_name)
+
+    # Command that creates the pod described above
+    create_pod_cmd = [
+        "kubectl",
+        "-n",
+        hub_name,
+        "run",
+        pod_name,
+        "--overrides",
+        json.dumps(pod),
+        "--image",
+        # Use ubuntu image so we get GNU rm and other tools
+        # Should match what we have in our pod definition
+        "ubuntu:jammy",
+        pod_name,
+    ]
+
+    # Command that waits for the pod above to be ready
+    wait_for_pod_cmd = [
+        "kubectl",
+        "-n",
+        hub_name,
+        "wait",
+        "pods",
+        "-l",
+        f"run={pod_name}",
+        "--for",
+        "condition=Ready",
+        "--timeout=90s",
+    ]
+
+    # Command that lists the contents of the source and destination home dirs
+    ls_dirs_cmd = [
+        "kubectl",
+        "-n",
+        hub_name,
+        "exec",
+        pod_name,
+        "--",
+        "ls",
+        "-lat",
+        f"/home/{source_user}",
+        f"/home/{destination_user}",
+    ]
+
+    # Command that copies the home directory of the source user
+    # into the home directory of the destination user
+    # under a directory located at `/home/{destination_user}/{source_user}-homedir``
+    copy_cmd = [
+        "kubectl",
+        "-n",
+        hub_name,
+        "exec",
+        pod_name,
+        "--",
+        "cp",
+        "-r",
+        f"/home/{source_user}",
+        f"/home/{destination_user}/{source_user}-homedir",
+    ]
+
+    # Command to delete the pod we created
+    delete_pod_cmd = [
+        "kubectl",
+        "-n",
+        hub_name,
+        "delete",
+        "pod",
+        pod_name,
+    ]
+
+    config_file_path = find_absolute_path_to_cluster_file(cluster_name)
+    with open(config_file_path) as f:
+        cluster = Cluster(yaml.load(f), config_file_path.parent)
+    with cluster.auth():
+        try:
+            print_colour(
+                f"Creating a pod with the home directories of {cluster_name} - {hub_name} hub mounted on /home...",
+                "yellow",
+            )
+            subprocess.check_call(create_pod_cmd)
+            subprocess.check_call(wait_for_pod_cmd)
+
+            print_colour(
+                f"Attention! You are about to start transferring the home dir of {source_user} into the home dir of {destination_user}/{source_user}-homedir",
+                "yellow",
+            )
+            confirm = typer.confirm("Are you sure you want to continue?")
+            if not confirm:
+                raise typer.Abort()
+
+            print_colour("The contents of the source and destination home dirs is:")
+            subprocess.check_call(ls_dirs_cmd)
+
+            print_colour("Starting the transfer...")
+            subprocess.check_call(copy_cmd)
+        finally:
+            print_colour("Deleting the pod...", "red")
+            subprocess.check_call(delete_pod_cmd)
 
 
 if __name__ == "__main__":
