@@ -46,15 +46,20 @@ resource "aws_efs_file_system" "homedirs" {
     Name = "hub-homedirs"
   }
 
+  # Transition files to a slower, cheaper backing medium 90 days
+  # after they were last *accessed*. They will be transferred back to regular
+  # backing medium immediately on access. This saves a *lot* of money with
+  # barely perceptible user performance hit. 90 days is the longest config,
+  # and we can start here to be conservative. IA (Infrequent Access) is
+  # documented in https://aws.amazon.com/efs/features/infrequent-access/
+  # These need to be two different blocks, see
+  # https://github.com/hashicorp/terraform-provider-aws/issues/21862#issuecomment-1007115545
   lifecycle_policy {
-    # Transition files to a slower, cheaper backing medium 90 days
-    # after they were last *accessed*. They will be transferred back to regular
-    # backing medium immediately on access. This saves a *lot* of money with
-    # barely perceptible user performance hit. 90 days is the longest config,
-    # and we can start here to be conservative. IA (Infrequent Access) is
-    # documented in https://aws.amazon.com/efs/features/infrequent-access/
-    transition_to_ia                    = "AFTER_90_DAYS"
     transition_to_primary_storage_class = "AFTER_1_ACCESS"
+  }
+
+  lifecycle_policy {
+    transition_to_ia = "AFTER_90_DAYS"
   }
 
   lifecycle {
