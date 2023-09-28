@@ -46,6 +46,16 @@ resource "aws_efs_file_system" "homedirs" {
     Name = "hub-homedirs"
   }
 
+  lifecycle_policy {
+    # Transition files to a slower, cheaper backing medium 90 days
+    # after they were last *accessed*. They will be transferred back to regular
+    # backing medium immediately on access. This saves a *lot* of money with
+    # barely perceptible user performance hit. 90 days is the longest config,
+    # and we can start here to be conservative. IA (Infrequent Access) is
+    # documented in https://aws.amazon.com/efs/features/infrequent-access/
+    transition_to_ia = "AFTER_90_DAYS"
+  }
+
   lifecycle {
     # Additional safeguard against deleting the EFS
     # as this causes irreversible data loss!
