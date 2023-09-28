@@ -53,7 +53,8 @@ resource "aws_efs_file_system" "homedirs" {
     # barely perceptible user performance hit. 90 days is the longest config,
     # and we can start here to be conservative. IA (Infrequent Access) is
     # documented in https://aws.amazon.com/efs/features/infrequent-access/
-    transition_to_ia = "AFTER_90_DAYS"
+    transition_to_ia                    = "AFTER_90_DAYS"
+    transition_to_primary_storage_class = "AFTER_1_ACCESS"
   }
 
   lifecycle {
