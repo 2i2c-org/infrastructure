@@ -59,25 +59,29 @@ jupyterhub:
 
   singleuser:
     defaultUrl: /lab
+    memory:
+      # https://2i2c.freshdesk.com/a/tickets/955
+      # Based on request from community rep
+      guarantee: 4G
+      limit: 4G
+    cpu:
+      # https://2i2c.freshdesk.com/a/tickets/955
+      # Based on request from community rep
+      guarantee: 0.1
+      limit: 1
+    nodeSelector:
+      node.kubernetes.io/instance-type: r5.2xlarge
     profileList:
       - display_name: EOSC211
-        description: "For class EOSC211, provides ~2 CPU and ~8G RAM"
+        description: "For class EOSC211, provides upto 1 CPU and ~4G RAM"
         default: true
         kubespawner_override:
-          mem_limit: 8G
-          mem_guarantee: 6.5G
-          node_selector:
-            node.kubernetes.io/instance-type: m5.large
           # Using 'latest' for now so updates do not require 2i2c
           # involvement.
           image: quay.io/henrykmodzelewski/2i2c-eosc211:latest
       - display_name: EOSC350
-        description: "For class EOSC350, provides ~2 CPU and ~8G RAM"
+        description: "For class EOSC350, provides upto 1 CPU and ~4G RAM"
         kubespawner_override:
-          mem_limit: 8G
-          mem_guarantee: 6.5G
-          node_selector:
-            node.kubernetes.io/instance-type: m5.large
           # Using 'latest' for now so updates do not require 2i2c
           # involvement.
           image: quay.io/henrykmodzelewski/2i2c-eosc350:latest

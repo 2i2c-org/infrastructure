@@ -25,13 +25,13 @@ local nodeAz = "ca-central-1a";
 // A `node.kubernetes.io/instance-type label is added, so pods
 // can request a particular kind of node with a nodeSelector
 local notebookNodes = [
+    # TODO: this m5 instance type is to be deleted when its no longer has user pods
+    #       running on it, we have transitioned to use r5 instance types (highmem)
     { instanceType: "m5.large" },
-    { instanceType: "m5.xlarge" },
-    { instanceType: "m5.2xlarge" },
-    { instanceType: "m5.8xlarge" },
+    { instanceType: "r5.2xlarge" },
 ];
 
-local daskNodes = []
+local daskNodes = [];
 
 
 {
