@@ -60,13 +60,13 @@ jupyterhub:
   singleuser:
     defaultUrl: /lab
     memory:
-      # Based on measurements of observed usage
-      guarantee: 1G
-      limit: 1G
+      # https://2i2c.freshdesk.com/a/tickets/955
+      # Based on request from community rep
+      guarantee: 4G
+      limit: 4G
     cpu:
-      # Based on measurements of observed usage
       guarantee: 0.1
-      limit: 4
+      limit: 1
     nodeSelector:
       node.kubernetes.io/instance-type: r5.2xlarge
     profileList:
