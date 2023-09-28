@@ -62,3 +62,13 @@ resource "aws_efs_mount_target" "homedirs" {
 output "nfs_server_dns" {
   value = aws_efs_file_system.homedirs.dns_name
 }
+
+# Enable automatic backups for user homedirectories
+# Documented in https://docs.aws.amazon.com/efs/latest/ug/awsbackup.html#automatic-backups
+resource "aws_efs_backup_policy" "homedirs" {
+  file_system_id = aws_efs_file_system.homedirs.id
+
+  backup_policy {
+    status = "ENABLED"
+  }
+}
