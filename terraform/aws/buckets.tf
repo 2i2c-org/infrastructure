@@ -55,3 +55,14 @@ resource "aws_s3_bucket_policy" "user_bucket_access" {
   bucket   = aws_s3_bucket.user_buckets[each.value.bucket_name].id
   policy   = data.aws_iam_policy_document.bucket_access[each.key].json
 }
+
+output "buckets" {
+  value       = { for b, _ in var.user_buckets : b => aws_s3_bucket.user_buckets[b].id }
+  description = <<-EOT
+  List of S3 buckets created for this cluster
+
+  Since S3 bucket names need to be globally unique, we prefix each item in
+  the user_buckets variable with the prefix variable. This output displays
+  the full name of all S3 buckets created conveniently.
+  EOT
+}
