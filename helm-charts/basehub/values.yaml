@@ -371,6 +371,126 @@ jupyterhub:
         blocked_users:
           - deployment-service-check
     extraFiles:
+      cleanup-orphaned-pods:
+        mountPath: /tmp/cleanup-orphaned-pods.py
+        stringData: |
+          """
+          Cleanup orphaned user server pods
+
+          Compares JupyterHub API list of running servers to list of running pods
+          in kubernetes in order to identify discrepancies.
+
+          This script is to be used once as a managed JupyterHub service by z2jh
+          deployment of versioned 3.1 and later, as could be needed if the z2jh deployment
+          once has been running version 3.0 - this could have led to orphaned user server
+          pods.
+
+          More information, including how to run this, is available at
+          https://discourse.jupyter.org/t/how-to-cleanup-orphaned-user-pods-after-bug-in-z2jh-3-0-and-kubespawner-6-0/21677
+          """
+          import asyncio
+          import json
+          import os
+          import logging
+
+          from urllib.parse import urlencode
+
+          from tornado.httpclient import AsyncHTTPClient
+          from kubernetes_asyncio import client, config
+
+          logging.basicConfig(level=logging.INFO)
+          log = logging.getLogger(__file__)
+
+
+          async def get_running_servers(api_url, api_token):
+              """Get users' running servers using JupyterHub's REST API"""
+              AsyncHTTPClient.configure("tornado.curl_httpclient.CurlAsyncHTTPClient")
+              http_client = AsyncHTTPClient()
+
+              api_url = api_url.rstrip("/")
+              users_url = api_url + "/users"
+              headers = {
+                  "Authorization": f"Bearer {api_token}",
+                  "Accept": "application/jupyterhub-pagination+json",
+              }
+              running = {}
+              params = {"state": "active", "limit": 200}
+              next_params = {"offset": "0"}
+              while next_params:
+                  params.update(next_params)
+                  url = users_url + "?" + urlencode(params)
+                  r = await http_client.fetch(url, headers=headers)
+
+                  page = json.loads(r.body)
+                  for user in page["items"]:
+                      for server_name, server in user["servers"].items():
+                          running[f"{user['name']}/{server_name}"] = server
+                  next_params = page["_pagination"]["next"]
+              return running
+
+
+          async def get_user_pods(api_client, namespace, helm_release_name):
+              """Get users' server pods running in Kubernetes"""
+              label_selector = f"release={helm_release_name},component=singleuser-server"
+              kwargs = {
+                  "label_selector": label_selector,
+                  "_preload_content": False,
+              }
+              r = await api_client.list_namespaced_pod(namespace, **kwargs)
+              r = json.loads(await r.read())
+              pods = r["items"]
+
+              user_pods = {}
+              for pod in pods:
+                  annotations = pod["metadata"]["annotations"]
+                  username = annotations["hub.jupyter.org/username"]
+                  servername = annotations.get("hub.jupyter.org/servername", "")
+                  key = f"{username}/{servername}"
+                  user_pods[key] = pod
+              return user_pods
+
+
+          async def main():
+              namespace = os.environ["POD_NAMESPACE"]
+              helm_release_name = os.environ["HELM_RELEASE_NAME"]
+              api_url = os.environ["JUPYTERHUB_API_URL"]
+              api_token = os.environ["JUPYTERHUB_API_TOKEN"]
+
+              config.load_incluster_config()
+              k8s_api_client = client.CoreV1Api()
+
+              pods = await get_user_pods(k8s_api_client, namespace, helm_release_name)
+              servers = await get_running_servers(api_url, api_token)
+              orphaned_pods = set(pods).difference(servers)
+
+              log.info(f"Found {len(servers)} active user servers according to JupyterHub")
+              log.info(f"Found {len(pods)} active user server pods according to Kubernetes")
+              log.info(f"{len(orphaned_pods)} user server pods are orphaned")
+
+              pod_names = []
+              for server_name in orphaned_pods:
+                  pod = pods[server_name]
+                  pod_name = pod["metadata"]["name"]
+                  pod_names.append(pod_name)
+                  log.info(f"Found orphaned pod {pod_name} for {server_name}")
+
+              for pod in pod_names:
+                  try:
+                      await k8s_api_client.delete_namespaced_pod(pod, namespace)
+                  except:
+                      log.warn(f"Failed to delete orphaned pod {pod}")
+                  else:
+                      log.info(f"Successfully deleted orphaned pod {pod}")
+              log.info("Cleanup of orphaned pods complete.")
+
+              await k8s_api_client.api_client.close()
+
+
+          if __name__ == "__main__":
+              loop = asyncio.new_event_loop()
+              asyncio.set_event_loop(loop)
+              loop.create_task(main())
+              loop.run_forever()
       configurator-schema-default:
         mountPath: /usr/local/etc/jupyterhub-configurator/00-default.schema.json
         data:
@@ -583,6 +703,25 @@ jupyterhub:
       limits:
         memory: 2Gi
     extraConfig:
+      00-cleanup-orphaned-pods: |
+        import os
+        import sys
+
+        c.JupyterHub.services.append({
+            "name": "cleanup-orphaned-pods",
+            "command": [sys.executable, "/tmp/cleanup-orphaned-pods.py"],
+            "environment": {
+                "POD_NAMESPACE": os.environ["POD_NAMESPACE"],
+                "HELM_RELEASE_NAME": os.environ["HELM_RELEASE_NAME"],
+                "KUBERNETES_SERVICE_HOST": os.environ["KUBERNETES_SERVICE_HOST"],
+                "KUBERNETES_SERVICE_PORT": os.environ["KUBERNETES_SERVICE_PORT"],
+            },
+        })
+        c.JupyterHub.load_roles.append({
+            "name": "cleanup-orphaned-pods",
+            "scopes": ["list:users", "read:servers"],
+            "services": ["cleanup-orphaned-pods"],
+        })
       01-custom-theme: |
         from z2jh import get_config
         c.JupyterHub.template_paths.insert(0,'/usr/local/share/jupyterhub/custom_templates')
