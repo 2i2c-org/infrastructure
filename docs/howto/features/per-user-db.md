@@ -58,7 +58,7 @@ jupyterhub:
       # since initContainers is a list, setting this here overwrites the chowning
       # initContainer we have set in basehub/values.yaml
       - name: volume-mount-ownership-fix
-        image: busybox:1.36
+        image: busybox:1.36.1
         command:
             [
                 "sh",

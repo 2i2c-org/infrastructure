@@ -102,7 +102,7 @@ basehub:
                       # Need to explicitly fix ownership here, as otherwise these directories will be owned
                       # by root on most NFS filesystems - neither EFS nor Google Filestore support anonuid
                       - name: volume-mount-ownership-fix
-                        image: buxybox:1.36
+                        image: busybox:1.36.1
                         command:
                           [
                             "sh",
@@ -160,7 +160,7 @@ basehub:
                       # Need to explicitly fix ownership here, as otherwise these directories will be owned
                       # by root on most NFS filesystems - neither EFS nor Google Filestore support anonuid
                       - name: volume-mount-ownership-fix
-                        image: buxybox:1.36
+                        image: busybox:1.36.1
                         command:
                           [
                             "sh",
