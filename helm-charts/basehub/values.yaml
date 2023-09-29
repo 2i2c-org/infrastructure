@@ -532,7 +532,7 @@ jupyterhub:
           - -c
           # Remove the existing repo first if it exists, as otherwise we will
           # error out when the pod restarts. /srv/extra-templates-dir is an
-          # emptyDir volume, so it is *not* cleaned up when the pod restarts -
+          # emptyDir volume, so it is *not* cleaned up when the pod's containers restarts -
           # only when the pod is deleted and cleaned back up.
           # We also mount the emptyDir in `/srv/extra-templates-dir` but
           # clone into a *subdirectory*, as the mount itself is owned by
