@@ -301,7 +301,6 @@ def transfer_old_home_dir_to_new_location(
                     "stdin": True,
                     "stdinOnce": True,
                     "tty": True,
-                    "user": 1000,
                     "volumeMounts": [
                         {
                             "name": "home",
@@ -369,7 +368,12 @@ def transfer_old_home_dir_to_new_location(
         pod_name,
         "--",
         "cp",
-        "-r",
+        # preserve all attributes of the directory being copied
+        "--archive",
+        # do not overwrite any existing files at the destination
+        "--no-clobber",
+        # copy directories recursively
+        "--recursive",
         f"/home/{source_user}",
         f"/home/{destination_user}/{source_user}-homedir",
     ]
@@ -404,11 +408,15 @@ def transfer_old_home_dir_to_new_location(
             if not confirm:
                 raise typer.Abort()
 
-            print_colour("The contents of the source and destination home dirs is:")
+            print_colour("The content of the source and destination home dirs is:")
             subprocess.check_call(ls_dirs_cmd)
 
-            print_colour("Starting the transfer...")
+            print_colour("Starting the transfer...", "yellow")
             subprocess.check_call(copy_cmd)
+            print_colour(
+                "Done! The content of the source and destination home dirs now is:"
+            )
+            subprocess.check_call(ls_dirs_cmd)
         finally:
             print_colour("Deleting the pod...", "red")
             subprocess.check_call(delete_pod_cmd)
