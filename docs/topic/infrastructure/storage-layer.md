@@ -116,7 +116,7 @@ jupyterhub:
           readOnly: true
     initContainers:
       - name: volume-mount-ownership-fix
-        image: buxybox:1.36
+        image: busybox:1.36.1
         command:
           [
             "sh",
