@@ -121,8 +121,18 @@ def user_logs(
         subprocess.check_call(cmd)
 
 
-def generate_pod_definition_with_home_mount(pod_name):
-    return {
+@app.command()
+def exec_homes_shell(
+    cluster_name: str = typer.Argument(..., help="Name of cluster to operate on"),
+    hub_name: str = typer.Argument(..., help="Name of hub to operate on"),
+):
+    """
+    Pop an interactive shell with the home directories of the given hub mounted on /home
+    """
+    # Name pod to include hub name so it is displayed as part of the default prompt
+    # This makes sure we don't end up deleting the wrong thing
+    pod_name = f"{cluster_name}-{hub_name}-shell"
+    pod = {
         "apiVersion": "v1",
         "kind": "Pod",
         "spec": {
@@ -150,20 +160,6 @@ def generate_pod_definition_with_home_mount(pod_name):
             ],
         },
     }
-
-
-@app.command()
-def exec_homes_shell(
-    cluster_name: str = typer.Argument(..., help="Name of cluster to operate on"),
-    hub_name: str = typer.Argument(..., help="Name of hub to operate on"),
-):
-    """
-    Pop an interactive shell with the home directories of the given hub mounted on /home
-    """
-    # Name pod to include hub name so it is displayed as part of the default prompt
-    # This makes sure we don't end up deleting the wrong thing
-    pod_name = f"{cluster_name}-{hub_name}-shell"
-    pod = generate_pod_definition_with_home_mount(pod_name)
 
     cmd = [
         "kubectl",
@@ -282,10 +278,41 @@ def transfer_old_home_dir_to_new_location(
     """
     Copy all the files from a user's old home dir to the new home directory
     """
-    # Name pod to include hub name so it is displayed as part of the default prompt
-    # This makes sure we don't end up deleting the wrong thing
+    # Name the pod so we know what to delete when the transfer is done
     pod_name = f"{cluster_name}-{hub_name}-transfer-shell"
-    pod = generate_pod_definition_with_home_mount(pod_name)
+    pod = {
+        "apiVersion": "v1",
+        "kind": "Pod",
+        "spec": {
+            "terminationGracePeriodSeconds": 1,
+            "automountServiceAccountToken": False,
+            # Make sure the pod and containers can only be ran as the jupyter user
+            # Otherwise the files we copy might end up be owned by another user
+            "securityContext": {"runAsUser": 1000, "runAsGroup": 1000},
+            "volumes": [
+                # This PVC is created by basehub
+                {"name": "home", "persistentVolumeClaim": {"claimName": "home-nfs"}}
+            ],
+            "containers": [
+                {
+                    "name": pod_name,
+                    # Use ubuntu image so we get better GNU cp
+                    "image": "ubuntu:jammy",
+                    "stdin": True,
+                    "stdinOnce": True,
+                    "tty": True,
+                    "user": 1000,
+                    "volumeMounts": [
+                        {
+                            "name": "home",
+                            "mountPath": "/home",
+                        }
+                    ],
+                    "securityContext": {"allowPrivilegeEscalation": False},
+                }
+            ],
+        },
+    }
 
     # Command that creates the pod described above
     create_pod_cmd = [
@@ -297,7 +324,7 @@ def transfer_old_home_dir_to_new_location(
         "--overrides",
         json.dumps(pod),
         "--image",
-        # Use ubuntu image so we get GNU rm and other tools
+        # Use ubuntu image so we get GNU cp and other tools
         # Should match what we have in our pod definition
         "ubuntu:jammy",
         pod_name,
