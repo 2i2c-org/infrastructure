@@ -406,12 +406,21 @@ jupyterhub:
     initContainers:
       - name: templates-clone
         image: alpine/git:2.40.1
-        imagePullPolicy: IfNotPresent
+        command:
+          - /bin/sh
         args:
-          - clone
-          - --
-          - $(GIT_REPO_URL)
-          - /srv/repo
+          - -c
+          # Remove the existing repo first if it exists, as otherwise we will
+          # error out when the pod restarts. /srv/extra-templates-dir is an
+          # emptyDir volume, so it is *not* cleaned up when the pod's containers restarts -
+          # only when the pod is deleted and cleaned back up.
+          # We also mount the emptyDir in `/srv/extra-templates-dir` but
+          # clone into a *subdirectory*, as the mount itself is owned by
+          # root, and git freaks out when that is the case. By putting
+          # the repo in a sub directory, we avoid the permission problems.
+          - |
+            rm -rf /srv/extra-templates-dir/repo;
+            git clone ${GIT_REPO_URL} /srv/extra-templates-dir/repo
         env:
           - name: GIT_REPO_URL
             valueFrom:
@@ -425,25 +434,11 @@ jupyterhub:
           readOnlyRootFilesystem: True
         volumeMounts:
           - name: custom-templates
-            mountPath: /srv/repo
-      - name: templates-ownership-fix
-        image: alpine/git:2.40.1
-        imagePullPolicy: IfNotPresent
-        command:
-          - /bin/sh
-        args:
-          - -c
-          - ls -lhd /srv/repo && chown 1000:1000 /srv/repo && ls -lhd /srv/repo
-        securityContext:
-          runAsUser: 0
-        volumeMounts:
-          - name: custom-templates
-            mountPath: /srv/repo
+            mountPath: /srv/extra-templates-dir
     extraContainers:
       - name: templates-sync
         image: alpine/git:2.40.1
-        imagePullPolicy: IfNotPresent
-        workingDir: /srv/repo
+        workingDir: /srv/extra-templates-dir/repo
         command:
           - /bin/sh
         args:
@@ -467,11 +462,11 @@ jupyterhub:
                 # "echo", "sleep", "set +x", or similar commands.
                 set -x;
                 git remote -v;
-                ls -lhd /srv/repo;
+                ls -lhd /srv/extra-templates-dir/repo;
             )
 
             echo "";
-            echo "Syncing local git repo /srv/repo against origin's branch $(GIT_REPO_BRANCH) every 5 minutes...";
+            echo "Syncing local git repo /srv/extra-templates-dir/repo against origin's branch $(GIT_REPO_BRANCH) every 5 minutes...";
             while true; do
                 git fetch origin;
                 git reset --hard origin/$(GIT_REPO_BRANCH);
@@ -495,17 +490,17 @@ jupyterhub:
           readOnlyRootFilesystem: True
         volumeMounts:
           - name: custom-templates
-            mountPath: /srv/repo
+            mountPath: /srv/extra-templates-dir
     extraVolumes:
       - name: custom-templates
         emptyDir: {}
     extraVolumeMounts:
       - mountPath: /usr/local/share/jupyterhub/custom_templates
         name: custom-templates
-        subPath: templates
+        subPath: repo/templates
       - mountPath: /usr/local/share/jupyterhub/static/extra-assets
         name: custom-templates
-        subPath: extra-assets
+        subPath: repo/extra-assets
     services:
       configurator:
         url: http://configurator:10101
