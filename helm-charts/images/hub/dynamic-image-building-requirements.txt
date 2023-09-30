@@ -1,9 +1,13 @@
-# Image lives at quay.io/2i2c/second-hub-experimental
+# Image lives at quay.io/2i2c/dynamic-image-building-experiment
+
+# jupyterhub-configurator isn't version controlled, so we pin to a specific
+# commit currently. Available commits are found at
+# https://github.com/yuvipanda/jupyterhub-configurator/commits/main
+#
+# FIXME: ed7e3a0df1e3d625d10903ef7d7fd9c2fbb548db is from Mar 26, 2021, but
+#        several commits has been made since.
+#
 git+https://github.com/yuvipanda/jupyterhub-configurator@ed7e3a0df1e3d625d10903ef7d7fd9c2fbb548db
-# Brings on using `unlisted_choice` in profile options per https://github.com/2i2c-org/infrastructure/issues/2146
-# Brings in https://github.com/jupyterhub/kubespawner/pull/787
-# This kubespawner version includes an important bugfix pending 6.1.0 release
-# tracked in https://github.com/jupyterhub/kubespawner/issues/767
-git+https://github.com/jupyterhub/kubespawner@d60146f5fe9cd31e09acf13c377d9334ecf59c9b
+
 # Brings in https://github.com/yuvipanda/jupyterhub-fancy-profiles
 git+https://github.com/yuvipanda/jupyterhub-fancy-profiles@b624031b661f71a278a37bb1fae0b8d6f316d6b3
