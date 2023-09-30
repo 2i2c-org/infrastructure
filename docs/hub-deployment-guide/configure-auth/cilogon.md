@@ -69,38 +69,49 @@ jupyterhub:
           - admin@anu.edu.au
       CILogonOAuthenticator:
         oauth_callback_url: https://{{ HUB_DOMAIN }}/hub/oauth_callback
-        # Allow to only login into the hub using Google or ANU's provider
+        # Google and ANU's are configured as the hubs identity providers (idps)
         allowed_idps:
           http://google.com/accounts/o8/id:
             username_derivation:
               # Use the email as the hub username
               username_claim: "email"
-            # Allow only 2i2c.org accounts to login through Google
+            # Authorize any user with a @2i2c.org email in this idp
             allowed_domains:
               - "2i2c.org"
           https://idp2.anu.edu.au/idp/shibboleth:
             username_derivation:
               # Use the email as the hub username
               username_claim: "email"
+            # Authorize all users in this idp
+            allow_all: true
 ```
 
-## Important rules to follow when using this method of authentication
+## `username_derivation` is security critical
 
-1. The `admin_users` list need to match `allowed_idps` rules too.
+Each configured idp has `username_derivation` config, and for security reasons
+its important that this is setup carefully thinking about the following aspects.
 
-2. It is recommended to define in the `allowed_idps` dict, all the identity providers we plan to allow to be used for a hub. This way, only these will be allowed to be used.
+1. `username_derivation.username_claim` _must provide unique values_ so that one
+   user in the idp can't impersonate another.
 
-    ```{note}
-    The keys allowed in the `allowed_idps` dict **must be valid CILogon `EntityIDs`**.
-    Go to https://cilogon.org/idplist for the list of EntityIDs of each IdP.
-    ```
+   As an example, a claim "username" is probably unique, but a "display name"
+   probably isn't.
 
-3. All the identity providers must define a `username_derivation` scheme, with their own `username_claim`, that the user *cannot change*. If they can, it can be easily used to impersonate others! For example, if we allow both GitHub and `utoronto.ca` as allowed authentication providers, and only use `email` as `username_claim`, for both providers, any GitHub user can set their email field in their GitHub profile to a `utoronto.ca` email and thus gain access to any `utoronto.ca` user's server! So a very careful choice needs to
-be made here.
+   Available claims will to some degree differ between idps and requested scope,
+   for more information see [ciLogon scopes documentation]
+2. `username_derivation.username_claim` _should provide values that doesn't
+   change over time_ so that users don't loose access to their old JupyterHub
+   account over time.
+3. Ensure that idps `username_derivation` doesn't lead to unwanted overlap
+   between JupyterHub usernames by using [`username_derivation.action`] if
+   needed.
 
-    ```{note}
-    You can check the [CILogon scopes section](https://www.cilogon.org/oidc#h.p_PEQXL8QUjsQm) to checkout available values for `username_claim`. This *cannot* be changed afterwards without manual migration of user names, so choose this carefully.
-    ```
+   As an example, if two separate idps A and B allows you to register with them
+   and provide any value for their configured `username_claim`, the `cat` user
+   in A could be controlled by a different human than the `cat` user in B.
+
+[`username_derivation.action`]: https://oauthenticator.readthedocs.io/en/latest/reference/api/gen/oauthenticator.cilogon.html#oauthenticator.cilogon.CILogonOAuthenticator.allowed_idps
+[ciLogon scopes documentation]: https://www.cilogon.org/oidc#h.p_PEQXL8QUjsQm
 
 ## Other common CILogon configurations across 2i2c hubs
 
