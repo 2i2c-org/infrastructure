@@ -216,6 +216,7 @@ basehub:
               nvidia.com/gpu: "1"
 
     hub:
+      allowNamedServers: true
       config:
         JupyterHub:
           authenticator_class: cilogon
@@ -273,7 +274,6 @@ basehub:
             - whyjz # Whyjay Zheng
             - yuvipanda # Yuvi Panda
             - jonathan-taylor # Jonathan Taylor
-      allowNamedServers: true
 
 dask-gateway:
   gateway:

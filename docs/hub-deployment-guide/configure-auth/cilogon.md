@@ -64,9 +64,6 @@ jupyterhub:
     config:
       JupyterHub:
         authenticator_class: cilogon
-      Authenticator:
-        admin_users:
-          - admin@anu.edu.au
       CILogonOAuthenticator:
         oauth_callback_url: https://{{ HUB_DOMAIN }}/hub/oauth_callback
         # Google and ANU's are configured as the hubs identity providers (idps)
@@ -84,6 +81,9 @@ jupyterhub:
               username_claim: "email"
             # Authorize all users in this idp
             allow_all: true
+      Authenticator:
+        admin_users:
+          - admin@anu.edu.au
 ```
 
 ## `username_derivation` is security critical

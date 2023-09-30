@@ -37,15 +37,6 @@ basehub:
         tag: "0.0.1-0.dev.git.7130.h0bdc2d30"
       allowNamedServers: true
       config:
-        Authenticator:
-          admin_users:
-            - abarciauskas-bgse
-            - freitagb
-            - j08lue
-            - rezuma
-            - ranchodeluxe
-            - jsignell
-            - slesaad
         JupyterHub:
           authenticator_class: github
         GitHubOAuthenticator:
@@ -56,6 +47,15 @@ basehub:
             - CYGNSS-VEDA:cygnss-iwg
           scope:
             - read:org
+        Authenticator:
+          admin_users:
+            - abarciauskas-bgse
+            - freitagb
+            - j08lue
+            - rezuma
+            - ranchodeluxe
+            - jsignell
+            - slesaad
     singleuser:
       defaultUrl: /lab
       image:

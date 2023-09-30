@@ -65,14 +65,6 @@ jupyterhub:
         # Callback URL for the auth0 tenant, provided to us by auth0
         oauth_redirect_uri: https://dev-tbr72rd5whnwlyrg.us.auth0.com/login/callback
     config:
-      Authenticator:
-        admin_users:
-          - nmearl
-          - patudom
-        # When using JupyterHub as an auth *provider*, we don't want the
-        # end user to see the JupyterHub home page at all - just redirect
-        # them to the upstream auth provider (CILogon) directly.
-        auto_login_oauth2_authorize: true
       JupyterHub:
         authenticator_class: cilogon
       CILogonOAuthenticator:
@@ -84,3 +76,11 @@ jupyterhub:
             username_derivation:
               username_claim: "preferred_username"
             allow_all: true
+      Authenticator:
+        admin_users:
+          - nmearl
+          - patudom
+        # When using JupyterHub as an auth *provider*, we don't want the
+        # end user to see the JupyterHub home page at all - just redirect
+        # them to the upstream auth provider (CILogon) directly.
+        auto_login_oauth2_authorize: true

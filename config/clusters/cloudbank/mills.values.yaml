@@ -42,7 +42,7 @@ jupyterhub:
               username_claim: "email"
             allow_all: true
       Authenticator:
-        admin_users: &mills_admins
+        admin_users:
           - aculich@berkeley.edu
           - sean.smorris@berkeley.edu
           - akonrad@mills.edu

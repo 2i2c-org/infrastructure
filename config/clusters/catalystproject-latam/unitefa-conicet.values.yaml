@@ -25,10 +25,6 @@ jupyterhub:
           url: "https://chanzuckerberg.com/science/programs-resources/open-science/"
   hub:
     config:
-      Authenticator:
-        admin_users:
-          - aquevedo@unc.edu.ar
-          - nicolasw@famaf.unc.edu.ar
       JupyterHub:
         authenticator_class: cilogon
       CILogonOAuthenticator:
@@ -44,3 +40,7 @@ jupyterhub:
               - "unc.edu.ar"
               - "mi.unc.edu.ar"
               - "famaf.unc.edu.ar"
+      Authenticator:
+        admin_users:
+          - aquevedo@unc.edu.ar
+          - nicolasw@famaf.unc.edu.ar

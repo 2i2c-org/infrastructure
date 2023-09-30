@@ -31,10 +31,6 @@ jupyterhub:
       tag: "6286b77ae45c"
   hub:
     config:
-      Authenticator:
-        admin_users:
-          - "dbkc@mtu.edu"
-          - "lebrown@mtu.edu"
       JupyterHub:
         authenticator_class: cilogon
       CILogonOAuthenticator:
@@ -52,3 +48,7 @@ jupyterhub:
               username_claim: "email"
             allowed_domains:
               - "mtu.edu"
+      Authenticator:
+        admin_users:
+          - "dbkc@mtu.edu"
+          - "lebrown@mtu.edu"

@@ -45,9 +45,6 @@ jupyterhub:
       limit: 2G
   hub:
     config:
-      Authenticator:
-        admin_users:
-          - jmsmith1@temple.edu
       JupyterHub:
         authenticator_class: cilogon
       CILogonOAuthenticator:
@@ -62,3 +59,6 @@ jupyterhub:
               username_claim: "email"
             allowed_domains:
               - "2i2c.org"
+      Authenticator:
+        admin_users:
+          - jmsmith1@temple.edu

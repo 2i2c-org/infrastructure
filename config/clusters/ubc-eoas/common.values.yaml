@@ -34,11 +34,6 @@ jupyterhub:
 
   hub:
     config:
-      Authenticator:
-        admin_users:
-          - ckrzysik # Technical representative, Charles Krzysik
-          - lheagy # Technical representative, Lindsey Heagy
-          - hmodzelewski # Technical representative, Henryk Modzelewski
       JupyterHub:
         authenticator_class: cilogon
       CILogonOAuthenticator:
@@ -54,6 +49,11 @@ jupyterhub:
               username_claim: email
             allowed_domains:
               - 2i2c.org
+      Authenticator:
+        admin_users:
+          - ckrzysik # Technical representative, Charles Krzysik
+          - lheagy # Technical representative, Lindsey Heagy
+          - hmodzelewski # Technical representative, Henryk Modzelewski
 
   singleuser:
     defaultUrl: /lab
