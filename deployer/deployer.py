@@ -17,7 +17,6 @@ from ruamel.yaml import YAML
 from .cli_app import app
 from .cluster import Cluster
 from .config_validation import (
-    validate_authenticator_config,
     validate_cluster_config,
     validate_hub_config,
     validate_support_config,
@@ -175,7 +174,6 @@ def deploy(
     """
     validate_cluster_config(cluster_name)
     validate_hub_config(cluster_name, hub_name)
-    validate_authenticator_config(cluster_name, hub_name)
 
     config_file_path = find_absolute_path_to_cluster_file(cluster_name)
     with open(config_file_path) as f:
@@ -431,4 +429,3 @@ def validate(
     validate_cluster_config(cluster_name)
     validate_support_config(cluster_name)
     validate_hub_config(cluster_name, hub_name)
-    validate_authenticator_config(cluster_name, hub_name)
