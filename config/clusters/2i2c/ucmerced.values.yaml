@@ -42,6 +42,7 @@ jupyterhub:
           urn:mace:incommon:ucmerced.edu:
             username_derivation:
               username_claim: "eppn"
+            allow_all: true
           http://google.com/accounts/o8/id:
             username_derivation:
               username_claim: "email"

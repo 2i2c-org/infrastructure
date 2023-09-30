@@ -42,9 +42,13 @@ jupyterhub:
           http://google.com/accounts/o8/id:
             username_derivation:
               username_claim: "email"
+            # allow_all is a partial authorization, username_pattern is enforced also
+            allow_all: true
           urn:mace:incommon:berkeley.edu:
             username_derivation:
               username_claim: "email"
+            # allow_all is a partial authorization, username_pattern is enforced also
+            allow_all: true
       Authenticator:
         # These folks should still have admin tho
         admin_users:

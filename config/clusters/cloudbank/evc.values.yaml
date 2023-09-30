@@ -51,6 +51,7 @@ jupyterhub:
           urn:mace:incommon:berkeley.edu:
             username_derivation:
               username_claim: "email"
+            allow_all: true
       JupyterHub:
         authenticator_class: cilogon
       Authenticator:

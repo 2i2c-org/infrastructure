@@ -44,6 +44,7 @@ jupyterhub:
           urn:mace:incommon:berkeley.edu:
             username_derivation:
               username_claim: "email"
+            allow_all: true
       Authenticator:
         admin_users:
           - ericvd@berkeley.edu

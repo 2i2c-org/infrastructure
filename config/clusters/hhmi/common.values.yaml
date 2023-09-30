@@ -50,3 +50,7 @@ basehub:
             http://github.com/login/oauth/authorize:
               username_derivation:
                 username_claim: "preferred_username"
+              # FIXME: allow_all=true is the current behavior, but its not
+              #        intentional based on discussion about how the hub was
+              #        setup.
+              allow_all: true

@@ -48,6 +48,7 @@ jupyterhub:
               username_claim: email
               action: strip_idp_domain
               domain: eoas.ubc.ca
+            allow_all: true
           http://google.com/accounts/o8/id:
             username_derivation:
               username_claim: email

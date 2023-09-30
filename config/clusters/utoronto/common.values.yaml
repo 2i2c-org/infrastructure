@@ -89,3 +89,4 @@ jupyterhub:
           https://idpz.utorauth.utoronto.ca/shibboleth:
             username_derivation:
               username_claim: "email"
+            allow_all: true
