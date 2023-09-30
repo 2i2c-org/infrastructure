@@ -69,13 +69,6 @@ You can remove yourself from the org once you have confirmed that login is worki
 4. **Edit the non-secret config under `config/clusters/<cluster_name>/<hub_name>.values.yaml`.**
    You should make sure the matching hub config takes one of the following forms.
 
-   ```{warning}
-   When using this method of authentication, make sure to remove the `allowed_users` key from the config.
-   This is because this key will block any user not listed under it **even if** they are valid members of the the organisation or team you are authenticating against.
-
-   You should keep the `admin_users` key, however.
-   ```
-
    To authenticate against a GitHub organisation (Note the `read:user` scope. See comment box below.):
 
     ```yaml
