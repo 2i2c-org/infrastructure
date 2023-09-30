@@ -127,8 +127,11 @@ jupyterhub:
           - cfis.com
           - "*.ca"
       CILogonOAuthenticator:
-        # We set up admin_users, but *not* allowed users. Those are set up via the extraConfig
-        admin_users: &callysto_users
+        # Usernames are based on a unique "oidc" claim and not email, so we need
+        # to reference these names when declaring admin_users. The custom
+        # authenticator class used will reject any user not having an associated
+        # email with a specific domain name though.
+        admin_users:
           - "117859169473992122769" # Georgiana (2i2c)
           - "115722756968212778437" # Sarah (2i2c)
           - "103849660365364958119" # Erik (2i2c)
