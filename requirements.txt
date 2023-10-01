@@ -33,7 +33,7 @@ prometheus_pandas
 pytest-mock
 google-cloud-bigquery==3.11.*
 google-cloud-bigquery[pandas]==3.11.*
-gspread==5.10.*
+gspread==5.11.*
 
 # requests is used by deployer/cilogon_app.py
 requests==2.*
