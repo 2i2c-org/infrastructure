@@ -33,6 +33,16 @@ jupyterhub:
         operator: "Equal"
         value: "temple"
         effect: "NoSchedule"
+    memory:
+      # Memory defaults are 256MB to 1G in basehub. These are bumped based on a
+      # request to bump these (https://2i2c.freshdesk.com/a/tickets/1003) at
+      # least during October 2-15.
+      #
+      # A previous request (https://2i2c.freshdesk.com/a/tickets/643) included
+      # notes on the new memory request and limits to adopt once again.
+      #
+      guarantee: 512M
+      limit: 2G
   hub:
     config:
       Authenticator:
