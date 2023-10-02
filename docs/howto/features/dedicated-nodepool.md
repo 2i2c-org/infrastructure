@@ -54,14 +54,14 @@ Some hubs on shared clusters require dedicated nodepools, for a few reasons:
 
    ```yaml
    jupyterhub:
-      singleuser:
-         nodeSelector:
-            2i2c.org/community: <community-name>
-         extraTolerations:
-            - key: "2i2c.org/community"
-              operator: "Equal"
-              value: "<community-name>"
-              effect: "NoSchedule"
+     singleuser:
+       nodeSelector:
+         2i2c.org/community: <community-name>
+       extraTolerations:
+         - key: 2i2c.org/community
+           operator: Equal
+           value: <community-name>
+           effect: NoSchedule
    ```
 
    ```{note}
