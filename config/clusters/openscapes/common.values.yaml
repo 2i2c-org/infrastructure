@@ -43,9 +43,6 @@ basehub:
     scheduling:
       userScheduler:
         enabled: true
-      userPods:
-        nodeAffinity:
-          matchNodePurpose: require
     hub:
       allowNamedServers: true
       readinessProbe:
@@ -73,9 +70,3 @@ basehub:
           #        configured explicitly.
           #
           allowed_users: *users
-dask-gateway:
-  gateway:
-    extraConfig:
-      idle: |-
-        # timeout after 30 minutes of inactivity
-        c.KubeClusterConfig.idle_timeout = 1800
