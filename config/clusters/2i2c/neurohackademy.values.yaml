@@ -46,7 +46,7 @@ jupyterhub:
         effect: "NoSchedule"
     cpu:
       guarantee: 0.5
-      # We're on n1-highmem-16 machines
+      # We're on n2-highmem-16 machines
       limit: 14
     memory:
       guarantee: 4G
