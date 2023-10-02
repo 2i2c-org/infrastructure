@@ -85,21 +85,6 @@ prometheus:
   # values ref: https://github.com/prometheus-community/helm-charts/blob/main/charts/prometheus-node-exporter/values.yaml
   #
   prometheus-node-exporter:
-    tolerations:
-      # Tolerate tainted jupyterhub user nodes
-      - key: hub.jupyter.org_dedicated
-        value: user
-        effect: NoSchedule
-      - key: hub.jupyter.org/dedicated
-        value: user
-        effect: NoSchedule
-      # Tolerate tainted dask worker nodes
-      - key: k8s.dask.org_dedicated
-        value: worker
-        effect: NoSchedule
-      - key: k8s.dask.org/dedicated
-        value: worker
-        effect: NoSchedule
     # resources for the node-exporter was set after inspecting cpu and memory
     # use via prometheus and grafana.
     #
