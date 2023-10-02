@@ -43,9 +43,6 @@ basehub:
     scheduling:
       userScheduler:
         enabled: true
-      userPods:
-        nodeAffinity:
-          matchNodePurpose: require
     hub:
       allowNamedServers: true
       readinessProbe:
