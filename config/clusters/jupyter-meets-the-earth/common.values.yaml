@@ -151,7 +151,7 @@ basehub:
           profile_options: *profile_options
           kubespawner_override:
             cpu_guarantee: 3.5
-            mem_guarantee: 14G
+            mem_guarantee: 13G
             mem_limit: null
             node_selector:
               node.kubernetes.io/instance-type: m5.xlarge
@@ -184,7 +184,7 @@ basehub:
           profile_options: *profile_options
           kubespawner_override:
             cpu_guarantee: 3.5
-            mem_guarantee: 14G
+            mem_guarantee: 13G
             mem_limit: null
             environment:
               NVIDIA_DRIVER_CAPABILITIES: compute,utility
