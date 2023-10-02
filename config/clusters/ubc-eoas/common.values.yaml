@@ -79,6 +79,12 @@ jupyterhub:
           # Using 'latest' for now so updates do not require 2i2c
           # involvement.
           image: quay.io/henrykmodzelewski/2i2c-eosc211:latest
+      - display_name: EOSC212
+        description: "For class EOSC212, provides upto 1 CPU and ~4G RAM"
+        kubespawner_override:
+          # Using 'latest' for now so updates do not require 2i2c
+          # involvement.
+          image: quay.io/henrykmodzelewski/2i2c-eosc212:latest
       - display_name: EOSC350
         description: "For class EOSC350, provides upto 1 CPU and ~4G RAM"
         kubespawner_override:
