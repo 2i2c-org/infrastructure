@@ -237,8 +237,3 @@ dask-gateway:
       limits:
         cpu: 2
         memory: 4Gi
-      # TODO: figure out a replacement for userLimits.
-    extraConfig:
-      idle: |
-        # timeout after 30 minutes of inactivity
-        c.KubeClusterConfig.idle_timeout = 1800

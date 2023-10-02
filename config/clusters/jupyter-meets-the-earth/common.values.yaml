@@ -337,6 +337,3 @@ dask-gateway:
                 handler=option_handler,
             )
         c.Backend.cluster_options = cluster_options
-      idle: |
-        # timeout after 30 minutes of inactivity
-        c.KubeClusterConfig.idle_timeout = 1800
