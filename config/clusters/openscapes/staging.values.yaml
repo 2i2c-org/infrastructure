@@ -1,4 +1,7 @@
 basehub:
+  userServiceAccount:
+    annotations:
+      eks.amazonaws.com/role-arn: arn:aws:iam::783616723547:role/openscapeshub-staging
   jupyterhub:
     ingress:
       hosts: [staging.openscapes.2i2c.cloud]
@@ -6,6 +9,8 @@ basehub:
         - hosts: [staging.openscapes.2i2c.cloud]
           secretName: https-auto-tls
     singleuser:
+      extraEnv:
+        SCRATCH_BUCKET: s3://openscapeshub-scratch-staging/$(JUPYTERHUB_USER)
       profileList:
         - display_name: Python
           description: Python datascience environment
