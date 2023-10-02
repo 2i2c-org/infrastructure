@@ -22,7 +22,7 @@ notebook_nodes = {
   "user" : {
     min : 0,
     max : 20,
-    machine_type : "n1-highmem-4",
+    machine_type : "n2-highmem-4",
   },
   "climatematch" : {
     min : 0,
