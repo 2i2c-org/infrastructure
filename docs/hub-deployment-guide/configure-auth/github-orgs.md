@@ -208,27 +208,23 @@ To enable this access,
     jupyterhub:
       singleuser:
         profileList:
-          - display_name: "Small"
-            description: 5GB RAM, 2 CPUs
+          - display_name: Small
+            description: 1.0 GB RAM
             default: true
             allowed_teams:
               - <org-name>:<team-name>
               - 2i2c-org:hub-access-for-2i2c-staff
             kubespawner_override:
-              mem_limit: 7G
-              mem_guarantee: 4.5G
-              node_selector:
-                node.kubernetes.io/instance-type: n1-standard-2
+              mem_guarantee: 1G
+              mem_limit: 1G
           - display_name: Medium
-            description: 11GB RAM, 4 CPUs
+            description: 4.0 GB RAM
             allowed_teams:
               - <org-name>:<team-name>
               - 2i2c-org:hub-access-for-2i2c-staff
             kubespawner_override:
-              mem_limit: 15G
-              mem_guarantee: 11G
-              node_selector:
-                node.kubernetes.io/instance-type: n1-standard-4
+              mem_guarantee: 4G
+              mem_limit: 4G
     ```
 
     Users who are a part of *any* of the listed teams will be able to access that profile.

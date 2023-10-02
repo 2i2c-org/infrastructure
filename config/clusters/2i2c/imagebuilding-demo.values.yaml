@@ -80,14 +80,15 @@ jupyterhub:
             choices:
               mem_2_7:
                 display_name: 2.7 GB RAM, upto 3.479 CPUs
-                description: "Use this for the workshop on 2023 September"
+                description: Use this for the workshop on 2023 September
                 kubespawner_override:
                   mem_guarantee: 2904451072
                   mem_limit: 2904451072
                   cpu_guarantee: 0.434875
                   cpu_limit: 3.479
                   node_selector:
-                    node.kubernetes.io/instance-type: n1-highmem-4
+                    # FIXME: guarantee/limits initialized for n1-highmem-4, not n2-
+                    node.kubernetes.io/instance-type: n2-highmem-4
                 default: true
               mem_5_4:
                 display_name: 5.4 GB RAM, upto 3.479 CPUs
@@ -97,7 +98,8 @@ jupyterhub:
                   cpu_guarantee: 0.86975
                   cpu_limit: 3.479
                   node_selector:
-                    node.kubernetes.io/instance-type: n1-highmem-4
+                    # FIXME: guarantee/limits initialized for n1-highmem-4, not n2-
+                    node.kubernetes.io/instance-type: n2-highmem-4
               mem_10_8:
                 display_name: 10.8 GB RAM, upto 3.479 CPUs
                 kubespawner_override:
@@ -106,17 +108,19 @@ jupyterhub:
                   cpu_guarantee: 1.7395
                   cpu_limit: 3.479
                   node_selector:
-                    node.kubernetes.io/instance-type: n1-highmem-4
+                    # FIXME: guarantee/limits initialized for n1-highmem-4, not n2-
+                    node.kubernetes.io/instance-type: n2-highmem-4
               mem_21_6:
                 display_name: 21.6 GB RAM, upto 3.479 CPUs
-                description: "Largest amount of RAM, might take a few minutes to start"
+                description: Largest amount of RAM, might take a few minutes to start
                 kubespawner_override:
                   mem_guarantee: 23235608576
                   mem_limit: 23235608576
                   cpu_guarantee: 3.479
                   cpu_limit: 3.479
                 node_selector:
-                  node.kubernetes.io/instance-type: n1-highmem-4
+                  # FIXME: guarantee/limits initialized for n1-highmem-4, not n2-
+                  node.kubernetes.io/instance-type: n2-highmem-4
   hub:
     services:
       binder:
