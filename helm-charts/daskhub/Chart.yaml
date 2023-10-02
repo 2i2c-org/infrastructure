@@ -11,5 +11,5 @@ dependencies:
     # in the deployer's CLI
     # https://github.com/2i2c-org/infrastructure/blob/HEAD/deployer/deployer.py#L195
   - name: dask-gateway
-    version: "2023.1.0"
+    version: "2023.9.0"
     repository: "https://helm.dask.org/"
