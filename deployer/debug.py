@@ -17,6 +17,10 @@ from .utils import print_colour
 
 # Without `pure=True`, I get an exception about str / byte issues
 yaml = YAML(typ="safe", pure=True)
+# Define the numerical version of the ubuntu image
+# used by the helper pods created by this script
+# in one central place to update it more easily
+UBUNTU_IMAGE = "ubuntu:22.04"
 
 
 class InfraComponents(Enum):
@@ -146,7 +150,7 @@ def exec_homes_shell(
                 {
                     "name": pod_name,
                     # Use ubuntu image so we get better gnu rm
-                    "image": "ubuntu:jammy",
+                    "image": UBUNTU_IMAGE,
                     "stdin": True,
                     "stdinOnce": True,
                     "tty": True,
@@ -173,7 +177,7 @@ def exec_homes_shell(
         "--image",
         # Use ubuntu image so we get GNU rm and other tools
         # Should match what we have in our pod definition
-        "ubuntu:jammy",
+        UBUNTU_IMAGE,
         pod_name,
         "--",
         "/bin/bash",
@@ -297,7 +301,7 @@ def transfer_old_home_dir_to_new_location(
                 {
                     "name": pod_name,
                     # Use ubuntu image so we get better GNU cp
-                    "image": "ubuntu:jammy",
+                    "image": UBUNTU_IMAGE,
                     "stdin": True,
                     "stdinOnce": True,
                     "tty": True,
@@ -325,7 +329,7 @@ def transfer_old_home_dir_to_new_location(
         "--image",
         # Use ubuntu image so we get GNU cp and other tools
         # Should match what we have in our pod definition
-        "ubuntu:jammy",
+        UBUNTU_IMAGE,
         pod_name,
     ]
 
