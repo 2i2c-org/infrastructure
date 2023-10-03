@@ -272,7 +272,7 @@ def transfer_old_home_dir_to_new_location(
     destination_user: str = typer.Option(
         prompt=True,
         confirmation_prompt=True,
-        help="Name of destination user in who's home dir we will be moving the files",
+        help="Name of destination user to whose home dir we will be moving the files",
     ),
 ):
     """
