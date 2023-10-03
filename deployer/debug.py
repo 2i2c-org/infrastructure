@@ -470,7 +470,10 @@ def copy_homedir_into_another(
     ),
 ):
     """
-    Copy all the files from a user's home dir to a subdir in destination user's home dir
+    Start a pod with the home directories of the given hub mounted on /home and run a container as the jupyter user (uuid 1000) in this pod.
+    Use this container to run commands to copy the source home directory <source_dir>, into the home directory of the destination directory <dest_dir>,
+    under a directory located at `/home/<dest_dir>/<source_dir>-homedir`.
+    Delete the pod when the copying is done or if any exception is raised.
     """
     # Name the pod so we know what to delete when the transfer is done
     pod_name = f"{cluster_name}-{hub_name}-transfer-shell"
