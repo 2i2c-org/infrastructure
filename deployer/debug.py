@@ -276,7 +276,7 @@ def transfer_old_home_dir_to_new_location(
     ),
 ):
     """
-    Copy all the files from a user's old home dir to the new home directory
+    Copy all the files from a user's home dir to a subdir in destination user's home dir
     """
     # Name the pod so we know what to delete when the transfer is done
     pod_name = f"{cluster_name}-{hub_name}-transfer-shell"
