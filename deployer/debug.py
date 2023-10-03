@@ -265,7 +265,7 @@ def start_docker_proxy(
 
 
 @app.command()
-def transfer_old_home_dir_to_new_location(
+def copy_homedir_into_another(
     cluster_name: str = typer.Argument(..., help="Name of cluster to operate on"),
     hub_name: str = typer.Argument(..., help="Name of hub to operate on"),
     source_user: str = typer.Option(
