@@ -352,7 +352,7 @@ def transfer_old_home_dir_to_new_location(
         pod_name,
         "--",
         "ls",
-        "-lat",
+        "-lath",
         f"/home/{source_user}",
         f"/home/{destination_user}",
     ]
