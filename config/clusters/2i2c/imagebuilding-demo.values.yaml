@@ -118,6 +118,8 @@ jupyterhub:
                 node_selector:
                   node.kubernetes.io/instance-type: n1-highmem-4
   hub:
+    # Allows for multiple concurrent demos
+    allowNamedServers: true
     services:
       binder:
         # FIXME: ref https://github.com/2i2c-org/binderhub-service/issues/57
