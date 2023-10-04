@@ -1,0 +1,38 @@
+jupyterhub:
+  custom:
+    2i2c:
+      add_staff_user_ids_to_admin_users: true
+      add_staff_user_ids_of_type: "google"
+    homepage:
+      templateVars:
+        org:
+          name: University of California, Merced
+          url: http://www.ucmerced.edu/
+          logo_url: https://brand.ucmerced.edu/sites/brand.ucmerced.edu/files/images/ucm-logo-text.png
+        designed_by:
+          name: 2i2c
+          url: https://2i2c.org
+        operated_by:
+          name: 2i2c
+          url: https://2i2c.org
+        funded_by:
+          name: University of California, Merced
+          url: http://www.ucmerced.edu/
+  hub:
+    config:
+      JupyterHub:
+        authenticator_class: cilogon
+      CILogonOAuthenticator:
+        allowed_idps:
+          urn:mace:incommon:ucmerced.edu:
+            username_derivation:
+              username_claim: "eppn"
+            allow_all: true
+          http://google.com/accounts/o8/id:
+            username_derivation:
+              username_claim: "email"
+            allowed_domains:
+              - "2i2c.org"
+      Authenticator:
+        admin_users:
+          - schadalapaka@ucmerced.edu

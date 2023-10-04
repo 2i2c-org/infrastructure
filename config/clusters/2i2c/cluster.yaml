@@ -86,6 +86,7 @@ hubs:
     helm_chart: basehub
     helm_chart_values_files:
       - basehub-common.values.yaml
+      - ucmerced-common.values.yaml
       - ucmerced-staging.values.yaml
       - enc-ucmerced-staging.secret.values.yaml
   - name: ucmerced
@@ -94,6 +95,7 @@ hubs:
     helm_chart: basehub
     helm_chart_values_files:
       - basehub-common.values.yaml
+      - ucmerced-common.values.yaml
       - ucmerced.values.yaml
       - enc-ucmerced.secret.values.yaml
   - name: climatematch
