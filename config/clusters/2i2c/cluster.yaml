@@ -80,7 +80,7 @@ hubs:
       - basehub-common.values.yaml
       - temple.values.yaml
       - enc-temple.secret.values.yaml
-  # Temporary deploy a staging hub to UCMerced
+  # Temporary deploy a staging hub for UCMerced
   # to help them transition to new user images
   # ref: https://github.com/2i2c-org/infrastructure/issues/3188
   - name: ucmerced-staging
