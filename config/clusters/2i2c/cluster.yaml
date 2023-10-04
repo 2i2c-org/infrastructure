@@ -80,6 +80,14 @@ hubs:
       - basehub-common.values.yaml
       - temple.values.yaml
       - enc-temple.secret.values.yaml
+  - name: ucmerced-staging
+    display_name: "UC Merced staging"
+    domain: staging.ucmerced.2i2c.cloud
+    helm_chart: basehub
+    helm_chart_values_files:
+      - basehub-common.values.yaml
+      - ucmerced-staging.values.yaml
+      - enc-ucmerced-staging.secret.values.yaml
   - name: ucmerced
     display_name: "UC Merced"
     domain: ucmerced.2i2c.cloud
