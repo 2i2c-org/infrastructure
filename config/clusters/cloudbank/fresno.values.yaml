@@ -33,6 +33,7 @@ jupyterhub:
           https://idp.scccd.edu/idp/shibboleth:
             username_derivation:
               username_claim: "email"
+            allow_all: true
           http://google.com/accounts/o8/id:
             username_derivation:
               username_claim: "email"
