@@ -122,6 +122,8 @@ jupyterhub:
                   # FIXME: guarantee/limits initialized for n1-highmem-4, not n2-
                   node.kubernetes.io/instance-type: n2-highmem-4
   hub:
+    # Allows for multiple concurrent demos
+    allowNamedServers: true
     services:
       binder:
         # FIXME: ref https://github.com/2i2c-org/binderhub-service/issues/57
