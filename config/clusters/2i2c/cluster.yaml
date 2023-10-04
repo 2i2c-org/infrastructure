@@ -80,12 +80,25 @@ hubs:
       - basehub-common.values.yaml
       - temple.values.yaml
       - enc-temple.secret.values.yaml
+  # Temporary deploy a staging hub for UCMerced
+  # to help them transition to new user images
+  # ref: https://github.com/2i2c-org/infrastructure/issues/3188
+  - name: ucmerced-staging
+    display_name: "UC Merced staging"
+    domain: staging.ucmerced.2i2c.cloud
+    helm_chart: basehub
+    helm_chart_values_files:
+      - basehub-common.values.yaml
+      - ucmerced-common.values.yaml
+      - ucmerced-staging.values.yaml
+      - enc-ucmerced-staging.secret.values.yaml
   - name: ucmerced
     display_name: "UC Merced"
     domain: ucmerced.2i2c.cloud
     helm_chart: basehub
     helm_chart_values_files:
       - basehub-common.values.yaml
+      - ucmerced-common.values.yaml
       - ucmerced.values.yaml
       - enc-ucmerced.secret.values.yaml
   - name: climatematch

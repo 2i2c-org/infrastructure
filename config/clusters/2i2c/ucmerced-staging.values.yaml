@@ -1,0 +1,40 @@
+jupyterhub:
+  ingress:
+    hosts:
+      - staging.ucmerced.2i2c.cloud
+    tls:
+      - secretName: https-auto-tls
+        hosts:
+          - staging.ucmerced.2i2c.cloud
+  singleuser:
+    profileList:
+      - display_name: Python
+        description: Start a Python server with JupyterLab and scientific Python stack
+        default: true
+        kubespawner_override:
+          image: jupyter/scipy-notebook:2023-06-26
+          # Launch into JupyterLab after the user logs in
+          default_url: /lab
+      - display_name: R
+        description: Start a R server with RStudio and tidyverse & Geospatial tools
+        kubespawner_override:
+          image: rocker/binder:4.3
+          default_url: /lab
+          # Ensures container working dir is homedir
+          # https://github.com/2i2c-org/infrastructure/issues/2559
+          working_dir: /home/rstudio
+          # Because this is a list, it will override our default volume mounts
+          volume_mounts:
+            # Mount the user home directory
+            - name: home
+              mountPath: /home/rstudio
+              subPath: "{username}"
+            # Mount the shared readonly directory
+            - name: home
+              mountPath: /home/rstudio/shared
+              subPath: _shared
+              readOnly: true
+  hub:
+    config:
+      CILogonOAuthenticator:
+        oauth_callback_url: https://staging.ucmerced.2i2c.cloud/hub/oauth_callback
