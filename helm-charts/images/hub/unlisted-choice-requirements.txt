@@ -1,5 +1,16 @@
+# Image lives at quay.io/2i2c/unlisted-choice-experiment
+
+# FIXME: This image is currently redundant as kubespawner 6.1.0 with
+#        unlisted_choice is used by default in z2jh 3.1.0, but it _could_ serve
+#        a purpose to test future related development such as
+#        https://github.com/jupyterhub/kubespawner/pull/778.
+#
+
+# jupyterhub-configurator isn't version controlled, so we pin to a specific
+# commit currently. Available commits are found at
+# https://github.com/yuvipanda/jupyterhub-configurator/commits/main
+#
+# FIXME: ed7e3a0df1e3d625d10903ef7d7fd9c2fbb548db is from Mar 26, 2021, but
+#        several commits has been made since.
+#
 git+https://github.com/yuvipanda/jupyterhub-configurator@ed7e3a0df1e3d625d10903ef7d7fd9c2fbb548db
-# Brings on using `unlisted_choice` in profile options per https://github.com/2i2c-org/infrastructure/issues/2146
-# This kubespawner version includes an important bugfix pending 6.1.0 release
-# tracked in https://github.com/jupyterhub/kubespawner/issues/767
-git+https://github.com/jupyterhub/kubespawner@d60146f5fe9cd31e09acf13c377d9334ecf59c9b

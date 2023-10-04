@@ -44,12 +44,7 @@ basehub:
         JupyterHub:
           authenticator_class: cilogon
         CILogonOAuthenticator:
-          scope:
-            - "email"
-            - "profile"
           oauth_callback_url: "https://dask-staging.2i2c.cloud/hub/oauth_callback"
-          shown_idps:
-            - http://accounts.google.com/o/oauth2/auth
           allowed_idps:
             http://google.com/accounts/o8/id:
               username_derivation:

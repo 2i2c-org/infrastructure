@@ -37,21 +37,40 @@ jupyterhub:
       JupyterHub:
         authenticator_class: cilogon
       CILogonOAuthenticator:
-        scope:
-          - "profile"
         oauth_callback_url: "https://aup.pilot.2i2c.cloud/hub/oauth_callback"
-        shown_idps:
-          - http://github.com/login/oauth/authorize
         allowed_idps:
           http://github.com/login/oauth/authorize:
             username_derivation:
               username_claim: "preferred_username"
-      Authenticator:
-        # FIXME: In z2jh 3.0.0-beta.1, a truthy allowed_users implies
-        #        allow_existing_users=True, while in z3jh 3.0.0 this needs to be
-        #        configured explicitly.
+      OAuthenticator:
+        # WARNING: Don't use allow_existing_users with config to allow an
+        #          externally managed group of users, such as
+        #          GitHubOAuthenticator.allowed_organizations, as it breaks a
+        #          common expectations for an admin user.
         #
-        allowed_users: &aup_users
+        #          The broken expectation is that removing a user from the
+        #          externally managed group implies that the user won't have
+        #          access any more. In practice the user will still have
+        #          access if it had logged in once before, as it then exists
+        #          in JupyterHub's database of users.
+        #
+        allow_existing_users: True
+      Authenticator:
+        # WARNING: Removing a user from admin_users or allowed_users doesn't
+        #          revoke admin status or access.
+        #
+        #          OAuthenticator.allow_existing_users allows any user in the
+        #          JupyterHub database of users able to login. This includes
+        #          any previously logged in user or user previously listed in
+        #          allowed_users or admin_users, as such users are added to
+        #          JupyterHub's database on startup.
+        #
+        #          To revoke admin status or access for a user when
+        #          allow_existing_users is enabled, first remove the user from
+        #          admin_users or allowed_users, then deploy the change, and
+        #          finally revoke the admin status or delete the user via the
+        #          /hub/admin panel.
+        #
+        admin_users:
           - swalker
           - shaolintl
-        admin_users: *aup_users

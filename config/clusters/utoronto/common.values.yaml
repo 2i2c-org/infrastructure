@@ -79,18 +79,14 @@ jupyterhub:
     readinessProbe:
       enabled: false
     config:
-      CILogonOAuthenticator:
-        oauth_callback_url: https://r-staging.datatools.utoronto.ca/hub/oauth_callback
-        shown_idps:
-          - https://idpz.utorauth.utoronto.ca/shibboleth
-        allowed_idps:
-          https://idpz.utorauth.utoronto.ca/shibboleth:
-            username_derivation:
-              username_claim: "email"
-      Authenticator:
-        enable_auth_state: false
       JupyterHub:
         authenticator_class: cilogon
         concurrent_spawn_limit: 100
         # We wanna keep logs long term, primarily for analytics
         extra_log_file: /srv/jupyterhub/jupyterhub.log
+      CILogonOAuthenticator:
+        allowed_idps:
+          https://idpz.utorauth.utoronto.ca/shibboleth:
+            username_derivation:
+              username_claim: "email"
+            allow_all: true

@@ -38,10 +38,6 @@ jupyterhub:
         authenticator_class: cilogon
       CILogonOAuthenticator:
         oauth_callback_url: https://humboldt.cloudbank.2i2c.cloud/hub/oauth_callback
-        shown_idps:
-          - http://google.com/accounts/o8/id
-          - https://sso.humboldt.edu/idp/metadata
-          - urn:mace:incommon:berkeley.edu
         allowed_idps:
           http://google.com/accounts/o8/id:
             username_derivation:
@@ -53,9 +49,11 @@ jupyterhub:
           https://sso.humboldt.edu/idp/metadata:
             username_derivation:
               username_claim: "email"
+            allow_all: true
           urn:mace:incommon:berkeley.edu:
             username_derivation:
               username_claim: "email"
+            allow_all: true
       Authenticator:
         # These folks should still have admin tho
         admin_users:

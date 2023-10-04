@@ -34,28 +34,26 @@ jupyterhub:
 
   hub:
     config:
-      Authenticator:
-        admin_users:
-          - ckrzysik # Technical representative, Charles Krzysik
-          - lheagy # Technical representative, Lindsey Heagy
-          - hmodzelewski # Technical representative, Henryk Modzelewski
       JupyterHub:
         authenticator_class: cilogon
       CILogonOAuthenticator:
-        shown_idps:
-          - https://authentication.ubc.ca
-          - http://google.com/accounts/o8/id
         allowed_idps:
           https://authentication.ubc.ca:
             username_derivation:
               username_claim: email
               action: strip_idp_domain
               domain: eoas.ubc.ca
+            allow_all: true
           http://google.com/accounts/o8/id:
             username_derivation:
               username_claim: email
             allowed_domains:
               - 2i2c.org
+      Authenticator:
+        admin_users:
+          - ckrzysik # Technical representative, Charles Krzysik
+          - lheagy # Technical representative, Lindsey Heagy
+          - hmodzelewski # Technical representative, Henryk Modzelewski
 
   singleuser:
     defaultUrl: /lab

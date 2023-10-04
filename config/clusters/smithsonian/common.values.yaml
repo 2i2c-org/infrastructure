@@ -48,9 +48,6 @@ basehub:
             - read:org
         Authenticator:
           enable_auth_state: true
-          # This hub uses GitHub Orgs auth and so we don't set allowed_users in
-          # order to not deny access to valid members of the listed orgs. These
-          # people should have admin access though.
           admin_users:
             - MikeTrizna # Mike Trizna
             - rdikow # Rebecca Dikow

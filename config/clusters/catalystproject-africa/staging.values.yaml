@@ -25,9 +25,6 @@ jupyterhub:
           url: "https://chanzuckerberg.com/science/programs-resources/open-science/"
   hub:
     config:
-      # Authenticator:
-      #   admin_users:
-      #     - future-community-champion
       JupyterHub:
         authenticator_class: github
       GitHubOAuthenticator:
@@ -37,3 +34,6 @@ jupyterhub:
           - czi-catalystproject
         scope:
           - read:org
+      # Authenticator:
+      #   admin_users:
+      #     - future-community-champion

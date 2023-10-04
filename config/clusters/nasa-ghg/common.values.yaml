@@ -34,9 +34,6 @@ basehub:
     hub:
       allowNamedServers: true
       config:
-        Authenticator:
-          admin_users:
-            - freitagb
         JupyterHub:
           authenticator_class: github
         GitHubOAuthenticator:
@@ -45,6 +42,9 @@ basehub:
             - US-GHG-Center:ghgc-hub-access
           scope:
             - read:org
+        Authenticator:
+          admin_users:
+            - freitagb
     singleuser:
       defaultUrl: /lab
       profileList:

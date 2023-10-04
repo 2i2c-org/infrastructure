@@ -28,15 +28,6 @@ jupyterhub:
           url: https://2i2c.org
   hub:
     config:
-      Authenticator:
-        # This hub uses GitHub Org auth and so we don't set
-        # allowed_users in order to not deny access to valid members of
-        # the listed orgs.
-        #
-        # You must always set admin_users, even if it is an empty list,
-        # otherwise `add_staff_user_ids_to_admin_users: true` will fail
-        # silently and no staff members will have admin access.
-        admin_users: []
       JupyterHub:
         authenticator_class: "github"
       GitHubOAuthenticator:

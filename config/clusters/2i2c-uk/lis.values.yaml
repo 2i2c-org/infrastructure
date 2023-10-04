@@ -49,17 +49,14 @@ jupyterhub:
     config:
       JupyterHub:
         authenticator_class: github
-      Authenticator:
-        # This hub uses GitHub Orgs auth and so we don't set
-        # allowed_users in order to not deny access to valid members of
-        # the listed orgs. These people should have admin access though.
-        admin_users:
-          - LaCrecerelle
-          - matthew-brett
       GitHubOAuthenticator:
+        oauth_callback_url: "https://ds.lis.2i2c.cloud/hub/oauth_callback"
         allowed_organizations:
           - 2i2c-org
           - lisacuk
         scope:
           - read:org
-        oauth_callback_url: "https://ds.lis.2i2c.cloud/hub/oauth_callback"
+      Authenticator:
+        admin_users:
+          - LaCrecerelle
+          - matthew-brett

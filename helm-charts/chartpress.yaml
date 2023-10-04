@@ -1,3 +1,13 @@
+# This is the configuration for chartpress, a CLI for Helm chart management.
+#
+# chartpress can be used to:
+# - Build images
+# - Update Chart.yaml (version) and values.yaml (image tags)
+# - Package and publish Helm charts to a GitHub based Helm chart repository
+#
+# For more information about chartpress, see the projects README.md file:
+# https://github.com/jupyterhub/chartpress
+#
 charts:
   - name: basehub
     imagePrefix: quay.io/2i2c/pilot-
@@ -5,16 +15,16 @@ charts:
       hub:
         valuesPath: jupyterhub.hub.image
         buildArgs:
-          REQUIREMENTS_FILE: "requirements.txt"
+          REQUIREMENTS_FILE: requirements.txt
       unlisted-choice-experiment:
         imageName: quay.io/2i2c/unlisted-choice-experiment
         buildArgs:
-          REQUIREMENTS_FILE: "unlisted-choice-requirements.txt"
-        contextPath: "images/hub"
+          REQUIREMENTS_FILE: unlisted-choice-requirements.txt
+        contextPath: images/hub
         dockerfilePath: images/hub/Dockerfile
       dynamic-image-building-experiment:
         imageName: quay.io/2i2c/dynamic-image-building-experiment
         buildArgs:
-          REQUIREMENTS_FILE: "dynamic-image-building-requirements.txt"
-        contextPath: "images/hub"
-        dockerfilePath: "images/hub/Dockerfile"
+          REQUIREMENTS_FILE: dynamic-image-building-requirements.txt
+        contextPath: images/hub
+        dockerfilePath: images/hub/Dockerfile

@@ -45,22 +45,20 @@ jupyterhub:
       limit: 2G
   hub:
     config:
-      Authenticator:
-        admin_users:
-          - jmsmith1@temple.edu
       JupyterHub:
         authenticator_class: cilogon
       CILogonOAuthenticator:
         oauth_callback_url: https://temple.2i2c.cloud/hub/oauth_callback
-        shown_idps:
-          - https://fim.temple.edu/idp/shibboleth
-          - https://accounts.google.com/o/oauth2/auth
         allowed_idps:
           https://fim.temple.edu/idp/shibboleth:
             username_derivation:
               username_claim: "eppn"
+            allow_all: true
           http://google.com/accounts/o8/id:
             username_derivation:
               username_claim: "email"
             allowed_domains:
               - "2i2c.org"
+      Authenticator:
+        admin_users:
+          - jmsmith1@temple.edu
