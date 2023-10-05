@@ -41,9 +41,6 @@ jupyterhub:
               username_claim: "email"
             allowed_domains:
               - mail.ccsf.edu
-          urn:mace:incommon:berkeley.edu:
-            username_derivation:
-              username_claim: "email"
       Authenticator:
         allowed_users:
           - clare.alice.heimer@gmail.com

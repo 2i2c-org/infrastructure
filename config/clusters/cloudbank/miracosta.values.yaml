@@ -30,14 +30,11 @@ jupyterhub:
       CILogonOAuthenticator:
         oauth_callback_url: https://miracosta.cloudbank.2i2c.cloud/hub/oauth_callback
         allowed_idps:
-          http://google.com/accounts/o8/id:
-            username_derivation:
-              username_claim: "email"
           https://miracosta.fedgw.com/gateway:
             username_derivation:
               username_claim: "email"
             allow_all: true
-          urn:mace:incommon:berkeley.edu:
+          http://google.com/accounts/o8/id:
             username_derivation:
               username_claim: "email"
       Authenticator:

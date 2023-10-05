@@ -36,9 +36,6 @@ jupyterhub:
             allowed_domains:
               - glendale.edu
               - student.glendale.edu
-          urn:mace:incommon:berkeley.edu:
-            username_derivation:
-              username_claim: "email"
       Authenticator:
         admin_users:
           - simon@glendale.edu

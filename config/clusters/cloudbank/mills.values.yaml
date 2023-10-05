@@ -35,9 +35,6 @@ jupyterhub:
               username_claim: "email"
             allowed_domains:
               - mills.edu
-          urn:mace:incommon:berkeley.edu:
-            username_derivation:
-              username_claim: "email"
       Authenticator:
         admin_users:
           - aculich@berkeley.edu

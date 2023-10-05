@@ -30,13 +30,10 @@ jupyterhub:
       CILogonOAuthenticator:
         oauth_callback_url: "https://sbcc.cloudbank.2i2c.cloud/hub/oauth_callback"
         allowed_idps:
-          http://google.com/accounts/o8/id:
-            username_derivation:
-              username_claim: "email"
           https://idp.sbcc.edu/idp/shibboleth:
             username_derivation:
               username_claim: "email"
-          urn:mace:incommon:berkeley.edu:
+          http://google.com/accounts/o8/id:
             username_derivation:
               username_claim: "email"
       OAuthenticator:

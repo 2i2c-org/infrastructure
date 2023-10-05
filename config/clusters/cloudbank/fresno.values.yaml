@@ -37,9 +37,6 @@ jupyterhub:
           http://google.com/accounts/o8/id:
             username_derivation:
               username_claim: "email"
-          urn:mace:incommon:berkeley.edu:
-            username_derivation:
-              username_claim: "email"
       Authenticator:
         admin_users:
           - joellen.green@fresnocitycollege.edu

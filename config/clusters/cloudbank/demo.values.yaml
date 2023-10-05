@@ -42,15 +42,11 @@ jupyterhub:
           http://google.com/accounts/o8/id:
             username_derivation:
               username_claim: "email"
-            # allow_all is a partial authorization, username_pattern is enforced
-            # also to allow a subset of users, specifically *.edu suffixed
-            # domains in this case
+            # allow_all is a partial authorization for this hub because
+            # username_pattern configured and enforced also, allowing only users
+            # with *.edu suffixed domains besides specific admin users.
             allow_all: true
-          urn:mace:incommon:berkeley.edu:
-            username_derivation:
-              username_claim: "email"
       Authenticator:
-        # These folks should still have admin tho
         admin_users:
           - ericvd@berkeley.edu
           - sean.smorris@berkeley.edu

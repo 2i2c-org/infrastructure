@@ -41,9 +41,6 @@ jupyterhub:
               username_claim: "email"
             allowed_domains:
               - santarosa.edu
-          urn:mace:incommon:berkeley.edu:
-            username_derivation:
-              username_claim: "email"
       Authenticator:
         admin_users:
           - ericvd@berkeley.edu
