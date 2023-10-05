@@ -41,6 +41,11 @@ jupyterhub:
               username_claim: "email"
             # allow_all is a partial authorization, username_pattern is enforced also
             allow_all: true
+          http://login.microsoftonline.com/common/oauth2/v2.0/authorize:
+            username_derivation:
+              username_claim: "email"
+            allowed_domains:
+              - "solano.edu"
           http://google.com/accounts/o8/id:
             username_derivation:
               username_claim: "email"
