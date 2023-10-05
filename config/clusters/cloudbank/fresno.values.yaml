@@ -37,12 +37,9 @@ jupyterhub:
           http://google.com/accounts/o8/id:
             username_derivation:
               username_claim: "email"
-            allowed_domains:
-              - "2i2c.org"
           urn:mace:incommon:berkeley.edu:
             username_derivation:
               username_claim: "email"
-            allow_all: true
       Authenticator:
         admin_users:
           - joellen.green@fresnocitycollege.edu

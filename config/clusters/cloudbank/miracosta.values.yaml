@@ -33,7 +33,6 @@ jupyterhub:
           http://google.com/accounts/o8/id:
             username_derivation:
               username_claim: "email"
-            allowed_domains: ["2i2c.org"]
           https://miracosta.fedgw.com/gateway:
             username_derivation:
               username_claim: "email"
@@ -41,7 +40,6 @@ jupyterhub:
           urn:mace:incommon:berkeley.edu:
             username_derivation:
               username_claim: "email"
-            allow_all: true
       Authenticator:
         admin_users:
           - sfirouzian@miracosta.edu
