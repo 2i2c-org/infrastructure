@@ -37,7 +37,6 @@ basehub:
           authenticator_class: "github"
         GitHubOAuthenticator:
           oauth_callback_url: "https://dask-staging.aws.2i2c.cloud/hub/oauth_callback"
-          allowed_organizations:
-            - 2i2c-org
+          allowed_organizations: []
           scope:
             - read:org

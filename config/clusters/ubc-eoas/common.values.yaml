@@ -47,8 +47,6 @@ jupyterhub:
           http://google.com/accounts/o8/id:
             username_derivation:
               username_claim: email
-            allowed_domains:
-              - 2i2c.org
       Authenticator:
         admin_users:
           - ckrzysik # Technical representative, Charles Krzysik

@@ -34,7 +34,6 @@ basehub:
         GitHubOAuthenticator:
           oauth_callback_url: https://ncar-cisl.2i2c.cloud/hub/oauth_callback
           allowed_organizations:
-            - 2i2c-org
             - NCAR:2i2c-cloud-users
           scope:
             - read:org

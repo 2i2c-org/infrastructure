@@ -92,7 +92,6 @@ basehub:
         - display_name: "Small"
           default: true
           allowed_teams: &allowed_teams_normal_use
-            - 2i2c-org:hub-access-for-2i2c-staff
             - meom-group:hub-users # long term users
           description: "~2 CPU, ~8G RAM"
           kubespawner_override:
@@ -147,7 +146,6 @@ basehub:
         GitHubOAuthenticator:
           populate_teams_in_auth_state: true
           allowed_organizations:
-            - 2i2c-org:hub-access-for-2i2c-staff
             - meom-group:hub-users # long term users
             - demo-dask-grenoble2023:demo # temporary users for event
           scope:

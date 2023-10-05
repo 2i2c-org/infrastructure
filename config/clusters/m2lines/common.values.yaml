@@ -44,7 +44,6 @@ basehub:
         GitHubOAuthenticator:
           allowed_organizations:
             - m2lines
-            - 2i2c-org:hub-access-for-2i2c-staff
           scope:
             - read:org
         Authenticator:

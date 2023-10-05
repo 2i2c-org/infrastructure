@@ -41,5 +41,4 @@ jupyterhub:
             username_derivation:
               username_claim: "email"
             allowed_domains:
-              - "2i2c.org"
-              - "rmbl.org"
+              - rmbl.org

@@ -33,7 +33,6 @@ jupyterhub:
       GitHubOAuthenticator:
         oauth_callback_url: https://itcoocean.2i2c.cloud/hub/oauth_callback
         allowed_organizations:
-          - 2i2c-org:hub-access-for-2i2c-staff
           - Hackweek-ITCOocean:itcoocean-hackweek-2023
         scope:
           - read:org
