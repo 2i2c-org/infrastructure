@@ -276,3 +276,11 @@ hubs:
       - common.values.yaml
       - csulb.values.yaml
       - enc-csulb.secret.values.yaml
+  - name: csum
+    display_name: "Cal Maritime"
+    domain: csum.cloudbank.2i2c.cloud
+    helm_chart: basehub
+    helm_chart_values_files:
+      - common.values.yaml
+      - csum.values.yaml
+      - enc-csum.secret.values.yaml
