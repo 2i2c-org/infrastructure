@@ -717,10 +717,11 @@ jupyterhub:
         async def profile_list_allowed_teams_filter(spawner):
             """
             Returns the initially configured profile_list filtered based on the
-            user's membership profiles' `allowed_teams` for profiles its
-            configured. `allowed_teams` is a list of GitHub organizations and/or
-            teams specified with `<github-org>` or `<github-org>:<team-name>`
-            strings.
+            user's membership in each profile's `allowed_teams`. If
+            `allowed_teams` isn't set for a profile, its not filtered out.
+
+            `allowed_teams` is a list of GitHub organizations and/or teams
+            specified with `<github-org>` or `<github-org>:<team-name>` strings.
 
             If the returned profile_list is filtered to not include a profile,
             an error is raised and the user isn't allowed to start a server.
