@@ -699,9 +699,12 @@ jupyterhub:
         # org/team membership as declared via "allowed_teams" read from
         # profile_list profiles.
         #
-        # This is only done if:
-        # - GitHubOAuthenticator is used
-        # - GitHubOAuthenticator.populate_teams_in_auth_state is True
+        # This only has effect if:
+        #
+        # - GitHubOAuthenticator is used.
+        # - GitHubOAuthenticator.populate_teams_in_auth_state is True, that
+        #   requires Authenticator.enable_auth_state to be True as well.
+        # - The user is a normal user, and not "deployment-service-check".
         #
         import copy
 
@@ -713,67 +716,63 @@ jupyterhub:
 
         async def profile_list_allowed_teams_filter(spawner):
             """
-            Returns the initially configured profile_list filtered based on if
-            the spawning user is part the profiles' specified GitHub org/teams.
+            Returns the initially configured profile_list filtered based on the
+            user's membership profiles' `allowed_teams` for profiles its
+            configured. `allowed_teams` is a list of GitHub organizations and/or
+            teams specified with `<github-org>` or `<github-org>:<team-name>`
+            strings.
 
-            Adds a 'allowed_teams' key to profile_list, with a list of GitHub teams (of the form
-            org-name:team-name) for which the profile is made available.
-
-            If the user isn't part of any team whose membership grants them access to even a single
-            profile, they aren't allowed to start any servers.
+            If the returned profile_list is filtered to not include a profile,
+            an error is raised and the user isn't allowed to start a server.
             """
-            # Only apply to GitHub Authenticator
+            # Ensure GitHubOAuthenticator with populate_teams_in_auth_state set
             if not isinstance(spawner.authenticator, GitHubOAuthenticator):
                 return original_profile_list
-
-            # If populate_teams_in_auth_state is not set, github teams are not fetched
-            # So we just don't do any of this filtering, and let anyone into everything
-            if spawner.authenticator.populate_teams_in_auth_state == False:
+            if not spawner.authenticator.populate_teams_in_auth_state:
+                return original_profile_list
+            if spawner.user.name == "deployment-service-check":
+                print("Ignoring allowed_teams check for deployment-service-check")
                 return original_profile_list
 
+            # Ensure auth_state is populated with teams info
             auth_state = await spawner.user.get_auth_state()
-
             if not auth_state or "teams" not in auth_state:
-                if spawner.user.name == 'deployment-service-check':
-                    # For our hub deployer health checker, ignore all this logic
-                    print("Ignoring allowed_teams check for deployment-service-check")
-                    return original_profile_list
                 print(f"User {spawner.user.name} does not have any auth_state set")
                 raise web.HTTPError(403)
 
-            # Make a list of team names of form org-name:team-name
-            # This is the same syntax used by allowed_organizations traitlet of GitHubOAuthenticator
-            teams = set([f'{team_info["organization"]["login"]}:{team_info["slug"]}' for team_info in auth_state["teams"]])
-
-
+            # Format user's teams in auth_state to "org:team"
+            teams = set([f'{team["organization"]["login"]}:{team["slug"]}' for team in auth_state["teams"]])
             print(f"User {spawner.user.name} is part of teams {' '.join(teams)}")
+
+            # Filter out profiles with allowed_teams set if the user isn't part
+            # of any.
             allowed_profiles = []
-
-            # Make a copy of the original profile_list dict,
-            # otherwise we might end up modifying it by mistake
-            profile_list_copy = copy.deepcopy(original_profile_list)
-            for profile in profile_list_copy:
-                # If there is no ':' in allowed_teams, it's an org and we should check that
-                # differently
-                allowed_orgs = set([o for o in profile.get('allowed_teams', []) if ':' not in o])
-                allowed_teams = set([t for t in profile.get('allowed_teams', []) if ':' in t])
-
-                # Keep the profile is the user is part of *any* team listed in allowed_teams
-                # If allowed_teams is empty or not set, it'll not be accessible to *anyone*
-                if allowed_teams & teams:
+            for profile in copy.deepcopy(original_profile_list):
+                allowed_teams = profile.get("allowed_teams")
+                if allowed_teams is None:
                     allowed_profiles.append(profile)
+                    continue
+
+                # allowed_teams can be "org" or "org:team", and we check
+                # membership just in time for orgs if needed
+                allowed_orgs = set([o for o in allowed_teams if ':' not in o])
+                allowed_teams = set([t for t in allowed_teams if ':' in t])
+
+                if allowed_teams & teams:
                     print(f"Allowing profile {profile['display_name']} for user {spawner.user.name} based on team membership")
-                elif allowed_orgs:
-                    for org in allowed_orgs:
-                      user_in_org = await spawner.authenticator._check_membership_allowed_organizations(
-                          org, spawner.user.name, auth_state['access_token']
-                      )
-                      if user_in_org:
-                          allowed_profiles.append(profile)
-                          print(f"Allowing profile {profile['display_name']} for user {spawner.user.name} based on org membership")
-                          break
-                else:
-                    print(f"Dropping profile {profile['display_name']} for user {spawner.user.name}")
+                    allowed_profiles.append(profile)
+                    continue
+
+                access_token = auth_state["token_response"]["access_token"]
+                token_type = auth_state["token_response"]["token_type"]
+                for allowed_org in allowed_orgs:
+                    user_in_allowed_org = await spawner.authenticator._check_membership_allowed_organizations(
+                        allowed_org, spawner.user.name, access_token, token_type
+                    )
+                    if user_in_allowed_org:
+                        print(f"Allowing profile {profile['display_name']} for user {spawner.user.name} based on org membership")
+                        allowed_profiles.append(profile)
+                        break
 
             if len(allowed_profiles) == 0:
                 # If no profiles are allowed, user should not be able to spawn anything!
