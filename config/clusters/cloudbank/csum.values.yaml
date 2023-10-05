@@ -50,12 +50,13 @@ jupyterhub:
             username_derivation:
               username_claim: "email"
             # allow_all is a partial authorization, username_pattern is enforced also
-            allow_all: true
+            allowed_domains: ["2i2c.org", "berkeley.edu"]
       Authenticator:
         admin_users:
           - ericvd@berkeley.edu
           - sean.smorris@berkeley.edu
           - jteoh@csum.edu
+          - jsimons@csum.edu
     extraFiles:
       configurator-schema-default:
         data:
