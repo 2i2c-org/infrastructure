@@ -92,6 +92,7 @@ basehub:
         - display_name: "Small"
           default: true
           allowed_teams: &allowed_teams_normal_use
+            - 2i2c-org:hub-access-for-2i2c-staff
             - meom-group:hub-users # long term users
           description: "~2 CPU, ~8G RAM"
           kubespawner_override:
