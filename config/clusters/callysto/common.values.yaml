@@ -39,7 +39,7 @@ jupyterhub:
   singleuser:
     image:
       name: callysto/2i2c
-      tag: 0.1.4
+      tag: 0.1.5
     extraFiles:
       tree.html:
         mountPath: /usr/local/share/jupyter/custom_template/tree.html
