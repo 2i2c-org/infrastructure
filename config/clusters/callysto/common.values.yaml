@@ -64,68 +64,76 @@ jupyterhub:
           {% endblock %}
   hub:
     extraConfig:
+      # FIXME: If the following issues are resolved, we should remove this
+      #        custom authenticator class and use CILogonOAuthenticator
+      #        directly instead.
+      #
+      #        https://github.com/jupyterhub/oauthenticator/issues/547
+      #        https://github.com/jupyterhub/oauthenticator/issues/692
+      #
       001-cilogon-email-auth: |
-        # Custom override of CILogonOAuthenticator to allow access control via one
-        # property (email) while the username itself is a different property (oidc).
-        # This allows us to restrict access based on the *email* of the authenticated
-        # user without having to store the actual email in our servers.
-        from oauthenticator.cilogon import CILogonOAuthenticator
         from fnmatch import fnmatch
-        from traitlets import List, Unicode
+
+        from oauthenticator.cilogon import CILogonOAuthenticator
+
 
         class EmailAuthenticatingCILogonOAuthenticator(CILogonOAuthenticator):
-          allowed_domains = List(
-            Unicode,
-            default=None,
-            # This must always be set!
-            allow_none=False,
-            help="""
-            Allow access to users with verified emails belonging to these domains.
+            """
+            Custom override of CILogonOAuthenticator to allow access control via
+            one property (email) while the username itself is a different
+            property (oidc), and to allow `allowed_domains` to involve wildcards
+            like *.
 
-            Allows glob patterns but not regexes. So you can allow access to
-            *.edu, for example. See https://docs.python.org/3/library/fnmatch.html for
-            list of allowed patterns.
-            """,
-            config=True
-          )
+            This allows us to restrict access based on the *email* of the
+            authenticated user without having to store the actual email in our
+            servers or use it as a username.
+            """
 
-          async def authenticate(self, *args, **kwargs):
-            authenticated_user = await super().authenticate(*args, **kwargs)
+            async def check_allowed(self, username, auth_model):
+                """
+                Replaces the default implementation of check_allowed as it
+                otherwise would error, not finding a `@` symbol in the non-email
+                username.
 
-            email = authenticated_user['auth_state']['cilogon_user']['email']
+                Mostly a copy of OAuthenticator 16.1, for comparison see:
+                https://github.com/jupyterhub/oauthenticator/blob/16.1.0/oauthenticator/cilogon.py#L349-L373
+                """
+                if await super(CILogonOAuthenticator, self).check_allowed(username, auth_model):
+                    return True
 
-            domain = email.rsplit('@', 1)[1]
-            for ad in self.allowed_domains:
-              # fnmatch will allow us to use wildcards like * and ?, but not the full
-              # regex. For simple domain matching this is good enough. If we were to
-              # use regexes instead, people will have to escape all their '.'s, and since
-              # that is actually going to match 'any character' it is a possible security hole.
-              if fnmatch(domain, ad):
-                return authenticated_user
+                user_info = auth_model["auth_state"][self.user_auth_state_key]
+                user_idp = user_info["idp"]
 
-            return None
+                idp_allow_all = self.allowed_idps[user_idp].get("allow_all")
+                if idp_allow_all:
+                    return True
+
+                user_info = auth_model["auth_state"][self.user_auth_state_key]
+                user_idp = user_info["idp"]
+
+                idp_allowed_domains = self.allowed_idps[user_idp].get("allowed_domains")
+                if idp_allowed_domains:
+                    # this was the part we wanted to replace
+                    email = auth_model["auth_state"][self.user_auth_state_key]["email"]
+                    email_domain = email.split("@", 1)[1].lower()
+                    for ad in idp_allowed_domains:
+                        # fnmatch allow us to use wildcards like * and ?, but
+                        # not the full regex. For simple domain matching this is
+                        # good enough. If we were to use regexes instead, people
+                        # will have to escape all their '.'s, and since that is
+                        # actually going to match 'any character' it is a
+                        # possible security hole. For details see
+                        # https://docs.python.org/3/library/fnmatch.html.
+                        if fnmatch(email_domain, ad):
+                            return True
+
+                # users should be explicitly allowed via config, otherwise they aren't
+                return False
+
 
         c.JupyterHub.authenticator_class = EmailAuthenticatingCILogonOAuthenticator
+
     config:
-      EmailAuthenticatingCILogonOAuthenticator:
-        allowed_domains:
-          - 2i2c.org
-          - btps.ca
-          - callysto.ca
-          - cssd.ab.ca
-          - cybera.ca
-          - eics.ab.ca
-          - eips.ca
-          - epsb.ca
-          - fmpsd.ab.ca
-          - fmcsd.ab.ca
-          - rvschools.ab.ca
-          - spschools.org
-          - wsrd.ca
-          - ucalgary.ca
-          - ualberta.ca
-          - cfis.com
-          - "*.ca"
       CILogonOAuthenticator:
         # Usernames are based on a unique "oidc" claim and not email, so we need
         # to reference these names when declaring admin_users. The custom
@@ -143,6 +151,25 @@ jupyterhub:
           http://google.com/accounts/o8/id:
             username_derivation:
               username_claim: "oidc"
+            allowed_domains: &allowed_domains
+              - 2i2c.org
+              - btps.ca
+              - callysto.ca
+              - cssd.ab.ca
+              - cybera.ca
+              - eics.ab.ca
+              - eips.ca
+              - epsb.ca
+              - fmpsd.ab.ca
+              - fmcsd.ab.ca
+              - rvschools.ab.ca
+              - spschools.org
+              - wsrd.ca
+              - ucalgary.ca
+              - ualberta.ca
+              - cfis.com
+              - "*.ca"
           http://login.microsoftonline.com/common/oauth2/v2.0/authorize:
             username_derivation:
               username_claim: "oidc"
+            allowed_domains: *allowed_domains
