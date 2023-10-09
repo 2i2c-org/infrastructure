@@ -110,6 +110,21 @@ basehub:
                   default: true
                   kubespawner_override:
                     image: openscapes/rocker:a7596b5
+                    # Ensures container working dir is homedir
+                    # https://github.com/2i2c-org/infrastructure/issues/2559
+                    working_dir: /home/rstudio
+                    # Because this is a list, it will override our default volume mounts
+                    volume_mounts:
+                      # Mount the user home directory
+                      - name: home
+                        mountPath: /home/rstudio
+                        subPath: "{username}"
+                      # Mount the shared readonly directory
+                      - name: home
+                        mountPath: /home/rstudio/shared
+                        subPath: _shared
+                        readOnly: true
+
             requests: *requests_profile_options
         - display_name: Matlab
           description: Matlab environment
