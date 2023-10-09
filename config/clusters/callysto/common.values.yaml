@@ -64,6 +64,13 @@ jupyterhub:
           {% endblock %}
   hub:
     extraConfig:
+      # FIXME: If the following issues are resolved, we should remove this
+      #        custom authenticator class and use CILogonOAuthenticator
+      #        directly instead.
+      #
+      #        https://github.com/jupyterhub/oauthenticator/issues/547
+      #        https://github.com/jupyterhub/oauthenticator/issues/692
+      #
       001-cilogon-email-auth: |
         from fnmatch import fnmatch
 
