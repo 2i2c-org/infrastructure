@@ -53,6 +53,7 @@ jupyterhub:
           - ericvd@berkeley.edu
           - sean.smorris@berkeley.edu
           - jteoh@csum.edu
+          - jsimons@csum.edu
     extraFiles:
       configurator-schema-default:
         data:
