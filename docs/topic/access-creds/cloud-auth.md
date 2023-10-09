@@ -148,7 +148,7 @@ are used to provide access to the AWS account from your terminal.
    format:
 
    ```ini
-   [your-cluster-name]
+   [your-cluster-name or the AWS account name]
    aws_access_key_id = <key-id>
    aws_secret_access_key = <access-key>
    ```
@@ -172,8 +172,11 @@ are used to provide access to the AWS account from your terminal.
    You can execute it like so:
    
    ```bash
-   $ deployer exec-aws-shell <your-cluster-hname> <arn-of-mfa-device> <code-from-token>
+   $ deployer exec-aws-shell <aws-profile-name> <arn-of-mfa-device> <code-from-token>
    ```
+
+   where `<aws-profile-name>` must match the name of the profile in `~/.aws/credentials`
+   you created in the previous step.
 
    This will open a new subshell with all the appropriate AWS environment
    variables setup to perform actions with `terraform`, `eksctl`, etc. Note
