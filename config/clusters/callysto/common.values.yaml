@@ -107,7 +107,7 @@ jupyterhub:
                 idp_allowed_domains = self.allowed_idps[user_idp].get("allowed_domains")
                 if idp_allowed_domains:
                     # this was the part we wanted to replace
-                    email = auth_model["auth_state"]["cilogon_user"]["email"]
+                    email = auth_model["auth_state"][self.user_auth_state_key]["email"]
                     email_domain = email.split("@", 1)[1].lower()
                     for ad in idp_allowed_domains:
                         # fnmatch allow us to use wildcards like * and ?, but
