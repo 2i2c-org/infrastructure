@@ -32,6 +32,3 @@ jupyterhub:
         authenticator_class: "github"
       GitHubOAuthenticator:
         oauth_callback_url: "https://staging.aws.2i2c.cloud/hub/oauth_callback"
-        allowed_organizations: []
-        scope:
-          - read:org
