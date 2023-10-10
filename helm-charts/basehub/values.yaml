@@ -93,8 +93,8 @@ jupyterhub:
       staff_google_ids:
         - choldgraf@2i2c.org
         - colliand@2i2c.org
-        - erik@2i2c.org
         - damianavila@2i2c.org
+        - erik@2i2c.org
         - georgianaelena@2i2c.org
         - jmunroe@2i2c.org
         - sgibson@2i2c.org

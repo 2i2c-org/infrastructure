@@ -65,7 +65,6 @@ basehub:
           allowed_organizations:
             - leap-stc:leap-pangeo-base-access
             - leap-stc:leap-pangeo-full-access
-            - 2i2c-org:hub-access-for-2i2c-staff
           scope:
             - read:org
         Authenticator:

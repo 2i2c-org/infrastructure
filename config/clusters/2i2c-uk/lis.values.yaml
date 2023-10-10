@@ -52,7 +52,6 @@ jupyterhub:
       GitHubOAuthenticator:
         oauth_callback_url: "https://ds.lis.2i2c.cloud/hub/oauth_callback"
         allowed_organizations:
-          - 2i2c-org
           - lisacuk
         scope:
           - read:org

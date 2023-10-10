@@ -73,6 +73,10 @@ You can remove yourself from the org once you have confirmed that login is worki
 
     ```yaml
     jupyterhub:
+      custom:
+        2i2c:
+          add_staff_user_ids_to_admin_users: true
+          add_staff_user_ids_of_type: github
       hub:
         config:
           JupyterHub:
@@ -80,7 +84,6 @@ You can remove yourself from the org once you have confirmed that login is worki
           GitHubOAuthenticator:
             oauth_callback_url: https://{{ HUB_DOMAIN }}/hub/oauth_callback
             allowed_organizations:
-              - 2i2c-org
               - ORG_NAME
             scope:
               - read:user
@@ -90,6 +93,10 @@ You can remove yourself from the org once you have confirmed that login is worki
 
     ```yaml
     jupyterhub:
+      custom:
+        2i2c:
+          add_staff_user_ids_to_admin_users: true
+          add_staff_user_ids_of_type: github
       hub:
         config:
           JupyterHub:
@@ -97,7 +104,6 @@ You can remove yourself from the org once you have confirmed that login is worki
           GitHubOAuthenticator:
             oauth_callback_url: https://{{ HUB_DOMAIN }}/hub/oauth_callback
             allowed_organizations:
-              - 2i2c-org:hub-access-for-2i2c-staff
               - ORG_NAME:TEAM_NAME
             scope:
               - read:org
@@ -220,6 +226,7 @@ To enable this access,
               mem_limit: 4G
     ```
 
-    Users who are a part of *any* of the listed teams will be able to access that profile.
-    Add `2i2c-org:teach-team` to all `allowed_teams` so 2i2c engineers can log in to debug
-    issues. If `allowed_teams` is not set, that profile is not available to anyone.
+    Users who are a part of *any* of the listed teams will be able to access
+    that profile. Add `2i2c-org:hub-access-for-2i2c-staff` to all
+    `allowed_teams` so 2i2c engineers can log in to debug issues. If
+    `allowed_teams` is not set, that profile is not available to anyone.

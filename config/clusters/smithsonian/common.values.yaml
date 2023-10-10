@@ -39,8 +39,7 @@ basehub:
           authenticator_class: github
         GitHubOAuthenticator:
           populate_teams_in_auth_state: true
-          allowed_organizations: &allowed_github_orgs
-            - 2i2c-org
+          allowed_organizations:
             - smithsonian
             - sidatasciencelab
             - Smithsonian-SDCH
@@ -76,7 +75,6 @@ basehub:
           description: &profile_list_description "Start a container with at least a chosen share of capacity on a node of this type"
           slug: small
           default: true
-          allowed_teams: *allowed_github_orgs
           profile_options:
             image: &profile_options_image
               display_name: Image

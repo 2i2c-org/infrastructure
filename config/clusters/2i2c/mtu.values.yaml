@@ -36,18 +36,16 @@ jupyterhub:
       CILogonOAuthenticator:
         oauth_callback_url: "https://mtu.2i2c.cloud/hub/oauth_callback"
         allowed_idps:
-          # Allow 2i2c staff to login with Google
-          http://google.com/accounts/o8/id:
-            username_derivation:
-              username_claim: "email"
-            allowed_domains:
-              - "2i2c.org"
           # Allow MTU to login via Shibboleth
           https://sso.mtu.edu/idp/shibboleth:
             username_derivation:
               username_claim: "email"
             allowed_domains:
               - "mtu.edu"
+          # Allow 2i2c staff to login with Google accounts
+          http://google.com/accounts/o8/id:
+            username_derivation:
+              username_claim: "email"
       Authenticator:
         admin_users:
           - "dbkc@mtu.edu"

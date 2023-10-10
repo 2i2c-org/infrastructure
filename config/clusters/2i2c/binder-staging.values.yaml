@@ -76,17 +76,14 @@ binderhub:
             http://google.com/accounts/o8/id:
               username_derivation:
                 username_claim: "email"
-              allowed_domains:
-                - "2i2c.org"
         Authenticator:
           admin_users:
             - choldgraf@2i2c.org
             - colliand@2i2c.org
-            - erik@2i2c.org
             - damianavila@2i2c.org
+            - erik@2i2c.org
             - georgianaelena@2i2c.org
             - jmunroe@2i2c.org
-            - pnasrat@2i2c.org
             - sgibson@2i2c.org
             - yuvipanda@2i2c.org
     singleuser:

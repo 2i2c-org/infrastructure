@@ -19,6 +19,9 @@ jupyterhub:
       enabled: true
   custom:
     2i2c:
+      # add_staff_user_ids_to_admin_users is disabled because the usernames
+      # aren't github id or email based, individual 2i2c members have added
+      # their user to admin_users manually instead.
       add_staff_user_ids_to_admin_users: false
       # add_staff_user_ids_of_type: "google"
     homepage:

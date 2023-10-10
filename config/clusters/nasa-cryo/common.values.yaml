@@ -44,7 +44,6 @@ basehub:
           # so need to populate the teams in the auth state
           populate_teams_in_auth_state: true
           allowed_organizations:
-            - 2i2c-org:hub-access-for-2i2c-staff
             - CryoInTheCloud:cryoclouduser
             - CryoInTheCloud:cryocloudadvanced
           scope:

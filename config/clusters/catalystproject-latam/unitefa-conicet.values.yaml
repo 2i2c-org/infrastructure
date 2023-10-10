@@ -34,10 +34,9 @@ jupyterhub:
             username_derivation:
               username_claim: "email"
             allowed_domains:
-              - "2i2c.org"
-              - "unc.edu.ar"
-              - "mi.unc.edu.ar"
-              - "famaf.unc.edu.ar"
+              - unc.edu.ar
+              - mi.unc.edu.ar
+              - famaf.unc.edu.ar
       Authenticator:
         admin_users:
           - aquevedo@unc.edu.ar

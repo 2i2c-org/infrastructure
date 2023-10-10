@@ -43,7 +43,6 @@ basehub:
         GitHubOAuthenticator:
           allowed_organizations:
             - pangeo-data:us-central1-b-gcp
-            - 2i2c-org:hub-access-for-2i2c-staff
           scope:
             - read:org
         Authenticator:

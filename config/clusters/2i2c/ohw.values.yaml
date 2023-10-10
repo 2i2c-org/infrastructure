@@ -89,7 +89,6 @@ basehub:
         GitHubOAuthenticator:
           oauth_callback_url: https://oceanhackweek.2i2c.cloud/hub/oauth_callback
           allowed_organizations:
-            - 2i2c-org:hub-access-for-2i2c-staff
             - oceanhackweek:ohw23-organizers
             - oceanhackweek:ohw23-participants-australia
             - oceanhackweek:ohw23-participants-seattle
