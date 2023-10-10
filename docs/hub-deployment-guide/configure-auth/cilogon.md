@@ -60,27 +60,30 @@ To get the value of the key that must go in the `allowed_idp` dict for a specifi
 
 ```yaml
 jupyterhub:
+  custom:
+    2i2c:
+      add_staff_user_ids_to_admin_users: true
+      add_staff_user_ids_of_type: google
   hub:
     config:
       JupyterHub:
         authenticator_class: cilogon
       CILogonOAuthenticator:
         oauth_callback_url: https://{{ HUB_DOMAIN }}/hub/oauth_callback
-        # Google and ANU's are configured as the hubs identity providers (idps)
         allowed_idps:
-          http://google.com/accounts/o8/id:
-            username_derivation:
-              # Use the email as the hub username
-              username_claim: "email"
-            # Authorize any user with a @2i2c.org email in this idp
-            allowed_domains:
-              - "2i2c.org"
+          # Community specific idp - enables community members to authenticate.
+          # In this example, all authenticated users are authorized via the idp
+          # specific allow_all config.
           https://idp2.anu.edu.au/idp/shibboleth:
             username_derivation:
-              # Use the email as the hub username
-              username_claim: "email"
-            # Authorize all users in this idp
-            allow_all: true
+              username_claim: email
+            allow_all: true # authorize all users authenticated by the idp
+          # Google (or GitHub) idp - enables 2i2c admin users to authenticate.
+          # The basehub chart config "custom.2i2c.add_staff_user_ids..." expands
+          # admin_users to authorize specific 2i2c staff members.
+          http://google.com/accounts/o8/id:
+            username_derivation:
+              username_claim: email
       Authenticator:
         admin_users:
           - admin@anu.edu.au

@@ -73,6 +73,10 @@ You can remove yourself from the org once you have confirmed that login is worki
 
     ```yaml
     jupyterhub:
+      custom:
+        2i2c:
+          add_staff_user_ids_to_admin_users: true
+          add_staff_user_ids_of_type: github
       hub:
         config:
           JupyterHub:
@@ -80,7 +84,6 @@ You can remove yourself from the org once you have confirmed that login is worki
           GitHubOAuthenticator:
             oauth_callback_url: https://{{ HUB_DOMAIN }}/hub/oauth_callback
             allowed_organizations:
-              - 2i2c-org
               - ORG_NAME
             scope:
               - read:user
@@ -90,6 +93,10 @@ You can remove yourself from the org once you have confirmed that login is worki
 
     ```yaml
     jupyterhub:
+      custom:
+        2i2c:
+          add_staff_user_ids_to_admin_users: true
+          add_staff_user_ids_of_type: github
       hub:
         config:
           JupyterHub:
