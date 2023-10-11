@@ -128,3 +128,13 @@ hubs:
       - basehub-common.values.yaml
       - mtu.values.yaml
       - enc-mtu.secret.values.yaml
+  - name: jackeddy
+    display_name: "Jack Eddy Symposium"
+    domain: jackeddy.2i2c.cloud
+    helm_chart: daskhub
+    auth0:
+      enabled: false
+    helm_chart_values_files:
+      - daskhub-common.values.yaml
+      - jackeddy.values.yaml
+      - enc-jackeddy.secret.values.yaml

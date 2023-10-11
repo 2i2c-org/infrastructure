@@ -79,6 +79,23 @@ notebook_nodes = {
       "community" : "temple"
     },
   }
+  # Nodepool for jackeddy symposium. https://github.com/2i2c-org/infrastructure/issues/3166
+  "jackeddy" : {
+    min : 0,
+    max : 100,
+    machine_type : "n2-highmem-16",
+    labels : {
+      "2i2c.org/community" : "jackeddy"
+    },
+    taints : [{
+      key : "2i2c.org/community",
+      value : "jackeddy",
+      effect : "NO_SCHEDULE"
+    }],
+    resource_labels : {
+      "community" : "jackeddy"
+    }
+  }
 }
 
 # Setup a single node pool for dask workers.
@@ -94,7 +111,11 @@ dask_nodes = {
   },
 }
 
-user_buckets = {}
+user_buckets = {
+  "jackeddy-scratch" : {
+    "delete_after" : 7
+  }
+}
 
 
 hub_cloud_permissions = {
@@ -113,6 +134,11 @@ hub_cloud_permissions = {
     requestor_pays : true,
     bucket_admin_access : [],
     hub_namespace : "catalyst-cooperative"
+  },
+  "jackeddy" : {
+    requestor_pays : true,
+    bucket_admin_access : ["jackeddy-scratch"],
+    hub_namespace : "jackeddy"
   },
 }
 
