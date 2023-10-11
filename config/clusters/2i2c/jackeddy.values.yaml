@@ -160,11 +160,6 @@ basehub:
       image:
         name: quay.io/2i2c/unlisted-choice-experiment
         tag: "0.0.1-0.dev.git.7130.h0bdc2d30"
-      networkPolicy:
-        # FIXME: For dask gateway
-        enabled: false
-      readinessProbe:
-        enabled: false
       config:
         JupyterHub:
           authenticator_class: github
