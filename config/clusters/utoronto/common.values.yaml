@@ -76,8 +76,6 @@ jupyterhub:
       pvc:
         # Default seems too slow for our database, causes very bad response times
         storageClassName: managed-premium
-    readinessProbe:
-      enabled: false
     config:
       JupyterHub:
         authenticator_class: cilogon
