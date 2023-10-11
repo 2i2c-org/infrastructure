@@ -176,10 +176,6 @@ basehub:
           scope:
             - read:org
         Authenticator:
-          # This hub uses GitHub Orgs/Teams auth and so we do not set
-          # allowed_users in order to not deny access to valid members of
-          # the listed Orgs/Teams. The following people should have admin
-          # access though.
           admin_users:
             - dan800 # Dan Marsh
             - rmcgranaghan # Ryan McGranaghan
