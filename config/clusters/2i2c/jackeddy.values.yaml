@@ -7,14 +7,6 @@ basehub:
     prePuller:
       continuous:
         enabled: true
-    # FIXME: document this feature
-    scheduling:
-      userPlaceholder:
-        # Needed for continuous prePuller to work
-        enabled: true
-        replicas: 0
-      userScheduler:
-        enabled: false
     ingress:
       hosts:
         - jackeddy.2i2c.cloud
