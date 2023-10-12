@@ -1,3 +1,14 @@
+"""
+noxfile.py is a configuration file for the command-line tool nox that automates
+tasks in multiple Python environments. We use it to setup an environment to
+build our documentation.
+
+Config reference: https://nox.thea.codes/en/stable/config.html#noxfile
+
+Common tasks:
+- Install nox:                        pip install nox
+- Start a live reloading docs server: nox -- live
+"""
 import nox
 
 nox.options.reuse_existing_virtualenvs = True
