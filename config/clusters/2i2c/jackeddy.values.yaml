@@ -33,7 +33,6 @@ basehub:
           funded_by:
             name: ""
             url: ""
-            # FIXME: document this feature https://github.com/2i2c-org/default-hub-homepage/pull/25
             custom_html: <a href="https://science.nasa.gov/heliophysics/programs/living-with-a-star/">NASA's Living with a Star program</a> and <a href="https://cpaess.ucar.edu/">UCAR/CPAESS</a>
     singleuser:
       extraFiles:
