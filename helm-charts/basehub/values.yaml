@@ -764,8 +764,15 @@ jupyterhub:
                     allowed_profiles.append(profile)
                     continue
 
-                access_token = auth_state["token_response"]["access_token"]
-                token_type = auth_state["token_response"]["token_type"]
+                if "token_response" in auth_state:
+                    access_token = auth_state["token_response"]["access_token"]
+                    token_type = auth_state["token_response"]["token_type"]
+                else:
+                    # token_response was introduced to auth_state in
+                    # oauthenticator 16, so this is adjusting to an auth_state
+                    # set by oauthenticator 15
+                    access_token = auth_state["access_token"]
+                    token_type = "token"
                 for allowed_org in allowed_orgs:
                     user_in_allowed_org = await spawner.authenticator._check_membership_allowed_organizations(
                         allowed_org, spawner.user.name, access_token, token_type
