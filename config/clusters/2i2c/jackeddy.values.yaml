@@ -48,6 +48,11 @@ basehub:
       nodeSelector:
         # Applied to all profile options
         2i2c.org/community: jackeddy
+    extraTolerations:
+      - key: "2i2c.org/community"
+        operator: "Equal"
+        value: "jackeddy"
+        effect: "NoSchedule"
       defaultUrl: /lab
       extraEnv:
         # https://infrastructure.2i2c.org/howto/features/buckets/
