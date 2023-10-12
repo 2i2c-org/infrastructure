@@ -32,9 +32,6 @@ basehub:
             name: "NASA"
             url: https://www.earthdata.nasa.gov/esds
     hub:
-      image:
-        name: quay.io/2i2c/unlisted-choice-experiment
-        tag: "0.0.1-0.dev.git.7130.h0bdc2d30"
       allowNamedServers: true
       config:
         JupyterHub:
