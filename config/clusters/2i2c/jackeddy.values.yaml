@@ -3,10 +3,6 @@ basehub:
     annotations:
       iam.gke.io/gcp-service-account: pilot-hubs-jackeddy@two-eye-two-see.iam.gserviceaccount.com
   jupyterhub:
-    # https://infrastructure.2i2c.org/howto/features/ephemeral/#pre-pulled-images
-    prePuller:
-      continuous:
-        enabled: true
     ingress:
       hosts:
         - jackeddy.2i2c.cloud
