@@ -15,7 +15,7 @@ on:
       - deployer/**
       # Exclude changes to the tests directory from
       # triggering this workflow
-      - "!deployer/tests/**"
+      - "!deployer/health_check_tests/**"
       - requirements.txt
       - .github/actions/setup-deploy/**
       - helm-charts/**
@@ -27,7 +27,7 @@ on:
       - deployer/**
       # Exclude changes to the tests directory from
       # triggering this workflow
-      - "!deployer/tests/**"
+      - "!deployer/health_check_tests/**"
       - requirements.txt
       - .github/actions/setup-deploy/**
       - helm-charts/**

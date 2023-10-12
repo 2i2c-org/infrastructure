@@ -99,12 +99,12 @@ The `deployer.py` file is the main file, that contains all of the commands regis
 │       └── config_cmd.py
 ```
 
-### The `tests` directory
+### The `health_check_tests` directory
 
-This directory contains the tests and assets used by these tests and called by `deployer run-hub-health-check` command to determine whether a hub should be marked as healthy or not.
+This directory contains the tests and assets used by them. It is called by `deployer run-hub-health-check` command to determine whether a hub should be marked as healthy or not.
 
 ```bash
-├── tests
+├── health_check_tests
 │   ├── __init__.py
 │   ├── conftest.py
 │   ├── test-notebooks

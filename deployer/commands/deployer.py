@@ -216,7 +216,7 @@ def run_hub_health_check(
     gh_ci = os.environ.get("CI", "false")
     pytest_args = [
         "-q",
-        "deployer/tests",
+        "deployer/health_check_tests",
         f"--hub-url={hub_url}",
         f"--api-token={service_api_token}",
         f"--hub-type={hub.spec['helm_chart']}",
