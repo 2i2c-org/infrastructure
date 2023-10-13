@@ -16,12 +16,6 @@ charts:
         valuesPath: jupyterhub.hub.image
         buildArgs:
           REQUIREMENTS_FILE: requirements.txt
-      unlisted-choice-experiment:
-        imageName: quay.io/2i2c/unlisted-choice-experiment
-        buildArgs:
-          REQUIREMENTS_FILE: unlisted-choice-requirements.txt
-        contextPath: images/hub
-        dockerfilePath: images/hub/Dockerfile
       dynamic-image-building-experiment:
         imageName: quay.io/2i2c/dynamic-image-building-experiment
         buildArgs:
