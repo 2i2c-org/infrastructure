@@ -19,7 +19,7 @@ jupyterhub:
         description: Start a R server with RStudio and tidyverse & Geospatial tools
         kubespawner_override:
           image: rocker/binder:4.3
-          default_url: /lab
+          default_url: /rstudio
           # Ensures container working dir is homedir
           # https://github.com/2i2c-org/infrastructure/issues/2559
           working_dir: /home/rstudio
