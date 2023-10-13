@@ -34,19 +34,16 @@ jupyterhub:
       CILogonOAuthenticator:
         oauth_callback_url: https://dvc.cloudbank.2i2c.cloud/hub/oauth_callback
         allowed_idps:
-          http://google.com/accounts/o8/id:
-            username_derivation:
-              username_claim: "email"
-            allowed_domains: ["2i2c.org", "berkeley.edu", "dvc.edu"]
           http://login.microsoftonline.com/common/oauth2/v2.0/authorize:
             username_derivation:
               username_claim: "email"
             allowed_domains:
-              - "dvc.edu"
-          urn:mace:incommon:berkeley.edu:
+              - dvc.edu
+          http://google.com/accounts/o8/id:
             username_derivation:
               username_claim: "email"
-            allow_all: true
+            allowed_domains:
+              - dvc.edu
       JupyterHub:
         authenticator_class: cilogon
       Authenticator:

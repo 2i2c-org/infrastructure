@@ -40,13 +40,7 @@ jupyterhub:
             username_derivation:
               username_claim: "email"
             allowed_domains:
-              - "2i2c.org"
-              - "berkeley.edu"
-              - "go.pasadena.edu"
-          urn:mace:incommon:berkeley.edu:
-            username_derivation:
-              username_claim: "email"
-            allow_all: true
+              - go.pasadena.edu
       Authenticator:
         admin_users:
           - yxchang@go.pasadena.edu

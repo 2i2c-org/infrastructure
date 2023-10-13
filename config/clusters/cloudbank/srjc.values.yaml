@@ -39,17 +39,11 @@ jupyterhub:
           http://google.com/accounts/o8/id:
             username_derivation:
               username_claim: "email"
-            # allow_all is a partial authorization, username_pattern is enforced also
-            allow_all: true
-          urn:mace:incommon:berkeley.edu:
-            username_derivation:
-              username_claim: "email"
-            # allow_all is a partial authorization, username_pattern is enforced also
-            allow_all: true
+            allowed_domains:
+              - santarosa.edu
       Authenticator:
         admin_users:
           - ericvd@berkeley.edu
           - sean.smorris@berkeley.edu
           - mmckeever@santarosa.edu
           - mjmckeever496@gmail.com
-        username_pattern: '^(.+@2i2c\.org|.+@berkeley\.edu|.+@santarosa\.edu|mjmckeever496@gmail\.com|deployment-service-check)$'

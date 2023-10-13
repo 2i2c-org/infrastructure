@@ -33,9 +33,6 @@ jupyterhub:
           http://google.com/accounts/o8/id:
             username_derivation:
               username_claim: "email"
-          urn:mace:incommon:berkeley.edu:
-            username_derivation:
-              username_claim: "email"
       OAuthenticator:
         # WARNING: Don't use allow_existing_users with config to allow an
         #          externally managed group of users, such as
