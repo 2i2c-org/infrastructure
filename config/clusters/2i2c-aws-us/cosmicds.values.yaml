@@ -45,6 +45,11 @@ jupyterhub:
       # Must set jupyterhub.custom.singleuserAdmin.extraVollumeMounts to [] as well
       type: none
       extraVolumeMounts: []
+    cpu:
+      # Authentication is wide open here, so let's limit how much CPU a single user can use
+      # more actively. This is to limit the amount of damage a rogue user can do to not more
+      # than 1 CPU per user account.
+      limit: 1
   hub:
     services:
       # OAuth2 credentials for the CosmicDS portal, which uses
@@ -73,6 +78,16 @@ jupyterhub:
           http://github.com/login/oauth/authorize:
             username_derivation:
               username_claim: "preferred_username"
+            allow_all: true
+          # Temporarily enable Google & Microsoft accounts again
+          # Disable again first week of november
+          http://google.com/accounts/o8/id:
+            username_derivation:
+              username_claim: "email"
+            allow_all: true
+          http://login.microsoftonline.com/common/oauth2/v2.0/authorize:
+            username_derivation:
+              username_claim: "email"
             allow_all: true
       Authenticator:
         admin_users:
