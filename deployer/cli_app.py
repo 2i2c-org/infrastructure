@@ -12,6 +12,7 @@ import typer
 app = typer.Typer(pretty_exceptions_show_locals=False)
 generate_app = typer.Typer(pretty_exceptions_show_locals=False)
 cilogon_client_app = typer.Typer(pretty_exceptions_show_locals=False)
+debug_app = typer.Typer(pretty_exceptions_show_locals=False)
 exec_app = typer.Typer(pretty_exceptions_show_locals=False)
 grafana_app = typer.Typer(pretty_exceptions_show_locals=False)
 validate_app = typer.Typer(pretty_exceptions_show_locals=False)
@@ -30,6 +31,11 @@ app.add_typer(
     exec_app,
     name="exec",
     help="Execute a shell in various parts of the infra. It can be used for poking around, or debugging issues.",
+)
+app.add_typer(
+    debug_app,
+    name="debug",
+    help="Debug issues by accessing different components and their logs",
 )
 app.add_typer(grafana_app, name="grafana", help="Manages Grafana related workflows.")
 app.add_typer(

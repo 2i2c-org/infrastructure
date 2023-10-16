@@ -9,12 +9,9 @@ import escapism
 import typer
 from ruamel.yaml import YAML
 
-from deployer.cli_app import exec_app
+from deployer.cli_app import debug_app
 from deployer.infra_components.cluster import Cluster
 from deployer.utils.file_acquisition import find_absolute_path_to_cluster_file
-
-exec_debug_app = typer.Typer(pretty_exceptions_show_locals=False)
-exec_app.add_typer(exec_debug_app, name="debug")
 
 # Without `pure=True`, I get an exception about str / byte issues
 yaml = YAML(typ="safe", pure=True)
@@ -32,7 +29,7 @@ class InfraComponents(Enum):
     dask_gateway_traefik = "dask-gateway-traefik"
 
 
-@exec_debug_app.command()
+@debug_app.command()
 def component_logs(
     cluster_name: str = typer.Argument(..., help="Name of cluster to operate on"),
     hub_name: str = typer.Argument(..., help="Name of hub to operate on"),
@@ -73,7 +70,7 @@ def component_logs(
         subprocess.check_call(cmd)
 
 
-@exec_debug_app.command()
+@debug_app.command()
 def user_logs(
     cluster_name: str = typer.Argument(..., help="Name of cluster to operate on"),
     hub_name: str = typer.Argument(..., help="Name of hub to operate on"),
@@ -122,6 +119,7 @@ def user_logs(
         subprocess.check_call(cmd)
 
 
+@debug_app.command()
 def start_docker_proxy(
     docker_daemon_cluster: str = typer.Argument(
         "2i2c", help="Name of cluster where the docker daemon lives"

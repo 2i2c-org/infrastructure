@@ -4,10 +4,9 @@ import subprocess
 import typer
 from ruamel.yaml import YAML
 
+from deployer.cli_app import exec_app
 from deployer.infra_components.cluster import Cluster
 from deployer.utils.file_acquisition import find_absolute_path_to_cluster_file
-
-from .app import exec_shell_app
 
 # Without `pure=True`, I get an exception about str / byte issues
 yaml = YAML(typ="safe", pure=True)
@@ -17,7 +16,7 @@ yaml = YAML(typ="safe", pure=True)
 UBUNTU_IMAGE = "ubuntu:22.04"
 
 
-@exec_shell_app.command()
+@exec_app.command()
 def homes(
     cluster_name: str = typer.Argument(..., help="Name of cluster to operate on"),
     hub_name: str = typer.Argument(..., help="Name of hub to operate on"),
@@ -83,7 +82,7 @@ def homes(
         subprocess.check_call(cmd)
 
 
-@exec_shell_app.command()
+@exec_app.command()
 def hub(
     cluster_name: str = typer.Argument(..., help="Name of cluster to operate on"),
     hub_name: str = typer.Argument(..., help="Name of hub to operate on"),
