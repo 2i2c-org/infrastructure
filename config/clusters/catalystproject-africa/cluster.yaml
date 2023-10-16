@@ -18,3 +18,11 @@ hubs:
       - common.values.yaml
       - staging.values.yaml
       - enc-staging.secret.values.yaml
+  - name: nm-aist
+    display_name: "NM-AIST"
+    domain: nm-aist.af.catalystproject.2i2c.cloud
+    helm_chart: basehub
+    helm_chart_values_files:
+      - common.values.yaml
+      - nm-aist.values.yaml
+      - enc-nm-aist.secret.values.yaml
