@@ -327,6 +327,23 @@ basehub:
           allowed_teams:
             - 2i2c-org:hub-access-for-2i2c-staff
             - CryoInTheCloud:ml-in-glaciology
+          profile_options:
+            image:
+              display_name: Image
+              unlisted_choice:
+                enabled: true
+                display_name: "Custom image"
+                validation_regex: "^.+:.+$"
+                validation_message: "Must be a publicly available docker image of form <image-name>:<tag>"
+                kubespawner_override:
+                  image: "{value}"
+              choices:
+                pytorch:
+                  display_name: Pangeo PyTorch ML Notebook
+                  default: true
+                  slug: "pytorch"
+                  kubespawner_override:
+                    image: "quay.io/pangeo/pytorch-notebook:2023.09.19"
           kubespawner_override:
             environment:
               NVIDIA_DRIVER_CAPABILITIES: compute,utility
