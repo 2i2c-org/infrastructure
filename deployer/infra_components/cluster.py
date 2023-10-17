@@ -4,6 +4,7 @@ import subprocess
 import tempfile
 from contextlib import contextmanager
 
+from deployer.utils.env_vars_management import unset_env_vars
 from deployer.utils.file_acquisition import (
     HELM_CHARTS_DIR,
     get_decrypted_file,
@@ -12,26 +13,6 @@ from deployer.utils.file_acquisition import (
 from deployer.utils.rendering import print_colour
 
 from .hub import Hub
-
-
-@contextmanager
-def unset_env_vars(vars):
-    """
-    Temporarily unset env vars in vars if they exist
-    """
-    orig_values = {}
-    for e in vars:
-        if e in os.environ:
-            orig_values[e] = os.environ[e]
-            # Clear values from os.environ if they are present!
-            del os.environ[e]
-
-    try:
-        yield
-    finally:
-        for e in orig_values:
-            # Put values back into os.environ when contextmanager returns
-            os.environ[e] = orig_values[e]
 
 
 class Cluster:
