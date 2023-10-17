@@ -7,6 +7,7 @@ from ruamel.yaml import YAML
 from deployer.cli_app import exec_app
 from deployer.infra_components.cluster import Cluster
 from deployer.utils.file_acquisition import find_absolute_path_to_cluster_file
+from deployer.utils.rendering import print_colour
 
 # Without `pure=True`, I get an exception about str / byte issues
 yaml = YAML(typ="safe", pure=True)
@@ -315,7 +316,7 @@ def delete_pod(pod_name, hub_name):
     subprocess.check_call(delete_pod_cmd)
 
 
-@exec_shell_app.command()
+@exec_app.command()
 def copy_homedir_into_another(
     cluster_name: str = typer.Argument(..., help="Name of cluster to operate on"),
     hub_name: str = typer.Argument(..., help="Name of hub to operate on"),
