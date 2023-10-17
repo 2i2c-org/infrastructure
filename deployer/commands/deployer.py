@@ -12,16 +12,12 @@ import typer
 from ruamel.yaml import YAML
 
 from deployer.cli_app import app
-from deployer.commands.validate.config_cmd import (
+from deployer.commands.validate.config import (
     authenticator_config as validate_authenticator_config,
 )
-from deployer.commands.validate.config_cmd import (
-    cluster_config as validate_cluster_config,
-)
-from deployer.commands.validate.config_cmd import hub_config as validate_hub_config
-from deployer.commands.validate.config_cmd import (
-    support_config as validate_support_config,
-)
+from deployer.commands.validate.config import cluster_config as validate_cluster_config
+from deployer.commands.validate.config import hub_config as validate_hub_config
+from deployer.commands.validate.config import support_config as validate_support_config
 from deployer.infra_components.cluster import Cluster
 from deployer.utils.file_acquisition import (
     find_absolute_path_to_cluster_file,

@@ -10,9 +10,9 @@ import deployer.commands.generate.dedicated_cluster.aws_commands  # noqa: F401
 import deployer.commands.generate.dedicated_cluster.gcp_commands  # noqa: F401
 import deployer.commands.generate.helm_upgrade.jobs_cmd  # noqa: F401
 import deployer.commands.grafana.central_grafana  # noqa: F401
-import deployer.commands.grafana.deploy_dashboards_cmd  # noqa: F401
-import deployer.commands.grafana.tokens_cmd  # noqa: F401
-import deployer.commands.validate.config_cmd  # noqa: F401
+import deployer.commands.grafana.deploy_dashboards  # noqa: F401
+import deployer.commands.grafana.tokens  # noqa: F401
+import deployer.commands.validate.config  # noqa: F401
 import deployer.keys.decrypt_age  # noqa: F401
 
 from .cli_app import app
