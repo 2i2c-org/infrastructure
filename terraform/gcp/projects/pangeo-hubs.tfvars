@@ -29,9 +29,9 @@ enable_private_cluster = true
 # Multi-tenant cluster, network policy is required to enforce separation between hubs
 enable_network_policy = true
 
-# Setup a filestore for in-cluster NFS
+# Setup a filestore for NFS
 enable_filestore      = true
-filestore_capacity_gb = 4096
+filestore_capacity_gb = 4608
 
 regional_cluster = false
 
