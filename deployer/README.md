@@ -27,9 +27,9 @@ The deployer has the following directory structure:
 ├── __main__.py
 ├── cli_app.py
 ├── commands
+├── health_check_tests
 ├── infra_components
 ├── keys
-├── tests
 └── utils
 ```
 
@@ -60,43 +60,41 @@ This is where utility functions are stored. They are to be imported and used thr
 This is the directory where all of the code related to the main `deployer` sub-commands is stored.
 
 Each sub-commands's functions are stored:
-- either in a single Python file that ends in `_cmd` or `_commands`
-- or in a directory that matches the name of the sub-command, if it is more complex and required additional helper files.
+- either in a single Python file where such thing was straight-forward
+- or in a directory that matches the name of the sub-command, if it's more complex and requires additional helper files.
 
 The `deployer.py` file is the main file, that contains all of the commands registered directly on the `deployer` main typer app, that could not or were not yet categorized in sub-commands.
 
 ```bash
-├── commands
-│   ├── cilogon_client_cmd.py
-│   ├── deployer.py
-│   ├── exec
-│   │   ├── debug_app_and_commands.py
-│   │   └── shell
-│   │       ├── app.py
-│   │       ├── cloud_commands.py
-│   │       └── infra_components_commands.py
-│   ├── generate
-│   │   ├── __init__.py
-│   │   ├── billing
-│   │   │   ├── cost_table_cmd.py
-│   │   │   ├── importers.py
-│   │   │   └── outputers.py
-│   │   ├── dedicated_cluster
-│   │   │   ├── aws_commands.py
-│   │   │   ├── common.py
-│   │   │   ├── dedicate_cluster_app.py
-│   │   │   └── gcp_commands.py
-│   │   └── helm_upgrade
-│   │       ├── decision.py
-│   │       └── jobs_cmd.py
-│   ├── grafana
-│   │   ├── central_grafana.py
-│   │   ├── deploy_dashboards_cmd.py
-│   │   ├── tokens_cmd.py
-│   │   └── utils.py
-│   └── validate
-│       ├── cluster.schema.yaml
-│       └── config_cmd.py
+── commands
+│   ├── cilogon.py
+│   ├── debug.py
+│   ├── deployer.py
+│   ├── exec
+│   │   ├── cloud.py
+│   │   └── infra_components.py
+│   ├── generate
+│   │   ├── __init__.py
+│   │   ├── billing
+│   │   │   ├── cost_table.py
+│   │   │   ├── importers.py
+│   │   │   └── outputers.py
+│   │   ├── dedicated_cluster
+│   │   │   ├── aws.py
+│   │   │   ├── common.py
+│   │   │   ├── dedicate_cluster_app.py
+│   │   │   └── gcp.py
+│   │   └── helm_upgrade
+│   │       ├── decision.py
+│   │       └── jobs.py
+│   ├── grafana
+│   │   ├── central_grafana.py
+│   │   ├── deploy_dashboards.py
+│   │   ├── tokens.py
+│   │   └── utils.py
+│   └── validate
+│       ├── cluster.schema.yaml
+│       └── config.py
 ```
 
 ### The `health_check_tests` directory
@@ -135,6 +133,7 @@ This section descripts all the subcommands the `deployer` can carry out and thei
 ╰──────────────────────────────────────────────────────────────────────────────────────────────────────────────────────╯
 ╭─ Commands ───────────────────────────────────────────────────────────────────────────────────────────────────────────╮
 │ cilogon-client           Manage cilogon clients for hubs' authentication.                                            │
+│ debug                    Debug issues by accessing different components and their logs                               │
 │ decrypt-age              Decrypt secrets sent to `support@2i2c.org` via `age`                                        │
 │ deploy                   Deploy one or more hubs in a given cluster                                                  │
 │ deploy-support           Deploy support components to a cluster                                                      │

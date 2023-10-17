@@ -21,7 +21,7 @@ from .common import (
     generate_config_directory,
     generate_support_files,
 )
-from .dedicate_cluster_app import dedicated_cluster_app
+from .dedicated_cluster_app import dedicated_cluster_app
 
 
 def generate_terraform_file(vars):

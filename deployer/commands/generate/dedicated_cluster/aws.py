@@ -16,7 +16,7 @@ from deployer.utils.file_acquisition import REPO_ROOT_PATH
 from deployer.utils.rendering import print_colour
 
 from .common import generate_config_directory, generate_support_files
-from .dedicate_cluster_app import dedicated_cluster_app
+from .dedicated_cluster_app import dedicated_cluster_app
 
 
 def generate_infra_files(vars):
