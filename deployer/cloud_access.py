@@ -19,7 +19,7 @@ def exec_aws_shell(
     mfa_device_id: str = typer.Argument(
         ..., help="Full ARN of MFA Device the code is from"
     ),
-    auth_token: int = typer.Argument(
+    auth_token: str = typer.Argument(
         ..., help="6 digit 2 factor authentication code from the MFA device"
     ),
 ):
