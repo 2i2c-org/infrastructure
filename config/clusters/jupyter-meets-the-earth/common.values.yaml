@@ -35,14 +35,6 @@ basehub:
             url: https://jupytearth.org
 
     singleuser:
-      extraFiles:
-        jupyter_server_config.json:
-          mountPath: /etc/jupyter/jupyter_notebook_config.json
-          data:
-            # Allow jupyterlab option to show hidden files in browser
-            # https://github.com/berkeley-dsep-infra/datahub/issues/3160
-            ContentsManager:
-              allow_hidden: true
       initContainers:
         # Need to explicitly set this up and copy what's in basehub/values.yaml
         # as we have an extra 'shared-public' directory here.
