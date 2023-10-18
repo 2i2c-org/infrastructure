@@ -45,8 +45,6 @@ basehub:
         enabled: true
     hub:
       allowNamedServers: true
-      readinessProbe:
-        enabled: false
       config:
         JupyterHub:
           authenticator_class: cilogon
