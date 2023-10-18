@@ -9,7 +9,7 @@ from contextlib import contextmanager
 
 import typer
 
-from ..cli_app import app
+from deployer.cli_app import app
 
 
 @contextmanager

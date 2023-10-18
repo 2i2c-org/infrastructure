@@ -4,6 +4,7 @@ import subprocess
 import tempfile
 from contextlib import contextmanager
 
+from deployer.infra_components.hub import Hub
 from deployer.utils.env_vars_management import unset_env_vars
 from deployer.utils.file_acquisition import (
     HELM_CHARTS_DIR,
@@ -11,8 +12,6 @@ from deployer.utils.file_acquisition import (
     get_decrypted_files,
 )
 from deployer.utils.rendering import print_colour
-
-from .hub import Hub
 
 
 class Cluster:
