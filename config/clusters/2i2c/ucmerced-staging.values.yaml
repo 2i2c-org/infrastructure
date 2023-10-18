@@ -16,10 +16,10 @@ jupyterhub:
           # Launch into JupyterLab after the user logs in
           default_url: /lab
       - display_name: R
-        description: Start a R server with RStudio and tidyverse & Geospatial tools
+        description: Start a R server with tidyverse & Geospatial tools
         kubespawner_override:
           image: rocker/binder:4.3
-          default_url: /rstudio
+          default_url: /lab
           # Ensures container working dir is homedir
           # https://github.com/2i2c-org/infrastructure/issues/2559
           working_dir: /home/rstudio
