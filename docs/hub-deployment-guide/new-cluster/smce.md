@@ -19,8 +19,8 @@ is handled for us by someone else.
    full access to the AWS account, and we can add other engineers here.
 
 3. This engineer should log in with the credentials provided by the community representative,
-   and set up [Multi Factor Authentication](https://aws.amazon.com/iam/features/mfa/). This
-   is required in all SMCE environments. You need to log out of the AWS console and back in
+   and set up [Multi Factor Authentication](https://aws.amazon.com/iam/features/mfa/), using [this dashboard link](https://us-east-1.console.aws.amazon.com/iamv2/home?region=us-west-2#/security_credentials/mfa). 
+   This is required in all SMCE environments. You need to log out of the AWS console and back in
    after setting up MFA to see your full permissions.
 
 4. This engineer should now create user accounts for all other 2i2c engineers, and make sure
