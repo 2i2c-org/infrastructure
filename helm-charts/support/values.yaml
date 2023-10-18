@@ -264,18 +264,22 @@ prometheus:
 #
 grafana:
   persistence:
-    # Attach a tiny 1G PVC with grafana for auth db as well as dashboard definition (not data) storage.
-    # Matches what we do with JupyterHub
+    # A PVC is used to enable Grafana to store auth details and dashboard
+    # definitions.
     enabled: true
+    # size could probably be smaller as not much space should be required, but
+    # the chart default of 10Gi has made it a bit tricky to reduce it
+    # retroactively.
+    size: 10Gi
   deploymentStrategy:
+    # type Recreate is required since we attach a PVC that can only be used by
+    # mounted for writing by one pod at the time.
     type: Recreate
-  service:
-    # Grafana is exposed to the world via ingress
-    type: ClusterIP
 
   rbac:
+    # namespaced makes us not get ClusterRole service accounts etc, and we do
+    # fine without it.
     namespaced: true
-    pspEnabled: false
 
   # initChownData refers to an init container enabled by default that isn't
   # needed as we don't reconfigure the linux user the grafana server will run
@@ -302,6 +306,8 @@ grafana:
       cpu: 10m
       memory: 200Mi
 
+  service:
+    type: ClusterIP
   ingress:
     enabled: true
     ingressClassName: nginx
@@ -331,8 +337,10 @@ grafana:
   #       client_id: ""
   #       client_secret: ""
   #
+  # grafana.ini ref: https://grafana.com/docs/grafana/latest/setup-grafana/configure-grafana/
+  #
   grafana.ini:
-    # dataproxy is used to make requests to prometheuses via the backend.
+    # dataproxy is used to make requests to prometheus via the backend.
     # This allows authless access to prometheus server in the same namespace.
     dataproxy:
       # Enable logging so we can debug grafana timeouts
@@ -346,6 +354,7 @@ grafana:
       timeout: 120
     server:
       root_url: ""
+      enable_gzip: true
     auth.github:
       enabled: false
       allowed_organizations: ""
