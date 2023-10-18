@@ -233,6 +233,11 @@ jupyterhub:
         # as culling the kernel will register activity,
         # resetting the no_activity timer for the server as a whole
         data:
+          # Allow JupyterLab to show the 'View -> Show Hidden Files' option
+          # in the menu. Defaults are not changed.
+          # https://github.com/jupyterlab/jupyterlab/issues/11304#issuecomment-945466766
+          ContentsManager:
+            allow_hidden: true
           # MappingKernelManager configuration reference:
           # https://jupyter-server.readthedocs.io/en/latest/api/jupyter_server.services.kernels.html#jupyter_server.services.kernels.kernelmanager.MappingKernelManager
           #

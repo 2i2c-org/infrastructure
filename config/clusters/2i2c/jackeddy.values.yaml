@@ -31,14 +31,6 @@ basehub:
             url: ""
             custom_html: <a href="https://science.nasa.gov/heliophysics/programs/living-with-a-star/">NASA's Living with a Star program</a> and <a href="https://cpaess.ucar.edu/">UCAR/CPAESS</a>
     singleuser:
-      extraFiles:
-        # FIXME: document this feature
-        # Currently only documented in the context of culling https://infrastructure.2i2c.org/sre-guide/manage-k8s/culling/#kernel-culling-configuration
-        jupyter_notebook_config.json:
-          data:
-            # Allow jupyterlab option to show hidden files in browser
-            ContentsManager:
-              allow_hidden: true
       # https://infrastructure.2i2c.org/howto/features/dedicated-nodepool/
       nodeSelector:
         # Applied to all profile options
