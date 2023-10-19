@@ -3,11 +3,15 @@ import os
 import subprocess
 import tempfile
 from contextlib import contextmanager
-from pathlib import Path
 
-from .file_acquisition import get_decrypted_file, get_decrypted_files
-from .hub import Hub
-from .utils import print_colour, unset_env_vars
+from deployer.infra_components.hub import Hub
+from deployer.utils.env_vars_management import unset_env_vars
+from deployer.utils.file_acquisition import (
+    HELM_CHARTS_DIR,
+    get_decrypted_file,
+    get_decrypted_files,
+)
+from deployer.utils.rendering import print_colour
 
 
 class Cluster:
@@ -63,7 +67,7 @@ class Cluster:
 
         print_colour("Provisioning support charts...")
 
-        support_dir = (Path(__file__).parent.parent).joinpath("helm-charts", "support")
+        support_dir = HELM_CHARTS_DIR.joinpath("support")
         subprocess.check_call(["helm", "dep", "up", support_dir])
 
         # contains both encrypted and unencrypted values files

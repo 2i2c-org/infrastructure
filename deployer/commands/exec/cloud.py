@@ -10,11 +10,11 @@ import subprocess
 
 import typer
 
-from .cli_app import app
+from deployer.cli_app import exec_app
 
 
-@app.command()
-def exec_aws_shell(
+@exec_app.command()
+def aws(
     profile: str = typer.Argument(..., help="Name of AWS profile to operate on"),
     mfa_device_id: str = typer.Argument(
         ..., help="Full ARN of MFA Device the code is from"

@@ -7,7 +7,7 @@ import pytest
 from pandera import Check, Column, DataFrameSchema, DateTime, Float, Index, String
 from ruamel.yaml import YAML
 
-from deployer.billing import importers
+from deployer.commands.generate.billing import importers
 
 yaml = YAML(typ="safe", pure=True)
 

@@ -15,7 +15,7 @@ on:
       - deployer/**
       # Exclude changes to the tests directory from
       # triggering this workflow
-      - "!deployer/tests/**"
+      - "!deployer/health_check_tests/**"
       - requirements.txt
       - .github/actions/setup-deploy/**
       - helm-charts/**
@@ -27,7 +27,7 @@ on:
       - deployer/**
       # Exclude changes to the tests directory from
       # triggering this workflow
-      - "!deployer/tests/**"
+      - "!deployer/health_check_tests/**"
       - requirements.txt
       - .github/actions/setup-deploy/**
       - helm-charts/**
@@ -49,7 +49,7 @@ env:
 jobs:
   # This job runs in Pull Requests and on pushes to the default branch. It identifies
   # which files have been added or modified by recent GitHub activity and parsed a list
-  # to the generate-helm-upgrade-jobs function of the deployer. This function generates
+  # to the `deployer generate helm-upgrade-job`s command of the deployer. This command generates
   # two lists of dictionaries, which can be read by GitHub Actions as matrix jobs. The
   # first set of jobs describes which clusters need their support chart and/or staging
   # hub upgraded; and the second set of jobs describe which production hubs require
@@ -113,7 +113,7 @@ jobs:
       # by one
       - name: Generate matrix jobs
         run: |
-          deployer generate-helm-upgrade-jobs "${{ steps.changed-files.outputs.changed_files }}"
+          deployer generate helm-upgrade-jobs "${{ steps.changed-files.outputs.changed_files }}"
 
       # The comment-deployment-plan-pr.yaml workflow won't have the correct context to
       # know the PR number, so we save it to a file to pass to that workflow

@@ -214,4 +214,4 @@ jobs:
         env:
           TERM: xterm
         run: |
-          deployer validate ${{ matrix.jobs.cluster_name }}
+          deployer validate all ${{ matrix.jobs.cluster_name }}

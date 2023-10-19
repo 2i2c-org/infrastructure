@@ -10,20 +10,18 @@ deployer command going forward.
 
 import json
 from base64 import b64encode
-from pathlib import Path
 
 import requests
 import typer
 
-from ..cli_app import app
-from ..utils import print_colour
-from .grafana_utils import (
+from deployer.cli_app import grafana_app
+from deployer.utils.rendering import print_colour
+
+from .utils import (
     get_grafana_admin_password,
     get_grafana_url,
     update_central_grafana_token,
 )
-
-REPO_ROOT = Path(__file__).parent.parent.parent
 
 
 def build_service_account_request_headers():
@@ -156,8 +154,8 @@ def create_deployer_token(sa_endpoint, sa_id, headers):
     return response.json()["key"]
 
 
-@app.command()
-def new_grafana_token(
+@grafana_app.command()
+def new_token(
     cluster=typer.Argument(
         ...,
         help="Name of cluster for who's Grafana deployment to generate a new deployer token",

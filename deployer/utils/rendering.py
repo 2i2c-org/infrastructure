@@ -1,6 +1,5 @@
 import os
 import subprocess
-from contextlib import contextmanager
 
 from markdownTable import markdownTable
 
@@ -142,23 +141,3 @@ Merging this PR will trigger the following deployment actions.
     # Save comment body to a file to be uploaded as an atrifact by GitHub Actions
     with open("comment-body.txt", "w") as f:
         f.write(comment_body)
-
-
-@contextmanager
-def unset_env_vars(vars):
-    """
-    Temporarily unset env vars in vars if they exist
-    """
-    orig_values = {}
-    for e in vars:
-        if e in os.environ:
-            orig_values[e] = os.environ[e]
-            # Clear values from os.environ if they are present!
-            del os.environ[e]
-
-    try:
-        yield
-    finally:
-        for e in orig_values:
-            # Put values back into os.environ when contextmanager returns
-            os.environ[e] = orig_values[e]

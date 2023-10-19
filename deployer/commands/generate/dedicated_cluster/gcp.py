@@ -13,14 +13,15 @@ import jinja2
 import typer
 from typing_extensions import Annotated
 
-from ..cli_app import app
-from ..utils import print_colour
+from deployer.utils.file_acquisition import REPO_ROOT_PATH
+from deployer.utils.rendering import print_colour
+
 from .common import (
-    REPO_ROOT,
     generate_cluster_config_file,
     generate_config_directory,
     generate_support_files,
 )
+from .dedicated_cluster_app import dedicated_cluster_app
 
 
 def generate_terraform_file(vars):
@@ -29,21 +30,21 @@ def generate_terraform_file(vars):
     required to create a GCP cluster
     """
     with open(
-        REPO_ROOT / f'terraform/gcp/projects/{vars["hub_type"]}-template.tfvars'
+        REPO_ROOT_PATH / f'terraform/gcp/projects/{vars["hub_type"]}-template.tfvars'
     ) as f:
         tfvars_template = jinja2.Template(f.read())
 
     print_colour("Generating the terraform infrastructure file...", "yellow")
     tfvars_file_path = (
-        REPO_ROOT / "terraform/gcp/projects" / f'{vars["cluster_name"]}.tfvars'
+        REPO_ROOT_PATH / "terraform/gcp/projects" / f'{vars["cluster_name"]}.tfvars'
     )
     with open(tfvars_file_path, "w") as f:
         f.write(tfvars_template.render(**vars))
     print_colour(f"{tfvars_file_path} created")
 
 
-@app.command()
-def generate_gcp_cluster(
+@dedicated_cluster_app.command()
+def gcp(
     cluster_name: Annotated[
         str, typer.Option(prompt="Please type the name of the new cluster")
     ],
