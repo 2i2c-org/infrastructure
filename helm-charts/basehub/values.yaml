@@ -611,7 +611,7 @@ jupyterhub:
                 admin_environment = custom_admin.get('extraEnv', {})
                 self.environment.update(admin_environment)
 
-                admin_service_account = custom_admin.get('serviceAccountName'):
+                admin_service_account = custom_admin.get('serviceAccountName')
                 if admin_service_account:
                     self.service_account = admin_service_account
 
