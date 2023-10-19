@@ -37,7 +37,7 @@ We have two ways to access AWS accounts.
 There are three units of organization in AWS that are relevant to 2i2c.
 
 AWS Accounts
-: Collections of services and infrastructure that generated their own bills. Kind-of like `projects` in Google Cloud Platform. For example, the Kubernetes cluster we run for `uwhackweeks` runs in an Account dedicated for this.
+: Collections of services and infrastructure that generated their own bills. Kind-of like `projects` in Google Cloud Platform. For example, the Kubernetes cluster `2i2c-aws-us` runs in a dedicated AWS Account.
 
 AWS Organizations
 : Organizations are basically collections of accounts. They make it easy to group **access** to multiple accounts via things like [AWS Single Sign On](cloud-access:aws-sso). Every AWS Organization has a "Management Account" that defines all of the other accounts in the organization.
