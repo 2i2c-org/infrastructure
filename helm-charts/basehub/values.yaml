@@ -58,6 +58,9 @@ inClusterNFS:
 global: {}
 
 jupyterhub:
+  cull:
+    # Don't allow any user pods to run for longer than 7 days by default
+    maxAge: 604800 # 7 days in seconds
   custom:
     auth:
       anonymizeUsername: false
