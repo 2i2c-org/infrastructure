@@ -29,7 +29,7 @@ hub_cloud_permissions = {
     # buckets, without having to explicitly list them. However, we don't want
     # to give access to all *internal* s3 buckets willy-nilly - this can be
     # a massive security hole, especially if terraform state is also here.
-    # As a temporary measure, we allow-list buckets here. Same as uwhackweeks.
+    # As a temporary measure, we allow-list buckets here.
     extra_iam_policy : <<-EOT
       {
         "Version": "2012-10-17",
@@ -64,7 +64,7 @@ hub_cloud_permissions = {
     # buckets, without having to explicitly list them. However, we don't want
     # to give access to all *internal* s3 buckets willy-nilly - this can be
     # a massive security hole, especially if terraform state is also here.
-    # As a temporary measure, we allow-list buckets here. Same as uwhackweeks.
+    # As a temporary measure, we allow-list buckets here.
     extra_iam_policy : <<-EOT
       {
         "Version": "2012-10-17",
