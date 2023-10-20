@@ -18,7 +18,7 @@ jupyterhub:
       - display_name: R
         description: Start a R server with tidyverse & Geospatial tools
         kubespawner_override:
-          image: rocker/binder:4.3
+          image: rocker/binder:4.3.1
           default_url: /lab
           # Ensures container working dir is homedir
           # https://github.com/2i2c-org/infrastructure/issues/2559
