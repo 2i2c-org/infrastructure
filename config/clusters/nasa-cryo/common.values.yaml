@@ -122,6 +122,13 @@ basehub:
           profile_options:
             image: &profile_list_profile_options_image
               display_name: Image
+              unlisted_choice:
+                enabled: true
+                display_name: "Custom image"
+                validation_regex: "^.+:.+$"
+                validation_message: "Must be a publicly available docker image of form <image-name>:<tag>"
+                kubespawner_override:
+                  image: "{value}"
               choices:
                 python:
                   display_name: Python
@@ -129,7 +136,7 @@ basehub:
                   slug: "python"
                   kubespawner_override:
                     # Image repo: https://github.com/CryoInTheCloud/hub-image
-                    image: "quay.io/cryointhecloud/cryo-hub-image:17aa6e2ed1a6"
+                    image: "quay.io/cryointhecloud/cryo-hub-image:f428e232bdb7"
                 rocker:
                   display_name: R
                   slug: "rocker"
