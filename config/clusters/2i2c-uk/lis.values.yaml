@@ -45,6 +45,9 @@ jupyterhub:
       # https://hub.docker.com/r/lisacuk/lishub-base
       name: "lisacuk/lishub-base"
       tag: "581a714"
+    memory:
+      guarantee: 512M
+      limit: 2G
   hub:
     config:
       JupyterHub:
