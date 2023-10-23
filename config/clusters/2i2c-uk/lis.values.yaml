@@ -45,6 +45,10 @@ jupyterhub:
       # https://hub.docker.com/r/lisacuk/lishub-base
       name: "lisacuk/lishub-base"
       tag: "581a714"
+    memory:
+      # increase as requested via https://2i2c.freshdesk.com/a/tickets/1066
+      guarantee: 512M
+      limit: 2G
   hub:
     config:
       JupyterHub:
