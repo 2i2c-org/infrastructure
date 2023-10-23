@@ -42,8 +42,8 @@ jupyterhub:
           - read:org
       Authenticator:
         admin_users:
-          - bilts  # Patrick Quinn
-          - freitagb  # Brian Freitag
+          - bilts # Patrick Quinn
+          - freitagb # Brian Freitag
   singleuser:
     profileList:
       - display_name: Python
