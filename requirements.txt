@@ -38,3 +38,5 @@ gspread==5.11.*
 # requests is used by deployer/cilogon_app.py
 requests==2.*
 
+# Used to parse units that kubernetes understands (like GiB)
+kubernetes
