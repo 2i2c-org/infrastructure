@@ -1,12 +1,15 @@
 basehub:
   userServiceAccount:
     annotations:
+      # When we renamed this hub, we did so at a DNS level and not an infrastructure
+      # level. No terraform config was touched. Hence the kubernetes annotations retain
+      # the original hub name.
       eks.amazonaws.com/role-arn: arn:aws:iam::790657130469:role/2i2c-aws-us-researchdelight
   jupyterhub:
     ingress:
-      hosts: [researchdelight.2i2c.cloud]
+      hosts: [showcase.2i2c.cloud]
       tls:
-        - hosts: [researchdelight.2i2c.cloud]
+        - hosts: [showcase.2i2c.cloud]
           secretName: https-auto-tls
     custom:
       2i2c:
@@ -15,7 +18,7 @@ basehub:
       homepage:
         templateVars:
           org:
-            name: 2i2c Research Delight
+            name: 2i2c Showcase
             url: https://2i2c.org
             logo_url: https://2i2c.org/media/logo.png
           designed_by:
