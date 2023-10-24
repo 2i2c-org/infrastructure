@@ -9,10 +9,10 @@ scale upload / download speeds.
 
 ## Building images remotely
 
-1. From a clone of the `infrastructure` repository, use the `start-docker-proxy` command.
+1. From a clone of the `infrastructure` repository, use the `debug start-docker-proxy` command.
 
    ```bash
-   deployer start-docker-proxy
+   deployer debug start-docker-proxy
    ```
 
    This will forward your *local* computer's port `23760` to the port `2376` running

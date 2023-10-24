@@ -25,12 +25,12 @@ that has monthly costs for all the clusters that are configured to have
 [bigquery export](new-gcp-project:billing-export).
 
 This sheet is currently manually updated. You can update it by running
-`deployer generate-cost-table --output 'google-sheet'`. It will by default
+`deployer generate cost-table --output 'google-sheet'`. It will by default
 update the sheet to provide information for the last 12 months. You can control
 the period by passing in the `start_month` and `end_month` parameters.
 
 If you just want to take a look at the costs in the terminal, you can also run
-`deployer generate-cost-table --output 'terminal'` instead.
+`deployer generate cost-table --output 'terminal'` instead.
 
 ## Caveats
 

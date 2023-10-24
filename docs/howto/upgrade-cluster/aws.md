@@ -52,7 +52,7 @@ cluster is unused or that the maintenance is communicated ahead of time.
    git status
 
    # generates a few new files
-   deployer generate-aws-cluster --cluster-name=$CLUSTER_NAME --cluster-region=$CLUSTER_REGION --hub-type=$HUB_TYPE
+   deployer generate dedicated-cluster aws --cluster-name=$CLUSTER_NAME --cluster-region=$CLUSTER_REGION --hub-type=$HUB_TYPE
 
    # overview changed files
    git status
