@@ -32,8 +32,8 @@ hubs:
     helm_chart: daskhub
     helm_chart_values_files:
       - daskhub-common.values.yaml
-      - researchdelight.values.yaml
-      - enc-researchdelight.secret.values.yaml
+      - showcase.values.yaml
+      - enc-showcase.secret.values.yaml
   - name: ncar-cisl
     display_name: "NCAR-CISL for UCAR"
     domain: ncar-cisl.2i2c.cloud
