@@ -9,12 +9,9 @@ nfs:
     # Name of Google Filestore share
     baseShareName: /homes/
 jupyterhub:
-  # pre-puller is necessary as the image is pretty big, and
-  # pulling during first user spawn might cause timeouts and poor user
-  # experience. Also helps with node pre-warming.
   prePuller:
-    continuous:
-      enabled: true
+    # hook prePuller shouldn't be enabled when configuring images in any other
+    # way than singleuser.image
     hook:
       enabled: true
   custom:

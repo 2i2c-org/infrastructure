@@ -107,34 +107,19 @@ jupyterhub:
 ```
 
 
-## Pre-pulled images
+## Image configuration in chart
 
-We want *consistently* faster startups wherever possible, as inconsistent start
-times is one of the big issues with folks using mybinder.org for events and
-workshops. So we enable the [pre-puller](https://z2jh.jupyter.org/en/latest/administrator/optimization.html#pulling-images-before-users-arrive)
-functionality to make startups faster and more consistent.
-
-This requires the user image is also set in config (and not via the JupyterHub
-configurator). But `tmpauthenticator` doesn't support admin accounts anyway,
-so this is fine.
+The image needs to be specified in the chart directly and not via the JupyterHub
+configurator because with `tmpauthenticator` we can't distinguish admin users to
+have such rights without providing it to every user.
 
 ```yaml
 jupyterhub:
   singleuser:
+    # image could also be configured via singleuser.profileList configuration
     image:
       name: <image-name>
       tag: <tag>
-      
-  prePuller:
-    # Startup performance is important for this event, and so we use
-    # pre-puller to make sure the images are already present on the
-    # nodes. This means image *must* be set in config, and not the configurator.
-    # tmpauthenticator doesn't support admin access anyway, so images
-    # must be set in config regardless.
-    hook:
-      enabled: true
-    continuous:
-      enabled: true
 ```
 
 ## Disabling home page customizations

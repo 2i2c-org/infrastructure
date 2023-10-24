@@ -143,9 +143,34 @@ jupyterhub:
           memory: 64Mi
         limits:
           memory: 1G
+  # prePuller is about pulling a one or more images identified via chart
+  # configuration, including singleuser.image, singleuser.profileList entries
+  # with a dedicated image, but not profileList entries with images' specified
+  # via profile_options.
   prePuller:
+    # continuous prePuller leads to the creation of a DaemonSet that starts a
+    # pod on each node to pull images.
+    #
+    # It is disabled as its only relevant for nodes started before user pods
+    # gets scheduled on them, in other cases it could delay startup and isn't
+    # expected to reduce startup times.
+    #
     continuous:
       enabled: false
+    # hook prePuller leads to the creation of a temporary DaemonSet and a pod
+    # awaiting pulling to complete before `helm upgrade` starts its main work.
+    #
+    # It is disabled as it adds notable complexity for a smaller benefit when
+    # correctly adopted. The added complexity includes:
+    #
+    # - risk of misconfiguration making image pulls not actually needed
+    # - risk of broken expectations and additional cognitive load
+    # - risk of causing significantly longer `helm upgrade` commands slowing
+    #   down our CI system
+    # - ClusterRoleBinding resources are needed for the image-awaiter Pod
+    #   involved, a resource that requires the highest k8s cluster permission
+    #   otherwise possibly not needed to deploy basehub
+    #
     hook:
       enabled: false
   proxy:
@@ -267,7 +292,7 @@ jupyterhub:
           MappingKernelManager: *server_config_mapping_kernel_manager
           NotebookApp: *server_config_server_app
           BaseFileIdManager: *server_config_base_file_id_manager
-    startTimeout: 600 # 10 mins, because sometimes we have too many new nodes coming up together
+    startTimeout: 600 # 10 mins, node startup + image pulling makes it relevant
     defaultUrl: /tree
     image:
       name: jupyter/scipy-notebook
