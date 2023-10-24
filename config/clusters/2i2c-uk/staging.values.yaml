@@ -40,6 +40,6 @@ jupyterhub:
       CILogonOAuthenticator:
         oauth_callback_url: "https://staging.uk.2i2c.cloud/hub/oauth_callback"
         allowed_idps:
-          http://google.com/accounts/o8/id:
+          http://github.com/login/oauth/authorize:
             username_derivation:
-              username_claim: "email"
+              username_claim: "preferred_username"
