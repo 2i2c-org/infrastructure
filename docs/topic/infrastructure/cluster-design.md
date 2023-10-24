@@ -96,7 +96,7 @@ pods.
 We default to always having available three machine types of 4 / 16 / 64 CPU and a memory specification of 32 / 128 / 512 GB for each notebook node poll in a 2i2c cluster. These three options have proven to be general enough to cover most usage scenarios, including events as well as being a good trade off between available options and the maintainability toil.
 
 ```{note}
-The actual resulting capacity in the k8s cluster is slightly lower and dependent of the cloud provider.
+The actual CPU and memory capacity available for use in k8s are slightly lower than the instance specification and dependent on cloud provider and instance type.
 ```
 
 The three machine types based on the cloud provider are the following:
