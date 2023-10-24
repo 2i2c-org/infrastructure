@@ -37,7 +37,12 @@ notebook_nodes = {
   "medium" : {
     min : 0,
     max : 100,
-    machine_type : "n2-highmem-16"
+    machine_type : "n2-highmem-16",
+  },
+  "large" : {
+    min : 0,
+    max : 100,
+    machine_type : "n2-highmem-64",
   },
 }
 

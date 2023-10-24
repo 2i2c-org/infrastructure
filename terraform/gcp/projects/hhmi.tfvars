@@ -22,10 +22,20 @@ hub_cloud_permissions = {}
 
 # Setup notebook node pools
 notebook_nodes = {
+  "small" : {
+    min : 0,
+    max : 100,
+    machine_type : "n2-highmem-4",
+  },
   "medium" : {
     min : 0,
     max : 100,
     machine_type : "n2-highmem-16",
+  },
+  "large" : {
+    min : 0,
+    max : 100,
+    machine_type : "n2-highmem-64",
   },
 }
 

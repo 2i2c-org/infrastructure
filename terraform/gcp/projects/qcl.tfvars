@@ -42,6 +42,11 @@ notebook_nodes = {
     max : 100,
     machine_type : "n2-standard-48",
   },
+  "larger" : {
+    min : 0,
+    max : 100,
+    machine_type : "n2-highmem-64",
+  },
   "huge" : {
     min : 0,
     max : 100,

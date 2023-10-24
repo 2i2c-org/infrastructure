@@ -70,12 +70,22 @@ hub_cloud_permissions = {
 
 # Setup notebook node pools
 notebook_nodes = {
+  "small" : {
+    min : 0,
+    max : 100,
+    machine_type : "n2-highmem-4",
+  },
   "medium" : {
     # A minimum of one is configured for LEAP to ensure quick startups at all
     # time. Cost is not a greater concern than optimizing startup times.
     min : 1,
     max : 100,
     machine_type : "n2-highmem-16",
+  },
+  "large" : {
+    min : 0,
+    max : 100,
+    machine_type : "n2-highmem-64",
   },
   "gpu-t4" : {
     min : 0,

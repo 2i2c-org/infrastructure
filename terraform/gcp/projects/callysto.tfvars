@@ -21,8 +21,18 @@ filestore_capacity_gb = 1024
 notebook_nodes = {
   "user" : {
     min : 0,
-    max : 20,
+    max : 100,
     machine_type : "n2-highmem-4"
+  },
+  "medium" : {
+    min : 0,
+    max : 100,
+    machine_type : "n2-highmem-16",
+  },
+  "large" : {
+    min : 0,
+    max : 100,
+    machine_type : "n2-highmem-64",
   },
 }
 
