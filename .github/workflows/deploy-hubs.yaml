@@ -16,6 +16,9 @@ on:
       # Exclude changes to the tests directory from
       # triggering this workflow
       - "!deployer/health_check_tests/**"
+      # Exclude changes to the README from triggering
+      # this workflow
+      - "!deployer/README.md"
       - requirements.txt
       - .github/actions/setup-deploy/**
       - helm-charts/**
@@ -28,6 +31,9 @@ on:
       # Exclude changes to the tests directory from
       # triggering this workflow
       - "!deployer/health_check_tests/**"
+      # Exclude changes to the README from triggering
+      # this workflow
+      - "!deployer/README.md"
       - requirements.txt
       - .github/actions/setup-deploy/**
       - helm-charts/**
