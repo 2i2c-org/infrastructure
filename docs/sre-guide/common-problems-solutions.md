@@ -173,7 +173,7 @@ Read more about [](cicd)
 
 Sometimes we need to inspect the job matrices the deployer generates for correctness.
 We can do this either by [inspecting the deployment plan that is posted to PRs](cicd/hub/pr-comment)
-or by running the `generate-helm-upgrade-jobs` command of the deployer [locally](tutorials:setup).
+or by running the `generate helm-upgrade-jobs` command of the deployer [locally](tutorials:setup).
 
 This will output the same deployment plan that is used in the PR comment, which is
 a table formatted by [`rich`](https://rich.readthedocs.io). However, we sometimes
@@ -186,7 +186,7 @@ export CI=true
 ```
 
 This will trigger the deployer to behave as if it is running in a CI environment.
-Principally, this means that executing `generate-helm-upgrade-jobs` will write
+Principally, this means that executing `generate helm-upgrade-jobs` will write
 two files to your local environment. The first file is called `pr-number.txt`
 and can be ignored (it is used by the workflow that posts the deployment plan
 as a comment and therefore requires the PR number). The second file we set the
@@ -203,7 +203,7 @@ our JSON formatted job matrices will be written to.
 Now we're setup, we can run:
 
 ```bash
-deployer generate-helm-update-jobs {comma separated list of changed files}
+deployer generate helm-update-jobs {comma separated list of changed files}
 ```
 
 where the list of changed files you can either provide yourself or you can copy-paste

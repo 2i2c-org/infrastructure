@@ -10,9 +10,7 @@ Sample notebook log from non-starting pod due to a dotfile that doesn't have cor
 /srv/start: line 23: exec: jupyterhub-singleuser: not found
 ```
 
-The
-[`exec-homes-shell`](https://github.com/2i2c-org/infrastructure/blob/master/deployer/README.md#exec-homes-shell)
-subcommand of the deployer can help us here.
+The `exec homes` subcommand of the deployer can help us here.
 
 ```bash
 export CLUSTER_NAME=<cluster-name>
@@ -20,7 +18,7 @@ export HUB_NAME=<hub-name>
 ```
 
 ```bash
-deployer exec-homes-shell $CLUSTER_NAME $HUB_NAME
+deployer exec homes $CLUSTER_NAME $HUB_NAME
 ```
 
 Will open a bash shell with all the home directories of all the users of `$HUB_NAME`

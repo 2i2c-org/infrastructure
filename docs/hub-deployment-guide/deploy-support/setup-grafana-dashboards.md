@@ -33,7 +33,7 @@ export CLUSTER_NAME=<cluster-name>
 ```
 
 ```bash
-deployer new-grafana-token $CLUSTER_NAME
+deployer grafana new-token $CLUSTER_NAME
 ```
 
 If the command succeeded, it should have created:
@@ -58,7 +58,7 @@ This key will be used by the [`deploy-grafana-dashboards` workflow](https://gith
 You can deploy the dashboards locally using the deployer:
 
 ```bash
-deployer deploy-grafana-dashboards $CLUSTER_NAME
+deployer grafana deploy-dashboards $CLUSTER_NAME
 ```
 
 ## Deploying the Grafana Dashboards from CI/CD

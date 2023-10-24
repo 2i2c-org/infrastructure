@@ -7,14 +7,14 @@
 The steps to enable the JupyterHub CILogonOAuthenticator for a hub are similar with the ones for enabling [GitHubOAuthenticator](auth:github-orgs):
 
 ### Create a CILogon OAuth client
-This can be achieved by using the `deployer cilogon-client-create` command.
+This can be achieved by using the `deployer cilogon-client create` command.
 
 The command needs to be passed the cluster and hub name for which a client id and secret will be generated, but also the hub type, and the hub domain, as specified in `cluster.yaml` (ex: staging.2i2c.cloud).
 
 Example script invocation that creates a CILogon OAuth client for the 2i2c dask-staging hub:
 
 ```bash
-deployer cilogon-client-create 2i2c dask-staging daskhub dask-staging.2i2c.cloud
+deployer cilogon-client create 2i2c dask-staging daskhub dask-staging.2i2c.cloud
 ```
 
 ````{note}

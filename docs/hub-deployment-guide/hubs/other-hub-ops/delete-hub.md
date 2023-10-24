@@ -22,7 +22,7 @@ Especially if we think that users will want this information in the future (or i
 
 ### 1.2. Delete data
 
-Delete user home directories using the [deployer `exec-homes-shell`](https://github.com/2i2c-org/infrastructure/blob/master/deployer/README.md#exec-homes-shell) option.
+Delete user home directories using the `deployer exec homes`command.
 
 ```bash
 export CLUSTER_NAME=<cluster-name>
@@ -30,7 +30,7 @@ export HUB_NAME=<hub-name>
 ```
 
 ```bash
-deployer exec-homes-shell $CLUSTER_NAME $HUB_NAME
+deployer exec homes $CLUSTER_NAME $HUB_NAME
 ```
 
 This should get you a shell with the home directories of all the users on the given hub. Delete all user home directories with:
@@ -53,19 +53,19 @@ The naming convention followed when creating these apps is: `$CLUSTER_NAME-$HUB_
 
 ### CILogon OAuth application
 
-Similarly, for each hub that uses CILogon, we dynamically create an OAuth [client application](https://cilogon.github.io/oa4mp/server/manuals/dynamic-client-registration.html) in CILogon using the `deployer cilogon-client-create` command.
-Use the `deployer cilogon-client-delete` command to delete this CILogon client when a hub is removed:
+Similarly, for each hub that uses CILogon, we dynamically create an OAuth [client application](https://cilogon.github.io/oa4mp/server/manuals/dynamic-client-registration.html) in CILogon using the `deployer cilogon-client create` command.
+Use the `deployer cilogon-client delete` command to delete this CILogon client when a hub is removed:
 
 You'll need to get all clients with:
 
 ```bash
-deployer cilogon-client-get-all
+deployer cilogon-client get-all
 ```
 
 And then identify the client of the hub and delete based on its id with:
 
 ```bash
-deployer cilogon-client-delete --client-id cilogon:/client_id/<id> $CLUSTER_NAME $HUB_NAME
+deployer cilogon-client delete --client-id cilogon:/client_id/<id> $CLUSTER_NAME $HUB_NAME
 ```
 
 This will clean up some of the hub values related to auth and must be done prior to removing the hub files.
