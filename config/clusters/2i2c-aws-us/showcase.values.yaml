@@ -35,6 +35,7 @@ basehub:
         JupyterHub:
           authenticator_class: github
         GitHubOAuthenticator:
+          oauth_callback_url: "https://showcase.2i2c.cloud/hub/oauth_callback"
           populate_teams_in_auth_state: true
           allowed_organizations:
             - 2i2c-org:research-delight-team
