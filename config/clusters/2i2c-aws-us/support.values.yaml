@@ -34,3 +34,8 @@ cluster-autoscaler:
   autoDiscovery:
     clusterName: 2i2c-aws-us
   awsRegion: us-west-2
+
+redirects:
+  rules:
+    - from: researchdelight.2i2c.cloud
+      to: showcase.2i2c.cloud
