@@ -91,9 +91,9 @@ that `prometheus-server` may require more memory than is available.
 On EKS we always use the `r5.xlarge` nodes to avoid running low on allocatable
 pods.
 
-#### For notebook node pool
+#### For user server node pool
 
-We default to always having available three machine types of 4 / 16 / 64 CPU and a memory specification of 32 / 128 / 512 GB for each notebook node poll in a 2i2c cluster. These three options have proven to be general enough to cover most usage scenarios, including events as well as being a good trade off between available options and the maintainability toil.
+We default to always having available three machine types of 4 / 16 / 64 CPU and a memory specification of 32 / 128 / 512 GB for each user server node poll in a 2i2c cluster. These three options have proven to be general enough to cover most usage scenarios, including events as well as being a good trade off between available options and the maintainability toil.
 
 ```{note}
 The actual CPU and memory capacity available for use in k8s are slightly lower than the instance specification and dependent on cloud provider and instance type.
