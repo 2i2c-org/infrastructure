@@ -47,42 +47,43 @@ jupyterhub:
       tag: "581a714"
     # Added profileList per https://2i2c.freshdesk.com/a/tickets/1066
     profileList:
-      - mem_0_4:
-          display_name: 0.4 GB RAM, upto 3.485 CPUs
-          kubespawner_override:
-            mem_guarantee: 457785792
-            mem_limit: 457785792
-            cpu_guarantee: 0.054453125
-            cpu_limit: 3.485
-            node_selector:
-              node.kubernetes.io/instance-type: n2-highmem-4
-      - mem_0_9:
-          display_name: 0.9 GB RAM, upto 3.485 CPUs
-          kubespawner_override:
-            mem_guarantee: 915571584
-            mem_limit: 915571584
-            cpu_guarantee: 0.10890625
-            cpu_limit: 3.485
-            node_selector:
-              node.kubernetes.io/instance-type: n2-highmem-4
-      - mem_1_7:
-          display_name: 1.7 GB RAM, upto 3.485 CPUs
-          kubespawner_override:
-            mem_guarantee: 1831143168
-            mem_limit: 1831143168
-            cpu_guarantee: 0.2178125
-            cpu_limit: 3.485
-            node_selector:
-              node.kubernetes.io/instance-type: n2-highmem-4
-      - mem_3_4:
-          display_name: 3.4 GB RAM, upto 3.485 CPUs
-          kubespawner_override:
-            mem_guarantee: 3662286336
-            mem_limit: 3662286336
-            cpu_guarantee: 0.435625
-            cpu_limit: 3.485
-            node_selector:
-              node.kubernetes.io/instance-type: n2-highmem-4
+      - display_name: 0.4 GB RAM, upto 3.485 CPUs
+        default: true
+        slug: mem_0_4
+        kubespawner_override:
+          mem_guarantee: 457785792
+          mem_limit: 457785792
+          cpu_guarantee: 0.054453125
+          cpu_limit: 3.485
+          node_selector:
+            node.kubernetes.io/instance-type: n2-highmem-4
+      - display_name: 0.9 GB RAM, upto 3.485 CPUs
+        slug: mem_0_9
+        kubespawner_override:
+          mem_guarantee: 915571584
+          mem_limit: 915571584
+          cpu_guarantee: 0.10890625
+          cpu_limit: 3.485
+          node_selector:
+            node.kubernetes.io/instance-type: n2-highmem-4
+      - display_name: 1.7 GB RAM, upto 3.485 CPUs
+        slug: mem_1_7
+        kubespawner_override:
+          mem_guarantee: 1831143168
+          mem_limit: 1831143168
+          cpu_guarantee: 0.2178125
+          cpu_limit: 3.485
+          node_selector:
+            node.kubernetes.io/instance-type: n2-highmem-4
+      - display_name: 3.4 GB RAM, upto 3.485 CPUs
+        slug: mem_3_4
+        kubespawner_override:
+          mem_guarantee: 3662286336
+          mem_limit: 3662286336
+          cpu_guarantee: 0.435625
+          cpu_limit: 3.485
+          node_selector:
+            node.kubernetes.io/instance-type: n2-highmem-4
   hub:
     config:
       JupyterHub:
