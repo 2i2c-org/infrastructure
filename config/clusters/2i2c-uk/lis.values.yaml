@@ -45,10 +45,21 @@ jupyterhub:
       # https://hub.docker.com/r/lisacuk/lishub-base
       name: "lisacuk/lishub-base"
       tag: "581a714"
-    memory:
-      # increase as requested via https://2i2c.freshdesk.com/a/tickets/1066
-      guarantee: 512M
-      limit: 2G
+    # Added profileList per https://2i2c.freshdesk.com/a/tickets/1066
+    profileList:
+      - display_name: "Small: ~512 MB RAM / ~0.5 CPU"
+        slug: mem_512m
+        default: true
+        kubespawner_override:
+          # increase as requested via https://2i2c.freshdesk.com/a/tickets/1066
+          mem_guarantee: 512M
+          mem_limit: 1G
+      - display_name: "Large: ~1 GB RAM / ~0.5 CPU"
+        slug: mem_1g
+        kubespawner_override:
+          # increase as requested via https://2i2c.freshdesk.com/a/tickets/1066
+          mem_guarantee: 1G
+          mem_limit: 2G
   hub:
     config:
       JupyterHub:
