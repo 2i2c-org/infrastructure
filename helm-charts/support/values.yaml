@@ -41,6 +41,11 @@ ingress-nginx:
         # the default request of 90Mi. To protect it from being evicted by using
         # more memory than requested, we have increased the memory request.
         memory: 250Mi # chart's default is 90Mi
+    # allowSnippetAnnotations being set to false by default was the result of
+    # the below linked CVE. We should investigate if there are other ways we can
+    # use this type of config.
+    # https://github.com/kubernetes/ingress-nginx/issues/7837
+    allowSnippetAnnotations: true
 
 # prometheus is responsible for collecting metrics and informing grafana about
 # the metrics on request. It comes with several dependency charts, where we
