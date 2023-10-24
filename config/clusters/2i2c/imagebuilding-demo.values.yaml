@@ -138,7 +138,7 @@ jupyterhub:
       GitHubOAuthenticator:
         oauth_callback_url: https://imagebuilding-demo.2i2c.cloud/hub/oauth_callback
         allowed_organizations:
-          - 2i2c-imagebuilding-hub-access
+          - 2i2c-demo-hub-access
           - veda-analytics-access:all-users
           - veda-analytics-access:collaborator-access
           - CYGNSS-VEDA:cygnss-iwg
