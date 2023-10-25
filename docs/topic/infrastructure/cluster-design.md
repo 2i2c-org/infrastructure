@@ -98,7 +98,7 @@ pods.
 #### For nodes where user servers will be scheduled on
 
 ```{note}
-In the 2i2c infrastructure, these nodes are grouped under slightly different names, depending on the clod provider, but they all refer ot the group of nodes where user servers will be scheduled on. They are called:
+In the 2i2c infrastructure, these nodes are grouped under slightly different names, depending on the cloud provider, but they all refer to the group of nodes where user servers will be scheduled on. They are called:
 
 - "notebook" node pools in the terraform config of [GCP clusters](https://github.com/2i2c-org/infrastructure/blob/d4224ce65d53ee29656bef6d45cbf7f3d0d10df8/terraform/gcp/cluster.tf#L243)
 - "nb-<instance-name>" node groups in the eksctl config of [AWS clusters](https://github.com/2i2c-org/infrastructure/blob/d4224ce65d53ee29656bef6d45cbf7f3d0d10df8/eksctl/template.jsonnet#L113-L132)
