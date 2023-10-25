@@ -38,7 +38,9 @@ basehub:
           oauth_callback_url: "https://showcase.2i2c.cloud/hub/oauth_callback"
           populate_teams_in_auth_state: true
           allowed_organizations:
+            - 2i2c-org:hub-access-for-2i2c-staff
             - 2i2c-org:research-delight-team
+            - 2i2c-demo-hub-access:showcase-topst
           scope:
             - read:org
         Authenticator:
@@ -48,6 +50,34 @@ basehub:
         name: quay.io/2i2c/researchdelight-image
         tag: "872f0c4578af"
       profileList:
+        - display_name: "NASA TOPS-T ScienceCore"
+          description: "For collaborative work on 2i2c/MD's NASA TOPS-T ScienceCore Module"
+          allowed_teams:
+            - 2i2c-demo-hub-access:showcase-topst
+            - 2i2c-org:hub-access-for-2i2c-staff
+          profile_options:
+            image:
+              display_name: Image
+              unlisted_choice:
+                enabled: True
+                display_name: "Custom image"
+                validation_regex: "^.+:.+$"
+                validation_message: "Must be a publicly available docker image, of form <image-name>:<tag>"
+                kubespawner_override:
+                  image: "{value}"
+              choices:
+                opera:
+                  display_name: Opera App
+                  default: true
+                  slug: opera
+                  kubespawner_override:
+                    image: quay.io/2i2c/researchdelight-image:c799b705ce90
+          kubespawner_override:
+            mem_guarantee: 7.234G
+            cpu_guarantee: 0.1
+            mem_limit: null
+            node_selector:
+              node.kubernetes.io/instance-type: r5.xlarge
         - display_name: "Shared Small: 1-4 CPU, 8-32 GB"
           description: "A shared machine, the recommended option until you experience a limitation."
           allowed_teams: &allowed_teams
