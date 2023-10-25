@@ -79,6 +79,12 @@ up to two replicas unless there are very many nodes in the k8s cluster.
 
 ### Our instance type choice
 
+#### For nodes where core services will be scheduled on
+
+```{note}
+In the 2i2c infrastructure, these node groups always have the word "core" in their name.
+```
+
 We default to setting up new k8s clusters's core node pool with instance types
 of either 2 CPU and 16GB of memory or 4 CPU and 32GB of memory.
 
@@ -88,6 +94,36 @@ that `prometheus-server` may require more memory than is available.
 
 On EKS we always use the `r5.xlarge` nodes to avoid running low on allocatable
 pods.
+
+#### For nodes where user servers will be scheduled on
+
+```{note}
+In the 2i2c infrastructure, these nodes are grouped under slightly different names, depending on the cloud provider, but they all refer to the group of nodes where user servers will be scheduled on. They are called:
+
+- "notebook" node pools in the terraform config of [GCP clusters](https://github.com/2i2c-org/infrastructure/blob/d4224ce65d53ee29656bef6d45cbf7f3d0d10df8/terraform/gcp/cluster.tf#L243)
+- "nb-<instance-name>" node groups in the eksctl config of [AWS clusters](https://github.com/2i2c-org/infrastructure/blob/d4224ce65d53ee29656bef6d45cbf7f3d0d10df8/eksctl/template.jsonnet#L113-L132)
+- "user_pool" node pools in the terraform config of [Azure cluster](https://github.com/2i2c-org/infrastructure/blob/d4224ce65d53ee29656bef6d45cbf7f3d0d10df8/terraform/azure/main.tf#L138-L163)
+```
+
+We default to always having available three machine types of 4 / 16 / 64 CPU and a memory specification of 32 / 128 / 512 GB for each user server node pool in a 2i2c cluster. These three options have proven to be general enough to cover most usage scenarios, including events as well as being a good trade off between available options and the maintainability toil.
+
+```{note}
+The actual CPU and memory capacity available for use in k8s are slightly lower than the instance specification and dependent on cloud provider and instance type.
+```
+
+The three machine types based on the cloud provider are the following:
+- [GKE](https://cloud.google.com/compute/docs/general-purpose-machines)
+  - n2-highmem-4
+  - n2-highmem-16
+  - n2-highmem-64
+- [EKS](https://aws.amazon.com/ec2/instance-types/r5/)
+  - r5.xlarge
+  - r5.4xlarge
+  - r5.16xlarge
+- [AKS](https://learn.microsoft.com/en-us/azure/virtual-machines/eav4-easv4-series)
+  - Standard_E4a_v4
+  - Standard_E16_v4
+  - Standard_E64_v4
 
 ## Network Policy
 
