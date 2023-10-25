@@ -1,0 +1,184 @@
+# Contains instances' total and allocatable capacity reported from our k8s
+# clusters via "kubectl get node".
+#
+# An instance type's reported total capacity and allocatable capacity has been
+# found to vary slightly, perhaps due to changes in the node pool's k8s
+# versions. To keep an eye on that situation, we keep track of the lowest low
+# and highest high.
+#
+# Note that n2-highmem-*, r5.*large, and Standard_E*s_v5 the same kind of
+# instances, all providing a ratio of 1:8 for CPU:memory and the 3:rd generation
+# Intel Xeon (Icy Lake) CPU.
+#
+# This file isn't updated by automation, but can easily be updated by manually
+# by running a command once for each cluster:
+#
+#     ls config/clusters | xargs -I {} deployer generate resource-allocation instance-capacity {}
+#
+# GKE instance types
+n2-highmem-2:
+  cpu_capacity_low: 2.0
+  cpu_capacity_high: 2.0
+  cpu_allocatable_low: 1.93
+  cpu_allocatable_high: 1.93
+  mem_capacity_low: 15.631Gi
+  mem_capacity_high: 15.634Gi
+  mem_allocatable_low: 12.972Gi
+  mem_allocatable_high: 12.975Gi
+n2-highmem-4:
+  cpu_capacity_low: 4.0
+  cpu_capacity_high: 4.0
+  cpu_allocatable_low: 3.92
+  cpu_allocatable_high: 3.92
+  mem_capacity_low: 31.357Gi
+  mem_capacity_high: 31.357Gi
+  mem_allocatable_low: 27.738Gi
+  mem_allocatable_high: 27.738Gi
+n2-highmem-8:
+  cpu_capacity_low: 8.0
+  cpu_capacity_high: 8.0
+  cpu_allocatable_low: 7.91
+  cpu_allocatable_high: 7.91
+  mem_capacity_low: 62.809Gi
+  mem_capacity_high: 62.809Gi
+  mem_allocatable_low: 57.27Gi
+  mem_allocatable_high: 57.27Gi
+n2-highmem-16:
+  cpu_capacity_low: 16.0
+  cpu_capacity_high: 16.0
+  cpu_allocatable_low: 15.89
+  cpu_allocatable_high: 15.89
+  mem_capacity_low: 125.807Gi
+  mem_capacity_high: 125.81Gi
+  mem_allocatable_low: 116.549Gi
+  mem_allocatable_high: 116.551Gi
+n2-highmem-32:
+  cpu_capacity_low: 32.0
+  cpu_capacity_high: 32.0
+  cpu_allocatable_low: 31.85
+  cpu_allocatable_high: 31.85
+  mem_capacity_low: 251.897Gi
+  mem_capacity_high: 251.897Gi
+  mem_allocatable_low: 240.079Gi
+  mem_allocatable_high: 240.079Gi
+n1-highmem-4:
+  cpu_capacity_low: 4.0
+  cpu_capacity_high: 4.0
+  cpu_allocatable_low: 3.92
+  cpu_allocatable_high: 3.92
+  mem_capacity_low: 25.451Gi
+  mem_capacity_high: 25.451Gi
+  mem_allocatable_low: 22.192Gi
+  mem_allocatable_high: 22.192Gi
+e2-highmem-16:
+  cpu_capacity_low: 16.0
+  cpu_capacity_high: 16.0
+  cpu_allocatable_low: 15.89
+  cpu_allocatable_high: 15.89
+  mem_capacity_low: 125.807Gi
+  mem_capacity_high: 125.807Gi
+  mem_allocatable_low: 116.549Gi
+  mem_allocatable_high: 116.549Gi
+n1-standard-2:
+  cpu_capacity_low: 2.0
+  cpu_capacity_high: 2.0
+  cpu_allocatable_low: 1.93
+  cpu_allocatable_high: 1.93
+  mem_capacity_low: 7.276Gi
+  mem_capacity_high: 7.276Gi
+  mem_allocatable_low: 5.483Gi
+  mem_allocatable_high: 5.483Gi
+n1-standard-8:
+  cpu_capacity_low: 8.0
+  cpu_capacity_high: 8.0
+  cpu_allocatable_low: 7.91
+  cpu_allocatable_high: 7.91
+  mem_capacity_low: 29.387Gi
+  mem_capacity_high: 29.387Gi
+  mem_allocatable_low: 25.888Gi
+  mem_allocatable_high: 25.888Gi
+n1-standard-16:
+  cpu_capacity_low: 16.0
+  cpu_capacity_high: 16.0
+  cpu_allocatable_low: 15.89
+  cpu_allocatable_high: 15.89
+  mem_capacity_low: 58.87Gi
+  mem_capacity_high: 58.87Gi
+  mem_allocatable_low: 53.571Gi
+  mem_allocatable_high: 53.571Gi
+
+# EKS instance types
+r5.xlarge:
+  cpu_capacity_low: 4.0
+  cpu_capacity_high: 4.0
+  cpu_allocatable_low: 3.92
+  cpu_allocatable_high: 3.92
+  mem_capacity_low: 30.887Gi
+  mem_capacity_high: 30.907Gi
+  mem_allocatable_low: 29.917Gi
+  mem_allocatable_high: 29.937Gi
+r5.2xlarge:
+  cpu_capacity_low: 8.0
+  cpu_capacity_high: 8.0
+  cpu_allocatable_low: 7.91
+  cpu_allocatable_high: 7.91
+  mem_capacity_low: 62.011Gi
+  mem_capacity_high: 62.011Gi
+  mem_allocatable_low: 61.041Gi
+  mem_allocatable_high: 61.041Gi
+r5.4xlarge:
+  cpu_capacity_low: 16.0
+  cpu_capacity_high: 16.0
+  cpu_allocatable_low: 15.89
+  cpu_allocatable_high: 15.89
+  mem_capacity_low: 124.364Gi
+  mem_capacity_high: 124.364Gi
+  mem_allocatable_low: 121.504Gi
+  mem_allocatable_high: 121.504Gi
+m5.large:
+  cpu_capacity_low: 2.0
+  cpu_capacity_high: 2.0
+  cpu_allocatable_low: 1.93
+  cpu_allocatable_high: 1.93
+  mem_capacity_low: 7.473Gi
+  mem_capacity_high: 7.473Gi
+  mem_allocatable_low: 6.815Gi
+  mem_allocatable_high: 6.815Gi
+m5.xlarge:
+  cpu_capacity_low: 4.0
+  cpu_capacity_high: 4.0
+  cpu_allocatable_low: 3.92
+  cpu_allocatable_high: 3.92
+  mem_capacity_low: 15.172Gi
+  mem_capacity_high: 15.344Gi
+  mem_allocatable_low: 14.202Gi
+  mem_allocatable_high: 14.375Gi
+g4dn.xlarge:
+  cpu_capacity_low: 4.0
+  cpu_capacity_high: 4.0
+  cpu_allocatable_low: 3.92
+  cpu_allocatable_high: 3.92
+  mem_capacity_low: 15.333Gi
+  mem_capacity_high: 15.333Gi
+  mem_allocatable_low: 14.675Gi
+  mem_allocatable_high: 14.675Gi
+
+# AKS instance types
+Standard_E4s_v3:
+  cpu_capacity_low: 4.0
+  cpu_capacity_high: 4.0
+  cpu_allocatable_low: 3.86
+  cpu_allocatable_high: 3.86
+  mem_capacity_low: 31.354Gi
+  mem_capacity_high: 31.354Gi
+  mem_allocatable_low: 27.062Gi
+  mem_allocatable_high: 27.062Gi
+Standard_E8s_v3:
+  cpu_capacity_low: 8.0
+  cpu_capacity_high: 8.0
+  cpu_allocatable_low: 7.82
+  cpu_allocatable_high: 7.82
+  mem_capacity_low: 62.806Gi
+  mem_capacity_high: 62.806Gi
+  mem_allocatable_low: 56.594Gi
+  mem_allocatable_high: 56.594Gi

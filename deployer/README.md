@@ -88,7 +88,11 @@ The `deployer.py` file is the main file, that contains all of the commands regis
 │   │   |   ├── decision.py
 │   │   |   └── jobs.py
 |   |   └── resource_allocation
+│   │       ├── daemonset_overhead.py
+│   │       ├── daemonset_overhead.yaml
 │   │       ├── generate_choices.py
+│   │       ├── instance_capacity.py
+│   │       ├── instance_capacity.yaml
 │   │       ├── node-capacity-info.json
 │   │       ├── resource_allocation_app.py
 │   │       └── update_nodeinfo.py
@@ -263,6 +267,12 @@ This sub-command can be used to generate the resource allocation choices for giv
 
 ##### `generate resource-allocation choices`
 This generates a custom number of resource allocation choices for a certain instance type, depending on a certain chosen strategy that can be used in the profile list of a hub.
+
+##### `generate resource-allocation daemonset-overhead`
+Updates `daemonset_overhead.yaml` with an individual cluster's DaemonSets with running pods combined requests of CPU and memory, excluding GPU related DaemonSets.
+
+##### `generate resource-allocation instance-capacity`
+Updates `instance_capacity.yaml` with instance types' total and allocatable capacity reported by `kubectl get node`.
 
 ##### `generate resource-allocation node-info-update`
 This updates the json file `node-capacity-info.json` with info about the capacity of a node of a certain type. This file is then used for generating the resource choices.
