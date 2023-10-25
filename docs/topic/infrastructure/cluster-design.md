@@ -105,7 +105,7 @@ In the 2i2c infrastructure, these nodes are grouped under slightly different nam
 - "user_pool" node pools in the terraform config of [Azure cluster](https://github.com/2i2c-org/infrastructure/blob/d4224ce65d53ee29656bef6d45cbf7f3d0d10df8/terraform/azure/main.tf#L138-L163)
 ```
 
-We default to always having available three machine types of 4 / 16 / 64 CPU and a memory specification of 32 / 128 / 512 GB for each user server node poll in a 2i2c cluster. These three options have proven to be general enough to cover most usage scenarios, including events as well as being a good trade off between available options and the maintainability toil.
+We default to always having available three machine types of 4 / 16 / 64 CPU and a memory specification of 32 / 128 / 512 GB for each user server node pool in a 2i2c cluster. These three options have proven to be general enough to cover most usage scenarios, including events as well as being a good trade off between available options and the maintainability toil.
 
 ```{note}
 The actual CPU and memory capacity available for use in k8s are slightly lower than the instance specification and dependent on cloud provider and instance type.
