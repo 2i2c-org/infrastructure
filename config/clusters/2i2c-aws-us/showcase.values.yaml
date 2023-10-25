@@ -54,6 +54,7 @@ basehub:
           description: "For collaborative work on 2i2c/MD's NASA TOPS-T ScienceCore Module"
           allowed_teams:
             - 2i2c-demo-hub-access:showcase-topst
+            - 2i2c-org:hub-access-for-2i2c-staff
           profile_options:
             image:
               display_name: Image
