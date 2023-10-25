@@ -72,17 +72,17 @@ basehub:
                   display_name: Pangeo Tensorflow ML Notebook
                   slug: "tensorflow"
                   kubespawner_override:
-                    image: "pangeo/ml-notebook:2023.05.08"
+                    image: "pangeo/ml-notebook:2023.10.24"
                 base-notebook:
                   display_name: Pangeo Base Notebook
                   slug: "base-notebook"
                   kubespawner_override:
-                    image: "pangeo/base-notebook:2023.05.08"
+                    image: "pangeo/base-notebook:2023.10.24"
                 pangeo-notebook:
                   display_name: Pangeo Notebook
                   slug: "pangeo-notebook"
                   kubespawner_override:
-                    image: "pangeo/pangeo-notebook:2023.05.08"
+                    image: "pangeo/pangeo-notebook:2023.10.24"
           kubespawner_override:
             # Expllicitly unset mem_limit, so it overrides the default memory limit we set in
             # basehub/values.yaml
