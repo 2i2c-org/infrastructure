@@ -50,10 +50,10 @@ basehub:
         tag: "872f0c4578af"
       profileList:
         - display_name: "NASA TOPS-T ScienceCore"
-          description: "Hub for collaborative work on 2i2c/MD's NASA TOPS-T ScienceCore Module"
+          description: "For collaborative work on 2i2c/MD's NASA TOPS-T ScienceCore Module"
           allowed_teams:
             - 2i2c-demo-hub-access:showcase-topst
-          profile_options: &profile_options
+          profile_options:
             image:
               display_name: Image
               unlisted_choice:
@@ -64,7 +64,7 @@ basehub:
                 kubespawner_override:
                   image: "{value}"
               choices:
-                pangeo:
+                opera:
                   display_name: Opera App
                   default: true
                   slug: opera
