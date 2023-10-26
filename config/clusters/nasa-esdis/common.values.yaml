@@ -38,6 +38,7 @@ jupyterhub:
         allowed_organizations:
           - 2i2c-org:hub-access-for-2i2c-staff
           - nasa:earthdata-cloud-hub-maintainer
+          - veda-analytics-access:esdis-hub-beta-testers
         scope:
           - read:org
       Authenticator:
