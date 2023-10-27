@@ -8,7 +8,7 @@ from dateutil.parser import parse
 from kubernetes.utils.quantity import parse_quantity
 from ruamel.yaml import YAML
 
-from ..cli_app import app
+from .resource_allocation_app import resource_allocation_app
 
 HERE = Path(__file__).parent
 
@@ -133,12 +133,17 @@ def get_node_capacity_info(instance_type: str):
     }
 
 
-@app.command()
-def update_node_capacity_info(
+@resource_allocation_app.command()
+def node_info_update(
     instance_type: str = typer.Argument(
         ..., help="Instance type to generate Resource Allocation options for"
     ),
 ):
+    """
+    Generates a new entry holding info about the capacity of a node of a certain instance type
+    or updates an existing one that is then used to update a json file called `node-capacity-info.json`.
+    This file is then used for generating the resource choices.
+    """
     try:
         with open(HERE / "node-capacity-info.json") as f:
             instances_info = json.load(f)

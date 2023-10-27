@@ -6,7 +6,7 @@ from pathlib import Path
 import typer
 from ruamel.yaml import YAML
 
-from ..cli_app import app
+from .resource_allocation_app import resource_allocation_app
 
 yaml = YAML(typ="rt")
 
@@ -99,8 +99,8 @@ def proportional_memory_strategy(
     return choices
 
 
-@app.command()
-def generate_resource_allocation_choices(
+@resource_allocation_app.command()
+def choices(
     instance_type: str = typer.Argument(
         ..., help="Instance type to generate Resource Allocation options for"
     ),
@@ -110,6 +110,10 @@ def generate_resource_allocation_choices(
         help="Strategy to use for generating resource allocation choices choices",
     ),
 ):
+    """
+    Generate a custom number of resource allocation choices for a certain instance type,
+    depending on a certain chosen strategy.
+    """
     with open(HERE / "node-capacity-info.json") as f:
         nodeinfo = json.load(f)
 

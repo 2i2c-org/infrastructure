@@ -20,7 +20,8 @@ validate_app = typer.Typer(pretty_exceptions_show_locals=False)
 app.add_typer(
     generate_app,
     name="generate",
-    help="Generate various types of assets. It currently supports generating files related to billing or new, dedicated clusters.",
+    help="Generate various types of assets. It currently supports generating files related to billing, "
+    "new dedicated clusters, helm upgrade strategies and resource allocation.",
 )
 app.add_typer(
     cilogon_client_app,
