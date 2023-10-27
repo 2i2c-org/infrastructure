@@ -85,8 +85,13 @@ The `deployer.py` file is the main file, that contains all of the commands regis
 │   │   │   ├── dedicate_cluster_app.py
 │   │   │   └── gcp.py
 │   │   └── helm_upgrade
-│   │       ├── decision.py
-│   │       └── jobs.py
+│   │   |   ├── decision.py
+│   │   |   └── jobs.py
+|   |   └── resource_allocation
+│   │       ├── generate_choices.py
+│   │       ├── node-capacity-info.json
+│   │       ├── resource_allocation_app.py
+│   │       └── update_nodeinfo.py
 │   ├── grafana
 │   │   ├── central_grafana.py
 │   │   ├── deploy_dashboards.py
@@ -139,8 +144,8 @@ This section descripts some of the subcommands the `deployer` can carry out.
 │ deploy-support           Deploy support components to a cluster                                                      │
 │ exec                     Execute a shell in various parts of the infra. It can be used for poking around, or         │
 │                          debugging issues.                                                                           │
-│ generate                 Generate various types of assets. It currently supports generating files related to billing │
-│                          or new, dedicated clusters.                                                                 │
+│ generate                 Generate various types of assets. It currently supports generating files related to         │
+│                          billing, new dedicated clusters, helm upgrade strategies and resource allocation.           │
 │ grafana                  Manages Grafana related workflows.                                                          │
 │ run-hub-health-check     Run a health check on a given hub on a given cluster. Optionally check scaling of dask      │
 │                          workers if the hub is a daskhub.                                                            │
@@ -252,6 +257,15 @@ These defaults are described in each file template.
   The cluster configuration directory is generated based on the templates in:
     - (`config/clusters/templates/gcp`)[https://github.com/2i2c-org/infrastructure/blob/master/config/clusters/templates/gcp]
 
+#### `generate resource-allocation`
+
+This sub-command can be used to generate the resource allocation choices for given instance type and a given optimization strategy.
+
+##### `generate resource-allocation choices`
+This generates a custom number of resource allocation choices for a certain instance type, depending on a certain chosen strategy that can be used in the profile list of a hub.
+
+##### `generate resource-allocation node-info-update`
+This updates the json file `node-capacity-info.json` with info about the capacity of a node of a certain type. This file is then used for generating the resource choices.
 
 ### The `grafana` sub-command
 This deployer sub-command manages all of the available functions related to Grafana.

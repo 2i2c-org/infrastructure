@@ -141,7 +141,8 @@ def node_info_update(
 ):
     """
     Generates a new entry holding info about the capacity of a node of a certain instance type
-    or updates existing one in a json file called `node-capacity-info.json`.
+    or updates an existing one that is then used to update a json file called `node-capacity-info.json`.
+    This file is then used for generating the resource choices.
     """
     try:
         with open(HERE / "node-capacity-info.json") as f:
