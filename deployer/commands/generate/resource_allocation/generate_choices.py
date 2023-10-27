@@ -6,7 +6,7 @@ from pathlib import Path
 import typer
 from ruamel.yaml import YAML
 
-from deployer.cli_app import generate_app
+from .resource_allocation_app import resource_allocation_app
 
 yaml = YAML(typ="rt")
 
@@ -99,8 +99,8 @@ def proportional_memory_strategy(
     return choices
 
 
-@generate_app.command()
-def resource_allocation_choices(
+@resource_allocation_app.command()
+def choices(
     instance_type: str = typer.Argument(
         ..., help="Instance type to generate Resource Allocation options for"
     ),
