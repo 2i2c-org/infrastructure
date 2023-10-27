@@ -36,16 +36,16 @@ notebook_nodes = {
     max : 100,
     machine_type : "n2-highmem-4"
   },
-  "n2-highmem-16" : {
+  "medium" : {
     min : 0,
     max : 100,
     machine_type : "n2-highmem-16"
   },
-  "n2-highmem-64" : {
+  "large" : {
     min : 0,
     max : 100,
     machine_type : "n2-highmem-64"
-  }
+  },
 }
 
 # Setup a single node pool for dask workers.
