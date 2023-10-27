@@ -18,7 +18,7 @@ basehub:
         templateVars:
           org:
             url: https://www.hhmi.org/
-            logo_url: https://www.hhmi.org/sites/default/files/Logos/JPG/HHMI-vertical-signature-color.jpg
+            logo_url: https://drive.google.com/uc?export=view&id=1tg5PRRT3_VjDaxq6Ax_JA3S92FuQ_NFt
           designed_by:
             name: 2i2c
             url: https://2i2c.org
@@ -30,18 +30,79 @@ basehub:
             url: ""
             custom_html: <a href="https://www.hhmi.org/">HHMI</a> and <a href="https://strategiesos.org/about/">Stratos</a>
     singleuser:
-      image:
-        name: pangeo/pangeo-notebook
-        tag: "2023.09.11"
-      nodeSelector:
-        node.kubernetes.io/instance-type: n2-highmem-16
-      cpu:
-        guarantee: 0.5
-        limit: 14
-      memory:
-        guarantee: 4G
-        limit: 16G
+      defaultUrl: /lab
+      profileList:
+        - display_name: "Frank Loren Lab"
+          default: true
+          description: "Spyglass-NWB container for the Frank Loren Lab"
+          slug: frankloren
+          profile_options:
+            image:
+              display_name: Image
+              choices:
+                spyglass:
+                  display_name: Spyglass-NWB
+                  slug: spyglass
+                  kubespawner_override:
+                    image: "quay.io/2i2c/hhmi-spyglass-nwb-image:f543e3444053"
+        - display_name: "Community Images"
+          description: "Start a container with a community maintained image"
+          slug: community
+          profile_options:
+            image:
+              display_name: Image
+              choices:
+                pangeo:
+                  display_name: Pangeo Notebook
+                  slug: pangeo
+                  default: true
+                  kubespawner_override:
+                    # Use JupyterLab <4 so that jupyterlab-git works
+                    image: "pangeo/pangeo-notebook:2023.07.05"
+                rocker:
+                  display_name: Rocker RStudio
+                  slug: rocker
+                  kubespawner_override:
+                    image: rocker/binder:4.3
+                    # Launch RStudio after the user logs in
+                    default_url: /rstudio
+                    # Ensures container working dir is homedir
+                    # https://github.com/2i2c-org/infrastructure/issues/2559
+                    working_dir: /home/rstudio
+                    # Because this is a list, it will override our default volume mounts
+                    volume_mounts:
+                      # Mount the user home directory
+                      - name: home
+                        mountPath: /home/rstudio
+                        subPath: "{username}"
+                      # Mount the shared readonly directory
+                      - name: home
+                        mountPath: /home/rstudio/shared
+                        subPath: _shared
+                        readOnly: true
+                desktop:
+                  display_name: Linux desktop
+                  slug: desktop
+                  kubespawner_override:
+                    # Explicitly unset this - we set this to 'jupyterhub-singleuser'
+                    # in basehub/values.yaml. We instead want to leave this unset,
+                    # so the default command for the docker image is used instead.
+                    # This is required for .desktop files to show up correctly.
+                    cmd: null
+                    # Launch people directly into the Linux desktop when they start
+                    default_url: /desktop
+                    # Built from https://github.com/jupyterhub/jupyter-remote-desktop-proxy/pull/51
+                    image: "quay.io/jupyter-remote-desktop-proxy/qgis:2023-09-27"
+          nodeSelector:
+            node.kubernetes.io/instance-type: n2-highmem-16
+          cpu:
+            guarantee: 0.5
+            limit: 14
+          memory:
+            guarantee: 4G
+            limit: 16G
     hub:
+      allowNamedServers: true
       config:
         JupyterHub:
           authenticator_class: cilogon
