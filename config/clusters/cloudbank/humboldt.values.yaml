@@ -4,11 +4,6 @@ jupyterhub:
     tls:
       - hosts: [humboldt.cloudbank.2i2c.cloud]
         secretName: https-auto-tls
-  prePuller:
-    # hook prePuller shouldn't be enabled when configuring images in any other
-    # way than singleuser.image
-    hook:
-      enabled: true
   singleuser:
     memory:
       guarantee: 512M

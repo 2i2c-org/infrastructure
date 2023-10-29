@@ -23,6 +23,18 @@ jupyterhub:
         funded_by:
           name: 2i2c
           url: https://2i2c.org
+    jupyterhubConfigurator:
+      enabled: false
+  prePuller:
+    # hook prePuller shouldn't be enabled when configuring images in any other
+    # way than singleuser.image.
+    #
+    # All cloudbank hubs makes use of the same user nodes, so its sufficient if
+    # a single hub pulls an image defined in common.values.yaml, this staging
+    # hub is picked for that purpose as it will be updated before other hubs.
+    #
+    hook:
+      enabled: true
   hub:
     config:
       JupyterHub:
