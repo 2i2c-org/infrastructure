@@ -1,0 +1,20 @@
+{{- /*
+  Error during template rendering to avoid misconfigurations that are either too
+  complicated to forbid by the chart's schema, or that would benefit from a more
+  verbose error message.
+*/}}
+
+{{- $error := "" }}
+{{- $error_title := "\n" }}
+{{- $error_title = print $error_title "\n#################################################################################" }}
+{{- $error_title = print $error_title "\n######   ERROR: The basehub chart config values wasn't accepted! The        #####" }}
+{{- $error_title = print $error_title "\n######          messages below provides more details.                       #####" }}
+{{- $error_title = print $error_title "\n#################################################################################" }}
+
+{{- if and .Values.jupyterhub.prePuller.hook.enabled .Values.jupyterhub.custom.jupyterhubConfigurator.enabled }}
+{{- $error = print $error "\n\nPROHIBITED: jupyterhub.prePuller.hook.enabled isn't allowed to be configured with jupyterhub.custom.jupyterhubConfigurator.enabled to ensure we don't pull an image that isn't relevant." }}
+{{- end }}
+
+{{- if $error }}
+{{- fail (print $error_title $error "\n\n") }}
+{{- end }}
