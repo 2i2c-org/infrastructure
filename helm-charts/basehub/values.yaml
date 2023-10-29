@@ -109,6 +109,8 @@ jupyterhub:
       gitRepoUrl: "https://github.com/2i2c-org/default-hub-homepage"
       # TODO: make main the default branch in the repo above
       gitRepoBranch: "master"
+    jupyterhubConfigurator:
+      enabled: true
   ingress:
     enabled: true
     ingressClassName: nginx
@@ -554,15 +556,6 @@ jupyterhub:
         name: custom-templates
         subPath: repo/extra-assets
     services:
-      configurator:
-        url: http://configurator:10101
-        # Don't require users to explicitly 'confirm' before sending them to configurator
-        oauth_no_confirm: true
-        command:
-          - python3
-          - -m
-          - jupyterhub_configurator.app
-          - --Configurator.config_file=/usr/local/etc/jupyterhub-configurator/jupyterhub_configurator_config.py
       # hub-health service helps us run health checks from the deployer script.
       # The JupyterHub Helm chart will automatically generate an API token for
       # services and expose it in a k8s Secret named `hub`. When we run health
@@ -605,7 +598,7 @@ jupyterhub:
         # jupyterhub-configurator isn't needed, as the request is directly to
         # 127.0.0.1:10101.
         #
-        # ref: The extraConfig.02-custom-admin section below
+        # ref: The extraConfig.02-basehub-spawner section below
         # ref: https://github.com/yuvipanda/jupyterhub-configurator/blob/996405d2a7017153d5abe592b8028fed7a1801bb/jupyterhub_configurator/mixins.py#L7C5-L11
         #
         - from:
@@ -638,9 +631,13 @@ jupyterhub:
         c.JupyterHub.template_vars.update({
             'custom': get_config('custom.homepage.templateVars')
         })
-      02-custom-admin: |
-        # adjusts the spawner to add config specific to admin users
-
+      02-basehub-spawner: |
+        # Updates JupyterHub.spawner_class to handle features introduced by the
+        # basehub chart, specifically those configured via:
+        #
+        # jupyterhub.custom.singleuserAdmin
+        # jupyterhub.custom.jupyterhubConfigurator
+        #
         from z2jh import get_config
         from kubespawner.utils import get_k8s_model
         from kubespawner import KubeSpawner
@@ -673,7 +670,26 @@ jupyterhub:
             return pod
         c.KubeSpawner.modify_pod_hook = modify_pod_hook
 
-        class CustomSpawner(ConfiguratorSpawnerMixin, KubeSpawner):
+        spawner_base_classes = [KubeSpawner]
+
+        # Setup jupyterhub-configurator only if needed
+        if get_config("custom.jupyterhubConfigurator.enabled"):
+            spawner_base_classes = [ConfiguratorSpawnerMixin, KubeSpawner]
+
+            jhc_service = {
+                "name": "configurator",
+                "url": "http://configurator:10101",
+                "oauth_no_confirm": True,
+                "command": [
+                    "python3",
+                    "-m",
+                    "jupyterhub_configurator.app",
+                    "--Configurator.config_file=/usr/local/etc/jupyterhub-configurator/jupyterhub_configurator_config.py",
+                ],
+            }
+            c.JupyterHub.services.append(jhc_service)
+
+        class BaseHubSpawner(*spawner_base_classes):
             def start(self, *args, **kwargs):
                 custom_admin = get_config('custom.singleuserAdmin', {})
                 if not (self.user.admin and custom_admin):
@@ -689,7 +705,7 @@ jupyterhub:
                 return super().start(*args, **kwargs)
 
 
-        c.JupyterHub.spawner_class = CustomSpawner
+        c.JupyterHub.spawner_class = BaseHubSpawner
       03-cloud-storage-bucket: |
         from z2jh import get_config
         cloud_resources = get_config('custom.cloudResources')
