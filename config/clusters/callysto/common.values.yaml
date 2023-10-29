@@ -9,11 +9,6 @@ nfs:
     # Name of Google Filestore share
     baseShareName: /homes/
 jupyterhub:
-  prePuller:
-    # hook prePuller shouldn't be enabled when configuring images in any other
-    # way than singleuser.image
-    hook:
-      enabled: true
   custom:
     2i2c:
       # add_staff_user_ids_to_admin_users is disabled because the usernames
@@ -37,9 +32,6 @@ jupyterhub:
           name: Callysto
           url: https://www.callysto.ca
   singleuser:
-    image:
-      name: callysto/2i2c
-      tag: 0.1.4
     extraFiles:
       tree.html:
         mountPath: /usr/local/share/jupyter/custom_template/tree.html
