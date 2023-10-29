@@ -9,11 +9,6 @@ nfs:
     # Name of Google Filestore share
     baseShareName: /homes/
 jupyterhub:
-  prePuller:
-    # hook prePuller shouldn't be enabled when configuring images in any other
-    # way than singleuser.image
-    hook:
-      enabled: true
   custom:
     2i2c:
       add_staff_user_ids_to_admin_users: true
@@ -48,13 +43,6 @@ jupyterhub:
           - gizmo404
           - jtkmckenna
   singleuser:
-    image:
-      # pangeo/pangeo-notebook is maintained at: https://github.com/pangeo-data/pangeo-docker-images
-      name: pangeo/pangeo-notebook
-      # pullPolicy set to "Always" because we use the changing over time tag
-      # "latest".
-      pullPolicy: Always
-      tag: "latest"
     profileList:
       # NOTE: About node sharing
       #
