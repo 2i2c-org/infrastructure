@@ -20,6 +20,13 @@ jupyterhub:
   custom:
     homepage:
       gitRepoBranch: "utoronto-prod"
+    jupyterhubConfigurator:
+      enabled: false
+  prePuller:
+    # hook prePuller shouldn't be enabled when configuring images in any other
+    # way than singleuser.image.
+    hook:
+      enabled: true
   hub:
     db:
       pvc:

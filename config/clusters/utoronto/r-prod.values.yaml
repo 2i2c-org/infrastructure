@@ -4,6 +4,14 @@ jupyterhub:
     tls:
       - hosts: [r.datatools.utoronto.ca]
         secretName: https-auto-tls
+  custom:
+    jupyterhubConfigurator:
+      enabled: false
+  prePuller:
+    # hook prePuller shouldn't be enabled when configuring images in any other
+    # way than singleuser.image.
+    hook:
+      enabled: true
   hub:
     db:
       pvc:
