@@ -38,13 +38,12 @@ def get_k8s_distribution():
         return "gke", server_version_info
     if "eks" in server_version_info:
         return "eks", server_version_info
-    else:
-        return "aks", server_version_info
+    return "aks", server_version_info
 
 
 def get_daemon_sets_requests():
     """
-    Returns a list of info about DaemonSets with pods desired to be scheduled on
+    Returns a list of dicts with info about DaemonSets with pods desired to be scheduled on
     some nodes the k8s cluster.
     """
     output = subprocess.check_output(

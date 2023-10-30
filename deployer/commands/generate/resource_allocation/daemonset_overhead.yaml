@@ -15,7 +15,7 @@
 #   support-prometheus-node-exporter)
 #
 # This file isn't updated by automation, but can easily be updated by manually
-# by running a command once for each cluster:
+# running a command once for each cluster:
 #
 #     ls config/clusters | xargs -I {} deployer generate resource-allocation daemonset-overhead {}
 #
