@@ -73,8 +73,9 @@ notebook_nodes = {
   "n2-highmem-4" : {
     min : 0,
     max : 100,
-    machine_type : "n2-highmem-4"
+    machine_type : "n2-highmem-4",
   },
+  # FIXME: Rename this to "n2-highmem-16" when given the chance and no such nodes are running
   "medium" : {
     # A minimum of one is configured for LEAP to ensure quick startups at all
     # time. Cost is not a greater concern than optimizing startup times.

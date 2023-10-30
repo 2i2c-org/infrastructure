@@ -29,20 +29,23 @@ user_buckets = {
 
 # Setup notebook node pools
 notebook_nodes = {
+  # FIXME: Rename this to "n2-highmem-4" when given the chance and no such nodes are running
   "small" : {
     min : 0,
     max : 100,
-    machine_type : "n2-highmem-4"
+    machine_type : "n2-highmem-4",
   },
+  # FIXME: Rename this to "n2-highmem-16" when given the chance and no such nodes are running
   "medium" : {
     min : 0,
     max : 100,
     machine_type : "n2-highmem-16",
   },
+  # FIXME: Rename this to "n2-highmem-64" when given the chance and no such nodes are running
   "n2-highmem-64" : {
     min : 0,
     max : 100,
-    machine_type : "n2-highmem-64"
+    machine_type : "n2-highmem-64",
   }
 }
 
