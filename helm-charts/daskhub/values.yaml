@@ -153,68 +153,133 @@ dask-gateway:
             name: basehub-cluster-info
             key: cloudProvider
 
-    # TODO: figure out a replacement for userLimits.
     extraConfig:
-      optionHandler: |
-        from dask_gateway_server.options import Options, Integer, Float, String, Mapping
-        import string
+      # This configuration represents options that can be presented to users
+      # that want to create a Dask cluster using dask-gateway client.
+      #
+      # This configuration is meant to enable the user to request dask worker
+      # pods that fits well on 2i2c's clusters. Currently the only kind of
+      # instance types used are n2-highmem-16 or r5.4xlarge.
+      #
+      # - Documentation about exposing cluster options to users:
+      #   https://gateway.dask.org/cluster-options.html and the
+      # - Reference for KubeClusterConfig, which is what can be configured:
+      #   https://gateway.dask.org/api-server.html#kubeclusterconfig.
+      #
+      option_handler: |
+        import os
+        from dask_gateway_server.options import Integer, Mapping, Options, Select, String
 
-        # Escape a string to be dns-safe in the same way that KubeSpawner does it.
-        # Reference https://github.com/jupyterhub/kubespawner/blob/616f72c4aee26c3d2127c6af6086ec50d6cda383/kubespawner/spawner.py#L1828-L1835
-        # Adapted from https://github.com/minrk/escapism to avoid installing the package
-        # in the dask-gateway api pod which would have been problematic.
-        def escape_string_label_safe(to_escape):
-            safe_chars = set(string.ascii_lowercase + string.digits)
-            escape_char = "-"
-            chars = []
-            for c in to_escape:
-                if c in safe_chars:
-                    chars.append(c)
-                else:
-                    # escape one character
-                    buf = []
-                    # UTF-8 uses 1 to 4 bytes per character, depending on the Unicode symbol
-                    # so we need to transform each byte to its hex value
-                    for byte in c.encode("utf8"):
-                        buf.append(escape_char)
-                        # %X is the hex value of the byte
-                        buf.append('%X' % byte)
-                    escaped_hex_char = "".join(buf)
-                    chars.append(escaped_hex_char)
-            return u''.join(chars)
+        # Decide on available instance types and their resource allocation
+        # choices to expose based on cloud provider. For each daskhub hub
+        # managed by 2i2c, there should be these instance types available.
+        #
+        cloud_provider = os.environ["BASEHUB_CLOUD_PROVIDER"] # gke, eks, or aks
+        instance_types = {
+            "gke": ["n2-highmem-16"],
+            "eks": ["r5.4xlarge"],
+        }
+        resource_allocations = {
+            # n2-highmem-16 nodes in our clusters have 15.89 allocatable cores
+            # and 116.549Gi allocatable memory, and daemonset are expected to
+            # not add more than 400m cores and 800Mi (0.781Gi) memory with some
+            # margin, so we get 15.49 cores and 115.768Gi available for worker
+            # pods to request.
+            #
+            # This is an initial conservative strategy, allowing a slight
+            # oversubscription of CPU but not any oversubscription of memory.
+            #
+            # To workaround https://github.com/dask/dask-gateway/issues/765, we
+            # round worker_cores down from [0.968, 1.936, 3.872, 7.745, 15.49]
+            # to [0.9, 1.9, 3.8, 7.7, 15.4].
+            #
+            "n2-highmem-16": {
+                "1CPU, 7.2Gi": {"worker_cores": 0.9, "worker_cores_limit": 1, "worker_memory": "7.235G", "worker_memory_limit": "7.235G"},
+                "2CPU, 14.5Gi": {"worker_cores": 1.9, "worker_cores_limit": 2, "worker_memory": "14.471G", "worker_memory_limit": "14.471G"},
+                "4CPU, 28.9Gi": {"worker_cores": 3.8, "worker_cores_limit": 4, "worker_memory": "28.942G", "worker_memory_limit": "28.942G"},
+                "8CPU, 57.9Gi": {"worker_cores": 7.7, "worker_cores_limit": 8, "worker_memory": "57.884G", "worker_memory_limit": "57.884G"},
+                "16CPU, 115.8Gi": {"worker_cores": 15.4, "worker_cores_limit": 16, "worker_memory": "115.768G", "worker_memory_limit": "115.768G"},
+            },
+            # r5.4xlarge nodes in our clusters have 15.89 allocatable cores and
+            # 121.504Gi allocatable memory, and daemonset are expected to not
+            # add more than 400m cores and 800Mi (0.781Gi) memory with some
+            # margin, so we get 15.49 cores and 120.723Gi available for worker
+            # pods to request.
+            #
+            # This is an initial conservative strategy, allowing a slight
+            # oversubscription of CPU but not any oversubscription of memory.
+            #
+            # To workaround https://github.com/dask/dask-gateway/issues/765, we
+            # round worker_cores down from [0.968, 1.936, 3.872, 7.745, 15.49]
+            # to [0.9, 1.9, 3.8, 7.7, 15.4].
+            #
+            "r5.4xlarge": {
+                "1CPU, 7.5Gi": {"worker_cores": 0.9, "worker_cores_limit": 1, "worker_memory": "7.545G", "worker_memory_limit": "7.545G"},
+                "2CPU, 15.1Gi": {"worker_cores": 1.9, "worker_cores_limit": 2, "worker_memory": "15.090G", "worker_memory_limit": "15.090G"},
+                "4CPU, 30.2Gi": {"worker_cores": 3.8, "worker_cores_limit": 4, "worker_memory": "30.180G", "worker_memory_limit": "30.180G"},
+                "8CPU, 60.4Gi": {"worker_cores": 7.7, "worker_cores_limit": 8, "worker_memory": "60.361G", "worker_memory_limit": "60.361G"},
+                "16CPU, 120.7Gi": {"worker_cores": 15.4, "worker_cores_limit": 16, "worker_memory": "120.723G", "worker_memory_limit": "120.723G"},
+            },
+        }
+
+        # for now we support only on one instance type per cluster, listing it
+        # as an option is a way to help convey how things work a bit better
+        it = instance_types[cloud_provider][0]
+        ra = resource_allocations[it]
+        ra_keys = list(ra.keys())
 
         def cluster_options(user):
-            safe_username = escape_string_label_safe(user.name)
             def option_handler(options):
                 if ":" not in options.image:
                     raise ValueError("When specifying an image you must also provide a tag")
+                extra_labels = {}
                 scheduler_extra_pod_annotations = {
-                    "hub.jupyter.org/username": safe_username,
+                    "hub.jupyter.org/username": user.name,
                     "prometheus.io/scrape": "true",
                     "prometheus.io/port": "8787",
                 }
-                extra_labels = {
-                    "hub.jupyter.org/username": safe_username,
+                worker_extra_pod_annotations = {
+                    "hub.jupyter.org/username": user.name,
                 }
+                picked_ra = ra[options.worker_resource_allocation]
+
                 return {
-                    "worker_cores_limit": options.worker_cores,
-                    "worker_cores": options.worker_cores,
-                    "worker_memory": "%fG" % options.worker_memory,
+                    # A default image is suggested via DASK_GATEWAY__CLUSTER__OPTIONS__IMAGE env variable
                     "image": options.image,
-                    "scheduler_extra_pod_annotations": scheduler_extra_pod_annotations,
                     "scheduler_extra_pod_labels": extra_labels,
+                    "scheduler_extra_pod_annotations": scheduler_extra_pod_annotations,
                     "worker_extra_pod_labels": extra_labels,
+                    "worker_extra_pod_annotations": worker_extra_pod_annotations,
+                    "worker_cores": picked_ra["worker_cores"],
+                    "worker_cores_limit": picked_ra["worker_cores_limit"],
+                    "worker_memory": picked_ra["worker_memory"],
+                    "worker_memory_limit": picked_ra["worker_memory_limit"],
                     "environment": options.environment,
+                    "idle_timeout": options.idle_timeout,
                 }
             return Options(
-                Integer("worker_cores", 2, min=1, label="Worker Cores"),
-                Float("worker_memory", 4, min=1, label="Worker Memory (GiB)"),
-                # The default image is set via DASK_GATEWAY__CLUSTER__OPTIONS__IMAGE env variable
+                Select(
+                    "instance_type",
+                    [it],
+                    default=it,
+                    label="Instance type running worker containers",
+                ),
+                Select(
+                    "worker_resource_allocation",
+                    ra_keys,
+                    default=ra_keys[0],
+                    label="Resources per worker container",
+                ),
+                # The default image is pre-specified by the dask-gateway client
+                # via the env var DASK_GATEWAY__CLUSTER__OPTIONS__IMAGE set on
+                # the jupyterhub user pods
                 String("image", label="Image"),
-                Mapping("environment", {}, label="Environment Variables"),
+                Mapping("environment", {}, label="Environment variables (YAML)"),
+                Integer("idle_timeout", 1800, min=0, label="Idle cluster terminated after (seconds)"),
                 handler=option_handler,
             )
         c.Backend.cluster_options = cluster_options
+
       idle: |
         # timeout after 30 minutes of inactivity
         c.KubeClusterConfig.idle_timeout = 1800
