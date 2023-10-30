@@ -146,6 +146,12 @@ dask-gateway:
           nodeSelector:
             # Dask workers get their own pre-emptible pool
             k8s.dask.org/node-purpose: worker
+    env:
+      - name: BASEHUB_CLOUD_PROVIDER
+        valueFrom:
+          configMapKeyRef:
+            name: basehub-cluster-info
+            key: cloudProvider
 
     # TODO: figure out a replacement for userLimits.
     extraConfig:

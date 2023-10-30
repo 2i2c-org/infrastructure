@@ -461,6 +461,12 @@ jupyterhub:
                   - value: "/rstudio"
                     title: RStudio
                     description: An IDE For R, created by the RStudio company
+    extraEnv:
+      BASEHUB_CLOUD_PROVIDER:
+        valueFrom:
+          configMapKeyRef:
+            name: basehub-cluster-info
+            key: cloudProvider
     initContainers:
       - name: templates-clone
         image: alpine/git:2.40.1

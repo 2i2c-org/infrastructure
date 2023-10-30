@@ -1,0 +1,19 @@
+kind: ConfigMap
+apiVersion: v1
+metadata:
+  name: basehub-cluster-info
+  labels:
+    helm.sh/chart: {{ .Chart.Name }}-{{ .Chart.Version | replace "+" "_" }}
+    app.kubernetes.io/name: basehub
+    app.kubernetes.io/instance: {{ .Release.Name }}
+    app.kubernetes.io/managed-by: {{ .Release.Service }}
+data:
+  {{- $cloud_provider := "" }}
+  {{- if (.Capabilities.KubeVersion.Version | contains "gke") }}
+  {{- $cloud_provider = "gke" }}
+  {{- else if (.Capabilities.KubeVersion.Version | contains "eks") }}
+  {{- $cloud_provider = "eks" }}
+  {{- else }}
+  {{- $cloud_provider = "aks" }}
+  {{- end }}
+  cloudProvider: {{ $cloud_provider }}
