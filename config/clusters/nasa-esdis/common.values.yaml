@@ -39,6 +39,7 @@ jupyterhub:
           - 2i2c-org:hub-access-for-2i2c-staff
           - nasa:earthdata-cloud-playground-maintainer
           - veda-analytics-access:esdis-hub-beta-testers
+          - NASA-Openscapes:esdis_hub_testers
         scope:
           - read:org
       Authenticator:
