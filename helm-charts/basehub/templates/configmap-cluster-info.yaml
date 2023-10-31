@@ -8,12 +8,12 @@ metadata:
     app.kubernetes.io/instance: {{ .Release.Name }}
     app.kubernetes.io/managed-by: {{ .Release.Service }}
 data:
-  {{- $cloud_provider := "" }}
+  {{- $k8s_dist := "" }}
   {{- if (.Capabilities.KubeVersion.Version | contains "gke") }}
-  {{- $cloud_provider = "gke" }}
+  {{- $k8s_dist = "gke" }}
   {{- else if (.Capabilities.KubeVersion.Version | contains "eks") }}
-  {{- $cloud_provider = "eks" }}
+  {{- $k8s_dist = "eks" }}
   {{- else }}
-  {{- $cloud_provider = "aks" }}
+  {{- $k8s_dist = "aks" }}
   {{- end }}
-  cloudProvider: {{ $cloud_provider }}
+  K8S_DIST: {{ $k8s_dist }}

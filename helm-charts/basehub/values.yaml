@@ -462,11 +462,11 @@ jupyterhub:
                     title: RStudio
                     description: An IDE For R, created by the RStudio company
     extraEnv:
-      BASEHUB_CLOUD_PROVIDER:
+      BASEHUB_K8S_DIST:
         valueFrom:
           configMapKeyRef:
             name: basehub-cluster-info
-            key: cloudProvider
+            key: K8S_DIST
     initContainers:
       - name: templates-clone
         image: alpine/git:2.40.1

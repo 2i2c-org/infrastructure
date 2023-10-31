@@ -147,11 +147,11 @@ dask-gateway:
             # Dask workers get their own pre-emptible pool
             k8s.dask.org/node-purpose: worker
     env:
-      - name: BASEHUB_CLOUD_PROVIDER
+      - name: BASEHUB_K8S_DIST
         valueFrom:
           configMapKeyRef:
             name: basehub-cluster-info
-            key: cloudProvider
+            key: K8S_DIST
 
     extraConfig:
       # This configuration represents options that can be presented to users
@@ -174,7 +174,7 @@ dask-gateway:
         # choices to expose based on cloud provider. For each daskhub hub
         # managed by 2i2c, there should be these instance types available.
         #
-        cloud_provider = os.environ["BASEHUB_CLOUD_PROVIDER"] # gke, eks, or aks
+        cloud_provider = os.environ["BASEHUB_K8S_DIST"] # gke, eks, or aks
         instance_types = {
             "gke": ["n2-highmem-16"],
             "eks": ["r5.4xlarge"],
