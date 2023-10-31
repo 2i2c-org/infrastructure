@@ -1,11 +1,7 @@
 jupyterhub:
-  # pre-puller is necessary as the image is pretty big, and
-  # pulling during first user spawn might cause timeouts and poor user
-  # experience. Also helps with node pre-warming. This works ok here
-  # because they have a dedicated nodepool.
   prePuller:
-    continuous:
-      enabled: true
+    # hook prePuller shouldn't be enabled when configuring images in any other
+    # way than singleuser.image
     hook:
       enabled: true
   singleuser:

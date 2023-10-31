@@ -10,8 +10,8 @@ nfs:
     baseShareName: /homes/
 jupyterhub:
   prePuller:
-    continuous:
-      enabled: true
+    # hook prePuller shouldn't be enabled when configuring images in any other
+    # way than singleuser.image
     hook:
       enabled: true
   custom:

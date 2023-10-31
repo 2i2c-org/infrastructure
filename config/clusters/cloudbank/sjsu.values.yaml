@@ -5,8 +5,8 @@ jupyterhub:
       - hosts: [sjsu.cloudbank.2i2c.cloud]
         secretName: https-auto-tls
   prePuller:
-    continuous:
-      enabled: true
+    # hook prePuller shouldn't be enabled when configuring images in any other
+    # way than singleuser.image
     hook:
       enabled: true
   singleuser:
