@@ -166,9 +166,35 @@ dask-gateway:
       # - Reference for KubeClusterConfig, which is what can be configured:
       #   https://gateway.dask.org/api-server.html#kubeclusterconfig.
       #
-      option_handler: |
+      optionHandler: |
         import os
+        import string
+
         from dask_gateway_server.options import Integer, Mapping, Options, Select, String
+
+        # Escape a string to be dns-safe in the same way that KubeSpawner does it.
+        # Reference https://github.com/jupyterhub/kubespawner/blob/616f72c4aee26c3d2127c6af6086ec50d6cda383/kubespawner/spawner.py#L1828-L1835
+        # Adapted from https://github.com/minrk/escapism to avoid installing the package
+        # in the dask-gateway api pod which would have been problematic.
+        def escape_string_label_safe(to_escape):
+            safe_chars = set(string.ascii_lowercase + string.digits)
+            escape_char = "-"
+            chars = []
+            for c in to_escape:
+                if c in safe_chars:
+                    chars.append(c)
+                else:
+                    # escape one character
+                    buf = []
+                    # UTF-8 uses 1 to 4 bytes per character, depending on the Unicode symbol
+                    # so we need to transform each byte to its hex value
+                    for byte in c.encode("utf8"):
+                        buf.append(escape_char)
+                        # %X is the hex value of the byte
+                        buf.append('%X' % byte)
+                    escaped_hex_char = "".join(buf)
+                    chars.append(escaped_hex_char)
+            return u''.join(chars)
 
         # Decide on available instance types and their resource allocation
         # choices to expose based on cloud provider. For each daskhub hub
@@ -232,7 +258,9 @@ dask-gateway:
             def option_handler(options):
                 if ":" not in options.image:
                     raise ValueError("When specifying an image you must also provide a tag")
-                extra_labels = {}
+                extra_labels = {
+                    "hub.jupyter.org/username": escape_string_label_safe(user.name),
+                }
                 scheduler_extra_pod_annotations = {
                     "hub.jupyter.org/username": user.name,
                     "prometheus.io/scrape": "true",
