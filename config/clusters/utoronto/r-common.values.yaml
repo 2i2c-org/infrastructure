@@ -11,9 +11,6 @@ jupyterhub:
         # https://github.com/2i2c-org/infrastructure/issues/2559
         working_dir: /home/rstudio
   singleuser:
-    storage:
-      # From https://jupyterhub-image.guide/rocker.html#step-7-setup-zero-to-jupyterhub-configuration-for-home-directory
-      homeMountPath: /home/rstudio
     defaultUrl: /rstudio
     image:
       name: quay.io/2i2c/utoronto-r-image

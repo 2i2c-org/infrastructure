@@ -112,17 +112,6 @@ jupyterhub:
                 # Ensures container working dir is homedir
                 # https://github.com/2i2c-org/infrastructure/issues/2559
                 working_dir: /home/rstudio
-                # Because this is a list, it will override our default volume mounts
-                volume_mounts:
-                  # Mount the user home directory
-                  - name: home
-                    mountPath: /home/rstudio
-                    subPath: "{username}"
-                  # Mount the shared readonly directory
-                  - name: home
-                    mountPath: /home/rstudio/shared
-                    subPath: _shared
-                    readOnly: true
             scipy:
               display_name: Jupyter SciPy Notebook
               slug: scipy
@@ -137,6 +126,6 @@ is configured to automatically install packages from the [Posit Package Manager]
 which provides fast binary package installs.
 
 They are installed under `/usr/local`, and hence *cleared on server stop*. So installed
-packages will *not* persist across user sessions. 
+packages will *not* persist across user sessions.
 
 If users need to have persistent packages installed, we would need a custom image.
