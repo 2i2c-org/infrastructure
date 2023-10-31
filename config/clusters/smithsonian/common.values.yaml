@@ -87,14 +87,6 @@ basehub:
                     image: rocker/binder:4.3
                     working_dir: /home/rstudio
                     default_url: /rstudio
-                    volume_mounts:
-                      - name: home
-                        mountPath: /home/rstudio
-                        subPath: "{username}"
-                      - name: home
-                        mountPath: /home/rstudio/shared
-                        subPath: _shared
-                        readOnly: true
                 scipy:
                   display_name: Jupyter SciPy Notebook
                   slug: scipy

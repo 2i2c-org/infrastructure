@@ -72,6 +72,9 @@ jupyterhub:
         - name: home
           mountPath: /home/jovyan/shared-readwrite
           subPath: _shared
+        - name: home
+          mountPath: /home/rstudio/shared-readwrite
+          subPath: _shared
     cloudResources:
       provider: ""
       gcp:
@@ -280,6 +283,24 @@ jupyterhub:
       extraVolumeMounts:
         - name: home
           mountPath: /home/jovyan/shared
+          subPath: _shared
+          readOnly: true
+
+        # For all pods, mount home in both /home/jovyan (done via singleuser.storage.static)
+        # as well as /home/rstudio. This allows rocker images (which use the
+        # rstudio user and put home ine /home/rstudio) to be first class citizens
+        # along with jupyter based images, regardless of how they are specified (
+        # via the configurator, or with unlisted_choice, or as a profile). For non-rocker
+        # images, this is just invisible in the UI and there is no performance overhead
+        # for these extra bind mounts. An additional positive here is that in case *students*
+        # end up accidentally hardcoding paths in their notebooks, it will continue to work
+        # regardless of wether they or on RStudio or JupyterLab (described to us as a serious
+        # problem by openscapes)
+        - name: home
+          mountPath: /home/rstudio
+          subPath: "{username}"
+        - name: home
+          mountPath: /home/rstudio/shared
           subPath: _shared
           readOnly: true
     memory:
@@ -596,17 +617,42 @@ jupyterhub:
         # adjusts the spawner to add config specific to admin users
 
         from z2jh import get_config
+        from kubespawner.utils import get_k8s_model
         from kubespawner import KubeSpawner
         from jupyterhub_configurator.mixins import ConfiguratorSpawnerMixin
+        from kubernetes_asyncio.client.models import V1VolumeMount
+
+
+        def modify_pod_hook(spawner, pod):
+            """
+            Modify the pod manifest for admins.
+
+            This is used to modify attributes of the pod that are *lists*,
+            as those are not merged but replaced by KubeSpawner. Everything
+            else is managed via the CustomSpawner's start method below.
+            """
+            custom_admin = get_config('custom.singleuserAdmin', {})
+            if not (spawner.user.admin and custom_admin):
+                return pod
+
+            for c in pod.spec.containers:
+                if c.name == "notebook":
+                  notebook_container = c
+                  break
+            else:
+                raise Exception("No container named 'notebook' found in pod definition")
+
+            admin_volume_mounts = custom_admin.get('extraVolumeMounts', [])
+            notebook_container.volume_mounts += [get_k8s_model(V1VolumeMount, obj) for obj in (admin_volume_mounts)]
+
+            return pod
+        c.KubeSpawner.modify_pod_hook = modify_pod_hook
 
         class CustomSpawner(ConfiguratorSpawnerMixin, KubeSpawner):
             def start(self, *args, **kwargs):
                 custom_admin = get_config('custom.singleuserAdmin', {})
                 if not (self.user.admin and custom_admin):
                     return super().start(*args, **kwargs)
-
-                admin_volume_mounts = custom_admin.get('extraVolumeMounts', [])
-                self.volume_mounts += [vm for vm in admin_volume_mounts if vm not in self.volume_mounts]
 
                 admin_environment = custom_admin.get('extraEnv', {})
                 self.environment.update(admin_environment)
