@@ -24,21 +24,21 @@ enable_filestore      = true
 filestore_capacity_gb = 1024
 
 notebook_nodes = {
-  "small" : {
+  "n2-highmem-4" : {
     min : 0,
     max : 100,
     machine_type : "n2-highmem-4",
   },
-  "medium" : {
+  "n2-highmem-16" : {
     min : 0,
     max : 100,
     machine_type : "n2-highmem-16",
   },
-  "large" : {
+  "n2-highmem-64" : {
     min : 0,
     max : 100,
     machine_type : "n2-highmem-64",
-  },
+  }
 }
 
 user_buckets = {}

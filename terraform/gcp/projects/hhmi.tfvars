@@ -22,11 +22,22 @@ hub_cloud_permissions = {}
 
 # Setup notebook node pools
 notebook_nodes = {
+  # FIXME: Rename this to "n2-highmem-16" when given the chance and no such nodes are running
   "medium" : {
     min : 0,
     max : 100,
     machine_type : "n2-highmem-16",
   },
+  "n2-highmem-4" : {
+    min : 0,
+    max : 100,
+    machine_type : "n2-highmem-4",
+  },
+  "n2-highmem-64" : {
+    min : 0,
+    max : 100,
+    machine_type : "n2-highmem-64",
+  }
 }
 
 # Setup a single node pool for dask workers.

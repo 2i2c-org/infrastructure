@@ -42,21 +42,21 @@ hub_cloud_permissions = {
 
 # Setup notebook node pools
 notebook_nodes = {
-  "small" : {
+  "n2-highmem-4" : {
     min : 0,
     max : 100,
     machine_type : "n2-highmem-4",
   },
-  "medium" : {
+  "n2-highmem-16" : {
     min : 0,
     max : 100,
     machine_type : "n2-highmem-16",
   },
-  "large" : {
+  "n2-highmem-64" : {
     min : 0,
     max : 100,
     machine_type : "n2-highmem-64",
-  },
+  }
 }
 
 # Setup a single node pool for dask workers.
