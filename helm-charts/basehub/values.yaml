@@ -292,7 +292,7 @@ jupyterhub:
           MappingKernelManager: *server_config_mapping_kernel_manager
           NotebookApp: *server_config_server_app
           BaseFileIdManager: *server_config_base_file_id_manager
-    startTimeout: 600 # 10 mins, node startup + image pulling makes it relevant
+    startTimeout: 600 # 10 mins, node startup + image pulling sometimes takes more than the default 5min
     defaultUrl: /tree
     image:
       name: jupyter/scipy-notebook
