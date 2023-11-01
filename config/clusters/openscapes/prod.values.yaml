@@ -97,5 +97,7 @@ basehub:
           profile_options: *profile_options
     hub:
       config:
+        GitHubOAuthenticator:
+          oauth_callback_url: "https://openscapes.2i2c.cloud/hub/oauth_callback"
         CILogonOAuthenticator:
           oauth_callback_url: "https://openscapes.2i2c.cloud/hub/oauth_callback"

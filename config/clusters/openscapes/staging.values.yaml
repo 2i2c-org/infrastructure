@@ -126,5 +126,7 @@ basehub:
             requests: *requests_profile_options
     hub:
       config:
+        GitHubOAuthenticator:
+          oauth_callback_url: "https://staging.openscapes.2i2c.cloud/hub/oauth_callback"
         CILogonOAuthenticator:
           oauth_callback_url: "https://staging.openscapes.2i2c.cloud/hub/oauth_callback"
