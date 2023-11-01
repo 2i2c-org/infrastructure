@@ -52,7 +52,9 @@ basehub:
           oauth_callback_url: https://staging.openscapes.2i2c.cloud/hub/oauth_callback
           allowed_organizations:
             - 2i2c-org:hub-access-for-2i2c-staff
-            # FIXME: Add more orgs here
+            - NASA-Openscapes:workshopaccess-2i2c
+            - NASA-Openscapes:longtermaccess-2i2c
+            - NASA-Openscapes:championsaccess-2i2c
           scope:
             - read:org
         Authenticator:
