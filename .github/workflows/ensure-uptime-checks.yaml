@@ -33,7 +33,7 @@ jobs:
         uses: actions/checkout@v4
 
       # Uptime checks are set up and managed via terraform
-      - uses: hashicorp/setup-terraform@v2
+      - uses: hashicorp/setup-terraform@v3
 
       # We use sops to store encrypted GCP ServiceAccount Key that terraform uses
       # to run, as well as PagerDuty config terraform uses
