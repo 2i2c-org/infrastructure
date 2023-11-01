@@ -30,7 +30,6 @@ jupyterhub:
       GitHubOAuthenticator:
         oauth_callback_url: https://wlac.cloudbank.2i2c.cloud/hub/oauth_callback
         allowed_organizations:
-          - 2i2c-org:hub-access-for-2i2c-staff
           - WLAC-CS
         scope:
           - read:org

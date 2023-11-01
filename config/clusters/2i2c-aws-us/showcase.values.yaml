@@ -38,7 +38,6 @@ basehub:
           oauth_callback_url: "https://showcase.2i2c.cloud/hub/oauth_callback"
           populate_teams_in_auth_state: true
           allowed_organizations:
-            - 2i2c-org:hub-access-for-2i2c-staff
             - 2i2c-org:research-delight-team
             - 2i2c-demo-hub-access:showcase-topst
           scope:
