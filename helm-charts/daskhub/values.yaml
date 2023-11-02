@@ -318,8 +318,9 @@ dask-gateway:
             )
         c.Backend.cluster_options = cluster_options
 
-      idle: |
-        # timeout after 30 minutes of inactivity
+        # timeout after 30 minutes of inactivity by default, keep this in sync
+        # with the user exposed option idle_timeout_minutes's default value
+        # configured above
         c.KubeClusterConfig.idle_timeout = 1800
     prefix: "/services/dask-gateway" # Users connect to the Gateway through the JupyterHub service.
     auth:
