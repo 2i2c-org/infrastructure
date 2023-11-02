@@ -65,6 +65,7 @@ jupyterhub:
         admin_users:
           - PINEDAEM@laccd.edu
           - LAMKT@laccd.edu
+          - sarvikb@lacitycollege.edu
           - ericvd@berkeley.edu
           - k_usovich@berkeley.edu
           - sean.smorris@berkeley.edu
