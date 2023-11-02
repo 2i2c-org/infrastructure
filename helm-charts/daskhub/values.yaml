@@ -204,6 +204,11 @@ dask-gateway:
         instance_types = {
             "gke": ["n2-highmem-16"],
             "eks": ["r5.4xlarge"],
+            # 2i2c doesn't yet manage any dask-gateway installations on AKS, so
+            # this hasn't been configured yet and may cause an error - but that
+            # is good as we really should have this if we setup dask-gateway for
+            # AKS anyhow.
+            # aks: [],
         }
         resource_allocations = {
             # n2-highmem-16 nodes in our clusters have 15.89 allocatable cores
