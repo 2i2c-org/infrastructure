@@ -4,7 +4,7 @@ In the [non-incident support response process](https://compass.2i2c.org/projects
 
 The support triagers use these 30m time interval to try an resolve a ticket, before opening a follow-up issue about it.
 
-The next sections represents an not-complete initial checklist that the support triager can follow in order to resolve the ticket or decide on opening a tracking issue about it, with the context they gained during this investigation.
+The next sections represents an incomplete initial checklist that the support triager can follow in order to resolve the ticket or decide on opening a tracking issue about it, with the context they gained during this investigation.
 
 The steps to follow depend greatly on the type of ticket. To simplify, only three big ticket categories will be addressed.
 
