@@ -31,7 +31,7 @@ pandas
 pandera
 prometheus_pandas
 pytest-mock
-google-cloud-bigquery==3.11.*
+google-cloud-bigquery==3.13.*
 google-cloud-bigquery[pandas]==3.11.*
 gspread==5.12.*
 
