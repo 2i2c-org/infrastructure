@@ -1,3 +1,5 @@
+(howto-troubleshoot:cloud-logs)=
+
 # Look at logs to troubleshoot issues
 
 Looking at and interpreting logs produced by various components is the easiest

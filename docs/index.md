@@ -88,7 +88,7 @@ topic/access-creds/index.md
 topic/infrastructure/index.md
 topic/monitoring-alerting/index.md
 topic/features.md
-topic/resource-allocations.md
+topic/resource-allocation.md
 ```
 
 ## Reference
