@@ -210,6 +210,11 @@ dask-gateway:
             # AKS anyhow.
             # aks: [],
         }
+
+        # NOTE: Data mentioned below comes from manual inspection of data
+        #       collected and currently only available at
+        #       https://github.com/2i2c-org/infrastructure/pull/3337.
+        #
         resource_allocations = {
             # n2-highmem-16 nodes in our clusters have 15.89 allocatable cores
             # and 116.549Gi allocatable memory, and daemonset are expected to
