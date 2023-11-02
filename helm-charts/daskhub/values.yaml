@@ -293,7 +293,7 @@ dask-gateway:
                     "worker_memory": picked_ra["worker_memory"],
                     "worker_memory_limit": picked_ra["worker_memory_limit"],
                     "environment": options.environment,
-                    "idle_timeout": options.idle_timeout,
+                    "idle_timeout": options.idle_timeout_minutes * 60,
                 }
             return Options(
                 Select(
@@ -313,7 +313,7 @@ dask-gateway:
                 # the jupyterhub user pods
                 String("image", label="Image"),
                 Mapping("environment", {}, label="Environment variables (YAML)"),
-                Integer("idle_timeout", 1800, min=0, label="Idle cluster terminated after (seconds)"),
+                Integer("idle_timeout_minutes", 30, min=0, label="Idle cluster terminated after (minutes)"),
                 handler=option_handler,
             )
         c.Backend.cluster_options = cluster_options
