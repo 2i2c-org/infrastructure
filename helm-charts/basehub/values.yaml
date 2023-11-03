@@ -632,26 +632,29 @@ jupyterhub:
             'custom': get_config('custom.homepage.templateVars')
         })
       02-basehub-spawner: |
-        # Updates JupyterHub.spawner_class to handle features introduced by the
-        # basehub chart, specifically those configured via:
+        # Updates JupyterHub.spawner_class and KubeSpawner.modify_pod_hook to
+        # handle features introduced by the basehub chart, specifically those
+        # configured via:
         #
         # jupyterhub.custom.singleuserAdmin
         # jupyterhub.custom.jupyterhubConfigurator
         #
-        from z2jh import get_config
-        from kubespawner.utils import get_k8s_model
-        from kubespawner import KubeSpawner
         from jupyterhub_configurator.mixins import ConfiguratorSpawnerMixin
         from kubernetes_asyncio.client.models import V1VolumeMount
+        from kubespawner import KubeSpawner
+        from kubespawner.utils import get_k8s_model
+        from z2jh import get_config
 
 
         def modify_pod_hook(spawner, pod):
             """
-            Modify the pod manifest for admins.
+            Modify admin user's pod manifests based on *list* config under
+            `jupyterhub.custom.singleuserAdmin`.
 
-            This is used to modify attributes of the pod that are *lists*,
-            as those are not merged but replaced by KubeSpawner. Everything
-            else is managed via the CustomSpawner's start method below.
+            This hook is required to ensures that list config under
+            `jupyterhub.custom.singleuserAdmin` are appended and not just
+            overridden when a profile_list entry has a kubespawner_override
+            modifying the same config.
             """
             custom_admin = get_config('custom.singleuserAdmin', {})
             if not (spawner.user.admin and custom_admin):
@@ -659,8 +662,8 @@ jupyterhub:
 
             for c in pod.spec.containers:
                 if c.name == "notebook":
-                  notebook_container = c
-                  break
+                    notebook_container = c
+                    break
             else:
                 raise Exception("No container named 'notebook' found in pod definition")
 
@@ -670,9 +673,9 @@ jupyterhub:
             return pod
         c.KubeSpawner.modify_pod_hook = modify_pod_hook
 
-        spawner_base_classes = [KubeSpawner]
 
-        # Setup jupyterhub-configurator only if needed
+        # Setup jupyterhub-configurator only if its enabled
+        spawner_base_classes = [KubeSpawner]
         if get_config("custom.jupyterhubConfigurator.enabled"):
             spawner_base_classes = [ConfiguratorSpawnerMixin, KubeSpawner]
 
@@ -689,8 +692,16 @@ jupyterhub:
             }
             c.JupyterHub.services.append(jhc_service)
 
+
         class BaseHubSpawner(*spawner_base_classes):
             def start(self, *args, **kwargs):
+                """
+                Modify admin users' spawners' non-list config based on
+                `jupyterhub.custom.singleuserAdmin`.
+
+                The list config is handled separately in by the
+                `modify_pod_hook`.
+                """
                 custom_admin = get_config('custom.singleuserAdmin', {})
                 if not (self.user.admin and custom_admin):
                     return super().start(*args, **kwargs)
@@ -703,8 +714,6 @@ jupyterhub:
                     self.service_account = admin_service_account
 
                 return super().start(*args, **kwargs)
-
-
         c.JupyterHub.spawner_class = BaseHubSpawner
       03-cloud-storage-bucket: |
         from z2jh import get_config
