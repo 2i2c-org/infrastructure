@@ -50,6 +50,10 @@ jupyterhub:
       # more actively. This is to limit the amount of damage a rogue user can do to not more
       # than 1 CPU per user account.
       limit: 1
+    memory:
+      # Ref https://2i2c.freshdesk.com/a/tickets/1088
+      guarantee: 512M
+      limit: 2G
   hub:
     services:
       # OAuth2 credentials for the CosmicDS portal, which uses
