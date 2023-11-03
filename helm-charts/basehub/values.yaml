@@ -646,34 +646,6 @@ jupyterhub:
         from z2jh import get_config
 
 
-        def modify_pod_hook(spawner, pod):
-            """
-            Modify admin user's pod manifests based on *list* config under
-            `jupyterhub.custom.singleuserAdmin`.
-
-            This hook is required to ensures that list config under
-            `jupyterhub.custom.singleuserAdmin` are appended and not just
-            overridden when a profile_list entry has a kubespawner_override
-            modifying the same config.
-            """
-            custom_admin = get_config('custom.singleuserAdmin', {})
-            if not (spawner.user.admin and custom_admin):
-                return pod
-
-            for c in pod.spec.containers:
-                if c.name == "notebook":
-                    notebook_container = c
-                    break
-            else:
-                raise Exception("No container named 'notebook' found in pod definition")
-
-            admin_volume_mounts = custom_admin.get('extraVolumeMounts', [])
-            notebook_container.volume_mounts += [get_k8s_model(V1VolumeMount, obj) for obj in (admin_volume_mounts)]
-
-            return pod
-        c.KubeSpawner.modify_pod_hook = modify_pod_hook
-
-
         # Setup jupyterhub-configurator only if its enabled
         spawner_base_classes = [KubeSpawner]
         if get_config("custom.jupyterhubConfigurator.enabled"):
@@ -715,6 +687,34 @@ jupyterhub:
 
                 return super().start(*args, **kwargs)
         c.JupyterHub.spawner_class = BaseHubSpawner
+
+
+        def modify_pod_hook(spawner, pod):
+            """
+            Modify admin user's pod manifests based on *list* config under
+            `jupyterhub.custom.singleuserAdmin`.
+
+            This hook is required to ensures that list config under
+            `jupyterhub.custom.singleuserAdmin` are appended and not just
+            overridden when a profile_list entry has a kubespawner_override
+            modifying the same config.
+            """
+            custom_admin = get_config('custom.singleuserAdmin', {})
+            if not (spawner.user.admin and custom_admin):
+                return pod
+
+            for c in pod.spec.containers:
+                if c.name == "notebook":
+                    notebook_container = c
+                    break
+            else:
+                raise Exception("No container named 'notebook' found in pod definition")
+
+            admin_volume_mounts = custom_admin.get('extraVolumeMounts', [])
+            notebook_container.volume_mounts += [get_k8s_model(V1VolumeMount, obj) for obj in (admin_volume_mounts)]
+
+            return pod
+        c.KubeSpawner.modify_pod_hook = modify_pod_hook
       03-cloud-storage-bucket: |
         from z2jh import get_config
         cloud_resources = get_config('custom.cloudResources')
