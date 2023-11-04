@@ -88,7 +88,11 @@ The `deployer.py` file is the main file, that contains all of the commands regis
 │   │   |   ├── decision.py
 │   │   |   └── jobs.py
 |   |   └── resource_allocation
+│   │       ├── daemonset_requests.py
+│   │       ├── daemonset_requests.yaml
 │   │       ├── generate_choices.py
+│   │       ├── instance_capacities.py
+│   │       ├── instance_capacities.yaml
 │   │       ├── node-capacity-info.json
 │   │       ├── resource_allocation_app.py
 │   │       └── update_nodeinfo.py
@@ -263,6 +267,22 @@ This sub-command can be used to generate the resource allocation choices for giv
 
 ##### `generate resource-allocation choices`
 This generates a custom number of resource allocation choices for a certain instance type, depending on a certain chosen strategy that can be used in the profile list of a hub.
+
+##### `generate resource-allocation daemonset-requests`
+Updates `daemonset_requests.yaml` with an individual cluster's DaemonSets' requests summarized.
+
+Only DaemonSet's with running pods are considered, and GPU related DaemonSets (with "nvidia" in the name) are also ignored.
+
+To run this command for all clusters, `xargs` can be used like this:
+
+    ls config/clusters | xargs -I {} deployer generate resource-allocation daemonset-requests {}
+
+##### `generate resource-allocation instance-capacities`
+Updates `instance_capacities.yaml` with an individual cluster's running instance types' total and allocatable capacity.
+
+To run this command for all clusters, `xargs` can be used like this:
+
+    ls config/clusters | xargs -I {} deployer generate resource-allocation instance-capacities {}
 
 ##### `generate resource-allocation node-info-update`
 This updates the json file `node-capacity-info.json` with info about the capacity of a node of a certain type. This file is then used for generating the resource choices.
