@@ -121,9 +121,15 @@ def daemonset_requests(
     cluster_name: str = typer.Argument(..., help="Name of cluster to operate on"),
 ):
     """
-    Updates `daemonset_requests.yaml` with an individual cluster's DaemonSets
-    with running pods combined requests of CPU and memory, excluding GPU related
-    DaemonSets.
+    Updates `daemonset_requests.yaml` with an individual cluster's DaemonSets'
+    requests summarized.
+
+    Only DaemonSet's with running pods are considered, and GPU related
+    DaemonSets (with "nvidia" in the name) are also ignored.
+
+    To run this command for all clusters, `xargs` can be used like this:
+
+        ls config/clusters | xargs -I {} deployer generate resource-allocation daemonset-requests {}
     """
     file_path = HERE / "daemonset_requests.yaml"
     file_path.touch(exist_ok=True)

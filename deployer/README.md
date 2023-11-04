@@ -269,10 +269,20 @@ This sub-command can be used to generate the resource allocation choices for giv
 This generates a custom number of resource allocation choices for a certain instance type, depending on a certain chosen strategy that can be used in the profile list of a hub.
 
 ##### `generate resource-allocation daemonset-requests`
-Updates `daemonset_requests.yaml` with an individual cluster's DaemonSets with running pods combined requests of CPU and memory, excluding GPU related DaemonSets.
+Updates `daemonset_requests.yaml` with an individual cluster's DaemonSets' requests summarized.
+
+Only DaemonSet's with running pods are considered, and GPU related DaemonSets (with "nvidia" in the name) are also ignored.
+
+To run this command for all clusters, `xargs` can be used like this:
+
+    ls config/clusters | xargs -I {} deployer generate resource-allocation daemonset-requests {}
 
 ##### `generate resource-allocation instance-capacity`
-Updates `instance_capacity.yaml` with instance types' total and allocatable capacity reported by `kubectl get node`.
+Updates `instance_capacity.yaml` with an individual cluster's running instance types' total and allocatable capacity.
+
+To run this command for all clusters, `xargs` can be used like this:
+
+    ls config/clusters | xargs -I {} deployer generate resource-allocation instance-capacity {}
 
 ##### `generate resource-allocation node-info-update`
 This updates the json file `node-capacity-info.json` with info about the capacity of a node of a certain type. This file is then used for generating the resource choices.

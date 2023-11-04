@@ -95,8 +95,12 @@ def instance_capacity(
     cluster_name: str = typer.Argument(..., help="Name of cluster to operate on"),
 ):
     """
-    Updates `instance_capacity.yaml` with instance types' total and allocatable
-    capacity reported by `kubectl get node`.
+    Updates `instance_capacity.yaml` with an individual cluster's running
+    instance types' total and allocatable capacity.
+
+    To run this command for all clusters, `xargs` can be used like this:
+
+        ls config/clusters | xargs -I {} deployer generate resource-allocation instance-capacity {}
     """
     file_path = HERE / "instance_capacity.yaml"
     file_path.touch(exist_ok=True)
