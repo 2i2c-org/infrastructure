@@ -13,7 +13,7 @@
 # This file isn't updated by automation, but can easily be updated by manually
 # by running a command once for each cluster:
 #
-#     ls config/clusters | xargs -I {} deployer generate resource-allocation instance-capacity {}
+#     ls config/clusters | xargs -I {} deployer generate resource-allocation instance-capacities {}
 #
 # GKE instance types
 n2-highmem-2:

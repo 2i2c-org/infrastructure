@@ -91,18 +91,18 @@ def get_instance_capacities():
 
 
 @resource_allocation_app.command()
-def instance_capacity(
+def instance_capacities(
     cluster_name: str = typer.Argument(..., help="Name of cluster to operate on"),
 ):
     """
-    Updates `instance_capacity.yaml` with an individual cluster's running
+    Updates `instance_capacities.yaml` with an individual cluster's running
     instance types' total and allocatable capacity.
 
     To run this command for all clusters, `xargs` can be used like this:
 
-        ls config/clusters | xargs -I {} deployer generate resource-allocation instance-capacity {}
+        ls config/clusters | xargs -I {} deployer generate resource-allocation instance-capacities {}
     """
-    file_path = HERE / "instance_capacity.yaml"
+    file_path = HERE / "instance_capacities.yaml"
     file_path.touch(exist_ok=True)
 
     # acquire a Cluster object

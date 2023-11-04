@@ -91,8 +91,8 @@ The `deployer.py` file is the main file, that contains all of the commands regis
 │   │       ├── daemonset_requests.py
 │   │       ├── daemonset_requests.yaml
 │   │       ├── generate_choices.py
-│   │       ├── instance_capacity.py
-│   │       ├── instance_capacity.yaml
+│   │       ├── instance_capacities.py
+│   │       ├── instance_capacities.yaml
 │   │       ├── node-capacity-info.json
 │   │       ├── resource_allocation_app.py
 │   │       └── update_nodeinfo.py
@@ -277,12 +277,12 @@ To run this command for all clusters, `xargs` can be used like this:
 
     ls config/clusters | xargs -I {} deployer generate resource-allocation daemonset-requests {}
 
-##### `generate resource-allocation instance-capacity`
-Updates `instance_capacity.yaml` with an individual cluster's running instance types' total and allocatable capacity.
+##### `generate resource-allocation instance-capacities`
+Updates `instance_capacities.yaml` with an individual cluster's running instance types' total and allocatable capacity.
 
 To run this command for all clusters, `xargs` can be used like this:
 
-    ls config/clusters | xargs -I {} deployer generate resource-allocation instance-capacity {}
+    ls config/clusters | xargs -I {} deployer generate resource-allocation instance-capacities {}
 
 ##### `generate resource-allocation node-info-update`
 This updates the json file `node-capacity-info.json` with info about the capacity of a node of a certain type. This file is then used for generating the resource choices.
