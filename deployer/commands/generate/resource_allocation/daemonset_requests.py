@@ -87,9 +87,9 @@ def get_daemon_sets_requests():
     return info
 
 
-def get_daemon_sets_overhead():
+def get_daemon_sets_requests_summary():
     """
-    Returns a summary of the overhead from get_daemon_sets_requests.
+    Returns a summary of the requests from `get_daemon_sets_requests`.
     """
     daemon_sets = get_daemon_sets_requests()
     # filter out DaemonSets related to nvidia GPUs
@@ -117,15 +117,15 @@ def get_daemon_sets_overhead():
 
 
 @resource_allocation_app.command()
-def daemonset_overhead(
+def daemonset_requests(
     cluster_name: str = typer.Argument(..., help="Name of cluster to operate on"),
 ):
     """
-    Updates `daemonset_overhead.yaml` with an individual cluster's DaemonSets
+    Updates `daemonset_requests.yaml` with an individual cluster's DaemonSets
     with running pods combined requests of CPU and memory, excluding GPU related
     DaemonSets.
     """
-    file_path = HERE / "daemonset_overhead.yaml"
+    file_path = HERE / "daemonset_requests.yaml"
     file_path.touch(exist_ok=True)
 
     # acquire a Cluster object
@@ -136,15 +136,15 @@ def daemonset_overhead(
     # auth and inspect cluster
     with cluster.auth():
         k8s_dist, k8s_version = get_k8s_distribution()
-        ds_overhead = get_daemon_sets_overhead()
+        ds_requests = get_daemon_sets_requests_summary()
 
     # read
     with open(file_path) as f:
         info = yaml.load(f) or {}
 
     # update
-    ds_overhead["k8s_version"] = k8s_version
-    info.setdefault(k8s_dist, {})[cluster_name] = ds_overhead
+    ds_requests["k8s_version"] = k8s_version
+    info.setdefault(k8s_dist, {})[cluster_name] = ds_requests
 
     # write
     with open(file_path, "w") as f:

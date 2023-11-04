@@ -9,7 +9,7 @@ import deployer.commands.generate.billing.cost_table  # noqa: F401
 import deployer.commands.generate.dedicated_cluster.aws  # noqa: F401
 import deployer.commands.generate.dedicated_cluster.gcp  # noqa: F401
 import deployer.commands.generate.helm_upgrade.jobs  # noqa: F401
-import deployer.commands.generate.resource_allocation.daemonset_overhead  # noqa: F401
+import deployer.commands.generate.resource_allocation.daemonset_requests  # noqa: F401
 import deployer.commands.generate.resource_allocation.generate_choices  # noqa: F401
 import deployer.commands.generate.resource_allocation.instance_capacity  # noqa: F401
 import deployer.commands.generate.resource_allocation.update_nodeinfo  # noqa: F401
