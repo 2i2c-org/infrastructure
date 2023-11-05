@@ -26,6 +26,13 @@ region                 = "us-central1"
 core_node_machine_type = "n2-highmem-8"
 enable_private_cluster = true
 
+k8s_versions = {
+  min_master_version : "1.26.5-gke.2100",
+  core_nodes_version : "1.26.4-gke.1400",
+  notebook_nodes_version : "1.26.4-gke.1400",
+  dask_nodes_version : "1.26.4-gke.1400",
+}
+
 # Multi-tenant cluster, network policy is required to enforce separation between hubs
 enable_network_policy = true
 
@@ -69,45 +76,21 @@ notebook_nodes = {
     min : 0,
     max : 100,
     machine_type : "n1-standard-2",
-    labels : {},
-    gpu : {
-      enabled : false,
-      type : "",
-      count : 0
-    }
   },
   "medium" : {
     min : 0,
     max : 100,
     machine_type : "n1-standard-4",
-    labels : {},
-    gpu : {
-      enabled : false,
-      type : "",
-      count : 0
-    }
   },
   "large" : {
     min : 0,
     max : 100,
     machine_type : "n1-standard-8",
-    labels : {},
-    gpu : {
-      enabled : false,
-      type : "",
-      count : 0
-    }
   },
   "huge" : {
     min : 0,
     max : 100,
     machine_type : "n1-standard-16",
-    labels : {},
-    gpu : {
-      enabled : false,
-      type : "",
-      count : 0
-    }
   },
 }
 
@@ -117,6 +100,7 @@ notebook_nodes = {
 # node pool, see https://github.com/2i2c-org/infrastructure/issues/2687.
 #
 dask_nodes = {
+  # FIXME: Rename this to "n2-highmem-16" when given the chance and no such nodes are running
   "worker" : {
     min : 0,
     max : 100,
