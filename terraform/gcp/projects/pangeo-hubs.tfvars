@@ -18,6 +18,7 @@
 #
 #     terraform apply --var-file projects/pangeo-hubs.tfvars
 #
+# FIXME: core_node_machine_type should be set to n2-highmem-4 as its enough
 prefix                 = "pangeo-hubs"
 project_id             = "pangeo-integration-te-3eea"
 billing_project_id     = "pangeo-integration-te-3eea"
