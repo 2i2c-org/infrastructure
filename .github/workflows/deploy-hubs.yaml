@@ -12,13 +12,13 @@ on:
     branches:
       - master
     paths:
+      # Include changes to the deployer script's folder, but exclude some parts
       - deployer/**
-      # Exclude changes to the tests directory from
-      # triggering this workflow
-      - "!deployer/health_check_tests/**"
-      # Exclude changes to the README from triggering
-      # this workflow
       - "!deployer/README.md"
+      - "!deployer/health_check_tests/**"
+      - "!deployer/commands/generate/billing/**"
+      - "!deployer/commands/generate/dedicated_cluster/**"
+      - "!deployer/commands/generate/resource_allocation/**"
       - requirements.txt
       - .github/actions/setup-deploy/**
       - helm-charts/**
@@ -27,13 +27,13 @@ on:
     branches:
       - master
     paths:
+      # Include changes to the deployer script's folder, but exclude some parts
       - deployer/**
-      # Exclude changes to the tests directory from
-      # triggering this workflow
-      - "!deployer/health_check_tests/**"
-      # Exclude changes to the README from triggering
-      # this workflow
       - "!deployer/README.md"
+      - "!deployer/health_check_tests/**"
+      - "!deployer/commands/generate/billing/**"
+      - "!deployer/commands/generate/dedicated_cluster/**"
+      - "!deployer/commands/generate/resource_allocation/**"
       - requirements.txt
       - .github/actions/setup-deploy/**
       - helm-charts/**
