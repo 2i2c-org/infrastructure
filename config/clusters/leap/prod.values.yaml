@@ -22,8 +22,11 @@ basehub:
       chp:
         resources:
           requests:
+            cpu: 100m
+            memory: 256Mi
+          limits:
             cpu: 1
-            memory: 1Gi
+            memory: 512Mi
     singleuser:
       extraEnv:
         SCRATCH_BUCKET: gs://leap-scratch/$(JUPYTERHUB_USER)
@@ -32,8 +35,11 @@ basehub:
     hub:
       resources:
         requests:
+          cpu: 100m
+          memory: 512Mi
+        limits:
           cpu: 1
-          memory: 2Gi
+          memory: 1Gi
       config:
         GitHubOAuthenticator:
           oauth_callback_url: https://leap.2i2c.cloud/hub/oauth_callback
