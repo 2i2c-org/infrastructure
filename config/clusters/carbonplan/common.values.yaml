@@ -170,19 +170,19 @@ basehub:
       chp:
         resources:
           requests:
-            cpu: 0.5
+            cpu: 100m
             memory: 256Mi
           limits:
             cpu: 1
-            memory: 4Gi
+            memory: 512Mi
     hub:
       resources:
         requests:
-          cpu: 0.5
-          memory: 256Mi
+          cpu: 100m
+          memory: 512Mi
         limits:
           cpu: 1
-          memory: 4Gi
+          memory: 1Gi
       allowNamedServers: true
       config:
         JupyterHub:
