@@ -114,6 +114,9 @@ AWS, and we can configure a node group there to provide us GPUs.
         tags+: {
             "k8s.io/cluster-autoscaler/node-template/resources/nvidia.com/gpu": "1"
         },
+        // Allow provisioning GPUs across all AZs, to prevent situation where all
+        // GPUs in a single AZ are in use and no new nodes can be spawned
+        availabilityZones: masterAzs,
     }
    ```
 
@@ -121,6 +124,10 @@ AWS, and we can configure a node group there to provide us GPUs.
    is necessary to let the autoscaler know that this nodegroup has
    1 GPU per node. If you're using a different machine type with
    more GPUs, adjust this definition accordingly.
+
+   We use a prior variable, `masterAzs`, to allow for GPU nodes to spawn in all
+   AZ in the region, rather than just a specific one. This is helpful as a single
+   zone may run out of GPUs rather fast.
 
 2. Render the `.jsonnet` file into a `.yaml` file that `eksctl` can use
 

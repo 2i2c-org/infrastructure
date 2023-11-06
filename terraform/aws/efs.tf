@@ -1,16 +1,14 @@
-// Find out which subnet and security group our EFS mount target should be in
+// Find out which subnets and security group our EFS mount target should be in
 // It needs to be in the public subnet where our nodes are, as the nodes will be
 // doing the mounting operation. It should be in a security group shared by all
-// the nodes.
-data "aws_subnet" "cluster_node_subnet" {
+// the nodes. We create a mount target in each subnet, even if we primarily put
+// all our nodes in one - this allows for GPU nodes to be spread out across
+// AZ when needed
+data "aws_subnets" "cluster_node_subnets" {
 
   filter {
     name   = "vpc-id"
     values = [data.aws_eks_cluster.cluster.vpc_config[0]["vpc_id"]]
-  }
-  filter {
-    name   = "availability-zone"
-    values = [var.cluster_nodes_location]
   }
 
   filter {
@@ -70,8 +68,10 @@ resource "aws_efs_file_system" "homedirs" {
 }
 
 resource "aws_efs_mount_target" "homedirs" {
+  for_each = toset(data.aws_subnets.cluster_node_subnets.ids)
+
   file_system_id  = aws_efs_file_system.homedirs.id
-  subnet_id       = data.aws_subnet.cluster_node_subnet.id
+  subnet_id       = each.key
   security_groups = [data.aws_security_group.cluster_nodes_shared_security_group.id]
 }
 
