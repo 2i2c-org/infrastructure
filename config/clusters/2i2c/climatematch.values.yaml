@@ -8,13 +8,6 @@ jupyterhub:
     memory:
       limit: 16G
       guarantee: 10G
-    nodeSelector:
-      2i2c.org/community: climatematch
-    extraTolerations:
-      - key: "2i2c.org/community"
-        operator: "Equal"
-        value: "climatematch"
-        effect: "NoSchedule"
     defaultUrl: /lab
     image:
       name: wesleyban/climatematch-notebook
