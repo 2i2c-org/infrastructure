@@ -39,7 +39,8 @@ user_buckets = {
   },
   "public-persistent" : {
     "delete_after" : null,
-    "extra_admin_members" : ["group:m2lines-persistent-bucket-writers@googlegroups.com"]
+    "extra_admin_members" : ["group:m2lines-persistent-bucket-writers@googlegroups.com"],
+    "public_access" : true
   },
 
 }
@@ -115,7 +116,6 @@ hub_cloud_permissions = {
   "prod" : {
     requestor_pays : true,
     bucket_admin_access : ["scratch", "persistent", "public-persistent"],
-    bucket_public_access : ["public-persistent"],
     hub_namespace : "prod"
   },
 }

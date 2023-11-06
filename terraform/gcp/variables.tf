@@ -240,7 +240,7 @@ variable "enable_network_policy" {
 }
 
 variable "user_buckets" {
-  type        = map(object({ delete_after : number, extra_admin_members : optional(list(string), []) }))
+  type        = map(object({ delete_after : number, extra_admin_members : optional(list(string), []), public_access : optional(bool, false) }))
   default     = {}
   description = <<-EOT
   GCS Buckets to be created.
@@ -258,6 +258,9 @@ variable "user_buckets" {
   is primarily useful for moving data into and out of buckets from outside
   the cloud. See https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/storage_bucket_iam#member/members
   for the format this would be specified in.
+
+  'public_access', if set to true, makes the bucket fully accessible to
+  the public internet, without any authentication.
   EOT
 }
 
@@ -379,7 +382,6 @@ variable "hub_cloud_permissions" {
       requestor_pays : bool,
       bucket_admin_access : set(string),
       bucket_readonly_access : optional(set(string), []),
-      bucket_public_access : optional(set(string), []),
       hub_namespace : string
     })
   )
