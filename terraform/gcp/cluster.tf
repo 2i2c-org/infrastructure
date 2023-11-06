@@ -247,7 +247,7 @@ resource "google_container_node_pool" "notebook" {
   cluster  = google_container_cluster.cluster.name
   project  = google_container_cluster.cluster.project
   location = google_container_cluster.cluster.location
-  version  = var.k8s_versions.notebook_nodes_version
+  version  = try(each.value.node_version, var.k8s_versions.notebook_nodes_version)
 
   # terraform treats null same as unset, so we only set the node_locations
   # here if it is explicitly overriden. If not, it will just inherit whatever

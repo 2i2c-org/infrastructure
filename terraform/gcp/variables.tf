@@ -98,7 +98,8 @@ variable "notebook_nodes" {
       {}
     ),
     resource_labels : optional(map(string), {}),
-    zones : optional(list(string), [])
+    zones : optional(list(string), []),
+    node_version : optional(string, ""),
   }))
   description = "Notebook node pools to create"
   default     = {}
