@@ -14,4 +14,4 @@ jupyterhub:
         oauth_callback_url: https://r-staging.datatools.utoronto.ca/hub/oauth_callback
   singleuser:
     image:
-      tag: "bb58a48eb2e8"
+      tag: "60ec7c973a69"
