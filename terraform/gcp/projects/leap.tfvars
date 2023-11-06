@@ -5,10 +5,10 @@ project_id = "leap-pangeo"
 core_node_machine_type = "n2-highmem-4"
 
 k8s_versions = {
-  min_master_version : "1.25.6-gke.1000",
-  core_nodes_version : "1.25.6-gke.1000",
-  notebook_nodes_version : "1.25.6-gke.1000",
-  dask_nodes_version : "1.25.6-gke.1000",
+  min_master_version : "1.27.4-gke.900",
+  core_nodes_version : "1.27.4-gke.900",
+  notebook_nodes_version : "1.27.4-gke.900",
+  dask_nodes_version : "1.27.4-gke.900",
 }
 
 # GPUs not available in us-central1-b
@@ -76,22 +76,26 @@ notebook_nodes = {
     machine_type : "n2-highmem-4",
   },
   # FIXME: Rename this to "n2-highmem-16" when given the chance and no such nodes are running
+  # FIXME: Remove node pool specific node_version pin when given the chance and no such nodes are running
   "medium" : {
     # A minimum of one is configured for LEAP to ensure quick startups at all
     # time. Cost is not a greater concern than optimizing startup times.
     min : 1,
     max : 100,
     machine_type : "n2-highmem-16",
+    node_version : "1.25.6-gke.1000",
   },
   "n2-highmem-64" : {
     min : 0,
     max : 100,
     machine_type : "n2-highmem-64"
   }
+  # FIXME: Remove node pool specific node_version pin when given the chance and no such nodes are running
   "gpu-t4" : {
     min : 0,
     max : 100,
     machine_type : "n1-standard-8",
+    node_version : "1.25.6-gke.1000",
     gpu : {
       enabled : true,
       type : "nvidia-tesla-t4",
@@ -114,7 +118,7 @@ notebook_nodes = {
 # node pool, see https://github.com/2i2c-org/infrastructure/issues/2687.
 #
 dask_nodes = {
-  "medium" : {
+  "n2-highmem-16" : {
     min : 0,
     max : 200,
     # Disable preemptive nodes for dask so we can remove possible complications

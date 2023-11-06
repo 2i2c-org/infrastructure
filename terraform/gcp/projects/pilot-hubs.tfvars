@@ -6,10 +6,10 @@ region           = "us-central1"
 regional_cluster = false
 
 k8s_versions = {
-  min_master_version : "1.26.5-gke.2100",
-  core_nodes_version : "1.26.5-gke.2100",
-  notebook_nodes_version : "1.26.4-gke.1400",
-  dask_nodes_version : "1.26.5-gke.1400",
+  min_master_version : "1.27.4-gke.900",
+  core_nodes_version : "1.27.4-gke.900",
+  notebook_nodes_version : "1.27.4-gke.900",
+  dask_nodes_version : "1.27.4-gke.900",
 }
 
 core_node_machine_type = "n2-highmem-4"
@@ -19,8 +19,7 @@ enable_filestore      = true
 filestore_capacity_gb = 5120
 
 notebook_nodes = {
-  # FIXME: Rename this to "n2-highmem-4" when given the chance and no such nodes are running
-  "user" : {
+  "n2-highmem-4" : {
     min : 0,
     max : 100,
     machine_type : "n2-highmem-4",
@@ -34,7 +33,7 @@ notebook_nodes = {
     min : 0,
     max : 100,
     machine_type : "n2-highmem-64",
-  }
+  },
   # Nodepool for neurohackademy. Tracking issue: https://github.com/2i2c-org/infrastructure/issues/2681
   "neurohackademy" : {
     # We expect around 120 users
@@ -52,8 +51,9 @@ notebook_nodes = {
     resource_labels : {
       "community" : "neurohackademy"
     },
-  }
+  },
   # Nodepool for temple university. https://github.com/2i2c-org/infrastructure/issues/3158
+  # FIXME: Remove node pool specific node_version pin when given the chance and no such nodes are running
   "temple" : {
     # Expecting upto ~120 users at a time
     min : 0,
@@ -62,6 +62,7 @@ notebook_nodes = {
     # This fits upto 100 users on the node, as memory guarantee isn't the constraint.
     # This works ok.
     machine_type : "n2-highmem-8",
+    node_version : "1.26.4-gke.1400",
     labels : {
       "2i2c.org/community" : "temple"
     },
@@ -73,7 +74,7 @@ notebook_nodes = {
     resource_labels : {
       "community" : "temple"
     },
-  }
+  },
   # Nodepool for jackeddy symposium. https://github.com/2i2c-org/infrastructure/issues/3166
   "jackeddy" : {
     min : 0,
@@ -89,8 +90,8 @@ notebook_nodes = {
     }],
     resource_labels : {
       "community" : "jackeddy"
-    }
-  }
+    },
+  },
 }
 
 # Setup a single node pool for dask workers.
@@ -99,7 +100,7 @@ notebook_nodes = {
 # node pool, see https://github.com/2i2c-org/infrastructure/issues/2687.
 #
 dask_nodes = {
-  "worker" : {
+  "n2-highmem-16" : {
     min : 0,
     max : 100,
     machine_type : "n2-highmem-16",

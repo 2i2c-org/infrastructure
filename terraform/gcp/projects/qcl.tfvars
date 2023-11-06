@@ -6,9 +6,9 @@ region           = "europe-west1"
 regional_cluster = true
 
 k8s_versions = {
-  min_master_version : "1.25.10-gke.2700",
-  core_nodes_version : "1.24.9-gke.3200",
-  notebook_nodes_version : "1.24.9-gke.3200",
+  min_master_version : "1.27.4-gke.900",
+  core_nodes_version : "1.27.4-gke.900",
+  notebook_nodes_version : "1.27.4-gke.900",
 }
 
 core_node_machine_type = "n2-highmem-2"
@@ -27,40 +27,37 @@ user_buckets = {
 }
 
 notebook_nodes = {
-  # FIXME: Rename this to "n2-highmem-4" when given the chance and no such nodes are running
-  "small" : {
+  "n2-highmem-4" : {
     min : 0,
     max : 100,
     machine_type : "n2-highmem-4",
   },
-  # FIXME: Rename this to "n2-highmem-16" when given the chance and no such nodes are running
-  "medium" : {
+  "n2-highmem-16" : {
     min : 0,
     max : 100,
     machine_type : "n2-highmem-16",
-  },
-  # FIXME: Rename this to "n2-highmem-48" when given the chance and no such nodes are running
-  "large" : {
-    min : 0,
-    max : 100,
-    machine_type : "n2-standard-48",
   },
   "n2-highmem-64" : {
     min : 0,
     max : 100,
     machine_type : "n2-highmem-64",
   }
-  "huge" : {
+  "n2-standard-48" : {
+    min : 0,
+    max : 100,
+    machine_type : "n2-standard-48",
+  },
+  "n2-standard-96" : {
     min : 0,
     max : 100,
     machine_type : "n2-standard-96",
   },
-  "large-highcpu" : {
+  "n2-highcpu-32" : {
     min : 0,
     max : 100,
     machine_type : "n2-highcpu-32",
   },
-  "huge-highcpu" : {
+  "n2-highcpu-96" : {
     min : 0,
     max : 100,
     machine_type : "n2-highcpu-96",
