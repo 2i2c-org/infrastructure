@@ -23,7 +23,6 @@ notebook_nodes = {
     min : 0,
     max : 100,
     machine_type : "n2-highmem-4",
-    node_version : "1.27.4-gke.900",
   },
   "n2-highmem-16" : {
     min : 0,
