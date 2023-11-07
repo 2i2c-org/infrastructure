@@ -12,6 +12,3 @@ jupyterhub:
     config:
       CILogonOAuthenticator:
         oauth_callback_url: https://r-staging.datatools.utoronto.ca/hub/oauth_callback
-  singleuser:
-    image:
-      tag: "60ec7c973a69"
