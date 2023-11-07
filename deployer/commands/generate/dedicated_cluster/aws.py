@@ -19,6 +19,22 @@ from .common import generate_config_directory, generate_support_files
 from .dedicated_cluster_app import dedicated_cluster_app
 
 
+def infra_files_already_exist(cluster_name):
+    infra_files = {
+        "jsonnet_file_path": REPO_ROOT_PATH / "eksctl" / f"{cluster_name}.jsonnet",
+        "tfvars_file_path": (
+            REPO_ROOT_PATH / "terraform/aws/projects" / f"{cluster_name}.tfvars"
+        ),
+        "ssh_key_file": REPO_ROOT_PATH
+        / "eksctl/ssh-keys/secret"
+        / f"{cluster_name}.key",
+    }
+    if any(os.path.exists(path) for path in infra_files.values()):
+        return True
+
+    return False
+
+
 def generate_infra_files(vars):
     cluster_name = vars["cluster_name"]
     with open(REPO_ROOT_PATH / "eksctl/template.jsonnet") as f:
@@ -42,7 +58,6 @@ def generate_infra_files(vars):
     print_colour("Generating the terraform infrastructure file...", "yellow")
     with open(REPO_ROOT_PATH / "terraform/aws/projects/template.tfvars") as f:
         tfvars_template = jinja2.Template(f.read())
-
     tfvars_file_path = (
         REPO_ROOT_PATH / "terraform/aws/projects" / f"{cluster_name}.tfvars"
     )
@@ -87,9 +102,15 @@ def aws(
     cluster_region: str = typer.Option(
         ..., prompt="The region where to deploy the cluster"
     ),
+    force: bool = typer.Option(
+        False,
+        "--force",
+        help="Whether or not to force the override of the files that already exist",
+    ),
 ):
     """
-    Automatically generate the files required to setup a new cluster on AWS
+    Automatically generate the files required to setup a new cluster on AWS if they don't exist.
+    Use --force to force existing configuration files to be overwritten by this command.
     """
 
     # These are the variables needed by the templates used to generate the cluster config file
@@ -100,10 +121,23 @@ def aws(
         "cluster_region": cluster_region,
     }
 
-    generate_infra_files(vars)
+    if infra_files_already_exist(cluster_name):
+        if not force:
+            print_colour(
+                f"Found existing infrastructure files for {cluster_name}. Use --force if you want to allow this script to overwrite them.",
+                "red",
+            )
+            raise typer.Abort("blabla")
+        else:
+            print_colour(
+                f"Attention! Found existing infrastructure files for {cluster_name}. They will be overwritten by the --force flag!",
+                "red",
+            )
 
+    # If we are here, then either no existing infrastructure files for this cluster have been found
+    # or the `--force` flag was provided and we can override existing files.
+    generate_infra_files(vars)
     # Automatically generate the config directory
     cluster_config_directory = generate_config_directory(vars)
-
     # Generate the support files
     generate_support_files(cluster_config_directory, vars)
