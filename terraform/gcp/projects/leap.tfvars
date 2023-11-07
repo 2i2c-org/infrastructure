@@ -44,11 +44,13 @@ user_buckets = {
   # For https://github.com/2i2c-org/infrastructure/issues/1230#issuecomment-1278183441
   "persistent-ro" : {
     "delete_after" : null,
-    "extra_admin_members" : ["group:leap-persistent-bucket-writers@googlegroups.com"]
+    "extra_admin_members" : ["group:leap-persistent-bucket-writers@googlegroups.com"],
+    "public_access" : true
   },
   "persistent-ro-staging" : {
     "delete_after" : null,
-    "extra_admin_members" : ["group:leap-persistent-bucket-writers@googlegroups.com"]
+    "extra_admin_members" : ["group:leap-persistent-bucket-writers@googlegroups.com"],
+    "public_access" : true
   }
 }
 
@@ -63,7 +65,6 @@ hub_cloud_permissions = {
     requestor_pays : true,
     bucket_admin_access : ["scratch", "persistent"],
     bucket_readonly_access : ["persistent-ro"],
-    bucket_public_access : ["persistent-ro"],
     hub_namespace : "prod"
   }
 }

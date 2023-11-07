@@ -73,9 +73,31 @@ on why users want this!
 
 4. Get this change deployed, and users should now be able to use the buckets!
    Currently running users might have to restart their pods for the change to take effect.
-   
-   
-## Allowing access to buckets from outside the JupyterHub
+
+
+## Allowing public, readonly to buckets from outside the JupyterHub
+
+### GCP
+
+Some hubs want to expose a particular bucket to the broad internet.
+This can have catastrophic cost consequences, so we only allow this
+on clusters where 2i2c is not paying the bill for.
+
+This can be enabled by setting the `public_access` parameter in
+`user_buckets` for the appropriate bucket, and running `terraform apply`.
+
+Example:
+
+```terraform
+user_buckets = {
+   "persistent": {
+      "delete_after": null,
+      "public_access": true
+   }
+}
+```
+
+## Allowing authenticated access to buckets from outside the JupyterHub
 
 ### GCP
 
