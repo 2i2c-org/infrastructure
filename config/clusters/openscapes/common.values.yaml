@@ -36,10 +36,19 @@ basehub:
       defaultUrl: /lab
       storage:
         extraVolumeMounts:
+          # Copy paste from basehub/values.yaml because we want
+          # `shared` to be readwrite for *everyone*
           - name: home
             mountPath: /home/jovyan/shared
             subPath: _shared
             readOnly: false
+          - name: home
+            mountPath: /home/rstudio
+            subPath: "{username}"
+          - name: home
+            mountPath: /home/rstudio/shared
+            subPath: _shared
+            readOnly: true
     scheduling:
       userScheduler:
         enabled: true
