@@ -43,12 +43,12 @@ basehub:
             subPath: _shared
             readOnly: false
           - name: home
-            mountPath: /home/rstudio
-            subPath: "{username}"
-          - name: home
             mountPath: /home/rstudio/shared
             subPath: _shared
-            readOnly: true
+            readOnly: false
+          - name: home
+            mountPath: /home/rstudio
+            subPath: "{username}"
     scheduling:
       userScheduler:
         enabled: true
