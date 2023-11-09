@@ -15,7 +15,7 @@ For example, see the [2i2c cluster directory](https://github.com/2i2c-org/infras
 All our secrets are encrypted with [`sops`](https://github.com/mozilla/sops).
 
 :::{seealso}
-For information about how to set up `sops`, see [the team compass documentation](tc:secrets:sops)
+For information about how to set up `sops`, see [the team compass documentation](https://compass.2i2c.org/engineering/secrets/)
 :::
 
 (secrets:naming-conventions)=
