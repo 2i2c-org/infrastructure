@@ -10,26 +10,6 @@ from deployer.utils.file_acquisition import REPO_ROOT_PATH
 from deployer.utils.rendering import print_colour
 
 
-def check_force_overwrite(cluster_name, force):
-    """
-    Check if the force flag is present and print relevant messages to stdout.
-    If  the --force flag was False, return False, otherwise, return True.
-    """
-    if not force:
-        print_colour(
-            f"Found existing infrastructure files for cluster {cluster_name}. Use --force if you want to allow this script to overwrite them.",
-            "red",
-        )
-        return False
-
-    print_colour(
-        f"Attention! Found existing infrastructure files for {cluster_name}. They will be overwritten by the --force flag!",
-        "red",
-    )
-
-    return True
-
-
 def check_git_status_clean(infra_files):
     """
     Check if running `git status` doesn't return any file that the generate command should create/update.
@@ -72,9 +52,17 @@ def check_before_continuing_with_generate_command(
     if not (any(os.path.exists(path) for path in infra_files)):
         return True
 
-    if not check_force_overwrite(cluster_name, force):
+    if not force:
+        print_colour(
+            f"Found existing infrastructure files for cluster {cluster_name}. Use --force if you want to allow this script to overwrite them.",
+            "red",
+        )
         return False
 
+    print_colour(
+        f"Attention! Found existing infrastructure files for {cluster_name}. They will be overwritten by the --force flag!",
+        "red",
+    )
     return True
 
 
