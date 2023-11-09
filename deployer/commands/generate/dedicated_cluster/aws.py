@@ -15,24 +15,22 @@ import typer
 from deployer.utils.file_acquisition import REPO_ROOT_PATH
 from deployer.utils.rendering import print_colour
 
-from .common import generate_config_directory, generate_support_files
+from .common import (
+    generate_config_directory,
+    generate_support_files,
+    infra_files_already_exist,
+)
 from .dedicated_cluster_app import dedicated_cluster_app
 
 
-def infra_files_already_exist(cluster_name):
-    infra_files = {
-        "jsonnet_file_path": REPO_ROOT_PATH / "eksctl" / f"{cluster_name}.jsonnet",
-        "tfvars_file_path": (
-            REPO_ROOT_PATH / "terraform/aws/projects" / f"{cluster_name}.tfvars"
-        ),
-        "ssh_key_file": REPO_ROOT_PATH
-        / "eksctl/ssh-keys/secret"
-        / f"{cluster_name}.key",
-    }
-    if any(os.path.exists(path) for path in infra_files.values()):
-        return True
-
-    return False
+def get_infra_files_to_be_created(cluster_name):
+    return [
+        REPO_ROOT_PATH / "eksctl" / f"{cluster_name}.jsonnet",
+        (REPO_ROOT_PATH / "terraform/aws/projects" / f"{cluster_name}.tfvars"),
+        (REPO_ROOT_PATH / "eksctl/ssh-keys/secret" / f"{cluster_name}.key",),
+        REPO_ROOT_PATH / "config/clusters/templates/common/support.values.yaml",
+        REPO_ROOT_PATH / "config/clusters/templates/common/support.secret.values.yaml",
+    ]
 
 
 def generate_infra_files(vars):
@@ -65,6 +63,7 @@ def generate_infra_files(vars):
         f.write(tfvars_template.render(**vars))
     print_colour(f"{tfvars_file_path} created")
 
+    print_colour("Generate, encrypt and store the ssh private key...", "yellow")
     subprocess.check_call(
         [
             "ssh-keygen",
@@ -82,15 +81,17 @@ def generate_infra_files(vars):
         f"{REPO_ROOT_PATH}/eksctl/ssh-keys/secret/{cluster_name}.key",
     )
 
+    ssh_key_file = REPO_ROOT_PATH / "eksctl/ssh-keys/secret" / f"{cluster_name}.key"
     # Encrypt the private key
     subprocess.check_call(
         [
             "sops",
             "--in-place",
             "--encrypt",
-            f"{REPO_ROOT_PATH}/eksctl/ssh-keys/secret/{cluster_name}.key",
+            ssh_key_file,
         ]
     )
+    print_colour(f"{ssh_key_file} created")
 
 
 @dedicated_cluster_app.command()
@@ -121,7 +122,7 @@ def aws(
         "cluster_region": cluster_region,
     }
 
-    if infra_files_already_exist(cluster_name):
+    if infra_files_already_exist(get_infra_files_to_be_created, cluster_name):
         if not force:
             print_colour(
                 f"Found existing infrastructure files for {cluster_name}. Use --force if you want to allow this script to overwrite them.",

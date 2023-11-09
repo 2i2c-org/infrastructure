@@ -9,6 +9,14 @@ from deployer.utils.file_acquisition import REPO_ROOT_PATH
 from deployer.utils.rendering import print_colour
 
 
+def infra_files_already_exist(get_infra_files_func, cluster_name):
+    infra_files = get_infra_files_func(cluster_name)
+    if any(os.path.exists(path) for path in infra_files):
+        return True
+
+    return False
+
+
 def generate_cluster_config_file(cluster_config_directory, provider, vars):
     """
     Generates the `config/<cluster_name>/cluster.yaml` config
