@@ -26,10 +26,13 @@ from .dedicated_cluster_app import dedicated_cluster_app
 def get_infra_files_to_be_created(cluster_name):
     return [
         REPO_ROOT_PATH / "eksctl" / f"{cluster_name}.jsonnet",
-        (REPO_ROOT_PATH / "terraform/aws/projects" / f"{cluster_name}.tfvars"),
-        (REPO_ROOT_PATH / "eksctl/ssh-keys/secret" / f"{cluster_name}.key",),
-        REPO_ROOT_PATH / "config/clusters/templates/common/support.values.yaml",
-        REPO_ROOT_PATH / "config/clusters/templates/common/support.secret.values.yaml",
+        REPO_ROOT_PATH / "terraform/aws/projects" / f"{cluster_name}.tfvars",
+        REPO_ROOT_PATH / "eksctl/ssh-keys/secret" / f"{cluster_name}.key",
+        REPO_ROOT_PATH
+        / "config/clusters/"
+        / cluster_name
+        / "enc-support.secret.values.yaml",
+        REPO_ROOT_PATH / "config/clusters" / cluster_name / "cluster.yaml",
     ]
 
 
