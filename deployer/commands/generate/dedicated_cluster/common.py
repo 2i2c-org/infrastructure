@@ -17,16 +17,35 @@ def infra_files_already_exist(get_infra_files_func, cluster_name):
     return False
 
 
+def force_overwrite(get_infra_files_func, cluster_name, force):
+    if infra_files_already_exist(get_infra_files_func, cluster_name):
+        if not force:
+            print_colour(
+                f"Found existing infrastructure files for cluster {cluster_name}. Use --force if you want to allow this script to overwrite them.",
+                "red",
+            )
+            return False
+        else:
+            print_colour(
+                f"Attention! Found existing infrastructure files for {cluster_name}. They will be overwritten by the --force flag!",
+                "red",
+            )
+    return True
+
+
 def generate_cluster_config_file(cluster_config_directory, provider, vars):
     """
     Generates the `config/<cluster_name>/cluster.yaml` config
     """
+    print_colour("Generating the cluster.yaml config file...", "yellow")
     with open(
         REPO_ROOT_PATH / f"config/clusters/templates/{provider}/cluster.yaml"
     ) as f:
         cluster_yaml_template = jinja2.Template(f.read())
-    with open(cluster_config_directory / "cluster.yaml", "w") as f:
+    cluster_yaml_file = cluster_config_directory / "cluster.yaml"
+    with open(cluster_yaml_file, "w") as f:
         f.write(cluster_yaml_template.render(**vars))
+        print_colour(f"{cluster_yaml_file} created")
 
 
 def generate_support_files(cluster_config_directory, vars):
