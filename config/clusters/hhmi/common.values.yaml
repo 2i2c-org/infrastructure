@@ -32,9 +32,9 @@ basehub:
     singleuser:
       defaultUrl: /lab
       profileList:
-        - display_name: "Frank Loren Lab"
+        - display_name: "Loren Frank Lab"
           default: true
-          description: "Spyglass-NWB container for the Frank Loren Lab"
+          description: "Spyglass-NWB container for the Loren Frank Lab"
           slug: frankloren
           profile_options:
             image:
