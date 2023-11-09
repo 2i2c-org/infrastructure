@@ -15,11 +15,7 @@ import typer
 from deployer.utils.file_acquisition import REPO_ROOT_PATH
 from deployer.utils.rendering import print_colour
 
-from .common import (
-    generate_config_directory,
-    generate_support_files,
-    infra_files_already_exist,
-)
+from .common import force_overwrite, generate_config_directory, generate_support_files
 from .dedicated_cluster_app import dedicated_cluster_app
 
 
@@ -29,7 +25,7 @@ def get_infra_files_to_be_created(cluster_name):
         REPO_ROOT_PATH / "terraform/aws/projects" / f"{cluster_name}.tfvars",
         REPO_ROOT_PATH / "eksctl/ssh-keys/secret" / f"{cluster_name}.key",
         REPO_ROOT_PATH
-        / "config/clusters/"
+        / "config/clusters"
         / cluster_name
         / "enc-support.secret.values.yaml",
         REPO_ROOT_PATH / "config/clusters" / cluster_name / "cluster.yaml",
@@ -125,18 +121,8 @@ def aws(
         "cluster_region": cluster_region,
     }
 
-    if infra_files_already_exist(get_infra_files_to_be_created, cluster_name):
-        if not force:
-            print_colour(
-                f"Found existing infrastructure files for {cluster_name}. Use --force if you want to allow this script to overwrite them.",
-                "red",
-            )
-            raise typer.Abort("blabla")
-        else:
-            print_colour(
-                f"Attention! Found existing infrastructure files for {cluster_name}. They will be overwritten by the --force flag!",
-                "red",
-            )
+    if not force_overwrite(get_infra_files_to_be_created, cluster_name, force):
+        raise typer.Abort()
 
     # If we are here, then either no existing infrastructure files for this cluster have been found
     # or the `--force` flag was provided and we can override existing files.
