@@ -17,7 +17,7 @@ from deployer.utils.file_acquisition import REPO_ROOT_PATH
 from deployer.utils.rendering import print_colour
 
 from .common import (
-    force_overwrite,
+    check_before_continuing_with_generate_command,
     generate_cluster_config_file,
     generate_config_directory,
     generate_support_files,
@@ -98,7 +98,9 @@ def gcp(
         "hub_name": hub_name,
     }
 
-    if not force_overwrite(get_infra_files_to_be_created, cluster_name, force):
+    if not check_before_continuing_with_generate_command(
+        get_infra_files_to_be_created, cluster_name, force
+    ):
         raise typer.Abort()
 
     # If we are here, then either no existing infrastructure files for this cluster have been found

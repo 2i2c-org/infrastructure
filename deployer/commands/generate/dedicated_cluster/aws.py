@@ -15,7 +15,11 @@ import typer
 from deployer.utils.file_acquisition import REPO_ROOT_PATH
 from deployer.utils.rendering import print_colour
 
-from .common import force_overwrite, generate_config_directory, generate_support_files
+from .common import (
+    check_before_continuing_with_generate_command,
+    generate_config_directory,
+    generate_support_files,
+)
 from .dedicated_cluster_app import dedicated_cluster_app
 
 
@@ -24,6 +28,7 @@ def get_infra_files_to_be_created(cluster_name):
         REPO_ROOT_PATH / "eksctl" / f"{cluster_name}.jsonnet",
         REPO_ROOT_PATH / "terraform/aws/projects" / f"{cluster_name}.tfvars",
         REPO_ROOT_PATH / "eksctl/ssh-keys/secret" / f"{cluster_name}.key",
+        REPO_ROOT_PATH / "config/clusters" / cluster_name / "support.values.yaml",
         REPO_ROOT_PATH
         / "config/clusters"
         / cluster_name
@@ -112,16 +117,18 @@ def aws(
     Automatically generate the files required to setup a new cluster on AWS if they don't exist.
     Use --force to force existing configuration files to be overwritten by this command.
     """
-
     # These are the variables needed by the templates used to generate the cluster config file
     # and support files
+
     vars = {
         "cluster_name": cluster_name,
         "hub_type": hub_type,
         "cluster_region": cluster_region,
     }
 
-    if not force_overwrite(get_infra_files_to_be_created, cluster_name, force):
+    if not check_before_continuing_with_generate_command(
+        get_infra_files_to_be_created, cluster_name, force
+    ):
         raise typer.Abort()
 
     # If we are here, then either no existing infrastructure files for this cluster have been found

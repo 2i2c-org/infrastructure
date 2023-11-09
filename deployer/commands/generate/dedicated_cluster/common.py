@@ -4,32 +4,77 @@ import string
 import subprocess
 
 import jinja2
+from git import Repo
 
 from deployer.utils.file_acquisition import REPO_ROOT_PATH
 from deployer.utils.rendering import print_colour
 
 
-def infra_files_already_exist(get_infra_files_func, cluster_name):
-    infra_files = get_infra_files_func(cluster_name)
-    if any(os.path.exists(path) for path in infra_files):
-        return True
+def check_force_overwrite(cluster_name, force):
+    """
+    Check if the force flag is present and print relevant messages to stdout.
+    If  the --force flag was False, return False, otherwise, return True.
+    """
+    if not force:
+        print_colour(
+            f"Found existing infrastructure files for cluster {cluster_name}. Use --force if you want to allow this script to overwrite them.",
+            "red",
+        )
+        return False
 
-    return False
+    print_colour(
+        f"Attention! Found existing infrastructure files for {cluster_name}. They will be overwritten by the --force flag!",
+        "red",
+    )
+
+    return True
 
 
-def force_overwrite(get_infra_files_func, cluster_name, force):
-    if infra_files_already_exist(get_infra_files_func, cluster_name):
-        if not force:
+def check_git_status_clean(infra_files):
+    """
+    Check if running `git status` doesn't return any file that the generate command should create/update.
+    If any of the files in `infra_files` (the files that the script will generate) are in the `git status` output,
+    then return False, otherwise True.
+    """
+    repo = Repo(REPO_ROOT_PATH)
+    status = repo.git.status("--porcelain")
+    list_of_modified_files = status.split("\n")
+
+    for file in list_of_modified_files:
+        file = file.lstrip("?? ") if file.startswith("?? ") else file.lstrip(" M ")
+        full_filepath = REPO_ROOT_PATH / file
+        if full_filepath in infra_files:
             print_colour(
-                f"Found existing infrastructure files for cluster {cluster_name}. Use --force if you want to allow this script to overwrite them.",
-                "red",
+                f"{full_filepath} was not comitted. Commit or restore the file in order to proceed with the generation.",
+                "yellow",
             )
             return False
-        else:
-            print_colour(
-                f"Attention! Found existing infrastructure files for {cluster_name}. They will be overwritten by the --force flag!",
-                "red",
-            )
+    return True
+
+
+def check_before_continuing_with_generate_command(
+    get_infra_files_func, cluster_name, force
+):
+    """
+    This function does a sanity check of the current state of infrastructure files of the desired cluster.
+    These checks will then be used to decide if the functions generating the files will be ran.
+
+    The checks are:
+    1. if any of the files that will be generated are found in the `git status` output, then return False
+    2. else, if none of the infrastructure files that the script will generate exist, then return True
+    3. else, if there are infrastructure files that already exist and the --force flag was not used, then return False
+    $. Otherwise, return True
+    """
+    infra_files = get_infra_files_func(cluster_name)
+    if not check_git_status_clean(infra_files):
+        return False
+
+    if not (any(os.path.exists(path) for path in infra_files)):
+        return True
+
+    if not check_force_overwrite(cluster_name, force):
+        return False
+
     return True
 
 
