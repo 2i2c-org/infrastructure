@@ -25,7 +25,7 @@ def check_git_status_clean(infra_files):
         full_filepath = REPO_ROOT_PATH / file
         if full_filepath in infra_files:
             print_colour(
-                f"{full_filepath} was not comitted. Commit or restore the file in order to proceed with the generation.",
+                f"{full_filepath} was not committed. Commit or restore the file in order to proceed with the generation.",
                 "yellow",
             )
             return False
