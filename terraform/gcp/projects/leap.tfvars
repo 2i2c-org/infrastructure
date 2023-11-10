@@ -45,12 +45,10 @@ user_buckets = {
   "persistent-ro" : {
     "delete_after" : null,
     "extra_admin_members" : ["group:leap-persistent-bucket-writers@googlegroups.com"],
-    "public_access" : true
   },
   "persistent-ro-staging" : {
     "delete_after" : null,
     "extra_admin_members" : ["group:leap-persistent-bucket-writers@googlegroups.com"],
-    "public_access" : true
   }
 }
 
