@@ -54,6 +54,10 @@ jupyterhub:
           - hmodzelewski # Technical representative, Henryk Modzelewski
 
   singleuser:
+    image:
+      # Required when using :latest, until https://github.com/jupyterhub/kubespawner/pull/807
+      # is merged
+      pullPolicy: Always
     defaultUrl: /lab
     memory:
       # https://2i2c.freshdesk.com/a/tickets/955
