@@ -218,6 +218,10 @@ resource "google_container_node_pool" "core" {
     # Faster disks provide faster image pulls!
     disk_type = "pd-balanced"
 
+    resource_labels = {
+      "node-purpose" : "core"
+    }
+
     labels = {
       "hub.jupyter.org/node-purpose" = "core",
       "k8s.dask.org/node-purpose"    = "core"
@@ -336,7 +340,9 @@ resource "google_container_node_pool" "notebook" {
       "https://www.googleapis.com/auth/cloud-platform"
     ]
 
-    resource_labels = each.value.resource_labels
+    resource_labels = merge({
+      "node-purpose" : "notebook"
+    }, each.value.resource_labels)
 
     // Set these values explicitly so they don't "change outside terraform"
     tags = []
@@ -416,7 +422,9 @@ resource "google_container_node_pool" "dask_worker" {
       "https://www.googleapis.com/auth/cloud-platform"
     ]
 
-    resource_labels = each.value.resource_labels
+    resource_labels = merge({
+      "node-purpose" : "dask-worker"
+    }, each.value.resource_labels)
 
     // Set these values explicitly so they don't "change outside terraform"
     tags = []
