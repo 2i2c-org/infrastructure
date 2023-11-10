@@ -1,0 +1,40 @@
+jupyterhub:
+  ingress:
+    hosts: [must.af.catalystproject.2i2c.cloud]
+    tls:
+      - hosts: [must.af.catalystproject.2i2c.cloud]
+        secretName: https-auto-tls
+  custom:
+    2i2c:
+      add_staff_user_ids_to_admin_users: true
+      add_staff_user_ids_of_type: "google"
+    homepage:
+      templateVars:
+        org:
+          name: "MUST"
+          url: https://www.must.ac.mw/
+          logo_url: https://www.must.ac.mw/wp-content/themes/mustwebsite/images/must-logo.png
+        designed_by:
+          name: "2i2c"
+          url: https://2i2c.org
+        operated_by:
+          name: "2i2c"
+          url: https://2i2c.org
+        funded_by:
+          name: Chan Zuckerberg Initiative - Open Science
+          url: "https://chanzuckerberg.com/science/programs-resources/open-science/"
+  hub:
+    config:
+      JupyterHub:
+        authenticator_class: cilogon
+      CILogonOAuthenticator:
+        oauth_callback_url: https://must.af.catalystproject.2i2c.cloud/hub/oauth_callback
+        allowed_idps:
+          http://google.com/accounts/o8/id:
+            username_derivation:
+              username_claim: email
+            allowed_domains:
+              - must.ac.mw
+      Authenticator:
+        admin_users:
+          - "bkankuzi@must.ac.mw"
