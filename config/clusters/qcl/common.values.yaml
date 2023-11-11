@@ -43,6 +43,10 @@ jupyterhub:
           - gizmo404
           - jtkmckenna
   singleuser:
+    image:
+      # Required when using :latest, until https://github.com/jupyterhub/kubespawner/pull/807
+      # is merged
+      pullPolicy: Always
     profileList:
       # NOTE: About node sharing
       #
