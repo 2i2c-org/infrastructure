@@ -23,6 +23,13 @@ jupyterhub:
         funded_by:
           name: Chan Zuckerberg Initiative - Open Science
           url: "https://chanzuckerberg.com/science/programs-resources/open-science/"
+  singleuser:
+    image:
+      # This image specification is likely overridden via the configurator.
+      # jupyter/scipy-notebook is maintained at: https://github.com/jupyter/docker-stacks
+      # tags can be viewed at: https://hub.docker.com/r/jupyter/scipy-notebook/tags
+      name: jupyter/scipy-notebook
+      tag: "2023-07-06"
   hub:
     config:
       JupyterHub:
