@@ -45,7 +45,7 @@ resource "google_storage_bucket" "user_buckets" {
 # We only keep them for 30 days so they don't end up costing a
 # ton of money
 resource "google_storage_bucket" "usage_logs_bucket" {
-  name     = "${var.prefix}-gcs-usages-logs"
+  name     = "${var.prefix}-gcs-usage-logs"
   location = var.region
   project  = var.project_id
 
@@ -53,7 +53,7 @@ resource "google_storage_bucket" "usage_logs_bucket" {
 
   lifecycle_rule {
     condition {
-      age = "30d"
+      age = 30
     }
     action {
       type = "Delete"
@@ -63,7 +63,7 @@ resource "google_storage_bucket" "usage_logs_bucket" {
 
 # Provide access to GCS infrastructure to write usage logs to this bucket
 resource "google_storage_bucket_iam_member" "usage_logs_bucket_access" {
-  bucket = google_storage_bucket.logging_bucket.name
+  bucket = google_storage_bucket.usage_logs_bucket.name
   member = "group:cloud-storage-analytics@google.com"
   role   = "roles/storage.objectCreator"
 }
