@@ -104,7 +104,7 @@ user_buckets = {
 We may want to know *what* objects in a bucket are actually being accessed,
 and when. While there is not a systematic way to do a 'when was this
 object last accessed', we can instead enable [usage logs](https://cloud.google.com/storage/docs/access-logs)
-that allow hub adminsrators to get access to some raw data.
+that allow hub administrators to get access to some raw data.
 
 Note that we currently can not actually help hub admins process these
 logs - that is *their* responsibility. We can only *enable* this logging.
