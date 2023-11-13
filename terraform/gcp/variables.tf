@@ -253,7 +253,12 @@ variable "enable_network_policy" {
 }
 
 variable "user_buckets" {
-  type        = map(object({ delete_after : number, extra_admin_members : optional(list(string), []), public_access : optional(bool, false) }))
+  type = map(object({
+    delete_after : number,
+    extra_admin_members : optional(list(string), []),
+    public_access : optional(bool, false),
+    usage_logs : optional(bool, false)
+  }))
   default     = {}
   description = <<-EOT
   GCS Buckets to be created.
@@ -273,7 +278,15 @@ variable "user_buckets" {
   for the format this would be specified in.
 
   'public_access', if set to true, makes the bucket fully accessible to
-  the public internet, without any authentication.
+  the public internet, without any authentication. This must be used with
+  *extreme* care as it can explode network egress costs immensely, and
+  should only be allowed on projects where 2i2c is *not* paying the cloud
+  bill to be recouped later.
+
+  'usage_logs', if set to true, will write GCS usage logs detailing
+  access to objects in this GCS bucket. https://cloud.google.com/storage/docs/access-logs
+  has more details. The bucket these will be written to can be determined by
+  the `usage_logs_bucket` terraform output variable.
   EOT
 }
 

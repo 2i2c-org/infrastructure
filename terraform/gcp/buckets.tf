@@ -11,6 +11,14 @@ resource "google_storage_bucket" "user_buckets" {
   // Set these values explicitly so they don't "change outside terraform"
   labels = {}
 
+  dynamic "logging" {
+    for_each = each.value.usage_logs ? [1] : []
+
+    content {
+      log_bucket = google_storage_bucket.usage_logs_bucket.name
+    }
+  }
+
   dynamic "lifecycle_rule" {
     for_each = each.value.delete_after != null ? [1] : []
 
@@ -24,6 +32,40 @@ resource "google_storage_bucket" "user_buckets" {
     }
 
   }
+}
+
+# Create GCS bucket that can store *usage* logs (access logs).
+# Helpful to see what data is *actually* being used.
+# https://cloud.google.com/storage/docs/access-logs
+#
+# We create this bucket unconditionally, because it costs nothing.
+# It only costs if we actually enable this logging, which is done in
+# per-bucket config.
+#
+# We only keep them for 30 days so they don't end up costing a
+# ton of money
+resource "google_storage_bucket" "usage_logs_bucket" {
+  name     = "${var.prefix}-gcs-usages-logs"
+  location = var.region
+  project  = var.project_id
+
+  labels = {}
+
+  lifecycle_rule {
+    condition {
+      age = "30d"
+    }
+    action {
+      type = "Delete"
+    }
+  }
+}
+
+# Provide access to GCS infrastructure to write usage logs to this bucket
+resource "google_storage_bucket_iam_member" "usage_logs_bucket_access" {
+  bucket = google_storage_bucket.logging_bucket.name
+  member = "group:cloud-storage-analytics@google.com"
+  role   = "roles/storage.objectCreator"
 }
 
 locals {
@@ -93,5 +135,16 @@ output "buckets" {
   Since GCS bucket names need to be globally unique, we prefix each item in
   the user_buckets variable with the prefix variable. This output displays
   the full name of all GCS buckets created conveniently.
+  EOT
+}
+
+output "usage_log_bucket" {
+  value       = google_storage_bucket.usage_logs_bucket.name
+  description = <<-EOT
+  Name of GCS bucket containing GCS usage logs (when enabled).
+
+  https://cloud.google.com/storage/docs/access-logs has more information
+  on GCS usage logs. It has to be enabled on a per-bucket basis - see
+  the documentation for the `user_buckets` variable for more information.
   EOT
 }

@@ -97,6 +97,40 @@ user_buckets = {
 }
 ```
 
+## Enable access logs for objects in a bucket
+
+### GCP
+
+We may want to know *what* objects in a bucket are actually being accessed,
+and when. While there is not a systematic way to do a 'when was this
+object last accessed', we can instead enable [usage logs](https://cloud.google.com/storage/docs/access-logs)
+that allow hub administrators to get access to some raw data.
+
+Note that we currently can not actually help hub admins process these
+logs - that is *their* responsibility. We can only *enable* this logging.
+
+This can be enabled by setting `usage_logs` parameter in `user_buckets`
+for the appropriate bucket, and running `terraform apply`.
+
+Example:
+
+```terraform
+user_buckets = {
+   "persistent": {
+      "usage_logs": true
+   }
+}
+```
+
+Once enabled, you can find out what bucket the access logs will be sent
+to with `terraform output usage_log_bucket`. The access logs will by
+default be deleted after 30 days, to avoid them costing too much money.
+
+The logs are in CSV format, with the fields [documented here](https://cloud.google.com/storage/docs/access-logs#format).
+We suggest that hub admins interested can [download the logs](https://cloud.google.com/storage/docs/access-logs#downloading)
+and parse them as they wish - this is not something that we can currently help
+much with.
+
 ## Allowing authenticated access to buckets from outside the JupyterHub
 
 ### GCP
@@ -108,15 +142,15 @@ GCS buckets, it can be used to allow arbitrary users to write to the bucket!
 
 1. With your `2i2c.org` google account, go to [Google Groups](https://groups.google.com) and create a new Google Group with the name
    "<bucket-name>-writers", where "<bucket-name>" is the name of the bucket
-   we are going to grant write access to. 
+   we are going to grant write access to.
 
 2. Grant "Group Owner" access to the community champion requesting this feature.
    They will be able to add / remove users from the group as necessary, and
    thus manage access without needing to involve 2i2c engineers.
-   
+
 3. In the `user_buckets` definition for the bucket in question, add the group
    name as an `extra_admin_members`:
-   
+
    ```terraform
    user_buckets = {
      "persistent": {
@@ -127,16 +161,16 @@ GCS buckets, it can be used to allow arbitrary users to write to the bucket!
      }
    }
    ```
-   
+
    Apply this terraform change to create the appropriate permissions for members
    of the group to have full read/write access to that GCS bucket.
-   
+
 4. We want the community champions to handle granting / revoking access to
    this google group, as well as produce community specific documentation on
    how to actually upload data here. We currently do not have a template of
-   how end users can use this, but something can be stolen from the 
+   how end users can use this, but something can be stolen from the
    [documentation for LEAP users](https://leap-stc.github.io/leap-pangeo/jupyterhub.html#i-have-a-dataset-and-want-to-work-with-it-on-the-hub-how-do-i-upload-it)
-  
+
 ## Granting access to cloud buckets in other cloud accounts / projects
 
 Sometimes, users on a hub we manage need access to a storage bucket
