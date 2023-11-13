@@ -18,20 +18,19 @@
 #
 #     terraform apply --var-file projects/pangeo-hubs.tfvars
 #
-# FIXME: core_node_machine_type should be set to n2-highmem-4 as its enough
 prefix                 = "pangeo-hubs"
 project_id             = "pangeo-integration-te-3eea"
 billing_project_id     = "pangeo-integration-te-3eea"
 zone                   = "us-central1-b"
 region                 = "us-central1"
-core_node_machine_type = "n2-highmem-8"
+core_node_machine_type = "n2-highmem-4"
 enable_private_cluster = true
 
 k8s_versions = {
-  min_master_version : "1.26.5-gke.2100",
-  core_nodes_version : "1.26.4-gke.1400",
-  notebook_nodes_version : "1.26.4-gke.1400",
-  dask_nodes_version : "1.26.4-gke.1400",
+  min_master_version : "1.27.5-gke.200",
+  core_nodes_version : "1.27.5-gke.200",
+  notebook_nodes_version : "1.27.5-gke.200",
+  dask_nodes_version : "1.27.5-gke.200",
 }
 
 # Multi-tenant cluster, network policy is required to enforce separation between hubs
@@ -101,8 +100,7 @@ notebook_nodes = {
 # node pool, see https://github.com/2i2c-org/infrastructure/issues/2687.
 #
 dask_nodes = {
-  # FIXME: Rename this to "n2-highmem-16" when given the chance and no such nodes are running
-  "worker" : {
+  "n2-highmem-16" : {
     min : 0,
     max : 100,
     machine_type : "n2-highmem-16",
