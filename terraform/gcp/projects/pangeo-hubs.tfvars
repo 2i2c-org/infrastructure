@@ -18,14 +18,18 @@
 #
 #     terraform apply --var-file projects/pangeo-hubs.tfvars
 #
-# FIXME: core_node_machine_type should be set to n2-highmem-4 as its enough
 prefix                 = "pangeo-hubs"
 project_id             = "pangeo-integration-te-3eea"
 billing_project_id     = "pangeo-integration-te-3eea"
 zone                   = "us-central1-b"
 region                 = "us-central1"
-core_node_machine_type = "n2-highmem-8"
 enable_private_cluster = true
+
+# FIXME: core_node_machine_type should be set to n2-highmem-4 as its enough
+# FIXME: Remove temp_opt_out_node_purpose_label_core_nodes when a node upgrade can be
+#        done. See https://github.com/2i2c-org/infrastructure/issues/3405.
+core_node_machine_type                     = "n2-highmem-8"
+temp_opt_out_node_purpose_label_core_nodes = true
 
 k8s_versions = {
   min_master_version : "1.26.5-gke.2100",
@@ -58,40 +62,49 @@ user_buckets = {
 
 # Setup notebook node pools
 notebook_nodes = {
+  # FIXME: Remove temp_opt_out_node_purpose_label when a node upgrade can be
+  #        done. See https://github.com/2i2c-org/infrastructure/issues/3405.
   "n2-highmem-4" : {
     min : 0,
     max : 100,
     machine_type : "n2-highmem-4",
+    temp_opt_out_node_purpose_label : true,
   },
   "n2-highmem-16" : {
     min : 0,
     max : 100,
     machine_type : "n2-highmem-16",
+    temp_opt_out_node_purpose_label : true,
   },
   "n2-highmem-64" : {
     min : 0,
     max : 100,
     machine_type : "n2-highmem-64",
+    temp_opt_out_node_purpose_label : true,
   },
   "small" : {
     min : 0,
     max : 100,
     machine_type : "n1-standard-2",
+    temp_opt_out_node_purpose_label : true,
   },
   "medium" : {
     min : 0,
     max : 100,
     machine_type : "n1-standard-4",
+    temp_opt_out_node_purpose_label : true,
   },
   "large" : {
     min : 0,
     max : 100,
     machine_type : "n1-standard-8",
+    temp_opt_out_node_purpose_label : true,
   },
   "huge" : {
     min : 0,
     max : 100,
     machine_type : "n1-standard-16",
+    temp_opt_out_node_purpose_label : true,
   },
 }
 
@@ -102,10 +115,13 @@ notebook_nodes = {
 #
 dask_nodes = {
   # FIXME: Rename this to "n2-highmem-16" when given the chance and no such nodes are running
+  # FIXME: Remove temp_opt_out_node_purpose_label when a node upgrade can be
+  #        done. See https://github.com/2i2c-org/infrastructure/issues/3405.
   "worker" : {
     min : 0,
     max : 100,
     machine_type : "n2-highmem-16",
+    temp_opt_out_node_purpose_label : true,
   },
 }
 

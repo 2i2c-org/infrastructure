@@ -11,10 +11,11 @@ k8s_versions = {
   notebook_nodes_version : "1.26.4-gke.1400",
 }
 
-# FIXME: We have a temporary core node pool setup with n2-highmem-4 and
-#        pd-balanced. This node pool still has standard though, but has been
-#        cordoned.
-#
+# FIXME: Remove temp_opt_out_node_purpose_label when a node upgrade can be
+#        done. See https://github.com/2i2c-org/infrastructure/issues/3405.
+temp_opt_out_node_purpose_label_core_nodes = true
+
+# FIXME: Transition to n2-highmem-4 when possible
 core_node_machine_type = "n1-highmem-4"
 enable_network_policy  = true
 
@@ -22,11 +23,15 @@ enable_filestore      = true
 filestore_capacity_gb = 1024
 
 notebook_nodes = {
-  # FIXME: Rename this to "n2-highmem-4" when given the chance and no such nodes are running
+  # FIXME: Update the machine type to "n2-highmem-4" and rename this node pool
+  #        when given the chance and no such nodes are running.
+  # FIXME: Remove temp_opt_out_node_purpose_label when a node upgrade can be
+  #        done. See https://github.com/2i2c-org/infrastructure/issues/3405.
   "user" : {
     min : 0,
     max : 100,
     machine_type : "n1-highmem-4",
+    temp_opt_out_node_purpose_label = true
   },
   "n2-highmem-16" : {
     min : 0,
@@ -46,7 +51,7 @@ notebook_nodes = {
 # node pool, see https://github.com/2i2c-org/infrastructure/issues/2687.
 #
 dask_nodes = {
-  "worker" : {
+  "n2-highmem-16" : {
     min : 0,
     max : 100,
     machine_type : "n2-highmem-16"

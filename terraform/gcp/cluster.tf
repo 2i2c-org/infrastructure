@@ -218,7 +218,7 @@ resource "google_container_node_pool" "core" {
     # Faster disks provide faster image pulls!
     disk_type = "pd-balanced"
 
-    resource_labels = {
+    resource_labels = var.temp_opt_out_node_purpose_label_core_nodes ? {} : {
       "node-purpose" : "core"
     }
 
@@ -340,7 +340,7 @@ resource "google_container_node_pool" "notebook" {
       "https://www.googleapis.com/auth/cloud-platform"
     ]
 
-    resource_labels = merge({
+    resource_labels = each.value.temp_opt_out_node_purpose_label ? each.value.resource_labels : merge({
       "node-purpose" : "notebook"
     }, each.value.resource_labels)
 
@@ -422,7 +422,7 @@ resource "google_container_node_pool" "dask_worker" {
       "https://www.googleapis.com/auth/cloud-platform"
     ]
 
-    resource_labels = merge({
+    resource_labels = each.value.temp_opt_out_node_purpose_label ? each.value.resource_labels : merge({
       "node-purpose" : "dask-worker"
     }, each.value.resource_labels)
 

@@ -11,6 +11,10 @@ k8s_versions = {
   dask_nodes_version : "1.27.4-gke.900",
 }
 
+# FIXME: Remove temp_opt_out_node_purpose_label when a node upgrade can be
+#        done. See https://github.com/2i2c-org/infrastructure/issues/3405.
+temp_opt_out_node_purpose_label_core_nodes = true
+
 # GPUs not available in us-central1-b
 zone             = "us-central1-c"
 region           = "us-central1"
@@ -69,13 +73,18 @@ hub_cloud_permissions = {
 
 # Setup notebook node pools
 notebook_nodes = {
+  # FIXME: Remove temp_opt_out_node_purpose_label when a node upgrade can be
+  #        done. See https://github.com/2i2c-org/infrastructure/issues/3405.
   "n2-highmem-4" : {
     min : 0,
     max : 100,
     machine_type : "n2-highmem-4",
+    temp_opt_out_node_purpose_label : true,
   },
   # FIXME: Rename this to "n2-highmem-16" when given the chance and no such nodes are running
   # FIXME: Remove node pool specific node_version pin when given the chance and no such nodes are running
+  # FIXME: Remove temp_opt_out_node_purpose_label when a node upgrade can be
+  #        done. See https://github.com/2i2c-org/infrastructure/issues/3405.
   "medium" : {
     # A minimum of one is configured for LEAP to ensure quick startups at all
     # time. Cost is not a greater concern than optimizing startup times.
@@ -83,18 +92,25 @@ notebook_nodes = {
     max : 100,
     machine_type : "n2-highmem-16",
     node_version : "1.25.6-gke.1000",
+    temp_opt_out_node_purpose_label : true
   },
+  # FIXME: Remove temp_opt_out_node_purpose_label when a node upgrade can be
+  #        done. See https://github.com/2i2c-org/infrastructure/issues/3405.
   "n2-highmem-64" : {
     min : 0,
     max : 100,
     machine_type : "n2-highmem-64"
+    temp_opt_out_node_purpose_label : true
   }
   # FIXME: Remove node pool specific node_version pin when given the chance and no such nodes are running
+  # FIXME: Remove temp_opt_out_node_purpose_label when a node upgrade can be
+  #        done. See https://github.com/2i2c-org/infrastructure/issues/3405.
   "gpu-t4" : {
     min : 0,
     max : 100,
     machine_type : "n1-standard-8",
     node_version : "1.25.6-gke.1000",
+    temp_opt_out_node_purpose_label : true
     gpu : {
       enabled : true,
       type : "nvidia-tesla-t4",
@@ -117,6 +133,8 @@ notebook_nodes = {
 # node pool, see https://github.com/2i2c-org/infrastructure/issues/2687.
 #
 dask_nodes = {
+  # FIXME: Remove temp_opt_out_node_purpose_label when a node upgrade can be
+  #        done. See https://github.com/2i2c-org/infrastructure/issues/3405.
   "n2-highmem-16" : {
     min : 0,
     max : 200,
@@ -125,5 +143,6 @@ dask_nodes = {
     # See https://github.com/2i2c-org/infrastructure/issues/2396
     preemptible : false,
     machine_type : "n2-highmem-16"
+    temp_opt_out_node_purpose_label : true
   },
 }

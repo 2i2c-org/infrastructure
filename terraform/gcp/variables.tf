@@ -97,6 +97,9 @@ variable "notebook_nodes" {
       }),
       {}
     ),
+    # FIXME: Remove temp_opt_out_node_purpose_label when its no longer referenced.
+    #        See https://github.com/2i2c-org/infrastructure/issues/3405.
+    temp_opt_out_node_purpose_label : optional(bool, false),
     resource_labels : optional(map(string), {}),
     zones : optional(list(string), []),
     node_version : optional(string, ""),
@@ -125,6 +128,9 @@ variable "dask_nodes" {
       }),
       {}
     ),
+    # FIXME: Remove temp_opt_out_node_purpose_label when its no longer referenced.
+    #        See https://github.com/2i2c-org/infrastructure/issues/3405.
+    temp_opt_out_node_purpose_label : optional(bool, false),
     resource_labels : optional(map(string), {}),
     zones : optional(list(string), [])
   }))
@@ -221,6 +227,13 @@ variable "core_node_max_count" {
 
   Minimum node count is fixed at 1.
   EOT
+}
+
+# FIXME: Remove temp_opt_out_node_purpose_label_core_nodes when its no longer referenced.
+#        See https://github.com/2i2c-org/infrastructure/issues/3405.
+variable "temp_opt_out_node_purpose_label_core_nodes" {
+  type    = bool
+  default = false
 }
 
 variable "enable_network_policy" {
