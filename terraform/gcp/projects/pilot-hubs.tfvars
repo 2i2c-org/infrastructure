@@ -12,6 +12,10 @@ k8s_versions = {
   dask_nodes_version : "1.27.4-gke.900",
 }
 
+# FIXME: Remove temp_opt_out_node_purpose_label when a node upgrade can be
+#        done. See https://github.com/2i2c-org/infrastructure/issues/3405.
+temp_opt_out_node_purpose_label_core_nodes = true
+
 core_node_machine_type = "n2-highmem-4"
 enable_network_policy  = true
 
@@ -19,10 +23,13 @@ enable_filestore      = true
 filestore_capacity_gb = 5120
 
 notebook_nodes = {
+  # FIXME: Remove temp_opt_out_node_purpose_label when a node upgrade can be
+  #        done. See https://github.com/2i2c-org/infrastructure/issues/3405.
   "n2-highmem-4" : {
     min : 0,
     max : 100,
     machine_type : "n2-highmem-4",
+    temp_opt_out_node_purpose_label : true,
   },
   "n2-highmem-16" : {
     min : 0,
@@ -54,6 +61,8 @@ notebook_nodes = {
   },
   # Nodepool for temple university. https://github.com/2i2c-org/infrastructure/issues/3158
   # FIXME: Remove node pool specific node_version pin when given the chance and no such nodes are running
+  # FIXME: Remove temp_opt_out_node_purpose_label when a node upgrade can be
+  #        done. See https://github.com/2i2c-org/infrastructure/issues/3405.
   "temple" : {
     # Expecting upto ~120 users at a time
     min : 0,
@@ -63,6 +72,7 @@ notebook_nodes = {
     # This works ok.
     machine_type : "n2-highmem-8",
     node_version : "1.26.4-gke.1400",
+    temp_opt_out_node_purpose_label : true,
     labels : {
       "2i2c.org/community" : "temple"
     },
