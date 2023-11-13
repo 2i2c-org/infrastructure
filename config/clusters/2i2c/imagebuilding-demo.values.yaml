@@ -39,6 +39,8 @@ jupyterhub:
               display_name: "Custom image"
               validation_regex: "^.+:.+$"
               validation_message: "Must be a publicly available docker image, of form <image-name>:<tag>"
+              display_name_in_choices: "Specify an existing docker image"
+              description_in_choices: "Use a pre-existing docker image from a public docker registry (dockerhub, quay, etc)"
               kubespawner_override:
                 image: "{value}"
             choices:
@@ -120,7 +122,7 @@ jupyterhub:
         url: http://imagebuilding-demo-binderhub-service:8090
     image:
       name: quay.io/2i2c/dynamic-image-building-experiment
-      tag: "0.0.1-0.dev.git.7130.h0bdc2d30"
+      tag: "0.0.1-0.dev.git.7563.he8470ee4"
     config:
       JupyterHub:
         authenticator_class: github
