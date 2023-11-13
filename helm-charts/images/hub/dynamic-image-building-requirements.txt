@@ -10,4 +10,4 @@
 git+https://github.com/yuvipanda/jupyterhub-configurator@ed7e3a0df1e3d625d10903ef7d7fd9c2fbb548db
 
 # Brings in https://github.com/yuvipanda/jupyterhub-fancy-profiles
-git+https://github.com/yuvipanda/jupyterhub-fancy-profiles@b624031b661f71a278a37bb1fae0b8d6f316d6b3
+git+https://github.com/yuvipanda/jupyterhub-fancy-profiles@ef923e37eddc9284c7b4701c79e56f1cb3ca9a9d
