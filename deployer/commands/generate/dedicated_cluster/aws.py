@@ -15,8 +15,26 @@ import typer
 from deployer.utils.file_acquisition import REPO_ROOT_PATH
 from deployer.utils.rendering import print_colour
 
-from .common import generate_config_directory, generate_support_files
+from .common import (
+    check_before_continuing_with_generate_command,
+    generate_config_directory,
+    generate_support_files,
+)
 from .dedicated_cluster_app import dedicated_cluster_app
+
+
+def get_infra_files_to_be_created(cluster_name):
+    return [
+        REPO_ROOT_PATH / "eksctl" / f"{cluster_name}.jsonnet",
+        REPO_ROOT_PATH / "terraform/aws/projects" / f"{cluster_name}.tfvars",
+        REPO_ROOT_PATH / "eksctl/ssh-keys/secret" / f"{cluster_name}.key",
+        REPO_ROOT_PATH / "config/clusters" / cluster_name / "support.values.yaml",
+        REPO_ROOT_PATH
+        / "config/clusters"
+        / cluster_name
+        / "enc-support.secret.values.yaml",
+        REPO_ROOT_PATH / "config/clusters" / cluster_name / "cluster.yaml",
+    ]
 
 
 def generate_infra_files(vars):
@@ -42,7 +60,6 @@ def generate_infra_files(vars):
     print_colour("Generating the terraform infrastructure file...", "yellow")
     with open(REPO_ROOT_PATH / "terraform/aws/projects/template.tfvars") as f:
         tfvars_template = jinja2.Template(f.read())
-
     tfvars_file_path = (
         REPO_ROOT_PATH / "terraform/aws/projects" / f"{cluster_name}.tfvars"
     )
@@ -50,6 +67,7 @@ def generate_infra_files(vars):
         f.write(tfvars_template.render(**vars))
     print_colour(f"{tfvars_file_path} created")
 
+    print_colour("Generate, encrypt and store the ssh private key...", "yellow")
     subprocess.check_call(
         [
             "ssh-keygen",
@@ -67,15 +85,17 @@ def generate_infra_files(vars):
         f"{REPO_ROOT_PATH}/eksctl/ssh-keys/secret/{cluster_name}.key",
     )
 
+    ssh_key_file = REPO_ROOT_PATH / "eksctl/ssh-keys/secret" / f"{cluster_name}.key"
     # Encrypt the private key
     subprocess.check_call(
         [
             "sops",
             "--in-place",
             "--encrypt",
-            f"{REPO_ROOT_PATH}/eksctl/ssh-keys/secret/{cluster_name}.key",
+            ssh_key_file,
         ]
     )
+    print_colour(f"{ssh_key_file} created")
 
 
 @dedicated_cluster_app.command()
@@ -87,23 +107,34 @@ def aws(
     cluster_region: str = typer.Option(
         ..., prompt="The region where to deploy the cluster"
     ),
+    force: bool = typer.Option(
+        False,
+        "--force",
+        help="Whether or not to force the override of the files that already exist",
+    ),
 ):
     """
-    Automatically generate the files required to setup a new cluster on AWS
+    Automatically generate the files required to setup a new cluster on AWS if they don't exist.
+    Use --force to force existing configuration files to be overwritten by this command.
     """
-
     # These are the variables needed by the templates used to generate the cluster config file
     # and support files
+
     vars = {
         "cluster_name": cluster_name,
         "hub_type": hub_type,
         "cluster_region": cluster_region,
     }
 
-    generate_infra_files(vars)
+    if not check_before_continuing_with_generate_command(
+        get_infra_files_to_be_created, cluster_name, force
+    ):
+        raise typer.Abort()
 
+    # If we are here, then either no existing infrastructure files for this cluster have been found
+    # or the `--force` flag was provided and we can override existing files.
+    generate_infra_files(vars)
     # Automatically generate the config directory
     cluster_config_directory = generate_config_directory(vars)
-
     # Generate the support files
     generate_support_files(cluster_config_directory, vars)

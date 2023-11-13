@@ -17,11 +17,24 @@ from deployer.utils.file_acquisition import REPO_ROOT_PATH
 from deployer.utils.rendering import print_colour
 
 from .common import (
+    check_before_continuing_with_generate_command,
     generate_cluster_config_file,
     generate_config_directory,
     generate_support_files,
 )
 from .dedicated_cluster_app import dedicated_cluster_app
+
+
+def get_infra_files_to_be_created(cluster_name):
+    return [
+        REPO_ROOT_PATH / "terraform/gcp/projects" / f"{cluster_name}.tfvars",
+        REPO_ROOT_PATH / "config/clusters" / cluster_name / "support.values.yaml",
+        REPO_ROOT_PATH
+        / "config/clusters"
+        / cluster_name
+        / "enc-support.secret.values.yaml",
+        REPO_ROOT_PATH / "config/clusters" / cluster_name / "cluster.yaml",
+    ]
 
 
 def generate_terraform_file(vars):
@@ -63,9 +76,17 @@ def gcp(
     hub_type: Annotated[
         str, typer.Option(prompt="Please insert the hub type of the first hub")
     ] = "basehub",
+    force: Annotated[
+        bool,
+        typer.Option(
+            "--force",
+            help="Whether or not to force the override of the files that already exist",
+        ),
+    ] = False,
 ):
     """
-    Automatically generates the initial files, required to setup a new cluster on GCP
+    Automatically generates the initial files, required to setup a new cluster on GCP if they don't exist.
+    Use --force to force existing configuration files to be overwritten by this command.
     """
     # These are the variables needed by the templates used to generate the cluster config file
     # and support files
@@ -76,6 +97,14 @@ def gcp(
         "project_id": project_id,
         "hub_name": hub_name,
     }
+
+    if not check_before_continuing_with_generate_command(
+        get_infra_files_to_be_created, cluster_name, force
+    ):
+        raise typer.Abort()
+
+    # If we are here, then either no existing infrastructure files for this cluster have been found
+    # or the `--force` flag was provided and we can override existing files.
 
     # Automatically generate the terraform config file
     generate_terraform_file(vars)
