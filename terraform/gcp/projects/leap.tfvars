@@ -31,34 +31,34 @@ user_buckets = {
   "scratch-staging" : {
     "delete_after" : 7,
     "extra_admin_members" : [],
-    "usage_logs" : true
+    "usage_logs" : true,
   },
   "scratch" : {
     "delete_after" : 7,
     "extra_admin_members" : [],
-    "usage_logs" : true
+    "usage_logs" : true,
   }
   # For https://github.com/2i2c-org/infrastructure/issues/1230#issuecomment-1278183441
   "persistent" : {
     "delete_after" : null,
     "extra_admin_members" : ["group:leap-persistent-bucket-writers@googlegroups.com"],
-    "usage_logs" : true
+    "usage_logs" : true,
   },
   "persistent-staging" : {
     "delete_after" : null,
     "extra_admin_members" : ["group:leap-persistent-bucket-writers@googlegroups.com"],
-    "usage_logs" : true
+    "usage_logs" : true,
   }
   # For https://github.com/2i2c-org/infrastructure/issues/1230#issuecomment-1278183441
   "persistent-ro" : {
     "delete_after" : null,
     "extra_admin_members" : ["group:leap-persistent-bucket-writers@googlegroups.com"],
-    "usage_logs" : true
+    "usage_logs" : true,
   },
   "persistent-ro-staging" : {
     "delete_after" : null,
     "extra_admin_members" : ["group:leap-persistent-bucket-writers@googlegroups.com"],
-    "usage_logs" : true
+    "usage_logs" : true,
   }
 }
 
