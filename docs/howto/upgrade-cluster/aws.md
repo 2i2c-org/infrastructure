@@ -86,7 +86,16 @@ cluster is unused or that the maintenance is communicated ahead of time.
 
 ## Cluster upgrade
 
-1. *Ensure in-cluster permissions*
+### 1. Ensure you are using the correct cluster's credentials
+
+   Future `eksctl` commands will need info from the kubeconfig file
+   to be able to run successfully.
+
+   ```bash
+   deployer use-cluster-credentials <hub>
+   ```
+
+### 2. Ensure in-cluster permissions
 
    The k8s api-server won't accept commands from you unless you have configured
    a mapping between the AWS user to a k8s user, and `eksctl` needs to make some
@@ -104,7 +113,7 @@ cluster is unused or that the maintenance is communicated ahead of time.
       --group=system:masters
    ```
 
-2. *Acquire and configure AWS credentials*
+### 3. Acquire and configure AWS credentials
 
    Visit https://2i2c.awsapps.com/start#/ and acquire CLI credentials.
 
@@ -119,10 +128,32 @@ cluster is unused or that the maintenance is communicated ahead of time.
    export AWS_SECRET_ACCESS_KEY="..."
    ```
 
-3. *Upgrade the k8s control plane's one minor version*
+### 4. Upgrade the k8s control plane's one minor version for three times in a row
 
+   ```{important}
    The k8s control plane can only be upgraded one minor version at the time.[^1]
-   So, update the eksctl config's version field one minor version.
+   ```
+
+   Update the cluster's jsonnet config's version field **one minor version.**
+   In `$CLUSTER_NAME.jsonnet` there should be an entry like the one below,
+   where the version must be updated.
+
+   ```yaml
+   apiVersion: 'eksctl.io/v1alpha5',
+    kind: 'ClusterConfig',
+    metadata+: {
+        name: "carbonplanhub",
+        region: clusterRegion,
+        version: '1.27'
+    },
+   ```
+
+   Then regenerate the `eksctl` config file:
+
+   ```bash
+   # re-generate an eksctl config file for use with eksctl
+   jsonnet $CLUSTER_NAME.jsonnet > $CLUSTER_NAME.eksctl.yaml
+   ```
 
    Then, perform the upgrade which typically takes ~10 minutes.
 
@@ -134,62 +165,86 @@ cluster is unused or that the maintenance is communicated ahead of time.
    If you see the error `Error: the server has asked for the client to provide credentials` don't worry, if you try it again you will find that the cluster is now upgraded.
    ```
 
-4. *Upgrade node groups up to two minor versions above the k8s control plane*
+### 5. Upgrade node groups up to three minor versions until it matches the version of the k8s control plane
 
-   A node's k8s software (`kubelet`) can be up to two minor versions ahead or
-   behind the control plane version.[^1] Due to this, you can plan your cluster
-   upgrade to only involve one node group upgrade even if you increment the
-   control plane four minor versions.
+   ```{important}
+   A node's k8s software (`kubelet`) can be up to three minor versions
+   **behind** the control plane version [^2] if kublet is at least at version 1.25.
+   Due to this, you can plan your cluster upgrade to only involve the minimum
+   number of node group upgrades.
 
-   So if you upgrade from k8s 1.21 to 1.24, you can for example upgrade the k8s
-   control plane from 1.21 to 1.22, then upgrade the node groups from 1.21 to
-   1.24, followed by upgrading the control plane two steps in a row.
+   So if you upgrade from k8s 1.25 to 1.28, you can for example upgrade the k8s
+   control plane  three steps in a row, from 1.25 to 1.26, then from 1.26
+   to 1.27 and then from 1.27 to 1.28. This way, the node groups were left
+   behind the control plane by three minor versions, which is acceptable.
 
-   To upgrade (unmanaged) node groups, you delete them and then them back. When
+   Then, you can upgrade the node groups from 1.25 to 1.28.
+   ```
+
+   To upgrade (unmanaged) node groups, you delete them and then add them back in. When
    adding them back, make sure your cluster config's k8s version is what you
    want the node groups to be added back as.
 
-   1. Update the k8s version in the config temporarily
+   #### 5.1. Update the k8s version in the config temporarily if needed
 
       This is to influence the k8s software version for the nodegroup's we
-      create only. We can choose something two minor versions of the current k8s
+      create only. We cannot choose a version ahead of the current k8s
       control plane version.
 
-   2. Add a new core node group (like `core-b`)
+      Make sure the cluster's jsonnet config's version field matches the
+      current version of the control plane and this version is **no more
+      than three minor versions** ahead of the node groups versions.
 
-      Rename (part 1/3) the config file's entry for the core node group
-      temporarily when running this command, either from `core-a` to `core-b` or
-      the other way around.
+   #### 5.2. Rename part 1: add a new core node group (like `core-b`)
+
+      Rename the `CLUSTER_NAME.jsonnet` config file's entry for the core node
+      group temporarily when running this command, either from `core-a` to `core-b` or
+      the other way around, then regenerate the `$CLUSTER_NAME.eksctl.yaml` file and
+      then create the new nodegroup.
 
       ```bash
+      # re-generate an eksctl config file for use with eksctl
+      jsonnet $CLUSTER_NAME.jsonnet > $CLUSTER_NAME.eksctl.yaml
+      ```
+
+      ```bash
+      # create a copy of the current nodegroup
       eksctl create nodegroup --config-file=$CLUSTER_NAME.eksctl.yaml --include="core-b"
       ```
 
-   3. Delete all old node groups (like `core-a,nb-*,dask-*`)
+   #### 5.3. Rename part 2: delete all old node groups (like `core-a,nb-*,dask-*`)
 
-      Rename (part 2/3) the core node group again in the config to its previous
-      name, so the old node group can be deleted with the following command.
+      Rename the core node group again in the config to its previous name,
+      so the old node group can be deleted with the following command,
+      then regenerate the `$CLUSTER_NAME.eksctl.yaml` file and after delete
+      the original nodegroup.
 
       ```bash
+      # re-generate an eksctl config file for use with eksctl
+      jsonnet $CLUSTER_NAME.jsonnet > $CLUSTER_NAME.eksctl.yaml
+      ```
+
+      ```bash
+      # delete the original nodegroup
       eksctl delete nodegroup --config-file=$CLUSTER_NAME.eksctl.yaml --include="core-a,nb-*,dask-*" --approve --drain=true
       ```
 
       Rename (part 3/3) the core node group one final time in the config to its
       new name, as that represents the state of the EKS cluster.
 
-   4. Re-create all non-core node groups (like `nb-*,dask-*`)
+   #### 5.4. Rename part 3: re-create all non-core node groups (like `nb-*,dask-*`)
 
       ```bash
       eksctl create nodegroup --config-file=$CLUSTER_NAME.eksctl.yaml --include="nb-*,dask-*"
       ```
 
-   5. Restore the k8s version in the config
+   #### 5.5. Restore the k8s version in the config
 
       We adjusted the k8s version in the config to influence the desired version
       of our created nodegroups. Let's restore it to what the k8s control plane
-      currently have.
+      currently have if not already.
 
-5. *Upgrad EKS add-ons (takes ~3*5s)*
+### 6. Upgrade EKS add-ons (takes ~3*5s)
 
    As documented in `eksctl`'s documentation[^1], we also need to upgrade three
    EKS add-ons enabled by default, and one we have added manually.
@@ -205,7 +260,7 @@ cluster is unused or that the maintenance is communicated ahead of time.
    eksctl utils update-coredns --config-file=$CLUSTER_NAME.eksctl.yaml --approve
 
    # upgrade the aws-ebs-csi-driver addon's deployment and daemonset
-   eksctl update addon --config-file=$CLUSTER_NAME.eksctl.yaml
+   eksctl update addon --name aws-ebs-csi-driver --version <version-to-upgrade-to> --cluster $CLUSTER_NAME
    ```
 
    ````{note} Common failures
@@ -216,11 +271,17 @@ cluster is unused or that the maintenance is communicated ahead of time.
    ```
    ````
 
-6. *Repeat steps 3 and 5 if needed*
+### 7. Repeat steps 4 and 6 if needed
 
-   If you upgrade k8s multiple minor versions, repeat step 3 and 5, where you
+   If you upgrade k8s multiple minor versions, repeat step 4 and 6, where you
    increment it one minor version at the time.
+
+### 8. Commit the changes to the jsonnet config file
+
+   During this upgrade, the k8s version and possibly the node group name might have
+   been changed. Make sure you commit this changes after the upgrade is finished.
 
 ## References
 
 [^1]: `eksctl`'s cluster upgrade documentation: <https://eksctl.io/usage/cluster-upgrade/>
+[^2]: `k8s's supported version skew documentation: <https://kubernetes.io/releases/version-skew-policy/#supported-version-skew>
