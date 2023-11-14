@@ -35,7 +35,7 @@ spec:
       containers:
         - name: dirsize-exporter
           # From https://github.com/yuvipanda/prometheus-dirsize-exporter
-          image: quay.io/yuvipanda/prometheus-dirsize-exporter:v2.0
+          image: quay.io/yuvipanda/prometheus-dirsize-exporter:v3.0
           resources:
             # Provide limited resources for this collector, as it can
             # baloon up (especially in CPU) quite easily. We are quite ok with
@@ -47,7 +47,7 @@ spec:
             limits:
               cpu: 0.05
               memory: 256Mi
-          command:
+          args:
             - dirsize-exporter
             - /shared-volume
             - "250" # Use only 250 io operations per second at most
