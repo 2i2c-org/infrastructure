@@ -3,9 +3,9 @@
 # Upgrade Kubernetes cluster on AWS
 
 ```{warning}
-This upgrade will cause disruptions for users and trigger alerts for
+This upgrade will cause disruptions for users and could trigger alerts for
 [](uptime-checks). To help other engineers, communicate that your are starting a
-cluster upgrade in the `#maintenance-notices` Slack channel and setup a [snooze](uptime-checks:snoozes)
+cluster upgrade in the `#maintenance-notices` Slack channel.
 ```
 
 ```{warning}

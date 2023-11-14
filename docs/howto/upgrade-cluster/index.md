@@ -16,5 +16,7 @@ clusters on AWS.
 ```{toctree}
 :maxdepth: 1
 :caption: Upgrading Kubernetes clusters
+kinds-of-upgrade-disruptions.md
 aws.md
+gcp.md
 ```
