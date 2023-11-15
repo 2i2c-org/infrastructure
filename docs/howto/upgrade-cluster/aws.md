@@ -194,10 +194,10 @@ If you upgrade k8s multiple minor versions, consider repeating step 3,
 up to maximum three times, incrementing the control plane one minor version
 at the time.
 
-This is because a node's k8s software (`kubelet`) can be up to three minor
-versions **behind** the control plane version[^2] if kublet is at least
-at version 1.25. Due to this, you can plan your cluster upgrade to only
-involve the minimum number of node group upgrades.
+This is because the control plane version can be **ahead** of
+the node's k8s software (`kubelet`) by up to three minor versions [^2]
+if kublet is at least at version 1.25. Due to this, you can plan your
+cluster upgrade to only involve the minimum number of node group upgrades.
 
 So if you upgrade from k8s 1.25 to 1.28, you can for example upgrade the k8s
 control plane three steps in a row, from 1.25 to 1.26, then from 1.26
