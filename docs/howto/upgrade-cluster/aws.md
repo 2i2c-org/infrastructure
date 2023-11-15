@@ -260,7 +260,7 @@ cluster is unused or that the maintenance is communicated ahead of time.
    eksctl utils update-coredns --config-file=$CLUSTER_NAME.eksctl.yaml --approve
 
    # upgrade the aws-ebs-csi-driver addon's deployment and daemonset
-   eksctl update addon --name aws-ebs-csi-driver --version <version-to-upgrade-to> --cluster $CLUSTER_NAME
+   eksctl update addon --config-file=$CLUSTER_NAME.eksctl.yaml
    ```
 
    ````{note} Common failures
