@@ -119,7 +119,7 @@ export AWS_ACCESS_KEY_ID="..."
 export AWS_SECRET_ACCESS_KEY="..."
 ```
 
-### 3. Upgrade the k8s control plane's one minor version for three times in a row
+### 3. Upgrade the k8s control plane one minor version at a time up to three times
 
 ```{important}
 1. The k8s control plane can only be upgraded one minor version at the time.[^1]
