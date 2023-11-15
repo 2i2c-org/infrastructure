@@ -25,7 +25,7 @@ More culling options and information about them can be found in the [idle-culler
 
 ## Kernel culling configuration
 
-The kernel culling options are configured through the `jupyter_notebook_config.json` file, located at `/usr/local/etc/jupyter/jupyter_notebook_config.json` in the user pod. This file is injected into the pod’s container on startup, by defining its location and content under [`singleuser.extraFiles`](https://zero-to-jupyterhub.readthedocs.io/en/latest/resources/reference.html#singleuser-extrafiles) dictionary.
+The kernel culling options are configured through the `jupyter_server_config.json` file, located at `/usr/local/etc/jupyter/jupyter_server_config.json` in the user pod. This file is injected into the pod’s container on startup, by defining its location and content under [`singleuser.extraFiles`](https://zero-to-jupyterhub.readthedocs.io/en/latest/resources/reference.html#singleuser-extrafiles) dictionary.
 
 You can modify the current culling options values, under `singleuser.extraFiles.data`, in the `helm-charts/basehub/values.yaml` file.
 
@@ -34,8 +34,8 @@ Example:
 ```yaml
 singleuser:
   extraFiles:
-    jupyter_notebook_config.json:
-      mountPath: /usr/local/etc/jupyter/jupyter_notebook_config.json
+    jupyter_server_config.json:
+      mountPath: /usr/local/etc/jupyter/jupyter_server_config.json
       data:
         MappingKernelManager:
           # shutdown kernels after no activity
