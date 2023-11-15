@@ -75,14 +75,28 @@ cluster is unused or that the maintenance is communicated ahead of time.
    a generated config file, `$CLUSTER_NAME.eksctl.yaml`. It's generated from the
    the `$CLUTER_NAME.jsonnet` file.
 
-   If you update the .jsonnet file, make sure to re-generate the .yaml file
-   before using `eksctl`. Respectively if you update the .yaml file directly,
-   remember to update the .jsonnet file.
-
    ```bash
    # re-generate an eksctl config file for use with eksctl
    jsonnet $CLUSTER_NAME.jsonnet > $CLUSTER_NAME.eksctl.yaml
    ```
+
+4. *(Optional) Temporarily commit the `eksctl` config file*
+
+   It might be useful to temporarily commit the `eksctl` config file
+   just after you have generated it, because during the next steps
+   of the upgrade process, you will need to update it a few times.
+
+   Having it committed might prove to be useful if you ever need to run
+   a `git diff` command on it to make sure you're changing only the
+   intended bits.
+
+```{important}
+If you update the .jsonnet file, make sure to re-generate the .yaml file
+before using `eksctl`.
+
+Respectively if you update the .yaml file directly,
+remember to update the .jsonnet file.
+```
 
 ## Cluster upgrade
 
@@ -122,7 +136,9 @@ export AWS_SECRET_ACCESS_KEY="..."
 ### 3. Upgrade the k8s control plane one minor version at a time up to three times
 
 ```{important}
+
 1. The k8s control plane can only be upgraded one minor version at the time.[^1]
+
 2. A node's k8s software (`kubelet`) can be up to three minor versions **behind**
    the control plane version[^2] if kublet is at least at version 1.25.
    Due to this, you can plan your cluster upgrade to only involve the minimum
@@ -138,24 +154,16 @@ export AWS_SECRET_ACCESS_KEY="..."
 ```
 
 Update the cluster's jsonnet config's version field **one minor version.**
-In `$CLUSTER_NAME.jsonnet` there should be an entry like the one below,
+
+In the cluster's config file there should be an entry like the one below,
 where the version must be updated.
 
 ```yaml
-apiVersion: 'eksctl.io/v1alpha5',
-   kind: 'ClusterConfig',
-   metadata+: {
-      name: "carbonplanhub",
-      region: clusterRegion,
-      version: '1.27'
-   },
-```
-
-Then regenerate the `eksctl` config file:
-
-```bash
-# re-generate an eksctl config file for use with eksctl
-jsonnet $CLUSTER_NAME.jsonnet > $CLUSTER_NAME.eksctl.yaml
+{
+   name: "carbonplanhub",
+   region: clusterRegion,
+   version: '1.27'
+}
 ```
 
 Then, perform the upgrade which typically takes ~10 minutes.
@@ -188,13 +196,7 @@ than three minor versions** ahead of the node groups versions.
 
 Rename the `CLUSTER_NAME.jsonnet` config file's entry for the core node
 group temporarily when running this command, either from `core-a` to `core-b` or
-the other way around, then regenerate the `$CLUSTER_NAME.eksctl.yaml` file and
-then create the new nodegroup.
-
-```bash
-# re-generate an eksctl config file for use with eksctl
-jsonnet $CLUSTER_NAME.jsonnet > $CLUSTER_NAME.eksctl.yaml
-```
+the other way around, then create the new nodegroup.
 
 ```bash
 # create a copy of the current nodegroup
@@ -205,13 +207,7 @@ eksctl create nodegroup --config-file=$CLUSTER_NAME.eksctl.yaml --include="core-
 
 Rename the core node group again in the config to its previous name,
 so the old node group can be deleted with the following command,
-then regenerate the `$CLUSTER_NAME.eksctl.yaml` file and after delete
-the original nodegroup.
-
-```bash
-# re-generate an eksctl config file for use with eksctl
-jsonnet $CLUSTER_NAME.jsonnet > $CLUSTER_NAME.eksctl.yaml
-```
+then delete the original nodegroup.
 
 ```bash
 # delete the original nodegroup
