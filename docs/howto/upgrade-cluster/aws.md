@@ -122,7 +122,19 @@ export AWS_SECRET_ACCESS_KEY="..."
 ### 3. Upgrade the k8s control plane's one minor version for three times in a row
 
 ```{important}
-The k8s control plane can only be upgraded one minor version at the time.[^1]
+1. The k8s control plane can only be upgraded one minor version at the time.[^1]
+2. A node's k8s software (`kubelet`) can be up to three minor versions **behind**
+   the control plane version[^2] if kublet is at least at version 1.25.
+   Due to this, you can plan your cluster upgrade to only involve the minimum
+   number of node group upgrades.
+
+   So if you upgrade from k8s 1.25 to 1.28, you can for example upgrade the k8s
+   control plane three steps in a row, from 1.25 to 1.26, then from 1.26
+   to 1.27 and then from 1.27 to 1.28. This way, the node groups were left
+   behind the control plane by three minor versions, which is ok, because it
+   doesn't break the three minor versions rule.
+
+   Then, you can upgrade the node groups from 1.25 to 1.28.
 ```
 
 Update the cluster's jsonnet config's version field **one minor version.**
@@ -157,20 +169,6 @@ If you see the error `Error: the server has asked for the client to provide cred
 ```
 
 ### 4. Upgrade node groups up to three minor versions until it matches the version of the k8s control plane
-
-```{important}
-A node's k8s software (`kubelet`) can be up to three minor versions
-**behind** the control plane version [^2] if kublet is at least at version 1.25.
-Due to this, you can plan your cluster upgrade to only involve the minimum
-number of node group upgrades.
-
-So if you upgrade from k8s 1.25 to 1.28, you can for example upgrade the k8s
-control plane  three steps in a row, from 1.25 to 1.26, then from 1.26
-to 1.27 and then from 1.27 to 1.28. This way, the node groups were left
-behind the control plane by three minor versions, which is acceptable.
-
-Then, you can upgrade the node groups from 1.25 to 1.28.
-```
 
 To upgrade (unmanaged) node groups, you delete them and then add them back in. When
 adding them back, make sure your cluster config's k8s version is what you
