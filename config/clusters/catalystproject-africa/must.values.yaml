@@ -39,6 +39,7 @@ jupyterhub:
         admin_users:
           - "bkankuzi@must.ac.mw"
   singleuser:
+    defaultUrl: "/lab"
     image:
       # This image specification is likely overridden via the configurator.
       # jupyter/scipy-notebook is maintained at: https://github.com/jupyter/docker-stacks
