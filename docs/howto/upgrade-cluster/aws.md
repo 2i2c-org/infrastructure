@@ -92,7 +92,7 @@ cluster is unused or that the maintenance is communicated ahead of time.
    to be able to run successfully.
 
    ```bash
-   deployer use-cluster-credentials <hub>
+   deployer use-cluster-credentials $CLUSTER_NAME
    ```
 
 ### 2. Ensure in-cluster permissions
