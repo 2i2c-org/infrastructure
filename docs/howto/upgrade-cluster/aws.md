@@ -156,7 +156,7 @@ eksctl upgrade cluster --config-file=$CLUSTER_NAME.eksctl.yaml --approve
 If you see the error `Error: the server has asked for the client to provide credentials` don't worry, if you try it again you will find that the cluster is now upgraded.
 ```
 
-### 5. Upgrade node groups up to three minor versions until it matches the version of the k8s control plane
+### 4. Upgrade node groups up to three minor versions until it matches the version of the k8s control plane
 
 ```{important}
 A node's k8s software (`kubelet`) can be up to three minor versions
@@ -176,7 +176,7 @@ To upgrade (unmanaged) node groups, you delete them and then add them back in. W
 adding them back, make sure your cluster config's k8s version is what you
 want the node groups to be added back as.
 
-#### 5.1. Update the k8s version in the config temporarily if needed
+#### 4.1. Update the k8s version in the config temporarily if needed
 
 This is to influence the k8s software version for the nodegroup's we
 create only. We cannot choose a version ahead of the current k8s
@@ -186,7 +186,7 @@ Make sure the cluster's jsonnet config's version field matches the
 current version of the control plane and this version is **no more
 than three minor versions** ahead of the node groups versions.
 
-#### 5.2. Renaming node groups part 1: add a new core node group (like `core-b`)
+#### 4.2. Renaming node groups part 1: add a new core node group (like `core-b`)
 
 Rename the `CLUSTER_NAME.jsonnet` config file's entry for the core node
 group temporarily when running this command, either from `core-a` to `core-b` or
@@ -203,7 +203,7 @@ jsonnet $CLUSTER_NAME.jsonnet > $CLUSTER_NAME.eksctl.yaml
 eksctl create nodegroup --config-file=$CLUSTER_NAME.eksctl.yaml --include="core-b"
 ```
 
-#### 5.3. Renaming node groups part 2: delete all old node groups (like `core-a,nb-*,dask-*`)
+#### 4.3. Renaming node groups part 2: delete all old node groups (like `core-a,nb-*,dask-*`)
 
 Rename the core node group again in the config to its previous name,
 so the old node group can be deleted with the following command,
@@ -223,19 +223,19 @@ eksctl delete nodegroup --config-file=$CLUSTER_NAME.eksctl.yaml --include="core-
 Rename (part 3/3) the core node group one final time in the config to its
 new name, as that represents the state of the EKS cluster.
 
-#### 5.4. Renaming node groups part 3: re-create all non-core node groups (like `nb-*,dask-*`)
+#### 4.4. Renaming node groups part 3: re-create all non-core node groups (like `nb-*,dask-*`)
 
 ```bash
 eksctl create nodegroup --config-file=$CLUSTER_NAME.eksctl.yaml --include="nb-*,dask-*"
 ```
 
-#### 5.5. Restore the k8s version in the config
+#### 4.5. Restore the k8s version in the config
 
 We adjusted the k8s version in the config to influence the desired version
 of our created nodegroups. Let's restore it to what the k8s control plane
 currently have if not already.
 
-### 6. Upgrade EKS add-ons (takes ~3*5s)
+### 5. Upgrade EKS add-ons (takes ~3*5s)
 
 As documented in `eksctl`'s documentation[^1], we also need to upgrade three
 EKS add-ons enabled by default, and one we have added manually.
@@ -262,12 +262,12 @@ kubectl edit daemonset coredns -n kube-system
 ```
 ````
 
-### 7. Repeat steps 4 and 6 if needed
+### 6. Repeat steps 4 and 6 if needed
 
 If you upgrade k8s multiple minor versions, repeat step 4 and 6, where you
 increment it one minor version at the time.
 
-### 8. Commit the changes to the jsonnet config file
+### 7. Commit the changes to the jsonnet config file
 
 During this upgrade, the k8s version and possibly the node group name might have
 been changed. Make sure you commit this changes after the upgrade is finished.
