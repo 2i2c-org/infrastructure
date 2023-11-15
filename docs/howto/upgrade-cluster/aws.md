@@ -210,7 +210,7 @@ one upgrade on the node groups instead of three.
 
 ### 5. Upgrade node groups version until it matches the k8s control plane
 
-```important
+```{important}
 Per step 4 above, you can upgrade the version of the node groups maximum
 three versions at once, for example from 1.25 to 1.28 directly if the
 control plane's version allows it.
@@ -224,15 +224,18 @@ To upgrade (unmanaged) node groups, you delete them and then add them back in. W
 adding them back, make sure your cluster config's k8s version is what you
 want the node groups to be added back as.
 
-#### 5.1. Update the k8s version in the config temporarily if needed
+#### 5.1. Double-check current k8s version in the config
 
-This is to influence the k8s software version for the nodegroup's we
-create only. We cannot choose a version ahead of the current k8s
-control plane version.
+Up until this step, you should have updated the control plane's
+version at least once but for maximum of three times. So you shouldn't
+need to update it.
 
-Make sure the cluster's jsonnet config's version field matches the
-current version of the control plane and this version is **no more
-than three minor versions** ahead of the node groups versions.
+However, it is worth double checking that the k8s version that is in
+the config file is:
+- not ahead of the current k8s control plane version, as this will
+  influence the version of the node groups.
+- not **more than three minor versions** than the version of node groups
+  was initially
 
 #### 5.2. Renaming node groups part 1: add a new core node group (like `core-b`)
 
@@ -271,7 +274,12 @@ We adjusted the k8s version in the config to influence the desired version
 of our created nodegroups. Let's restore it to what the k8s control plane
 currently have if not already.
 
-### 6. Commit the changes to the jsonnet config file
+### 6. Repeat steps 3,4,5 if needed
+
+If you need to upgrade the cluster more than three minor versions,
+consider repeating steps 3, 4 and 5 until the desired version is reached.
+
+### 7. Commit the changes to the jsonnet config file
 
 During this upgrade, the k8s version and possibly the node group name might have
 been changed. Make sure you commit this changes after the upgrade is finished.
