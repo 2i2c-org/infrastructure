@@ -73,30 +73,20 @@ cluster is unused or that the maintenance is communicated ahead of time.
 
    When upgrading an EKS cluster, we will use `eksctl` extensively and reference
    a generated config file, `$CLUSTER_NAME.eksctl.yaml`. It's generated from the
-   the `$CLUTER_NAME.jsonnet` file.
+   the `$CLUSTER_NAME.jsonnet` file.
 
    ```bash
    # re-generate an eksctl config file for use with eksctl
    jsonnet $CLUSTER_NAME.jsonnet > $CLUSTER_NAME.eksctl.yaml
    ```
 
-4. *(Optional) Temporarily commit the `eksctl` config file*
+   ```{important}
+   If you update the .jsonnet file, make sure to re-generate the .yaml file
+   before using `eksctl`.
 
-   It might be useful to temporarily commit the `eksctl` config file
-   just after you have generated it, because during the next steps
-   of the upgrade process, you will need to update it a few times.
-
-   Having it committed might prove to be useful if you ever need to run
-   a `git diff` command on it to make sure you're changing only the
-   intended bits.
-
-```{important}
-If you update the .jsonnet file, make sure to re-generate the .yaml file
-before using `eksctl`.
-
-Respectively if you update the .yaml file directly,
-remember to update the .jsonnet file.
-```
+   Respectively if you update the .yaml file directly,
+   remember to update the .jsonnet file.
+   ```
 
 ## Cluster upgrade
 
@@ -234,14 +224,14 @@ However, it is worth double checking that the k8s version that is in
 the config file is:
 - not ahead of the current k8s control plane version, as this will
   influence the version of the node groups.
-- not **more than three minor versions** than the version of node groups
+- not **more than three minor versions** than what the version of node groups
   was initially
 
 #### 5.2. Renaming node groups part 1: add a new core node group (like `core-b`)
 
-Rename the `CLUSTER_NAME.jsonnet` config file's entry for the core node
-group temporarily when running this command, either from `core-a` to `core-b` or
-the other way around, then create the new nodegroup.
+Rename the config file's entry for the core node group temporarily when running
+this command, either from `core-a` to `core-b` or the other way around,
+then create the new nodegroup.
 
 ```bash
 # create a copy of the current nodegroup
@@ -259,20 +249,14 @@ then delete the original nodegroup.
 eksctl delete nodegroup --config-file=$CLUSTER_NAME.eksctl.yaml --include="core-a,nb-*,dask-*" --approve --drain=true
 ```
 
-Rename (part 3/3) the core node group one final time in the config to its
-new name, as that represents the state of the EKS cluster.
-
 #### 5.4. Renaming node groups part 3: re-create all non-core node groups (like `nb-*,dask-*`)
+
+Rename the core node group one final time in the config to its
+new name, as that represents the state of the EKS cluster.
 
 ```bash
 eksctl create nodegroup --config-file=$CLUSTER_NAME.eksctl.yaml --include="nb-*,dask-*"
 ```
-
-#### 5.5. Restore the k8s version in the config
-
-We adjusted the k8s version in the config to influence the desired version
-of our created nodegroups. Let's restore it to what the k8s control plane
-currently have if not already.
 
 ### 6. Repeat steps 3,4,5 if needed
 
