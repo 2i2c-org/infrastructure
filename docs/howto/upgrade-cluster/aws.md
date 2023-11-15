@@ -139,7 +139,7 @@ export AWS_SECRET_ACCESS_KEY="..."
 The k8s control plane can only be upgraded one minor version at the time.[^1]
 ```
 
-Update the cluster's jsonnet config's version field **one minor version.**
+#### 3.1. Update the cluster's version field one minor version.
 
 In the cluster's config file there should be an entry like the one below,
 where the version must be updated.
@@ -161,6 +161,32 @@ eksctl upgrade cluster --config-file=$CLUSTER_NAME.eksctl.yaml --approve
 ```{note}
 If you see the error `Error: the server has asked for the client to provide credentials` don't worry, if you try it again you will find that the cluster is now upgraded.
 ```
+#### 3.2. Upgrade EKS add-ons (takes ~3*5s)
+
+As documented in `eksctl`'s documentation[^1], we also need to upgrade three
+EKS add-ons enabled by default, and one we have added manually.
+
+```bash
+# upgrade the kube-proxy daemonset
+eksctl utils update-kube-proxy --config-file=$CLUSTER_NAME.eksctl.yaml --approve
+
+# upgrade the aws-node daemonset
+eksctl utils update-aws-node --config-file=$CLUSTER_NAME.eksctl.yaml --approve
+
+# upgrade the coredns deployment
+eksctl utils update-coredns --config-file=$CLUSTER_NAME.eksctl.yaml --approve
+
+# upgrade the aws-ebs-csi-driver addon's deployment and daemonset
+eksctl update addon --config-file=$CLUSTER_NAME.eksctl.yaml
+```
+
+````{note} Common failures
+The kube-proxy deamonset's pods may fail to pull the image, to resolve this visit AWS EKS docs on [managing coredns](https://docs.aws.amazon.com/eks/latest/userguide/managing-coredns.html) to identify the version to use and update the coredns deployment's container image to match it.
+
+```bash
+kubectl edit daemonset coredns -n kube-system
+```
+````
 
 ### 4. Repeat step 3 above for up to three times, if needed
 
@@ -189,10 +215,11 @@ Per step 4 above, you can upgrade the version of the node groups maximum
 three versions at once, for example from 1.25 to 1.28 directly if the
 control plane's version allows it.
 
-If after one such combined upgrade, the node groups version still doesn't
-match the k8s control plane, you will need to repeat the upgrade process
+If after one such upgrade, the node groups version is still behind
+the k8s control plane, you will need to repeat the node upgrade process
 until it does.
 ```
+
 To upgrade (unmanaged) node groups, you delete them and then add them back in. When
 adding them back, make sure your cluster config's k8s version is what you
 want the node groups to be added back as.
@@ -244,34 +271,7 @@ We adjusted the k8s version in the config to influence the desired version
 of our created nodegroups. Let's restore it to what the k8s control plane
 currently have if not already.
 
-### 6. Upgrade EKS add-ons (takes ~3*5s)
-
-As documented in `eksctl`'s documentation[^1], we also need to upgrade three
-EKS add-ons enabled by default, and one we have added manually.
-
-```bash
-# upgrade the kube-proxy daemonset
-eksctl utils update-kube-proxy --config-file=$CLUSTER_NAME.eksctl.yaml --approve
-
-# upgrade the aws-node daemonset
-eksctl utils update-aws-node --config-file=$CLUSTER_NAME.eksctl.yaml --approve
-
-# upgrade the coredns deployment
-eksctl utils update-coredns --config-file=$CLUSTER_NAME.eksctl.yaml --approve
-
-# upgrade the aws-ebs-csi-driver addon's deployment and daemonset
-eksctl update addon --config-file=$CLUSTER_NAME.eksctl.yaml
-```
-
-````{note} Common failures
-The kube-proxy deamonset's pods may fail to pull the image, to resolve this visit AWS EKS docs on [managing coredns](https://docs.aws.amazon.com/eks/latest/userguide/managing-coredns.html) to identify the version to use and update the coredns deployment's container image to match it.
-
-```bash
-kubectl edit daemonset coredns -n kube-system
-```
-````
-
-### 7. Commit the changes to the jsonnet config file
+### 6. Commit the changes to the jsonnet config file
 
 During this upgrade, the k8s version and possibly the node group name might have
 been changed. Make sure you commit this changes after the upgrade is finished.
