@@ -133,24 +133,10 @@ export AWS_ACCESS_KEY_ID="..."
 export AWS_SECRET_ACCESS_KEY="..."
 ```
 
-### 3. Upgrade the k8s control plane one minor version at a time up to three times
+### 3. Upgrade the k8s control plane one minor version
 
 ```{important}
-
-1. The k8s control plane can only be upgraded one minor version at the time.[^1]
-
-2. A node's k8s software (`kubelet`) can be up to three minor versions **behind**
-   the control plane version[^2] if kublet is at least at version 1.25.
-   Due to this, you can plan your cluster upgrade to only involve the minimum
-   number of node group upgrades.
-
-   So if you upgrade from k8s 1.25 to 1.28, you can for example upgrade the k8s
-   control plane three steps in a row, from 1.25 to 1.26, then from 1.26
-   to 1.27 and then from 1.27 to 1.28. This way, the node groups were left
-   behind the control plane by three minor versions, which is ok, because it
-   doesn't break the three minor versions rule.
-
-   Then, you can upgrade the node groups from 1.25 to 1.28.
+The k8s control plane can only be upgraded one minor version at the time.[^1]
 ```
 
 Update the cluster's jsonnet config's version field **one minor version.**
@@ -176,13 +162,42 @@ eksctl upgrade cluster --config-file=$CLUSTER_NAME.eksctl.yaml --approve
 If you see the error `Error: the server has asked for the client to provide credentials` don't worry, if you try it again you will find that the cluster is now upgraded.
 ```
 
-### 4. Upgrade node groups up to three minor versions until it matches the version of the k8s control plane
+### 4. Repeat step 3 above for up to three times, if needed
 
+If you upgrade k8s multiple minor versions, consider repeating step 3,
+up to maximum three times, incrementing the control plane one minor version
+at the time.
+
+This is because a node's k8s software (`kubelet`) can be up to three minor
+versions **behind** the control plane version[^2] if kublet is at least
+at version 1.25. Due to this, you can plan your cluster upgrade to only
+involve the minimum number of node group upgrades.
+
+So if you upgrade from k8s 1.25 to 1.28, you can for example upgrade the k8s
+control plane three steps in a row, from 1.25 to 1.26, then from 1.26
+to 1.27 and then from 1.27 to 1.28. This way, the node groups were left
+behind the control plane by three minor versions, which is ok, because it
+doesn't break the three minor versions rule.
+
+Then, you can upgrade the node groups directly from 1.25 to 1.28 making only
+one upgrade on the node groups instead of three.
+
+### 5. Upgrade node groups version until it matches the k8s control plane
+
+```important
+Per step 4 above, you can upgrade the version of the node groups maximum
+three versions at once, for example from 1.25 to 1.28 directly if the
+control plane's version allows it.
+
+If after one such combined upgrade, the node groups version still doesn't
+match the k8s control plane, you will need to repeat the upgrade process
+until it does.
+```
 To upgrade (unmanaged) node groups, you delete them and then add them back in. When
 adding them back, make sure your cluster config's k8s version is what you
 want the node groups to be added back as.
 
-#### 4.1. Update the k8s version in the config temporarily if needed
+#### 5.1. Update the k8s version in the config temporarily if needed
 
 This is to influence the k8s software version for the nodegroup's we
 create only. We cannot choose a version ahead of the current k8s
@@ -192,7 +207,7 @@ Make sure the cluster's jsonnet config's version field matches the
 current version of the control plane and this version is **no more
 than three minor versions** ahead of the node groups versions.
 
-#### 4.2. Renaming node groups part 1: add a new core node group (like `core-b`)
+#### 5.2. Renaming node groups part 1: add a new core node group (like `core-b`)
 
 Rename the `CLUSTER_NAME.jsonnet` config file's entry for the core node
 group temporarily when running this command, either from `core-a` to `core-b` or
@@ -203,7 +218,7 @@ the other way around, then create the new nodegroup.
 eksctl create nodegroup --config-file=$CLUSTER_NAME.eksctl.yaml --include="core-b"
 ```
 
-#### 4.3. Renaming node groups part 2: delete all old node groups (like `core-a,nb-*,dask-*`)
+#### 5.3. Renaming node groups part 2: delete all old node groups (like `core-a,nb-*,dask-*`)
 
 Rename the core node group again in the config to its previous name,
 so the old node group can be deleted with the following command,
@@ -217,19 +232,19 @@ eksctl delete nodegroup --config-file=$CLUSTER_NAME.eksctl.yaml --include="core-
 Rename (part 3/3) the core node group one final time in the config to its
 new name, as that represents the state of the EKS cluster.
 
-#### 4.4. Renaming node groups part 3: re-create all non-core node groups (like `nb-*,dask-*`)
+#### 5.4. Renaming node groups part 3: re-create all non-core node groups (like `nb-*,dask-*`)
 
 ```bash
 eksctl create nodegroup --config-file=$CLUSTER_NAME.eksctl.yaml --include="nb-*,dask-*"
 ```
 
-#### 4.5. Restore the k8s version in the config
+#### 5.5. Restore the k8s version in the config
 
 We adjusted the k8s version in the config to influence the desired version
 of our created nodegroups. Let's restore it to what the k8s control plane
 currently have if not already.
 
-### 5. Upgrade EKS add-ons (takes ~3*5s)
+### 6. Upgrade EKS add-ons (takes ~3*5s)
 
 As documented in `eksctl`'s documentation[^1], we also need to upgrade three
 EKS add-ons enabled by default, and one we have added manually.
@@ -255,11 +270,6 @@ The kube-proxy deamonset's pods may fail to pull the image, to resolve this visi
 kubectl edit daemonset coredns -n kube-system
 ```
 ````
-
-### 6. Repeat steps 4 and 6 if needed
-
-If you upgrade k8s multiple minor versions, repeat step 4 and 6, where you
-increment it one minor version at the time.
 
 ### 7. Commit the changes to the jsonnet config file
 
