@@ -195,7 +195,7 @@ cluster is unused or that the maintenance is communicated ahead of time.
       current version of the control plane and this version is **no more
       than three minor versions** ahead of the node groups versions.
 
-   #### 5.2. Rename part 1: add a new core node group (like `core-b`)
+   #### 5.2. Renaming node groups part 1: add a new core node group (like `core-b`)
 
       Rename the `CLUSTER_NAME.jsonnet` config file's entry for the core node
       group temporarily when running this command, either from `core-a` to `core-b` or
@@ -212,7 +212,7 @@ cluster is unused or that the maintenance is communicated ahead of time.
       eksctl create nodegroup --config-file=$CLUSTER_NAME.eksctl.yaml --include="core-b"
       ```
 
-   #### 5.3. Rename part 2: delete all old node groups (like `core-a,nb-*,dask-*`)
+   #### 5.3. Renaming node groups part 2: delete all old node groups (like `core-a,nb-*,dask-*`)
 
       Rename the core node group again in the config to its previous name,
       so the old node group can be deleted with the following command,
@@ -232,7 +232,7 @@ cluster is unused or that the maintenance is communicated ahead of time.
       Rename (part 3/3) the core node group one final time in the config to its
       new name, as that represents the state of the EKS cluster.
 
-   #### 5.4. Rename part 3: re-create all non-core node groups (like `nb-*,dask-*`)
+   #### 5.4. Renaming node groups part 3: re-create all non-core node groups (like `nb-*,dask-*`)
 
       ```bash
       eksctl create nodegroup --config-file=$CLUSTER_NAME.eksctl.yaml --include="nb-*,dask-*"
