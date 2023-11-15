@@ -44,7 +44,7 @@ jupyterhub:
           - jtkmckenna
   singleuser:
     extraFiles:
-      jupyter_notebook_config.json:
+      jupyter_server_config.json:
         data:
           MappingKernelManager:
             # Cull idle kernels after 24h (24 * 60 * 60)
