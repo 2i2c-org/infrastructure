@@ -98,6 +98,7 @@ local daskNodes = [
             // Related docs: https://docs.aws.amazon.com/eks/latest/userguide/managing-ebs-csi.html
             //
             name: 'aws-ebs-csi-driver',
+            version: "latest",
             wellKnownPolicies: {
                 ebsCSIController: true,
             },
