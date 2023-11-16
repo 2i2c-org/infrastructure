@@ -21,12 +21,7 @@
    ```{note}
    Make sure the correct project is selected while enabling these!
    ```
-
-7. If we have direct access to the billing account used, we must set up
-   [billing export to BigQuery](new-gcp-project:billing-export).
-   This allows us to figure out how much this project is costing over a period of time.
-   
-8. [Setup a new cluster](new-cluster:new-cluster) inside it via Terraform
+7. [Setup a new cluster](new-cluster:new-cluster) inside it via Terraform
 
 ## Checking quotas and requesting increases
 
@@ -49,6 +44,17 @@ Finally, we should check what quotas are enforced on the project and increase th
 
 (new-gcp-project:billing-export)=
 ## Set up project cost export to bigquery
+
+```{warning}
+
+This must be only done if it is a **new** billing account handled by 2i2c for a specific project,
+rather than just for a new project under the same billing account. This is a somewhat rare occurance!
+
+If there is already billing export set up for this **billing account** as you try
+to complete these steps, do not change it and raise an issue for engineering to
+validate what the right thing to do is. Changing existing billing export
+may cause automated billing code to have issues
+```
 
 Each time we set up a *new billing account*, we need to set it up to export detailed
 usage costs to a GCP BigQuery dataset, so we can automatically figure out how much each
