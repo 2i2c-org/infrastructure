@@ -44,6 +44,8 @@ basehub:
         Authenticator:
           admin_users:
             - freitagb
+            - j08lue
+            - slesaad
     singleuser:
       defaultUrl: /lab
       profileList:
