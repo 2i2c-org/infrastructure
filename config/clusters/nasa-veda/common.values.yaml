@@ -52,6 +52,7 @@ basehub:
             - ranchodeluxe
             - jsignell
             - slesaad
+            - wildintellect
     singleuser:
       defaultUrl: /lab
       image:
