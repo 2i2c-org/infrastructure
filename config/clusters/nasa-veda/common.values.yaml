@@ -129,6 +129,19 @@ basehub:
                         securityContext:
                           runAsUser: 1000
                           runAsGroup: 1000
+                qgis:
+                  display_name: QGIS on Linux Desktop
+                  slug: qgis
+                  kubespawner_override:
+                    # Explicitly unset this - we set this to 'jupyterhub-singleuser'
+                    # in basehub/values.yaml. We instead want to leave this unset,
+                    # so the default command for the docker image is used instead.
+                    # This is required for .desktop files to show up correctly.
+                    cmd: null
+                    # Launch people directly into the Linux desktop when they start
+                    default_url: /desktop
+                    # Built from https://github.com/jupyterhub/jupyter-remote-desktop-proxy/pull/51
+                    image: "quay.io/jupyter-remote-desktop-proxy/qgis:2023-09-27"
                 rocker:
                   display_name: Rocker Geospatial with RStudio
                   slug: rocker
