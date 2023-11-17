@@ -86,16 +86,6 @@ jupyterhub:
             username_derivation:
               username_claim: "preferred_username"
             allow_all: true
-          # Temporarily enable Google & Microsoft accounts again
-          # Disable again first week of november
-          http://google.com/accounts/o8/id:
-            username_derivation:
-              username_claim: "email"
-            allow_all: true
-          http://login.microsoftonline.com/common/oauth2/v2.0/authorize:
-            username_derivation:
-              username_claim: "email"
-            allow_all: true
       Authenticator:
         admin_users:
           - nmearl
