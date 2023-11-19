@@ -69,7 +69,7 @@ local daskNodes = [];
             version should be the latest support version by the eksctl CLI, see
             https://eksctl.io/introduction/ for a list of supported versions.
         -#}
-        version: '1.25'
+        version: "1.27",
     },
     availabilityZones: masterAzs,
     iam: {
