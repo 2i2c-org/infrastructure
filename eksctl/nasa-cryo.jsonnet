@@ -25,6 +25,8 @@ local nodeAz = "us-west-2a";
 // A `node.kubernetes.io/instance-type label is added, so pods
 // can request a particular kind of node with a nodeSelector
 local notebookNodes = [
+    # FIXME: The r5.xlarge node group is still at version 1.25 and should be
+    #        upgraded by deleting it and adding it back when possible.
     { instanceType: "r5.xlarge" },
     { instanceType: "r5.4xlarge" },
     { instanceType: "r5.16xlarge" },
@@ -60,7 +62,7 @@ local daskNodes = [
     metadata+: {
         name: "nasa-cryo",
         region: clusterRegion,
-        version: '1.25'
+        version: "1.27",
     },
     availabilityZones: masterAzs,
     iam: {
@@ -88,7 +90,7 @@ local daskNodes = [
     ],
     nodeGroups: [
         ng {
-            name: 'core-a',
+            name: 'core-b',
             availabilityZones: [nodeAz],
             ssh: {
                 publicKeyPath: 'ssh-keys/nasa-cryo.key.pub'

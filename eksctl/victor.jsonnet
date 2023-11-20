@@ -29,6 +29,9 @@ local notebookNodes = [
     { instanceType: "m5.xlarge" },
     { instanceType: "m5.2xlarge" },
     { instanceType: "m5.8xlarge" },
+    { instanceType: "r5.xlarge" },
+    { instanceType: "r5.4xlarge" },
+    { instanceType: "r5.16xlarge" },
 ];
 
 local daskNodes = [
@@ -52,7 +55,7 @@ local daskNodes = [
     metadata+: {
         name: "victor",
         region: clusterRegion,
-        version: '1.25'
+        version: "1.27",
     },
     availabilityZones: masterAzs,
     iam: {
@@ -80,7 +83,7 @@ local daskNodes = [
     ],
     nodeGroups: [
         ng {
-            name: 'core-b',
+            name: 'core-a',
             availabilityZones: [nodeAz],
             ssh: {
                 publicKeyPath: 'ssh-keys/victor.key.pub'

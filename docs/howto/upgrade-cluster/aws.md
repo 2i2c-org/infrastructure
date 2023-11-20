@@ -151,22 +151,23 @@ eksctl upgrade cluster --config-file=$CLUSTER_NAME.eksctl.yaml --approve
 ```{note}
 If you see the error `Error: the server has asked for the client to provide credentials` don't worry, if you try it again you will find that the cluster is now upgraded.
 ```
-#### 3.2. Upgrade EKS add-ons (takes ~3*5s)
+
+#### 3.2. Upgrade EKS add-ons
 
 As documented in `eksctl`'s documentation[^1], we also need to upgrade three
 EKS add-ons enabled by default, and one we have added manually.
 
 ```bash
-# upgrade the kube-proxy daemonset
+# upgrade the kube-proxy daemonset (takes ~5s)
 eksctl utils update-kube-proxy --config-file=$CLUSTER_NAME.eksctl.yaml --approve
 
-# upgrade the aws-node daemonset
+# upgrade the aws-node daemonset (takes ~5s)
 eksctl utils update-aws-node --config-file=$CLUSTER_NAME.eksctl.yaml --approve
 
-# upgrade the coredns deployment
+# upgrade the coredns deployment (takes ~5s)
 eksctl utils update-coredns --config-file=$CLUSTER_NAME.eksctl.yaml --approve
 
-# upgrade the aws-ebs-csi-driver addon's deployment and daemonset
+# upgrade the aws-ebs-csi-driver addon's deployment and daemonset (takes ~60s)
 eksctl update addon --config-file=$CLUSTER_NAME.eksctl.yaml
 ```
 
@@ -234,8 +235,15 @@ this command, either from `core-a` to `core-b` or the other way around,
 then create the new nodegroup.
 
 ```bash
-# create a copy of the current nodegroup
+# create a copy of the current nodegroup (takes ~5 min)
 eksctl create nodegroup --config-file=$CLUSTER_NAME.eksctl.yaml --include="core-b"
+```
+
+```{important}
+The `eksctl create nodegroup` can fail quietly when re-creating a node group
+that has been deleted recently (last ~60 seconds). If you see messages like _#
+existing nodegroup(s) (...) will be excluded_ and _created 0 nodegroup(s)_, you
+can just re-run the `create` command.
 ```
 
 #### 5.3. Renaming node groups part 2: delete all old node groups (like `core-a,nb-*,dask-*`)
@@ -245,8 +253,14 @@ so the old node group can be deleted with the following command,
 then delete the original nodegroup.
 
 ```bash
-# delete the original nodegroup
+# delete the original nodegroup (takes ~20s if the node groups has no running nodes)
 eksctl delete nodegroup --config-file=$CLUSTER_NAME.eksctl.yaml --include="core-a,nb-*,dask-*" --approve --drain=true
+```
+
+```{note}
+The `eksctl` managed drain operation may get stuck but you could help it along
+by finding the pods that fail to terminate with `kubectl get pod -A`, and then
+manually forcefully terminating them with `kubectl delete pod --force <...>`.
 ```
 
 #### 5.4. Renaming node groups part 3: re-create all non-core node groups (like `nb-*,dask-*`)

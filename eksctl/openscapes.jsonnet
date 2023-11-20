@@ -55,7 +55,7 @@ local daskNodes = [
     metadata+: {
         name: "openscapeshub",
         region: clusterRegion,
-        version: '1.24'
+        version: "1.27",
     },
     availabilityZones: masterAzs,
     iam: {
