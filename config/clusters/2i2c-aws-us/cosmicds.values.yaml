@@ -37,6 +37,9 @@ jupyterhub:
           name: Cosmic DS, Harvard
           url: https://www.cosmicds.cfa.harvard.edu/
   singleuser:
+    # Unset cmd so repo2docker-entrypoint gets used, and logs actually work
+    # Ref https://github.com/2i2c-org/infrastructure/issues/3109
+    cmd: null
     # No persistent storage should be kept to reduce any potential data
     # retention & privacy issues.
     # Ref https://github.com/2i2c-org/infrastructure/issues/2128#issuecomment-1635107926
@@ -82,16 +85,6 @@ jupyterhub:
           http://github.com/login/oauth/authorize:
             username_derivation:
               username_claim: "preferred_username"
-            allow_all: true
-          # Temporarily enable Google & Microsoft accounts again
-          # Disable again first week of november
-          http://google.com/accounts/o8/id:
-            username_derivation:
-              username_claim: "email"
-            allow_all: true
-          http://login.microsoftonline.com/common/oauth2/v2.0/authorize:
-            username_derivation:
-              username_claim: "email"
             allow_all: true
       Authenticator:
         admin_users:
