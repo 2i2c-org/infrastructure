@@ -10,10 +10,15 @@
 
 // Exported object
 {
-  // If using spot instances where a Auto Scaling Group (ASG) has multiple
-  // instances associated with it, label using the first instance type.
-  // FIXME: Clarify the limitations of picking one of multiple instance types
+  // Note that spot instances configured via an Auto Scaling Group (ASG) can have
+  // multiple instance types associated with it (with the same CPU/RAM/GPU), we
+  // label them using the first instance type in the ASG as a compromise.
+  //
+  // More details at:
+  // https://github.com/kubernetes/autoscaler/blob/master/cluster-autoscaler/cloudprovider/aws/README.md#using-mixed-instances-policies-and-spot-instances
+  //
   local instanceType = if 'instanceType' in $ then $.instanceType else $.instancesDistribution.instanceTypes[0],
+  // NodeGroup names can't have a '.' in them as instanceTypes has
   local escapedInstanceType = std.strReplace(instanceType, ".", "-"),
 
   // The cluster autoscaler reads specific tags on a Auto Scaling Group's default
