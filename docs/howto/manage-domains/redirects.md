@@ -1,3 +1,4 @@
+(domain-redirects)=
 # Setup Domain Redirects
 
 Sometimes, when we move a hub, we want to redirect users from the

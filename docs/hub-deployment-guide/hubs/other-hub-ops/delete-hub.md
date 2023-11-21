@@ -1,3 +1,4 @@
+(delete-a-hub)=
 # Delete a hub
 
 If you'd like to delete a hub, there are a few steps that we need to take:
