@@ -84,8 +84,10 @@ local daskNodes = [
         },
     ],
     nodeGroups: [
-        ng {
-            name: 'core-b',
+        ng + {
+            namePrefix: 'core',
+            nameSuffix: 'b',
+            nameIncludeInstanceType: false,
             availabilityZones: [nodeAz],
             ssh: {
                 publicKeyPath: 'ssh-keys/2i2c-aws-us.key.pub'
@@ -99,10 +101,8 @@ local daskNodes = [
             },
         },
     ] + [
-        ng {
-            // NodeGroup names can't have a '.' in them, while
-            // instanceTypes always have a .
-            name: "nb-%s" % std.strReplace(n.instanceType, ".", "-"),
+        ng + {
+            namePrefix: "nb",
             availabilityZones: [nodeAz],
             minSize: 0,
             maxSize: 500,
@@ -122,10 +122,8 @@ local daskNodes = [
         } + n for n in notebookNodes
     ] + ( if daskNodes != null then
         [
-        ng {
-            // NodeGroup names can't have a '.' in them, while
-            // instanceTypes always have a .
-            name: "dask-%s" % std.strReplace(n.instancesDistribution.instanceTypes[0], ".", "-"),
+        ng + {
+            namePrefix: "dask",
             availabilityZones: [nodeAz],
             minSize: 0,
             maxSize: 500,
