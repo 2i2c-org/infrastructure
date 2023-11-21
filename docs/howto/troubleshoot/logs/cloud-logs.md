@@ -1,6 +1,6 @@
 (howto-troubleshoot:cloud-logs)=
 
-# Cloud specific logs
+# Cloud specific logging
 
 This page describes how to look at various logs in different cloud providers.
 
