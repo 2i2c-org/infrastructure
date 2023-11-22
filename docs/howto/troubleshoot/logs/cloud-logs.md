@@ -170,7 +170,7 @@ Otherwise, it means that Azure Monitoring was not setup for your cluster and you
 Azure Monitoring is not configured on any of the 2i2c Azure clusters (i.e. the utoronto `hub-cluster`).
 ```
 
-## Amazon AWS https://aws.amazon.com/cloudwatch/
+## Amazon AWS
 
 On Amazon, the logs produced by all containers and other components are sent to [Amazon Cloud Watch](https://aws.amazon.com/cloudwatch), if the service is configured.
 
