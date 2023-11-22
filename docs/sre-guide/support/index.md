@@ -12,5 +12,4 @@ decrypt-age
 build-image-remotely
 credits
 grafana-account
-timeboxed-initial-ticket-evaluation
 ```
