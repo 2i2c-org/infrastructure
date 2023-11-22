@@ -5,7 +5,14 @@ This page describes how to look at various logs by using some deployer commands 
 
 ## Look at logs via deployer sub-commands
 
-There are some `deployer debug` sub-commands that wrap up the most relevant `kubectl logs` arguments that allow conveniently checking logs with only one command. 
+There are some `deployer debug` sub-commands that wrap up the most relevant `kubectl logs` arguments that allow conveniently checking logs with only one command.
+
+````{tip}
+You can export the cluster's and hub's names as environmental variables to directly use the copy-pasted commands in the sections below.
+
+```bash
+export CLUSTER_NAME=2i2c; export HUB_NAME=staging
+````
 
 ### Look at hub component logs
 
@@ -125,13 +132,21 @@ kubectl describe -n kube-system configmap cluster-autoscaler-status
 You can access any pod's logs by using the `kubectl logs` commands. Bellow are some of the most common debugging commands.
 
 ```{tip}
-1. The `--no-follow` flag
+1. The `--follow` flag
 
-   You can pass `--no-follow` to each of the `kubectl logs` command below to provide just logs up to the current point in time and then stop.
+   You can pass the `--follow` flag to each of the `kubectl logs` command below to stream the logs as they are happening, otherwise, they will just be presented up to the current point in time and then stop.
 
 2. The `--previous` flag
 
    If the pod has restarted due to an error, you can pass `--previous` to look at the logs of the pod prior to the last restart.
+
+3. The `--tail` flag
+
+    With `--tail=<number>` flag you can pass the number of lines of recent log file to display, otherwise, it will show all log lines.
+
+4. The `--since` flag
+
+    This flag can be used like `--since=1h` to only return logs newer than 1h in this case, or any other relative duration like 5s, 2m, or 3h.
 ```
 
 1. Print the logs of a pod
