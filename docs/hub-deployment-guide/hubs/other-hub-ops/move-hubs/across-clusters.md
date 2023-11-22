@@ -8,6 +8,7 @@ to ensure data is preserved.
 Setup [a new hub](../../../topic/infrastructure/config.md) in the target cluster, mimicking
 the config of the old hub as much as possible.
 
+(copy-home-dirs)=
 ## 2. Copy home directories
 
 Next, copy home directory contents from the old cluster to the new cluster.

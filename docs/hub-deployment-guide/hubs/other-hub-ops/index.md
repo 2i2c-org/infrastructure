@@ -6,6 +6,6 @@ They also cover more specific use-cases for special infrastructure set-ups.
 ```{toctree}
 :maxdepth: 2
 manual-deploy.md
-move-hub.md
+move-hubs/index.md
 delete-hub.md
 ```
