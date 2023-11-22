@@ -30,6 +30,7 @@ These commands are standalone and **don't require** running `deployer use-cluste
    If the pod has restarted due to an error, you can pass `--previous` to look at the logs of the pod prior to the last restart.
 ```
 
+(howto-troubleshoot:hub-pod-logs)=
 #### Hub pod logs
 ```bash
 deployer debug component-logs $CLUSTER_NAME $HUB_NAME hub
@@ -40,11 +41,13 @@ deployer debug component-logs $CLUSTER_NAME $HUB_NAME hub
 deployer debug component-logs $CLUSTER_NAME $HUB_NAME proxy
 ```
 
+(howto-troubleshoot:kubectl-traefik-logs)=
 #### Traefik pod logs
 ```bash
 deployer debug component-logs $CLUSTER_NAME $HUB_NAME traefik
 ```
 
+(howto-troubleshoot:kubectl-dask-gateway-logs)=
 ### Look at dask-gateway logs
 
 Display the logs from the dask-gateway's most important component pods.
@@ -82,6 +85,7 @@ export CLUSTER_NAME=2i2c;
 deployer use-cluster-credentials $CLUSTER_NAME
 ```
 
+(howto-troubleshoot:kubectl-autoscaler-logs)=
 ### Kubernetes autoscaler logs
 
 You can find scale up or scale down events by looking for decision events

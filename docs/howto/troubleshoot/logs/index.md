@@ -11,4 +11,5 @@ by using cloud-agnostic kubectl and deployer commands.
 :maxdepth: 2
 cloud-logs
 kubectl-logs
+common-errors
 ```

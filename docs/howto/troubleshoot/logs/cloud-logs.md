@@ -30,6 +30,7 @@ logs are kept for 30 days, and are searchable.
 
 ### Common queries
 
+(howto-troubleshoot:gcp-autoscaler-logs)=
 #### Kubernetes autoscaler logs
 
 You can find scale up or scale down events by looking for decision events
@@ -105,6 +106,7 @@ special characters, highly recommend using the script instead - escaping
 errors can be frustrating!
 ```
 
+(howto-troubleshoot:gcloud-dask-gateway-logs)=
 #### Look at dask-gateway logs
 
 The following query will show logs from all the components of dask-gateway -
