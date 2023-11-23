@@ -5,7 +5,7 @@ issues that may arise.
 
 ```{toctree}
 :maxdepth: 2
-logs.md
+logs/index.md
 ssh.md
 prometheus.md
 cilogon-user-accounts.md
