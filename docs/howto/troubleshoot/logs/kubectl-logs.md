@@ -17,7 +17,7 @@ export CLUSTER_NAME=2i2c; export HUB_NAME=staging
 
 ### Look at hub component logs
 
-The JupyterHub components's logs can be fetched with the `deployer debug component-logs` command, ran for each hub component.
+The JupyterHub component's logs can be fetched with the `deployer debug component-logs` command, ran for each hub component.
 
 These commands are standalone and **don't require** running `deployer use-cluster-credentials` before.
 
