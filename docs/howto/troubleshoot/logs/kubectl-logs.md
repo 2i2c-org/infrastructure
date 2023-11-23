@@ -113,6 +113,11 @@ kubectl describe -n kube-system configmap cluster-autoscaler-status
     ```
 
 ### Kubernetes pod events and status
+
+```{tip}
+The following commands require passing the namespace where a specific pod is running. Usually this namespace is the same with the hub name.
+```
+
 1. Running pods in a namespace and their status
     ```bash
     kubectl get pods -n <namespace>
