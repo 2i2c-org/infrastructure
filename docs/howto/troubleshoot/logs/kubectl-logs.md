@@ -12,6 +12,7 @@ You can export the cluster's and hub's names as environmental variables to direc
 
 ```bash
 export CLUSTER_NAME=2i2c; export HUB_NAME=staging
+```
 ````
 
 ### Look at hub component logs
