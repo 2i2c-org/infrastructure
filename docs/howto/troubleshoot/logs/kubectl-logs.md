@@ -77,7 +77,7 @@ Note that you don't need the *escaped* username, with this command.
 
 ### Pre-requisites
 
-Get the name of the cluster you want to debug and export its name as and env vars. Then use the `deployer` to gain `kubectl` access into this specific cluster.
+Get the name of the cluster you want to debug and export its name as env vars. Then use the `deployer` to gain `kubectl` access into this specific cluster.
 
 Example:
 
