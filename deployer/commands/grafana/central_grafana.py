@@ -28,12 +28,18 @@ from .utils import (
 yaml = YAML(typ="safe")
 
 
-def build_datasource_details(cluster_name):
+def central_grafana_datasource_endpoint(central_grafana_cluster_name="2i2c"):
+    grafana_url = get_grafana_url(central_grafana_cluster_name)
+    return f"{grafana_url}/api/datasources"
+
+
+def build_datasource_details(cluster_name, datasource_name=None):
     """
     Build the payload needed to create an authenticated datasource in Grafana for `cluster_name`.
 
     Args:
-        cluster_name: name of the cluster
+        cluster_name: name of the cluster who's prometheus instance will map to this datasource_name
+        datasource_name: name of the datasource
     Returns:
         dict object: req payload to be consumed by Grafana
     """
@@ -43,8 +49,9 @@ def build_datasource_details(cluster_name):
     # Get the credentials of this prometheus instance
     prometheus_creds = get_cluster_prometheus_creds(cluster_name)
 
+    datasource_name = cluster_name if not datasource_name else datasource_name
     datasource_details = {
-        "name": cluster_name,
+        "name": datasource_name,
         "type": "prometheus",
         "access": "proxy",
         "url": f"https://{datasource_url}",
@@ -56,14 +63,14 @@ def build_datasource_details(cluster_name):
     return datasource_details
 
 
-def build_datasource_request_headers(cluster_name):
+def build_datasource_request_headers(central_grafana_cluster_name="2i2c"):
     """
     Build the headers needed to send requests to the Grafana datasource endpoint.
 
     Returns:
         dict: "Accept", "Content-Type", "Authorization" headers
     """
-    token = get_grafana_token(cluster_name)
+    token = get_grafana_token(central_grafana_cluster_name)
 
     headers = {
         "Accept": "application/json",
@@ -74,7 +81,7 @@ def build_datasource_request_headers(cluster_name):
     return headers
 
 
-def get_clusters_used_as_datasources(cluster_name, datasource_endpoint):
+def get_clusters_used_as_datasources(central_grafana_cluster_name="2i2c"):
     """
     Get the list of cluster names that have prometheus instances
     already defined as datasources of the central Grafana.
@@ -82,14 +89,18 @@ def get_clusters_used_as_datasources(cluster_name, datasource_endpoint):
     Returns:
         list: the name of the clusters registered as central Grafana datasources
     """
-    headers = build_datasource_request_headers(cluster_name)
+    datasource_endpoint = central_grafana_datasource_endpoint(
+        central_grafana_cluster_name
+    )
+
+    headers = build_datasource_request_headers()
 
     # Get the list of all the currently existing datasources
     response = requests.get(datasource_endpoint, headers=headers)
 
     if not response.ok:
         print(
-            f"An error occured when retrieving the datasources from {datasource_endpoint}.\n"
+            f"An error occurred when retrieving the datasources from {datasource_endpoint}.\n"
             f"Error was {response.text}."
         )
         response.raise_for_status()
@@ -99,68 +110,126 @@ def get_clusters_used_as_datasources(cluster_name, datasource_endpoint):
 
 
 @grafana_app.command()
-def update_central_datasources(
-    central_grafana_cluster=typer.Option(
-        "2i2c", help="Name of cluster where the central grafana lives"
+def get_datasources_removal_candidates():
+    """
+    Get the datasources names that are registered in central grafana
+    but are NOT in the list of clusters in the infrastructure repository.
+    You might consider removing these datasources one by one, as they might link to
+    decommissioned clusters.
+    """
+    # Get a list of the clusters that already have their prometheus instances used as datasources
+    datasources = get_clusters_used_as_datasources()
+
+    # Get the list of the names of clusters in the infrastructure repository
+    cluster_files = get_all_cluster_yaml_files()
+    cluster_names = [cluster.parents[0].name for cluster in cluster_files]
+
+    rm_candidates = set(datasources).difference(cluster_names)
+
+    if not rm_candidates:
+        print_colour("Everything is up to date! :)")
+        return
+
+    print(
+        "These datasources don't map to an existing cluster. You might consider removing them."
     )
+    print_colour(f"{rm_candidates}", "yellow")
+
+
+@grafana_app.command()
+def get_datasources_add_candidates():
+    """
+    Get the clusters in the infrastructure repository but are NOT
+    registered in central grafana as datasources.
+    You might consider adding these datasources, as they might link to
+    new clusters that haven't been updated.
+    """
+
+    # Get a list of the clusters that already have their prometheus instances used as datasources
+    datasources = get_clusters_used_as_datasources()
+
+    # Get the list of the names of clusters in the infrastructure repository
+    cluster_files = get_all_cluster_yaml_files()
+    cluster_names = [cluster.parents[0].name for cluster in cluster_files]
+
+    add_candidates = set(cluster_names).difference(datasources)
+    if not add_candidates:
+        print_colour("Everything is up to date! :)")
+        return
+
+    print(
+        "These datasources don't map to an existing cluster. You might consider removing them."
+    )
+    print_colour(f"{add_candidates}", "yellow")
+
+
+@grafana_app.command()
+def add_cluster_as_datasource(
+    cluster_name=typer.Argument(
+        ..., help="Name of cluster to add as a datasource to the central 2i2c grafana."
+    ),
+    datasource_name=typer.Option(
+        "",
+        help="(Optional) The name of the datasource to add. Defaults to cluster_name.",
+    ),
+):
+    """
+    Add a new cluster to the central 2i2c grafana.
+    """
+    datasource_name = cluster_name if not datasource_name else datasource_name
+    datasource_endpoint = central_grafana_datasource_endpoint("2i2c")
+
+    # Get a list of the clusters that already have their prometheus instances used as datasources
+    datasources = get_clusters_used_as_datasources()
+    if cluster_name and cluster_name not in datasources:
+        print(f"Checking if {cluster_name} it can be added as datasource...")
+        datasource_details = build_datasource_details(cluster_name)
+        req_body = json.dumps(datasource_details)
+
+        # Tell Grafana to create and register a datasource for this cluster
+        headers = build_datasource_request_headers()
+        response = requests.post(datasource_endpoint, data=req_body, headers=headers)
+        if not response.ok:
+            print_colour(f"{response.reason}.{response.json()['message']}.", "red")
+            return
+
+        print_colour(f"Successfully created a new datasource for {cluster_name}!")
+
+
+@grafana_app.command()
+def rm_entry_from_datasources(
+    cluster_name=typer.Argument(
+        ...,
+        help="The name of cluster who's prometheus instance we're removing from the datasources in the central 2i2c grafana.",
+    ),
+    datasource_name=typer.Option(
+        "",
+        help="The name of the datasource we're removing. This is usually the same with the name of cluster.",
+    ),
 ):
     """
     Update the central grafana with datasources for all clusters prometheus instances
     """
-    grafana_url = get_grafana_url(central_grafana_cluster)
-    datasource_endpoint = f"{grafana_url}/api/datasources"
+    datasource_name = cluster_name if not datasource_name else datasource_name
+    datasource_endpoint = central_grafana_datasource_endpoint("2i2c")
+    datasource_delete_endpoint = f"{datasource_endpoint}/name/{datasource_name}"
 
     # Get a list of the clusters that already have their prometheus instances used as datasources
-    datasources = get_clusters_used_as_datasources(
-        central_grafana_cluster, datasource_endpoint
-    )
+    datasources = get_clusters_used_as_datasources()
 
-    # Get a list of filepaths to all cluster.yaml files in the repo
-    cluster_files = get_all_cluster_yaml_files()
+    if datasource_name in datasources:
+        print(f"Checking if {datasource_name} it can be deleted from datasources...")
+        # Build the datasource details for the instances that aren't configures as datasources
+        datasource_details = build_datasource_details(cluster_name, datasource_name)
+        req_body = json.dumps(datasource_details)
 
-    print("Searching for clusters that aren't Grafana datasources...")
-    # Count how many clusters we can't add as datasources for logging
-    exceptions = 0
-    for cluster_file in cluster_files:
-        # Read in the cluster.yaml file
-        with open(cluster_file) as f:
-            cluster_config = yaml.load(f)
-
-        # Get the cluster's name
-        cluster_name = cluster_config.get("name", {})
-        if cluster_name and cluster_name not in datasources:
-            print(f"Found {cluster_name} cluster. Checking if it can be added...")
-            # Build the datasource details for the instances that aren't configures as datasources
-            try:
-                datasource_details = build_datasource_details(cluster_name)
-                req_body = json.dumps(datasource_details)
-
-                # Tell Grafana to create and register a datasource for this cluster
-                headers = build_datasource_request_headers(central_grafana_cluster)
-                response = requests.post(
-                    datasource_endpoint, data=req_body, headers=headers
-                )
-                if not response.ok:
-                    print(
-                        f"An error occured when creating the datasource. \nError was {response.text}."
-                    )
-                    response.raise_for_status()
-                print_colour(
-                    f"Successfully created a new datasource for {cluster_name}!"
-                )
-            except Exception as e:
-                print_colour(
-                    f"An error occured for {cluster_name}.\nError was: {e}.\nSkipping...",
-                    "yellow",
-                )
-                exceptions += 1
-                pass
-
-    if exceptions:
-        print_colour(
-            f"Failed to add {exceptions} clusters as datasources. See errors above!",
-            "red",
+        # Tell Grafana to create and register a datasource for this cluster
+        headers = build_datasource_request_headers()
+        response = requests.delete(
+            datasource_delete_endpoint, data=req_body, headers=headers
         )
-    print_colour(
-        f"Successfully retrieved {len(datasources)} existing datasources! {datasources}"
-    )
+        if not response.ok:
+            print_colour(f"{response.reason}. {response.json()['message']}.", "red")
+            return
+
+        print_colour(f"Successfully deleted the datasource of {datasource_name}!")
