@@ -31,6 +31,7 @@ jupyterhub:
         oauth_callback_url: https://must.af.catalystproject.2i2c.cloud/hub/oauth_callback
         allowed_idps:
           http://google.com/accounts/o8/id:
+            default: true
             username_derivation:
               username_claim: email
             allowed_domains:
@@ -39,13 +40,12 @@ jupyterhub:
         admin_users:
           - "bkankuzi@must.ac.mw"
   singleuser:
-    defaultUrl: "/lab"
+    defaultUrl: /lab
     image:
-      # This image specification is likely overridden via the configurator.
-      # jupyter/scipy-notebook is maintained at: https://github.com/jupyter/docker-stacks
-      # tags can be viewed at: https://hub.docker.com/r/jupyter/scipy-notebook/tags
-      name: jupyter/scipy-notebook
-      tag: "2023-07-06"
+      # rocker/binder is maintained at: https://github.com/rocker-org/rocker-versioned2
+      # tags can be viewed at: https://hub.docker.com/r/rocker/binder/tags
+      name: rocker/binder
+      tag: "4.3"
     # Below config was copied from OpenScapes common.values.yaml with choices
     # for images removed
     # https://github.com/2i2c-org/infrastructure/blob/22a2c4b5f80c63d1a06d59bef148da087d339d3b/config/clusters/openscapes/common.values.yaml#L47-L237
@@ -107,6 +107,7 @@ jupyterhub:
         kubespawner_override:
           cpu_limit: null
           mem_limit: null
+          working_dir: /home/rstudio
           node_selector:
             node.kubernetes.io/instance-type: r5.xlarge
       - display_name: "Medium: up to 16 CPU / 128 GB RAM"
@@ -162,6 +163,7 @@ jupyterhub:
         kubespawner_override:
           cpu_limit: null
           mem_limit: null
+          working_dir: /home/rstudio
           node_selector:
             node.kubernetes.io/instance-type: r5.4xlarge
       - display_name: "Large: up to 64 CPU / 512 GB RAM"
@@ -217,5 +219,6 @@ jupyterhub:
         kubespawner_override:
           cpu_limit: null
           mem_limit: null
+          working_dir: /home/rstudio
           node_selector:
             node.kubernetes.io/instance-type: r5.16xlarge
