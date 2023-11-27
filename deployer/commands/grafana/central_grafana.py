@@ -182,7 +182,7 @@ def add_cluster_as_datasource(
     # Get a list of the clusters that already have their prometheus instances used as datasources
     datasources = get_clusters_used_as_datasources()
     if cluster_name and cluster_name not in datasources:
-        print(f"Checking if {cluster_name} it can be added as datasource...")
+        print(f"Checking if {cluster_name} can be added as datasource...")
         datasource_details = build_datasource_details(cluster_name)
         req_body = json.dumps(datasource_details)
 
@@ -218,7 +218,7 @@ def rm_entry_from_datasources(
     datasources = get_clusters_used_as_datasources()
 
     if datasource_name in datasources:
-        print(f"Checking if {datasource_name} it can be deleted from datasources...")
+        print(f"Checking if {datasource_name} can be deleted from datasources...")
         # Build the datasource details for the instances that aren't configures as datasources
         datasource_details = build_datasource_details(cluster_name, datasource_name)
         req_body = json.dumps(datasource_details)

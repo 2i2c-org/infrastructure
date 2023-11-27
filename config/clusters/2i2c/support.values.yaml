@@ -32,7 +32,7 @@ grafana:
     # We delete the initial "prometheus" data source from the database to avoid confusion.
     # This is because the 2i2c grafana is the central one and we call this datasource "2i2c"
     # instead of "prometheus" to be more clear what's about.
-    # This config-added datasource can only be deleted link this,
+    # This config-added datasource can only be deleted like this,
     # the UI and API are disabled for this operation.
     deleteDatasources:
       - name: prometheus
