@@ -69,49 +69,43 @@ jupyterhub:
           resources:
             display_name: Resource Allocation
             choices:
-              mem_2_7:
-                display_name: 2.7 GB RAM, upto 3.479 CPUs
-                description: Use this for the workshop on 2023 September
+              mem_3_4:
+                display_name: 3.4 GB RAM, upto 3.485 CPUs
                 kubespawner_override:
-                  mem_guarantee: 2904451072
-                  mem_limit: 2904451072
-                  cpu_guarantee: 0.434875
-                  cpu_limit: 3.479
+                  mem_guarantee: 3662286336
+                  mem_limit: 3662286336
+                  cpu_guarantee: 0.435625
+                  cpu_limit: 3.485
                   node_selector:
-                    # FIXME: guarantee/limits initialized for n1-highmem-4, not n2-
                     node.kubernetes.io/instance-type: n2-highmem-4
                 default: true
-              mem_5_4:
-                display_name: 5.4 GB RAM, upto 3.479 CPUs
+              mem_6_8:
+                display_name: 6.8 GB RAM, upto 3.485 CPUs
                 kubespawner_override:
-                  mem_guarantee: 5808902144
-                  mem_limit: 5808902144
-                  cpu_guarantee: 0.86975
-                  cpu_limit: 3.479
+                  mem_guarantee: 7324572672
+                  mem_limit: 7324572672
+                  cpu_guarantee: 0.87125
+                  cpu_limit: 3.485
                   node_selector:
-                    # FIXME: guarantee/limits initialized for n1-highmem-4, not n2-
                     node.kubernetes.io/instance-type: n2-highmem-4
-              mem_10_8:
-                display_name: 10.8 GB RAM, upto 3.479 CPUs
+              mem_13_6:
+                display_name: 13.6 GB RAM, upto 3.485 CPUs
                 kubespawner_override:
-                  mem_guarantee: 11617804288
-                  mem_limit: 11617804288
-                  cpu_guarantee: 1.7395
-                  cpu_limit: 3.479
+                  mem_guarantee: 14649145344
+                  mem_limit: 14649145344
+                  cpu_guarantee: 1.7425
+                  cpu_limit: 3.485
                   node_selector:
-                    # FIXME: guarantee/limits initialized for n1-highmem-4, not n2-
                     node.kubernetes.io/instance-type: n2-highmem-4
-              mem_21_6:
-                display_name: 21.6 GB RAM, upto 3.479 CPUs
-                description: Largest amount of RAM, might take a few minutes to start
+              mem_27_3:
+                display_name: 27.3 GB RAM, upto 3.485 CPUs
                 kubespawner_override:
-                  mem_guarantee: 23235608576
-                  mem_limit: 23235608576
-                  cpu_guarantee: 3.479
-                  cpu_limit: 3.479
-                node_selector:
-                  # FIXME: guarantee/limits initialized for n1-highmem-4, not n2-
-                  node.kubernetes.io/instance-type: n2-highmem-4
+                  mem_guarantee: 29298290688
+                  mem_limit: 29298290688
+                  cpu_guarantee: 3.485
+                  cpu_limit: 3.485
+                  node_selector:
+                    node.kubernetes.io/instance-type: n2-highmem-4
   hub:
     # Allows for multiple concurrent demos
     allowNamedServers: true
