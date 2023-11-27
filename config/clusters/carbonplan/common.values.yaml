@@ -35,10 +35,6 @@ basehub:
       serviceAccountName: cloud-user-sa
       image:
         name: carbonplan/trace-python-notebook
-        # pullPolicy set to "Always" because we use the changing over time tag
-        # "latest".
-        pullPolicy: Always
-        tag: "latest"
       profileList:
         # The mem-guarantees are here so k8s doesn't schedule other pods
         # on these nodes.
