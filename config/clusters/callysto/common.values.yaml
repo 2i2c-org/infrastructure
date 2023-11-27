@@ -55,76 +55,6 @@ jupyterhub:
             <img src="https://www.callysto.ca/wp-content/uploads/2022/08/Callysto-HUB_horizontal.png" alt="CallystoHub"/>
           {% endblock %}
   hub:
-    extraConfig:
-      # FIXME: If the following issues are resolved, we should remove this
-      #        custom authenticator class and use CILogonOAuthenticator
-      #        directly instead.
-      #
-      #        https://github.com/jupyterhub/oauthenticator/issues/547
-      #        https://github.com/jupyterhub/oauthenticator/issues/692
-      #
-      001-cilogon-email-auth: |
-        from fnmatch import fnmatch
-
-        from oauthenticator.cilogon import CILogonOAuthenticator
-
-
-        class EmailAuthenticatingCILogonOAuthenticator(CILogonOAuthenticator):
-            """
-            Custom override of CILogonOAuthenticator to allow access control via
-            one property (email) while the username itself is a different
-            property (oidc), and to allow `allowed_domains` to involve wildcards
-            like *.
-
-            This allows us to restrict access based on the *email* of the
-            authenticated user without having to store the actual email in our
-            servers or use it as a username.
-            """
-
-            async def check_allowed(self, username, auth_model):
-                """
-                Replaces the default implementation of check_allowed as it
-                otherwise would error, not finding a `@` symbol in the non-email
-                username.
-
-                Mostly a copy of OAuthenticator 16.1, for comparison see:
-                https://github.com/jupyterhub/oauthenticator/blob/16.1.0/oauthenticator/cilogon.py#L349-L373
-                """
-                if await super(CILogonOAuthenticator, self).check_allowed(username, auth_model):
-                    return True
-
-                user_info = auth_model["auth_state"][self.user_auth_state_key]
-                user_idp = user_info["idp"]
-
-                idp_allow_all = self.allowed_idps[user_idp].get("allow_all")
-                if idp_allow_all:
-                    return True
-
-                user_info = auth_model["auth_state"][self.user_auth_state_key]
-                user_idp = user_info["idp"]
-
-                idp_allowed_domains = self.allowed_idps[user_idp].get("allowed_domains")
-                if idp_allowed_domains:
-                    # this was the part we wanted to replace
-                    email = auth_model["auth_state"][self.user_auth_state_key]["email"]
-                    email_domain = email.split("@", 1)[1].lower()
-                    for ad in idp_allowed_domains:
-                        # fnmatch allow us to use wildcards like * and ?, but
-                        # not the full regex. For simple domain matching this is
-                        # good enough. If we were to use regexes instead, people
-                        # will have to escape all their '.'s, and since that is
-                        # actually going to match 'any character' it is a
-                        # possible security hole. For details see
-                        # https://docs.python.org/3/library/fnmatch.html.
-                        if fnmatch(email_domain, ad):
-                            return True
-
-                # users should be explicitly allowed via config, otherwise they aren't
-                return False
-
-
-        c.JupyterHub.authenticator_class = EmailAuthenticatingCILogonOAuthenticator
-
     config:
       CILogonOAuthenticator:
         # Usernames are based on a unique "oidc" claim and not email, so we need
@@ -143,6 +73,7 @@ jupyterhub:
           http://google.com/accounts/o8/id:
             username_derivation:
               username_claim: "oidc"
+            allowed_domains_claim: email
             allowed_domains: &allowed_domains
               - 2i2c.org
               - btps.ca
@@ -164,4 +95,5 @@ jupyterhub:
           http://login.microsoftonline.com/common/oauth2/v2.0/authorize:
             username_derivation:
               username_claim: "oidc"
+            allowed_domains_claim: email
             allowed_domains: *allowed_domains
