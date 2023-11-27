@@ -125,6 +125,7 @@ basehub:
         CILogonOAuthenticator:
           allowed_idps:
             http://github.com/login/oauth/authorize:
+              default: true
               username_derivation:
                 username_claim: "preferred_username"
         OAuthenticator:

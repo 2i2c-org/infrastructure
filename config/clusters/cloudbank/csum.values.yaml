@@ -37,6 +37,7 @@ jupyterhub:
         oauth_callback_url: "https://csum.cloudbank.2i2c.cloud/hub/oauth_callback"
         allowed_idps:
           https://cma-shibboleth.csum.edu/idp/shibboleth:
+            default: true
             username_derivation:
               username_claim: "email"
             allow_all: true
