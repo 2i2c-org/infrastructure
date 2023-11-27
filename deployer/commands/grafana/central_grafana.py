@@ -27,6 +27,16 @@ from .utils import (
 
 yaml = YAML(typ="safe")
 
+# Creates a new typer application, called "central"
+# and nest it as a sub-command under "grafana"
+
+central_grafana_ds_app = typer.Typer(pretty_exceptions_show_locals=False)
+grafana_app.add_typer(
+    central_grafana_ds_app,
+    name="central-ds",
+    help="Sub-command to manage the 2i2c central Grafana's data sources.",
+)
+
 
 def central_grafana_datasource_endpoint(central_grafana_cluster_name="2i2c"):
     grafana_url = get_grafana_url(central_grafana_cluster_name)
@@ -109,12 +119,12 @@ def get_clusters_used_as_datasources(central_grafana_cluster_name="2i2c"):
     return [datasource["name"] for datasource in datasources]
 
 
-@grafana_app.command()
-def get_datasources_removal_candidates():
+@central_grafana_ds_app.command()
+def get_rm_candidates():
     """
-    Get the datasources names that are registered in central grafana
+    Get the list of datasources that are registered in central grafana
     but are NOT in the list of clusters in the infrastructure repository.
-    You might consider removing these datasources one by one, as they might link to
+    You might consider removing these datasources, as they might refer to
     decommissioned clusters.
     """
     # Get a list of the clusters that already have their prometheus instances used as datasources
@@ -136,10 +146,10 @@ def get_datasources_removal_candidates():
     print_colour(f"{rm_candidates}", "yellow")
 
 
-@grafana_app.command()
-def get_datasources_add_candidates():
+@central_grafana_ds_app.command()
+def get_add_candidates():
     """
-    Get the clusters in the infrastructure repository but are NOT
+    Get the clusters that are in the infrastructure repository but are NOT
     registered in central grafana as datasources.
     You might consider adding these datasources, as they might link to
     new clusters that haven't been updated.
@@ -163,18 +173,18 @@ def get_datasources_add_candidates():
     print_colour(f"{add_candidates}", "yellow")
 
 
-@grafana_app.command()
-def add_cluster_as_datasource(
+@central_grafana_ds_app.command()
+def add(
     cluster_name=typer.Argument(
         ..., help="Name of cluster to add as a datasource to the central 2i2c grafana."
     ),
     datasource_name=typer.Option(
         "",
-        help="(Optional) The name of the datasource to add. Defaults to cluster_name.",
+        help="(Optional) The name of the datasource. Defaults to `cluster_name`.",
     ),
 ):
     """
-    Add a new cluster to the central 2i2c grafana.
+    Add a new cluster as a datasource to the central Grafana.
     """
     datasource_name = cluster_name if not datasource_name else datasource_name
     datasource_endpoint = central_grafana_datasource_endpoint("2i2c")
@@ -196,8 +206,8 @@ def add_cluster_as_datasource(
         print_colour(f"Successfully created a new datasource for {cluster_name}!")
 
 
-@grafana_app.command()
-def rm_entry_from_datasources(
+@central_grafana_ds_app.command()
+def remove(
     cluster_name=typer.Argument(
         ...,
         help="The name of cluster who's prometheus instance we're removing from the datasources in the central 2i2c grafana.",
@@ -208,7 +218,9 @@ def rm_entry_from_datasources(
     ),
 ):
     """
-    Update the central grafana with datasources for all clusters prometheus instances
+    Remove a datasource that maps to a cluster, from the central Grafana.
+    In the unlikely case, the datasource has a different name than the cluster's name,
+    pass it through the optional `datasource-name` flag.
     """
     datasource_name = cluster_name if not datasource_name else datasource_name
     datasource_endpoint = central_grafana_datasource_endpoint("2i2c")
