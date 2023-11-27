@@ -162,9 +162,3 @@ basehub:
           admin_users:
             - dan800 # Dan Marsh
             - rmcgranaghan # Ryan McGranaghan
-dask-gateway:
-  gateway:
-    extraConfig:
-      idle: |
-        # timeout after 30 minutes of inactivity
-        c.KubeClusterConfig.idle_timeout = 1800
