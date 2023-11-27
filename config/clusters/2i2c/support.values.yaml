@@ -34,9 +34,24 @@ grafana:
     # instead of "prometheus" to be more clear what's about.
     # This config-added datasource can only be deleted like this,
     # the UI and API are disabled for this operation.
-    deleteDatasources:
-      - name: prometheus
-        orgId: 1
+  datasources:
+    datasources.yaml:
+      apiVersion: 1
+      datasources:
+        # Add the prometheus server as a datasource in the same namespace as grafana.
+        # This is called "prometheus" in all other clusters, except of the 2i2c one,
+        # which is the central Grafana, where all clusters' prometheus instances
+        # are also linked as datasources.
+        # Having "2i2c" as the name, instead of the more generic "prometheus"
+        # will help to more easily know what cluster the datasource is mapping.
+        - name: 2i2c
+          orgId: 1
+          type: prometheus
+          # This is the name of the kubernetes service exposed by the prometheus server
+          url: http://support-prometheus-server
+          access: proxy
+          isDefault: true
+          editable: false
   ingress:
     hosts:
       - grafana.pilot.2i2c.cloud
