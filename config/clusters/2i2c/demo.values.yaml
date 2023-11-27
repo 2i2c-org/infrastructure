@@ -34,6 +34,7 @@ jupyterhub:
         allowed_idps:
           # UTexas hub
           https://enterprise.login.utexas.edu/idp/shibboleth:
+            default: true
             username_derivation:
               username_claim: "eppn"
             allow_all: true

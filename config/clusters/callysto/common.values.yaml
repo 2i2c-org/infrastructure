@@ -141,6 +141,7 @@ jupyterhub:
           - "106951135662332329542" # Elmar Bouwer (Cybera)
         allowed_idps:
           http://google.com/accounts/o8/id:
+            default: true
             username_derivation:
               username_claim: "oidc"
             allowed_domains: &allowed_domains
