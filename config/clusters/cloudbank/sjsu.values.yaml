@@ -40,7 +40,6 @@ jupyterhub:
         oauth_callback_url: https://sjsu.cloudbank.2i2c.cloud/hub/oauth_callback
         allowed_idps:
           https://idp01.sjsu.edu/idp/shibboleth:
-            default: true
             username_derivation:
               username_claim: "email"
             allow_all: true

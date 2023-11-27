@@ -38,7 +38,6 @@ jupyterhub:
         allowed_idps:
           # Allow MTU to login via Shibboleth
           https://sso.mtu.edu/idp/shibboleth:
-            default: true
             username_derivation:
               username_claim: "email"
             allowed_domains:

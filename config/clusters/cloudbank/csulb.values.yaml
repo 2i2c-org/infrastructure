@@ -37,7 +37,6 @@ jupyterhub:
         oauth_callback_url: https://csulb.cloudbank.2i2c.cloud/hub/oauth_callback
         allowed_idps:
           https://its-shib.its.csulb.edu/idp/shibboleth:
-            default: true
             username_derivation:
               username_claim: "email"
             allow_all: true
