@@ -42,6 +42,7 @@ jupyterhub:
       CILogonOAuthenticator:
         allowed_idps:
           https://authentication.ubc.ca:
+            default: true
             username_derivation:
               username_claim: email
               action: strip_idp_domain

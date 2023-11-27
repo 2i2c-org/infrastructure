@@ -19,28 +19,19 @@ jupyterhub:
           name: University of California, Merced
           url: http://www.ucmerced.edu/
   hub:
-    extraConfig:
-      100-cilogon-ordering: |
-        # Explicitly specify allowed_idps here, so their sort order is
-        # preserved. Otherwise, the keys get sorted lexicographically,
-        # and Google comes before UC Merced
-        # https://github.com/2i2c-org/infrastructure/issues/3267
-        c.CILogonOAuthenticator.allowed_idps = {
-          "urn:mace:incommon:ucmerced.edu": {
-            "username_derivation": {
-              "username_claim": "eppn"
-            },
-            "allow_all": True
-          },
-          "http://google.com/accounts/o8/id": {
-            "username_derivation": {
-              "username_claim": "email"
-            }
-          }
-        }
     config:
       JupyterHub:
         authenticator_class: cilogon
+      CILogonOAuthenticator:
+        allowed_idps:
+          urn:mace:incommon:ucmerced.edu:
+            default: true
+            username_derivation:
+              username_claim: "eppn"
+            allow_all: true
+          http://google.com/accounts/o8/id:
+            username_derivation:
+              username_claim: "email"
       Authenticator:
         admin_users:
           - schadalapaka@ucmerced.edu
