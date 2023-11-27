@@ -51,7 +51,6 @@ jupyterhub:
         oauth_callback_url: https://temple.2i2c.cloud/hub/oauth_callback
         allowed_idps:
           https://fim.temple.edu/idp/shibboleth:
-            default: true
             username_derivation:
               username_claim: "eppn"
             allow_all: true

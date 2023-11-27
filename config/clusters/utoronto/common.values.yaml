@@ -82,7 +82,6 @@ jupyterhub:
       CILogonOAuthenticator:
         allowed_idps:
           https://idpz.utorauth.utoronto.ca/shibboleth:
-            default: true
             username_derivation:
               username_claim: "email"
             allow_all: true

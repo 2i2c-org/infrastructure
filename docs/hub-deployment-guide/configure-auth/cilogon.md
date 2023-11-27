@@ -75,7 +75,6 @@ jupyterhub:
           # In this example, all authenticated users are authorized via the idp
           # specific allow_all config.
           https://idp2.anu.edu.au/idp/shibboleth:
-            default: true
             username_derivation:
               username_claim: email
             allow_all: true # authorize all users authenticated by the idp
@@ -133,7 +132,6 @@ jupyterhub:
         oauth_callback_url: https://{{ HUB_DOMAIN }}/hub/oauth_callback
         allowed_idps:
           http://github.com/login/oauth/authorize:
-            default: true
             username_derivation:
               username_claim: "preferred_username"
 ```
