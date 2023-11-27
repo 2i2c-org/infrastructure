@@ -29,11 +29,6 @@ grafana:
       allowed_organizations: 2i2c-org
     feature_toggles:
       enable: exploreMixedDatasource
-    # We delete the initial "prometheus" data source from the database to avoid confusion.
-    # This is because the 2i2c grafana is the central one and we call this datasource "2i2c"
-    # instead of "prometheus" to be more clear what's about.
-    # This config-added datasource can only be deleted like this,
-    # the UI and API are disabled for this operation.
   datasources:
     datasources.yaml:
       apiVersion: 1
