@@ -50,10 +50,6 @@ jupyterhub:
             # Cull idle kernels after 24h (24 * 60 * 60)
             # Ref https://2i2c.freshdesk.com/a/tickets/1120
             cull_idle_timeout: 86400
-    image:
-      # Required when using :latest, until https://github.com/jupyterhub/kubespawner/pull/807
-      # is merged
-      pullPolicy: Always
     profileList:
       # NOTE: About node sharing
       #
