@@ -56,19 +56,9 @@ jupyterhub:
           {% endblock %}
   hub:
     config:
+      JupyterHub:
+        authenticator_class: cilogon
       CILogonOAuthenticator:
-        # Usernames are based on a unique "oidc" claim and not email, so we need
-        # to reference these names when declaring admin_users. The custom
-        # authenticator class used will reject any user not having an associated
-        # email with a specific domain name though.
-        admin_users:
-          - "117859169473992122769" # Georgiana (2i2c)
-          - "115722756968212778437" # Sarah (2i2c)
-          - "103849660365364958119" # Erik (2i2c)
-          - "115240156849150087300" # Ian Allison (PIMS)
-          - "102749090965437723445" # Byron Chu (Cybera)
-          - "115909958579864751636" # Michael Jones (Cybera)
-          - "106951135662332329542" # Elmar Bouwer (Cybera)
         allowed_idps:
           http://google.com/accounts/o8/id:
             default: true
@@ -98,3 +88,13 @@ jupyterhub:
               username_claim: "oidc"
             allowed_domains_claim: email
             allowed_domains: *allowed_domains
+        # Usernames are based on a unique "oidc" claim and not email, so we need
+        # to reference these names when declaring admin_users.
+        admin_users:
+          - "117859169473992122769" # Georgiana (2i2c)
+          - "115722756968212778437" # Sarah (2i2c)
+          - "103849660365364958119" # Erik (2i2c)
+          - "115240156849150087300" # Ian Allison (PIMS)
+          - "102749090965437723445" # Byron Chu (Cybera)
+          - "115909958579864751636" # Michael Jones (Cybera)
+          - "106951135662332329542" # Elmar Bouwer (Cybera)
