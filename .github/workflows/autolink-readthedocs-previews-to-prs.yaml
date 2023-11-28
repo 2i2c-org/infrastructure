@@ -1,11 +1,7 @@
 name: Add readthedocs preview link to pull requests
 
 on:
-  pull_request:
-    types:
-      - opened
-    branches:
-      - master
+  pull_request_target:
     paths:
       - "docs/**"
 
