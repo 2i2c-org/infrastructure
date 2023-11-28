@@ -133,6 +133,7 @@ variable "dask_nodes" {
     temp_opt_out_node_purpose_label : optional(bool, false),
     resource_labels : optional(map(string), {}),
     zones : optional(list(string), [])
+    node_version : optional(string, ""),
   }))
   description = "Dask node pools to create. Defaults to notebook_nodes"
   default     = {}
