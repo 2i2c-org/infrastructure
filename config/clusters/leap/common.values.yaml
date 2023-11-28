@@ -37,6 +37,10 @@ basehub:
             name: LEAP
             url: https://leap-stc.github.io
     hub:
+      annotations:
+        # Prevents the core node on which this pod is present from being drained
+        # See https://github.com/2i2c-org/infrastructure/issues/3461
+        cluster-autoscaler.kubernetes.io/safe-to-evict: "false"
       allowNamedServers: true
       config:
         JupyterHub:
