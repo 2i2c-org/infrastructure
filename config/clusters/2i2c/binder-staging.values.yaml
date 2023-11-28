@@ -74,7 +74,6 @@ binderhub:
           oauth_callback_url: "https://binder-staging.hub.2i2c.cloud/hub/oauth_callback"
           allowed_idps:
             http://google.com/accounts/o8/id:
-              default: true
               username_derivation:
                 username_claim: "email"
         Authenticator:
