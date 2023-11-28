@@ -9,6 +9,13 @@ regional_cluster = true
 
 core_node_machine_type = "n2-highmem-4"
 
+k8s_versions = {
+  min_master_version : "1.27.5-gke.200",
+  core_nodes_version : "1.27.5-gke.200",
+  notebook_nodes_version : "1.27.5-gke.200",
+  dask_nodes_version : "1.27.5-gke.200",
+}
+
 # Network policy is required to enforce separation between hubs on multi-tenant clusters
 # Tip: uncomment the line below if this cluster will be multi-tenant
 # enable_network_policy  = true
@@ -22,16 +29,15 @@ hub_cloud_permissions = {}
 
 # Setup notebook node pools
 notebook_nodes = {
-  # FIXME: Rename this to "n2-highmem-16" when given the chance and no such nodes are running
-  "medium" : {
-    min : 0,
-    max : 100,
-    machine_type : "n2-highmem-16",
-  },
   "n2-highmem-4" : {
     min : 0,
     max : 100,
     machine_type : "n2-highmem-4",
+  },
+  "n2-highmem-16" : {
+    min : 0,
+    max : 100,
+    machine_type : "n2-highmem-16",
   },
   "n2-highmem-64" : {
     min : 0,
@@ -46,7 +52,7 @@ notebook_nodes = {
 # node pool, see https://github.com/2i2c-org/infrastructure/issues/2687.
 #
 dask_nodes = {
-  "worker" : {
+  "n2-highmem-16" : {
     min : 0,
     max : 200,
     machine_type : "n2-highmem-16",

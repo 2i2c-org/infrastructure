@@ -11,10 +11,6 @@ k8s_versions = {
   notebook_nodes_version : "1.27.4-gke.900",
 }
 
-# FIXME: Remove temp_opt_out_node_purpose_label_core_nodes when a node upgrade can be
-#        done. See https://github.com/2i2c-org/infrastructure/issues/3405.
-temp_opt_out_node_purpose_label_core_nodes = true
-
 core_node_machine_type = "n2-highmem-2"
 enable_network_policy  = true
 
@@ -31,13 +27,10 @@ user_buckets = {
 }
 
 notebook_nodes = {
-  # FIXME: Remove temp_opt_out_node_purpose_label when a node upgrade can be
-  #        done. See https://github.com/2i2c-org/infrastructure/issues/3405.
   "n2-highmem-4" : {
     min : 0,
     max : 100,
     machine_type : "n2-highmem-4",
-    temp_opt_out_node_purpose_label : true,
   },
   "n2-highmem-16" : {
     min : 0,
