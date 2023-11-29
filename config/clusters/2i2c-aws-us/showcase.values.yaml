@@ -40,6 +40,7 @@ basehub:
           allowed_organizations:
             - 2i2c-org:research-delight-team
             - 2i2c-demo-hub-access:showcase-topst
+            - ScienceCore-ClimateRisk
           scope:
             - read:org
         Authenticator:
@@ -54,6 +55,7 @@ basehub:
           allowed_teams:
             - 2i2c-demo-hub-access:showcase-topst
             - 2i2c-org:hub-access-for-2i2c-staff
+            - ScienceCore-ClimateRisk
           profile_options:
             image:
               display_name: Image
@@ -70,7 +72,7 @@ basehub:
                   default: true
                   slug: opera
                   kubespawner_override:
-                    image: quay.io/2i2c/researchdelight-image:c799b705ce90
+                    image: quay.io/2i2c/sciencecore-climaterisk-image:ea0618a408e2
           kubespawner_override:
             mem_guarantee: 7.234G
             cpu_guarantee: 0.1
@@ -93,6 +95,11 @@ basehub:
                 kubespawner_override:
                   image: "{value}"
               choices:
+                handbook:
+                  display_name: Handbook Authoring
+                  slug: handbook
+                  kubespawner_override:
+                    image: quay.io/2i2c/handbook-authoring-image:bbe4225a7940
                 pangeo:
                   display_name: Pangeo Notebook
                   default: true
