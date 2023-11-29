@@ -1,8 +1,8 @@
 jupyterhub:
   ingress:
-    hosts: [nm-aist.af.catalystproject.2i2c.cloud]
+    hosts: [must.af.catalystproject.2i2c.cloud]
     tls:
-      - hosts: [nm-aist.af.catalystproject.2i2c.cloud]
+      - hosts: [must.af.catalystproject.2i2c.cloud]
         secretName: https-auto-tls
   custom:
     2i2c:
@@ -11,9 +11,9 @@ jupyterhub:
     homepage:
       templateVars:
         org:
-          name: "NM-AIST"
-          url: https://nm-aist.ac.tz/
-          logo_url: https://nm-aist.ac.tz/images/logo.png
+          name: "MUST"
+          url: https://www.must.ac.mw/
+          logo_url: https://www.must.ac.mw/wp-content/themes/mustwebsite/images/must-logo.png
         designed_by:
           name: "2i2c"
           url: https://2i2c.org
@@ -28,18 +28,19 @@ jupyterhub:
       JupyterHub:
         authenticator_class: cilogon
       CILogonOAuthenticator:
-        oauth_callback_url: https://nm-aist.af.catalystproject.2i2c.cloud/hub/oauth_callback
+        oauth_callback_url: https://must.af.catalystproject.2i2c.cloud/hub/oauth_callback
         allowed_idps:
           http://google.com/accounts/o8/id:
             default: true
             username_derivation:
               username_claim: email
             allowed_domains:
-              - nm-aist.ac.tz
+              - must.ac.mw
       Authenticator:
         admin_users:
-          - "beatus.lyimo@nm-aist.ac.tz"
+          - "bkankuzi@must.ac.mw"
   singleuser:
+    defaultUrl: /lab
     image:
       # rocker/binder is maintained at: https://github.com/rocker-org/rocker-versioned2
       # tags can be viewed at: https://hub.docker.com/r/rocker/binder/tags
@@ -107,7 +108,6 @@ jupyterhub:
           cpu_limit: null
           mem_limit: null
           working_dir: /home/rstudio
-          default_url: /rstudio
           node_selector:
             node.kubernetes.io/instance-type: r5.xlarge
       - display_name: "Medium: up to 16 CPU / 128 GB RAM"
@@ -164,7 +164,6 @@ jupyterhub:
           cpu_limit: null
           mem_limit: null
           working_dir: /home/rstudio
-          default_url: /rstudio
           node_selector:
             node.kubernetes.io/instance-type: r5.4xlarge
       - display_name: "Large: up to 64 CPU / 512 GB RAM"
@@ -221,6 +220,5 @@ jupyterhub:
           cpu_limit: null
           mem_limit: null
           working_dir: /home/rstudio
-          default_url: /rstudio
           node_selector:
             node.kubernetes.io/instance-type: r5.16xlarge

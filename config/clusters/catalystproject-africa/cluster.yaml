@@ -26,3 +26,11 @@ hubs:
       - common.values.yaml
       - nm-aist.values.yaml
       - enc-nm-aist.secret.values.yaml
+  - name: must
+    display_name: "MUST"
+    domain: must.af.catalystproject.2i2c.cloud
+    helm_chart: basehub
+    helm_chart_values_files:
+      - common.values.yaml
+      - must.values.yaml
+      - enc-must.secret.values.yaml

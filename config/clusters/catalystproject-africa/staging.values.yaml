@@ -36,3 +36,188 @@ jupyterhub:
       # Authenticator:
       #   admin_users:
       #     - future-community-champion
+  singleuser:
+    image:
+      # rocker/binder is maintained at: https://github.com/rocker-org/rocker-versioned2
+      # tags can be viewed at: https://hub.docker.com/r/rocker/binder/tags
+      name: rocker/binder
+      tag: "4.3"
+    # Below config was copied from OpenScapes common.values.yaml with choices
+    # for images removed
+    # https://github.com/2i2c-org/infrastructure/blob/22a2c4b5f80c63d1a06d59bef148da087d339d3b/config/clusters/openscapes/common.values.yaml#L47-L237
+    profileList:
+      # NOTE: About node sharing
+      #
+      #       CPU/Memory requests/limits are actively considered still. This
+      #       profile list is setup to involve node sharing as considered in
+      #       https://github.com/2i2c-org/infrastructure/issues/2121.
+      #
+      #       - Memory requests are different from the description, based on:
+      #         whats found to remain allocate in k8s, subtracting 1GiB
+      #         overhead for misc system pods, and transitioning from GB in
+      #         description to GiB in mem_guarantee.
+      #       - CPU requests are lower than the description, with a factor of
+      #         10%.
+      #
+      - display_name: "Small: up to 4 CPU / 32 GB RAM"
+        description: &profile_list_description "Start a container with at least a chosen share of capacity on a node of this type"
+        slug: small
+        default: true
+        profile_options:
+          requests:
+            # NOTE: Node share choices are in active development, see comment
+            #       next to profileList: above.
+            display_name: Node share
+            choices:
+              mem_1:
+                default: true
+                display_name: ~1 GB, ~0.125 CPU
+                kubespawner_override:
+                  mem_guarantee: 0.904G
+                  cpu_guarantee: 0.013
+              mem_2:
+                display_name: ~2 GB, ~0.25 CPU
+                kubespawner_override:
+                  mem_guarantee: 1.809G
+                  cpu_guarantee: 0.025
+              mem_4:
+                display_name: ~4 GB, ~0.5 CPU
+                kubespawner_override:
+                  mem_guarantee: 3.617G
+                  cpu_guarantee: 0.05
+              mem_8:
+                display_name: ~8 GB, ~1.0 CPU
+                kubespawner_override:
+                  mem_guarantee: 7.234G
+                  cpu_guarantee: 0.1
+              mem_16:
+                display_name: ~16 GB, ~2.0 CPU
+                kubespawner_override:
+                  mem_guarantee: 14.469G
+                  cpu_guarantee: 0.2
+              mem_32:
+                display_name: ~32 GB, ~4.0 CPU
+                kubespawner_override:
+                  mem_guarantee: 28.937G
+                  cpu_guarantee: 0.4
+        kubespawner_override:
+          cpu_limit: null
+          mem_limit: null
+          working_dir: /home/rstudio
+          default_url: /rstudio
+          node_selector:
+            node.kubernetes.io/instance-type: r5.xlarge
+      - display_name: "Medium: up to 16 CPU / 128 GB RAM"
+        description: *profile_list_description
+        slug: medium
+        profile_options:
+          requests:
+            # NOTE: Node share choices are in active development, see comment
+            #       next to profileList: above.
+            display_name: Node share
+            choices:
+              mem_1:
+                display_name: ~1 GB, ~0.125 CPU
+                kubespawner_override:
+                  mem_guarantee: 0.942G
+                  cpu_guarantee: 0.013
+              mem_2:
+                display_name: ~2 GB, ~0.25 CPU
+                kubespawner_override:
+                  mem_guarantee: 1.883G
+                  cpu_guarantee: 0.025
+              mem_4:
+                default: true
+                display_name: ~4 GB, ~0.5 CPU
+                kubespawner_override:
+                  mem_guarantee: 3.766G
+                  cpu_guarantee: 0.05
+              mem_8:
+                display_name: ~8 GB, ~1.0 CPU
+                kubespawner_override:
+                  mem_guarantee: 7.532G
+                  cpu_guarantee: 0.1
+              mem_16:
+                display_name: ~16 GB, ~2.0 CPU
+                kubespawner_override:
+                  mem_guarantee: 15.064G
+                  cpu_guarantee: 0.2
+              mem_32:
+                display_name: ~32 GB, ~4.0 CPU
+                kubespawner_override:
+                  mem_guarantee: 30.128G
+                  cpu_guarantee: 0.4
+              mem_64:
+                display_name: ~64 GB, ~8.0 CPU
+                kubespawner_override:
+                  mem_guarantee: 60.257G
+                  cpu_guarantee: 0.8
+              mem_128:
+                display_name: ~128 GB, ~16.0 CPU
+                kubespawner_override:
+                  mem_guarantee: 120.513G
+                  cpu_guarantee: 1.6
+        kubespawner_override:
+          cpu_limit: null
+          mem_limit: null
+          working_dir: /home/rstudio
+          default_url: /rstudio
+          node_selector:
+            node.kubernetes.io/instance-type: r5.4xlarge
+      - display_name: "Large: up to 64 CPU / 512 GB RAM"
+        description: *profile_list_description
+        slug: large
+        profile_options:
+          requests:
+            # NOTE: Node share choices are in active development, see comment
+            #       next to profileList: above.
+            display_name: Node share
+            choices:
+              mem_4:
+                display_name: ~4 GB, ~0.5 CPU
+                kubespawner_override:
+                  mem_guarantee: 3.821G
+                  cpu_guarantee: 0.05
+              mem_8:
+                display_name: ~8 GB, ~1.0 CPU
+                kubespawner_override:
+                  mem_guarantee: 7.643G
+                  cpu_guarantee: 0.1
+              mem_16:
+                default: true
+                display_name: ~16 GB, ~2.0 CPU
+                kubespawner_override:
+                  mem_guarantee: 15.285G
+                  cpu_guarantee: 0.2
+              mem_32:
+                display_name: ~32 GB, ~4.0 CPU
+                kubespawner_override:
+                  mem_guarantee: 30.571G
+                  cpu_guarantee: 0.4
+              mem_64:
+                display_name: ~64 GB, ~8.0 CPU
+                kubespawner_override:
+                  mem_guarantee: 61.141G
+                  cpu_guarantee: 0.8
+              mem_128:
+                display_name: ~128 GB, ~16.0 CPU
+                kubespawner_override:
+                  mem_guarantee: 122.282G
+                  cpu_guarantee: 1.6
+              mem_256:
+                display_name: ~256 GB, ~32.0 CPU
+                kubespawner_override:
+                  mem_guarantee: 244.565G
+                  cpu_guarantee: 3.2
+              mem_512:
+                display_name: ~512 GB, ~64.0 CPU
+                kubespawner_override:
+                  mem_guarantee: 489.13G
+                  cpu_guarantee: 6.4
+        kubespawner_override:
+          cpu_limit: null
+          mem_limit: null
+          working_dir: /home/rstudio
+          default_url: /rstudio
+          node_selector:
+            node.kubernetes.io/instance-type: r5.16xlarge
