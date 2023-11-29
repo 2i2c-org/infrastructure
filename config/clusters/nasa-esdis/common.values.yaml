@@ -36,10 +36,7 @@ jupyterhub:
         authenticator_class: github
       GitHubOAuthenticator:
         allowed_organizations:
-          - 2i2c-org:hub-access-for-2i2c-staff
-          - nasa:earthdata-cloud-playground-maintainer
-          - veda-analytics-access:esdis-hub-beta-testers
-          - NASA-Openscapes:esdis_hub_testers
+          - nasa-esdis:cloud-users
         scope:
           - read:org
       Authenticator:
