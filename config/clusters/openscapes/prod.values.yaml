@@ -96,7 +96,7 @@ basehub:
         - display_name: Matlab
           description: Matlab environment
           kubespawner_override:
-            image: openscapes/matlab:2023-06-29
+            image: openscapes/matlab:2023-11-28
           profile_options: *profile_options
     hub:
       config:
