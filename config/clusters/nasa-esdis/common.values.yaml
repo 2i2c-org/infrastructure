@@ -19,7 +19,7 @@ jupyterhub:
       templateVars:
         org:
           name: ESDIS
-          logo_url: ""
+          logo_url: "https://private-user-images.githubusercontent.com/61120/286372889-3380676a-1f2e-400d-8471-79496510c1e7.png?jwt=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJnaXRodWIuY29tIiwiYXVkIjoicmF3LmdpdGh1YnVzZXJjb250ZW50LmNvbSIsImtleSI6ImtleTEiLCJleHAiOjE3MDEyNTQ0NDAsIm5iZiI6MTcwMTI1NDE0MCwicGF0aCI6Ii82MTEyMC8yODYzNzI4ODktMzM4MDY3NmEtMWYyZS00MDBkLTg0NzEtNzk0OTY1MTBjMWU3LnBuZz9YLUFtei1BbGdvcml0aG09QVdTNC1ITUFDLVNIQTI1NiZYLUFtei1DcmVkZW50aWFsPUFLSUFJV05KWUFYNENTVkVINTNBJTJGMjAyMzExMjklMkZ1cy1lYXN0LTElMkZzMyUyRmF3czRfcmVxdWVzdCZYLUFtei1EYXRlPTIwMjMxMTI5VDEwMzU0MFomWC1BbXotRXhwaXJlcz0zMDAmWC1BbXotU2lnbmF0dXJlPTlmOThmYTZmMzQyMWY2YjIyYzE5OTU2ZDhlZGVjOGI3ZDE4MzUzMDc0MDE3ZGVkNmM0MDliNDhmYmM0M2U1OTImWC1BbXotU2lnbmVkSGVhZGVycz1ob3N0JmFjdG9yX2lkPTAma2V5X2lkPTAmcmVwb19pZD0wIn0.1HKSBVV0WEBcY1CoEr-YtXdjev-D6hViaIWEALdT5G4"
           url: https://www.earthdata.nasa.gov/esdis
         designed_by:
           name: 2i2c
@@ -28,8 +28,8 @@ jupyterhub:
           name: 2i2c
           url: https://2i2c.org
         funded_by:
-          name: ""
-          url: ""
+          name: NASA
+          url: "https://www.earthdata.nasa.gov/esds"
   hub:
     config:
       JupyterHub:
