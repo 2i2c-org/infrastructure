@@ -40,22 +40,31 @@ basehub:
           allowed_organizations:
             - 2i2c-org:research-delight-team
             - 2i2c-demo-hub-access:showcase-topst
-            - ScienceCore-ClimateRisk
+            - ScienceCore
           scope:
             - read:org
         Authenticator:
           enable_auth_state: true
     singleuser:
-      image:
-        name: quay.io/2i2c/researchdelight-image
-        tag: "872f0c4578af"
       profileList:
-        - display_name: "NASA TOPS-T ScienceCore"
+        - display_name: "NASA TOPS-T ScienceCore-ClimateRisk"
           description: "For collaborative work on 2i2c/MD's NASA TOPS-T ScienceCore Module"
           allowed_teams:
             - 2i2c-demo-hub-access:showcase-topst
             - 2i2c-org:hub-access-for-2i2c-staff
             - ScienceCore-ClimateRisk
+          kubespawner_override:
+            image: quay.io/2i2c/sciencecore-climaterisk-image:ea0618a408e2
+            mem_guarantee: 7.234G
+            cpu_guarantee: 0.1
+            mem_limit: null
+            node_selector:
+              node.kubernetes.io/instance-type: r5.xlarge
+        - display_name: "NASA TOPS-T ScienceCore"
+          description: "JupyterHubs for NASA ScienceCore Modules"
+          allowed_teams:
+            - 2i2c-org:hub-access-for-2i2c-staff
+            - ScienceCore:2i2c-showcase
           profile_options:
             image:
               display_name: Image
@@ -67,12 +76,33 @@ basehub:
                 kubespawner_override:
                   image: "{value}"
               choices:
-                opera:
-                  display_name: Opera App
+                jupyter-scipy:
                   default: true
-                  slug: opera
+                  display_name: Jupyter SciPy
+                  slug: jupyter-scipy
                   kubespawner_override:
-                    image: quay.io/2i2c/sciencecore-climaterisk-image:ea0618a408e2
+                    image: jupyter/scipy-notebook:2023-06-27
+                jupyter-datascience:
+                  display_name: Jupyter DataScience
+                  slug: jupyter-datascience
+                  kubespawner_override:
+                    image: jupyter/datascience-notebook:2023-06-27
+                rocker-geospatial:
+                  display_name: Rocker Geospatial
+                  slug: rocker-geospatial
+                  kubespawner_override:
+                    image: rocker/binder:4.3
+                    # Launch into RStudio after the user logs in
+                    default_url: /rstudio
+                    # Ensures container working dir is homedir
+                    # https://github.com/2i2c-org/infrastructure/issues/2559
+                    working_dir: /home/rstudio
+                pangeo:
+                  display_name: Pangeo Notebook
+                  slug: pangeo
+                  kubespawner_override:
+                    image: pangeo/pangeo-notebook:2023.06.20
+
           kubespawner_override:
             mem_guarantee: 7.234G
             cpu_guarantee: 0.1
