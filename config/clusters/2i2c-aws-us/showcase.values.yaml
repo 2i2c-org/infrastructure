@@ -52,7 +52,7 @@ basehub:
           allowed_teams:
             - 2i2c-demo-hub-access:showcase-topst
             - 2i2c-org:hub-access-for-2i2c-staff
-            - ScienceCore-ClimateRisk
+            - ScienceCore:climaterisk-team
           kubespawner_override:
             image: quay.io/2i2c/sciencecore-climaterisk-image:ea0618a408e2
             mem_guarantee: 7.234G
