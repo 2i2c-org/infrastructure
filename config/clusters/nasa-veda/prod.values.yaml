@@ -4,11 +4,11 @@ basehub:
       eks.amazonaws.com/role-arn: arn:aws:iam::444055461661:role/nasa-veda-prod
   jupyterhub:
     ingress:
-      hosts: [veda.2i2c.cloud]
+      hosts: [hub.openveda.cloud]
       tls:
         - hosts: [veda.2i2c.cloud]
           secretName: https-auto-tls
     hub:
       config:
         GitHubOAuthenticator:
-          oauth_callback_url: https://veda.2i2c.cloud/hub/oauth_callback
+          oauth_callback_url: https://hub.openveda.cloud/hub/oauth_callback
