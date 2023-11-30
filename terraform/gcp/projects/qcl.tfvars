@@ -15,7 +15,7 @@ core_node_machine_type = "n2-highmem-2"
 enable_network_policy  = true
 
 enable_filestore      = true
-filestore_capacity_gb = 2048
+filestore_capacity_gb = 2560
 
 user_buckets = {
   "scratch-staging" : {
