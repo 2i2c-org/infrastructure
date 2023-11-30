@@ -1,6 +1,6 @@
 # Register the cluster's Prometheus server with the central Grafana
 
-Once you have [deployed the support chart](deploy-support-chart), you must also register this cluster as a datasource for the [central Grafana dashboard](grafana-dashboards:central). This will allow you to visualize cluster statistics not only from the cluster-specific Grafana deployement but also from the central dashboard, that aggregates data from all the clusters.
+Once you have [deployed the support chart](deploy-support-chart), you must also register this cluster as a datasource for the [central Grafana dashboard](grafana-dashboards:central). This will allow you to visualize cluster statistics not only from the cluster-specific Grafana deployment but also from the central dashboard, that aggregates data from all the clusters.
 
 ## Create a `support.secret.values.yaml` file
 
@@ -49,4 +49,8 @@ deployer deploy-support $CLUSTER_NAME
 
 ## Link the cluster's Prometheus server to the central Grafana
 
-Run `deployer grafana update-central-datasources` to register the new prometheus with the default central grafana.
+To register the new prometheus with the default central grafana, run the command below.
+
+```bash
+deployer grafana central-ds add $CLUSTER_NAME
+```

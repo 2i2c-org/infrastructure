@@ -44,6 +44,8 @@ Usually, it is because it was a hub that we created for a workshop/conference an
 
 _This phase is only necessary for single hub clusters._
 
+- [ ] Remove the cluster's datasource from the central Grafana with:
+  - `deployer grafana central-ds remove CLUSTER_NAME`
 - [ ] Run `terraform plan -destroy` and `terraform apply` from the [appropriate workspace](https://infrastructure.2i2c.org/en/latest/topic/terraform.html#workspaces), to destroy the cluster
 - [ ] Delete the terraform workspace: `terraform workspace delete <NAME>`
 - [ ] Remove the associated `config/clusters/<cluster_name>` directory and all its contents

@@ -317,11 +317,20 @@ If such a file doesn't already exist, it will be created by this function.
   Updates:
   - the content of `enc-grafana-token.secret.yaml` with the new token if one already existed
 
-#### `grafana update-central-datasources`
+#### The `grafana central-ds` sub-command
+This is a sub-command meant to help engineers to programmatically manage the datasources registered in the 2i2c central Grafana at https://grafana.pilot.2i2c.cloud.
 
-Ensures that the central grafana at https://grafana.pilot.2i2c.cloud is
-configured to use as datasource the authenticated prometheus instances of all
-the clusters that we run.
+##### `grafana central-ds add`
+Adds a new cluster as a datasource to the central Grafana.
+
+##### `grafana central-ds remove`
+Removes a datasource from the central Grafana. In the unlikely case, the datasource has a different name than the cluster's name, pass it through the optional `datasource-name` flag.
+
+##### `grafana central-ds get-add-candidates`
+Gets the clusters that are in the infrastructure repository but are NOT registered in central grafana as datasources. Usually this happens when a new clusters was added, but its prometheus server was not mapped to a datasource of the central 2i2c Grafana. This list can then be used to know which datasources to add.
+
+##### `grafana central-ds get-rm-candidates`
+Gets the list of datasources that are registered in central grafana but are NOT in the list of clusters in the infrastructure repository. Usually this happens when a clusters was decommissioned, but its prometheus server was not removed from the datasources of the central 2i2c Grafana. This list can then be used to know which datasources to remove.
 
 ### The `validate` sub-command
 
