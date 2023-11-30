@@ -27,9 +27,9 @@ redirects:
     # nasa-veda.2i2c.cloud was the old URL
     # Moved due to https://github.com/2i2c-org/infrastructure/issues/3029
     - from: nasa-veda.2i2c.cloud
-      to: veda.2i2c.cloud
+      to: hub.openveda.cloud
     - from: staging.nasa-veda.2i2c.cloud
-      to: staging.veda.2i2c.cloud
+      to: staging.hub.openveda.cloud
 
 prometheus:
   server:
