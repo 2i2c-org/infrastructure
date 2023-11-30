@@ -383,7 +383,7 @@ grafana:
           # This is the name of the kubernetes service exposed by the prometheus server
           url: http://support-prometheus-server
           access: proxy
-          isDefault: true
+          isDefault: false
           editable: false
 
 # cryptnono kills processes attempting to mine the cryptocurrency Monero in the
