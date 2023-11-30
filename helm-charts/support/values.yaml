@@ -83,6 +83,7 @@ prometheus:
     metricLabelsAllowlist:
       - pods=[app,component,hub.jupyter.org/username,app.kubernetes.io/component]
       - nodes=[*]
+      - services=[app, component]
 
   # prometheus-node-exporter is an optional prometheus chart dependency that we
   # rely on to collect metrics about the nodes
