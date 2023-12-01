@@ -22,7 +22,7 @@ basehub:
           org:
             name: NASA Openscapes
             logo_url: https://nasa-openscapes.github.io/images/nasa-openscapes.png
-            url: https://www.openscapes.org/
+            url: https://nasa-openscapes.github.io/
           designed_by:
             name: 2i2c
             url: https://2i2c.org
@@ -31,7 +31,7 @@ basehub:
             url: https://2i2c.org
           funded_by:
             name: NASA Openscapes
-            url: https://www.openscapes.org/
+            url: https://nasa-openscapes.github.io/
     singleuser:
       serviceAccountName: cloud-user-sa
       defaultUrl: /lab
