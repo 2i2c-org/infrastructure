@@ -20,7 +20,7 @@ basehub:
         templateVars:
           org:
             name: NASA Openscapes
-            logo_url: https://www.openscapes.org/img/logo.png
+            logo_url: https://nasa-openscapes.github.io/images/nasa-openscapes.png
             url: https://www.openscapes.org/
           designed_by:
             name: 2i2c
