@@ -38,6 +38,16 @@ jupyterhub:
         announcements:
           - |
             <div>
+              <strong>ARC will be making changes to our educational JupyterHub on January 9, 2023</strong>: R/RStudio will be
+              moved off <a href="https://jupyter.utoronto.ca">jupyter.utoronto.ca</a>. R/RStudio will continue to be available
+              through <a href="https://r.datatools.utoronto.ca">r.datatools.utoronto.ca</a> – a separate RStudio hub. To make
+              access to JupyterHub easier than ever, we will also consolidate the landing pages for our Jupyter Notebook and
+              RStudio hubs into a single launch page: <a href="https://datatools.utoronto.ca">datatools.utoronto.ca</a>.
+
+              For more information, please read <a href="https://act.utoronto.ca/jupyterhub-support/updates-to-our-educational-jupyterhub/">our announcement</a>.
+            </div>
+          - |
+            <div>
               <h4>* NEW * Jupyter Support Website</h4>
 
               We have started a JupyterHub support website with documentation and tip sheets, and we will be adding more on an
