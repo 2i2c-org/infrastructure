@@ -129,6 +129,6 @@ runs:
       shell: bash
 
     - name: Setup sops credentials to decrypt repo secrets
-      uses: google-github-actions/auth@v1
+      uses: google-github-actions/auth@v2
       with:
         credentials_json: "${{ inputs.GCP_KMS_DECRYPTOR_KEY }}"
