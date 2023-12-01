@@ -17,10 +17,11 @@ basehub:
         add_staff_user_ids_to_admin_users: true
         add_staff_user_ids_of_type: "github"
       homepage:
+        gitRepoBranch: "openscapes"
         templateVars:
           org:
-            name: Openscapes
-            logo_url: https://www.openscapes.org/img/logo.png
+            name: NASA Openscapes
+            logo_url: https://nasa-openscapes.github.io/images/nasa-openscapes.png
             url: https://www.openscapes.org/
           designed_by:
             name: 2i2c
@@ -29,7 +30,7 @@ basehub:
             name: 2i2c
             url: https://2i2c.org
           funded_by:
-            name: Openscapes
+            name: NASA Openscapes
             url: https://www.openscapes.org/
     singleuser:
       serviceAccountName: cloud-user-sa
