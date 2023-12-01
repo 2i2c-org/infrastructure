@@ -91,7 +91,6 @@ properties:
     additionalProperties: false
     required:
       - azure
-      - gke
     properties:
       azure:
         type: object
@@ -101,26 +100,6 @@ properties:
         properties:
           enabled:
             type: boolean
-      gke:
-        type: object
-        additionalProperties: false
-        required:
-          - enabled
-          - version
-        properties:
-          enabled:
-            type: boolean
-          version:
-            type: string
-            enum:
-              - stable
-              - latest
-            description: |
-              Install the stable or latest version of nvidia GPU drivers for the node.
-
-              See table in https://cloud.google.com/kubernetes-engine/docs/how-to/gpus#installing_drivers
-              to determine what versions would be installed. Might need to be matched with appropriate
-              version of the CUDA libraries used in the images users use.
 
   prometheusIngressAuthSecret:
     type: object

@@ -434,15 +434,11 @@ redirects:
   rules: []
 
 # Enable a daemonset to install nvidia device plugin to GPU nodes
-# AWS does not require this to be set, as eksctl sets this up automatically
+# Not necessary on GCP & AWS don't need this, as it is handled automatically by terraform or eksctl
+# respectively
 nvidiaDevicePlugin:
-  # For Azure-specific image, default to false
   azure:
     enabled: false
-  # For GKE specific image, defaults to false
-  gke:
-    enabled: false
-    version: "stable"
 
 # Setup a separate storageClass specifically for prometheus data
 prometheusStorageClass:

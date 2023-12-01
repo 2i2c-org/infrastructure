@@ -296,6 +296,10 @@ resource "google_container_node_pool" "notebook" {
       content {
         type  = each.value.gpu.type
         count = each.value.gpu.count
+
+        gpu_driver_installation_config {
+          gpu_driver_version = "DEFAULT"
+        }
       }
 
     }
