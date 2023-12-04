@@ -74,12 +74,6 @@ gke:
     cpu_requests: 344m
     memory_requests: 596Mi
     k8s_version: v1.27.4-gke.900
-  m2lines:
-    requesting_daemon_sets: calico-node,fluentbit-gke,gke-metadata-server,gke-metrics-agent,ip-masq-agent,netd,pdcsi-node,support-cryptnono,support-prometheus-node-exporter
-    other_daemon_sets: ""
-    cpu_requests: 344m
-    memory_requests: 596Mi
-    k8s_version: v1.27.4-gke.900
   meom-ige:
     requesting_daemon_sets: fluentbit-gke,gke-metadata-server,gke-metrics-agent,netd,pdcsi-node,support-cryptnono,support-prometheus-node-exporter
     other_daemon_sets: ""
