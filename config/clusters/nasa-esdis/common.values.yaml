@@ -1,0 +1,143 @@
+nfs:
+  pv:
+    # from https://docs.aws.amazon.com/efs/latest/ug/mounting-fs-nfs-mount-settings.html
+    mountOptions:
+      - rsize=1048576
+      - wsize=1048576
+      - timeo=600
+      - soft # We pick soft over hard, so NFS lockups don't lead to hung processes
+      - retrans=2
+      - noresvport
+    serverIP: fs-0013506a2d5ee70fc.efs.us-west-2.amazonaws.com
+    baseShareName: /
+jupyterhub:
+  custom:
+    2i2c:
+      add_staff_user_ids_to_admin_users: true
+      add_staff_user_ids_of_type: "github"
+    homepage:
+      templateVars:
+        org:
+          name: ESDIS
+          logo_url: "https://github.com/2i2c-org/infrastructure/assets/61120/3380676a-1f2e-400d-8471-79496510c1e7"
+          url: https://www.earthdata.nasa.gov/esdis
+        designed_by:
+          name: 2i2c
+          url: https://2i2c.org
+        operated_by:
+          name: 2i2c
+          url: https://2i2c.org
+        funded_by:
+          name: NASA
+          url: "https://www.earthdata.nasa.gov/esds"
+  hub:
+    config:
+      JupyterHub:
+        authenticator_class: github
+      GitHubOAuthenticator:
+        allowed_organizations:
+          - nasa-esdis:cloud-users
+        scope:
+          - read:org
+      Authenticator:
+        admin_users:
+          - bilts # Patrick Quinn
+          - freitagb # Brian Freitag
+  singleuser:
+    profileList:
+      - display_name: Python
+        description: Python datascience environment
+        default: true
+        kubespawner_override:
+          image: openscapes/python:6ee57a9
+        profile_options: &profile_options
+          requests:
+            display_name: Resource Allocation
+            choices:
+              mem_1_9:
+                display_name: 1.9 GB RAM, upto 3.75 CPUs
+                kubespawner_override:
+                  mem_guarantee: 1992701952
+                  mem_limit: 1992701952
+                  cpu_guarantee: 0.234375
+                  cpu_limit: 3.75
+                  node_selector:
+                    node.kubernetes.io/instance-type: r5.xlarge
+                default: true
+              mem_3_7:
+                display_name: 3.7 GB RAM, upto 3.75 CPUs
+                kubespawner_override:
+                  mem_guarantee: 3985403904
+                  mem_limit: 3985403904
+                  cpu_guarantee: 0.46875
+                  cpu_limit: 3.75
+                  node_selector:
+                    node.kubernetes.io/instance-type: r5.xlarge
+              mem_7_4:
+                display_name: 7.4 GB RAM, upto 3.75 CPUs
+                kubespawner_override:
+                  mem_guarantee: 7970807808
+                  mem_limit: 7970807808
+                  cpu_guarantee: 0.9375
+                  cpu_limit: 3.75
+                  node_selector:
+                    node.kubernetes.io/instance-type: r5.xlarge
+              mem_14_8:
+                display_name: 14.8 GB RAM, upto 3.75 CPUs
+                kubespawner_override:
+                  mem_guarantee: 15941615616
+                  mem_limit: 15941615616
+                  cpu_guarantee: 1.875
+                  cpu_limit: 3.75
+                  node_selector:
+                    node.kubernetes.io/instance-type: r5.xlarge
+              mem_29_7:
+                display_name: 29.7 GB RAM, upto 3.75 CPUs
+                kubespawner_override:
+                  mem_guarantee: 31883231232
+                  mem_limit: 31883231232
+                  cpu_guarantee: 3.75
+                  cpu_limit: 3.75
+                  node_selector:
+                    node.kubernetes.io/instance-type: r5.xlarge
+              mem_60_6:
+                display_name: 60.6 GB RAM, upto 15.72 CPUs
+                kubespawner_override:
+                  mem_guarantee: 65105797120
+                  mem_limit: 65105797120
+                  cpu_guarantee: 7.86
+                  cpu_limit: 15.72
+                  node_selector:
+                    node.kubernetes.io/instance-type: r5.4xlarge
+              mem_121_3:
+                display_name: 121.3 GB RAM, upto 15.72 CPUs
+                kubespawner_override:
+                  mem_guarantee: 130211594240
+                  mem_limit: 130211594240
+                  cpu_guarantee: 15.72
+                  cpu_limit: 15.72
+                  node_selector:
+                    node.kubernetes.io/instance-type: r5.4xlarge
+      - display_name: R
+        description: R (with RStudio) + Python environment
+        kubespawner_override:
+          image: openscapes/rocker:a7596b5
+        profile_options: *profile_options
+      - display_name: Matlab
+        description: Matlab environment
+        kubespawner_override:
+          image: openscapes/matlab:2023-06-29
+        profile_options: *profile_options
+      - display_name: QGIS
+        description: QGIS environment
+        kubespawner_override:
+          # Explicitly unset this - we set this to 'jupyterhub-singleuser'
+          # in basehub/values.yaml. We instead want to leave this unset,
+          # so the default command for the docker image is used instead.
+          # This is required for .desktop files to show up correctly.
+          cmd: null
+          # Launch people directly into the Linux desktop when they start
+          default_url: /desktop
+          # Built from https://github.com/jupyterhub/jupyter-remote-desktop-proxy/pull/51
+          image: "quay.io/jupyter-remote-desktop-proxy/qgis:2023-09-27"
+        profile_options: *profile_options

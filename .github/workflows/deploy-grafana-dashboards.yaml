@@ -28,6 +28,7 @@ jobs:
           - cluster_name: m2lines
           - cluster_name: meom-ige
           - cluster_name: nasa-cryo
+          - cluster_name: nasa-esdis
           - cluster_name: nasa-veda
           - cluster_name: openscapes
           - cluster_name: pangeo-hubs
