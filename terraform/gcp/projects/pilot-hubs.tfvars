@@ -102,24 +102,7 @@ notebook_nodes = {
     resource_labels : {
       "community" : "temple"
     },
-  },
-  # Nodepool for jackeddy symposium. https://github.com/2i2c-org/infrastructure/issues/3166
-  "jackeddy" : {
-    min : 0,
-    max : 100,
-    machine_type : "n2-highmem-16",
-    labels : {
-      "2i2c.org/community" : "jackeddy"
-    },
-    taints : [{
-      key : "2i2c.org/community",
-      value : "jackeddy",
-      effect : "NO_SCHEDULE"
-    }],
-    resource_labels : {
-      "community" : "jackeddy"
-    },
-  },
+  }
 }
 
 # Setup a single node pool for dask workers.
