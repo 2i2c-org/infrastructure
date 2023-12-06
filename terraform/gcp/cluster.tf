@@ -283,12 +283,7 @@ resource "google_container_node_pool" "notebook" {
 
 
   node_config {
-
-    # Balanced disks are much faster than standard disks, and much cheaper
-    # than SSD disks. It contributes heavily to how fast new nodes spin up,
-    # as images being pulled takes up a lot of new node spin up time.
-    # Faster disks provide faster image pulls!
-    disk_type = "pd-balanced"
+    disk_type = each.value.disk_type
 
     dynamic "guest_accelerator" {
       for_each = each.value.gpu.enabled ? [1] : []
@@ -388,11 +383,7 @@ resource "google_container_node_pool" "dask_worker" {
 
     preemptible = each.value.preemptible
 
-    # Balanced disks are much faster than standard disks, and much cheaper
-    # than SSD disks. It contributes heavily to how fast new nodes spin up,
-    # as images being pulled takes up a lot of new node spin up time.
-    # Faster disks provide faster image pulls!
-    disk_type = "pd-balanced"
+    disk_type = each.value.disk_type
 
     workload_metadata_config {
       # Config Connector requires workload identity to be enabled (via GKE_METADATA_SERVER).

@@ -40,6 +40,13 @@ hubs:
     helm_chart_values_files:
       - binder-staging.values.yaml
       - enc-binder-staging.secret.values.yaml
+  - name: agu-binder
+    display_name: "2i2c AGU Demo Binder"
+    domain: agu-binder.2i2c.cloud
+    helm_chart: binderhub
+    helm_chart_values_files:
+      - agu-binder.values.yaml
+      - enc-agu-binder.secret.values.yaml
   - name: imagebuilding-demo
     display_name: "2i2c image building demo"
     domain: imagebuilding-demo.2i2c.cloud
