@@ -42,11 +42,15 @@ basehub:
           - name: home
             mountPath: /home/jovyan/shared
             subPath: _shared
-            readOnly: false
+            # To be changed back to r-w after Dec 10th
+            # https://2i2c.freshdesk.com/a/tickets/1121
+            readOnly: true
           - name: home
             mountPath: /home/rstudio/shared
             subPath: _shared
-            readOnly: false
+            # To be changed back to r-w after Dec 10th
+            # https://2i2c.freshdesk.com/a/tickets/1121
+            readOnly: true
           - name: home
             mountPath: /home/rstudio
             subPath: "{username}"
