@@ -54,7 +54,7 @@ The `hub-continuous-deployer` has an access key and secret associated with it, t
 authenticates with AWS to perform actions. SMCE accounts have a 60 day password/access key
 regeneration policy and so we need to prepare to regularly regenerate this access key.
 
-We track which clusters have had their `hub-continuous-dpeloyer` access key regenerated
+We track which clusters have had their `hub-continuous-deployer` access key regenerated
 and when in this issue <https://github.com/2i2c-org/infrastructure/issues/2434> which
 also includes the steps for regeneration. Make sure to add the new cluster to this issue.
 
