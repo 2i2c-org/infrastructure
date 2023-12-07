@@ -99,17 +99,15 @@ binderhub:
         #
         # DASK_GATEWAY__CLUSTER__OPTIONS__IMAGE makes the default worker image
         # match the singleuser image.
-        DASK_GATEWAY__CLUSTER__OPTIONS__IMAGE: "{JUPYTER_IMAGE_SPEC}"
+        DASK_GATEWAY__CLUSTER__OPTIONS__IMAGE: "{{JUPYTER_IMAGE_SPEC}}"
         # DASK_GATEWAY__CLUSTER__OPTIONS__ENVIRONMENT makes some environment
         # variables be copied over to the worker nodes from the user nodes.
-        DASK_GATEWAY__CLUSTER__OPTIONS__ENVIRONMENT:
-          '{"SCRATCH_BUCKET": "$(SCRATCH_BUCKET)",
-          "PANGEO_SCRATCH": "$(PANGEO_SCRATCH)"}'
+        DASK_GATEWAY__CLUSTER__OPTIONS__ENVIRONMENT: '{{"SCRATCH_BUCKET": "$(SCRATCH_BUCKET)", "PANGEO_SCRATCH": "$(PANGEO_SCRATCH)"}}'
         # DASK_DISTRIBUTED__DASHBOARD__LINK makes the suggested link to the
         # dashboard account for the /user/<username> prefix in the path. Note
         # that this still misbehave if you have a named server but now its at
         # least functional for non-named servers.
-        DASK_DISTRIBUTED__DASHBOARD__LINK: "/user/{JUPYTERHUB_USER}/proxy/{port}/status"
+        DASK_DISTRIBUTED__DASHBOARD__LINK: "/user/{{JUPYTERHUB_USER}}/proxy/{{port}}/status"
       extraFiles:
         jupyter_notebook_config.json:
           mountPath: /usr/local/etc/jupyter/jupyter_notebook_config.json
@@ -176,6 +174,8 @@ binderhub:
                     app.kubernetes.io/component: traefik
     hub:
       config:
+        Authenticator:
+          auto_login: true
         JupyterHub:
           # Allow unauthenticated prometheus requests
           # Otherwise our prometheus server can't get hub metrics

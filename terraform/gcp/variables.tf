@@ -89,6 +89,11 @@ variable "notebook_nodes" {
       value : string,
       effect : string
     })), [])
+    # Balanced disks are much faster than standard disks, and much cheaper
+    # than SSD disks. It contributes heavily to how fast new nodes spin up,
+    # as images being pulled takes up a lot of new node spin up time.
+    # Faster disks provide faster image pulls!
+    disk_type : optional(string, "pd-balanced"),
     gpu : optional(
       object({
         enabled : optional(bool, false),
@@ -120,6 +125,11 @@ variable "dask_nodes" {
       value : string,
       effect : string
     })), [])
+    # Balanced disks are much faster than standard disks, and much cheaper
+    # than SSD disks. It contributes heavily to how fast new nodes spin up,
+    # as images being pulled takes up a lot of new node spin up time.
+    # Faster disks provide faster image pulls!
+    disk_type : optional(string, "pd-balanced"),
     gpu : optional(
       object({
         enabled : optional(bool, false),
