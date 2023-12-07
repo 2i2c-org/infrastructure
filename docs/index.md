@@ -75,6 +75,7 @@ howto/grafana-github-auth.md
 howto/update-env.md
 howto/upgrade-cluster/index.md
 howto/troubleshoot/index.md
+howto/regenerate-smce-password.md
 ```
 
 ## Topic guides

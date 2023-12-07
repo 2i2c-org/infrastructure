@@ -64,3 +64,8 @@ We only receive **5 days notice** that a password/access key will expire via ema
 Also it is unclear who receives this email: all engineers or just the engineer who
 setup the cluster?
 ```
+
+```{note}
+See [](nasa-smce:regenerate-password) for how to reset an expired password for
+a _user_, e.g., a member of the engineering team.
+```
