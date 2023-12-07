@@ -3,6 +3,12 @@
 
 We can enable GitHub authentication against a Grafana instance in order to allow access to the dashboards for hub administrators as well as 2i2c engineers.
 
+```{note}
+We only offer this method of authentication to communities if they want to give
+`Viewer` access to a whole GitHub organisation. The default method to provide
+access to a community representative is to [generate an invite link](grafana-access:invite-link).
+```
+
 To enable logging into Grafana using GitHub, follow these steps:
 
 1. Create a GitHub OAuth application following [Grafana's documentation](https://grafana.com/docs/grafana/latest/setup-grafana/configure-security/configure-authentication/github/#configure-github-oauth-application).
