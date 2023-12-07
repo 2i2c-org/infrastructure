@@ -72,3 +72,8 @@ The workflow only runs when manually triggered.
 
 Any re-triggering of the workflow after the initial deployment will overwrite any dashboard created from the Grafana UI and not stored in the [`jupyterhub/grafana-dashboards`](https://github.com/jupyterhub/grafana-dashboards) repository.
 ```
+
+## Granting grafana access to the community representative
+
+Once you have setup the grafana instance, you may wish to [](grafana-access:invite-link)
+**only if the cluster is _dedicated_ to one community**.
