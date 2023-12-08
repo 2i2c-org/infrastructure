@@ -56,7 +56,9 @@ hub_cloud_permissions = {
                     "arn:aws:s3:::podaac-ops-cumulus-protected",
                     "arn:aws:s3:::podaac-ops-cumulus-protected/*",
                     "arn:aws:s3:::maap-ops-workspace",
-                    "arn:aws:s3:::nasa-maap-data-store"
+                    "arn:aws:s3:::maap-ops-workspace/*",
+                    "arn:aws:s3:::nasa-maap-data-store",
+                    "arn:aws:s3:::nasa-maap-data-store/*",
                 ]
             },
             {
@@ -109,7 +111,9 @@ hub_cloud_permissions = {
                     "arn:aws:s3:::podaac-ops-cumulus-protected",
                     "arn:aws:s3:::podaac-ops-cumulus-protected/*",
                     "arn:aws:s3:::maap-ops-workspace",
-                    "arn:aws:s3:::nasa-maap-data-store"
+                    "arn:aws:s3:::maap-ops-workspace/*",
+                    "arn:aws:s3:::nasa-maap-data-store",
+                    "arn:aws:s3:::nasa-maap-data-store/*",
                 ]
             },
             {
