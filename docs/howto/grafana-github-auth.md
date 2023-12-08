@@ -1,9 +1,20 @@
 (grafana-dashboards:github-auth)=
-# Enable GitHub authentication for Grafana
+# Enable GitHub Organisation authentication for Grafana
 
-We can enable GitHub authentication against a Grafana instance in order to allow access to the dashboards for hub administrators as well as 2i2c engineers.
+We can enable GitHub Organisation authentication against a Grafana instance in
+order to allow access to the dashboards for the whole 2i2c GitHub organisation,
+or a community's GitHub organisation.
 
-To enable logging into Grafana using GitHub, follow these steps:
+```{note}
+This is the default authentication method for 2i2c staff wanting to visualise the
+dashboards on [](grafana-dashboards:central). However, we can also offer this
+method of authentication to communities on their cluster-specific Grafana instance
+_only_ if they want to give `Viewer` access to a _whole_ GitHub organisation and
+they are on a _dedicated_ cluster. Otherwise, the default method to provide access
+to a community representative is to [generate an invite link](grafana-access:invite-link).
+```
+
+To enable logging into Grafana using GitHub Organisations, follow these steps:
 
 1. Create a GitHub OAuth application following [Grafana's documentation](https://grafana.com/docs/grafana/latest/setup-grafana/configure-security/configure-authentication/github/#configure-github-oauth-application).
    - Create [a new app](https://github.com/organizations/2i2c-org/settings/applications/new) inside the `2i2c-org`.
