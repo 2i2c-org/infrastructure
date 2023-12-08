@@ -17,4 +17,4 @@ jupyterhub:
       limit: 4
     image:
       name: quay.io/2i2c/cloudbank-data8-image
-      tag: 6286b77ae45c
+      tag: d2746e55a4ee
