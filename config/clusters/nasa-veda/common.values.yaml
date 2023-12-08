@@ -44,6 +44,7 @@ basehub:
             - veda-analytics-access:all-users
             - veda-analytics-access:collaborator-access
             - CYGNSS-VEDA:cygnss-iwg
+            - veda-analytics-access:maap-biomass-team
           scope:
             - read:org
         Authenticator:
