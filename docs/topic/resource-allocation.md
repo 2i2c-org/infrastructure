@@ -1,3 +1,4 @@
+(topic:resource-allocation)=
 # Resource Allocation on Profile Lists
 
 This document lays out general guidelines on how to think about what goes into

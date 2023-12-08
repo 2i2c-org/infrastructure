@@ -77,6 +77,7 @@ On GKE clusters with network policy enforcement, we look to edit the
 `calico-typha-horizontal-autoscaler` ConfigMap in `kube-system` to avoid scaling
 up to two replicas unless there are very many nodes in the k8s cluster.
 
+(topic:cluster-design:instance-type)=
 ### Our instance type choice
 
 #### For nodes where core services will be scheduled on
