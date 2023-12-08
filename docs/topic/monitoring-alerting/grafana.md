@@ -17,19 +17,21 @@ Each cluster's Grafana deployment can be accessed at `grafana.<cluster-name>.2i2
 For example, the Grafana for the community hubs running on our GCP project is accessible at `grafana.pilot.2i2c.cloud`.
 Checkout the list of all 2i2c running clusters and their Grafana [here](https://infrastructure.2i2c.org/en/latest/reference/hubs.html).
 
-To access the Grafana dashboards you have two options:
+To access the Grafana dashboards you have two options, detailed in the next sections.
 
-- Authenticate with GitHub to get `Viewer` access into the Grafana, _if enabled_.
+### Get `Viewer` access by authenticating with GitHub
 
-  This is the recommended way of accessing grafana if modifying/creating dashboards is not needed.
-  To get access, ask a 2i2c engineer to enable **GitHub authentication** following [](grafana-dashboards:github-auth) for that particular Grafana (if it's not already) and allow you access.
+Authenticate with GitHub to get `Viewer` access into the Grafana, _if enabled_.
+If enabled, this is the recommended way of accessing Grafana if modifying/creating dashboards is not needed.
+To get access, ask a 2i2c engineer to enable **GitHub authentication** following [](grafana-dashboards:github-auth) for that particular Grafana (if it's not already) and allow you access.
 
-- Use the **`admin` username and password** to get `Admin` access into the Grafana.
+### Get `Admin` access using the `admin` username and password
 
-  These credentials can be accessed using `sops` (see  [the team compass documentation](tc:secrets:sops) for how to set up `sops` on your machine).
-  See [](setup-grafana:log-in) for how to find the credentials information.
-  Alternatively, the password is also stored in the [shared BitWarden account](https://vault.bitwarden.com/#/vault?organizationId=11313781-4b83-41a3-9d35-afe200c8e9f1).
-  `Admin` access grants you permissions to create and edit dashboards.
+Use the **`admin` username and password** to get `Admin` access into the Grafana.
+These credentials can be accessed using `sops` (see  [the team compass documentation](tc:secrets:sops) for how to set up `sops` on your machine).
+See [](setup-grafana:log-in) for how to find the credentials information.
+Alternatively, the password is also stored in the [shared BitWarden account](https://vault.bitwarden.com/#/vault?organizationId=11313781-4b83-41a3-9d35-afe200c8e9f1).
+`Admin` access grants you permissions to create and edit dashboards.
 
 (grafana-dashboards:central)=
 ## The 2i2c Central Grafana
