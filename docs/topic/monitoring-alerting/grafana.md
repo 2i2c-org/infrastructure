@@ -28,7 +28,7 @@ To get access, ask a 2i2c engineer to enable **GitHub authentication** following
 ### Get `Admin` access using the `admin` username and password
 
 Use the **`admin` username and password** to get `Admin` access into the Grafana.
-These credentials can be accessed using `sops` (see  [the team compass documentation](tc:secrets:sops) for how to set up `sops` on your machine).
+These credentials can be accessed using `sops` (see  [the team compass documentation](https://compass.2i2c.org/engineering/secrets/#sops-overview) for how to set up `sops` on your machine).
 See [](setup-grafana:log-in) for how to find the credentials information.
 Alternatively, the password is also stored in the [shared BitWarden account](https://vault.bitwarden.com/#/vault?organizationId=11313781-4b83-41a3-9d35-afe200c8e9f1).
 `Admin` access grants you permissions to create and edit dashboards.
