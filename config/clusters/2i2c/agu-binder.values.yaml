@@ -47,7 +47,6 @@ binderhub:
   extraVolumeMounts:
     - name: custom-templates
       mountPath: /etc/binderhub/custom
-
   jupyterhub:
     ingress:
       enabled: true
@@ -69,6 +68,25 @@ binderhub:
           scopes:
             - self
             - "access:services"
+      extraConfig:
+        01-orcid: |
+          def setup_orcid_username(authenticator, handler, authentication):
+            """
+            Fish ORCID username from inside cilogon_user when used with ORCID
+
+            There is no clear way to get just the ORCID id from CILogon, so we
+            have to do this. https://github.com/jupyterhub/oauthenticator/issues/712
+            is the upstream report, we can get rid of this once that gets fixed.
+            """
+            idp = authentication['auth_state']['cilogon_user']['idp']
+            if idp == 'http://orcid.org/oauth/authorize':
+              # Only modify usernames if orcid is used
+              # oidc is of the form https://orcid.org/<orcid-id>
+              authentication['name'] = authentication['auth_state']['cilogon_user']['oidc'].split('/')[-1]
+            return authentication
+
+          c.Authenticator.post_auth_hook = setup_orcid_username
+
       config:
         BinderSpawner:
           auth_enabled: true
@@ -80,6 +98,14 @@ binderhub:
             http://google.com/accounts/o8/id:
               username_derivation:
                 username_claim: "email"
+            http://orcid.org/oauth/authorize:
+              username_derivation:
+                username_claim: "given_name"
+              allow_all: true
+            http://github.com/login/oauth/authorize:
+              username_derivation:
+                username_claim: "preferred_username"
+              allow_all: true
         Authenticator:
           admin_users:
             - choldgraf@2i2c.org
