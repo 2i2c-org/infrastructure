@@ -4,7 +4,7 @@ A hub's specific setup is usually optimized based on the day to day usage expect
 
 The communities we serve have the responsibility to notify us about an event they have planned on a 2i2c hub [at least three weeks before](https://docs.2i2c.org/community/events/#notify-the-2i2c-team-about-the-event) the event will start. This should allow us enough time to plan and prepare the infrastructure for the event properly if needed.
 
-The events might vary in type, so the following list is not complete and does not cover all of them (yet) Most common event types are exams, workshops etc.
+The events might vary in type, so the following list is not complete and does not cover all of them (yet). Most common event types are exams, workshops etc.
 
 ## Event checklist
 
@@ -66,25 +66,44 @@ Currently, this is the recommended way to prepare a hub before an event if the h
 
 Assuming this hub already has a profile list, before an event, you should check the following:
 
-1. **Information is avalailable**
+1. **Information is available**
 
     Make sure the information in the event GitHub issue was filled in, especially the number of expected users before an event and their expected resource needs (if that can be known by the community beforehand).
 
 2. **Given the current setup, calculate**
 
-  - how many users will fit on a node?
-  - how many nodes will be necessary during the event?
+  - x = how many users will fit on a node?
 
 3. **Check some rules**
 
-    With the numbers you got, check the following general rules are respected:
+    Check that `x` respects the following general rules:
 
-    - **Startup time**
-      - have at least `3-4 people on a node` but [no more than ~100]( https://kubernetes.io/docs/setup/best-practices/cluster-large/#:~:text=No%20more%20than%20110%20pods,more%20than%20300%2C000%20total%20containers) as few users per node cause longer startup times
-      - `no more than 30% of the users waiting for a node` to come up
-    - For events, we wish to enforce memory constraints that can easily be observed and understood. We might want to consider having an oversubscription factor of 1.
-       With this setup, when the limit is reached, the process inside container will be killed and typically in this situation, the kernel dies.
+    - **Minimize startup time**
 
+      - have at least `3-4 people on a node` as few users per node cause longer startup times
+      - `no more than 30% of the users waiting for a node` to come up, but [no more than ~100]( https://kubernetes.io/docs/setup/best-practices/cluster-large/#:~:text=No%20more%20than%20110%20pods,more%20than%20300%2C000%20total%20containers)
+
+      ```{admonition} Action to take
+      :class: tip
+
+      If `x` doesn't respect the rules above, you should adjust the instance type.
+      ```
+
+    - **Don't oversubscribe resources**
+
+      The oversubscription factor is how much larger a limit is than the actual request (aka, the minimum guaranteed amount of a resource that is reserved for a container). When this factor is greater, then a more efficient node packing can be achieved because usually most users don't use resources up to their limit, and more users can fit on a node.
+
+      However, a bigger oversubscription factor also means that the users that use more resources than they are guaranteed can get their kernels killed or CPU throttled at some other times, based on what other users are doing. This inconsistent behavior is confusing to end users and the hub, so we should try and avoid this during events.
+
+      ````{admonition} Action to take
+      :class: tip
+
+      If the hub is setup so that the oversubscription factor of memory is greater than 1, you should consider changing it. For this you can use the deployer script by passing it the instance type where the pods will be scheduled on, in this example is `n2-highmem-4` and pick the choice(s) that will be used during the event based on expected usage.
+
+      ```bash
+      deployer generate resource-allocation choices n2-highmem-4
+      ```
+      ````
 
 3. **Tilt the balance towards reducing server startup time**
 
