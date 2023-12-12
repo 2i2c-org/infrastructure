@@ -86,11 +86,16 @@ Assuming this hub already has a profile list, before an event, you should check 
   - have at least `3-4 people on a node` as few users per node cause longer startup times, but [no more than ~100]( https://kubernetes.io/docs/setup/best-practices/cluster-large/#:~:text=No%20more%20than%20110%20pods,more%20than%20300%2C000%20total%20containers)
   - don't have more than 30% of the users waiting for a node to come up
 
-    ```{admonition} Action to take
+    ````{admonition} Action to take
     :class: tip
 
     If the current number of users per node doesn't respect the rules above, you should adjust the instance type so that it does.
+    Note that if you are changing the instance type, you should also consider re-writing the allocation options, especially if you are going with a smaller machine than the original one.
+
+    ```bash
+    deployer generate resource-allocation choices <instance type>
     ```
+    ````
 
 4. **Don't oversubscribe resources**
     The oversubscription factor is how much larger a limit is than the actual request (aka, the minimum guaranteed amount of a resource that is reserved for a container). When this factor is greater, then a more efficient node packing can be achieved because usually most users don't use resources up to their limit, and more users can fit on a node.
@@ -107,26 +112,22 @@ Assuming this hub already has a profile list, before an event, you should check 
     ```
     ````
 
-````{warning}
-Note that if you are changing the instance type, you should also consider re-writing the allocation options, especially if you are going with a smaller machine than the original one.
-
-```bash
-deployer generate resource-allocation choices n2-highmem-4
-```
-````
 
 #### 3.2. Setting a minimum node count on a specific node pool
-    TODO
+TODO
 
 #### 3.3. Pre-pulling the image
-    TODO. Relevant discussions:
-    - https://github.com/2i2c-org/infrastructure/issues/2541
-    - https://github.com/2i2c-org/infrastructure/pull/3313
-    - https://github.com/2i2c-org/infrastructure/pull/3341
+TODO. Relevant discussions:
+- https://github.com/2i2c-org/infrastructure/issues/2541
+- https://github.com/2i2c-org/infrastructure/pull/3313
+- https://github.com/2i2c-org/infrastructure/pull/3341
 
 
 ```{important}
-To get a deeper understanding of the resource allocation topic, you can read up these issues:
+To get a deeper understanding of the resource allocation topic, you can read up these issues and documentation pieces:
 - https://github.com/2i2c-org/infrastructure/issues/2121
-- 
+- https://github.com/2i2c-org/infrastructure/pull/3030
+- https://github.com/2i2c-org/infrastructure/issues/3132
+- https://github.com/2i2c-org/infrastructure/issues/3293
+- https://infrastructure.2i2c.org/topic/resource-allocation/#factors-to-balance
 ```
