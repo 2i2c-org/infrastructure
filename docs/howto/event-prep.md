@@ -119,11 +119,15 @@ This section is a Work in Progress!
 ```
 
 #### 3.3. Pre-pulling the image
-TODO. Relevant discussions:
+
+```{warning}
+This section is a Work in Progress!
+```
+
+Relevant discussions:
 - https://github.com/2i2c-org/infrastructure/issues/2541
 - https://github.com/2i2c-org/infrastructure/pull/3313
 - https://github.com/2i2c-org/infrastructure/pull/3341
-
 
 ```{important}
 To get a deeper understanding of the resource allocation topic, you can read up these issues and documentation pieces:
