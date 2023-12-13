@@ -91,6 +91,12 @@ jupyterhub:
         concurrent_spawn_limit: 100
         # We wanna keep logs long term, primarily for analytics
         extra_log_file: /srv/jupyterhub/jupyterhub.log
+      Authenticator:
+        # If users come directly to jupyter.utoronto.ca or any of the other hub landing pages,
+        # we don't actually want to show them the landing page - just auth them if needed and
+        # send them over to wherever they need to go. This is because there is an *external* home
+        # page that is sending people to appropriate locations with /hub/user-redirect.
+        auto_login: true
       CILogonOAuthenticator:
         allowed_idps:
           https://idpz.utorauth.utoronto.ca/shibboleth:
