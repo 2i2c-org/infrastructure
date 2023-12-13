@@ -6,12 +6,24 @@ for responsiveness.
 
 This page documents what we do to prep, based on our prior experiences.
 
-1. Make sure the exact dates and times of the exam are checked well in
-   advance, and we have enough engineering coverage during this time period.
-   Engineers should also *test* their access to the infrastructure and the
+1. **Exact dates and times are known and at least two engineers available**
+
+   Make sure the exact dates and times of the exam are checked well in
+   advance, and we have at least two engineers available during this time period.
+
+2. **Check engineer access**
+
+   Engineers should *test* their access to the infrastructure and the
    hub beforehand, to make sure they can fix issues if needed.
 
-2. For the duration of the exam, all user pods must have a
+   Simple checklist:
+      - 🔲 Can access and login to the hub admin page
+      - 🔲 Can access and login to the cluster grafana
+      - 🔲 Can access and login to the cloud console
+      - 🔲 Test access to Logs Explorer for container logs if on GCP
+      - 🔲 Test that running `deployer use-cluster-credentials $CLUSTER` and then `kubectl get pods -A` work
+
+3. For the duration of the exam, all user pods must have a
    [guaranteed quality of service class](https://kubernetes.io/docs/tasks/configure-pod-container/quality-service-pod/).
    In practice, this means we have memory & cpu requests set to be the same
    as guarantees. This is to ensure equity - no user should get more or less
