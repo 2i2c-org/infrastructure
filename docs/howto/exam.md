@@ -17,9 +17,9 @@ This page documents what we do to prep, based on our prior experiences.
    hub beforehand, to make sure they can fix issues if needed.
 
    Simple checklist:
-      - 🔲 Can access and login to the hub admin page
-      - 🔲 Can access and login to the cluster grafana
-      - 🔲 Can access and login to the cloud console
+      - 🔲 Access and login to the hub admin page
+      - 🔲 Access and login to the cluster grafana
+      - 🔲 Access and login to the cloud console
       - 🔲 Test access to Logs Explorer for container logs if on GCP
       - 🔲 Test that running `deployer use-cluster-credentials $CLUSTER` and then `kubectl get pods -A` work
 
