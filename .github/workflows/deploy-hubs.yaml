@@ -206,6 +206,7 @@ jobs:
       failure_catalystproject-africa: "${{ env.failure_catalystproject-africa }}"
       failure_hhmi: "${{ env.failure_hhmi }}"
       failure_nasa-esdis: "${{ env.failure_nasa-esdis }}"
+      failure_earthscope: "${{ env.failure_earthscope }}"
 
     # Only run this job on pushes to the default branch and when the job output is not
     # an empty list

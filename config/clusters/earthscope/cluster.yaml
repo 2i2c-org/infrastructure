@@ -1,0 +1,12 @@
+name: earthscope
+provider: aws
+aws:
+  key: enc-deployer-credentials.secret.json
+  clusterType: eks
+  clusterName: earthscope
+  region: us-east-2
+support:
+  helm_chart_values_files:
+    - support.values.yaml
+    - enc-support.secret.values.yaml
+hubs: []
