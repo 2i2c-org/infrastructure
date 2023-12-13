@@ -24,7 +24,7 @@ We must ensure that the quotas from the cloud provider are high-enough to handle
 
 ### 2. Consider dedicated nodepools on shared clusters
 
-If the hub that's having an event is running on a shared cluster, then we might want to consider putting it on a dedicated nodepool as that will help with cost isolation, scaling up/down effectively, not impacting other hub's users performance.
+If the hub that's having an event is running on a shared cluster, then we might want to consider putting it on a dedicated nodepool as that will help with cost isolation, scaling up/down effectively, and avoid impacting other hub's users performance.
 
 ```{admonition} Action to take
 :class: tip
