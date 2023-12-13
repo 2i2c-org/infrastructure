@@ -45,18 +45,29 @@ This page documents what we do to prep, based on our prior experiences.
 
    Running this command will output options where memory requests equal limits.
 
-3. The instructor running the exam should test out their exam on the hub,
+4. **Ensure instructor tests the hub before the exam**
+
+   The instructor running the exam should test out their exam on the hub,
    and make sure that it will complete within the amount of resources assigned
    to it. They should also make sure that the environment (packages, python
    versions, etc) are set up appropriately. From the time they test this until
    the exam is over, new environment changes are put on hold.
 
-4. We should pre-warm the cluster the hub is on before the start of the exam,
+   Responsibilities:
+      - the **community and partnerships** team makes sure that the community's
+      **expectations** around exams are correctly set
+      - the **engineer(s)** leading the exam, should make sure **they are respected**
+
+5. **Pre-warm the cluster**
+
+   We should pre-warm the cluster the hub is on before the start of the exam,
    to make sure that all users can start a notebook without having to wait. This
    is also for equity reasons, to make sure we don't disadvantage one user from
    another.
 
-5. Issues during the exam are communicated via freshdesk, and what we are paid
+6. **Follow freshdesk for any questions/issues**
+
+   Issues during the exam are communicated via freshdesk, and what we are paid
    for is to make sure we respond immediately - there is no guarantee of fixes,
    although we try very hard to make sure the infrastructure is stable during this
    period.
