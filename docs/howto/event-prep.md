@@ -114,7 +114,9 @@ Assuming this hub already has a profile list, before an event, you should check 
 
 
 #### 3.2. Setting a minimum node count on a specific node pool
-TODO
+```{warning}
+This section is a Work in Progress!
+```
 
 #### 3.3. Pre-pulling the image
 TODO. Relevant discussions:
