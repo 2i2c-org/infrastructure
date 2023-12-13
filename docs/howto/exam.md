@@ -23,15 +23,27 @@ This page documents what we do to prep, based on our prior experiences.
       - 🔲 Test access to Logs Explorer for container logs if on GCP
       - 🔲 Test that running `deployer use-cluster-credentials $CLUSTER` and then `kubectl get pods -A` work
 
-3. For the duration of the exam, all user pods must have a
+3. **Ensure user pods have a guaranteed quality of service class**
+
+   For the duration of the exam, all user pods must have a
    [guaranteed quality of service class](https://kubernetes.io/docs/tasks/configure-pod-container/quality-service-pod/).
+
    In practice, this means we have memory & cpu requests set to be the same
    as guarantees. This is to ensure equity - no user should get more or less
    resources than any other. It also improves reliability.
 
-   This usually increases cost too, so should be done no more than 12h before
+   This usually increases cost too, so should be done **no more than 12h before**
    the start of the exam. It should be reverted back soon after the exam
    is done.
+
+   If the hub has a profile list enabled, based on the instance types setup for
+   the hub, you can find the new allocation options by running:
+
+   ```{bash}
+   deployer generate resource-allocation choices <instance-type>
+   ```
+
+   Running this command will output options where memory requests equal limits.
 
 3. The instructor running the exam should test out their exam on the hub,
    and make sure that it will complete within the amount of resources assigned
