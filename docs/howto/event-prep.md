@@ -19,7 +19,7 @@ We must ensure that the quotas from the cloud provider are high-enough to handle
 ```{admonition} Action to take
 :class: tip
 - follow the [AWS quota guide](hub-deployment-guide:cloud-accounts:aws-quotas) for information about how to check the quotas in an AWS project
-- follow [GCP quota guide](hub-deployment-guide:cloud-accounts:aws-quotas) for information about how to check the quotas in a GCP project
+- follow the [GCP quota guide](hub-deployment-guide:cloud-accounts:aws-quotas) for information about how to check the quotas in a GCP project
 ```
 
 ### 2. Consider dedicated nodepools on shared clusters
