@@ -1,12 +1,115 @@
-nfs:
-  pv:
-    # from https://docs.aws.amazon.com/efs/latest/ug/mounting-fs-nfs-mount-settings.html
-    mountOptions:
-      - rsize=1048576
-      - wsize=1048576
-      - timeo=600
-      - soft # We pick soft over hard, so NFS lockups don't lead to hung processes
-      - retrans=2
-      - noresvport
-    serverIP: fs-08e7747330d833d82.efs.us-east-2.amazonaws.com
-    baseShareName: /
+basehub:
+  nfs:
+    pv:
+      # from https://docs.aws.amazon.com/efs/latest/ug/mounting-fs-nfs-mount-settings.html
+      mountOptions:
+        - rsize=1048576
+        - wsize=1048576
+        - timeo=600
+        - soft # We pick soft over hard, so NFS lockups don't lead to hung processes
+        - retrans=2
+        - noresvport
+      serverIP: fs-08e7747330d833d82.efs.us-east-2.amazonaws.com
+      baseShareName: /
+  jupyterhub:
+    custom:
+      2i2c:
+        add_staff_user_ids_to_admin_users: true
+        add_staff_user_ids_of_type: "google"
+      homepage:
+        templateVars:
+          org:
+            url: https://www.earthscope.org/
+            logo_url: https://drive.google.com/uc?export=view&id=1UUStqv7PBcxiIkzECUFKIdQKKIU8mXeb
+          designed_by:
+            name: "2i2c"
+            url: https://2i2c.org
+          operated_by:
+            name: "2i2c"
+            url: https://2i2c.org
+          funded_by:
+            name: "EarthScope Consortium"
+            url: https://www.earthscope.org/
+    hub:
+      config:
+        JupyterHub:
+          authenticator_class: cilogon
+        CILogonOAuthenticator:
+          allowed_idps:
+            http://github.com/login/oauth/authorize:
+              default: true
+              username_derivation:
+                username_claim: "preferred_username"
+            http://google.com/accounts/o8/id:
+              username_derivation:
+                username_claim: email
+        Authenticator:
+          admin_users:
+            - timdittmann
+            - chad-earthscope
+    singleuser:
+      profileList:
+        - display_name: "Shared Small: 1-4 CPU, 8-32 GB"
+          description: "A shared machine, the recommended option until you experience a limitation."
+          profile_options: &profile_options
+            image:
+              display_name: Image
+              unlisted_choice:
+                enabled: True
+                display_name: "Custom image"
+                validation_regex: "^.+:.+$"
+                validation_message: "Must be a publicly available docker image, of form <image-name>:<tag>"
+                kubespawner_override:
+                  image: "{value}"
+              choices:
+                jupyter-scipy:
+                  display_name: Jupyter
+                  slug: jupyter-scipy
+                  kubespawner_override:
+                    image: jupyter/scipy-notebook:2023-06-27
+                rocker-geospatial:
+                  display_name: RStudio
+                  slug: rocker-geospatial
+                  kubespawner_override:
+                    image: rocker/binder:4.3
+                    # Launch into RStudio after the user logs in
+                    default_url: /rstudio
+                    # Ensures container working dir is homedir
+                    # https://github.com/2i2c-org/infrastructure/issues/2559
+                    working_dir: /home/rstudio
+          kubespawner_override:
+            mem_guarantee: 7.234G
+            cpu_guarantee: 0.1
+            mem_limit: null
+            node_selector:
+              node.kubernetes.io/instance-type: r5.xlarge
+
+        - display_name: "Small: 4 CPU, 32 GB"
+          description: "A dedicated machine for you."
+          profile_options: *profile_options
+          kubespawner_override:
+            mem_guarantee: 28.937G
+            cpu_guarantee: 0.4
+            mem_limit: null
+            node_selector:
+              node.kubernetes.io/instance-type: r5.xlarge
+
+        - display_name: "Medium: 16 CPU, 128 GB"
+          description: "A dedicated machine for you."
+          profile_options: *profile_options
+          kubespawner_override:
+            mem_guarantee: 120.513G
+            cpu_guarantee: 1.6
+            mem_limit: null
+            node_selector:
+              node.kubernetes.io/instance-type: r5.4xlarge
+
+        - display_name: "Large: 64 CPU, 512 GB"
+          description: "A dedicated machine for you"
+          profile_options: *profile_options
+          kubespawner_override:
+            mem_guarantee: 489.13G
+            cpu_guarantee: 6.4
+            mem_limit: null
+            node_selector:
+              node.kubernetes.io/instance-type: r5.16xlarge
