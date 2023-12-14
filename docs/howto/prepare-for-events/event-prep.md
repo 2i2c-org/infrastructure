@@ -1,18 +1,8 @@
-# Decide if the infrastructure needs preparation before an Event
-
-A hub's specific setup is usually optimized based on the day to day usage expectations. But because events usually imply a different usage pattern, the infrastructure might need to be adjusted in order to accommodate the spikes in activity.
-
-```{important}
-The communities we serve have the responsibility to notify us about an event they have planned on a 2i2c hub [at least three weeks before](https://docs.2i2c.org/community/events/#notify-the-2i2c-team-about-the-event) the event will start. This should allow us enough time to plan and prepare the infrastructure for the event properly if needed.
-```
-
-The events might vary in type, so the following list is not complete and does not cover all of them (yet). Most common event types are exams, workshops etc.
-
-## Event checklist
+# Event infrastructure preparation checklist
 
 Below are listed the main aspects to consider adjusting on a hub to prepare it for an event:
 
-### 1. Quotas
+## 1. Quotas
 
 We must ensure that the quotas from the cloud provider are high-enough to handle expected usage. It might be that the number of users attending the event is very big, or their expected resource usage is big, or both. Either way, we need to check the the existing quotas will accommodate the new numbers.
 
@@ -22,7 +12,7 @@ We must ensure that the quotas from the cloud provider are high-enough to handle
 - follow the [GCP quota guide](hub-deployment-guide:cloud-accounts:aws-quotas) for information about how to check the quotas in a GCP project
 ```
 
-### 2. Consider dedicated nodepools on shared clusters
+## 2. Consider dedicated nodepools on shared clusters
 
 If the hub that's having an event is running on a shared cluster, then we might want to consider putting it on a dedicated nodepool as that will help with cost isolation, scaling up/down effectively, and avoid impacting other hub's users performance.
 
@@ -31,7 +21,7 @@ If the hub that's having an event is running on a shared cluster, then we might 
 Follow the guide at [](features:shared-cluster:dedicated-nodepool) in order to setup a dedicated nodepool before an event.
 ```
 
-### 3. Pre-warm the hub to reduce wait times
+## 3. Pre-warm the hub to reduce wait times
 
 There are two mechanisms that we can use to pre-warm a hub before an event:
 
@@ -63,7 +53,7 @@ There are two mechanisms that we can use to pre-warm a hub before an event:
 - the user **image is not huge**, otherwise pre-pulling it must be considered
 
 
-#### 3.1. Node sharing via profile lists
+### 3.1. Node sharing via profile lists
 
 ```{important}
 Currently, this is the recommended way to handle an event on a hub. However, for some communities that don't already use profile lists, setting up one just before an event might be confusing, we might want to consider setting up a minimum node count in this case.
@@ -182,12 +172,12 @@ Assuming this hub already has a profile list, before an event, you should check 
     ````
     `````
 
-#### 3.2. Setting a minimum node count on a specific node pool
+### 3.2. Setting a minimum node count on a specific node pool
 ```{warning}
 This section is a Work in Progress!
 ```
 
-#### 3.3. Pre-pulling the image
+### 3.3. Pre-pulling the image
 
 ```{warning}
 This section is a Work in Progress!
