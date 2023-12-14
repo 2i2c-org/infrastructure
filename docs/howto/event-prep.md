@@ -84,6 +84,7 @@ Assuming this hub already has a profile list, before an event, you should check 
 3. **Minimize startup time**
 
   - have at least `3-4 people on a node` as few users per node cause longer startup times, but [no more than ~100]( https://kubernetes.io/docs/setup/best-practices/cluster-large/#:~:text=No%20more%20than%20110%20pods,more%20than%20300%2C000%20total%20containers)
+
   - don't have more than 30% of the users waiting for a node to come up
 
     ````{admonition} Action to take
@@ -92,26 +93,94 @@ Assuming this hub already has a profile list, before an event, you should check 
     If the current number of users per node doesn't respect the rules above, you should adjust the instance type so that it does.
     Note that if you are changing the instance type, you should also consider re-writing the allocation options, especially if you are going with a smaller machine than the original one.
 
-    ```bash
+    ```{code-block}
     deployer generate resource-allocation choices <instance type>
     ```
     ````
 
 4. **Don't oversubscribe resources**
+
     The oversubscription factor is how much larger a limit is than the actual request (aka, the minimum guaranteed amount of a resource that is reserved for a container). When this factor is greater, then a more efficient node packing can be achieved because usually most users don't use resources up to their limit, and more users can fit on a node.
 
     However, a bigger oversubscription factor also means that the users that use more resources than they are guaranteed can get their kernels killed or CPU throttled at some other times, based on what other users are doing. This inconsistent behavior is confusing to end users and the hub, so we should try and avoid this during events.
 
-    ````{admonition} Action to take
+    `````{admonition} Action to take
     :class: tip
 
-    For an event, you should consider an oversubscription factor of 1. For this you can use the deployer script by passing it the instance type where the pods will be scheduled on (in this example is `n2-highmem-4`), then from its output, pick the choice(s) that will be used during the event based on expected usage.
+    For an event, you should consider an oversubscription factor of 1.
 
-    ```bash
-    deployer generate resource-allocation choices n2-highmem-4
+    - if the instance type remains unchanged, then just adjust the limit to match the memory guarantee if not already the case
+
+    - if the instance type also changes, then you can use the `deployer generate resource-allocation` command, passing it the new instance type and optionally the number of choices.
+
+      You can then use its output to:
+        - either replace all allocation options with the ones for the new node type
+        - or pick the choice(s) that will be used during the event based on expected usage and just don't show the others
+
+    ````{admonition} Example
+    For example, if the community expects to only use ~3GB of memory during an event, and no other users are expected to use the hub for the duration of the event, then you can choose to only make available that one option.
+
+    Assuming they had 4 options on a `n2-highmem-2` machine and we wish to move them on a `n2-highmem-4` for the event, we could run:
+    
+    ```{code-block}
+    deployer generate resource-allocation choices n2-highmem-4 --num-allocations 4
+    ```
+
+    which will output:
+
+    ```{code-block}
+    # pick this option to present the single ~3GB memory option for the event
+    mem_3_4:
+      display_name: 3.4 GB RAM, upto 3.485 CPUs
+      kubespawner_override:
+        mem_guarantee: 3662286336
+        mem_limit: 3662286336
+        cpu_guarantee: 0.435625
+        cpu_limit: 3.485
+        node_selector:
+          node.kubernetes.io/instance-type: n2-highmem-4
+      default: true
+    mem_6_8:
+      display_name: 6.8 GB RAM, upto 3.485 CPUs
+      kubespawner_override:
+        mem_guarantee: 7324572672
+        mem_limit: 7324572672
+        cpu_guarantee: 0.87125
+        cpu_limit: 3.485
+        node_selector:
+          node.kubernetes.io/instance-type: n2-highmem-4
+    (...2 more options)
+    ```
+    And we would have this in the profileList configuration:
+    ```{code-block}
+    profileList:
+      - display_name: Workshop
+        description: Workshop environment
+        default: true
+        kubespawner_override:
+          image: python:6ee57a9
+        profile_options:
+          requests:
+            display_name: Resource Allocation
+            choices:
+              mem_3_4:
+                display_name: 3.4 GB RAM, upto 3.485 CPUs
+                kubespawner_override:
+                  mem_guarantee: 3662286336
+                  mem_limit: 3662286336
+                  cpu_guarantee: 0.435625
+                  cpu_limit: 3.485
+                  node_selector:
+                    node.kubernetes.io/instance-type: n2-highmem-4
     ```
     ````
 
+    ````{warning}
+    The `deployer generate resource-allocation`:
+    - cam only generate options where guarantees (requests) equal limits!
+    - supports the instance types located in `node-capacity-info.json` file
+    ````
+    `````
 
 #### 3.2. Setting a minimum node count on a specific node pool
 ```{warning}
