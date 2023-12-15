@@ -23,6 +23,7 @@
    ```
 7. [Setup a new cluster](new-cluster:new-cluster) inside it via Terraform
 
+(hub-deployment-guide:cloud-accounts:gcp-quotas)=
 ## Checking quotas and requesting increases
 
 Finally, we should check what quotas are enforced on the project and increase them as necessary.
