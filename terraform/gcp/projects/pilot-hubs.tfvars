@@ -19,13 +19,6 @@ enable_filestore      = true
 filestore_capacity_gb = 5120
 
 notebook_nodes = {
-  # FIXME: Delete this node pool when its empty, its replaced by n2-highmem-4-b
-  "n2-highmem-4" : {
-    min : 0,
-    max : 100,
-    machine_type : "n2-highmem-4",
-    temp_opt_out_node_purpose_label : true,
-  },
   "n2-highmem-4-b" : {
     min : 0,
     max : 100,
@@ -40,24 +33,6 @@ notebook_nodes = {
     min : 0,
     max : 100,
     machine_type : "n2-highmem-64",
-  },
-  # Nodepool for neurohackademy. Tracking issue: https://github.com/2i2c-org/infrastructure/issues/2681
-  "neurohackademy" : {
-    # We expect around 120 users
-    min : 0,
-    max : 100,
-    machine_type : "n2-highmem-16",
-    labels : {
-      "2i2c.org/community" : "neurohackademy"
-    },
-    taints : [{
-      key : "2i2c.org/community",
-      value : "neurohackademy",
-      effect : "NO_SCHEDULE"
-    }],
-    resource_labels : {
-      "community" : "neurohackademy"
-    },
   },
   # Nodepool for temple university. https://github.com/2i2c-org/infrastructure/issues/3158
   # FIXME: Delete this node pool when its empty, its replaced by temple-b
