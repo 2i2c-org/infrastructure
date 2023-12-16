@@ -218,7 +218,7 @@ resource "google_container_node_pool" "core" {
     # Faster disks provide faster image pulls!
     disk_type = "pd-balanced"
 
-    resource_labels = var.temp_opt_out_node_purpose_label_core_nodes ? {} : {
+    resource_labels = {
       "node-purpose" : "core"
     }
 

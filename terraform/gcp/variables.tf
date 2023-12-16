@@ -240,13 +240,6 @@ variable "core_node_max_count" {
   EOT
 }
 
-# FIXME: Remove temp_opt_out_node_purpose_label_core_nodes when its no longer referenced.
-#        See https://github.com/2i2c-org/infrastructure/issues/3405.
-variable "temp_opt_out_node_purpose_label_core_nodes" {
-  type    = bool
-  default = false
-}
-
 variable "enable_network_policy" {
   type        = bool
   default     = false
