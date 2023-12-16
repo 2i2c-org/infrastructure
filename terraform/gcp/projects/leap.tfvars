@@ -80,14 +80,6 @@ notebook_nodes = {
     max : 100,
     machine_type : "n2-highmem-4",
   },
-  # FIXME: Delete this node pool when its empty, its replaced by n2-highmem-16
-  "medium" : {
-    min : 0,
-    max : 100,
-    machine_type : "n2-highmem-16",
-    node_version : "1.25.6-gke.1000",
-    temp_opt_out_node_purpose_label : true
-  },
   "n2-highmem-16" : {
     # A minimum of one is configured for LEAP to ensure quick startups at all
     # time. Cost is not a greater concern than optimizing startup times.
