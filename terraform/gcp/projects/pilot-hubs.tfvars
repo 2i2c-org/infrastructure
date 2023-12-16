@@ -35,29 +35,6 @@ notebook_nodes = {
     machine_type : "n2-highmem-64",
   },
   # Nodepool for temple university. https://github.com/2i2c-org/infrastructure/issues/3158
-  # FIXME: Delete this node pool when its empty, its replaced by temple-b
-  "temple" : {
-    # Expecting upto ~120 users at a time
-    min : 0,
-    max : 100,
-    # Everyone gets a 256M guarantee, and n2-highmem-8 has about 60GB of RAM.
-    # This fits upto 100 users on the node, as memory guarantee isn't the constraint.
-    # This works ok.
-    machine_type : "n2-highmem-8",
-    node_version : "1.26.4-gke.1400",
-    temp_opt_out_node_purpose_label : true,
-    labels : {
-      "2i2c.org/community" : "temple"
-    },
-    taints : [{
-      key : "2i2c.org/community",
-      value : "temple",
-      effect : "NO_SCHEDULE"
-    }],
-    resource_labels : {
-      "community" : "temple"
-    },
-  },
   "temple-b" : {
     # Expecting upto ~120 users at a time
     min : 0,
