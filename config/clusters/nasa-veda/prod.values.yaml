@@ -6,7 +6,7 @@ basehub:
     ingress:
       hosts: [hub.openveda.cloud]
       tls:
-        - hosts: [veda.2i2c.cloud]
+        - hosts: [hub.openveda.cloud]
           secretName: https-auto-tls
     hub:
       config:
