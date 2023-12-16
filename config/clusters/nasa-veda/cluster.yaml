@@ -13,7 +13,7 @@ support:
 hubs:
   - name: staging
     display_name: "NASA VEDA (staging)"
-    domain: staging.veda.2i2c.cloud
+    domain: staging.hub.openveda.cloud
     helm_chart: daskhub
     helm_chart_values_files:
       - common.values.yaml
