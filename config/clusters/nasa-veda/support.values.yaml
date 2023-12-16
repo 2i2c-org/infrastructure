@@ -22,6 +22,15 @@ grafana:
         hosts:
           - grafana.nasa-veda.2i2c.cloud
 
+redirects:
+  rules:
+    # nasa-veda.2i2c.cloud was the old URL
+    # Moved due to https://github.com/2i2c-org/infrastructure/issues/3029
+    - from: nasa-veda.2i2c.cloud
+      to: hub.openveda.cloud
+    - from: staging.nasa-veda.2i2c.cloud
+      to: staging.hub.openveda.cloud
+
 prometheus:
   server:
     ingress:
@@ -32,11 +41,3 @@ prometheus:
         - secretName: prometheus-tls
           hosts:
             - prometheus.nasa-veda.2i2c.cloud
-
-redirects:
-  rules:
-    # nasa-veda was previously used in the domain name, but domains including
-    # nasa that doesn't end in .gov can get blocked so the name was reduced to
-    # just veda, see https://github.com/2i2c-org/infrastructure/issues/3029
-    - from: staging.nasa-veda.2i2c.cloud
-      to: staging.veda.2i2c.cloud
