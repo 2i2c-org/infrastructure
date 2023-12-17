@@ -12,11 +12,7 @@ k8s_versions = {
   dask_nodes_version : "1.27.5-gke.200",
 }
 
-# FIXME: n2-highmem-2 is a better fit for cloudbank as they are currently
-#        limited by the number of pods per node and don't use dask-gateway
-#        that otherwise can make prothemeus server need more memory than a
-#        n2-highmem-2 node can provide.
-core_node_machine_type = "n2-highmem-4"
+core_node_machine_type = "n2-highmem-2"
 enable_network_policy  = true
 
 enable_filestore      = true
