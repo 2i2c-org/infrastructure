@@ -102,9 +102,6 @@ variable "notebook_nodes" {
       }),
       {}
     ),
-    # FIXME: Remove temp_opt_out_node_purpose_label when its no longer referenced.
-    #        See https://github.com/2i2c-org/infrastructure/issues/3405.
-    temp_opt_out_node_purpose_label : optional(bool, false),
     resource_labels : optional(map(string), {}),
     zones : optional(list(string), []),
     node_version : optional(string, ""),
@@ -138,9 +135,6 @@ variable "dask_nodes" {
       }),
       {}
     ),
-    # FIXME: Remove temp_opt_out_node_purpose_label when its no longer referenced.
-    #        See https://github.com/2i2c-org/infrastructure/issues/3405.
-    temp_opt_out_node_purpose_label : optional(bool, false),
     resource_labels : optional(map(string), {}),
     zones : optional(list(string), [])
     node_version : optional(string, ""),
