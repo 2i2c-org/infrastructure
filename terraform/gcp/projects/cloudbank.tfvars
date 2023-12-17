@@ -23,14 +23,6 @@ enable_filestore      = true
 filestore_capacity_gb = 1024
 
 notebook_nodes = {
-  # FIXME: Delete this node pool when its empty, its replaced by n2-highmem-4
-  "user" : {
-    min : 0,
-    max : 100,
-    machine_type : "n1-highmem-4",
-    node_version : "1.26.4-gke.1400",
-    temp_opt_out_node_purpose_label = true,
-  },
   "n2-highmem-4" : {
     min : 0,
     max : 100,
