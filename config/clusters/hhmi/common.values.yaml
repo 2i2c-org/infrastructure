@@ -88,6 +88,46 @@ basehub:
           description: "Spyglass-NWB container for the Loren Frank Lab"
           slug: lorenfrank
           profile_options:
+            requests: &profile_option_requests
+              display_name: Resource Allocation
+              choices:
+                mem_3_4:
+                  display_name: 3.4 GB RAM, upto 3.477 CPUs
+                  kubespawner_override:
+                    mem_guarantee: 3644869120
+                    mem_limit: 3644869120
+                    cpu_guarantee: 0.434625
+                    cpu_limit: 3.477
+                    node_selector:
+                      node.kubernetes.io/instance-type: n2-highmem-4
+                  default: true
+                mem_6_8:
+                  display_name: 6.8 GB RAM, upto 3.477 CPUs
+                  kubespawner_override:
+                    mem_guarantee: 7289738240
+                    mem_limit: 7289738240
+                    cpu_guarantee: 0.86925
+                    cpu_limit: 3.477
+                    node_selector:
+                      node.kubernetes.io/instance-type: n2-highmem-4
+                mem_13_6:
+                  display_name: 13.6 GB RAM, upto 3.477 CPUs
+                  kubespawner_override:
+                    mem_guarantee: 14579476480
+                    mem_limit: 14579476480
+                    cpu_guarantee: 1.7385
+                    cpu_limit: 3.477
+                    node_selector:
+                      node.kubernetes.io/instance-type: n2-highmem-4
+                mem_27_2:
+                  display_name: 27.2 GB RAM, upto 3.477 CPUs
+                  kubespawner_override:
+                    mem_guarantee: 29158952960
+                    mem_limit: 29158952960
+                    cpu_guarantee: 3.477
+                    cpu_limit: 3.477
+                    node_selector:
+                      node.kubernetes.io/instance-type: n2-highmem-4
             image:
               display_name: Image
               unlisted_choice:
@@ -107,6 +147,7 @@ basehub:
           description: "Start a container with a community maintained image"
           slug: community
           profile_options:
+            requests: *profile_option_requests
             image:
               display_name: Image
               choices:
@@ -140,14 +181,6 @@ basehub:
                     default_url: /desktop
                     # Built from https://github.com/jupyterhub/jupyter-remote-desktop-proxy/pull/51
                     image: "quay.io/jupyter-remote-desktop-proxy/qgis:2023-09-27"
-          nodeSelector:
-            node.kubernetes.io/instance-type: n2-highmem-16
-          cpu:
-            guarantee: 0.5
-            limit: 14
-          memory:
-            guarantee: 4G
-            limit: 16G
     hub:
       allowNamedServers: true
       config:
