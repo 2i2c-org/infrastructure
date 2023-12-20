@@ -24,7 +24,7 @@ basehub:
           org:
             name: "U.S. Greenhouse Gas Center"
             logo_url: https://raw.githubusercontent.com/US-GHG-Center/ghgc-docs/b818ba6fdd3c43ede04b110975bf39d248c40df6/Logo/ghg-logo.svg
-            url: https://ghg.center
+            url: https://earth.gov/ghgcenter
           designed_by:
             name: "2i2c"
             url: https://2i2c.org
@@ -33,7 +33,7 @@ basehub:
             url: https://2i2c.org
           funded_by:
             name: "U.S. Greenhouse Gas Center"
-            url: https://ghg.center
+            url: https://earth.gov/ghgcenter
     hub:
       allowNamedServers: true
       config:
