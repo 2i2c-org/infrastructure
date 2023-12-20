@@ -40,13 +40,6 @@ hubs:
     helm_chart_values_files:
       - binder-staging.values.yaml
       - enc-binder-staging.secret.values.yaml
-  - name: agu-binder
-    display_name: "2i2c AGU Demo Binder"
-    domain: agu-binder.2i2c.cloud
-    helm_chart: binderhub
-    helm_chart_values_files:
-      - agu-binder.values.yaml
-      - enc-agu-binder.secret.values.yaml
   - name: imagebuilding-demo
     display_name: "2i2c image building demo"
     domain: imagebuilding-demo.2i2c.cloud
@@ -116,17 +109,6 @@ hubs:
       - basehub-common.values.yaml
       - climatematch.values.yaml
       - enc-climatematch.secret.values.yaml
-  - name: neurohackademy
-    display_name: "Neurohackademy"
-    domain: neurohackademy.2i2c.cloud
-    helm_chart: basehub
-    helm_chart_values_files:
-      # The order in which you list files here is the order the will be passed
-      # to the helm upgrade command in, and that has meaning. Please check
-      # that you intend for these files to be applied in this order.
-      - basehub-common.values.yaml
-      - enc-neurohackademy.secret.values.yaml
-      - neurohackademy.values.yaml
   - name: mtu
     display_name: "Michigan Technological University"
     domain: mtu.2i2c.cloud

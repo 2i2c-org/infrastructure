@@ -34,24 +34,6 @@ notebook_nodes = {
     max : 100,
     machine_type : "n2-highmem-64",
   },
-  "agu-binder" : {
-    min : 0,
-    max : 100,
-    machine_type : "n2-highmem-8",
-    node_version : "1.26.4-gke.1400",
-    disk_type : "pd-ssd",
-    labels : {
-      "2i2c.org/community" : "agu-binder"
-    },
-    taints : [{
-      key : "2i2c.org/community",
-      value : "agu-binder",
-      effect : "NO_SCHEDULE"
-    }],
-    resource_labels : {
-      "community" : "agu-binder"
-    },
-  },
 }
 
 # Setup a single node pool for dask workers.
