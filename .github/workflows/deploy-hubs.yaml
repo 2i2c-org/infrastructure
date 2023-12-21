@@ -182,7 +182,6 @@ jobs:
     outputs:
       failure_2i2c: "${{ env.failure_2i2c }}"
       failure_2i2c-uk: "${{ env.failure_2i2c-uk }}"
-      failure_carbonplan: "${{ env.failure_carbonplan }}"
       failure_cloudbank: "${{ env.failure_cloudbank }}"
       failure_leap: "${{ env.failure_leap }}"
       failure_meom-ige: "${{ env.failure_meom-ige }}"

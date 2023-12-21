@@ -13,11 +13,9 @@ server startup faster.
       To scale all nodepools, locate the `minSize` property of the `nb` node group and change the value to what you want.
       An example can be found here:
       <https://github.com/2i2c-org/infrastructure/blob/f40cfbc2b5bd236a1f95e406a6f6d9bec99e55d2/eksctl/2i2c-aws-us.jsonnet#L102>
-   
+
    2. **Scale a specific nodepool.**
       If you only wish to scale a specific nodepool, you can add the `minSize` property to the local `notebookNodes` variable next to the `instanceType` that you wish to scale.
-      An example can be found here:
-      <https://github.com/2i2c-org/infrastructure/blob/f40cfbc2b5bd236a1f95e406a6f6d9bec99e55d2/eksctl/carbonplan.jsonnet#L40>
 
    ```{warning}
    It is currently unclear if *lowering* the `minSize` property just allows
