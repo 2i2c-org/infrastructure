@@ -99,12 +99,6 @@ eks:
     cpu_requests: 170m
     memory_requests: 250Mi
     k8s_version: v1.25.12-eks-2d98532
-  carbonplan:
-    requesting_daemon_sets: aws-node,ebs-csi-node,kube-proxy,support-cryptnono,support-prometheus-node-exporter
-    other_daemon_sets: ""
-    cpu_requests: 170m
-    memory_requests: 250Mi
-    k8s_version: v1.24.16-eks-2d98532
   catalystproject-africa:
     requesting_daemon_sets: aws-node,ebs-csi-node,kube-proxy,support-cryptnono,support-prometheus-node-exporter
     other_daemon_sets: ""

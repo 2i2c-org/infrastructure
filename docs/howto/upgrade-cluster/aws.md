@@ -136,7 +136,7 @@ where the version must be updated.
 
 ```yaml
 {
-   name: "carbonplanhub",
+   name: "openscapeshub",
    region: clusterRegion,
    version: '1.27'
 }
