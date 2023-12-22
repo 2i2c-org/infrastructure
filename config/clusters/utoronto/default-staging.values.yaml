@@ -9,7 +9,7 @@ jupyterhub:
       gitRepoBranch: "utoronto-staging"
   singleuser:
     image:
-      tag: "178819e05792"
+      tag: "6d72913197bf"
   hub:
     config:
       CILogonOAuthenticator:
