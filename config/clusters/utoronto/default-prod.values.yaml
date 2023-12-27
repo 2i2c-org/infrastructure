@@ -1,4 +1,12 @@
 jupyterhub:
+  singleuser:
+    extraEnv:
+      # Required to get jupyter-contrib-nbextensions to work, until
+      # https://github.com/2i2c-org/utoronto-image/pull/58 can land. An image
+      # including that is already in the staging hub, but not in the prod
+      # hub. This config can be removed when we promote that image to
+      # production.
+      JUPYTERHUB_SINGLEUSER_APP: "notebook.notebookapp.NotebookApp"
   ingress:
     hosts: [jupyter.utoronto.ca]
     tls:
