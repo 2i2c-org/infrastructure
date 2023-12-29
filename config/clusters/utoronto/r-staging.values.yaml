@@ -4,6 +4,9 @@ jupyterhub:
     tls:
       - hosts: [r-staging.datatools.utoronto.ca]
         secretName: https-auto-tls
+  singleuser:
+    image:
+      tag: "36c17e91963a"
   hub:
     db:
       pvc:
