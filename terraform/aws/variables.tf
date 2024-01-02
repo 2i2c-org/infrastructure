@@ -20,7 +20,12 @@ variable "cluster_nodes_location" {
 }
 
 variable "user_buckets" {
-  type        = map(object({ delete_after : number }))
+  type = map(
+    object({
+      delete_after : optional(number, null),
+      archival_storageclass_after : optional(number, null)
+    })
+  )
   default     = {}
   description = <<-EOT
   S3 Buckets to be created.
@@ -28,9 +33,13 @@ variable "user_buckets" {
   The key for each entry will be prefixed with {var.prefix}- to form
   the name of the bucket.
 
-  The value is a map, with 'delete_after' the only accepted key in that
-  map - it lists the number of days after which any content in the
-  bucket will be deleted. Set to null to not delete data.
+  The value is a map, with the following accepted keys:
+
+  1. `delete_after` - number of days after *creation* an object in this
+     bucket will be automatically deleted. Set to null to not delete data.
+  2. `archival_storageclass_after` - number of days after *creation* an
+     object in this bucket will be automatically transitioned to a cheaper,
+     slower storageclass for cost savings. Set to null to not transition.
   EOT
 }
 

@@ -11,6 +11,9 @@ user_buckets = {
   "scratch" : {
     "delete_after" : 7
   },
+  "prod-homedirs-archive" : {
+    "archival_storageclass_after" : 3
+  }
 }
 
 

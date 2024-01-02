@@ -16,6 +16,18 @@ resource "aws_s3_bucket_lifecycle_configuration" "user_bucket_expiry" {
       days = each.value.delete_after
     }
   }
+
+  rule {
+    id     = "archival-storageclass"
+    status = each.value.delete_after != null ? "Enabled" : "Disabled"
+
+    transition {
+      # Transition this to much cheaper object storage after a few days
+      days = each.value.archival_storageclass_after
+      # Glacier Instant is fast enough while also being pretty cheap
+      storage_class = "GLACIER_IR"
+    }
+  }
 }
 
 locals {
