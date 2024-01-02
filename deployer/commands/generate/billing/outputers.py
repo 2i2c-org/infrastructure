@@ -83,7 +83,7 @@ def output_cost_table(output, google_sheet_url, rows):
             print(r)
             table.add_row(
                 index.strftime("%Y-%m"),
-                r["project"],
+                str(r["project"]),
                 str(round(float(r["total_with_credits"]), 2)),
             )
             last_period = index
