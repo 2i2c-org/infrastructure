@@ -102,7 +102,7 @@ basehub:
                   runAsUser: 1000
                   runAsGroup: 1000
           profile_options: &profile_options
-            resource_allocation:
+            resource_allocation: &profile_options_resource_allocation
               display_name: Resource Allocation
               choices:
                 mem_1_9:
@@ -208,6 +208,7 @@ basehub:
                 kubespawner_override:
                   image: "{value}"
               choices: {}
+            resource_allocation: *profile_options_resource_allocation
 
     scheduling:
       userScheduler:
