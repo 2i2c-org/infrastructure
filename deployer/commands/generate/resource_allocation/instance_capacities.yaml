@@ -131,9 +131,9 @@ r5.4xlarge:
   cpu_capacity_high: 16.0
   cpu_allocatable_low: 15.89
   cpu_allocatable_high: 15.89
-  mem_capacity_low: 124.364Gi
+  mem_capacity_low: 124.353Gi
   mem_capacity_high: 124.364Gi
-  mem_allocatable_low: 121.504Gi
+  mem_allocatable_low: 121.492Gi
   mem_allocatable_high: 121.504Gi
 m5.large:
   cpu_capacity_low: 2.0
