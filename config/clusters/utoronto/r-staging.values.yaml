@@ -6,7 +6,7 @@ jupyterhub:
         secretName: https-auto-tls
   singleuser:
     image:
-      tag: "36c17e91963a"
+      tag: "b0f448387134"
   hub:
     db:
       pvc:
