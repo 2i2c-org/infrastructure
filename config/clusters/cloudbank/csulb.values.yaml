@@ -51,6 +51,8 @@ jupyterhub:
           - ericvd@berkeley.edu
           - sean.smorris@berkeley.edu
           - shabnam.sodagari@csulb.edu
+          - Kagba.Suaray@csulb.edu
+          - Tianni.Zhou@csulb.edu
   cull:
     # Cull after 30min of inactivity
     every: 300
