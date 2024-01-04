@@ -134,7 +134,7 @@ eks:
     other_daemon_sets: ""
     cpu_requests: 170m
     memory_requests: 250Mi
-    k8s_version: v1.25.12-eks-2d98532
+    k8s_version: v1.27.8-eks-8cb36c9
   openscapes:
     requesting_daemon_sets: aws-node,ebs-csi-node,kube-proxy,support-cryptnono,support-prometheus-node-exporter
     other_daemon_sets: ""

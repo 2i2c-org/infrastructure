@@ -55,12 +55,12 @@
             "memory": 130451771392
         },
         "measured_overhead": {
-            "cpu": 0.165,
-            "memory": 157286400
+            "cpu": 0.17,
+            "memory": 262144000
         },
         "available": {
-            "cpu": 15.725,
-            "memory": 130294484992
+            "cpu": 15.72,
+            "memory": 130189627392
         }
     },
     "n2-highmem-32": {
