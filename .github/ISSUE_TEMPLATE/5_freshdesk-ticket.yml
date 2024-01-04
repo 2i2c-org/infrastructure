@@ -35,6 +35,22 @@ body:
     validations:
       required: true
 
+  - type: dropdown
+    id: ticket_impact
+    attributes:
+      label: Ticket impact
+      description: |
+        The impact the support triager believes the ticket has. Choose the most appropriate one from the drowpdown below. This information will be used to prioritize the ticket.
+
+        Checkout the [non-incident support process](https://compass.2i2c.org/projects/managed-hubs/support/#non-incident-response-process) for more information about choosing the impact level.
+      options:
+        - 🟩 Low
+        - 🟨 Medium
+        - 🟧 High
+        - 🟥 Critical
+    validations:
+      required: true
+
   - type: textarea
     id: description
     attributes:
