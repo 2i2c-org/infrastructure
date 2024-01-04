@@ -6,7 +6,7 @@ body:
   - type: markdown
     attributes:
       value: |
-        This template is designed to help the support triagers provide information about a Freshdesk ticket that could not be solved in the first 30min support window.
+        This template is designed to help the support triagers provide information about a Freshdesk ticket that could not be solved in [the first 30min support window](https://compass.2i2c.org/projects/managed-hubs/timeboxed-initial-ticket-evaluation/#support-timeboxed-evaluation).
 
         This information will then be used to plan, prioritize and assign capacity in order to resolve this ticket.
 
