@@ -67,9 +67,9 @@ local daskNodes = [];
         region: clusterRegion,
         {#
             version should be the latest support version by the eksctl CLI, see
-            https://eksctl.io/introduction/ for a list of supported versions.
+            https://eksctl.io/getting-started/ for a list of supported versions.
         -#}
-        version: "1.27",
+        version: "1.28",
     },
     availabilityZones: masterAzs,
     iam: {

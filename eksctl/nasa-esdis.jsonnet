@@ -37,7 +37,8 @@ local daskNodes = [];
     kind: 'ClusterConfig',
     metadata+: {
         name: "nasa-esdis",
-        region: clusterRegion,        version: '1.27'
+        region: clusterRegion,
+        version: '1.27',
     },
     availabilityZones: masterAzs,
     iam: {
