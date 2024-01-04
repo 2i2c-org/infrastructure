@@ -101,8 +101,8 @@ basehub:
                     cmd: null
                     # Launch people directly into the Linux desktop when they start
                     default_url: /desktop
-                    # Built from https://github.com/jupyterhub/jupyter-remote-desktop-proxy/pull/51
-                    image: "quay.io/jupyter-remote-desktop-proxy/qgis:2023-09-27"
+                    # Built from https://github.com/2i2c-org/nasa-qgis-image
+                    image: "quay.io/2i2c/nasa-qgis-image:78d96c092f8e"
             requests:
               # NOTE: Node share choices are in active development, see comment
               #       next to profileList: above.
