@@ -196,7 +196,7 @@ resource "azurerm_container_registry" "container_registry" {
   name                = var.global_container_registry_name
   resource_group_name = azurerm_resource_group.jupyterhub.name
   location            = azurerm_resource_group.jupyterhub.location
-  sku                 = "premium"
+  sku                 = "Premium"
   admin_enabled       = true
 }
 
