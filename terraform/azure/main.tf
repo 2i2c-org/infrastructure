@@ -8,6 +8,9 @@ terraform {
       # FIXME: v3 has been released and we are still at v2, see release notes:
       #        https://github.com/hashicorp/terraform-provider-azurerm/releases/tag/v3.0.0
       #
+      #        We may need to remove old state and then then import it according to
+      #        https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/guides/3.0-upgrade-guide#migrating-to-new--renamed-resources.
+      #
       source  = "hashicorp/azurerm"
       version = "~> 2.99"
     }
@@ -15,13 +18,13 @@ terraform {
     azuread = {
       # ref: https://registry.terraform.io/providers/hashicorp/azuread/latest
       source  = "hashicorp/azuread"
-      version = "~> 2.35"
+      version = "~> 2.47"
     }
 
     kubernetes = {
       # ref: https://registry.terraform.io/providers/hashicorp/kubernetes/latest
       source  = "hashicorp/kubernetes"
-      version = "~> 2.18"
+      version = "~> 2.25"
     }
 
   }
