@@ -34,9 +34,3 @@ resource "azurerm_storage_share" "homes" {
 output "azure_fileshare_url" {
   value = azurerm_storage_share.homes.url
 }
-
-resource "kubernetes_namespace" "homes" {
-  metadata {
-    name = "azure-file"
-  }
-}
