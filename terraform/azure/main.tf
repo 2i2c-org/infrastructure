@@ -8,6 +8,9 @@ terraform {
       # FIXME: v3 has been released and we are still at v2, see release notes:
       #        https://github.com/hashicorp/terraform-provider-azurerm/releases/tag/v3.0.0
       #
+      #        We may need to remove old state and then then import it according to
+      #        https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/guides/3.0-upgrade-guide#migrating-to-new--renamed-resources.
+      #
       source  = "hashicorp/azurerm"
       version = "~> 2.99"
     }
@@ -15,13 +18,13 @@ terraform {
     azuread = {
       # ref: https://registry.terraform.io/providers/hashicorp/azuread/latest
       source  = "hashicorp/azuread"
-      version = "~> 2.35"
+      version = "~> 2.47"
     }
 
     kubernetes = {
       # ref: https://registry.terraform.io/providers/hashicorp/kubernetes/latest
       source  = "hashicorp/kubernetes"
-      version = "~> 2.18"
+      version = "~> 2.25"
     }
 
   }
@@ -92,9 +95,8 @@ resource "azurerm_kubernetes_cluster" "jupyterhub" {
 
   # Core node-pool
   default_node_pool {
-    name       = "core"
-    node_count = 1
     # Unfortunately, changing anything about VM type / size recreates *whole cluster
+    name                = "core"
     vm_size             = var.core_node_vm_size
     os_disk_size_gb     = 40
     enable_auto_scaling = true
@@ -197,7 +199,7 @@ resource "azurerm_container_registry" "container_registry" {
   name                = var.global_container_registry_name
   resource_group_name = azurerm_resource_group.jupyterhub.name
   location            = azurerm_resource_group.jupyterhub.location
-  sku                 = "premium"
+  sku                 = "Premium"
   admin_enabled       = true
 }
 

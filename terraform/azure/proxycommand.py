@@ -1,4 +1,11 @@
 #!/usr/bin/env python3
+"""
+This script can be used to migrate Azure Files storage from one cluster to
+another.
+
+Learn more at https://infrastructure.2i2c.org/hub-deployment-guide/hubs/other-hub-ops/move-hubs/across-clusters/#azure-files.
+"""
+
 import subprocess
 import sys
 import time
