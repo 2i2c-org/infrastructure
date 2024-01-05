@@ -18,6 +18,8 @@ core_node_vm_size = "Standard_E4s_v3"
 
 notebook_nodes = {
   "default" : {
+    # NOTE: min-max below was set to 0-86 retroactively to align with
+    #       observed state without understanding on why 0-86 was picked.
     min : 0,
     max : 86,
     # FIXME: upgrade user nodes vm_size to Standard_E8s_v5
