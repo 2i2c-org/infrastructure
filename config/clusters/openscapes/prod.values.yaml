@@ -70,17 +70,17 @@ basehub:
                 mem_60_6:
                   display_name: 60.6 GB RAM, upto 15.72 CPUs
                   kubespawner_override:
-                    mem_guarantee: 65105797120
-                    mem_limit: 65105797120
+                    mem_guarantee: 65094813696
+                    mem_limit: 65094813696
                     cpu_guarantee: 7.86
                     cpu_limit: 15.72
                     node_selector:
                       node.kubernetes.io/instance-type: r5.4xlarge
-                mem_121_3:
-                  display_name: 121.3 GB RAM, upto 15.72 CPUs
+                mem_121_2:
+                  display_name: 121.2 GB RAM, upto 15.72 CPUs
                   kubespawner_override:
-                    mem_guarantee: 130211594240
-                    mem_limit: 130211594240
+                    mem_guarantee: 130189627392
+                    mem_limit: 130189627392
                     cpu_guarantee: 15.72
                     cpu_limit: 15.72
                     node_selector:
