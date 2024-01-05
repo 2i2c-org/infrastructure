@@ -18,8 +18,8 @@ core_node_vm_size = "Standard_E4s_v3"
 
 notebook_nodes = {
   "default" : {
-    min : 1,
-    max : 100,
+    min : 0,
+    max : 86,
     # FIXME: upgrade user nodes vm_size to Standard_E8s_v5
     vm_size : "Standard_E8s_v3",
   }
