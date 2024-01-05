@@ -12,6 +12,12 @@ resource "azurerm_storage_account" "homes" {
 
   network_rules {
     # Allow NFS access only from our nodes, deny access from all other networks
+    #
+    # Use of terraform plan or apply can run into issues due to this, but they
+    # can be handled by temporarily adding your public IP to a firewall
+    # exception like described in
+    # https://github.com/2i2c-org/infrastructure/issues/890#issuecomment-1879072422.
+    #
     default_action = "Deny"
     virtual_network_subnet_ids = [
       azurerm_subnet.node_subnet.id
