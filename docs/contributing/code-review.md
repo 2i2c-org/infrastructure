@@ -49,11 +49,12 @@ any approval.
 
 1. Updating admin users for a hub
 2. Changing basic hub configuration such as the URL of its landing page image
-3. Updating the user image of a hub.
+3. Updating the user image of a hub
 4. Updating the max number of nodes for nodepools in a cluster
 5. Resizing home directory storage upwards when it is about to fill up
 6. Emergency (eg exam, outage) related resource bumps
 7. *Cleanly* reverting a change that failed CI
+8. Updating soon to be expired credentials
   
 ## Self-merging as a community partner
 
