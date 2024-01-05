@@ -92,9 +92,8 @@ resource "azurerm_kubernetes_cluster" "jupyterhub" {
 
   # Core node-pool
   default_node_pool {
-    name       = "core"
-    node_count = 1
     # Unfortunately, changing anything about VM type / size recreates *whole cluster
+    name                = "core"
     vm_size             = var.core_node_vm_size
     os_disk_size_gb     = 40
     enable_auto_scaling = true
