@@ -64,23 +64,50 @@ def get_daemon_sets_requests():
     info = []
     for ds in daemon_sets:
         name = ds["metadata"]["name"]
-        req_mem = req_cpu = lim_mem = lim_cpu = 0
+        # From https://kubernetes.io/docs/concepts/workloads/pods/init-containers/#resource-sharing-within-containers
+        # > - The highest of any particular resource request or limit defined on
+        # >   all init containers is the effective init request/limit. If any
+        # >   resource has no resource limit specified this is considered as the
+        # >   highest limit.
+        # > - The Pod's effective request/limit for a resource is the higher of:
+        # >  - the sum of all app containers request/limit for a resource
+        # >  - the effective init request/limit for a resource
+        #
+        # So we have to calculate the requests of the init containers and containers separately,
+        # and take the max as the effective request / limit
+
+        container_req_mem = (
+            container_req_cpu
+        ) = container_lim_mem = container_lim_cpu = 0
+        init_container_req_mem = (
+            init_container_req_cpu
+        ) = init_container_lim_mem = init_container_lim_cpu = 0
+
         for c in ds["spec"]["template"]["spec"]["containers"]:
             resources = c.get("resources", {})
             requests = resources.get("requests", {})
             limits = resources.get("limits", {})
-            req_mem += parse_quantity(requests.get("memory", 0))
-            lim_mem += parse_quantity(limits.get("memory", 0))
-            req_cpu += parse_quantity(requests.get("cpu", 0))
-            lim_cpu += parse_quantity(limits.get("cpu", 0))
+            container_req_mem += parse_quantity(requests.get("memory", 0))
+            container_lim_mem += parse_quantity(limits.get("memory", 0))
+            container_req_cpu += parse_quantity(requests.get("cpu", 0))
+            container_lim_cpu += parse_quantity(limits.get("cpu", 0))
+
+        for c in ds["spec"]["template"]["spec"].get("initContainers", []):
+            resources = c.get("resources", {})
+            requests = resources.get("requests", {})
+            limits = resources.get("limits", {})
+            init_container_req_mem += parse_quantity(requests.get("memory", 0))
+            init_container_lim_mem += parse_quantity(limits.get("memory", 0))
+            init_container_req_cpu += parse_quantity(requests.get("cpu", 0))
+            init_container_lim_cpu += parse_quantity(limits.get("cpu", 0))
 
         info.append(
             {
                 "name": name,
-                "cpu_request": float(req_cpu),
-                "cpu_limit": float(lim_cpu),
-                "memory_request": int(req_mem),
-                "memory_limit": int(lim_mem),
+                "cpu_request": float(max(container_req_cpu, init_container_req_cpu)),
+                "cpu_limit": float(max(container_lim_cpu, init_container_lim_cpu)),
+                "memory_request": int(max(container_req_mem, init_container_req_mem)),
+                "memory_limit": int(max(container_lim_mem, init_container_lim_mem)),
             }
         )
 
