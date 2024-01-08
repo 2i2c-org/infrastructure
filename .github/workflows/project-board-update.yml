@@ -20,10 +20,9 @@ jobs:
         id: get-ticket-impact
         run: |
           import os
-
           form = ${{ steps.issue-parser.outputs.jsonString }}
           impact = form.get("ticket_impact")
-          # Export the `pending_info` string to GITHUB_OUTPUT to be used in following steps
+          # Export the `impact` string to GITHUB_OUTPUT to be used in following steps
           with open(os.environ["GITHUB_OUTPUT"], "a") as f :
               print(f"impact={impact}", file=f)
       - name: Set the "Impact" project board field
