@@ -26,7 +26,7 @@ jobs:
           # Export the `pending_info` string to GITHUB_OUTPUT to be used in following steps
           with open(os.environ["GITHUB_OUTPUT"], "a") as f :
               print(f"impact={impact}", file=f)
-      - name: Update the "Impact" field with info from the issue form
+      - name: Set the "Impact" project board field
         uses: EndBug/project-fields@v2
         id: fields
         with:
@@ -35,7 +35,7 @@ jobs:
           github_token: ${{ secrets.PROJECT_BOARD_PAT_TOKEN }}
           project_url: https://github.com/orgs/2i2c-org/projects/22
           values: "${{ steps.get-ticket-impact.outputs.impact }}"
-      - name: Update the "Type" field to "Support"
+      - name: Set "Type" field of the project board to "Support"
         uses: EndBug/project-fields@v2
         id: fields
         with:
