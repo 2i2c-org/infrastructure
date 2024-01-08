@@ -1,5 +1,5 @@
 name: Set project board status fields
-on: 
+on:
   issues:
     types:
       - labeled
@@ -27,7 +27,7 @@ jobs:
               print(f"impact={impact}", file=f)
       - name: Set the "Impact" project board field
         uses: EndBug/project-fields@v2
-        id: fields
+        id: impact-field
         with:
           operation: set
           fields: Impact
@@ -36,7 +36,7 @@ jobs:
           values: "${{ steps.get-ticket-impact.outputs.impact }}"
       - name: Set "Type" field of the project board to "Support"
         uses: EndBug/project-fields@v2
-        id: fields
+        id: type-field
         with:
           operation: set
           fields: Type
