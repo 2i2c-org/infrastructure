@@ -42,6 +42,10 @@ basehub:
         GitHubOAuthenticator:
           allowed_organizations:
             - US-GHG-Center:ghgc-hub-access
+            - US-GHG-Center:ghg-use-case-1
+            - US-GHG-Center:ghg-use-case-2
+            - US-GHG-Center:ghg-use-case-3
+            - US-GHG-Center:ghg-external-collaborators
           scope:
             - read:org
         Authenticator:
