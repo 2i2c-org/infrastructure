@@ -50,7 +50,7 @@ For example, if a service we use has become compromised, and we need to generate
 To rotate our secrets, take these steps:
 
 1. Determine which configuration file you'd like to update. See [](secrets:locations).
-2. Unencrypt the configuration file. See [the team compass documentation](tc:secrets:sops) for instructions on unencrypting.
+2. Unencrypt the configuration file. See [the team compass documentation](inv:tc#secrets:sops) for instructions on unencrypting.
 3. Generate a new key with `openssl`:
 
    ```
