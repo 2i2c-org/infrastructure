@@ -42,25 +42,9 @@ core_node_pool = {
 }
 
 user_node_pools = {
-  "default" : {
-    name : "nbdefault",
-    # NOTE: min-max below was set to 0-86 retroactively to align with
-    #       observed state without understanding on why 0-86 was picked.
-    min : 0,
-    max : 86,
-    # FIXME: upgrade user nodes vm_size to Standard_E8s_v5
-    vm_size : "Standard_E8s_v3",
-    # FIXME: remove this label
-    labels : {
-      "hub.jupyter.org/node-size" = "Standard_E8s_v3",
-    },
-    kubernetes_version : "1.26.3",
-    # FIXME: stop using persistent disks for the nodes, use Temporary instead
-    kubelet_disk_type : "OS",
-  },
   "usere8sv5" : {
     min : 0,
     max : 100,
     vm_size : "Standard_E8s_v5",
-  }
+  },
 }
