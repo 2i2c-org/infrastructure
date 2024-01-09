@@ -4,9 +4,6 @@ jupyterhub:
     tls:
       - hosts: [staging.utoronto.2i2c.cloud]
         secretName: https-auto-tls
-  singleuser:
-    image:
-      tag: "14320bae73a0"
   hub:
     config:
       CILogonOAuthenticator:

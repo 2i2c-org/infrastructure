@@ -39,7 +39,7 @@ This page documents what we do to prep, based on our prior experiences.
    If the hub has a profile list enabled, based on the instance types setup for
    the hub, you can find the new allocation options by running:
 
-   ```{bash}
+   ```bash
    deployer generate resource-allocation choices <instance-type>
    ```
 

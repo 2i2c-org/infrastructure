@@ -1,4 +1,5 @@
 import json
+import math
 import sys
 from enum import Enum
 from pathlib import Path
@@ -52,6 +53,11 @@ def proportional_memory_strategy(
     available_node_mem = nodeinfo["available"]["memory"]
     available_node_cpu = nodeinfo["available"]["cpu"]
 
+    # Only show one digit after . for CPU, but round *down* not up so we never
+    # say they are getting more CPU than our limit is set to. We multiply & divide
+    # with a floor, as otherwise 3.75 gets rounded to 3.8, not 3.7
+    cpu_display = math.floor(available_node_cpu * 10) / 10
+
     # We always start from the top, and provide a choice that takes up the whole node.
     mem_limit = available_node_mem
 
@@ -61,9 +67,9 @@ def proportional_memory_strategy(
         # This makes sure we utilize all the memory on a node all the time.
         cpu_guarantee = (mem_limit / available_node_mem) * available_node_cpu
 
-        # Memory is in bytes, let's convert it to GB to display
+        # Memory is in bytes, let's convert it to GB (with only 1 digit after .) to display
         mem_display = f"{mem_limit / 1024 / 1024 / 1024:.1f}"
-        display_name = f"{mem_display} GB RAM, upto {available_node_cpu} CPUs"
+        display_name = f"{mem_display} GB RAM, upto {cpu_display} CPUs"
 
         choice = {
             "display_name": display_name,

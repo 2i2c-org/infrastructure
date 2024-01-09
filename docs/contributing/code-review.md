@@ -3,7 +3,7 @@
 
 Much of our active infrastructure is configured and automatically updated via CI/CD pipelines.
 This means that changes in this repository often immediately impact the infrastructure that we run.
-As such, we follow team policies for review/merge that are more specific [than our general development merge policies](tc:development:merge-policy).
+As such, we follow team policies for review/merge that are more specific [than our general development merge policies](inv:tc#development:merge-policy).
 
 This document codifies our guidelines for doing code review and merging pull requests on active infrastructure (ie, anything in the `infrastructure/` codebase).
 
