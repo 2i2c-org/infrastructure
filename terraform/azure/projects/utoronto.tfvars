@@ -11,7 +11,7 @@ ssh_pub_key  = "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQDQJ4h39UYNi1wybxAH+jCFkNK2
 # FIXME: upgrade to 1.27.7, and then 1.28.3, based on the latest versions
 #        available via: az aks get-versions --location westus2 -o table
 #
-kubernetes_version = "1.26.3"
+kubernetes_version = "1.27.7"
 
 core_node_pool = {
   name : "core",
