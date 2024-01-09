@@ -99,7 +99,7 @@ resource "azurerm_kubernetes_cluster" "jupyterhub" {
   #
   # Most changes to this node pool forces a replace operation on the entire
   # cluster. This can be avoided with v3.47.0+ of this provider by declaring
-  # temporary_name_for_rotation = "core-b".
+  # temporary_name_for_rotation = "coreb".
   #
   # ref: https://github.com/hashicorp/terraform-provider-azurerm/pull/20628
   # ref: https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/kubernetes_cluster#temporary_name_for_rotation.
@@ -108,9 +108,11 @@ resource "azurerm_kubernetes_cluster" "jupyterhub" {
     name                = var.core_node_pool.name
     vm_size             = var.core_node_pool.vm_size
     os_disk_size_gb     = var.core_node_pool.os_disk_size_gb
-    enable_auto_scaling = true
-    min_count           = var.core_node_pool.min
-    max_count           = var.core_node_pool.max
+    enable_auto_scaling = var.core_node_pool.enable_auto_scaling
+    min_count           = var.core_node_pool.enable_auto_scaling ? var.core_node_pool.min : null
+    max_count           = var.core_node_pool.enable_auto_scaling ? var.core_node_pool.max : null
+    node_count          = var.core_node_pool.node_count
+    kubelet_disk_type   = var.core_node_pool.kubelet_disk_type
     vnet_subnet_id      = azurerm_subnet.node_subnet.id
     node_labels = merge({
       "hub.jupyter.org/node-purpose" = "core",
@@ -147,13 +149,14 @@ resource "azurerm_kubernetes_cluster" "jupyterhub" {
 
 
 resource "azurerm_kubernetes_cluster_node_pool" "user_pool" {
-  for_each = var.notebook_nodes
+  for_each = var.user_node_pools
 
   name                  = coalesce(each.value.name, each.key)
   kubernetes_cluster_id = azurerm_kubernetes_cluster.jupyterhub.id
   enable_auto_scaling   = true
-  os_disk_size_gb       = 200
+  os_disk_size_gb       = each.value.os_disk_size_gb
   vnet_subnet_id        = azurerm_subnet.node_subnet.id
+  kubelet_disk_type     = each.value.kubelet_disk_type
 
   orchestrator_version = each.value.kubernetes_version == "" ? var.kubernetes_version : each.value.kubernetes_version
 
@@ -173,14 +176,14 @@ resource "azurerm_kubernetes_cluster_node_pool" "user_pool" {
 }
 
 resource "azurerm_kubernetes_cluster_node_pool" "dask_pool" {
-  # If dask_nodes is set, we use that. If it isn't, we use notebook_nodes.
-  # This lets us set dask_nodes to an empty array to get no dask nodes
-  for_each = var.dask_nodes
+  # If dask_node_pools is set, we use that. If it isn't, we use user_node_pools.
+  # This lets us set dask_node_pools to an empty array to get no dask nodes
+  for_each = var.dask_node_pools
 
   name                  = "dask${each.key}"
   kubernetes_cluster_id = azurerm_kubernetes_cluster.jupyterhub.id
   enable_auto_scaling   = true
-  os_disk_size_gb       = 200
+  os_disk_size_gb       = each.value.os_disk_size_gb
   vnet_subnet_id        = azurerm_subnet.node_subnet.id
 
   orchestrator_version = each.value.kubernetes_version == "" ? var.kubernetes_version : each.value.kubernetes_version

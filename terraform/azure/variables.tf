@@ -81,18 +81,21 @@ variable "ssh_pub_key" {
 variable "core_node_pool" {
   type = object({
     name : optional(string, ""),
+    enable_auto_scaling = optional(bool, true),
     min : optional(number, 1),
     max : optional(number, 10),
+    node_count : optional(number),
     vm_size : string,
     labels : optional(map(string), {}),
     taints : optional(list(string), []),
-    os_disk_size_gb : optional(number, 40),
-    kubernetes_version : optional(string, "")
+    os_disk_size_gb : optional(number, 100),
+    kubernetes_version : optional(string, ""),
+    kubelet_disk_type : optional(string, "Temporary"),
   })
   description = "Core node pool"
 }
 
-variable "notebook_nodes" {
+variable "user_node_pools" {
   type = map(object({
     name : optional(string, ""),
     min : number,
@@ -100,20 +103,22 @@ variable "notebook_nodes" {
     vm_size : string,
     labels : optional(map(string), {}),
     taints : optional(list(string), []),
-    kubernetes_version : optional(string, "")
+    os_disk_size_gb : optional(number, 200),
+    kubernetes_version : optional(string, ""),
+    kubelet_disk_type : optional(string, "Temporary"),
   }))
-  description = "Notebook node pools to create"
+  description = "User node pools to create"
   default     = {}
 }
 
-variable "dask_nodes" {
+variable "dask_node_pools" {
   type = map(object({
     min : number,
     max : number,
     vm_size : string,
     labels : optional(map(string), {}),
     taints : optional(list(string), []),
-    kubernetes_version : optional(string, "")
+    kubernetes_version : optional(string, ""),
   }))
   description = "Dask node pools to create"
   default     = {}
