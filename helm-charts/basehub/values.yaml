@@ -88,23 +88,27 @@ jupyterhub:
       add_staff_user_ids_to_admin_users: false
       add_staff_user_ids_of_type: ""
       staff_github_ids:
+        - agoose77
         - AIDEA775
         - choldgraf
         - colliand
         - consideRatio
         - damianavila
         - GeorgianaElena
+        - haroldcampbell
         - jmunroe
         - jnywong
         - sgibson91
         - yuvipanda
       staff_google_ids:
+        - ahollands@2i2c.org
         - asilva@2i2c.org
         - choldgraf@2i2c.org
         - colliand@2i2c.org
         - damianavila@2i2c.org
         - erik@2i2c.org
         - georgianaelena@2i2c.org
+        - hcampbell@2i2c.org
         - jmunroe@2i2c.org
         - jwong@2i2c.org
         - sgibson@2i2c.org
