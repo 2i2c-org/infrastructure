@@ -20,10 +20,6 @@ core_node_pool = {
   #        reasons like three calico-typha pods. See
   #        https://github.com/2i2c-org/infrastructure/issues/3592#issuecomment-1883269632.
   #
-  #        Transitioning to E2s_v5 would require reducing the requested memory
-  #        by prometheus-server though, but that should be okay since
-  #        prometheus has reduced its memory profile significant enough recently.
-  #
   vm_size : "Standard_E4s_v3",
 
   # FIXME: stop using persistent disks for the nodes, use the variable default
