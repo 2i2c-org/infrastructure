@@ -93,22 +93,31 @@ resource "azurerm_kubernetes_cluster" "jupyterhub" {
     }
   }
 
-  # Core node-pool
+  # default_node_pool must be set, and it must be a node pool of system type
+  # that can't scale to zero. Due to that we are forced to use it, and have
+  # decided to use it as our core node pool.
+  #
+  # Most changes to this node pool forces a replace operation on the entire
+  # cluster. This can be avoided with v3.47.0+ of this provider by declaring
+  # temporary_name_for_rotation = "core-b".
+  #
+  # ref: https://github.com/hashicorp/terraform-provider-azurerm/pull/20628
+  # ref: https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/kubernetes_cluster#temporary_name_for_rotation.
+  #
   default_node_pool {
-    # Unfortunately, changing anything about VM type / size recreates *whole cluster
-    name                = "core"
-    vm_size             = var.core_node_vm_size
-    os_disk_size_gb     = 40
+    name                = var.core_node_pool.name
+    vm_size             = var.core_node_pool.vm_size
+    os_disk_size_gb     = var.core_node_pool.os_disk_size_gb
     enable_auto_scaling = true
-    min_count           = 1
-    max_count           = 10
+    min_count           = var.core_node_pool.min
+    max_count           = var.core_node_pool.max
     vnet_subnet_id      = azurerm_subnet.node_subnet.id
-    node_labels = {
+    node_labels = merge({
       "hub.jupyter.org/node-purpose" = "core",
       "k8s.dask.org/node-purpose"    = "core"
-    }
+    }, var.core_node_pool.labels)
 
-    orchestrator_version = var.kubernetes_version
+    orchestrator_version = coalesce(var.core_node_pool.kubernetes_version, var.kubernetes_version)
   }
 
   auto_scaler_profile {
@@ -140,7 +149,7 @@ resource "azurerm_kubernetes_cluster" "jupyterhub" {
 resource "azurerm_kubernetes_cluster_node_pool" "user_pool" {
   for_each = var.notebook_nodes
 
-  name                  = "nb${each.key}"
+  name                  = coalesce(each.value.name, each.key)
   kubernetes_cluster_id = azurerm_kubernetes_cluster.jupyterhub.id
   enable_auto_scaling   = true
   os_disk_size_gb       = 200
@@ -152,7 +161,6 @@ resource "azurerm_kubernetes_cluster_node_pool" "user_pool" {
   node_labels = merge({
     "hub.jupyter.org/node-purpose" = "user",
     "k8s.dask.org/node-purpose"    = "scheduler"
-    "hub.jupyter.org/node-size"    = each.value.vm_size
   }, each.value.labels)
 
   node_taints = concat([
@@ -180,7 +188,6 @@ resource "azurerm_kubernetes_cluster_node_pool" "dask_pool" {
   vm_size = each.value.vm_size
   node_labels = merge({
     "k8s.dask.org/node-purpose" = "worker",
-    "hub.jupyter.org/node-size" = each.value.vm_size
   }, each.value.labels)
 
   node_taints = concat([

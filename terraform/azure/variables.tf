@@ -48,20 +48,6 @@ variable "kubernetes_version" {
 }
 
 
-variable "core_node_vm_size" {
-  type        = string
-  description = <<-EOT
-  VM Size to use for core nodes
-
-  Core nodes will always be on, and count as 'base cost'
-  for a cluster. We should try to run with as few of them
-  as possible.
-
-  WARNING: CHANGING THIS WILL DESTROY AND RECREATE THE CLUSTER!
-  EOT
-}
-
-
 variable "global_container_registry_name" {
   type        = string
   description = <<-EOT
@@ -92,8 +78,23 @@ variable "ssh_pub_key" {
   EOT
 }
 
+variable "core_node_pool" {
+  type = object({
+    name : optional(string, ""),
+    min : optional(number, 1),
+    max : optional(number, 10),
+    vm_size : string,
+    labels : optional(map(string), {}),
+    taints : optional(list(string), []),
+    os_disk_size_gb : optional(number, 40),
+    kubernetes_version : optional(string, "")
+  })
+  description = "Core node pool"
+}
+
 variable "notebook_nodes" {
   type = map(object({
+    name : optional(string, ""),
     min : number,
     max : number,
     vm_size : string,

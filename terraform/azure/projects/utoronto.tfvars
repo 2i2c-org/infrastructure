@@ -13,16 +13,31 @@ ssh_pub_key  = "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQDQJ4h39UYNi1wybxAH+jCFkNK2
 #
 kubernetes_version = "1.26.3"
 
-# FIXME: upgrade core_node_vm_size to Standard_E4s_v5
-core_node_vm_size = "Standard_E4s_v3"
+core_node_pool = {
+  name : "core",
+  vm_size : "Standard_E4s_v3",
+  kubernetes_version : "1.26.3",
+}
 
 notebook_nodes = {
   "default" : {
+    name : "nbdefault",
     # NOTE: min-max below was set to 0-86 retroactively to align with
     #       observed state without understanding on why 0-86 was picked.
     min : 0,
     max : 86,
     # FIXME: upgrade user nodes vm_size to Standard_E8s_v5
     vm_size : "Standard_E8s_v3",
-  }
+    # FIXME: remove this label
+    labels : {
+      "hub.jupyter.org/node-size" = "Standard_E8s_v3",
+    },
+    kubernetes_version : "1.26.3",
+  },
+  #"usere8sv5" : {
+  #  min : 0,
+  #  max : 100,
+  #  vm_size : "Standard_E8s_v5",
+  #  kubernetes_version : "1.28.3",
+  #}
 }
