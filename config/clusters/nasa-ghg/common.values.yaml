@@ -53,6 +53,7 @@ basehub:
             - freitagb
             - j08lue
             - slesaad
+            - Jeanne-le-Roux
     singleuser:
       defaultUrl: /lab
       profileList:
