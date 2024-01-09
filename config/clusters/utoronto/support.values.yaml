@@ -23,10 +23,11 @@ prometheus:
           hosts:
             - prometheus.utoronto.2i2c.cloud
     resources:
+      # utoronto's prometheus seems to lie stable below 10Gi at around 6Gi
       requests:
-        memory: 16Gi
+        memory: 12Gi
       limits:
-        memory: 16Gi
+        memory: 12Gi
 
 grafana:
   grafana.ini:
