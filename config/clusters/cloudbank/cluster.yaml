@@ -148,6 +148,14 @@ hubs:
       - common.values.yaml
       - sbcc-dev.values.yaml
       - enc-sbcc-dev.secret.values.yaml
+  - name: elac
+    display_name: "East Los Angeles College"
+    domain: elac.cloudbank.2i2c.cloud
+    helm_chart: basehub
+    helm_chart_values_files:
+      - common.values.yaml
+      - elac.values.yaml
+      - enc-elac.secret.values.yaml
   - name: lacc
     display_name: "Los Angeles City College"
     domain: lacc.cloudbank.2i2c.cloud
