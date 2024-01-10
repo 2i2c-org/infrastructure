@@ -11,36 +11,38 @@ ssh_pub_key  = "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQDQJ4h39UYNi1wybxAH+jCFkNK2
 # List available versions via: az aks get-versions --location westus2 -o table
 kubernetes_version = "1.28.3"
 
-core_node_pool = {
-  name : "core",
-  kubernetes_version : "1.28.3",
+node_pools = {
+  core : [
+    {
+      name : "core",
 
-  # FIXME: transition to "Standard_E2s_v5" nodes as they are large enough and
-  #        can more cheaply handle being forced to have 2-3 replicas for silly
-  #        reasons like three calico-typha pods. See
-  #        https://github.com/2i2c-org/infrastructure/issues/3592#issuecomment-1883269632.
-  #
-  vm_size : "Standard_E4s_v3",
+      # FIXME: transition to "Standard_E2s_v5" nodes as they are large enough and
+      #        can more cheaply handle being forced to have 2-3 replicas for silly
+      #        reasons like three calico-typha pods. See
+      #        https://github.com/2i2c-org/infrastructure/issues/3592#issuecomment-1883269632.
+      #
+      vm_size : "Standard_E4s_v3",
 
-  # FIXME: stop using persistent disks for the nodes, use the variable default
-  #        "Temporary" instead
-  kubelet_disk_type : "OS",
+      os_disk_size_gb : 40,
 
-  # FIXME: use a larger os_disk_size_gb than 40, like the default of 100, to
-  #        avoid running low when few replicas are used
-  os_disk_size_gb : 40,
+      # FIXME: stop using persistent disks for the nodes, use the variable default
+      #        "Temporary" instead
+      kubelet_disk_type : "OS",
 
-  # FIXME: its nice to use autoscaling, but we end up with three replicas due to
-  #        https://github.com/2i2c-org/infrastructure/issues/3592#issuecomment-1883269632
-  #        and its a waste at least using Standard_E4s_v3 machines.
-  enable_auto_scaling : false,
-  node_count : 2,
-}
+      min : 1,
+      max : 10,
+    },
+  ],
 
-user_node_pools = {
-  "usere8sv5" : {
-    min : 0,
-    max : 100,
-    vm_size : "Standard_E8s_v5",
-  },
+  user : [
+    {
+      name : "usere8sv5",
+      vm_size : "Standard_E8s_v5",
+      os_disk_size_gb : 200,
+      min : 0,
+      max : 100,
+    },
+  ],
+
+  dask : []
 }
