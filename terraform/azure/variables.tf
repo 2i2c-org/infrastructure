@@ -79,17 +79,21 @@ variable "ssh_pub_key" {
 }
 
 variable "node_pools" {
-  type = map(list(object({
-    name : string,
-    vm_size : string,
-    os_disk_size_gb : optional(number, 100),
-    kubelet_disk_type : optional(string, "Temporary"),
-    min : number,
-    max : number,
-    labels : optional(map(string), {}),
-    taints : optional(list(string), []),
-    kubernetes_version : optional(string, ""),
-  })))
+  type = map(
+    list(
+      object({
+        name : string,
+        vm_size : string,
+        os_disk_size_gb : optional(number, 100),
+        kubelet_disk_type : optional(string, "Temporary"),
+        min : number,
+        max : number,
+        labels : optional(map(string), {}),
+        taints : optional(list(string), []),
+        kubernetes_version : optional(string, ""),
+      })
+    )
+  )
   description = <<-EOT
   Node pools to create to be listed under the keys 'core', 'user', and 'dask'.
 
@@ -97,6 +101,21 @@ variable "node_pools" {
   special treatment by being listed directly in the cluster resource's
   'default_node_pool' field.
   EOT
+
+  validation {
+    condition     = length(var.node_pools["core"]) == 1
+    error_message = "The core node pool is mapped to the cluster resource's `default_node_pool`, due to this we require exactly one core node pool to be specified."
+  }
+
+  validation {
+    condition     = length(setsubtract(keys(var.node_pools), ["core", "user", "dask"])) == 0
+    error_message = "Only three kinds of node pools supported: 'core', 'user', and 'dask'."
+  }
+
+  validation {
+    condition     = length(setintersection(keys(var.node_pools), ["core", "user", "dask"])) == 3
+    error_message = "All three kinds of node pools ('core', 'user', and 'dask') must be declared, even if they are empty lists of node pools."
+  }
 }
 
 variable "create_service_principal" {

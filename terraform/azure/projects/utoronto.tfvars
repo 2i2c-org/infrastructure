@@ -55,5 +55,5 @@ node_pools = {
     },
   ],
 
-  dask : []
+  dask : [],
 }
