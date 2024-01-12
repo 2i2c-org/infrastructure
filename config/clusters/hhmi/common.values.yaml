@@ -139,10 +139,10 @@ basehub:
                   image: "{value}"
               choices:
                 spyglass:
-                  display_name: Spyglass-NWB
+                  display_name: Spyglass
                   slug: spyglass
                   kubespawner_override:
-                    image: "quay.io/2i2c/hhmi-spyglass-nwb-image:28e92dae096f"
+                    image: "quay.io/lorenlab/hhmi-spyglass-image:c307f9418a60"
         - display_name: "Community Images"
           description: "Start a container with a community maintained image"
           slug: community
