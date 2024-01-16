@@ -21,7 +21,7 @@ dependencies:
   # Grafana for dashboarding of metrics.
   # https://github.com/grafana/helm-charts/tree/main/charts/grafana
   - name: grafana
-    version: 7.0.19
+    version: 7.2.1
     repository: https://grafana.github.io/helm-charts
 
   # ingress-nginx for a k8s Ingress resource controller that routes traffic from
@@ -42,6 +42,6 @@ dependencies:
   # cryptnono, counters crypto mining
   # Source code: https://github.com/yuvipanda/cryptnono/
   - name: cryptnono
-    version: "0.3.1-0.dev.git.107.heb504bc"
+    version: "0.3.1-0.dev.git.129.ha9d73b8"
     repository: https://yuvipanda.github.io/cryptnono/
     condition: cryptnono.enabled
