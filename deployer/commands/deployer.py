@@ -97,7 +97,7 @@ def deploy(
         help="Name of hub to operate deploy. Omit to deploy all hubs on the cluster",
     ),
     dask_gateway_version: str = typer.Option(
-        "2023.9.0", help="Version of dask-gateway to install CRDs for"
+        "2024.1.0", help="Version of dask-gateway to install CRDs for"
     ),
     debug: bool = typer.Option(
         False,
