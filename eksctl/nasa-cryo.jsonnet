@@ -25,10 +25,6 @@ local nodeAz = "us-west-2a";
 // A `node.kubernetes.io/instance-type label is added, so pods
 // can request a particular kind of node with a nodeSelector
 local notebookNodes = [
-    # FIXME: Delete the r5.xlarge node group when empty. It has an old k8s
-    #        version and is tainted to prevent it from scaling up or scheduling
-    #        new pods on it.
-    { instanceType: "r5.xlarge" },
     { instanceType: "r5.xlarge", nameSuffix: "b" },
     { instanceType: "r5.4xlarge" },
     { instanceType: "r5.16xlarge" },
