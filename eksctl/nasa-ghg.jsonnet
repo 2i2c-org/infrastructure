@@ -50,7 +50,7 @@ local daskNodes = [
     metadata+: {
         name: "nasa-ghg-hub",
         region: clusterRegion,
-        version: '1.27'
+        version: '1.27',
     },
     availabilityZones: masterAzs,
     iam: {

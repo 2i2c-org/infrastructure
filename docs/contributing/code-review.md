@@ -3,7 +3,7 @@
 
 Much of our active infrastructure is configured and automatically updated via CI/CD pipelines.
 This means that changes in this repository often immediately impact the infrastructure that we run.
-As such, we follow team policies for review/merge that are more specific [than our general development merge policies](tc:development:merge-policy).
+As such, we follow team policies for review/merge that are more specific [than our general development merge policies](inv:tc#development:merge-policy).
 
 This document codifies our guidelines for doing code review and merging pull requests on active infrastructure (ie, anything in the `infrastructure/` codebase).
 
@@ -49,11 +49,12 @@ any approval.
 
 1. Updating admin users for a hub
 2. Changing basic hub configuration such as the URL of its landing page image
-3. Updating the user image of a hub.
+3. Updating the user image of a hub
 4. Updating the max number of nodes for nodepools in a cluster
 5. Resizing home directory storage upwards when it is about to fill up
 6. Emergency (eg exam, outage) related resource bumps
 7. *Cleanly* reverting a change that failed CI
+8. Updating soon to be expired credentials
   
 ## Self-merging as a community partner
 

@@ -17,9 +17,6 @@ jupyterhub:
           # that pods in `kube-system` will still schedule.
           # So even though this is under `userPlaceholder`, it really is operating as a `nodePlaceholder`
           memory: 57350076Ki
-  custom:
-    homepage:
-      gitRepoBranch: "utoronto-prod"
   hub:
     db:
       pvc:

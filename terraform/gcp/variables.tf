@@ -47,10 +47,8 @@ variable "k8s_version_prefixes" {
   # channel, so we may want to remove or add minor versions here over time.
   #
   default = [
-    "1.24.",
-    "1.25.",
-    "1.26.",
     "1.27.",
+    "1.28.",
     "1.",
   ]
   description = <<-EOT
@@ -89,6 +87,11 @@ variable "notebook_nodes" {
       value : string,
       effect : string
     })), [])
+    # Balanced disks are much faster than standard disks, and much cheaper
+    # than SSD disks. It contributes heavily to how fast new nodes spin up,
+    # as images being pulled takes up a lot of new node spin up time.
+    # Faster disks provide faster image pulls!
+    disk_type : optional(string, "pd-balanced"),
     gpu : optional(
       object({
         enabled : optional(bool, false),
@@ -97,9 +100,6 @@ variable "notebook_nodes" {
       }),
       {}
     ),
-    # FIXME: Remove temp_opt_out_node_purpose_label when its no longer referenced.
-    #        See https://github.com/2i2c-org/infrastructure/issues/3405.
-    temp_opt_out_node_purpose_label : optional(bool, false),
     resource_labels : optional(map(string), {}),
     zones : optional(list(string), []),
     node_version : optional(string, ""),
@@ -120,6 +120,11 @@ variable "dask_nodes" {
       value : string,
       effect : string
     })), [])
+    # Balanced disks are much faster than standard disks, and much cheaper
+    # than SSD disks. It contributes heavily to how fast new nodes spin up,
+    # as images being pulled takes up a lot of new node spin up time.
+    # Faster disks provide faster image pulls!
+    disk_type : optional(string, "pd-balanced"),
     gpu : optional(
       object({
         enabled : optional(bool, false),
@@ -128,9 +133,6 @@ variable "dask_nodes" {
       }),
       {}
     ),
-    # FIXME: Remove temp_opt_out_node_purpose_label when its no longer referenced.
-    #        See https://github.com/2i2c-org/infrastructure/issues/3405.
-    temp_opt_out_node_purpose_label : optional(bool, false),
     resource_labels : optional(map(string), {}),
     zones : optional(list(string), [])
     node_version : optional(string, ""),
@@ -228,13 +230,6 @@ variable "core_node_max_count" {
 
   Minimum node count is fixed at 1.
   EOT
-}
-
-# FIXME: Remove temp_opt_out_node_purpose_label_core_nodes when its no longer referenced.
-#        See https://github.com/2i2c-org/infrastructure/issues/3405.
-variable "temp_opt_out_node_purpose_label_core_nodes" {
-  type    = bool
-  default = false
 }
 
 variable "enable_network_policy" {

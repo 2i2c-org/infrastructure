@@ -77,6 +77,7 @@ On GKE clusters with network policy enforcement, we look to edit the
 `calico-typha-horizontal-autoscaler` ConfigMap in `kube-system` to avoid scaling
 up to two replicas unless there are very many nodes in the k8s cluster.
 
+(topic:cluster-design:instance-type)=
 ### Our instance type choice
 
 #### For nodes where core services will be scheduled on
@@ -121,9 +122,9 @@ The three machine types based on the cloud provider are the following:
   - r5.4xlarge
   - r5.16xlarge
 - [AKS](https://learn.microsoft.com/en-us/azure/virtual-machines/eav4-easv4-series)
-  - Standard_E4a_v4
-  - Standard_E16_v4
-  - Standard_E64_v4
+  - Standard_E4s_v5
+  - Standard_E16s_v5
+  - Standard_E64s_v5
 
 ## Network Policy
 

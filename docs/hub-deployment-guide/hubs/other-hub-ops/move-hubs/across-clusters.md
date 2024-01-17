@@ -5,7 +5,7 @@ to ensure data is preserved.
 
 ## 1. Setup a new hub
 
-Setup [a new hub](../../../topic/infrastructure/config.md) in the target cluster, mimicking
+Setup [a new hub](config) in the target cluster, mimicking
 the config of the old hub as much as possible.
 
 (copy-home-dirs)=

@@ -218,7 +218,7 @@ resource "google_container_node_pool" "core" {
     # Faster disks provide faster image pulls!
     disk_type = "pd-balanced"
 
-    resource_labels = var.temp_opt_out_node_purpose_label_core_nodes ? {} : {
+    resource_labels = {
       "node-purpose" : "core"
     }
 
@@ -283,12 +283,7 @@ resource "google_container_node_pool" "notebook" {
 
 
   node_config {
-
-    # Balanced disks are much faster than standard disks, and much cheaper
-    # than SSD disks. It contributes heavily to how fast new nodes spin up,
-    # as images being pulled takes up a lot of new node spin up time.
-    # Faster disks provide faster image pulls!
-    disk_type = "pd-balanced"
+    disk_type = each.value.disk_type
 
     dynamic "guest_accelerator" {
       for_each = each.value.gpu.enabled ? [1] : []
@@ -296,6 +291,10 @@ resource "google_container_node_pool" "notebook" {
       content {
         type  = each.value.gpu.type
         count = each.value.gpu.count
+
+        gpu_driver_installation_config {
+          gpu_driver_version = "DEFAULT"
+        }
       }
 
     }
@@ -340,7 +339,7 @@ resource "google_container_node_pool" "notebook" {
       "https://www.googleapis.com/auth/cloud-platform"
     ]
 
-    resource_labels = each.value.temp_opt_out_node_purpose_label ? each.value.resource_labels : merge({
+    resource_labels = merge({
       "node-purpose" : "notebook"
     }, each.value.resource_labels)
 
@@ -384,11 +383,7 @@ resource "google_container_node_pool" "dask_worker" {
 
     preemptible = each.value.preemptible
 
-    # Balanced disks are much faster than standard disks, and much cheaper
-    # than SSD disks. It contributes heavily to how fast new nodes spin up,
-    # as images being pulled takes up a lot of new node spin up time.
-    # Faster disks provide faster image pulls!
-    disk_type = "pd-balanced"
+    disk_type = each.value.disk_type
 
     workload_metadata_config {
       # Config Connector requires workload identity to be enabled (via GKE_METADATA_SERVER).
@@ -422,7 +417,7 @@ resource "google_container_node_pool" "dask_worker" {
       "https://www.googleapis.com/auth/cloud-platform"
     ]
 
-    resource_labels = each.value.temp_opt_out_node_purpose_label ? each.value.resource_labels : merge({
+    resource_labels = merge({
       "node-purpose" : "dask-worker"
     }, each.value.resource_labels)
 

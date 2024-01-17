@@ -106,20 +106,42 @@ def get_node_capacity_info(instance_type: str):
     mem_available = mem_allocatable
 
     for p in pods:
-        mem_request = 0
-        cpu_request = 0
-        # Iterate through all the containers in the pod, and count the memory & cpu requests
-        # they make. We don't count initContainers' requests as they don't overlap with the
-        # container requests at any point.
+        # From https://kubernetes.io/docs/concepts/workloads/pods/init-containers/#resource-sharing-within-containers
+        # > - The highest of any particular resource request or limit defined on
+        # >   all init containers is the effective init request/limit. If any
+        # >   resource has no resource limit specified this is considered as the
+        # >   highest limit.
+        # > - The Pod's effective request/limit for a resource is the higher of:
+        # >  - the sum of all app containers request/limit for a resource
+        # >  - the effective init request/limit for a resource
+        #
+        # So we have to calculate the requests of the init containers and containers separately,
+        # and take the max as the effective request / limit
+        container_cpu_request = container_mem_request = 0
+        init_container_cpu_request = init_container_mem_request = 0
+
         for c in p["spec"]["containers"]:
-            mem_request += parse_quantity(
+            container_mem_request += parse_quantity(
                 c.get("resources", {}).get("requests", {}).get("memory", "0")
             )
-            cpu_request += parse_quantity(
+            container_cpu_request += parse_quantity(
                 c.get("resources", {}).get("requests", {}).get("cpu", "0")
             )
-        cpu_available -= cpu_request
-        mem_available -= mem_request
+
+        for c in p["spec"].get("initContainers", []):
+            init_container_mem_request += parse_quantity(
+                c.get("resources", {}).get("requests", {}).get("memory", "0")
+            )
+            init_container_cpu_request += parse_quantity(
+                c.get("resources", {}).get("requests", {}).get("cpu", "0")
+            )
+
+        print(
+            p["metadata"]["name"],
+            max(init_container_mem_request, container_mem_request),
+        )
+        cpu_available -= max(container_cpu_request, init_container_cpu_request)
+        mem_available -= max(container_mem_request, init_container_mem_request)
 
     return {
         # CPU units are  in fractions, while memory units are bytes

@@ -5,13 +5,32 @@ How we upgrade a Kubernetes cluster is specific to the cloud provider. This
 section covers topics in upgrading an existing Kubernetes cluster.
 
 ```{warning}
-As of now, we have not yet established practices on when to upgrade our
-Kubernetes clusters. Establishing this is tracked in [this GitHub
-issue](https://github.com/2i2c-org/infrastructure/issues/412).
-
 As of now, we also only have written documentation for how to upgrade Kubernetes
 clusters on AWS.
 ```
+
+## Upgrade policy
+
+1. To keep our k8s cluster's control plane and node pools upgraded to the latest
+   _three_ and _four_ [official minor k8s versions] respectively at all times.
+2. To await a level of maturity for minor k8s versions before we adopt them.
+
+   | Kubernetes distribution | Our maturity criteria                     |
+   | -                       | -                                         |
+   | GKE                     | Part of [GKE's regular release channel]   |
+   | EKS                     | [Supported by `eksctl`] and is GKE mature |
+   | AKS                     | Listed as [generally available on AKS]    |
+3. To upgrade k8s cluster's control plane and node pools at least _twice_ and
+   _once_ per year respectively.
+4. To not disrupt user nodes with running users, by instead rolling out new user
+   node pools if needed and cleaning up the old at a later time.
+5. To check if actions needs to be scheduled related to this in the beginning of
+   every quarter.
+
+[official minor k8s versions]: https://kubernetes.io/releases/
+[gke's regular release channel]: https://cloud.google.com/kubernetes-engine/docs/release-notes-regular
+[supported by `eksctl`]: https://eksctl.io/getting-started/#basic-cluster-creation
+[generally available on aks]: https://learn.microsoft.com/en-gb/azure/aks/supported-kubernetes-versions?tabs=azure-cli#aks-kubernetes-release-calendar
 
 ```{toctree}
 :maxdepth: 1

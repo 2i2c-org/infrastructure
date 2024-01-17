@@ -70,11 +70,13 @@ deployed occasionally as a specific addition.
 howto/features/index.md
 howto/bill.md
 howto/custom-jupyterhub-image.md
+howto/prepare-for-events/index.md
 howto/manage-domains/index.md
 howto/grafana-github-auth.md
 howto/update-env.md
 howto/upgrade-cluster/index.md
 howto/troubleshoot/index.md
+howto/regenerate-smce-password.md
 ```
 
 ## Topic guides

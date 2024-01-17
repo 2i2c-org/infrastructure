@@ -42,14 +42,17 @@ jupyterhub:
         admin_users:
           - gizmo404
           - jtkmckenna
+  cull:
+    # Disable all culling: https://github.com/2i2c-org/infrastructure/issues/3495
+    enabled: false
   singleuser:
     extraFiles:
       jupyter_server_config.json:
         data:
           MappingKernelManager:
-            # Cull idle kernels after 24h (24 * 60 * 60)
-            # Ref https://2i2c.freshdesk.com/a/tickets/1120
-            cull_idle_timeout: 86400
+            # Disable all culling: https://github.com/2i2c-org/infrastructure/issues/3495
+            cull_idle_timeout: 0
+            cull_connected: false
     profileList:
       # NOTE: About node sharing
       #
@@ -175,7 +178,7 @@ jupyterhub:
           mem_guarantee: 27G
           cpu_guarantee: 3.2
           cpu_limit: null
-          mem_limit: null
+          mem_limit: 27G
       - display_name: "n2-highcpu-96: 96 CPU / 96 GB RAM"
         description: "Start a container on a dedicated node"
         slug: "n2_highcpu_96"
@@ -183,7 +186,7 @@ jupyterhub:
           node_selector:
             node.kubernetes.io/instance-type: n2-highcpu-96
           cpu_limit: null
-          mem_limit: null
+          mem_limit: 86G
           mem_guarantee: 86G
           cpu_guarantee: 9.6
       - display_name: "n2-standard-48: 48 CPU / 192 GB RAM"
@@ -195,7 +198,7 @@ jupyterhub:
           mem_guarantee: 160G
           cpu_guarantee: 4.8
           cpu_limit: null
-          mem_limit: null
+          mem_limit: 160G
       - display_name: "n2-standard-96: 96 CPU / 384 GB RAM"
         description: "Start a container on a dedicated node"
         slug: "n2_standard_96"
@@ -205,7 +208,7 @@ jupyterhub:
           mem_guarantee: 320G
           cpu_guarantee: 9.6
           cpu_limit: null
-          mem_limit: null
+          mem_limit: 320G
     # shared-public for collaboration
     # See https://2i2c.freshdesk.com/a/tickets/814
     storage:
