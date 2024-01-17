@@ -43,5 +43,5 @@ dependencies:
   # Source code: https://github.com/cryptnono/cryptnono/
   - name: cryptnono
     version: "0.3.1-0.dev.git.129.ha9d73b8"
-    repository: https://yuvipanda.github.io/cryptnono/
+    repository: https://cryptnono.github.io/cryptnono/
     condition: cryptnono.enabled
