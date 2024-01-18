@@ -30,7 +30,7 @@ jupyterhub:
       GitHubOAuthenticator:
         oauth_callback_url: https://cicada.latam.catalystproject.2i2c.cloud/hub/oauth_callback
         allowed_organizations:
-          - CICADA-hubs
+          - CatalystProject-Hubs:cicada
         scope:
           - read:org
       Authenticator:
