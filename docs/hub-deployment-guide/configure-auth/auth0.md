@@ -67,8 +67,17 @@ jupyterhub:
         auth0_domain: <auth0-domain>
         client_id: <client-id>
         client_secret: <client-secret>
+        scope: openid
+        username_claim: sub
 ```
 
+Once deployed, this should allow users authorized by Auth0 to login to the hub! Their usernames will
+look like `<auth-provider>:<id>`, which looks a little strange but allows differentiation between
+people who use multiple accounts but the same email. For example,
+
 ## Selecting `username_claim`
+
+TODO: `sub` is not always a valid username, as CILogon produces `sub` like `oauth2|cilogon|http://cilogon.org/servera/users/32158821`.
+Need to figure out how to make this happen.
 
 ## Passing on auth0 tokens to user servers via environment variables

@@ -33,9 +33,41 @@ basehub:
             name: "EarthScope Consortium"
             url: https://www.earthscope.org/
     hub:
+      extraConfig:
+        001-username-claim: |
+          from oauthenticator.auth0 import Auth0OAuthenticator
+
+          class CustomAuth0OAuthenticator(Auth0OAuthenticator):
+            async def authenticate(self, *args, **kwargs):
+              auth_model = await super().authenticate(*args, **kwargs)
+              username = auth_model["name"]
+              print(auth_model)
+              if username.startswith("oauth2|cilogon"):
+                  cilogon_sub = username.rsplit("|", 1)[-1]
+                  cilogon_sub_parts = cilogon_sub.split("/")
+                  username = f"oauth2|cilogon|{cilogon_sub_parts[3]}|{cilogon_sub_parts[5]}"
+              auth_model["name"] = username
+              return auth_model
+
+          def populate_token(spawner, auth_state):
+            token_env = {
+              'AUTH0_ACCESS_TOKEN': auth_state.get("access_token", ""),
+              'AUTH0_ID_TOKEN': auth_state.get("id_token", ""),
+              'AUTH0_REFRESH_TOKEN': auth_state.get('refresh_token', '')
+            }
+            spawner.environment.update(token_env)
+          c.Spawner.auth_state_hook = populate_token
+
+          c.JupyterHub.authenticator_class = CustomAuth0OAuthenticator
       config:
         JupyterHub:
-          authenticator_class: cilogon
+          authenticator_class: auth0
+        Auth0OAuthenticator:
+          scope:
+            - openid
+            - offline_access
+          username_claim: sub
+          allow_all: True
         CILogonOAuthenticator:
           allowed_idps:
             http://github.com/login/oauth/authorize:
@@ -46,6 +78,7 @@ basehub:
               username_derivation:
                 username_claim: email
         Authenticator:
+          enable_auth_state: true
           admin_users:
             - timdittmann
             - chad-earthscope
