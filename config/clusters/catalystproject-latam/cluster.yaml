@@ -41,3 +41,11 @@ hubs:
       - common.values.yaml
       - cicada.values.yaml
       - enc-cicada.secret.values.yaml
+  - name: gita
+    display_name: "Catalyst Project, LatAm - GITA"
+    domain: gita.latam.catalystproject.2i2c.cloud
+    helm_chart: basehub
+    helm_chart_values_files:
+      - common.values.yaml
+      - gita.values.yaml
+      - enc-gita.secret.values.yaml
