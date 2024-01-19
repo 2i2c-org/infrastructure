@@ -42,7 +42,10 @@ hub_cloud_permissions = {
   },
   "researchdelight" : {
     requestor_pays : true,
-    bucket_admin_access : ["scratch-researchdelight"],
+    bucket_admin_access : [
+      "scratch-researchdelight",
+      "persistent-showcase"
+    ],
     extra_iam_policy : ""
   },
   "ncar-cisl" : {
