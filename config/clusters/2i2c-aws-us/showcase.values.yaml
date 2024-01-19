@@ -48,6 +48,9 @@ basehub:
         Authenticator:
           enable_auth_state: true
     singleuser:
+      extraEnv:
+        SCRATCH_BUCKET: s3://2i2c-aws-us-scratch-researchdelight/$(JUPYTERHUB_USER)
+        PANGEO_SCRATCH: s3://2i2c-aws-us-scratch-researchdelight/$(JUPYTERHUB_USER)
       profileList:
         - display_name: "NASA TOPS-T ScienceCore-ClimateRisk"
           description: "For collaborative work on 2i2c/MD's NASA TOPS-T ScienceCore Module"
