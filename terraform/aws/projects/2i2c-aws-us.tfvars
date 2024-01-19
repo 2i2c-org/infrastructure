@@ -14,6 +14,9 @@ user_buckets = {
   "scratch-researchdelight" : {
     "delete_after" : 7
   },
+  "persistent-showcase" : {
+    "delete_after" : null
+  },
   "scratch-ncar-cisl" : {
     "delete_after" : 7
   },
