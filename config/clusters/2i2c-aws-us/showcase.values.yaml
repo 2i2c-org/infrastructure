@@ -131,7 +131,7 @@ basehub:
                   display_name: Handbook Authoring
                   slug: handbook
                   kubespawner_override:
-                    image: quay.io/2i2c/handbook-authoring-image:3559ba6430b3
+                    image: quay.io/2i2c/handbook-authoring-image:ad18f6ea575d
                 pangeo:
                   display_name: Pangeo Notebook
                   default: true
