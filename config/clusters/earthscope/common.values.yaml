@@ -41,6 +41,8 @@ basehub:
             async def authenticate(self, *args, **kwargs):
               auth_model = await super().authenticate(*args, **kwargs)
               username = auth_model["name"]
+              if 'geolab' not in auth_model['auth_state']['scope']:
+                return None
               print(auth_model)
               if username.startswith("oauth2|cilogon"):
                   cilogon_sub = username.rsplit("|", 1)[-1]
@@ -65,7 +67,13 @@ basehub:
         Auth0OAuthenticator:
           scope:
             - openid
+            # This gives us refresh token
             - offline_access
+            # This allows EarthScope to control who can login to the hub
+            - geolab
+          extra_authorize_params:
+            # This isn't an actual URL, just a string. Must not have a trailing slash
+            audience: https://api.dev.earthscope.org
           username_claim: sub
           allow_all: True
         CILogonOAuthenticator:
