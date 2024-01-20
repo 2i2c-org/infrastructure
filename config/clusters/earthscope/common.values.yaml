@@ -36,20 +36,55 @@ basehub:
       extraConfig:
         001-username-claim: |
           from oauthenticator.auth0 import Auth0OAuthenticator
+          from traitlets import List, Unicode
 
           class CustomAuth0OAuthenticator(Auth0OAuthenticator):
+            # required_scopes functionality comes in from https://github.com/jupyterhub/oauthenticator/pull/719
+            # Can be removed from here once that PR is merged
+            required_scopes = List(
+                Unicode(),
+                config=True,
+                help="""
+                List of scopes that must be granted to allow login.
+
+                All the scopes listed in this config must be present in the OAuth2 grant
+                from the authorizing server to allow the user to login. We request all
+                the scopes listed in the 'scope' config, but only a subset of these may
+                be granted by the authorization server. This may happen if the user does not
+                have permissions to access a requested scope, or has chosen to not give consent
+                for a particular scope. If the scopes listed in this config are not granted,
+                the user will not be allowed to log in.
+
+                See the OAuth documentation of your OAuth provider for various options.
+                """,
+            )
+
             async def authenticate(self, *args, **kwargs):
               auth_model = await super().authenticate(*args, **kwargs)
               username = auth_model["name"]
-              if 'geolab' not in auth_model['auth_state']['scope']:
-                return None
-              print(auth_model)
+              # This is required until https://github.com/jupyterhub/oauthenticator/pull/717
+              # gets merged, can be removed after that.
               if username.startswith("oauth2|cilogon"):
                   cilogon_sub = username.rsplit("|", 1)[-1]
                   cilogon_sub_parts = cilogon_sub.split("/")
                   username = f"oauth2|cilogon|{cilogon_sub_parts[3]}|{cilogon_sub_parts[5]}"
               auth_model["name"] = username
               return auth_model
+
+            async def check_allowed(self, username, auth_model):
+              if await super().check_allowed(username, auth_model):
+                  return True
+
+              if self.required_scopes:
+                  granted_scopes = auth_model.get('auth_state', {}).get('scope', [])
+                  missing_scopes = set(self.required_scopes) - set(granted_scopes)
+                  if missing_scopes:
+                      self.log.info(f"Denying access to user {username} - scopes {missing_scopes} were not granted")
+                      return False
+                  else:
+                      return True
+
+              return False
 
           def populate_token(spawner, auth_state):
             token_env = {
@@ -58,12 +93,17 @@ basehub:
               'AUTH0_REFRESH_TOKEN': auth_state.get('refresh_token', '')
             }
             spawner.environment.update(token_env)
+
           c.Spawner.auth_state_hook = populate_token
 
           c.JupyterHub.authenticator_class = CustomAuth0OAuthenticator
       config:
         JupyterHub:
           authenticator_class: auth0
+        CustomAuth0OAuthenticator:
+          required_scopes:
+            # This allows EarthScope to control who can login to the hub
+            - geolab
         Auth0OAuthenticator:
           scope:
             - openid
@@ -75,7 +115,6 @@ basehub:
             # This isn't an actual URL, just a string. Must not have a trailing slash
             audience: https://api.dev.earthscope.org
           username_claim: sub
-          allow_all: True
         CILogonOAuthenticator:
           allowed_idps:
             http://github.com/login/oauth/authorize:
@@ -90,6 +129,8 @@ basehub:
           admin_users:
             - timdittmann
             - chad-earthscope
+            - google-oauth2|101500906458831444600
+            - oauth2|cilogon|servera|32158821
     singleuser:
       profileList:
         - display_name: "Shared Small: 1-4 CPU, 8-32 GB"
