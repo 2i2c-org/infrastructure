@@ -14,6 +14,9 @@ user_buckets = {
   "scratch-researchdelight" : {
     "delete_after" : 7
   },
+  "persistent-showcase" : {
+    "delete_after" : null
+  },
   "scratch-ncar-cisl" : {
     "delete_after" : 7
   },
@@ -39,7 +42,10 @@ hub_cloud_permissions = {
   },
   "researchdelight" : {
     requestor_pays : true,
-    bucket_admin_access : ["scratch-researchdelight"],
+    bucket_admin_access : [
+      "scratch-researchdelight",
+      "persistent-showcase"
+    ],
     extra_iam_policy : ""
   },
   "ncar-cisl" : {
