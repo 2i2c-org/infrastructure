@@ -13,3 +13,58 @@ basehub:
       config:
         GitHubOAuthenticator:
           oauth_callback_url: https://staging.victor.2i2c.cloud/hub/oauth_callback
+    singleuser:
+      profileList:
+        # Create a small instance that can launch a custom image
+        - display_name: "Bring your own image - Small: m5.large"
+          description: "Specific your own image (must have python and jupyterhub installed in it) - ~2 CPU, ~8G RAM"
+          slug: custom
+          profile_options:
+            image:
+              display_name: Image
+              unlisted_choice:
+                enabled: true
+                display_name: "Custom image"
+                validation_regex: "^.+:.+$"
+                validation_message: "Must be a publicly available docker image, of form <image-name>:<tag>"
+                kubespawner_override:
+                  image: "{value}"
+                  mem_limit: 8G
+                  mem_guarantee: 6.5G
+                  node_selector:
+                    node.kubernetes.io/instance-type: m5.large
+              choices: {}
+        #=== Below are copied from common file ===#
+        # The mem-guarantees are here so k8s doesn't schedule other pods
+        # on these nodes.
+        - display_name: "Small: m5.large"
+          description: "~2 CPU, ~8G RAM"
+          default: true
+          kubespawner_override:
+            # Explicitly unset mem_limit, so it overrides the default memory limit we set in
+            # basehub/values.yaml
+            mem_limit: 8G
+            mem_guarantee: 6.5G
+            node_selector:
+              node.kubernetes.io/instance-type: m5.large
+        - display_name: "Medium: m5.xlarge"
+          description: "~4 CPU, ~15G RAM"
+          kubespawner_override:
+            mem_limit: 15G
+            mem_guarantee: 12G
+            node_selector:
+              node.kubernetes.io/instance-type: m5.xlarge
+        - display_name: "Large: m5.2xlarge"
+          description: "~8 CPU, ~30G RAM"
+          kubespawner_override:
+            mem_limit: 30G
+            mem_guarantee: 25G
+            node_selector:
+              node.kubernetes.io/instance-type: m5.2xlarge
+        - display_name: "Huge: m5.8xlarge"
+          description: "~16 CPU, ~60G RAM"
+          kubespawner_override:
+            mem_limit: 60G
+            mem_guarantee: 50G
+            node_selector:
+              node.kubernetes.io/instance-type: m5.8xlarge
