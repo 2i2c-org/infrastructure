@@ -16,7 +16,7 @@ FROM jupyterhub/k8s-hub:3.2.1
 
 # chartpress.yaml defines multiple hub images differentiated only by a
 # requirements.txt file with dependencies, this build argument allows us to
-# re-use this Dockerfile for all images.
+# reuse this Dockerfile for all images.
 ARG REQUIREMENTS_FILE
 
 COPY ${REQUIREMENTS_FILE} /tmp/

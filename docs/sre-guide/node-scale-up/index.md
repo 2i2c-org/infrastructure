@@ -1,6 +1,6 @@
 # Scaling nodepools
 
-When we provision Kubernetes clusters, we setup two, somtimes three, nodepools:
+When we provision Kubernetes clusters, we setup two, sometimes three, nodepools:
 
 - `core` that contains 'always-on' services such as the hub itself;
 - `notebooks` where users' notebook servers are created;

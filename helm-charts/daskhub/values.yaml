@@ -99,7 +99,7 @@ basehub:
 
 dask-gateway:
   enabled: true # Enabling dask-gateway will install Dask Gateway as a dependency.
-  # Futher Dask Gateway configuration goes here
+  # Further Dask Gateway configuration goes here
   # See https://github.com/dask/dask-gateway/blob/master/resources/helm/dask-gateway/values.yaml
   gateway:
     backend:

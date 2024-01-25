@@ -122,7 +122,7 @@ def get_deployer_token(sa_endpoint, sa_id, headers):
     )
     if not response.ok:
         print(
-            f"An error occured when retrieving the tokens the service account with id {sa_id}.\n"
+            f"An error occurred when retrieving the tokens the service account with id {sa_id}.\n"
             f"Error was {response.text}."
         )
         response.raise_for_status()
@@ -144,7 +144,7 @@ def create_deployer_token(sa_endpoint, sa_id, headers):
 
     if not response.ok:
         print(
-            "An error occured when creating the token for the deployer service account.\n"
+            "An error occurred when creating the token for the deployer service account.\n"
             f"Error was {response.text}."
         )
         response.raise_for_status()

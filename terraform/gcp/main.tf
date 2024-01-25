@@ -44,7 +44,7 @@ provider "google" {
   #        the API for all our existing GCP projects and new GCP projects, and
   #        then reference var.project_id instead.
   #
-  #        But who knows, its hard to understand whats going on.
+  #        But who knows, its hard to understand what's going on.
   #
   user_project_override = true
   billing_project       = var.billing_project_id

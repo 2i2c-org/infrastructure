@@ -26,7 +26,7 @@ pieces of config people want to know values for, and where you can find them.
 
 The default memory limit and guarantee for all users across all our hubs is set
 in [`helm-charts/basehub/values.yaml`](https://github.com/2i2c-org/infrastructure/tree/HEAD/helm-charts/basehub/values.yaml#L104),
-under `jupyterhub.singleuser.memory`. This is sometimes overriden on a per-hub
+under `jupyterhub.singleuser.memory`. This is sometimes overridden on a per-hub
 basis in the config for the hub under [`config/clusters`](https://github.com/2i2c-org/infrastructure/tree/HEAD/config/clusters)
 
 ### 2i2c staff lists

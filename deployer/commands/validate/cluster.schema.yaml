@@ -235,7 +235,7 @@ properties:
                 type: string
                 description: |
                   Status code expected from hitting the health checkpoint for
-                  this hub. Defaults to 200, can be overriden in case we have
+                  this hub. Defaults to 200, can be overridden in case we have
                   basic auth setup for the entire hub
           domain:
             type: string

@@ -226,7 +226,7 @@ variable "core_node_max_count" {
   Core nodes can scale up to this many nodes if necessary.
   They are part of the 'base cost', should be kept to a minimum.
   This number should be small enough to prevent runaway scaling,
-  but large enough to support ocassional spikes for whatever reason.
+  but large enough to support occasional spikes for whatever reason.
 
   Minimum node count is fixed at 1.
   EOT

@@ -29,7 +29,7 @@ server startup faster.
    then in order to scale up the node pool to an exact number of nodes, temporarily deactivate the autoscaler,
    by selecting the `Manual` option, introduce the desired number of nodes then click `Apply`.
 
-1. After the Apply succeded, you should see the new nodes coming up.
+1. After the Apply succeeded, you should see the new nodes coming up.
    You can then click on `Scale node pool` option again, **enable the `Autoscale`**,
    and set the `Min` number of nodes to the desired one the you set in the step before.
 

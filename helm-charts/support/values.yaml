@@ -297,7 +297,7 @@ grafana:
   # prometheus and grafana.
   #
   # Grafana's memory use seems to increase over time but seems reasonable to
-  # stay below 200Mi for years to come. Grafana's CPU use seems miniscule with
+  # stay below 200Mi for years to come. Grafana's CPU use seems minuscule with
   # peaks at up to 9m CPU from one user is browsing its dashboards.
   #
   # PromQL queries for CPU and memory use:

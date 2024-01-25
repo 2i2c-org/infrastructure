@@ -139,7 +139,7 @@ The following commands require passing the namespace where a specific pod is run
     ```
 
 ### Kubernetes pod logs
-You can access any pod's logs by using the `kubectl logs` commands. Bellow are some of the most common debugging commands.
+You can access any pod's logs by using the `kubectl logs` commands. Below are some of the most common debugging commands.
 
 ```{tip}
 1. The `--follow` flag

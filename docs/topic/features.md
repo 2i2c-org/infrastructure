@@ -28,7 +28,7 @@ improving the security posture of our hubs.
 
 By default, the organization *hosting* data on Google Cloud pays for both
 storage and bandwidth costs of the data. However, Google Cloud also offers
-a [requestor pays](https://cloud.google.com/storage/docs/requester-pays)
+a [requester pays](https://cloud.google.com/storage/docs/requester-pays)
 option, where the bandwidth costs are paid for by the organization *requesting*
 the data. This is very commonly used by organizations that provide big datasets
 on Google Cloud storage, to sustainably share costs of maintaining the data.
