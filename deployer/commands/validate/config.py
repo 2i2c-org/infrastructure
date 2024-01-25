@@ -237,6 +237,81 @@ def authenticator_config(
 
 
 @validate_app.command()
+def configurator_config(
+    cluster_name: str = typer.Argument(..., help="Name of cluster to operate on"),
+    hub_name: str = typer.Argument(None, help="Name of hub to operate on"),
+):
+    """
+    For each hub of a specific cluster:
+     - It asserts that when the JupyterHub GitHubOAuthenticator is used,
+       then `Authenticator.allowed_users` is not set.
+       An error is raised otherwise.
+    """
+    _prepare_helm_charts_dependencies_and_schemas()
+
+    config_file_path = find_absolute_path_to_cluster_file(cluster_name)
+    with open(config_file_path) as f:
+        cluster = Cluster(yaml.load(f), config_file_path.parent)
+
+    hubs = []
+    if hub_name:
+        hubs = [h for h in cluster.hubs if h.spec["name"] == hub_name]
+    else:
+        hubs = cluster.hubs
+
+    for i, hub in enumerate(hubs):
+        print_colour(
+            f"{i+1} / {len(hubs)}: Validating authenticator config for {hub.spec['name']}..."
+        )
+
+        configurator_enabled = False
+        singleuser_overrides = False
+        for values_file_name in hub.spec["helm_chart_values_files"]:
+            if "secret" not in os.path.basename(values_file_name):
+                values_file = config_file_path.parent.joinpath(values_file_name)
+                # Load the hub extra config from its specific values files
+                config = yaml.load(values_file)
+                # Check if there's config that specifies an authenticator class
+                try:
+                    if hub.spec["helm_chart"] != "basehub":
+                        singleuser_config = config["basehub"]["jupyterhub"][
+                            "singleuser"
+                        ]
+                        custom_config = config["basehub"]["jupyterhub"]["custom"]
+                    else:
+                        singleuser_config = config["jupyterhub"]["singleuser"]
+                        custom_config = config["jupyterhub"]["custom"]
+
+                    configurator_enabled = custom_config.get(
+                        "jupyterhubConfigurator", {}
+                    ).get("enabled")
+                    if configurator_enabled:
+                        profiles = singleuser_config.get("profileList", None)
+                        if profiles:
+                            for p in profiles:
+                                overrides = p.get("kubespawner_override", None)
+                                if overrides and overrides.get("image", None):
+                                    singleuser_overrides = True
+                                    break
+                                options = p.get("profile_options", None)
+                                if options:
+                                    if "image" in options:
+                                        singleuser_overrides = True
+                                        break
+                except KeyError:
+                    pass
+
+        # If the authenticator class is github, then raise an error
+        # if `Authenticator.allowed_users` is set
+        if configurator_enabled == True and singleuser_overrides == True:
+            raise ValueError(
+                f"""
+                    Please disable the configurator for {hub.spec['name']}.
+                """
+            )
+
+
+@validate_app.command()
 def all(
     cluster_name: str = typer.Argument(..., help="Name of cluster to operate on"),
     hub_name: str = typer.Argument(None, help="Name of hub to operate on"),
