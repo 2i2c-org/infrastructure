@@ -69,6 +69,17 @@ def _prepare_helm_charts_dependencies_and_schemas():
     subprocess.check_call(["helm", "dep", "up", support_dir])
 
 
+def get_list_of_hubs_to_operate_on(cluster_name, hub_name):
+    config_file_path = find_absolute_path_to_cluster_file(cluster_name)
+    with open(config_file_path) as f:
+        cluster = Cluster(yaml.load(f), config_file_path.parent)
+
+    if hub_name:
+        return [h for h in cluster.hubs if h.spec["name"] == hub_name]
+
+    return cluster.hubs
+
+
 @validate_app.command()
 def cluster_config(
     cluster_name: str = typer.Argument(..., help="Name of cluster to operate on"),
@@ -99,14 +110,8 @@ def hub_config(
     _prepare_helm_charts_dependencies_and_schemas()
 
     config_file_path = find_absolute_path_to_cluster_file(cluster_name)
-    with open(config_file_path) as f:
-        cluster = Cluster(yaml.load(f), config_file_path.parent)
 
-    hubs = []
-    if hub_name:
-        hubs = [h for h in cluster.hubs if h.spec["name"] == hub_name]
-    else:
-        hubs = cluster.hubs
+    hubs = get_list_of_hubs_to_operate_on(cluster_name, hub_name)
 
     for i, hub in enumerate(hubs):
         print_colour(
@@ -185,14 +190,8 @@ def authenticator_config(
     _prepare_helm_charts_dependencies_and_schemas()
 
     config_file_path = find_absolute_path_to_cluster_file(cluster_name)
-    with open(config_file_path) as f:
-        cluster = Cluster(yaml.load(f), config_file_path.parent)
 
-    hubs = []
-    if hub_name:
-        hubs = [h for h in cluster.hubs if h.spec["name"] == hub_name]
-    else:
-        hubs = cluster.hubs
+    hubs = get_list_of_hubs_to_operate_on(cluster_name, hub_name)
 
     for i, hub in enumerate(hubs):
         print_colour(
@@ -250,14 +249,8 @@ def configurator_config(
     _prepare_helm_charts_dependencies_and_schemas()
 
     config_file_path = find_absolute_path_to_cluster_file(cluster_name)
-    with open(config_file_path) as f:
-        cluster = Cluster(yaml.load(f), config_file_path.parent)
 
-    hubs = []
-    if hub_name:
-        hubs = [h for h in cluster.hubs if h.spec["name"] == hub_name]
-    else:
-        hubs = cluster.hubs
+    hubs = get_list_of_hubs_to_operate_on(cluster_name, hub_name)
 
     for i, hub in enumerate(hubs):
         print_colour(
