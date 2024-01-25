@@ -293,8 +293,6 @@ def configurator_config(
                 except KeyError:
                     pass
 
-        # If the authenticator class is github, then raise an error
-        # if `Authenticator.allowed_users` is set
         if configurator_enabled == True and singleuser_overrides == True:
             raise ValueError(
                 f"""
