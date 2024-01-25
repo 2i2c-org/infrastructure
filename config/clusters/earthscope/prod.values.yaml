@@ -13,7 +13,7 @@ basehub:
     hub:
       config:
         Auth0OAuthenticator:
-          auth0_domain: login-dev.earthscope.org
+          auth0_domain: login.earthscope.org
           extra_authorize_params:
             # This isn't an actual URL, just a string. Must not have a trailing slash
             audience: https://api.earthscope.org
