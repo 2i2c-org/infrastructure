@@ -12,5 +12,10 @@ basehub:
             name: "EarthScope"
     hub:
       config:
+        Auth0OAuthenticator:
+          auth0_domain: login.earthscope.org
+          extra_authorize_params:
+            # This isn't an actual URL, just a string. Must not have a trailing slash
+            audience: https://api.earthscope.org
         CILogonOAuthenticator:
           oauth_callback_url: https://earthscope.2i2c.cloud/hub/oauth_callback
