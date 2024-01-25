@@ -12,6 +12,8 @@ basehub:
             name: "EarthScope"
     hub:
       config:
+        CustomAuth0OAuthenticator:
+          logout_redirect_to_url: https://earthscope.2i2c.cloud
         Auth0OAuthenticator:
           auth0_domain: login.earthscope.org
           extra_authorize_params:

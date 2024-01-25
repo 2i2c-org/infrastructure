@@ -12,6 +12,8 @@ basehub:
             name: "EarthScope staging"
     hub:
       config:
+        CustomAuth0OAuthenticator:
+          logout_redirect_to_url: https://staging.earthscope.2i2c.cloud
         Auth0OAuthenticator:
           auth0_domain: login-dev.earthscope.org
           extra_authorize_params:
