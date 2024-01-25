@@ -19,7 +19,7 @@ to create a [Regular Auth0 Web App](https://auth0.com/docs/get-started/auth0-ove
 for each hub - so at the least, for the staging hub and the production hub.
 
 Under [Application URIs](https://auth0.com/docs/get-started/applications/application-settings#application-uris),
-they should use the following URL under"Allowed Callback URLs":
+they should use the following URL under "Allowed Callback URLs":
 
 `https://<domain-of-the-hub>/hub/oauth_callback`
 
