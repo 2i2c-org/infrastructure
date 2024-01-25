@@ -242,8 +242,8 @@ def configurator_config(
 ):
     """
     For each hub of a specific cluster:
-     - It asserts that when the JupyterHub GitHubOAuthenticator is used,
-       then `Authenticator.allowed_users` is not set.
+     - It asserts that when the singleuser configuration overrides the same fields like the configurator,
+       the later must be disabled.
        An error is raised otherwise.
     """
     _prepare_helm_charts_dependencies_and_schemas()
@@ -254,7 +254,7 @@ def configurator_config(
 
     for i, hub in enumerate(hubs):
         print_colour(
-            f"{i+1} / {len(hubs)}: Validating authenticator config for {hub.spec['name']}..."
+            f"{i+1} / {len(hubs)}: Validating configurator and profile lists config for {hub.spec['name']}..."
         )
 
         configurator_enabled = False
@@ -264,7 +264,6 @@ def configurator_config(
                 values_file = config_file_path.parent.joinpath(values_file_name)
                 # Load the hub extra config from its specific values files
                 config = yaml.load(values_file)
-                # Check if there's config that specifies an authenticator class
                 try:
                     if hub.spec["helm_chart"] != "basehub":
                         singleuser_config = config["basehub"]["jupyterhub"][
@@ -278,6 +277,7 @@ def configurator_config(
                     configurator_enabled = custom_config.get(
                         "jupyterhubConfigurator", {}
                     ).get("enabled")
+                    # If it's already disabled we don't have what to check
                     if configurator_enabled:
                         profiles = singleuser_config.get("profileList", None)
                         if profiles:
@@ -287,10 +287,9 @@ def configurator_config(
                                     singleuser_overrides = True
                                     break
                                 options = p.get("profile_options", None)
-                                if options:
-                                    if "image" in options:
-                                        singleuser_overrides = True
-                                        break
+                                if options and "image" in options:
+                                    singleuser_overrides = True
+                                    break
                 except KeyError:
                     pass
 
@@ -299,7 +298,8 @@ def configurator_config(
         if configurator_enabled == True and singleuser_overrides == True:
             raise ValueError(
                 f"""
-                    Please disable the configurator for {hub.spec['name']}.
+                    When the singleuser configuration overrides the same fields like the configurator,
+                    the later must be disabled. Please disable the configurator for {hub.spec['name']}.
                 """
             )
 
