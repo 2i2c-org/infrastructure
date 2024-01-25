@@ -87,12 +87,15 @@ basehub:
               return False
 
           def populate_token(spawner, auth_state):
-            token_env = {
-              'AUTH0_ACCESS_TOKEN': auth_state.get("access_token", ""),
-              'AUTH0_ID_TOKEN': auth_state.get("id_token", ""),
-              'AUTH0_REFRESH_TOKEN': auth_state.get('refresh_token', '')
-            }
-            spawner.environment.update(token_env)
+            # For our deployment-service-check health check user, there is no auth_state.
+            # So these env variables need not be set.
+            if auth_state:
+              token_env = {
+                'AUTH0_ACCESS_TOKEN': auth_state.get("access_token", ""),
+                'AUTH0_ID_TOKEN': auth_state.get("id_token", ""),
+                'AUTH0_REFRESH_TOKEN': auth_state.get('refresh_token', '')
+              }
+              spawner.environment.update(token_env)
 
           c.Spawner.auth_state_hook = populate_token
 
