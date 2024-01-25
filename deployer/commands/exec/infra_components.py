@@ -210,8 +210,8 @@ def ask_for_dirname_again():
     """
     Function that asks the user to provide the name of the source and dest directories using typer prompts.
 
-    Returns the name of the source and dest directories as a touple if they were provided by the user
-    or the None, None touple.
+    Returns the name of the source and dest directories as a tuple if they were provided by the user
+    or the None, None tuple.
     """
     print_colour("Asking for the dirs again...", "yellow")
     continue_with_dir_names_confirmation = typer.confirm(

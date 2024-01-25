@@ -329,7 +329,7 @@ jupyterhub:
         # images, this is just invisible in the UI and there is no performance overhead
         # for these extra bind mounts. An additional positive here is that in case *students*
         # end up accidentally hardcoding paths in their notebooks, it will continue to work
-        # regardless of wether they or on RStudio or JupyterLab (described to us as a serious
+        # regardless of whether they or on RStudio or JupyterLab (described to us as a serious
         # problem by openscapes)
         - name: home
           mountPath: /home/rstudio
