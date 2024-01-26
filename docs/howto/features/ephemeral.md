@@ -175,7 +175,7 @@ for distributing content. This allows creation of a specific link that will
 put users who click it on a specific notebook with a specific UI (such as lab,
 classic notebook, RStudio, etc).
 
-The [http://nbgitpuller.link/](nbgitpuller link generator) supports mybinder.org
+The [nbgitpuller link generator](http://nbgitpuller.link/) supports mybinder.org
 style links, but for use with *ephemeral hubs*, just use the regular 'JupyterHub'
 link generator. [Firefox](https://addons.mozilla.org/en-US/firefox/addon/nbgitpuller-link-generator/)
 and [Google Chrome](https://chrome.google.com/webstore/detail/nbgitpuller-link-generato/hpdbdpklpmppnoibabdkkhnfhkkehgnc)
