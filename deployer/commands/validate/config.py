@@ -243,7 +243,7 @@ def configurator_config(
     """
     For each hub of a specific cluster:
      - It asserts that when the singleuser configuration overrides the same fields like the configurator,
-       the later must be disabled.
+       the latter must be disabled.
        An error is raised otherwise.
     """
     _prepare_helm_charts_dependencies_and_schemas()
