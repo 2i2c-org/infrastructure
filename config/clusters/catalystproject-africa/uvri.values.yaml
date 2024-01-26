@@ -33,9 +33,9 @@ jupyterhub:
           - CatalystProject-Hubs:uvri
         scope:
           - read:org
-      # Authenticator:
-      #   admin_users:
-      #     -
+      Authenticator:
+        admin_users:
+          - eddUG
   singleuser:
     profileList:
       - display_name: Jupyter
