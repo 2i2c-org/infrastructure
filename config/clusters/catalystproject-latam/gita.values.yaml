@@ -33,9 +33,9 @@ jupyterhub:
           - CatalystProject-Hubs:gita
         scope:
           - read:org
-      # Authenticator:
-      #   admin_users:
-      #     -
+      Authenticator:
+        admin_users:
+          - rafaelorozco511
   singleuser:
     profileList:
       - display_name: Jupyter
