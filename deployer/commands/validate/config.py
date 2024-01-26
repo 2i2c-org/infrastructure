@@ -242,7 +242,7 @@ def configurator_config(
 ):
     """
     For each hub of a specific cluster:
-     - It asserts that when the singleuser configuration overrides the same fields like the configurator,
+     - It asserts that when the singleuser configuration overrides the same fields like the configurator, specifically kubespawner_override and profile_options,
        the latter must be disabled.
        An error is raised otherwise.
     """
