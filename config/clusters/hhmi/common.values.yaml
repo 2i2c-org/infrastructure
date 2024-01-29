@@ -20,7 +20,7 @@ basehub:
         templateVars:
           org:
             url: https://www.hhmi.org/
-            logo_url: https://drive.google.com/uc?export=view&id=1tg5PRRT3_VjDaxq6Ax_JA3S92FuQ_NFt
+            logo_url: https://github.com/2i2c-org/infrastructure/assets/1879041/76419ba9-6d1a-41fe-b9b7-56fd89e0da40
           designed_by:
             name: 2i2c
             url: https://2i2c.org
