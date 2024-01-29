@@ -32,3 +32,10 @@ hubs:
       - common.values.yaml
       - prod.values.yaml
       - enc-prod.secret.values.yaml
+  - name: spyglass
+    display_name: "HHMI Spyglass (ephemeral)"
+    domain: spyglass.hhmi.2i2c.cloud
+    helm_chart: basehub
+    helm_chart_values_files:
+      - spyglass.values.yaml
+      - enc-spyglass.secret.values.yaml
