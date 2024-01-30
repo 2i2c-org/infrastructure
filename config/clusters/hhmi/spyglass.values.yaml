@@ -33,6 +33,9 @@ jupyterhub:
           name: ""
           url: ""
           custom_html: <a href="https://www.hhmi.org/">HHMI</a> and <a href="https://strategiesos.org/about/">Stratos</a>
+  prePuller:
+    hook:
+      enabled: true
   singleuser:
     initContainers: []
     storage:
