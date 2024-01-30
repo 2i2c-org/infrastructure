@@ -92,6 +92,9 @@ As users are temporary and can not be accessed again, there is no reason to
 provide persistent storage. So we turn it all off.
 
 ```yaml
+nfs:
+  enabled: false
+
 jupyterhub:
   custom:
     singleuserAdmin:
