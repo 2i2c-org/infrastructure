@@ -1,0 +1,83 @@
+nfs:
+  enabled: false
+  pv:
+    enabled: false
+jupyterhub:
+  ingress:
+    hosts:
+      - spyglass.hhmi.2i2c.cloud
+    tls:
+      - secretName: https-auto-tls
+        hosts:
+          - spyglass.hhmi.2i2c.cloud
+  custom:
+    jupyterhubConfigurator:
+      enabled: false
+    singleuserAdmin:
+      # Turn off trying to mount shared-readwrite folder for admins
+      extraVolumeMounts: []
+    2i2c:
+      add_staff_user_ids_to_admin_users: true
+      add_staff_user_ids_of_type: "github"
+    homepage:
+      templateVars:
+        org:
+          name: "HHMI"
+          url: https://www.hhmi.org/
+          logo_url: https://github.com/2i2c-org/infrastructure/assets/1879041/76419ba9-6d1a-41fe-b9b7-56fd89e0da40
+        designed_by:
+          name: 2i2c
+          url: https://2i2c.org
+        operated_by:
+          name: 2i2c
+          url: https://2i2c.org
+        funded_by:
+          name: ""
+          url: ""
+          custom_html: <a href="https://www.hhmi.org/">HHMI</a> and <a href="https://strategiesos.org/about/">Stratos</a>
+  prePuller:
+    hook:
+      enabled: true
+  singleuser:
+    initContainers: []
+    storage:
+      # No persistent storage should be kept to reduce any potential data
+      # retention & privacy issues.
+      type: none
+      extraVolumeMounts: []
+    defaultUrl: /lab
+    image:
+      name: quay.io/lorenlab/hhmi-spyglass-image
+      tag: "c307f9418a60"
+    extraContainers:
+      - name: mysql
+        image: datajoint/mysql # following the spyglass tutorial at https://lorenfranklab.github.io/spyglass/latest/notebooks/00_Setup/#existing-database
+        ports:
+          - name: mysql
+            containerPort: 3306
+        resources:
+          limits:
+            # Best effort only. No more than 1 CPU, and if mysql uses more than 4G, restart it
+            memory: 4Gi
+            cpu: 1.0
+          requests:
+            # If we don't set requests, k8s sets requests == limits!
+            # So we set something tiny
+            memory: 64Mi
+            cpu: 0.01
+        env:
+          # Configured using the env vars documented in https://lorenfranklab.github.io/spyglass/latest/notebooks/00_Setup/#existing-database
+          - name: MYSQL_ROOT_PASSWORD
+            value: "tutorial"
+  hub:
+    config:
+      JupyterHub:
+        authenticator_class: cilogon
+      CILogonOAuthenticator:
+        oauth_callback_url: https://spyglass.hhmi.2i2c.cloud/hub/oauth_callback
+        allowed_idps:
+          http://github.com/login/oauth/authorize:
+            default: true
+            username_derivation:
+              username_claim: "preferred_username"
+            allow_all: true
