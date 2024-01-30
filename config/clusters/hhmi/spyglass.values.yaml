@@ -1,13 +1,5 @@
 nfs:
-  enabled: true
-  dirsizeReporter:
-    enabled: true
-  pv:
-    mountOptions:
-      - soft
-      - noatime
-    serverIP: 10.55.112.74
-    baseShareName: /homes/
+  enabled: false
 jupyterhub:
   ingress:
     hosts:
