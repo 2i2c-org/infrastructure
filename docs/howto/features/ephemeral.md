@@ -45,46 +45,6 @@ jupyterhub:
         force_new_server: true
 ```
 
-## Shared systemwide password setup
-
-Unfortunately, a shared password is required to guard against random cryptobros
-abusing using our systems for 'free' compute. This password is same for all
-users, and can be shared by the community champions of the hub in whatever
-form they wish.
-
-This requires two bits of config - one in the `<hub>.values.yaml` file for the hub,
-and another in the `enc-<hub>.secret.values.yaml` file.
-
-In `<hub>.values.yaml`:
-
-```yaml
-ingressBasicAuth:
-  enabled: true
-  
-jupyterhub:
-  ingress:
-    annotations:
-      # We protect our entire hub from cryptobros by putting it all
-      # behind a single shared basicauth
-      nginx.ingress.kubernetes.io/auth-type: basic
-      nginx.ingress.kubernetes.io/auth-secret: ingress-basic-auth
-      nginx.ingress.kubernetes.io/auth-realm: "Authentication Required"
-```
-
-In `enc-<hub>.secret.values.yaml`:
-```yaml
-ingressBasicAuth:
-  username: <username>
-  password: <password>
-```
-
-```{tip}
-Pick a *passphrase* for the password, like [the holy book says](https://xkcd.com/936/).
-```
-
-```{note}
-Make sure the `enc-<hub>.secret.values.yaml` is encrypted via [sops](tools:sops)
-```
 
 ## No persistent storage
 
@@ -199,3 +159,50 @@ style links, but for use with *ephemeral hubs*, just use the regular 'JupyterHub
 link generator. [Firefox](https://addons.mozilla.org/en-US/firefox/addon/nbgitpuller-link-generator/)
 and [Google Chrome](https://chrome.google.com/webstore/detail/nbgitpuller-link-generato/hpdbdpklpmppnoibabdkkhnfhkkehgnc)
 extensions are also available.
+
+## Enable stronger anti-crypto abuse features for a hub
+
+Ephemeral hubs with public access must have [stronger anti crypto abuse features
+enabled](howto:features:cryptnono) before going live.
+
+## (Optional) Shared systemwide password setup
+
+Optionally, in addition to the cryptnono setup documented above, a shared
+password may be used as additional protection to guard against random cryptobros
+abusing using our systems for 'free' compute. This password is same for all
+users, and can be shared by the community champions of the hub in whatever form
+they wish.
+
+This requires two bits of config - one in the `<hub>.values.yaml` file for the hub,
+and another in the `enc-<hub>.secret.values.yaml` file.
+
+In `<hub>.values.yaml`:
+
+```yaml
+ingressBasicAuth:
+  enabled: true
+
+jupyterhub:
+  ingress:
+    annotations:
+      # We protect our entire hub from cryptobros by putting it all
+      # behind a single shared basicauth
+      nginx.ingress.kubernetes.io/auth-type: basic
+      nginx.ingress.kubernetes.io/auth-secret: ingress-basic-auth
+      nginx.ingress.kubernetes.io/auth-realm: "Authentication Required"
+```
+
+In `enc-<hub>.secret.values.yaml`:
+```yaml
+ingressBasicAuth:
+  username: <username>
+  password: <password>
+```
+
+```{tip}
+Pick a *passphrase* for the password, like [the holy book says](https://xkcd.com/936/).
+```
+
+```{note}
+Make sure the `enc-<hub>.secret.values.yaml` is encrypted via [sops](tools:sops)
+```

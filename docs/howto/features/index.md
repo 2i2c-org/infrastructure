@@ -53,6 +53,7 @@ See the sections below for more details.
 4. (default enabled) Configurator <https://docs.2i2c.org/admin/howto/configurator>
 5. (dedicated clusters only) Grafana <../..//topic/monitoring-alerting/grafana>
 6. Using JupyterHub as an identity provider <identity-provider.md>
+7. Stronger anti-crypto abuse features for a hub <cryptnono.md>
 ```
 
 ### Performance Layer

@@ -422,6 +422,12 @@ cryptnono:
     # Disable the execwhacker detector for now, as it matures by being deployed on mybinder.org
     execwhacker:
       enabled: false
+      configs:
+        unencrypted-test-01:
+          bannedCommandStrings:
+            # Provide an unencrypted, randomly generated test string. All processes that have this in their commandline will be killed.
+            # This is helpful for testing by engineers
+            - phahPaiWie2aeluax4Of7tiwiekujeaF7aquuPeexeiT7jieJailaKai7haiB0raetib9ue8Ai2daeTaehaemohJeeyaifeip6nevae5Safeir9iep8Baic3nohn9zoa
     monero:
       enabled: true
       resources:

@@ -72,12 +72,9 @@ jupyterhub:
   hub:
     config:
       JupyterHub:
-        authenticator_class: cilogon
-      CILogonOAuthenticator:
-        oauth_callback_url: https://spyglass.hhmi.2i2c.cloud/hub/oauth_callback
-        allowed_idps:
-          http://github.com/login/oauth/authorize:
-            default: true
-            username_derivation:
-              username_claim: "preferred_username"
-            allow_all: true
+        authenticator_class: tmpauthenticator.TmpAuthenticator
+      TmpAuthenticator:
+        # This allows users to go to the hub URL directly again to
+        # get a new server, instead of being plopped back into their
+        # older, existing user with a 'start server' button.
+        force_new_server: true
