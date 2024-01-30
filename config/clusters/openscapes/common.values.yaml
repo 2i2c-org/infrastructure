@@ -37,6 +37,126 @@ basehub:
     singleuser:
       serviceAccountName: cloud-user-sa
       defaultUrl: /lab
+      profileList:
+        - display_name: Python
+          description: Python datascience environment
+          default: true
+          allowed_teams:
+            - 2i2c-org:hub-access-for-2i2c-staff
+            - NASA-Openscapes:workshopaccess-2i2c
+            - NASA-Openscapes:longtermaccess-2i2c
+            - NASA-Openscapes:championsaccess-2i2c
+          kubespawner_override:
+            image: openscapes/python:4f340eb
+          profile_options: &profile_options
+            requests: &profile_options_resource_allocation
+              display_name: Resource Allocation
+              choices:
+                mem_1_9:
+                  display_name: 1.9 GB RAM, upto 3.7 CPUs
+                  kubespawner_override:
+                    mem_guarantee: 1992701952
+                    mem_limit: 1992701952
+                    cpu_guarantee: 0.234375
+                    cpu_limit: 3.75
+                    node_selector:
+                      node.kubernetes.io/instance-type: r5.xlarge
+                  default: true
+                mem_3_7:
+                  display_name: 3.7 GB RAM, upto 3.7 CPUs
+                  kubespawner_override:
+                    mem_guarantee: 3985403904
+                    mem_limit: 3985403904
+                    cpu_guarantee: 0.46875
+                    cpu_limit: 3.75
+                    node_selector:
+                      node.kubernetes.io/instance-type: r5.xlarge
+                mem_7_4:
+                  display_name: 7.4 GB RAM, upto 3.7 CPUs
+                  kubespawner_override:
+                    mem_guarantee: 7970807808
+                    mem_limit: 7970807808
+                    cpu_guarantee: 0.9375
+                    cpu_limit: 3.75
+                    node_selector:
+                      node.kubernetes.io/instance-type: r5.xlarge
+                mem_14_8:
+                  display_name: 14.8 GB RAM, upto 3.7 CPUs
+                  kubespawner_override:
+                    mem_guarantee: 15941615616
+                    mem_limit: 15941615616
+                    cpu_guarantee: 1.875
+                    cpu_limit: 3.75
+                    node_selector:
+                      node.kubernetes.io/instance-type: r5.xlarge
+                mem_29_7:
+                  display_name: 29.7 GB RAM, upto 3.7 CPUs
+                  kubespawner_override:
+                    mem_guarantee: 31883231232
+                    mem_limit: 31883231232
+                    cpu_guarantee: 3.75
+                    cpu_limit: 3.75
+                    node_selector:
+                      node.kubernetes.io/instance-type: r5.xlarge
+                mem_60_6:
+                  display_name: 60.6 GB RAM, upto 15.7 CPUs
+                  kubespawner_override:
+                    mem_guarantee: 65094813696
+                    mem_limit: 65094813696
+                    cpu_guarantee: 7.86
+                    cpu_limit: 15.72
+                    node_selector:
+                      node.kubernetes.io/instance-type: r5.4xlarge
+                mem_121_2:
+                  display_name: 121.2 GB RAM, upto 15.7 CPUs
+                  kubespawner_override:
+                    mem_guarantee: 130189627392
+                    mem_limit: 130189627392
+                    cpu_guarantee: 15.72
+                    cpu_limit: 15.72
+                    node_selector:
+                      node.kubernetes.io/instance-type: r5.4xlarge
+        - display_name: R
+          description: R (with RStudio) + Python environment
+          allowed_teams:
+            - 2i2c-org:hub-access-for-2i2c-staff
+            - NASA-Openscapes:workshopaccess-2i2c
+            - NASA-Openscapes:longtermaccess-2i2c
+            - NASA-Openscapes:championsaccess-2i2c
+          kubespawner_override:
+            image: openscapes/rocker:a7596b5
+            # Ensures container working dir is homedir
+            # https://github.com/2i2c-org/infrastructure/issues/2559
+            working_dir: /home/rstudio
+          profile_options: *profile_options
+        - display_name: Matlab
+          description: Matlab environment
+          allowed_teams:
+            - 2i2c-org:hub-access-for-2i2c-staff
+            - NASA-Openscapes:workshopaccess-2i2c
+            - NASA-Openscapes:longtermaccess-2i2c
+            - NASA-Openscapes:championsaccess-2i2c
+          kubespawner_override:
+            image: openscapes/matlab:2023-11-28
+          profile_options: *profile_options
+        - display_name: "Bring your own image"
+          description: Specify your own docker image (must have python and jupyterhub installed in it)
+          slug: custom
+          allowed_teams:
+            - NASA-Openscapes:longtermaccess-2i2c
+            - 2i2c-org:hub-access-for-2i2c-staff
+          profile_options:
+            image:
+              display_name: Image
+              unlisted_choice:
+                enabled: True
+                display_name: "Custom image"
+                validation_regex: "^.+:.+$"
+                validation_message: "Must be a publicly available docker image, of form <image-name>:<tag>"
+                kubespawner_override:
+                  image: "{value}"
+              choices: {}
+            resource_allocation: *profile_options_resource_allocation
     scheduling:
       userScheduler:
         enabled: true
@@ -46,7 +166,10 @@ basehub:
         JupyterHub:
           authenticator_class: github
         GitHubOAuthenticator:
+          enable_auth_state: true
+          populate_teams_in_auth_state: true
           allowed_organizations:
+            - 2i2c-org:hub-access-for-2i2c-staff
             - NASA-Openscapes:workshopaccess-2i2c
             - NASA-Openscapes:longtermaccess-2i2c
             - NASA-Openscapes:championsaccess-2i2c

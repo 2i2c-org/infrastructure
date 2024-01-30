@@ -230,3 +230,33 @@ To enable this access,
     that profile. Add `2i2c-org:hub-access-for-2i2c-staff` to all
     `allowed_teams` so 2i2c engineers can log in to debug issues. If
     `allowed_teams` is not set, that profile is not available to anyone.
+
+### Enabling team based access on hub with pre-existing users
+
+If this is being enabled for users on a hub with *pre-existing* users, they
+will all need to be logged out before deployment. This would force them to
+re-login next time, and that will set `auth_state` properly so we can filter
+based on team membership - without that, we won't know which teams the user
+belongs to, and they will get an opaque 'Access denied' error.
+
+1. Check with the community to know *when* is a good time to log everyone
+   out. If users have running servers, they will need to refresh the page -
+   which will put them through the authentication flow again. It's best to
+   do this at a time when minimal or no users are running, to minimze
+   disruption.
+
+2. We log everyone out by regenerating [hub.cookieSecret](https://z2jh.jupyter.org/en/stable/resources/reference.html#hub-cookiesecret).
+   The easiest way to do this is to simply delete the kubernetes secret
+   named `hub` in the namespace of the hub, and then do a deployment. So
+   once the PR for deployment is ready, run the following command:
+
+   ```bash
+   # Get kubectl access to the cluster
+   deployer use-cluster-credentials <cluster-name>
+   kubectl -n <hub-name> delete secret hub
+   ```
+
+   After that, you can deploy either manually or by merging your PR.
+
+This should log everyone out, and when they log in, they should see
+the profiles they have access to!
