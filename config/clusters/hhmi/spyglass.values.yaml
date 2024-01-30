@@ -1,5 +1,7 @@
 nfs:
   enabled: false
+  pv:
+    enabled: false
 jupyterhub:
   ingress:
     hosts:
