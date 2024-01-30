@@ -125,6 +125,22 @@ jupyterhub:
       tag: <tag>
 ```
 
+## Enable hook pre-puller & disable JupyterHub
+
+Startup time is very important in ephemeral hubs, and since the JupyterHub
+configurator can not be used (no admin users), [the hook pre-puller](https://z2jh.jupyter.org/en/stable/administrator/optimization.html#pulling-images-before-users-arrive)
+can be enabled.
+
+```yaml
+jupyterhub:
+  custom:
+    jupyterhubConfigurator:
+      enabled: false
+  prePuller:
+    hook:
+      enabled: true
+```
+
 ## Disabling home page customizations
 
 `tmpauthenticator` doesn't actually show the home page - it just launches
