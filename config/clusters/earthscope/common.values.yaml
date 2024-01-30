@@ -36,7 +36,8 @@ basehub:
       extraConfig:
         001-username-claim: |
           from oauthenticator.auth0 import Auth0OAuthenticator
-          from traitlets import List, Unicode
+          from traitlets import List, Unicode, default
+          from urllib.parse import urlencode
 
           class CustomAuth0OAuthenticator(Auth0OAuthenticator):
             # required_scopes functionality comes in from https://github.com/jupyterhub/oauthenticator/pull/719
@@ -58,6 +59,28 @@ basehub:
                 See the OAuth documentation of your OAuth provider for various options.
                 """,
             )
+
+            # Upstreamed at https://github.com/jupyterhub/oauthenticator/pull/722
+            logout_redirect_to_url = Unicode(
+                config=True,
+                help="""
+                Redirect to this URL after the user is logged out.
+
+                Must be explicitly added to the "Allowed Logout URLs" in the configuration
+                for this Auth0 application. See https://auth0.com/docs/authenticate/login/logout/redirect-users-after-logout
+                for more information.
+                """
+            )
+
+            @default("logout_redirect_url")
+            def _logout_redirect_url_default(self):
+                url = f"https://{self.auth0_domain}/v2/logout"
+                if self.logout_redirect_to_url:
+                    # If a redirectTo is set, we must also include the `client_id`
+                    # Auth0 expects `client_id` to be snake cased while `redirectTo` is camel cased
+                    params = urlencode({"client_id": self.client_id, "redirectTo": self.logout_redirect_to_url})
+                    url = f"{url}?{params}"
+                return url
 
             async def authenticate(self, *args, **kwargs):
               auth_model = await super().authenticate(*args, **kwargs)
