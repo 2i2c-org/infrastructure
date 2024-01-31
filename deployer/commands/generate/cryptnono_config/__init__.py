@@ -3,9 +3,9 @@ import subprocess
 from pathlib import Path
 
 from deployer.cli_app import generate_app
+from deployer.utils.file_acquisition import REPO_ROOT_PATH
 
 HERE = Path(__file__).parent
-REPO_ROOT_PATH = HERE.parent.parent.parent.parent
 
 
 @generate_app.command()
