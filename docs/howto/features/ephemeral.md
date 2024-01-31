@@ -119,20 +119,20 @@ ephemeral hub's users.
 
    ```yaml
    jupyterhub:
-    singleuser:
-      storage:
-        # We still don't want to have per-user storage
-        type: none
-        extraVolumes:
-          - name: shared-dir-pvc
-            persistentVolumeClaim:
-              # The name of the PVC setup by nfs.yaml for the ephemeral hub to use
-              claimName: home-nfs
-        extraVolumeMounts:
-          - name: shared-dir-pvc
-            mountPath: /home/jovyan/shared
-            subPath: _shared
-            readOnly: true
+     singleuser:
+       storage:
+         # We still don't want to have per-user storage
+         type: none
+         extraVolumes:
+           - name: shared-dir-pvc
+             persistentVolumeClaim:
+               # The name of the PVC setup by nfs.yaml for the ephemeral hub to use
+               claimName: home-nfs
+         extraVolumeMounts:
+           - name: shared-dir-pvc
+             mountPath: /home/jovyan/shared
+             subPath: _shared
+             readOnly: true
    ```
 
    This will mount the shared directory from the 'source' hub under `shared` in the
