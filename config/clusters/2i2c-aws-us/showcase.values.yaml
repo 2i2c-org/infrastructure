@@ -4,7 +4,7 @@ basehub:
       # When we renamed this hub, we did so at a DNS level and not an infrastructure
       # level. No terraform config was touched. Hence the kubernetes annotations retain
       # the original hub name.
-      eks.amazonaws.com/role-arn: arn:aws:iam::790657130469:role/2i2c-aws-us-researchdelight
+      eks.amazonaws.com/role-arn: arn:aws:iam::790657130469:role/2i2c-aws-us-showcase
   jupyterhub:
     ingress:
       hosts: [showcase.2i2c.cloud]

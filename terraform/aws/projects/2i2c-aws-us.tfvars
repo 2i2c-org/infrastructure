@@ -40,7 +40,7 @@ hub_cloud_permissions = {
     bucket_admin_access : ["scratch-dask-staging"],
     extra_iam_policy : ""
   },
-  "researchdelight" : {
+  "showcase" : {
     requestor_pays : true,
     bucket_admin_access : [
       "scratch-researchdelight",
