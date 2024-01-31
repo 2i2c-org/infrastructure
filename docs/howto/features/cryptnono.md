@@ -60,12 +60,13 @@ To test that the detector is actually working, you can login to a hub on the clu
 try to execute the following command:
 
 ```bash
-ls phahPaiWie2aeluax4Of7tiwiekujeaF7aquuPeexeiT7jieJailaKai7haiB0raetib9ue8Ai2daeTaehaemohJeeyaifeip6nevae5Safeir9iep8Baic3nohn9zoa
+sh -c 'sleep 1 && echo beiquatohGa1uay0ahMies9couyahPeiz9xohju3Ahvaik3FaeM7eey1thaish1U'
 ```
 
 It should immediately die, with a message saying `Killed`. This is a randomly generated test string, set up
 in an unencrypted fashion in `helm-charts/support/values.yaml` under `cryptnono.detectors.execwhacker.configs`,
-to enable testing by engineers and others.
+to enable testing by engineers and others. We also put the `sleep` in there as it can sometimes take cryptnono
+upto a second to kill a process.
 
 ## Looking at logs to understand why a process was killed by `execwhacker`
 
