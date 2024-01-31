@@ -46,10 +46,10 @@ jupyterhub:
 ```
 
 
-## No persistent storage
+## No persistent home directory
 
 As users are temporary and can not be accessed again, there is no reason to
-provide persistent storage. So we turn it all off.
+provide persistent storage. So we turn it all off - particularly the home directories.
 
 ```yaml
 nfs:
@@ -69,6 +69,77 @@ jupyterhub:
       extraVolumeMounts: []
 ```
 
+## (Optional) Sharing `shared` directories from another hub with an ephemeral hub
+
+In some specific cases, we may need to share a `shared` directory from another hub
+on the same cluster with the ephemeral hub. The 'source' hub whose `shared` directory
+we mount may be used to provide common data files, teaching materials, etc for the
+ephemeral hub's users.
+
+1. Setup the [PersistentVolume](https://kubernetes.io/docs/concepts/storage/persistent-volumes/)
+   in the ephemeral hub's config to point to the same NFS share that the 'source' hub is
+   pointing to, with the following config:
+
+   ```yaml
+   nfs:
+     enabled: true
+     dirsizeReporter:
+       # We don't need to report directory sizes here, as it's already being reported on by
+       # the 'source' hub
+       enabled: false
+     pv:
+       enabled: true
+       mountOptions: <copied-from-source-hub>
+       serverIP: <copied-from-source-hub>
+       baseShareName: <copied-from-source-hub>
+       shareNameOverride: <name-of-source-hub>
+   ```
+
+   A few options should copied from the config of the 'source' hub, and `shareNameOverride`
+   should be set to whatever is the `name` of the 'source' hub in `cluster.yaml`.
+
+   When deployed, this should set up a new PersistentVolume for the ephemeral hub to use
+   that references the same NFS share of the 'source' hub. You can validate this by
+   comparing them:
+
+   ```bash
+   # Get the source hub's NFS volume
+   kubectl get pv <source-hub-name>-home-nfs -o yaml
+   # Get the ephemeral hub's NFS volume
+   kubectl get pv <ephemeral-hub-name>-home-nfs -o yaml
+   ```
+
+   The section under `spec.nfs` should match for both these `PersistentVolume` options.
+
+   ```{note}
+   If you want to learn more about how this is setup, look into `helm-charts/basehub/templates/nfs.yaml`
+   ```
+
+2. Mount *just* the shared directory appropriately:
+
+   ```yaml
+   jupyterhub:
+    singleuser:
+      storage:
+        # We still don't want to have per-user storage
+        type: none
+        extraVolumes:
+          - name: shared-dir-pvc
+            persistentVolumeClaim:
+              # The name of the PVC setup by nfs.yaml for the ephemeral hub to use
+              claimName: home-nfs
+        extraVolumeMounts:
+          - name: shared-dir-pvc
+            mountPath: /home/jovyan/shared
+            subPath: _shared
+            readOnly: true
+   ```
+
+   This will mount the shared directory from the 'source' hub under `shared` in the
+   ephemeral hub - so admins can write stuff to the `shared-readwrite` directory in the
+   'source' hub and it'll immediately show up here! It's mounted to be read-only - since
+   there are no real 'users' in an ephemeral hub, if we make it readwrite, it can be easily
+   deleted (accidentally or intentionally) with no accountability.
 
 ## Image configuration in chart
 
@@ -130,23 +201,6 @@ jupyterhub:
           url: ""
 ```
 
-
-## Customizing the uptime check to expect a HTTP `401`
-
-Our [uptime checks](uptime-checks) expect a HTTP `200` response to consider a
-hub as live. However, since we protect the entire hub at the Ingress level,
-all endpoints will return a HTTP `401` asking for a password. We can configure
-our uptime checks to allow for `401` as a valid response in the appropriate
-`cluster.yaml` definition for this hub.
-
-```yaml
-  - name: <name-of-hub>
-    display_name: <display-name>
-    uptime_check:
-      # This is an ephemeral hub, fully password protected with HTTP Basic Auth
-      expected_status: 401
-```
-
 ## Use `nbgitpuller` for distributing content
 
 We encourage users to use [nbgitpuller](https://github.com/jupyterhub/nbgitpuller)
@@ -205,4 +259,20 @@ Pick a *passphrase* for the password, like [the holy book says](https://xkcd.com
 
 ```{note}
 Make sure the `enc-<hub>.secret.values.yaml` is encrypted via [sops](tools:sops)
+```
+
+### Customizing the uptime check to expect a HTTP `401`
+
+Our [uptime checks](uptime-checks) expect a HTTP `200` response to consider a
+hub as live. However, since we protect the entire hub at the Ingress level,
+all endpoints will return a HTTP `401` asking for a password. We can configure
+our uptime checks to allow for `401` as a valid response in the appropriate
+`cluster.yaml` definition for this hub.
+
+```yaml
+  - name: <name-of-hub>
+    display_name: <display-name>
+    uptime_check:
+      # This is an ephemeral hub, fully password protected with HTTP Basic Auth
+      expected_status: 401
 ```
