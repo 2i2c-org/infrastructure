@@ -20,7 +20,7 @@ Cryptnono currently has two primary detectors:
    how to detect it. This is fairly safe and has a very low false positive rate, and requires
    no configuration. So by default, **this detector is enabled on all hubs**.
 
-2. A detector (`execWhacker`) based on heuristics, where the full commandline used to execute a process (
+2. A detector (`execwhacker`) based on heuristics, where the full commandline used to execute a process (
    regardless of how it is started) is used to detect if a process is likely crypto mining,
    and if so, immediately kill it. This relies on a tweakable config of banned strings to
    look for in the commandline of a process, and is [constantly being tweaked](https://github.com/jupyterhub/mybinder.org-deploy/security/advisories/GHSA-j42g-x8qw-jjfh).
@@ -34,9 +34,9 @@ Cryptnono currently has two primary detectors:
    this would also be enabled by default everywhere. In the meantime, we only enable it for
    *clusters* with any hub that allows unfettered external access.
 
-## Enabling the `execWhacker` detector
+## Enabling the `execwhacker` detector
 
-The `execWhacker` detector can be enabled with the following configuration in the appropriate
+The `execwhacker` detector can be enabled with the following configuration in the appropriate
 `support.values.yaml` for the cluster:
 
 ```yaml
@@ -54,7 +54,7 @@ named `execwhacker` in the `cryptnono` daemonset in the `support` namespace.
 kubectl -n support get daemonset support-cryptnono -o yaml
 ```
 
-## Testing the `execWhacker` detector
+## Testing the `execwhacker` detector
 
 To test that the detector is actually working, you can login to a hub on the cluster and
 try to execute the following command:
