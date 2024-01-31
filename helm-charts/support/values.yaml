@@ -431,7 +431,7 @@ cryptnono:
         unencrypted-test-01:
           bannedCommandStrings:
             # Provide an unencrypted, randomly generated test string. All processes that have this in their commandline will be killed.
-            # This is helpful for testing by engineers
+            # This is helpful for testing execwhacker is enabled and functional
             - beiquatohGa1uay0ahMies9couyahPeiz9xohju3Ahvaik3FaeM7eey1thaish1U
     monero:
       enabled: true
