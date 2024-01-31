@@ -1,7 +1,8 @@
-from deployer.cli_app import generate_app
-from pathlib import Path
-import subprocess
 import shutil
+import subprocess
+from pathlib import Path
+
+from deployer.cli_app import generate_app
 
 HERE = Path(__file__).parent
 REPO_ROOT_PATH = HERE.parent.parent.parent.parent
