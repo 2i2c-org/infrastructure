@@ -103,18 +103,33 @@ to understand why - it may also lead to more tweaking of the generator config.
    The logs will be structured as `json`, and will look like this:
 
    ```json
-   {"pid": 13704, "cmdline": "/usr/bin/ls --color=auto phahpaiwie2aeluax4of7tiwiekujeaf7aquupeexeit7jiejailakai7haib0raetib9ue8ai2daetaehaemohjeeyaifeip6nevae5safeir9iep8baic3nohn9zoa", "matched": "phahpaiwie2aeluax4of7tiwiekujeaf7aquupeexeit7jiejailakai7haib0raetib9ue8ai2daetaehaemohjeeyaifeip6nevae5safeir9iep8baic3nohn9zoa", "source": "execwhacker.bpf", "action": "killed", "event": "Killed process", "level": "info", "timestamp": "2024-01-30T19:35:36.610659Z"}
+    {
+        "pid": 23933,
+        "cmdline": "/usr/bin/sh -c 'sleep 1 && echo beiquatohga1uay0ahmies9couyahpeiz9xohju3ahvaik3faem7eey1thaish1u'",
+        "matched": "beiquatohga1uay0ahmies9couyahpeiz9xohju3ahvaik3faem7eey1thaish1u",
+        "source": "execwhacker.bpf",
+        "container_type": "cri",
+        "labels": {
+            "io.kubernetes.container.name": "notebook",
+            "io.kubernetes.pod.name": "jupyter-921a1d97-2d4cb1-2d4eb1-2da427-2dd5eed98e3ab9",
+            "io.kubernetes.pod.namespace": "spyglass",
+            "io.kubernetes.pod.uid": "d2ed6416-812f-413b-ba53-e62d11646809"
+        },
+        "image": "quay.io/2i2c/hhmi-spyglass-image:67523d9ea855",
+        "action": "killed",
+        "event": "Killed process",
+        "level": "info",
+        "timestamp": "2024-01-31T16:59:32.990489Z"
+    }
    ```
 
-   This tells us that the name of the process, as well as why it was killed.
-
-   ```{note}
-   We will eventually be able to see the [pod & namespace](https://github.com/cryptnono/cryptnono/issues/30) information
-   of killed processes as well.
-   ```
+   This tells us that the name of the process, the name of the pod (and hence user) who was cryptomining, the
+   namespace (and hence hub name) it happened in, the image being used as well as what string was matched that
+   caused it to die.
 
    ```{tip}
-   To make the JSON easier to read, you can pipe the logs command to `jq`.
+   The logs by default output one JSON object per line, which is hard for a human to read. You can pipe it
+   to `jq` to make it easier to read!
    ```
 
 ## Regenerating list of banned strings
