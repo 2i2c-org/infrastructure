@@ -188,5 +188,5 @@ them. Since none of the code for cryptnono itself is secret, this does not confl
 
 ## Future work
 
-`cryptnono` also exposes prometheus metrics about processes it has killed. We currently do not collect these,
-but we should enable collection so we can
+`cryptnono` also exposes prometheus metrics about processes it has killed. We currently *do* collect these,
+but there is no Grafana dashboard that exposes them yet.
