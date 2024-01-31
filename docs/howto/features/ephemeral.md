@@ -47,9 +47,10 @@ As users are temporary and can not be accessed again, there is no reason to
 provide persistent storage. So we turn it all off - particularly the home directories.
 
 ```yaml
+# nfs functionality explicitly disabled in case a common.values.yaml
+# file is used to enable it for all hubs in the cluster
 nfs:
   enabled: false
-  # Required until https://github.com/2i2c-org/infrastructure/issues/3654 is fixed
   pv:
     enabled: false
 

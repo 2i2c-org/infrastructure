@@ -1,6 +1,8 @@
 nfs:
   enabled: true
   dirsizeReporter:
+    # We don't need to report directory sizes here, as it's already being reported on by
+    # the 'source' hub
     enabled: false
   pv:
     enabled: true

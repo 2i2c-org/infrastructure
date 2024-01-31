@@ -4,6 +4,7 @@ basehub:
     dirsizeReporter:
       enabled: true
     pv:
+      enabled: true
       mountOptions:
         - soft
         - noatime
