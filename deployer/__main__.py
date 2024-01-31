@@ -6,6 +6,7 @@ import deployer.commands.deployer  # noqa: F401
 import deployer.commands.exec.cloud  # noqa: F401
 import deployer.commands.exec.infra_components  # noqa: F401
 import deployer.commands.generate.billing.cost_table  # noqa: F401
+import deployer.commands.generate.cryptnono_config  # noqa: F401
 import deployer.commands.generate.dedicated_cluster.aws  # noqa: F401
 import deployer.commands.generate.dedicated_cluster.gcp  # noqa: F401
 import deployer.commands.generate.helm_upgrade.jobs  # noqa: F401

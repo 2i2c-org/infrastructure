@@ -422,6 +422,17 @@ cryptnono:
     # Disable the execwhacker detector for now, as it matures by being deployed on mybinder.org
     execwhacker:
       enabled: false
+      # Cryptnono can get information about what container the kill was in, so we can identify which
+      # user was cryptomining
+      containerdHostPath: /run/containerd/containerd.sock
+      metrics:
+        enabled: true
+      configs:
+        unencrypted-test-01:
+          bannedCommandStrings:
+            # Provide an unencrypted, randomly generated test string. All processes that have this in their commandline will be killed.
+            # This is helpful for testing execwhacker is enabled and functional
+            - beiquatohGa1uay0ahMies9couyahPeiz9xohju3Ahvaik3FaeM7eey1thaish1U
     monero:
       enabled: true
       resources:
