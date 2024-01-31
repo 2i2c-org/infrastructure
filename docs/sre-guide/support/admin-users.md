@@ -32,7 +32,7 @@ Requests to make specific users admin are handled via Freshdesk.
 
 ## Caveats & future work
 
-We don't have a clearly stated policy on wether admin access should
+We don't have a clearly stated policy on whether admin access should
 be granted via config or via existing admins marking other users as
 admin. Marking other users as admins via the admin interface may
 cause them to lose that status if we ever have to nuke and redeploy
