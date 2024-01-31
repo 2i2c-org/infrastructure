@@ -34,12 +34,16 @@ repos:
     rev: "23.12.1"
     hooks:
       - id: black
+        # This is a `.py` file but is encrypted with sops
+        exclude: deployer/commands/generate/cryptnono_config/enc-blocklist-generator.secret.py
 
   # Lint: Python code
   - repo: https://github.com/pycqa/flake8
     rev: "6.1.0"
     hooks:
       - id: flake8
+        # This is a `.py` file but is encrypted with sops
+        exclude: deployer/commands/generate/cryptnono_config/enc-blocklist-generator.secret.py
 
   # Run `terraform fmt` on all our terraform files automatically
   - repo: https://github.com/yuvipanda/terraform-bin
