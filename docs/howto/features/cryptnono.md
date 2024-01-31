@@ -131,7 +131,7 @@ This will update the file `helm-charts/support/enc-cryptnono.secret.values.yaml`
 
 The banned strings generator is a fairly simple python script, present in `deployer/commands/generate/cryptnono_config/enc-blocklist-generator.secret.py`.
 It's unencrypted and loaded by code in `deployer/commands/generate/cryptnono_config/__init__.py`. There is inline
-documentation in `encrypted_secret_blocklist.py`, but how does one hack on it?
+documentation in `enc-blocklist-generator.secret.py`, but how does one maintain it?
 
 1. Unencrypt the file with `sops`
 
