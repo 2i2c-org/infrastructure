@@ -27,7 +27,7 @@ Cryptnono currently has two primary detectors:
    Since making the list of banned strings public would make ban evasion easy, the list of
    strings (and the method used to generate them) is encrypted. You can read more details
    about the specific method used by looking in the encrypted code file (`deployer/commands/generate/cryptnono_config/encrypted_secret_blocklist.py`)
-   in this repository.
+   in the `infrastructure` repository.
 
    Since this detector may have a non-0 false positive rate, it is currently *not* enabled by
    default. However, eventually, once the config matures enough (and we have tested it enough),
