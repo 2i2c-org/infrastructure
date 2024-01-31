@@ -89,9 +89,4 @@ jupyterhub:
   hub:
     config:
       JupyterHub:
-        authenticator_class: tmpauthenticator.TmpAuthenticator
-      TmpAuthenticator:
-        # This allows users to go to the hub URL directly again to
-        # get a new server, instead of being plopped back into their
-        # older, existing user with a 'start server' button.
-        force_new_server: true
+        authenticator_class: tmp
