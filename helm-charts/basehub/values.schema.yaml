@@ -215,7 +215,7 @@ properties:
             type: string
           shareNameOverride:
             type: string
-            descirption: |
+            description: |
               Optional string to use as the name of the share - defaults to name of the
               hub specified in the cluster.yaml file.
   inClusterNFS:
