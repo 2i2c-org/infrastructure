@@ -87,7 +87,7 @@ to understand why - it may also lead to more tweaking of the generator config.
 
    ```bash
    kubectl -n support get pod \
-    --field-selector spec.nodeName=<name-of-node>\
+    --field-selector spec.nodeName=<name-of-node> \
     -l app.kubernetes.io/name=cryptnono
    ```
 
