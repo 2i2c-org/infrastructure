@@ -63,7 +63,7 @@ jupyterhub:
     defaultUrl: /lab
     image:
       name: quay.io/2i2c/hhmi-spyglass-image
-      tag: "8be848d09076"
+      tag: "67523d9ea855"
     extraContainers:
       - name: mysql
         image: datajoint/mysql # following the spyglass tutorial at https://lorenfranklab.github.io/spyglass/latest/notebooks/00_Setup/#existing-database
