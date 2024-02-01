@@ -3,7 +3,6 @@
 Requests to make specific users admin are handled via Freshdesk.
 
 1. Validate that the person asking is allowed to ask for this
-   TODO: Link to the team-compass page once that is merged
 
 2. Make sure that the username is in the correct format for the hub!
    This means GitHub handles for GitHub Auth, appropriate values based on
