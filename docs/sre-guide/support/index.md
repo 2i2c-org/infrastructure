@@ -12,4 +12,5 @@ decrypt-age
 build-image-remotely
 credits
 grafana-account
+admin-users
 ```
