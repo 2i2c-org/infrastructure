@@ -54,7 +54,7 @@ runs:
     # action is run, as its only done after the "generate-jobs" job has been run
     # which will save a cache.
     - name: Restore pip's install cache
-      uses: actions/cache@v3
+      uses: actions/cache@v4
       with:
         path: ~/.cache/pip
         # key determines if we define or re-use an existing cache or not. Our
