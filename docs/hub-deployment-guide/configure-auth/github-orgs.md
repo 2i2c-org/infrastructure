@@ -242,7 +242,7 @@ belongs to, and they will get an opaque 'Access denied' error.
 1. Check with the community to know *when* is a good time to log everyone
    out. If users have running servers, they will need to refresh the page -
    which will put them through the authentication flow again. It's best to
-   do this at a time when minimal or no users are running, to minimze
+   do this at a time when minimal or no users are running, to minimize
    disruption.
 
 2. We log everyone out by regenerating [hub.cookieSecret](https://z2jh.jupyter.org/en/stable/resources/reference.html#hub-cookiesecret).
