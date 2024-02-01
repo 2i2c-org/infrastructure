@@ -2,7 +2,7 @@
 
 This is used in two places:
 
-- docs/_static/hub-options-table.json is published with the docs and meant for re-use in other parts of 2i2c
+- docs/_static/hub-options-table.json is published with the docs and meant for reuse in other parts of 2i2c
 - docs/tmp/hub-options-table.csv is read by reference/options.md to create a list of hubs
 """
 import hcl2
@@ -171,7 +171,7 @@ def build_options_list_entry(hub, hub_count, values_files_features, terraform_fe
         "user buckets (scratch/persistent)": terraform_features.get(
             hub["name"], {}
         ).get("user_buckets", False),
-        "requestor pays for buckets storage": terraform_features.get(
+        "requester pays for buckets storage": terraform_features.get(
             hub["name"], {}
         ).get("requestor_pays", False),
         "authenticator": values_files_features["authenticator"],

@@ -27,7 +27,7 @@ jupyterhub:
       #       https://github.com/2i2c-org/infrastructure/issues/2121.
       #
       #       - Memory requests are different from the description, based on:
-      #         whats found to remain allocate in k8s, subtracting 1GiB
+      #         what's found to remain allocate in k8s, subtracting 1GiB
       #         overhead for misc system pods, and transitioning from GB in
       #         description to GiB in mem_guarantee
       #         https://cloud.google.com/kubernetes-engine/docs/concepts/plan-node-sizes.

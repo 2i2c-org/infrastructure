@@ -1,7 +1,7 @@
 apiVersion: v2
 name: support
 version: "0.1.0"
-description: Cluster wide depdencies for deployed hubs
+description: Cluster wide dependencies for deployed hubs
 
 dependencies:
   # Prometheus for collection of metrics.

@@ -65,7 +65,7 @@ Navigating at <https://grafana.pilot.2i2c.cloud/dashboards>, shows a `JupyterHub
   - user CPU usage distribution
   - user memory usage distribution
   - server start times
-  - hub respone latency
+  - hub response latency
 
   There is also a Panel section about `Anomalous user pods` where pods with high CPU usage or high memory usage are tracked.
 

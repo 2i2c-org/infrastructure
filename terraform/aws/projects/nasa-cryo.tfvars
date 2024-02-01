@@ -25,7 +25,7 @@ hub_cloud_permissions = {
     requestor_pays : true,
     bucket_admin_access : ["scratch-staging", "persistent-staging"],
     # Provides readonly requestor-pays access to usgs-landsat bucket
-    # FIXME: We should find a way to allow access to *all* requestor pays
+    # FIXME: We should find a way to allow access to *all* requester pays
     # buckets, without having to explicitly list them. However, we don't want
     # to give access to all *internal* s3 buckets willy-nilly - this can be
     # a massive security hole, especially if terraform state is also here.
@@ -60,7 +60,7 @@ hub_cloud_permissions = {
     requestor_pays : true,
     bucket_admin_access : ["scratch", "persistent"],
     # Provides readonly requestor-pays access to usgs-landsat bucket
-    # FIXME: We should find a way to allow access to *all* requestor pays
+    # FIXME: We should find a way to allow access to *all* requester pays
     # buckets, without having to explicitly list them. However, we don't want
     # to give access to all *internal* s3 buckets willy-nilly - this can be
     # a massive security hole, especially if terraform state is also here.

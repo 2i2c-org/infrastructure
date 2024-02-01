@@ -44,7 +44,7 @@ or can wait for review.  That said, sometimes the only way to
 understand the impact of a change is to merge and see how things go,
 so use your best judgment!
 
-Here is a list of things you can clearly, unambigously self merge without
+Here is a list of things you can clearly, unambiguously self merge without
 any approval.
 
 1. Updating admin users for a hub
@@ -119,7 +119,7 @@ To deploy changes to the authentication workflow, follow these steps:
    - cluster: `utoronto`, hub: `staging` (Azure AD)
    - cluster: `2i2c`, hub: `staging` (CILogon)
 1. **Login into the staging hubs**. Try logging in into the hubs where you deployed your changes.
-1. **Start a server**. Afer you've logged into the hub, make sure everything works as expected by spinning up a server.
+1. **Start a server**. After you've logged into the hub, make sure everything works as expected by spinning up a server.
 1. **Post the status of the manual steps above**. In your PR's top comment, post the hubs where you've deployed the changes and whether or not they are functioning properly.
 1. **Wait for review and approval**. Leave the PR open for other team members to review and approve.
 

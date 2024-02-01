@@ -226,7 +226,7 @@ variable "core_node_max_count" {
   Core nodes can scale up to this many nodes if necessary.
   They are part of the 'base cost', should be kept to a minimum.
   This number should be small enough to prevent runaway scaling,
-  but large enough to support ocassional spikes for whatever reason.
+  but large enough to support occasional spikes for whatever reason.
 
   Minimum node count is fixed at 1.
   EOT
@@ -267,7 +267,7 @@ variable "user_buckets" {
   'delete_after' specifies the number of days after which any content
   in the bucket will be deleted. Set to null to not delete data.
 
-  'extra_admin_members' describes extra identies (user groups, user accounts,
+  'extra_admin_members' describes extra identities (user groups, user accounts,
   service accounts, etc) that will have *full* access to this bucket. This
   is primarily useful for moving data into and out of buckets from outside
   the cloud. See https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/storage_bucket_iam#member/members

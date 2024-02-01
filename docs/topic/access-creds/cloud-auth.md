@@ -44,7 +44,7 @@ AWS Organizations
 
 (cloud-access:aws-management-account)=
 AWS Management Account
-: A special account that is a centralized place for configuration for an AWS Organization and other accounts that might be in it. Our AWS Management account is `2i2c-sandbox`. It defines our **payment methods** for centralized payment across all of our accounts. So each of our AWS Accounts generates a bill, and these are consolidated into `2i2c-sandbox` and payed with a single credit card.
+: A special account that is a centralized place for configuration for an AWS Organization and other accounts that might be in it. Our AWS Management account is `2i2c-sandbox`. It defines our **payment methods** for centralized payment across all of our accounts. So each of our AWS Accounts generates a bill, and these are consolidated into `2i2c-sandbox` and paid with a single credit card.
 
 
 (cloud-access:aws-sso)=

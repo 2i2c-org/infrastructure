@@ -35,7 +35,7 @@ terraform to provision supporting infrastructure, such as storage buckets.
 (new-cluster:aws-setup-credentials)=
 ### Setup credentials
 
-Depending on wether this project is using AWS SSO or not, you can use the following
+Depending on whether this project is using AWS SSO or not, you can use the following
 links to figure out how to authenticate to this project from your terminal.
 
 - [For accounts setup with AWS SSO](cloud-access:aws-sso:terminal)

@@ -41,7 +41,7 @@ subcharts of the daskhub.
 ```
 % The editable version of the diagram is here: https://docs.google.com/presentation/d/1KMyrTd3wdR715tPGuzIHkHqScXBlLpeiksIM2x7EI0g/edit?usp=sharing
 
-This hierachy is the reason why when adding a new hub using the `daskhub`
+This hierarchy is the reason why when adding a new hub using the `daskhub`
 specific configuration in a `*.values.yaml` file needs to be nested under a `basehub` key, indicating that we are overriding configuration
 from the *basehub/jupyterhub* parent chart.
 

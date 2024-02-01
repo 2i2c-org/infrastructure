@@ -383,7 +383,7 @@ Once you run this command, run `export DOCKER_HOST=tcp://localhost:23760` in ano
 docker daemon.
 
 #### `exec shell`
-This exec sub-command can be used to aquire a shell in various places of the infrastructure.
+This exec sub-command can be used to acquire a shell in various places of the infrastructure.
 
 ##### `exec shell hub`
 

@@ -16,5 +16,5 @@ redirects:
 ```
 
 You can add any number of such redirects. They will all be `302 Temporary`
-redirects, in case we want to re-use the old domain for something else in
+redirects, in case we want to reuse the old domain for something else in
 the future.

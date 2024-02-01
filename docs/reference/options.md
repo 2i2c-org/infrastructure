@@ -48,7 +48,7 @@ $(document).ready( function () {
             {"render": checkbox}, // dedicated cluster column
             {"render": checkbox}, // dedicated nodepool column
             {"render": checkbox}, // user buckets (scratch/persistent) column
-            {"render": checkbox}, // requestor pays for buckets storage column
+            {"render": checkbox}, // requester pays for buckets storage column
             null, // authenticator column
             {"render": checkbox}, // user anonymisation column
             {"render": checkbox}, // allusers access column
@@ -231,7 +231,7 @@ flowchart TB
         public_bucket[Publicly accessible]
         from_hub[Buckets accessible from the Hub]
         outside_hub[Buckets accessible from outside the Hub]
-        requestor_pays[Requestor Pays]
+        requestor_pays[Requester Pays]
 
         hub_cloud_permissions --> outside_hub
         hub_cloud_permissions -- default --> from_hub

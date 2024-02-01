@@ -15,7 +15,7 @@ Next, copy home directory contents from the old cluster to the new cluster.
 
 ```{note}
 This might not entirely be necessary - if the source and target cluster
-are in the same GCP Project / AWS Account, we can just re-use the same
+are in the same GCP Project / AWS Account, we can just reuse the same
 home directory storage!
 ```
 
@@ -33,7 +33,7 @@ Primarily used with GKE right now.
    NFS server will be able to open SSH connections to the source NFS server.
 4. Copy the NFS home directories from the source NFS server to
    the target NFS server, making sure that the NFS exports locations
-   match up appopriately. For example, if the source NFS server has
+   match up appropriately. For example, if the source NFS server has
    home directories for each hub stored in `/export/home-01/homes`,
    and the target NFS server also has hub home directories stored under
    `/export/home-01/homes`, you can `scp` the contents across with:
@@ -99,7 +99,7 @@ source & dest EFS instances are created, create a DataSync instance in the the
 VPC, Subnet and Security Group that have access to the EFS instance (you can
 find these details in the 'Network' tab of the EFS page in the AWS Console). Set
 the transfer to hourly, but immediately manually start the sync task. Once the
-data is transfered over and verified, switch the EFS used in the hub config.
+data is transferred over and verified, switch the EFS used in the hub config.
 Remember to delete the datasync instance soon after - or it might incur extra
 charges!
 
@@ -191,7 +191,7 @@ Tip: You can use [this script](https://github.com/2i2c-org/infrastructure/tree/H
 Make sure the new cluster has Grafana Dashboards deployed. If not, follow the steps in [](setup-grafana). Also, verify if the old cluster had Prometheus deployed and whether you also need to migrate that.
 
 ## 4. Take down the current hub
-Delete the proxy service to make the hub unreacheable.
+Delete the proxy service to make the hub unreachable.
 
 ``` bash
 kubectl delete svc proxy-public -n <old_prod_namespace>

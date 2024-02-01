@@ -25,7 +25,7 @@ logs are kept for 30 days, and are searchable.
    as time sliders. However, for most of our logs, the 'log levels' (error, warning, etc)
    are not parsed correctly, and hence are useless.
 
-4. Google provies a [query library](https://cloud.google.com/logging/docs/view/query-library) set of [sample queries](https://cloudlogging.app.goo.gl/Ad7B8hjFHpj6X7rT8) that you can access via the Library tab in Logs Explorer.
+4. Google provides a [query library](https://cloud.google.com/logging/docs/view/query-library) set of [sample queries](https://cloudlogging.app.goo.gl/Ad7B8hjFHpj6X7rT8) that you can access via the Library tab in Logs Explorer.
 
 
 ### Common queries

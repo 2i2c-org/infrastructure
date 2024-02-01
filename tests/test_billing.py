@@ -198,7 +198,7 @@ def test_shared_cluster_internal(shared_cluster, start_date, end_date):
     ), "Utilization for 2i2c_costs should be 0.75"
     assert (
         "staging" not in rows
-    ), "Utilization for 2i2c_costs should replace interal namespaces"
+    ), "Utilization for 2i2c_costs should replace internal namespaces"
 
 
 def test_shared_cluster_aggregates_internal(shared_cluster, start_date, end_date):

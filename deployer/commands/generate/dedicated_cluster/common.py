@@ -92,7 +92,7 @@ def generate_support_files(cluster_config_directory, vars):
         - `config/<cluster_name>/support.values.yaml`
         - `config/<cluster_name>/enc-support.secret.values.yaml`
     """
-    # Generate the suppport values file `support.values.yaml`
+    # Generate the support values file `support.values.yaml`
     print_colour("Generating the support values file...", "yellow")
     with open(
         REPO_ROOT_PATH / "config/clusters/templates/common/support.values.yaml"

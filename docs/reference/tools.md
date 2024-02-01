@@ -84,7 +84,7 @@ to encrypt our secrets, so you need the Google Cloud tools installed and
 authenticated locally (following [the instructions here](https://github.com/mozilla/sops/#23encrypting-using-gcp-kms))
 before you can use sops.
 
-`sops` is called programatically by our deployment scripts to decrypt
+`sops` is called programmatically by our deployment scripts to decrypt
 files for deployment, and you will use it interactively to modify or encrypt
 new files.
 

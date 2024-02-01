@@ -55,7 +55,7 @@ Two inputs are required for this Action:
 2. A variable called `chart_urls` which is a dictionary containing information about the sub-charts we wish to bump in the given config file.
    By providing a dictionary in this way, we can choose to include/exclude sub-charts in the given config from being bumped.
 
-The `chart_urls` has the sub-charts we wish to bump as keys, and URLs where a list of pulished versions of those charts is available.
+The `chart_urls` has the sub-charts we wish to bump as keys, and URLs where a list of published versions of those charts is available.
 An example below would bump the JupyterHub subchart of the basehub helm chart.
 
 ```json

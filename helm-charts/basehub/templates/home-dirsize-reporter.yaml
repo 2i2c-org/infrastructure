@@ -38,7 +38,7 @@ spec:
           image: quay.io/yuvipanda/prometheus-dirsize-exporter:v3.0
           resources:
             # Provide limited resources for this collector, as it can
-            # baloon up (especially in CPU) quite easily. We are quite ok with
+            # balloon up (especially in CPU) quite easily. We are quite ok with
             # the collection taking a while as long as we aren't costing too much
             # CPU or RAM
             requests:

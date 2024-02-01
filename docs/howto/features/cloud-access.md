@@ -136,6 +136,6 @@ This AWS IAM Role is managed via terraform.
     If the hub is a `daskhub`, nest the config under a `basehub` key
     ```
 
-7. Get this change deployed, and users should now be able to use the requestor pays feature!
+7. Get this change deployed, and users should now be able to use the requester pays feature!
    Currently running users might have to restart their pods for the change to take effect.
 

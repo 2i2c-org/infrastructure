@@ -254,7 +254,7 @@ resource "google_container_node_pool" "notebook" {
   version  = coalesce(each.value.node_version, var.k8s_versions.notebook_nodes_version)
 
   # terraform treats null same as unset, so we only set the node_locations
-  # here if it is explicitly overriden. If not, it will just inherit whatever
+  # here if it is explicitly overridden. If not, it will just inherit whatever
   # is set for the cluster.
   node_locations = length(each.value.zones) == 0 ? null : each.value.zones
 
@@ -357,7 +357,7 @@ resource "google_container_node_pool" "dask_worker" {
   version  = var.k8s_versions.dask_nodes_version
 
   # terraform treats null same as unset, so we only set the node_locations
-  # here if it is explicitly overriden. If not, it will just inherit whatever
+  # here if it is explicitly overridden. If not, it will just inherit whatever
   # is set for the cluster.
   node_locations = length(each.value.zones) == 0 ? null : each.value.zones
 

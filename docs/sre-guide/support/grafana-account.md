@@ -29,7 +29,7 @@ However, for now, we can **invite** individual users to a grafana via the Grafan
    and then select "Users".
 
    ```{figure} ../../images/grafana-grant-access_step-3a.jpg
-   Location of the "hamburger" menu on the Grafana dashbaord
+   Location of the "hamburger" menu on the Grafana dashboard
    ```
 
    ```{figure} ../../images/grafana-grant-access_step-3b.jpg
@@ -72,5 +72,5 @@ However, for now, we can **invite** individual users to a grafana via the Grafan
    ```
 
    ```{warning}
-   Anyone posessing this invite link can access the grafana, so make sure to not leak it!
+   Anyone possessing this invite link can access the grafana, so make sure to not leak it!
    ```
