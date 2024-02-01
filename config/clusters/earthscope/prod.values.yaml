@@ -1,9 +1,9 @@
 basehub:
   jupyterhub:
     ingress:
-      hosts: [earthscope.2i2c.cloud]
+      hosts: [geolab.earthscope.cloud]
       tls:
-        - hosts: [earthscope.2i2c.cloud]
+        - hosts: [geolab.earthscope.cloud]
           secretName: https-auto-tls
     custom:
       homepage:
@@ -13,11 +13,9 @@ basehub:
     hub:
       config:
         CustomAuth0OAuthenticator:
-          logout_redirect_to_url: https://earthscope.2i2c.cloud
+          logout_redirect_to_url: https://geolab.earthscope.cloud
         Auth0OAuthenticator:
           auth0_domain: login.earthscope.org
           extra_authorize_params:
             # This isn't an actual URL, just a string. Must not have a trailing slash
             audience: https://api.earthscope.org
-        CILogonOAuthenticator:
-          oauth_callback_url: https://earthscope.2i2c.cloud/hub/oauth_callback
