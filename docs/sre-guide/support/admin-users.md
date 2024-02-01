@@ -19,7 +19,7 @@ Requests to make specific users admin are handled via Freshdesk.
 
 4. Make a pull request with this change, and you can self merge this.
 
-5. Let the requestor know this has been deployed. You may use the following template:
+5. Let the requester know this has been deployed. You may use the following template:
 
    > Hello {{ Name }}
    >
