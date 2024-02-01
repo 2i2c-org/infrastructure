@@ -55,7 +55,8 @@ any approval.
 6. Emergency (eg exam, outage) related resource bumps
 7. *Cleanly* reverting a change that failed CI
 8. Updating soon to be expired credentials
-  
+9. Spelling and grammar error fixes in documentation or code comments
+
 ## Self-merging as a community partner
 
 As part of our [shared responsibility model](https://docs.2i2c.org/en/latest/about/service/shared-responsibility.html), we may grant merge rights to partner engineers.
