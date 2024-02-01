@@ -56,7 +56,7 @@ jobs:
             issue_author: "${{ github.event.issue.user.login }}"
       - name: Create comment
         if: ${{ steps.find-missing-info.outputs.pending_info }}
-        uses: peter-evans/create-or-update-comment@v3
+        uses: peter-evans/create-or-update-comment@v4
         with:
           issue-number: ${{ github.event.issue.number }}
           body: ${{ steps.template.outputs.result }}
