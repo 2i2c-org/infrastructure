@@ -31,6 +31,12 @@ updates:
     schedule:
       # Check for updates once a week. By default, this check happens on a Monday.
       interval: "monthly"
+    groups:
+      # Group all GHA updates together (to avoid desync in related actions e.g. upload-artifact, download-artifact)
+      # ref: https://docs.github.com/en/code-security/dependabot/dependabot-version-updates/configuration-options-for-the-dependabot.yml-file#groups
+      actions:
+        patterns:
+          - "*"
     ignore:
       # Ignore patch upgrades to further reduce noise
       - update-types: ["version-update:semver-patch"]
