@@ -49,6 +49,9 @@ provide persistent storage. So we turn it all off - particularly the home direct
 ```yaml
 nfs:
   enabled: false
+  # Required until https://github.com/2i2c-org/infrastructure/issues/3654 is fixed
+  pv:
+    enabled: false
 
 jupyterhub:
   custom:
