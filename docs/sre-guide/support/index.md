@@ -13,4 +13,5 @@ build-image-remotely
 credits
 grafana-account
 admin-users
+community-domains.md
 ```
