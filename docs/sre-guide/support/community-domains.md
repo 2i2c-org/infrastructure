@@ -148,20 +148,20 @@ point to the new domain, users can not log in to the old domain anymore!
 
 Use the `deployer cilogon-client` command to update the existing CILogon client application.
 
-This commands needs to be passed the cluster name, the hub name and the **new domain**.
-
-The example below updates the 2i2c's staging hub domain to ` new-domain.staging.2i2c.cloud`.
+This commands needs to be passed the cluster name, the hub name and the **new community managed domain**.
 
 ```bash
-deployer cilogon-client update 2i2c staging new-domain.staging.2i2c.cloud
+deployer cilogon-client update {{ cluster name }} {{ hub name }} {{ community managed domain}}
 ```
 
-````{tip}
-You can use the get command afterwards to verify that the update happened successfully and check the `redirect_urls` list in the output dictionary of the command.
+You can verify this was updated correctly by looking at the output of the following command:
 
 ```bash
-deployer cilogon-client get 2i2c staging
+deployer cilogon-client get {{ cluster name }} {{ hub name }}
 ```
+
+The `redirect_uris` field should have the new community managed domain, and should match
+the value in `jupyterhub.hub.config.CILogonOAuthenticator.oauth_callback_url``
 
 #### Auth0 Authentication
 
