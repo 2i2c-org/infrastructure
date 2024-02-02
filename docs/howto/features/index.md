@@ -27,7 +27,7 @@ See the sections below for more details.
 ### Community Customization Layer
 ```{toctree}
 :maxdepth: 1
-1. Community specific hub domain <../manage-domains/set-cnames>
+1. Community managed hub domain <../../sre-guide/support/community-domains>
 2. Configure the hub login page <login-page.md>
 ```
 3. Customizations of hub pages

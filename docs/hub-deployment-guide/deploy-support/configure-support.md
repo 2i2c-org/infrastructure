@@ -90,6 +90,7 @@ support:
     - support.values.yaml
 ```
 
+(deploy-support-chart:manual)=
 ## Deploy the `support` chart via the `deployer`
 
 Use the `deployer` tool to deploy the support chart to the cluster.
