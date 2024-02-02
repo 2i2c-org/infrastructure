@@ -146,8 +146,21 @@ point to the new domain, users can not log in to the old domain anymore!
 
 #### CILogon Authentication
 
-```{todo}
-This section to be filled in :)
+Use the `deployer cilogon-client` command to update the existing CILogon client application.
+
+This commands needs to be passed the cluster name, the hub name and the **new domain**.
+
+The example below updates the 2i2c's staging hub domain to ` new-domain.staging.2i2c.cloud`.
+
+```bash
+deployer cilogon-client update 2i2c staging new-domain.staging.2i2c.cloud
+```
+
+````{tip}
+You can use the get command afterwards to verify that the update happened successfully and check the `redirect_urls` list in the output dictionary of the command.
+
+```bash
+deployer cilogon-client get 2i2c staging
 ```
 
 #### Auth0 Authentication
