@@ -57,10 +57,31 @@ There are two distinct ML ecosystems in python - based on
 [tensorflow](https://www.tensorflow.org/) and [pytorch](https://pytorch.org/).
 Does the package depend transitively on either of these packages?
 
-```{note}
-We need to provide a simple way to determine this transitive dependency. Currently
-it's up to the implementor to figure that out
+#### Check dependencies on `pip`
+
+If we are installing from `PyPI` via `pip`, you can check transitive dependencies
+via the excellent [libraries.io](https://libraries.io).
+
+1. Go to the [libraries.io/pypi](https://libraries.io/pypi/) page - this collects
+   and provides many useful pieces of information about packages on PyPI.
+2. Search for the name of the package, and open its page.
+3. In the right sidebar, under 'Dependencies', click 'Explore' dependencies.
+   This should take you to a dependency tree page, showing all dependencies
+   (including transitive dependencies). Here is what that looks
+   like for [pymc3](https://libraries.io/pypi/pymc3/3.11.5/tree).
+4. Search for `tensorflow` or `torch` (the package name for pytorch) here.
+
+#### Check dependencies on `conda`
+
+If the package is in `conda-forge` and you have [mamba](https://mamba.readthedocs.io)
+locally installed, you can use the [mamba repoquery](https://mamba.readthedocs.io/en/latest/user_guide/mamba.html#repoquery)
+command. For example, to find all the dependencies of `pymc`, you would run:
+
+```bash
+mamba repoquery depends -c conda-forge pymc --tree
 ```
+
+This should show you all the transitive dependencies
 
 #### No
 
