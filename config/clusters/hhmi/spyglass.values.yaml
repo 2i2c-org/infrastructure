@@ -66,6 +66,15 @@ jupyterhub:
     image:
       name: quay.io/2i2c/hhmi-spyglass-image
       tag: "67523d9ea855"
+    profileList:
+      - display_name: "Spyglass"
+        description: "3.4GB RAM environment for spyglass notebooks"
+        default: true
+        kubespawner_override:
+          mem_guarantee: 3.4G
+          mem_limit: 3.4G
+          node_selector:
+            node.kubernetes.io/instance-type: n2-highmem-4
     extraContainers:
       - name: mysql
         image: datajoint/mysql # following the spyglass tutorial at https://lorenfranklab.github.io/spyglass/latest/notebooks/00_Setup/#existing-database
