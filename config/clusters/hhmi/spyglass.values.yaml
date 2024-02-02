@@ -66,7 +66,6 @@ jupyterhub:
     image:
       name: quay.io/2i2c/hhmi-spyglass-image
       tag: "67523d9ea855"
-    profileList: null
     memory:
       limit: 3.4G
       guarantee: 3.4G
