@@ -28,7 +28,7 @@ is simple, and if so, complete it.
         i. [jupyter/docker-stacks](https://github.com/jupyter/docker-stacks)
         ii. [pangeo-docker-images](https://github.com/pangeo-data/pangeo-docker-images/)
 
-If *any* of these pre-requisites are not met, escalate to all of engineering to figure this out.
+If *any* of these pre-requisites are not met, go straight to [escalation](sre-guide:support:simple-python-package:escalation).
 
 ## Determine if this is a 'simple' package addition
 
@@ -43,7 +43,8 @@ If *any* of these pre-requisites are not met, escalate to all of engineering to 
   can install it from there. In the meantime, they can test it within their
   environment by just `pip install`ing from their github repo.
 
-- Package is available in a non-conda-forge channel -> Escalate to rest of the
+- Package is available in a non-conda-forge channel ->
+  [Escalate](sre-guide:support:simple-python-package:escalation) to rest of the
   team, as mixing conda channels can get messy and complex.
 
 #### Yes
@@ -77,8 +78,9 @@ Yes, this is a *simple* package addition. Proceed to implementation.
 
 #### No
 
-No, this is not a simple package addition. Escalate to the rest of the team, to help choose
-between:
+No, this is not a simple package addition.
+[Escalate](sre-guide:support:simple-python-package:escalation) to the rest of
+the team, to help choose between:
 
 1. Adding ML packages to existing image
 2. Suggesting the community to use a different image as part of a `profileList`
@@ -131,10 +133,22 @@ You can self merge the PR and roll it out to staging for the requester to test. 
 
 #### No
 
-Escalate to engineering so this can be debugged. We should communicate this to the requester as well. The following template may be used:
+[Escalate](sre-guide:support:simple-python-package:escalation) to the whole team
+so this can be debugged. We should communicate this escalation to the requester as well.
+The following template may be used:
 
 > Hello {{ name of requester }}
 >
 > We tried to add the package you requested in {{ link to PR }}. However, it looks like the package addition is not simple, and the build has failed. I've escalated this to our general engineering prioritization process, and we will get back to you once we have more information. Thank you for your patience!
 >
 > Thanks!
+
+(sre-guide:support:simple-python-package:escalation)=
+## Escalation
+
+If this is *not* a simple package installation, escalate this to rest of engineering in the following way:
+
+1. If it doesn't already exist, create a [freshdesk tracking issue](https://github.com/2i2c-org/infrastructure/issues/new?assignees=&labels=support&projects=&template=5_freshdesk-ticket.yml&title=%5BSupport%5D+%7B%7B+Ticket+name+%7D%7D)
+   in the `2i2c-org/infrastructure` repository. Make sure to fill in whatever you have learnt so
+   far.
+2. Raise this in the `#support-freshdesk` channel on slack for further help and action.
