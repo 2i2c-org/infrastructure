@@ -5,6 +5,5 @@ of our hubs and how to go about achieving that.
 
 ```{toctree}
 :maxdepth: 2
-redirects.md
 override-domain.md
 ```
