@@ -64,6 +64,9 @@ repos:
     rev: v2.2.5
     hooks:
       - id: codespell
+        args:
+          # Autofix known typos
+          - --write-changes
         additional_dependencies:
           - tomli
 
