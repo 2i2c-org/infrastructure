@@ -204,7 +204,7 @@ basehub:
                   default: true
                   slug: "pangeo"
                   kubespawner_override:
-                    image: "pangeo/pangeo-notebook:2023.08.292024.01.23"
+                    image: "pangeo/pangeo-notebook:2024.01.23"
                 tensorflow:
                   display_name: Pangeo Tensorflow ML Notebook
                   slug: "tensorflow"
