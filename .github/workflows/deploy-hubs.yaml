@@ -82,7 +82,7 @@ jobs:
       # this job is re-attempted as part of the same workflow run after
       # succeeding previously.
       - name: Save pip's install cache on job completion
-        uses: actions/cache@v3
+        uses: actions/cache@v4
         with:
           path: ~/.cache/pip
           # key determines if we define or reuse an existing cache or not. Our
