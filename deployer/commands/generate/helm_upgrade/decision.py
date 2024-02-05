@@ -3,6 +3,7 @@ Functions related to deciding which clusters and/or hubs need their *hub helm ch
 support helm chart upgrading depending on an input list of filenames that have been
 added or modified in a GitHub Pull Request.
 """
+
 import fnmatch
 
 from rich.console import Console
@@ -111,9 +112,9 @@ def generate_hub_matrix_jobs(
             matrix_job["hub_name"] = hub["name"]
 
             if upgrade_all_hubs_on_all_clusters:
-                matrix_job[
-                    "reason_for_redeploy"
-                ] = "Core infrastructure has been modified"
+                matrix_job["reason_for_redeploy"] = (
+                    "Core infrastructure has been modified"
+                )
 
             matrix_jobs.append(matrix_job)
 
@@ -133,10 +134,9 @@ def generate_hub_matrix_jobs(
                 # upgraded
                 matrix_job = cluster_info.copy()
                 matrix_job["hub_name"] = hub["name"]
-                matrix_job[
-                    "reason_for_redeploy"
-                ] = "Following helm chart values files were modified: " + ", ".join(
-                    [path.name for path in intersection]
+                matrix_job["reason_for_redeploy"] = (
+                    "Following helm chart values files were modified: "
+                    + ", ".join([path.name for path in intersection])
                 )
                 matrix_jobs.append(matrix_job)
 
@@ -210,9 +210,9 @@ def generate_support_matrix_jobs(
             matrix_job["upgrade_support"] = True
 
             if upgrade_support_on_all_clusters:
-                matrix_job[
-                    "reason_for_support_redeploy"
-                ] = "Support helm chart has been modified"
+                matrix_job["reason_for_support_redeploy"] = (
+                    "Support helm chart has been modified"
+                )
 
             matrix_jobs.append(matrix_job)
 
@@ -227,10 +227,9 @@ def generate_support_matrix_jobs(
             if intersection:
                 matrix_job = cluster_info.copy()
                 matrix_job["upgrade_support"] = True
-                matrix_job[
-                    "reason_for_support_redeploy"
-                ] = "Following helm chart values files were modified: " + ", ".join(
-                    [path.name for path in intersection]
+                matrix_job["reason_for_support_redeploy"] = (
+                    "Following helm chart values files were modified: "
+                    + ", ".join([path.name for path in intersection])
                 )
                 matrix_jobs.append(matrix_job)
 
@@ -310,9 +309,9 @@ def move_staging_hubs_to_staging_matrix(
             # Update the matching job in support_and_staging_matrix_jobs to hold
             # information related to upgrading the staging hub
             support_and_staging_matrix_jobs[job_idx]["upgrade_staging"] = True
-            support_and_staging_matrix_jobs[job_idx][
-                "reason_for_staging_redeploy"
-            ] = staging_job["reason_for_redeploy"]
+            support_and_staging_matrix_jobs[job_idx]["reason_for_staging_redeploy"] = (
+                staging_job["reason_for_redeploy"]
+            )
         else:
             # A job with a matching cluster name doesn't exist, this is because its
             # support chart doesn't need upgrading. We create a new job in that will
@@ -365,10 +364,9 @@ def ensure_support_staging_jobs_have_correct_keys(
                 # There are prod hubs on this cluster that require an upgrade, and so we
                 # also upgrade staging
                 job["upgrade_staging"] = True
-                job[
-                    "reason_for_staging_redeploy"
-                ] = "Following prod hubs require redeploy: " + ", ".join(
-                    hubs_on_this_cluster
+                job["reason_for_staging_redeploy"] = (
+                    "Following prod hubs require redeploy: "
+                    + ", ".join(hubs_on_this_cluster)
                 )
             else:
                 # There are no prod hubs on this cluster that require an upgrade, so we

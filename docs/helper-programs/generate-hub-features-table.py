@@ -5,6 +5,7 @@ This is used in two places:
 - docs/_static/hub-options-table.json is published with the docs and meant for reuse in other parts of 2i2c
 - docs/tmp/hub-options-table.csv is read by reference/options.md to create a list of hubs
 """
+
 import hcl2
 import pandas as pd
 from utils import (

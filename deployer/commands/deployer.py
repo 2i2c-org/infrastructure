@@ -1,6 +1,7 @@
 """
 Actions available when deploying many JupyterHubs to many Kubernetes clusters
 """
+
 import base64
 import os
 import subprocess

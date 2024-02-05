@@ -1,6 +1,7 @@
 """
 Simple utility to decrypt secrets sent to `support@2i2c.org` via `age`
 """
+
 import pathlib
 import subprocess
 import sys

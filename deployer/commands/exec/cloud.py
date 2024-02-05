@@ -4,6 +4,7 @@ Helper methods for commandline access to cloud providers.
 Google Cloud's `gcloud` is more user friendly than AWS's `aws`,
 so we have some augmented methods here primarily for AWS use.
 """
+
 import json
 import os
 import subprocess

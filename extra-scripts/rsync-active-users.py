@@ -9,6 +9,7 @@ home directories.
 An environment variable 'JUPYTERHUB_ADMIN' must be set with an admin token,
 obtainable from {hub_url}/hub/token by an admin user.
 """
+
 import argparse
 import os
 import string

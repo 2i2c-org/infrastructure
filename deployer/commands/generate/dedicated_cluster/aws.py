@@ -6,6 +6,7 @@ Generates:
 - a .tfvars file
 - An ssh-key (the private part is encrypted)
 """
+
 import os
 import subprocess
 

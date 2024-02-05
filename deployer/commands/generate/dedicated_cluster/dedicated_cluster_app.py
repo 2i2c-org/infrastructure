@@ -3,6 +3,7 @@ Creates a new typer application, which is then
 nested as a sub-command named "dedicated-cluster"
 under the `generate` sub-command of the deployer.
 """
+
 import typer
 
 from deployer.cli_app import generate_app

@@ -2,6 +2,7 @@
 Functions related to validating configuration files such as helm chart values and our
 cluster.yaml files
 """
+
 import functools
 import json
 import os
