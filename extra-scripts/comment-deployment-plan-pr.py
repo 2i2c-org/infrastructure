@@ -4,6 +4,7 @@ which hubs will be upgraded as a result of a merge. This script is run in CI/CD
 to download the markdown content of the deployment plan from a GitHub Actions
 workflow artifact and then post it as a comment on the PR that generated the plan.
 """
+
 import io
 import os
 import re

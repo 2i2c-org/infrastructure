@@ -57,7 +57,7 @@ runs:
       uses: actions/cache@v4
       with:
         path: ~/.cache/pip
-        # key determines if we define or re-use an existing cache or not. Our
+        # key determines if we define or reuse an existing cache or not. Our
         # key ensure we cache within a workflow run and its attempts, but not
         # between workflow runs.
         key: "${{ github.run_id }}"

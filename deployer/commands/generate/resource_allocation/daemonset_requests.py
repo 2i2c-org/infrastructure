@@ -76,12 +76,12 @@ def get_daemon_sets_requests():
         # So we have to calculate the requests of the init containers and containers separately,
         # and take the max as the effective request / limit
 
-        container_req_mem = (
-            container_req_cpu
-        ) = container_lim_mem = container_lim_cpu = 0
-        init_container_req_mem = (
-            init_container_req_cpu
-        ) = init_container_lim_mem = init_container_lim_cpu = 0
+        container_req_mem = container_req_cpu = container_lim_mem = (
+            container_lim_cpu
+        ) = 0
+        init_container_req_mem = init_container_req_cpu = init_container_lim_mem = (
+            init_container_lim_cpu
+        ) = 0
 
         for c in ds["spec"]["template"]["spec"]["containers"]:
             resources = c.get("resources", {})

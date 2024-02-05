@@ -5,6 +5,7 @@ This is used in two places:
 - docs/_static/hub-table.json is published with the docs and meant for reuse in other parts of 2i2c
 - docs/tmp/hub-table.csv is read by reference/hubs.md to create a list of hubs
 """
+
 import pandas as pd
 from utils import get_cluster_provider, get_clusters_list, write_to_json_and_csv_files
 from yaml import safe_load
@@ -71,9 +72,11 @@ def build_hub_list_entry(
         "cluster": cluster["name"],
         "provider": provider,
         "data center location": datacentre_loc,  # Americanising for you ;)
-        "UI console link": f"[Use with **{account}** account]({cluster_console_url})"
-        if cluster_console_url
-        else None,
+        "UI console link": (
+            f"[Use with **{account}** account]({cluster_console_url})"
+            if cluster_console_url
+            else None
+        ),
         "admin_url": f"[admin](https://{hub['domain']}/hub/admin)",
     }
 
