@@ -46,7 +46,11 @@ basehub:
             - NASA-Openscapes:workshopaccess-2i2c
             - NASA-Openscapes:longtermaccess-2i2c
             - NASA-Openscapes:championsaccess-2i2c
-            - nasa-openscapes-workshops  # Requested in: https://2i2c.freshdesk.com/a/tickets/1284
+            # Requested in: https://2i2c.freshdesk.com/a/tickets/1284
+            - nasa-openscapes-workshops:AdminTeam
+            - nasa-openscapes-workshops:ChampionsAccess-2i2c
+            - nasa-openscapes-workshops:LongtermAccess-2i2c
+            - nasa-openscapes-workshops:WorkshopAccess-2i2c
           kubespawner_override:
             image: openscapes/python:4f340eb
           profile_options: &profile_options
