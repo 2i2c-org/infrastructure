@@ -128,6 +128,11 @@ basehub:
             - NASA-Openscapes:workshopaccess-2i2c
             - NASA-Openscapes:longtermaccess-2i2c
             - NASA-Openscapes:championsaccess-2i2c
+            # Requested in: https://2i2c.freshdesk.com/a/tickets/1284
+            - nasa-openscapes-workshops:AdminTeam
+            - nasa-openscapes-workshops:ChampionsAccess-2i2c
+            - nasa-openscapes-workshops:LongtermAccess-2i2c
+            - nasa-openscapes-workshops:WorkshopAccess-2i2c
           kubespawner_override:
             image: openscapes/rocker:a7596b5
             # Ensures container working dir is homedir
@@ -141,6 +146,11 @@ basehub:
             - NASA-Openscapes:workshopaccess-2i2c
             - NASA-Openscapes:longtermaccess-2i2c
             - NASA-Openscapes:championsaccess-2i2c
+            # Requested in: https://2i2c.freshdesk.com/a/tickets/1284
+            - nasa-openscapes-workshops:AdminTeam
+            - nasa-openscapes-workshops:ChampionsAccess-2i2c
+            - nasa-openscapes-workshops:LongtermAccess-2i2c
+            - nasa-openscapes-workshops:WorkshopAccess-2i2c
           kubespawner_override:
             image: openscapes/matlab:2023-11-28
           profile_options: *profile_options
@@ -178,6 +188,11 @@ basehub:
             - NASA-Openscapes:workshopaccess-2i2c
             - NASA-Openscapes:longtermaccess-2i2c
             - NASA-Openscapes:championsaccess-2i2c
+            # Requested in: https://2i2c.freshdesk.com/a/tickets/1284
+            - nasa-openscapes-workshops:AdminTeam
+            - nasa-openscapes-workshops:ChampionsAccess-2i2c
+            - nasa-openscapes-workshops:LongtermAccess-2i2c
+            - nasa-openscapes-workshops:WorkshopAccess-2i2c
           scope:
             - read:org
         Authenticator:
