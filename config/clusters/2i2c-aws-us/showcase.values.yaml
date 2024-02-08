@@ -40,7 +40,7 @@ basehub:
           oauth_callback_url: "https://showcase.2i2c.cloud/hub/oauth_callback"
           populate_teams_in_auth_state: true
           allowed_organizations:
-            - 2i2c-org:research-delight-team
+            - 2i2c-community-showcase:access-2i2c-showcase
             - 2i2c-demo-hub-access:showcase-topst
             - ScienceCore
           scope:
@@ -121,7 +121,7 @@ basehub:
           description: "A shared machine, the recommended option until you experience a limitation."
           allowed_teams: &allowed_teams
             - 2i2c-org:hub-access-for-2i2c-staff
-            - 2i2c-org:research-delight-team
+            - 2i2c-community-showcase:access-2i2c-showcase
           profile_options: &profile_options
             image:
               display_name: Image
@@ -208,7 +208,6 @@ basehub:
           slug: gpu
           allowed_teams:
             - 2i2c-org:hub-access-for-2i2c-staff
-            - 2i2c-org:research-delight-gpu-team
           description: "Start a container on a dedicated node with a GPU"
           profile_options:
             image:
