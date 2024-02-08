@@ -39,7 +39,7 @@ basehub:
       defaultUrl: /lab
       extraEnv:
         GH_SCOPED_CREDS_CLIENT_ID: "Iv1.6981e043b45f042f"
-        GH_SCOPED_CREDS_ALL_URL: https://github.com/apps/openscapes-github-push-access
+        GH_SCOPED_CREDS_APP_URL: https://github.com/apps/openscapes-github-push-access
       profileList:
         - display_name: Python
           description: Python datascience environment
