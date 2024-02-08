@@ -160,6 +160,9 @@ basehub:
           allowed_teams:
             - NASA-Openscapes:longtermaccess-2i2c
             - 2i2c-org:hub-access-for-2i2c-staff
+            # Requested in: https://2i2c.freshdesk.com/a/tickets/1284
+            - nasa-openscapes-workshops:AdminTeam
+            - nasa-openscapes-workshops:LongtermAccess-2i2c
           profile_options:
             image:
               display_name: Image
