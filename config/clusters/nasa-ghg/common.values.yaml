@@ -49,6 +49,7 @@ basehub:
             - US-GHG-Center:ghg-use-case-3
             - US-GHG-Center:ghg-external-collaborators
             - US-GHG-Center:ghg-ams-2024-workshop-access
+            - US-GHG-Center:ghg-trial-access
           scope:
             - read:org
         Authenticator:
