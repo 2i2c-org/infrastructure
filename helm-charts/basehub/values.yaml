@@ -868,7 +868,9 @@ jupyterhub:
                 raise web.HTTPError(403)
 
             # Format user's teams in auth_state to "org:team"
-            teams = set([f'{team["organization"]["login"]}:{team["slug"]}' for team in auth_state["teams"]])
+            # casefold them so we can do case insensitive comparisons, as github itself is case insensitive (but preserving)
+            # for orgs and teams
+            teams = set([f'{team["organization"]["login"]}:{team["slug"]}'.casefold() for team in auth_state["teams"]])
             print(f"User {spawner.user.name} is part of teams {' '.join(teams)}")
 
             # Filter out profiles with allowed_teams set if the user isn't part
@@ -882,8 +884,10 @@ jupyterhub:
 
                 # allowed_teams can be "org" or "org:team", and we check
                 # membership just in time for orgs if needed
-                allowed_orgs = set([o for o in allowed_teams if ':' not in o])
-                allowed_teams = set([t for t in allowed_teams if ':' in t])
+                # casefold them so we can do case insensitive comparisons, as github itself is case insensitive (but preserving)
+                # for orgs and teams
+                allowed_orgs = set([o.casefold() for o in allowed_teams if ':' not in o])
+                allowed_teams = set([t.casefold() for t in allowed_teams if ':' in t])
 
                 if allowed_teams & teams:
                     print(f"Allowing profile {profile['display_name']} for user {spawner.user.name} based on team membership")
