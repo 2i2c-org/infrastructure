@@ -64,8 +64,8 @@ jupyterhub:
           readOnly: true
     defaultUrl: /lab
     image:
-      name: quay.io/2i2c/hhmi-spyglass-image
-      tag: "67523d9ea855"
+      name: quay.io/lorenlab/hhmi-spyglass-image
+      tag: "78764087554d"
     memory:
       limit: 3.4G
       guarantee: 3.4G
