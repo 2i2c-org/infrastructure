@@ -45,6 +45,12 @@ jupyterhub:
       Authenticator:
         allowed_users:
           - clare.alice.heimer@gmail.com
+          # Below are UC Berkeley tutors for spring semester 2024
+          - k_usovich@berkeley.edu
+          - bellajzhang@berkeley.edu
+          - freddygoh21@berkeley.edu
+          - knnebedum@berkeley.edu
+          - kingsun@berkeley.edu
         admin_users:
           - ericvd@berkeley.edu
           - sean.smorris@berkeley.edu
