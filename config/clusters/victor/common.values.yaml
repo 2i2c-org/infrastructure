@@ -81,9 +81,6 @@ basehub:
             node_selector:
               node.kubernetes.io/instance-type: m5.8xlarge
       defaultUrl: /lab
-      image:
-        name: pangeo/pangeo-notebook
-        tag: "2022.09.21"
     scheduling:
       userScheduler:
         enabled: true
