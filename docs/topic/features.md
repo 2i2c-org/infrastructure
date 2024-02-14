@@ -34,8 +34,22 @@ the data. This is very commonly used by organizations that provide big datasets
 on Google Cloud storage, to sustainably share costs of maintaining the data.
 
 When this feature is enabled, users on a hub accessing cloud buckets from
-other organizations marked as 'requestor pays' will increase our cloud bill.
+other organizations marked as 'Requester Pays' will increase our cloud bill.
 Hence, this is an opt-in feature.
+
+```{important}
+This feature enables the hub users to access `Requester Pays` buckets,
+**outside** of their project.
+
+However, note that this feature **does not** control which buckets **inside**
+the project will have `Requester Pays` enabled for themselves.
+
+This can be checked from the console following these steps in the
+[GCP docs](`Requester Pays`). Enabling/disabling the `Requester Pays`
+setting on a bucket can be achieved following
+[this other section](https://cloud.google.com/storage/docs/using-requester-pays#set)
+ of the GCP docs.
+```
 
 (topic:features:cloud:scratch-buckets)=
 ## 'Scratch' buckets on object storage
