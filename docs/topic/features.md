@@ -44,11 +44,14 @@ This feature enables the hub users to access `Requester Pays` buckets,
 However, note that this feature **does not** control which buckets **inside**
 the project will have `Requester Pays` enabled for themselves.
 
-This can be checked from the console following these steps in the
-[GCP docs](`Requester Pays`). Enabling/disabling the `Requester Pays`
-setting on a bucket can be achieved following
-[this other section](https://cloud.google.com/storage/docs/using-requester-pays#set)
- of the GCP docs.
+1. This can be **checked** from the console following these steps in the
+[GCP docs](https://cloud.google.com/storage/docs/using-requester-pays#check) or
+by checking the `user_buckets` configuration in the project's terraform config
+file if any `requester_pays` flag is specified because it is disabled by default.
+
+2. **Enabling or disabling** the `Requester Pays` flag on a bucket can be achieved by
+setting the [`requestor_pays`](https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/storage_bucket#requester_pays) flag to true in our terraform config
+`user_buckets` variable as described in [](howto:features:storage-buckets).
 ```
 
 (topic:features:cloud:scratch-buckets)=
