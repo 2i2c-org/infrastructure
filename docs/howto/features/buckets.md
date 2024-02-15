@@ -106,6 +106,35 @@ user_buckets = {
 }
 ```
 
+## Enabling Requester Pays flag on buckets
+
+Some hubs want to expose a particular bucket to the broad internet
+but not be billed for the charges associated with making and executing the
+requests on this bucket.
+
+By enabling the [Requester Pays flag](https://cloud.google.com/storage/docs/using-requester-pays#using),
+the requesters are required to include a billing project in their requests,
+which will mean that the billing will happen on the requester's project.
+
+Enabling Requester Pays is useful, for example, if the communities have a lot
+of data that they want to make available to others, but don't want to be
+charged for their access to that data.
+
+This can be enabled by setting the `requester_pays` parameter in `user_buckets`
+for the appropriate bucket, and running `terraform apply`.
+
+Example:
+
+```terraform
+user_buckets = {
+   "persistent": {
+      "delete_after": null,
+      "public_access": true,
+      "requester_pays": true
+   }
+}
+```
+
 ## Enable access logs for objects in a bucket
 
 ### GCP
