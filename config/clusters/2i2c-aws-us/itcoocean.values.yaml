@@ -36,12 +36,15 @@ jupyterhub:
         oauth_callback_url: https://itcoocean.2i2c.cloud/hub/oauth_callback
         allowed_organizations:
           - Hackweek-ITCOocean:itcoocean-hackweek-2023
+          - nmfs-opensci:2i2c-demo
         scope:
           - read:org
       Authenticator:
         admin_users:
           - eeholmes # Eli Holmes, Community representative
   singleuser:
+    # Requested in https://2i2c.freshdesk.com/a/tickets/1320
+    defaultUrl: /lab
     # shared-public for collaboration
     # See https://github.com/2i2c-org/infrastructure/issues/2821#issuecomment-1665642853
     storage:
@@ -241,11 +244,11 @@ jupyterhub:
                   mem_guarantee: 115.549G
                   mem_limit: 128G
                   cpu_guarantee: 15.0
+      # Requested in: https://2i2c.freshdesk.com/a/tickets/1320
       - display_name: "Bring your own image"
         description: Specify your own docker image (must have python and jupyterhub installed in it)
         slug: custom
         allowed_teams:
-          # Requested in: https://2i2c.freshdesk.com/a/tickets/1320
           - Hackweek-ITCOocean:itcoocean-hackweek-2023
           - nmfs-opensci:2i2c-demo
           - 2i2c-org:hub-access-for-2i2c-staff
@@ -328,7 +331,6 @@ jupyterhub:
                   node_selector:
                     node.kubernetes.io/instance-type: r5.4xlarge
         kubespawner_override:
-          default_url: /lab
           cpu_limit: null
           mem_limit: null
           node_selector:
