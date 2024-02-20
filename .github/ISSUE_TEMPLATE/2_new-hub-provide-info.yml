@@ -28,7 +28,7 @@ body:
       label: Technical support contacts listed
       description: |
         Technical contacts are the folks who are authorized to open support tickets about this hub.
-        The source of truth is maintained in [this airtable](https://airtable.com/appxk7c9WUsDjSi0Q/tbl3CWOgyoEtuGuIw/viwtpo7RxkYv63hiD?blocks=hide).
+        The source of truth is maintained in [this airtable](https://airtable.com/appbjBTRIbgRiElkr/pagog9egWRpeLyLGW?uMtyG=b%3AWzAsWyI4WnV1VyIsOSxbInNlbDRjSG1pdlRuRlRza0ljIl0sIklPZVJqIl1d).
 
         Validate that there is at least one technical contact listed in the airtable for this hub. If not, ping
         partnerships to ensure they find out who that is and fill that information in.
