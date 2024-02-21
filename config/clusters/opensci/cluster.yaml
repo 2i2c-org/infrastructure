@@ -1,0 +1,8 @@
+name: opensci
+provider: aws
+aws:
+  key: enc-deployer-credentials.secret.json
+  clusterType: eks
+  clusterName: opensci
+  region: us-west-2
+hubs: []
