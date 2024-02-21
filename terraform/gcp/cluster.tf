@@ -5,7 +5,6 @@
 # To get get the output of relevance, run:
 #
 #   terraform plan -var-file=projects/$CLUSTER_NAME.tfvars
-#   terraform output regular_channel_latest_k8s_versions
 #
 # data ref: https://registry.terraform.io/providers/hashicorp/google/latest/docs/data-sources/container_engine_versions
 data "google_container_engine_versions" "k8s_version_prefixes" {
