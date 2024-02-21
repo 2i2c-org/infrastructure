@@ -20,49 +20,53 @@ jupyterhub:
         kubespawner_override:
           image: jupyter/scipy-notebook:2023-06-27
           default_url: /lab
-          node_selector:
-            node.kubernetes.io/instance-type: n2-highmem-4
         profile_options: &profile_options
           resource_allocation: &resource_allocation
             display_name: Resource Allocation
             choices:
-              mem_0_5:
+              mem_0_3:
                 default: true
-                display_name: ~0.5 GB RAM, ~1/16 CPU
+                display_name: 375 MB RAM, ~1/20 CPU
                 kubespawner_override:
-                  mem_guarantee: 0.5G
+                  mem_guarantee: 366210K
                   mem_limit: 1G
-                  cpu_guarantee: 0.05625
+                  cpu_guarantee: 0.046
                   cpu_limit: 1
-              mem_1_0:
-                display_name: ~1 GB RAM, ~1/8 CPU
+              mem_0_7:
+                display_name: 750 MB RAM, ~1/10 CPU
                 kubespawner_override:
-                  mem_guarantee: 1G
+                  mem_guarantee: 732421K
                   mem_limit: 2G
-                  cpu_guarantee: 0.1125
+                  cpu_guarantee: 0.093
                   cpu_limit: 1
-              mem_2_0:
-                display_name: ~2 GB RAM, ~1/4 CPU
+              mem_1_5:
+                display_name: 1.5 GB RAM, ~1/5 CPU
                 kubespawner_override:
-                  mem_guarantee: 2G
-                  mem_limit: 4G
-                  cpu_guarantee: 0.225
+                  mem_guarantee: 1464843.75K
+                  mem_limit: 3G
+                  cpu_guarantee: 0.187
                   cpu_limit: 2
-              mem_4_0:
-                display_name: ~4 GB RAM, ~1/2 CPU
+              mem_3_0:
+                display_name: 3 GB RAM, ~1/2 CPU
                 kubespawner_override:
-                  mem_guarantee: 4G
-                  mem_limit: 8G
-                  cpu_guarantee: 0.45
+                  mem_guarantee: 2929687.5K
+                  mem_limit: 6G
+                  cpu_guarantee: 0.375
                   cpu_limit: 2
-              mem_8_0:
-                display_name: ~8 GB RAM, ~1.0 CPU
+              mem_6_0:
+                display_name: 6 GB RAM, 3/4 CPU
                 kubespawner_override:
-                  mem_guarantee: 8G
-                  mem_limit: 16G
-                  cpu_guarantee: 0.9
+                  mem_guarantee: 5859375K
+                  mem_limit: 12G
+                  cpu_guarantee: 0.750
                   cpu_limit: 2
-
+              mem_12_0:
+                display_name: 12 GB RAM, 1.5 CPU
+                kubespawner_override:
+                  mem_guarantee: 11718750K
+                  mem_limit: 24G
+                  cpu_guarantee: 1.5
+                  cpu_limit: 3
       - display_name: Rocker Geospatial with RStudio
         description: R environment
         slug: rocker
@@ -70,8 +74,6 @@ jupyterhub:
           image: rocker/binder:4.3
           default_url: /rstudio
           working_dir: /home/rstudio # Ensures container working dir is homedir
-          node_selector:
-            node.kubernetes.io/instance-type: n2-highmem-4
         profile_options: *profile_options
 
       - display_name: Bring your own image
