@@ -1,0 +1,17 @@
+jupyterhub:
+  ingress:
+    hosts:
+      - staging.opensci.2i2c.cloud
+    tls:
+      - secretName: https-auto-tls
+        hosts:
+          - staging.opensci.2i2c.cloud
+  hub:
+    config:
+      GitHubOAuthenticator:
+        oauth_callback_url: https://staging.opensci.2i2c.cloud/hub/oauth_callback
+    services:
+      binder:
+        # FIXME: ref https://github.com/2i2c-org/binderhub-service/issues/57
+        # for something more readable and requiring less copy-pasting
+        url: https://staging.opensci-binderhub-service:8090

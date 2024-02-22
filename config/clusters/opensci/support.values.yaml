@@ -1,6 +1,12 @@
 prometheusIngressAuthSecret:
   enabled: true
 
+cluster-autoscaler:
+  enabled: true
+  autoDiscovery:
+    clusterName: opensci
+  awsRegion: us-west-2
+
 prometheus:
   server:
     ingress:
