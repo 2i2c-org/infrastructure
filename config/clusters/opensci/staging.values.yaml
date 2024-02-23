@@ -162,7 +162,7 @@ binderhub-service:
       use_registry: true
       # Re-uses the registry created for the `binderhub-staging` hub
       # but pushes images under a different prefix
-      image_prefix: us-central1-docker.pkg.dev/two-eye-two-see/binder-staging-registry/binderhub-service-
+      image_prefix: us-central1-docker.pkg.dev/two-eye-two-see/binder-staging-registry/opensci-
     KubernetesBuildExecutor:
       # Get ourselves a newer repo2docker!
       build_image: quay.io/jupyterhub/repo2docker:2023.06.0-8.gd414e99
