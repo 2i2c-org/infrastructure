@@ -190,7 +190,6 @@ jobs:
       failure_utoronto: "${{ env.failure_utoronto }}"
       failure_linked-earth: "${{ env.failure_linked-earth }}"
       failure_awi-ciroh: "${{ env.failure_awi-ciroh }}"
-      failure_callysto: "${{ env.failure_callysto }}"
       failure_nasa-cryo: "${{ env.failure_nasa-cryo }}"
       failure_gridsst: "${{ env.failure_gridsst }}"
       failure_victor: "${{ env.failure_victor }}"

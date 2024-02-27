@@ -15,7 +15,6 @@ jobs:
           - cluster_name: 2i2c-aws-us
           - cluster_name: 2i2c-uk
           - cluster_name: awi-ciroh
-          - cluster_name: callysto
           - cluster_name: catalystproject-africa
           - cluster_name: catalystproject-latam
           - cluster_name: cloudbank
