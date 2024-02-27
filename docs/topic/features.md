@@ -23,8 +23,8 @@ improving the security posture of our hubs.
 
 ### GCP
 
-(topic:features:cloud:gcp:requestor-pays)=
-#### 'Requestor Pays' access to Google Cloud Storage buckets
+(topic:features:cloud:gcp:requester-pays)=
+#### 'Requester Pays' access
 
 By default, the organization *hosting* data on Google Cloud pays for both
 storage and bandwidth costs of the data. However, Google Cloud also offers
@@ -33,25 +33,28 @@ option, where the bandwidth costs are paid for by the organization *requesting*
 the data. This is very commonly used by organizations that provide big datasets
 on Google Cloud storage, to sustainably share costs of maintaining the data.
 
+**Requester Pays** is a feature that a bucket can have.
+
+#### Allow access to external `Requester Payes` buckets
+
+If buckets outside the project have the `Requester Payes` flag, then we need to:
+- set `hub_cloud_permissions.allow_access_to_external_requester_pays_buckets`
+  in the terraform config of the cluster
+- this will allow them to be charged on their project for access of such
+  outside buckets
+
+```{warning}
 When this feature is enabled, users on a hub accessing cloud buckets from
-other organizations marked as 'Requester Pays' will increase our cloud bill.
+other organizations marked as `Requester Pays` will increase our cloud bill.
 Hence, this is an opt-in feature.
+```
 
-```{important}
-This feature enables the hub users to access `Requester Pays` buckets,
-**outside** of their project.
+#### Enable `Requester Pays` flag on community buckets
 
-However, note that this feature **does not** control which buckets **inside**
-the project will have `Requester Pays` enabled for themselves.
+The buckets that we set for communities, inside their projects can also have this flag enabled on them, which means that other people outside will be charged for their usage.
 
-1. This can be **checked** from the console following these steps in the
-[GCP docs](https://cloud.google.com/storage/docs/using-requester-pays#check) or
-by checking the `user_buckets` configuration in the project's terraform config
-file if any `requester_pays` flag is specified because it is disabled by default.
-
-2. **Enabling or disabling** the `Requester Pays` flag on a bucket can be achieved by
-setting the [`requestor_pays`](https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/storage_bucket#requester_pays) flag to true in our terraform config
-`user_buckets` variable as described in [](howto:features:storage-buckets).
+```{warning}
+This is not supported yet by our terraform. Follow (todo: insert issue link) for when support will be added.
 ```
 
 (topic:features:cloud:scratch-buckets)=
