@@ -45,7 +45,6 @@ variable "user_buckets" {
 
 variable "hub_cloud_permissions" {
   type = map(object({
-    allow_access_to_requestor_pays_buckets : optional(bool, false),
     bucket_admin_access : set(string),
     extra_iam_policy : string
   }))
@@ -56,14 +55,9 @@ variable "hub_cloud_permissions" {
   Key is name of the hub namespace in the cluster, and values are particular
   permissions users running on those hubs should have. Currently supported are:
 
-  1. allow_access_to_requestor_pays_buckets: Allow code running in user servers from this
-     hub to identify as coming from this particular GCP project when accessing GCS buckets
-     marked as 'requestor_pays'. In this case, the egress costs will
-     be borne by the project *containing the hub*, rather than the project *containing the bucket*.
-     Egress costs can get quite expensive, so this is 'opt-in'.
-  2. bucket_admin_access: List of S3 storage buckets that users on this hub should have read
+  1. bucket_admin_access: List of S3 storage buckets that users on this hub should have read
      and write permissions for.
-  3. extra_iam_policy: An AWS IAM Policy document that grants additional rights to the users
+  2. extra_iam_policy: An AWS IAM Policy document that grants additional rights to the users
      on this hub when talking to AWS services.
   EOT
 }
