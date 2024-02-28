@@ -16,7 +16,6 @@ user_buckets = {
 
 hub_cloud_permissions = {
   "staging" : {
-    requestor_pays : true,
     bucket_admin_access : ["scratch-staging"],
     extra_iam_policy : <<-EOT
     {
@@ -71,7 +70,6 @@ hub_cloud_permissions = {
   EOT
   },
   "prod" : {
-    requestor_pays : true,
     bucket_admin_access : ["scratch"],
     extra_iam_policy : <<-EOT
     {

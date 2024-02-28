@@ -22,7 +22,6 @@ user_buckets = {
 
 hub_cloud_permissions = {
   "staging" : {
-    requestor_pays : true,
     bucket_admin_access : ["scratch-staging", "persistent-staging"],
     # Provides readonly requestor-pays access to usgs-landsat bucket
     # FIXME: We should find a way to allow access to *all* requester pays
@@ -57,7 +56,6 @@ hub_cloud_permissions = {
   EOT
   },
   "prod" : {
-    requestor_pays : true,
     bucket_admin_access : ["scratch", "persistent"],
     # Provides readonly requestor-pays access to usgs-landsat bucket
     # FIXME: We should find a way to allow access to *all* requester pays
