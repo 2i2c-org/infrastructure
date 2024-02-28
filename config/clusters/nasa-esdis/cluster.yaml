@@ -1,5 +1,6 @@
 name: nasa-esdis
-provider: aws
+provider: aws # https://smce-esdis-hub.signin.aws.amazon.com/console
+account: smce-esdis-hub
 aws:
   key: enc-deployer-credentials.secret.json
   clusterType: eks
