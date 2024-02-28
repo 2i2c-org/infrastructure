@@ -54,7 +54,7 @@ Hence, this is an opt-in feature.
 The buckets that we set for communities, inside their projects can also have this flag enabled on them, which means that other people outside will be charged for their usage.
 
 ```{warning}
-This is not supported yet by our terraform. Follow (todo: insert issue link) for when support will be added.
+This is not supported yet by our terraform. Follow https://github.com/2i2c-org/infrastructure/issues/3746 to check when support will be added.
 ```
 
 (topic:features:cloud:scratch-buckets)=
