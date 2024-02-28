@@ -39,7 +39,10 @@ This AWS IAM Role is managed via terraform.
    create (or modify) the `hub_cloud_permissions` variable. The config is
    like:
 
-   ```
+   `````{tab-set}
+   ````{tab-item} GCP
+   :sync: gcp-key
+   ```yaml
    hub_cloud_permissions = {
        "<hub-name-slug>": {
            allow_access_to_external_requester_pays_buckets : true,
@@ -48,7 +51,24 @@ This AWS IAM Role is managed via terraform.
        }
    }
    ```
+   ````
 
+   ````{tab-item} AWS
+   :sync: aws-key
+   ```bash
+   hub_cloud_permissions = {
+       "<hub-name-slug>": {
+           bucket_admin_access : ["bucket-1", "bucket-2"]
+           hub_namespace : "<hub-name>"
+       }
+   }
+   ```
+   ````
+   `````
+
+   ```{warning}
+   `allow_access_to_external_requester_pays_buckets` is not yet supported on AWS!
+   ```
    where:
 
    1. `<hub-name-slug>` is the name of the hub, but restricted in length. This
