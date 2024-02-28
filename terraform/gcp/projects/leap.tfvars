@@ -60,13 +60,13 @@ user_buckets = {
 
 hub_cloud_permissions = {
   "staging" : {
-    requestor_pays : true,
+    allow_access_to_external_requester_pays_buckets : true,
     bucket_admin_access : ["scratch-staging", "persistent-staging"],
     bucket_readonly_access : ["persistent-ro-staging"],
     hub_namespace : "staging"
   },
   "prod" : {
-    requestor_pays : true,
+    allow_access_to_external_requester_pays_buckets : true,
     bucket_admin_access : ["scratch", "persistent"],
     bucket_readonly_access : ["persistent-ro"],
     hub_namespace : "prod"

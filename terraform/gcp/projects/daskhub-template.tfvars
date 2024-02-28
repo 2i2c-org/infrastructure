@@ -33,7 +33,7 @@ user_buckets = {
 
 hub_cloud_permissions = {
   "{{ hub_name }}" : {
-    requestor_pays : true,
+    allow_access_to_external_requester_pays_buckets : true,
     bucket_admin_access : ["scratch-{{ hub_name }}"],
     hub_namespace : "{{ hub_name }}"
   },

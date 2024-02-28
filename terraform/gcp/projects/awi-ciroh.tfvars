@@ -63,12 +63,12 @@ dask_nodes = {
 
 hub_cloud_permissions = {
   "staging" : {
-    requestor_pays : false,
+    allow_access_to_external_requester_pays_buckets : false,
     bucket_admin_access : ["scratch-staging", "persistent-staging"],
     hub_namespace : "staging"
   },
   "prod" : {
-    requestor_pays : false,
+    allow_access_to_external_requester_pays_buckets : false,
     bucket_admin_access : ["scratch", "persistent"],
     hub_namespace : "prod"
   }

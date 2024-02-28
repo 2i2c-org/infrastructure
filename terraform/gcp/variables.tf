@@ -416,7 +416,7 @@ variable "hub_cloud_permissions" {
 
   1. allow_access_to_external_requester_pays_buckets: Allow code running in user servers from this
      hub to identify as coming from this particular GCP project when accessing GCS buckets
-     marked as 'requestor_pays'. In this case, the egress costs will
+     marked as 'Requester Pays'. In this case, the egress costs will
      be borne by the project *containing the hub*, rather than the project *containing the bucket*.
      Egress costs can get quite expensive, so this is 'opt-in'.
   2. bucket_admin_access: List of GCS storage buckets that users on this hub should have read
