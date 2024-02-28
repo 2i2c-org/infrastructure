@@ -42,7 +42,7 @@ This AWS IAM Role is managed via terraform.
    ```
    hub_cloud_permissions = {
        "<hub-name-slug>": {
-           "allow_access_to_external_requester_pays_buckets : true,
+           allow_access_to_external_requester_pays_buckets : true,
            bucket_admin_access : ["bucket-1", "bucket-2"]
            hub_namespace : "<hub-name>"
        }
