@@ -36,8 +36,13 @@ This AWS IAM Role is managed via terraform.
 ## Enabling specific cloud access permissions
 
 1. In the `.tfvars` file for the project in which this hub is based off
-   create (or modify) the `hub_cloud_permissions` variable. The config is
-   like:
+   create (or modify) the `hub_cloud_permissions` variable.
+
+   ```{warning}
+   `allow_access_to_external_requester_pays_buckets` is not yet supported on AWS!
+   ```
+
+   The config is like:
 
    `````{tab-set}
    ````{tab-item} GCP
@@ -66,9 +71,6 @@ This AWS IAM Role is managed via terraform.
    ````
    `````
 
-   ```{warning}
-   `allow_access_to_external_requester_pays_buckets` is not yet supported on AWS!
-   ```
    where:
 
    1. `<hub-name-slug>` is the name of the hub, but restricted in length. This
