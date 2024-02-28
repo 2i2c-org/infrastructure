@@ -44,7 +44,10 @@ variable "user_buckets" {
 }
 
 variable "hub_cloud_permissions" {
-  type        = map(object({ requestor_pays : bool, bucket_admin_access : set(string), extra_iam_policy : string }))
+  type = map(object({
+    bucket_admin_access : set(string),
+    extra_iam_policy : string
+  }))
   default     = {}
   description = <<-EOT
   Map of cloud permissions given to a particular hub
@@ -52,12 +55,9 @@ variable "hub_cloud_permissions" {
   Key is name of the hub namespace in the cluster, and values are particular
   permissions users running on those hubs should have. Currently supported are:
 
-  1. requestor_pays: Identify as coming from the google cloud project when accessing
-     storage buckets marked as  https://cloud.google.com/storage/docs/requester-pays.
-     This *potentially* incurs cost for us, the originating project, so opt-in.
-  2. bucket_admin_access: List of S3 storage buckets that users on this hub should have read
+  1. bucket_admin_access: List of S3 storage buckets that users on this hub should have read
      and write permissions for.
-  3. extra_iam_policy: An AWS IAM Policy document that grants additional rights to the users
+  2. extra_iam_policy: An AWS IAM Policy document that grants additional rights to the users
      on this hub when talking to AWS services.
   EOT
 }

@@ -402,7 +402,7 @@ variable "max_cpu" {
 variable "hub_cloud_permissions" {
   type = map(
     object({
-      requestor_pays : bool,
+      allow_access_to_external_requester_pays_buckets : optional(bool, false),
       bucket_admin_access : set(string),
       bucket_readonly_access : optional(set(string), []),
       hub_namespace : string
@@ -415,9 +415,11 @@ variable "hub_cloud_permissions" {
   Key is name of the hub namespace in the cluster, and values are particular
   permissions users running on those hubs should have. Currently supported are:
 
-  1. requestor_pays: Identify as coming from the google cloud project when accessing
-     storage buckets marked as  https://cloud.google.com/storage/docs/requester-pays.
-     This *potentially* incurs cost for us, the originating project, so opt-in.
+  1. allow_access_to_external_requester_pays_buckets: Allow code running in user servers from this
+     hub to identify as coming from this particular GCP project when accessing GCS buckets in other projects
+     marked as 'Requester Pays'. In this case, the egress costs will
+     be borne by the project *containing the hub*, rather than the project *containing the bucket*.
+     Egress costs can get quite expensive, so this is 'opt-in'.
   2. bucket_admin_access: List of GCS storage buckets that users on this hub should have read
      and write permissions for.
   EOT

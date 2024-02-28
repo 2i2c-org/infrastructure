@@ -23,8 +23,8 @@ improving the security posture of our hubs.
 
 ### GCP
 
-(topic:features:cloud:gcp:requestor-pays)=
-#### 'Requestor Pays' access to Google Cloud Storage buckets
+(topic:features:cloud:gcp:requester-pays)=
+#### 'Requester Pays' access
 
 By default, the organization *hosting* data on Google Cloud pays for both
 storage and bandwidth costs of the data. However, Google Cloud also offers
@@ -33,9 +33,29 @@ option, where the bandwidth costs are paid for by the organization *requesting*
 the data. This is very commonly used by organizations that provide big datasets
 on Google Cloud storage, to sustainably share costs of maintaining the data.
 
+**Requester Pays** is a feature that a bucket can have.
+
+#### Allow access to external `Requester Payes` buckets
+
+If buckets outside the project have the `Requester Payes` flag, then we need to:
+- set `hub_cloud_permissions.allow_access_to_external_requester_pays_buckets`
+  in the terraform config of the cluster (see the guide at [](howto:features:cloud-access:access-perms))
+- this will allow them to be charged on their project for access of such
+  outside buckets
+
+```{warning}
 When this feature is enabled, users on a hub accessing cloud buckets from
-other organizations marked as 'requestor pays' will increase our cloud bill.
+other organizations marked as `Requester Pays` will increase our cloud bill.
 Hence, this is an opt-in feature.
+```
+
+#### Enable `Requester Pays` flag on community buckets
+
+The buckets that we set for communities, inside their projects can also have this flag enabled on them, which means that other people outside will be charged for their usage.
+
+```{warning}
+This is not supported yet by our terraform. Follow https://github.com/2i2c-org/infrastructure/issues/3746 to check when support will be added.
+```
 
 (topic:features:cloud:scratch-buckets)=
 ## 'Scratch' buckets on object storage

@@ -16,7 +16,6 @@ user_buckets = {
 
 hub_cloud_permissions = {
   "staging" : {
-    requestor_pays : true,
     bucket_admin_access : ["scratch-staging"],
     # FIXME: Previously, users were granted full S3 permissions.
     # Keep it the same for now
@@ -34,7 +33,6 @@ hub_cloud_permissions = {
 EOT
   },
   "prod" : {
-    requestor_pays : true,
     bucket_admin_access : ["scratch"],
     # FIXME: Previously, users were granted full S3 permissions.
     # Keep it the same for now

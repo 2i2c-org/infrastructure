@@ -81,12 +81,12 @@ user_buckets = {
 
 hub_cloud_permissions = {
   "staging" : {
-    requestor_pays : true,
+    allow_access_to_external_requester_pays_buckets : true,
     bucket_admin_access : ["scratch", "data"],
     hub_namespace : "staging"
   },
   "prod" : {
-    requestor_pays : true,
+    allow_access_to_external_requester_pays_buckets : true,
     bucket_admin_access : ["scratch", "data"],
     hub_namespace : "prod"
   }

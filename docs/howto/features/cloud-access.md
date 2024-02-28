@@ -36,18 +36,40 @@ This AWS IAM Role is managed via terraform.
 ## Enabling specific cloud access permissions
 
 1. In the `.tfvars` file for the project in which this hub is based off
-   create (or modify) the `hub_cloud_permissions` variable. The config is
-   like:
+   create (or modify) the `hub_cloud_permissions` variable.
 
+   ```{warning}
+   `allow_access_to_external_requester_pays_buckets` is not yet supported on AWS!
    ```
+
+   The config is like:
+
+   `````{tab-set}
+   ````{tab-item} GCP
+   :sync: gcp-key
+   ```yaml
    hub_cloud_permissions = {
        "<hub-name-slug>": {
-           requestor_pays : true,
+           allow_access_to_external_requester_pays_buckets : true,
            bucket_admin_access : ["bucket-1", "bucket-2"]
            hub_namespace : "<hub-name>"
        }
    }
    ```
+   ````
+
+   ````{tab-item} AWS
+   :sync: aws-key
+   ```bash
+   hub_cloud_permissions = {
+       "<hub-name-slug>": {
+           bucket_admin_access : ["bucket-1", "bucket-2"]
+           hub_namespace : "<hub-name>"
+       }
+   }
+   ```
+   ````
+   `````
 
    where:
 
@@ -55,9 +77,9 @@ This AWS IAM Role is managed via terraform.
       and the cluster name together can't be more than 29 characters. `terraform`
       will complain if you go over this limit, so in general just use the name
       of the hub and shorten it only if `terraform` complains.
-   2. (GCP only) `requestor_pays` enables permissions for user pods and dask worker
-      pods to identify as the project while making requests to Google Cloud Storage
-      buckets marked as 'requestor pays'. More details [here](topic:features:cloud:gcp:requestor-pays).
+   2. (GCP only) `allow_access_to_external_requester_pays_buckets` enables permissions for user pods and dask worker
+      pods to identify as the project while making requests to other Google Cloud Storage
+      buckets, outside of this project, that have 'Requester Pays' enabled. More details [here](topic:features:cloud:gcp:requester-pays).
    3. `bucket_admin_access` lists bucket names (as specified in `user_buckets`
       terraform variable) all users on this hub should have full read/write
       access to. Used along with the [user_buckets](howto:features:storage-buckets)
