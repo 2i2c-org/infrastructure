@@ -69,6 +69,14 @@ jupyterhub:
     singleuserAdmin:
       extraEnv: {}
       extraVolumeMounts:
+        # IMPORTANT: What is added to this list is copied to other locations
+        #            that wants to add an element to this list. This is done
+        #            because when Helm config files are merged, lists get
+        #            replaced rather than appended. So, if this is to be
+        #            updated, we should update all those copies as well. An easy
+        #            to way find such copies is to search for "singleuserAdmin:"
+        #            in this repo.
+        #
         - name: home
           mountPath: /home/jovyan/shared-readwrite
           subPath: _shared
