@@ -47,7 +47,7 @@ resource "google_project_iam_custom_role" "requestor_pays" {
 }
 
 resource "google_project_iam_member" "requestor_pays_binding" {
-  for_each = toset([for hub_name, permissions in var.hub_cloud_permissions : hub_name if permissions.requestor_pays])
+  for_each = toset([for hub_name, permissions in var.hub_cloud_permissions : hub_name if permissions.allow_access_to_external_requester_pays_buckets])
   project  = var.project_id
   role     = google_project_iam_custom_role.requestor_pays.name
   member   = "serviceAccount:${google_service_account.workload_sa[each.value].email}"
