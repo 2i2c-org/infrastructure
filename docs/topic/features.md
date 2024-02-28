@@ -39,7 +39,7 @@ on Google Cloud storage, to sustainably share costs of maintaining the data.
 
 If buckets outside the project have the `Requester Payes` flag, then we need to:
 - set `hub_cloud_permissions.allow_access_to_external_requester_pays_buckets`
-  in the terraform config of the cluster
+  in the terraform config of the cluster (see the guide at [](howto:features:cloud-access:access-perms))
 - this will allow them to be charged on their project for access of such
   outside buckets
 
