@@ -49,6 +49,7 @@ variable "k8s_version_prefixes" {
   default = [
     "1.27.",
     "1.28.",
+    "1.29.",
     "1.",
   ]
   description = <<-EOT

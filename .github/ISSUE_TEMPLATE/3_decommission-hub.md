@@ -40,18 +40,19 @@ Usually, it is because it was a hub that we created for a workshop/conference an
 - [ ] Remove the hub deployment
   - `helm --namespace HUB_NAME delete HUB_NAME`
   - `kubectl delete namespace HUB_NAME`
+  - TIP: Run `deployer use-cluster-credentials <cluster_name>` before running the above commands
 
 #### Phase III - Cluster Removal
 
 _This phase is only necessary for single hub clusters._
 
 - [ ] Remove the cluster's datasource from the central Grafana with:
-  - `deployer grafana central-ds remove CLUSTER_NAME`
+  - `deployer grafana central-ds remove <cluster_name>`
 - [ ] Run `terraform plan -destroy` and `terraform apply` from the [appropriate workspace](https://infrastructure.2i2c.org/en/latest/topic/terraform.html#workspaces), to destroy the cluster
 - [ ] Delete the terraform workspace: `terraform workspace delete <NAME>`
+- [ ] Delete the terraform values file under the `projects` folder associated with the relevant cloud provider (e.g. `terraform/gcp/projects/` for GCP)
 - [ ] Remove the associated `config/clusters/<cluster_name>` directory and all its contents
 - Remove the cluster from CI:
   - [ ] [`deploy-hubs.yaml`](https://github.com/2i2c-org/infrastructure/blob/HEAD/.github/workflows/deploy-hubs.yaml)
-  - [ ] [`validate-clusters.yaml`](https://github.com/2i2c-org/infrastructure/blob/HEAD/.github/workflows/validate-clusters.yaml)
-- [ ] Remove the cluster from the list of grafana datasources at https://grafana.pilot.2i2c.cloud/datasources
+  - [ ] [`deploy-grafana-dashboards.yaml`](https://github.com/2i2c-org/infrastructure/blob/HEAD/.github/workflows/deploy-grafana-dashboards.yaml)
 - [ ] Remove A record from Namecheap account

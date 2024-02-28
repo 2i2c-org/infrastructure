@@ -57,7 +57,11 @@ hub_cloud_permissions = {
                     "arn:aws:s3:::maap-ops-workspace",
                     "arn:aws:s3:::maap-ops-workspace/*",
                     "arn:aws:s3:::nasa-maap-data-store",
-                    "arn:aws:s3:::nasa-maap-data-store/*"
+                    "arn:aws:s3:::nasa-maap-data-store/*",
+                    "arn:aws:s3:::sdap-dev-zarr",
+                    "arn:aws:s3:::sdap-dev-zarr/*",
+                    "arn:aws:s3:::usgs-landsat",
+                    "arn:aws:s3:::usgs-landsat/*"
                 ]
             },
             {
@@ -111,7 +115,11 @@ hub_cloud_permissions = {
                     "arn:aws:s3:::maap-ops-workspace",
                     "arn:aws:s3:::maap-ops-workspace/*",
                     "arn:aws:s3:::nasa-maap-data-store",
-                    "arn:aws:s3:::nasa-maap-data-store/*"
+                    "arn:aws:s3:::nasa-maap-data-store/*",
+                    "arn:aws:s3:::sdap-dev-zarr",
+                    "arn:aws:s3:::sdap-dev-zarr/*",
+                    "arn:aws:s3:::usgs-landsat",
+                    "arn:aws:s3:::usgs-landsat/*"
                 ]
             },
             {
