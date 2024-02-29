@@ -108,7 +108,6 @@ jupyterhub:
                     node.kubernetes.io/instance-type: r5.xlarge
 
   hub:
-    # Allows for multiple concurrent demos
     allowNamedServers: true
     services:
       binder:
@@ -160,8 +159,6 @@ binderhub-service:
     BinderHub:
       base_url: /services/binder
       use_registry: true
-      # Re-uses the registry created for the `binderhub-staging` hub
-      # but pushes images under a different prefix
       image_prefix: quay.io/2i2c/opensci-sciencecore
     KubernetesBuildExecutor:
       # Get ourselves a newer repo2docker!
