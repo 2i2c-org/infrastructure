@@ -49,11 +49,7 @@ dask_nodes = {
   },
 }
 
-user_buckets = {
-  "jackeddy-scratch" : {
-    "delete_after" : 7
-  }
-}
+user_buckets = {}
 
 
 hub_cloud_permissions = {
@@ -67,21 +63,8 @@ hub_cloud_permissions = {
     bucket_admin_access : [],
     hub_namespace : "ohw"
   },
-  # Can't use full name here as it violates line length restriction of service account id
-  "catalyst-coop" : {
-    allow_access_to_external_requester_pays_buckets : true,
-    bucket_admin_access : [],
-    hub_namespace : "catalyst-cooperative"
-  },
-  "jackeddy" : {
-    allow_access_to_external_requester_pays_buckets : true,
-    bucket_admin_access : ["jackeddy-scratch"],
-    hub_namespace : "jackeddy"
-  },
 }
 
 container_repos = [
-  "pilot-hubs",
   "binder-staging",
-  "agu-binder"
 ]
