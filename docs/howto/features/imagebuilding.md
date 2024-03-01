@@ -1,6 +1,6 @@
 # Make an imagebuilding hub
 
-We can support users who want to build, push and launch user images, from open source GitHub repositories from within their JupyterHubs, similar with what [mybinder.org](https://mybinder.org) does, but from their own JupyterHubs.
+We can support users who want to build, push and launch user images, from open source GitHub repositories, similar with what [mybinder.org](https://mybinder.org) does, but from within their JupyterHubs
 
 We call this an `imagebuilding` style hub and the primary features offered would be:
 
@@ -11,49 +11,62 @@ We call this an `imagebuilding` style hub and the primary features offered would
   - specifying another image, different from the ones in the pre-defined list
   - building and pushing an image to a registry from a GitHub repository
 
+## Use the `dynamic-image-building-experiment` hub image
+
+We will need to use `jupyterhub-fancy-profiles`, but this Python package isn't installed in the default image deployed with our hubs, so we should use the [`dynamic-image-building-experiment` hub image](https://github.com/2i2c-org/infrastructure/blob/master/helm-charts/images/hub/dynamic-image-building-requirements.txt) instead.
+
+```yaml
+jupyterhub:
+  hub:
+    image:
+      name: quay.io/2i2c/dynamic-image-building-experiment
+      tag: "0.0.1-0.dev.git.7567.ha4162031"
+```
+
 ## Connect with `jupyterhub-fancy-profiles`
 
 1. The [jupyterhub-fancy-profiles](https://github.com/yuvipanda/jupyterhub-fancy-profiles) project provides a user facing frontend for connecting the JupyterHub to the BinderHub service, allowing the users to build their own images similar with how they would on mybinder.org.
 
-```yaml
-hub:
-  extraConfig:
-    enable-fancy-profiles: |
-      from jupyterhub_fancy_profiles import setup_ui
-      setup_ui(c)
-```
+    ```yaml
+    jupyterhub:
+      hub:
+        extraConfig:
+          enable-fancy-profiles: |
+            from jupyterhub_fancy_profiles import setup_ui
+            setup_ui(c)
+    ```
 
 2. Since `jupyterhub-fancy-profiles` adds on to the [`profileList` feature of `KubeSpawner`](https://jupyterhub-kubespawner.readthedocs.io/en/latest/spawner.html#kubespawner.KubeSpawner.profile_list), we need to configure a profile list here as well. Edit and update the following configuration per the community requesting the hub needs.
 
-```yaml
-singleuser:
-  profileList:
-    - display_name: "Only Profile Available, this info is not shown in the UI"
-      slug: only-choice
-      profile_options:
-        image:
-          display_name: Image
-          unlisted_choice:
-            enabled: True
-            display_name: "Custom image"
-            validation_regex: "^.+:.+$"
-            validation_message: "Must be a publicly available docker image, of form <image-name>:<tag>"
-            display_name_in_choices: "Specify an existing docker image"
-            description_in_choices: "Use a pre-existing docker image from a public docker registry (dockerhub, quay, etc)"
-            kubespawner_override:
-              image: "{value}"
-          choices:
-            pangeo:
-              display_name: Pangeo Notebook Image
-              description: "Python image with scientific, dask and geospatial tools"
-              kubespawner_override:
-                image: pangeo/pangeo-notebook:2023.09.11
-            scipy:
-              display_name: Jupyter SciPy Notebook
-              slug: scipy
-              kubespawner_override:
-                image: jupyter/scipy-notebook:2023-06-26
-```
+    ```yaml
+    singleuser:
+      profileList:
+        - display_name: "Only Profile Available, this info is not shown in the UI"
+          slug: only-choice
+          profile_options:
+            image:
+              display_name: Image
+              unlisted_choice:
+                enabled: True
+                display_name: "Custom image"
+                validation_regex: "^.+:.+$"
+                validation_message: "Must be a publicly available docker image, of form <image-name>:<tag>"
+                display_name_in_choices: "Specify an existing docker image"
+                description_in_choices: "Use a pre-existing docker image from a public docker registry (dockerhub, quay, etc)"
+                kubespawner_override:
+                  image: "{value}"
+              choices:
+                pangeo:
+                  display_name: Pangeo Notebook Image
+                  description: "Python image with scientific, dask and geospatial tools"
+                  kubespawner_override:
+                    image: pangeo/pangeo-notebook:2023.09.11
+                scipy:
+                  display_name: Jupyter SciPy Notebook
+                  slug: scipy
+                  kubespawner_override:
+                    image: jupyter/scipy-notebook:2023-06-26
+    ```
 
 ## The `binderhub-service` chart
 
