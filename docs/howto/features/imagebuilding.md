@@ -65,7 +65,7 @@ The `binderhub-service` installation starts a `docker-api` pod on each of the us
 
 The `docker-api` pod setups and starts the [dockerd](https://docs.docker.com/engine/reference/commandline/dockerd/) daemon, that will then be accessible via a mounted unix socket, by the `build pods`.
 
-The `build pods` are created as a result of an image build request, and they must run on the same node as the builder pods to make use of the docker daemon. These pods mount a k8s Secret with the docker config file holding the necessary registry credentials.
+The `build pods` are created as a result of an image build request, and they must run on the same node as the builder pods to make use of the docker daemon. These pods mount a k8s Secret with the docker config file holding the necessary registry credentials so they can push to the container registry.
 
 ### How to set it up
 
