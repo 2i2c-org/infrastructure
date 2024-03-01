@@ -137,7 +137,7 @@ binderhub-service:
   enabled: true
   config:
     BinderHub:
-      image_prefix: quay.io/2i2c/opensci-sciencecore
+      image_prefix: quay.io/2i2c-opensci-sciencecore
   # The password to the registry is stored encrypted in the hub's encrypted config file
   buildPodsRegistryCredentials:
     server: "https://quay.io"
