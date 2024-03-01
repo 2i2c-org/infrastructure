@@ -141,4 +141,4 @@ binderhub-service:
   # The password to the registry is stored encrypted in the hub's encrypted config file
   buildPodsRegistryCredentials:
     server: "https://quay.io"
-    username: "2i2c+opensci_sciencecore_binderhub_service"
+    username: "2i2c-opensci-sciencecore+image_manager"
