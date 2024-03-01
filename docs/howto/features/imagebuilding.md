@@ -101,40 +101,41 @@ The `build pods` are created as a result of an image build request, and they mus
 
 2. Setup the `binderhub-service` config
 
-  ```yaml
-  binderhub-service:
-    enabled: true
-    config:
-      BinderHub:
-        # something like <region>-docker.pkg.dev/<project-name>/<repository-name> for grc.io
-        # or quay.io/org/repo/cluster-hub/ for quay.io
-        image_prefix: <repository_path>
-    buildPodsRegistryCredentials:
-      # registry server address like https://quay.io
-      server: <server_address>
-      # robot account namer or "_json_key" if using grc.io
-      username: <account_name>
-  ```
+    ```yaml
+    binderhub-service:
+      enabled: true
+      config:
+        BinderHub:
+          # something like <region>-docker.pkg.dev/<project-name>/<repository-name> for grc.io
+          # or quay.io/org/repo/cluster-hub/ for quay.io
+          image_prefix: <repository_path>
+      buildPodsRegistryCredentials:
+        # registry server address like https://quay.io
+        server: <server_address>
+        # robot account namer or "_json_key" if using grc.io
+        username: <account_name>
+    ```
 
 3. Sops-encrypt and store the password of the registry account, in the `enc-<hub>.secret.values.yaml` file.
 
-  ```yaml
-  buildPodsRegistryCredentials:
-    password: |
-      <json_key_from_service_account>
-  ```
+    ```yaml
+    binderhub-service:
+      buildPodsRegistryCredentials:
+        password: |
+          <json_key_from_service_account>
+    ```
 
 4. If pushing to quay.io registry, also setup the credentials for image pulling
 
-  When pushing to the quay registry, the images are pushed as `private` by default (even if the plan doesn't allow it).
+    When pushing to the quay registry, the images are pushed as `private` by default (even if the plan doesn't allow it).
 
-  A quick workaround for this, is to use the robot's account credentials to also set [`imagePullSecret`](https://z2jh.jupyter.org/en/stable/resources/reference.html#imagepullsecret) in the `enc-<hub>.secret.values.yaml`:
+    A quick workaround for this, is to use the robot's account credentials to also set [`imagePullSecret`](https://z2jh.jupyter.org/en/stable/resources/reference.html#imagepullsecret) in the `enc-<hub>.secret.values.yaml`:
 
-  ```yaml
-  jupyterhub:
-    imagePullSecret:
-        create: true
-        registry: quay.io
-        username: <robot_account_name>
-        password: <account_password>
-  ```
+    ```yaml
+    jupyterhub:
+      imagePullSecret:
+          create: true
+          registry: quay.io
+          username: <robot_account_name>
+          password: <account_password>
+    ```
