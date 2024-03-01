@@ -15,7 +15,7 @@ dependencies:
   - name: prometheus
     # NOTE: CHECK INSTRUCTIONS UNDER prometheus.server.command IN support/values.yaml
     # EACH TIME THIS VERSION IS BUMPED!
-    version: 25.11.0
+    version: 25.15.0
     repository: https://prometheus-community.github.io/helm-charts
 
   # Grafana for dashboarding of metrics.
@@ -29,13 +29,13 @@ dependencies:
   # that references this controller.
   # https://github.com/kubernetes/ingress-nginx/tree/main/charts/ingress-nginx
   - name: ingress-nginx
-    version: 4.9.1
+    version: 4.10.0
     repository: https://kubernetes.github.io/ingress-nginx
 
   # cluster-autoscaler for k8s clusters where it doesn't come out of the box (EKS)
   # https://github.com/kubernetes/autoscaler/tree/master/charts/cluster-autoscaler
   - name: cluster-autoscaler
-    version: 9.34.1
+    version: 9.35.0
     repository: https://kubernetes.github.io/autoscaler
     condition: cluster-autoscaler.enabled
 
