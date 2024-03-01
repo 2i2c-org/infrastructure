@@ -39,33 +39,34 @@ jupyterhub:
 2. Since `jupyterhub-fancy-profiles` adds on to the [`profileList` feature of `KubeSpawner`](https://jupyterhub-kubespawner.readthedocs.io/en/latest/spawner.html#kubespawner.KubeSpawner.profile_list), we need to configure a profile list here as well. Edit and update the following configuration per the community requesting the hub needs.
 
     ```yaml
-    singleuser:
-      profileList:
-        - display_name: "Only Profile Available, this info is not shown in the UI"
-          slug: only-choice
-          profile_options:
-            image:
-              display_name: Image
-              unlisted_choice:
-                enabled: True
-                display_name: "Custom image"
-                validation_regex: "^.+:.+$"
-                validation_message: "Must be a publicly available docker image, of form <image-name>:<tag>"
-                display_name_in_choices: "Specify an existing docker image"
-                description_in_choices: "Use a pre-existing docker image from a public docker registry (dockerhub, quay, etc)"
-                kubespawner_override:
-                  image: "{value}"
-              choices:
-                pangeo:
-                  display_name: Pangeo Notebook Image
-                  description: "Python image with scientific, dask and geospatial tools"
+    jupyterhub:
+      singleuser:
+        profileList:
+          - display_name: "Only Profile Available, this info is not shown in the UI"
+            slug: only-choice
+            profile_options:
+              image:
+                display_name: Image
+                unlisted_choice:
+                  enabled: True
+                  display_name: "Custom image"
+                  validation_regex: "^.+:.+$"
+                  validation_message: "Must be a publicly available docker image, of form <image-name>:<tag>"
+                  display_name_in_choices: "Specify an existing docker image"
+                  description_in_choices: "Use a pre-existing docker image from a public docker registry (dockerhub, quay, etc)"
                   kubespawner_override:
-                    image: pangeo/pangeo-notebook:2023.09.11
-                scipy:
-                  display_name: Jupyter SciPy Notebook
-                  slug: scipy
-                  kubespawner_override:
-                    image: jupyter/scipy-notebook:2023-06-26
+                    image: "{value}"
+                choices:
+                  pangeo:
+                    display_name: Pangeo Notebook Image
+                    description: "Python image with scientific, dask and geospatial tools"
+                    kubespawner_override:
+                      image: pangeo/pangeo-notebook:2023.09.11
+                  scipy:
+                    display_name: Jupyter SciPy Notebook
+                    slug: scipy
+                    kubespawner_override:
+                      image: jupyter/scipy-notebook:2023-06-26
     ```
 
 ## The `binderhub-service` chart
@@ -102,39 +103,12 @@ The `build pods` are created as a result of an image build request, and they mus
 
   ```yaml
   binderhub-service:
-    nodeSelector:
-      hub.jupyter.org/node-purpose: core
     enabled: true
-    # Set a port on which the binderhub-service ClusterIP Service will run
-    service:
-      port: 8090
-    dockerApi:
-      nodeSelector:
-        # The dockerApi pods need to run on the same user nodes as the user pods
-        hub.jupyter.org/node-purpose: user
-      tolerations:
-        # Tolerate tainted jupyterhub user nodes
-        - key: hub.jupyter.org_dedicated
-          value: user
-          effect: NoSchedule
-        - key: hub.jupyter.org/dedicated
-          value: user
-          effect: NoSchedule
     config:
       BinderHub:
-        # jupyterhub-fancy-profile expects binderhub to be available under http://{{hub url}}/services/binder
-        base_url: /services/binder
-        use_registry: true
         # something like <region>-docker.pkg.dev/<project-name>/<repository-name> for grc.io
         # or quay.io/org/repo/cluster-hub/ for quay.io
         image_prefix: <repository_path>
-      KubernetesBuildExecutor:
-        # Get ourselves a newer repo2docker!
-        build_image: quay.io/jupyterhub/repo2docker:2023.06.0-8.gd414e99
-        node_selector:
-          # Schedule builder pods to run on user nodes only
-          hub.jupyter.org/node-purpose: user
-    # The password to the registry is stored encrypted in the hub's encrypted config file
     buildPodsRegistryCredentials:
       # registry server address like https://quay.io
       server: <server_address>
