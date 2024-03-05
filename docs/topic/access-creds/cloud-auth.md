@@ -102,11 +102,12 @@ To do so, follow these steps:
    after logging in for current set of IAM users.
 2. Go to the [SSO users](https://console.aws.amazon.com/singlesignon/identity/home?region=us-east-1#!/users)
    page, and create an appropriate entry for the new user.
-   a. Their username should match their `2i2c.org` email address.
-   b. Use their `2i2c.org` address as email address.
-   c. Other than email and username, provide as little info as possible. This would be
+
+   - Their username should match their `2i2c.org` email address.
+   - Use their `2i2c.org` address as email address.
+   - Other than email and username, provide as little info as possible. This would be
       just first name, last name and display name.
-   d. "Send an email to the user with password setup instructions".
+   - "Send an email to the user with password setup instructions".
 3. Add them to the `2i2c-engineers` group. This gives them access to all the other
    AWS accounts we create.
 4. Create the account! They'll receive an email with appropriate instructions.

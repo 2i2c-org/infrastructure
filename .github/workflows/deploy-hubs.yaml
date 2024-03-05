@@ -205,6 +205,7 @@ jobs:
       failure_hhmi: "${{ env.failure_hhmi }}"
       failure_nasa-esdis: "${{ env.failure_nasa-esdis }}"
       failure_earthscope: "${{ env.failure_earthscope }}"
+      failure_opensci: "${{ env.failure_opensci }}"
 
     # Only run this job on pushes to the default branch and when the job output is not
     # an empty list

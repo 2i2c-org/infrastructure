@@ -1,0 +1,23 @@
+name: opensci
+provider: aws # https://2i2c.awsapps.com/start#/
+aws:
+  key: enc-deployer-credentials.secret.json
+  clusterType: eks
+  clusterName: opensci
+  region: us-west-2
+support:
+  helm_chart_values_files:
+    - support.values.yaml
+    - enc-support.secret.values.yaml
+hubs:
+  - name: sciencecore
+    display_name: "Sciencecore "
+    domain: sciencecore.opensci.2i2c.cloud
+    helm_chart: basehub
+    helm_chart_values_files:
+      # The order in which you list files here is the order the will be passed
+      # to the helm upgrade command in, and that has meaning. Please check
+      # that you intend for these files to be applied in this order.
+      - common.values.yaml
+      - sciencecore.values.yaml
+      - enc-sciencecore.secret.values.yaml

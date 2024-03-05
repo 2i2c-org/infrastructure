@@ -28,6 +28,7 @@ jobs:
           - cluster_name: nasa-esdis
           - cluster_name: nasa-veda
           - cluster_name: openscapes
+          - cluster_name: opensci
           - cluster_name: pangeo-hubs
           - cluster_name: qcl
           - cluster_name: smithsonian

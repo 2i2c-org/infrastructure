@@ -96,7 +96,7 @@ def retrieve_jupyterhub_config_dict(hub_config):
             return hub_config["binderhub"]["jupyterhub"]
         return hub_config["jupyterhub"]
     except KeyError:
-        return
+        return {}
 
 
 def parse_yaml_config_value_files_for_features(cluster_path, hub_values_files):
@@ -168,20 +168,20 @@ def build_options_list_entry(hub, hub_count, values_files_features, terraform_fe
     return {
         "domain": domain,
         "dedicated cluster": False if hub_count else True,
-        "dedicated nodepool": values_files_features["dedicated_nodepool"],
+        "dedicated nodepool": values_files_features.get("dedicated_nodepool", False),
         "user buckets (scratch/persistent)": terraform_features.get(
             hub["name"], {}
         ).get("user_buckets", False),
         "requester pays for buckets storage": terraform_features.get(
             hub["name"], {}
         ).get("requestor_pays", False),
-        "authenticator": values_files_features["authenticator"],
-        "user anonymisation": values_files_features["anonymization"],
-        "admin access to allusers dirs": values_files_features["allusers"],
+        "authenticator": values_files_features.get("authenticator", None),
+        "user anonymisation": values_files_features.get("anonymization", False),
+        "admin access to allusers dirs": values_files_features.get("allusers", False),
         "community domain": False if "2i2c.cloud" in domain else True,
-        "custom login page": values_files_features["custom_homepage"],
-        "custom html pages": values_files_features["custom_html"],
-        "gh-scoped-creds": values_files_features["gh_scoped_creds"],
+        "custom login page": values_files_features.get("custom_homepage", False),
+        "custom html pages": values_files_features.get("custom_html", False),
+        "gh-scoped-creds": values_files_features.get("gh_scoped_creds", False),
         #         "static web pages":
         #         "GPUs":
         #         "profile lists":
