@@ -4,9 +4,9 @@ We can support users who want to build, push and launch user images, from open s
 
 We call this an `imagebuilding` style hub and the primary features offered would be:
 
-1. User authentication
-2. Persistent storage
-3. Server options allowing:
+- **User authentication**
+- **Persistent storage**
+- **Server options** allowing:
   - pre-defined list of images to choose from
   - specifying another image, different from the ones in the pre-defined list
   - building and pushing an image to a registry from a GitHub repository
@@ -69,27 +69,63 @@ jupyterhub:
                       image: jupyter/scipy-notebook:2023-06-26
     ```
 
+## Setup the image registry
+
+### For GCP (via terraform)
+
+If the hub will be deployed on a GCP cluster, we can setup [gcr.io](https://gcr.io) via the [terraform config](https://github.com/2i2c-org/infrastructure/blob/master/terraform/gcp/registry.tf).
+
+1. Enable the repository creation by adding the following in the cluster's terraform config:
+
+    ```terraform
+    container_repos = [
+      "some-other-repository",
+      "<repository-name>",
+    ]
+    ```
+
+    where <repository-name> is the name of the repository where all the images built from the hub will be pushed.
+
+    ```{note}
+    If a `container_repos` config already exists, then, just add the new repository name to this list.
+    ```
+
+2. Get the registry credentials
+
+   The username to access this registry is [`_json_key`](https://cloud.google.com/artifact-registry/docs/docker/authentication#json-key) and the password can be discovered by running the following terraform command:
+
+   ```bash
+   terraform output registry_sa_keys
+   ```
+
+   ```{important}
+   Store these somewhere safe as we will need them in a following step.
+   ```
+
+### For other cloud providers (quay.io)
+
+If the hub will be deployed on another cloud provider than GCP, we must setup a new [quay.io](https://quay.io) organization and a robot account to push and pull from it.
+
+1. Go to https://quay.io/organizations/new/ and create a new organization. Give it a memorable name like <cluster-name>-<hub-name>.
+2. Make sure this new organization is selected, by going to https://quay.io/organization/<new-org-name>.
+3. Select the 'Robot Accounts' option on the left menu.
+3. Click 'Create Robot account', give it a memorable name (such as `image_builder`) and click 'Create'.
+4. In the next screen, don't select any of the existing repositories, as we need this robot account to have enough permissions to push **any** new repository under the organization, so permissions to existing repositories is not needed.
+5. Once done, click the name of the robot account again. This will give you its username and password.
+   ```{important}
+   Store these somewhere safe as we will need them in a following step.
+   ```
+6. Select the 'Team and Membership' option on the left menu.
+7. Click on the 'Options' wheel of the `owners` team, then select 'Manage Team Members'.
+8. Type in the name of the robot account that you created, select it from the list and add it to the `owners` team.
+9. Add also the other engineers as members of this new organization by searching their handles in the search bar on the right.
+
+
 ## Setup the `binderhub-service` chart
 
 We will use the [binderhub-service](https://github.com/2i2c-org/binderhub-service/) Helm chart to run BinderHub, the Python software, as a standalone service to build and push images with [repo2docker](https://github.com/jupyterhub/repo2docker), next to JupyterHub.
 
-1. Setup a registry and safely store the credentials to push to it
-
-  - If the hub will be deployed on a GCP cluster, follow the steps 4 to 8 from the [binderhub-service installation guide](https://github.com/2i2c-org/binderhub-service?tab=readme-ov-file#installation). When you're done, you should have a gcr.io registry setup and the appropriate credentials to push images to it.
-
-  - If the hub will be deployed on another cloud provider than GCP, then you should setup the desired quay.io repository and robot account to push and pull from it. The steps below describes how to create one under the 2i2c quay.io organization, assuming this is where we wish the repositories that will be build by `binderhub-service` to be pushed.
-
-    - Go to https://quay.io/organization/2i2c
-    - Select the 'Robot Accounts' option on the left menu.
-    - Click 'Create Robot account', give it a memorable name (such as `<cluster_name>_<hub-name>_image_builder`) and click 'Create'
-    - In the next screen, don't select any of the existing repositories, as we need this robot account to have enough permissions to push **any** new repository under the organization and permissions to existing repositories is not needed.
-    - Once done, click the name of the robot account again. This will give you its username and password.
-    - Select the 'Team and Membership' option on the left menu.
-    - Click on the 'Options' wheel of the `owners` team, then select 'Manage Team Members'
-    - Type in the name of the robot account that you created, select it from the list and add it to the `owners` team
-
-
-2. Setup the `binderhub-service` config
+1. Setup the `binderhub-service` config
 
     ```yaml
     binderhub-service:
@@ -100,22 +136,23 @@ We will use the [binderhub-service](https://github.com/2i2c-org/binderhub-servic
           # or quay.io/org/repo/cluster-hub/ for quay.io
           image_prefix: <repository_path>
       buildPodsRegistryCredentials:
-        # registry server address like https://quay.io
+        # registry server address like https://quay.io or https://us-central1-docker.pkg.dev
         server: <server_address>
         # robot account namer or "_json_key" if using grc.io
         username: <account_name>
     ```
 
-3. Sops-encrypt and store the password of the registry account, in the `enc-<hub>.secret.values.yaml` file.
+2. Sops-encrypt and store the password for accessing the image registry, in the `enc-<hub>.secret.values.yaml` file.
+
+    You should have the password for accessing the image registry from a previous step.
 
     ```yaml
     binderhub-service:
       buildPodsRegistryCredentials:
-        password: |
-          <json_key_from_service_account>
+        password: <password>
     ```
 
-4. If pushing to quay.io registry, also setup the credentials for image pulling
+3. If pushing to quay.io registry, also setup the credentials for image pulling
 
     When pushing to the quay registry, the images are pushed as `private` by default (even if the plan doesn't allow it).
 
@@ -127,5 +164,5 @@ We will use the [binderhub-service](https://github.com/2i2c-org/binderhub-servic
           create: true
           registry: quay.io
           username: <robot_account_name>
-          password: <account_password>
+          password: <password>
     ```
