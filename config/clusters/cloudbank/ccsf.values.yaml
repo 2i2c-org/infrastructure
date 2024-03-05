@@ -11,8 +11,8 @@ jupyterhub:
       guarantee: 384M
       limit: 1.5G
     image:
-        repository: "your-registry/your-image"
-        tag: "latest"
+      repository: "your-registry/your-image"
+      tag: "latest"
   custom:
     singleuserAdmin:
       image:
