@@ -300,6 +300,7 @@ resource "google_container_node_pool" "notebook" {
 
     workload_metadata_config {
       # Config Connector requires workload identity to be enabled (via GKE_METADATA_SERVER).
+      # Config Connector hasn't been used since March 2024, see https://github.com/2i2c-org/infrastructure/pull/3778.
       # If config connector is not necessary, we use simple metadata concealment
       # (https://cloud.google.com/kubernetes-engine/docs/how-to/protecting-cluster-metadata)
       # to expose the node CA to users safely.

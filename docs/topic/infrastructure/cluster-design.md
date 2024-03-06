@@ -134,29 +134,25 @@ to isolate them from each other.
 
 ## Cloud access credentials for hub users
 
-For hub users to access cloud resources (like storage buckets), they will need
-to be authorized via a [GCP ServiceAccount](https://cloud.google.com/iam/docs/service-accounts).
-This is different from a [Kubernetes ServiceAccount](https://kubernetes.io/docs/tasks/configure-pod-container/configure-service-account/),
-which is used to authenticate and authorize access to kubernetes resources (like spawning pods).
+For hub users to access cloud resources like storage buckets from their user
+servers, they will need to have credentials from a cloud specific service
+account - like a [GCP ServiceAccount].
 
-For dask hubs, we want to provide users with write access to at least one storage
-bucket they can use for temporary data storage. User pods need to be given access to
-a GCP ServiceAccount that has write permissions to this bucket. There are two ways
-to do this:
+Currently for practical reasons we only provision one cloud specific service
+account per hub, which makes all users interaction be seen as a single user.
+Note that providing for example two cloud service accounts, one for hub admin
+users and one for non-admin users is by far an easier improvement than providing
+one for each hub user.
 
-1. Provide appropriate permissions to the GCP ServiceAccount used by the node the user
-   pods are running on. When used with [Metadata Concealment](https://cloud.google.com/kubernetes-engine/docs/how-to/protecting-cluster-metadata#overview),
-   user pods can read / write from storage buckets. However, this grants the same permissions
-   to *all* pods on the cluster, and hence is unsuitable for clusters with multiple
-   hubs running for different organizations.
+```{note} Technical notes
+When we create a hub with access to a bucket, we create cloud provider specific
+service account for the hub via `terraform`. We then also create a [Kubernetes
+ServiceAccount] via the basehub chart's templates that references the cloud
+specific service account via an annotation. When this Kubernetes ServiceAccount
+is mounted to the hub's user server pods, a cloud specific controller ensures
+the Pod gets credentials that can be exchanged for temporary credentials to the
+cloud specific service account.
 
-2. Use the [GKE Cloud Config Connector](https://cloud.google.com/config-connector/docs/overview) to
-   create a GCP ServiceAccount + Storage Bucket for each hub via helm. This requires using
-   [Workload Identity](https://cloud.google.com/kubernetes-engine/docs/how-to/workload-identity) and
-   is incompatible with (1). This is required for multi-tenant clusters, since users on a hub
-   have much tighter scoped permissions.
-
-Long-term, (2) is the appropriate way to do this for everyone. However, it affects the size
-of the core node pool, since it runs some components in the cluster. For now, we use (1) for
-single-tenant clusters, and (2) for multi-tenant clusters. If nobody wants a scratch GCS bucket,
-neither option is required.
+[gcp serviceaccount]: https://cloud.google.com/iam/docs/service-accounts
+[kubernetes serviceaccount]: https://kubernetes.io/docs/tasks/configure-pod-container/configure-service-account/
+```
