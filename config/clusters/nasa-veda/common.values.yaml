@@ -47,6 +47,7 @@ basehub:
             - veda-analytics-access:collaborator-access
             - CYGNSS-VEDA:cygnss-iwg
             - veda-analytics-access:maap-biomass-team
+            - Earth-Information-System:eis-fire
           scope:
             - read:org
         Authenticator:
