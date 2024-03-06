@@ -1,10 +1,13 @@
 # What exactly do cloud providers charge us for?
 
 There are a million ways to pay cloud providers money, and trying to
-understand it all is [several](https://www.oreilly.com/library/view/cloud-finops/9781492054610/)
-[books](https://www.porchlightbooks.com/product/cloud-cost-a-complete-guide---2020-edition--gerardus-blokdyk?variationCode=9780655917908)
-[worth](https://www.abebooks.com/servlet/BookDetailsPL?bi=31001470420&dest=usa) [of](https://www.thriftbooks.com/w/cloud-data-centers-and-cost-modeling-a-complete-guide-to-planning-designing-and-building-a-cloud-data-center_caesar-wu_rajkumar-buyya/13992190/item/26408356/?srsltid=AfmBOootnd77xklpoo2MTy8n0np1b5oamDo5KgOg9dCD-0bKody2zEF14oU#idiq=26408356&edition=14835620)
-[material](https://bookshop.org/p/books/reduce-cloud-computing-cost-101-ideas-to-save-millions-in-public-cloud-spending-abhinav-mittal/10266848).
+understand it all is several books worth of material.[^1][^2][^3][^4][^5]
+
+[^1]: https://www.oreilly.com/library/view/cloud-finops/9781492054610/
+[^2]: https://www.porchlightbooks.com/product/cloud-cost-a-complete-guide---2020-edition--gerardus-blokdyk?variationCode=9780655917908
+[^3]: https://www.abebooks.com/servlet/BookDetailsPL?bi=31001470420&dest=usa
+[^4]: https://www.thriftbooks.com/w/cloud-data-centers-and-cost-modeling-a-complete-guide-to-planning-designing-and-building-a-cloud-data-center_caesar-wu_rajkumar-buyya/13992190/item/26408356/?srsltid=AfmBOootnd77xklpoo2MTy8n0np1b5oamDo5KgOg9dCD-0bKody2zEF14oU#idiq=26408356&edition=14835620
+[^5]: https://bookshop.org/p/books/reduce-cloud-computing-cost-101-ideas-to-save-millions-in-public-cloud-spending-abhinav-mittal/10266848
 However, a lot of JupyterHub (+ optionally Dask) clusters operate in
 similar ways, so we can focus on a smaller subset of ways in which cloud
 companies charge us.
@@ -375,7 +378,7 @@ Grafana, as well as any other service through this single endpoint.
 Each Load Balancer costs money as long as it exists, and there is a per GB
 processing charge as well. Since we don't really have a lot of data coming
 *in* to the JupyterHub (as only user sessions are exposed via the browser),
-the per GB charge usually doesn't add up to much (even uploading 1 terabyte of data (which will be very slow) will only cost between 5 - 14 USD).
+the per GB charge usually doesn't add up to much (even uploading 1 terabyte of data, which will be very slow, will only cost between 5 - 14 USD).
 
 1. [AWS ELB](https://aws.amazon.com/elasticloadbalancing/pricing/?nc=sn&loc=3)
 
@@ -392,7 +395,7 @@ the per GB charge usually doesn't add up to much (even uploading 1 terabyte of d
 3. [Azure LoadBalancer](https://azure.microsoft.com/en-us/pricing/details/load-balancer/)
 
    Pricing varies by region, but is about $0.025 per hour per load balancer
-   (listed as a 'rule' in the pricing page, as our load balancers only have one rule each) + $$0.005 per GB processed.
+   (listed as a 'rule' in the pricing page, as our load balancers only have one rule each) + $0.005 per GB processed.
 
 ## Access to the external internet
 
@@ -457,9 +460,11 @@ that this traffic looks to originate from. Our kubernetes nodes are not
 exposed to the public internet at all, which theoretically adds another
 layer of security as well.
 
-![Dr. Who Meme about Cloud NAT](https://hackmd.io/_uploads/H1IYevYi6.png)
+```{image} https://hackmd.io/_uploads/H1IYevYi6.png)
+:alt: Dr. Who Meme about Cloud NAT
 
-(one of the many memes about Cloud NAT being expensive, from [QuinnyPig](https://twitter.com/QuinnyPig/status/1357391731902341120). Many seem far more violent. See [this post](https://www.lastweekinaws.com/blog/the-aws-managed-nat-gateway-is-unpleasant-and-not-recommended/) for more information.)
+One of the many memes about Cloud NAT being expensive, from [QuinnyPig](https://twitter.com/QuinnyPig/status/1357391731902341120). Many seem far more violent. See [this post](https://www.lastweekinaws.com/blog/the-aws-managed-nat-gateway-is-unpleasant-and-not-recommended/) for more information.
+```
 
 However, it is the **single most expensive** thing one can do on any cloud
 provider, and must be avoided at all costs. Instead of data *ingress*
@@ -472,7 +477,7 @@ being free, it becomes pretty incredibly expensive.
 | Azure | $0.045 per hour + $0.045 per GiB | [link](https://azure.microsoft.com/en-us/pricing/details/azure-nat-gateway/) |
 
 Data *ingress* costs go from zero to $0.045 per GiB. So a user could download
-a terabyte of data, and it costs about $46 instead of 0$. This can escalate
+a terabyte of data, and it costs about $46 instead of $0. This can escalate
 real quick, because this cost is *invisible* to the user.
 
 The shared IP also causes issues with external services that throttle per IP.
@@ -551,7 +556,7 @@ separate from the nodes used to run various things in it. This is usually a *fix
 
 2. [GCP GKE](https://cloud.google.com/kubernetes-engine/pricing#standard_edition)
 
-   Is a bit messier - it costs \$0.10 per hour, but is structured in such a way
+   Is a bit messier - it costs $0.10 per hour, but is structured in such a way
    that one single-zone (non highly available) cluster is free per GCP project.
    While this is a cost saving of about 75$ per month, in most cases we
    use *regional* (multi-zonal) clusters that are not free. This makes

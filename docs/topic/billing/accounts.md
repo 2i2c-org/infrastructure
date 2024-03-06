@@ -20,18 +20,18 @@ be attached to a single billing account, and projects can usually move
 between billing accounts. All cloud resources (clusters, nodes, object storage,
 etc) are always contained inside a Project.
 
-Billing accounts are generally not created often. Usually you would need to
+Billing accounts are generally not created often. Usually, you would need to
 create a new one for the following reasons:
 
 1. You are getting cloud credits from somewhere, and want a separate container
-   for it so you can track spend accurately.
+   for it so you can track spending accurately.
 2. You want to use a different credit card than what you use for your other
    billing account.
 
 ## AWS
 
-AWS billing is a little more haphazard than GCP's, and derived partially
-from the well established monstrosity that is [LDAP](https://en.wikipedia.org/wiki/Lightweight_Directory_Access_Protocol).
+AWS billing is a little more haphazard than GCP's and is derived partially
+from the well-established monstrosity that is [LDAP](https://en.wikipedia.org/wiki/Lightweight_Directory_Access_Protocol).
 
 We will not dig too deep into it, lest we wake some demons. However, since
 we are primarily concerned with billing, understanding the following concepts
@@ -53,7 +53,7 @@ Each AWS Account can have billing attached in one of two ways:
    part of. This is known as [consolidated billing](https://docs.aws.amazon.com/awsaccountbilling/latest/aboutv2/consolidated-billing.html)
 
 So billing information is *always* associated with an AWS Account,
-*not* AWS Organization. This is a historical artifact - AWS Organizations
+*not* an AWS Organization. This is a historical artefact - AWS Organizations
 were only announced [in 2016](https://aws.amazon.com/about-aws/whats-new/2016/11/announcing-aws-organizations-now-in-preview/),
 a good 9 years after AWS started. So if this feels a little hacked on,
 it is because it is!
@@ -70,13 +70,13 @@ who need to handle billing.
 We currently have no experience or knowledge here, as all our Azure
 customers handle billing themselves. This is not uncommon - most Azure
 users want to use it because they already have a pre-existing *strong*
-relationship with Microsoft, and their billing gets managed as part of
+relationship with Microsoft and their billing gets managed as part of
 that.
 
 ## Billing reports in the web console
 
 Cloud providers provide a billing console accessible via the web, often
-with very helpful reports. While not automation friendly (see next section
+with very helpful reports. While not automation-friendly (see next section
 for more information on automation), this is very helpful for doing ad-hoc
 reporting as well as trying to optimize cloud costs. For dedicated clusters,
 this may also be directly accessible to hub champions, allowing them to
@@ -84,8 +84,8 @@ explore their own usage.
 
 ### GCP
 
-You can get a list of all billing accounts you have access to [here](https://console.cloud.google.com/billing)
-(make sure you are logged in to the correct google account). Alternatively,
+You can get a list of all billing accounts you have access to via the [billing console](https://console.cloud.google.com/billing)
+(make sure you are logged in to the correct Google account). Alternatively,
 you can select 'Billing' from the left sidebar in the Google Cloud Console
 after selecting the correct project.
 
@@ -120,9 +120,9 @@ access to any Azure account!
 ## Programmatic access to billing information
 
 The APIs for getting access to billing data *somehow* seem to be the
-least well developed parts of any cloud vendor's offerings. Usually
+least well-developed parts of any cloud vendor's offerings. Usually,
 they take the form of a 'billing export' - you set up a *destination*
-where information about billing is written, often once a day. And then
+where information about billing is written, often once a day. Then
 you query this location for billing information. This is in sharp contrast
 to most other cloud APIs, where the cloud vendor has a *single source of
 truth* you can just query. Not so for billing - there's no external API
@@ -136,9 +136,9 @@ access from that point onwards, not retrospectively.
    their sql-like big data product. In particular, we should prefer setting
    up [detailed billing export](https://cloud.google.com/billing/docs/how-to/export-data-bigquery-tables/detailed-usage).
    This is set up **once per billing account**, and **not once per project**.
-   And one billing account can export only to bigquery in one project, and
+   And one billing account can export only to BigQuery in one project, and
    you can not easily move this table from one project to another. New
-   data is written into this once a day, at 5AM Pacific Time.
+   data is written into this once a day, at 5 AM Pacific Time.
 
 2. AWS asks you to set up [export to an S3 bucket](https://docs.aws.amazon.com/cur/latest/userguide/what-is-cur.html),
    where CSV files are produced once a day. While we *could* then import
@@ -151,5 +151,5 @@ access from that point onwards, not retrospectively.
    management.
 
 Our automated systems for billing need to read from these 'exported'
-data sources, and we need to develop processes for making sure that
+data sources, and we need to develop processes to make sure that
 we *do* have the billing data exports enabled correctly.
