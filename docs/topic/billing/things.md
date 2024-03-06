@@ -124,7 +124,7 @@ needs, and get replaced when version upgrades happen. They have
 names like `gke-jup-test-default-pool-47300cca-wk01` - notice
 the random string of characters towards the end. The [cluster autoscaler](https://github.com/kubernetes/autoscaler/)
 is the primary reason for a new node to come into existence or disappear,
-along with ocassional manual node version upgrades.
+along with occasional manual node version upgrades.
 
 Since nodes are often the biggest cloud cost for communities, and the cluster
 autoscaler is the biggest determiner of how / when nodes are used,
@@ -134,7 +134,7 @@ Documentation: [GCP](https://cloud.google.com/kubernetes-engine/docs/concepts/cl
 
 ## Home directory
 
-By default, we provide users with a persistent, POSIX compatible fileystem mounted
+By default, we provide users with a persistent, POSIX compatible filesystem mounted
 under `$HOME`. This persists across user server restarts, and is used to store
 code (and sometimes data).
 
