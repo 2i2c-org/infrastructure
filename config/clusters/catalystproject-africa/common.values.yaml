@@ -46,7 +46,7 @@ jupyterhub:
                   cpu_guarantee: 0.093
                   cpu_limit: 1
               mem_3_0:
-                display_name: Up to 6G of RAM and 2 CPUs"
+                display_name: Up to 6G of RAM and 2 CPUs
                 kubespawner_override:
                   mem_guarantee: 2929687.5K
                   mem_limit: 6G
