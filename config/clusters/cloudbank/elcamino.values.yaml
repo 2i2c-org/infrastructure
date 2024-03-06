@@ -26,8 +26,8 @@ jupyterhub:
 
   singleuser:
     memory:
-      limit: 2G
-      guarantee: 2G
+      limit: 3G
+      guarantee: 3G
   hub:
     config:
       JupyterHub:
