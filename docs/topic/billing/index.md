@@ -5,7 +5,7 @@ terminology to talk about cloud billing.
 
 ```{toctree}
 :maxdepth: 2
-things
+chargeable-resources
 accounts
 tools
 ```
