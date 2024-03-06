@@ -113,12 +113,6 @@ jupyterhub:
         - name: home
           mountPath: /home/rstudio/shared-readwrite
           subPath: _shared
-    cloudResources:
-      provider: ""
-      gcp:
-        projectId: ""
-      scratchBucket:
-        enabled: false
     2i2c:
       # Should 2i2c engineering staff user IDs be injected to the admin_users
       # configuration of the JupyterHub's authenticator by our custom
@@ -779,31 +773,7 @@ jupyterhub:
 
             return pod
         c.KubeSpawner.modify_pod_hook = modify_pod_hook
-      03-cloud-storage-bucket: |
-        from z2jh import get_config
-        cloud_resources = get_config('custom.cloudResources')
-        scratch_bucket = cloud_resources['scratchBucket']
-        import os
-
-        if scratch_bucket['enabled']:
-            # FIXME: Support other providers too
-            assert cloud_resources['provider'] == 'gcp'
-            project_id = cloud_resources['gcp']['projectId']
-
-            release = os.environ['HELM_RELEASE_NAME']
-            bucket_protocol = 'gcs'
-            bucket_name = f'{project_id}-{release}-scratch-bucket'
-            env = {
-                'SCRATCH_BUCKET_PROTOCOL': bucket_protocol,
-                # Matches "daskhub.scratchBUcket.name" helm template
-                'SCRATCH_BUCKET_NAME': bucket_name,
-                # Use k8s syntax of $(ENV_VAR) to substitute env vars dynamically in other env vars
-                'SCRATCH_BUCKET': f'{bucket_protocol}://{bucket_name}/$(JUPYTERHUB_USER)',
-                'PANGEO_SCRATCH': f'{bucket_protocol}://{bucket_name}/$(JUPYTERHUB_USER)',
-            }
-
-            c.KubeSpawner.environment.update(env)
-      04-2i2c-add-staff-user-ids-to-admin-users: |
+      03-2i2c-add-staff-user-ids-to-admin-users: |
         from z2jh import get_config
         add_staff_user_ids_to_admin_users = get_config("custom.2i2c.add_staff_user_ids_to_admin_users", False)
 
@@ -816,7 +786,7 @@ jupyterhub:
             staff_user_ids.extend(get_config("hub.config.Authenticator.admin_users", []))
             c.Authenticator.admin_users = staff_user_ids
 
-      05-per-user-disk: |
+      04-per-user-disk: |
         # Optionally, create a PVC per user - useful for per-user databases
         from jupyterhub.utils import exponential_backoff
         from z2jh import get_config
