@@ -88,6 +88,7 @@ Topic guides go more in-depth on a particular topic.
 :maxdepth: 2
 topic/access-creds/index.md
 topic/infrastructure/index.md
+topic/billing/index.md
 topic/monitoring-alerting/index.md
 topic/features.md
 topic/resource-allocation.md

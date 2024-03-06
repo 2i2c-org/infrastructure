@@ -1,0 +1,58 @@
+# Cloud billing tools
+
+There are a few tools we can use to make cloud billing easier to understand,
+reason about and use.
+
+## Using tags to separate costs
+
+Cloud billing reports by default allow us to see how much each **service**
+was charged for - for example, we could know that VMs cost us 589\$.
+But wouldn't it be nice to know how much of that 589\$ was for core nodes,
+how much was for user nodes, and how much for dask workers? Or
+hypothetically, if we had multiple profiles that were accessible only to
+certain subsets of users, which profiles had cost how much money?
+
+This is actually possible if we use **cost tags**, which can be attached
+to *most* cloud resources (**not** kubernetes resources). Once attached
+to specific sets of resources, you can filter and group by them in the
+web reporting UI or in programmatically in the billing export. This will
+count *all* costs emnating from any resource tagged with that tag. For
+example, if a node is tagged with a particular tag, the following separate
+things will all have that tag associated:
+
+1. The amount of memory allocated to that node
+2. The amount of CPU allocated to the node
+3. (If tagged correctly) The base disk allocated to that node
+4. Any network costs accured by actions of processes on that node (subject
+   to some complexity)
+
+However, they have quite a few limitations as well:
+
+1. They are attached to *cloud* resources, *not* kubernetes resources. By
+   default, multiple users can be on a single node, so deeper granularity
+   of cost attribution is not possible.
+2. Some cloud resources are shared to reduce cost (home directories are a
+   prime example), and detailed cost attribution there needs to be done
+   via other means.
+3. This does not apply retroactively, you must already have the tags set up
+   for costs to be accured to them.
+
+Despite these limitations, cost tagging is extremely important to get a good
+understanding of what costs how much money. With a well tagged system, we
+can make reasoned trade-offs about cost rather than fiddling in the dark.
+
+Resource links: [GCP Labels](https://cloud.google.com/compute/docs/labeling-resources), [AWS Cost Allocation Tags](https://docs.aws.amazon.com/awsaccountbilling/latest/aboutv2/cost-alloc-tags.html), [Azure Tags](https://learn.microsoft.com/en-us/azure/cost-management-billing/costs/enable-tag-inheritance)
+
+## Budget alerts
+
+All cloud providers allow us to set up alerts that fire whenever a particular
+project is about to cost more than a specific amount, or is forecast to go
+cost over a specific amount by end of the month if current trends continue.
+This can be *extremely helpful* in assuaging communities of cost overruns,
+but requires we have a prediction for *what numbers* to set these budgets at,
+as well as what to do when the alerts fire. Usually these alerts can be
+set up manually in the UI or (preferably) via terraform. We currently don't
+utilize these, but we really should!
+
+More information: [GCP](https://cloud.google.com/billing/docs/how-to/budgets), [AWS](https://aws.amazon.com/aws-cost-management/aws-budgets/)
+and [Azure](https://learn.microsoft.com/en-us/azure/cost-management-billing/costs/cost-mgt-alerts-monitor-usage-spending).
