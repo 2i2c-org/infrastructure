@@ -18,7 +18,7 @@ jupyterhub:
         slug: jupyter
         default: true
         kubespawner_override:
-          image: jupyter/scipy-notebook:2023-10-20
+          image: quay.io/jupyter/scipy-notebook:2024-03-04
           default_url: /lab
         profile_options: &profile_options
           resource_allocation: &resource_allocation
