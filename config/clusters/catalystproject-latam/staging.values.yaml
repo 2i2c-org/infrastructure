@@ -31,5 +31,6 @@ jupyterhub:
         oauth_callback_url: https://staging.latam.catalystproject.2i2c.cloud/hub/oauth_callback
         allowed_organizations:
           - czi-catalystproject
+          - CatalystProject-Hubs:staging
         scope:
           - read:org
