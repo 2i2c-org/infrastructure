@@ -64,6 +64,7 @@ jupyterhub:
           mem_guarantee: 512M
       - display_name: Large Instance
         # Requested in https://2i2c.freshdesk.com/a/tickets/1348
+        # FIXME: The </p><p> is a hack for kubespawner to render a new line, maybe there are better ways to do this?
         description: |
           Provides 1G - 4G of RAM</p>
           <p> ⚠️ Please use this instance only if you know you need it, otherwise use the Regular Instance!
