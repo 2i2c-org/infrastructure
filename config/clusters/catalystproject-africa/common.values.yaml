@@ -38,44 +38,22 @@ jupyterhub:
           resource_allocation: &resource_allocation
             display_name: Resource Allocation
             choices:
-              mem_0_3:
-                default: true
-                display_name: 375 MB RAM, ~1/20 CPU
-                kubespawner_override:
-                  mem_guarantee: 366210K
-                  mem_limit: 1G
-                  cpu_guarantee: 0.046
-                  cpu_limit: 1
               mem_0_7:
-                display_name: 750 MB RAM, ~1/10 CPU
+                display_name: "Small: 750MB RAM and 1/10 CPU"
                 kubespawner_override:
                   mem_guarantee: 732421K
                   mem_limit: 2G
                   cpu_guarantee: 0.093
                   cpu_limit: 1
-              mem_1_5:
-                display_name: 1.5 GB RAM, ~1/5 CPU
-                kubespawner_override:
-                  mem_guarantee: 1464843.75K
-                  mem_limit: 3G
-                  cpu_guarantee: 0.187
-                  cpu_limit: 2
               mem_3_0:
-                display_name: 3 GB RAM, ~1/2 CPU
+                display_name: "Medium: 3GB RAM and 1/2 CPU"
                 kubespawner_override:
                   mem_guarantee: 2929687.5K
                   mem_limit: 6G
                   cpu_guarantee: 0.375
                   cpu_limit: 2
-              mem_6_0:
-                display_name: 6 GB RAM, 3/4 CPU
-                kubespawner_override:
-                  mem_guarantee: 5859375K
-                  mem_limit: 12G
-                  cpu_guarantee: 0.750
-                  cpu_limit: 2
               mem_12_0:
-                display_name: 12 GB RAM, 1.5 CPU
+                display_name: "Large: 12GB RAM and 1.5 CPU"
                 kubespawner_override:
                   mem_guarantee: 11718750K
                   mem_limit: 24G
