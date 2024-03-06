@@ -138,8 +138,8 @@ By default, we provide users with a persistent, POSIX compatible filesystem moun
 under `$HOME`. This persists across user server restarts, and is used to store
 code (and sometimes data).
 
-Because this has to persist regardless of wether the user is currently active or
-not, cloud providers will charge us for it regardless of wether the user is actively
+Because this has to persist regardless of whether the user is currently active or
+not, cloud providers will charge us for it regardless of whether the user is actively
 using it or not. Hence, choosing what cloud products we use here becomes crucial - if
 we pick something that is a poor fit, storage costs can easily dwarf everything else.
 

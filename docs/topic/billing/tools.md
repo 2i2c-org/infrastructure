@@ -23,7 +23,7 @@ things will all have that tag associated:
 1. The amount of memory allocated to that node
 2. The amount of CPU allocated to the node
 3. (If tagged correctly) The base disk allocated to that node
-4. Any network costs accured by actions of processes on that node (subject
+4. Any network costs accrued by actions of processes on that node (subject
    to some complexity)
 
 However, they have quite a few limitations as well:
@@ -35,7 +35,7 @@ However, they have quite a few limitations as well:
    prime example), and detailed cost attribution there needs to be done
    via other means.
 3. This does not apply retroactively, you must already have the tags set up
-   for costs to be accured to them.
+   for costs to be accrued to them.
 
 Despite these limitations, cost tagging is extremely important to get a good
 understanding of what costs how much money. With a well tagged system, we
