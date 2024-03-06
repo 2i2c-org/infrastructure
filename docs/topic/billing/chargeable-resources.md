@@ -74,7 +74,8 @@ to store:
    ephemeral disk
 6. For *ephemeral hubs*, their home directories are also stored using the
    same mechanism as (3) - so they take up space on the ephemeral disk as
-   well. Most hubs have a *persistent* home directory set up, detailed below.
+   well. Most hubs have a *persistent* home directory set up, detailed
+   in the [Home directories section](topic:billing:resources:home).
 
 
 These disks can be fairly small - 100GB at the largest, but we can get away
@@ -130,6 +131,7 @@ understanding its behavior is very important in understanding cloud costs.
 
 Documentation: [GCP](https://cloud.google.com/kubernetes-engine/docs/concepts/cluster-autoscaler), [AWS](https://github.com/kubernetes/autoscaler/blob/master/cluster-autoscaler/cloudprovider/aws/README.md), [Azure](https://learn.microsoft.com/en-us/azure/aks/cluster-autoscaler?tabs=azure-cli)
 
+(topic:billing:resources:home)=
 ## Home directory
 
 By default, we provide users with a persistent, POSIX compatible filesystem mounted
@@ -184,7 +186,7 @@ cloud providers:
    We have to specify a maximum storage capacity, which can be adjusted up or down. We pay for the maximum storage capacity, regardless of what we use.
 
 
-
+(topic:billing:resources:network-fees)=
 ## Network Fees
 
 Back in the old days, 'networking' implied literally running physical
@@ -279,10 +281,10 @@ A core use of JupyterHub is to put the compute near where the data is, so
 at all, as we are accessing data in the same region / zone. Object storage
 access is the primary point of contention here for the kind of infrastructure
 we manage, so as long as we are careful about that we should be ok. More
-information about managing this is present in the object storage section of
-this guide.
+information about managing this is present in the [object storage section](topic:billing:resources:object-storage)
+of this guide.
 
-
+(topic:billing:resources:object-storage)=
 ## Object storage
 
 [Object Storage](https://en.wikipedia.org/wiki/Object_storage) is one of the
@@ -338,11 +340,13 @@ Pricing link: [AWS S3](https://aws.amazon.com/s3/pricing/), [GCP GCS](https://cl
 
 ### Egress fees
 
-As discussed in the network fees section, *egress* fees are how cloud
+As discussed in the [network fees
+section](topic:billing:resources:network-fees), *egress* fees are how cloud
 providers often lock you in. They want you to store all your data in them,
-particularly in their object stores, and charge an inordinate amount of money
-to take that data with you somewhere else. This is egregious enough now that
-[regulators are noticing](https://www.cnbc.com/2023/10/05/amazon-and-microsofts-cloud-dominance-referred-for-uk-competition-probe.html),
+particularly in their object stores, and charge an inordinate amount of money to
+take that data with you somewhere else. This is egregious enough now that
+[regulators are
+noticing](https://www.cnbc.com/2023/10/05/amazon-and-microsofts-cloud-dominance-referred-for-uk-competition-probe.html),
 and that is probably the long term solution.
 
 In the meantime, the answer is fairly simple - just **never** expose your
@@ -528,7 +532,7 @@ the infrastructure:
    their data, and need a dedicated block storage device. One is created
    *for each user* (via [Kubernetes Dynamic Volume Provisioning](https://kubernetes.io/docs/concepts/storage/dynamic-provisioning/)),
    and this can get quite expensive
-   (for reasons outlined in the "Home Directory Storage" section above).
+   (for reasons outlined in the ["Home Directory Storage" section](topic:billing:resources:home)).
 
 Pricing is primarily dependent on the expected disk performance (measured as throughput and IOPS) as well as the disk size. While there's a lot of
 options available, we'll list what we most commonly use in this table.
