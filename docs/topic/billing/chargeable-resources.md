@@ -1,13 +1,8 @@
 # What exactly do cloud providers charge us for?
 
 There are a million ways to pay cloud providers money, and trying to
-understand it all is several books worth of material.[^1][^2][^3][^4][^5]
+understand it all is [several][book-1] [books][book-2] [worth][book-3] [of][book-4] [material][book-5].
 
-[^1]: https://www.oreilly.com/library/view/cloud-finops/9781492054610/
-[^2]: https://www.porchlightbooks.com/product/cloud-cost-a-complete-guide---2020-edition--gerardus-blokdyk?variationCode=9780655917908
-[^3]: https://www.abebooks.com/servlet/BookDetailsPL?bi=31001470420&dest=usa
-[^4]: https://www.thriftbooks.com/w/cloud-data-centers-and-cost-modeling-a-complete-guide-to-planning-designing-and-building-a-cloud-data-center_caesar-wu_rajkumar-buyya/13992190/item/26408356/?srsltid=AfmBOootnd77xklpoo2MTy8n0np1b5oamDo5KgOg9dCD-0bKody2zEF14oU#idiq=26408356&edition=14835620
-[^5]: https://bookshop.org/p/books/reduce-cloud-computing-cost-101-ideas-to-save-millions-in-public-cloud-spending-abhinav-mittal/10266848
 However, a lot of JupyterHub (+ optionally Dask) clusters operate in
 similar ways, so we can focus on a smaller subset of ways in which cloud
 companies charge us.
@@ -613,3 +608,10 @@ which is automatically already pre-configured to collect logs from all our clust
 AWS supports [CloudWatch](https://docs.aws.amazon.com/eks/latest/userguide/control-plane-logs.html)
 for logs, but they aren't enabled by default. Azure probably has at least one product
 for logs.
+
+
+[book-1]: https://www.oreilly.com/library/view/cloud-finops/9781492054610/
+[book-2]: https://www.porchlightbooks.com/product/cloud-cost-a-complete-guide---2020-edition--gerardus-blokdyk?variationCode=9780655917908
+[book-3]: https://www.abebooks.com/servlet/BookDetailsPL?bi=31001470420&dest=usa
+[book-4]: https://www.thriftbooks.com/w/cloud-data-centers-and-cost-modeling-a-complete-guide-to-planning-designing-and-building-a-cloud-data-center_caesar-wu_rajkumar-buyya/13992190/item/26408356/?srsltid=AfmBOootnd77xklpoo2MTy8n0np1b5oamDo5KgOg9dCD-0bKody2zEF14oU#idiq=26408356&edition=14835620
+[book-5]: https://bookshop.org/p/books/reduce-cloud-computing-cost-101-ideas-to-save-millions-in-public-cloud-spending-abhinav-mittal/10266848
