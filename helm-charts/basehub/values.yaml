@@ -320,7 +320,7 @@ jupyterhub:
 
           # adjust these to meet vulnerability mitigation needs
           UPGRADE_IF_VULNERABLE = True
-          ERROR_IF_VULNERABLE = True
+          ERROR_IF_VULNERABLE = False
 
 
           def check_vuln():
