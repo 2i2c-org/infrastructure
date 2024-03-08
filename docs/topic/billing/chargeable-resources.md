@@ -377,7 +377,7 @@ Grafana, as well as any other service through this single endpoint.
 Each Load Balancer costs money as long as it exists, and there is a per GB
 processing charge as well. Since we don't really have a lot of data coming
 *in* to the JupyterHub (as only user sessions are exposed via the browser),
-the per GB charge usually doesn't add up to much (even uploading 1 terabyte of data, which will be very slow, will only cost between 5 - 14 USD).
+the per GB charge usually doesn't add up to much (even uploading 1 terabyte of data, which will be very slow, will only cost between $5 - $14).
 
 1. [AWS ELB](https://aws.amazon.com/elasticloadbalancing/pricing/?nc=sn&loc=3)
 

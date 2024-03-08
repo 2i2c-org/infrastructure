@@ -6,8 +6,8 @@ reason about and use.
 ## Using tags to separate costs
 
 Cloud billing reports by default allow us to see how much each **service**
-was charged for - for example, we could know that VMs cost us 589\$.
-But wouldn't it be nice to know how much of that 589\$ was for core nodes,
+was charged for - for example, we could know that VMs cost us $589.
+But wouldn't it be nice to know how much of that $589 was for core nodes,
 how much was for user nodes, and how much for dask workers? Or
 hypothetically, if we had multiple profiles that were accessible only to
 certain subsets of users, which profiles would cost how much money?
