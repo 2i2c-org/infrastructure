@@ -54,6 +54,7 @@ basehub:
             - nasa-openscapes-workshops:ChampionsAccess-2i2c
             - nasa-openscapes-workshops:LongtermAccess-2i2c
             - nasa-openscapes-workshops:WorkshopAccess-2i2c
+            - nasa-openscapes-workshops:emit-methane-plume-2024-03-14
           kubespawner_override:
             image: openscapes/python:4f340eb
           profile_options: &profile_options
@@ -136,6 +137,7 @@ basehub:
             - nasa-openscapes-workshops:ChampionsAccess-2i2c
             - nasa-openscapes-workshops:LongtermAccess-2i2c
             - nasa-openscapes-workshops:WorkshopAccess-2i2c
+            - nasa-openscapes-workshops:emit-methane-plume-2024-03-14            
           kubespawner_override:
             image: openscapes/rocker:a7596b5
             # Ensures container working dir is homedir
@@ -154,6 +156,7 @@ basehub:
             - nasa-openscapes-workshops:ChampionsAccess-2i2c
             - nasa-openscapes-workshops:LongtermAccess-2i2c
             - nasa-openscapes-workshops:WorkshopAccess-2i2c
+            - nasa-openscapes-workshops:emit-methane-plume-2024-03-14            
           kubespawner_override:
             image: openscapes/matlab:2023-11-28
           profile_options: *profile_options
@@ -199,6 +202,7 @@ basehub:
             - nasa-openscapes-workshops:ChampionsAccess-2i2c
             - nasa-openscapes-workshops:LongtermAccess-2i2c
             - nasa-openscapes-workshops:WorkshopAccess-2i2c
+            - nasa-openscapes-workshops:emit-methane-plume-2024-03-14            
           scope:
             - read:org
         Authenticator:
