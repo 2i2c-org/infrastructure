@@ -65,7 +65,7 @@ jupyterhub:
     defaultUrl: /lab
     image:
       name: quay.io/lorenlab/hhmi-spyglass-image
-      tag: "78764087554d"
+      tag: "cb5d6847727d"
     memory:
       limit: 3.4G
       guarantee: 3.4G
