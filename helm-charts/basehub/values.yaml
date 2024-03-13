@@ -304,12 +304,14 @@ jupyterhub:
           passed via arguments if provided, allowing it to wrap a user server startup call
           to `jupyterhub-singleuser` for example.
 
-          Script assumptions:
-          - its run before the jupyter server starts
-
           Script adjustments:
           - UPGRADE_IF_VULNERABLE
           - ERROR_IF_VULNERABLE
+
+          Script patching assumptions:
+          - script is run before the jupyter server starts
+          - pip is available
+          - pip has sufficient filesystem permissions to upgrade jupyter-server-proxy
 
           Read more at https://github.com/jupyterhub/jupyter-server-proxy/security/advisories/GHSA-w3vc-fx9p-wp4v.
           """
@@ -325,8 +327,8 @@ jupyterhub:
 
           def check_vuln():
               """
-              Checks for the vulnerability by looking to see if __version__ is available,
-              it is since 3.2.3 and 4.1.1 that and those are the first patched versions.
+              Checks for the vulnerability by looking to see if __version__ is available
+              as it coincides with the patched versions (3.2.3 and 4.1.1).
               """
               try:
                   import jupyter_server_proxy
