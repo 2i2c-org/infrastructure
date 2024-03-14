@@ -65,11 +65,11 @@ local daskNodes = [];
     metadata+: {
         name: "<< cluster_name >>",
         region: clusterRegion,
-        {#-
+        {#
             version should be the latest support version by the eksctl CLI, see
-            https://eksctl.io/introduction/ for a list of supported versions.
-        #}
-        version: '1.25'
+            https://eksctl.io/getting-started/ for a list of supported versions.
+        -#}
+        version: "1.29",
     },
     availabilityZones: masterAzs,
     iam: {
@@ -96,8 +96,10 @@ local daskNodes = [];
         },
     ],
     nodeGroups: [
-        ng {
-            name: 'core-a',
+        ng + {
+            namePrefix: 'core',
+            nameSuffix: 'a',
+            nameIncludeInstanceType: false,
             availabilityZones: [nodeAz],
             ssh: {
                 publicKeyPath: 'ssh-keys/<< cluster_name >>.key.pub'
@@ -111,10 +113,8 @@ local daskNodes = [];
             },
         },
     ] + [
-        ng {
-            // NodeGroup names can't have a '.' in them, while
-            // instanceTypes always have a .
-            name: "nb-%s" % std.strReplace(n.instanceType, ".", "-"),
+        ng + {
+            namePrefix: 'nb',
             availabilityZones: [nodeAz],
             minSize: 0,
             maxSize: 500,
@@ -133,10 +133,8 @@ local daskNodes = [];
         } + n for n in notebookNodes
     ] + ( if daskNodes != null then
         [
-        ng {
-            // NodeGroup names can't have a '.' in them, while
-            // instanceTypes always have a .
-            name: "dask-%s" % std.strReplace(n.instancesDistribution.instanceTypes[0], ".", "-"),
+        ng + {
+            namePrefix: 'dask',
             availabilityZones: [nodeAz],
             minSize: 0,
             maxSize: 500,

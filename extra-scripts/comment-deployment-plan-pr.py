@@ -4,6 +4,7 @@ which hubs will be upgraded as a result of a merge. This script is run in CI/CD
 to download the markdown content of the deployment plan from a GitHub Actions
 workflow artifact and then post it as a comment on the PR that generated the plan.
 """
+
 import io
 import os
 import re
@@ -45,7 +46,7 @@ all_artifacts = response.json()["artifacts"]
 # If "Link" is present in the response headers, that means that the results are
 # paginated and we need to loop through them to collect all the results.
 # It is unlikely that we will have more than 100 artifact results for a single
-# worflow ID however.
+# workflow ID however.
 while ("Link" in response.headers.keys()) and (
     'rel="next"' in response.headers["Link"]
 ):

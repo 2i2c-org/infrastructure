@@ -14,6 +14,9 @@ user_buckets = {
   "scratch-researchdelight" : {
     "delete_after" : 7
   },
+  "persistent-showcase" : {
+    "delete_after" : null
+  },
   "scratch-ncar-cisl" : {
     "delete_after" : 7
   },
@@ -28,32 +31,29 @@ user_buckets = {
 
 hub_cloud_permissions = {
   "staging" : {
-    requestor_pays : true,
     bucket_admin_access : ["scratch-staging"],
     extra_iam_policy : ""
   },
   "dask-staging" : {
-    requestor_pays : true,
     bucket_admin_access : ["scratch-dask-staging"],
     extra_iam_policy : ""
   },
-  "researchdelight" : {
-    requestor_pays : true,
-    bucket_admin_access : ["scratch-researchdelight"],
+  "showcase" : {
+    bucket_admin_access : [
+      "scratch-researchdelight",
+      "persistent-showcase"
+    ],
     extra_iam_policy : ""
   },
   "ncar-cisl" : {
-    requestor_pays : true,
     bucket_admin_access : ["scratch-ncar-cisl"],
     extra_iam_policy : ""
   },
   "go-bgc" : {
-    requestor_pays : true,
     bucket_admin_access : ["scratch-go-bgc"],
     extra_iam_policy : ""
   },
   "itcoocean" : {
-    requestor_pays : true,
     bucket_admin_access : ["scratch-itcoocean"],
     extra_iam_policy : ""
   },

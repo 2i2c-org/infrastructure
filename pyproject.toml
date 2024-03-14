@@ -10,3 +10,7 @@ asyncio_mode = "auto"
 testpaths = [
     "./tests",
 ]
+
+[tool.codespell]
+skip = '.git,*.pdf,*.svg,*.secret.*,*.key'
+ignore-words-list = 'aks'

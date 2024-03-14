@@ -25,10 +25,19 @@ local nodeAz = "us-west-2a";
 // A `node.kubernetes.io/instance-type label is added, so pods
 // can request a particular kind of node with a nodeSelector
 local notebookNodes = [
+    # FIXME: Ensure gridsst wants minSize 1. Before an event it was set to 0,
+    #        but as part of scaling down after the event it stayed at one.
+    #
+    #        scale up:   https://github.com/2i2c-org/infrastructure/pull/1836
+    #        scale down: https://github.com/2i2c-org/infrastructure/pull/1844
+    #
     { instanceType: "m5.large", minSize: 1 },
     { instanceType: "m5.xlarge", minSize: 0 },
     { instanceType: "m5.2xlarge", minSize: 0 },
     { instanceType: "m5.8xlarge", minSize: 0 },
+    { instanceType: "r5.xlarge", minSize: 0 },
+    { instanceType: "r5.4xlarge", minSize: 0 },
+    { instanceType: "r5.16xlarge", minSize: 0 },
     {
         instanceType: "g4dn.xlarge", minSize: 0,
         tags+: {
@@ -58,7 +67,7 @@ local daskNodes = [
     metadata+: {
         name: "gridsst",
         region: clusterRegion,
-        version: '1.25'
+        version: "1.27",
     },
     availabilityZones: masterAzs,
     iam: {
@@ -85,8 +94,10 @@ local daskNodes = [
         },
     ],
     nodeGroups: [
-        ng {
-            name: 'core-a',
+        ng + {
+            namePrefix: 'core',
+            nameSuffix: 'b',
+            nameIncludeInstanceType: false,
             availabilityZones: [nodeAz],
             ssh: {
                 publicKeyPath: 'ssh-keys/gridsst.key.pub'
@@ -100,10 +111,8 @@ local daskNodes = [
             },
         },
     ] + [
-        ng {
-            // NodeGroup names can't have a '.' in them, while
-            // instanceTypes always have a .
-            name: "nb-%s" % std.strReplace(n.instanceType, ".", "-"),
+        ng + {
+            namePrefix: "nb",
             availabilityZones: [nodeAz],
             minSize: n.minSize,
             maxSize: 500,
@@ -119,13 +128,10 @@ local daskNodes = [
                 "hub.jupyter.org_dedicated": "user:NoSchedule",
                 "hub.jupyter.org/dedicated": "user:NoSchedule"
             },
-
         } + n for n in notebookNodes
     ] + [
-        ng {
-            // NodeGroup names can't have a '.' in them, while
-            // instanceTypes always have a .
-            name: "dask-%s" % std.strReplace(n.instancesDistribution.instanceTypes[0], ".", "-"),
+        ng + {
+            namePrefix: "dask",
             availabilityZones: [nodeAz],
             minSize: 0,
             maxSize: 500,

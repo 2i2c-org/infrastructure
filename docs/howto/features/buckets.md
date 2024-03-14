@@ -15,6 +15,9 @@ on why users want this!
       },
       "bucket2": {
          "delete_after": null
+      },
+      "bucket3": {
+         "archival_storageclass_after": 3
       }
    }
    ```
@@ -27,6 +30,12 @@ on why users want this!
    time* the object will be automatically cleaned up - this is
    very helpful for 'scratch' buckets that are temporary. Set to
    `null` to prevent this cleaning up process from happening, e.g., if users want a persistent bucket.
+
+   `archival_storageclass_after` (available only for AWS currently) transitions objects
+   created in this bucket to a cheaper, slower archival class after the number of days
+   specified in this variable. This is helpful for archiving user home directories or similar
+   use cases, where data needs to be kept for a long time but rarely accessed. This should
+   not be used for frequently accessed or publicly accessible data.
 
 2. Enable access to these buckets from the hub or make them publicly accessible from outside
    by [editing `hub_cloud_permissions`](howto:features:cloud-access:access-perms)

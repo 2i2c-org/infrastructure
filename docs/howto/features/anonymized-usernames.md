@@ -40,7 +40,7 @@ useful privacy guarantees to be worth it. Those are:
 2. We live in a world where user data leaks are a fact of life, and you can buy
    tons of user identifiers for pretty cheap. This may also happen to *us*, and
    we may unintentionally leak data too! So users should still be hard to 
-   de-anonymize when the attacker has in their posession the following:
+   de-anonymize when the attacker has in their possession the following:
 
    1. List of user identifiers (emails, usernames, numeric user ids,
       etc) from *other data breaches*.

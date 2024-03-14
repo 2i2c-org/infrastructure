@@ -26,13 +26,6 @@ jupyterhub:
           name: Temple University
           url: https://www.temple.edu/
   singleuser:
-    nodeSelector:
-      2i2c.org/community: temple
-    extraTolerations:
-      - key: "2i2c.org/community"
-        operator: "Equal"
-        value: "temple"
-        effect: "NoSchedule"
     memory:
       # Memory defaults are 256MB to 1G in basehub. These are bumped based on a
       # request to bump these (https://2i2c.freshdesk.com/a/tickets/1003) at
@@ -51,6 +44,7 @@ jupyterhub:
         oauth_callback_url: https://temple.2i2c.cloud/hub/oauth_callback
         allowed_idps:
           https://fim.temple.edu/idp/shibboleth:
+            default: true
             username_derivation:
               username_claim: "eppn"
             allow_all: true

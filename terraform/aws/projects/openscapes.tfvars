@@ -11,17 +11,18 @@ user_buckets = {
   "scratch" : {
     "delete_after" : 7
   },
+  "prod-homedirs-archive" : {
+    "archival_storageclass_after" : 3
+  }
 }
 
 
 hub_cloud_permissions = {
   "staging" : {
-    requestor_pays : true,
     bucket_admin_access : ["scratch-staging"],
     extra_iam_policy : ""
   },
   "prod" : {
-    requestor_pays : true,
     bucket_admin_access : ["scratch"],
     extra_iam_policy : ""
   },

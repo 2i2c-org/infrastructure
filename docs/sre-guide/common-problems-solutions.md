@@ -196,7 +196,7 @@ name of with our second environment variable.
 export GITHUB_ENV=test.txt  # You can call this file anything you like, it's the setting of GITHUB_ENV that's important
 ```
 
-This mimicks the GitHub Actions environment where a `GITHUB_ENV` file is available
+This mimics the GitHub Actions environment where a `GITHUB_ENV` file is available
 to store and share environment variables across steps/jobs, and this will be where
 our JSON formatted job matrices will be written to.
 

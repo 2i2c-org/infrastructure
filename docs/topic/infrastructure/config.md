@@ -26,7 +26,7 @@ pieces of config people want to know values for, and where you can find them.
 
 The default memory limit and guarantee for all users across all our hubs is set
 in [`helm-charts/basehub/values.yaml`](https://github.com/2i2c-org/infrastructure/tree/HEAD/helm-charts/basehub/values.yaml#L104),
-under `jupyterhub.singleuser.memory`. This is sometimes overriden on a per-hub
+under `jupyterhub.singleuser.memory`. This is sometimes overridden on a per-hub
 basis in the config for the hub under [`config/clusters`](https://github.com/2i2c-org/infrastructure/tree/HEAD/config/clusters)
 
 ### 2i2c staff lists
@@ -69,7 +69,6 @@ A hub's helm chart values file can be encrypted as well, following the naming co
 
 Where we run dedicated clusters that only host a `staging` and `prod` hub, we aggregate all helm chart values shared by each hub into a `common.values.yaml` file, and then describe the helm chart values specific to either `staging` or `prod` with a `staging.values.yaml` or `prod.values.yaml` file respectively.
 See the [Pangeo config](https://github.com/2i2c-org/infrastructure/blob/HEAD/config/clusters/pangeo-hubs/cluster.yaml) for an example.
-This may lead to cases where two hubs on the same cluster use the same config for the `staging` and `prod` hubs, see the [Carbon Plan config](https://github.com/2i2c-org/infrastructure/blob/HEAD/config/clusters/carbonplan/cluster.yaml) as an example.
 
 ### Conventions for our configuration structure
 

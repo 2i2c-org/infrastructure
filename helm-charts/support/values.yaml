@@ -83,6 +83,7 @@ prometheus:
     metricLabelsAllowlist:
       - pods=[app,component,hub.jupyter.org/username,app.kubernetes.io/component]
       - nodes=[*]
+      - services=[app, component]
 
   # prometheus-node-exporter is an optional prometheus chart dependency that we
   # rely on to collect metrics about the nodes
@@ -296,7 +297,7 @@ grafana:
   # prometheus and grafana.
   #
   # Grafana's memory use seems to increase over time but seems reasonable to
-  # stay below 200Mi for years to come. Grafana's CPU use seems miniscule with
+  # stay below 200Mi for years to come. Grafana's CPU use seems minuscule with
   # peaks at up to 9m CPU from one user is browsing its dashboards.
   #
   # PromQL queries for CPU and memory use:
@@ -382,7 +383,7 @@ grafana:
           # This is the name of the kubernetes service exposed by the prometheus server
           url: http://support-prometheus-server
           access: proxy
-          isDefault: true
+          isDefault: false
           editable: false
 
 # cryptnono kills processes attempting to mine the cryptocurrency Monero in the
@@ -395,30 +396,57 @@ cryptnono:
   # resources for cryptnono was set after inspecting cpu and memory use via
   # prometheus and grafana.
   #
-  # cryptnono has an init container (kubectl-trace-init) and another container
-  # (trace). The init container has been found using up to 1.6Gi and up to about
-  # 600m for 4 minutes. The main container has been found using up to 150Mi but
-  # typically below 100Mi, and miniscule amounts of CPU (0-3m).
+  # cryptnono has an init container (fetch-kernel-headers) and one container per
+  # detector. We currently only use one detector (monero).
+  #
+  # In the past, the init container init container has been found using up to 1.6Gi and up to about
+  # 600m for 4 minutes. However, recent changes seem to have made this much faster,
+  # and there's no record of the initcontainer because our prometheus scrape interval
+  # is 1minute, and the init container seems to complete by then. We retain the older
+  # measured metrics until we can make new measurements.
   #
   # Since cryptnono is a non-critical service, we are at the moment allowing it
   # to be evicted during node memory pressure by providing a low memory request
   # compared to the limit. We are also not requesting significant amounts of CPU
   # so that it doesn't compete well with others initially.
-  #
-  # Note that as of now 2023-03-31 (8367fa5 in yuvipanda/cryptnono), the
-  # resources configuration configure both containers.
-  #
-  # PromQL queries for CPU and memory use:
-  # - CPU:    sum(rate(container_cpu_usage_seconds_total{container="kube-trace-init", namespace="support"}[5m])) by (pod)
-  # - Memory: sum(container_memory_usage_bytes{container="kube-trace-init", namespace="support"}) by (pod)
-  #
-  resources:
-    limits:
-      cpu: 800m
-      memory: 2Gi
-    requests:
-      cpu: 5m
-      memory: 100Mi
+  fetchKernelHeaders:
+    resources:
+      limits:
+        cpu: 800m
+        memory: 2Gi
+      requests:
+        cpu: 5m
+        memory: 100Mi
+
+  detectors:
+    # Disable the execwhacker detector for now, as it matures by being deployed on mybinder.org
+    execwhacker:
+      enabled: false
+      # Cryptnono can get information about what container the kill was in, so we can identify which
+      # user was cryptomining
+      containerdHostPath: /run/containerd/containerd.sock
+      metrics:
+        enabled: true
+      configs:
+        unencrypted-test-01:
+          bannedCommandStrings:
+            # Provide an unencrypted, randomly generated test string. All processes that have this in their commandline will be killed.
+            # This is helpful for testing execwhacker is enabled and functional
+            - beiquatohGa1uay0ahMies9couyahPeiz9xohju3Ahvaik3FaeM7eey1thaish1U
+    monero:
+      enabled: true
+      resources:
+        # Measured with the following prometheus queries:
+        # Memory: sum(container_memory_usage_bytes{container="monero", namespace="support"}) by (instance)
+        # CPU: sum(rate(container_cpu_usage_seconds_total{container="trace", namespace="support"}[5m])) by (instance)
+        # Seems to hover mostly around the 60Mi mark for memory, and generally less than 0.0002 in CPU. But
+        # 1m (or 0.001) is the lowest that can be specified in kubernetes, so we use that.
+        limits:
+          memory: 128Mi
+          cpu: 5m
+        requests:
+          memory: 64Mi
+          cpu: 1m
 
 # Configuration of templates provided directly by this chart
 # -------------------------------------------------------------------------------
@@ -433,15 +461,11 @@ redirects:
   rules: []
 
 # Enable a daemonset to install nvidia device plugin to GPU nodes
-# AWS does not require this to be set, as eksctl sets this up automatically
+# Not necessary on GCP & AWS don't need this, as it is handled automatically by terraform or eksctl
+# respectively
 nvidiaDevicePlugin:
-  # For Azure-specific image, default to false
   azure:
     enabled: false
-  # For GKE specific image, defaults to false
-  gke:
-    enabled: false
-    version: "stable"
 
 # Setup a separate storageClass specifically for prometheus data
 prometheusStorageClass:

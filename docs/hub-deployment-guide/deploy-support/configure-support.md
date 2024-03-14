@@ -2,7 +2,7 @@
 # Configure and deploy the `support` chart
 
 The `support` chart is a helm chart maintained by the 2i2c Engineers that consists of common tools used to support JupyterHub deployments in the cloud.
-These tools are [`ingress-nginx`](https://kubernetes.github.io/ingress-nginx/), for controlling ingresses and load balancing; [`cert-manager`](https://cert-manager.io/docs/), for automatically provisioning TLS certificates from [Let's Encrypt](https://letsencrypt.org/); [Prometheus](https://prometheus.io/), for scraping and storing metrics from the cluster and hub; and [Grafana](https://grafana.com/), for visualising the metrics retreived by Prometheus.
+These tools are [`ingress-nginx`](https://kubernetes.github.io/ingress-nginx/), for controlling ingresses and load balancing; [`cert-manager`](https://cert-manager.io/docs/), for automatically provisioning TLS certificates from [Let's Encrypt](https://letsencrypt.org/); [Prometheus](https://prometheus.io/), for scraping and storing metrics from the cluster and hub; and [Grafana](https://grafana.com/), for visualising the metrics retrieved by Prometheus.
 
 This section will walk you through how to deploy the support chart on a cluster.
 
@@ -90,6 +90,7 @@ support:
     - support.values.yaml
 ```
 
+(deploy-support-chart:manual)=
 ## Deploy the `support` chart via the `deployer`
 
 Use the `deployer` tool to deploy the support chart to the cluster.
@@ -119,7 +120,7 @@ Namecheap.com](https://ap.www.namecheap.com/Domains/DomainControlPanel/2i2c.clou
 2. `*.<cluster-name>`, for all other hubs, grafana and prometheus
    instances.
 
-Use an `A` record when we point to an external IP addresse (GCP, Azure), and a
+Use an `A` record when we point to an external IP address (GCP, Azure), and a
 `CNAME` record when we point to another domain (AWS).
 
 ```{note}

@@ -17,6 +17,7 @@ extensions = [
     "sphinx_design",
     "sphinxcontrib.mermaid",
     "sphinxcontrib.jquery",
+    "sphinx_togglebutton",
 ]
 
 intersphinx_mapping = {
@@ -43,6 +44,7 @@ exclude_patterns = ["_build", "Thumbs.db", ".DS_Store"]
 
 # -- Options for MyST -------------------------------------------------
 panels_add_bootstrap_css = False
+myst_footnote_transition = False
 myst_enable_extensions = [
     "colon_fence",
     "deflist",

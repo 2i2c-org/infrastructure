@@ -10,7 +10,7 @@ spec:
     - ReadWriteMany
   nfs:
     server: {{ .Values.nfs.pv.serverIP | quote }}
-    path: "{{ .Values.nfs.pv.baseShareName }}{{ .Release.Name }}"
+    path: "{{ .Values.nfs.pv.baseShareName }}{{ .Values.nfs.pv.shareNameOverride | default .Release.Name }}"
   mountOptions: {{ .Values.nfs.pv.mountOptions | toJson }}
 ---
 apiVersion: v1

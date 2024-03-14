@@ -20,8 +20,11 @@ jupyterhub:
       enabled: true
   custom:
     homepage:
+      # Everyone hitting the home page directly is redirected to
+      # https://datatools.utoronto.ca as the unified home page. The various parameters
+      # here under templateVars are no-op - UToronto manages the unified homepage themselves.
+      gitRepoBranch: "utoronto"
       templateVars:
-        interface_selector: true
         org:
           name: University of Toronto
           logo_url: https://raw.githubusercontent.com/2i2c-org/default-hub-homepage/utoronto-prod/extra-assets/images/home-hero.png
@@ -35,14 +38,6 @@ jupyterhub:
         funded_by:
           name: University of Toronto
           url: https://www.utoronto.ca/
-        announcements:
-          - |
-            <div>
-              <h4>* NEW * Jupyter Support Website</h4>
-
-              We have started a JupyterHub support website with documentation and tip sheets, and we will be adding more on an
-              ongoing basis. To reach the support site, please visit: <a href="https://act.utoronto.ca/jupyterhub-support">https://act.utoronto.ca/jupyterhub-support/</a>.
-            </div>
   singleuser:
     cpu:
       # Each node has about 8 CPUs total, and if we limit users to no more than
@@ -82,6 +77,7 @@ jupyterhub:
       CILogonOAuthenticator:
         allowed_idps:
           https://idpz.utorauth.utoronto.ca/shibboleth:
+            default: true
             username_derivation:
               username_claim: "email"
             allow_all: true

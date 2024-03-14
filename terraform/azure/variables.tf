@@ -48,20 +48,6 @@ variable "kubernetes_version" {
 }
 
 
-variable "core_node_vm_size" {
-  type        = string
-  description = <<-EOT
-  VM Size to use for core nodes
-
-  Core nodes will always be on, and count as 'base cost'
-  for a cluster. We should try to run with as few of them
-  as possible.
-
-  WARNING: CHANGING THIS WILL DESTROY AND RECREATE THE CLUSTER!
-  EOT
-}
-
-
 variable "global_container_registry_name" {
   type        = string
   description = <<-EOT
@@ -92,30 +78,44 @@ variable "ssh_pub_key" {
   EOT
 }
 
-variable "notebook_nodes" {
-  type = map(object({
-    min : number,
-    max : number,
-    vm_size : string,
-    labels : optional(map(string), {}),
-    taints : optional(list(string), []),
-    kubernetes_version : optional(string, "")
-  }))
-  description = "Notebook node pools to create"
-  default     = {}
-}
+variable "node_pools" {
+  type = map(
+    list(
+      object({
+        name : string,
+        vm_size : string,
+        os_disk_size_gb : optional(number, 100),
+        kubelet_disk_type : optional(string, "Temporary"),
+        min : number,
+        max : number,
+        labels : optional(map(string), {}),
+        taints : optional(list(string), []),
+        kubernetes_version : optional(string, ""),
+      })
+    )
+  )
+  description = <<-EOT
+  Node pools to create to be listed under the keys 'core', 'user', and 'dask'.
 
-variable "dask_nodes" {
-  type = map(object({
-    min : number,
-    max : number,
-    vm_size : string,
-    labels : optional(map(string), {}),
-    taints : optional(list(string), []),
-    kubernetes_version : optional(string, "")
-  }))
-  description = "Dask node pools to create"
-  default     = {}
+  There should be exactly one core node pool. The core node pool is given a
+  special treatment by being listed directly in the cluster resource's
+  'default_node_pool' field.
+  EOT
+
+  validation {
+    condition     = length(var.node_pools["core"]) == 1
+    error_message = "The core node pool is mapped to the cluster resource's `default_node_pool`, due to this we require exactly one core node pool to be specified."
+  }
+
+  validation {
+    condition     = length(setsubtract(keys(var.node_pools), ["core", "user", "dask"])) == 0
+    error_message = "Only three kinds of node pools supported: 'core', 'user', and 'dask'."
+  }
+
+  validation {
+    condition     = length(setintersection(keys(var.node_pools), ["core", "user", "dask"])) == 3
+    error_message = "All three kinds of node pools ('core', 'user', and 'dask') must be declared, even if they are empty lists of node pools."
+  }
 }
 
 variable "create_service_principal" {

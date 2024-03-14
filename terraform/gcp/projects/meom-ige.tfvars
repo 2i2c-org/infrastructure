@@ -63,7 +63,7 @@ notebook_nodes = {
 # node pool, see https://github.com/2i2c-org/infrastructure/issues/2687.
 #
 dask_nodes = {
-  "worker" : {
+  "n2-highmem-16" : {
     min : 0,
     max : 100,
     machine_type : "n2-highmem-16",
@@ -81,12 +81,12 @@ user_buckets = {
 
 hub_cloud_permissions = {
   "staging" : {
-    requestor_pays : true,
+    allow_access_to_external_requester_pays_buckets : true,
     bucket_admin_access : ["scratch", "data"],
     hub_namespace : "staging"
   },
   "prod" : {
-    requestor_pays : true,
+    allow_access_to_external_requester_pays_buckets : true,
     bucket_admin_access : ["scratch", "data"],
     hub_namespace : "prod"
   }

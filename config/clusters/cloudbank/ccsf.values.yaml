@@ -37,6 +37,7 @@ jupyterhub:
         oauth_callback_url: "https://ccsf.cloudbank.2i2c.cloud/hub/oauth_callback"
         allowed_idps:
           http://google.com/accounts/o8/id:
+            default: true
             username_derivation:
               username_claim: "email"
             allowed_domains:
@@ -44,6 +45,12 @@ jupyterhub:
       Authenticator:
         allowed_users:
           - clare.alice.heimer@gmail.com
+          # Below are UC Berkeley tutors for spring semester 2024
+          - k_usovich@berkeley.edu
+          - bellajzhang@berkeley.edu
+          - freddygoh21@berkeley.edu
+          - knnebedum@berkeley.edu
+          - kingsun@berkeley.edu
         admin_users:
           - ericvd@berkeley.edu
           - sean.smorris@berkeley.edu

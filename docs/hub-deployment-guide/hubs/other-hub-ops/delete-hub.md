@@ -1,10 +1,11 @@
+(delete-a-hub)=
 # Delete a hub
 
 If you'd like to delete a hub, there are a few steps that we need to take:
 
 ## 1. Manage existing data
 
-The existing data should either be migrated to another place or should be deleted, depending on what has been aggreed to with the Community Representative.
+The existing data should either be migrated to another place or should be deleted, depending on what has been agreed to with the Community Representative.
 
 If the data should be migrated from the hub before decommissioning, then make sure that a 2i2c Engineer has access to the destination in order to complete the data migration.
 
@@ -75,12 +76,12 @@ This will clean up some of the hub values related to auth and must be done prior
 If the hub remains listed in its cluster's `cluster.yaml` file, the hub could be
 redeployed by any merged PR triggering our CI/CD pipeline.
 
-Open a decomissioning PR that removes the appropriate hub entry from the
+Open a decommissioning PR that removes the appropriate hub entry from the
 `config/clusters/$CLUSTER_NAME/cluster.yaml` file and associated
 `*.values.yaml` files no longer referenced in the `cluster.yaml` file.
 
 You can continue with the steps below before the PR is merged, but be ready to
-re-do them if the CI/CD pipeline was triggered before the decomissioning PR was
+re-do them if the CI/CD pipeline was triggered before the decommissioning PR was
 merged.
 
 ## 4. Delete the Helm release and namespace

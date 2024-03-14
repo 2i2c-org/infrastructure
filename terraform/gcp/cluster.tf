@@ -5,7 +5,6 @@
 # To get get the output of relevance, run:
 #
 #   terraform plan -var-file=projects/$CLUSTER_NAME.tfvars
-#   terraform output regular_channel_latest_k8s_versions
 #
 # data ref: https://registry.terraform.io/providers/hashicorp/google/latest/docs/data-sources/container_engine_versions
 data "google_container_engine_versions" "k8s_version_prefixes" {
@@ -218,7 +217,7 @@ resource "google_container_node_pool" "core" {
     # Faster disks provide faster image pulls!
     disk_type = "pd-balanced"
 
-    resource_labels = var.temp_opt_out_node_purpose_label_core_nodes ? {} : {
+    resource_labels = {
       "node-purpose" : "core"
     }
 
@@ -251,10 +250,10 @@ resource "google_container_node_pool" "notebook" {
   cluster  = google_container_cluster.cluster.name
   project  = google_container_cluster.cluster.project
   location = google_container_cluster.cluster.location
-  version  = try(each.value.node_version, var.k8s_versions.notebook_nodes_version)
+  version  = coalesce(each.value.node_version, var.k8s_versions.notebook_nodes_version)
 
   # terraform treats null same as unset, so we only set the node_locations
-  # here if it is explicitly overriden. If not, it will just inherit whatever
+  # here if it is explicitly overridden. If not, it will just inherit whatever
   # is set for the cluster.
   node_locations = length(each.value.zones) == 0 ? null : each.value.zones
 
@@ -283,12 +282,7 @@ resource "google_container_node_pool" "notebook" {
 
 
   node_config {
-
-    # Balanced disks are much faster than standard disks, and much cheaper
-    # than SSD disks. It contributes heavily to how fast new nodes spin up,
-    # as images being pulled takes up a lot of new node spin up time.
-    # Faster disks provide faster image pulls!
-    disk_type = "pd-balanced"
+    disk_type = each.value.disk_type
 
     dynamic "guest_accelerator" {
       for_each = each.value.gpu.enabled ? [1] : []
@@ -296,6 +290,10 @@ resource "google_container_node_pool" "notebook" {
       content {
         type  = each.value.gpu.type
         count = each.value.gpu.count
+
+        gpu_driver_installation_config {
+          gpu_driver_version = "DEFAULT"
+        }
       }
 
     }
@@ -340,7 +338,7 @@ resource "google_container_node_pool" "notebook" {
       "https://www.googleapis.com/auth/cloud-platform"
     ]
 
-    resource_labels = each.value.temp_opt_out_node_purpose_label ? each.value.resource_labels : merge({
+    resource_labels = merge({
       "node-purpose" : "notebook"
     }, each.value.resource_labels)
 
@@ -358,7 +356,7 @@ resource "google_container_node_pool" "dask_worker" {
   version  = var.k8s_versions.dask_nodes_version
 
   # terraform treats null same as unset, so we only set the node_locations
-  # here if it is explicitly overriden. If not, it will just inherit whatever
+  # here if it is explicitly overridden. If not, it will just inherit whatever
   # is set for the cluster.
   node_locations = length(each.value.zones) == 0 ? null : each.value.zones
 
@@ -384,11 +382,7 @@ resource "google_container_node_pool" "dask_worker" {
 
     preemptible = each.value.preemptible
 
-    # Balanced disks are much faster than standard disks, and much cheaper
-    # than SSD disks. It contributes heavily to how fast new nodes spin up,
-    # as images being pulled takes up a lot of new node spin up time.
-    # Faster disks provide faster image pulls!
-    disk_type = "pd-balanced"
+    disk_type = each.value.disk_type
 
     workload_metadata_config {
       # Config Connector requires workload identity to be enabled (via GKE_METADATA_SERVER).
@@ -422,7 +416,7 @@ resource "google_container_node_pool" "dask_worker" {
       "https://www.googleapis.com/auth/cloud-platform"
     ]
 
-    resource_labels = each.value.temp_opt_out_node_purpose_label ? each.value.resource_labels : merge({
+    resource_labels = merge({
       "node-purpose" : "dask-worker"
     }, each.value.resource_labels)
 

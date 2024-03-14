@@ -37,6 +37,7 @@ jupyterhub:
         oauth_callback_url: https://csulb.cloudbank.2i2c.cloud/hub/oauth_callback
         allowed_idps:
           https://its-shib.its.csulb.edu/idp/shibboleth:
+            default: true
             username_derivation:
               username_claim: "email"
             allow_all: true
@@ -50,6 +51,12 @@ jupyterhub:
           - ericvd@berkeley.edu
           - sean.smorris@berkeley.edu
           - shabnam.sodagari@csulb.edu
+          - Kagba.Suaray@csulb.edu
+          - Tianni.Zhou@csulb.edu
+          - Antonio.Martinez@csulb.edu
+          - Babette.Benken@csulb.edu
+          - Florence.Newberger@csulb.edu
+          - Seungjoon.Lee@csulb.edu
   cull:
     # Cull after 30min of inactivity
     every: 300

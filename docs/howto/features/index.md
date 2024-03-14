@@ -27,7 +27,7 @@ See the sections below for more details.
 ### Community Customization Layer
 ```{toctree}
 :maxdepth: 1
-1. Community specific hub domain <../manage-domains/set-cnames>
+1. Community managed hub domain <../../sre-guide/support/community-domains>
 2. Configure the hub login page <login-page.md>
 ```
 3. Customizations of hub pages
@@ -53,6 +53,7 @@ See the sections below for more details.
 4. (default enabled) Configurator <https://docs.2i2c.org/admin/howto/configurator>
 5. (dedicated clusters only) Grafana <../..//topic/monitoring-alerting/grafana>
 6. Using JupyterHub as an identity provider <identity-provider.md>
+7. Stronger anti-crypto abuse features for a hub <cryptnono.md>
 ```
 
 ### Performance Layer

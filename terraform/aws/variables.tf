@@ -20,7 +20,12 @@ variable "cluster_nodes_location" {
 }
 
 variable "user_buckets" {
-  type        = map(object({ delete_after : number }))
+  type = map(
+    object({
+      delete_after : optional(number, null),
+      archival_storageclass_after : optional(number, null)
+    })
+  )
   default     = {}
   description = <<-EOT
   S3 Buckets to be created.
@@ -28,14 +33,21 @@ variable "user_buckets" {
   The key for each entry will be prefixed with {var.prefix}- to form
   the name of the bucket.
 
-  The value is a map, with 'delete_after' the only accepted key in that
-  map - it lists the number of days after which any content in the
-  bucket will be deleted. Set to null to not delete data.
+  The value is a map, with the following accepted keys:
+
+  1. `delete_after` - number of days after *creation* an object in this
+     bucket will be automatically deleted. Set to null to not delete data.
+  2. `archival_storageclass_after` - number of days after *creation* an
+     object in this bucket will be automatically transitioned to a cheaper,
+     slower storageclass for cost savings. Set to null to not transition.
   EOT
 }
 
 variable "hub_cloud_permissions" {
-  type        = map(object({ requestor_pays : bool, bucket_admin_access : set(string), extra_iam_policy : string }))
+  type = map(object({
+    bucket_admin_access : set(string),
+    extra_iam_policy : string
+  }))
   default     = {}
   description = <<-EOT
   Map of cloud permissions given to a particular hub
@@ -43,12 +55,9 @@ variable "hub_cloud_permissions" {
   Key is name of the hub namespace in the cluster, and values are particular
   permissions users running on those hubs should have. Currently supported are:
 
-  1. requestor_pays: Identify as coming from the google cloud project when accessing
-     storage buckets marked as  https://cloud.google.com/storage/docs/requester-pays.
-     This *potentially* incurs cost for us, the originating project, so opt-in.
-  2. bucket_admin_access: List of S3 storage buckets that users on this hub should have read
+  1. bucket_admin_access: List of S3 storage buckets that users on this hub should have read
      and write permissions for.
-  3. extra_iam_policy: An AWS IAM Policy document that grants additional rights to the users
+  2. extra_iam_policy: An AWS IAM Policy document that grants additional rights to the users
      on this hub when talking to AWS services.
   EOT
 }

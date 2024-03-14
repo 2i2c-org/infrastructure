@@ -9,6 +9,7 @@ Common tasks:
 - Install nox:                        pip install nox
 - Start a live reloading docs server: nox -- live
 """
+
 import nox
 
 nox.options.reuse_existing_virtualenvs = True
@@ -25,14 +26,20 @@ def docs(session):
         session.posargs.pop(session.posargs.index("live"))
 
         # Add folders to ignore
-        AUTOBUILD_IGNORE = [
+        AUTOBUILD_IGNORE_DIRS = [
             "_build",
             "tmp",
         ]
+        # Add files to ignore
+        AUTOBUILD_IGNORE_FILES = [
+            "_static/*.json",
+        ]
 
         cmd = ["sphinx-autobuild"]
-        for folder in AUTOBUILD_IGNORE:
+        for folder in AUTOBUILD_IGNORE_DIRS:
             cmd.extend(["--ignore", f"*/{folder}/*"])
+        for file in AUTOBUILD_IGNORE_FILES:
+            cmd.extend(["--ignore", f"*/{file}"])
 
         # Find an open port to serve on
         cmd.extend(["--port", "0"])

@@ -29,6 +29,9 @@ local notebookNodes = [
     { instanceType: "m5.xlarge" },
     { instanceType: "m5.2xlarge" },
     { instanceType: "m5.8xlarge" },
+    { instanceType: "r5.xlarge" },
+    { instanceType: "r5.4xlarge" },
+    { instanceType: "r5.16xlarge" },
 ];
 
 local daskNodes = [
@@ -52,7 +55,7 @@ local daskNodes = [
     metadata+: {
         name: "victor",
         region: clusterRegion,
-        version: '1.25'
+        version: "1.27",
     },
     availabilityZones: masterAzs,
     iam: {
@@ -79,8 +82,10 @@ local daskNodes = [
         },
     ],
     nodeGroups: [
-        ng {
-            name: 'core-b',
+        ng + {
+            namePrefix: 'core',
+            nameSuffix: 'a',
+            nameIncludeInstanceType: false,
             availabilityZones: [nodeAz],
             ssh: {
                 publicKeyPath: 'ssh-keys/victor.key.pub'
@@ -94,10 +99,8 @@ local daskNodes = [
             },
         },
     ] + [
-        ng {
-            // NodeGroup names can't have a '.' in them, while
-            // instanceTypes always have a .
-            name: "nb-%s" % std.strReplace(n.instanceType, ".", "-"),
+        ng + {
+            namePrefix: "nb",
             availabilityZones: [nodeAz],
             minSize: 0,
             maxSize: 500,
@@ -116,10 +119,8 @@ local daskNodes = [
 
         } + n for n in notebookNodes
     ] + [
-        ng {
-            // NodeGroup names can't have a '.' in them, while
-            // instanceTypes always have a .
-            name: "dask-%s" % std.strReplace(n.instancesDistribution.instanceTypes[0], ".", "-"),
+        ng + {
+            namePrefix: "dask",
             availabilityZones: [nodeAz],
             minSize: 0,
             maxSize: 500,

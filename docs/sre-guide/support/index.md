@@ -8,8 +8,11 @@ There is also a wiki with [per-cluster support notes](https://github.com/2i2c-or
 ```{toctree}
 :maxdepth: 2
 home-dir
+simple-python-package
 decrypt-age
 build-image-remotely
 credits
 grafana-account
+admin-users
+community-domains.md
 ```

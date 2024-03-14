@@ -1,3 +1,4 @@
+(features:shared-cluster:dedicated-nodepool)=
 # Setup a dedicated nodepool for a hub on a shared cluster
 
 Some hubs on shared clusters require dedicated nodepools, for a few reasons:

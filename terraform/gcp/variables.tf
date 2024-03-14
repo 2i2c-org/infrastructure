@@ -47,10 +47,9 @@ variable "k8s_version_prefixes" {
   # channel, so we may want to remove or add minor versions here over time.
   #
   default = [
-    "1.24.",
-    "1.25.",
-    "1.26.",
     "1.27.",
+    "1.28.",
+    "1.29.",
     "1.",
   ]
   description = <<-EOT
@@ -89,6 +88,11 @@ variable "notebook_nodes" {
       value : string,
       effect : string
     })), [])
+    # Balanced disks are much faster than standard disks, and much cheaper
+    # than SSD disks. It contributes heavily to how fast new nodes spin up,
+    # as images being pulled takes up a lot of new node spin up time.
+    # Faster disks provide faster image pulls!
+    disk_type : optional(string, "pd-balanced"),
     gpu : optional(
       object({
         enabled : optional(bool, false),
@@ -97,9 +101,6 @@ variable "notebook_nodes" {
       }),
       {}
     ),
-    # FIXME: Remove temp_opt_out_node_purpose_label when its no longer referenced.
-    #        See https://github.com/2i2c-org/infrastructure/issues/3405.
-    temp_opt_out_node_purpose_label : optional(bool, false),
     resource_labels : optional(map(string), {}),
     zones : optional(list(string), []),
     node_version : optional(string, ""),
@@ -120,6 +121,11 @@ variable "dask_nodes" {
       value : string,
       effect : string
     })), [])
+    # Balanced disks are much faster than standard disks, and much cheaper
+    # than SSD disks. It contributes heavily to how fast new nodes spin up,
+    # as images being pulled takes up a lot of new node spin up time.
+    # Faster disks provide faster image pulls!
+    disk_type : optional(string, "pd-balanced"),
     gpu : optional(
       object({
         enabled : optional(bool, false),
@@ -128,11 +134,9 @@ variable "dask_nodes" {
       }),
       {}
     ),
-    # FIXME: Remove temp_opt_out_node_purpose_label when its no longer referenced.
-    #        See https://github.com/2i2c-org/infrastructure/issues/3405.
-    temp_opt_out_node_purpose_label : optional(bool, false),
     resource_labels : optional(map(string), {}),
     zones : optional(list(string), [])
+    node_version : optional(string, ""),
   }))
   description = "Dask node pools to create. Defaults to notebook_nodes"
   default     = {}
@@ -223,17 +227,10 @@ variable "core_node_max_count" {
   Core nodes can scale up to this many nodes if necessary.
   They are part of the 'base cost', should be kept to a minimum.
   This number should be small enough to prevent runaway scaling,
-  but large enough to support ocassional spikes for whatever reason.
+  but large enough to support occasional spikes for whatever reason.
 
   Minimum node count is fixed at 1.
   EOT
-}
-
-# FIXME: Remove temp_opt_out_node_purpose_label_core_nodes when its no longer referenced.
-#        See https://github.com/2i2c-org/infrastructure/issues/3405.
-variable "temp_opt_out_node_purpose_label_core_nodes" {
-  type    = bool
-  default = false
 }
 
 variable "enable_network_policy" {
@@ -271,7 +268,7 @@ variable "user_buckets" {
   'delete_after' specifies the number of days after which any content
   in the bucket will be deleted. Set to null to not delete data.
 
-  'extra_admin_members' describes extra identies (user groups, user accounts,
+  'extra_admin_members' describes extra identities (user groups, user accounts,
   service accounts, etc) that will have *full* access to this bucket. This
   is primarily useful for moving data into and out of buckets from outside
   the cloud. See https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/storage_bucket_iam#member/members
@@ -405,7 +402,7 @@ variable "max_cpu" {
 variable "hub_cloud_permissions" {
   type = map(
     object({
-      requestor_pays : bool,
+      allow_access_to_external_requester_pays_buckets : optional(bool, false),
       bucket_admin_access : set(string),
       bucket_readonly_access : optional(set(string), []),
       hub_namespace : string
@@ -418,9 +415,11 @@ variable "hub_cloud_permissions" {
   Key is name of the hub namespace in the cluster, and values are particular
   permissions users running on those hubs should have. Currently supported are:
 
-  1. requestor_pays: Identify as coming from the google cloud project when accessing
-     storage buckets marked as  https://cloud.google.com/storage/docs/requester-pays.
-     This *potentially* incurs cost for us, the originating project, so opt-in.
+  1. allow_access_to_external_requester_pays_buckets: Allow code running in user servers from this
+     hub to identify as coming from this particular GCP project when accessing GCS buckets in other projects
+     marked as 'Requester Pays'. In this case, the egress costs will
+     be borne by the project *containing the hub*, rather than the project *containing the bucket*.
+     Egress costs can get quite expensive, so this is 'opt-in'.
   2. bucket_admin_access: List of GCS storage buckets that users on this hub should have read
      and write permissions for.
   EOT

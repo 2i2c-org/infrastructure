@@ -4,7 +4,7 @@ basehub:
       # When we renamed this hub, we did so at a DNS level and not an infrastructure
       # level. No terraform config was touched. Hence the kubernetes annotations retain
       # the original hub name.
-      eks.amazonaws.com/role-arn: arn:aws:iam::790657130469:role/2i2c-aws-us-researchdelight
+      eks.amazonaws.com/role-arn: arn:aws:iam::790657130469:role/2i2c-aws-us-showcase
   jupyterhub:
     ingress:
       hosts: [showcase.2i2c.cloud]
@@ -15,6 +15,8 @@ basehub:
       2i2c:
         add_staff_user_ids_to_admin_users: true
         add_staff_user_ids_of_type: "github"
+      jupyterhubConfigurator:
+        enabled: false
       homepage:
         templateVars:
           org:
@@ -38,22 +40,39 @@ basehub:
           oauth_callback_url: "https://showcase.2i2c.cloud/hub/oauth_callback"
           populate_teams_in_auth_state: true
           allowed_organizations:
-            - 2i2c-org:research-delight-team
+            - 2i2c-community-showcase:access-2i2c-showcase
             - 2i2c-demo-hub-access:showcase-topst
+            - ScienceCore
           scope:
             - read:org
         Authenticator:
           enable_auth_state: true
     singleuser:
-      image:
-        name: quay.io/2i2c/researchdelight-image
-        tag: "872f0c4578af"
+      extraEnv:
+        SCRATCH_BUCKET: s3://2i2c-aws-us-scratch-researchdelight/$(JUPYTERHUB_USER)
+        PANGEO_SCRATCH: s3://2i2c-aws-us-scratch-researchdelight/$(JUPYTERHUB_USER)
+        PERSISTENT_BUCKET: s3://2i2c-aws-us-persistent-showcase/$(JUPYTERHUB_USER)
+        GH_SCOPED_CREDS_CLIENT_ID: Iv1.f9261c4c78b4dfdd
+        GH_SCOPED_CREDS_APP_URL: https://github.com/apps/2i2c-community-showcase-hub
       profileList:
-        - display_name: "NASA TOPS-T ScienceCore"
+        - display_name: "NASA TOPS-T ScienceCore-ClimateRisk"
           description: "For collaborative work on 2i2c/MD's NASA TOPS-T ScienceCore Module"
           allowed_teams:
             - 2i2c-demo-hub-access:showcase-topst
             - 2i2c-org:hub-access-for-2i2c-staff
+            - ScienceCore:climaterisk-team
+          kubespawner_override:
+            image: quay.io/2i2c/sciencecore-climaterisk-image:ea0618a408e2
+            mem_guarantee: 7.234G
+            cpu_guarantee: 0.1
+            mem_limit: null
+            node_selector:
+              node.kubernetes.io/instance-type: r5.xlarge
+        - display_name: "NASA TOPS-T ScienceCore"
+          description: "JupyterHubs for NASA ScienceCore Modules"
+          allowed_teams:
+            - 2i2c-org:hub-access-for-2i2c-staff
+            - ScienceCore:2i2c-showcase
           profile_options:
             image:
               display_name: Image
@@ -65,12 +84,33 @@ basehub:
                 kubespawner_override:
                   image: "{value}"
               choices:
-                opera:
-                  display_name: Opera App
+                jupyter-scipy:
                   default: true
-                  slug: opera
+                  display_name: Jupyter SciPy
+                  slug: jupyter-scipy
                   kubespawner_override:
-                    image: quay.io/2i2c/researchdelight-image:c799b705ce90
+                    image: jupyter/scipy-notebook:2023-06-27
+                jupyter-datascience:
+                  display_name: Jupyter DataScience
+                  slug: jupyter-datascience
+                  kubespawner_override:
+                    image: jupyter/datascience-notebook:2023-06-27
+                rocker-geospatial:
+                  display_name: Rocker Geospatial
+                  slug: rocker-geospatial
+                  kubespawner_override:
+                    image: rocker/binder:4.3
+                    # Launch into RStudio after the user logs in
+                    default_url: /rstudio
+                    # Ensures container working dir is homedir
+                    # https://github.com/2i2c-org/infrastructure/issues/2559
+                    working_dir: /home/rstudio
+                pangeo:
+                  display_name: Pangeo Notebook
+                  slug: pangeo
+                  kubespawner_override:
+                    image: pangeo/pangeo-notebook:2023.06.20
+
           kubespawner_override:
             mem_guarantee: 7.234G
             cpu_guarantee: 0.1
@@ -81,7 +121,7 @@ basehub:
           description: "A shared machine, the recommended option until you experience a limitation."
           allowed_teams: &allowed_teams
             - 2i2c-org:hub-access-for-2i2c-staff
-            - 2i2c-org:research-delight-team
+            - 2i2c-community-showcase:access-2i2c-showcase
           profile_options: &profile_options
             image:
               display_name: Image
@@ -93,6 +133,11 @@ basehub:
                 kubespawner_override:
                   image: "{value}"
               choices:
+                handbook:
+                  display_name: Handbook Authoring
+                  slug: handbook
+                  kubespawner_override:
+                    image: quay.io/2i2c/handbook-authoring-image:b5b2c88daa24
                 pangeo:
                   display_name: Pangeo Notebook
                   default: true
@@ -163,7 +208,6 @@ basehub:
           slug: gpu
           allowed_teams:
             - 2i2c-org:hub-access-for-2i2c-staff
-            - 2i2c-org:research-delight-gpu-team
           description: "Start a container on a dedicated node with a GPU"
           profile_options:
             image:

@@ -2,9 +2,10 @@
 
 This is used in two places:
 
-- docs/_static/hub-table.json is published with the docs and meant for re-use in other parts of 2i2c
+- docs/_static/hub-table.json is published with the docs and meant for reuse in other parts of 2i2c
 - docs/tmp/hub-table.csv is read by reference/hubs.md to create a list of hubs
 """
+
 import pandas as pd
 from utils import get_cluster_provider, get_clusters_list, write_to_json_and_csv_files
 from yaml import safe_load
@@ -71,9 +72,11 @@ def build_hub_list_entry(
         "cluster": cluster["name"],
         "provider": provider,
         "data center location": datacentre_loc,  # Americanising for you ;)
-        "UI console link": f"[Use with **{account}** account]({cluster_console_url})"
-        if cluster_console_url
-        else None,
+        "UI console link": (
+            f"[Use with **{account}** account]({cluster_console_url})"
+            if cluster_console_url
+            else None
+        ),
         "admin_url": f"[admin](https://{hub['domain']}/hub/admin)",
     }
 
@@ -81,7 +84,7 @@ def build_hub_list_entry(
 def build_hub_statistics_df(df):
     # Write some quick statistics for display
     # Calculate total number of community hubs by removing staging and demo hubs
-    # Remove `staging` hubs to count the total number of communites we serve
+    # Remove `staging` hubs to count the total number of communities we serve
     filter_out = ["staging", "demo"]
     community_hubs = df.loc[
         df["name"].map(lambda a: all(ii not in a.lower() for ii in filter_out))
@@ -167,7 +170,7 @@ def main():
     write_to_json_and_csv_files(df, "hub-table")
     write_to_json_and_csv_files(community_hubs_by_cluster, "hub-stats")
 
-    print("Finished updating list of hubs and statics tables...")
+    print("Finished updating list of hubs and statistics tables...")
 
 
 if __name__ == "__main__":

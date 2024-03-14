@@ -8,6 +8,9 @@ terraform {
       # FIXME: v3 has been released and we are still at v2, see release notes:
       #        https://github.com/hashicorp/terraform-provider-azurerm/releases/tag/v3.0.0
       #
+      #        We may need to remove old state and then then import it according to
+      #        https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/guides/3.0-upgrade-guide#migrating-to-new--renamed-resources.
+      #
       source  = "hashicorp/azurerm"
       version = "~> 2.99"
     }
@@ -15,13 +18,13 @@ terraform {
     azuread = {
       # ref: https://registry.terraform.io/providers/hashicorp/azuread/latest
       source  = "hashicorp/azuread"
-      version = "~> 2.35"
+      version = "~> 2.47"
     }
 
     kubernetes = {
       # ref: https://registry.terraform.io/providers/hashicorp/kubernetes/latest
       source  = "hashicorp/kubernetes"
-      version = "~> 2.18"
+      version = "~> 2.25"
     }
 
   }
@@ -34,6 +37,7 @@ terraform {
 provider "azuread" {
   tenant_id = var.tenant_id
 }
+
 provider "azurerm" {
   subscription_id = var.subscription_id
   features {}
@@ -90,25 +94,6 @@ resource "azurerm_kubernetes_cluster" "jupyterhub" {
     }
   }
 
-  # Core node-pool
-  default_node_pool {
-    name       = "core"
-    node_count = 1
-    # Unfortunately, changing anything about VM type / size recreates *whole cluster
-    vm_size             = var.core_node_vm_size
-    os_disk_size_gb     = 40
-    enable_auto_scaling = true
-    min_count           = 1
-    max_count           = 10
-    vnet_subnet_id      = azurerm_subnet.node_subnet.id
-    node_labels = {
-      "hub.jupyter.org/node-purpose" = "core",
-      "k8s.dask.org/node-purpose"    = "core"
-    }
-
-    orchestrator_version = var.kubernetes_version
-  }
-
   auto_scaler_profile {
     skip_nodes_with_local_storage = true
   }
@@ -118,7 +103,8 @@ resource "azurerm_kubernetes_cluster" "jupyterhub" {
   }
 
   network_profile {
-    # I don't trust Azure CNI
+    # Azure CNI is the default, but we don't trust it to be reliable, so we've
+    # opted to use kubenet instead
     network_plugin = "kubenet"
     network_policy = "calico"
   }
@@ -131,75 +117,99 @@ resource "azurerm_kubernetes_cluster" "jupyterhub" {
       client_secret = azuread_service_principal_password.service_principal_password[0].value
     }
   }
+
+  # default_node_pool must be set, and it must be a node pool of system type
+  # that can't scale to zero. Due to that we are forced to use it, and have
+  # decided to use it as our core node pool.
+  #
+  # Most changes to this node pool forces a replace operation on the entire
+  # cluster. This can be avoided with v3.47.0+ of this provider by declaring
+  # temporary_name_for_rotation = "coreb".
+  #
+  # ref: https://github.com/hashicorp/terraform-provider-azurerm/pull/20628
+  # ref: https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/kubernetes_cluster#temporary_name_for_rotation.
+  #
+  default_node_pool {
+    name                = var.node_pools["core"][0].name
+    vm_size             = var.node_pools["core"][0].vm_size
+    os_disk_size_gb     = var.node_pools["core"][0].os_disk_size_gb
+    kubelet_disk_type   = var.node_pools["core"][0].kubelet_disk_type
+    enable_auto_scaling = true
+    min_count           = var.node_pools["core"][0].min
+    max_count           = var.node_pools["core"][0].max
+
+    node_labels = merge({
+      "hub.jupyter.org/node-purpose" = "core",
+      "k8s.dask.org/node-purpose"    = "core"
+    }, var.node_pools["core"][0].labels)
+    node_taints = concat([], var.node_pools["core"][0].taints)
+
+    orchestrator_version = coalesce(var.node_pools["core"][0].kubernetes_version, var.kubernetes_version)
+
+    vnet_subnet_id = azurerm_subnet.node_subnet.id
+  }
 }
 
 
-
 resource "azurerm_kubernetes_cluster_node_pool" "user_pool" {
-  for_each = var.notebook_nodes
+  for_each = { for i, v in var.node_pools["user"] : v.name => v }
 
-  name                  = "nb${each.key}"
-  kubernetes_cluster_id = azurerm_kubernetes_cluster.jupyterhub.id
-  enable_auto_scaling   = true
-  os_disk_size_gb       = 200
-  vnet_subnet_id        = azurerm_subnet.node_subnet.id
+  name                = each.value.name
+  vm_size             = each.value.vm_size
+  os_disk_size_gb     = each.value.os_disk_size_gb
+  kubelet_disk_type   = each.value.kubelet_disk_type
+  enable_auto_scaling = true
+  min_count           = each.value.min
+  max_count           = each.value.max
 
-  orchestrator_version = each.value.kubernetes_version == "" ? var.kubernetes_version : each.value.kubernetes_version
-
-  vm_size = each.value.vm_size
   node_labels = merge({
     "hub.jupyter.org/node-purpose" = "user",
     "k8s.dask.org/node-purpose"    = "scheduler"
-    "hub.jupyter.org/node-size"    = each.value.vm_size
   }, each.value.labels)
-
   node_taints = concat([
     "hub.jupyter.org_dedicated=user:NoSchedule"
   ], each.value.taints)
 
-
-  min_count = each.value.min
-  max_count = each.value.max
-}
-
-resource "azurerm_kubernetes_cluster_node_pool" "dask_pool" {
-  # If dask_nodes is set, we use that. If it isn't, we use notebook_nodes.
-  # This lets us set dask_nodes to an empty array to get no dask nodes
-  for_each = var.dask_nodes
-
-  name                  = "dask${each.key}"
-  kubernetes_cluster_id = azurerm_kubernetes_cluster.jupyterhub.id
-  enable_auto_scaling   = true
-  os_disk_size_gb       = 200
-  vnet_subnet_id        = azurerm_subnet.node_subnet.id
-
   orchestrator_version = each.value.kubernetes_version == "" ? var.kubernetes_version : each.value.kubernetes_version
 
-  vm_size = each.value.vm_size
+  kubernetes_cluster_id = azurerm_kubernetes_cluster.jupyterhub.id
+  vnet_subnet_id        = azurerm_subnet.node_subnet.id
+}
+
+
+resource "azurerm_kubernetes_cluster_node_pool" "dask_pool" {
+  for_each = { for i, v in var.node_pools["dask"] : v.name => v }
+
+  name                = each.value.name
+  vm_size             = each.value.vm_size
+  os_disk_size_gb     = each.value.os_disk_size_gb
+  kubelet_disk_type   = each.value.kubelet_disk_type
+  enable_auto_scaling = true
+  min_count           = each.value.min
+  max_count           = each.value.max
+
   node_labels = merge({
     "k8s.dask.org/node-purpose" = "worker",
-    "hub.jupyter.org/node-size" = each.value.vm_size
   }, each.value.labels)
-
   node_taints = concat([
     "k8s.dask.org_dedicated=worker:NoSchedule"
   ], each.value.taints)
 
+  orchestrator_version = each.value.kubernetes_version == "" ? var.kubernetes_version : each.value.kubernetes_version
 
-  min_count = each.value.min
-  max_count = each.value.max
+  kubernetes_cluster_id = azurerm_kubernetes_cluster.jupyterhub.id
+  vnet_subnet_id        = azurerm_subnet.node_subnet.id
 }
 
-# AZure container registry
 
 resource "azurerm_container_registry" "container_registry" {
-  # meh, only alphanumberic chars. No separators. BE CONSISTENT, AZURE
   name                = var.global_container_registry_name
   resource_group_name = azurerm_resource_group.jupyterhub.name
   location            = azurerm_resource_group.jupyterhub.location
-  sku                 = "premium"
+  sku                 = "Premium"
   admin_enabled       = true
 }
+
 
 locals {
   registry_creds = {

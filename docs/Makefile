@@ -15,7 +15,7 @@ help:
 .PHONY: help Makefile
 
 live:
-	sphinx-autobuild --ignore */_build/* --ignore */tmp/* -b html -n . _build/html 
+	sphinx-autobuild --ignore */_build/* --ignore */tmp/* --ignore */_static/hub-*.json -b dirhtml -n . _build/dirhtml
 
 # Catch-all target: route all unknown targets to Sphinx using the new
 # "make mode" option.  $(O) is meant as a shortcut for $(SPHINXOPTS).

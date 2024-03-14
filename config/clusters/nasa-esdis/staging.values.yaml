@@ -1,0 +1,16 @@
+userServiceAccount:
+  annotations:
+    eks.amazonaws.com/role-arn: arn:aws:iam::942325726017:role/nasa-esdis-staging
+jupyterhub:
+  ingress:
+    hosts: [staging.esdis.2i2c.cloud]
+    tls:
+      - hosts: [staging.esdis.2i2c.cloud]
+        secretName: https-auto-tls
+  singleuser:
+    extraEnv:
+      SCRATCH_BUCKET: s3://nasa-esdis-scratch-staging/$(JUPYTERHUB_USER)
+  hub:
+    config:
+      GitHubOAuthenticator:
+        oauth_callback_url: "https://staging.esdis.2i2c.cloud/hub/oauth_callback"

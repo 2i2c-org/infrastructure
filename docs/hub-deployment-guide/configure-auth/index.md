@@ -12,4 +12,5 @@ Switching authentication providers (e.g. from GitHub to Google) for a pre-existi
 :caption: Authentication Providers
 github-orgs
 cilogon
+auth0
 ```

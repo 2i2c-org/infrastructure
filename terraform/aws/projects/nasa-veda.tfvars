@@ -16,7 +16,6 @@ user_buckets = {
 
 hub_cloud_permissions = {
   "staging" : {
-    requestor_pays : true,
     bucket_admin_access : ["scratch-staging"],
     extra_iam_policy : <<-EOT
     {
@@ -54,7 +53,15 @@ hub_cloud_permissions = {
                     "arn:aws:s3:::podaac-ops-cumulus-public",
                     "arn:aws:s3:::podaac-ops-cumulus-public/*",
                     "arn:aws:s3:::podaac-ops-cumulus-protected",
-                    "arn:aws:s3:::podaac-ops-cumulus-protected/*"
+                    "arn:aws:s3:::podaac-ops-cumulus-protected/*",
+                    "arn:aws:s3:::maap-ops-workspace",
+                    "arn:aws:s3:::maap-ops-workspace/*",
+                    "arn:aws:s3:::nasa-maap-data-store",
+                    "arn:aws:s3:::nasa-maap-data-store/*",
+                    "arn:aws:s3:::sdap-dev-zarr",
+                    "arn:aws:s3:::sdap-dev-zarr/*",
+                    "arn:aws:s3:::usgs-landsat",
+                    "arn:aws:s3:::usgs-landsat/*"
                 ]
             },
             {
@@ -67,7 +74,6 @@ hub_cloud_permissions = {
   EOT
   },
   "prod" : {
-    requestor_pays : true,
     bucket_admin_access : ["scratch"],
     extra_iam_policy : <<-EOT
     {
@@ -101,7 +107,19 @@ hub_cloud_permissions = {
                     "arn:aws:s3:::nsidc-cumulus-prod-protected",
                     "arn:aws:s3:::nsidc-cumulus-prod-protected/*",
                     "arn:aws:s3:::ornl-cumulus-prod-protected",
-                    "arn:aws:s3:::ornl-cumulus-prod-protected/*"
+                    "arn:aws:s3:::ornl-cumulus-prod-protected/*",
+                    "arn:aws:s3:::podaac-ops-cumulus-public",
+                    "arn:aws:s3:::podaac-ops-cumulus-public/*",
+                    "arn:aws:s3:::podaac-ops-cumulus-protected",
+                    "arn:aws:s3:::podaac-ops-cumulus-protected/*",
+                    "arn:aws:s3:::maap-ops-workspace",
+                    "arn:aws:s3:::maap-ops-workspace/*",
+                    "arn:aws:s3:::nasa-maap-data-store",
+                    "arn:aws:s3:::nasa-maap-data-store/*",
+                    "arn:aws:s3:::sdap-dev-zarr",
+                    "arn:aws:s3:::sdap-dev-zarr/*",
+                    "arn:aws:s3:::usgs-landsat",
+                    "arn:aws:s3:::usgs-landsat/*"
                 ]
             },
             {

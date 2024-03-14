@@ -16,6 +16,24 @@ resource "aws_s3_bucket_lifecycle_configuration" "user_bucket_expiry" {
       days = each.value.delete_after
     }
   }
+
+  dynamic "rule" {
+    # Only set up this rule if it will be enabled. Prevents unnecessary
+    # churn in terraform
+    for_each = each.value.archival_storageclass_after != null ? [1] : []
+
+    content {
+      id     = "archival-storageclass"
+      status = "Enabled"
+
+      transition {
+        # Transition this to much cheaper object storage after a few days
+        days = each.value.archival_storageclass_after
+        # Glacier Instant is fast enough while also being pretty cheap
+        storage_class = "GLACIER_IR"
+      }
+    }
+  }
 }
 
 locals {

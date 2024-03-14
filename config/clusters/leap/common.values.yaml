@@ -18,9 +18,20 @@ basehub:
           - name: home
             mountPath: /home/jovyan/allusers
             readOnly: true
+          # mounts below are copied from basehub's values that we override by
+          # specifying extraVolumeMounts (lists get overridden when helm values
+          # are combined)
+          - name: home
+            mountPath: /home/jovyan/shared-readwrite
+            subPath: _shared
+          - name: home
+            mountPath: /home/rstudio/shared-readwrite
+            subPath: _shared
       2i2c:
         add_staff_user_ids_to_admin_users: true
         add_staff_user_ids_of_type: "github"
+      jupyterhubConfigurator:
+        enabled: false
       homepage:
         templateVars:
           org:
@@ -37,6 +48,10 @@ basehub:
             name: LEAP
             url: https://leap-stc.github.io
     hub:
+      annotations:
+        # Prevents the core node on which this pod is present from being drained
+        # See https://github.com/2i2c-org/infrastructure/issues/3461
+        cluster-autoscaler.kubernetes.io/safe-to-evict: "false"
       allowNamedServers: true
       config:
         JupyterHub:
@@ -70,9 +85,6 @@ basehub:
             - rabernat
             - jbusecke
     singleuser:
-      image:
-        name: pangeo/pangeo-notebook
-        tag: "2023.05.18"
       extraEnv:
         GH_SCOPED_CREDS_CLIENT_ID: "Iv1.0c7df3d4b3191b2f"
         GH_SCOPED_CREDS_APP_URL: https://github.com/apps/leap-hub-push-access
@@ -84,7 +96,7 @@ basehub:
         #       https://github.com/2i2c-org/infrastructure/issues/2121.
         #
         #       - Memory requests are different from the description, based on:
-        #         whats found to remain allocate in k8s, subtracting 1GiB
+        #         what's found to remain allocate in k8s, subtracting 1GiB
         #         overhead for misc system pods, and transitioning from GB in
         #         description to GiB in mem_guarantee.
         #       - CPU requests are lower than the description, with a factor of
@@ -198,17 +210,17 @@ basehub:
                   default: true
                   slug: "pangeo"
                   kubespawner_override:
-                    image: "pangeo/pangeo-notebook:2023.08.29"
+                    image: "pangeo/pangeo-notebook:2024.01.23"
                 tensorflow:
                   display_name: Pangeo Tensorflow ML Notebook
                   slug: "tensorflow"
                   kubespawner_override:
-                    image: "pangeo/ml-notebook:2023.08.29"
+                    image: "pangeo/ml-notebook:2024.01.23"
                 pytorch:
                   display_name: Pangeo PyTorch ML Notebook
                   slug: "pytorch"
                   kubespawner_override:
-                    image: "pangeo/pytorch-notebook:2023.08.29"
+                    image: "pangeo/pytorch-notebook:2024.01.23"
                 leap-pangeo-edu:
                   display_name: LEAP Education Notebook (Testing Prototype)
                   slug: "leap_edu"
@@ -261,12 +273,12 @@ basehub:
                   display_name: Pangeo Tensorflow ML Notebook
                   slug: "tensorflow"
                   kubespawner_override:
-                    image: "pangeo/ml-notebook:2023.08.29"
+                    image: "pangeo/ml-notebook:2024.01.23"
                 pytorch:
                   display_name: Pangeo PyTorch ML Notebook
                   slug: "pytorch"
                   kubespawner_override:
-                    image: "pangeo/pytorch-notebook:2023.08.29"
+                    image: "pangeo/pytorch-notebook:2024.01.23"
           kubespawner_override:
             environment:
               NVIDIA_DRIVER_CAPABILITIES: compute,utility

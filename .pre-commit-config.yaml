@@ -11,7 +11,7 @@
 repos:
   # Autoformat: markdown, yaml
   - repo: https://github.com/pre-commit/mirrors-prettier
-    rev: v3.0.3
+    rev: v3.1.0
     hooks:
       - id: prettier
 
@@ -25,21 +25,25 @@ repos:
 
   # Autoformat: Python code
   - repo: https://github.com/pycqa/isort
-    rev: "5.12.0"
+    rev: "5.13.2"
     hooks:
       - id: isort
 
   # Autoformat: Python code
   - repo: https://github.com/psf/black
-    rev: "23.10.1"
+    rev: "24.1.1"
     hooks:
       - id: black
+        # This is a `.py` file but is encrypted with sops
+        exclude: deployer/commands/generate/cryptnono_config/enc-blocklist-generator.secret.py
 
   # Lint: Python code
   - repo: https://github.com/pycqa/flake8
-    rev: "6.1.0"
+    rev: "7.0.0"
     hooks:
       - id: flake8
+        # This is a `.py` file but is encrypted with sops
+        exclude: deployer/commands/generate/cryptnono_config/enc-blocklist-generator.secret.py
 
   # Run `terraform fmt` on all our terraform files automatically
   - repo: https://github.com/yuvipanda/terraform-bin
@@ -54,6 +58,17 @@ repos:
       - id: sops-encryption
         # Add files here if they contain the word 'secret' but should not be encrypted
         exclude: secrets\.md|helm-charts/support/templates/prometheus-ingres-auth/secret\.yaml|helm-charts/basehub/templates/dex/secret\.yaml|helm-charts/basehub/templates/static/secret\.yaml|config/clusters/templates/common/support\.secret\.values\.yaml|helm-charts/basehub/templates/ingress-auth/secret\.yaml
+
+  # Prevent known typos from being committed
+  - repo: https://github.com/codespell-project/codespell
+    rev: v2.2.6
+    hooks:
+      - id: codespell
+        args:
+          # Autofix known typos
+          - --write-changes
+        additional_dependencies:
+          - tomli
 
 # pre-commit.ci config reference: https://pre-commit.ci/#configuration
 ci:

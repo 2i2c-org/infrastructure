@@ -1,0 +1,14 @@
+nfs:
+  enabled: true
+  pv:
+    enabled: true
+    # from https://docs.aws.amazon.com/efs/latest/ug/mounting-fs-nfs-mount-settings.html
+    mountOptions:
+      - rsize=1048576
+      - wsize=1048576
+      - timeo=600
+      - soft # We pick soft over hard, so NFS lockups don't lead to hung processes
+      - retrans=2
+      - noresvport
+    serverIP: fs-065fcb5bb0ad79b25.efs.us-west-2.amazonaws.com
+    baseShareName: /

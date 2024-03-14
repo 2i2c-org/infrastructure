@@ -251,7 +251,7 @@ def get_shared_cluster_hub_costs(cluster, start_month, end_month):
     # Rename project to use hub names
     totals["project"] = totals["hub"]
     totals.drop("hub", axis=1)
-    # Calcluate cost from utilization
+    # Calculate cost from utilization
     # Needs to account for uptime checks and 2i2c paid for stuff
     totals["cost"] = totals["utilization"].multiply(
         totals["total_with_credits"].astype(float), axis=0

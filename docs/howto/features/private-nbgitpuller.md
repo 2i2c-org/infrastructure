@@ -4,6 +4,10 @@
 used to pull repos from public GitHub repositories. We can also allow users
 to pull from *private* GitHub repositories, with [git-credential-helpers](https://github.com/yuvipanda/git-credential-helpers).
 
+When supporting a cluster of hubs for use by the same community (such as a
+large university), we can use the *same* GitHub app for all of the hubs
+(unless explicitly requested to not). This simplifies instructors workflow.
+
 ## Configure the image
 
 The image used in the JupyterHub must have the [git-credential-helpers](https://pypi.org/project/git-credential-helpers/)

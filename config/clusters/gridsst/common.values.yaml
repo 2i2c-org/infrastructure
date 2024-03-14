@@ -1,5 +1,8 @@
 basehub:
   nfs:
+    # FIXME: Enable after https://github.com/yuvipanda/prometheus-dirsize-exporter/pull/7 is used
+    dirsizeReporter:
+      enabled: false
     pv:
       # from https://docs.aws.amazon.com/efs/latest/ug/mounting-fs-nfs-mount-settings.html
       mountOptions:
@@ -16,6 +19,8 @@ basehub:
       2i2c:
         add_staff_user_ids_to_admin_users: true
         add_staff_user_ids_of_type: "github"
+      jupyterhubConfigurator:
+        enabled: false
       homepage:
         templateVars:
           org:

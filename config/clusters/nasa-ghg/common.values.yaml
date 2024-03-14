@@ -1,5 +1,8 @@
 basehub:
   nfs:
+    # FIXME: Enable after https://github.com/yuvipanda/prometheus-dirsize-exporter/pull/7 is used
+    dirsizeReporter:
+      enabled: false
     pv:
       # from https://docs.aws.amazon.com/efs/latest/ug/mounting-fs-nfs-mount-settings.html
       mountOptions:
@@ -16,12 +19,14 @@ basehub:
       2i2c:
         add_staff_user_ids_to_admin_users: true
         add_staff_user_ids_of_type: "github"
+      jupyterhubConfigurator:
+        enabled: false
       homepage:
         templateVars:
           org:
             name: "U.S. Greenhouse Gas Center"
             logo_url: https://raw.githubusercontent.com/US-GHG-Center/ghgc-docs/b818ba6fdd3c43ede04b110975bf39d248c40df6/Logo/ghg-logo.svg
-            url: https://ghg.center
+            url: https://earth.gov/ghgcenter
           designed_by:
             name: "2i2c"
             url: https://2i2c.org
@@ -30,7 +35,7 @@ basehub:
             url: https://2i2c.org
           funded_by:
             name: "U.S. Greenhouse Gas Center"
-            url: https://ghg.center
+            url: https://earth.gov/ghgcenter
     hub:
       allowNamedServers: true
       config:
@@ -39,6 +44,12 @@ basehub:
         GitHubOAuthenticator:
           allowed_organizations:
             - US-GHG-Center:ghgc-hub-access
+            - US-GHG-Center:ghg-use-case-1
+            - US-GHG-Center:ghg-use-case-2
+            - US-GHG-Center:ghg-use-case-3
+            - US-GHG-Center:ghg-external-collaborators
+            - US-GHG-Center:ghg-ams-2024-workshop-access
+            - US-GHG-Center:ghg-trial-access
           scope:
             - read:org
         Authenticator:
@@ -46,213 +57,124 @@ basehub:
             - freitagb
             - j08lue
             - slesaad
+            - Jeanne-le-Roux
     singleuser:
       defaultUrl: /lab
       profileList:
-        # NOTE: About node sharing
-        #
-        #       CPU/Memory requests/limits are actively considered still. This
-        #       profile list is setup to involve node sharing as considered in
-        #       https://github.com/2i2c-org/infrastructure/issues/2121.
-        #
-        #       - Memory requests are different from the description, based on:
-        #         whats found to remain allocate in k8s, subtracting 1GiB
-        #         overhead for misc system pods, and transitioning from GB in
-        #         description to GiB in mem_guarantee.
-        #       - CPU requests are lower than the description, with a factor of
-        #         10%.
-        #
-        - display_name: "Small: up to 4 CPU / 32 GB RAM"
-          description: &profile_list_description "Start a container with at least a chosen share of capacity on a node of this type"
-          slug: small
+        - display_name: "Modified Pangeo Notebook"
+          slug: modified-pangeo
+          description: Pangeo based notebook with a Python environment
           default: true
+          kubespawner_override:
+            image: public.ecr.aws/nasa-veda/nasa-veda-singleuser:5068290376e8c3151d97a36ae6485bb7ff79650b94aecc93ffb2ea1b42d76460
+          profile_options: &profile_options
+            resource_allocation: &profile_options_resource_allocation
+              display_name: Resource Allocation
+              choices:
+                mem_1_9:
+                  display_name: 1.9 GB RAM, upto 3.7 CPUs
+                  kubespawner_override:
+                    mem_guarantee: 1991341312
+                    mem_limit: 1991341312
+                    cpu_guarantee: 0.234375
+                    cpu_limit: 3.75
+                    node_selector:
+                      node.kubernetes.io/instance-type: r5.xlarge
+                  default: true
+                mem_3_7:
+                  display_name: 3.7 GB RAM, upto 3.7 CPUs
+                  kubespawner_override:
+                    mem_guarantee: 3982682624
+                    mem_limit: 3982682624
+                    cpu_guarantee: 0.46875
+                    cpu_limit: 3.75
+                    node_selector:
+                      node.kubernetes.io/instance-type: r5.xlarge
+                mem_7_4:
+                  display_name: 7.4 GB RAM, upto 3.7 CPUs
+                  kubespawner_override:
+                    mem_guarantee: 7965365248
+                    mem_limit: 7965365248
+                    cpu_guarantee: 0.9375
+                    cpu_limit: 3.75
+                    node_selector:
+                      node.kubernetes.io/instance-type: r5.xlarge
+                mem_14_8:
+                  display_name: 14.8 GB RAM, upto 3.7 CPUs
+                  kubespawner_override:
+                    mem_guarantee: 15930730496
+                    mem_limit: 15930730496
+                    cpu_guarantee: 1.875
+                    cpu_limit: 3.75
+                    node_selector:
+                      node.kubernetes.io/instance-type: r5.xlarge
+                mem_29_7:
+                  display_name: 29.7 GB RAM, upto 3.7 CPUs
+                  kubespawner_override:
+                    mem_guarantee: 31861460992
+                    mem_limit: 31861460992
+                    cpu_guarantee: 3.75
+                    cpu_limit: 3.75
+                    node_selector:
+                      node.kubernetes.io/instance-type: r5.xlarge
+                mem_60_6:
+                  display_name: 60.6 GB RAM, upto 15.7 CPUs
+                  kubespawner_override:
+                    mem_guarantee: 65094813696
+                    mem_limit: 65094813696
+                    cpu_guarantee: 7.86
+                    cpu_limit: 15.72
+                    node_selector:
+                      node.kubernetes.io/instance-type: r5.4xlarge
+                mem_121_2:
+                  display_name: 121.2 GB RAM, upto 15.7 CPUs
+                  kubespawner_override:
+                    mem_guarantee: 130189627392
+                    mem_limit: 130189627392
+                    cpu_guarantee: 15.72
+                    cpu_limit: 15.72
+                    node_selector:
+                      node.kubernetes.io/instance-type: r5.4xlarge
+        - display_name: "Rocker Geospatial with RStudio"
+          slug: rocker
+          description: R environment with many geospatial libraries pre-installed
+          kubespawner_override:
+            image: rocker/binder:4.3
+            # Launch RStudio after the user logs in
+            default_url: /rstudio
+            # Ensures container working dir is homedir
+            # https://github.com/2i2c-org/infrastructure/issues/2559
+            working_dir: /home/rstudio
+          profile_options: *profile_options
+        - display_name: "QGIS on Linux Desktop"
+          slug: qgis
+          description: Linux desktop in the browser, with qgis installed
+          kubespawner_override:
+            # Explicitly unset this - we set this to 'jupyterhub-singleuser'
+            # in basehub/values.yaml. We instead want to leave this unset,
+            # so the default command for the docker image is used instead.
+            # This is required for .desktop files to show up correctly.
+            cmd: null
+            # Launch people directly into the Linux desktop when they start
+            default_url: /desktop
+            # Built from https://github.com/2i2c-org/nasa-qgis-image
+            image: "quay.io/2i2c/nasa-qgis-image:78d96c092f8e"
+          profile_options: *profile_options
+        - display_name: "Bring your own image"
+          description: Specify your own docker image (must have python and jupyterhub installed in it)
+          slug: custom
           profile_options:
-            image: &image_options
+            image:
               display_name: Image
-              choices:
-                pangeo:
-                  display_name: Pangeo Notebook
-                  default: true
-                  slug: pangeo
-                  kubespawner_override:
-                    # Uses JupyterLab <4, so jupyterlab-git and dask-dashboard work
-                    image: "pangeo/pangeo-notebook:2023.07.05"
-                rocker:
-                  display_name: Rocker Geospatial with RStudio
-                  slug: rocker
-                  kubespawner_override:
-                    image: rocker/binder:4.3
-                    # Launch RStudio after the user logs in
-                    default_url: /rstudio
-                    # Ensures container working dir is homedir
-                    # https://github.com/2i2c-org/infrastructure/issues/2559
-                    working_dir: /home/rstudio
-                qgis:
-                  display_name: QGIS on Linux Desktop
-                  slug: qgis
-                  kubespawner_override:
-                    # Explicitly unset this - we set this to 'jupyterhub-singleuser'
-                    # in basehub/values.yaml. We instead want to leave this unset,
-                    # so the default command for the docker image is used instead.
-                    # This is required for .desktop files to show up correctly.
-                    cmd: null
-                    # Launch people directly into the Linux desktop when they start
-                    default_url: /desktop
-                    # Built from https://github.com/jupyterhub/jupyter-remote-desktop-proxy/pull/51
-                    image: "quay.io/jupyter-remote-desktop-proxy/qgis:2023-09-27"
-            requests:
-              # NOTE: Node share choices are in active development, see comment
-              #       next to profileList: above.
-              display_name: Node share
-              choices:
-                mem_1:
-                  default: true
-                  display_name: ~1 GB, ~0.125 CPU
-                  kubespawner_override:
-                    mem_guarantee: 0.904G
-                    cpu_guarantee: 0.013
-                mem_2:
-                  display_name: ~2 GB, ~0.25 CPU
-                  kubespawner_override:
-                    mem_guarantee: 1.809G
-                    cpu_guarantee: 0.025
-                mem_4:
-                  display_name: ~4 GB, ~0.5 CPU
-                  kubespawner_override:
-                    mem_guarantee: 3.617G
-                    cpu_guarantee: 0.05
-                mem_8:
-                  display_name: ~8 GB, ~1.0 CPU
-                  kubespawner_override:
-                    mem_guarantee: 7.234G
-                    cpu_guarantee: 0.1
-                mem_16:
-                  display_name: ~16 GB, ~2.0 CPU
-                  kubespawner_override:
-                    mem_guarantee: 14.469G
-                    cpu_guarantee: 0.2
-                mem_32:
-                  display_name: ~32 GB, ~4.0 CPU
-                  kubespawner_override:
-                    mem_guarantee: 28.937G
-                    cpu_guarantee: 0.4
-          kubespawner_override:
-            cpu_limit: null
-            mem_limit: null
-            node_selector:
-              node.kubernetes.io/instance-type: r5.xlarge
-        - display_name: "Medium: up to 16 CPU / 128 GB RAM"
-          description: *profile_list_description
-          slug: medium
-          profile_options:
-            image: *image_options
-            requests:
-              # NOTE: Node share choices are in active development, see comment
-              #       next to profileList: above.
-              display_name: Node share
-              choices:
-                mem_1:
-                  display_name: ~1 GB, ~0.125 CPU
-                  kubespawner_override:
-                    mem_guarantee: 0.942G
-                    cpu_guarantee: 0.013
-                mem_2:
-                  display_name: ~2 GB, ~0.25 CPU
-                  kubespawner_override:
-                    mem_guarantee: 1.883G
-                    cpu_guarantee: 0.025
-                mem_4:
-                  default: true
-                  display_name: ~4 GB, ~0.5 CPU
-                  kubespawner_override:
-                    mem_guarantee: 3.766G
-                    cpu_guarantee: 0.05
-                mem_8:
-                  display_name: ~8 GB, ~1.0 CPU
-                  kubespawner_override:
-                    mem_guarantee: 7.532G
-                    cpu_guarantee: 0.1
-                mem_16:
-                  display_name: ~16 GB, ~2.0 CPU
-                  kubespawner_override:
-                    mem_guarantee: 15.064G
-                    cpu_guarantee: 0.2
-                mem_32:
-                  display_name: ~32 GB, ~4.0 CPU
-                  kubespawner_override:
-                    mem_guarantee: 30.128G
-                    cpu_guarantee: 0.4
-                mem_64:
-                  display_name: ~64 GB, ~8.0 CPU
-                  kubespawner_override:
-                    mem_guarantee: 60.257G
-                    cpu_guarantee: 0.8
-                mem_128:
-                  display_name: ~128 GB, ~16.0 CPU
-                  kubespawner_override:
-                    mem_guarantee: 120.513G
-                    cpu_guarantee: 1.6
-          kubespawner_override:
-            cpu_limit: null
-            mem_limit: null
-            node_selector:
-              node.kubernetes.io/instance-type: r5.4xlarge
-        - display_name: "Large: up to 64 CPU / 512 GB RAM"
-          description: *profile_list_description
-          slug: large
-          profile_options:
-            image: *image_options
-            requests:
-              # NOTE: Node share choices are in active development, see comment
-              #       next to profileList: above.
-              display_name: Node share
-              choices:
-                mem_4:
-                  display_name: ~4 GB, ~0.5 CPU
-                  kubespawner_override:
-                    mem_guarantee: 3.821G
-                    cpu_guarantee: 0.05
-                mem_8:
-                  display_name: ~8 GB, ~1.0 CPU
-                  kubespawner_override:
-                    mem_guarantee: 7.643G
-                    cpu_guarantee: 0.1
-                mem_16:
-                  default: true
-                  display_name: ~16 GB, ~2.0 CPU
-                  kubespawner_override:
-                    mem_guarantee: 15.285G
-                    cpu_guarantee: 0.2
-                mem_32:
-                  display_name: ~32 GB, ~4.0 CPU
-                  kubespawner_override:
-                    mem_guarantee: 30.571G
-                    cpu_guarantee: 0.4
-                mem_64:
-                  display_name: ~64 GB, ~8.0 CPU
-                  kubespawner_override:
-                    mem_guarantee: 61.141G
-                    cpu_guarantee: 0.8
-                mem_128:
-                  display_name: ~128 GB, ~16.0 CPU
-                  kubespawner_override:
-                    mem_guarantee: 122.282G
-                    cpu_guarantee: 1.6
-                mem_256:
-                  display_name: ~256 GB, ~32.0 CPU
-                  kubespawner_override:
-                    mem_guarantee: 244.565G
-                    cpu_guarantee: 3.2
-                mem_512:
-                  display_name: ~512 GB, ~64.0 CPU
-                  kubespawner_override:
-                    mem_guarantee: 489.13G
-                    cpu_guarantee: 6.4
-          kubespawner_override:
-            cpu_limit: null
-            mem_limit: null
-            node_selector:
-              node.kubernetes.io/instance-type: r5.16xlarge
+              unlisted_choice:
+                enabled: True
+                display_name: "Custom image"
+                validation_regex: "^.+:.+$"
+                validation_message: "Must be a publicly available docker image, of form <image-name>:<tag>"
+                kubespawner_override:
+                  image: "{value}"
+              choices: {}
+            resource_allocation: *profile_options_resource_allocation
     scheduling:
       userScheduler:
         enabled: true

@@ -12,6 +12,12 @@ resource "azurerm_storage_account" "homes" {
 
   network_rules {
     # Allow NFS access only from our nodes, deny access from all other networks
+    #
+    # Use of terraform plan or apply can run into issues due to this, but they
+    # can be handled by temporarily adding your public IP to a firewall
+    # exception like described in
+    # https://github.com/2i2c-org/infrastructure/issues/890#issuecomment-1879072422.
+    #
     default_action = "Deny"
     virtual_network_subnet_ids = [
       azurerm_subnet.node_subnet.id
@@ -23,7 +29,7 @@ resource "azurerm_storage_share" "homes" {
   name                 = "homes"
   storage_account_name = azurerm_storage_account.homes.name
   quota                = var.storage_size
-  enabled_protocol     = var.storage_protocol
+  enabled_protocol     = "NFS"
   lifecycle {
     # Additional safeguard against deleting the share
     # as this causes irreversible data loss!
@@ -33,10 +39,4 @@ resource "azurerm_storage_share" "homes" {
 
 output "azure_fileshare_url" {
   value = azurerm_storage_share.homes.url
-}
-
-resource "kubernetes_namespace" "homes" {
-  metadata {
-    name = "azure-file"
-  }
 }

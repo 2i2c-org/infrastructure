@@ -44,7 +44,7 @@ on:
 # https://github.blog/changelog/2021-04-19-github-actions-limit-workflow-run-or-job-concurrency/
 concurrency: deploy
 
-# This environment variable triggers the deployer to colourise print statments in the
+# This environment variable triggers the deployer to colourise print statements in the
 # GitHug Actions logs for easy reading
 env:
   TERM: xterm
@@ -73,7 +73,7 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Install Python 3.9
-        uses: actions/setup-python@v4
+        uses: actions/setup-python@v5
         with:
           python-version: "3.9"
 
@@ -82,10 +82,10 @@ jobs:
       # this job is re-attempted as part of the same workflow run after
       # succeeding previously.
       - name: Save pip's install cache on job completion
-        uses: actions/cache@v3
+        uses: actions/cache@v4
         with:
           path: ~/.cache/pip
-          # key determines if we define or re-use an existing cache or not. Our
+          # key determines if we define or reuse an existing cache or not. Our
           # key ensure we cache within a workflow run and its attempts, but not
           # between workflow runs.
           key: "${{ github.run_id }}"
@@ -136,7 +136,7 @@ jobs:
           github.event_name == 'pull_request' &&
           (env.support-and-staging-matrix-jobs != '[]' ||
           env.prod-hub-matrix-jobs != '[]')
-        uses: actions/upload-artifact@v3.1.0
+        uses: actions/upload-artifact@v4
         with:
           name: pr
           path: |
@@ -182,17 +182,14 @@ jobs:
     outputs:
       failure_2i2c: "${{ env.failure_2i2c }}"
       failure_2i2c-uk: "${{ env.failure_2i2c-uk }}"
-      failure_carbonplan: "${{ env.failure_carbonplan }}"
       failure_cloudbank: "${{ env.failure_cloudbank }}"
       failure_leap: "${{ env.failure_leap }}"
       failure_meom-ige: "${{ env.failure_meom-ige }}"
       failure_openscapes: "${{ env.failure_openscapes }}"
       failure_pangeo-hubs: "${{ env.failure_pangeo-hubs }}"
       failure_utoronto: "${{ env.failure_utoronto }}"
-      failure_m2lines: "${{ env.failure_m2lines }}"
       failure_linked-earth: "${{ env.failure_linked-earth }}"
       failure_awi-ciroh: "${{ env.failure_awi-ciroh }}"
-      failure_callysto: "${{ env.failure_callysto }}"
       failure_nasa-cryo: "${{ env.failure_nasa-cryo }}"
       failure_gridsst: "${{ env.failure_gridsst }}"
       failure_victor: "${{ env.failure_victor }}"
@@ -206,6 +203,9 @@ jobs:
       failure_catalystproject-latam: "${{ env.failure_catalystproject-latam }}"
       failure_catalystproject-africa: "${{ env.failure_catalystproject-africa }}"
       failure_hhmi: "${{ env.failure_hhmi }}"
+      failure_nasa-esdis: "${{ env.failure_nasa-esdis }}"
+      failure_earthscope: "${{ env.failure_earthscope }}"
+      failure_opensci: "${{ env.failure_opensci }}"
 
     # Only run this job on pushes to the default branch and when the job output is not
     # an empty list
@@ -241,7 +241,7 @@ jobs:
       # Retry action: https://github.com/marketplace/actions/retry-step
       - name: Run health check for staging hub on cluster ${{ matrix.jobs.cluster_name }}
         if: matrix.jobs.upgrade_staging
-        uses: nick-fields/retry@v2
+        uses: nick-fields/retry@v3
         with:
           timeout_minutes: 10
           max_attempts: 2
@@ -261,7 +261,7 @@ jobs:
       # Retry action: https://github.com/marketplace/actions/retry-step
       - name: Run health check for dask-staging hub on cluster ${{ matrix.jobs.cluster_name }} if it exists
         if: matrix.jobs.upgrade_staging && matrix.jobs.cluster_name == '2i2c'
-        uses: nick-fields/retry@v2
+        uses: nick-fields/retry@v3
         with:
           timeout_minutes: 10
           max_attempts: 2
@@ -407,7 +407,7 @@ jobs:
 
       # Retry action: https://github.com/marketplace/actions/retry-step
       - name: Run health check against ${{ matrix.jobs.hub_name }} hub on cluster ${{ matrix.jobs.cluster_name}}
-        uses: nick-fields/retry@v2
+        uses: nick-fields/retry@v3
         with:
           timeout_minutes: 10
           max_attempts: 3

@@ -9,6 +9,7 @@ Generates the following files:
 - `config/<cluster_name>/enc-support.secret.values.yaml`
 
 """
+
 import jinja2
 import typer
 from typing_extensions import Annotated

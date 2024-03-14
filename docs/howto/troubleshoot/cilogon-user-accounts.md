@@ -1,15 +1,15 @@
 # CILogon: switch Identity Providers or user accounts
 
 By default, logging in with a particular user account will persist your credentials in future sessions.
-This means that you'll automatically re-use the same institutional and user account when you access the hub's home page.
+This means that you'll automatically reuse the same institutional and user account when you access the hub's home page.
 
 ## Switch Identity Providers
 
 1. **Logout of the Hub** using the logout button or by going to `https://{hub-name}/hub/logout`.
-2. **Clear browser cookies** (optional). If the user asked CILogon to re-use the same Identity Provider connection when they logged in, they'll need to [clear browser cookies](https://www.lifewire.com/how-to-delete-cookies-2617981) for <https://cilogon.org>.
+2. **Clear browser cookies** (optional). If the user asked CILogon to reuse the same Identity Provider connection when they logged in, they'll need to [clear browser cookies](https://www.lifewire.com/how-to-delete-cookies-2617981) for <https://cilogon.org>.
 
    ```{figure} ../../images/cilogon-remember-this-selection.png
-   The dialog box that allows you to re-use the same Identity Provider.
+   The dialog box that allows you to reuse the same Identity Provider.
    ```
 
    Firefox example:
@@ -40,6 +40,6 @@ If you see a 403 error page, this means that the account you were using to login
 ```{figure} ../../images/403-forbidden.png
 ```
 
-If you think this is an error, and the account should have been allowed, then contact the hub adminstrator/s.
+If you think this is an error, and the account should have been allowed, then contact the hub administrator/s.
 
 If you used the wrong user account, you can log in using another account by following the steps in [](troubleshoot:cilogon:switch-user-accounts).

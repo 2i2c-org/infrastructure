@@ -32,7 +32,7 @@ resource "google_service_account_iam_binding" "workload_identity_binding" {
   ]
 }
 
-# To access GCS buckets with requestor pays, the calling code needs
+# To access GCS buckets with requester pays, the calling code needs
 # to have serviceusage.services.use permission. We create a role
 # granting just this to provide the workload SA, so user pods can
 # use it. See https://cloud.google.com/storage/docs/requester-pays
@@ -47,7 +47,7 @@ resource "google_project_iam_custom_role" "requestor_pays" {
 }
 
 resource "google_project_iam_member" "requestor_pays_binding" {
-  for_each = toset([for hub_name, permissions in var.hub_cloud_permissions : hub_name if permissions.requestor_pays])
+  for_each = toset([for hub_name, permissions in var.hub_cloud_permissions : hub_name if permissions.allow_access_to_external_requester_pays_buckets])
   project  = var.project_id
   role     = google_project_iam_custom_role.requestor_pays.name
   member   = "serviceAccount:${google_service_account.workload_sa[each.value].email}"

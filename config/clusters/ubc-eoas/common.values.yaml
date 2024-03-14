@@ -1,4 +1,7 @@
 nfs:
+  # FIXME: Enable after https://github.com/yuvipanda/prometheus-dirsize-exporter/pull/7 is used
+  dirsizeReporter:
+    enabled: false
   pv:
     # from https://docs.aws.amazon.com/efs/latest/ug/mounting-fs-nfs-mount-settings.html
     mountOptions:
@@ -16,6 +19,8 @@ jupyterhub:
     2i2c:
       add_staff_user_ids_to_admin_users: true
       add_staff_user_ids_of_type: "google"
+    jupyterhubConfigurator:
+      enabled: false
     homepage:
       templateVars:
         org:
@@ -39,6 +44,7 @@ jupyterhub:
       CILogonOAuthenticator:
         allowed_idps:
           https://authentication.ubc.ca:
+            default: true
             username_derivation:
               username_claim: email
               action: strip_idp_domain
@@ -54,10 +60,6 @@ jupyterhub:
           - hmodzelewski # Technical representative, Henryk Modzelewski
 
   singleuser:
-    image:
-      # Required when using :latest, until https://github.com/jupyterhub/kubespawner/pull/807
-      # is merged
-      pullPolicy: Always
     defaultUrl: /lab
     memory:
       # https://2i2c.freshdesk.com/a/tickets/955
@@ -91,6 +93,12 @@ jupyterhub:
           # Using 'latest' for now so updates do not require 2i2c
           # involvement.
           image: quay.io/henrykmodzelewski/2i2c-eosc350:latest
+      - display_name: EOSC454
+        description: "For class EOSC454, provides upto 1 CPU and ~4G RAM"
+        kubespawner_override:
+          # Using 'latest' for now so updates do not require 2i2c
+          # involvement.
+          image: quay.io/henrykmodzelewski/2i2c-eosc454:latest
   scheduling:
     userScheduler:
       enabled: true

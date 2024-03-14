@@ -14,11 +14,13 @@ basehub:
       2i2c:
         add_staff_user_ids_to_admin_users: true
         add_staff_user_ids_of_type: "github"
+      jupyterhubConfigurator:
+        enabled: false
       homepage:
         templateVars:
           org:
             url: https://www.hhmi.org/
-            logo_url: https://drive.google.com/uc?export=view&id=1tg5PRRT3_VjDaxq6Ax_JA3S92FuQ_NFt
+            logo_url: https://github.com/2i2c-org/infrastructure/assets/1879041/76419ba9-6d1a-41fe-b9b7-56fd89e0da40
           designed_by:
             name: 2i2c
             url: https://2i2c.org
@@ -51,12 +53,83 @@ basehub:
             - name: MYSQL_ROOT_PASSWORD
               value: "tutorial"
       defaultUrl: /lab
+      storage:
+        extraVolumeMounts:
+          - name: home
+            mountPath: /home/jovyan/shared-public
+            subPath: _shared-public
+            readOnly: false
+          - name: home
+            mountPath: /home/jovyan/shared-readonly
+            subPath: _shared
+            readOnly: true
+      initContainers:
+        - name: volume-mount-ownership-fix
+          image: busybox:1.36.1
+          command:
+            - sh
+            - -c
+            - id && chown 1000:1000 /home/jovyan /home/jovyan/shared-readonly /home/jovyan/shared-public && ls -lhd /home/jovyan
+          securityContext:
+            runAsUser: 0
+          volumeMounts:
+            - name: home
+              mountPath: /home/jovyan
+              subPath: "{username}"
+            # Mounted without readonly attribute here,
+            # so we can chown it appropriately
+            - name: home
+              mountPath: /home/jovyan/shared-readonly
+              subPath: _shared
+            - name: home
+              mountPath: /home/jovyan/shared-public
+              subPath: _shared-public
       profileList:
         - display_name: "Loren Frank Lab"
           default: true
           description: "Spyglass-NWB container for the Loren Frank Lab"
           slug: lorenfrank
           profile_options:
+            requests: &profile_option_requests
+              display_name: Resource Allocation
+              choices:
+                mem_3_4:
+                  display_name: 3.4 GB RAM, upto 3.477 CPUs
+                  kubespawner_override:
+                    mem_guarantee: 3644869120
+                    mem_limit: 3644869120
+                    cpu_guarantee: 0.434625
+                    cpu_limit: 3.477
+                    node_selector:
+                      node.kubernetes.io/instance-type: n2-highmem-4
+                  default: true
+                mem_6_8:
+                  display_name: 6.8 GB RAM, upto 3.477 CPUs
+                  kubespawner_override:
+                    mem_guarantee: 7289738240
+                    mem_limit: 7289738240
+                    cpu_guarantee: 0.86925
+                    cpu_limit: 3.477
+                    node_selector:
+                      node.kubernetes.io/instance-type: n2-highmem-4
+                mem_13_6:
+                  display_name: 13.6 GB RAM, upto 3.477 CPUs
+                  kubespawner_override:
+                    mem_guarantee: 14579476480
+                    mem_limit: 14579476480
+                    cpu_guarantee: 1.7385
+                    cpu_limit: 3.477
+                    node_selector:
+                      node.kubernetes.io/instance-type: n2-highmem-4
+                mem_27_2:
+                  display_name: 27.2 GB RAM, upto 3.477 CPUs
+                  kubespawner_override:
+                    mem_guarantee: 29158952960
+                    mem_limit: 29158952960
+                    cpu_guarantee: 3.477
+                    cpu_limit: 3.477
+                    node_selector:
+                      node.kubernetes.io/instance-type: n2-highmem-4
             image:
               display_name: Image
               unlisted_choice:
@@ -68,14 +141,15 @@ basehub:
                   image: "{value}"
               choices:
                 spyglass:
-                  display_name: Spyglass-NWB
+                  display_name: Spyglass
                   slug: spyglass
                   kubespawner_override:
-                    image: "quay.io/2i2c/hhmi-spyglass-nwb-image:28e92dae096f"
+                    image: "quay.io/lorenlab/hhmi-spyglass-image:78764087554d"
         - display_name: "Community Images"
           description: "Start a container with a community maintained image"
           slug: community
           profile_options:
+            requests: *profile_option_requests
             image:
               display_name: Image
               choices:
@@ -109,14 +183,6 @@ basehub:
                     default_url: /desktop
                     # Built from https://github.com/jupyterhub/jupyter-remote-desktop-proxy/pull/51
                     image: "quay.io/jupyter-remote-desktop-proxy/qgis:2023-09-27"
-          nodeSelector:
-            node.kubernetes.io/instance-type: n2-highmem-16
-          cpu:
-            guarantee: 0.5
-            limit: 14
-          memory:
-            guarantee: 4G
-            limit: 16G
     hub:
       allowNamedServers: true
       config:
@@ -125,6 +191,7 @@ basehub:
         CILogonOAuthenticator:
           allowed_idps:
             http://github.com/login/oauth/authorize:
+              default: true
               username_derivation:
                 username_claim: "preferred_username"
         OAuthenticator:

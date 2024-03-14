@@ -7,6 +7,36 @@ userServiceAccount:
 
 binderhub-service:
   enabled: false
+  nodeSelector:
+    hub.jupyter.org/node-purpose: core
+  service:
+    port: 8090
+  # The DaemonSet at https://github.com/2i2c-org/binderhub-service/blob/main/binderhub-service/templates/docker-api/daemonset.yaml
+  # will start a docker-api pod on a user node.
+  # It starts the [dockerd](https://docs.docker.com/engine/reference/commandline/dockerd/) daemon,
+  # that will be accessible via a unix socket, mounted by the build.
+  # The docker-api pod must run on the same node as the builder pods.
+  dockerApi:
+    nodeSelector:
+      hub.jupyter.org/node-purpose: user
+    tolerations:
+      # Tolerate tainted jupyterhub user nodes
+      - key: hub.jupyter.org_dedicated
+        value: user
+        effect: NoSchedule
+      - key: hub.jupyter.org/dedicated
+        value: user
+        effect: NoSchedule
+  config:
+    BinderHub:
+      base_url: /services/binder
+      use_registry: true
+    KubernetesBuildExecutor:
+      # Get ourselves a newer repo2docker!
+      build_image: quay.io/jupyterhub/repo2docker:2023.06.0-8.gd414e99
+      node_selector:
+        # Schedule builder pods to run on user nodes only
+        hub.jupyter.org/node-purpose: user
 
 ingressBasicAuth:
   enabled: false
@@ -69,6 +99,14 @@ jupyterhub:
     singleuserAdmin:
       extraEnv: {}
       extraVolumeMounts:
+        # IMPORTANT: What is added to this list is copied to other locations
+        #            that wants to add an element to this list. This is done
+        #            because when Helm config files are merged, lists get
+        #            replaced rather than appended. So, if this is to be
+        #            updated, we should update all those copies as well. An easy
+        #            to way find such copies is to search for "singleuserAdmin:"
+        #            in this repo.
+        #
         - name: home
           mountPath: /home/jovyan/shared-readwrite
           subPath: _shared
@@ -88,23 +126,27 @@ jupyterhub:
       add_staff_user_ids_to_admin_users: false
       add_staff_user_ids_of_type: ""
       staff_github_ids:
+        - agoose77
         - AIDEA775
         - choldgraf
         - colliand
         - consideRatio
         - damianavila
         - GeorgianaElena
+        - haroldcampbell
         - jmunroe
         - jnywong
         - sgibson91
         - yuvipanda
       staff_google_ids:
+        - ahollands@2i2c.org
         - asilva@2i2c.org
         - choldgraf@2i2c.org
         - colliand@2i2c.org
         - damianavila@2i2c.org
         - erik@2i2c.org
         - georgianaelena@2i2c.org
+        - hcampbell@2i2c.org
         - jmunroe@2i2c.org
         - jwong@2i2c.org
         - sgibson@2i2c.org
@@ -210,6 +252,18 @@ jupyterhub:
   singleuser:
     # Need to explicitly fix ownership here, as otherwise these directories will be owned
     # by root on most NFS filesystems - neither EFS nor Google Filestore support anonuid
+    #
+    # This has to be done _once_ for each directory we mount _from_ the NFS
+    # server. We do it all the time since we don't know for sure it has been done once
+    # already.
+    #
+    # Note that we don't have to chown both the shared and shared-readwrite
+    # folder since they are both mounting the same folder on the NFS server.
+    #
+    # For details about this, see notes at:
+    # - https://github.com/2i2c-org/infrastructure/issues/2953#issuecomment-1672025545
+    # - https://github.com/2i2c-org/infrastructure/issues/2946#issuecomment-1671691248
+    #
     initContainers:
       - name: volume-mount-ownership-fix
         image: busybox:1.36.1
@@ -325,7 +379,7 @@ jupyterhub:
         # images, this is just invisible in the UI and there is no performance overhead
         # for these extra bind mounts. An additional positive here is that in case *students*
         # end up accidentally hardcoding paths in their notebooks, it will continue to work
-        # regardless of wether they or on RStudio or JupyterLab (described to us as a serious
+        # regardless of whether they or on RStudio or JupyterLab (described to us as a serious
         # problem by openscapes)
         - name: home
           mountPath: /home/rstudio
@@ -461,6 +515,12 @@ jupyterhub:
                   - value: "/rstudio"
                     title: RStudio
                     description: An IDE For R, created by the RStudio company
+    extraEnv:
+      BASEHUB_K8S_DIST:
+        valueFrom:
+          configMapKeyRef:
+            name: basehub-cluster-info
+            key: K8S_DIST
     initContainers:
       - name: templates-clone
         image: alpine/git:2.40.1
@@ -573,7 +633,7 @@ jupyterhub:
         admin: true
     image:
       name: quay.io/2i2c/pilot-hub
-      tag: "0.0.1-0.dev.git.7130.h0bdc2d30"
+      tag: "0.0.1-0.dev.git.7670.hfd1b116d"
     networkPolicy:
       enabled: true
       # interNamespaceAccessLabels=accept makes the hub pod's associated
@@ -858,7 +918,9 @@ jupyterhub:
                 raise web.HTTPError(403)
 
             # Format user's teams in auth_state to "org:team"
-            teams = set([f'{team["organization"]["login"]}:{team["slug"]}' for team in auth_state["teams"]])
+            # casefold them so we can do case insensitive comparisons, as github itself is case insensitive (but preserving)
+            # for orgs and teams
+            teams = set([f'{team["organization"]["login"]}:{team["slug"]}'.casefold() for team in auth_state["teams"]])
             print(f"User {spawner.user.name} is part of teams {' '.join(teams)}")
 
             # Filter out profiles with allowed_teams set if the user isn't part
@@ -872,8 +934,10 @@ jupyterhub:
 
                 # allowed_teams can be "org" or "org:team", and we check
                 # membership just in time for orgs if needed
-                allowed_orgs = set([o for o in allowed_teams if ':' not in o])
-                allowed_teams = set([t for t in allowed_teams if ':' in t])
+                # casefold them so we can do case insensitive comparisons, as github itself is case insensitive (but preserving)
+                # for orgs and teams
+                allowed_orgs = set([o.casefold() for o in allowed_teams if ':' not in o])
+                allowed_teams = set([t.casefold() for t in allowed_teams if ':' in t])
 
                 if allowed_teams & teams:
                     print(f"Allowing profile {profile['display_name']} for user {spawner.user.name} based on team membership")

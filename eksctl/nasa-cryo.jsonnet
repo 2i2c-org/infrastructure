@@ -25,7 +25,7 @@ local nodeAz = "us-west-2a";
 // A `node.kubernetes.io/instance-type label is added, so pods
 // can request a particular kind of node with a nodeSelector
 local notebookNodes = [
-    { instanceType: "r5.xlarge" },
+    { instanceType: "r5.xlarge", nameSuffix: "b" },
     { instanceType: "r5.4xlarge" },
     { instanceType: "r5.16xlarge" },
     {
@@ -60,7 +60,7 @@ local daskNodes = [
     metadata+: {
         name: "nasa-cryo",
         region: clusterRegion,
-        version: '1.25'
+        version: "1.27",
     },
     availabilityZones: masterAzs,
     iam: {
@@ -87,8 +87,10 @@ local daskNodes = [
         },
     ],
     nodeGroups: [
-        ng {
-            name: 'core-a',
+        ng + {
+            namePrefix: 'core',
+            nameSuffix: 'b',
+            nameIncludeInstanceType: false,
             availabilityZones: [nodeAz],
             ssh: {
                 publicKeyPath: 'ssh-keys/nasa-cryo.key.pub'
@@ -102,10 +104,8 @@ local daskNodes = [
             },
         },
     ] + [
-        ng {
-            // NodeGroup names can't have a '.' in them, while
-            // instanceTypes always have a .
-            name: "nb-%s" % std.strReplace(n.instanceType, ".", "-"),
+        ng + {
+            namePrefix: "nb",
             availabilityZones: [nodeAz],
             minSize: 0,
             maxSize: 500,
@@ -124,10 +124,8 @@ local daskNodes = [
 
         } + n for n in notebookNodes
     ] + [
-        ng {
-            // NodeGroup names can't have a '.' in them, while
-            // instanceTypes always have a .
-            name: "dask-%s" % std.strReplace(n.instancesDistribution.instanceTypes[0], ".", "-"),
+        ng + {
+            namePrefix: "dask",
             availabilityZones: [nodeAz],
             minSize: 0,
             maxSize: 500,

@@ -40,6 +40,7 @@ jupyterhub:
         oauth_callback_url: https://humboldt.cloudbank.2i2c.cloud/hub/oauth_callback
         allowed_idps:
           https://sso.humboldt.edu/idp/metadata:
+            default: true
             username_derivation:
               username_claim: "email"
             allow_all: true

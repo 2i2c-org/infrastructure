@@ -11,7 +11,7 @@ This separation should protect against user pods exhausting the resources needed
 
 The machines where the core nodes run, are different than the ones on which the user nodes run.
 The type of these machines is chosen based on the number, type, and the resource needs (CPU, memory, etc.) of the pods that will be scheduled to run on these nodes.
-Because of this resource dependance, these types might be adjusted in the future.
+Because of this resource dependence, these types might be adjusted in the future.
 You can checkout the exact type of the core and user nodes VMs in the `terraform` config for each cloud provider.
 For example, here is the [`terraform` config for Google Cloud](https://github.com/2i2c-org/infrastructure/tree/HEAD/terraform/gcp/variables.tf).
 

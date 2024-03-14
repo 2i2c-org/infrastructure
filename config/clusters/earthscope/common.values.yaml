@@ -1,0 +1,223 @@
+basehub:
+  nfs:
+    pv:
+      # from https://docs.aws.amazon.com/efs/latest/ug/mounting-fs-nfs-mount-settings.html
+      mountOptions:
+        - rsize=1048576
+        - wsize=1048576
+        - timeo=600
+        - soft # We pick soft over hard, so NFS lockups don't lead to hung processes
+        - retrans=2
+        - noresvport
+      serverIP: fs-08e7747330d833d82.efs.us-east-2.amazonaws.com
+      baseShareName: /
+  jupyterhub:
+    custom:
+      2i2c:
+        add_staff_user_ids_to_admin_users: true
+        add_staff_user_ids_of_type: "google"
+      jupyterhubConfigurator:
+        enabled: false
+      homepage:
+        templateVars:
+          org:
+            url: https://www.earthscope.org/
+            logo_url: https://drive.google.com/uc?export=view&id=1UUStqv7PBcxiIkzECUFKIdQKKIU8mXeb
+          designed_by:
+            name: "2i2c"
+            url: https://2i2c.org
+          operated_by:
+            name: "2i2c"
+            url: https://2i2c.org
+          funded_by:
+            name: "EarthScope Consortium"
+            url: https://www.earthscope.org/
+    hub:
+      extraConfig:
+        001-username-claim: |
+          from oauthenticator.auth0 import Auth0OAuthenticator
+          from traitlets import List, Unicode, default
+          from urllib.parse import urlencode
+
+          class CustomAuth0OAuthenticator(Auth0OAuthenticator):
+            # required_scopes functionality comes in from https://github.com/jupyterhub/oauthenticator/pull/719
+            # Can be removed from here once that PR is merged
+            required_scopes = List(
+                Unicode(),
+                config=True,
+                help="""
+                List of scopes that must be granted to allow login.
+
+                All the scopes listed in this config must be present in the OAuth2 grant
+                from the authorizing server to allow the user to login. We request all
+                the scopes listed in the 'scope' config, but only a subset of these may
+                be granted by the authorization server. This may happen if the user does not
+                have permissions to access a requested scope, or has chosen to not give consent
+                for a particular scope. If the scopes listed in this config are not granted,
+                the user will not be allowed to log in.
+
+                See the OAuth documentation of your OAuth provider for various options.
+                """,
+            )
+
+            # Upstreamed at https://github.com/jupyterhub/oauthenticator/pull/722
+            logout_redirect_to_url = Unicode(
+                config=True,
+                help="""
+                Redirect to this URL after the user is logged out.
+
+                Must be explicitly added to the "Allowed Logout URLs" in the configuration
+                for this Auth0 application. See https://auth0.com/docs/authenticate/login/logout/redirect-users-after-logout
+                for more information.
+                """
+            )
+
+            @default("logout_redirect_url")
+            def _logout_redirect_url_default(self):
+                url = f"https://{self.auth0_domain}/v2/logout"
+                if self.logout_redirect_to_url:
+                    # If a redirectTo is set, we must also include the `client_id`
+                    # Auth0 expects `client_id` to be snake cased while `redirectTo` is camel cased
+                    params = urlencode({"client_id": self.client_id, "redirectTo": self.logout_redirect_to_url})
+                    url = f"{url}?{params}"
+                return url
+
+            async def authenticate(self, *args, **kwargs):
+              auth_model = await super().authenticate(*args, **kwargs)
+              username = auth_model["name"]
+              # This is required until https://github.com/jupyterhub/oauthenticator/pull/717
+              # gets merged, can be removed after that.
+              if username.startswith("oauth2|cilogon"):
+                  cilogon_sub = username.rsplit("|", 1)[-1]
+                  cilogon_sub_parts = cilogon_sub.split("/")
+                  username = f"oauth2|cilogon|{cilogon_sub_parts[3]}|{cilogon_sub_parts[5]}"
+              auth_model["name"] = username
+              return auth_model
+
+            async def check_allowed(self, username, auth_model):
+              if await super().check_allowed(username, auth_model):
+                  return True
+
+              if self.required_scopes:
+                  granted_scopes = auth_model.get('auth_state', {}).get('scope', [])
+                  missing_scopes = set(self.required_scopes) - set(granted_scopes)
+                  if missing_scopes:
+                      self.log.info(f"Denying access to user {username} - scopes {missing_scopes} were not granted, only {granted_scopes} were granted")
+                      return False
+                  else:
+                      return True
+
+              return False
+
+          def populate_token(spawner, auth_state):
+            # For our deployment-service-check health check user, there is no auth_state.
+            # So these env variables need not be set.
+            if auth_state:
+              token_env = {
+                'AUTH0_ACCESS_TOKEN': auth_state.get("access_token", ""),
+                'AUTH0_ID_TOKEN': auth_state.get("id_token", ""),
+                'AUTH0_REFRESH_TOKEN': auth_state.get('refresh_token', '')
+              }
+              spawner.environment.update(token_env)
+
+          c.Spawner.auth_state_hook = populate_token
+
+          c.JupyterHub.authenticator_class = CustomAuth0OAuthenticator
+      config:
+        JupyterHub:
+          authenticator_class: auth0
+        CustomAuth0OAuthenticator:
+          required_scopes:
+            # This allows EarthScope to control who can login to the hub
+            - geolab
+        Auth0OAuthenticator:
+          scope:
+            - openid
+            # This gives us refresh token
+            - offline_access
+            # This allows EarthScope to control who can login to the hub
+            - geolab
+          extra_authorize_params:
+            # This isn't an actual URL, just a string. Must not have a trailing slash
+            audience: https://api.dev.earthscope.org
+          username_claim: sub
+        CILogonOAuthenticator:
+          allowed_idps:
+            http://github.com/login/oauth/authorize:
+              default: true
+              username_derivation:
+                username_claim: "preferred_username"
+            http://google.com/accounts/o8/id:
+              username_derivation:
+                username_claim: email
+        Authenticator:
+          enable_auth_state: true
+          admin_users:
+            # Chad Trebant, https://2i2c.freshdesk.com/a/tickets/1279
+            - google-oauth2|117718799995701713253
+    singleuser:
+      profileList:
+        - display_name: "Shared Small: 1-4 CPU, 8-32 GB"
+          description: "A shared machine, the recommended option until you experience a limitation."
+          profile_options: &profile_options
+            image:
+              display_name: Image
+              unlisted_choice:
+                enabled: True
+                display_name: "Custom image"
+                validation_regex: "^.+:.+$"
+                validation_message: "Must be a publicly available docker image, of form <image-name>:<tag>"
+                kubespawner_override:
+                  image: "{value}"
+              choices:
+                jupyter-scipy:
+                  display_name: Jupyter
+                  slug: jupyter-scipy
+                  kubespawner_override:
+                    image: jupyter/scipy-notebook:2023-06-27
+                rocker-geospatial:
+                  display_name: RStudio
+                  slug: rocker-geospatial
+                  kubespawner_override:
+                    image: rocker/binder:4.3
+                    # Launch into RStudio after the user logs in
+                    default_url: /rstudio
+                    # Ensures container working dir is homedir
+                    # https://github.com/2i2c-org/infrastructure/issues/2559
+                    working_dir: /home/rstudio
+          kubespawner_override:
+            mem_guarantee: 7.234G
+            cpu_guarantee: 0.1
+            mem_limit: null
+            node_selector:
+              node.kubernetes.io/instance-type: r5.xlarge
+
+        - display_name: "Small: 4 CPU, 32 GB"
+          description: "A dedicated machine for you."
+          profile_options: *profile_options
+          kubespawner_override:
+            mem_guarantee: 28.937G
+            cpu_guarantee: 0.4
+            mem_limit: null
+            node_selector:
+              node.kubernetes.io/instance-type: r5.xlarge
+
+        - display_name: "Medium: 16 CPU, 128 GB"
+          description: "A dedicated machine for you."
+          profile_options: *profile_options
+          kubespawner_override:
+            mem_guarantee: 120.513G
+            cpu_guarantee: 1.6
+            mem_limit: null
+            node_selector:
+              node.kubernetes.io/instance-type: r5.4xlarge
+
+        - display_name: "Large: 64 CPU, 512 GB"
+          description: "A dedicated machine for you"
+          profile_options: *profile_options
+          kubespawner_override:
+            mem_guarantee: 489.13G
+            cpu_guarantee: 6.4
+            mem_limit: null
+            node_selector:
+              node.kubernetes.io/instance-type: r5.16xlarge

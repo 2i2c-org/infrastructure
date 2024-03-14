@@ -19,7 +19,7 @@ on:
 # https://github.blog/changelog/2021-04-19-github-actions-limit-workflow-run-or-job-concurrency/
 concurrency: uptime-checks
 
-# This environment variable triggers the deployer to colourise print statments in the
+# This environment variable triggers the deployer to colourise print statements in the
 # GitHub Actions logs for easy reading
 env:
   TERM: xterm
@@ -42,7 +42,7 @@ jobs:
 
       # Authenticate with the correct KMS key that sops will use.
       - name: Setup sops credentials to decrypt repo secrets
-        uses: google-github-actions/auth@v1
+        uses: google-github-actions/auth@v2
         with:
           credentials_json: "${{ secrets.GCP_KMS_DECRYPTOR_KEY }}"
 

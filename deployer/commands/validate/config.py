@@ -2,6 +2,7 @@
 Functions related to validating configuration files such as helm chart values and our
 cluster.yaml files
 """
+
 import functools
 import json
 import os
@@ -69,6 +70,17 @@ def _prepare_helm_charts_dependencies_and_schemas():
     subprocess.check_call(["helm", "dep", "up", support_dir])
 
 
+def get_list_of_hubs_to_operate_on(cluster_name, hub_name):
+    config_file_path = find_absolute_path_to_cluster_file(cluster_name)
+    with open(config_file_path) as f:
+        cluster = Cluster(yaml.load(f), config_file_path.parent)
+
+    if hub_name:
+        return [h for h in cluster.hubs if h.spec["name"] == hub_name]
+
+    return cluster.hubs
+
+
 @validate_app.command()
 def cluster_config(
     cluster_name: str = typer.Argument(..., help="Name of cluster to operate on"),
@@ -99,14 +111,8 @@ def hub_config(
     _prepare_helm_charts_dependencies_and_schemas()
 
     config_file_path = find_absolute_path_to_cluster_file(cluster_name)
-    with open(config_file_path) as f:
-        cluster = Cluster(yaml.load(f), config_file_path.parent)
 
-    hubs = []
-    if hub_name:
-        hubs = [h for h in cluster.hubs if h.spec["name"] == hub_name]
-    else:
-        hubs = cluster.hubs
+    hubs = get_list_of_hubs_to_operate_on(cluster_name, hub_name)
 
     for i, hub in enumerate(hubs):
         print_colour(
@@ -185,14 +191,8 @@ def authenticator_config(
     _prepare_helm_charts_dependencies_and_schemas()
 
     config_file_path = find_absolute_path_to_cluster_file(cluster_name)
-    with open(config_file_path) as f:
-        cluster = Cluster(yaml.load(f), config_file_path.parent)
 
-    hubs = []
-    if hub_name:
-        hubs = [h for h in cluster.hubs if h.spec["name"] == hub_name]
-    else:
-        hubs = cluster.hubs
+    hubs = get_list_of_hubs_to_operate_on(cluster_name, hub_name)
 
     for i, hub in enumerate(hubs):
         print_colour(
@@ -232,6 +232,73 @@ def authenticator_config(
                 f"""
                     Please unset `Authenticator.allowed_users` for {hub.spec['name']} when GitHub Orgs/Teams is
                     being used for auth so valid members are not refused access.
+                """
+            )
+
+
+@validate_app.command()
+def configurator_config(
+    cluster_name: str = typer.Argument(..., help="Name of cluster to operate on"),
+    hub_name: str = typer.Argument(None, help="Name of hub to operate on"),
+):
+    """
+    For each hub of a specific cluster:
+     - It asserts that when the singleuser configuration overrides the same fields like the configurator, specifically kubespawner_override and profile_options,
+       the latter must be disabled.
+       An error is raised otherwise.
+    """
+    _prepare_helm_charts_dependencies_and_schemas()
+
+    config_file_path = find_absolute_path_to_cluster_file(cluster_name)
+
+    hubs = get_list_of_hubs_to_operate_on(cluster_name, hub_name)
+
+    for i, hub in enumerate(hubs):
+        print_colour(
+            f"{i+1} / {len(hubs)}: Validating configurator and profile lists config for {hub.spec['name']}..."
+        )
+
+        configurator_enabled = False
+        singleuser_overrides = False
+        for values_file_name in hub.spec["helm_chart_values_files"]:
+            if "secret" not in os.path.basename(values_file_name):
+                values_file = config_file_path.parent.joinpath(values_file_name)
+                # Load the hub extra config from its specific values files
+                config = yaml.load(values_file)
+                try:
+                    if hub.spec["helm_chart"] != "basehub":
+                        singleuser_config = config["basehub"]["jupyterhub"][
+                            "singleuser"
+                        ]
+                        custom_config = config["basehub"]["jupyterhub"]["custom"]
+                    else:
+                        singleuser_config = config["jupyterhub"]["singleuser"]
+                        custom_config = config["jupyterhub"]["custom"]
+
+                    configurator_enabled = custom_config.get(
+                        "jupyterhubConfigurator", {}
+                    ).get("enabled")
+                    # If it's already disabled we don't have what to check
+                    if configurator_enabled:
+                        profiles = singleuser_config.get("profileList", None)
+                        if profiles:
+                            for p in profiles:
+                                overrides = p.get("kubespawner_override", None)
+                                if overrides and overrides.get("image", None):
+                                    singleuser_overrides = True
+                                    break
+                                options = p.get("profile_options", None)
+                                if options and "image" in options:
+                                    singleuser_overrides = True
+                                    break
+                except KeyError:
+                    pass
+
+        if configurator_enabled == True and singleuser_overrides == True:
+            raise ValueError(
+                f"""
+                    When the singleuser configuration overrides the same fields like the configurator,
+                    the later must be disabled. Please disable the configurator for {hub.spec['name']}.
                 """
             )
 

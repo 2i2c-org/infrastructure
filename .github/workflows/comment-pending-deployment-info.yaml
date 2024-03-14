@@ -47,7 +47,7 @@ jobs:
               print(f"community_rep={community_rep}", file=f)
       - name: Render comment template using information from the `find-missing-info` step before
         id: template
-        uses: chuhlomin/render-template@v1.8
+        uses: chuhlomin/render-template@v1.9
         with:
           template: .github/comment-templates/comment-pending-deployment-info.md
           vars: |
@@ -56,7 +56,7 @@ jobs:
             issue_author: "${{ github.event.issue.user.login }}"
       - name: Create comment
         if: ${{ steps.find-missing-info.outputs.pending_info }}
-        uses: peter-evans/create-or-update-comment@v3
+        uses: peter-evans/create-or-update-comment@v4
         with:
           issue-number: ${{ github.event.issue.number }}
           body: ${{ steps.template.outputs.result }}

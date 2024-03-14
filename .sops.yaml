@@ -5,3 +5,14 @@ creation_rules:
     gcp_kms: projects/two-eye-two-see/locations/global/keyRings/sops-keys/cryptoKeys/similar-hubs
   - path_regex: deployer/keys/.*key.*
     gcp_kms: projects/two-eye-two-see/locations/global/keyRings/sops-keys/cryptoKeys/similar-hubs
+
+# stores configuration is supported by sops 3.9.0+ only
+stores:
+  # By configuring json indent, we get spaces instead of tabs for json files,
+  # which makes them valid YAML files as well.
+  json:
+    indent: 4
+  json_binary:
+    indent: 4
+  yaml:
+    indent: 2

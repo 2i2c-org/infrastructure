@@ -1,0 +1,41 @@
+prometheusIngressAuthSecret:
+  enabled: true
+
+redirects:
+  rules:
+    - from: staging.earthscope.2i2c.cloud
+      to: staging.geolab.earthscope.cloud
+    - from: earthscope.2i2c.cloud
+      to: geolab.earthscope.cloud
+
+prometheus:
+  server:
+    ingress:
+      enabled: true
+      hosts:
+        - prometheus.earthscope.2i2c.cloud
+      tls:
+        - secretName: prometheus-tls
+          hosts:
+            - prometheus.earthscope.2i2c.cloud
+
+grafana:
+  grafana.ini:
+    server:
+      root_url: https://grafana.earthscope.2i2c.cloud/
+  auth.github:
+    enabled: true
+    allowed_organizations: 2i2c-org
+  ingress:
+    hosts:
+      - grafana.earthscope.2i2c.cloud
+    tls:
+      - secretName: grafana-tls
+        hosts:
+          - grafana.earthscope.2i2c.cloud
+
+cluster-autoscaler:
+  enabled: true
+  autoDiscovery:
+    clusterName: earthscope
+  awsRegion: us-east-2
