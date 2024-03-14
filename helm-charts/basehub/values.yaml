@@ -380,6 +380,7 @@ jupyterhub:
                   )
                   if proc.returncode == 0:
                       return True
+              return False    
 
 
           def main():
