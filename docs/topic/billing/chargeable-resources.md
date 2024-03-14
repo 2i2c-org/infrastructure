@@ -19,7 +19,7 @@ components:
 
 1. CPU (count and architecture)
 2. Memory (just size)
-3. Ephemeral disk space
+3. Boot disk (size and type, ephemeral)
 4. Optional accelerators (like GPUs, TPUs, network accelerators, etc)
 
 Let's go through each of these components, and then talk about how they
@@ -54,7 +54,7 @@ of a node costs for our usage pattern.
 Unlike CPU, memory is simpler. A GB is a GB! We pay for how much GB the
 VM we request has, regardless of whether we use it or not.
 
-### (Ephemeral) Disk
+### Boot disk (ephemeral)
 
 Each node needs some disk space that lives only as long as the node is up,
 to store:
@@ -80,7 +80,7 @@ to store:
 
 These disks can be fairly small - 100GB at the largest, but we can get away
 with far smaller disks most of the time. The performance of these disks
-primarily matters *only* during initial docker image pull time - faster the
+*primarily* matters during initial docker image pull time - faster the
 disk, faster it is to pull large docker images. But it can be really
 expensive to make the base disks super fast SSDs, so often a balanced
 middling performance tier is more appropriate.
@@ -92,9 +92,7 @@ dedicated hardware that is more limited in functionality than a general
 purpose CPU, but much, *much* faster. [GPU](https://en.wikipedia.org/wiki/Graphics_processing_unit)
 are the most common ones in use today, but there are also [TPU](https://cloud.google.com/tpu?hl=en)s,
 [FGPA](https://en.wikipedia.org/wiki/Field-programmable_gate_array)s
-available in the cloud. Depending on the cloud provider, these can either
-be attached to *any* node type (GCP), or available only on a special set
-of node types & sizes (AWS & Azure).
+available in the cloud. Accelerators can often only be attached to a subset of a cloud provider's available node types, node sizes, and cloud zones.
 
 GPUs are the most commonly used with JupyterHubs, and are often the most
 expensive as well! Leaving a GPU running for days accidentally is the
@@ -239,7 +237,7 @@ we can consider a boundary to be crossed when:
 
 1. The source and destination are in different zones of the same region of the cloud provider
 2. The source and destination are in different regions of the same cloud provider
-3. One of the source or destination is *outside* the cloud provider
+3. Either the source or destination is *outside* the cloud provider
 
 If the source and destination are within the same zone, no network cost
 boundaries are crossed and usually this costs no money. As a general rule,
@@ -295,7 +293,7 @@ data is stored as *objects* and accessed via HTTP methods over the network
 higher scalability at the cost of a little more complexity (as all data
 access becomes a network call). While home directories may store users' code,
 the data is either currently already being stored in object storage, or is
-goint to be stored that way in the near future.
+going to be stored that way in the near future.
 
 While object storage has been around since the 90s, it was heavily
 popularized by the introduction of [AWS S3](https://aws.amazon.com/s3/) in
@@ -387,9 +385,9 @@ the per GB charge usually doesn't add up to much (even uploading 1 terabyte of d
 
 2. [GCP Cloud LoadBalancing](https://cloud.google.com/vpc/network-pricing#lb)
 
-  Pricing varies by region, but is about $0.0327 per hour per load balancer
-  (listed as 'forwarding rule' in the pricing page, as our load balancers only have one forwarding rule each)
-  + $0.01046 per GB processed.
+   Pricing varies by region, but is about $0.0327 per hour per load balancer
+   (listed as 'forwarding rule' in the pricing page, as our load balancers only have one forwarding rule each)
+   + $0.01046 per GB processed.
 
 3. [Azure LoadBalancer](https://azure.microsoft.com/en-us/pricing/details/load-balancer/)
 
@@ -446,7 +444,7 @@ There are two possible negatives when using this:
    theoretically our attack surface is larger. However, these are all
    cloud managed kubernetes nodes without any real ports open to the public,
    so not a particularly large risk factor.
-2. Some clouds have a separate quota system for public IPs, so this may
+2. Some clouds have a separate quota system for public IPs (GCP, Azure), so this may
    limit the total size of our kubernetes cluster even if we have other
    quotas.
 
