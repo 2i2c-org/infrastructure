@@ -18,7 +18,7 @@ to specific sets of resources, you can filter and group by them in the
 web reporting UI or programmatically in the billing export. This will
 count *all* costs emanating from any resource tagged with that tag. For
 example, if a node is tagged with a particular tag, the following separate
-things will be assoiated with the tag:
+things will be associated with the tag:
 
 1. The amount of memory allocated to that node
 2. The amount of CPU allocated to the node
