@@ -54,6 +54,7 @@ basehub:
             - nasa-openscapes-workshops:ChampionsAccess-2i2c
             - nasa-openscapes-workshops:LongtermAccess-2i2c
             - nasa-openscapes-workshops:WorkshopAccess-2i2c
+            - nasa-openscapes-workshops:emit-methane-plume-2024-03-14
           kubespawner_override:
             image: openscapes/python:4f340eb
           profile_options: &profile_options
@@ -63,49 +64,49 @@ basehub:
                 mem_1_9:
                   display_name: 1.9 GB RAM, upto 3.7 CPUs
                   kubespawner_override:
-                    mem_guarantee: 1992701952
-                    mem_limit: 1992701952
+                    mem_guarantee: 1991341312
+                    mem_limit: 1991341312
                     cpu_guarantee: 0.234375
                     cpu_limit: 3.75
                     node_selector:
-                      node.kubernetes.io/instance-type: r5.xlarge
+                      node.kubernetes.io/instance-type: r5.16xlarge
                   default: true
                 mem_3_7:
                   display_name: 3.7 GB RAM, upto 3.7 CPUs
                   kubespawner_override:
-                    mem_guarantee: 3985403904
-                    mem_limit: 3985403904
+                    mem_guarantee: 3982682624
+                    mem_limit: 3982682624
                     cpu_guarantee: 0.46875
                     cpu_limit: 3.75
                     node_selector:
-                      node.kubernetes.io/instance-type: r5.xlarge
+                      node.kubernetes.io/instance-type: r5.16xlarge
                 mem_7_4:
                   display_name: 7.4 GB RAM, upto 3.7 CPUs
                   kubespawner_override:
-                    mem_guarantee: 7970807808
-                    mem_limit: 7970807808
+                    mem_guarantee: 7965365248
+                    mem_limit: 7965365248
                     cpu_guarantee: 0.9375
                     cpu_limit: 3.75
                     node_selector:
-                      node.kubernetes.io/instance-type: r5.xlarge
+                      node.kubernetes.io/instance-type: r5.16xlarge
                 mem_14_8:
                   display_name: 14.8 GB RAM, upto 3.7 CPUs
                   kubespawner_override:
-                    mem_guarantee: 15941615616
-                    mem_limit: 15941615616
+                    mem_guarantee: 15930730496
+                    mem_limit: 15930730496
                     cpu_guarantee: 1.875
                     cpu_limit: 3.75
                     node_selector:
-                      node.kubernetes.io/instance-type: r5.xlarge
+                      node.kubernetes.io/instance-type: r5.16xlarge
                 mem_29_7:
                   display_name: 29.7 GB RAM, upto 3.7 CPUs
                   kubespawner_override:
-                    mem_guarantee: 31883231232
-                    mem_limit: 31883231232
+                    mem_guarantee: 31861460992
+                    mem_limit: 31861460992
                     cpu_guarantee: 3.75
                     cpu_limit: 3.75
                     node_selector:
-                      node.kubernetes.io/instance-type: r5.xlarge
+                      node.kubernetes.io/instance-type: r5.16xlarge
                 mem_60_6:
                   display_name: 60.6 GB RAM, upto 15.7 CPUs
                   kubespawner_override:
@@ -114,7 +115,7 @@ basehub:
                     cpu_guarantee: 7.86
                     cpu_limit: 15.72
                     node_selector:
-                      node.kubernetes.io/instance-type: r5.4xlarge
+                      node.kubernetes.io/instance-type: r5.16xlarge
                 mem_121_2:
                   display_name: 121.2 GB RAM, upto 15.7 CPUs
                   kubespawner_override:
@@ -123,7 +124,7 @@ basehub:
                     cpu_guarantee: 15.72
                     cpu_limit: 15.72
                     node_selector:
-                      node.kubernetes.io/instance-type: r5.4xlarge
+                      node.kubernetes.io/instance-type: r5.16xlarge
         - display_name: R
           description: R (with RStudio) + Python environment
           allowed_teams:
@@ -136,6 +137,7 @@ basehub:
             - nasa-openscapes-workshops:ChampionsAccess-2i2c
             - nasa-openscapes-workshops:LongtermAccess-2i2c
             - nasa-openscapes-workshops:WorkshopAccess-2i2c
+            - nasa-openscapes-workshops:emit-methane-plume-2024-03-14
           kubespawner_override:
             image: openscapes/rocker:a7596b5
             # Ensures container working dir is homedir
@@ -154,6 +156,7 @@ basehub:
             - nasa-openscapes-workshops:ChampionsAccess-2i2c
             - nasa-openscapes-workshops:LongtermAccess-2i2c
             - nasa-openscapes-workshops:WorkshopAccess-2i2c
+            - nasa-openscapes-workshops:emit-methane-plume-2024-03-14
           kubespawner_override:
             image: openscapes/matlab:2023-11-28
           profile_options: *profile_options
@@ -199,6 +202,7 @@ basehub:
             - nasa-openscapes-workshops:ChampionsAccess-2i2c
             - nasa-openscapes-workshops:LongtermAccess-2i2c
             - nasa-openscapes-workshops:WorkshopAccess-2i2c
+            - nasa-openscapes-workshops:emit-methane-plume-2024-03-14
           scope:
             - read:org
         Authenticator:
