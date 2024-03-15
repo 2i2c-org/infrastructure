@@ -276,10 +276,6 @@ jupyterhub:
           - name: home
             mountPath: /home/jovyan/shared
             subPath: _shared
-    cmd:
-      # Explicitly define this, as it's no longer set by z2jh
-      # https://github.com/jupyterhub/zero-to-jupyterhub-k8s/pull/2449
-      - jupyterhub-singleuser
     extraEnv:
       # notebook writes secure files that don't need to survive a
       # restart here. Writing 'secure' files on some file systems (like
