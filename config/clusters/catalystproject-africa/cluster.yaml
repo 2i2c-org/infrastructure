@@ -42,3 +42,11 @@ hubs:
       - common.values.yaml
       - uvri.values.yaml
       - enc-uvri.secret.values.yaml
+  - name: wits
+    display_name: "Catalyst Project, Africa - WITS"
+    domain: wits.af.catalystproject.2i2c.cloud
+    helm_chart: basehub
+    helm_chart_values_files:
+      - common.values.yaml
+      - wits.values.yaml
+      - enc-wits.secret.values.yaml
