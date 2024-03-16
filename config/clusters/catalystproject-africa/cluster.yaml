@@ -58,3 +58,11 @@ hubs:
       - common.values.yaml
       - kush.values.yaml
       - enc-kush.secret.values.yaml
+  - name: molerhealth
+    display_name: "Catalyst Project, Africa - MolerHealth "
+    domain: molerhealth.af.catalystproject.2i2c.cloud
+    helm_chart: basehub
+    helm_chart_values_files:
+      - common.values.yaml
+      - molerhealth.values.yaml
+      - enc-molerhealth.secret.values.yaml
