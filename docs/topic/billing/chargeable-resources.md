@@ -383,7 +383,7 @@ the per GB charge usually doesn't add up to much (even uploading 1 terabyte of d
 
 1. [AWS ELB](https://aws.amazon.com/elasticloadbalancing/pricing/?nc=sn&loc=3)
 
-   We currently us [Classic Load Balancers](https://docs.aws.amazon.com/elasticloadbalancing/latest/classic/introduction.html) as that is the kubernetes
+   We currently use [Classic Load Balancers](https://docs.aws.amazon.com/elasticloadbalancing/latest/classic/introduction.html) as that is the kubernetes
    default. Pricing varies by region, but is mostly $0.025 per hour + $0.008
    per GB.
 
