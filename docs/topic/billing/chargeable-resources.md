@@ -97,8 +97,10 @@ available in the cloud. Accelerators can often only be attached to a subset of a
 GPUs are the most commonly used with JupyterHubs, and are often the most
 expensive as well! Leaving a GPU running for days accidentally is the
 second easiest way to get a huge AWS bill (you'll meet NAT / network egress, the primary culprit, later in this document). So they are usually segregated
-out into their own node pool that is spawned only for servers that require
-GPU use, and shut down after.
+out into their own node pool that is _exclusively_ for use by servers that need
+GPUs - a [kubernetes taint](https://kubernetes.io/docs/concepts/scheduling-eviction/taint-and-toleration/)
+is used to exclude all other user servers from those nodes. The cluster autoscaler
+can stop the GPU node as soon as there are are actual GPU users, thus saving cost.
 
 ### Combining resource sizes when making a node
 
