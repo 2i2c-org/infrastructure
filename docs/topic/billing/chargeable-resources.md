@@ -267,7 +267,11 @@ enforce this lock-in by charging an [extremely high network egress cost](https:/
 Like, 'bankrupt your customer because they tried to move a bucket of data from
 one cloud provider to another' high egress cost. Cloudflare estimates that
 in US data centers, it's [about 80x](https://blog.cloudflare.com/aws-egregious-egress) what
-it actually costs the big cloud providers.
+it actually costs the big cloud providers. The fundamental anti-competitive nature
+how egress fees can hold your data 'hostage' in a cloud provider is finally causing
+regulators to crack down, but only under limited circumstances (
+[AWS](https://aws.amazon.com/blogs/aws/free-data-transfer-out-to-internet-when-moving-out-of-aws/),
+[GCP](https://cloud.google.com/blog/products/networking/eliminating-data-transfer-fees-when-migrating-off-google-cloud)).
 
 So when people are 'scared' of cloud costs, it's **most often** network
 egress costs. It's very easy to make a bucket public, have a single other person
