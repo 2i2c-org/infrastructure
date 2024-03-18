@@ -148,8 +148,10 @@ which sets up a *separate, dedicated* block storage device (think of it like a h
 (([EBS](https://aws.amazon.com/ebs/) on AWS, [Persistent Disk](https://cloud.google.com/persistent-disk?hl=en) on GCP and [Disk Storage](https://azure.microsoft.com/en-us/products/storage/disks) on Azure))
 *per user*. This has the following advantages:
 
-1. No single user can take over the entire drive or use up extremely large amounts of
-   space, as the max size is enforced by the cloud provider.
+1. Since there is one drive per user, a user filling up their disk will only affect them -
+   there will be no effect on other users. This removes a failure mode associated with one
+   shared drive for all users - a single user can use up so much disk space that no other
+   users' server can start!
 2. Performance is pretty fast, since the disks are dedicated to a single user.
 3. It's incredibly easy to set up, as kubernetes takes care of everything for us.
 
