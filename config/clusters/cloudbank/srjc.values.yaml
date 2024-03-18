@@ -36,6 +36,11 @@ jupyterhub:
       CILogonOAuthenticator:
         oauth_callback_url: https://srjc.cloudbank.2i2c.cloud/hub/oauth_callback
         allowed_idps:
+          http://login.microsoftonline.com/common/oauth2/v2.0/authorize:
+            username_derivation:
+              username_claim: "email"
+            allowed_domains:
+              - "santarosa.edu"
           http://google.com/accounts/o8/id:
             default: true
             username_derivation:
@@ -47,4 +52,6 @@ jupyterhub:
           - ericvd@berkeley.edu
           - sean.smorris@berkeley.edu
           - mmckeever@santarosa.edu
-          - mjmckeever496@gmail.com
+          - ylin@santarosa.edu
+          - hwong@santarosa.edu
+          - dharden@santarosa.edu
