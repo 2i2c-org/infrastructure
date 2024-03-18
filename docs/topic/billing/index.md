@@ -7,5 +7,6 @@ terminology to talk about cloud billing.
 :maxdepth: 2
 chargeable-resources
 accounts
+reports
 tools
 ```
