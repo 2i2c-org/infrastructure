@@ -562,8 +562,13 @@ separate from the nodes used to run various things in it. This is usually a *fix
 2. [GCP GKE](https://cloud.google.com/kubernetes-engine/pricing#standard_edition)
 
    Costs $0.10 per hour flat.
-   
-   There is a discount of about 75$ per month allowing one *zonal* (single zone, non highly available) cluster per GCP billing account continuously for free. This discount is of little value to us and communities since since we favor the *regional* (multi-zone, highly available) clusters for less disruptive kubernetes control plane upgrades, and since we don't manage that many separate billing accounts.
+
+   There is a discount of about 75$ per month allowing one *zonal* (single zone,
+   non highly available) cluster per GCP billing account continuously for free.
+   This discount is of little value to us and communities since since we favor
+   the *regional* (multi-zone, highly available) clusters for less disruptive
+   kubernetes control plane upgrades, and since we don't manage that many
+   separate billing accounts.
 
    GKE also has an 'autopilot' edition that we have tried to use in the
    past and decided against using, for various restrictions it has on
