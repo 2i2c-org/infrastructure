@@ -1,0 +1,31 @@
+jupyterhub:
+  ingress:
+    hosts: [wits.af.catalystproject.2i2c.cloud]
+    tls:
+      - hosts: [wits.af.catalystproject.2i2c.cloud]
+        secretName: https-auto-tls
+  custom:
+    2i2c:
+      add_staff_user_ids_to_admin_users: true
+      add_staff_user_ids_of_type: "github"
+    jupyterhubConfigurator:
+      enabled: false
+    homepage:
+      templateVars:
+        org:
+          name: Catalyst Project, Africa - WITS
+          url: https://catalystproject.cloud/
+          logo_url: https://catalystproject.cloud/_images/catalyst-icon-dark.png
+  hub:
+    config:
+      JupyterHub:
+        authenticator_class: github
+      GitHubOAuthenticator:
+        oauth_callback_url: https://wits.af.catalystproject.2i2c.cloud/hub/oauth_callback
+        allowed_organizations:
+          - CatalystProject-Hubs:wits
+        scope:
+          - read:org
+      Authenticator:
+        admin_users:
+          - gentlelab2016
