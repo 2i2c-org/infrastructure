@@ -64,6 +64,7 @@ jupyterhub:
         slug: rocker
         kubespawner_override:
           image: rocker/binder:4.3
+          image_pull_policy: Always
           default_url: /rstudio
           working_dir: /home/rstudio # Ensures container working dir is homedir
           node_selector:
