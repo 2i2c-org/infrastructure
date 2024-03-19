@@ -352,8 +352,8 @@ jupyterhub:
     startTimeout: 600 # 10 mins, node startup + image pulling sometimes takes more than the default 5min
     defaultUrl: /tree
     image:
-      name: jupyter/scipy-notebook
-      tag: "2023-06-19"
+      name: quay.io/jupyter/scipy-notebook
+      tag: "2024-03-18"
     storage:
       type: static
       static:

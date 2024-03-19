@@ -174,7 +174,7 @@ basehub:
                   display_name: Jupyter
                   slug: jupyter-scipy
                   kubespawner_override:
-                    image: jupyter/scipy-notebook:2023-06-27
+                    image: quay.io/jupyter/scipy-notebook:2024-03-18
                 rocker-geospatial:
                   display_name: RStudio
                   slug: rocker-geospatial
