@@ -20,9 +20,9 @@ count *all* costs emanating from any resource tagged with that tag. For
 example, if a node is tagged with a particular tag, the following separate
 things will be associated with the tag:
 
-1. The amount of memory allocated to that node
-2. The amount of CPU allocated to the node
-3. (If tagged correctly) The base disk allocated to that node
+1. The node's memory
+2. The node's CPU
+3. (If tagged correctly) The node's boot disk
 4. Any network costs accrued by actions of processes on that node (subject
    to some complexity)
 
