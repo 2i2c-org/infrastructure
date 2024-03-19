@@ -117,7 +117,7 @@ jupyterhub:
                 display_name: Jupyter SciPy Notebook
                 slug: scipy
                 kubespawner_override:
-                  image: jupyter/scipy-notebook:2023-06-26
+                  image: quay.io/jupyter/scipy-notebook:2024-03-18
 ```
 
 ## User installed packages

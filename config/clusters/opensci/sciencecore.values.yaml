@@ -66,6 +66,7 @@ jupyterhub:
                 display_name: Jupyter SciPy Notebook
                 slug: scipy
                 kubespawner_override:
+                  # FIXME: use quay.io/ for tags after 2023-10-20
                   image: jupyter/scipy-notebook:2023-06-26
           resources:
             display_name: Resource Allocation

@@ -94,6 +94,7 @@ basehub:
                   display_name: Jupyter SciPy Notebook
                   slug: scipy
                   kubespawner_override:
+                    # FIXME: use quay.io/ for tags after 2023-10-20
                     image: "jupyter/scipy-notebook:2023-09-04"
                 pangeo:
                   display_name: Pangeo Notebook
