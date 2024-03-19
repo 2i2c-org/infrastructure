@@ -87,6 +87,7 @@ basehub:
                   slug: geospatial
                   kubespawner_override:
                     image: rocker/binder:4.3
+                    image_pull_policy: Always
                     working_dir: /home/rstudio
                     default_url: /rstudio
                 scipy:
