@@ -13,12 +13,13 @@ have a baseline to reason from.
 
 ## Nodes / Virtual Machines
 
-The unit of *compute* in the cloud is a virtual machine (a 'node' in
+The unit of *compute* in the cloud is a virtual machine (a
+[node](https://kubernetes.io/docs/concepts/architecture/nodes/) in
 kubernetes terminology). It is assembled from the following
 components:
 
 1. CPU (count and architecture)
-2. Memory (just size)
+2. Memory (only capacity)
 3. Boot disk (size and type, ephemeral)
 4. Optional accelerators (like GPUs, TPUs, network accelerators, etc)
 
@@ -35,7 +36,7 @@ CPU specification for a node is three components:
 
 The 'default' everyone assumes is x86_64 for architecture, and some sort of
 recent intel processor for make. So if someone says 'I want 4 CPUs', we can
-currently assume they just mean they want 4 x86_64 Intel CPUs. x86_64 intel
+currently assume they mean they want 4 x86_64 Intel CPUs. x86_64 intel
 CPUs are also often the most expensive - AMD CPUs are cheaper, ARM CPUs are
 cheaper still. So it's a possible place to make cost differences - *but*,
 some software may not work correctly on different CPUs. While ARM support
@@ -51,15 +52,17 @@ of a node costs for our usage pattern.
 
 ### Memory
 
-Unlike CPU, memory is simpler. A GB is a GB! We pay for how much GB the
-VM we request has, regardless of whether we use it or not.
+Unlike CPU, memory is simpler - capacity is what matters. A GB of memory is a GB
+of memory! We pay for how much memory capacity the VM we request has, regardless
+of whether we use it or not.
 
 ### Boot disk (ephemeral)
 
 Each node needs some disk space that lives only as long as the node is up,
 to store:
 
-1. The basic underlying OS that runs the node itself (Ubuntu, [COS](https://cloud.google.com/container-optimized-os/docs) or similar)
+1. The basic underlying operating system that runs the node itself (Ubuntu,
+   [COS](https://cloud.google.com/container-optimized-os/docs) or similar)
 2. Storage for any docker images that need to be pulled and used on the node
 3. Temporary storage for any changes made to the *running containers* in a
    pod. For example, if a user runs `pip install` or `conda install` in a
@@ -143,9 +146,13 @@ not, cloud providers will charge us for it regardless of whether the user is act
 using it or not. Hence, choosing what cloud products we use here becomes crucial - if
 we pick something that is a poor fit, storage costs can easily dwarf everything else.
 
-The default from z2jh is to use [Dynamic Volume Provisioning](https://kubernetes.io/docs/concepts/storage/dynamic-provisioning/),
-which sets up a *separate, dedicated* block storage device (think of it like a hard drive)
-(([EBS](https://aws.amazon.com/ebs/) on AWS, [Persistent Disk](https://cloud.google.com/persistent-disk?hl=en) on GCP and [Disk Storage](https://azure.microsoft.com/en-us/products/storage/disks) on Azure))
+The default from [z2jh](https://z2jh.jupyter.org/en/stable/) is to use [Dynamic
+Volume
+Provisioning](https://kubernetes.io/docs/concepts/storage/dynamic-provisioning/),
+which sets up a *separate, dedicated* block storage device (think of it like a
+hard drive) (([EBS](https://aws.amazon.com/ebs/) on AWS, [Persistent
+Disk](https://cloud.google.com/persistent-disk?hl=en) on GCP and [Disk
+Storage](https://azure.microsoft.com/en-us/products/storage/disks) on Azure))
 *per user*. This has the following advantages:
 
 1. Since there is one drive per user, a user filling up their disk will only affect them -
@@ -204,7 +211,7 @@ need to be performed, we the users of the cloud are not privy to any of that.
 Instead, we operate in the world of [software defined networking](https://www.cloudflare.com/learning/network-layer/what-is-sdn/) (or SDN).
 The fundamental idea here is that instead of having to phsycially connect
 cables around, you can define network configuration in software somehow,
-and it 'just works'. Without SDN, instead of just creating two VMs in the
+and it 'just works'. Without SDN, instead of simply creating two VMs in the
 same network from a web UI and expecting them to communicate with each other,
 you would have to email support, and someone will have to go physically plug
 in a cable from somewhere to somewhere else. Instead of being annoyed that
@@ -219,8 +226,8 @@ Depending on the source and destination of this transmission, **we may get charg
 so it's important to have a good mental model of how network costs work when
 thinking about cloud costs.
 
-While the overall topic of network costs in the cloud is complex, thankfully
-we can get away with a simplified model when operating just JupyterHubs.
+While the overall topic of network costs in the cloud is complex, if we are only concerned
+with operating JupyterHubs, we can get away with a simplified model.
 
 ### Network Boundaries
 
@@ -286,9 +293,12 @@ A core use of JupyterHub is to put the compute near where the data is, so
 *most likely* we are simply not going to see any significant egress fees
 at all, as we are accessing data in the same region / zone. Object storage
 access is the primary point of contention here for the kind of infrastructure
-we manage, so as long as we are careful about that we should be ok. More
-information about managing this is present in the [object storage section](topic:billing:resources:object-storage)
-of this guide.
+we manage, so as long as we are careful about that we should be ok. If you have data
+in more than one region / zone, set up a hub in each region / zone you have data in -
+move the compute to where the data is, rather than the other way around.
+
+More information about managing this is present in the [object storage
+section](topic:billing:resources:object-storage) of this guide.
 
 (topic:billing:resources:object-storage)=
 ## Object storage
@@ -355,7 +365,7 @@ take that data with you somewhere else. This is egregious enough now that
 noticing](https://www.cnbc.com/2023/10/05/amazon-and-microsofts-cloud-dominance-referred-for-uk-competition-probe.html),
 and that is probably the long term solution.
 
-In the meantime, the answer is fairly simple - just **never** expose your
+In the meantime, the answer is fairly simple - **never** expose your
 object store buckets to the public internet! Treat them as 'internal' storage
 only. JupyterHubs should be put in the same region as the
 object store buckets they need to access, so this access can be free of cost,
@@ -405,7 +415,7 @@ the per GB charge usually doesn't add up to much (even uploading 1 terabyte of d
 ## Access to the external internet
 
 Users on JupyterHubs generally expect to be able to access the external
-internet, rather than just internal services. This requires one of two
+internet, rather than only internal services. This requires one of two
 solutions:
 
 1. Each **node** of our kubernetes cluster gets an **external IP**, so
@@ -471,9 +481,10 @@ layer of security as well.
 One of the many memes about Cloud NAT being expensive, from [QuinnyPig](https://twitter.com/QuinnyPig/status/1357391731902341120). Many seem far more violent. See [this post](https://www.lastweekinaws.com/blog/the-aws-managed-nat-gateway-is-unpleasant-and-not-recommended/) for more information.
 ```
 
-However, it is the **single most expensive** thing one can do on any cloud
-provider, and must be avoided at all costs. Instead of data *ingress*
-being free, it becomes pretty incredibly expensive.
+However, using a cloud NAT for outbound internet access is the **single most
+expensive** thing one can do on any cloud provider, and must be avoided at all
+costs. Instead of data *ingress* being free, it becomes pretty incredibly
+expensive.
 
 | Cloud Provider | Cost | Pricing Link |
 | - | - | - |
