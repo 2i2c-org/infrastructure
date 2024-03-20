@@ -37,7 +37,7 @@ AWS account. AWS has a million ways for you to slice and dice these reports,
 but the most helpful place to start is the "Cost Explorer Saved Reports".
 This provides 'Monthly costs by linked account' and 'Monthly costs by
 service'. Once you open those reports, you can further filter and group
-as you wish. A CSV of reports can also be downloaded here.
+as you wish. A CSV of reports can also be downloaded from this page.
 
 ### Azure
 
