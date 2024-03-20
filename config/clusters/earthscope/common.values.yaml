@@ -82,18 +82,6 @@ basehub:
                     url = f"{url}?{params}"
                 return url
 
-            async def authenticate(self, *args, **kwargs):
-              auth_model = await super().authenticate(*args, **kwargs)
-              username = auth_model["name"]
-              # This is required until https://github.com/jupyterhub/oauthenticator/pull/717
-              # gets merged, can be removed after that.
-              if username.startswith("oauth2|cilogon"):
-                  cilogon_sub = username.rsplit("|", 1)[-1]
-                  cilogon_sub_parts = cilogon_sub.split("/")
-                  username = f"oauth2|cilogon|{cilogon_sub_parts[3]}|{cilogon_sub_parts[5]}"
-              auth_model["name"] = username
-              return auth_model
-
             async def check_allowed(self, username, auth_model):
               if await super().check_allowed(username, auth_model):
                   return True
