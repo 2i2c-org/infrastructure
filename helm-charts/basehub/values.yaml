@@ -277,8 +277,10 @@ jupyterhub:
             mountPath: /home/jovyan/shared
             subPath: _shared
     cmd:
-      # Explicitly define this, as it's no longer set by z2jh
-      # https://github.com/jupyterhub/zero-to-jupyterhub-k8s/pull/2449
+      # Mitigate a vulnerability in jupyter-server-proxy version <4.1.1, see
+      # https://github.com/jupyterhub/jupyter-server-proxy/security/advisories/GHSA-w3vc-fx9p-wp4v
+      # for more details.
+      - /mnt/ghsa-w3vc-fx9p-wp4v/check-patch-run
       - jupyterhub-singleuser
     extraEnv:
       # notebook writes secure files that don't need to survive a
@@ -291,6 +293,136 @@ jupyterhub:
       # Most people do not expect this, so let's match expectation
       SHELL: /bin/bash
     extraFiles:
+      ghsa-w3vc-fx9p-wp4v-check-patch-run:
+        mountPath: /mnt/ghsa-w3vc-fx9p-wp4v/check-patch-run
+        mode: 0755
+        stringData: |
+          #!/usr/bin/env python3
+          """
+          This script is designed to check for and conditionally patch GHSA-w3vc-fx9p-wp4v
+          in user servers started by a JupyterHub. The script will execute any command
+          passed via arguments if provided, allowing it to wrap a user server startup call
+          to `jupyterhub-singleuser` for example.
+
+          Script adjustments:
+          - UPGRADE_IF_VULNERABLE
+          - ERROR_IF_VULNERABLE
+
+          Script patching assumptions:
+          - script is run before the jupyter server starts
+          - pip is available
+          - pip has sufficient filesystem permissions to upgrade jupyter-server-proxy
+
+          Read more at https://github.com/jupyterhub/jupyter-server-proxy/security/advisories/GHSA-w3vc-fx9p-wp4v.
+          """
+
+          import os
+          import subprocess
+          import sys
+
+          # adjust these to meet vulnerability mitigation needs
+          UPGRADE_IF_VULNERABLE = True
+          ERROR_IF_VULNERABLE = False
+
+
+          def check_vuln():
+              """
+              Checks for the vulnerability by looking to see if __version__ is available
+              as it coincides with the patched versions (3.2.3 and 4.1.1).
+              """
+              try:
+                  import jupyter_server_proxy
+
+                  return False if hasattr(jupyter_server_proxy, "__version__") else True
+              except:
+                  return False
+
+
+          def get_version_specifier():
+              """
+              Returns a pip version specifier for use with `--no-deps` meant to do as
+              little as possible besides patching the vulnerability and remaining
+              functional.
+              """
+              old = ["jupyter-server-proxy>=3.2.3,<4"]
+              new = ["jupyter-server-proxy>=4.1.1,<5", "simpervisor>=1,<2"]
+
+              try:
+                  if sys.version_info < (3, 8):
+                      return old
+
+                  from importlib.metadata import version
+
+                  jsp_version = version("jupyter-server-proxy")
+                  if int(jsp_version.split(".")[0]) < 4:
+                      return old
+              except:
+                  pass
+              return new
+
+
+          def patch_vuln():
+              """
+              Attempts to patch the vulnerability by upgrading jupyter-server-proxy using
+              pip.
+              """
+              # attempt upgrade via pip, takes ~4 seconds
+              proc = subprocess.run(
+                  [sys.executable, "-m", "pip", "--version"],
+                  stdout=subprocess.DEVNULL,
+                  stderr=subprocess.DEVNULL,
+              )
+              pip_available = proc.returncode == 0
+              if pip_available:
+                  proc = subprocess.run(
+                      [sys.executable, "-m", "pip", "install", "--no-deps"]
+                      + get_version_specifier()
+                  )
+                  if proc.returncode == 0:
+                      return True
+              return False    
+
+
+          def main():
+              if check_vuln():
+                  warning_or_error = (
+                      "ERROR" if ERROR_IF_VULNERABLE and not UPGRADE_IF_VULNERABLE else "WARNING"
+                  )
+                  print(
+                      f"{warning_or_error}: jupyter-server-proxy __is vulnerable__ to GHSA-w3vc-fx9p-wp4v, see "
+                      "https://github.com/jupyterhub/jupyter-server-proxy/security/advisories/GHSA-w3vc-fx9p-wp4v.",
+                      flush=True,
+                  )
+                  if warning_or_error == "ERROR":
+                      sys.exit(1)
+
+                  if UPGRADE_IF_VULNERABLE:
+                      print(
+                          "INFO: Attempting to upgrade jupyter-server-proxy using pip...",
+                          flush=True,
+                      )
+                      if patch_vuln():
+                          print(
+                              "INFO: Attempt to upgrade jupyter-server-proxy succeeded!",
+                              flush=True,
+                          )
+                      else:
+                          warning_or_error = "ERROR" if ERROR_IF_VULNERABLE else "WARNING"
+                          print(
+                              f"{warning_or_error}: Attempt to upgrade jupyter-server-proxy failed!",
+                              flush=True,
+                          )
+                          if warning_or_error == "ERROR":
+                              sys.exit(1)
+
+              if len(sys.argv) >= 2:
+                  print("INFO: Executing provided command", flush=True)
+                  os.execvp(sys.argv[1], sys.argv[1:])
+              else:
+                  print("INFO: No command to execute provided", flush=True)
+
+
+          main()
       ipython_kernel_config.json:
         mountPath: /usr/local/etc/ipython/ipython_kernel_config.json
         data:
@@ -352,8 +484,8 @@ jupyterhub:
     startTimeout: 600 # 10 mins, node startup + image pulling sometimes takes more than the default 5min
     defaultUrl: /tree
     image:
-      name: jupyter/scipy-notebook
-      tag: "2023-06-19"
+      name: quay.io/jupyter/scipy-notebook
+      tag: "2024-03-18"
     storage:
       type: static
       static:

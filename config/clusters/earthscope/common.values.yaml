@@ -174,12 +174,14 @@ basehub:
                   display_name: Jupyter
                   slug: jupyter-scipy
                   kubespawner_override:
+                    # FIXME: use quay.io/ for tags after 2023-10-20
                     image: jupyter/scipy-notebook:2023-06-27
                 rocker-geospatial:
                   display_name: RStudio
                   slug: rocker-geospatial
                   kubespawner_override:
                     image: rocker/binder:4.3
+                    image_pull_policy: Always
                     # Launch into RStudio after the user logs in
                     default_url: /rstudio
                     # Ensures container working dir is homedir

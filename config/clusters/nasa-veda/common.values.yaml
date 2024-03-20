@@ -48,7 +48,6 @@ basehub:
             - CYGNSS-VEDA:cygnss-iwg
             - veda-analytics-access:maap-biomass-team
             - Earth-Information-System:eis-fire
-            - nasa-veda-workshops:ieee-grss-webinar-mar-2024
           scope:
             - read:org
         Authenticator:
@@ -178,6 +177,7 @@ basehub:
           description: R environment with many geospatial libraries pre-installed
           kubespawner_override:
             image: rocker/binder:4.3
+            image_pull_policy: Always
             # Launch RStudio after the user logs in
             default_url: /rstudio
             # Ensures container working dir is homedir

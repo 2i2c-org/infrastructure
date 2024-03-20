@@ -96,27 +96,28 @@ When using profileLists, it should probably look like this:
 jupyterhub:
   singleuser:
     profileList:
-    - display_name: "Some Profile Name"
-      profile_options:
-        image:
-          display_name: Image
-          choices:
-            geospatial:
-              display_name: Rocker Geospatial
-              default: true
-              slug: geospatial
-              kubespawner_override:
-                image: rocker/binder:4.3
-                # Launch into RStudio after the user logs in
-                default_url: /rstudio
-                # Ensures container working dir is homedir
-                # https://github.com/2i2c-org/infrastructure/issues/2559
-                working_dir: /home/rstudio
-            scipy:
-              display_name: Jupyter SciPy Notebook
-              slug: scipy
-              kubespawner_override:
-                image: jupyter/scipy-notebook:2023-06-26
+      - display_name: "Some Profile Name"
+        profile_options:
+          image:
+            display_name: Image
+            choices:
+              geospatial:
+                display_name: Rocker Geospatial
+                default: true
+                slug: geospatial
+                kubespawner_override:
+                  image: rocker/binder:4.3
+                  image_pull_policy: Always
+                  # Launch into RStudio after the user logs in
+                  default_url: /rstudio
+                  # Ensures container working dir is homedir
+                  # https://github.com/2i2c-org/infrastructure/issues/2559
+                  working_dir: /home/rstudio
+              scipy:
+                display_name: Jupyter SciPy Notebook
+                slug: scipy
+                kubespawner_override:
+                  image: quay.io/jupyter/scipy-notebook:2024-03-18
 ```
 
 ## User installed packages
