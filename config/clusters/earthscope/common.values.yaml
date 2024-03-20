@@ -22,7 +22,7 @@ basehub:
         templateVars:
           org:
             url: https://www.earthscope.org/
-            logo_url: https://drive.google.com/uc?export=view&id=1UUStqv7PBcxiIkzECUFKIdQKKIU8mXeb
+            logo_url: https://github.com/2i2c-org/infrastructure/assets/7579677/589da909-86c2-4440-a42b-e3f1b59f49d5
           designed_by:
             name: "2i2c"
             url: https://2i2c.org
