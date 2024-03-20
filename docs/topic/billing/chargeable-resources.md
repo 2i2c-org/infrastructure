@@ -121,7 +121,7 @@ memory bound, not CPU bound.
 
 ### Autoscaling makes nodes temporary
 
-Nodes in our workloads are are *temporary* - they come and go with user
+Nodes in our workloads are *temporary* - they come and go with user
 needs, and get replaced when version upgrades happen. They have
 names like `gke-jup-test-default-pool-47300cca-wk01` - notice
 the random string of characters towards the end. The [cluster autoscaler](https://github.com/kubernetes/autoscaler/)
@@ -255,7 +255,7 @@ boundaries are crossed and usually this costs no money. As a general rule,
 when each boundary gets crossed, the cost of the data transmission
 goes up. Within a cloud provider, transmission between regions is often
 priced based on the distance between them - australia to
-the US is more expensive than canada to the US. Data transmission from within a cloud provider to outside is the most expensive, and is also often
+the US is more expensive than Canada to the US. Data transmission from within a cloud provider to outside is the most expensive, and is also often
 metered by geographical location.
 
 This also applies to data present in any *cloud services* as well, although
