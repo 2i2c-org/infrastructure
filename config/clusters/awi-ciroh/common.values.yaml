@@ -45,6 +45,7 @@ basehub:
             - jameshalgren
             - arpita0911patel
             - karnesh
+    singleuser:
       profileList:
         # The mem-guarantees are here so k8s doesn't schedule other pods
         # on these nodes. They need to be just under total allocatable
