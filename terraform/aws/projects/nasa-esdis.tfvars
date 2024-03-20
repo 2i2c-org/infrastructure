@@ -67,7 +67,7 @@ hub_cloud_permissions = {
                     "arn:aws::s3:::grss-veda-data-store",
                     "arn:aws::s3:::grss-veda-data-store/*",
                     "arn:aws:s3:::sentinel-cogs",
-                    "arn:aws:s3:::sentinel-cogs/*",
+                    "arn:aws:s3:::sentinel-cogs/*"
                 ]
             },
             {
