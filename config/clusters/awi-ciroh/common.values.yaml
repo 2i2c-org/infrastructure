@@ -45,15 +45,6 @@ basehub:
             - jameshalgren
             - arpita0911patel
             - karnesh
-    singleuser:
-      image:
-        # Image build repo: https://github.com/2i2c-org/awi-ciroh-image
-        #
-        # NOTE: The configurator is used in this cluster, so this is stale
-        #       configuration.
-        #
-        name: "quay.io/2i2c/awi-ciroh-image"
-        tag: "584293e50d4c"
       profileList:
         # The mem-guarantees are here so k8s doesn't schedule other pods
         # on these nodes. They need to be just under total allocatable
@@ -78,6 +69,21 @@ basehub:
         - display_name: "Small"
           description: 5GB RAM, 2 CPUs
           default: true
+          profile_options: &profile_options
+            image:
+              display_name: Image
+              choices:
+                old:
+                  display_name: Original Pangeo Notebook base image 2023.01.13
+                  slug: "tensorflow"
+                  kubespawner_override:
+                    image: "quay.io/2i2c/awi-ciroh-image:f7222fce8b16 "
+                new:
+                  display_name: New Pangeo Notebook base image 2023.09.11
+                  default: true
+                  slug: "pytorch"
+                  kubespawner_override:
+                    image: "quay.io/2i2c/awi-ciroh-image:88ea9a74a66e"
           kubespawner_override:
             mem_limit: 7G
             mem_guarantee: 5G
@@ -87,6 +93,7 @@ basehub:
               node.kubernetes.io/instance-type: n2-highmem-16
         - display_name: Medium
           description: 11GB RAM, 4 CPUs
+          profile_options: *profile_options
           kubespawner_override:
             mem_limit: 15G
             mem_guarantee: 11G
@@ -96,6 +103,7 @@ basehub:
               node.kubernetes.io/instance-type: n2-highmem-16
         - display_name: Large
           description: 24GB RAM, 8 CPUs
+          profile_options: *profile_options
           kubespawner_override:
             mem_limit: 30G
             mem_guarantee: 24G
@@ -105,6 +113,7 @@ basehub:
               node.kubernetes.io/instance-type: n2-highmem-16
         - display_name: Huge
           description: 52GB RAM, 16 CPUs
+          profile_options: *profile_options
           kubespawner_override:
             mem_limit: 60G
             mem_guarantee: 52G
