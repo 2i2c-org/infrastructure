@@ -144,7 +144,7 @@ basehub:
                   display_name: Spyglass
                   slug: spyglass
                   kubespawner_override:
-                    image: "quay.io/lorenlab/hhmi-spyglass-image:cb5d6847727d"
+                    image: "quay.io/lorenlab/hhmi-spyglass-image:62b90867ea22"
         - display_name: "Community Images"
           description: "Start a container with a community maintained image"
           slug: community
