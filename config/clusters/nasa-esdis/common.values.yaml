@@ -47,6 +47,10 @@ jupyterhub:
           - freitagb # Brian Freitag
           - slesaad # Slesa Adhikari
   singleuser:
+    # We want to access IAM roles here, even though this is not set up to use dask
+    cloudMetadata:
+      blockWithIptables: false
+    serviceAccountName: user-sa
     defaultUrl: /lab
     profileList:
       - display_name: "Modified Pangeo Notebook"
