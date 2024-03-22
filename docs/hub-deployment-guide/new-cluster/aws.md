@@ -72,6 +72,11 @@ This will generate the following files:
 4. `terraform/aws/projects/$CLUSTER_NAME.tfvars`, a terraform variables file that will setup
    most of the non EKS infrastructure.
 
+### Add GPU nodegroup if needed
+
+If this cluster is going to have GPUs, you should edit the generated jsonnet file
+to [include a GPU nodegroups](howto:features:gpu:aws:nodegroup).
+
 ### Create and render an eksctl config file
 
 We use an eksctl [config file](https://eksctl.io/usage/schema/) in YAML to specify
