@@ -51,13 +51,9 @@ increase_[^2] for any substantial use of their services. Quotas act as an upper
 bound of for example the number of CPUs from a certain machine type and the
 amount of public IPs that the account can acquire.
 
-When an AWS account is created under our AWS Organization, a Service Quota
-increase request is automatically submitted thanks to what AWS refer to
-"Organization templates", "Quota request template", and "Template
-association"[^3].
-
-Following account creation, make sure to check our emails to see what is being
-requested and if its approved.
+When an AWS account is created under our AWS Organization, the default quotas
+that AWS applies to our organization are already set up for for the new account.
+By default, we don't need to request quota increases here.
 
 We typically need to increase three kinds of quotas described below. The values
 of these are all 'Total CPUs' and hence larger nodes consume more quota.
@@ -67,7 +63,7 @@ of these are all 'Total CPUs' and hence larger nodes consume more quota.
   These instances are what we use for everything besides the exceptions noted
   below.
 
-  All our hubs will require an increase in this quota.
+  By default, AWS grants us 640 quota here.
 
 - **Spot instance quota** (`All Standard (A, C, D, H, I, M, R, T, Z) Spot Instance Requests`)
 
@@ -75,7 +71,7 @@ of these are all 'Total CPUs' and hence larger nodes consume more quota.
   standard instances are. We configure these to be used by dask worker pods as
   created for dask-gateway provided clusters.
 
-  Our `daskhub` hubs will require an increase in this quota.
+  By default, AWS grants us 640 quota here.
 
 - **GPU instance or high memory instance quota**
 
@@ -84,7 +80,8 @@ of these are all 'Total CPUs' and hence larger nodes consume more quota.
   High Memory instances`) is requested specifically to be able to use GPU
   powered machines or machines with high amounts of RAM memory.
 
-  Our custom tailored hubs will require an increase in this quota.
+  By default, AWS grants us 64 quota here for GPU instances and 448 for
+  high memory instances.
 
 ### Manually requesting a quota increase
 
@@ -96,4 +93,3 @@ of these are all 'Total CPUs' and hence larger nodes consume more quota.
 
 [^1]: AWS documentation on creating new accounts in an Organization: <https://docs.aws.amazon.com/organizations/latest/userguide/orgs_manage_accounts_create.html>
 [^2]: AWS documentation on service quotas: <https://docs.aws.amazon.com/general/latest/gr/aws_service_limits.html>
-[^3]: AWS documentation on request templates: <https://docs.aws.amazon.com/servicequotas/latest/userguide/organization-templates.html>
