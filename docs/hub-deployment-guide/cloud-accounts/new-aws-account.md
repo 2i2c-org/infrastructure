@@ -80,7 +80,7 @@ of these are all 'Total CPUs' and hence larger nodes consume more quota.
   High Memory instances`) is requested specifically to be able to use GPU
   powered machines or machines with high amounts of RAM memory.
 
-  By default, AWS grants us 640 quota here for GPU instances and 448 for
+  By default, AWS grants us 64 quota here for GPU instances and 448 for
   high memory instances.
 
 ### Manually requesting a quota increase
