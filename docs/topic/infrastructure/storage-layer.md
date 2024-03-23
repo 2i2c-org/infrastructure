@@ -87,6 +87,10 @@ jupyterhub:
           mountPath: /home/jovyan/allusers
           # Uncomment the line below to make the directory readonly for admins
           # readOnly: true
+        - name: home
+          mountPath: /home/rstudio/allusers
+          # Uncomment the line below to make the directory readonly for admins
+          # readOnly: true
         # mounts below are copied from basehub's values that we override by
         # specifying extraVolumeMounts (lists get overridden when helm values
         # are combined)
