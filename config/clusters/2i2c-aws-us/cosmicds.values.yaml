@@ -1,5 +1,6 @@
 nfs:
-  # No persistent storage for cosmicds
+  # nfs functionality explicitly disabled in case a common.values.yaml
+  # file is used to enable it for all hubs in the cluster
   enabled: false
   pv:
     enabled: false

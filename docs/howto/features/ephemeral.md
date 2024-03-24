@@ -80,11 +80,11 @@ ephemeral hub's users.
    pointing to, with the following config:
 
    ```yaml
+   # nfs functionality enabled for this ephemeral hub to mount
+   # a shared folder from another hub in the cluster
    nfs:
      enabled: true
      dirsizeReporter:
-       # We don't need to report directory sizes here, as it's already being reported on by
-       # the 'source' hub
        enabled: false
      pv:
        enabled: true
