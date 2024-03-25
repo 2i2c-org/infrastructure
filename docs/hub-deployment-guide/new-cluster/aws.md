@@ -105,6 +105,10 @@ for all the possible options. You'd want to make sure to change at least the fol
 Once you have a `.jsonnet` file, you can render it into a config file that eksctl
 can read.
 
+```{tip}
+Make sure to run this command inside the `eksctl` directory.
+```
+
 ```bash
 jsonnet $CLUSTER_NAME.jsonnet > $CLUSTER_NAME.eksctl.yaml
 ```
@@ -119,12 +123,12 @@ against the `*.jsonnet` file and regenerate the YAML file when needed by a
 
 Now you're ready to create the cluster!
 
-```bash
-eksctl create cluster --config-file=$CLUSTER_NAME.eksctl.yaml
+```{tip}
+Make sure to run this command **inside** the `eksctl` directory, otherwise it cannot discover the `ssh-keys` subfolder.
 ```
 
-```{tip}
-Make sure the run this command **inside** the `eksctl` directory, otherwise it cannot discover the `ssh-keys` subfolder.
+```bash
+eksctl create cluster --config-file=$CLUSTER_NAME.eksctl.yaml
 ```
 
 This might take a few minutes.
