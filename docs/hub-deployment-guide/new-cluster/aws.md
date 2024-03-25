@@ -105,6 +105,10 @@ for all the possible options. You'd want to make sure to change at least the fol
 Once you have a `.jsonnet` file, you can render it into a config file that eksctl
 can read.
 
+```{tip}
+Make sure to run this command inside the `eksctl` directory.
+```
+
 ```bash
 jsonnet $CLUSTER_NAME.jsonnet > $CLUSTER_NAME.eksctl.yaml
 ```
@@ -119,12 +123,12 @@ against the `*.jsonnet` file and regenerate the YAML file when needed by a
 
 Now you're ready to create the cluster!
 
-```bash
-eksctl create cluster --config-file=$CLUSTER_NAME.eksctl.yaml
+```{tip}
+Make sure to run this command **inside** the `eksctl` directory, otherwise it cannot discover the `ssh-keys` subfolder.
 ```
 
-```{tip}
-Make sure the run this command **inside** the `eksctl` directory, otherwise it cannot discover the `ssh-keys` subfolder.
+```bash
+eksctl create cluster --config-file=$CLUSTER_NAME.eksctl.yaml
 ```
 
 This might take a few minutes.
@@ -333,19 +337,3 @@ automatically deployed by our CI/CD system. Add an entry for the new cluster
 here.
 
 [`upgrade-support-and-staging`]: https://github.com/2i2c-org/infrastructure/blob/18f5a4f8f39ed98c2f5c99091ae9f19a1075c988/.github/workflows/deploy-hubs.yaml#L128-L166
-
-## A note on the support chart for AWS clusters
-
-````{warning}
-When you deploy the support chart on an AWS cluster, you **must** enable the
-`cluster-autoscaler` sub-chart, otherwise the node groups will not automatically
-scale. Include the following in your `support.values.yaml` file:
-
-```yaml
-cluster-autoscaler:
-  enabled: true
-  autoDiscovery:
-    clusterName: <cluster-name>
-  awsRegion: <aws-region>
-```
-````

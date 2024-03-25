@@ -6,6 +6,12 @@ These tools are [`ingress-nginx`](https://kubernetes.github.io/ingress-nginx/), 
 
 This section will walk you through how to deploy the support chart on a cluster.
 
+```{attention}
+If you ran `deployer generate dedicated-cluster ...` during the [new cluster setup](new-cluster),
+then a lot of these files will have already been created for you and you do not
+need to recreate them, only update them if required.
+```
+
 ## Create a `support.values.yaml` file in your chosen cluster folder
 
 In the `infrastructure` repo, the full filepath should be: `config/clusters/<cluster_name>/support.values.yaml`.
