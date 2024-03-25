@@ -1,5 +1,5 @@
 name: bican
-provider: aws  # https://2i2c.awsapps.com/start#/
+provider: aws # https://2i2c.awsapps.com/start#/
 aws:
   key: enc-deployer-credentials.secret.json
   clusterType: eks
