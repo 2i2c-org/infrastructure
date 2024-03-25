@@ -337,19 +337,3 @@ automatically deployed by our CI/CD system. Add an entry for the new cluster
 here.
 
 [`upgrade-support-and-staging`]: https://github.com/2i2c-org/infrastructure/blob/18f5a4f8f39ed98c2f5c99091ae9f19a1075c988/.github/workflows/deploy-hubs.yaml#L128-L166
-
-## A note on the support chart for AWS clusters
-
-````{warning}
-When you deploy the support chart on an AWS cluster, you **must** enable the
-`cluster-autoscaler` sub-chart, otherwise the node groups will not automatically
-scale. Include the following in your `support.values.yaml` file:
-
-```yaml
-cluster-autoscaler:
-  enabled: true
-  autoDiscovery:
-    clusterName: <cluster-name>
-  awsRegion: <aws-region>
-```
-````
