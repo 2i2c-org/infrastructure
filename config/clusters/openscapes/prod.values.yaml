@@ -11,6 +11,7 @@ basehub:
     singleuser:
       extraEnv:
         SCRATCH_BUCKET: s3://openscapeshub-scratch/$(JUPYTERHUB_USER)
+        PERSISTENT_BUCKET: s3://openscapeshub-persistent/$(JUPYTERHUB_USER)
     hub:
       config:
         GitHubOAuthenticator:
