@@ -26,3 +26,9 @@ grafana:
       - secretName: grafana-tls
         hosts:
           - grafana.bican.2i2c.cloud
+
+cluster-autoscaler:
+  enabled: true
+  autoDiscovery:
+    clusterName: bican
+  awsRegion: us-east-2
