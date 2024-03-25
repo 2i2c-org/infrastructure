@@ -20,11 +20,6 @@ local clusterRegion = "us-west-2";
 local masterAzs = ["us-west-2a", "us-west-2b", "us-west-2c"];
 local nodeAz = "us-west-2b";
 
-// List of namespaces where we have hubs deployed
-// Each will get a ServiceAccount that will get credentials to talk
-// to AWS services, via https://docs.aws.amazon.com/eks/latest/userguide/iam-roles-for-service-accounts.html
-local namespaces = ['staging', 'prod'];
-
 // Node definitions for notebook nodes. Config here is merged
 // with our notebook node definition.
 // A `node.kubernetes.io/instance-type label is added, so pods
@@ -60,16 +55,6 @@ local daskNodes = [
     availabilityZones: masterAzs,
     iam: {
         withOIDC: true,
-
-        serviceAccounts: [{
-            metadata: {
-                name: "cloud-user-sa",
-                namespace: namespace
-            },
-            attachPolicyARNs:[
-                "arn:aws:iam::aws:policy/AmazonS3FullAccess"
-            ],
-        } for namespace in namespaces],
     },
     // If you add an addon to this config, run the create addon command.
     //
