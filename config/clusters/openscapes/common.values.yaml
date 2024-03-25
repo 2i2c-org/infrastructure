@@ -35,7 +35,6 @@ basehub:
             name: NASA Openscapes
             url: https://nasa-openscapes.github.io/
     singleuser:
-      serviceAccountName: cloud-user-sa
       defaultUrl: /lab
       extraEnv:
         GH_SCOPED_CREDS_CLIENT_ID: "Iv1.6981e043b45f042f"
