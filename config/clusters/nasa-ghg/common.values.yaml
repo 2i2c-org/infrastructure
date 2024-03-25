@@ -66,7 +66,7 @@ basehub:
           description: Pangeo based notebook with a Python environment
           default: true
           kubespawner_override:
-            image: public.ecr.aws/nasa-veda/nasa-veda-singleuser:5068290376e8c3151d97a36ae6485bb7ff79650b94aecc93ffb2ea1b42d76460
+            image: public.ecr.aws/nasa-veda/nasa-veda-singleuser:2024-03-20
           profile_options: &profile_options
             resource_allocation: &profile_options_resource_allocation
               display_name: Resource Allocation
