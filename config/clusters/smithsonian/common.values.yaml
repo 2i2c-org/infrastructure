@@ -62,7 +62,7 @@ basehub:
     singleuser:
       profileList:
         - display_name: "Pangeo Notebook"
-          slug: modified-pangeo
+          slug: pangeo
           description: Pangeo based notebook with a Python environment
           default: true
           kubespawner_override:
