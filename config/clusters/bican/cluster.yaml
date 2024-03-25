@@ -5,4 +5,8 @@ aws:
   clusterType: eks
   clusterName: bican
   region: us-east-2
+support:
+  helm_chart_values_files:
+    - support.values.yaml
+    - enc-support.secret.values.yaml
 hubs: []
