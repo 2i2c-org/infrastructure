@@ -100,6 +100,7 @@ series nodes.
 7. Ask for the increase, and wait. This can take *several working days*,
    so do it as early as possible!
 
+(howto:features:gpu:aws:nodegroup)=
 #### Setup GPU nodegroup on eksctl
 
 We use `eksctl` with `jsonnet` to provision our kubernetes clusters on
