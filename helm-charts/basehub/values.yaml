@@ -244,6 +244,9 @@ jupyterhub:
         limits:
           memory: 1Gi
   singleuser:
+    # Default to mounting the user service account we create, so we can give users
+    # appropriate cloud permissions when needed.
+    serviceAccountName: user-sa
     # Need to explicitly fix ownership here, as otherwise these directories will be owned
     # by root on most NFS filesystems - neither EFS nor Google Filestore support anonuid
     #

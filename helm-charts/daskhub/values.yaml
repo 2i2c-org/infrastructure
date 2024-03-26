@@ -15,7 +15,6 @@ basehub:
         # storage buckets.
         #
         blockWithIptables: false
-      serviceAccountName: user-sa
       extraEnv:
         # About DASK_ prefixed variables we set:
         #
