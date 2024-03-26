@@ -92,7 +92,7 @@ to and read from it.
 
 1. Login to the hub, and open a Terminal in JupyterLab
 
-2. Look for the envirionment variables we just set (`SCRATCH_BUCKET` and/or `PERSISTENT_BUCKET`), make
+2. Look for the environment variables we just set (`SCRATCH_BUCKET` and/or `PERSISTENT_BUCKET`), make
    sure they are showing up correctly:
 
    ```bash
