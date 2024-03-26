@@ -139,7 +139,7 @@ basehub:
                   kubespawner_override:
                     # Image repo: https://github.com/CryoInTheCloud/hub-image
                     # Requested in https://2i2c.freshdesk.com/a/tickets/1409
-                    image: "quay.io/cryointhecloud/cryo-hub-image:8f0fe899975c"
+                    image: "quay.io/cryointhecloud/cryo-hub-image:ef77b28abd1f"
                 rocker:
                   display_name: R
                   slug: "rocker"
