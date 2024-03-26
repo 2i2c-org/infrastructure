@@ -28,7 +28,7 @@ on:
       - "config/clusters/**"
       # Exclude changes the templates directory from
       # triggering this workflow
-      - "!config/clusters/templates"
+      - "!config/clusters/templates/**"
       - "helm-charts/**"
       - "deployer/**"
       - "requirements.txt"
@@ -102,6 +102,11 @@ jobs:
               - added|modified: .github/workflows/validate-clusters.yaml
             cluster_specific:
               - added|modified: config/clusters/**
+              # We want to ignore config/clusters/templates/**, but it seems its
+              # not be possible for us to do so with a single call to this
+              # action. Let's try to ignore jobs failing triggered by stuff in
+              # templates/.
+              # - added|modified: !config/clusters/templates/**
 
       # Only run this step if there *ARE* changes under the common filter, *OR*
       # we have manually triggered the workflow
