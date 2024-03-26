@@ -9,6 +9,14 @@ basehub:
         - hosts: [ciroh.awi.2i2c.cloud]
           secretName: https-auto-tls
     singleuser:
+      image:
+        # Image build repo: https://github.com/2i2c-org/awi-ciroh-image
+        #
+        # NOTE: The configurator is used in this cluster, so this is stale
+        #       configuration.
+        #
+        name: "quay.io/2i2c/awi-ciroh-image"
+        tag: "584293e50d4c"
       extraEnv:
         SCRATCH_BUCKET: gs://awi-ciroh-scratch/$(JUPYTERHUB_USER)
         PANGEO_SCRATCH: gs://awi-ciroh-scratch/$(JUPYTERHUB_USER)
