@@ -20,4 +20,5 @@ jupyterhub:
         scope:
           - read:org
       Authenticator:
-        admin_users: [] # pending
+        admin_users:
+          - LandiMi2
