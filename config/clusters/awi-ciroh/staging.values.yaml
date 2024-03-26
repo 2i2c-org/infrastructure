@@ -38,16 +38,16 @@ basehub:
               display_name: Image
               choices:
                 old:
-                  display_name: Original Pangeo Notebook base image 2023.01.13
-                  slug: "tensorflow"
+                  display_name: Original Pangeo Notebook base image 2022.07.13
+                  slug: "old"
                   kubespawner_override:
-                    image: "quay.io/2i2c/awi-ciroh-image:f7222fce8b16 "
+                    image: "quay.io/2i2c/awi-ciroh-image:88ea9a74a66e"
                 new:
                   display_name: New Pangeo Notebook base image 2023.09.11
                   default: true
-                  slug: "pytorch"
+                  slug: "new"
                   kubespawner_override:
-                    image: "quay.io/2i2c/awi-ciroh-image:88ea9a74a66e"
+                    image: "quay.io/2i2c/awi-ciroh-image:f7222fce8b16"
           kubespawner_override:
             mem_limit: 7G
             mem_guarantee: 5G
