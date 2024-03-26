@@ -1,3 +1,5 @@
+# nfs functionality enabled for this ephemeral hub to mount
+# a shared folder from another hub in the cluster
 nfs:
   enabled: true
   dirsizeReporter:

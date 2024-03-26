@@ -64,14 +64,14 @@ staticWebsite:
       privateKey: ""
 
 nfs:
-  enabled: true
+  enabled: false
   dirsizeReporter:
     enabled: true
   shareCreator:
     enabled: true
     tolerations: []
   pv:
-    enabled: true
+    enabled: false
     mountOptions:
       - soft
       - noatime

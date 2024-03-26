@@ -1,9 +1,8 @@
 basehub:
   nfs:
     enabled: true
-    dirsizeReporter:
-      enabled: true
     pv:
+      enabled: true
       mountOptions:
         - soft
         - noatime
