@@ -22,16 +22,17 @@ Currently this is the recommended way of retrieving the costs from GCP.
 4. Select the time range you are interested in. Note that this has to be at least two months right now, or the next step does not work
 5. Under 'Group by', select 'Month -> Project'.
 6. Under the chart, click the 'Download CSV' button. This downloads a CSV that you can use to later populate the columns in the costs spreadsheet
-   ```{figure} ../../images/gcp-billing-ui.png
+   ```{figure} ../images/gcp-billing-ui.png
    GCP billing UI
    ```
-7. Copy GCP costs
+7. Copy GCP costs.
+
    The GCP CSV has rows for each month and project. Carefully copy the $ values under
    'subtotal' (last column) into [our billing spreadsheet]((https://docs.google.com/spreadsheets/d/1AWVCg0D_-ATub_cVsIy5XZCwqnC6uIcgwDGYK9Q7yno/edit#gid=1349808947)). Match the 'project name' column in the GCP CSV with the 'cloud project' row in our billing spreadsheet.
 
    When done, re-check the numbers once again to make sure they are copied correctly.
 
-### Get costs automatically via the deployer (under development)
+### Get costs automatically via the deployer (not ready to be used yet!)
 
 ```{warning}
 This deployer command requires more development work and is not yet recommended to be used.
@@ -61,10 +62,11 @@ the period by passing in the `start_month` and `end_month` parameters.
 If you just want to take a look at the costs in the terminal, you can also run
 `deployer generate cost-table --output 'terminal'` instead.
 
-Caveat:
-- If the script is run before the end of the month, the total costs would not
-  be accurate. Run the script once the month has finished to get an accurate
-  amount of the previous month's costs.
+```{warning}
+If the script is run before the end of the month, the total costs would not
+be accurate. Run the script once the month has finished to get an accurate
+amount of the previous month's costs.
+```
 
 ## Caveats
 
@@ -72,7 +74,7 @@ Caveat:
    is only available and accurate after that has been enabled. For billing data
    before this was enabled, you need to manually go look in the cloud console.
 
-   ## Other Cloud Cost Reporting Exporting
+## Other Cloud Cost Reporting Exporting
 
-   - [AWS Cost and Usage Report](https://docs.aws.amazon.com/cur/latest/userguide/cur-create.html)
-   - [Azure Cost Export](https://learn.microsoft.com/en-us/azure/cost-management-billing/costs/tutorial-export-acm-data?tabs=azure-portal)
+- [AWS Cost and Usage Report](https://docs.aws.amazon.com/cur/latest/userguide/cur-create.html)
+- [Azure Cost Export](https://learn.microsoft.com/en-us/azure/cost-management-billing/costs/tutorial-export-acm-data?tabs=azure-portal)
