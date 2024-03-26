@@ -44,7 +44,8 @@ basehub:
           admin_users:
             - jameshalgren
             - arpita0911patel
-            - karnesh
+            - sepehrkrz
+            - benlee0423
 dask-gateway:
   gateway:
     backend:
