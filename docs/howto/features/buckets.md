@@ -92,7 +92,22 @@ to and read from it.
 
 1. Login to the hub, and open a Terminal in JupyterLab
 
-2. Check if the AWS CLI is installed by running the `aws` command - many base images
+2. Look for the envirionment variables we just set (`SCRATCH_BUCKET` and/or `PERSISTENT_BUCKET`), make
+   sure they are showing up correctly:
+
+   ```bash
+   env | grep _BUCKET
+   ```
+
+   They should end with the name of your JupyterHub user. For example, here is the output
+   on the openscapes hub, when my JupyterHub username is `yuvipanda`:
+
+   ```
+   PERSISTENT_BUCKET=s3://openscapeshub-persistent/yuvipanda
+   SCRATCH_BUCKET=s3://openscapeshub-scratch/yuvipanda
+   ```
+
+3. Check if the AWS CLI is installed by running the `aws` command - many base images
    already include this package. If not, you can do a local installation with:
 
    ```bash
@@ -105,13 +120,13 @@ to and read from it.
    This could have been as simple as a `pip install`, but [AWS does not support it](https://github.com/aws/aws-cli/issues/4947)
    ```
 
-3. Create a temporary file, which we will then copy over to our scratch bucket.
+4. Create a temporary file, which we will then copy over to our scratch bucket.
 
    ```bash
    echo 'hi' > temp-test-file
    ```
 
-4. Copy the file over to S3, under `$SCRATCH_BUCKET` or `$PERSISTENT_BUCKET` (based on
+5. Copy the file over to S3, under `$SCRATCH_BUCKET` or `$PERSISTENT_BUCKET` (based on
    which one we are going to be testing).
 
    ```bash
@@ -120,7 +135,7 @@ to and read from it.
 
    This should succeed with a message like `upload: ./temp-test-file to s3://openscapeshub-scratch/yuvipanda/temp-test-file`
 
-5. Let's list our bucket to make sure the file is there.
+6. Let's list our bucket to make sure the file is there.
 
    ```bash
    $ aws s3 ls $SCRATCH_BUCKET/
@@ -135,7 +150,7 @@ to and read from it.
    If testing `$PERSISTENT_BUCKET`, use that environment variable instead
    ```
 
-6. Copy the file back from s3, to make sure we can read.
+7. Copy the file back from s3, to make sure we can read.
 
    ```bash
    $ aws s3 cp  $SCRATCH_BUCKET/temp-test-file back-here
@@ -146,7 +161,7 @@ to and read from it.
 
    We have verified this all works!
 
-7. Clean up our  files so we don't cost the community money in the long run.
+8. Clean up our  files so we don't cost the community money in the long run.
 
    ```bash
    aws s3 rm $SCRATCH_BUCKET/temp-test-file
