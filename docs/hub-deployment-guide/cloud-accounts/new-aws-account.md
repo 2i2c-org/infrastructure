@@ -32,9 +32,12 @@ More information on these terms can be found in [](cloud-access:aws).
 
 6. Click "Create AWS account"
 
-7. Once the new account is created, visit the [AWS accounts section of the IAM Identity Center](https://us-east-1.console.aws.amazon.com/iamv2/home?region=us-east-1#/organization/accounts)
+7. AWS will send an email to freshdesk about this new account, opening a new ticket. Close
+   the ticket in freshdesk to keep our support queue clean.
 
-8. To add the new account to our SSO:
+8. Once the new account is created, visit the [AWS accounts section of the IAM Identity Center](https://us-east-1.console.aws.amazon.com/iamv2/home?region=us-east-1#/organization/accounts)
+
+9. To add the new account to our SSO:
    * Select the checkbox next to the new account and then click the "Assign users or groups" button
    * On the "Groups" tab, select the "2i2c-engineers" group. Click "Next".
    * On the "Permission Set" page, select "AdministratorAccess". Click "Next".
