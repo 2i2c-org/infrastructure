@@ -1,0 +1,24 @@
+jupyterhub:
+  ingress:
+    hosts: [aibst.af.catalystproject.2i2c.cloud]
+    tls:
+      - hosts: [aibst.af.catalystproject.2i2c.cloud]
+        secretName: https-auto-tls
+  custom:
+    homepage:
+      templateVars:
+        org:
+          name: Catalyst Project, Africa - African Institute of Biomedical Sciences and Technology
+  hub:
+    config:
+      JupyterHub:
+        authenticator_class: github
+      GitHubOAuthenticator:
+        oauth_callback_url: https://aibst.af.catalystproject.2i2c.cloud/hub/oauth_callback
+        allowed_organizations:
+          - CatalystProject-Hubs:aibst
+        scope:
+          - read:org
+      Authenticator:
+        admin_users:
+          - zchikwambi
