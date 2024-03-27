@@ -84,7 +84,7 @@ jupyterhub:
         url: http://dex:9000
 ```
 
-This clones the [repo]( https://github.com/inferentialthinking/inferentialthinking.github.io),
+This clones the [repo](https://github.com/inferentialthinking/inferentialthinking.github.io),
 checks out the `master` branch and keeps it up to date by doing a
 `git pull` every 5 minutes. It is made available under `/textbook`,
 and requires users be logged-in to the hub before they can access it.

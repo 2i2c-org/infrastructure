@@ -196,7 +196,7 @@ jupyterhub:
    to use.
 
    ```{warning}
-   **Do not** use the `latest` or `master` tags - find
+   **Do not** use the `latest`, `main`, or `master` tags - find
    a specific tag listed for the image you want, and use that.
    ```
 

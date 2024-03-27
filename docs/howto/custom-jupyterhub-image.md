@@ -152,7 +152,7 @@ hub:
 ```
 
 ```{important}
-The image tag of the of the [jupyterhub/k8s-hub](https://hub.docker.com/r/jupyterhub/k8s-hub) [in the Dockerfile](https://github.com/2i2c-org/infrastructure/blob/HEAD/helm-charts/images/hub/Dockerfile#L9) must match the dependent JupyterHub Helm chart's version as declared in [basehub/Chart.yaml](https://github.com/2i2c-org/infrastructure/blob/master/helm-charts/basehub/Chart.yaml#L14).
+The image tag of the of the [jupyterhub/k8s-hub](https://hub.docker.com/r/jupyterhub/k8s-hub) [in the Dockerfile](https://github.com/2i2c-org/infrastructure/blob/HEAD/helm-charts/images/hub/Dockerfile#L9) must match the dependent JupyterHub Helm chart's version as declared in [basehub/Chart.yaml](https://github.com/2i2c-org/infrastructure/blob/main/helm-charts/basehub/Chart.yaml#L14).
 ```
 
 [^1]: <https://cloudolife.com/2022/03/05/Infrastructure-as-Code-IaC/Container/Docker/Docker-buildx-support-multiple-architectures-images/>

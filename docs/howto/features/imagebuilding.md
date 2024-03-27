@@ -13,7 +13,7 @@ We call this an `imagebuilding` style hub and the primary features offered would
 
 ## Use the `dynamic-image-building-experiment` hub image
 
-We will need to use `jupyterhub-fancy-profiles`, but this Python package isn't installed in the default image deployed with our hubs, so we should use the [`dynamic-image-building-experiment` hub image](https://github.com/2i2c-org/infrastructure/blob/master/helm-charts/images/hub/dynamic-image-building-requirements.txt) instead.
+We will need to use `jupyterhub-fancy-profiles`, but this Python package isn't installed in the default image deployed with our hubs, so we should use the [`dynamic-image-building-experiment` hub image](https://github.com/2i2c-org/infrastructure/blob/main/helm-charts/images/hub/dynamic-image-building-requirements.txt) instead.
 
 ```yaml
 jupyterhub:
@@ -73,7 +73,7 @@ jupyterhub:
 
 ### For GCP (via terraform)
 
-If the hub will be deployed on a GCP cluster, we can setup [gcr.io](https://gcr.io) via the [terraform config](https://github.com/2i2c-org/infrastructure/blob/master/terraform/gcp/registry.tf).
+If the hub will be deployed on a GCP cluster, we can setup [gcr.io](https://gcr.io) via the [terraform config](https://github.com/2i2c-org/infrastructure/blob/main/terraform/gcp/registry.tf).
 
 1. Enable the repository creation by adding the following in the cluster's terraform config:
 

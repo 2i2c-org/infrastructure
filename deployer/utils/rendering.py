@@ -8,7 +8,7 @@ def print_colour(msg: str, colour="green"):
     """Print messages in colour to be distinguishable in CI logs
 
     See the mybinder.org deploy.py script for more details:
-    https://github.com/jupyterhub/mybinder.org-deploy/blob/master/deploy.py
+    https://github.com/jupyterhub/mybinder.org-deploy/blob/main/deploy.py
 
     Args:
         msg (str): The message to print in colour
