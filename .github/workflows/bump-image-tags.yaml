@@ -60,5 +60,4 @@ jobs:
           images_info: ${{ matrix.images_info }}
           github_token: ${{ steps.generate_token.outputs.token }}
           # team_reviewers: ${{ env.team_reviewers }}
-          base_branch: "master"
           dry_run: ${{ github.event.inputs.dry_run || false }}

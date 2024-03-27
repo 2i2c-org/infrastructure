@@ -11,7 +11,7 @@ name: Validate clusters
 on:
   pull_request:
     branches:
-      - master
+      - main
     paths:
       - "config/clusters/**"
       # Exclude changes to the templates directory from
@@ -23,7 +23,7 @@ on:
       - ".github/workflows/validate-clusters.yaml"
   push:
     branches:
-      - master
+      - main
     paths:
       - "config/clusters/**"
       # Exclude changes the templates directory from
@@ -67,12 +67,12 @@ jobs:
       cluster_matrix: ${{ env.MATRIX || '[]' }}
     # Only run this job if one of the following conditions is true:
     # - The workflow was manually triggered
-    # - The event is a push to the master branch
+    # - The event is a push to the main branch
     # - The event is a pull request where the head branch is *NOT* a dependabot
     #   or pre-commit generated branch
     if: |
       github.event_name == 'workflow_dispatch' ||
-      (github.event_name == 'push' && contains(github.ref, 'master')) ||
+      (github.event_name == 'push' && contains(github.ref, 'main')) ||
       (github.event_name == 'pull_request' && contains(github.head_ref, fromJson('["dependabot", "pre-commit"]')) == false)
 
     steps:

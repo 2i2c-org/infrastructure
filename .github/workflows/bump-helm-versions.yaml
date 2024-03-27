@@ -57,5 +57,4 @@ jobs:
           chart_urls: ${{ matrix.chart_urls }}
           github_token: ${{ steps.generate_token.outputs.token }}
           # team_reviewers: ${{ env.team_reviewers }}
-          base_branch: "master"
           dry_run: ${{ github.event.inputs.dry_run || false }}

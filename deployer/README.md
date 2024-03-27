@@ -228,8 +228,8 @@ the name of the cluster, the region where the cluster will be deployed and wheth
     - `config/<cluster_name>/enc-support.secret.values.yaml`
 
 The files are generated based on the jsonnet templates in:
-  - (`eksctl/template.json`)[https://github.com/2i2c-org/infrastructure/blob/master/eksctl/template.jsonnet]
-  - (`terraform/aws/projects/basehub-template.tfvars`)[https://github.com/2i2c-org/infrastructure/blob/master/terraform/aws/projects/basehub-template.tfvars]
+  - (`eksctl/template.json`)[https://github.com/2i2c-org/infrastructure/blob/main/eksctl/template.jsonnet]
+  - (`terraform/aws/projects/basehub-template.tfvars`)[https://github.com/2i2c-org/infrastructure/blob/main/terraform/aws/projects/basehub-template.tfvars]
 
 
 ##### `generate dedicated-cluster gcp`
@@ -256,10 +256,10 @@ The templates have a set of default features and define some opinionated charact
 These defaults are described in each file template.
 
   The infrastructure terraform config is generated based on the terraform templates in:
-    - (`terraform/basehub-template.tfvars`)[https://github.com/2i2c-org/infrastructure/blob/master/terraform/gcp/projects/basehub-template.tfvars]
-    - (`terraform/daskhub-template.tfvars`)[https://github.com/2i2c-org/infrastructure/blob/master/terraform/gcp/projects/daskhub-template.tfvars]
+    - (`terraform/basehub-template.tfvars`)[https://github.com/2i2c-org/infrastructure/blob/main/terraform/gcp/projects/basehub-template.tfvars]
+    - (`terraform/daskhub-template.tfvars`)[https://github.com/2i2c-org/infrastructure/blob/main/terraform/gcp/projects/daskhub-template.tfvars]
   The cluster configuration directory is generated based on the templates in:
-    - (`config/clusters/templates/gcp`)[https://github.com/2i2c-org/infrastructure/blob/master/config/clusters/templates/gcp]
+    - (`config/clusters/templates/gcp`)[https://github.com/2i2c-org/infrastructure/blob/main/config/clusters/templates/gcp]
 
 #### `generate resource-allocation`
 
