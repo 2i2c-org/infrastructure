@@ -183,6 +183,11 @@ jupyterhub:
       replicas: 0
     userScheduler:
       enabled: false
+      # replicas default value is 2, but having the user-scheduler run HA is an
+      # almost never practically helpful but has been found to increase cloud
+      # costs in clusters with many hubs. For additional discussion reducing
+      # this to 1, see https://github.com/2i2c-org/infrastructure/issues/3865.
+      replicas: 1
       # FIXME: We should think about these resource requests/limits, see
       #        https://github.com/2i2c-org/infrastructure/issues/2127.
       #
