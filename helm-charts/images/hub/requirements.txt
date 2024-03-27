@@ -4,7 +4,11 @@
 # commit currently. Available commits are found at
 # https://github.com/yuvipanda/jupyterhub-configurator/commits/main
 #
-# FIXME: ed7e3a0df1e3d625d10903ef7d7fd9c2fbb548db is from Mar 26, 2021, but
-#        several commits has been made since.
+# FIXME: bc7aaab136c8eff3619d18151f35437c64d6f7d1 is from Mar 30, 2021, but
+#        several commits has been made since as can be seen via
+#        https://github.com/yuvipanda/jupyterhub-configurator/compare/bc7aaab136c8eff3619d18151f35437c64d6f7d1...main,
+#        where the commit after the one we currently use removes
+#        c.Configurator.schemas that we configure in our provided
+#        jupyterhub_configurator_config.py.
 #
-git+https://github.com/yuvipanda/jupyterhub-configurator@ed7e3a0df1e3d625d10903ef7d7fd9c2fbb548db
+git+https://github.com/yuvipanda/jupyterhub-configurator@bc7aaab136c8eff3619d18151f35437c64d6f7d1
