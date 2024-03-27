@@ -250,7 +250,7 @@ have least amount of permissions possible.
 
    ```yaml
    name: <your-cluster-name>
-   provider: aws
+   provider: aws # <copy paste link to sign in url here>
    aws:
      key: enc-deployer-credentials.secret.json
      clusterType: eks
