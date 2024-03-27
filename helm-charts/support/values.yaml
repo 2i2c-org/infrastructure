@@ -297,8 +297,10 @@ grafana:
   # prometheus and grafana.
   #
   # Grafana's memory use seems to increase over time but seems reasonable to
-  # stay below 200Mi for years to come. Grafana's CPU use seems minuscule with
-  # peaks at up to 9m CPU from one user is browsing its dashboards.
+  # stay below 200Mi in general. Memory can peak when dashboards are updated,
+  # and was increased to 400Mi as its been seen getting OOMKilled. Grafana's CPU
+  # use seems minuscule with peaks at up to 9m CPU from one user is browsing its
+  # dashboards.
   #
   # PromQL queries for CPU and memory use:
   # - CPU:    sum(rate(container_cpu_usage_seconds_total{container="grafana", namespace="support"}[5m])) by (pod)
@@ -307,7 +309,7 @@ grafana:
   resources:
     limits:
       cpu: 100m
-      memory: 200Mi
+      memory: 400Mi
     requests:
       cpu: 10m
       memory: 200Mi
