@@ -199,6 +199,7 @@ jobs:
       failure_nasa-ghg: "${{ env.failure_nasa-ghg }}"
       failure_qcl: "${{ env.failure_qcl }}"
       failure_jupyter-meets-the-earth: "${{ env.failure_jupyter-meets-the-earth }}"
+      failure_jupyter-health: "${{ env.failure_jupyter-health }}"
       failure_smithsonian: "${{ env.failure_smithsonian }}"
       failure_catalystproject-latam: "${{ env.failure_catalystproject-latam }}"
       failure_catalystproject-africa: "${{ env.failure_catalystproject-africa }}"
