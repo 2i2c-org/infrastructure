@@ -1,10 +1,12 @@
 name: jupyter-meets-the-earth
-provider: aws #  https://286354552638.signin.aws.amazon.com/console
+provider: aws # https://286354552638.signin.aws.amazon.com/console
 aws:
   key: enc-deployer-credentials.secret.json
   clusterType: eks
   clusterName: jupyter-meets-the-earth
   region: us-west-2
+  billing:
+    paid_by_us: false
 support:
   helm_chart_values_files:
     - support.values.yaml

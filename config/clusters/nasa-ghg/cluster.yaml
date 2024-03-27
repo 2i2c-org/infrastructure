@@ -6,6 +6,8 @@ aws:
   clusterType: eks
   clusterName: nasa-ghg-hub
   region: us-west-2
+  billing:
+    paid_by_us: false
 support:
   helm_chart_values_files:
     - support.values.yaml
