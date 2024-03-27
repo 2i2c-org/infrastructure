@@ -6,7 +6,7 @@ gcp:
   cluster: leap-cluster
   zone: us-central1
   billing:
-    paid_by_us: true
+    paid_by_us: false
     bigquery:
       project: leap-pangeo
       dataset: cloud_costs
