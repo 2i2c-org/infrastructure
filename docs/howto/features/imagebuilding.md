@@ -20,7 +20,7 @@ jupyterhub:
   hub:
     image:
       name: quay.io/2i2c/dynamic-image-building-experiment
-      tag: "0.0.1-0.dev.git.7567.ha4162031"
+      tag: "0.0.1-0.dev.git.8556.hc4aa62f4"
 ```
 
 ## Connect with `jupyterhub-fancy-profiles`
