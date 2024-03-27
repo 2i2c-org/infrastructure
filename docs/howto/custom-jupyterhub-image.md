@@ -148,7 +148,7 @@ You will need to put a config similar to the one below in your hub configuration
 hub:
   image:
     name: quay.io/2i2c/new-experiment
-    tag: "0.0.1-0.dev.git.7130.h70e84dd2"
+    tag: "0.0.1-0.dev.git.8663.h049aa2c2"
 ```
 
 ```{important}
