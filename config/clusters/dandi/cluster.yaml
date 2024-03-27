@@ -1,0 +1,8 @@
+name: dandi
+provider: aws
+aws:
+  key: enc-deployer-credentials.secret.json
+  clusterType: eks
+  clusterName: dandi
+  region: us-east-2
+hubs: []
