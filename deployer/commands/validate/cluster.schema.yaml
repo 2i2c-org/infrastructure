@@ -66,10 +66,18 @@ properties:
     description: |
       Configuration to connect to the cluster on GCP. Is used when
       provider is set to `gcp`
+    required:
+      - key
+      - project
+      - cluster
+      - zone
+      - billing
     properties:
       billing:
         type: object
         additionalProperties: false
+        required:
+          - paid_by_us
         # if paid_by_us is true, we *must* provide bigquery information
         # on where to find the costs export for this project
         if:
@@ -79,15 +87,13 @@ properties:
         then:
           required:
             - bigquery
-        required:
-          - paid_by_us
         description: |
           Billing information for this cluster
         properties:
           paid_by_us:
             type: boolean
             description: |
-              Set to true if the cloud cost is paid by us, and expected to be
+              Set to true if the cloud cost is paid by 2i2c, and expected to be
               recovered from actual users.
           bigquery:
             type: object
@@ -133,15 +139,15 @@ properties:
           If the cluster is a zonal cluster, this specifies the zone
           in which the cluster is. If it's a regional cluster, this
           specifies the region the cluster is in.
-    required:
-      - key
-      - project
-      - cluster
-      - zone
-      - billing
   aws:
     type: object
     additionalProperties: false
+    required:
+      - key
+      - clusterType
+      - clusterName
+      - region
+      - billing
     description: |
       Configuration to connect to the cluster on AWS.
       Is used when provider is set to `aws`.
@@ -168,14 +174,24 @@ properties:
         type: string
         description: |
           The AWS region the cluster is in.
-    required:
-      - key
-      - clusterType
-      - clusterName
-      - region
+      billing:
+        type: object
+        additionalProperties: false
+        required:
+          - paid_by_us
+        properties:
+          paid_by_us:
+            type: boolean
+            description: |
+              Set to true if the cloud cost is paid by 2i2c, and expected to be
+              recovered from actual users.
   azure:
     type: object
     additionalProperties: false
+    required:
+      - key
+      - resource_group
+      - cluster
     description: |
       Configuration to connect to a cluster on Azure. Is used when
       provider is set to `azure`
@@ -197,10 +213,6 @@ properties:
         type: string
         description: |
           Name of the cluster inside this Azure Resource Group
-    required:
-      - key
-      - resource_group
-      - cluster
   hubs:
     type: array
     description: |
