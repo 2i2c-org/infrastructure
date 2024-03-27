@@ -281,6 +281,11 @@ grafana:
     # type Recreate is required since we attach a PVC that can only be used by
     # mounted for writing by one pod at the time.
     type: Recreate
+  # We unset the grafana chart's readinessProbe to disable it. We only have one
+  # grafana pod replica, so having a readiness probe provides little benefit. It
+  # was disabled after seeing it was sometimes failing when large API requests
+  # were made to deploy new dashboards.
+  readinessProbe:
 
   rbac:
     # namespaced makes us not get ClusterRole service accounts etc, and we do
