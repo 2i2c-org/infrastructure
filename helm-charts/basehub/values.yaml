@@ -179,6 +179,15 @@ jupyterhub:
       replicas: 0
     userScheduler:
       enabled: false
+      # replicas default value is 2 in z2jh, but its an optimization that seldom
+      # is needed so let's settle for 1 to preserve max number of pods available
+      # per node on EKS clusters where they are somewhat limited. Only one
+      # replica is actively doing work to schedule pods, so at worst during
+      # disruptions of pods we end up waiting longer for a replica to reschedule
+      # on a new core node than it took for a non-leader replica to become
+      # leader. If that takes more time, it could could delay scheduling a newly
+      # created user server assuming the hub pod wasn't also disrupted.
+      replicas: 1
       # FIXME: We should think about these resource requests/limits, see
       #        https://github.com/2i2c-org/infrastructure/issues/2127.
       #
