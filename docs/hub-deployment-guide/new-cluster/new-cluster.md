@@ -39,7 +39,7 @@ The _minimum_ inputs this file requires are:
   to `true`.
 - `zone`: Zone where cluster nodes and filestore for home directory
   are created.
-- `region`: Region where cluster master (if `regional_cluster` is
+- `region`: Region where cluster's control plan (if `regional_cluster` is
   `true`) is run, as well as any storage buckets created with
   `user_buckets`.
 

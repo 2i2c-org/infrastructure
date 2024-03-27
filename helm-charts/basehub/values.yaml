@@ -244,6 +244,11 @@ jupyterhub:
         limits:
           memory: 1Gi
   singleuser:
+    # basehub creates a k8s ServiceAccount for the hubs users that isn't granted
+    # permissions to the k8s api-server or other resources by default. Cloud
+    # infra permissions can be granted to all users by declaring annotations on
+    # this k8s ServiceAccount via basehub config userServiceAccount.annotations.
+    serviceAccountName: user-sa
     # Need to explicitly fix ownership here, as otherwise these directories will be owned
     # by root on most NFS filesystems - neither EFS nor Google Filestore support anonuid
     #

@@ -1,0 +1,53 @@
+basehub:
+  nfs:
+    enabled: true
+    pv:
+      enabled: true
+      # from https://docs.aws.amazon.com/efs/latest/ug/mounting-fs-nfs-mount-settings.html
+      mountOptions:
+        - rsize=1048576
+        - wsize=1048576
+        - timeo=600
+        - soft # We pick soft over hard, so NFS lockups don't lead to hung processes
+        - retrans=2
+        - noresvport
+      serverIP: fs-0276405f3cabae08b.efs.us-east-1.amazonaws.com
+      baseShareName: /
+  jupyterhub:
+    hub:
+      config:
+        JupyterHub:
+          authenticator_class: github
+        GitHubOAuthenticator:
+          populate_teams_in_auth_state: true
+          # allowed_organizations:
+          #   - abc:def
+          scope:
+            - read:org
+        Authenticator:
+          enable_auth_state: true
+          # admin_users:
+          #   - asdf
+    custom:
+      2i2c:
+        add_staff_user_ids_to_admin_users: true
+        add_staff_user_ids_of_type: "github"
+      jupyterhubConfigurator:
+        enabled: false
+      homepage:
+        templateVars:
+          org:
+            logo_url: ""
+            url: ""
+          designed_by:
+            name: 2i2c
+            url: https://2i2c.org
+          operated_by:
+            name: 2i2c
+            url: https://2i2c.org
+          funded_by:
+            name: ""
+            url: ""
+    scheduling:
+      userScheduler:
+        enabled: true
