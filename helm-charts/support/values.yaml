@@ -281,6 +281,12 @@ grafana:
     # type Recreate is required since we attach a PVC that can only be used by
     # mounted for writing by one pod at the time.
     type: Recreate
+  readinessProbe:
+    # With one grafana pod replica, having a readiness probe fail is pointless.
+    # We ensure it won't fail before the livenessProbe that would restart the
+    # container.
+    failureThreshold: 1000
+    initialDelaySeconds: 1
 
   rbac:
     # namespaced makes us not get ClusterRole service accounts etc, and we do
