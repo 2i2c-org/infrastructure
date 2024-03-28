@@ -42,13 +42,13 @@ basehub:
                   display_name: Original Pangeo Notebook base image 2022.07.13
                   slug: "old"
                   kubespawner_override:
-                    image: "quay.io/2i2c/awi-ciroh-image:88ea9a74a66e"
+                    image: "quay.io/2i2c/awi-ciroh-image:f7222fce8b16"
                 new:
                   display_name: New Pangeo Notebook base image 2023.09.11
                   default: true
                   slug: "new"
                   kubespawner_override:
-                    image: "quay.io/2i2c/awi-ciroh-image:f7222fce8b16"
+                    image: "quay.io/2i2c/awi-ciroh-image:d9f753c83a6b"
           kubespawner_override:
             mem_limit: 7G
             mem_guarantee: 5G
