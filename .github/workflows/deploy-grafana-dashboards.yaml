@@ -37,6 +37,7 @@ jobs:
           - cluster_name: ubc-eoas
           - cluster_name: utoronto
           - cluster_name: victor
+          - cluster_name: jupyter-health
 
     steps:
       - name: Checkout repo

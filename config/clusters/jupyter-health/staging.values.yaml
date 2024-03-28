@@ -1,0 +1,13 @@
+userServiceAccount:
+  annotations:
+    eks.amazonaws.com/role-arn: arn:aws:iam::211125465508:role/jupyter-health-staging
+jupyterhub:
+  ingress:
+    hosts: [staging.jupyter-health.2i2c.cloud]
+    tls:
+      - hosts: [staging.jupyter-health.2i2c.cloud]
+        secretName: https-auto-tls
+  hub:
+    config:
+      GitHubOAuthenticator:
+        oauth_callback_url: https://staging.jupyter-health.2i2c.cloud/hub/oauth_callback

@@ -1,0 +1,13 @@
+userServiceAccount:
+  annotations:
+    eks.amazonaws.com/role-arn: arn:aws:iam::211125465508:role/jupyter-health-prod
+jupyterhub:
+  ingress:
+    hosts: [jupyter-health.2i2c.cloud]
+    tls:
+      - hosts: [jupyter-health.2i2c.cloud]
+        secretName: https-auto-tls
+  hub:
+    config:
+      GitHubOAuthenticator:
+        oauth_callback_url: https://jupyter-health.2i2c.cloud/hub/oauth_callback
