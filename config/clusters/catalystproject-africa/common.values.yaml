@@ -14,6 +14,11 @@ nfs:
     baseShareName: /
 jupyterhub:
   custom:
+    2i2c:
+      add_staff_user_ids_to_admin_users: true
+      add_staff_user_ids_of_type: "github"
+    jupyterhubConfigurator:
+      enabled: false
     homepage:
       templateVars:
         designed_by:
@@ -25,6 +30,9 @@ jupyterhub:
         funded_by:
           name: Chan Zuckerberg Initiative - Open Science
           url: "https://chanzuckerberg.com/science/programs-resources/open-science/"
+        org:
+          url: https://catalystproject.cloud/
+          logo_url: https://catalystproject.cloud/_images/catalyst-icon-dark.png
   singleuser:
     profileList:
       - display_name: Jupyter SciPy Notebook
