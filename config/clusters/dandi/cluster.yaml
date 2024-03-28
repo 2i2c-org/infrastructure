@@ -1,0 +1,10 @@
+name: dandi
+provider: aws # https://2i2c.awsapps.com/start#/
+aws:
+  key: enc-deployer-credentials.secret.json
+  clusterType: eks
+  clusterName: dandi
+  region: us-east-2
+  billing:
+    paid_by_us: true
+hubs: []
