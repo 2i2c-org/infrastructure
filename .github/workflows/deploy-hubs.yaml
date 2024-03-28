@@ -188,6 +188,7 @@ jobs:
       failure_earthscope: "${{ env.failure_earthscope }}"
       failure_gridsst: "${{ env.failure_gridsst }}"
       failure_hhmi: "${{ env.failure_hhmi }}"
+      failure_jupyter-health: "${{ env.failure_jupyter-health }}"
       failure_jupyter-meets-the-earth: "${{ env.failure_jupyter-meets-the-earth }}"
       failure_leap: "${{ env.failure_leap }}"
       failure_linc: "${{ env.failure_linc }}"
