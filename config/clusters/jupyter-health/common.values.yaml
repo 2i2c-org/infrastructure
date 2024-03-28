@@ -60,26 +60,6 @@ jupyterhub:
         default: true
         kubespawner_override:
           image: quay.io/pangeo/pangeo-notebook:2024.03.22
-          init_containers:
-            # Need to explicitly fix ownership here, as otherwise these directories will be owned
-            # by root on most NFS filesystems - neither EFS nor Google Filestore support anonuid
-            - name: volume-mount-ownership-fix
-              image: busybox:1.36.1
-              command:
-                - sh
-                - -c
-                - id && chown 1000:1000 /home/jovyan /home/jovyan/shared && ls -lhd /home/jovyan
-              securityContext:
-                runAsUser: 0
-              volumeMounts:
-                - name: home
-                  mountPath: /home/jovyan
-                  subPath: "{username}"
-                # mounted without readonly attribute here,
-                # so we can chown it appropriately
-                - name: home
-                  mountPath: /home/jovyan/shared
-                  subPath: _shared
         profile_options: &profile_options
           resource_allocation: &profile_options_resource_allocation
             display_name: Resource Allocation
