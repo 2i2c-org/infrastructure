@@ -102,9 +102,6 @@ def generate_infra_files(vars):
 @dedicated_cluster_app.command()
 def aws(
     cluster_name: str = typer.Option(..., prompt="Name of the cluster to deploy"),
-    hub_type: str = typer.Option(
-        ..., prompt="Type of hub. Choose from `basehub` or `daskhub`"
-    ),
     cluster_region: str = typer.Option(
         ..., prompt="The region where to deploy the cluster"
     ),
@@ -123,7 +120,6 @@ def aws(
 
     vars = {
         "cluster_name": cluster_name,
-        "hub_type": hub_type,
         "cluster_region": cluster_region,
     }
 
