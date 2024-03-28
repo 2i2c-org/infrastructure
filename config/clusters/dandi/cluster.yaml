@@ -11,4 +11,12 @@ support:
   helm_chart_values_files:
     - support.values.yaml
     - enc-support.secret.values.yaml
-hubs: []
+hubs:
+  - name: staging
+    display_name: "MIT DANDI (staging)"
+    domain: staging.dandi.2i2c.cloud
+    helm_chart: basehub
+    helm_chart_values_files:
+      - common.values.yaml
+      - staging.values.yaml
+      - enc-staging.secret.values.yaml
