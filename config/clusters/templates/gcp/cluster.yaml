@@ -1,5 +1,5 @@
 name: {{ cluster_name }}
-provider: gcp
+provider: gcp # https://console.cloud.google.com/kubernetes/clusters/details/{{ cluster_region }}/{{ cluster_name }}-cluster/observability?project={{ project_id }}
 gcp:
   key: enc-deployer-credentials.secret.json
   project: {{ project_id }}

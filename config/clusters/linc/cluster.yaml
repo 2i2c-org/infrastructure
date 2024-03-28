@@ -5,6 +5,8 @@ aws:
   clusterType: eks
   clusterName: linc
   region: us-east-1
+  billing:
+    paid_by_us: true
 support:
   helm_chart_values_files:
     - support.values.yaml
