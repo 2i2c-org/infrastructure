@@ -43,7 +43,7 @@ def generate_terraform_file(vars):
     Generates the `terraform/gcp/projects/<cluster_name>.tfvars` terraform file
     required to create a GCP cluster
     """
-    with open(REPO_ROOT_PATH / "terraform/gcp/projects/template.tfvars") as f:
+    with open(REPO_ROOT_PATH / "terraform/gcp/projects/cluster.tfvars.template") as f:
         tfvars_template = jinja2.Template(f.read())
 
     print_colour("Generating the terraform infrastructure file...", "yellow")
