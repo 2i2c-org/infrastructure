@@ -5,4 +5,6 @@ aws:
   clusterType: eks
   clusterName: dandi
   region: us-east-2
+  billing:
+    paid_by_us: true
 hubs: []
