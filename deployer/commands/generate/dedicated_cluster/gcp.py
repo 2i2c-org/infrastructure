@@ -43,9 +43,7 @@ def generate_terraform_file(vars):
     Generates the `terraform/gcp/projects/<cluster_name>.tfvars` terraform file
     required to create a GCP cluster
     """
-    with open(
-        REPO_ROOT_PATH / f'terraform/gcp/projects/{vars["hub_type"]}-template.tfvars'
-    ) as f:
+    with open(REPO_ROOT_PATH / "terraform/gcp/projects/template.tfvars") as f:
         tfvars_template = jinja2.Template(f.read())
 
     print_colour("Generating the terraform infrastructure file...", "yellow")
@@ -59,31 +57,24 @@ def generate_terraform_file(vars):
 
 @dedicated_cluster_app.command()
 def gcp(
-    cluster_name: Annotated[
-        str, typer.Option(prompt="Please type the name of the new cluster")
-    ],
-    project_id: Annotated[
-        str, typer.Option(prompt="Please insert the Project ID of the GCP project")
-    ],
-    hub_name: Annotated[
+    cluster_name: str = typer.Option(..., prompt="Name of the cluster to deploy"),
+    cluster_region: str = typer.Option(
+        ..., prompt="The region where to deploy the cluster"
+    ),
+    project_id: str = typer.Option(
+        ..., prompt="Please insert the Project ID of the GCP project"
+    ),
+    hub_type: Annotated[
         str,
         typer.Option(
-            prompt="Please insert the name of first hub to add to the cluster"
+            prompt="Please type in the hub type: basehub/daskhub.\n-> If this cluster will host daskhubs, please type `daskhub`.\n-> If you don't know this info, or this is not the case, just hit ENTER"
         ),
-    ],
-    cluster_region: Annotated[
-        str, typer.Option(prompt="Please insert the name of the cluster region")
-    ] = "us-central1",
-    hub_type: Annotated[
-        str, typer.Option(prompt="Please insert the hub type of the first hub")
     ] = "basehub",
-    force: Annotated[
-        bool,
-        typer.Option(
-            "--force",
-            help="Whether or not to force the override of the files that already exist",
-        ),
-    ] = False,
+    force: bool = typer.Option(
+        False,
+        "--force",
+        help="Whether or not to force the override of the files that already exist",
+    ),
 ):
     """
     Automatically generates the initial files, required to setup a new cluster on GCP if they don't exist.
@@ -96,7 +87,6 @@ def gcp(
         "hub_type": hub_type,
         "cluster_region": cluster_region,
         "project_id": project_id,
-        "hub_name": hub_name,
     }
 
     if not check_before_continuing_with_generate_command(
