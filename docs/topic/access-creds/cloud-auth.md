@@ -83,11 +83,15 @@ and will need to be refreshed with new sets whenever that time is up.
 
 1. Log-in at [2i2c.awsapps.com/start#/](https://2i2c.awsapps.com/start#/).
 2. Select an account from the list of displayed options.
-3. Select **Commandline or programmatic access** to open a pop-up with credentials.
+3. Select **Access Keys** to open a pop-up with credentials.
 4. Prefer *Option 1* of copying specific environment variables, as that makes it much
    easier to use a new set of credentials when this set expires than using *Option 2* of
    putting the credentials in a file. You can also more easily authenticate to different
    AWS accounts in different terminal tabs this way.
+5. After setting these environment variables in your terminal, you can run
+   `aws sts get-caller-identity` to verify that these are working. The `UserId` in the
+   response should contain your SSO username at the very end (after the `:`), and the
+   `Account` is the AWS account id of the account you are authenticated to.
 
 #### Add users to our SSO
 
