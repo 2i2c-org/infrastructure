@@ -38,8 +38,7 @@ basehub:
       extraConfig:
         001-username-claim: |
           from oauthenticator.generic import GenericOAuthenticator
-          from traitlets import List, Unicode, default
-          from urllib.parse import urlencode
+          from traitlets import List, Unicode
 
           class CustomGenericOAuthenticator(GenericOAuthenticator):
             # required_scopes functionality comes in from https://github.com/jupyterhub/oauthenticator/pull/719
