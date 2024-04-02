@@ -59,8 +59,15 @@ export HUB_TYPE=<hub-type-like-basehub>
 ```
 
 ```bash
-deployer generate dedicated-cluster aws --cluster-name=$CLUSTER_NAME --cluster-region=$CLUSTER_REGION --hub-type=$HUB_TYPE
+deployer generate dedicated-cluster aws --cluster-name=$CLUSTER_NAME --cluster-region=$CLUSTER_REGION
 ```
+
+After running this command, you will be asked to provide the type of hub that will be deployed in the cluster, i.e. `basehub` or `daskhub`.
+
+- If you already know that the there will be daskhubs running in this cluster, then type in `daskhub` and hit ENTER.
+
+  This will generate a specific node pool for dask workers to run on, in the appropriate `.jsonnet` file that will be used with `eksctl`.
+- Otherwise, just hit ENTER and it will default to a basehub infrastructure that you can later amend if daskhubs will be needed.
 
 This will generate the following files:
 
