@@ -1,3 +1,7 @@
+userServiceAccount:
+  annotations:
+    eks.amazonaws.com/role-arn: arn:aws:iam::975050327108:role/dandi-staging
+
 jupyterhub:
   ingress:
     hosts: [staging.dandi.2i2c.cloud]
@@ -13,3 +17,6 @@ jupyterhub:
       templateVars:
         org:
           name: MIT DANDI (staging)
+  singleuser:
+    extraEnv:
+      SCRATCH_BUCKET: s3://dandi-scratch-staging/$(JUPYTERHUB_USER)
