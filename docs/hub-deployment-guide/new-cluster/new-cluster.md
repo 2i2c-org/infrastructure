@@ -1,5 +1,5 @@
 (new-cluster:new-cluster)=
-# New Kubernetes cluster on GCP or Azure
+# New Kubernetes cluster on GCP, Azure or AWS
 
 This guide will walk through the process of adding a new cluster to our [terraform configuration](https://github.com/2i2c-org/infrastructure/tree/HEAD/terraform).
 
@@ -7,58 +7,126 @@ You can find out more about terraform in [](/topic/infrastructure/terraform) and
 
 ```{attention}
 Currently, we do not deploy clusters to AWS _solely_ using terraform.
-Please see [](new-cluster:aws) for AWS-specific deployment guidelines.
+We use [eksctl](https://eksctl.io/) to provision our k8s clusters on AWS and
+terraform to provision supporting infrastructure, such as storage buckets.
 ```
 
 ## Cluster Design
 
 This guide will assume you have already followed the guidance in [](/topic/infrastructure/cluster-design) to select the appropriate infrastructure.
 
-## Create a Terraform variables file for the cluster
-
-The first step is to create a `.tfvars` file in the appropriate terraform projects subdirectory:
-
-- [`terraform/gcp/projects`](https://github.com/2i2c-org/infrastructure/tree/HEAD/terraform/gcp/projects) for Google Cloud clusters
-- [`terraform/azure/projects`](https://github.com/2i2c-org/infrastructure/tree/HEAD/terraform/azure/projects) for Azure clusters
-
-Give it a descriptive name that at a glance provides context to the location and/or purpose of the cluster.
+## Prerequisites
 
 `````{tab-set}
+````{tab-item} AWS
+:sync: aws-key
+1. Install `kubectl`, `helm`, `sops`, etc.
+
+   In [](tutorials:setup) you find instructions on how to setup `sops` to
+   encrypt and decrypt files.
+
+2. Install [`aws`](https://docs.aws.amazon.com/cli/latest/userguide/getting-started-install.html#getting-started-install-instructions)
+
+   Verify install and version with `aws --version`. You should have at least
+   version 2.
+
+3. Install or upgrade [eksctl](https://eksctl.io/introduction/#installation)
+
+   Mac users with homebrew can run `brew install eksctl`.
+
+   Verify install and version with `eksctl version`. You typically need a very
+   recent version of this CLI.
+
+4. Install [`jsonnet`](https://github.com/google/jsonnet)
+
+   Mac users with homebrew can run `brew install jsonnet`.
+
+   Verify install and version with `jsonnet --version`.
+````
+````{tab-item} Azure and Google Cloud
+:sync: azure-and-gcp-key
+1. Install `kubectl`, `helm`, `sops`, etc.
+
+   In [](tutorials:setup) you find instructions on how to setup `sops` to
+   encrypt and decrypt files.
+````
+`````
+
+## Create a new cluster
+
+`````{tab-set}
+````{tab-item} Setup credentials (AWS only)
+:sync: aws-key
+Depending on whether this project is using AWS SSO or not, you can use the following
+links to figure out how to authenticate to this project from your terminal.
+
+- [For accounts setup with AWS SSO](cloud-access:aws-sso:terminal)
+- [For accounts without AWS SSO](cloud-access:aws-iam:terminal)
+````
+`````
+
+### Generate cluster files
+
+We automatically generate the files required to setup a new cluster:
+
+`````{tab-set}
+````{tab-item} AWS
+:sync: aws-key
+- A `.jsonnet` file for use with `eksctl`
+- An [ssh key](https://eksctl.io/introduction/#ssh-access) for use with eksctl
+- A `.tfvars` file for use with `terraform
+- The cluster config directory in `./config/cluster/<new-cluster>`
+- The support values file `support.values.yaml`
+- The the support credentials encrypted file `enc-support.values.yaml` 
+````
 ````{tab-item} Google Cloud
 :sync: gcp-key
-The _minimum_ inputs this file requires are:
-
-- `prefix`: Prefix for all objects created by terraform.
-  Primary identifier to 'group' together resources.
-- `project_id`: GCP Project ID to create resources in.
-  Should be the id, rather than display name of the project.
-- `regional_cluster`: Set to true to provision a [GKE Regional
-  Highly Available cluster](https://cloud.google.com/kubernetes-engine/docs/concepts/regional-clusters).
-  Costs ~70$ a month, but worth it for the added reliability for most
-  cases except when cost saving is an absolute requirement. Defaults
-  to `true`.
-- `zone`: Zone where cluster nodes and filestore for home directory
-  are created.
-- `region`: Region where cluster's control plan (if `regional_cluster` is
-  `true`) is run, as well as any storage buckets created with
-  `user_buckets`.
-
-See the [variables file](https://github.com/2i2c-org/infrastructure/tree/HEAD/terraform/gcp/variables.tf) for other inputs this file can take and their descriptions.
-
-Example `.tfvars` file:
-
+- A `.tfvars` file for use with `terraform`
+- The cluster config directory in `./config/cluster/<new-cluster>`
+- A sample `cluster.yaml` config file
+- The support values file `support.values.yaml`
+- The the support credentials encrypted file `enc-support.values.yaml` 
+````
+````{tab-item} Azure
+:sync: azure-key
+```{warning}
+An automated deployer command doesn't exist yet, these files need to be manually generated!
 ```
-prefix           = "my-awesome-project"
-project_id       = "my-awesome-project-id"
-zone             = "us-central1-c"
-region           = "us-central1"
-regional_cluster = true
+````
+`````
+
+You can generate these with:
+
+`````{tab-set}
+````{tab-item} AWS
+:sync: aws-key
+
+```bash
+export CLUSTER_NAME=<cluster-name>
+export CLUSTER_REGION=<cluster-region-like ca-central-1>
+```
+
+```bash
+deployer generate dedicated-cluster aws --cluster-name=$CLUSTER_NAME --cluster-region=$CLUSTER_REGION
 ```
 ````
 
+````{tab-item} Google Cloud
+:sync: gcp-key
+```bash
+export CLUSTER_NAME=<cluster-name>
+export CLUSTER_REGION=<cluster-region-like ca-central-1>
+export PROJECT_ID=<gcp-project-id>
+```
+
+```bash
+deployer generate dedicated-cluster gcp --cluster-name=$CLUSTER_NAME --project-id=$PROJECT_ID --cluster-region=CLUSTER_REGION
+```
+````
 ````{tab-item} Azure
 :sync: azure-key
-The _minimum_ inputs this file requires are:
+
+An automated deployer command doesn't exist yet, these files need to be manually generated. The _minimum_ inputs this file requires are:
 
 - `subscription_id`: Azure subscription ID to create resources in.
   Should be the id, rather than display name of the project.
@@ -118,8 +186,23 @@ ssh_pub_key                    = "ssh-rsa my-public-ssh-key"
 ````
 `````
 
-Once you have created this file, open a Pull Request to the [`infrastructure` repo](https://github.com/2i2c-org/infrastructure) for review.
-See our [review and merge guidelines](infrastructure:review) for how this process should pan out.
+After running this command, you will be asked to provide the type of hub that will be deployed in the cluster, i.e. `basehub` or `daskhub`.
+
+- If you already know that the there will be daskhubs running in this cluster, then type in `daskhub` and hit ENTER.
+
+  This will generate a specific node pool for dask workers to run on, in the appropriate `.jsonnet` file that will be used with `eksctl`.
+- Otherwise, just hit ENTER and it will default to a basehub infrastructure that you can later amend if daskhubs will be needed by following the guide on [how to add support for daskhubs in an existing cluster](howto:features:daskhub).
+
+This will generate the following files:
+
+1. `eksctl/$CLUSTER_NAME.jsonnet` with a default cluster configuration, deployed to `us-west-2`
+2. `eksctl/ssh-keys/secret/$CLUSTER_NAME.key`, a `sops` encrypted ssh private key that can be
+   used to ssh into the kubernetes nodes.
+3. `eksctl/ssh-keys/$CLUSTER_NAME.pub`, an ssh public key used by `eksctl` to grant access to
+   the private key.
+4. `terraform/aws/projects/$CLUSTER_NAME.tfvars`, a terraform variables file that will setup
+   most of the non EKS infrastructure.
+
 
 ## Initialising Terraform
 

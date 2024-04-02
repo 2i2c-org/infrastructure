@@ -12,7 +12,7 @@ anonymized-usernames.md
 buckets.md
 cloud-access.md
 cryptnono.md
-daskhub.md
+dask.md
 dedicated-nodepool.md
 ephemeral.md
 github.md
