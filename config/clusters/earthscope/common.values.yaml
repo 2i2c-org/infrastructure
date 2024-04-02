@@ -126,6 +126,9 @@ basehub:
             # This gives us refresh token
             - offline_access
             # This allows EarthScope to control who can login to the hub
+            # Everyone who logs in with Google and has a `@2i2c.org` email will be
+            # automatically granted this scope, so we can test. See
+            # https://2i2c.freshdesk.com/a/tickets/1280 for how this was granted.
             - geolab
           extra_authorize_params:
             # This isn't an actual URL, just a string. Must not have a trailing slash
