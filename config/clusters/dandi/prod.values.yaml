@@ -19,4 +19,4 @@ jupyterhub:
           name: MIT DANDI
   singleuser:
     extraEnv:
-      SCRATCH_BUCKET: s3://dandi-scratch-prod/$(JUPYTERHUB_USER)
+      SCRATCH_BUCKET: s3://dandi-scratch/$(JUPYTERHUB_USER)
