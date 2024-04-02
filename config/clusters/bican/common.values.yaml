@@ -42,11 +42,11 @@ jupyterhub:
         authenticator_class: github
       Authenticator:
         admin_users:
-        - kabilar
-        - aaronkanzer
-        - asmacdo
-        - satra
-        - djarecka
+          - kabilar
+          - aaronkanzer
+          - asmacdo
+          - satra
+          - djarecka
   singleuser:
     profileList:
       - display_name: "DANDI (CPU)"
