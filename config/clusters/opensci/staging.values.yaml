@@ -118,7 +118,6 @@ jupyterhub:
       JupyterHub:
         authenticator_class: github
       GitHubOAuthenticator:
-        oauth_callback_url: https://staging.opensci.2i2c.cloud/hub/oauth_callback
         allowed_organizations:
           - 2i2c-demo-hub-access
         scope:

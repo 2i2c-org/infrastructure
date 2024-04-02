@@ -73,7 +73,6 @@ basehub:
         JupyterHub:
           authenticator_class: github
         GitHubOAuthenticator:
-          oauth_callback_url: https://oceanhackweek.2i2c.cloud/hub/oauth_callback
           allowed_organizations:
             - oceanhackweek:ohw23-organizers
             - oceanhackweek:ohw23-participants-australia

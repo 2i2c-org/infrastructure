@@ -8,10 +8,6 @@ basehub:
       tls:
         - hosts: [staging.hub.cryointhecloud.com]
           secretName: https-auto-tls
-    hub:
-      config:
-        GitHubOAuthenticator:
-          oauth_callback_url: https://staging.hub.cryointhecloud.com/hub/oauth_callback
     singleuser:
       extraEnv:
         SCRATCH_BUCKET: s3://nasa-cryo-scratch-staging/$(JUPYTERHUB_USER)

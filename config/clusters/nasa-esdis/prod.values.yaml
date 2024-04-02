@@ -10,7 +10,3 @@ jupyterhub:
   singleuser:
     extraEnv:
       SCRATCH_BUCKET: s3://nasa-esdis-scratch/$(JUPYTERHUB_USER)
-  hub:
-    config:
-      GitHubOAuthenticator:
-        oauth_callback_url: "https://esdis.2i2c.cloud/hub/oauth_callback"

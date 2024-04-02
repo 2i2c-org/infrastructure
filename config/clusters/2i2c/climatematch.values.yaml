@@ -85,7 +85,6 @@ jupyterhub:
       JupyterHub:
         authenticator_class: github
       GitHubOAuthenticator:
-        oauth_callback_url: https://climatematch.2i2c.cloud/hub/oauth_callback
         allowed_organizations:
           - ClimateMatchAcademy:2023students
         scope:

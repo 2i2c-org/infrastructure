@@ -7,7 +7,3 @@ jupyterhub:
     tls:
       - hosts: [staging.jupyter-health.2i2c.cloud]
         secretName: https-auto-tls
-  hub:
-    config:
-      GitHubOAuthenticator:
-        oauth_callback_url: https://staging.jupyter-health.2i2c.cloud/hub/oauth_callback

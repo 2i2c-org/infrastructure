@@ -7,7 +7,3 @@ jupyterhub:
     tls:
       - hosts: [staging.quantifiedcarbon.com]
         secretName: https-auto-tls
-  hub:
-    config:
-      GitHubOAuthenticator:
-        oauth_callback_url: https://staging.quantifiedcarbon.com/hub/oauth_callback

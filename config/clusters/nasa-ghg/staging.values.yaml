@@ -12,7 +12,3 @@ basehub:
       homepage:
         gitRepoBranch: "staging"
         gitRepoUrl: "https://github.com/US-GHG-Center/ghgc-hub-homepage"
-    hub:
-      config:
-        GitHubOAuthenticator:
-          oauth_callback_url: https://staging.ghg.2i2c.cloud/hub/oauth_callback

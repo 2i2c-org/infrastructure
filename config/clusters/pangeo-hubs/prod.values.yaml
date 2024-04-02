@@ -8,10 +8,6 @@ basehub:
       tls:
         - hosts: [us-central1-b.gcp.pangeo.io]
           secretName: https-auto-tls
-    hub:
-      config:
-        GitHubOAuthenticator:
-          oauth_callback_url: https://us-central1-b.gcp.pangeo.io/hub/oauth_callback
     singleuser:
       extraEnv:
         SCRATCH_BUCKET: gs://pangeo-hubs-scratch/$(JUPYTERHUB_USER)

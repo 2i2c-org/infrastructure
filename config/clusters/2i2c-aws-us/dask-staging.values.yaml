@@ -35,5 +35,3 @@ basehub:
       config:
         JupyterHub:
           authenticator_class: "github"
-        GitHubOAuthenticator:
-          oauth_callback_url: "https://dask-staging.aws.2i2c.cloud/hub/oauth_callback"

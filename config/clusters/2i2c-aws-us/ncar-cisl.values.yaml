@@ -34,7 +34,6 @@ basehub:
         JupyterHub:
           authenticator_class: github
         GitHubOAuthenticator:
-          oauth_callback_url: https://ncar-cisl.2i2c.cloud/hub/oauth_callback
           allowed_organizations:
             - NCAR:2i2c-cloud-users
           scope:

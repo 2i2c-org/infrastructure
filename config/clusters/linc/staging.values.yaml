@@ -5,10 +5,6 @@ basehub:
       tls:
         - hosts: [staging.linc.2i2c.cloud]
           secretName: https-auto-tls
-    hub:
-      config:
-        GitHubOAuthenticator:
-          oauth_callback_url: https://staging.linc.2i2c.cloud/hub/oauth_callback
     custom:
       homepage:
         templateVars:

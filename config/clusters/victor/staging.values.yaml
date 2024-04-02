@@ -9,10 +9,6 @@ basehub:
       tls:
         - hosts: [staging.victor.2i2c.cloud]
           secretName: https-auto-tls
-    hub:
-      config:
-        GitHubOAuthenticator:
-          oauth_callback_url: https://staging.victor.2i2c.cloud/hub/oauth_callback
     singleuser:
       profileList:
         # Create a small instance that can launch a custom image

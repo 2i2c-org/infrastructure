@@ -21,7 +21,6 @@ jupyterhub:
       JupyterHub:
         authenticator_class: github
       GitHubOAuthenticator:
-        oauth_callback_url: https://uvri.af.catalystproject.2i2c.cloud/hub/oauth_callback
         allowed_organizations:
           - CatalystProject-Hubs:uvri
         scope:

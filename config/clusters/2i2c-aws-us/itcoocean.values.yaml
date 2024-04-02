@@ -33,7 +33,6 @@ jupyterhub:
       JupyterHub:
         authenticator_class: github
       GitHubOAuthenticator:
-        oauth_callback_url: https://itcoocean.2i2c.cloud/hub/oauth_callback
         allowed_organizations:
           - Hackweek-ITCOocean:itcoocean-hackweek-2023
           - nmfs-opensci:2i2c-demo

@@ -8,7 +8,3 @@ basehub:
       tls:
         - hosts: [hub.openveda.cloud]
           secretName: https-auto-tls
-    hub:
-      config:
-        GitHubOAuthenticator:
-          oauth_callback_url: https://hub.openveda.cloud/hub/oauth_callback
