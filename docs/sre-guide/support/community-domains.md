@@ -93,15 +93,11 @@ it does not, wait for about 15 minutes and try again - DNS propagation may take 
 3. If Auth0 is being used, change `jupyterhub.hub.config.CustomAuth0OAuthenticator.logout_redirect_to_url`
    to point to the community managed domain.
 
-4. If GitHub Authentication is being used, change the domain used in the URL in
-   `jupyterhub.hub.config.GitHubOAuthenticator.oauth_callback_url` to point to the community
-   managed domain.
-
-5. If CILogon Authentication is being used, change the domain used in the URL in
+4. If CILogon Authentication is being used, change the domain used in the URL in
    `jupyterhub.hub.config.CILogonOAuthenticator.oauth_callback_url` to point to the community
    managed domain.
 
-6. In the `support.values.yaml` file for the cluster in which the hubs are, we set up redirects
+5. In the `support.values.yaml` file for the cluster in which the hubs are, we set up redirects
    so folks who go to the older domains will get redirected to the new domain.
 
    ```yaml
@@ -111,7 +107,7 @@ it does not, wait for about 15 minutes and try again - DNS propagation may take 
        to: <community-managed-domain>
    ```
 
-7. Make a PR with your changes.
+6. Make a PR with your changes.
 
 ## Deploying the configuration change
 
@@ -140,8 +136,7 @@ point to the new domain, users can not log in to the old domain anymore!
 1. Open the appropriate GitHub App from the [list of OAuth apps](https://github.com/organizations/2i2c-org/settings/applications)
    in the 2i2c-org GitHub org.
 2. Change the **Homepage URL** to point to the new community managed domain.
-3. Change the **Authorization callback URL** to point to the new community managed domain. This
-   should match the value in `jupyterhub.hub.config.GitHubOAuthenticator.oauth_callback_url`.
+3. Change the **Authorization callback URL** to point to the new community managed domain.
 4. Hit the **Update application** button.
 
 #### CILogon Authentication

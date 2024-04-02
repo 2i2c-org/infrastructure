@@ -82,7 +82,6 @@ You can remove yourself from the org once you have confirmed that login is worki
           JupyterHub:
             authenticator_class: github
           GitHubOAuthenticator:
-            oauth_callback_url: https://{{ HUB_DOMAIN }}/hub/oauth_callback
             allowed_organizations:
               - ORG_NAME
             scope:
@@ -102,7 +101,6 @@ You can remove yourself from the org once you have confirmed that login is worki
           JupyterHub:
             authenticator_class: github
           GitHubOAuthenticator:
-            oauth_callback_url: https://{{ HUB_DOMAIN }}/hub/oauth_callback
             allowed_organizations:
               - ORG_NAME:TEAM_NAME
             scope:
