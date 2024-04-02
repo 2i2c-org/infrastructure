@@ -8,7 +8,7 @@ user_buckets = {
   "scratch-staging" : {
     "delete_after" : 7
   },
-  "scratch-dandi" : {
+  "scratch-prod" : {
     "delete_after" : 7
   },
 }
@@ -18,8 +18,8 @@ hub_cloud_permissions = {
     bucket_admin_access : ["scratch-staging"],
     extra_iam_policy : ""
   },
-  "dandi" : {
-    bucket_admin_access : ["scratch-dandi"],
+  "prod" : {
+    bucket_admin_access : ["scratch-prod"],
     extra_iam_policy : ""
   },
 }

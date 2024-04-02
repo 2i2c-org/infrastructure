@@ -20,11 +20,11 @@ hubs:
       - common.values.yaml
       - staging.values.yaml
       - enc-staging.secret.values.yaml
-  - name: dandi
+  - name: prod
     display_name: "MIT DANDI (staging)"
     domain: dandi.2i2c.cloud
     helm_chart: basehub
     helm_chart_values_files:
       - common.values.yaml
-      - dandi.values.yaml
+      - prod.values.yaml
       - enc-dandi.secret.values.yaml
