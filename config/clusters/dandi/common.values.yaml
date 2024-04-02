@@ -20,7 +20,6 @@ jupyterhub:
       Authenticator:
         enable_auth_state: true
         admin_users:
-          - asdf
           - kabilar
           - aaronkanzer
           - asmacdo
