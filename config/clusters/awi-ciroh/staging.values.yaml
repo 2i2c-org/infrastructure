@@ -39,7 +39,7 @@ basehub:
               # Requested in https://2i2c.freshdesk.com/a/tickets/1387
               choices:
                 old:
-                  display_name: Original Pangeo Notebook base image 2022.07.13
+                  display_name: Original Pangeo Notebook base image 2023.01.04
                   slug: "old"
                   kubespawner_override:
                     image: "quay.io/2i2c/awi-ciroh-image:f7222fce8b16"
