@@ -1,0 +1,14 @@
+userServiceAccount:
+  annotations:
+    eks.amazonaws.com/role-arn: arn:aws:iam::533267153382:role/bican-staging
+
+jupyterhub:
+  ingress:
+    hosts: [staging.bican.2i2c.cloud]
+    tls:
+      - hosts: [staging.bican.2i2c.cloud]
+        secretName: https-auto-tls
+
+  singleuser:
+    extraEnv:
+      SCRATCH_BUCKET: s3://bican-scratch-staging/$(JUPYTERHUB_USER)
