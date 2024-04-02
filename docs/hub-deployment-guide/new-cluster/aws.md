@@ -67,7 +67,7 @@ After running this command, you will be asked to provide the type of hub that wi
 - If you already know that the there will be daskhubs running in this cluster, then type in `daskhub` and hit ENTER.
 
   This will generate a specific node pool for dask workers to run on, in the appropriate `.jsonnet` file that will be used with `eksctl`.
-- Otherwise, just hit ENTER and it will default to a basehub infrastructure that you can later amend if daskhubs will be needed.
+- Otherwise, just hit ENTER and it will default to a basehub infrastructure that you can later amend if daskhubs will be needed by following the guide on [how to add support for daskhubs in an existing cluster](howto:features:daskhub).
 
 This will generate the following files:
 
