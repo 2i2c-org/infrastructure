@@ -50,6 +50,7 @@ jupyterhub:
     userScheduler:
       enabled: true
   singleuser:
+    defaultUrl: /lab
     profileList:
       - display_name: "DANDI (CPU)"
         description: "Default DANDI image with JupyterLab"
@@ -57,7 +58,6 @@ jupyterhub:
         kubespawner_override:
           image: dandiarchive/dandihub:latest
           image_pull_policy: Always
-          default_url: /lab
         profile_options: &profile_options_cpu
           requests:
             display_name: Resource Allocation
