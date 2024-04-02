@@ -81,8 +81,8 @@ notebook_nodes = {
   }
 }
 
-dask_nodes = {
 {% if hub_type == "daskhub" %}
+dask_nodes = {
 #  A not yet fully established policy is being developed about using a single
 #  node pool, see https://github.com/2i2c-org/infrastructure/issues/2687.
   "n2-highmem-16" : {
@@ -90,7 +90,5 @@ dask_nodes = {
     max : 200,
     machine_type : "n2-highmem-16",
   },
-}
-{% else %}
 }
 {% endif %}
