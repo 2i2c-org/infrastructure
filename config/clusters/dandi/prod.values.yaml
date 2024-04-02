@@ -1,0 +1,22 @@
+userServiceAccount:
+  annotations:
+    eks.amazonaws.com/role-arn: arn:aws:iam::975050327108:role/dandi-prod
+
+jupyterhub:
+  ingress:
+    hosts: [dandi.2i2c.cloud]
+    tls:
+      - hosts: [dandi.2i2c.cloud]
+        secretName: https-auto-tls
+  hub:
+    config:
+      GitHubOAuthenticator:
+        oauth_callback_url: https://dandi.2i2c.cloud/hub/oauth_callback
+  custom:
+    homepage:
+      templateVars:
+        org:
+          name: MIT DANDI
+  singleuser:
+    extraEnv:
+      SCRATCH_BUCKET: s3://dandi-scratch/$(JUPYTERHUB_USER)

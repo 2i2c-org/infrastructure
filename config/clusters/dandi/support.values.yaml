@@ -30,3 +30,9 @@ grafana:
       - secretName: grafana-tls
         hosts:
           - grafana.dandi.2i2c.cloud
+
+cluster-autoscaler:
+  enabled: true
+  autoDiscovery:
+    clusterName: dandi
+  awsRegion: us-east-2

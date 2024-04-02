@@ -13,7 +13,6 @@ user_buckets = {
   },
 }
 
-
 hub_cloud_permissions = {
   "staging" : {
     bucket_admin_access : ["scratch-staging"],
