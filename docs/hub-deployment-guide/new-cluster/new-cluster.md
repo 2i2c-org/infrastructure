@@ -77,6 +77,7 @@ links to figure out how to authenticate to this project from your terminal.
 ````
 
 ````{tab-item} Google Cloud
+:sync: gcp-key
 N/A
 ````
 
@@ -164,7 +165,6 @@ export PROJECT_ID=<gcp-project-id>
 ```bash
 deployer generate dedicated-cluster gcp --cluster-name=$CLUSTER_NAME --project-id=$PROJECT_ID --cluster-region=$CLUSTER_REGION
 ```
-````
 
 After running this command, you will be asked to provide the type of hub that will be deployed in the cluster, i.e. `basehub` or `daskhub`.
 
@@ -176,11 +176,12 @@ After running this command, you will be asked to provide the type of hub that wi
 This will generate the following files:
 
 Generating the terraform infrastructure file...
-1. `terraform/gcp/projects/$CLUSTER_NAME.tfvars
+1. `terraform/gcp/projects/$CLUSTER_NAME.tfvars`
 2. `config/clusters/$CLUSTER_NAME`
 3. `config/clusters/$CLUSTER_NAME/cluster.yaml`
 4. `config/clusters/$CLUSTER_NAME/support.values.yaml`
 5. `config/clusters/$CLUSTER_NAME/enc-support.values.yaml`
+````
 
 ````{tab-item} Azure
 :sync: azure-key
