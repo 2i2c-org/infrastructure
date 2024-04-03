@@ -29,7 +29,6 @@ Deploying Kubernetes to AWS has a distinctly different workflow than GCP or Azur
 :maxdepth: 1
 :caption: Deploying Kubernetes
 new-cluster.md
-aws.md
 smce.md
 external-account.md
 ```
