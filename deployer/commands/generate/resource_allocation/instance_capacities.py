@@ -132,11 +132,11 @@ def instance_capacities(
         props = ["cpu_capacity", "cpu_allocatable", "mem_capacity", "mem_allocatable"]
         for p in props:
             lp = f"{p}_low"
-            if new_cap[lp] < cap[lp]:
+            if parse_quantity(new_cap[lp]) < parse_quantity(cap[lp]):
                 cap[lp] = new_cap[lp]
         for p in props:
             lp = f"{p}_high"
-            if new_cap[lp] > cap[lp]:
+            if parse_quantity(new_cap[lp]) > parse_quantity(cap[lp]):
                 cap[lp] = new_cap[lp]
 
     # write
