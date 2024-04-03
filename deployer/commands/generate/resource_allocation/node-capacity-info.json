@@ -2,29 +2,55 @@
     "r5.xlarge": {
         "capacity": {
             "cpu": 4.0,
-            "memory": 33164840960
+            "memory": 33163589976
         },
         "allocatable": {
             "cpu": 3.92,
-            "memory": 32123604992
+            "memory": 32122060406
         },
         "measured_overhead": {
-            "cpu": 0.17,
+            "cpu": 0.195,
             "memory": 262144000
         },
         "available": {
-            "cpu": 3.75,
-            "memory": 31861460992
+            "cpu": 3.725,
+            "memory": 31859916406
+        }
+    },
+    "r5.4xlarge": {
+        "capacity": {
+            "cpu": 16.0,
+            "memory": 133523017039
+        },
+        "allocatable": {
+            "cpu": 15.89,
+            "memory": 130451041681
+        },
+        "measured_overhead": {
+            "cpu": 0.195,
+            "memory": 262144000
+        },
+        "available": {
+            "cpu": 15.695,
+            "memory": 130188897681
         }
     },
     "r5.16xlarge": {
         "capacity": {
             "cpu": 64.0,
-            "memory": 535146246144
+            "memory": 535122860310
+        },
+        "allocatable": {
+            "cpu": 63.77,
+            "memory": 526249457876
+        },
+        "measured_overhead": {
+            "cpu": 0.195,
+            "memory": 262144000
         },
         "available": {
-            "cpu": 63.6,
-            "memory": 526011052032
+            "cpu": 63.575,
+            "memory": 525987313876
         }
     },
     "n2-highmem-4": {
@@ -43,24 +69,6 @@
         "available": {
             "cpu": 3.477,
             "memory": 29158952960
-        }
-    },
-    "r5.4xlarge": {
-        "capacity": {
-            "cpu": 16.0,
-            "memory": 133523050496
-        },
-        "allocatable": {
-            "cpu": 15.89,
-            "memory": 130451771392
-        },
-        "measured_overhead": {
-            "cpu": 0.17,
-            "memory": 262144000
-        },
-        "available": {
-            "cpu": 15.72,
-            "memory": 130189627392
         }
     },
     "n2-highmem-32": {
