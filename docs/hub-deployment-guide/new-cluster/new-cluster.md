@@ -435,87 +435,89 @@ To begin deploying and operating hubs on your new cluster, we need to export the
 
 1. First, make sure you are in the right terraform directory:
 
-`````{tab-set}
-````{tab-item} AWS
-:sync: aws-key
-   ```bash
-   cd terraform/aws
-   ```
-```
-````{tab-item} Google Cloud
-:sync: gcp-key
-   ```bash
-   cd terraform/gcp
-   ```
-```
-````
-````{tab-item} Azure
-:sync: azure-key
-  ```bash
-  cd terraform/azure
-  ```
-````
-`````
+    `````{tab-set}
+    ````{tab-item} AWS
+    :sync: aws-key
+      ```bash
+      cd terraform/aws
+      ```
+    ````
+
+    ````{tab-item} Google Cloud
+    :sync: gcp-key
+      ```bash
+      cd terraform/gcp
+      ```
+    ````
+
+    ````{tab-item} Azure
+    :sync: azure-key
+      ```bash
+      cd terraform/azure
+      ```
+    ````
+    `````
 
 1. Check you are still in the correct terraform workspace
 
-  ```bash
-  terraform workspace show
-  ```
+    ```bash
+    terraform workspace show
+    ```
 
-  If you need to change, you can do so as follows
+    If you need to change, you can do so as follows
 
-  ```bash
-  terraform workspace list  # List all available workspaces
-  terraform workspace select WORKSPACE_NAME
-  ```
+    ```bash
+    terraform workspace list  # List all available workspaces
+    terraform workspace select WORKSPACE_NAME
+    ```
 
 1. Fetch credentials for automatic deployment
 
-Create the directory if it doesn't exist already:
-```bash
-mkdir -p ../../config/clusters/$CLUSTER_NAME
-```
+    Create the directory if it doesn't exist already:
+    ```bash
+    mkdir -p ../../config/clusters/$CLUSTER_NAME
+    ```
 
-`````{tab-set}
-````{tab-item} AWS
-:sync: aws-key
-  ```bash
-  terraform output -raw continuous_deployer_creds > ../../config/clusters/$CLUSTER_NAME/deployer-credentials.secret.json
-  ```
-````
+    `````{tab-set}
+    ````{tab-item} AWS
+    :sync: aws-key
+      ```bash
+      terraform output -raw continuous_deployer_creds > ../../config/clusters/$CLUSTER_NAME/deployer-credentials.secret.json
+      ```
+    ````
 
-````{tab-item} Google Cloud
-:sync: gcp-key
-  ```bash
-  terraform output -raw ci_deployer_key > ../../config/clusters/$CLUSTER_NAME/deployer-credentials.secret.json
-  ```
-````
+    ````{tab-item} Google Cloud
+    :sync: gcp-key
+      ```bash
+      terraform output -raw ci_deployer_key > ../../config/clusters/$CLUSTER_NAME/deployer-credentials.secret.json
+      ```
+    ````
 
-````{tab-item} Azure
-:sync: azure-key
-  ```bash
-  terraform output -raw kubeconfig > ../../config/clusters/$CLUSTER_NAME/deployer-credentials.secret.yaml
-  ```
-````
-`````
+    ````{tab-item} Azure
+    :sync: azure-key
+      ```bash
+      terraform output -raw kubeconfig > ../../config/clusters/$CLUSTER_NAME/deployer-credentials.secret.yaml
+      ```
+    ````
+    `````
 
-Then encrypt the key using `sops`.
+1. Then encrypt the key using `sops`.
 
-```{note}
-You must be logged into Google with your `@2i2c.org` account at this point so `sops` can read the encryption key from the `two-eye-two-see` project.
-```
+    ```{note}
+    You must be logged into Google with your `@2i2c.org` account at this point so `sops` can read the encryption key from the `two-eye-two-see` project.
+    ```
 
-First, make sure you are in the root of the repository
-```bash
-cd ../..
-```
+    ```bash
+    sops --output ../../config/clusters/$CLUSTER_NAME/enc-deployer-credentials.secret.json --encrypt ../../config/clusters/$CLUSTER_NAME/deployer-credentials.secret.json
+    ```
 
-```bash
-sops --output config/clusters/$CLUSTER_NAME/enc-deployer-credentials.secret.{{ json | yaml }} --encrypt config/clusters/$CLUSTER_NAME/deployer-credentials.secret.{{ json | yaml }}
-```
+    This key can now be committed to the `infrastructure` repo and used to deploy and manage hubs hosted on that cluster.
 
-This key can now be committed to the `infrastructure` repo and used to deploy and manage hubs hosted on that cluster.
+1. Double check to make sure that the `config/clusters/$CLUSTER_NAME/enc-deployer-credentials.secret.json` file is actually encrypted by `sops` before checking it in to the git repo. Otherwise this can be a serious security leak!
+
+    ```bash
+    cat ../../config/clusters/$CLUSTER_NAME/enc-deployer-credentials.secret.json
+    ```
 
 ## Create a `cluster.yaml` file
 
@@ -527,6 +529,25 @@ See [](config:structure) for more information.
 Create a `cluster.yaml` file under the `config/cluster/$CLUSTER_NAME>` folder and populate it with the following info:
 
 `````{tab-set}
+
+````{tab-item} AWS
+:sync: aws-key
+```yaml
+name: <your-cluster-name>
+provider: aws # <copy paste link to sign in url here>
+aws:
+  key: enc-deployer-credentials.secret.json
+  clusterType: eks
+  clusterName: <your-cluster-name>
+  region: <your-region>
+hubs: []
+```
+
+```{note}
+The `aws.key` file is defined _relative_ to the location of the `cluster.yaml` file.
+```
+````
+
 ````{tab-item} Google Cloud
 :sync: gcp-key
 ```yaml
@@ -605,6 +626,128 @@ azure:
 `````
 
 Commit this file to the repo.
+
+## Access
+
+`````{tab-set}
+````{tab-item} AWS
+:sync: aws-key
+
+### Grant additional access
+
+First, we need to grant the freshly created deployer IAM user access to the kubernetes cluster.
+
+1. As this requires passing in some parameters that match the created cluster,
+  we have a `terraform output` that can give you the exact command to run.
+
+  ```bash
+  terraform output -raw eksctl_iam_command
+  ```
+
+2. Run the `eksctl create iamidentitymapping` command returned by `terraform output`.
+  That should give the continuous deployer user access.
+
+  The command should look like this:
+
+  ```bash
+  eksctl create iamidentitymapping \
+      --cluster $CLUSTER_NAME \
+      --region $CLUSTER_REGION \
+      --arn arn:aws:iam::<aws-account-id>:user/hub-continuous-deployer \
+      --username hub-continuous-deployer \
+      --group system:masters
+  ```
+
+  Test the access by running:
+
+  ```bash
+  deployer use-cluster-credentials $CLUSTER_NAME
+  ```
+
+  and running:
+
+  ```bash
+  kubectl get node
+  ```
+
+  It should show you the provisioned node on the cluster if everything works out ok.
+
+### Grant `eksctl` access to other users
+
+```{note}
+This section is still required even if the account is managed by SSO. Though a
+user could run `deployer use-cluster-credentials $CLUSTER_NAME` to gain access
+as well.
+```
+
+AWS EKS has a strange access control problem, where the IAM user who creates
+the cluster has [full access without any visible settings
+changes](https://docs.aws.amazon.com/eks/latest/userguide/add-user-role.html),
+and nobody else does. You need to explicitly grant access to other users. Find
+the usernames of the 2i2c engineers on this particular AWS account, and run the
+following command to give them access:
+
+```{note}
+You can modify the command output by running `terraform output -raw eksctl_iam_command` as described in [](new-cluster:aws:terraform:cicd).
+```
+
+```bash
+eksctl create iamidentitymapping \
+   --cluster $CLUSTER_NAME \
+   --region $CLUSTER_REGION \
+   --arn arn:aws:iam::<aws-account-id>:user/<iam-user-name> \
+   --username <iam-user-name> \
+   --group system:masters
+```
+
+This gives all the users full access to the entire kubernetes cluster.
+After this step is done, they can fetch local config with:
+
+```bash
+aws eks update-kubeconfig --name=$CLUSTER_NAME --region=$CLUSTER_REGION
+```
+
+This should eventually be converted to use an [IAM Role] instead, so we need not
+give each individual user access, but just grant access to the role - and users
+can modify them as they wish.
+
+[iam role]: https://docs.aws.amazon.com/IAM/latest/UserGuide/id_roles.html
+````
+
+````{tab-item} Google Cloud
+:sync: gcp-key
+Test deployer access by running:
+
+```bash
+deployer use-cluster-credentials $CLUSTER_NAME
+```
+
+and running:
+
+```bash
+kubectl get node
+```
+
+It should show you the provisioned node on the cluster if everything works out ok.
+````
+
+````{tab-item} Azure
+:sync: azure-key
+Test deployer access by running:
+
+```bash
+deployer use-cluster-credentials $CLUSTER_NAME
+```
+
+and running:
+
+```bash
+kubectl get node
+```
+
+It should show you the provisioned node on the cluster if everything works out ok.
+````
+`````
 
 ## Adding the new cluster to CI/CD
 
