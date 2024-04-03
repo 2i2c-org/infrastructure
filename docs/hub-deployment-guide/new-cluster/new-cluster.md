@@ -152,6 +152,76 @@ This will generate the following files:
    the private key.
 4. `terraform/aws/projects/$CLUSTER_NAME.tfvars`, a terraform variables file that will setup
    most of the non EKS infrastructure.
+
+### Create and render an eksctl config file
+
+We use an eksctl [config file](https://eksctl.io/usage/schema/) in YAML to specify
+how our cluster should be built. Since it can get repetitive, we use
+[jsonnet](https://jsonnet.org) to declaratively specify this config. You can
+find the `.jsonnet` files for the current clusters in the `eksctl/` directory.
+
+The previous step should've created a baseline `.jsonnet` file you can modify as
+you like. The eksctl docs have a [reference](https://eksctl.io/usage/schema/)
+for all the possible options. You'd want to make sure to change at least the following:
+
+- Region / Zone - make sure you are creating your cluster in the correct region
+  and verify the suggested zones 1a, 1b, and 1c actually are available in that
+  region.
+
+  ```bash
+  # a command to list availability zones, for example
+  # ca-central-1 doesn't have 1c, but 1d instead
+  aws ec2 describe-availability-zones --region=$CLUSTER_REGION
+  ```
+- Size of nodes in instancegroups, for both notebook nodes and dask nodes. In particular,
+  make sure you have enough quota to launch these instances in your selected regions.
+- Kubernetes version - older `.jsonnet` files might be on older versions, but you should
+  pick a newer version when you create a new cluster.
+
+Once you have a `.jsonnet` file, you can render it into a config file that eksctl
+can read.
+
+```{tip}
+Make sure to run this command inside the `eksctl` directory.
+```
+
+```bash
+jsonnet $CLUSTER_NAME.jsonnet > $CLUSTER_NAME.eksctl.yaml
+```
+
+```{tip}
+The `*.eksctl.yaml` files are git ignored as we can regenerate it, so work
+against the `*.jsonnet` file and regenerate the YAML file when needed by a
+`eksctl` command.
+```
+
+### Create the cluster
+
+Now you're ready to create the cluster!
+
+```{tip}
+Make sure to run this command **inside** the `eksctl` directory, otherwise it cannot discover the `ssh-keys` subfolder.
+```
+
+```bash
+eksctl create cluster --config-file=$CLUSTER_NAME.eksctl.yaml
+```
+
+This might take a few minutes.
+
+If any errors are reported in the config (there is a schema validation step),
+fix it in the `.jsonnet` file, re-render the config, and try again.
+
+Once it is done, you can test access to the new cluster with `kubectl`, after
+getting credentials via:
+
+```bash
+aws eks update-kubeconfig --name=$CLUSTER_NAME --region=$CLUSTER_REGION
+```
+
+`kubectl` should be able to find your cluster now! `kubectl get node` should show
+you at least one core node running.
+
 ````
 
 ````{tab-item} Google Cloud
@@ -246,7 +316,7 @@ ssh_pub_key                    = "ssh-rsa my-public-ssh-key"
 ````
 `````
 
-### Add GPU nodegroup if needed
+## Add GPU nodegroup if needed
 
 If this cluster is going to have GPUs, you should edit the generated jsonnet file
 to [include a GPU nodegroups](howto:features:gpu).
@@ -263,6 +333,26 @@ gcloud auth application-default login
 Then you can change into the terraform subdirectory for the appropriate cloud provider and initialise terraform.
 
 `````{tab-set}
+````{tab-item} AWS
+:sync: aws-key
+
+Our AWS *terraform* code is now used to deploy supporting infrastructure for the EKS cluster, including:
+
+- An IAM identity account for use with our CI/CD system
+- Appropriately networked EFS storage to serve as an NFS server for hub home directories
+- Optionally, setup a [shared database](features:shared-db:aws)
+- Optionally, setup [user buckets](howto:features:storage-buckets)
+
+The steps above will have created a default `.tfvars` file. This file can either be used as-is or edited to enable the optional features listed above.
+
+Initialise terraform for use with AWS:
+
+```bash
+cd terraform/aws
+terraform init
+```
+````
+
 ````{tab-item} Google Cloud
 :sync: gcp-key
 ```bash
@@ -309,7 +399,7 @@ If you can't find the workspace you're looking for, double check you've enabled 
 
 ## Plan and Apply Changes
 
-```{note}
+```{important}
 When deploying to Google Cloud, make sure the [Compute Engine](https://console.cloud.google.com/apis/library/compute.googleapis.com), [Kubernetes Engine](https://console.cloud.google.com/apis/library/container.googleapis.com), [Artifact Registry](https://console.cloud.google.com/apis/library/artifactregistry.googleapis.com), and [Cloud Logging](https://console.cloud.google.com/apis/library/logging.googleapis.com) APIs are enabled on the project before deploying!
 ```
 
@@ -338,48 +428,75 @@ Congratulations, you've just deployed a new cluster!
 
 ## Exporting and Encrypting the Cluster Access Credentials
 
-To begin deploying and operating hubs on your new cluster, we need to export the credentials created by terraform, encrypt it using `sops`, and store it in the `secrets` directory of the `infrastructure` repo.
+In the previous step, we will have created an IAM user with just enough permissions for automatic deployment of hubs from CI/CD. Since these credentials are checked-in to our git repository and made public, they should have least amount of permissions possible.
 
-Check you are still in the correct terraform workspace
+To begin deploying and operating hubs on your new cluster, we need to export these credentials, encrypt them using `sops`, and store them in the `secrets` directory of the `infrastructure` repo.
 
-```bash
-terraform workspace show
+
+1. First, make sure you are in the right terraform directory:
+
+`````{tab-set}
+````{tab-item} AWS
+:sync: aws-key
+   ```bash
+   cd terraform/aws
+   ```
 ```
-
-If you need to change, you can do so as follows
-
-```bash
-terraform workspace list  # List all available workspaces
-terraform workspace select WORKSPACE_NAME
+````{tab-item} Google Cloud
+:sync: gcp-key
+   ```bash
+   cd terraform/gcp
+   ```
 ```
+````
+````{tab-item} Azure
+:sync: azure-key
+  ```bash
+  cd terraform/azure
+  ```
+````
+`````
 
-Then, output the credentials created by terraform to a file under the appropriate cluster directory: `/config/clusters/$CLUSTER_NAME`.
+1. Check you are still in the correct terraform workspace
 
-````{note}
-Create the cluster directory if it doesn't already exist with:
+  ```bash
+  terraform workspace show
+  ```
 
-```bash
-export CLUSTER_NAME=<cluster-name>
-```
+  If you need to change, you can do so as follows
 
+  ```bash
+  terraform workspace list  # List all available workspaces
+  terraform workspace select WORKSPACE_NAME
+  ```
+
+1. Fetch credentials for automatic deployment
+
+Create the directory if it doesn't exist already:
 ```bash
 mkdir -p ../../config/clusters/$CLUSTER_NAME
 ```
-````
 
 `````{tab-set}
+````{tab-item} AWS
+:sync: aws-key
+  ```bash
+  terraform output -raw continuous_deployer_creds > ../../config/clusters/$CLUSTER_NAME/deployer-credentials.secret.json
+  ```
+````
+
 ````{tab-item} Google Cloud
 :sync: gcp-key
-```bash
-terraform output -raw ci_deployer_key > ../../config/clusters/$CLUSTER_NAME/deployer-credentials.secret.json
-```
+  ```bash
+  terraform output -raw ci_deployer_key > ../../config/clusters/$CLUSTER_NAME/deployer-credentials.secret.json
+  ```
 ````
 
 ````{tab-item} Azure
 :sync: azure-key
-```bash
-terraform output -raw kubeconfig > ../../config/clusters/$CLUSTER_NAME/deployer-credentials.secret.yaml
-```
+  ```bash
+  terraform output -raw kubeconfig > ../../config/clusters/$CLUSTER_NAME/deployer-credentials.secret.yaml
+  ```
 ````
 `````
 
