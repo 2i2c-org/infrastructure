@@ -42,14 +42,19 @@ AWS, and we can configure a node group there for the dask pods to run onto.
 
    ```
     dask_nodes = {
-    #  A not yet fully established policy is being developed about using a single
-    #  node pool, see https://github.com/2i2c-org/infrastructure/issues/2687.
-      "n2-highmem-16" : {
-        min : 0,
-        max : 200,
-        machine_type : "n2-highmem-16",
-      },
-    }
+local daskNodes = [
+    // Node definitions for dask worker nodes. Config here is merged
+    // with our dask worker node definition, which uses spot instances.
+    // A `node.kubernetes.io/instance-type label is set to the name of the
+    // *first* item in instanceDistribution.instanceTypes, to match
+    // what we do with notebook nodes. Pods can request a particular
+    // kind of node with a nodeSelector
+    //
+    // A not yet fully established policy is being developed about using a single
+    // node pool, see https://github.com/2i2c-org/infrastructure/issues/2687.
+    //
+    { instancesDistribution+: { instanceTypes: ["r5.4xlarge"] }},
+];
    ```
 
 2. Render the `.jsonnet` file into a `.yaml` file that `eksctl` can use
