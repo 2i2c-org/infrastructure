@@ -96,9 +96,9 @@ r5.xlarge:
   cpu_allocatable_low: 3.92
   cpu_allocatable_high: 3.92
   mem_capacity_low: 30.886Gi
-  mem_capacity_high: 30.907Gi
+  mem_capacity_high: 30.887Gi
   mem_allocatable_low: 29.916Gi
-  mem_allocatable_high: 29.937Gi
+  mem_allocatable_high: 29.917Gi
 r5.2xlarge:
   cpu_capacity_low: 8.0
   cpu_capacity_high: 8.0
@@ -132,9 +132,9 @@ m5.large:
   cpu_allocatable_low: 1.93
   cpu_allocatable_high: 1.93
   mem_capacity_low: 7.461Gi
-  mem_capacity_high: 7.473Gi
+  mem_capacity_high: 7.543Gi
   mem_allocatable_low: 6.803Gi
-  mem_allocatable_high: 6.815Gi
+  mem_allocatable_high: 6.885Gi
 m5.xlarge:
   cpu_capacity_low: 4.0
   cpu_capacity_high: 4.0
