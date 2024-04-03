@@ -1,6 +1,10 @@
 name: Deploy grafana dashboards
 
-on: workflow_dispatch
+on:
+  schedule:
+    # Run at 05:00 every day, ref: https://crontab.guru/#0_5_*_*_*
+    - cron: "0 5 * * *"
+  workflow_dispatch:
 
 jobs:
   deploy_grafana_dashboards:
