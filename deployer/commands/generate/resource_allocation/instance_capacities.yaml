@@ -61,15 +61,6 @@ n2-highmem-32:
   mem_capacity_high: 251.897Gi
   mem_allocatable_low: 240.079Gi
   mem_allocatable_high: 240.079Gi
-e2-highmem-16:
-  cpu_capacity_low: 16.0
-  cpu_capacity_high: 16.0
-  cpu_allocatable_low: 15.89
-  cpu_allocatable_high: 15.89
-  mem_capacity_low: 125.807Gi
-  mem_capacity_high: 125.807Gi
-  mem_allocatable_low: 116.549Gi
-  mem_allocatable_high: 116.549Gi
 n1-standard-2:
   cpu_capacity_low: 2.0
   cpu_capacity_high: 2.0
