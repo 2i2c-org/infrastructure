@@ -88,23 +88,5 @@
             "cpu": 31.424,
             "memory": 257326313472
         }
-    },
-    "n1-highmem-4": {
-        "capacity": {
-            "cpu": 4.0,
-            "memory": 27328200704
-        },
-        "allocatable": {
-            "cpu": 3.92,
-            "memory": 23829102592
-        },
-        "measured_overhead": {
-            "cpu": 0.441,
-            "memory": 593494016
-        },
-        "available": {
-            "cpu": 3.479,
-            "memory": 23235608576
-        }
     }
 }
