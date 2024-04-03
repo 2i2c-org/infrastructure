@@ -13,10 +13,18 @@ support:
     - enc-support.secret.values.yaml
 hubs:
   - name: staging
-    display_name: MIT Linc Staging
+    display_name: LINC (staging)
     domain: staging.linc.2i2c.cloud
-    helm_chart: daskhub
+    helm_chart: basehub
     helm_chart_values_files:
       - common.values.yaml
       - staging.values.yaml
       - enc-staging.secret.values.yaml
+  - name: prod
+    display_name: LINC
+    domain: linc.2i2c.cloud
+    helm_chart: basehub
+    helm_chart_values_files:
+      - common.values.yaml
+      - prod.values.yaml
+      - enc-prod.secret.values.yaml
