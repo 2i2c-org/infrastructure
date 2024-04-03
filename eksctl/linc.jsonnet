@@ -36,21 +36,18 @@ local notebookNodes = [
         // Allow provisioning GPUs across all AZs, to prevent situation where all
         // GPUs in a single AZ are in use and no new nodes can be spawned
         availabilityZones: masterAzs,
-    }
+    },
+    {
+        instanceType: "g4dn.2xlarge",
+        tags+: {
+            "k8s.io/cluster-autoscaler/node-template/resources/nvidia.com/gpu": "1"
+        },
+        // Allow provisioning GPUs across all AZs, to prevent situation where all
+        // GPUs in a single AZ are in use and no new nodes can be spawned
+        availabilityZones: masterAzs,
+    },
 ];
-local daskNodes = [
-    // Node definitions for dask worker nodes. Config here is merged
-    // with our dask worker node definition, which uses spot instances.
-    // A `node.kubernetes.io/instance-type label is set to the name of the
-    // *first* item in instanceDistribution.instanceTypes, to match
-    // what we do with notebook nodes. Pods can request a particular
-    // kind of node with a nodeSelector
-    //
-    // A not yet fully established policy is being developed about using a single
-    // node pool, see https://github.com/2i2c-org/infrastructure/issues/2687.
-    //
-    { instancesDistribution+: { instanceTypes: ["r5.4xlarge"] }},
-];
+local daskNodes = [];
 
 
 {

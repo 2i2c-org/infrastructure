@@ -1,53 +1,189 @@
-basehub:
-  nfs:
+nfs:
+  enabled: true
+  pv:
     enabled: true
-    pv:
+    # from https://docs.aws.amazon.com/efs/latest/ug/mounting-fs-nfs-mount-settings.html
+    mountOptions:
+      - rsize=1048576
+      - wsize=1048576
+      - timeo=600
+      - soft # We pick soft over hard, so NFS lockups don't lead to hung processes
+      - retrans=2
+      - noresvport
+    serverIP: fs-0276405f3cabae08b.efs.us-east-1.amazonaws.com
+    baseShareName: /
+jupyterhub:
+  custom:
+    2i2c:
+      add_staff_user_ids_to_admin_users: true
+      add_staff_user_ids_of_type: "github"
+    jupyterhubConfigurator:
+      enabled: false
+    homepage:
+      templateVars:
+        org:
+          name: LINC
+          logo_url: https://github.com/lincbrain/linc-artwork/blob/main/linc.logo.color+white.notext.png?raw=true
+          url: https://lincbrain.org/
+        designed_by:
+          name: 2i2c
+          url: https://2i2c.org
+        operated_by:
+          name: 2i2c
+          url: https://2i2c.org
+        # FIXME: populate funded_by, tracked in
+        #        https://github.com/2i2c-org/infrastructure/issues/3828#issuecomment-2033800425.
+        funded_by:
+          name: ""
+          url: ""
+  hub:
+    allowNamedServers: true
+    config:
+      JupyterHub:
+        authenticator_class: github
+      # GitHubOAuthenticator:
+      #   populate_teams_in_auth_state: true
+      #   allowed_organizations:
+      #     - abc:def
+      #   scope:
+      #     - read:org
+      Authenticator:
+        # enable_auth_state: true
+        admin_users:
+          - kabilar
+          - aaronkanzer
+          - asmacdo
+          - satra
+  singleuser:
+    defaultUrl: /lab
+    profileList:
+      - display_name: "DANDI (CPU)"
+        description: "Default DANDI image with JupyterLab"
+        default: true
+        kubespawner_override:
+          image: dandiarchive/dandihub:latest
+          image_pull_policy: Always
+        profile_options: &profile_options_cpu
+          requests:
+            display_name: Resource Allocation
+            choices:
+              mem_3_7:
+                display_name: 3.7 GB RAM, upto 3.7 CPUs
+                kubespawner_override:
+                  mem_guarantee: 3982682624
+                  mem_limit: 3982682624
+                  cpu_guarantee: 0.46875
+                  cpu_limit: 3.75
+                  node_selector:
+                    node.kubernetes.io/instance-type: r5.xlarge
+                default: true
+              mem_7_4:
+                display_name: 7.4 GB RAM, upto 3.7 CPUs
+                kubespawner_override:
+                  mem_guarantee: 7965365248
+                  mem_limit: 7965365248
+                  cpu_guarantee: 0.9375
+                  cpu_limit: 3.75
+                  node_selector:
+                    node.kubernetes.io/instance-type: r5.xlarge
+              mem_14_8:
+                display_name: 14.8 GB RAM, upto 3.7 CPUs
+                kubespawner_override:
+                  mem_guarantee: 15930730496
+                  mem_limit: 15930730496
+                  cpu_guarantee: 1.875
+                  cpu_limit: 3.75
+                  node_selector:
+                    node.kubernetes.io/instance-type: r5.xlarge
+              mem_29_7:
+                display_name: 29.7 GB RAM, upto 3.7 CPUs
+                kubespawner_override:
+                  mem_guarantee: 31861460992
+                  mem_limit: 31861460992
+                  cpu_guarantee: 3.75
+                  cpu_limit: 3.75
+                  node_selector:
+                    node.kubernetes.io/instance-type: r5.xlarge
+              mem_60_6:
+                display_name: 60.6 GB RAM, upto 15.7 CPUs
+                kubespawner_override:
+                  mem_guarantee: 65094813696
+                  mem_limit: 65094813696
+                  cpu_guarantee: 7.86
+                  cpu_limit: 15.72
+                  node_selector:
+                    node.kubernetes.io/instance-type: r5.4xlarge
+              mem_121_2:
+                display_name: 121.2 GB RAM, upto 15.7 CPUs
+                kubespawner_override:
+                  mem_guarantee: 130189627392
+                  mem_limit: 130189627392
+                  cpu_guarantee: 15.72
+                  cpu_limit: 15.72
+                  node_selector:
+                    node.kubernetes.io/instance-type: r5.4xlarge
+              mem_244_9:
+                display_name: 244.9 GB RAM, upto 63.6 CPUs
+                kubespawner_override:
+                  mem_guarantee: 263005526016
+                  mem_limit: 263005526016
+                  cpu_guarantee: 31.8
+                  cpu_limit: 63.6
+                  node_selector:
+                    node.kubernetes.io/instance-type: r5.16xlarge
+              mem_489_9:
+                display_name: 489.9 GB RAM, upto 63.6 CPUs
+                kubespawner_override:
+                  mem_guarantee: 526011052032
+                  mem_limit: 526011052032
+                  cpu_guarantee: 63.6
+                  cpu_limit: 63.6
+                  node_selector:
+                    node.kubernetes.io/instance-type: r5.16xlarge
+      - display_name: "DANDI Matlab (CPU)"
+        description: "DANDI image with MATLAB. Requires you to bring your own license"
+        kubespawner_override:
+          image: dandiarchive/dandihub:latest-matlab
+          image_pull_policy: Always
+        profile_options: *profile_options_cpu
+      - display_name: "DANDI (GPU)"
+        description: "DANDI image with JupyterLab and GPU support"
+        kubespawner_override:
+          image: dandiarchive/dandihub:latest-gpu
+          image_pull_policy: Always
+          extra_resource_limits:
+            nvidia.com/gpu: 1
+        profile_options: &profile_options_gpu
+          requests:
+            display_name: Resource Allocation
+            choices:
+              gpu_1:
+                display_name: 1 T4 GPU, ~4 CPUs, ~16GB of RAM
+                kubespawner_override:
+                  mem_guarantee: 14G
+                  mem_limit: 16G
+                  cpu_guarantee: 3
+                  cpu_limit: 4
+                  node_selector:
+                    node.kubernetes.io/instance-type: g4dn.xlarge
+                default: true
+              gpu_2:
+                display_name: 1 T4 GPU, ~8 CPUs, ~32GB of RAM
+                kubespawner_override:
+                  mem_guarantee: 29G
+                  mem_limit: 32G
+                  cpu_guarantee: 6
+                  cpu_limit: 8
+                  node_selector:
+                    node.kubernetes.io/instance-type: g4dn.2xlarge
+      - display_name: "DANDI Matlab (GPU)"
+        description: "DANDI Matlab image with GPU support. Requires you to bring your own license."
+        kubespawner_override:
+          image: dandiarchive/dandihub:latest-gpu-matlab
+          image_pull_policy: Always
+          extra_resource_limits:
+            nvidia.com/gpu: 1
+        profile_options: *profile_options_gpu
+  scheduling:
+    userScheduler:
       enabled: true
-      # from https://docs.aws.amazon.com/efs/latest/ug/mounting-fs-nfs-mount-settings.html
-      mountOptions:
-        - rsize=1048576
-        - wsize=1048576
-        - timeo=600
-        - soft # We pick soft over hard, so NFS lockups don't lead to hung processes
-        - retrans=2
-        - noresvport
-      serverIP: fs-0276405f3cabae08b.efs.us-east-1.amazonaws.com
-      baseShareName: /
-  jupyterhub:
-    hub:
-      config:
-        JupyterHub:
-          authenticator_class: github
-        GitHubOAuthenticator:
-          populate_teams_in_auth_state: true
-          # allowed_organizations:
-          #   - abc:def
-          scope:
-            - read:org
-        Authenticator:
-          enable_auth_state: true
-          # admin_users:
-          #   - asdf
-    custom:
-      2i2c:
-        add_staff_user_ids_to_admin_users: true
-        add_staff_user_ids_of_type: "github"
-      jupyterhubConfigurator:
-        enabled: false
-      homepage:
-        templateVars:
-          org:
-            logo_url: ""
-            url: ""
-          designed_by:
-            name: 2i2c
-            url: https://2i2c.org
-          operated_by:
-            name: 2i2c
-            url: https://2i2c.org
-          funded_by:
-            name: ""
-            url: ""
-    scheduling:
-      userScheduler:
-        enabled: true
