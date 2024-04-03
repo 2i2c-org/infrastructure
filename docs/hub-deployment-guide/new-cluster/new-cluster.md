@@ -43,8 +43,17 @@ This guide will assume you have already followed the guidance in [](/topic/infra
 
    Verify install and version with `jsonnet --version`.
 ````
-````{tab-item} Azure and Google Cloud
-:sync: azure-and-gcp-key
+
+````{tab-item} Google Cloud
+:sync: gcp-key
+1. Install `kubectl`, `helm`, `sops`, etc.
+
+   In [](tutorials:setup) you find instructions on how to setup `sops` to
+   encrypt and decrypt files.
+````
+
+````{tab-item} Azure
+:sync: azure-key
 1. Install `kubectl`, `helm`, `sops`, etc.
 
    In [](tutorials:setup) you find instructions on how to setup `sops` to
@@ -54,14 +63,26 @@ This guide will assume you have already followed the guidance in [](/topic/infra
 
 ## Create a new cluster
 
+### Setup credentials
+
 `````{tab-set}
-````{tab-item} Setup credentials (AWS only)
+
+````{tab-item} AWS
 :sync: aws-key
 Depending on whether this project is using AWS SSO or not, you can use the following
 links to figure out how to authenticate to this project from your terminal.
 
 - [For accounts setup with AWS SSO](cloud-access:aws-sso:terminal)
 - [For accounts without AWS SSO](cloud-access:aws-iam:terminal)
+````
+
+````{tab-item} Google Cloud
+N/A
+````
+
+````{tab-item} Azure
+:sync: azure-key
+N/A
 ````
 `````
 
@@ -70,15 +91,18 @@ links to figure out how to authenticate to this project from your terminal.
 We automatically generate the files required to setup a new cluster:
 
 `````{tab-set}
+
 ````{tab-item} AWS
 :sync: aws-key
 - A `.jsonnet` file for use with `eksctl`
-- An [ssh key](https://eksctl.io/introduction/#ssh-access) for use with eksctl
-- A `.tfvars` file for use with `terraform
+- A `sops` encrypted [ssh key](https://eksctl.io/introduction/#ssh-access) that can be used to ssh into the kubernetes nodes.
+- A ssh public key used by `eksctl` to grant access to the private key.
+- A `.tfvars` terraform variables file that will setup most of the non EKS infrastructure.
 - The cluster config directory in `./config/cluster/<new-cluster>`
 - The support values file `support.values.yaml`
 - The the support credentials encrypted file `enc-support.values.yaml` 
 ````
+
 ````{tab-item} Google Cloud
 :sync: gcp-key
 - A `.tfvars` file for use with `terraform`
@@ -87,6 +111,7 @@ We automatically generate the files required to setup a new cluster:
 - The support values file `support.values.yaml`
 - The the support credentials encrypted file `enc-support.values.yaml` 
 ````
+
 ````{tab-item} Azure
 :sync: azure-key
 ```{warning}
@@ -109,6 +134,23 @@ export CLUSTER_REGION=<cluster-region-like ca-central-1>
 ```bash
 deployer generate dedicated-cluster aws --cluster-name=$CLUSTER_NAME --cluster-region=$CLUSTER_REGION
 ```
+
+After running this command, you will be asked to provide the type of hub that will be deployed in the cluster, i.e. `basehub` or `daskhub`.
+
+- If you already know that the there will be daskhubs running in this cluster, then type in `daskhub` and hit ENTER.
+
+  This will generate a specific node pool for dask workers to run on, in the appropriate `.jsonnet` file that will be used with `eksctl`.
+- Otherwise, just hit ENTER and it will default to a basehub infrastructure that you can later amend if daskhubs will be needed by following the guide on [how to add support for daskhubs in an existing cluster](howto:features:daskhub).
+
+This will generate the following files:
+
+1. `eksctl/$CLUSTER_NAME.jsonnet` with a default cluster configuration, deployed to `us-west-2`
+2. `eksctl/ssh-keys/secret/$CLUSTER_NAME.key`, a `sops` encrypted ssh private key that can be
+   used to ssh into the kubernetes nodes.
+3. `eksctl/ssh-keys/$CLUSTER_NAME.pub`, an ssh public key used by `eksctl` to grant access to
+   the private key.
+4. `terraform/aws/projects/$CLUSTER_NAME.tfvars`, a terraform variables file that will setup
+   most of the non EKS infrastructure.
 ````
 
 ````{tab-item} Google Cloud
@@ -120,9 +162,26 @@ export PROJECT_ID=<gcp-project-id>
 ```
 
 ```bash
-deployer generate dedicated-cluster gcp --cluster-name=$CLUSTER_NAME --project-id=$PROJECT_ID --cluster-region=CLUSTER_REGION
+deployer generate dedicated-cluster gcp --cluster-name=$CLUSTER_NAME --project-id=$PROJECT_ID --cluster-region=$CLUSTER_REGION
 ```
 ````
+
+After running this command, you will be asked to provide the type of hub that will be deployed in the cluster, i.e. `basehub` or `daskhub`.
+
+- If you already know that the there will be daskhubs running in this cluster, then type in `daskhub` and hit ENTER.
+
+  This will generate a specific node pool for dask workers to run on, in the appropriate `.jsonnet` file that will be used with `eksctl`.
+- Otherwise, just hit ENTER and it will default to a basehub infrastructure that you can later amend if daskhubs will be needed by following the guide on [how to add support for daskhubs in an existing cluster](howto:features:daskhub).
+
+This will generate the following files:
+
+Generating the terraform infrastructure file...
+1. `terraform/gcp/projects/$CLUSTER_NAME.tfvars
+2. `config/clusters/$CLUSTER_NAME`
+3. `config/clusters/$CLUSTER_NAME/cluster.yaml`
+4. `config/clusters/$CLUSTER_NAME/support.values.yaml`
+5. `config/clusters/$CLUSTER_NAME/enc-support.values.yaml`
+
 ````{tab-item} Azure
 :sync: azure-key
 
@@ -186,23 +245,10 @@ ssh_pub_key                    = "ssh-rsa my-public-ssh-key"
 ````
 `````
 
-After running this command, you will be asked to provide the type of hub that will be deployed in the cluster, i.e. `basehub` or `daskhub`.
+### Add GPU nodegroup if needed
 
-- If you already know that the there will be daskhubs running in this cluster, then type in `daskhub` and hit ENTER.
-
-  This will generate a specific node pool for dask workers to run on, in the appropriate `.jsonnet` file that will be used with `eksctl`.
-- Otherwise, just hit ENTER and it will default to a basehub infrastructure that you can later amend if daskhubs will be needed by following the guide on [how to add support for daskhubs in an existing cluster](howto:features:daskhub).
-
-This will generate the following files:
-
-1. `eksctl/$CLUSTER_NAME.jsonnet` with a default cluster configuration, deployed to `us-west-2`
-2. `eksctl/ssh-keys/secret/$CLUSTER_NAME.key`, a `sops` encrypted ssh private key that can be
-   used to ssh into the kubernetes nodes.
-3. `eksctl/ssh-keys/$CLUSTER_NAME.pub`, an ssh public key used by `eksctl` to grant access to
-   the private key.
-4. `terraform/aws/projects/$CLUSTER_NAME.tfvars`, a terraform variables file that will setup
-   most of the non EKS infrastructure.
-
+If this cluster is going to have GPUs, you should edit the generated jsonnet file
+to [include a GPU nodegroups](howto:features:gpu).
 
 ## Initialising Terraform
 
