@@ -55,6 +55,7 @@ jupyterhub:
           - asmacdo
           - satra
   singleuser:
+    startTimeout: 900 # 15 mins provides headroom for very large image pulls
     defaultUrl: /lab
     profileList:
       - display_name: "DANDI (CPU)"
