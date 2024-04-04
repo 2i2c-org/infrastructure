@@ -37,7 +37,7 @@ terraform apply -var-file projects/$CLUSTER_NAME.tfvars
 We use `eksctl` with `jsonnet` to provision our kubernetes clusters on
 AWS, and we can configure a node group there for the dask pods to run onto.
 
-1. In the appropriate `.jsonnet` file, add a `dask_nodes` definition.
+1. In the appropriate `.jsonnet` file, update the `local daskNodes`:
 
     This is how it could look in a .jsonnet file after updating the local daskNodes = [] variable:
 
