@@ -8,7 +8,10 @@ jupyterhub:
     tls:
       - hosts: [bican.2i2c.cloud]
         secretName: https-auto-tls
-
+  hub:
+    config:
+      GitHubOAuthenticator:
+        oauth_callback_url: https://bican.2i2c.cloud/hub/oauth_callback
   singleuser:
     extraEnv:
       SCRATCH_BUCKET: s3://bican-scratch/$(JUPYTERHUB_USER)
