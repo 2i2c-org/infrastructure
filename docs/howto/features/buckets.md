@@ -83,12 +83,12 @@ on why users want this!
 4. Get this change deployed, and users should now be able to use the buckets!
    Currently running users might have to restart their pods for the change to take effect.
 
-### Testing access to buckets
+## Testing access to buckets
 
 Once bucket access has been set up, we should test to make sure users can write
 to and read from it.
 
-#### AWS
+### AWS
 
 1. Login to the hub, and open a Terminal in JupyterLab
 
