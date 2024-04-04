@@ -164,6 +164,8 @@ prometheus:
       - /bin/sh
     defaultFlagsOverride:
       - -c
+      # If changing this, please also find wherever this has been copied to and change
+      # those as well as appropriate
       - "rm -rvf /data/wal/* && \
         exec /bin/prometheus \
         --storage.tsdb.retention.time=366d \
