@@ -1,24 +1,24 @@
 jupyterhub:
   ingress:
-    hosts: [wits.af.catalystproject.2i2c.cloud]
+    hosts: [bhki.af.catalystproject.2i2c.cloud]
     tls:
-      - hosts: [wits.af.catalystproject.2i2c.cloud]
+      - hosts: [bhki.af.catalystproject.2i2c.cloud]
         secretName: https-auto-tls
   custom:
     homepage:
       templateVars:
         org:
-          name: Catalyst Project, Africa - WITS
+          name: Catalyst Project, Africa - Bioinformatics Hub of Kenya Initiative
   hub:
     config:
       JupyterHub:
         authenticator_class: github
       GitHubOAuthenticator:
-        oauth_callback_url: https://wits.af.catalystproject.2i2c.cloud/hub/oauth_callback
+        oauth_callback_url: https://bhki.af.catalystproject.2i2c.cloud/hub/oauth_callback
         allowed_organizations:
-          - CatalystProject-Hubs:wits
+          - CatalystProject-Hubs:bhki
         scope:
           - read:org
       Authenticator:
         admin_users:
-          - gentlelab2016
+          - LandiMi2
