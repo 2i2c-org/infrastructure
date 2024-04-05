@@ -76,6 +76,12 @@ basehub:
 
               return False
 
+            async def authenticate(self, *args, **kwargs):
+              resp = await super().authenticate(*args, **kwargs)
+              # Set scope to groups
+              resp["groups"] = resp["auth_state"]["scope"]
+              return resp
+
           def populate_token(spawner, auth_state):
             # For our deployment-service-check health check user, there is no auth_state.
             # So these env variables need not be set.
@@ -89,7 +95,75 @@ basehub:
 
           c.Spawner.auth_state_hook = populate_token
 
+          c.GenericOAuthenticator.manage_groups = True
+
           c.JupyterHub.authenticator_class = CustomGenericOAuthenticator
+
+        05-gh-teams: |
+          # Filters profileList based on group membership of JupyterHubs
+          import copy
+
+          from textwrap import dedent
+          from tornado import web
+          from oauthenticator.github import GitHubOAuthenticator
+
+          original_profile_list = c.KubeSpawner.profile_list
+
+          async def profile_list_allowed_groups_filter(spawner):
+              """
+              Returns the initially configured profile_list filtered based on the
+              user's membership in each profile's `allowed_groups`. If
+              `allowed_groups` isn't set for a profile, its not filtered out.
+
+              `allowed_groups` is a list of JupyterHub groups.
+
+              If the returned profile_list is filtered to not include a profile,
+              an error is raised and the user isn't allowed to start a server.
+              """
+              if spawner.user.name == "deployment-service-check":
+                  print("Ignoring allowed_teams check for deployment-service-check")
+                  return original_profile_list
+
+              groups = {g.name.casefold() for g in spawner.user.groups}
+              print(f"User {spawner.user.name} is part of groups {groups}")
+
+              # Filter out profiles with allowed_groups set if the user isn't part of any.
+              allowed_profiles = []
+              for profile in copy.deepcopy(original_profile_list):
+                  allowed_groups = set(profile.get("allowed_groups"))
+                  if allowed_groups is None:
+                      # If no allowed_groups are set, allow access to everything
+                      allowed_profiles.append(profile)
+                      continue
+
+                  if allowed_groups & groups:
+                      print(f"Allowing profile {profile['display_name']} for user {spawner.user.name} based on group membership")
+                      allowed_profiles.append(profile)
+                      continue
+
+              if len(allowed_profiles) == 0:
+                  # If no profiles are allowed, user should not be able to spawn anything!
+                  # If we don't explicitly stop this, user will be logged into the 'default' settings
+                  # set in singleuser, without any profile overrides. Not desired behavior
+                  # FIXME: User doesn't actually see this error message, just the generic 403.
+                  error_msg = dedent(f"""
+                  Your Group team membership is insufficient to launch any server profiles.
+
+                  GitHub teams you are a member of that this JupyterHub knows about are {', '.join(groups)}.
+
+                  If you are part of additional teams, log out of this JupyterHub and log back in to refresh that information.
+                  """)
+                  raise web.HTTPError(403, error_msg)
+
+              return allowed_profiles
+
+          # Only set this customized profile_list *if* we already have a profile_list set
+          # otherwise, we'll show users a blank server options form and they won't be able to
+          # start their server
+          if c.KubeSpawner.profile_list:
+              # Customize list of profiles dynamically, rather than override options form.
+              # This is more secure, as users can't override the options available to them via the hub API
+              c.KubeSpawner.profile_list = profile_list_allowed_groups_filter
       config:
         # JupyterHub:
         #   authenticator_class: auth0
@@ -113,7 +187,7 @@ basehub:
           username_claim: sub
           # Convert 'scope' from the OAuth2 response into JupyterHub groups
           manage_groups: true
-          claim_groups_key: 'scope'
+          # claim_groups_key: 'scope'
         CILogonOAuthenticator:
           allowed_idps:
             http://github.com/login/oauth/authorize:
@@ -132,6 +206,10 @@ basehub:
       profileList:
         - display_name: "Shared Small: 1-4 CPU, 8-32 GB"
           description: "A shared machine, the recommended option until you experience a limitation."
+          allowed_groups:
+          - geolab
+          - geolab:dev
+          - geolab:power
           profile_options: &profile_options
             image:
               display_name: Image
@@ -166,9 +244,12 @@ basehub:
             mem_limit: null
             node_selector:
               node.kubernetes.io/instance-type: r5.xlarge
-
         - display_name: "Small: 4 CPU, 32 GB"
           description: "A dedicated machine for you."
+          allowed_groups:
+          - geolab
+          - geolab:dev
+          - geolab:power
           profile_options: *profile_options
           kubespawner_override:
             mem_guarantee: 28.937G
@@ -176,20 +257,23 @@ basehub:
             mem_limit: null
             node_selector:
               node.kubernetes.io/instance-type: r5.xlarge
-
         - display_name: "Medium: 16 CPU, 128 GB"
           description: "A dedicated machine for you."
           profile_options: *profile_options
+          allowed_groups:
+          - geolab:dev
+          - geolab:power
           kubespawner_override:
             mem_guarantee: 120.513G
             cpu_guarantee: 1.6
             mem_limit: null
             node_selector:
               node.kubernetes.io/instance-type: r5.4xlarge
-
         - display_name: "Large: 64 CPU, 512 GB"
           description: "A dedicated machine for you"
           profile_options: *profile_options
+          allowed_groups:
+          - geolab:power
           kubespawner_override:
             mem_guarantee: 489.13G
             cpu_guarantee: 6.4
