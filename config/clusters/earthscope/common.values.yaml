@@ -111,6 +111,9 @@ basehub:
             # This isn't an actual URL, just a string. Must not have a trailing slash
             audience: https://api.dev.earthscope.org
           username_claim: sub
+          # Convert 'scope' from the OAuth2 response into JupyterHub groups
+          manage_groups: true
+          claim_groups_key: 'scope'
         CILogonOAuthenticator:
           allowed_idps:
             http://github.com/login/oauth/authorize:
