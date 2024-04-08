@@ -271,6 +271,10 @@ prometheus:
 # values ref: https://github.com/grafana/helm-charts/blob/main/charts/grafana/values.yaml
 #
 grafana:
+  # We decrypt and pass `grafana.adminPassword` just in time as part of
+  # deploying grafana, and find it acceptable - so we disable this strict check.
+  assertNoLeakedSecrets: false
+
   persistence:
     # A PVC is used to enable Grafana to store auth details and dashboard
     # definitions.
