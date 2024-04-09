@@ -13,7 +13,7 @@ jupyterhub:
         org:
           name: "MUST"
           url: https://www.must.ac.mw/
-          logo_url: https://www.must.ac.mw/wp-content/themes/mustwebsite/images/must-logo.png
+          logo_url: https://www.must.ac.mw/imgs/logo/must%20log%20black.png
   hub:
     config:
       JupyterHub:
