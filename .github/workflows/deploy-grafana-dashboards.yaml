@@ -1,16 +1,24 @@
 name: Deploy grafana dashboards
 
-on: workflow_dispatch
+on:
+  schedule:
+    # Run at 05:00 every day, ref: https://crontab.guru/#0_5_*_*_*
+    - cron: "0 5 * * *"
+  workflow_dispatch:
 
 jobs:
   deploy_grafana_dashboards:
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-22.04
     strategy:
       # Don't stop other deployments if one fails
       fail-fast: false
       matrix:
         include:
-          # The grafana for 2i2c cluster holds also info about all other clusters
+          # The grafana for 2i2c cluster holds also info about all other
+          # clusters and gets an additional dashboard deployed for that
+          - cluster_name: 2i2c
+            deploy_flags: --dashboards-dir=global-dashboards
+
           - cluster_name: 2i2c
           - cluster_name: 2i2c-aws-us
           - cluster_name: 2i2c-uk
@@ -41,12 +49,11 @@ jobs:
           - cluster_name: jupyter-health
 
     steps:
-      - name: Checkout repo
-        uses: actions/checkout@v4
+      - uses: actions/checkout@v4
 
       - uses: actions/setup-python@v5
         with:
-          python-version: "3.9"
+          python-version: "3.11"
 
       - name: Install deployer
         run: |
@@ -63,4 +70,4 @@ jobs:
 
       - name: Deploy grafana dashboards for ${{ matrix.cluster_name }}
         run: |
-          deployer grafana deploy-dashboards ${{ matrix.cluster_name }}
+          deployer grafana deploy-dashboards ${{ matrix.deploy_flags }} ${{ matrix.cluster_name }}
