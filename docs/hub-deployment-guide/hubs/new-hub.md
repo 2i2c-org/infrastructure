@@ -64,10 +64,65 @@ To deploy a new hub, follow these steps:
    If however a specific feature has been requested that does not come out-of-the-box with `basehub` or `daskhub`, see [](hub-features) for information on how to deploy it and the relevant config that should be added to the `<hub>.values.yaml` file.
    ```
 
-5. Create a Pull Request with the new hub entry, and get a team member to review it.
-6. Once you merge the pull request, the GitHub Action workflow will detect that a new entry has been added to the configuration file.
+5. Make sure you setup the [PersistentVolume](https://kubernetes.io/docs/concepts/storage/persistent-volumes/) in the hub's config.
+
+`````{tab-set}
+````{tab-item} AWS
+:sync: aws-key
+
+An [EFS instance](https://aws.amazon.com/efs/) to store the hub home directories, should exist from when the cluster was created.
+
+Get the address a hub on this cluster should use for connecting to NFS with
+`terraform output nfs_server_dns`, and set it in the hub's config under
+`nfs.pv.serverIP` (nested under `basehub` when necessary) in the appropriate
+`<hub>.values.yaml` file.
+
+```yaml
+nfs:
+   enabled: true
+      enabled: false
+   pv:
+      enabled: true
+      # from https://docs.aws.amazon.com/efs/latest/ug/mounting-fs-nfs-mount-settings.html
+      mountOptions:
+      - rsize=1048576
+      - wsize=1048576
+      - timeo=600
+      - soft # We pick soft over hard, so NFS lockups don't lead to hung processes
+      - retrans=2
+      - noresvport
+      serverIP: <from-terraform>
+      baseShareName: /
+```
+````
+
+````{tab-item} Google Cloud
+:sync: gcp-key
+```yaml
+nfs:
+  enabled: true
+  pv:
+    enabled: true
+    mountOptions:
+      - soft
+      - noatime
+    # Google FileStore IP
+    serverIP: <gcp-filestore-ip>
+    # Name of Google Filestore share
+    baseShareName: /homes/
+```
+````
+
+````{tab-item} Azure
+:sync: azure-key
+N/A
+````
+`````
+
+6. Create a Pull Request with the new hub entry, and get a team member to review it.
+7. Once you merge the pull request, the GitHub Action workflow will detect that a new entry has been added to the configuration file.
    It will then deploy a new JupyterHub with the configuration you've specified onto the corresponding cluster.
-7. Monitor the action to make sure that it completes.
+8. Monitor the action to make sure that it completes.
    If something goes wrong and the workflow does not finish, try [deploying locally](hubs:manual-deploy) to access the logs to help understand what is going on.
    It may be necessary to make new changes to the hub's configuration via a Pull Request, or to *revert* the old Pull Request if you cannot determine how to resolve the problem.
 
@@ -76,8 +131,8 @@ To deploy a new hub, follow these steps:
    You will need to run the [health check locally](hubs:manual-deploy:health-check) to inspect these logs.
    ```
 
-8. Log in to the hub and ensure that the hub works as expected from a user's perspective.
-9. Send a link to the hub's Community Representative(s) so they can confirm that it works from their perspective as well.
+9. Log in to the hub and ensure that the hub works as expected from a user's perspective.
+10. Send a link to the hub's Community Representative(s) so they can confirm that it works from their perspective as well.
 
 ## Automated vs. manual deploys
 

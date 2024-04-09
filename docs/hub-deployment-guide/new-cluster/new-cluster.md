@@ -1,5 +1,5 @@
 (new-cluster:new-cluster)=
-# New Kubernetes cluster on GCP or Azure
+# New Kubernetes cluster on GCP, Azure or AWS
 
 This guide will walk through the process of adding a new cluster to our [terraform configuration](https://github.com/2i2c-org/infrastructure/tree/HEAD/terraform).
 
@@ -7,58 +7,256 @@ You can find out more about terraform in [](/topic/infrastructure/terraform) and
 
 ```{attention}
 Currently, we do not deploy clusters to AWS _solely_ using terraform.
-Please see [](new-cluster:aws) for AWS-specific deployment guidelines.
+We use [eksctl](https://eksctl.io/) to provision our k8s clusters on AWS and
+terraform to provision supporting infrastructure, such as storage buckets.
 ```
 
 ## Cluster Design
 
 This guide will assume you have already followed the guidance in [](/topic/infrastructure/cluster-design) to select the appropriate infrastructure.
 
-## Create a Terraform variables file for the cluster
-
-The first step is to create a `.tfvars` file in the appropriate terraform projects subdirectory:
-
-- [`terraform/gcp/projects`](https://github.com/2i2c-org/infrastructure/tree/HEAD/terraform/gcp/projects) for Google Cloud clusters
-- [`terraform/azure/projects`](https://github.com/2i2c-org/infrastructure/tree/HEAD/terraform/azure/projects) for Azure clusters
-
-Give it a descriptive name that at a glance provides context to the location and/or purpose of the cluster.
+## Prerequisites
 
 `````{tab-set}
+````{tab-item} AWS
+:sync: aws-key
+1. Install `kubectl`, `helm`, `sops`, etc.
+
+   In [](tutorials:setup) you find instructions on how to setup `sops` to
+   encrypt and decrypt files.
+
+2. Install [`aws`](https://docs.aws.amazon.com/cli/latest/userguide/getting-started-install.html#getting-started-install-instructions)
+
+   Verify install and version with `aws --version`. You should have at least
+   version 2.
+
+3. Install or upgrade [eksctl](https://eksctl.io/introduction/#installation)
+
+   Mac users with homebrew can run `brew install eksctl`.
+
+   Verify install and version with `eksctl version`. You typically need a very
+   recent version of this CLI.
+
+4. Install [`jsonnet`](https://github.com/google/jsonnet)
+
+   Mac users with homebrew can run `brew install jsonnet`.
+
+   Verify install and version with `jsonnet --version`.
+````
+
 ````{tab-item} Google Cloud
 :sync: gcp-key
-The _minimum_ inputs this file requires are:
+1. Install `kubectl`, `helm`, `sops`, etc.
 
-- `prefix`: Prefix for all objects created by terraform.
-  Primary identifier to 'group' together resources.
-- `project_id`: GCP Project ID to create resources in.
-  Should be the id, rather than display name of the project.
-- `regional_cluster`: Set to true to provision a [GKE Regional
-  Highly Available cluster](https://cloud.google.com/kubernetes-engine/docs/concepts/regional-clusters).
-  Costs ~70$ a month, but worth it for the added reliability for most
-  cases except when cost saving is an absolute requirement. Defaults
-  to `true`.
-- `zone`: Zone where cluster nodes and filestore for home directory
-  are created.
-- `region`: Region where cluster's control plan (if `regional_cluster` is
-  `true`) is run, as well as any storage buckets created with
-  `user_buckets`.
-
-See the [variables file](https://github.com/2i2c-org/infrastructure/tree/HEAD/terraform/gcp/variables.tf) for other inputs this file can take and their descriptions.
-
-Example `.tfvars` file:
-
-```
-prefix           = "my-awesome-project"
-project_id       = "my-awesome-project-id"
-zone             = "us-central1-c"
-region           = "us-central1"
-regional_cluster = true
-```
+   In [](tutorials:setup) you find instructions on how to setup `sops` to
+   encrypt and decrypt files.
 ````
 
 ````{tab-item} Azure
 :sync: azure-key
-The _minimum_ inputs this file requires are:
+1. Install `kubectl`, `helm`, `sops`, etc.
+
+   In [](tutorials:setup) you find instructions on how to setup `sops` to
+   encrypt and decrypt files.
+````
+`````
+
+## Create a new cluster
+
+### Setup credentials
+
+`````{tab-set}
+
+````{tab-item} AWS
+:sync: aws-key
+Depending on whether this project is using AWS SSO or not, you can use the following
+links to figure out how to authenticate to this project from your terminal.
+
+- [For accounts setup with AWS SSO](cloud-access:aws-sso:terminal)
+- [For accounts without AWS SSO](cloud-access:aws-iam:terminal)
+````
+
+````{tab-item} Google Cloud
+:sync: gcp-key
+N/A
+````
+
+````{tab-item} Azure
+:sync: azure-key
+N/A
+````
+`````
+
+### Generate cluster files
+
+We automatically generate the files required to setup a new cluster:
+
+`````{tab-set}
+
+````{tab-item} AWS
+:sync: aws-key
+- A `.jsonnet` file for use with `eksctl`
+- A `sops` encrypted [ssh key](https://eksctl.io/introduction/#ssh-access) that can be used to ssh into the kubernetes nodes.
+- A ssh public key used by `eksctl` to grant access to the private key.
+- A `.tfvars` terraform variables file that will setup most of the non EKS infrastructure.
+- The cluster config directory in `./config/cluster/<new-cluster>`
+- The support values file `support.values.yaml`
+- The the support credentials encrypted file `enc-support.values.yaml` 
+````
+
+````{tab-item} Google Cloud
+:sync: gcp-key
+- A `.tfvars` file for use with `terraform`
+- The cluster config directory in `./config/cluster/<new-cluster>`
+- A sample `cluster.yaml` config file
+- The support values file `support.values.yaml`
+- The the support credentials encrypted file `enc-support.values.yaml` 
+````
+
+````{tab-item} Azure
+:sync: azure-key
+```{warning}
+An automated deployer command doesn't exist yet, these files need to be manually generated!
+```
+````
+`````
+
+You can generate these with:
+
+`````{tab-set}
+````{tab-item} AWS
+:sync: aws-key
+
+```bash
+export CLUSTER_NAME=<cluster-name>
+export CLUSTER_REGION=<cluster-region-like ca-central-1>
+```
+
+```bash
+deployer generate dedicated-cluster aws --cluster-name=$CLUSTER_NAME --cluster-region=$CLUSTER_REGION
+```
+
+After running this command, you will be asked to provide the type of hub that will be deployed in the cluster, i.e. `basehub` or `daskhub`.
+
+- If you already know that the there will be daskhubs running in this cluster, then type in `daskhub` and hit ENTER.
+
+  This will generate a specific node pool for dask workers to run on, in the appropriate `.jsonnet` file that will be used with `eksctl`.
+- Otherwise, just hit ENTER and it will default to a basehub infrastructure that you can later amend if daskhubs will be needed by following the guide on [how to add support for daskhubs in an existing cluster](howto:features:daskhub).
+
+This will generate the following files:
+
+1. `eksctl/$CLUSTER_NAME.jsonnet` with a default cluster configuration, deployed to `us-west-2`
+2. `eksctl/ssh-keys/secret/$CLUSTER_NAME.key`, a `sops` encrypted ssh private key that can be
+   used to ssh into the kubernetes nodes.
+3. `eksctl/ssh-keys/$CLUSTER_NAME.pub`, an ssh public key used by `eksctl` to grant access to
+   the private key.
+4. `terraform/aws/projects/$CLUSTER_NAME.tfvars`, a terraform variables file that will setup
+   most of the non EKS infrastructure.
+
+### Create and render an eksctl config file
+
+We use an eksctl [config file](https://eksctl.io/usage/schema/) in YAML to specify
+how our cluster should be built. Since it can get repetitive, we use
+[jsonnet](https://jsonnet.org) to declaratively specify this config. You can
+find the `.jsonnet` files for the current clusters in the `eksctl/` directory.
+
+The previous step should've created a baseline `.jsonnet` file you can modify as
+you like. The eksctl docs have a [reference](https://eksctl.io/usage/schema/)
+for all the possible options. You'd want to make sure to change at least the following:
+
+- Region / Zone - make sure you are creating your cluster in the correct region
+  and verify the suggested zones 1a, 1b, and 1c actually are available in that
+  region.
+
+  ```bash
+  # a command to list availability zones, for example
+  # ca-central-1 doesn't have 1c, but 1d instead
+  aws ec2 describe-availability-zones --region=$CLUSTER_REGION
+  ```
+- Size of nodes in instancegroups, for both notebook nodes and dask nodes. In particular,
+  make sure you have enough quota to launch these instances in your selected regions.
+- Kubernetes version - older `.jsonnet` files might be on older versions, but you should
+  pick a newer version when you create a new cluster.
+
+Once you have a `.jsonnet` file, you can render it into a config file that eksctl
+can read.
+
+```{tip}
+Make sure to run this command inside the `eksctl` directory.
+```
+
+```bash
+jsonnet $CLUSTER_NAME.jsonnet > $CLUSTER_NAME.eksctl.yaml
+```
+
+```{tip}
+The `*.eksctl.yaml` files are git ignored as we can regenerate it, so work
+against the `*.jsonnet` file and regenerate the YAML file when needed by a
+`eksctl` command.
+```
+
+### Create the cluster
+
+Now you're ready to create the cluster!
+
+```{tip}
+Make sure to run this command **inside** the `eksctl` directory, otherwise it cannot discover the `ssh-keys` subfolder.
+```
+
+```bash
+eksctl create cluster --config-file=$CLUSTER_NAME.eksctl.yaml
+```
+
+This might take a few minutes.
+
+If any errors are reported in the config (there is a schema validation step),
+fix it in the `.jsonnet` file, re-render the config, and try again.
+
+Once it is done, you can test access to the new cluster with `kubectl`, after
+getting credentials via:
+
+```bash
+aws eks update-kubeconfig --name=$CLUSTER_NAME --region=$CLUSTER_REGION
+```
+
+`kubectl` should be able to find your cluster now! `kubectl get node` should show
+you at least one core node running.
+
+````
+
+````{tab-item} Google Cloud
+:sync: gcp-key
+```bash
+export CLUSTER_NAME=<cluster-name>
+export CLUSTER_REGION=<cluster-region-like ca-central-1>
+export PROJECT_ID=<gcp-project-id>
+```
+
+```bash
+deployer generate dedicated-cluster gcp --cluster-name=$CLUSTER_NAME --project-id=$PROJECT_ID --cluster-region=$CLUSTER_REGION
+```
+
+After running this command, you will be asked to provide the type of hub that will be deployed in the cluster, i.e. `basehub` or `daskhub`.
+
+- If you already know that the there will be daskhubs running in this cluster, then type in `daskhub` and hit ENTER.
+
+  This will generate a specific node pool for dask workers to run on, in the appropriate `.jsonnet` file that will be used with `eksctl`.
+- Otherwise, just hit ENTER and it will default to a basehub infrastructure that you can later amend if daskhubs will be needed by following the guide on [how to add support for daskhubs in an existing cluster](howto:features:daskhub).
+
+This will generate the following files:
+
+Generating the terraform infrastructure file...
+1. `terraform/gcp/projects/$CLUSTER_NAME.tfvars`
+2. `config/clusters/$CLUSTER_NAME`
+3. `config/clusters/$CLUSTER_NAME/cluster.yaml`
+4. `config/clusters/$CLUSTER_NAME/support.values.yaml`
+5. `config/clusters/$CLUSTER_NAME/enc-support.values.yaml`
+````
+
+````{tab-item} Azure
+:sync: azure-key
+
+An automated deployer command doesn't exist yet, these files need to be manually generated. The _minimum_ inputs this file requires are:
 
 - `subscription_id`: Azure subscription ID to create resources in.
   Should be the id, rather than display name of the project.
@@ -118,8 +316,10 @@ ssh_pub_key                    = "ssh-rsa my-public-ssh-key"
 ````
 `````
 
-Once you have created this file, open a Pull Request to the [`infrastructure` repo](https://github.com/2i2c-org/infrastructure) for review.
-See our [review and merge guidelines](infrastructure:review) for how this process should pan out.
+## Add GPU nodegroup if needed
+
+If this cluster is going to have GPUs, you should edit the generated jsonnet file
+to [include a GPU nodegroups](howto:features:gpu).
 
 ## Initialising Terraform
 
@@ -133,6 +333,26 @@ gcloud auth application-default login
 Then you can change into the terraform subdirectory for the appropriate cloud provider and initialise terraform.
 
 `````{tab-set}
+````{tab-item} AWS
+:sync: aws-key
+
+Our AWS *terraform* code is now used to deploy supporting infrastructure for the EKS cluster, including:
+
+- An IAM identity account for use with our CI/CD system
+- Appropriately networked EFS storage to serve as an NFS server for hub home directories
+- Optionally, setup a [shared database](features:shared-db:aws)
+- Optionally, setup [user buckets](howto:features:storage-buckets)
+
+The steps above will have created a default `.tfvars` file. This file can either be used as-is or edited to enable the optional features listed above.
+
+Initialise terraform for use with AWS:
+
+```bash
+cd terraform/aws
+terraform init
+```
+````
+
 ````{tab-item} Google Cloud
 :sync: gcp-key
 ```bash
@@ -179,7 +399,7 @@ If you can't find the workspace you're looking for, double check you've enabled 
 
 ## Plan and Apply Changes
 
-```{note}
+```{important}
 When deploying to Google Cloud, make sure the [Compute Engine](https://console.cloud.google.com/apis/library/compute.googleapis.com), [Kubernetes Engine](https://console.cloud.google.com/apis/library/container.googleapis.com), [Artifact Registry](https://console.cloud.google.com/apis/library/artifactregistry.googleapis.com), and [Cloud Logging](https://console.cloud.google.com/apis/library/logging.googleapis.com) APIs are enabled on the project before deploying!
 ```
 
@@ -208,67 +428,96 @@ Congratulations, you've just deployed a new cluster!
 
 ## Exporting and Encrypting the Cluster Access Credentials
 
-To begin deploying and operating hubs on your new cluster, we need to export the credentials created by terraform, encrypt it using `sops`, and store it in the `secrets` directory of the `infrastructure` repo.
+In the previous step, we will have created an IAM user with just enough permissions for automatic deployment of hubs from CI/CD. Since these credentials are checked-in to our git repository and made public, they should have least amount of permissions possible.
 
-Check you are still in the correct terraform workspace
+To begin deploying and operating hubs on your new cluster, we need to export these credentials, encrypt them using `sops`, and store them in the `secrets` directory of the `infrastructure` repo.
 
-```bash
-terraform workspace show
-```
 
-If you need to change, you can do so as follows
+1. First, make sure you are in the right terraform directory:
 
-```bash
-terraform workspace list  # List all available workspaces
-terraform workspace select WORKSPACE_NAME
-```
+    `````{tab-set}
+    ````{tab-item} AWS
+    :sync: aws-key
+      ```bash
+      cd terraform/aws
+      ```
+    ````
 
-Then, output the credentials created by terraform to a file under the appropriate cluster directory: `/config/clusters/$CLUSTER_NAME`.
+    ````{tab-item} Google Cloud
+    :sync: gcp-key
+      ```bash
+      cd terraform/gcp
+      ```
+    ````
 
-````{note}
-Create the cluster directory if it doesn't already exist with:
+    ````{tab-item} Azure
+    :sync: azure-key
+      ```bash
+      cd terraform/azure
+      ```
+    ````
+    `````
 
-```bash
-export CLUSTER_NAME=<cluster-name>
-```
+1. Check you are still in the correct terraform workspace
 
-```bash
-mkdir -p ../../config/clusters/$CLUSTER_NAME
-```
-````
+    ```bash
+    terraform workspace show
+    ```
 
-`````{tab-set}
-````{tab-item} Google Cloud
-:sync: gcp-key
-```bash
-terraform output -raw ci_deployer_key > ../../config/clusters/$CLUSTER_NAME/deployer-credentials.secret.json
-```
-````
+    If you need to change, you can do so as follows
 
-````{tab-item} Azure
-:sync: azure-key
-```bash
-terraform output -raw kubeconfig > ../../config/clusters/$CLUSTER_NAME/deployer-credentials.secret.yaml
-```
-````
-`````
+    ```bash
+    terraform workspace list  # List all available workspaces
+    terraform workspace select WORKSPACE_NAME
+    ```
 
-Then encrypt the key using `sops`.
+1. Fetch credentials for automatic deployment
 
-```{note}
-You must be logged into Google with your `@2i2c.org` account at this point so `sops` can read the encryption key from the `two-eye-two-see` project.
-```
+    Create the directory if it doesn't exist already:
+    ```bash
+    mkdir -p ../../config/clusters/$CLUSTER_NAME
+    ```
 
-First, make sure you are in the root of the repository
-```bash
-cd ../..
-```
+    `````{tab-set}
+    ````{tab-item} AWS
+    :sync: aws-key
+      ```bash
+      terraform output -raw continuous_deployer_creds > ../../config/clusters/$CLUSTER_NAME/deployer-credentials.secret.json
+      ```
+    ````
 
-```bash
-sops --output config/clusters/$CLUSTER_NAME/enc-deployer-credentials.secret.{{ json | yaml }} --encrypt config/clusters/$CLUSTER_NAME/deployer-credentials.secret.{{ json | yaml }}
-```
+    ````{tab-item} Google Cloud
+    :sync: gcp-key
+      ```bash
+      terraform output -raw ci_deployer_key > ../../config/clusters/$CLUSTER_NAME/deployer-credentials.secret.json
+      ```
+    ````
 
-This key can now be committed to the `infrastructure` repo and used to deploy and manage hubs hosted on that cluster.
+    ````{tab-item} Azure
+    :sync: azure-key
+      ```bash
+      terraform output -raw kubeconfig > ../../config/clusters/$CLUSTER_NAME/deployer-credentials.secret.yaml
+      ```
+    ````
+    `````
+
+1. Then encrypt the key using `sops`.
+
+    ```{note}
+    You must be logged into Google with your `@2i2c.org` account at this point so `sops` can read the encryption key from the `two-eye-two-see` project.
+    ```
+
+    ```bash
+    sops --output ../../config/clusters/$CLUSTER_NAME/enc-deployer-credentials.secret.json --encrypt ../../config/clusters/$CLUSTER_NAME/deployer-credentials.secret.json
+    ```
+
+    This key can now be committed to the `infrastructure` repo and used to deploy and manage hubs hosted on that cluster.
+
+1. Double check to make sure that the `config/clusters/$CLUSTER_NAME/enc-deployer-credentials.secret.json` file is actually encrypted by `sops` before checking it in to the git repo. Otherwise this can be a serious security leak!
+
+    ```bash
+    cat ../../config/clusters/$CLUSTER_NAME/enc-deployer-credentials.secret.json
+    ```
 
 ## Create a `cluster.yaml` file
 
@@ -280,6 +529,25 @@ See [](config:structure) for more information.
 Create a `cluster.yaml` file under the `config/cluster/$CLUSTER_NAME>` folder and populate it with the following info:
 
 `````{tab-set}
+
+````{tab-item} AWS
+:sync: aws-key
+```yaml
+name: <your-cluster-name>
+provider: aws # <copy paste link to sign in url here>
+aws:
+  key: enc-deployer-credentials.secret.json
+  clusterType: eks
+  clusterName: <your-cluster-name>
+  region: <your-region>
+hubs: []
+```
+
+```{note}
+The `aws.key` file is defined _relative_ to the location of the `cluster.yaml` file.
+```
+````
+
 ````{tab-item} Google Cloud
 :sync: gcp-key
 ```yaml
@@ -359,11 +627,137 @@ azure:
 
 Commit this file to the repo.
 
+## Access
+
+`````{tab-set}
+````{tab-item} AWS
+:sync: aws-key
+
+### Grant additional access
+
+First, we need to grant the freshly created deployer IAM user access to the kubernetes cluster.
+
+1. As this requires passing in some parameters that match the created cluster,
+  we have a `terraform output` that can give you the exact command to run.
+
+  ```bash
+  terraform output -raw eksctl_iam_command
+  ```
+
+2. Run the `eksctl create iamidentitymapping` command returned by `terraform output`.
+  That should give the continuous deployer user access.
+
+  The command should look like this:
+
+  ```bash
+  eksctl create iamidentitymapping \
+      --cluster $CLUSTER_NAME \
+      --region $CLUSTER_REGION \
+      --arn arn:aws:iam::<aws-account-id>:user/hub-continuous-deployer \
+      --username hub-continuous-deployer \
+      --group system:masters
+  ```
+
+  Test the access by running:
+
+  ```bash
+  deployer use-cluster-credentials $CLUSTER_NAME
+  ```
+
+  and running:
+
+  ```bash
+  kubectl get node
+  ```
+
+  It should show you the provisioned node on the cluster if everything works out ok.
+
+### Grant `eksctl` access to other users
+
+```{note}
+This section is still required even if the account is managed by SSO. Though a
+user could run `deployer use-cluster-credentials $CLUSTER_NAME` to gain access
+as well.
+```
+
+AWS EKS has a strange access control problem, where the IAM user who creates
+the cluster has [full access without any visible settings
+changes](https://docs.aws.amazon.com/eks/latest/userguide/add-user-role.html),
+and nobody else does. You need to explicitly grant access to other users. Find
+the usernames of the 2i2c engineers on this particular AWS account, and run the
+following command to give them access:
+
+```{note}
+You can modify the command output by running `terraform output -raw eksctl_iam_command` as described in [](new-cluster:aws:terraform:cicd).
+```
+
+```bash
+eksctl create iamidentitymapping \
+   --cluster $CLUSTER_NAME \
+   --region $CLUSTER_REGION \
+   --arn arn:aws:iam::<aws-account-id>:user/<iam-user-name> \
+   --username <iam-user-name> \
+   --group system:masters
+```
+
+This gives all the users full access to the entire kubernetes cluster.
+After this step is done, they can fetch local config with:
+
+```bash
+aws eks update-kubeconfig --name=$CLUSTER_NAME --region=$CLUSTER_REGION
+```
+
+This should eventually be converted to use an [IAM Role] instead, so we need not
+give each individual user access, but just grant access to the role - and users
+can modify them as they wish.
+
+[iam role]: https://docs.aws.amazon.com/IAM/latest/UserGuide/id_roles.html
+````
+
+````{tab-item} Google Cloud
+:sync: gcp-key
+Test deployer access by running:
+
+```bash
+deployer use-cluster-credentials $CLUSTER_NAME
+```
+
+and running:
+
+```bash
+kubectl get node
+```
+
+It should show you the provisioned node on the cluster if everything works out ok.
+````
+
+````{tab-item} Azure
+:sync: azure-key
+Test deployer access by running:
+
+```bash
+deployer use-cluster-credentials $CLUSTER_NAME
+```
+
+and running:
+
+```bash
+kubectl get node
+```
+
+It should show you the provisioned node on the cluster if everything works out ok.
+````
+`````
+
 ## Adding the new cluster to CI/CD
 
 To ensure the new cluster is appropriately handled by our CI/CD system, please add it as an entry in the following places:
 
-- The [`deploy-hubs.yaml`](https://github.com/2i2c-org/infrastructure/blob/008ae2c1deb3f5b97d0c334ed124fa090df1f0c6/.github/workflows/deploy-hubs.yaml#L121) workflow file
+- The [`deploy-hubs.yaml`](https://github.com/2i2c-org/infrastructure/blob/008ae2c1deb3f5b97d0c334ed124fa090df1f0c6/.github/workflows/deploy-hubs.yaml#L121) GitHub workflow has a job named []`upgrade-support-and-staging`] that need to list of clusters being
+automatically deployed by our CI/CD system. Add an entry for the new cluster
+here.
+
+  [`upgrade-support-and-staging`]: https://github.com/2i2c-org/infrastructure/blob/18f5a4f8f39ed98c2f5c99091ae9f19a1075c988/.github/workflows/deploy-hubs.yaml#L128-L166
 
 ## Cluster is now ready, what are the next steps
 
