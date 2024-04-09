@@ -70,4 +70,4 @@ jobs:
 
       - name: Deploy grafana dashboards for ${{ matrix.cluster_name }}
         run: |
-          deployer grafana deploy-dashboards ${{ matrix.cluster_name }} ${{ matrix.deploy_flags }}
+          deployer grafana deploy-dashboards ${{ matrix.deploy_flags }} ${{ matrix.cluster_name }}
