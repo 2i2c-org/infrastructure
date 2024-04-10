@@ -386,10 +386,10 @@ terraform init -backend-config=pangeo-backend.hcl -reconfigure
 ## Creating a new terraform workspace
 
 We use terraform workspaces so that the state of one `.tfvars` file does not influence another.
-Create a new workspace with the below command, and again give it the same name as the `.tfvars` filename.
+Create a new workspace with the below command, and again give it the same name as the `.tfvars` filename, $CLUSTER_NAME.
 
 ```bash
-terraform workspace new WORKSPACE_NAME
+terraform workspace new $CLUSTER_NAME
 ```
 
 ```{note}
