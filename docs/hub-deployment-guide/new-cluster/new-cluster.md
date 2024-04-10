@@ -538,8 +538,14 @@ provider: aws # <copy paste link to sign in url here>
 aws:
   key: enc-deployer-credentials.secret.json
   clusterType: eks
-  clusterName: <your-cluster-name>
-  region: <your-region>
+  clusterName: $CLUSTER_NAME
+  region: $CLUSTER_REGION
+  billing:
+    paid_by_us: true # or not if appropriate
+support:
+  helm_chart_values_files:
+    - support.values.yaml
+    - enc-support.secret.values.yaml
 hubs: []
 ```
 
