@@ -52,19 +52,6 @@ prometheus:
 ```
 
 ````{warning}
-If you are deploying the support chart on an AWS cluster, you **must** enable the `cluster-autoscaler` sub-chart, otherwise the node groups will not automatically scale.
-Include the following in your `support.values.yaml` file:
-
-```yaml
-cluster-autoscaler:
-  enabled: true
-  autoDiscovery:
-    clusterName: <cluster-name>
-  awsRegion: <aws-region>
-```
-````
-
-````{warning}
 If you are deploying the support chart on an Azure cluster, you **must** set an annotation for `ingress-nginx`'s k8s Service resource.
 Include the following in your `support.values.yaml` file:
 
