@@ -1,20 +1,22 @@
-data "aws_caller_identity" "current" {}
+/*
+  This file provides resources _per hub and role_. Each role is tied to a
+  specific k8s ServiceAccount allowed to assume the role.
 
+  - Role                 - for use by k8s ServiceAccount (user-sa, admin-sa)
+  - Policy               - if extra_iam_policy is declared
+  - RolePolicyAttachment - if extra_iam_policy is declared
+*/
+
+data "aws_caller_identity" "current" {}
 data "aws_partition" "current" {}
 
-resource "aws_iam_role" "irsa_role" {
-  for_each = var.hub_cloud_permissions
-  name     = "${var.cluster_name}-${each.key}"
 
-  assume_role_policy = data.aws_iam_policy_document.irsa_role_assume[each.key].json
-}
 
+// TODO: update to loop over hub and role
 data "aws_iam_policy_document" "irsa_role_assume" {
   for_each = var.hub_cloud_permissions
   statement {
-
-    effect = "Allow"
-
+    effect  = "Allow"
     actions = ["sts:AssumeRoleWithWebIdentity"]
 
     principals {
@@ -34,6 +36,15 @@ data "aws_iam_policy_document" "irsa_role_assume" {
   }
 }
 
+// TODO: update to loop over hub and role
+resource "aws_iam_role" "irsa_role" {
+  for_each = var.hub_cloud_permissions
+  name     = "${var.cluster_name}-${each.key}"
+
+  assume_role_policy = data.aws_iam_policy_document.irsa_role_assume[each.key].json
+}
+
+// TODO: update to loop over hub and role
 resource "aws_iam_policy" "extra_user_policy" {
   for_each    = { for hub_name, value in var.hub_cloud_permissions : hub_name => value if value.extra_iam_policy != "" }
   name        = "${var.cluster_name}-${each.key}-extra-user-policy"
@@ -41,11 +52,14 @@ resource "aws_iam_policy" "extra_user_policy" {
   policy      = each.value.extra_iam_policy
 }
 
+// TODO: update to loop over hub and role
 resource "aws_iam_role_policy_attachment" "extra_user_policy" {
   for_each   = { for hub_name, value in var.hub_cloud_permissions : hub_name => value if value.extra_iam_policy != "" }
   role       = aws_iam_role.irsa_role[each.key].name
   policy_arn = aws_iam_policy.extra_user_policy[each.key].arn
 }
+
+
 
 output "kubernetes_sa_annotations" {
   value = {
