@@ -126,6 +126,9 @@ def aws(
     # and support files
 
     vars = {
+        # Also store the provider, as it's useful for some jinja templates
+        # to differentiate between them when rendering the configuration
+        "provider": "aws",
         "cluster_name": cluster_name,
         "hub_type": hub_type,
         "cluster_region": cluster_region,
