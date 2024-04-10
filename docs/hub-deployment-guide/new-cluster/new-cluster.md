@@ -128,7 +128,7 @@ You can generate these with:
 :sync: aws-key
 
 ```bash
-export CLUSTER_NAME=<cluster-name>
+export CLUSTER_NAME=<cluster-name>;
 export CLUSTER_REGION=<cluster-region-like ca-central-1>
 ```
 
