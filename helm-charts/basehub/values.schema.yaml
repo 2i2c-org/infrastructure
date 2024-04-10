@@ -450,6 +450,8 @@ properties:
                   additionalProperties: true
               extraEnv:
                 type: object
+              serviceAccountName:
+                type: string
           2i2c:
             type: object
             additionalProperties: false
