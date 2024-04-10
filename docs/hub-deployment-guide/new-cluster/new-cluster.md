@@ -412,7 +412,7 @@ terraform workspace show
 Plan your changes with the `terraform plan` command, passing the `.tfvars` file as a variable file.
 
 ```bash
-terraform plan -var-file=projects/CLUSTER.tfvars
+terraform plan -var-file=projects/$CLUSTER_NAME.tfvars
 ```
 
 Check over the output of this command to ensure nothing is being created/deleted that you didn't expect.
@@ -421,7 +421,7 @@ Copy-paste the plan into your open Pull Request so a fellow 2i2c engineer can do
 If you're both satisfied with the plan, merge the Pull Request and apply the changes to deploy the cluster.
 
 ```bash
-terraform apply -var-file=projects/CLUSTER.tfvars
+terraform apply -var-file=projects/$CLUSTER_NAME.tfvars
 ```
 
 Congratulations, you've just deployed a new cluster!
