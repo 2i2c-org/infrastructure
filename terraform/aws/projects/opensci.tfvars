@@ -8,21 +8,28 @@ user_buckets = {
   "scratch-staging" : {
     "delete_after" : 7
   },
-  "scratch" : {
+  "scratch-sciencecore" : {
     "delete_after" : 7
+  },
+  "persistent-sciencecore" : {
+    "delete_after" : null
   },
 }
 
 
 hub_cloud_permissions = {
   "staging" : {
-    requestor_pays : true,
-    bucket_admin_access : ["scratch-staging"],
-    extra_iam_policy : ""
+    "user-sa" : {
+      bucket_admin_access : ["scratch-staging"],
+    },
   },
-  "prod" : {
-    requestor_pays : true,
-    bucket_admin_access : ["scratch"],
-    extra_iam_policy : ""
+  "sciencecore" : {
+    "user-sa" : {
+      bucket_admin_access : ["scratch-sciencecore"],
+      bucket_readonly_access : ["persistent-sciencecore"],
+    },
+    "admin-sa" : {
+      bucket_admin_access : ["scratch-sciencecore", "persistent-sciencecore"],
+    },
   },
 }
