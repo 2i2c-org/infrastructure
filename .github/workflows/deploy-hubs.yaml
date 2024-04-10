@@ -23,6 +23,8 @@ on:
       - .github/actions/setup-deploy/**
       - helm-charts/**
       - config/clusters/**
+      # Exclude the template configuration files
+      - "!config/clusters/templates"
   pull_request:
     branches:
       - main
@@ -38,6 +40,8 @@ on:
       - .github/actions/setup-deploy/**
       - helm-charts/**
       - config/clusters/**
+      # Exclude the template configuration files
+      - "!config/clusters/templates"
 
 # When multiple PRs triggering this workflow are merged, queue them instead
 # of running them in parallel
