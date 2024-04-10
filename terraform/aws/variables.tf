@@ -44,20 +44,27 @@ variable "user_buckets" {
 }
 
 variable "hub_cloud_permissions" {
-  type = map(object({
-    bucket_admin_access : set(string),
-    extra_iam_policy : string
-  }))
+  type = map(
+    map(
+      object({
+        bucket_admin_access : optional(set(string), [])
+        bucket_readonly_access : optional(set(string), [])
+        extra_iam_policy : optional(string, "")
+      })
+    )
+  )
   default     = {}
   description = <<-EOT
-  Map of cloud permissions given to a particular hub
+  Map of cloud permissions given to a particular hub (k8s namespace) and
+  its associated IAM Role's that are 1:1 with k8s ServiceAccounts.
 
-  Key is name of the hub namespace in the cluster, and values are particular
-  permissions users running on those hubs should have. Currently supported are:
+  Currently supported are:
 
-  1. bucket_admin_access: List of S3 storage buckets that users on this hub should have read
+  1. bucket_admin_access: List of S3 storage buckets that the associated aws-iam-role/k8s-service-account should have read
      and write permissions for.
-  2. extra_iam_policy: An AWS IAM Policy document that grants additional rights to the users
+  2. bucket_readonly_access: List of S3 storage buckets that users on this hub should have read
+     permissions for.
+  3. extra_iam_policy: An AWS IAM Policy document that grants additional rights to the users
      on this hub when talking to AWS services.
   EOT
 }
