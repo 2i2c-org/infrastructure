@@ -22,71 +22,75 @@ user_buckets = {
 
 hub_cloud_permissions = {
   "staging" : {
-    bucket_admin_access : ["scratch-staging", "persistent-staging"],
-    # Provides readonly requestor-pays access to usgs-landsat bucket
-    # FIXME: We should find a way to allow access to *all* requester pays
-    # buckets, without having to explicitly list them. However, we don't want
-    # to give access to all *internal* s3 buckets willy-nilly - this can be
-    # a massive security hole, especially if terraform state is also here.
-    # As a temporary measure, we allow-list buckets here.
-    extra_iam_policy : <<-EOT
-      {
-        "Version": "2012-10-17",
-        "Statement": [
-            {
-                "Effect": "Allow",
-                "Action": [
-                    "s3:*"
-                ],
-                "Resource": [
-                  "arn:aws:s3:::usgs-landsat"
-                ]
-            },
-            {
-                "Effect": "Allow",
-                "Action": [
-                    "s3:*"
-                ],
-                "Resource": [
-                  "arn:aws:s3:::usgs-landsat/*"
-                ]
-            }
-        ]
-      }
-  EOT
+    "user-sa" : {
+      bucket_admin_access : ["scratch-staging", "persistent-staging"],
+      # Provides readonly requestor-pays access to usgs-landsat bucket
+      # FIXME: We should find a way to allow access to *all* requester pays
+      # buckets, without having to explicitly list them. However, we don't want
+      # to give access to all *internal* s3 buckets willy-nilly - this can be
+      # a massive security hole, especially if terraform state is also here.
+      # As a temporary measure, we allow-list buckets here.
+      extra_iam_policy : <<-EOT
+        {
+          "Version": "2012-10-17",
+          "Statement": [
+              {
+                  "Effect": "Allow",
+                  "Action": [
+                      "s3:*"
+                  ],
+                  "Resource": [
+                    "arn:aws:s3:::usgs-landsat"
+                  ]
+              },
+              {
+                  "Effect": "Allow",
+                  "Action": [
+                      "s3:*"
+                  ],
+                  "Resource": [
+                    "arn:aws:s3:::usgs-landsat/*"
+                  ]
+              }
+          ]
+        }
+    EOT
+    },
   },
   "prod" : {
-    bucket_admin_access : ["scratch", "persistent"],
-    # Provides readonly requestor-pays access to usgs-landsat bucket
-    # FIXME: We should find a way to allow access to *all* requester pays
-    # buckets, without having to explicitly list them. However, we don't want
-    # to give access to all *internal* s3 buckets willy-nilly - this can be
-    # a massive security hole, especially if terraform state is also here.
-    # As a temporary measure, we allow-list buckets here.
-    extra_iam_policy : <<-EOT
-      {
-        "Version": "2012-10-17",
-        "Statement": [
-            {
-                "Effect": "Allow",
-                "Action": [
-                    "s3:*"
-                ],
-                "Resource": [
-                  "arn:aws:s3:::usgs-landsat"
-                ]
-            },
-            {
-                "Effect": "Allow",
-                "Action": [
-                    "s3:*"
-                ],
-                "Resource": [
-                  "arn:aws:s3:::usgs-landsat/*"
-                ]
-            }
-        ]
-      }
-  EOT
+    "user-sa" : {
+      bucket_admin_access : ["scratch", "persistent"],
+      # Provides readonly requestor-pays access to usgs-landsat bucket
+      # FIXME: We should find a way to allow access to *all* requester pays
+      # buckets, without having to explicitly list them. However, we don't want
+      # to give access to all *internal* s3 buckets willy-nilly - this can be
+      # a massive security hole, especially if terraform state is also here.
+      # As a temporary measure, we allow-list buckets here.
+      extra_iam_policy : <<-EOT
+        {
+          "Version": "2012-10-17",
+          "Statement": [
+              {
+                  "Effect": "Allow",
+                  "Action": [
+                      "s3:*"
+                  ],
+                  "Resource": [
+                    "arn:aws:s3:::usgs-landsat"
+                  ]
+              },
+              {
+                  "Effect": "Allow",
+                  "Action": [
+                      "s3:*"
+                  ],
+                  "Resource": [
+                    "arn:aws:s3:::usgs-landsat/*"
+                  ]
+              }
+          ]
+        }
+    EOT
+    },
   },
 }

@@ -25,8 +25,10 @@ cluster_nodes_location = "{{ cluster_region }}a"
 #
 #hub_cloud_permissions = {
 #  "{{ hub_name }}" : {
-#    bucket_admin_access : ["scratch-{{ hub_name }}"],
-#    extra_iam_policy : ""
+#    "user-sa" : {
+#      bucket_admin_access : ["scratch-{{ hub_name }}"],
+#      extra_iam_policy : "",
+#    },
 #  },
 # # Tip: add more namespaces below, if this cluster will be multi-tenant
 #}

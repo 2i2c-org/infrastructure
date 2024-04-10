@@ -31,30 +31,42 @@ user_buckets = {
 
 hub_cloud_permissions = {
   "staging" : {
-    bucket_admin_access : ["scratch-staging"],
-    extra_iam_policy : ""
+    "user-sa" : {
+      bucket_admin_access : ["scratch-staging"],
+      extra_iam_policy : "",
+    },
   },
   "dask-staging" : {
-    bucket_admin_access : ["scratch-dask-staging"],
-    extra_iam_policy : ""
+    "user-sa" : {
+      bucket_admin_access : ["scratch-dask-staging"],
+      extra_iam_policy : "",
+    },
   },
   "showcase" : {
-    bucket_admin_access : [
-      "scratch-researchdelight",
-      "persistent-showcase"
-    ],
-    extra_iam_policy : ""
+    "user-sa" : {
+      bucket_admin_access : [
+        "scratch-researchdelight",
+        "persistent-showcase",
+      ],
+      extra_iam_policy : "",
+    },
   },
   "ncar-cisl" : {
-    bucket_admin_access : ["scratch-ncar-cisl"],
-    extra_iam_policy : ""
+    "user-sa" : {
+      bucket_admin_access : ["scratch-ncar-cisl"],
+      extra_iam_policy : "",
+    },
   },
   "go-bgc" : {
-    bucket_admin_access : ["scratch-go-bgc"],
-    extra_iam_policy : ""
+    "user-sa" : {
+      bucket_admin_access : ["scratch-go-bgc"],
+      extra_iam_policy : "",
+    },
   },
   "itcoocean" : {
-    bucket_admin_access : ["scratch-itcoocean"],
-    extra_iam_policy : ""
+    "user-sa" : {
+      bucket_admin_access : ["scratch-itcoocean"],
+      extra_iam_policy : "",
+    },
   },
 }

@@ -16,11 +16,15 @@ user_buckets = {
 
 hub_cloud_permissions = {
   "staging" : {
-    bucket_admin_access : ["scratch-staging"],
-    extra_iam_policy : ""
+    "user-sa" : {
+      bucket_admin_access : ["scratch-staging"],
+      extra_iam_policy : "",
+    },
   },
   "prod" : {
-    bucket_admin_access : ["scratch"],
-    extra_iam_policy : ""
+    "user-sa" : {
+      bucket_admin_access : ["scratch"],
+      extra_iam_policy : "",
+    },
   },
 }
