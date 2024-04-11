@@ -130,6 +130,9 @@ jupyterhub:
           - ScienceCore
         scope:
           - read:org
+      Authenticator:
+        admin_users:
+          - kyttmacmanus # Kytt MacManus, added as part of https://2i2c.freshdesk.com/a/tickets/1454
 
     extraConfig:
       enable-fancy-profiles: |
