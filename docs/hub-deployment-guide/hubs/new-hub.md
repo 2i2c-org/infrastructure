@@ -141,6 +141,14 @@ This is changing over time as we automate more things, and is dependent on the c
 
 General details about our CI/CD machinery lives at [](/reference/ci-cd/index.md)
 
+### Adding a new cluster to CI/CD
+
+To ensure the new cluster is appropriately handled by our CI/CD system, please add it as an entry in the following places:
+
+- The [`deploy-hubs.yaml`](https://github.com/2i2c-org/infrastructure/blob/008ae2c1deb3f5b97d0c334ed124fa090df1f0c6/.github/workflows/deploy-hubs.yaml#L121) GitHub workflow has a job named [`upgrade-support-and-staging`](https://github.com/2i2c-org/infrastructure/blob/18f5a4f8f39ed98c2f5c99091ae9f19a1075c988/.github/workflows/deploy-hubs.yaml#L128-L166) that need to list of clusters being
+automatically deployed by our CI/CD system. Add an entry for the new cluster
+here.
+
 ### Deploying hubs manually
 
 Some of our infrastructure still requires manual deploys.

@@ -128,7 +128,7 @@ You can generate these with:
 :sync: aws-key
 
 ```bash
-export CLUSTER_NAME=<cluster-name>
+export CLUSTER_NAME=<cluster-name>;
 export CLUSTER_REGION=<cluster-region-like ca-central-1>
 ```
 
@@ -386,10 +386,10 @@ terraform init -backend-config=pangeo-backend.hcl -reconfigure
 ## Creating a new terraform workspace
 
 We use terraform workspaces so that the state of one `.tfvars` file does not influence another.
-Create a new workspace with the below command, and again give it the same name as the `.tfvars` filename.
+Create a new workspace with the below command, and again give it the same name as the `.tfvars` filename, $CLUSTER_NAME.
 
 ```bash
-terraform workspace new WORKSPACE_NAME
+terraform workspace new $CLUSTER_NAME
 ```
 
 ```{note}
@@ -412,7 +412,7 @@ terraform workspace show
 Plan your changes with the `terraform plan` command, passing the `.tfvars` file as a variable file.
 
 ```bash
-terraform plan -var-file=projects/CLUSTER.tfvars
+terraform plan -var-file=projects/$CLUSTER_NAME.tfvars
 ```
 
 Check over the output of this command to ensure nothing is being created/deleted that you didn't expect.
@@ -421,7 +421,7 @@ Copy-paste the plan into your open Pull Request so a fellow 2i2c engineer can do
 If you're both satisfied with the plan, merge the Pull Request and apply the changes to deploy the cluster.
 
 ```bash
-terraform apply -var-file=projects/CLUSTER.tfvars
+terraform apply -var-file=projects/$CLUSTER_NAME.tfvars
 ```
 
 Congratulations, you've just deployed a new cluster!
@@ -538,8 +538,14 @@ provider: aws # <copy paste link to sign in url here>
 aws:
   key: enc-deployer-credentials.secret.json
   clusterType: eks
-  clusterName: <your-cluster-name>
-  region: <your-region>
+  clusterName: $CLUSTER_NAME
+  region: $CLUSTER_REGION
+  billing:
+    paid_by_us: true # or not if appropriate
+support:
+  helm_chart_values_files:
+    - support.values.yaml
+    - enc-support.secret.values.yaml
 hubs: []
 ```
 
@@ -749,15 +755,6 @@ It should show you the provisioned node on the cluster if everything works out o
 ````
 `````
 
-## Adding the new cluster to CI/CD
-
-To ensure the new cluster is appropriately handled by our CI/CD system, please add it as an entry in the following places:
-
-- The [`deploy-hubs.yaml`](https://github.com/2i2c-org/infrastructure/blob/008ae2c1deb3f5b97d0c334ed124fa090df1f0c6/.github/workflows/deploy-hubs.yaml#L121) GitHub workflow has a job named []`upgrade-support-and-staging`] that need to list of clusters being
-automatically deployed by our CI/CD system. Add an entry for the new cluster
-here.
-
-  [`upgrade-support-and-staging`]: https://github.com/2i2c-org/infrastructure/blob/18f5a4f8f39ed98c2f5c99091ae9f19a1075c988/.github/workflows/deploy-hubs.yaml#L128-L166
 
 ## Cluster is now ready, what are the next steps
 
