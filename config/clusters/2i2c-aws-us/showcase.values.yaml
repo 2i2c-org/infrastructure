@@ -41,6 +41,7 @@ basehub:
           populate_teams_in_auth_state: true
           allowed_organizations:
             - 2i2c-community-showcase:access-2i2c-showcase
+            - 2i2c-community-showcase:magiclinks-demo
             - 2i2c-demo-hub-access:showcase-topst
             - ScienceCore
           scope:
@@ -55,6 +56,17 @@ basehub:
         GH_SCOPED_CREDS_CLIENT_ID: Iv1.f9261c4c78b4dfdd
         GH_SCOPED_CREDS_APP_URL: https://github.com/apps/2i2c-community-showcase-hub
       profileList:
+        - display_name: "Magic Link Demo"
+          description: "For demoing magic links"
+          allowed_teams:
+            - 2i2c-community-showcase:magiclinks-demo
+          kubespawner_override:
+            image: pangeo/pangeo-notebook:2023.06.20
+            mem_guarantee: 7.234G
+            cpu_guarantee: 0.1
+            mem_limit: null
+            node_selector:
+              node.kubernetes.io/instance-type: r5.xlarge
         - display_name: "NASA TOPS-T ScienceCore-ClimateRisk"
           description: "For collaborative work on 2i2c/MD's NASA TOPS-T ScienceCore Module"
           allowed_teams:
