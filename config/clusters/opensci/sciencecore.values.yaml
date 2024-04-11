@@ -62,7 +62,7 @@ jupyterhub:
                 display_name: Pangeo Notebook Image
                 description: "Python image with scientific, dask and geospatial tools"
                 kubespawner_override:
-                  image: pangeo/pangeo-notebook:2023.09.11
+                  image: pangeo/pangeo-notebook:2024.04.08
               geospatial:
                 display_name: Rocker Geospatial
                 description: "R image with RStudio, the tidyverse & Geospatial tools"
@@ -80,8 +80,7 @@ jupyterhub:
                 display_name: Jupyter SciPy Notebook
                 slug: scipy
                 kubespawner_override:
-                  # FIXME: use quay.io/ for tags after 2023-10-20
-                  image: jupyter/scipy-notebook:2023-06-26
+                  image: quay.io/jupyter/scipy-notebook:2024-04-15
               school:
                 display_name: TOPST SCHOOL Project
                 description: "quay.io/repository/isciences/tops-school:latest"
