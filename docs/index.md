@@ -49,7 +49,7 @@ These sections walk an engineer step-by-step through the workflow of setting up 
 ```{toctree}
 :maxdepth: 1
 :caption: Hub deployment guide
-hub-deployment-guide/cloud-accounts/index.md
+hub-deployment-guide/runbooks/index.md
 hub-deployment-guide/new-cluster/index.md
 hub-deployment-guide/deploy-support/index.md
 hub-deployment-guide/hubs/new-hub.md

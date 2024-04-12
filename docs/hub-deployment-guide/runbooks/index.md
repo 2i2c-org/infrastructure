@@ -6,5 +6,5 @@ This is still a work in progress and this contents might change.
 
 ```{toctree}
 :maxdepth: 1
-phase1
+phase1/index.md
 ```
