@@ -31,6 +31,7 @@ jobs:
           - cluster_name: gridsst
           - cluster_name: hhmi
           - cluster_name: jupyter-meets-the-earth
+          - cluster_name: kitware
           - cluster_name: leap
           - cluster_name: linc
           - cluster_name: linked-earth
