@@ -42,7 +42,7 @@ If on AWS:
     └   └── <new-cluster>.key
 ```
 
-And the following existing file should be updated to accommodate the new clusteR:
+And the following existing file should be updated to accommodate the new cluster:
 
 ```bash
 ～ .github/workflows
@@ -55,7 +55,7 @@ When reviewing cluster setup PRs, make sure the files above are all present.
 
 ## Cluster setup runbook
 
-All of the following steps must be followed in order to consider phase 2 complete. Steps contain references to other smaller, topic-specifc runbooks that this just gathers all together and lists them in the order they should be carried on by an engineer.
+All of the following steps must be followed in order to consider phase 2 complete. Steps contain references to other smaller, topic-specifc runbooks that are gathered together and listed in the order they should be carried on by an engineer.
 
 1. **Create the new cluster**
 
