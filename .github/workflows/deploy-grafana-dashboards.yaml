@@ -58,7 +58,12 @@ jobs:
       - name: Install deployer
         run: |
           python3 -m pip install --editable .
-          sudo apt install jsonnet
+
+      - name: Install jsonnet (go-jsonnet)
+        run: |
+          JSONNET_VERSION=0.20.0
+          wget -qO- https://github.com/google/go-jsonnet/releases/download/v${JSONNET_VERSION}/go-jsonnet_${JSONNET_VERSION}_Linux_x86_64.tar.gz \
+              | tar -xvz --one-top-level=$HOME/.local/bin
 
       - name: Install sops
         uses: mdgreenwald/mozilla-sops-action@v1.6.0
