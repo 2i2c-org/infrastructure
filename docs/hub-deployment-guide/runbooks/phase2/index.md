@@ -20,7 +20,6 @@ The file assets that should have been generated at the end of this phase and inc
 ```bash
 ➕ config/clusters/<new-cluster-name>
   ├── cluster.yaml
-  ├── deployer-credentials.secret.json
   ├── enc-deployer-credentials.secret.json
   ├── enc-support.secret.values.yaml
   ├── enc-grafana-token.secret.yaml
