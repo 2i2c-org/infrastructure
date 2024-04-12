@@ -18,13 +18,15 @@ The following table lists the information that needs to be available to the engi
 - Community Representatives
 - Technical Contacts added to Airtable?
 
-## Phase outputs
+## Outputs
 
 At the end of Phase 1, all engineers should have access to the cloud account where the new cluster and hub will be deployed to.
 
 No file assets will be generated at the end of this phase.
 
 ## Available runbooks
+
+Based on the information provided, choose one of the following runbooks to follow.
 
 ```{toctree}
 :maxdepth: 1
