@@ -12,8 +12,8 @@ jupyterhub:
         description: Start a Python server with JupyterLab and scientific Python stack
         default: true
         kubespawner_override:
-          # From https://github.com/2i2c-org/scipy-notebook-with-nbgitpuller
-          image: quay.io/2i2c/scipy-notebook-with-nbgitpuller:99968bfe6916
+          # From https://github.com/SaiUCM/example-inherit-from-community-image
+          image: quay.io/cirt_ucm/jupyter-scipy-xarray:latest
           # Launch into JupyterLab after the user logs in
           default_url: /lab
       - display_name: R
