@@ -62,7 +62,7 @@ class BigqueryGCPBillingCostImporter:
         """Bigquery Cost Importer for GCP clusters
 
         Args:
-            cluster (dict):  parsed cluster.yaml.
+            cluster (dict): parsed cluster.yaml.
             service_id (string, optional): Optional Google Service ID. Defaults to None.
         """
         self.cluster = cluster

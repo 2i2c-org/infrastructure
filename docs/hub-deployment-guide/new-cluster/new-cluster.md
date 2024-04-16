@@ -544,7 +544,10 @@ aws:
   clusterName: $CLUSTER_NAME
   region: $CLUSTER_REGION
   billing:
-    paid_by_us: true # or not if appropriate
+    # For an AWS account explicitly configured to have the cloud bill
+    # paid directly by the community and not through 2i2c, declare
+    # paid_by_us to false
+    paid_by_us: true
 support:
   helm_chart_values_files:
     - support.values.yaml
@@ -559,31 +562,8 @@ The `aws.key` file is defined _relative_ to the location of the `cluster.yaml` f
 
 ````{tab-item} Google Cloud
 :sync: gcp-key
-```yaml
-name: <cluster-name>  # This should also match the name of the folder: config/clusters/$CLUSTER_NAME>
-provider: gcp
-gcp:
-  # The location of the *encrypted* key we exported from terraform
-  key: enc-deployer-credentials.secret.json
-  # The name of the GCP project the cluster is deployed in
-  project: <gcp-project-name>
-  # The name of the cluster *as it appears in the GCP console*! Sometimes our
-  # terraform code appends '-cluster' to the 'name' field, so double check this.
-  cluster: <cluster-name-in-gcp>
-  # The GCP zone the cluster in deployed in. For multi-regional clusters, you
-  # may have to strip the last identifier, i.e., 'us-central1-a' becomes 'us-central1'
-  zone: <gcp-zone>
-  billing:
-   # Set to true if billing for this cluster is paid for by the 2i2c card
-   paid_by_us: true
-   bigquery:
-    # contains information about bigquery billing export (https://cloud.google.com/billing/docs/how-to/export-data-bigquery)
-    # for calculating how much this cluster costs us. Required if `paid_by_us` is
-    # set to true.
-    project: <id-of-gcp-project-where-bigquery-dataset-lives>
-    dataset: <id-of-bigquery-dataset>
-    billing_id: <id-of-billing-account-associated-with-this-project>
-```
+
+A `cluster.yaml` file should already have been generated as part of [](new-cluster:generate-cluster-files).
 
 ### Billing information
 
