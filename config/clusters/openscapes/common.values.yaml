@@ -47,14 +47,14 @@ basehub:
           default: true
           allowed_teams:
             - 2i2c-org:hub-access-for-2i2c-staff
-            - NASA-Openscapes:workshopaccess-2i2c
+            - NASA-Openscapes:workshopaccess-2i2c # legacy but no plans to delete immediately until fledged
             - NASA-Openscapes:longtermaccess-2i2c
-            - NASA-Openscapes:championsaccess-2i2c
+            - NASA-Openscapes:championsaccess-2i2c # legacy but no plans to delete immediately until fledged
             # Requested in: https://2i2c.freshdesk.com/a/tickets/1284
             - nasa-openscapes-workshops:AdminTeam
-            - nasa-openscapes-workshops:ChampionsAccess-2i2c
-            - nasa-openscapes-workshops:LongtermAccess-2i2c
-            - nasa-openscapes-workshops:WorkshopAccess-2i2c
+            - nasa-openscapes-workshops:nasa-champions-2024
+            - nasa-openscapes-workshops:ChampionsAccess-2i2c # legacy, will delete - has only one user from 2023 cohort
+            - nasa-openscapes-workshops:WorkshopAccess-2i2c # From SWOT workshop 2024-02-13
             - nasa-openscapes-workshops:emit-methane-plume-2024-03-14
           kubespawner_override:
             image: openscapes/python:39dffde
@@ -135,8 +135,8 @@ basehub:
             - NASA-Openscapes:championsaccess-2i2c
             # Requested in: https://2i2c.freshdesk.com/a/tickets/1284
             - nasa-openscapes-workshops:AdminTeam
+            - nasa-openscapes-workshops:nasa-champions-2024
             - nasa-openscapes-workshops:ChampionsAccess-2i2c
-            - nasa-openscapes-workshops:LongtermAccess-2i2c
             - nasa-openscapes-workshops:WorkshopAccess-2i2c
             - nasa-openscapes-workshops:emit-methane-plume-2024-03-14
           kubespawner_override:
@@ -154,8 +154,8 @@ basehub:
             - NASA-Openscapes:championsaccess-2i2c
             # Requested in: https://2i2c.freshdesk.com/a/tickets/1284
             - nasa-openscapes-workshops:AdminTeam
+            - nasa-openscapes-workshops:nasa-champions-2024
             - nasa-openscapes-workshops:ChampionsAccess-2i2c
-            - nasa-openscapes-workshops:LongtermAccess-2i2c
             - nasa-openscapes-workshops:WorkshopAccess-2i2c
             - nasa-openscapes-workshops:emit-methane-plume-2024-03-14
           kubespawner_override:
@@ -169,7 +169,7 @@ basehub:
             - 2i2c-org:hub-access-for-2i2c-staff
             # Requested in: https://2i2c.freshdesk.com/a/tickets/1284
             - nasa-openscapes-workshops:AdminTeam
-            - nasa-openscapes-workshops:LongtermAccess-2i2c
+            - nasa-openscapes-workshops:nasa-champions-2024
           profile_options:
             image:
               display_name: Image
@@ -200,8 +200,8 @@ basehub:
             - NASA-Openscapes:championsaccess-2i2c
             # Requested in: https://2i2c.freshdesk.com/a/tickets/1284
             - nasa-openscapes-workshops:AdminTeam
+            - nasa-openscapes-workshops:nasa-champions-2024
             - nasa-openscapes-workshops:ChampionsAccess-2i2c
-            - nasa-openscapes-workshops:LongtermAccess-2i2c
             - nasa-openscapes-workshops:WorkshopAccess-2i2c
             - nasa-openscapes-workshops:emit-methane-plume-2024-03-14
           scope:
@@ -212,3 +212,4 @@ basehub:
             - jules32
             - erinmr
             - betolink
+            - ateucher
