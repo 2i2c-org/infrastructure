@@ -40,7 +40,7 @@ The `notebook_nodes` variable for our GCP terraform accepts a `gpu`
 parameter, which can be used to provision a GPU nodepool. An example
 would look like:
 
-```terraform
+```
 notebook_nodes = {
   "gpu-t4": {
     min: 0,
@@ -49,16 +49,16 @@ notebook_nodes = {
     gpu: {
       enabled: true,
       type: "nvidia-tesla-t4",
-      count: 1
+      count: 1,
     },
     # Optional, in case we run into resource exhaustion in the main zone
     zones: [
       "us-central1-a",
       "us-central1-b",
       "us-central1-c",
-      "us-central1-f"
-    ]
-  }
+      "us-central1-f",
+    ],
+  },
 }
 ```
 

@@ -26,12 +26,12 @@ is handled for us by someone else.
 4. This engineer should now create user accounts for all other 2i2c engineers, and make sure
    they are all part of the `SMCE-ProjectAdmins` group.
 
-Once this is done, steps for the regular [AWS Cluster Setup](new-cluster:aws) can proceed,
-until completion of [provisioning credentials for CI/CD](new-cluster:aws:terraform:cicd).
+Once this is done, steps for the regular [AWS Cluster Setup](new-cluster:new-cluster) can proceed,
+until completion of [provisioning credentials for CI/CD](new-cluster:terraform:cluster-credentials).
 
 ## Getting a MFA exemption for our `hub-continuous-deployer` user
 
-At the completion of [provisioning credentials for CI/CD](new-cluster:aws:terraform:cicd),
+At the completion of [provisioning credentials for CI/CD](new-cluster:terraform:cluster-credentials),
 we will have a IAM user named `hub-continuous-deployer` provisioned. This is what we use to
 deploy from GitHub actions, but also to deploy from our local machines. The MFA requirement
 needs to be exempted for this user before we can continue and actually deploy our hubs.

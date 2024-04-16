@@ -476,9 +476,7 @@ exposed to the public internet at all, which theoretically adds another
 layer of security as well.
 
 ```{image} https://hackmd.io/_uploads/H1IYevYi6.png)
-:alt: Dr. Who Meme about Cloud NAT
-
-One of the many memes about Cloud NAT being expensive, from [QuinnyPig](https://twitter.com/QuinnyPig/status/1357391731902341120). Many seem far more violent. See [this post](https://www.lastweekinaws.com/blog/the-aws-managed-nat-gateway-is-unpleasant-and-not-recommended/) for more information.
+:alt: Dr. Who Meme about Cloud NAT. One of the many memes about Cloud NAT being expensive, from [QuinnyPig](https://twitter.com/QuinnyPig/status/1357391731902341120). Many seem far more violent. See [this post](https://www.lastweekinaws.com/blog/the-aws-managed-nat-gateway-is-unpleasant-and-not-recommended/) for more information.
 ```
 
 However, using a cloud NAT for outbound internet access is the **single most

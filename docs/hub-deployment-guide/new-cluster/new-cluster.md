@@ -15,6 +15,7 @@ terraform to provision supporting infrastructure, such as storage buckets.
 
 This guide will assume you have already followed the guidance in [](/topic/infrastructure/cluster-design) to select the appropriate infrastructure.
 
+(new-cluster:prerequisites)=
 ## Prerequisites
 
 `````{tab-set}
@@ -87,6 +88,7 @@ N/A
 ````
 `````
 
+(new-cluster:generate-cluster-files)=
 ### Generate cluster files
 
 We automatically generate the files required to setup a new cluster:
@@ -426,6 +428,7 @@ terraform apply -var-file=projects/$CLUSTER_NAME.tfvars
 
 Congratulations, you've just deployed a new cluster!
 
+(new-cluster:terraform:cluster-credentials)=
 ## Exporting and Encrypting the Cluster Access Credentials
 
 In the previous step, we will have created an IAM user with just enough permissions for automatic deployment of hubs from CI/CD. Since these credentials are checked-in to our git repository and made public, they should have least amount of permissions possible.
@@ -694,7 +697,7 @@ the usernames of the 2i2c engineers on this particular AWS account, and run the
 following command to give them access:
 
 ```{note}
-You can modify the command output by running `terraform output -raw eksctl_iam_command` as described in [](new-cluster:aws:terraform:cicd).
+You can modify the command output by running `terraform output -raw eksctl_iam_command` as described in [](new-cluster:terraform:cluster-credentials).
 ```
 
 ```bash
