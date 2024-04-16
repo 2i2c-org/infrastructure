@@ -33,3 +33,119 @@ When reviewing cluster setup PRs, make sure the files above are all present.
 
 All of the following steps must be followed in order to consider phase 3.1 complete. Steps might contain references to other smaller, topic-specifc runbooks that are gathered together and listed in the order they should be carried on by an engineer.
 
+1. Determine the **hub helm chart** that is needed.
+
+   Use the info provided in the new hub GitHub issue for the `Dask gateway` section.
+   If Dask gateway will be needed, then go for a `daskbhub` helm chart, otherwise choose a `basehub`.
+
+   Let's say we store the helm type under $HELM_CHART_TYPE env var:
+
+   ```bash
+   export $HELM_CHART_TYPE=type
+   ```
+
+   For more information about our hub helm charts and how to choose, see [](hub-helm-charts).
+
+   ```{seealso}
+   See [](/topic/infrastructure/config.md) for general information about hub helm chart configuration.
+   ```
+
+2. Create a new `<hub_name>.values.yaml` file under the appropriate cluster directory.
+
+   ```bash
+   export $CLUSTER_NAME=cluster-name;
+   export $HUB_NAME=hub-name
+   ```
+
+   Make sure you are in the root of the infrastructure repository and run:
+
+   ```bash
+   touch ./config/clusters/$CLUSTER_NAME/$HUB_NAME.values.yaml
+   ```
+
+3. Then reference this file in a new entry under the `hubs` key in the cluster's `cluster.yaml` file
+
+   Example cluster.yaml configuration listing a `staging` hub that takes its config from staging.values.yaml
+
+   ```
+   hubs:
+    - name: $HUB_NAME
+      display_name: "$CLUSTER_NAME $HUB_NAME"
+      domain: $HUB_NAME.$CLUSTER_NAME.2i2c.cloud
+      helm_chart: $HELM_CHART_TYPE
+      helm_chart_values_files:
+        - $HUB_NAME.values.yaml
+      ```
+
+   Each `*.values.yaml` file is a Zero to JupyterHub configuration, and you can customize whatever you like.
+
+   The easiest way to add new configuration is to look at the entries for similar hubs under the same cluster folder, copy / paste one of them, and make modifications as needed for this specific hub.
+
+   For example, see the hubs configuration in [the 2i2c Google Cloud cluster configuration directory](https://github.com/2i2c-org/infrastructure/tree/HEAD/config/clusters/2i2c).
+
+
+
+   ```{seealso}
+   During this process you will likely also need to configure an Authentication Provider for the hub.
+   See [](enable-auth-provider) for steps on how to achieve this.
+   ```
+
+   ```{seealso}
+   At this point, you should have everything you need to deploy a hub that matches the requirements of the Community Representative.
+   If however a specific feature has been requested that does not come out-of-the-box with `basehub` or `daskhub`, see [](hub-features) for information on how to deploy it and the relevant config that should be added to the `<hub>.values.yaml` file.
+   ```
+
+3. Make sure you setup the [PersistentVolume](https://kubernetes.io/docs/concepts/storage/persistent-volumes/) in the hub's config.
+
+`````{tab-set}
+````{tab-item} AWS
+:sync: aws-key
+
+An [EFS instance](https://aws.amazon.com/efs/) to store the hub home directories, should exist from when the cluster was created.
+
+Get the address a hub on this cluster should use for connecting to NFS with
+`terraform output nfs_server_dns`, and set it in the hub's config under
+`nfs.pv.serverIP` (nested under `basehub` when necessary) in the appropriate
+`<hub>.values.yaml` file.
+
+```yaml
+nfs:
+   enabled: true
+      enabled: false
+   pv:
+      enabled: true
+      # from https://docs.aws.amazon.com/efs/latest/ug/mounting-fs-nfs-mount-settings.html
+      mountOptions:
+      - rsize=1048576
+      - wsize=1048576
+      - timeo=600
+      - soft # We pick soft over hard, so NFS lockups don't lead to hung processes
+      - retrans=2
+      - noresvport
+      serverIP: <from-terraform>
+      baseShareName: /
+```
+````
+
+````{tab-item} Google Cloud
+:sync: gcp-key
+```yaml
+nfs:
+  enabled: true
+  pv:
+    enabled: true
+    mountOptions:
+      - soft
+      - noatime
+    # Google FileStore IP
+    serverIP: <gcp-filestore-ip>
+    # Name of Google Filestore share
+    baseShareName: /homes/
+```
+````
+
+````{tab-item} Azure
+:sync: azure-key
+N/A
+````
+`````
