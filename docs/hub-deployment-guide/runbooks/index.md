@@ -11,4 +11,5 @@ This is still a work in progress and this contents might change.
 :maxdepth: 1
 phase1/index.md
 phase2/index.md
+phase3/index.md
 ```
