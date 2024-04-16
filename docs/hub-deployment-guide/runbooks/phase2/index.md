@@ -27,7 +27,7 @@ The file assets that should have been generated at the end of this phase and inc
 ```
 
 ```bash
-➕ terraform
+➕ terraform/<cloud-provider>/projects
   └── <new-cluster>.tfvars
 ```
 
