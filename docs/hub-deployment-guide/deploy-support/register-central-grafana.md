@@ -1,3 +1,4 @@
+(register-new-cluster-with-central-grafana)=
 # Register the cluster's Prometheus server with the central Grafana
 
 Once you have [deployed the support chart](deploy-support-chart), you must also register this cluster as a datasource for the [central Grafana dashboard](grafana-dashboards:central). This will allow you to visualize cluster statistics not only from the cluster-specific Grafana deployment but also from the central dashboard, that aggregates data from all the clusters.
