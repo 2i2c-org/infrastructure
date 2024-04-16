@@ -21,5 +21,4 @@ There are some steps to do before the deploy:
    Create a **User group** with admin permissions.
    ```
 
-1. Continue with the cluster setup as usual (following [new cluster on AWS](aws)).
-   On the section [](new-cluster:aws-setup-credentials) follow the steps for "For accounts without AWS SSO".
+1. Continue with the cluster setup as usual (following [new cluster runbook](hub-deployment-guide:runbooks:phase2)).

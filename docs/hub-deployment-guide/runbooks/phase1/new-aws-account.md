@@ -44,7 +44,7 @@ More information on these terms can be found in [](cloud-access:aws).
    * On the "Review and submit assignments" page, click "Submit".
 
 You have successfully created a new AWS account and connected it to our AWS Organization's Management Account!
-Now, [setup a new cluster](new-cluster:aws) inside it via Terraform.
+Now, [setup a new cluster](new-cluster:new-cluster) inside it via Terraform.
 
 (hub-deployment-guide:cloud-accounts:aws-quotas)=
 ## Checking quotas and requesting increases

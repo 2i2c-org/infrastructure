@@ -18,7 +18,7 @@ cluster is unused or that the maintenance is communicated ahead of time.
 
 1. *Install or upgrade CLI tools*
 
-   Install required tools as documented in [](new-cluster:aws-required-tools),
+   Install required tools as documented in [](new-cluster:prerequisites),
    and ensure you have a recent version of eksctl.
 
    ```{warning}
@@ -35,7 +35,7 @@ cluster is unused or that the maintenance is communicated ahead of time.
    Before upgrading an EKS cluster, it could be a good time to consider changes
    to `eksctl/template.jsonnet` since this cluster's jsonnet template was last
    generated, which it was initially according to
-   [](new-cluster:aws:generate-cluster-files).
+   [](new-cluster:generate-cluster-files).
 
    To do this first ensure `git status` reports no changes, then generate new
    cluster files using the deployer script, then restore changes to everything

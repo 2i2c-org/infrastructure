@@ -107,8 +107,8 @@ it does not, wait for about 15 minutes and try again - DNS propagation may take 
    ```yaml
    redirects:
      rules:
-     - from: <2i2c-managed-domain>
-       to: <community-managed-domain>
+       - from: <2i2c-managed-domain>
+         to: <community-managed-domain>
    ```
 
 7. Make a PR with your changes.

@@ -116,7 +116,7 @@ To do so, follow these steps:
    AWS accounts we create.
 4. Create the account! They'll receive an email with appropriate instructions.
 
-(cloud-access:aws-individual-accnts)=
+(cloud-access:aws-individual-accounts)=
 ### Access individual AWS accounts
 
 For AWS accounts that are managed by clients, we use an individual AWS account for each team member, and ask the client to provide us access for each person.
@@ -192,8 +192,8 @@ are used to provide access to the AWS account from your terminal.
    expire in 12 hours, and you will need to re-authenticate.
 
 ```{note}
-Currently, the only accounts that enforce MFA are some [individual accounts](cloud-access:aws-individual-accnts) not under 2i2c's organisation SSO.
-Though in the future, we may enforce MFA for our orgnisation as well.
+Currently, the only accounts that enforce MFA are some [individual accounts](cloud-access:aws-individual-accounts) not under 2i2c's organisation SSO.
+Though in the future, we may enforce MFA for our organisation as well.
 ```
 
 % TODO: Add instructions for Azure as well.

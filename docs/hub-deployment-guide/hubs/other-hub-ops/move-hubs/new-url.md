@@ -35,16 +35,27 @@ we have deployed, e.g., renaming the previous 'researchdelight' hub to 'showcase
     judgment call to make.
     ```
 
-1. [Add a redirect](domain-redirects) from the old URL to the new one
+1. Add a redirect from the old URL to the new one
 
-1. Open a Pull Request with the changes for review
+   In the `support.values.yaml` file for the cluster, set up automatic
+   redirection of users going to the old domain name to arrive at the new new
+   domain name.
 
-1. Once the PR has been approved:
+   ```yaml
+   redirects:
+     rules:
+       - from: <old-domain>
+         to: <new-domain>
+   ```
+
+2. Open a Pull Request with the changes for review
+
+3. Once the PR has been approved:
 
     1. Update A/CNAME records in Namecheap for the new URL
-    1. Update the relevant OAuth app for the new URL
-    1. Merge the PR
+    2. Update the relevant OAuth app for the new URL
+    3. Merge the PR
 
-1. If you also changed the `name` field within the
+4. If you also changed the `name` field within the
    `cluster.yaml` file, [delete the old hub namespace in helm](delete-a-hub). It is recommended to
    [migrate the data](copy-home-dirs) first.

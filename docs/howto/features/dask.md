@@ -1,11 +1,11 @@
-(howto:features:daskhubs)=
+(howto:features:daskhub)=
 # Add support for daskhubs in an existing cluster
 
 ## GCP
 
 Setting up dask nodepools with terraform can be done by adding the following to the cluster's terraform config file:
 
-```terraform
+```
 # Setup a single node pool for dask workers.
 #
 # A not yet fully established policy is being developed about using a single
