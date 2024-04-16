@@ -68,6 +68,15 @@ jupyterhub:
                 kubespawner_override:
                   # FIXME: use quay.io/ for tags after 2023-10-20
                   image: jupyter/scipy-notebook:2023-06-26
+              school:
+                display_name: TOPST SCHOOL Project
+                description: "quay.io/repository/isciences/tops-school:latest"
+                slug: school
+                kubespawner_override:
+                  image: quay.io/isciences/tops-school:latest
+                  # Launch into RStudio after the user logs in
+                  default_url: /rstudio
+                  working_dir: /home/rstudio
           resources:
             display_name: Resource Allocation
             choices:
