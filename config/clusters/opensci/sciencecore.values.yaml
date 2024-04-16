@@ -1,3 +1,12 @@
+userServiceAccount:
+  enabled: true
+  annotations:
+    eks.amazonaws.com/role-arn: arn:aws:iam::211125293633:role/opensci-sciencecore
+adminServiceAccount:
+  enabled: true
+  annotations:
+    eks.amazonaws.com/role-arn: arn:aws:iam::211125293633:role/opensci-sciencecore-admin-sa
+
 jupyterhub:
   ingress:
     hosts:
@@ -27,7 +36,12 @@ jupyterhub:
         funded_by:
           name: ""
           url: ""
+    singleuserAdmin:
+      serviceAccountName: admin-sa
   singleuser:
+    extraEnv:
+      SCRATCH_BUCKET: s3://opensci-scratch-sciencecore/$(JUPYTERHUB_USER)
+      PERSISTENT_BUCKET: s3://opensci-persistent-sciencecore/$(JUPYTERHUB_USER)
     profileList:
       - display_name: "Only Profile Available, this info is not shown in the UI"
         slug: only-choice
