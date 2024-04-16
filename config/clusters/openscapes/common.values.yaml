@@ -57,7 +57,7 @@ basehub:
             - nasa-openscapes-workshops:WorkshopAccess-2i2c # From SWOT workshop 2024-02-13
             - nasa-openscapes-workshops:emit-methane-plume-2024-03-14
           kubespawner_override:
-            image: openscapes/python:4f340eb
+            image: openscapes/python:39dffde
           profile_options: &profile_options
             requests: &profile_options_resource_allocation
               display_name: Resource Allocation
