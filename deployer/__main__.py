@@ -10,6 +10,7 @@ import deployer.commands.generate.cryptnono_config  # noqa: F401
 import deployer.commands.generate.dedicated_cluster.aws  # noqa: F401
 import deployer.commands.generate.dedicated_cluster.gcp  # noqa: F401
 import deployer.commands.generate.helm_upgrade.jobs  # noqa: F401
+import deployer.commands.generate.hub_asset.cluster_entry  # noqa: F401
 import deployer.commands.generate.resource_allocation.daemonset_requests  # noqa: F401
 import deployer.commands.generate.resource_allocation.generate_choices  # noqa: F401
 import deployer.commands.generate.resource_allocation.instance_capacities  # noqa: F401
