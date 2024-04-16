@@ -19,8 +19,6 @@ def cluster_entry(
     """
 
     vars = {
-        # Also store the provider, as it's useful for some jinja templates
-        # to differentiate between them when rendering the configuration
         "cluster_name": cluster_name,
         "hub_name": hub_name,
         "hub_type": hub_type,
@@ -29,5 +27,5 @@ def cluster_entry(
     with open(
         REPO_ROOT_PATH / "config/clusters/templates/common/cluster-entry.yaml"
     ) as f:
-        cluster_yaml_template = jinja2.Template(f.read())
-    print(cluster_yaml_template.render(**vars))
+        cluster_hub_entry_template = jinja2.Template(f.read())
+    print(cluster_hub_entry_template.render(**vars))
