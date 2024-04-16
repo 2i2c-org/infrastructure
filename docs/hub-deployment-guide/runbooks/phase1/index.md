@@ -10,7 +10,7 @@ For example, "project" on GCP, "account" on AWS, "subscription" on Azure, and so
 
 ## Definition of ready
 
-The following table lists the information that needs to be available to the engineer before this phase can start.
+The following lists the information that needs to be available to the engineer before this phase can start.
 
 - Cloud Provider
 - Will 2i2c pay for cloud costs and recover them via invoice?
