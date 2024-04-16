@@ -32,30 +32,6 @@ To learn which subset of clusters are *automatically* deployed via GitHub Action
 
 The process of automatically updating and adding hubs is almost the same for all of the hubs deployed on these clusters.
 
-(new-hub:deploy)=
-## To add a new hub
-
-To deploy a new hub, follow these steps:
-
-1. Make sure a [`New Hub - Provide Information`](https://github.com/2i2c-org/infrastructure/issues/new?assignees=&labels=type%3A+hub&template=2_new-hub-provide-info.yml&title=%Provide+Information%5D+New+Hub%3A+%7B%7B+HUB+NAME+%7D%7D) issue was created and filled in with enough information from the Community Representative.
-   Once that issue is created, move to the next step.
-2. If no option was explicitly asked by the Community Representative, decide whether you'll deploy on a pre-existing Kubernetes cluster, or if you'll need to create a new one.
-   See [](cluster:when-to-deploy) for information to help you decide.
-6. Create a Pull Request with the new hub entry, and get a team member to review it.
-7. Once you merge the pull request, the GitHub Action workflow will detect that a new entry has been added to the configuration file.
-   It will then deploy a new JupyterHub with the configuration you've specified onto the corresponding cluster.
-8. Monitor the action to make sure that it completes.
-   If something goes wrong and the workflow does not finish, try [deploying locally](hubs:manual-deploy) to access the logs to help understand what is going on.
-   It may be necessary to make new changes to the hub's configuration via a Pull Request, or to *revert* the old Pull Request if you cannot determine how to resolve the problem.
-
-   ```{attention}
-   In order to protect sensitive tokens, our CI/CD pipeline will **not** print testing output to its logs.
-   You will need to run the [health check locally](hubs:manual-deploy:health-check) to inspect these logs.
-   ```
-
-9. Log in to the hub and ensure that the hub works as expected from a user's perspective.
-10. Send a link to the hub's Community Representative(s) so they can confirm that it works from their perspective as well.
-
 ## Automated vs. manual deploys
 
 Some of our infrastructure automatically deploys and updates hubs via GitHub Actions workflows, while others require manual deploys.
