@@ -39,6 +39,7 @@ jupyterhub:
     singleuserAdmin:
       serviceAccountName: admin-sa
   singleuser:
+    defaultUrl: /lab
     extraEnv:
       SCRATCH_BUCKET: s3://opensci-scratch-sciencecore/$(JUPYTERHUB_USER)
       PERSISTENT_BUCKET: s3://opensci-persistent-sciencecore/$(JUPYTERHUB_USER)
