@@ -568,9 +568,8 @@ A `cluster.yaml` file should already have been generated as part of [](new-clust
 ### Billing information
 
 For projects where we are paying the cloud bill & then passing costs through, you need to fill
-in information under` gcp.billing.bigquery` and set `gcp.billing.paid_by_us` to `true`. Partnerships
-should be able to tell you if we are doing cloud costs pass through or not, and eventually this should
-be provided by a single source of truth for all contracts.
+in information under `gcp.billing.bigquery` and set `gcp.billing.paid_by_us` to `true`. Partnerships
+should be able to tell you if we are doing cloud costs pass through or not.
 
 1. Going to the [Billing Tab](https://console.cloud.google.com/billing/linkedaccount) on Google Cloud Console
 2. Make sure the correct project is selected in the top bar. You might have to select the 'All' tab in the
@@ -582,6 +581,7 @@ be provided by a single source of truth for all contracts.
    `dataset` under "Detailed cost usage".
 6. If "Detailed cost usage" is not set up, you should [enable it](new-gcp-project:billing-export)
 ````
+
 ````{tab-item} Azure (kubeconfig)
 :sync: azure-key
 ```{warning}
@@ -597,6 +597,7 @@ kubeconfig:
   file: enc-deployer-credentials.secret.yaml
 ```
 ````
+
 ````{tab-item} Azure (Service Principal)
 ```yaml
 name: <cluster-name>  # This should also match the name of the folder: config/clusters/$CLUSTER_NAME
