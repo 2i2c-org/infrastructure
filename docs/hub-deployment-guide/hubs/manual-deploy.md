@@ -14,7 +14,7 @@ of this repository, and can deploy one or more hubs to our clusters.
 
 1. [Setup your local environment](tutorials:setup) to be able to do deploys
 
-2. Make the [config change](../../../topic/infrastructure/config.md) you want to deploy.
+2. Make the [config change](../../topic/infrastructure/config.md) you want to deploy.
 
 3. Deploy just a single hub:
 

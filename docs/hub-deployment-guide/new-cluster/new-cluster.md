@@ -738,12 +738,3 @@ kubectl get node
 It should show you the provisioned node on the cluster if everything works out ok.
 ````
 `````
-
-
-## Cluster is now ready, what are the next steps
-
-```{important}
-Cluster is now ready to perform the next steps:
-1. [](support-components).
-2. [](new-hub)
-```
