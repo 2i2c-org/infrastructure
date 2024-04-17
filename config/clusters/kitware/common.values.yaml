@@ -41,6 +41,7 @@ jupyterhub:
         admin_users:
           - aashish24
           - annehaley
+          - johnkit
   scheduling:
     userScheduler:
       enabled: true
