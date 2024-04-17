@@ -1,7 +1,7 @@
 (new-hub)=
 # Deploy a new hub
 
-This section describes steps around adding hubs to the 2i2c JupyterHub federation.
+This section describes what adding hubs to the 2i2c JupyterHub federation is about from an infrastructure point of view.
 
 ## Infrastructure that is needed for a hub
 
