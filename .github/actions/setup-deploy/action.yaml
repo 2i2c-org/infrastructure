@@ -84,10 +84,10 @@ runs:
 
     # Manually update a pinning of kubectl to a minor version based on:
     #
-    # - the current range of k8s version in our k8s clusters, as of 2023-05-24,
-    #   this is k8s 1.22 - 1.25
-    # - the expected change in this range, as of 2023-05-24, is to expand to
-    #   1.22 - 1.26
+    # - the current range of k8s version in our k8s clusters, as of 2024-04-17,
+    #   this is k8s 1.27 - 1.29
+    # - the next expected change in this range, as of 2024-04-17, is to expand
+    #   to include 1.30
     # - the kubectl <-> k8s api-server skew policy of +/- one minor version
     # - the policy of attempting to update our kubectl version here to be +/-
     #   one minor versions of future k8s clusters additions or upgrades, so that
@@ -105,7 +105,7 @@ runs:
     #
     - uses: azure/setup-kubectl@v4
       with:
-        version: "v1.25.10"
+        version: "v1.28.8"
 
     # This action use the github official cache mechanism internally
     - name: Install sops
