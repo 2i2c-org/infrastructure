@@ -29,8 +29,7 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout repo
-        uses: actions/checkout@v4
+      - uses: actions/checkout@v4
 
       # Uptime checks are set up and managed via terraform
       - uses: hashicorp/setup-terraform@v3
