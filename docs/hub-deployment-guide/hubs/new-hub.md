@@ -32,6 +32,7 @@ To learn which subset of clusters are *automatically* deployed via GitHub Action
 
 The process of automatically updating and adding hubs is almost the same for all of the hubs deployed on these clusters.
 
+(hub-deployment)=
 ## Automated vs. manual deploys
 
 Some of our infrastructure automatically deploys and updates hubs via GitHub Actions workflows, while others require manual deploys.
