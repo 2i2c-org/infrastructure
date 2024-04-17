@@ -54,7 +54,7 @@ hub-deployment-guide/new-cluster/index.md
 hub-deployment-guide/deploy-support/index.md
 hub-deployment-guide/hubs/new-hub.md
 hub-deployment-guide/configure-auth/index.md
-hub-deployment-guide/hubs/other-hub-ops/index.md
+hub-deployment-guide/hubs/index.md
 ```
 
 ## How-to guides
@@ -86,6 +86,7 @@ Topic guides go more in-depth on a particular topic.
 ```{toctree}
 :caption: Topic guides
 :maxdepth: 2
+topic/new-hub
 topic/access-creds/index.md
 topic/infrastructure/index.md
 topic/billing/index.md
