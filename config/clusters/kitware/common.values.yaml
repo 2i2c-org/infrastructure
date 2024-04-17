@@ -46,7 +46,7 @@ jupyterhub:
         allowed_organizations:
           - Pan3D-Community
         scope:
-          - read:user
+          - read:org
   scheduling:
     userScheduler:
       enabled: true

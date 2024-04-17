@@ -1,3 +1,7 @@
+userServiceAccount:
+  annotations:
+    eks.amazonaws.com/role-arn: arn:aws:iam::471112920937:role/kitware-staging
+
 jupyterhub:
   ingress:
     hosts: [staging.kitware.2i2c.cloud]
