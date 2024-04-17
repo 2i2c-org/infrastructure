@@ -51,7 +51,7 @@ All of the following steps must be followed in order to consider phase 3.1 compl
    Store the helm type under $HELM_CHART_TYPE env var:
 
    ```bash
-   export $HELM_CHART_TYPE=type
+   export HELM_CHART_TYPE=type
    ```
 
    ```{seealso}
@@ -90,8 +90,8 @@ All of the following steps must be followed in order to consider phase 3.1 compl
    - One file will hold the common hubs configuration and one will hold the specific hub configuration.
 
      ```bash
-     export $CLUSTER_NAME=cluster-name;
-     export $HUB_NAME=hub-name
+     export CLUSTER_NAME=cluster-name;
+     export HUB_NAME=hub-name
      ```
 
    - Make sure you are in the root of the infrastructure repository and run:
