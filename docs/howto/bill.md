@@ -1,9 +1,13 @@
 # Calculate how much cloud infrastructure costs
 
-We have several contracts where we pay for our users' cloud bills, and then
-invoice them for it. This is done with help from CS&S that we interact with
-regarding this in the `#billing` slack channel after updating a [spreadsheet for
-billing].
+We have several community contracts where we first pay their cloud bills and
+then invoice them for it. Any community paying their cloud bills through 2i2c
+_must_ have their hub(s) under a `cluster.yaml` file declaring
+`[gcp|aws].billing.paid_by_us=true`.
+
+Practically to invoice these communities, we update a [spreadsheet for billing]
+summarizing monthly costs for communities, and then request invoicing help from
+CS&S via the `#billing` slack channel.
 
 This documentation helps you update that spreadsheet!
 
@@ -19,9 +23,9 @@ following the steps below. Your 2i2c.org email should give you access.
 ### Get costs manually via the UI (only documented option)
 
 ```{note}
-As of 2024-04-03, we only manage the cost for AWS accounts associated with our
-AWS management account. If a future cluster deviates from this, we should be
-able to tell by seeing `aws.billing.paid_by_us` set true in its `cluster.yaml`.
+As of 2024-04-17, we only manage the cost for AWS accounts associated with our
+AWS management account. If a future cluster deviates from this, you can tell by
+`aws.billing.paid_by_us` being set true in its `cluster.yaml`.
 ```
 
 1. Login to shared AWS SSO at https://2i2c.awsapps.com/start#/
