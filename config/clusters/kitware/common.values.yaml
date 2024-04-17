@@ -42,6 +42,11 @@ jupyterhub:
           - aashish24
           - annehaley
           - johnkit
+      GitHubOAuthenticator:
+        allowed_organizations:
+          - Pan3D-Community
+        scope:
+          - read:user
   scheduling:
     userScheduler:
       enabled: true
