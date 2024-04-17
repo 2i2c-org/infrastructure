@@ -1,0 +1,46 @@
+nfs:
+  enabled: true
+  pv:
+    enabled: true
+    # from https://docs.aws.amazon.com/efs/latest/ug/mounting-fs-nfs-mount-settings.html
+    mountOptions:
+      - rsize=1048576
+      - wsize=1048576
+      - timeo=600
+      - soft # We pick soft over hard, so NFS lockups don't lead to hung processes
+      - retrans=2
+      - noresvport
+    serverIP: fs-0a99c54ad0abc573e.efs.us-west-2.amazonaws.com
+    baseShareName: /
+jupyterhub:
+  custom:
+    2i2c:
+      add_staff_user_ids_to_admin_users: true
+      add_staff_user_ids_of_type: github
+    homepage:
+      templateVars:
+        org:
+          name: kitware
+          logo_url: https://www.kitware.com/main/wp-content/uploads/2021/10/Kitware-Wordmark.svg
+          url: https://www.kitware.com/
+        designed_by:
+          name: 2i2c
+          url: https://2i2c.org
+        operated_by:
+          name: 2i2c
+          url: https://2i2c.org
+        funded_by:
+          name: Kitware
+          url: https://www.kitware.com/
+  hub:
+    allowNamedServers: true
+    config:
+      JupyterHub:
+        authenticator_class: github
+      Authenticator:
+        admin_users:
+          - aashish24
+          - annehaley
+  scheduling:
+    userScheduler:
+      enabled: true
