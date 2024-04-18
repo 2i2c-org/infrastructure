@@ -56,6 +56,8 @@ any approval.
 7. *Cleanly* reverting a change that failed CI
 8. Updating soon to be expired credentials
 9. Spelling and grammar error fixes in documentation or code comments
+10. Setting up a new hub following our new hub turn up process, without any extra feature development
+    or customization.
 
 ## Self-merging as a community partner
 
