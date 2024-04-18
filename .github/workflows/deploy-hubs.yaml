@@ -75,13 +75,11 @@ jobs:
       prod-hub-matrix-jobs: ${{ env.prod-hub-matrix-jobs }}
 
     steps:
-      - name: Checkout repo
-        uses: actions/checkout@v4
+      - uses: actions/checkout@v4
 
-      - name: Install Python 3.9
-        uses: actions/setup-python@v5
+      - uses: actions/setup-python@v5
         with:
-          python-version: "3.9"
+          python-version: "3.11"
 
       # There will almost never be a cache hit on the cache key when this job is
       # run, as it is the first of all jobs in this workflow. An exception is if
@@ -227,8 +225,7 @@ jobs:
         jobs: ${{ fromJson(needs.generate-jobs.outputs.support-and-staging-matrix-jobs) }}
 
     steps:
-      - name: Checkout repo
-        uses: actions/checkout@v4
+      - uses: actions/checkout@v4
 
       - name: Setup deploy for ${{ matrix.jobs.cluster_name }}
         uses: ./.github/actions/setup-deploy
@@ -400,8 +397,7 @@ jobs:
         jobs: ${{ fromJson(needs.filter-generate-jobs.outputs.filtered-prod-hub-matrix-jobs) }}
 
     steps:
-      - name: Checkout repo
-        uses: actions/checkout@v4
+      - uses: actions/checkout@v4
 
       - name: Setup deploy for ${{ matrix.jobs.cluster_name }} cluster
         uses: ./.github/actions/setup-deploy
