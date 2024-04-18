@@ -18,11 +18,7 @@ In the `infrastructure` repo, the full filepath should be: `config/clusters/<clu
 
 Checkout the template support values file in `config/clusters/templates/common/support.values.yaml` for an example configuration. If the cluster is running on GCP or AWS, the deployer should have been generated this file already.
 
-If you are deploying the support chart on an Azure cluster, you **must** manually create such a file using the template mentioned above.
-
-You must also set an annotation for `ingress-nginx`'s k8s Service resource.
-
-Include the following in your `support.values.yaml` file:
+If you are deploying the support chart on an Azure cluster, you **must** manually create such a file using the template mentioned above. Also, you must set an annotation for `ingress-nginx`'s k8s Service resource by including the following in your `support.values.yaml` file:
 
 ```yaml
 ingress-nginx:
