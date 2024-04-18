@@ -1,8 +1,3 @@
-{% if provider == "aws" %}
-userServiceAccount:
-  annotations:
-    eks.amazonaws.com/role-arn: {{ role_arn }}
-{% endif %}
 jupyterhub:
   ingress:
     hosts: [{{ hub_name }}.{{ cluster_name }}.2i2c.cloud]
