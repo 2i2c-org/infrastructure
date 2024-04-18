@@ -143,7 +143,7 @@ All of the following steps must be followed in order to consider phase 3.1 compl
 6. **Add the new cluster to CI/CD**
 
    ```{important}
-   This step is only applicable if the hub is being deployed to a new cluster that has been recently created by following the previous runbooks.
+   This step is only applicable if the hub is the first hub being deployed to a cluster.
    ```
 
    To ensure the new cluster and its hubs are appropriately handled by our CI/CD system, please add it as an entry in the following places:
