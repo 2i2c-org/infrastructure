@@ -12,7 +12,7 @@ then a lot of these files will have already been created for you and you do not
 need to recreate them, only update them if required.
 ```
 
-## Make sure the `support.values.yaml` file in your chosen cluster folder is correctly configured
+## Make sure `support.values.yaml` is correctly configured
 
 In the `infrastructure` repo, the full filepath should be: `config/clusters/<cluster_name>/support.values.yaml`.
 
