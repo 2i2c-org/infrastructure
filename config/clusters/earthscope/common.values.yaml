@@ -181,6 +181,8 @@ basehub:
             # automatically granted this scope, so we can test. See
             # https://2i2c.freshdesk.com/a/tickets/1280 for how this was granted.
             - geolab
+            - geolab:dev
+            - geolab:power
           extra_authorize_params:
             # This isn't an actual URL, just a string. Must not have a trailing slash
             audience: https://api.dev.earthscope.org
