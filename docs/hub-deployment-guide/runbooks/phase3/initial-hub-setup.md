@@ -12,7 +12,7 @@ The following lists the information that needs to be available to the engineer b
 - Splash image
 - URL of the community's webpage
 - Funded by information (name and URL)
-- Authentication Mechanism
+- Authentication mechanism
 - List of admin users
 
 ## Outputs
