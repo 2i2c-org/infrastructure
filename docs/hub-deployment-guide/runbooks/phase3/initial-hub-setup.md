@@ -41,7 +41,7 @@ When reviewing initial hub setup PRs, make sure the files above are all present.
 
 ## Initial setup runbook
 
-All of the following steps must be followed in order to consider phase 3.1 complete. Steps might contain references to other smaller, topic-specifc runbooks that are gathered together and listed in the order they should be carried on by an engineer.
+All of the following steps must be followed in order to consider phase 3.1 complete. Steps might contain references to other smaller, topic-specific runbooks that are gathered together and listed in the order they should be carried out in by an engineer.
 
 1. **Determine the hub helm chart that is needed**
 
