@@ -1,0 +1,14 @@
+userServiceAccount:
+  annotations:
+    eks.amazonaws.com/role-arn: arn:aws:iam::471112920937:role/kitware-prod
+
+jupyterhub:
+  ingress:
+    hosts: [kitware.2i2c.cloud]
+    tls:
+      - hosts: [kitware.2i2c.cloud]
+        secretName: https-auto-tls
+  hub:
+    config:
+      GitHubOAuthenticator:
+        oauth_callback_url: https://kitware.2i2c.cloud/hub/oauth_callback
