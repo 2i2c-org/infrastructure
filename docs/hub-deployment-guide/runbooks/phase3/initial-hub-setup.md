@@ -119,6 +119,10 @@ All of the following steps must be followed in order to consider phase 3.1 compl
      deployer generate hub-asset common-values-file --admin-users admin1 --admin-users admin2
      ```
 
+     ```{warning}
+     If the admin users list is not passed independently as arguments and is instead left to be passed via de prompt with all the other args, then the following error is raised no matter the value passed: `Error: Value must be an iterable.`.
+     ```
+
    ```{tip}
    Each `*.values.yaml` file is a Helm chart configuration file (`basehub`, or `daskhub`), and you can also configure their chart dependencies (`jupyterhub`, `dask-gateway`, etc).
 
