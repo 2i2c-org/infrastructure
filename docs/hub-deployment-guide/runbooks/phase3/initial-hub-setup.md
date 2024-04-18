@@ -1,7 +1,7 @@
 (hub-deployment-guide:runbooks:phase3.1)=
 # Phase 3.1: Initial setup
 
-This phase is about configuring an initial, basic hub for the community to try it on. This hub will have basic customizations, like appearance, daskhub/basehub, a simple authentication mechanism and a list of initial admin users able to access it.
+This phase is about a fast initial hub setup that later could be fine-tuned.
 
 ## Definition of ready
 
