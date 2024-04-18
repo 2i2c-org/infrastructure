@@ -50,9 +50,11 @@ jupyterhub:
         authenticator_class: {{ authenticator }}
       Authenticator:
         admin_users:
-        {% for admin in admin_users %}
+          {% for admin in admin_users %}
           - {{ admin }}
-        {% endfor %}
+          {% else %}
+          []
+          {% endfor %}
   scheduling:
     userScheduler:
       enabled: true
