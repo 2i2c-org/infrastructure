@@ -28,7 +28,7 @@ The file assets that should have been generated and included in the PR should be
   └── enc-<new-hub-name>.secret.values.yaml
 ```
 
-And the following existing file should be updated to accommodate the new hub if the cluster was recently added:
+And the following existing file should have been updated if the new hub was the first in a cluster:
 
 ```bash
 ～ .github/workflows
