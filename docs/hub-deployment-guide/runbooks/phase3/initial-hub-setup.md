@@ -114,9 +114,9 @@ All of the following steps must be followed in order to consider phase 3.1 compl
      deployer generate hub-asset main-values-file
      ```
 
-   - **Run the deployer commands below to generate config for the common hubs configuration:**
+   - **Run the deployer command below to generate config for the common hubs configuration, passing the admin users one by one:**
      ```bash
-     deployer generate hub-asset common-values-file
+     deployer generate hub-asset common-values-file --admin-users admin1 --admin-users admin2
      ```
 
    ```{tip}

@@ -31,7 +31,7 @@ def common_values_file(
     funded_by_url: str = typer.Option(
         ..., prompt="The url to the website of the entity funding the hubs"
     ),
-    admin_users: List[str] = typer.Option(..., prompt="The list of hub admin users"),
+    admin_users: List[str] = typer.Option([], prompt="The list of hub admin users"),
 ):
     """
     Outputs the relevant common.values.yaml hub file contents that the engineer can then manually copy-paste into the relevant values.yaml file.
