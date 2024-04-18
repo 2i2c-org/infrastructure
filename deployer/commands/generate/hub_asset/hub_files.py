@@ -17,7 +17,7 @@ def common_values_file(
         ..., prompt="The name of the cluster where the hub will live"
     ),
     authenticator: str = typer.Option(
-        ..., prompt="The authenticator name: github/ciogon/auth0/generic"
+        ..., prompt="The authenticator type: github/cilogon/auth0/generic"
     ),
     logo_url: str = typer.Option(
         ...,
