@@ -85,6 +85,8 @@ All of the following steps must be followed in order to consider phase 3.1 compl
     :sync: aws-key
     Get the address of the EFS server via terraform and store it as it will be required in a later step.
 
+    Make sure you are in the right terraform directory, i.e. `terraform/projects/aws` and the right terraform workspace by running `terraform workspace show`.
+
     ```bash
     terraform output nfs_server_dns
     ```
