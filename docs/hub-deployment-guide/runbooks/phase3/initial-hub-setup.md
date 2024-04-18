@@ -8,7 +8,7 @@ This phase is about a fast initial hub setup that later could be fine-tuned.
 The following lists the information that needs to be available to the engineer before this phase can start.
 
 - Name of the hub
-- Dask gateway?
+- Will Dask gateway be required?
 - Splash image
 - URL of the community's webpage
 - Funded by information (name and URL)
