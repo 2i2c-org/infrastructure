@@ -173,4 +173,4 @@ All of the following steps must be followed in order to consider phase 3.1 compl
 
    And ensure that the hub works as expected from a user's perspective.
 
-10. Send a link to the hub's Community Representative(s) so they can confirm that it works from their perspective as well.
+10. **Send a link to the hub's Community Representative(s) so they can confirm that it works from their perspective as well.**
