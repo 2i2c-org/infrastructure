@@ -12,47 +12,16 @@ then a lot of these files will have already been created for you and you do not
 need to recreate them, only update them if required.
 ```
 
-## Create a `support.values.yaml` file in your chosen cluster folder
+## Make sure the `support.values.yaml` file in your chosen cluster folder is correctly configured
 
 In the `infrastructure` repo, the full filepath should be: `config/clusters/<cluster_name>/support.values.yaml`.
 
-Add the following helm chart values to your `support.values.yaml` file.
-`<grafana-domain>` should follow the pattern `grafana.<cluster_name>.2i2c.cloud`,
-and `<prometheus-domain>` should follow the pattern `prometheus.<cluster_name>.2i2c.cloud`.
+Checkout the template support values file in `config/clusters/templates/common/support.values.yaml` for an example configuration. If the cluster is running on GCP or AWS, the deployer should have been generated this file already.
 
-```yaml
-prometheusIngressAuthSecret:
-  enabled: true
+If you are deploying the support chart on an Azure cluster, you **must** manually create such a file using the template mentioned above.
 
-grafana:
-  grafana.ini:
-    server:
-      root_url: https://<grafana-domain>/
-    auth.github:
-      enabled: true
-      allowed_organizations: 2i2c-org
-  ingress:
-    hosts:
-      - <grafana-domain>
-    tls:
-      - secretName: grafana-tls
-        hosts:
-          - <grafana-domain>
+You must also set an annotation for `ingress-nginx`'s k8s Service resource.
 
-prometheus:
-  server:
-    ingress:
-      enabled: true
-      hosts:
-        - <prometheus-domain>
-      tls:
-        - secretName: prometheus-tls
-          hosts:
-            - <prometheus-domain>
-```
-
-````{warning}
-If you are deploying the support chart on an Azure cluster, you **must** set an annotation for `ingress-nginx`'s k8s Service resource.
 Include the following in your `support.values.yaml` file:
 
 ```yaml
@@ -70,7 +39,6 @@ ingress-nginx:
         #
         service.beta.kubernetes.io/azure-load-balancer-health-probe-request-path: /healthz
 ```
-````
 
 ## Edit your `cluster.yaml` file
 
