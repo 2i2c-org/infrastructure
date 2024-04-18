@@ -5,7 +5,7 @@ This assumes all engineers have access to this new account, and will be able to 
 
 ## Definition of ready
 
-The following table lists the information that needs to be available to the engineer before this phase can start.
+The following lists the information that needs to be available to the engineer before this phase can start.
 
 - Region / Zone of the cluster
 - Name of cluster
@@ -13,9 +13,9 @@ The following table lists the information that needs to be available to the engi
 
 ## Outputs
 
-At the end of Phase 1, there should be a new cluster setup, with fully configured and deployed support components.
+At the end of Phase 2, there should be a new cluster setup, with fully configured and deployed support components.
 
-The file assets that should have been generated at the end of this phase and included in the PR should be:
+The file assets that should have been included in the PR should be:
 
 ```bash
 ➕ config/clusters/<new-cluster-name>

@@ -18,6 +18,7 @@ on:
       - "!deployer/health_check_tests/**"
       - "!deployer/commands/generate/billing/**"
       - "!deployer/commands/generate/dedicated_cluster/**"
+      - "!deployer/commands/generate/hub_asset/**"
       - "!deployer/commands/generate/resource_allocation/**"
       - requirements.txt
       - .github/actions/setup-deploy/**
@@ -35,6 +36,7 @@ on:
       - "!deployer/health_check_tests/**"
       - "!deployer/commands/generate/billing/**"
       - "!deployer/commands/generate/dedicated_cluster/**"
+      - "!deployer/commands/generate/hub_asset/**"
       - "!deployer/commands/generate/resource_allocation/**"
       - requirements.txt
       - .github/actions/setup-deploy/**

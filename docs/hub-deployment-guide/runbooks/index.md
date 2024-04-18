@@ -8,7 +8,8 @@ This is still a work in progress and this contents might change.
 ```
 
 ```{toctree}
-:maxdepth: 1
+:maxdepth: 2
 phase1/index.md
 phase2/index.md
+phase3/index.md
 ```

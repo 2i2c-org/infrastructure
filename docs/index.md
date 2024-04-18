@@ -42,19 +42,14 @@ sre-guide/common-problems-solutions.md
 
 These sections walk an engineer step-by-step through the workflow of setting up a new 2i2c-managed JupyterHub.
 
-- If there isn't a cloud account setup yet, start with [](hub-deployment-guide:runbooks:phase1)
-- If there isn't a Kubernetes cluster setup yet, start with [](new-cluster)
-- If all you need to do is deploy the hub, start with [](new-hub)
-
 ```{toctree}
 :maxdepth: 1
 :caption: Hub deployment guide
 hub-deployment-guide/runbooks/index.md
 hub-deployment-guide/new-cluster/index.md
 hub-deployment-guide/deploy-support/index.md
-hub-deployment-guide/hubs/new-hub.md
 hub-deployment-guide/configure-auth/index.md
-hub-deployment-guide/hubs/other-hub-ops/index.md
+hub-deployment-guide/hubs/index.md
 ```
 
 ## How-to guides
@@ -86,6 +81,7 @@ Topic guides go more in-depth on a particular topic.
 ```{toctree}
 :caption: Topic guides
 :maxdepth: 2
+topic/new-hub
 topic/access-creds/index.md
 topic/infrastructure/index.md
 topic/billing/index.md
