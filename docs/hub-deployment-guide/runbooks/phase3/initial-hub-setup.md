@@ -118,7 +118,7 @@ All of the following steps must be followed in order to consider phase 3.1 compl
      ```
 
    ```{tip}
-   Each `*.values.yaml` file is a Zero to JupyterHub configuration, and you can customize whatever you like.
+   Each `*.values.yaml` file is a Helm chart configuration file (`basehub`, or `daskhub`), and you can also configure their chart dependencies (`jupyterhub`, `dask-gateway`, etc).
 
    You can also look at the entries for similar hubs under the same cluster folder, copy / paste one of them, and make modifications as needed for this specific hub.
    For example, see the hubs configuration in [the 2i2c Google Cloud cluster configuration directory](https://github.com/2i2c-org/infrastructure/tree/HEAD/config/clusters/2i2c).
