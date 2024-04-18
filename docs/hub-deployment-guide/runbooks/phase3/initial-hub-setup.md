@@ -60,7 +60,25 @@ All of the following steps must be followed in order to consider phase 3.1 compl
    See [](/topic/infrastructure/config.md) for general information about hub helm chart configuration.
    ```
 
-2. **Determine the address of the storage server that a hub on this cluster should use to connect to it**
+1. **Create the relevant `values.yaml` file/s under the appropriate cluster directory**
+
+   If the cluster will have multiple hubs, and chances are it will as there's a common 2i2c practice to always deploy a staging hub alongside a production one, then create two values.yaml files under the appropriate cluster directory.
+
+   - One file will hold the common hubs configuration and one will hold the specific hub configuration.
+
+     ```bash
+     export CLUSTER_NAME=cluster-name;
+     export HUB_NAME=hub-name
+     ```
+
+   - Make sure you are in the root of the infrastructure repository and run:
+
+     ```bash
+     touch ./config/clusters/$CLUSTER_NAME/$HUB_NAME.values.yaml;
+     touch ./config/clusters/$CLUSTER_NAME/common.values.yaml
+     ```
+
+1. **Determine the address of the storage server that a hub on this cluster should use to connect to it**
 
     `````{tab-set}
     ````{tab-item} AWS
@@ -83,25 +101,7 @@ All of the following steps must be followed in order to consider phase 3.1 compl
     ````
     `````
 
-3. **Create the relevant `values.yaml` file/s under the appropriate cluster directory**
-
-   If the cluster will have multiple hubs, and chances are it will as there's a common 2i2c practice to always deploy a staging hub alongside a production one, then create two values.yaml files under the appropriate cluster directory.
-
-   - One file will hold the common hubs configuration and one will hold the specific hub configuration.
-
-     ```bash
-     export CLUSTER_NAME=cluster-name;
-     export HUB_NAME=hub-name
-     ```
-
-   - Make sure you are in the root of the infrastructure repository and run:
-
-     ```bash
-     touch ./config/clusters/$CLUSTER_NAME/$HUB_NAME.values.yaml;
-     touch ./config/clusters/$CLUSTER_NAME/common.values.yaml
-     ```
-
-4. **Run the deployer to generate a sample basic hub configuration**
+1. **Run the deployer to generate a sample basic hub configuration**
 
    The easiest way to add new configuration is to use the deployer to generate an initial sample config.
 
@@ -124,11 +124,11 @@ All of the following steps must be followed in order to consider phase 3.1 compl
    For example, see the hubs configuration in [the 2i2c Google Cloud cluster configuration directory](https://github.com/2i2c-org/infrastructure/tree/HEAD/config/clusters/2i2c).
    ```
 
-4. **Setup the relevant Authentication Provider with relevant credentials**
+1. **Setup the relevant Authentication Provider with relevant credentials**
 
    See [](enable-auth-provider) for steps on how to achieve this.
 
-5. **Then reference these files in a new entry under the `hubs` key in the cluster's `cluster.yaml` file**
+1. **Then reference these files in a new entry under the `hubs` key in the cluster's `cluster.yaml` file**
 
    You can use the `deployer generate hub-asset` subcommand to generate the relevant entry to insert into cluster.yaml file.
 
@@ -140,7 +140,7 @@ All of the following steps must be followed in order to consider phase 3.1 compl
    Please pay attention to all the fields that have been auto-generated for you by this command and change every one that doesn't match the community's requirements or was not rendered correctly before copying-pasting it into the relevant files.
    ```
 
-6. **Add the new cluster to CI/CD**
+1. **Add the new cluster to CI/CD**
 
    ```{important}
    This step is only applicable if the hub is the first hub being deployed to a cluster.
@@ -150,16 +150,16 @@ All of the following steps must be followed in order to consider phase 3.1 compl
 
       - The [`deploy-hubs.yaml`](https://github.com/2i2c-org/infrastructure/blob/008ae2c1deb3f5b97d0c334ed124fa090df1f0c6/.github/workflows/deploy-hubs.yaml#L121) GitHub workflow has a job named [`upgrade-support-and-staging`](https://github.com/2i2c-org/infrastructure/blob/18f5a4f8f39ed98c2f5c99091ae9f19a1075c988/.github/workflows/deploy-hubs.yaml#L128-L166) that needs to list of clusters being automatically deployed by our CI/CD system. Add an entry for the new cluster here.
 
-6. **Create a Pull Request with the new hub entry**
+1. **Create a Pull Request with the new hub entry**
 
    And get a team member to review it.
 
-7. **Merge the PR once it's approved**
+1. **Merge the PR once it's approved**
    Once you merge the pull request, the GitHub Action workflow will detect that a new entry has been added to the configuration file.
 
    It will then deploy a new JupyterHub with the configuration you've specified onto the corresponding cluster.
 
-8. **Monitor the action to make sure that it completes**
+1. **Monitor the action to make sure that it completes**
 
    If something goes wrong and the workflow does not finish, try [deploying locally](hubs:manual-deploy) to access the logs to help understand what is going on.
    It may be necessary to make new changes to the hub's configuration via a Pull Request, or to *revert* the old Pull Request if you cannot determine how to resolve the problem.
@@ -169,8 +169,9 @@ All of the following steps must be followed in order to consider phase 3.1 compl
    You will need to run the [health check locally](hubs:manual-deploy:health-check) to inspect these logs.
    ```
 
-9. **Log in to the hub**
+1. **Log in to the hub**
 
    And ensure that the hub works as expected from a user's perspective.
 
-10. **Send a link to the hub's Community Representative(s) so they can confirm that it works from their perspective as well.**
+1. **Send a link to the hub's Community Representative(s)**
+   So they can confirm that it works from their perspective as well.
