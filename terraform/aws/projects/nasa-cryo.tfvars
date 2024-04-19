@@ -54,7 +54,7 @@ hub_cloud_permissions = {
               }
           ]
         }
-    EOT
+      EOT
     },
   },
   "prod" : {
@@ -90,7 +90,7 @@ hub_cloud_permissions = {
               }
           ]
         }
-    EOT
+      EOT
     },
   },
 }
