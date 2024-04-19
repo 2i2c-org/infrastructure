@@ -155,6 +155,11 @@ def parse_terraform_value_files_for_features(terraform_config):
         hub_cloud_permissions = terraform_config.get("hub_cloud_permissions", None)
         if hub_cloud_permissions:
             for hub_slug, permissions in hub_cloud_permissions.items():
+                # The permission object doesn't have the same structure in AWS
+                # as for GCP currently, and requestor_pays is only available for
+                # GCP currently. The logic below works, but needs an update if
+                # GCP aligns with the same structure as AWS, or if
+                # requestor_pays config is added for AWS.
                 features[hub_slug] = {
                     "user_buckets": True,
                     "requestor_pays": permissions.get("requestor_pays", False),
