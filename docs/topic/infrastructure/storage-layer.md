@@ -77,6 +77,8 @@ Can be mounted **just for admins**, showing the contents of `<hub-directory-path
 This `volumeMount` can be made `readOnly` if the following volume property is set: `readOnly: true`.
 If it is not specified, then by default, it is **NOT `readOnly`**, so admins can write to it.
 It's purpose is to give access to the hub admins to all the users home directory to read and/or modify.
+This is helpful if they want to rename users (after a user name change, for example), download
+*all* the users' data, or delete some users' home directories to conserve disk space.
 
 ```yaml
 jupyterhub:
