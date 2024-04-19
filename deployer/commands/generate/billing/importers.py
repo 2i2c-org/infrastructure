@@ -16,7 +16,6 @@ def build_gcp_query(cluster: dict, service_id=None):
 
     Returns:
         string: query string
-    """ """
     """
     bq = cluster["gcp"]["billing"]["bigquery"]
 
