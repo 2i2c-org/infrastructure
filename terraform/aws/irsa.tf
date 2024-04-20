@@ -16,8 +16,10 @@ locals {
   hub_role = flatten([
     for hub, hub_value in var.hub_cloud_permissions : [
       for role, role_value in hub_value : {
-        // id is conservatively adjusted to not change any previous resource
-        // name set to the hub's name when only "user-sa" roles were around
+        // Most hubs only use `user-sa`, so we use just the hub name for the IAM
+        // role for user-sa. `user-sa` was also the only service account supported
+        // for a long time, so this special casing reduces the amount of work
+        // we needed to do to introduce other service accounts.
         id   = role == "user-sa" ? hub : "${hub}-${role}"
         hub  = hub
         role = role
