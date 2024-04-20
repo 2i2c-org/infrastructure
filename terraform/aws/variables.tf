@@ -56,7 +56,7 @@ variable "hub_cloud_permissions" {
   default     = {}
   description = <<-EOT
   Cloud permissions attached to Kubernetes Service Accounts in a particular
-  hub in this cluster.
+  k8s namespace (hub) in this cluster.
 
   The key is a Kubernetes namespace, which by convention in 2i2c clusters
   is also the name of the hub.
