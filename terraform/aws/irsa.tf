@@ -15,15 +15,15 @@ data "aws_partition" "current" {}
 locals {
   hub_to_role_mapping = flatten([
     for hub, hub_value in var.hub_cloud_permissions : [
-      for ksa_name, ksa_value in hub_value : {
+      for ksa_name, cloud_permissions in hub_value : {
         // Most hubs only use `user-sa`, so we use just the hub name for the IAM
         // role for user-sa. `user-sa` was also the only service account supported
         // for a long time, so this special casing reduces the amount of work
         // we needed to do to introduce other service accounts.
-        iam_role_name = ksa_name == "user-sa" ? hub : "${hub}-${ksa_name}"
-        hub           = hub
-        ksa_name      = ksa_name
-        ksa_value     = ksa_value
+        iam_role_name     = ksa_name == "user-sa" ? hub : "${hub}-${ksa_name}"
+        hub               = hub
+        ksa_name          = ksa_name
+        cloud_permissions = cloud_permissions
       }
     ]
   ])
@@ -64,15 +64,15 @@ resource "aws_iam_role" "irsa_role" {
 
 
 resource "aws_iam_policy" "extra_user_policy" {
-  for_each = { for index, hr in local.hub_to_role_mapping : hr.iam_role_name => hr if hr.ksa_value.extra_iam_policy != "" }
+  for_each = { for index, hr in local.hub_to_role_mapping : hr.iam_role_name => hr if hr.cloud_permissions.extra_iam_policy != "" }
   name     = "${var.cluster_name}-${each.key}-extra-user-policy"
 
   description = "Extra permissions granted to users on hub ${each.key} on ${var.cluster_name}"
-  policy      = each.value.ksa_value.extra_iam_policy
+  policy      = each.value.cloud_permissions.extra_iam_policy
 }
 
 resource "aws_iam_role_policy_attachment" "extra_user_policy" {
-  for_each   = { for index, hr in local.hub_to_role_mapping : hr.iam_role_name => hr if hr.ksa_value.extra_iam_policy != "" }
+  for_each   = { for index, hr in local.hub_to_role_mapping : hr.iam_role_name => hr if hr.cloud_permissions.extra_iam_policy != "" }
   role       = aws_iam_role.irsa_role[each.key].name
   policy_arn = aws_iam_policy.extra_user_policy[each.key].arn
 }
