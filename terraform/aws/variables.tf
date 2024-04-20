@@ -55,17 +55,27 @@ variable "hub_cloud_permissions" {
   )
   default     = {}
   description = <<-EOT
-  Map of cloud permissions given to a particular hub (k8s namespace) and
-  its associated IAM Role's that are 1:1 with k8s ServiceAccounts.
+  Cloud permissions attached to Kubernetes Service Accounts in a particular
+  hub in this cluster.
 
-  Currently supported are:
+  The key is a Kubernetes namespace, which by convention in 2i2c clusters
+  is also the name of the hub.
 
-  1. bucket_admin_access: List of S3 storage buckets that the associated aws-iam-role/k8s-service-account should have read
-     and write permissions for.
-  2. bucket_readonly_access: List of S3 storage buckets that users on this hub should have read
-     permissions for.
-  3. extra_iam_policy: An AWS IAM Policy document that grants additional rights to the users
-     on this hub when talking to AWS services.
+  The value is itself a map, as each hub can have multiple Kubernetes Service
+  Accounts attached to it, for different kinds of users. The key is the name
+  of the Kubernetes Service Account. By convention, the currently supported keys
+  are are `user-sa` (for non-admin users on the hub) and `admin-sa` (for admin
+  users on the hub). The value can be one of:
+
+  1. bucket_admin_access: List of S3 storage buckets to grant full read & write
+     permissions to.
+  2. bucket_readonly_access: List of S3 storage buckets to grant full read
+     permissions to.
+  3. extra_iam_policy: An AWS IAM Policy document that grants additional rights
+     to this Kubernetes Service Account.
+
+  Note that these are independent of each other - so if you want both admins
+  and non-admins to have a set of permissions, you may need to repeat them.
   EOT
 }
 
