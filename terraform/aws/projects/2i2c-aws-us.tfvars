@@ -33,13 +33,11 @@ hub_cloud_permissions = {
   "staging" : {
     "user-sa" : {
       bucket_admin_access : ["scratch-staging"],
-      extra_iam_policy : "",
     },
   },
   "dask-staging" : {
     "user-sa" : {
       bucket_admin_access : ["scratch-dask-staging"],
-      extra_iam_policy : "",
     },
   },
   "showcase" : {
@@ -48,25 +46,21 @@ hub_cloud_permissions = {
         "scratch-researchdelight",
         "persistent-showcase",
       ],
-      extra_iam_policy : "",
     },
   },
   "ncar-cisl" : {
     "user-sa" : {
       bucket_admin_access : ["scratch-ncar-cisl"],
-      extra_iam_policy : "",
     },
   },
   "go-bgc" : {
     "user-sa" : {
       bucket_admin_access : ["scratch-go-bgc"],
-      extra_iam_policy : "",
     },
   },
   "itcoocean" : {
     "user-sa" : {
       bucket_admin_access : ["scratch-itcoocean"],
-      extra_iam_policy : "",
     },
   },
 }

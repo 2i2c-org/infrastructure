@@ -30,7 +30,6 @@ hub_cloud_permissions = {
         "scratch-staging",
         "persistent-staging",
       ],
-      extra_iam_policy : "",
     },
   },
   "prod" : {
@@ -39,7 +38,6 @@ hub_cloud_permissions = {
         "scratch",
         "persistent",
       ],
-      extra_iam_policy : "",
     }
   },
 }
