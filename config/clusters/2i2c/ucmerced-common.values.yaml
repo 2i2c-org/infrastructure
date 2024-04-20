@@ -18,6 +18,21 @@ jupyterhub:
         funded_by:
           name: University of California, Merced
           url: http://www.ucmerced.edu/
+        announcements:
+        # from https://2i2c.freshdesk.com/a/tickets/1512
+        - |
+          <div>
+            <p>
+              Support for JyupterHub is provided during standard operating hours: 8:00 a.m. –
+              5:00 p.m., Monday through Friday. Please submit a general ticket through the <a
+              href="https://ucmerced.service-now.com/servicehub">UC Merced ServiceHub</a>.
+            </p>
+
+            <p>
+              If you're having issues accessing JupterHub, please Report a Problem at
+              <a href="servicehub.ucmerced.edu">servicehub.ucmerced.edu</a> or call 228-HELP (4357).
+            </p>
+          </div>
   hub:
     config:
       JupyterHub:
