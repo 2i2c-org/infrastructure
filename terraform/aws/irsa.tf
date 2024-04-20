@@ -20,10 +20,10 @@ locals {
         // role for user-sa. `user-sa` was also the only service account supported
         // for a long time, so this special casing reduces the amount of work
         // we needed to do to introduce other service accounts.
-        id   = role == "user-sa" ? hub : "${hub}-${role}"
-        hub  = hub
-        role = role
-        data = role_value
+        iam_role_name = role == "user-sa" ? hub : "${hub}-${role}"
+        hub           = hub
+        role          = role
+        data          = role_value
       }
     ]
   ])
@@ -32,7 +32,7 @@ locals {
 
 
 data "aws_iam_policy_document" "irsa_role_assume" {
-  for_each = { for index, hr in local.hub_to_role_mapping : hr.id => hr }
+  for_each = { for index, hr in local.hub_to_role_mapping : hr.iam_role_name => hr }
   statement {
     effect  = "Allow"
     actions = ["sts:AssumeRoleWithWebIdentity"]
@@ -55,7 +55,7 @@ data "aws_iam_policy_document" "irsa_role_assume" {
 }
 
 resource "aws_iam_role" "irsa_role" {
-  for_each = { for index, hr in local.hub_to_role_mapping : hr.id => hr }
+  for_each = { for index, hr in local.hub_to_role_mapping : hr.iam_role_name => hr }
   name     = "${var.cluster_name}-${each.key}"
 
   assume_role_policy = data.aws_iam_policy_document.irsa_role_assume[each.key].json
@@ -64,7 +64,7 @@ resource "aws_iam_role" "irsa_role" {
 
 
 resource "aws_iam_policy" "extra_user_policy" {
-  for_each = { for index, hr in local.hub_to_role_mapping : hr.id => hr if hr.data.extra_iam_policy != "" }
+  for_each = { for index, hr in local.hub_to_role_mapping : hr.iam_role_name => hr if hr.data.extra_iam_policy != "" }
   name     = "${var.cluster_name}-${each.key}-extra-user-policy"
 
   description = "Extra permissions granted to users on hub ${each.key} on ${var.cluster_name}"
@@ -72,7 +72,7 @@ resource "aws_iam_policy" "extra_user_policy" {
 }
 
 resource "aws_iam_role_policy_attachment" "extra_user_policy" {
-  for_each   = { for index, hr in local.hub_to_role_mapping : hr.id => hr if hr.data.extra_iam_policy != "" }
+  for_each   = { for index, hr in local.hub_to_role_mapping : hr.iam_role_name => hr if hr.data.extra_iam_policy != "" }
   role       = aws_iam_role.irsa_role[each.key].name
   policy_arn = aws_iam_policy.extra_user_policy[each.key].arn
 }
@@ -82,7 +82,7 @@ resource "aws_iam_role_policy_attachment" "extra_user_policy" {
 output "kubernetes_sa_annotations" {
   value = {
     for index, hr in local.hub_to_role_mapping :
-    hr.id => "eks.amazonaws.com/role-arn: ${aws_iam_role.irsa_role[hr.id].arn}"
+    hr.iam_role_name => "eks.amazonaws.com/role-arn: ${aws_iam_role.irsa_role[hr.iam_role_name].arn}"
   }
   description = <<-EOT
   Annotations to apply to userServiceAccount in each hub to enable cloud permissions for them.
