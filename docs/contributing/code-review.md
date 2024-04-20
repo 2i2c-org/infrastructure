@@ -8,7 +8,7 @@ As such, we follow team policies for review/merge that are more specific [than o
 This document codifies our guidelines for doing code review and merging pull requests on active infrastructure (ie, anything in the `infrastructure/` codebase).
 
 > A Foolish Consistency is the Hobgoblin of Little Minds
-> 
+>
 > - PEP 8
 
 ## Changing active infrastructure in general
@@ -31,7 +31,7 @@ Here are some guidelines for merging and reviewing in this case:
   make sure you push a PR with the change *and merge it quickly* to make sure that the changes
   are persisted across future deploys. Self merging is acceptable here, although this general
   class of changes should be limited as much as possible.
-  
+
 ## Self-merging as a 2i2c engineer
 
 **Be careful when self-merging without review**.
@@ -47,17 +47,30 @@ so use your best judgment!
 Here is a list of things you can clearly, unambiguously self merge without
 any approval.
 
-1. Updating admin users for a hub
-2. Changing basic hub configuration such as the URL of its landing page image
-3. Updating the user image of a hub
-4. Updating the max number of nodes for nodepools in a cluster
-5. Resizing home directory storage upwards when it is about to fill up
-6. Emergency (eg exam, outage) related resource bumps
-7. *Cleanly* reverting a change that failed CI
-8. Updating soon to be expired credentials
-9. Spelling and grammar error fixes in documentation or code comments
-10. Setting up a new hub following our new hub turn up process, without any extra feature development
-    or customization.
+1. Updating the max number of nodes for nodepools in a cluster
+2. Resizing home directory storage upwards when it is about to fill up
+3. Emergency (eg exam, outage) related resource bumps
+4. *Cleanly* reverting a change that failed CI
+5. Updating soon to be expired credentials
+6. Spelling and grammar error fixes in documentation or code comments
+7. Setting up a new hub following our new hub turn up process, without any extra feature development
+   or customization.
+
+### Safe configuration changes when asked for by the community
+
+Many hub configuration changes are asked for by the community, and we are simply mechanically
+doing them. We only need to verify that the change propagated, and not much more. In these cases,
+the engineer working on it can self merge, as long as they know how to verify this after.
+The following is a list of such changes, but it's not exhaustive.
+
+1. Updating front page information by updating `jupyterhub.custom.homepage.templateVars`.
+2. Update the image used in a hub, either for everyone or as part of a profile list. Because the
+   image tag is provided to us by the community, we assume they had already tested this in some
+   fashion.
+3. Adding or removing admin users from a hub.
+4. Adding or removing list of organizations or teams with access to the hub.
+5. Changing the default interface for the hub, either for everyone or as part of a profile.
+
 
 ## Self-merging as a community partner
 
@@ -94,7 +107,7 @@ Community partners *may* self-merge if they want to, provided the following cond
    - Changing resources provided to the hub
    - Adding / removing admin users
    - Changing profile options available to the hub
-   
+
    Here are some examples of *novel* configuration that requires approval from a 2i2c engineer before merging:
 
    - Adding python code to `hub.extraConfig` to enable new functionality, such as
@@ -102,7 +115,7 @@ Community partners *may* self-merge if they want to, provided the following cond
    - Significant alterations to the configuration of the user pod, such as setting
      `singleuser.extraContainers`.
    - Modifications to how NFS home directory storage is managed.
-   
+
 As a general rule, when in doubt, ask for review :)
 
 ```{note}
