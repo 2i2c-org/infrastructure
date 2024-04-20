@@ -80,6 +80,11 @@ locals {
     `local.bucket_role_actions` to a dictionary with one key per bucket with
     associated permissions.
 
+    Below is an example value `local.bucket_role_actions_lists` could take. This
+    example value is aligned with the example value for
+    `var.hub_cloud_permissions` and `local.bucket_role_actions` in the code
+    block above.
+
     bucket_role_actions_lists:
       scratch-staging:
         - bucket: scratch-staging
