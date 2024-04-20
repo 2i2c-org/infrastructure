@@ -13,6 +13,7 @@ data "aws_partition" "current" {}
 
 
 locals {
+  # Nested for loop, thanks to https://www.daveperrett.com/articles/2021/08/19/nested-for-each-with-terraform/
   hub_to_role_mapping = flatten([
     for hub, hub_value in var.hub_cloud_permissions : [
       for ksa_name, cloud_permissions in hub_value : {
