@@ -11,7 +11,7 @@ user_buckets = {
   "scratch-dask-staging" : {
     "delete_after" : 7
   },
-  "scratch-researchdelight" : {
+  "scratch-showcase" : {
     "delete_after" : 7
   },
   "persistent-showcase" : {
@@ -43,7 +43,7 @@ hub_cloud_permissions = {
   "showcase" : {
     "user-sa" : {
       bucket_admin_access : [
-        "scratch-researchdelight",
+        "scratch-showcase",
         "persistent-showcase",
       ],
     },
