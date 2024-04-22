@@ -434,6 +434,7 @@ cryptnono:
 
   image:
     # Brings in https://github.com/cryptnono/cryptnono/pull/33
+    # FIXME: Unset this once that gets merged and we update to the newest cryptnono version
     tag: 0.3.1-0.dev.git.138.ha4b11b8
 
   detectors:
