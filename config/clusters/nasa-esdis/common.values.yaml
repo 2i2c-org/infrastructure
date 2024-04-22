@@ -40,7 +40,7 @@ jupyterhub:
         authenticator_class: github
       GitHubOAuthenticator:
         allowed_organizations:
-          - nasa-veda-workshops:ieee-grss-webinar-mar-2024
+          - nasa-veda-workshops:grss-workshop-india-apr-2024
         scope:
           - read:org
       Authenticator:
