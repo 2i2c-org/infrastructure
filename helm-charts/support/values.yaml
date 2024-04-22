@@ -432,6 +432,10 @@ cryptnono:
         cpu: 5m
         memory: 100Mi
 
+  image:
+    # Brings in https://github.com/cryptnono/cryptnono/pull/33
+    tag: 0.3.1-0.dev.git.138.ha4b11b8
+
   detectors:
     # Disable the execwhacker detector for now, as it matures by being deployed on mybinder.org
     execwhacker:
