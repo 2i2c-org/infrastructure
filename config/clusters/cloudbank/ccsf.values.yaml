@@ -44,6 +44,7 @@ jupyterhub:
               - mail.ccsf.edu
       Authenticator:
         allowed_users:
+          - sonnyzadeh@gmail.com
           - clare.alice.heimer@gmail.com
           # Below are UC Berkeley tutors for spring semester 2024
           - k_usovich@berkeley.edu
