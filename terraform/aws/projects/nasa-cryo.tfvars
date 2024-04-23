@@ -51,6 +51,24 @@ hub_cloud_permissions = {
                   "Resource": [
                     "arn:aws:s3:::usgs-landsat/*"
                   ]
+              },
+              {
+                  "Effect": "Allow",
+                  "Action": [
+                      "s3:*"
+                  ],
+                  "Resource": [
+                    "arn:aws:s3:::sliderule-public"
+                  ]
+              },
+              {
+                  "Effect": "Allow",
+                  "Action": [
+                      "s3:*"
+                  ],
+                  "Resource": [
+                    "arn:aws:s3:::sliderule-public/*"
+                  ]
               }
           ]
         }
@@ -86,6 +104,24 @@ hub_cloud_permissions = {
                   ],
                   "Resource": [
                     "arn:aws:s3:::usgs-landsat/*"
+                  ]
+              },
+              {
+                  "Effect": "Allow",
+                  "Action": [
+                      "s3:*"
+                  ],
+                  "Resource": [
+                    "arn:aws:s3:::sliderule-public"
+                  ]
+              },
+              {
+                  "Effect": "Allow",
+                  "Action": [
+                      "s3:*"
+                  ],
+                  "Resource": [
+                    "arn:aws:s3:::sliderule-public/*"
                   ]
               }
           ]
