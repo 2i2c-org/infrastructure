@@ -51,9 +51,8 @@ any approval.
 2. Resizing home directory storage upwards when it is about to fill up
 3. Emergency (eg exam, outage) related resource bumps
 4. *Cleanly* reverting a change that failed CI
-5. Updating soon to be expired credentials
-6. Spelling and grammar error fixes in documentation or code comments
-7. Setting up a new hub following our new hub turn up process, without any extra feature development
+5. Spelling and grammar error fixes in documentation or code comments
+6. Setting up a new hub following our new hub turn up process, without any extra feature development
    or customization.
 
 ### Safe configuration changes when asked for by the community
@@ -70,6 +69,20 @@ The following is a list of such changes, but it's not exhaustive.
 3. Adding or removing admin users from a hub.
 4. Adding or removing list of organizations or teams with access to the hub.
 5. Changing the default interface for the hub, either for everyone or as part of a profile.
+
+### Safe configuration changes when doing maintenance
+
+There is often maintenance related changes we need to do that *don't affect the user experience*,
+but are important to do to make progress on the maintenance. What does and does not affect
+user experience is hard to always know. This is a list of tasks that we already know don't
+affect user experience, and can be self merged. Whoever merging still is responsible for testing these
+appropriate, and can always ask for extra review if unsure.
+
+1. Updating the values for resource allocation in profile lists, with the output of
+   `deployer generate resource-allocation`. The time to ask for review is when the logic or
+   values for the `resource-allocation` command itself is changed - simply re-running it and updating
+   values does not require extra review.
+2. Updating credentials for cloud accounts that have expired or are about to expire.
 
 
 ## Self-merging as a community partner
