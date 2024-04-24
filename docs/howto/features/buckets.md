@@ -282,8 +282,7 @@ On AWS, we would need to set up [cross account S3 access](https://aws.amazon.com
    find this under `userServiceAccount.annotations.eks.amazon.com/role-arn` in
    the `values.yaml` file for your hub. It should look something like
    `arn:aws:iam::<account-id>:role/<hub-name>`.
-2. In the AWS account *with the S3 bucket*, [create an IAM
-   policy](https://docs.aws.amazon.com/IAM/latest/UserGuide/access_policies_create-console.html)
+2. In the AWS account *with the S3 bucket*, you need to [attach a bucket policy](https://docs.aws.amazon.com/AmazonS3/latest/userguide/add-bucket-policy.html)
    that grants appropriate access to the S3 bucket from the hub. For example, the
    following policy grants readonly access to the bucket for users of the hub
 
@@ -316,6 +315,13 @@ On AWS, we would need to set up [cross account S3 access](https://aws.amazon.com
    You can list as many buckets as you want, but each bucket needs two entries -
    one with the `/*` and one without so both listing the bucket as well as fetching
    data from it can work
+   ```
+
+   ```{warning}
+
+   You must add this as a bucket policy, not a regular IAM Policy. If you try to add
+   this as a regular IAM Policy, you may get an error about `Principal` not being
+   allowed in the policy document.
    ```
 
 3. In the `.tfvars` file for the cluster hosting the hub, add `extra_iam_policy`
