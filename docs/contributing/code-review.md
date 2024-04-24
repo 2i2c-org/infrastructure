@@ -76,7 +76,7 @@ There is often maintenance related changes we need to do that *don't affect the 
 but are important to do to make progress on the maintenance. What does and does not affect
 user experience is hard to always know. This is a list of tasks that we already know don't
 affect user experience, and can be self merged. Whoever merging still is responsible for testing these
-appropriate, and can always ask for extra review if unsure.
+appropriately, and can always ask for extra review if unsure.
 
 1. Updating the values for resource allocation in profile lists, with the output of
    `deployer generate resource-allocation`. The time to ask for review is when the logic or
