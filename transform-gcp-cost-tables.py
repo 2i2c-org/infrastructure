@@ -3,8 +3,9 @@ Script that ingests a CSV cost table generated via the GCP UI and performs a
 transposition
 """
 
-from sys import argv
 from pathlib import Path
+from sys import argv
+
 import pandas as pd
 
 # Get input file path from command line args
@@ -31,7 +32,7 @@ months = sorted(input_cost_table["Month"].unique().tolist())
 projects = sorted(input_cost_table["projects"].unique().tolist())
 
 # Construct column headers and target DataFrame for transposition
-columns =["Project name"] + months
+columns = ["Project name"] + months
 transposed_cost_table = pd.DataFrame(columns=columns)
 
 # For each project, extract the subtotal for each month and construct a new
