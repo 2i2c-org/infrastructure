@@ -1,6 +1,24 @@
 """
 Script that ingests a CSV cost table generated via the GCP UI and performs a
-transposition
+transformation.
+
+We assume the input CSV file has the following columns (and are subject to changes
+by GCP):
+- Project name
+- Month
+- Subtotal ($)
+
+We aim to have an output CSV file with columns:
+- Project name
+- start-month
+- ...
+- end-month
+- Total
+
+where:
+- start-month...end-month are unique values from the Month column in the input file
+- Project name are unique entries from the input file
+- The Total column is the sum across all month columns for each project
 """
 
 from sys import argv
