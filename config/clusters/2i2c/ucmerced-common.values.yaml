@@ -18,6 +18,9 @@ jupyterhub:
         funded_by:
           name: University of California, Merced
           url: http://www.ucmerced.edu/
+        learn_more: |
+          UC Merced has <a href="https://ucmerced.github.io/hpc_docs/#/jupyterhub">
+          resources and documentation</a> on how to utilize JupyterHub.
         announcements:
           # from https://2i2c.freshdesk.com/a/tickets/1512
           - |

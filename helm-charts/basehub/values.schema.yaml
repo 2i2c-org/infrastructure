@@ -391,6 +391,11 @@ properties:
                   - operated_by
                   - funded_by
                 properties:
+                  learn_more:
+                    type: string
+                    description: |
+                      HTML to display under the 'Where can I learn more?' section of the
+                      home page
                   default_url:
                     type: string
                     description: |
