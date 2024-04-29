@@ -29,54 +29,22 @@ import pandas as pd
 # Get input file path from command line args
 input_filepath = Path(argv[1])
 
-# Read input file
-input_cost_table = pd.read_csv(
-    input_filepath,
-    usecols=["Month", "Project name", "Subtotal ($)"],
+# Read the CSV file into a pandas dataframe. Only select relevant columns from
+# the input file: [Project Name, Month, Subtotal ($)]. Rename the columns so
+# that they are all lower case and any whitespace in column names is replaced
+# with an underscore.
+df = (
+    pd.read_csv(input_filepath, usecols=["Month", "Project name", "Subtotal ($)"])
+    .rename(columns=lambda col: col.strip().lower().replace(" ", "_"))
 )
 
-# Drop NaN values
-input_cost_table = input_cost_table.dropna()
-
-# Rename the projects column. This makes using the 'query' function later easier
-# as we don't have to deal with a column name containing whitespace.
-input_cost_table["projects"] = input_cost_table["Project name"]
-input_cost_table.drop(columns=["Project name"], inplace=True)
-
-# Get unique months
-months = sorted(input_cost_table["Month"].unique().tolist())
-
-# Get unique projects
-projects = sorted(input_cost_table["projects"].unique().tolist())
-
-# Construct column headers and target DataFrame for transposition
-columns = ["Project name"] + months
-transposed_cost_table = pd.DataFrame(columns=columns)
-
-# For each project, extract the subtotal for each month and construct a new
-# entry in the target transposed dataframe
-for project in projects:
-    # Begin a new dictionary to contain the billing information for this project
-    data = {"Project name": project}
-
-    for month in months:
-        # Find the subtotal amount incurred by the current iteration project
-        # during the current iteration month
-        query = f"projects=='{project}' & Month=='{month}'"
-        monthly_total = input_cost_table.query(query)["Subtotal ($)"].item()
-
-        # Store the monthly total in the data dictionary
-        data[month] = monthly_total
-
-    # Concatenate the project-specific dataframe into our target transposed data frame
-    transposed_cost_table = pd.concat(
-        [transposed_cost_table, pd.DataFrame(data, index=[0])],
-        ignore_index=True,
-    )
-
-# Make the project names the index
-transposed_cost_table.set_index("Project name", drop=True, inplace=True)
-
-# Calculate the total over all months
-transposed_cost_table["Total"] = transposed_cost_table.sum(axis=1)
-print(transposed_cost_table)
+# Aggregate and pivot the dataframe into desired format
+transformed_df = (
+    # Group the data by project name and month, and sum the subtotals
+    df.groupby(["project_name", "month"]).sum()
+    # Pivot the data so project name is the index and months are columns
+    .pivot_table(index="project_name", columns="month", values="subtotal_($)")
+    # Create a new column containing the total across all the months
+    .assign(total=lambda df: df.sum(axis=1))
+)
+print(transformed_df)
