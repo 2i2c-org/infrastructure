@@ -1,7 +1,15 @@
 {{- if .Values.nfs.enabled }}
+{{- if .Values.nfs.volumeReporter.enabled }}
 # To provide data for the jupyterhub/grafana-dashboards dashboard about free
 # space in the shared volume, which contains users home folders etc, we deploy
 # prometheus node-exporter to collect this data for prometheus server to scrape.
+#
+# This prometheus metrics exporter will when used against a shared EFS storage
+# (AWS NFS service) report an extreme amount of available disk space, making the
+# available space remaining 100%. This makes the jupyterhub/grafana-dashboards
+# graph reporting remaining available disk space in % quite pointless. Due to
+# that, it can make sense to disable this if EFS is used to provide storage as
+# it becomes another pod that eats up the available pods per node.
 #
 # This is based on the Deployment manifest in jupyterhub/grafana-dashboards'
 # readme: https://github.com/jupyterhub/grafana-dashboards#additional-collectors
@@ -64,4 +72,5 @@ spec:
         - name: shared-volume
           persistentVolumeClaim:
             claimName: home-nfs
+{{- end }}
 {{- end }}
