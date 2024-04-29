@@ -33,10 +33,9 @@ input_filepath = Path(argv[1])
 # the input file: [Project Name, Month, Subtotal ($)]. Rename the columns so
 # that they are all lower case and any whitespace in column names is replaced
 # with an underscore.
-df = (
-    pd.read_csv(input_filepath, usecols=["Month", "Project name", "Subtotal ($)"])
-    .rename(columns=lambda col: col.strip().lower().replace(" ", "_"))
-)
+df = pd.read_csv(
+    input_filepath, usecols=["Month", "Project name", "Subtotal ($)"]
+).rename(columns=lambda col: col.strip().lower().replace(" ", "_"))
 
 # Aggregate and pivot the dataframe into desired format
 transformed_df = (
