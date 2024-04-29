@@ -87,10 +87,10 @@ jupyterhub:
       GitHubOAuthenticator:
         oauth_callback_url: https://climatematch.2i2c.cloud/hub/oauth_callback
         allowed_organizations:
-          - ClimateMatchAcademy:2023students
+          - ClimateMatchAcademy:2024students
         scope:
           - read:org
       Authenticator:
         admin_users:
-          - WesleyTheGeolien
+          - iamzoltan
           - abodner
