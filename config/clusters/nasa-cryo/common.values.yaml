@@ -153,8 +153,8 @@ basehub:
                   display_name: Matlab
                   slug: "matlab"
                   kubespawner_override:
-                    # Image repo: https://github.com/CryoInTheCloud/hub-matlab-image
-                    image: "quay.io/cryointhecloud/cryo-hub-matlab-image:113755d00366"
+                    # Per https://2i2c.freshdesk.com/a/tickets/1537
+                    image: openscapes/matlab:latest
             requests:
               # NOTE: Node share choices are in active development, see comment
               #       next to profileList: above.
