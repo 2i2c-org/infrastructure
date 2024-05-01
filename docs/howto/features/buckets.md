@@ -276,15 +276,26 @@ other cloud providers when needed.
 
 ### AWS
 
-On AWS, we would need to set up [cross account S3 access](https://aws.amazon.com/premiumsupport/knowledge-center/cross-account-access-s3/).
+On AWS, we would need to set up [cross account S3 access](https://aws.amazon.com/premiumsupport/knowledge-center/cross-account-access-s3/). It requires action from both the 2i2c engineering team as
+well as the the community representative.
 
-1. Find the ARN of the service account used by the *users* on the hub. You can
-   find this under `userServiceAccount.annotations.eks.amazon.com/role-arn` in
-   the `values.yaml` file for your hub. It should look something like
+1. **Who**: 2i2c Engineering Team
+
+   Find the ARN of the service account that is assumed by the users on the hub,
+   under `userServiceAccount.annotations.eks.amazon.com/role-arn` in the YAML
+   config specific to the hub. It should look something like
    `arn:aws:iam::<account-id>:role/<hub-name>`.
-2. In the AWS account *with the S3 bucket*, you need to [attach a bucket policy](https://docs.aws.amazon.com/AmazonS3/latest/userguide/add-bucket-policy.html)
-   that grants appropriate access to the S3 bucket from the hub. For example, the
-   following policy grants readonly access to the bucket for users of the hub
+
+   If this hub has an equivalent *staging* hub, find the ARN of the service
+   account for the staging hub too. This helps us keep staging and prod in sync.
+
+2. **Who**: 2i2c Engineering Team
+
+   Generate a [Bucket Policy](https://docs.aws.amazon.com/AmazonS3/latest/userguide/using-iam-policies.html)
+   that can be communicated to the community champion. You need to generate one policy
+   for each ARN determined in step 1. The `Action` section lists various permissions to be
+   granted. The default is to allow hub users to list all objects and get data - so readonly
+   access. The community champion is welcome to modify this to fit their needs.
 
    ```json
    {
@@ -309,26 +320,55 @@ On AWS, we would need to set up [cross account S3 access](https://aws.amazon.com
    }
    ```
 
-   You can add additional permissions to the bucket if needed here.
+   here,
+   1. `Statement.Principal.AWS` is the ARN determined from step 1. This is the only item that needs
+      to be supplied by the 2i2c engineer.
+   2. `Statement.Action` is the list of S3 permissions to be granted. The default allows readonly
+      access, with the ability to list objects and get their data. The community champion is welcome
+      to modify this to fit their needs.
+   3. `Statement.Resource` is the list of buckets this policy is applied to. There are two entries for
+      each bucket, as some permissions apply to the bucket itself and some apply to the contents of
+      the bucket. We don't need to know the list of buckets here, the community champion can supply this.
+
+3. **Who**: 2i2c Engineering Team
+
+   Communicate to the community champion that they need to [attach a bucket policy](https://docs.aws.amazon.com/AmazonS3/latest/userguide/add-bucket-policy.html)
+   to the S3 buckets. You can use the following template.
 
    ```{note}
-   You can list as many buckets as you want, but each bucket needs two entries -
-   one with the `/*` and one without so both listing the bucket as well as fetching
-   data from it can work
+   To start the process, we need to attach policies to the appropriate S3 bucket to grant access
+   to the hub. I've generated these templates:
+
+   {{ JSON from step 2. Include multiple ones if we are doing this for multiple hubs }}
+
+   You need to fill in the list of S3 buckets you want granted access under the "Resource" section.
+   Note that there are two entries for each bucket.
+
+   This policy, as written, will grant readonly access to the buckets from the hub. Users
+   on the hub will be able to list objects and retrieve them. If you'd like to grant other
+   kinds of access, adjust the list under 'Actions' accordingly.
+
+   AWS has [some documentation](https://docs.aws.amazon.com/AmazonS3/latest/userguide/add-bucket-policy.html)
+   on how to attach this bucket policy. Once attached, can you give us the full content of the
+   policy you attached? That would help us take next steps in granting access to these buckets.
+
+   Thanks!
    ```
 
-   ```{warning}
+4. **Who**: Community Champion
 
-   You must add this as a bucket policy, not a regular IAM Policy. If you try to add
-   this as a regular IAM Policy, you may get an error about `Principal` not being
-   allowed in the policy document.
-   ```
+   They attach the bucket policy, and get back to us with content of the policy they attached. This
+   helps us see the list of buckets that are authorized, as well as a record of what permissions
+   were actually granted.
 
-3. In the `.tfvars` file for the cluster hosting the hub, add `extra_iam_policy`
+5. **Who**: 2i2c Engineering Team
+
+   In the `.tfvars` file for the cluster hosting the hub, add `extra_iam_policy`
    as a key to the hub under `hub_cloud_permissions`. This is used to set any additional
-   IAM permissions granted to the users of the hub. In this case, you should copy the
-   exact policy that was applied to the bucket in step 2, but remove the "Principal" key.
-   So it would look something like:
+   IAM permissions granted to the users of the hub. In this case, we use `s3:*` to allow
+   all S3 actions on the given list of buckets, so the exact permissions granted are
+   controlled by the bucket policy set in earlier steps. This allows the community to grant
+   more (or less) permissions in the future without any intervention on our part.
 
    ```json
    {
@@ -337,9 +377,7 @@ On AWS, we would need to set up [cross account S3 access](https://aws.amazon.com
         {
             "Effect": "Allow",
             "Action": [
-                "s3:GetObject",
-                "s3:GetObjectVersion",
-                "s3:ListBucket"
+                "s3:*"
             ],
             "Resource": [
                 "arn:aws:s3:::<name-of-bucket>",
@@ -350,4 +388,11 @@ On AWS, we would need to set up [cross account S3 access](https://aws.amazon.com
    }
    ```
 
-4. Apply the terraform config, and test out if s3 bucket access works on the hub!
+6. **Who**: 2i2c Engineering Team
+
+   Apply the terraform config, and test out if s3 bucket access works on the hub!
+   If `s3:ListBucket` is among the granted permissions, you can test by running
+   `aws s3 ls s3://<bucket-name>`. If it is *not* among the granted permissions,
+   you need to ask the community for the full path of an object, so you can try to
+   check for access with `aws s3 cp s3://<object-path> temp`, and seeing if it
+   copied the object to `temp`
