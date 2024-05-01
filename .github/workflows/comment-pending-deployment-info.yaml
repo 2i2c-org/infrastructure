@@ -47,7 +47,7 @@ jobs:
               print(f"community_rep={community_rep}", file=f)
       - name: Render comment template using information from the `find-missing-info` step before
         id: template
-        uses: chuhlomin/render-template@v1.9
+        uses: chuhlomin/render-template@v1.10
         with:
           template: .github/comment-templates/comment-pending-deployment-info.md
           vars: |
