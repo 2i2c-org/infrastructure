@@ -99,17 +99,15 @@ basehub:
 
           c.JupyterHub.authenticator_class = CustomGenericOAuthenticator
 
-        05-gh-teams: |
+        002-group-profiles: |
           # Filters profileList based on group membership of JupyterHubs
-          import copy
+          from copy import deepcopy
 
           from textwrap import dedent
           from tornado import web
-          from oauthenticator.github import GitHubOAuthenticator
+          from functools import partial
 
-          original_profile_list = c.KubeSpawner.profile_list
-
-          async def profile_list_allowed_groups_filter(spawner):
+          async def profile_list_allowed_groups_filter(original_profile_list, spawner):
               """
               Returns the initially configured profile_list filtered based on the
               user's membership in each profile's `allowed_groups`. If
@@ -129,7 +127,7 @@ basehub:
 
               # Filter out profiles with allowed_groups set if the user isn't part of any.
               allowed_profiles = []
-              for profile in copy.deepcopy(original_profile_list):
+              for profile in original_profile_list:
                   allowed_groups = set(profile.get("allowed_groups"))
                   if allowed_groups is None:
                       # If no allowed_groups are set, allow access to everything
@@ -163,7 +161,11 @@ basehub:
           if c.KubeSpawner.profile_list:
               # Customize list of profiles dynamically, rather than override options form.
               # This is more secure, as users can't override the options available to them via the hub API
-              c.KubeSpawner.profile_list = profile_list_allowed_groups_filter
+              # We pass in a copy of the original profile_list set in config via partial, to reduce possible variable
+              # capture related issues.
+              c.KubeSpawner.profile_list = partial(
+                profile_list_allowed_groups_filter, deepcopy(c.KubeSpawner.profile_list)
+              )
       config:
         # JupyterHub:
         #   authenticator_class: auth0
