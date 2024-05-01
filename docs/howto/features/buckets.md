@@ -341,6 +341,11 @@ well as the the community representative.
 
    {{ JSON from step 2. Include multiple ones if we are doing this for multiple hubs }}
 
+   {{ if a staging hub is included }}
+   This includes access permissions for staging hub we use to test out changes to the main hub,
+   so those two can be in sync.
+   {{ end if }}
+
    You need to fill in the list of S3 buckets you want granted access under the "Resource" section.
    Note that there are two entries for each bucket.
 
