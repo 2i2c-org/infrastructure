@@ -106,6 +106,13 @@ jupyterhub:
                   cpu_limit: 3.725
                   node_selector:
                     node.kubernetes.io/instance-type: r5.xlarge
+      - display_name: Kitware Trame
+        default: true
+        kubespawner_override:
+          image: kitware/trame:geotrame-cloud
+          # Not an immutable tag
+          image_pull_policy: Always
+        profile_options: *profile_options
       - display_name: "Bring your own image"
         description: Specify your own docker image (must have python and jupyterhub installed in it)
         slug: custom
