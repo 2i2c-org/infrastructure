@@ -143,7 +143,7 @@ In addition, we can allow people access to specific profiles based on their GitH
 This only works if the hub is already set to allow people only from certain GitHub organizations
 to log in.
 
-The key `allowed_teams` can be set for any profile definition, with a list of GitHub
+The key `allowed_groups` can be set for any profile definition, with a list of GitHub
 teams (formatted as `<github-org>:<team-name>`) that will get access to that profile. Users
 need to be a member of any one of the listed teams for access. The list of teams a user
 is part of is fetched at login time - so if the user is added to a GitHub team, they need
@@ -171,7 +171,7 @@ To enable this access,
    If `populate_teams_in_auth_state` is not set, this entire feature is disabled.
 
 2. Specify which teams should have access to which profiles with an
-   `allowed_teams` key under `profileList`:
+   `allowed_groups` key under `profileList`:
 
     ```yaml
     jupyterhub:
@@ -180,7 +180,7 @@ To enable this access,
           - display_name: Small
             description: 1.0 GB RAM
             default: true
-            allowed_teams:
+            allowed_groups:
               - <org-name>:<team-name>
               - 2i2c-org:hub-access-for-2i2c-staff
             kubespawner_override:
@@ -188,7 +188,7 @@ To enable this access,
               mem_limit: 1G
           - display_name: Medium
             description: 4.0 GB RAM
-            allowed_teams:
+            allowed_groups:
               - <org-name>:<team-name>
               - 2i2c-org:hub-access-for-2i2c-staff
             kubespawner_override:
@@ -198,8 +198,8 @@ To enable this access,
 
     Users who are a part of *any* of the listed teams will be able to access
     that profile. Add `2i2c-org:hub-access-for-2i2c-staff` to all
-    `allowed_teams` so 2i2c engineers can log in to debug issues. If
-    `allowed_teams` is not set, that profile is not available to anyone.
+    `allowed_groups` so 2i2c engineers can log in to debug issues. If
+    `allowed_groups` is not set, that profile is not available to anyone.
 
     ```{note}
     We used to allow restricting which profiles users can see based on what
