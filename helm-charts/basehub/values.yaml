@@ -1043,11 +1043,8 @@ jupyterhub:
                     allowed_profiles.append(profile)
                     continue
 
-                # allowed_teams can be "org" or "org:team", and we check
-                # membership just in time for orgs if needed
-                # casefold them so we can do case insensitive comparisons, as github itself is case insensitive (but preserving)
+                # casefold teams so we can do case insensitive comparisons, as github itself is case insensitive (but preserving)
                 # for orgs and teams
-                allowed_orgs = set([o.casefold() for o in allowed_teams if ':' not in o])
                 allowed_teams = set([t.casefold() for t in allowed_teams if ':' in t])
 
                 if allowed_teams & teams:
