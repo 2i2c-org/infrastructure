@@ -9,7 +9,8 @@ Practically to invoice these communities, we update a [spreadsheet for billing]
 summarizing monthly costs for communities, and then request invoicing help from
 CS&S via the `#billing` slack channel.
 
-This documentation helps you update that spreadsheet!
+This documentation helps you update that spreadsheet for communities in both
+shared and dedicated clusters!
 
 ```{important}
 Make sure you have access to the [spreadsheet for billing] before
@@ -18,9 +19,29 @@ following the steps below. Your 2i2c.org email should give you access.
 
 [spreadsheet for billing]: https://docs.google.com/spreadsheets/d/1AWVCg0D_-ATub_cVsIy5XZCwqnC6uIcgwDGYK9Q7yno/edit#gid=1349808947
 
-## AWS
+## Communities in shared cloud accounts
 
-### Get costs manually via the UI (only documented option)
+The procedure for GCP projects and AWS accounts is similar. It is practically
+demonstrated in a ~20 minute [video] working in a [spreadsheet for accounting of
+cost for communities in shared clusters].
+
+The procedure from the video is:
+
+1. Open the [spreadsheet for accounting of cost for communities in shared
+   clusters].
+2. Duplicate and clear green cells a page for a previous month.
+3. Use guidance in pink cells to fill in green cells and finally verify a sum.
+4. Protect the page by right clicking on its tab in order to warn users trying
+   to edit it going onwards.
+5. Enter the verified monthly community costs in the [spreadsheet for billing]
+   and double check anything looking odd in relation to previous months' values.
+
+[video]: https://drive.google.com/file/d/1NQAVo3iJuuaDAp5WI0uinY148M9IK1Ty/view?usp=drive_link
+[spreadsheet for accounting of cost for communities in shared clusters]: https://docs.google.com/spreadsheets/d/1tzKlNBkJiqmm_eTO7dqxIYugverZNi_zSlmBWP3Ek5E/edit#gid=120717885
+
+## Communities with dedicated cloud accounts
+
+### Get a community dedicated AWS accounts's costs
 
 ```{note}
 As of 2024-04-17, we only manage the cost for AWS accounts associated with our
@@ -47,9 +68,7 @@ AWS management account. If a future cluster deviates from this, you can tell by
 
 [direct link]: https://us-east-1.console.aws.amazon.com/costmanagement/home?region=us-east-1#/cost-explorer?reportId=d826a775-e0d6-4e85-a181-7f87a8deb162&reportName=Monthly%20costs%20by%20linked%20account&isDefault=true&chartStyle=GROUP&historicalRelativeRange=LAST_6_MONTHS&futureRelativeRange=CUSTOM&granularity=Monthly&groupBy=%5B%22LinkedAccount%22%5D&filter=%5B%5D&costAggregate=unBlendedCost&showOnlyUntagged=false&showOnlyUncategorized=false&useNormalizedUnits=false
 
-## GCP
-
-### Get costs manually via the UI (recommended)
+### Get a community dedicated GCP projects' costs
 
 ```{important}
 Currently this is the recommended way of retrieving the costs from GCP.
@@ -72,6 +91,12 @@ Currently this is the recommended way of retrieving the costs from GCP.
    When done, re-check the numbers once again to make sure they are copied correctly.
 
 [2i2c billing account]: https://console.cloud.google.com/billing/0157F7-E3EA8C-25AC3C/reports;timeRange=CUSTOM_RANGE;from=2024-01-01;to=2024-01-31;dateType=INVOICE_DATE;invoiceCorrections=TAX,BILLING_MODIFICATION?organizationId=184174754493&project=two-eye-two-see
+
+## Experimental
+
+We have an unfinished attempt to automate collection of community monthly costs.
+This heading retains documentation about that, but we are for 2024 not driving
+development here and instead relying on the manual approaches.
 
 ### Get costs automatically via the deployer (not ready to be used yet!)
 
