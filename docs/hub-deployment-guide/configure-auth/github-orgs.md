@@ -173,8 +173,7 @@ This only works if the hub is already set to allow people only from certain GitH
 to log in.
 
 The key `allowed_teams` can be set for any profile definition, with a list of GitHub
-teams (formatted as `<github-org>:<team-name>`) or GitHub organizations (formatted
-just as `<github-org>`) that will get access to that profile. Users
+teams (formatted as `<github-org>:<team-name>`) that will get access to that profile. Users
 need to be a member of any one of the listed teams for access. The list of teams a user
 is part of is fetched at login time - so if the user is added to a GitHub team, they need
 to log out and log back in to the JupyterHub (not necessarily to GitHub!) to see the new
@@ -200,7 +199,7 @@ To enable this access,
 
    If `populate_teams_in_auth_state` is not set, this entire feature is disabled.
 
-2. Specify which teams or orgs should have access to which profiles with an
+2. Specify which teams should have access to which profiles with an
    `allowed_teams` key under `profileList`:
 
     ```yaml
@@ -230,6 +229,12 @@ To enable this access,
     that profile. Add `2i2c-org:hub-access-for-2i2c-staff` to all
     `allowed_teams` so 2i2c engineers can log in to debug issues. If
     `allowed_teams` is not set, that profile is not available to anyone.
+
+    ```{note}
+    We used to allow restricting which profiles users can see based on what
+    org they were a part of, rather than just the *teams* they were a part of.
+    We no longer support this.
+    ```
 
 ### Enabling team based access on hub with pre-existing users
 
