@@ -127,8 +127,21 @@ basehub:
 
               # Filter out profiles with allowed_groups set if the user isn't part of any.
               allowed_profiles = []
-              for profile in original_profile_list:
+              for orig_profile in original_profile_list:
+                  profile = deepcopy(orig_profile)
+                  if 'profile_options' in profile:
+                    for k, po in profile['profile_options'].items():
+                      if 'choices' in po:
+                        new_choices = {}
+                        for k, c in po['choices'].items():
+                          if 'allowed_teams' not in c:
+                            new_choices[k] = c
+                          elif set(c['allowed_teams']) & groups:
+                            new_choices[k] = c
+                        po['choices'] = new_choices
+
                   allowed_groups = set(profile.get("allowed_groups"))
+
                   if allowed_groups is None:
                       # If no allowed_groups are set, allow access to everything
                       allowed_profiles.append(profile)

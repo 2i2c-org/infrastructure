@@ -1039,7 +1039,36 @@ jupyterhub:
             # Filter out profiles with allowed_teams set if the user isn't part
             # of any.
             allowed_profiles = []
-            for profile in original_profile_list:
+            for original_profile in original_profile_list:
+                # Make a copy, as we'll be modifying this profile
+                profile = deepcopy(original_profile)
+
+                # Handle `allowed_teams` specified in profile_options
+                if 'profile_options' in profile:
+                  for k, po in profile['profile_options'].items():
+
+                    # If `unlisted_choice` has an `allowed_teams` and the current
+                    # user is not present in any of those teams, we delete the
+                    # `unlisted_choice` config entirely for this option. The user
+                    # will then not be allowed to 'write in' a value.
+                    if 'unlisted_choice' in po:
+                      if 'allowed_teams' in po['unlisted_choice']:
+                        if (set(po['unlisted_choice']['allowed_teams']) and teams):
+                          del po['unlisted_choice']
+
+                    if 'choices' in po:
+                      new_choices = {}
+                      for k, c in po['choices'].items():
+                        # If `allowed_teams` is not set for a profile option, it is automatically
+                        # allowed for everyone
+                        if 'allowed_teams' not in c:
+                          new_choices[k] = c
+                        # If `allowed_teams` *is* set for a profile option, it is allowed only for
+                        # members of that team.
+                        elif set(c['allowed_teams']) & teams:
+                          new_choices[k] = c
+                      po['choices'] = new_choices
+
                 allowed_teams = profile.get("allowed_teams")
                 if allowed_teams is None:
                     allowed_profiles.append(profile)
