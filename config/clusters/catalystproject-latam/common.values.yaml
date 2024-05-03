@@ -10,6 +10,24 @@ nfs:
     # Name of Google Filestore share
     baseShareName: /homes/
 jupyterhub:
+  custom:
+    2i2c:
+      add_staff_user_ids_to_admin_users: true
+      add_staff_user_ids_of_type: "github"
+    homepage:
+      templateVars:
+        designed_by:
+          name: "2i2c"
+          url: https://2i2c.org
+        operated_by:
+          name: "2i2c"
+          url: https://2i2c.org
+        funded_by:
+          name: Catalyst Project
+          url: https://catalystproject.cloud
+        org:
+          url: https://catalystproject.cloud
+          logo_url: https://catalystproject.cloud/_static/catalyst-logo-dark-bg-white.png
   hub:
     allowNamedServers: true
   singleuser:
