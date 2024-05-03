@@ -1,22 +1,22 @@
 jupyterhub:
   ingress:
-    hosts: [uccl.latam.catalystproject.2i2c.cloud]
+    hosts: [plnc.latam.catalystproject.2i2c.cloud]
     tls:
-      - hosts: [uccl.latam.catalystproject.2i2c.cloud]
+      - hosts: [plnc.latam.catalystproject.2i2c.cloud]
         secretName: https-auto-tls
   custom:
     homepage:
       templateVars:
         org:
-          name: Catalyst Project, LatAm - UCCL
+          name: Catalyst Project, LatAm - PLNC
   hub:
     config:
       JupyterHub:
         authenticator_class: github
       GitHubOAuthenticator:
-        oauth_callback_url: https://uccl.latam.catalystproject.2i2c.cloud/hub/oauth_callback
+        oauth_callback_url: https://plnc.latam.catalystproject.2i2c.cloud/hub/oauth_callback
         allowed_organizations:
-          - CatalystProject-Hubs:uccl
+          - CatalystProject-Hubs:plnc
         scope:
           - read:org
       Authenticator:
