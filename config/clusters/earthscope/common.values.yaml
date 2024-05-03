@@ -78,7 +78,9 @@ basehub:
 
             async def authenticate(self, *args, **kwargs):
               resp = await super().authenticate(*args, **kwargs)
-              # Set scope to groups
+              # Setup groups to be same as list of scopes granted
+              # This can go away after https://github.com/jupyterhub/oauthenticator/pull/735 is
+              # merged
               resp["groups"] = resp["auth_state"]["scope"]
               return resp
 
@@ -99,8 +101,6 @@ basehub:
 
           c.JupyterHub.authenticator_class = CustomGenericOAuthenticator
       config:
-        # JupyterHub:
-        #   authenticator_class: auth0
         CustomGenericOAuthenticator:
           required_scopes:
             # This allows EarthScope to control who can login to the hub
@@ -123,7 +123,6 @@ basehub:
           username_claim: sub
           # Convert 'scope' from the OAuth2 response into JupyterHub groups
           manage_groups: true
-          # claim_groups_key: 'scope'
         CILogonOAuthenticator:
           allowed_idps:
             http://github.com/login/oauth/authorize:
