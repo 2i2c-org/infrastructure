@@ -39,7 +39,7 @@ jupyterhub:
 In some hubs, we don't want *everyone* to be able to specify an image - but
 we do want some subset of users to be able to do so, for testing
 purposes. This can be done by coupling `unlisted_choice` with
-[`allowed_groups`](howto:features:profile-list-restrict).
+[`allowed_groups`](howto:features:profile-restrict).
 
 In the `profileList` for the hub in question, add a profile like this:
 
