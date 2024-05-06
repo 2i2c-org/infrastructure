@@ -14,12 +14,6 @@ jupyterhub:
           name: Catalyst Project, LatAm - UNITEFA-CONICET
           url: "https://unitefa.conicet.unc.edu.ar/"
           logo_url: https://unitefa.conicet.unc.edu.ar/wp-content/blogs.dir/50/files/sites/50/2019/12/cropped-Captura-de-pantalla-de-2019-12-17-10-29-47.png
-        designed_by:
-          name: "2i2c"
-          url: https://2i2c.org
-        operated_by:
-          name: "2i2c"
-          url: https://2i2c.org
         funded_by:
           name: Chan Zuckerberg Initiative - Open Science
           url: "https://chanzuckerberg.com/science/programs-resources/open-science/"

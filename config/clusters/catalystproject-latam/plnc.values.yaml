@@ -1,0 +1,24 @@
+jupyterhub:
+  ingress:
+    hosts: [plnc.latam.catalystproject.2i2c.cloud]
+    tls:
+      - hosts: [plnc.latam.catalystproject.2i2c.cloud]
+        secretName: https-auto-tls
+  custom:
+    homepage:
+      templateVars:
+        org:
+          name: Catalyst Project, LatAm - PLNC
+  hub:
+    config:
+      JupyterHub:
+        authenticator_class: github
+      GitHubOAuthenticator:
+        oauth_callback_url: https://plnc.latam.catalystproject.2i2c.cloud/hub/oauth_callback
+        allowed_organizations:
+          - CatalystProject-Hubs:plnc
+        scope:
+          - read:org
+      Authenticator:
+        admin_users:
+          - fvillena
