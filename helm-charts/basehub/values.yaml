@@ -71,6 +71,8 @@ nfs:
   enabled: false
   dirsizeReporter:
     enabled: true
+  volumeReporter:
+    enabled: true
   shareCreator:
     enabled: true
     tolerations: []
