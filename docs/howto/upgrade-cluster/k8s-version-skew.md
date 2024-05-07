@@ -11,7 +11,7 @@ When we upgrade, we are practically constrained by [Kubernetes' version skew
 policy] in the following ways:
 
 1. Highly available clusters' control planes can only be upgraded one minor
-   version at the time (`api-server` requirement).
+   version at a time (`api-server` requirement).
 
    All of our new clusters and most of our old clusters are regional, so our
    documentation assumes we need to respect this constraint.
