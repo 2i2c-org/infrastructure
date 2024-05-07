@@ -1,6 +1,13 @@
 (howto:features:profile-restrict)=
 # Restrict profile options based on JupyterHub groups (or GitHub teams)
 
+```{warning}
+This is currently only functional for GitHub authentication with `GitHubOAuthenticator`,
+and the earthscope hub is special cased. This will be more generally available once
+group management is [broadly available](https://github.com/jupyterhub/oauthenticator/pull/735)
+on OAuthenticator.
+```
+
 Communities often want to *selectively* grant access to resources based on
 what *groups* a user belongs to. The most common example being restricted
 access to GPUs, really large resource allocations or the ability to specify
