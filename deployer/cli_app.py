@@ -49,5 +49,5 @@ app.add_typer(
 app.add_typer(
     transform_app,
     name="transform",
-    help="Programatically transform datasets, such as cost tables for billing purposes.",
+    help="Programmatically transform datasets, such as cost tables for billing purposes.",
 )
