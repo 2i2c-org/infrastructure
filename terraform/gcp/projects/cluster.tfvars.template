@@ -11,9 +11,6 @@ project_id = "{{ project_id }}"
 zone   = "{{ cluster_region }}"
 region = "{{ cluster_region }}"
 
-# Default to a HA cluster for reliability
-regional_cluster = true
-
 # TODO: Before applying this, identify a k8s version to specify. Pick the latest
 #       k8s version from GKE's regular release channel. Look at the output
 #       called `regular_channel_latest_k8s_versions` as seen when using

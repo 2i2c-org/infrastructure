@@ -1,9 +1,8 @@
 prefix     = "two-eye-two-see-uk"
 project_id = "two-eye-two-see-uk"
 
-zone             = "europe-west2-b"
-region           = "europe-west2"
-regional_cluster = true
+zone   = "europe-west2-b"
+region = "europe-west2"
 
 k8s_versions = {
   min_master_version : "1.27.4-gke.900",

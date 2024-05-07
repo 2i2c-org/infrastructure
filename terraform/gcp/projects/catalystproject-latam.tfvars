@@ -2,7 +2,6 @@ prefix                = "latam"
 project_id            = "catalystproject-392106"
 region                = "southamerica-east1"
 zone                  = "southamerica-east1-c"
-regional_cluster      = true
 enable_network_policy = true
 
 k8s_versions = {

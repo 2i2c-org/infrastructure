@@ -23,6 +23,7 @@ project_id             = "pangeo-integration-te-3eea"
 billing_project_id     = "pangeo-integration-te-3eea"
 zone                   = "us-central1-b"
 region                 = "us-central1"
+regional_cluster       = false
 core_node_machine_type = "n2-highmem-4"
 enable_private_cluster = true
 
@@ -39,8 +40,6 @@ enable_network_policy = true
 # Setup a filestore for NFS
 enable_filestore      = true
 filestore_capacity_gb = 4608
-
-regional_cluster = false
 
 
 user_buckets = {

@@ -1,9 +1,8 @@
 prefix     = "qcl"
 project_id = "qcl-hub"
 
-zone             = "europe-west1-d"
-region           = "europe-west1"
-regional_cluster = true
+zone   = "europe-west1-d"
+region = "europe-west1"
 
 k8s_versions = {
   min_master_version : "1.27.4-gke.900",

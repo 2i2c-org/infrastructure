@@ -4,9 +4,6 @@ project_id = "hhmi-398911"
 zone   = "us-west2-b"
 region = "us-west2"
 
-# Default to a HA cluster for reliability
-regional_cluster = true
-
 core_node_machine_type = "n2-highmem-4"
 
 k8s_versions = {
