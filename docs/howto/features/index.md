@@ -8,6 +8,7 @@ See the sections below for more details.
 ```{toctree}
 :maxdepth: 2
 allow-unlisted-profile-choice.md
+profile-list-restrict.md
 anonymized-usernames.md
 buckets.md
 cloud-access.md

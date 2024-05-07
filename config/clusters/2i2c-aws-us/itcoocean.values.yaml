@@ -248,7 +248,7 @@ jupyterhub:
       - display_name: "Bring your own image"
         description: Specify your own docker image (must have python and jupyterhub installed in it)
         slug: custom
-        allowed_teams:
+        allowed_groups:
           - Hackweek-ITCOocean:itcoocean-hackweek-2023
           - nmfs-opensci:2i2c-demo
           - 2i2c-org:hub-access-for-2i2c-staff

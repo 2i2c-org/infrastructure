@@ -1,3 +1,4 @@
+(howto:features:unlisted-choice)=
 # Allow users to setup custom, free-form user profile choices
 
 Sometimes it is useful to allow users to specify their own, free-form choice for an option.
@@ -38,7 +39,7 @@ jupyterhub:
 In some hubs, we don't want *everyone* to be able to specify an image - but
 we do want some subset of users to be able to do so, for testing
 purposes. This can be done by coupling `unlisted_choice` with
-[`allowed_teams`](auth:github-orgs:profile-list).
+[`allowed_groups`](howto:features:profile-restrict).
 
 In the `profileList` for the hub in question, add a profile like this:
 
@@ -46,7 +47,7 @@ In the `profileList` for the hub in question, add a profile like this:
         - display_name: "Test custom image"
           description: Test any custom image before rolling it out to rest of your users
           slug: custom-image-only
-          allowed_teams:
+          allowed_groups:
             - 2i2c-org:hub-access-for-2i2c-staff
             - <other-github-teams>
           profile_options:
