@@ -97,8 +97,6 @@ basehub:
 
           c.Spawner.auth_state_hook = populate_token
 
-          c.GenericOAuthenticator.manage_groups = True
-
           c.JupyterHub.authenticator_class = CustomGenericOAuthenticator
       config:
         CustomGenericOAuthenticator:
