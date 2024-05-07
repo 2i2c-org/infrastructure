@@ -50,6 +50,7 @@ some in shared clusters have been announced ahead of time.
 :maxdepth: 1
 :caption: Upgrading Kubernetes clusters
 upgrade-disruptions.md
+node-upgrade-strategies.md
 k8s-version-skew.md
 aws.md
 ```

@@ -2,74 +2,17 @@
 
 # Upgrade Kubernetes cluster on AWS
 
-```{warning}
-This upgrade will cause disruptions for users and trigger alerts for
-[](uptime-checks). To help other engineers, communicate that your are starting a
-cluster upgrade in the `#maintenance-notices` Slack channel and setup a [snooze](uptime-checks:snoozes)
-```
-
-```{warning}
-We haven't yet established a policy for planning and communicating maintenance
-procedures to users. So preliminary, only make a k8s cluster upgrade while the
-cluster is unused or that the maintenance is communicated ahead of time.
-```
-
 ## Pre-requisites
 
-1. *Install or upgrade CLI tools*
+1. *Install/upgrade CLI tools*
 
-   Install required tools as documented in [](new-cluster:prerequisites),
-   and ensure you have a recent version of eksctl.
+   Refer to [](new-cluster:prerequisites) on how to do this.
 
-   ```{warning}
-   Using a modern version of `eksctl` has been found important historically, make
-   sure to use the latest version to avoid debugging an already fixed bug!
+   ```{important}
+   Ensure you have the latest version of `eksctl`, it matters.
    ```
 
-2. *Consider changes to `template.jsonnet`*
-
-   The eksctl config jinja2 template `eksctl/template.jsonnet` was once used to
-   generate the jsonnet template `eksctl/$CLUSTER_NAME.jsonnet`, that has been
-   used to generate an actual eksctl config.
-
-   Before upgrading an EKS cluster, it could be a good time to consider changes
-   to `eksctl/template.jsonnet` since this cluster's jsonnet template was last
-   generated, which it was initially according to
-   [](new-cluster:generate-cluster-files).
-
-   To do this first ensure `git status` reports no changes, then generate new
-   cluster files using the deployer script, then restore changes to everything
-   but the `eksctl/$CLUSTER_NAME.jsonnet` file.
-
-   ```bash
-   export CLUSTER_NAME=<cluster-name>
-   export CLUSTER_REGION=<cluster-region-like ca-central-1>
-   export HUB_TYPE=<hub-type-like-basehub>
-   ```
-
-   ```bash
-   # only continue below if git status reports a clean state
-   git status
-
-   # generates a few new files
-   deployer generate dedicated-cluster aws --cluster-name=$CLUSTER_NAME --cluster-region=$CLUSTER_REGION --hub-type=$HUB_TYPE
-
-   # overview changed files
-   git status
-
-   # restore changes to all files but the .jsonnet files
-   git add *.jsonnet
-   git checkout ..  # .. should be the git repo's root
-   git reset
-
-   # inspect changes
-   git diff
-   ```
-
-   Finally if you identify changes you think should be retained, add and commit
-   them. Discard the remaining changes with a `git checkout .` command.
-
-3. *Learn how to generate an `eksctl` config file*
+2. *Learn/recall how to generate an `eksctl` config file*
 
    When upgrading an EKS cluster, we will use `eksctl` extensively and reference
    a generated config file, `$CLUSTER_NAME.eksctl.yaml`. It's generated from the
@@ -80,24 +23,42 @@ cluster is unused or that the maintenance is communicated ahead of time.
    jsonnet $CLUSTER_NAME.jsonnet > $CLUSTER_NAME.eksctl.yaml
    ```
 
-   ```{important}
-   If you update the .jsonnet file, make sure to re-generate the .yaml file
-   before using `eksctl`.
+3. *Two terminal sessions*
 
-   Respectively if you update the .yaml file directly,
-   remember to update the .jsonnet file.
-   ```
+   Use one terminal session/tab to run `eksctl` commands and where you later
+   configure your AWS credentials, and another to run `kubectl` commands where
+   you setup easily with `deployer use-cluster-credentials $CLUSTER_NAME`.
+
+   Declare `CLUTER_NAME=...` in both terminals, and put yourself in the `eksctl`
+   folder in the one to run `eksctl` commands. This allows you to identify the
+   terminal session among many if you upgrade multiple clusters at the same
+   time.
+
+   The motivation for two terminal sessions are:
+
+   1. If you would use `deployer use-cluster-credentials` in a terminal where
+      you configured your personal AWS credentials, you will no longer act as
+      your AWS user but the `hub-deployer-user` that doesn't have the relevant
+      permissions to work with `eksctl`.
+   2. If you would use `eksctl utils write-kubeconfig` instead to setup your AWS
+      user's credentials with `kubectl` in a single terminal, you wouldn't be
+      able to use `kubectl` while `eksctl` was working.
 
 ## Cluster upgrade
 
-### 1. Ensure in-cluster permissions
+### 1. Acquire and configure AWS credentials
 
-The k8s api-server won't accept commands from you unless you have configured
-a mapping between the AWS user to a k8s user, and `eksctl` needs to make some
-commands behind the scenes.
+Refer to [](cloud-access:aws) on how to do this.
 
-This mapping is done from a ConfigMap in kube-system called `aws-auth`, and
-we can use an `eksctl` command to influence it.
+### 2. Ensure in-cluster permissions
+
+`eksctl` may need to use your AWS credentials to act within the k8s cluster
+(`kubectl drain` during node pool operations for example), but the k8s
+api-server won't accept commands from your AWS user unless you have configured a
+mapping between it to a k8s user.
+
+This mapping is done from a ConfigMap in kube-system called `aws-auth`, and we
+should use an `eksctl` command to influence it.
 
 ```bash
 eksctl create iamidentitymapping \
@@ -108,54 +69,48 @@ eksctl create iamidentitymapping \
    --group=system:masters
 ```
 
-### 2. Acquire and configure AWS credentials
+### 3. Communicate
 
-Visit https://2i2c.awsapps.com/start#/ and acquire CLI credentials.
+Communicate that your are starting a cluster upgrade in the
+`#maintenance-notices` Slack channel.
 
-In case the AWS account isn't managed there, inspect
-`config/$CLUSTER_NAME/cluster.yaml` to understand what AWS account number to
-login to at https://console.aws.amazon.com/.
+### 4. Upgrade the k8s control plane
 
-Configure credentials like:
+#### 4.1. Upgrade the k8s control plane one minor version
 
-```bash
-export AWS_ACCESS_KEY_ID="..."
-export AWS_SECRET_ACCESS_KEY="..."
-```
-
-### 3. Upgrade the k8s control plane one minor version
-
-```{important}
-The k8s control plane can only be upgraded one minor version at the time.[^1]
-```
-
-#### 3.1. Update the cluster's version field one minor version.
-
-In the cluster's config file there should be an entry like the one below,
-where the version must be updated.
+The k8s control plane can only be upgraded one minor version at the time,[^1] so
+increment the version field in the `.jsonnet` file.
 
 ```yaml
 {
    name: "openscapeshub",
    region: clusterRegion,
-   version: '1.27'
+   version: "1.29", # increment this
 }
 ```
 
-Then, perform the upgrade which typically takes ~10 minutes.
+Re-generate the `.yaml` file, and then perform the upgrade which typically takes
+~10 minutes. This upgrade is not expected to be disruptive for EKS clusters as
+they come with multiple replicas of the k8s api-server.
 
 ```bash
+jsonnet $CLUSTER_NAME.jsonnet > $CLUSTER_NAME.eksctl.yaml
 eksctl upgrade cluster --config-file=$CLUSTER_NAME.eksctl.yaml --approve
 ```
 
 ```{note}
-If you see the error `Error: the server has asked for the client to provide credentials` don't worry, if you try it again you will find that the cluster is now upgraded.
+If you see the error `Error: the server has asked for the client to provide
+credentials` don't worry, if you try it again you will find that the cluster is
+now upgraded.
 ```
 
-#### 3.2. Upgrade EKS add-ons
+#### 4.2. Upgrade EKS add-ons
 
-As documented in `eksctl`'s documentation[^1], we also need to upgrade three
-EKS add-ons enabled by default, and one we have added manually.
+As documented in `eksctl`'s documentation[^1], we also need to upgrade three EKS
+add-ons managed by `eksctl` (by EKS these are considered self-managed add-ons),
+and one declared in our config (by EKS this is considered a managed add-on).
+
+These upgrades are believed to briefly disrupt networking.
 
 ```bash
 # upgrade the kube-proxy daemonset (takes ~5s)
@@ -171,118 +126,107 @@ eksctl utils update-coredns --config-file=$CLUSTER_NAME.eksctl.yaml --approve
 eksctl update addon --config-file=$CLUSTER_NAME.eksctl.yaml
 ```
 
-````{note} Common failures
-The kube-proxy deamonset's pods may fail to pull the image, to resolve this visit AWS EKS docs on [managing coredns](https://docs.aws.amazon.com/eks/latest/userguide/managing-coredns.html) to identify the version to use and update the coredns deployment's container image to match it.
+#### 4.3. Repeat to upgrade multiple minor versions
 
-```bash
-kubectl edit daemonset coredns -n kube-system
-```
-````
+If you need to upgrade multiple minor versions, repeat the previous steps
+starting with the minor version upgrade.
 
-### 4. Repeat step 3 above for up to three times, if needed
+### 5. Upgrade node groups
 
-If you upgrade k8s multiple minor versions, consider repeating step 3,
-up to maximum three times, incrementing the control plane one minor version
-at the time.
+All of the cluster's node groups should be upgraded. Strategies to upgrade nodes
+are introduced in [](upgrade-cluster:node-upgrade-strategies).
 
-This is because the control plane version can be **ahead** of
-the node's k8s software (`kubelet`) by up to three minor versions [^2]
-if kublet is at least at version 1.25. Due to this, you can plan your
-cluster upgrade to only involve the minimum number of node group upgrades.
+1. Upgrade *the core node group* with a rolling upgrade using `drain`.
+2. Upgrade *user node group(s)* with rolling upgrades without using `drain`, or
+   optionally using re-creation upgrades.
 
-So if you upgrade from k8s 1.25 to 1.28, you can for example upgrade the k8s
-control plane three steps in a row, from 1.25 to 1.26, then from 1.26
-to 1.27 and then from 1.27 to 1.28. This way, the node groups were left
-behind the control plane by three minor versions, which is ok, because it
-doesn't break the three minor versions rule.
+#### Performing rolling upgrades (with or without drain)
 
-Then, you can upgrade the node groups directly from 1.25 to 1.28 making only
-one upgrade on the node groups instead of three.
+1. Add a new node group
 
-### 5. Upgrade node groups version until it matches the k8s control plane
+   Add a new node group in the `.jsonnet` file. Name it `core-b` or similar if
+   the other was named `core-a`, or the other way around.
 
-```{important}
-Per step 4 above, you can upgrade the version of the node groups maximum
-three versions at once, for example from 1.25 to 1.28 directly if the
-control plane's version allows it.
+   ```bash
+   # create a new nodegroup (takes ~5 min)
+   # IMPORTANT: review the --include flag's value
+   jsonnet $CLUSTER_NAME.jsonnet > $CLUSTER_NAME.eksctl.yaml
+   eksctl create nodegroup --config-file=$CLUSTER_NAME.eksctl.yaml --include="core-b"
+   ```
 
-If after one such upgrade, the node groups version is still behind
-the k8s control plane, you will need to repeat the node upgrade process
-until it does.
-```
+   ```{important}
+   The `eksctl create nodegroup` can fail quietly when re-creating a node group
+   that has been deleted recently (last ~60 seconds). If you see messages like
+   _# existing nodegroup(s) (...) will be excluded_ and _created 0
+   nodegroup(s)_, you can just re-run the `create` command.
+   ```
 
-To upgrade (unmanaged) node groups, you delete them and then add them back in. When
-adding them back, make sure your cluster config's k8s version is what you
-want the node groups to be added back as.
+2. Taint the old node group's nodes
 
-#### 5.1. Double-check current k8s version in the config
+   This makes new pods not able to schedule on any of these nodes, and the
+   cluster-autoscaler will guess that it shouldn't try to start up nodes from
+   this node group.
 
-Up until this step, you should have updated the control plane's
-version at least once but for maximum of three times. So you shouldn't
-need to update it.
+   ```bash
+   kubectl taint node manual-phaseout:NoSchedule -l alpha.eksctl.io/nodegroup-name=core-b
+   ```
 
-However, it is worth double checking that the k8s version that is in
-the config file is:
-- not ahead of the current k8s control plane version, as this will
-  influence the version of the node groups.
-- not **more than three minor versions** than what the version of node groups
-  was initially
+3. Optionally wait for old nodes' pods to go away
 
-#### 5.2. Renaming node groups part 1: add a new core node group (like `core-b`)
+   If you aren't going to forcefully drain the old node group's nodes, you have
+   to wait before deleting the old node group. If you do, add a comment in the
+   `.jsonnet` file next to the old node group saying:
 
-Rename the config file's entry for the core node group temporarily when running
-this command, either from `core-a` to `core-b` or the other way around,
-then create the new nodegroup.
+   ```json
+   // FIXME: tainted, to be deleted when empty, replaced by equivalent during k8s upgrade
+   ```
 
-```bash
-# create a copy of the current nodegroup (takes ~5 min)
-eksctl create nodegroup --config-file=$CLUSTER_NAME.eksctl.yaml --include="core-b"
-```
+4. Remove the old node group
 
-```{important}
-The `eksctl create nodegroup` can fail quietly when re-creating a node group
-that has been deleted recently (last ~60 seconds). If you see messages like _#
-existing nodegroup(s) (...) will be excluded_ and _created 0 nodegroup(s)_, you
-can just re-run the `create` command.
-```
+   Remove the old node group in the `.jsonnet` file.
 
-#### 5.3. Renaming node groups part 2: delete all old node groups (like `core-a,nb-*,dask-*`)
+   ```bash
+   # drain and delete all non-listed nodegroups (takes ~20s if the node groups has no running nodes)
+   jsonnet $CLUSTER_NAME.jsonnet > $CLUSTER_NAME.eksctl.yaml
+   eksctl delete nodegroup --config-file=$CLUSTER_NAME.eksctl.yaml --approve --drain=true --only-missing
+   ```
 
-Rename the core node group again in the config to its previous name,
-so the old node group can be deleted with the following command,
-then delete the original nodegroup.
+   ```{note}
+   The `eksctl` managed drain operation may get stuck but you could help it along
+   by finding the pods that fail to terminate with `kubectl get pod -A`, and then
+   manually forcefully terminating them with `kubectl delete pod --force <...>`.
+   ```
 
-```bash
-# delete the original nodegroup (takes ~20s if the node groups has no running nodes)
-eksctl delete nodegroup --config-file=$CLUSTER_NAME.eksctl.yaml --include="core-a,nb-*,dask-*" --approve --drain=true
-```
+#### Performing re-creation upgrades
 
-```{note}
-The `eksctl` managed drain operation may get stuck but you could help it along
-by finding the pods that fail to terminate with `kubectl get pod -A`, and then
-manually forcefully terminating them with `kubectl delete pod --force <...>`.
-```
+If you do maintenance on a cluster with no running user workloads (user servers,
+dask gateway workers), a quick and simple strategy is to delete all user node
+groups and then re-create them. The `eksctl [delete|create] nodegroup` commands
+can work with multiple node group at the time by using wildcards in the
+`--include` flag.
 
-#### 5.4. Renaming node groups part 3: re-create all non-core node groups (like `nb-*,dask-*`)
+1. Delete node group(s)
 
-Rename the core node group one final time in the config to its
-new name, as that represents the state of the EKS cluster.
+   ```bash
+   # drain nodes and delete the nodegroups (takes ~20s if the node groups has no running nodes)
+   # IMPORTANT: review the --include flag's value
+   eksctl delete nodegroup --config-file=$CLUSTER_NAME.eksctl.yaml --approve --drain=true --include="nb-*,dask-*"
+   ```
 
-```bash
-eksctl create nodegroup --config-file=$CLUSTER_NAME.eksctl.yaml --include="nb-*,dask-*"
-```
+2. Re-create node group(s)
 
-### 6. Repeat steps 3,4,5 if needed
+   ```bash
+   # create a new nodegroup (takes ~5 min)
+   # IMPORTANT: review the --include flag's value
+   eksctl create nodegroup --config-file=$CLUSTER_NAME.eksctl.yaml --include="nb-*,dask-*"
+   ```
 
-If you need to upgrade the cluster more than three minor versions,
-consider repeating steps 3, 4 and 5 until the desired version is reached.
-
-### 7. Commit the changes to the jsonnet config file
+### 5. Commit changes
 
 During this upgrade, the k8s version and possibly the node group name might have
 been changed. Make sure you commit this changes after the upgrade is finished.
 
 ## References
 
-[^1]: `eksctl`'s cluster upgrade documentation: <https://eksctl.io/usage/cluster-upgrade/>
-[^2]: `k8s's supported version skew documentation: <https://kubernetes.io/releases/version-skew-policy/#supported-version-skew>
+[^1]: About Kubernetes' version skew policy: <upgrade-cluster:k8s-version-skew>
+[^2]: `eksctl`'s cluster upgrade documentation: <https://eksctl.io/usage/cluster-upgrade/>
