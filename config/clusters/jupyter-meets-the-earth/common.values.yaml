@@ -273,6 +273,10 @@ basehub:
             - yuvipanda # Yuvi Panda
             - jonathan-taylor # Jonathan Taylor
 
+    scheduling:
+      userScheduler:
+        enabled: true
+
 dask-gateway:
   gateway:
     backend:
