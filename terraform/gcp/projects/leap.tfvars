@@ -12,9 +12,8 @@ k8s_versions = {
 }
 
 # GPUs not available in us-central1-b
-zone             = "us-central1-c"
-region           = "us-central1"
-regional_cluster = true
+zone   = "us-central1-c"
+region = "us-central1"
 
 # Multi-tenant cluster, network policy is required to enforce separation between hubs
 enable_network_policy = true

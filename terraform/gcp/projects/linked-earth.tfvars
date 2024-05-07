@@ -1,9 +1,8 @@
 prefix     = "linked-earth"
 project_id = "linked-earth-hubs"
 
-zone             = "us-central1-c"
-region           = "us-central1"
-regional_cluster = true
+zone   = "us-central1-c"
+region = "us-central1"
 
 k8s_versions = {
   min_master_version : "1.27.4-gke.900",
