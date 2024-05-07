@@ -29,7 +29,8 @@ The procedure from the video is:
 
 1. Open the [spreadsheet for accounting of cost for communities in shared
    clusters].
-2. Duplicate and clear green cells a page for a previous month.
+2. Duplicate the page for the previous month and clear outdated values in green
+   cells.
 3. Use guidance in pink cells to fill in green cells and finally verify a sum.
 4. Protect the page by right clicking on its tab in order to warn users trying
    to edit it going onwards.
