@@ -161,6 +161,9 @@ jupyterhub:
       profileList:
         - display_name: NVIDIA Tesla T4, ~16 GB, ~4 CPUs
           description: "Start a container on a dedicated node with a GPU"
+          allowed_teams:
+            - 2i2c-org:hub-access-for-2i2c-staff
+            - <github-org>:<team-name>
           profile_options:
             image:
               display_name: Image
@@ -207,6 +210,12 @@ jupyterhub:
 4. The `node_selector` makes sure that these user pods end up on
    the appropriate nodegroup we created earlier. Change the selector
    and the `mem_guarantee` if you are using a different kind of node
+5. `<github-org>:<team-name>` is only to be used if the hub is
+   using `GitHubOAuthenticator`, and restricts access to the GPU only
+   to members of that GitHub team. If `allowed_teams` is not used in
+   other config in the `profileList`, you may need to also explicitly
+   [enable some other config (`enable_auth_state` and `populate_teams_in_auth_state`)](auth:github-orgs:profile-list)
+   for this feature to work.
 
 Do a deployment with this config, and then we can test to make sure
 this works!
