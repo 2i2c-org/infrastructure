@@ -216,3 +216,7 @@ basehub:
             mem_limit: null
             node_selector:
               node.kubernetes.io/instance-type: r5.16xlarge
+
+    scheduling:
+      userScheduler:
+        enabled: true
