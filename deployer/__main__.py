@@ -19,6 +19,7 @@ import deployer.commands.generate.resource_allocation.update_nodeinfo  # noqa: F
 import deployer.commands.grafana.central_grafana  # noqa: F401
 import deployer.commands.grafana.deploy_dashboards  # noqa: F401
 import deployer.commands.grafana.tokens  # noqa: F401
+import deployer.commands.transform.cost_table.gcp  # noqa: F401
 import deployer.commands.validate.config  # noqa: F401
 import deployer.keys.decrypt_age  # noqa: F401
 
