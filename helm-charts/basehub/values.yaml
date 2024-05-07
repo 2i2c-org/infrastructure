@@ -1050,35 +1050,14 @@ jupyterhub:
                     allowed_profiles.append(profile)
                     continue
 
-                # allowed_teams can be "org" or "org:team", and we check
-                # membership just in time for orgs if needed
-                # casefold them so we can do case insensitive comparisons, as github itself is case insensitive (but preserving)
+                # casefold teams so we can do case insensitive comparisons, as github itself is case insensitive (but preserving)
                 # for orgs and teams
-                allowed_orgs = set([o.casefold() for o in allowed_teams if ':' not in o])
                 allowed_teams = set([t.casefold() for t in allowed_teams if ':' in t])
 
                 if allowed_teams & teams:
                     print(f"Allowing profile {profile['display_name']} for user {spawner.user.name} based on team membership")
                     allowed_profiles.append(profile)
                     continue
-
-                if "token_response" in auth_state:
-                    access_token = auth_state["token_response"]["access_token"]
-                    token_type = auth_state["token_response"]["token_type"]
-                else:
-                    # token_response was introduced to auth_state in
-                    # oauthenticator 16, so this is adjusting to an auth_state
-                    # set by oauthenticator 15
-                    access_token = auth_state["access_token"]
-                    token_type = "token"
-                for allowed_org in allowed_orgs:
-                    user_in_allowed_org = await spawner.authenticator._check_membership_allowed_organizations(
-                        allowed_org, spawner.user.name, access_token, token_type
-                    )
-                    if user_in_allowed_org:
-                        print(f"Allowing profile {profile['display_name']} for user {spawner.user.name} based on org membership")
-                        allowed_profiles.append(profile)
-                        break
 
             if len(allowed_profiles) == 0:
                 # If no profiles are allowed, user should not be able to spawn anything!
