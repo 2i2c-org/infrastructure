@@ -27,14 +27,12 @@ It can contain a list of JupyterHub **group names**. These are determined either
 the JupyterHub admin interface or provided externally via the authentication provider
 (see below for how the group names look like)
 
-If `allowed_groups` is not set, that profile will be available to all users.
+If `allowed_groups` is not set, that profile, profile option choice or unlisted choice, will be visible and available to everyone who can log in to the hub/
 
 So to restrict a profile, profile option choice or unlisted choice to a specific set
 of users, put a `allowed_groups` config under whatever you want to restrict, and list
 the groups that should be *allowed* access. Everyone else will not see that option,
-and members of that group will. If there's no `allowed_groups` config under a particular
-profile, profile option choice or unlisted choice, everyone who can log in to the hub
-can see it.
+and members of that group will.
 
 Now let's look at some examples.
 
