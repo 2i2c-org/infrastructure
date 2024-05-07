@@ -66,30 +66,9 @@ You can remove yourself from the org once you have confirmed that login is worki
      ...
    ```
 
-4. **Edit the non-secret config under `config/clusters/<cluster_name>/<hub_name>.values.yaml`.**
-   You should make sure the matching hub config takes one of the following forms.
-
-   To authenticate against a GitHub organisation (Note the `read:user` scope. See comment box below.):
-
-    ```yaml
-    jupyterhub:
-      custom:
-        2i2c:
-          add_staff_user_ids_to_admin_users: true
-          add_staff_user_ids_of_type: github
-      hub:
-        config:
-          JupyterHub:
-            authenticator_class: github
-          GitHubOAuthenticator:
-            oauth_callback_url: https://{{ HUB_DOMAIN }}/hub/oauth_callback
-            allowed_organizations:
-              - ORG_NAME
-            scope:
-              - read:user
-    ```
-
-   To authenticate against a GitHub Team (Note the `read:org` scope. See the comment box below.):
+4. **Edit the non-secret config under `config/clusters/<cluster_name>/<hub_name>.values.yaml`,**
+   making sure we ask for enough permissions (`read:org`) so we know what organizations (or
+   teams) users are a part of
 
     ```yaml
     jupyterhub:
@@ -105,17 +84,9 @@ You can remove yourself from the org once you have confirmed that login is worki
             oauth_callback_url: https://{{ HUB_DOMAIN }}/hub/oauth_callback
             allowed_organizations:
               - ORG_NAME:TEAM_NAME
+              - ORG_NAME
             scope:
               - read:org
-    ```
-
-    ```{admonition} A note on scopes
-    When authenticating against a whole organisation, we used the `read:user` scope in the example above.
-    This means that the GitHub OAuth App will read the _user's_ profile to determine whether the currently authenticating user is a member of the listed organisation. **It also requires the user to have their membership of the organisation publicly listed otherwise authentication will fail, even if they are valid members.**
-
-    To avoid this requirement, you may choose to use the `read:org` scope instead. This grants the GitHub OAuth App permission to read the profile of the _whole organisation_, however, and may be more powerful than the organisation owners wish to grant. So use your best judgment here.
-
-    When authenticating against a GitHub Team, we are required to use the `read:org` scope as the GitHub OAuth App needs to know which teams belong to the organisation as well as the members of the specified team.
     ```
 
     ````{note}
