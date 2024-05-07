@@ -43,20 +43,17 @@ administer. Solutions (potentially a shared account) are being explored.
 
 ## Configuring the JupyterHub to use Auth0
 
-While there is an upstream [Auth0OAuthenticator](https://github.com/jupyterhub/oauthenticator/blob/main/oauthenticator/auth0.py),
-it doesn't have any specific features that aren't in the upstream [GenericOAuthenticator](https://oauthenticator.readthedocs.io/en/latest/reference/api/gen/oauthenticator.generic.html),
-and is missing some features that are present in the GenericOAuthenticator. Using the GenericOAuthenticator
-here also allows us to support other Generic OAuth providers in the future, and not tie ourselves down
-to Auth0.
+We will use the upstream [Auth0OAuthenticator](https://github.com/jupyterhub/oauthenticator/blob/main/oauthenticator/auth0.py)
+to allow folks to login to JupyterHub.
 
-In the `common.yaml` file for the cluster hosting the hubs, we set the authenticator to be `generic`.
+In the `common.yaml` file for the cluster hosting the hubs, we set the authenticator to be `auth0`.
 
 ```yaml
 jupyterhub:
   hub:
     config:
       JupyterHub:
-        authenticator_class: generic
+        authenticator_class: auth0
 ```
 
 In the encrypted, per-hub config (of form `enc-<hub-name>.secret.values.yaml`), we specify the secret values
@@ -66,10 +63,9 @@ we received from the community.
 jupyterhub:
   hub:
     config:
-      GenericOAuthenticator:
+      Auth0OAuthenticator:
         client_id: <client-id>
         client_secret: <client-secret>
-        logout_redirect_url: https://<auth0-domain>/v2/logout?client_id=<client-id>
 ```
 
 And in the *unencrypted*, per-hub config (of form `<hub-name>.values.yaml`), we specify the non-secret
@@ -79,17 +75,11 @@ config values.
 jupyterhub:
   hub:
     config:
-      GenericOAuthenticator:
-        token_url: https://<auth0-domain>/oauth/token
-        authorize_url: https://<auth0-domain>/authorize
-        userdata_url: https://<auth0-domain>/userinfo
+      Auth0OAuthenticator:
+        auth0_domain: <auth0-domain>
         scope: openid
         username_claim: sub
 ```
-
-Auth0 has documentation for the [userinfo](https://auth0.com/docs/api/authentication#get-user-info),
-[token](https://auth0.com/docs/api/authentication#authenticate-user) and [authorize](https://auth0.com/docs/api/authentication#social)
-endpoints.
 
 Once deployed, this should allow users authorized by Auth0 to login to the hub! Their usernames will
 look like `<auth-provider>:<id>`, which looks a little strange but allows differentiation between
