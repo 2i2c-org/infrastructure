@@ -18,8 +18,8 @@ procedures to community champions and users.
 
 Up until now we have made some k8s cluster upgrades opportunistically,
 especially for clusters that has showed little to no activity during some
-periods. Other cluster upgrades has been scheduled with community champions, and
-some in shared clusters has been announced ahead of time.
+periods. Other cluster upgrades have been scheduled with community champions, and
+some in shared clusters have been announced ahead of time.
 ```
 
 (upgrade-cluster:ambition)=

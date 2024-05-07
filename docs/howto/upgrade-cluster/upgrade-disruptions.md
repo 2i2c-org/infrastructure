@@ -14,7 +14,7 @@ the cost savings are minimal we only create for regional clusters now.
 
 If upgrading a zonal cluster, the single k8s api-server will be temporarily
 unavailable, but that is not a big problem as user servers and JupyterHub will
-remains accessible. The brief disruption is that JupyterHub won't be able to
+remain accessible. The brief disruption is that JupyterHub won't be able to
 start new user servers, and user servers won't be able to create or scale their
 dask-clusters.
 
@@ -22,8 +22,8 @@ dask-clusters.
 
 When upgrading a cloud provider managed k8s cluster, it may upgrade some managed
 workload part of the k8s cluster, such as calico that enforces NetworkPolicy
-rules. Maybe this could cause a disruption for users, but its not currently know
-to do so.
+rules. Maybe this could cause a disruption for users, but its not currently known
+if it does and in what manner.
 
 ## Core node pool disruptions
 
@@ -38,21 +38,21 @@ pods that are proxying network traffic associated with incoming connections.
 
 To shut down such pod means to break connections from users working against the
 user servers. A broken connection can be re-established if there is another
-replica of this pod is ready to accept a new connection.
+replica of this pod ready to accept a new connection.
 
 We are currently running only one replica of the `ingress-nginx-controller` pod,
 and we won't have issues with this during rolling updates, such as when the
 Deployment's pod template specification is changed or when manually running
 `kubectl rollout restart -n support deploy/support-ingress-nginx-controller`. We
-will however have broken connections and user pods unable to establish new
+will however have broken connections and user pods unable to establish new connections
 directly if `kubectl delete` is used on this single pod, or `kubectl drain` is
 used on the node.
 
 ### hub pod disruptions
 
-Our JupyterHub installations each has a single `hub` pod, and having more isn't
+Our JupyterHub installations each have a single `hub` pod, and having more isn't
 supported by JupyterHub itself. Due to this, and because it has a disk mounted
-to it that can only be mounted at the same time to one pod, it isn't configured
+to it that can only be mounted to one pod at a time, it isn't configured
 to do rolling updates.
 
 When the `hub` pod isn't running, users can't visit `/hub` paths, but they can
