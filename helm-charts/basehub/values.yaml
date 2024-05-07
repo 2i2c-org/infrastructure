@@ -1027,6 +1027,7 @@ jupyterhub:
                 print("Ignoring allowed_groups check for deployment-service-check")
                 return original_profile_list
 
+            # casefold group names so we can do case insensitive comparisons.
             groups = {g.name.casefold() for g in spawner.user.groups}
 
             # If we're using GitHubOAuthenticator, add the user's teams to the groups as well.
@@ -1039,6 +1040,8 @@ jupyterhub:
                   print(f"User {spawner.user.name} does not have any auth_state set")
                   raise web.HTTPError(403)
 
+
+              # casefold teams to match what GitHub's API does when doing authorization calls
               groups |= set([f'{team["organization"]["login"]}:{team["slug"]}'.casefold() for team in auth_state["teams"]])
 
             print(f"User {spawner.user.name} is part of groups {' '.join(groups)}")
@@ -1075,8 +1078,6 @@ jupyterhub:
                           new_choices[k] = c
                       po['choices'] = new_choices
 
-                # casefold teams so we can do case insensitive comparisons, as github itself is case insensitive (but preserving)
-                # for orgs and teams
                 if 'allowed_groups' not in profile:
                   allowed_profiles.append(profile)
                 else:
