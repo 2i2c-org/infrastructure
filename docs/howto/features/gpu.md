@@ -214,7 +214,7 @@ jupyterhub:
    using `GitHubOAuthenticator`, and restricts access to the GPU only
    to members of that GitHub team. If `allowed_teams` is not used in
    other config in the `profileList`, you may need to also explicitly
-   [enable some other config (`enable_auth_state` and `populate_teams_in_auth_state`)](auth:github-orgs:profile-list)
+   [enable some other config (`enable_auth_state` and `populate_teams_in_auth_state`)](howto:features:profile-restrict)
    for this feature to work.
 
 Do a deployment with this config, and then we can test to make sure
