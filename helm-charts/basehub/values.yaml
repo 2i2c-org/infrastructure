@@ -1037,12 +1037,11 @@ jupyterhub:
               # Ensure auth_state is populated with teams info
               auth_state = await spawner.user.get_auth_state()
               if not auth_state or "teams" not in auth_state:
-                  print(f"User {spawner.user.name} does not have any auth_state set")
-                  raise web.HTTPError(403)
+                  print(f"User {spawner.user.name} does not have any auth_state set, profile_list filtering not available")
 
-
-              # casefold teams to match what GitHub's API does when doing authorization calls
-              groups |= set([f'{team["organization"]["login"]}:{team["slug"]}'.casefold() for team in auth_state["teams"]])
+              else:
+                # casefold teams to match what GitHub's API does when doing authorization calls
+                groups |= set([f'{team["organization"]["login"]}:{team["slug"]}'.casefold() for team in auth_state["teams"]])
 
             print(f"User {spawner.user.name} is part of groups {' '.join(groups)}")
 
