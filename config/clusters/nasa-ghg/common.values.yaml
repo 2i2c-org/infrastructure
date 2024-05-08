@@ -70,6 +70,43 @@ basehub:
             resource_allocation: &profile_options_resource_allocation
               display_name: Resource Allocation
               choices:
+                cpu_8_16:
+                  display_name: 8 CPU, 16GB RAM
+                  kubespawner_override:
+                    mem_guarantee: 14.87Gi
+                    mem_limit: 14.87Gi
+                    cpu_guarantee: 4
+                    cpu_limit: 7.8
+                    node_selector:
+                      node.kubernetes.io/instance-type: c5.4xlarge
+                cpu_12_16:
+                  display_name: 12 CPU, 16GB RAM
+                  kubespawner_override:
+                    mem_guarantee: 14.87Gi
+                    mem_limit: 14.87Gi
+                    cpu_guarantee: 6
+                    cpu_limit: 11.8
+                    node_selector:
+                      node.kubernetes.io/instance-type: c5.4xlarge
+                cpu_12_16:
+                  display_name: 8 CPU, 24GB RAM
+                  kubespawner_override:
+                    mem_guarantee: 22.305Gi
+                    mem_limit: 22.305Gi
+                    cpu_guarantee: 4
+                    cpu_limit: 7.8
+                    node_selector:
+                      node.kubernetes.io/instance-type: c5.4xlarge
+                cpu_12_16:
+                  display_name: 12 CPU, 24GB RAM
+                  kubespawner_override:
+                    mem_guarantee: 22.305Gi
+                    mem_limit: 22.305Gi
+                    cpu_guarantee: 6
+                    cpu_limit: 11.8
+                    node_selector:
+                      node.kubernetes.io/instance-type: c5.4xlarge
+                                                      
                 mem_1_9:
                   display_name: 1.9 GB RAM, upto 3.7 CPUs
                   kubespawner_override:
