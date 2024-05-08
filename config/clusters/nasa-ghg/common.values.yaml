@@ -81,8 +81,8 @@ basehub:
                 cpu_8_16:
                   display_name: 8 CPU, 16GB RAM
                   kubespawner_override:
-                    mem_guarantee: 14.87Gi
-                    mem_limit: 14.87Gi
+                    mem_guarantee: 14.87G
+                    mem_limit: 14.87G
                     cpu_guarantee: 8
                     cpu_limit: 8
                     node_selector:
@@ -90,8 +90,8 @@ basehub:
                 cpu_12_16:
                   display_name: 12 CPU, 16GB RAM
                   kubespawner_override:
-                    mem_guarantee: 14.87Gi
-                    mem_limit: 14.87Gi
+                    mem_guarantee: 14.87G
+                    mem_limit: 14.87G
                     cpu_guarantee: 12
                     cpu_limit: 12
                     node_selector:
@@ -99,8 +99,8 @@ basehub:
                 cpu_8_24:
                   display_name: 8 CPU, 24GB RAM
                   kubespawner_override:
-                    mem_guarantee: 22.305Gi
-                    mem_limit: 22.305Gi
+                    mem_guarantee: 22.305G
+                    mem_limit: 22.305G
                     cpu_guarantee: 8
                     cpu_limit: 8
                     node_selector:
@@ -108,8 +108,8 @@ basehub:
                 cpu_12_24:
                   display_name: 12 CPU, 24GB RAM
                   kubespawner_override:
-                    mem_guarantee: 22.305Gi
-                    mem_limit: 22.305Gi
+                    mem_guarantee: 22.305G
+                    mem_limit: 22.305G
                     cpu_guarantee: 12
                     cpu_limit: 12
                     node_selector:
