@@ -100,7 +100,7 @@ def instance_capacities(
 
     To run this command for all clusters, `xargs` can be used like this:
 
-        ls config/clusters | xargs -I {} deployer generate resource-allocation instance-capacities {}
+        deployer config get-clusters | xargs -I {} deployer generate resource-allocation instance-capacities {}
     """
     file_path = HERE / "instance_capacities.yaml"
     file_path.touch(exist_ok=True)

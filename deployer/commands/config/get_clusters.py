@@ -18,8 +18,8 @@ def get_clusters(
     ),
 ):
     """
-    Lists all clusters, optionally filtered by the provider field in the
-    cluster.yaml file.
+    Prints all cluster names sorted alphabetically, optionally filtered by the
+    'provider' field in the cluster.yaml file.
     """
     cluster_names = []
     for config_file_path in get_all_cluster_yaml_files():

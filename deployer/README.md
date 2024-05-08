@@ -283,14 +283,14 @@ Only DaemonSet's with running pods are considered, and GPU related DaemonSets (w
 
 To run this command for all clusters, `xargs` can be used like this:
 
-    ls config/clusters | xargs -I {} deployer generate resource-allocation daemonset-requests {}
+    deployer config get-clusters | xargs -I {} deployer generate resource-allocation daemonset-requests {}
 
 ##### `generate resource-allocation instance-capacities`
 Updates `instance_capacities.yaml` with an individual cluster's running instance types' total and allocatable capacity.
 
 To run this command for all clusters, `xargs` can be used like this:
 
-    ls config/clusters | xargs -I {} deployer generate resource-allocation instance-capacities {}
+    deployer config get-clusters | xargs -I {} deployer generate resource-allocation instance-capacities {}
 
 ##### `generate resource-allocation node-info-update`
 This updates the json file `node-capacity-info.json` with info about the capacity of a node of a certain type. This file is then used for generating the resource choices.

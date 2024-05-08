@@ -17,7 +17,7 @@
 # This file isn't updated by automation, but can easily be updated by manually
 # running a command once for each cluster:
 #
-#     ls config/clusters | xargs -I {} deployer generate resource-allocation daemonset-requests {}
+#     deployer config get-clusters | xargs -I {} deployer generate resource-allocation daemonset-requests {}
 #
 gke:
   2i2c:
