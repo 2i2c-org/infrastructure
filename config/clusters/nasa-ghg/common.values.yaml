@@ -70,6 +70,50 @@ basehub:
             resource_allocation: &profile_options_resource_allocation
               display_name: Resource Allocation
               choices:
+                # The `cpu_` options are added by hand, temporarily,
+                # to help evaluate ideal resource options for an upcoming workshop.
+                # See: https://github.com/NASA-IMPACT/veda-jupyterhub/issues/32
+                # Once we settle on the ideal resource allocation for the workshop, we should:
+                #  - Create a new profile for the workshop, with just the resource option needed
+                #  - Pick a more appropriate (compute-optimized) node type and add to eksctl
+                #  - Remove these options from the global resource select options
+                #  - Remove this comment.
+                cpu_8_16:
+                  display_name: 8 CPU, 16GB RAM
+                  kubespawner_override:
+                    mem_guarantee: 14.87Gi
+                    mem_limit: 14.87Gi
+                    cpu_guarantee: 8
+                    cpu_limit: 8
+                    node_selector:
+                      node.kubernetes.io/instance-type: r5.4xlarge
+                cpu_12_16:
+                  display_name: 12 CPU, 16GB RAM
+                  kubespawner_override:
+                    mem_guarantee: 14.87Gi
+                    mem_limit: 14.87Gi
+                    cpu_guarantee: 12
+                    cpu_limit: 12
+                    node_selector:
+                      node.kubernetes.io/instance-type: r5.4xlarge
+                cpu_8_24:
+                  display_name: 8 CPU, 24GB RAM
+                  kubespawner_override:
+                    mem_guarantee: 22.305Gi
+                    mem_limit: 22.305Gi
+                    cpu_guarantee: 8
+                    cpu_limit: 8
+                    node_selector:
+                      node.kubernetes.io/instance-type: r5.4xlarge
+                cpu_12_24:
+                  display_name: 12 CPU, 24GB RAM
+                  kubespawner_override:
+                    mem_guarantee: 22.305Gi
+                    mem_limit: 22.305Gi
+                    cpu_guarantee: 12
+                    cpu_limit: 12
+                    node_selector:
+                      node.kubernetes.io/instance-type: r5.4xlarge
                 mem_1_9:
                   display_name: 1.9 GB RAM, upto 3.7 CPUs
                   kubespawner_override:
