@@ -119,7 +119,7 @@ basehub:
           description: &profile_list_description "Start a container with at least a chosen share of capacity on a node of this type"
           slug: small
           default: true
-          allowed_groups:
+          allowed_teams:
             - 2i2c-org:hub-access-for-2i2c-staff
             - CryoInTheCloud:cryoclouduser
             - CryoInTheCloud:cryocloudadvanced
@@ -200,7 +200,7 @@ basehub:
         - display_name: "Medium: up to 16 CPU / 128 GB RAM"
           description: *profile_list_description
           slug: medium
-          allowed_groups:
+          allowed_teams:
             - 2i2c-org:hub-access-for-2i2c-staff
             - CryoInTheCloud:cryocloudadvanced
             - CryoInTheCloud:ml-in-glaciology
@@ -268,7 +268,7 @@ basehub:
         # - display_name: "Large: up to 64 CPU / 512 GB RAM"
         #   description: *profile_list_description
         #   slug: large
-        #   allowed_groups:
+        #   allowed_teams:
         #     - 2i2c-org:hub-access-for-2i2c-staff
         #     - CryoInTheCloud:cryocloudadvanced
         #   profile_options:
@@ -328,7 +328,7 @@ basehub:
         - display_name: NVIDIA Tesla T4, ~16 GB, ~4 CPUs
           description: "Start a container on a dedicated node with a GPU"
           slug: "gpu"
-          allowed_groups:
+          allowed_teams:
             - 2i2c-org:hub-access-for-2i2c-staff
             - CryoInTheCloud:ml-in-glaciology
           profile_options:

@@ -132,7 +132,7 @@ basehub:
           description: &profile_list_description "Start a container limited to a chosen share of capacity on a node of this type"
           slug: medium-full
           default: true
-          allowed_groups:
+          allowed_teams:
             - 2i2c-org:hub-access-for-2i2c-staff
             - leap-stc:leap-pangeo-full-access
           profile_options:
@@ -235,13 +235,13 @@ basehub:
 
         # NOTE: This is the second medium profile list entry, with less node
         #       share options for a different subset of users via the basehub
-        #       specific allowed_groups configuration.
+        #       specific allowed_teams configuration.
         #
         - display_name: "CPU only"
           description: *profile_list_description
           slug: medium-base
           default: true
-          allowed_groups:
+          allowed_teams:
             - leap-stc:leap-pangeo-base-access
           profile_options:
             requests:
@@ -262,7 +262,7 @@ basehub:
         - display_name: GPU
           slug: gpu
           description: NVIDIA Tesla T4, 24GB RAM, 8 CPUs
-          allowed_groups:
+          allowed_teams:
             - 2i2c-org:hub-access-for-2i2c-staff
             - leap-stc:leap-pangeo-full-access
           profile_options:
