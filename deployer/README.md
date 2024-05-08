@@ -196,6 +196,14 @@ For daskhubs, there is an optional check to verify that the user can scale dask 
 
 Decrypts information sent to 2i2c by community representatives using [age](https://age-encryption.org/) according to instructions in [2i2c documentation](https://docs.2i2c.org/en/latest/support.html?highlight=decrypt#send-us-encrypted-content).
 
+### The `config` sub-command
+
+This deployer sub-command provides misc information.
+
+#### `config get-clusters`
+
+This function prints a sorted list of clusters, optionally filtered by the
+`--provider` flag.
 
 ### The `generate` sub-command
 
@@ -275,14 +283,14 @@ Only DaemonSet's with running pods are considered, and GPU related DaemonSets (w
 
 To run this command for all clusters, `xargs` can be used like this:
 
-    ls config/clusters | xargs -I {} deployer generate resource-allocation daemonset-requests {}
+    deployer config get-clusters | xargs -I {} deployer generate resource-allocation daemonset-requests {}
 
 ##### `generate resource-allocation instance-capacities`
 Updates `instance_capacities.yaml` with an individual cluster's running instance types' total and allocatable capacity.
 
 To run this command for all clusters, `xargs` can be used like this:
 
-    ls config/clusters | xargs -I {} deployer generate resource-allocation instance-capacities {}
+    deployer config get-clusters | xargs -I {} deployer generate resource-allocation instance-capacities {}
 
 ##### `generate resource-allocation node-info-update`
 This updates the json file `node-capacity-info.json` with info about the capacity of a node of a certain type. This file is then used for generating the resource choices.

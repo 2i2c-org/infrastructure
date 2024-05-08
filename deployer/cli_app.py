@@ -12,6 +12,7 @@ import typer
 # Disable 'pretty' exception handling
 app = typer.Typer(pretty_exceptions_show_locals=False)
 generate_app = typer.Typer(pretty_exceptions_show_locals=False)
+config_app = typer.Typer(pretty_exceptions_show_locals=False)
 cilogon_client_app = typer.Typer(pretty_exceptions_show_locals=False)
 debug_app = typer.Typer(pretty_exceptions_show_locals=False)
 exec_app = typer.Typer(pretty_exceptions_show_locals=False)
@@ -23,6 +24,11 @@ app.add_typer(
     name="generate",
     help="Generate various types of assets. It currently supports generating files related to billing, "
     "new dedicated clusters, helm upgrade strategies and resource allocation.",
+)
+app.add_typer(
+    config_app,
+    name="config",
+    help="Get refined information from the config folder.",
 )
 app.add_typer(
     cilogon_client_app,
