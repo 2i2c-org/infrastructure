@@ -37,10 +37,11 @@ basehub:
     hub:
       extraConfig:
         001-username-claim: |
-          from oauthenticator.generic import GenericOAuthenticator
-          from traitlets import List, Unicode
+          from oauthenticator.auth0 import Auth0OAuthenticator
+          from traitlets import List, Unicode, default
+          from urllib.parse import urlencode
 
-          class CustomGenericOAuthenticator(GenericOAuthenticator):
+          class CustomAuth0OAuthenticator(Auth0OAuthenticator):
             # required_scopes functionality comes in from https://github.com/jupyterhub/oauthenticator/pull/719
             # Can be removed from here once that PR is merged
             required_scopes = List(
@@ -61,6 +62,28 @@ basehub:
                 """,
             )
 
+            # Upstreamed at https://github.com/jupyterhub/oauthenticator/pull/722
+            logout_redirect_to_url = Unicode(
+                config=True,
+                help="""
+                Redirect to this URL after the user is logged out.
+
+                Must be explicitly added to the "Allowed Logout URLs" in the configuration
+                for this Auth0 application. See https://auth0.com/docs/authenticate/login/logout/redirect-users-after-logout
+                for more information.
+                """
+            )
+
+            @default("logout_redirect_url")
+            def _logout_redirect_url_default(self):
+                url = f"https://{self.auth0_domain}/v2/logout"
+                if self.logout_redirect_to_url:
+                    # If a redirectTo is set, we must also include the `client_id`
+                    # Auth0 expects `client_id` to be snake cased while `redirectTo` is camel cased
+                    params = urlencode({"client_id": self.client_id, "redirectTo": self.logout_redirect_to_url})
+                    url = f"{url}?{params}"
+                return url
+
             async def check_allowed(self, username, auth_model):
               if await super().check_allowed(username, auth_model):
                   return True
@@ -76,14 +99,6 @@ basehub:
 
               return False
 
-            async def authenticate(self, *args, **kwargs):
-              resp = await super().authenticate(*args, **kwargs)
-              # Setup groups to be same as list of scopes granted
-              # This can go away after https://github.com/jupyterhub/oauthenticator/pull/735 is
-              # merged
-              resp["groups"] = resp["auth_state"]["scope"]
-              return resp
-
           def populate_token(spawner, auth_state):
             # For our deployment-service-check health check user, there is no auth_state.
             # So these env variables need not be set.
@@ -97,13 +112,15 @@ basehub:
 
           c.Spawner.auth_state_hook = populate_token
 
-          c.JupyterHub.authenticator_class = CustomGenericOAuthenticator
+          c.JupyterHub.authenticator_class = CustomAuth0OAuthenticator
       config:
-        CustomGenericOAuthenticator:
+        JupyterHub:
+          authenticator_class: auth0
+        CustomAuth0OAuthenticator:
           required_scopes:
             # This allows EarthScope to control who can login to the hub
             - geolab
-        GenericOAuthenticator:
+        Auth0OAuthenticator:
           scope:
             - openid
             # This gives us refresh token
@@ -113,14 +130,10 @@ basehub:
             # automatically granted this scope, so we can test. See
             # https://2i2c.freshdesk.com/a/tickets/1280 for how this was granted.
             - geolab
-            - geolab:dev
-            - geolab:power
           extra_authorize_params:
             # This isn't an actual URL, just a string. Must not have a trailing slash
             audience: https://api.dev.earthscope.org
           username_claim: sub
-          # Convert 'scope' from the OAuth2 response into JupyterHub groups
-          manage_groups: true
         CILogonOAuthenticator:
           allowed_idps:
             http://github.com/login/oauth/authorize:
@@ -139,10 +152,6 @@ basehub:
       profileList:
         - display_name: "Shared Small: 1-4 CPU, 8-32 GB"
           description: "A shared machine, the recommended option until you experience a limitation."
-          allowed_groups:
-            - geolab
-            - geolab:dev
-            - geolab:power
           profile_options: &profile_options
             image:
               display_name: Image
@@ -177,12 +186,9 @@ basehub:
             mem_limit: null
             node_selector:
               node.kubernetes.io/instance-type: r5.xlarge
+
         - display_name: "Small: 4 CPU, 32 GB"
           description: "A dedicated machine for you."
-          allowed_groups:
-            - geolab
-            - geolab:dev
-            - geolab:power
           profile_options: *profile_options
           kubespawner_override:
             mem_guarantee: 28.937G
@@ -190,23 +196,20 @@ basehub:
             mem_limit: null
             node_selector:
               node.kubernetes.io/instance-type: r5.xlarge
+
         - display_name: "Medium: 16 CPU, 128 GB"
           description: "A dedicated machine for you."
           profile_options: *profile_options
-          allowed_groups:
-            - geolab:dev
-            - geolab:power
           kubespawner_override:
             mem_guarantee: 120.513G
             cpu_guarantee: 1.6
             mem_limit: null
             node_selector:
               node.kubernetes.io/instance-type: r5.4xlarge
+
         - display_name: "Large: 64 CPU, 512 GB"
           description: "A dedicated machine for you"
           profile_options: *profile_options
-          allowed_groups:
-            - geolab:power
           kubespawner_override:
             mem_guarantee: 489.13G
             cpu_guarantee: 6.4
