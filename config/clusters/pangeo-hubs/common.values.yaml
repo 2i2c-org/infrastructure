@@ -36,11 +36,13 @@ basehub:
         JupyterHub:
           authenticator_class: github
         GitHubOAuthenticator:
+          populate_teams_in_auth_state: true
           allowed_organizations:
             - pangeo-data:us-central1-b-gcp
           scope:
             - read:org
         Authenticator:
+          enable_auth_state: true
           admin_users:
             - rabernat
             - jhamman
