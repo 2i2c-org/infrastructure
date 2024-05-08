@@ -191,7 +191,6 @@ basehub:
         JupyterHub:
           authenticator_class: github
         GitHubOAuthenticator:
-          enable_auth_state: true
           populate_teams_in_auth_state: true
           allowed_organizations:
             - 2i2c-org:hub-access-for-2i2c-staff
@@ -207,6 +206,7 @@ basehub:
           scope:
             - read:org
         Authenticator:
+          enable_auth_state: true
           admin_users:
             - amfriesz
             - jules32

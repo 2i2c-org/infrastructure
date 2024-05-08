@@ -34,12 +34,14 @@ jupyterhub:
         authenticator_class: github
       GitHubOAuthenticator:
         oauth_callback_url: https://itcoocean.2i2c.cloud/hub/oauth_callback
+        populate_teams_in_auth_state: true
         allowed_organizations:
           - Hackweek-ITCOocean:itcoocean-hackweek-2023
           - nmfs-opensci:2i2c-demo
         scope:
           - read:org
       Authenticator:
+        enable_auth_state: true
         admin_users:
           - eeholmes # Eli Holmes, Community representative
   singleuser:
