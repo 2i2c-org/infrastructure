@@ -30,9 +30,9 @@ n2-highmem-4:
   cpu_capacity_high: 4.0
   cpu_allocatable_low: 3.92
   cpu_allocatable_high: 3.92
-  mem_capacity_low: 31.357Gi
+  mem_capacity_low: 31.354Gi
   mem_capacity_high: 31.357Gi
-  mem_allocatable_low: 27.738Gi
+  mem_allocatable_low: 27.734Gi
   mem_allocatable_high: 27.738Gi
 n2-highmem-8:
   cpu_capacity_low: 8.0
@@ -48,9 +48,9 @@ n2-highmem-16:
   cpu_capacity_high: 16.0
   cpu_allocatable_low: 15.89
   cpu_allocatable_high: 15.89
-  mem_capacity_low: 125.807Gi
+  mem_capacity_low: 125.804Gi
   mem_capacity_high: 125.81Gi
-  mem_allocatable_low: 116.549Gi
+  mem_allocatable_low: 116.545Gi
   mem_allocatable_high: 116.551Gi
 n2-highmem-32:
   cpu_capacity_low: 32.0
@@ -66,28 +66,46 @@ n1-standard-2:
   cpu_capacity_high: 2.0
   cpu_allocatable_low: 1.93
   cpu_allocatable_high: 1.93
-  mem_capacity_low: 7.276Gi
+  mem_capacity_low: 7.272Gi
   mem_capacity_high: 7.276Gi
-  mem_allocatable_low: 5.483Gi
+  mem_allocatable_low: 5.479Gi
   mem_allocatable_high: 5.483Gi
 n1-standard-8:
   cpu_capacity_low: 8.0
   cpu_capacity_high: 8.0
   cpu_allocatable_low: 7.91
   cpu_allocatable_high: 7.91
-  mem_capacity_low: 29.387Gi
+  mem_capacity_low: 29.384Gi
   mem_capacity_high: 29.387Gi
-  mem_allocatable_low: 25.888Gi
+  mem_allocatable_low: 25.885Gi
   mem_allocatable_high: 25.888Gi
 n1-standard-16:
   cpu_capacity_low: 16.0
   cpu_capacity_high: 16.0
   cpu_allocatable_low: 15.89
   cpu_allocatable_high: 15.89
-  mem_capacity_low: 58.87Gi
+  mem_capacity_low: 58.866Gi
   mem_capacity_high: 58.87Gi
-  mem_allocatable_low: 53.571Gi
+  mem_allocatable_low: 53.567Gi
   mem_allocatable_high: 53.571Gi
+n1-standard-32:
+  cpu_capacity_low: 32.0
+  cpu_capacity_high: 32.0
+  cpu_allocatable_low: 31.85
+  cpu_allocatable_high: 31.85
+  mem_capacity_low: 117.925Gi
+  mem_capacity_high: 117.925Gi
+  mem_allocatable_low: 109.027Gi
+  mem_allocatable_high: 109.027Gi
+n1-standard-64:
+  cpu_capacity_low: 64.0
+  cpu_capacity_high: 64.0
+  cpu_allocatable_low: 63.77
+  cpu_allocatable_high: 63.77
+  mem_capacity_low: 235.947Gi
+  mem_capacity_high: 235.947Gi
+  mem_allocatable_low: 224.448Gi
+  mem_allocatable_high: 224.448Gi
 
 # EKS instance types
 r5.xlarge:
