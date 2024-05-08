@@ -1,6 +1,6 @@
 import os
 from pathlib import Path
-from unittest import TestCase
+from unittest import TestCase, mock
 
 from ruamel.yaml import YAML
 
@@ -20,12 +20,16 @@ root_path = Path(__file__).parent.parent
 
 
 def test_get_all_cluster_yaml_files():
+    clusters_path = root_path.joinpath("tests/test-clusters")
     expected_cluster_files = {
-        root_path.joinpath("tests/test-clusters/cluster1/cluster.yaml"),
-        root_path.joinpath("tests/test-clusters/cluster2/cluster.yaml"),
+        clusters_path.joinpath("cluster1/cluster.yaml"),
+        clusters_path.joinpath("cluster2/cluster.yaml"),
     }
 
-    result_cluster_files = get_all_cluster_yaml_files(is_test=True)
+    with mock.patch(
+        "deployer.utils.file_acquisition.CONFIG_CLUSTERS_PATH", clusters_path
+    ):
+        result_cluster_files = get_all_cluster_yaml_files()
 
     assert result_cluster_files == expected_cluster_files
     assert isinstance(result_cluster_files, set)
