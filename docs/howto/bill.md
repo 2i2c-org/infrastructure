@@ -34,8 +34,9 @@ AWS management account. If a future cluster deviates from this, you can tell by
 4. Visit the "Monthly Costs By Linked Account" report ([direct link]) via "Billing and Cost Management" -> "Cost Explorer Saved Reports"
 5. On the right sidebar under "Time -> Date Range", select all the completed months we want to get data for
 6. On the right sidebar under "Time -> Granularity", ensure its selected as "Monthly"
-7. Click the 'Download as CSV' button
-8. Copy AWS costs
+7. On the right sidebar under "Group by -> Dimension", select "Linked account"
+8. Click the 'Download as CSV' button
+9. Copy AWS costs
 
    The CSV file has rows for each month, and columns for each project. Copy it
    into the spreadsheet, making sure the rows and columns both match what is
