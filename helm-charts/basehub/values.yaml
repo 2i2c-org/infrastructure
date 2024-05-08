@@ -601,29 +601,6 @@ jupyterhub:
     # c.JupyterHub.load_roles without overriding a list - use it instead of the
     # passthrough config hub.config.JupyterHub.load_roles.
     #
-    # - About jupyterhub-configurator service access
-    #
-    #   The JupyterHub admin users get the scope access:services by being
-    #   admins, which includes the scope access:services!service=configurator.
-    #   This makes them not need additional scope requests to work with
-    #   jupyterhub-configurator that also require users to be admins anyhow.
-    #
-    #   ref: https://github.com/yuvipanda/jupyterhub-configurator/blob/f46fb4e81b1de74c4fcaa5a7763fb230265bab90/jupyterhub_configurator/app.py#L100-L109
-    #
-    # - About dask-gateway service access
-    #
-    #   Providing access:services!service=dask-gateway has no effect, as
-    #   dask-gateway the client passes the jupyterhub user's jupyterhub api
-    #   token to the dask-gateway-server, which then just verifies that the api
-    #   token is associated with an actual user using the api token itself. Due
-    #   to that, we can't limit access to dask-gateway by providing that scope
-    #   only to some users.
-    #
-    #   Considerations of updating dask-gateway to gate access via
-    #   access:services!service=dask-gateway is considered in the linked issue.
-    #
-    #   ref: https://github.com/dask/dask-gateway/issues/829
-    #
     # loadRoles ref (z2jh): https://z2jh.jupyter.org/en/stable/resources/reference.html#hub-loadroles
     # load_roles ref (jh):  https://jupyterhub.readthedocs.io/en/stable/rbac/roles.html#defining-roles
     #
