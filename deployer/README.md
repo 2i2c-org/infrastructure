@@ -196,6 +196,14 @@ For daskhubs, there is an optional check to verify that the user can scale dask 
 
 Decrypts information sent to 2i2c by community representatives using [age](https://age-encryption.org/) according to instructions in [2i2c documentation](https://docs.2i2c.org/en/latest/support.html?highlight=decrypt#send-us-encrypted-content).
 
+### The `config` sub-command
+
+This deployer sub-command provides misc information.
+
+#### `config get-clusters`
+
+This function prints a sorted list of clusters, optionally filtered by the
+`--provider` flag.
 
 ### The `generate` sub-command
 

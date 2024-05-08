@@ -1,6 +1,7 @@
 # Import the various subcommands here, they will be automatically
 # registered into the app
 import deployer.commands.cilogon  # noqa: F401
+import deployer.commands.config.get_clusters  # noqa: F401
 import deployer.commands.debug  # noqa: F401
 import deployer.commands.deployer  # noqa: F401
 import deployer.commands.exec.cloud  # noqa: F401
