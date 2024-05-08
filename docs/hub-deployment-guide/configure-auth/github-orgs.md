@@ -132,7 +132,6 @@ You will **still** require admin access to the org to carry out those steps.
 
 Once you have confirmed with the Community Representative that users can login, you can remove yourself from the org.
 
-(auth:github-orgs:profile-list)=
 ## Restricting user profiles based on GitHub Team Membership
 
 JupyterHub has support for using [profileList](https://zero-to-jupyterhub.readthedocs.io/en/latest/jupyterhub/customizing/user-environment.html#using-multiple-profiles-to-let-users-select-their-environment)
@@ -141,72 +140,7 @@ server.
 
 In addition, we can allow people access to specific profiles based on their GitHub Teams membership!
 This only works if the hub is already set to allow people only from certain GitHub organizations
-to log in.
-
-The key `allowed_teams` can be set for any profile definition, with a list of GitHub
-teams (formatted as `<github-org>:<team-name>`) that will get access to that profile. Users
-need to be a member of any one of the listed teams for access. The list of teams a user
-is part of is fetched at login time - so if the user is added to a GitHub team, they need
-to log out and log back in to the JupyterHub (not necessarily to GitHub!) to see the new
-profiles they have access to. To remove access to a profile from a user, they have to be
-removed from the appropriate team on GitHub *and* their JupyterHub user needs to be
-deleted from the hub admin dashboard.
-
-To enable this access,
-
-1. Enable storing the list of GitHub teams a user is in as a part of
-   [`auth_state`](https://zero-to-jupyterhub.readthedocs.io/en/latest/administrator/authentication.html#enable-auth-state)
-   with the following config:
-
-   ```yaml
-   jupyterhub:
-      hub:
-        config:
-          Authenticator:
-            enable_auth_state: true
-          GitHubOAuthenticator:
-            populate_teams_in_auth_state: true
-   ```
-
-   If `populate_teams_in_auth_state` is not set, this entire feature is disabled.
-
-2. Specify which teams should have access to which profiles with an
-   `allowed_teams` key under `profileList`:
-
-    ```yaml
-    jupyterhub:
-      singleuser:
-        profileList:
-          - display_name: Small
-            description: 1.0 GB RAM
-            default: true
-            allowed_teams:
-              - <org-name>:<team-name>
-              - 2i2c-org:hub-access-for-2i2c-staff
-            kubespawner_override:
-              mem_guarantee: 1G
-              mem_limit: 1G
-          - display_name: Medium
-            description: 4.0 GB RAM
-            allowed_teams:
-              - <org-name>:<team-name>
-              - 2i2c-org:hub-access-for-2i2c-staff
-            kubespawner_override:
-              mem_guarantee: 4G
-              mem_limit: 4G
-    ```
-
-    Users who are a part of *any* of the listed teams will be able to access
-    that profile. Add `2i2c-org:hub-access-for-2i2c-staff` to all
-    `allowed_teams` so 2i2c engineers can log in to debug issues. If
-    `allowed_teams` is not set, that profile is not available to anyone.
-
-    ```{note}
-    We used to allow restricting which profiles users can see based on what
-    org they were a part of, rather than just the *teams* they were a part of.
-    We no longer support this.
-    ```
-
+to log in. See [](howto:features:profile-restrict) for more information.
 ### Enabling team based access on hub with pre-existing users
 
 If this is being enabled for users on a hub with *pre-existing* users, they
