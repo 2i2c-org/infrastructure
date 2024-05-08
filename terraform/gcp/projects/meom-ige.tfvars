@@ -6,9 +6,9 @@ region           = "us-central1"
 regional_cluster = false
 
 k8s_versions = {
-  min_master_version : "1.27.4-gke.900",
-  core_nodes_version : "1.27.4-gke.900",
-  notebook_nodes_version : "1.27.4-gke.900",
+  min_master_version : "1.29.1-gke.1589018",
+  core_nodes_version : "1.29.1-gke.1589018",
+  notebook_nodes_version : "1.29.1-gke.1589018",
 }
 
 core_node_machine_type = "n2-highmem-4"

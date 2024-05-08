@@ -5,9 +5,9 @@ zone                  = "southamerica-east1-c"
 enable_network_policy = true
 
 k8s_versions = {
-  min_master_version : "1.27.2-gke.1200",
-  core_nodes_version : "1.27.2-gke.1200",
-  notebook_nodes_version : "1.27.2-gke.1200",
+  min_master_version : "1.29.1-gke.1589018",
+  core_nodes_version : "1.29.1-gke.1589018",
+  notebook_nodes_version : "1.29.1-gke.1589018",
 }
 
 enable_filestore      = true
