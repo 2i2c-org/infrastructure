@@ -105,8 +105,7 @@ basehub:
                     cpu_guarantee: 6
                     cpu_limit: 11.8
                     node_selector:
-                      node.kubernetes.io/instance-type: c5.4xlarge
-                                                      
+                      node.kubernetes.io/instance-type: c5.4xlarge                                                     
                 mem_1_9:
                   display_name: 1.9 GB RAM, upto 3.7 CPUs
                   kubespawner_override:
