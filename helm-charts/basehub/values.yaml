@@ -597,14 +597,6 @@ jupyterhub:
                 matchLabels:
                   app.kubernetes.io/component: traefik
   hub:
-    # hub.loadRoles is z2jh native config to enable configuration of
-    # c.JupyterHub.load_roles without overriding a list - use it instead of the
-    # passthrough config hub.config.JupyterHub.load_roles.
-    #
-    # loadRoles ref (z2jh): https://z2jh.jupyter.org/en/stable/resources/reference.html#hub-loadroles
-    # load_roles ref (jh):  https://jupyterhub.readthedocs.io/en/stable/rbac/roles.html#defining-roles
-    #
-    loadRoles: {}
     config:
       JupyterHub:
         # Allow unauthenticated prometheus requests
