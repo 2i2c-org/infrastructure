@@ -28,10 +28,10 @@ core_node_machine_type = "n2-highmem-4"
 enable_private_cluster = true
 
 k8s_versions = {
-  min_master_version : "1.27.5-gke.200",
-  core_nodes_version : "1.27.5-gke.200",
-  notebook_nodes_version : "1.27.5-gke.200",
-  dask_nodes_version : "1.27.5-gke.200",
+  min_master_version : "1.29.1-gke.1589018",
+  core_nodes_version : "1.29.1-gke.1589018",
+  notebook_nodes_version : "1.29.1-gke.1589018",
+  dask_nodes_version : "1.29.1-gke.1589018",
 }
 
 # Multi-tenant cluster, network policy is required to enforce separation between hubs
