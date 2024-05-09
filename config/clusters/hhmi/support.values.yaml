@@ -26,9 +26,3 @@ grafana:
       - secretName: grafana-tls
         hosts:
           - grafana.hhmi.2i2c.cloud
-
-cryptnono:
-  detectors:
-    # Enable execwhacker, as this cluster has a hub that is widely open to the public
-    execwhacker:
-      enabled: true
