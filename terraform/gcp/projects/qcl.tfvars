@@ -5,16 +5,16 @@ zone   = "europe-west1-d"
 region = "europe-west1"
 
 k8s_versions = {
-  min_master_version : "1.27.4-gke.900",
-  core_nodes_version : "1.27.4-gke.900",
-  notebook_nodes_version : "1.27.4-gke.900",
+  min_master_version : "1.29.1-gke.1589018",
+  core_nodes_version : "1.29.1-gke.1589018",
+  notebook_nodes_version : "1.29.1-gke.1589018",
 }
 
 core_node_machine_type = "n2-highmem-2"
 enable_network_policy  = true
 
 enable_filestore      = true
-filestore_capacity_gb = 35840
+filestore_capacity_gb = 3584
 
 user_buckets = {
   "scratch-staging" : {
@@ -26,7 +26,14 @@ user_buckets = {
 }
 
 notebook_nodes = {
+  # FIXME: tainted, to be deleted when empty, replaced by k8s upgraded variant
   "n2-highmem-4" : {
+    min : 0,
+    max : 100,
+    machine_type : "n2-highmem-4",
+    node_version : "1.27.4-gke.900",
+  },
+  "n2-highmem-4-b" : {
     min : 0,
     max : 100,
     machine_type : "n2-highmem-4",
@@ -56,11 +63,18 @@ notebook_nodes = {
     max : 100,
     machine_type : "n2-highcpu-32",
   },
+  # FIXME: tainted, to be deleted when empty, replaced by k8s upgraded variant
   "n2-highcpu-96" : {
     min : 0,
     max : 100,
     machine_type : "n2-highcpu-96",
-  }
+    node_version : "1.27.4-gke.900",
+  },
+  "n2-highcpu-96-b" : {
+    min : 0,
+    max : 100,
+    machine_type : "n2-highcpu-96",
+  },
 }
 
 hub_cloud_permissions = {

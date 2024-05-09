@@ -5,10 +5,10 @@ project_id = "leap-pangeo"
 core_node_machine_type = "n2-highmem-4"
 
 k8s_versions = {
-  min_master_version : "1.27.4-gke.900",
-  core_nodes_version : "1.27.4-gke.900",
-  notebook_nodes_version : "1.27.4-gke.900",
-  dask_nodes_version : "1.27.4-gke.900",
+  min_master_version : "1.29.1-gke.1589018",
+  core_nodes_version : "1.29.1-gke.1589018",
+  notebook_nodes_version : "1.29.1-gke.1589018",
+  dask_nodes_version : "1.29.1-gke.1589018",
 }
 
 # GPUs not available in us-central1-b
@@ -79,19 +79,49 @@ notebook_nodes = {
     max : 100,
     machine_type : "n2-highmem-4",
   },
+  # FIXME: tainted, to be deleted when empty, replaced by k8s upgraded variant
   "n2-highmem-16" : {
     # A minimum of one is configured for LEAP to ensure quick startups at all
     # time. Cost is not a greater concern than optimizing startup times.
     min : 1,
     max : 100,
     machine_type : "n2-highmem-16",
+    node_version : "1.27.4-gke.900",
+  },
+  "n2-highmem-16-b" : {
+    # A minimum of one is configured for LEAP to ensure quick startups at all
+    # time. Cost is not a greater concern than optimizing startup times.
+    min : 1,
+    max : 100,
+    machine_type : "n2-highmem-16",
+    node_version : "1.27.4-gke.900",
   },
   "n2-highmem-64" : {
     min : 0,
     max : 100,
     machine_type : "n2-highmem-64"
   }
+  # FIXME: tainted, to be deleted when empty, replaced by k8s upgraded variant
   "gpu-t4" : {
+    min : 0,
+    max : 100,
+    machine_type : "n1-standard-8",
+    node_version : "1.27.4-gke.900",
+    gpu : {
+      enabled : true,
+      type : "nvidia-tesla-t4",
+      count : 1
+    },
+    zones : [
+      # Get GPUs wherever they are available, as sometimes a single
+      # zone might be out of GPUs.
+      "us-central1-a",
+      "us-central1-b",
+      "us-central1-c",
+      "us-central1-f"
+    ]
+  },
+  "gpu-t4-b" : {
     min : 0,
     max : 100,
     machine_type : "n1-standard-8",

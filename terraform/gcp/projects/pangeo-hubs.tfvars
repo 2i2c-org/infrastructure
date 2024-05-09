@@ -28,6 +28,9 @@ core_node_machine_type = "n2-highmem-4"
 enable_private_cluster = true
 
 k8s_versions = {
+  # NOTE: This isn't a regional cluster / highly available cluster, when
+  #       upgrading the control plane, there will be ~5 minutes of k8s not being
+  #       available making new server launches error etc.
   min_master_version : "1.29.1-gke.1589018",
   core_nodes_version : "1.29.1-gke.1589018",
   notebook_nodes_version : "1.29.1-gke.1589018",

@@ -284,7 +284,8 @@ basehub:
             environment:
               NVIDIA_DRIVER_CAPABILITIES: compute,utility
             node_selector:
-              cloud.google.com/gke-nodepool: nb-gpu-t4
+              node.kubernetes.io/instance-type: n1-standard-8
+              cloud.google.com/gke-accelerator: nvidia-tesla-t4
             mem_limit: 30G
             mem_guarantee: 24G
             extra_resource_limits:

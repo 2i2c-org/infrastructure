@@ -35,9 +35,9 @@ gke:
   awi-ciroh:
     requesting_daemon_sets: calico-node,fluentbit-gke,gke-metadata-server,gke-metrics-agent,ip-masq-agent,netd,pdcsi-node,support-cryptnono,support-prometheus-node-exporter
     other_daemon_sets: ""
-    cpu_requests: 344m
-    memory_requests: 596Mi
-    k8s_version: v1.27.10-gke.1055000
+    cpu_requests: 354m
+    memory_requests: 656Mi
+    k8s_version: v1.29.1-gke.1589018
   callysto:
     requesting_daemon_sets: calico-node,fluentbit-gke,gke-metadata-server,gke-metrics-agent,ip-masq-agent,netd,pdcsi-node,support-cryptnono,support-prometheus-node-exporter
     other_daemon_sets: ""
@@ -53,9 +53,9 @@ gke:
   cloudbank:
     requesting_daemon_sets: calico-node,fluentbit-gke,gke-metadata-server,gke-metrics-agent,ip-masq-agent,netd,pdcsi-node,support-cryptnono,support-prometheus-node-exporter
     other_daemon_sets: ""
-    cpu_requests: 344m
-    memory_requests: 596Mi
-    k8s_version: v1.27.10-gke.1055000
+    cpu_requests: 354m
+    memory_requests: 656Mi
+    k8s_version: v1.29.1-gke.1589018
   hhmi:
     requesting_daemon_sets: fluentbit-gke,gke-metadata-server,netd,pdcsi-node,support-cryptnono,support-prometheus-node-exporter
     other_daemon_sets: ""
@@ -64,10 +64,10 @@ gke:
     k8s_version: v1.27.10-gke.1055000
   leap:
     requesting_daemon_sets: calico-node,fluentbit-gke,gke-metadata-server,gke-metrics-agent,ip-masq-agent,netd,pdcsi-node,support-cryptnono,support-prometheus-node-exporter
-    other_daemon_sets: ""
-    cpu_requests: 344m
-    memory_requests: 596Mi
-    k8s_version: v1.27.10-gke.1055000
+    other_daemon_sets: maintenance-handler
+    cpu_requests: 354m
+    memory_requests: 656Mi
+    k8s_version: v1.29.1-gke.1589018
   linked-earth:
     requesting_daemon_sets: calico-node,fluentbit-gke,gke-metadata-server,gke-metrics-agent,ip-masq-agent,netd,pdcsi-node,support-cryptnono,support-prometheus-node-exporter
     other_daemon_sets: ""
@@ -89,9 +89,9 @@ gke:
   qcl:
     requesting_daemon_sets: calico-node,fluentbit-gke,gke-metadata-server,ip-masq-agent,netd,pdcsi-node,support-cryptnono,support-prometheus-node-exporter
     other_daemon_sets: ""
-    cpu_requests: 338m
-    memory_requests: 496Mi
-    k8s_version: v1.27.10-gke.1055000
+    cpu_requests: 348m
+    memory_requests: 556Mi
+    k8s_version: v1.29.1-gke.1589018
 eks:
   2i2c-aws-us:
     requesting_daemon_sets: aws-node,ebs-csi-node,kube-proxy,support-cryptnono,support-prometheus-node-exporter
