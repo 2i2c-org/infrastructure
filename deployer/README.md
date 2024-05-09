@@ -129,34 +129,28 @@ This section descripts some of the subcommands the `deployer` can carry out.
 **Command line usage:**
 
 ```bash
-                                                                                                                        
- Usage: deployer [OPTIONS] COMMAND [ARGS]...                                                                            
-                                                                                                                        
-╭─ Options ────────────────────────────────────────────────────────────────────────────────────────────────────────────╮
-│ --install-completion        [bash|zsh|fish|powershell|pwsh]  Install completion for the specified shell.             │
-│                                                              [default: None]                                         │
-│ --show-completion           [bash|zsh|fish|powershell|pwsh]  Show completion for the specified shell, to copy it or  │
-│                                                              customize the installation.                             │
-│                                                              [default: None]                                         │
-│ --help                                                       Show this message and exit.                             │
-╰──────────────────────────────────────────────────────────────────────────────────────────────────────────────────────╯
-╭─ Commands ───────────────────────────────────────────────────────────────────────────────────────────────────────────╮
-│ cilogon-client           Manage cilogon clients for hubs' authentication.                                            │
-│ debug                    Debug issues by accessing different components and their logs                               │
-│ decrypt-age              Decrypt secrets sent to `support@2i2c.org` via `age`                                        │
-│ deploy                   Deploy one or more hubs in a given cluster                                                  │
-│ deploy-support           Deploy support components to a cluster                                                      │
-│ exec                     Execute a shell in various parts of the infra. It can be used for poking around, or         │
-│                          debugging issues.                                                                           │
-│ generate                 Generate various types of assets. It currently supports generating files related to         │
-│                          billing, new dedicated clusters, helm upgrade strategies and resource allocation.           │
-│ grafana                  Manages Grafana related workflows.                                                          │
-│ run-hub-health-check     Run a health check on a given hub on a given cluster. Optionally check scaling of dask      │
-│                          workers if the hub is a daskhub.                                                            │
-│ use-cluster-credentials  Pop a new shell or execute a command after authenticating to the given cluster using the    │
-│                          deployer's credentials                                                                      │
-│ validate                 Validate configuration files such as helm chart values and cluster.yaml files.              │
-╰──────────────────────────────────────────────────────────────────────────────────────────────────────────────────────╯
+ Usage: deployer [OPTIONS] COMMAND [ARGS]...                
+
+╭─ Options ─────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────╮
+│ --install-completion          Install completion for the current shell.                                                                                                                   │
+│ --show-completion             Show completion for the current shell, to copy it or customize the installation.                                                                            │
+│ --help                        Show this message and exit.                                                                                                                                 │
+╰───────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────╯
+╭─ Commands ────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────╮
+│ cilogon-client            Manage cilogon clients for hubs' authentication.                                                                                                                │
+│ debug                     Debug issues by accessing different components and their logs                                                                                                   │
+│ decrypt-age               Decrypt secrets sent to `support@2i2c.org` via `age`                                                                                                            │
+│ deploy                    Deploy one or more hubs in a given cluster                                                                                                                      │
+│ deploy-support            Deploy support components to a cluster                                                                                                                          │
+│ exec                      Execute a shell in various parts of the infra. It can be used for poking around, or debugging issues.                                                           │
+│ generate                  Generate various types of assets. It currently supports generating files related to billing, new dedicated clusters, helm upgrade strategies and resource       │
+│                           allocation.                                                                                                                                                     │
+│ grafana                   Manages Grafana related workflows.                                                                                                                              │
+│ run-hub-health-check      Run a health check on a given hub on a given cluster. Optionally check scaling of dask workers if the hub is a daskhub.                                         │
+│ transform                 Programmatically transform datasets, such as cost tables for billing purposes.                                                                                  │
+│ use-cluster-credentials   Pop a new shell or execute a command after authenticating to the given cluster using the deployer's credentials                                                 │
+│ validate                  Validate configuration files such as helm chart values and cluster.yaml files.                                                                                  │
+╰───────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────╯
 ```
 
 ### Standalone sub-commands related to deployment
@@ -331,6 +325,24 @@ Gets the clusters that are in the infrastructure repository but are NOT register
 
 ##### `grafana central-ds get-rm-candidates`
 Gets the list of datasources that are registered in central grafana but are NOT in the list of clusters in the infrastructure repository. Usually this happens when a clusters was decommissioned, but its prometheus server was not removed from the datasources of the central 2i2c Grafana. This list can then be used to know which datasources to remove.
+
+### The `transform` sub-command
+
+This sub-command can be used to transform various datasets.
+
+#### `transform cost-table`
+
+This is a sub-command meant to help engineers transform cost tables generated by cloud vendors into the format required by our fiscal sponsor in order for them to bill our communities.
+This transformation is automated to avoid copy-paste errors from one CSV file to another.
+These transformations happen locally and another CSV file is outputted to the local directory, which then needs to be manually handed over to CS&S staff.
+
+##### `transform cost-table aws`
+
+Transforms a cost table generated in the AWS UI into the correct format.
+
+##### `transform cost-table gcp`
+
+Transforms a cost table generated in the GCP UI into the correct format.
 
 ### The `validate` sub-command
 
