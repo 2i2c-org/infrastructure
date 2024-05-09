@@ -42,10 +42,9 @@ def aws(
     # replaced with underscores. Then strip '_($)' to ensure we just have the
     # project names.
     df = pd.read_csv(
-        input_path, skiprows=1,
-    ).rename(
-        columns=lambda col: col.strip().lower().replace(" ", "_").strip("_($)")
-    )
+        input_path,
+        skiprows=1,
+    ).rename(columns=lambda col: col.strip().lower().replace(" ", "_").strip("_($)"))
 
     # Ensure values of the linked_account_name column are lower case and any
     # whitespace is replaced with underscores.
