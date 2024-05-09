@@ -9,9 +9,9 @@ filestore_capacity_gb  = 2048
 
 k8s_versions = {
   min_master_version : "1.29.1-gke.1589018",
-  core_nodes_version : "1.27.4-gke.900",
-  notebook_nodes_version : "1.27.4-gke.900",
-  dask_nodes_version : "1.27.4-gke.900",
+  core_nodes_version : "1.29.1-gke.1589018",
+  notebook_nodes_version : "1.29.1-gke.1589018",
+  dask_nodes_version : "1.29.1-gke.1589018",
 }
 
 user_buckets = {
@@ -31,7 +31,7 @@ user_buckets = {
 
 # Setup notebook node pools
 notebook_nodes = {
-  "n2-highmem-4" : {
+  "n2-highmem-4-b" : {
     min : 0,
     max : 100,
     machine_type : "n2-highmem-4",
