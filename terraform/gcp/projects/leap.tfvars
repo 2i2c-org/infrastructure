@@ -88,13 +88,12 @@ notebook_nodes = {
     machine_type : "n2-highmem-16",
     node_version : "1.27.4-gke.900",
   },
-  "n2-highmem-16-b" : {
+  "n2-highmem-16-c" : {
     # A minimum of one is configured for LEAP to ensure quick startups at all
     # time. Cost is not a greater concern than optimizing startup times.
     min : 1,
     max : 100,
     machine_type : "n2-highmem-16",
-    node_version : "1.27.4-gke.900",
   },
   "n2-highmem-64" : {
     min : 0,
