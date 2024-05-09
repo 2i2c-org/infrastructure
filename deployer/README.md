@@ -34,7 +34,13 @@ The deployer has the following directory structure:
 ```
 
 ### The `cli_app.py` file
+
 The `cli_app.py` file is the file that contains the main `deployer` typer app and all of the main sub-apps "attached" to it, each corresponding to a `deployer` sub-command. These apps are used throughout the codebase.
+
+### The `__main__.py` file
+
+The `__main__.py` file is the main file that gets executed when the deployer is called.
+If you are adding any sub-command functions, you **must** import them in this file for them to be picked up by the package.
 
 ### The `infra_components` directory
 
