@@ -5,7 +5,7 @@ project_id = "leap-pangeo"
 core_node_machine_type = "n2-highmem-4"
 
 k8s_versions = {
-  min_master_version : "1.27.4-gke.900",
+  min_master_version : "1.29.1-gke.1589018",
   core_nodes_version : "1.27.4-gke.900",
   notebook_nodes_version : "1.27.4-gke.900",
   dask_nodes_version : "1.27.4-gke.900",
