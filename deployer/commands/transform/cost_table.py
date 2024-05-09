@@ -1,9 +1,11 @@
+import re
 from pathlib import Path
 
 import pandas as pd
 import typer
 
 from deployer.cli_app import transform_app
+from deployer.utils.rendering import print_colour
 
 # Creates a new typer application, which is then nested as a sub-command named
 # "cost-table" under the `transform` sub-command of the deployer.
@@ -19,7 +21,11 @@ transform_app.add_typer(
 def aws(
     input_path: Path = typer.Argument(
         ..., help="The file path to the cost table downloaded from the AWS UI"
-    )
+    ),
+    output_path: Path = typer.Option(
+        None,
+        help="(Optional) The path to write the output CSV to. If None, one will be constructed.",
+    ),
 ):
     """
     Ingests a CSV cost table generated via the AWS UI and performs a transformation.
@@ -67,14 +73,34 @@ def aws(
     # Sort the account names in alphabetical order
     df.sort_index(inplace=True)
 
-    print(df)
+    if output_path is None:
+        # Find all the column names that match the regex expression `[0-9]*-[0-9]*-[0-9]*`
+        months = [
+            col
+            for col in df.columns
+            if re.match("[0-9]*-[0-9]*-[0-9]*", col) is not None
+        ]
+
+        # Construct output filename
+        output_path = Path(
+            f"2i2c_dedicated_cluster_billing_AWS_{months[0]}_{months[-1]}.csv"
+        )
+
+    print_colour(f"Writing output CSV to: {output_path}")
+
+    # Save CSV file
+    df.to_csv(output_path, index_label="project_name")
 
 
 @cost_table_app.command()
 def gcp(
     input_path: Path = typer.Argument(
         ..., help="The file path to the cost table downloaded from the GCP UI"
-    )
+    ),
+    output_path: Path = typer.Option(
+        None,
+        help="(Optional) The path to write the output CSV to. If None, one will be constructed.",
+    ),
 ):
     """
     Ingests a CSV cost table generated via the GCP UI and performs a transformation.
@@ -115,4 +141,21 @@ def gcp(
         # Create a new column containing the total across all the months
         .assign(total=lambda df: df.sum(axis=1))
     )
-    print(transformed_df)
+
+    if output_path is None:
+        # Find all the column names that match the regex expression `[0-9]*-[0-9]*`
+        months = [
+            col
+            for col in transformed_df.columns
+            if re.match("[0-9]*-[0-9]*", col) is not None
+        ]
+
+        # Construct output filename
+        output_path = Path(
+            f"2i2c_dedicated_cluster_billing_GCP_{months[0]}_{months[-1]}.csv"
+        )
+
+    print_colour(f"Writing output CSV to: {output_path}")
+
+    # Save CSV file
+    transformed_df.to_csv(output_path)
