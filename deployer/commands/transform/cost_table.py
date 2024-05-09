@@ -61,7 +61,9 @@ def aws(
     # Set the linked_account_name column as the index
     df.set_index("linked_account_name", drop=True, inplace=True)
 
-    # Drop the total_costs column
+    # Drop the total_costs column. This column is the total across all linked accounts,
+    # and hence not necessary. We use the linked_account_total column for the total
+    # per linked account.
     df.drop("total_costs", axis=1, inplace=True)
 
     # Transpose the dataframe
