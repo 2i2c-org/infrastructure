@@ -9,10 +9,10 @@ k8s_versions = {
   # NOTE: This isn't a regional cluster / highly available cluster, when
   #       upgrading the control plane, there will be ~5 minutes of k8s not being
   #       available making new server launches error etc.
-  min_master_version : "1.27.4-gke.900",
-  core_nodes_version : "1.27.4-gke.900",
-  notebook_nodes_version : "1.27.4-gke.900",
-  dask_nodes_version : "1.27.4-gke.900",
+  min_master_version : "1.29.1-gke.1589020",
+  core_nodes_version : "1.29.1-gke.1589020",
+  notebook_nodes_version : "1.29.1-gke.1589020",
+  dask_nodes_version : "1.29.1-gke.1589020",
 }
 
 core_node_machine_type = "n2-highmem-4"
@@ -22,7 +22,7 @@ enable_filestore      = true
 filestore_capacity_gb = 5120
 
 notebook_nodes = {
-  "n2-highmem-4-b" : {
+  "n2-highmem-4" : {
     min : 0,
     max : 100,
     machine_type : "n2-highmem-4",
