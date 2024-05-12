@@ -22,13 +22,6 @@ enable_filestore      = true
 filestore_capacity_gb = 1024
 
 notebook_nodes = {
-  # FIXME: tainted, to be deleted when empty, replaced by k8s upgraded variant
-  "n2-highmem-4" : {
-    min : 0,
-    max : 100,
-    machine_type : "n2-highmem-4",
-    node_version : "1.27.5-gke.200",
-  },
   "n2-highmem-4-b" : {
     min : 0,
     max : 100,

@@ -79,15 +79,6 @@ notebook_nodes = {
     max : 100,
     machine_type : "n2-highmem-4",
   },
-  # FIXME: tainted, to be deleted when empty, replaced by k8s upgraded variant
-  "n2-highmem-16" : {
-    # A minimum of one is configured for LEAP to ensure quick startups at all
-    # time. Cost is not a greater concern than optimizing startup times.
-    min : 1,
-    max : 100,
-    machine_type : "n2-highmem-16",
-    node_version : "1.27.4-gke.900",
-  },
   "n2-highmem-16-c" : {
     # A minimum of one is configured for LEAP to ensure quick startups at all
     # time. Cost is not a greater concern than optimizing startup times.
