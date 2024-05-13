@@ -24,7 +24,9 @@ hub_cloud_permissions = {
   "staging" : {
     "user-sa" : {
       bucket_admin_access : ["scratch-staging", "persistent-staging"],
-      # Provides readonly requestor-pays access to usgs-landsat bucket
+      # Provides readonly requestor-pays access to usgs-landsat bucket,
+      # veda bucket (https://2i2c.freshdesk.com/a/tickets/1547) and sliderule
+      # bucket (https://2i2c.freshdesk.com/a/tickets/1508).
       # FIXME: We should find a way to allow access to *all* requester pays
       # buckets, without having to explicitly list them. However, we don't want
       # to give access to all *internal* s3 buckets willy-nilly - this can be
@@ -40,34 +42,17 @@ hub_cloud_permissions = {
                       "s3:*"
                   ],
                   "Resource": [
-                    "arn:aws:s3:::usgs-landsat"
-                  ]
-              },
-              {
-                  "Effect": "Allow",
-                  "Action": [
-                      "s3:*"
-                  ],
-                  "Resource": [
-                    "arn:aws:s3:::usgs-landsat/*"
-                  ]
-              },
-              {
-                  "Effect": "Allow",
-                  "Action": [
-                      "s3:*"
-                  ],
-                  "Resource": [
-                    "arn:aws:s3:::sliderule-public"
-                  ]
-              },
-              {
-                  "Effect": "Allow",
-                  "Action": [
-                      "s3:*"
-                  ],
-                  "Resource": [
-                    "arn:aws:s3:::sliderule-public/*"
+                    "arn:aws:s3:::usgs-landsat",
+                    "arn:aws:s3:::usgs-landsat/*",
+                    "arn:aws:s3:::sliderule-public",
+                    "arn:aws:s3:::sliderule-public/*",
+                    "arn:aws:s3:::veda-data-store",
+                    "arn:aws:s3:::veda-data-store/*",
+                    "arn:aws:s3:::veda-data-store-staging",
+                    "arn:aws:s3:::veda-data-store-staging/*",
+                    "arn:aws:s3:::ghgc-data-store",
+                    "arn:aws:s3:::ghgc-data-store/*"
+
                   ]
               }
           ]
@@ -94,34 +79,16 @@ hub_cloud_permissions = {
                       "s3:*"
                   ],
                   "Resource": [
-                    "arn:aws:s3:::usgs-landsat"
-                  ]
-              },
-              {
-                  "Effect": "Allow",
-                  "Action": [
-                      "s3:*"
-                  ],
-                  "Resource": [
-                    "arn:aws:s3:::usgs-landsat/*"
-                  ]
-              },
-              {
-                  "Effect": "Allow",
-                  "Action": [
-                      "s3:*"
-                  ],
-                  "Resource": [
-                    "arn:aws:s3:::sliderule-public"
-                  ]
-              },
-              {
-                  "Effect": "Allow",
-                  "Action": [
-                      "s3:*"
-                  ],
-                  "Resource": [
-                    "arn:aws:s3:::sliderule-public/*"
+                    "arn:aws:s3:::usgs-landsat",
+                    "arn:aws:s3:::usgs-landsat/*",
+                    "arn:aws:s3:::sliderule-public",
+                    "arn:aws:s3:::sliderule-public/*",
+                    "arn:aws:s3:::veda-data-store",
+                    "arn:aws:s3:::veda-data-store/*",
+                    "arn:aws:s3:::veda-data-store-staging",
+                    "arn:aws:s3:::veda-data-store-staging/*",
+                    "arn:aws:s3:::ghgc-data-store",
+                    "arn:aws:s3:::ghgc-data-store/*"
                   ]
               }
           ]
