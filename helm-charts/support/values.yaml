@@ -438,9 +438,8 @@ cryptnono:
     tag: 0.3.1-0.dev.git.138.ha4b11b8
 
   detectors:
-    # Disable the execwhacker detector for now, as it matures by being deployed on mybinder.org
     execwhacker:
-      enabled: false
+      enabled: true
       # Cryptnono can get information about what container the kill was in, so we can identify which
       # user was cryptomining
       containerdHostPath: /run/containerd/containerd.sock
@@ -453,7 +452,9 @@ cryptnono:
             # This is helpful for testing execwhacker is enabled and functional
             - beiquatohGa1uay0ahMies9couyahPeiz9xohju3Ahvaik3FaeM7eey1thaish1U
     monero:
-      enabled: true
+      # disable the monero specific detector, as execwhacker catches most of that too
+      # monero detector is using bpftrace, which has issues with cross-kernel compatibility
+      enabled: false
       resources:
         # Measured with the following prometheus queries:
         # Memory: sum(container_memory_usage_bytes{container="monero", namespace="support"}) by (instance)
