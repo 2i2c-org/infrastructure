@@ -61,6 +61,14 @@ AWS management account. If a future cluster deviates from this, you can tell by
    ```{figure} ../images/aws-billing-ui.jpg
    AWS billing UI
    ```
+1. Run the following deployer command to convert the generated CSV file into the format required for the invoicing process.
+   
+   ```bash
+   deployer transform cost-table gcp pathto/downloaded/csvfile
+   ```
+
+   This will output a new CSV file to your local filesystem called `2i2c_dedicated_cluster_billing_AWS_{START_MONTH}_{END_MONTH}.csv`.
+
 
 [direct link]: https://us-east-1.console.aws.amazon.com/costmanagement/home?region=us-east-1#/cost-explorer?reportId=d826a775-e0d6-4e85-a181-7f87a8deb162&reportName=Monthly%20costs%20by%20linked%20account&isDefault=true&chartStyle=GROUP&historicalRelativeRange=LAST_6_MONTHS&futureRelativeRange=CUSTOM&granularity=Monthly&groupBy=%5B%22LinkedAccount%22%5D&filter=%5B%5D&costAggregate=unBlendedCost&showOnlyUntagged=false&showOnlyUncategorized=false&useNormalizedUnits=false
 
@@ -79,12 +87,14 @@ Currently this is the recommended way of retrieving the costs from GCP.
    ```{figure} ../images/gcp-billing-ui.png
    GCP billing UI
    ```
-7. Copy GCP costs.
+1. Run the following deployer command to convert the generated CSV file into the format required for the invoicing process.
+   
+   ```bash
+   deployer transform cost-table gcp pathto/downloaded/csvfile
+   ```
 
-   The GCP CSV has rows for each month and project. Carefully copy the $ values under
-   'subtotal' (last column) into the [spreadsheet for billing]. Match the 'project name' column in the GCP CSV with the 'cloud project' row in our billing spreadsheet.
+   This will output a new CSV file to your local filesystem called `2i2c_dedicated_cluster_billing_GCP_{START_MONTH}_{END_MONTH}.csv`.
 
-   When done, re-check the numbers once again to make sure they are copied correctly.
 
 [2i2c billing account]: https://console.cloud.google.com/billing/0157F7-E3EA8C-25AC3C/reports;timeRange=CUSTOM_RANGE;from=2024-01-01;to=2024-01-31;dateType=INVOICE_DATE;invoiceCorrections=TAX,BILLING_MODIFICATION?organizationId=184174754493&project=two-eye-two-see
 
