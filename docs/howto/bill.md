@@ -50,23 +50,14 @@ AWS management account. If a future cluster deviates from this, you can tell by
 `aws.billing.paid_by_us` being set true in its `cluster.yaml`.
 ```
 
-1. Login to shared AWS SSO at https://2i2c.awsapps.com/start#/
-2. Select the `2i2c-sandbox` account, as it is the primary billing account
-3. Select 'AdministratorAccess' to open the AWS Console for this account
-4. Visit the "Monthly Costs By Linked Account" report ([direct link]) via "Billing and Cost Management" -> "Cost Explorer Saved Reports"
-5. On the right sidebar under "Time -> Date Range", select all the completed months we want to get data for
-6. On the right sidebar under "Time -> Granularity", ensure its selected as "Monthly"
-7. On the right sidebar under "Group by -> Dimension", select "Linked account"
-8. Click the 'Download as CSV' button
-9. Copy AWS costs
-
-   The CSV file has rows for each month, and columns for each project. Copy it
-   into the spreadsheet, making sure the rows and columns both match what is
-   already present. The AWS account name should match the "Cloud Project" row in
-   the spreadsheet.
-
-   Once done, re-check the numbers once again to make sure they were copied
-   correctly.
+1. Login to shared AWS SSO at <https://2i2c.awsapps.com/start#/>
+1. Select the `2i2c-sandbox` account, as it is the primary billing account
+1. Select 'AdministratorAccess' to open the AWS Console for this account
+1. Visit the "Monthly Costs By Linked Account" report ([direct link]) via "Billing and Cost Management" -> "Cost Explorer Saved Reports"
+1. On the right sidebar under "Time -> Date Range", select all the completed months we want to get data for
+1. On the right sidebar under "Time -> Granularity", ensure its selected as "Monthly"
+1. On the right sidebar under "Group by -> Dimension", select "Linked account"
+1. Click the 'Download as CSV' button
 
 [direct link]: https://us-east-1.console.aws.amazon.com/costmanagement/home?region=us-east-1#/cost-explorer?reportId=d826a775-e0d6-4e85-a181-7f87a8deb162&reportName=Monthly%20costs%20by%20linked%20account&isDefault=true&chartStyle=GROUP&historicalRelativeRange=LAST_6_MONTHS&futureRelativeRange=CUSTOM&granularity=Monthly&groupBy=%5B%22LinkedAccount%22%5D&filter=%5B%5D&costAggregate=unBlendedCost&showOnlyUntagged=false&showOnlyUncategorized=false&useNormalizedUnits=false
 
@@ -77,11 +68,11 @@ Currently this is the recommended way of retrieving the costs from GCP.
 ```
 
 1. Go to the [2i2c billing account] on GCP
-2. Select 'Reports' on the left sidebar
-3. Under time range on the right sidebar, select 'Invoice Month'
-4. Select the time range you are interested in. Note that this has to be at least two months right now, or the next step does not work
-5. Under 'Group by', select 'Month -> Project'.
-6. Under the chart, click the 'Download CSV' button. This downloads a CSV that you can use to later populate the columns in the costs spreadsheet
+1. Select 'Reports' on the left sidebar
+1. Under time range on the right sidebar, select 'Invoice Month'
+1. Select the time range you are interested in. Note that this has to be at least two months right now, or the next step does not work
+1. Under 'Group by', select 'Month -> Project'.
+1. Under the chart, click the 'Download CSV' button. This downloads a CSV that you can use to later populate the columns in the costs spreadsheet
    ```{figure} ../images/gcp-billing-ui.png
    GCP billing UI
    ```
