@@ -99,6 +99,36 @@ jobs:
           pip install --editable .
           pip list
 
+      - name: Get merged/open PR labels
+        uses: actions/github-script@v7
+        id: pr-labels
+        with:
+          script: |
+            let labels = [];
+            if (context.eventName === 'pull_request') {
+              labels = context.payload.pull_request.labels;
+            }
+
+            // Determine if the pushed commit triggering the workflow is
+            // associated with a merged pull request
+            else if (context.eventName === 'push') {
+              // api ref: https://octokit.github.io/rest.js/v20#pulls-list
+              const resp = await github.rest.pulls.list(
+                {
+                  owner: context.repo.owner,
+                  repo: context.repo.repo,
+                  state: 'closed',
+                  sort: 'updated',
+                  direction: 'desc',
+                  per_page: 100,
+                }
+              );
+              const merged_pr = resp.data.find(pr => pr.merge_commit_sha === context.sha);
+              labels = merged_pr?.labels;
+            }
+            labels = (labels || []).map(l => l.name);
+            return labels
+
       - name: Identify files that have been added or modified
         # Action repo: https://github.com/dorny/paths-filter
         uses: dorny/paths-filter@v3
@@ -121,7 +151,7 @@ jobs:
       # by one
       - name: Generate matrix jobs
         run: |
-          deployer generate helm-upgrade-jobs "${{ steps.changed-files.outputs.changed_files }}"
+          deployer generate helm-upgrade-jobs "${{ steps.changed-files.outputs.changed_files }}" '${{ steps.pr-labels.outputs.result }}'
 
       # The comment-deployment-plan-pr.yaml workflow won't have the correct context to
       # know the PR number, so we save it to a file to pass to that workflow
