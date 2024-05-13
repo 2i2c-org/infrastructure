@@ -143,10 +143,9 @@ def helm_upgrade_jobs(
     if ci_env:
         # Add these matrix jobs as environment variables for use in another job
         with open(env_file, "a") as f:
-            f.write(f"prod-hub-matrix-jobs={json.dumps(prod_hub_matrix_jobs)}")
-            f.write("\n")
+            f.write(f"prod-hub-matrix-jobs={json.dumps(prod_hub_matrix_jobs)}\n")
             f.write(
-                f"support-and-staging-matrix-jobs={json.dumps(support_and_staging_matrix_jobs)}"
+                f"support-and-staging-matrix-jobs={json.dumps(support_and_staging_matrix_jobs)}\n"
             )
 
         # Don't bother generating a comment if both of the matrices are empty
