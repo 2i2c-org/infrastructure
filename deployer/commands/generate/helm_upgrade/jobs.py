@@ -26,13 +26,19 @@ yaml = YAML(typ="safe", pure=True)
 def helm_upgrade_jobs(
     changed_filepaths: str = typer.Argument(
         ..., help="Comma delimited list of files that have changed"
-    )
+    ),
+    pr_labels: str = typer.Argument(
+        "[]",
+        help="JSON formatted list of PR labels, where 'deployer:skip-deploy' is respected.",
+    ),
 ):
     """
-    Analyze added or modified files from a GitHub Pull Request and decide which
-    clusters and/or hubs require helm upgrades to be performed for their *hub helm
-    charts or the support helm chart.
+    Analyze added or modified files and labels from a GitHub Pull Request and
+    decide which clusters and/or hubs require helm upgrades to be performed for
+    their *hub helm charts or the support helm chart.
     """
+    pr_labels = json.loads(pr_labels)
+
     changed_filepaths = changed_filepaths.split(",")
     (
         upgrade_support_on_all_clusters,
@@ -87,6 +93,7 @@ def helm_upgrade_jobs(
                 cluster_config,
                 cluster_info,
                 set(changed_filepaths),
+                pr_labels,
                 upgrade_all_hubs_on_this_cluster=upgrade_all_hubs_on_this_cluster,
                 upgrade_all_hubs_on_all_clusters=upgrade_all_hubs_on_all_clusters,
             )
@@ -99,6 +106,7 @@ def helm_upgrade_jobs(
                 cluster_config,
                 cluster_info,
                 set(changed_filepaths),
+                pr_labels,
                 upgrade_support_on_this_cluster=upgrade_support_on_this_cluster,
                 upgrade_support_on_all_clusters=upgrade_support_on_all_clusters,
             )

@@ -171,6 +171,32 @@ def test_generate_hub_matrix_jobs_all_hubs():
         assert isinstance(result_matrix_jobs[0], dict)
 
 
+def test_generate_hub_matrix_jobs_skip_deploy_label():
+    cluster_file = root_path.joinpath("tests/test-clusters/cluster1/cluster.yaml")
+    with open(cluster_file) as f:
+        cluster_config = yaml.load(f)
+
+    cluster_info = {
+        "cluster_name": cluster_config.get("name", {}),
+        "provider": cluster_config.get("provider", {}),
+        "reason_for_redeploy": "",
+    }
+
+    modified_file = {
+        root_path.joinpath("tests/test-clusters/cluster1/hub1.values.yaml"),
+    }
+
+    pr_labels = ["unrelated1", "deployer:skip-deploy", "unrelated2"]
+
+    expected_matrix_jobs = []
+
+    result_matrix_jobs = generate_hub_matrix_jobs(
+        cluster_file, cluster_config, cluster_info, modified_file, pr_labels
+    )
+
+    case.assertCountEqual(result_matrix_jobs, expected_matrix_jobs)
+
+
 def test_generate_support_matrix_jobs_one_cluster():
     cluster_file = root_path.joinpath("tests/test-clusters/cluster1/cluster.yaml")
     with open(cluster_file) as f:
@@ -244,6 +270,32 @@ def test_generate_support_matrix_jobs_all_clusters():
         case.assertCountEqual(result_matrix_jobs, expected_matrix_jobs)
         assert isinstance(result_matrix_jobs, list)
         assert isinstance(result_matrix_jobs[0], dict)
+
+
+def test_generate_support_matrix_jobs_skip_deploy_label():
+    cluster_file = root_path.joinpath("tests/test-clusters/cluster1/cluster.yaml")
+    with open(cluster_file) as f:
+        cluster_config = yaml.load(f)
+
+    cluster_info = {
+        "cluster_name": cluster_config.get("name", {}),
+        "provider": cluster_config.get("provider", {}),
+        "reason_for_redeploy": "",
+    }
+
+    modified_file = {
+        root_path.joinpath("tests/test-clusters/cluster1/support.values.yaml"),
+    }
+
+    pr_labels = ["unrelated1", "deployer:skip-deploy", "unrelated2"]
+
+    expected_matrix_jobs = []
+
+    result_matrix_jobs = generate_support_matrix_jobs(
+        cluster_file, cluster_config, cluster_info, modified_file, pr_labels
+    )
+
+    case.assertCountEqual(result_matrix_jobs, expected_matrix_jobs)
 
 
 def test_discover_modified_common_files_hub_helm_charts():
