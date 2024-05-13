@@ -58,6 +58,9 @@ AWS management account. If a future cluster deviates from this, you can tell by
 1. On the right sidebar under "Time -> Granularity", ensure its selected as "Monthly"
 1. On the right sidebar under "Group by -> Dimension", select "Linked account"
 1. Click the 'Download as CSV' button
+   ```{figure} ../images/aws-billing-ui.jpg
+   AWS billing UI
+   ```
 
 [direct link]: https://us-east-1.console.aws.amazon.com/costmanagement/home?region=us-east-1#/cost-explorer?reportId=d826a775-e0d6-4e85-a181-7f87a8deb162&reportName=Monthly%20costs%20by%20linked%20account&isDefault=true&chartStyle=GROUP&historicalRelativeRange=LAST_6_MONTHS&futureRelativeRange=CUSTOM&granularity=Monthly&groupBy=%5B%22LinkedAccount%22%5D&filter=%5B%5D&costAggregate=unBlendedCost&showOnlyUntagged=false&showOnlyUncategorized=false&useNormalizedUnits=false
 
