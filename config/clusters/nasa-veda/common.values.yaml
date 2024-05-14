@@ -90,13 +90,14 @@ basehub:
                     mountPath: /home/jovyan/shared
                     subPath: _shared
               # this container uses nbgitpuller to mount https://github.com/NASA-IMPACT/veda-docs/ for user pods
-              # image source: https://github.com/NASA-IMPACT/veda-jh-environments/tree/main/docker-images/base/nasa-veda-singleuser-init
-              - name: nasa-veda-singleuser-init
-                image: public.ecr.aws/nasa-veda/nasa-veda-singleuser-init:38e8998f9be64b0a59ac6c4d6d152d3403121dfc4be6d49bdf52ddc92827af8a
-                command:
-                  - "python3"
-                  - "/opt/k8s-init-container-nb-docs.py"
-                  - "/home/jovyan"
+              # image source: https://github.com/NASA-IMPACT/jupyterhub-gitpuller-init
+              - name: jupyterhub-gitpuller-init
+                image: public.ecr.aws/nasa-veda/jupyterhub-gitpuller-init:97eb45f9d23b128aff810e45911857d5cffd05c2
+                env:
+                  - name: TARGET_PATH
+                    value: veda-docs
+                  - name: SOURCE_REPO
+                    value: "https://github.com/NASA-IMPACT/veda-docs"
                 volumeMounts:
                   - name: home
                     mountPath: /home/jovyan
