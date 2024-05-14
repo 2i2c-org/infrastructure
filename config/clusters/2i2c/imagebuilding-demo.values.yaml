@@ -78,8 +78,8 @@ jupyterhub:
                 kubespawner_override:
                   mem_guarantee: 3620925866
                   mem_limit: 3620925866
-                  cpu_guarantee: 0.43375
-                  cpu_limit: 3.47
+                  cpu_guarantee: 0.43125
+                  cpu_limit: 3.45
                   node_selector:
                     node.kubernetes.io/instance-type: n2-highmem-4
                 default: true
@@ -88,8 +88,8 @@ jupyterhub:
                 kubespawner_override:
                   mem_guarantee: 7241851732
                   mem_limit: 7241851732
-                  cpu_guarantee: 0.8675
-                  cpu_limit: 3.47
+                  cpu_guarantee: 0.8625
+                  cpu_limit: 3.45
                   node_selector:
                     node.kubernetes.io/instance-type: n2-highmem-4
               mem_13_5:
@@ -97,8 +97,8 @@ jupyterhub:
                 kubespawner_override:
                   mem_guarantee: 14483703464
                   mem_limit: 14483703464
-                  cpu_guarantee: 1.735
-                  cpu_limit: 3.47
+                  cpu_guarantee: 1.725
+                  cpu_limit: 3.45
                   node_selector:
                     node.kubernetes.io/instance-type: n2-highmem-4
               mem_27_0:
@@ -106,8 +106,8 @@ jupyterhub:
                 kubespawner_override:
                   mem_guarantee: 28967406928
                   mem_limit: 28967406928
-                  cpu_guarantee: 3.47
-                  cpu_limit: 3.47
+                  cpu_guarantee: 3.45
+                  cpu_limit: 3.45
                   node_selector:
                     node.kubernetes.io/instance-type: n2-highmem-4
   hub:

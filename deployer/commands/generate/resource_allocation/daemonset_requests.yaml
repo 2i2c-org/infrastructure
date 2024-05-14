@@ -14,6 +14,11 @@
 # - We may deploy or change a DaemonSet's requests over time (support-cryptnono,
 #   support-prometheus-node-exporter)
 #
+# Besides requests from DaemonSet resources, GKE apparently has a controller
+# creating a standalone kube-proxy pod per node, currently requesting 100m CPU
+# (no memory requests). These needs to be accounted for as well in the end, but
+# isn't tracked by in this file.
+#
 # This file isn't updated by automation, but can easily be updated by manually
 # running a command once for each cluster:
 #

@@ -63,11 +63,11 @@
             "memory": 29779155746
         },
         "measured_overhead": {
-            "cpu": 0.45,
+            "cpu": 0.47,
             "memory": 811748818
         },
         "available": {
-            "cpu": 3.47,
+            "cpu": 3.45,
             "memory": 28967406928
         }
     }
