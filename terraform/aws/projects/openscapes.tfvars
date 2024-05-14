@@ -11,6 +11,9 @@ user_buckets = {
   "scratch" : {
     "delete_after" : 7
   },
+  "scratch-workshop" : {
+    "delete_after" : 7
+  },
   "prod-homedirs-archive" : {
     "archival_storageclass_after" : 3
   },
@@ -18,6 +21,9 @@ user_buckets = {
     "delete_after" : null
   },
   "persistent" : {
+    "delete_after" : null
+  },
+  "persistent-workshop" : {
     "delete_after" : null
   }
 }
@@ -37,6 +43,14 @@ hub_cloud_permissions = {
       bucket_admin_access : [
         "scratch",
         "persistent",
+      ],
+    }
+  },
+  "workshop" : {
+    "user-sa" : {
+      bucket_admin_access : [
+        "scratch-workshop",
+        "persistent-workshop",
       ],
     }
   },
