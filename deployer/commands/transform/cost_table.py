@@ -44,13 +44,22 @@ def aws(
     """
     # Read the CSV file into a pandas dataframe. Skip the first row and this
     # contains numerical project IDs - the project names begin on the second row.
-    # Rename the columns so that they are all lower case and any whitespace is
-    # replaced with underscores. Then strip '_($)' to ensure we just have the
-    # project names.
+    # We conditionally rename the column names. If '($)' is present in the column
+    # name, we assume this is a linked account name: we strip of any
+    # leading/trailing whitespace and convert to lower case so we have just the
+    # account names and allow for AWS permitting whitespace in them.
+    # Otherwise (i.e. not an account name), we also replace any whitespace with
+    # underscores for easier data cleaning in pandas.
     df = pd.read_csv(
         input_path,
         skiprows=1,
-    ).rename(columns=lambda col: col.strip().lower().replace(" ", "_").strip("_($)"))
+    ).rename(
+        columns=lambda col: (
+            col.lower().strip("($)").strip()
+            if "($)" in col
+            else col.strip().lower().replace(" ", "_")
+        )
+    )
 
     # Ensure values of the linked_account_name column are lower case and any
     # whitespace is replaced with underscores.
@@ -63,10 +72,10 @@ def aws(
     # Set the linked_account_name column as the index
     df.set_index("linked_account_name", drop=True, inplace=True)
 
-    # Drop the total_costs column. This column is the total across all linked accounts,
-    # and hence not necessary. We use the linked_account_total column for the total
-    # per linked account.
-    df.drop("total_costs", axis=1, inplace=True)
+    # Drop the 'total costs' column. This column is the total across all linked
+    # accounts, and hence not necessary. We use the linked_account_total column
+    # for the total per linked account.
+    df.drop("total costs", axis=1, inplace=True)
 
     # Transpose the dataframe
     df = df.T
