@@ -183,7 +183,7 @@ basehub:
             mem_limit: null
             node_selector:
               node.kubernetes.io/instance-type: n2-highmem-64
-            
+
         - display_name: "CPU only"
           description: &profile_list_description "Start a container limited to a chosen share of capacity on a node of this type"
           slug: medium-full
