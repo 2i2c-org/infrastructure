@@ -213,10 +213,6 @@ link generator. [Firefox](https://addons.mozilla.org/en-US/firefox/addon/nbgitpu
 and [Google Chrome](https://chrome.google.com/webstore/detail/nbgitpuller-link-generato/hpdbdpklpmppnoibabdkkhnfhkkehgnc)
 extensions are also available.
 
-## Enable stronger anti-crypto abuse features for a hub
-
-Ephemeral hubs with public access must have [stronger anti crypto abuse features
-enabled](howto:features:cryptnono) before going live.
 
 ## (Optional) Shared systemwide password setup
 
