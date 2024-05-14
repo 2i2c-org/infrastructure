@@ -91,41 +91,43 @@ basehub:
             requests: &profile_option_requests
               display_name: Resource Allocation
               choices:
+                # choices were generated using the command (GKE 1.29 compatible):
+                # deployer generate resource-allocation choices --num-allocations 4 n2-highmem-4
                 mem_3_4:
-                  display_name: 3.4 GB RAM, upto 3.477 CPUs
+                  display_name: 3.4 GB RAM, upto 3.4 CPUs
                   kubespawner_override:
-                    mem_guarantee: 3644869120
-                    mem_limit: 3644869120
-                    cpu_guarantee: 0.434625
-                    cpu_limit: 3.477
+                    mem_guarantee: 3620925866
+                    mem_limit: 3620925866
+                    cpu_guarantee: 0.43375
+                    cpu_limit: 3.47
                     node_selector:
                       node.kubernetes.io/instance-type: n2-highmem-4
                   default: true
-                mem_6_8:
-                  display_name: 6.8 GB RAM, upto 3.477 CPUs
+                mem_6_7:
+                  display_name: 6.7 GB RAM, upto 3.4 CPUs
                   kubespawner_override:
-                    mem_guarantee: 7289738240
-                    mem_limit: 7289738240
-                    cpu_guarantee: 0.86925
-                    cpu_limit: 3.477
+                    mem_guarantee: 7241851732
+                    mem_limit: 7241851732
+                    cpu_guarantee: 0.8675
+                    cpu_limit: 3.47
                     node_selector:
                       node.kubernetes.io/instance-type: n2-highmem-4
-                mem_13_6:
-                  display_name: 13.6 GB RAM, upto 3.477 CPUs
+                mem_13_5:
+                  display_name: 13.5 GB RAM, upto 3.4 CPUs
                   kubespawner_override:
-                    mem_guarantee: 14579476480
-                    mem_limit: 14579476480
-                    cpu_guarantee: 1.7385
-                    cpu_limit: 3.477
+                    mem_guarantee: 14483703464
+                    mem_limit: 14483703464
+                    cpu_guarantee: 1.735
+                    cpu_limit: 3.47
                     node_selector:
                       node.kubernetes.io/instance-type: n2-highmem-4
-                mem_27_2:
-                  display_name: 27.2 GB RAM, upto 3.477 CPUs
+                mem_27_0:
+                  display_name: 27.0 GB RAM, upto 3.4 CPUs
                   kubespawner_override:
-                    mem_guarantee: 29158952960
-                    mem_limit: 29158952960
-                    cpu_guarantee: 3.477
-                    cpu_limit: 3.477
+                    mem_guarantee: 28967406928
+                    mem_limit: 28967406928
+                    cpu_guarantee: 3.47
+                    cpu_limit: 3.47
                     node_selector:
                       node.kubernetes.io/instance-type: n2-highmem-4
             image:
