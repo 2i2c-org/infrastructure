@@ -38,7 +38,7 @@ local daskNodes = [];
     metadata+: {
         name: "opensci",
         region: clusterRegion,
-        version: "1.28",
+        version: "1.29",
     },
     availabilityZones: masterAzs,
     iam: {

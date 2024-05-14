@@ -60,7 +60,7 @@ local daskNodes = [
     metadata+: {
         name: "nasa-cryo",
         region: clusterRegion,
-        version: "1.27",
+        version: "1.29",
     },
     availabilityZones: masterAzs,
     iam: {

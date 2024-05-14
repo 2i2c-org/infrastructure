@@ -57,7 +57,7 @@ local daskNodes = [
     metadata+: {
         name: "2i2c-aws-us",
         region: clusterRegion,
-        version: '1.27',
+        version: "1.29",
     },
     availabilityZones: masterAzs,
     iam: {
