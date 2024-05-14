@@ -81,7 +81,7 @@ local daskNodes = [
     metadata+: {
         name: "jupyter-meets-the-earth",
         region: clusterRegion,
-        version: "1.27",
+        version: "1.29",
     },
     availabilityZones: masterAzs,
     iam: {

@@ -50,7 +50,7 @@ local daskNodes = [
     metadata+: {
         name: "earthscope",
         region: clusterRegion,
-        version: "1.28",
+        version: "1.29",
     },
     availabilityZones: masterAzs,
     iam: {

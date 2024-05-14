@@ -67,7 +67,7 @@ local daskNodes = [
     metadata+: {
         name: "gridsst",
         region: clusterRegion,
-        version: "1.27",
+        version: "1.29",
     },
     availabilityZones: masterAzs,
     iam: {
