@@ -60,33 +60,15 @@
         },
         "allocatable": {
             "cpu": 3.92,
-            "memory": 29783904256
+            "memory": 29779155746
         },
         "measured_overhead": {
-            "cpu": 0.443,
-            "memory": 624951296
+            "cpu": 0.45,
+            "memory": 811748818
         },
         "available": {
-            "cpu": 3.477,
-            "memory": 29158952960
-        }
-    },
-    "n2-highmem-32": {
-        "capacity": {
-            "cpu": 32.0,
-            "memory": 270473359360
-        },
-        "allocatable": {
-            "cpu": 31.85,
-            "memory": 257783492608
-        },
-        "measured_overhead": {
-            "cpu": 0.426,
-            "memory": 457179136
-        },
-        "available": {
-            "cpu": 31.424,
-            "memory": 257326313472
+            "cpu": 3.47,
+            "memory": 28967406928
         }
     }
 }
