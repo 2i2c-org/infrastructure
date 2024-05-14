@@ -7,10 +7,10 @@ region = "us-west2"
 core_node_machine_type = "n2-highmem-4"
 
 k8s_versions = {
-  min_master_version : "1.27.5-gke.200",
-  core_nodes_version : "1.27.5-gke.200",
-  notebook_nodes_version : "1.27.5-gke.200",
-  dask_nodes_version : "1.27.5-gke.200",
+  min_master_version : "1.29.1-gke.1589020",
+  core_nodes_version : "1.29.1-gke.1589020",
+  notebook_nodes_version : "1.29.1-gke.1589020",
+  dask_nodes_version : "1.29.1-gke.1589020",
 }
 
 # Network policy is required to enforce separation between hubs on multi-tenant clusters
