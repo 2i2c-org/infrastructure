@@ -54,6 +54,8 @@ def aws(
 
     # Ensure values of the linked_account_name column are lower case and any
     # whitespace is replaced with underscores.
+    # Note that because AWS outputs the linked account names as a row, this
+    # column name is misleading - we are not affecting linked account names here.
     df["linked_account_name"] = df["linked_account_name"].apply(
         lambda val: val.strip().lower().replace(" ", "_")
     )
