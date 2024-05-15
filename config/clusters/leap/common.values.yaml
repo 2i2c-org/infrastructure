@@ -128,6 +128,61 @@ basehub:
         #          causes more frequent need to wait on startups, increased cost,
         #          wasted energy.
         #
+        - display_name: "Devs Only"
+          description: &profile_list_description "Start a container limited to a chosen share of capacity on a node of this type"
+          default: true
+          allowed_groups:
+            - 2i2c-org:hub-access-for-2i2c-staff
+            - leap-stc:leap-pangeo-dev-access
+          profile_options:
+            requests:
+              # NOTE: Node share choices are in active development, see comment
+              #       next to profileList: above.
+              #
+              #       This specific setup is not a standard node sharing setup,
+              #       don't copy it!
+              #
+              display_name: Node share
+              choices:
+                mem_512:
+                  display_name: ~512 GB, ~64.0 CPU
+                  kubespawner_override:
+                    mem_guarantee: 462.196G
+                    cpu_guarantee: 46.4
+                    mem_limit: 512G
+                    cpu_limit: 64
+            image: &profile_list_profile_options_image
+              display_name: Image
+              unlisted_choice: &profile_list_unlisted_choice
+                enabled: True
+                display_name: "Custom image"
+                validation_regex: "^.+:.+$"
+                validation_message: "Must be a publicly available docker image, of form <image-name>:<tag>"
+                kubespawner_override:
+                  image: "{value}"
+              choices:
+                pangeo:
+                  display_name: Base Pangeo Notebook
+                  default: true
+                  slug: "pangeo"
+                  kubespawner_override:
+                    image: "pangeo/pangeo-notebook:2024.04.08"
+                tensorflow:
+                  display_name: Pangeo Tensorflow ML Notebook
+                  slug: "tensorflow"
+                  kubespawner_override:
+                    image: "pangeo/ml-notebook:2024.04.08"
+                pytorch:
+                  display_name: Pangeo PyTorch ML Notebook
+                  slug: "pytorch"
+                  kubespawner_override:
+                    image: "pangeo/pytorch-notebook:2024.04.08"
+          kubespawner_override: &medium_kubespawner_override
+            cpu_limit: null
+            mem_limit: null
+            node_selector:
+              node.kubernetes.io/instance-type: n2-highmem-64
+
         - display_name: "CPU only"
           description: &profile_list_description "Start a container limited to a chosen share of capacity on a node of this type"
           slug: medium-full
