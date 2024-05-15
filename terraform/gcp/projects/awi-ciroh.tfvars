@@ -46,6 +46,16 @@ notebook_nodes = {
     max : 100,
     machine_type : "n2-highmem-64",
   },
+  "gpu-t4" : {
+    min : 0,
+    max : 20,
+    machine_type : "n1-highmem-8",
+    gpu : {
+      enabled : true,
+      type : "nvidia-tesla-t4",
+      count : 1,
+    },
+  },
 }
 
 # Setup a single node pool for dask workers.
