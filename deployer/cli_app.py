@@ -18,6 +18,7 @@ debug_app = typer.Typer(pretty_exceptions_show_locals=False)
 exec_app = typer.Typer(pretty_exceptions_show_locals=False)
 grafana_app = typer.Typer(pretty_exceptions_show_locals=False)
 validate_app = typer.Typer(pretty_exceptions_show_locals=False)
+transform_app = typer.Typer(pretty_exceptions_show_locals=False)
 
 app.add_typer(
     generate_app,
@@ -50,4 +51,9 @@ app.add_typer(
     validate_app,
     name="validate",
     help="Validate configuration files such as helm chart values and cluster.yaml files.",
+)
+app.add_typer(
+    transform_app,
+    name="transform",
+    help="Programmatically transform datasets, such as cost tables for billing purposes.",
 )
