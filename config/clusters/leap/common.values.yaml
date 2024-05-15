@@ -130,7 +130,6 @@ basehub:
         #
         - display_name: "Devs Only"
           description: &profile_list_description "Start a container limited to a chosen share of capacity on a node of this type"
-          slug: medium-full
           default: true
           allowed_groups:
             - 2i2c-org:hub-access-for-2i2c-staff
