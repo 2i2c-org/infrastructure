@@ -116,7 +116,12 @@ eks:
   # - aws-node requests 25m or 50m depending on if it has the extra container
   #   running aws-network-policy-agent or not.
   #
-  #   ref: https://github.com/2i2c-org/infrastructure/issues/1794
+  #   Based on docs, we should be able to use the latest aws-node version for
+  #   all clusters, but eksctl has hardcoded a very old version. This bug is
+  #   tracked in https://github.com/eksctl-io/eksctl/issues/7755. The latest
+  #   aws-node version, or at least 1.16+, will provide us with network policy
+  #   enforcement, which is tracked in
+  #   https://github.com/2i2c-org/infrastructure/issues/1794.
   #
   2i2c-aws-us:
     requesting_daemon_sets: aws-node,ebs-csi-node,kube-proxy,support-cryptnono,support-prometheus-node-exporter
@@ -127,7 +132,7 @@ eks:
   bican:
     requesting_daemon_sets: aws-node,ebs-csi-node,kube-proxy,support-cryptnono,support-prometheus-node-exporter
     other_daemon_sets: ""
-    cpu_requests: 195m
+    cpu_requests: 170m
     memory_requests: 250Mi
     k8s_version: v1.29.3-eks-adc7111
   catalystproject-africa:
