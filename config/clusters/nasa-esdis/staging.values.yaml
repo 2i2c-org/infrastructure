@@ -7,10 +7,10 @@ jupyterhub:
     tls:
       - hosts: [staging.esdis.2i2c.cloud]
         secretName: https-auto-tls
-  singleuser:
-    extraEnv:
-      SCRATCH_BUCKET: s3://nasa-esdis-scratch-staging/$(JUPYTERHUB_USER)
   hub:
     config:
       GitHubOAuthenticator:
         oauth_callback_url: "https://staging.esdis.2i2c.cloud/hub/oauth_callback"
+  singleuser:
+    extraEnv:
+      SCRATCH_BUCKET: s3://nasa-esdis-scratch-staging/$(JUPYTERHUB_USER)

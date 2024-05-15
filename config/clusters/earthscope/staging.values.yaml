@@ -1,4 +1,8 @@
 basehub:
+  userServiceAccount:
+    annotations:
+      eks.amazonaws.com/role-arn: arn:aws:iam::762698921361:role/earthscope-staging
+
   jupyterhub:
     ingress:
       hosts:
@@ -21,3 +25,6 @@ basehub:
           extra_authorize_params:
             # This isn't an actual URL, just a string. Must not have a trailing slash
             audience: https://api.dev.earthscope.org
+    singleuser:
+      extraEnv:
+        SCRATCH_BUCKET: s3://earthscope-scratch-staging/$(JUPYTERHUB_USER)

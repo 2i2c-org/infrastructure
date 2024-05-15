@@ -12,3 +12,6 @@ basehub:
       config:
         GitHubOAuthenticator:
           oauth_callback_url: https://staging.hub.openveda.cloud/hub/oauth_callback
+    singleuser:
+      extraEnv:
+        SCRATCH_BUCKET: s3://nasa-veda-scratch-staging/$(JUPYTERHUB_USER)
