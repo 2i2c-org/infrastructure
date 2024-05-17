@@ -129,8 +129,7 @@ basehub:
         #          wasted energy.
         #
         - display_name: "Devs Only"
-          description: &profile_list_description "Start a container limited to a chosen share of capacity on a node of this type"
-          default: true
+          description: "Start a container limited to a chosen share of capacity on a node of this type"
           allowed_groups:
             - 2i2c-org:hub-access-for-2i2c-staff
             - leap-stc:leap-pangeo-dev-access
@@ -177,7 +176,12 @@ basehub:
                   slug: "pytorch"
                   kubespawner_override:
                     image: "pangeo/pytorch-notebook:2024.04.08"
-          kubespawner_override: &medium_kubespawner_override
+                leap-pangeo-edu:
+                  display_name: LEAP Education Notebook (Testing Prototype)
+                  slug: "leap_edu"
+                  kubespawner_override:
+                    image: "quay.io/jbusecke/leap-edu-image:fa442ab4851c"
+          kubespawner_override:
             cpu_limit: null
             mem_limit: null
             node_selector:
@@ -251,9 +255,9 @@ basehub:
                     cpu_guarantee: 1.6
                     mem_limit: 128G
                     cpu_limit: 16
-            image: &profile_list_profile_options_image
+            image:
               display_name: Image
-              unlisted_choice: &profile_list_unlisted_choice
+              unlisted_choice:
                 enabled: True
                 display_name: "Custom image"
                 validation_regex: "^.+:.+$"
