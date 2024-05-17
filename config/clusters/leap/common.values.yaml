@@ -299,7 +299,6 @@ basehub:
         - display_name: "CPU only"
           description: *profile_list_description
           slug: medium-base
-          default: true
           allowed_groups:
             - leap-stc:leap-pangeo-base-access
           profile_options:
