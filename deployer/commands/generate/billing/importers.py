@@ -180,7 +180,6 @@ class PrometheusUtilizationImporter:
             "dask-staging",
             "configconnector-operator-system",
             "cnrm-system",
-            "binder-staging",
         }
         df["2i2c_costs"] = 0.0
         for namespace in internal.intersection(df.columns):
