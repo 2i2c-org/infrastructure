@@ -168,7 +168,6 @@ jobs:
       # Upload the pr-number.txt and comment-body.txt files as artifacts for the
       # comment-deployment-plan-pr.yaml workflow to access
       - name: Upload artifacts
-        # Only run this steps in PRs when the matrices are not empty
         if: >
           github.event_name == 'pull_request' &&
           (env.support-and-staging-matrix-jobs != '[]' ||
@@ -249,10 +248,9 @@ jobs:
       failure_utoronto: "${{ env.failure_utoronto }}"
       failure_victor: "${{ env.failure_victor }}"
 
-    # Only run this job on pushes to the default branch and when the job output is not
-    # an empty list
     if: |
       (github.event_name == 'push' && contains(github.ref, 'main')) &&
+      needs.generate-jobs.result == 'success' &&
       needs.generate-jobs.outputs.support-and-staging-matrix-jobs != '[]'
     strategy:
       # Don't stop other deployments if one fails
@@ -346,15 +344,10 @@ jobs:
   filter-generate-jobs:
     runs-on: ubuntu-latest
     needs: [generate-jobs, upgrade-support-and-staging]
-    # Only run this job on pushes to the default branch and when the job output is not
-    # an empty list
-    #
-    # always() is added as it seems to be a magic function to ensure a job can
-    # run at all without being skipped if a previous job has had any failures.
-    # https://docs.github.com/en/actions/learn-github-actions/expressions#always
     if: |
-      always() &&
+      !cancelled() &&
       (github.event_name == 'push' && contains(github.ref, 'main')) &&
+      needs.generate-jobs.result == 'success' &&
       needs.generate-jobs.outputs.prod-hub-matrix-jobs != '[]'
 
     outputs:
@@ -414,17 +407,10 @@ jobs:
   upgrade-prod-hubs:
     runs-on: ubuntu-latest
     needs: [filter-generate-jobs]
-    # Only run this job on pushes to the default branch and when the `generate-jobs` job output is not
-    # an empty list
-    #
-    # always() is added as it seems to be a magic function to ensure a job can
-    # run at all without being skipped if a previous job has had any failures. By
-    # using always() we need to ensure filter-generate-jobs wasn't skipped or
-    # failed explicitly now though.
-    # https://docs.github.com/en/actions/learn-github-actions/expressions#always
     if: |
-      always() && needs.filter-generate-jobs.result == 'success' &&
+      !cancelled() &&
       (github.event_name == 'push' && contains(github.ref, 'main')) &&
+      needs.filter-generate-jobs.result == 'success' &&
       needs.filter-generate-jobs.outputs.filtered-prod-hub-matrix-jobs != '[]'
     strategy:
       # Don't stop other deployments if one fails
