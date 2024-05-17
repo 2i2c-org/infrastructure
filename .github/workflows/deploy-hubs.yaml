@@ -301,11 +301,6 @@ jobs:
         run: |
           deployer deploy ${{ matrix.jobs.cluster_name }} dask-staging
 
-      - name: Upgrade binder-staging hub on cluster ${{ matrix.jobs.cluster_name }} if it exists
-        if: matrix.jobs.upgrade_staging && matrix.jobs.cluster_name == '2i2c'
-        run: |
-          deployer deploy ${{ matrix.jobs.cluster_name }} binder-staging
-
       # Retry action: https://github.com/marketplace/actions/retry-step
       - name: Run health check for dask-staging hub on cluster ${{ matrix.jobs.cluster_name }} if it exists
         if: matrix.jobs.upgrade_staging && matrix.jobs.cluster_name == '2i2c'
