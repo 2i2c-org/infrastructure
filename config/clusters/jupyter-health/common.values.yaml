@@ -53,7 +53,9 @@ jupyterhub:
           - ryanlovett
   singleuser:
     defaultUrl: /lab
-    image: quay.io/jupyterhealth/singleuser-premvp:latest
+    image:
+      name: quay.io/jupyterhealth/singleuser-premvp
+      tag: "latest"
     memory:
       limit: 1991244775
       guarantee: 1991244775
