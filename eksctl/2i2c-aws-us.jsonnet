@@ -118,7 +118,6 @@ local daskNodes = [
                 "hub.jupyter.org_dedicated": "user:NoSchedule",
                 "hub.jupyter.org/dedicated": "user:NoSchedule"
             },
-
         } + n for n in notebookNodes
     ] + ( if daskNodes != null then
         [
