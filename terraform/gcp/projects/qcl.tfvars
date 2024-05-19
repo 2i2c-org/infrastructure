@@ -63,13 +63,6 @@ notebook_nodes = {
     max : 100,
     machine_type : "n2-highcpu-32",
   },
-  # FIXME: tainted, to be deleted when empty, replaced by k8s upgraded variant
-  "n2-highcpu-96" : {
-    min : 0,
-    max : 100,
-    machine_type : "n2-highcpu-96",
-    node_version : "1.27.4-gke.900",
-  },
   "n2-highcpu-96-b" : {
     min : 0,
     max : 100,
