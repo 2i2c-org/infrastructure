@@ -72,7 +72,7 @@ basehub:
             - US-GHG-Center:ghg-use-case-3
             - US-GHG-Center:ghg-external-collaborators
             - US-GHG-Center:ghg-workshop-access
-            - US-GHG-Center:ghg-trial-access          
+            - US-GHG-Center:ghg-trial-access
           kubespawner_override:
             image: public.ecr.aws/nasa-veda/nasa-veda-singleuser:2024-04-09
             init_containers:
