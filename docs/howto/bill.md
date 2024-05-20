@@ -17,6 +17,7 @@ Make sure you have access to the [spreadsheet for billing] before
 following the steps below. Your 2i2c.org email should give you access.
 ```
 
+[cloud costs folder]: https://drive.google.com/drive/folders/1_xXZ2ndEOplZidG_mj6nmUTzsOuxARcL?usp=drive_link
 [spreadsheet for billing]: https://docs.google.com/spreadsheets/d/1AWVCg0D_-ATub_cVsIy5XZCwqnC6uIcgwDGYK9Q7yno/edit#gid=1349808947
 
 ## Communities in shared cloud accounts
@@ -68,7 +69,8 @@ AWS management account. If a future cluster deviates from this, you can tell by
    ```
 
    This will output a new CSV file to your local filesystem called `2i2c_dedicated_cluster_billing_AWS_{START_MONTH}_{END_MONTH}.csv`.
-
+1. Upload this CSV file to the [cloud costs folder]
+1. Ping the folks in the `#billing` slack channel to let them know the info for dedicated clusters is now available
 
 [direct link]: https://us-east-1.console.aws.amazon.com/costmanagement/home?region=us-east-1#/cost-explorer?reportId=d826a775-e0d6-4e85-a181-7f87a8deb162&reportName=Monthly%20costs%20by%20linked%20account&isDefault=true&chartStyle=GROUP&historicalRelativeRange=LAST_6_MONTHS&futureRelativeRange=CUSTOM&granularity=Monthly&groupBy=%5B%22LinkedAccount%22%5D&filter=%5B%5D&costAggregate=unBlendedCost&showOnlyUntagged=false&showOnlyUncategorized=false&useNormalizedUnits=false
 
@@ -94,7 +96,8 @@ Currently this is the recommended way of retrieving the costs from GCP.
    ```
 
    This will output a new CSV file to your local filesystem called `2i2c_dedicated_cluster_billing_GCP_{START_MONTH}_{END_MONTH}.csv`.
-
+1. Upload this CSV file to the [cloud costs folder]
+1. Ping the folks in the `#billing` slack channel to let them know the info for dedicated clusters is now available
 
 [2i2c billing account]: https://console.cloud.google.com/billing/0157F7-E3EA8C-25AC3C/reports;timeRange=CUSTOM_RANGE;from=2024-01-01;to=2024-01-31;dateType=INVOICE_DATE;invoiceCorrections=TAX,BILLING_MODIFICATION?organizationId=184174754493&project=two-eye-two-see
 
