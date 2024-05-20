@@ -9,12 +9,17 @@ Practically to invoice these communities, we update a [spreadsheet for billing]
 summarizing monthly costs for communities, and then request invoicing help from
 CS&S via the `#billing` slack channel.
 
-This documentation helps you update that spreadsheet for communities in both
-shared and dedicated clusters!
+```{important}
+If you do not have access to the `#billing` slack channel, ask in the
+`#team-updates` channel and someone will add you.
+```
+
+This documentation helps you update that spreadsheet for communities on shared
+clusters and generate CSV files for dedicated clusters.
 
 ```{important}
-Make sure you have access to the [spreadsheet for billing] before
-following the steps below. Your 2i2c.org email should give you access.
+Make sure you have access to the [cloud costs folder] and [spreadsheet for billing]
+before following the steps below. Your 2i2c.org email should give you access.
 ```
 
 [cloud costs folder]: https://drive.google.com/drive/folders/1_xXZ2ndEOplZidG_mj6nmUTzsOuxARcL?usp=drive_link
