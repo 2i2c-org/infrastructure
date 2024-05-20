@@ -128,5 +128,9 @@ basehub:
         PERSISTENT_BUCKET: gs://awi-ciroh-persistent-staging/$(JUPYTERHUB_USER)
     hub:
       config:
+        KubeSpawner:
+          # Requested as part of https://2i2c.freshdesk.com/a/tickets/1607, to
+          # make it easier to test custom images
+          image_pull_policy: Always
         GitHubOAuthenticator:
           oauth_callback_url: "https://staging.ciroh.awi.2i2c.cloud/hub/oauth_callback"
