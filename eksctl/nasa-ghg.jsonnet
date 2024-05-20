@@ -28,6 +28,7 @@ local notebookNodes = [
     { instanceType: "r5.xlarge" },
     { instanceType: "r5.4xlarge" },
     { instanceType: "r5.16xlarge" },
+    { instanceType: "c5.4xlarge"},
 ];
 local daskNodes = [
     // Node definitions for dask worker nodes. Config here is merged

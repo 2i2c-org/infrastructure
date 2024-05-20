@@ -49,6 +49,7 @@ basehub:
             - US-GHG-Center:ghg-external-collaborators
             - US-GHG-Center:ghg-workshop-access
             - US-GHG-Center:ghg-trial-access
+            - US-GHG-Center:ssim-ghg-2024
           scope:
             - read:org
         Authenticator:
@@ -64,6 +65,14 @@ basehub:
           slug: modified-pangeo
           description: Pangeo based notebook with a Python environment
           default: true
+          allowed_groups:
+            - US-GHG-Center:ghgc-hub-access
+            - US-GHG-Center:ghg-use-case-1
+            - US-GHG-Center:ghg-use-case-2
+            - US-GHG-Center:ghg-use-case-3
+            - US-GHG-Center:ghg-external-collaborators
+            - US-GHG-Center:ghg-workshop-access
+            - US-GHG-Center:ghg-trial-access          
           kubespawner_override:
             image: public.ecr.aws/nasa-veda/nasa-veda-singleuser:2024-04-09
             init_containers:
@@ -106,50 +115,6 @@ basehub:
             resource_allocation: &profile_options_resource_allocation
               display_name: Resource Allocation
               choices:
-                # The `cpu_` options are added by hand, temporarily,
-                # to help evaluate ideal resource options for an upcoming workshop.
-                # See: https://github.com/NASA-IMPACT/veda-jupyterhub/issues/32
-                # Once we settle on the ideal resource allocation for the workshop, we should:
-                #  - Create a new profile for the workshop, with just the resource option needed
-                #  - Pick a more appropriate (compute-optimized) node type and add to eksctl
-                #  - Remove these options from the global resource select options
-                #  - Remove this comment.
-                cpu_8_16:
-                  display_name: 8 CPU, 16GB RAM
-                  kubespawner_override:
-                    mem_guarantee: 14.87G
-                    mem_limit: 14.87G
-                    cpu_guarantee: 8
-                    cpu_limit: 8
-                    node_selector:
-                      node.kubernetes.io/instance-type: r5.4xlarge
-                cpu_12_16:
-                  display_name: 12 CPU, 16GB RAM
-                  kubespawner_override:
-                    mem_guarantee: 14.87G
-                    mem_limit: 14.87G
-                    cpu_guarantee: 12
-                    cpu_limit: 12
-                    node_selector:
-                      node.kubernetes.io/instance-type: r5.4xlarge
-                cpu_8_24:
-                  display_name: 8 CPU, 24GB RAM
-                  kubespawner_override:
-                    mem_guarantee: 22.305G
-                    mem_limit: 22.305G
-                    cpu_guarantee: 8
-                    cpu_limit: 8
-                    node_selector:
-                      node.kubernetes.io/instance-type: r5.4xlarge
-                cpu_12_24:
-                  display_name: 12 CPU, 24GB RAM
-                  kubespawner_override:
-                    mem_guarantee: 22.305G
-                    mem_limit: 22.305G
-                    cpu_guarantee: 12
-                    cpu_limit: 12
-                    node_selector:
-                      node.kubernetes.io/instance-type: r5.4xlarge
                 mem_1_9:
                   display_name: 1.9 GB RAM, upto 3.7 CPUs
                   kubespawner_override:
@@ -217,6 +182,14 @@ basehub:
         - display_name: "Rocker Geospatial with RStudio"
           slug: rocker
           description: R environment with many geospatial libraries pre-installed
+          allowed_groups:
+            - US-GHG-Center:ghgc-hub-access
+            - US-GHG-Center:ghg-use-case-1
+            - US-GHG-Center:ghg-use-case-2
+            - US-GHG-Center:ghg-use-case-3
+            - US-GHG-Center:ghg-external-collaborators
+            - US-GHG-Center:ghg-workshop-access
+            - US-GHG-Center:ghg-trial-access
           kubespawner_override:
             image: rocker/binder:4.3
             image_pull_policy: Always
@@ -229,6 +202,14 @@ basehub:
         - display_name: "QGIS on Linux Desktop"
           slug: qgis
           description: Linux desktop in the browser, with qgis installed
+          allowed_groups:
+            - US-GHG-Center:ghgc-hub-access
+            - US-GHG-Center:ghg-use-case-1
+            - US-GHG-Center:ghg-use-case-2
+            - US-GHG-Center:ghg-use-case-3
+            - US-GHG-Center:ghg-external-collaborators
+            - US-GHG-Center:ghg-workshop-access
+            - US-GHG-Center:ghg-trial-access
           kubespawner_override:
             default_url: /desktop
             # Built from https://github.com/2i2c-org/nasa-qgis-image
@@ -236,6 +217,14 @@ basehub:
           profile_options: *profile_options
         - display_name: "Bring your own image"
           description: Specify your own docker image (must have python and jupyterhub installed in it)
+          allowed_groups:
+            - US-GHG-Center:ghgc-hub-access
+            - US-GHG-Center:ghg-use-case-1
+            - US-GHG-Center:ghg-use-case-2
+            - US-GHG-Center:ghg-use-case-3
+            - US-GHG-Center:ghg-external-collaborators
+            - US-GHG-Center:ghg-workshop-access
+            - US-GHG-Center:ghg-trial-access
           slug: custom
           profile_options:
             image:
@@ -249,6 +238,41 @@ basehub:
                   image: "{value}"
               choices: {}
             resource_allocation: *profile_options_resource_allocation
+
+        # Following profile list items are added for the SSIMS-GHG-Workshop 2024.
+        # They specify custom resource allocations and custom images for the workshop
+        # They are the only profile options users in the US-GHG-Center:ssim-ghg-2024
+        # team should have access to. These profile items as well as this comment should
+        # be cleaned up once the workshop is over.
+        - display_name: "SSIMS-GHG 2024 Workshop: Python"
+          description: Python notebook for SSIMS-GHG 2024 Workshop
+          allowed_groups:
+            - US-GHG-Center:ssim-ghg-2024
+          slug: ssims-ghg-2024-python
+          kubespawner_override:
+            # This will be updated to a custom python imge for the workshop when it is ready
+            image: public.ecr.aws/nasa-veda/nasa-veda-singleuser:2024-04-09
+            mem_guarantee: 28G
+            mem_limit: 28G
+            cpu_guarantee: 14
+            cpu_limit: 14
+            node_selector:
+              node.kubernetes.io/instance-type: c5.4xlarge
+        - display_name: "SSIMS-GHG 2024 Workshop: R"
+          description: R notebook for SSIMS-GHG 2024 Workshop
+          allowed_groups:
+            - US-GHG-Center:ssim-ghg-2024
+          slug: ssims-ghg-2024-r
+          kubespawner_override:
+            # This will be updated to a custom R image for the workshop when it is ready
+            image: rocker/binder:4.3
+            mem_guarantee: 28G
+            mem_limit: 28G
+            cpu_guarantee: 14
+            cpu_limit: 14
+            node_selector:
+              node.kubernetes.io/instance-type: c5.4xlarge
+
     scheduling:
       userScheduler:
         enabled: true
