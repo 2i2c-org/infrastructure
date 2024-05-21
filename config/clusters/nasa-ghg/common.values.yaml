@@ -260,10 +260,11 @@ basehub:
           kubespawner_override:
             # This will be updated to a custom python imge for the workshop when it is ready
             image: public.ecr.aws/nasa-veda/nasa-veda-singleuser:2024-04-09
-            mem_guarantee: 28G
-            mem_limit: 28G
+            # Adjusted to try to land only one user on each node
+            mem_guarantee: 27G
+            mem_limit: 27G
             cpu_guarantee: 14
-            cpu_limit: 14
+            cpu_limit: 16
             node_selector:
               node.kubernetes.io/instance-type: c5.4xlarge
         - display_name: "SSIM-GHG 2024 Workshop: R"
@@ -275,10 +276,11 @@ basehub:
           kubespawner_override:
             # This will be updated to a custom R image for the workshop when it is ready
             image: rocker/binder:4.3
-            mem_guarantee: 28G
-            mem_limit: 28G
+            # Adjusted to try to land only one user on each node
+            mem_guarantee: 27G
+            mem_limit: 27G
             cpu_guarantee: 14
-            cpu_limit: 14
+            cpu_limit: 16
             node_selector:
               node.kubernetes.io/instance-type: c5.4xlarge
 
