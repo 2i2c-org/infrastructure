@@ -123,6 +123,10 @@ basehub:
                     cpu_limit: 3.725
                     node_selector:
                       node.kubernetes.io/instance-type: r5.xlarge
+                    allowed_groups: &regular_allowed_groups
+                      - CryoInTheCloud:cryocloudadvanced
+                      - CryoInTheCloud:cryoclouduser
+                      - 2i2c-org:hub-access-for-2i2c-staff
                 mem_3_7:
                   display_name: 3.7 GB RAM, upto 3.7 CPUs
                   kubespawner_override:
@@ -132,8 +136,10 @@ basehub:
                     cpu_limit: 3.725
                     node_selector:
                       node.kubernetes.io/instance-type: r5.xlarge
+                  allowed_groups: *regular_allowed_groups
                 mem_7_4:
                   display_name: 7.4 GB RAM, upto 3.7 CPUs
+                  allowed_groups: *regular_allowed_groups
                   kubespawner_override:
                     mem_guarantee: 7964979101
                     mem_limit: 7964979101
@@ -143,6 +149,7 @@ basehub:
                       node.kubernetes.io/instance-type: r5.xlarge
                 mem_14_8:
                   display_name: 14.8 GB RAM, upto 3.7 CPUs
+                  allowed_groups: *regular_allowed_groups
                   kubespawner_override:
                     mem_guarantee: 15929958203
                     mem_limit: 15929958203
@@ -152,6 +159,7 @@ basehub:
                       node.kubernetes.io/instance-type: r5.xlarge
                 mem_29_7:
                   display_name: 29.7 GB RAM, upto 3.7 CPUs
+                  allowed_groups: *regular_allowed_groups
                   kubespawner_override:
                     mem_guarantee: 31859916406
                     mem_limit: 31859916406
