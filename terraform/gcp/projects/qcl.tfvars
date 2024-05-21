@@ -26,7 +26,7 @@ user_buckets = {
 }
 
 notebook_nodes = {
-  # FIXME: tainted, to be deleted when empty, replaced by k8s upgraded variant
+  # FIXME: tainted, to be deleted when empty, replaced by equivalent during k8s upgrade
   "n2-highmem-4" : {
     min : 0,
     max : 100,

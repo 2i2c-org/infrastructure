@@ -35,8 +35,13 @@ This guide will assume you have already followed the guidance in [](/topic/infra
 
    Mac users with homebrew can run `brew install eksctl`.
 
-   Verify install and version with `eksctl version`. You typically need a very
-   recent version of this CLI.
+   Verify install and version with `eksctl version`. You should have *the latest
+   version* of this CLI.
+
+   ```{important}
+   Without the latest version, you may install an outdated versions of `aws-node`
+   because [its hardcoded](https://github.com/eksctl-io/eksctl/pull/7756).
+   ```
 
 4. Install [`jsonnet`](https://github.com/google/jsonnet)
 
