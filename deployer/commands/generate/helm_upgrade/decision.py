@@ -41,7 +41,6 @@ def discover_modified_common_files(modified_paths):
         # Filepaths related to helm chart infrastructure
         "helm-charts/basehub/*",
         "helm-charts/daskhub/*",
-        "helm-charts/binderhub/*",
     ]
     # If this filepath has changes, we should upgrade the support chart on all clusters
     support_chart_filepath = "helm-charts/support/*"

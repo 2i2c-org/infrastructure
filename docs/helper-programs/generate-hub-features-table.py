@@ -87,13 +87,9 @@ def get_custom_pages_html(jupyterhub_config):
 
 def retrieve_jupyterhub_config_dict(hub_config):
     daskhub_type = hub_config.get("basehub", None)
-    binderhub_type = hub_config.get("binderhub", None)
     try:
         if daskhub_type:
             return hub_config["basehub"]["jupyterhub"]
-
-        elif binderhub_type:
-            return hub_config["binderhub"]["jupyterhub"]
         return hub_config["jupyterhub"]
     except KeyError:
         return {}

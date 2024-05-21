@@ -28,7 +28,7 @@ This job provides the following outputs:
 While the aim of this workflow is to only upgrade the pieces of the infrastructure that require it with every change, some changes do require us to redeploy everything.
 
 - If a cluster's `cluster.yaml` file has been modified, we upgrade the support chart and **all** hubs on **that** cluster. This is because we cannot tell what has been changed without inspecting the diff of the file.
-- If any of the `basehub`, `daskhub`, or `binderhub` Helm charts have additions/modifications in their paths, we redeploy **all** hubs across **all** clusters.
+- If any of the `basehub` or `daskhub` Helm charts have additions/modifications in their paths, we redeploy **all** hubs across **all** clusters.
 - If the support Helm chart has additions/modifications in its path, we redeploy the support chart on **all** clusters.
 - If the deployer module has additions/modifications in its path, then we redeploy **all** hubs on **all** clusters.
 
@@ -46,7 +46,7 @@ A matrix job is set up that parallelises over all the clusters defined in the JS
 For each cluster, the support chart is first upgraded (if required) followed by the staging hub (if required).
 
 ```{note}
-The 2i2c cluster is a special case here as it has three staging hubs: one running the `basehub` Helm chart, another running the `daskhub` Helm chart, and another running the `binderhub` helm chart.
+The 2i2c cluster is a special case here as it has three staging hubs: one running the `basehub` Helm chart and another running the `daskhub` Helm chart.
 We therefore run extra steps for the 2i2c cluster to upgrade these hubs (if required).
 ```
 
