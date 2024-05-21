@@ -239,7 +239,7 @@ basehub:
               choices: {}
             resource_allocation: *profile_options_resource_allocation
 
-        # Following profile list items are added for the -GHG-Workshop 2024.
+        # Following profile list items are added for the SSIM-GHG-Workshop 2024.
         # They specify custom resource allocations and custom images for the workshop
         # They are the only profile options users in the US-GHG-Center:ssim-ghg-2024
         # team should have access to. These profile items as well as this comment should
