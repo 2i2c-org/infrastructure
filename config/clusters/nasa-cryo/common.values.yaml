@@ -169,6 +169,10 @@ basehub:
                       node.kubernetes.io/instance-type: r5.xlarge
                 mem_60_6:
                   display_name: 60.6 GB RAM, upto 15.6 CPUs
+                  allowed_groups: &large_allowed_groups
+                    - 2i2c-org:hub-access-for-2i2c-staff
+                    - CryoInTheCloud:cryocloudadvanced
+                    - CryoInTheCloud:ml-in-glaciology
                   kubespawner_override:
                     mem_guarantee: 65094448840
                     mem_limit: 65094448840
@@ -178,6 +182,7 @@ basehub:
                       node.kubernetes.io/instance-type: r5.4xlarge
                 mem_121_2:
                   display_name: 121.2 GB RAM, upto 15.6 CPUs
+                  allowed_groups: *large_allowed_groups
                   kubespawner_override:
                     mem_guarantee: 130188897681
                     mem_limit: 130188897681
@@ -215,7 +220,6 @@ basehub:
                   image: "{value}"
               choices: {}
             resource_allocation: *profile_options_resource_allocation
-
         - display_name: NVIDIA Tesla T4, ~16 GB, ~4 CPUs
           description: "Start a container on a dedicated node with a GPU"
           slug: "gpu"
