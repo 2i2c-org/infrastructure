@@ -13,8 +13,8 @@ jupyterhub:
         default: true
         kubespawner_override:
           # From https://github.com/SaiUCM/example-inherit-from-community-image
-          # See https://2i2c.freshdesk.com/a/tickets/1522
-          image: quay.io/cirt_ucm/jupyter-scipy-xarray:a21781ac247f
+          # See https://2i2c.freshdesk.com/a/tickets/1612
+          image: quay.io/cirt_ucm/jupyter-scipy-xarray:afab6a519d8b
           # Launch into JupyterLab after the user logs in
           default_url: /lab
       - display_name: R
