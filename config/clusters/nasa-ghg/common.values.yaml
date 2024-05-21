@@ -41,6 +41,7 @@ basehub:
         JupyterHub:
           authenticator_class: github
         GitHubOAuthenticator:
+          populate_teams_in_auth_state: true
           allowed_organizations:
             - US-GHG-Center:ghgc-hub-access
             - US-GHG-Center:ghg-use-case-1
@@ -50,9 +51,11 @@ basehub:
             - US-GHG-Center:ghg-workshop-access
             - US-GHG-Center:ghg-trial-access
             - US-GHG-Center:ssim-ghg-2024
+            - 2i2c-org:hub-access-for-2i2c-staff
           scope:
             - read:org
         Authenticator:
+          enable_auth_state: true
           admin_users:
             - freitagb
             - j08lue
@@ -73,6 +76,7 @@ basehub:
             - US-GHG-Center:ghg-external-collaborators
             - US-GHG-Center:ghg-workshop-access
             - US-GHG-Center:ghg-trial-access
+            - 2i2c-org:hub-access-for-2i2c-staff
           kubespawner_override:
             image: public.ecr.aws/nasa-veda/nasa-veda-singleuser:2024-04-09
             init_containers:
@@ -190,6 +194,7 @@ basehub:
             - US-GHG-Center:ghg-external-collaborators
             - US-GHG-Center:ghg-workshop-access
             - US-GHG-Center:ghg-trial-access
+            - 2i2c-org:hub-access-for-2i2c-staff
           kubespawner_override:
             image: rocker/binder:4.3
             image_pull_policy: Always
@@ -210,6 +215,7 @@ basehub:
             - US-GHG-Center:ghg-external-collaborators
             - US-GHG-Center:ghg-workshop-access
             - US-GHG-Center:ghg-trial-access
+            - 2i2c-org:hub-access-for-2i2c-staff
           kubespawner_override:
             default_url: /desktop
             # Built from https://github.com/2i2c-org/nasa-qgis-image
@@ -225,6 +231,7 @@ basehub:
             - US-GHG-Center:ghg-external-collaborators
             - US-GHG-Center:ghg-workshop-access
             - US-GHG-Center:ghg-trial-access
+            - 2i2c-org:hub-access-for-2i2c-staff
           slug: custom
           profile_options:
             image:
@@ -248,6 +255,7 @@ basehub:
           description: Python notebook for SSIM-GHG 2024 Workshop
           allowed_groups:
             - US-GHG-Center:ssim-ghg-2024
+            - 2i2c-org:hub-access-for-2i2c-staff
           slug: ssim-ghg-2024-python
           kubespawner_override:
             # This will be updated to a custom python imge for the workshop when it is ready
@@ -262,6 +270,7 @@ basehub:
           description: R notebook for SSIM-GHG 2024 Workshop
           allowed_groups:
             - US-GHG-Center:ssim-ghg-2024
+            - 2i2c-org:hub-access-for-2i2c-staff
           slug: ssim-ghg-2024-r
           kubespawner_override:
             # This will be updated to a custom R image for the workshop when it is ready
