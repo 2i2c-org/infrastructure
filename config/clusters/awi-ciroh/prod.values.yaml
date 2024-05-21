@@ -49,6 +49,37 @@ basehub:
                   slug: "new"
                   kubespawner_override:
                     image: "quay.io/2i2c/awi-ciroh-image:79bb68961852"
+                devcon1:
+                  display_name: CNN for downscaling climate forcing variables
+                  default: true
+                  slug: "devcon1"
+                  kubespawner_override:
+                    image: "quay.io/benlee7411/devcon24:swolvin"
+                devcon2:
+                  display_name: Using Actors for Parallelization in Hydrology
+                  default: true
+                  slug: "devcon2"
+                  kubespawner_override:
+                    image: "quay.io/benlee7411/devcon24:kklenk"
+                devcon3:
+                  display_name: Decision Tree models
+                  default: true
+                  slug: "devcon3"
+                  kubespawner_override:
+                    image: "quay.io/benlee7411/devcon24:savalan"
+                devcon4:
+                  display_name: Data Workflows 101
+                  default: true
+                  slug: "devcon4"
+                  kubespawner_override:
+                    image: "quay.io/benlee7411/devcon24:pclemins"
+                devcon5:
+                  display_name: Neural Networks for Snow Modeling
+                  default: true
+                  slug: "devcon5"
+                  kubespawner_override:
+                    image: "quay.io/benlee7411/devcon24:dane"
+             
           kubespawner_override:
             mem_limit: 7G
             mem_guarantee: 5G
