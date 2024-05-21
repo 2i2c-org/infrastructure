@@ -78,8 +78,7 @@ basehub:
                   default: true
                   slug: "devcon5"
                   kubespawner_override:
-                    image: "quay.io/benlee7411/devcon24:dane"
-             
+                    image: "quay.io/benlee7411/devcon24:dane"     
           kubespawner_override:
             mem_limit: 7G
             mem_guarantee: 5G
