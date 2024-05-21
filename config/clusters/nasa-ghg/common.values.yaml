@@ -239,16 +239,16 @@ basehub:
               choices: {}
             resource_allocation: *profile_options_resource_allocation
 
-        # Following profile list items are added for the SSIMS-GHG-Workshop 2024.
+        # Following profile list items are added for the -GHG-Workshop 2024.
         # They specify custom resource allocations and custom images for the workshop
         # They are the only profile options users in the US-GHG-Center:ssim-ghg-2024
         # team should have access to. These profile items as well as this comment should
         # be cleaned up once the workshop is over.
-        - display_name: "SSIMS-GHG 2024 Workshop: Python"
-          description: Python notebook for SSIMS-GHG 2024 Workshop
+        - display_name: "SSIM-GHG 2024 Workshop: Python"
+          description: Python notebook for SSIM-GHG 2024 Workshop
           allowed_groups:
             - US-GHG-Center:ssim-ghg-2024
-          slug: ssims-ghg-2024-python
+          slug: ssim-ghg-2024-python
           kubespawner_override:
             # This will be updated to a custom python imge for the workshop when it is ready
             image: public.ecr.aws/nasa-veda/nasa-veda-singleuser:2024-04-09
@@ -258,11 +258,11 @@ basehub:
             cpu_limit: 14
             node_selector:
               node.kubernetes.io/instance-type: c5.4xlarge
-        - display_name: "SSIMS-GHG 2024 Workshop: R"
-          description: R notebook for SSIMS-GHG 2024 Workshop
+        - display_name: "SSIM-GHG 2024 Workshop: R"
+          description: R notebook for SSIM-GHG 2024 Workshop
           allowed_groups:
             - US-GHG-Center:ssim-ghg-2024
-          slug: ssims-ghg-2024-r
+          slug: ssim-ghg-2024-r
           kubespawner_override:
             # This will be updated to a custom R image for the workshop when it is ready
             image: rocker/binder:4.3
