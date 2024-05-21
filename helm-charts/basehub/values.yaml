@@ -1064,8 +1064,10 @@ jupyterhub:
                           new_choices[k] = c
                         # If `allowed_groups` *is* set for a profile option, it is allowed only for
                         # members of that team.
-                        elif set(c['allowed_groups']) & groups:
-                          new_choices[k] = c
+                        else:
+                          allowed_groups = set([g.casefold() for g in c['allowed_groups']])
+                          if allowed_groups & groups:
+                            new_choices[k] = c
                       po['choices'] = new_choices
 
                 if 'allowed_groups' not in profile:
