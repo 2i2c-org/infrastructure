@@ -13,5 +13,5 @@ Switching authentication providers (e.g. from GitHub to Google) for a pre-existi
 github-orgs
 cilogon
 auth0
-dummy-auth
+shared-password
 ```
