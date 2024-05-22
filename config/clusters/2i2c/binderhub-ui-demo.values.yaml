@@ -93,6 +93,12 @@ binderhub-service:
       - secretName: https-auto-tls
         hosts:
           - binderhub-ui-demo.2i2c.cloud
+  extraEnv:
+    - name: JUPYTERHUB_API_TOKEN
+      valueFrom:
+        secretKeyRef:
+          name: '{{ include "jupyterhub.hub.fullname" . }}'
+          key: hub.services.binder.apiToken
   config:
     BinderHub:
       hub_url: https://hub.binderhub-ui-demo.2i2c.cloud
