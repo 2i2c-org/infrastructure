@@ -77,4 +77,5 @@ hub_cloud_permissions = {
 
 container_repos = [
   "binder-staging",
+  "binderhub-ui-demo"
 ]
