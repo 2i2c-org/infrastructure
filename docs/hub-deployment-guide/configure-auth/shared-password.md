@@ -1,6 +1,6 @@
-# Dummy Authentication
+# Shared Password Authentication
 
-This documentation covers setting up the [Dummy Authenticator](https://jupyterhub.readthedocs.io/en/stable/reference/authenticators.html#the-dummy-authenticator)
+This documentation covers setting up a hub to have a shared password for login using the [Dummy Authenticator](https://jupyterhub.readthedocs.io/en/stable/reference/authenticators.html#the-dummy-authenticator)
 for a hub.
 
 For this section, it may be useful to set the following environment variables in your terminal.
@@ -26,9 +26,9 @@ jupyterhub:
       templateVars: [...]  # These values are as normal
 ```
 
-## (Recommended) Using Dummy Authenticator with a global password
+## Using a global password
 
-We strongly recommend using a global password with the authenticator.
+We **only** support using a global password with this method of authentication.
 A global password is simple to distribute to a large group of people for a specific event, such as a workshop, while still locking the hub down from the public which can protect it from cryptomining abuse.
 
 Enable the Dummy Authenticator in the `${HUB_NAME}.values.yaml` file with the following config.
@@ -71,16 +71,9 @@ hubs:
       - enc-${HUB_NAME}.secret.values.yaml
 ```
 
-```{note}
-To use the Dummy Authenticator without a password, the steps on including the password config and encrypting it can be skipped.
-```
-
 ### How the community should request changing the password
 
-If the community wishes to change the global password, they should do so by [submitting a ticket the support team](https://docs.2i2c.org/support/) and using `age` to encrypt the new password.
-
-- [Community docs on `age`](https://docs.2i2c.org/support/#send-us-encrypted-content)
-- [Engineering docs on `age`](support:decrypt-age)
+If the community wishes to change the global password, they should do so by [submitting a ticket the support team](https://docs.2i2c.org/support/).
 
 ## Disabling admin users
 
