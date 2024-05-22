@@ -1,3 +1,4 @@
+(support:decrypt-age)=
 # Decrypt encrypted information sent to `support@2i2c.org`
 
 Sometimes community representatives need to send us *encrypted* information -
