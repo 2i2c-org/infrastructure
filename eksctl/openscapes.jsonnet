@@ -79,7 +79,7 @@ local daskNodes = [
     nodeGroups: [n + {clusterName:: $.metadata.name} for n in [
         ng + {
             namePrefix: 'core',
-            nameSuffix: 'b',
+            nameSuffix: 'a',
             nameIncludeInstanceType: false,
             availabilityZones: [nodeAz],
             ssh: {
