@@ -96,7 +96,7 @@ def aws(
 
         # Construct output filename
         output_path = Path(
-            f"2i2c_dedicated_cluster_billing_AWS_{months[0]}_{months[-1]}.csv"
+            f"AWS_{months[0]}_{months[-1]}.csv"
         )
 
     print_colour(f"Writing output CSV to: {output_path}")
@@ -165,7 +165,7 @@ def gcp(
 
         # Construct output filename
         output_path = Path(
-            f"2i2c_dedicated_cluster_billing_GCP_{months[0]}_{months[-1]}.csv"
+            f"GCP_{months[0]}_{months[-1]}.csv"
         )
 
     print_colour(f"Writing output CSV to: {output_path}")
