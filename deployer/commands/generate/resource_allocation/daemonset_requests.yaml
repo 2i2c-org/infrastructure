@@ -129,22 +129,10 @@ eks:
     cpu_requests: 170m
     memory_requests: 250Mi
     k8s_version: v1.29.4-eks-036c24b
-  bican:
-    requesting_daemon_sets: aws-node,ebs-csi-node,kube-proxy,support-cryptnono,support-prometheus-node-exporter
-    other_daemon_sets: ""
-    cpu_requests: 170m
-    memory_requests: 250Mi
-    k8s_version: v1.29.3-eks-adc7111
   catalystproject-africa:
     requesting_daemon_sets: aws-node,ebs-csi-node,kube-proxy,support-cryptnono,support-prometheus-node-exporter
     other_daemon_sets: ""
     cpu_requests: 170m
-    memory_requests: 250Mi
-    k8s_version: v1.29.3-eks-adc7111
-  dandi:
-    requesting_daemon_sets: aws-node,ebs-csi-node,kube-proxy,support-cryptnono,support-prometheus-node-exporter
-    other_daemon_sets: ""
-    cpu_requests: 195m
     memory_requests: 250Mi
     k8s_version: v1.29.3-eks-adc7111
   earthscope:
@@ -172,12 +160,6 @@ eks:
     memory_requests: 250Mi
     k8s_version: v1.29.4-eks-036c24b
   kitware:
-    requesting_daemon_sets: aws-node,ebs-csi-node,kube-proxy,support-cryptnono,support-prometheus-node-exporter
-    other_daemon_sets: ""
-    cpu_requests: 195m
-    memory_requests: 250Mi
-    k8s_version: v1.29.3-eks-adc7111
-  linc:
     requesting_daemon_sets: aws-node,ebs-csi-node,kube-proxy,support-cryptnono,support-prometheus-node-exporter
     other_daemon_sets: ""
     cpu_requests: 195m
