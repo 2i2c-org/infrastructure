@@ -9,14 +9,20 @@ Practically to invoice these communities, we update a [spreadsheet for billing]
 summarizing monthly costs for communities, and then request invoicing help from
 CS&S via the `#billing` slack channel.
 
-This documentation helps you update that spreadsheet for communities in both
-shared and dedicated clusters!
-
 ```{important}
-Make sure you have access to the [spreadsheet for billing] before
-following the steps below. Your 2i2c.org email should give you access.
+If you do not have access to the `#billing` slack channel, ask in the
+`#team-updates` channel and someone will add you.
 ```
 
+This documentation helps you update that spreadsheet for communities on shared
+clusters and generate CSV files for dedicated clusters.
+
+```{important}
+Make sure you have access to the [cloud costs folder] and [spreadsheet for billing]
+before following the steps below. Your 2i2c.org email should give you access.
+```
+
+[cloud costs folder]: https://drive.google.com/drive/folders/1_xXZ2ndEOplZidG_mj6nmUTzsOuxARcL?usp=drive_link
 [spreadsheet for billing]: https://docs.google.com/spreadsheets/d/1AWVCg0D_-ATub_cVsIy5XZCwqnC6uIcgwDGYK9Q7yno/edit#gid=1349808947
 
 ## Communities in shared cloud accounts
@@ -50,23 +56,26 @@ AWS management account. If a future cluster deviates from this, you can tell by
 `aws.billing.paid_by_us` being set true in its `cluster.yaml`.
 ```
 
-1. Login to shared AWS SSO at https://2i2c.awsapps.com/start#/
-2. Select the `2i2c-sandbox` account, as it is the primary billing account
-3. Select 'AdministratorAccess' to open the AWS Console for this account
-4. Visit the "Monthly Costs By Linked Account" report ([direct link]) via "Billing and Cost Management" -> "Cost Explorer Saved Reports"
-5. On the right sidebar under "Time -> Date Range", select all the completed months we want to get data for
-6. On the right sidebar under "Time -> Granularity", ensure its selected as "Monthly"
-7. On the right sidebar under "Group by -> Dimension", select "Linked account"
-8. Click the 'Download as CSV' button
-9. Copy AWS costs
+1. Login to shared AWS SSO at <https://2i2c.awsapps.com/start#/>
+1. Select the `2i2c-sandbox` account, as it is the primary billing account
+1. Select 'AdministratorAccess' to open the AWS Console for this account
+1. Visit the "Monthly Costs By Linked Account" report ([direct link]) via "Billing and Cost Management" -> "Cost Explorer Saved Reports"
+1. On the right sidebar under "Time -> Date Range", select all the completed months we want to get data for
+1. On the right sidebar under "Time -> Granularity", ensure its selected as "Monthly"
+1. On the right sidebar under "Group by -> Dimension", select "Linked account"
+1. Click the 'Download as CSV' button
+   ```{figure} ../images/aws-billing-ui.jpg
+   AWS billing UI
+   ```
+1. Run the following deployer command to convert the generated CSV file into the format required for the invoicing process.
+   
+   ```bash
+   deployer transform cost-table gcp pathto/downloaded/csvfile
+   ```
 
-   The CSV file has rows for each month, and columns for each project. Copy it
-   into the spreadsheet, making sure the rows and columns both match what is
-   already present. The AWS account name should match the "Cloud Project" row in
-   the spreadsheet.
-
-   Once done, re-check the numbers once again to make sure they were copied
-   correctly.
+   This will output a new CSV file to your local filesystem called `AWS_{START_MONTH}_{END_MONTH}.csv`.
+2. Upload this CSV file to the [cloud costs folder]
+3. Ping the folks in the `#billing` slack channel to let them know the info for dedicated clusters is now available and provide a link to the file you have just uploaded
 
 [direct link]: https://us-east-1.console.aws.amazon.com/costmanagement/home?region=us-east-1#/cost-explorer?reportId=d826a775-e0d6-4e85-a181-7f87a8deb162&reportName=Monthly%20costs%20by%20linked%20account&isDefault=true&chartStyle=GROUP&historicalRelativeRange=LAST_6_MONTHS&futureRelativeRange=CUSTOM&granularity=Monthly&groupBy=%5B%22LinkedAccount%22%5D&filter=%5B%5D&costAggregate=unBlendedCost&showOnlyUntagged=false&showOnlyUncategorized=false&useNormalizedUnits=false
 
@@ -77,20 +86,23 @@ Currently this is the recommended way of retrieving the costs from GCP.
 ```
 
 1. Go to the [2i2c billing account] on GCP
-2. Select 'Reports' on the left sidebar
-3. Under time range on the right sidebar, select 'Invoice Month'
-4. Select the time range you are interested in. Note that this has to be at least two months right now, or the next step does not work
-5. Under 'Group by', select 'Month -> Project'.
-6. Under the chart, click the 'Download CSV' button. This downloads a CSV that you can use to later populate the columns in the costs spreadsheet
+1. Select 'Reports' on the left sidebar
+1. Under time range on the right sidebar, select 'Invoice Month'
+1. Select the time range you are interested in. Note that this has to be at least two months right now, or the next step does not work
+1. Under 'Group by', select 'Month -> Project'.
+1. Under the chart, click the 'Download CSV' button. This downloads a CSV that you can use to later populate the columns in the costs spreadsheet
    ```{figure} ../images/gcp-billing-ui.png
    GCP billing UI
    ```
-7. Copy GCP costs.
+1. Run the following deployer command to convert the generated CSV file into the format required for the invoicing process.
+   
+   ```bash
+   deployer transform cost-table gcp pathto/downloaded/csvfile
+   ```
 
-   The GCP CSV has rows for each month and project. Carefully copy the $ values under
-   'subtotal' (last column) into the [spreadsheet for billing]. Match the 'project name' column in the GCP CSV with the 'cloud project' row in our billing spreadsheet.
-
-   When done, re-check the numbers once again to make sure they are copied correctly.
+   This will output a new CSV file to your local filesystem called `GCP_{START_MONTH}_{END_MONTH}.csv`.
+2. Upload this CSV file to the [cloud costs folder]
+3. Ping the folks in the `#billing` slack channel to let them know the info for dedicated clusters is now available and provide a link to the file just uploaded
 
 [2i2c billing account]: https://console.cloud.google.com/billing/0157F7-E3EA8C-25AC3C/reports;timeRange=CUSTOM_RANGE;from=2024-01-01;to=2024-01-31;dateType=INVOICE_DATE;invoiceCorrections=TAX,BILLING_MODIFICATION?organizationId=184174754493&project=two-eye-two-see
 
