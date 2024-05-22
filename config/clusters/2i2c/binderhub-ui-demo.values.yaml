@@ -81,7 +81,7 @@ jupyterhub:
       JupyterHub:
         authenticator_class: github
       GitHubOAuthenticator:
-        oauth_callback_url: https://binderhub-ui-demo.2i2c.cloud/hub/oauth_callback
+        oauth_callback_url: https://hub.binderhub-ui-demo.2i2c.cloud/hub/oauth_callback
 
 binderhub-service:
   enabled: true
