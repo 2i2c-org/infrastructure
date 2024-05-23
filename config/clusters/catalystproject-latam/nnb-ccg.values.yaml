@@ -1,0 +1,24 @@
+jupyterhub:
+  ingress:
+    hosts: [nnb-ccg.latam.catalystproject.2i2c.cloud]
+    tls:
+      - hosts: [nnb-ccg.latam.catalystproject.2i2c.cloud]
+        secretName: https-auto-tls
+  custom:
+    homepage:
+      templateVars:
+        org:
+          name: Catalyst Project, LatAm - NNB-CCG
+  hub:
+    config:
+      JupyterHub:
+        authenticator_class: github
+      GitHubOAuthenticator:
+        oauth_callback_url: https://nnb-ccg.latam.catalystproject.2i2c.cloud/hub/oauth_callback
+        allowed_organizations:
+          - CatalystProject-Hubs:nnb-ccg
+        scope:
+          - read:org
+      Authenticator:
+        admin_users:
+          - alfredojosehernandezalvarez
