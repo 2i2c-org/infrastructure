@@ -30,7 +30,7 @@ Usually, it is because it was a hub that we created for a workshop/conference an
 
 #### Phase II - Hub Removal
 
-(These steps are described in more detail in the docs at https://infrastructure.2i2c.org/en/latest/hub-deployment-guide/hubs/other-hub-ops/delete-hub.html)
+(These steps are described in more detail in the docs at https://infrastructure.2i2c.org/hub-deployment-guide/hubs/delete-hub/)
 
 - [ ] Manage existing home directory data (migrate data from the hub or delete it)
 - [ ] Manage existing cloud bucket data (migrate data, or delete it)
