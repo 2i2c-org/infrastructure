@@ -26,7 +26,8 @@ local nodeAz = "us-west-2a";
 // can request a particular kind of node with a nodeSelector
 local notebookNodes = [
     { instanceType: "r5.xlarge" },
-    { instanceType: "r5.4xlarge" },
+    { instanceType: "r5.4xlarge" },  // FIXME: tainted, to be deleted when empty, replaced by equivalent during k8s upgrade
+    { instanceType: "r5.4xlarge" , nameSuffix : "b" },
     { instanceType: "r5.16xlarge" },
 ];
 local daskNodes = [
@@ -79,7 +80,7 @@ local daskNodes = [
     nodeGroups: [
         ng + {
             namePrefix: 'core',
-            nameSuffix: 'a',
+            nameSuffix: 'b',
             nameIncludeInstanceType: false,
             availabilityZones: [nodeAz],
             ssh: {
