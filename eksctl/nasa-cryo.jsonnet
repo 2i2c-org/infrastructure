@@ -26,8 +26,7 @@ local nodeAz = "us-west-2a";
 // can request a particular kind of node with a nodeSelector
 local notebookNodes = [
     { instanceType: "r5.xlarge" },
-    // FIXME: tainted, to be deleted when empty, replaced by equivalent during k8s upgrade
-    { instanceType: "r5.xlarge", nameSuffix: "b" },
+    { instanceType: "r5.xlarge", nameSuffix: "b" },  // FIXME: tainted, to be deleted when empty, replaced by equivalent during k8s upgrade
     { instanceType: "r5.4xlarge" },
     { instanceType: "r5.16xlarge" },
     {
