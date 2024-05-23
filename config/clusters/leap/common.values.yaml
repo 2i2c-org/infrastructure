@@ -165,17 +165,17 @@ basehub:
                   default: true
                   slug: "pangeo"
                   kubespawner_override:
-                    image: "pangeo/pangeo-notebook:2024.04.08"
+                    image: "pangeo/pangeo-notebook:2024.05.21"
                 tensorflow:
                   display_name: Pangeo Tensorflow ML Notebook
                   slug: "tensorflow"
                   kubespawner_override:
-                    image: "pangeo/ml-notebook:2024.04.08"
+                    image: "pangeo/ml-notebook:2024.05.21"
                 pytorch:
                   display_name: Pangeo PyTorch ML Notebook
                   slug: "pytorch"
                   kubespawner_override:
-                    image: "pangeo/pytorch-notebook:2024.04.08"
+                    image: "pangeo/pytorch-notebook:2024.05.21"
                 leap-pangeo-edu:
                   display_name: LEAP Education Notebook (Testing Prototype)
                   slug: "leap_edu"
@@ -270,17 +270,17 @@ basehub:
                   default: true
                   slug: "pangeo"
                   kubespawner_override:
-                    image: "pangeo/pangeo-notebook:2024.04.08"
+                    image: "pangeo/pangeo-notebook:2024.05.21"
                 tensorflow:
                   display_name: Pangeo Tensorflow ML Notebook
                   slug: "tensorflow"
                   kubespawner_override:
-                    image: "pangeo/ml-notebook:2024.04.08"
+                    image: "pangeo/ml-notebook:2024.05.21"
                 pytorch:
                   display_name: Pangeo PyTorch ML Notebook
                   slug: "pytorch"
                   kubespawner_override:
-                    image: "pangeo/pytorch-notebook:2024.04.08"
+                    image: "pangeo/pytorch-notebook:2024.05.21"
                 leap-pangeo-edu:
                   display_name: LEAP Education Notebook (Testing Prototype)
                   slug: "leap_edu"
@@ -332,12 +332,12 @@ basehub:
                   display_name: Pangeo Tensorflow ML Notebook
                   slug: "tensorflow"
                   kubespawner_override:
-                    image: "pangeo/ml-notebook:2024.04.08"
+                    image: "pangeo/ml-notebook:2024.05.21"
                 pytorch:
                   display_name: Pangeo PyTorch ML Notebook
                   slug: "pytorch"
                   kubespawner_override:
-                    image: "pangeo/pytorch-notebook:2024.04.08"
+                    image: "pangeo/pytorch-notebook:2024.05.21"
           kubespawner_override:
             environment:
               NVIDIA_DRIVER_CAPABILITIES: compute,utility
