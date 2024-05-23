@@ -90,7 +90,7 @@ local daskNodes = [
     nodeGroups: [
         ng + {
             namePrefix: 'core',
-            nameSuffix: 'b',
+            nameSuffix: 'a',
             nameIncludeInstanceType: false,
             availabilityZones: [nodeAz],
             ssh: {
