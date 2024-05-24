@@ -74,6 +74,11 @@ basehub:
                   kubespawner_override:
                     image: "quay.io/benlee7411/devcon24:dane"
                     image_pull_policy: "Always"
+                devcon6:
+                  display_name: "DevCon24 workshop : Long Short Term Memory modeling"
+                  kubespawner_override:
+                    image: "quay.io/benlee7411/devcon24:jmframe_neuralhydrology"
+                    image_pull_policy: "Always"                
           kubespawner_override:
             mem_limit: 7G
             mem_guarantee: 5G
