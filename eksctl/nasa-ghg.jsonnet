@@ -29,6 +29,7 @@ local notebookNodes = [
     { instanceType: "r5.4xlarge" },  // FIXME: tainted, to be deleted when empty, replaced by equivalent during k8s upgrade
     { instanceType: "r5.4xlarge" , nameSuffix : "b" },
     { instanceType: "r5.16xlarge" },
+    { instanceType: "c5.4xlarge"},
 ];
 local daskNodes = [
     // Node definitions for dask worker nodes. Config here is merged
