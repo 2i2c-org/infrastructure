@@ -78,7 +78,7 @@ basehub:
                   display_name: "DevCon24 workshop : Long Short Term Memory modeling"
                   kubespawner_override:
                     image: "quay.io/benlee7411/devcon24:jmframe_neuralhydrology"
-                    image_pull_policy: "Always"                
+                    image_pull_policy: "Always"
           kubespawner_override:
             mem_limit: 7G
             mem_guarantee: 5G
