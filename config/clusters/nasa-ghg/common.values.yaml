@@ -258,8 +258,8 @@ basehub:
             - 2i2c-org:hub-access-for-2i2c-staff
           slug: ssim-ghg-2024-python
           kubespawner_override:
-            # This will be updated to a custom python imge for the workshop when it is ready
-            image: public.ecr.aws/nasa-veda/nasa-veda-singleuser:2024-04-09
+            # Custom image for workshop: https://github.com/NASA-IMPACT/ssim-ghg-workshop-2024-python-image
+            image: public.ecr.aws/nasa-veda/ssim-ghg-workshop-2024-python-image:363ef30a73a6
             # Adjusted to try to land only one user on each node
             mem_guarantee: 27G
             mem_limit: 27G
@@ -274,8 +274,8 @@ basehub:
             - 2i2c-org:hub-access-for-2i2c-staff
           slug: ssim-ghg-2024-r
           kubespawner_override:
-            # This will be updated to a custom R image for the workshop when it is ready
-            image: rocker/binder:4.3
+            # Custom image for workshop: https://github.com/NASA-IMPACT/ssim-ghg-workshop-2024-r-image
+            image: public.ecr.aws/nasa-veda/ssim-ghg-workshop-2024-r-image:5437bbe6b051
             # Adjusted to try to land only one user on each node
             mem_guarantee: 27G
             mem_limit: 27G
