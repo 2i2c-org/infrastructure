@@ -64,17 +64,6 @@ basehub:
         - display_name: Python
           description: Python datascience environment
           default: true
-          allowed_groups:
-            - 2i2c-org:hub-access-for-2i2c-staff
-            - NASA-Openscapes:workshopaccess-2i2c # legacy but no plans to delete immediately until fledged
-            - NASA-Openscapes:longtermaccess-2i2c
-            - NASA-Openscapes:championsaccess-2i2c # legacy but no plans to delete immediately until fledged
-            # Requested in: https://2i2c.freshdesk.com/a/tickets/1284
-            - nasa-openscapes-workshops:AdminTeam
-            - nasa-openscapes-workshops:nasa-champions-2024
-            - nasa-openscapes-workshops:ChampionsAccess-2i2c # legacy, will delete - has only one user from 2023 cohort
-            - nasa-openscapes-workshops:WorkshopAccess-2i2c # From SWOT workshop 2024-02-13
-            - nasa-openscapes-workshops:emit-methane-plume-2024-03-14
           kubespawner_override:
             image: openscapes/python:39dffde
           profile_options: &profile_options
@@ -147,17 +136,6 @@ basehub:
                       node.kubernetes.io/instance-type: r5.4xlarge
         - display_name: R
           description: R (with RStudio) + Python environment
-          allowed_groups:
-            - 2i2c-org:hub-access-for-2i2c-staff
-            - NASA-Openscapes:workshopaccess-2i2c
-            - NASA-Openscapes:longtermaccess-2i2c
-            - NASA-Openscapes:championsaccess-2i2c
-            # Requested in: https://2i2c.freshdesk.com/a/tickets/1284
-            - nasa-openscapes-workshops:AdminTeam
-            - nasa-openscapes-workshops:nasa-champions-2024
-            - nasa-openscapes-workshops:ChampionsAccess-2i2c
-            - nasa-openscapes-workshops:WorkshopAccess-2i2c
-            - nasa-openscapes-workshops:emit-methane-plume-2024-03-14
           kubespawner_override:
             image: openscapes/rocker:a7596b5
             # Ensures container working dir is homedir
@@ -166,29 +144,12 @@ basehub:
           profile_options: *profile_options
         - display_name: Matlab
           description: Matlab environment
-          allowed_groups:
-            - 2i2c-org:hub-access-for-2i2c-staff
-            - NASA-Openscapes:workshopaccess-2i2c
-            - NASA-Openscapes:longtermaccess-2i2c
-            - NASA-Openscapes:championsaccess-2i2c
-            # Requested in: https://2i2c.freshdesk.com/a/tickets/1284
-            - nasa-openscapes-workshops:AdminTeam
-            - nasa-openscapes-workshops:nasa-champions-2024
-            - nasa-openscapes-workshops:ChampionsAccess-2i2c
-            - nasa-openscapes-workshops:WorkshopAccess-2i2c
-            - nasa-openscapes-workshops:emit-methane-plume-2024-03-14
           kubespawner_override:
             image: openscapes/matlab:2023-11-28
           profile_options: *profile_options
         - display_name: "Bring your own image"
           description: Specify your own docker image (must have python and jupyterhub installed in it)
           slug: custom
-          allowed_groups:
-            - NASA-Openscapes:longtermaccess-2i2c
-            - 2i2c-org:hub-access-for-2i2c-staff
-            # Requested in: https://2i2c.freshdesk.com/a/tickets/1284
-            - nasa-openscapes-workshops:AdminTeam
-            - nasa-openscapes-workshops:nasa-champions-2024
           profile_options:
             image:
               display_name: Image
