@@ -76,6 +76,7 @@ jupyterhub:
         url: http://binderhub-ui-demo-binderhub-service:8090
         display: true
         oauth_no_confirm: true
+        oauth_redirect_uri: https://binderhub-ui-demo.2i2c.cloud/oauth_callback
     config:
       BinderSpawnerMixin:
         auth_enabled: true
@@ -91,11 +92,11 @@ binderhub-service:
     ingressClassName: nginx
     annotations:
       nginx.ingress.kubernetes.io/proxy-body-size: 256m
-      cert-manager.io/cluster-issuer: letsencrypt-prodc
+      cert-manager.io/cluster-issuer: letsencrypt-prod
     hosts:
       - binderhub-ui-demo.2i2c.cloud
     tls:
-      - secretName: https-auto-tls
+      - secretName: binder-https-auto-tls
         hosts:
           - binderhub-ui-demo.2i2c.cloud
   extraEnv:
@@ -107,9 +108,9 @@ binderhub-service:
     - name: JUPYTERHUB_CLIENT_ID
       value: "service-binder"
     - name: JUPYTERHUB_OAUTH_CALLBACK_URL
-      value: "/services/binder/oauth_callback"
+      value: "https://binderhub-ui-demo.2i2c.cloud/oauth_callback"
     - name: JUPYTERHUB_API_URL
-      value: "https://hub.binderhub-ui-demo.2i2c.cloud/hub/api/"
+      value: "https://hub.binderhub-ui-demo.2i2c.cloud/hub/api"
 
   config:
     BinderHub:
