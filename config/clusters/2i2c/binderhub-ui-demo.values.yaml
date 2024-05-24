@@ -74,7 +74,8 @@ jupyterhub:
         # FIXME: ref https://github.com/2i2c-org/binderhub-service/issues/57
         # for something more readable and requiring less copy-pasting
         url: http://binderhub-ui-demo-binderhub-service:8090
-        display: false
+        display: true
+        oauth_no_confirm: true
     config:
       BinderSpawnerMixin:
         auth_enabled: true
@@ -87,6 +88,10 @@ binderhub-service:
   enabled: true
   ingress:
     enabled: true
+    ingressClassName: nginx
+    annotations:
+      nginx.ingress.kubernetes.io/proxy-body-size: 256m
+      cert-manager.io/cluster-issuer: letsencrypt-prodc
     hosts:
       - binderhub-ui-demo.2i2c.cloud
     tls:
@@ -99,6 +104,13 @@ binderhub-service:
         secretKeyRef:
           name: '{{ include "jupyterhub.hub.fullname" . }}'
           key: hub.services.binder.apiToken
+    - name: JUPYTERHUB_CLIENT_ID
+      value: "service-binder"
+    - name: JUPYTERHUB_OAUTH_CALLBACK_URL
+      value: "/services/binder/oauth_callback"
+    - name: JUPYTERHUB_API_URL
+      value: "https://hub.binderhub-ui-demo.2i2c.cloud/hub/api/"
+
   config:
     BinderHub:
       hub_url: https://hub.binderhub-ui-demo.2i2c.cloud
