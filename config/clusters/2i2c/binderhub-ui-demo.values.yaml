@@ -75,21 +75,6 @@ binderhub-service:
       - secretName: binder-https-auto-tls
         hosts:
           - binderhub-ui-demo.2i2c.cloud
-  extraEnv:
-    - name: JUPYTERHUB_API_TOKEN
-      valueFrom:
-        secretKeyRef:
-          name: '{{ include "jupyterhub.hub.fullname" . }}'
-          key: hub.services.binder.apiToken
-    - name: JUPYTERHUB_CLIENT_ID
-      value: "service-binder"
-    # Without this, the redirect URL to /hub/api/... gets
-    # appended to binderhub's URL instead of the hub's
-    # and setting JUPYTHUB_API_URL has no effect
-    - name: JUPYTERHUB_BASE_URL
-      value: "https://hub.binderhub-ui-demo.2i2c.cloud/"
-    - name: JUPYTERHUB_OAUTH_CALLBACK_URL
-      value: "https://binderhub-ui-demo.2i2c.cloud/oauth_callback"
   config:
     BinderHub:
       base_url: /
@@ -98,6 +83,22 @@ binderhub-service:
       auth_enabled: true
       enable_api_only_mode: false
       image_prefix: us-central1-docker.pkg.dev/two-eye-two-see/binderhub-ui-demo-registry/binderhub-service-
+  extraEnv:
+    - name: JUPYTERHUB_API_TOKEN
+      valueFrom:
+        secretKeyRef:
+          name: '{{ include "jupyterhub.hub.fullname" . }}'
+          key: hub.services.binder.apiToken
+    - name: JUPYTERHUB_CLIENT_ID
+      value: "service-binder"
+    - name: JUPYTERHUB_API_URL
+      value: "https://hub.binderhub-ui-demo.2i2c.cloud/hub/api"
+    # Without this, the redirect URL to /hub/api/... gets
+    # appended to binderhub's URL instead of the hub's
+    - name: JUPYTERHUB_BASE_URL
+      value: "https://hub.binderhub-ui-demo.2i2c.cloud/"
+    - name: JUPYTERHUB_OAUTH_CALLBACK_URL
+      value: "https://binderhub-ui-demo.2i2c.cloud/oauth_callback"
   # The password to the registry is stored encrypted in the hub's encrypted config file
   buildPodsRegistryCredentials:
     server: "https://us-central1-docker.pkg.dev"
