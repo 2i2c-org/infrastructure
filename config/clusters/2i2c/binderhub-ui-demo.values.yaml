@@ -41,7 +41,7 @@ jupyterhub:
       binder:
         # FIXME: ref https://github.com/2i2c-org/binderhub-service/issues/57
         # for something more readable and requiring less copy-pasting
-        display: true
+        display: false
         oauth_no_confirm: true
         url: http://binderhub-ui-demo-binderhub-service:8090
         oauth_redirect_uri: https://binderhub-ui-demo.2i2c.cloud/oauth_callback
@@ -61,7 +61,6 @@ jupyterhub:
           http://google.com/accounts/o8/id:
             username_derivation:
               username_claim: "email"
-
 binderhub-service:
   enabled: true
   ingress:
@@ -84,11 +83,13 @@ binderhub-service:
           key: hub.services.binder.apiToken
     - name: JUPYTERHUB_CLIENT_ID
       value: "service-binder"
+    # Without this, the redirect URL to /hub/api/... gets
+    # appended to binderhub's URL instead of the hub's
+    # and setting JUPYTHUB_API_URL has no effect
+    - name: JUPYTERHUB_BASE_URL
+      value: "https://hub.binderhub-ui-demo.2i2c.cloud/"
     - name: JUPYTERHUB_OAUTH_CALLBACK_URL
       value: "https://binderhub-ui-demo.2i2c.cloud/oauth_callback"
-    - name: JUPYTERHUB_API_URL
-      value: "https://hub.binderhub-ui-demo.2i2c.cloud/hub/api"
-
   config:
     BinderHub:
       base_url: /
