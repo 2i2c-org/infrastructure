@@ -91,6 +91,7 @@ binderhub-service:
 
   config:
     BinderHub:
+      base_url: /
       hub_url: https://hub.binderhub-ui-demo.2i2c.cloud
       badge_base_url: https://binderhub-ui-demo.2i2c.cloud
       auth_enabled: true

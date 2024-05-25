@@ -41,6 +41,14 @@ hubs:
       - basehub-common.values.yaml
       - imagebuilding-demo.values.yaml
       - enc-imagebuilding-demo.secret.values.yaml
+  - name: binderhub-ui-demo
+    display_name: "2i2c Binderhub UI demo"
+    domain: hub.binderhub-ui-demo-demo.2i2c.cloud
+    helm_chart: basehub
+    helm_chart_values_files:
+      - basehub-common.values.yaml
+      - binderhub-ui-demo.values.yaml
+      - enc-binderhub-ui-demo.secret.values.yaml
   - name: demo
     display_name: "2i2c demo"
     domain: demo.2i2c.cloud
