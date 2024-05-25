@@ -35,12 +35,14 @@ basehub:
         JupyterHub:
           authenticator_class: github
         GitHubOAuthenticator:
+          populate_teams_in_auth_state: true
           allowed_organizations:
             - alabamawaterinstitute
             - NOAA-OWP
           scope:
             - read:org
         Authenticator:
+          enable_auth_state: True
           admin_users:
             - jameshalgren
             - arpita0911patel
