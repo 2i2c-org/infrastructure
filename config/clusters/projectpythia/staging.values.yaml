@@ -1,0 +1,19 @@
+jupyterhub:
+  ingress:
+    hosts: [staging.projectpythia.2i2c.cloud]
+    tls:
+      - hosts: [staging.projectpythia.2i2c.cloud]
+        secretName: https-auto-tls
+  custom:
+    homepage:
+      templateVars:
+        org:
+          name: projectpythia staging
+  hub:
+    config:
+      GitHubOAuthenticator:
+        oauth_callback_url: https://staging.projectpythia.2i2c.cloud/hub/oauth_callback
+        allowed_organizations:
+          - ProjectPythia
+        scope:
+          - read:org
