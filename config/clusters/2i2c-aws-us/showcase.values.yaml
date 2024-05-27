@@ -74,7 +74,7 @@ basehub:
             - 2i2c-org:hub-access-for-2i2c-staff
             - ScienceCore:climaterisk-team
           kubespawner_override:
-            image: quay.io/2i2c/sciencecore-climaterisk-image:ea0618a408e2
+            image: quay.io/2i2c/sciencecore-climaterisk-image:69d8d944f907 
             mem_guarantee: 7.234G
             cpu_guarantee: 0.1
             mem_limit: null

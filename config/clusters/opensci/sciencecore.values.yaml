@@ -91,6 +91,12 @@ jupyterhub:
                   # Launch into RStudio after the user logs in
                   default_url: /rstudio
                   working_dir: /home/rstudio
+              climaterisk:
+                display_name: NASA TOPS-T ScienceCore-ClimateRisk
+                description: "quay.io/2i2c/sciencecore-climaterisk-image"
+                slug: climaterisk
+                kubespawner_override:
+                  image: quay.io/2i2c/sciencecore-climaterisk-image:69d8d944f907                  
           resources:
             display_name: Resource Allocation
             choices:
