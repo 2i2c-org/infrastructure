@@ -161,7 +161,7 @@ jupyterhub:
       profileList:
         - display_name: NVIDIA Tesla T4, ~16 GB, ~4 CPUs
           description: "Start a container on a dedicated node with a GPU"
-          allowed_teams:
+          allowed_groups:
             - 2i2c-org:hub-access-for-2i2c-staff
             - <github-org>:<team-name>
           profile_options:
