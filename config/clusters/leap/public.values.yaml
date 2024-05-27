@@ -1,0 +1,127 @@
+nfs:
+  enabled: false
+  pv:
+    enabled: false
+jupyterhub:
+  ingress:
+    hosts: [public.leap.2i2c.cloud]
+    tls:
+      - hosts: [public.leap.2i2c.cloud]
+        secretName: https-auto-tls
+  custom:
+    2i2c:
+      add_staff_user_ids_to_admin_users: true
+      add_staff_user_ids_of_type: "github"
+    jupyterhubConfigurator:
+      enabled: false
+    singleuserAdmin:
+      # Turn off trying to mount shared-readwrite folder for admins
+      extraVolumeMounts: []
+    homepage:
+      templateVars:
+        org:
+          name: LEAP
+          url: https://leap-stc.github.io
+          logo_url: https://leap-stc.github.io/_static/LEAP_logo.png
+        designed_by:
+          name: 2i2c
+          url: https://2i2c.org
+        operated_by:
+          name: 2i2c
+          url: https://2i2c.org
+        funded_by:
+          name: LEAP
+          url: https://leap-stc.github.io
+  hub:
+    annotations:
+      # Prevents the core node on which this pod is present from being drained
+      # See https://github.com/2i2c-org/infrastructure/issues/3461
+      cluster-autoscaler.kubernetes.io/safe-to-evict: "false"
+    allowNamedServers: true
+    config:
+      JupyterHub:
+        authenticator_class: github
+      GitHubOAuthenticator:
+        populate_teams_in_auth_state: true
+        oauth_callback_url: https://public.leap.2i2c.cloud/hub/oauth_callback
+        allowed_organizations:
+          - leap-stc:leap-pangeo-public-access
+        scope:
+          - read:org
+      Authenticator:
+        enable_auth_state: true
+        admin_users:
+          - rabernat
+          - jbusecke
+  singleuser:
+    initContainers: []
+    storage:
+      # No persistent storage should be kept to reduce any potential data
+      # retention & privacy issues.
+      type: none
+      extraVolumeMounts: []
+    nodeSelector:
+      2i2c.org/community: public
+    extraTolerations:
+      - key: 2i2c.org/community
+        operator: Equal
+        value: public
+        effect: NoSchedule
+
+    profileList:
+      - display_name: Pangeo Notebook
+        description: Python with Geoscience Packages
+        slug: pangeo
+        default: true
+        kubespawner_override:
+          image: pangeo/pangeo-notebook:2024.05.21
+          default_url: /lab
+        profile_options: &profile_options
+          resource_allocation: &resource_allocation
+            display_name: Resource Allocation
+            choices:
+              mem_3_4:
+                display_name: 3.4 GB RAM, upto 3.4 CPUs
+                kubespawner_override:
+                  mem_guarantee: 3620925866
+                  mem_limit: 3620925866
+                  cpu_guarantee: 0.43125
+                  cpu_limit: 3.45
+                default: true
+              mem_6_7:
+                display_name: 6.7 GB RAM, upto 3.4 CPUs
+                kubespawner_override:
+                  mem_guarantee: 7241851732
+                  mem_limit: 7241851732
+                  cpu_guarantee: 0.8625
+                  cpu_limit: 3.45
+              mem_13_5:
+                display_name: 13.5 GB RAM, upto 3.4 CPUs
+                kubespawner_override:
+                  mem_guarantee: 14483703464
+                  mem_limit: 14483703464
+                  cpu_guarantee: 1.725
+                  cpu_limit: 3.45
+              mem_27_0:
+                display_name: 27.0 GB RAM, upto 3.4 CPUs
+                kubespawner_override:
+                  mem_guarantee: 28967406928
+                  mem_limit: 28967406928
+                  cpu_guarantee: 3.45
+                  cpu_limit: 3.45
+
+      - display_name: Pangeo Tensorflow ML Notebook
+        description: Python with Geoscience Packages and Tensorflow (no GPU)
+        slug: tensorflow
+        kubespawner_override:
+          image: pangeo/ml-notebook:2024.05.21
+          default_url: /lab
+        profile_options: *profile_options
+
+      - display_name: Pangeo PyTorch ML Notebook
+        description: Python with Geoscience Packages and PyTorch (no GPU)
+        slug: pytorch
+        kubespawner_override:
+          image: pangeo/pytorch-notebook:2024.05.21
+          default_url: /lab
+        profile_options: *profile_options
