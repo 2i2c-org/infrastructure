@@ -35,6 +35,7 @@ jupyterhub:
     cmd: jupyterhub-singleuser
     storage:
       type: none
+    initContainers: []
   hub:
     redirectToServer: false
     services:
