@@ -40,7 +40,6 @@ jupyterhub:
     redirectToServer: false
     services:
       binder:
-        display: false
         oauth_no_confirm: true
         oauth_redirect_uri: https://binderhub-ui-demo.2i2c.cloud/oauth_callback
     loadRoles:
@@ -50,6 +49,12 @@ jupyterhub:
         scopes:
           - servers
           - read:users # admin:users is required if authentication isn't enabled
+      user:
+        scopes:
+          - self
+          # Admin users will by default have access:services, so this is only
+          # observed to be required for non-admin users.
+          - access:services!service=binder
     config:
       BinderSpawnerMixin:
         auth_enabled: true
