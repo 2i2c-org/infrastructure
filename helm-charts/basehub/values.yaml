@@ -11,6 +11,12 @@ adminServiceAccount:
 
 binderhub-service:
   enabled: false
+  ingress:
+    enabled: false
+    ingressClassName: nginx
+    annotations:
+      nginx.ingress.kubernetes.io/proxy-body-size: 256m
+      cert-manager.io/cluster-issuer: letsencrypt-prod
   nodeSelector:
     hub.jupyter.org/node-purpose: core
   service:
