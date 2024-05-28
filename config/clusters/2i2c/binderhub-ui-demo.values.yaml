@@ -46,6 +46,12 @@ jupyterhub:
         url: http://binderhub-ui-demo-binderhub-service:8090
         oauth_redirect_uri: https://binderhub-ui-demo.2i2c.cloud/oauth_callback
     loadRoles:
+      binder:
+        services:
+          - binder
+        scopes:
+          - servers
+          - "admin:users" # only required if authentication is enabled
       user:
         scopes:
           - self
