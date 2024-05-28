@@ -21,9 +21,9 @@ n2-highmem-2:
   cpu_capacity_high: 2.0
   cpu_allocatable_low: 1.93
   cpu_allocatable_high: 1.93
-  mem_capacity_low: 15.627Gi
+  mem_capacity_low: 15.631Gi
   mem_capacity_high: 15.634Gi
-  mem_allocatable_low: 12.968Gi
+  mem_allocatable_low: 12.972Gi
   mem_allocatable_high: 12.975Gi
 n2-highmem-4:
   cpu_capacity_low: 4.0
@@ -209,12 +209,3 @@ Standard_E8s_v5:
   mem_capacity_high: 62.793Gi
   mem_allocatable_low: 56.581Gi
   mem_allocatable_high: 56.581Gi
-n2-highmem-64:
-  cpu_capacity_low: 64.0
-  cpu_capacity_high: 64.0
-  cpu_allocatable_low: 63.77
-  cpu_allocatable_high: 63.77
-  mem_capacity_low: 503.884Gi
-  mem_capacity_high: 503.884Gi
-  mem_allocatable_low: 486.945Gi
-  mem_allocatable_high: 486.945Gi
