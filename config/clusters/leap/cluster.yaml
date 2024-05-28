@@ -32,3 +32,10 @@ hubs:
       - common.values.yaml
       - prod.values.yaml
       - enc-prod.secret.values.yaml
+  - name: public
+    display_name: "LEAP Public"
+    domain: public.leap.2i2c.cloud
+    helm_chart: basehub
+    helm_chart_values_files:
+      - public.values.yaml
+      - enc-public.secret.values.yaml
