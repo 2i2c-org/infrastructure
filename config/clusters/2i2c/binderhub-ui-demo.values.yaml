@@ -43,11 +43,8 @@ jupyterhub:
     redirectToServer: false
     services:
       binder:
-        # FIXME: ref https://github.com/2i2c-org/binderhub-service/issues/57
-        # for something more readable and requiring less copy-pasting
         display: false
         oauth_no_confirm: true
-        url: http://binderhub-ui-demo-binderhub-service:8090
         oauth_redirect_uri: https://binderhub-ui-demo.2i2c.cloud/oauth_callback
     loadRoles:
       binder:
@@ -56,10 +53,6 @@ jupyterhub:
         scopes:
           - servers
           - "admin:users" # only required if authentication is enabled
-      user:
-        scopes:
-          - self
-          - "access:services"
     config:
       BinderSpawnerMixin:
         auth_enabled: true
