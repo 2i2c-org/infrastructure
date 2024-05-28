@@ -49,7 +49,7 @@ jupyterhub:
           - binder
         scopes:
           - servers
-          - "admin:users" # only required if authentication is enabled
+          - read:users # admin:users is required if authentication isn't enabled
     config:
       BinderSpawnerMixin:
         auth_enabled: true
