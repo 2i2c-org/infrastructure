@@ -29,12 +29,15 @@ jupyterhub:
         funded_by:
           name: ""
           url: ""
+    singleuserAdmin:
+      extraVolumeMounts: []
   singleuser:
     # This is copied from https://binderhub.readthedocs.io/en/latest/authentication.html#enabling-authentication
     # to make notebook servers aware of hub
     cmd: jupyterhub-singleuser
     storage:
       type: none
+      extraVolumeMounts: []
     initContainers: []
   hub:
     redirectToServer: false
