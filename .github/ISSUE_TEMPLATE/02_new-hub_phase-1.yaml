@@ -17,7 +17,7 @@ body:
   - type: textarea
     id: info-table
     attributes:
-      label: >- 
+      label: >-
         Required information for setting up a cloud account for a new community
         on a dedicated cluster.
       description: >-
