@@ -28,11 +28,11 @@ body:
       value: |-
         | Question | Answer | Notes |
         | :--- | :--- | :--- |
-        | Cloud Provider | `AWS/GCP (delete as appropriate)` | |
-        | Will 2i2c pay for cloud costs? | `Yes/No (delete as appropriate)` | |
+        | Cloud Provider | `AWS/GCP` | |
+        | Will 2i2c pay for cloud costs? | `Yes/No` | |
         | Name of cloud account | | |
         | Community Representative(s) (GitHub handles or email) | | |
-        | Have the Technical Contacts been added to the [AirTable](https://airtable.com/appbjBTRIbgRiElkr/pagD3XyZjqBunYMnC)? | `Yes/No (delete as appropriate)` | |
+        | Have the Technical Contacts been added to the [AirTable](https://airtable.com/appbjBTRIbgRiElkr/pagD3XyZjqBunYMnC)? | `Yes/No` | |
     validations:
       required: true
   - type: markdown
