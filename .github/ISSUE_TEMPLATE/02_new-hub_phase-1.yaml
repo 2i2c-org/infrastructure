@@ -33,3 +33,6 @@ body:
         | Name of cloud account | `TBA` | |
     validations:
       required: true
+  - type: markdown
+    attributes:
+      value: "Available runbooks: https://infrastructure.2i2c.org/hub-deployment-guide/runbooks/phase1/#available-runbooks"
