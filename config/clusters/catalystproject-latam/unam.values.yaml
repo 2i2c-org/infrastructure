@@ -58,28 +58,23 @@ jupyterhub:
                   cpu_guarantee: 1.5
                   cpu_limit: 3
               # guarantee = limit because we are requesting a complete node, no space for other user
-              # this was generated with deploy generate command
-              # TODO: this was generated with deploy generate command, but with mem -= 1024 * 1024,
-              #       otherwise the pod startup fail with "insufficient memory"
               mem_116_0:
-                display_name: Up to 116.0 GB RAM and 15.4 CPUs
+                display_name: Up to 115G RAM and 15 CPUs
                 kubespawner_override:
-                  mem_guarantee: 124555718656
-                  mem_limit: 124555718656
-                  cpu_guarantee: 15.443
-                  cpu_limit: 15.443
+                  mem_guarantee: 115G
+                  mem_limit: 115G
+                  cpu_guarantee: 15
+                  cpu_limit: 15
                   node_selector:
                     node.kubernetes.io/instance-type: n2-highmem-16
               # guarantee = limit because we are requesting a complete node, no space for other user
-              # TODO: this was generated with deploy generate command, but with mem -= 1024 * 1024,
-              #       otherwise the pod startup fail with "insufficient memory"
               mem_486_4:
-                display_name: Up to 486.4 GB RAM and 63.3 CPUs
+                display_name: Up to 486G RAM and 63 CPUs
                 kubespawner_override:
-                  mem_guarantee: 522271244288
-                  mem_limit: 522271244288
-                  cpu_guarantee: 63.323
-                  cpu_limit: 63.323
+                  mem_guarantee: 486G
+                  mem_limit: 486G
+                  cpu_guarantee: 63
+                  cpu_limit: 63
                   node_selector:
                     node.kubernetes.io/instance-type: n2-highmem-64
       - display_name: Rocker Geospatial with RStudio
