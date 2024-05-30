@@ -78,6 +78,21 @@ variable "ssh_pub_key" {
   EOT
 }
 
+variable "cluster_sku_tier" {
+  type = string
+  default = "Free"
+  description = <<-EOT
+  Support tier to be used for this cluster
+
+  https://learn.microsoft.com/en-us/azure/aks/free-standard-pricing-tiers
+  has more information.
+
+  Can be one of "Free" | "Standard" | "Premium".
+
+  Defaults to "Free", as that's mostly good enough for our use cases.
+  EOT
+}
+
 variable "node_pools" {
   type = map(
     list(

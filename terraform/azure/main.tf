@@ -90,6 +90,9 @@ resource "azurerm_kubernetes_cluster" "jupyterhub" {
   # prevented forced recreation of the cluster.
   role_based_access_control_enabled = false
 
+  # "Free" (the default) not supported in westeurope
+  sku_tier = "Standard"
+
   lifecycle {
     # An additional safeguard against accidentally deleting the cluster.
     # The databases for the hubs are held in PVCs managed by the cluster,
