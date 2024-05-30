@@ -80,42 +80,42 @@ basehub:
                     image: "quay.io/benlee7411/devcon24:jmframe_neuralhydrology"
                     image_pull_policy: "Always"
           kubespawner_override:
-            mem_limit: 5G
+            mem_limit: 7G
             mem_guarantee: 5G
             cpu_limit: 2
             cpu_guarantee: 0.938
             node_selector:
-              node.kubernetes.io/instance-type: n2-highmem-64
+              node.kubernetes.io/instance-type: n2-highmem-16
         - display_name: Medium
           description: 11GB RAM, 4 CPUs
           profile_options: *profile_options
           kubespawner_override:
-            mem_limit: 11G
+            mem_limit: 15G
             mem_guarantee: 11G
             cpu_limit: 4
             cpu_guarantee: 1.875
             node_selector:
-              node.kubernetes.io/instance-type: n2-highmem-64
+              node.kubernetes.io/instance-type: n2-highmem-16
         - display_name: Large
           description: 24GB RAM, 8 CPUs
           profile_options: *profile_options
           kubespawner_override:
-            mem_limit: 24G
+            mem_limit: 30G
             mem_guarantee: 24G
             cpu_limit: 8
             cpu_guarantee: 3.75
             node_selector:
-              node.kubernetes.io/instance-type: n2-highmem-64
+              node.kubernetes.io/instance-type: n2-highmem-16
         - display_name: Huge
           description: 52GB RAM, 16 CPUs
           profile_options: *profile_options
           kubespawner_override:
-            mem_limit: 52G
+            mem_limit: 60G
             mem_guarantee: 52G
             cpu_limit: 16
             cpu_guarantee: 7.5
             node_selector:
-              node.kubernetes.io/instance-type: n2-highmem-64
+              node.kubernetes.io/instance-type: n2-highmem-16
         - display_name: NVIDIA Tesla T4, ~16 GB, ~4 CPUs
           description: "Start a container on a dedicated node with a GPU"
           allowed_groups:
