@@ -20,12 +20,13 @@ body:
       label: >-
         Required information for setting up a cloud account for a new community
         on a dedicated cluster.
-      description: >-
+
+      value: |-
         This phase is applicable for cases where a community is being setup on a
         dedicated cluster. The following table lists the information that must
-        be provided before this phase can start. Use the Notes column to provide
-        any other contextual information.
-      value: |-
+        be provided before this phase can be marked as READY and begin.
+        Use the Notes column to provide any other contextual information.
+
         | Question | Answer | Notes |
         | :--- | :--- | :--- |
         | Cloud Provider | `AWS/GCP` | |
@@ -33,8 +34,7 @@ body:
         | Name of cloud account | | |
         | Community Representative(s) (GitHub handles or email) | | |
         | Have the Technical Contacts been added to the [AirTable](https://airtable.com/appbjBTRIbgRiElkr/pagD3XyZjqBunYMnC)? | `Yes/No` | |
-    validations:
+
+        Available runbooks:
+        - https://infrastructure.2i2c.org/hub-deployment-guide/runbooks/phase1/#available-runbooks
       required: true
-  - type: markdown
-    attributes:
-      value: "Available runbooks: https://infrastructure.2i2c.org/hub-deployment-guide/runbooks/phase1/#available-runbooks"
