@@ -126,6 +126,10 @@ jupyterhub:
           subPath: _shared-public
           readOnly: false
         - name: home
+          mountPath: /home/rstudio/shared-public
+          subPath: _shared-public
+          readOnly: false
+        - name: home
           mountPath: /home/jovyan/shared
           subPath: _shared
           readOnly: true
