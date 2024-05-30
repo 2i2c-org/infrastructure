@@ -34,7 +34,7 @@ body:
         | Name of cloud account | | |
         | Community Representative(s) (GitHub handles or email) | | |
         | Have the Technical Contacts been added to the [AirTable](https://airtable.com/appbjBTRIbgRiElkr/pagD3XyZjqBunYMnC)? | `Yes/No` | |
-        
+
         Available runbooks:
         - https://infrastructure.2i2c.org/hub-deployment-guide/runbooks/phase1/#available-runbooks
       required: true
