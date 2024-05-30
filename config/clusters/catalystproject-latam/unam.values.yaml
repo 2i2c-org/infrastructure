@@ -1,3 +1,10 @@
+userServiceAccount:
+  annotations:
+    # singleuser.networkPolicy.egressAllowRules.cloudMetadataServer=true and
+    # singleuser.cloudMetadata.blockWithIptables=false are set for so that users
+    # can work against the scratch bucket using this GCP service account
+    iam.gke.io/gcp-service-account: latam-unam@catalystproject-392106.iam.gserviceaccount.com
+
 jupyterhub:
   ingress:
     hosts: [unam.latam.catalystproject.2i2c.cloud]
@@ -24,6 +31,13 @@ jupyterhub:
           - nselem
           - miguel-mx
   singleuser:
+    networkPolicy:
+      egressAllowRules:
+        cloudMetadataServer: true
+    cloudMetadata:
+      blockWithIptables: false
+    extraEnv:
+      SCRATCH_BUCKET: gs://latam-scratch-unam/$(JUPYTERHUB_USER)
     profileList:
       - display_name: Jupyter SciPy Notebook
         description: Python environment
