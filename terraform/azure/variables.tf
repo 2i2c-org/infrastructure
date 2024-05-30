@@ -147,7 +147,9 @@ variable "create_service_principal" {
 variable "storage_size" {
   type        = number
   description = <<-EOT
-  Size (in GB) of the storage to provision
+  Size (in GB) of the storage to provision.
+
+  Minimum is 100
   EOT
 }
 
