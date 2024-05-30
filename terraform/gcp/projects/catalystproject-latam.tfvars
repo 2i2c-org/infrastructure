@@ -33,4 +33,17 @@ notebook_nodes = {
   },
 }
 
-user_buckets = {}
+user_buckets = {
+  // unam's scratch bucket was setup for James Munroe specifically to copy misc
+  // data over for the community (https://2i2c.freshdesk.com/a/tickets/1588)
+  "scratch-unam" : {
+    "delete_after" : 7,
+  },
+}
+
+hub_cloud_permissions = {
+  "unam" : {
+    bucket_admin_access : ["scratch-unam"],
+    hub_namespace : "unam",
+  },
+}
