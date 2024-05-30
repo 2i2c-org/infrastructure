@@ -1,4 +1,4 @@
-name: New Hub Turnup Phase 2 - Cloud Cluster Setup
+name: New Hub Turnup Phase 2 - Cluster Setup
 description: Track setting up a cluster for new community or set of communities
 title: "[New Hub] [Phase 2] Cluster Setup - {{community_name}}"
 body:
