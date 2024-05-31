@@ -1,9 +1,11 @@
 jupyterhub:
   ingress:
-    hosts: [plnc.latam.catalystproject.2i2c.cloud]
+    # From https://2i2c.freshdesk.com/a/tickets/1591
+    hosts: [hub.pln.villena.cl]
     tls:
-      - hosts: [plnc.latam.catalystproject.2i2c.cloud]
+      - hosts: [hub.pln.villena.cl]
         secretName: https-auto-tls
+
   custom:
     homepage:
       templateVars:
@@ -14,7 +16,7 @@ jupyterhub:
       JupyterHub:
         authenticator_class: github
       GitHubOAuthenticator:
-        oauth_callback_url: https://plnc.latam.catalystproject.2i2c.cloud/hub/oauth_callback
+        oauth_callback_url: https://hub.pln.villena.cl/hub/oauth_callback
         allowed_organizations:
           - CatalystProject-Hubs:plnc
         scope:
