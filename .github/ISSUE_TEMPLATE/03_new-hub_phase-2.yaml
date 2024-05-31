@@ -35,7 +35,7 @@ body:
         | Are GPUs required? | `Yes/No` | |
 
         Available runbooks:
-        - https://infrastructure.2i2c.org/hub-deployment-guide/new-cluster/new-cluster/
+        - https://infrastructure.2i2c.org/hub-deployment-guide/runbooks/phase2/
         - https://infrastructure.2i2c.org/hub-deployment-guide/deploy-support/
     validations:
       required: true
