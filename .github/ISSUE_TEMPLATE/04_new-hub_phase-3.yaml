@@ -1,0 +1,97 @@
+name: New Hub Turnup Phase 3 - Hub Setup
+description: Track setting up one (or more) hubs for a new community
+title: "[New Hub] [Phase 3] Hub Setup - {{community_url}}"
+body:
+  - type: textarea
+    id: context
+    attributes:
+      label: Context
+      description: >-
+        Optionally provide some context about the community we are deploying a
+        hub for.
+    validations:
+      required: false
+  - type: input
+    id: hub-num
+    attributes:
+      label: How many hubs will be deployed?
+    validations:
+      required: true
+  - type: input
+    id: cluster
+    attributes:
+      label: Which cluster will the hub(s) be deployed on?
+    validations:
+      required: true
+  - type: textarea
+    id: info-tables
+    validations:
+      required: true
+    attributes:
+      label: Hub Setup Information
+      value: |-
+        For each hub to be deployed, copy the tables below and fill them in.
+        The tables must be complete for each hub to be considered READY to be
+        deployed. For a staging/prod pair, a statement such as "Same as staging
+        but for production" will suffice for the prod hub's specification. Use
+        the Notes column to provide any contextual information.
+
+        Available runbooks:
+        - https://infrastructure.2i2c.org/hub-deployment-guide/runbooks/phase3/
+
+        ### Hub 1: {{hub_name}} (`READY/NOT READY`)
+
+        #### Phase 3.1: Initial setup
+
+        | Question | Answer | Notes |
+        | :--- | :--- | :--- |
+        | Name of the hub | | |
+        | Dask gateway? | `Yes/No` | |
+        | Splash image URL | | |
+        | Homepage URL | | | 
+        | Funded by? | | |
+        | Authentication Mechanism | | |
+        | Admin Users (GitHub handles or emails, depending on Mechanism) | | |
+
+        At the end of this phase, both 2i2c engineers and the admin users mentioned can login to the hub.
+
+        #### Phase 3.2: Object storage access
+
+        | Question | Answer | Notes |
+        | :--- | :--- | :--- |
+        | Scratch bucket enabled? | `Yes/No` |  |
+        | Persistent bucket enabled? | `Yes/No` |  |
+        | Requestor pays requests to external buckets allowed? | `Yes/No` | |  
+
+        At the end of this phase, both 2i2c engineers and the admin users mentioned can access any object storage setup.
+
+        #### Phase 3.3: Profile List
+
+        These are the standard profile list options to start with. They can be customized later.
+        Use the Notes column to provide extra information, such as specific image tags to use, or `deployer generate resource-allocation choices` command to use for RAM, etc.
+
+        | Question | Answer | Notes |
+        | :--- | :--- | :--- |
+        | Pangeo Notebook?  | `Yes/No` | |
+        | RStudio (with Rocker)? | `Yes/No` |  |
+        | Allow users to specify any image they want to use? | `Yes/No` | If Yes, enable `unlisted_choice`. | 
+        | Max RAM option allowed | | |
+        | GPU enabled? | `Yes/No` | |
+        | Default Interface | `Classic/JupyterLab/Other` | |
+        | Allow multiple concurrent servers per user? | `Yes/No` | If yes, enable `allowNamedServers`. |
+ 
+        At the end of this phase, the admin users mentioned should be able to start a server with their desired environment(s).
+
+        #### Phase 3.4: Authentication tuning
+
+        | Question | Answer | Notes |
+        | :--- | :--- | :-- |
+        | Authentication Mechanism | | |
+        | GitHub Teams based access? | `Yes/No/NA` | |
+        | List of GitHub Teams to be granted access (if required) | | |
+
+        #### Phase 3.5: Profile List finetuning
+
+        | Question | Answer | Notes |
+        | :--- | :--- | :--- |
+        | Custom image to be specified? | `Yes/No` |  |
