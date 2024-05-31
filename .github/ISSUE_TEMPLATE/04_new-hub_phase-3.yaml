@@ -61,7 +61,7 @@ body:
         | :--- | :--- | :--- |
         | Scratch bucket enabled? | `Yes/No` |  |
         | Persistent bucket enabled? | `Yes/No` |  |
-        | Requestor pays requests to external buckets allowed? | `Yes/No` | |  
+        | Requester pays requests to external buckets allowed? | `Yes/No` | |  
 
         At the end of this phase, both 2i2c engineers and the admin users mentioned can access any object storage setup.
 
@@ -79,7 +79,7 @@ body:
         | GPU enabled? | `Yes/No` | |
         | Default Interface | `Classic/JupyterLab/Other` | |
         | Allow multiple concurrent servers per user? | `Yes/No` | If yes, enable `allowNamedServers`. |
- 
+
         At the end of this phase, the admin users mentioned should be able to start a server with their desired environment(s).
 
         #### Phase 3.4: Authentication tuning
