@@ -3,9 +3,9 @@ prometheusIngressAuthSecret:
 
 redirects:
   rules:
-  # From https://2i2c.freshdesk.com/a/tickets/1591
-  - from: plnc.latam.catalystproject.2i2c.cloud
-    to: hub.pln.villena.cl
+    # From https://2i2c.freshdesk.com/a/tickets/1591
+    - from: plnc.latam.catalystproject.2i2c.cloud
+      to: hub.pln.villena.cl
 
 prometheus:
   server:
