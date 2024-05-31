@@ -11,7 +11,7 @@ k8s_versions = {
 }
 
 enable_filestore      = true
-filestore_capacity_gb = 1024
+filestore_capacity_gb = 4096
 
 core_node_machine_type = "n2-highmem-2"
 
