@@ -16,7 +16,7 @@ jupyterhub:
   custom:
     2i2c:
       add_staff_user_ids_to_admin_users: true
-      add_staff_user_ids_of_type: "google"
+      add_staff_user_ids_of_type: "github"
     homepage:
       templateVars:
         org:
@@ -35,25 +35,17 @@ jupyterhub:
   hub:
     config:
       JupyterHub:
-        authenticator_class: cilogon
-      CILogonOAuthenticator:
+        authenticator_class: github
+      GitHubOAuthenticator:
         oauth_callback_url: https://demo.cloudbank.2i2c.cloud/hub/oauth_callback
-        allowed_idps:
-          http://google.com/accounts/o8/id:
-            default: true
-            username_derivation:
-              username_claim: "email"
+        allowed_organizations:
+          - data-8:demo-hub-auth
+          - data-8
+        scope:
+          - read:org
       Authenticator:
         admin_users:
-          - ericvd@berkeley.edu
-          - sean.smorris@berkeley.edu
-          - kalkeab@gmail.com
-          - jhenryestrada@gmail.com
-        # NOTE: This demo hub may be temporarily opened up for broad access by
-        #       declaring `allow_all: true` for the google idp. If that is done,
-        #       username_pattern can then be used to constrain access.
-        #
-        # username_pattern: '^(.+@2i2c\.org|.+\.edu|kalkeab@gmail\.com|jhenryestrada@gmail\.com|deployment-service-check)$'
+          - sean-morris
   cull:
     # Cull after 30min of inactivity
     every: 300
