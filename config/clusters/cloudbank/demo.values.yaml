@@ -39,13 +39,13 @@ jupyterhub:
       GitHubOAuthenticator:
         oauth_callback_url: https://demo.cloudbank.2i2c.cloud/hub/oauth_callback
         allowed_organizations:
-          - data-8:demo-hub-auth
-          - data-8
+          - ucb-ds
         scope:
           - read:org
       Authenticator:
         admin_users:
           - sean-morris
+          - ericvd-ucb
   cull:
     # Cull after 30min of inactivity
     every: 300
