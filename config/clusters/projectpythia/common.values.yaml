@@ -160,3 +160,13 @@ jupyterhub:
                     node.kubernetes.io/instance-type: g4dn.xlarge
                 extra_resource_limits:
                   nvidia.com/gpu: "1"
+
+binderhub-service:
+  enabled: true
+  config:
+    BinderHub:
+      image_prefix: quay.io/2i2c-projectpythia/binderhub-service-
+  # The password to the registry is stored encrypted in the hub's encrypted config file
+  buildPodsRegistryCredentials:
+    server: "https://quay.io"
+    username: "2i2c-projectpythia+image_builder"
