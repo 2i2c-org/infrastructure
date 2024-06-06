@@ -259,7 +259,7 @@ basehub:
           slug: ssim-ghg-2024-python
           kubespawner_override:
             # Custom image for workshop: https://github.com/NASA-IMPACT/ssim-ghg-workshop-2024-python-image
-            image: public.ecr.aws/nasa-veda/ssim-ghg-workshop-2024-python-image:363ef30a73a6
+            image: public.ecr.aws/nasa-veda/ssim-ghg-workshop-2024-python-image:1e641d14629a
             # Adjusted to try to land only one user on each node
             mem_guarantee: 27G
             mem_limit: 27G
@@ -275,7 +275,7 @@ basehub:
           slug: ssim-ghg-2024-r
           kubespawner_override:
             # Custom image for workshop: https://github.com/NASA-IMPACT/ssim-ghg-workshop-2024-r-image
-            image: public.ecr.aws/nasa-veda/ssim-ghg-workshop-2024-r-image:5437bbe6b051
+            image: public.ecr.aws/nasa-veda/ssim-ghg-workshop-2024-r-image:c7936af92743
             # Adjusted to try to land only one user on each node
             mem_guarantee: 27G
             mem_limit: 27G
