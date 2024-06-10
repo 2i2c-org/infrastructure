@@ -17,3 +17,9 @@ jupyterhub:
           - ProjectPythia
         scope:
           - read:org
+    services:
+      binder:
+        # FIXME: ref https://github.com/2i2c-org/binderhub-service/issues/57
+        # for something more readable and requiring less copy-pasting
+        url: http://staging-binderhub-service:8090
+        display: false
