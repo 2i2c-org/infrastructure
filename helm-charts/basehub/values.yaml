@@ -43,7 +43,7 @@ binderhub-service:
       use_registry: true
     KubernetesBuildExecutor:
       # Get ourselves a newer repo2docker!
-      build_image: quay.io/jupyterhub/repo2docker:2023.06.0-8.gd414e99
+      build_image: quay.io/jupyterhub/repo2docker:2024.03.0-21.g09f3d53
       node_selector:
         # Schedule builder pods to run on user nodes only
         hub.jupyter.org/node-purpose: user
