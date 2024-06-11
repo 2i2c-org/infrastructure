@@ -12,7 +12,7 @@ terraform {
       #        https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/guides/3.0-upgrade-guide#migrating-to-new--renamed-resources.
       #
       source  = "hashicorp/azurerm"
-      version = "~> 2.99"
+      version = "~> 3.107.0"
     }
 
     azuread = {
@@ -80,11 +80,12 @@ provider "kubernetes" {
 
 
 resource "azurerm_kubernetes_cluster" "jupyterhub" {
-  name                = "hub-cluster"
-  location            = azurerm_resource_group.jupyterhub.location
-  resource_group_name = azurerm_resource_group.jupyterhub.name
-  kubernetes_version  = var.kubernetes_version
-  dns_prefix          = "k8s"
+  name                              = "hub-cluster"
+  location                          = azurerm_resource_group.jupyterhub.location
+  resource_group_name               = azurerm_resource_group.jupyterhub.name
+  kubernetes_version                = var.kubernetes_version
+  dns_prefix                        = "k8s"
+  role_based_access_control_enabled = false
 
   lifecycle {
     # An additional safeguard against accidentally deleting the cluster.
