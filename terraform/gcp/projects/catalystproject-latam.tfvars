@@ -31,6 +31,26 @@ notebook_nodes = {
     max : 100,
     machine_type : "n2-highmem-64",
   },
+  "gpu-t4-highmem-4" : {
+    min : 0,
+    max : 20,
+    machine_type : "n1-highmem-4",
+    gpu : {
+      enabled : true,
+      type : "nvidia-tesla-t4",
+      count : 1,
+    },
+  },
+  "gpu-t4-highmem-16" : {
+    min : 0,
+    max : 20,
+    machine_type : "n1-highmem-16",
+    gpu : {
+      enabled : true,
+      type : "nvidia-tesla-t4",
+      count : 4,
+    },
+  },
 }
 
 user_buckets = {
