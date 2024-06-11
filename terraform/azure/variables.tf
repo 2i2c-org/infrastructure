@@ -140,6 +140,6 @@ variable "fileshare_alert_available_fraction" {
   type        = number
   default     = 0.9
   description = <<-EOT
-  Decimal fraction (between 0 and 1) of free space in fileshare available over which to fire an alert to pagerduty.
+  Decimal fraction (between 0 and 1) of total space available in fileshare. If used space is over this, we fire an alert to pagerduty.
   EOT
 }
