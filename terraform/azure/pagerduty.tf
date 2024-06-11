@@ -24,3 +24,21 @@ resource "azurerm_monitor_action_group" "alerts" {
   }
 }
 
+resource "azurerm_monitor_metric_alert" "disk_space_full_alert" {
+  name                = "Used disk space > ${locals.storage_threshold} GB on ${var.project_id}"
+  resource_group_name = var.resourcegroup_name
+  scopes              = [azurerm_storage_account.homes.id]
+  description         = "Action will be triggered when used disk space is > ${locals.storage_threshold} GB."
+
+  criteria {
+    metric_namespace = "Microsoft.Storage/storageAccounts"
+    metric_name      = "UsedCapacity"
+    aggregation      = "Average"
+    operator         = "GreaterThan"
+    threshold        = "${locals.storage_threshold * 1000000000}"  # Convert GB to Bytes
+  }
+
+  action {
+    action_group_id = azurerm_monitor_action_group.alerts.id
+  }
+}
