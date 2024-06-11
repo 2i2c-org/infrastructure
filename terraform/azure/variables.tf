@@ -135,3 +135,11 @@ variable "storage_size" {
   Size (in GB) of the storage to provision
   EOT
 }
+
+variable "fileshare_alert_available_fraction" {
+  type        = number
+  default     = 0.9
+  description = <<-EOT
+  Decimal fraction (between 0 and 1) of free space in fileshare available over which to fire an alert to pagerduty.
+  EOT
+}
