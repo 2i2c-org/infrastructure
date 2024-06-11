@@ -13,3 +13,14 @@ data "sops_file" "pagerduty_service_integration_keys" {
   source_file = "secret/enc-pagerduty-service-integration-keys.secret.yaml"
 }
 
+resource "azurerm_monitor_action_group" "alerts" {
+  name                = "AlertsActionGroup"  # Changing this forces a recreation
+  resource_group_name = var.resourcegroup_name
+  short_name          = "alertaction"
+
+  webhook_receiver {
+    name        = "callpagerdutyapi"
+    service_uri = "https://events.pagerduty.com/integration/5ebdc22d2399400cd0560e450b579333/enqueue"
+  }
+}
+
