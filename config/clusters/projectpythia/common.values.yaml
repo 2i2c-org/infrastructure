@@ -62,6 +62,9 @@ jupyterhub:
 
   singleuser:
     defaultUrl: /lab
+    extraEnv:
+      GH_SCOPED_CREDS_CLIENT_ID: "Iv23liaEC5WLtjKehTtK"
+      GH_SCOPED_CREDS_APP_URL: "https://github.com/apps/project-pythia"
     profileList:
       - display_name: "Only Profile Available, this info is not shown in the UI"
         slug: only-choice
