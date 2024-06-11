@@ -84,6 +84,8 @@ binderhub-service:
       auth_enabled: true
       enable_api_only_mode: false
       image_prefix: us-central1-docker.pkg.dev/two-eye-two-see/binderhub-ui-demo-registry/binderhub-service-
+      banner_message: "Testing binderhub used by 2i2c"
+      about_message: "Testing binderhub used by 2i2c"
   extraConfig:
     # FIXME: set KubernetesBuildExecutor.push_secret again
     #        without this for some reason the build pods
