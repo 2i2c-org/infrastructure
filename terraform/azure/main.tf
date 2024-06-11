@@ -73,11 +73,11 @@ provider "kubernetes" {
 
 
 resource "azurerm_kubernetes_cluster" "jupyterhub" {
-  name                              = "hub-cluster"
-  location                          = azurerm_resource_group.jupyterhub.location
-  resource_group_name               = azurerm_resource_group.jupyterhub.name
-  kubernetes_version                = var.kubernetes_version
-  dns_prefix                        = "k8s"
+  name                = "hub-cluster"
+  location            = azurerm_resource_group.jupyterhub.location
+  resource_group_name = azurerm_resource_group.jupyterhub.name
+  kubernetes_version  = var.kubernetes_version
+  dns_prefix          = "k8s"
   # role_based_access_control_enabled was added as the default changed from false
   # to true when migrating from v2 to v3 of the provider. Setting back to false
   # prevented forced recreation of the cluster.
