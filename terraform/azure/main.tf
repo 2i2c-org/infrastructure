@@ -78,6 +78,9 @@ resource "azurerm_kubernetes_cluster" "jupyterhub" {
   resource_group_name               = azurerm_resource_group.jupyterhub.name
   kubernetes_version                = var.kubernetes_version
   dns_prefix                        = "k8s"
+  # role_based_access_control_enabled was added as the default changed from false
+  # to true when migrating from v2 to v3 of the provider. Setting back to false
+  # prevented forced recreation of the cluster.
   role_based_access_control_enabled = false
 
   lifecycle {
@@ -142,6 +145,9 @@ resource "azurerm_kubernetes_cluster" "jupyterhub" {
       "hub.jupyter.org/node-purpose" = "core",
       "k8s.dask.org/node-purpose"    = "core"
     }, var.node_pools["core"][0].labels)
+    # node_taints field will be removed in v4.0 of the Azure Provider since the AKS API
+    # doesn't allow arbitrary node taints on the default node pool. A warning that
+    # this field will be deprecated is produced.
     node_taints = concat([], var.node_pools["core"][0].taints)
 
     orchestrator_version = coalesce(var.node_pools["core"][0].kubernetes_version, var.kubernetes_version)
