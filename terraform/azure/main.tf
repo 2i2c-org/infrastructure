@@ -27,6 +27,12 @@ terraform {
       version = "~> 2.25"
     }
 
+    # Used to decrypt sops encrypted secrets containing PagerDuty keys
+    sops = {
+      # ref: https://registry.terraform.io/providers/carlpett/sops/latest
+      source  = "carlpett/sops"
+      version = "~> 0.7.2"
+    }
   }
   backend "gcs" {
     bucket = "two-eye-two-see-org-terraform-state"
