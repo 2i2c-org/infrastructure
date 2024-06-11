@@ -14,7 +14,7 @@ data "sops_file" "pagerduty_service_integration_keys" {
 }
 
 resource "azurerm_monitor_action_group" "alerts" {
-  name                = "AlertsActionGroup"  # Changing this forces a recreation
+  name                = "AlertsActionGroup" # Changing this forces a recreation
   resource_group_name = var.resourcegroup_name
   short_name          = "alertaction"
 
@@ -35,7 +35,7 @@ resource "azurerm_monitor_metric_alert" "disk_space_full_alert" {
     metric_name      = "UsedCapacity"
     aggregation      = "Average"
     operator         = "GreaterThan"
-    threshold        = "${locals.storage_threshold * 1000000000}"  # Convert GB to Bytes
+    threshold        = locals.storage_threshold * 1000000000 # Convert GB to Bytes
   }
 
   action {

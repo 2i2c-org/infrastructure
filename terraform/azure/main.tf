@@ -225,7 +225,7 @@ locals {
       "registry" : "https://${azurerm_container_registry.container_registry.login_server}"
     }
   }
-  storage_threshold = "${var.storage_size * var.fileshare_alert_available_fraction}"
+  storage_threshold = var.storage_size * var.fileshare_alert_available_fraction
 }
 
 output "kubeconfig" {
