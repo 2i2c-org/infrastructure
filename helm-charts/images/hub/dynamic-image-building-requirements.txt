@@ -1,13 +1,13 @@
 # Image lives at quay.io/2i2c/dynamic-image-building-experiment
 
-# jupyterhub-configurator isn't version controlled, so we pin to a specific
-# commit currently. Available commits are found at
-# https://github.com/yuvipanda/jupyterhub-configurator/commits/main
+# jupyterhub-configurator isn't maintained and its not intended to be developed
+# further. We are using a branch that has forked from the main branch just
+# before a breaking change were made. This allows us to avoid migrating.
 #
-# FIXME: ed7e3a0df1e3d625d10903ef7d7fd9c2fbb548db is from Mar 26, 2021, but
-#        several commits has been made since.
+# ref: https://github.com/yuvipanda/jupyterhub-configurator/commits/main
+# ref: https://github.com/yuvipanda/jupyterhub-configurator/commits/backported-jh41-compatibility
 #
-git+https://github.com/yuvipanda/jupyterhub-configurator@ed7e3a0df1e3d625d10903ef7d7fd9c2fbb548db
+git+https://github.com/yuvipanda/jupyterhub-configurator@backported-jh41-compatibility
 
 # Brings in https://github.com/yuvipanda/jupyterhub-fancy-profiles
 jupyterhub-fancy-profiles==0.2.0

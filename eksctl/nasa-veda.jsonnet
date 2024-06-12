@@ -51,7 +51,7 @@ local daskNodes = [
     metadata+: {
         name: "nasa-veda",
         region: clusterRegion,
-        version: "1.27",
+        version: "1.29",
     },
     availabilityZones: masterAzs,
     iam: {
@@ -80,7 +80,7 @@ local daskNodes = [
     nodeGroups: [
         ng + {
             namePrefix: 'core',
-            nameSuffix: 'a',
+            nameSuffix: 'b',
             nameIncludeInstanceType: false,
             availabilityZones: [nodeAz],
             ssh: {

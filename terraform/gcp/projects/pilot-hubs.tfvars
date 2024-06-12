@@ -6,10 +6,13 @@ region           = "us-central1"
 regional_cluster = false
 
 k8s_versions = {
-  min_master_version : "1.27.4-gke.900",
-  core_nodes_version : "1.27.4-gke.900",
-  notebook_nodes_version : "1.27.4-gke.900",
-  dask_nodes_version : "1.27.4-gke.900",
+  # NOTE: This isn't a regional cluster / highly available cluster, when
+  #       upgrading the control plane, there will be ~5 minutes of k8s not being
+  #       available making new server launches error etc.
+  min_master_version : "1.29.1-gke.1589020",
+  core_nodes_version : "1.29.1-gke.1589020",
+  notebook_nodes_version : "1.29.1-gke.1589020",
+  dask_nodes_version : "1.29.1-gke.1589020",
 }
 
 core_node_machine_type = "n2-highmem-4"
@@ -19,7 +22,7 @@ enable_filestore      = true
 filestore_capacity_gb = 5120
 
 notebook_nodes = {
-  "n2-highmem-4-b" : {
+  "n2-highmem-4" : {
     min : 0,
     max : 100,
     machine_type : "n2-highmem-4",
@@ -49,22 +52,30 @@ dask_nodes = {
   },
 }
 
-user_buckets = {}
+user_buckets = {
+  "scratch-dask-staging" : {
+    "delete_after" : 7,
+  },
+  "scratch-ohw" : {
+    "delete_after" : 7,
+  },
+}
 
 
 hub_cloud_permissions = {
   "dask-staging" : {
     allow_access_to_external_requester_pays_buckets : true,
-    bucket_admin_access : [],
-    hub_namespace : "dask-staging"
+    bucket_admin_access : ["scratch-dask-staging"],
+    hub_namespace : "dask-staging",
   },
   "ohw" : {
     allow_access_to_external_requester_pays_buckets : true,
-    bucket_admin_access : [],
-    hub_namespace : "ohw"
+    bucket_admin_access : ["scratch-ohw"],
+    hub_namespace : "ohw",
   },
 }
 
 container_repos = [
   "binder-staging",
+  "binderhub-ui-demo"
 ]

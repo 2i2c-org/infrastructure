@@ -1,0 +1,60 @@
+
+#If the hub is a daskhub, please indent everything under a basehub key
+#basehub:
+nfs:
+  enabled: true
+  pv:
+    enabled: true
+    {% if provider == "aws" %}
+    # from https://docs.aws.amazon.com/efs/latest/ug/mounting-fs-nfs-mount-settings.html
+    mountOptions:
+      - rsize=1048576
+      - wsize=1048576
+      - timeo=600
+      - soft # We pick soft over hard, so NFS lockups don't lead to hung processes
+      - retrans=2
+      - noresvport
+    serverIP: {{ server_ip }}
+    baseShareName: /
+    {% elif provider == "gcp" %}
+    mountOptions:
+      - soft
+      - noatime
+    serverIP: 10.55.112.74
+    baseShareName: /homes/
+    {% endif %}
+jupyterhub:
+  custom:
+    2i2c:
+      add_staff_user_ids_to_admin_users: true
+      add_staff_user_ids_of_type: {{ authenticator }}
+    homepage:
+      templateVars:
+        org:
+          name: {{ cluster_name }}
+          logo_url: {{ logo_url }}
+          url: {{ url }}
+        designed_by:
+          name: 2i2c
+          url: https://2i2c.org
+        operated_by:
+          name: 2i2c
+          url: https://2i2c.org
+        funded_by:
+          name: {{ funded_by_name }}
+          url: {{ funded_by_url }}
+  hub:
+    allowNamedServers: true
+    config:
+      JupyterHub:
+        authenticator_class: {{ authenticator }}
+      Authenticator:
+        admin_users:
+          {% for admin in admin_users %}
+          - {{ admin }}
+          {% else %}
+          []
+          {% endfor %}
+  scheduling:
+    userScheduler:
+      enabled: true

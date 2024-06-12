@@ -17,7 +17,7 @@ repos:
 
   # Autoformat: Python code, syntax patterns are modernized
   - repo: https://github.com/asottile/pyupgrade
-    rev: v3.15.0
+    rev: v3.15.2
     hooks:
       - id: pyupgrade
         args:
@@ -31,7 +31,7 @@ repos:
 
   # Autoformat: Python code
   - repo: https://github.com/psf/black
-    rev: "24.1.1"
+    rev: "24.4.2"
     hooks:
       - id: black
         # This is a `.py` file but is encrypted with sops
@@ -61,7 +61,7 @@ repos:
 
   # Prevent known typos from being committed
   - repo: https://github.com/codespell-project/codespell
-    rev: v2.2.6
+    rev: v2.3.0
     hooks:
       - id: codespell
         args:

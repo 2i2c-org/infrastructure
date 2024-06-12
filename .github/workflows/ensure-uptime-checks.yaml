@@ -3,7 +3,7 @@ name: Ensure Uptime Checks
 on:
   push:
     branches:
-      - master
+      - main
     paths:
       # Config of prometheus or hubs might have changed
       - helm-charts/**
@@ -14,10 +14,9 @@ on:
       # The way terraform is deployed might have changed!
       - .github/workflows/ensure-uptime-checks.yaml
 
-# When multiple PRs triggering this workflow are merged, queue them instead
-# of running them in parallel
-# https://github.blog/changelog/2021-04-19-github-actions-limit-workflow-run-or-job-concurrency/
-concurrency: uptime-checks
+# Queue executions of this workflow to avoid conflicts
+# ref: https://docs.github.com/en/actions/using-jobs/using-concurrency
+concurrency: ${{ github.workflow }}
 
 # This environment variable triggers the deployer to colourise print statements in the
 # GitHub Actions logs for easy reading
@@ -29,8 +28,7 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout repo
-        uses: actions/checkout@v4
+      - uses: actions/checkout@v4
 
       # Uptime checks are set up and managed via terraform
       - uses: hashicorp/setup-terraform@v3
@@ -38,7 +36,7 @@ jobs:
       # We use sops to store encrypted GCP ServiceAccount Key that terraform uses
       # to run, as well as PagerDuty config terraform uses
       - name: Install sops
-        uses: mdgreenwald/mozilla-sops-action@v1.5.0
+        uses: mdgreenwald/mozilla-sops-action@v1.6.0
 
       # Authenticate with the correct KMS key that sops will use.
       - name: Setup sops credentials to decrypt repo secrets

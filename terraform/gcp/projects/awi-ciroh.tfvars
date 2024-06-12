@@ -5,13 +5,13 @@ region                 = "us-central1"
 core_node_machine_type = "n2-highmem-4"
 enable_network_policy  = true
 enable_filestore       = true
-filestore_capacity_gb  = 1536
+filestore_capacity_gb  = 2560
 
 k8s_versions = {
-  min_master_version : "1.27.4-gke.900",
-  core_nodes_version : "1.27.4-gke.900",
-  notebook_nodes_version : "1.27.4-gke.900",
-  dask_nodes_version : "1.27.4-gke.900",
+  min_master_version : "1.29.1-gke.1589018",
+  core_nodes_version : "1.29.1-gke.1589018",
+  notebook_nodes_version : "1.29.1-gke.1589018",
+  dask_nodes_version : "1.29.1-gke.1589018",
 }
 
 user_buckets = {
@@ -31,7 +31,7 @@ user_buckets = {
 
 # Setup notebook node pools
 notebook_nodes = {
-  "n2-highmem-4" : {
+  "n2-highmem-4-b" : {
     min : 0,
     max : 100,
     machine_type : "n2-highmem-4",
@@ -45,6 +45,16 @@ notebook_nodes = {
     min : 0,
     max : 100,
     machine_type : "n2-highmem-64",
+  },
+  "gpu-t4" : {
+    min : 0,
+    max : 20,
+    machine_type : "n1-highmem-8",
+    gpu : {
+      enabled : true,
+      type : "nvidia-tesla-t4",
+      count : 1,
+    },
   },
 }
 

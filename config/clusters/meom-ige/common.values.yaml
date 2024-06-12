@@ -1,6 +1,8 @@
 basehub:
   nfs:
+    enabled: true
     pv:
+      enabled: true
       # from https://docs.aws.amazon.com/efs/latest/ug/mounting-fs-nfs-mount-settings.html
       mountOptions:
         - rsize=1048576
@@ -43,7 +45,7 @@ basehub:
         #
         # - display_name: Grenoble demo
         #   default: true
-        #   allowed_teams:
+        #   allowed_groups:
         #     - 2i2c-org:hub-access-for-2i2c-staff
         #     - meom-group:hub-users # long term users
         #     - demo-dask-grenoble2023:demo # temporary users for event
@@ -91,7 +93,7 @@ basehub:
         # RAM on a node, not total node capacity
         - display_name: "Small"
           default: true
-          allowed_teams: &allowed_teams_normal_use
+          allowed_groups: &allowed_groups_normal_use
             - 2i2c-org:hub-access-for-2i2c-staff
             - meom-group:hub-users # long term users
           description: "~2 CPU, ~8G RAM"
@@ -101,7 +103,7 @@ basehub:
             node_selector:
               node.kubernetes.io/instance-type: n1-standard-2
         - display_name: "Medium"
-          allowed_teams: *allowed_teams_normal_use
+          allowed_groups: *allowed_groups_normal_use
           description: "~8 CPU, ~32G RAM"
           kubespawner_override:
             mem_limit: 32G
@@ -109,7 +111,7 @@ basehub:
             node_selector:
               node.kubernetes.io/instance-type: n1-standard-8
         - display_name: "Large"
-          allowed_teams: *allowed_teams_normal_use
+          allowed_groups: *allowed_groups_normal_use
           description: "~16 CPU, ~64G RAM"
           kubespawner_override:
             mem_limit: 64G
@@ -117,7 +119,7 @@ basehub:
             node_selector:
               node.kubernetes.io/instance-type: n1-standard-16
         - display_name: "Very Large"
-          allowed_teams: *allowed_teams_normal_use
+          allowed_groups: *allowed_groups_normal_use
           description: "~32 CPU, ~128G RAM"
           kubespawner_override:
             mem_limit: 128G
@@ -125,7 +127,7 @@ basehub:
             node_selector:
               node.kubernetes.io/instance-type: n1-standard-32
         - display_name: "Huge"
-          allowed_teams: *allowed_teams_normal_use
+          allowed_groups: *allowed_groups_normal_use
           description: "~64 CPU, ~256G RAM"
           kubespawner_override:
             mem_limit: 256G

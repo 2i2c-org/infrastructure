@@ -1,5 +1,11 @@
 nfs:
+  enabled: true
+  # volumeReporter will report 100% for all hubs as EFS is unbounded, we disable
+  # it to save a limited amount of pods we can allocate per core node
+  volumeReporter:
+    enabled: false
   pv:
+    enabled: true
     # from https://docs.aws.amazon.com/efs/latest/ug/mounting-fs-nfs-mount-settings.html
     mountOptions:
       - rsize=1048576

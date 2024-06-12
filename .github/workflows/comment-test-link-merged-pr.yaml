@@ -3,7 +3,7 @@ name: Comment GitHub Actions link on a merged PR
 on:
   push:
     branches:
-      - master
+      - main
     paths:
       - deployer/**
       - requirements.txt
@@ -27,7 +27,7 @@ jobs:
           COMMIT_MSG: ${{ github.event.head_commit.message }}
           GITHUB_REPO: ${{ github.repository }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          BRANCH: "master"
+          BRANCH: "main"
           EVENT: "push"
           # WORKFLOW_NAME *MUST* match what is set in the name field in the
           # deploy-hubs.yaml workflow file

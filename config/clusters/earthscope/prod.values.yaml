@@ -1,4 +1,7 @@
 basehub:
+  userServiceAccount:
+    annotations:
+      eks.amazonaws.com/role-arn: arn:aws:iam::762698921361:role/earthscope-prod
   jupyterhub:
     ingress:
       hosts: [geolab.earthscope.cloud]
@@ -12,10 +15,14 @@ basehub:
             name: "EarthScope"
     hub:
       config:
-        CustomAuth0OAuthenticator:
-          logout_redirect_to_url: https://geolab.earthscope.cloud
-        Auth0OAuthenticator:
-          auth0_domain: login.earthscope.org
+        GenericOAuthenticator:
+          token_url: https://login.earthscope.org/oauth/token
+          authorize_url: https://login.earthscope.org/authorize
+          userdata_url: https://login.earthscope.org/userinfo
+          logout_redirect_url: https://login.earthscope.org/v2/logout?client_id=2PbhUTbRU6e7uIaaEZIShotx15MbvsJJ
           extra_authorize_params:
             # This isn't an actual URL, just a string. Must not have a trailing slash
             audience: https://api.earthscope.org
+    singleuser:
+      extraEnv:
+        SCRATCH_BUCKET: s3://earthscope-scratch/$(JUPYTERHUB_USER)

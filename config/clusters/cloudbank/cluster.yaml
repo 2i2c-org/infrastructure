@@ -107,7 +107,7 @@ hubs:
     helm_chart_values_files:
       - common.values.yaml
       - demo.values.yaml
-      - enc-demo.secret.values.yaml
+      - enc-demo-git.secret.values.yaml
   - name: fresno
     display_name: "Fresno City College"
     domain: fresno.cloudbank.2i2c.cloud

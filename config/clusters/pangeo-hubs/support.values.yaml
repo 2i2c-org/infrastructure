@@ -35,6 +35,6 @@ prometheus:
             - prometheus.gcp.pangeo.2i2c.cloud
     resources:
       requests:
-        memory: 16Gi
+        memory: 24Gi
       limits:
-        memory: 16Gi
+        memory: 24Gi

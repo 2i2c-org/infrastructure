@@ -6,9 +6,13 @@ region           = "us-central1"
 regional_cluster = false
 
 k8s_versions = {
-  min_master_version : "1.27.4-gke.900",
-  core_nodes_version : "1.27.4-gke.900",
-  notebook_nodes_version : "1.27.4-gke.900",
+  # NOTE: This isn't a regional cluster / highly available cluster, when
+  #       upgrading the control plane, there will be ~5 minutes of k8s not being
+  #       available making new server launches error etc.
+  min_master_version : "1.29.1-gke.1589018",
+  core_nodes_version : "1.29.1-gke.1589018",
+  notebook_nodes_version : "1.29.1-gke.1589018",
+  dask_nodes_version : "1.29.1-gke.1589018",
 }
 
 core_node_machine_type = "n2-highmem-4"

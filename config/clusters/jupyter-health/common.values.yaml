@@ -1,0 +1,70 @@
+nfs:
+  enabled: true
+  pv:
+    enabled: true
+    # from https://docs.aws.amazon.com/efs/latest/ug/mounting-fs-nfs-mount-settings.html
+    mountOptions:
+      - rsize=1048576
+      - wsize=1048576
+      - timeo=600
+      - soft # We pick soft over hard, so NFS lockups don't lead to hung processes
+      - retrans=2
+      - noresvport
+    serverIP: fs-07b67adf6626672af.efs.us-east-2.amazonaws.com
+    baseShareName: /
+jupyterhub:
+  custom:
+    2i2c:
+      add_staff_user_ids_to_admin_users: true
+      add_staff_user_ids_of_type: "github"
+    jupyterhubConfigurator:
+      enabled: false
+    homepage:
+      templateVars:
+        org:
+          name: Jupyter Health
+          logo_url: https://jupyter.org/assets/homepage/main-logo.svg
+          url: https://github.com/jupyterhealth/
+        designed_by:
+          name: "Jupyter Health"
+          url: https://github.com/jupyterhealth/
+        operated_by:
+          name: "2i2c"
+          url: https://2i2c.org
+        funded_by:
+          name: "Jupyter Health"
+          url: https://www.earthdata.nasa.gov/esds/veda
+  hub:
+    allowNamedServers: true
+    config:
+      JupyterHub:
+        authenticator_class: github
+      GitHubOAuthenticator:
+        allowed_organizations:
+          - jupyterhealth
+        scope:
+          - read:org
+      Authenticator:
+        admin_users:
+          - minrk
+          - fperez
+          - colliand
+          - maryamv
+          - ryanlovett
+  singleuser:
+    defaultUrl: /lab
+    image:
+      name: quay.io/jupyterhealth/singleuser-premvp
+      tag: "latest"
+    memory:
+      limit: 1991244775
+      guarantee: 1991244775
+    cpu:
+      limit: 3.725
+      guarantee: 0.2328125
+    nodeSelector:
+      node.kubernetes.io/instance-type: r5.xlarge
+
+  scheduling:
+    userScheduler:
+      enabled: true

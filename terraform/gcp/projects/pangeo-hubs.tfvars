@@ -23,14 +23,18 @@ project_id             = "pangeo-integration-te-3eea"
 billing_project_id     = "pangeo-integration-te-3eea"
 zone                   = "us-central1-b"
 region                 = "us-central1"
+regional_cluster       = false
 core_node_machine_type = "n2-highmem-4"
 enable_private_cluster = true
 
 k8s_versions = {
-  min_master_version : "1.27.5-gke.200",
-  core_nodes_version : "1.27.5-gke.200",
-  notebook_nodes_version : "1.27.5-gke.200",
-  dask_nodes_version : "1.27.5-gke.200",
+  # NOTE: This isn't a regional cluster / highly available cluster, when
+  #       upgrading the control plane, there will be ~5 minutes of k8s not being
+  #       available making new server launches error etc.
+  min_master_version : "1.29.1-gke.1589018",
+  core_nodes_version : "1.29.1-gke.1589018",
+  notebook_nodes_version : "1.29.1-gke.1589018",
+  dask_nodes_version : "1.29.1-gke.1589018",
 }
 
 # Multi-tenant cluster, network policy is required to enforce separation between hubs
@@ -39,8 +43,6 @@ enable_network_policy = true
 # Setup a filestore for NFS
 enable_filestore      = true
 filestore_capacity_gb = 4608
-
-regional_cluster = false
 
 
 user_buckets = {

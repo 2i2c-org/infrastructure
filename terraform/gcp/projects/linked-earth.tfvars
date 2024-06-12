@@ -1,15 +1,14 @@
 prefix     = "linked-earth"
 project_id = "linked-earth-hubs"
 
-zone             = "us-central1-c"
-region           = "us-central1"
-regional_cluster = true
+zone   = "us-central1-c"
+region = "us-central1"
 
 k8s_versions = {
-  min_master_version : "1.27.4-gke.900",
-  core_nodes_version : "1.27.4-gke.900",
-  notebook_nodes_version : "1.27.4-gke.900",
-  dask_nodes_version : "1.27.4-gke.900",
+  min_master_version : "1.29.1-gke.1589018",
+  core_nodes_version : "1.29.1-gke.1589018",
+  notebook_nodes_version : "1.29.1-gke.1589018",
+  dask_nodes_version : "1.29.1-gke.1589018",
 }
 
 core_node_machine_type = "n2-highmem-4"

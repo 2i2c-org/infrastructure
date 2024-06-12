@@ -1,5 +1,5 @@
 name: hhmi
-provider: gcp
+provider: gcp # https://console.cloud.google.com/kubernetes/clusters/details/us-west2/hhmi-cluster/details?project=hhmi-398911
 gcp:
   key: enc-deployer-credentials.secret.json
   project: hhmi-398911

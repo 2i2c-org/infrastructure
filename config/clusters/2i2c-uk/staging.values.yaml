@@ -1,6 +1,7 @@
 nfs:
   enabled: true
   pv:
+    enabled: true
     mountOptions:
       - soft
       - noatime

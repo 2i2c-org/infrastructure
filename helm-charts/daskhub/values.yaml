@@ -15,7 +15,6 @@ basehub:
         # storage buckets.
         #
         blockWithIptables: false
-      serviceAccountName: user-sa
       extraEnv:
         # About DASK_ prefixed variables we set:
         #
@@ -59,7 +58,7 @@ basehub:
           # as dask-gateway has no UI
           display: false
       extraConfig:
-        # Initially copied from https://github.com/dask/helm-chart/blob/master/daskhub/values.yaml
+        # Initially copied from https://github.com/dask/helm-chart/blob/main/daskhub/values.yaml
         daskhub-01-add-dask-gateway-values: |
           # 1. Sets `DASK_GATEWAY__PROXY_ADDRESS` in the singleuser environment.
           # 2. Adds the URL for the Dask Gateway JupyterHub service.
@@ -100,7 +99,7 @@ basehub:
 dask-gateway:
   enabled: true # Enabling dask-gateway will install Dask Gateway as a dependency.
   # Further Dask Gateway configuration goes here
-  # See https://github.com/dask/dask-gateway/blob/master/resources/helm/dask-gateway/values.yaml
+  # See https://github.com/dask/dask-gateway/blob/main/resources/helm/dask-gateway/values.yaml
   gateway:
     backend:
       scheduler:

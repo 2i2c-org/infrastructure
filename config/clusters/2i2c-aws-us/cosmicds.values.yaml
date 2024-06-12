@@ -1,5 +1,6 @@
 nfs:
-  # No persistent storage for cosmicds
+  # nfs functionality explicitly disabled in case a common.values.yaml
+  # file is used to enable it for all hubs in the cluster
   enabled: false
   pv:
     enabled: false
@@ -37,9 +38,6 @@ jupyterhub:
           name: Cosmic DS, Harvard
           url: https://www.cosmicds.cfa.harvard.edu/
   singleuser:
-    # Unset cmd so repo2docker-entrypoint gets used, and logs actually work
-    # Ref https://github.com/2i2c-org/infrastructure/issues/3109
-    cmd: null
     # No persistent storage should be kept to reduce any potential data
     # retention & privacy issues.
     # Ref https://github.com/2i2c-org/infrastructure/issues/2128#issuecomment-1635107926

@@ -1,3 +1,5 @@
+# nfs functionality enabled for this ephemeral hub to mount
+# a shared folder from another hub in the cluster
 nfs:
   enabled: true
   dirsizeReporter:
@@ -62,10 +64,10 @@ jupyterhub:
           mountPath: /home/jovyan/shared-readonly
           subPath: _shared
           readOnly: true
-    defaultUrl: /lab
+    defaultUrl: /git-pull?repo=https%3A%2F%2Fgithub.com%2FLorenFrankLab%2Fspyglass-demo&urlpath=lab%2Ftree%2Fspyglass-demo%2Fnotebooks%2F00_HubQuickStart.ipynb&branch=main
     image:
       name: quay.io/lorenlab/hhmi-spyglass-image
-      tag: "78764087554d"
+      tag: "82450331e8f1"
     memory:
       limit: 3.4G
       guarantee: 3.4G
@@ -73,7 +75,7 @@ jupyterhub:
       node.kubernetes.io/instance-type: n2-highmem-4
     extraContainers:
       - name: mysql
-        image: datajoint/mysql # following the spyglass tutorial at https://lorenfranklab.github.io/spyglass/latest/notebooks/00_Setup/#existing-database
+        image: datajoint/mysql:8.0 # following the spyglass tutorial at https://lorenfranklab.github.io/spyglass/latest/notebooks/00_Setup/#existing-database
         ports:
           - name: mysql
             containerPort: 3306

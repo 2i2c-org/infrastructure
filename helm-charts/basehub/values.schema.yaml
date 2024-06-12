@@ -16,6 +16,7 @@ required:
   - global
   - jupyterhub
   - userServiceAccount
+  - adminServiceAccount
   - dex
   - staticWebsite
   - ingressBasicAuth
@@ -153,6 +154,27 @@ properties:
           the annotation with key "iam.gke.io/gcp-service-account" to the
           email address of the Google Service Account whose credentials it
           should have.
+  adminServiceAccount:
+    type: object
+    additionalProperties: false
+    required:
+      - enabled
+    properties:
+      enabled:
+        type: boolean
+        description: |
+          Enables creation of a Service Account named admin-sa for opt-in use
+          via jupyterhub.custom.singleuserAdmin.serviceAccountName.
+      annotations:
+        type: object
+        additionalProperties: true
+        description: |
+          Dictionary of annotations that can be applied to the service account.
+
+          When used with GKE and Workload Identity, you need to set
+          the annotation with key "iam.gke.io/gcp-service-account" to the
+          email address of the Google Service Account whose credentials it
+          should have.
   nfs:
     type: object
     additionalProperties: false
@@ -165,6 +187,14 @@ properties:
       enabled:
         type: boolean
       dirsizeReporter:
+        type: object
+        additionalProperties: false
+        required:
+          - enabled
+        properties:
+          enabled:
+            type: boolean
+      volumeReporter:
         type: object
         additionalProperties: false
         required:
@@ -284,7 +314,6 @@ properties:
         required:
           - singleuserAdmin
           - singleuser
-          - cloudResources
           - 2i2c
           - auth
           - jupyterhubConfigurator
@@ -370,6 +399,11 @@ properties:
                   - operated_by
                   - funded_by
                 properties:
+                  learn_more:
+                    type: string
+                    description: |
+                      HTML to display under the 'Where can I learn more?' section of the
+                      home page
                   default_url:
                     type: string
                     description: |
@@ -451,32 +485,8 @@ properties:
                   additionalProperties: true
               extraEnv:
                 type: object
-          cloudResources:
-            type: object
-            additionalProperties: false
-            required:
-              - provider
-              - gcp
-              - scratchBucket
-            properties:
-              provider:
-                enum: ["", gcp]
-              gcp:
-                type: object
-                additionalProperties: false
-                required:
-                  - projectId
-                properties:
-                  projectId:
-                    type: string
-              scratchBucket:
-                type: object
-                additionalProperties: false
-                required:
-                  - enabled
-                properties:
-                  enabled:
-                    type: boolean
+              serviceAccountName:
+                type: string
           2i2c:
             type: object
             additionalProperties: false
@@ -499,6 +509,14 @@ properties:
                 items:
                   type: string
           jupyterhubConfigurator:
+            type: object
+            additionalProperties: false
+            required:
+              - enabled
+            properties:
+              enabled:
+                type: boolean
+          binderhubUI:
             type: object
             additionalProperties: false
             required:

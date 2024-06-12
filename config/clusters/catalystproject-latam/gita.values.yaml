@@ -5,21 +5,12 @@ jupyterhub:
       - hosts: [gita.latam.catalystproject.2i2c.cloud]
         secretName: https-auto-tls
   custom:
-    2i2c:
-      add_staff_user_ids_to_admin_users: true
-      add_staff_user_ids_of_type: "github"
     homepage:
       templateVars:
         org:
           name: Catalyst Project, LatAm - GITA
           url: https://2i2c.org
           logo_url: https://2i2c.org/media/logo.png
-        designed_by:
-          name: "2i2c"
-          url: https://2i2c.org
-        operated_by:
-          name: "2i2c"
-          url: https://2i2c.org
         funded_by:
           name: Chan Zuckerberg Initiative - Open Science
           url: "https://chanzuckerberg.com/science/programs-resources/open-science/"
@@ -36,35 +27,3 @@ jupyterhub:
       Authenticator:
         admin_users:
           - rafaelorozco511
-  singleuser:
-    profileList:
-      - display_name: Jupyter
-        slug: jupyter-scipy
-        description: "Python environment"
-        default: true
-        kubespawner_override:
-          image: jupyter/scipy-notebook:2023-06-27
-          default_url: /lab
-        profile_options: &profile_options
-          resource_allocation:
-            display_name: Resource Allocation
-            choices:
-              mem_8:
-                default: true
-                display_name: ~8 GB RAM, ~1.0 CPU
-                kubespawner_override:
-                  mem_guarantee: 6.684G
-                  cpu_guarantee: 0.75
-                  mem_limit: null
-                  cpu_limit: null
-                  node_selector:
-                    node.kubernetes.io/instance-type: n2-highmem-4
-      - display_name: RStudio
-        description: R environment
-        kubespawner_override:
-          image: rocker/binder:4.3
-          default_url: /rstudio
-          # Ensures container working dir is homedir
-          # https://github.com/2i2c-org/infrastructure/issues/2559
-          working_dir: /home/rstudio
-        profile_options: *profile_options

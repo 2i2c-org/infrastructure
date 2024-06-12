@@ -1,6 +1,8 @@
 basehub:
   nfs:
+    enabled: true
     pv:
+      enabled: true
       # from https://docs.aws.amazon.com/efs/latest/ug/mounting-fs-nfs-mount-settings.html
       mountOptions:
         - rsize=1048576
@@ -100,232 +102,128 @@ basehub:
               mountPath: /home/jovyan/shared-public
               subPath: _shared-public
       profileList:
-        # NOTE: About node sharing
-        #
-        #       CPU/Memory requests/limits are actively considered still. This
-        #       profile list is setup to involve node sharing as considered in
-        #       https://github.com/2i2c-org/infrastructure/issues/2121.
-        #
-        #       - Memory requests are different from the description, based on:
-        #         what's found to remain allocate in k8s, subtracting 1GiB
-        #         overhead for misc system pods, and transitioning from GB in
-        #         description to GiB in mem_guarantee.
-        #       - CPU requests are lower than the description, with a factor of
-        #         10%.
-        #
-        - display_name: "Small: up to 4 CPU / 32 GB RAM"
-          description: &profile_list_description "Start a container with at least a chosen share of capacity on a node of this type"
-          slug: small
+        - display_name: "Python"
+          slug: python
           default: true
-          allowed_teams:
-            - 2i2c-org:hub-access-for-2i2c-staff
-            - CryoInTheCloud:cryoclouduser
-            - CryoInTheCloud:cryocloudadvanced
+          kubespawner_override:
+            # Image repo: https://github.com/CryoInTheCloud/hub-image
+            # Requested in https://2i2c.freshdesk.com/a/tickets/1692
+            image: quay.io/cryointhecloud/cryo-hub-image:03a26b80ca50
+          profile_options: &profile_options
+            resource_allocation: &profile_options_resource_allocation
+              display_name: Resource Allocation
+              choices:
+                mem_1_9:
+                  display_name: 1.9 GB RAM, upto 3.7 CPUs
+                  allowed_groups: &regular_allowed_groups
+                    - CryoInTheCloud:CryoCloudAdvanced
+                    - CryoInTheCloud:CryoCloudUser
+                    - 2i2c-org:hub-access-for-2i2c-staff
+                  kubespawner_override:
+                    mem_guarantee: 1991244775
+                    mem_limit: 1991244775
+                    cpu_guarantee: 0.2328125
+                    cpu_limit: 3.725
+                    node_selector:
+                      node.kubernetes.io/instance-type: r5.xlarge
+                  default: true
+                mem_3_7:
+                  display_name: 3.7 GB RAM, upto 3.7 CPUs
+                  kubespawner_override:
+                    mem_guarantee: 3982489550
+                    mem_limit: 3982489550
+                    cpu_guarantee: 0.465625
+                    cpu_limit: 3.725
+                    node_selector:
+                      node.kubernetes.io/instance-type: r5.xlarge
+                  allowed_groups: *regular_allowed_groups
+                mem_7_4:
+                  display_name: 7.4 GB RAM, upto 3.7 CPUs
+                  allowed_groups: *regular_allowed_groups
+                  kubespawner_override:
+                    mem_guarantee: 7964979101
+                    mem_limit: 7964979101
+                    cpu_guarantee: 0.93125
+                    cpu_limit: 3.725
+                    node_selector:
+                      node.kubernetes.io/instance-type: r5.xlarge
+                mem_14_8:
+                  display_name: 14.8 GB RAM, upto 3.7 CPUs
+                  allowed_groups: *regular_allowed_groups
+                  kubespawner_override:
+                    mem_guarantee: 15929958203
+                    mem_limit: 15929958203
+                    cpu_guarantee: 1.8625
+                    cpu_limit: 3.725
+                    node_selector:
+                      node.kubernetes.io/instance-type: r5.xlarge
+                mem_29_7:
+                  display_name: 29.7 GB RAM, upto 3.7 CPUs
+                  allowed_groups: *regular_allowed_groups
+                  kubespawner_override:
+                    mem_guarantee: 31859916406
+                    mem_limit: 31859916406
+                    cpu_guarantee: 3.725
+                    cpu_limit: 3.725
+                    node_selector:
+                      node.kubernetes.io/instance-type: r5.xlarge
+                mem_60_6:
+                  display_name: 60.6 GB RAM, upto 15.6 CPUs
+                  allowed_groups: &large_allowed_groups
+                    - 2i2c-org:hub-access-for-2i2c-staff
+                    - CryoInTheCloud:CryoCloudAdvanced
+                    - CryoInTheCloud:ml-in-glaciology
+                  kubespawner_override:
+                    mem_guarantee: 65094448840
+                    mem_limit: 65094448840
+                    cpu_guarantee: 7.8475
+                    cpu_limit: 15.695
+                    node_selector:
+                      node.kubernetes.io/instance-type: r5.4xlarge
+                mem_121_2:
+                  display_name: 121.2 GB RAM, upto 15.6 CPUs
+                  allowed_groups: *large_allowed_groups
+                  kubespawner_override:
+                    mem_guarantee: 130188897681
+                    mem_limit: 130188897681
+                    cpu_guarantee: 15.695
+                    cpu_limit: 15.695
+                    node_selector:
+                      node.kubernetes.io/instance-type: r5.4xlarge
+
+        - display_name: "R"
+          slug: r
+          description: R environment with many geospatial libraries pre-installed
+          kubespawner_override:
+            # Image repo: https://github.com/CryoInTheCloud/hub-Rstudio-image
+            image: "quay.io/cryointhecloud/cryo-hub-r-image:c2ee1f933030"
+          profile_options: *profile_options
+        - display_name: Matlab
+          slug: matlab
+          description: Matlab Environment (bring your own license)
+          kubespawner_override:
+            # Per https://2i2c.freshdesk.com/a/tickets/1537
+            image: openscapes/matlab:latest
+          profile_options: *profile_options
+        - display_name: "Bring your own image"
+          description: Specify your own docker image (must have python and jupyterhub installed in it)
+          slug: custom
           profile_options:
-            image: &profile_list_profile_options_image
+            image:
               display_name: Image
               unlisted_choice:
-                enabled: true
+                enabled: True
                 display_name: "Custom image"
                 validation_regex: "^.+:.+$"
-                validation_message: "Must be a publicly available docker image of form <image-name>:<tag>"
+                validation_message: "Must be a publicly available docker image, of form <image-name>:<tag>"
                 kubespawner_override:
                   image: "{value}"
-              choices:
-                python:
-                  display_name: Python
-                  default: true
-                  slug: "python"
-                  kubespawner_override:
-                    # Image repo: https://github.com/CryoInTheCloud/hub-image
-                    image: "quay.io/cryointhecloud/cryo-hub-image:bc688cb8686a"
-                rocker:
-                  display_name: R
-                  slug: "rocker"
-                  kubespawner_override:
-                    # Image repo: https://github.com/CryoInTheCloud/hub-Rstudio-image
-                    image: "quay.io/cryointhecloud/cryo-hub-r-image:c2ee1f933030"
-
-                matlab:
-                  display_name: Matlab
-                  slug: "matlab"
-                  kubespawner_override:
-                    # Image repo: https://github.com/CryoInTheCloud/hub-matlab-image
-                    image: "quay.io/cryointhecloud/cryo-hub-matlab-image:113755d00366"
-            requests:
-              # NOTE: Node share choices are in active development, see comment
-              #       next to profileList: above.
-              display_name: Node share
-              choices:
-                mem_1:
-                  display_name: ~1 GB, ~0.125 CPU
-                  kubespawner_override:
-                    mem_guarantee: 0.904G
-                    cpu_guarantee: 0.013
-                mem_2:
-                  display_name: ~2 GB, ~0.25 CPU
-                  kubespawner_override:
-                    mem_guarantee: 1.809G
-                    cpu_guarantee: 0.025
-                mem_4:
-                  default: true
-                  display_name: ~4 GB, ~0.5 CPU
-                  kubespawner_override:
-                    mem_guarantee: 3.617G
-                    cpu_guarantee: 0.05
-                mem_8:
-                  display_name: ~8 GB, ~1.0 CPU
-                  kubespawner_override:
-                    mem_guarantee: 7.234G
-                    cpu_guarantee: 0.1
-                mem_16:
-                  display_name: ~16 GB, ~2.0 CPU
-                  kubespawner_override:
-                    mem_guarantee: 14.469G
-                    cpu_guarantee: 0.2
-                mem_32:
-                  display_name: ~32 GB, ~4.0 CPU
-                  kubespawner_override:
-                    mem_guarantee: 28.937G
-                    cpu_guarantee: 0.4
-          kubespawner_override:
-            cpu_limit: null
-            mem_limit: null
-            node_selector:
-              node.kubernetes.io/instance-type: r5.xlarge
-
-        - display_name: "Medium: up to 16 CPU / 128 GB RAM"
-          description: *profile_list_description
-          slug: medium
-          allowed_teams:
-            - 2i2c-org:hub-access-for-2i2c-staff
-            - CryoInTheCloud:cryocloudadvanced
-            - CryoInTheCloud:ml-in-glaciology
-          profile_options:
-            image: *profile_list_profile_options_image
-            requests:
-              # NOTE: Node share choices are in active development, see comment
-              #       next to profileList: above.
-              display_name: Node share
-              choices:
-                mem_1:
-                  display_name: ~1 GB, ~0.125 CPU
-                  kubespawner_override:
-                    mem_guarantee: 0.942G
-                    cpu_guarantee: 0.013
-                mem_2:
-                  display_name: ~2 GB, ~0.25 CPU
-                  kubespawner_override:
-                    mem_guarantee: 1.883G
-                    cpu_guarantee: 0.025
-                mem_4:
-                  display_name: ~4 GB, ~0.5 CPU
-                  kubespawner_override:
-                    mem_guarantee: 3.766G
-                    cpu_guarantee: 0.05
-                mem_8:
-                  display_name: ~8 GB, ~1.0 CPU
-                  kubespawner_override:
-                    mem_guarantee: 7.532G
-                    cpu_guarantee: 0.1
-                mem_16:
-                  default: true
-                  display_name: ~16 GB, ~2.0 CPU
-                  kubespawner_override:
-                    mem_guarantee: 15.064G
-                    cpu_guarantee: 0.2
-                mem_32:
-                  display_name: ~32 GB, ~4.0 CPU
-                  kubespawner_override:
-                    mem_guarantee: 30.128G
-                    cpu_guarantee: 0.4
-                mem_64:
-                  display_name: ~64 GB, ~8.0 CPU
-                  kubespawner_override:
-                    mem_guarantee: 60.257G
-                    cpu_guarantee: 0.8
-                mem_128:
-                  display_name: ~128 GB, ~16.0 CPU
-                  kubespawner_override:
-                    mem_guarantee: 120.513G
-                    cpu_guarantee: 1.6
-          kubespawner_override:
-            cpu_limit: null
-            mem_limit: null
-            node_selector:
-              node.kubernetes.io/instance-type: r5.4xlarge
-
-        # NOTE: The large option is added as a comment for now. It may be that
-        #       its relevant in the future for advanced users having a workshop,
-        #       and then its possible to enable more easily.
-        #
-        #       This setup was discussed with Tasha Snow in March 2023 at
-        #       https://2i2c.freshdesk.com/a/tickets/543.
-        #
-        # - display_name: "Large: up to 64 CPU / 512 GB RAM"
-        #   description: *profile_list_description
-        #   slug: large
-        #   allowed_teams:
-        #     - 2i2c-org:hub-access-for-2i2c-staff
-        #     - CryoInTheCloud:cryocloudadvanced
-        #   profile_options:
-        #     image: *profile_list_profile_options_image
-        #     requests:
-        #       # NOTE: Node share choices are in active development, see comment
-        #       #       next to profileList: above.
-        #       display_name: Node share
-        #       choices:
-        #         mem_4:
-        #           display_name: ~4 GB, ~0.5 CPU
-        #           kubespawner_override:
-        #             mem_guarantee: 3.821G
-        #             cpu_guarantee: 0.05
-        #         mem_8:
-        #           display_name: ~8 GB, ~1.0 CPU
-        #           kubespawner_override:
-        #             mem_guarantee: 7.643G
-        #             cpu_guarantee: 0.1
-        #         mem_16:
-        #           default: true
-        #           display_name: ~16 GB, ~2.0 CPU
-        #           kubespawner_override:
-        #             mem_guarantee: 15.285G
-        #             cpu_guarantee: 0.2
-        #         mem_32:
-        #           display_name: ~32 GB, ~4.0 CPU
-        #           kubespawner_override:
-        #             mem_guarantee: 30.571G
-        #             cpu_guarantee: 0.4
-        #         mem_64:
-        #           display_name: ~64 GB, ~8.0 CPU
-        #           kubespawner_override:
-        #             mem_guarantee: 61.141G
-        #             cpu_guarantee: 0.8
-        #         mem_128:
-        #           display_name: ~128 GB, ~16.0 CPU
-        #           kubespawner_override:
-        #             mem_guarantee: 122.282G
-        #             cpu_guarantee: 1.6
-        #         mem_256:
-        #           display_name: ~256 GB, ~32.0 CPU
-        #           kubespawner_override:
-        #             mem_guarantee: 244.565G
-        #             cpu_guarantee: 3.2
-        #         mem_512:
-        #           display_name: ~512 GB, ~64.0 CPU
-        #           kubespawner_override:
-        #             mem_guarantee: 489.13G
-        #             cpu_guarantee: 6.4
-        #   kubespawner_override:
-        #     cpu_limit: null
-        #     mem_limit: null
-        #     node_selector:
-        #       node.kubernetes.io/instance-type: r5.16xlarge
-
+              choices: {}
+            resource_allocation: *profile_options_resource_allocation
         - display_name: NVIDIA Tesla T4, ~16 GB, ~4 CPUs
           description: "Start a container on a dedicated node with a GPU"
           slug: "gpu"
-          allowed_teams:
+          allowed_groups:
             - 2i2c-org:hub-access-for-2i2c-staff
             - CryoInTheCloud:ml-in-glaciology
           profile_options:

@@ -18,6 +18,7 @@ yaml = YAML(typ="safe", pure=True)
 
 REPO_ROOT_PATH = Path(__file__).parent.parent.parent
 HELM_CHARTS_DIR = REPO_ROOT_PATH.joinpath("helm-charts")
+CONFIG_CLUSTERS_PATH = REPO_ROOT_PATH.joinpath("config/clusters")
 
 
 def _assert_file_exists(filepath):
@@ -37,7 +38,7 @@ def _assert_file_exists(filepath):
         )
 
 
-def find_absolute_path_to_cluster_file(cluster_name: str, is_test: bool = False):
+def find_absolute_path_to_cluster_file(cluster_name: str):
     """Find the absolute path to a cluster.yaml file for a named cluster
 
     Args:
@@ -48,9 +49,7 @@ def find_absolute_path_to_cluster_file(cluster_name: str, is_test: bool = False)
     Returns:
         Path object: The absolute path to the cluster.yaml file for the named cluster
     """
-    cluster_yaml_path = REPO_ROOT_PATH.joinpath(
-        f"config/clusters/{cluster_name}/cluster.yaml"
-    )
+    cluster_yaml_path = CONFIG_CLUSTERS_PATH.joinpath(f"{cluster_name}/cluster.yaml")
     if not cluster_yaml_path.exists():
         raise FileNotFoundError(
             f"No cluster.yaml file exists for cluster {cluster_name}. "
@@ -120,7 +119,7 @@ def persist_config_in_encrypted_file(encrypted_file, new_config):
 def remove_jupyterhub_hub_config_key_from_encrypted_file(encrypted_file, key):
     """
     Remove config from the dict `config["jupyterhub"]["hub"]["config"][<key>]`
-    in `encrypted_file` (the config is also searched for under daskhub/binderhub prefixes).
+    in `encrypted_file` (the config is also searched for under daskhub prefix).
 
     If after removing this config, the file only contains a config dict with empty leaves,
     delete the entire file, as it no longer holds any information.
@@ -132,11 +131,8 @@ def remove_jupyterhub_hub_config_key_from_encrypted_file(encrypted_file, key):
             config = yaml.load(f)
 
     daskhub = config.get("basehub", None)
-    binderhub = config.get("binderhub", None)
     if daskhub:
         config["basehub"]["jupyterhub"]["hub"]["config"].pop(key)
-    elif binderhub:
-        config["binderhub"]["jupyterhub"]["hub"]["config"].pop(key)
     else:
         config["jupyterhub"]["hub"]["config"].pop(key)
 
@@ -241,27 +237,14 @@ def get_decrypted_files(files):
         yield [stack.enter_context(get_decrypted_file(f)) for f in files]
 
 
-def get_all_cluster_yaml_files(is_test=False):
+def get_all_cluster_yaml_files():
     """Get a set of absolute paths to all cluster.yaml files in the repository
-
-    Args:
-        is_test (bool, optional): A flag to determine whether we are running a test
-            suite or not. If True, only return the paths to cluster.yaml files under the
-            'tests/' directory. If False, explicitly exclude the cluster.yaml files
-            nested under the 'tests/' directory. Defaults to False.
 
     Returns:
         set[path obj]: A set of absolute paths to all cluster.yaml files in the repo
     """
-    # Get absolute paths
-    if is_test:
-        # We are running a test via pytest. We only want to focus on the cluster
-        # folders nested under the `tests/` folder.
-        return set(REPO_ROOT_PATH.glob("tests/test-clusters/**/cluster.yaml"))
-
-    # We are NOT running a test via pytest. We only care about the clusters under config/clusters
     return {
         path
-        for path in REPO_ROOT_PATH.glob("config/clusters/**/cluster.yaml")
+        for path in CONFIG_CLUSTERS_PATH.glob("**/cluster.yaml")
         if "templates" not in path.as_posix()
     }

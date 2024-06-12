@@ -12,15 +12,16 @@ jupyterhub:
         description: Start a Python server with JupyterLab and scientific Python stack
         default: true
         kubespawner_override:
-          # From https://github.com/2i2c-org/scipy-notebook-with-nbgitpuller
-          image: quay.io/2i2c/scipy-notebook-with-nbgitpuller:99968bfe6916
+          # From https://github.com/SaiUCM/example-inherit-from-community-image
+          # See https://2i2c.freshdesk.com/a/tickets/1612
+          image: quay.io/cirt_ucm/jupyter-scipy-xarray:afab6a519d8b
           # Launch into JupyterLab after the user logs in
           default_url: /lab
       - display_name: R
         description: Start a R server with tidyverse & Geospatial tools
         kubespawner_override:
           # From https://github.com/2i2c-org/rocker-with-nbgitpuller
-          image: quay.io/2i2c/rocker-with-nbgitpuller:287ea05b2809
+          image: quay.io/2i2c/rocker-with-nbgitpuller:3edc87d73e3d
           default_url: /lab
           # Ensures container working dir is homedir
           # https://github.com/2i2c-org/infrastructure/issues/2559

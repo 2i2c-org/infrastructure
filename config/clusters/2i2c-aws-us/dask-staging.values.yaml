@@ -30,7 +30,7 @@ basehub:
     singleuser:
       image:
         name: pangeo/pangeo-notebook
-        tag: "2022.06.02"
+        tag: "latest"
     hub:
       config:
         JupyterHub:

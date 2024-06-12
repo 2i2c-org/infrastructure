@@ -83,8 +83,6 @@ def persist_client_credentials_in_config_file(client, hub_type, config_filename)
 
     if hub_type == "daskhub":
         auth_config["basehub"] = jupyterhub_config
-    elif hub_type == "binderhub":
-        auth_config["binderhub"] = jupyterhub_config
     else:
         auth_config = jupyterhub_config
 
@@ -100,14 +98,9 @@ def load_client_id_from_file(config_filename):
             auth_config = yaml.load(f)
 
     daskhub = auth_config.get("basehub", None)
-    binderhub = auth_config.get("binderhub", None)
     try:
         if daskhub:
             return auth_config["basehub"]["jupyterhub"]["hub"]["config"][
-                "CILogonOAuthenticator"
-            ]["client_id"]
-        elif binderhub:
-            return auth_config["binderhub"]["jupyterhub"]["hub"]["config"][
                 "CILogonOAuthenticator"
             ]["client_id"]
         return auth_config["jupyterhub"]["hub"]["config"]["CILogonOAuthenticator"][

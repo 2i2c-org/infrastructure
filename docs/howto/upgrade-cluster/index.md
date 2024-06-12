@@ -9,7 +9,21 @@ As of now, we also only have written documentation for how to upgrade Kubernetes
 clusters on AWS.
 ```
 
-## Upgrade policy
+(upgrade-cluster:planning)=
+## Upgrade planning
+
+```{warning}
+We haven't yet established a policy for planning and communicating maintenance
+procedures to community champions and users.
+
+Up until now we have made some k8s cluster upgrades opportunistically,
+especially for clusters that has showed little to no activity during some
+periods. Other cluster upgrades have been scheduled with community champions, and
+some in shared clusters have been announced ahead of time.
+```
+
+(upgrade-cluster:ambition)=
+## Upgrade ambition
 
 1. To keep our k8s cluster's control plane and node pools upgraded to the latest
    _three_ and _four_ [official minor k8s versions] respectively at all times.
@@ -35,5 +49,8 @@ clusters on AWS.
 ```{toctree}
 :maxdepth: 1
 :caption: Upgrading Kubernetes clusters
+upgrade-disruptions.md
+node-upgrade-strategies.md
+k8s-version-skew.md
 aws.md
 ```

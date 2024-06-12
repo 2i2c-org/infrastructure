@@ -1,9 +1,12 @@
 (howto:features:cryptnono)=
 # Enable stronger anti-crypto abuse features for a hub
 
-These docs discuss how to enable the `execwhacker` detector, particularly for hubs that are open to the world.
-attacks are the most common security threat. They take up resources and rack up
-They also cover:
+These docs discuss how to test and work on the `execwhacker` detector. It is enabled
+on *all* our hubs, but is particularly useful for hubs that are open to the world.
+Cryptomining attacks are the most common security threat to these hubs, as
+they take up resources and rack up cloud bills.
+
+These docs also cover:
 - how to test if `execWhacker` is operational,
 - regenerating the list of banned strings used by `execwhacker`, and
 - how to work on the encrypted banned strings generator script.
@@ -11,26 +14,6 @@ They also cover:
 ```{note}
 For more information on `cryptnono`, it's use, and the detectors, please see
 [](topic:cryptnono) and <https://github.com/cryptnono/cryptnono>.
-```
-
-## Enabling the `execwhacker` detector
-
-The `execwhacker` detector can be enabled with the following configuration in the appropriate
-`support.values.yaml` for the cluster:
-
-```yaml
-cryptnono:
-  detectors:
-    # Enable execwhacker, as this cluster has a hub that is widely open to the public
-    execwhacker:
-      enabled: true
-```
-
-Upon deployment of this change, you can verify the detector is enabled by looking for a container
-named `execwhacker` in the `cryptnono` daemonset in the `support` namespace.
-
-```yaml
-kubectl -n support get daemonset support-cryptnono -o yaml
 ```
 
 ## Testing the `execwhacker` detector

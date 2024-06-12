@@ -56,7 +56,7 @@ local daskNodes = [
     metadata+: {
         name: "smithsonian",
         region: clusterRegion,
-        version: "1.27",
+        version: "1.29",
     },
     availabilityZones: masterAzs,
     iam: {
@@ -85,7 +85,7 @@ local daskNodes = [
     nodeGroups: [
         ng + {
             namePrefix: 'core',
-            nameSuffix: 'b',
+            nameSuffix: 'a',
             nameIncludeInstanceType: false,
             availabilityZones: [nodeAz],
             ssh: {

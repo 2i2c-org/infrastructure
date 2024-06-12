@@ -49,3 +49,51 @@ hubs:
       - common.values.yaml
       - gita.values.yaml
       - enc-gita.secret.values.yaml
+  - name: iner
+    display_name: "Catalyst Project, LatAm - INER"
+    domain: iner.latam.catalystproject.2i2c.cloud
+    helm_chart: basehub
+    helm_chart_values_files:
+      - common.values.yaml
+      - iner.values.yaml
+      - enc-iner.secret.values.yaml
+  - name: plnc
+    display_name: "Catalyst Project, LatAm - PLNC"
+    domain: hub.pln.villena.cl
+    helm_chart: basehub
+    helm_chart_values_files:
+      - common.values.yaml
+      - plnc.values.yaml
+      - enc-plnc.secret.values.yaml
+  - name: unam
+    display_name: "Catalyst Project, LatAm - UNAM"
+    domain: unam.latam.catalystproject.2i2c.cloud
+    helm_chart: basehub
+    helm_chart_values_files:
+      - common.values.yaml
+      - unam.values.yaml
+      - enc-unam.secret.values.yaml
+  - name: uprrp
+    display_name: "Catalyst Project, LatAm - UPRRP"
+    domain: uprrp.latam.catalystproject.2i2c.cloud
+    helm_chart: basehub
+    helm_chart_values_files:
+      - common.values.yaml
+      - uprrp.values.yaml
+      - enc-uprrp.secret.values.yaml
+  - name: cabana
+    display_name: "Catalyst Project, LatAm - CABANA"
+    domain: cabana.latam.catalystproject.2i2c.cloud
+    helm_chart: basehub
+    helm_chart_values_files:
+      - common.values.yaml
+      - cabana.values.yaml
+      - enc-cabana.secret.values.yaml
+  - name: nnb-ccg
+    display_name: "Catalyst Project, LatAm - NNB-CCG"
+    domain: nnb-ccg.latam.catalystproject.2i2c.cloud
+    helm_chart: basehub
+    helm_chart_values_files:
+      - common.values.yaml
+      - nnb-ccg.values.yaml
+      - enc-nnb-ccg.secret.values.yaml

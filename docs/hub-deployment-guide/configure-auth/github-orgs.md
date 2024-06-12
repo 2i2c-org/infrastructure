@@ -66,30 +66,9 @@ You can remove yourself from the org once you have confirmed that login is worki
      ...
    ```
 
-4. **Edit the non-secret config under `config/clusters/<cluster_name>/<hub_name>.values.yaml`.**
-   You should make sure the matching hub config takes one of the following forms.
-
-   To authenticate against a GitHub organisation (Note the `read:user` scope. See comment box below.):
-
-    ```yaml
-    jupyterhub:
-      custom:
-        2i2c:
-          add_staff_user_ids_to_admin_users: true
-          add_staff_user_ids_of_type: github
-      hub:
-        config:
-          JupyterHub:
-            authenticator_class: github
-          GitHubOAuthenticator:
-            oauth_callback_url: https://{{ HUB_DOMAIN }}/hub/oauth_callback
-            allowed_organizations:
-              - ORG_NAME
-            scope:
-              - read:user
-    ```
-
-   To authenticate against a GitHub Team (Note the `read:org` scope. See the comment box below.):
+4. **Edit the non-secret config under `config/clusters/<cluster_name>/<hub_name>.values.yaml`,**
+   making sure we ask for enough permissions (`read:org`) so we know what organizations (or
+   teams) users are a part of
 
     ```yaml
     jupyterhub:
@@ -105,17 +84,9 @@ You can remove yourself from the org once you have confirmed that login is worki
             oauth_callback_url: https://{{ HUB_DOMAIN }}/hub/oauth_callback
             allowed_organizations:
               - ORG_NAME:TEAM_NAME
+              - ORG_NAME
             scope:
               - read:org
-    ```
-
-    ```{admonition} A note on scopes
-    When authenticating against a whole organisation, we used the `read:user` scope in the example above.
-    This means that the GitHub OAuth App will read the _user's_ profile to determine whether the currently authenticating user is a member of the listed organisation. **It also requires the user to have their membership of the organisation publicly listed otherwise authentication will fail, even if they are valid members.**
-
-    To avoid this requirement, you may choose to use the `read:org` scope instead. This grants the GitHub OAuth App permission to read the profile of the _whole organisation_, however, and may be more powerful than the organisation owners wish to grant. So use your best judgment here.
-
-    When authenticating against a GitHub Team, we are required to use the `read:org` scope as the GitHub OAuth App needs to know which teams belong to the organisation as well as the members of the specified team.
     ```
 
     ````{note}
@@ -161,7 +132,6 @@ You will **still** require admin access to the org to carry out those steps.
 
 Once you have confirmed with the Community Representative that users can login, you can remove yourself from the org.
 
-(auth:github-orgs:profile-list)=
 ## Restricting user profiles based on GitHub Team Membership
 
 JupyterHub has support for using [profileList](https://zero-to-jupyterhub.readthedocs.io/en/latest/jupyterhub/customizing/user-environment.html#using-multiple-profiles-to-let-users-select-their-environment)
@@ -170,67 +140,7 @@ server.
 
 In addition, we can allow people access to specific profiles based on their GitHub Teams membership!
 This only works if the hub is already set to allow people only from certain GitHub organizations
-to log in.
-
-The key `allowed_teams` can be set for any profile definition, with a list of GitHub
-teams (formatted as `<github-org>:<team-name>`) or GitHub organizations (formatted
-just as `<github-org>`) that will get access to that profile. Users
-need to be a member of any one of the listed teams for access. The list of teams a user
-is part of is fetched at login time - so if the user is added to a GitHub team, they need
-to log out and log back in to the JupyterHub (not necessarily to GitHub!) to see the new
-profiles they have access to. To remove access to a profile from a user, they have to be
-removed from the appropriate team on GitHub *and* their JupyterHub user needs to be
-deleted from the hub admin dashboard.
-
-To enable this access,
-
-1. Enable storing the list of GitHub teams a user is in as a part of
-   [`auth_state`](https://zero-to-jupyterhub.readthedocs.io/en/latest/administrator/authentication.html#enable-auth-state)
-   with the following config:
-
-   ```yaml
-   jupyterhub:
-      hub:
-        config:
-          Authenticator:
-            enable_auth_state: true
-          GitHubOAuthenticator:
-            populate_teams_in_auth_state: true
-   ```
-
-   If `populate_teams_in_auth_state` is not set, this entire feature is disabled.
-
-2. Specify which teams or orgs should have access to which profiles with an
-   `allowed_teams` key under `profileList`:
-
-    ```yaml
-    jupyterhub:
-      singleuser:
-        profileList:
-          - display_name: Small
-            description: 1.0 GB RAM
-            default: true
-            allowed_teams:
-              - <org-name>:<team-name>
-              - 2i2c-org:hub-access-for-2i2c-staff
-            kubespawner_override:
-              mem_guarantee: 1G
-              mem_limit: 1G
-          - display_name: Medium
-            description: 4.0 GB RAM
-            allowed_teams:
-              - <org-name>:<team-name>
-              - 2i2c-org:hub-access-for-2i2c-staff
-            kubespawner_override:
-              mem_guarantee: 4G
-              mem_limit: 4G
-    ```
-
-    Users who are a part of *any* of the listed teams will be able to access
-    that profile. Add `2i2c-org:hub-access-for-2i2c-staff` to all
-    `allowed_teams` so 2i2c engineers can log in to debug issues. If
-    `allowed_teams` is not set, that profile is not available to anyone.
-
+to log in. See [](howto:features:profile-restrict) for more information.
 ### Enabling team based access on hub with pre-existing users
 
 If this is being enabled for users on a hub with *pre-existing* users, they

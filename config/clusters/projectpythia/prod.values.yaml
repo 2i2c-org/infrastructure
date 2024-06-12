@@ -1,0 +1,25 @@
+jupyterhub:
+  ingress:
+    hosts: [projectpythia.2i2c.cloud]
+    tls:
+      - hosts: [projectpythia.2i2c.cloud]
+        secretName: https-auto-tls
+  custom:
+    homepage:
+      templateVars:
+        org:
+          name: ProjectPythia
+  hub:
+    config:
+      GitHubOAuthenticator:
+        oauth_callback_url: https://projectpythia.2i2c.cloud/hub/oauth_callback
+        allowed_organizations:
+          - ProjectPythia
+        scope:
+          - read:org
+    services:
+      binder:
+        # FIXME: ref https://github.com/2i2c-org/binderhub-service/issues/57
+        # for something more readable and requiring less copy-pasting
+        url: http://prod-binderhub-service:8090
+        display: false

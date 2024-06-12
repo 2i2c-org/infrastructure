@@ -41,6 +41,7 @@ basehub:
           populate_teams_in_auth_state: true
           allowed_organizations:
             - 2i2c-community-showcase:access-2i2c-showcase
+            - 2i2c-community-showcase:magiclinks-demo
             - 2i2c-demo-hub-access:showcase-topst
             - ScienceCore
           scope:
@@ -55,14 +56,25 @@ basehub:
         GH_SCOPED_CREDS_CLIENT_ID: Iv1.f9261c4c78b4dfdd
         GH_SCOPED_CREDS_APP_URL: https://github.com/apps/2i2c-community-showcase-hub
       profileList:
+        - display_name: "Magic Link Demo"
+          description: "For demoing magic links"
+          allowed_groups:
+            - 2i2c-community-showcase:magiclinks-demo
+          kubespawner_override:
+            image: pangeo/pangeo-notebook:2023.06.20
+            mem_guarantee: 7.234G
+            cpu_guarantee: 0.1
+            mem_limit: null
+            node_selector:
+              node.kubernetes.io/instance-type: r5.xlarge
         - display_name: "NASA TOPS-T ScienceCore-ClimateRisk"
           description: "For collaborative work on 2i2c/MD's NASA TOPS-T ScienceCore Module"
-          allowed_teams:
+          allowed_groups:
             - 2i2c-demo-hub-access:showcase-topst
             - 2i2c-org:hub-access-for-2i2c-staff
             - ScienceCore:climaterisk-team
           kubespawner_override:
-            image: quay.io/2i2c/sciencecore-climaterisk-image:ea0618a408e2
+            image: quay.io/2i2c/sciencecore-climaterisk-image:69d8d944f907
             mem_guarantee: 7.234G
             cpu_guarantee: 0.1
             mem_limit: null
@@ -70,7 +82,7 @@ basehub:
               node.kubernetes.io/instance-type: r5.xlarge
         - display_name: "NASA TOPS-T ScienceCore"
           description: "JupyterHubs for NASA ScienceCore Modules"
-          allowed_teams:
+          allowed_groups:
             - 2i2c-org:hub-access-for-2i2c-staff
             - ScienceCore:2i2c-showcase
           profile_options:
@@ -89,17 +101,18 @@ basehub:
                   display_name: Jupyter SciPy
                   slug: jupyter-scipy
                   kubespawner_override:
-                    image: jupyter/scipy-notebook:2023-06-27
+                    image: quay.io/jupyter/scipy-notebook:2024-03-18
                 jupyter-datascience:
                   display_name: Jupyter DataScience
                   slug: jupyter-datascience
                   kubespawner_override:
-                    image: jupyter/datascience-notebook:2023-06-27
+                    image: quay.io/jupyter/datascience-notebook:2024-03-18
                 rocker-geospatial:
                   display_name: Rocker Geospatial
                   slug: rocker-geospatial
                   kubespawner_override:
                     image: rocker/binder:4.3
+                    image_pull_policy: Always
                     # Launch into RStudio after the user logs in
                     default_url: /rstudio
                     # Ensures container working dir is homedir
@@ -119,7 +132,7 @@ basehub:
               node.kubernetes.io/instance-type: r5.xlarge
         - display_name: "Shared Small: 1-4 CPU, 8-32 GB"
           description: "A shared machine, the recommended option until you experience a limitation."
-          allowed_teams: &allowed_teams
+          allowed_groups: &allowed_groups
             - 2i2c-org:hub-access-for-2i2c-staff
             - 2i2c-community-showcase:access-2i2c-showcase
           profile_options: &profile_options
@@ -137,7 +150,7 @@ basehub:
                   display_name: Handbook Authoring
                   slug: handbook
                   kubespawner_override:
-                    image: quay.io/2i2c/handbook-authoring-image:b5b2c88daa24
+                    image: quay.io/2i2c/handbook-authoring-image:7c62c6e63869
                 pangeo:
                   display_name: Pangeo Notebook
                   default: true
@@ -148,17 +161,18 @@ basehub:
                   display_name: Jupyter SciPy
                   slug: jupyter-scipy
                   kubespawner_override:
-                    image: jupyter/scipy-notebook:2023-06-27
+                    image: quay.io/jupyter/scipy-notebook:2024-03-18
                 jupyter-datascience:
                   display_name: Jupyter DataScience
                   slug: jupyter-datascience
                   kubespawner_override:
-                    image: jupyter/datascience-notebook:2023-06-27
+                    image: quay.io/jupyter/datascience-notebook:2024-03-18
                 rocker-geospatial:
                   display_name: Rocker Geospatial
                   slug: rocker-geospatial
                   kubespawner_override:
                     image: rocker/binder:4.3
+                    image_pull_policy: Always
                     # Launch into RStudio after the user logs in
                     default_url: /rstudio
                     # Ensures container working dir is homedir
@@ -174,7 +188,7 @@ basehub:
         - display_name: "Small: 4 CPU, 32 GB"
           description: "A dedicated machine for you."
           profile_options: *profile_options
-          allowed_teams: *allowed_teams
+          allowed_groups: *allowed_groups
           kubespawner_override:
             mem_guarantee: 28.937G
             cpu_guarantee: 0.4
@@ -185,7 +199,7 @@ basehub:
         - display_name: "Medium: 16 CPU, 128 GB"
           description: "A dedicated machine for you."
           profile_options: *profile_options
-          allowed_teams: *allowed_teams
+          allowed_groups: *allowed_groups
           kubespawner_override:
             mem_guarantee: 120.513G
             cpu_guarantee: 1.6
@@ -196,7 +210,7 @@ basehub:
         - display_name: "Large: 64 CPU, 512 GB"
           description: "A dedicated machine for you"
           profile_options: *profile_options
-          allowed_teams: *allowed_teams
+          allowed_groups: *allowed_groups
           kubespawner_override:
             mem_guarantee: 489.13G
             cpu_guarantee: 6.4
@@ -206,7 +220,7 @@ basehub:
 
         - display_name: NVIDIA Tesla T4, ~16 GB, ~4 CPUs
           slug: gpu
-          allowed_teams:
+          allowed_groups:
             - 2i2c-org:hub-access-for-2i2c-staff
           description: "Start a container on a dedicated node with a GPU"
           profile_options:

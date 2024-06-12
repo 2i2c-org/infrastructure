@@ -34,7 +34,13 @@ The deployer has the following directory structure:
 ```
 
 ### The `cli_app.py` file
+
 The `cli_app.py` file is the file that contains the main `deployer` typer app and all of the main sub-apps "attached" to it, each corresponding to a `deployer` sub-command. These apps are used throughout the codebase.
+
+### The `__main__.py` file
+
+The `__main__.py` file is the main file that gets executed when the deployer is called.
+If you are adding any sub-command functions, you **must** import them in this file for them to be picked up by the package.
 
 ### The `infra_components` directory
 
@@ -129,34 +135,28 @@ This section descripts some of the subcommands the `deployer` can carry out.
 **Command line usage:**
 
 ```bash
-                                                                                                                        
- Usage: deployer [OPTIONS] COMMAND [ARGS]...                                                                            
-                                                                                                                        
-╭─ Options ────────────────────────────────────────────────────────────────────────────────────────────────────────────╮
-│ --install-completion        [bash|zsh|fish|powershell|pwsh]  Install completion for the specified shell.             │
-│                                                              [default: None]                                         │
-│ --show-completion           [bash|zsh|fish|powershell|pwsh]  Show completion for the specified shell, to copy it or  │
-│                                                              customize the installation.                             │
-│                                                              [default: None]                                         │
-│ --help                                                       Show this message and exit.                             │
-╰──────────────────────────────────────────────────────────────────────────────────────────────────────────────────────╯
-╭─ Commands ───────────────────────────────────────────────────────────────────────────────────────────────────────────╮
-│ cilogon-client           Manage cilogon clients for hubs' authentication.                                            │
-│ debug                    Debug issues by accessing different components and their logs                               │
-│ decrypt-age              Decrypt secrets sent to `support@2i2c.org` via `age`                                        │
-│ deploy                   Deploy one or more hubs in a given cluster                                                  │
-│ deploy-support           Deploy support components to a cluster                                                      │
-│ exec                     Execute a shell in various parts of the infra. It can be used for poking around, or         │
-│                          debugging issues.                                                                           │
-│ generate                 Generate various types of assets. It currently supports generating files related to         │
-│                          billing, new dedicated clusters, helm upgrade strategies and resource allocation.           │
-│ grafana                  Manages Grafana related workflows.                                                          │
-│ run-hub-health-check     Run a health check on a given hub on a given cluster. Optionally check scaling of dask      │
-│                          workers if the hub is a daskhub.                                                            │
-│ use-cluster-credentials  Pop a new shell or execute a command after authenticating to the given cluster using the    │
-│                          deployer's credentials                                                                      │
-│ validate                 Validate configuration files such as helm chart values and cluster.yaml files.              │
-╰──────────────────────────────────────────────────────────────────────────────────────────────────────────────────────╯
+ Usage: deployer [OPTIONS] COMMAND [ARGS]...                
+
+╭─ Options ─────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────╮
+│ --install-completion          Install completion for the current shell.                                                                                                                   │
+│ --show-completion             Show completion for the current shell, to copy it or customize the installation.                                                                            │
+│ --help                        Show this message and exit.                                                                                                                                 │
+╰───────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────╯
+╭─ Commands ────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────╮
+│ cilogon-client            Manage cilogon clients for hubs' authentication.                                                                                                                │
+│ debug                     Debug issues by accessing different components and their logs                                                                                                   │
+│ decrypt-age               Decrypt secrets sent to `support@2i2c.org` via `age`                                                                                                            │
+│ deploy                    Deploy one or more hubs in a given cluster                                                                                                                      │
+│ deploy-support            Deploy support components to a cluster                                                                                                                          │
+│ exec                      Execute a shell in various parts of the infra. It can be used for poking around, or debugging issues.                                                           │
+│ generate                  Generate various types of assets. It currently supports generating files related to billing, new dedicated clusters, helm upgrade strategies and resource       │
+│                           allocation.                                                                                                                                                     │
+│ grafana                   Manages Grafana related workflows.                                                                                                                              │
+│ run-hub-health-check      Run a health check on a given hub on a given cluster. Optionally check scaling of dask workers if the hub is a daskhub.                                         │
+│ transform                 Programmatically transform datasets, such as cost tables for billing purposes.                                                                                  │
+│ use-cluster-credentials   Pop a new shell or execute a command after authenticating to the given cluster using the deployer's credentials                                                 │
+│ validate                  Validate configuration files such as helm chart values and cluster.yaml files.                                                                                  │
+╰───────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────╯
 ```
 
 ### Standalone sub-commands related to deployment
@@ -196,6 +196,14 @@ For daskhubs, there is an optional check to verify that the user can scale dask 
 
 Decrypts information sent to 2i2c by community representatives using [age](https://age-encryption.org/) according to instructions in [2i2c documentation](https://docs.2i2c.org/en/latest/support.html?highlight=decrypt#send-us-encrypted-content).
 
+### The `config` sub-command
+
+This deployer sub-command provides misc information.
+
+#### `config get-clusters`
+
+This function prints a sorted list of clusters, optionally filtered by the
+`--provider` flag.
 
 ### The `generate` sub-command
 
@@ -228,8 +236,8 @@ the name of the cluster, the region where the cluster will be deployed and wheth
     - `config/<cluster_name>/enc-support.secret.values.yaml`
 
 The files are generated based on the jsonnet templates in:
-  - (`eksctl/template.json`)[https://github.com/2i2c-org/infrastructure/blob/master/eksctl/template.jsonnet]
-  - (`terraform/aws/projects/basehub-template.tfvars`)[https://github.com/2i2c-org/infrastructure/blob/master/terraform/aws/projects/basehub-template.tfvars]
+  - (`eksctl/template.json`)[https://github.com/2i2c-org/infrastructure/blob/main/eksctl/template.jsonnet]
+  - (`terraform/aws/projects/basehub-template.tfvars`)[https://github.com/2i2c-org/infrastructure/blob/main/terraform/aws/projects/basehub-template.tfvars]
 
 
 ##### `generate dedicated-cluster gcp`
@@ -256,10 +264,10 @@ The templates have a set of default features and define some opinionated charact
 These defaults are described in each file template.
 
   The infrastructure terraform config is generated based on the terraform templates in:
-    - (`terraform/basehub-template.tfvars`)[https://github.com/2i2c-org/infrastructure/blob/master/terraform/gcp/projects/basehub-template.tfvars]
-    - (`terraform/daskhub-template.tfvars`)[https://github.com/2i2c-org/infrastructure/blob/master/terraform/gcp/projects/daskhub-template.tfvars]
+    - (`terraform/basehub-template.tfvars`)[https://github.com/2i2c-org/infrastructure/blob/main/terraform/gcp/projects/basehub-template.tfvars]
+    - (`terraform/daskhub-template.tfvars`)[https://github.com/2i2c-org/infrastructure/blob/main/terraform/gcp/projects/daskhub-template.tfvars]
   The cluster configuration directory is generated based on the templates in:
-    - (`config/clusters/templates/gcp`)[https://github.com/2i2c-org/infrastructure/blob/master/config/clusters/templates/gcp]
+    - (`config/clusters/templates/gcp`)[https://github.com/2i2c-org/infrastructure/blob/main/config/clusters/templates/gcp]
 
 #### `generate resource-allocation`
 
@@ -275,14 +283,14 @@ Only DaemonSet's with running pods are considered, and GPU related DaemonSets (w
 
 To run this command for all clusters, `xargs` can be used like this:
 
-    ls config/clusters | xargs -I {} deployer generate resource-allocation daemonset-requests {}
+    deployer config get-clusters | xargs -I {} deployer generate resource-allocation daemonset-requests {}
 
 ##### `generate resource-allocation instance-capacities`
 Updates `instance_capacities.yaml` with an individual cluster's running instance types' total and allocatable capacity.
 
 To run this command for all clusters, `xargs` can be used like this:
 
-    ls config/clusters | xargs -I {} deployer generate resource-allocation instance-capacities {}
+    deployer config get-clusters | xargs -I {} deployer generate resource-allocation instance-capacities {}
 
 ##### `generate resource-allocation node-info-update`
 This updates the json file `node-capacity-info.json` with info about the capacity of a node of a certain type. This file is then used for generating the resource choices.
@@ -331,6 +339,24 @@ Gets the clusters that are in the infrastructure repository but are NOT register
 
 ##### `grafana central-ds get-rm-candidates`
 Gets the list of datasources that are registered in central grafana but are NOT in the list of clusters in the infrastructure repository. Usually this happens when a clusters was decommissioned, but its prometheus server was not removed from the datasources of the central 2i2c Grafana. This list can then be used to know which datasources to remove.
+
+### The `transform` sub-command
+
+This sub-command can be used to transform various datasets.
+
+#### `transform cost-table`
+
+This is a sub-command meant to help engineers transform cost tables generated by cloud vendors into the format required by our fiscal sponsor in order for them to bill our communities.
+This transformation is automated to avoid copy-paste errors from one CSV file to another.
+These transformations happen locally and another CSV file is outputted to the local directory, which then needs to be manually handed over to CS&S staff.
+
+##### `transform cost-table aws`
+
+Transforms a cost table generated in the AWS UI into the correct format.
+
+##### `transform cost-table gcp`
+
+Transforms a cost table generated in the GCP UI into the correct format.
 
 ### The `validate` sub-command
 

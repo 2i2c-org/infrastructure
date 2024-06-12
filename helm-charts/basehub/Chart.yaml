@@ -12,9 +12,9 @@ dependencies:
     # images/hub/Dockerfile, and will also involve manually building and pushing
     # the Dockerfile to https://quay.io/2i2c/pilot-hub. Details about this can
     # be found in the Dockerfile's comments.
-    version: 3.2.1
+    version: 3.3.7
     repository: https://jupyterhub.github.io/helm-chart/
   - name: binderhub-service
-    version: 0.1.0-0.dev.git.110.hd833d08
+    version: 0.1.0-0.dev.git.240.hdaf17cc
     repository: https://2i2c.org/binderhub-service/
     condition: binderhub-service.enabled

@@ -40,7 +40,7 @@ local daskNodes = [];
     metadata+: {
         name: "ubc-eoas",
         region: clusterRegion,
-        version: "1.27",
+        version: "1.29",
     },
     availabilityZones: masterAzs,
     iam: {
@@ -69,7 +69,7 @@ local daskNodes = [];
     nodeGroups: [
         ng + {
             namePrefix: 'core',
-            nameSuffix: 'a',
+            nameSuffix: 'b',
             nameIncludeInstanceType: false,
             availabilityZones: [nodeAz],
             ssh: {
@@ -81,11 +81,6 @@ local daskNodes = [];
             labels+: {
                 "hub.jupyter.org/node-purpose": "core",
                 "k8s.dask.org/node-purpose": "core"
-            },
-            iam+: {
-                withAddonPolicies+: {
-                    ebs: true,
-                },
             },
         },
     ] + [
@@ -106,7 +101,6 @@ local daskNodes = [];
                 "hub.jupyter.org_dedicated": "user:NoSchedule",
                 "hub.jupyter.org/dedicated": "user:NoSchedule"
             },
-
         } + n for n in notebookNodes
     ] + ( if daskNodes != null then
         [

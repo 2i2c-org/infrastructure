@@ -17,7 +17,7 @@ In general, the question of whether to deploy a new cluster for a community come
 - **Whether their infrastructure needs require their own cluster**. In some cases a community will need sophisticated infrastructure that requires a dedicated cluster. For example, if they have extreme computational needs, require complex data access, or require different kinds of computing nodes that are not available on clusters that run many different kinds of hubs. For example, [this terraform directory](https://github.com/2i2c-org/infrastructure/tree/HEAD/terraform/gcp/projects) contains configurations for a number of different GCP clusters.
 
 For most hub communities that simply wish to pay for a hub and are not opinionated about the cluster on which it runs, we can deploy their hub on a pre-existing Kubernetes cluster.
-In that case, follow the instructions at [](new-hub).
+In that case, follow the instructions at [](hub-deployment-guide:runbooks:phase3).
 
 The following sections cover how to deploy a Kubernetes cluster.
 
@@ -29,7 +29,5 @@ Deploying Kubernetes to AWS has a distinctly different workflow than GCP or Azur
 :maxdepth: 1
 :caption: Deploying Kubernetes
 new-cluster.md
-aws.md
 smce.md
-external-account.md
 ```

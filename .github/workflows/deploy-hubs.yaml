@@ -10,7 +10,7 @@ name: Deploy and test hubs
 on:
   push:
     branches:
-      - master
+      - main
     paths:
       # Include changes to the deployer script's folder, but exclude some parts
       - deployer/**
@@ -18,14 +18,17 @@ on:
       - "!deployer/health_check_tests/**"
       - "!deployer/commands/generate/billing/**"
       - "!deployer/commands/generate/dedicated_cluster/**"
+      - "!deployer/commands/generate/hub_asset/**"
       - "!deployer/commands/generate/resource_allocation/**"
       - requirements.txt
       - .github/actions/setup-deploy/**
       - helm-charts/**
       - config/clusters/**
+      # Exclude the template configuration files
+      - "!config/clusters/templates"
   pull_request:
     branches:
-      - master
+      - main
     paths:
       # Include changes to the deployer script's folder, but exclude some parts
       - deployer/**
@@ -33,16 +36,28 @@ on:
       - "!deployer/health_check_tests/**"
       - "!deployer/commands/generate/billing/**"
       - "!deployer/commands/generate/dedicated_cluster/**"
+      - "!deployer/commands/generate/hub_asset/**"
       - "!deployer/commands/generate/resource_allocation/**"
       - requirements.txt
       - .github/actions/setup-deploy/**
       - helm-charts/**
       - config/clusters/**
+      # Exclude the template configuration files
+      - "!config/clusters/templates"
 
-# When multiple PRs triggering this workflow are merged, queue them instead
-# of running them in parallel
-# https://github.blog/changelog/2021-04-19-github-actions-limit-workflow-run-or-job-concurrency/
-concurrency: deploy
+# Queue triggered executions of this workflow stemming from pushes to avoid
+# deployment conflicts.
+#
+# By using a different concurrency groups for pull requests and pushes, we
+# reduce the risk of cancelling a queued but not started workflow as discussed
+# in https://github.com/2i2c-org/infrastructure/issues/3214.
+#
+# github.head_ref is used to create PR unique concurrency groups, and for
+# workflow executions not triggered by a PR we get a dedicated group.
+#
+# ref: https://docs.github.com/en/actions/using-jobs/using-concurrency
+#
+concurrency: ${{ github.workflow }}-${{ github.head_ref || 'not-a-pr' }}
 
 # This environment variable triggers the deployer to colourise print statements in the
 # GitHug Actions logs for easy reading
@@ -69,13 +84,11 @@ jobs:
       prod-hub-matrix-jobs: ${{ env.prod-hub-matrix-jobs }}
 
     steps:
-      - name: Checkout repo
-        uses: actions/checkout@v4
+      - uses: actions/checkout@v4
 
-      - name: Install Python 3.9
-        uses: actions/setup-python@v5
+      - uses: actions/setup-python@v5
         with:
-          python-version: "3.9"
+          python-version: "3.11"
 
       # There will almost never be a cache hit on the cache key when this job is
       # run, as it is the first of all jobs in this workflow. An exception is if
@@ -95,11 +108,44 @@ jobs:
           pip install --editable .
           pip list
 
+      - name: Get merged/open PR labels
+        uses: actions/github-script@v7
+        id: pr-labels
+        with:
+          # Both pull_request and push can have triggered this job to run. A
+          # context with PR info (including its labels) is available when this
+          # job is triggered via pull_request, but not when triggered via push -
+          # a push can be triggered by other things than merged PRs. Due to
+          # this, we check if a pushed commit is matching some PRs merge commit,
+          # and if so gets its labels.
+          script: |
+            let labels = null;
+
+            if (context.eventName === 'pull_request') {
+              labels = context.payload.pull_request.labels;
+            }
+            else if (context.eventName === 'push') {
+              // api ref: https://octokit.github.io/rest.js/v20#pulls-list
+              const resp = await github.rest.pulls.list(
+                {
+                  owner: context.repo.owner,
+                  repo: context.repo.repo,
+                  state: 'closed',
+                  sort: 'updated',
+                  direction: 'desc',
+                  per_page: 100,
+                }
+              );
+              const merged_pr = resp.data.find(pr => pr.merge_commit_sha === context.sha);
+              labels = merged_pr?.labels;
+            }
+
+            label_names = (labels || []).map(l => l.name);
+            return label_names
+
       - name: Identify files that have been added or modified
         # Action repo: https://github.com/dorny/paths-filter
-        # Fork of the repo above that we use: https://github.com/frouioui/paths-filter/tree/main
-        # In order to take advantage of https://github.com/dorny/paths-filter/pull/133
-        uses: frouioui/paths-filter@main
+        uses: dorny/paths-filter@v3
         id: changed-files
         with:
           token: ""
@@ -119,7 +165,7 @@ jobs:
       # by one
       - name: Generate matrix jobs
         run: |
-          deployer generate helm-upgrade-jobs "${{ steps.changed-files.outputs.changed_files }}"
+          deployer generate helm-upgrade-jobs "${{ steps.changed-files.outputs.changed_files }}" '${{ steps.pr-labels.outputs.result }}'
 
       # The comment-deployment-plan-pr.yaml workflow won't have the correct context to
       # know the PR number, so we save it to a file to pass to that workflow
@@ -131,7 +177,6 @@ jobs:
       # Upload the pr-number.txt and comment-body.txt files as artifacts for the
       # comment-deployment-plan-pr.yaml workflow to access
       - name: Upload artifacts
-        # Only run this steps in PRs when the matrices are not empty
         if: >
           github.event_name == 'pull_request' &&
           (env.support-and-staging-matrix-jobs != '[]' ||
@@ -180,37 +225,39 @@ jobs:
     #
     # If you are adding a new cluster, please remember to list it here!
     outputs:
-      failure_2i2c: "${{ env.failure_2i2c }}"
-      failure_2i2c-uk: "${{ env.failure_2i2c-uk }}"
-      failure_cloudbank: "${{ env.failure_cloudbank }}"
-      failure_leap: "${{ env.failure_leap }}"
-      failure_meom-ige: "${{ env.failure_meom-ige }}"
-      failure_openscapes: "${{ env.failure_openscapes }}"
-      failure_pangeo-hubs: "${{ env.failure_pangeo-hubs }}"
-      failure_utoronto: "${{ env.failure_utoronto }}"
-      failure_linked-earth: "${{ env.failure_linked-earth }}"
-      failure_awi-ciroh: "${{ env.failure_awi-ciroh }}"
-      failure_nasa-cryo: "${{ env.failure_nasa-cryo }}"
-      failure_gridsst: "${{ env.failure_gridsst }}"
-      failure_victor: "${{ env.failure_victor }}"
       failure_2i2c-aws-us: "${{ env.failure_2i2c-aws-us }}"
-      failure_ubc-eoas: "${{ env.failure_ubc-eoas }}"
-      failure_nasa-veda: "${{ env.failure_nasa-veda }}"
-      failure_nasa-ghg: "${{ env.failure_nasa-ghg }}"
-      failure_qcl: "${{ env.failure_qcl }}"
-      failure_jupyter-meets-the-earth: "${{ env.failure_jupyter-meets-the-earth }}"
-      failure_smithsonian: "${{ env.failure_smithsonian }}"
-      failure_catalystproject-latam: "${{ env.failure_catalystproject-latam }}"
+      failure_2i2c-uk: "${{ env.failure_2i2c-uk }}"
+      failure_2i2c: "${{ env.failure_2i2c }}"
+      failure_awi-ciroh: "${{ env.failure_awi-ciroh }}"
       failure_catalystproject-africa: "${{ env.failure_catalystproject-africa }}"
-      failure_hhmi: "${{ env.failure_hhmi }}"
-      failure_nasa-esdis: "${{ env.failure_nasa-esdis }}"
+      failure_catalystproject-latam: "${{ env.failure_catalystproject-latam }}"
+      failure_cloudbank: "${{ env.failure_cloudbank }}"
       failure_earthscope: "${{ env.failure_earthscope }}"
+      failure_gridsst: "${{ env.failure_gridsst }}"
+      failure_hhmi: "${{ env.failure_hhmi }}"
+      failure_jupyter-health: "${{ env.failure_jupyter-health }}"
+      failure_jupyter-meets-the-earth: "${{ env.failure_jupyter-meets-the-earth }}"
+      failure_kitware: "${{ env.failure_kitware }}"
+      failure_leap: "${{ env.failure_leap }}"
+      failure_linked-earth: "${{ env.failure_linked-earth }}"
+      failure_meom-ige: "${{ env.failure_meom-ige }}"
+      failure_nasa-cryo: "${{ env.failure_nasa-cryo }}"
+      failure_nasa-esdis: "${{ env.failure_nasa-esdis }}"
+      failure_nasa-ghg: "${{ env.failure_nasa-ghg }}"
+      failure_nasa-veda: "${{ env.failure_nasa-veda }}"
+      failure_openscapes: "${{ env.failure_openscapes }}"
       failure_opensci: "${{ env.failure_opensci }}"
+      failure_pangeo-hubs: "${{ env.failure_pangeo-hubs }}"
+      failure_projectpythia: "${{ env.failure_projectpythia }}"
+      failure_qcl: "${{ env.failure_qcl }}"
+      failure_smithsonian: "${{ env.failure_smithsonian }}"
+      failure_ubc-eoas: "${{ env.failure_ubc-eoas }}"
+      failure_utoronto: "${{ env.failure_utoronto }}"
+      failure_victor: "${{ env.failure_victor }}"
 
-    # Only run this job on pushes to the default branch and when the job output is not
-    # an empty list
     if: |
-      (github.event_name == 'push' && contains(github.ref, 'master')) &&
+      (github.event_name == 'push' && contains(github.ref, 'main')) &&
+      needs.generate-jobs.result == 'success' &&
       needs.generate-jobs.outputs.support-and-staging-matrix-jobs != '[]'
     strategy:
       # Don't stop other deployments if one fails
@@ -219,8 +266,7 @@ jobs:
         jobs: ${{ fromJson(needs.generate-jobs.outputs.support-and-staging-matrix-jobs) }}
 
     steps:
-      - name: Checkout repo
-        uses: actions/checkout@v4
+      - uses: actions/checkout@v4
 
       - name: Setup deploy for ${{ matrix.jobs.cluster_name }}
         uses: ./.github/actions/setup-deploy
@@ -252,11 +298,6 @@ jobs:
         if: matrix.jobs.upgrade_staging && matrix.jobs.cluster_name == '2i2c'
         run: |
           deployer deploy ${{ matrix.jobs.cluster_name }} dask-staging
-
-      - name: Upgrade binder-staging hub on cluster ${{ matrix.jobs.cluster_name }} if it exists
-        if: matrix.jobs.upgrade_staging && matrix.jobs.cluster_name == '2i2c'
-        run: |
-          deployer deploy ${{ matrix.jobs.cluster_name }} binder-staging
 
       # Retry action: https://github.com/marketplace/actions/retry-step
       - name: Run health check for dask-staging hub on cluster ${{ matrix.jobs.cluster_name }} if it exists
@@ -305,15 +346,10 @@ jobs:
   filter-generate-jobs:
     runs-on: ubuntu-latest
     needs: [generate-jobs, upgrade-support-and-staging]
-    # Only run this job on pushes to the default branch and when the job output is not
-    # an empty list
-    #
-    # always() is added as it seems to be a magic function to ensure a job can
-    # run at all without being skipped if a previous job has had any failures.
-    # https://docs.github.com/en/actions/learn-github-actions/expressions#always
     if: |
-      always() &&
-      (github.event_name == 'push' && contains(github.ref, 'master')) &&
+      !cancelled() &&
+      (github.event_name == 'push' && contains(github.ref, 'main')) &&
+      needs.generate-jobs.result == 'success' &&
       needs.generate-jobs.outputs.prod-hub-matrix-jobs != '[]'
 
     outputs:
@@ -373,17 +409,10 @@ jobs:
   upgrade-prod-hubs:
     runs-on: ubuntu-latest
     needs: [filter-generate-jobs]
-    # Only run this job on pushes to the default branch and when the `generate-jobs` job output is not
-    # an empty list
-    #
-    # always() is added as it seems to be a magic function to ensure a job can
-    # run at all without being skipped if a previous job has had any failures. By
-    # using always() we need to ensure filter-generate-jobs wasn't skipped or
-    # failed explicitly now though.
-    # https://docs.github.com/en/actions/learn-github-actions/expressions#always
     if: |
-      always() && needs.filter-generate-jobs.result == 'success' &&
-      (github.event_name == 'push' && contains(github.ref, 'master')) &&
+      !cancelled() &&
+      (github.event_name == 'push' && contains(github.ref, 'main')) &&
+      needs.filter-generate-jobs.result == 'success' &&
       needs.filter-generate-jobs.outputs.filtered-prod-hub-matrix-jobs != '[]'
     strategy:
       # Don't stop other deployments if one fails
@@ -392,8 +421,7 @@ jobs:
         jobs: ${{ fromJson(needs.filter-generate-jobs.outputs.filtered-prod-hub-matrix-jobs) }}
 
     steps:
-      - name: Checkout repo
-        uses: actions/checkout@v4
+      - uses: actions/checkout@v4
 
       - name: Setup deploy for ${{ matrix.jobs.cluster_name }} cluster
         uses: ./.github/actions/setup-deploy

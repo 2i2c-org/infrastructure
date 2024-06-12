@@ -47,9 +47,10 @@ As users are temporary and can not be accessed again, there is no reason to
 provide persistent storage. So we turn it all off - particularly the home directories.
 
 ```yaml
+# nfs functionality explicitly disabled in case a common.values.yaml
+# file is used to enable it for all hubs in the cluster
 nfs:
   enabled: false
-  # Required until https://github.com/2i2c-org/infrastructure/issues/3654 is fixed
   pv:
     enabled: false
 
@@ -79,11 +80,11 @@ ephemeral hub's users.
    pointing to, with the following config:
 
    ```yaml
+   # nfs functionality enabled for this ephemeral hub to mount
+   # a shared folder from another hub in the cluster
    nfs:
      enabled: true
      dirsizeReporter:
-       # We don't need to report directory sizes here, as it's already being reported on by
-       # the 'source' hub
        enabled: false
      pv:
        enabled: true
@@ -212,10 +213,6 @@ link generator. [Firefox](https://addons.mozilla.org/en-US/firefox/addon/nbgitpu
 and [Google Chrome](https://chrome.google.com/webstore/detail/nbgitpuller-link-generato/hpdbdpklpmppnoibabdkkhnfhkkehgnc)
 extensions are also available.
 
-## Enable stronger anti-crypto abuse features for a hub
-
-Ephemeral hubs with public access must have [stronger anti crypto abuse features
-enabled](howto:features:cryptnono) before going live.
 
 ## (Optional) Shared systemwide password setup
 

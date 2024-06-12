@@ -1,10 +1,12 @@
 name: catalystproject-africa
-provider: aws
+provider: aws # https://2i2c.awsapps.com/start#/
 aws:
   key: enc-deployer-credentials.secret.json
   clusterType: eks
   clusterName: catalystproject-africa
   region: af-south-1
+  billing:
+    paid_by_us: true
 support:
   helm_chart_values_files:
     - support.values.yaml
@@ -42,3 +44,51 @@ hubs:
       - common.values.yaml
       - uvri.values.yaml
       - enc-uvri.secret.values.yaml
+  - name: wits
+    display_name: "Catalyst Project, Africa - WITS"
+    domain: wits.af.catalystproject.2i2c.cloud
+    helm_chart: basehub
+    helm_chart_values_files:
+      - common.values.yaml
+      - wits.values.yaml
+      - enc-wits.secret.values.yaml
+  - name: kush
+    display_name: "Catalyst Project, Africa - KUSH"
+    domain: kush.af.catalystproject.2i2c.cloud
+    helm_chart: basehub
+    helm_chart_values_files:
+      - common.values.yaml
+      - kush.values.yaml
+      - enc-kush.secret.values.yaml
+  - name: molerhealth
+    display_name: "Catalyst Project, Africa - MolerHealth"
+    domain: molerhealth.af.catalystproject.2i2c.cloud
+    helm_chart: basehub
+    helm_chart_values_files:
+      - common.values.yaml
+      - molerhealth.values.yaml
+      - enc-molerhealth.secret.values.yaml
+  - name: aibst
+    display_name: "Catalyst Project, Africa - AIBST"
+    domain: aibst.af.catalystproject.2i2c.cloud
+    helm_chart: basehub
+    helm_chart_values_files:
+      - common.values.yaml
+      - aibst.values.yaml
+      - enc-aibst.secret.values.yaml
+  - name: bhki
+    display_name: "Catalyst Project, Africa - BHKI"
+    domain: bhki.af.catalystproject.2i2c.cloud
+    helm_chart: basehub
+    helm_chart_values_files:
+      - common.values.yaml
+      - bhki.values.yaml
+      - enc-bhki.secret.values.yaml
+  - name: bon
+    display_name: "Catalyst Project, Africa - BON"
+    domain: bon.af.catalystproject.2i2c.cloud
+    helm_chart: basehub
+    helm_chart_values_files:
+      - common.values.yaml
+      - bon.values.yaml
+      - enc-bon.secret.values.yaml

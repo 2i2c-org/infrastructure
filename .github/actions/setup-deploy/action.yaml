@@ -48,7 +48,7 @@ runs:
   steps:
     - uses: actions/setup-python@v5
       with:
-        python-version: "3.9"
+        python-version: "3.11"
 
     # There will always be a cache hit on the cache key when this composite
     # action is run, as its only done after the "generate-jobs" job has been run
@@ -80,14 +80,14 @@ runs:
         #
         # - helm versions: https://github.com/helm/helm/releases
         #
-        version: v3.12.0
+        version: v3.14.4
 
     # Manually update a pinning of kubectl to a minor version based on:
     #
-    # - the current range of k8s version in our k8s clusters, as of 2023-05-24,
-    #   this is k8s 1.22 - 1.25
-    # - the expected change in this range, as of 2023-05-24, is to expand to
-    #   1.22 - 1.26
+    # - the current range of k8s version in our k8s clusters, as of 2024-04-17,
+    #   this is k8s 1.27 - 1.29
+    # - the next expected change in this range, as of 2024-04-17, is to expand
+    #   to include 1.30
     # - the kubectl <-> k8s api-server skew policy of +/- one minor version
     # - the policy of attempting to update our kubectl version here to be +/-
     #   one minor versions of future k8s clusters additions or upgrades, so that
@@ -103,13 +103,13 @@ runs:
     # - 2i2c, k8s upgrades tracked: https://github.com/2i2c-org/infrastructure/issues/2293
     # - 2i2c, historical issue: https://github.com/2i2c-org/infrastructure/issues/1271
     #
-    - uses: azure/setup-kubectl@v3
+    - uses: azure/setup-kubectl@v4
       with:
-        version: "v1.25.10"
+        version: "v1.28.8"
 
     # This action use the github official cache mechanism internally
     - name: Install sops
-      uses: mdgreenwald/mozilla-sops-action@v1.5.0
+      uses: mdgreenwald/mozilla-sops-action@v1.6.0
 
     # Install pre-requisite for "gcloud container clusters get-credentials"
     # command with a modern k8s client.

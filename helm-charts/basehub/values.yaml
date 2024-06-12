@@ -5,8 +5,18 @@ userServiceAccount:
   enabled: true
   annotations: {}
 
+adminServiceAccount:
+  enabled: false
+  annotations: {}
+
 binderhub-service:
   enabled: false
+  ingress:
+    enabled: false
+    ingressClassName: nginx
+    annotations:
+      nginx.ingress.kubernetes.io/proxy-body-size: 256m
+      cert-manager.io/cluster-issuer: letsencrypt-prod
   nodeSelector:
     hub.jupyter.org/node-purpose: core
   service:
@@ -33,7 +43,7 @@ binderhub-service:
       use_registry: true
     KubernetesBuildExecutor:
       # Get ourselves a newer repo2docker!
-      build_image: quay.io/jupyterhub/repo2docker:2023.06.0-8.gd414e99
+      build_image: quay.io/jupyterhub/repo2docker:2024.03.0-21.g09f3d53
       node_selector:
         # Schedule builder pods to run on user nodes only
         hub.jupyter.org/node-purpose: user
@@ -64,14 +74,16 @@ staticWebsite:
       privateKey: ""
 
 nfs:
-  enabled: true
+  enabled: false
   dirsizeReporter:
+    enabled: true
+  volumeReporter:
     enabled: true
   shareCreator:
     enabled: true
     tolerations: []
   pv:
-    enabled: true
+    enabled: false
     mountOptions:
       - soft
       - noatime
@@ -113,12 +125,6 @@ jupyterhub:
         - name: home
           mountPath: /home/rstudio/shared-readwrite
           subPath: _shared
-    cloudResources:
-      provider: ""
-      gcp:
-        projectId: ""
-      scratchBucket:
-        enabled: false
     2i2c:
       # Should 2i2c engineering staff user IDs be injected to the admin_users
       # configuration of the JupyterHub's authenticator by our custom
@@ -133,6 +139,7 @@ jupyterhub:
         - consideRatio
         - damianavila
         - GeorgianaElena
+        - Gman0909
         - haroldcampbell
         - jmunroe
         - jnywong
@@ -146,6 +153,7 @@ jupyterhub:
         - damianavila@2i2c.org
         - erik@2i2c.org
         - georgianaelena@2i2c.org
+        - gmaciocci@2i2c.org
         - hcampbell@2i2c.org
         - jmunroe@2i2c.org
         - jwong@2i2c.org
@@ -185,6 +193,11 @@ jupyterhub:
       replicas: 0
     userScheduler:
       enabled: false
+      # replicas default value is 2, but having the user-scheduler run HA is an
+      # almost never practically helpful but has been found to increase cloud
+      # costs in clusters with many hubs. For additional discussion reducing
+      # this to 1, see https://github.com/2i2c-org/infrastructure/issues/3865.
+      replicas: 1
       # FIXME: We should think about these resource requests/limits, see
       #        https://github.com/2i2c-org/infrastructure/issues/2127.
       #
@@ -250,6 +263,11 @@ jupyterhub:
         limits:
           memory: 1Gi
   singleuser:
+    # basehub creates a k8s ServiceAccount for the hubs users that isn't granted
+    # permissions to the k8s api-server or other resources by default. Cloud
+    # infra permissions can be granted to all users by declaring annotations on
+    # this k8s ServiceAccount via basehub config userServiceAccount.annotations.
+    serviceAccountName: user-sa
     # Need to explicitly fix ownership here, as otherwise these directories will be owned
     # by root on most NFS filesystems - neither EFS nor Google Filestore support anonuid
     #
@@ -283,8 +301,10 @@ jupyterhub:
             mountPath: /home/jovyan/shared
             subPath: _shared
     cmd:
-      # Explicitly define this, as it's no longer set by z2jh
-      # https://github.com/jupyterhub/zero-to-jupyterhub-k8s/pull/2449
+      # Mitigate a vulnerability in jupyter-server-proxy version <4.1.1, see
+      # https://github.com/jupyterhub/jupyter-server-proxy/security/advisories/GHSA-w3vc-fx9p-wp4v
+      # for more details.
+      - /mnt/ghsa-w3vc-fx9p-wp4v/check-patch-run
       - jupyterhub-singleuser
     extraEnv:
       # notebook writes secure files that don't need to survive a
@@ -297,6 +317,136 @@ jupyterhub:
       # Most people do not expect this, so let's match expectation
       SHELL: /bin/bash
     extraFiles:
+      ghsa-w3vc-fx9p-wp4v-check-patch-run:
+        mountPath: /mnt/ghsa-w3vc-fx9p-wp4v/check-patch-run
+        mode: 0755
+        stringData: |
+          #!/usr/bin/env python3
+          """
+          This script is designed to check for and conditionally patch GHSA-w3vc-fx9p-wp4v
+          in user servers started by a JupyterHub. The script will execute any command
+          passed via arguments if provided, allowing it to wrap a user server startup call
+          to `jupyterhub-singleuser` for example.
+
+          Script adjustments:
+          - UPGRADE_IF_VULNERABLE
+          - ERROR_IF_VULNERABLE
+
+          Script patching assumptions:
+          - script is run before the jupyter server starts
+          - pip is available
+          - pip has sufficient filesystem permissions to upgrade jupyter-server-proxy
+
+          Read more at https://github.com/jupyterhub/jupyter-server-proxy/security/advisories/GHSA-w3vc-fx9p-wp4v.
+          """
+
+          import os
+          import subprocess
+          import sys
+
+          # adjust these to meet vulnerability mitigation needs
+          UPGRADE_IF_VULNERABLE = True
+          ERROR_IF_VULNERABLE = False
+
+
+          def check_vuln():
+              """
+              Checks for the vulnerability by looking to see if __version__ is available
+              as it coincides with the patched versions (3.2.3 and 4.1.1).
+              """
+              try:
+                  import jupyter_server_proxy
+
+                  return False if hasattr(jupyter_server_proxy, "__version__") else True
+              except:
+                  return False
+
+
+          def get_version_specifier():
+              """
+              Returns a pip version specifier for use with `--no-deps` meant to do as
+              little as possible besides patching the vulnerability and remaining
+              functional.
+              """
+              old = ["jupyter-server-proxy>=3.2.3,<4"]
+              new = ["jupyter-server-proxy>=4.1.1,<5", "simpervisor>=1,<2"]
+
+              try:
+                  if sys.version_info < (3, 8):
+                      return old
+
+                  from importlib.metadata import version
+
+                  jsp_version = version("jupyter-server-proxy")
+                  if int(jsp_version.split(".")[0]) < 4:
+                      return old
+              except:
+                  pass
+              return new
+
+
+          def patch_vuln():
+              """
+              Attempts to patch the vulnerability by upgrading jupyter-server-proxy using
+              pip.
+              """
+              # attempt upgrade via pip, takes ~4 seconds
+              proc = subprocess.run(
+                  [sys.executable, "-m", "pip", "--version"],
+                  stdout=subprocess.DEVNULL,
+                  stderr=subprocess.DEVNULL,
+              )
+              pip_available = proc.returncode == 0
+              if pip_available:
+                  proc = subprocess.run(
+                      [sys.executable, "-m", "pip", "install", "--no-deps"]
+                      + get_version_specifier()
+                  )
+                  if proc.returncode == 0:
+                      return True
+              return False
+
+
+          def main():
+              if check_vuln():
+                  warning_or_error = (
+                      "ERROR" if ERROR_IF_VULNERABLE and not UPGRADE_IF_VULNERABLE else "WARNING"
+                  )
+                  print(
+                      f"{warning_or_error}: jupyter-server-proxy __is vulnerable__ to GHSA-w3vc-fx9p-wp4v, see "
+                      "https://github.com/jupyterhub/jupyter-server-proxy/security/advisories/GHSA-w3vc-fx9p-wp4v.",
+                      flush=True,
+                  )
+                  if warning_or_error == "ERROR":
+                      sys.exit(1)
+
+                  if UPGRADE_IF_VULNERABLE:
+                      print(
+                          "INFO: Attempting to upgrade jupyter-server-proxy using pip...",
+                          flush=True,
+                      )
+                      if patch_vuln():
+                          print(
+                              "INFO: Attempt to upgrade jupyter-server-proxy succeeded!",
+                              flush=True,
+                          )
+                      else:
+                          warning_or_error = "ERROR" if ERROR_IF_VULNERABLE else "WARNING"
+                          print(
+                              f"{warning_or_error}: Attempt to upgrade jupyter-server-proxy failed!",
+                              flush=True,
+                          )
+                          if warning_or_error == "ERROR":
+                              sys.exit(1)
+
+              if len(sys.argv) >= 2:
+                  print("INFO: Executing provided command", flush=True)
+                  os.execvp(sys.argv[1], sys.argv[1:])
+              else:
+                  print("INFO: No command to execute provided", flush=True)
+
+
+          main()
       ipython_kernel_config.json:
         mountPath: /usr/local/etc/ipython/ipython_kernel_config.json
         data:
@@ -358,8 +508,8 @@ jupyterhub:
     startTimeout: 600 # 10 mins, node startup + image pulling sometimes takes more than the default 5min
     defaultUrl: /tree
     image:
-      name: jupyter/scipy-notebook
-      tag: "2023-06-19"
+      name: quay.io/jupyter/scipy-notebook
+      tag: "2024-03-18"
     storage:
       type: static
       static:
@@ -455,15 +605,6 @@ jupyterhub:
                 matchLabels:
                   app.kubernetes.io/component: traefik
   hub:
-    loadRoles:
-      # Should use this, not hub.config.JupyterHub.load_roles - that will
-      # override any existing load_roles set by z2jh
-      service-use:
-        name: user
-        scopes:
-          # Allow all users access to 'services', which includes dask-gateway & configurator
-          - access:services
-          - self
     config:
       JupyterHub:
         # Allow unauthenticated prometheus requests
@@ -633,7 +774,7 @@ jupyterhub:
         admin: true
     image:
       name: quay.io/2i2c/pilot-hub
-      tag: "0.0.1-0.dev.git.7670.hfd1b116d"
+      tag: "0.0.1-0.dev.git.8663.h049aa2c2"
     networkPolicy:
       enabled: true
       # interNamespaceAccessLabels=accept makes the hub pod's associated
@@ -687,6 +828,125 @@ jupyterhub:
       limits:
         memory: 2Gi
     extraConfig:
+      # This is copy-pasted exactly from https://github.com/jupyterhub/binderhub/blob/c6c5dc8fe73f81ca538c47b420b33f317c3aa8ae/helm-chart/binderhub/values.yaml#L87
+      # Should be updated every time the upstream code changes
+      0-binderspawnermixin: |
+        """
+        Helpers for creating BinderSpawners
+
+        FIXME:
+        This file is defined in binderhub/binderspawner_mixin.py
+        and is copied to helm-chart/binderhub/values.yaml
+        by ci/check_embedded_chart_code.py
+
+        The BinderHub repo is just used as the distribution mechanism for this spawner,
+        BinderHub itself doesn't require this code.
+
+        Longer term options include:
+        - Move BinderSpawnerMixin to a separate Python package and include it in the Z2JH Hub
+          image
+        - Override the Z2JH hub with a custom image built in this repository
+        - Duplicate the code here and in binderhub/binderspawner_mixin.py
+        """
+
+        from tornado import web
+        from traitlets import Bool, Unicode
+        from traitlets.config import Configurable
+
+
+        class BinderSpawnerMixin(Configurable):
+            """
+            Mixin to convert a JupyterHub container spawner to a BinderHub spawner
+
+            Container spawner must support the following properties that will be set
+            via spawn options:
+            - image: Container image to launch
+            - token: JupyterHub API token
+            """
+
+            def __init__(self, *args, **kwargs):
+                # Is this right? Is it possible to having multiple inheritance with both
+                # classes using traitlets?
+                # https://stackoverflow.com/questions/9575409/calling-parent-class-init-with-multiple-inheritance-whats-the-right-way
+                # https://github.com/ipython/traitlets/pull/175
+                super().__init__(*args, **kwargs)
+
+            auth_enabled = Bool(
+                False,
+                help="""
+                Enable authenticated binderhub setup.
+
+                Requires `jupyterhub-singleuser` to be available inside the repositories
+                being built.
+                """,
+                config=True,
+            )
+
+            cors_allow_origin = Unicode(
+                "",
+                help="""
+                Origins that can access the spawned notebooks.
+
+                Sets the Access-Control-Allow-Origin header in the spawned
+                notebooks. Set to '*' to allow any origin to access spawned
+                notebook servers.
+
+                See also BinderHub.cors_allow_origin in binderhub config
+                for controlling CORS policy for the BinderHub API endpoint.
+                """,
+                config=True,
+            )
+
+            def get_args(self):
+                if self.auth_enabled:
+                    args = super().get_args()
+                else:
+                    args = [
+                        "--ip=0.0.0.0",
+                        f"--port={self.port}",
+                        f"--NotebookApp.base_url={self.server.base_url}",
+                        f"--NotebookApp.token={self.user_options['token']}",
+                        "--NotebookApp.trust_xheaders=True",
+                    ]
+                    if self.default_url:
+                        args.append(f"--NotebookApp.default_url={self.default_url}")
+
+                    if self.cors_allow_origin:
+                        args.append("--NotebookApp.allow_origin=" + self.cors_allow_origin)
+                    # allow_origin=* doesn't properly allow cross-origin requests to single files
+                    # see https://github.com/jupyter/notebook/pull/5898
+                    if self.cors_allow_origin == "*":
+                        args.append("--NotebookApp.allow_origin_pat=.*")
+                    args += self.args
+                    # ServerApp compatibility: duplicate NotebookApp args
+                    for arg in list(args):
+                        if arg.startswith("--NotebookApp."):
+                            args.append(arg.replace("--NotebookApp.", "--ServerApp."))
+                return args
+
+            def start(self):
+                if not self.auth_enabled:
+                    if "token" not in self.user_options:
+                        raise web.HTTPError(400, "token required")
+                    if "image" not in self.user_options:
+                        raise web.HTTPError(400, "image required")
+                if "image" in self.user_options:
+                    self.image = self.user_options["image"]
+                return super().start()
+
+            def get_env(self):
+                env = super().get_env()
+                if "repo_url" in self.user_options:
+                    env["BINDER_REPO_URL"] = self.user_options["repo_url"]
+                for key in (
+                    "binder_ref_url",
+                    "binder_launch_host",
+                    "binder_persistent_request",
+                    "binder_request",
+                ):
+                    if key in self.user_options:
+                        env[key.upper()] = self.user_options[key]
+                return env
       01-custom-theme: |
         # adds a JupyterHub template path and updates template variables
 
@@ -728,6 +988,8 @@ jupyterhub:
             }
             c.JupyterHub.services.append(jhc_service)
 
+        if get_config("custom.binderhubUI.enabled"):
+            spawner_base_classes = [BinderSpawnerMixin, KubeSpawner]
 
         class BaseHubSpawner(*spawner_base_classes):
             def start(self, *args, **kwargs):
@@ -750,6 +1012,7 @@ jupyterhub:
                     self.service_account = admin_service_account
 
                 return super().start(*args, **kwargs)
+
         c.JupyterHub.spawner_class = BaseHubSpawner
 
 
@@ -779,31 +1042,7 @@ jupyterhub:
 
             return pod
         c.KubeSpawner.modify_pod_hook = modify_pod_hook
-      03-cloud-storage-bucket: |
-        from z2jh import get_config
-        cloud_resources = get_config('custom.cloudResources')
-        scratch_bucket = cloud_resources['scratchBucket']
-        import os
-
-        if scratch_bucket['enabled']:
-            # FIXME: Support other providers too
-            assert cloud_resources['provider'] == 'gcp'
-            project_id = cloud_resources['gcp']['projectId']
-
-            release = os.environ['HELM_RELEASE_NAME']
-            bucket_protocol = 'gcs'
-            bucket_name = f'{project_id}-{release}-scratch-bucket'
-            env = {
-                'SCRATCH_BUCKET_PROTOCOL': bucket_protocol,
-                # Matches "daskhub.scratchBUcket.name" helm template
-                'SCRATCH_BUCKET_NAME': bucket_name,
-                # Use k8s syntax of $(ENV_VAR) to substitute env vars dynamically in other env vars
-                'SCRATCH_BUCKET': f'{bucket_protocol}://{bucket_name}/$(JUPYTERHUB_USER)',
-                'PANGEO_SCRATCH': f'{bucket_protocol}://{bucket_name}/$(JUPYTERHUB_USER)',
-            }
-
-            c.KubeSpawner.environment.update(env)
-      04-2i2c-add-staff-user-ids-to-admin-users: |
+      03-2i2c-add-staff-user-ids-to-admin-users: |
         from z2jh import get_config
         add_staff_user_ids_to_admin_users = get_config("custom.2i2c.add_staff_user_ids_to_admin_users", False)
 
@@ -816,7 +1055,7 @@ jupyterhub:
             staff_user_ids.extend(get_config("hub.config.Authenticator.admin_users", []))
             c.Authenticator.admin_users = staff_user_ids
 
-      05-per-user-disk: |
+      04-per-user-disk: |
         # Optionally, create a PVC per user - useful for per-user databases
         from jupyterhub.utils import exponential_backoff
         from z2jh import get_config
@@ -869,10 +1108,10 @@ jupyterhub:
                   timeout=spawner.k8s_api_request_retry_timeout
               )
           c.Spawner.pre_spawn_hook = ensure_db_pvc
-      05-gh-teams: |
+      05-profile-groups: |
         # Re-assignes c.KubeSpawner.profile_list to a callable that filters the
         # initial configuration of profile_list based on the user's github
-        # org/team membership as declared via "allowed_teams" read from
+        # org/team membership as declared via "allowed_groups" read from
         # profile_list profiles.
         #
         # This only has effect if:
@@ -882,85 +1121,94 @@ jupyterhub:
         #   requires Authenticator.enable_auth_state to be True as well.
         # - The user is a normal user, and not "deployment-service-check".
         #
-        import copy
+        from copy import deepcopy
 
+        from functools import partial
         from textwrap import dedent
         from tornado import web
         from oauthenticator.github import GitHubOAuthenticator
+        from z2jh import get_config
 
-        original_profile_list = c.KubeSpawner.profile_list
-
-        async def profile_list_allowed_teams_filter(spawner):
+        async def profile_list_allowed_groups_filter(original_profile_list, spawner):
             """
             Returns the initially configured profile_list filtered based on the
-            user's membership in each profile's `allowed_teams`. If
-            `allowed_teams` isn't set for a profile, its not filtered out.
+            user's membership in each profile's `allowed_groups`. If
+            `allowed_groups` isn't set for a profile, that profile is allowed for
+            everyone. Similar functionality is provided for both `unlisted_choice` and
+            `choice` inside `profile_options`.
 
-            `allowed_teams` is a list of GitHub organizations and/or teams
-            specified with `<github-org>` or `<github-org>:<team-name>` strings.
+            `allowed_groups` is a list of JupyterHub groups, set up by the authenticator.
+            In addition, for use with GitHubOAuthenticator, it can be a list of
+            teams the user is a part of, of form '<github-org>:<team-name>'.
 
-            If the returned profile_list is filtered to not include a profile,
+            If the returned profile_list is filtered to not include any profiles,
             an error is raised and the user isn't allowed to start a server.
             """
-            # Ensure GitHubOAuthenticator with populate_teams_in_auth_state set
-            if not isinstance(spawner.authenticator, GitHubOAuthenticator):
-                return original_profile_list
-            if not spawner.authenticator.populate_teams_in_auth_state:
-                return original_profile_list
             if spawner.user.name == "deployment-service-check":
-                print("Ignoring allowed_teams check for deployment-service-check")
+                print("Ignoring allowed_groups check for deployment-service-check")
                 return original_profile_list
 
-            # Ensure auth_state is populated with teams info
-            auth_state = await spawner.user.get_auth_state()
-            if not auth_state or "teams" not in auth_state:
-                print(f"User {spawner.user.name} does not have any auth_state set")
-                raise web.HTTPError(403)
+            # casefold group names so we can do case insensitive comparisons.
+            groups = {g.name.casefold() for g in spawner.user.groups}
 
-            # Format user's teams in auth_state to "org:team"
-            # casefold them so we can do case insensitive comparisons, as github itself is case insensitive (but preserving)
-            # for orgs and teams
-            teams = set([f'{team["organization"]["login"]}:{team["slug"]}'.casefold() for team in auth_state["teams"]])
-            print(f"User {spawner.user.name} is part of teams {' '.join(teams)}")
+            # If we're using GitHubOAuthenticator, add the user's teams to the groups as well.
+            # Eventually this can be removed, as the user's teams can be set to be groups
+            # once https://github.com/jupyterhub/oauthenticator/pull/735 is merged
+            if isinstance(spawner.authenticator, GitHubOAuthenticator):
+              # Ensure auth_state is populated with teams info
+              auth_state = await spawner.user.get_auth_state()
+              if not auth_state or "teams" not in auth_state:
+                  print(f"User {spawner.user.name} does not have any auth_state set, profile_list filtering not available")
 
-            # Filter out profiles with allowed_teams set if the user isn't part
-            # of any.
+              else:
+                # casefold teams to match what GitHub's API does when doing authorization calls
+                groups |= set([f'{team["organization"]["login"]}:{team["slug"]}'.casefold() for team in auth_state["teams"]])
+
+            print(f"User {spawner.user.name} is part of groups {' '.join(groups)}")
+
+            # Filter out profiles with allowed_groups set if the user isn't part of the group
             allowed_profiles = []
-            for profile in copy.deepcopy(original_profile_list):
-                allowed_teams = profile.get("allowed_teams")
-                if allowed_teams is None:
-                    allowed_profiles.append(profile)
-                    continue
+            for original_profile in original_profile_list:
+                # Make a copy, as we'll be modifying this profile
+                profile = deepcopy(original_profile)
 
-                # allowed_teams can be "org" or "org:team", and we check
-                # membership just in time for orgs if needed
-                # casefold them so we can do case insensitive comparisons, as github itself is case insensitive (but preserving)
-                # for orgs and teams
-                allowed_orgs = set([o.casefold() for o in allowed_teams if ':' not in o])
-                allowed_teams = set([t.casefold() for t in allowed_teams if ':' in t])
+                # Handle `allowed_groups` specified in profile_options
+                if 'profile_options' in profile:
+                  for k, po in profile['profile_options'].items():
 
-                if allowed_teams & teams:
-                    print(f"Allowing profile {profile['display_name']} for user {spawner.user.name} based on team membership")
-                    allowed_profiles.append(profile)
-                    continue
+                    # If `unlisted_choice` has an `allowed_groups` and the current
+                    # user is not present in any of those teams, we delete the
+                    # `unlisted_choice` config entirely for this option. The user
+                    # will then not be allowed to 'write in' a value.
+                    if 'unlisted_choice' in po:
+                      if 'allowed_groups' in po['unlisted_choice']:
+                        if not (set(po['unlisted_choice']['allowed_groups']) and groups):
+                          del po['unlisted_choice']
 
-                if "token_response" in auth_state:
-                    access_token = auth_state["token_response"]["access_token"]
-                    token_type = auth_state["token_response"]["token_type"]
+                    if 'choices' in po:
+                      new_choices = {}
+                      for k, c in po['choices'].items():
+                        # If `allowed_groups` is not set for a profile option, it is automatically
+                        # allowed for everyone
+                        if 'allowed_groups' not in c:
+                          new_choices[k] = c
+                        # If `allowed_groups` *is* set for a profile option, it is allowed only for
+                        # members of that team.
+                        else:
+                          allowed_groups = set([g.casefold() for g in c['allowed_groups']])
+                          if allowed_groups & groups:
+                            new_choices[k] = c
+                      po['choices'] = new_choices
+
+                if 'allowed_groups' not in profile:
+                  allowed_profiles.append(profile)
                 else:
-                    # token_response was introduced to auth_state in
-                    # oauthenticator 16, so this is adjusting to an auth_state
-                    # set by oauthenticator 15
-                    access_token = auth_state["access_token"]
-                    token_type = "token"
-                for allowed_org in allowed_orgs:
-                    user_in_allowed_org = await spawner.authenticator._check_membership_allowed_organizations(
-                        allowed_org, spawner.user.name, access_token, token_type
-                    )
-                    if user_in_allowed_org:
-                        print(f"Allowing profile {profile['display_name']} for user {spawner.user.name} based on org membership")
-                        allowed_profiles.append(profile)
-                        break
+                  allowed_groups = set([g.casefold() for g in profile.get("allowed_groups", [])])
+
+                  if allowed_groups & groups:
+                      print(f"Allowing profile {profile['display_name']} for user {spawner.user.name} based on team membership")
+                      allowed_profiles.append(profile)
+                      continue
 
             if len(allowed_profiles) == 0:
                 # If no profiles are allowed, user should not be able to spawn anything!
@@ -968,23 +1216,27 @@ jupyterhub:
                 # set in singleuser, without any profile overrides. Not desired behavior
                 # FIXME: User doesn't actually see this error message, just the generic 403.
                 error_msg = dedent(f"""
-                Your GitHub team membership is insufficient to launch any server profiles.
+                Your JupyterHub group membership is insufficient to launch any server profiles.
 
-                GitHub teams you are a member of that this JupyterHub knows about are {', '.join(teams)}.
+                JupyterHub groups you are a member of are {', '.join(groups)}.
 
-                If you are part of additional teams, log out of this JupyterHub and log back in to refresh that information.
+                If you are part of additional groups, log out of this JupyterHub and log back in to refresh that information.
                 """)
                 raise web.HTTPError(403, error_msg)
 
             return allowed_profiles
 
-        # Only set this customized profile_list *if* we already have a profile_list set
-        # otherwise, we'll show users a blank server options form and they won't be able to
-        # start their server
+        # Only set our custom filter if
+        # profile_list is specified (otherwise users will get an empty screen when trying to launch servers)
         if c.KubeSpawner.profile_list:
             # Customize list of profiles dynamically, rather than override options form.
             # This is more secure, as users can't override the options available to them via the hub API
-            c.KubeSpawner.profile_list = profile_list_allowed_teams_filter
+            # We pass in a copy of the original profile_list set in config via partial, to reduce possible variable
+            # capture related issues.
+            c.KubeSpawner.profile_list = partial(
+              profile_list_allowed_groups_filter,
+              deepcopy(c.KubeSpawner.profile_list)
+            )
 
       06-salted-username: |
         # Allow anonymizing username to not store *any* PII

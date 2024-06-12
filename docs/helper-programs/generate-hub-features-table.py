@@ -87,13 +87,9 @@ def get_custom_pages_html(jupyterhub_config):
 
 def retrieve_jupyterhub_config_dict(hub_config):
     daskhub_type = hub_config.get("basehub", None)
-    binderhub_type = hub_config.get("binderhub", None)
     try:
         if daskhub_type:
             return hub_config["basehub"]["jupyterhub"]
-
-        elif binderhub_type:
-            return hub_config["binderhub"]["jupyterhub"]
         return hub_config["jupyterhub"]
     except KeyError:
         return {}
@@ -155,6 +151,11 @@ def parse_terraform_value_files_for_features(terraform_config):
         hub_cloud_permissions = terraform_config.get("hub_cloud_permissions", None)
         if hub_cloud_permissions:
             for hub_slug, permissions in hub_cloud_permissions.items():
+                # The permission object doesn't have the same structure in AWS
+                # as for GCP currently, and requestor_pays is only available for
+                # GCP currently. The logic below works, but needs an update if
+                # GCP aligns with the same structure as AWS, or if
+                # requestor_pays config is added for AWS.
                 features[hub_slug] = {
                     "user_buckets": True,
                     "requestor_pays": permissions.get("requestor_pays", False),

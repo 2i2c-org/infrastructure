@@ -1,0 +1,24 @@
+jupyterhub:
+  ingress:
+    hosts: [kush.af.catalystproject.2i2c.cloud]
+    tls:
+      - hosts: [kush.af.catalystproject.2i2c.cloud]
+        secretName: https-auto-tls
+  custom:
+    homepage:
+      templateVars:
+        org:
+          name: Catalyst Project, Africa - Kush Centre for Genomics & Biomedical Informatics
+  hub:
+    config:
+      JupyterHub:
+        authenticator_class: github
+      GitHubOAuthenticator:
+        oauth_callback_url: https://kush.af.catalystproject.2i2c.cloud/hub/oauth_callback
+        allowed_organizations:
+          - CatalystProject-Hubs:kush
+        scope:
+          - read:org
+      Authenticator:
+        admin_users:
+          - Fadlelmola

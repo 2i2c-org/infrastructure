@@ -16,7 +16,6 @@ def build_gcp_query(cluster: dict, service_id=None):
 
     Returns:
         string: query string
-    """ """
     """
     bq = cluster["gcp"]["billing"]["bigquery"]
 
@@ -62,7 +61,7 @@ class BigqueryGCPBillingCostImporter:
         """Bigquery Cost Importer for GCP clusters
 
         Args:
-            cluster (dict):  parsed cluster.yaml.
+            cluster (dict): parsed cluster.yaml.
             service_id (string, optional): Optional Google Service ID. Defaults to None.
         """
         self.cluster = cluster
@@ -181,7 +180,6 @@ class PrometheusUtilizationImporter:
             "dask-staging",
             "configconnector-operator-system",
             "cnrm-system",
-            "binder-staging",
         }
         df["2i2c_costs"] = 0.0
         for namespace in internal.intersection(df.columns):

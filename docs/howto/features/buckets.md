@@ -83,6 +83,90 @@ on why users want this!
 4. Get this change deployed, and users should now be able to use the buckets!
    Currently running users might have to restart their pods for the change to take effect.
 
+## Testing access to buckets
+
+Once bucket access has been set up, we should test to make sure users can write
+to and read from it.
+
+### AWS
+
+1. Login to the hub, and open a Terminal in JupyterLab
+
+2. Look for the environment variables we just set (`SCRATCH_BUCKET` and/or `PERSISTENT_BUCKET`), make
+   sure they are showing up correctly:
+
+   ```bash
+   env | grep _BUCKET
+   ```
+
+   They should end with the name of your JupyterHub user. For example, here is the output
+   on the openscapes hub, when my JupyterHub username is `yuvipanda`:
+
+   ```
+   PERSISTENT_BUCKET=s3://openscapeshub-persistent/yuvipanda
+   SCRATCH_BUCKET=s3://openscapeshub-scratch/yuvipanda
+   ```
+
+3. Check if the AWS CLI is installed by running the `aws` command - many base images
+   already include this package. If not, you can do a local installation with:
+
+   ```bash
+   curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
+   unzip awscliv2.zip
+   export PATH=$(pwd)aws/dist/:$PATH
+   ```
+
+   ```{note}
+   This could have been as simple as a `pip install`, but [AWS does not support it](https://github.com/aws/aws-cli/issues/4947)
+   ```
+
+4. Create a temporary file, which we will then copy over to our scratch bucket.
+
+   ```bash
+   echo 'hi' > temp-test-file
+   ```
+
+5. Copy the file over to S3, under `$SCRATCH_BUCKET` or `$PERSISTENT_BUCKET` (based on
+   which one we are going to be testing).
+
+   ```bash
+   aws s3 cp temp-test-file $SCRATCH_BUCKET/temp-test-file
+   ```
+
+   This should succeed with a message like `upload: ./temp-test-file to s3://openscapeshub-scratch/yuvipanda/temp-test-file`
+
+6. Let's list our bucket to make sure the file is there.
+
+   ```bash
+   $ aws s3 ls $SCRATCH_BUCKET/
+   2024-03-26 01:38:53          3 temp-test-file
+   ```
+
+   ```{note}
+   The trailing `/` is important.
+   ```
+
+   ```{note}
+   If testing `$PERSISTENT_BUCKET`, use that environment variable instead
+   ```
+
+7. Copy the file back from s3, to make sure we can read.
+
+   ```bash
+   $ aws s3 cp  $SCRATCH_BUCKET/temp-test-file back-here
+   download: s3://openscapeshub-scratch/yuvipanda/temp-test-file to ./back-here
+   $ cat back-here
+   hi
+   ```
+
+   We have verified this all works!
+
+8. Clean up our  files so we don't cost the community money in the long run.
+
+   ```bash
+   aws s3 rm $SCRATCH_BUCKET/temp-test-file
+   rm temp-test-file back-here
+   ```
 
 ## Allowing public, readonly to buckets from outside the JupyterHub
 

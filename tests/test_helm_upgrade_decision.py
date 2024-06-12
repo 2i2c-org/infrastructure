@@ -1,6 +1,6 @@
 import os
 from pathlib import Path
-from unittest import TestCase
+from unittest import TestCase, mock
 
 from ruamel.yaml import YAML
 
@@ -20,12 +20,16 @@ root_path = Path(__file__).parent.parent
 
 
 def test_get_all_cluster_yaml_files():
+    clusters_path = root_path.joinpath("tests/test-clusters")
     expected_cluster_files = {
-        root_path.joinpath("tests/test-clusters/cluster1/cluster.yaml"),
-        root_path.joinpath("tests/test-clusters/cluster2/cluster.yaml"),
+        clusters_path.joinpath("cluster1/cluster.yaml"),
+        clusters_path.joinpath("cluster2/cluster.yaml"),
     }
 
-    result_cluster_files = get_all_cluster_yaml_files(is_test=True)
+    with mock.patch(
+        "deployer.utils.file_acquisition.CONFIG_CLUSTERS_PATH", clusters_path
+    ):
+        result_cluster_files = get_all_cluster_yaml_files()
 
     assert result_cluster_files == expected_cluster_files
     assert isinstance(result_cluster_files, set)
@@ -167,6 +171,32 @@ def test_generate_hub_matrix_jobs_all_hubs():
         assert isinstance(result_matrix_jobs[0], dict)
 
 
+def test_generate_hub_matrix_jobs_skip_deploy_label():
+    cluster_file = root_path.joinpath("tests/test-clusters/cluster1/cluster.yaml")
+    with open(cluster_file) as f:
+        cluster_config = yaml.load(f)
+
+    cluster_info = {
+        "cluster_name": cluster_config.get("name", {}),
+        "provider": cluster_config.get("provider", {}),
+        "reason_for_redeploy": "",
+    }
+
+    modified_file = {
+        root_path.joinpath("tests/test-clusters/cluster1/hub1.values.yaml"),
+    }
+
+    pr_labels = ["unrelated1", "deployer:skip-deploy", "unrelated2"]
+
+    expected_matrix_jobs = []
+
+    result_matrix_jobs = generate_hub_matrix_jobs(
+        cluster_file, cluster_config, cluster_info, modified_file, pr_labels
+    )
+
+    case.assertCountEqual(result_matrix_jobs, expected_matrix_jobs)
+
+
 def test_generate_support_matrix_jobs_one_cluster():
     cluster_file = root_path.joinpath("tests/test-clusters/cluster1/cluster.yaml")
     with open(cluster_file) as f:
@@ -240,6 +270,32 @@ def test_generate_support_matrix_jobs_all_clusters():
         case.assertCountEqual(result_matrix_jobs, expected_matrix_jobs)
         assert isinstance(result_matrix_jobs, list)
         assert isinstance(result_matrix_jobs[0], dict)
+
+
+def test_generate_support_matrix_jobs_skip_deploy_label():
+    cluster_file = root_path.joinpath("tests/test-clusters/cluster1/cluster.yaml")
+    with open(cluster_file) as f:
+        cluster_config = yaml.load(f)
+
+    cluster_info = {
+        "cluster_name": cluster_config.get("name", {}),
+        "provider": cluster_config.get("provider", {}),
+        "reason_for_redeploy": "",
+    }
+
+    modified_file = {
+        root_path.joinpath("tests/test-clusters/cluster1/support.values.yaml"),
+    }
+
+    pr_labels = ["unrelated1", "deployer:skip-deploy", "unrelated2"]
+
+    expected_matrix_jobs = []
+
+    result_matrix_jobs = generate_support_matrix_jobs(
+        cluster_file, cluster_config, cluster_info, modified_file, pr_labels
+    )
+
+    case.assertCountEqual(result_matrix_jobs, expected_matrix_jobs)
 
 
 def test_discover_modified_common_files_hub_helm_charts():

@@ -7,6 +7,17 @@ prometheusStorageClass:
 
 prometheus:
   server:
+    defaultFlagsOverride:
+      - -c
+      - "rm -rvf /data/wal/* && \
+        exec /bin/prometheus \
+        --storage.tsdb.retention.time=732d \
+        --config.file=/etc/config/prometheus.yml \
+        --storage.tsdb.path=/data \
+        --web.console.libraries=/etc/prometheus/console_libraries \
+        --web.console.templates=/etc/prometheus/consoles \
+        --web.enable-lifecycle"
+    retention: 732d # Keep data for at least 2 year
     persistentVolume:
       # 100Gi filled up, and this is source of our billing data.
       size: 512Gi

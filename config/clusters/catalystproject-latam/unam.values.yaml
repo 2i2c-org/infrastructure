@@ -1,0 +1,118 @@
+userServiceAccount:
+  annotations:
+    # singleuser.networkPolicy.egressAllowRules.cloudMetadataServer=true and
+    # singleuser.cloudMetadata.blockWithIptables=false are set for so that users
+    # can work against the scratch bucket using this GCP service account
+    iam.gke.io/gcp-service-account: latam-unam@catalystproject-392106.iam.gserviceaccount.com
+
+jupyterhub:
+  ingress:
+    hosts: [unam.latam.catalystproject.2i2c.cloud]
+    tls:
+      - hosts: [unam.latam.catalystproject.2i2c.cloud]
+        secretName: https-auto-tls
+  custom:
+    homepage:
+      templateVars:
+        org:
+          name: Catalyst Project, LatAm - UNAM
+  hub:
+    config:
+      JupyterHub:
+        authenticator_class: github
+      GitHubOAuthenticator:
+        oauth_callback_url: https://unam.latam.catalystproject.2i2c.cloud/hub/oauth_callback
+        allowed_organizations:
+          - CatalystProject-Hubs:unam
+        scope:
+          - read:org
+      Authenticator:
+        admin_users:
+          - nselem
+          - miguel-mx
+  singleuser:
+    networkPolicy:
+      egressAllowRules:
+        cloudMetadataServer: true
+    cloudMetadata:
+      blockWithIptables: false
+    extraEnv:
+      SCRATCH_BUCKET: gs://latam-scratch-unam/$(JUPYTERHUB_USER)
+    profileList:
+      - display_name: Jupyter SciPy Notebook
+        description: Python environment
+        slug: jupyter
+        default: true
+        kubespawner_override:
+          image: quay.io/jupyter/scipy-notebook:2024-03-04
+          default_url: /lab
+        profile_options: &profile_options
+          resource_allocation: &resource_allocation
+            display_name: Resource Allocation
+            choices:
+              mem_0_7:
+                display_name: Up to 2G of RAM and 1 CPU
+                kubespawner_override:
+                  mem_guarantee: 732421K
+                  mem_limit: 2G
+                  cpu_guarantee: 0.093
+                  cpu_limit: 1
+              mem_3_0:
+                display_name: Up to 6G of RAM and 2 CPUs
+                kubespawner_override:
+                  mem_guarantee: 2929687.5K
+                  mem_limit: 6G
+                  cpu_guarantee: 0.375
+                  cpu_limit: 2
+              mem_12_0:
+                display_name: Up to 24G of RAM and 3 CPUs
+                kubespawner_override:
+                  mem_guarantee: 11718750K
+                  mem_limit: 24G
+                  cpu_guarantee: 1.5
+                  cpu_limit: 3
+              # guarantee = limit because we are requesting a complete node, no space for other user
+              mem_116_0:
+                display_name: Up to 115G RAM and 15 CPUs
+                kubespawner_override:
+                  mem_guarantee: 115G
+                  mem_limit: 115G
+                  cpu_guarantee: 15
+                  cpu_limit: 15
+                  node_selector:
+                    node.kubernetes.io/instance-type: n2-highmem-16
+              # guarantee = limit because we are requesting a complete node, no space for other user
+              mem_486_4:
+                display_name: Up to 486G RAM and 63 CPUs
+                kubespawner_override:
+                  mem_guarantee: 486G
+                  mem_limit: 486G
+                  cpu_guarantee: 63
+                  cpu_limit: 63
+                  node_selector:
+                    node.kubernetes.io/instance-type: n2-highmem-64
+      - display_name: Rocker Geospatial with RStudio
+        description: R environment
+        slug: rocker
+        kubespawner_override:
+          image: rocker/binder:4.3
+          image_pull_policy: Always
+          default_url: /rstudio
+          working_dir: /home/rstudio # Ensures container working dir is homedir
+        profile_options: *profile_options
+
+      - display_name: Bring your own image
+        description: Specify your own docker image (must have python and jupyterhub installed in it)
+        slug: custom
+        profile_options:
+          image:
+            display_name: Image
+            unlisted_choice:
+              enabled: True
+              display_name: "Custom image"
+              validation_regex: "^.+:.+$"
+              validation_message: "Must be a publicly available docker image, of form <image-name>:<tag>"
+              kubespawner_override:
+                image: "{value}"
+            choices: {}
+          resource_allocation: *resource_allocation

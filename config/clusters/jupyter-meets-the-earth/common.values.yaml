@@ -1,6 +1,8 @@
 basehub:
   nfs:
+    enabled: true
     pv:
+      enabled: true
       # from https://docs.aws.amazon.com/efs/latest/ug/mounting-fs-nfs-mount-settings.html
       mountOptions:
         - rsize=1048576
@@ -128,6 +130,7 @@ basehub:
                   display_name: Jupyter DockerStacks Julia Notebook
                   slug: "julia"
                   kubespawner_override:
+                    # FIXME: use quay.io/ for tags after 2023-10-20
                     image: "jupyter/julia-notebook:2023-07-05"
         - display_name: "4th of Medium: 1-4 CPU, 4-16 GB"
           description: "A shared machine."
@@ -269,6 +272,10 @@ basehub:
             - whyjz # Whyjay Zheng
             - yuvipanda # Yuvi Panda
             - jonathan-taylor # Jonathan Taylor
+
+    scheduling:
+      userScheduler:
+        enabled: true
 
 dask-gateway:
   gateway:

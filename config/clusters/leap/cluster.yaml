@@ -6,7 +6,7 @@ gcp:
   cluster: leap-cluster
   zone: us-central1
   billing:
-    paid_by_us: true
+    paid_by_us: false
     bigquery:
       project: leap-pangeo
       dataset: cloud_costs
@@ -32,3 +32,10 @@ hubs:
       - common.values.yaml
       - prod.values.yaml
       - enc-prod.secret.values.yaml
+  - name: public
+    display_name: "LEAP Public"
+    domain: public.leap.2i2c.cloud
+    helm_chart: basehub
+    helm_chart_values_files:
+      - public.values.yaml
+      - enc-public.secret.values.yaml

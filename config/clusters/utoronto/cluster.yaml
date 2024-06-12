@@ -1,5 +1,5 @@
 name: utoronto
-provider: kubeconfig
+provider: kubeconfig # azure based, cloud infra work requires a dedicated utoronto account
 account: UTORid
 kubeconfig:
   file: enc-deployer-credentials.secret.yaml
@@ -10,6 +10,8 @@ support:
 hubs:
   - name: staging
     display_name: "University of Toronto (staging)"
+    # to access this staging hub, visit this link directly
+    # https://staging.utoronto.2i2c.cloud/hub/home
     domain: staging.utoronto.2i2c.cloud
     helm_chart: basehub
     helm_chart_values_files:
@@ -28,6 +30,8 @@ hubs:
       - enc-default-prod.secret.values.yaml
   - name: r-staging
     display_name: "University of Toronto (r-staging)"
+    # to access this staging hub, visit this link directly
+    # https://r-staging.datatools.utoronto.ca/hub/home
     domain: r-staging.datatools.utoronto.ca
     helm_chart: basehub
     helm_chart_values_files:

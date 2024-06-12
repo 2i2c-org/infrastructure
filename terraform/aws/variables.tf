@@ -44,21 +44,39 @@ variable "user_buckets" {
 }
 
 variable "hub_cloud_permissions" {
-  type = map(object({
-    bucket_admin_access : set(string),
-    extra_iam_policy : string
-  }))
+  type = map(
+    map(
+      object({
+        bucket_admin_access : optional(set(string), [])
+        bucket_readonly_access : optional(set(string), [])
+        extra_iam_policy : optional(string, "")
+      })
+    )
+  )
   default     = {}
   description = <<-EOT
-  Map of cloud permissions given to a particular hub
+  Cloud permissions attached to Kubernetes Service Accounts in a particular
+  k8s namespace (hub) in this cluster.
 
-  Key is name of the hub namespace in the cluster, and values are particular
-  permissions users running on those hubs should have. Currently supported are:
+  The key is a Kubernetes namespace, which by convention in 2i2c clusters
+  is also the name of the hub.
 
-  1. bucket_admin_access: List of S3 storage buckets that users on this hub should have read
-     and write permissions for.
-  2. extra_iam_policy: An AWS IAM Policy document that grants additional rights to the users
-     on this hub when talking to AWS services.
+  The value is itself a map, as each hub can have multiple Kubernetes Service
+  Accounts attached to it, for different kinds of users. The key is the name
+  of the Kubernetes Service Account. By convention, basehub currently only
+  supports creation of Kubernetes Service Accounts `user-sa` (for non-admin
+  users on the hub) and `admin-sa` (for admin users on the hub). The value
+  can be one of:
+
+  1. bucket_admin_access: List of S3 storage buckets to grant full read & write
+     permissions to.
+  2. bucket_readonly_access: List of S3 storage buckets to grant full read
+     permissions to.
+  3. extra_iam_policy: An AWS IAM Policy document that grants additional rights
+     to this Kubernetes Service Account.
+
+  Note that these are independent of each other - so if you want both admins
+  and non-admins to have a set of permissions, you may need to repeat them.
   EOT
 }
 

@@ -3,7 +3,7 @@
 
 ## Overview
 
-We use [GitHub Actions](https://docs.github.com/en/actions) as our CI/CD vendor and all our workflows are defined as YAML files in the [`.github/workflows` folder](https://github.com/2i2c-org/infrastructure/tree/master/.github/workflows) in the `infrastructure` repo.
+We use [GitHub Actions](https://docs.github.com/en/actions) as our CI/CD vendor and all our workflows are defined as YAML files in the [`.github/workflows` folder](https://github.com/2i2c-org/infrastructure/tree/main/.github/workflows) in the `infrastructure` repo.
 
 Longer or more complex workflows are discussed on their own pages (listed in the table of contents), whereas you can find descriptions of simpler or shorter workflows further down this page.
 
@@ -22,7 +22,7 @@ These schemas explicitly list what values can be passed through our config, and 
 Therefore, we can use these schemas to validate all our config before making deploys, and catch bugs early.
 
 We have [functions within the deployer](https://github.com/2i2c-org/infrastructure/blob/HEAD/deployer/__main__.py#L213-L302) that validate the cluster config, the support chart values, and the helm chart values for each hub against these schemas.
-We automatically run these functions in GitHub Actions configured by the [`validate-clusters.yaml` workflow file](https://github.com/2i2c-org/infrastructure/blob/master/.github/workflows/validate-clusters.yaml).
+We automatically run these functions in GitHub Actions configured by the [`validate-clusters.yaml` workflow file](https://github.com/2i2c-org/infrastructure/blob/main/.github/workflows/validate-clusters.yaml).
 This workflow is only triggered when related configuration has changed.
 
 ## Finding the right workflow runs
@@ -34,7 +34,7 @@ Hence, it should be much easier to find the current deployments caused by merges
 
 ## Required workflows and author auto-assignment
 
-To make the most out of the [Project Boards](https://github.com/orgs/2i2c-org/projects) that 2i2c uses, the [`auto-author-assign-pull-request.yaml`](https://github.com/2i2c-org/infrastructure/blob/master/.github/workflows/auto-author-assign-pull-request.yaml) workflow automatically assigns authors to Pull Requests.
+To make the most out of the [Project Boards](https://github.com/orgs/2i2c-org/projects) that 2i2c uses, the [`auto-author-assign-pull-request.yaml`](https://github.com/2i2c-org/infrastructure/blob/main/.github/workflows/auto-author-assign-pull-request.yaml) workflow automatically assigns authors to Pull Requests.
 
 Because this is a practice that we wish to have across other 2i2c repositories, an equivalent of the `auto-author-assign-pull-request.yaml` workflow in https://github.com/2i2c-org/infrastructure exists in https://github.com/2i2c-org/.github/tree/HEAD/workflows. The workflow in the https://github.com/2i2c-org/.github repository is marked as a [required workflow](https://docs.github.com/en/actions/using-workflows/required-workflows). This means that it will run on every PR in the repositories that it's setup as required for.
 

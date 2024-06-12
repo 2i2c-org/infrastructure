@@ -1,10 +1,12 @@
 name: earthscope
-provider: aws
+provider: aws # https://762698921361.signin.aws.amazon.com/console
 aws:
   key: enc-deployer-credentials.secret.json
   clusterType: eks
   clusterName: earthscope
   region: us-east-2
+  billing:
+    paid_by_us: false
 support:
   helm_chart_values_files:
     - support.values.yaml

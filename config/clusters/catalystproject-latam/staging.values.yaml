@@ -5,24 +5,10 @@ jupyterhub:
       - hosts: [staging.latam.catalystproject.2i2c.cloud]
         secretName: https-auto-tls
   custom:
-    2i2c:
-      add_staff_user_ids_to_admin_users: true
-      add_staff_user_ids_of_type: "github"
     homepage:
       templateVars:
         org:
-          name: Catalyst Project
-          url: "https://chanzuckerberg.com/science/programs-resources/open-science/educationcapacitybuilding/international-interactive-computing-collaboration-2i2c/"
-          logo_url: https://github.com/2i2c-org/infrastructure/assets/6181563/0667c576-7dce-4443-afd2-922288530814
-        designed_by:
-          name: "2i2c"
-          url: https://2i2c.org
-        operated_by:
-          name: "2i2c"
-          url: https://2i2c.org
-        funded_by:
-          name: Chan Zuckerberg Initiative - Open Science
-          url: "https://chanzuckerberg.com/science/programs-resources/open-science/"
+          name: Catalyst Project, LatAm - Staging
   hub:
     config:
       JupyterHub:
@@ -31,5 +17,6 @@ jupyterhub:
         oauth_callback_url: https://staging.latam.catalystproject.2i2c.cloud/hub/oauth_callback
         allowed_organizations:
           - czi-catalystproject
+          - CatalystProject-Hubs:staging
         scope:
           - read:org

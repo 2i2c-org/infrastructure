@@ -35,7 +35,7 @@ spec:
       containers:
         - name: dirsize-exporter
           # From https://github.com/yuvipanda/prometheus-dirsize-exporter
-          image: quay.io/yuvipanda/prometheus-dirsize-exporter:v3.0
+          image: quay.io/yuvipanda/prometheus-dirsize-exporter:v3.1
           resources:
             # Provide limited resources for this collector, as it can
             # balloon up (especially in CPU) quite easily. We are quite ok with

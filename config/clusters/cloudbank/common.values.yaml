@@ -1,5 +1,7 @@
 nfs:
+  enabled: true
   pv:
+    enabled: true
     mountOptions:
       - soft
       - noatime
@@ -19,5 +21,5 @@ jupyterhub:
       name: quay.io/2i2c/cloudbank-data8-image
       tag: d2746e55a4ee
     nodeSelector:
-      # Put everything on the most appropriate nodepool for these users
-      cloud.google.com/gke-nodepool: nb-n2-highmem-4
+      # Put everything on the most appropriate instance type for these users
+      node.kubernetes.io/instance-type: n2-highmem-4

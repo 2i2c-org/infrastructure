@@ -12,7 +12,12 @@ from .utils import get_grafana_token, get_grafana_url
 
 @grafana_app.command()
 def deploy_dashboards(
-    cluster_name: str = typer.Argument(..., help="Name of cluster to operate on")
+    cluster_name: str = typer.Argument(..., help="Name of cluster to operate on"),
+    dashboards_dir: str = typer.Option(
+        "dashboards",
+        help="""(Optional) ./deploy.py script accepts --dashboards-dir flag, and
+             this is the value we provide to that flag.""",
+    ),
 ):
     """
     Deploy the latest official JupyterHub dashboards to a cluster's grafana
@@ -42,7 +47,7 @@ def deploy_dashboards(
     try:
         print_colour(f"Deploying grafana dashboards to {cluster_name}...")
         subprocess.check_call(
-            ["./deploy.py", grafana_url],
+            ["./deploy.py", grafana_url, f"--dashboards-dir={dashboards_dir}"],
             env=deploy_script_env,
             cwd="grafana-dashboards",
         )

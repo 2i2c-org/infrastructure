@@ -13,9 +13,9 @@ Some hubs on shared clusters require dedicated nodepools, for a few reasons:
 1. Setup a new nodepool in terraform, via the `<cluster-name>.tfvars` for the
    cluster. Add the new nodepool to `notebook_nodes`:
 
-   ```terraform
+   ```
    notebook_nodes = {
-     "<community-name>": {
+     "<community-name>" : {
          min: 0,
          max: 100,
          machine_type: "<machine-type>",
@@ -25,16 +25,16 @@ Some hubs on shared clusters require dedicated nodepools, for a few reasons:
          taints: [{
             key: "2i2c.org/community",
             value: "<community-name>",
-            effect: "NO_SCHEDULE"
+            effect: "NO_SCHEDULE",
          }],
          gpu: {
             enabled: false,
             type: "",
-            count: 0
+            count: 0,
          },
          resource_labels: {
-            "community": "<community-name>"
-         }
+            "community": "<community-name>",
+         },
       }
    }
    ```

@@ -34,12 +34,14 @@ jupyterhub:
         authenticator_class: github
       GitHubOAuthenticator:
         oauth_callback_url: https://itcoocean.2i2c.cloud/hub/oauth_callback
+        populate_teams_in_auth_state: true
         allowed_organizations:
           - Hackweek-ITCOocean:itcoocean-hackweek-2023
           - nmfs-opensci:2i2c-demo
         scope:
           - read:org
       Authenticator:
+        enable_auth_state: true
         admin_users:
           - eeholmes # Eli Holmes, Community representative
   singleuser:
@@ -248,7 +250,7 @@ jupyterhub:
       - display_name: "Bring your own image"
         description: Specify your own docker image (must have python and jupyterhub installed in it)
         slug: custom
-        allowed_teams:
+        allowed_groups:
           - Hackweek-ITCOocean:itcoocean-hackweek-2023
           - nmfs-opensci:2i2c-demo
           - 2i2c-org:hub-access-for-2i2c-staff
@@ -269,65 +271,65 @@ jupyterhub:
               mem_1_9:
                 display_name: 1.9 GB RAM, upto 3.7 CPUs
                 kubespawner_override:
-                  mem_guarantee: 1992701952
-                  mem_limit: 1992701952
-                  cpu_guarantee: 0.234375
-                  cpu_limit: 3.75
+                  mem_guarantee: 1991244775
+                  mem_limit: 1991244775
+                  cpu_guarantee: 0.2328125
+                  cpu_limit: 3.725
                   node_selector:
                     node.kubernetes.io/instance-type: r5.xlarge
                 default: true
               mem_3_7:
                 display_name: 3.7 GB RAM, upto 3.7 CPUs
                 kubespawner_override:
-                  mem_guarantee: 3985403904
-                  mem_limit: 3985403904
-                  cpu_guarantee: 0.46875
-                  cpu_limit: 3.75
+                  mem_guarantee: 3982489550
+                  mem_limit: 3982489550
+                  cpu_guarantee: 0.465625
+                  cpu_limit: 3.725
                   node_selector:
                     node.kubernetes.io/instance-type: r5.xlarge
               mem_7_4:
                 display_name: 7.4 GB RAM, upto 3.7 CPUs
                 kubespawner_override:
-                  mem_guarantee: 7970807808
-                  mem_limit: 7970807808
-                  cpu_guarantee: 0.9375
-                  cpu_limit: 3.75
+                  mem_guarantee: 7964979101
+                  mem_limit: 7964979101
+                  cpu_guarantee: 0.93125
+                  cpu_limit: 3.725
                   node_selector:
                     node.kubernetes.io/instance-type: r5.xlarge
               mem_14_8:
                 display_name: 14.8 GB RAM, upto 3.7 CPUs
                 kubespawner_override:
-                  mem_guarantee: 15941615616
-                  mem_limit: 15941615616
-                  cpu_guarantee: 1.875
-                  cpu_limit: 3.75
+                  mem_guarantee: 15929958203
+                  mem_limit: 15929958203
+                  cpu_guarantee: 1.8625
+                  cpu_limit: 3.725
                   node_selector:
                     node.kubernetes.io/instance-type: r5.xlarge
               mem_29_7:
                 display_name: 29.7 GB RAM, upto 3.7 CPUs
                 kubespawner_override:
-                  mem_guarantee: 31883231232
-                  mem_limit: 31883231232
-                  cpu_guarantee: 3.75
-                  cpu_limit: 3.75
+                  mem_guarantee: 31859916406
+                  mem_limit: 31859916406
+                  cpu_guarantee: 3.725
+                  cpu_limit: 3.725
                   node_selector:
                     node.kubernetes.io/instance-type: r5.xlarge
               mem_60_6:
-                display_name: 60.6 GB RAM, upto 15.7 CPUs
+                display_name: 60.6 GB RAM, upto 15.6 CPUs
                 kubespawner_override:
-                  mem_guarantee: 65094813696
-                  mem_limit: 65094813696
-                  cpu_guarantee: 7.86
-                  cpu_limit: 15.72
+                  mem_guarantee: 65094448840
+                  mem_limit: 65094448840
+                  cpu_guarantee: 7.8475
+                  cpu_limit: 15.695
                   node_selector:
                     node.kubernetes.io/instance-type: r5.4xlarge
               mem_121_2:
-                display_name: 121.2 GB RAM, upto 15.7 CPUs
+                display_name: 121.2 GB RAM, upto 15.6 CPUs
                 kubespawner_override:
-                  mem_guarantee: 130189627392
-                  mem_limit: 130189627392
-                  cpu_guarantee: 15.72
-                  cpu_limit: 15.72
+                  mem_guarantee: 130188897681
+                  mem_limit: 130188897681
+                  cpu_guarantee: 15.695
+                  cpu_limit: 15.695
                   node_selector:
                     node.kubernetes.io/instance-type: r5.4xlarge
         kubespawner_override:

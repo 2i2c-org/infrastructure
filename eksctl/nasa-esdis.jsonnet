@@ -38,7 +38,7 @@ local daskNodes = [];
     metadata+: {
         name: "nasa-esdis",
         region: clusterRegion,
-        version: '1.27',
+        version: "1.29",
     },
     availabilityZones: masterAzs,
     iam: {
@@ -58,14 +58,17 @@ local daskNodes = [];
             // Related docs: https://docs.aws.amazon.com/eks/latest/userguide/managing-ebs-csi.html
             //
             name: 'aws-ebs-csi-driver',
+            version: "latest",
             wellKnownPolicies: {
                 ebsCSIController: true,
             },
         },
     ],
     nodeGroups: [
-        ng {
-            name: 'core-a',
+        ng + {
+            namePrefix: 'core',
+            nameSuffix: 'b',
+            nameIncludeInstanceType: false,
             availabilityZones: [nodeAz],
             ssh: {
                 publicKeyPath: 'ssh-keys/nasa-esdis.key.pub'
@@ -79,10 +82,8 @@ local daskNodes = [];
             },
         },
     ] + [
-        ng {
-            // NodeGroup names can't have a '.' in them, while
-            // instanceTypes always have a .
-            name: "nb-%s" % std.strReplace(n.instanceType, ".", "-"),
+        ng + {
+            namePrefix: "nb",
             availabilityZones: [nodeAz],
             minSize: 0,
             maxSize: 500,
@@ -101,10 +102,8 @@ local daskNodes = [];
         } + n for n in notebookNodes
     ] + ( if daskNodes != null then
         [
-        ng {
-            // NodeGroup names can't have a '.' in them, while
-            // instanceTypes always have a .
-            name: "dask-%s" % std.strReplace(n.instancesDistribution.instanceTypes[0], ".", "-"),
+        ng + {
+            namePrefix: "dask",
             availabilityZones: [nodeAz],
             minSize: 0,
             maxSize: 500,

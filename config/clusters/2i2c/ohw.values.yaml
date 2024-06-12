@@ -12,21 +12,9 @@ basehub:
             - oceanhackweek.2i2c.cloud
     singleuser:
       networkPolicy:
-        # In clusters with NetworkPolicy enabled, do not
-        # allow outbound internet access that's not DNS, HTTP or HTTPS
         # For OHW, we allow 8080 (for DAP) and 22 (for ssh)
         # https://github.com/2i2c-org/infrastructure/issues/549#issuecomment-892276020
-        enabled: true
         egress:
-          - ports:
-              - port: 53
-                protocol: UDP
-          - ports:
-              - port: 80
-                protocol: TCP
-          - ports:
-              - port: 443
-                protocol: TCP
           - ports:
               - port: 8080
                 protocol: TCP
@@ -54,15 +42,11 @@ basehub:
             cpu_limit: 2
             cpu_guarantee: 0.5
       extraEnv:
+        SCRATCH_BUCKET: gs://pilot-hubs-scratch-ohw/$(JUPYTERHUB_USER)
+        PANGEO_SCRATCH: gs://pilot-hubs-scratch-ohw/$(JUPYTERHUB_USER)
         GH_SCOPED_CREDS_CLIENT_ID: "Iv1.9c20af442fad0d86"
         GH_SCOPED_CREDS_APP_URL: "https://github.com/apps/ohw-gh-scoped-creds-app"
     custom:
-      cloudResources:
-        provider: gcp
-        gcp:
-          projectId: two-eye-two-see
-        scratchBucket:
-          enabled: true
       2i2c:
         add_staff_user_ids_to_admin_users: true
         add_staff_user_ids_of_type: "github"

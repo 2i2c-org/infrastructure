@@ -47,9 +47,9 @@ This AWS IAM Role is managed via terraform.
    `````{tab-set}
    ````{tab-item} GCP
    :sync: gcp-key
-   ```yaml
+   ```
    hub_cloud_permissions = {
-       "<hub-name-slug>": {
+       "<hub-name-slug>" : {
            allow_access_to_external_requester_pays_buckets : true,
            bucket_admin_access : ["bucket-1", "bucket-2"]
            hub_namespace : "<hub-name>"
@@ -60,9 +60,9 @@ This AWS IAM Role is managed via terraform.
 
    ````{tab-item} AWS
    :sync: aws-key
-   ```bash
+   ```
    hub_cloud_permissions = {
-       "<hub-name-slug>": {
+       "<hub-name-slug>" : {
            bucket_admin_access : ["bucket-1", "bucket-2"]
            hub_namespace : "<hub-name>"
        }

@@ -1,0 +1,117 @@
+jupyterhub:
+  ingress:
+    hosts:
+      - hub.binderhub-ui-demo.2i2c.cloud
+    tls:
+      - secretName: https-auto-tls
+        hosts:
+          - hub.binderhub-ui-demo.2i2c.cloud
+  custom:
+    2i2c:
+      add_staff_user_ids_to_admin_users: true
+      add_staff_user_ids_of_type: "google"
+    jupyterhubConfigurator:
+      enabled: false
+    binderhubUI:
+      enabled: true
+    homepage:
+      gitRepoBranch: "no-homepage-subsections"
+      templateVars:
+        org:
+          name: Demo binderhub UI with binderhub-service
+          url: https://2i2c.org
+          logo_url: https://2i2c.org/media/logo.png
+        designed_by:
+          name: 2i2c
+          url: https://2i2c.org
+        operated_by:
+          name: 2i2c
+          url: https://2i2c.org
+        funded_by:
+          name: ""
+          url: ""
+    singleuserAdmin:
+      extraVolumeMounts: []
+  singleuser:
+    storage:
+      type: none
+      extraVolumeMounts: []
+    initContainers: []
+  hub:
+    redirectToServer: false
+    services:
+      binder:
+        oauth_no_confirm: true
+        oauth_redirect_uri: https://binderhub-ui-demo.2i2c.cloud/oauth_callback
+    loadRoles:
+      binder:
+        services:
+          - binder
+        scopes:
+          - servers
+          - read:users # admin:users is required if authentication isn't enabled
+      user:
+        scopes:
+          - self
+          # Admin users will by default have access:services, so this is only
+          # observed to be required for non-admin users.
+          - access:services!service=binder
+    config:
+      BinderSpawnerMixin:
+        auth_enabled: true
+      JupyterHub:
+        authenticator_class: cilogon
+      CILogonOAuthenticator:
+        oauth_callback_url: "https://hub.binderhub-ui-demo.2i2c.cloud/hub/oauth_callback"
+        allowed_idps:
+          http://google.com/accounts/o8/id:
+            username_derivation:
+              username_claim: "email"
+binderhub-service:
+  enabled: true
+  ingress:
+    enabled: true
+    hosts:
+      - binderhub-ui-demo.2i2c.cloud
+    tls:
+      - secretName: binder-https-auto-tls
+        hosts:
+          - binderhub-ui-demo.2i2c.cloud
+  config:
+    BinderHub:
+      base_url: /
+      hub_url: https://hub.binderhub-ui-demo.2i2c.cloud
+      badge_base_url: https://binderhub-ui-demo.2i2c.cloud
+      auth_enabled: true
+      enable_api_only_mode: false
+      image_prefix: us-central1-docker.pkg.dev/two-eye-two-see/binderhub-ui-demo-registry/binderhub-service-
+      banner_message: "Testing binderhub used by 2i2c"
+      about_message: "Testing binderhub used by 2i2c"
+  extraConfig:
+    # FIXME: set KubernetesBuildExecutor.push_secret again
+    #        without this for some reason the build pods
+    #        search after the wrong secret name (i.e. the default name)
+    #        set by binderhub in KubernetesBuildExecutor.push_secret
+    01-binderhub-service-set-push-secret: |
+      import os
+      c.KubernetesBuildExecutor.push_secret = os.environ["PUSH_SECRET_NAME"]
+  extraEnv:
+    - name: JUPYTERHUB_API_TOKEN
+      valueFrom:
+        secretKeyRef:
+          name: '{{ include "jupyterhub.hub.fullname" . }}'
+          key: hub.services.binder.apiToken
+    - name: JUPYTERHUB_CLIENT_ID
+      value: "service-binder"
+    - name: JUPYTERHUB_API_URL
+      value: "https://hub.binderhub-ui-demo.2i2c.cloud/hub/api"
+    # Without this, the redirect URL to /hub/api/... gets
+    # appended to binderhub's URL instead of the hub's
+    - name: JUPYTERHUB_BASE_URL
+      value: "https://hub.binderhub-ui-demo.2i2c.cloud/"
+    - name: JUPYTERHUB_OAUTH_CALLBACK_URL
+      value: "https://binderhub-ui-demo.2i2c.cloud/oauth_callback"
+  # The password to the registry is stored encrypted in the hub's encrypted config file
+  buildPodsRegistryCredentials:
+    server: "https://us-central1-docker.pkg.dev"
+    username: "_json_key"

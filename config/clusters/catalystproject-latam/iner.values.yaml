@@ -1,0 +1,25 @@
+jupyterhub:
+  ingress:
+    hosts: [iner.latam.catalystproject.2i2c.cloud]
+    tls:
+      - hosts: [iner.latam.catalystproject.2i2c.cloud]
+        secretName: https-auto-tls
+  custom:
+    homepage:
+      templateVars:
+        org:
+          name: Catalyst Project, LatAm - INER
+  hub:
+    config:
+      JupyterHub:
+        authenticator_class: github
+      GitHubOAuthenticator:
+        oauth_callback_url: https://iner.latam.catalystproject.2i2c.cloud/hub/oauth_callback
+        allowed_organizations:
+          - CatalystProject-Hubs:iner
+        scope:
+          - read:org
+      Authenticator:
+        admin_users:
+          - Gabo8611
+          - Yalbibalderas

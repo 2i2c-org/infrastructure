@@ -84,11 +84,11 @@ As the checks are all in GCP they can be created through the [monitoring console
 The `alpha` gcloud component also supports setting snoozes from the command line. For further documentation see the [Google Cloud Monitoring docs](https://cloud.google.com/monitoring/alerts/manage-snooze#gcloud-cli) or the [gcloud alpha monitoring snoozes](https://cloud.google.com/sdk/gcloud/reference/alpha/monitoring/snoozes) reference. You may need to add the `alpha` component to your `gcloud` install.
 
 
-Example CLI use that snoozes binder-staging check for 7 days:
+Example CLI use that snoozes staging check for 7 days:
 
 ```
-HUB=binder-staging
-POLICY=$(gcloud alpha monitoring policies list  --filter "displayName ~ binder-staging" --format='value(name)')
+HUB=staging
+POLICY=$(gcloud alpha monitoring policies list  --filter "displayName ~ staging" --format='value(name)')
 # echo $POLICY 
 # projects/two-eye-two-see/alertPolicies/12673409021288629743
 gcloud alpha monitoring snoozes create --display-name="Uptime Check Disabled $HUB" --criteria-policies="$POLICY" --start-time="$(date -Iseconds)" --end-time="+PT7D"

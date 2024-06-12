@@ -41,7 +41,6 @@ def discover_modified_common_files(modified_paths):
         # Filepaths related to helm chart infrastructure
         "helm-charts/basehub/*",
         "helm-charts/daskhub/*",
-        "helm-charts/binderhub/*",
     ]
     # If this filepath has changes, we should upgrade the support chart on all clusters
     support_chart_filepath = "helm-charts/support/*"
@@ -68,6 +67,7 @@ def generate_hub_matrix_jobs(
     cluster_config,
     cluster_info,
     added_or_modified_files,
+    pr_labels=None,
     upgrade_all_hubs_on_this_cluster=False,
     upgrade_all_hubs_on_all_clusters=False,
 ):
@@ -88,6 +88,7 @@ def generate_hub_matrix_jobs(
             redeployed.
         added_or_modified_files (set[str]): A set of all added or modified files
             provided in a GitHub Pull Requests
+        pr_labels (list, optional): A list of PR labels
         upgrade_all_hubs_on_this_cluster (bool, optional): If True, generates jobs to
             upgrade all hubs on the given cluster. This is triggered when the
             cluster.yaml file itself has been modified. Defaults to False.
@@ -100,6 +101,9 @@ def generate_hub_matrix_jobs(
             cluster, the cloud provider that cluster runs on, the name of a hub
             deployed to that cluster, and the reason that hub needs to be redeployed.
     """
+    if pr_labels and "deployer:skip-deploy" in pr_labels:
+        return []
+
     # Empty list to store all the matrix job definitions in
     matrix_jobs = []
 
@@ -148,6 +152,7 @@ def generate_support_matrix_jobs(
     cluster_config,
     cluster_info,
     added_or_modified_files,
+    pr_labels=None,
     upgrade_support_on_this_cluster=False,
     upgrade_support_on_all_clusters=False,
 ):
@@ -168,6 +173,7 @@ def generate_support_matrix_jobs(
             cluster to be redeployed.
         added_or_modified_files (set[str]): A set of all added or modified files
             provided in a GitHub Pull Requests
+        pr_labels (list, optional): A list of PR labels
         upgrade_support_on_this_cluster (bool, optional): If True, generates jobs to
             update the support chart on the given cluster. This is triggered when the
             cluster.yaml file itself is modified. Defaults to False.
@@ -192,6 +198,9 @@ def generate_support_matrix_jobs(
                 },
             ]
     """
+    if pr_labels and "deployer:skip-deploy" in pr_labels:
+        return []
+
     # Rename dictionary key
     cluster_info["reason_for_support_redeploy"] = cluster_info.pop(
         "reason_for_redeploy"

@@ -14,8 +14,9 @@ help:
 
 .PHONY: help Makefile
 
+# keep --ignore entries in sync with content in noxfile.py
 live:
-	sphinx-autobuild --ignore */_build/* --ignore */tmp/* --ignore */_static/hub-*.json -b dirhtml -n . _build/dirhtml
+	sphinx-autobuild --ignore "*/_build/*" --ignore "*/tmp/*" --ignore "*/*.json" --ignore "*/*.csv" -b dirhtml -n . _build/dirhtml
 
 # Catch-all target: route all unknown targets to Sphinx using the new
 # "make mode" option.  $(O) is meant as a shortcut for $(SPHINXOPTS).

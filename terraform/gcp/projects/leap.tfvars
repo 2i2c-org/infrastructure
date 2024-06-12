@@ -5,23 +5,22 @@ project_id = "leap-pangeo"
 core_node_machine_type = "n2-highmem-4"
 
 k8s_versions = {
-  min_master_version : "1.27.4-gke.900",
-  core_nodes_version : "1.27.4-gke.900",
-  notebook_nodes_version : "1.27.4-gke.900",
-  dask_nodes_version : "1.27.4-gke.900",
+  min_master_version : "1.29.1-gke.1589018",
+  core_nodes_version : "1.29.1-gke.1589018",
+  notebook_nodes_version : "1.29.1-gke.1589018",
+  dask_nodes_version : "1.29.1-gke.1589018",
 }
 
 # GPUs not available in us-central1-b
-zone             = "us-central1-c"
-region           = "us-central1"
-regional_cluster = true
+zone   = "us-central1-c"
+region = "us-central1"
 
 # Multi-tenant cluster, network policy is required to enforce separation between hubs
 enable_network_policy = true
 
 # Setup a filestore for in-cluster NFS
 enable_filestore      = true
-filestore_capacity_gb = 2048
+filestore_capacity_gb = 3072
 
 user_buckets = {
   "scratch-staging" : {
@@ -80,7 +79,24 @@ notebook_nodes = {
     max : 100,
     machine_type : "n2-highmem-4",
   },
-  "n2-highmem-16" : {
+  "public-n2-highmem-4" : {
+    min : 0,
+    max : 100,
+    machine_type : "n2-highmem-4",
+    labels : {
+      "2i2c.org/community" : "public"
+    },
+    taints : [{
+      key : "2i2c.org/community",
+      value : "public",
+      effect : "NO_SCHEDULE",
+    }],
+    resource_labels : {
+      "community" : "public",
+    },
+  }
+
+  "n2-highmem-16-c" : {
     # A minimum of one is configured for LEAP to ensure quick startups at all
     # time. Cost is not a greater concern than optimizing startup times.
     min : 1,
@@ -91,8 +107,8 @@ notebook_nodes = {
     min : 0,
     max : 100,
     machine_type : "n2-highmem-64"
-  }
-  "gpu-t4" : {
+  },
+  "gpu-t4-b" : {
     min : 0,
     max : 100,
     machine_type : "n1-standard-8",

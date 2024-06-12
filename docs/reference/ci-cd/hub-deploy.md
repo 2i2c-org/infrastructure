@@ -7,14 +7,14 @@ You can learn more about this workflow in our blog post [Multiple JupyterHubs, m
 
 The best place to learn about the latest state of our *automatic* hub deployment
 is to look at [the `deploy-hubs.yaml` GitHub Actions workflow file](https://github.com/2i2c-org/infrastructure/tree/HEAD/.github/workflows/deploy-hubs.yaml).
-This workflow file depends on a locally defined action that [sets up access to a given cluster](https://github.com/2i2c-org/infrastructure/blob/master/.github/actions/setup-deploy/action.yaml) and itself contains four main jobs, detailed below.
+This workflow file depends on a locally defined action that [sets up access to a given cluster](https://github.com/2i2c-org/infrastructure/blob/main/.github/actions/setup-deploy/action.yaml) and itself contains four main jobs, detailed below.
 
 ## Main hub deployment workflow
 
 (cicd/hub/generate-jobs)=
 ### 1. `generate-jobs`: Generate Helm upgrade jobs
 
-The first job takes a list of files that have been added/modified as part of a Pull Request and pipes them into the [`generate-helm-upgrade-jobs` sub-command](https://github.com/2i2c-org/infrastructure/blob/master/deployer/helm_upgrade_decision.py) of the [deployer module](https://github.com/2i2c-org/infrastructure/tree/master/deployer).
+The first job takes a list of files that have been added/modified as part of a Pull Request and pipes them into the [`generate-helm-upgrade-jobs` sub-command](https://github.com/2i2c-org/infrastructure/blob/main/deployer/helm_upgrade_decision.py) of the [deployer module](https://github.com/2i2c-org/infrastructure/tree/main/deployer).
 This sub-command uses a set of functions to calculate which hubs on which clusters require a helm upgrade, alongside whether the support chart and staging hub on that cluster should also be upgraded.
 If any production hubs require an upgrade, the upgrade of the staging hub is a requirement.
 
@@ -28,7 +28,7 @@ This job provides the following outputs:
 While the aim of this workflow is to only upgrade the pieces of the infrastructure that require it with every change, some changes do require us to redeploy everything.
 
 - If a cluster's `cluster.yaml` file has been modified, we upgrade the support chart and **all** hubs on **that** cluster. This is because we cannot tell what has been changed without inspecting the diff of the file.
-- If any of the `basehub`, `daskhub`, or `binderhub` Helm charts have additions/modifications in their paths, we redeploy **all** hubs across **all** clusters.
+- If any of the `basehub` or `daskhub` Helm charts have additions/modifications in their paths, we redeploy **all** hubs across **all** clusters.
 - If the support Helm chart has additions/modifications in its path, we redeploy the support chart on **all** clusters.
 - If the deployer module has additions/modifications in its path, then we redeploy **all** hubs on **all** clusters.
 
@@ -46,7 +46,7 @@ A matrix job is set up that parallelises over all the clusters defined in the JS
 For each cluster, the support chart is first upgraded (if required) followed by the staging hub (if required).
 
 ```{note}
-The 2i2c cluster is a special case here as it has three staging hubs: one running the `basehub` Helm chart, another running the `daskhub` Helm chart, and another running the `binderhub` helm chart.
+The 2i2c cluster is a special case here as it has three staging hubs: one running the `basehub` Helm chart and another running the `daskhub` Helm chart.
 We therefore run extra steps for the 2i2c cluster to upgrade these hubs (if required).
 ```
 

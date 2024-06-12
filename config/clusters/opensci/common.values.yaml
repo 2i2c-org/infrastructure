@@ -12,3 +12,8 @@ nfs:
       - noresvport
     serverIP: fs-065fcb5bb0ad79b25.efs.us-west-2.amazonaws.com
     baseShareName: /
+
+jupyterhub:
+  scheduling:
+    userScheduler:
+      enabled: true

@@ -1,6 +1,6 @@
 prometheusIngressAuthSecret:
   enabled: true
-  
+
 prometheus:
   server:
     ingress:
@@ -26,3 +26,10 @@ grafana:
       - secretName: grafana-tls
         hosts:
           - grafana.{{ cluster_name }}.2i2c.cloud
+{% if provider == "aws" %}
+cluster-autoscaler:
+  enabled: true
+  autoDiscovery:
+    clusterName: {{ cluster_name }}
+  awsRegion: {{ cluster_region }}
+{% endif %}

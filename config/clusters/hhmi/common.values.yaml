@@ -1,9 +1,8 @@
 basehub:
   nfs:
     enabled: true
-    dirsizeReporter:
-      enabled: true
     pv:
+      enabled: true
       mountOptions:
         - soft
         - noatime
@@ -34,7 +33,7 @@ basehub:
     singleuser:
       extraContainers:
         - name: mysql
-          image: datajoint/mysql # following the spyglass tutorial at https://lorenfranklab.github.io/spyglass/latest/notebooks/00_Setup/#existing-database
+          image: datajoint/mysql:8.0 # following the spyglass tutorial at https://lorenfranklab.github.io/spyglass/latest/notebooks/00_Setup/#existing-database
           ports:
             - name: mysql
               containerPort: 3306
@@ -86,48 +85,49 @@ basehub:
               subPath: _shared-public
       profileList:
         - display_name: "Loren Frank Lab"
-          default: true
           description: "Spyglass-NWB container for the Loren Frank Lab"
           slug: lorenfrank
           profile_options:
             requests: &profile_option_requests
               display_name: Resource Allocation
               choices:
+                # choices were generated using the command (GKE 1.29 compatible):
+                # deployer generate resource-allocation choices --num-allocations 4 n2-highmem-4
                 mem_3_4:
-                  display_name: 3.4 GB RAM, upto 3.477 CPUs
+                  display_name: 3.4 GB RAM, upto 3.4 CPUs
                   kubespawner_override:
-                    mem_guarantee: 3644869120
-                    mem_limit: 3644869120
-                    cpu_guarantee: 0.434625
-                    cpu_limit: 3.477
+                    mem_guarantee: 3620925866
+                    mem_limit: 3620925866
+                    cpu_guarantee: 0.43125
+                    cpu_limit: 3.45
                     node_selector:
                       node.kubernetes.io/instance-type: n2-highmem-4
                   default: true
-                mem_6_8:
-                  display_name: 6.8 GB RAM, upto 3.477 CPUs
+                mem_6_7:
+                  display_name: 6.7 GB RAM, upto 3.4 CPUs
                   kubespawner_override:
-                    mem_guarantee: 7289738240
-                    mem_limit: 7289738240
-                    cpu_guarantee: 0.86925
-                    cpu_limit: 3.477
+                    mem_guarantee: 7241851732
+                    mem_limit: 7241851732
+                    cpu_guarantee: 0.8625
+                    cpu_limit: 3.45
                     node_selector:
                       node.kubernetes.io/instance-type: n2-highmem-4
-                mem_13_6:
-                  display_name: 13.6 GB RAM, upto 3.477 CPUs
+                mem_13_5:
+                  display_name: 13.5 GB RAM, upto 3.4 CPUs
                   kubespawner_override:
-                    mem_guarantee: 14579476480
-                    mem_limit: 14579476480
-                    cpu_guarantee: 1.7385
-                    cpu_limit: 3.477
+                    mem_guarantee: 14483703464
+                    mem_limit: 14483703464
+                    cpu_guarantee: 1.725
+                    cpu_limit: 3.45
                     node_selector:
                       node.kubernetes.io/instance-type: n2-highmem-4
-                mem_27_2:
-                  display_name: 27.2 GB RAM, upto 3.477 CPUs
+                mem_27_0:
+                  display_name: 27.0 GB RAM, upto 3.4 CPUs
                   kubespawner_override:
-                    mem_guarantee: 29158952960
-                    mem_limit: 29158952960
-                    cpu_guarantee: 3.477
-                    cpu_limit: 3.477
+                    mem_guarantee: 28967406928
+                    mem_limit: 28967406928
+                    cpu_guarantee: 3.45
+                    cpu_limit: 3.45
                     node_selector:
                       node.kubernetes.io/instance-type: n2-highmem-4
             image:
@@ -144,8 +144,29 @@ basehub:
                   display_name: Spyglass
                   slug: spyglass
                   kubespawner_override:
-                    image: "quay.io/lorenlab/hhmi-spyglass-image:78764087554d"
+                    image: "quay.io/lorenlab/hhmi-spyglass-image:62b90867ea22"
+        - display_name: "Janelia Cellmap"
+          description: "Dacapo container for Janelia Cellmap"
+          slug: cellmap
+          profile_options:
+            requests: *profile_option_requests
+            image:
+              display_name: Image
+              unlisted_choice:
+                enabled: True
+                display_name: "Custom image"
+                validation_regex: "^.+:.+$"
+                validation_message: "Must be a publicly available docker image, of form <image-name>:<tag>"
+                kubespawner_override:
+                  image: "{value}"
+              choices:
+                dacapo:
+                  display_name: Dacapo
+                  slug: dacapo
+                  kubespawner_override:
+                    image: "quay.io/2i2c/dacapo-image:42b606702986"
         - display_name: "Community Images"
+          default: true
           description: "Start a container with a community maintained image"
           slug: community
           profile_options:
@@ -165,6 +186,7 @@ basehub:
                   slug: rocker
                   kubespawner_override:
                     image: rocker/binder:4.3
+                    image_pull_policy: Always
                     # Launch RStudio after the user logs in
                     default_url: /rstudio
                     # Ensures container working dir is homedir
@@ -174,15 +196,10 @@ basehub:
                   display_name: Linux desktop
                   slug: desktop
                   kubespawner_override:
-                    # Explicitly unset this - we set this to 'jupyterhub-singleuser'
-                    # in basehub/values.yaml. We instead want to leave this unset,
-                    # so the default command for the docker image is used instead.
-                    # This is required for .desktop files to show up correctly.
-                    cmd: null
                     # Launch people directly into the Linux desktop when they start
                     default_url: /desktop
                     # Built from https://github.com/jupyterhub/jupyter-remote-desktop-proxy/pull/51
-                    image: "quay.io/jupyter-remote-desktop-proxy/qgis:2023-09-27"
+                    image: quay.io/2i2c/nasa-qgis-image:babb0fa15dfa
     hub:
       allowNamedServers: true
       config:

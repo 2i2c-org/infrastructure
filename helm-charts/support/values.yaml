@@ -164,6 +164,8 @@ prometheus:
       - /bin/sh
     defaultFlagsOverride:
       - -c
+      # If changing this, please also find wherever this has been copied to and change
+      # those as well as appropriate
       - "rm -rvf /data/wal/* && \
         exec /bin/prometheus \
         --storage.tsdb.retention.time=366d \
@@ -269,6 +271,10 @@ prometheus:
 # values ref: https://github.com/grafana/helm-charts/blob/main/charts/grafana/values.yaml
 #
 grafana:
+  # We decrypt and pass `grafana.adminPassword` just in time as part of
+  # deploying grafana, and find it acceptable - so we disable this strict check.
+  assertNoLeakedSecrets: false
+
   persistence:
     # A PVC is used to enable Grafana to store auth details and dashboard
     # definitions.
@@ -281,6 +287,12 @@ grafana:
     # type Recreate is required since we attach a PVC that can only be used by
     # mounted for writing by one pod at the time.
     type: Recreate
+  readinessProbe:
+    # With one grafana pod replica, having a readiness probe fail is pointless.
+    # We ensure it won't fail before the livenessProbe that would restart the
+    # container.
+    failureThreshold: 1000
+    initialDelaySeconds: 1
 
   rbac:
     # namespaced makes us not get ClusterRole service accounts etc, and we do
@@ -297,8 +309,10 @@ grafana:
   # prometheus and grafana.
   #
   # Grafana's memory use seems to increase over time but seems reasonable to
-  # stay below 200Mi for years to come. Grafana's CPU use seems minuscule with
-  # peaks at up to 9m CPU from one user is browsing its dashboards.
+  # stay below 200Mi in general. Memory can peak when dashboards are updated,
+  # and was increased to 400Mi as its been seen getting OOMKilled. Grafana's CPU
+  # use seems minuscule with peaks at up to 9m CPU from one user is browsing its
+  # dashboards.
   #
   # PromQL queries for CPU and memory use:
   # - CPU:    sum(rate(container_cpu_usage_seconds_total{container="grafana", namespace="support"}[5m])) by (pod)
@@ -307,7 +321,7 @@ grafana:
   resources:
     limits:
       cpu: 100m
-      memory: 200Mi
+      memory: 400Mi
     requests:
       cpu: 10m
       memory: 200Mi
@@ -418,10 +432,14 @@ cryptnono:
         cpu: 5m
         memory: 100Mi
 
+  image:
+    # Brings in https://github.com/cryptnono/cryptnono/pull/33
+    # FIXME: Unset this once that gets merged and we update to the newest cryptnono version
+    tag: 0.3.1-0.dev.git.138.ha4b11b8
+
   detectors:
-    # Disable the execwhacker detector for now, as it matures by being deployed on mybinder.org
     execwhacker:
-      enabled: false
+      enabled: true
       # Cryptnono can get information about what container the kill was in, so we can identify which
       # user was cryptomining
       containerdHostPath: /run/containerd/containerd.sock
@@ -434,7 +452,9 @@ cryptnono:
             # This is helpful for testing execwhacker is enabled and functional
             - beiquatohGa1uay0ahMies9couyahPeiz9xohju3Ahvaik3FaeM7eey1thaish1U
     monero:
-      enabled: true
+      # disable the monero specific detector, as execwhacker catches most of that too
+      # monero detector is using bpftrace, which has issues with cross-kernel compatibility
+      enabled: false
       resources:
         # Measured with the following prometheus queries:
         # Memory: sum(container_memory_usage_bytes{container="monero", namespace="support"}) by (instance)

@@ -83,11 +83,15 @@ and will need to be refreshed with new sets whenever that time is up.
 
 1. Log-in at [2i2c.awsapps.com/start#/](https://2i2c.awsapps.com/start#/).
 2. Select an account from the list of displayed options.
-3. Select **Commandline or programmatic access** to open a pop-up with credentials.
+3. Select **Access Keys** to open a pop-up with credentials.
 4. Prefer *Option 1* of copying specific environment variables, as that makes it much
    easier to use a new set of credentials when this set expires than using *Option 2* of
    putting the credentials in a file. You can also more easily authenticate to different
    AWS accounts in different terminal tabs this way.
+5. After setting these environment variables in your terminal, you can run
+   `aws sts get-caller-identity` to verify that these are working. The `UserId` in the
+   response should contain your SSO username at the very end (after the `:`), and the
+   `Account` is the AWS account id of the account you are authenticated to.
 
 #### Add users to our SSO
 
@@ -112,7 +116,7 @@ To do so, follow these steps:
    AWS accounts we create.
 4. Create the account! They'll receive an email with appropriate instructions.
 
-(cloud-access:aws-individual-accnts)=
+(cloud-access:aws-individual-accounts)=
 ### Access individual AWS accounts
 
 For AWS accounts that are managed by clients, we use an individual AWS account for each team member, and ask the client to provide us access for each person.
@@ -188,8 +192,8 @@ are used to provide access to the AWS account from your terminal.
    expire in 12 hours, and you will need to re-authenticate.
 
 ```{note}
-Currently, the only accounts that enforce MFA are some [individual accounts](cloud-access:aws-individual-accnts) not under 2i2c's organisation SSO.
-Though in the future, we may enforce MFA for our orgnisation as well.
+Currently, the only accounts that enforce MFA are some [individual accounts](cloud-access:aws-individual-accounts) not under 2i2c's organisation SSO.
+Though in the future, we may enforce MFA for our organisation as well.
 ```
 
 % TODO: Add instructions for Azure as well.

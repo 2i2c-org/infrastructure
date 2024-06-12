@@ -57,6 +57,7 @@ jupyterhub:
                 slug: geospatial
                 kubespawner_override:
                   image: rocker/binder:4.3
+                  image_pull_policy: Always
                   # Launch into RStudio after the user logs in
                   default_url: /rstudio
                   # Ensures container working dir is homedir
@@ -66,45 +67,47 @@ jupyterhub:
                 display_name: Jupyter SciPy Notebook
                 slug: scipy
                 kubespawner_override:
-                  image: jupyter/scipy-notebook:2023-06-26
+                  image: quay.io/jupyter/scipy-notebook:2024-03-18
           resources:
             display_name: Resource Allocation
             choices:
+              # choices were generated using the command (GKE 1.29 compatible):
+              # deployer generate resource-allocation choices --num-allocations 4 n2-highmem-4
               mem_3_4:
-                display_name: 3.4 GB RAM, upto 3.485 CPUs
+                display_name: 3.4 GB RAM, upto 3.4 CPUs
                 kubespawner_override:
-                  mem_guarantee: 3662286336
-                  mem_limit: 3662286336
-                  cpu_guarantee: 0.435625
-                  cpu_limit: 3.485
+                  mem_guarantee: 3620925866
+                  mem_limit: 3620925866
+                  cpu_guarantee: 0.43125
+                  cpu_limit: 3.45
                   node_selector:
                     node.kubernetes.io/instance-type: n2-highmem-4
                 default: true
-              mem_6_8:
-                display_name: 6.8 GB RAM, upto 3.485 CPUs
+              mem_6_7:
+                display_name: 6.7 GB RAM, upto 3.4 CPUs
                 kubespawner_override:
-                  mem_guarantee: 7324572672
-                  mem_limit: 7324572672
-                  cpu_guarantee: 0.87125
-                  cpu_limit: 3.485
+                  mem_guarantee: 7241851732
+                  mem_limit: 7241851732
+                  cpu_guarantee: 0.8625
+                  cpu_limit: 3.45
                   node_selector:
                     node.kubernetes.io/instance-type: n2-highmem-4
-              mem_13_6:
-                display_name: 13.6 GB RAM, upto 3.485 CPUs
+              mem_13_5:
+                display_name: 13.5 GB RAM, upto 3.4 CPUs
                 kubespawner_override:
-                  mem_guarantee: 14649145344
-                  mem_limit: 14649145344
-                  cpu_guarantee: 1.7425
-                  cpu_limit: 3.485
+                  mem_guarantee: 14483703464
+                  mem_limit: 14483703464
+                  cpu_guarantee: 1.725
+                  cpu_limit: 3.45
                   node_selector:
                     node.kubernetes.io/instance-type: n2-highmem-4
-              mem_27_3:
-                display_name: 27.3 GB RAM, upto 3.485 CPUs
+              mem_27_0:
+                display_name: 27.0 GB RAM, upto 3.4 CPUs
                 kubespawner_override:
-                  mem_guarantee: 29298290688
-                  mem_limit: 29298290688
-                  cpu_guarantee: 3.485
-                  cpu_limit: 3.485
+                  mem_guarantee: 28967406928
+                  mem_limit: 28967406928
+                  cpu_guarantee: 3.45
+                  cpu_limit: 3.45
                   node_selector:
                     node.kubernetes.io/instance-type: n2-highmem-4
   hub:
@@ -115,9 +118,10 @@ jupyterhub:
         # FIXME: ref https://github.com/2i2c-org/binderhub-service/issues/57
         # for something more readable and requiring less copy-pasting
         url: http://imagebuilding-demo-binderhub-service:8090
+        display: false
     image:
       name: quay.io/2i2c/dynamic-image-building-experiment
-      tag: "0.0.1-0.dev.git.7567.ha4162031"
+      tag: "0.0.1-0.dev.git.8663.h049aa2c2"
     config:
       JupyterHub:
         authenticator_class: github

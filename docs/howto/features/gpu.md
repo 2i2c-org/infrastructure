@@ -40,7 +40,7 @@ The `notebook_nodes` variable for our GCP terraform accepts a `gpu`
 parameter, which can be used to provision a GPU nodepool. An example
 would look like:
 
-```terraform
+```
 notebook_nodes = {
   "gpu-t4": {
     min: 0,
@@ -49,16 +49,16 @@ notebook_nodes = {
     gpu: {
       enabled: true,
       type: "nvidia-tesla-t4",
-      count: 1
+      count: 1,
     },
     # Optional, in case we run into resource exhaustion in the main zone
     zones: [
       "us-central1-a",
       "us-central1-b",
       "us-central1-c",
-      "us-central1-f"
-    ]
-  }
+      "us-central1-f",
+    ],
+  },
 }
 ```
 
@@ -100,6 +100,7 @@ series nodes.
 7. Ask for the increase, and wait. This can take *several working days*,
    so do it as early as possible!
 
+(howto:features:gpu:aws:nodegroup)=
 #### Setup GPU nodegroup on eksctl
 
 We use `eksctl` with `jsonnet` to provision our kubernetes clusters on
@@ -160,6 +161,9 @@ jupyterhub:
       profileList:
         - display_name: NVIDIA Tesla T4, ~16 GB, ~4 CPUs
           description: "Start a container on a dedicated node with a GPU"
+          allowed_groups:
+            - 2i2c-org:hub-access-for-2i2c-staff
+            - <github-org>:<team-name>
           profile_options:
             image:
               display_name: Image
@@ -195,7 +199,7 @@ jupyterhub:
    to use.
 
    ```{warning}
-   **Do not** use the `latest` or `master` tags - find
+   **Do not** use the `latest`, `main`, or `master` tags - find
    a specific tag listed for the image you want, and use that.
    ```
 
@@ -206,6 +210,12 @@ jupyterhub:
 4. The `node_selector` makes sure that these user pods end up on
    the appropriate nodegroup we created earlier. Change the selector
    and the `mem_guarantee` if you are using a different kind of node
+5. `<github-org>:<team-name>` is only to be used if the hub is
+   using `GitHubOAuthenticator`, and restricts access to the GPU only
+   to members of that GitHub team. If `allowed_teams` is not used in
+   other config in the `profileList`, you may need to also explicitly
+   [enable some other config (`enable_auth_state` and `populate_teams_in_auth_state`)](howto:features:profile-restrict)
+   for this feature to work.
 
 Do a deployment with this config, and then we can test to make sure
 this works!

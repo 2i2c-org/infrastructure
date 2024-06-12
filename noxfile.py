@@ -26,13 +26,16 @@ def docs(session):
         session.posargs.pop(session.posargs.index("live"))
 
         # Add folders to ignore
+        # keep this in sync with Makefile
         AUTOBUILD_IGNORE_DIRS = [
             "_build",
             "tmp",
         ]
         # Add files to ignore
+        # keep this in sync with Makefile
         AUTOBUILD_IGNORE_FILES = [
-            "_static/*.json",
+            "*.json",
+            "*.csv",
         ]
 
         cmd = ["sphinx-autobuild"]

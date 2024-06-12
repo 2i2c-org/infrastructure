@@ -156,7 +156,7 @@ def daemonset_requests(
 
     To run this command for all clusters, `xargs` can be used like this:
 
-        ls config/clusters | xargs -I {} deployer generate resource-allocation daemonset-requests {}
+        deployer config get-clusters | xargs -I {} deployer generate resource-allocation daemonset-requests {}
     """
     file_path = HERE / "daemonset_requests.yaml"
     file_path.touch(exist_ok=True)

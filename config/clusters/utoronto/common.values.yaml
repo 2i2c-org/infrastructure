@@ -1,6 +1,7 @@
 nfs:
   enabled: true
   pv:
+    enabled: true
     # Recommended options from the Azure Portal UI for mounting the share
     mountOptions:
       - vers=4

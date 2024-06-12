@@ -26,8 +26,9 @@ local nodeAz = "us-west-2a";
 // can request a particular kind of node with a nodeSelector
 local notebookNodes = [
     { instanceType: "r5.xlarge" },
-    { instanceType: "r5.4xlarge" },
+    { instanceType: "r5.4xlarge" , nameSuffix : "b" },
     { instanceType: "r5.16xlarge" },
+    { instanceType: "c5.4xlarge"},
 ];
 local daskNodes = [
     // Node definitions for dask worker nodes. Config here is merged
@@ -50,7 +51,7 @@ local daskNodes = [
     metadata+: {
         name: "nasa-ghg-hub",
         region: clusterRegion,
-        version: '1.27',
+        version: "1.29",
     },
     availabilityZones: masterAzs,
     iam: {
@@ -79,7 +80,7 @@ local daskNodes = [
     nodeGroups: [
         ng + {
             namePrefix: 'core',
-            nameSuffix: 'a',
+            nameSuffix: 'b',
             nameIncludeInstanceType: false,
             availabilityZones: [nodeAz],
             ssh: {

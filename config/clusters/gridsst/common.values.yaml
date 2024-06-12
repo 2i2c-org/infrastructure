@@ -1,9 +1,8 @@
 basehub:
   nfs:
-    # FIXME: Enable after https://github.com/yuvipanda/prometheus-dirsize-exporter/pull/7 is used
-    dirsizeReporter:
-      enabled: false
+    enabled: true
     pv:
+      enabled: true
       # from https://docs.aws.amazon.com/efs/latest/ug/mounting-fs-nfs-mount-settings.html
       mountOptions:
         - rsize=1048576
