@@ -174,7 +174,7 @@ variable "tags" {
       managed_by : optional(string, "")
     }
   )
-  default     = { managed_by: "2i2c" }
+  default     = { managed_by : "2i2c" }
   description = <<-EOT
   Tags to apply to resources that we manage. The value is an object as we may
   wish to apply multiple tags. Current values are:

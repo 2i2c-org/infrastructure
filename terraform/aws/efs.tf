@@ -40,7 +40,7 @@ data "aws_security_group" "cluster_nodes_shared_security_group" {
 }
 
 resource "aws_efs_file_system" "homedirs" {
-  tags = merge(var.tags, {Name = "hub-homedirs"})
+  tags = merge(var.tags, { Name = "hub-homedirs" })
 
   # Transition files to a slower, cheaper backing medium 90 days
   # after they were last *accessed*. They will be transferred back to regular
