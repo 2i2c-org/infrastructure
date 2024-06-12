@@ -21,28 +21,28 @@ notebook_nodes = {
     max : 100,
     machine_type : "n2-highmem-4",
     # Per https://github.com/2i2c-org/infrastructure/issues/4213
-    disk_size_gb: 400,
+    disk_size_gb : 400,
   },
   "n2-highmem-16" : {
     min : 0,
     max : 100,
     machine_type : "n2-highmem-16",
     # Per https://github.com/2i2c-org/infrastructure/issues/4213
-    disk_size_gb: 400,
+    disk_size_gb : 400,
   },
   "n2-highmem-64" : {
     min : 0,
     max : 100,
     machine_type : "n2-highmem-64",
     # Per https://github.com/2i2c-org/infrastructure/issues/4213
-    disk_size_gb: 400,
+    disk_size_gb : 400,
   },
   "gpu-t4-highmem-4" : {
     min : 0,
     max : 20,
     machine_type : "n1-highmem-4",
     # Per https://github.com/2i2c-org/infrastructure/issues/4213
-    disk_size_gb: 400,
+    disk_size_gb : 400,
     gpu : {
       enabled : true,
       type : "nvidia-tesla-t4",
@@ -54,7 +54,7 @@ notebook_nodes = {
     max : 20,
     machine_type : "n1-highmem-16",
     # Per https://github.com/2i2c-org/infrastructure/issues/4213
-    disk_size_gb: 400,
+    disk_size_gb : 400,
     gpu : {
       enabled : true,
       type : "nvidia-tesla-t4",
