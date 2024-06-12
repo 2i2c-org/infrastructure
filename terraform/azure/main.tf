@@ -4,6 +4,11 @@ terraform {
   required_providers {
     azurerm = {
       # ref: https://registry.terraform.io/providers/hashicorp/azurerm/latest
+      #
+      # FIXME: In v4 of this module, we will lose the ability to taint the default
+      #        node pool. See comment in azurerm_kubernetes_cluster block and
+      #        deprecation warning in output
+      #
       source  = "hashicorp/azurerm"
       version = "~> 3.107"
     }
