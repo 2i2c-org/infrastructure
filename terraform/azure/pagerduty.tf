@@ -8,11 +8,6 @@
 *   https://2i2c-org.pagerduty.com/service-directory/?direction=asc&query=&team_ids=all
 *
 */
-data "sops_file" "pagerduty_service_integration_keys" {
-  # Read sops encrypted file containing integration key for pagerduty
-  source_file = "secret/enc-pagerduty-service-integration-keys.secret.yaml"
-}
-
 resource "azurerm_monitor_action_group" "alerts" {
   name                = "AlertsActionGroup" # Changing this forces a recreation
   resource_group_name = var.resourcegroup_name
