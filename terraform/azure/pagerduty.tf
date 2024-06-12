@@ -20,7 +20,8 @@ resource "azurerm_monitor_action_group" "alerts" {
 }
 
 resource "azurerm_monitor_metric_alert" "disk_space_full_alert" {
-  name                = "Used disk space greater than ${local.storage_threshold} GB on ${var.subscription_id}"
+  # Changing the name forces a recreation every time we apply
+  name                = "Used disk space approaching capacity on Azure Subscription ${var.subscription_id}"
   resource_group_name = var.resourcegroup_name
   scopes              = [azurerm_storage_account.homes.id]
   description         = "Action will be triggered when used disk space is greater than ${local.storage_threshold} GB."
