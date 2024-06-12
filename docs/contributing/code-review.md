@@ -19,9 +19,9 @@ in mind a lot of factors:
 However, when we merge a PR in this *infrastructure repository*, the
 factors are quite different:
 
-1. What change will this actually make to our running infrastructure? How
-   do I know it has done the thing I intended it to do?
-2. How do we mitigate the chance that we break something unintentionally?
+1. What change will this actually make to our running infrastructure?
+2. How do I know it has done the thing I intended it to do?
+3. How do we mitigate the chance that we break something unintentionally?
 
 This repository has **no downstream users**, which gives us a fair bit
 of flexibility in how we go about it (subject only to restrictions based
@@ -30,8 +30,8 @@ on [Right to Replicate](https://2i2c.org/right-to-replicate/)).
 
 ## Prime directive
 
-The following should be the prime directive under which we review PRs
-to this repository:
+The following should be the prime directive under which we approach
+making changes to this repository:
 
 > Better to always move forward in the direction of the iteration / team
 > goal, than to not.
@@ -39,13 +39,18 @@ to this repository:
 It's a bias towards action, with the goal of empowering team members
 to make progress, learn, break things (safely) and iterate as needed.
 
-## As a 2i2c engineer, when can I self merge without review?
+As a corollary, the primary role of **code review** is to **help engineers
+grow**, rather than to
 
-1. Is this PR in service of moving forward on a task that you picked up
-   from the Engineering Board?
-2. Do you know how to *verify* the effects of merging this PR?
-3. *If* this PR breaks something, do you feel comfortable debugging it or
+## Merging as a 2i2c engineer
+
+After you make your PR, ask yourself these three questions:
+
+1. *If* this PR breaks something, do you feel comfortable debugging it or
    reverting it to undo the change?
+2. Do you know how to *verify* the effects of merging this PR?
+3. Is this PR in service of moving forward on a task that you picked up
+   from the Engineering Board?
 
 If the answer to all these 3 questions are 'yes', you should go ahead
 and self merge.
@@ -55,8 +60,8 @@ to making a change to our infrastructure. We want all our engineers to
 feel comfortable making changes to our infrastructure themselves, so our
 eventual goal is to get to a very high percentage of PRs self merged!
 
-Let's now explore the cases when answers to any of these questions are no,
-in reverse order.
+Let's now explore the cases when answers to any of these questions are "no".
+
 
 ### I don't feel comfortable debugging this if it breaks
 
@@ -77,13 +82,13 @@ following loop:
 
 As a **team**, our goal is to find ways to empower you to feel more
 comfortable with things breaking, because you believe you can fix them
-when they *do* break. If things **never** break, we are doing ourselves
-and our users a disservice, as it probably means we are not moving
-fast enough.
-
+when they *do* break.
 <a title="Reedy, CC BY-SA 4.0 &lt;https://creativecommons.org/licenses/by-sa/4.0&gt;, via Wikimedia Commons" href="https://commons.wikimedia.org/wiki/File:Framed_%22I_BROKE_WIKIPEDIA..._THEN_I_FIXED_IT!%22_T-shirt.jpg"><img width="512" alt="Framed &quot;I BROKE WIKIPEDIA... THEN I FIXED IT!&quot; T-shirt" src="https://upload.wikimedia.org/wikipedia/commons/thumb/7/79/Framed_%22I_BROKE_WIKIPEDIA..._THEN_I_FIXED_IT%21%22_T-shirt.jpg/512px-Framed_%22I_BROKE_WIKIPEDIA..._THEN_I_FIXED_IT%21%22_T-shirt.jpg?20190318200628"></a>
 
+We don't have a shirt like this, but maybe someday we could :)
+
 ### I don't know how to verify if what I did worked
+
 
 Ask the community? I'm not sure what to say here
 
