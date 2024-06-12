@@ -167,3 +167,21 @@ variable "db_user_password_special_chars" {
   Set to True if you don't want special characters in generated user password
   EOT
 }
+
+variable "tags" {
+  type = object(
+    {
+      managed_by : optional(string, "")
+    }
+  )
+  default     = { managed_by: "2i2c" }
+  description = <<-EOT
+  Tags to apply to resources that we manage. The value is an object as we may
+  wish to apply multiple tags. Current values are:
+
+  1. managed_by: This tag will indicate who manages the deployed resource. By
+     default, this will be set to "2i2c". This helps communities who bring their
+     own billing account distinguish between resources 2i2c manages, and those
+     they deploy and manage themselves.
+  EOT
+}

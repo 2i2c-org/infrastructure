@@ -1,6 +1,7 @@
 resource "aws_s3_bucket" "user_buckets" {
   for_each = var.user_buckets
   bucket   = lower("${var.cluster_name}-${each.key}")
+  tags     = var.tags
 }
 
 resource "aws_s3_bucket_lifecycle_configuration" "user_bucket_expiry" {

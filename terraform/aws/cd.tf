@@ -1,6 +1,7 @@
 // Resources required for continuously deploying hubs to this cluster
 resource "aws_iam_user" "continuous_deployer" {
   name = "hub-continuous-deployer"
+  tags = var.tags
 }
 
 resource "aws_iam_access_key" "continuous_deployer" {
