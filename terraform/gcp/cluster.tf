@@ -282,7 +282,8 @@ resource "google_container_node_pool" "notebook" {
 
 
   node_config {
-    disk_type = each.value.disk_type
+    disk_type    = each.value.disk_type
+    disk_size_gb = each.value.disk_size_gb
 
     dynamic "guest_accelerator" {
       for_each = each.value.gpu.enabled ? [1] : []
@@ -383,7 +384,8 @@ resource "google_container_node_pool" "dask_worker" {
 
     preemptible = each.value.preemptible
 
-    disk_type = each.value.disk_type
+    disk_type    = each.value.disk_type
+    disk_size_gb = each.value.disk_size_gb
 
     workload_metadata_config {
       # Config Connector requires workload identity to be enabled (via GKE_METADATA_SERVER).
