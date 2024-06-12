@@ -30,6 +30,8 @@ resource "azurerm_monitor_metric_alert" "disk_space_full_alert" {
   scopes              = [azurerm_storage_account.homes.id]
   description         = "Action will be triggered when used disk space is greater than ${local.storage_threshold} GB."
 
+  window_size = "PT1H"  # Window to aggregate over: 1 Hour
+
   criteria {
     metric_namespace = "Microsoft.Storage/storageAccounts"
     metric_name      = "UsedCapacity"
