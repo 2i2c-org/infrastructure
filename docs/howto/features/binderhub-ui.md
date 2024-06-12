@@ -10,16 +10,22 @@ We call this a `binderhub-ui` style hub and the primary features offered would b
 
 ## Important architectural decisions made
 
-1. **Two separate domains, one for binderhub UI and one for the jupyterhub**
-1. **A logged out homepage, and a logged-in homepage**
+1. **Two separate domains, one for binderhub UI and one for JupyterHub**
+   Keeping them separate will help with having clean and correct sharing URLs without having them be based off the `hub/services/:name` path.
 
+1. **A logged out homepage, and a logged-in homepage**
+   See https://github.com/2i2c-org/infrastructure/issues/4168 for context on this decision
+
+## Initial hub setup
+
+Follow the steps in the [Initial Hub setup](hub-deployment-guide:runbooks:phase3.1) guide to get started on a very basic hub setup or copy-paste the configuration of a similar hub, then follow the steps below.
 
 ## Setup jupyterhub.custom config
 
 Under `jupyterhub.custom` there are a few configuration options that need to be set in the following way:
 
 1. disable the `jupyterhub-configurator`
-1. enable the `binderhubUI`, which will in turn allow us to convert JupyterHub container spawners into BinderHub spawners
+1. enable the `binderhubUI`, which will in turn enable the hub to use [BinderSpawnerMixin](https://github.com/jupyterhub/binderhub/blob/bd297b2c3f713cf46b0b22cfabc86d8140bbed41/helm-chart/binderhub/values.yaml#L115-L207) that allows converting JupyterHub container spawners into BinderHub spawners
 1. use a simpler landing page, i.e. the page where users land to login into the hub before actually seeing the binderhub UI. This is done by having the hub track the `no-homepage-subsections` branch of the default homepage repo
 1. disable `singleuserAdmin.extraVolumeMounts` (no persistent storage so these don't make sense)
 
@@ -98,6 +104,17 @@ Follow the guide at [](howto:features:imagebuilding-hub:image-registry) of the i
 ## Setup the `binderhub-service` chart
 
 We will use the [binderhub-service](https://github.com/2i2c-org/binderhub-service/) Helm chart to run BinderHub, the Python software, as a standalone service to build and push images with [repo2docker](https://github.com/jupyterhub/repo2docker), next to JupyterHub.
+
+We need to configure it so that it:
+
+1. setup an https reachable domain for the binder service via enabling and configuring `binderhub-service.ingress`
+1. configure BinderHub so that it's:
+  - not running in an API only mode
+  - it's configured for an authentication use-case
+  - it knows about where the hub is running
+  - knows the prefix to use for the images before it pushed them to the registry
+1. setup the the credentials needed to push the image to the container registry by the build pods
+1. setup some env variables that the pieces of the jupyterhub software that the binderhub software runs will need.
 
 1. Setup the `binderhub-service` config
 
