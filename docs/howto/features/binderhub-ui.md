@@ -121,8 +121,6 @@ We will use the [binderhub-service](https://github.com/2i2c-org/binderhub-servic
           badge_base_url: https://<binderhub-public-url>.2i2c.cloud
           auth_enabled: true
           enable_api_only_mode: false
-          # something like <region>-docker.pkg.dev/<project-name>/<repository-name> for grc.io
-          # or quay.io/org/repo/cluster-hub/ for quay.io
           image_prefix: <repository_path>
       buildPodsRegistryCredentials:
         # registry server address like https://quay.io or https://us-central1-docker.pkg.dev
@@ -140,8 +138,9 @@ We will use the [binderhub-service](https://github.com/2i2c-org/binderhub-servic
       extraEnv:
         - name: JUPYTERHUB_API_TOKEN
           valueFrom:
+            # Any JupyterHub Services api_tokens are exposed in this k8s Secret
             secretKeyRef:
-              name: '{{ include "jupyterhub.hub.fullname" . }}'
+              name: hub
               key: hub.services.binder.apiToken
         - name: JUPYTERHUB_CLIENT_ID
           value: "service-binder"
