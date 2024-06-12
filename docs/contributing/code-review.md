@@ -39,8 +39,9 @@ making changes to this repository:
 It's a bias towards action, with the goal of empowering team members
 to make progress, learn, break things (safely) and iterate as needed.
 
-As a corollary, the primary role of **code review** is to **help engineers
-grow**, rather than to
+As a corollary, the primary role of **code review** is to **help
+engineers grow** and build a coherent, high performance team that we can
+all trust in, rather than a specific focus on 'the right thing'.
 
 ## Merging as a 2i2c engineer
 
@@ -55,13 +56,9 @@ After you make your PR, ask yourself these three questions:
 If the answer to all these 3 questions are 'yes', you should go ahead
 and self merge.
 
-Merging a PR to this repository is (to a first approximation) equivalent,
-to making a change to our infrastructure. We want all our engineers to
-feel comfortable making changes to our infrastructure themselves, so our
-eventual goal is to get to a very high percentage of PRs self merged!
+If it breaks, you can revert your PR, make changes, and try again.
 
 Let's now explore the cases when answers to any of these questions are "no".
-
 
 ### I don't feel comfortable debugging this if it breaks
 
@@ -78,7 +75,10 @@ following loop:
    specific **knowledge** about the issue, you have the **skills** to
    acquire this knowledge and fix the issue.
 4. Boldly proceed into this uncertainity, and fix the issue, asking for
-   and receiving help from the team as needed.
+   and receiving help from the team as needed. See section below on
+   [how to ask for help](contributing:code-review:help).
+
+Note: You can also ask for help *before*.
 
 As a **team**, our goal is to find ways to empower you to feel more
 comfortable with things breaking, because you believe you can fix them
@@ -88,7 +88,6 @@ when they *do* break.
 We don't have a shirt like this, but maybe someday we could :)
 
 ### I don't know how to verify if what I did worked
-
 
 Ask the community? I'm not sure what to say here
 
@@ -101,9 +100,15 @@ This will make you uncomfortable, and that is ok. Sit in the discomfort!
 How to handle 'little' quality of life improvement PRs? Like
 https://github.com/2i2c-org/infrastructure/pull/4141?
 
+(contributing:code-review:help)=
 ## How to ask for help?
 
-1. Ask in `#engineering`.
+1. Ask yourself - 'what about this change makes me uncomfortable?'. The
+   primary goal of review / help should be to make you *more comfortable*
+   so you can make the change, rather than to 'perfect' the code / config. Communicate what makes you uncomfortable, and use that to
+   focus the review time.
+2. Spend a *maximum* of 20min trying to think things through yourself
+   before asking for help.
 
 
 ## Self-merging as a community partner
