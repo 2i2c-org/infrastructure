@@ -62,21 +62,30 @@ All of the following steps must be followed in order to consider phase 3.1 compl
 
 1. **Create the relevant `values.yaml` file/s under the appropriate cluster directory**
 
-   If the cluster will have multiple hubs, and chances are it will as there's a common 2i2c practice to always deploy a staging hub alongside a production one, then create two values.yaml files under the appropriate cluster directory.
+    ```bash
+      export CLUSTER_NAME=cluster-name;
+      export HUB_NAME=hub-name
+      ```
 
-   - One file will hold the common hubs configuration and one will hold the specific hub configuration.
+   - If the cluster has currently no hubs
 
-     ```bash
-     export CLUSTER_NAME=cluster-name;
-     export HUB_NAME=hub-name
-     ```
+      but will have more than one (and chances are it will as this is a common 2i2c practice to always deploy a staging hub alongside a production one), then create two values.yaml files under the appropriate cluster directory.
 
-   - Make sure you are in the root of the infrastructure repository and run:
+      - One file will hold the common hubs configuration and one will hold the specific hub configuration.
 
-     ```bash
-     touch ./config/clusters/$CLUSTER_NAME/$HUB_NAME.values.yaml;
-     touch ./config/clusters/$CLUSTER_NAME/common.values.yaml
-     ```
+      - Make sure you are in the root of the infrastructure repository and run:
+
+      ```bash
+      touch ./config/clusters/$CLUSTER_NAME/$HUB_NAME.values.yaml;
+      touch ./config/clusters/$CLUSTER_NAME/common.values.yaml
+      ```
+
+   - If you're adding a hub to an existing cluster with hubs on it
+      then create only one hub to hold the specific hub configuration via
+
+      ```bash
+      touch ./config/clusters/$CLUSTER_NAME/$HUB_NAME.values.yaml
+      ```
 
 1. **Determine the address of the storage server that a hub on this cluster should use to connect to it**
 
