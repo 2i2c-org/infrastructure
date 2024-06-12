@@ -8,6 +8,10 @@ basehub:
       tls:
         - hosts: [staging.hub.openveda.cloud]
           secretName: https-auto-tls
+    custom:
+      homepage:
+        gitRepoBranch: "staging"
+        gitRepoUrl: "https://github.com/NASA-IMPACT/veda-hub-homepage"
     hub:
       config:
         GitHubOAuthenticator:
