@@ -93,6 +93,7 @@ variable "notebook_nodes" {
     # as images being pulled takes up a lot of new node spin up time.
     # Faster disks provide faster image pulls!
     disk_type : optional(string, "pd-balanced"),
+    disk_size_gb : optional(number, 100),
     gpu : optional(
       object({
         enabled : optional(bool, false),
@@ -126,6 +127,7 @@ variable "dask_nodes" {
     # as images being pulled takes up a lot of new node spin up time.
     # Faster disks provide faster image pulls!
     disk_type : optional(string, "pd-balanced"),
+    disk_size_gb : optional(number, 100),
     gpu : optional(
       object({
         enabled : optional(bool, false),
