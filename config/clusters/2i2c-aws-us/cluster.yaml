@@ -60,3 +60,11 @@ hubs:
       - basehub-common.values.yaml
       - cosmicds.values.yaml
       - enc-cosmicds.secret.values.yaml
+  - name: isea
+    display_name: "UW ISEA"
+    domain: isea.aws.2i2c.cloud
+    helm_chart: basehub
+    helm_chart_values_files:
+      - basehub-common.values.yaml
+      - isea.values.yaml
+      - enc-isea.secret.values.yaml
