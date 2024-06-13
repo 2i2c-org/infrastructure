@@ -28,4 +28,9 @@ hub_cloud_permissions = {
       bucket_admin_access : ["scratch"],
     },
   },
+  "bhki" : {
+    "user-sa" : {
+      bucket_admin_access : ["persistent-bhki"],
+    },
+  },
 }
