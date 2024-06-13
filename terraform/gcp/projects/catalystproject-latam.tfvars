@@ -69,6 +69,14 @@ user_buckets = {
   "scratch-unam" : {
     "delete_after" : 7,
   },
+  // Created as part of "LEAP"-style method of data input/output as per:
+  // https://github.com/2i2c-org/infrastructure/issues/4214
+  "persistent-unam" : {
+    "delete_after" : null,
+    "extra_admin_members" : [
+      "group:persistent-unam-writers@2i2c.org"
+    ]
+  },
 }
 
 hub_cloud_permissions = {

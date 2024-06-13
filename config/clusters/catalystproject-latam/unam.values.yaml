@@ -38,6 +38,7 @@ jupyterhub:
       blockWithIptables: false
     extraEnv:
       SCRATCH_BUCKET: gs://latam-scratch-unam/$(JUPYTERHUB_USER)
+      PERSISTENT_BUCKET: gs://latam-persistent-unam/$(JUPYTERHUB_USER)
     profileList:
       - display_name: Jupyter SciPy Notebook
         description: Python environment
