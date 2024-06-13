@@ -1,3 +1,6 @@
+userServiceAccount:
+  annotations:
+    eks.amazonaws.com/role-arn: arn:aws:iam::495928966746:role/catalystproject-africa-bhki
 jupyterhub:
   ingress:
     hosts: [bhki.af.catalystproject.2i2c.cloud]
