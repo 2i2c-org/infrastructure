@@ -74,7 +74,7 @@ user_buckets = {
   "persistent-unam" : {
     "delete_after" : null,
     "extra_admin_members": [
-      "group:persistent-unam-writers@googlegroups.com"
+      "group:persistent-unam-writers@2i2c.org"
     ]
   },
 }
