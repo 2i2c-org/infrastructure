@@ -1,6 +1,5 @@
 jupyterhub:
   ingress:
-    enabled: false
     hosts: [hub.binder.pythia.2i2c.cloud]
     tls:
       - hosts: [hub.binder.pythia.2i2c.cloud]
@@ -13,7 +12,6 @@ jupyterhub:
     binderhubUI:
       enabled: true
     homepage:
-      gitRepoBranch: "no-homepage-subsections"
       templateVars:
         org:
           name: ""
@@ -24,7 +22,17 @@ jupyterhub:
       type: none
       extraVolumeMounts: []
     initContainers: []
+    # The profile list in the common values files needs to be emptied
+    # otherwise the launching will fail
+    profileList: []
   hub:
+    config:
+      BinderSpawnerMixin:
+        auth_enabled: false
+      JupyterHub:
+        authenticator_class: "null"
+    # In the common values files this is where fancy profiles gets enabled
+    extraConfig: {}
     redirectToServer: false
     services:
       binder: {}
@@ -34,7 +42,7 @@ jupyterhub:
           - binder
         scopes:
           - servers
-          - read:users # admin:users is required if authentication isn't enabled
+          - admin:users
       user:
         scopes:
           - self
@@ -56,6 +64,8 @@ binderhub-service:
     BinderHub:
       base_url: /
       badge_base_url: https://binder.pythia.2i2c.cloud
+      auth_enabled: false
+      hub_url: https://hub.binder.pythia.2i2c.cloud
       enable_api_only_mode: false
       banner_message: ""
       about_message: Binder for use with Project Pythia
@@ -66,3 +76,5 @@ binderhub-service:
         secretKeyRef:
           name: hub
           key: hub.services.binder.apiToken
+    - name: JUPYTERHUB_API_URL
+      value: "https://hub.binderhub-ui-demo.2i2c.cloud/hub/api"
