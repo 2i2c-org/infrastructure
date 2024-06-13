@@ -11,6 +11,9 @@ user_buckets = {
   "scratch" : {
     "delete_after" : 7
   },
+  "persistent-bhki" : {
+    "delete_after" : null
+  },
 }
 
 
