@@ -212,6 +212,14 @@ hubs:
       - common.values.yaml
       - pasadena.values.yaml
       - enc-pasadena.secret.values.yaml
+  - name: reedley
+    display_name: "Reedley College"
+    domain: reedley.cloudbank.2i2c.cloud
+    helm_chart: basehub
+    helm_chart_values_files:
+      - common.values.yaml
+      - reedley.values.yaml
+      - enc-reedley.secret.values.yaml
   - name: sjcc
     display_name: "San Jose Community College"
     domain: sjcc.cloudbank.2i2c.cloud

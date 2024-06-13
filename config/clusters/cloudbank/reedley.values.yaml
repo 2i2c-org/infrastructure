@@ -1,0 +1,56 @@
+jupyterhub:
+  ingress:
+    hosts: [reedley.cloudbank.2i2c.cloud]
+    tls:
+      - hosts: [reedley.cloudbank.2i2c.cloud]
+        secretName: https-auto-tls
+  singleuser:
+    memory:
+      # Increased to help deal with possible kernel restarts
+      # https://2i2c.freshdesk.com/a/tickets/567
+      guarantee: 384M
+      limit: 1.5G
+  custom:
+    2i2c:
+      add_staff_user_ids_of_type: google
+      add_staff_user_ids_to_admin_users: true
+    homepage:
+      templateVars:
+        designed_by:
+          name: 2i2c
+          url: https://2i2c.org
+        funded_by:
+          name: CloudBank
+          url: http://cloudbank.org/
+        operated_by:
+          name: CloudBank
+          url: http://cloudbank.org/
+        org:
+          logo_url: https://www.reedleycollege.edu/_files/images/headerlogo.png
+          name: Reedley College
+          url: https://www.reedleycollege.edu
+  hub:
+    config:
+      JupyterHub:
+        authenticator_class: cilogon
+      CILogonOAuthenticator:
+        oauth_callback_url: https://reedley.cloudbank.2i2c.cloud/hub/oauth_callback
+        allowed_idps:
+          https://idp.scccd.edu/idp/shibboleth:
+            default: true
+            username_derivation:
+              username_claim: "email"
+            allowed_domains:
+              - reedley.edu
+              - scccd.net
+              - my.scccd.edu
+          http://google.com/accounts/o8/id:
+            username_derivation:
+              username_claim: "email"
+      Authenticator:
+        admin_users:
+          - simon.sultana@reedley.edu
+          - ss063@scccd.net
+          - ericvd@berkeley.edu
+          - k_usovich@berkeley.edu
+          - sean.smorris@berkeley.edu
