@@ -73,7 +73,7 @@ user_buckets = {
   // https://github.com/2i2c-org/infrastructure/issues/4214
   "persistent-unam" : {
     "delete_after" : null,
-    "extra_admin_members": [
+    "extra_admin_members" : [
       "group:persistent-unam-writers@2i2c.org"
     ]
   },
