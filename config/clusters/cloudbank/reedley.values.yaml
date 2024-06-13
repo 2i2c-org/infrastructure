@@ -41,7 +41,7 @@ jupyterhub:
             username_derivation:
               username_claim: "email"
             allowed_domains:
-              - reedley.edu
+              - reedleycollege.edu
               - scccd.net
               - my.scccd.edu
           http://google.com/accounts/o8/id:
@@ -49,8 +49,8 @@ jupyterhub:
               username_claim: "email"
       Authenticator:
         admin_users:
-          - simon.sultana@reedley.edu
-          - ss063@scccd.net
+          - simon.sultana@reedleycollege.edu
+          - ss063@reedleycollege.edu
           - ericvd@berkeley.edu
           - k_usovich@berkeley.edu
           - sean.smorris@berkeley.edu
