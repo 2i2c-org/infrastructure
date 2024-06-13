@@ -81,7 +81,7 @@ user_buckets = {
 
 hub_cloud_permissions = {
   "unam" : {
-    bucket_admin_access : ["scratch-unam"],
+    bucket_admin_access : ["scratch-unam", "persistent-unam"],
     hub_namespace : "unam",
   },
 }
