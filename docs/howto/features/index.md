@@ -10,6 +10,7 @@ See the sections below for more details.
 allow-unlisted-profile-choice.md
 profile-list-restrict.md
 anonymized-usernames.md
+binderhub-ui.md
 buckets.md
 cloud-access.md
 cryptnono.md

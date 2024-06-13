@@ -1,3 +1,4 @@
+(howto:features:imagebuilding-hub)=
 # Make an imagebuilding hub
 
 We can support users who want to build, push and launch user images, from open source GitHub repositories, similar with what [mybinder.org](https://mybinder.org) does, but from within their JupyterHubs
@@ -69,6 +70,7 @@ jupyterhub:
                       image: quay.io/jupyter/scipy-notebook:2024-03-18
     ```
 
+(howto:features:imagebuilding-hub:image-registry)=
 ## Setup the image registry
 
 ### For GCP (via terraform)
