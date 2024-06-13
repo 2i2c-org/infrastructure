@@ -22,3 +22,6 @@ jupyterhub:
       Authenticator:
         admin_users:
           - LandiMi2
+  singleuser:
+    extraEnv:
+      PERSISTENT_BUCKET: s3://catalystproject-africa-persistent-bhki/$(JUPYTERHUB_USER)
