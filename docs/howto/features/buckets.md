@@ -113,7 +113,7 @@ to and read from it.
    ```bash
    curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
    unzip awscliv2.zip
-   export PATH=$(pwd)aws/dist/:$PATH
+   export PATH=$(pwd)/aws/dist/:$PATH
    ```
 
    ```{note}
