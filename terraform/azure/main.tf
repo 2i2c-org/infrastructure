@@ -7,7 +7,9 @@ terraform {
       #
       # FIXME: In v4 of this module, we will lose the ability to taint the default
       #        node pool. See comment in azurerm_kubernetes_cluster block and
-      #        deprecation warning in output
+      #        deprecation warning in output.
+      #
+      #        Tracked in: https://github.com/2i2c-org/infrastructure/issues/4233
       #
       source  = "hashicorp/azurerm"
       version = "~> 3.107"
