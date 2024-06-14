@@ -7,8 +7,6 @@ jupyterhub:
   custom:
     2i2c:
       add_staff_user_ids_to_admin_users: false
-    jupyterhubConfigurator:
-      enabled: false
     binderhubUI:
       enabled: true
     homepage:
@@ -76,5 +74,11 @@ binderhub-service:
         secretKeyRef:
           name: hub
           key: hub.services.binder.apiToken
+    - name: JUPYTERHUB_CLIENT_ID
+      value: "service-binder"
     - name: JUPYTERHUB_API_URL
-      value: "https://hub.binderhub-ui-demo.2i2c.cloud/hub/api"
+      value: "https://hub.binder.pythia.2i2c.cloud/hub/api"
+    # Without this, the redirect URL to /hub/api/... gets
+    # appended to binderhub's URL instead of the hub's
+    - name: JUPYTERHUB_BASE_URL
+      value: "https://hub.binder.pythia.2i2c.cloud/"
