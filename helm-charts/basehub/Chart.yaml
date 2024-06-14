@@ -15,6 +15,6 @@ dependencies:
     version: 3.3.7
     repository: https://jupyterhub.github.io/helm-chart/
   - name: binderhub-service
-    version: 0.1.0-0.dev.git.240.hdaf17cc
+    version: 0.1.0-0.dev.git.244.h1e88014
     repository: https://2i2c.org/binderhub-service/
     condition: binderhub-service.enabled
