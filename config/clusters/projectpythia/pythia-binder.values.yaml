@@ -23,6 +23,7 @@ jupyterhub:
     # The profile list in the common values files needs to be emptied
     # otherwise the launching will fail
     profileList: []
+    cmd: jupyter-lab
   hub:
     config:
       BinderSpawnerMixin:
@@ -59,6 +60,7 @@ binderhub-service:
     GitHubRepoProvider:
       allowed_specs:
         - ^ProjectPythia/.*$
+        - binder-examples/requirements
     BinderHub:
       base_url: /
       badge_base_url: https://binder.pythia.2i2c.cloud
