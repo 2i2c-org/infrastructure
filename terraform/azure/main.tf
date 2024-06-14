@@ -5,14 +5,14 @@ terraform {
     azurerm = {
       # ref: https://registry.terraform.io/providers/hashicorp/azurerm/latest
       #
-      # FIXME: v3 has been released and we are still at v2, see release notes:
-      #        https://github.com/hashicorp/terraform-provider-azurerm/releases/tag/v3.0.0
+      # FIXME: In v4 of this module, we will lose the ability to taint the default
+      #        node pool. See comment in azurerm_kubernetes_cluster block and
+      #        deprecation warning in output.
       #
-      #        We may need to remove old state and then then import it according to
-      #        https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/guides/3.0-upgrade-guide#migrating-to-new--renamed-resources.
+      #        Tracked in: https://github.com/2i2c-org/infrastructure/issues/4233
       #
       source  = "hashicorp/azurerm"
-      version = "~> 2.99"
+      version = "~> 3.107"
     }
 
     azuread = {
@@ -27,6 +27,12 @@ terraform {
       version = "~> 2.25"
     }
 
+    # Used to decrypt sops encrypted secrets containing PagerDuty keys
+    sops = {
+      # ref: https://registry.terraform.io/providers/carlpett/sops/latest
+      source  = "carlpett/sops"
+      version = "~> 0.7.2"
+    }
   }
   backend "gcs" {
     bucket = "two-eye-two-see-org-terraform-state"
@@ -79,6 +85,10 @@ resource "azurerm_kubernetes_cluster" "jupyterhub" {
   resource_group_name = azurerm_resource_group.jupyterhub.name
   kubernetes_version  = var.kubernetes_version
   dns_prefix          = "k8s"
+  # role_based_access_control_enabled was added as the default changed from false
+  # to true when migrating from v2 to v3 of the provider. Setting back to false
+  # prevented forced recreation of the cluster.
+  role_based_access_control_enabled = false
 
   lifecycle {
     # An additional safeguard against accidentally deleting the cluster.
@@ -142,6 +152,9 @@ resource "azurerm_kubernetes_cluster" "jupyterhub" {
       "hub.jupyter.org/node-purpose" = "core",
       "k8s.dask.org/node-purpose"    = "core"
     }, var.node_pools["core"][0].labels)
+    # node_taints field will be removed in v4.0 of the Azure Provider since the AKS API
+    # doesn't allow arbitrary node taints on the default node pool. A warning that
+    # this field will be deprecated is produced.
     node_taints = concat([], var.node_pools["core"][0].taints)
 
     orchestrator_version = coalesce(var.node_pools["core"][0].kubernetes_version, var.kubernetes_version)
@@ -219,8 +232,8 @@ locals {
       "registry" : "https://${azurerm_container_registry.container_registry.login_server}"
     }
   }
+  storage_threshold = var.storage_size * var.fileshare_alert_available_fraction
 }
-
 
 output "kubeconfig" {
   value     = azurerm_kubernetes_cluster.jupyterhub.kube_config_raw
