@@ -10,6 +10,9 @@ cluster_name = "projectpythia"
 
 cluster_nodes_location = "us-west-2a"
 
+# Remove this variable to tag all our resources with {"ManagedBy": "2i2c"}
+tags = {}
+
 # Tip: uncomment and fill the missing info in the lines below if you want
 #       to setup scratch buckets for the hubs on this cluster.
 #
