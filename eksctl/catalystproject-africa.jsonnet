@@ -25,7 +25,6 @@ local nodeAz = "af-south-1a";
 // A `node.kubernetes.io/instance-type label is added, so pods
 // can request a particular kind of node with a nodeSelector
 local notebookNodes = [
-    { instanceType: "r5.xlarge" }, // FIXME: Tainted, to be deleted when empty. Replaced with equivalent.
     { instanceType: "r5.xlarge", nameSuffix: "b", volumeSize: 400 },
     { instanceType: "r5.4xlarge", volumeSize: 400 },
     { instanceType: "r5.16xlarge", volumeSize: 400 },
