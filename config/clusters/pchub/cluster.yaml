@@ -1,6 +1,6 @@
 name: pchub
-provider: kubeconfig # azure based, cloud infra work requires a dedicated utoronto account
-# account: UTORid
+provider: kubeconfig # azure based
+# account: support@2i2c.org
 kubeconfig:
   file: enc-deployer-credentials.secret.yaml
 support:
