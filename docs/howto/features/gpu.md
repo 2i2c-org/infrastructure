@@ -115,6 +115,9 @@ AWS, and we can configure a node group there to provide us GPUs.
         tags+: {
             "k8s.io/cluster-autoscaler/node-template/resources/nvidia.com/gpu": "1"
         },
+        taints+: {
+            "nvidia.com/gpu": "present:NoSchedule"
+        },
         // Allow provisioning GPUs across all AZs, to prevent situation where all
         // GPUs in a single AZ are in use and no new nodes can be spawned
         availabilityZones: masterAzs,
@@ -123,7 +126,8 @@ AWS, and we can configure a node group there to provide us GPUs.
 
    `g4dn.xlarge` gives us 1 Nvidia T4 GPU and ~4 CPUs. The `tags` definition
    is necessary to let the autoscaler know that this nodegroup has
-   1 GPU per node. If you're using a different machine type with
+   1 GPU per node. The `taints` definition is required to prevent scheduling of
+   non-GPU pods onto the GPU nodes. If you're using a different machine type with
    more GPUs, adjust this definition accordingly.
 
    We use a prior variable, `masterAzs`, to allow for GPU nodes to spawn in all
