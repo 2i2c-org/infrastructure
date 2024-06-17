@@ -26,6 +26,18 @@ variable "resourcegroup_name" {
   EOT
 }
 
+variable "kubernetes_rbac_enabled" {
+  type = bool
+  default = true
+  description = <<-EOT
+  Enable RBAC enforcement on kubernetes clusters.
+
+  New clusters **must** have this set to true. Set to false
+  only for existing clusters so they are not recreated
+  unnecessarily.
+  EOT
+}
+
 variable "location" {
   type        = string
   default     = "westus2"

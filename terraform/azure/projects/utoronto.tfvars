@@ -19,6 +19,10 @@ ssh_pub_key  = "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQDQJ4h39UYNi1wybxAH+jCFkNK2
 # List available versions via: az aks get-versions --location westus2 -o table
 kubernetes_version = "1.28.3"
 
+
+# Ref https://github.com/2i2c-org/meta/issues/539
+kubernetes_rbac_enabled = false
+
 node_pools = {
   core : [
     {
