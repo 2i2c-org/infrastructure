@@ -19,10 +19,11 @@ def get_clusters_list():
 
 
 def get_cluster_provider(cluster):
-    custom_providers = {"utoronto": "azure"}
-    if cluster["name"] in custom_providers.keys():
-        return custom_providers[cluster["name"]]
-    return cluster["provider"]
+    provider = cluster["provider"]
+    if provider == "kubeconfig":
+        # In AKS, we use raw `kubeconfig` files
+        return "azure"
+    return provider
 
 
 def write_to_json_and_csv_files(info, file_name_prefix):

@@ -26,6 +26,18 @@ variable "resourcegroup_name" {
   EOT
 }
 
+variable "kubernetes_rbac_enabled" {
+  type        = bool
+  default     = true
+  description = <<-EOT
+  Enable RBAC enforcement on kubernetes clusters.
+
+  New clusters **must** have this set to true. Set to false
+  only for existing clusters so they are not recreated
+  unnecessarily.
+  EOT
+}
+
 variable "location" {
   type        = string
   default     = "westus2"
@@ -75,6 +87,21 @@ variable "ssh_pub_key" {
 
   The username is `hub-admin`, and you can use the private key
   associated with this public key to login.
+  EOT
+}
+
+variable "cluster_sku_tier" {
+  type        = string
+  default     = "Free"
+  description = <<-EOT
+  Support tier to be used for this cluster
+
+  https://learn.microsoft.com/en-us/azure/aks/free-standard-pricing-tiers
+  has more information.
+
+  Can be one of "Free" | "Standard" | "Premium".
+
+  Defaults to "Free", as that's mostly good enough for our use cases.
   EOT
 }
 
@@ -132,7 +159,9 @@ variable "create_service_principal" {
 variable "storage_size" {
   type        = number
   description = <<-EOT
-  Size (in GB) of the storage to provision
+  Size (in GB) of the storage to provision.
+
+  Minimum is 100
   EOT
 }
 

@@ -85,10 +85,11 @@ resource "azurerm_kubernetes_cluster" "jupyterhub" {
   resource_group_name = azurerm_resource_group.jupyterhub.name
   kubernetes_version  = var.kubernetes_version
   dns_prefix          = "k8s"
-  # role_based_access_control_enabled was added as the default changed from false
-  # to true when migrating from v2 to v3 of the provider. Setting back to false
-  # prevented forced recreation of the cluster.
-  role_based_access_control_enabled = false
+
+  role_based_access_control_enabled = var.kubernetes_rbac_enabled
+
+  # "Free" (the default) not supported in westeurope
+  sku_tier = var.cluster_sku_tier
 
   lifecycle {
     # An additional safeguard against accidentally deleting the cluster.

@@ -1,0 +1,11 @@
+basehub:
+  jupyterhub:
+    ingress:
+      hosts: [pchub.2i2c.cloud]
+      tls:
+        - hosts: [pchub.2i2c.cloud]
+          secretName: https-auto-tls
+    hub:
+      config:
+        GitHubOAuthenticator:
+          oauth_callback_url: https://pchub.2i2c.cloud/hub/oauth_callback
