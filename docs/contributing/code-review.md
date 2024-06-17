@@ -93,20 +93,29 @@ Ask the community? I'm not sure what to say here
 
 ### This was not something picked up from the engineering board
 
-Perils of unplanned work, and we should not do it.
+First, consider if you really *must* do this. The engineering board
+is a representation of the work the *team* has committed to doing. Ask
+yourself if you can instead be doing something else that can move this
+forward. Can this wait, and go through the refinement / sprint planning
+process?
+
+LINK TO THE DOCUMENT SARAH, GEORGIANA AND HAROLD ARE WORKING ON ABOUT
+TEAM COMMITMENTS.
+
+You should break this rule when it makes sense, but do not do so
+**casually**. This is an important mechanism by which we can build a
+team we can all trust in over
 
 This will make you uncomfortable, and that is ok. Sit in the discomfort!
-
-How to handle 'little' quality of life improvement PRs? Like
-https://github.com/2i2c-org/infrastructure/pull/4141?
 
 (contributing:code-review:help)=
 ## How to ask for help?
 
 1. Ask yourself - 'what about this change makes me uncomfortable?'. The
    primary goal of review / help should be to make you *more comfortable*
-   so you can make the change, rather than to 'perfect' the code / config. Communicate what makes you uncomfortable, and use that to
-   focus the review time.
+   so you can make the change, rather than to 'perfect' the code / config.
+   Communicate what makes you uncomfortable, and use that to focus the review
+   time.
 2. Spend a *maximum* of 20min trying to think things through yourself
    before asking for help.
 
