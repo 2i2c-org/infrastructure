@@ -27,8 +27,8 @@ variable "resourcegroup_name" {
 }
 
 variable "kubernetes_rbac_enabled" {
-  type = bool
-  default = true
+  type        = bool
+  default     = true
   description = <<-EOT
   Enable RBAC enforcement on kubernetes clusters.
 
