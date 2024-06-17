@@ -203,10 +203,6 @@ dask-gateway:
         instance_types = {
             "gke": ["n2-highmem-16"],
             "eks": ["r5.4xlarge"],
-            # 2i2c doesn't yet manage any dask-gateway installations on AKS, so
-            # this hasn't been configured yet and may cause an error - but that
-            # is good as we really should have this if we setup dask-gateway for
-            # AKS anyhow.
             "aks": ["Standard_E16_v4"],
         }
 
@@ -256,6 +252,7 @@ dask-gateway:
                 "16CPU, 120.7Gi": {"worker_cores": 15.4, "worker_cores_limit": 16, "worker_memory": "120.723G", "worker_memory_limit": "120.723G"},
             },
             "Standard_E16_v4": {
+                # Set up to be proportioate, so using all the RAM uses all the CPU too
                 ".25-1 CPU, 2GB RAM": {"worker_cores": 0.25, "worker_cores_limit": 1, "worker_memory": "2G", "worker_memory_limit": "2G"},
             },
         }
