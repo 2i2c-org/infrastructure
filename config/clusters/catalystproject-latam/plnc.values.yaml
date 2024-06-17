@@ -35,9 +35,9 @@ jupyterhub:
           image: quay.io/jupyter/scipy-notebook:2024-03-04
           default_url: /lab
         profile_options: &profile_options
-          resource_allocation: &resource_allocation
+          resource_allocation:
             display_name: Resource Allocation
-            choices:
+            choices: &resource_choices
               mem_0_7:
                 display_name: Up to 2G of RAM and 1 CPU
                 kubespawner_override:
@@ -70,16 +70,16 @@ jupyterhub:
           working_dir: /home/rstudio # Ensures container working dir is homedir
         profile_options: *profile_options
 
-      - display_name: Pangeo Tensorflow ML Notebook
+      - display_name: Tensorflow ML Notebook
         description: Dedicated node with a NVIDIA Tesla T4
         slug: "tensorflow"
         kubespawner_override:
-          image: "quay.io/pangeo/ml-notebook:2024.05.07"
+          image: "quay.io/jupyter/tensorflow-notebook:cuda-2024-06-17"
           default_url: /lab
         profile_options: &profile_gpu_options
           resource_allocation:
             display_name: Resource Allocation
-            choices:
+            choices: &resource_choices_gpu
               mem_26_0:
                 display_name: 1 GPU, 21G of RAM and 3 CPUs
                 default: true
@@ -106,11 +106,11 @@ jupyterhub:
                   extra_resource_limits:
                     nvidia.com/gpu: "4"
 
-      - display_name: Pangeo PyTorch ML Notebook
+      - display_name: PyTorch ML Notebook
         description: Dedicated node with a NVIDIA Tesla T4
         slug: "pytorch"
         kubespawner_override:
-          image: "quay.io/pangeo/pytorch-notebook:2024.05.07"
+          image: "quay.io/jupyter/pytorch-notebook:cuda12-2024-06-17"
           default_url: /lab
         profile_options: *profile_gpu_options
 
@@ -128,4 +128,7 @@ jupyterhub:
               kubespawner_override:
                 image: "{value}"
             choices: {}
-          resource_allocation: *resource_allocation
+          resource_allocation:
+            display_name: Resource Allocation
+            choices:
+              <<: [*resource_choices, *resource_choices_gpu]
