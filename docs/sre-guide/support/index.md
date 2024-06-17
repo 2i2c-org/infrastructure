@@ -15,4 +15,5 @@ credits
 grafana-account
 admin-users
 community-domains.md
+reset-hub
 ```
