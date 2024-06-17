@@ -18,7 +18,7 @@ We are going to "reset" the hub. This would do the following:
 
    {{ list of admin users from the config.yaml file for this hub}}
 
-This will also forcibly log and stop the server of any user running at that time.
+This will also forcibly log out and stop the server of any user running at that time.
 
 Let us know if this sounds ok, and we will proceed!
 ```
@@ -30,9 +30,6 @@ Once they respond affirmatively, you can begin.
 This clears up space and reduces their cloud costs.
 
 1. Get a shell with the home directories mounted
-
-   ``b
-1. Delete *all* home directories.
 
    ```bash
    deployer exec homes <cluster-name> <hub-name>
