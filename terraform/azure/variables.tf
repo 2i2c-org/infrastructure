@@ -79,8 +79,8 @@ variable "ssh_pub_key" {
 }
 
 variable "cluster_sku_tier" {
-  type = string
-  default = "Free"
+  type        = string
+  default     = "Free"
   description = <<-EOT
   Support tier to be used for this cluster
 
