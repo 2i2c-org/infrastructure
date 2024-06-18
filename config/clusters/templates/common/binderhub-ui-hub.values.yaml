@@ -1,0 +1,134 @@
+jupyterhub:
+  ingress:
+    hosts: [{{ jupyterhub_domain }}]
+    tls:
+      - hosts: [{{ jupyterhub_domain }}]
+        secretName: https-auto-tls
+  custom:
+    binderhubUI:
+      enabled: true
+    2i2c:
+{% if authenticator == "none" %}
+      add_staff_user_ids_to_admin_users: false
+{% else %}
+      add_staff_user_ids_to_admin_users: true
+      add_staff_user_ids_of_type: {{ authenticator }}
+    homepage:
+      gitRepoBranch: "no-homepage-subsections"
+      templateVars:
+        org:
+          name: {{ cluster_name }}
+          logo_url: {{ logo_url }}
+          url: {{ url }}
+        designed_by:
+          name: 2i2c
+          url: https://2i2c.org
+        operated_by:
+          name: 2i2c
+          url: https://2i2c.org
+        funded_by:
+          name: {{ funded_by_name }}
+          url: {{ funded_by_url }}
+{% endif %}
+    jupyterhubConfigurator:
+      enabled: false
+    singleuserAdmin:
+      extraVolumeMounts: []
+  singleuser:
+    storage:
+      type: none
+      extraVolumeMounts: []
+    initContainers: []
+    profileList: []
+{% if authenticator == "none" %}
+    cmd: jupyter-lab
+{% endif %}
+  hub:
+{% if authenticator == "none" %}
+    config:
+      BinderSpawnerMixin:
+        auth_enabled: false
+      JupyterHub:
+        authenticator_class: "null"
+{% else %}
+    config:
+      BinderSpawnerMixin:
+        auth_enabled: true
+      JupyterHub:
+        authenticator_class: {{ authenticator }}
+  {% if authenticator == "github" %}
+      GitHubOAuthenticator:
+        oauth_callback_url: https://{{ jupyterhub_domain }}/hub/oauth_callback
+  {% elif authenticator == "cilogon" %}
+      CILogonOAuthenticator:
+        oauth_callback_url: https://{{ jupyterhub_domain }}/hub/oauth_callback
+        allowed_idps:
+          http://google.com/accounts/o8/id:
+            username_derivation:
+              username_claim: "email"
+  {% endif %}
+{% endif %}
+    redirectToServer: false
+    services:
+      binder:
+      {% if authenticator != "none" %}
+        oauth_no_confirm: true
+        oauth_redirect_uri: https://{{ binderhub_domain }}/oauth_callback
+      {% else %} {}
+      {% endif %}
+    loadRoles:
+      binder:
+        services:
+          - binder
+        scopes:
+          - servers
+        {% if authenticator != "none" %}
+          - read:users # admin:users is required if authentication isn't enabled
+        {% else %}
+          - admin:users
+        {% endif %}
+      user:
+        scopes:
+          - self
+          # Admin users will by default have access:services, so this is only
+          # observed to be required for non-admin users.
+          - access:services!service=binder
+binderhub-service:
+  enabled: true
+  ingress:
+    enabled: true
+    hosts: [{{ binderhub_domain }}]
+    tls:
+      - hosts: [{{ binderhub_domain }}]
+        secretName: binder-https-auto-tls
+  config:
+    BinderHub:
+      base_url: /
+      hub_url: https://{{ jupyterhub_domain }}
+      badge_base_url: https://{{ binderhub_domain }}
+      {% if authenticator != "none" %}
+      auth_enabled: true
+      {% else %}
+      auth_enabled: false
+      {% endif %}
+      enable_api_only_mode: false
+      banner_message: {{ banner_message }}
+      about_message: {{ about_message }}
+  extraEnv:
+    - name: JUPYTERHUB_API_TOKEN
+      valueFrom:
+        secretKeyRef:
+          name: hub
+          key: hub.services.binder.apiToken
+    - name: JUPYTERHUB_CLIENT_ID
+      value: "service-binder"
+    - name: JUPYTERHUB_API_URL
+      value: "https://{{ jupyterhub_domain }}/hub/api"
+    # Without this, the redirect URL to /hub/api/... gets
+    # appended to binderhub's URL instead of the hub's
+    - name: JUPYTERHUB_BASE_URL
+      value: "https://{{ jupyterhub_domain }}/"
+    {% if authenticator != "none" %}
+    - name: JUPYTERHUB_OAUTH_CALLBACK_URL
+      value: "https://{{ binderhub_domain }}/oauth_callback"
+    {% endif %}
