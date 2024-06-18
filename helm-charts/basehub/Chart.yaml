@@ -18,3 +18,10 @@ dependencies:
     version: 0.1.0-0.dev.git.244.h1e88014
     repository: https://2i2c.org/binderhub-service/
     condition: binderhub-service.enabled
+    # If bumping the version of dask-gateway, please also bump the default version set
+    # in the deployer's CLI
+    # https://github.com/2i2c-org/infrastructure/blob/HEAD/deployer/deployer.py#L195
+  - name: dask-gateway
+    version: "2024.1.0"
+    repository: "https://helm.dask.org/"
+    condition: dask-gateway.enabled

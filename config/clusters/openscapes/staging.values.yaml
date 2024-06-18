@@ -1,8 +1,13 @@
 basehub:
+  dask-gateway:
+    enabled: true
   userServiceAccount:
     annotations:
       eks.amazonaws.com/role-arn: arn:aws:iam::783616723547:role/openscapeshub-staging
   jupyterhub:
+    custom:
+      daskGateway:
+        enabled: true
     ingress:
       hosts: [staging.openscapes.2i2c.cloud]
       tls:
@@ -12,6 +17,9 @@ basehub:
       extraEnv:
         SCRATCH_BUCKET: s3://openscapeshub-scratch-staging/$(JUPYTERHUB_USER)
         PERSISTENT_BUCKET: s3://openscapeshub-persistent-staging/$(JUPYTERHUB_USER)
+      cloudMetadata:
+        # FIXME: Not sure if this is absolutely necessary, but verify.
+        blockWithIptables: false
     hub:
       config:
         GitHubOAuthenticator:
