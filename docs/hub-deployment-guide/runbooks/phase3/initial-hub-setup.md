@@ -23,7 +23,7 @@ The file assets that should have been generated and included in the PR should be
 
 ```bash
 ➕ config/clusters/<new-cluster-name>
-  ├── common.values.yaml
+  ├── common.values.yaml (!if it doesn't already exist)
   ├── <new-hub-name>.values.yaml
   └── enc-<new-hub-name>.secret.values.yaml
 ```
@@ -94,10 +94,25 @@ All of the following steps must be followed in order to consider phase 3.1 compl
    You will be asked to input all the information needed for the command to run successfully. Follow the instructions on the screen and using the information provided to you, fill in all the fields.
 
    1. **If you're adding a hub to an existing cluster with hubs on it**
+
       Then run the deployer command below to generate config for the specific hub configuration:
-      ```bash
-      deployer generate hub-asset main-values-file
-      ```
+
+         - **If this will be a regular JupyterHub then:**
+
+            - **Run:**
+               ```bash
+               deployer generate hub-asset main-values-file
+               ```
+            - **Setup the relevant Authentication Provider with relevant credentials**
+
+               See [](enable-auth-provider) for steps on how to achieve this.
+
+         - **If this will be a binderhub style hub, then run:**
+            ```bash
+            deployer generate hub-asset binderhub-ui-values-file
+            ```
+
+            And continue following the guide at [](features:binderhub-ui-hub).
 
    1. **If the cluster has currently no hubs**
 
@@ -140,10 +155,6 @@ All of the following steps must be followed in order to consider phase 3.1 compl
    You can also look at the entries for similar hubs under the same cluster folder, copy / paste one of them, and make modifications as needed for this specific hub.
    For example, see the hubs configuration in [the 2i2c Google Cloud cluster configuration directory](https://github.com/2i2c-org/infrastructure/tree/HEAD/config/clusters/2i2c).
    ```
-
-1. **Setup the relevant Authentication Provider with relevant credentials**
-
-   See [](enable-auth-provider) for steps on how to achieve this.
 
 1. **Then reference these files in a new entry under the `hubs` key in the cluster's `cluster.yaml` file**
 
