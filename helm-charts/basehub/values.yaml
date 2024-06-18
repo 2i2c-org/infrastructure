@@ -73,7 +73,6 @@ staticWebsite:
       id: 0
       privateKey: ""
 
-
 dask-gateway:
   enabled: false # Enabling dask-gateway will install Dask Gateway as a dependency.
   # Further Dask Gateway configuration goes here
