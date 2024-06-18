@@ -16,6 +16,13 @@ jupyterhub:
       templateVars:
         org:
           name: Catalyst Project, LatAm - UNAM
+    singleuserAdmin:
+      extraVolumeMounts:
+        # /allusers is an extra mount point for admins to access to all users'
+        # home dirs
+        - name: home
+          mountPath: /home/jovyan/allusers
+          readOnly: false
   hub:
     config:
       JupyterHub:
