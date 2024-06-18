@@ -19,6 +19,7 @@ resource "aws_security_group" "db" {
   name        = "db"
   description = "Allow traffic into the db"
   vpc_id      = data.aws_eks_cluster.cluster.vpc_config[0]["vpc_id"]
+  tags        = var.tags
 
   ingress {
     to_port          = 3306
@@ -45,6 +46,7 @@ resource "aws_db_subnet_group" "db" {
 
   subnet_ids = data.aws_subnets.cluster_subnets[0].ids
 
+  tags = var.tags
 }
 
 resource "aws_db_instance" "db" {
@@ -65,12 +67,15 @@ resource "aws_db_instance" "db" {
   apply_immediately      = true
   availability_zone      = var.cluster_nodes_location
   parameter_group_name   = aws_db_parameter_group.db[0].name
+
+  tags = var.tags
 }
 
 resource "aws_db_parameter_group" "db" {
   count  = var.db_enabled ? 1 : 0
   name   = var.db_instance_identifier
   family = "${var.db_engine}${var.db_engine_version}"
+  tags   = var.tags
 
   dynamic "parameter" {
     for_each = var.db_params

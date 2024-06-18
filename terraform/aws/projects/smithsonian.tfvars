@@ -2,6 +2,9 @@ region                 = "us-east-2"
 cluster_name           = "smithsonian"
 cluster_nodes_location = "us-east-2b"
 
+# Remove this variable to tag all our resources with {"ManagedBy": "2i2c"}
+tags = {}
+
 user_buckets = {
   "scratch-staging" : {
     "delete_after" : 7

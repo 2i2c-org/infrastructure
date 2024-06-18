@@ -167,3 +167,22 @@ variable "db_user_password_special_chars" {
   Set to True if you don't want special characters in generated user password
   EOT
 }
+
+variable "tags" {
+  type = object(
+    {
+      ManagedBy : optional(string, "")
+    }
+  )
+  default     = { ManagedBy : "2i2c" }
+  description = <<-EOT
+  Tags to apply to resources that we manage. The value is an object as we may
+  wish to apply multiple tags. We use CamelCase for tag names to match AWS's
+  tagging style. Current tags are:
+
+  1. ManagedBy: This tag will indicate who manages the deployed resource. By
+     default, this will be set to "2i2c". This helps communities who bring their
+     own billing account distinguish between resources 2i2c manages, and those
+     they deploy and manage themselves.
+  EOT
+}

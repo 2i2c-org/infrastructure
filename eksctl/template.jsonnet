@@ -111,6 +111,9 @@ local daskNodes = [];
                 "hub.jupyter.org/node-purpose": "core",
                 "k8s.dask.org/node-purpose": "core"
             },
+            tags+: {
+                "ManagedBy": "2i2c
+            },
         },
     ] + [
         ng + {
@@ -125,6 +128,9 @@ local daskNodes = [];
             labels+: {
                 "hub.jupyter.org/node-purpose": "user",
                 "k8s.dask.org/node-purpose": "scheduler"
+            },
+            tags+: {
+                "ManagedBy": "2i2c
             },
             taints+: {
                 "hub.jupyter.org_dedicated": "user:NoSchedule",
@@ -143,6 +149,9 @@ local daskNodes = [];
             },
             labels+: {
                 "k8s.dask.org/node-purpose": "worker"
+            },
+            tags+: {
+                "ManagedBy": "2i2c
             },
             taints+: {
                 "k8s.dask.org_dedicated" : "worker:NoSchedule",
