@@ -67,7 +67,14 @@ All of the following steps must be followed in order to consider phase 3.1 compl
       export HUB_NAME=hub-name
       ```
 
-   - If the cluster has currently no hubs
+   1. **If you're adding a hub to an existing cluster with hubs on it**
+      then create only one file to hold the specific hub configuration via
+
+      ```bash
+      touch ./config/clusters/$CLUSTER_NAME/$HUB_NAME.values.yaml
+      ```
+
+   1. **If the cluster has currently no hubs**
 
       but will have more than one (and chances are it will as this is a common 2i2c practice to always deploy a staging hub alongside a production one), then create two values.yaml files under the appropriate cluster directory.
 
@@ -80,57 +87,67 @@ All of the following steps must be followed in order to consider phase 3.1 compl
       touch ./config/clusters/$CLUSTER_NAME/common.values.yaml
       ```
 
-   - If you're adding a hub to an existing cluster with hubs on it
-      then create only one hub to hold the specific hub configuration via
-
-      ```bash
-      touch ./config/clusters/$CLUSTER_NAME/$HUB_NAME.values.yaml
-      ```
-
-1. **Determine the address of the storage server that a hub on this cluster should use to connect to it**
-
-    `````{tab-set}
-    ````{tab-item} AWS
-    :sync: aws-key
-    Get the address of the EFS server via terraform and store it as it will be required in a later step.
-
-    Make sure you are in the right terraform directory, i.e. `terraform/projects/aws` and the right terraform workspace by running `terraform workspace show`.
-
-    ```bash
-    terraform output nfs_server_dns
-    ```
-    ````
-
-    ````{tab-item} Google Cloud
-    :sync: gcp-key
-    Get the address of the Google FileStore IP from the UI and store it as it will be required in a later step.
-    ````
-
-    ````{tab-item} Azure
-    :sync: azure-key
-    N/A
-    ````
-    `````
-
 1. **Run the deployer to generate a sample basic hub configuration**
 
    The easiest way to add new configuration is to use the deployer to generate an initial sample config.
 
    You will be asked to input all the information needed for the command to run successfully. Follow the instructions on the screen and using the information provided to you, fill in all the fields.
 
-   - **Run the deployer command below to generate config for the specific hub configuration:**
-     ```bash
-     deployer generate hub-asset main-values-file
-     ```
+   1. **If you're adding a hub to an existing cluster with hubs on it**
 
-   - **Run the deployer command below to generate config for the common hubs configuration, passing the admin users one by one:**
-     ```bash
-     deployer generate hub-asset common-values-file --admin-users admin1 --admin-users admin2
-     ```
+      Then run the deployer command below to generate config for the specific hub configuration:
 
-     ```{warning}
-     If the admin users list is not passed independently as arguments and is instead left to be passed via de prompt with all the other args, then the following error is raised no matter the value passed: `Error: Value must be an iterable.`.
-     ```
+         - **If this will be a regular JupyterHub then:**
+
+            - **Run:**
+               ```bash
+               deployer generate hub-asset main-values-file
+               ```
+            - **Setup the relevant Authentication Provider with relevant credentials**
+
+               See [](enable-auth-provider) for steps on how to achieve this.
+
+         - **If this will be a binderhub style hub, then run:**
+            ```bash
+            deployer generate hub-asset binderhub-ui-values-file
+            ```
+
+            And continue following the guide at [](features:binderhub-ui-hub).
+
+   1. **If the cluster has currently no hubs**
+
+      1. **Determine the address of the storage server that a hub on this cluster should use to connect to it**
+
+      `````{tab-set}
+      ````{tab-item} AWS
+      :sync: aws-key
+      Get the address of the EFS server via terraform and store it as it will be required in a later step.
+
+      Make sure you are in the right terraform directory, i.e. `terraform/projects/aws` and the right terraform workspace by running `terraform workspace show`.
+
+      ```bash
+      terraform output nfs_server_dns
+      ```
+      ````
+
+      ````{tab-item} Google Cloud
+      :sync: gcp-key
+      Get the address of the Google FileStore IP from the UI and store it as it will be required in a later step.
+      ````
+
+      ````{tab-item} Azure
+      :sync: azure-key
+      N/A
+      ````
+      `````
+      1. **Run the deployer command below to generate config for the common hubs configuration, passing the admin users one by one:**
+      ```bash
+      deployer generate hub-asset common-values-file --admin-users admin1 --admin-users admin2
+      ```
+
+      ```{warning}
+      If the admin users list is not passed independently as arguments and is instead left to be passed via de prompt with all the other args, then the following error is raised no matter the value passed: `Error: Value must be an iterable.`.
+      ```
 
    ```{tip}
    Each `*.values.yaml` file is a Helm chart configuration file (`basehub`, or `daskhub`), and you can also configure their chart dependencies (`jupyterhub`, `dask-gateway`, etc).
@@ -138,10 +155,6 @@ All of the following steps must be followed in order to consider phase 3.1 compl
    You can also look at the entries for similar hubs under the same cluster folder, copy / paste one of them, and make modifications as needed for this specific hub.
    For example, see the hubs configuration in [the 2i2c Google Cloud cluster configuration directory](https://github.com/2i2c-org/infrastructure/tree/HEAD/config/clusters/2i2c).
    ```
-
-1. **Setup the relevant Authentication Provider with relevant credentials**
-
-   See [](enable-auth-provider) for steps on how to achieve this.
 
 1. **Then reference these files in a new entry under the `hubs` key in the cluster's `cluster.yaml` file**
 
