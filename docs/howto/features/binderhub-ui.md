@@ -207,7 +207,7 @@ jupyterhub:
           - binder
         scopes:
           - servers
-          - read:users # admin:users is required if authentication isn't enabled
+          - read:users
       # The role user allows access to the user’s own resources and to access
       # only the binder service
       user:
@@ -228,6 +228,106 @@ jupyterhub:
     config:
       BinderSpawnerMixin:
         auth_enabled: true
+```
+
+### II. NO hub authentication specific configuration
+
+#### 1. Check that the NullAuthenticator is used
+
+This will disable the hub login page and allow binderhub to generate random usernames for user servers.
+
+This also means that any configuration of the homepage (`gitRepoBranch` or `templateVars`) will just be ignored.
+
+
+```yaml
+jupyterhub:
+   hub:
+    config:
+      JupyterHub:
+        authenticator_class: "null"
+```
+
+#### 2. Check admins are disabled
+No authentication, so no admins:
+
+```yaml
+jupyterhub:
+  custom:
+    2i2c:
+      add_staff_user_ids_to_admin_users: false
+```
+
+#### 3. Check the binder hub service
+
+Setup `binder` as a jupyterhub externally managed service.
+
+```yaml
+jupyterhub:
+  hub:
+    services:
+      binder: {}
+```
+
+#### 4. Check the roles
+Setup a `binder` and a `user` role and make sure the correct permissions are being assigned to this new service but also to the users so that they can access the service.
+
+```yaml
+jupyterhub:
+  hub:
+    loadRoles:
+      # The role binder allows service binder to start and stop servers
+      # and read (but not modify) any user’s model
+      binder:
+        services:
+          - binder
+        scopes:
+          - servers
+          - admin:users
+      # The role user allows access to the user’s own resources and to access
+      # only the binder service
+      user:
+        scopes:
+          - self
+          # Admin users will by default have access:services, so this is only
+          # observed to be required for non-admin users.
+          - access:services!service=binder
+```
+
+#### 5. Make sure servers aren't spawned just for authenticated hub users
+
+Disable authenticated binderhub spawner setup via `hub.config.BinderSpawnerMixin.auth_enabled`
+
+```yaml
+jupyterhub:
+  hub:
+    config:
+      BinderSpawnerMixin:
+        auth_enabled: false
+```
+
+#### 6. Check the singleuser cmd that is used
+
+If the binderhub will be unauthenticated, then we need to replace `jupyterhub.singleuser.jupyterhub-singleuser` with `jupyterhub.singleuser.jupyter-lab`.
+
+Otherwise the requests to authorize the user server will get redirected to `/hub/login` which always returns a `403` HTTP response code when using the null authenticator.
+
+```yaml
+jupyterhub:
+  singleuser:
+    cmd: jupyter-lab
+```
+
+#### 7. Restrict the repositories that can be built
+
+When deploying an unauthenticated binderhub, it's useful to restrict what repositories can be built to avoid abuse. This can be achieved by setting 
+
+```yaml
+binderhub-service:
+  config:
+    GitHubRepoProvider:
+      allowed_specs:
+        - <some regex>
+        - <another regex>
 ```
 
 ## Manually handle registry creation and login
