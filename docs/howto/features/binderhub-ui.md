@@ -33,11 +33,12 @@ Follow the checklist below before committing the hub values file to the infrastr
 
 The following configuration applies to both authenticated and not-authenticated binderhubs.
 
-#### 1. Clear some of the inherited configuration
+#### 1. Check that some of the inherited configuration is emptied
 
 Some of the configuration that gets inherited either from the `basehub` defaults or from the cluster's common value file (if that exists) needs to be clear out as not relevant for a binderhub style hub.
 
 - disable `jupyterhub.custom.jupyterhub-configurator`
+
     ```yaml
     jupyterhub:
       custom:
@@ -45,6 +46,7 @@ Some of the configuration that gets inherited either from the `basehub` defaults
           enabled: false
     ```
 - disable `jupyterhub.custom.singleuserAdmin.extraVolumeMounts` (no persistent storage so these don't make sense)
+
     ```yaml
     jupyterhub:
       custom:
@@ -52,6 +54,7 @@ Some of the configuration that gets inherited either from the `basehub` defaults
           extraVolumeMounts: []
     ```
 - on the singleuser server, disable storage and init containers and profile lists
+
     There will be no persistent storage, so disable it. Because of this `singleuser.extraVolumeMounts` and `singleuser.initContainers` should also be emptied.
 
     Also make sure that the profileList is disabled in case it gets set in the common values file, as keeping it will make binderhub fail to launch a server.
@@ -65,7 +68,8 @@ Some of the configuration that gets inherited either from the `basehub` defaults
         initContainers: []
         profileList: []
     ```
-#### 2. Setup jupyterhub and binderhub domains
+#### 2. Check jupyterhub and binderhub domains setup
+
 Having separate domains for both jupyterhub and binderhub will help with having clean and correct sharing URLs without having them be based off the `hub/services/:name` path.
 
 So make sure ingress is setup correctly for both jupyterhub and binderhub and **make sure that ingress.tls.secretName differs** as they will be in the same namespace and naming them the same will fail the setup of the other one.
@@ -90,7 +94,7 @@ binderhub-service:
         secretName: binder-https-auto-tls
 ```
 
-#### 3. Enable the binderhubUI custom configuration
+#### 3. Check that binderhubUI is enabled
 
 Enable `jupyterhub.custom.binderhubUI` which will in turn enable the hub to use [BinderSpawnerMixin](https://github.com/jupyterhub/binderhub/blob/bd297b2c3f713cf46b0b22cfabc86d8140bbed41/helm-chart/binderhub/values.yaml#L115-L207) that allows converting JupyterHub container spawners into BinderHub spawners
 
@@ -101,7 +105,7 @@ jupyterhub:
       enabled: false
 ```
 
-#### 4. Enable the binderhub-service chart
+#### 4. Check that the binderhub-service chart is enabled
 
 We will use the [binderhub-service](https://github.com/2i2c-org/binderhub-service/) Helm chart to run BinderHub, the Python software, as a standalone service to build and push images with [repo2docker](https://github.com/jupyterhub/repo2docker), next to JupyterHub so we need to enable it.
 
@@ -110,17 +114,12 @@ binderhub-service:
   enabled: true
 ```
 
-#### 4. Setup the image registry
-
-Follow the guide at [](howto:features:imagebuilding-hub:image-registry) of the imagebuilding hub.
-
-#### 5. Configure BinderHub
+#### 5. Check that BinderHub is configured correctly
 
 We need to configure BinderHub so that:
 
 - it's not running in an API only mode
 - it knows about where the hub is running
-- knows the prefix to use for the images before it pushed them to the registry
 
 ```yaml
 binderhub-service:
@@ -130,46 +129,9 @@ binderhub-service:
       hub_url: https://<jupyterhub-public-url>.2i2c.cloud
       badge_base_url: https://<binderhub-public-url>.2i2c.cloud
       enable_api_only_mode: false
-      image_prefix: <repository_path>
 ```
 
-#### 6. Setup the the credentials needed to push the image to the container registry by the build pods
-
-```yaml
-binderhub-service:
-  buildPodsRegistryCredentials:
-    # registry server address like https://quay.io or https://us-central1-docker.pkg.dev
-    server: <server_address>
-    # robot account namer or "_json_key" if using grc.io
-    username: <account_name>
-```
-
-#### 7. Sops-encrypt and store the password for accessing the image registry, in the `enc-<hub>.secret.values.yaml` file.
-
-You should have the password for accessing the image registry from a previous step.
-
-```yaml
-binderhub-service:
-  buildPodsRegistryCredentials:
-    password: <password>
-```
-
-#### 8. If pushing to quay.io registry, also setup the credentials for image pulling
-
-When pushing to the quay registry, the images are pushed as `private` by default (even if the plan doesn't allow it).
-
-A quick workaround for this, is to use the robot's account credentials to also set [`imagePullSecret`](https://z2jh.jupyter.org/en/stable/resources/reference.html#imagepullsecret) in the `enc-<hub>.secret.values.yaml`:
-
-```yaml
-jupyterhub:
-  imagePullSecret:
-      create: true
-      registry: quay.io
-      username: <robot_account_name>
-      password: <password>
-```
-
-#### 7. Setup env variables for BinderHub software to use
+#### 6. Check the binderhub extra env variables
 
 These are needed by the jupyterhub software bits that the binderhub software uses.
 
@@ -194,7 +156,8 @@ binderhub-service:
 
 ### II. Authenticated hub specific configuration
 
-#### 1. Use a simpler landing page
+#### 1. Check that the simpler landing page is used
+
 If accessing binderhub will require users to login first, then the login page, i.e. the page where users land to login into the hub before actually seeing the binderhub UI must be updated to use a simpler version of it.
 
 This is done by having the hub track the `no-homepage-subsections` branch of the default homepage repo
@@ -206,7 +169,7 @@ jupyterhub:
       gitRepoBranch: "no-homepage-subsections"
 ```
 
-#### 2. Don't redirect to singleuser server after login
+#### 2. Make sure we don't redirect to singleuser server after login
 After the user logs in, don't redirect it to it's server as we want them to go to the binderhub launch page to configure their image before launching it.
 
 ```yaml
@@ -215,7 +178,7 @@ jupyterhub:
     redirectToServer: false
 ```
 
-#### 3. Setup binder as a hub service
+#### 3. Check the binder hub service
 
 Setup `binder` as a jupyterhub externally managed service making sure that redirection happens correctly after authentication with the OAuth provider and that users are not presented with extra prompts to login.
 
@@ -230,7 +193,7 @@ jupyterhub:
         oauth_redirect_uri: https://<binderhub-public-url>/oauth_callback
 ```
 
-#### 4. Setup roles
+#### 4. Check the roles
 Setup a `binder` and a `user` role and make sure the correct permissions are being assigned to this new service but also to the users so that they can access the service.
 
 ```yaml
@@ -265,4 +228,61 @@ jupyterhub:
     config:
       BinderSpawnerMixin:
         auth_enabled: true
+```
+
+## Manually handle registry creation and login
+
+Configuration about image registry is not *yet* being generated by the deployer, so the steps below need to be followed in order to set it up.
+
+Following the steps below will require adding additional configuration to the sample file generated by the deployer.
+
+#### 1. Setup the image registry
+
+Follow the guide at [](howto:features:imagebuilding-hub:image-registry) of the imagebuilding hub.
+
+#### 2. Configure BinderHub image_prefix
+
+We need to configure BinderHub so that it knows under which prefix to push the images to the registry.
+
+```yaml
+binderhub-service:
+  config:
+    BinderHub:
+      image_prefix: <repository_path>
+```
+
+#### 2. Setup the the credentials needed to push the image to the container registry by the build pods
+
+```yaml
+binderhub-service:
+  buildPodsRegistryCredentials:
+    # registry server address like https://quay.io or https://us-central1-docker.pkg.dev
+    server: <server_address>
+    # robot account namer or "_json_key" if using grc.io
+    username: <account_name>
+```
+
+#### 3. Sops-encrypt and store the password for accessing the image registry, in the `enc-<hub>.secret.values.yaml` file.
+
+You should have the password for accessing the image registry from a previous step.
+
+```yaml
+binderhub-service:
+  buildPodsRegistryCredentials:
+    password: <password>
+```
+
+#### 4. If pushing to quay.io registry, also setup the credentials for image pulling
+
+When pushing to the quay registry, the images are pushed as `private` by default (even if the plan doesn't allow it).
+
+A quick workaround for this, is to use the robot's account credentials to also set [`imagePullSecret`](https://z2jh.jupyter.org/en/stable/resources/reference.html#imagepullsecret) in the `enc-<hub>.secret.values.yaml`:
+
+```yaml
+jupyterhub:
+  imagePullSecret:
+      create: true
+      registry: quay.io
+      username: <robot_account_name>
+      password: <password>
 ```
