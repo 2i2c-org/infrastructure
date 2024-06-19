@@ -28,7 +28,9 @@ escapism==1.*
 
 # Used for GCP billing management
 pandas
-pandera==0.19.2
+# FIXME: Unpin when https://github.com/unionai-oss/pandera/issues/1656 gets solved
+numpy<2
+pandera
 prometheus_pandas
 pytest-mock
 google-cloud-bigquery[pandas]==3.*
