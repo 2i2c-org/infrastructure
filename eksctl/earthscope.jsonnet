@@ -25,9 +25,27 @@ local nodeAz = "us-east-2a";
 // A `node.kubernetes.io/instance-type label is added, so pods
 // can request a particular kind of node with a nodeSelector
 local notebookNodes = [
-    { instanceType: "r5.xlarge" },
-    { instanceType: "r5.4xlarge" },
-    { instanceType: "r5.16xlarge" },
+    { 
+        instanceType: "r5.xlarge",
+        tags+: {
+            "earthscope:application:name": "geolab",
+            "earthscope:application:owner": "research-onramp-to-the-cloud"
+        },
+    },
+    { 
+        instanceType: "r5.4xlarge",
+        tags+: {
+            "earthscope:application:name": "geolab",
+            "earthscope:application:owner": "research-onramp-to-the-cloud"
+        },
+    },
+    { 
+        instanceType: "r5.16xlarge",
+        tags+: {
+            "earthscope:application:name": "geolab",
+            "earthscope:application:owner": "research-onramp-to-the-cloud"
+        },
+    },
 ];
 local daskNodes = [
     // Node definitions for dask worker nodes. Config here is merged
@@ -40,7 +58,13 @@ local daskNodes = [
     // A not yet fully established policy is being developed about using a single
     // node pool, see https://github.com/2i2c-org/infrastructure/issues/2687.
     //
-    { instancesDistribution+: { instanceTypes: ["r5.4xlarge"] }},
+    { 
+        instancesDistribution+: { instanceTypes: ["r5.4xlarge"] },
+        tags+: {
+            "earthscope:application:name": "geolab",
+            "earthscope:application:owner": "research-onramp-to-the-cloud"
+        },
+    },
 ];
 
 
@@ -79,7 +103,7 @@ local daskNodes = [
     nodeGroups: [
         ng + {
             namePrefix: 'core',
-            nameSuffix: 'a',
+            nameSuffix: 'b',
             nameIncludeInstanceType: false,
             availabilityZones: [nodeAz],
             ssh: {
@@ -94,6 +118,8 @@ local daskNodes = [
             },
             tags+: {
                 "ManagedBy": "2i2c",
+                "earthscope:application:name": "geolab",
+                "earthscope:application:owner": "research-onramp-to-the-cloud"
             },
         },
     ] + [
