@@ -230,6 +230,17 @@ jupyterhub:
         auth_enabled: true
 ```
 
+#### 6. Check the binderhub extra env variables
+
+There is one extra env var that needs to be set if the hub is authenticated:
+
+```yaml
+binderhub-service:
+  extraEnv:
+    - name: JUPYTERHUB_OAUTH_CALLBACK_URL
+      value: "https://{{ binderhub_domain }}/oauth_callback"
+```
+
 ### III. Configuration specific to non-authenticated hubs
 
 #### 1. Check that the NullAuthenticator is used
