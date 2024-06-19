@@ -70,7 +70,7 @@ AWS management account. If a future cluster deviates from this, you can tell by
 1. Run the following deployer command to convert the generated CSV file into the format required for the invoicing process.
    
    ```bash
-   deployer transform cost-table gcp pathto/downloaded/csvfile
+   deployer transform cost-table aws pathto/downloaded/csvfile
    ```
 
    This will output a new CSV file to your local filesystem called `AWS_{START_MONTH}_{END_MONTH}.csv`.
