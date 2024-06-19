@@ -154,7 +154,7 @@ binderhub-service:
       value: "https://<hub-public-url>.2i2c.cloud/"
 ```
 
-### II. Authenticated hub specific configuration
+### II. Configuration specific to authenticated hubs
 
 #### 1. Check that the simpler landing page is used
 
@@ -230,7 +230,7 @@ jupyterhub:
         auth_enabled: true
 ```
 
-### II. NO hub authentication specific configuration
+### III. Configuration specific to non-authenticated hubs
 
 #### 1. Check that the NullAuthenticator is used
 
