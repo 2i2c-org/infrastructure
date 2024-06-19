@@ -23,7 +23,7 @@ The file assets that should have been generated and included in the PR should be
 
 ```bash
 ➕ config/clusters/<new-cluster-name>
-  ├── common.values.yaml (!if it doesn't already exist)
+  ├── common.values.yaml
   ├── <new-hub-name>.values.yaml
   └── enc-<new-hub-name>.secret.values.yaml
 ```
