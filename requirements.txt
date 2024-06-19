@@ -28,7 +28,7 @@ escapism==1.*
 
 # Used for GCP billing management
 pandas
-pandera
+pandera==0.19.2
 prometheus_pandas
 pytest-mock
 google-cloud-bigquery[pandas]==3.*
