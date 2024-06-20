@@ -155,6 +155,12 @@ basehub:
                   image: "{value}"
               choices:
                 jupyter-scipy:
+                  display_name: GeoLab
+                  slug: geolab-general
+                  kubespawner_override:
+                    # FIXME: use quay.io/ for tags after 2023-10-20
+                    image: public.ecr.aws/earthscope-dev/geolab:td-dev-dd5851e6
+                jupyter-scipy:
                   display_name: Jupyter
                   slug: jupyter-scipy
                   kubespawner_override:
