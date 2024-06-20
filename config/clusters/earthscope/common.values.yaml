@@ -154,6 +154,11 @@ basehub:
                 kubespawner_override:
                   image: "{value}"
               choices:
+                geolab-general:
+                  display_name: GeoLab
+                  slug: geolab-general
+                  kubespawner_override:
+                    image: public.ecr.aws/earthscope-dev/geolab:td-dev-dd5851e6
                 jupyter-scipy:
                   display_name: Jupyter
                   slug: jupyter-scipy
