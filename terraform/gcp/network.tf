@@ -1,27 +1,21 @@
+resource "google_compute_network" "network" {
+  name    = "${var.prefix}-network"
+  project = var.project_id
+  auto_create_subnetworks = true
+}
+
 /**
 * Networking to support private clusters
 *
-* This config is only deployed when the enable_private_cluster variable is set
-* to true
+* Config below here is only deployed when the enable_private_cluster variable is
+* set to true
 */
-
-data "google_compute_network" "default_network" {
-  name    = "default"
-  project = var.project_id
-}
-
-data "google_compute_subnetwork" "default_subnetwork" {
-  name    = "default"
-  project = var.project_id
-  region  = var.region
-}
-
 resource "google_compute_firewall" "iap_ssh_ingress" {
   count = var.enable_private_cluster ? 1 : 0
 
   name    = "allow-ssh"
   project = var.project_id
-  network = data.google_compute_network.default_network.name
+  network = google_compute_network.network.name
 
   allow {
     protocol = "tcp"
@@ -39,7 +33,7 @@ resource "google_compute_router" "router" {
   name    = "${var.prefix}-router"
   project = var.project_id
   region  = var.region
-  network = data.google_compute_network.default_network.id
+  network = google_compute_network.network.id
 }
 
 resource "google_compute_router_nat" "nat" {
