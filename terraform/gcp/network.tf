@@ -1,6 +1,6 @@
 resource "google_compute_network" "network" {
-  name    = "${var.prefix}-network"
-  project = var.project_id
+  name                    = "${var.prefix}-network"
+  project                 = var.project_id
   auto_create_subnetworks = true
 }
 

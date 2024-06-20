@@ -73,7 +73,7 @@ resource "google_container_cluster" "cluster" {
     prevent_destroy = true
   }
 
-  network    = google_compute_network.network.name
+  network = google_compute_network.network.name
 
   // Dynamically provision the private cluster config when deploying a
   // private cluster
