@@ -61,6 +61,7 @@ basehub:
             - j08lue
             - slesaad
             - Jeanne-le-Roux
+            - amarouane-ABDELHAK
     singleuser:
       defaultUrl: /lab
       profileList:
