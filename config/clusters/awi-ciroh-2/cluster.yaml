@@ -1,0 +1,28 @@
+name: awi-ciroh
+provider: gcp # https://console.cloud.google.com/kubernetes/clusters/details/us-central1/awi-ciroh-cluster/details?project=awi-ciroh
+gcp:
+  # key: enc-deployer-credentials.secret.json
+  project: ciroh-jupyterhub-423218
+  cluster: awi-ciroh-cluster
+  zone: us-central1
+support:
+  helm_chart_values_files:
+    - support.values.yaml
+    - enc-support.secret.values.yaml
+hubs: []
+  # - name: staging
+  #   display_name: "Alabama Water Institute: CIROH (staging)"
+  #   domain: staging.ciroh.awi.2i2c.cloud
+  #   helm_chart: daskhub
+  #   helm_chart_values_files:
+  #     - common.values.yaml
+  #     - staging.values.yaml
+  #     - enc-staging.secret.values.yaml
+  # - name: prod
+  #   display_name: "Alabama Water Institute: CIROH (prod)"
+  #   domain: ciroh.awi.2i2c.cloud
+  #   helm_chart: daskhub
+  #   helm_chart_values_files:
+  #     - common.values.yaml
+  #     - prod.values.yaml
+  #     - enc-prod.secret.values.yaml
