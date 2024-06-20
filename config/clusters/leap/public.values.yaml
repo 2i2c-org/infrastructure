@@ -67,17 +67,21 @@ jupyterhub:
         operator: Equal
         value: public
         effect: NoSchedule
-
+    extraFiles:
+      welcome.txt:
+        mountPath: /home/jovyan/welcome.txt
+        mode: 0644
+        stringData: |
+          Welcome to LEAP public hub!
     profileList:
-      - display_name: Pangeo Notebook
-        description: Python with Geoscience Packages
-        slug: pangeo
+      - display_name: "CPU only"
+        description: "Start a container limited to a chosen share of capacity on a node of this type"
+        slug: medium-full
         default: true
         kubespawner_override:
-          image: pangeo/pangeo-notebook:2024.05.21
           default_url: /lab
-        profile_options: &profile_options
-          resource_allocation: &resource_allocation
+        profile_options:
+          requests:
             display_name: Resource Allocation
             choices:
               mem_3_4:
@@ -109,19 +113,29 @@ jupyterhub:
                   mem_limit: 28967406928
                   cpu_guarantee: 3.45
                   cpu_limit: 3.45
-
-      - display_name: Pangeo Tensorflow ML Notebook
-        description: Python with Geoscience Packages and Tensorflow (no GPU)
-        slug: tensorflow
-        kubespawner_override:
-          image: pangeo/ml-notebook:2024.05.21
-          default_url: /lab
-        profile_options: *profile_options
-
-      - display_name: Pangeo PyTorch ML Notebook
-        description: Python with Geoscience Packages and PyTorch (no GPU)
-        slug: pytorch
-        kubespawner_override:
-          image: pangeo/pytorch-notebook:2024.05.21
-          default_url: /lab
-        profile_options: *profile_options
+          image:
+            display_name: Image
+            unlisted_choice:
+              enabled: True
+              display_name: "Custom image"
+              validation_regex: "^.+:.+$"
+              validation_message: "Must be a publicly available docker image, of form <image-name>:<tag>"
+              kubespawner_override:
+                image: "{value}"
+            choices:
+              pangeo:
+                display_name: Base Pangeo Notebook (2024.06.02)
+                default: true
+                slug: "pangeo"
+                kubespawner_override:
+                  image: "pangeo/pangeo-notebook:2024.06.02"
+              tensorflow:
+                display_name: Pangeo Tensorflow ML Notebook (2024.06.02)
+                slug: "tensorflow"
+                kubespawner_override:
+                  image: "pangeo/ml-notebook:2024.06.02"
+              pytorch:
+                display_name: Pangeo PyTorch ML Notebook (2024.06.02)
+                slug: "pytorch"
+                kubespawner_override:
+                  image: "pangeo/pytorch-notebook:2024.06.02"
