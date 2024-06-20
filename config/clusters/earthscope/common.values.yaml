@@ -154,7 +154,7 @@ basehub:
                 kubespawner_override:
                   image: "{value}"
               choices:
-                jupyter-scipy:
+                geolab-general:
                   display_name: GeoLab
                   slug: geolab-general
                   kubespawner_override:
