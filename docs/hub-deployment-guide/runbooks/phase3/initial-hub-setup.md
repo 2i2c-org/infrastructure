@@ -168,6 +168,10 @@ All of the following steps must be followed in order to consider phase 3.1 compl
    Please pay attention to all the fields that have been auto-generated for you by this command and change every one that doesn't match the community's requirements or was not rendered correctly before copying-pasting it into the relevant files.
    ```
 
+   ```{important}
+   If you are deploying a binderhub ui style hub, then make sure that in the `cluster.yaml` file **the hub's domain** is entered instead of the binderhub's, for testing purposes.
+   ```
+
 1. **Add the new cluster to CI/CD**
 
    ```{important}

@@ -172,7 +172,7 @@ def run_hub_health_check(
         print_colour("ERROR: No hubs with this name found!")
         sys.exit(1)
 
-    # Skip the regular hub health check for hubs with binderhub ui that are also launching user servers
+    # Skip the regular hub health check for hubs with binderhub ui that are not authenticated
     for values_file_name in hub.spec["helm_chart_values_files"]:
         if not any(
             substr in os.path.basename(values_file_name)
@@ -186,10 +186,17 @@ def run_hub_health_check(
                 .get("binderhubUI", {})
                 .get("enabled")
             )
+            authentication = (
+                config.get("jupyterhub", {})
+                .get("hub", {})
+                .get("config", {})
+                .get("JupyterHub", {})
+                .get("authenticator_class", "")
+            )
 
-    if binderhub_ui:
+    if binderhub_ui and authentication == "null":
         print_colour(
-            f"Skipping hub health check for {hub.spec['name']} because it's a binderhub...",
+            f"Testing {hub.spec['name']} is not yet supported. Skipping ...",
             "yellow",
         )
         return

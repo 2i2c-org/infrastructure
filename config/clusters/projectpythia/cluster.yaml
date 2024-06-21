@@ -33,7 +33,7 @@ hubs:
       - enc-prod.secret.values.yaml
   - name: pythia-binder
     display_name: Binder for use with Project Pythia
-    domain: binder.pythia.2i2c.cloud
+    domain: hub.binder.pythia.2i2c.cloud
     helm_chart: basehub
     helm_chart_values_files:
       - common.values.yaml
