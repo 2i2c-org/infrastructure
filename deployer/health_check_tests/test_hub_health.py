@@ -46,10 +46,6 @@ async def check_hub_health(hub_url, test_notebook_path, service_api_token):
             hub_url,
             test_notebook_path,
             username=username,
-            user_options={
-                "token": service_api_token,
-                "image": "quay.io/2i2c-projectpythia/binderhub-ui-binder-2dexamples-2drequirements-55ab5c:50533eb470ee6c24e872043d30b2fee463d6943f",
-            },
             server_creation_timeout=360,
             kernel_execution_timeout=360,  # This doesn't do anything yet
             create_user=True,
