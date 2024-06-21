@@ -3,6 +3,13 @@ jupyterhub:
     2i2c:
       add_staff_user_ids_to_admin_users: true
       add_staff_user_ids_of_type: "google"
+    singleuserAdmin:
+      extraVolumeMounts:
+        # /allusers is an extra mount point for admins to access to all users'
+        # home dirs
+        - name: home
+          mountPath: /home/jovyan/allusers
+          readOnly: false
     homepage:
       templateVars:
         org:
