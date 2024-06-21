@@ -5,6 +5,8 @@ gcp:
   project: ciroh-jupyterhub-423218
   cluster: awi-ciroh-cluster
   zone: us-central1
+  billing:
+    paid_by_us: false
 support:
   helm_chart_values_files:
     - support.values.yaml
