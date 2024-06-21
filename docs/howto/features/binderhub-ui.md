@@ -318,14 +318,40 @@ jupyterhub:
 
 #### 6. Check the singleuser cmd that is used
 
-If the binderhub will be unauthenticated, then we need to replace `jupyterhub.singleuser.jupyterhub-singleuser` with `jupyterhub.singleuser.jupyter-lab`.
+If the binderhub will be unauthenticated, then we need to replace `jupyterhub.singleuser.jupyterhub-singleuser` with `jupyterhub.singleuser.jupyter-lab` if available or `jupyterhub.singleuser.jupyter-notebook`.
 
 Otherwise the requests to authorize the user server will get redirected to `/hub/login` which always returns a `403` HTTP response code when using the null authenticator.
 
 ```yaml
 jupyterhub:
   singleuser:
-    cmd: jupyter-lab
+    cmd:
+      - python3
+      - "-c"
+      - |
+        import os
+        import sys
+
+        try:
+            import jupyterlab
+            import jupyterlab.labapp
+            major = int(jupyterlab.__version__.split(".", 1)[0])
+        except Exception as e:
+            print("Failed to import jupyterlab: {e}", file=sys.stderr)
+            have_lab = False
+        else:
+            have_lab = major >= 3
+
+        if have_lab:
+            # technically, we could accept another jupyter-server-based frontend
+            print("Launching jupyter-lab", file=sys.stderr)
+            exe = "jupyter-lab"
+        else:
+            print("jupyter-lab not found, launching jupyter-notebook", file=sys.stderr)
+            exe = "jupyter-notebook"
+
+        # launch the notebook server
+        os.execvp(exe, sys.argv)
 ```
 
 #### 7. Restrict the repositories that can be built
