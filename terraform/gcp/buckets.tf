@@ -45,6 +45,7 @@ resource "google_storage_bucket" "user_buckets" {
 # We only keep them for 30 days so they don't end up costing a
 # ton of money
 resource "google_storage_bucket" "usage_logs_bucket" {
+  count    = var.enable_logging ? 1 : 0
   name     = "${var.prefix}-gcs-usage-logs"
   location = var.region
   project  = var.project_id
@@ -63,7 +64,8 @@ resource "google_storage_bucket" "usage_logs_bucket" {
 
 # Provide access to GCS infrastructure to write usage logs to this bucket
 resource "google_storage_bucket_iam_member" "usage_logs_bucket_access" {
-  bucket = google_storage_bucket.usage_logs_bucket.name
+  count  = var.enable_logging ? 1 : 0
+  bucket = google_storage_bucket.usage_logs_bucket[0].name
   member = "group:cloud-storage-analytics@google.com"
   role   = "roles/storage.objectCreator"
 }
@@ -139,7 +141,7 @@ output "buckets" {
 }
 
 output "usage_log_bucket" {
-  value       = google_storage_bucket.usage_logs_bucket.name
+  value       = var.enable_logging ? google_storage_bucket.usage_logs_bucket[0].name : null
   description = <<-EOT
   Name of GCS bucket containing GCS usage logs (when enabled).
 

@@ -1,0 +1,24 @@
+prometheusIngressAuthSecret:
+  enabled: true
+
+# FIXME: Re-add GitHub login once old cluster has been decommissioned. Reuse the GitHub
+#        OAuth App the previous cluster used to save creating another app.
+grafana:
+  ingress:
+    hosts:
+      - grafana.ciroh2.awi.2i2c.cloud
+    tls:
+      - secretName: grafana-tls
+        hosts:
+          - grafana.ciroh2.awi.2i2c.cloud
+
+prometheus:
+  server:
+    ingress:
+      enabled: true
+      hosts:
+        - prometheus.ciroh2.awi.2i2c.cloud
+      tls:
+        - secretName: prometheus-tls
+          hosts:
+            - prometheus.ciroh2.awi.2i2c.cloud
