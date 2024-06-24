@@ -74,7 +74,7 @@ dask_nodes = {
   },
 }
 
-# FIXME: Uncomment requestor pays lines and add bucket names to admin access
+# FIXME: Uncomment requester pays lines and add bucket names to admin access
 #        once bucket access policy restriction has been lifted from the project
 hub_cloud_permissions = {
   "staging" : {
