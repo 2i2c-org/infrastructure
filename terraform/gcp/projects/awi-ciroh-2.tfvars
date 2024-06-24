@@ -14,6 +14,8 @@ k8s_versions = {
   dask_nodes_version : "1.29.4-gke.1043002",
 }
 
+# FIXME: Enable these buckets once the access policy restriction has been lifted
+#        on the project
 # user_buckets = {
 #   "scratch-staging" : {
 #     "delete_after" : 7
@@ -71,17 +73,19 @@ dask_nodes = {
   },
 }
 
-# hub_cloud_permissions = {
-#   "staging" : {
-#     allow_access_to_external_requester_pays_buckets : false,
-#     bucket_admin_access : ["scratch-staging", "persistent-staging"],
-#     hub_namespace : "staging"
-#   },
-#   "prod" : {
-#     allow_access_to_external_requester_pays_buckets : false,
-#     bucket_admin_access : ["scratch", "persistent"],
-#     hub_namespace : "prod"
-#   }
-# }
+# FIXME: Uncomment requestor pays lines and add bucket names to admin access
+#        once bucket access policy restriction has been lifted from the project
+hub_cloud_permissions = {
+  "staging" : {
+    # allow_access_to_external_requester_pays_buckets : false,
+    bucket_admin_access : [],
+    hub_namespace : "staging"
+  },
+  "prod" : {
+    # allow_access_to_external_requester_pays_buckets : false,
+    bucket_admin_access : [],
+    hub_namespace : "prod"
+  }
+}
 
 container_repos = []
