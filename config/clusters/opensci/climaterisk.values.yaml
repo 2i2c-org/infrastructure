@@ -1,0 +1,40 @@
+jupyterhub:
+  ingress:
+    hosts: [climaterisk.opensci.2i2c.cloud]
+    tls:
+      - hosts: [climaterisk.opensci.2i2c.cloud]
+        secretName: https-auto-tls
+  custom:
+    homepage:
+      gitRepoBranch: "username-and-password-homepage"
+      templateVars:
+        org:
+          name: ScienceCore:climaterisk
+          url: https://2i2c.org
+          logo_url: https://2i2c.org/media/logo.png
+        designed_by:
+          name: 2i2c
+          url: https://2i2c.org
+        operated_by:
+          name: 2i2c
+          url: https://2i2c.org
+        funded_by:
+          name: "NASA TOPS-T ScienceCore"
+          url: ""
+  hub:
+    config:
+      jupyterHub:
+        authenticator_class: dummy
+  singleuser:
+    defaultUrl: /lab
+    image:
+      name: quay.io/jupyter/scipy-notebook
+      tag: "2024-05-27"
+    nodeSelector:
+      node.kubernetes.io/instance-type: r5.xlarge
+    memory:
+      guarantee: 7964979101
+      limit: 7964979101
+    cpu:
+      guarantee: 0.93125
+      limit: 3.725
