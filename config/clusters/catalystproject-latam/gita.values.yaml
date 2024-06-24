@@ -9,11 +9,6 @@ jupyterhub:
       templateVars:
         org:
           name: Catalyst Project, LatAm - GITA
-          url: https://2i2c.org
-          logo_url: https://2i2c.org/media/logo.png
-        funded_by:
-          name: Chan Zuckerberg Initiative - Open Science
-          url: "https://chanzuckerberg.com/science/programs-resources/open-science/"
   hub:
     config:
       JupyterHub:
