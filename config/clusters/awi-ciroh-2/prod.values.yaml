@@ -145,6 +145,7 @@ basehub:
               node.kubernetes.io/instance-type: n1-highmem-8
             extra_resource_limits:
               nvidia.com/gpu: "1"
+      # FIXME: Uncomment when buckets have been deployed
       # extraEnv:
       #   SCRATCH_BUCKET: gs://awi-ciroh-scratch/$(JUPYTERHUB_USER)
       #   PANGEO_SCRATCH: gs://awi-ciroh-scratch/$(JUPYTERHUB_USER)

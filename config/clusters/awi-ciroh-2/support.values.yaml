@@ -1,6 +1,8 @@
 prometheusIngressAuthSecret:
   enabled: true
 
+# FIXME: Re-add GitHub login once old cluster has been decommissioned. Re-use the GitHub
+#        OAuth App the previous cluster used to save creating another app.
 grafana:
   ingress:
     hosts:
