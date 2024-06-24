@@ -166,6 +166,14 @@ def main():
     df = pd.DataFrame(hub_list)
     community_hubs_by_cluster = build_hub_statistics_df(df)
 
+    # FIXME: This is a hack to accommodate the fact that we have two AWI-CIROH
+    #        clusters running identical hubs with identical names. Without these
+    #        two lines, the write_to_json_and_csv_files function will fail
+    #        complaining that the indexes are not unique. Remove these lines
+    #        once the old AWI-CIROH cluster has been decommissioned.
+    mask = df["cluster"] == "awi-ciroh-2"
+    df.loc[mask, "name"] = df["name"].astype(str) + " 2"
+
     df.set_index("name", inplace=True)
     write_to_json_and_csv_files(df, "hub-table")
     write_to_json_and_csv_files(community_hubs_by_cluster, "hub-stats")
