@@ -89,14 +89,28 @@ def escape(to_escape, safe=SAFE, escape_char=ESCAPE_CHAR, allow_collisions=False
 
 
 def get_all_users(hub_url, token):
-    url = f"{hub_url}/hub/api/users"
-    resp = requests.get(url, headers={"Authorization": f"token {token}"})
+    offset = 0
+    limit = 200  # The default max size for a page
 
-    users = resp.json()
-    for user in users:
-        if user["last_activity"]:
-            user["last_activity"] = parse(user.get("last_activity"))
-    return users
+    while True:
+        url = f"{hub_url}/hub/api/users?offset={offset}&limit={limit}"
+        resp = requests.get(url, headers={
+            "Authorization": f"token {token}",
+            "Accept": "application/jupyterhub-pagination+json"
+        })
+
+        paginated_resp = resp.json()
+        users = paginated_resp['items']
+        pagination = paginated_resp.get('_pagination', {}).get('next', None)
+        if pagination is None:
+            break
+        else:
+            offset = pagination['offset']
+            limit = pagination['limit']
+        for user in users:
+            if user["last_activity"]:
+                user["last_activity"] = parse(user.get("last_activity"))
+            yield user
 
 
 def rsync(user, src_basedir, dest_basedir, dry_run):
