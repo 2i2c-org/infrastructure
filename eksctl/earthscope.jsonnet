@@ -75,6 +75,11 @@ local daskNodes = [
         name: "earthscope",
         region: clusterRegion,
         version: "1.29",
+        tags+: {
+            "ManagedBy": "2i2c",
+            "earthscope:application:name": "geolab",
+            "earthscope:application:owner": "research-onramp-to-the-cloud"
+        },
     },
     availabilityZones: masterAzs,
     iam: {
