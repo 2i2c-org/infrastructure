@@ -1,0 +1,41 @@
+name: New Hub Turnup Phase 2 - Cluster Setup
+description: Track setting up a cluster for new community or set of communities
+title: "[New Hub] [Phase 2] Cluster Setup - {{community_name}}"
+body:
+  - type: dropdown
+    id: status
+    attributes:
+      label: "What is the 'ready to work' status of this phase?"
+      description: >-
+        This phase can only be marked READY when the table below is complete
+      options:
+        - "NOT READY"
+        - "READY"
+      default: 0
+    validations:
+      required: true
+  - type: textarea
+    id: info-table
+    attributes:
+      label: >-
+        Required information for setting up a cluster for a new community or a
+        set of communities.
+      value: |-
+        This phase assumes all engineers have access to the relevant account,
+        and will be able to set up the cluster + support without issue. No hubs
+        are to be deployed during this phase. The following table lists the
+        information that must be provided before this phase can be marked as
+        READY and begin. Use the Notes column to provide any other contextual
+        information.
+
+        | Question | Answer | Notes |
+        | :--- | :--- | :--- |
+        | Region/Zone of the cluster | `e.g. us-east-1` | |
+        | Name of the cluster | | |
+        | Are GPUs required? | `Yes/No` | |
+
+        Available runbooks:
+        - https://infrastructure.2i2c.org/hub-deployment-guide/runbooks/phase2/
+        - https://infrastructure.2i2c.org/hub-deployment-guide/deploy-support/
+    validations:
+      required: true
