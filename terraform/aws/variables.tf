@@ -169,12 +169,8 @@ variable "db_user_password_special_chars" {
 }
 
 variable "tags" {
-  type = object(
-    {
-      ManagedBy : optional(string, "")
-    }
-  )
-  default     = { ManagedBy : "2i2c" }
+  type        = map(string)
+  default     = { "ManagedBy" : "2i2c" }
   description = <<-EOT
   Tags to apply to resources that we manage. The value is an object as we may
   wish to apply multiple tags. We use CamelCase for tag names to match AWS's

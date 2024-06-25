@@ -70,6 +70,9 @@ local daskNodes = [];
             https://eksctl.io/getting-started/ for a list of supported versions.
         -#}
         version: "1.29",
+        tags+: {
+            "ManagedBy": "2i2c"
+        },
     },
     availabilityZones: masterAzs,
     iam: {
