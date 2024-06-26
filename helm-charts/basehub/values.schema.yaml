@@ -264,7 +264,7 @@ properties:
     additionalProperties: true
   dask-gateway:
     type: object
-    additionalProprties: true
+    additionalProperties: true
   binderhub-service:
     type: object
     additionalProperties: true
