@@ -81,10 +81,7 @@ def persist_client_credentials_in_config_file(client, hub_type, config_filename)
         }
     }
 
-    if hub_type == "daskhub":
-        auth_config["basehub"] = jupyterhub_config
-    else:
-        auth_config = jupyterhub_config
+    auth_config = jupyterhub_config
 
     persist_config_in_encrypted_file(config_filename, auth_config)
     print_colour(
@@ -97,12 +94,7 @@ def load_client_id_from_file(config_filename):
         with open(decrypted_path) as f:
             auth_config = yaml.load(f)
 
-    daskhub = auth_config.get("basehub", None)
     try:
-        if daskhub:
-            return auth_config["basehub"]["jupyterhub"]["hub"]["config"][
-                "CILogonOAuthenticator"
-            ]["client_id"]
         return auth_config["jupyterhub"]["hub"]["config"]["CILogonOAuthenticator"][
             "client_id"
         ]
@@ -379,16 +371,13 @@ def create(
     hub_name: str = typer.Argument(
         ..., help="Name of the hub for which we'll create a CILogon client"
     ),
-    hub_type: str = typer.Argument(
-        "basehub",
-        help="Type of hub for which we'll create a CILogon client (ex: basehub, daskhub)",
-    ),
     hub_domain: str = typer.Argument(
         ...,
         help="The hub domain, as specified in `cluster.yaml` (ex: staging.2i2c.cloud)",
     ),
 ):
     """Create a CILogon client for a hub."""
+    hub_type = "basehub"
     admin_id, admin_secret = get_2i2c_cilogon_admin_credentials()
     callback_url = f"https://{hub_domain}/hub/oauth_callback"
     create_client(

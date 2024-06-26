@@ -40,7 +40,6 @@ def discover_modified_common_files(modified_paths):
         ".github/actions/setup-deploy/*",
         # Filepaths related to helm chart infrastructure
         "helm-charts/basehub/*",
-        "helm-charts/daskhub/*",
     ]
     # If this filepath has changes, we should upgrade the support chart on all clusters
     support_chart_filepath = "helm-charts/support/*"
@@ -94,7 +93,7 @@ def generate_hub_matrix_jobs(
             cluster.yaml file itself has been modified. Defaults to False.
         upgrade_all_hubs_on_all_clusters (bool, optional): If True, generates jobs to
             upgrade all hubs on all clusters. This is triggered when common config has
-            been modified, such as the basehub or daskhub helm charts. Defaults to False.
+            been modified, such as the basehub helm chart. Defaults to False.
 
     Returns:
         list[dict]: A list of dictionaries. Each dictionary contains: the name of a

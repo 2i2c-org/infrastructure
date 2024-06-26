@@ -119,7 +119,7 @@ def persist_config_in_encrypted_file(encrypted_file, new_config):
 def remove_jupyterhub_hub_config_key_from_encrypted_file(encrypted_file, key):
     """
     Remove config from the dict `config["jupyterhub"]["hub"]["config"][<key>]`
-    in `encrypted_file` (the config is also searched for under daskhub prefix).
+    in `encrypted_file.
 
     If after removing this config, the file only contains a config dict with empty leaves,
     delete the entire file, as it no longer holds any information.
@@ -130,11 +130,7 @@ def remove_jupyterhub_hub_config_key_from_encrypted_file(encrypted_file, key):
         with open(decrypted_path) as f:
             config = yaml.load(f)
 
-    daskhub = config.get("basehub", None)
-    if daskhub:
-        config["basehub"]["jupyterhub"]["hub"]["config"].pop(key)
-    else:
-        config["jupyterhub"]["hub"]["config"].pop(key)
+    config["jupyterhub"]["hub"]["config"].pop(key)
 
     def clean_empty_nested_dicts(d):
         if isinstance(d, dict):

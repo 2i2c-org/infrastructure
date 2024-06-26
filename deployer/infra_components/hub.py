@@ -1,9 +1,11 @@
+import os
 import subprocess
 
 from ruamel.yaml import YAML
 
 from deployer.utils.file_acquisition import (
     HELM_CHARTS_DIR,
+    find_absolute_path_to_cluster_file,
     get_decrypted_file,
     get_decrypted_files,
 )
@@ -48,7 +50,19 @@ class Hub:
 
             self.spec["domain"] = domain_override_config["domain"]
 
-        if self.spec["helm_chart"] == "daskhub":
+        config_file_path = find_absolute_path_to_cluster_file(self.cluster.config_path)
+        for values_file in self.spec["helm_chart_values_files"]:
+            if "secret" not in os.path.basename(values_file):
+                values_file = config_file_path.parent.joinpath(values_file)
+                config = yaml.load(values_file)
+                # Check if there's config that enables dask-gateway
+                dask_gateway_enabled = config.get("dask-gateway", {}).get(
+                    "enabled", False
+                )
+                if dask_gateway_enabled:
+                    break
+
+        if dask_gateway_enabled:
             # Install CRDs for daskhub before deployment
             manifest_urls = [
                 f"https://raw.githubusercontent.com/dask/dask-gateway/{dask_gateway_version}/resources/helm/dask-gateway/crds/daskclusters.yaml",

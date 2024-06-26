@@ -252,7 +252,16 @@ def run_hub_health_check(
         f"--hub-type={hub.spec['helm_chart']}",
     ]
 
-    if (hub.spec["helm_chart"] == "daskhub") and check_dask_scaling:
+    for values_file in hub.spec["helm_chart_values_files"]:
+        if "secret" not in os.path.basename(values_file):
+            values_file = config_file_path.parent.joinpath(values_file)
+            config = yaml.load(values_file)
+            # Check if there's config that enables dask-gateway
+            dask_gateway_enabled = config.get("dask-gateway", {}).get("enabled", False)
+            if dask_gateway_enabled:
+                break
+
+    if dask_gateway_enabled and check_dask_scaling:
         pytest_args.append("--check-dask-scaling")
 
     if gh_ci == "true":

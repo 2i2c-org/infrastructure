@@ -12,7 +12,6 @@ Generates the following files:
 
 import jinja2
 import typer
-from typing_extensions import Annotated
 
 from deployer.utils.file_acquisition import REPO_ROOT_PATH
 from deployer.utils.rendering import print_colour
@@ -64,12 +63,6 @@ def gcp(
     project_id: str = typer.Option(
         ..., prompt="Please insert the Project ID of the GCP project"
     ),
-    hub_type: Annotated[
-        str,
-        typer.Option(
-            prompt="Please type in the hub type: basehub/daskhub.\n-> If this cluster will host daskhubs, please type `daskhub`.\n-> If you don't know this info, or this is not the case, just hit ENTER"
-        ),
-    ] = "basehub",
     force: bool = typer.Option(
         False,
         "--force",
@@ -86,8 +79,8 @@ def gcp(
         # Also store the provider, as it's useful for some jinja templates
         # to differentiate between them when rendering the configuration
         "provider": "gcp",
+        "hub_type": "basehub",
         "cluster_name": cluster_name,
-        "hub_type": hub_type,
         "cluster_region": cluster_region,
         "project_id": project_id,
     }
