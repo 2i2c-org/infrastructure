@@ -1552,7 +1552,7 @@ jupyterhub:
         import os
         from z2jh import get_config
 
-        if get_config('custom.daskGateway.enabled'):
+        if get_config('custom.daskhubSetup.enabled'):
           # Default all users on hubs with dask-gateway to use JupyterLab
           c.Spawner.default_url = '/lab'
 
