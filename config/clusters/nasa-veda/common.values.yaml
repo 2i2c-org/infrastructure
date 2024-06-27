@@ -42,6 +42,7 @@ basehub:
         JupyterHub:
           authenticator_class: github
         GitHubOAuthenticator:
+          populate_teams_in_auth_state: true
           allowed_organizations:
             - CASI-LIS-Dashboard:dev-veda-jupyterhub
             - veda-analytics-access:all-users
@@ -53,6 +54,7 @@ basehub:
           scope:
             - read:org
         Authenticator:
+          enable_auth_state: true
           admin_users:
             - abarciauskas-bgse
             - freitagb
