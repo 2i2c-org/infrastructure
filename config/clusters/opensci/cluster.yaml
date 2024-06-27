@@ -45,3 +45,10 @@ hubs:
       - common.values.yaml
       - climaterisk.values.yaml
       - enc-climaterisk.secret.values.yaml
+  - name: small-binder
+    display_name: OpenSci Binder (Small)
+    domain: hub.binder.opensci.2i2c.cloud
+    helm_chart: basehub
+    helm_chart_values_files:
+      - small-binder.values.yaml
+      - enc-small-binder.secret.values.yaml
