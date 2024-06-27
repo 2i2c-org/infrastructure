@@ -14,10 +14,8 @@ basehub:
       serverIP: fs-01707b06.efs.us-west-2.amazonaws.com
       # This is different from rest of our hubs!
       baseShareName: /
-
   dask-gateway:
     enabled: true
-
   jupyterhub:
     custom:
       daskhubSetup:
