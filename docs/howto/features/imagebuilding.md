@@ -110,10 +110,13 @@ If the hub will be deployed on another cloud provider than GCP, we must setup a 
 
 1. Go to https://quay.io/organizations/new/ and create a new organization.
    Give it a memorable name like `<cluster-name>-<hub-name>`.
+   1. Set the Organisation Email to `support+quay-<cluster-name>-<hub-name>@2i2c.org`, like `support+quay-opensci-small-binder@2i2c.org`. It will still be delivered to `support@2i2c.org` but functions as a unique username identifer. This is called [subaddressing](https://en.wikipedia.org/wiki/Email_address#Subaddressing).
+   1. Select the free "Open Source" plan and create the organisation.
 1. Make sure this new organization is selected, by going to https://quay.io/organization/`<new-org-name>`.
 1. Select the 'Robot Accounts' option on the left menu.
 1. Click 'Create Robot account', give it a memorable name (such as `image_builder`) and click 'Create'.
 1. In the next screen, don't select any of the existing repositories, as we need this robot account to have enough permissions to push **any** new repository under the organization, so permissions to existing repositories is not needed.
+   (You likely will not see this "next screen" for new organisations which do not have any repositories yet.)
 1. Once done, click the name of the robot account again. This will give you its username and password.
    ```{important}
    Store these somewhere safe as we will need them in a following step.

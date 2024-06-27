@@ -379,12 +379,13 @@ Follow the guide at [](howto:features:imagebuilding-hub:image-registry) of the i
 ### 2. Configure BinderHub image_prefix
 
 We need to configure BinderHub so that it knows under which prefix to push the images to the registry.
+For example, use something like `quay.io/opensci-small-binder/binderhub-ui-`
 
 ```yaml
 binderhub-service:
   config:
     BinderHub:
-      image_prefix: <repository_path>
+      image_prefix: <registry_url>/<prefix>-
 ```
 
 ### 2. Setup the the credentials needed to push the image to the container registry by the build pods
@@ -392,7 +393,7 @@ binderhub-service:
 ```yaml
 binderhub-service:
   buildPodsRegistryCredentials:
-    # registry server address like https://quay.io or https://us-central1-docker.pkg.dev
+    # registry server address like https://quay.io (nor org name required) or https://us-central1-docker.pkg.dev
     server: <server_address>
     # robot account namer or "_json_key" if using grc.io
     username: <account_name>
