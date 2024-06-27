@@ -86,7 +86,7 @@ If the hub will be deployed on a GCP cluster, we can setup [gcr.io](https://gcr.
     ]
     ```
 
-    where <repository-name> is the name of the repository where all the images built from the hub will be pushed.
+    where `<repository-name>` is the name of the repository where all the images built from the hub will be pushed.
 
     ```{note}
     If a `container_repos` config already exists, then, just add the new repository name to this list.
@@ -108,20 +108,23 @@ If the hub will be deployed on a GCP cluster, we can setup [gcr.io](https://gcr.
 
 If the hub will be deployed on another cloud provider than GCP, we must setup a new [quay.io](https://quay.io) organization and a robot account to push and pull from it.
 
-1. Go to https://quay.io/organizations/new/ and create a new organization. Give it a memorable name like <cluster-name>-<hub-name>.
-2. Make sure this new organization is selected, by going to https://quay.io/organization/<new-org-name>.
-3. Select the 'Robot Accounts' option on the left menu.
-3. Click 'Create Robot account', give it a memorable name (such as `image_builder`) and click 'Create'.
-4. In the next screen, don't select any of the existing repositories, as we need this robot account to have enough permissions to push **any** new repository under the organization, so permissions to existing repositories is not needed.
-5. Once done, click the name of the robot account again. This will give you its username and password.
+1. Go to https://quay.io/organizations/new/ and create a new organization.
+   Give it a memorable name like `<cluster-name>-<hub-name>`.
+   1. Set the Organisation Email to `support+quay-<cluster-name>-<hub-name>@2i2c.org`, like `support+quay-opensci-small-binder@2i2c.org`. It will still be delivered to `support@2i2c.org` but functions as a unique username identifier. This is called [subaddressing](https://en.wikipedia.org/wiki/Email_address#Subaddressing).
+   1. Select the free "Open Source" plan and create the organisation.
+1. Make sure this new organization is selected, by going to https://quay.io/organization/`<new-org-name>`.
+1. Select the 'Robot Accounts' option on the left menu.
+1. Click 'Create Robot account', give it a memorable name (such as `image_builder`) and click 'Create'.
+1. In the next screen, don't select any of the existing repositories, as we need this robot account to have enough permissions to push **any** new repository under the organization, so permissions to existing repositories is not needed.
+   (You likely will not see this "next screen" for new organisations which do not have any repositories yet.)
+1. Once done, click the name of the robot account again. This will give you its username and password.
    ```{important}
    Store these somewhere safe as we will need them in a following step.
    ```
-6. Select the 'Team and Membership' option on the left menu.
-7. Click on the 'Options' wheel of the `owners` team, then select 'Manage Team Members'.
-8. Type in the name of the robot account that you created, select it from the list and add it to the `owners` team.
-9. Add also the other engineers as members of this new organization by searching their handles in the search bar on the right.
-
+1. Select the 'Team and Membership' option on the left menu.
+1. Click on the 'Options' wheel of the `owners` team, then select 'Manage Team Members'.
+1. Type in the name of the robot account that you created, select it from the list and add it to the `owners` team.
+1. Add also the other engineers as members of this new organization by searching their handles in the search bar on the right.
 
 ## Setup the `binderhub-service` chart
 
