@@ -52,3 +52,10 @@ hubs:
     helm_chart_values_files:
       - small-binder.values.yaml
       - enc-small-binder.secret.values.yaml
+  - name: big-binder
+    display_name: OpenSci Binder (Big)
+    domain: hub.big.binder.opensci.2i2c.cloud
+    helm_chart: basehub
+    helm_chart_values_files:
+      - big-binder.values.yaml
+      - enc-big-binder.secret.values.yaml

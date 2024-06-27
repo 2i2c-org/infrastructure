@@ -1,0 +1,108 @@
+jupyterhub:
+  ingress:
+    hosts: [hub.big.binder.opensci.2i2c.cloud]
+    tls:
+      - hosts: [hub.big.binder.opensci.2i2c.cloud]
+        secretName: https-auto-tls
+  custom:
+    binderhubUI:
+      enabled: true
+    2i2c:
+      add_staff_user_ids_to_admin_users: true
+      add_staff_user_ids_of_type: github
+    homepage:
+      gitRepoBranch: "no-homepage-subsections"
+      templateVars:
+        org:
+          name: Sciencecore
+          logo_url: https://2i2c.org
+          url: https://2i2c.org/media.logo.png
+        designed_by:
+          name: 2i2c
+          url: https://2i2c.org
+        operated_by:
+          name: 2i2c
+          url: https://2i2c.org
+        funded_by:
+          name: ""
+          url: ""
+    jupyterhubConfigurator:
+      enabled: false
+    singleuserAdmin:
+      extraVolumeMounts: []
+  singleuser:
+    cpu:
+      limit: 0.25
+    memory:
+      limit: 1G
+      guarantee: 256M
+    storage:
+      type: none
+      extraVolumeMounts: []
+    initContainers: []
+    profileList: []
+  hub:
+    config:
+      BinderSpawnerMixin:
+        auth_enabled: true
+      JupyterHub:
+        authenticator_class: github
+      GitHubOAuthenticator:
+        oauth_callback_url: https://hub.big.binder.opensci.2i2c.cloud/hub/oauth_callback
+        allowed_organizations:
+          - 2i2c-nasa-binder-access:big-binder-team
+    redirectToServer: false
+    services:
+      binder:
+        oauth_no_confirm: true
+        oauth_redirect_uri: https://big.binder.opensci.2i2c.cloud/oauth_callback
+    loadRoles:
+      binder:
+        services:
+          - binder
+        scopes:
+          - servers
+          - read:users # admin:users is required if authentication isn't enabled
+      user:
+        scopes:
+          - self
+          # Admin users will by default have access:services, so this is only
+          # observed to be required for non-admin users.
+          - access:services!service=binder
+binderhub-service:
+  enabled: true
+  ingress:
+    enabled: true
+    hosts: [big.binder.opensci.2i2c.cloud]
+    tls:
+      - hosts: [big.binder.opensci.2i2c.cloud]
+        secretName: binder-https-auto-tls
+  config:
+    BinderHub:
+      base_url: /
+      hub_url: https://hub.big.binder.opensci.2i2c.cloud
+      badge_base_url: https://big.binder.opensci.2i2c.cloud
+      image_prefix: quay.io/opensci-big-binder/binderhub-ui-
+      auth_enabled: true
+      enable_api_only_mode: false
+      banner_message: ""
+      about_message: ""
+  extraEnv:
+    - name: JUPYTERHUB_API_TOKEN
+      valueFrom:
+        secretKeyRef:
+          name: hub
+          key: hub.services.binder.apiToken
+    - name: JUPYTERHUB_CLIENT_ID
+      value: "service-binder"
+    - name: JUPYTERHUB_API_URL
+      value: "https://hub.big.binder.opensci.2i2c.cloud/hub/api"
+    # Without this, the redirect URL to /hub/api/... gets
+    # appended to binderhub's URL instead of the hub's
+    - name: JUPYTERHUB_BASE_URL
+      value: "https://hub.big.binder.opensci.2i2c.cloud/"
+    - name: JUPYTERHUB_OAUTH_CALLBACK_URL
+      value: "https://big.binder.opensci.2i2c.cloud/oauth_callback"
+  buildPodsRegistryCredentials:
+    server: "https://quay.io"
+    username: opensci-big-binder+image_builder
