@@ -1,5 +1,46 @@
+# Add support for daskhubs
+
+(howto:features:daskhub:existing-hub)=
+## To an existing hub
+
+A daskhub setup can now also be enabled **after** a hub has been setup as a basehub.
+
+To enable dask-gateway support on a hub, the following configuration changes need to be made to the hub's values file:
+
+1. set `dask-gateway.enabled` to true:
+
+    ```yaml
+    dask-gateway:
+      enabled: true
+    ```
+
+1. set `jupyterhub.custom.daskGateway.enabled` to true:
+
+    ```yaml
+    jupyterhub:
+      custom:
+        daskhubSetup:
+          enabled: true
+    ```
+
+1. set `jupyterhub.singleuser.cloudMetadata.blockWithIptables` to false
+
+    This is to don't block access to the cloud provider's metadata server!
+    If we do the coupling between the cloud providers IAM permissions and
+    the credentials provided to pod's by mounting a k8s ServiceAccount
+    with certain annotations on breaks (AWS IRSA, GCP workload identity).
+    This in turn results in users unable to able to access AWS/GCP object
+    storage buckets.
+
+    ```yaml
+    jupyterhub:
+      singleuser:
+        cloudMetadata:
+          blockWithIptables: false
+    ```
+
 (howto:features:daskhub)=
-# Add support for daskhubs in an existing cluster
+## To an existing cluster
 
 ## GCP
 
