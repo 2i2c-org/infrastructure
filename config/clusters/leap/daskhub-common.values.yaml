@@ -10,8 +10,12 @@ basehub:
       serverIP: 10.104.103.242
       # Name of Google Filestore share
       baseShareName: /homes/
+  dask-gateway:
+    enabled: true
   jupyterhub:
     custom:
+      daskhubSetup:
+        enabled: true
       # Extra mount point for admins to access to all users' home dirs
       # Ref https://github.com/2i2c-org/infrastructure/issues/2105
       singleuserAdmin:
