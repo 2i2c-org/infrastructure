@@ -280,6 +280,7 @@ properties:
               determines the kind of hub deployed.
             enum:
               - basehub
+              - daskhub
           helm_chart_values_files:
             type: array
             description: |
