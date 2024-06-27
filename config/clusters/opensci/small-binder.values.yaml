@@ -29,6 +29,11 @@ jupyterhub:
           name: ""
           url: ""
   singleuser:
+    cpu:
+      limit: 2
+    memory:
+      limit: 4G
+      guarantee: 2G
     storage:
       type: none
       extraVolumeMounts: []
