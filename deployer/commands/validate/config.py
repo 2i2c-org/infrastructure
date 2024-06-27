@@ -57,7 +57,7 @@ def _prepare_helm_charts_dependencies_and_schemas():
     subprocess.check_call(["helm", "dep", "up", basehub_dir])
 
     daskhub_dir = HELM_CHARTS_DIR.joinpath("daskhub")
-    _generate_values_schema_json(basehub_dir)
+    # Not generating schema for daskhub, as it is dead
     subprocess.check_call(["helm", "dep", "up", daskhub_dir])
 
     support_dir = HELM_CHARTS_DIR.joinpath("support")
