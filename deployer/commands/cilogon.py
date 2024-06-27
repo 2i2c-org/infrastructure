@@ -66,9 +66,8 @@ def build_client_details(cluster_name, hub_name, callback_url):
     }
 
 
-def persist_client_credentials_in_config_file(client, hub_type, config_filename):
-    auth_config = {}
-    jupyterhub_config = {
+def persist_client_credentials_in_config_file(client, config_filename):
+    auth_config = {
         "jupyterhub": {
             "hub": {
                 "config": {
@@ -81,8 +80,6 @@ def persist_client_credentials_in_config_file(client, hub_type, config_filename)
         }
     }
 
-    auth_config = jupyterhub_config
-
     persist_config_in_encrypted_file(config_filename, auth_config)
     print_colour(
         f"Successfully persisted the encrypted CILogon client app credentials to file {config_filename}"
@@ -94,7 +91,12 @@ def load_client_id_from_file(config_filename):
         with open(decrypted_path) as f:
             auth_config = yaml.load(f)
 
+    daskhub_legacy_config = auth_config.get("basehub", None)
     try:
+        if daskhub_legacy_config:
+            return auth_config["basehub"]["jupyterhub"]["hub"]["config"][
+                "CILogonOAuthenticator"
+            ]["client_id"]
         return auth_config["jupyterhub"]["hub"]["config"]["CILogonOAuthenticator"][
             "client_id"
         ]
@@ -124,9 +126,7 @@ def print_not_ok_request_message(response):
     print_colour(f"{response.text}", "yellow")
 
 
-def create_client(
-    admin_id, admin_secret, cluster_name, hub_name, hub_type, callback_url
-):
+def create_client(admin_id, admin_secret, cluster_name, hub_name, callback_url):
     """Creates a new client
 
     Args:
@@ -175,7 +175,7 @@ def create_client(
     print_colour("Done! Successfully created a new CILogon client app.")
 
     # Persist and encrypt the client credentials
-    return persist_client_credentials_in_config_file(client, hub_type, config_filename)
+    return persist_client_credentials_in_config_file(client, config_filename)
 
 
 def update_client(admin_id, admin_secret, cluster_name, hub_name, callback_url):
@@ -377,12 +377,9 @@ def create(
     ),
 ):
     """Create a CILogon client for a hub."""
-    hub_type = "basehub"
     admin_id, admin_secret = get_2i2c_cilogon_admin_credentials()
     callback_url = f"https://{hub_domain}/hub/oauth_callback"
-    create_client(
-        admin_id, admin_secret, cluster_name, hub_name, hub_type, callback_url
-    )
+    create_client(admin_id, admin_secret, cluster_name, hub_name, callback_url)
 
 
 @cilogon_client_app.command()

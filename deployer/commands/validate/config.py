@@ -49,13 +49,16 @@ def _generate_values_schema_json(helm_chart_dir):
 @functools.lru_cache
 def _prepare_helm_charts_dependencies_and_schemas():
     """
-    Ensures that the basehub helm chart we deploy, has its
-    dependencies updated and .json schema files generated so that it can be
-    rendered during validation or deployment.
+    Ensures that the helm charts we deploy, basehub and daskhub, have got their
+    dependencies updated and .json schema files generated so that they can be
     """
     basehub_dir = HELM_CHARTS_DIR.joinpath("basehub")
     _generate_values_schema_json(basehub_dir)
     subprocess.check_call(["helm", "dep", "up", basehub_dir])
+
+    daskhub_dir = HELM_CHARTS_DIR.joinpath("daskhub")
+    _generate_values_schema_json(basehub_dir)
+    subprocess.check_call(["helm", "dep", "up", daskhub_dir])
 
     support_dir = HELM_CHARTS_DIR.joinpath("support")
     _generate_values_schema_json(support_dir)
@@ -206,7 +209,13 @@ def authenticator_config(
                 config = yaml.load(values_file)
                 # Check if there's config that specifies an authenticator class
                 try:
-                    hub_config = config["jupyterhub"]["hub"]["config"]
+                    # This special casing is needed for legacy daskhubs still
+                    # using the daskhub chart
+                    if hub.spec["helm_chart"] != "basehub":
+                        hub_config = config["basehub"]["jupyterhub"]["hub"]["config"]
+                    else:
+                        hub_config = config["jupyterhub"]["hub"]["config"]
+
                     authenticator_class = hub_config["JupyterHub"][
                         "authenticator_class"
                     ]
@@ -260,8 +269,16 @@ def configurator_config(
                 # Load the hub extra config from its specific values files
                 config = yaml.load(values_file)
                 try:
-                    singleuser_config = config["jupyterhub"]["singleuser"]
-                    custom_config = config["jupyterhub"]["custom"]
+                    # This special casing is needed for legacy daskhubs still
+                    # using the daskhub chart
+                    if hub.spec["helm_chart"] != "basehub":
+                        singleuser_config = config["basehub"]["jupyterhub"][
+                            "singleuser"
+                        ]
+                        custom_config = config["basehub"]["jupyterhub"]["custom"]
+                    else:
+                        singleuser_config = config["jupyterhub"]["singleuser"]
+                        custom_config = config["jupyterhub"]["custom"]
                     configurator_enabled = custom_config.get(
                         "jupyterhubConfigurator", {}
                     ).get("enabled")

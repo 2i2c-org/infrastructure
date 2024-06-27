@@ -130,7 +130,11 @@ def remove_jupyterhub_hub_config_key_from_encrypted_file(encrypted_file, key):
         with open(decrypted_path) as f:
             config = yaml.load(f)
 
-    config["jupyterhub"]["hub"]["config"].pop(key)
+    daskhub_legacy_config = config.get("basehub", None)
+    if daskhub_legacy_config:
+        config["basehub"]["jupyterhub"]["hub"]["config"].pop(key)
+    else:
+        config["jupyterhub"]["hub"]["config"].pop(key)
 
     def clean_empty_nested_dicts(d):
         if isinstance(d, dict):
