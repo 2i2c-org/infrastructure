@@ -1,13 +1,8 @@
 basehub:
-  dask-gateway:
-    enabled: true
   userServiceAccount:
     annotations:
       eks.amazonaws.com/role-arn: arn:aws:iam::783616723547:role/openscapeshub-staging
   jupyterhub:
-    custom:
-      daskhubSetup:
-        enabled: true
     ingress:
       hosts: [staging.openscapes.2i2c.cloud]
       tls:

@@ -13,8 +13,12 @@ basehub:
         - noresvport
       serverIP: fs-09bd18b3ca23eefa2.efs.us-west-2.amazonaws.com
       baseShareName: /
+  dask-gateway:
+    enabled: true
   jupyterhub:
     custom:
+      daskhubSetup:
+        enabled: true
       2i2c:
         add_staff_user_ids_to_admin_users: true
         add_staff_user_ids_of_type: "github"
