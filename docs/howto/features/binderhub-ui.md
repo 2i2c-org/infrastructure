@@ -249,7 +249,6 @@ This will disable the hub login page and allow binderhub to generate random user
 
 This also means that any configuration of the homepage (`gitRepoBranch` or `templateVars`) will just be ignored.
 
-
 ```yaml
 jupyterhub:
    hub:
