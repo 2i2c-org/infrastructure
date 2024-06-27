@@ -60,6 +60,8 @@ basehub:
             mountPath: /home/rstudio/shared-readwrite
             subPath: _shared
     singleuser:
+      cloudMetadata:
+        blockWithIptables: false
       defaultUrl: /lab
       extraEnv:
         GH_SCOPED_CREDS_CLIENT_ID: "Iv1.6981e043b45f042f"

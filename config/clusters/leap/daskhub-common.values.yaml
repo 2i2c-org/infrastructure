@@ -12,6 +12,15 @@ basehub:
       baseShareName: /homes/
   dask-gateway:
     enabled: true
+    gateway:
+      backend:
+        scheduler:
+          cores:
+            request: 1
+            limit: 2
+          memory:
+            request: 4G
+            limit: 4G
   jupyterhub:
     custom:
       daskhubSetup:
@@ -90,6 +99,8 @@ basehub:
             - rabernat
             - jbusecke
     singleuser:
+      cloudMetadata:
+        blockWithIptables: false
       extraEnv:
         GH_SCOPED_CREDS_CLIENT_ID: "Iv1.0c7df3d4b3191b2f"
         GH_SCOPED_CREDS_APP_URL: https://github.com/apps/leap-hub-push-access
@@ -352,14 +363,3 @@ basehub:
             mem_guarantee: 24G
             extra_resource_limits:
               nvidia.com/gpu: "1"
-
-dask-gateway:
-  gateway:
-    backend:
-      scheduler:
-        cores:
-          request: 1
-          limit: 2
-        memory:
-          request: 4G
-          limit: 4G

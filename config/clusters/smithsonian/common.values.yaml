@@ -81,6 +81,8 @@ basehub:
         enabled: true
 
     singleuser:
+      cloudMetadata:
+        blockWithIptables: false
       profileList:
         - display_name: "Pangeo Notebook"
           slug: pangeo

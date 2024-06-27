@@ -67,6 +67,8 @@ basehub:
             - Jeanne-le-Roux
             - amarouane-ABDELHAK
     singleuser:
+      cloudMetadata:
+        blockWithIptables: false
       defaultUrl: /lab
       profileList:
         - display_name: "Modified Pangeo Notebook"

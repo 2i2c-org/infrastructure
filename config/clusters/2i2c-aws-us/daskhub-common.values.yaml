@@ -26,3 +26,6 @@ basehub:
     custom:
       daskhubSetup:
         enabled: true
+    singleuser:
+      cloudMetadata:
+        blockWithIptables: false

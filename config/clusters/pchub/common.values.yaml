@@ -52,6 +52,8 @@ basehub:
         Authenticator:
           admin_users: []
     singleuser:
+      cloudMetadata:
+        blockWithIptables: false
       initContainers:
         - name: volume-mount-ownership-fix
           image: busybox:1.36.1

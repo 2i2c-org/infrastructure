@@ -77,6 +77,8 @@ basehub:
             - nikki-t
             - dgumustel
     singleuser:
+      cloudMetadata:
+        blockWithIptables: false
       profileList:
         # The mem-guarantees are here so k8s doesn't schedule other pods
         # on these nodes.

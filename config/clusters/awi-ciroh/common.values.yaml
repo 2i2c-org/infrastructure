@@ -12,7 +12,19 @@ basehub:
       baseShareName: /homes/
   dask-gateway:
     enabled: true
+    gateway:
+      backend:
+        scheduler:
+          cores:
+            request: 0.8
+            limit: 1
+          memory:
+            request: 1G
+            limit: 2G
   jupyterhub:
+    singleuser:
+      cloudMetadata:
+        blockWithIptables: false
     custom:
       daskhubSetup:
         enabled: true
@@ -52,13 +64,3 @@ basehub:
             - arpita0911patel
             - sepehrkrz
             - benlee0423
-dask-gateway:
-  gateway:
-    backend:
-      scheduler:
-        cores:
-          request: 0.8
-          limit: 1
-        memory:
-          request: 1G
-          limit: 2G

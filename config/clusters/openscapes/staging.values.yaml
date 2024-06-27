@@ -12,9 +12,6 @@ basehub:
       extraEnv:
         SCRATCH_BUCKET: s3://openscapeshub-scratch-staging/$(JUPYTERHUB_USER)
         PERSISTENT_BUCKET: s3://openscapeshub-persistent-staging/$(JUPYTERHUB_USER)
-      cloudMetadata:
-        # FIXME: Not sure if this is absolutely necessary, but verify.
-        blockWithIptables: false
     hub:
       config:
         GitHubOAuthenticator:

@@ -70,6 +70,8 @@ basehub:
             - jomey
 
     singleuser:
+      cloudMetadata:
+        blockWithIptables: false
       defaultUrl: /lab
       storage:
         extraVolumes:

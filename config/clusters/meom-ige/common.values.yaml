@@ -38,6 +38,8 @@ basehub:
             name: SWOT Ocean Pangeo Team
             url: https://meom-group.github.io/
     singleuser:
+      cloudMetadata:
+        blockWithIptables: false
       extraEnv:
         DATA_BUCKET: gs://meom-ige-data
         SCRATCH_BUCKET: "gs://meom-ige-scratch/$(JUPYTERHUB_USER)"

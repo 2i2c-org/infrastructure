@@ -70,6 +70,8 @@ basehub:
             - wildintellect
             - amarouane-ABDELHAK
     singleuser:
+      cloudMetadata:
+        blockWithIptables: false
       defaultUrl: /lab
       initContainers:
         - &volume_ownership_fix_initcontainer

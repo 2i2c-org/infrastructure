@@ -16,6 +16,22 @@ basehub:
       baseShareName: /
   dask-gateway:
     enabled: true
+    gateway:
+      backend:
+        scheduler:
+          # IMPORTANT: We have experienced that the scheduler can fail with
+          #            1GB memory limit. This was observed "stream closed"
+          #            from the python client working against the
+          #            Dask-Gateway created DaskCluster.
+          #
+          #            CommClosedError: in <TLS (closed) ConnectionPool.gather local=tls://192.168.40.210:54296 remote=gateway://traefik-prod-dask-gateway.prod:80/prod.b9600f678bb747c1a5f038b5bef3eb90>: Stream is closed
+          #
+          cores:
+            request: 1
+            limit: 64
+          memory:
+            request: 2G
+            limit: 500G
   jupyterhub:
     custom:
       daskhubSetup:
@@ -42,6 +58,8 @@ basehub:
             url: https://jupytearth.org
 
     singleuser:
+      cloudMetadata:
+        blockWithIptables: false
       initContainers:
         # Need to explicitly set this up and copy what's in basehub/values.yaml
         # as we have an extra 'shared-public' directory here.
@@ -279,21 +297,3 @@ basehub:
     scheduling:
       userScheduler:
         enabled: true
-
-dask-gateway:
-  gateway:
-    backend:
-      scheduler:
-        # IMPORTANT: We have experienced that the scheduler can fail with
-        #            1GB memory limit. This was observed "stream closed"
-        #            from the python client working against the
-        #            Dask-Gateway created DaskCluster.
-        #
-        #            CommClosedError: in <TLS (closed) ConnectionPool.gather local=tls://192.168.40.210:54296 remote=gateway://traefik-prod-dask-gateway.prod:80/prod.b9600f678bb747c1a5f038b5bef3eb90>: Stream is closed
-        #
-        cores:
-          request: 1
-          limit: 64
-        memory:
-          request: 2G
-          limit: 500G

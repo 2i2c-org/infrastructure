@@ -35,6 +35,8 @@ basehub:
             url: ""
             custom_html: <a href="https://www.hhmi.org/">HHMI</a> and <a href="https://strategiesos.org/about/">Stratos</a>
     singleuser:
+      cloudMetadata:
+        blockWithIptables: false
       extraContainers:
         - name: mysql
           image: datajoint/mysql:8.0 # following the spyglass tutorial at https://lorenfranklab.github.io/spyglass/latest/notebooks/00_Setup/#existing-database
