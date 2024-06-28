@@ -2,7 +2,7 @@
 
 This document describes how we regenerate credentials for _users_ and the `deployer` when they expire in NASA SMCE accounts.
 
-(nasa-smce:regenerate-deployer-credentials)=
+(nasa-smce:regenerate-deployer-creds)=
 ## Regenerate credentials for the `deployer`
 
 1. Set the cluster name as an environment variable
