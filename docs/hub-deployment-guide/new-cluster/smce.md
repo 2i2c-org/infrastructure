@@ -53,10 +53,7 @@ Once this exemption has been processed, you can continue as usual with deploymen
 The `hub-continuous-deployer` has an access key and secret associated with it, this is how it
 authenticates with AWS to perform actions. SMCE accounts have a 60 day password/access key
 regeneration policy and so we need to prepare to regularly regenerate this access key.
-
-We track which clusters have had their `hub-continuous-deployer` access key regenerated
-and when in this issue <https://github.com/2i2c-org/infrastructure/issues/2434> which
-also includes the steps for regeneration. Make sure to add the new cluster to this issue.
+See [](nasa-smce:regenerate-deployer-creds) for how to reset the credentials.
 
 ```{warning}
 We only receive **5 days notice** that a password/access key will expire via email!
