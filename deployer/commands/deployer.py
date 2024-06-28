@@ -257,7 +257,17 @@ def run_hub_health_check(
             values_file = config_file_path.parent.joinpath(values_file)
             config = yaml.load(values_file)
             # Check if there's config that enables dask-gateway
-            dask_gateway_enabled = config.get("dask-gateway", {}).get("enabled", False)
+            if config.get("basehub", {}):
+                dask_gateway_enabled = (
+                    config.get("basehub", {})
+                    .get("dask-gateway", {})
+                    .get("enabled", False)
+                )
+            else:
+                dask_gateway_enabled = config.get("dask-gateway", {}).get(
+                    "enabled", False
+                )
+
             if dask_gateway_enabled:
                 break
 

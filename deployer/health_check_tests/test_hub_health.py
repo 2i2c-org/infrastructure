@@ -64,15 +64,15 @@ async def check_hub_health(hub_url, test_notebook_path, service_api_token):
 async def test_hub_healthy(hub_url, api_token, notebook_dir, check_dask_scaling):
     try:
         print(f"Starting hub {hub_url} health validation...")
-        for root, directories, files in os.walk(notebook_dir, topdown=False):
-            for i, name in enumerate(files):
+        for root, _, files in os.walk(notebook_dir, topdown=False):
+            for _, name in enumerate(files):
                 # We only want to run the "scale_dask_workers.ipynb" file if the
                 # check_dask_scaling variable is true. We continue in the loop if
                 # check_dask_scaling == False when we iterate over this file.
+                print(f"Running {name} test notebook...")
                 if (not check_dask_scaling) and (name == "scale_dask_workers.ipynb"):
                     continue
 
-                print(f"Running {name} test notebook...")
                 test_notebook_path = os.path.join(root, name)
                 await check_hub_health(hub_url, test_notebook_path, api_token)
 
