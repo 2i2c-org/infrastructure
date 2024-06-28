@@ -26,10 +26,10 @@ jupyterhub:
       jupyterHub:
         authenticator_class: dummy
   singleuser:
-    defaultUrl: /git-pull?repo=https%3A%2F%2Fgithub.com%2FScienceCore%2Fclimaterisk&urlpath=lab%2Ftree%2Fclimaterisk%2F&branch=main
+    defaultUrl: /git-pull?repo=https%3A%2F%2Fgithub.com%2FScienceCore%2Fscipy-2024-climaterisk.git&urlpath=lab%2Ftree%2Fscipy-2024-climaterisk.git%2F&branch=main
     image:
       name: quay.io/2i2c/sciencecore-climaterisk-image
-      tag: "6b0b6f6f80fd"
+      tag: "ecb8fe463e9b"
     nodeSelector:
       node.kubernetes.io/instance-type: r5.xlarge
     memory:
