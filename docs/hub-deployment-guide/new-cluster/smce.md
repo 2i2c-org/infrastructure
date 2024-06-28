@@ -66,6 +66,6 @@ setup the cluster?
 ```
 
 ```{note}
-See [](nasa-smce:regenerate-password) for how to reset an expired password for
+See [](nasa-smce:regenerate-user-password) for how to reset an expired password for
 a _user_, e.g., a member of the engineering team.
 ```

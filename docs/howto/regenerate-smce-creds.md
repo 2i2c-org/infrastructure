@@ -1,4 +1,4 @@
-(nasa-smce:regenerate-password)=
+(nasa-smce:regenerate-user-password)=
 # Regenerate a password for a user in a NASA SMCE account
 
 The AWS accounts associated with NASA's [Science Managed Cloud Environment](https://smce.nasa.gov)
