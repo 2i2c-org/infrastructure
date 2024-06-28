@@ -1,0 +1,46 @@
+jupyterhub:
+  ingress:
+    hosts: [mendocino.cloudbank.2i2c.cloud]
+    tls:
+      - hosts: [mendocino.cloudbank.2i2c.cloud]
+        secretName: https-auto-tls
+  custom:
+    2i2c:
+      add_staff_user_ids_to_admin_users: true
+      add_staff_user_ids_of_type: "google"
+    homepage:
+      templateVars:
+        org:
+          name: Mendocino College
+          logo_url: https://www.mendocino.edu/themes/custom/mendocino/assets/images/logos/header-logo-r.png
+          url: https://www.mendocino.edu/
+        designed_by:
+          name: 2i2c
+          url: https://2i2c.org
+        operated_by:
+          name: CloudBank
+          url: http://cloudbank.org/
+        funded_by:
+          name: CloudBank
+          url: http://cloudbank.org/
+  hub:
+    config:
+      JupyterHub:
+        authenticator_class: cilogon
+      CILogonOAuthenticator:
+        oauth_callback_url: https://mendocino.cloudbank.2i2c.cloud/hub/oauth_callback
+        allowed_idps:
+          http://login.microsoftonline.com/common/oauth2/v2.0/authorize:
+            username_derivation:
+              username_claim: "email"
+            allowed_domains:
+              - "mendocino.edu"
+              - "student.mendocino.edu"
+          http://google.com/accounts/o8/id:
+            username_derivation:
+              username_claim: "email"
+      Authenticator:
+        admin_users:
+          - jedington@mendocino.edu
+          - ericvd@berkeley.edu
+          - sean.smorris@berkeley.edu
