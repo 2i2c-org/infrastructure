@@ -180,6 +180,14 @@ hubs:
       - common.values.yaml
       - lbcc.values.yaml
       - enc-lbcc.secret.values.yaml
+  - name: mendocino
+    display_name: "Mendocino College"
+    domain: mendocino.cloudbank.2i2c.cloud
+    helm_chart: basehub
+    helm_chart_values_files:
+      - common.values.yaml
+      - mendocino.values.yaml
+      - enc-mendocino.secret.values.yaml
   - name: mills
     display_name: "Mills College"
     domain: datahub.mills.edu
