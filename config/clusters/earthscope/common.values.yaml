@@ -13,8 +13,12 @@ basehub:
         - noresvport
       serverIP: fs-08e7747330d833d82.efs.us-east-2.amazonaws.com
       baseShareName: /
+  dask-gateway:
+    enabled: true
   jupyterhub:
     custom:
+      daskhubSetup:
+        enabled: true
       2i2c:
         add_staff_user_ids_to_admin_users: true
         add_staff_user_ids_of_type: "google"
@@ -136,6 +140,8 @@ basehub:
             # Chad Trebant, https://2i2c.freshdesk.com/a/tickets/1279
             - google-oauth2|117718799995701713253
     singleuser:
+      cloudMetadata:
+        blockWithIptables: false
       profileList:
         - display_name: "Shared Small: 1-4 CPU, 8-32 GB"
           description: "A shared machine, the recommended option until you experience a limitation."

@@ -1,6 +1,11 @@
 (hub-helm-charts)=
 # Hub helm charts
 
+```{warning}
+The `daskhub` helm chart has now been deprecated and `dask-gateway` is now a conditional dependency of the `basehub` chart. It shouldn't be used for new hub deployments.
+
+However there are still existing hub configuration that uses a chart called `daskhub`. This is just for backward compatibility in order to not disrupt existing deployments by causing hubs reinstallations and should not be replicated going further.
+```
 The hubs are configured and deployed using [*locally defined helm charts*](https://helm.sh/docs/topics/chart_repository/#create-a-chart-repository). Because each hub
 type can be described by a helm chart, a hierarchy
 of hub types can be built and this makes development and usage easier.

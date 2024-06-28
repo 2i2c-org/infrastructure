@@ -51,14 +51,13 @@ def _prepare_helm_charts_dependencies_and_schemas():
     """
     Ensures that the helm charts we deploy, basehub and daskhub, have got their
     dependencies updated and .json schema files generated so that they can be
-    rendered during validation or deployment.
     """
     basehub_dir = HELM_CHARTS_DIR.joinpath("basehub")
     _generate_values_schema_json(basehub_dir)
     subprocess.check_call(["helm", "dep", "up", basehub_dir])
 
     daskhub_dir = HELM_CHARTS_DIR.joinpath("daskhub")
-    _generate_values_schema_json(daskhub_dir)
+    # Not generating schema for daskhub, as it is dead
     subprocess.check_call(["helm", "dep", "up", daskhub_dir])
 
     support_dir = HELM_CHARTS_DIR.joinpath("support")
@@ -122,11 +121,17 @@ def hub_config(
         ]
         for values_file in hub.spec["helm_chart_values_files"]:
             if "secret" not in os.path.basename(values_file):
-                cmd.append(f"--values={config_file_path.parent.joinpath(values_file)}")
+                values_file = config_file_path.parent.joinpath(values_file)
+                cmd.append(f"--values={values_file}")
+                config = yaml.load(values_file)
+                # Check if there's config that enables dask-gateway
+                dask_gateway_enabled = config.get("dask-gateway", {}).get(
+                    "enabled", False
+                )
         # Workaround the current requirement for dask-gateway 0.9.0 to have a
         # JupyterHub api-token specified, for updates if this workaround can be
         # removed, see https://github.com/dask/dask-gateway/issues/473.
-        if hub.spec["helm_chart"] == "daskhub":
+        if dask_gateway_enabled:
             cmd.append("--set=dask-gateway.gateway.auth.jupyterhub.apiToken=dummy")
         try:
             subprocess.check_output(cmd, text=True)
@@ -204,6 +209,8 @@ def authenticator_config(
                 config = yaml.load(values_file)
                 # Check if there's config that specifies an authenticator class
                 try:
+                    # This special casing is needed for legacy daskhubs still
+                    # using the daskhub chart
                     if hub.spec["helm_chart"] != "basehub":
                         hub_config = config["basehub"]["jupyterhub"]["hub"]["config"]
                     else:
@@ -262,6 +269,8 @@ def configurator_config(
                 # Load the hub extra config from its specific values files
                 config = yaml.load(values_file)
                 try:
+                    # This special casing is needed for legacy daskhubs still
+                    # using the daskhub chart
                     if hub.spec["helm_chart"] != "basehub":
                         singleuser_config = config["basehub"]["jupyterhub"][
                             "singleuser"
@@ -270,7 +279,6 @@ def configurator_config(
                     else:
                         singleuser_config = config["jupyterhub"]["singleuser"]
                         custom_config = config["jupyterhub"]["custom"]
-
                     configurator_enabled = custom_config.get(
                         "jupyterhubConfigurator", {}
                     ).get("enabled")

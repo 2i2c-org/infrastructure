@@ -12,16 +12,15 @@ def cluster_entry(
         ..., prompt="The name of the cluster where the hub will live"
     ),
     hub_name: str = typer.Option(..., prompt="The name of the hub"),
-    hub_type: str = typer.Option(..., prompt="The hub type: basehub/daskhub"),
 ):
     """
     Outputs the relevant cluster.yaml hub entry that the engineer can then manually copy-paste into the relevant cluster.yaml file.
     """
 
     vars = {
+        "hub_type": "basehub",
         "cluster_name": cluster_name,
         "hub_name": hub_name,
-        "hub_type": hub_type,
     }
 
     with open(

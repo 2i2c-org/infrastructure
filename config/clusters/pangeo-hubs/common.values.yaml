@@ -10,8 +10,21 @@ basehub:
       serverIP: 10.229.44.234
       # Name of Google Filestore share
       baseShareName: /homes/
+  dask-gateway:
+    enabled: true
+    gateway:
+      backend:
+        scheduler:
+          cores:
+            request: 0.8
+            limit: 1
+          memory:
+            request: 1G
+            limit: 2G
   jupyterhub:
     custom:
+      daskhubSetup:
+        enabled: true
       2i2c:
         add_staff_user_ids_to_admin_users: true
         add_staff_user_ids_of_type: "github"
@@ -49,6 +62,8 @@ basehub:
             - scottyhq
             - TomAugspurger
     singleuser:
+      cloudMetadata:
+        blockWithIptables: false
       extraEnv:
         GH_SCOPED_CREDS_CLIENT_ID: "Iv1.c90ee430400a347f"
         GH_SCOPED_CREDS_APP_URL: https://github.com/apps/pangeo-gcp-hub-push-access
@@ -102,13 +117,3 @@ basehub:
             mem_guarantee: 52G
             node_selector:
               node.kubernetes.io/instance-type: n1-standard-16
-dask-gateway:
-  gateway:
-    backend:
-      scheduler:
-        cores:
-          request: 0.8
-          limit: 1
-        memory:
-          request: 1G
-          limit: 2G

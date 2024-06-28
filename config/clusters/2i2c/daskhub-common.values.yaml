@@ -9,3 +9,12 @@ basehub:
       serverIP: 10.234.45.250
       # MUST HAVE TRAILING SLASH
       baseShareName: /homes/homes/
+  dask-gateway:
+    enabled: true
+  jupyterhub:
+    custom:
+      daskhubSetup:
+        enabled: true
+    singleuser:
+      cloudMetadata:
+        blockWithIptables: false

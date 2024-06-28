@@ -13,8 +13,12 @@ basehub:
         - noresvport
       serverIP: fs-05f68d7e096d7cf16.efs.us-west-2.amazonaws.com
       baseShareName: /
+  dask-gateway:
+    enabled: true
   jupyterhub:
     custom:
+      daskhubSetup:
+        enabled: true
       2i2c:
         add_staff_user_ids_to_admin_users: true
         add_staff_user_ids_of_type: "github"
@@ -73,6 +77,8 @@ basehub:
             - nikki-t
             - dgumustel
     singleuser:
+      cloudMetadata:
+        blockWithIptables: false
       profileList:
         # The mem-guarantees are here so k8s doesn't schedule other pods
         # on these nodes.

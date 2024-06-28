@@ -262,6 +262,9 @@ properties:
   global:
     type: object
     additionalProperties: true
+  dask-gateway:
+    type: object
+    additionalProperties: true
   binderhub-service:
     type: object
     additionalProperties: true
@@ -517,6 +520,14 @@ properties:
               enabled:
                 type: boolean
           binderhubUI:
+            type: object
+            additionalProperties: false
+            required:
+              - enabled
+            properties:
+              enabled:
+                type: boolean
+          daskhubSetup:
             type: object
             additionalProperties: false
             required:

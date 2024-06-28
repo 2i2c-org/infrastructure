@@ -1,0 +1,69 @@
+jupyterhub:
+  ingress:
+    hosts: [hub.binder.pythia.2i2c.cloud]
+    tls:
+      - hosts: [hub.binder.pythia.2i2c.cloud]
+        secretName: https-auto-tls
+  custom:
+    binderhubUI:
+      enabled: true
+    2i2c:
+      add_staff_user_ids_to_admin_users: false
+    jupyterhubConfigurator:
+      enabled: false
+    singleuserAdmin:
+      extraVolumeMounts: []
+  singleuser:
+    storage:
+      type: none
+      extraVolumeMounts: []
+    initContainers: []
+    profileList: []
+  hub:
+    redirectToServer: false
+    services:
+      binder: {}
+    loadRoles:
+      binder:
+        services:
+          - binder
+        scopes:
+          - servers
+          - admin:users
+      user:
+        scopes:
+          - self
+          # Admin users will by default have access:services, so this is only
+          # observed to be required for non-admin users.
+          - access:services!service=binder
+binderhub-service:
+  enabled: true
+  ingress:
+    enabled: true
+    hosts: [binder.pythia.2i2c.cloud]
+    tls:
+      - hosts: [binder.pythia.2i2c.cloud]
+        secretName: binder-https-auto-tls
+  config:
+    BinderHub:
+      base_url: /
+      hub_url: https://hub.binder.pythia.2i2c.cloud
+      badge_base_url: https://binder.pythia.2i2c.cloud
+      auth_enabled: false
+      enable_api_only_mode: false
+      banner_message: ""
+      about_message: Binder for use with Project Pythia
+  extraEnv:
+    - name: JUPYTERHUB_API_TOKEN
+      valueFrom:
+        secretKeyRef:
+          name: hub
+          key: hub.services.binder.apiToken
+    - name: JUPYTERHUB_CLIENT_ID
+      value: "service-binder"
+    - name: JUPYTERHUB_API_URL
+      value: "https://hub.binder.pythia.2i2c.cloud/hub/api"
+    # Without this, the redirect URL to /hub/api/... gets
+    # appended to binderhub's URL instead of the hub's
+    - name: JUPYTERHUB_BASE_URL
+      value: "https://hub.binder.pythia.2i2c.cloud/"

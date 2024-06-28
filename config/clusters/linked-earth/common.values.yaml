@@ -10,8 +10,21 @@ basehub:
       serverIP: 10.155.150.2
       # Name of Google Filestore share
       baseShareName: /homes/
+  dask-gateway:
+    enabled: true
+    gateway:
+      backend:
+        scheduler:
+          cores:
+            request: 0.8
+            limit: 1
+          memory:
+            request: 1G
+            limit: 2G
   jupyterhub:
     custom:
+      daskhubSetup:
+        enabled: true
       2i2c:
         add_staff_user_ids_to_admin_users: true
         add_staff_user_ids_of_type: "github"
@@ -43,6 +56,8 @@ basehub:
           admin_users:
             - khider
     singleuser:
+      cloudMetadata:
+        blockWithIptables: false
       image:
         # User image repo: https://quay.io/repository/linkedearth/pyleoclim
         name: quay.io/linkedearth/pyleoclim
@@ -163,13 +178,3 @@ basehub:
             mem_limit: null
             node_selector:
               node.kubernetes.io/instance-type: n2-highmem-16
-dask-gateway:
-  gateway:
-    backend:
-      scheduler:
-        cores:
-          request: 0.8
-          limit: 1
-        memory:
-          request: 1G
-          limit: 2G

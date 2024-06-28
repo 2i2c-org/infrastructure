@@ -21,7 +21,7 @@ hubs:
     domain: staging.leap.2i2c.cloud
     helm_chart: daskhub
     helm_chart_values_files:
-      - common.values.yaml
+      - daskhub-common.values.yaml
       - staging.values.yaml
       - enc-staging.secret.values.yaml
   - name: prod
@@ -29,7 +29,7 @@ hubs:
     domain: leap.2i2c.cloud
     helm_chart: daskhub
     helm_chart_values_files:
-      - common.values.yaml
+      - daskhub-common.values.yaml
       - prod.values.yaml
       - enc-prod.secret.values.yaml
   - name: public

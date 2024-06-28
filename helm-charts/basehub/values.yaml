@@ -73,6 +73,240 @@ staticWebsite:
       id: 0
       privateKey: ""
 
+dask-gateway:
+  enabled: false # Enabling dask-gateway will install Dask Gateway as a dependency.
+  # Further Dask Gateway configuration goes here
+  # See https://github.com/dask/dask-gateway/blob/main/resources/helm/dask-gateway/values.yaml
+  gateway:
+    backend:
+      scheduler:
+        extraPodConfig:
+          serviceAccountName: user-sa
+          tolerations:
+            # Let's put schedulers on notebook nodes, since they aren't ephemeral
+            # dask can recover from dead workers, but not dead schedulers
+            - key: "hub.jupyter.org/dedicated"
+              operator: "Equal"
+              value: "user"
+              effect: "NoSchedule"
+            - key: "hub.jupyter.org_dedicated"
+              operator: "Equal"
+              value: "user"
+              effect: "NoSchedule"
+          nodeSelector:
+            k8s.dask.org/node-purpose: scheduler
+        cores:
+          request: 0.01
+          limit: 1
+        memory:
+          request: 128M
+          limit: 1G
+      worker:
+        extraContainerConfig:
+          securityContext:
+            runAsGroup: 1000
+            runAsUser: 1000
+        extraPodConfig:
+          serviceAccountName: user-sa
+          securityContext:
+            fsGroup: 1000
+          tolerations:
+            - key: "k8s.dask.org/dedicated"
+              operator: "Equal"
+              value: "worker"
+              effect: "NoSchedule"
+            - key: "k8s.dask.org_dedicated"
+              operator: "Equal"
+              value: "worker"
+              effect: "NoSchedule"
+          nodeSelector:
+            # Dask workers get their own pre-emptible pool
+            k8s.dask.org/node-purpose: worker
+    env:
+      - name: BASEHUB_K8S_DIST
+        valueFrom:
+          configMapKeyRef:
+            name: basehub-cluster-info
+            key: K8S_DIST
+
+    extraConfig:
+      # This configuration represents options that can be presented to users
+      # that want to create a Dask cluster using dask-gateway client.
+      #
+      # This configuration is meant to enable the user to request dask worker
+      # pods that fits well on 2i2c's clusters. Currently the only kind of
+      # instance types used are n2-highmem-16 or r5.4xlarge.
+      #
+      # - Documentation about exposing cluster options to users:
+      #   https://gateway.dask.org/cluster-options.html and the
+      # - Reference for KubeClusterConfig, which is what can be configured:
+      #   https://gateway.dask.org/api-server.html#kubeclusterconfig.
+      #
+      optionHandler: |
+        import os
+        import string
+
+        from dask_gateway_server.options import Integer, Mapping, Options, Select, String
+
+        # Escape a string to be dns-safe in the same way that KubeSpawner does it.
+        # Reference https://github.com/jupyterhub/kubespawner/blob/616f72c4aee26c3d2127c6af6086ec50d6cda383/kubespawner/spawner.py#L1828-L1835
+        # Adapted from https://github.com/minrk/escapism to avoid installing the package
+        # in the dask-gateway api pod which would have been problematic.
+        def escape_string_label_safe(to_escape):
+            safe_chars = set(string.ascii_lowercase + string.digits)
+            escape_char = "-"
+            chars = []
+            for c in to_escape:
+                if c in safe_chars:
+                    chars.append(c)
+                else:
+                    # escape one character
+                    buf = []
+                    # UTF-8 uses 1 to 4 bytes per character, depending on the Unicode symbol
+                    # so we need to transform each byte to its hex value
+                    for byte in c.encode("utf8"):
+                        buf.append(escape_char)
+                        # %X is the hex value of the byte
+                        buf.append('%X' % byte)
+                    escaped_hex_char = "".join(buf)
+                    chars.append(escaped_hex_char)
+            return u''.join(chars)
+
+        # Decide on available instance types and their resource allocation
+        # choices to expose based on cloud provider. For each daskhub hub
+        # managed by 2i2c, there should be these instance types available.
+        #
+        cloud_provider = os.environ["BASEHUB_K8S_DIST"] # gke, eks, or aks
+        instance_types = {
+            "gke": ["n2-highmem-16"],
+            "eks": ["r5.4xlarge"],
+            "aks": ["Standard_E16_v4"],
+        }
+
+        # NOTE: Data mentioned below comes from manual inspection of data
+        #       collected and currently only available at
+        #       https://github.com/2i2c-org/infrastructure/pull/3337.
+        #
+        resource_allocations = {
+            # n2-highmem-16 nodes in our clusters have 15.89 allocatable cores
+            # and 116.549Gi allocatable memory, and daemonset are expected to
+            # not add more than 400m cores and 800Mi (0.781Gi) memory with some
+            # margin, so we get 15.49 cores and 115.768Gi available for worker
+            # pods to request.
+            #
+            # This is an initial conservative strategy, allowing a slight
+            # oversubscription of CPU but not any oversubscription of memory.
+            #
+            # To workaround https://github.com/dask/dask-gateway/issues/765, we
+            # round worker_cores down from [0.968, 1.936, 3.872, 7.745, 15.49]
+            # to [0.9, 1.9, 3.8, 7.7, 15.4].
+            #
+            "n2-highmem-16": {
+                "1CPU, 7.2Gi": {"worker_cores": 0.9, "worker_cores_limit": 1, "worker_memory": "7.235G", "worker_memory_limit": "7.235G"},
+                "2CPU, 14.5Gi": {"worker_cores": 1.9, "worker_cores_limit": 2, "worker_memory": "14.471G", "worker_memory_limit": "14.471G"},
+                "4CPU, 28.9Gi": {"worker_cores": 3.8, "worker_cores_limit": 4, "worker_memory": "28.942G", "worker_memory_limit": "28.942G"},
+                "8CPU, 57.9Gi": {"worker_cores": 7.7, "worker_cores_limit": 8, "worker_memory": "57.884G", "worker_memory_limit": "57.884G"},
+                "16CPU, 115.8Gi": {"worker_cores": 15.4, "worker_cores_limit": 16, "worker_memory": "115.768G", "worker_memory_limit": "115.768G"},
+            },
+            # r5.4xlarge nodes in our clusters have 15.89 allocatable cores and
+            # 121.504Gi allocatable memory, and daemonset are expected to not
+            # add more than 400m cores and 800Mi (0.781Gi) memory with some
+            # margin, so we get 15.49 cores and 120.723Gi available for worker
+            # pods to request.
+            #
+            # This is an initial conservative strategy, allowing a slight
+            # oversubscription of CPU but not any oversubscription of memory.
+            #
+            # To workaround https://github.com/dask/dask-gateway/issues/765, we
+            # round worker_cores down from [0.968, 1.936, 3.872, 7.745, 15.49]
+            # to [0.9, 1.9, 3.8, 7.7, 15.4].
+            #
+            "r5.4xlarge": {
+                "1CPU, 7.5Gi": {"worker_cores": 0.9, "worker_cores_limit": 1, "worker_memory": "7.545G", "worker_memory_limit": "7.545G"},
+                "2CPU, 15.1Gi": {"worker_cores": 1.9, "worker_cores_limit": 2, "worker_memory": "15.090G", "worker_memory_limit": "15.090G"},
+                "4CPU, 30.2Gi": {"worker_cores": 3.8, "worker_cores_limit": 4, "worker_memory": "30.180G", "worker_memory_limit": "30.180G"},
+                "8CPU, 60.4Gi": {"worker_cores": 7.7, "worker_cores_limit": 8, "worker_memory": "60.361G", "worker_memory_limit": "60.361G"},
+                "16CPU, 120.7Gi": {"worker_cores": 15.4, "worker_cores_limit": 16, "worker_memory": "120.723G", "worker_memory_limit": "120.723G"},
+            },
+            "Standard_E16_v4": {
+                # Set up to be proportioate, so using all the RAM uses all the CPU too
+                ".25-1 CPU, 2GB RAM": {"worker_cores": 0.25, "worker_cores_limit": 1, "worker_memory": "2G", "worker_memory_limit": "2G"},
+            },
+        }
+
+        # for now we support only on one instance type per cluster, listing it
+        # as an option is a way to help convey how things work a bit better
+        it = instance_types[cloud_provider][0]
+        ra = resource_allocations[it]
+        ra_keys = list(ra.keys())
+
+        def cluster_options(user):
+            def option_handler(options):
+                if ":" not in options.image:
+                    raise ValueError("When specifying an image you must also provide a tag")
+                extra_labels = {
+                    "hub.jupyter.org/username": escape_string_label_safe(user.name),
+                }
+                scheduler_extra_pod_annotations = {
+                    "hub.jupyter.org/username": user.name,
+                    "prometheus.io/scrape": "true",
+                    "prometheus.io/port": "8787",
+                }
+                worker_extra_pod_annotations = {
+                    "hub.jupyter.org/username": user.name,
+                }
+                picked_ra = ra[options.worker_resource_allocation]
+
+                return {
+                    # A default image is suggested via DASK_GATEWAY__CLUSTER__OPTIONS__IMAGE env variable
+                    "image": options.image,
+                    "scheduler_extra_pod_labels": extra_labels,
+                    "scheduler_extra_pod_annotations": scheduler_extra_pod_annotations,
+                    "worker_extra_pod_labels": extra_labels,
+                    "worker_extra_pod_annotations": worker_extra_pod_annotations,
+                    "worker_cores": picked_ra["worker_cores"],
+                    "worker_cores_limit": picked_ra["worker_cores_limit"],
+                    "worker_memory": picked_ra["worker_memory"],
+                    "worker_memory_limit": picked_ra["worker_memory_limit"],
+                    "environment": options.environment,
+                    "idle_timeout": options.idle_timeout_minutes * 60,
+                }
+            return Options(
+                Select(
+                    "instance_type",
+                    [it],
+                    default=it,
+                    label="Instance type running worker containers",
+                ),
+                Select(
+                    "worker_resource_allocation",
+                    ra_keys,
+                    default=ra_keys[0],
+                    label="Resources per worker container",
+                ),
+                # The default image is pre-specified by the dask-gateway client
+                # via the env var DASK_GATEWAY__CLUSTER__OPTIONS__IMAGE set on
+                # the jupyterhub user pods
+                String("image", label="Image"),
+                Mapping("environment", {}, label="Environment variables (YAML)"),
+                Integer("idle_timeout_minutes", 30, min=0, label="Idle cluster terminated after (minutes)"),
+                handler=option_handler,
+            )
+        c.Backend.cluster_options = cluster_options
+
+        # timeout after 30 minutes of inactivity by default, keep this in sync
+        # with the user exposed option idle_timeout_minutes's default value
+        # configured above
+        c.KubeClusterConfig.idle_timeout = 1800
+    prefix: "/services/dask-gateway" # Users connect to the Gateway through the JupyterHub service.
+    auth:
+      type: jupyterhub # Use JupyterHub to authenticate with Dask Gateway
+  traefik:
+    nodeSelector:
+      k8s.dask.org/node-purpose: core
+    service:
+      type: ClusterIP # Access Dask Gateway through JupyterHub. To access the Gateway from outside JupyterHub, this must be changed to a `LoadBalancer`.
+
 nfs:
   enabled: false
   dirsizeReporter:
@@ -772,6 +1006,11 @@ jupyterhub:
         #        more tightly scoped permissions based on our needs.
         #
         admin: true
+      dask-gateway:
+        # We provide an entry here for dask-gateway unconditionally, so
+        # our helm chart will correctly autogenerate a secret with appropriate
+        # keys. It's not used if dask-gateway is not enabled.
+        display: false
     image:
       name: quay.io/2i2c/pilot-hub
       tag: "0.0.1-0.dev.git.8663.h049aa2c2"
@@ -1305,3 +1544,66 @@ jupyterhub:
         if get_config('custom.auth.anonymizeUsername', False):
           # https://jupyterhub.readthedocs.io/en/stable/reference/api/auth.html#jupyterhub.auth.Authenticator.post_auth_hook
           c.Authenticator.post_auth_hook = salt_username
+
+      # Initially copied from https://github.com/dask/helm-chart/blob/main/daskhub/values.yaml
+      daskhub-01-add-dask-gateway-values: |
+        # 1. Sets `DASK_GATEWAY__PROXY_ADDRESS` in the singleuser environment.
+        # 2. Adds the URL for the Dask Gateway JupyterHub service.
+        import os
+        from z2jh import get_config
+
+        if get_config('custom.daskhubSetup.enabled'):
+          # Default all users on hubs with dask-gateway to use JupyterLab
+          c.Spawner.default_url = '/lab'
+
+          # Add an extra label that allows user pods to talk to the proxy pod
+          # in clusters with networkPolicy enabled so kernels can talk to the
+          # dask-gateway service via the proxy
+          c.KubeSpawner.extra_labels.update({
+            "hub.jupyter.org/network-access-proxy-http": "true"
+          })
+          # These are set by jupyterhub.
+          release_name = os.environ["HELM_RELEASE_NAME"]
+          release_namespace = os.environ["POD_NAMESPACE"]
+          if "PROXY_HTTP_SERVICE_HOST" in os.environ:
+              # https is enabled, we want to use the internal http service.
+              gateway_address = "http://{}:{}/services/dask-gateway/".format(
+                  os.environ["PROXY_HTTP_SERVICE_HOST"],
+                  os.environ["PROXY_HTTP_SERVICE_PORT"],
+              )
+              print("Setting DASK_GATEWAY__ADDRESS {} from HTTP service".format(gateway_address))
+          else:
+              gateway_address = "http://proxy-public/services/dask-gateway"
+              print("Setting DASK_GATEWAY__ADDRESS {}".format(gateway_address))
+          # Internal address to connect to the Dask Gateway.
+          c.KubeSpawner.environment.setdefault("DASK_GATEWAY__ADDRESS", gateway_address)
+          # Internal address for the Dask Gateway proxy.
+          c.KubeSpawner.environment.setdefault("DASK_GATEWAY__PROXY_ADDRESS", "gateway://traefik-{}-dask-gateway.{}:80".format(release_name, release_namespace))
+          # Relative address for the dashboard link.
+          c.KubeSpawner.environment.setdefault("DASK_GATEWAY__PUBLIC_ADDRESS", "/services/dask-gateway/")
+          # Use JupyterHub to authenticate with Dask Gateway.
+          c.KubeSpawner.environment.setdefault("DASK_GATEWAY__AUTH__TYPE", "jupyterhub")
+
+          # Add some settings for dask gateway via environment variables
+          # https://docs.dask.org/en/latest/configuration.html has more information
+          # Kubernetes env variable expansion via `{{}}` is used here. See
+          # https://kubernetes.io/docs/tasks/inject-data-application/define-interdependent-environment-variables/
+          # for more information
+          c.KubeSpawner.environment.update({
+            # Specify what image dask-gateway workers and schedulers should use
+            'DASK_GATEWAY__CLUSTER__OPTIONS__IMAGE': '{{JUPYTER_IMAGE_SPEC}}',
+            'DASK_GATEWAY__CLUSTER__OPTIONS__ENVIRONMENT': '{{"SCRATCH_BUCKET": "$(SCRATCH_BUCKET)", "PANGEO_SCRATCH": "$(PANGEO_SCRATCH)"}}',
+            'DASK_DISTRIBUTED__DASHBOARD__LINK': '{{JUPYTERHUB_SERVICE_PREFIX}}proxy/{{port}}/status'
+          })
+
+          # Adds Dask Gateway as a JupyterHub service to make the gateway available at
+          # {HUB_URL}/services/dask-gateway
+          service_url = "http://traefik-{}-dask-gateway.{}".format(release_name, release_namespace)
+          for service in c.JupyterHub.services:
+              if service["name"] == "dask-gateway":
+                  if not service.get("url", None):
+                      print("Adding dask-gateway service URL")
+                      service.setdefault("url", service_url)
+                  break
+          else:
+              print("dask-gateway service not found, this should not happen!")

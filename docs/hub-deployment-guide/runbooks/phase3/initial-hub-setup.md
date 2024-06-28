@@ -43,22 +43,6 @@ When reviewing initial hub setup PRs, make sure the files above are all present.
 
 All of the following steps must be followed in order to consider phase 3.1 complete. Steps might contain references to other smaller, topic-specific runbooks that are gathered together and listed in the order they should be carried out in by an engineer.
 
-1. **Determine the hub helm chart that is needed**
-
-   Use the info provided in the new hub GitHub issue for the `Dask gateway` section.
-   If Dask gateway will be needed, then go for a `daskhub` helm chart, otherwise choose a `basehub`.
-
-   Store the helm type under $HELM_CHART_TYPE env var:
-
-   ```bash
-   export HELM_CHART_TYPE=type
-   ```
-
-   ```{seealso}
-   For more information about our hub helm charts and how to choose, see [](hub-helm-charts).
-
-   See [](/topic/infrastructure/config.md) for general information about hub helm chart configuration.
-   ```
 
 1. **Create the relevant `values.yaml` file/s under the appropriate cluster directory**
 
@@ -161,7 +145,7 @@ All of the following steps must be followed in order to consider phase 3.1 compl
    You can use the `deployer generate hub-asset` subcommand to generate the relevant entry to insert into cluster.yaml file.
 
    ```bash
-   deployer generate hub-asset cluster-entry --cluster-name $CLUSTER_NAME --hub-name $HUB_NAME --hub-type $HELM_CHART_TYPE
+   deployer generate hub-asset cluster-entry --cluster-name $CLUSTER_NAME --hub-name $HUB_NAME
    ```
 
    ```{warning}
@@ -171,6 +155,12 @@ All of the following steps must be followed in order to consider phase 3.1 compl
    ```{important}
    If you are deploying a binderhub ui style hub, then make sure that in the `cluster.yaml` file **the hub's domain** is entered instead of the binderhub's, for testing purposes.
    ```
+
+1. **Enable dask-gateway**
+
+   Use the info provided in the new hub GitHub issue for the `Dask gateway` section.
+   If Dask gateway will be needed, then choose a `basehub`, and follow the guide on
+   (how to enable dask-gateway on an existing hub)[howto:features:daskhub]
 
 1. **Add the new cluster to CI/CD**
 

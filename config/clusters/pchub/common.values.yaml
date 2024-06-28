@@ -11,8 +11,12 @@ basehub:
       serverIP: 2i2cpchub.file.core.windows.net
       # Trailing slash is important!
       baseShareName: /2i2cpchub/homes/
+  dask-gateway:
+    enabled: true
   jupyterhub:
     custom:
+      daskhubSetup:
+        enabled: true
       2i2c:
         add_staff_user_ids_to_admin_users: true
         add_staff_user_ids_of_type: "github"
@@ -48,6 +52,8 @@ basehub:
         Authenticator:
           admin_users: []
     singleuser:
+      cloudMetadata:
+        blockWithIptables: false
       initContainers:
         - name: volume-mount-ownership-fix
           image: busybox:1.36.1
