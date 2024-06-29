@@ -97,7 +97,7 @@ following loop:
 3. Remember that you are not an imposter, and while you may not have the
    specific **knowledge** about the issue, you have the **skills** to
    acquire this knowledge and fix the issue.
-4. Boldly proceed into this uncertainity, and fix the issue, asking for
+4. Boldly proceed into this uncertainty, and fix the issue, asking for
    and receiving help from the team as needed.
 
 Note: You can also ask for help *before*.
