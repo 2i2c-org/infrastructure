@@ -113,4 +113,5 @@ Information on contributing to this repository
 :maxdepth: 2
 
 contributing/code-review
+contributing/community-partner
 ```
