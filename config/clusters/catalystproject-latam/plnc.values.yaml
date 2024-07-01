@@ -125,13 +125,13 @@ jupyterhub:
                 display_name: Tensorflow ML Notebook
                 slug: "tensorflow"
                 kubespawner_override:
-                  image: "quay.io/jupyter/tensorflow-notebook:cuda-2024-06-17"
+                  image: "quay.io/jupyter/tensorflow-notebook:cuda-2024-07-01"
               pytorch:
                 display_name: PyTorch ML Notebook
                 default: true
                 slug: "pytorch"
                 kubespawner_override:
-                  image: "quay.io/jupyter/pytorch-notebook:cuda12-2024-06-17"
+                  image: "quay.io/jupyter/pytorch-notebook:cuda12-2024-07-01"
         kubespawner_override:
           default_url: /lab
           environment:
