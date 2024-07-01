@@ -1,3 +1,8 @@
+dask-gateway:
+  enabled: true
+  gateway:
+    backend:
+      imagePullSecrets: [{ name: image-pull-secret }]
 jupyterhub:
   ingress:
     hosts: [hub.big.binder.opensci.2i2c.cloud]
@@ -6,6 +11,8 @@ jupyterhub:
         secretName: https-auto-tls
   custom:
     binderhubUI:
+      enabled: true
+    daskhubSetup:
       enabled: true
     2i2c:
       add_staff_user_ids_to_admin_users: true
@@ -31,6 +38,8 @@ jupyterhub:
     singleuserAdmin:
       extraVolumeMounts: []
   singleuser:
+    cloudMetadata:
+      blockWithIptables: false
     cpu:
       limit: 0.25
     memory:
