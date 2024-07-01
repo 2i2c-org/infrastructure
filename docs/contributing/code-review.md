@@ -1,235 +1,118 @@
 (infrastructure:review)=
-# Review and merge guidelines
+# Review and merge guidelines for 2i2c Engineers
 
-Much of our active infrastructure is configured and automatically updated via CI/CD pipelines.
-This means that changes in this repository often immediately impact the infrastructure that we run.
-As such, we follow team policies for review/merge that are more specific [than our general development merge policies](inv:tc#development:merge-policy).
+## Mindset
 
-This document codifies our guidelines for doing code review and merging pull requests on active infrastructure (ie, anything in the `infrastructure/` codebase).
+This repository is *not* an open source *project* (unlike, for example,
+[jupyterhub/jupyterhub](https://github.com/jupyterhub/jupyterhub)). It
+is instead the *source of truth* for the infrastructure that 2i2c runs.
+As such, it needs a different mindset on what review is **useful**.
 
-> A Foolish Consistency is the Hobgoblin of Little Minds
->
-> - PEP 8
+When you merge a PR in an open source *project*, usually you have to keep
+in mind a lot of factors:
 
-## Changing active infrastructure in general
+1. How will this affect downstream users?
+2. How will this affect me (and other maintainers) in the future as we
+   try to change this?
+3. How will this affect the direction of the project?
 
-The following general policies apply to any change that will affect active infrastructure.
-Policies specific to **Terraform** changes [are described below](infrastructure:review:terraform).
+However, when we merge a PR in this *infrastructure repository*, the
+factors are quite different:
 
-Here are some guidelines for merging and reviewing in this case:
+1. What change will this actually make to our running infrastructure?
+2. How do I know it has done the thing I intended it to do?
+3. How do we mitigate the chance that we break something unintentionally?
 
-- **The PR author must also merge the PR**. (REQUIRED)
-  Because a PR is a reflection of a _deploy_, the author of the PR should also be the one that merges it, since only they know what infrastructure has actually been deployed.
-- **Explicitly list a back-up if you must step away**. (REQUIRED)
-  PR authors are responsible for the infrastructure changes that they make.
-  You should generally only make a change to live infrastructure if you'll have the bandwidth to ensure it is fixed if something goes wrong.
-  If for some reason you **must** step away, make it clear who else is responsible for shepherding the PR.
-- **Be careful when changing config of a hub *during* an event**
-  Sometimes, a hub config change needs to happen *immediately*, to help debug something
-  or change behavior during a time sensitive event. Local deploys are ok to make sure that
-  users see the benefit immediately and we aren't blocking the progress of the event. However,
-  make sure you push a PR with the change *and merge it quickly* to make sure that the changes
-  are persisted across future deploys. Self merging is acceptable here, although this general
-  class of changes should be limited as much as possible.
+This repository has **no downstream users**, which gives us a fair bit
+of flexibility in how we go about it (subject only to restrictions based
+on [Right to Replicate](https://2i2c.org/right-to-replicate/)).
 
-## Self-merging as a 2i2c engineer
+## Prime directive
 
-**Be careful when self-merging without review**.
+The following should be the prime directive under which we approach
+making changes to this repository:
 
-Because changing active infrastructure is potentially confusing or
-disruptive to users, be extra careful if you self-merge without a
-review approval.  Consider whether your commit will cause a change
-that might be destructive and ask if you _really_ need to merge now
-or can wait for review.  That said, sometimes the only way to
-understand the impact of a change is to merge and see how things go,
-so use your best judgment!
+> Better to always move forward in the direction of the iteration / team
+> goal, than to not.
 
-Here is a list of things you can clearly, unambiguously self merge without
-any approval.
+(Inspired by [this document in our team compass](https://compass.2i2c.org/engineering/workflow/1-week-iteration-workflow/)).
 
-1. Updating the max number of nodes for nodepools in a cluster
-2. Resizing home directory storage upwards when it is about to fill up
-3. Emergency (eg exam, outage) related resource bumps
-4. *Cleanly* reverting a change that failed CI
-5. Spelling and grammar error fixes in documentation or code comments
-6. Setting up a new hub following our new hub turn up process, without any extra feature development
-   or customization.
+It's a bias towards action, with the goal of empowering team members
+to make progress, learn, break things (safely) and iterate as needed.
 
-### Safe configuration changes when asked for by the community
+As a corollary, the primary role of **code review** is to **help
+engineers grow** and build a coherent, high performance team that we can
+all trust in, rather than a specific focus on 'the right thing'.
 
-Many hub configuration changes are asked for by the community, and we are simply mechanically
-doing them. We only need to verify that the change propagated, and not much more. In these cases,
-the engineer working on it can self merge, as long as they know how to verify this after.
-The following is a list of such changes, but it's not exhaustive.
+## Before making a PR
 
-1. Updating front page information by updating `jupyterhub.custom.homepage.templateVars`.
-2. Update the image used in a hub, either for everyone or as part of a profile list. Because the
-   image tag is provided to us by the community, we assume they had already tested this in some
-   fashion.
-3. Adding or removing admin users from a hub.
-4. Adding or removing list of organizations or teams with access to the hub.
-5. Changing the default interface for the hub, either for everyone or as part of a profile.
+Before you make a PR, ask yourself the following questions:
 
-### Safe configuration changes when doing maintenance
+1. Is this PR in service of moving forward on a issue that you picked up
+   from the Engineering Board?
 
-There is often maintenance related changes we need to do that *don't affect the user experience*,
-but are important to do to make progress on the maintenance. What does and does not affect
-user experience is hard to always know. This is a list of tasks that we already know don't
-affect user experience, and can be self merged. Whoever merging still is responsible for testing these
-appropriately, and can always ask for extra review if unsure.
+If the answer to this is "No", consider if you really *must* do this. The
+engineering board is a representation of the work the *team* has committed to
+doing. Ask yourself if you can instead be doing something else that can move
+this forward. Can this wait, and go through the refinement / sprint planning
+process?
 
-1. Updating the values for resource allocation in profile lists, with the output of
-   `deployer generate resource-allocation`. The time to ask for review is when the logic or
-   values for the `resource-allocation` command itself is changed - simply re-running it and updating
-   values does not require extra review.
-2. Updating credentials for cloud accounts that have expired or are about to expire.
+See [the guiding principles](https://compass.2i2c.org/engineering/workflow/1-week-iteration-workflow/#guiding-principle-move-the-team-forward)
+document for more guidance on what else you can do.
 
+You should break this rule when it makes sense, but do not do so
+**casually**. This is an important mechanism by which we can build a
+team we can all trust in over
 
-## Self-merging as a community partner
+This may make you uncomfortable, and that is ok. Ultimately our goal is to
+build a **team we can all trust in**, and this is a very important part
+of getting there.
 
-As part of our [shared responsibility model](https://docs.2i2c.org/en/latest/about/service/shared-responsibility.html), we may grant merge rights to partner engineers.
-This allows others to merge changes that impact their community's infrastructure without requiring intervention from a 2i2c engineer.
+## After making the PR
 
-Merge rights are only given for partners with which we have built a relationship of trust, on a case-by-case basis.
-2i2c ultimately retains responsibility for the configuration of this infrastructure and its configuration.
+After you make your PR, ask yourself these three questions:
 
-[See the `2i2c-org/collaborators` team](https://github.com/orgs/2i2c-org/teams/collaborators) for a list of sub-teams and individuals with write access to this repository.
+1. *If* this PR breaks something, do you feel comfortable debugging it **or**
+   reverting it to undo the change?
+2. Do you know how to *verify* the effects of merging this PR?
 
-### Guidelines for community partners
+If the answer to all these 2 questions are 'yes', you should go ahead
+and self merge.
 
-Our goal is to provide trusted communities the ability to more quickly make changes to their infrastructure in order to lead to a better, more collaborative service for their community.
-However, merge rights are a big responsibility, so please be careful in your actions.
+If it breaks, you can revert your PR, make changes, and try again.
 
-Community partners *may* self-merge if they want to, provided the following conditions are met:
+Let's now explore the cases when answers to any of these questions are "no".
 
-1. **They are confident debugging any issues that arise from the self-merged PR**.
-   If any issues arise from your self-merge, **you are responsible for resolving them, or reverting the change**.
-   You should understand the potential repurcussions of your change, and be ready to fix things if they break.
-2. **They have access to their cloud cluster to debug changes**.
-   Sometimes an issue requires intervention directly in the cloud infrastructure.
-   Before self-merging, ensure that you are authorized and have login-access to this infrastructure.
-3. **The change *only* touches files inside the `config/clusters/<cluster-name>` directory for their cluster.**
-   Do not change configuration or code outside of your community's cluster folder without a review from a 2i2c engineer.
-4. **The change is fairly standard, and not a novel configuration**.
-   If something is straightforward (e.g., updating an environment image tag), then go for it.
-   If you aren't quite sure what a change will impact, or you think you're doing something non-standard, ask for some help first.
+### I don't feel comfortable debugging this if it breaks
 
-   This is hard to quantify, but here are some examples of *routine* changes:
+Congratulations, you have unearthed a (possibly scary) opportunity for growing
+as an engineer!
 
-   - Adding a new hub that looks exactly like other hubs in the cluster
-   - Changing resources provided to the hub
-   - Adding / removing admin users
-   - Changing profile options available to the hub
+A very important component of improving as an engineer is to be in the
+following loop:
 
-   Here are some examples of *novel* configuration that requires approval from a 2i2c engineer before merging:
+1. Make a change that breaks
+2. Feel uncomfortable (required), and question your life choices that have led
+   you to this moment (optional)
+3. Remember that you are not an imposter, and while you may not have the
+   specific **knowledge** about the issue, you have the **skills** to
+   acquire this knowledge and fix the issue.
+4. Boldly proceed into this uncertainty, and fix the issue, asking for
+   and receiving help from the team as needed.
 
-   - Adding python code to `hub.extraConfig` to enable new functionality, such as
-     adding a postgres database to each user pod.
-   - Significant alterations to the configuration of the user pod, such as setting
-     `singleuser.extraContainers`.
-   - Modifications to how NFS home directory storage is managed.
+Note: You can also ask for help *before*.
 
-As a general rule, when in doubt, ask for review :)
+As a **team**, our goal is to find ways to empower you to feel more
+comfortable with things breaking, because you believe you can fix them
+when they *do* break.
+<a title="Reedy, CC BY-SA 4.0 &lt;https://creativecommons.org/licenses/by-sa/4.0&gt;, via Wikimedia Commons" href="https://commons.wikimedia.org/wiki/File:Framed_%22I_BROKE_WIKIPEDIA..._THEN_I_FIXED_IT!%22_T-shirt.jpg"><img width="512" alt="Framed &quot;I BROKE WIKIPEDIA... THEN I FIXED IT!&quot; T-shirt" src="https://upload.wikimedia.org/wikipedia/commons/thumb/7/79/Framed_%22I_BROKE_WIKIPEDIA..._THEN_I_FIXED_IT%21%22_T-shirt.jpg/512px-Framed_%22I_BROKE_WIKIPEDIA..._THEN_I_FIXED_IT%21%22_T-shirt.jpg?20190318200628"></a>
 
-```{note}
-These policies assume trust and good faith from the individuals to which we grant write-access.
-We recognize that this will not scale as the communities we work with grows.
-In the future, we plan to make **technical** restrictions on which folders a user may write to.
-```
+We don't have a shirt like this, but maybe someday we could :)
 
-## Changing authentication related configuration
+### I don't know how to verify if what I did worked
 
-Extra caution must be taken when changing authentication related configuration. Since the current testing infrastructure doesn't automatically test the authentication workflow, any issue within the authentication process might go undetected and cause an outage, if no manual testing is conducted before deploying it to all the hubs.
+This likely means the issue was not refined enough. You can escalate this by
+either:
 
-To deploy changes to the authentication workflow, follow these steps:
-1. **Propose changes**. Change the codebase and open a PR.
-1. **Manually deploy changes to a few kinds of staging hubs**. The hubs use different authentication mechanisms, based on their needs, but testing on the staging hubs listed below should cover all the possible types. The hubs are:
-   - cluster: `leap`, hub: `staging` (GitHub)
-   - cluster: `utoronto`, hub: `staging` (Azure AD)
-   - cluster: `2i2c`, hub: `staging` (CILogon)
-1. **Login into the staging hubs**. Try logging in into the hubs where you deployed your changes.
-1. **Start a server**. After you've logged into the hub, make sure everything works as expected by spinning up a server.
-1. **Post the status of the manual steps above**. In your PR's top comment, post the hubs where you've deployed the changes and whether or not they are functioning properly.
-1. **Wait for review and approval**. Leave the PR open for other team members to review and approve.
-
-   :::{admonition} Guidelines for reviewing changes to authentication infrastructure
-   :class: tip
-   Apply slightly higher code review scrutiny when reviewing changes to the authentication workflow.
-   :::
-1. **Merge the change**. Once approved, merge the PR. This will deploy your change to all the hubs.
-
-(infrastructure:review:terraform)=
-## Terraform changes
-
-[Terraform](tools:terraform) is used for directly provisioning and modifying cloud infrastructure (as opposed to just deploying applications on pre-existing cloud infrastructure).
-This lets us treat our infrastructure as code, so we can use regular code quality practices (code review, linters, extensive documentation, etc) to keep the quality of our infrastructure high.
-However, it comes with a few caveats:
-
-1. Locally and iteratively testing terraform is impossible - as we
-   develop it, the infrastructure is deployed / modified / destroyed
-   as we go.
-2. Behavior of terraform code differs based on the current
-   state of the infrastructure (as represented in the
-   [state file](https://www.terraform.io/docs/language/state/index.html)).
-3. While `terraform plan` can tell us what terraform *thinks* it is
-   going to do, it might not always succeed. Permission errors or
-   organizational restrictions can cause it to fail. Timeouts can happen.
-   Runtime errors pop up.
-
-Thanks to all these, it is impossible to either:
-
-- Accurately gauge the impact of a terraform code change just from looking at the text
-- Automatically deploy it via continuous deployment
-
-As a result, we have some workflows that are specific to using Terraform, described below.
-
-### Changes to running infrastructure
-
-In this scenario, there is already-running infrastructure and you are deploying changes to it.
-
-To deploy changes, follow these steps:
-
-1. **Propose changes**. Change the codebase and open a PR. **Do not deploy changes yet**. Use `terraform plan` rather than `terraform apply` do understand the change before deploying it.
-1. **Post the output of `terraform plan`**. In your PR's top comment, post the output of `terraform plan` whenever you update the PR. This helps others review the likely impact on our infrastructure.
-1. **Wait for review and approval**. Leave the PR open for other team members to review and approve.
-
-   :::{admonition} Guidelines for reviewing changes to existing infrastructure
-   :class: tip
-   Focus is on both making sure the change is minimally disruptive, and on the quality of the infrastructure design.
-   :::
-1. **Deploy the change**. Once approved, leave a comment in the PR that you will start deploying the changes. Then `terraform apply` your change and verify it works ok.
-1. **Iterate as needed**. If things break or you need to iterate on the deployment, follow this cycle until the infrastructure is in the state you wish:
-
-   1. Amend your PR with changes
-   2. Deploy with `terraform apply`
-   3. Comment that you've made a deployment
-1. **Communicate that you've finished deploying**. Leave a comment in the PR that the changes have been deployed. You should always communicate when a deploy has been made!
-1. **Self-merge or request another review**. If you didn't need to make a change to the PR, merge the PR. If you made changes to the PR, use your judgement to decide if you should request another review or if you should self-merge it directly. If you merge, just leave a comment about changes made since the initial approval.
-
-
-### Changes to set up new infrastructure
-
-For creating *new* infrastructure, you are less-likely to deploy something disruptive to users, and you have a bit more flexibility to experiment.
-
-The suggested workflow for setting up new infrastructure is:
-
-1. **Iterate deploys locally**. Iteratively develop the code locally, testing it with `terraform apply` as you go.
-2. **Start a PR early, and solicit feedback**. The primary goal here is to
-   do a review of the *infrastructure design*, rather than of any particular
-   `terraform plan` output.
-
-   :::{admonition} Guidelines for reviewing changes to existing infrastructure
-   :class: tip
-   Focus of code review is just on infrastructure design.
-   :::
-
-3. **After approval, re-deploy from scratch**. Once someone else approves your PR, you should re-deploy the infrastructure from scratch to make sure that it exactly matches the PR's code. Do the following:
-
-   1. Destroy the current infra you have setup with `terraform destroy`
-   2. `terraform apply` from scratch.
-   3. If things break, amend your PR until it unbreaks. This might solicit adding another cycle of code review.
-   4. Self-merge the PR once the infra works as you would like.
-
-   This way, terraform code will have been 'realized' by the time it is
-   merged.
-
+1. Asking for more specific information in the GitHub issue.
+2. Ask in the `#engineering` slack channel for more information.
