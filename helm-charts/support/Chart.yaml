@@ -15,13 +15,13 @@ dependencies:
   - name: prometheus
     # NOTE: CHECK INSTRUCTIONS UNDER prometheus.server.command IN support/values.yaml
     # EACH TIME THIS VERSION IS BUMPED!
-    version: 25.21.0
+    version: 25.22.0
     repository: https://prometheus-community.github.io/helm-charts
 
   # Grafana for dashboarding of metrics.
   # https://github.com/grafana/helm-charts/tree/main/charts/grafana
   - name: grafana
-    version: 7.3.11
+    version: 8.2.0
     repository: https://grafana.github.io/helm-charts
 
   # ingress-nginx for a k8s Ingress resource controller that routes traffic from
