@@ -23,7 +23,7 @@ To enable dask-gateway support on a hub, the following configuration changes nee
           enabled: true
     ```
 
-1. set `jupyterhub.singleuser.cloudMetadata.blockWithIptables` to false
+1. set `jupyterhub.singleuser.cloudMetadata.blockWithIptables` to false:
 
     This is to don't block access to the cloud provider's metadata server!
     If we do the coupling between the cloud providers IAM permissions and
@@ -38,6 +38,12 @@ To enable dask-gateway support on a hub, the following configuration changes nee
         cloudMetadata:
           blockWithIptables: false
     ```
+
+1. if binderhub is enabled to work against a private container registry:
+
+    Then dask-gateway's scheduler and worker pods need to pull from that
+    registry, so follow steps in [](features:binderhub-service:private-registry)
+    to set up permissions for that.
 
 (howto:features:daskhub)=
 ## To an existing cluster

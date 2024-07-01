@@ -409,6 +409,7 @@ binderhub-service:
     password: <password>
 ```
 
+(features:binderhub-service:private-registry)=
 ### 4. If pushing to quay.io registry, also setup the credentials for image pulling
 
 When pushing to the quay registry, the images are pushed as `private` by default (even if the plan doesn't allow it).
@@ -422,4 +423,15 @@ jupyterhub:
       registry: quay.io
       username: <robot_account_name>
       password: <password>
+```
+
+If dask-gateway is enabled, the scheduler and worker pods needs to be configured
+to reference the k8s Secret created by the JupyterHub chart through the config
+above. This is done like below:
+
+```yaml
+dask-gateway:
+  gateway:
+    backend:
+      imagePullSecrets: [{name: image-pull-secret}]
 ```
