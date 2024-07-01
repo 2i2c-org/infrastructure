@@ -27,17 +27,16 @@ jupyterhub:
 
   singleuser:
     profileList:
-      - display_name: Jupyter SciPy Notebook
-        description: Python environment
-        slug: jupyter
+      - display_name: "CPU only"
+        description: "Start a container limited to a chosen share of capacity"
+        slug: cpu
         default: true
         kubespawner_override:
-          image: quay.io/jupyter/scipy-notebook:2024-03-04
           default_url: /lab
-        profile_options: &profile_options
-          resource_allocation: &resource_allocation
+        profile_options:
+          requests:
             display_name: Resource Allocation
-            choices:
+            choices: &resource_choices
               mem_0_7:
                 display_name: Up to 2G of RAM and 1 CPU
                 kubespawner_override:
@@ -59,25 +58,36 @@ jupyterhub:
                   mem_limit: 24G
                   cpu_guarantee: 1.5
                   cpu_limit: 3
+          image:
+            display_name: Image
+            unlisted_choice:
+              enabled: True
+              display_name: "Custom image"
+              validation_regex: "^.+:.+$"
+              validation_message: "Must be a publicly available docker image, of form <image-name>:<tag>"
+              kubespawner_override:
+                image: "{value}"
+            choices:
+              rstudio:
+                display_name: Rocker Geospatial with RStudio
+                default: true
+                slug: "rstudio"
+                kubespawner_override:
+                  image: "rocker/binder:4.3"
+                  image_pull_policy: Always
+                  default_url: /rstudio
+                  working_dir: /home/rstudio # Ensures container working dir is homedir
+              jupyter:
+                display_name: Jupyter SciPy Notebook
+                slug: "jupyter"
+                kubespawner_override:
+                  image: "quay.io/jupyter/scipy-notebook:2024-03-04"
+                  default_url: /lab
 
-      - display_name: Rocker Geospatial with RStudio
-        description: R environment
-        slug: rocker
-        kubespawner_override:
-          image: rocker/binder:4.3
-          image_pull_policy: Always
-          default_url: /rstudio
-          working_dir: /home/rstudio # Ensures container working dir is homedir
-        profile_options: *profile_options
-
-      - display_name: Pangeo Tensorflow ML Notebook
-        description: Dedicated node with a NVIDIA Tesla T4
-        slug: "tensorflow"
-        kubespawner_override:
-          image: "quay.io/pangeo/ml-notebook:2024.05.07"
-          default_url: /lab
-        profile_options: &profile_gpu_options
-          resource_allocation:
+      - display_name: "With GPUs"
+        description: "Start a container on a dedicated node with a NVIDIA Tesla T4"
+        profile_options:
+          requests:
             display_name: Resource Allocation
             choices:
               mem_26_0:
@@ -87,8 +97,6 @@ jupyterhub:
                   mem_guarantee: 21G
                   mem_limit: null
                   cpu_guarantee: 3
-                  environment:
-                    NVIDIA_DRIVER_CAPABILITIES: compute,utility
                   node_selector:
                     node.kubernetes.io/instance-type: n1-highmem-4
                   extra_resource_limits:
@@ -99,25 +107,10 @@ jupyterhub:
                   mem_guarantee: 92G
                   mem_limit: null
                   cpu_guarantee: 15
-                  environment:
-                    NVIDIA_DRIVER_CAPABILITIES: compute,utility
                   node_selector:
                     node.kubernetes.io/instance-type: n1-highmem-16
                   extra_resource_limits:
                     nvidia.com/gpu: "4"
-
-      - display_name: Pangeo PyTorch ML Notebook
-        description: Dedicated node with a NVIDIA Tesla T4
-        slug: "pytorch"
-        kubespawner_override:
-          image: "quay.io/pangeo/pytorch-notebook:2024.05.07"
-          default_url: /lab
-        profile_options: *profile_gpu_options
-
-      - display_name: Bring your own image
-        description: Specify your own docker image (must have python and jupyterhub installed in it)
-        slug: custom
-        profile_options:
           image:
             display_name: Image
             unlisted_choice:
@@ -127,5 +120,19 @@ jupyterhub:
               validation_message: "Must be a publicly available docker image, of form <image-name>:<tag>"
               kubespawner_override:
                 image: "{value}"
-            choices: {}
-          resource_allocation: *resource_allocation
+            choices:
+              tensorflow:
+                display_name: Tensorflow ML Notebook
+                slug: "tensorflow"
+                kubespawner_override:
+                  image: "quay.io/jupyter/tensorflow-notebook:cuda-2024-07-01"
+              pytorch:
+                display_name: PyTorch ML Notebook
+                default: true
+                slug: "pytorch"
+                kubespawner_override:
+                  image: "quay.io/jupyter/pytorch-notebook:cuda12-2024-07-01"
+        kubespawner_override:
+          default_url: /lab
+          environment:
+            NVIDIA_DRIVER_CAPABILITIES: compute,utility
