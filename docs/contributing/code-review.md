@@ -61,22 +61,21 @@ See [the guiding principles](https://compass.2i2c.org/engineering/workflow/1-wee
 document for more guidance on what else you can do.
 
 You should break this rule when it makes sense, but do not do so
-**casually**. This is an important mechanism by which we can build a
-team we can all trust in over
+**casually**.
 
 This may make you uncomfortable, and that is ok. Ultimately our goal is to
-build a **team we can all trust in**, and this is a very important part
-of getting there.
+build a **team we can all trust in** rather than be a group of individuals
+who can trust each other, and this is a very important part of getting there.
 
 ## After making the PR
 
-After you make your PR, ask yourself these three questions:
+After you make your PR, ask yourself these questions:
 
 1. *If* this PR breaks something, do you feel comfortable debugging it **or**
    reverting it to undo the change?
 2. Do you know how to *verify* the effects of merging this PR?
 
-If the answer to all these 2 questions are 'yes', you should go ahead
+If the answer to all these questions are 'yes', you should go ahead
 and self merge.
 
 If it breaks, you can revert your PR, make changes, and try again.
