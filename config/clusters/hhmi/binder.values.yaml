@@ -1,0 +1,128 @@
+jupyterhub:
+  ingress:
+    hosts: [hub.binder.hhmi.2i2c.cloud]
+    tls:
+      - hosts: [hub.binder.hhmi.2i2c.cloud]
+        secretName: https-auto-tls
+  custom:
+    binderhubUI:
+      enabled: true
+    2i2c:
+      add_staff_user_ids_to_admin_users: false
+    jupyterhubConfigurator:
+      enabled: false
+    singleuserAdmin:
+      extraVolumeMounts: []
+    homepage:
+      templateVars:
+        org:
+          name: ""
+          url: ""
+          logo_url: ""
+        designed_by:
+          name: ""
+          url: ""
+        operated_by:
+          name: ""
+          url: ""
+        funded_by:
+          name: ""
+          url: ""
+  singleuser:
+    cpu:
+      limit: 2
+    memory:
+      guarantee: 256M
+      limit: 1G
+    storage:
+      type: none
+      extraVolumeMounts: []
+    initContainers: []
+    profileList: []
+    cmd:
+      - python3
+      - "-c"
+      - |
+        import os
+        import sys
+
+        try:
+            import jupyterlab
+            import jupyterlab.labapp
+            major = int(jupyterlab.__version__.split(".", 1)[0])
+        except Exception as e:
+            print("Failed to import jupyterlab: {e}", file=sys.stderr)
+            have_lab = False
+        else:
+            have_lab = major >= 3
+
+        if have_lab:
+            # technically, we could accept another jupyter-server-based frontend
+            print("Launching jupyter-lab", file=sys.stderr)
+            exe = "jupyter-lab"
+        else:
+            print("jupyter-lab not found, launching jupyter-notebook", file=sys.stderr)
+            exe = "jupyter-notebook"
+
+        # launch the notebook server
+        os.execvp(exe, sys.argv)
+  hub:
+    config:
+      BinderSpawnerMixin:
+        auth_enabled: false
+      JupyterHub:
+        authenticator_class: "null"
+    redirectToServer: false
+    services:
+      binder: {}
+    loadRoles:
+      binder:
+        services:
+          - binder
+        scopes:
+          - servers
+          - admin:users
+      user:
+        scopes:
+          - self
+          # Admin users will by default have access:services, so this is only
+          # observed to be required for non-admin users.
+          - access:services!service=binder
+binderhub-service:
+  enabled: true
+  ingress:
+    enabled: true
+    hosts: [binder.hhmi.2i2c.cloud]
+    tls:
+      - hosts: [binder.hhmi.2i2c.cloud]
+        secretName: binder-https-auto-tls
+  config:
+    BinderHub:
+      base_url: /
+      hub_url: https://hub.binder.hhmi.2i2c.cloud
+      badge_base_url: https://binder.hhmi.2i2c.cloud
+      image_prefix: us-west2-docker.pkg.dev/hhmi/hhmi-binder-images-registry/binder-
+      auth_enabled: false
+      enable_api_only_mode: false
+      banner_message: ""
+      about_message: ""
+    GitHubRepoProvider:
+      allowed_specs:
+        - "^binder-examples/.*"
+  extraEnv:
+    - name: JUPYTERHUB_API_TOKEN
+      valueFrom:
+        secretKeyRef:
+          name: hub
+          key: hub.services.binder.apiToken
+    - name: JUPYTERHUB_CLIENT_ID
+      value: "service-binder"
+    - name: JUPYTERHUB_API_URL
+      value: "https://hub.binder.hhmi.2i2c.cloud/hub/api"
+    # Without this, the redirect URL to /hub/api/... gets
+    # appended to binderhub's URL instead of the hub's
+    - name: JUPYTERHUB_BASE_URL
+      value: "https://hub.binder.hhmi.2i2c.cloud/"
+  buildPodsRegistryCredentials:
+    server: https://us-west2-docker.pkg.dev
+    username: "_json_key"
