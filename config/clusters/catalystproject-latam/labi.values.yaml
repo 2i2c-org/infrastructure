@@ -20,7 +20,9 @@ jupyterhub:
         scope:
           - read:org
       Authenticator:
-        admin_users: []
+        admin_users:
+          - paul-hernandez-herrera # Paúl Hernandez
+          - aolivera-labi # Andrés Olivera
 
   singleuser:
     profileList:
