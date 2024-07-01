@@ -26,7 +26,7 @@ jupyterhub:
       jupyterHub:
         authenticator_class: dummy
   singleuser:
-    defaultUrl: /git-pull?repo=https%3A%2F%2Fgithub.com%2FScienceCore%2Fscipy-2024-climaterisk.git&urlpath=lab%2Ftree%2Fscipy-2024-climaterisk.git%2F&branch=main
+    defaultUrl: /git-pull?repo=https%3A%2F%2Fgithub.com%2FScienceCore%2Fscipy-2024-climaterisk&urlpath=lab%2Ftree%2Fscipy-2024-climaterisk%2F00_Introduction_Setup%2F02_Introduction_to_Open_Science.ipynb&branch=main
     image:
       name: quay.io/2i2c/sciencecore-climaterisk-image
       tag: "ecb8fe463e9b"
