@@ -58,11 +58,11 @@ def _prepare_helm_charts_dependencies_and_schemas():
 
     daskhub_dir = HELM_CHARTS_DIR.joinpath("daskhub")
     # Not generating schema for daskhub, as it is dead
-    subprocess.check_call(["helm", "dep", "up", daskhub_dir])
+    subprocess.check_call(["helm", "dep", "up", daskhub_dir, "--skip-refresh"])
 
     support_dir = HELM_CHARTS_DIR.joinpath("support")
     _generate_values_schema_json(support_dir)
-    subprocess.check_call(["helm", "dep", "up", support_dir])
+    subprocess.check_call(["helm", "dep", "up", support_dir, "--skip-refresh"])
 
 
 def get_list_of_hubs_to_operate_on(cluster_name, hub_name):
@@ -98,13 +98,13 @@ def cluster_config(
 def hub_config(
     cluster_name: str = typer.Argument(..., help="Name of cluster to operate on"),
     hub_name: str = typer.Argument(None, help="Name of hub to operate on"),
-    skip_update: bool = typer.Argument(False, help="Skip the helm dep update"),
+    skip_refresh: bool = typer.Argument(False, help="Skip the helm dep update"),
 ):
     """
     Validates the provided non-encrypted helm chart values files for each hub of
     a specific cluster.
     """
-    if not skip_update:
+    if not skip_refresh:
         _prepare_helm_charts_dependencies_and_schemas()
 
     config_file_path = find_absolute_path_to_cluster_file(cluster_name)
