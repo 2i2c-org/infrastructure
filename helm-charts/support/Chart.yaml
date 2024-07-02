@@ -15,13 +15,13 @@ dependencies:
   - name: prometheus
     # NOTE: CHECK INSTRUCTIONS UNDER prometheus.server.command IN support/values.yaml
     # EACH TIME THIS VERSION IS BUMPED!
-    version: 25.20.1
+    version: 25.22.0
     repository: https://prometheus-community.github.io/helm-charts
 
   # Grafana for dashboarding of metrics.
   # https://github.com/grafana/helm-charts/tree/main/charts/grafana
   - name: grafana
-    version: 7.3.9
+    version: 8.2.2
     repository: https://grafana.github.io/helm-charts
 
   # ingress-nginx for a k8s Ingress resource controller that routes traffic from
@@ -35,13 +35,13 @@ dependencies:
   # cluster-autoscaler for k8s clusters where it doesn't come out of the box (EKS)
   # https://github.com/kubernetes/autoscaler/tree/master/charts/cluster-autoscaler
   - name: cluster-autoscaler
-    version: 9.36.0
+    version: 9.37.0
     repository: https://kubernetes.github.io/autoscaler
     condition: cluster-autoscaler.enabled
 
   # cryptnono, counters crypto mining
   # Source code: https://github.com/cryptnono/cryptnono/
   - name: cryptnono
-    version: "0.3.1-0.dev.git.133.hd195428"
+    version: "0.3.1-0.dev.git.143.hfc89744"
     repository: https://cryptnono.github.io/cryptnono/
     condition: cryptnono.enabled
