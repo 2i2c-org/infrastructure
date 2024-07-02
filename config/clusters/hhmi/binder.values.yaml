@@ -101,7 +101,7 @@ binderhub-service:
       base_url: /
       hub_url: https://hub.binder.hhmi.2i2c.cloud
       badge_base_url: https://binder.hhmi.2i2c.cloud
-      image_prefix: us-west2-docker.pkg.dev/hhmi/hhmi-binder-images-registry/binder-
+      image_prefix: quay.io/hhmi-binder/binderhub-ui-
       auth_enabled: false
       enable_api_only_mode: false
       banner_message: ""
@@ -124,5 +124,5 @@ binderhub-service:
     - name: JUPYTERHUB_BASE_URL
       value: "https://hub.binder.hhmi.2i2c.cloud/"
   buildPodsRegistryCredentials:
-    server: https://us-west2-docker.pkg.dev
-    username: "_json_key"
+    server: https://quay.io
+    username: hhmi-binder+image_builder
