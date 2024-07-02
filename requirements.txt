@@ -28,8 +28,7 @@ escapism==1.*
 
 # Used for GCP billing management
 pandas
-# FIXME: Unpin when https://github.com/unionai-oss/pandera/issues/1656 gets solved
-numpy<3
+numpy==2.*
 pandera
 prometheus_pandas
 pytest-mock
