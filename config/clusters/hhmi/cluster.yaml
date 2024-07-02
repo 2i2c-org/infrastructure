@@ -39,3 +39,10 @@ hubs:
     helm_chart_values_files:
       - spyglass.values.yaml
       - enc-spyglass.secret.values.yaml
+  - name: binder
+    display_name: "HHMI Binder (ephemeral)"
+    domain: binder.hhmi.2i2c.cloud
+    helm_chart: basehub
+    helm_chart_values_files:
+      - binder.values.yaml
+      - enc-binder.secret.values.yaml
