@@ -98,12 +98,14 @@ def cluster_config(
 def hub_config(
     cluster_name: str = typer.Argument(..., help="Name of cluster to operate on"),
     hub_name: str = typer.Argument(None, help="Name of hub to operate on"),
+    skip_refresh: bool = typer.Argument(False, help="Skip the helm dep update"),
 ):
     """
     Validates the provided non-encrypted helm chart values files for each hub of
     a specific cluster.
     """
-    _prepare_helm_charts_dependencies_and_schemas()
+    if not skip_refresh:
+        _prepare_helm_charts_dependencies_and_schemas()
 
     config_file_path = find_absolute_path_to_cluster_file(cluster_name)
 
