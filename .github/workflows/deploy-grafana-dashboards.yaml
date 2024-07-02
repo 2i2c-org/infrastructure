@@ -33,7 +33,6 @@ jobs:
           - cluster_name: kitware
           - cluster_name: leap
           - cluster_name: linked-earth
-          - cluster_name: meom-ige
           - cluster_name: nasa-cryo
           - cluster_name: nasa-esdis
           - cluster_name: nasa-veda
