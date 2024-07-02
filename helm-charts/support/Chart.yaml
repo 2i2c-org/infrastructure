@@ -21,7 +21,7 @@ dependencies:
   # Grafana for dashboarding of metrics.
   # https://github.com/grafana/helm-charts/tree/main/charts/grafana
   - name: grafana
-    version: 8.2.0
+    version: 8.2.2
     repository: https://grafana.github.io/helm-charts
 
   # ingress-nginx for a k8s Ingress resource controller that routes traffic from
