@@ -102,7 +102,7 @@ Enable `jupyterhub.custom.binderhubUI` which will in turn enable the hub to use 
 jupyterhub:
   custom:
     binderhubUI:
-      enabled: false
+      enabled: true
 ```
 
 #### 4. Check that the binderhub-service chart is enabled
