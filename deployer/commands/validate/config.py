@@ -58,11 +58,11 @@ def _prepare_helm_charts_dependencies_and_schemas():
 
     daskhub_dir = HELM_CHARTS_DIR.joinpath("daskhub")
     # Not generating schema for daskhub, as it is dead
-    subprocess.check_call(["helm", "dep", "up", daskhub_dir, "--skip-refresh"])
+    subprocess.check_call(["helm", "dep", "up", daskhub_dir])
 
     support_dir = HELM_CHARTS_DIR.joinpath("support")
     _generate_values_schema_json(support_dir)
-    subprocess.check_call(["helm", "dep", "up", support_dir, "--skip-refresh"])
+    subprocess.check_call(["helm", "dep", "up", support_dir])
 
 
 def get_list_of_hubs_to_operate_on(cluster_name, hub_name):
