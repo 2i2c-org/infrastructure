@@ -15,19 +15,7 @@ jupyterhub:
       extraVolumeMounts: []
     homepage:
       templateVars:
-        org:
-          name: ""
-          url: ""
-          logo_url: ""
-        designed_by:
-          name: ""
-          url: ""
-        operated_by:
-          name: ""
-          url: ""
-        funded_by:
-          name: ""
-          url: ""
+        enabled: false
   singleuser:
     cpu:
       limit: 2

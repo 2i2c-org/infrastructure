@@ -397,6 +397,8 @@ jupyterhub:
       gitRepoUrl: "https://github.com/2i2c-org/default-hub-homepage"
       # TODO: make main the default branch in the repo above
       gitRepoBranch: "master"
+      templateVars:
+        enabled: true
     jupyterhubConfigurator:
       enabled: true
   ingress:

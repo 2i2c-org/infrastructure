@@ -397,11 +397,24 @@ properties:
                 type: object
                 additionalProperties: false
                 required:
-                  - org
-                  - designed_by
-                  - operated_by
-                  - funded_by
+                  - enabled
+                # If enabled is true, we must provide info to populate the homepage
+                if:
+                  properties:
+                    enabled:
+                      const: true
+                then:
+                  required:
+                    - org
+                    - designed_by
+                    - operated_by
+                    - funded_by
                 properties:
+                  enabled:
+                    type: boolean
+                    description: |
+                      Set to false to not provide homepage information on hubs that do not
+                      have a homepage, such as unauthenticated binderhubs.
                   learn_more:
                     type: string
                     description: |

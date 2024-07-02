@@ -102,7 +102,7 @@ Enable `jupyterhub.custom.binderhubUI` which will in turn enable the hub to use 
 jupyterhub:
   custom:
     binderhubUI:
-      enabled: false
+      enabled: true
 ```
 
 #### 4. Check that the binderhub-service chart is enabled
@@ -248,10 +248,15 @@ binderhub-service:
 This will disable the hub login page and allow binderhub to generate random usernames for user servers.
 
 This also means that any configuration of the homepage (`gitRepoBranch` or `templateVars`) will just be ignored.
+However, you need to disable `templateVars` configuration in order to pass the validation step.
 
 ```yaml
 jupyterhub:
-   hub:
+  custom:
+    homepage:
+      templateVars:
+        enabled: false
+  hub:
     config:
       JupyterHub:
         authenticator_class: "null"
