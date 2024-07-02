@@ -44,21 +44,24 @@ def aws(
     """
     # Read the CSV file into a pandas dataframe. Skip the first row and this
     # contains numerical project IDs - the project names begin on the second row.
+    df = pd.read_csv(
+        input_path,
+        skiprows=1,
+    )
+
     # We conditionally rename the column names. If '($)' is present in the column
     # name, we assume this is a linked account name: we strip of any
     # leading/trailing whitespace and convert to lower case so we have just the
     # account names and allow for AWS permitting whitespace in them.
     # Otherwise (i.e. not an account name), we also replace any whitespace with
     # underscores for easier data cleaning in pandas.
-    df = pd.read_csv(
-        input_path,
-        skiprows=1,
-    ).rename(
+    df.rename(
         columns=lambda col: (
             col.lower().strip("($)").strip()
             if "($)" in col
             else col.strip().lower().replace(" ", "_")
-        )
+        ),
+        inplace=True,
     )
 
     # Ensure values of the linked_account_name column are lower case and any
@@ -86,12 +89,20 @@ def aws(
     # Sort the account names in alphabetical order
     df.sort_index(inplace=True)
 
+    # Transform months from 2024-01-01 to 2024-01
+    df.rename(
+        columns=lambda col: (
+            re.match("([0-9]*-[0-9]*)-[0-9]*", col).groups()[0]
+            if re.match("[0-9]*-[0-9]*-[0-9]*", col)
+            else col
+        ),
+        inplace=True,
+    )
+
     if output_path is None:
-        # Find all the column names that match the regex expression `[0-9]*-[0-9]*-[0-9]*`
+        # Find all the column names that match the regex expression `[0-9]*-[0-9]*`
         months = [
-            col
-            for col in df.columns
-            if re.match("[0-9]*-[0-9]*-[0-9]*", col) is not None
+            col for col in df.columns if re.match("[0-9]*-[0-9]*", col) is not None
         ]
 
         # Construct output filename
