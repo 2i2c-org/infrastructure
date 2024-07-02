@@ -59,7 +59,7 @@ jupyterhub:
         description: Pangeo based notebook with a Python environment
         default: true
         kubespawner_override:
-          image: public.ecr.aws/nasa-veda/nasa-veda-singleuser:2024-04-09
+          image: public.ecr.aws/nasa-veda/pangeo-notebook-veda-image:53b6fd1256f5
           init_containers:
             # Need to explicitly fix ownership here, as otherwise these directories will be owned
             # by root on most NFS filesystems - neither EFS nor Google Filestore support anonuid
