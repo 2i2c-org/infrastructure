@@ -1,0 +1,44 @@
+jupyterhub:
+  ingress:
+    hosts: [high.cloudbank.2i2c.cloud]
+    tls:
+      - hosts: [high.cloudbank.2i2c.cloud]
+        secretName: https-auto-tls
+  custom:
+    2i2c:
+      add_staff_user_ids_to_admin_users: true
+      add_staff_user_ids_of_type: "google"
+    homepage:
+      templateVars:
+        org:
+          name: High Schools Experimental
+          logo_url: https://cdss.berkeley.edu/sites/all/themes/cdss/images/DESKTOP_SECTIONS/HEADER-FOOTER/CDSS_LOGO_NEW_HEADER.svg
+          url: https://cdss.berkeley.edu/
+        designed_by:
+          name: 2i2c
+          url: https://2i2c.org
+        operated_by:
+          name: CloudBank
+          url: http://cloudbank.org/
+        funded_by:
+          name: CloudBank
+          url: http://cloudbank.org/
+  hub:
+    config:
+      JupyterHub:
+        authenticator_class: cilogon
+      CILogonOAuthenticator:
+        oauth_callback_url: https://high.cloudbank.2i2c.cloud/hub/oauth_callback
+        allowed_idps:
+          http://google.com/accounts/o8/id:
+            default: true
+            username_derivation:
+              username_claim: "email"
+            allowed_domains:
+              - scusd.net
+              - ausdk12.org
+              - peddie.org
+      Authenticator:
+        admin_users:
+          - ericvd@berkeley.edu
+          - sean.smorris@berkeley.edu
