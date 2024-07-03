@@ -97,6 +97,8 @@ binderhub-service:
     GitHubRepoProvider:
       allowed_specs:
         - "^binder-examples/.*"
+        - "^2i2c-org/.*"
+        - "^LorenFrankLab/.*"
   extraEnv:
     - name: JUPYTERHUB_API_TOKEN
       valueFrom:
