@@ -76,6 +76,14 @@ hubs:
       - common.values.yaml
       - glendale.values.yaml
       - enc-glendale.secret.values.yaml
+  - name: high
+    display_name: "High School Experimental Hub"
+    domain: high.cloudbank.2i2c.cloud
+    helm_chart: basehub
+    helm_chart_values_files:
+      - common.values.yaml
+      - high.values.yaml
+      - enc-high.secret.values.yaml
   - name: howard
     display_name: "Howard University"
     domain: howard.cloudbank.2i2c.cloud
