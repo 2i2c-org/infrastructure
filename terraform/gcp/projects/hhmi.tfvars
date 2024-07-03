@@ -19,9 +19,9 @@ k8s_versions = {
 
 hub_cloud_permissions = {
   "binder" : {
-      allow_access_to_external_requester_pays_buckets : false,
-      bucket_admin_access: [],
-      hub_namespace: "binder"
+    allow_access_to_external_requester_pays_buckets : false,
+    bucket_admin_access : [],
+    hub_namespace : "binder"
   }
 }
 
@@ -29,7 +29,7 @@ hub_cloud_permissions = {
 enable_filestore      = true
 filestore_capacity_gb = 1024
 
-user_buckets          = {}
+user_buckets = {}
 
 # Setup notebook node pools
 notebook_nodes = {
