@@ -96,6 +96,9 @@ binderhub-service:
       enable_api_only_mode: false
       banner_message: ""
       about_message: ""
+      DockerRegistry:
+        url: &url https://quay.io
+        username: &username opensci-big-binder+image_builder
   extraEnv:
     - name: JUPYTERHUB_API_TOKEN
       valueFrom:
@@ -113,5 +116,5 @@ binderhub-service:
     - name: JUPYTERHUB_OAUTH_CALLBACK_URL
       value: "https://big.binder.opensci.2i2c.cloud/oauth_callback"
   buildPodsRegistryCredentials:
-    server: "https://quay.io"
-    username: opensci-big-binder+image_builder
+    server: *url
+    username: *username
