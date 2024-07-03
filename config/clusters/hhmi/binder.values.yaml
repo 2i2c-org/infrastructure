@@ -1,3 +1,6 @@
+userServiceAccount:
+  annotations:
+    iam.gke.io/gcp-service-account: hhmi-binder@hhmi-398911.iam.gserviceaccount.com
 jupyterhub:
   ingress:
     hosts: [hub.binder.hhmi.2i2c.cloud]
@@ -17,6 +20,8 @@ jupyterhub:
       templateVars:
         enabled: false
   singleuser:
+    cloudMetadata:
+      blockWithIptables: false
     cpu:
       limit: 2
     memory:

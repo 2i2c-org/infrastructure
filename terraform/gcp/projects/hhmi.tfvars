@@ -17,12 +17,19 @@ k8s_versions = {
 # Tip: uncomment the line below if this cluster will be multi-tenant
 # enable_network_policy  = true
 
+hub_cloud_permissions = {
+  "binder" : {
+    allow_access_to_external_requester_pays_buckets : false,
+    bucket_admin_access : [],
+    hub_namespace : "binder"
+  }
+}
+
 # Setup a filestore for in-cluster NFS
 enable_filestore      = true
 filestore_capacity_gb = 1024
 
-user_buckets          = {}
-hub_cloud_permissions = {}
+user_buckets = {}
 
 # Setup notebook node pools
 notebook_nodes = {
