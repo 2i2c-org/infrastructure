@@ -99,6 +99,9 @@ binderhub-service:
       enable_api_only_mode: false
       banner_message: ""
       about_message: ""
+      DockerRegistry:
+        url: &url https://quay.io
+        username: &username hhmi-binder+image_builder
     GitHubRepoProvider:
       allowed_specs:
         - "^binder-examples/.*"
@@ -119,5 +122,5 @@ binderhub-service:
     - name: JUPYTERHUB_BASE_URL
       value: "https://hub.binder.hhmi.2i2c.cloud/"
   buildPodsRegistryCredentials:
-    server: https://quay.io
-    username: hhmi-binder+image_builder
+    server: *url
+    username: *username

@@ -95,6 +95,9 @@ binderhub-service:
       banner_message: "Please email support@2i2c.org to request repositories to be added to the allow list"
       # Update the about message as more repos are added to GitHubRepoProvider.allowed_specs
       about_message: "Launchable repositories are: github.com/binder-examples/requirements and github.com/2i2c-org/*"
+      DockerRegistry:
+        url: &url https://quay.io
+        username: &username opensci-small-binder+image_builder
     GitHubRepoProvider:
       allowed_specs:
         - "^2i2c-org/.*$"
@@ -114,7 +117,5 @@ binderhub-service:
     - name: JUPYTERHUB_BASE_URL
       value: "https://hub.binder.opensci.2i2c.cloud/"
   buildPodsRegistryCredentials:
-    # registry server address like https://quay.io (no org name required) or https://us-central1-docker.pkg.dev
-    server: "https://quay.io"
-    # robot account namer or "_json_key" if using grc.io
-    username: opensci-small-binder+image_builder
+    server: *url
+    username: *username
