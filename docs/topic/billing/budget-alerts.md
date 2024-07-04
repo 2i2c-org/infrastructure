@@ -1,4 +1,4 @@
-(topic:budget-alerts)=
+(topic:billing:budget-alerts)=
 # Cloud Billing Budget Alerts
 
 "I forgot to turn off my cloud resources, your honor" as a reason for declaring

@@ -9,4 +9,5 @@ chargeable-resources
 accounts
 reports
 tools
+alerts
 ```
