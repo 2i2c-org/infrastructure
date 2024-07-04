@@ -87,14 +87,6 @@ binderhub-service:
       image_prefix: us-central1-docker.pkg.dev/two-eye-two-see/binderhub-ui-demo-registry/binderhub-service-
       banner_message: "Testing binderhub used by 2i2c"
       about_message: "Testing binderhub used by 2i2c"
-  extraConfig:
-    # FIXME: set KubernetesBuildExecutor.push_secret again
-    #        without this for some reason the build pods
-    #        search after the wrong secret name (i.e. the default name)
-    #        set by binderhub in KubernetesBuildExecutor.push_secret
-    01-binderhub-service-set-push-secret: |
-      import os
-      c.KubernetesBuildExecutor.push_secret = os.environ["PUSH_SECRET_NAME"]
   extraEnv:
     - name: JUPYTERHUB_API_TOKEN
       valueFrom:
