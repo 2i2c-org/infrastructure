@@ -7,8 +7,8 @@ core_node_machine_type = "n2-highmem-4"
 # The billing data for the community-LEAP-NSF account was zero for the last 3 months
 # so choosing to disable this for this project
 budget_alert_enabled = false
-budget_alert_amount   = ""
-billing_account_id    = "01A164-923D17-3199D9"
+budget_alert_amount  = ""
+billing_account_id   = "01A164-923D17-3199D9"
 
 k8s_versions = {
   min_master_version : "1.29.1-gke.1589018",
