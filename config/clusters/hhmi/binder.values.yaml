@@ -99,9 +99,9 @@ binderhub-service:
       enable_api_only_mode: false
       banner_message: ""
       about_message: ""
-      DockerRegistry:
-        url: &url https://quay.io
-        username: &username hhmi-binder+image_builder
+    DockerRegistry:
+      url: &url https://quay.io
+      username: &username hhmi-binder+image_builder
     GitHubRepoProvider:
       allowed_specs:
         - "^binder-examples/.*"
