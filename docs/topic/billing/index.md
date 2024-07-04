@@ -9,5 +9,5 @@ chargeable-resources
 accounts
 reports
 tools
-alerts
+budget-alerts
 ```
