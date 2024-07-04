@@ -117,12 +117,17 @@ def deploy(
         "--dry-run",
         help="""When present, the `--dry-run` flag will be passed to the `helm upgrade` command.""",
     ),
+    skip_refresh: bool = typer.Option(
+        False,
+        "--skip-refresh",
+        help="""When present, the helm charts and schemas will not be updated.""",
+    ),
 ):
     """
     Deploy one or more hubs in a given cluster
     """
     validate_cluster_config(cluster_name)
-    validate_hub_config(cluster_name, hub_name)
+    validate_hub_config(cluster_name, hub_name, skip_refresh)
 
     config_file_path = find_absolute_path_to_cluster_file(cluster_name)
     with open(config_file_path) as f:
