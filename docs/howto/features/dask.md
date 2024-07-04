@@ -42,7 +42,7 @@ To enable dask-gateway support on a hub, the following configuration changes nee
 1. if binderhub is enabled to work against a private container registry:
 
     Then dask-gateway's scheduler and worker pods need to pull from that
-    registry, so follow steps in [](features:binderhub-service:private-registry)
+    registry, so follow the final step in [](howto:features:imagebuilding-hub:configure-binderhub-service-chart)
     to set up permissions for that.
 
 (howto:features:daskhub)=
