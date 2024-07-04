@@ -7,6 +7,8 @@ regional_cluster = false
 
 # We don't have enough access to enable this
 budget_alert_enabled = false
+billing_account_id   = ""
+budget_alert_amount  = ""
 
 k8s_versions = {
   # NOTE: This isn't a regional cluster / highly available cluster, when

@@ -5,8 +5,13 @@ region                 = "us-central1"
 core_node_machine_type = "n2-highmem-4"
 enable_network_policy  = true
 enable_filestore       = true
-filestore_capacity_gb  = 2560
+filestore_capacity_gb  = 4915
 enable_logging         = false
+
+# This is the average of total costs for Apr -> Jun 2024 +20% in USD
+# This value is calculated from the OLD cluster we used to manage
+budget_alert_amount = "1986"
+billing_account_id  = "01C45D-1F6147-63E18E"
 
 k8s_versions = {
   min_master_version : "1.29.4-gke.1043002",
