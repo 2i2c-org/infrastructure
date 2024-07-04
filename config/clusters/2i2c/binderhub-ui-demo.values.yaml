@@ -87,6 +87,9 @@ binderhub-service:
       image_prefix: us-central1-docker.pkg.dev/two-eye-two-see/binderhub-ui-demo-registry/binderhub-service-
       banner_message: "Testing binderhub used by 2i2c"
       about_message: "Testing binderhub used by 2i2c"
+    DockerRegistry:
+      url: &url https://us-central1-docker.pkg.dev
+      username: &username _json_key
   extraEnv:
     - name: JUPYTERHUB_API_TOKEN
       valueFrom:
@@ -105,5 +108,5 @@ binderhub-service:
       value: "https://binderhub-ui-demo.2i2c.cloud/oauth_callback"
   # The password to the registry is stored encrypted in the hub's encrypted config file
   buildPodsRegistryCredentials:
-    server: "https://us-central1-docker.pkg.dev"
-    username: "_json_key"
+    server: *url
+    username: *username
