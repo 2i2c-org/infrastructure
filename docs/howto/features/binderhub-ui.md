@@ -381,62 +381,50 @@ Following the steps below will require adding additional configuration to the sa
 
 Follow the guide at [](howto:features:imagebuilding-hub:image-registry) of the imagebuilding hub.
 
-### 2. Configure BinderHub image_prefix
+### 2. Further configure the `binderhub-service` chart
 
-We need to configure BinderHub so that it knows under which prefix to push the images to the registry.
-For example, use something like `quay.io/opensci-small-binder/binderhub-ui-`
+Some more configuration of the `binderhub-service` chart is required by following the guide at [](howto:features:imagebuilding-hub:configure-binderhub-service-chart).
+Specifically, we need to:
+
+- **Configure `binderhub-service.config.BinderHub.image_prefix** so that BinderHub knows under which prefix to push the images to the registry
+- **Setup the credentials to push the image to the registry by the build pods** under `binderhub-service.buildPodsRegistryCredentials`
+- **Setup `imagePullSecret` for pulling images from the registry** if using quay.io
+
+### 3. Setup the credentials needed to check for and pull existing images in the registry by the BinderHub software
+
+Without these credentials, images will be rebuilt unnecessarily since the BinderHub software does not have the appropriate permissions to check if an image exists in the registry.
+
+We must pass information and credentials through `DockerRegistry` so that the BinderHub software can read from the registry.
+You should have the username and password for the registry from a previous step, and `password` should be stored in the `enc-<hub>.secret.values.yaml` file.
 
 ```yaml
 binderhub-service:
   config:
-    BinderHub:
-      image_prefix: <registry_url>/<prefix>-
+    DockerRegistry:
+      # registry url address like https://quay.io or https://us-central1-docker.pkg.dev
+      url: <url-address>
+      username: <username>
+      password: <password>
 ```
 
-### 2. Setup the the credentials needed to push the image to the container registry by the build pods
+### 4. Sops-encrypt any credentials added to the `enc-<hub>.secret.values.yaml` file
 
-```yaml
-binderhub-service:
-  buildPodsRegistryCredentials:
-    # registry server address like https://quay.io (nor org name required) or https://us-central1-docker.pkg.dev
-    server: <server_address>
-    # robot account namer or "_json_key" if using grc.io
-    username: <account_name>
-```
+This ensures they are not leaked.
+See our [`sops` documentation](https://compass.2i2c.org/engineering/secrets/#sops-overview) for more info.
 
-### 3. Sops-encrypt and store the password for accessing the image registry, in the `enc-<hub>.secret.values.yaml` file.
-
-You should have the password for accessing the image registry from a previous step.
-
-```yaml
-binderhub-service:
-  buildPodsRegistryCredentials:
-    password: <password>
-```
-
-(features:binderhub-service:private-registry)=
-### 4. If pushing to quay.io registry, also setup the credentials for image pulling
-
-When pushing to the quay registry, the images are pushed as `private` by default (even if the plan doesn't allow it).
-
-A quick workaround for this, is to use the robot's account credentials to also set [`imagePullSecret`](https://z2jh.jupyter.org/en/stable/resources/reference.html#imagepullsecret) in the `enc-<hub>.secret.values.yaml`:
+````{tip}
+In setting up this config, we have repeated the username and password for the registry in a few places.
+You can use [YAML anchors](https://support.atlassian.com/bitbucket-cloud/docs/yaml-anchors/) to avoid this repetition like the example config below.
+Anchors work for individual values as well as maps, and are preserved when sops-encrypted too!
 
 ```yaml
 jupyterhub:
   imagePullSecret:
-      create: true
-      registry: quay.io
-      username: <robot_account_name>
-      password: <password>
+    password: &password <password>
+binderhub-service:
+  buildPodsRegistryCredentials:
+    password: *password
+  DockerRegistry:
+    password: *password
 ```
-
-If dask-gateway is enabled, the scheduler and worker pods needs to be configured
-to reference the k8s Secret created by the JupyterHub chart through the config
-above. This is done like below:
-
-```yaml
-dask-gateway:
-  gateway:
-    backend:
-      imagePullSecrets: [{name: image-pull-secret}]
-```
+````

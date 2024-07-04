@@ -126,6 +126,7 @@ If the hub will be deployed on another cloud provider than GCP, we must setup a 
 1. Type in the name of the robot account that you created, select it from the list and add it to the `owners` team.
 1. Add also the other engineers as members of this new organization by searching their handles in the search bar on the right.
 
+(howto:features:imagebuilding-hub:configure-binderhub-service-chart)=
 ## Setup the `binderhub-service` chart
 
 We will use the [binderhub-service](https://github.com/2i2c-org/binderhub-service/) Helm chart to run BinderHub, the Python software, as a standalone service to build and push images with [repo2docker](https://github.com/jupyterhub/repo2docker), next to JupyterHub.
@@ -147,7 +148,7 @@ We will use the [binderhub-service](https://github.com/2i2c-org/binderhub-servic
         username: <account_name>
     ```
 
-2. Sops-encrypt and store the password for accessing the image registry, in the `enc-<hub>.secret.values.yaml` file.
+1. Sops-encrypt and store the password for accessing the image registry, in the `enc-<hub>.secret.values.yaml` file, and any other credentials added there.
 
     You should have the password for accessing the image registry from a previous step.
 
@@ -157,7 +158,7 @@ We will use the [binderhub-service](https://github.com/2i2c-org/binderhub-servic
         password: <password>
     ```
 
-3. If pushing to quay.io registry, also setup the credentials for image pulling
+1. If pushing to quay.io registry, also setup the credentials for image pulling
 
     When pushing to the quay registry, the images are pushed as `private` by default (even if the plan doesn't allow it).
 
@@ -170,4 +171,21 @@ We will use the [binderhub-service](https://github.com/2i2c-org/binderhub-servic
           registry: quay.io
           username: <robot_account_name>
           password: <password>
+    ```
+
+    Make sure to re-encrypt the file!
+
+    ```{note}
+    `imagePullSecret` is not required for GCP deployments since k8s pods are setup with credentials automatically by GCP in the background.
+    ```
+
+    If dask-gateway is enabled, the scheduler and worker pods needs to be configured
+    to reference the k8s Secret created by the JupyterHub chart through the config
+    above. This is done like below:
+
+    ```yaml
+    dask-gateway:
+      gateway:
+        backend:
+          imagePullSecrets: [{name: image-pull-secret}]
     ```
