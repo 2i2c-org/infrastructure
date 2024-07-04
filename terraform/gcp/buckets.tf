@@ -15,7 +15,7 @@ resource "google_storage_bucket" "user_buckets" {
     for_each = each.value.usage_logs ? [1] : []
 
     content {
-      log_bucket = google_storage_bucket.usage_logs_bucket.name
+      log_bucket = google_storage_bucket.usage_logs_bucket[0].name
     }
   }
 

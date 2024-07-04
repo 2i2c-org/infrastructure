@@ -23,17 +23,36 @@ variable "project_id" {
   EOT
 }
 
-variable "billing_project_id" {
+variable "billing_account_id" {
   type        = string
-  default     = "two-eye-two-see"
   description = <<-EOT
-  This should be a GCP Project ID, not a GCP Billing Account ID as the name
-  indicates. It should be to a project that has a GCP API called Cloud Resource
-  Manager enabled. That can be enabled on a project via the link below:
-  https://console.cloud.google.com/apis/library/cloudresourcemanager.googleapis.com
+  ID of the billing account used for this project. Used to set up alerts
+  for budget forecasts.
+  EOT
+}
 
-  What goes on here is confusing, see the comments about the confusion in main.tf
-  for more details.
+variable "budget_alert_currency" {
+  type        = string
+  default     = "USD"
+  description = <<-EOT
+  Currency used for budget alerts.
+  EOT
+}
+
+variable "budget_alert_amount" {
+  type        = string
+  description = <<-EOT
+  Amount of *forecasted spend* at which to send a billing alert. Current practice
+  is to set this to the average of the last 3 months expenditure + 20%.
+  EOT
+}
+
+variable "budget_alert_enabled" {
+  type        = bool
+  default     = true
+  description = <<-EOT
+  Enable budget alerts. Disable in cases where we do not have enough permissions
+  on the billing account or cloud account to enable APIs.
   EOT
 }
 

@@ -72,6 +72,7 @@ howto/update-env.md
 howto/upgrade-cluster/index.md
 howto/troubleshoot/index.md
 howto/regenerate-smce-creds.md
+howto/budget-alerts
 ```
 
 ## Topic guides

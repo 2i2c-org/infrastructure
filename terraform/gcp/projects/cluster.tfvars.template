@@ -11,6 +11,11 @@ project_id = "{{ project_id }}"
 zone   = "{{ cluster_region }}"
 region = "{{ cluster_region }}"
 
+# Config required to enable automatic budget alerts to be sent to support@2i2c.org
+budget_alert_enabled = false
+budget_alert_amount  = ""
+billing_account_id   = ""
+
 # TODO: Before applying this, identify a k8s version to specify. Pick the latest
 #       k8s version from GKE's regular release channel. Look at the output
 #       called `regular_channel_latest_k8s_versions` as seen when using

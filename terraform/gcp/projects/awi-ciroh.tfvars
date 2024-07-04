@@ -1,3 +1,6 @@
+billing_account_id  = "0157F7-E3EA8C-25AC3C"
+budget_alert_amount = "800"
+
 prefix                 = "awi-ciroh"
 project_id             = "awi-ciroh"
 zone                   = "us-central1-b"

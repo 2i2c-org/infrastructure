@@ -4,6 +4,10 @@ region                = "southamerica-east1"
 zone                  = "southamerica-east1-c"
 enable_network_policy = true
 
+# This is the average of total costs for Apr -> Jun 2024 +20% in USD
+budget_alert_amount = "1672"
+billing_account_id  = "0157F7-E3EA8C-25AC3C"
+
 k8s_versions = {
   min_master_version : "1.29.1-gke.1589018",
   core_nodes_version : "1.29.1-gke.1589018",

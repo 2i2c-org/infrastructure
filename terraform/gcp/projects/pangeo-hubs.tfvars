@@ -20,12 +20,17 @@
 #
 prefix                 = "pangeo-hubs"
 project_id             = "pangeo-integration-te-3eea"
-billing_project_id     = "pangeo-integration-te-3eea"
 zone                   = "us-central1-b"
 region                 = "us-central1"
 regional_cluster       = false
 core_node_machine_type = "n2-highmem-4"
 enable_private_cluster = true
+enable_logging         = false
+
+# We don't have enough rights to make billing alerts
+budget_alert_enabled = false
+budget_alert_amount  = ""
+billing_account_id   = ""
 
 k8s_versions = {
   # NOTE: This isn't a regional cluster / highly available cluster, when

@@ -5,6 +5,10 @@ zone             = "us-central1-b"
 region           = "us-central1"
 regional_cluster = false
 
+# This is the average of total costs for Apr -> Jun 2024 +20% in USD
+budget_alert_amount = "1880"
+billing_account_id  = "0157F7-E3EA8C-25AC3C"
+
 k8s_versions = {
   # NOTE: This isn't a regional cluster / highly available cluster, when
   #       upgrading the control plane, there will be ~5 minutes of k8s not being
