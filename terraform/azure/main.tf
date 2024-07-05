@@ -4,34 +4,27 @@ terraform {
   required_providers {
     azurerm = {
       # ref: https://registry.terraform.io/providers/hashicorp/azurerm/latest
-      #
-      # FIXME: In v4 of this module, we will lose the ability to taint the default
-      #        node pool. See comment in azurerm_kubernetes_cluster block and
-      #        deprecation warning in output.
-      #
-      #        Tracked in: https://github.com/2i2c-org/infrastructure/issues/4233
-      #
       source  = "hashicorp/azurerm"
-      version = "~> 3.107"
+      version = "~> 3.111"
     }
 
     azuread = {
       # ref: https://registry.terraform.io/providers/hashicorp/azuread/latest
       source  = "hashicorp/azuread"
-      version = "~> 2.47"
+      version = "~> 2.53"
     }
 
     kubernetes = {
       # ref: https://registry.terraform.io/providers/hashicorp/kubernetes/latest
       source  = "hashicorp/kubernetes"
-      version = "~> 2.25"
+      version = "~> 2.31"
     }
 
     # Used to decrypt sops encrypted secrets containing PagerDuty keys
     sops = {
       # ref: https://registry.terraform.io/providers/carlpett/sops/latest
       source  = "carlpett/sops"
-      version = "~> 0.7.2"
+      version = "~> 1.0"
     }
   }
   backend "gcs" {
@@ -153,10 +146,6 @@ resource "azurerm_kubernetes_cluster" "jupyterhub" {
       "hub.jupyter.org/node-purpose" = "core",
       "k8s.dask.org/node-purpose"    = "core"
     }, var.node_pools["core"][0].labels)
-    # node_taints field will be removed in v4.0 of the Azure Provider since the AKS API
-    # doesn't allow arbitrary node taints on the default node pool. A warning that
-    # this field will be deprecated is produced.
-    node_taints = concat([], var.node_pools["core"][0].taints)
 
     orchestrator_version = coalesce(var.node_pools["core"][0].kubernetes_version, var.kubernetes_version)
 
