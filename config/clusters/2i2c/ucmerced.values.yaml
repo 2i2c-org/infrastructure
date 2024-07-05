@@ -15,7 +15,7 @@ jupyterhub:
           # From https://github.com/SaiUCM/example-inherit-from-community-image
           # See https://2i2c.freshdesk.com/a/tickets/1612
           # See https://2i2c.freshdesk.com/a/tickets/1771
-          image: quay.io/cirt_ucm/jupyter-scipy-xarray:254e773d6003
+          image: quay.io/cirt_ucm/jupyter-scipy-xarray:584123d977f3
           # Launch into JupyterLab after the user logs in
           default_url: /lab
       - display_name: R
