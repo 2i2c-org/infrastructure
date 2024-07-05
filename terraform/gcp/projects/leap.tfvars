@@ -24,9 +24,13 @@ region = "us-central1"
 # Multi-tenant cluster, network policy is required to enforce separation between hubs
 enable_network_policy = true
 
-# Setup a filestore for in-cluster NFS
-enable_filestore      = true
-filestore_capacity_gb = 3072
+filestores = [
+  {
+    name_suffix = null,
+    capacity_gb = 3072,
+    tier        = "BASIC_HDD"
+  }
+]
 
 user_buckets = {
   "scratch-staging" : {
