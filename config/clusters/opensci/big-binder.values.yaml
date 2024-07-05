@@ -33,6 +33,16 @@ jupyterhub:
         funded_by:
           name: ""
           url: ""
+        announcements:
+          - |
+            <div>
+              <p>
+                Are you affiliated with NASA in some way and want to get access
+                to this instance? Please email
+                <a href="mailto:binder-requests@2i2c.org">binder-requests@2i2c.org</a>
+                with information and we will get back to you!
+              </p>
+            </div>
     jupyterhubConfigurator:
       enabled: false
     singleuserAdmin:
