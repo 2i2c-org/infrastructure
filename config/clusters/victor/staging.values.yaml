@@ -14,6 +14,8 @@ basehub:
         GitHubOAuthenticator:
           oauth_callback_url: https://staging.victor.2i2c.cloud/hub/oauth_callback
     singleuser:
+      extraEnv:
+        SCRATCH_BUCKET: s3://victor-scratch-staging/$(JUPYTERHUB_USER)
       profileList:
         # Create a small instance that can launch a custom image
         - display_name: "Bring your own image - Small: m5.large"

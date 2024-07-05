@@ -13,3 +13,6 @@ basehub:
       config:
         GitHubOAuthenticator:
           oauth_callback_url: https://victor.2i2c.cloud/hub/oauth_callback
+    singleuser:
+      extraEnv:
+        SCRATCH_BUCKET: s3://victor-scratch/$(JUPYTERHUB_USER)
