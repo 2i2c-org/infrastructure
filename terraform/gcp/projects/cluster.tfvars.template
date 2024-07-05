@@ -58,7 +58,7 @@ filestore_capacity_gb = 1024
 #
 #hub_cloud_permissions = {
 #  "{{ hub_name }}" : {
-#    allow_access_to_external_requester_pays_buckets : true,
+#    allow_access_to_external_requester_pays_buckets : false,
 #    bucket_admin_access : ["scratch-{{ hub_name }}"],
 #    hub_namespace : "{{ hub_name }}"
 #  },
