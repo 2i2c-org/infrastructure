@@ -1,4 +1,9 @@
 basehub:
+  userServiceAccount:
+    enabled: true
+    annotations:
+      eks.amazonaws.com/role-arn: arn:aws:iam::969396938818:role/smithsonian-staging
+
   jupyterhub:
     ingress:
       hosts: [staging.smithsonian.2i2c.cloud]
@@ -9,3 +14,6 @@ basehub:
       config:
         GitHubOAuthenticator:
           oauth_callback_url: https://staging.smithsonian.2i2c.cloud/hub/oauth_callback
+    singleuser:
+      extraEnv:
+        SCRATCH_BUCKET: s3://smithsonian-scratch-staging/$(JUPYTERHUB_USER)
