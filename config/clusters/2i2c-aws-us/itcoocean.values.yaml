@@ -81,8 +81,7 @@ jupyterhub:
             mountPath: /home/jovyan/shared-public
             subPath: _shared-public
     extraEnv:
-      SCRATCH_BUCKET: s3://scratch-itcoocean/$(JUPYTERHUB_USER)
-      PANGEO_SCRATCH: s3://scratch-itcoocean/$(JUPYTERHUB_USER)
+      SCRATCH_BUCKET: s3://2i2c-aws-us-scratch-itcoocean/$(JUPYTERHUB_USER)
     profileList:
       # NOTE: About node sharing
       #
