@@ -5,7 +5,7 @@ terraform {
     aws = {
       # ref: https://registry.terraform.io/providers/hashicorp/aws/latest
       source  = "hashicorp/aws"
-      version = "~> 4.52"
+      version = "~> 5.57"
     }
 
     mysql = {
@@ -15,8 +15,9 @@ terraform {
     }
 
     random = {
+      # ref: https://registry.terraform.io/providers/hashicorp/random/latest
       source  = "hashicorp/random"
-      version = "~> 3.5.1"
+      version = "~> 3.6"
     }
   }
   backend "gcs" {
