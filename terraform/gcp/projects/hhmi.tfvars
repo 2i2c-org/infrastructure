@@ -29,10 +29,6 @@ hub_cloud_permissions = {
   }
 }
 
-# Setup a filestore for in-cluster NFS
-enable_filestore      = true
-filestore_capacity_gb = 1024
-
 user_buckets = {}
 
 # Setup notebook node pools

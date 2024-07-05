@@ -324,36 +324,28 @@ variable "enable_private_cluster" {
   EOT
 }
 
-variable "enable_filestore" {
-  type        = bool
-  default     = false
+variable "filestores" {
+  type = list(map(any))
+  default = [{
+    "name_suffix" = null,
+    "capacity_gb" = 1024,
+    "tier"        = "BASIC_HDD"
+  }]
   description = <<-EOT
-  Deploy a Google FileStore for home directories
+  Deploy one or more FileStores for home directories.
 
   This provisions a managed NFS solution that can be mounted as
   home directories for users. If this is not enabled, a manual or
-  in-cluster NFS solution must be set up
-  EOT
-}
+  in-cluster NFS solution must be set up.
 
-variable "filestore_capacity_gb" {
-  type        = number
-  default     = 1024
-  description = <<-EOT
-  Minimum size (in GB) of Google FileStore.
-
-  Minimum is 1024 for BASIC_HDD tier, and 2560 for BASIC_SSD tier.
-  EOT
-}
-
-variable "filestore_tier" {
-  type        = string
-  default     = "BASIC_HDD"
-  description = <<-EOT
-  Google FileStore service tier to use.
-
-  Most likely BASIC_HDD (for slower home directories, min $204 / month) or
-  BASIC_SSD (for faster home directories, min $768 / month)
+  - name-suffix: Suffix to append to the name of the FileStore. This
+      prevents name-clashing. Default: null.
+  - capacity_gb: Minimum size (in GB) of Google FileStore. Minimum
+      is 1024 for BASIC_HDD tier, and 2560 for BASIC_SSD tier.
+      Default: 1024.
+  - tier: Google FileStore service tier to use. Most likely BASIC_HDD
+      (for slower home directories, min $204 / month) or BASIC_SSD (for
+      faster home directories, min $768 / month). Default: BASIC_HDD.
   EOT
 }
 

@@ -1,5 +1,6 @@
-billing_account_id  = "0157F7-E3EA8C-25AC3C"
-budget_alert_amount = "800"
+budget_alert_enabled = false
+billing_account_id   = "0157F7-E3EA8C-25AC3C"
+budget_alert_amount  = "800"
 
 prefix                 = "awi-ciroh"
 project_id             = "awi-ciroh"
@@ -7,8 +8,14 @@ zone                   = "us-central1-b"
 region                 = "us-central1"
 core_node_machine_type = "n2-highmem-4"
 enable_network_policy  = true
-enable_filestore       = true
-filestore_capacity_gb  = 2560
+
+filestores = [
+  {
+    name_suffix = null,
+    capacity_gb = 9216,
+    tier        = "BASIC_HDD"
+  }
+]
 
 k8s_versions = {
   min_master_version : "1.29.1-gke.1589018",

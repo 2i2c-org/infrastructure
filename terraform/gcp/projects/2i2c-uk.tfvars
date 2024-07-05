@@ -17,10 +17,6 @@ k8s_versions = {
 core_node_machine_type = "n2-highmem-4"
 enable_network_policy  = true
 
-# Setup a filestore for in-cluster NFS
-enable_filestore      = true
-filestore_capacity_gb = 1024
-
 notebook_nodes = {
   "n2-highmem-4-b" : {
     min : 0,

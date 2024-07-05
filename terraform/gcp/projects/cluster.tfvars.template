@@ -39,10 +39,6 @@ core_node_machine_type = "n2-highmem-2"
 #
 enable_network_policy  = true
 
-# Setup a filestore for in-cluster NFS
-enable_filestore      = true
-filestore_capacity_gb = 1024
-
 # Tip: uncomment and fill the missing info in the lines below if you want
 #       to setup scratch buckets for the hubs on this cluster.
 #

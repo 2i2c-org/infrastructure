@@ -1,11 +1,11 @@
 resource "google_filestore_instance" "homedirs" {
 
-  name     = "${var.prefix}-homedirs"
+  name     = var.filestores[count.index].name_suffix == null ? "${var.prefix}-homedirs" : "${var.prefix}-homedirs-${var.filestores[count.index].name_suffix}"
   location = var.zone
-  tier     = var.filestore_tier
+  tier     = var.filestores[count.index].tier
   project  = var.project_id
 
-  count = var.enable_filestore ? 1 : 0
+  count = length(var.filestores)
 
   lifecycle {
     # Additional safeguard against deleting the filestore
@@ -14,7 +14,7 @@ resource "google_filestore_instance" "homedirs" {
   }
 
   file_shares {
-    capacity_gb = var.filestore_capacity_gb
+    capacity_gb = var.filestores[count.index].capacity_gb
     name        = "homes"
   }
 

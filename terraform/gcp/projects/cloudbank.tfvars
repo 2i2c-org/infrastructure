@@ -23,9 +23,6 @@ k8s_versions = {
 core_node_machine_type = "n2-highmem-2"
 enable_network_policy  = true
 
-enable_filestore      = true
-filestore_capacity_gb = 1024
-
 notebook_nodes = {
   "n2-highmem-4-b" : {
     min : 0,
