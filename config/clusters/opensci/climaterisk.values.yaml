@@ -31,10 +31,10 @@ jupyterhub:
       name: quay.io/2i2c/sciencecore-climaterisk-image
       tag: "ecb8fe463e9b"
     nodeSelector:
-      node.kubernetes.io/instance-type: r5.xlarge
+      node.kubernetes.io/instance-type: r5.4xlarge
     memory:
-      guarantee: 7964979101
-      limit: 7964979101
+      guarantee: 15929958203
+      limit: 15929958203
     cpu:
-      guarantee: 0.93125
+      guarantee: 1.8625
       limit: 3.725
