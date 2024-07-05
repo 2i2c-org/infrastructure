@@ -23,9 +23,6 @@ user_buckets = {
   "scratch-ncar-cisl" : {
     "delete_after" : 7
   },
-  "scratch-go-bgc" : {
-    "delete_after" : 7
-  },
   "scratch-itcoocean" : {
     "delete_after" : 7
   },
@@ -54,11 +51,6 @@ hub_cloud_permissions = {
   "ncar-cisl" : {
     "user-sa" : {
       bucket_admin_access : ["scratch-ncar-cisl"],
-    },
-  },
-  "go-bgc" : {
-    "user-sa" : {
-      bucket_admin_access : ["scratch-go-bgc"],
     },
   },
   "itcoocean" : {
