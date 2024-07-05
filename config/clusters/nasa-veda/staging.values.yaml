@@ -4,6 +4,8 @@ basehub:
       eks.amazonaws.com/role-arn: arn:aws:iam::444055461661:role/nasa-veda-staging
   jupyterhub:
     singleuser:
+      extraEnv:
+        SCRATCH_BUCKET: s3://nasa-veda-scratch-staging/$(JUPYTERHUB_USER)
       initContainers:
         - &volume_ownership_fix_initcontainer
           name: volume-mount-ownership-fix
