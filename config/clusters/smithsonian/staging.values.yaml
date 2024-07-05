@@ -5,3 +5,7 @@ basehub:
       tls:
         - hosts: [staging.smithsonian.2i2c.cloud]
           secretName: https-auto-tls
+    hub:
+      config:
+        GitHubOAuthenticator:
+          oauth_callback_url: https://staging.smithsonian.2i2c.cloud/hub/oauth_callback
