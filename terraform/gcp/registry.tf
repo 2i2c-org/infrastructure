@@ -4,8 +4,6 @@
 * Hosting it in the same project makes node startup time faster.
 */
 resource "google_artifact_registry_repository" "registry" {
-  provider = google-beta
-
   for_each = toset(var.container_repos)
 
   location      = var.region
