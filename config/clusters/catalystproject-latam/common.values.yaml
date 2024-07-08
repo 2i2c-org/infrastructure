@@ -6,7 +6,7 @@ nfs:
       - soft
       - noatime
     # Google FileStore IP
-    serverIP: 172.21.82.226
+    serverIP: 172.16.137.210
     # Name of Google Filestore share
     baseShareName: /homes/
 jupyterhub:
