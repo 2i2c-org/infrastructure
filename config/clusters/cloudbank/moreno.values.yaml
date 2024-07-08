@@ -26,7 +26,7 @@ jupyterhub:
           name: CloudBank
           url: http://cloudbank.org/
         org:
-          logo_url: https://mvc.edu/_resources/images/brand/brand-logo-colors.png
+          logo_url: https://mvc.edu/_resources/images/brand/brand-mvc-logo-black.png
           name: Moreno Valley College
           url: https://www.mvc.edu/
   hub:
