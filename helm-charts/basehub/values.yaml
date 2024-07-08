@@ -1009,10 +1009,17 @@ jupyterhub:
         #
         admin: true
       dask-gateway:
-        # We provide an entry here for dask-gateway unconditionally, so
-        # our helm chart will correctly autogenerate a secret with appropriate
-        # keys. It's not used if dask-gateway is not enabled.
+        # We provide an entry here for dask-gateway unconditionally, so the
+        # jupyterhub chart will autogenerate a secret with appropriate keys.
+        # It's not used if dask-gateway is not enabled.
         display: false
+      binder:
+        # We provide an entry here for binderhub-service unconditionally, so the
+        # jupyterhub chart will autogenerate a secret with appropriate keys.
+        # It's not used if binderhub-service is not enabled.
+        display: false
+        url: http://binderhub:8090
+        oauth_no_confirm: true
     image:
       name: quay.io/2i2c/pilot-hub
       tag: "0.0.1-0.dev.git.8663.h049aa2c2"

@@ -61,8 +61,6 @@ jupyterhub:
       JupyterHub:
         authenticator_class: "null"
     redirectToServer: false
-    services:
-      binder: {}
     loadRoles:
       binder:
         services:

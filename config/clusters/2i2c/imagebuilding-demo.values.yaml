@@ -113,12 +113,6 @@ jupyterhub:
   hub:
     # Allows for multiple concurrent demos
     allowNamedServers: true
-    services:
-      binder:
-        # FIXME: ref https://github.com/2i2c-org/binderhub-service/issues/57
-        # for something more readable and requiring less copy-pasting
-        url: http://imagebuilding-demo-binderhub-service:8090
-        display: false
     image:
       name: quay.io/2i2c/dynamic-image-building-experiment
       tag: "0.0.1-0.dev.git.8663.h049aa2c2"

@@ -73,7 +73,6 @@ jupyterhub:
     redirectToServer: false
     services:
       binder:
-        oauth_no_confirm: true
         oauth_redirect_uri: https://big.binder.opensci.2i2c.cloud/oauth_callback
     loadRoles:
       binder:

@@ -95,13 +95,11 @@ jupyterhub:
   {% endif %}
 {% endif %}
     redirectToServer: false
+    {% if authenticator != "none" %}
     services:
       binder:
-      {% if authenticator != "none" %}
-        oauth_no_confirm: true
         oauth_redirect_uri: https://{{ binderhub_domain }}/oauth_callback
-      {% else %} {}
-      {% endif %}
+    {% endif %}
     loadRoles:
       binder:
         services:

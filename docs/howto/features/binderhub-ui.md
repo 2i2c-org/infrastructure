@@ -187,9 +187,6 @@ jupyterhub:
   hub:
     services:
       binder:
-        # skip the OAuth confirmation page
-        oauth_no_confirm: true
-        # the service will have a public url instead of being contacted via /services/:name
         oauth_redirect_uri: https://<binderhub-public-url>/oauth_callback
 ```
 
@@ -272,18 +269,7 @@ jupyterhub:
       add_staff_user_ids_to_admin_users: false
 ```
 
-#### 3. Check the binder hub service
-
-Setup `binder` as a jupyterhub externally managed service.
-
-```yaml
-jupyterhub:
-  hub:
-    services:
-      binder: {}
-```
-
-#### 4. Check the roles
+#### 3. Check the roles
 Setup a `binder` and a `user` role and make sure the correct permissions are being assigned to this new service but also to the users so that they can access the service.
 
 ```yaml

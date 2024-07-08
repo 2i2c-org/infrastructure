@@ -59,8 +59,6 @@ jupyterhub:
     # In the common values files this is where fancy profiles gets enabled
     extraConfig: {}
     redirectToServer: false
-    services:
-      binder: {}
     loadRoles:
       binder:
         services:
