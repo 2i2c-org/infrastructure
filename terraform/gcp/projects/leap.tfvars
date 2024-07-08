@@ -24,13 +24,13 @@ region = "us-central1"
 # Multi-tenant cluster, network policy is required to enforce separation between hubs
 enable_network_policy = true
 
-filestores = [
-  {
+filestores = {
+  filestore = {
     name_suffix = null,
     capacity_gb = 3072,
     tier        = "BASIC_HDD"
   }
-]
+}
 
 user_buckets = {
   "scratch-staging" : {

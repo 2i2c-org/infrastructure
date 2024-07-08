@@ -22,13 +22,13 @@ k8s_versions = {
 core_node_machine_type = "n2-highmem-4"
 enable_network_policy  = true
 
-filestores = [
-  {
+filestores = {
+  filestore = {
     name_suffix = null,
     capacity_gb = 5120,
     tier        = "BASIC_HDD"
   }
-]
+}
 
 notebook_nodes = {
   "n2-highmem-4" : {

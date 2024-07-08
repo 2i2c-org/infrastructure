@@ -14,13 +14,13 @@ k8s_versions = {
   notebook_nodes_version : "1.29.1-gke.1589018",
 }
 
-filestores = [
-  {
+filestores = {
+  filestore = {
     name_suffix = null,
     capacity_gb = 6144,
     tier        = "BASIC_HDD"
   }
-]
+}
 
 core_node_machine_type = "n2-highmem-2"
 

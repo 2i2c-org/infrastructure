@@ -6,13 +6,13 @@ core_node_machine_type = "n2-highmem-4"
 enable_network_policy  = true
 enable_logging         = false
 
-filestores = [
-  {
+filestores = {
+  filestore = {
     name_suffix = null,
     capacity_gb = 4915,
     tier        = "BASIC_HDD"
   }
-]
+}
 
 # This is the average of total costs for Apr -> Jun 2024 +20% in USD
 # This value is calculated from the OLD cluster we used to manage
