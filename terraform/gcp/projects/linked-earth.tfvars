@@ -4,9 +4,10 @@ project_id = "linked-earth-hubs"
 zone   = "us-central1-c"
 region = "us-central1"
 
-# This is the average of total costs for Apr -> Jun 2024 +20% in USD
-budget_alert_amount = "540"
-billing_account_id  = "018C36-9A47B4-82AE21"
+# Cloud costs for this project are not passed through by 2i2c
+budget_alert_enabled = false
+budget_alert_amount  = ""
+billing_account_id   = ""
 
 k8s_versions = {
   min_master_version : "1.29.1-gke.1589018",
