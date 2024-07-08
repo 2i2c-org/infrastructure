@@ -325,12 +325,14 @@ variable "enable_private_cluster" {
 }
 
 variable "filestores" {
-  type = list(map(any))
-  default = [{
-    "name_suffix" = null,
-    "capacity_gb" = 1024,
-    "tier"        = "BASIC_HDD"
-  }]
+  type = map(map(any))
+  default = {
+    "filestore" = {
+      "name_suffix" = null,
+      "capacity_gb" = 1024,
+      "tier"        = "BASIC_HDD"
+    }
+  }
   description = <<-EOT
   Deploy one or more FileStores for home directories.
 
