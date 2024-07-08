@@ -4,6 +4,10 @@ cluster_name = "nasa-esdis"
 
 cluster_nodes_location = "us-west-2a"
 
+default_budget_alert = {
+  "enabled" : false,
+}
+
 # Remove this variable to tag all our resources with {"ManagedBy": "2i2c"}
 tags = {}
 

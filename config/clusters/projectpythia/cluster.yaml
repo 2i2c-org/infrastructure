@@ -6,10 +6,7 @@ aws:
   clusterName: projectpythia
   region: us-west-2
   billing:
-    # For an AWS account explicitly configured to have the cloud bill
-    # paid directly by the community and not through 2i2c, declare
-    # paid_by_us to false
-    paid_by_us: true
+    paid_by_us: false
 support:
   helm_chart_values_files:
     - support.values.yaml

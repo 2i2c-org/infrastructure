@@ -4,6 +4,10 @@ cluster_name = "earthscope"
 
 cluster_nodes_location = "us-east-2a"
 
+default_budget_alert = {
+  "enabled" : false,
+}
+
 tags = {
   "ManagedBy" : "2i2c",
   # Requested by the community in https://2i2c.freshdesk.com/a/tickets/1460
