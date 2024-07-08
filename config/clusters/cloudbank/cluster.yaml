@@ -220,6 +220,14 @@ hubs:
       - common.values.yaml
       - mission.values.yaml
       - enc-mission.secret.values.yaml
+  - name: moreno
+    display_name: "Moreno Valley College"
+    domain: moreno.cloudbank.2i2c.cloud
+    helm_chart: basehub
+    helm_chart_values_files:
+      - common.values.yaml
+      - moreno.values.yaml
+      - enc-moreno.secret.values.yaml
   - name: norco
     display_name: "Norco College"
     domain: norco.cloudbank.2i2c.cloud
