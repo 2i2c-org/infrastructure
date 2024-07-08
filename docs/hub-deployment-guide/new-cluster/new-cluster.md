@@ -404,6 +404,12 @@ Workspaces are defined **per backend**.
 If you can't find the workspace you're looking for, double check you've enabled the correct backend.
 ```
 
+## Enable Budget Alerting
+
+If 2i2c is passing cloud costs through to the community, we enable budget alerting to be forewarned of runaway bills.
+You will need to update the `.tfvars` file before the next step by following instructions in [](howto:enable-budget-alerts).
+You can learn more about our budget alerts in [](topic:billing:budget-alerts).
+
 ## Plan and Apply Changes
 
 ```{important}
