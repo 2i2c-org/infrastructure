@@ -68,6 +68,7 @@ basehub:
             - fperez
             - scottyhq
             - jomey
+            - rwegener2
 
     singleuser:
       cloudMetadata:
