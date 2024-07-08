@@ -26,7 +26,7 @@ jupyterhub:
           name: CloudBank
           url: http://cloudbank.org/
         org:
-          logo_url: https://www.mvc.edu/_resources/images/icons/MVC-logo.svg
+          logo_url: https://mvc.edu/_resources/images/brand/brand-logo-colors.png
           name: Moreno Valley College
           url: https://www.mvc.edu/
   hub:
@@ -42,6 +42,7 @@ jupyterhub:
               username_claim: "email"
             allowed_domains:
               - mvc.edu
+              - student.rccd.edu
           http://google.com/accounts/o8/id:
             username_derivation:
               username_claim: "email"
