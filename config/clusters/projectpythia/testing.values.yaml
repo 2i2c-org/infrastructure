@@ -21,8 +21,6 @@ jupyterhub:
     profileList: []
   hub:
     redirectToServer: false
-    services:
-      binder: {}
     loadRoles:
       binder:
         services:
