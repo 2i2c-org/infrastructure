@@ -19,6 +19,11 @@ filestores = {
     name_suffix = null,
     capacity_gb = 6144,
     tier        = "BASIC_HDD"
+  },
+  filestore_b = {
+    name_suffix = "b",
+    capacity_gb = 2048,
+    tier        = "BASIC_HDD"
   }
 }
 
