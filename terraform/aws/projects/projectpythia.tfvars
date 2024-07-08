@@ -1,14 +1,12 @@
-/*
- Some of the assumptions this template makes about the cluster:
-   - location of the nodes of the kubernetes cluster will be <region>a
-   - no default scratch buckets support
-*/
-
 region = "us-west-2"
 
 cluster_name = "projectpythia"
 
 cluster_nodes_location = "us-west-2a"
+
+default_budget_alert = {
+  "enabled" : false,
+}
 
 # Remove this variable to tag all our resources with {"ManagedBy": "2i2c"}
 tags = {}

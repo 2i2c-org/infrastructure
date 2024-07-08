@@ -4,6 +4,10 @@ cluster_name = "openscapeshub"
 
 cluster_nodes_location = "us-west-2b"
 
+default_budget_alert = {
+  "enabled" : false,
+}
+
 # Remove this variable to tag all our resources with {"ManagedBy": "2i2c"}
 tags = {}
 
