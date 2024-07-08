@@ -96,14 +96,16 @@ binderhub-service:
         <a href="mailto:binder-requests@2i2c.org">binder-requests@2i2c.org</a>
         with information and we will get back to you!
       # Update the about message as more repos are added to GitHubRepoProvider.allowed_specs
-      about_message: "Launchable repositories are: github.com/binder-examples/requirements and github.com/2i2c-org/*"
+      about_message: "Launchable repositories are: github.com/binder-examples/requirements and github.com/2i2c-org/* and github.com/sciencecore/*"
     DockerRegistry:
       url: &url https://quay.io
       username: &username opensci-small-binder+image_builder
     GitHubRepoProvider:
       allowed_specs:
         - "^2i2c-org/.*$"
+        - "^sciencecore/.*$"
         - binder-examples/requirements
+
   extraEnv:
     - name: JUPYTERHUB_API_TOKEN
       valueFrom:
