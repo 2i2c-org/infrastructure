@@ -182,3 +182,17 @@ variable "tags" {
      they deploy and manage themselves.
   EOT
 }
+
+variable "default_budget_alert" {
+  type = object({
+    enabled : optional(bool, true)
+    subscriber_email_addresses : optional(
+      list(string),
+      ["support+{var_cluster_name}@2i2c.org"]
+    )
+  })
+  default     = {}
+  description = <<-EOT
+  A boilerplate budget alert initially setup for AWS accounts we pay the bill for.
+  EOT
+}
