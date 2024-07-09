@@ -46,11 +46,7 @@ k8s_versions = {
 enable_network_policy = true
 
 filestores = {
-  filestore = {
-    name_suffix = null,
-    capacity_gb = 4608,
-    tier        = "BASIC_HDD"
-  }
+  "filestore" = { capacity_gb = 4608 }
 }
 
 user_buckets = {

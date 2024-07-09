@@ -10,11 +10,7 @@ core_node_machine_type = "n2-highmem-4"
 enable_network_policy  = true
 
 filestores = {
-  filestore = {
-    name_suffix = null,
-    capacity_gb = 9216,
-    tier        = "BASIC_HDD"
-  }
+  "filestore" = { capacity_gb = 9216 }
 }
 
 k8s_versions = {
