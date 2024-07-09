@@ -73,6 +73,7 @@ howto/upgrade-cluster/index.md
 howto/troubleshoot/index.md
 howto/regenerate-smce-creds.md
 howto/budget-alerts
+howto/decrease-size-gcp-filestore
 ```
 
 ## Topic guides
