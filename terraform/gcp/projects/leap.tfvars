@@ -24,11 +24,7 @@ region = "us-central1"
 enable_network_policy = true
 
 filestores = {
-  filestore = {
-    name_suffix = null,
-    capacity_gb = 3072,
-    tier        = "BASIC_HDD"
-  }
+  "filestore" = { capacity_gb = 3072 }
 }
 
 user_buckets = {

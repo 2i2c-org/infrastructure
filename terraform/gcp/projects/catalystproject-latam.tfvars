@@ -15,15 +15,10 @@ k8s_versions = {
 }
 
 filestores = {
-  filestore = {
-    name_suffix = null,
-    capacity_gb = 6144,
-    tier        = "BASIC_HDD"
-  },
-  filestore_b = {
+  "filestore" = { capacity_gb = 6144 },
+  "filestore_b" = {
     name_suffix = "b",
-    capacity_gb = 2048,
-    tier        = "BASIC_HDD"
+    capacity_gb = 2048
   }
 }
 
