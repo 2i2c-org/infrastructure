@@ -16,6 +16,10 @@ jupyterhub:
     singleuserAdmin:
       extraVolumeMounts: []
   singleuser:
+    nodeSelector:
+      # Schedule users on the smallest instance
+      # https://github.com/2i2c-org/infrastructure/issues/4241
+      node.kubernetes.io/instance-type: r5.xlarge
     storage:
       type: none
       extraVolumeMounts: []
