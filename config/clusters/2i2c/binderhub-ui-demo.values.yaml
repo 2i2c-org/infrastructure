@@ -68,6 +68,11 @@ jupyterhub:
               username_claim: "email"
 binderhub-service:
   enabled: true
+  dockerApi:
+    nodeSelector:
+      # Schedule dockerApi pods to run on the smallest user nodes only
+      # https://github.com/2i2c-org/infrastructure/issues/4241
+      node.kubernetes.io/instance-type: n2-highmem-4
   ingress:
     enabled: true
     hosts:
@@ -77,6 +82,11 @@ binderhub-service:
         hosts:
           - binderhub-ui-demo.2i2c.cloud
   config:
+    KubernetesBuildExecutor:
+      nodeSelector:
+        # Schedule builder pods to run on the smallest user nodes only
+        # https://github.com/2i2c-org/infrastructure/issues/4241
+        node.kubernetes.io/instance-type: n2-highmem-4
     BinderHub:
       base_url: /
       hub_url: https://hub.binderhub-ui-demo.2i2c.cloud
