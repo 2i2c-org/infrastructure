@@ -30,6 +30,11 @@ jupyterhub:
       CILogonOAuthenticator:
         oauth_callback_url: https://high.cloudbank.2i2c.cloud/hub/oauth_callback
         allowed_idps:
+          http://login.microsoftonline.com/common/oauth2/v2.0/authorize:
+            username_derivation:
+              username_claim: "email"
+            allowed_domains:
+              - basisindependent.com
           http://google.com/accounts/o8/id:
             default: true
             username_derivation:
