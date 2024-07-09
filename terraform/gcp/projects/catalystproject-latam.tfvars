@@ -15,7 +15,6 @@ k8s_versions = {
 }
 
 filestores = {
-  "filestore" = { capacity_gb = 6144 },
   "filestore_b" = {
     name_suffix = "b",
     capacity_gb = 2048
