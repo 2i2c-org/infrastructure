@@ -78,6 +78,14 @@ local daskNodes = [];
     iam: {
         withOIDC: true,
     },
+    vpc: {
+        nat: {
+            // Use of a NAT gateway isn't required for our cluster with k8s
+            // nodes having public instanceTypes, so its disabled to reduce
+            // cost.
+            gateway: "Disable",
+        }
+    }
     // If you add an addon to this config, run the create addon command.
     //
     //    eksctl create addon --config-file=<< cluster_name >>.eksctl.yaml
