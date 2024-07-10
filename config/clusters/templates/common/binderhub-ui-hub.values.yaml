@@ -35,6 +35,14 @@ jupyterhub:
     singleuserAdmin:
       extraVolumeMounts: []
   singleuser:
+    nodeSelector:
+      # Schedule users on the smallest instance
+      # https://github.com/2i2c-org/infrastructure/issues/4241
+      {% if provider == "gcp" %}
+      node.kubernetes.io/instance-type: n2-highmem-4
+      {% else %}
+      node.kubernetes.io/instance-type: r5.xlarge
+      {% endif %}
     storage:
       type: none
       extraVolumeMounts: []
@@ -119,6 +127,15 @@ jupyterhub:
           - access:services!service=binder
 binderhub-service:
   enabled: true
+  dockerApi:
+    nodeSelector:
+      # Schedule dockerApi pods to run on the smallest user nodes only
+      # https://github.com/2i2c-org/infrastructure/issues/4241
+      {% if provider == "gcp" %}
+      node.kubernetes.io/instance-type: n2-highmem-4
+      {% else %}
+      node.kubernetes.io/instance-type: r5.xlarge
+      {% endif %}
   ingress:
     enabled: true
     hosts: [{{ binderhub_domain }}]
@@ -126,6 +143,15 @@ binderhub-service:
       - hosts: [{{ binderhub_domain }}]
         secretName: binder-https-auto-tls
   config:
+    KubernetesBuildExecutor:
+      nodeSelector:
+        # Schedule builder pods to run on the smallest user nodes only
+        # https://github.com/2i2c-org/infrastructure/issues/4241
+        {% if provider == "gcp" %}
+        node.kubernetes.io/instance-type: n2-highmem-4
+        {% else %}
+        node.kubernetes.io/instance-type: r5.xlarge
+        {% endif %}
     BinderHub:
       base_url: /
       hub_url: https://{{ jupyterhub_domain }}
