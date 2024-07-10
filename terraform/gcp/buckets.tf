@@ -122,6 +122,21 @@ resource "google_storage_bucket_iam_member" "extra_admin_members" {
   member   = each.value.member
 }
 
+// Being storage admin isn't sufficient to do work against a bucket, they need
+// "service usage consumer" as well. The service usage consumer part can be
+// restricted to a specific bucket, which this IAM member accomplishes.
+resource "google_project_iam_member" "extra_admin_members" {
+  for_each = { for bm in local.bucket_extra_admin_members : "${bm.bucket_name}.${bm.member}" => bm }
+  project  = var.project_id
+  role     = "roles/serviceusage.serviceUsageConsumer"
+  member   = each.value.member
+
+  condition {
+    title      = "Allow work against bucket ${google_storage_bucket.user_buckets[each.value.bucket_name].name}"
+    expression = "resource.type == \"storage.googleapis.com/Bucket\" && resource.name.startsWith(\"projects/_/buckets/${google_storage_bucket.user_buckets[each.value.bucket_name].name}\")"
+  }
+}
+
 resource "google_storage_bucket_iam_member" "public_access" {
   for_each = { for k, v in var.user_buckets : k => v if v.public_access }
   bucket   = google_storage_bucket.user_buckets[each.key].name
