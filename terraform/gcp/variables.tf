@@ -91,8 +91,8 @@ variable "k8s_versions" {
   description = <<-EOT
   Configuration of the k8s cluster's version and node pools' versions. To specify these
 
-  - min_master_nodes is passthrough configuration of google_container_cluster's min_master_version, documented in https://registry.terraform.io/providers/hashicorp/google-beta/latest/docs/resources/container_cluster#min_master_version
-  - [core|notebook|dask]_nodes_version is passthrough configuration of container_node_pool's version, documented in https://registry.terraform.io/providers/hashicorp/google-beta/latest/docs/resources/container_node_pool#version
+  - min_master_nodes is passthrough configuration of google_container_cluster's min_master_version, documented in https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/container_cluster#min_master_version
+  - [core|notebook|dask]_nodes_version is passthrough configuration of container_node_pool's version, documented in https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/container_node_pool#version
   EOT
 }
 

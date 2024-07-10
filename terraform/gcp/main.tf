@@ -5,18 +5,8 @@ terraform {
   required_providers {
     google = {
       # ref: https://registry.terraform.io/providers/hashicorp/google/latest
-      #
-      # FIXME: v5 is out but we've not managed to migrate the config yet, we run
-      #        into something about taints. See the upgrade guide at:
-      #        https://registry.terraform.io/providers/hashicorp/google/latest/docs/guides/version_5_upgrade.
-      #
       source  = "google"
-      version = "~> 4.85"
-    }
-    google-beta = {
-      # ref: https://registry.terraform.io/providers/hashicorp/google-beta/latest
-      source  = "google-beta"
-      version = "~> 4.85"
+      version = "~> 5.36"
     }
     kubernetes = {
       # ref: https://registry.terraform.io/providers/hashicorp/kubernetes/latest
