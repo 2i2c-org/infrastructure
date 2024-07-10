@@ -86,6 +86,9 @@ def binderhub_ui_values_file(
     cluster_name: str = typer.Option(
         ..., prompt="Name of the cluster where the hub will live"
     ),
+    provider: str = typer.Option(
+        ..., prompt="Name of the provider where the hub will live (gcp/aws)"
+    ),
     jupyterhub_domain: str = typer.Option(
         ...,
         prompt="Domain where jupyterhub will run (ex. hub.binder.community.2i2c.cloud)",
@@ -127,6 +130,7 @@ def binderhub_ui_values_file(
 
     vars = {
         "cluster_name": cluster_name,
+        "provider": provider,
         "jupyterhub_domain": jupyterhub_domain,
         "binderhub_domain": binderhub_domain,
         "authenticator": authenticator,

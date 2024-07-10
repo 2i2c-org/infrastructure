@@ -17,6 +17,10 @@ jupyterhub:
       templateVars:
         enabled: false
   singleuser:
+    nodeSelector:
+      # Schedule users on the smallest instance
+      # https://github.com/2i2c-org/infrastructure/issues/4241
+      node.kubernetes.io/instance-type: r5.xlarge
     cpu:
       limit: 2
     memory:
@@ -76,6 +80,11 @@ jupyterhub:
           - access:services!service=binder
 binderhub-service:
   enabled: true
+  dockerApi:
+    nodeSelector:
+      # Schedule dockerApi pods to run on the smallest user nodes only
+      # https://github.com/2i2c-org/infrastructure/issues/4241
+      node.kubernetes.io/instance-type: r5.xlarge
   ingress:
     enabled: true
     hosts: [binder.opensci.2i2c.cloud]
@@ -83,6 +92,11 @@ binderhub-service:
       - hosts: [binder.opensci.2i2c.cloud]
         secretName: binder-https-auto-tls
   config:
+    KubernetesBuildExecutor:
+      nodeSelector:
+        # Schedule builder pods to run on the smallest user nodes only
+        # https://github.com/2i2c-org/infrastructure/issues/4241
+        node.kubernetes.io/instance-type: r5.xlarge
     BinderHub:
       base_url: /
       hub_url: https://hub.binder.opensci.2i2c.cloud

@@ -68,7 +68,7 @@ Some of the configuration that gets inherited either from the `basehub` defaults
         initContainers: []
         profileList: []
     ```
-#### 2. Check jupyterhub and binderhub domains setup
+#### 1. Check jupyterhub and binderhub domains setup
 
 Having separate domains for both jupyterhub and binderhub will help with having clean and correct sharing URLs without having them be based off the `hub/services/:name` path.
 
@@ -94,7 +94,7 @@ binderhub-service:
         secretName: binder-https-auto-tls
 ```
 
-#### 3. Check that binderhubUI is enabled
+#### 1. Check that binderhubUI is enabled
 
 Enable `jupyterhub.custom.binderhubUI` which will in turn enable the hub to use [BinderSpawnerMixin](https://github.com/jupyterhub/binderhub/blob/bd297b2c3f713cf46b0b22cfabc86d8140bbed41/helm-chart/binderhub/values.yaml#L115-L207) that allows converting JupyterHub container spawners into BinderHub spawners
 
@@ -105,7 +105,7 @@ jupyterhub:
       enabled: true
 ```
 
-#### 4. Check that the binderhub-service chart is enabled
+#### 1. Check that the binderhub-service chart is enabled
 
 We will use the [binderhub-service](https://github.com/2i2c-org/binderhub-service/) Helm chart to run BinderHub, the Python software, as a standalone service to build and push images with [repo2docker](https://github.com/jupyterhub/repo2docker), next to JupyterHub so we need to enable it.
 
@@ -114,7 +114,7 @@ binderhub-service:
   enabled: true
 ```
 
-#### 5. Check that BinderHub is configured correctly
+#### 1. Check that BinderHub is configured correctly
 
 We need to configure BinderHub so that:
 
@@ -131,7 +131,33 @@ binderhub-service:
       enable_api_only_mode: false
 ```
 
-#### 6. Check the binderhub extra env variables
+#### 1. Check that the builder docker api and user pods are scheduled on the smallest available instance
+
+In general, for GCP, they should run on `n2-highmem-4` and on AWS they should be placed on `r5.xlarge` machines. But it's best to double-check the cluster's terraform or eksctl configuration files to make sure this is the smallest instance and not another one.
+
+
+```yaml
+binderhub-service:
+  dockerApi:
+    nodeSelector:
+      # Schedule dockerApi pods to run on the smallest user nodes only
+      # https://github.com/2i2c-org/infrastructure/issues/4241
+      node.kubernetes.io/instance-type: n2-highmem-4
+  config:
+    KubernetesBuildExecutor:
+      nodeSelector:
+        # Schedule builder pods to run on the smallest user nodes only
+        # https://github.com/2i2c-org/infrastructure/issues/4241
+        node.kubernetes.io/instance-type: n2-highmem-4
+jupyterhub:
+  singleuser:
+    nodeSelector:
+      # Schedule users on the smallest instance
+      # https://github.com/2i2c-org/infrastructure/issues/4241
+      node.kubernetes.io/instance-type: n2-highmem-4
+```
+
+#### 1. Check the binderhub extra env variables
 
 These are needed by the jupyterhub software bits that the binderhub software uses.
 
