@@ -21,9 +21,9 @@ jupyterhub:
       gitRepoBranch: "no-homepage-subsections"
       templateVars:
         org:
-          name: Sciencecore
-          logo_url: https://2i2c.org
-          url: https://2i2c.org/media.logo.png
+          name: Ephemeral Interactive Computing for NASA Communities
+          url: https://2i2c.org
+          logo_url: https://2i2c.org/media/logo.png
         designed_by:
           name: 2i2c
           url: https://2i2c.org
@@ -31,8 +31,8 @@ jupyterhub:
           name: 2i2c
           url: https://2i2c.org
         funded_by:
-          name: ""
-          url: ""
+          name: NASA ROSES-2023 F.15 High Priority Open-Source Science
+          url: https://nasa.gov
         announcements:
           - |
             <div>
