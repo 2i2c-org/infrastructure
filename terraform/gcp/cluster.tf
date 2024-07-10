@@ -44,11 +44,8 @@ resource "google_project_iam_member" "cluster_sa_roles" {
   member  = "serviceAccount:${google_service_account.cluster_sa.email}"
 }
 
-# resource ref: https://registry.terraform.io/providers/hashicorp/google-beta/latest/docs/resources/google_container_cluster
+# resource ref: https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/google_container_cluster
 resource "google_container_cluster" "cluster" {
-  # Setting cluster autoscaling profile is in google-beta
-  provider = google-beta
-
   name               = "${var.prefix}-cluster"
   location           = var.regional_cluster ? var.region : var.zone
   node_locations     = var.regional_cluster ? [var.zone] : null
@@ -176,7 +173,7 @@ resource "google_container_cluster" "cluster" {
   resource_labels = {}
 }
 
-# resource ref: https://registry.terraform.io/providers/hashicorp/google-beta/latest/docs/resources/container_node_pool
+# resource ref: https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/container_node_pool
 resource "google_container_node_pool" "core" {
   name     = "core-pool"
   cluster  = google_container_cluster.cluster.name
@@ -242,7 +239,7 @@ resource "google_container_node_pool" "core" {
   }
 }
 
-# resource ref: https://registry.terraform.io/providers/hashicorp/google-beta/latest/docs/resources/container_node_pool
+# resource ref: https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/container_node_pool
 resource "google_container_node_pool" "notebook" {
   for_each = var.notebook_nodes
 
@@ -315,20 +312,33 @@ resource "google_container_node_pool" "notebook" {
       "k8s.dask.org/node-purpose"    = "scheduler",
     }, each.value.labels)
 
-    taint = concat([{
-      key    = "hub.jupyter.org_dedicated"
-      value  = "user"
-      effect = "NO_SCHEDULE"
-      }],
-      # Add extra taint explicitly if GPU is enabled, so non-GPU pods aren't scheduled here
-      # Terraform implicitly adds this taint anyway, and tries to recreate the nodepool if we re-apply
-      each.value.gpu.enabled ? [{
-        effect = "NO_SCHEDULE"
-        key    = "nvidia.com/gpu"
-        value  = "present"
-      }] : [],
-      each.value.taints
-    )
+    dynamic "taint" {
+      for_each = concat(
+        [
+          {
+            key    = "hub.jupyter.org_dedicated"
+            value  = "user"
+            effect = "NO_SCHEDULE"
+          }
+        ],
+        # Add extra taint explicitly if GPU is enabled, so non-GPU pods aren't
+        # scheduled here Terraform implicitly adds this taint anyway, and tries
+        # to recreate the nodepool if we re-apply
+        each.value.gpu.enabled ? [{
+          effect = "NO_SCHEDULE"
+          key    = "nvidia.com/gpu"
+          value  = "present"
+        }] : [],
+        each.value.taints
+      )
+
+      content {
+        key    = taint.value["key"]
+        value  = taint.value["value"]
+        effect = taint.value["effect"]
+      }
+    }
+
     machine_type = each.value.machine_type
 
     # Our service account gets all OAuth scopes so it can access
@@ -349,7 +359,7 @@ resource "google_container_node_pool" "notebook" {
   }
 }
 
-# resource ref: https://registry.terraform.io/providers/hashicorp/google-beta/latest/docs/resources/container_node_pool
+# resource ref: https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/container_node_pool
 resource "google_container_node_pool" "dask_worker" {
   name     = "dask-${each.key}"
   cluster  = google_container_cluster.cluster.name
@@ -400,13 +410,24 @@ resource "google_container_node_pool" "dask_worker" {
       "k8s.dask.org/node-purpose" = "worker",
     }, each.value.labels)
 
-    taint = concat([{
-      key    = "k8s.dask.org_dedicated"
-      value  = "worker"
-      effect = "NO_SCHEDULE"
-      }],
-      each.value.taints
-    )
+    dynamic "taint" {
+      for_each = concat(
+        [
+          {
+            key    = "k8s.dask.org_dedicated"
+            value  = "worker"
+            effect = "NO_SCHEDULE"
+          }
+        ],
+        each.value.taints
+      )
+
+      content {
+        key    = taint.value["key"]
+        value  = taint.value["value"]
+        effect = taint.value["effect"]
+      }
+    }
 
     machine_type = each.value.machine_type
 
