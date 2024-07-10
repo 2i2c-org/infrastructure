@@ -233,9 +233,14 @@ primarily for large data transfer from on-premise systems. Since
 [Google Groups](https://groups.google.com) can be used to control access to
 GCS buckets, it can be used to allow arbitrary users to write to the bucket!
 
-1. With your `2i2c.org` google account, go to [Google Groups](https://groups.google.com) and create a new Google Group with the name
-   "{bucket-name}-writers", where "{bucket-name}" is the name of the bucket
-   we are going to grant write access to.
+1. With your `2i2c.org` google account, go to [Google Groups](https://groups.google.com)
+   and create a new Google Group with the name "{bucket-name}-writers" and email
+   "{bucket-name}-writers@googlegroups.com", where "{bucket-name}" is the name
+   of the bucket we are going to grant write access to.
+
+   Use of `@googlegroups.com` instead of `@2i2c.org` is suitable as this group
+   will include non-2i2c members, who otherwise could get control of a 2i2c.org
+   email which isn't a necessary security compromise.
 
 2. Grant "Group Owner" access to the community champion requesting this feature.
    They will be able to add / remove users from the group as necessary, and
