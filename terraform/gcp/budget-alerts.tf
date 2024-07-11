@@ -2,6 +2,10 @@
 # bad* in the future if left unattended. Should *not* be used for immediate
 # outages
 
+data "google_project" "project" {
+  project_id = var.project_id
+}
+
 resource "google_monitoring_notification_channel" "support_email" {
   count        = var.budget_alert_enabled ? 1 : 0
   project      = var.project_id
@@ -12,10 +16,6 @@ resource "google_monitoring_notification_channel" "support_email" {
   }
 }
 
-data "google_project" "project" {
-  project_id = var.project_id
-}
-
 # Need to explicitly enable https://console.cloud.google.com/apis/library/billingbudgets.googleapis.com?project=two-eye-two-see
 # resource ref: https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/billing_budget
 resource "google_billing_budget" "budget" {
@@ -23,6 +23,13 @@ resource "google_billing_budget" "budget" {
 
   billing_account = var.billing_account_id
   display_name    = "Auto-adjusting budget for ${var.prefix}"
+
+  all_updates_rule {
+    monitoring_notification_channels = [
+      google_monitoring_notification_channel.support_email[0].id,
+    ]
+    disable_default_iam_recipients = true
+  }
 
   budget_filter {
     # Use project number here, as project_name seems to be converted internally to number
@@ -35,13 +42,6 @@ resource "google_billing_budget" "budget" {
 
   amount {
     last_period_amount = true
-  }
-
-  all_updates_rule {
-    monitoring_notification_channels = [
-      google_monitoring_notification_channel.support_email[0].id,
-    ]
-    disable_default_iam_recipients = true
   }
 
   # NOTE: These threshold_rules *MUST BE ORDERED BY threshold_percent* in ascending order!
