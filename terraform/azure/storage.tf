@@ -53,7 +53,7 @@ resource "azurerm_backup_policy_file_share" "backup_policy" {
   resource_group_name = azurerm_resource_group.jupyterhub.name
   recovery_vault_name = azurerm_recovery_services_vault.homedir_recovery_vault.name
 
-  timezone = "UTC-07:00"
+  timezone = "Mountain Standard Time"
 
   backup {
     frequency = "Daily"
