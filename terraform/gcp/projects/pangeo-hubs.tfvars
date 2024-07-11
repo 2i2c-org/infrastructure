@@ -29,7 +29,6 @@ enable_logging         = false
 
 # We don't have enough rights to make billing alerts
 budget_alert_enabled = false
-budget_alert_amount  = ""
 billing_account_id   = ""
 
 k8s_versions = {

@@ -10,9 +10,8 @@ filestores = {
   "filestore" = { capacity_gb = 5939 }
 }
 
-# This project does not have cloud costs passed through by 2i2c
+# Cloud costs for this project are not passed through by 2i2c
 budget_alert_enabled = false
-budget_alert_amount  = ""
 billing_account_id   = ""
 
 k8s_versions = {
