@@ -1,13 +1,14 @@
-# Alerts sent to support@2i2c.org for things that *will go bad* in the future
-# if left unattended. Should *not* be used for immediate outages
+# Alerts sent to support+budget-${var.prefix}@2i2c.org for things that *will go
+# bad* in the future if left unattended. Should *not* be used for immediate
+# outages
 
 resource "google_monitoring_notification_channel" "support_email" {
   count        = var.budget_alert_enabled ? 1 : 0
   project      = var.project_id
-  display_name = "support@2i2c.org email"
+  display_name = "Email support+budget-${var.prefix}@2i2c.org"
   type         = "email"
   labels = {
-    email_address = "support@2i2c.org"
+    email_address = "support+budget-${var.prefix}@2i2c.org"
   }
 }
 
@@ -16,11 +17,12 @@ data "google_project" "project" {
 }
 
 # Need to explicitly enable https://console.cloud.google.com/apis/library/billingbudgets.googleapis.com?project=two-eye-two-see
+# resource ref: https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/billing_budget
 resource "google_billing_budget" "budget" {
   count = var.budget_alert_enabled ? 1 : 0
 
   billing_account = var.billing_account_id
-  display_name    = "Billing alert"
+  display_name    = "Auto-adjusting budget for ${var.prefix}"
 
   budget_filter {
     # Use project number here, as project_name seems to be converted internally to number
