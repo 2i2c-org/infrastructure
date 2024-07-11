@@ -113,7 +113,7 @@ if __name__ == "__main__":
         type=str,
         help="",
     )
-    parser.add_argument("filestore_name", metavar="filestore-name", type=str, help="")
+    parser.add_argument("filestore_name", type=str, help="")
     parser.add_argument(
         "region",
         type=str,
