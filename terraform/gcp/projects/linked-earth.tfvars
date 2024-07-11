@@ -6,7 +6,6 @@ region = "us-central1"
 
 # Cloud costs for this project are not passed through by 2i2c
 budget_alert_enabled = false
-budget_alert_amount  = ""
 billing_account_id   = ""
 
 k8s_versions = {

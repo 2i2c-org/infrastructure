@@ -13,7 +13,6 @@ region = "{{ cluster_region }}"
 
 # Config required to enable automatic budget alerts to be sent to support@2i2c.org
 budget_alert_enabled = false
-budget_alert_amount  = ""
 billing_account_id   = ""
 
 # TODO: Before applying this, identify a k8s version to specify. Pick the latest

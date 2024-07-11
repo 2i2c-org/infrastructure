@@ -31,22 +31,6 @@ variable "billing_account_id" {
   EOT
 }
 
-variable "budget_alert_currency" {
-  type        = string
-  default     = "USD"
-  description = <<-EOT
-  Currency used for budget alerts.
-  EOT
-}
-
-variable "budget_alert_amount" {
-  type        = string
-  description = <<-EOT
-  Amount of *forecasted spend* at which to send a billing alert. Current practice
-  is to set this to the average of the last 3 months expenditure + 20%.
-  EOT
-}
-
 variable "budget_alert_enabled" {
   type        = bool
   default     = true

@@ -28,13 +28,11 @@ resource "google_billing_budget" "budget" {
     # This is a bug in the google provider / budgets API https://github.com/hashicorp/terraform-provider-google/issues/8444
     projects               = ["projects/${data.google_project.project.number}"]
     credit_types_treatment = "INCLUDE_ALL_CREDITS"
+    calendar_period        = "MONTH"
   }
 
   amount {
-    specified_amount {
-      currency_code = var.budget_alert_currency
-      units         = var.budget_alert_amount
-    }
+    last_period_amount = true
   }
 
   all_updates_rule {
@@ -43,19 +41,18 @@ resource "google_billing_budget" "budget" {
     ]
     disable_default_iam_recipients = true
   }
+
   # NOTE: These threshold_rules *MUST BE ORDERED BY threshold_percent* in ascending order!
   # If not, we'll run into https://github.com/hashicorp/terraform-provider-google/issues/8444
   # and terraform apply won't be clean.
   threshold_rules {
-    # Alert when *actual* spend reached 80% of budget
-    threshold_percent = 1.0
+    # Alert when *actual* spend reached 120% of budget (last month's spend)
+    threshold_percent = 1.2
     spend_basis       = "CURRENT_SPEND"
   }
   threshold_rules {
-    # Alert when *forecasted* spend is about to blow over our budget
-    # Adding the extra 1% to help terraform not redo this each time.
-    threshold_percent = 1.01
+    # Alert when *forecasted* spend reached 120% of budget (last month's spend)
+    threshold_percent = 1.2
     spend_basis       = "FORECASTED_SPEND"
   }
-
 }
