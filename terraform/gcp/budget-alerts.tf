@@ -18,7 +18,7 @@ resource "google_monitoring_notification_channel" "support_email" {
 
 # Need to explicitly enable https://console.cloud.google.com/apis/library/billingbudgets.googleapis.com?project=two-eye-two-see
 # resource ref: https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/billing_budget
-resource "google_billing_budget" "budget" {
+resource "google_billing_budget" "budgets" {
   count = var.budget_alert_enabled ? 1 : 0
 
   billing_account = var.billing_account_id
