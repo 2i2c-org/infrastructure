@@ -194,6 +194,7 @@ basehub:
             node_selector:
               node.kubernetes.io/instance-type: r5.xlarge
         - display_name: "Small: 4 CPU, 32 GB"
+          description: "A dedicated machine for you."
           allowed_groups:
             - geolab
             - geolab:dev
@@ -202,10 +203,9 @@ basehub:
           kubespawner_override:
             mem_guarantee: 28.937G
             cpu_guarantee: 0.4
-            mem_limit: 28.937G
-            cpu_limit: 4
+            mem_limit: null
             node_selector:
-              node.kubernetes.io/instance-type: r5.16xlarge
+              node.kubernetes.io/instance-type: r5.xlarge
         - display_name: "Medium: 16 CPU, 128 GB"
           description: "A dedicated machine for you."
           profile_options: *profile_options
