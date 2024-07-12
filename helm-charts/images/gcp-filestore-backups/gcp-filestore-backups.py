@@ -11,7 +11,7 @@ def extract_region_from_zone(zone: str):
     """
     Parse a GCP zone (e.g. us-central1-b) to return a region (e.g. us-central1)
     """
-    return "-".join(zone.split("-"[:2]))
+    return "-".join(zone.split("-")[:2])
 
 
 def get_existing_backups(
@@ -196,9 +196,9 @@ def main(args):
     )
     create_backup_if_necessary(
         recent_filestore_backups,
-        args.project,
         args.filestore_name,
         args.filestore_share_name,
+        args.project,
         region,
         args.zone,
     )
