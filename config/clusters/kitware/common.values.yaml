@@ -109,7 +109,7 @@ jupyterhub:
       - display_name: Kitware Trame
         default: true
         kubespawner_override:
-          image: kitware/trame:geotrame-cloud
+          image: kitware/trame:pan3d-cloud
           # Not an immutable tag
           image_pull_policy: Always
         profile_options: *profile_options
