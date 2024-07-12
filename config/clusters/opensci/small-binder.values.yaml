@@ -121,6 +121,7 @@ binderhub-service:
         - "^2i2c-org/.*$"
         - "^sciencecore/.*$"
         - binder-examples/requirements
+        - "^2i2c-nasa-binder-access/.*$"
 
   extraEnv:
     - name: JUPYTERHUB_API_TOKEN
