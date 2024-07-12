@@ -131,4 +131,4 @@ if __name__ == "__main__":
 
     while True:
         main(args)
-        time.sleep(600)
+        time.sleep(600)  # 60 seconds * 10 for 10 minutes sleep period
