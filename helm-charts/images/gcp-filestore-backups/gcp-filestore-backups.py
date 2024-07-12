@@ -155,6 +155,10 @@ def create_backup_if_necessary(
                 # return immediately, without waiting for the operation in progress
                 # to complete. Given that we only expect to be creating a backup
                 # once a day, this feels safe enough to try for now.
+                # The `gcloud filestore backups list` command is instantaneously
+                # populated with new backups, even if they are not done creating.
+                # So we don't have to worry about the async flag not taking those
+                # into account.
                 "--async",
             ]
         )
