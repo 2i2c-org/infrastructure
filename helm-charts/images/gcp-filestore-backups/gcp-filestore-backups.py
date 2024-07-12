@@ -7,6 +7,13 @@ from datetime import datetime, timedelta
 import jmespath
 
 
+def extract_region_from_zone(zone: str):
+    """
+    Parse a GCP zone (e.g. us-central1-b) to return a region (e.g. us-central1)
+    """
+    return "-".join(zone.split("-"[:2]))
+
+
 def get_existing_backups(
     project: str, region: str, filestore_name: str, filestore_share_name: str
 ):
@@ -180,8 +187,9 @@ def delete_old_backups(backups: list, region: str):
 
 
 def main(args):
+    region = extract_region_from_zone(args.zone)
     filestore_backups = get_existing_backups(
-        args.project, args.region, args.filestore_name, args.filestore_share_name
+        args.project, region, args.filestore_name, args.filestore_share_name
     )
     recent_filestore_backups, old_filestore_backups = (
         filter_backups_into_recent_and_old(filestore_backups, args.retention_days)
@@ -191,10 +199,10 @@ def main(args):
         args.project,
         args.filestore_name,
         args.filestore_share_name,
-        args.region,
+        region,
         args.zone,
     )
-    delete_old_backups(old_filestore_backups, args.region)
+    delete_old_backups(old_filestore_backups, region)
 
 
 if __name__ == "__main__":
@@ -211,11 +219,6 @@ if __name__ == "__main__":
         "project",
         type=str,
         help="The GCP project the Filestore belongs to",
-    )
-    parser.add_argument(
-        "region",
-        type=str,
-        help="The GCP region the Filestore is deployed in, e.g. us-central1",
     )
     parser.add_argument(
         "zone",
