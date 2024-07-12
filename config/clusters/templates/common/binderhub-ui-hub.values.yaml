@@ -142,9 +142,11 @@ binderhub-service:
     tls:
       - hosts: [{{ binderhub_domain }}]
         secretName: binder-https-auto-tls
+  custom:
+    sendLogsOfLaunchEventsTo2i2c: true
   config:
     KubernetesBuildExecutor:
-      nodeSelector:
+      node_selector:
         # Schedule builder pods to run on the smallest user nodes only
         # https://github.com/2i2c-org/infrastructure/issues/4241
         {% if provider == "gcp" %}

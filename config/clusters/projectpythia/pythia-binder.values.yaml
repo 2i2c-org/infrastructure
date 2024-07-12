@@ -89,16 +89,14 @@ binderhub-service:
     tls:
       - hosts: [binder.pythia.2i2c.cloud]
         secretName: binder-https-auto-tls
+  custom:
+    sendLogsOfLaunchEventsTo2i2c: true
   config:
     KubernetesBuildExecutor:
-      nodeSelector:
+      node_selector:
         # Schedule builder pods to run on the smallest user nodes only
         # https://github.com/2i2c-org/infrastructure/issues/4241
         node.kubernetes.io/instance-type: r5.xlarge
-    GitHubRepoProvider:
-      allowed_specs:
-        - ^ProjectPythia/.*$
-        - binder-examples/requirements
     BinderHub:
       base_url: /
       badge_base_url: https://binder.pythia.2i2c.cloud
@@ -108,6 +106,13 @@ binderhub-service:
       banner_message: ""
       about_message: Binder for use with Project Pythia
       image_prefix: quay.io/2i2c-projectpythia/binderhub-ui-
+    GitHubRepoProvider:
+      allowed_specs:
+        - ^ProjectPythia/.*$
+        - binder-examples/requirements
+    DockerRegistry:
+      url: &url https://quay.io
+      username: &username 2i2c-projectpythia+image_builder
   extraEnv:
     - name: JUPYTERHUB_API_TOKEN
       valueFrom:
@@ -122,3 +127,6 @@ binderhub-service:
     # appended to binderhub's URL instead of the hub's
     - name: JUPYTERHUB_BASE_URL
       value: "https://hub.binder.pythia.2i2c.cloud/"
+  buildPodsRegistryCredentials:
+    server: *url
+    username: *username

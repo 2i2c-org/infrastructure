@@ -85,9 +85,11 @@ binderhub-service:
       - secretName: binder-https-auto-tls
         hosts:
           - binderhub-ui-demo.2i2c.cloud
+  custom:
+    sendLogsOfLaunchEventsTo2i2c: true
   config:
     KubernetesBuildExecutor:
-      nodeSelector:
+      node_selector:
         # Schedule builder pods to run on the smallest user nodes only
         # https://github.com/2i2c-org/infrastructure/issues/4241
         node.kubernetes.io/instance-type: n2-highmem-4

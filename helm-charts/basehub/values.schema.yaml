@@ -262,20 +262,32 @@ properties:
   global:
     type: object
     additionalProperties: true
+
   dask-gateway:
     type: object
     additionalProperties: true
+
+  # binderhub-service is a dependency chart with its own schema, but we impose
+  # some additional restrictions below via this chart's schema.
   binderhub-service:
     type: object
     additionalProperties: true
     required:
       - enabled
+      - custom
     properties:
       enabled:
         type: boolean
         # https://github.com/2i2c-org/binderhub-service
         description: |
           Enable image building with binderhub-service
+      custom:
+        type: object
+        additionalProperties: false
+        properties:
+          sendLogsOfLaunchEventsTo2i2c:
+            type: boolean
+
   # jupyterhub is a dependent helm chart and we rely _mostly_ on its schema
   # validation for values passed to it and are not imposing restrictions on
   # most of them in this helm chart.

@@ -145,7 +145,7 @@ binderhub-service:
       node.kubernetes.io/instance-type: n2-highmem-4
   config:
     KubernetesBuildExecutor:
-      nodeSelector:
+      node_selector:
         # Schedule builder pods to run on the smallest user nodes only
         # https://github.com/2i2c-org/infrastructure/issues/4241
         node.kubernetes.io/instance-type: n2-highmem-4
@@ -178,6 +178,43 @@ binderhub-service:
     # appended to binderhub's URL instead of the hub's
     - name: JUPYTERHUB_BASE_URL
       value: "https://<hub-public-url>.2i2c.cloud/"
+```
+
+#### 1. Setup logging of launch events to 2i2c
+
+We are sending logs of launch events to a 2i2c managed GCP project to be able to
+produce reports about usage in the future.
+
+This requires an explicit opt-in in the deployments chart config and setup of
+credentials to the 2i2c managed GCP project.
+
+To opt-in, this should be configured:
+
+```yaml
+binderhub-service:
+  custom:
+    sendLogsOfLaunchEventsTo2i2c: true
+```
+
+To setup credentials, we can reuse a single GCP service account's key already
+encrypted for other BinderHub UI enabled hubs. You can use `sops` to read, and
+then to write.
+
+```bash
+# read from existing hub
+sops config/clusters/2i2c/enc-binderhub-ui-demo.secret.values.yaml
+
+# copy a section looking like this under binderhub-service
+#
+#   extraCredentials:
+#       googleServiceAccountKey: |
+#         ...
+#         ...
+#         ...
+#
+
+# write it to new hub by pasting it under binderhub-service
+sops config/clusters/<cluster-name>/enc-<hubname>.secret.values.yaml
 ```
 
 ### II. Configuration specific to authenticated hubs

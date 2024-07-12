@@ -15,7 +15,7 @@ dependencies:
     version: 3.3.7
     repository: https://jupyterhub.github.io/helm-chart/
   - name: binderhub-service
-    version: 0.1.0-0.dev.git.255.h7580133
+    version: 0.1.0-0.dev.git.276.h00ba998
     repository: https://2i2c.org/binderhub-service/
     condition: binderhub-service.enabled
     # If bumping the version of dask-gateway, please also bump the default version set
