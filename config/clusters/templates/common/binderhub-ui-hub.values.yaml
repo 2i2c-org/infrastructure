@@ -144,7 +144,7 @@ binderhub-service:
         secretName: binder-https-auto-tls
   config:
     KubernetesBuildExecutor:
-      nodeSelector:
+      node_selector:
         # Schedule builder pods to run on the smallest user nodes only
         # https://github.com/2i2c-org/infrastructure/issues/4241
         {% if provider == "gcp" %}

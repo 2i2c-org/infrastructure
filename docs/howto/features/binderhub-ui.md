@@ -145,7 +145,7 @@ binderhub-service:
       node.kubernetes.io/instance-type: n2-highmem-4
   config:
     KubernetesBuildExecutor:
-      nodeSelector:
+      node_selector:
         # Schedule builder pods to run on the smallest user nodes only
         # https://github.com/2i2c-org/infrastructure/issues/4241
         node.kubernetes.io/instance-type: n2-highmem-4
