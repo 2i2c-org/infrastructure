@@ -6,6 +6,15 @@
 #            This workaround is problematic as that may temporarily allow access
 #            to storage by other actors with the same IP.
 #
+# SETTING UP TO WORK WITH THIS FILE:
+# ----------------------------------
+#
+# The Azure account for this cluster has MFA enabled. The username, password and
+# TOTP token are stored in the 2i2c shared Bitwarden account. To authenticate the
+# Azure CLI, run:
+#
+#     az login --tenant f1123d69-0c31-44db-ab9f-fa856d721d49
+#
 tenant_id                      = "f1123d69-0c31-44db-ab9f-fa856d721d49"
 subscription_id                = "4ca0b08a-26e1-482f-bca6-f4eb0926124a"
 resourcegroup_name             = "2i2c-pchub"
