@@ -7,7 +7,7 @@ enable_network_policy  = true
 enable_logging         = false
 
 filestores = {
-  "filestore" = { capacity_gb = 5939 }
+  "filestore" = { capacity_gb = 9216 }
 }
 
 # Cloud costs for this project are not passed through by 2i2c
