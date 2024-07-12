@@ -114,6 +114,7 @@ def create_backup_if_necessary(
     filestore_share_name: str,
     project: str,
     region: str,
+    zone: str,
 ):
     """If no recent backups have been found, create a new backup using the gcloud CLI
 
@@ -124,6 +125,7 @@ def create_backup_if_necessary(
         filestore_share_name (str): The name of the share on the Filestore to backup
         project (str): The GCP project within which to create a backup
         region (str): The GCP region to create the backup in, e.g. us-central1
+        zone (str): The GCP zone to create the backup in, e.g. us-central1-b
     """
     if len(backups) == 0:
         print(
@@ -139,7 +141,7 @@ def create_backup_if_necessary(
                 f"{filestore_name}-{filestore_share_name}-backup-{datetime.now().strftime('%Y-%m-%d')}",
                 f"--file-share={filestore_share_name}",
                 f"--instance={filestore_name}",
-                f"--instance-location={region}-b",
+                f"--instance-zone={zone}",
                 f"--region={region}",
                 # This operation can take a long time to complete and will only take
                 # longer as filestores grow, hence we use the `--async` flag to
@@ -190,6 +192,7 @@ def main(args):
         args.filestore_name,
         args.filestore_share_name,
         args.region,
+        args.zone,
     )
     delete_old_backups(old_filestore_backups, args.region)
 
@@ -205,6 +208,11 @@ if __name__ == "__main__":
     parser.add_argument("filestore_name", type=str, help="")
     parser.add_argument(
         "region",
+        type=str,
+        help="",
+    )
+    parser.add_argument(
+        "zone",
         type=str,
         help="",
     )
