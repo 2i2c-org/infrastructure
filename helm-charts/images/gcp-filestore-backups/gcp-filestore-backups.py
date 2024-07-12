@@ -198,31 +198,42 @@ def main(args):
 
 
 if __name__ == "__main__":
-    parser = argparse.ArgumentParser(description="")
+    parser = argparse.ArgumentParser(
+        description="""Uses the gcloud CLI to check for existing backups of a GCP
+        Filestore, creates a new backup if necessary, and deletes outdated backups
+        """
+    )
 
+    parser.add_argument(
+        "filestore_name", type=str, help="The name of the GCP Filestore to backup"
+    )
     parser.add_argument(
         "project",
         type=str,
-        help="",
+        help="The GCP project the Filestore belongs to",
     )
-    parser.add_argument("filestore_name", type=str, help="")
     parser.add_argument(
         "region",
         type=str,
-        help="",
+        help="The GCP region the Filestore is deployed in, e.g. us-central1",
     )
     parser.add_argument(
         "zone",
         type=str,
-        help="",
+        help="The GCP zone the Filestore is deployed in, e.g. us-central1-b",
     )
     parser.add_argument(
         "--filestore-share-name",
         type=str,
         default="homes",
-        help="",
+        help="The name of the share on the Filestore to backup",
     )
-    parser.add_argument("--retention-days", type=int, default=5, help="")
+    parser.add_argument(
+        "--retention-days",
+        type=int,
+        default=5,
+        help="The number of days to store backups for",
+    )
 
     args = parser.parse_args()
 
