@@ -11,7 +11,7 @@
 #
 # The Azure account for this cluster has MFA enabled. The username, password and
 # TOTP token are stored in the 2i2c shared Bitwarden account. To authenticate the
-# Azure CLI login, run:
+# Azure CLI, run:
 #
 #     az login --tenant f1123d69-0c31-44db-ab9f-fa856d721d49
 #
