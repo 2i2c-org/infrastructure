@@ -91,6 +91,8 @@ binderhub-service:
     tls:
       - hosts: [binder.opensci.2i2c.cloud]
         secretName: binder-https-auto-tls
+  custom:
+    sendLogsOfLaunchEventsTo2i2c: true
   config:
     KubernetesBuildExecutor:
       node_selector:

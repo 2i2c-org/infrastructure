@@ -45,6 +45,30 @@ binderhub-service:
       node_selector:
         # Schedule builder pods to run on user nodes only
         hub.jupyter.org/node-purpose: user
+  custom:
+    sendLogsOfLaunchEventsTo2i2c: false
+  extraConfig:
+    01-send-logs-of-launch-events-to-2i2c: |
+      if get_chart_config("custom.sendLogsOfLaunchEventsTo2i2c"):
+          import os
+          import sys
+          from traitlets.log import get_logger
+
+          # this check would ideally be done via chart config schema validation,
+          # but it may be too messy to do in practice - maybe not though
+          if not os.environ.get("GOOGLE_APPLICATION_CREDENTIALS"):
+              get_logger().critical("binderhub-service.custom.sendLogsOfLaunchEventsTo2i2c requires binderhub-service.extraCredentials.googleServiceAccountKey to be setup")
+              sys.exit(1)
+
+          from google.cloud.logging import Client
+          from google.cloud.logging.handlers import CloudLoggingHandler
+
+          def _make_eventsink_handler(el):
+              client = Client()
+              log_name = "binderhub-event-logs"
+              get_logger().info(f"Sending logs of launch events to a 2i2c managed GCP project {client.project} under log name {log_name}.")
+              return [CloudLoggingHandler(client, name=log_name)]
+          c.EventLog.handlers_maker = _make_eventsink_handler
 
 ingressBasicAuth:
   enabled: false

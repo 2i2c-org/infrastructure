@@ -142,6 +142,8 @@ binderhub-service:
     tls:
       - hosts: [{{ binderhub_domain }}]
         secretName: binder-https-auto-tls
+  custom:
+    sendLogsOfLaunchEventsTo2i2c: true
   config:
     KubernetesBuildExecutor:
       node_selector:
