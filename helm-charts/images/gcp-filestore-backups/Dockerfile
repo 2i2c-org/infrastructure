@@ -13,3 +13,4 @@ COPY requirements.txt /tmp/
 RUN pip install -r /tmp/requirements.txt
 
 COPY gcp-filestore-backups.py /
+ENTRYPOINT ["python", "gcp-filestore-backups.py"]
