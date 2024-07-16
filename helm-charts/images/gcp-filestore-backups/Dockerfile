@@ -9,7 +9,7 @@ RUN echo "deb [signed-by=/usr/share/keyrings/cloud.google.gpg] https://packages.
     && curl https://packages.cloud.google.com/apt/doc/apt-key.gpg | gpg --dearmor -o /usr/share/keyrings/cloud.google.gpg \
     && apt-get update -y && apt-get install google-cloud-sdk -y
 
-ARG REQUIREMENTS_FILE
-COPY ${REQUIREMENTS_FILE} /tmp/
+COPY requirements.txt /tmp/
+RUN pip install -r /tmp/requirements.txt
 
 COPY gcp-filestore-backups.py /
