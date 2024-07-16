@@ -11,6 +11,8 @@ resource "google_storage_bucket" "user_buckets" {
   // Set these values explicitly so they don't "change outside terraform"
   labels = {}
 
+  uniform_bucket_level_access = each.value.uniform_bucket_level_access_only
+
   dynamic "logging" {
     for_each = each.value.usage_logs ? [1] : []
 

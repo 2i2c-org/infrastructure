@@ -259,7 +259,8 @@ variable "user_buckets" {
     delete_after : number,
     extra_admin_members : optional(list(string), []),
     public_access : optional(bool, false),
-    usage_logs : optional(bool, false)
+    usage_logs : optional(bool, false),
+    uniform_bucket_level_access_only : optional(bool, false)
   }))
   default     = {}
   description = <<-EOT
@@ -289,6 +290,14 @@ variable "user_buckets" {
   access to objects in this GCS bucket. https://cloud.google.com/storage/docs/access-logs
   has more details. The bucket these will be written to can be determined by
   the `usage_logs_bucket` terraform output variable.
+
+  'uniform_bucket_level_access_only', if set to true, will enforce *only*
+  Uniform Bucket Level access (https://cloud.google.com/storage/docs/uniform-bucket-level-access)
+  for this bucket. When enabled, all cloud bucket ACLs are disabled - only IAM
+  permission policies are applied. Even though we only use IAM permission policies,
+  this defaults to false to give us flexibility, as it can be *enabled* at any time
+  but *can not* be disabled 90 days after enabling! Set this to true if operating
+  under security restrictions that require it to be enabled.
   EOT
 }
 
