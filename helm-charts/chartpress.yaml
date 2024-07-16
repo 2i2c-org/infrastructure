@@ -26,7 +26,3 @@ charts:
     images:
       gcp-filestore-backups:
         imageName: quay.io/2i2c/gcp-filestore-backups
-        buildArgs:
-          REQUIREMENTS_FILE: requirements.txt
-        contextPath: images/gcp-filestore-backups
-        dockerfilePath: images/gcp-filestore-backups/Dockerfile
