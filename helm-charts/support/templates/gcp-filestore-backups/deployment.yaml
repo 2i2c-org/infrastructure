@@ -1,0 +1,32 @@
+{{- if .Values.gcp-filestore-backups.enabled -}}
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: gcp-filestore-backups
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: gcp-filestore-backups
+  template:
+    metadata:
+      labels:
+        app: gcp-filestore-backups
+    spec:
+      strategy:
+        type: Recreate
+      containers:
+        - name: gcp-filestore-backups
+          image: "quay.io/2i2c/gcp-filestore-backups:0.0.1-0.dev.git.9800.hbcab1958"
+          command:
+            - python
+            - gcp-filestore-backups.py
+          args:
+            - '{{ .Values.gcp-filestore-backups.filestore-name | required "gcp-filestore-backups.filestore-name is required with gcp-filestore-backups.enabled set to true" }}'
+            - '{{ .Values.gcp-filestore-backups.project | required "gcp-filestore-backups.project is required with gcp-filestore-backups.enabled set to true" }}'
+            - '{{ .Values.gcp-filestore-backups.zone | required "gcp-filestore-backups.zone is required with gcp-filestore-backups.enabled set to true" }}'
+          securityContext:
+            runAsUser: 1000
+            allowPrivilegeEscalation: False
+            readOnlyRootFilesystem: True
+{{- end -}}
