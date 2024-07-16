@@ -22,3 +22,7 @@ charts:
           REQUIREMENTS_FILE: dynamic-image-building-requirements.txt
         contextPath: images/hub
         dockerfilePath: images/hub/Dockerfile
+  - name: support
+    images:
+      gcp-filestore-backups:
+        imageName: quay.io/2i2c/gcp-filestore-backups
