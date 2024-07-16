@@ -73,7 +73,7 @@ jupyterhub:
       GitHubOAuthenticator:
         oauth_callback_url: https://hub.big.binder.opensci.2i2c.cloud/hub/oauth_callback
         allowed_organizations:
-          - 2i2c-nasa-binder-access:big-binder-team
+          - 2i2c-ephemeral-hubs:access
     redirectToServer: false
     services:
       binder:
