@@ -19,6 +19,7 @@ required:
   - prometheusIngressAuthSecret
   - cryptnono
   - redirects
+  - gcpFilestoreBackups
   - global
 properties:
   # cluster-autoscaler is a dependent helm chart, we rely on its schema
@@ -165,6 +166,48 @@ properties:
             type: string
             description: |
               Name of the StorageClass to create
+  gcpFilestoreBackups:
+    type: object
+    additionalProperties: false
+    required:
+      - enabled
+    # Require options to be set *only* if gcpFilestoreBackups is enabled
+    if:
+      properties:
+        enabled:
+          const: true
+    then:
+      required:
+        - filestoreName
+        - project
+        - zone
+        - annotations
+    properties:
+      enabled:
+        type: boolean
+        description: |
+          Enable automatic daily backups of GCP Filestores
+      filestoreName:
+        type: string
+        description: |
+          The name of the GCP Filestore to backup
+      project:
+        type: string
+        description: |
+          The GCP project the Filestore and backups are stored in
+      zone:
+        type: string
+        description: |
+          The GCP zone the Filestore and backups are stored in, e.g., us-central1-b
+      annotations:
+        type: object
+        additionalProperties: true
+        description: |
+          Dictionary of annotations that can be applied to the service account.
+
+          When used with GKE and Workload Identity, you need to set the
+          annotation with the key "iam.gke.io/gcp-service-account" to the email
+          address of the Google Service Account whose credentials it should have.
   global:
     type: object
     additionalProperties: true
