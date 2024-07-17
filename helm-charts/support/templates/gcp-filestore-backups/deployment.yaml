@@ -1,4 +1,4 @@
-{{- if .Values.gcp-filestore-backups.enabled -}}
+{{- if .Values.gcpFilestoreBackups.enabled -}}
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -22,9 +22,9 @@ spec:
             - python
             - gcp-filestore-backups.py
           args:
-            - '{{ .Values.gcp-filestore-backups.filestore-name | required "gcp-filestore-backups.filestore-name is required with gcp-filestore-backups.enabled set to true" }}'
-            - '{{ .Values.gcp-filestore-backups.project | required "gcp-filestore-backups.project is required with gcp-filestore-backups.enabled set to true" }}'
-            - '{{ .Values.gcp-filestore-backups.zone | required "gcp-filestore-backups.zone is required with gcp-filestore-backups.enabled set to true" }}'
+            - '{{ .Values.gcpFilestoreBackups.filestoreName | required "gcpFilestoreBackups.filestoreName is required with gcpFilestoreBackups.enabled set to true" }}'
+            - '{{ .Values.gcpFilestoreBackups.project | required "gcpFilestoreBackups.project is required with gcpFilestoreBackups.enabled set to true" }}'
+            - '{{ .Values.gcpFilestoreBackups.zone | required "gcpFilestoreBackups.zone is required with gcpFilestoreBackups.enabled set to true" }}'
           securityContext:
             runAsUser: 1000
             allowPrivilegeEscalation: False
