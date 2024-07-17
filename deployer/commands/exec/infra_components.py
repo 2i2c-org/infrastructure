@@ -1,4 +1,5 @@
 import json
+import os
 import subprocess
 
 import typer
@@ -15,6 +16,105 @@ yaml = YAML(typ="safe", pure=True)
 # used by the helper pods created by this script
 # in one central place to update it more easily
 UBUNTU_IMAGE = "ubuntu:22.04"
+
+
+@exec_app.command()
+def root_homes(
+    cluster_name: str = typer.Argument(..., help="Name of cluster to operate on"),
+):
+    """
+    Pop an interactive shell with the entire nfs file system of the given cluster mounted on /root-homes
+    """
+    config_file_path = find_absolute_path_to_cluster_file(cluster_name)
+    with open(config_file_path) as f:
+        cluster = Cluster(yaml.load(f), config_file_path.parent)
+
+    with cluster.auth():
+        hubs = cluster.hubs
+        # Get a hub so we can extract the nfs ip and base share name from its config
+        hub = next((hub for hub in hubs if hub.spec["name"] == "staging"), None)
+        if hub:
+            namespace = "staging"
+        else:
+            hub = hubs[0]
+            namespace = hub.spec["name"]
+
+    for values_file in hub.spec["helm_chart_values_files"]:
+        if "secret" not in os.path.basename(values_file):
+            values_file = config_file_path.parent.joinpath(values_file)
+            config = yaml.load(values_file)
+
+            if config.get("basehub", {}):
+                server_ip = (
+                    config["basehub"].get("nfs", {}).get("pv", {}).get("serverIP", "")
+                )
+                base_share_name = (
+                    config["basehub"]
+                    .get("nfs", {})
+                    .get("pv", {})
+                    .get("baseShareName", "")
+                )
+            else:
+                server_ip = config.get("nfs", {}).get("pv", {}).get("serverIP", "")
+                base_share_name = (
+                    config.get("nfs", {}).get("pv", {}).get("baseShareName", "")
+                )
+            if server_ip and base_share_name:
+                break
+
+    pod_name = f"{cluster_name}-root-home-shell"
+    pod = {
+        "apiVersion": "v1",
+        "kind": "Pod",
+        "spec": {
+            "terminationGracePeriodSeconds": 1,
+            "automountServiceAccountToken": False,
+            "volumes": [
+                {
+                    "name": "root-homes",
+                    "nfs": {"server": server_ip, "path": base_share_name},
+                }
+            ],
+            "containers": [
+                {
+                    "name": pod_name,
+                    # Use ubuntu image so we get better gnu rm
+                    "image": UBUNTU_IMAGE,
+                    "stdin": True,
+                    "stdinOnce": True,
+                    "tty": True,
+                    "volumeMounts": [
+                        {
+                            "name": "root-homes",
+                            "mountPath": "/root-homes",
+                        }
+                    ],
+                }
+            ],
+        },
+    }
+
+    cmd = [
+        "kubectl",
+        "-n",
+        namespace,
+        "run",
+        "--rm",  # Remove pod when we're done
+        "-it",  # Give us a shell!
+        "--overrides",
+        json.dumps(pod),
+        "--image",
+        # Use ubuntu image so we get GNU rm and other tools
+        # Should match what we have in our pod definition
+        UBUNTU_IMAGE,
+        pod_name,
+        "--",
+        "/bin/bash",
+        "-l",
+    ]
+
+    with cluster.auth():
+        subprocess.check_call(cmd)
 
 
 @exec_app.command()
