@@ -15,6 +15,8 @@ spec:
     spec:
       strategy:
         type: Recreate
+      serviceAccountName: gcp-filestore-backups-sa
+      automountServiceAccountToken: false
       containers:
         - name: gcp-filestore-backups
           image: "quay.io/2i2c/gcp-filestore-backups:0.0.1-0.dev.git.9800.hbcab1958"
