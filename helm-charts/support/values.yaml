@@ -501,7 +501,7 @@ prometheusStorageClass:
     parameters:
       type: pd-balanced
 
-# Setup a pod that will periodically backup the Filestore contents
+# Setup a deployment that will periodically backup the Filestore contents
 gcpFilestoreBackups:
   enabled: false
 
