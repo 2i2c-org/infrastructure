@@ -30,5 +30,5 @@ spec:
           securityContext:
             runAsUser: 1000
             allowPrivilegeEscalation: False
-            readOnlyRootFilesystem: True
+            readOnlyRootFilesystem: False
 {{- end -}}
