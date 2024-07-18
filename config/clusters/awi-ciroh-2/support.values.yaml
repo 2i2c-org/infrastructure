@@ -6,19 +6,19 @@ prometheusIngressAuthSecret:
 grafana:
   ingress:
     hosts:
-      - grafana.ciroh2.awi.2i2c.cloud
+      - grafana.ciroh.awi.2i2c.cloud
     tls:
       - secretName: grafana-tls
         hosts:
-          - grafana.ciroh2.awi.2i2c.cloud
+          - grafana.ciroh.awi.2i2c.cloud
 
 prometheus:
   server:
     ingress:
       enabled: true
       hosts:
-        - prometheus.ciroh2.awi.2i2c.cloud
+        - prometheus.ciroh.awi.2i2c.cloud
       tls:
         - secretName: prometheus-tls
           hosts:
-            - prometheus.ciroh2.awi.2i2c.cloud
+            - prometheus.ciroh.awi.2i2c.cloud
