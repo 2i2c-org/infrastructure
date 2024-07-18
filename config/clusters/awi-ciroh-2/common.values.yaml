@@ -10,6 +10,17 @@ basehub:
       serverIP: 10.207.3.186
       # Name of Google Filestore share
       baseShareName: /homes/
+  dask-gateway:
+    enabled: true
+    gateway:
+      backend:
+        scheduler:
+          cores:
+            request: 0.8
+            limit: 1
+          memory:
+            request: 1G
+            limit: 2G
   jupyterhub:
     custom:
       2i2c:
@@ -17,6 +28,8 @@ basehub:
         add_staff_user_ids_of_type: "github"
       jupyterhubConfigurator:
         enabled: false
+      daskhubSetup:
+        enabled: true
       homepage:
         templateVars:
           org:
@@ -32,6 +45,10 @@ basehub:
           funded_by:
             name: National Oceanic and Atmospheric Administration
             url: https://www.noaa.gov/
+    singleuser:
+      defaultUrl: /lab
+      cloudMetadata:
+        blockWithIptables: false
     hub:
       config:
         JupyterHub:
@@ -50,13 +67,3 @@ basehub:
             - arpita0911patel
             - sepehrkrz
             - benlee0423
-dask-gateway:
-  gateway:
-    backend:
-      scheduler:
-        cores:
-          request: 0.8
-          limit: 1
-        memory:
-          request: 1G
-          limit: 2G

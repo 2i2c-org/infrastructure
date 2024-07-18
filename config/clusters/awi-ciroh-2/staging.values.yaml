@@ -4,9 +4,9 @@ basehub:
       iam.gke.io/gcp-service-account: awi-ciroh-staging@ciroh-jupyterhub-423218.iam.gserviceaccount.com
   jupyterhub:
     ingress:
-      hosts: [staging.ciroh2.awi.2i2c.cloud]
+      hosts: [staging.ciroh.awi.2i2c.cloud]
       tls:
-        - hosts: [staging.ciroh2.awi.2i2c.cloud]
+        - hosts: [staging.ciroh.awi.2i2c.cloud]
           secretName: https-auto-tls
     singleuser:
       profileList:
@@ -122,11 +122,10 @@ basehub:
               node.kubernetes.io/instance-type: n1-highmem-8
             extra_resource_limits:
               nvidia.com/gpu: "1"
-      # FIXME: Uncomment once buckets have been deployed
-      # extraEnv:
-      #   SCRATCH_BUCKET: gs://awi-ciroh-scratch-staging/$(JUPYTERHUB_USER)
-      #   PANGEO_SCRATCH: gs://awi-ciroh-scratch-staging/$(JUPYTERHUB_USER)
-      #   PERSISTENT_BUCKET: gs://awi-ciroh-persistent-staging/$(JUPYTERHUB_USER)
+      extraEnv:
+        SCRATCH_BUCKET: gs://awi-ciroh-scratch-staging/$(JUPYTERHUB_USER)
+        PANGEO_SCRATCH: gs://awi-ciroh-scratch-staging/$(JUPYTERHUB_USER)
+        PERSISTENT_BUCKET: gs://awi-ciroh-persistent-staging/$(JUPYTERHUB_USER)
     hub:
       config:
         KubeSpawner:
@@ -134,4 +133,4 @@ basehub:
           # make it easier to test custom images
           image_pull_policy: Always
         GitHubOAuthenticator:
-          oauth_callback_url: "https://staging.ciroh2.awi.2i2c.cloud/hub/oauth_callback"
+          oauth_callback_url: "https://staging.ciroh.awi.2i2c.cloud/hub/oauth_callback"

@@ -21,26 +21,24 @@ k8s_versions = {
   dask_nodes_version : "1.29.4-gke.1043002",
 }
 
-# FIXME: Enable these buckets once the access policy restriction has been lifted
-#        on the project
-# user_buckets = {
-#   "scratch-staging" : {
-#     "delete_after" : 7,
-#     "uniform_bucket_level_access_only": true
-#   },
-#   "scratch" : {
-#     "delete_after" : 7,
-#     "uniform_bucket_level_access_only": true
-#   },
-#   "persistent-staging" : {
-#     "delete_after" : null,
-#     "uniform_bucket_level_access_only": true
-#   },
-#   "persistent" : {
-#     "delete_after" : null,
-#     "uniform_bucket_level_access_only": true
-#   }
-# }
+user_buckets = {
+  "scratch-staging" : {
+    "delete_after" : 7,
+    "uniform_bucket_level_access_only" : true
+  },
+  "scratch" : {
+    "delete_after" : 7,
+    "uniform_bucket_level_access_only" : true
+  },
+  "persistent-staging" : {
+    "delete_after" : null,
+    "uniform_bucket_level_access_only" : true
+  },
+  "persistent" : {
+    "delete_after" : null,
+    "uniform_bucket_level_access_only" : true
+  }
+}
 
 # Setup notebook node pools
 notebook_nodes = {
@@ -88,13 +86,11 @@ dask_nodes = {
 #        once bucket access policy restriction has been lifted from the project
 hub_cloud_permissions = {
   "staging" : {
-    # allow_access_to_external_requester_pays_buckets : false,
-    bucket_admin_access : [],
+    bucket_admin_access : ["scratch-staging", "persistent-staging"],
     hub_namespace : "staging"
   },
   "prod" : {
-    # allow_access_to_external_requester_pays_buckets : false,
-    bucket_admin_access : [],
+    bucket_admin_access : ["scratch", "persistent"],
     hub_namespace : "prod"
   }
 }
