@@ -24,19 +24,19 @@ k8s_versions = {
 user_buckets = {
   "scratch-staging" : {
     "delete_after" : 7,
-    "uniform_bucket_level_access_only": true
+    "uniform_bucket_level_access_only" : true
   },
   "scratch" : {
     "delete_after" : 7,
-    "uniform_bucket_level_access_only": true
+    "uniform_bucket_level_access_only" : true
   },
   "persistent-staging" : {
     "delete_after" : null,
-    "uniform_bucket_level_access_only": true
+    "uniform_bucket_level_access_only" : true
   },
   "persistent" : {
     "delete_after" : null,
-    "uniform_bucket_level_access_only": true
+    "uniform_bucket_level_access_only" : true
   }
 }
 
