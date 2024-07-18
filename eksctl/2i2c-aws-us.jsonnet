@@ -42,6 +42,37 @@ local notebookNodes = [
     },
 ];
 
+local dedicatedNotebookNodes = [
+    { 
+        instanceType: "r5.xlarge",
+        labels+: {
+            "2i2c.org/community": "neurohackademy"
+        },
+        tags+: {
+            "community": "neurohackademy"
+        },
+        taints+: {
+            "2i2c.org/community": "neurohackademy:NoSchedule"
+        },
+    },
+    {
+        instanceType: "g4dn.xlarge",
+        labels+: {
+            "2i2c.org/community": "neurohackademy"
+        },
+        tags+: {
+            "k8s.io/cluster-autoscaler/node-template/resources/nvidia.com/gpu": "1"
+        },
+        taints+: {
+            "nvidia.com/gpu": "present:NoSchedule",
+            "2i2c.org/community": "neurohackademy:NoSchedule"
+        },
+        // Allow provisioning GPUs across all AZs, to prevent situation where all
+        // GPUs in a single AZ are in use and no new nodes can be spawned
+        availabilityZones: masterAzs,
+    },
+];
+
 local daskNodes = [
     // Node definitions for dask worker nodes. Config here is merged
     // with our dask worker node definition, which uses spot instances.
@@ -125,7 +156,28 @@ local daskNodes = [
                 "hub.jupyter.org/dedicated": "user:NoSchedule"
             },
         } + n for n in notebookNodes
-    ] + ( if daskNodes != null then
+    ] + ( if dedicatedNotebookNodes != null then
+        [
+        ng + {
+            namePrefix: "nb-dedicated",
+            availabilityZones: [nodeAz],
+            minSize: 0,
+            maxSize: 500,
+            instanceType: n.instanceType,
+            ssh: {
+                publicKeyPath: 'ssh-keys/2i2c-aws-us.key.pub'
+            },
+            labels+: {
+                "hub.jupyter.org/node-purpose": "user",
+                "k8s.dask.org/node-purpose": "scheduler"
+            },
+            taints+: {
+                "hub.jupyter.org_dedicated": "user:NoSchedule",
+                "hub.jupyter.org/dedicated": "user:NoSchedule"
+            },
+        } + n for n in dedicatedNotebookNodes
+    ] else []
+    ) + ( if daskNodes != null then
         [
         ng + {
             namePrefix: "dask",
