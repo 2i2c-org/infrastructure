@@ -14,7 +14,7 @@ spec:
         app: gcp-filestore-backups
     spec:
       strategy:
-        type: Recreate
+        type: "Recreate"
       serviceAccountName: gcp-filestore-backups-sa
       automountServiceAccountToken: false
       containers:
