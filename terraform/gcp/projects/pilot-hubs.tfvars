@@ -23,6 +23,7 @@ enable_network_policy  = true
 filestores = {
   "filestore" : { capacity_gb : 5120 }
 }
+enable_filestore_backups = true
 
 notebook_nodes = {
   "n2-highmem-4" : {
