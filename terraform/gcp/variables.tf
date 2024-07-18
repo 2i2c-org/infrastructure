@@ -352,6 +352,20 @@ variable "filestore_alert_available_percent" {
   EOT
 }
 
+variable "enable_filestore_backups" {
+  type        = bool
+  default     = false
+  description = <<-EOT
+  Provide a Workload Identity and appropriate permissions to perform backups of
+  the Filestore.
+
+  When enabled, this will create a GCP Service Account with permissions to manage
+  Filestore backups and bind it to a K8s Service Account for use in the support
+  chart. An output of the appropriate annotations to apply in the support chart
+  will also be provided.
+  EOT
+}
+
 
 variable "enable_node_autoprovisioning" {
   type        = bool
