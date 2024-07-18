@@ -67,3 +67,11 @@ grafana:
           - grafana.pilot.2i2c.cloud
   plugins:
     - grafana-bigquery-datasource
+
+gcpFilestoreBackups:
+  enabled: true
+  filestoreName: pilot-hubs-homedirs
+  project: two-eye-two-see
+  zone: us-central1-b
+  annotations:
+    iam.gke.io/gcp-service-account: pilot-hubs-filestore-backup@two-eye-two-see.iam.gserviceaccount.com
