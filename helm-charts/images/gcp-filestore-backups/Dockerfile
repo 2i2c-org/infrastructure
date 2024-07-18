@@ -15,3 +15,5 @@ RUN pip install -r /tmp/requirements.txt
 RUN mkdir -p /app
 COPY gcp-filestore-backups.py /app/
 WORKDIR /app
+
+ENV CLOUDSDK_CONFIG=/app
