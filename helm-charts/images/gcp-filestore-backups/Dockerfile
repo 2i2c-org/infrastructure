@@ -12,4 +12,6 @@ RUN echo "deb [signed-by=/usr/share/keyrings/cloud.google.gpg] https://packages.
 COPY requirements.txt /tmp/
 RUN pip install -r /tmp/requirements.txt
 
-COPY gcp-filestore-backups.py /
+RUN mkdir -p /app
+COPY gcp-filestore-backups.py /app/
+WORKDIR /app
