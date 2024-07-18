@@ -171,6 +171,7 @@ properties:
     additionalProperties: false
     required:
       - enabled
+      - image
     # Require options to be set *only* if gcpFilestoreBackups is enabled
     if:
       properties:
@@ -187,6 +188,11 @@ properties:
         type: boolean
         description: |
           Enable automatic daily backups of GCP Filestores
+      image:
+        type: string
+        description: |
+          The image name and tag to use for the gcp-filestore-backups pod.
+          Will be set by chartpress.
       filestoreName:
         type: string
         description: |

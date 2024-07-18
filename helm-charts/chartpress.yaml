@@ -26,3 +26,4 @@ charts:
     images:
       gcp-filestore-backups:
         imageName: quay.io/2i2c/gcp-filestore-backups
+        valuesPath: gcpFilestoreBackups.image

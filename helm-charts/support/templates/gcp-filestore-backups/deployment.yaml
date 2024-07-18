@@ -19,7 +19,7 @@ spec:
       automountServiceAccountToken: false
       containers:
         - name: gcp-filestore-backups
-          image: "quay.io/2i2c/gcp-filestore-backups:0.0.1-0.dev.git.9876.heb46be97"
+          image: '{{ .Values.gcpFilestoreBackups.image }}'
           command:
             - python
             - gcp-filestore-backups.py

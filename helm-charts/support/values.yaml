@@ -504,6 +504,7 @@ prometheusStorageClass:
 # Setup a deployment that will periodically backup the Filestore contents
 gcpFilestoreBackups:
   enabled: false
+  image: "quay.io/2i2c/gcp-filestore-backups:0.0.1-0.dev.git.9876.heb46be97"
 
 # A placeholder as global values that can be referenced from the same location
 # of any chart should be possible to provide, but aren't necessarily provided or
