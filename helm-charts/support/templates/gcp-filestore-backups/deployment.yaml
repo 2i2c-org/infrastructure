@@ -5,6 +5,8 @@ metadata:
   name: gcp-filestore-backups
 spec:
   replicas: 1
+  strategy:
+    type: "Recreate"
   selector:
     matchLabels:
       app: gcp-filestore-backups
@@ -13,8 +15,6 @@ spec:
       labels:
         app: gcp-filestore-backups
     spec:
-      strategy:
-        type: "Recreate"
       serviceAccountName: gcp-filestore-backups-sa
       automountServiceAccountToken: false
       containers:
