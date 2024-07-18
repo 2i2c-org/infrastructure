@@ -228,7 +228,6 @@ jobs:
       failure_2i2c-aws-us: "${{ env.failure_2i2c-aws-us }}"
       failure_2i2c-uk: "${{ env.failure_2i2c-uk }}"
       failure_2i2c: "${{ env.failure_2i2c }}"
-      failure_awi-ciroh: "${{ env.failure_awi-ciroh }}"
       failure_awi-ciroh-2: "${{ env.failure_awi-ciroh-2 }}"
       failure_catalystproject-africa: "${{ env.failure_catalystproject-africa }}"
       failure_catalystproject-latam: "${{ env.failure_catalystproject-latam }}"
