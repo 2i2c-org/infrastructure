@@ -25,10 +25,10 @@ resource "google_project_iam_custom_role" "filestore_backups" {
 }
 
 resource "google_project_iam_member" "filestore_backups_binding" {
-  count    = var.enable_filestore_backups ? 1 : 0
-  project  = var.project_id
-  role     = google_project_iam_custom_role.filestore_backups[0].name
-  member   = "serviceAccount:${google_service_account.filestore_backup_sa[0].email}"
+  count   = var.enable_filestore_backups ? 1 : 0
+  project = var.project_id
+  role    = google_project_iam_custom_role.filestore_backups[0].name
+  member  = "serviceAccount:${google_service_account.filestore_backup_sa[0].email}"
 }
 
 # Bind the Kubernetes Service Accounts to their appropriate Google Cloud Service Accounts

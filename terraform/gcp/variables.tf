@@ -353,8 +353,8 @@ variable "filestore_alert_available_percent" {
 }
 
 variable "enable_filestore_backups" {
-  type = bool
-  default = false
+  type        = bool
+  default     = false
   description = <<-EOT
   Provide a Workload Identity and appropriate permissions to perform backups of
   the Filestore.
