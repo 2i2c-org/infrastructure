@@ -73,9 +73,6 @@ hubs:
     domain: neurohackademy.2i2c.cloud
     helm_chart: basehub
     helm_chart_values_files:
-      # The order in which you list files here is the order the will be passed
-      # to the helm upgrade command in, and that has meaning. Please check
-      # that you intend for these files to be applied in this order.
       - basehub-common.values.yaml
       - neurohackademy.values.yaml
       - enc-neurohackademy.secret.values.yaml
