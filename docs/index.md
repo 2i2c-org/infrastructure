@@ -74,6 +74,7 @@ howto/troubleshoot/index.md
 howto/regenerate-smce-creds.md
 howto/budget-alerts
 howto/decrease-size-gcp-filestore
+howto/filesystem-backups/index
 ```
 
 ## Topic guides
