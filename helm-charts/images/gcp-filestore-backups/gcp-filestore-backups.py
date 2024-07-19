@@ -239,7 +239,7 @@ if __name__ == "__main__":
     # NOTE: We assume that the share name will be homes on all GCP filestores
     #       right now, which is a safe assumption given that this is not configurable
     #       in our terraform code:
-    # 
+    #
     #           https://github.com/2i2c-org/infrastructure/blob/HEAD/terraform/gcp/storage.tf
     #
     #       We should change this if that value becomes configurable.
