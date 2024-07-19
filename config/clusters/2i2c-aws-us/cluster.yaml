@@ -68,3 +68,11 @@ hubs:
       - basehub-common.values.yaml
       - isea.values.yaml
       - enc-isea.secret.values.yaml
+  - name: neurohackademy
+    display_name: "Neurohackademy"
+    domain: neurohackademy.2i2c.cloud
+    helm_chart: basehub
+    helm_chart_values_files:
+      - basehub-common.values.yaml
+      - neurohackademy.values.yaml
+      - enc-neurohackademy.secret.values.yaml

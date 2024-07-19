@@ -40,7 +40,39 @@ local notebookNodes = [
         // GPUs in a single AZ are in use and no new nodes can be spawned
         availabilityZones: masterAzs,
     },
+    { 
+        instanceType: "r5.xlarge",
+        nameSuffix: 'dedicated',
+        labels+: {
+            "2i2c.org/community": "neurohackademy"
+        },
+        tags+: {
+            "community": "neurohackademy"
+        },
+        taints+: {
+            "2i2c.org/community": "neurohackademy:NoSchedule"
+        },
+    },
+    {
+        instanceType: "g4dn.xlarge",
+        nameSuffix: 'dedicated',
+        labels+: {
+            "2i2c.org/community": "neurohackademy"
+        },
+        tags+: {
+            "k8s.io/cluster-autoscaler/node-template/resources/nvidia.com/gpu": "1",
+            "community": "neurohackademy"
+        },
+        taints+: {
+            "nvidia.com/gpu": "present:NoSchedule",
+            "2i2c.org/community": "neurohackademy:NoSchedule"
+        },
+        // Allow provisioning GPUs across all AZs, to prevent situation where all
+        // GPUs in a single AZ are in use and no new nodes can be spawned
+        availabilityZones: masterAzs,
+    },
 ];
+
 
 local daskNodes = [
     // Node definitions for dask worker nodes. Config here is merged
