@@ -21,7 +21,13 @@ resource "google_project_iam_custom_role" "filestore_backups" {
   project     = var.project_id
   title       = "Identify as project role for pods in ${var.prefix}"
   description = "Minimal role for gcp-filestore-backups pods on ${var.prefix} to identify as current project"
-  permissions = ["file.backups.*"]
+  permissions = [
+    "file.backups.create",
+    "file.backups.update",
+    "file.backups.delete",
+    "file.backups.get",
+    "file.backups.list"
+  ]
 }
 
 resource "google_project_iam_member" "filestore_backups_binding" {

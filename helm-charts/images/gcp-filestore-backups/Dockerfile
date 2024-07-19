@@ -12,4 +12,10 @@ RUN echo "deb [signed-by=/usr/share/keyrings/cloud.google.gpg] https://packages.
 COPY requirements.txt /tmp/
 RUN pip install -r /tmp/requirements.txt
 
-COPY gcp-filestore-backups.py /
+RUN mkdir -p /app/.config/gcloud
+RUN chown 1000:1000 /app/.config/gcloud
+
+COPY gcp-filestore-backups.py /app/
+WORKDIR /app
+
+ENV CLOUDSDK_CONFIG=/app/.config/gcloud
