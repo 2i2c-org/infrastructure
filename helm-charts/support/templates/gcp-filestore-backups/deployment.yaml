@@ -2,7 +2,7 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: gcp-filestore-backups
+  name: {{ .Release.Name }}-gcp-filestore-backups
 spec:
   replicas: 1
   strategy:
@@ -18,7 +18,7 @@ spec:
       serviceAccountName: gcp-filestore-backups-sa
       automountServiceAccountToken: false
       containers:
-        - name: gcp-filestore-backups
+        - name: {{ .Release.Name }}-gcp-filestore-backups
           image: '{{ .Values.gcpFilestoreBackups.image }}'
           command:
             - python
