@@ -70,7 +70,8 @@ grafana:
 
 gcpFilestoreBackups:
   enabled: true
-  filestoreName: pilot-hubs-homedirs
+  filestoreNames:
+    - pilot-hubs-homedirs
   project: two-eye-two-see
   zone: us-central1-b
   annotations:

@@ -39,15 +39,17 @@ export CLUSTER_NAME=<cluster-name>
       ```yaml
       gcpFilestoreBackups:
         enabled: true
-        filestoreName: <filestore-name>
+        filestoreNames:
+          - <filestore-name>
+          - ...
         project: <gcp-project>
         zone: <gcp-zone>
         annotations:
           iam.gke.io/gcp-service-account: <gcp-service-account-email>
       ```
       where:
-      - `filestoreName` is the name of the filestore to be backed up (can be found
-        from the Filestore Instances page in the GCP console)
+      - `filestoreNames` is a list of the filestore names to be backed up (can be
+        found from the Filestore Instances page in the GCP console)
       - `project` is the name of the GCP project in which the filestore exists
       - `zone` is the GCP zone the filestore is deployed to and where the backups
         will be stored (e.g. `us-central-b`)

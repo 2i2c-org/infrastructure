@@ -86,7 +86,9 @@ def filter_backups_into_recent_and_old(
         retention_days (int): The number of days above which a backup is considered
             to be out of date
         day_freq (int, optional): The time period in days for which we create a
-            backup. Defaults to 1 (ie. daily backups).
+            backup. Defaults to 1 (ie. daily backups). NOTE: The frequency at
+            which we make backups is not yet configurable on the command line,
+            but could be if required.
 
     Returns:
         recent_backups (list(dict)): A JSON-like object containing all existing
@@ -192,21 +194,23 @@ def delete_old_backups(backups: list, region: str):
 
 def main(args):
     region = extract_region_from_zone(args.zone)
-    filestore_backups = get_existing_backups(
-        args.project, region, args.filestore_name, args.filestore_share_name
-    )
-    recent_filestore_backups, old_filestore_backups = (
-        filter_backups_into_recent_and_old(filestore_backups, args.retention_days)
-    )
-    create_backup_if_necessary(
-        recent_filestore_backups,
-        args.filestore_name,
-        args.filestore_share_name,
-        args.project,
-        region,
-        args.zone,
-    )
-    delete_old_backups(old_filestore_backups, region)
+
+    for filestore_name in args.filestore_names:
+        filestore_backups = get_existing_backups(
+            args.project, region, filestore_name, args.filestore_share_name
+        )
+        recent_filestore_backups, old_filestore_backups = (
+            filter_backups_into_recent_and_old(filestore_backups, args.retention_days)
+        )
+        create_backup_if_necessary(
+            recent_filestore_backups,
+            filestore_name,
+            args.filestore_share_name,
+            args.project,
+            region,
+            args.zone,
+        )
+        delete_old_backups(old_filestore_backups, region)
 
 
 if __name__ == "__main__":
@@ -217,7 +221,9 @@ if __name__ == "__main__":
     )
 
     parser.add_argument(
-        "filestore_name", type=str, help="The name of the GCP Filestore to backup"
+        "filestore_names",
+        nargs="+",
+        help="The name of one or more GCP Filestores to backup",
     )
     parser.add_argument(
         "project",
@@ -229,6 +235,15 @@ if __name__ == "__main__":
         type=str,
         help="The GCP zone the Filestore is deployed in, e.g. us-central1-b",
     )
+
+    # NOTE: We assume that the share name will be homes on all GCP filestores
+    #       right now, which is a safe assumption given that this is not configurable
+    #       in our terraform code:
+    #
+    #           https://github.com/2i2c-org/infrastructure/blob/HEAD/terraform/gcp/storage.tf
+    #
+    #       We should change this if that value becomes configurable.
+    #
     parser.add_argument(
         "--filestore-share-name",
         type=str,

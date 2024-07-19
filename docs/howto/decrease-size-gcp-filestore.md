@@ -38,6 +38,12 @@ terraform plan -var-file=projects/$CLUSTER_NAME.tfvars
 terraform apply -var-file=projects/$CLUSTER_NAME.tfvars
 ```
 
+```{note}
+If filestore backups are enabled for this cluster, don't forget to add the name
+of the new filestore to the cluster's support values file, following
+[the instructions](howto:filesystem-backups:enable:gcp).
+```
+
 Open a PR and merge these changes so that other engineers cannot accidentally overwrite them.
 
 ## 2. Create a VM

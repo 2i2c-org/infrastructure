@@ -2,7 +2,7 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: gcp-filestore-backups
+  name: {{ .Release.Name }}-gcp-filestore-backups
 spec:
   replicas: 1
   strategy:
@@ -18,13 +18,15 @@ spec:
       serviceAccountName: gcp-filestore-backups-sa
       automountServiceAccountToken: false
       containers:
-        - name: gcp-filestore-backups
+        - name: {{ .Release.Name }}-gcp-filestore-backups
           image: '{{ .Values.gcpFilestoreBackups.image }}'
           command:
             - python
             - gcp-filestore-backups.py
           args:
-            - '{{ .Values.gcpFilestoreBackups.filestoreName | required "gcpFilestoreBackups.filestoreName is required with gcpFilestoreBackups.enabled set to true" }}'
+            {{- range .Values.gcpFilestoreBackups.filestoreNames | required "gcpFilestoreBackups.filestoreNames is required with gcpFilestoreBackups.enabled set to true" }}
+            - '{{ . }}'
+            {{- end }}
             - '{{ .Values.gcpFilestoreBackups.project | required "gcpFilestoreBackups.project is required with gcpFilestoreBackups.enabled set to true" }}'
             - '{{ .Values.gcpFilestoreBackups.zone | required "gcpFilestoreBackups.zone is required with gcpFilestoreBackups.enabled set to true" }}'
           securityContext:
