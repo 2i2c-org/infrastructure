@@ -37,17 +37,6 @@ binderhub-service:
       - key: hub.jupyter.org/dedicated
         value: user
         effect: NoSchedule
-    resources:
-      # requests are currently zeroed based on discussion in:
-      # https://github.com/2i2c-org/infrastructure/issues/4371#issuecomment-2223168854
-      requests:
-        cpu: 0 # 0.5 in mybinder.org-deploy
-        memory: 0 # 1Gi in mybinder.org-deploy
-      # limits are set to mimic mybinder.org-deploy:
-      # https://github.com/jupyterhub/mybinder.org-deploy/blob/6b921dca969ac2c4ed77fa322b8bf28245c3c4ba/mybinder/values.yaml#L316-L322
-      limits:
-        cpu: 4
-        memory: 4Gi
   config:
     BinderHub:
       base_url: /services/binder
@@ -56,12 +45,6 @@ binderhub-service:
       node_selector:
         # Schedule builder pods to run on user nodes only
         hub.jupyter.org/node-purpose: user
-      # memory_request are currently zeroed based on discussion in:
-      # https://github.com/2i2c-org/infrastructure/issues/4371#issuecomment-2223168854
-      memory_request: 0 # 1G in mybinder.org-deploy
-      # memory_limits are set to mimic mybinder.org-deploy:
-      # https://github.com/jupyterhub/mybinder.org-deploy/blob/6b921dca969ac2c4ed77fa322b8bf28245c3c4ba/mybinder/values.yaml#L194-L195
-      memory_limit: 3G
   custom:
     sendLogsOfLaunchEventsTo2i2c: false
   extraConfig:
