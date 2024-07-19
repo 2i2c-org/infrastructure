@@ -87,6 +87,20 @@ jupyterhub:
             2i2c.org/community: neurohackademy
           extra_resource_limits:
             nvidia.com/gpu: "1"
+      - display_name: "Bring your own image"
+        description: Specify your own docker image (must have python and jupyterhub installed in it)
+        slug: custom
+        profile_options:
+          image:
+            display_name: Image
+            unlisted_choice:
+              enabled: True
+              display_name: "Custom image"
+              validation_regex: "^.+:.+$"
+              validation_message: "Must be a publicly available docker image, of form <image-name>:<tag>"
+              kubespawner_override:
+                image: "{value}"
+            choices: {}
   hub:
     config:
       JupyterHub:
