@@ -57,7 +57,9 @@ on:
 #
 # ref: https://docs.github.com/en/actions/using-jobs/using-concurrency
 #
-concurrency: ${{ github.workflow }}-${{ github.head_ref || 'not-a-pr' }}
+concurrency:
+  group: ${{ github.workflow }}-${{ github.head_ref || 'not-a-pr' }}
+  cancel-in-progress: false
 
 # This environment variable triggers the deployer to colourise print statements in the
 # GitHug Actions logs for easy reading
