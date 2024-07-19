@@ -5,7 +5,7 @@ This document covers how to enable automatic filesystem backups across the cloud
 providers we use.
 
 (howto:filesystem-backups:enable:gcp)=
-### GCP
+## GCP
 
 ```bash
 export CLUSTER_NAME=<cluster-name>

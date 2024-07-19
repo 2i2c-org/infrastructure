@@ -9,5 +9,5 @@ various cloud providers, and recover filesystems from those backups.
 ```{toctree}
 :maxdepth: 2
 enable-backups
-recover-filesystem
+restore-filesystem
 ```
