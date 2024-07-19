@@ -24,7 +24,9 @@ spec:
             - python
             - gcp-filestore-backups.py
           args:
-            - '{{ .Values.gcpFilestoreBackups.filestoreName | required "gcpFilestoreBackups.filestoreName is required with gcpFilestoreBackups.enabled set to true" }}'
+            {{- range .Values.gcpFilestoreBackups.filestoreNames | required "gcpFilestoreBackups.filestoreNames is required with gcpFilestoreBackups.enabled set to true" }}
+            - '{{ . }}'
+            {{- end }}
             - '{{ .Values.gcpFilestoreBackups.project | required "gcpFilestoreBackups.project is required with gcpFilestoreBackups.enabled set to true" }}'
             - '{{ .Values.gcpFilestoreBackups.zone | required "gcpFilestoreBackups.zone is required with gcpFilestoreBackups.enabled set to true" }}'
           securityContext:
