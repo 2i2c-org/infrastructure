@@ -90,16 +90,13 @@ jupyterhub:
   hub:
     config:
       JupyterHub:
-        authenticator_class: cilogon
-      CILogonOAuthenticator:
+        authenticator_class: github
+      GitHubOAuthenticator:
         oauth_callback_url: https://neurohackademy.2i2c.cloud/hub/oauth_callback
-        allowed_idps:
-          http://github.com/login/oauth/authorize:
-            default: true
-            username_derivation:
-              username_claim: "preferred_username"
-      OAuthenticator:
-        allow_existing_users: True
+        allowed_organizations:
+          - NeuroHackademy2024
+        scope:
+          - read:org
       Authenticator:
         admin_users:
           - arokem
