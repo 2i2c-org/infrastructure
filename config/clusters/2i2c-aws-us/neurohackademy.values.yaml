@@ -114,3 +114,4 @@ jupyterhub:
       Authenticator:
         admin_users:
           - arokem
+          - noahbenson
