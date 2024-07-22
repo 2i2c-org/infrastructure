@@ -1,0 +1,56 @@
+jupyterhub:
+  ingress:
+    hosts: [merced.cloudbank.2i2c.cloud]
+    tls:
+      - hosts: [merced.cloudbank.2i2c.cloud]
+        secretName: https-auto-tls
+  singleuser:
+    memory:
+      # Increased to help deal with possible kernel restarts
+      # https://2i2c.freshdesk.com/a/tickets/567
+      guarantee: 384M
+      limit: 1.5G
+  custom:
+    2i2c:
+      add_staff_user_ids_of_type: google
+      add_staff_user_ids_to_admin_users: true
+    homepage:
+      templateVars:
+        designed_by:
+          name: 2i2c
+          url: https://2i2c.org
+        funded_by:
+          name: CloudBank
+          url: http://cloudbank.org/
+        operated_by:
+          name: CloudBank
+          url: http://cloudbank.org/
+        org:
+          logo_url: https://www.mccd.edu/wp-content/uploads/2023/09/MicrosoftTeams-image-15-300x300.png
+          name: Merced College
+          url: https://www.mccd.edu/
+  hub:
+    config:
+      JupyterHub:
+        authenticator_class: cilogon
+      CILogonOAuthenticator:
+        oauth_callback_url: https://merced.cloudbank.2i2c.cloud/hub/oauth_callback
+        allowed_idps:
+          http://login.microsoftonline.com/common/oauth2/v2.0/authorize:
+            default: true
+            username_derivation:
+              username_claim: "email"
+            allowed_domains:
+              - mccd.edu
+              - campus.mccd.edu
+          http://google.com/accounts/o8/id:
+            username_derivation:
+              username_claim: "email"
+      Authenticator:
+        admin_users:
+          - ericvd@berkeley.edu
+          - sean.smorris@berkeley.edu
+          - gregory.hogan@mccd.edu
+          - kanemoto.k@mccd.edu
+          - bassem.saad@mccd.edu
+          - gargova.s@mccd.edu
