@@ -40,7 +40,9 @@ to pull private repos as static content.
 
 8. Create a new private key for authentication use with the `Generate a private key`
    button. This should download a private key file, that you should delete after
-   putting it in the appropriate config (in the next step)
+   putting it in the appropriate config (in the next step).
+
+   You must use the **private key**, not a **client secret** here.
 
 ## Helm values configuration
 
@@ -60,13 +62,13 @@ the app we just created.
              helper = !git-credential-github-app --app-key-file /etc/github/github-app-private-key.pem --app-id <app-id>
              useHttpPath = true
    ```
-   
+
    Unfortunately, the `<path-to-git-config>` depends on *how* `git` is
-   installed inside the image. 
+   installed inside the image.
 
    a. The most common situation is `git` is installed from `apt` or the system
       package manager, and not `conda`. In this case, `mountPath` is `/etc/gitconfig`.
-      
+
    b. If `git` is installed from conda, it will
       *not* read `/etc/gitconfig` (see [bug](https://github.com/conda-forge/git-feedstock/issues/113),
       but `${CONDA_PREFIX}/etc/gitconfig`. So, *if* the image installs `git` from
@@ -88,11 +90,16 @@ the app we just created.
            mountPath: /etc/github/github-app-private-key.pem
            stringData: |
              <contents-of-the-private-key-file>
-            
+
    ```
-   
+
    Make sure this file is also listed under `helm_chart_values_files` for the hub in
    the cluster's `cluster.yaml` so it is read during deployment.
+
+   ```{warning}
+   This should be the private key, a multiline file that starts with
+   `BEGIN RSA PRIVATE KEY`, not the simpler client secret.
+   ```
 
 3. Once set up, do a deploy to test!
 
