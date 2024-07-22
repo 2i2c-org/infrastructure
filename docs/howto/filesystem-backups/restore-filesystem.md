@@ -4,6 +4,15 @@
 In the event of a disaster and the filesystem needs recovering, this document
 covers those steps for the cloud providers.
 
+(howto:filesystem-backup:restore:aws)=
+## AWS
+
+```{note}
+We follow AWS's guidance for [restoring EFS from a recovery point](https://docs.aws.amazon.com/aws-backup/latest/devguide/restoring-efs.html#efs-restore-console)
+```
+
+Due to the length of the steps listed in that document, we will not repeat them here.
+
 (howto:filesystem-backup:restore:gcp)=
 ## GCP
 
