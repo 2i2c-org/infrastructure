@@ -22,6 +22,10 @@ global_container_registry_name = "2i2cpchub"
 global_storage_account_name    = "2i2cpchub"
 location                       = "westeurope"
 
+budget_alert_enabled = true
+# This is the average of total costs for Jun 2024 +20% in USD
+budget_alert_amount = "600"
+
 storage_size = 100
 ssh_pub_key  = "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABgQDEswiqOZ3cdu+OaT1K3ay8brlnnoHIpDyKNfLGeRAFQ4ZP+1OD82CIwrUiU4GhmiKTyyN9DWuKKhbEjMIrAKnoybQZBk/x21sHLyrqit1wq/X+f7/SKqDTFQGFYO5cERl/MwMRIp5WHEcLXi6WnaRczCQxOW6J36V5/frynz2Qq/3XwhQnkW9401HYt9H4Ur6JTZC0G0hMVklIT+gGsIml6Qu2O8+iuA2saGn3SCmTs7WBxVsEQTFt1w6JoJi4ohi7RtlT9QDSx4J+cawBNqzAK+gkozj2lN5Yiq7gtPJMe8sdLqmg9vSPCuAMMZeP+DhEGbre7Y+MMplSJrqkeT61WeCl39ffqwievGFkdTxzCiqX9TKSR2SS98W6jpCYrSkA1ymzn+HUADfyszU7sn6/F9I2w8oUbuFfMKDD4XfgkdK7Jqew7YJ4CDK2f4D94MWAmFicVKsYXPautnk+d3JqXarUN7k8bF9On2N8xZln0Zsui/Pmj1jQsnm0KXZOb9k= yuvipanda@instantaneous-authenticity.local"
 
