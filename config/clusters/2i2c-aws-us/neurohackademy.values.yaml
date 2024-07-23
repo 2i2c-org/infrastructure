@@ -54,29 +54,47 @@ jupyterhub:
           node_selector:
             node.kubernetes.io/instance-type: r5.xlarge
             2i2c.org/community: neurohackademy
-        profile_options: &profile_options
-          interface:
-            display_name: Interface
-            choices:
-              tree:
-                display_name: Classic Notebook
-                slug: "tree"
-                kubespawner_override:
-                  default_url: "/tree"
-              lab:
-                display_name: JupyterLab
-                slug: "lab"
-                kubespawner_override:
-                  default_url: "/lab"
-              pull:
-                display_name: Pull curriculum repo and redirect to /lab
-                slug: "pull"
-                kubespawner_override:
-                  default_url: "/git-pull?repo=https%3A%2F%2Fgithub.com%2FNeuroHackademy-2023%2Fcurriculum&urlpath=lab&branch=main"
+          init_containers: &init_containers
+            # Need to explicitly fix ownership here, as otherwise these directories will be owned
+            # by root on most NFS filesystems - neither EFS nor Google Filestore support anonuid
+            - name: volume-mount-ownership-fix
+              image: busybox:1.36.1
+              command:
+                - sh
+                - -c
+                - id && chown 1000:1000 /home/jovyan /home/jovyan/shared && ls -lhd /home/jovyan
+              securityContext:
+                runAsUser: 0
+              volumeMounts:
+                - name: home
+                  mountPath: /home/jovyan
+                  subPath: "{username}"
+                # mounted without readonly attribute here,
+                # so we can chown it appropriately
+                - name: home
+                  mountPath: /home/jovyan/shared
+                  subPath: _shared
+            # this container uses nbgitpuller to mount https://github.com/NeuroHackademy2024/curriculum for user pods
+            # image source: https://github.com/NASA-IMPACT/jupyterhub-gitpuller-init
+            - name: jupyterhub-gitpuller-init
+              image: public.ecr.aws/nasa-veda/jupyterhub-gitpuller-init:latest
+              env:
+                - name: TARGET_PATH
+                  value: "curriculum"
+                - name: SOURCE_REPO
+                  value: "https://github.com/NeuroHackademy2024/curriculum"
+                - name: SOURCE_BRANCH
+                  value: "main"
+              volumeMounts:
+                - name: home
+                  mountPath: /home/jovyan
+                  subPath: "{username}"
+              securityContext:
+                runAsUser: 1000
+                runAsGroup: 1000
       - display_name: GPU machine
         slug: gpu
         description: "Start a container on a dedicated node with a GPU"
-        profile_options: *profile_options
         kubespawner_override:
           mem_limit: null
           mem_guarantee: 14G
@@ -87,6 +105,7 @@ jupyterhub:
             2i2c.org/community: neurohackademy
           extra_resource_limits:
             nvidia.com/gpu: "1"
+          init_containers: *init_containers
       - display_name: "Bring your own image"
         description: Specify your own docker image (must have python and jupyterhub installed in it)
         slug: custom
@@ -100,6 +119,7 @@ jupyterhub:
               validation_message: "Must be a publicly available docker image, of form <image-name>:<tag>"
               kubespawner_override:
                 image: "{value}"
+                init_containers: *init_containers
             choices: {}
   hub:
     config:
