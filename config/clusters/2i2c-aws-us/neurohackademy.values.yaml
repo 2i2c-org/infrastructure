@@ -88,7 +88,10 @@ jupyterhub:
               volumeMounts: 
                 - name: home 
                   mountPath: /home/jovyan 
-                  subPath: "{username}" 
+                  subPath: "{username}"
+              securityContext:
+                runAsUser: 1000
+                runAsGroup: 1000
       - display_name: GPU machine
         slug: gpu
         description: "Start a container on a dedicated node with a GPU"
