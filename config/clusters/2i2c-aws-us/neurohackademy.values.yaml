@@ -33,16 +33,6 @@ jupyterhub:
           [credential "https://github.com"]
           helper = !git-credential-github-app --app-key-file /etc/github/github-app-private-key.pem --app-id 356717
           useHttpPath = true
-    initContainers:
-      - name: jupyterhub-gitpuller-init
-        image: public.ecr.aws/nasa-veda/jupyterhub-gitpuller-init:latest
-        env:
-          - name: TARGET_PATH
-            value: curriculum
-          - name: SOURCE_REPO
-            value: "https://github.com/NeuroHackademy2024/curriculum"
-          - name: SOURCE_BRANCH
-            value: "main"
     # User image: https://quay.io/repository/arokem/nh2023?tab=tags
     image:
       name: quay.io/arokem/nh2023
@@ -64,6 +54,18 @@ jupyterhub:
           node_selector:
             node.kubernetes.io/instance-type: r5.xlarge
             2i2c.org/community: neurohackademy
+          init_containers: &init_containers
+            # this container uses nbgitpuller to mount https://github.com/NeuroHackademy2024/curriculum for user pods
+            # image source: https://github.com/NASA-IMPACT/jupyterhub-gitpuller-init
+            - name: jupyterhub-gitpuller-init
+              image: public.ecr.aws/nasa-veda/jupyterhub-gitpuller-init:latest
+              env:
+                - name: TARGET_PATH
+                  value: "curriculum"
+                - name: SOURCE_REPO
+                  value: "https://github.com/NeuroHackademy2024/curriculum"
+                - name: SOURCE_BRANCH
+                  value: "main"
       - display_name: GPU machine
         slug: gpu
         description: "Start a container on a dedicated node with a GPU"
@@ -77,6 +79,7 @@ jupyterhub:
             2i2c.org/community: neurohackademy
           extra_resource_limits:
             nvidia.com/gpu: "1"
+          init_containers: *init_containers
       - display_name: "Bring your own image"
         description: Specify your own docker image (must have python and jupyterhub installed in it)
         slug: custom
@@ -90,6 +93,7 @@ jupyterhub:
               validation_message: "Must be a publicly available docker image, of form <image-name>:<tag>"
               kubespawner_override:
                 image: "{value}"
+                init_containers: *init_containers
             choices: {}
   hub:
     config:
