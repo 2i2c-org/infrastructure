@@ -66,6 +66,10 @@ jupyterhub:
                   value: "https://github.com/NeuroHackademy2024/curriculum"
                 - name: SOURCE_BRANCH
                   value: "main"
+              volumeMounts: 
+                - name: home 
+                  mountPath: /home/jovyan 
+                  subPath: "{username}" 
       - display_name: GPU machine
         slug: gpu
         description: "Start a container on a dedicated node with a GPU"
