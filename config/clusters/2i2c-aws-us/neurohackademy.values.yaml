@@ -54,29 +54,9 @@ jupyterhub:
           node_selector:
             node.kubernetes.io/instance-type: r5.xlarge
             2i2c.org/community: neurohackademy
-        profile_options: &profile_options
-          interface:
-            display_name: Interface
-            choices:
-              tree:
-                display_name: Classic Notebook
-                slug: "tree"
-                kubespawner_override:
-                  default_url: "/tree"
-              lab:
-                display_name: JupyterLab
-                slug: "lab"
-                kubespawner_override:
-                  default_url: "/lab"
-              pull:
-                display_name: Pull curriculum repo and redirect to /lab
-                slug: "pull"
-                kubespawner_override:
-                  default_url: "/git-pull?repo=https%3A%2F%2Fgithub.com%2FNeuroHackademy-2023%2Fcurriculum&urlpath=lab&branch=main"
       - display_name: GPU machine
         slug: gpu
         description: "Start a container on a dedicated node with a GPU"
-        profile_options: *profile_options
         kubespawner_override:
           mem_limit: null
           mem_guarantee: 14G
