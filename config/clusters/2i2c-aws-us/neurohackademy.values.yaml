@@ -33,6 +33,16 @@ jupyterhub:
           [credential "https://github.com"]
           helper = !git-credential-github-app --app-key-file /etc/github/github-app-private-key.pem --app-id 356717
           useHttpPath = true
+    initContainers:
+      - name: jupyterhub-gitpuller-init
+        image: public.ecr.aws/nasa-veda/jupyterhub-gitpuller-init:latest
+        env:
+          - name: TARGET_PATH
+            value: curriculum
+          - name: SOURCE_REPO
+            value: "https://github.com/NeuroHackademy2024/curriculum"
+          - name: SOURCE_BRANCH
+            value: "main"
     # User image: https://quay.io/repository/arokem/nh2023?tab=tags
     image:
       name: quay.io/arokem/nh2023
