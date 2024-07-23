@@ -1,6 +1,7 @@
-resource "azurerm_consumption_budget_resource_group" "budget" {
-  name              = "BudgetResourceGroup"
-  resource_group_id = azurerm_resource_group.jupyterhub.id
+data "azurerm_subscription" "current" {}
+resource "azurerm_consumption_budget_subscription" "budget" {
+  name            = "BudgetSubscription"
+  subscription_id = data.azurerm_subscription.current.id
 
   amount     = var.budget_alert_amount
   time_grain = "Monthly"
