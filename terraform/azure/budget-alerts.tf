@@ -17,7 +17,7 @@ resource "azurerm_consumption_budget_resource_group" "budget" {
     threshold_type = "Forecasted"
 
     contact_emails = [
-      "support+budget-forcasted-${var.resourcegroup_name}@2i2c.org",
+      "support+budget-${var.resourcegroup_name}@2i2c.org",
     ]
   }
 }
