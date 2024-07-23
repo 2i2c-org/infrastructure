@@ -20,15 +20,4 @@ resource "azurerm_consumption_budget_resource_group" "budget" {
       "support+budget-forcasted-${var.resourcegroup_name}@2i2c.org",
     ]
   }
-
-  notification {
-    enabled        = var.budget_alert_enabled ? true : false
-    threshold      = 120
-    operator       = "GreaterThanOrEqualTo"
-    threshold_type = "Actual"
-
-    contact_emails = [
-      "support+budget-actual-${var.resourcegroup_name}@2i2c.org"
-    ]
-  }
 }
