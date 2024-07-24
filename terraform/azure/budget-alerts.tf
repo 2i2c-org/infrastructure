@@ -1,6 +1,6 @@
 data "azurerm_subscription" "current" {}
 resource "azurerm_consumption_budget_subscription" "budget" {
-  name            = "BudgetSubscription"
+  name            = "BudgetSubscription-${var.resourcegroup_name}"
   subscription_id = data.azurerm_subscription.current.id
 
   amount     = var.budget_alert_amount
