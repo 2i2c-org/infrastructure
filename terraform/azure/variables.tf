@@ -172,3 +172,20 @@ variable "fileshare_alert_available_fraction" {
   Decimal fraction (between 0 and 1) of total space available in fileshare. If used space is over this, we fire an alert to pagerduty.
   EOT
 }
+
+variable "budget_alert_enabled" {
+  type        = bool
+  default     = false
+  description = <<-EOT
+  Enable budget alerts. Disable in cases where we do not have enough permissions
+  on the billing account or cloud account to enable APIs.
+  EOT
+}
+
+variable "budget_alert_amount" {
+  type        = string
+  description = <<-EOT
+  Amount of *forecasted spend* at which to send a billing alert. Current practice
+  is to set this to the average of the last 3 months expenditure + 20%.
+  EOT
+}

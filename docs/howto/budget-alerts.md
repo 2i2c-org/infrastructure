@@ -3,11 +3,9 @@
 
 This document describes how to enable budget alerts for a cluster.
 
-```{note}
-This feature is currently only available on GCP!
-```
-
-## GCP
+`````{tab-set}
+````{tab-item} GCP
+:sync: gcp-key
 
 ```{attention}
 We can only enable budget alerting on GCP projects where we have enough permissions to enable APIs and view the billing account.
@@ -31,3 +29,28 @@ Then edit the following variables in the relevant `.tfvars` file for the cluster
     In this case, we cannot enable budget alerting for this project.
 
 With these variables set, you are ready to open a PR and perform a terraform apply!
+````
+
+````{tab-item} Azure
+:sync: azure-key
+
+To enable budget alerts for an Azure cluster, edit the following variables in the relevant `.tfvars` file for the cluster.
+
+- **Set `budget_alert_enabled = true`**
+
+  This will ensure that the relevant resources will be created by terraform.
+
+- **Set `budget_alert_amount`**
+
+  Current practice is to set this to the average expenditure of the last 3 months.
+
+  Then the alert will be triggered when the forecasted cost will exceed this value plus 20%.
+
+  You can find values to calculate that in the Cost analysis tab of the relevant Azure subscription: `Azure subscription` -> `Cost Management` -> `Cost analysis`.
+
+  If you are setting this up for a new cluster, you obviously don't have this information yet!
+  Instead, set the value to something like `500` and we can adjust as the community begins to use it.
+
+- With these variables set, you are ready to open a PR and perform a terraform apply!
+````
+`````
