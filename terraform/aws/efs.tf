@@ -75,8 +75,8 @@ locals {
 
   efs_mount_targets = [
     for pair in setproduct(local.subnet_ids, local.fs_ids) : {
-      file_system_id = pair[0]
-      subnet_id      = pair[1]
+      subnet_id      = pair[0]
+      file_system_id = pair[1]
     }
   ]
 }
