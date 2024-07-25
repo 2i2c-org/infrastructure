@@ -110,6 +110,11 @@ jupyterhub:
       - display_name: "Bring your own image"
         description: Specify your own docker image (must have python and jupyterhub installed in it)
         slug: custom
+        kubespawner_override:
+          cpu_guarantee: 0.5
+          cpu_limit: 14
+          mem_guarantee: 4G
+          mem_limit: 16G
         profile_options:
           image:
             display_name: Image
