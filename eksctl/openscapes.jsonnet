@@ -79,7 +79,7 @@ local daskNodes = [
     nodeGroups: [n + {clusterName:: $.metadata.name} for n in [
         ng + {
             namePrefix: 'core',
-            nameSuffix: 'a',
+            nameSuffix: 'b',
             nameIncludeInstanceType: false,
             availabilityZones: [nodeAz],
             ssh: {
@@ -91,6 +91,9 @@ local daskNodes = [
             labels+: {
                 "hub.jupyter.org/node-purpose": "core",
                 "k8s.dask.org/node-purpose": "core"
+            },
+            tags+: {
+                "2i2c:node-purpose": "core"
             },
         },
     ] + [
