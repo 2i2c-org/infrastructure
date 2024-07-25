@@ -37,6 +37,7 @@ jupyterhub:
     image:
       name: quay.io/arokem/nh2023
       tag: "894883dfb3bd"
+    defaultUrl: "/lab"
     extraTolerations:
       - key: "2i2c.org/community"
         operator: "Equal"
