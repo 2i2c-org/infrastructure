@@ -69,8 +69,7 @@ resource "aws_efs_file_system" "homedirs" {
 }
 
 locals {
-  fs_ids       = toset(values(aws_efs_file_system.homedirs)[*].id)
-  fs_dns_names = toset(values(aws_efs_file_system.homedirs)[*].dns_name)
+  fs_ids = toset(values(aws_efs_file_system.homedirs)[*].id)
 
   subnet_ids = toset(data.aws_subnets.cluster_node_subnets.ids)
 
