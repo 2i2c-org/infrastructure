@@ -40,7 +40,10 @@ data "aws_security_group" "cluster_nodes_shared_security_group" {
 }
 
 resource "aws_efs_file_system" "homedirs" {
-  tags = merge(var.tags, { Name = "hub-homedirs" })
+  for_each = var.filestores
+  tags = merge(var.tags, {
+    Name = each.value.name_suffix == null ? "hub-homedirs" : "hub-homedirs-${each.value.name_suffix}"
+  })
 
   # Transition files to a slower, cheaper backing medium 90 days
   # after they were last *accessed*. They will be transferred back to regular
@@ -65,22 +68,38 @@ resource "aws_efs_file_system" "homedirs" {
   }
 }
 
-resource "aws_efs_mount_target" "homedirs" {
-  for_each = toset(data.aws_subnets.cluster_node_subnets.ids)
+locals {
+  fs_ids       = toset(values(aws_efs_file_system.homedirs)[*].id)
+  fs_dns_names = toset(values(aws_efs_file_system.homedirs)[*].dns_name)
 
-  file_system_id  = aws_efs_file_system.homedirs.id
-  subnet_id       = each.key
+  subnet_ids = toset(data.aws_subnets.cluster_node_subnets.ids)
+
+  efs_mount_targets = [
+    for pair in setproduct(local.subnet_ids, local.fs_ids) : {
+      file_system_id = pair[0]
+      subnet_id      = pair[1]
+    }
+  ]
+}
+resource "aws_efs_mount_target" "homedirs" {
+  for_each = tomap({
+    for mount_target in local.efs_mount_targets : "${mount_target.subnet_id}.${mount_target.file_system_id}" => mount_target
+  })
+
+  file_system_id  = each.value.file_system_id
+  subnet_id       = each.value.subnet_id
   security_groups = [data.aws_security_group.cluster_nodes_shared_security_group.id]
 }
 
 output "nfs_server_dns" {
-  value = aws_efs_file_system.homedirs.dns_name
+  value = values(aws_efs_file_system.homedirs)[*].dns_name
 }
 
 # Enable automatic backups for user homedirectories
 # Documented in https://docs.aws.amazon.com/efs/latest/ug/awsbackup.html#automatic-backups
 resource "aws_efs_backup_policy" "homedirs" {
-  file_system_id = aws_efs_file_system.homedirs.id
+  for_each       = aws_efs_file_system.homedirs
+  file_system_id = each.value.id
 
   backup_policy {
     status = "ENABLED"

@@ -196,3 +196,30 @@ variable "default_budget_alert" {
   A boilerplate budget alert initially setup for AWS accounts we pay the bill for.
   EOT
 }
+
+variable "filestores" {
+  type = map(object({
+    name_suffix : optional(string, null),
+    tags : optional(map(string), {}),
+  }))
+  default = {
+    "filestore" : {}
+  }
+  description = <<-EOT
+  Deploy one or more AWS ElasticFileStores for home directories.
+
+  This provisions a managed NFS solution that can be mounted as
+  home directories for users. If this is not enabled, a manual or
+  in-cluster NFS solution must be set up.
+
+  - name-suffix: Suffix to append to the name of the FileStore. This
+    prevents name-clashing. Default: null.
+
+  - tags: Tags to apply to the homedir. The value is an object as we
+    are appending existing tags to homedir specific tags.
+    We use CamelCase for tag names to match AWS's tagging style.
+    Default tag is:
+      1. Name: This tag will indicate the name of the homedir.
+        By default, this will be set to "hub-homedirs-{name_suffix}".
+  EOT
+}
