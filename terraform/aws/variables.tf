@@ -203,7 +203,6 @@ variable "filestores" {
     tags : optional(map(string), {}),
   }))
   default = {
-    "filestore" : {}
   }
   description = <<-EOT
   Deploy one or more AWS ElasticFileStores for home directories.
