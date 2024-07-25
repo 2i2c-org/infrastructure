@@ -1,9 +1,13 @@
 prometheusIngressAuthSecret:
   enabled: true
 
-# FIXME: Re-add GitHub login once old cluster has been decommissioned. Reuse the GitHub
-#        OAuth App the previous cluster used to save creating another app.
 grafana:
+  grafana.ini:
+    server:
+      root_url: https://grafana.ciroh.awi.2i2c.cloud/
+    auth.github:
+      enabled: true
+      allowed_organizations: 2i2c-org
   ingress:
     hosts:
       - grafana.ciroh.awi.2i2c.cloud
