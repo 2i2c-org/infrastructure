@@ -11,6 +11,12 @@ default_budget_alert = {
 # Remove this variable to tag all our resources with {"ManagedBy": "2i2c"}
 tags = {}
 
+filestores = {
+  "staging" = {
+    name_suffix = "staging"
+  }
+}
+
 user_buckets = {
   "scratch-staging" : {
     "delete_after" : 7
