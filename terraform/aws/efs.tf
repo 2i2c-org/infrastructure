@@ -42,7 +42,7 @@ data "aws_security_group" "cluster_nodes_shared_security_group" {
 # This allows supporting running multiple EFS instances in a cluster
 # for an accurate cost allocation per hub of home directory storage.
 # https://github.com/2i2c-org/infrastructure/issues/4453
-resource "aws_efs_file_system" "homedirs_map" {
+resource "aws_efs_file_system" "hub_homedirs" {
   for_each = var.filestores
   tags = merge(var.tags, {
     Name = each.value.name_suffix == null ? "hub-homedirs" : "hub-homedirs-${each.value.name_suffix}"
@@ -72,10 +72,10 @@ resource "aws_efs_file_system" "homedirs_map" {
 }
 
 locals {
-  # setproduct works with sets and lists, but aws_efs_file_system.homedirs_map
+  # setproduct works with sets and lists, but aws_efs_file_system.hub_homedirs
   # is a map so convert it first
   file_systems = [
-    for key, fs in aws_efs_file_system.homedirs_map : {
+    for _, fs in aws_efs_file_system.hub_homedirs : {
       id   = fs.id
       name = fs.tags["Name"]
     }
@@ -84,7 +84,7 @@ locals {
   subnet_ids = toset(data.aws_subnets.cluster_node_subnets.ids)
 
   # This variable is used to find the number of and construct all the
-  # indexes of the items in aws_efs_mount_target.homedirs_map[*]
+  # indexes of the items in aws_efs_mount_target.hub_homedirs[*]
   efs_mount_targets = [
     # setproduct function will computing the Cartesian product
     # between the ids of each subnet and the given name of each EFS instance
@@ -98,7 +98,7 @@ locals {
   ]
 }
 
-resource "aws_efs_mount_target" "homedirs_map" {
+resource "aws_efs_mount_target" "hub_homedirs" {
   for_each = tomap({
     for mount_target in local.efs_mount_targets : "${mount_target.subnet_id}.${mount_target.name}" => mount_target
   })
@@ -109,13 +109,13 @@ resource "aws_efs_mount_target" "homedirs_map" {
 }
 
 output "nfs_server_dns_list" {
-  value = values(aws_efs_file_system.homedirs_map)[*].dns_name
+  value = values(aws_efs_file_system.hub_homedirs)[*].dns_name
 }
 
 # Enable automatic backups for user homedirectories
 # Documented in https://docs.aws.amazon.com/efs/latest/ug/awsbackup.html#automatic-backups
-resource "aws_efs_backup_policy" "homedirs_map" {
-  for_each       = aws_efs_file_system.homedirs_map
+resource "aws_efs_backup_policy" "hub_homedirs" {
+  for_each       = aws_efs_file_system.hub_homedirs
   file_system_id = each.value.id
 
   backup_policy {
