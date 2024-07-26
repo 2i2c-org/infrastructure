@@ -1,9 +1,9 @@
-// Find out which subnets and security group our EFS mount target should be in
+// Find out which subnets and security group our EFS mount targets should be in
 // It needs to be in the public subnet where our nodes are, as the nodes will be
 // doing the mounting operation. It should be in a security group shared by all
-// the nodes. We create a mount target in each subnet, even if we primarily put
-// all our nodes in one - this allows for GPU nodes to be spread out across
-// AZ when needed
+// the nodes. We create a mount target for each EFS, in each subnet, even if we
+// primarily put all our nodes in one - this allows for GPU nodes to be spread
+// out across AZ when needed
 data "aws_subnets" "cluster_node_subnets" {
 
   filter {
@@ -110,63 +110,6 @@ resource "aws_efs_backup_policy" "homedirs_map" {
   for_each       = aws_efs_file_system.homedirs_map
   file_system_id = each.value.id
 
-  backup_policy {
-    status = "ENABLED"
-  }
-}
-
-# Original cluster-wide EFS instance
-# FIXME: To be deleted once all the clusters have been migrated
-#        to use aws_efs_file_system.homedirs_map instead
-#        and var.disable_cluster_wide_filestore is true
-resource "aws_efs_file_system" "homedirs" {
-  count = var.disable_cluster_wide_filestore ? 0 : 1
-
-  tags = merge(var.tags, { Name = "hub-homedirs" })
-
-  lifecycle_policy {
-    transition_to_primary_storage_class = "AFTER_1_ACCESS"
-  }
-
-  lifecycle_policy {
-    transition_to_ia = "AFTER_90_DAYS"
-  }
-
-  lifecycle {
-    prevent_destroy = true
-  }
-}
-
-# Original mount targets for cluster-wide EFS instance
-# FIXME: To be deleted once all the clusters have been migrated
-#        to use aws_efs_file_system.homedirs_map instead
-#        and var.disable_cluster_wide_filestore is true
-resource "aws_efs_mount_target" "homedirs" {
-  count = var.disable_cluster_wide_filestore ? 0 : 1
-
-  for_each = toset(data.aws_subnets.cluster_node_subnets.ids)
-
-  file_system_id  = aws_efs_file_system.homedirs.id
-  subnet_id       = each.key
-  security_groups = [data.aws_security_group.cluster_nodes_shared_security_group.id]
-}
-
-# Original output for the dns name of the cluster-wide EFS instance
-# FIXME: To be deleted once all the clusters have been migrated
-#        to use aws_efs_file_system.homedirs_map instead
-#        and var.disable_cluster_wide_filestore is true
-output "nfs_server_dns" {
-  value = var.disable_cluster_wide_filestore ? 0 : aws_efs_file_system.homedirs.dns_name
-}
-
-# Original backup of the cluster-wide EFS instance
-# FIXME: To be deleted once all the clusters have been migrated
-#        to use aws_efs_file_system.homedirs_map instead
-#        and var.disable_cluster_wide_filestore is true
-resource "aws_efs_backup_policy" "homedirs" {
-  count = var.disable_cluster_wide_filestore ? 0 : 1
-
-  file_system_id = aws_efs_file_system.homedirs.id
   backup_policy {
     status = "ENABLED"
   }
