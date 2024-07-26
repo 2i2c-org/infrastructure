@@ -33,10 +33,10 @@ jupyterhub:
           [credential "https://github.com"]
           helper = !git-credential-github-app --app-key-file /etc/github/github-app-private-key.pem --app-id 356717
           useHttpPath = true
-    # User image: https://quay.io/repository/arokem/nh2023?tab=tags
+    # User image: https://quay.io/repository/arokem/nh2024?tab=tags
     image:
-      name: quay.io/arokem/nh2023
-      tag: "894883dfb3bd"
+      name: quay.io/arokem/nh2024
+      tag: "b97329d773de"
     defaultUrl: "/lab"
     extraTolerations:
       - key: "2i2c.org/community"
