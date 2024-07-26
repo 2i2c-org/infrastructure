@@ -1,4 +1,7 @@
 basehub:
+  nfs:
+    pv:
+      serverIP: fs-05f0845c8a4f0b5a5.efs.us-west-2.amazonaws.com
   userServiceAccount:
     annotations:
       eks.amazonaws.com/role-arn: arn:aws:iam::783616723547:role/openscapeshub-staging
