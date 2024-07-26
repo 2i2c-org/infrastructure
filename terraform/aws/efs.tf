@@ -72,6 +72,8 @@ resource "aws_efs_file_system" "homedirs_map" {
 }
 
 locals {
+  # setproduct works with sets and lists, but aws_efs_file_system.homedirs_map
+  # is a map so convert it first
   file_systems = [
     for key, fs in aws_efs_file_system.homedirs_map : {
       id   = fs.id
@@ -81,11 +83,17 @@ locals {
 
   subnet_ids = toset(data.aws_subnets.cluster_node_subnets.ids)
 
+  # This variable is used to find the number of and construct all the
+  # indexes of the items in aws_efs_mount_target.homedirs_map[*]
   efs_mount_targets = [
+    # setproduct function will computing the Cartesian product
+    # between the ids of each subnet and the given name of each EFS instance
     for pair in setproduct(local.subnet_ids, local.file_systems) : {
       subnet_id      = pair[0]
       file_system_id = pair[1].id
-      name           = pair[1].name
+      # Note that the id alone is not enough because terraform needs to know its
+      # value at plan time and this is not possible
+      name = pair[1].name
     }
   ]
 }
