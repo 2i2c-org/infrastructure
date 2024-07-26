@@ -23,6 +23,7 @@ user_buckets = {
   },
   "prod-homedirs-archive" : {
     "archival_storageclass_after" : 3
+    "delete_after" : 185
   },
   "persistent-staging" : {
     "delete_after" : null
