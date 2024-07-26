@@ -39,8 +39,8 @@ data "aws_security_group" "cluster_nodes_shared_security_group" {
   }
 }
 
-# This allows supporting running multiple EFS instances in a cluster.
-# and an accurate cost allocation per hub for home directory storage.
+# This allows supporting running multiple EFS instances in a cluster
+# for an accurate cost allocation per hub of home directory storage.
 # https://github.com/2i2c-org/infrastructure/issues/4453
 resource "aws_efs_file_system" "homedirs_map" {
   for_each = var.filestores
