@@ -39,17 +39,12 @@ data "aws_security_group" "cluster_nodes_shared_security_group" {
   }
 }
 
+# Original cluster-wide EFS instance
+# FIXME: To be deleted once all the clusters have been migrated
+#        to use aws_efs_file_system.homedirs_map instead
 resource "aws_efs_file_system" "homedirs" {
   tags = merge(var.tags, { Name = "hub-homedirs" })
 
-  # Transition files to a slower, cheaper backing medium 90 days
-  # after they were last *accessed*. They will be transferred back to regular
-  # backing medium immediately on access. This saves a *lot* of money with
-  # barely perceptible user performance hit. 90 days is the longest config,
-  # and we can start here to be conservative. IA (Infrequent Access) is
-  # documented in https://aws.amazon.com/efs/features/infrequent-access/
-  # These need to be two different blocks, see
-  # https://github.com/hashicorp/terraform-provider-aws/issues/21862#issuecomment-1007115545
   lifecycle_policy {
     transition_to_primary_storage_class = "AFTER_1_ACCESS"
   }
@@ -59,17 +54,27 @@ resource "aws_efs_file_system" "homedirs" {
   }
 
   lifecycle {
-    # Additional safeguard against deleting the EFS
-    # as this causes irreversible data loss!
     prevent_destroy = true
   }
 }
+
+# This allows supporting running multiple EFS instances in a cluster.
+# and an accurate cost allocation per hub for home directory storage.
+# https://github.com/2i2c-org/infrastructure/issues/4453
 resource "aws_efs_file_system" "homedirs_map" {
   for_each = var.filestores
   tags = merge(var.tags, {
     Name = each.value.name_suffix == null ? "hub-homedirs" : "hub-homedirs-${each.value.name_suffix}"
   })
 
+  # Transition files to a slower, cheaper backing medium 90 days
+  # after they were last *accessed*. They will be transferred back to regular
+  # backing medium immediately on access. This saves a *lot* of money with
+  # barely perceptible user performance hit. 90 days is the longest config,
+  # and we can start here to be conservative. IA (Infrequent Access) is
+  # documented in https://aws.amazon.com/efs/features/infrequent-access/
+  # These need to be two different blocks, see
+  # https://github.com/hashicorp/terraform-provider-aws/issues/21862#issuecomment-1007115545
   lifecycle_policy {
     transition_to_primary_storage_class = "AFTER_1_ACCESS"
   }
@@ -103,6 +108,10 @@ locals {
     }
   ]
 }
+
+# Original mount targets for cluster-wide EFS instance
+# FIXME: To be deleted once all the clusters have been migrated
+#        to use aws_efs_file_system.homedirs_map instead
 resource "aws_efs_mount_target" "homedirs" {
   for_each = toset(data.aws_subnets.cluster_node_subnets.ids)
 
@@ -121,6 +130,9 @@ resource "aws_efs_mount_target" "homedirs_map" {
   security_groups = [data.aws_security_group.cluster_nodes_shared_security_group.id]
 }
 
+# Original output for the dns name of the cluster-wide EFS instance
+# FIXME: To be deleted once all the clusters have been migrated
+#        to use aws_efs_file_system.homedirs_map instead
 output "nfs_server_dns" {
   value = aws_efs_file_system.homedirs.dns_name
 }
@@ -129,14 +141,18 @@ output "nfs_server_dns_list" {
   value = values(aws_efs_file_system.homedirs_map)[*].dns_name
 }
 
-# Enable automatic backups for user homedirectories
-# Documented in https://docs.aws.amazon.com/efs/latest/ug/awsbackup.html#automatic-backups
+# Original backup of the cluster-wide EFS instance
+# FIXME: To be deleted once all the clusters have been migrated
+#        to use aws_efs_file_system.homedirs_map instead
 resource "aws_efs_backup_policy" "homedirs" {
   file_system_id = aws_efs_file_system.homedirs.id
   backup_policy {
     status = "ENABLED"
   }
 }
+
+# Enable automatic backups for user homedirectories
+# Documented in https://docs.aws.amazon.com/efs/latest/ug/awsbackup.html#automatic-backups
 resource "aws_efs_backup_policy" "homedirs_map" {
   for_each       = aws_efs_file_system.homedirs_map
   file_system_id = each.value.id
