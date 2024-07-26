@@ -167,7 +167,7 @@ You should also have the browser window with the ssh connection to the VM handy 
    This should also bring back the `proxy-public` service and restore access.
    You can monitor progress by running:
    ```bash
-   kubectl --namespace $HUB_NAME get pods --watch
+   kubectl --namespace $HUB_NAME get svc --watch
    ```
 
 Repeat this process for as many hubs as there are on the cluster, remembering to update the value of `$HUB_NAME`.
