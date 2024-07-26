@@ -197,6 +197,18 @@ variable "default_budget_alert" {
   EOT
 }
 
+variable "disable_cluster_wide_filestore" {
+  default     = false
+  type        = bool
+  description = <<-EOT
+  Whether or not the initial cluster-wide `homedirs` filestore
+  should be disabled and deleted.
+
+  Should be set to true once an EFS instance per cluster has been
+  setup and all the relevant data has been migrated.
+  EOT
+}
+
 variable "filestores" {
   type = map(object({
     name_suffix : optional(string, null),

@@ -43,6 +43,8 @@ data "aws_security_group" "cluster_nodes_shared_security_group" {
 # FIXME: To be deleted once all the clusters have been migrated
 #        to use aws_efs_file_system.homedirs_map instead
 resource "aws_efs_file_system" "homedirs" {
+  count = var.disable_cluster_wide_filestore ? 0 : 1
+
   tags = merge(var.tags, { Name = "hub-homedirs" })
 
   lifecycle_policy {
@@ -113,6 +115,8 @@ locals {
 # FIXME: To be deleted once all the clusters have been migrated
 #        to use aws_efs_file_system.homedirs_map instead
 resource "aws_efs_mount_target" "homedirs" {
+  count = var.disable_cluster_wide_filestore ? 0 : 1
+
   for_each = toset(data.aws_subnets.cluster_node_subnets.ids)
 
   file_system_id  = aws_efs_file_system.homedirs.id
@@ -134,7 +138,7 @@ resource "aws_efs_mount_target" "homedirs_map" {
 # FIXME: To be deleted once all the clusters have been migrated
 #        to use aws_efs_file_system.homedirs_map instead
 output "nfs_server_dns" {
-  value = aws_efs_file_system.homedirs.dns_name
+  value = var.disable_cluster_wide_filestore ? 0 : aws_efs_file_system.homedirs.dns_name
 }
 
 output "nfs_server_dns_list" {
@@ -145,6 +149,8 @@ output "nfs_server_dns_list" {
 # FIXME: To be deleted once all the clusters have been migrated
 #        to use aws_efs_file_system.homedirs_map instead
 resource "aws_efs_backup_policy" "homedirs" {
+  count = var.disable_cluster_wide_filestore ? 0 : 1
+
   file_system_id = aws_efs_file_system.homedirs.id
   backup_policy {
     status = "ENABLED"
