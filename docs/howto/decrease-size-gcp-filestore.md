@@ -159,7 +159,7 @@ You should also have the browser window with the ssh connection to the VM handy 
    ```bash
    kubectl delete pv ${HUB_NAME}-home-nfs --wait=false
    kubectl --namespace $HUB_NAME delete pvc home-nfs --wait=false
-   kubectl --namespace $HUB_NAME delete pod -l component=stared-dirsize-metrics
+   kubectl --namespace $HUB_NAME delete pod -l component=shared-dirsize-metrics
    kubectl --namespace $HUB_NAME delete pod -l component=shared-volume-metrics
    ```
 1. **Update `nfs.pv.serverIP` values in the `<hub-name>.values.yaml` file.**
