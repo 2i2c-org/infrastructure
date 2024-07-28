@@ -107,6 +107,12 @@ jupyterhub:
           extra_resource_limits:
             nvidia.com/gpu: "1"
           init_containers: *init_containers
+      - display_name: R machine
+        slug: R
+        description: "Start a container with R available"
+        image:
+          name: quay.io/arokem/nh2024-r
+          tag: "40c35e7ea05e"
       - display_name: "Bring your own image"
         description: Specify your own docker image (must have python and jupyterhub installed in it)
         slug: custom
