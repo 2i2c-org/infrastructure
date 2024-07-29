@@ -14,7 +14,7 @@ support:
 hubs:
   - name: staging
     display_name: "Alabama Water Institute: CIROH (staging)"
-    domain: staging.ciroh2.awi.2i2c.cloud
+    domain: staging.ciroh.awi.2i2c.cloud
     helm_chart: daskhub
     helm_chart_values_files:
       - common.values.yaml
@@ -22,7 +22,7 @@ hubs:
       - enc-staging.secret.values.yaml
   - name: prod
     display_name: "Alabama Water Institute: CIROH (prod)"
-    domain: ciroh2.awi.2i2c.cloud
+    domain: ciroh.awi.2i2c.cloud
     helm_chart: daskhub
     helm_chart_values_files:
       - common.values.yaml
