@@ -16,16 +16,22 @@ jupyterhub:
     homepage:
       templateVars:
         enabled: false
+  cull:
+    every: 300
+    # Cull after 4h of inactivity
+    timeout: 14400
+    # No pods over 12h long
+    maxAge: 43200
   singleuser:
     nodeSelector:
-      # Schedule users on the smallest instance
-      # https://github.com/2i2c-org/infrastructure/issues/4241
-      node.kubernetes.io/instance-type: r5.xlarge
+      # Temporary bigger machine and resources for https://github.com/2i2c-org/infrastructure/issues/4479
+      node.kubernetes.io/instance-type: r5.4xlarge
     cpu:
-      limit: 2
+      guarantee: 1
+      limit: 4
     memory:
-      limit: 4G
-      guarantee: 2G
+      limit: 8G
+      guarantee: 8G
     storage:
       type: none
       extraVolumeMounts: []

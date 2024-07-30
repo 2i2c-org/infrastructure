@@ -22,6 +22,8 @@ basehub:
           admin_users: []
     singleuser:
       defaultUrl: /lab
+      nodeSelector:
+        2i2c/hub-name: workshop
       extraEnv:
         SCRATCH_BUCKET: s3://openscapeshub-scratch-workshop/$(JUPYTERHUB_USER)
         PERSISTENT_BUCKET: s3://openscapeshub-persistent-workshop/$(JUPYTERHUB_USER)
