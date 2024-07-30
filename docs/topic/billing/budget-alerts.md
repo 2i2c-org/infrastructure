@@ -6,7 +6,13 @@ bankruptcy is second only to "The US healthcare system sucks, your honor" in the
 US court system. "How much is my cloud going to cost?" is a big anxiety for a lot
 of our users, and hence us. We set up billing alerts to help deal with this anxiety.
 
-See [](howto:enable-budget-alerts) for instructions on enabling this feature.
+To setup budget alerts, refer to [](howto:setting-up-budget-alerts). To learn
+more about them from the cloud provider's documentation, visit it at either
+[AWS], [GCP], or [Azure].
+
+[aws]: https://aws.amazon.com/aws-cost-management/aws-budgets/
+[azure]: https://learn.microsoft.com/en-us/azure/cost-management-billing/costs/cost-mgt-alerts-monitor-usage-spending
+[gcp]: https://cloud.google.com/billing/docs/how-to/budgets
 
 ## When are the alerts triggered?
 

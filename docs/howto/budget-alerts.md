@@ -1,9 +1,27 @@
-(howto:enable-budget-alerts)=
-# Enable Budget Alerts
+(howto:setting-up-budget-alerts)=
+# Setting up Budget Alerts
 
-This document describes how to enable budget alerts for a cluster.
+As of July 2024, we look to setup budget alerts for all cloud projects where we
+pay the bill from the cloud provider, independently if we pass through these
+costs or not to the community. We currently don't look to setup budget alerts
+for communities paying their cloud provider bill directly.
+
+This document describes how to enable (or opt-out of) budget alerts for a
+cluster via the cluster's associated terraform variables file (`.tfvars`).
 
 `````{tab-set}
+````{tab-item} AWS
+:sync: aws-key
+
+AWS budget alerts are setup by default. To opt-out, declare:
+
+```
+default_budget_alert = {
+  "enabled" : false,
+}
+```
+````
+
 ````{tab-item} GCP
 :sync: gcp-key
 

@@ -49,9 +49,6 @@ All cloud providers allow us to set up alerts that fire whenever a particular
 project is about to cost more than a specific amount, or is forecast to go over a specific amount by the end of the month if current trends continue.
 This can be *extremely helpful* in assuaging communities of cost overruns
 but requires we have a prediction for *what numbers* to set these budgets at,
-as well as what to do when the alerts fire. Usually, these alerts can be
-set up manually in the UI or (preferably) via Terraform. We currently only
-utilise these on GCP, and more details can be found in [](topic:billing:budget-alerts).
+as well as what to do when the alerts fire.
 
-More information: [GCP](https://cloud.google.com/billing/docs/how-to/budgets), [AWS](https://aws.amazon.com/aws-cost-management/aws-budgets/)
-and [Azure](https://learn.microsoft.com/en-us/azure/cost-management-billing/costs/cost-mgt-alerts-monitor-usage-spending).
+More details can be found in [](topic:billing:budget-alerts).
