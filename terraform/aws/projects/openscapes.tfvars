@@ -19,27 +19,33 @@ filestores = {
 
 user_buckets = {
   "scratch-staging" : {
-    "delete_after" : 7
+    "delete_after" : 7,
+    "tags" : { "2i2c:hub-name" : "staging" },
   },
   "scratch" : {
-    "delete_after" : 7
+    "delete_after" : 7,
+    "tags" : { "2i2c:hub-name" : "prod" },
   },
   "scratch-workshop" : {
-    "delete_after" : 7
+    "delete_after" : 7,
+    "tags" : { "2i2c:hub-name" : "workshop" },
   },
   "prod-homedirs-archive" : {
-    "archival_storageclass_after" : 3
-    "delete_after" : 185
+    "archival_storageclass_after" : 3,
+    "delete_after" : 185,
   },
   "persistent-staging" : {
-    "delete_after" : null
+    "delete_after" : null,
+    "tags" : { "2i2c:hub-name" : "staging" },
   },
   "persistent" : {
-    "delete_after" : null
+    "delete_after" : null,
+    "tags" : { "2i2c:hub-name" : "prod" },
   },
   "persistent-workshop" : {
-    "delete_after" : null
-  }
+    "delete_after" : null,
+    "tags" : { "2i2c:hub-name" : "workshop" },
+  },
 }
 
 
