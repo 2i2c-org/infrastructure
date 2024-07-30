@@ -16,6 +16,12 @@ jupyterhub:
     homepage:
       templateVars:
         enabled: false
+  cull:
+    every: 300
+    # Cull after 4h of inactivity
+    timeout: 14400
+    # No pods over 12h long
+    maxAge: 43200
   singleuser:
     nodeSelector:
       # Temporary bigger machine and resources for https://github.com/2i2c-org/infrastructure/issues/4479
