@@ -15,6 +15,9 @@ filestores = {
   "staging" = {
     name_suffix = "staging"
   }
+  "workshop" = {
+    name_suffix = "workshop"
+  }
 }
 
 user_buckets = {
