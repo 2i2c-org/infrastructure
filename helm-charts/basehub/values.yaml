@@ -819,20 +819,11 @@ jupyterhub:
       #    this guarantee doesn't actually change our scheduling.
       guarantee: 0.05
     networkPolicy:
-      # Allow unrestricted access to the internet but not local cluster network
       enabled: true
+      # Egress to internet is allowed by default via z2jh's egressAllowRules,
+      # but we need to add a few custom rules for the cluster internal
+      # networking.
       egress:
-        - to:
-            - ipBlock:
-                cidr: 0.0.0.0/0
-                except:
-                  # Don't allow network access to private IP ranges
-                  # Listed in https://datatracker.ietf.org/doc/html/rfc1918
-                  - 10.0.0.0/8
-                  - 172.16.0.0/12
-                  - 192.168.0.0/16
-                  # Don't allow network access to the metadata IP
-                  - 169.254.169.254/32
         # Allow code in hubs to talk to ingress provider, so they can talk to
         # the hub via its public URL
         - to:
