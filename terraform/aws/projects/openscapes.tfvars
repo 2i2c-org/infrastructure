@@ -14,6 +14,9 @@ tags = {}
 filestores = {
   "staging" = {
     name_suffix = "staging"
+    tags = {
+      "2i2c:hub-name": "staging"
+    }
   }
 }
 
