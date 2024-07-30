@@ -84,14 +84,31 @@ local daskNodes = [
     // Node definitions for dask worker nodes. Config here is merged
     // with our dask worker node definition, which uses spot instances.
     // A `node.kubernetes.io/instance-type label is set to the name of the
-    // *first* item in instanceDistribution.instanceTypes, to match
+    // *first* item in instancesDistribution.instanceTypes, to match
     // what we do with notebook nodes. Pods can request a particular
     // kind of node with a nodeSelector
     //
     // A not yet fully established policy is being developed about using a single
     // node pool, see https://github.com/2i2c-org/infrastructure/issues/2687.
     //
-    { instancesDistribution+: { instanceTypes: ["r5.4xlarge"] }},
+    {
+        namePrefix: "dask-staging",
+        labels+: { "2i2c/hub-name": "staging" },
+        tags+: { "2i2c:hub-name": "staging" },
+        instancesDistribution+: { instanceTypes: ["r5.4xlarge"] }
+    },
+    {
+        namePrefix: "dask-prod",
+        labels+: { "2i2c/hub-name": "prod" },
+        tags+: { "2i2c:hub-name": "prod" },
+        instancesDistribution+: { instanceTypes: ["r5.4xlarge"] }
+    },
+    {
+        namePrefix: "dask-workshop",
+        labels+: { "2i2c/hub-name": "workshop" },
+        tags+: { "2i2c:hub-name": "workshop" },
+        instancesDistribution+: { instanceTypes: ["r5.4xlarge"] }
+    },
 ];
 
 
@@ -180,6 +197,9 @@ local daskNodes = [
             },
             labels+: {
                 "k8s.dask.org/node-purpose": "worker"
+            },
+            tags+: {
+                "2i2c:node-purpose": "worker"
             },
             taints+: {
                 "k8s.dask.org_dedicated" : "worker:NoSchedule",
