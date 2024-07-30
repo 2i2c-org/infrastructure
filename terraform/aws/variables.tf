@@ -236,3 +236,11 @@ variable "filestores" {
         By default, this will be set to "hub-homedirs-{name_suffix}".
   EOT
 }
+
+variable "active_cost_allocation_tags" {
+  type        = list(string)
+  default     = []
+  description = <<-EOT
+  Tags to be treated as active cost allocation tags.
+  EOT
+}
