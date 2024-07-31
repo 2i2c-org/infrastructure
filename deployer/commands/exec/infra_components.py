@@ -21,6 +21,7 @@ UBUNTU_IMAGE = "ubuntu:22.04"
 @exec_app.command()
 def root_homes(
     cluster_name: str = typer.Argument(..., help="Name of cluster to operate on"),
+    hub_name: str = typer.Argument(..., help="Name of hub to operate on"),
 ):
     """
     Pop an interactive shell with the entire nfs file system of the given cluster mounted on /root-homes
@@ -31,36 +32,26 @@ def root_homes(
 
     with cluster.auth():
         hubs = cluster.hubs
-        # Get a hub so we can extract the nfs ip and base share name from its config
-        hub = next((hub for hub in hubs if hub.spec["name"] == "staging"), None)
-        if hub:
-            namespace = "staging"
-        else:
-            hub = hubs[0]
-            namespace = hub.spec["name"]
+        hub = next((hub for hub in hubs if hub.spec["name"] == hub_name), None)
+        if not hub:
+            print_colour("Hub does not exist in {cluster_name} cluster}")
+            return
 
+    server_ip = base_share_name = ""
     for values_file in hub.spec["helm_chart_values_files"]:
         if "secret" not in os.path.basename(values_file):
             values_file = config_file_path.parent.joinpath(values_file)
             config = yaml.load(values_file)
 
             if config.get("basehub", {}):
-                server_ip = (
-                    config["basehub"].get("nfs", {}).get("pv", {}).get("serverIP", "")
-                )
-                base_share_name = (
-                    config["basehub"]
-                    .get("nfs", {})
-                    .get("pv", {})
-                    .get("baseShareName", "")
-                )
-            else:
-                server_ip = config.get("nfs", {}).get("pv", {}).get("serverIP", "")
-                base_share_name = (
-                    config.get("nfs", {}).get("pv", {}).get("baseShareName", "")
-                )
-            if server_ip and base_share_name:
-                break
+                config = config["basehub"]
+
+            server_ip = config.get("nfs", {}).get("pv", {}).get("serverIP", server_ip)
+            base_share_name = (
+                config.get("nfs", {})
+                .get("pv", {})
+                .get("baseShareName", base_share_name)
+            )
 
     pod_name = f"{cluster_name}-root-home-shell"
     pod = {
@@ -97,7 +88,7 @@ def root_homes(
     cmd = [
         "kubectl",
         "-n",
-        namespace,
+        hub_name,
         "run",
         "--rm",  # Remove pod when we're done
         "-it",  # Give us a shell!
