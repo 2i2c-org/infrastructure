@@ -53,8 +53,6 @@ def root_homes(
                 .get("baseShareName", base_share_name)
             )
 
-    print(server_ip)
-    print(base_share_name)
     pod_name = f"{cluster_name}-root-home-shell"
     pod = {
         "apiVersion": "v1",
