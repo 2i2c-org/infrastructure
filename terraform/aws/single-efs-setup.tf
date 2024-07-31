@@ -5,7 +5,7 @@
 resource "aws_efs_file_system" "homedirs" {
   count = var.disable_cluster_wide_filestore ? 0 : 1
 
-  tags = merge(var.tags, { Name = "hub-homedirs" })
+  tags = merge(var.tags, var.original_single_efs_tags, { Name = "hub-homedirs" })
 
   lifecycle_policy {
     transition_to_primary_storage_class = "AFTER_1_ACCESS"

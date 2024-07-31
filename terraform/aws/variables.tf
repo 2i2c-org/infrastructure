@@ -211,6 +211,14 @@ variable "disable_cluster_wide_filestore" {
   EOT
 }
 
+variable "original_single_efs_tags" {
+  default     = {}
+  type        = map(string)
+  description = <<-EOT
+  Extra tags to apply to the original cluster wide EFS
+  EOT
+}
+
 variable "filestores" {
   type = map(object({
     name_suffix : optional(string, null),
