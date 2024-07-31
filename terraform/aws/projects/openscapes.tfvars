@@ -14,9 +14,15 @@ tags = {}
 filestores = {
   "staging" = {
     name_suffix = "staging"
+    tags = {
+      "2i2c:hub-name" : "staging"
+    }
   }
   "workshop" = {
     name_suffix = "workshop"
+    tags = {
+      "2i2c:hub-name" : "workshop"
+    }
   }
 }
 
