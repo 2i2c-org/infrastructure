@@ -11,12 +11,22 @@ default_budget_alert = {
 # Remove this variable to tag all our resources with {"ManagedBy": "2i2c"}
 tags = {}
 
+# The initial EFS is now used by the prod hub only
+# So we tag it appropriately for costs purposes
+original_single_efs_tags = { "2i2c:hub-name" : "prod" }
+
 filestores = {
   "staging" = {
     name_suffix = "staging"
+    tags = {
+      "2i2c:hub-name" : "staging"
+    }
   }
   "workshop" = {
     name_suffix = "workshop"
+    tags = {
+      "2i2c:hub-name" : "workshop"
+    }
   }
 }
 
