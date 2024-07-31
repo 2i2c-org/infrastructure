@@ -49,36 +49,6 @@ basehub:
                   slug: "new"
                   kubespawner_override:
                     image: "quay.io/2i2c/awi-ciroh-image:79bb68961852"
-                devcon1:
-                  display_name: "DevCon24 workshop : CNN for downscaling climate forcing variables"
-                  kubespawner_override:
-                    image: "quay.io/benlee7411/devcon24:swolvin"
-                    image_pull_policy: "Always"
-                devcon2:
-                  display_name: "DevCon24 workshop : Using Actors for Parallelization in Hydrology"
-                  kubespawner_override:
-                    image: "quay.io/benlee7411/devcon24:kklenk"
-                    image_pull_policy: "Always"
-                devcon3:
-                  display_name: "DevCon24 workshop : Decision Tree models"
-                  kubespawner_override:
-                    image: "quay.io/benlee7411/devcon24:savalan"
-                    image_pull_policy: "Always"
-                devcon4:
-                  display_name: "DevCon24 workshop : Data Workflows 101"
-                  kubespawner_override:
-                    image: "quay.io/benlee7411/devcon24:pclemins"
-                    image_pull_policy: "Always"
-                devcon5:
-                  display_name: "DevCon24 workshop : Neural Networks for Snow Modeling"
-                  kubespawner_override:
-                    image: "quay.io/benlee7411/devcon24:dane"
-                    image_pull_policy: "Always"
-                devcon6:
-                  display_name: "DevCon24 workshop : Long Short Term Memory modeling"
-                  kubespawner_override:
-                    image: "quay.io/benlee7411/devcon24:jmframe_neuralhydrology"
-                    image_pull_policy: "Always"
           kubespawner_override:
             mem_limit: 7G
             mem_guarantee: 5G
