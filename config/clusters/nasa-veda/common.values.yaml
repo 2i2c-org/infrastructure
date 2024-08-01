@@ -76,6 +76,10 @@ basehub:
             - slesaad
             - wildintellect
             - amarouane-ABDELHAK
+      extraConfig:
+        enable-fancy-profiles: |
+          from jupyterhub_fancy_profiles import setup_ui
+          setup_ui(c)
     singleuser:
       cloudMetadata:
         blockWithIptables: false

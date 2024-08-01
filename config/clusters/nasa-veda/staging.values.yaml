@@ -30,10 +30,6 @@ basehub:
       config:
         GitHubOAuthenticator:
           oauth_callback_url: https://staging.hub.openveda.cloud/hub/oauth_callback
-      extraConfig:
-        enable-fancy-profiles: |
-          from jupyterhub_fancy_profiles import setup_ui
-          setup_ui(c)
     ingress:
       hosts: [staging.hub.openveda.cloud]
       tls:
