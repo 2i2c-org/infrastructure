@@ -36,7 +36,7 @@ jupyterhub:
     # User image: https://quay.io/repository/arokem/nh2024?tab=tags
     image:
       name: quay.io/arokem/nh2024
-      tag: "da466c65bd43"
+      tag: "6a7f72572771"
     defaultUrl: "/lab"
     extraTolerations:
       - key: "2i2c.org/community"
