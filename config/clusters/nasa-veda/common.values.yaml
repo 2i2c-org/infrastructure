@@ -114,34 +114,64 @@ basehub:
             subPath: _shared
             readOnly: true
       profileList:
-        - display_name: "Modified Pangeo Notebook"
-          slug: modified-pangeo
-          description: Pangeo based notebook with a Python environment
+        - display_name: Choose your environment and resources
           default: true
-          kubespawner_override:
-            image: public.ecr.aws/nasa-veda/pangeo-notebook-veda-image:53b6fd1256f5
-            init_containers:
-              # Need to explicitly fix ownership here, as otherwise these directories will be owned
-              # by root on most NFS filesystems - neither EFS nor Google Filestore support anonuid
-              - *volume_ownership_fix_initcontainer
-              # this container uses nbgitpuller to mount https://github.com/NASA-IMPACT/veda-docs/ for user pods
-              # image source: https://github.com/NASA-IMPACT/jupyterhub-gitpuller-init
-              - name: jupyterhub-gitpuller-init
-                image: public.ecr.aws/nasa-veda/jupyterhub-gitpuller-init:97eb45f9d23b128aff810e45911857d5cffd05c2
-                env:
-                  - name: TARGET_PATH
-                    value: veda-docs
-                  - name: SOURCE_REPO
-                    value: "https://github.com/NASA-IMPACT/veda-docs"
-                volumeMounts:
-                  - name: home
-                    mountPath: /home/jovyan
-                    subPath: "{username}"
-                securityContext:
-                  runAsUser: 1000
-                  runAsGroup: 1000
-          profile_options: &profile_options
-            resource_allocation: &profile_options_resource_allocation
+          profile_options:
+            image:
+              display_name: Environment
+              unlisted_choice:
+                enabled: True
+                display_name: "Custom image"
+                validation_regex: "^.+:.+$"
+                validation_message: "Must be a publicly available docker image, of form <image-name>:<tag>"
+                kubespawner_override:
+                  image: "{value}"
+              choices:
+                01-modify-pangeo:
+                  display_name: Modified Pangeo Notebook
+                  description: Pangeo based notebook with a Python environment
+                  kubespawner_override:
+                    image: public.ecr.aws/nasa-veda/nasa-veda-singleuser:2024-04-09
+                    init_containers:
+                      # Need to explicitly fix ownership here, as otherwise these directories will be owned
+                      # by root on most NFS filesystems - neither EFS nor Google Filestore support anonuid
+                      - *volume_ownership_fix_initcontainer
+                      # this container uses nbgitpuller to mount https://github.com/NASA-IMPACT/veda-docs/ for user pods
+                      # image source: https://github.com/NASA-IMPACT/jupyterhub-gitpuller-init
+                      - name: jupyterhub-gitpuller-init
+                        image: public.ecr.aws/nasa-veda/jupyterhub-gitpuller-init:97eb45f9d23b128aff810e45911857d5cffd05c2
+                        env:
+                          - name: TARGET_PATH
+                            value: veda-docs
+                          - name: SOURCE_REPO
+                            value: "https://github.com/NASA-IMPACT/veda-docs"
+                        volumeMounts:
+                          - name: home
+                            mountPath: /home/jovyan
+                            subPath: "{username}"
+                        securityContext:
+                          runAsUser: 1000
+                          runAsGroup: 1000
+                02-rocker:
+                  display_name: Rocker Geospatial with RStudio
+                  description: R environment with many geospatial libraries pre-installed
+                  kubespawner_override:
+                    image: rocker/binder:4.3
+                    image_pull_policy: Always
+                    # Launch RStudio after the user logs in
+                    default_url: /rstudio
+                    # Ensures container working dir is homedir
+                    # https://github.com/2i2c-org/infrastructure/issues/2559
+                    working_dir: /home/rstudio
+                03-qgis:
+                  display_name: QGIS on Linux Desktop
+                  description: Linux desktop in the browser, with qgis installed
+                  kubespawner_override:
+                    # Launch people directly into the Linux desktop when they start
+                    default_url: /desktop
+                    # Built from https://github.com/2i2c-org/nasa-qgis-image
+                    image: quay.io/2i2c/nasa-qgis-image:0d0765090250
+            resource_allocation:
               display_name: Resource Allocation
               choices:
                 mem_1_9:
@@ -208,42 +238,6 @@ basehub:
                     cpu_limit: 15.695
                     node_selector:
                       node.kubernetes.io/instance-type: r5.4xlarge
-        - display_name: "Rocker Geospatial with RStudio"
-          slug: rocker
-          description: R environment with many geospatial libraries pre-installed
-          kubespawner_override:
-            image: rocker/binder:4.3
-            image_pull_policy: Always
-            # Launch RStudio after the user logs in
-            default_url: /rstudio
-            # Ensures container working dir is homedir
-            # https://github.com/2i2c-org/infrastructure/issues/2559
-            working_dir: /home/rstudio
-          profile_options: *profile_options
-        - display_name: "QGIS on Linux Desktop"
-          slug: qgis
-          description: Linux desktop in the browser, with qgis installed
-          kubespawner_override:
-            # Launch people directly into QGIS when they start
-            default_url: /qgis
-            # Built from https://github.com/2i2c-org/nasa-qgis-image
-            image: quay.io/2i2c/nasa-qgis-image:ce0b7c7f33ea
-          profile_options: *profile_options
-        - display_name: "Bring your own image"
-          description: Specify your own docker image (must have python and jupyterhub installed in it)
-          slug: custom
-          profile_options:
-            image:
-              display_name: Image
-              unlisted_choice:
-                enabled: True
-                display_name: "Custom image"
-                validation_regex: "^.+:.+$"
-                validation_message: "Must be a publicly available docker image, of form <image-name>:<tag>"
-                kubespawner_override:
-                  image: "{value}"
-              choices: {}
-            resource_allocation: *profile_options_resource_allocation
 
     scheduling:
       userScheduler:
