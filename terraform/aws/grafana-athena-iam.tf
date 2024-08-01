@@ -8,9 +8,9 @@ resource "aws_iam_role" "grafana_athena_role" {
     Version = "2012-10-17"
     Statement = [{
 
-        Action = ["sts:AssumeRole"]
-        Effect = "Allow"
-        Principal = {}
+      Action    = ["sts:AssumeRole"]
+      Effect    = "Allow"
+      Principal = {}
     }]
   })
 
