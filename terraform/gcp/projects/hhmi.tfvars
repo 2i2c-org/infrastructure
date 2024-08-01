@@ -15,7 +15,7 @@ k8s_versions = {
   dask_nodes_version : "1.29.1-gke.1589020",
 }
 
-enable_network_policy  = true
+enable_network_policy = true
 
 hub_cloud_permissions = {
   "binder" : {

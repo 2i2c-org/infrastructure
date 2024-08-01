@@ -156,7 +156,7 @@ resource "google_container_cluster" "cluster" {
   }
 
   network_policy {
-    enabled = var.enable_network_policy
+    enabled  = var.enable_network_policy
     provider = "CALICO"
   }
 
