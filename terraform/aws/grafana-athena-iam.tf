@@ -9,7 +9,7 @@ resource "aws_iam_role" "grafana_athena_role" {
   assume_role_policy = jsonencode({
     Version = "2012-10-17"
     Statement = [{
-      Sid = "AthenaQueryAccess"
+      Sid    = "AthenaQueryAccess"
       Effect = "Allow"
       Action = [
         "sts:AssumeRoleWithWebIdentity",
@@ -27,46 +27,46 @@ resource "aws_iam_role" "grafana_athena_role" {
         "athena:StopQueryExecution"
       ]
       Resource = ["*"]
-    },
-    {
-      Sid = "GlueReadAccess"
-      Effect = "Allow"
-      Action = [
-        "sts:AssumeRoleWithWebIdentity",
-        "glue:GetDatabase",
-        "glue:GetDatabases",
-        "glue:GetTable",
-        "glue:GetTables",
-        "glue:GetPartition",
-        "glue:GetPartitions",
-        "glue:BatchGetPartition"
-      ]
-      Resource = ["*"]
-    },
-    {
-      Sid = "AthenaS3Access"
-      Effect = "Allow"
-      Action = [
-        "sts:AssumeRoleWithWebIdentity",
-        "s3:GetBucketLocation",
-        "s3:GetObject",
-        "s3:ListBucket",
-        "s3:ListBucketMultipartUploads",
-        "s3:ListMultipartUploadParts",
-        "s3:AbortMultipartUpload",
-        "s3:PutObject"
-      ]
-      Resource = ["arn:aws:s3:::aws-athena-query-results-*"]
-    },
-    {
-      Sid = "AthenaExamplesS3Access"
-      Effect = "Allow"
-      Action = [
-        "sts:AssumeRoleWithWebIdentity",
-        "s3:GetObject",
-        "s3:ListBucket"
-      ]
-      Resource = ["arn:aws:s3:::athena-examples*"]
+      },
+      {
+        Sid    = "GlueReadAccess"
+        Effect = "Allow"
+        Action = [
+          "sts:AssumeRoleWithWebIdentity",
+          "glue:GetDatabase",
+          "glue:GetDatabases",
+          "glue:GetTable",
+          "glue:GetTables",
+          "glue:GetPartition",
+          "glue:GetPartitions",
+          "glue:BatchGetPartition"
+        ]
+        Resource = ["*"]
+      },
+      {
+        Sid    = "AthenaS3Access"
+        Effect = "Allow"
+        Action = [
+          "sts:AssumeRoleWithWebIdentity",
+          "s3:GetBucketLocation",
+          "s3:GetObject",
+          "s3:ListBucket",
+          "s3:ListBucketMultipartUploads",
+          "s3:ListMultipartUploadParts",
+          "s3:AbortMultipartUpload",
+          "s3:PutObject"
+        ]
+        Resource = ["arn:aws:s3:::aws-athena-query-results-*"]
+      },
+      {
+        Sid    = "AthenaExamplesS3Access"
+        Effect = "Allow"
+        Action = [
+          "sts:AssumeRoleWithWebIdentity",
+          "s3:GetObject",
+          "s3:ListBucket"
+        ]
+        Resource = ["arn:aws:s3:::athena-examples*"]
     }]
   })
 }
