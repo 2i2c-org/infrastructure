@@ -111,7 +111,7 @@ jupyterhub:
         slug: R
         description: "Start a container with R available"
         kubespawner_override:
-          image: "quay.io/arokem/nh2024-r:40c35e7ea05e"
+          image: "quay.io/arokem/nh2024-r:f36d1dbaa3d7"
           cpu_guarantee: 0.5
           cpu_limit: 14
           mem_guarantee: 4G
