@@ -635,9 +635,17 @@ Commit this file to the repo.
 ````{tab-item} AWS
 :sync: aws-key
 
-### Grant additional access
+### Grant the deployer's IAM user access
 
-First, we need to grant the freshly created deployer IAM user access to the kubernetes cluster.
+```{note}
+This still works, but makes use of a deprecated system (`iamidentitymapping` and
+`aws-auth` ConfigMap in kube-system namespace) instead of the new system called
+[EKS access entries]. Migrating to the new system is [tracked by this github issue](https://github.com/2i2c-org/infrastructure/issues/4558).
+
+[eks access entries]: https://docs.aws.amazon.com/eks/latest/userguide/access-entries.html
+```
+
+We need to grant the freshly created deployer IAM user access to the kubernetes cluster.
 
 1. As this requires passing in some parameters that match the created cluster,
   we have a `terraform output` that can give you the exact command to run.
@@ -677,9 +685,9 @@ First, we need to grant the freshly created deployer IAM user access to the kube
 ### (no longer needed) Grant `eksctl` access to other users
 
 Use of `eksctl create iamidentitymapping` was previously required step to grant
-access to other engineers, but after AWS introduced a new system in parallel to
-the now deprecated `iamidentitymapping` system, it seems AWS account admin users
-are no longer required to be granted access like this.
+access to other engineers, but after AWS introduced a new system (EKS access
+entries) in parallel to the now deprecated `iamidentitymapping` system, it seems
+AWS account admin users are no longer required to be granted access like this.
 
 To conclude, any AWS account admin authenticated should be able to acquire k8s
 cluster credentials like below without use of `eksctl create iamidentitymapping`:
