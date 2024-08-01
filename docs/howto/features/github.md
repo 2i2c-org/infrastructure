@@ -4,6 +4,15 @@ We use [gh-scoped-creds](https://github.com/yuvipanda/gh-scoped-creds/) to
 allow users to safely push to GitHub from their JupyterHub. This requires
 a little setup on the hub side to make the user experience seamless.
 
+```{important}
+The environment variables for `gh-scoped-creds` can also be set on the user image level as well.
+
+This can be done by setting the environment variables in the `start` script or directly in the Dockerfile. Checkout this [example](https://github.com/CryoInTheCloud/hub-image/blob/adb84d6ad7b9bfc5b029349c01be34b199b88176/start#L13-L14).
+
+This is useful for for communities managing their own user images that want to have full control
+over this feature and adjacent resources like the GitHub app.
+```
+
 1. [Create a GitHub app](https://github.com/organizations/2i2c-org/settings/apps/new)
    under the 2i2c organization with the settings
    [outlined in the gh-scoped-creds docs](https://github.com/yuvipanda/gh-scoped-creds/#github-app-configuration)
