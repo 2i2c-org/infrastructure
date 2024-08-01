@@ -252,3 +252,12 @@ variable "active_cost_allocation_tags" {
   Tags to be treated as active cost allocation tags.
   EOT
 }
+
+variable "enable_grafana_athena_iam" {
+  type        = bool
+  default     = false
+  description = <<-EOT
+  Create an IAM role with attached policy to permit a connection between a
+  Grafana instance and AWS Athena service.
+  EOT
+}
