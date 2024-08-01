@@ -30,9 +30,6 @@ basehub:
       config:
         GitHubOAuthenticator:
           oauth_callback_url: https://staging.hub.openveda.cloud/hub/oauth_callback
-      image:
-        name: quay.io/2i2c/dynamic-image-building-experiment
-        tag: 0.0.1-0.dev.git.9829.h282c5c35
       extraConfig:
         enable-fancy-profiles: |
           from jupyterhub_fancy_profiles import setup_ui

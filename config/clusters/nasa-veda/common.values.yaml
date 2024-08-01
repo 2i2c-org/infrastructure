@@ -43,6 +43,9 @@ basehub:
             name: "NASA"
             url: https://www.earthdata.nasa.gov/esds
     hub:
+      image:
+        name: quay.io/2i2c/dynamic-image-building-experiment
+        tag: 0.0.1-0.dev.git.9829.h282c5c35
       allowNamedServers: true
       config:
         JupyterHub:
