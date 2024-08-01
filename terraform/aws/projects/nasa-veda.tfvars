@@ -44,6 +44,8 @@ hub_cloud_permissions = {
                 "s3:ListMultipartUploadParts"
               ],
               "Resource": [
+                "arn:aws:s3:::veda-data-store",
+                "arn:aws:s3:::veda-data-store/*",
                 "arn:aws:s3:::veda-data-store-staging",
                 "arn:aws:s3:::veda-data-store-staging/*",
                 "arn:aws:s3:::veda-nex-gddp-cmip6-public",
