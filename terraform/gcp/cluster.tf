@@ -97,6 +97,10 @@ resource "google_container_cluster" "cluster" {
   }
 
   addons_config {
+    network_policy_config {
+      disabled = !var.enable_network_policy
+    }
+
     http_load_balancing {
       // FIXME: This used to not work well with websockets, and
       // cost extra money as well. Let's validate if this is still
@@ -153,6 +157,7 @@ resource "google_container_cluster" "cluster" {
 
   network_policy {
     enabled = var.enable_network_policy
+    provider = "CALICO"
   }
 
   node_config {

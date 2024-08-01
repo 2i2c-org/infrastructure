@@ -853,6 +853,25 @@ jupyterhub:
             - podSelector:
                 matchLabels:
                   app.kubernetes.io/component: traefik
+
+        # Allow HTTPS and HTTP traffic explicitly to the whole world
+        # This is a no-op if `singleuser.networkPolicy.egressAllowRules.nonPrivateIPs`
+        # is true (the default). When it is set to false, this rule allows outbound access
+        # to these specified ports to the broad internet (but not internal networks)
+        - ports:
+          - port: 80
+            protocol: TCP
+          - port: 443
+            protocol: TCP
+          - port: 443
+            protocol: UDP # Hello, HTTPS/3
+          to:
+            - ipBlock:
+                cidr: 0.0.0.0/0
+                except:
+                - 10.0.0.0/8
+                - 172.16.0.0/12
+                - 192.168.0.0/16
   hub:
     config:
       JupyterHub:

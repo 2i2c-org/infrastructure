@@ -53,6 +53,9 @@ jupyterhub:
       enabled: true
   singleuser:
     initContainers: []
+    networkPolicy:
+      egressAllowRules:
+        nonPrivateIPs: false
     storage:
       type: none
       extraVolumes:

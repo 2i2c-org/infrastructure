@@ -15,9 +15,7 @@ k8s_versions = {
   dask_nodes_version : "1.29.1-gke.1589020",
 }
 
-# Network policy is required to enforce separation between hubs on multi-tenant clusters
-# Tip: uncomment the line below if this cluster will be multi-tenant
-# enable_network_policy  = true
+enable_network_policy  = true
 
 hub_cloud_permissions = {
   "binder" : {
