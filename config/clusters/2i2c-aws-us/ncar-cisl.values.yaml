@@ -52,6 +52,8 @@ basehub:
         # pangeo/pangeo-notebook is maintained at: https://github.com/pangeo-data/pangeo-docker-images
         name: pangeo/pangeo-notebook
         tag: "2023.05.18"
+      extraEnv:
+        SCRATCH_BUCKET: s3://2i2c-aws-us-scratch-ncar-cisl/$(JUPYTERHUB_USER)
       profileList:
         # NOTE: About node sharing
         #

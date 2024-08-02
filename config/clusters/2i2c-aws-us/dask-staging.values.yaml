@@ -31,6 +31,8 @@ basehub:
       image:
         name: pangeo/pangeo-notebook
         tag: "latest"
+      extraEnv:
+        SCRATCH_BUCKET: s3://2i2c-aws-us-scratch-dask-staging/$(JUPYTERHUB_USER)
     hub:
       config:
         JupyterHub:
