@@ -20,6 +20,9 @@ jupyterhub:
       templateVars:
         enabled: false
   singleuser:
+    networkPolicy:
+      egressAllowRules:
+        nonPrivateIPs: false
     nodeSelector:
       # Schedule users on the smallest instance
       # https://github.com/2i2c-org/infrastructure/issues/4241
