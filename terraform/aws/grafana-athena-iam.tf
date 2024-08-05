@@ -82,5 +82,5 @@ resource "aws_iam_role" "grafana_athena_role" {
 }
 
 output "grafana_athena_iam_annotation" {
-  value = "eks.amazonaws.com/role-arn: ${aws_iam_role.grafana_athena_role[0].arn}"
+  value = var.enable_grafana_athena_iam ? "eks.amazonaws.com/role-arn: ${aws_iam_role.grafana_athena_role[0].arn}" : null
 }
