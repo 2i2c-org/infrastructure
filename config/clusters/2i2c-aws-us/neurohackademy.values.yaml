@@ -123,11 +123,7 @@ jupyterhub:
       - display_name: "Bring your own image"
         description: Specify your own docker image (must have python and jupyterhub installed in it)
         slug: custom
-        kubespawner_override:
-          cpu_guarantee: 0.5
-          cpu_limit: 14
-          mem_guarantee: 4G
-          mem_limit: 16G
+        kubespawner_override: {}
         profile_options:
           image:
             display_name: Image
@@ -140,6 +136,29 @@ jupyterhub:
                 image: "{value}"
                 init_containers: *init_containers
             choices: {}
+          gpu:
+            display_name: GPU
+            choices:
+              01-none:
+                display_name: No GPU
+                default: true
+                kubespawner_override:
+                  cpu_guarantee: 0.5
+                  cpu_limit: 14
+                  mem_guarantee: 4G
+                  mem_limit: 16G
+              01-yes:
+                display_name: Yes (NVIDIA T4)
+                kubespawner_override:
+                  mem_limit: null
+                  mem_guarantee: 14G
+                  environment:
+                    NVIDIA_DRIVER_CAPABILITIES: compute,utility
+                  node_selector:
+                    node.kubernetes.io/instance-type: g4dn.xlarge
+                    2i2c.org/community: neurohackademy
+                  extra_resource_limits:
+                    nvidia.com/gpu: "1"
   hub:
     config:
       JupyterHub:
