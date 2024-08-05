@@ -61,7 +61,6 @@ basehub:
             - Earth-Information-System:eis-fire
             - Earth-Information-System:swot
             - nasa-veda-workshops:igarss-eo-workshop-2024
-            - nasa-veda-workshops:veda-ej-workshop-esip-2024
           scope:
             - read:org
         Authenticator:
