@@ -97,6 +97,7 @@ jupyterhub:
         slug: gpu
         description: "Start a container on a dedicated node with a GPU"
         kubespawner_override:
+          image: "quay.io/arokem/nh2024-gpu:74cb5cb5c8ad"
           mem_limit: null
           mem_guarantee: 14G
           environment:
