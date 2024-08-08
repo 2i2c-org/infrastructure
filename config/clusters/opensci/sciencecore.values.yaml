@@ -82,15 +82,22 @@ jupyterhub:
                 slug: scipy
                 kubespawner_override:
                   image: quay.io/jupyter/scipy-notebook:2024-04-15
-              school:
-                display_name: TOPST SCHOOL Project
+              school-r:
+                display_name: "TOPST SCHOOL Project - R"
                 description: "quay.io/repository/isciences/tops-school:latest"
-                slug: school
+                slug: "school-r"
                 kubespawner_override:
                   image: quay.io/isciences/tops-school:latest
                   # Launch into RStudio after the user logs in
                   default_url: /rstudio
                   working_dir: /home/rstudio
+              school-py:
+                display_name: "TOPST SCHOOL Project - Python"
+                # Source repo: https://github.com/ciesin-geospatial/TOPSTSCHOOL-air-quality/
+                description: "quay.io/repository/isciences/tops-school-py:latest"
+                slug: "school-py"
+                kubespawner_override:
+                  image: quay.io/isciences/tops-school-py:latest
               climaterisk:
                 display_name: NASA TOPS-T ScienceCore-ClimateRisk
                 description: "quay.io/2i2c/sciencecore-climaterisk-image"
