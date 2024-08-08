@@ -7,8 +7,13 @@ jupyterhub:
           - hub.binder.nasa-veda.2i2c.cloud
         secretName: https-auto-tls
   cull:
-    # Don't allow any user pods to run for longer than 7 days by default
-    maxAge: 604800 # 7 days in seconds
+    every: 300
+    # Cull after 4h of inactivity
+    timeout: 14400
+    # No pods over 12h long
+    maxAge: 43200
+    # Also cull all users more than 12h old
+    users: true
   custom:
     binderhubUI:
       enabled: true
