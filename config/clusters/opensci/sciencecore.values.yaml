@@ -82,10 +82,10 @@ jupyterhub:
                 slug: scipy
                 kubespawner_override:
                   image: quay.io/jupyter/scipy-notebook:2024-04-15
-              school:
-                display_name: TOPST SCHOOL Project
+              school-r:
+                display_name: "TOPST SCHOOL Project - R"
                 description: "quay.io/repository/isciences/tops-school:latest"
-                slug: school
+                slug: "school-r"
                 kubespawner_override:
                   image: quay.io/isciences/tops-school:latest
                   # Launch into RStudio after the user logs in
