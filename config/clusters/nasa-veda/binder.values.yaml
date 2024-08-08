@@ -33,7 +33,7 @@ jupyterhub:
     nodeSelector:
       2i2c/hub-name: "binder"
     extraTolerations:
-      - key: 2i2c.org/hub-name
+      - key: 2i2c/hub-name
         operator: Equal
         value: binder
         effect: NoSchedule
