@@ -93,6 +93,7 @@ jupyterhub:
                   working_dir: /home/rstudio
               school-py:
                 display_name: "TOPST SCHOOL Project - Python"
+                # Source repo: https://github.com/ciesin-geospatial/TOPSTSCHOOL-air-quality/
                 description: "quay.io/repository/isciences/tops-school-py:latest"
                 slug: "school-py"
                 kubespawner_override:
