@@ -116,6 +116,9 @@ binderhub-service:
       auth_enabled: false
       enable_api_only_mode: false
       image_prefix: quay.io/veda-binder/binder-
+    DockerRegistry:
+      url: https://quay.io
+      username: veda-binder+image_builder
   extraEnv:
     - name: JUPYTERHUB_API_TOKEN
       valueFrom:
@@ -130,3 +133,6 @@ binderhub-service:
     # appended to binderhub's URL instead of the hub's
     - name: JUPYTERHUB_BASE_URL
       value: "https://hub.binder.nasa-veda.2i2c.cloud"
+  buildPodsRegistryCredentials:
+    server: https://quay.io
+    username: veda-binder+image_builder
