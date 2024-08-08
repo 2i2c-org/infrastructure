@@ -34,7 +34,7 @@ local notebookNodes = [
       labels+: { "2i2c/hub-name": "binder" },
       tags+: { "2i2c:hub-name": "binder" },
       taints+: {
-        "2i2c/hub-name": "binder"
+        "2i2c/hub-name": "binder:NoSchedule"
      },
     },
 ];
