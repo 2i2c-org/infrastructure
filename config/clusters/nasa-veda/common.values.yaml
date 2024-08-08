@@ -60,7 +60,6 @@ basehub:
             - veda-analytics-access:maap-biomass-team
             - Earth-Information-System:eis-fire
             - Earth-Information-System:swot
-            - nasa-veda-workshops:igarss-eo-workshop-2024
           scope:
             - read:org
         Authenticator:
