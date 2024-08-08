@@ -32,8 +32,7 @@ hubs:
   - name: binder
     display_name: "NASA VEDA (binder)"
     domain: hub.binder.nasa-veda.2i2c.cloud
-    helm_chart: daskhub
+    helm_chart: basehub
     helm_chart_values_files:
-      - common.values.yaml
       - binder.values.yaml
       - enc-binder.secret.values.yaml
