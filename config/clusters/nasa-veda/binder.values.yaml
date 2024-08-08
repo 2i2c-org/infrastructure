@@ -28,9 +28,12 @@ jupyterhub:
       extraVolumeMounts: []
   singleuser:
     nodeSelector:
-      # Schedule users on the smallest instance
-      # https://github.com/2i2c-org/infrastructure/issues/4241
-      node.kubernetes.io/instance-type: r5.xlarge
+      2i2c/hub-name: "binder"
+    extraTolerations:
+      - key: 2i2c.org/hub-name
+        operator: Equal
+        value: binder
+        effect: NoSchedule
     memory:
       guarantee: 1G
       limit: 2G
@@ -92,9 +95,7 @@ binderhub-service:
   enabled: true
   dockerApi:
     nodeSelector:
-      # Schedule dockerApi pods to run on the smallest user nodes only
-      # https://github.com/2i2c-org/infrastructure/issues/4241
-      node.kubernetes.io/instance-type: r5.xlarge
+      2i2c/hub-name: "binder"
   ingress:
     enabled: true
     hosts: [binder.openveda.cloud]
