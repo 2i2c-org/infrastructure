@@ -23,11 +23,12 @@ basehub:
 
 dask-gateway:
   gateway:
-    scheduler:
-      extraPodConfig:
-        nodeSelector:
-          2i2c/hub-name: prod
-    worker:
-      extraPodConfig:
-        nodeSelector:
-          2i2c/hub-name: prod
+    backend:
+      scheduler:
+        extraPodConfig:
+          nodeSelector:
+            2i2c/hub-name: prod
+      worker:
+        extraPodConfig:
+          nodeSelector:
+            2i2c/hub-name: prod
