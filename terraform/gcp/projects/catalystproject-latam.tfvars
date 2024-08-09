@@ -76,6 +76,9 @@ user_buckets = {
   "scratch-areciboc3" : {
     "delete_after" : 7,
   },
+  "scratch-valledellili" : {
+    "delete_after" : 7,
+  },
 }
 
 hub_cloud_permissions = {
@@ -86,5 +89,9 @@ hub_cloud_permissions = {
   "areciboc3" : {
     bucket_admin_access : ["scratch-areciboc3"],
     hub_namespace : "areciboc3",
+  },
+  "valledellili" : {
+    bucket_admin_access : ["scratch-valledellili"],
+    hub_namespace : "valledellili",
   },
 }
