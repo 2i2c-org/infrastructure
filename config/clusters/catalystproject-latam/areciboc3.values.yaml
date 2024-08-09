@@ -1,0 +1,27 @@
+userServiceAccount:
+  annotations:
+    iam.gke.io/gcp-service-account: latam-areciboc3@catalystproject-392106.iam.gserviceaccount.com
+jupyterhub:
+  ingress:
+    hosts: [areciboc3.latam.catalystproject.2i2c.cloud]
+    tls:
+      - hosts: [areciboc3.latam.catalystproject.2i2c.cloud]
+        secretName: https-auto-tls
+  custom:
+    homepage:
+      templateVars:
+        org:
+          name: Catalyst Project, LatAm - Arecibo C3
+  singleuser:
+    extraEnv:
+      SCRATCH_BUCKET: gs://latam-scratch-areciboc3/$(JUPYTERHUB_USER)
+  hub:
+    config:
+      JupyterHub:
+        authenticator_class: github
+      GitHubOAuthenticator:
+        oauth_callback_url: https://areciboc3.latam.catalystproject.2i2c.cloud/hub/oauth_callback
+        allowed_organizations:
+          - catalystproject-hubs:areciboc3
+        scope:
+          - read:org
