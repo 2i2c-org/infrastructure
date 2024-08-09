@@ -73,11 +73,18 @@ user_buckets = {
       "group:persistent-unam-writers@2i2c.org"
     ]
   },
+  "scratch-areciboc3" : {
+    "delete_after" : 7,
+  },
 }
 
 hub_cloud_permissions = {
   "unam" : {
     bucket_admin_access : ["scratch-unam", "persistent-unam"],
     hub_namespace : "unam",
+  },
+  "areciboc3" : {
+    bucket_admin_access : ["scratch-areciboc3"],
+    hub_namespace : "areciboc3",
   },
 }
