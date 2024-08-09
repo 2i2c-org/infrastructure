@@ -67,11 +67,8 @@ local notebookNodes = [
       instanceType: "r5.xlarge",
       namePrefix: "nb-binder",
       labels+: { "2i2c/hub-name": "binder" },
-      tags+: { "2i2c:hub-name": "binder" },
-      taints+: {
-        "2i2c/hub-name": "binder:NoSchedule"
-     },
-    },
+      tags+: { "2i2c:hub-name": "binder" }
+    }
 ];
 
 local daskNodes = [
