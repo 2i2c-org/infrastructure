@@ -97,3 +97,11 @@ hubs:
       - common.values.yaml
       - labi.values.yaml
       - enc-labi.secret.values.yaml
+  - name: areciboc3
+    display_name: "Catalyst Project, LatAm - Arecibo C3"
+    domain: areciboc3.latam.catalystproject.2i2c.cloud
+    helm_chart: basehub
+    helm_chart_values_files:
+      - common.values.yaml
+      - areciboc3.values.yaml
+      - enc-areciboc3.secret.values.yaml
