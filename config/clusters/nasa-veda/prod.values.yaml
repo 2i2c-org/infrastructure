@@ -12,7 +12,22 @@ basehub:
       homepage:
         gitRepoBranch: "master"
         gitRepoUrl: "https://github.com/NASA-IMPACT/veda-hub-homepage"
+    singleuser:
+      nodeSelector:
+        2i2c/hub-name: prod
     hub:
       config:
         GitHubOAuthenticator:
           oauth_callback_url: https://hub.openveda.cloud/hub/oauth_callback
+
+dask-gateway:
+  gateway:
+    backend:
+      scheduler:
+        extraPodConfig:
+          nodeSelector:
+            2i2c/hub-name: prod
+      worker:
+        extraPodConfig:
+          nodeSelector:
+            2i2c/hub-name: prod

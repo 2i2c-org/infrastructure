@@ -1,3 +1,6 @@
+userServiceAccount:
+  annotations:
+    eks.amazonaws.com/role-arn: arn:aws:iam::444055461661:role/nasa-veda-binder
 jupyterhub:
   ingress:
     hosts:
@@ -28,9 +31,7 @@ jupyterhub:
       extraVolumeMounts: []
   singleuser:
     nodeSelector:
-      # Schedule users on the smallest instance
-      # https://github.com/2i2c-org/infrastructure/issues/4241
-      node.kubernetes.io/instance-type: r5.xlarge
+      2i2c/hub-name: "binder"
     memory:
       guarantee: 1G
       limit: 2G
@@ -92,9 +93,7 @@ binderhub-service:
   enabled: true
   dockerApi:
     nodeSelector:
-      # Schedule dockerApi pods to run on the smallest user nodes only
-      # https://github.com/2i2c-org/infrastructure/issues/4241
-      node.kubernetes.io/instance-type: r5.xlarge
+      2i2c/hub-name: "binder"
   ingress:
     enabled: true
     hosts: [binder.openveda.cloud]
@@ -109,6 +108,7 @@ binderhub-service:
         # Schedule builder pods to run on the smallest user nodes only
         # https://github.com/2i2c-org/infrastructure/issues/4241
         node.kubernetes.io/instance-type: r5.xlarge
+        2i2c/hub-name: "binder"
     BinderHub:
       base_url: /
       hub_url: https://hub.binder.nasa-veda.2i2c.cloud
