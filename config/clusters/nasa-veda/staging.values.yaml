@@ -4,6 +4,8 @@ basehub:
       eks.amazonaws.com/role-arn: arn:aws:iam::444055461661:role/nasa-veda-staging
   jupyterhub:
     singleuser:
+      nodeSelector:
+        2i2c/hub-name: staging
       initContainers:
         - &volume_ownership_fix_initcontainer
           name: volume-mount-ownership-fix
@@ -39,3 +41,15 @@ basehub:
       homepage:
         gitRepoBranch: "staging"
         gitRepoUrl: "https://github.com/NASA-IMPACT/veda-hub-homepage"
+
+dask-gateway:
+  gateway:
+    backend:
+      scheduler:
+        extraPodConfig:
+          nodeSelector:
+            2i2c/hub-name: staging
+      worker:
+        extraPodConfig:
+          node_selector:
+            2i2c/hub-name: staging
