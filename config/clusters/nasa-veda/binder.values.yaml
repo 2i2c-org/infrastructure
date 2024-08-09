@@ -32,11 +32,6 @@ jupyterhub:
   singleuser:
     nodeSelector:
       2i2c/hub-name: "binder"
-    extraTolerations:
-      - key: 2i2c/hub-name
-        operator: Equal
-        value: binder
-        effect: NoSchedule
     memory:
       guarantee: 1G
       limit: 2G
