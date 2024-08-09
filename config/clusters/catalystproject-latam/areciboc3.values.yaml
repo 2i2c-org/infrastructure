@@ -25,3 +25,7 @@ jupyterhub:
           - catalystproject-hubs:areciboc3
         scope:
           - read:org
+      Authenticator:
+        admin_users:
+          - pattiordonez
+          - danielhjacobs
