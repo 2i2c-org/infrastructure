@@ -1,0 +1,30 @@
+userServiceAccount:
+  annotations:
+    iam.gke.io/gcp-service-account: latam-valledellili@catalystproject-392106.iam.gserviceaccount.com
+jupyterhub:
+  ingress:
+    hosts: [valledellili.latam.catalystproject.2i2c.cloud]
+    tls:
+      - hosts: [valledellili.latam.catalystproject.2i2c.cloud]
+        secretName: https-auto-tls
+  custom:
+    homepage:
+      templateVars:
+        org:
+          name: "Catalyst Project, LatAm - Fundación Valle del Lili-UMBC & AC3"
+  singleuser:
+    extraEnv:
+      SCRATCH_BUCKET: gs://latam-scratch-valledellili/$(JUPYTERHUB_USER)
+  hub:
+    config:
+      JupyterHub:
+        authenticator_class: github
+      GitHubOAuthenticator:
+        oauth_callback_url: https://valledellili.latam.catalystproject.2i2c.cloud/hub/oauth_callback
+        allowed_organizations:
+          - catalystproject-hubs:valledellili
+        scope:
+          - read:org
+      Authenticator:
+        admin_users:
+          - pattiordonez
