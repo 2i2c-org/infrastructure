@@ -773,11 +773,17 @@ jupyterhub:
       static:
         pvcName: home-nfs
         subPath: "{username}"
+      extraVolume:
+        - name: dev-shm
+          emptyDir:
+            medium: Memory
       extraVolumeMounts:
         - name: home
           mountPath: /home/jovyan/shared
           subPath: _shared
           readOnly: true
+        - name: dev-shm
+          mountPath: /dev/shm
 
         # For all pods, mount home in both /home/jovyan (done via singleuser.storage.static)
         # as well as /home/rstudio. This allows rocker images (which use the
