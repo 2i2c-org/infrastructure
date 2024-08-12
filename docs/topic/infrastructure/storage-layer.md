@@ -96,6 +96,8 @@ jupyterhub:
         # mounts below are copied from basehub's values that we override by
         # specifying extraVolumeMounts (lists get overridden when helm values
         # are combined)
+        - name: dev-shm
+          mountPath: /dev/shm
         - name: home
           mountPath: /home/jovyan/shared-readwrite
           subPath: _shared

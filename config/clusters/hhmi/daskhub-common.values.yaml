@@ -68,6 +68,8 @@ basehub:
             mountPath: /home/jovyan/shared-readonly
             subPath: _shared
             readOnly: true
+          - name: dev-shm
+            mountPath: /dev/shm
       initContainers:
         - name: volume-mount-ownership-fix
           image: busybox:1.36.1
