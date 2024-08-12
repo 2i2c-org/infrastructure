@@ -81,11 +81,18 @@ jupyterhub:
             subPath: data
     storage:
       extraVolumes:
+           # We include the dev-shm extraVolume as the list of extraVolumes from base hub will be overwritten
+           - name: dev-shm
+             emptyDir:
+               medium: Memory
         - name: postgres-db
           persistentVolumeClaim:
             # This should match what is set as `name` in the earlier step under `custom.singleuser.extraPVCs`
             claimName: 'postgres-{username}'
       extraVolumeMounts:
+           # We include the dev-shm extraVolumeMount as the list of extraVolumeMounts from base hub will be overwritten
+           - name: dev-shm
+             mountPath: /dev/shm
         - name: postgres-db
           mountPath: /var/lib/postgresql/data
           # postgres recommends against mounting a volume directly here
