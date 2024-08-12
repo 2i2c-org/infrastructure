@@ -51,6 +51,8 @@ hub_cloud_permissions = {
                 "arn:aws:s3:::ghgc-data-store/*",
                 "arn:aws:s3:::ghgc-data-store-staging",
                 "arn:aws:s3:::ghgc-data-store-staging/*",
+                "arn:aws:s3:::veda-data-store",
+                "arn:aws:s3:::veda-data-store/*",
                 "arn:aws:s3:::veda-data-store-staging",
                 "arn:aws:s3:::veda-data-store-staging/*",
                 "arn:aws:s3:::lp-prod-protected",
