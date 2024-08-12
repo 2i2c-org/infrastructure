@@ -98,6 +98,8 @@ basehub:
             mountPath: /home/jovyan/shared
             subPath: _shared
             readOnly: true
+          - name: dev-shm
+            mountPath: /dev/shm
       profileList:
         - display_name: "Pangeo Notebook"
           slug: pangeo

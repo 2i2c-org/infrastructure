@@ -62,11 +62,16 @@ jupyterhub:
         - name: shared-dir-pv
           persistentVolumeClaim:
             claimName: home-nfs
+        - name: dev-shm
+          emptyDir:
+            medium: Memory
       extraVolumeMounts:
         - name: shared-dir-pv
           mountPath: /home/jovyan/shared-readonly
           subPath: _shared
           readOnly: true
+        - name: dev-shm
+          mountPath: /dev/shm
     defaultUrl: /git-pull?repo=https%3A%2F%2Fgithub.com%2FLorenFrankLab%2Fspyglass-demo&urlpath=lab%2Ftree%2Fspyglass-demo%2Fnotebooks%2F00_HubQuickStart.ipynb&branch=main
     image:
       name: quay.io/lorenlab/hhmi-spyglass-image
