@@ -773,7 +773,7 @@ jupyterhub:
       static:
         pvcName: home-nfs
         subPath: "{username}"
-      extraVolume:
+      extraVolumes:
         - name: dev-shm
           emptyDir:
             medium: Memory
