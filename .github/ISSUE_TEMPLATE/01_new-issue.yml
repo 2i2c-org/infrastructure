@@ -12,21 +12,25 @@ body:
       required: true
 
   - type: textarea
-    id: proposal
+    id: tasks
     attributes:
-      label: Proposal
+      label: Task list
       description: |
-        (optional) A clear and concise description of what we should do, if we have a next step in mind.
-        Add any guidance that will lower our uncertainty in resolving this (e.g., instructions, constraints to follow, red flags to avoid).
+        (optional) A clear and concise list of steps to take to close this issue.
+      value: |
+        ```[tasklist]
+        - [ ] 
+        - [ ] 
+        - [ ] 
+        ```
     validations:
       required: false
 
   - type: textarea
-    id: tasks
+    id: dod
     attributes:
-      label: Updates and actions
+      label: Definition of Done
       description: |
-        (optional) A place to track ongoing work items or tasks, as we figure them out.
-
+        The Definition of Done. What must be true to consider this task complete?
     validations:
-      required: false
+      required: true
