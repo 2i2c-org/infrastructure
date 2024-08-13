@@ -46,6 +46,7 @@ jupyterhub:
               username_claim: "email"
             allowed_domains:
               - csulb.edu
+              - student.csulb.edu
       Authenticator:
         admin_users:
           - ericvd@berkeley.edu
