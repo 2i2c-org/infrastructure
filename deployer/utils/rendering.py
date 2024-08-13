@@ -1,7 +1,7 @@
 import os
 import subprocess
 
-from markdownTable import markdownTable
+from py_markdown_table.markdown_table import markdown_table
 
 
 def print_colour(msg: str, colour="green"):
@@ -96,9 +96,9 @@ def create_markdown_comment(support_staging_matrix, prod_matrix):
 
         # Generate a Markdown table
         support_staging_md_table = (
-            markdownTable(formatted_support_staging_matrix)
-            .setParams(row_sep="markdown", quote=False)
-            .getMarkdown()
+            markdown_table(formatted_support_staging_matrix)
+            .set_params(row_sep="markdown", quote=False)
+            .get_markdown()
         )
     else:
         support_staging_md_table = []
@@ -118,9 +118,9 @@ def create_markdown_comment(support_staging_matrix, prod_matrix):
 
         # Generate a Markdown table
         prod_md_table = (
-            markdownTable(formatted_prod_matrix)
-            .setParams(row_sep="markdown", quote=False)
-            .getMarkdown()
+            markdown_table(formatted_prod_matrix)
+            .set_params(row_sep="markdown", quote=False)
+            .get_markdown()
         )
     else:
         prod_md_table = []
