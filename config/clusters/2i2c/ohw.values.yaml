@@ -26,7 +26,7 @@ basehub:
           description: "~2 CPU, ~8G RAM"
           default: true
           kubespawner_override:
-            image: "ghcr.io/oceanhackweek/python:c3d1f4b"
+            image: "ghcr.io/oceanhackweek/python:341190e"
             default_url: "/lab"
             mem_limit: 8G
             mem_guarantee: 4G
@@ -75,15 +75,15 @@ basehub:
         GitHubOAuthenticator:
           oauth_callback_url: https://oceanhackweek.2i2c.cloud/hub/oauth_callback
           allowed_organizations:
-            - oceanhackweek:ohw23-organizers
-            - oceanhackweek:ohw23-participants-australia
-            - oceanhackweek:ohw23-participants-seattle
-            - oceanhackweek:ohw23-participants-virtual
-            - oceanhackweek:ohw23-project-mentors
-            - oceanhackweek:ohw23-tutorial-presenters
+            - oceanhackweek:ohw24-organizers
+            - oceanhackweek:ohw24-participants-australia
+            - oceanhackweek:ohw24-participants-bigelow
+            - oceanhackweek:ohw24-project-mentors
+            - oceanhackweek:ohw24-tutorial-presenters
           scope:
             - read:org
         Authenticator:
           admin_users:
             - ocefpaf
             - abkfenris
+            - cpsarason
