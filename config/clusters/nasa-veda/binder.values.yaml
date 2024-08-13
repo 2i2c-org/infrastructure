@@ -11,8 +11,6 @@ jupyterhub:
         secretName: https-auto-tls
   cull:
     every: 300
-    # Cull after 4h of inactivity
-    timeout: 14400
     # No pods over 12h long
     maxAge: 43200
     # Also cull all users more than 12h old
@@ -101,7 +99,7 @@ binderhub-service:
       - hosts: [binder.openveda.cloud]
         secretName: binder-https-auto-tls
   custom:
-    sendLogsOfLaunchEventsTo2i2c: false
+    sendLogsOfLaunchEventsTo2i2c: true
   config:
     KubernetesBuildExecutor:
       node_selector:
