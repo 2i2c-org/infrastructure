@@ -99,7 +99,7 @@ binderhub-service:
       - hosts: [binder.openveda.cloud]
         secretName: binder-https-auto-tls
   custom:
-    sendLogsOfLaunchEventsTo2i2c: false
+    sendLogsOfLaunchEventsTo2i2c: true
   config:
     KubernetesBuildExecutor:
       node_selector:
