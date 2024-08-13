@@ -97,8 +97,8 @@ def create_markdown_comment(support_staging_matrix, prod_matrix):
         # Generate a Markdown table
         support_staging_md_table = (
             markdown_table(formatted_support_staging_matrix)
-            .setParams(row_sep="markdown", quote=False)
-            .getMarkdown()
+            .set_params(row_sep="markdown", quote=False)
+            .get_markdown()
         )
     else:
         support_staging_md_table = []
@@ -119,8 +119,8 @@ def create_markdown_comment(support_staging_matrix, prod_matrix):
         # Generate a Markdown table
         prod_md_table = (
             markdown_table(formatted_prod_matrix)
-            .setParams(row_sep="markdown", quote=False)
-            .getMarkdown()
+            .set_params(row_sep="markdown", quote=False)
+            .get_markdown()
         )
     else:
         prod_md_table = []
