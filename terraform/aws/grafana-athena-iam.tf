@@ -62,7 +62,7 @@ resource "aws_iam_role" "grafana_athena_role" {
           Resource = ["*"]
         },
         {
-          Sid    = "AthenaS3Access"
+          Sid    = "AthenaS3WriteAccess"
           Effect = "Allow"
           Action = [
             "s3:GetBucketLocation",
@@ -73,7 +73,16 @@ resource "aws_iam_role" "grafana_athena_role" {
             "s3:AbortMultipartUpload",
             "s3:PutObject"
           ]
-          Resource = ["arn:aws:s3:::${var.athena_storage_bucket}*"]
+          Resource = ["arn:aws:s3:::${var.athena_write_storage_bucket}*"]
+        },
+        {
+          Sid    = "AthenaS3ReadAccess"
+          Effect = "Allow"
+          Action = [
+            "s3:GetObject",
+            "s3:ListBucket"
+          ]
+          Resource = ["arn:aws:s3:::${var.athena_read_storage_bucket}*"]
       }]
     })
   }

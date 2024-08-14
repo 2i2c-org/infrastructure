@@ -46,9 +46,15 @@ variable "user_buckets" {
 }
 
 
-variable "athena_storage_bucket" {
+variable "athena_write_storage_bucket" {
   type        = string
-  description = "The name of the S3 bucket where Athena related data will be stored"
+  description = "The name of the S3 bucket where Grafana query results from Athena will be stored"
+  default     = ""
+}
+
+variable "athena_read_storage_bucket" {
+  type        = string
+  description = "The name of the S3 bucket where Athena tables and data is stored"
   default     = ""
 }
 

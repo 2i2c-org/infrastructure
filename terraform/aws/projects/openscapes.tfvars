@@ -8,8 +8,10 @@ default_budget_alert = {
   "enabled" : false,
 }
 
-enable_grafana_athena_iam = true
-athena_storage_bucket     = "openscapes-cost-usage-report"
+enable_grafana_athena_iam   = true
+athena_write_storage_bucket = "openscapes-cost-usage-report"
+athena_read_storage_bucket  = "openscapes-2i2c-cur"
+
 
 # Remove this variable to tag all our resources with {"ManagedBy": "2i2c"}
 tags = {}
