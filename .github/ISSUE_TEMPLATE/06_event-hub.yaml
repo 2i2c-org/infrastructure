@@ -1,6 +1,6 @@
 name: 📅 Event for a community
 description: Coordination and planning around an event for a community
-title: "[EVENT] {{ HUB NAME }}"
+title: "[EVENT][{{ dates }}] {{ HUB NAME }}"
 labels: ["event"]
 body:
   - type: markdown
@@ -27,7 +27,7 @@ body:
       description: |
         Type the GitHub handle of the community representative or their name if the handle is not known.
     validations:
-      required: true
+      required: false
 
   - type: textarea
     id: event_begin
@@ -117,18 +117,27 @@ body:
 
         General checks to perform before the event.
 
-  - type: checkboxes
-    id: info_available
+  - type: textarea
+    id: tasks
     attributes:
-      label: Was all the info filled in above?
-      options:
-        - label: "Yes"
-        - label: "No"
+      label: Task list
+      description: |
+        (optional) A clear and concise list of steps to take to close this issue.
+      value: |
+        - [ ] Was all the info filled in above?
+        - [ ] Quotas from the cloud provider are high-enough to handle expected usage?
+        - [ ]
+    validations:
+      required: true
 
-  - type: checkboxes
-    id: quotas_ok
+  - type: textarea
+    id: dod
     attributes:
-      label: Quotas from the cloud provider are high-enough to handle expected usage?
-      options:
-        - label: "Yes"
-        - label: "No"
+      label: Definition of Done
+      description: |
+        The Definition of Done. What must be true to consider this task complete?
+      value: |
+        - [ ] All the tasks have been completed
+        - [ ]
+    validations:
+      required: true

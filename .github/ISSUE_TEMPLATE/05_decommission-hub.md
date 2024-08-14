@@ -1,7 +1,7 @@
 ---
 name: "\U0001F4E6 Decommission a Hub"
 about: Decommission a Hub that is no longer in active use
-title: "[Decommission Hub] {{ HUB NAME }}"
+title: "[Decommission Hub][{{ deadline }}] {{ HUB NAME }}"
 labels: ''
 assignees: ''
 
@@ -38,9 +38,9 @@ Usually, it is because it was a hub that we created for a workshop/conference an
 - [ ] Remove the appropriate `config/clusters/<cluster_name>/<hub_name>.values.yaml` files. A complete list of relevant files can be found under the appropriate entry in the associated `cluster.yaml` file.
 - [ ] Remove the associated hub entry from the `config/clusters/<cluster_name>/cluster.yaml` file.
 - [ ] Remove the hub deployment
+  - TIP: Run `deployer use-cluster-credentials <cluster_name>` before running the commands below
   - `helm --namespace HUB_NAME delete HUB_NAME`
   - `kubectl delete namespace HUB_NAME`
-  - TIP: Run `deployer use-cluster-credentials <cluster_name>` before running the above commands
 
 #### Phase III - Cluster Removal
 
@@ -56,3 +56,8 @@ _This phase is only necessary for single hub clusters._
   - [ ] [`deploy-hubs.yaml`](https://github.com/2i2c-org/infrastructure/blob/HEAD/.github/workflows/deploy-hubs.yaml)
   - [ ] [`deploy-grafana-dashboards.yaml`](https://github.com/2i2c-org/infrastructure/blob/HEAD/.github/workflows/deploy-grafana-dashboards.yaml)
 - [ ] Remove A record from Namecheap account
+
+### Definition of Done
+_A non-specific, pre-defined list of tasks that should be considered before marking the task complete._
+- [] All the tasks above have been completed
+- [] Existing functionality was not broken
