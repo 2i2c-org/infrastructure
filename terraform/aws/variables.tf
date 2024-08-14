@@ -45,6 +45,13 @@ variable "user_buckets" {
   EOT
 }
 
+
+variable "athena_storage_bucket" {
+  type        = string
+  description = "The name of the S3 bucket where Athena related data will be stored"
+  default     = ""
+}
+
 variable "hub_cloud_permissions" {
   type = map(
     map(

@@ -73,16 +73,7 @@ resource "aws_iam_role" "grafana_athena_role" {
             "s3:AbortMultipartUpload",
             "s3:PutObject"
           ]
-          Resource = ["arn:aws:s3:::aws-athena-query-results-*"]
-        },
-        {
-          Sid    = "AthenaExamplesS3Access"
-          Effect = "Allow"
-          Action = [
-            "s3:GetObject",
-            "s3:ListBucket"
-          ]
-          Resource = ["arn:aws:s3:::athena-examples*"]
+          Resource = ["arn:aws:s3:::${var.athena_storage_bucket}*"]
       }]
     })
   }
