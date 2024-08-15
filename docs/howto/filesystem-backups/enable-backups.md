@@ -63,3 +63,18 @@ export CLUSTER_NAME=<cluster-name>
 
 This will have successfully enabled automatic backups of GCP Filestores for this
 cluster.
+
+### Verify successful backups on GCP
+
+We manually verify that backups are being successfully created and cleaned up on a regular schedule.
+
+To verify that a backup has been recently created, and that no backups older than the retention period exist, we can use the following deployer command:
+
+```bash
+deployer verify-backups gcp <project-name> <region> <filestore-name>
+```
+
+where:
+- `<project-name>` is the name of the GCP project the Filestore is located in
+- `<region>` is the GCP region the Filestore is located in, e.g., `us-central1`
+- `<filestore-name>` is the name of the Filestore instance

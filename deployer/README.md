@@ -107,9 +107,10 @@ The `deployer.py` file is the main file, that contains all of the commands regis
 │   │   ├── deploy_dashboards.py
 │   │   ├── tokens.py
 │   │   └── utils.py
-│   └── validate
-│       ├── cluster.schema.yaml
-│       └── config.py
+│   ├── validate
+│   │   ├── cluster.schema.yaml
+│   │   └── config.py
+│   └── verify_backups.py
 ```
 
 ### The `health_check_tests` directory
@@ -135,8 +136,8 @@ This section descripts some of the subcommands the `deployer` can carry out.
 **Command line usage:**
 
 ```bash
- Usage: deployer [OPTIONS] COMMAND [ARGS]...                
-
+ Usage: deployer [OPTIONS] COMMAND [ARGS]...                                                                                                                                                 
+                                                                                                                                                                                             
 ╭─ Options ─────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────╮
 │ --install-completion          Install completion for the current shell.                                                                                                                   │
 │ --show-completion             Show completion for the current shell, to copy it or customize the installation.                                                                            │
@@ -144,6 +145,7 @@ This section descripts some of the subcommands the `deployer` can carry out.
 ╰───────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────╯
 ╭─ Commands ────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────╮
 │ cilogon-client            Manage cilogon clients for hubs' authentication.                                                                                                                │
+│ config                    Get refined information from the config folder.                                                                                                                 │
 │ debug                     Debug issues by accessing different components and their logs                                                                                                   │
 │ decrypt-age               Decrypt secrets sent to `support@2i2c.org` via `age`                                                                                                            │
 │ deploy                    Deploy one or more hubs in a given cluster                                                                                                                      │
@@ -156,6 +158,7 @@ This section descripts some of the subcommands the `deployer` can carry out.
 │ transform                 Programmatically transform datasets, such as cost tables for billing purposes.                                                                                  │
 │ use-cluster-credentials   Pop a new shell or execute a command after authenticating to the given cluster using the deployer's credentials                                                 │
 │ validate                  Validate configuration files such as helm chart values and cluster.yaml files.                                                                                  │
+│ verify-backups            Verify backups of home directories have been successfully created, and old backups have been cleared out.                                                       │
 ╰───────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────╯
 ```
 

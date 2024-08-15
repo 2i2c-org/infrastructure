@@ -22,6 +22,7 @@ import deployer.commands.grafana.deploy_dashboards  # noqa: F401
 import deployer.commands.grafana.tokens  # noqa: F401
 import deployer.commands.transform.cost_table  # noqa: F401
 import deployer.commands.validate.config  # noqa: F401
+import deployer.commands.verify_backups  # noqa: F401
 import deployer.keys.decrypt_age  # noqa: F401
 
 from .cli_app import app

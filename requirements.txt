@@ -43,3 +43,6 @@ GitPython==3.*
 
 # Used to parse units that kubernetes understands (like GiB)
 kubernetes
+
+# Used to perform regex searches on JSON objects
+jmespath
