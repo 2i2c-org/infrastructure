@@ -1,5 +1,7 @@
 data "azurerm_subscription" "current" {}
 resource "azurerm_consumption_budget_subscription" "budget" {
+  count = var.budget_alert_enabled ? 1 : 0
+
   name            = "BudgetSubscription-${var.resourcegroup_name}"
   subscription_id = data.azurerm_subscription.current.id
 
@@ -12,7 +14,7 @@ resource "azurerm_consumption_budget_subscription" "budget" {
   }
 
   notification {
-    enabled        = var.budget_alert_enabled ? true : false
+    enabled        = true
     threshold      = 120
     operator       = "GreaterThanOrEqualTo"
     threshold_type = "Forecasted"
