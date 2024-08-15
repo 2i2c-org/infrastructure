@@ -72,3 +72,12 @@ resource "azurerm_backup_policy_file_share" "backup_policy" {
     count = 5
   }
 }
+
+resource "azurerm_backup_protected_file_share" "homes" {
+  resource_group_name       = azurerm_resource_group.jupyterhub.name
+  recovery_vault_name       = azurerm_recovery_services_vault.homedir_recovery_vault.name
+  source_storage_account_id = azurerm_backup_container_storage_account.protection_container.storage_account_id
+  source_file_share_name    = azurerm_storage_share.homes.name
+  backup_policy_id          = azurerm_backup_policy_file_share.backup_policy.id
+  depends_on                = [azurerm_backup_container_storage_account.protection_container]
+}
