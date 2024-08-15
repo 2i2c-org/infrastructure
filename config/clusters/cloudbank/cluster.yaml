@@ -36,6 +36,14 @@ hubs:
       - common.values.yaml
       - ccsf.values.yaml
       - enc-ccsf.secret.values.yaml
+  - name: chabot
+    display_name: "Chabot College"
+    domain: chabot.cloudbank.2i2c.cloud
+    helm_chart: basehub
+    helm_chart_values_files:
+      - common.values.yaml
+      - chabot.values.yaml
+      - enc-chabot.secret.values.yaml
   - name: csm
     display_name: "College of San Mateo"
     domain: csm.cloudbank.2i2c.cloud
