@@ -69,7 +69,7 @@ kubectl get pod -A -l "app.kubernetes.io/component in (dask-scheduler, dask-work
 Notify others in 2i2c that your are starting this cluster upgrade in the
 `#maintenance-notices` Slack channel.
 
-### 4. Upgrade the k8s control plane
+### 4. Upgrade the k8s control plane[^2]
 
 #### 4.1. Upgrade the k8s control plane one minor version
 
