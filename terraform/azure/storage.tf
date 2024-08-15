@@ -50,6 +50,12 @@ resource "azurerm_recovery_services_vault" "homedir_recovery_vault" {
   sku                 = "Standard"
 }
 
+resource "azurerm_backup_container_storage_account" "protection_container" {
+  resource_group_name = azurerm_resource_group.jupyterhub.name
+  recovery_vault_name = azurerm_recovery_services_vault.homedir_recovery_vault.name
+  storage_account_id  = azurerm_storage_account.homes.id
+}
+
 resource "azurerm_backup_policy_file_share" "backup_policy" {
   name                = "homedir-recovery-vault-policy"
   resource_group_name = azurerm_resource_group.jupyterhub.name
