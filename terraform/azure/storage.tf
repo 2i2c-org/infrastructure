@@ -8,7 +8,7 @@ resource "azurerm_storage_account" "homes" {
 
   # Disable 'secure link' because we only want to use NFS
   # see https://docs.microsoft.com/en-us/azure/storage/files/storage-files-how-to-mount-nfs-shares#disable-secure-transfer
-  enable_https_traffic_only = false
+  https_traffic_only_enabled = false
 
   network_rules {
     # Allow NFS access only from our nodes, deny access from all other networks
