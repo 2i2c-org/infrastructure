@@ -32,24 +32,15 @@ jupyterhub:
   hub:
     config:
       JupyterHub:
-        authenticator_class: cilogon
-      CILogonOAuthenticator:
+        authenticator_class: github
+      GitHubOAuthenticator:
         oauth_callback_url: https://riohondo.cloudbank.2i2c.cloud/hub/oauth_callback
-        allowed_idps:
-          http://google.com/accounts/o8/id:
-            default: true
-            username_derivation:
-              username_claim: "email"
-            allowed_domains:
-              - my.riohondo.edu
-          http://login.microsoftonline.com/common/oauth2/v2.0/authorize:
-            username_derivation:
-              username_claim: "email"
-            allowed_domains:
-              - riohondo.edu
+        allowed_organizations:
+          - RHC-DSCI-100
+        scope:
+          - read:org
       Authenticator:
         admin_users:
-          - ericvd@berkeley.edu
-          - sean.smorris@berkeley.edu
-          - bharlow@riohondo.edu
-          - vholbrook@riohondo.edu
+          - sean-morris
+          - DrHolbrook
+          - bharlowRHC
