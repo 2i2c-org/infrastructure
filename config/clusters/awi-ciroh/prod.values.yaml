@@ -49,6 +49,11 @@ basehub:
                   slug: "new"
                   kubespawner_override:
                     image: "quay.io/2i2c/awi-ciroh-image:79bb68961852"
+                rkernel:
+                  display_name: Notebook with R kernel
+                  slug: "rkernel"
+                  kubespawner_override:
+                    image: "quay.io/2i2c/awi-ciroh-image:33c3c1039461"
           kubespawner_override:
             mem_limit: 7G
             mem_guarantee: 5G
