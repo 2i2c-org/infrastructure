@@ -19,6 +19,7 @@ exec_app = typer.Typer(pretty_exceptions_show_locals=False)
 grafana_app = typer.Typer(pretty_exceptions_show_locals=False)
 validate_app = typer.Typer(pretty_exceptions_show_locals=False)
 transform_app = typer.Typer(pretty_exceptions_show_locals=False)
+verify_backups_app = typer.Typer(pretty_exceptions_show_locals=False)
 
 app.add_typer(
     generate_app,
@@ -56,4 +57,9 @@ app.add_typer(
     transform_app,
     name="transform",
     help="Programmatically transform datasets, such as cost tables for billing purposes.",
+)
+app.add_typer(
+    verify_backups_app,
+    name="verify-backups",
+    help="Verify backups of home directories have been successfully created, and old backups have been cleared out.",
 )
