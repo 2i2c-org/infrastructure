@@ -6,9 +6,11 @@ resource "azurerm_storage_account" "homes" {
   account_kind             = "FileStorage"
   account_replication_type = "LRS"
 
+  cross_tenant_replication_enabled = false
+
   # Disable 'secure link' because we only want to use NFS
   # see https://docs.microsoft.com/en-us/azure/storage/files/storage-files-how-to-mount-nfs-shares#disable-secure-transfer
-  enable_https_traffic_only = false
+  https_traffic_only_enabled = false
 
   network_rules {
     # Allow NFS access only from our nodes, deny access from all other networks
@@ -48,6 +50,12 @@ resource "azurerm_recovery_services_vault" "homedir_recovery_vault" {
   sku                 = "Standard"
 }
 
+resource "azurerm_backup_container_storage_account" "protection_container" {
+  resource_group_name = azurerm_resource_group.jupyterhub.name
+  recovery_vault_name = azurerm_recovery_services_vault.homedir_recovery_vault.name
+  storage_account_id  = azurerm_storage_account.homes.id
+}
+
 resource "azurerm_backup_policy_file_share" "backup_policy" {
   name                = "homedir-recovery-vault-policy"
   resource_group_name = azurerm_resource_group.jupyterhub.name
@@ -63,4 +71,13 @@ resource "azurerm_backup_policy_file_share" "backup_policy" {
   retention_daily {
     count = 5
   }
+}
+
+resource "azurerm_backup_protected_file_share" "homes_share" {
+  resource_group_name       = azurerm_resource_group.jupyterhub.name
+  recovery_vault_name       = azurerm_recovery_services_vault.homedir_recovery_vault.name
+  source_storage_account_id = azurerm_backup_container_storage_account.protection_container.storage_account_id
+  source_file_share_name    = azurerm_storage_share.homes.name
+  backup_policy_id          = azurerm_backup_policy_file_share.backup_policy.id
+  depends_on                = [azurerm_backup_container_storage_account.protection_container]
 }
