@@ -130,8 +130,10 @@ def gcp(
     We assume the input CSV file has the following columns (and are subject to
     changes by GCP):
     - Project name
-    - Month
     - Subtotal ($)
+    - Month *
+
+    (*) The Month column will be missing if the report is generated for a single month.
 
     We aim to have an output CSV file with columns:
     - Project name
@@ -142,17 +144,41 @@ def gcp(
 
     where:
     - start-month...end-month are unique values from the Month column in the
-      input file
+      input file or from the name of the input file if the Month column is missing.
     - Project name are unique entries from the input file
     - The Total column is the sum across all month columns for each project
     """
-    # Read the CSV file into a pandas dataframe. Only select relevant columns from
-    # the input file: [Project Name, Month, Subtotal ($)]. Rename the columns so
-    # that they are all lower case and any whitespace in column names is replaced
-    # with an underscore.
     df = pd.read_csv(
-        input_path, usecols=["Month", "Project name", "Subtotal ($)"]
-    ).rename(columns=lambda col: col.strip().lower().replace(" ", "_"))
+        input_path,
+    )
+
+    # We only need the following columns from the input file
+    required_columns = ["Month", "Project name", "Subtotal ($)"]
+
+    # Filter the columns that actually exist in the dataframe
+    existing_columns = [col for col in required_columns if col in df.columns]
+
+    # Select only the existing columns and rename them so that they
+    # are all lower case and replace any whitespace in column names
+    # with an underscore.
+    df = df[existing_columns].rename(
+        columns=lambda col: col.strip().lower().replace(" ", "_")
+    )
+
+    if "Month" not in existing_columns:
+        # If group by month wasn't possible, it means we have a single month
+        # and we extract it from the file name
+        match = re.search(r"(\d{4}-\d{2})-\d{2} — (\d{4}-\d{2})-\d{2}", input_path.name)
+        if not match:
+            raise ValueError(
+                "Month period not found in file name. Try downloading the report again from GCP without renaming it."
+            )
+        start_month_year = match.group(1)
+        end_month_year = match.group(2)
+        assert start_month_year == end_month_year
+
+        # Assign the extracted month period to the dataframe
+        df = df.assign(month=start_month_year)
 
     # Aggregate and pivot the dataframe into desired format
     transformed_df = (
