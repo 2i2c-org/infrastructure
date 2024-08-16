@@ -35,6 +35,7 @@ jupyterhub:
         profile_options:
           image:
             display_name: Image
+            dynamic_image_building: True
             unlisted_choice: &profile_list_unlisted_choice
               enabled: True
               display_name: "Custom image"
