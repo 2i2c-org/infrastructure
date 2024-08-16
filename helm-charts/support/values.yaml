@@ -169,7 +169,7 @@ prometheus:
       # those as well as appropriate
       - "rm -rvf /data/wal/* && \
         exec /bin/prometheus \
-        --storage.tsdb.retention.time=366d \
+        --storage.tsdb.retention.time=1098d \
         --config.file=/etc/config/prometheus.yml \
         --storage.tsdb.path=/data \
         --web.console.libraries=/etc/prometheus/console_libraries \
@@ -179,7 +179,7 @@ prometheus:
     extraFlags:
       - web.enable-lifecycle
     # retention MUST BE UPDATED in prometheus.server.defaultFlagsOverride as well
-    retention: 366d # Keep data for at least 1 year
+    retention: 1098d # Keep data for at least 3 years
 
     ingress:
       ingressClassName: nginx
