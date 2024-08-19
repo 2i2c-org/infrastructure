@@ -4,10 +4,10 @@ userServiceAccount:
 jupyterhub:
   ingress:
     hosts:
-      - hub.binder.nasa-veda.2i2c.cloud
+      - hub.binder.openveda.cloud
     tls:
       - hosts:
-          - hub.binder.nasa-veda.2i2c.cloud
+          - hub.binder.openveda.cloud
         secretName: https-auto-tls
   cull:
     every: 300
@@ -109,7 +109,7 @@ binderhub-service:
         2i2c/hub-name: "binder"
     BinderHub:
       base_url: /
-      hub_url: https://hub.binder.nasa-veda.2i2c.cloud
+      hub_url: https://hub.binder.openveda.cloud
       badge_base_url: https://binder.openveda.cloud
       auth_enabled: false
       enable_api_only_mode: false
@@ -126,11 +126,11 @@ binderhub-service:
     - name: JUPYTERHUB_CLIENT_ID
       value: "service-binder"
     - name: JUPYTERHUB_API_URL
-      value: "https://hub.binder.nasa-veda.2i2c.cloud/hub/api"
+      value: "https://hub.binder.openveda.cloud/hub/api"
     # Without this, the redirect URL to /hub/api/... gets
     # appended to binderhub's URL instead of the hub's
     - name: JUPYTERHUB_BASE_URL
-      value: "https://hub.binder.nasa-veda.2i2c.cloud"
+      value: "https://hub.binder.openveda.cloud"
   buildPodsRegistryCredentials:
     server: https://quay.io
     username: veda-binder+image_builder
