@@ -48,6 +48,7 @@ jupyterhub:
             allowed_domains:
               - santarosa.edu
               - srjc.santarosa.edu
+              - bearcubs.santarosa.edu
       Authenticator:
         admin_users:
           - ericvd@berkeley.edu
