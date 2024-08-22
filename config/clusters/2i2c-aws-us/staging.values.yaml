@@ -32,3 +32,6 @@ jupyterhub:
         authenticator_class: "github"
       GitHubOAuthenticator:
         oauth_callback_url: "https://staging.aws.2i2c.cloud/hub/oauth_callback"
+  singleuser:
+    extraEnv:
+      SCRATCH_BUCKET: s3://2i2c-aws-us-scratch-staging/$(JUPYTERHUB_USER)
