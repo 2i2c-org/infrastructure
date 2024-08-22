@@ -13,8 +13,9 @@ resource "google_filestore_instance" "homedirs" {
   }
 
   file_shares {
-    capacity_gb = each.value.capacity_gb
-    name        = "homes"
+    capacity_gb   = each.value.capacity_gb
+    name          = "homes"
+    source_backup = each.value.source_backup
   }
 
   networks {

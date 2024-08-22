@@ -322,6 +322,7 @@ variable "filestores" {
     name_suffix : optional(string, null),
     capacity_gb : optional(number, 1024),
     tier : optional(string, "BASIC_HDD"),
+    source_backup : optional(string, null),
   }))
   default = {
     "filestore" : {}
@@ -341,6 +342,10 @@ variable "filestores" {
   - tier: Google FileStore service tier to use. Most likely BASIC_HDD
       (for slower home directories, min $204 / month) or BASIC_SSD (for
       faster home directories, min $768 / month). Default: BASIC_HDD.
+  - source_backup: To restore from a backup, this can be set. If a
+      backup has been done from the web console, this must be updated
+      to match retroactively as terraform apply will otherwise lead to
+      a blocked re-creation attempt.
   EOT
 }
 
