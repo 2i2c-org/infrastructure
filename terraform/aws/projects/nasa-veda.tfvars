@@ -165,16 +165,10 @@ hub_cloud_permissions = {
             {
               "Effect": "Allow",
               "Action": [
-                "s3:PutObject",
                 "s3:GetObject",
-                "s3:ListBucketMultipartUploads",
-                "s3:AbortMultipartUpload",
                 "s3:ListBucketVersions",
-                "s3:CreateBucket",
                 "s3:ListBucket",
-                "s3:DeleteObject",
-                "s3:GetBucketLocation",
-                "s3:ListMultipartUploadParts"
+                "s3:GetBucketLocation"
               ],
               "Resource": [
                 "arn:aws:s3:::veda-data-store",
