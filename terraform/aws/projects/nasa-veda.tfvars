@@ -168,7 +168,7 @@ hub_cloud_permissions = {
                 "s3:GetObject",
                 "s3:ListBucketVersions",
                 "s3:ListBucket",
-                "s3:GetBucketLocation",
+                "s3:GetBucketLocation"
               ],
               "Resource": [
                 "arn:aws:s3:::veda-data-store",
