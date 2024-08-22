@@ -24,14 +24,14 @@ basehub:
         CILogonOAuthenticator:
           oauth_callback_url: "https://staging.openscapes.2i2c.cloud/hub/oauth_callback"
 
-dask-gateway:
-  gateway:
-    backend:
-      scheduler:
-        extraPodConfig:
-          nodeSelector:
-            2i2c/hub-name: staging
-      worker:
-        extraPodConfig:
-          nodeSelector:
-            2i2c/hub-name: staging
+  dask-gateway:
+    gateway:
+      backend:
+        scheduler:
+          extraPodConfig:
+            nodeSelector:
+              2i2c/hub-name: staging
+        worker:
+          extraPodConfig:
+            nodeSelector:
+              2i2c/hub-name: staging
