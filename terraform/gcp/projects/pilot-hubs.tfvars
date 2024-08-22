@@ -65,6 +65,11 @@ user_buckets = {
   },
   "scratch-ohw" : {
     "delete_after" : 7,
+    "extra_admin_members" : [
+      # Requested via https://2i2c.freshdesk.com/a/tickets/2051, Erik and James
+      # were added as group owners besides Alex who requested it.
+      "group:pilot-hubs-scratch-ohw-writers@googlegroups.com",
+    ],
   },
 }
 
