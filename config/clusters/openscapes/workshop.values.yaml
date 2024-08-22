@@ -133,13 +133,14 @@ basehub:
               choices: {}
             resource_allocation: *profile_options_resource_allocation
 
-dask-gateway:
-  gateway:
-    scheduler:
-      extraPodConfig:
-        nodeSelector:
-          2i2c/hub-name: workshop
-    worker:
-      extraPodConfig:
-        nodeSelector:
-          2i2c/hub-name: workshop
+  dask-gateway:
+    gateway:
+      backend:
+        scheduler:
+          extraPodConfig:
+            nodeSelector:
+              2i2c/hub-name: workshop
+        worker:
+          extraPodConfig:
+            nodeSelector:
+              2i2c/hub-name: workshop

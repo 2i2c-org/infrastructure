@@ -20,14 +20,14 @@ basehub:
         GitHubOAuthenticator:
           oauth_callback_url: https://hub.openveda.cloud/hub/oauth_callback
 
-dask-gateway:
-  gateway:
-    backend:
-      scheduler:
-        extraPodConfig:
-          nodeSelector:
-            2i2c/hub-name: prod
-      worker:
-        extraPodConfig:
-          nodeSelector:
-            2i2c/hub-name: prod
+  dask-gateway:
+    gateway:
+      backend:
+        scheduler:
+          extraPodConfig:
+            nodeSelector:
+              2i2c/hub-name: prod
+        worker:
+          extraPodConfig:
+            nodeSelector:
+              2i2c/hub-name: prod
