@@ -64,7 +64,8 @@ user_buckets = {
     "delete_after" : 7,
   },
   "scratch-ohw" : {
-    "delete_after" : 7,
+    # delete_after 30 was requested via https://2i2c.freshdesk.com/a/tickets/2051
+    "delete_after" : 30,
     "extra_admin_members" : [
       # Requested via https://2i2c.freshdesk.com/a/tickets/2051, Erik and James
       # were added as group owners besides Alex who requested it.
