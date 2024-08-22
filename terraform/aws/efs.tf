@@ -43,8 +43,8 @@ data "aws_security_group" "cluster_nodes_shared_security_group" {
 # for an accurate cost allocation per hub of home directory storage.
 # https://github.com/2i2c-org/infrastructure/issues/4453
 resource "aws_efs_file_system" "hub_homedirs" {
-  for_each  = var.filestores
-  tags      = merge(var.tags, each.value.tags, {
+  for_each = var.filestores
+  tags = merge(var.tags, each.value.tags, {
     Name = each.value.name_suffix == null ? "hub-homedirs" : "hub-homedirs-${each.value.name_suffix}"
   })
   encrypted = true
