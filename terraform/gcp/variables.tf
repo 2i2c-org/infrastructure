@@ -50,9 +50,8 @@ variable "k8s_version_prefixes" {
   # channel, so we may want to remove or add minor versions here over time.
   #
   default = [
-    "1.27.",
-    "1.28.",
     "1.29.",
+    "1.30.",
     "1.",
   ]
   description = <<-EOT
