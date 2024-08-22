@@ -1,7 +1,7 @@
 basehub:
   nfs:
     pv:
-      serverIP: fs-0d709210a8154ad49.efs.us-west-2.amazonaws.com
+      serverIP: fs-09a9026ea8f4b4d3b.efs.us-west-2.amazonaws.com
   jupyterhub:
     custom:
       2i2c:
