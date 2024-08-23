@@ -109,8 +109,8 @@ resource "aws_efs_mount_target" "hub_homedirs" {
   security_groups = [data.aws_security_group.cluster_nodes_shared_security_group.id]
 }
 
-output "nfs_server_dns_list" {
-  value = values(aws_efs_file_system.hub_homedirs)[*].dns_name
+output "nfs_server_dns_map" {
+  value = { for nfs in values(aws_efs_file_system.hub_homedirs)[*] : nfs.name => nfs.dns_name }
 }
 
 # Enable automatic backups for user homedirectories
