@@ -47,6 +47,7 @@ resource "aws_efs_file_system" "hub_homedirs" {
   tags = merge(var.tags, each.value.tags, {
     Name = each.value.name_suffix == null ? "hub-homedirs" : "hub-homedirs-${each.value.name_suffix}"
   })
+  encrypted = true
 
   # Transition files to a slower, cheaper backing medium 90 days
   # after they were last *accessed*. They will be transferred back to regular
