@@ -1,0 +1,59 @@
+# General configuration
+# -----------------------------------------------------------------------------
+#
+nameOverride: ""
+fullnameOverride: ""
+global: {}
+
+# Deployment resource
+# -----------------------------------------------------------------------------
+#
+replicas: 1
+extraEnv: []
+image:
+  repository: quay.io/2i2c/aws-ce-grafana-backend
+  tag: "0.0.1-0.dev.git.10263.hc87b65cf"
+  pullPolicy: ""
+  pullSecrets: []
+resources: {}
+securityContext:
+  capabilities:
+    drop:
+      - ALL
+  readOnlyRootFilesystem: true
+  runAsNonRoot: true
+  runAsUser: 65534 # nobody user
+  runAsGroup: 65534 # nobody group
+
+podSecurityContext: {}
+podAnnotations: {}
+nodeSelector: {}
+affinity: {}
+tolerations: []
+
+# ServiceAccount resource
+# -----------------------------------------------------------------------------
+#
+serviceAccount:
+  create: true
+  name: ""
+  annotations: {}
+
+# Service resource
+# -----------------------------------------------------------------------------
+#
+service:
+  type: ClusterIP
+  port: 80
+
+# Ingress resource
+# -----------------------------------------------------------------------------
+#
+ingress:
+  enabled: false
+  annotations: {}
+  ingressClassName:
+  hosts: []
+  pathSuffix:
+  pathType: Prefix
+  tls: []

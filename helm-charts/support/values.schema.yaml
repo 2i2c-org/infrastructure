@@ -20,6 +20,7 @@ required:
   - cryptnono
   - redirects
   - gcpFilestoreBackups
+  - aws-ce-grafana-backend
   - global
 properties:
   # cluster-autoscaler is a dependent helm chart, we rely on its schema
@@ -44,6 +45,12 @@ properties:
   # values passed to it and are not imposing restrictions on them in this helm
   # chart.
   grafana:
+    type: object
+    additionalProperties: true
+  # aws-ce-grafana-backend is a dependent helm chart, we rely on its schema
+  # validation for values passed to it and are not imposing restrictions on them
+  # in this helm chart.
+  aws-ce-grafana-backend:
     type: object
     additionalProperties: true
   # Enables  https://github.com/yuvipanda/cryptnono/ to prevent cryptomining
