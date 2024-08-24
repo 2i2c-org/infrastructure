@@ -274,3 +274,11 @@ variable "enable_grafana_athena_iam" {
   Grafana instance and AWS Athena service.
   EOT
 }
+
+variable "enable_aws_ce_grafana_backend_iam" {
+  type        = bool
+  default     = false
+  description = <<-EOT
+  Create an IAM role with attached policy to permit read use of AWS Cost Explorer API.
+  EOT
+}
