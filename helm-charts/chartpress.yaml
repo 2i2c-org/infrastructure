@@ -27,3 +27,8 @@ charts:
       gcp-filestore-backups:
         imageName: quay.io/2i2c/gcp-filestore-backups
         valuesPath: gcpFilestoreBackups.image
+  - name: aws-ce-grafana-backend
+    images:
+      aws-ce-grafana-backend:
+        imageName: quay.io/2i2c/aws-ce-grafana-backend
+        valuesPath: image

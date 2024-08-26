@@ -469,6 +469,13 @@ cryptnono:
           memory: 64Mi
           cpu: 1m
 
+# aws-ce-grafana-backend exposes AWS Cost Explorer API info to Grafana
+#
+# values ref: https://github.com/2i2c-org/infrastructure/blob/main/helm-charts/aws-ce-grafana-backend/values.yaml
+#
+aws-ce-grafana-backend:
+  enabled: false
+
 # Configuration of templates provided directly by this chart
 # -------------------------------------------------------------------------------
 #

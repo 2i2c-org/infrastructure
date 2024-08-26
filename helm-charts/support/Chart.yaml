@@ -45,3 +45,10 @@ dependencies:
     version: "0.3.1-0.dev.git.143.hfc89744"
     repository: https://cryptnono.github.io/cryptnono/
     condition: cryptnono.enabled
+
+  # aws-ce-grafana-backend, exposes AWS Cost Explorer API info to Grafana
+  # Source code: https://github.com/2i2c/infrastructure/
+  - name: aws-ce-grafana-backend
+    version: "0.0.1-set.by.chartpress"
+    repository: "file://../aws-ce-grafana-backend"
+    condition: aws-ce-grafana-backend.enabled
