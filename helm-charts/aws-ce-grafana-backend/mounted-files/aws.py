@@ -7,18 +7,34 @@ import boto3
 # - get_tags
 # - list_cost_allocation_tags
 #
+aws_ce_client = boto3.client("ce")
 
 
-def query_aws_cost_explorer():
-    aws_ce_client = boto3.client("ce")
+def query_total_cost(from_date, to_date):
+    results = query_aws_cost_explorer(from_date, to_date)
+    return results
 
+
+def query_aws_cost_explorer(from_date, to_date):
     # ref: https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/ce/client/get_cost_and_usage.html#get-cost-and-usage
     response = aws_ce_client.get_cost_and_usage(
+        # Metrics:
+        #   UnblendedCosts represents costs for an individual AWS account. It is
+        #   the default metric in the AWS web console. BlendedCosts represents
+        #   the potentially reduced costs stemming from having multiple AWS
+        #   accounts in an organization the collectively could enter better
+        #   pricing tiers.
+        #
         Metrics=["UnblendedCost"],
+        # Granularity:
+        #
+        #   HOURLY granularity is only available for the last two days, while
+        #   DAILY is available for the last 13 months.
+        #
         Granularity="DAILY",
         TimePeriod={
-            "Start": "2024-07-01",
-            "End": "2024-08-01",
+            "Start": from_date,
+            "End": to_date,
         },
         Filter={
             "Dimensions": {
@@ -28,99 +44,41 @@ def query_aws_cost_explorer():
                 "Values": ["Usage"],
             },
         },
-        GroupBy=[
-            {
-                "Type": "DIMENSION",
-                "Key": "SERVICE",
-            },
-        ],
+        # FIXME: Add this or something similar back when focusing on something
+        #        beyond just the total daily costs.
+        #
+        # GroupBy=[
+        #     {
+        #         "Type": "DIMENSION",
+        #         "Key": "SERVICE",
+        #     },
+        # ],
     )
+
+    # response["ResultsByTime"] is a list with entries looking like this...
+    #
+    # [
+    #     {
+    #         "Estimated": false,
+    #         "Groups": [],
+    #         "TimePeriod": {
+    #             "End": "2024-07-28",
+    #             "Start": "2024-07-27",
+    #         },
+    #         "Total": {
+    #             "UnblendedCost": {
+    #                 "Amount": "23.3110299724",
+    #                 "Unit": "USD",
+    #             },
+    #         },
+    #     },
+    #     # ...
+    # ]
+    #
     return response["ResultsByTime"]
 
 
-# Granularity:
-#
-# - HOURLY, DAILY, or MONTHLY
-#
-# - Hourly resolution is only available for the last two days, so we'll use a
-#   daily resolution which is available for the last 13 months.
-#
-#
-#
-# Metrics:
-#
-# - Valid choices:
-#   - AmortizedCost
-#   - BlendedCosts
-#   - NetAmortizedCost
-#   - NetUnblendedCost
-#   - NormalizedUsageAmount
-#   - UnblendedCosts
-#   - UsageQuantity
-#
-# - UnblendedCosts is the default metric presented in the web console, it
-#   represents costs for an individual AWS account. When combining costs in an
-#   organization, 1 + 1 <= 2, because the accounts cumulative use can reduce
-#   rates.
-#
-# - We'll focus on UnblendedCosts though, because makes the service cost
-#   decoupled from other cloud accounts usage.
-#
-# Filter:
-#
-# - RECORD_TYPE is what's named Charge type in the web console, and looking at
-#   "Usage" only that helps us avoid responses related to credits, tax, etc.
-#
-# - Dimensions:
-#   - AZ
-#   - INSTANCE_TYPE
-#   - LINKED_ACCOUNT
-#   - LINKED_ACCOUNT_NAME
-#   - OPERATION
-#   - PURCHASE_TYPE
-#   - REGION
-#   - SERVICE
-#   - SERVICE_CODE
-#   - USAGE_TYPE
-#   - USAGE_TYPE_GROUP
-#   - RECORD_TYPE
-#   - OPERATING_SYSTEM
-#   - TENANCY
-#   - SCOPE
-#   - PLATFORM
-#   - SUBSCRIPTION_ID
-#   - LEGAL_ENTITY_NAME
-#   - DEPLOYMENT_OPTION
-#   - DATABASE_ENGINE
-#   - CACHE_ENGINE
-#   - INSTANCE_TYPE_FAMILY
-#   - BILLING_ENTITY
-#   - RESERVATION_ID
-#   - RESOURCE_ID (available only for the last 14 days of usage)
-#   - RIGHTSIZING_TYPE
-#   - SAVINGS_PLANS_TYPE
-#   - SAVINGS_PLAN_ARN
-#   - PAYMENT_OPTION
-#   - AGREEMENT_END_DATE_TIME_AFTER
-#   - AGREEMENT_END_DATE_TIME_BEFORE
-#   - INVOICING_ENTITY
-#   - ANOMALY_TOTAL_IMPACT_ABSOLUTE
-#   - ANOMALY_TOTAL_IMPACT_PERCENTAGE
-# - Tags:
-#   - Refers to Cost Allocation Tags.
-# - CostCategories:
-#   - Can include Cost Allocation Tags, but also references various services
-#     etc.
-#
-# GroupBy
-#
-# - Can be an array with up to two string elements, being either:
-#   - DIMENSION
-#   - TAG
-#   - COST_CATEGORY
-#
-
-# Description of Grafana panels wanted by Yuvi:
+# Description of Grafana panels requested by Yuvi:
 # ref: https://github.com/2i2c-org/infrastructure/issues/4453#issuecomment-2298076415
 #
 # Currently our AWS tag 2i2c:hub-name is only capturing a fraction of the costs,
