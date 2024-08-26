@@ -40,6 +40,8 @@ jupyterhub:
               username_claim: "email"
             allowed_domains:
               - dvc.edu
+              - email.4cd.edu
+              - insite.4cd.edu
           http://google.com/accounts/o8/id:
             username_derivation:
               username_claim: "email"
