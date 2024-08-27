@@ -77,6 +77,7 @@ def setup(app):
     app.add_css_file("custom.css")
 
 
+import os
 import subprocess
 
 # -- Custom scripts -----------------------------------------
@@ -84,3 +85,13 @@ subprocess.run(
     ["python", "helper-programs/generate-general-info-table-about-hubs.py"], check=True
 )
 subprocess.run(["python", "helper-programs/generate-hub-features-table.py"], check=True)
+
+# -- Set canonical custom domain via html_baseurl -----------
+# -- See https://github.com/2i2c-org/infrastructure/issues/4629
+
+# Set canonical URL from the Read the Docs Domain
+html_baseurl = os.environ.get("READTHEDOCS_CANONICAL_URL", "")
+
+# Tell Jinja2 templates the build is running on Read the Docs
+if os.environ.get("READTHEDOCS", "") == "True":
+    html_context["READTHEDOCS"] = True
