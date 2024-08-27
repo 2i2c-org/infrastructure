@@ -28,6 +28,14 @@ hubs:
       - common.values.yaml
       - bcc.values.yaml
       - enc-bcc.secret.values.yaml
+  - name: ccc
+    display_name: "Contra Costa College"
+    domain: ccc.cloudbank.2i2c.cloud
+    helm_chart: basehub
+    helm_chart_values_files:
+      - common.values.yaml
+      - ccc.values.yaml
+      - enc-ccc.secret.values.yaml
   - name: ccsf
     display_name: "City College SF"
     domain: ccsf.cloudbank.2i2c.cloud
