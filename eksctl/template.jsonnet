@@ -71,7 +71,7 @@ local daskNodes = [];
         -#}
         version: "1.30",
         tags+: {
-            "ManagedBy": "2i2c"
+            "ManagedBy": "2i2c",
         },
     },
     availabilityZones: masterAzs,
@@ -96,6 +96,9 @@ local daskNodes = [];
             wellKnownPolicies: {
                 ebsCSIController: true,
             },
+            tags: {
+                "ManagedBy": "2i2c",
+            },
         },
     ],
     nodeGroups: [
@@ -112,10 +115,10 @@ local daskNodes = [];
             maxSize: 6,
             labels+: {
                 "hub.jupyter.org/node-purpose": "core",
-                "k8s.dask.org/node-purpose": "core"
+                "k8s.dask.org/node-purpose": "core",
             },
             tags+: {
-                "ManagedBy": "2i2c
+                "ManagedBy": "2i2c,
             },
         },
     ] + [
@@ -133,11 +136,11 @@ local daskNodes = [];
                 "k8s.dask.org/node-purpose": "scheduler"
             },
             tags+: {
-                "ManagedBy": "2i2c
+                "ManagedBy": "2i2c,
             },
             taints+: {
                 "hub.jupyter.org_dedicated": "user:NoSchedule",
-                "hub.jupyter.org/dedicated": "user:NoSchedule"
+                "hub.jupyter.org/dedicated": "user:NoSchedule",
             },
         } + n for n in notebookNodes
     ] + ( if daskNodes != null then
@@ -154,11 +157,11 @@ local daskNodes = [];
                 "k8s.dask.org/node-purpose": "worker"
             },
             tags+: {
-                "ManagedBy": "2i2c
+                "ManagedBy": "2i2c,
             },
             taints+: {
                 "k8s.dask.org_dedicated" : "worker:NoSchedule",
-                "k8s.dask.org/dedicated" : "worker:NoSchedule"
+                "k8s.dask.org/dedicated" : "worker:NoSchedule",
             },
             instancesDistribution+: {
                 onDemandBaseCapacity: 0,
