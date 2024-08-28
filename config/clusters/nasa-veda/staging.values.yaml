@@ -184,7 +184,7 @@ basehub:
           extraPodConfig:
             node_selector:
               2i2c/hub-name: staging
-        imagePullSecrets: [{name: image-pull-secret}]
+        imagePullSecrets: [{ name: image-pull-secret }]
 
   binderhub-service:
     enabled: true
