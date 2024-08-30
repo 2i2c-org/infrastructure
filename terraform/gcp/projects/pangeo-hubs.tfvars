@@ -45,7 +45,7 @@ k8s_versions = {
 enable_network_policy = true
 
 filestores = {
-  "filestore" = { capacity_gb = 4608 }
+  "filestore" = { capacity_gb = 5120 }
 }
 
 user_buckets = {
