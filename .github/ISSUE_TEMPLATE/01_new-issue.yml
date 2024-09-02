@@ -1,0 +1,32 @@
+name: 💡 General Issue
+description: A general template for many kinds of issues.
+body:
+  - type: textarea
+    id: context
+    attributes:
+      label: Context
+      description: |
+        Any background information that helps others understand this issue and why it is important.
+
+    validations:
+      required: true
+
+  - type: textarea
+    id: proposal
+    attributes:
+      label: Proposal
+      description: |
+        (optional) A clear and concise description of what we should do, if we have a next step in mind.
+        Add any guidance that will lower our uncertainty in resolving this (e.g., instructions, constraints to follow, red flags to avoid).
+    validations:
+      required: false
+
+  - type: textarea
+    id: tasks
+    attributes:
+      label: Updates and actions
+      description: |
+        (optional) A place to track ongoing work items or tasks, as we figure them out.
+
+    validations:
+      required: false
