@@ -28,9 +28,9 @@ body:
         # Definition of Done
 
   - type: checkboxes
-    label: Tasklist
-    description: Once these are done, the issue can be considered complete and can be closed.
     attributes:
+      label: Tasklist
+      description: Once these are done, the issue can be considered complete and can be closed.
       options:
         - label: Billing data is collected according to instructions.
           required: false
