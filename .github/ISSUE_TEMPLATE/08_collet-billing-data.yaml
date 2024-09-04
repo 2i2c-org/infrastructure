@@ -39,5 +39,5 @@ body:
       options:
         - label: Billing data is collected according to instructions.
           required: false
-        - label: The #billing slack was notified about the new billing data collected
+        - label: The "#billing" slack was notified about the new billing data collected
           required: false
