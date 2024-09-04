@@ -34,9 +34,6 @@ body:
         Once these are done, the issue can be considered complete and can be
         closed.
 
-  - type: markdown
-    attributes:
-      value: |
         ```[tasklist]
         - [ ] Billing data is collected according to instructions.
         - [ ] The #billing slack was notified about the new billing data
