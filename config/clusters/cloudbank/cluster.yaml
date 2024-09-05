@@ -60,6 +60,30 @@ hubs:
       - common.values.yaml
       - csm.values.yaml
       - enc-csm.secret.values.yaml
+  - name: csulb
+    display_name: "California State University Long Beach"
+    domain: csulb.cloudbank.2i2c.cloud
+    helm_chart: basehub
+    helm_chart_values_files:
+      - common.values.yaml
+      - csulb.values.yaml
+      - enc-csulb.secret.values.yaml
+  - name: csum
+    display_name: "Cal Maritime"
+    domain: csum.cloudbank.2i2c.cloud
+    helm_chart: basehub
+    helm_chart_values_files:
+      - common.values.yaml
+      - csum.values.yaml
+      - enc-csum.secret.values.yaml
+  - name: demo
+    display_name: "Cloudbank demo"
+    domain: demo.cloudbank.2i2c.cloud
+    helm_chart: basehub
+    helm_chart_values_files:
+      - common.values.yaml
+      - demo.values.yaml
+      - enc-demo-git.secret.values.yaml
   - name: dvc
     display_name: "Diablo Valley College"
     domain: dvc.cloudbank.2i2c.cloud
@@ -68,6 +92,14 @@ hubs:
       - common.values.yaml
       - dvc.values.yaml
       - enc-dvc.secret.values.yaml
+  - name: elac
+    display_name: "East Los Angeles College"
+    domain: elac.cloudbank.2i2c.cloud
+    helm_chart: basehub
+    helm_chart_values_files:
+      - common.values.yaml
+      - elac.values.yaml
+      - enc-elac.secret.values.yaml
   - name: elcamino
     display_name: "El Camino College"
     domain: elcamino.cloudbank.2i2c.cloud
@@ -84,6 +116,14 @@ hubs:
       - common.values.yaml
       - evc.values.yaml
       - enc-evc.secret.values.yaml
+  - name: fresno
+    display_name: "Fresno City College"
+    domain: fresno.cloudbank.2i2c.cloud
+    helm_chart: basehub
+    helm_chart_values_files:
+      - common.values.yaml
+      - fresno.values.yaml
+      - enc-fresno.secret.values.yaml
   - name: glendale
     display_name: "Glendale Community College"
     domain: glendale.cloudbank.2i2c.cloud
@@ -108,46 +148,6 @@ hubs:
       - common.values.yaml
       - howard.values.yaml
       - enc-howard.secret.values.yaml
-  - name: miracosta
-    display_name: "MiraCosta College"
-    domain: miracosta.cloudbank.2i2c.cloud
-    helm_chart: basehub
-    helm_chart_values_files:
-      - common.values.yaml
-      - miracosta.values.yaml
-      - enc-miracosta.secret.values.yaml
-  - name: riohondo
-    display_name: "Rio Hondo Community College"
-    domain: riohondo.cloudbank.2i2c.cloud
-    helm_chart: basehub
-    helm_chart_values_files:
-      - common.values.yaml
-      - riohondo.values.yaml
-      - enc-riohondo.secret.values.yaml
-  - name: skyline
-    display_name: "Skyline College"
-    domain: skyline.cloudbank.2i2c.cloud
-    helm_chart: basehub
-    helm_chart_values_files:
-      - common.values.yaml
-      - skyline.values.yaml
-      - enc-skyline.secret.values.yaml
-  - name: demo
-    display_name: "Cloudbank demo"
-    domain: demo.cloudbank.2i2c.cloud
-    helm_chart: basehub
-    helm_chart_values_files:
-      - common.values.yaml
-      - demo.values.yaml
-      - enc-demo-git.secret.values.yaml
-  - name: fresno
-    display_name: "Fresno City College"
-    domain: fresno.cloudbank.2i2c.cloud
-    helm_chart: basehub
-    helm_chart_values_files:
-      - common.values.yaml
-      - fresno.values.yaml
-      - enc-fresno.secret.values.yaml
   - name: humboldt
     display_name: "Cal Poly Humboldt"
     domain: humboldt.cloudbank.2i2c.cloud
@@ -156,38 +156,6 @@ hubs:
       - common.values.yaml
       - humboldt.values.yaml
       - enc-humboldt.secret.values.yaml
-  - name: laney
-    display_name: "Laney College"
-    domain: laney.cloudbank.2i2c.cloud
-    helm_chart: basehub
-    helm_chart_values_files:
-      - common.values.yaml
-      - laney.values.yaml
-      - enc-laney.secret.values.yaml
-  - name: sbcc
-    display_name: "Santa Barbara City College"
-    domain: sbcc.cloudbank.2i2c.cloud
-    helm_chart: basehub
-    helm_chart_values_files:
-      - common.values.yaml
-      - sbcc.values.yaml
-      - enc-sbcc.secret.values.yaml
-  - name: sbcc-dev
-    display_name: "Santa Barbara City College Dev"
-    domain: sbcc-dev.cloudbank.2i2c.cloud
-    helm_chart: basehub
-    helm_chart_values_files:
-      - common.values.yaml
-      - sbcc-dev.values.yaml
-      - enc-sbcc-dev.secret.values.yaml
-  - name: elac
-    display_name: "East Los Angeles College"
-    domain: elac.cloudbank.2i2c.cloud
-    helm_chart: basehub
-    helm_chart_values_files:
-      - common.values.yaml
-      - elac.values.yaml
-      - enc-elac.secret.values.yaml
   - name: lacc
     display_name: "Los Angeles City College"
     domain: lacc.cloudbank.2i2c.cloud
@@ -204,6 +172,14 @@ hubs:
       - common.values.yaml
       - lamission.values.yaml
       - enc-lamission.secret.values.yaml
+  - name: laney
+    display_name: "Laney College"
+    domain: laney.cloudbank.2i2c.cloud
+    helm_chart: basehub
+    helm_chart_values_files:
+      - common.values.yaml
+      - laney.values.yaml
+      - enc-laney.secret.values.yaml
   - name: lbcc
     display_name: "Long Beach City College"
     domain: lbcc.cloudbank.2i2c.cloud
@@ -236,6 +212,14 @@ hubs:
       - common.values.yaml
       - mills.values.yaml
       - enc-mills.secret.values.yaml
+  - name: miracosta
+    display_name: "MiraCosta College"
+    domain: miracosta.cloudbank.2i2c.cloud
+    helm_chart: basehub
+    helm_chart_values_files:
+      - common.values.yaml
+      - miracosta.values.yaml
+      - enc-miracosta.secret.values.yaml
   - name: mission
     display_name: "Mission College Santa Clara"
     domain: mission.cloudbank.2i2c.cloud
@@ -284,14 +268,14 @@ hubs:
       - common.values.yaml
       - reedley.values.yaml
       - enc-reedley.secret.values.yaml
-  - name: sjcc
-    display_name: "San Jose Community College"
-    domain: sjcc.cloudbank.2i2c.cloud
+  - name: riohondo
+    display_name: "Rio Hondo Community College"
+    domain: riohondo.cloudbank.2i2c.cloud
     helm_chart: basehub
     helm_chart_values_files:
       - common.values.yaml
-      - sjcc.values.yaml
-      - enc-sjcc.secret.values.yaml
+      - riohondo.values.yaml
+      - enc-riohondo.secret.values.yaml
   - name: sacramento
     display_name: "Sacramento City College"
     domain: sacramento.cloudbank.2i2c.cloud
@@ -300,14 +284,6 @@ hubs:
       - common.values.yaml
       - sacramento.values.yaml
       - enc-sacramento.secret.values.yaml
-  - name: srjc
-    display_name: "Santa Rosa Junior College"
-    domain: srjc.cloudbank.2i2c.cloud
-    helm_chart: basehub
-    helm_chart_values_files:
-      - common.values.yaml
-      - srjc.values.yaml
-      - enc-srjc.secret.values.yaml
   - name: saddleback
     display_name: "Saddleback College"
     domain: saddleback.cloudbank.2i2c.cloud
@@ -324,14 +300,22 @@ hubs:
       - common.values.yaml
       - santiago.values.yaml
       - enc-santiago.secret.values.yaml
-  - name: sjsu
-    display_name: "San Jose State University"
-    domain: sjsu.cloudbank.2i2c.cloud
+  - name: sbcc
+    display_name: "Santa Barbara City College"
+    domain: sbcc.cloudbank.2i2c.cloud
     helm_chart: basehub
     helm_chart_values_files:
       - common.values.yaml
-      - sjsu.values.yaml
-      - enc-sjsu.secret.values.yaml
+      - sbcc.values.yaml
+      - enc-sbcc.secret.values.yaml
+  - name: sbcc-dev
+    display_name: "Santa Barbara City College Dev"
+    domain: sbcc-dev.cloudbank.2i2c.cloud
+    helm_chart: basehub
+    helm_chart_values_files:
+      - common.values.yaml
+      - sbcc-dev.values.yaml
+      - enc-sbcc-dev.secret.values.yaml
   - name: sierra
     display_name: "Sierra College"
     domain: sierra.cloudbank.2i2c.cloud
@@ -340,6 +324,38 @@ hubs:
       - common.values.yaml
       - sierra.values.yaml
       - enc-sierra.secret.values.yaml
+  - name: sjcc
+    display_name: "San Jose Community College"
+    domain: sjcc.cloudbank.2i2c.cloud
+    helm_chart: basehub
+    helm_chart_values_files:
+      - common.values.yaml
+      - sjcc.values.yaml
+      - enc-sjcc.secret.values.yaml
+  - name: sjsu
+    display_name: "San Jose State University"
+    domain: sjsu.cloudbank.2i2c.cloud
+    helm_chart: basehub
+    helm_chart_values_files:
+      - common.values.yaml
+      - sjsu.values.yaml
+      - enc-sjsu.secret.values.yaml
+  - name: skyline
+    display_name: "Skyline College"
+    domain: skyline.cloudbank.2i2c.cloud
+    helm_chart: basehub
+    helm_chart_values_files:
+      - common.values.yaml
+      - skyline.values.yaml
+      - enc-skyline.secret.values.yaml
+  - name: srjc
+    display_name: "Santa Rosa Junior College"
+    domain: srjc.cloudbank.2i2c.cloud
+    helm_chart: basehub
+    helm_chart_values_files:
+      - common.values.yaml
+      - srjc.values.yaml
+      - enc-srjc.secret.values.yaml
   - name: tuskegee
     display_name: "Tuskegee University"
     domain: tuskegee.cloudbank.2i2c.cloud
@@ -356,19 +372,3 @@ hubs:
       - common.values.yaml
       - wlac.values.yaml
       - enc-wlac.secret.values.yaml
-  - name: csulb
-    display_name: "California State University Long Beach"
-    domain: csulb.cloudbank.2i2c.cloud
-    helm_chart: basehub
-    helm_chart_values_files:
-      - common.values.yaml
-      - csulb.values.yaml
-      - enc-csulb.secret.values.yaml
-  - name: csum
-    display_name: "Cal Maritime"
-    domain: csum.cloudbank.2i2c.cloud
-    helm_chart: basehub
-    helm_chart_values_files:
-      - common.values.yaml
-      - csum.values.yaml
-      - enc-csum.secret.values.yaml

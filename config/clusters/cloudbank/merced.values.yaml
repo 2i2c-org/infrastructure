@@ -32,25 +32,17 @@ jupyterhub:
   hub:
     config:
       JupyterHub:
-        authenticator_class: cilogon
-      CILogonOAuthenticator:
+        authenticator_class: github
+      GitHubOAuthenticator:
         oauth_callback_url: https://merced.cloudbank.2i2c.cloud/hub/oauth_callback
-        allowed_idps:
-          http://login.microsoftonline.com/common/oauth2/v2.0/authorize:
-            default: true
-            username_derivation:
-              username_claim: "email"
-            allowed_domains:
-              - mccd.edu
-              - campus.mccd.edu
-          http://google.com/accounts/o8/id:
-            username_derivation:
-              username_claim: "email"
+        allowed_organizations:
+          - Merced-College
+        scope:
+          - read:org
       Authenticator:
         admin_users:
-          - ericvd@berkeley.edu
-          - sean.smorris@berkeley.edu
-          - gregory.hogan@mccd.edu
-          - kanemoto.k@mccd.edu
-          - bassem.saad@mccd.edu
-          - gargova.s@mccd.edu
+          - sean-morris
+          - katkanemoto
+          - ghogan42
+          - svetla-gargova
+          - basaadMerced
