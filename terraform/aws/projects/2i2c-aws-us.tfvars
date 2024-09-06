@@ -2,11 +2,6 @@ region                 = "us-west-2"
 cluster_name           = "2i2c-aws-us"
 cluster_nodes_location = "us-west-2a"
 
-tags = {
-  "2i2c.org/cluster-name" : "2i2c-aws-us",
-  "ManagedBy" : "2i2c",
-}
-
 user_buckets = {
   "scratch-staging" : {
     "delete_after" : 7

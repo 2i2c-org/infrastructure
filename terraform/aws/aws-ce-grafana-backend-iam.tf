@@ -3,7 +3,6 @@ resource "aws_iam_role" "aws_ce_grafana_backend_iam_role" {
   count = var.enable_aws_ce_grafana_backend_iam ? 1 : 0
 
   name = "aws_ce_grafana_backend_iam_role"
-  tags = var.tags
 
   assume_role_policy = jsonencode({
     Version = "2012-10-17"

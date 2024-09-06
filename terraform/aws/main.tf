@@ -32,6 +32,13 @@ provider "random" {}
 # ref: https://registry.terraform.io/providers/hashicorp/aws/latest/docs
 provider "aws" {
   region = var.region
+
+  # default_tags ref: https://registry.terraform.io/providers/hashicorp/aws/latest/docs#default_tags-configuration-block
+  default_tags {
+    tags = {
+      for k, v in var.default_tags : k => replace(v, "{var_cluster_name}", var.cluster_name)
+    }
+  }
 }
 
 # ref: https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/eks_cluster

@@ -3,7 +3,6 @@ resource "aws_iam_role" "grafana_athena_role" {
   count = var.enable_grafana_athena_iam ? 1 : 0
 
   name = "${var.cluster_name}-grafana-athena-iam-role"
-  tags = var.tags
 
   assume_role_policy = jsonencode({
     Version = "2012-10-17"

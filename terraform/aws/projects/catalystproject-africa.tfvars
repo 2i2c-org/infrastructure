@@ -2,11 +2,6 @@ region                 = "af-south-1"
 cluster_name           = "catalystproject-africa"
 cluster_nodes_location = "af-south-1a"
 
-tags = {
-  "2i2c.org/cluster-name" : "catalystproject-africa",
-  "ManagedBy" : "2i2c",
-}
-
 user_buckets = {
   "scratch-staging" : {
     "delete_after" : 7

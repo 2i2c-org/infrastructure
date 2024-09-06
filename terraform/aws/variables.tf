@@ -183,18 +183,25 @@ variable "db_user_password_special_chars" {
   EOT
 }
 
-variable "tags" {
-  type        = map(string)
-  default     = { "ManagedBy" : "2i2c" }
+variable "default_tags" {
+  type = map(string)
+  default = {
+    "2i2c.org/cluster-name" = "{var_cluster_name}"
+    "ManagedBy"             = "2i2c"
+  }
   description = <<-EOT
-  Tags to apply to resources that we manage. The value is an object as we may
-  wish to apply multiple tags. We use CamelCase for tag names to match AWS's
-  tagging style. Current tags are:
+  Default tags to apply to all resources created. The value is an object as we may
+  wish to apply multiple tags.
+
+  Current tags are:
 
   1. ManagedBy: This tag will indicate who manages the deployed resource. By
      default, this will be set to "2i2c". This helps communities who bring their
      own billing account distinguish between resources 2i2c manages, and those
      they deploy and manage themselves.
+  2. 2i2c.org/cluster-name: helps clarify that a resource is associated with the
+     creation of a specific cluster, which can help if a cluster is re-created or
+     multiple clusters would be deployed.
   EOT
 }
 

@@ -5,7 +5,6 @@
 # ref: https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/iam_user
 resource "aws_iam_user" "continuous_deployer" {
   name = "hub-continuous-deployer"
-  tags = var.tags
 }
 
 # ref: https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/iam_access_key
