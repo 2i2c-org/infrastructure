@@ -2,7 +2,7 @@ region                 = "us-east-2"
 cluster_name           = "earthscope"
 cluster_nodes_location = "us-east-2a"
 
-tags = {
+default_tags = {
   "2i2c.org/cluster-name" : "{var_cluster_name}",
   "ManagedBy" : "2i2c",
   # Requested by the community in https://2i2c.freshdesk.com/a/tickets/1460

@@ -183,7 +183,7 @@ variable "db_user_password_special_chars" {
   EOT
 }
 
-variable "tags" {
+variable "default_tags" {
   type = map(string)
   default = {
     "2i2c.org/cluster-name" = "{var_cluster_name}"
