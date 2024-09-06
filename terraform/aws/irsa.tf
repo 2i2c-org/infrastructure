@@ -7,7 +7,10 @@
   - RolePolicyAttachment - if extra_iam_policy is declared
 */
 
+# ref: https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/caller_identity
 data "aws_caller_identity" "current" {}
+
+# ref: https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/partition
 data "aws_partition" "current" {}
 
 
@@ -32,6 +35,7 @@ locals {
 
 
 
+# ref: https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/iam_policy_document
 data "aws_iam_policy_document" "irsa_role_assume" {
   for_each = { for index, hr in local.hub_to_role_mapping : hr.iam_role_name => hr }
   statement {
@@ -55,6 +59,7 @@ data "aws_iam_policy_document" "irsa_role_assume" {
   }
 }
 
+# ref: https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/iam_role
 resource "aws_iam_role" "irsa_role" {
   for_each = { for index, hr in local.hub_to_role_mapping : hr.iam_role_name => hr }
   name     = "${var.cluster_name}-${each.key}"
@@ -63,8 +68,7 @@ resource "aws_iam_role" "irsa_role" {
   assume_role_policy = data.aws_iam_policy_document.irsa_role_assume[each.key].json
 }
 
-
-
+# ref: https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/iam_policy
 resource "aws_iam_policy" "extra_user_policy" {
   for_each = { for index, hr in local.hub_to_role_mapping : hr.iam_role_name => hr if hr.cloud_permissions.extra_iam_policy != "" }
   name     = "${var.cluster_name}-${each.key}-extra-user-policy"
@@ -74,6 +78,7 @@ resource "aws_iam_policy" "extra_user_policy" {
   policy      = each.value.cloud_permissions.extra_iam_policy
 }
 
+# ref: https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/iam_role_policy_attachment
 resource "aws_iam_role_policy_attachment" "extra_user_policy" {
   for_each   = { for index, hr in local.hub_to_role_mapping : hr.iam_role_name => hr if hr.cloud_permissions.extra_iam_policy != "" }
   role       = aws_iam_role.irsa_role[each.key].name

@@ -1,3 +1,4 @@
+# ref: https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/iam_role
 resource "aws_iam_role" "grafana_athena_role" {
   count = var.enable_grafana_athena_iam ? 1 : 0
 

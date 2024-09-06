@@ -1,3 +1,4 @@
+# ref: https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/budgets_budget
 resource "aws_budgets_budget" "budgets" {
   count = var.default_budget_alert.enabled ? 1 : 0
 
