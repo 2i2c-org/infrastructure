@@ -4,10 +4,8 @@
    - no default scratch buckets support
 */
 
-region = "{{ cluster_region }}"
-
-cluster_name = "{{ cluster_name }}"
-
+region                 = "{{ cluster_region }}"
+cluster_name           = "{{ cluster_name }}"
 cluster_nodes_location = "{{ cluster_region }}a"
 
 # Tip: uncomment and fill the missing info in the lines below if you want

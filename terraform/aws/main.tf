@@ -26,12 +26,15 @@ terraform {
   }
 }
 
+# ref: https://registry.terraform.io/providers/hashicorp/random/latest/docs
 provider "random" {}
 
+# ref: https://registry.terraform.io/providers/hashicorp/aws/latest/docs
 provider "aws" {
   region = var.region
 }
 
+# ref: https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/eks_cluster
 data "aws_eks_cluster" "cluster" {
   name = var.cluster_name
 }

@@ -115,11 +115,12 @@ locals {
 
 
 
+# ref: https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/iam_policy_document
 data "aws_iam_policy_document" "bucket_policy" {
   for_each = local.bucket_role_actions_lists
 
-  // Only one policy document can be declared per bucket, so we provide multiple
-  // "statement" in this policy.
+  # Only one policy document can be declared per bucket, so we provide multiple
+  # "statement" in this policy.
   dynamic "statement" {
     for_each = { for index, bra in each.value : "${bra.bucket}.${bra.role}" => bra }
 
@@ -141,8 +142,10 @@ data "aws_iam_policy_document" "bucket_policy" {
   }
 }
 
-// There can only be one of these per bucket, if more are defined they will end
-// up replacing each other without terraform indicating there is trouble.
+# There can only be one of these per bucket, if more are defined they will end
+# up replacing each other without terraform indicating there is trouble.
+#
+# ref: https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/s3_bucket_policy
 resource "aws_s3_bucket_policy" "user_bucket_access" {
   for_each = local.bucket_role_actions_lists
   bucket   = aws_s3_bucket.user_buckets[each.key].id

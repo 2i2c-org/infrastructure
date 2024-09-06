@@ -1,3 +1,4 @@
+# ref: https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/subnets
 data "aws_subnets" "cluster_subnets" {
   count = var.db_enabled ? 1 : 0
 
@@ -12,8 +13,8 @@ data "aws_subnets" "cluster_subnets" {
   }
 }
 
+# ref: https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/security_group
 resource "aws_security_group" "db" {
-
   count = var.db_enabled ? 1 : 0
 
   name        = "db"
@@ -41,6 +42,7 @@ resource "aws_security_group" "db" {
   }
 }
 
+# ref: https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/db_subnet_group
 resource "aws_db_subnet_group" "db" {
   count = var.db_enabled ? 1 : 0
 
@@ -49,8 +51,8 @@ resource "aws_db_subnet_group" "db" {
   tags = var.tags
 }
 
+# ref: https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/db_instance
 resource "aws_db_instance" "db" {
-
   count = var.db_enabled ? 1 : 0
 
   instance_class         = var.db_instance_class
@@ -71,6 +73,7 @@ resource "aws_db_instance" "db" {
   tags = var.tags
 }
 
+# ref: https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/db_parameter_group
 resource "aws_db_parameter_group" "db" {
   count  = var.db_enabled ? 1 : 0
   name   = var.db_instance_identifier
@@ -86,12 +89,14 @@ resource "aws_db_parameter_group" "db" {
   }
 }
 
+# ref: https://registry.terraform.io/providers/hashicorp/random/latest/docs/resources/password
 resource "random_password" "db_root_password" {
   count = var.db_enabled ? 1 : 0
   # mysql passwords can't be longer than 41 chars lololol
   length = 41
 }
 
+# ref: https://registry.terraform.io/providers/hashicorp/random/latest/docs/resources/password
 resource "random_password" "db_readonly_password" {
   count   = var.db_enabled ? 1 : 0
   special = var.db_user_password_special_chars
@@ -99,6 +104,7 @@ resource "random_password" "db_readonly_password" {
   length = 41
 }
 
+# ref: https://registry.terraform.io/providers/petoju/mysql/latest/docs
 provider "mysql" {
   # We only want to set this up if db is enabled, otherwise there is no
   # mysql endpoint for this provider to connect to. These are all still 'required'
@@ -110,6 +116,7 @@ provider "mysql" {
   password = var.db_enabled ? random_password.db_root_password[0].result : ""
 }
 
+# ref: https://registry.terraform.io/providers/petoju/mysql/latest/docs/resources/user
 resource "mysql_user" "user" {
   count = var.db_enabled && var.db_engine == "mysql" ? 1 : 0
 
@@ -118,6 +125,7 @@ resource "mysql_user" "user" {
   plaintext_password = random_password.db_readonly_password[0].result
 }
 
+# ref: https://registry.terraform.io/providers/petoju/mysql/latest/docs/resources/grant
 resource "mysql_grant" "user" {
   count = var.db_enabled && var.db_engine == "mysql" ? 1 : 0
 

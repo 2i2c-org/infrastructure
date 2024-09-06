@@ -1,3 +1,4 @@
+# ref: https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/iam_role
 resource "aws_iam_role" "aws_ce_grafana_backend_iam_role" {
   count = var.enable_aws_ce_grafana_backend_iam ? 1 : 0
 

@@ -4,6 +4,7 @@
 // the nodes. We create a mount target for each EFS, in each subnet, even if we
 // primarily put all our nodes in one - this allows for GPU nodes to be spread
 // out across AZ when needed
+# ref: https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/subnets
 data "aws_subnets" "cluster_node_subnets" {
 
   filter {
@@ -17,11 +18,12 @@ data "aws_subnets" "cluster_node_subnets" {
   }
 
   filter {
-    name   = "tag:eksctl.cluster.k8s.io/v1alpha1/cluster-name"
+    name   = "tag:alpha.eksctl.io/cluster-name"
     values = [var.cluster_name]
   }
 }
 
+# ref: https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/security_group
 data "aws_security_group" "cluster_nodes_shared_security_group" {
 
   filter {
@@ -34,7 +36,7 @@ data "aws_security_group" "cluster_nodes_shared_security_group" {
   }
 
   filter {
-    name   = "tag:eksctl.cluster.k8s.io/v1alpha1/cluster-name"
+    name   = "tag:alpha.eksctl.io/cluster-name"
     values = [var.cluster_name]
   }
 }
@@ -42,6 +44,7 @@ data "aws_security_group" "cluster_nodes_shared_security_group" {
 # This allows supporting running multiple EFS instances in a cluster
 # for an accurate cost allocation per hub of home directory storage.
 # https://github.com/2i2c-org/infrastructure/issues/4453
+# ref: https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/efs_file_system
 resource "aws_efs_file_system" "hub_homedirs" {
   for_each = var.filestores
   tags = merge(var.tags, each.value.tags, {
@@ -99,6 +102,7 @@ locals {
   ]
 }
 
+# ref: https://registry.terraform.io/providers/-/aws/latest/docs/resources/efs_mount_target
 resource "aws_efs_mount_target" "hub_homedirs" {
   for_each = tomap({
     for mount_target in local.efs_mount_targets : "${mount_target.subnet_id}.${mount_target.name}" => mount_target
@@ -115,6 +119,7 @@ output "nfs_server_dns_map" {
 
 # Enable automatic backups for user homedirectories
 # Documented in https://docs.aws.amazon.com/efs/latest/ug/awsbackup.html#automatic-backups
+# ref: https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/efs_backup_policy
 resource "aws_efs_backup_policy" "hub_homedirs" {
   for_each       = aws_efs_file_system.hub_homedirs
   file_system_id = each.value.id
