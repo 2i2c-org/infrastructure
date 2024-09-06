@@ -7,7 +7,7 @@
     command as part of creating new clusters.
 
     References:
-    - https://infrastructure.2i2c.org/en/latest/hub-deployment-guide/new-cluster/aws.html#generate-cluster-files
+    - https://infrastructure.2i2c.org/hub-deployment-guide/new-cluster/new-cluster/#generate-cluster-files
 -#}
 /*
     This file is a jsonnet template of a eksctl's cluster configuration file,
