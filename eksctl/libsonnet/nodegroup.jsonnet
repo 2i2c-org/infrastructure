@@ -33,12 +33,17 @@
     ['k8s.io/cluster-autoscaler/node-template/taint/%s' % key]: taints[key]
     for key in std.objectFields(taints)
   },
-  local tags = caLabelTags(self.labels) + caTaintTags(self.taints),
+  local commonTags = {
+    "ManagedBy": "2i2c",
+    "2i2c.org/cluster-name": $.clusterName,
+  },
+  local tags = caLabelTags(self.labels) + caTaintTags(self.taints) + commonTags,
 
   local nameParts = [self.namePrefix, self.nameBase, self.nameSuffix],
 
   // Hidden fields (due to ::) are used as inputs from merged objects to compute
   // output fields
+  clusterName:: "",
   namePrefix:: "",
   nameIncludeInstanceType:: true,
   nameBase:: if self.nameIncludeInstanceType then escapedInstanceType else "",
