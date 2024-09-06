@@ -17,7 +17,7 @@ data "aws_subnets" "cluster_node_subnets" {
   }
 
   filter {
-    name   = "tag:eksctl.cluster.k8s.io/v1alpha1/cluster-name"
+    name   = "tag:alpha.eksctl.io/cluster-name"
     values = [var.cluster_name]
   }
 }
@@ -34,7 +34,7 @@ data "aws_security_group" "cluster_nodes_shared_security_group" {
   }
 
   filter {
-    name   = "tag:eksctl.cluster.k8s.io/v1alpha1/cluster-name"
+    name   = "tag:alpha.eksctl.io/cluster-name"
     values = [var.cluster_name]
   }
 }
