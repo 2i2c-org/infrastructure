@@ -82,6 +82,8 @@ local daskNodes = [
         },
     ],
     nodeGroups: [
+    n + {clusterName: $.metadata.name} for n in
+    [
         ng + {
             namePrefix: 'core',
             nameSuffix: 'b',
@@ -140,5 +142,6 @@ local daskNodes = [
                 spotAllocationStrategy: "capacity-optimized",
             },
         } + n for n in daskNodes
+    ]
     ]
 }

@@ -106,6 +106,8 @@ local daskNodes = [
         },
     ],
     nodeGroups: [
+    n + {clusterName: $.metadata.name} for n in
+    [
         ng + {
             namePrefix: 'core',
             nameSuffix: 'b',
@@ -177,4 +179,5 @@ local daskNodes = [
         } + n for n in daskNodes
         ] else []
     )
+    ]
 }
