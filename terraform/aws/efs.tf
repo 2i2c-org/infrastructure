@@ -47,7 +47,7 @@ data "aws_security_group" "cluster_nodes_shared_security_group" {
 # ref: https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/efs_file_system
 resource "aws_efs_file_system" "hub_homedirs" {
   for_each = var.filestores
-  tags = merge(var.tags, each.value.tags, {
+  tags = merge(each.value.tags, {
     Name = each.value.name_suffix == null ? "hub-homedirs" : "hub-homedirs-${each.value.name_suffix}"
   })
   encrypted = true

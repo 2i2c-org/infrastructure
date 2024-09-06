@@ -2,11 +2,6 @@ region                 = "us-west-2"
 cluster_name           = "openscapeshub"
 cluster_nodes_location = "us-west-2b"
 
-tags = {
-  "2i2c.org/cluster-name" : "openscapeshub",
-  "ManagedBy" : "2i2c",
-}
-
 default_budget_alert = {
   "enabled" : false,
 }

@@ -63,7 +63,6 @@ data "aws_iam_policy_document" "irsa_role_assume" {
 resource "aws_iam_role" "irsa_role" {
   for_each = { for index, hr in local.hub_to_role_mapping : hr.iam_role_name => hr }
   name     = "${var.cluster_name}-${each.key}"
-  tags     = var.tags
 
   assume_role_policy = data.aws_iam_policy_document.irsa_role_assume[each.key].json
 }
@@ -72,7 +71,6 @@ resource "aws_iam_role" "irsa_role" {
 resource "aws_iam_policy" "extra_user_policy" {
   for_each = { for index, hr in local.hub_to_role_mapping : hr.iam_role_name => hr if hr.cloud_permissions.extra_iam_policy != "" }
   name     = "${var.cluster_name}-${each.key}-extra-user-policy"
-  tags     = var.tags
 
   description = "Extra permissions granted to users on hub ${each.key} on ${var.cluster_name}"
   policy      = each.value.cloud_permissions.extra_iam_policy

@@ -3,7 +3,7 @@ cluster_name           = "earthscope"
 cluster_nodes_location = "us-east-2a"
 
 tags = {
-  "2i2c.org/cluster-name" : "earthscope",
+  "2i2c.org/cluster-name" : "{var_cluster_name}",
   "ManagedBy" : "2i2c",
   # Requested by the community in https://2i2c.freshdesk.com/a/tickets/1460
   "earthscope:application:name" : "geolab",

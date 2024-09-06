@@ -2,11 +2,6 @@ region                 = "us-west-2"
 cluster_name           = "jupyter-meets-the-earth"
 cluster_nodes_location = "us-west-2a"
 
-
-tags = {
-  "2i2c.org/cluster-name" : "jupyter-meets-the-earth",
-  "ManagedBy" : "2i2c",
-}
 default_budget_alert = {
   "enabled" : false,
 }

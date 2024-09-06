@@ -2,7 +2,7 @@
 resource "aws_s3_bucket" "user_buckets" {
   for_each = var.user_buckets
   bucket   = lower("${var.cluster_name}-${each.key}")
-  tags     = merge(var.tags, each.value.tags)
+  tags     = each.value.tags
 }
 
 # ref: https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/s3_bucket_lifecycle_configuration
