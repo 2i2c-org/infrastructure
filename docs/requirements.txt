@@ -1,4 +1,4 @@
-myst-parser[sphinx,linkify]
+myst-parser[linkify]
 pandas
 pyyaml
 python-hcl2
