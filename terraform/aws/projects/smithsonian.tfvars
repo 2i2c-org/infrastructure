@@ -2,8 +2,10 @@ region                 = "us-east-2"
 cluster_name           = "smithsonian"
 cluster_nodes_location = "us-east-2b"
 
-# Remove this variable to tag all our resources with {"ManagedBy": "2i2c"}
-tags = {}
+tags = {
+  "2i2c.org/cluster-name" : "smithsonian",
+  "ManagedBy" : "2i2c",
+}
 
 user_buckets = {
   "scratch-staging" : {
