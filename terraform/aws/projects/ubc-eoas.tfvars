@@ -1,11 +1,11 @@
-region = "ca-central-1"
-
-cluster_name = "ubc-eoas"
-
+region                 = "ca-central-1"
+cluster_name           = "ubc-eoas"
 cluster_nodes_location = "ca-central-1a"
 
-# Remove this variable to tag all our resources with {"ManagedBy": "2i2c"}
-tags = {}
+tags = {
+  "2i2c.org/cluster-name" : "ubc-eoas",
+  "ManagedBy" : "2i2c",
+}
 
 user_buckets = {
   "scratch-staging" : {

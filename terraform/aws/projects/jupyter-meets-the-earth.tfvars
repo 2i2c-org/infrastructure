@@ -1,15 +1,15 @@
-region = "us-west-2"
-
-cluster_name = "jupyter-meets-the-earth"
-
+region                 = "us-west-2"
+cluster_name           = "jupyter-meets-the-earth"
 cluster_nodes_location = "us-west-2a"
 
+
+tags = {
+  "2i2c.org/cluster-name" : "jupyter-meets-the-earth",
+  "ManagedBy" : "2i2c",
+}
 default_budget_alert = {
   "enabled" : false,
 }
-
-# Remove this variable to tag all our resources with {"ManagedBy": "2i2c"}
-tags = {}
 
 user_buckets = {
   "scratch-staging" : {

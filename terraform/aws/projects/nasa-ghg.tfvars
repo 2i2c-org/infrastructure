@@ -1,15 +1,15 @@
-region = "us-west-2"
-
-cluster_name = "nasa-ghg-hub"
-
+region                 = "us-west-2"
+cluster_name           = "nasa-ghg-hub"
 cluster_nodes_location = "us-west-2a"
+
+tags = {
+  "2i2c.org/cluster-name" : "nasa-ghg-hub",
+  "ManagedBy" : "2i2c",
+}
 
 default_budget_alert = {
   "enabled" : false,
 }
-
-# Remove this variable to tag all our resources with {"ManagedBy": "2i2c"}
-tags = {}
 
 user_buckets = {
   "scratch-staging" : {

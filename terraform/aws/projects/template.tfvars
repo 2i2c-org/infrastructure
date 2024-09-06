@@ -8,6 +8,11 @@ region                 = "{{ cluster_region }}"
 cluster_name           = "{{ cluster_name }}"
 cluster_nodes_location = "{{ cluster_region }}a"
 
+tags = {
+  "ManagedBy" : "2i2c",
+  "2i2c.org/cluster-name" : "{{ cluster_name }}",
+}
+
 # Tip: uncomment and fill the missing info in the lines below if you want
 #       to setup scratch buckets for the hubs on this cluster.
 #

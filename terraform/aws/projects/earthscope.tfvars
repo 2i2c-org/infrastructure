@@ -1,18 +1,17 @@
-region = "us-east-2"
-
-cluster_name = "earthscope"
-
+region                 = "us-east-2"
+cluster_name           = "earthscope"
 cluster_nodes_location = "us-east-2a"
 
-default_budget_alert = {
-  "enabled" : false,
-}
-
 tags = {
+  "2i2c.org/cluster-name" : "earthscope",
   "ManagedBy" : "2i2c",
   # Requested by the community in https://2i2c.freshdesk.com/a/tickets/1460
   "earthscope:application:name" : "geolab",
-  "earthscope:application:owner" : "research-onramp-to-the-cloud"
+  "earthscope:application:owner" : "research-onramp-to-the-cloud",
+}
+
+default_budget_alert = {
+  "enabled" : false,
 }
 
 user_buckets = {

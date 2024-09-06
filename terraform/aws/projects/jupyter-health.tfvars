@@ -1,11 +1,11 @@
-region = "us-east-2"
-
-cluster_name = "jupyter-health"
-
+region                 = "us-east-2"
+cluster_name           = "jupyter-health"
 cluster_nodes_location = "us-east-2a"
 
-# Remove this variable to tag all our resources with {"ManagedBy": "2i2c"}
-tags = {}
+tags = {
+  "2i2c.org/cluster-name" : "jupyter-health",
+  "ManagedBy" : "2i2c",
+}
 
 user_buckets = {
   "scratch-staging" : {

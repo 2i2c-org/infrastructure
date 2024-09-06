@@ -1,11 +1,11 @@
-region = "us-west-2"
-
-cluster_name = "gridsst"
-
+region                 = "us-west-2"
+cluster_name           = "gridsst"
 cluster_nodes_location = "us-west-2a"
 
-# Remove this variable to tag all our resources with {"ManagedBy": "2i2c"}
-tags = {}
+tags = {
+  "2i2c.org/cluster-name" : "gridsst",
+  "ManagedBy" : "2i2c",
+}
 
 user_buckets = {
   "scratch-staging" : {

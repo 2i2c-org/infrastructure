@@ -1,11 +1,11 @@
-region = "af-south-1"
-
-cluster_name = "catalystproject-africa"
-
+region                 = "af-south-1"
+cluster_name           = "catalystproject-africa"
 cluster_nodes_location = "af-south-1a"
 
-# Remove this variable to tag all our resources with {"ManagedBy": "2i2c"}
-tags = {}
+tags = {
+  "2i2c.org/cluster-name" : "catalystproject-africa",
+  "ManagedBy" : "2i2c",
+}
 
 user_buckets = {
   "scratch-staging" : {

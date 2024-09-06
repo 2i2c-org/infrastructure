@@ -259,10 +259,34 @@ variable "filestores" {
 }
 
 variable "active_cost_allocation_tags" {
-  type        = list(string)
-  default     = []
+  type    = list(string)
+  default = []
+
   description = <<-EOT
   Tags to be treated as active cost allocation tags.
+
+  Without permissions on the billing account, we get the following
+  error if we try to use this:
+
+      Failed to update Cost Allocation Tag:
+      Linked account doesn't have access to cost allocation tags.
+
+  Due to that, we don't provide a default value here, but if we could,
+  we would want to activate at least the following that are relevant
+  to cost attribution currently as piloted by the openscapes cluster:
+
+  - 2i2c:hub-name
+  - 2i2c.org/cluster-name
+  - alpha.eksctl.io/cluster-name
+  - kubernetes.io/cluster/{var_cluster_name}
+
+  Cost allocation tags can only be activated after sufficient amount of
+  time has passed since resources was tagged, so expect a few hours or
+  up to 24 hours in order you can activate them without running into
+  this error:
+
+      Failed to update Cost Allocation Tag:
+      Tag keys not found: 2i2c.org/cluster-name
   EOT
 }
 
