@@ -1,3 +1,4 @@
+# ref: https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/storage_account
 resource "azurerm_storage_account" "homes" {
   name                     = var.global_storage_account_name
   resource_group_name      = azurerm_resource_group.jupyterhub.name
@@ -27,6 +28,7 @@ resource "azurerm_storage_account" "homes" {
   }
 }
 
+# ref: https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/storage_share
 resource "azurerm_storage_share" "homes" {
   name                 = "homes"
   storage_account_name = azurerm_storage_account.homes.name
@@ -43,6 +45,7 @@ output "azure_fileshare_url" {
   value = azurerm_storage_share.homes.url
 }
 
+# ref: https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/recovery_services_vault
 resource "azurerm_recovery_services_vault" "homedir_recovery_vault" {
   name                = "homedir-recovery-vault"
   location            = azurerm_resource_group.jupyterhub.location
@@ -50,6 +53,7 @@ resource "azurerm_recovery_services_vault" "homedir_recovery_vault" {
   sku                 = "Standard"
 }
 
+# ref: https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/backup_policy_file_share
 resource "azurerm_backup_policy_file_share" "backup_policy" {
   name                = "homedir-recovery-vault-policy"
   resource_group_name = azurerm_resource_group.jupyterhub.name

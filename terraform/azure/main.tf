@@ -1,8 +1,9 @@
 
 terraform {
-  required_version = "~> 1.5"
+  required_version = "~> 1.9"
   required_providers {
     azurerm = {
+      # FIXME: upgrade to v4, see https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/guides/4.0-upgrade-guide
       # ref: https://registry.terraform.io/providers/hashicorp/azurerm/latest
       source  = "hashicorp/azurerm"
       version = "~> 3.111"
@@ -17,14 +18,14 @@ terraform {
     kubernetes = {
       # ref: https://registry.terraform.io/providers/hashicorp/kubernetes/latest
       source  = "hashicorp/kubernetes"
-      version = "~> 2.31"
+      version = "~> 2.32"
     }
 
     # Used to decrypt sops encrypted secrets containing PagerDuty keys
     sops = {
       # ref: https://registry.terraform.io/providers/carlpett/sops/latest
       source  = "carlpett/sops"
-      version = "~> 1.0"
+      version = "~> 1.1"
     }
   }
   backend "gcs" {
@@ -33,20 +34,24 @@ terraform {
   }
 }
 
+# ref: https://registry.terraform.io/providers/hashicorp/azuread/latest/docs#argument-reference
 provider "azuread" {
   tenant_id = var.tenant_id
 }
 
+# ref: https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs#argument-reference
 provider "azurerm" {
   subscription_id = var.subscription_id
   features {}
 }
 
+# ref: https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/resource_group
 resource "azurerm_resource_group" "jupyterhub" {
   name     = var.resourcegroup_name
   location = var.location
 }
 
+# ref: https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/virtual_network
 resource "azurerm_virtual_network" "jupyterhub" {
   name                = "k8s-network"
   location            = azurerm_resource_group.jupyterhub.location
@@ -54,6 +59,7 @@ resource "azurerm_virtual_network" "jupyterhub" {
   address_space       = ["10.0.0.0/8"]
 }
 
+# ref: https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/subnet
 resource "azurerm_subnet" "node_subnet" {
   name                 = "k8s-nodes-subnet"
   virtual_network_name = azurerm_virtual_network.jupyterhub.name
@@ -64,6 +70,7 @@ resource "azurerm_subnet" "node_subnet" {
   service_endpoints = ["Microsoft.Storage"]
 }
 
+# ref: https://registry.terraform.io/providers/hashicorp/kubernetes/latest/docs
 provider "kubernetes" {
   host                   = azurerm_kubernetes_cluster.jupyterhub.kube_config[0].host
   client_certificate     = base64decode(azurerm_kubernetes_cluster.jupyterhub.kube_config[0].client_certificate)
@@ -72,6 +79,7 @@ provider "kubernetes" {
 }
 
 
+# ref: https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/kubernetes_cluster
 resource "azurerm_kubernetes_cluster" "jupyterhub" {
   name                = "hub-cluster"
   location            = azurerm_resource_group.jupyterhub.location
@@ -154,6 +162,7 @@ resource "azurerm_kubernetes_cluster" "jupyterhub" {
 }
 
 
+# ref: https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/kubernetes_cluster_node_pool
 resource "azurerm_kubernetes_cluster_node_pool" "user_pool" {
   for_each = { for i, v in var.node_pools["user"] : v.name => v }
 
@@ -180,6 +189,7 @@ resource "azurerm_kubernetes_cluster_node_pool" "user_pool" {
 }
 
 
+# ref: https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/kubernetes_cluster_node_pool
 resource "azurerm_kubernetes_cluster_node_pool" "dask_pool" {
   for_each = { for i, v in var.node_pools["dask"] : v.name => v }
 
@@ -205,6 +215,7 @@ resource "azurerm_kubernetes_cluster_node_pool" "dask_pool" {
 }
 
 
+# ref: https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/container_registry
 resource "azurerm_container_registry" "container_registry" {
   name                = var.global_container_registry_name
   resource_group_name = azurerm_resource_group.jupyterhub.name

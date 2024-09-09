@@ -1,5 +1,5 @@
 terraform {
-  required_version = "~> 1.5"
+  required_version = "~> 1.9"
   backend "gcs" {
     # This is a separate GCS bucket than what we use for our other terraform state
     # This is less sensitive, so let's keep it separate
@@ -8,16 +8,17 @@ terraform {
   }
   required_providers {
     google = {
+      # FIXME: upgrade to v6, see https://registry.terraform.io/providers/hashicorp/google/latest/docs/guides/version_6_upgrade
       # ref: https://registry.terraform.io/providers/hashicorp/google/latest
       source  = "google"
-      version = "~> 4.55"
+      version = "~> 5.43"
     }
 
     # Used to decrypt sops encrypted secrets containing PagerDuty keys
     sops = {
       # ref: https://registry.terraform.io/providers/carlpett/sops/latest
       source  = "carlpett/sops"
-      version = "~> 0.7.2"
+      version = "~> 1.1"
     }
   }
 }

@@ -1,23 +1,24 @@
 terraform {
-  required_version = "~> 1.5"
+  required_version = "~> 1.9"
 
   backend "gcs" {}
   required_providers {
     google = {
+      # FIXME: upgrade to v6, see https://registry.terraform.io/providers/hashicorp/google/latest/docs/guides/version_6_upgrade
       # ref: https://registry.terraform.io/providers/hashicorp/google/latest
       source  = "google"
-      version = "~> 5.36"
+      version = "~> 5.43"
     }
     kubernetes = {
       # ref: https://registry.terraform.io/providers/hashicorp/kubernetes/latest
       source  = "hashicorp/kubernetes"
-      version = "~> 2.31"
+      version = "~> 2.32"
     }
     # Used to decrypt sops encrypted secrets containing PagerDuty keys
     sops = {
       # ref: https://registry.terraform.io/providers/carlpett/sops/latest
       source  = "carlpett/sops"
-      version = "~> 1.0"
+      version = "~> 1.1"
     }
   }
 }

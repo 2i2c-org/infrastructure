@@ -8,11 +8,13 @@
 *   https://2i2c-org.pagerduty.com/service-directory/?direction=asc&query=&team_ids=all
 *
 */
+# ref: https://registry.terraform.io/providers/carlpett/sops/latest/docs/data-sources/file
 data "sops_file" "pagerduty_service_integration_keys" {
   # Read sops encrypted file containing integration key for pagerduty
   source_file = "secret/enc-pagerduty-service-integration-keys.secret.yaml"
 }
 
+# ref: https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/monitor_action_group
 resource "azurerm_monitor_action_group" "alerts" {
   name                = "AlertsActionGroup" # Changing this forces a recreation
   resource_group_name = var.resourcegroup_name
@@ -24,6 +26,7 @@ resource "azurerm_monitor_action_group" "alerts" {
   }
 }
 
+# ref: https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/monitor_metric_alert
 resource "azurerm_monitor_metric_alert" "disk_space_full_alert" {
   # Changing the name forces a recreation every time we apply
   name                = "Used disk space approaching capacity on Azure Subscription ${var.subscription_id}"
