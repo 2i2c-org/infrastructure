@@ -28,12 +28,14 @@ jobs:
           - cluster_name: cloudbank
           - cluster_name: gridsst
           - cluster_name: hhmi
+          - cluster_name: jupyter-health
           - cluster_name: jupyter-meets-the-earth
           - cluster_name: kitware
           - cluster_name: leap
           - cluster_name: nasa-cryo
           - cluster_name: nasa-esdis
           - cluster_name: nasa-veda
+          - cluster_name: nmfs-openscapes
           - cluster_name: openscapes
           - cluster_name: opensci
           - cluster_name: pangeo-hubs
@@ -43,7 +45,6 @@ jobs:
           - cluster_name: ubc-eoas
           - cluster_name: utoronto
           - cluster_name: victor
-          - cluster_name: jupyter-health
 
     steps:
       - uses: actions/checkout@v4

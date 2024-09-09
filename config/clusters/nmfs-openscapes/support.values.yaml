@@ -11,6 +11,11 @@ prometheus:
         - secretName: prometheus-tls
           hosts:
             - prometheus.nmfs-openscapes.2i2c.cloud
+    resources:
+      requests:
+        memory: 8Gi
+      limits:
+        memory: 8Gi
 
 grafana:
   grafana.ini:
