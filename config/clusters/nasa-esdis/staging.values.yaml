@@ -10,7 +10,110 @@ jupyterhub:
   singleuser:
     extraEnv:
       SCRATCH_BUCKET: s3://nasa-esdis-scratch-staging/$(JUPYTERHUB_USER)
+    profileList:
+      - display_name: "Only Profile Available, this info is not shown in the UI"
+        slug: only-choice
+        profile_options:
+          image:
+            display_name: Image
+            choices:
+              modified-pangeo:
+                display_name: Modified Pangeo Notebook
+                description: Pangeo based notebook with a Python environment
+                kubespawner_override:
+                  image: public.ecr.aws/nasa-veda/pangeo-notebook-veda-image:53b6fd1256f5
+                  init_containers:
+                    # Need to explicitly fix ownership here, as otherwise these directories will be owned
+                    # by root on most NFS filesystems - neither EFS nor Google Filestore support anonuid
+                    - name: volume-mount-ownership-fix
+                      image: busybox:1.36.1
+                      command:
+                        - sh
+                        - -c
+                        - id && chown 1000:1000 /home/jovyan /home/jovyan/shared && ls -lhd /home/jovyan
+                      securityContext:
+                        runAsUser: 0
+                      volumeMounts:
+                        - name: home
+                          mountPath: /home/jovyan
+                          subPath: "{username}"
+                        # mounted without readonly attribute here,
+                        # so we can chown it appropriately
+                        - name: home
+                          mountPath: /home/jovyan/shared
+                          subPath: _shared
+                    # this container uses nbgitpuller to mount https://github.com/NASA-IMPACT/veda-docs/ for user pods
+                    # image source: https://github.com/NASA-IMPACT/veda-jh-environments/tree/main/docker-images/base/nasa-veda-singleuser-init
+                    - name: nasa-veda-singleuser-init
+                      image: public.ecr.aws/nasa-veda/nasa-veda-singleuser-init:38e8998f9be64b0a59ac6c4d6d152d3403121dfc4be6d49bdf52ddc92827af8a
+                      command:
+                        - "python3"
+                        - "/opt/k8s-init-container-nb-docs.py"
+                        - "/home/jovyan"
+                      volumeMounts:
+                        - name: home
+                          mountPath: /home/jovyan
+                          subPath: "{username}"
+                      securityContext:
+                        runAsUser: 1000
+                        runAsGroup: 1000
+              rstudio:
+                display_name: R
+                description: R (with RStudio) + Python environment
+                kubespawner_override:
+                  image: openscapes/rocker:a7596b5
+              matlab:
+                display_name: Matlab
+                description: Matlab environment
+                kubespawner_override:
+                  image: openscapes/matlab:2023-06-29
+              qgis:
+                display_name: QGIS
+                description: QGIS environment
+                kubespawner_override:
+                  # Launch people directly into the Linux desktop when they start
+                  default_url: /desktop
+                  # Built from https://github.com/jupyterhub/jupyter-remote-desktop-proxy/pull/51
+                  image: quay.io/2i2c/nasa-qgis-image:0d0765090250
+          requests:
+            display_name: Resource Allocation
+            choices:
+              mem_1_9:
+                display_name: 1.9 GB RAM, upto 3.7 CPUs
+                kubespawner_override:
+                  mem_guarantee: 1991244775
+                  mem_limit: 1991244775
+                  cpu_guarantee: 0.2328125
+                  cpu_limit: 3.725
+                  node_selector:
+                    node.kubernetes.io/instance-type: r5.xlarge
+                default: true
+              mem_3_7:
+                display_name: 3.7 GB RAM, upto 3.7 CPUs
+                kubespawner_override:
+                  mem_guarantee: 3982489550
+                  mem_limit: 3982489550
+                  cpu_guarantee: 0.465625
+                  cpu_limit: 3.725
+                  node_selector:
+                    node.kubernetes.io/instance-type: r5.xlarge
+              mem_7_4:
+                display_name: 7.4 GB RAM, upto 3.7 CPUs
+                kubespawner_override:
+                  mem_guarantee: 7964979101
+                  mem_limit: 7964979101
+                  cpu_guarantee: 0.93125
+                  cpu_limit: 3.725
+                  node_selector:
+                    node.kubernetes.io/instance-type: r5.xlarge
   hub:
+    image:
+      name: quay.io/2i2c/dynamic-image-building-experiment
+      tag: "0.0.1-0.dev.git.10263.hc87b65cf"
     config:
       GitHubOAuthenticator:
         oauth_callback_url: "https://staging.esdis.2i2c.cloud/hub/oauth_callback"
+    extraConfig:
+      enable-fancy-profiles: |
+        from jupyterhub_fancy_profiles import setup_ui
+        setup_ui(c)
