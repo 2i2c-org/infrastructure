@@ -91,7 +91,7 @@ local daskNodes = [];
                 name: "vpc-cni",
                 configurationValues: |||
                     enableNetworkPolicy: "true"
-                |||
+                |||,
             },
             { name: "coredns" },
             { name: "kube-proxy" },
@@ -107,6 +107,10 @@ local daskNodes = [];
                 wellKnownPolicies: {
                     ebsCSIController: true,
                 },
+                configurationValues: |||
+                    defaultStorageClass:
+                        enabled: true
+                |||,
             },
         ]
     ],
