@@ -11,20 +11,20 @@ cluster_nodes_location = "{{ cluster_region }}a"
 #       to setup scratch buckets for the hubs on this cluster.
 #
 #user_buckets = {
-#  "scratch-{{ hub_name }}" : {
-#    "delete_after" : 7
+#  "scratch-staging" : {
+#    "delete_after" : 7,
 #  },
-# Tip: add more scratch buckets below, if this cluster will be multi-tenant
+#  # Tip: add more scratch buckets below, if this cluster will be multi-tenant
 #}
 
 # Tip: uncomment and fill the missing info in the lines below if you want
 #       to setup specific cloud permissions for the buckets in this cluster.
 #
 #hub_cloud_permissions = {
-#  "{{ hub_name }}" : {
+#  "staging" : {
 #    "user-sa" : {
-#      bucket_admin_access : ["scratch-{{ hub_name }}"],
+#      bucket_admin_access : ["scratch-staging"],
 #    },
 #  },
-# # Tip: add more namespaces below, if this cluster will be multi-tenant
+#  # Tip: add more namespaces below, if this cluster will be multi-tenant
 #}
