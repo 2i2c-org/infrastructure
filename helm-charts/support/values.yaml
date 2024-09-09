@@ -46,6 +46,17 @@ ingress-nginx:
     # use this type of config.
     # https://github.com/kubernetes/ingress-nginx/issues/7837
     allowSnippetAnnotations: true
+    admissionWebhooks:
+      # Disabled as cert-manager in EKS 1.30 ran into the following issue
+      # working with Ingress objects with the webhook not working out, with an
+      # error message including this:
+      #
+      #   err="Internal error occurred: failed calling webhook \"validate.nginx.ingress.kubernetes.io\": failed to call webhook: Post \"https://support-ingress-nginx-controller-admission.support.svc:443/networking/v1/ingresses?timeout=10s\": tls: failed to verify certificate: x509: certificate signed by unknown authority"
+      #
+      # Disabling this shouldn't be an issue, it just helps catch invalid
+      # configurations beyond what the k8s api-server will catch.
+      #
+      enabled: false
 
 # prometheus is responsible for collecting metrics and informing grafana about
 # the metrics on request. It comes with several dependency charts, where we
