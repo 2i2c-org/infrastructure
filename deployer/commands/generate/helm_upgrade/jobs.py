@@ -29,7 +29,7 @@ def helm_upgrade_jobs(
     ),
     pr_labels: str = typer.Argument(
         "[]",
-        help="JSON formatted list of PR labels, where 'deployer:skip-deploy' is respected.",
+        help="JSON formatted list of PR labels, where 'deployer:skip-deploy' and 'deployer:skip-deploy-hubs' are respected.",
     ),
 ):
     """
