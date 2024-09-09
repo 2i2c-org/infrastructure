@@ -11,7 +11,7 @@ terraform {
     kubernetes = {
       # ref: https://registry.terraform.io/providers/hashicorp/kubernetes/latest
       source  = "hashicorp/kubernetes"
-      version = "~> 2.31"
+      version = "~> 2.32"
     }
     # Used to decrypt sops encrypted secrets containing PagerDuty keys
     sops = {
