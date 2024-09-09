@@ -17,7 +17,7 @@ terraform {
     sops = {
       # ref: https://registry.terraform.io/providers/carlpett/sops/latest
       source  = "carlpett/sops"
-      version = "~> 0.7.2"
+      version = "~> 1.1"
     }
   }
 }
