@@ -16,3 +16,6 @@ basehub:
       config:
         GitHubOAuthenticator:
           oauth_callback_url: https://staging.ghg.2i2c.cloud/hub/oauth_callback
+    singleuser:
+      extraEnv:
+        SCRATCH_BUCKET: s3://nasa-ghg-hub-scratch-staging/$(JUPYTERHUB_USER)

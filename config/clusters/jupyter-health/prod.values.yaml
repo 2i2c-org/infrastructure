@@ -11,3 +11,6 @@ jupyterhub:
     config:
       GitHubOAuthenticator:
         oauth_callback_url: https://jupyter-health.2i2c.cloud/hub/oauth_callback
+  singleuser:
+    extraEnv:
+      SCRATCH_BUCKET: s3://jupyter-health-scratch/$(JUPYTERHUB_USER)

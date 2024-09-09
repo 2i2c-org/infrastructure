@@ -12,3 +12,6 @@ basehub:
       config:
         GitHubOAuthenticator:
           oauth_callback_url: https://staging.gridsst.2i2c.cloud/hub/oauth_callback
+    singleuser:
+      extraEnv:
+        SCRATCH_BUCKET: s3://gridsst-scratch-staging/$(JUPYTERHUB_USER)

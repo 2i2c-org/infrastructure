@@ -1,3 +1,8 @@
+userServiceAccount:
+  enabled: true
+  annotations:
+    eks.amazonaws.com/role-arn: arn:aws:iam::259060176665:role/ubc-eoas-staging
+
 jupyterhub:
   ingress:
     hosts: [staging.ubc-eoas.2i2c.cloud]
@@ -8,3 +13,6 @@ jupyterhub:
     config:
       CILogonOAuthenticator:
         oauth_callback_url: https://staging.ubc-eoas.2i2c.cloud/hub/oauth_callback
+  singleuser:
+    extraEnv:
+      SCRATCH_BUCKET: s3://ubc-eoas-scratch-staging/$(JUPYTERHUB_USER)

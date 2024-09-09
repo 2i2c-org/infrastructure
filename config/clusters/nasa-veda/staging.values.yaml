@@ -6,6 +6,8 @@ basehub:
     singleuser:
       nodeSelector:
         2i2c/hub-name: staging
+      extraEnv:
+        SCRATCH_BUCKET: s3://nasa-veda-scratch-staging/$(JUPYTERHUB_USER)
       initContainers:
         - &volume_ownership_fix_initcontainer
           name: volume-mount-ownership-fix
