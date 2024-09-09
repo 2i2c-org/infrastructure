@@ -10,20 +10,20 @@ default_budget_alert = {
 #       to setup scratch buckets for the hubs on this cluster.
 #
 #user_buckets = {
-#  "scratch-" : {
-#    "delete_after" : 7
+#  "scratch-staging" : {
+#    "delete_after" : 7,
 #  },
-# Tip: add more scratch buckets below, if this cluster will be multi-tenant
+#  # Tip: add more scratch buckets below, if this cluster will be multi-tenant
 #}
 
 # Tip: uncomment and fill the missing info in the lines below if you want
 #       to setup specific cloud permissions for the buckets in this cluster.
 #
 #hub_cloud_permissions = {
-#  "" : {
+#  "staging" : {
 #    "user-sa" : {
-#      bucket_admin_access : ["scratch-"],
+#      bucket_admin_access : ["scratch-staging"],
 #    },
 #  },
-# # Tip: add more namespaces below, if this cluster will be multi-tenant
+#  # Tip: add more namespaces below, if this cluster will be multi-tenant
 #}
