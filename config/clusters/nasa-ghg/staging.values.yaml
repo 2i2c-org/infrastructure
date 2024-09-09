@@ -13,6 +13,168 @@ basehub:
         gitRepoBranch: "staging"
         gitRepoUrl: "https://github.com/US-GHG-Center/ghgc-hub-homepage"
     hub:
+      image:
+        name: quay.io/2i2c/dynamic-image-building-experiment
+        tag: "0.0.1-0.dev.git.10263.hc87b65cf"
       config:
         GitHubOAuthenticator:
           oauth_callback_url: https://staging.ghg.2i2c.cloud/hub/oauth_callback
+      extraConfig:
+        enable-fancy-profiles: |
+          from jupyterhub_fancy_profiles import setup_ui
+          setup_ui(c)
+    singleuser:
+      profileList:
+        - display_name: "Only Profile Available, this info is not shown in the UI"
+          slug: only-choice
+          profile_options:
+            image:
+              display_name: Image
+              unlisted_choice:
+                enabled: True
+                display_name: "Custom image"
+                validation_regex: "^.+:.+$"
+                validation_message: "Must be a publicly available docker image, of form <image-name>:<tag>"
+                display_name_in_choices: "Specify an existing docker image"
+                description_in_choices: "Use a pre-existing docker image from a public docker registry (dockerhub, quay, etc)"
+                allowed_groups: &allowed_groups
+                  - US-GHG-Center:ghgc-hub-access
+                  - US-GHG-Center:ghg-use-case-1
+                  - US-GHG-Center:ghg-use-case-2
+                  - US-GHG-Center:ghg-use-case-3
+                  - US-GHG-Center:ghg-external-collaborators
+                  - US-GHG-Center:ghg-workshop-access
+                  - US-GHG-Center:ghg-trial-access
+                  - 2i2c-org:hub-access-for-2i2c-staff
+                kubespawner_override:
+                  image: "{value}"
+              choices:
+                modified-pangeo:
+                  display_name: Modified Pangeo Notebook
+                  description: "Pangeo based notebook with a Python environment"
+                  allowed_groups: *allowed_groups
+                  kubespawner_override:
+                    image: public.ecr.aws/nasa-veda/pangeo-notebook-veda-image:53b6fd1256f5
+                    init_containers:
+                      # Need to explicitly fix ownership here, as otherwise these directories will be owned
+                      # by root on most NFS filesystems - neither EFS nor Google Filestore support anonuid
+                      - name: volume-mount-ownership-fix
+                        image: busybox:1.36.1
+                        command:
+                          - sh
+                          - -c
+                          - id && chown 1000:1000 /home/jovyan /home/jovyan/shared && ls -lhd /home/jovyan
+                        securityContext:
+                          runAsUser: 0
+                        volumeMounts:
+                          - name: home
+                            mountPath: /home/jovyan
+                            subPath: "{username}"
+                          # mounted without readonly attribute here,
+                          # so we can chown it appropriately
+                          - name: home
+                            mountPath: /home/jovyan/shared
+                            subPath: _shared
+                      # this container uses nbgitpuller to mount https://github.com/US-GHG-Center/ghgc-docs/ for user pods
+                      # image source: https://github.com/NASA-IMPACT/jupyterhub-gitpuller-init
+                      - name: jupyterhub-gitpuller-init
+                        image: public.ecr.aws/nasa-veda/jupyterhub-gitpuller-init:97eb45f9d23b128aff810e45911857d5cffd05c2
+                        env:
+                          - name: TARGET_PATH
+                            value: ghgc-docs
+                          - name: SOURCE_REPO
+                            value: "https://github.com/US-GHG-Center/ghgc-docs"
+                        volumeMounts:
+                          - name: home
+                            mountPath: /home/jovyan
+                            subPath: "{username}"
+                        securityContext:
+                          runAsUser: 1000
+                          runAsGroup: 1000
+                rocker:
+                  display_name: Rocker Geospatial with RStudio
+                  description: R environment with many geospatial libraries pre-installed
+                  allowed_groups: *allowed_groups
+                  kubespawner_override:
+                    image: rocker/binder:4.3
+                    image_pull_policy: Always
+                    # Launch RStudio after the user logs in
+                    default_url: /rstudio
+                    # Ensures container working dir is homedir
+                    # https://github.com/2i2c-org/infrastructure/issues/2559
+                    working_dir: /home/rstudio
+                qgis:
+                  display_name: "QGIS on Linux Desktop"
+                  description: Linux desktop in the browser, with qgis installed
+                  allowed_groups: *allowed_groups
+                  kubespawner_override:
+                    default_url: /desktop
+                    # Built from https://github.com/2i2c-org/nasa-qgis-image
+                    image: quay.io/2i2c/nasa-qgis-image:0d0765090250
+            resource_allocation:
+              display_name: Resource Allocation
+              choices:
+                mem_1_9:
+                  display_name: 1.9 GB RAM, upto 3.7 CPUs
+                  kubespawner_override:
+                    mem_guarantee: 1991244775
+                    mem_limit: 1991244775
+                    cpu_guarantee: 0.2328125
+                    cpu_limit: 3.725
+                    node_selector:
+                      node.kubernetes.io/instance-type: r5.xlarge
+                  default: true
+                mem_3_7:
+                  display_name: 3.7 GB RAM, upto 3.7 CPUs
+                  kubespawner_override:
+                    mem_guarantee: 3982489550
+                    mem_limit: 3982489550
+                    cpu_guarantee: 0.465625
+                    cpu_limit: 3.725
+                    node_selector:
+                      node.kubernetes.io/instance-type: r5.xlarge
+                mem_7_4:
+                  display_name: 7.4 GB RAM, upto 3.7 CPUs
+                  kubespawner_override:
+                    mem_guarantee: 7964979101
+                    mem_limit: 7964979101
+                    cpu_guarantee: 0.93125
+                    cpu_limit: 3.725
+                    node_selector:
+                      node.kubernetes.io/instance-type: r5.xlarge
+                mem_14_8:
+                  display_name: 14.8 GB RAM, upto 3.7 CPUs
+                  kubespawner_override:
+                    mem_guarantee: 15929958203
+                    mem_limit: 15929958203
+                    cpu_guarantee: 1.8625
+                    cpu_limit: 3.725
+                    node_selector:
+                      node.kubernetes.io/instance-type: r5.xlarge
+                mem_29_7:
+                  display_name: 29.7 GB RAM, upto 3.7 CPUs
+                  kubespawner_override:
+                    mem_guarantee: 31859916406
+                    mem_limit: 31859916406
+                    cpu_guarantee: 3.725
+                    cpu_limit: 3.725
+                    node_selector:
+                      node.kubernetes.io/instance-type: r5.xlarge
+                mem_60_6:
+                  display_name: 60.6 GB RAM, upto 15.6 CPUs
+                  kubespawner_override:
+                    mem_guarantee: 65094448840
+                    mem_limit: 65094448840
+                    cpu_guarantee: 7.8475
+                    cpu_limit: 15.695
+                    node_selector:
+                      node.kubernetes.io/instance-type: r5.4xlarge
+                mem_121_2:
+                  display_name: 121.2 GB RAM, upto 15.6 CPUs
+                  kubespawner_override:
+                    mem_guarantee: 130188897681
+                    mem_limit: 130188897681
+                    cpu_guarantee: 15.695
+                    cpu_limit: 15.695
+                    node_selector:
+                      node.kubernetes.io/instance-type: r5.4xlarge
