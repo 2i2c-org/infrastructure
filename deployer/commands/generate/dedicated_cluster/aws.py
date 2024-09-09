@@ -18,6 +18,7 @@ from deployer.utils.rendering import print_colour
 
 from .common import (
     check_before_continuing_with_generate_command,
+    generate_cluster_config_file,
     generate_config_directory,
     generate_support_files,
 )
@@ -105,6 +106,10 @@ def aws(
     cluster_region: str = typer.Option(
         ..., prompt="The region where to deploy the cluster"
     ),
+    account_id: str = typer.Option(
+        ...,
+        prompt="The AWS account id or alias. Declare 2i2c for 2i2c's SSO based accounts and paid_by_us=true",
+    ),
     force: bool = typer.Option(
         False,
         "--force",
@@ -115,6 +120,14 @@ def aws(
     Automatically generate the files required to setup a new cluster on AWS if they don't exist.
     Use --force to force existing configuration files to be overwritten by this command.
     """
+
+    if account_id == "2i2c":
+        sign_in_url = "https://2i2c.awsapps.com/start#/"
+        paid_by_us = True
+    else:
+        sign_in_url = f"https://{account_id}.signin.aws.amazon.com/console"
+        paid_by_us = False
+
     # These are the variables needed by the templates used to generate the cluster config file
     # and support files
     vars = {
@@ -124,6 +137,8 @@ def aws(
         "hub_type": "basehub",
         "cluster_name": cluster_name,
         "cluster_region": cluster_region,
+        "sign_in_url": sign_in_url,
+        "paid_by_us": str(paid_by_us).lower(),
     }
 
     if not check_before_continuing_with_generate_command(
@@ -133,8 +148,15 @@ def aws(
 
     # If we are here, then either no existing infrastructure files for this cluster have been found
     # or the `--force` flag was provided and we can override existing files.
+
+    # Automatically generate eksctl and terraform files
     generate_infra_files(vars)
+
     # Automatically generate the config directory
     cluster_config_directory = generate_config_directory(vars)
+
+    # Create the cluster config directory and initial `cluster.yaml` file
+    generate_cluster_config_file(cluster_config_directory, "aws", vars)
+
     # Generate the support files
     generate_support_files(cluster_config_directory, vars)
