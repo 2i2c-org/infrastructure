@@ -25,9 +25,42 @@ local nodeAz = "us-west-2b";
 // A `node.kubernetes.io/instance-type label is added, so pods
 // can request a particular kind of node with a nodeSelector
 local notebookNodes = [
-    { instanceType: "r7i.xlarge" },
-    { instanceType: "r7i.4xlarge" },
-    { instanceType: "r7i.16xlarge" },
+    {
+        instanceType: "r7i.xlarge",
+        namePrefix: "nb-staging",
+        labels+: { "2i2c.org/hub-name": "staging" },
+        tags+: { "2i2c:hub-name": "staging" },
+    },
+    {
+        instanceType: "r7i.4xlarge",
+        namePrefix: "nb-staging",
+        labels+: { "2i2c.org/hub-name": "staging" },
+        tags+: { "2i2c:hub-name": "staging" },
+    },
+    {
+        instanceType: "r7i.16xlarge",
+        namePrefix: "nb-staging",
+        labels+: { "2i2c.org/hub-name": "staging" },
+        tags+: { "2i2c:hub-name": "staging" },
+    },
+    {
+        instanceType: "r7i.xlarge",
+        namePrefix: "nb-prod",
+        labels+: { "2i2c.org/hub-name": "prod" },
+        tags+: { "2i2c:hub-name": "prod" },
+    },
+    {
+        instanceType: "r7i.4xlarge",
+        namePrefix: "nb-prod",
+        labels+: { "2i2c.org/hub-name": "prod" },
+        tags+: { "2i2c:hub-name": "prod" },
+    },
+    {
+        instanceType: "r7i.16xlarge",
+        namePrefix: "nb-prod",
+        labels+: { "2i2c.org/hub-name": "prod" },
+        tags+: { "2i2c:hub-name": "prod" },
+    },
 ];
 local daskNodes = [];
 
@@ -53,24 +86,31 @@ local daskNodes = [];
     //    eksctl create addon --config-file=nmfs-openscapes.eksctl.yaml
     //
     addons: [
-        {
-            // aws-ebs-csi-driver ensures that our PVCs are bound to PVs that
-            // couple to AWS EBS based storage, without it expect to see pods
-            // mounting a PVC failing to schedule and PVC resources that are
-            // unbound.
-            //
-            // Related docs: https://docs.aws.amazon.com/eks/latest/userguide/managing-ebs-csi.html
-            //
-            name: 'aws-ebs-csi-driver',
-            version: "latest",
-            wellKnownPolicies: {
-                ebsCSIController: true,
+        { version: "latest", tags: $.metadata.tags } + addon
+        for addon in
+        [
+            {
+                name: "vpc-cni",
+                configurationValues: |||
+                    enableNetworkPolicy: "true"
+                |||
             },
-            tags: {
-                "ManagedBy": "2i2c",
-                "2i2c.org/cluster-name": $.metadata.name,
+            { name: "coredns" },
+            { name: "kube-proxy" },
+            {
+                // aws-ebs-csi-driver ensures that our PVCs are bound to PVs that
+                // couple to AWS EBS based storage, without it expect to see pods
+                // mounting a PVC failing to schedule and PVC resources that are
+                // unbound.
+                //
+                // Related docs: https://docs.aws.amazon.com/eks/latest/userguide/managing-ebs-csi.html
+                //
+                name: "aws-ebs-csi-driver",
+                wellKnownPolicies: {
+                    ebsCSIController: true,
+                },
             },
-        },
+        ]
     ],
     nodeGroups: [
     n + {clusterName: $.metadata.name} for n in
@@ -83,7 +123,7 @@ local daskNodes = [];
             ssh: {
                 publicKeyPath: 'ssh-keys/nmfs-openscapes.key.pub'
             },
-            instanceType: "r5.xlarge",
+            instanceType: "r7i.xlarge",
             minSize: 1,
             maxSize: 6,
             labels+: {

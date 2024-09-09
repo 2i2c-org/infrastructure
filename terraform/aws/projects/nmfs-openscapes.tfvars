@@ -1,30 +1,45 @@
-/*
- Some of the assumptions this jinja2 template makes about the cluster:
-   - location of the nodes of the kubernetes cluster will be <region>a
-   - no default scratch buckets support
-*/
 region                 = "us-west-2"
 cluster_name           = "nmfs-openscapes"
 cluster_nodes_location = "us-west-2b"
 
-# Tip: uncomment and fill the missing info in the lines below if you want
-#       to setup scratch buckets for the hubs on this cluster.
-#
-#user_buckets = {
-#  "scratch-staging" : {
-#    "delete_after" : 7,
-#  },
-#  # Tip: add more scratch buckets below, if this cluster will be multi-tenant
-#}
+disable_cluster_wide_filestore = true
+filestores = {
+  "staging" = {
+    name_suffix = "staging",
+    tags        = { "2i2c:hub-name" : "staging" },
+  },
+  "prod" = {
+    name_suffix = "prod",
+    tags        = { "2i2c:hub-name" : "prod" },
+  },
+}
 
-# Tip: uncomment and fill the missing info in the lines below if you want
-#       to setup specific cloud permissions for the buckets in this cluster.
-#
-#hub_cloud_permissions = {
-#  "staging" : {
-#    "user-sa" : {
-#      bucket_admin_access : ["scratch-staging"],
-#    },
-#  },
-#  # Tip: add more namespaces below, if this cluster will be multi-tenant
-#}
+user_buckets = {
+  "scratch-staging" : {
+    "delete_after" : 7,
+    "tags" : { "2i2c:hub-name" : "staging" },
+  },
+  "scratch" : {
+    "delete_after" : 7,
+    "tags" : { "2i2c:hub-name" : "prod" },
+  },
+  "persistent-staging" : {
+    "tags" : { "2i2c:hub-name" : "staging" },
+  },
+  "persistent" : {
+    "tags" : { "2i2c:hub-name" : "prod" },
+  },
+}
+
+hub_cloud_permissions = {
+  "staging" : {
+    "user-sa" : {
+      bucket_admin_access : ["scratch-staging", "persistent-staging"],
+    },
+  },
+  "prod" : {
+    "user-sa" : {
+      bucket_admin_access : ["scratch", "persistent"],
+    },
+  },
+}
