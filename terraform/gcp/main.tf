@@ -7,7 +7,7 @@ terraform {
       # FIXME: upgrade to v6, see https://registry.terraform.io/providers/hashicorp/google/latest/docs/guides/version_6_upgrade
       # ref: https://registry.terraform.io/providers/hashicorp/google/latest
       source  = "google"
-      version = "~> 5.36"
+      version = "~> 5.43"
     }
     kubernetes = {
       # ref: https://registry.terraform.io/providers/hashicorp/kubernetes/latest

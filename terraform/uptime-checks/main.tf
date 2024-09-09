@@ -11,7 +11,7 @@ terraform {
       # FIXME: upgrade to v6, see https://registry.terraform.io/providers/hashicorp/google/latest/docs/guides/version_6_upgrade
       # ref: https://registry.terraform.io/providers/hashicorp/google/latest
       source  = "google"
-      version = "~> 4.55"
+      version = "~> 5.43"
     }
 
     # Used to decrypt sops encrypted secrets containing PagerDuty keys
