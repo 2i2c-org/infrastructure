@@ -84,24 +84,31 @@ local daskNodes = [];
     //    eksctl create addon --config-file=<< cluster_name >>.eksctl.yaml
     //
     addons: [
-        {
-            // aws-ebs-csi-driver ensures that our PVCs are bound to PVs that
-            // couple to AWS EBS based storage, without it expect to see pods
-            // mounting a PVC failing to schedule and PVC resources that are
-            // unbound.
-            //
-            // Related docs: https://docs.aws.amazon.com/eks/latest/userguide/managing-ebs-csi.html
-            //
-            name: 'aws-ebs-csi-driver',
-            version: "latest",
-            wellKnownPolicies: {
-                ebsCSIController: true,
+        { version: "latest", tags: $.metadata.tags } + addon
+        for addon in
+        [
+            {
+                name: "vpc-cni",
+                configurationValues: |||
+                    enableNetworkPolicy: "true"
+                |||
             },
-            tags: {
-                "ManagedBy": "2i2c",
-                "2i2c.org/cluster-name": $.metadata.name,
+            { name: "coredns" },
+            { name: "kube-proxy" },
+            {
+                // aws-ebs-csi-driver ensures that our PVCs are bound to PVs that
+                // couple to AWS EBS based storage, without it expect to see pods
+                // mounting a PVC failing to schedule and PVC resources that are
+                // unbound.
+                //
+                // Related docs: https://docs.aws.amazon.com/eks/latest/userguide/managing-ebs-csi.html
+                //
+                name: "aws-ebs-csi-driver",
+                wellKnownPolicies: {
+                    ebsCSIController: true,
+                },
             },
-        },
+        ]
     ],
     nodeGroups: [
     n + {clusterName: $.metadata.name} for n in
