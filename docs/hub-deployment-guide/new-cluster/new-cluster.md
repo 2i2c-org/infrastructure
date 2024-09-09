@@ -107,6 +107,7 @@ We automatically generate the files required to setup a new cluster:
 - A ssh public key used by `eksctl` to grant access to the private key.
 - A `.tfvars` terraform variables file that will setup most of the non EKS infrastructure.
 - The cluster config directory in `./config/cluster/<new-cluster>`
+- The `cluster.yaml` config file
 - The support values file `support.values.yaml`
 - The the support credentials encrypted file `enc-support.values.yaml` 
 ````
@@ -135,12 +136,13 @@ You can generate these with:
 :sync: aws-key
 
 ```bash
-export CLUSTER_NAME=<cluster-name>;
+export CLUSTER_NAME=<cluster-name>
 export CLUSTER_REGION=<cluster-region-like ca-central-1>
+export ACCOUNT_ID=<declare 2i2c for clusters under 2i2c SSO, otherwise an account id or alias>
 ```
 
 ```bash
-deployer generate dedicated-cluster aws --cluster-name=$CLUSTER_NAME --cluster-region=$CLUSTER_REGION
+deployer generate dedicated-cluster aws --cluster-name=$CLUSTER_NAME --cluster-region=$CLUSTER_REGION --account-id=$ACCOUNT_ID
 ```
 
 After running this command, you will be asked to provide the type of hub that will be deployed in the cluster, i.e. `basehub` or `daskhub`.
@@ -547,29 +549,8 @@ Create a `cluster.yaml` file under the `config/cluster/$CLUSTER_NAME>` folder an
 
 ````{tab-item} AWS
 :sync: aws-key
-```yaml
-name: <your-cluster-name>
-provider: aws # <copy paste link to sign in url here>
-aws:
-  key: enc-deployer-credentials.secret.json
-  clusterType: eks
-  clusterName: $CLUSTER_NAME
-  region: $CLUSTER_REGION
-  billing:
-    # For an AWS account explicitly configured to have the cloud bill
-    # paid directly by the community and not through 2i2c, declare
-    # paid_by_us to false
-    paid_by_us: true
-support:
-  helm_chart_values_files:
-    - support.values.yaml
-    - enc-support.secret.values.yaml
-hubs: []
-```
 
-```{note}
-The `aws.key` file is defined _relative_ to the location of the `cluster.yaml` file.
-```
+A `cluster.yaml` file should already have been generated as part of [](new-cluster:generate-cluster-files).
 ````
 
 ````{tab-item} Google Cloud

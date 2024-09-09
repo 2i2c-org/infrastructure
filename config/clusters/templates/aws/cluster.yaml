@@ -1,0 +1,26 @@
+name: {{ cluster_name }}
+provider: aws # {{ sign_in_url }}
+aws:
+  key: enc-deployer-credentials.secret.json
+  clusterType: eks
+  clusterName: {{ cluster_name }}
+  region: {{ cluster_region }}
+  billing:
+    paid_by_us: {{ paid_by_us }}
+support:
+  helm_chart_values_files:
+    - support.values.yaml
+    - enc-support.secret.values.yaml
+hubs: []
+  # Uncomment the lines below once the support infrastructure was deployed and
+  # you are ready to add the first cluster
+
+  # - name: {{ hub_name }}
+  #   # Tip: consider changing this to something more human friendly
+  #   display_name: "{{ cluster_name }} - {{ hub_name }}"
+  #   domain: {{ hub_name }}.{{ cluster_name }}.2i2c.cloud
+  #   helm_chart: {{ hub_type }}
+  #   helm_chart_values_files:
+  #     - common.values.yaml
+  #     - {{ hub_name }}.values.yaml
+  #     - enc-{{ hub_name }}.secret.values.yaml
