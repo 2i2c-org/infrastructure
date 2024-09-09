@@ -1,3 +1,4 @@
+# ref: https://registry.terraform.io/providers/hashicorp/azuread/latest/docs/resources/service_principal
 resource "azuread_service_principal" "service_principal" {
   count = var.create_service_principal ? 1 : 0
 
@@ -6,6 +7,7 @@ resource "azuread_service_principal" "service_principal" {
   use_existing                 = true
 }
 
+# ref: https://registry.terraform.io/providers/hashicorp/azuread/latest/docs/resources/service_principal_password.html
 resource "azuread_service_principal_password" "service_principal_password" {
   count = var.create_service_principal ? 1 : 0
 
