@@ -145,16 +145,6 @@ export ACCOUNT_ID=<declare 2i2c for clusters under 2i2c SSO, otherwise an accoun
 deployer generate dedicated-cluster aws --cluster-name=$CLUSTER_NAME --cluster-region=$CLUSTER_REGION --account-id=$ACCOUNT_ID
 ```
 
-This will generate the following files:
-
-1. `eksctl/$CLUSTER_NAME.jsonnet` with a default cluster configuration, deployed to `us-west-2`
-2. `eksctl/ssh-keys/secret/$CLUSTER_NAME.key`, a `sops` encrypted ssh private key that can be
-   used to ssh into the kubernetes nodes.
-3. `eksctl/ssh-keys/$CLUSTER_NAME.pub`, an ssh public key used by `eksctl` to grant access to
-   the private key.
-4. `terraform/aws/projects/$CLUSTER_NAME.tfvars`, a terraform variables file that will setup
-   most of the non EKS infrastructure.
-
 ### Create and render an eksctl config file
 
 We use an eksctl [config file](https://eksctl.io/usage/schema/) in YAML to specify
@@ -237,15 +227,6 @@ export PROJECT_ID=<gcp-project-id>
 ```bash
 deployer generate dedicated-cluster gcp --cluster-name=$CLUSTER_NAME --project-id=$PROJECT_ID --cluster-region=$CLUSTER_REGION
 ```
-
-This will generate the following files:
-
-Generating the terraform infrastructure file...
-1. `terraform/gcp/projects/$CLUSTER_NAME.tfvars`
-2. `config/clusters/$CLUSTER_NAME`
-3. `config/clusters/$CLUSTER_NAME/cluster.yaml`
-4. `config/clusters/$CLUSTER_NAME/support.values.yaml`
-5. `config/clusters/$CLUSTER_NAME/enc-support.values.yaml`
 ````
 
 ````{tab-item} Azure
