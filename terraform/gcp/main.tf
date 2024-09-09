@@ -4,6 +4,7 @@ terraform {
   backend "gcs" {}
   required_providers {
     google = {
+      # FIXME: upgrade to v6, see https://registry.terraform.io/providers/hashicorp/google/latest/docs/guides/version_6_upgrade
       # ref: https://registry.terraform.io/providers/hashicorp/google/latest
       source  = "google"
       version = "~> 5.36"
