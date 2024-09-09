@@ -118,9 +118,14 @@ def generate_hub_matrix_jobs(
             matrix_job["hub_name"] = hub["name"]
 
             if upgrade_all_hubs_on_all_clusters:
-                matrix_job["reason_for_redeploy"] = (
-                    "Core infrastructure has been modified"
-                )
+                if pr_labels and "deployer:deploy-hubs" in pr_labels:
+                    matrix_job["reason_for_redeploy"] = (
+                        "deployer:deploy-hubs label detected"
+                    )
+                else:
+                    matrix_job["reason_for_redeploy"] = (
+                        "Core infrastructure has been modified"
+                    )
 
             matrix_jobs.append(matrix_job)
 
@@ -221,9 +226,14 @@ def generate_support_matrix_jobs(
             matrix_job["upgrade_support"] = True
 
             if upgrade_support_on_all_clusters:
-                matrix_job["reason_for_support_redeploy"] = (
-                    "Support helm chart has been modified"
-                )
+                if pr_labels and "deployer:deploy-support" in pr_labels:
+                    matrix_job["reason_for_support_redeploy"] = (
+                        "deployer:deploy-support label detected"
+                    )
+                else:
+                    matrix_job["reason_for_support_redeploy"] = (
+                        "Support helm chart has been modified"
+                    )
 
             matrix_jobs.append(matrix_job)
 
