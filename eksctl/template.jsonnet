@@ -89,6 +89,7 @@ local daskNodes = [];
         [
             {
                 name: "vpc-cni",
+                # configurationValues ref: https://github.com/aws/amazon-vpc-cni-k8s/blob/HEAD/charts/aws-vpc-cni/values.yaml
                 configurationValues: |||
                     enableNetworkPolicy: "true"
                 |||,
@@ -107,6 +108,7 @@ local daskNodes = [];
                 wellKnownPolicies: {
                     ebsCSIController: true,
                 },
+                # configurationValues ref: https://github.com/kubernetes-sigs/aws-ebs-csi-driver/blob/HEAD/charts/aws-ebs-csi-driver/values.yaml
                 configurationValues: |||
                     defaultStorageClass:
                         enabled: true
