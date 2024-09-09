@@ -2,6 +2,10 @@ region                 = "us-west-2"
 cluster_name           = "nmfs-openscapes"
 cluster_nodes_location = "us-west-2b"
 
+default_budget_alert = {
+  "enabled" : false,
+}
+
 disable_cluster_wide_filestore = true
 filestores = {
   "staging" = {
