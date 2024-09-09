@@ -103,6 +103,8 @@ def generate_hub_matrix_jobs(
     """
     if pr_labels and "deployer:skip-deploy" in pr_labels:
         return []
+    if pr_labels and "deployer:skip-deploy-hubs" in pr_labels:
+        return []
 
     # Empty list to store all the matrix job definitions in
     matrix_jobs = []
