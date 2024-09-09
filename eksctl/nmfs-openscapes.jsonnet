@@ -1,14 +1,3 @@
-{#-
-    This file is a jinja2 template of a jsonnet template of a eksctl's cluster
-    configuration file, which in turn is to be used with the eksctl CLI to both
-    update and initialize an AWS EKS based cluster.
-
-    This jinja2 template is used by the deployer script's generate-aws-cluster
-    command as part of creating new clusters.
-
-    References:
-    - https://infrastructure.2i2c.org/hub-deployment-guide/new-cluster/new-cluster/#generate-cluster-files
--#}
 /*
     This file is a jsonnet template of a eksctl's cluster configuration file,
     that is used with the eksctl CLI to both update and initialize an AWS EKS
@@ -19,7 +8,7 @@
 
     To use jsonnet to generate an eksctl configuration file from this, do:
 
-        jsonnet << cluster_name >>.jsonnet > << cluster_name >>.eksctl.yaml
+        jsonnet nmfs-openscapes.jsonnet > nmfs-openscapes.eksctl.yaml
 
     References:
     - https://eksctl.io/usage/schema/
@@ -27,48 +16,61 @@
 local ng = import "./libsonnet/nodegroup.jsonnet";
 
 // place all cluster nodes here
-local clusterRegion = "<< cluster_region >>";
-local masterAzs = ["<< cluster_region >>a", "<< cluster_region >>b", "<< cluster_region >>c"];
-local nodeAz = "<< cluster_region >>a";
+local clusterRegion = "us-west-2";
+local masterAzs = ["us-west-2a", "us-west-2b", "us-west-2c"];
+local nodeAz = "us-west-2b";
 
 // Node definitions for notebook nodes. Config here is merged
 // with our notebook node definition.
 // A `node.kubernetes.io/instance-type label is added, so pods
 // can request a particular kind of node with a nodeSelector
 local notebookNodes = [
-    { instanceType: "r7i.xlarge" },
-    { instanceType: "r7i.4xlarge" },
-    { instanceType: "r7i.16xlarge" },
+    {
+        instanceType: "r7i.xlarge",
+        namePrefix: "nb-staging",
+        labels+: { "2i2c.org/hub-name": "staging" },
+        tags+: { "2i2c:hub-name": "staging" },
+    },
+    {
+        instanceType: "r7i.4xlarge",
+        namePrefix: "nb-staging",
+        labels+: { "2i2c.org/hub-name": "staging" },
+        tags+: { "2i2c:hub-name": "staging" },
+    },
+    {
+        instanceType: "r7i.16xlarge",
+        namePrefix: "nb-staging",
+        labels+: { "2i2c.org/hub-name": "staging" },
+        tags+: { "2i2c:hub-name": "staging" },
+    },
+    {
+        instanceType: "r7i.xlarge",
+        namePrefix: "nb-prod",
+        labels+: { "2i2c.org/hub-name": "prod" },
+        tags+: { "2i2c:hub-name": "prod" },
+    },
+    {
+        instanceType: "r7i.4xlarge",
+        namePrefix: "nb-prod",
+        labels+: { "2i2c.org/hub-name": "prod" },
+        tags+: { "2i2c:hub-name": "prod" },
+    },
+    {
+        instanceType: "r7i.16xlarge",
+        namePrefix: "nb-prod",
+        labels+: { "2i2c.org/hub-name": "prod" },
+        tags+: { "2i2c:hub-name": "prod" },
+    },
 ];
-<% if hub_type == "daskhub" %>
-local daskNodes = [
-    // Node definitions for dask worker nodes. Config here is merged
-    // with our dask worker node definition, which uses spot instances.
-    // A `node.kubernetes.io/instance-type label is set to the name of the
-    // *first* item in instanceDistribution.instanceTypes, to match
-    // what we do with notebook nodes. Pods can request a particular
-    // kind of node with a nodeSelector
-    //
-    // A not yet fully established policy is being developed about using a single
-    // node pool, see https://github.com/2i2c-org/infrastructure/issues/2687.
-    //
-    { instancesDistribution+: { instanceTypes: ["r7i.4xlarge"] }},
-];
-<% else %>
 local daskNodes = [];
-<% endif %>
 
 
 {
     apiVersion: 'eksctl.io/v1alpha5',
     kind: 'ClusterConfig',
     metadata+: {
-        name: "<< cluster_name >>",
+        name: "nmfs-openscapes",
         region: clusterRegion,
-        {#
-            version should be the latest support version by the eksctl CLI, see
-            https://eksctl.io/getting-started/ for a list of supported versions.
-        -#}
         version: "1.30",
         tags+: {
             "ManagedBy": "2i2c",
@@ -81,7 +83,7 @@ local daskNodes = [];
     },
     // If you add an addon to this config, run the create addon command.
     //
-    //    eksctl create addon --config-file=<< cluster_name >>.eksctl.yaml
+    //    eksctl create addon --config-file=nmfs-openscapes.eksctl.yaml
     //
     addons: [
         { version: "latest", tags: $.metadata.tags } + addon
@@ -125,9 +127,9 @@ local daskNodes = [];
             nameIncludeInstanceType: false,
             availabilityZones: [nodeAz],
             ssh: {
-                publicKeyPath: 'ssh-keys/<< cluster_name >>.key.pub'
+                publicKeyPath: 'ssh-keys/nmfs-openscapes.key.pub'
             },
-            instanceType: "r5.xlarge",
+            instanceType: "r7i.xlarge",
             minSize: 1,
             maxSize: 6,
             labels+: {
@@ -143,7 +145,7 @@ local daskNodes = [];
             maxSize: 500,
             instanceType: n.instanceType,
             ssh: {
-                publicKeyPath: 'ssh-keys/<< cluster_name >>.key.pub'
+                publicKeyPath: 'ssh-keys/nmfs-openscapes.key.pub'
             },
             labels+: {
                 "hub.jupyter.org/node-purpose": "user",
@@ -162,7 +164,7 @@ local daskNodes = [];
             minSize: 0,
             maxSize: 500,
             ssh: {
-                publicKeyPath: 'ssh-keys/<< cluster_name >>.key.pub'
+                publicKeyPath: 'ssh-keys/nmfs-openscapes.key.pub'
             },
             labels+: {
                 "k8s.dask.org/node-purpose": "worker"

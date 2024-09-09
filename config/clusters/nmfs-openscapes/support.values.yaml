@@ -1,0 +1,39 @@
+prometheusIngressAuthSecret:
+  enabled: true
+
+prometheus:
+  server:
+    ingress:
+      enabled: true
+      hosts:
+        - prometheus.nmfs-openscapes.2i2c.cloud
+      tls:
+        - secretName: prometheus-tls
+          hosts:
+            - prometheus.nmfs-openscapes.2i2c.cloud
+    resources:
+      requests:
+        memory: 8Gi
+      limits:
+        memory: 8Gi
+
+grafana:
+  grafana.ini:
+    server:
+      root_url: https://grafana.nmfs-openscapes.2i2c.cloud/
+  auth.github:
+    enabled: true
+    allowed_organizations: 2i2c-org nmfs-openscapes
+  ingress:
+    hosts:
+      - grafana.nmfs-openscapes.2i2c.cloud
+    tls:
+      - secretName: grafana-tls
+        hosts:
+          - grafana.nmfs-openscapes.2i2c.cloud
+
+cluster-autoscaler:
+  enabled: true
+  autoDiscovery:
+    clusterName: nmfs-openscapes
+  awsRegion: us-west-2
