@@ -29,7 +29,7 @@ def helm_upgrade_jobs(
     ),
     pr_labels: str = typer.Argument(
         "[]",
-        help="JSON formatted list of PR labels, where 'deployer:skip-deploy' and 'deployer:skip-deploy-hubs' are respected.",
+        help="JSON formatted list of PR labels, where 'deployer:skip-deploy', 'deployer:skip-deploy-hubs', 'deployer:deploy-support', and 'deployer:deploy-hubs' are respected.",
     ),
 ):
     """
@@ -44,6 +44,11 @@ def helm_upgrade_jobs(
         upgrade_support_on_all_clusters,
         upgrade_all_hubs_on_all_clusters,
     ) = discover_modified_common_files(changed_filepaths)
+
+    if "deployer:deploy-support" in pr_labels:
+        upgrade_support_on_all_clusters = True
+    if "deployer:deploy-hubs" in pr_labels:
+        upgrade_all_hubs_on_all_clusters = True
 
     # Convert changed filepaths into absolute Posix Paths
     changed_filepaths = [
