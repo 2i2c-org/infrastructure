@@ -35,6 +35,7 @@ jupyterhub:
               username_claim: "email"
             allowed_domains:
               - basisindependent.com
+              - basisinds.com
           http://google.com/accounts/o8/id:
             default: true
             username_derivation:
