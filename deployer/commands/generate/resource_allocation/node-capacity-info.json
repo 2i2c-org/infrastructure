@@ -78,7 +78,7 @@
         },
         "allocatable": {
             "cpu": 15.89,
-            "memory": 129847713792
+            "memory": 129847705600
         },
         "measured_overhead": {
             "cpu": 0.195,
@@ -86,7 +86,7 @@
         },
         "available": {
             "cpu": 15.695,
-            "memory": 129585569792
+            "memory": 129585561600
         }
     },
     "n2-highmem-4": {
