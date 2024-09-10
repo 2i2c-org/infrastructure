@@ -245,6 +245,7 @@ jobs:
       failure_nasa-esdis: "${{ env.failure_nasa-esdis }}"
       failure_nasa-ghg: "${{ env.failure_nasa-ghg }}"
       failure_nasa-veda: "${{ env.failure_nasa-veda }}"
+      failure_nmfs-openscapes: "${{ env.failure_nmfs-openscapes }}"
       failure_openscapes: "${{ env.failure_openscapes }}"
       failure_opensci: "${{ env.failure_opensci }}"
       failure_pangeo-hubs: "${{ env.failure_pangeo-hubs }}"
