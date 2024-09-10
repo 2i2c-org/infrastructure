@@ -91,10 +91,13 @@ local daskNodes = [];
         [
             {
                 name: "vpc-cni",
+                # FIXME: network policy enforcement doesn't work, what's wrong
+                #        isn't clear.
                 # configurationValues ref: https://github.com/aws/amazon-vpc-cni-k8s/blob/HEAD/charts/aws-vpc-cni/values.yaml
                 configurationValues: |||
                     enableNetworkPolicy: "true"
                 |||,
+                attachPolicyARNs: ["arn:aws:iam::aws:policy/AmazonEKS_CNI_Policy"],
             },
             { name: "coredns" },
             { name: "kube-proxy" },
