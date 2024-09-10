@@ -68,7 +68,7 @@
         },
         "available": {
             "cpu": 3.725,
-            "memory": 31859916406
+            "memory": 31785893888
         }
     },
     "r7i.4xlarge": {
@@ -86,7 +86,7 @@
         },
         "available": {
             "cpu": 15.695,
-            "memory": 130188897681
+            "memory": 129585569792
         }
     },
     "n2-highmem-4": {
