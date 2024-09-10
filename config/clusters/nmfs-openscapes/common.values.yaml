@@ -115,8 +115,8 @@ jupyterhub:
               mem_1_9:
                 display_name: 1.9 GB RAM, upto 3.7 CPUs
                 kubespawner_override:
-                  mem_guarantee: 1991244775
-                  mem_limit: 1991244775
+                  mem_guarantee: 1986618368
+                  mem_limit: 1986618368
                   cpu_guarantee: 0.2328125
                   cpu_limit: 3.725
                   node_selector:
@@ -125,8 +125,8 @@ jupyterhub:
               mem_3_7:
                 display_name: 3.7 GB RAM, upto 3.7 CPUs
                 kubespawner_override:
-                  mem_guarantee: 3982489550
-                  mem_limit: 3982489550
+                  mem_guarantee: 3973236736
+                  mem_limit: 3973236736
                   cpu_guarantee: 0.465625
                   cpu_limit: 3.725
                   node_selector:
@@ -134,8 +134,8 @@ jupyterhub:
               mem_7_4:
                 display_name: 7.4 GB RAM, upto 3.7 CPUs
                 kubespawner_override:
-                  mem_guarantee: 7964979101
-                  mem_limit: 7964979101
+                  mem_guarantee: 7946473472
+                  mem_limit: 7946473472
                   cpu_guarantee: 0.93125
                   cpu_limit: 3.725
                   node_selector:
@@ -143,35 +143,35 @@ jupyterhub:
               mem_14_8:
                 display_name: 14.8 GB RAM, upto 3.7 CPUs
                 kubespawner_override:
-                  mem_guarantee: 15929958203
-                  mem_limit: 15929958203
+                  mem_guarantee: 15892946944
+                  mem_limit: 15892946944
                   cpu_guarantee: 1.8625
                   cpu_limit: 3.725
                   node_selector:
                     node.kubernetes.io/instance-type: r7i.xlarge
-              mem_29_7:
-                display_name: 29.7 GB RAM, upto 3.7 CPUs
+              mem_29_6:
+                display_name: 29.6 GB RAM, upto 3.7 CPUs
                 kubespawner_override:
-                  mem_guarantee: 31859916406
-                  mem_limit: 31859916406
+                  mem_guarantee: 31785893888
+                  mem_limit: 31785893888
                   cpu_guarantee: 3.725
                   cpu_limit: 3.725
                   node_selector:
                     node.kubernetes.io/instance-type: r7i.xlarge
-              mem_60_6:
-                display_name: 60.6 GB RAM, upto 15.6 CPUs
+              mem_60_3:
+                display_name: 60.3 GB RAM, upto 15.6 CPUs
                 kubespawner_override:
-                  mem_guarantee: 65094448840
-                  mem_limit: 65094448840
+                  mem_guarantee: 64792784896
+                  mem_limit: 64792784896
                   cpu_guarantee: 7.8475
                   cpu_limit: 15.695
                   node_selector:
                     node.kubernetes.io/instance-type: r7i.4xlarge
-              mem_121_2:
-                display_name: 121.2 GB RAM, upto 15.6 CPUs
+              mem_120_7:
+                display_name: 120.7 GB RAM, upto 15.6 CPUs
                 kubespawner_override:
-                  mem_guarantee: 130188897681
-                  mem_limit: 130188897681
+                  mem_guarantee: 129585569792
+                  mem_limit: 129585569792
                   cpu_guarantee: 15.695
                   cpu_limit: 15.695
                   node_selector:
