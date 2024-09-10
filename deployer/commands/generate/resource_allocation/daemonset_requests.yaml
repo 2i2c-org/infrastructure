@@ -40,7 +40,7 @@ gke:
   #
   2i2c:
     requesting_daemon_sets: calico-node,fluentbit-gke,gke-metadata-server,gke-metrics-agent,ip-masq-agent,netd,pdcsi-node,support-cryptnono,support-prometheus-node-exporter
-    other_daemon_sets: imagebuilding-demo-binderhub-service-docker-api
+    other_daemon_sets: docker-api,docker-api
     cpu_requests: 354m
     memory_requests: 656Mi
     k8s_version: v1.29.1-gke.1589020
@@ -49,65 +49,45 @@ gke:
     other_daemon_sets: ""
     cpu_requests: 354m
     memory_requests: 656Mi
-    k8s_version: v1.29.1-gke.1589018
+    k8s_version: v1.29.1-gke.1589020
   awi-ciroh:
-    requesting_daemon_sets: calico-node,fluentbit-gke,gke-metadata-server,gke-metrics-agent,ip-masq-agent,netd,pdcsi-node,support-cryptnono,support-prometheus-node-exporter
+    requesting_daemon_sets: calico-node,fluentbit-gke,gke-metadata-server,ip-masq-agent,netd,pdcsi-node,support-cryptnono,support-prometheus-node-exporter
     other_daemon_sets: ""
-    cpu_requests: 354m
-    memory_requests: 656Mi
-    k8s_version: v1.29.1-gke.1589018
+    cpu_requests: 348m
+    memory_requests: 556Mi
+    k8s_version: v1.29.4-gke.1043002
   catalystproject-latam:
     # missing: gke-metrics-agent
     requesting_daemon_sets: calico-node,fluentbit-gke,gke-metadata-server,ip-masq-agent,netd,pdcsi-node,support-cryptnono,support-prometheus-node-exporter
     other_daemon_sets: ""
     cpu_requests: 348m
     memory_requests: 556Mi
-    k8s_version: v1.29.1-gke.1589018
+    k8s_version: v1.29.1-gke.1589020
   cloudbank:
     requesting_daemon_sets: calico-node,fluentbit-gke,gke-metadata-server,gke-metrics-agent,ip-masq-agent,netd,pdcsi-node,support-cryptnono,support-prometheus-node-exporter
     other_daemon_sets: ""
     cpu_requests: 354m
     memory_requests: 656Mi
-    k8s_version: v1.29.1-gke.1589018
+    k8s_version: v1.29.1-gke.1589020
   hhmi:
     # missing: calico-node, ip-masq-agent, gke-metrics-agent
-    requesting_daemon_sets: fluentbit-gke,gke-metadata-server,netd,pdcsi-node,support-cryptnono,support-prometheus-node-exporter
+    requesting_daemon_sets: calico-node,fluentbit-gke,gke-metadata-server,ip-masq-agent,netd,pdcsi-node,support-cryptnono,support-prometheus-node-exporter
     other_daemon_sets: ""
-    cpu_requests: 238m
-    memory_requests: 540Mi
-    k8s_version: v1.29.1-gke.1589020
+    cpu_requests: 348m
+    memory_requests: 556Mi
+    k8s_version: v1.29.6-gke.1254000
   leap:
     requesting_daemon_sets: calico-node,fluentbit-gke,gke-metadata-server,gke-metrics-agent,ip-masq-agent,netd,pdcsi-node,support-cryptnono,support-prometheus-node-exporter
     other_daemon_sets: maintenance-handler
     cpu_requests: 354m
     memory_requests: 656Mi
-    k8s_version: v1.29.1-gke.1589018
-  linked-earth:
-    requesting_daemon_sets: calico-node,fluentbit-gke,gke-metadata-server,gke-metrics-agent,ip-masq-agent,netd,pdcsi-node,support-cryptnono,support-prometheus-node-exporter
-    other_daemon_sets: ""
-    cpu_requests: 354m
-    memory_requests: 656Mi
-    k8s_version: v1.29.1-gke.1589018
-  meom-ige:
-    # missing: calico-node, ip-masq-agent
-    requesting_daemon_sets: fluentbit-gke,gke-metadata-server,gke-metrics-agent,netd,pdcsi-node,support-cryptnono,support-prometheus-node-exporter
-    other_daemon_sets: ""
-    cpu_requests: 244m
-    memory_requests: 640Mi
-    k8s_version: v1.29.1-gke.1589018
+    k8s_version: v1.29.1-gke.1589020
   pangeo-hubs:
     requesting_daemon_sets: calico-node,fluentbit-gke,gke-metadata-server,gke-metrics-agent,ip-masq-agent,netd,pdcsi-node,support-cryptnono,support-prometheus-node-exporter
     other_daemon_sets: ""
     cpu_requests: 354m
     memory_requests: 656Mi
-    k8s_version: v1.29.1-gke.1589018
-  qcl:
-    # missing: gke-metrics-agent
-    requesting_daemon_sets: calico-node,fluentbit-gke,gke-metadata-server,ip-masq-agent,netd,pdcsi-node,support-cryptnono,support-prometheus-node-exporter
-    other_daemon_sets: ""
-    cpu_requests: 348m
-    memory_requests: 556Mi
-    k8s_version: v1.29.1-gke.1589018
+    k8s_version: v1.29.1-gke.1589020
 eks:
   # Current overhead is 195m and 250Mi (May 15 2024 with EKS 1.29.4).
   #
@@ -128,98 +108,116 @@ eks:
     other_daemon_sets: ""
     cpu_requests: 170m
     memory_requests: 250Mi
-    k8s_version: v1.29.4-eks-036c24b
+    k8s_version: v1.29.7-eks-2f46c53
   catalystproject-africa:
     requesting_daemon_sets: aws-node,ebs-csi-node,kube-proxy,support-cryptnono,support-prometheus-node-exporter
     other_daemon_sets: ""
     cpu_requests: 170m
     memory_requests: 250Mi
-    k8s_version: v1.29.3-eks-adc7111
+    k8s_version: v1.29.7-eks-2f46c53
   earthscope:
     requesting_daemon_sets: aws-node,ebs-csi-node,kube-proxy,support-cryptnono,support-prometheus-node-exporter
     other_daemon_sets: ""
-    cpu_requests: 170m
+    cpu_requests: 195m
     memory_requests: 250Mi
-    k8s_version: v1.29.4-eks-036c24b
+    k8s_version: v1.29.7-eks-2f46c53
   gridsst:
     requesting_daemon_sets: aws-node,ebs-csi-node,kube-proxy,support-cryptnono,support-prometheus-node-exporter
     other_daemon_sets: ""
     cpu_requests: 170m
     memory_requests: 250Mi
-    k8s_version: v1.29.4-eks-036c24b
+    k8s_version: v1.29.7-eks-2f46c53
   jupyter-health:
     requesting_daemon_sets: aws-node,ebs-csi-node,kube-proxy,support-cryptnono,support-prometheus-node-exporter
     other_daemon_sets: ""
     cpu_requests: 195m
     memory_requests: 250Mi
-    k8s_version: v1.29.3-eks-adc7111
+    k8s_version: v1.29.7-eks-2f46c53
   jupyter-meets-the-earth:
     requesting_daemon_sets: aws-node,ebs-csi-node,kube-proxy,support-cryptnono,support-prometheus-node-exporter
     other_daemon_sets: ""
     cpu_requests: 170m
     memory_requests: 250Mi
-    k8s_version: v1.29.4-eks-036c24b
+    k8s_version: v1.29.7-eks-2f46c53
   kitware:
     requesting_daemon_sets: aws-node,ebs-csi-node,kube-proxy,support-cryptnono,support-prometheus-node-exporter
     other_daemon_sets: ""
     cpu_requests: 195m
     memory_requests: 250Mi
-    k8s_version: v1.29.3-eks-adc7111
+    k8s_version: v1.29.7-eks-2f46c53
   nasa-cryo:
     requesting_daemon_sets: aws-node,ebs-csi-node,kube-proxy,support-cryptnono,support-prometheus-node-exporter
     other_daemon_sets: ""
     cpu_requests: 170m
     memory_requests: 250Mi
-    k8s_version: v1.29.4-eks-036c24b
+    k8s_version: v1.29.7-eks-2f46c53
   nasa-esdis:
     requesting_daemon_sets: aws-node,ebs-csi-node,kube-proxy,support-cryptnono,support-prometheus-node-exporter
     other_daemon_sets: ""
     cpu_requests: 170m
     memory_requests: 250Mi
-    k8s_version: v1.29.4-eks-036c24b
+    k8s_version: v1.29.7-eks-2f46c53
   nasa-ghg:
     requesting_daemon_sets: aws-node,ebs-csi-node,kube-proxy,support-cryptnono,support-prometheus-node-exporter
     other_daemon_sets: ""
     cpu_requests: 170m
     memory_requests: 250Mi
-    k8s_version: v1.29.4-eks-036c24b
+    k8s_version: v1.29.7-eks-2f46c53
   nasa-veda:
     requesting_daemon_sets: aws-node,ebs-csi-node,kube-proxy,support-cryptnono,support-prometheus-node-exporter
     other_daemon_sets: ""
     cpu_requests: 170m
     memory_requests: 250Mi
-    k8s_version: v1.29.4-eks-036c24b
+    k8s_version: v1.29.7-eks-2f46c53
+  nmfs-openscapes:
+    requesting_daemon_sets: aws-node,ebs-csi-node,kube-proxy,support-cryptnono,support-prometheus-node-exporter
+    other_daemon_sets: ""
+    cpu_requests: 195m
+    memory_requests: 250Mi
+    k8s_version: v1.30.4-eks-a737599
   openscapes:
     requesting_daemon_sets: aws-node,ebs-csi-node,kube-proxy,support-cryptnono,support-prometheus-node-exporter
     other_daemon_sets: ""
     cpu_requests: 170m
     memory_requests: 250Mi
-    k8s_version: v1.29.4-eks-036c24b
+    k8s_version: v1.29.7-eks-2f46c53
   opensci:
     requesting_daemon_sets: aws-node,ebs-csi-node,kube-proxy,support-cryptnono,support-prometheus-node-exporter
-    other_daemon_sets: sciencecore-binderhub-service-docker-api
+    other_daemon_sets: ""
     cpu_requests: 170m
     memory_requests: 250Mi
-    k8s_version: v1.29.4-eks-036c24b
+    k8s_version: v1.29.7-eks-2f46c53
+  projectpythia:
+    requesting_daemon_sets: aws-node,ebs-csi-node,kube-proxy,support-cryptnono,support-prometheus-node-exporter
+    other_daemon_sets: ""
+    cpu_requests: 195m
+    memory_requests: 250Mi
+    k8s_version: v1.29.7-eks-2f46c53
   smithsonian:
     requesting_daemon_sets: aws-node,ebs-csi-node,kube-proxy,support-cryptnono,support-prometheus-node-exporter
     other_daemon_sets: ""
     cpu_requests: 170m
     memory_requests: 250Mi
-    k8s_version: v1.29.4-eks-036c24b
+    k8s_version: v1.29.7-eks-2f46c53
   ubc-eoas:
     requesting_daemon_sets: aws-node,ebs-csi-node,kube-proxy,support-cryptnono,support-prometheus-node-exporter
     other_daemon_sets: ""
     cpu_requests: 170m
     memory_requests: 250Mi
-    k8s_version: v1.29.4-eks-036c24b
+    k8s_version: v1.29.7-eks-2f46c53
   victor:
     requesting_daemon_sets: aws-node,ebs-csi-node,kube-proxy,support-cryptnono,support-prometheus-node-exporter
     other_daemon_sets: ""
     cpu_requests: 170m
     memory_requests: 250Mi
-    k8s_version: v1.29.4-eks-036c24b
+    k8s_version: v1.29.7-eks-2f46c53
 aks:
+  pchub:
+    requesting_daemon_sets: cloud-node-manager,csi-azuredisk-node,csi-azurefile-node,kube-proxy,support-cryptnono,support-prometheus-node-exporter
+    other_daemon_sets: calico-node
+    cpu_requests: 226m
+    memory_requests: 300Mi
+    k8s_version: v1.29.4
   utoronto:
     requesting_daemon_sets: cloud-node-manager,csi-azuredisk-node,csi-azurefile-node,kube-proxy,support-cryptnono,support-prometheus-node-exporter
     other_daemon_sets: calico-node
