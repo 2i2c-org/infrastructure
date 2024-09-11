@@ -313,3 +313,19 @@ variable "enable_aws_ce_grafana_backend_iam" {
   Create an IAM role with attached policy to permit read use of AWS Cost Explorer API.
   EOT
 }
+
+variable "ebs_volumes" {
+  type = map(object({
+    size        = number
+    type        = string
+    name_suffix = optional(string, null)
+    tags        = optional(map(string), {})
+  }))
+  default = {}
+  description = <<-EOT
+  Deploy one or more AWS ElasticBlockStore volumes.
+
+  This provisions a managed EBS volume that can be used by jupyter-home-nfs server
+  to store home directories for users.
+  EOT
+}

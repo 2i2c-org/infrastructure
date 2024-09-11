@@ -211,3 +211,12 @@ hub_cloud_permissions = {
     },
   },
 }
+
+ebs_volumes = {
+  "staging" = {
+    size        = 100
+    type        = "gp3"
+    name_suffix = "staging"
+    tags        = {}
+  }
+}
