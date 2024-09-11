@@ -321,7 +321,7 @@ variable "ebs_volumes" {
     name_suffix = optional(string, null)
     tags        = optional(map(string), {})
   }))
-  default = {}
+  default     = {}
   description = <<-EOT
   Deploy one or more AWS ElasticBlockStore volumes.
 
