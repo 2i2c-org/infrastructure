@@ -40,3 +40,8 @@ grafana:
     auth.github:
       enabled: true
       allowed_organizations: 2i2c-org NASA-Openscapes
+
+redirects:
+  rules:
+    - from: workshop.openscapes.2i2c.cloud
+      to: shared-password.openscapes.2i2c.cloud

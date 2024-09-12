@@ -11,9 +11,9 @@ basehub:
       homepage:
         gitRepoBranch: "username-and-password-homepage"
     ingress:
-      hosts: [workshop.openscapes.2i2c.cloud]
+      hosts: [shared-password.openscapes.2i2c.cloud]
       tls:
-        - hosts: [workshop.openscapes.2i2c.cloud]
+        - hosts: [shared-password.openscapes.2i2c.cloud]
           secretName: https-auto-tls
     hub:
       allowNamedServers: true
