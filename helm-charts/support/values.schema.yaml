@@ -173,54 +173,11 @@ properties:
             type: string
             description: |
               Name of the StorageClass to create
+  # Enables https://github.com/2i2c-org/gcp-filestore-backups to regularly backup
+  # GCP Filestore instances
   gcpFilestoreBackups:
     type: object
-    additionalProperties: false
-    required:
-      - enabled
-      - image
-    # Require options to be set *only* if gcpFilestoreBackups is enabled
-    if:
-      properties:
-        enabled:
-          const: true
-    then:
-      required:
-        - filestoreNames
-        - project
-        - zone
-        - annotations
-    properties:
-      enabled:
-        type: boolean
-        description: |
-          Enable automatic daily backups of GCP Filestores
-      image:
-        type: string
-        description: |
-          The image name and tag to use for the gcp-filestore-backups pod.
-          Will be set by chartpress.
-      filestoreNames:
-        type: array
-        description: |
-          The name of one or more GCP Filestores to backup as a list
-      project:
-        type: string
-        description: |
-          The GCP project the Filestore and backups are stored in
-      zone:
-        type: string
-        description: |
-          The GCP zone the Filestore and backups are stored in, e.g., us-central1-b
-      annotations:
-        type: object
-        additionalProperties: true
-        description: |
-          Dictionary of annotations that can be applied to the service account.
-
-          When used with GKE and Workload Identity, you need to set the
-          annotation with the key "iam.gke.io/gcp-service-account" to the email
-          address of the Google Service Account whose credentials it should have.
+    additionalProperties: true
   global:
     type: object
     additionalProperties: true

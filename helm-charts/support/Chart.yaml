@@ -52,3 +52,10 @@ dependencies:
     version: "0.0.1-set.by.chartpress"
     repository: "file://../aws-ce-grafana-backend"
     condition: aws-ce-grafana-backend.enabled
+
+  # gcpFilestoreBackups runs regular backups of GCP Filestore Instances hosting
+  # home directories within the cloud project.
+  - name: gcpFilestoreBackups
+    version: "0.0.1-0.dev.git.53.h8b9558e"
+    repository: https://2i2c.org/gcp-filestore-backups
+    condition: gcpFilestoreBackups.enabled
