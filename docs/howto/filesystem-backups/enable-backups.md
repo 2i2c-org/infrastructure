@@ -33,7 +33,7 @@ export CLUSTER_NAME=<cluster-name>
       terraform apply -var-file=projects/$CLUSTER_NAME.tfvars
       ```
 
-1. **Enable the `gcpFilestoreBackups` deployment in the cluster's support values.**
+1. **Enable the `gcpFilestoreBackups` chart in the cluster's support values.**
 
    1. In `config/clusters/<cluster-name>/support.values.yaml`, add the following config:
       ```yaml
@@ -44,8 +44,9 @@ export CLUSTER_NAME=<cluster-name>
           - ...
         project: <gcp-project>
         zone: <gcp-zone>
-        annotations:
-          iam.gke.io/gcp-service-account: <gcp-service-account-email>
+        serviceAccount:
+          annotations:
+            iam.gke.io/gcp-service-account: <gcp-service-account-email>
       ```
       where:
       - `filestoreNames` is a list of the filestore names to be backed up (can be
