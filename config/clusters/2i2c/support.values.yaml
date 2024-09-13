@@ -63,5 +63,6 @@ gcpFilestoreBackups:
     - pilot-hubs-homedirs
   project: two-eye-two-see
   zone: us-central1-b
-  annotations:
-    iam.gke.io/gcp-service-account: pilot-hubs-filestore-backup@two-eye-two-see.iam.gserviceaccount.com
+  serviceAccount:
+    annotations:
+      iam.gke.io/gcp-service-account: pilot-hubs-filestore-backup@two-eye-two-see.iam.gserviceaccount.com
