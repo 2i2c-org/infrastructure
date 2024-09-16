@@ -267,6 +267,19 @@ properties:
     type: object
     additionalProperties: true
 
+  jupyter-home-nfs:
+    type: object
+    additionalProperties: true
+    required:
+      - enabled
+    properties:
+      enabled:
+        type: boolean
+        description: |
+          Enable using jupyter-home-nfs to provide persistent storage for
+          user home directories on an in-cluster NFS server with storage
+          quota enforcement.
+
   # binderhub-service is a dependency chart with its own schema, but we impose
   # some additional restrictions below via this chart's schema.
   binderhub-service:

@@ -1654,3 +1654,6 @@ jupyterhub:
                   break
           else:
               print("dask-gateway service not found, this should not happen!")
+
+jupyter-home-nfs:
+  enabled: false
