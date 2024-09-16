@@ -65,14 +65,6 @@ hubs:
       - daskhub-common.values.yaml
       - ohw.values.yaml
       - enc-ohw.secret.values.yaml
-  - name: aup
-    display_name: "The American University of Paris"
-    domain: aup.pilot.2i2c.cloud
-    helm_chart: basehub
-    helm_chart_values_files:
-      - basehub-common.values.yaml
-      - aup.values.yaml
-      - enc-aup.secret.values.yaml
   - name: temple
     display_name: "Temple University"
     domain: temple.2i2c.cloud
