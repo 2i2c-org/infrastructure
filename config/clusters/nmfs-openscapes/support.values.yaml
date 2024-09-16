@@ -3,6 +3,9 @@ prometheusIngressAuthSecret:
 
 prometheus:
   server:
+    # Size increased as part of https://github.com/2i2c-org/infrastructure/issues/4632
+    persistentVolume:
+      size: 500Gi
     ingress:
       enabled: true
       hosts:
