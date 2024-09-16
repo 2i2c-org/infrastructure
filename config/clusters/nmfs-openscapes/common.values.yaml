@@ -53,7 +53,7 @@ jupyterhub:
             display_name: Image
             choices:
               python:
-                display_name: Py - Openscapes Python 39dffde
+                display_name: Py - NASA Openscapes Python 39dffde
                 slug: python
                 kubespawner_override:
                   image: openscapes/python:39dffde
@@ -87,7 +87,7 @@ jupyterhub:
                 display_name: Py - Echopype with pangeo nmfs-opensci echopype latest
                 slug: echopype
                 kubespawner_override:
-                  image: ghcr.io/nmfs-opensci/container-images/echopype:latest
+                  image: ghcr.io/nmfs-opensci/image-acoustics:latest
               arcgis:
                 display_name: Py - ArcGIS Python 3.9
                 slug: arcgis
@@ -102,6 +102,11 @@ jupyterhub:
                 display_name: R - VAST with TMB - nmfs-opensci vast latest
                 kubespawner_override:
                   image: ghcr.io/nmfs-opensci/container-images/vast:latest
+              pace:
+                display_name: Py - PACE image with OCSSW tools
+                slug: pace
+                kubespawner_override:
+                  image: quay.io/pacehackweek/pace-2024:latest
             unlisted_choice:
               enabled: True
               display_name: "Custom image"
@@ -188,6 +193,10 @@ jupyterhub:
         populate_teams_in_auth_state: true
         allowed_organizations:
           - nmfs-openscapes:longterm-access-2i2c
+          - nmfs-openscapes:2024-mentors
+          - nmfs-openscapes:2024-science-teams
+          - nmfs-openscapes:2024-CoastWatch
+          - nmfs-openscapes:2024-champions-cohort
         scope:
           - read:org
       Authenticator:
