@@ -22,9 +22,19 @@ UBUNTU_IMAGE = "ubuntu:22.04"
 def root_homes(
     cluster_name: str = typer.Argument(..., help="Name of cluster to operate on"),
     hub_name: str = typer.Argument(..., help="Name of hub to operate on"),
+    extra_nfs_server: str = typer.Argument(
+        None, help="IP address of an extra NFS server to mount"
+    ),
+    extra_nfs_base_path: str = typer.Argument(
+        None, help="Path of the extra NFS share to mount"
+    ),
+    extra_nfs_mount_path: str = typer.Argument(
+        None, help="Mount point for the extra NFS share"
+    ),
 ):
     """
     Pop an interactive shell with the entire nfs file system of the given cluster mounted on /root-homes
+    Optionally mount an extra NFS share if required (useful when migrating data to a new NFS server).
     """
     config_file_path = find_absolute_path_to_cluster_file(cluster_name)
     with open(config_file_path) as f:
@@ -54,18 +64,40 @@ def root_homes(
             )
 
     pod_name = f"{cluster_name}-root-home-shell"
+    volumes = [
+        {
+            "name": "root-homes",
+            "nfs": {"server": server_ip, "path": base_share_name},
+        }
+    ]
+    volume_mounts = [
+        {
+            "name": "root-homes",
+            "mountPath": "/root-homes",
+        }
+    ]
+
+    if extra_nfs_server and extra_nfs_base_path and extra_nfs_mount_path:
+        volumes.append(
+            {
+                "name": "extra-nfs",
+                "nfs": {"server": extra_nfs_server, "path": extra_nfs_base_path},
+            }
+        )
+        volume_mounts.append(
+            {
+                "name": "extra-nfs",
+                "mountPath": extra_nfs_mount_path,
+            }
+        )
+
     pod = {
         "apiVersion": "v1",
         "kind": "Pod",
         "spec": {
             "terminationGracePeriodSeconds": 1,
             "automountServiceAccountToken": False,
-            "volumes": [
-                {
-                    "name": "root-homes",
-                    "nfs": {"server": server_ip, "path": base_share_name},
-                }
-            ],
+            "volumes": volumes,
             "containers": [
                 {
                     "name": pod_name,
@@ -74,12 +106,7 @@ def root_homes(
                     "stdin": True,
                     "stdinOnce": True,
                     "tty": True,
-                    "volumeMounts": [
-                        {
-                            "name": "root-homes",
-                            "mountPath": "/root-homes",
-                        }
-                    ],
+                    "volumeMounts": volume_mounts,
                 }
             ],
         },
