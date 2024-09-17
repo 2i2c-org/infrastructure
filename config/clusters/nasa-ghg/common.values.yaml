@@ -86,7 +86,7 @@ basehub:
             - US-GHG-Center:ghg-trial-access
             - 2i2c-org:hub-access-for-2i2c-staff
           kubespawner_override:
-            image: public.ecr.aws/nasa-veda/pangeo-notebook-veda-image:53b6fd1256f5
+            image: public.ecr.aws/nasa-veda/pangeo-notebook-veda-image:2024.08.18-v1
             init_containers:
               # Need to explicitly fix ownership here, as otherwise these directories will be owned
               # by root on most NFS filesystems - neither EFS nor Google Filestore support anonuid
@@ -227,7 +227,7 @@ basehub:
           kubespawner_override:
             default_url: /desktop
             # Built from https://github.com/2i2c-org/nasa-qgis-image
-            image: quay.io/2i2c/nasa-qgis-image:0d0765090250
+            image: quay.io/2i2c/nasa-qgis-image:d76118ea0c15
           profile_options: *profile_options
         - display_name: "Bring your own image"
           description: Specify your own docker image (must have python and jupyterhub installed in it)
