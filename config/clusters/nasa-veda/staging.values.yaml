@@ -206,3 +206,11 @@ basehub:
     buildPodsRegistryCredentials:
       server: *url
       username: *username
+
+  jupyter-home-nfs:
+    enabled: true
+    eks:
+      enabled: true
+      volumeId: vol-0a1246ee2e07372d0
+    quotaEnforcer:
+      hardQuota: "10" # in GB
