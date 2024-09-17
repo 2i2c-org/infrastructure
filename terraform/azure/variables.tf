@@ -55,10 +55,20 @@ variable "kubernetes_version" {
   Version of kubernetes the cluster should use.
 
   `az aks get-versions --location westus2 -o table` will
-  display the list of available versions.
+  display the list of available versions. Or the terraform
+  output called latest_supported_k8s_versions if running against
+  an existing cluster.
   EOT
 }
 
+variable "k8s_version_prefixes" {
+  type = set(string)
+  default = [ "1.29", "1.30", "1." ]
+  description = <<-EOT
+  A list of k8s version prefixes that can be evaluated to their latest version by
+  the output defined in cluster.tf called latest_supported_k8s_versions.
+  EOT
+}
 
 variable "global_container_registry_name" {
   type        = string

@@ -1,3 +1,24 @@
+# This data resource and output provides information on the latest available k8s
+# versions supported by Azure Kubernetes Service. This can be used when specifying
+# versions to upgrade to via the kubernetes_version variable.
+#
+# To get the output of relevance, run:
+#
+#     terraform plan -var-file=projects/$CLUSTER_NAME.tfvars
+#
+# ref: https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/data-sources/kubernetes_service_versions
+data "azurerm_kubernetes_service_versions" "k8s_version_prefixes" {
+  location = var.location
+  
+  for_each       = var.k8s_version_prefixes
+  version_prefix = each.value
+}
+output "latest_supported_k8s_versions" {
+  value = { #data.azurerm_kubernetes_service_versions.current.versions
+    for k, v in data.azurerm_kubernetes_service_versions.k8s_version_prefixes: k => v.latest_version
+  }
+}
+
 # ref: https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/kubernetes_cluster
 resource "azurerm_kubernetes_cluster" "jupyterhub" {
   name                = "hub-cluster"
