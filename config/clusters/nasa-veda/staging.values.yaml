@@ -1,4 +1,7 @@
 basehub:
+  nfs:
+    pv:
+      serverIP: staging-service.staging.svc.cluster.local
   userServiceAccount:
     annotations:
       eks.amazonaws.com/role-arn: arn:aws:iam::444055461661:role/nasa-veda-staging
