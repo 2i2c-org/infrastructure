@@ -9,13 +9,13 @@
 # ref: https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/data-sources/kubernetes_service_versions
 data "azurerm_kubernetes_service_versions" "k8s_version_prefixes" {
   location = var.location
-  
+
   for_each       = var.k8s_version_prefixes
   version_prefix = each.value
 }
 output "latest_supported_k8s_versions" {
   value = { #data.azurerm_kubernetes_service_versions.current.versions
-    for k, v in data.azurerm_kubernetes_service_versions.k8s_version_prefixes: k => v.latest_version
+    for k, v in data.azurerm_kubernetes_service_versions.k8s_version_prefixes : k => v.latest_version
   }
 }
 
