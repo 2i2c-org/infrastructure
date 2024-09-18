@@ -102,7 +102,7 @@ def cluster_config(
 def hub_config(
     cluster_name: str = typer.Argument(..., help="Name of cluster to operate on"),
     hub_name: str = typer.Argument(None, help="Name of hub to operate on"),
-    skip_refresh: bool = typer.Argument(False, help="Skip the helm dep update"),
+    debug: bool = typer.Option(False, "--debug", help="Enable verbose output"),
 ):
     """
     Validates the provided non-encrypted helm chart values files for each hub of
@@ -125,6 +125,9 @@ def hub_config(
             "template",
             str(HELM_CHARTS_DIR.joinpath(hub.spec["helm_chart"])),
         ]
+        if debug:
+            cmd.append("--debug")
+
         for values_file in hub.spec["helm_chart_values_files"]:
             if "secret" not in os.path.basename(values_file):
                 values_file = config_file_path.parent.joinpath(values_file)
@@ -149,6 +152,7 @@ def hub_config(
 @validate_app.command()
 def support_config(
     cluster_name: str = typer.Argument(..., help="Name of cluster to operate on"),
+    debug: bool = typer.Option(False, "--debug", help="Enable verbose output"),
 ):
     """
     Validates the provided non-encrypted helm chart values files for the support chart
@@ -170,6 +174,8 @@ def support_config(
             "template",
             str(HELM_CHARTS_DIR.joinpath("support")),
         ]
+        if debug:
+            cmd.append("--debug")
 
         for values_file in cluster.support["helm_chart_values_files"]:
             if "secret" not in os.path.basename(values_file):
@@ -317,11 +323,12 @@ def configurator_config(
 def all(
     cluster_name: str = typer.Argument(..., help="Name of cluster to operate on"),
     hub_name: str = typer.Argument(None, help="Name of hub to operate on"),
+    debug: bool = typer.Option(False, "--debug", help="Enable verbose output"),
 ):
     """
     Validate cluster.yaml and non-encrypted helm config for given hub
     """
     cluster_config(cluster_name)
-    support_config(cluster_name)
-    hub_config(cluster_name, hub_name)
+    support_config(cluster_name, debug=debug)
+    hub_config(cluster_name, hub_name, skip_refresh=skip_refresh, debug=debug)
     authenticator_config(cluster_name, hub_name)
