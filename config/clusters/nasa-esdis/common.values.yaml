@@ -61,7 +61,7 @@ jupyterhub:
         description: Pangeo based notebook with a Python environment
         default: true
         kubespawner_override:
-          image: public.ecr.aws/nasa-veda/pangeo-notebook-veda-image:53b6fd1256f5
+          image: public.ecr.aws/nasa-veda/pangeo-notebook-veda-image:2024.08.18-v1
           init_containers:
             # Need to explicitly fix ownership here, as otherwise these directories will be owned
             # by root on most NFS filesystems - neither EFS nor Google Filestore support anonuid
@@ -145,7 +145,7 @@ jupyterhub:
           # Launch people directly into the Linux desktop when they start
           default_url: /desktop
           # Built from https://github.com/jupyterhub/jupyter-remote-desktop-proxy/pull/51
-          image: quay.io/2i2c/nasa-qgis-image:0d0765090250
+          image: quay.io/2i2c/nasa-qgis-image:d76118ea0c15
         profile_options: *profile_options
   scheduling:
     userScheduler:
