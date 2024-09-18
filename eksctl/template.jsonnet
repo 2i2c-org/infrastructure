@@ -36,9 +36,9 @@ local nodeAz = "<< cluster_region >>a";
 // A `node.kubernetes.io/instance-type label is added, so pods
 // can request a particular kind of node with a nodeSelector
 local notebookNodes = [
-    { instanceType: "r7i.xlarge" },
-    { instanceType: "r7i.4xlarge" },
-    { instanceType: "r7i.16xlarge" },
+    { instanceType: "r5.xlarge" },
+    { instanceType: "r5.4xlarge" },
+    { instanceType: "r5.16xlarge" },
 ];
 <% if hub_type == "daskhub" %>
 local daskNodes = [
@@ -52,7 +52,7 @@ local daskNodes = [
     // A not yet fully established policy is being developed about using a single
     // node pool, see https://github.com/2i2c-org/infrastructure/issues/2687.
     //
-    { instancesDistribution+: { instanceTypes: ["r7i.4xlarge"] }},
+    { instancesDistribution+: { instanceTypes: ["r5.4xlarge"] }},
 ];
 <% else %>
 local daskNodes = [];
