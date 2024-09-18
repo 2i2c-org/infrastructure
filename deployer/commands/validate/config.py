@@ -102,6 +102,9 @@ def cluster_config(
 def hub_config(
     cluster_name: str = typer.Argument(..., help="Name of cluster to operate on"),
     hub_name: str = typer.Argument(None, help="Name of hub to operate on"),
+    skip_refresh: bool = typer.Option(
+        False, "--skip-refresh", help="Skip the helm dep update"
+    ),
     debug: bool = typer.Option(False, "--debug", help="Enable verbose output"),
 ):
     """
@@ -323,6 +326,9 @@ def configurator_config(
 def all(
     cluster_name: str = typer.Argument(..., help="Name of cluster to operate on"),
     hub_name: str = typer.Argument(None, help="Name of hub to operate on"),
+    skip_refresh: bool = typer.Option(
+        False, "--skip-refresh", help="Skip the helm dep update"
+    ),
     debug: bool = typer.Option(False, "--debug", help="Enable verbose output"),
 ):
     """
