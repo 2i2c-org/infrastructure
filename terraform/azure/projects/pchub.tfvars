@@ -18,6 +18,7 @@
 tenant_id                      = "f1123d69-0c31-44db-ab9f-fa856d721d49"
 subscription_id                = "4ca0b08a-26e1-482f-bca6-f4eb0926124a"
 resourcegroup_name             = "2i2c-pchub"
+create_container_registry      = true
 global_container_registry_name = "2i2cpchub"
 global_storage_account_name    = "2i2cpchub"
 location                       = "westeurope"
