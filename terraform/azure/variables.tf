@@ -70,10 +70,19 @@ variable "k8s_version_prefixes" {
   EOT
 }
 
+variable "create_container_registry" {
+  type        = bool
+  default     = false
+  description = <<-EOT
+  Create a container registry for image storage, e.g., for binder deployments.
+  EOT
+}
+
 variable "global_container_registry_name" {
   type        = string
+  default     = null
   description = <<-EOT
-  Name of container registry to use for our image.
+  Name of container registry to use for image storage.
 
   This needs to be globally unique across all of Azure (ugh?)
   and not contain dashes or underscores.

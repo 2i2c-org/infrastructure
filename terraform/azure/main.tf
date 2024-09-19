@@ -80,6 +80,8 @@ resource "azurerm_subnet" "node_subnet" {
 
 # ref: https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/container_registry
 resource "azurerm_container_registry" "container_registry" {
+  count = var.create_container_registry ? 1 : 0
+
   name                = var.global_container_registry_name
   resource_group_name = azurerm_resource_group.jupyterhub.name
   location            = azurerm_resource_group.jupyterhub.location
@@ -87,19 +89,18 @@ resource "azurerm_container_registry" "container_registry" {
   admin_enabled       = true
 }
 
-
 locals {
   registry_creds = {
-    "imagePullSecret" = {
-      "username" : azurerm_container_registry.container_registry.admin_username,
-      "password" : azurerm_container_registry.container_registry.admin_password,
-      "registry" : "https://${azurerm_container_registry.container_registry.login_server}"
-    }
+    "imagePullSecret" = try({
+      "username" : azurerm_container_registry.container_registry[0].admin_username,
+      "password" : azurerm_container_registry.container_registry[0].admin_password,
+      "registry" : "https://${azurerm_container_registry.container_registry[0].login_server}"
+    }, null)
   }
   storage_threshold = var.storage_size * var.fileshare_alert_available_fraction
 }
 
 output "registry_creds_config" {
-  value     = jsonencode(local.registry_creds)
+  value     = var.create_container_registry ? jsonencode(local.registry_creds) : null
   sensitive = true
 }
