@@ -5,6 +5,13 @@ nameOverride: ""
 fullnameOverride: ""
 global: {}
 
+# Software configuration
+# -----------------------------------------------------------------------------
+#
+# FIXME: This chart deploys hardcoded software currently, see
+#        https://github.com/2i2c-org/infrastructure/issues/4788 about resolving
+#        it.
+
 # Deployment resource
 # -----------------------------------------------------------------------------
 #

@@ -88,18 +88,18 @@ def query_aws_cost_explorer(cluster_name, from_date, to_date):
                 },
             ]
         },
-        # FIXME: Add this or something similar back when focusing on something
-        #        beyond just the total daily costs.
-        #
-        # GroupBy=[
-        #     {
-        #         "Type": "DIMENSION",
-        #         "Key": "SERVICE",
-        #     },
-        # ],
+        GroupBy=[
+            {
+                "Type": "TAG",
+                "Key": "2i2c:hub-name",
+            },
+        ],
     )
 
-    # response["ResultsByTime"] is a list with entries looking like this...
+    print(response)
+
+    # response["ResultsByTime"] is a list with entries looking like this if
+    # GroupBy isn't specified...
     #
     # [
     #     {
@@ -117,6 +117,43 @@ def query_aws_cost_explorer(cluster_name, from_date, to_date):
     #         },
     #     },
     #     # ...
+    # ]
+    #
+    # response["ResultsByTime"] is a list with entries looking like this if
+    # GroupBy is specified...
+    #
+    # [
+    #     {
+    #         "TimePeriod": {"Start": "2024-08-30", "End": "2024-08-31"},
+    #         "Total": {},
+    #         "Groups": [
+    #             {
+    #                 "Keys": ["2i2c:hub-name$"],
+    #                 "Metrics": {
+    #                     "UnblendedCost": {"Amount": "12.1930361882", "Unit": "USD"}
+    #                 },
+    #             },
+    #             {
+    #                 "Keys": ["2i2c:hub-name$prod"],
+    #                 "Metrics": {
+    #                     "UnblendedCost": {"Amount": "18.662514854", "Unit": "USD"}
+    #                 },
+    #             },
+    #             {
+    #                 "Keys": ["2i2c:hub-name$staging"],
+    #                 "Metrics": {
+    #                     "UnblendedCost": {"Amount": "0.000760628", "Unit": "USD"}
+    #                 },
+    #             },
+    #             {
+    #                 "Keys": ["2i2c:hub-name$workshop"],
+    #                 "Metrics": {
+    #                     "UnblendedCost": {"Amount": "0.1969903219", "Unit": "USD"}
+    #                 },
+    #             },
+    #         ],
+    #         "Estimated": False,
+    #     },
     # ]
     #
     processed_response = [
