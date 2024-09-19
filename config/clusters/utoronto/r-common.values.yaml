@@ -10,6 +10,14 @@ jupyterhub:
         # Ensures container working dir is homedir
         # https://github.com/2i2c-org/infrastructure/issues/2559
         working_dir: /home/rstudio
+      Authenticator:
+        admin_users:
+          # 2i2c staff below, a list maintained in default-common r-common
+          - "yuvi.panda@utoronto.ca"
+          - "georgiana.elena@utoronto.ca"
+          - "chris.holdgraf@utoronto.ca"
+          - "erik.sundell@utoronto.ca"
+          - "csadminsundelle@utoronto.ca"
   singleuser:
     defaultUrl: /rstudio
     image:

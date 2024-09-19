@@ -7,8 +7,10 @@ jupyterhub:
     config:
       Authenticator:
         admin_users:
+          # 2i2c staff below, a list maintained in default-common r-common
           - "yuvi.panda@utoronto.ca"
           - "georgiana.elena@utoronto.ca"
           - "chris.holdgraf@utoronto.ca"
           - "davidy.liu@utoronto.ca"
+          - "erik.sundell@utoronto.ca"
           - "csadminsundelle@utoronto.ca"
