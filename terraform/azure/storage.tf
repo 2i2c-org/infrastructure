@@ -44,29 +44,3 @@ resource "azurerm_storage_share" "homes" {
 output "azure_fileshare_url" {
   value = azurerm_storage_share.homes.url
 }
-
-# ref: https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/recovery_services_vault
-resource "azurerm_recovery_services_vault" "homedir_recovery_vault" {
-  name                = "homedir-recovery-vault"
-  location            = azurerm_resource_group.jupyterhub.location
-  resource_group_name = azurerm_resource_group.jupyterhub.name
-  sku                 = "Standard"
-}
-
-# ref: https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/backup_policy_file_share
-resource "azurerm_backup_policy_file_share" "backup_policy" {
-  name                = "homedir-recovery-vault-policy"
-  resource_group_name = azurerm_resource_group.jupyterhub.name
-  recovery_vault_name = azurerm_recovery_services_vault.homedir_recovery_vault.name
-
-  timezone = "Mountain Standard Time"
-
-  backup {
-    frequency = "Daily"
-    time      = "22:00"
-  }
-
-  retention_daily {
-    count = 5
-  }
-}
