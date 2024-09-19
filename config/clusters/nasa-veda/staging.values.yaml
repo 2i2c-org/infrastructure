@@ -1,4 +1,7 @@
 basehub:
+  nfs:
+    pv:
+      serverIP: 10.100.88.130
   userServiceAccount:
     annotations:
       eks.amazonaws.com/role-arn: arn:aws:iam::444055461661:role/nasa-veda-staging
@@ -214,3 +217,4 @@ basehub:
       volumeId: vol-0a1246ee2e07372d0
     quotaEnforcer:
       hardQuota: "10" # in GB
+      path: "/export/staging"
