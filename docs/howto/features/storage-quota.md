@@ -1,3 +1,4 @@
+(howto:configure-storage-quota)=
 # Configure per-user storage quotas
 
 This guide explains how to enable and configure per-user storage quotas.
@@ -147,4 +148,4 @@ xfs_quota -x -c 'report -N -p'
 
 This should show us the list of directories being monitored for quota enforcement, and the current usage and quotas for each of the home directories.
 
-If a user exceeds their quota, the user's pod will not be able to start successfully. A hub admin will need to free up space in the user's home directory to allow the pod to start.
+If a user exceeds their quota, the user's pod will not be able to start successfully. A hub admin will need to free up space in the user's home directory to allow the pod to start, using [the `allusers` feature](topic:storage:allusers).
