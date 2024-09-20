@@ -2,3 +2,6 @@ fullnameOverride: ce-test
 serviceAccount:
   annotations:
     eks.amazonaws.com/role-arn: arn:aws:iam::783616723547:role/aws_ce_grafana_backend_iam_role
+
+envBasedConfig:
+  clusterName: openscapeshub

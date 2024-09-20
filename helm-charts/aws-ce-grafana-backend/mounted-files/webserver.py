@@ -2,19 +2,9 @@ from datetime import date, datetime, timedelta, timezone
 
 from flask import Flask, request
 
-from .aws import query_total_cost
+from .query import query_total_costs, query_total_costs_per_hub
 
 app = Flask(__name__)
-
-
-@app.route("/")
-def hello_world():
-    return "<p>Hello, World!</p>"
-
-
-@app.route("/health/ready")
-def ready():
-    return ("", 204)
 
 
 def parse_from_to_in_query_params():
@@ -47,8 +37,20 @@ def parse_from_to_in_query_params():
     return from_date, to_date
 
 
-@app.route("/aws/total-cost")
-def aws_total_cost():
+@app.route("/health/ready")
+def ready():
+    return ("", 204)
+
+
+@app.route("/total-costs")
+def total_costs():
     from_date, to_date = parse_from_to_in_query_params()
 
-    return query_total_cost(from_date, to_date)
+    return query_total_costs(from_date, to_date)
+
+
+@app.route("/total-costs-per-hub")
+def total_costs_per_hub():
+    from_date, to_date = parse_from_to_in_query_params()
+
+    return query_total_costs_per_hub(from_date, to_date)
