@@ -40,3 +40,11 @@ grafana:
     auth.github:
       enabled: true
       allowed_organizations: 2i2c-org NASA-Openscapes
+
+aws-ce-grafana-backend:
+  enabled: true
+  envBasedConfig:
+    clusterName: openscapeshub
+  serviceAccount:
+    annotations:
+      eks.amazonaws.com/role-arn: arn:aws:iam::783616723547:role/aws_ce_grafana_backend_iam_role
