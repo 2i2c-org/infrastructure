@@ -6,9 +6,6 @@ from .aws import query_total_cost
 
 app = Flask(__name__)
 
-# Hardcoded, see https://github.com/2i2c-org/infrastructure/issues/4788
-CLUSTER_NAME = "openscapeshub"
-
 
 def parse_from_to_in_query_params():
     """
@@ -49,4 +46,4 @@ def ready():
 def aws_total_cost():
     from_date, to_date = parse_from_to_in_query_params()
 
-    return query_total_cost(CLUSTER_NAME, from_date, to_date)
+    return query_total_cost(from_date, to_date)

@@ -2,17 +2,23 @@
 Queries to AWS Cost Explorer to get different kinds of cost data.
 """
 
+import os
+
 import boto3
+
+# Environment variables based config isn't great, see fixme comment in
+# values.yaml under the software configuration heading
+CLUSTER_NAME = os.environ["AWS_CE_GRAFANA_BACKEND__CLUSTER_NAME"]
 
 aws_ce_client = boto3.client("ce")
 
 
-def query_total_cost(cluster_name, from_date, to_date):
-    results = query_aws_cost_explorer(cluster_name, from_date, to_date)
+def query_total_cost(from_date, to_date):
+    results = query_aws_cost_explorer(from_date, to_date)
     return results
 
 
-def query_aws_cost_explorer(cluster_name, from_date, to_date):
+def query_aws_cost_explorer(from_date, to_date):
     # ref: https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/ce/client/get_cost_and_usage.html#get-cost-and-usage
     response = aws_ce_client.get_cost_and_usage(
         # Metrics:
@@ -50,13 +56,13 @@ def query_aws_cost_explorer(cluster_name, from_date, to_date):
                         {
                             "Tags": {
                                 "Key": "alpha.eksctl.io/cluster-name",
-                                "Values": [cluster_name],
+                                "Values": [CLUSTER_NAME],
                                 "MatchOptions": ["EQUALS"],
                             },
                         },
                         {
                             "Tags": {
-                                "Key": f"kubernetes.io/cluster/{cluster_name}",
+                                "Key": f"kubernetes.io/cluster/{CLUSTER_NAME}",
                                 "Values": ["owned"],
                                 "MatchOptions": ["EQUALS"],
                             },
@@ -64,7 +70,7 @@ def query_aws_cost_explorer(cluster_name, from_date, to_date):
                         {
                             "Tags": {
                                 "Key": "2i2c.org/cluster-name",
-                                "Values": [cluster_name],
+                                "Values": [CLUSTER_NAME],
                                 "MatchOptions": ["EQUALS"],
                             },
                         },

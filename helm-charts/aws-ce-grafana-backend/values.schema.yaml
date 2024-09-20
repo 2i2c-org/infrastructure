@@ -17,6 +17,8 @@ additionalProperties: false
 required:
   # General configuration
   - global
+  # Software configuration
+  - envBasedConfig
   # Deployment resource
   - image
   # Other resources
@@ -42,6 +44,17 @@ properties:
   global:
     type: object
     additionalProperties: true
+
+  # Software configuration
+  # ---------------------------------------------------------------------------
+  #
+  envBasedConfig:
+    type: object
+    additionalProperties: false
+    required: [clusterName]
+    properties:
+      clusterName:
+        type: string
 
   # Deployment resource
   # ---------------------------------------------------------------------------

@@ -37,10 +37,14 @@ spec:
             - name: secret
               mountPath: /srv/aws-ce-grafana-backend
               readOnly: true
-          {{- with .Values.extraEnv }}
           env:
+            - name: PYTHONUNBUFFERED
+              value: "1"
+            - name: AWS_CE_GRAFANA_BACKEND__CLUSTER_NAME
+              value: "{{ .Values.envBasedConfig.clusterName }}"
+            {{- with .Values.extraEnv }}
             {{- tpl (. | toYaml) $ | nindent 12 }}
-          {{- end }}
+            {{- end }}
           resources:
             {{- .Values.resources | toYaml | nindent 12 }}
           securityContext:
