@@ -2,6 +2,10 @@
 
 This guide explains how to enable and configure per-user storage quotas.
 
+```{note}
+Nest all config examples under a `basehub` key if deployingb this for a daskhub.
+```
+
 ## Enabling jupyter-home-nfs
 
 To be able to configure per-user storage quotas, we need to run an in-cluster NFS server using [`jupyter-home-nfs`](https://github.com/sunu/jupyter-home-nfs). This can be enabled by setting `jupyter-home-nfs.enabled` to `true` in the hub's values file.
@@ -12,24 +16,22 @@ jupyter-home-nfs expects a reference to an pre-provisioned disk. Here's an examp
 ````{tab-item} AWS
 :sync: aws-key
 ```yaml
-basehub:
-  jupyter-home-nfs:
+jupyter-home-nfs:
+  enabled: true
+  eks:
     enabled: true
-    eks:
-      enabled: true
-      volumeId: vol-0a1246ee2e07372d0
+    volumeId: vol-0a1246ee2e07372d0
 ```
 ````
 
 ````{tab-item} GCP
 :sync: gcp-key
 ```yaml
-basehub:
-  jupyter-home-nfs:
+jupyter-home-nfs:
+  enabled: true
+  gke:
     enabled: true
-    gke:
-      enabled: true
-      volumeId: projects/jupyter-nfs/zones/us-central1-f/disks/jupyter-nfs-home-directories
+    volumeId: projects/jupyter-nfs/zones/us-central1-f/disks/jupyter-nfs-home-directories
 ```
 ````
 `````
@@ -69,10 +71,9 @@ Make sure the path structure of the existing home directories matches the path s
 Now that we have a new NFS server running in our cluster, and we have migrated the existing home directories to the new NFS server, we can switch the hub to use the new NFS server. This can be done by updating the `basehub.nfs.pv.serverIP` field in the hub's values file.
 
 ```yaml
-basehub:
-  nfs:
-    pv:
-      serverIP: <nfs_service_ip>
+nfs:
+  pv:
+    serverIP: <nfs_service_ip>
 ```
 
 Note that Kubernetes doesn't allow changing an existing PersistentVolume. So we need to delete the existing PersistentVolume first.
@@ -97,11 +98,10 @@ Now we can set quotas for each user and configure the path to monitor for storag
 This can be done by updating `basehub.jupyter-home-nfs.quotaEnforcer` in the hub's values file. For example, to set a quota of 10GB for the user `staging`, we would add the following to the user's values file:
 
 ```yaml
-basehub:
-  jupyter-home-nfs:
-    quotaEnforcer:
-      hardQuota: "10" # in GB
-      path: "/export/staging"
+jupyter-home-nfs:
+  quotaEnforcer:
+    hardQuota: "10" # in GB
+    path: "/export/staging"
 ```
 
 The `path` field is the path to the parent directory of the user's home directory in the NFS server. The `hardQuota` field is the maximum allowed size of the user's home directory in GB.
