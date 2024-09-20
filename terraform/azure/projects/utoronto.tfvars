@@ -51,7 +51,15 @@ node_pools = {
 
   user : [
     {
-      name : "usere8sv5",
+      name : "usere8sv5", # FIXME: tainted, to be deleted when empty, replaced by equivalent during k8s upgrade
+      vm_size : "Standard_E8s_v5",
+      os_disk_size_gb : 200,
+      min : 0,
+      max : 100,
+      kubernetes_version : "1.28.3",
+    },
+    {
+      name : "usere8sv5b",
       vm_size : "Standard_E8s_v5",
       os_disk_size_gb : 200,
       min : 0,
