@@ -21,6 +21,7 @@ First authenticate yourself against the AWS openscapes account.
 
 ```bash
 cd helm-charts/aws-ce-grafana-backend/mounted-files
+export AWS_CE_GRAFANA_BACKEND__CLUSTER_NAME=openscapeshub
 python -m flask --app=webserver run --port=8080
 
 # visit http://localhost:8080/aws
