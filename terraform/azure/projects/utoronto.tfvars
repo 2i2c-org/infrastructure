@@ -17,8 +17,8 @@ budget_alert_amount            = null
 storage_size                   = 10240
 ssh_pub_key                    = "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQDQJ4h39UYNi1wybxAH+jCFkNK2aqRcuhDkQSMx0Hak5xkbt3KnT3cOwAgUP1Vt/SjhltSTuxpOHxiAKCRnjwRk60SxKhUNzPHih2nkfYTmBBjmLfdepDPSke/E0VWvTDIEXz/L8vW8aI0QGPXnXyqzEDO9+U1buheBlxB0diFAD3vEp2SqBOw+z7UgrGxXPdP+2b3AV+X6sOtd6uSzpV8Qvdh+QAkd4r7h9JrkFvkrUzNFAGMjlTb0Lz7qAlo4ynjEwzVN2I1i7cVDKgsGz9ZG/8yZfXXx+INr9jYtYogNZ63ajKR/dfjNPovydhuz5zQvQyxpokJNsTqt1CiWEUNj georgiana@georgiana"
 
-# List available versions via: az aks get-versions --location westus2 -o table
-kubernetes_version = "1.28.3"
+# List available versions via: tf output latest_supported_k8s_versions
+kubernetes_version = "1.30.3"
 
 # Ref https://github.com/2i2c-org/meta/issues/539
 kubernetes_rbac_enabled = false
@@ -51,7 +51,15 @@ node_pools = {
 
   user : [
     {
-      name : "usere8sv5",
+      name : "usere8sv5", # FIXME: tainted, to be deleted when empty, replaced by equivalent during k8s upgrade
+      vm_size : "Standard_E8s_v5",
+      os_disk_size_gb : 200,
+      min : 0,
+      max : 100,
+      kubernetes_version : "1.28.3",
+    },
+    {
+      name : "usere8sv5b",
       vm_size : "Standard_E8s_v5",
       os_disk_size_gb : 200,
       min : 0,
