@@ -31,18 +31,40 @@ The image shouldn't need to be rebuilt unless additional dependencies needs to
 be installed etc, so if you've only made code changes, you can do the following
 to re-deploy.
 
+During development, a procedure like below can be used to iterate faster than by
+using the deployer.
+
 ```bash
 deployer use-cluster-credentials openscapes
 
 cd helm-charts/aws-ce-grafana-backend
-helm upgrade --install --create-namespace -n ce-test --values ce-test-config.yaml ce-test .
+helm upgrade --install --create-namespace -n support --values my-test-config.yaml aws-ce-grafana-backend .
 
 # note that port-forward to a service is just a way to port-forward to a pod
 # behind the service, so you need to do the port-forwarding again if the pod
 # restarts.
-kubectl port-forward -n ce-test service/ce-test 8080:http
+kubectl port-forward -n support service/aws-ce-grafana-backend 8080:http
 
 # visit http://localhost:8080/total-costs and other urls
+```
+
+It assumes that you have a `my-test-config.yaml` file looking like this:
+
+```yaml
+serviceAccount:
+  annotations:
+    # can be setup via terraform by setting the variable
+    # enable_aws_ce_grafana_backend_iam = true
+    #
+    # note that the terraform managed IAM Role's assume policy is
+    # only granting a k8s ServiceAccount in "support" namespace
+    # named "aws-ce-grafana-backend" rights to assume it
+    #
+    eks.amazonaws.com/role-arn: arn:aws:iam::783616723547:role/aws_ce_grafana_backend_iam_role
+envBasedConfig:
+  # note that this must be the AWS EKS cluster resource name,
+  # not what we call the cluster
+  clusterName: openscapeshub
 ```
 
 ### Testing image changes in k8s
