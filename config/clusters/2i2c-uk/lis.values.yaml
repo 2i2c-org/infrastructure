@@ -84,5 +84,6 @@ jupyterhub:
           - read:org
       Authenticator:
         admin_users:
-          - LaCrecerelle
-          - matthew-brett
+          - richard-x-ball
+          - maundjs-lis
+          - kestrai
