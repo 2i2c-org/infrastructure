@@ -6,10 +6,7 @@ default_budget_alert = {
   "enabled" : false,
 }
 
-enable_grafana_athena_iam         = true
 enable_aws_ce_grafana_backend_iam = true
-athena_write_storage_bucket       = "openscapes-cost-usage-report"
-athena_read_storage_bucket        = "openscapes-2i2c-cur"
 
 # The initial EFS is now used by the prod hub only
 # So we tag it appropriately for costs purposes

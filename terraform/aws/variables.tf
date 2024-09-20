@@ -46,18 +46,6 @@ variable "user_buckets" {
 }
 
 
-variable "athena_write_storage_bucket" {
-  type        = string
-  description = "The name of the S3 bucket where Grafana query results from Athena will be stored"
-  default     = ""
-}
-
-variable "athena_read_storage_bucket" {
-  type        = string
-  description = "The name of the S3 bucket where Athena tables and data is stored"
-  default     = ""
-}
-
 variable "hub_cloud_permissions" {
   type = map(
     map(
@@ -294,15 +282,6 @@ variable "active_cost_allocation_tags" {
 
       Failed to update Cost Allocation Tag:
       Tag keys not found: 2i2c.org/cluster-name
-  EOT
-}
-
-variable "enable_grafana_athena_iam" {
-  type        = bool
-  default     = false
-  description = <<-EOT
-  Create an IAM role with attached policy to permit a connection between a
-  Grafana instance and AWS Athena service.
   EOT
 }
 

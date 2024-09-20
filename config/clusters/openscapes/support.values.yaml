@@ -31,9 +31,6 @@ grafana:
       - secretName: grafana-tls
         hosts:
           - grafana.openscapes.2i2c.cloud
-  serviceAccount:
-    annotations:
-      eks.amazonaws.com/role-arn: arn:aws:iam::783616723547:role/openscapeshub-grafana-athena-iam-role
   grafana.ini:
     server:
       root_url: https://grafana.openscapes.2i2c.cloud/
