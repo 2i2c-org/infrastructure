@@ -1,17 +1,12 @@
 # About code files
 
-The code is meant to help serve grafana with JSON with cost related data,
-initially only from AWS.
+The code is meant to help serve grafana with JSON with cost related data from
+AWS Cost Explorer API. It doesn't doesn't rely to other k8s services, so it can
+deploy and be tested by itself.
 
-## De-coupled from other k8s services
-
-This software doesn't rely to other k8s services, so it can deploy and be tested
-by itself.
-
-## Bundling into Dockerfile vs. mounting in Helm chart
-
-By mounting the code files, development iterations running the code in k8s
-becomes faster.
+The code files in this folders are mounted instead of built into the image in
+order to quicken up development iterations running the code in k8s becomes
+faster.
 
 ## Development
 
@@ -47,13 +42,12 @@ helm upgrade --install --create-namespace -n ce-test --values ce-test-config.yam
 # restarts.
 kubectl port-forward -n ce-test service/ce-test 8080:http
 
-# visit http://localhost:8080/aws
+# visit http://localhost:8080/total-costs and other urls
 ```
 
 ### Testing image changes in k8s
 
 ```bash
-
 cd helm-charts
 
 # before doing this: commit the image change, and stash other changes
