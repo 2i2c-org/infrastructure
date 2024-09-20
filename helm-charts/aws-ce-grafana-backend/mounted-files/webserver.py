@@ -4,6 +4,7 @@ from datetime import date, datetime, timedelta, timezone
 from flask import Flask, request
 
 from .query import (
+    query_hub_names,
     query_total_costs,
     query_total_costs_per_component,
     query_total_costs_per_hub,
@@ -13,7 +14,7 @@ app = Flask(__name__)
 logging.basicConfig(level=logging.INFO)
 
 
-def parse_from_to_in_query_params():
+def _parse_from_to_in_query_params():
     """
     Parse "from" and "to" query parameters, expected to arrive as YYYY-MM-DD
     strings.
@@ -48,22 +49,30 @@ def ready():
     return ("", 204)
 
 
+@app.route("/hub-names")
+def hub_names():
+    from_date, to_date = _parse_from_to_in_query_params()
+
+    return query_hub_names(from_date, to_date)
+
+
 @app.route("/total-costs")
 def total_costs():
-    from_date, to_date = parse_from_to_in_query_params()
+    from_date, to_date = _parse_from_to_in_query_params()
 
     return query_total_costs(from_date, to_date)
 
 
 @app.route("/total-costs-per-hub")
 def total_costs_per_hub():
-    from_date, to_date = parse_from_to_in_query_params()
+    from_date, to_date = _parse_from_to_in_query_params()
 
     return query_total_costs_per_hub(from_date, to_date)
 
 
 @app.route("/total-costs-per-component")
 def total_costs_per_component():
-    from_date, to_date = parse_from_to_in_query_params()
+    from_date, to_date = _parse_from_to_in_query_params()
+    hub_name = request.args.get("hub")
 
-    return query_total_costs_per_component(from_date, to_date)
+    return query_total_costs_per_component(from_date, to_date, hub_name)

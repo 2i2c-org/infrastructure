@@ -7,6 +7,7 @@ import logging
 
 import boto3
 
+from .cache import ttl_lru_cache
 from .const import (
     FILTER_ATTRIBUTABLE_COSTS,
     FILTER_USAGE_COSTS,
@@ -47,6 +48,39 @@ def query_aws_cost_explorer(metrics, granularity, from_date, to_date, filter, gr
     return response
 
 
+@ttl_lru_cache(seconds_to_live=3600)
+def query_hub_names(from_date, to_date):
+    # ref: https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/ce/client/get_tags.html
+    response = aws_ce_client.get_tags(
+        TimePeriod={"Start": from_date, "End": to_date},
+        TagKey="2i2c:hub-name",
+    )
+    # response looks like...
+    #
+    # {
+    #     "Tags": ["", "prod", "staging", "workshop"],
+    #     "ReturnSize": 4,
+    #     "TotalSize": 4,
+    #     "ResponseMetadata": {
+    #         "RequestId": "23736d32-9929-4b6a-8c4f-d80b1487ed37",
+    #         "HTTPStatusCode": 200,
+    #         "HTTPHeaders": {
+    #             "date": "Fri, 20 Sep 2024 12:42:13 GMT",
+    #             "content-type": "application/x-amz-json-1.1",
+    #             "content-length": "70",
+    #             "connection": "keep-alive",
+    #             "x-amzn-requestid": "23736d32-9929-4b6a-8c4f-d80b1487ed37",
+    #             "cache-control": "no-cache",
+    #         },
+    #         "RetryAttempts": 0,
+    #     },
+    # }
+    #
+    hub_names = [t or "shared" for t in response["Tags"]]
+    return hub_names
+
+
+@ttl_lru_cache(seconds_to_live=3600)
 def query_total_costs(from_date, to_date):
     """
     A query with processing of the response tailored query to report hub
@@ -105,6 +139,7 @@ def query_total_costs(from_date, to_date):
     return processed_response
 
 
+@ttl_lru_cache(seconds_to_live=3600)
 def query_total_costs_per_hub(from_date, to_date):
     """
     A query with processing of the response tailored query to report total costs
@@ -189,22 +224,47 @@ def query_total_costs_per_hub(from_date, to_date):
     return processed_response
 
 
-def query_total_costs_per_component(from_date, to_date):
+@ttl_lru_cache(seconds_to_live=3600)
+def query_total_costs_per_component(from_date, to_date, hub_name=None):
     """
-    A query with processing of the response tailored query to report hub
-    independent total costs per component - a grouping of services.
+    A query with processing of the response tailored query to report total costs
+    per component - a grouping of services.
+
+    If a hub_name is specified, component costs are filtered to only consider
+    costs directly attributable to the hub name.
     """
+    filter = {
+        "And": [
+            FILTER_USAGE_COSTS,
+            FILTER_ATTRIBUTABLE_COSTS,
+        ]
+    }
+    if hub_name == "shared":
+        filter["And"].append(
+            {
+                "Tags": {
+                    "Key": "2i2c:hub-name",
+                    "MatchOptions": ["ABSENT"],
+                },
+            }
+        )
+    elif hub_name:
+        filter["And"].append(
+            {
+                "Tags": {
+                    "Key": "2i2c:hub-name",
+                    "Values": [hub_name],
+                    "MatchOptions": ["EQUALS"],
+                },
+            }
+        )
+
     response = query_aws_cost_explorer(
         metrics=[METRICS_UNBLENDED_COST],
         granularity=GRANULARITY_DAILY,
         from_date=from_date,
         to_date=to_date,
-        filter={
-            "And": [
-                FILTER_USAGE_COSTS,
-                FILTER_ATTRIBUTABLE_COSTS,
-            ]
-        },
+        filter=filter,
         group_by=[GROUP_BY_SERVICE_DIMENSION],
     )
 
