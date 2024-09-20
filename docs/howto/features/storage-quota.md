@@ -31,7 +31,19 @@ basehub:
       volumeId: projects/jupyter-nfs/zones/us-central1-f/disks/jupyter-nfs-home-directories
 ```
 
-Once these changes are deployed, we should have a new NFS server running in our cluster through the `jupyter-home-nfs` Helm chart.
+This changes can be deployed by running the following command:
+
+```bash
+deployer deploy <cluster_name> <hub_name>
+```
+
+Once these changes are deployed, we should have a new NFS server running in our cluster through the `jupyter-home-nfs` Helm chart. We can get the IP address of the NFS server by running the following command:
+
+```bash
+kubectl -n <hub_name> get svc <hub_name>-nfs-service
+```
+
+To check whether the NFS server is running properly, see the [Troubleshooting](#troubleshooting) section.
 
 ## Migrating existing home directories
 
@@ -101,7 +113,7 @@ Once this is deployed, the hub will automatically enforce the storage quota for 
 
 ## Troubleshooting
 
-### Checking the NFS server
+### Checking the NFS server is running properly
 To check whether the NFS server is running properly, we can run the following command in the NFS server pod in the nfs-server container:
 
 ```bash
