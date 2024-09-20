@@ -24,7 +24,7 @@ python -m flask --app=webserver run --port=8080
 
 ### Testing Python changes in k8s
 
-This is currently being developed in the openscapes cluster. It depends on a k8s
+This was initially developed in the openscapes cluster. It depends on a k8s
 ServiceAccount coupled to an IAM Role there as well.
 
 The image shouldn't need to be rebuilt unless additional dependencies needs to

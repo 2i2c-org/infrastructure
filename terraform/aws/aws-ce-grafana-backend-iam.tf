@@ -13,11 +13,9 @@ resource "aws_iam_role" "aws_ce_grafana_backend_iam_role" {
         Federated = "arn:${data.aws_partition.current.partition}:iam::${data.aws_caller_identity.current.account_id}:oidc-provider/${replace(data.aws_eks_cluster.cluster.identity[0].oidc[0].issuer, "https://", "")}"
       },
 
-      # FIXME: Below we have a string including ce-test:ce-test, it should be support:<k8s secret name>
-
       Condition = {
         StringEquals = {
-          "${replace(data.aws_eks_cluster.cluster.identity[0].oidc[0].issuer, "https://", "")}:sub" = "system:serviceaccount:ce-test:ce-test"
+          "${replace(data.aws_eks_cluster.cluster.identity[0].oidc[0].issuer, "https://", "")}:sub" = "system:serviceaccount:support:aws-ce-grafana-backend"
         }
       },
     }]
