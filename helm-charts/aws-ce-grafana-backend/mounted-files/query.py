@@ -76,6 +76,8 @@ def query_hub_names(from_date, to_date):
     #     },
     # }
     #
+    # The empty string is replaced with "shared"
+    #
     hub_names = [t or "shared" for t in response["Tags"]]
     return hub_names
 
