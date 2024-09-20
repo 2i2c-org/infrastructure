@@ -2,7 +2,7 @@ from datetime import date, datetime, timedelta, timezone
 
 from flask import Flask, request
 
-from .aws import query_total_costs, query_total_costs_per_hub
+from .query import query_total_costs, query_total_costs_per_hub
 
 app = Flask(__name__)
 
