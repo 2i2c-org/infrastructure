@@ -8,6 +8,17 @@ import os
 # values.yaml under the software configuration heading
 CLUSTER_NAME = os.environ["AWS_CE_GRAFANA_BACKEND__CLUSTER_NAME"]
 
+SERVICE_COMPONENT_MAP = {
+    "AWS Backup": "backup",
+    "EC2 - Other": "compute",
+    "Amazon Elastic Compute Cloud - Compute": "compute",
+    "Amazon Elastic Container Service for Kubernetes": "fixed",
+    "Amazon Elastic File System": "home storage",
+    "Amazon Elastic Load Balancing": "networking",
+    "Amazon Simple Storage Service": "object storage",
+    "Amazon Virtual Private Cloud": "networking",
+}
+
 # Metrics:
 #
 #   UnblendedCost represents costs for an individual AWS account. It is
@@ -84,4 +95,9 @@ FILTER_ATTRIBUTABLE_COSTS = {
 GROUP_BY_HUB_TAG = {
     "Type": "TAG",
     "Key": "2i2c:hub-name",
+}
+
+GROUP_BY_SERVICE_DIMENSION = {
+    "Type": "DIMENSION",
+    "Key": "SERVICE",
 }

@@ -1,10 +1,16 @@
+import logging
 from datetime import date, datetime, timedelta, timezone
 
 from flask import Flask, request
 
-from .query import query_total_costs, query_total_costs_per_hub
+from .query import (
+    query_total_costs,
+    query_total_costs_per_component,
+    query_total_costs_per_hub,
+)
 
 app = Flask(__name__)
+logging.basicConfig(level=logging.INFO)
 
 
 def parse_from_to_in_query_params():
@@ -54,3 +60,10 @@ def total_costs_per_hub():
     from_date, to_date = parse_from_to_in_query_params()
 
     return query_total_costs_per_hub(from_date, to_date)
+
+
+@app.route("/total-costs-per-component")
+def total_costs_per_component():
+    from_date, to_date = parse_from_to_in_query_params()
+
+    return query_total_costs_per_component(from_date, to_date)
