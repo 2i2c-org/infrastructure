@@ -36,15 +36,19 @@ jupyter-home-nfs:
 ````
 `````
 
-This changes can be deployed by running the following command:
+These changes can be deployed by running the following command:
 
 ```bash
 deployer deploy <cluster_name> <hub_name>
 ```
 
-Once these changes are deployed, we should have a new NFS server running in our cluster through the `jupyter-home-nfs` Helm chart. We can get the IP address of the NFS server by running the following command:
+Once these changes are deployed, we should have a new NFS server running in our cluster through the `jupyter-home-nfs` Helm chart. We can get the IP address of the NFS server by running the following commands:
 
 ```bash
+# Authenticate with the cluster
+deployer use-cluster-credentials <cluster_name>
+
+# Retrieve the service IP
 kubectl -n <hub_name> get svc <hub_name>-nfs-service
 ```
 
@@ -79,10 +83,10 @@ nfs:
 Note that Kubernetes doesn't allow changing an existing PersistentVolume. So we need to delete the existing PersistentVolume first.
 
 ```bash
-   kubectl delete pv ${HUB_NAME}-home-nfs --wait=false
-   kubectl --namespace $HUB_NAME delete pvc home-nfs --wait=false
-   kubectl --namespace $HUB_NAME delete pod -l component=shared-dirsize-metrics
-   kubectl --namespace $HUB_NAME delete pod -l component=shared-volume-metrics
+kubectl delete pv ${HUB_NAME}-home-nfs --wait=false
+kubectl --namespace $HUB_NAME delete pvc home-nfs --wait=false
+kubectl --namespace $HUB_NAME delete pod -l component=shared-dirsize-metrics
+kubectl --namespace $HUB_NAME delete pod -l component=shared-volume-metrics
 ```
 
 After this, we should be able to deploy the hub and have it use the new NFS server:
@@ -117,6 +121,7 @@ Once this is deployed, the hub will automatically enforce the storage quota for 
 ## Troubleshooting
 
 ### Checking the NFS server is running properly
+
 To check whether the NFS server is running properly, we can run the following command in the NFS server pod in the nfs-server container:
 
 ```bash
