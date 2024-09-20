@@ -8,8 +8,9 @@ To be able to configure per-user storage quotas, we need to run an in-cluster NF
 
 jupyter-home-nfs expects a reference to an pre-provisioned disk. Here's an example of how to configure that on AWS and GCP.
 
-### AWS
-
+`````{tab-set}
+````{tab-item} AWS
+:sync: aws-key
 ```yaml
 basehub:
   jupyter-home-nfs:
@@ -18,10 +19,10 @@ basehub:
       enabled: true
       volumeId: vol-0a1246ee2e07372d0
 ```
+````
 
-
-### GCP
-
+````{tab-item} GCP
+:sync: gcp-key
 ```yaml
 basehub:
   jupyter-home-nfs:
@@ -30,6 +31,8 @@ basehub:
       enabled: true
       volumeId: projects/jupyter-nfs/zones/us-central1-f/disks/jupyter-nfs-home-directories
 ```
+````
+`````
 
 This changes can be deployed by running the following command:
 
