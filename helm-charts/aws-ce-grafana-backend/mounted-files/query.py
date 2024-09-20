@@ -23,8 +23,6 @@ aws_ce_client = boto3.client("ce")
 
 @functools.cache
 def _get_component_name(service_name):
-    print(f"test {service_name}")
-    logger.info(f"test {service_name}")
     if service_name in SERVICE_COMPONENT_MAP:
         return SERVICE_COMPONENT_MAP[service_name]
     else:
