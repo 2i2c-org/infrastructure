@@ -7,6 +7,26 @@ This guide explains how to enable and configure per-user storage quotas.
 Nest all config examples under a `basehub` key if deployingb this for a daskhub.
 ```
 
+## Creating a pre-provisioned disk
+
+The in-cluster NFS server uses a pre-provisioned disk to store the users' home directories. We don't use a dynamically provisioned volume because we want to be able to reuse the same disk even when the Kubernetes cluster is deleted and recreated. So the first step is to create a disk that will be used to store the users' home directories.
+
+For hubs running on AWS, we can create a disk through Terraform by adding a block like the following to the [tfvars file of the hub](https://github.com/2i2c-org/infrastructure/tree/main/terraform/aws/projects):
+
+```hcl
+ebs_volumes = {
+  "staging" = {
+    size        = 100
+    type        = "gp3"
+    name_suffix = "staging"
+    tags        = {}
+  }
+}
+```
+
+This will create a disk with a size of 100GB for the `staging` hub that we can reference when configuring the NFS server.
+
+
 ## Enabling jupyter-home-nfs
 
 To be able to configure per-user storage quotas, we need to run an in-cluster NFS server using [`jupyter-home-nfs`](https://github.com/sunu/jupyter-home-nfs). This can be enabled by setting `jupyter-home-nfs.enabled` to `true` in the hub's values file.
@@ -100,7 +120,7 @@ deployer deploy <cluster_name> <hub_name>
 
 Now we can set quotas for each user and configure the path to monitor for storage quota enforcement.
 
-This can be done by updating `basehub.jupyter-home-nfs.quotaEnforcer` in the hub's values file. For example, to set a quota of 10GB for the user `staging`, we would add the following to the user's values file:
+This can be done by updating `basehub.jupyter-home-nfs.quotaEnforcer` in the hub's values file. For example, to set a quota of 10GB for all users on the `staging` hub, we would add the following to the hub's values file:
 
 ```yaml
 jupyter-home-nfs:
