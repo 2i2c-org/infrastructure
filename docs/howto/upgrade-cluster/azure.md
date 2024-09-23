@@ -65,14 +65,14 @@ You can also control which minor k8s versions terraform will check using the `k8
 
 The k8s control plane can only be upgraded one minor version at the time,[^1] so increment the version using the `kubernetes_version` variable in the `projects/$CLUSTER_NAME.tfvars` file.
 
-```hcl
+```
 kubernetes_version = "1.30.3"  # Increment this
 ```
 
 Since this variable also defines the k8s versions of the node pools, we will need to pin them until later in the process.
 We can do this using the `kubernetes_version` variable in the node pool definitions.
 
-```hcl
+```
 node_pools = {
   core : [
     {
@@ -129,7 +129,7 @@ We are forced to use a re-creation strategy for our core node pool because this 
 
 Remove the `kubernetes_variable` we added to the core node pool definition in the previous step.
 
-```hcl
+```
 node_pools = {
   core : [
     {
@@ -156,7 +156,7 @@ This time, it could take up to 10 mins to complete.
    Duplicate the config for the node pool you wish to upgrade.
    Update the name so it doesn't clash, and make sure *not* to copy the `kubernetes_version` variable from the first node pool.
 
-   ```hcl
+   ```
    node_pools = {
      ...
      user : [
@@ -200,7 +200,7 @@ This time, it could take up to 10 mins to complete.
 
    Then add a comment in the `.tfvars` file above the old node pool saying:
 
-   ```hcl
+   ```
    # FIXME: tainted, to be deleted when empty, replaced by equivalent during k8s upgrade
    ```
 
