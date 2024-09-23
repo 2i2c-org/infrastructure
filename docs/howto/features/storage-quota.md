@@ -11,7 +11,7 @@ Nest all config examples under a `basehub` key if deploying this for a daskhub.
 
 The in-cluster NFS server uses a pre-provisioned disk to store the users' home directories. We don't use a dynamically provisioned volume because we want to be able to reuse the same disk even when the Kubernetes cluster is deleted and recreated. So the first step is to create a disk that will be used to store the users' home directories.
 
-For hubs running on AWS, we can create a disk through Terraform by adding a block like the following to the [tfvars file of the hub](https://github.com/2i2c-org/infrastructure/tree/main/terraform/aws/projects):
+For infrastructure running on AWS, we can create a disk through Terraform by adding a block like the following to the [tfvars file of the hub](https://github.com/2i2c-org/infrastructure/tree/main/terraform/aws/projects):
 
 ```hcl
 ebs_volumes = {
