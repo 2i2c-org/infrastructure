@@ -25,6 +25,7 @@ required:
   - serviceAccount
   - service
   - ingress
+  - networkPolicy
 properties:
   # Flag to conditionally install the chart
   # ---------------------------------------------------------------------------
@@ -151,3 +152,23 @@ properties:
         enum: [Prefix, Exact, ImplementationSpecific]
       tls:
         type: array
+
+  # NetworkPolicy resource
+  # ---------------------------------------------------------------------------
+  #
+  networkPolicy:
+    type: object
+    additionalProperties: false
+    properties:
+      enabled:
+        type: boolean
+      ingress:
+        type: array
+      ingressAllowRules:
+        type: object
+        additionalProperties: false
+        required:
+          - localGrafanaInstances
+        properties:
+          localGrafanaInstances:
+            type: boolean

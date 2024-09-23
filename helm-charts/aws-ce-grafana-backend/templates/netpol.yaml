@@ -1,0 +1,47 @@
+{{- if .Values.networkPolicy.enabled -}}
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: {{ include "aws-ce-grafana-backend.webserver.fullname" . }}
+  labels:
+    {{- include "aws-ce-grafana-backend.labels" . | nindent 4 }}
+spec:
+  podSelector:
+    matchLabels:
+      {{- include "aws-ce-grafana-backend.selectorLabels" . | nindent 6 }}
+  policyTypes:
+    # Only constrain ingress for simplicy, allow any egress
+    - Ingress
+
+  # IMPORTANT:
+  #
+  # NetworkPolicy's ingress "from" and egress "to" rule specifications require
+  # great attention to detail. A quick summary is:
+  #
+  # 1. You can provide "from"/"to" rules that provide access either ports or a
+  #    subset of ports.
+  # 2. You can for each "from"/"to" rule provide any number of
+  #    "sources"/"destinations" of four different kinds.
+  #    - podSelector                        - targets pods with a certain label in the same namespace as the NetworkPolicy
+  #    - namespaceSelector                  - targets all pods running in namespaces with a certain label
+  #    - namespaceSelector and podSelector  - targets pods with a certain label running in namespaces with a certain label
+  #    - ipBlock                            - targets network traffic from/to a set of IP address ranges
+  #
+  # Read more at: https://kubernetes.io/docs/concepts/services-networking/network-policies/#behavior-of-to-and-from-selectors
+  #
+  ingress:
+    # Allow Grafana instances in the local namespace, as recognized by a label,
+    # to access the http port
+    {{- if .Values.networkPolicy.ingressAllowRules.localGrafanaInstances }}
+    - ports:
+        - port: http
+      from:
+        - podSelector:
+            matchLabels:
+              app.kubernetes.io/name: grafana
+    {{- end }}
+
+    {{- with .Values.networkPolicy.ingress }}
+    {{- . | toYaml | nindent 4 }}
+    {{- end }}
+{{- end }}
