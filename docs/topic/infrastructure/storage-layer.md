@@ -1,3 +1,4 @@
+(topic:storage)=
 # User home directory storage
 
 All users on all the hubs get a home directory with persistent storage.
@@ -71,6 +72,7 @@ This volumeMount is **NOT `readOnly`**, so admins can write to it.
 This feature comes from the [custom KubeSpawner](https://github.com/2i2c-org/infrastructure/tree/HEAD/helm-charts/basehub/values.yaml#L182) that the our community hubs use, that allows providing extra configuration for admin users only.
 ```
 
+(topic:storage:allusers)=
 #### (Optional) The `allusers` directory
 
 Can be mounted **just for admins**, showing the contents of `<hub-directory-path>/<hub-name>/`.
