@@ -71,3 +71,12 @@ ingress:
   pathSuffix:
   pathType: Prefix
   tls: []
+
+# NetworkPolicy resource
+# -----------------------------------------------------------------------------
+#
+networkPolicy:
+  enabled: true
+  ingress: []
+  ingressAllowRules:
+    localGrafanaInstances: true
