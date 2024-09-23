@@ -4,7 +4,7 @@
 This guide explains how to enable and configure per-user storage quotas.
 
 ```{note}
-Nest all config examples under a `basehub` key if deployingb this for a daskhub.
+Nest all config examples under a `basehub` key if deploying this for a daskhub.
 ```
 
 ## Creating a pre-provisioned disk
