@@ -25,13 +25,13 @@ local nodeAz = "us-west-2b";
 // A `node.kubernetes.io/instance-type label is added, so pods
 // can request a particular kind of node with a nodeSelector
 local notebookNodes = [
-    { 
+    {
         instanceType: "r5.xlarge",
         namePrefix: "nb-staging",
         labels+: { "2i2c/hub-name": "staging" },
         tags+: { "2i2c:hub-name": "staging" }
     },
-    { 
+    {
         instanceType: "r5.4xlarge",
         namePrefix: "nb-staging",
         labels+: { "2i2c/hub-name": "staging" },
@@ -43,13 +43,20 @@ local notebookNodes = [
         labels+: { "2i2c/hub-name": "staging" },
         tags+: { "2i2c:hub-name": "staging" }
     },
-    { 
+    {
+        // FIXME: tainted, to be deleted when empty, replaced by equivalent already
         instanceType: "r5.xlarge",
         namePrefix: "nb-prod",
         labels+: { "2i2c/hub-name": "prod" },
         tags+: { "2i2c:hub-name": "prod" }
     },
-    { 
+    {
+        instanceType: "r5.xlarge",
+        namePrefix: "nb-prod-a",
+        labels+: { "2i2c/hub-name": "prod" },
+        tags+: { "2i2c:hub-name": "prod" }
+    },
+    {
         instanceType: "r5.4xlarge",
         namePrefix: "nb-prod",
         labels+: { "2i2c/hub-name": "prod" },
@@ -61,13 +68,13 @@ local notebookNodes = [
         labels+: { "2i2c/hub-name": "prod" },
         tags+: { "2i2c:hub-name": "prod" }
     },
-    { 
+    {
         instanceType: "r5.xlarge",
         namePrefix: "nb-workshop",
         labels+: { "2i2c/hub-name": "workshop" },
         tags+: { "2i2c:hub-name": "workshop" }
     },
-    { 
+    {
         instanceType: "r5.4xlarge",
         namePrefix: "nb-workshop",
         labels+: { "2i2c/hub-name": "workshop" },
@@ -149,7 +156,7 @@ local daskNodes = [
     [
         ng + {
             namePrefix: 'core',
-            nameSuffix: 'b',
+            nameSuffix: 'a',
             nameIncludeInstanceType: false,
             availabilityZones: [nodeAz],
             ssh: {
