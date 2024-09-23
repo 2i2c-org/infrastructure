@@ -5,8 +5,8 @@ How we upgrade a Kubernetes cluster is specific to the cloud provider. This
 section covers topics in upgrading an existing Kubernetes cluster.
 
 ```{warning}
-As of now, we also only have written documentation for how to upgrade Kubernetes
-clusters on AWS.
+As of now, we are lacking written documentation for how to upgrade Kubernetes
+clusters on GCP.
 ```
 
 (upgrade-cluster:planning)=
@@ -53,4 +53,5 @@ upgrade-disruptions.md
 node-upgrade-strategies.md
 k8s-version-skew.md
 aws.md
+azure.md
 ```
