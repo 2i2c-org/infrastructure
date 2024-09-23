@@ -73,6 +73,11 @@ FILTER_ATTRIBUTABLE_COSTS = {
                 "MatchOptions": ["EQUALS"],
             },
         },
+        # FIXME: The inclusion of tags 2i2c:hub-name and 2i2c:node-purpose below
+        #        in this filter is a patch to capture openscapes data from 1st
+        #        July and up to 24th September 2024, and can be removed once
+        #        that date range is considered irrelevant.
+        #
         {
             "Not": {
                 "Tags": {
