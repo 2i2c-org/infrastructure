@@ -679,3 +679,17 @@ kubectl get node
 It should show you the provisioned node on the cluster if everything works out ok.
 ````
 `````
+
+## AWS only: Expandable storage class
+
+The default storage class that is created when we deploy a cluster to AWS does permit auto-expansion of persistent volumes.
+This can cause problems when we want to expand the size of a disk, say used by Prometheus to store metrics data.
+We will therefore patch the default storage class to permite auto-expansion.
+
+```bash
+# Gain k8s access to the cluster
+deployer use-cluster-credentials $CLUSTER_NAME
+
+# Patch the storage class
+kubectl patch storageclass gp2 --patch '{\"allowVolumeExpansion\": true}'
+```
