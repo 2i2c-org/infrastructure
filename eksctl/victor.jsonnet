@@ -32,6 +32,18 @@ local notebookNodes = [
     { instanceType: "r5.xlarge" },
     { instanceType: "r5.4xlarge" },
     { instanceType: "r5.16xlarge" },
+    {
+        instanceType: "g4dn.xlarge",
+        tags+: {
+            "k8s.io/cluster-autoscaler/node-template/resources/nvidia.com/gpu": "1"
+        },
+        taints+: {
+            "nvidia.com/gpu": "present:NoSchedule"
+        },
+        // Allow provisioning GPUs across all AZs, to prevent situation where all
+        // GPUs in a single AZ are in use and no new nodes can be spawned
+        availabilityZones: masterAzs,
+    },
 ];
 
 local daskNodes = [
