@@ -15,26 +15,12 @@ basehub:
           oauth_callback_url: https://staging.victor.2i2c.cloud/hub/oauth_callback
     singleuser:
       profileList:
-        # Create a small instance that can launch a custom image
-        - display_name: "Bring your own image - Small: m5.large"
-          description: "Specific your own image (must have python and jupyterhub installed in it) - ~2 CPU, ~8G RAM"
-          slug: custom
-          profile_options:
-            image:
-              display_name: Image
-              unlisted_choice:
-                enabled: true
-                display_name: "Custom image"
-                validation_regex: "^.+:.+$"
-                validation_message: "Must be a publicly available docker image, of form <image-name>:<tag>"
-                kubespawner_override:
-                  image: "{value}"
-                  mem_limit: 8G
-                  mem_guarantee: 6.5G
-                  node_selector:
-                    node.kubernetes.io/instance-type: m5.large
-              choices: {}
         #=== Below are copied from common file ===#
+        #
+        # But, they have been adjusted to include unlisted_choice to pick a
+        # custom image.
+        #
+
         # The mem-guarantees are here so k8s doesn't schedule other pods
         # on these nodes.
         - display_name: "Small: m5.large"
@@ -47,6 +33,30 @@ basehub:
             mem_guarantee: 6.5G
             node_selector:
               node.kubernetes.io/instance-type: m5.large
+          profile_options: &profile_options
+            image:
+              display_name: Image
+              choices:
+                a-victor-notebook:
+                  display_name: Victor Notebook
+                  default: true
+                  kubespawner_override:
+                    image: quay.io/volcanocyber/victor-notebook:a045ad3616d1
+                b-pytorch-notebook:
+                  display_name: Pangeo ML Notebook (Pytorch)
+                  kubespawner_override:
+                    image: "quay.io/pangeo/pytorch-notebook:2024.09.11"
+                c-ml-notebook:
+                  display_name: Pangeo ML Notebook (Tensorflow)
+                  kubespawner_override:
+                    image: "quay.io/pangeo/ml-notebook:2024.09.11"
+              unlisted_choice:
+                enabled: true
+                display_name: "Custom image"
+                validation_regex: "^.+:.+$"
+                validation_message: "Must be a publicly available docker image, of form <image-name>:<tag>"
+                kubespawner_override:
+                  image: "{value}"
         - display_name: "Medium: m5.xlarge"
           description: "~4 CPU, ~15G RAM"
           kubespawner_override:
@@ -54,6 +64,7 @@ basehub:
             mem_guarantee: 12G
             node_selector:
               node.kubernetes.io/instance-type: m5.xlarge
+          profile_options: *profile_options
         - display_name: "Large: m5.2xlarge"
           description: "~8 CPU, ~30G RAM"
           kubespawner_override:
@@ -61,6 +72,7 @@ basehub:
             mem_guarantee: 25G
             node_selector:
               node.kubernetes.io/instance-type: m5.2xlarge
+          profile_options: *profile_options
         - display_name: "Huge: m5.8xlarge"
           description: "~16 CPU, ~60G RAM"
           kubespawner_override:
@@ -68,3 +80,17 @@ basehub:
             mem_guarantee: 50G
             node_selector:
               node.kubernetes.io/instance-type: m5.8xlarge
+          profile_options: *profile_options
+        - display_name: NVIDIA Tesla T4, ~16 GB, ~4 CPUs
+          description: "Start a container on a dedicated node with a GPU"
+          slug: "gpu"
+          kubespawner_override:
+            environment:
+              NVIDIA_DRIVER_CAPABILITIES: compute,utility
+            mem_limit: null
+            mem_guarantee: 14G
+            node_selector:
+              node.kubernetes.io/instance-type: g4dn.xlarge
+            extra_resource_limits:
+              nvidia.com/gpu: "1"
+          profile_options: *profile_options
