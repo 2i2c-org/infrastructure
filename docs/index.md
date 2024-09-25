@@ -35,6 +35,7 @@ sre-guide/support/index.md
 sre-guide/manage-k8s/index.md
 sre-guide/node-scale-up/index.md
 sre-guide/common-problems-solutions.md
+sre-guide/prometheus-disk-resize.md
 ```
 
 (hub-deployment-guide)=
