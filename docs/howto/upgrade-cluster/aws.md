@@ -126,6 +126,8 @@ eksctl update addon --config-file=$CLUSTER_NAME.eksctl.yaml
 If you need to upgrade multiple minor versions, repeat the previous steps
 starting with the minor version upgrade.
 
+(upgrade-cluster:aws:node-groups)=
+
 ### 5. Upgrade node groups
 
 All of the cluster's node groups should be upgraded. Strategies to upgrade nodes
