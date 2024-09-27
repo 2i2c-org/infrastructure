@@ -15,6 +15,7 @@ node_pools = {
       name : "core",
       vm_size : "Standard_E2s_v5",
       os_disk_size_gb : 40,
+      kubelet_disk_type : "OS",  # Temporary disk does not have enough space
       min : 1,
       max : 10,
     },
