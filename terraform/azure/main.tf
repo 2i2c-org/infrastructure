@@ -6,7 +6,7 @@ terraform {
       # FIXME: upgrade to v4, see https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/guides/4.0-upgrade-guide
       # ref: https://registry.terraform.io/providers/hashicorp/azurerm/latest
       source  = "hashicorp/azurerm"
-      version = "~> 3.111"
+      version = "~> 4.3"
     }
 
     azuread = {
