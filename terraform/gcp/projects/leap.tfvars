@@ -23,7 +23,7 @@ region = "us-central1"
 enable_network_policy = true
 
 filestores = {
-  "filestore" = { capacity_gb = 3072 }
+  "filestore" = { capacity_gb = 3584 }
 }
 
 user_buckets = {
@@ -53,11 +53,13 @@ user_buckets = {
     "delete_after" : null,
     "extra_admin_members" : ["group:leap-persistent-bucket-writers@googlegroups.com"],
     "usage_logs" : true,
+    "uniform_bucket_level_access_only" : true, # cannot change after 90 days
   },
   "persistent-ro-staging" : {
     "delete_after" : null,
     "extra_admin_members" : ["group:leap-persistent-bucket-writers@googlegroups.com"],
     "usage_logs" : true,
+    "uniform_bucket_level_access_only" : true, # cannot change after 90 days
   }
 }
 
