@@ -82,13 +82,13 @@ resource "azurerm_kubernetes_cluster" "jupyterhub" {
   # ref: https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/kubernetes_cluster#temporary_name_for_rotation.
   #
   default_node_pool {
-    name                = var.node_pools["core"][0].name
-    vm_size             = var.node_pools["core"][0].vm_size
-    os_disk_size_gb     = var.node_pools["core"][0].os_disk_size_gb
-    kubelet_disk_type   = var.node_pools["core"][0].kubelet_disk_type
-    enable_auto_scaling = true
-    min_count           = var.node_pools["core"][0].min
-    max_count           = var.node_pools["core"][0].max
+    name                 = var.node_pools["core"][0].name
+    vm_size              = var.node_pools["core"][0].vm_size
+    os_disk_size_gb      = var.node_pools["core"][0].os_disk_size_gb
+    kubelet_disk_type    = var.node_pools["core"][0].kubelet_disk_type
+    auto_scaling_enabled = true
+    min_count            = var.node_pools["core"][0].min
+    max_count            = var.node_pools["core"][0].max
 
     node_labels = merge({
       "hub.jupyter.org/node-purpose" = "core",
@@ -105,13 +105,13 @@ resource "azurerm_kubernetes_cluster" "jupyterhub" {
 resource "azurerm_kubernetes_cluster_node_pool" "user_pool" {
   for_each = { for i, v in var.node_pools["user"] : v.name => v }
 
-  name                = each.value.name
-  vm_size             = each.value.vm_size
-  os_disk_size_gb     = each.value.os_disk_size_gb
-  kubelet_disk_type   = each.value.kubelet_disk_type
-  enable_auto_scaling = true
-  min_count           = each.value.min
-  max_count           = each.value.max
+  name                 = each.value.name
+  vm_size              = each.value.vm_size
+  os_disk_size_gb      = each.value.os_disk_size_gb
+  kubelet_disk_type    = each.value.kubelet_disk_type
+  auto_scaling_enabled = true
+  min_count            = each.value.min
+  max_count            = each.value.max
 
   node_labels = merge({
     "hub.jupyter.org/node-purpose" = "user",
@@ -132,13 +132,13 @@ resource "azurerm_kubernetes_cluster_node_pool" "user_pool" {
 resource "azurerm_kubernetes_cluster_node_pool" "dask_pool" {
   for_each = { for i, v in var.node_pools["dask"] : v.name => v }
 
-  name                = each.value.name
-  vm_size             = each.value.vm_size
-  os_disk_size_gb     = each.value.os_disk_size_gb
-  kubelet_disk_type   = each.value.kubelet_disk_type
-  enable_auto_scaling = true
-  min_count           = each.value.min
-  max_count           = each.value.max
+  name                 = each.value.name
+  vm_size              = each.value.vm_size
+  os_disk_size_gb      = each.value.os_disk_size_gb
+  kubelet_disk_type    = each.value.kubelet_disk_type
+  auto_scaling_enabled = true
+  min_count            = each.value.min
+  max_count            = each.value.max
 
   node_labels = merge({
     "k8s.dask.org/node-purpose" = "worker",
