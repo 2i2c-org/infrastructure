@@ -70,3 +70,7 @@ jupyterhub:
       Authenticator:
         admin_users:
           - schadalapaka@ucmerced.edu
+    singleuser:
+      memory:
+        guarantee: "2G"
+        limit: "2G"
