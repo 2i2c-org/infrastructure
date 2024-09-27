@@ -5,7 +5,7 @@ global_storage_account_name = "2i2cjupyterhubstorage"
 location                    = "canadacentral"
 budget_alert_amount         = null
 storage_size                = 512
-ssh_pub_key                 = "ecdsa-sha2-nistp256 AAAAE2VjZHNhLXNoYTItbmlzdHAyNTYAAAAIbmlzdHAyNTYAAABBBInYkhcbNZoDtGFcY6zWdcqO3G9VlVxTc8ECW7/VpAhbetuUpe7T9eo0oGx+Y3ZBrlLZMyd1RpQiUzVKWEoDPB0= sgibson@2i2c.org"
+ssh_pub_key                 = "ecdsa-sha2-nistp256 AAAAE2VjZHNhLXNoYTItbmlzdHAyNTYAAAAIbmlzdHAyNTYAAABBBBQ9Fgc9s/Or8ZyFWVDU+a2s2dFPkviuX4tEK9l4oDYsbFLhZ3bHFSPFvVwI0G3rnSFzahzPQyAO/xugJJcDSV0= sgibson-2i2c"
 
 kubernetes_version = "1.30.3"
 
