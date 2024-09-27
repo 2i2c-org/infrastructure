@@ -23,7 +23,7 @@ region = "us-central1"
 enable_network_policy = true
 
 filestores = {
-  "filestore" = { capacity_gb = 3072 }
+  "filestore" = { capacity_gb = 3584 }
 }
 
 user_buckets = {
