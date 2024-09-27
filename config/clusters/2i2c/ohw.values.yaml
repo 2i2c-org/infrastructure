@@ -75,6 +75,9 @@ basehub:
         GitHubOAuthenticator:
           oauth_callback_url: https://oceanhackweek.2i2c.cloud/hub/oauth_callback
           allowed_organizations:
+            - Intercoonecta:ohwes24-organizers
+            - Intercoonecta:ohwes24-mentor-helper-presenter
+            - Intercoonecta:ohwes24-participants-tallerintermed
             - oceanhackweek:ohw24-organizers
             - oceanhackweek:ohw24-participants-australia
             - oceanhackweek:ohw24-participants-bigelow
@@ -87,3 +90,4 @@ basehub:
             - ocefpaf
             - abkfenris
             - cpsarason
+            - emiliom
