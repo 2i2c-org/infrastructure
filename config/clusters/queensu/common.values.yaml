@@ -1,0 +1,79 @@
+nfs:
+  enabled: true
+  pv:
+    enabled: true
+    # Recommended options from the Azure Portal UI for mounting the share
+    mountOptions:
+      - vers=4
+      - minorversion=1
+      - sec=sys
+    serverIP: 2i2cjupyterhubstorage.file.core.windows.net
+    # Trailing slash is important!
+    baseShareName: /2i2cjupyterhubstorage/homes/
+jupyterhub:
+  custom:
+    2i2c:
+      add_staff_user_ids_to_admin_users: true
+      add_staff_user_ids_of_type: google
+    homepage:
+      templateVars:
+        org:
+          name: "Queen's University"
+          logo_url: https://www.queensu.ca/resources/assets/logos/Queens-logo-reversed.svg
+          url: https://www.queensu.ca/
+        designed_by:
+          name: 2i2c
+          url: https://2i2c.org
+        operated_by:
+          name: 2i2c
+          url: https://2i2c.org
+        funded_by:
+          name: "Queen's University"
+          url: https://www.queensu.ca/
+  hub:
+    config:
+      JupyterHub:
+        authenticator_class: cilogon
+      CILogonOAuthenticator:
+        allowed_idps:
+          # Community specific idp - enables community members to authenticate.
+          # In this example, all authenticated users are authorized via the idp
+          # specific allow_all config.
+          https://login.queensu.ca/idp/shibboleth:
+            default: true
+            username_derivation:
+              username_claim: email
+            allow_all: true # authorize all users authenticated by the idp
+          # Google idp - enables 2i2c admin users to authenticate.
+          # The basehub chart config "custom.2i2c.add_staff_user_ids..." expands
+          # admin_users to authorize specific 2i2c staff members.
+          http://google.com/accounts/o8/id:
+            username_derivation:
+              username_claim: email
+      Authenticator:
+        admin_users: []
+  scheduling:
+    userScheduler:
+      enabled: true
+  singleuser:
+    profileList:
+      - display_name: "Choose an image to launch"
+        description: "Launch either the Jupyter SciPy image, or a pre-existing docker image from a public docker registry (dockerhub, quay, etc)"
+        slug: only-choice
+        profile_options:
+          image:
+            display_name: Image
+            unlisted_choice:
+              enabled: True
+              display_name: "Custom image"
+              validation_regex: "^.+:.+$"
+              validation_message: "Must be a publicly available docker image, of form <image-name>:<tag>"
+              display_name_in_choices: "Specify an existing docker image"
+              kubespawner_override:
+                image: "{value}"
+            choices:
+              scipy:
+                display_name: Jupyter SciPy Notebook
+                slug: scipy
+                kubespawner_override:
+                  image: quay.io/jupyter/scipy-notebook:2024-09-23

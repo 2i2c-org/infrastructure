@@ -1,0 +1,10 @@
+jupyterhub:
+  ingress:
+    hosts: [queensu.2i2c.cloud]
+    tls:
+      - hosts: [queensu.2i2c.cloud]
+        secretName: https-auto-tls
+  hub:
+    config:
+      CILogonOAuthenticator:
+        oauth_callback_url: https://queensu.2i2c.cloud/hub/oauth_callback
