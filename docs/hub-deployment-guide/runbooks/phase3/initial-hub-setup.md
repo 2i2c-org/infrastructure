@@ -121,7 +121,7 @@ All of the following steps must be followed in order to consider phase 3.1 compl
 
       ````{tab-item} Azure
       :sync: azure-key
-      N/A
+      tf output azure_fileshare_url
       ````
       `````
       1. **Run the deployer command below to generate config for the common hubs configuration, passing the admin users one by one:**
