@@ -1,0 +1,109 @@
+nfs:
+  enabled: true
+  pv:
+    enabled: true
+    # from https://docs.aws.amazon.com/efs/latest/ug/mounting-fs-nfs-mount-settings.html
+    mountOptions:
+      - rsize=1048576
+      - wsize=1048576
+      - timeo=600
+      - soft # We pick soft over hard, so NFS lockups don't lead to hung processes
+      - retrans=2
+      - noresvport
+    serverIP: fs-02429ba76bca794be.efs.us-west-2.amazonaws.com
+    baseShareName: /
+
+jupyterhub:
+  custom:
+    2i2c:
+      add_staff_user_ids_to_admin_users: true
+      add_staff_user_ids_of_type: github
+    homepage:
+      templateVars:
+        org:
+          name: strudel
+          logo_url: none
+          url: strudel
+        designed_by:
+          name: 2i2c
+          url: https://2i2c.org
+        operated_by:
+          name: 2i2c
+          url: https://2i2c.org
+        funded_by:
+          name: none
+          url: none
+  hub:
+    allowNamedServers: true
+    config:
+      JupyterHub:
+        authenticator_class: github
+      # Authenticator:
+      #   admin_users:
+      #     - user1
+    image:
+      name: quay.io/2i2c/dynamic-image-building-experiment
+      tag: "0.0.1-0.dev.git.8663.h049aa2c2"
+    extraConfig:
+      enable-fancy-profiles: |
+        from jupyterhub_fancy_profiles import setup_ui
+        setup_ui(c)
+  scheduling:
+    userScheduler:
+      enabled: true
+  singleuser:
+    profileList:
+      - display_name: "Only Profile Available, this info is not shown in the UI"
+        slug: only-choice
+        profile_options:
+          image:
+            display_name: Image
+            unlisted_choice:
+              enabled: True
+              display_name: "Custom image"
+              validation_regex: "^.+:.+$"
+              validation_message: "Must be a publicly available docker image, of form <image-name>:<tag>"
+              display_name_in_choices: "Specify an existing docker image"
+              description_in_choices: "Use a pre-existing docker image from a public docker registry (dockerhub, quay, etc)"
+              kubespawner_override:
+                image: "{value}"
+            choices:
+              qgis:
+                display_name: QGIS
+                description: QGIS environment
+                kubespawner_override:
+                  # Launch people directly into the Linux desktop when they start
+                  default_url: /desktop
+                  # Built from https://github.com/jupyterhub/jupyter-remote-desktop-proxy/pull/51
+                  image: quay.io/2i2c/nasa-qgis-image:0d0765090250
+          requests:
+            display_name: Resource Allocation
+            choices:
+              mem_1_9:
+                display_name: 1.9 GB RAM, upto 3.7 CPUs
+                kubespawner_override:
+                  mem_guarantee: 1991244775
+                  mem_limit: 1991244775
+                  cpu_guarantee: 0.2328125
+                  cpu_limit: 3.725
+                  node_selector:
+                    node.kubernetes.io/instance-type: r5.xlarge
+                default: true
+              mem_3_7:
+                display_name: 3.7 GB RAM, upto 3.7 CPUs
+                kubespawner_override:
+                  mem_guarantee: 3982489550
+                  mem_limit: 3982489550
+                  cpu_guarantee: 0.465625
+                  cpu_limit: 3.725
+                  node_selector:
+                    node.kubernetes.io/instance-type: r5.xlarge
+              mem_7_4:
+                display_name: 7.4 GB RAM, upto 3.7 CPUs
+                kubespawner_override:
+                  mem_guarantee: 7964979101
+                  mem_limit: 7964979101
+                  cpu_guarantee: 0.93125
+                  cpu_limit: 3.725
+                  node_selector:
+                    node.kubernetes.io/instance-type: r5.xlarge
