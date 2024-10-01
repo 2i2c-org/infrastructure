@@ -253,6 +253,7 @@ jobs:
       failure_projectpythia: "${{ env.failure_projectpythia }}"
       failure_qcl: "${{ env.failure_qcl }}"
       failure_smithsonian: "${{ env.failure_smithsonian }}"
+      failure_strudel: "${{ env.failure_strudel }}"
       failure_ubc-eoas: "${{ env.failure_ubc-eoas }}"
       failure_utoronto: "${{ env.failure_utoronto }}"
       failure_victor: "${{ env.failure_victor }}"
