@@ -51,7 +51,7 @@ jupyterhub:
             username_derivation:
               username_claim: email
       Authenticator:
-        admin_users: [] 
+        admin_users: []
   scheduling:
     userScheduler:
       enabled: true
