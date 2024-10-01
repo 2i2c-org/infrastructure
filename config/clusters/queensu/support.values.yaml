@@ -40,4 +40,3 @@ grafana:
       - secretName: grafana-tls
         hosts:
           - grafana.queensu.2i2c.cloud
-
