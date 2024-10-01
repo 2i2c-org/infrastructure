@@ -17,7 +17,7 @@ hubs:
       - enc-staging.secret.values.yaml
   - name: prod
     display_name: "Queen's University"
-    domain: prod.queensu.2i2c.cloud
+    domain: queensu.2i2c.cloud
     helm_chart: basehub
     helm_chart_values_files:
       - common.values.yaml
