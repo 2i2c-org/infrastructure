@@ -1,0 +1,4 @@
+name: queensu
+provider: kubeconfig
+kubeconfig:
+  file: enc-deployer-credentials.secret.yaml
