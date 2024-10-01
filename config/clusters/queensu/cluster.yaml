@@ -2,3 +2,7 @@ name: queensu
 provider: kubeconfig
 kubeconfig:
   file: enc-deployer-credentials.secret.yaml
+support:
+  helm_chart_values_files:
+    - support.values.yaml
+    - enc-support.secret.values.yaml
