@@ -139,8 +139,10 @@ basehub:
         Authenticator:
           enable_auth_state: true
           admin_users:
-            # Chad Trebant, https://2i2c.freshdesk.com/a/tickets/1279
-            - google-oauth2|117718799995701713253
+            - google-oauth2|117718799995701713253 #Chad Trabant, https://2i2c.freshdesk.com/a/tickets/1279
+            - google-oauth2|117710759588624106233 #Sarah Wilson
+            - google-oauth2|112630227497477971771 #Robert Weekly
+            - google-oauth2|118403506154942842583 #Alex Hamilton
     singleuser:
       cloudMetadata:
         blockWithIptables: false
