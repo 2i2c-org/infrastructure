@@ -1,0 +1,31 @@
+name: "New Hub Turnup Phase 0 - Partnership/Engineering sync chat"
+description: |
+  If partnerships need a conversation with an engineer to help with filling out
+  the other phases, they should open this type of issue to trigger that process.
+title: "[New Hub] [Spike: 30mins] Sync chat to refine phases - {{community_name}}"
+projects: ["2i2c-org/49"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        This issue is to be used when Partnerships require some engineering assistance
+        to refine the requirements for an upcoming new hub deployment.
+
+        ### Tasks
+
+        ```[tasklist]
+        - [ ] Schedule a 30min sync chat with James Munroe, or a delegate, to refine the new hub requirements
+        - [ ] Refine the requirements for this new hub deployment
+        - [ ] Open the relevant Phase 1,2,3 issues with all of the required information
+        ```
+
+        ### Definition of Done
+        
+        Each of the following phases for this new hub deployment:
+        - have an open issue,
+        - all the relevant information in the issue tables are filled out and marked READY,
+        - the issues have been placed in the Refined column of the Engineering board
+
+        - [ ] Phase 1
+        - [ ] Phase 2
+        - [ ] Phase 3
