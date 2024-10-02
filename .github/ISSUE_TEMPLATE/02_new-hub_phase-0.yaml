@@ -2,7 +2,7 @@ name: "New Hub Turnup Phase 0 - Partnership/Engineering sync chat"
 description: |
   If partnerships need a conversation with an engineer to help with filling out
   the other phases, they should open this type of issue to trigger that process.
-title: "[New Hub] [Spike: 30mins] Sync chat to refine phases - {{community_name}}"
+title: "[New Hub] [Due by: {{date}}] [Spike: 30mins] Sync chat to refine phases - {{community_name}}"
 projects: ["2i2c-org/49"]
 body:
   - type: markdown
