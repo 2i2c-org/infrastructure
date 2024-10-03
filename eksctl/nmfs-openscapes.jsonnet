@@ -25,42 +25,9 @@ local nodeAz = "us-west-2b";
 // A `node.kubernetes.io/instance-type label is added, so pods
 // can request a particular kind of node with a nodeSelector
 local notebookNodes = [
-    {
-        instanceType: "r7i.xlarge",
-        namePrefix: "nb-staging",
-        labels+: { "2i2c.org/hub-name": "staging" },
-        tags+: { "2i2c:hub-name": "staging" },
-    },
-    {
-        instanceType: "r7i.4xlarge",
-        namePrefix: "nb-staging",
-        labels+: { "2i2c.org/hub-name": "staging" },
-        tags+: { "2i2c:hub-name": "staging" },
-    },
-    {
-        instanceType: "r7i.16xlarge",
-        namePrefix: "nb-staging",
-        labels+: { "2i2c.org/hub-name": "staging" },
-        tags+: { "2i2c:hub-name": "staging" },
-    },
-    {
-        instanceType: "r7i.xlarge",
-        namePrefix: "nb-prod",
-        labels+: { "2i2c.org/hub-name": "prod" },
-        tags+: { "2i2c:hub-name": "prod" },
-    },
-    {
-        instanceType: "r7i.4xlarge",
-        namePrefix: "nb-prod",
-        labels+: { "2i2c.org/hub-name": "prod" },
-        tags+: { "2i2c:hub-name": "prod" },
-    },
-    {
-        instanceType: "r7i.16xlarge",
-        namePrefix: "nb-prod",
-        labels+: { "2i2c.org/hub-name": "prod" },
-        tags+: { "2i2c:hub-name": "prod" },
-    },
+    { instanceType: "r5.xlarge" },
+    { instanceType: "r5.4xlarge" },
+    { instanceType: "r5.16xlarge" },
 ];
 local daskNodes = [];
 
@@ -132,7 +99,7 @@ local daskNodes = [];
             ssh: {
                 publicKeyPath: 'ssh-keys/nmfs-openscapes.key.pub'
             },
-            instanceType: "r7i.xlarge",
+            instanceType: "r5.xlarge",
             minSize: 1,
             maxSize: 6,
             labels+: {
