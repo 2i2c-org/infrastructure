@@ -4,7 +4,13 @@ local dashboard = grafonnet.dashboard;
 local ts = grafonnet.panel.timeSeries;
 
 local totalDailyCosts =
-  ts.standardOptions.withMin(20)
+  ts.new('Total daily costs')
+  + ts.panelOptions.withDescription(
+    |||
+      Total daily costs
+    |||
+  )
+  + ts.standardOptions.withMin(20)
   + ts.options.withTooltip({ mode: 'multi' })
   + ts.options.withLegend({
     "calcs": [
@@ -20,12 +26,6 @@ local totalDailyCosts =
    })
   + ts.fieldConfig.defaults.custom.withLineInterpolation('stepAfter')
   + ts.fieldConfig.defaults.custom.withFillOpacity(10)
-  + ts.new('Total daily costs')
-  + ts.panelOptions.withDescription(
-    |||
-      Total daily costs
-    |||
-  )
   + ts.standardOptions.withUnit('currencyUSD')
   + ts.queryOptions.withTargets([
     {
