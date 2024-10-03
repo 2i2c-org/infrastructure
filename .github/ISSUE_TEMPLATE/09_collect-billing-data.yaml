@@ -1,7 +1,7 @@
 name: "💳 Collect billing data for a time period"
 description: "Generate the billing data for a specific time period for all 2i2c clusters"
 title: "[Billing] Collect billing data for {{ Month(s) }} - {{ Dedicated / Shared }} clusters"
-labels: ["billing"]
+labels: ["billing", "recurrent"]
 body:
   - type: markdown
     attributes:
@@ -10,7 +10,7 @@ body:
 
         Once all the info has been filled in, this issue is considered to be fully refined and can be added to the `Refined` column of the Project Board.
 
-        # Context
+        # Resources
 
   - type: dropdown
     id: cluster_type
