@@ -99,3 +99,11 @@ hub_cloud_permissions = {
     },
   },
 }
+
+active_cost_allocation_tags = [
+  "2i2c:hub-name",
+  "2i2c.org/cluster-name",
+  "alpha.eksctl.io/cluster-name",
+  "kubernetes.io/cluster/nasa-cryo",
+  "kubernetes.io/created-for/pvc/namespace",
+]
