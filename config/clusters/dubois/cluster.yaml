@@ -1,0 +1,39 @@
+name: dubois
+provider: gcp # https://console.cloud.google.com/kubernetes/clusters/details/us-central1/dubois-cluster/observability?project=dubois-436615
+gcp:
+  key: enc-deployer-credentials.secret.json
+  project: dubois-436615
+  cluster: dubois-cluster
+  # We default to a regional cluster
+  zone: us-central1
+  billing:
+    # Set to true if billing for this cluster is paid for by the 2i2c card
+    paid_by_us: true
+    bigquery:
+      # contains information about bigquery billing export (https://cloud.google.com/billing/docs/how-to/export-data-bigquery)
+      # for calculating how much this cluster costs us. Required if `paid_by_us` is
+      # set to true.
+      # the id of gcp project where bigquery dataset lives, which is usually the cluster's name
+      project: dubois
+      # the default name of the dataset from the docs
+      dataset: cloud_costs
+      # the 2i2c billing account id
+      billing_id: 0157F7-E3EA8C-25AC3C
+support:
+  helm_chart_values_files:
+    - support.values.yaml
+    - enc-support.secret.values.yaml
+hubs:
+  []
+  # Uncomment the lines below once the support infrastructure was deployed and
+  # you are ready to add the first cluster
+
+  # - name: <hub_name>
+  #   # Tip: consider changing this to something more human friendly
+  #   display_name: "dubois - <hub_name>"
+  #   domain: <hub_name>.dubois.2i2c.cloud
+  #   helm_chart: basehub
+  #   helm_chart_values_files:
+  #     - common.values.yaml
+  #     - <hub_name>.values.yaml
+  #     - enc-<hub_name>.secret.values.yaml
