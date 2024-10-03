@@ -22,20 +22,20 @@ basehub:
               - port: 22
                 protocol: TCP
       profileList:
-        - display_name: "Python using JupyterLab"
+        - display_name: "Python en JupyterLab"
           description: "~2 CPU, ~8G RAM"
           default: true
           kubespawner_override:
-            image: "ghcr.io/oceanhackweek/python:e5901d6"
+            image: "ghcr.io/oceanhackweek/python:27d5f52"
             default_url: "/lab"
             mem_limit: 8G
             mem_guarantee: 4G
             cpu_limit: 2
             cpu_guarantee: 0.5
-        - display_name: "R using RStudio"
+        - display_name: "R en RStudio"
           description: "~2 CPU, ~8G RAM"
           kubespawner_override:
-            image: "ghcr.io/oceanhackweek/r:e18dea3"
+            image: "ghcr.io/oceanhackweek/r:27d5f52"
             default_url: "/rstudio"
             mem_limit: 8G
             mem_guarantee: 4G
@@ -56,9 +56,9 @@ basehub:
         templateVars:
           org:
             name: OceanHackWeek
-            logo_url: https://avatars.githubusercontent.com/u/33128979
-            # logo_url: https://intercoonecta.github.io/_static/OHWe.png
-            url: https://oceanhackweek.org/
+            # logo_url: https://avatars.githubusercontent.com/u/33128979
+            logo_url: https://intercoonecta.github.io/_static/OHWe.png
+            url: https://intercoonecta.github.io
           designed_by:
             name: 2i2c
             url: https://2i2c.org
@@ -66,8 +66,8 @@ basehub:
             name: 2i2c
             url: https://2i2c.org
           funded_by:
-            name: IOOS
-            url: https://ioos.us/
+            name: AECID
+            url: https://www.aecid.es
     hub:
       config:
         JupyterHub:
