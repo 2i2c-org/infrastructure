@@ -25,8 +25,10 @@ local nodeAz = "us-west-2a";
 // A `node.kubernetes.io/instance-type label is added, so pods
 // can request a particular kind of node with a nodeSelector
 local notebookNodes = [
-    { instanceType: "r5.xlarge" },
-    { instanceType: "r5.4xlarge" },
+    { instanceType: "r5.xlarge" }, // FIXME: tainted, to be deleted when empty, replaced by equivalent during k8s upgrade
+    { instanceType: "r5.xlarge", nameSuffix: "b" },
+    { instanceType: "r5.4xlarge" }, // FIXME: tainted, to be deleted when empty, replaced by equivalent during k8s upgrade
+    { instanceType: "r5.4xlarge", nameSuffix: "b" },
     { instanceType: "r5.16xlarge" },
     {
         instanceType: "g4dn.xlarge",
@@ -63,7 +65,7 @@ local daskNodes = [
     metadata+: {
         name: "nasa-cryo",
         region: clusterRegion,
-        version: "1.29",
+        version: "1.30",
     },
     availabilityZones: masterAzs,
     iam: {
@@ -94,7 +96,7 @@ local daskNodes = [
     [
         ng + {
             namePrefix: 'core',
-            nameSuffix: 'a',
+            nameSuffix: 'b',
             nameIncludeInstanceType: false,
             availabilityZones: [nodeAz],
             ssh: {

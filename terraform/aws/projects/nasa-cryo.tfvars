@@ -4,17 +4,21 @@ cluster_nodes_location = "us-west-2a"
 
 user_buckets = {
   "scratch-staging" : {
-    "delete_after" : 7
+    "delete_after" : 7,
+    "tags" : { "2i2c:hub-name" : "staging" }
   },
   "scratch" : {
-    "delete_after" : 7
+    "delete_after" : 7,
+    "tags" : { "2i2c:hub-name" : "prod" }
   },
   # For https://2i2c.freshdesk.com/a/tickets/847
   "persistent-staging" : {
     "delete_after" : null,
+    "tags" : { "2i2c:hub-name" : "staging" }
   },
   "persistent" : {
     "delete_after" : null,
+    "tags" : { "2i2c:hub-name" : "prod" }
   },
 }
 
