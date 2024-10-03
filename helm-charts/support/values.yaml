@@ -384,6 +384,10 @@ grafana:
       # Because our grafana is behind an nginx ingress, this should match the
       # read timeout set above under `ingress.annotations`.
       timeout: 120
+    unified_alerting:
+      # Disable alerting for now as its not something our community users can
+      # setup. See https://github.com/2i2c-org/infrastructure/issues/4919.
+      enabled: false
     server:
       root_url: ""
       enable_gzip: true
