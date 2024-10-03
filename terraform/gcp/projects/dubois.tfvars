@@ -12,14 +12,14 @@ zone   = "us-central1-b"
 region = "us-central1"
 
 # Config required to enable automatic budget alerts to be sent to support@2i2c.org
-billing_account_id   = "0157F7-E3EA8C-25AC3C"
+billing_account_id = "0157F7-E3EA8C-25AC3C"
 
 enable_network_policy = true
 
 k8s_versions = {
- min_master_version : "1.30.4-gke.1348000",
- core_nodes_version : "1.30.4-gke.1348000",
- notebook_nodes_version : "1.30.4-gke.1348000",
+  min_master_version : "1.30.4-gke.1348000",
+  core_nodes_version : "1.30.4-gke.1348000",
+  notebook_nodes_version : "1.30.4-gke.1348000",
 }
 
 core_node_machine_type = "n2-highmem-2"
