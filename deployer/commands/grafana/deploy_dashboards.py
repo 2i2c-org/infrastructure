@@ -7,7 +7,7 @@ import typer
 from deployer.cli_app import grafana_app
 from deployer.utils.rendering import print_colour
 
-from .utils import get_grafana_token, get_grafana_url
+from .utils import get_cluster_cloud_provider, get_grafana_token, get_grafana_url
 
 
 @grafana_app.command()
@@ -30,6 +30,7 @@ def deploy_dashboards(
     """
     grafana_url = get_grafana_url(cluster_name)
     grafana_token = get_grafana_token(cluster_name)
+    cluster_provider = get_cluster_cloud_provider(cluster_name)
 
     print_colour("Cloning jupyterhub/grafana-dashboards...")
     subprocess.check_call(
@@ -58,3 +59,8 @@ def deploy_dashboards(
         # Might be because opening more than once of a temp file is tried
         # (https://docs.python.org/3.8/library/tempfile.html#tempfile.NamedTemporaryFile)
         shutil.rmtree("grafana-dashboards")
+
+    if cluster_provider == "aws":
+        # FIXME: Add code to deploy cost attribution dashboards here
+        pass
+    
