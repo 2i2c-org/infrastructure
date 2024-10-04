@@ -46,7 +46,7 @@ spec:
               cpu: 0.01
             limits:
               cpu: 0.05
-              memory: 256Mi
+              memory: 512Mi
           args:
             - dirsize-exporter
             - /shared-volume
