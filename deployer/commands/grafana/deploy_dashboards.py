@@ -7,7 +7,7 @@ import typer
 from deployer.cli_app import grafana_app
 from deployer.utils.rendering import print_colour
 
-from .utils import get_grafana_token, get_grafana_url
+from .utils import get_cluster_cloud_provider, get_grafana_token, get_grafana_url
 
 
 @grafana_app.command()
@@ -30,6 +30,7 @@ def deploy_dashboards(
     """
     grafana_url = get_grafana_url(cluster_name)
     grafana_token = get_grafana_token(cluster_name)
+    cluster_provider = get_cluster_cloud_provider(cluster_name)
 
     print_colour("Cloning jupyterhub/grafana-dashboards...")
     subprocess.check_call(
@@ -37,6 +38,7 @@ def deploy_dashboards(
             "git",
             "clone",
             "https://github.com/jupyterhub/grafana-dashboards",
+            "jupyterhub-grafana-dashboards",
         ]
     )
 
@@ -44,17 +46,34 @@ def deploy_dashboards(
     # jupyterhub/grafana-dashboards' deploy.py script
     deploy_script_env = os.environ.copy()
     deploy_script_env.update({"GRAFANA_TOKEN": grafana_token})
+
     try:
         print_colour(f"Deploying grafana dashboards to {cluster_name}...")
         subprocess.check_call(
             ["./deploy.py", grafana_url, f"--dashboards-dir={dashboards_dir}"],
             env=deploy_script_env,
-            cwd="grafana-dashboards",
+            cwd="jupyterhub-grafana-dashboards",
         )
+
+        if cluster_provider == "aws":
+            print_colour("Deploying cost attribution dashboards to an AWS cluster...")
+            subprocess.check_call(
+                [
+                    "./deploy.py",
+                    grafana_url,
+                    "--dashboards-dir=../grafana-dashboards",
+                    "--folder-name='Cost Attribution Dashboards'",
+                    "--folder-uid=aws-ce-grafana-backend",
+                ],
+                env=deploy_script_env,
+                cwd="jupyterhub-grafana-dashboards",
+            )
+
         print_colour(f"Done! Dashboards deployed to {grafana_url}.")
+
     finally:
         # Delete the directory where we cloned the repo.
         # The deployer cannot call jsonnet to deploy the dashboards if using a temp directory here.
         # Might be because opening more than once of a temp file is tried
         # (https://docs.python.org/3.8/library/tempfile.html#tempfile.NamedTemporaryFile)
-        shutil.rmtree("grafana-dashboards")
+        shutil.rmtree("jupyterhub-grafana-dashboards")

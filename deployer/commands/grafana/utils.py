@@ -200,3 +200,20 @@ def update_central_grafana_token(cluster_name, token):
 
     # Encrypt the private key
     subprocess.check_call(["sops", "--in-place", "--encrypt", grafana_token_file])
+
+
+def get_cluster_cloud_provider(cluster_name):
+    """
+    Get the cloud provider a cluster is hosted on from its cluster.yaml file
+
+    Args:
+        cluster_name (str): name of the cluster
+        provider (str): name of the cloud provider the cluster is hosted on
+    """
+    cluster_config_dir_path = find_absolute_path_to_cluster_file(cluster_name).parent
+    config_filename = cluster_config_dir_path.joinpath("cluster.yaml")
+
+    with open(config_filename) as f:
+        cluster_config = yaml.load(f)
+
+    return cluster_config["provider"]
