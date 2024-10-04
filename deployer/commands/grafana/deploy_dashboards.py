@@ -46,6 +46,7 @@ def deploy_dashboards(
     # jupyterhub/grafana-dashboards' deploy.py script
     deploy_script_env = os.environ.copy()
     deploy_script_env.update({"GRAFANA_TOKEN": grafana_token})
+
     try:
         print_colour(f"Deploying grafana dashboards to {cluster_name}...")
         subprocess.check_call(
@@ -53,15 +54,26 @@ def deploy_dashboards(
             env=deploy_script_env,
             cwd="jupyterhub-grafana-dashboards",
         )
+
+        if cluster_provider == "aws":
+            print_colour("Deploying cost attribution dashboards to an AWS cluster...")
+            subprocess.check_call(
+                [
+                    "./deploy.py",
+                    grafana_url,
+                    "--dashboards-dir=../grafana-dashboards",
+                    "--folder-name='Cost Attribution Dashboards'",
+                    "--folder-uid=aws-ce-grafana-backend",
+                ],
+                env=deploy_script_env,
+                cwd="jupyterhub-grafana-dashboards",
+            )
+
         print_colour(f"Done! Dashboards deployed to {grafana_url}.")
+
     finally:
         # Delete the directory where we cloned the repo.
         # The deployer cannot call jsonnet to deploy the dashboards if using a temp directory here.
         # Might be because opening more than once of a temp file is tried
         # (https://docs.python.org/3.8/library/tempfile.html#tempfile.NamedTemporaryFile)
         shutil.rmtree("jupyterhub-grafana-dashboards")
-
-    if cluster_provider == "aws":
-        # FIXME: Add code to deploy cost attribution dashboards here
-        pass
-    
