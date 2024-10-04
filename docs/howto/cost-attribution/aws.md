@@ -153,42 +153,15 @@ deployer deploy-support $CLUSTER_NAME
 
 ### 5. Deploy a Grafana dashboard
 
-```{important}
-We doesn't yet have no automation for this, and the dashboard definition will be
-duplicated every time we deploy because its not centralized. With that in mind,
-please treat the Grafana dashboard in https://grafana.openscapes.2i2c.cloud as
-the source of truth for now, and act as changes to dashboards in other cluster
-will get discarded.
+Use the deployer to deploy the Grafana dashboards:
+
+```bash
+deployer grafana deploy-dashboards $CLUSTER_NAME
 ```
 
-To manually deploy the dashboard we currently have:
-
-1. Login to https://grafana.openscapes.2i2c.cloud as the admin user
-2. Visit [openscapes's dashboard settings] and save the JSON blob to a text
-   editor
-3. Login to Grafana instance of the cluster you're working with now as the admin
-   user
-4. Navigate to the `plugins/yesoreyeram-infinity-datasource` path (Plugins -> Search for infinity)
-5. First press the "Install" button, and then press the "Add new datasource"
-   button
-6. You'll arrive at a page with a path like
-   `connections/datasources/edit/ddyyd0z19aznke`, where the last part is an ID
-   of the datasource you just added. Copy that id, which in this example is
-   `ddyyd0z19aznke`.
-7. In the text editor with the JSON blob from openscapes dashboard definition,
-   find all references to the old infinity datasource ID listed under `uid`, and
-   replace all those with the ID you copied just before.
-8. Navigate to the `/dashboard/import` path (Dashboards -> New dashboard ->
-   Import dashboard)
-9. Paste the JSON blob you updated in the text editor and create a new dashboard
-
-The same dashboard definition is besides updating the datasource ID expected to
-work out of the box, because there is nothing hardcoded to the openscapes
-cluster within it. It simply reads data from
-`aws-ce-grafana-backend.support.svc.cluster.local`, which is a k8s cluster local
-address to the k8s Service `aws-ce-grafana-backend` in the `support` namespace.
-
-[openscapes's dashboard settings]: https://grafana.openscapes.2i2c.cloud/d/edw06h7udjwg0b/cloud-cost-attribution?orgId=1&editview=dashboard_json
+```{warning}
+Running this command will overwrite any changes or new dashboards made via the UI.
+```
 
 ## Troubleshooting
 
