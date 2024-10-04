@@ -43,7 +43,14 @@ local totalDailyCosts =
       columns: [
         {selector: "cost", text: "Cost", type: "number", unit: "currencyUSD"},
         {selector: "date", text: "Date", type: "timestamp"}
-      ]
+      ],
+      parser: "backend",
+      type: "json",
+      source: "url",
+      url_options: {
+        "method": "GET",
+        "data": "",
+      },
     }
   ]);
 
@@ -94,6 +101,13 @@ local totalDailyCostsPerHub =
         {selector: "name", text: "Name", type: "string"},
         {selector: "cost", text: "Cost", type: "number"}
       ],
+      parser: "backend",
+      type: "json",
+      source: "url",
+      url_options: {
+        "method": "GET",
+        "data": "",
+      },
     }
   ]);
 
@@ -144,6 +158,13 @@ local totalDailyCostsPerComponent =
         {selector: "name", text: "Name", type: "string"},
         {selector: "cost", text: "Cost", type: "number"}
       ],
+      parser: "backend",
+      type: "json",
+      source: "url",
+      url_options: {
+        "method": "GET",
+        "data": "",
+      },
     }
   ]);
 
@@ -155,6 +176,8 @@ local totalDailyCostsPerComponentAndHub =
       Total daily costs per component, for ${hub}
     |||
   )
+  + ts.panelOptions.withRepeat('hub')
+  + ts.panelOptions.withMaxPerRow(2)
   + ts.options.withTooltip({ mode: 'single', sort: "none" })
   + ts.options.withLegend({
     "calcs": [
@@ -194,6 +217,13 @@ local totalDailyCostsPerComponentAndHub =
         {selector: "name", text: "Name", type: "string"},
         {selector: "cost", text: "Cost", type: "number"}
       ],
+      parser: "backend",
+      type: "json",
+      source: "url",
+      url_options: {
+        "method": "GET",
+        "data": "",
+      },
     }
   ]);
 

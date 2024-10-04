@@ -15,12 +15,9 @@ local var = grafonnet.dashboard.variable;
           query: "",
           queryType: "infinity",
           infinityQuery: {
-            columns: [],
-            filters: [],
             format: "table",
             parser: "backend",
             refId: "variable",
-            root_selector: "",
             source: "url",
             type: "json",
             url: "http://aws-ce-grafana-backend.support.svc.cluster.local/hub-names?from=${__from:date}&to=${__to:date}",
@@ -32,8 +29,9 @@ local var = grafonnet.dashboard.variable;
         }
       )
       + var.query.withDatasourceFromVariable(self.infinity_datasource)
-      + var.query.generalOptions.showOnDashboard.withNothing()
       + var.query.selectionOptions.withIncludeAll(value=true)
+      + var.query.generalOptions.showOnDashboard.withNothing()
+      + var.query.refresh.onTime()
     ,
   },
 }
