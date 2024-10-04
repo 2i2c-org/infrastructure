@@ -38,6 +38,7 @@ def deploy_dashboards(
             "git",
             "clone",
             "https://github.com/jupyterhub/grafana-dashboards",
+            "jupyterhub-grafana-dashboards",
         ]
     )
 
@@ -50,7 +51,7 @@ def deploy_dashboards(
         subprocess.check_call(
             ["./deploy.py", grafana_url, f"--dashboards-dir={dashboards_dir}"],
             env=deploy_script_env,
-            cwd="grafana-dashboards",
+            cwd="jupyterhub-grafana-dashboards",
         )
         print_colour(f"Done! Dashboards deployed to {grafana_url}.")
     finally:
@@ -58,7 +59,7 @@ def deploy_dashboards(
         # The deployer cannot call jsonnet to deploy the dashboards if using a temp directory here.
         # Might be because opening more than once of a temp file is tried
         # (https://docs.python.org/3.8/library/tempfile.html#tempfile.NamedTemporaryFile)
-        shutil.rmtree("grafana-dashboards")
+        shutil.rmtree("jupyterhub-grafana-dashboards")
 
     if cluster_provider == "aws":
         # FIXME: Add code to deploy cost attribution dashboards here
