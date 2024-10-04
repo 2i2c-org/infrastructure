@@ -1,8 +1,11 @@
 #!/usr/bin/env -S jsonnet -J ../vendor
-local grafonnet = import 'github.com/grafana/grafonnet/gen/grafonnet-v10.4.0/main.libsonnet';
+local grafonnet = import 'grafonnet/main.libsonnet';
 local dashboard = grafonnet.dashboard;
 local ts = grafonnet.panel.timeSeries;
 local var = grafonnet.dashboard.variable;
+
+local common = import './common.libsonnet';
+
 
 local totalDailyCosts =
   ts.new('Total daily costs')
@@ -30,16 +33,27 @@ local totalDailyCosts =
   + ts.standardOptions.withUnit('currencyUSD')
   + ts.queryOptions.withTargets([
     {
-      datasource: { type: 'yesoreyeram-infinity-datasource', uid: 'fdsrfvebctptsf' },
+      datasource: {
+        type: 'yesoreyeram-infinity-datasource',
+        uid: '${infinity_datasource}',
+      },
       url: "http://aws-ce-grafana-backend.support.svc.cluster.local/total-costs?from=${__from:date}&to=${__to:date}",
       format: "table",
       refId: "A",
       columns: [
         {selector: "cost", text: "Cost", type: "number", unit: "currencyUSD"},
         {selector: "date", text: "Date", type: "timestamp"}
-      ]
+      ],
+      parser: "backend",
+      type: "json",
+      source: "url",
+      url_options: {
+        "method": "GET",
+        "data": "",
+      },
     }
   ]);
+
 
 local totalDailyCostsPerHub =
   ts.new('Total daily costs per hub')
@@ -75,7 +89,10 @@ local totalDailyCostsPerHub =
   + ts.standardOptions.withUnit('currencyUSD')
   + ts.queryOptions.withTargets([
     {
-      datasource: { type: 'yesoreyeram-infinity-datasource', uid: 'fdsrfvebctptsf' },
+      datasource: {
+        type: 'yesoreyeram-infinity-datasource',
+        uid: '${infinity_datasource}',
+      },
       url: "http://aws-ce-grafana-backend.support.svc.cluster.local/total-costs-per-hub?from=${__from:date}&to=${__to:date}",
       format: "timeseries",
       refId: "A",
@@ -84,19 +101,15 @@ local totalDailyCostsPerHub =
         {selector: "name", text: "Name", type: "string"},
         {selector: "cost", text: "Cost", type: "number"}
       ],
+      parser: "backend",
+      type: "json",
+      source: "url",
+      url_options: {
+        "method": "GET",
+        "data": "",
+      },
     }
   ]);
-
-local hubQueryVar =
-  var.query.new('hub')
-  + var.query.queryTypes.withLabelValues(
-    'Hub',
-  )
-  + var.query.withDatasource(
-      type= 'yesoreyeram-infinity-datasource', uid='fdsrfvebctptsf'
-    
-  )
-  + var.query.selectionOptions.withIncludeAll();
 
 
 local totalDailyCostsPerComponent =
@@ -133,7 +146,10 @@ local totalDailyCostsPerComponent =
   + ts.standardOptions.withUnit('currencyUSD')
   + ts.queryOptions.withTargets([
     {
-      datasource: { type: 'yesoreyeram-infinity-datasource', uid: 'fdsrfvebctptsf' },
+      datasource: {
+        type: 'yesoreyeram-infinity-datasource',
+        uid: '${infinity_datasource}',
+      },
       url: "http://aws-ce-grafana-backend.support.svc.cluster.local/total-costs-per-component?from=${__from:date}&to=${__to:date}",
       format: "timeseries",
       refId: "A",
@@ -142,17 +158,26 @@ local totalDailyCostsPerComponent =
         {selector: "name", text: "Name", type: "string"},
         {selector: "cost", text: "Cost", type: "number"}
       ],
+      parser: "backend",
+      type: "json",
+      source: "url",
+      url_options: {
+        "method": "GET",
+        "data": "",
+      },
     }
   ]);
 
 
-local totalDailyCostsPerComponentandHub =
+local totalDailyCostsPerComponentAndHub =
   ts.new('Total daily costs per component, for ${hub}')
   + ts.panelOptions.withDescription(
     |||
       Total daily costs per component, for ${hub}
     |||
   )
+  + ts.panelOptions.withRepeat('hub')
+  + ts.panelOptions.withMaxPerRow(2)
   + ts.options.withTooltip({ mode: 'single', sort: "none" })
   + ts.options.withLegend({
     "calcs": [
@@ -180,7 +205,10 @@ local totalDailyCostsPerComponentandHub =
   + ts.standardOptions.withUnit('currencyUSD')
   + ts.queryOptions.withTargets([
     {
-      datasource: { type: 'yesoreyeram-infinity-datasource', uid: 'fdsrfvebctptsf' },
+      datasource: {
+        type: 'yesoreyeram-infinity-datasource',
+        uid: '${infinity_datasource}',
+      },
       url: "http://aws-ce-grafana-backend.support.svc.cluster.local/total-costs-per-component?from=${__from:date}&to=${__to:date}&hub=${hub}",
       format: "timeseries",
       refId: "A",
@@ -189,22 +217,32 @@ local totalDailyCostsPerComponentandHub =
         {selector: "name", text: "Name", type: "string"},
         {selector: "cost", text: "Cost", type: "number"}
       ],
+      parser: "backend",
+      type: "json",
+      source: "url",
+      url_options: {
+        "method": "GET",
+        "data": "",
+      },
     }
   ]);
 
 
 dashboard.new('Cloud cost attribution')
-+ dashboard.withUid('edw06h7udjwg0b')
++ dashboard.withUid('cloud-cost-attribution')
 + dashboard.withEditable(true)
 + dashboard.time.withFrom('now-30d')
-+ dashboard.withVariables(hubQueryVar)
++ dashboard.withVariables([
+    common.variables.hub,
+    common.variables.infinity_datasource,
+  ])
 + dashboard.withPanels(
   grafonnet.util.grid.makeGrid(
     [
       totalDailyCosts,
       totalDailyCostsPerHub,
       totalDailyCostsPerComponent,
-      totalDailyCostsPerComponentandHub
+      totalDailyCostsPerComponentAndHub
     ],
     panelWidth=24,
     panelHeight=12,
