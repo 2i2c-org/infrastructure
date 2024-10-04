@@ -1,5 +1,5 @@
 #!/usr/bin/env -S jsonnet -J ../vendor
-local grafonnet = import 'github.com/grafana/grafonnet/gen/grafonnet-v11.1.0/main.libsonnet';
+local grafonnet = import 'grafonnet/main.libsonnet';
 local dashboard = grafonnet.dashboard;
 local ts = grafonnet.panel.timeSeries;
 local var = grafonnet.dashboard.variable;
