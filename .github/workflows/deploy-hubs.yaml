@@ -234,6 +234,7 @@ jobs:
       failure_catalystproject-africa: "${{ env.failure_catalystproject-africa }}"
       failure_catalystproject-latam: "${{ env.failure_catalystproject-latam }}"
       failure_cloudbank: "${{ env.failure_cloudbank }}"
+      failure_dubois: "${{ env.failure_dubois }}"
       failure_earthscope: "${{ env.failure_earthscope }}"
       failure_gridsst: "${{ env.failure_gridsst }}"
       failure_hhmi: "${{ env.failure_hhmi }}"

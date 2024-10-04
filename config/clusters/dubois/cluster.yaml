@@ -4,7 +4,6 @@ gcp:
   key: enc-deployer-credentials.secret.json
   project: dubois-436615
   cluster: dubois-cluster
-  # We default to a regional cluster
   zone: us-central1
   billing:
     # Set to true if billing for this cluster is paid for by the 2i2c card
@@ -24,16 +23,19 @@ support:
     - support.values.yaml
     - enc-support.secret.values.yaml
 hubs:
-  []
-  # Uncomment the lines below once the support infrastructure was deployed and
-  # you are ready to add the first cluster
-
-  # - name: <hub_name>
-  #   # Tip: consider changing this to something more human friendly
-  #   display_name: "dubois - <hub_name>"
-  #   domain: <hub_name>.dubois.2i2c.cloud
-  #   helm_chart: basehub
-  #   helm_chart_values_files:
-  #     - common.values.yaml
-  #     - <hub_name>.values.yaml
-  #     - enc-<hub_name>.secret.values.yaml
+  - name: staging
+    display_name: Dubois staging
+    domain: staging.dubois.2i2c.cloud
+    helm_chart: basehub
+    helm_chart_values_files:
+      - common.values.yaml
+      - staging.values.yaml
+      - enc-staging.secret.values.yaml
+  - name: prod
+    display_name: Dubois
+    domain: dubois.2i2c.cloud
+    helm_chart: basehub
+    helm_chart_values_files:
+      - common.values.yaml
+      - prod.values.yaml
+      - enc-prod.secret.values.yaml
