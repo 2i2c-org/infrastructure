@@ -25,8 +25,6 @@ local nodeAz = "us-west-2a";
 // A `node.kubernetes.io/instance-type label is added, so pods
 // can request a particular kind of node with a nodeSelector
 local notebookNodes = [
-    { instanceType: "r5.xlarge" },  // FIXME: tainted, to be deleted when empty, replaced by equivalent
-    { instanceType: "r5.xlarge", nameSuffix: "b" }, // FIXME: tainted, to be deleted when empty, replaced by equivalent
     {
         instanceType: "r5.xlarge",
         namePrefix: "nb-staging",
@@ -45,6 +43,7 @@ local notebookNodes = [
         labels+: { "2i2c/hub-name": "staging" },
         tags+: { "2i2c:hub-name": "staging" }
     },
+    // FIXME: tainted, to be deleted when empty, replaced by equivalent during k8s upgrade
     {
         instanceType: "r5.xlarge",
         namePrefix: "nb-prod",
@@ -52,8 +51,23 @@ local notebookNodes = [
         tags+: { "2i2c:hub-name": "prod" }
     },
     {
+        instanceType: "r5.xlarge",
+        namePrefix: "nb-prod",
+        nameSuffix: "b",
+        labels+: { "2i2c/hub-name": "prod" },
+        tags+: { "2i2c:hub-name": "prod" }
+    },
+    // FIXME: tainted, to be deleted when empty, replaced by equivalent during k8s upgrade
+    {
         instanceType: "r5.4xlarge",
         namePrefix: "nb-prod",
+        labels+: { "2i2c/hub-name": "prod" },
+        tags+: { "2i2c:hub-name": "prod" }
+    },
+    {
+        instanceType: "r5.4xlarge",
+        namePrefix: "nb-prod",
+        nameSuffix: "b",
         labels+: { "2i2c/hub-name": "prod" },
         tags+: { "2i2c:hub-name": "prod" }
     },
@@ -103,7 +117,7 @@ local daskNodes = [
     metadata+: {
         name: "nasa-veda",
         region: clusterRegion,
-        version: "1.29",
+        version: "1.30",
     },
     availabilityZones: masterAzs,
     iam: {
@@ -134,7 +148,7 @@ local daskNodes = [
     [
         ng + {
             namePrefix: 'core',
-            nameSuffix: 'a',
+            nameSuffix: 'b',
             nameIncludeInstanceType: false,
             availabilityZones: [nodeAz],
             ssh: {

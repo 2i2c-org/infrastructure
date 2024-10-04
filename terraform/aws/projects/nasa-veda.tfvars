@@ -8,13 +8,16 @@ default_budget_alert = {
 
 user_buckets = {
   "scratch-staging" : {
-    "delete_after" : 7
+    "delete_after" : 7,
+    "tags" : { "2i2c:hub-name" : "staging" }
   },
   "scratch" : {
-    "delete_after" : 7
+    "delete_after" : 7,
+    "tags" : { "2i2c:hub-name" : "prod" }
   },
   "scratch-binder" : {
-    "delete_after" : 1
+    "delete_after" : 1,
+    "tags" : { "2i2c:hub-name" : "binder" }
   },
 }
 
@@ -217,6 +220,8 @@ ebs_volumes = {
     size        = 100
     type        = "gp3"
     name_suffix = "staging"
-    tags        = {}
+    tags        = { "2i2c:hub-name" : "staging" }
   }
 }
+
+original_single_efs_tags = { "2i2c:hub-name" : "prod" }
