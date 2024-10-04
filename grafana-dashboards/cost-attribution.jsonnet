@@ -1,5 +1,5 @@
 #!/usr/bin/env -S jsonnet -J ../vendor
-local grafonnet = import 'github.com/grafana/grafonnet/gen/grafonnet-v10.4.0/main.libsonnet';
+local grafonnet = import 'github.com/grafana/grafonnet/gen/grafonnet-v11.1.0/main.libsonnet';
 local dashboard = grafonnet.dashboard;
 local ts = grafonnet.panel.timeSeries;
 local var = grafonnet.dashboard.variable;
@@ -88,13 +88,14 @@ local totalDailyCostsPerHub =
   ]);
 
 local hubQueryVar =
+
   var.query.new('hub')
   + var.query.queryTypes.withLabelValues(
     'Hub',
   )
   + var.query.withDatasource(
-      type= 'yesoreyeram-infinity-datasource', uid='fdsrfvebctptsf'
-    
+      type= 'yesoreyeram-infinity-datasource',
+      uid='fdsrfvebctptsf',
   )
   + var.query.selectionOptions.withIncludeAll();
 
@@ -146,7 +147,7 @@ local totalDailyCostsPerComponent =
   ]);
 
 
-local totalDailyCostsPerComponentandHub =
+local totalDailyCostsPerComponentAndHub =
   ts.new('Total daily costs per component, for ${hub}')
   + ts.panelOptions.withDescription(
     |||
@@ -194,7 +195,7 @@ local totalDailyCostsPerComponentandHub =
 
 
 dashboard.new('Cloud cost attribution')
-+ dashboard.withUid('edw06h7udjwg0b')
++ dashboard.withUid('cloud-cost-attribution')
 + dashboard.withEditable(true)
 + dashboard.time.withFrom('now-30d')
 + dashboard.withVariables(hubQueryVar)
@@ -204,7 +205,7 @@ dashboard.new('Cloud cost attribution')
       totalDailyCosts,
       totalDailyCostsPerHub,
       totalDailyCostsPerComponent,
-      totalDailyCostsPerComponentandHub
+      totalDailyCostsPerComponentAndHub
     ],
     panelWidth=24,
     panelHeight=12,
