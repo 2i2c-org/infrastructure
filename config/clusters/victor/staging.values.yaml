@@ -15,26 +15,14 @@ basehub:
           oauth_callback_url: https://staging.victor.2i2c.cloud/hub/oauth_callback
     singleuser:
       profileList:
-        #=== Below are copied from common file ===#
+        # IMPORTANT: Staging and prod's profileList's are meant to be kept
+        #            equivalent with the exception that staging adds
+        #            unlisted_choice to pick a custom image. If you update
+        #            either, update the other as well.
         #
-        # But, they have been adjusted to include unlisted_choice to pick a
-        # custom image.
-        #
-
-        # The mem-guarantees are here so k8s doesn't schedule other pods
-        # on these nodes.
-        - display_name: "Small: m5.large"
-          description: "~2 CPU, ~8G RAM"
-          default: true
-          kubespawner_override:
-            # Explicitly unset mem_limit, so it overrides the default memory limit we set in
-            # basehub/values.yaml
-            mem_limit: 8G
-            mem_guarantee: 6.5G
-            node_selector:
-              node.kubernetes.io/instance-type: m5.large
+        - display_name: CPU Only
           profile_options: &profile_options
-            image:
+            image: &profile_option_image
               display_name: Image
               choices:
                 a-victor-notebook:
@@ -57,30 +45,73 @@ basehub:
                 validation_message: "Must be a publicly available docker image, of form <image-name>:<tag>"
                 kubespawner_override:
                   image: "{value}"
-        - display_name: "Medium: m5.xlarge"
-          description: "~4 CPU, ~15G RAM"
-          kubespawner_override:
-            mem_limit: 15G
-            mem_guarantee: 12G
-            node_selector:
-              node.kubernetes.io/instance-type: m5.xlarge
-          profile_options: *profile_options
-        - display_name: "Large: m5.2xlarge"
-          description: "~8 CPU, ~30G RAM"
-          kubespawner_override:
-            mem_limit: 30G
-            mem_guarantee: 25G
-            node_selector:
-              node.kubernetes.io/instance-type: m5.2xlarge
-          profile_options: *profile_options
-        - display_name: "Huge: m5.8xlarge"
-          description: "~16 CPU, ~60G RAM"
-          kubespawner_override:
-            mem_limit: 60G
-            mem_guarantee: 50G
-            node_selector:
-              node.kubernetes.io/instance-type: m5.8xlarge
-          profile_options: *profile_options
+            resource_allocation: &profile_option_resource_allocation
+              display_name: Resource Allocation
+              choices:
+                mem_1_9:
+                  default: true
+                  display_name: 1.9 GB RAM, upto 3.7 CPUs
+                  kubespawner_override:
+                    mem_guarantee: 1991244775
+                    mem_limit: 1991244775
+                    cpu_guarantee: 0.2328125
+                    cpu_limit: 3.725
+                    node_selector:
+                      node.kubernetes.io/instance-type: r5.xlarge
+                mem_3_7:
+                  display_name: 3.7 GB RAM, upto 3.7 CPUs
+                  kubespawner_override:
+                    mem_guarantee: 3982489550
+                    mem_limit: 3982489550
+                    cpu_guarantee: 0.465625
+                    cpu_limit: 3.725
+                    node_selector:
+                      node.kubernetes.io/instance-type: r5.xlarge
+                mem_7_4:
+                  display_name: 7.4 GB RAM, upto 3.7 CPUs
+                  kubespawner_override:
+                    mem_guarantee: 7964979101
+                    mem_limit: 7964979101
+                    cpu_guarantee: 0.93125
+                    cpu_limit: 3.725
+                    node_selector:
+                      node.kubernetes.io/instance-type: r5.xlarge
+                mem_14_8:
+                  display_name: 14.8 GB RAM, upto 3.7 CPUs
+                  kubespawner_override:
+                    mem_guarantee: 15929958203
+                    mem_limit: 15929958203
+                    cpu_guarantee: 1.8625
+                    cpu_limit: 3.725
+                    node_selector:
+                      node.kubernetes.io/instance-type: r5.xlarge
+                mem_29_7:
+                  display_name: 29.7 GB RAM, upto 3.7 CPUs
+                  kubespawner_override:
+                    mem_guarantee: 31859916406
+                    mem_limit: 31859916406
+                    cpu_guarantee: 3.725
+                    cpu_limit: 3.725
+                    node_selector:
+                      node.kubernetes.io/instance-type: r5.xlarge
+                mem_60_6:
+                  display_name: 60.6 GB RAM, upto 15.6 CPUs
+                  kubespawner_override:
+                    mem_guarantee: 65094448840
+                    mem_limit: 65094448840
+                    cpu_guarantee: 7.8475
+                    cpu_limit: 15.695
+                    node_selector:
+                      node.kubernetes.io/instance-type: r5.4xlarge
+                mem_121_2:
+                  display_name: 121.2 GB RAM, upto 15.6 CPUs
+                  kubespawner_override:
+                    mem_guarantee: 130188897681
+                    mem_limit: 130188897681
+                    cpu_guarantee: 15.695
+                    cpu_limit: 15.695
+                    node_selector:
+                      node.kubernetes.io/instance-type: r5.4xlarge
         - display_name: NVIDIA Tesla T4, ~16 GB, ~4 CPUs
           description: "Start a container on a dedicated node with a GPU"
           slug: "gpu"
@@ -93,4 +124,5 @@ basehub:
               node.kubernetes.io/instance-type: g4dn.xlarge
             extra_resource_limits:
               nvidia.com/gpu: "1"
-          profile_options: *profile_options
+          profile_options:
+            image: *profile_option_image
