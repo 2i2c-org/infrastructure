@@ -27,6 +27,7 @@ jobs:
           - cluster_name: catalystproject-latam
           - cluster_name: cloudbank
           - cluster_name: dubois
+          - cluster_name: earthscope
           - cluster_name: gridsst
           - cluster_name: hhmi
           - cluster_name: jupyter-health
@@ -35,6 +36,7 @@ jobs:
           - cluster_name: leap
           - cluster_name: nasa-cryo
           - cluster_name: nasa-esdis
+          - cluster_name: nasa-ghg
           - cluster_name: nasa-veda
           - cluster_name: nmfs-openscapes
           - cluster_name: openscapes
