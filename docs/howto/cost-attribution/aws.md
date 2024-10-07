@@ -82,8 +82,17 @@ Service's of type LoadBalancer).
 
 ### 2. Enable cost allocation tags
 
-Use terraform to enable relevant tags to function as a cost allocation tag as
-well.
+Enabling cost allocation tags via terraform can be done for standalone AWS
+accounts, but not for member accounts part of an organization. Due to this,
+we'll provide separate ways of doing this depending on the situation.
+
+`````{tab-set}
+
+````{tab-item} Standalone account
+:sync: standalone
+
+In standalone accounts, we should have relevant permissions. Use terraform to
+enable relevant tags to also function as a cost allocation tags.
 
 Configure the following terraform variable like below and apply the changes.
 
@@ -97,9 +106,72 @@ active_cost_allocation_tags = [
 ]
 ```
 
-Doing this will fail if the AWS billing system hasn't detected the tags recently
-enough, then you'll see a error message about the tags not being found. If this
-happens, wait a few hours and try again.
+The apply operation could fail with the following errors:
+
+1. _Tag keys not found_
+
+   While it sounds like cloud resources haven't been tagged, its probably because
+   the billing system hasn't yet detected them. It runs a few times a day, so you
+   may need to wait a few hours for the billing system to have detected each tag
+   at least once.
+
+2. _Linked account doesn't have access to cost allocation tags._
+
+   This means the AWS account wasn't a standalone account, but a member account
+   after all. If the account isn't a member account 2i2c's AWS organization,
+   then its likely a member of a community's AWS organization.
+````
+
+````{tab-item} Member account (2i2c org)
+:sync: member-2i2c
+
+2i2c's AWS organization have all but one cost allocation tags activated already,
+you only need to activate `kubernetes.io/cluster/<cluster name>` manually.
+
+To do this, visit https://2i2c.awsapps.com/start/#/ and login to the
+`2i2c-sandbox` account, then from [cost allocation tags] find and enable the tag
+`kubernetes.io/cluster/<cluster name>`. If you can't find it and created the
+cluster very recently, come back in a few hours and try again.
+
+[cost allocation tags]: https://us-east-1.console.aws.amazon.com/billing/home?region=us-east-1#/tags
+````
+
+````{tab-item} Member account (community org)
+:sync: member-community
+
+We can't do this ourselves, but we can communicate instructions to the community
+on what they need to do in order to have this function.
+
+Below is part of a message that could be used when communicating with a community
+representative about this. Note that the message mentions `<cluster name>` as
+part of a tag, update that to be the community's actual cluster name as listed
+within a eksctl .jsonnet file.
+
+```
+In order for 2i2c to provide an overview cloud costs via a Grafana dashboard,
+the following changes needs to be made in the AWS organization's management
+account:
+
+1. Declare that linked member accounts are allowed to access Cost Explorer.
+
+   This can be done via "Billing and Cost Management" -> "Cost Management Preferences",
+   where the checkbox "Linked account access" should be checked.
+
+2. Enable a specific set of cost allocation tags.
+
+   This can be done via "Billing and Cost Management" -> "Cost Allocation Tags".
+
+   The tags that needs to be enabled to function as cost allocation tags are:
+
+   - 2i2c:hub-name
+   - 2i2c.org/cluster-name
+   - alpha.eksctl.io/cluster-name
+   - kubernetes.io/cluster/<cluster name>
+   - kubernetes.io/created-for/pvc/namespace
+```
+````
+
+`````
 
 ```{note}
 The `kubernetes.io/created-for/pvc/namespace` is enabled even if its currently
