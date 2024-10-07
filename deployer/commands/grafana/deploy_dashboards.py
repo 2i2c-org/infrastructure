@@ -56,14 +56,14 @@ def deploy_dashboards(
         )
 
         if cluster_provider == "aws":
-            print_colour("Deploying cost attribution dashboards to an AWS cluster...")
+            print_colour("Deploying cloud cost dashboards to an AWS cluster...")
             subprocess.check_call(
                 [
                     "./deploy.py",
                     grafana_url,
                     "--dashboards-dir=../grafana-dashboards",
-                    "--folder-name='Cost Attribution Dashboards'",
-                    "--folder-uid=aws-ce-grafana-backend",
+                    "--folder-name=Cloud cost dashboards",
+                    "--folder-uid=cloud-cost",
                 ],
                 env=deploy_script_env,
                 cwd="jupyterhub-grafana-dashboards",

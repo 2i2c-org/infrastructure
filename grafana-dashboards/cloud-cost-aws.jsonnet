@@ -94,7 +94,7 @@ local totalDailyCostsPerComponentAndHub =
 
 // grafonnet ref: https://grafana.github.io/grafonnet/API/dashboard/index.html
 dashboard.new("Cloud cost attribution")
-+ dashboard.withUid("cloud-cost-attribution")
++ dashboard.withUid("cloud-cost-aws")
 + dashboard.withTimezone("utc")
 + dashboard.withEditable(true)
 + dashboard.time.withFrom("now-30d")
