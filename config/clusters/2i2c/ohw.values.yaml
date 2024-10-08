@@ -35,7 +35,7 @@ basehub:
         - display_name: "R en RStudio"
           description: "~2 CPU, ~8G RAM"
           kubespawner_override:
-            image: "ghcr.io/oceanhackweek/r:37f83fb"
+            image: "ghcr.io/oceanhackweek/r:9767746"
             default_url: "/rstudio"
             mem_limit: 8G
             mem_guarantee: 4G
@@ -66,8 +66,8 @@ basehub:
             name: 2i2c
             url: https://2i2c.org
           funded_by:
-            name: AECID
-            url: https://www.aecid.es
+            name: CSIC
+            url: https://www.csic.es/es
     hub:
       config:
         JupyterHub:
