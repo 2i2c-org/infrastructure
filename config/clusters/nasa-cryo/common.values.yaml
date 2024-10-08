@@ -220,13 +220,6 @@ basehub:
             # Per https://2i2c.freshdesk.com/a/tickets/1537
             image: openscapes/matlab:latest
           profile_options: *profile_options
-        - display_name: PACE Hackweek 2024
-          slug: pace-2024
-          description: Environment for the PACE Hackweek
-          kubespawner_override:
-            # Per https://2i2c.freshdesk.com/a/tickets/1952
-            image: quay.io/pacehackweek/pace-2024:latest
-          profile_options: *profile_options
         - display_name: "Bring your own image"
           description: Specify your own docker image (must have python and jupyterhub installed in it)
           slug: custom
