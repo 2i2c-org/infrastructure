@@ -5,14 +5,14 @@ basehub:
 
   jupyterhub:
     ingress:
-      hosts: [staging.victor.2i2c.cloud]
+      hosts: [staging.hub.victorproject.org]
       tls:
-        - hosts: [staging.victor.2i2c.cloud]
+        - hosts: [staging.hub.victorproject.org]
           secretName: https-auto-tls
     hub:
       config:
         GitHubOAuthenticator:
-          oauth_callback_url: https://staging.victor.2i2c.cloud/hub/oauth_callback
+          oauth_callback_url: https://staging.hub.victorproject.org/hub/oauth_callback
     singleuser:
       profileList:
         # IMPORTANT: Staging and prod's profileList's are meant to be kept

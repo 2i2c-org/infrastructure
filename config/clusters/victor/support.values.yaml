@@ -32,3 +32,10 @@ prometheus:
         - secretName: prometheus-tls
           hosts:
             - prometheus.victor.2i2c.cloud
+
+redirects:
+  rules:
+    - from: victor.2i2c.cloud
+      to: hub.victorproject.org
+    - from: staging.victor.2i2c.cloud
+      to: staging.hub.victorproject.org
