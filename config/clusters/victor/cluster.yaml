@@ -14,7 +14,7 @@ support:
 hubs:
   - name: staging
     display_name: "Victor (staging)"
-    domain: staging.victor.2i2c.cloud
+    domain: staging.hub.victorproject.org
     helm_chart: daskhub
     helm_chart_values_files:
       # The order in which you list files here is the order the will be passed
@@ -25,7 +25,7 @@ hubs:
       - enc-staging.secret.values.yaml
   - name: prod
     display_name: "Victor"
-    domain: victor.2i2c.cloud
+    domain: hub.victorproject.org
     helm_chart: daskhub
     helm_chart_values_files:
       # The order in which you list files here is the order the will be passed
