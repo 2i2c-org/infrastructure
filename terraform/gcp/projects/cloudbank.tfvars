@@ -6,7 +6,7 @@ region           = "us-central1"
 regional_cluster = false
 
 filestores = {
-  "filestore": { "capacity_gb": 1536 }
+  "filestore" : { "capacity_gb" : 1536 }
 }
 
 # Cloud costs for this project are not passed through by 2i2c
