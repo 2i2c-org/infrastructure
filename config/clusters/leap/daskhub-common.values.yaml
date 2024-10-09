@@ -91,6 +91,7 @@ basehub:
           allowed_organizations:
             - leap-stc:leap-pangeo-base-access
             - leap-stc:leap-pangeo-full-access
+            - leap-stc:data-and-compute
           scope:
             - read:org
         Authenticator:
@@ -148,6 +149,7 @@ basehub:
           allowed_groups:
             - 2i2c-org:hub-access-for-2i2c-staff
             - leap-stc:leap-pangeo-dev-access
+            - leap-stc:data-and-compute
           profile_options:
             requests:
               # NOTE: Node share choices are in active development, see comment
@@ -209,6 +211,7 @@ basehub:
           allowed_groups:
             - 2i2c-org:hub-access-for-2i2c-staff
             - leap-stc:leap-pangeo-full-access
+            - leap-stc:data-and-compute
           profile_options:
             requests:
               # NOTE: Node share choices are in active development, see comment
@@ -338,6 +341,7 @@ basehub:
           allowed_groups:
             - 2i2c-org:hub-access-for-2i2c-staff
             - leap-stc:leap-pangeo-full-access
+            - leap-stc:data-and-compute
           profile_options:
             image:
               display_name: Image
