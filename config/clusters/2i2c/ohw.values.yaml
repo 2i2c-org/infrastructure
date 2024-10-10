@@ -35,7 +35,7 @@ basehub:
         - display_name: "R en RStudio"
           description: "~2 CPU, ~8G RAM"
           kubespawner_override:
-            image: "ghcr.io/oceanhackweek/r:9767746"
+            image: "ghcr.io/oceanhackweek/r:d78896f"
             default_url: "/rstudio"
             mem_limit: 8G
             mem_guarantee: 4G
@@ -56,7 +56,7 @@ basehub:
         gitRepoBranch: "2i2c-ohw"
         templateVars:
           org:
-            name: OceanHackWeek
+            name: OceanHackWeek en español
             # logo_url: https://avatars.githubusercontent.com/u/33128979
             logo_url: https://intercoonecta.github.io/_static/OHWe.png
             url: https://intercoonecta.github.io
