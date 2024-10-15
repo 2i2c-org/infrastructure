@@ -264,52 +264,19 @@ def get_client(admin_id, admin_secret, cluster_name, hub_name, client_id=None):
     return client_details
 
 
-def delete_client(admin_id, admin_secret, cluster_name, hub_name, client_id=None):
-    """Deletes the client associated with the id.
-
-    Args:
-        id (str): Id of the client to delete
+def delete_client(admin_id, admin_secret, client_id=None):
+    """Deletes a CILogon client.
 
     Returns status code if response.ok
     or None if the `delete` request returned a status code not in the range 200-299.
 
     See: https://github.com/ncsa/OA4MP/blob/HEAD/oa4mp-server-admin-oauth2/src/main/scripts/oidc-cm-scripts/cm-delete.sh
     """
-    config_filename = build_absolute_path_to_hub_encrypted_config_file(
-        cluster_name, hub_name
-    )
-
-    if not client_id:
-        if Path(config_filename).is_file():
-            client_id = load_client_id_from_file(config_filename)
-            # Nothing to do if no client has been found
-            if not client_id:
-                print_colour(
-                    "No `client_id` to delete was provided and couldn't find any in `config_filename`",
-                    "red",
-                )
-                return
-        else:
-            print_colour(
-                f"No `client_id` to delete was provided and couldn't find any {config_filename} file",
-                "red",
-            )
-            return
+    if client_id is None:
+        print("Deleting a CILogon client fr unknown ID")
     else:
-        if not stored_client_id_same_with_cilogon_records(
-            admin_id,
-            admin_secret,
-            cluster_name,
-            hub_name,
-            client_id,
-        ):
-            print_colour(
-                "CILogon records are different than the client app stored in the configuration file. Consider updating the file.",
-                "red",
-            )
-            return
+        print(f"Deleting the CILogon client details for {client_id}...")
 
-    print(f"Deleting the CILogon client details for {client_id}...")
     headers = build_request_headers(admin_id, admin_secret)
     response = requests.delete(build_request_url(client_id), headers=headers, timeout=5)
     if not response.ok:
@@ -317,19 +284,6 @@ def delete_client(admin_id, admin_secret, cluster_name, hub_name, client_id=None
         return
 
     print_colour("Done!")
-
-    # Delete client credentials from config file also if file exists
-    if Path(config_filename).is_file():
-        print(f"Deleting the CILogon client details from the {config_filename} also...")
-        key = "CILogonOAuthenticator"
-        try:
-            remove_jupyterhub_hub_config_key_from_encrypted_file(config_filename, key)
-        except KeyError:
-            print_colour(f"No {key} found to delete from {config_filename}", "yellow")
-            return
-        print_colour(f"CILogonAuthenticator config removed from {config_filename}")
-        if not Path(config_filename).is_file():
-            print_colour(f"Empty {config_filename} file also deleted.", "yellow")
 
 
 def get_all_clients(admin_id, admin_secret):
@@ -432,7 +386,56 @@ def delete(
         """,
     ),
 ):
-    """Delete an existing CILogon client. This deletes both the CILogon client application,
-    and the client credentials from the configuration file."""
+    """
+    Delete an existing CILogon client. This deletes both the CILogon client application,
+    and the client credentials from the configuration file.
+    """
+    config_filename = build_absolute_path_to_hub_encrypted_config_file(
+        cluster_name, hub_name
+    )
     admin_id, admin_secret = get_2i2c_cilogon_admin_credentials()
+
+    if not client_id:
+        if Path(config_filename).is_file():
+            client_id = load_client_id_from_file(config_filename)
+            # Nothing to do if no client has been found
+            if not client_id:
+                print_colour(
+                    "No `client_id` to delete was provided and couldn't find any in `config_filename`",
+                    "red",
+                )
+                return
+        else:
+            print_colour(
+                f"No `client_id` to delete was provided and couldn't find any {config_filename} file",
+                "red",
+            )
+            return
+    else:
+        if not stored_client_id_same_with_cilogon_records(
+            admin_id,
+            admin_secret,
+            cluster_name,
+            hub_name,
+            client_id,
+        ):
+            print_colour(
+                "CILogon records are different than the client app stored in the configuration file. Consider updating the file.",
+                "red",
+            )
+            return
+
     delete_client(admin_id, admin_secret, cluster_name, hub_name, client_id)
+
+    # Delete client credentials from config file also if file exists
+    if Path(config_filename).is_file():
+        print(f"Deleting the CILogon client details from the {config_filename} also...")
+        key = "CILogonOAuthenticator"
+        try:
+            remove_jupyterhub_hub_config_key_from_encrypted_file(config_filename, key)
+        except KeyError:
+            print_colour(f"No {key} found to delete from {config_filename}", "yellow")
+            return
+        print_colour(f"CILogonAuthenticator config removed from {config_filename}")
+        if not Path(config_filename).is_file():
+            print_colour(f"Empty {config_filename} file also deleted.", "yellow")
