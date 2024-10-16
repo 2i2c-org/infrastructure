@@ -275,7 +275,7 @@ def delete_client(admin_id, admin_secret, client_id=None):
     See: https://github.com/ncsa/OA4MP/blob/HEAD/oa4mp-server-admin-oauth2/src/main/scripts/oidc-cm-scripts/cm-delete.sh
     """
     if client_id is None:
-        print("Deleting a CILogon client fr unknown ID")
+        print("Deleting a CILogon client for unknown ID")
     else:
         print(f"Deleting the CILogon client details for {client_id}...")
 
@@ -460,7 +460,17 @@ def delete(
 
 
 @cilogon_client_app.command()
-def cleanup():
+def cleanup(
+    delete: bool = typer.Option(
+        False, help="Proceed with deleting duplicated CILogon apps"
+    )
+):
+    """Identify duplicated CILogon clients and which ID is being actively used in config,
+    and optionally delete unused duplicates.
+
+    Args:
+        delete (bool, optional): Delete unused duplicate CILogon apps. Defaults to False.
+    """
     client_ids_to_be_deleted = []
 
     admin_id, admin_secret = get_2i2c_cilogon_admin_credentials()
@@ -507,3 +517,7 @@ def cleanup():
     print_colour("CILogon clients to be deleted...")
     for c in client_ids_to_be_deleted:
         print(c)
+
+    if delete:
+        for c in client_ids_to_be_deleted:
+            delete_client(admin_id, admin_secret, client_id=c["client_id"])
