@@ -22,6 +22,12 @@ charts:
           REQUIREMENTS_FILE: dynamic-image-building-requirements.txt
         contextPath: images/hub
         dockerfilePath: images/hub/Dockerfile
+      pkce-experiment:
+        imageName: quay.io/2i2c/pkce-experiment
+        buildArgs:
+          REQUIREMENTS_FILE: pkce-requirements.txt
+        contextPath: images/hub
+        dockerfilePath: images/hub/Dockerfile
   - name: support
     images:
       gcp-filestore-backups:

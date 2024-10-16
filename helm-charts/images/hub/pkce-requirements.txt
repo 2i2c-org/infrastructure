@@ -1,0 +1,5 @@
+# Image lives at quay.io/2i2c/pkce-experiment
+# install oauthenticator 17.1,
+# which adds PKCE support.
+# experiment no longer needed when base chart is updated to z2jh 4.0.0
+oauthenticator>=17.1,<18
