@@ -210,7 +210,7 @@ basehub:
       server: *url
       username: *username
 
-  jupyter-home-nfs:
+  jupyterhub-home-nfs:
     enabled: true
     eks:
       enabled: true
