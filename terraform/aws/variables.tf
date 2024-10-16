@@ -304,7 +304,7 @@ variable "ebs_volumes" {
   description = <<-EOT
   Deploy one or more AWS ElasticBlockStore volumes.
 
-  This provisions a managed EBS volume that can be used by jupyter-home-nfs server
-  to store home directories for users.
+  This provisions a managed EBS volume that can be used by jupyterhub-home-nfs
+  server to store home directories for users.
   EOT
 }

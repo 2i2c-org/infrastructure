@@ -26,18 +26,17 @@ ebs_volumes = {
 
 This will create a disk with a size of 100GB for the `staging` hub that we can reference when configuring the NFS server.
 
+## Enabling jupyterhub-home-nfs
 
-## Enabling jupyter-home-nfs
+To be able to configure per-user storage quotas, we need to run an in-cluster NFS server using [`jupyterhub-home-nfs`](https://github.com/sunu/jupyterhub-home-nfs). This can be enabled by setting `jupyterhub-home-nfs.enabled` to `true` in the hub's values file.
 
-To be able to configure per-user storage quotas, we need to run an in-cluster NFS server using [`jupyter-home-nfs`](https://github.com/sunu/jupyter-home-nfs). This can be enabled by setting `jupyter-home-nfs.enabled` to `true` in the hub's values file.
-
-jupyter-home-nfs expects a reference to an pre-provisioned disk. Here's an example of how to configure that on AWS and GCP.
+jupyterhub-home-nfs expects a reference to an pre-provisioned disk. Here's an example of how to configure that on AWS and GCP.
 
 `````{tab-set}
 ````{tab-item} AWS
 :sync: aws-key
 ```yaml
-jupyter-home-nfs:
+jupyterhub-home-nfs:
   enabled: true
   eks:
     enabled: true
@@ -48,7 +47,7 @@ jupyter-home-nfs:
 ````{tab-item} GCP
 :sync: gcp-key
 ```yaml
-jupyter-home-nfs:
+jupyterhub-home-nfs:
   enabled: true
   gke:
     enabled: true
@@ -63,7 +62,7 @@ These changes can be deployed by running the following command:
 deployer deploy <cluster_name> <hub_name>
 ```
 
-Once these changes are deployed, we should have a new NFS server running in our cluster through the `jupyter-home-nfs` Helm chart. We can get the IP address of the NFS server by running the following commands:
+Once these changes are deployed, we should have a new NFS server running in our cluster through the `jupyterhub-home-nfs` Helm chart. We can get the IP address of the NFS server by running the following commands:
 
 ```bash
 # Authenticate with the cluster
@@ -120,10 +119,10 @@ deployer deploy <cluster_name> <hub_name>
 
 Now we can set quotas for each user and configure the path to monitor for storage quota enforcement.
 
-This can be done by updating `basehub.jupyter-home-nfs.quotaEnforcer` in the hub's values file. For example, to set a quota of 10GB for all users on the `staging` hub, we would add the following to the hub's values file:
+This can be done by updating `basehub.jupyterhub-home-nfs.quotaEnforcer` in the hub's values file. For example, to set a quota of 10GB for all users on the `staging` hub, we would add the following to the hub's values file:
 
 ```yaml
-jupyter-home-nfs:
+jupyterhub-home-nfs:
   quotaEnforcer:
     hardQuota: "10" # in GB
     path: "/export/staging"
