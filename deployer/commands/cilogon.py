@@ -13,6 +13,7 @@ The commands in this file can be used to:
 - `delete` a CILogon client application when a hub is removed or changes auth methods
 - `get` details about an existing hub CILogon client
 - `get-all` existing 2i2c CILogon client applications
+- `cleanup` duplicated CILogon applications
 """
 
 import base64
@@ -456,3 +457,53 @@ def delete(
         print_colour(f"CILogonAuthenticator config removed from {config_filename}")
         if not Path(config_filename).is_file():
             print_colour(f"Empty {config_filename} file also deleted.", "yellow")
+
+
+@cilogon_client_app.command()
+def cleanup():
+    client_ids_to_be_deleted = []
+
+    admin_id, admin_secret = get_2i2c_cilogon_admin_credentials()
+    clients = get_all_clients(admin_id, admin_secret)
+    duplicated_clients = find_duplicated_clients(clients)
+
+    # Cycle over each duplicated client name
+    for duped_client in duplicated_clients:
+        # Finds all the client IDs associated with a duplicated name
+        ids = [c["client_id"] for c in clients if c["name"] == duped_client]
+
+        # Establish the cluster and hub name from the client name and build the
+        # absolute path to the encrypted hub values file
+        cluster_name, hub_name = duped_client.split("-")
+        config_filename = build_absolute_path_to_hub_encrypted_config_file(
+            cluster_name, hub_name
+        )
+
+        with get_decrypted_file(config_filename) as decrypted_path:
+            with open(decrypted_path) as f:
+                secret_config = yaml.load(f)
+
+        if (
+            "CILogonOAuthenticator"
+            not in secret_config["jupyterhub"]["hub"]["config"].keys()
+        ):
+            print(
+                f"Hub {hub_name} on cluster {cluster_name} doesn't use CILogonOAuthenticator."
+            )
+        else:
+            # Extract the client ID *currently in use* from the encrypted config and remove it from the list of IDs
+            config_client_id = secret_config["jupyterhub"]["hub"]["config"][
+                "CILogonOAuthenticator"
+            ]["client_id"]
+            ids.remove(config_client_id)
+
+        client_ids_to_be_deleted.extend(
+            [{"client_name": duped_client, "client_id": id} for id in ids]
+        )
+
+        # Remove the duplicated clients from the client list
+        clients = [c for c in clients if c["name"] != duped_client]
+
+    print_colour("CILogon clients to be deleted...")
+    for c in client_ids_to_be_deleted:
+        print(c)
