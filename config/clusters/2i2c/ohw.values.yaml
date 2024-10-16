@@ -80,8 +80,6 @@ basehub:
             - Intercoonecta:ohwes24-mentor-helper-presenter
             - Intercoonecta:ohwes24-participants-tallerintermed
             - oceanhackweek:ohw24-organizers
-            - oceanhackweek:ohw24-participants-australia
-            - oceanhackweek:ohw24-participants-bigelow
             - oceanhackweek:ohw24-project-mentors
             - oceanhackweek:ohw24-tutorial-presenters
           scope:
