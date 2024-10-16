@@ -43,6 +43,15 @@ basehub:
           funded_by:
             name: NSF EarthCube Program (Award ICER-2026932)
             url: "https://www.nsf.gov/awardsearch/showAward?AWD_ID=2026932"
+          announcements:
+            - |
+              <div>
+                <p>
+                  This JupyterHub will be shut down in one week from 2024-10-16.
+                  Please migrate/backup any critical data and code as soon as possible.
+                  Apologies for the short notice.
+                </p>
+              </div>
     hub:
       allowNamedServers: true
       config:
