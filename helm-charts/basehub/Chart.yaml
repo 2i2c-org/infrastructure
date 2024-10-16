@@ -25,7 +25,7 @@ dependencies:
     version: "2024.1.0"
     repository: "https://helm.dask.org/"
     condition: dask-gateway.enabled
-  - name: jupyter-home-nfs
+  - name: jupyterhub-home-nfs
     version: 0.0.5
-    repository: oci://ghcr.io/sunu/jupyter-home-nfs
-    condition: jupyter-home-nfs.enabled
+    repository: oci://ghcr.io/2i2c-org/jupyterhub-home-nfs
+    condition: jupyterhub-home-nfs.enabled
