@@ -298,8 +298,7 @@ def get_all_clients(admin_id, admin_secret):
         return
 
     clients = response.json()
-    for c in clients["clients"]:
-        print(c)
+    return [c for c in clients["clients"]]
 
 
 def get_2i2c_cilogon_admin_credentials():
@@ -369,7 +368,9 @@ def get(
 def get_all():
     """Retrieve details about all existing 2i2c CILogon clients."""
     admin_id, admin_secret = get_2i2c_cilogon_admin_credentials()
-    get_all_clients(admin_id, admin_secret)
+    clients = get_all_clients(admin_id, admin_secret)
+    for c in clients:
+        print(c)
 
 
 @cilogon_client_app.command()
