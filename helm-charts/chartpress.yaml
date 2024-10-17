@@ -22,11 +22,12 @@ charts:
           REQUIREMENTS_FILE: dynamic-image-building-requirements.txt
         contextPath: images/hub
         dockerfilePath: images/hub/Dockerfile
-  - name: support
-    images:
-      gcp-filestore-backups:
-        imageName: quay.io/2i2c/gcp-filestore-backups
-        valuesPath: gcpFilestoreBackups.image
+      pkce-experiment:
+        imageName: quay.io/2i2c/pkce-experiment
+        buildArgs:
+          REQUIREMENTS_FILE: pkce-requirements.txt
+        contextPath: images/hub
+        dockerfilePath: images/hub/Dockerfile
   - name: aws-ce-grafana-backend
     images:
       aws-ce-grafana-backend:
