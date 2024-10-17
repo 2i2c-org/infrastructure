@@ -248,3 +248,12 @@ def get_all_cluster_yaml_files():
         for path in CONFIG_CLUSTERS_PATH.glob("**/cluster.yaml")
         if "templates" not in path.as_posix()
     }
+
+
+def get_cluster_names_list():
+    """
+    Returns a list of all the clusters currently listed under config/clusters
+    """
+    return [
+        d.name for d, _, _ in CONFIG_CLUSTERS_PATH.walk() if "templates" not in str(d)
+    ]
