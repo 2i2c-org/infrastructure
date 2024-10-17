@@ -37,6 +37,13 @@ jupyterhub:
           name: "Jupyter Health"
           url: https://www.earthdata.nasa.gov/esds/veda
   hub:
+    # FIXME: Experiment to use oauthenticator 17.1, should be transitioned away
+    #        as part of upgrading to z2jh 4, see
+    #        https://github.com/2i2c-org/infrastructure/pull/4968
+    #
+    image:
+      name: quay.io/2i2c/pkce-experiment
+      tag: 0.0.1-0.dev.git.10692.hd9c78f75
     allowNamedServers: true
     config:
       JupyterHub:
