@@ -29,6 +29,8 @@ from yarl import URL
 from deployer.cli_app import cilogon_client_app
 from deployer.utils.file_acquisition import (
     build_absolute_path_to_hub_encrypted_config_file,
+    find_absolute_path_to_cluster_file,
+    get_cluster_names_list,
     get_decrypted_file,
     persist_config_in_encrypted_file,
     remove_jupyterhub_hub_config_key_from_encrypted_file,
@@ -318,6 +320,51 @@ def find_duplicated_clients(clients):
     return [k for k, v in client_names_count.items() if v > 1]
 
 
+def find_orphaned_clients(clients):
+    """Find CILogon clients for which an associated cluster or hub no longer
+    exists and can safely be deleted.
+
+    Args:
+        clients (list[dict]): A list of existing CILogon client info
+
+    Returns:
+        list[dict]: A list of 'orphaned' CILogon clients which don't have an
+            associated cluster or hub, which can be deleted
+    """
+    clients_to_be_deleted = []
+    clusters = get_cluster_names_list()
+
+    for client in clients:
+        cluster = next((cl for cl in clusters if cl in client["name"]), "")
+
+        if cluster:
+            cluster_config_file = find_absolute_path_to_cluster_file(cluster)
+            with open(cluster_config_file) as f:
+                cluster_config = yaml.load(f)
+
+            hub = next(
+                (
+                    hub["name"]
+                    for hub in cluster_config["hubs"]
+                    if hub["name"] in client["name"]
+                ),
+                "",
+            )
+
+            if not hub:
+                print(
+                    f"A hub pertaining to client {client['name']} does NOT exist. Marking client for deletion."
+                )
+                clients_to_be_deleted.append(client)
+        else:
+            print(
+                f"A cluster pertaining to client {client['name']} does NOT exist. Marking client for deletion."
+            )
+            clients_to_be_deleted.append(client)
+
+    return clients_to_be_deleted
+
+
 def get_2i2c_cilogon_admin_credentials():
     """
     Retrieve the 2i2c administrative client credentials
@@ -513,6 +560,9 @@ def cleanup(
 
         # Remove the duplicated clients from the client list
         clients = [c for c in clients if c["name"] != duped_client]
+
+    orphaned_clients = find_orphaned_clients(clients)
+    client_ids_to_be_deleted.extend(orphaned_clients)
 
     print_colour("CILogon clients to be deleted...")
     for c in client_ids_to_be_deleted:
