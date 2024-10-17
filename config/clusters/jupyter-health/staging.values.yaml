@@ -9,5 +9,28 @@ jupyterhub:
         secretName: https-auto-tls
   hub:
     config:
-      GitHubOAuthenticator:
+      JupyterHub:
+        authenticator_class: generic-oauth
+      GenericOAuthenticator:
+        client_id: Ima7rx8D6eko0PzlU1jK28WBUT2ZweZj7mqVG2wm
         oauth_callback_url: https://staging.jupyter-health.2i2c.cloud/hub/oauth_callback
+        authorize_url: https://chcs.fly.dev/o/authorize/
+        token_url: https://chcs.fly.dev/o/token/
+        usredata_url: https://chcs.fly.dev/api/v1/users/profile
+        username_claim: email
+        login_service: CHCS
+        scope:
+          - openid
+        enable_auth_state: true
+    extraConfig:
+      # add access tokens via auth state
+      auth_state_env.py: |
+        def auth_state_env(spawner, auth_state):
+            if not auth_state:
+                spawner.log.warning(f"Missing auth state for user {spawner.user.name}")
+                return
+            spawner.environment["CHCS_TOKEN"] = auth_state["access_token"]
+            spawner.environment["CHCS_REFRESH_TOKEN"] = auth_state["refresh_token"]
+            spawner.environment["CHCS_CLIENT_ID"] = "Ima7rx8D6eko0PzlU1jK28WBUT2ZweZj7mqVG2wm"
+
+        c.Spawner.auth_state_hook = auth_state_env
