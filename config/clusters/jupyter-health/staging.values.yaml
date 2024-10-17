@@ -16,7 +16,7 @@ jupyterhub:
         oauth_callback_url: https://staging.jupyter-health.2i2c.cloud/hub/oauth_callback
         authorize_url: https://chcs.fly.dev/o/authorize/
         token_url: https://chcs.fly.dev/o/token/
-        usredata_url: https://chcs.fly.dev/api/v1/users/profile
+        userdata_url: https://chcs.fly.dev/api/v1/users/profile
         username_claim: email
         login_service: CHCS
         scope:
