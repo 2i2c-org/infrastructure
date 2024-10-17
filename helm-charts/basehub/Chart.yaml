@@ -26,6 +26,6 @@ dependencies:
     repository: "https://helm.dask.org/"
     condition: dask-gateway.enabled
   - name: jupyterhub-home-nfs
-    version: 0.0.5
+    version: 0.0.6
     repository: oci://ghcr.io/2i2c-org/jupyterhub-home-nfs
     condition: jupyterhub-home-nfs.enabled
