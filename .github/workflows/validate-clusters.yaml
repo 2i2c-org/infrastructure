@@ -37,6 +37,9 @@ on:
       - "**"
   workflow_dispatch:
 
+permissions:
+  packages: read
+
 jobs:
   # This job inspects changed files in order to determine which cluster files
   # should be validated. If helm-chart files change, then all clusters will be

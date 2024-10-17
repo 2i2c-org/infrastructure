@@ -267,7 +267,7 @@ properties:
     type: object
     additionalProperties: true
 
-  jupyter-home-nfs:
+  jupyterhub-home-nfs:
     type: object
     additionalProperties: true
     required:
@@ -276,7 +276,7 @@ properties:
       enabled:
         type: boolean
         description: |
-          Enable using jupyter-home-nfs to provide persistent storage for
+          Enable using jupyterhub-home-nfs to provide persistent storage for
           user home directories on an in-cluster NFS server with storage
           quota enforcement.
 
