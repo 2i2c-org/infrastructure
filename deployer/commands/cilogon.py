@@ -518,7 +518,7 @@ def cleanup(
     Args:
         delete (bool, optional): Delete unused duplicate CILogon apps. Defaults to False.
     """
-    client_ids_to_be_deleted = []
+    clients_to_be_deleted = []
 
     admin_id, admin_secret = get_2i2c_cilogon_admin_credentials()
     clients = get_all_clients(admin_id, admin_secret)
@@ -554,7 +554,7 @@ def cleanup(
             ]["client_id"]
             ids.remove(config_client_id)
 
-        client_ids_to_be_deleted.extend(
+        clients_to_be_deleted.extend(
             [{"client_name": duped_client, "client_id": id} for id in ids]
         )
 
@@ -562,12 +562,12 @@ def cleanup(
         clients = [c for c in clients if c["name"] != duped_client]
 
     orphaned_clients = find_orphaned_clients(clients)
-    client_ids_to_be_deleted.extend(orphaned_clients)
+    clients_to_be_deleted.extend(orphaned_clients)
 
     print_colour("CILogon clients to be deleted...")
-    for c in client_ids_to_be_deleted:
+    for c in clients_to_be_deleted:
         print(c)
 
     if delete:
-        for c in client_ids_to_be_deleted:
+        for c in clients_to_be_deleted:
             delete_client(admin_id, admin_secret, client_id=c["client_id"])
