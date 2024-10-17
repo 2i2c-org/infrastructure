@@ -369,9 +369,9 @@ This allows us to validate that all required values are present and have the cor
 ### The `cilogon-client` sub-command for CILogon OAuth client management
 Deployer sub-command for managing CILogon clients for 2i2c hubs.
 
-#### `cilogon-client create/delete/get/get-all/update`
+#### `cilogon-client create/delete/get/get-all/update/cleanup`
 
-create/delete/get/get-all/update/ CILogon clients using the 2i2c administrative client provided by CILogon.
+create/delete/get/get-all/update/cleanup CILogon clients using the 2i2c administrative client provided by CILogon.
 
 ### The `exec` sub-command for executing shells and debugging commands
 
