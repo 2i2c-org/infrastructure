@@ -28,11 +28,6 @@ charts:
           REQUIREMENTS_FILE: pkce-requirements.txt
         contextPath: images/hub
         dockerfilePath: images/hub/Dockerfile
-  - name: support
-    images:
-      gcp-filestore-backups:
-        imageName: quay.io/2i2c/gcp-filestore-backups
-        valuesPath: gcpFilestoreBackups.image
   - name: aws-ce-grafana-backend
     images:
       aws-ce-grafana-backend:
