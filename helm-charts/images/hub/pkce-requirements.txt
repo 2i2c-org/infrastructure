@@ -3,3 +3,12 @@
 # which adds PKCE support.
 # experiment no longer needed when base chart is updated to z2jh 4.0.0
 oauthenticator>=17.1,<18
+
+# jupyterhub-configurator isn't maintained and its not intended to be developed
+# further. We are using a branch that has forked from the main branch just
+# before a breaking change were made. This allows us to avoid migrating.
+#
+# ref: https://github.com/yuvipanda/jupyterhub-configurator/commits/main
+# ref: https://github.com/yuvipanda/jupyterhub-configurator/commits/backported-jh41-compatibility
+#
+git+https://github.com/yuvipanda/jupyterhub-configurator@backported-jh41-compatibility
