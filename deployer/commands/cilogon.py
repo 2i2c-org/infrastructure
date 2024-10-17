@@ -436,6 +436,10 @@ def get_all():
     for c in clients:
         print(c)
 
+    # Our plan with CILogon only permits 100 clients, so provide feedback on that
+    # number here. Change this if our plan updates.
+    print_colour(f"{len(clients)} / 100 clients used", "yellow")
+
 
 @cilogon_client_app.command()
 def delete(
