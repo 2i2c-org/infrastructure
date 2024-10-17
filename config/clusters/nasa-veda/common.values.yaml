@@ -266,7 +266,7 @@ basehub:
               choices:
                 pytorch:
                   display_name: Pangeo PyTorch ML Notebook
-                  default: true
+                  default: false
                   slug: "pytorch"
                   kubespawner_override:
                     image: "quay.io/pangeo/pytorch-notebook:2024.08.18"
