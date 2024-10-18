@@ -94,14 +94,6 @@ hubs:
       - ucmerced-common.values.yaml
       - ucmerced.values.yaml
       - enc-ucmerced.secret.values.yaml
-  - name: climatematch
-    display_name: "ClimateMatch"
-    domain: climatematch.2i2c.cloud
-    helm_chart: basehub
-    helm_chart_values_files:
-      - basehub-common.values.yaml
-      - climatematch.values.yaml
-      - enc-climatematch.secret.values.yaml
   - name: mtu
     display_name: "Michigan Technological University"
     domain: mtu.2i2c.cloud
