@@ -10,6 +10,10 @@ jupyterhub:
   hub:
     config:
       JupyterHub:
+        # Uses CHCS auth provider
+        # Note: 2i2c engineers can not log in via this, so they can not provide support that
+        # requires logging into this hub. But since Jupyter Health team members have access to this
+        # repo, this is acceptable
         authenticator_class: generic-oauth
       GenericOAuthenticator:
         client_id: Ima7rx8D6eko0PzlU1jK28WBUT2ZweZj7mqVG2wm
