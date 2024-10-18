@@ -15,6 +15,9 @@ staticWebsite:
     enabled: false
 
 jupyterhub:
+  debug:
+    enabled: true
+
   ingress:
     hosts:
       - staging.2i2c.cloud

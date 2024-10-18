@@ -1056,8 +1056,8 @@ jupyterhub:
         # jupyterhub chart will autogenerate a secret with appropriate keys.
         # It's not used if binderhub-service is not enabled.
         display: false
-        url: http://binderhub:8090
-        oauth_no_confirm: true
+        # url: http://binderhub:8090
+        # oauth_no_confirm: true
     image:
       name: quay.io/2i2c/pilot-hub
       tag: "0.0.1-0.dev.git.10722.h6ed14882"
