@@ -36,7 +36,7 @@ jupyterhub:
                       volumeMounts:
                         - name: home
                           mountPath: /home/jovyan
-                          subPath: "{username}"
+                          subPath: "{escaped_username}"
                         # mounted without readonly attribute here,
                         # so we can chown it appropriately
                         - name: home
@@ -53,7 +53,7 @@ jupyterhub:
                       volumeMounts:
                         - name: home
                           mountPath: /home/jovyan
-                          subPath: "{username}"
+                          subPath: "{escaped_username}"
                       securityContext:
                         runAsUser: 1000
                         runAsGroup: 1000
@@ -109,7 +109,7 @@ jupyterhub:
   hub:
     image:
       name: quay.io/2i2c/dynamic-image-building-experiment
-      tag: "0.0.1-0.dev.git.10263.hc87b65cf"
+      tag: "0.0.1-0.dev.git.10722.h6ed14882"
     config:
       GitHubOAuthenticator:
         oauth_callback_url: "https://staging.esdis.2i2c.cloud/hub/oauth_callback"
