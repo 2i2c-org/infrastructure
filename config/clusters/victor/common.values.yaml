@@ -41,13 +41,54 @@ basehub:
     hub:
       config:
         JupyterHub:
-          authenticator_class: github
-        GitHubOAuthenticator:
-          allowed_organizations:
-            - VICTOR-Community:victoraccess
-          scope:
-            - read:org
+          authenticator_class: cilogon
+        CILogonOAuthenticator:
+          allowed_idps:
+            # Choice of idps was discussed in
+            # https://2i2c.freshdesk.com/a/tickets/2080
+            http://github.com/login/oauth/authorize:
+              default: true
+              username_derivation:
+                username_claim: "preferred_username"
+            http://google.com/accounts/o8/id:
+              username_derivation:
+                username_claim: "email"
+                action: prefix
+                prefix: g
+            http://login.microsoftonline.com/common/oauth2/v2.0/authorize:
+              username_derivation:
+                username_claim: "email"
+                action: prefix
+                prefix: ms
+        OAuthenticator:
+          # WARNING: Don't use allow_existing_users with config to allow an
+          #          externally managed group of users, such as
+          #          GitHubOAuthenticator.allowed_organizations, as it breaks a
+          #          common expectations for an admin user.
+          #
+          #          The broken expectation is that removing a user from the
+          #          externally managed group implies that the user won't have
+          #          access any more. In practice the user will still have
+          #          access if it had logged in once before, as it then exists
+          #          in JupyterHub's database of users.
+          #
+          allow_existing_users: True
         Authenticator:
+          # WARNING: Removing a user from admin_users or allowed_users doesn't
+          #          revoke admin status or access.
+          #
+          #          OAuthenticator.allow_existing_users allows any user in the
+          #          JupyterHub database of users able to login. This includes
+          #          any previously logged in user or user previously listed in
+          #          allowed_users or admin_users, as such users are added to
+          #          JupyterHub's database on startup.
+          #
+          #          To revoke admin status or access for a user when
+          #          allow_existing_users is enabled, first remove the user from
+          #          admin_users or allowed_users, then deploy the change, and
+          #          finally revoke the admin status or delete the user via the
+          #          /hub/admin panel.
+          #
           admin_users:
             - einatlev-ldeo
             - SamKrasnoff

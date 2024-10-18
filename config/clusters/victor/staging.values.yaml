@@ -11,7 +11,7 @@ basehub:
           secretName: https-auto-tls
     hub:
       config:
-        GitHubOAuthenticator:
+        CILogonOAuthenticator:
           oauth_callback_url: https://staging.hub.victorproject.org/hub/oauth_callback
     singleuser:
       profileList:
