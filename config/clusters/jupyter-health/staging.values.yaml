@@ -26,6 +26,14 @@ jupyterhub:
         scope:
           - openid
         enable_auth_state: true
+        admin_users:
+          - benjaminrk@simula.no
+          - yuvipanda@2i2c.org
+        allowed_users:
+          # TODO: implement allow based on organization membership,
+          # so we don't have to add users one at a time
+          # this is the test user account
+          - anna@example.com
     extraConfig:
       # add access tokens via auth state
       auth_state_env.py: |
