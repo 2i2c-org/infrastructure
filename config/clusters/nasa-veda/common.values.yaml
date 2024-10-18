@@ -98,7 +98,7 @@ basehub:
           volumeMounts:
             - name: home
               mountPath: /home/jovyan
-              subPath: "{username}"
+              subPath: "{escaped_username}"
             # Mounted without readonly attribute here,
             # so we can chown it appropriately
             - name: home
@@ -158,7 +158,7 @@ basehub:
                         volumeMounts:
                           - name: home
                             mountPath: /home/jovyan
-                            subPath: "{username}"
+                            subPath: "{escaped_username}"
                         securityContext:
                           runAsUser: 1000
                           runAsGroup: 1000

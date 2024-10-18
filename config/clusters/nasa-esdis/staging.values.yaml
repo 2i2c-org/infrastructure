@@ -36,7 +36,7 @@ jupyterhub:
                       volumeMounts:
                         - name: home
                           mountPath: /home/jovyan
-                          subPath: "{username}"
+                          subPath: "{escaped_username}"
                         # mounted without readonly attribute here,
                         # so we can chown it appropriately
                         - name: home
@@ -53,7 +53,7 @@ jupyterhub:
                       volumeMounts:
                         - name: home
                           mountPath: /home/jovyan
-                          subPath: "{username}"
+                          subPath: "{escaped_username}"
                       securityContext:
                         runAsUser: 1000
                         runAsGroup: 1000
