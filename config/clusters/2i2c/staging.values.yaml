@@ -42,15 +42,19 @@ jupyterhub:
           name: 2i2c
           url: https://2i2c.org
   hub:
-    services:
-      dex:
-        url: http://dex:5556
-        oauth_redirect_uri: https://staging.2i2c.cloud/services/dex/callback
-        oauth_no_confirm: true
-        display: false
-      oauth2-proxy:
-        url: http://dex:9000
-        display: false
+    # FIXME: dex and oauth2-proxy is commented out to avoid error messages until
+    #        its fixed to work again, it also makes jupyterhub 5.2.0 fail to
+    #        start if it can't connect to this during startup.
+    #
+    # services:
+    #   dex:
+    #     url: http://dex:5556
+    #     oauth_redirect_uri: https://staging.2i2c.cloud/services/dex/callback
+    #     oauth_no_confirm: true
+    #     display: false
+    #   oauth2-proxy:
+    #     url: http://dex:9000
+    #     display: false
     config:
       JupyterHub:
         authenticator_class: cilogon
