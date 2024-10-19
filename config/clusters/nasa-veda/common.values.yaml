@@ -253,6 +253,7 @@ basehub:
           slug: "gpu"
           allowed_groups:
             - veda-analytics-access:maap-biomass-team
+            - 2i2c-org:hub-access-for-2i2c-staff
           profile_options:
             image:
               display_name: Image
