@@ -123,6 +123,8 @@ basehub:
           profile_options:
             image:
               display_name: Environment
+              dynamic_image_building:
+                enabled: true
               unlisted_choice:
                 enabled: True
                 display_name: "Custom image"
@@ -252,6 +254,8 @@ basehub:
           profile_options:
             image:
               display_name: Environment
+              dynamic_image_building:
+                enabled: true
               unlisted_choice:
                 enabled: true
                 display_name: "Custom image"
@@ -285,3 +289,6 @@ basehub:
     scheduling:
       userScheduler:
         enabled: true
+
+  binderhub-service:
+    enabled: true
