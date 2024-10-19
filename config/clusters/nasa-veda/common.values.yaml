@@ -256,7 +256,7 @@ basehub:
             - 2i2c-org:hub-access-for-2i2c-staff
           profile_options:
             image:
-              display_name: Image
+              display_name: Environment
               unlisted_choice:
                 enabled: true
                 display_name: "Custom image"
