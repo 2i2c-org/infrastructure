@@ -59,7 +59,6 @@ basehub:
         imagePullSecrets: [{ name: image-pull-secret }]
 
   binderhub-service:
-    enabled: true
     dockerApi:
       nodeSelector:
         2i2c/hub-name: staging

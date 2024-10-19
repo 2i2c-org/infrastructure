@@ -31,3 +31,23 @@ basehub:
           extraPodConfig:
             nodeSelector:
               2i2c/hub-name: prod
+
+  binderhub-service:
+    dockerApi:
+      nodeSelector:
+        2i2c/hub-name: prod
+    config:
+      KubernetesBuildExecutor:
+        node_selector:
+          node.kubernetes.io/instance-type: r5.xlarge
+          2i2c/hub-name: prod
+      BinderHub:
+        # something like <region>-docker.pkg.dev/<project-name>/<repository-name> for grc.io
+        # or quay.io/org/repo/cluster-hub/ for quay.io
+        image_prefix: quay.io/veda-binder/prod-
+      DockerRegistry:
+        url: &url https://quay.io
+        username: &username veda-binder+image_builder
+    buildPodsRegistryCredentials:
+      server: *url
+      username: *username
