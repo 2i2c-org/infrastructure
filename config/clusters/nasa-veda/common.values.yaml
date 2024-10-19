@@ -248,6 +248,43 @@ basehub:
                     cpu_limit: 15.695
                     node_selector:
                       node.kubernetes.io/instance-type: r5.4xlarge
+        - display_name: NVIDIA Tesla T4, ~16 GB, ~4 CPUs
+          description: "Start a container on a dedicated node with a GPU"
+          slug: "gpu"
+          allowed_groups:
+            - veda-analytics-access:maap-biomass-team
+          profile_options:
+            image:
+              display_name: Image
+              unlisted_choice:
+                enabled: true
+                display_name: "Custom image"
+                validation_regex: "^.+:.+$"
+                validation_message: "Must be a publicly available docker image of form <image-name>:<tag>"
+                kubespawner_override:
+                  image: "{value}"
+              choices:
+                pytorch:
+                  display_name: Pangeo PyTorch ML Notebook
+                  default: false
+                  slug: "pytorch"
+                  kubespawner_override:
+                    image: "quay.io/pangeo/pytorch-notebook:2024.08.18"
+                tensorflow2:
+                  display_name: Pangeo Tensorflow2 ML Notebook
+                  default: true
+                  slug: "tensorflow2"
+                  kubespawner_override:
+                    image: "quay.io/pangeo/ml-notebook:2024.08.18"
+          kubespawner_override:
+            environment:
+              NVIDIA_DRIVER_CAPABILITIES: compute,utility
+            mem_limit: null
+            mem_guarantee: 14G
+            node_selector:
+              node.kubernetes.io/instance-type: g4dn.xlarge
+            extra_resource_limits:
+              nvidia.com/gpu: "1"
 
     scheduling:
       userScheduler:
