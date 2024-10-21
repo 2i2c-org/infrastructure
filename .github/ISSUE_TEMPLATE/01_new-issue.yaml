@@ -20,6 +20,20 @@ body:
       value: |
         The Definition of Done. What must be true to consider this task complete?   
        ```[tasklist]
+        - [ ] .
+        - [ ] .
+        - [ ] .
+       ```
+    validations:
+      required: false
+
+  - type: textarea
+    id: dod
+    attributes:
+      label: Definition of Done
+      description: |
+        The Definition of Done. What must be true to consider this task complete?
+        ```[tasklist]
         - [ ] The feature/service is technically complete
         - [ ] The feature/service been tested with one or more users (if applicable)
         - [ ] The feature/service been deployed to a production cluster
@@ -30,24 +44,3 @@ body:
         ```
     validations:
       required: false
-
-  - type: textarea
-    id: dod
-    attributes:
-      label: Definition of Done
-      description: |
-        The Definition of Done. What must be true to consider this task complete?
-    validations:
-      required: true
-
-  - type: checkboxes
-    attributes:
-      label: Pre-defined Definition of Done
-      description: A non-specific, pre-defined list of tasks that should be considered before marking the task complete.
-      options:
-        - label: All the tasks have been completed
-          required: false
-        - label: It has been tested to work and to not break any existing functionality
-          required: false
-        - label: Documentation was added so other engineers can implement this in the future if needed
-          required: false
