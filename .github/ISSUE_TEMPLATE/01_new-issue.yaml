@@ -18,11 +18,11 @@ body:
       description: |
         (optional) A clear and concise list of steps to take to close this issue.
       value: |
-       ```[tasklist]
-        - [ ] .
-        - [ ] .
-        - [ ] .
-       ```
+        ```[tasklist]
+         - [ ] .
+         - [ ] .
+         - [ ] .
+        ```
     validations:
       required: false
 
