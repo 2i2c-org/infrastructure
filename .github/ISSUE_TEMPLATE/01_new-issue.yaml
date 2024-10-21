@@ -18,7 +18,6 @@ body:
       description: |
         (optional) A clear and concise list of steps to take to close this issue.
       value: |
-        The Definition of Done. What must be true to consider this task complete?   
        ```[tasklist]
         - [ ] .
         - [ ] .
