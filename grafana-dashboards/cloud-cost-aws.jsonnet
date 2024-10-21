@@ -93,6 +93,11 @@ local totalDailyCostsPerComponentAndHub =
 
 
 // grafonnet ref: https://grafana.github.io/grafonnet/API/dashboard/index.html
+//
+// A dashboard description can be provided, but isn't used much it seems, due to
+// that we aren't providing one atm.
+// See https://community.grafana.com/t/dashboard-description-is-it-used-anywhere/53273.
+//
 dashboard.new("Cloud cost attribution")
 + dashboard.withUid("cloud-cost-aws")
 + dashboard.withTimezone("utc")
