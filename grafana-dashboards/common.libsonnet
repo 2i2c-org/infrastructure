@@ -42,6 +42,11 @@ local ts = grafonnet.panel.timeSeries;
       type: "yesoreyeram-infinity-datasource",
       uid: "${infinity_datasource}",
     },
+    columns: [
+      {selector: "date", text: "Date", type: "timestamp"},
+      {selector: "name", text: "Name", type: "string"},
+      {selector: "cost", text: "Cost", type: "number"}
+    ],
     parser: "backend",
     type: "json",
     source: "url",

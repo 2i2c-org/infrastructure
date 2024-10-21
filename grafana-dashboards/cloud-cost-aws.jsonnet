@@ -19,10 +19,6 @@ local totalDailyCosts =
       common.queryTarget
       + {
           url: "http://aws-ce-grafana-backend.support.svc.cluster.local/total-costs?from=${__from:date}&to=${__to:date}",
-          columns: [
-            {selector: "cost", text: "Cost", type: "number"},
-            {selector: "date", text: "Date", type: "timestamp"},
-          ],
         }
   ]);
 
@@ -39,11 +35,6 @@ local totalDailyCostsPerHub =
       common.queryTarget
       + {
           url: "http://aws-ce-grafana-backend.support.svc.cluster.local/total-costs-per-hub?from=${__from:date}&to=${__to:date}",
-          columns: [
-            {selector: "date", text: "Date", type: "timestamp"},
-            {selector: "name", text: "Name", type: "string"},
-            {selector: "cost", text: "Cost", type: "number"}
-          ],
         }
   ]);
 
@@ -60,11 +51,6 @@ local totalDailyCostsPerComponent =
       common.queryTarget
       + {
           url: "http://aws-ce-grafana-backend.support.svc.cluster.local/total-costs-per-component?from=${__from:date}&to=${__to:date}",
-          columns: [
-            {selector: "date", text: "Date", type: "timestamp"},
-            {selector: "name", text: "Name", type: "string"},
-            {selector: "cost", text: "Cost", type: "number"}
-          ],
         }
   ]);
 
@@ -83,11 +69,6 @@ local totalDailyCostsPerComponentAndHub =
       common.queryTarget
       + {
           url: "http://aws-ce-grafana-backend.support.svc.cluster.local/total-costs-per-component?from=${__from:date}&to=${__to:date}&hub=${hub}",
-          columns: [
-            {selector: "date", text: "Date", type: "timestamp"},
-            {selector: "name", text: "Name", type: "string"},
-            {selector: "cost", text: "Cost", type: "number"}
-          ],
         }
   ]);
 
