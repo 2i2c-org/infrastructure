@@ -57,13 +57,6 @@ local notebookNodes = [
         labels+: { "2i2c/hub-name": "prod" },
         tags+: { "2i2c:hub-name": "prod" }
     },
-    // FIXME: tainted, to be deleted when empty, replaced by equivalent during k8s upgrade
-    {
-        instanceType: "r5.4xlarge",
-        namePrefix: "nb-prod",
-        labels+: { "2i2c/hub-name": "prod" },
-        tags+: { "2i2c:hub-name": "prod" }
-    },
     {
         instanceType: "r5.4xlarge",
         namePrefix: "nb-prod",
@@ -85,11 +78,29 @@ local notebookNodes = [
     },
     {
       instanceType: "g4dn.xlarge",
+      namePrefix: "gpu-staging",
+      labels+: { "2i2c/hub-name": "staging" },
       tags+: {
-            "k8s.io/cluster-autoscaler/node-template/resources/nvidia.com/gpu": "1"
+        "2i2c:hub-name": "staging",
+        "k8s.io/cluster-autoscaler/node-template/resources/nvidia.com/gpu": "1"
       },
       taints+: {
-            "nvidia.com/gpu": "present:NoSchedule"
+        "nvidia.com/gpu": "present:NoSchedule"
+      },
+      // Allow provisioning GPUs across all AZs, to prevent situation where all
+      // GPUs in a single AZ are in use and no new nodes can be spawned
+      availabilityZones: masterAzs,
+    },
+    {
+      instanceType: "g4dn.xlarge",
+      namePrefix: "gpu-prod",
+      labels+: { "2i2c/hub-name": "prod" },
+      tags+: {
+        "2i2c:hub-name": "prod",
+        "k8s.io/cluster-autoscaler/node-template/resources/nvidia.com/gpu": "1"
+      },
+      taints+: {
+        "nvidia.com/gpu": "present:NoSchedule"
       },
       // Allow provisioning GPUs across all AZs, to prevent situation where all
       // GPUs in a single AZ are in use and no new nodes can be spawned
