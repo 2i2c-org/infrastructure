@@ -19,9 +19,9 @@ body:
         (optional) A clear and concise list of steps to take to close this issue.
       value: |
         ```[tasklist]
-        - [ ] 
-        - [ ] 
-        - [ ] 
+         - [ ] .
+         - [ ] .
+         - [ ] .
         ```
     validations:
       required: false
@@ -32,17 +32,14 @@ body:
       label: Definition of Done
       description: |
         The Definition of Done. What must be true to consider this task complete?
+        ```[tasklist]
+        - [ ] The feature/service is technically complete
+        - [ ] The feature/service been tested with one or more users (if applicable)
+        - [ ] The feature/service been deployed to a production cluster
+        - [ ] The feature/service has been shown to be replicably deployable
+        - [ ] The feature/service is well documented, and the documentation is accessible for the target user base
+        - [ ] The feature/service has been added to our product menu.
+        - [ ] Lessons learned have been documented 
+        ```
     validations:
-      required: true
-
-  - type: checkboxes
-    attributes:
-      label: Pre-defined Definition of Done
-      description: A non-specific, pre-defined list of tasks that should be considered before marking the task complete.
-      options:
-        - label: All the tasks have been completed
-          required: false
-        - label: It has been tested to work and to not break any existing functionality
-          required: false
-        - label: Documentation was added so other engineers can implement this in the future if needed
-          required: false
+      required: false
