@@ -12,20 +12,20 @@ faster.
 
 ### Testing Python changes locally
 
-First authenticate yourself against the AWS openscapes account.
+First authenticate yourself against an AWS account.
 
 ```bash
 cd helm-charts/aws-ce-grafana-backend/mounted-files
-export AWS_CE_GRAFANA_BACKEND__CLUSTER_NAME=openscapeshub
+export AWS_CE_GRAFANA_BACKEND__CLUSTER_NAME=<name of cluster according to eksctl config>
 python -m flask --app=webserver run --port=8080
 
-# visit http://localhost:8080/aws
+# visit http://localhost:8080/hub-names
 ```
 
 ### Testing Python changes in k8s
 
-This was initially developed in the openscapes cluster. It depends on a k8s
-ServiceAccount coupled to an IAM Role there as well.
+This requires a k8s ServiceAccount coupled to an IAM Role prepared in advance
+via terraform.
 
 The image shouldn't need to be rebuilt unless additional dependencies needs to
 be installed etc, so if you've only made code changes, you can do the following
@@ -35,7 +35,7 @@ During development, a procedure like below can be used to iterate faster than by
 using the deployer.
 
 ```bash
-deployer use-cluster-credentials openscapes
+deployer use-cluster-credentials $CLUSTER_NAME
 
 cd helm-charts/aws-ce-grafana-backend
 helm upgrade --install --create-namespace -n support --values my-test-config.yaml aws-ce-grafana-backend .
@@ -45,7 +45,7 @@ helm upgrade --install --create-namespace -n support --values my-test-config.yam
 # restarts.
 kubectl port-forward -n support service/aws-ce-grafana-backend 8080:http
 
-# visit http://localhost:8080/total-costs and other urls
+# visit http://localhost:8080/hub-names and other urls
 ```
 
 It assumes that you have a `my-test-config.yaml` file looking like this:

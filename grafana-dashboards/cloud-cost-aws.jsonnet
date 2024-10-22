@@ -19,10 +19,6 @@ local totalDailyCosts =
       common.queryTarget
       + {
           url: "http://aws-ce-grafana-backend.support.svc.cluster.local/total-costs?from=${__from:date}&to=${__to:date}",
-          columns: [
-            {selector: "cost", text: "Cost", type: "number"},
-            {selector: "date", text: "Date", type: "timestamp"},
-          ],
         }
   ]);
 
@@ -39,11 +35,6 @@ local totalDailyCostsPerHub =
       common.queryTarget
       + {
           url: "http://aws-ce-grafana-backend.support.svc.cluster.local/total-costs-per-hub?from=${__from:date}&to=${__to:date}",
-          columns: [
-            {selector: "date", text: "Date", type: "timestamp"},
-            {selector: "name", text: "Name", type: "string"},
-            {selector: "cost", text: "Cost", type: "number"}
-          ],
         }
   ]);
 
@@ -60,11 +51,6 @@ local totalDailyCostsPerComponent =
       common.queryTarget
       + {
           url: "http://aws-ce-grafana-backend.support.svc.cluster.local/total-costs-per-component?from=${__from:date}&to=${__to:date}",
-          columns: [
-            {selector: "date", text: "Date", type: "timestamp"},
-            {selector: "name", text: "Name", type: "string"},
-            {selector: "cost", text: "Cost", type: "number"}
-          ],
         }
   ]);
 
@@ -83,16 +69,16 @@ local totalDailyCostsPerComponentAndHub =
       common.queryTarget
       + {
           url: "http://aws-ce-grafana-backend.support.svc.cluster.local/total-costs-per-component?from=${__from:date}&to=${__to:date}&hub=${hub}",
-          columns: [
-            {selector: "date", text: "Date", type: "timestamp"},
-            {selector: "name", text: "Name", type: "string"},
-            {selector: "cost", text: "Cost", type: "number"}
-          ],
         }
   ]);
 
 
 // grafonnet ref: https://grafana.github.io/grafonnet/API/dashboard/index.html
+//
+// A dashboard description can be provided, but isn't used much it seems, due to
+// that we aren't providing one atm.
+// See https://community.grafana.com/t/dashboard-description-is-it-used-anywhere/53273.
+//
 dashboard.new("Cloud cost attribution")
 + dashboard.withUid("cloud-cost-aws")
 + dashboard.withTimezone("utc")

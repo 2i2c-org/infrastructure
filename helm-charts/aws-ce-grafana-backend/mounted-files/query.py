@@ -94,20 +94,54 @@ def query_hub_names(from_date, to_date):
 @ttl_lru_cache(seconds_to_live=3600)
 def query_total_costs(from_date, to_date):
     """
-    A query with processing of the response tailored query to report hub
-    independent total costs.
+    A query with processing of the response tailored to report both the total
+    AWS account cost, and the total attributable cost.
+
+    Not all costs will be successfully attributed, such as the cost of accessing
+    the AWS Cost Explorer API - its not something that can be attributed based
+    on a tag.
     """
+    total_account_costs = _query_total_costs(
+        from_date, to_date, add_attributable_costs_filter=False
+    )
+    total_attributable_costs = _query_total_costs(
+        from_date, to_date, add_attributable_costs_filter=True
+    )
+
+    processed_response = total_account_costs + total_attributable_costs
+
+    # the infinity plugin appears needs us to sort by date, otherwise it fails
+    # to distinguish time series by the name field for some reason
+    processed_response = sorted(processed_response, key=lambda x: x["date"])
+
+    return processed_response
+
+
+@ttl_lru_cache(seconds_to_live=3600)
+def _query_total_costs(from_date, to_date, add_attributable_costs_filter):
+    """
+    A query with processing of the response tailored to report total costs.
+
+    It can either be the total account costs, or only the attributable costs.
+    """
+    if add_attributable_costs_filter:
+        name = "attributable"
+        filter = {
+            "And": [
+                FILTER_USAGE_COSTS,
+                FILTER_ATTRIBUTABLE_COSTS,
+            ]
+        }
+    else:
+        name = "account"
+        filter = FILTER_USAGE_COSTS
+
     response = query_aws_cost_explorer(
         metrics=[METRICS_UNBLENDED_COST],
         granularity=GRANULARITY_DAILY,
         from_date=from_date,
         to_date=to_date,
-        filter={
-            "And": [
-                FILTER_USAGE_COSTS,
-                FILTER_ATTRIBUTABLE_COSTS,
-            ]
-        },
+        filter=filter,
         group_by=[],
     )
 
@@ -144,6 +178,7 @@ def query_total_costs(from_date, to_date):
         {
             "date": e["TimePeriod"]["Start"],
             "cost": f'{float(e["Total"]["UnblendedCost"]["Amount"]):.2f}',
+            "name": name,
         }
         for e in response["ResultsByTime"]
     ]
@@ -153,9 +188,8 @@ def query_total_costs(from_date, to_date):
 @ttl_lru_cache(seconds_to_live=3600)
 def query_total_costs_per_hub(from_date, to_date):
     """
-    A query with processing of the response tailored query to report total costs
-    per hub, where costs not attributed to a specific hub is listed under
-    'shared'.
+    A query with processing of the response tailored to report total costs per
+    hub, where costs not attributed to a specific hub is listed under 'shared'.
     """
     response = query_aws_cost_explorer(
         metrics=[METRICS_UNBLENDED_COST],
@@ -238,8 +272,8 @@ def query_total_costs_per_hub(from_date, to_date):
 @ttl_lru_cache(seconds_to_live=3600)
 def query_total_costs_per_component(from_date, to_date, hub_name=None):
     """
-    A query with processing of the response tailored query to report total costs
-    per component - a grouping of services.
+    A query with processing of the response tailored to report total costs per
+    component - a grouping of services.
 
     If a hub_name is specified, component costs are filtered to only consider
     costs directly attributable to the hub name.
