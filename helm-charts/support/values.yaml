@@ -402,6 +402,9 @@ grafana:
       token_url: https://github.com/login/oauth/access_token
       api_url: https://api.github.com/user
 
+  plugins:
+    - yesoreyeram-infinity-datasource
+
   datasources:
     datasources.yaml:
       apiVersion: 1
@@ -415,6 +418,10 @@ grafana:
           access: proxy
           isDefault: false
           editable: false
+        - name: yesoreyeram-infinity-datasource
+          type: yesoreyeram-infinity-datasource
+          isDefault: false
+          editable: true
 
 # cryptnono kills processes attempting to mine the cryptocurrency Monero in the
 # k8s cluster.
