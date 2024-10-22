@@ -7,12 +7,31 @@ local var = grafonnet.dashboard.variable;
 local common = import "./common.libsonnet";
 
 
-local totalDailyCosts =
+local dailyCosts =
   common.tsOptions
-  + ts.new("Total daily costs")
+  + ts.new("Daily costs")
   + ts.panelOptions.withDescription(
     |||
-      Total daily costs
+      "Costs account" refers to the associated AWS account's total costs, and
+      "Costs attributable" refers to the costs that has successfully been
+      attributed to 2i2c managed cloud infrastructure.
+
+      There are some costs associated with 2i2c managed cloud infrastructure
+      that can't be attributed to it, but they are expected to be small. As an
+      example, this panel is presenting data that incurred a small cost to ask
+      for, and that cost is an example of what we fail to attribute and is only
+      captured in the AWS account's cost.
+
+      If "Costs account" is significantly larger than "Cost attributable", it
+      _should_ be because of activity unrelated to 2i2c managed cloud
+      infrastructure.
+
+      ---
+
+      **Note**
+
+      - All costs are [unblended costs](https://aws.amazon.com/blogs/aws-cloud-financial-management/understanding-your-aws-cost-datasets-a-cheat-sheet/)
+      - All costs are pure usage costs, and doesn't consider credits etc.
     |||
   )
   + ts.queryOptions.withTargets([
@@ -23,12 +42,35 @@ local totalDailyCosts =
   ]);
 
 
-local totalDailyCostsPerHub =
+local dailyCostsPerHub =
   common.tsOptions
-  + ts.new("Total daily costs per hub")
+  + ts.new("Daily costs per hub")
   + ts.panelOptions.withDescription(
     |||
-      Total daily costs per hub
+      Costs can sometimes be attributed to a specific hub, and that can then be
+      seen here.
+
+      "Cost shared" reflect all 2i2c cloud infrastructure attributable costs
+      that isn't attributable to a specific hub.
+      
+      For hub specific cost attribution, the underlying cloud infrastructure
+      needs to setup to be hub specific. Currently compute, home storage, and
+      object storage can be setup for specific hubs, but isn't unless explicitly
+      requested.
+      
+      To provide hub specific cloud infrastructure for is opt-in because it is a
+      trade off. Documentation about this trade off isn't yet available but
+      tracked [in this github
+      issue](https://github.com/2i2c-org/infrastructure/issues/5000).
+
+      ---
+
+      **Note**
+
+      - Hub refers to a deployment of a JupyterHub and related services within a
+        Kubernetes namespace.
+      - All costs are [unblended costs](https://aws.amazon.com/blogs/aws-cloud-financial-management/understanding-your-aws-cost-datasets-a-cheat-sheet/)
+      - All costs are pure usage costs, and doesn't consider credits etc.
     |||
   )
   + ts.queryOptions.withTargets([
@@ -39,12 +81,20 @@ local totalDailyCostsPerHub =
   ]);
 
 
-local totalDailyCostsPerComponent =
+local dailyCostsPerComponent =
   common.tsOptions
   + ts.new("Total daily costs per component")
   + ts.panelOptions.withDescription(
     |||
-      Total daily costs per component
+      Components are human friendly groupings of AWS services, as [defined
+      here](https://github.com/2i2c-org/infrastructure/blob/main/helm-charts/aws-ce-grafana-backend/mounted-files/const.py#L11-L20).
+
+      ---
+
+      **Note**
+
+      - All costs are [unblended costs](https://aws.amazon.com/blogs/aws-cloud-financial-management/understanding-your-aws-cost-datasets-a-cheat-sheet/)
+      - All costs are pure usage costs, and doesn't consider credits etc.
     |||
   )
   + ts.queryOptions.withTargets([
@@ -55,12 +105,20 @@ local totalDailyCostsPerComponent =
   ]);
 
 
-local totalDailyCostsPerComponentAndHub =
+local dailyCostsPerComponentAndHub =
   common.tsOptions
-  + ts.new("Total daily costs per component, for ${hub}")
+  + ts.new("Daily costs per component, for ${hub}")
   + ts.panelOptions.withDescription(
     |||
-      Total daily costs per component, for ${hub}
+      Components are human friendly groupings of AWS services, as [defined
+      here](https://github.com/2i2c-org/infrastructure/blob/main/helm-charts/aws-ce-grafana-backend/mounted-files/const.py#L11-L20).
+
+      **Note**
+
+      - Hub refers to a deployment of a JupyterHub and related services within a
+        specific Kubernetes namespace.
+      - All costs are [unblended costs](https://aws.amazon.com/blogs/aws-cloud-financial-management/understanding-your-aws-cost-datasets-a-cheat-sheet/)
+      - All costs are pure usage costs, and doesn't consider credits etc.
     |||
   )
   + ts.panelOptions.withRepeat("hub")
@@ -91,10 +149,10 @@ dashboard.new("Cloud cost attribution")
 + dashboard.withPanels(
   grafonnet.util.grid.makeGrid(
     [
-      totalDailyCosts,
-      totalDailyCostsPerHub,
-      totalDailyCostsPerComponent,
-      totalDailyCostsPerComponentAndHub
+      dailyCosts,
+      dailyCostsPerHub,
+      dailyCostsPerComponent,
+      dailyCostsPerComponentAndHub
     ],
     panelWidth=24,
     panelHeight=12,
