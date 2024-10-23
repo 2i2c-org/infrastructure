@@ -223,18 +223,6 @@ Finally deploy the support chart:
 deployer deploy-support $CLUSTER_NAME
 ```
 
-### 5. Manually install plugin and add datasource to Grafana
-
-A cost attribution dashboard should be deployed via a GitHub workflow with
-automation, but the dashboard requires the Infinity plugin to be installed
-together with one data source of the Infinity plugin's kind to be added.
-
-1. Login to Grafana instance as the admin user
-2. Navigate to the `plugins/yesoreyeram-infinity-datasource` path (Plugins ->
-   Search for infinity)
-3. First press the "Install" button, and then press the "Add new datasource"
-   button
-
 ## Troubleshooting
 
 If you don't see data in the cost attribution dashboard, you may want to look to
