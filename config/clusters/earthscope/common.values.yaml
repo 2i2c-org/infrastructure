@@ -173,7 +173,7 @@ basehub:
                   display_name: MT-ShortCourse
                   slug: mt-shortcourse
                   kubespawner_override:
-                    image: public.ecr.aws/earthscope-dev/geolab_default:mt_shortcourse-461f507c
+                    image: public.ecr.aws/earthscope-dev/geolab_default:mt_shortcourse-1a6a2fbd
                 jupyter-scipy:
                   display_name: Jupyter
                   slug: jupyter-scipy
