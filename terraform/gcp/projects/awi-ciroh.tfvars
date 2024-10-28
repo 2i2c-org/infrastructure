@@ -8,6 +8,10 @@ enable_logging         = false
 
 filestores = {
   "filestore" = { capacity_gb : 9216 },
+  "filestore_b" = {
+    name_suffix : "b",
+    capacity_gb : 3072
+  }
 }
 
 # Cloud costs for this project are not passed through by 2i2c
