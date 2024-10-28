@@ -44,5 +44,6 @@ jupyterhub:
         admin_users:
           - ericvd@berkeley.edu
           - sean.smorris@berkeley.edu
-          - koh@peralta.edu
           - dsmith@peralta.edu
+          - koh@peralta.edu
+          - kwilliamson@peralta.edu
