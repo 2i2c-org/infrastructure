@@ -62,6 +62,9 @@ jupyterhub:
           - ryanlovett
   singleuser:
     defaultUrl: /lab
+    extraEnv:
+      GH_SCOPED_CREDS_CLIENT_ID: Iv23lilZjNoav2oWKdPJ
+      GH_SCOPED_CREDS_APP_URL: https://github.com/apps/jupyter-health-demostration-hub
     image:
       name: quay.io/jupyterhealth/singleuser-premvp
       tag: "latest"
