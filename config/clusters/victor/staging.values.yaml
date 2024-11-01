@@ -14,6 +14,8 @@ basehub:
         CILogonOAuthenticator:
           oauth_callback_url: https://staging.hub.victorproject.org/hub/oauth_callback
     singleuser:
+      nodeSelector:
+        2i2c/hub-name: staging
       profileList:
         # IMPORTANT: Staging and prod's profileList's are meant to be kept
         #            equivalent with the exception that staging adds
