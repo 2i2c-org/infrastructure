@@ -25,20 +25,71 @@ local nodeAz = "us-west-2a";
 // A `node.kubernetes.io/instance-type label is added, so pods
 // can request a particular kind of node with a nodeSelector
 local notebookNodes = [
-    { instanceType: "r5.xlarge" },
-    { instanceType: "r5.4xlarge" },
-    { instanceType: "r5.16xlarge" },
     {
-        instanceType: "g4dn.xlarge",
-        tags+: {
-            "k8s.io/cluster-autoscaler/node-template/resources/nvidia.com/gpu": "1"
-        },
-        taints+: {
-            "nvidia.com/gpu": "present:NoSchedule"
-        },
-        // Allow provisioning GPUs across all AZs, to prevent situation where all
-        // GPUs in a single AZ are in use and no new nodes can be spawned
-        availabilityZones: masterAzs,
+        instanceType: "r5.xlarge",
+        namePrefix: "nb-staging",
+        labels+: { "2i2c/hub-name": "staging" },
+        tags+: { "2i2c:hub-name": "staging" }
+    },
+    {
+        instanceType: "r5.4xlarge",
+        namePrefix: "nb-staging",
+        labels+: { "2i2c/hub-name": "staging" },
+        tags+: { "2i2c:hub-name": "staging" }
+    },
+    {
+        instanceType: "r5.16xlarge",
+        namePrefix: "nb-staging",
+        labels+: { "2i2c/hub-name": "staging" },
+        tags+: { "2i2c:hub-name": "staging" }
+    },
+    {
+        instanceType: "r5.xlarge",
+        namePrefix: "nb-prod",
+        labels+: { "2i2c/hub-name": "prod" },
+        tags+: { "2i2c:hub-name": "prod" }
+    },
+    {
+        instanceType: "r5.4xlarge",
+        namePrefix: "nb-prod",
+        labels+: { "2i2c/hub-name": "prod" },
+        tags+: { "2i2c:hub-name": "prod" }
+    },
+    {
+        instanceType: "r5.16xlarge",
+        namePrefix: "nb-prod",
+        labels+: { "2i2c/hub-name": "prod" },
+        tags+: { "2i2c:hub-name": "prod" }
+    },
+    {
+      instanceType: "g4dn.xlarge",
+      namePrefix: "gpu-staging",
+      labels+: { "2i2c/hub-name": "staging" },
+      tags+: {
+        "2i2c:hub-name": "staging",
+        "k8s.io/cluster-autoscaler/node-template/resources/nvidia.com/gpu": "1"
+      },
+      taints+: {
+        "nvidia.com/gpu": "present:NoSchedule"
+      },
+      // Allow provisioning GPUs across all AZs, to prevent situation where all
+      // GPUs in a single AZ are in use and no new nodes can be spawned
+      availabilityZones: masterAzs,
+    },
+    {
+      instanceType: "g4dn.xlarge",
+      namePrefix: "gpu-prod",
+      labels+: { "2i2c/hub-name": "prod" },
+      tags+: {
+        "2i2c:hub-name": "prod",
+        "k8s.io/cluster-autoscaler/node-template/resources/nvidia.com/gpu": "1"
+      },
+      taints+: {
+        "nvidia.com/gpu": "present:NoSchedule"
+      },
+      // Allow provisioning GPUs across all AZs, to prevent situation where all
+      // GPUs in a single AZ are in use and no new nodes can be spawned
+      availabilityZones: masterAzs,
     },
 ];
 
@@ -53,7 +104,18 @@ local daskNodes = [
     // A not yet fully established policy is being developed about using a single
     // node pool, see https://github.com/2i2c-org/infrastructure/issues/2687.
     //
-    { instancesDistribution+: { instanceTypes: ["r5.4xlarge"] }},
+    {
+        namePrefix: "dask-staging",
+        labels+: { "2i2c/hub-name": "staging" },
+        tags+: { "2i2c:hub-name": "staging" },
+        instancesDistribution+: { instanceTypes: ["r5.4xlarge"] }
+    },
+    {
+        namePrefix: "dask-prod",
+        labels+: { "2i2c/hub-name": "prod" },
+        tags+: { "2i2c:hub-name": "prod" },
+        instancesDistribution+: { instanceTypes: ["r5.4xlarge"] }
+    },
 ];
 
 
@@ -63,7 +125,7 @@ local daskNodes = [
     metadata+: {
         name: "victor",
         region: clusterRegion,
-        version: "1.29",
+        version: "1.30",
     },
     availabilityZones: masterAzs,
     iam: {
@@ -94,7 +156,7 @@ local daskNodes = [
     [
         ng + {
             namePrefix: 'core',
-            nameSuffix: 'b',
+            nameSuffix: 'a',
             nameIncludeInstanceType: false,
             availabilityZones: [nodeAz],
             ssh: {
