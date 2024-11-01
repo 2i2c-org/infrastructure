@@ -2,6 +2,8 @@ region                 = "us-west-2"
 cluster_name           = "victor"
 cluster_nodes_location = "us-west-2a"
 
+enable_aws_ce_grafana_backend_iam = true
+
 user_buckets = {
   "scratch-staging" : {
     "delete_after" : 7,
