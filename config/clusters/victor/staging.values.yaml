@@ -29,7 +29,7 @@ basehub:
                   display_name: Victor Notebook
                   default: true
                   kubespawner_override:
-                    image: quay.io/volcanocyber/victor-notebook:a045ad3616d1
+                    image: quay.io/volcanocyber/victor-notebook:afd68aef9dc1
                 b-pytorch-notebook:
                   display_name: Pangeo ML Notebook (Pytorch)
                   kubespawner_override:
