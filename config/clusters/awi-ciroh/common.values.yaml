@@ -7,7 +7,7 @@ basehub:
         - soft
         - noatime
       # Google FileStore IP
-      serverIP: 10.207.3.186
+      serverIP: 10.26.195.98
       # Name of Google Filestore share
       baseShareName: /homes/
   dask-gateway:
