@@ -35,7 +35,6 @@ jobs:
           - cluster_name: kitware
           - cluster_name: leap
           - cluster_name: nasa-cryo
-          - cluster_name: nasa-esdis
           - cluster_name: nasa-ghg
           - cluster_name: nasa-veda
           - cluster_name: nmfs-openscapes
