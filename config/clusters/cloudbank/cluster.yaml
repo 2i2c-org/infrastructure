@@ -124,6 +124,14 @@ hubs:
       - common.values.yaml
       - fresno.values.yaml
       - enc-fresno.secret.values.yaml
+  - name: foothill
+    display_name: "Foothill College"
+    domain: foothill.cloudbank.2i2c.cloud
+    helm_chart: basehub
+    helm_chart_values_files:
+      - common.values.yaml
+      - foothill.values.yaml
+      - enc-foothill.secret.values.yaml
   - name: glendale
     display_name: "Glendale Community College"
     domain: glendale.cloudbank.2i2c.cloud
