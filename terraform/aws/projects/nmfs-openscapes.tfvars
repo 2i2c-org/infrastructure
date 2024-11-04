@@ -6,6 +6,8 @@ default_budget_alert = {
   "enabled" : false,
 }
 
+enable_aws_ce_grafana_backend_iam = true
+
 disable_cluster_wide_filestore = true
 filestores = {
   "staging" = {

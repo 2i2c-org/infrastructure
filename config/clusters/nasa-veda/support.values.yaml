@@ -41,3 +41,11 @@ prometheus:
         - secretName: prometheus-tls
           hosts:
             - prometheus.nasa-veda.2i2c.cloud
+
+aws-ce-grafana-backend:
+  enabled: true
+  envBasedConfig:
+    clusterName: nasa-veda
+  serviceAccount:
+    annotations:
+      eks.amazonaws.com/role-arn: arn:aws:iam::444055461661:role/aws_ce_grafana_backend_iam_role
