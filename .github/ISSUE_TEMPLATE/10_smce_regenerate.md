@@ -13,7 +13,6 @@ The credentials of the deployer on SMCE clusters must be renewed every ~55 days.
 AWS credentials for our hub deployer must be renewed for the following clusters:
 - [ ] nasa-veda
 - [ ] nasa-ghg
-- [ ] nasa-esdis
 
 ### Resources
 Follow [the instructions](https://infrastructure.2i2c.org/howto/regenerate-smce-creds/#regenerate-credentials-for-the-deployer) on how to do this.
