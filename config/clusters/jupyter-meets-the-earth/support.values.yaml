@@ -40,3 +40,11 @@ prometheus:
         - secretName: prometheus-tls
           hosts:
             - prometheus.jmte.2i2c.cloud
+
+aws-ce-grafana-backend:
+  enabled: true
+  envBasedConfig:
+    clusterName: jupyter-meets-the-earth
+  serviceAccount:
+    annotations:
+      eks.amazonaws.com/role-arn: arn:aws:iam::286354552638:role/aws_ce_grafana_backend_iam_role

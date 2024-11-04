@@ -25,21 +25,30 @@ local nodeAz = "us-east-2a";
 // A `node.kubernetes.io/instance-type label is added, so pods
 // can request a particular kind of node with a nodeSelector
 local notebookNodes = [
-    { 
+    // FIXME: tainted, to be deleted when empty, replaced by equivalent during k8s upgrade
+    {
         instanceType: "r5.xlarge",
         tags+: {
             "earthscope:application:name": "geolab",
             "earthscope:application:owner": "research-onramp-to-the-cloud"
         },
     },
-    { 
+    {
+        instanceType: "r5.xlarge",
+        nameSuffix: "b",
+        tags+: {
+            "earthscope:application:name": "geolab",
+            "earthscope:application:owner": "research-onramp-to-the-cloud"
+        },
+    },
+    {
         instanceType: "r5.4xlarge",
         tags+: {
             "earthscope:application:name": "geolab",
             "earthscope:application:owner": "research-onramp-to-the-cloud"
         },
     },
-    { 
+    {
         instanceType: "r5.16xlarge",
         tags+: {
             "earthscope:application:name": "geolab",
@@ -74,7 +83,7 @@ local daskNodes = [
     metadata+: {
         name: "earthscope",
         region: clusterRegion,
-        version: "1.29",
+        version: "1.30",
         tags+: {
             "ManagedBy": "2i2c",
             "earthscope:application:name": "geolab",
@@ -110,7 +119,7 @@ local daskNodes = [
     [
         ng + {
             namePrefix: 'core',
-            nameSuffix: 'b',
+            nameSuffix: 'a',
             nameIncludeInstanceType: false,
             availabilityZones: [nodeAz],
             ssh: {
@@ -124,7 +133,6 @@ local daskNodes = [
                 "k8s.dask.org/node-purpose": "core"
             },
             tags+: {
-                "ManagedBy": "2i2c",
                 "earthscope:application:name": "geolab",
                 "earthscope:application:owner": "research-onramp-to-the-cloud"
             },
@@ -143,9 +151,6 @@ local daskNodes = [
                 "hub.jupyter.org/node-purpose": "user",
                 "k8s.dask.org/node-purpose": "scheduler"
             },
-            tags+: {
-                "ManagedBy": "2i2c",
-            },
             taints+: {
                 "hub.jupyter.org_dedicated": "user:NoSchedule",
                 "hub.jupyter.org/dedicated": "user:NoSchedule"
@@ -163,9 +168,6 @@ local daskNodes = [
             },
             labels+: {
                 "k8s.dask.org/node-purpose": "worker"
-            },
-            tags+: {
-                "ManagedBy": "2i2c",
             },
             taints+: {
                 "k8s.dask.org_dedicated" : "worker:NoSchedule",

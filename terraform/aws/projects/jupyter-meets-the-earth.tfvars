@@ -6,15 +6,19 @@ default_budget_alert = {
   "enabled" : false,
 }
 
+enable_aws_ce_grafana_backend_iam = true
+
 user_buckets = {
   "scratch-staging" : {
-    "delete_after" : 7
+    "delete_after" : 7,
+    "tags" : { "2i2c:hub-name" : "staging" },
   },
   // IMPORTANT: This bucket isn't used, they are instead using s3://jmte-scratch
   //            that doesn't have a delete_after policy setup etc, but maybe
   //            they want to have.
   "scratch" : {
-    "delete_after" : 7
+    "delete_after" : 7,
+    "tags" : { "2i2c:hub-name" : "prod" },
   },
 }
 

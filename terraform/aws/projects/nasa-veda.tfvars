@@ -6,18 +6,20 @@ default_budget_alert = {
   "enabled" : false,
 }
 
+enable_aws_ce_grafana_backend_iam = true
+
 user_buckets = {
   "scratch-staging" : {
     "delete_after" : 7,
-    "tags" : { "2i2c:hub-name" : "staging" }
+    "tags" : { "2i2c:hub-name" : "staging" },
   },
   "scratch" : {
     "delete_after" : 7,
-    "tags" : { "2i2c:hub-name" : "prod" }
+    "tags" : { "2i2c:hub-name" : "prod" },
   },
   "scratch-binder" : {
     "delete_after" : 1,
-    "tags" : { "2i2c:hub-name" : "binder" }
+    "tags" : { "2i2c:hub-name" : "binder" },
   },
 }
 
