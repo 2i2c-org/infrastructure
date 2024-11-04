@@ -80,7 +80,7 @@ jupyterhub:
               jupyter-r-notebook:
                 display_name: Jupyter R Notebook
                 kubespawner_override:
-                  image: quay.io/jupyter/r-notebook:2024-10-03
+                  image: quay.io/highereddata/du-bois-stem:latest
             unlisted_choice:
               enabled: True
               display_name: "Custom image"
