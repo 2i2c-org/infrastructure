@@ -6,6 +6,8 @@ default_budget_alert = {
   "enabled" : false,
 }
 
+enable_aws_ce_grafana_backend_iam = true
+
 # Tip: uncomment and fill the missing info in the lines below if you want
 #       to setup scratch buckets for the hubs on this cluster.
 #
