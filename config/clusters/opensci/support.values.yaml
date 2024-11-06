@@ -32,3 +32,11 @@ grafana:
       - secretName: grafana-tls
         hosts:
           - grafana.opensci.2i2c.cloud
+
+aws-ce-grafana-backend:
+  enabled: true
+  envBasedConfig:
+    clusterName: opensci
+  serviceAccount:
+    annotations:
+      eks.amazonaws.com/role-arn: arn:aws:iam::211125293633:role/aws_ce_grafana_backend_iam_role
