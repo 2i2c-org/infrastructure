@@ -59,6 +59,16 @@ Service's of type LoadBalancer).
    - EBS volumes in terraform
    - Node groups in eksctl
 
+   ```{important}
+   If EFS, EBS or nodegroups are not split based on the hub they're deployed to
+   and instead they are shared by the entire cluster, then splliting it in order
+   to add the `2i2c:hub-name` tag will be an opt-in feature because it would
+   incur additional cloud costs and startup times for communities.
+
+   See the following GitHub issue for additional context
+   https://github.com/2i2c-org/infrastructure/issues/4928#issuecomment-2417091407
+   ```
+
    Search and mimic configuration of other clusters to understand how to
    configure the `2i2c:hub-name` tags for specific cloud infra types.
 
