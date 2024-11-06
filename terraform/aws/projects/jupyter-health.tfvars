@@ -2,12 +2,16 @@ region                 = "us-east-2"
 cluster_name           = "jupyter-health"
 cluster_nodes_location = "us-east-2a"
 
+enable_aws_ce_grafana_backend_iam = true
+
 user_buckets = {
   "scratch-staging" : {
-    "delete_after" : 7
+    "delete_after" : 7,
+    "tags" : { "2i2c:hub-name" : "staging" },
   },
   "scratch" : {
-    "delete_after" : 7
+    "delete_after" : 7,
+    "tags" : { "2i2c:hub-name" : "prod" },
   },
 }
 
