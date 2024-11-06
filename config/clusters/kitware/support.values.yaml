@@ -27,6 +27,14 @@ grafana:
         hosts:
           - grafana.kitware.2i2c.cloud
 
+aws-ce-grafana-backend:
+  enabled: true
+  envBasedConfig:
+    clusterName: kitware
+  serviceAccount:
+    annotations:
+      eks.amazonaws.com/role-arn: arn:aws:iam::471112920937:role/aws_ce_grafana_backend_iam_role
+
 cluster-autoscaler:
   enabled: true
   autoDiscovery:

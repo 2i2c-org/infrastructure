@@ -6,24 +6,22 @@ default_budget_alert = {
   "enabled" : false,
 }
 
-# Tip: uncomment and fill the missing info in the lines below if you want
-#       to setup scratch buckets for the hubs on this cluster.
-#
-#user_buckets = {
-#  "scratch-staging" : {
-#    "delete_after" : 7,
-#  },
-#  # Tip: add more scratch buckets below, if this cluster will be multi-tenant
-#}
+enable_aws_ce_grafana_backend_iam = true
 
-# Tip: uncomment and fill the missing info in the lines below if you want
-#       to setup specific cloud permissions for the buckets in this cluster.
-#
-#hub_cloud_permissions = {
-#  "staging" : {
-#    "user-sa" : {
-#      bucket_admin_access : ["scratch-staging"],
-#    },
-#  },
-#  # Tip: add more namespaces below, if this cluster will be multi-tenant
-#}
+# FIXME: placeholder bucket to get the 2i2c:hub-name tag in place
+# so the community cand enable it for cost allocation purposes
+# To be removed once it has been activated.
+user_buckets = {
+  "placeholder-bucket-staging" : {
+    "delete_after" : 7,
+    "tags" : { "2i2c:hub-name" : "staging" },
+  },
+}
+
+hub_cloud_permissions = {
+  "staging" : {
+    "user-sa" : {
+      bucket_admin_access : ["placeholder-bucket-staging"],
+    },
+  },
+}
