@@ -32,3 +32,11 @@ prometheus:
         - secretName: prometheus-tls
           hosts:
             - prometheus.smithsonian.2i2c.cloud
+
+aws-ce-grafana-backend:
+  enabled: true
+  envBasedConfig:
+    clusterName: smithsonian
+  serviceAccount:
+    annotations:
+      eks.amazonaws.com/role-arn: arn:aws:iam::969396938818:role/aws_ce_grafana_backend_iam_role
