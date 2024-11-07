@@ -63,13 +63,18 @@ jupyterhub:
                 kubespawner_override:
                   image: ghcr.io/nmfs-opensci/container-images/py-rocket-base:latest
               pyrgeo:
-                display_name: Py-R - Base geospatial image - py-rocket-geospatial latest
+                display_name: Py-R - Geospatial - py-rocket-geospatial latest
                 slug: pyrgeo
                 default: true
                 kubespawner_override:
                   image: ghcr.io/nmfs-opensci/container-images/py-rocket-geospatial:latest
+              pyrgeo2:
+                display_name: Py-R - Geospatial + QGIS, Panoply, CWUtils - py-rocket-geospatial-2 latest
+                slug: pyrgeo2
+                kubespawner_override:
+                  image: ghcr.io/nmfs-opensci/container-images/py-rocket-geospatial-2:latest
               coastwatch:
-                display_name: Py-R - CoastWatch - nmfs-opensci coastwatch latest
+                display_name: Py-R - CoastWatch - coastwatch latest
                 slug: coastwatch
                 kubespawner_override:
                   image: ghcr.io/nmfs-opensci/container-images/coastwatch:latest
@@ -79,12 +84,12 @@ jupyterhub:
                 kubespawner_override:
                   image: ghcr.io/nmfs-opensci/container-images/aomlomics-jh:latest
               iorocker:
-                display_name: R - R geospatial w sdmTMB - r-geospatial-sdm latest
+                display_name: R - Geospatial w sdmTMB - r-geospatial-sdm latest
                 slug: rgeospatialsdm
                 kubespawner_override:
                   image: ghcr.io/nmfs-opensci/container-images/r-geospatial-sdm:latest
               echopype:
-                display_name: Py - Echopype with pangeo nmfs-opensci echopype latest
+                display_name: Py - Echopype with pangeo - image-acoustics latest
                 slug: echopype
                 kubespawner_override:
                   image: ghcr.io/nmfs-opensci/image-acoustics:latest
@@ -99,7 +104,7 @@ jupyterhub:
                 kubespawner_override:
                   image: ghcr.io/boettiger-lab/nasa-tops:latest
               vast:
-                display_name: R - VAST with TMB - nmfs-opensci vast latest
+                display_name: R - VAST with TMB - vast latest
                 kubespawner_override:
                   image: ghcr.io/nmfs-opensci/container-images/vast:latest
               pace:
