@@ -32,3 +32,11 @@ prometheus:
         - secretName: prometheus-tls
           hosts:
             - prometheus.ubc-eoas.2i2c.cloud
+
+aws-ce-grafana-backend:
+  enabled: true
+  envBasedConfig:
+    clusterName: ubc-eoas
+  serviceAccount:
+    annotations:
+      eks.amazonaws.com/role-arn: arn:aws:iam::259060176665:role/aws_ce_grafana_backend_iam_role
