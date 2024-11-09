@@ -27,6 +27,14 @@ grafana:
         hosts:
           - grafana.{{ cluster_name }}.2i2c.cloud
 {% if provider == "aws" %}
+aws-ce-grafana-backend:
+  enabled: true
+  envBasedConfig:
+    clusterName: {{ cluster_name }}
+  serviceAccount:
+    annotations:
+      eks.amazonaws.com/role-arn: {{ output of `terraform output -raw aws_ce_grafana_backend_k8s_sa_annotation` }}
+
 cluster-autoscaler:
   enabled: true
   autoDiscovery:
