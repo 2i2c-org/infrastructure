@@ -37,6 +37,8 @@ jupyterhub:
             allowed_domains:
               - fhda.edu
               - student.foothill.edu
+              - student.fhda.edu
+              - student.deanza.edu
           http://google.com/accounts/o8/id:
             username_derivation:
               username_claim: "email"
