@@ -20,6 +20,7 @@ on:
       - "!deployer/commands/generate/dedicated_cluster/**"
       - "!deployer/commands/generate/hub_asset/**"
       - "!deployer/commands/generate/resource_allocation/**"
+      - "!config/clusters/templates/**"
       - requirements.txt
       - .github/actions/setup-deploy/**
       - helm-charts/**
