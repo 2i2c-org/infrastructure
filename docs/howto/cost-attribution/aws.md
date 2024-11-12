@@ -22,6 +22,21 @@ attribute cost to.
 - `alpha.eksctl.io/cluster-name`
 - `kubernetes.io/cluster/<cluster name>`
 
+```{important}
+Currently, on clusters that have a k8s version greater or equal with 1.30,
+terraform managed resources already have the `2i2c.org/cluster-name`
+tag configured via the `default_tags` variable, and eksctl managed resources
+already have the tag configured for node groups via `nodegroup.libsonnet`.
+
+On clusters that have a k8s version less than 1.30, eksctl managed resources,
+the `alpha.eksctl.io/cluster-name` and `kubernetes.io/cluster/<cluster name>`
+tags are present and used instead.
+
+New clusters have _all_ eksctl managed resources configured to be tagged, not
+just the node groups. This isn't important to ensure for existing clusters'
+cost attribution though.
+```
+
 The system also relies on the tag `2i2c:hub-name` to be specified in addition to
 the tags above for any cloud infra tied to specific hubs.
 
@@ -31,21 +46,7 @@ create cloud resources to represent k8s resources (block storage volumes for k8s
 PV resources referencing certain storage classes, and load balancers for k8s
 Service's of type LoadBalancer).
 
-1. _Configure `2i2c.org/cluster-name` tags_
-
-   No configuration is needed.
-
-   ```{note}
-   Terraform managed resources already have the tag configured via the
-   `default_tags` variable, and eksctl managed resources already have the tag
-   configured for node groups via `nodegroup.libsonnet`.
-
-   New clusters have _all_ eksctl managed resources configured to be tagged, not
-   just the node groups. This isn't important to ensure for existing clusters'
-   cost attribution though.
-   ```
-
-2. _Configure `2i2c:hub-name` tags_
+1. _Configure `2i2c:hub-name` tags_
 
    For any resource _specific to a hub_, declare an additional tag
    `2i2c:hub-name=<hub name>`. If this isn't done, they will be listed under a
@@ -54,16 +55,16 @@ Service's of type LoadBalancer).
    The following resources are known to be hub specific in some cases and known
    to incur costs.
 
-   - S3 buckets in terraform
-   - EFS storage in terraform
-   - EBS volumes in terraform
-   - Node groups in eksctl
+   - **S3 buckets** in terraform
+   - **EFS storage** in terraform
+   - **EBS volumes** in terraform
+   - **Node groups** in eksctl
 
    ```{important}
    If EFS, EBS or nodegroups are not split based on the hub they're deployed to
-   and instead they are shared by the entire cluster, then splliting it in order
-   to add the `2i2c:hub-name` tag will be an opt-in feature because it would
-   incur additional cloud costs and startup times for communities.
+   and instead they are shared by the entire cluster, then splitting it in order
+   to add the `2i2c:hub-name` tag is an opt-in feature because the split incurs
+   additional cloud costs and startup times for communities.
 
    See the following GitHub issue for additional context
    https://github.com/2i2c-org/infrastructure/issues/4928#issuecomment-2417091407
@@ -72,29 +73,17 @@ Service's of type LoadBalancer).
    Search and mimic configuration of other clusters to understand how to
    configure the `2i2c:hub-name` tags for specific cloud infra types.
 
-3. _Apply changes_
+2. _Apply changes_
 
    1. If you changed anything in terraform, apply those changes.
    2. If you changed anything in eksctl, apply those changed by re-creating
       those resources.
-   3. If the eksctl cluster is listed and unchecked in this [github reference
-      issue], and versioned older than k8s 1.29 or older, it needs to have its
-      node groups re-created to get the implicitly configured
-      `2i2c.org/cluster-name` tag unless you've not already just done this to
-      apply a `2i2c:hub-name` tag.
-
-      Reference our [documentation on doing node group
-      upgrades](upgrade-cluster:aws:node-groups) for details.
-   4. Update the [github reference issue] and ensure the checkbox is ticked for
-      this cluster.
-
-   [github reference issue]: https://github.com/2i2c-org/infrastructure/issues/4885
 
 ### 2. Enable cost allocation tags
 
 Enabling cost allocation tags via terraform can be done for standalone AWS
-accounts, but not for member accounts part of an organization. Due to this,
-we'll provide separate ways of doing this depending on the situation.
+accounts, but not for member accounts part of an organization that we don't manage.
+Due to this, we'll provide separate ways of doing this depending on the situation.
 
 `````{tab-set}
 
@@ -194,7 +183,7 @@ storage disks dynamically provisioned in case that's relevant in the future.
 You can optionally backfill billing data to tags having been around for a while
 but not enabled as cost allocation tags.
 
-You can do request this to be done once a day, and it takes a several hours to
+You can request this to be done once a day, and it takes a several hours to
 process the request. Make a request through the AWS web console by navigating to
 "Cost allocation tags" under "Billing and Cost Management", then from there
 click the "Backfill tags" button.

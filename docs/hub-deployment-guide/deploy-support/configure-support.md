@@ -16,25 +16,31 @@ need to recreate them, only update them if required.
 
 In the `infrastructure` repo, the full filepath should be: `config/clusters/<cluster_name>/support.values.yaml`.
 
-Checkout the template support values file in `config/clusters/templates/common/support.values.yaml` for an example configuration. If the cluster is running on GCP or AWS, the deployer should have been generated this file already.
+If the cluster is running on GCP or AWS, the deployer should have been generated this file already.
 
-If you are deploying the support chart on an Azure cluster, you **must** manually create such a file using the template mentioned above. Also, you must set an annotation for `ingress-nginx`'s k8s Service resource by including the following in your `support.values.yaml` file:
+1. If you are deploying the support chart on an AWS cluster, you **must** also manually update the `aws-ce-grafana-backend` service account annotation in the `support.values.yaml` with the output of thew following command:
 
-```yaml
-ingress-nginx:
-  controller:
-    service:
-      annotations:
-        # This annotation is a requirement for use in Azure provided
-        # LoadBalancer.
-        #
-        # ref: https://learn.microsoft.com/en-us/azure/aks/ingress-basic?tabs=azure-cli#basic-configuration
-        # ref: https://github.com/Azure/AKS/blob/master/CHANGELOG.md#release-2022-09-11
-        # ref: https://github.com/Azure/AKS/issues/2907#issuecomment-1109759262
-        # ref: https://github.com/kubernetes/ingress-nginx/issues/8501#issuecomment-1108428615
-        #
-        service.beta.kubernetes.io/azure-load-balancer-health-probe-request-path: /healthz
+```bash
+terraform output -raw aws_ce_grafana_backend_k8s_sa_annotation
 ```
+
+2. If you are deploying the support chart on an Azure cluster, you **must** manually create such a file using the template at `config/clusters/templates/common/support.values.yaml`. Also, you must set an annotation for `ingress-nginx`'s k8s Service resource by including the following in your `support.values.yaml` file:
+
+  ```yaml
+  ingress-nginx:
+    controller:
+      service:
+        annotations:
+          # This annotation is a requirement for use in Azure provided
+          # LoadBalancer.
+          #
+          # ref: https://learn.microsoft.com/en-us/azure/aks/ingress-basic?tabs=azure-cli#basic-configuration
+          # ref: https://github.com/Azure/AKS/blob/master/CHANGELOG.md#release-2022-09-11
+          # ref: https://github.com/Azure/AKS/issues/2907#issuecomment-1109759262
+          # ref: https://github.com/kubernetes/ingress-nginx/issues/8501#issuecomment-1108428615
+          #
+          service.beta.kubernetes.io/azure-load-balancer-health-probe-request-path: /healthz
+  ```
 
 ## Edit your `cluster.yaml` file
 
