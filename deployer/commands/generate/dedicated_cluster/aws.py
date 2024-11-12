@@ -110,10 +110,6 @@ def aws(
         ...,
         prompt="The AWS account id or alias. Declare 2i2c for 2i2c's SSO based accounts and paid_by_us=true",
     ),
-    aws_ce_grafana_backend_k8s_sa_annotation: str = typer.Option(
-        ...,
-        help="Output of `terraform output -raw aws_ce_grafana_backend_k8s_sa_annotation` for the cluster",
-    ),
     force: bool = typer.Option(
         False,
         "--force",
@@ -143,7 +139,6 @@ def aws(
         "cluster_region": cluster_region,
         "sign_in_url": sign_in_url,
         "paid_by_us": str(paid_by_us).lower(),
-        "aws_grafana_sa_annotation": aws_ce_grafana_backend_k8s_sa_annotation,
     }
 
     if not check_before_continuing_with_generate_command(

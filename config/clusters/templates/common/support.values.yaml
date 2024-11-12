@@ -33,7 +33,7 @@ aws-ce-grafana-backend:
     clusterName: {{ cluster_name }}
   serviceAccount:
     annotations:
-      eks.amazonaws.com/role-arn: {{ aws_grafana_sa_annotation }}
+      eks.amazonaws.com/role-arn: <output of `terraform output -raw aws_ce_grafana_backend_k8s_sa_annotation`>
 
 cluster-autoscaler:
   enabled: true
