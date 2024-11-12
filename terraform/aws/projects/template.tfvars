@@ -7,12 +7,15 @@ region                 = "{{ cluster_region }}"
 cluster_name           = "{{ cluster_name }}"
 cluster_nodes_location = "{{ cluster_region }}a"
 
+enable_aws_ce_grafana_backend_iam = true
+
 # Tip: uncomment and fill the missing info in the lines below if you want
 #       to setup scratch buckets for the hubs on this cluster.
 #
 #user_buckets = {
 #  "scratch-staging" : {
 #    "delete_after" : 7,
+#    "tags" : { "2i2c:hub-name" : "staging" },
 #  },
 #  # Tip: add more scratch buckets below, if this cluster will be multi-tenant
 #}
@@ -28,3 +31,4 @@ cluster_nodes_location = "{{ cluster_region }}a"
 #  },
 #  # Tip: add more namespaces below, if this cluster will be multi-tenant
 #}
+
