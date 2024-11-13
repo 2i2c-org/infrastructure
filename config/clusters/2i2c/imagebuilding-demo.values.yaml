@@ -30,7 +30,7 @@ jupyterhub:
           custom_html: <a href="https://www.dfg.de/">DFG</a>, <a href="https://www.cessda.eu/">CESSDA</a>, <a href="https://www.gesis.org/">GESIS</a>, FKZ/Project number <a href="https://gepris.dfg.de/gepris/projekt/460234259?language=en">460234259</a>
   singleuser:
     profileList:
-      - display_name: "Only Profile Available, this info is not shown in the UI"
+      - display_name: Choose your environment and resources
         slug: only-choice
         profile_options:
           image:
