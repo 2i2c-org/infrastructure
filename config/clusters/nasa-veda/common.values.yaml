@@ -254,6 +254,7 @@ basehub:
           allowed_groups:
             - veda-analytics-access:maap-biomass-team
             - 2i2c-org:hub-access-for-2i2c-staff
+            - veda-analytics-access:harvard-data-team
           profile_options:
             image:
               display_name: Environment
