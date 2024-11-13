@@ -149,9 +149,6 @@ jupyterhub:
 
   hub:
     allowNamedServers: true
-    image:
-      name: quay.io/2i2c/dynamic-image-building-experiment
-      tag: "0.0.1-0.dev.git.10263.hc87b65cf"
     config:
       JupyterHub:
         authenticator_class: github
@@ -165,11 +162,6 @@ jupyterhub:
       Authenticator:
         admin_users:
           - kyttmacmanus # Kytt MacManus, added as part of https://2i2c.freshdesk.com/a/tickets/1454
-
-    extraConfig:
-      enable-fancy-profiles: |
-        from jupyterhub_fancy_profiles import setup_ui
-        setup_ui(c)
 
 binderhub-service:
   enabled: true

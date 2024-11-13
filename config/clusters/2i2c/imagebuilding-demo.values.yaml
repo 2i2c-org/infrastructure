@@ -115,9 +115,6 @@ jupyterhub:
   hub:
     # Allows for multiple concurrent demos
     allowNamedServers: true
-    image:
-      name: quay.io/2i2c/dynamic-image-building-experiment
-      tag: "0.0.1-0.dev.git.10263.hc87b65cf"
     config:
       JupyterHub:
         authenticator_class: github
@@ -130,11 +127,6 @@ jupyterhub:
           - CYGNSS-VEDA:cygnss-iwg
         scope:
           - read:org
-
-    extraConfig:
-      enable-fancy-profiles: |
-        from jupyterhub_fancy_profiles import setup_ui
-        setup_ui(c)
 
 binderhub-service:
   enabled: true

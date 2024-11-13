@@ -43,9 +43,6 @@ basehub:
             name: "NASA"
             url: https://www.earthdata.nasa.gov/esds
     hub:
-      image:
-        name: quay.io/2i2c/dynamic-image-building-experiment
-        tag: 0.0.1-0.dev.git.10730.h0ce7d704
       allowNamedServers: true
       config:
         JupyterHub:
@@ -74,10 +71,6 @@ basehub:
             - slesaad
             - wildintellect
             - amarouane-ABDELHAK
-      extraConfig:
-        enable-fancy-profiles: |
-          from jupyterhub_fancy_profiles import setup_ui
-          setup_ui(c)
     singleuser:
       cloudMetadata:
         blockWithIptables: false
