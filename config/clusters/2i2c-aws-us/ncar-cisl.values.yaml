@@ -45,6 +45,8 @@ basehub:
             - NicholasCote # Nicholas Cote, Initial administrator
             - nwehrheim # Nick Wehrheim, Community representative
     singleuser:
+      nodeSelector:
+        2i2c/hub-name: ncar-cisl
       image:
         # image choice preliminary and is expected to be setup via
         # https://ncar-cisl.2i2c.cloud/services/configurator/ by the community

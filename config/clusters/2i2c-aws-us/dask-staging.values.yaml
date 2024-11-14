@@ -28,6 +28,8 @@ basehub:
             name: 2i2c
             url: https://2i2c.org
     singleuser:
+      nodeSelector:
+        2i2c/hub-name: dask-staging
       image:
         name: pangeo/pangeo-notebook
         tag: "latest"
