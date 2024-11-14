@@ -27,21 +27,60 @@ local nodeAz = "us-east-2a";
 local notebookNodes = [
     {
         instanceType: "r5.xlarge",
+        namePrefix: "nb-staging",
+        labels+: { "2i2c/hub-name": "staging" },
         tags+: {
+            "2i2c:hub-name": "staging",
+            "earthscope:application:name": "geolab",
+            "earthscope:application:owner": "research-onramp-to-the-cloud"
+        },
+    },
+    {
+        instanceType: "r5.xlarge",
+        namePrefix: "nb-prod",
+        labels+: { "2i2c/hub-name": "prod" },
+        tags+: {
+            "2i2c:hub-name": "prod",
             "earthscope:application:name": "geolab",
             "earthscope:application:owner": "research-onramp-to-the-cloud"
         },
     },
     {
         instanceType: "r5.4xlarge",
+        namePrefix: "nb-staging",
+        labels+: { "2i2c/hub-name": "staging" },
         tags+: {
+            "2i2c:hub-name": "staging",
+            "earthscope:application:name": "geolab",
+            "earthscope:application:owner": "research-onramp-to-the-cloud"
+        },
+    },
+    {
+        instanceType: "r5.4xlarge",
+        namePrefix: "nb-prod",
+        labels+: { "2i2c/hub-name": "prod" },
+        tags+: {
+            "2i2c:hub-name": "prod",
             "earthscope:application:name": "geolab",
             "earthscope:application:owner": "research-onramp-to-the-cloud"
         },
     },
     {
         instanceType: "r5.16xlarge",
+        namePrefix: "nb-staging",
+        labels+: { "2i2c/hub-name": "staging" },
         tags+: {
+            "2i2c:hub-name": "staging",
+            "earthscope:application:name": "geolab",
+            "earthscope:application:owner": "research-onramp-to-the-cloud"
+        },
+    },
+    {
+        instanceType: "r5.16xlarge",
+        namePrefix: "nb-prod",
+        labels+: { "2i2c/hub-name": "prod" },
+        tags+: {
+            "2i2c:hub-name": "prod",
             "earthscope:application:name": "geolab",
             "earthscope:application:owner": "research-onramp-to-the-cloud"
         },
