@@ -16,3 +16,6 @@ basehub:
       config:
         GitHubOAuthenticator:
           oauth_callback_url: https://hub.ghg.center/hub/oauth_callback
+    singleuser:
+      nodeSelector:
+        2i2c/hub-name: prod
