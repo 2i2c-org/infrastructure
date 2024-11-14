@@ -1060,7 +1060,7 @@ jupyterhub:
         oauth_no_confirm: true
     image:
       name: quay.io/2i2c/pilot-hub
-      tag: "0.0.1-0.dev.git.10853.hf249a530"
+      tag: "0.0.1-0.dev.git.10856.h1a21a6f0"
     networkPolicy:
       enabled: true
       # interNamespaceAccessLabels=accept makes the hub pod's associated
