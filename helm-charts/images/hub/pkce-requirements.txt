@@ -5,4 +5,4 @@
 oauthenticator>=17.1,<18
 
 # Include all the requirements we have for our base hub image
--r ./requirements.txt
+-r requirements.txt
