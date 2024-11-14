@@ -60,6 +60,7 @@ basehub:
             - veda-analytics-access:maap-biomass-team
             - Earth-Information-System:eis-fire
             - Earth-Information-System:swot
+            - veda-analytics-access:harvard-data-team
           scope:
             - read:org
         Authenticator:
@@ -252,7 +253,7 @@ basehub:
           description: "Start a container on a dedicated node with a GPU"
           slug: "gpu"
           allowed_groups:
-            - veda-analytics-access:maap-biomass-team
+            - veda-analytics-access:gpu
             - 2i2c-org:hub-access-for-2i2c-staff
             - veda-analytics-access:harvard-data-team
           profile_options:
