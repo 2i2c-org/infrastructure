@@ -250,7 +250,6 @@ jobs:
       failure_openscapes: "${{ env.failure_openscapes }}"
       failure_opensci: "${{ env.failure_opensci }}"
       failure_pangeo-hubs: "${{ env.failure_pangeo-hubs }}"
-      failure_pchub: "${{ env.failure_pchub }}"
       failure_projectpythia: "${{ env.failure_projectpythia }}"
       failure_queensu: "${{ env.failure_queensu }}"
       failure_smithsonian: "${{ env.failure_smithsonian }}"
