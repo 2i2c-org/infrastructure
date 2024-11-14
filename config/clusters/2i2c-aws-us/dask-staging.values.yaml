@@ -41,3 +41,14 @@ basehub:
           authenticator_class: "github"
         GitHubOAuthenticator:
           oauth_callback_url: "https://dask-staging.aws.2i2c.cloud/hub/oauth_callback"
+
+dask-gateway:
+  gateway:
+    scheduler:
+      extraPodConfig:
+        nodeSelector:
+          2i2c/hub-name: dask-staging
+    worker:
+      extraPodConfig:
+        nodeSelector:
+          2i2c/hub-name: dask-staging

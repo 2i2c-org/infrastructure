@@ -248,3 +248,14 @@ basehub:
               node.kubernetes.io/instance-type: g4dn.xlarge
             extra_resource_limits:
               nvidia.com/gpu: "1"
+
+dask-gateway:
+  gateway:
+    scheduler:
+      extraPodConfig:
+        nodeSelector:
+          2i2c/hub-name: showcase
+    worker:
+      extraPodConfig:
+        nodeSelector:
+          2i2c/hub-name: showcase
