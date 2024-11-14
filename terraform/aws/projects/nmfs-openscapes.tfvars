@@ -19,6 +19,14 @@ filestores = {
     tags        = { "2i2c:hub-name" : "prod" },
   },
 }
+ebs_volumes = {
+  "staging" = {
+    size        = 1
+    type        = "gp3"
+    name_suffix = "staging"
+    tags        = { "2i2c:hub-name" : "staging" }
+  }
+}
 
 user_buckets = {
   "scratch-staging" : {
