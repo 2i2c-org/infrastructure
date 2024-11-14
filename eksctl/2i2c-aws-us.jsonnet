@@ -252,12 +252,6 @@ local daskNodes = [
     //
     {
         namePrefix: "dask-staging",
-        labels+: { "2i2c/hub-name": "staging" },
-        tags+: { "2i2c:hub-name": "staging" },
-        instancesDistribution+: { instanceTypes: ["r5.4xlarge"] }
-    },
-    {
-        namePrefix: "dask-dask-staging",
         labels+: { "2i2c/hub-name": "dask-staging" },
         tags+: { "2i2c:hub-name": "dask-staging" },
         instancesDistribution+: { instanceTypes: ["r5.4xlarge"] }
@@ -272,18 +266,6 @@ local daskNodes = [
         namePrefix: "dask-ncar-cisl",
         labels+: { "2i2c/hub-name": "ncar-cisl" },
         tags+: { "2i2c:hub-name": "ncar-cisl" },
-        instancesDistribution+: { instanceTypes: ["r5.4xlarge"] }
-    },
-    {
-        namePrefix: "dask-itcoocean",
-        labels+: { "2i2c/hub-name": "itcoocean" },
-        tags+: { "2i2c:hub-name": "itcoocean" },
-        instancesDistribution+: { instanceTypes: ["r5.4xlarge"] }
-    },
-    {
-        namePrefix: "dask-cosmicds",
-        labels+: { "2i2c/hub-name": "cosmicds" },
-        tags+: { "2i2c:hub-name": "cosmicds" },
         instancesDistribution+: { instanceTypes: ["r5.4xlarge"] }
     },
 ];
