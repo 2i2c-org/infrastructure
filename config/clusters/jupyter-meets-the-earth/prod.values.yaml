@@ -30,5 +30,5 @@ basehub:
         SCRATCH_BUCKET: s3://jmte-scratch/$(JUPYTERHUB_USER)
         PANGEO_SCRATCH: s3://jmte-scratch/$(JUPYTERHUB_USER)
       nodeSelector:
-        2i2c/hub-name: staging
+        2i2c/hub-name: prod
         node.kubernetes.io/instance-type: m5.xlarge
