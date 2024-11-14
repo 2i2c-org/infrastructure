@@ -23,6 +23,8 @@ basehub:
             # FIXME: We keep a *full* spare medium node around, is this necessary?
             memory: 14G
     singleuser:
+      nodeSelector:
+        2i2c/hub-name: staging
       extraEnv:
         # FIXME: This is a *pre-existing bucket*, not the one created by
         # terraform. Either import it properly into our terraform state, or

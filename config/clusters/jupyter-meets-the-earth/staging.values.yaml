@@ -13,5 +13,7 @@ basehub:
         - hosts: [staging.jmte.2i2c.cloud]
           secretName: https-auto-tls
     singleuser:
+      nodeSelector:
+        2i2c/hub-name: staging
       extraEnv:
         SCRATCH_BUCKET: s3://jupyter-meets-the-earth-scratch-staging/$(JUPYTERHUB_USER)
