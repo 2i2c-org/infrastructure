@@ -41,9 +41,6 @@ jupyterhub:
 
   hub:
     allowNamedServers: true
-    image:
-      name: quay.io/2i2c/dynamic-image-building-experiment
-      tag: "0.0.1-0.dev.git.8663.h049aa2c2"
     config:
       JupyterHub:
         authenticator_class: github
@@ -51,10 +48,6 @@ jupyterhub:
         admin_users:
           - jmunroe
           - ktyle
-    extraConfig:
-      enable-fancy-profiles: |
-        from jupyterhub_fancy_profiles import setup_ui
-        setup_ui(c)
 
   scheduling:
     userScheduler:
@@ -66,7 +59,7 @@ jupyterhub:
       GH_SCOPED_CREDS_CLIENT_ID: "Iv23liaEC5WLtjKehTtK"
       GH_SCOPED_CREDS_APP_URL: "https://github.com/apps/2i2c-project-pythia-push-access"
     profileList:
-      - display_name: "Only Profile Available, this info is not shown in the UI"
+      - display_name: Choose your environment and resources
         slug: only-choice
         profile_options:
           image:
