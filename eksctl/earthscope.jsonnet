@@ -25,9 +25,21 @@ local nodeAz = "us-east-2a";
 // A `node.kubernetes.io/instance-type label is added, so pods
 // can request a particular kind of node with a nodeSelector
 local notebookNodes = [
+    // FIXME: tainted, to be deleted when empty, replaced by equivalent
     {
         instanceType: "r5.xlarge",
         namePrefix: "nb-staging",
+        labels+: { "2i2c/hub-name": "staging" },
+        tags+: {
+            "2i2c:hub-name": "staging",
+            "earthscope:application:name": "geolab",
+            "earthscope:application:owner": "research-onramp-to-the-cloud"
+        },
+    },
+    {
+        instanceType: "r5.xlarge",
+        namePrefix: "nb-staging",
+        nameSuffix: "b",
         labels+: { "2i2c/hub-name": "staging" },
         tags+: {
             "2i2c:hub-name": "staging",
@@ -149,7 +161,7 @@ local daskNodes = [
     [
         ng + {
             namePrefix: 'core',
-            nameSuffix: 'a',
+            nameSuffix: 'b',
             nameIncludeInstanceType: false,
             availabilityZones: [nodeAz],
             ssh: {
@@ -163,6 +175,7 @@ local daskNodes = [
                 "k8s.dask.org/node-purpose": "core"
             },
             tags+: {
+                "2i2c:node-purpose": "core",
                 "earthscope:application:name": "geolab",
                 "earthscope:application:owner": "research-onramp-to-the-cloud"
             },
@@ -181,6 +194,7 @@ local daskNodes = [
                 "hub.jupyter.org/node-purpose": "user",
                 "k8s.dask.org/node-purpose": "scheduler"
             },
+            tags+: { "2i2c:node-purpose": "user" },
             taints+: {
                 "hub.jupyter.org_dedicated": "user:NoSchedule",
                 "hub.jupyter.org/dedicated": "user:NoSchedule"
