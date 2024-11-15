@@ -22,3 +22,6 @@ jupyterhub:
       Authenticator:
         admin_users:
           - Monsurat-Onabajo
+  singleuser:
+    nodeSelector:
+      2i2c/hub-name: molerhealth

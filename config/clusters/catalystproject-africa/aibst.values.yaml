@@ -22,3 +22,6 @@ jupyterhub:
       Authenticator:
         admin_users:
           - zchikwambi
+  singleuser:
+    nodeSelector:
+      2i2c/hub-name: aibst

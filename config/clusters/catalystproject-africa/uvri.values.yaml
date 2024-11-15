@@ -24,3 +24,6 @@ jupyterhub:
       Authenticator:
         admin_users:
           - eddUG
+  singleuser:
+    nodeSelector:
+      2i2c/hub-name: uvri

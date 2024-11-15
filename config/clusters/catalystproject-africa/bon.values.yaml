@@ -23,3 +23,6 @@ jupyterhub:
         admin_users:
           - Seunolufemi123
           - Emmanuel19-ada
+  singleuser:
+    nodeSelector:
+      2i2c/hub-name: bon
