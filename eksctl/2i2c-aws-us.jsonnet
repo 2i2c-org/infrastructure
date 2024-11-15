@@ -45,22 +45,6 @@ local notebookNodes = [
         labels+: { "2i2c/hub-name": "staging" },
         tags+: { "2i2c:hub-name": "staging" }
     },
-    {
-        instanceType: "g4dn.xlarge",
-        namePrefix: "nb-staging",
-        minSize: 0,
-        labels+: { "2i2c/hub-name": "staging" },
-        tags+: {
-            "k8s.io/cluster-autoscaler/node-template/resources/nvidia.com/gpu": "1",
-            "2i2c:hub-name": "staging",
-        },
-        taints+: {
-            "nvidia.com/gpu": "present:NoSchedule"
-        },
-        // Allow provisioning GPUs across all AZs, to prevent situation where all
-        // GPUs in a single AZ are in use and no new nodes can be spawned
-        availabilityZones: masterAzs,
-    },
     // dask-staging
     {
         instanceType: "r5.xlarge",
@@ -79,22 +63,6 @@ local notebookNodes = [
         namePrefix: "nb-dask-staging",
         labels+: { "2i2c/hub-name": "dask-staging" },
         tags+: { "2i2c:hub-name": "dask-staging" }
-    },
-    {
-        instanceType: "g4dn.xlarge",
-        namePrefix: "nb-dask-staging",
-        minSize: 0,
-        labels+: { "2i2c/hub-name": "dask-staging" },
-        tags+: {
-            "k8s.io/cluster-autoscaler/node-template/resources/nvidia.com/gpu": "1",
-            "2i2c:hub-name": "dask-staging",
-        },
-        taints+: {
-            "nvidia.com/gpu": "present:NoSchedule"
-        },
-        // Allow provisioning GPUs across all AZs, to prevent situation where all
-        // GPUs in a single AZ are in use and no new nodes can be spawned
-        availabilityZones: masterAzs,
     },
     // showcase
     {
@@ -185,22 +153,6 @@ local notebookNodes = [
         labels+: { "2i2c/hub-name": "itcoocean" },
         tags+: { "2i2c:hub-name": "itcoocean" }
     },
-    {
-        instanceType: "g4dn.xlarge",
-        namePrefix: "nb-itcoocean",
-        minSize: 0,
-        labels+: { "2i2c/hub-name": "itcoocean" },
-        tags+: {
-            "k8s.io/cluster-autoscaler/node-template/resources/nvidia.com/gpu": "1",
-            "2i2c:hub-name": "itcoocean",
-        },
-        taints+: {
-            "nvidia.com/gpu": "present:NoSchedule"
-        },
-        // Allow provisioning GPUs across all AZs, to prevent situation where all
-        // GPUs in a single AZ are in use and no new nodes can be spawned
-        availabilityZones: masterAzs,
-    },
     // cosmicds
     {
         instanceType: "r5.xlarge",
@@ -219,22 +171,6 @@ local notebookNodes = [
         namePrefix: "cosmicds",
         labels+: { "2i2c/hub-name": "cosmicds" },
         tags+: { "2i2c:hub-name": "cosmicds" }
-    },
-    {
-        instanceType: "g4dn.xlarge",
-        namePrefix: "nb-cosmicds",
-        minSize: 0,
-        labels+: { "2i2c/hub-name": "cosmicds" },
-        tags+: {
-            "k8s.io/cluster-autoscaler/node-template/resources/nvidia.com/gpu": "1",
-            "2i2c:hub-name": "cosmicds",
-        },
-        taints+: {
-            "nvidia.com/gpu": "present:NoSchedule"
-        },
-        // Allow provisioning GPUs across all AZs, to prevent situation where all
-        // GPUs in a single AZ are in use and no new nodes can be spawned
-        availabilityZones: masterAzs,
     },
 ];
 
