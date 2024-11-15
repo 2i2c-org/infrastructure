@@ -25,14 +25,58 @@ local nodeAz = "ca-central-1a";
 // A `node.kubernetes.io/instance-type label is added, so pods
 // can request a particular kind of node with a nodeSelector
 local notebookNodes = [
-    { instanceType: "r5.xlarge" },
-    { instanceType: "r5.2xlarge" },
-    { instanceType: "r5.4xlarge" },
-    { instanceType: "r5.16xlarge" },
+    { instanceType: "r5.2xlarge" }, // FIXME: tainted, to be deleted when empty, replaced by equivalent during k8s upgrade
+    {
+        instanceType: "r5.xlarge",
+        namePrefix: "nb-staging",
+        labels+: { "2i2c/hub-name": "staging" },
+        tags+: { "2i2c:hub-name": "staging" },
+    },
+    {
+        instanceType: "r5.xlarge",
+        namePrefix: "nb-prod",
+        labels+: { "2i2c/hub-name": "prod" },
+        tags+: { "2i2c:hub-name": "prod" },
+    },
+    {
+        instanceType: "r5.2xlarge",
+        namePrefix: "nb-staging",
+        labels+: { "2i2c/hub-name": "staging" },
+        tags+: { "2i2c:hub-name": "staging" },
+    },
+    {
+        instanceType: "r5.2xlarge",
+        namePrefix: "nb-prod",
+        labels+: { "2i2c/hub-name": "prod" },
+        tags+: { "2i2c:hub-name": "prod" },
+    },
+    {
+        instanceType: "r5.4xlarge",
+        namePrefix: "nb-staging",
+        labels+: { "2i2c/hub-name": "staging" },
+        tags+: { "2i2c:hub-name": "staging" },
+    },
+    {
+        instanceType: "r5.4xlarge",
+        namePrefix: "nb-prod",
+        labels+: { "2i2c/hub-name": "prod" },
+        tags+: { "2i2c:hub-name": "prod" },
+    },
+    {
+        instanceType: "r5.16xlarge",
+        namePrefix: "nb-staging",
+        labels+: { "2i2c/hub-name": "staging" },
+        tags+: { "2i2c:hub-name": "staging" },
+    },
+    {
+        instanceType: "r5.16xlarge",
+        namePrefix: "nb-prod",
+        labels+: { "2i2c/hub-name": "prod" },
+        tags+: { "2i2c:hub-name": "prod" },
+    },
 ];
 
 local daskNodes = [];
-
 
 {
     apiVersion: 'eksctl.io/v1alpha5',
@@ -40,7 +84,7 @@ local daskNodes = [];
     metadata+: {
         name: "ubc-eoas",
         region: clusterRegion,
-        version: "1.29",
+        version: "1.30",
     },
     availabilityZones: masterAzs,
     iam: {
@@ -71,7 +115,7 @@ local daskNodes = [];
     [
         ng + {
             namePrefix: 'core',
-            nameSuffix: 'b',
+            nameSuffix: 'a',
             nameIncludeInstanceType: false,
             availabilityZones: [nodeAz],
             ssh: {
@@ -83,6 +127,9 @@ local daskNodes = [];
             labels+: {
                 "hub.jupyter.org/node-purpose": "core",
                 "k8s.dask.org/node-purpose": "core"
+            },
+            tags+: {
+                "2i2c:node-purpose": "core"
             },
         },
     ] + [
@@ -102,6 +149,9 @@ local daskNodes = [];
             taints+: {
                 "hub.jupyter.org_dedicated": "user:NoSchedule",
                 "hub.jupyter.org/dedicated": "user:NoSchedule"
+            },
+            tags+: {
+                "2i2c:node-purpose": "user"
             },
         } + n for n in notebookNodes
     ] + ( if daskNodes != null then
