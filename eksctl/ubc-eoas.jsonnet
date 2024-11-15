@@ -84,6 +84,9 @@ local daskNodes = [];
                 "hub.jupyter.org/node-purpose": "core",
                 "k8s.dask.org/node-purpose": "core"
             },
+            tags+: {
+                "2i2c:node-purpose": "core"
+            },
         },
     ] + [
         ng + {
