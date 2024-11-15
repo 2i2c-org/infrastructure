@@ -13,14 +13,19 @@ jupyterhub:
         default: true
         kubespawner_override:
           # From https://github.com/SaiUCM/example-inherit-from-community-image
-          image: quay.io/cirt_ucm/jupyter-scipy-xarray:latest
+          # See https://2i2c.freshdesk.com/a/tickets/1612
+          # See https://2i2c.freshdesk.com/a/tickets/1771
+          # See https://2i2c.freshdesk.com/a/tickets/2076
+          # See https://2i2c.freshdesk.com/a/tickets/2138
+          # See https://2i2c.freshdesk.com/a/tickets/2396
+          image: quay.io/cirt_ucm/jupyter-scipy-xarray:0b689eb927fa
           # Launch into JupyterLab after the user logs in
           default_url: /lab
       - display_name: R
         description: Start a R server with tidyverse & Geospatial tools
         kubespawner_override:
           # From https://github.com/2i2c-org/rocker-with-nbgitpuller
-          image: quay.io/2i2c/rocker-with-nbgitpuller:287ea05b2809
+          image: quay.io/2i2c/rocker-with-nbgitpuller:3edc87d73e3d
           default_url: /lab
           # Ensures container working dir is homedir
           # https://github.com/2i2c-org/infrastructure/issues/2559
