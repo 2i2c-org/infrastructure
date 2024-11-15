@@ -163,6 +163,7 @@ local daskNodes = [
                 "k8s.dask.org/node-purpose": "core"
             },
             tags+: {
+                "2i2c:node-purpose": "core",
                 "earthscope:application:name": "geolab",
                 "earthscope:application:owner": "research-onramp-to-the-cloud"
             },
@@ -181,6 +182,7 @@ local daskNodes = [
                 "hub.jupyter.org/node-purpose": "user",
                 "k8s.dask.org/node-purpose": "scheduler"
             },
+            tags+: { "2i2c:node-purpose": "user" },
             taints+: {
                 "hub.jupyter.org_dedicated": "user:NoSchedule",
                 "hub.jupyter.org/dedicated": "user:NoSchedule"
