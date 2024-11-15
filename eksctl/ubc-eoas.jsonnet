@@ -150,6 +150,9 @@ local daskNodes = [];
                 "hub.jupyter.org_dedicated": "user:NoSchedule",
                 "hub.jupyter.org/dedicated": "user:NoSchedule"
             },
+            tags+: {
+                "2i2c:node-purpose": "user"
+            },
         } + n for n in notebookNodes
     ] + ( if daskNodes != null then
         [
