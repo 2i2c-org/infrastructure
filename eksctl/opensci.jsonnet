@@ -25,9 +25,103 @@ local nodeAz = "us-west-2a";
 // A `node.kubernetes.io/instance-type label is added, so pods
 // can request a particular kind of node with a nodeSelector
 local notebookNodes = [
+    // FIXME: tainted, to be deleted when empty, replaced by equivalent
     { instanceType: "r5.xlarge" },
-    { instanceType: "r5.4xlarge" },
-    { instanceType: "r5.16xlarge" },
+    // staging hub
+    {
+        instanceType: "r5.xlarge",
+        namePrefix: "nb-staging",
+        labels+: { "2i2c/hub-name": "staging" },
+        tags+: { "2i2c:hub-name": "staging" },
+    },
+    {
+        instanceType: "r5.4xlarge",
+        namePrefix: "nb-staging",
+        labels+: { "2i2c/hub-name": "staging" },
+        tags+: { "2i2c:hub-name": "staging" },
+    },
+    {
+        instanceType: "r5.16xlarge",
+        namePrefix: "nb-staging",
+        labels+: { "2i2c/hub-name": "staging" },
+        tags+: { "2i2c:hub-name": "staging" },
+    },
+    // sciencecore hub
+    {
+        instanceType: "r5.xlarge",
+        namePrefix: "nb-sciencecore",
+        labels+: { "2i2c/hub-name": "sciencecore" },
+        tags+: { "2i2c:hub-name": "sciencecore" },
+    },
+    {
+        instanceType: "r5.4xlarge",
+        namePrefix: "nb-sciencecore",
+        labels+: { "2i2c/hub-name": "sciencecore" },
+        tags+: { "2i2c:hub-name": "sciencecore" },
+    },
+    {
+        instanceType: "r5.16xlarge",
+        namePrefix: "nb-sciencecore",
+        labels+: { "2i2c/hub-name": "sciencecore" },
+        tags+: { "2i2c:hub-name": "sciencecore" },
+    },
+    // climaterisk hub
+    {
+        instanceType: "r5.xlarge",
+        namePrefix: "nb-climaterisk",
+        labels+: { "2i2c/hub-name": "climaterisk" },
+        tags+: { "2i2c:hub-name": "climaterisk" },
+    },
+    {
+        instanceType: "r5.4xlarge",
+        namePrefix: "nb-climaterisk",
+        labels+: { "2i2c/hub-name": "climaterisk" },
+        tags+: { "2i2c:hub-name": "climaterisk" },
+    },
+    {
+        instanceType: "r5.16xlarge",
+        namePrefix: "nb-climaterisk",
+        labels+: { "2i2c/hub-name": "climaterisk" },
+        tags+: { "2i2c:hub-name": "climaterisk" },
+    },
+    // small-binder hub
+    {
+        instanceType: "r5.xlarge",
+        namePrefix: "nb-small-binder",
+        labels+: { "2i2c/hub-name": "small-binder" },
+        tags+: { "2i2c:hub-name": "small-binder" },
+    },
+    {
+        instanceType: "r5.4xlarge",
+        namePrefix: "nb-small-binder",
+        labels+: { "2i2c/hub-name": "small-binder" },
+        tags+: { "2i2c:hub-name": "small-binder" },
+    },
+    {
+        instanceType: "r5.16xlarge",
+        namePrefix: "nb-small-binder",
+        labels+: { "2i2c/hub-name": "small-binder" },
+        tags+: { "2i2c:hub-name": "small-binder" },
+    },
+    // big-binder hub
+    {
+        instanceType: "r5.xlarge",
+        namePrefix: "nb-big-binder",
+        labels+: { "2i2c/hub-name": "big-binder" },
+        tags+: { "2i2c:hub-name": "big-binder" },
+    },
+    {
+        instanceType: "r5.4xlarge",
+        namePrefix: "nb-big-binder",
+        labels+: { "2i2c/hub-name": "big-binder" },
+        tags+: { "2i2c:hub-name": "big-binder" },
+    },
+    {
+        instanceType: "r5.16xlarge",
+        namePrefix: "nb-big-binder",
+        labels+: { "2i2c/hub-name": "big-binder" },
+        tags+: { "2i2c:hub-name": "big-binder" },
+    },
 ];
 local daskNodes = [
     // Node definitions for dask worker nodes. Config here is merged
@@ -50,7 +144,7 @@ local daskNodes = [
     metadata+: {
         name: "opensci",
         region: clusterRegion,
-        version: "1.29",
+        version: "1.30",
     },
     availabilityZones: masterAzs,
     iam: {
@@ -81,7 +175,7 @@ local daskNodes = [
     [
         ng + {
             namePrefix: 'core',
-            nameSuffix: 'b',
+            nameSuffix: 'a',
             nameIncludeInstanceType: false,
             availabilityZones: [nodeAz],
             ssh: {
@@ -94,6 +188,7 @@ local daskNodes = [
                 "hub.jupyter.org/node-purpose": "core",
                 "k8s.dask.org/node-purpose": "core"
             },
+            tags+: { "2i2c:node-purpose": "core" },
         },
     ] + [
         ng + {
@@ -109,6 +204,7 @@ local daskNodes = [
                 "hub.jupyter.org/node-purpose": "user",
                 "k8s.dask.org/node-purpose": "scheduler"
             },
+            tags+: { "2i2c:node-purpose": "user" },
             taints+: {
                 "hub.jupyter.org_dedicated": "user:NoSchedule",
                 "hub.jupyter.org/dedicated": "user:NoSchedule"

@@ -21,6 +21,7 @@ jupyterhub:
       # Schedule users on the smallest instance
       # https://github.com/2i2c-org/infrastructure/issues/4241
       node.kubernetes.io/instance-type: r5.xlarge
+      2i2c/hub-name: small-binder
     cpu:
       limit: 2
     memory:
@@ -86,6 +87,7 @@ binderhub-service:
       # Schedule dockerApi pods to run on the smallest user nodes only
       # https://github.com/2i2c-org/infrastructure/issues/4241
       node.kubernetes.io/instance-type: r5.xlarge
+      2i2c/hub-name: small-binder
   ingress:
     enabled: true
     hosts: [binder.opensci.2i2c.cloud]
@@ -100,6 +102,7 @@ binderhub-service:
         # Schedule builder pods to run on the smallest user nodes only
         # https://github.com/2i2c-org/infrastructure/issues/4241
         node.kubernetes.io/instance-type: r5.xlarge
+        2i2c/hub-name: small-binder
     BinderHub:
       base_url: /
       hub_url: https://hub.binder.opensci.2i2c.cloud
