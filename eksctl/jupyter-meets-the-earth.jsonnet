@@ -240,7 +240,7 @@ local daskNodes = [
     [
         ng + {
             namePrefix: 'core',
-            nameSuffix: 'a',
+            nameSuffix: 'b',
             nameIncludeInstanceType: false,
             availabilityZones: [nodeAz],
             ssh: {
