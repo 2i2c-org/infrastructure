@@ -243,7 +243,7 @@ local daskNodes = [
     [
         ng + {
             namePrefix: 'core',
-            nameSuffix: 'b',
+            nameSuffix: 'a',
             nameIncludeInstanceType: false,
             availabilityZones: [nodeAz],
             ssh: {
@@ -255,6 +255,9 @@ local daskNodes = [
             labels+: {
                 "hub.jupyter.org/node-purpose": "core",
                 "k8s.dask.org/node-purpose": "core"
+            },
+            tags+: {
+                "2i2c:node-purpose": "core"
             },
         },
     ] + [
