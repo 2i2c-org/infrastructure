@@ -28,6 +28,8 @@ jupyterhub:
           name: ""
           url: ""
   singleuser:
+    nodeSelector:
+      2i2c/hub-name: staging
     profileList:
       - display_name: Choose your environment and resources
         slug: only-choice

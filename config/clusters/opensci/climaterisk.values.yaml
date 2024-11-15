@@ -32,6 +32,7 @@ jupyterhub:
       tag: "09c3a11f1698"
     nodeSelector:
       node.kubernetes.io/instance-type: r5.4xlarge
+      2i2c/hub-name: climaterisk
     memory:
       guarantee: 15929958203
       limit: 15929958203
