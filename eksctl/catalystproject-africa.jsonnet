@@ -25,19 +25,13 @@ local nodeAz = "af-south-1a";
 // A `node.kubernetes.io/instance-type label is added, so pods
 // can request a particular kind of node with a nodeSelector
 local notebookNodes = [
+    // staging hub
     {
         instanceType: "r5.xlarge",
         volumeSize: 400,
         namePrefix: "nb-staging",
         labels+: { "2i2c/hub-name": "staging" },
         tags+: { "2i2c:hub-name": "staging" },
-    },
-    {
-        instanceType: "r5.xlarge",
-        volumeSize: 400,
-        namePrefix: "nb-prod",
-        labels+: { "2i2c/hub-name": "prod" },
-        tags+: { "2i2c:hub-name": "prod" },
     },
     {
         instanceType: "r5.4xlarge",
@@ -47,25 +41,209 @@ local notebookNodes = [
         tags+: { "2i2c:hub-name": "staging" },
     },
     {
-        instanceType: "r5.4xlarge",
-        volumeSize: 400,
-        namePrefix: "nb-prod",
-        labels+: { "2i2c/hub-name": "prod" },
-        tags+: { "2i2c:hub-name": "prod" },
-    },
-    {
         instanceType: "r5.16xlarge",
         volumeSize: 400,
         namePrefix: "nb-staging",
         labels+: { "2i2c/hub-name": "staging" },
         tags+: { "2i2c:hub-name": "staging" },
     },
+    // nm-aist hub
+    {
+        instanceType: "r5.xlarge",
+        volumeSize: 400,
+        namePrefix: "nb-nm-aist",
+        labels+: { "2i2c/hub-name": "nm-aist" },
+        tags+: { "2i2c:hub-name": "nm-aist" },
+    },
+    {
+        instanceType: "r5.4xlarge",
+        volumeSize: 400,
+        namePrefix: "nb-nm-aist",
+        labels+: { "2i2c/hub-name": "nm-aist" },
+        tags+: { "2i2c:hub-name": "nm-aist" },
+    },
     {
         instanceType: "r5.16xlarge",
         volumeSize: 400,
-        namePrefix: "nb-prod",
-        labels+: { "2i2c/hub-name": "prod" },
-        tags+: { "2i2c:hub-name": "prod" },
+        namePrefix: "nb-nm-aist",
+        labels+: { "2i2c/hub-name": "nm-aist" },
+        tags+: { "2i2c:hub-name": "nm-aist" },
+    },
+    // must hub
+    {
+        instanceType: "r5.xlarge",
+        volumeSize: 400,
+        namePrefix: "nb-must",
+        labels+: { "2i2c/hub-name": "must" },
+        tags+: { "2i2c:hub-name": "must" },
+    },
+    {
+        instanceType: "r5.4xlarge",
+        volumeSize: 400,
+        namePrefix: "nb-must",
+        labels+: { "2i2c/hub-name": "must" },
+        tags+: { "2i2c:hub-name": "must" },
+    },
+    {
+        instanceType: "r5.16xlarge",
+        volumeSize: 400,
+        namePrefix: "nb-must",
+        labels+: { "2i2c/hub-name": "must" },
+        tags+: { "2i2c:hub-name": "must" },
+    },
+    // uvri hub
+    {
+        instanceType: "r5.xlarge",
+        volumeSize: 400,
+        namePrefix: "nb-uvri",
+        labels+: { "2i2c/hub-name": "uvri" },
+        tags+: { "2i2c:hub-name": "uvri" },
+    },
+    {
+        instanceType: "r5.4xlarge",
+        volumeSize: 400,
+        namePrefix: "nb-uvri",
+        labels+: { "2i2c/hub-name": "uvri" },
+        tags+: { "2i2c:hub-name": "uvri" },
+    },
+    {
+        instanceType: "r5.16xlarge",
+        volumeSize: 400,
+        namePrefix: "nb-uvri",
+        labels+: { "2i2c/hub-name": "uvri" },
+        tags+: { "2i2c:hub-name": "uvri" },
+    },
+    // wits hub
+    {
+        instanceType: "r5.xlarge",
+        volumeSize: 400,
+        namePrefix: "nb-wits",
+        labels+: { "2i2c/hub-name": "wits" },
+        tags+: { "2i2c:hub-name": "wits" },
+    },
+    {
+        instanceType: "r5.4xlarge",
+        volumeSize: 400,
+        namePrefix: "nb-wits",
+        labels+: { "2i2c/hub-name": "wits" },
+        tags+: { "2i2c:hub-name": "wits" },
+    },
+    {
+        instanceType: "r5.16xlarge",
+        volumeSize: 400,
+        namePrefix: "nb-wits",
+        labels+: { "2i2c/hub-name": "wits" },
+        tags+: { "2i2c:hub-name": "wits" },
+    },
+    // kush hub
+    {
+        instanceType: "r5.xlarge",
+        volumeSize: 400,
+        namePrefix: "nb-kush",
+        labels+: { "2i2c/hub-name": "kush" },
+        tags+: { "2i2c:hub-name": "kush" },
+    },
+    {
+        instanceType: "r5.4xlarge",
+        volumeSize: 400,
+        namePrefix: "nb-kush",
+        labels+: { "2i2c/hub-name": "kush" },
+        tags+: { "2i2c:hub-name": "kush" },
+    },
+    {
+        instanceType: "r5.16xlarge",
+        volumeSize: 400,
+        namePrefix: "nb-kush",
+        labels+: { "2i2c/hub-name": "kush" },
+        tags+: { "2i2c:hub-name": "kush" },
+    },
+    // molerhealth hub
+    {
+        instanceType: "r5.xlarge",
+        volumeSize: 400,
+        namePrefix: "nb-molerhealth",
+        labels+: { "2i2c/hub-name": "molerhealth" },
+        tags+: { "2i2c:hub-name": "molerhealth" },
+    },
+    {
+        instanceType: "r5.4xlarge",
+        volumeSize: 400,
+        namePrefix: "nb-molerhealth",
+        labels+: { "2i2c/hub-name": "molerhealth" },
+        tags+: { "2i2c:hub-name": "molerhealth" },
+    },
+    {
+        instanceType: "r5.16xlarge",
+        volumeSize: 400,
+        namePrefix: "nb-molerhealth",
+        labels+: { "2i2c/hub-name": "molerhealth" },
+        tags+: { "2i2c:hub-name": "molerhealth" },
+    },
+    // aibst hub
+    {
+        instanceType: "r5.xlarge",
+        volumeSize: 400,
+        namePrefix: "nb-aibst",
+        labels+: { "2i2c/hub-name": "aibst" },
+        tags+: { "2i2c:hub-name": "aibst" },
+    },
+    {
+        instanceType: "r5.4xlarge",
+        volumeSize: 400,
+        namePrefix: "nb-aibst",
+        labels+: { "2i2c/hub-name": "aibst" },
+        tags+: { "2i2c:hub-name": "aibst" },
+    },
+    {
+        instanceType: "r5.16xlarge",
+        volumeSize: 400,
+        namePrefix: "nb-aibst",
+        labels+: { "2i2c/hub-name": "aibst" },
+        tags+: { "2i2c:hub-name": "aibst" },
+    },
+    // bhki hub
+    {
+        instanceType: "r5.xlarge",
+        volumeSize: 400,
+        namePrefix: "nb-bhki",
+        labels+: { "2i2c/hub-name": "bhki" },
+        tags+: { "2i2c:hub-name": "bhki" },
+    },
+    {
+        instanceType: "r5.4xlarge",
+        volumeSize: 400,
+        namePrefix: "nb-bhki",
+        labels+: { "2i2c/hub-name": "bhki" },
+        tags+: { "2i2c:hub-name": "bhki" },
+    },
+    {
+        instanceType: "r5.16xlarge",
+        volumeSize: 400,
+        namePrefix: "nb-bhki",
+        labels+: { "2i2c/hub-name": "bhki" },
+        tags+: { "2i2c:hub-name": "bhki" },
+    },
+    // bon hub
+    {
+        instanceType: "r5.xlarge",
+        volumeSize: 400,
+        namePrefix: "nb-bon",
+        labels+: { "2i2c/hub-name": "bon" },
+        tags+: { "2i2c:hub-name": "bon" },
+    },
+    {
+        instanceType: "r5.4xlarge",
+        volumeSize: 400,
+        namePrefix: "nb-bon",
+        labels+: { "2i2c/hub-name": "bon" },
+        tags+: { "2i2c:hub-name": "bon" },
+    },
+    {
+        instanceType: "r5.16xlarge",
+        volumeSize: 400,
+        namePrefix: "nb-bon",
+        labels+: { "2i2c/hub-name": "bon" },
+        tags+: { "2i2c:hub-name": "bon" },
     },
 ];
 local daskNodes = [];
