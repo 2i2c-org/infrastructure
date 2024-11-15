@@ -45,6 +45,8 @@ jupyterhub:
         admin_users:
           - eeholmes # Eli Holmes, Community representative
   singleuser:
+    nodeSelector:
+      2i2c/hub-name: itcoocean
     # Requested in https://2i2c.freshdesk.com/a/tickets/1320
     defaultUrl: /lab
     # shared-public for collaboration

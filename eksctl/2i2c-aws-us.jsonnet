@@ -25,13 +25,71 @@ local nodeAz = "us-west-2a";
 // A `node.kubernetes.io/instance-type label is added, so pods
 // can request a particular kind of node with a nodeSelector
 local notebookNodes = [
-    { instanceType: "r5.xlarge" },
-    { instanceType: "r5.4xlarge" },
-    { instanceType: "r5.16xlarge" },
+    // staging
+    {
+        instanceType: "r5.xlarge",
+        namePrefix: "nb-staging",
+        labels+: { "2i2c/hub-name": "staging" },
+        tags+: { "2i2c:hub-name": "staging" }
+    },
+    {
+        instanceType: "r5.4xlarge",
+        namePrefix: "nb-staging",
+        labels+: { "2i2c/hub-name": "staging" },
+        tags+: { "2i2c:hub-name": "staging" }
+    },
+    {
+        instanceType: "r5.16xlarge",
+        namePrefix: "nb-staging",
+        labels+: { "2i2c/hub-name": "staging" },
+        tags+: { "2i2c:hub-name": "staging" }
+    },
+    // dask-staging
+    {
+        instanceType: "r5.xlarge",
+        namePrefix: "nb-dask-staging",
+        labels+: { "2i2c/hub-name": "dask-staging" },
+        tags+: { "2i2c:hub-name": "dask-staging" }
+    },
+    {
+        instanceType: "r5.4xlarge",
+        namePrefix: "nb-dask-staging",
+        labels+: { "2i2c/hub-name": "dask-staging" },
+        tags+: { "2i2c:hub-name": "dask-staging" }
+    },
+    {
+        instanceType: "r5.16xlarge",
+        namePrefix: "nb-dask-staging",
+        labels+: { "2i2c/hub-name": "dask-staging" },
+        tags+: { "2i2c:hub-name": "dask-staging" }
+    },
+    // showcase
+    {
+        instanceType: "r5.xlarge",
+        namePrefix: "nb-showcase",
+        labels+: { "2i2c/hub-name": "showcase" },
+        tags+: { "2i2c:hub-name": "showcase" }
+    },
+    {
+        instanceType: "r5.4xlarge",
+        namePrefix: "nb-showcase",
+        labels+: { "2i2c/hub-name": "showcase" },
+        tags+: { "2i2c:hub-name": "showcase" }
+    },
+    {
+        instanceType: "r5.16xlarge",
+        namePrefix: "nb-showcase",
+        labels+: { "2i2c/hub-name": "showcase" },
+        tags+: { "2i2c:hub-name": "showcase" }
+    },
     {
         instanceType: "g4dn.xlarge",
+        namePrefix: "nb-showcase",
+        minSize: 0,
+        labels+: { "2i2c/hub-name": "showcase" },
         tags+: {
-            "k8s.io/cluster-autoscaler/node-template/resources/nvidia.com/gpu": "1"
+            "k8s.io/cluster-autoscaler/node-template/resources/nvidia.com/gpu": "1",
+            "2i2c:hub-name": "showcase",
         },
         taints+: {
             "nvidia.com/gpu": "present:NoSchedule"
@@ -39,6 +97,79 @@ local notebookNodes = [
         // Allow provisioning GPUs across all AZs, to prevent situation where all
         // GPUs in a single AZ are in use and no new nodes can be spawned
         availabilityZones: masterAzs,
+    },
+    // ncar-cisl
+    {
+        instanceType: "r5.xlarge",
+        namePrefix: "nb-ncar-cisl",
+        labels+: { "2i2c/hub-name": "ncar-cisl" },
+        tags+: { "2i2c:hub-name": "ncar-cisl" }
+    },
+    {
+        instanceType: "r5.4xlarge",
+        namePrefix: "nb-ncar-cisl",
+        labels+: { "2i2c/hub-name": "ncar-cisl" },
+        tags+: { "2i2c:hub-name": "ncar-cisl" }
+    },
+    {
+        instanceType: "r5.16xlarge",
+        namePrefix: "nb-ncar-cisl",
+        labels+: { "2i2c/hub-name": "ncar-cisl" },
+        tags+: { "2i2c:hub-name": "ncar-cisl" }
+    },
+    {
+        instanceType: "g4dn.xlarge",
+        namePrefix: "nb-ncar-cisl",
+        minSize: 0,
+        labels+: { "2i2c/hub-name": "ncar-cisl" },
+        tags+: {
+            "k8s.io/cluster-autoscaler/node-template/resources/nvidia.com/gpu": "1",
+            "2i2c:hub-name": "ncar-cisl",
+        },
+        taints+: {
+            "nvidia.com/gpu": "present:NoSchedule"
+        },
+        // Allow provisioning GPUs across all AZs, to prevent situation where all
+        // GPUs in a single AZ are in use and no new nodes can be spawned
+        availabilityZones: masterAzs,
+    },
+    // itcoocean
+    {
+        instanceType: "r5.xlarge",
+        namePrefix: "itcoocean",
+        labels+: { "2i2c/hub-name": "itcoocean" },
+        tags+: { "2i2c:hub-name": "itcoocean" }
+    },
+    {
+        instanceType: "r5.4xlarge",
+        namePrefix: "itcoocean",
+        labels+: { "2i2c/hub-name": "itcoocean" },
+        tags+: { "2i2c:hub-name": "itcoocean" }
+    },
+    {
+        instanceType: "r5.16xlarge",
+        namePrefix: "itcoocean",
+        labels+: { "2i2c/hub-name": "itcoocean" },
+        tags+: { "2i2c:hub-name": "itcoocean" }
+    },
+    // cosmicds
+    {
+        instanceType: "r5.xlarge",
+        namePrefix: "cosmicds",
+        labels+: { "2i2c/hub-name": "cosmicds" },
+        tags+: { "2i2c:hub-name": "cosmicds" }
+    },
+    {
+        instanceType: "r5.4xlarge",
+        namePrefix: "cosmicds",
+        labels+: { "2i2c/hub-name": "cosmicds" },
+        tags+: { "2i2c:hub-name": "cosmicds" }
+    },
+    {
+        instanceType: "r5.16xlarge",
+        namePrefix: "cosmicds",
+        labels+: { "2i2c/hub-name": "cosmicds" },
+        tags+: { "2i2c:hub-name": "cosmicds" }
     },
 ];
 
@@ -54,7 +185,24 @@ local daskNodes = [
     // A not yet fully established policy is being developed about using a single
     // node pool, see https://github.com/2i2c-org/infrastructure/issues/2687.
     //
-    { instancesDistribution+: { instanceTypes: ["r5.4xlarge"] }},
+    {
+        namePrefix: "dask-staging",
+        labels+: { "2i2c/hub-name": "dask-staging" },
+        tags+: { "2i2c:hub-name": "dask-staging" },
+        instancesDistribution+: { instanceTypes: ["r5.4xlarge"] }
+    },
+    {
+        namePrefix: "dask-showcase",
+        labels+: { "2i2c/hub-name": "showcase" },
+        tags+: { "2i2c:hub-name": "showcase" },
+        instancesDistribution+: { instanceTypes: ["r5.4xlarge"] }
+    },
+    {
+        namePrefix: "dask-ncar-cisl",
+        labels+: { "2i2c/hub-name": "ncar-cisl" },
+        tags+: { "2i2c:hub-name": "ncar-cisl" },
+        instancesDistribution+: { instanceTypes: ["r5.4xlarge"] }
+    },
 ];
 
 
@@ -64,7 +212,7 @@ local daskNodes = [
     metadata+: {
         name: "2i2c-aws-us",
         region: clusterRegion,
-        version: "1.29",
+        version: "1.30",
     },
     availabilityZones: masterAzs,
     iam: {
@@ -108,6 +256,9 @@ local daskNodes = [
                 "hub.jupyter.org/node-purpose": "core",
                 "k8s.dask.org/node-purpose": "core"
             },
+            tags+: {
+                "2i2c:node-purpose": "core"
+            },
         },
     ] + [
         ng + {
@@ -122,6 +273,9 @@ local daskNodes = [
             labels+: {
                 "hub.jupyter.org/node-purpose": "user",
                 "k8s.dask.org/node-purpose": "scheduler"
+            },
+            tags+: {
+                "2i2c:node-purpose": "user"
             },
             taints+: {
                 "hub.jupyter.org_dedicated": "user:NoSchedule",
@@ -144,6 +298,9 @@ local daskNodes = [
             taints+: {
                 "k8s.dask.org_dedicated" : "worker:NoSchedule",
                 "k8s.dask.org/dedicated" : "worker:NoSchedule"
+            },
+            tags+: {
+                "2i2c:node-purpose": "worker"
             },
             instancesDistribution+: {
                 onDemandBaseCapacity: 0,
