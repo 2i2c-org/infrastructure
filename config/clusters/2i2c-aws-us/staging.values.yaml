@@ -35,5 +35,6 @@ jupyterhub:
   singleuser:
     nodeSelector:
       2i2c/hub-name: staging
+      node.kubernetes.io/instance-type: r5.xlarge
     extraEnv:
       SCRATCH_BUCKET: s3://2i2c-aws-us-scratch-staging/$(JUPYTERHUB_USER)
