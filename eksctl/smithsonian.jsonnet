@@ -25,12 +25,63 @@ local nodeAz = "us-east-2b";
 // A `node.kubernetes.io/instance-type label is added, so pods
 // can request a particular kind of node with a nodeSelector
 local notebookNodes = [
-    { instanceType: "r5.xlarge" },
-    { instanceType: "r5.4xlarge" },
-    { instanceType: "r5.16xlarge" },
+    {
+        instanceType: "r5.xlarge",
+        namePrefix: "nb-staging",
+        labels+: { "2i2c/hub-name": "staging" },
+        tags+: { "2i2c:hub-name": "staging" },
+    },
+    {
+        instanceType: "r5.xlarge",
+        namePrefix: "nb-prod",
+        labels+: { "2i2c/hub-name": "prod" },
+        tags+: { "2i2c:hub-name": "prod" },
+    },
+    {
+        instanceType: "r5.4xlarge",
+        namePrefix: "nb-staging",
+        labels+: { "2i2c/hub-name": "staging" },
+        tags+: { "2i2c:hub-name": "staging" },
+    },
+    {
+        instanceType: "r5.4xlarge",
+        namePrefix: "nb-prod",
+        labels+: { "2i2c/hub-name": "prod" },
+        tags+: { "2i2c:hub-name": "prod" },
+    },
+    {
+        instanceType: "r5.16xlarge",
+        namePrefix: "nb-staging",
+        labels+: { "2i2c/hub-name": "staging" },
+        tags+: { "2i2c:hub-name": "staging" },
+    },
+    {
+        instanceType: "r5.16xlarge",
+        namePrefix: "nb-prod",
+        labels+: { "2i2c/hub-name": "prod" },
+        tags+: { "2i2c:hub-name": "prod" },
+    },
     {
         instanceType: "g4dn.xlarge",
+        namePrefix: "nb-staging",
+        labels+: { "2i2c/hub-name": "staging" },
         tags+: {
+            "2i2c:hub-name": "staging",
+            "k8s.io/cluster-autoscaler/node-template/resources/nvidia.com/gpu": "1"
+        },
+        taints+: {
+            "nvidia.com/gpu": "present:NoSchedule"
+        },
+        // Allow provisioning GPUs across all AZs, to prevent situation where all
+        // GPUs in a single AZ are in use and no new nodes can be spawned
+        availabilityZones: masterAzs,
+    },
+    {
+        instanceType: "g4dn.xlarge",
+        namePrefix: "nb-prod",
+        labels+: { "2i2c/hub-name": "prod" },
+        tags+: {
+            "2i2c:hub-name": "prod",
             "k8s.io/cluster-autoscaler/node-template/resources/nvidia.com/gpu": "1"
         },
         taints+: {
@@ -62,7 +113,7 @@ local daskNodes = [
     metadata+: {
         name: "smithsonian",
         region: clusterRegion,
-        version: "1.29",
+        version: "1.30",
     },
     availabilityZones: masterAzs,
     iam: {
@@ -93,7 +144,7 @@ local daskNodes = [
     [
         ng + {
             namePrefix: 'core',
-            nameSuffix: 'a',
+            nameSuffix: 'b',
             nameIncludeInstanceType: false,
             availabilityZones: [nodeAz],
             ssh: {
@@ -106,6 +157,7 @@ local daskNodes = [
                 "hub.jupyter.org/node-purpose": "core",
                 "k8s.dask.org/node-purpose": "core"
             },
+            tags+: { "2i2c:node-purpose": "core" },
         },
     ] + [
         ng + {
@@ -121,6 +173,7 @@ local daskNodes = [
                 "hub.jupyter.org/node-purpose": "user",
                 "k8s.dask.org/node-purpose": "scheduler"
             },
+            tags+: { "2i2c:node-purpose": "user" },
             taints+: {
                 "hub.jupyter.org_dedicated": "user:NoSchedule",
                 "hub.jupyter.org/dedicated": "user:NoSchedule"
