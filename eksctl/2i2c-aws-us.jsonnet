@@ -136,38 +136,38 @@ local notebookNodes = [
     // itcoocean
     {
         instanceType: "r5.xlarge",
-        namePrefix: "itcoocean",
+        namePrefix: "nb-itcoocean",
         labels+: { "2i2c/hub-name": "itcoocean" },
         tags+: { "2i2c:hub-name": "itcoocean" }
     },
     {
         instanceType: "r5.4xlarge",
-        namePrefix: "itcoocean",
+        namePrefix: "nb-itcoocean",
         labels+: { "2i2c/hub-name": "itcoocean" },
         tags+: { "2i2c:hub-name": "itcoocean" }
     },
     {
         instanceType: "r5.16xlarge",
-        namePrefix: "itcoocean",
+        namePrefix: "nb-itcoocean",
         labels+: { "2i2c/hub-name": "itcoocean" },
         tags+: { "2i2c:hub-name": "itcoocean" }
     },
     // cosmicds
     {
         instanceType: "r5.xlarge",
-        namePrefix: "cosmicds",
+        namePrefix: "nb-cosmicds",
         labels+: { "2i2c/hub-name": "cosmicds" },
         tags+: { "2i2c:hub-name": "cosmicds" }
     },
     {
         instanceType: "r5.4xlarge",
-        namePrefix: "cosmicds",
+        namePrefix: "nb-cosmicds",
         labels+: { "2i2c/hub-name": "cosmicds" },
         tags+: { "2i2c:hub-name": "cosmicds" }
     },
     {
         instanceType: "r5.16xlarge",
-        namePrefix: "cosmicds",
+        namePrefix: "nb-cosmicds",
         labels+: { "2i2c/hub-name": "cosmicds" },
         tags+: { "2i2c:hub-name": "cosmicds" }
     },
@@ -186,7 +186,7 @@ local daskNodes = [
     // node pool, see https://github.com/2i2c-org/infrastructure/issues/2687.
     //
     {
-        namePrefix: "dask-staging",
+        namePrefix: "dask-dask-staging",
         labels+: { "2i2c/hub-name": "dask-staging" },
         tags+: { "2i2c:hub-name": "dask-staging" },
         instancesDistribution+: { instanceTypes: ["r5.4xlarge"] }
