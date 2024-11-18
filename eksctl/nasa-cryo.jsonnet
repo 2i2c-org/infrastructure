@@ -38,7 +38,6 @@ local notebookNodes = [
         labels+: { "2i2c/hub-name": "prod" },
         tags+: { "2i2c:hub-name": "prod" },
     },
-    { instanceType: "r5.4xlarge" }, // FIXME: tainted
     {
         instanceType: "r5.4xlarge",
         namePrefix: "nb-staging",
