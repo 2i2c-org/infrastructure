@@ -25,9 +25,42 @@ local nodeAz = "us-east-2a";
 // A `node.kubernetes.io/instance-type label is added, so pods
 // can request a particular kind of node with a nodeSelector
 local notebookNodes = [
-    { instanceType: "r5.xlarge" },
-    { instanceType: "r5.4xlarge" },
-    { instanceType: "r5.16xlarge" },
+    {
+        instanceType: "r5.xlarge",
+        namePrefix: "nb-staging",
+        labels+: { "2i2c/hub-name": "staging" },
+        tags+: { "2i2c:hub-name": "staging" },
+    },
+    {
+        instanceType: "r5.xlarge",
+        namePrefix: "nb-prod",
+        labels+: { "2i2c/hub-name": "prod" },
+        tags+: { "2i2c:hub-name": "prod" },
+    },
+    {
+        instanceType: "r5.4xlarge",
+        namePrefix: "nb-staging",
+        labels+: { "2i2c/hub-name": "staging" },
+        tags+: { "2i2c:hub-name": "staging" },
+    },
+    {
+        instanceType: "r5.4xlarge",
+        namePrefix: "nb-prod",
+        labels+: { "2i2c/hub-name": "prod" },
+        tags+: { "2i2c:hub-name": "prod" },
+    },
+    {
+        instanceType: "r5.16xlarge",
+        namePrefix: "nb-staging",
+        labels+: { "2i2c/hub-name": "staging" },
+        tags+: { "2i2c:hub-name": "staging" },
+    },
+    {
+        instanceType: "r5.16xlarge",
+        namePrefix: "nb-prod",
+        labels+: { "2i2c/hub-name": "prod" },
+        tags+: { "2i2c:hub-name": "prod" },
+    },
 ];
 local daskNodes = [];
 
@@ -38,7 +71,7 @@ local daskNodes = [];
     metadata+: {
         name: "jupyter-health",
         region: clusterRegion,
-        version: "1.29",
+        version: "1.30",
         tags+: {
             "ManagedBy": "2i2c",
             "2i2c.org/cluster-name": $.metadata.name,
@@ -101,7 +134,7 @@ local daskNodes = [];
     [
         ng + {
             namePrefix: 'core',
-            nameSuffix: 'a',
+            nameSuffix: 'b',
             nameIncludeInstanceType: false,
             availabilityZones: [nodeAz],
             ssh: {
@@ -114,6 +147,7 @@ local daskNodes = [];
                 "hub.jupyter.org/node-purpose": "core",
                 "k8s.dask.org/node-purpose": "core"
             },
+            tags+: { "2i2c:node-purpose": "core" },
         },
     ] + [
         ng + {
@@ -129,6 +163,7 @@ local daskNodes = [];
                 "hub.jupyter.org/node-purpose": "user",
                 "k8s.dask.org/node-purpose": "scheduler"
             },
+            tags+: { "2i2c:node-purpose": "user" },
             taints+: {
                 "hub.jupyter.org_dedicated": "user:NoSchedule",
                 "hub.jupyter.org/dedicated": "user:NoSchedule"
