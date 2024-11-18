@@ -89,18 +89,26 @@ local daskNodes = [];
         { version: "latest", tags: $.metadata.tags } + addon
         for addon in
         [
-            {
-                name: "vpc-cni",
-                # FIXME: network policy enforcement doesn't work, what's wrong
-                #        isn't clear.
-                # configurationValues ref: https://github.com/aws/amazon-vpc-cni-k8s/blob/HEAD/charts/aws-vpc-cni/values.yaml
-                configurationValues: |||
-                    enableNetworkPolicy: "true"
-                |||,
-                attachPolicyARNs: ["arn:aws:iam::aws:policy/AmazonEKS_CNI_Policy"],
-            },
             { name: "coredns" },
             { name: "kube-proxy" },
+            {
+                // vpc-cni is a Amazon maintained container networking interface
+                // (CNI), where a CNI is required for k8s networking. The aws-node
+                // DaemonSet in kube-system stems from installing this.
+                //
+                // Related docs: https://kubernetes.io/docs/concepts/extend-kubernetes/compute-storage-net/network-plugins/
+                //               https://docs.aws.amazon.com/eks/latest/userguide/managing-vpc-cni.html
+                //
+                name: "vpc-cni",
+                attachPolicyARNs: ["arn:aws:iam::aws:policy/AmazonEKS_CNI_Policy"],
+                # FIXME: enabling network policy enforcement didn't work as of
+                #        August 2024, what's wrong isn't clear.
+                #
+                # configurationValues ref: https://github.com/aws/amazon-vpc-cni-k8s/blob/HEAD/charts/aws-vpc-cni/values.yaml
+                configurationValues: |||
+                    enableNetworkPolicy: "false"
+                |||,
+            },
             {
                 // aws-ebs-csi-driver ensures that our PVCs are bound to PVs that
                 // couple to AWS EBS based storage, without it expect to see pods
