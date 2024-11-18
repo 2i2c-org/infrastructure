@@ -101,24 +101,18 @@ now upgraded.
 
 #### 4.2. Upgrade EKS add-ons
 
-As documented in `eksctl`'s documentation[^1], we also need to upgrade three EKS
-add-ons managed by `eksctl` (by EKS these are considered self-managed add-ons),
-and one declared in our config (by EKS this is considered a managed add-on).
-
-These upgrades are believed to briefly disrupt networking.
+As documented in `eksctl`'s documentation[^2], we also need to upgrade EKS
+add-ons. This upgrade is believed to very briefly disrupt networking.
 
 ```bash
-# upgrade the kube-proxy daemonset (takes ~5s)
-eksctl utils update-kube-proxy --config-file=$CLUSTER_NAME.eksctl.yaml --approve
-
-# upgrade the aws-node daemonset (takes ~5s)
-eksctl utils update-aws-node --config-file=$CLUSTER_NAME.eksctl.yaml --approve
-
-# upgrade the coredns deployment (takes ~5s)
-eksctl utils update-coredns --config-file=$CLUSTER_NAME.eksctl.yaml --approve
-
-# upgrade the aws-ebs-csi-driver addon's deployment and daemonset (takes ~60s)
+# upgrade all EKS addons (takes up to a few minutes)
 eksctl update addon --config-file=$CLUSTER_NAME.eksctl.yaml
+```
+
+```{note}
+Since November 2024, the add-ons are systematically installed as EKS managed
+add-ons and not self-managed as they were before when `eksctl` installed them
+without involving EKS.
 ```
 
 #### 4.3. Repeat to upgrade multiple minor versions
