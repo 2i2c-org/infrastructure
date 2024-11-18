@@ -25,7 +25,6 @@ local nodeAz = "ca-central-1a";
 // A `node.kubernetes.io/instance-type label is added, so pods
 // can request a particular kind of node with a nodeSelector
 local notebookNodes = [
-    { instanceType: "r5.2xlarge" }, // FIXME: tainted, to be deleted when empty, replaced by equivalent during k8s upgrade
     {
         instanceType: "r5.xlarge",
         namePrefix: "nb-staging",
