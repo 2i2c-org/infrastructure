@@ -134,6 +134,10 @@ local daskNodes = [
         name: "nasa-veda",
         region: clusterRegion,
         version: "1.30",
+        tags+: {
+            "ManagedBy": "2i2c",
+            "2i2c.org/cluster-name": $.metadata.name,
+        },
     },
     availabilityZones: masterAzs,
     iam: {
@@ -144,20 +148,48 @@ local daskNodes = [
     //    eksctl create addon --config-file=nasa-veda.eksctl.yaml
     //
     addons: [
-        {
-            // aws-ebs-csi-driver ensures that our PVCs are bound to PVs that
-            // couple to AWS EBS based storage, without it expect to see pods
-            // mounting a PVC failing to schedule and PVC resources that are
-            // unbound.
-            //
-            // Related docs: https://docs.aws.amazon.com/eks/latest/userguide/managing-ebs-csi.html
-            //
-            name: 'aws-ebs-csi-driver',
-            version: "latest",
-            wellKnownPolicies: {
-                ebsCSIController: true,
+        { version: "latest", tags: $.metadata.tags } + addon
+        for addon in
+        [
+            { name: "coredns" },
+            { name: "kube-proxy" },
+            {
+                // vpc-cni is a Amazon maintained container networking interface
+                // (CNI), where a CNI is required for k8s networking. The aws-node
+                // DaemonSet in kube-system stems from installing this.
+                //
+                // Related docs: https://kubernetes.io/docs/concepts/extend-kubernetes/compute-storage-net/network-plugins/
+                //               https://docs.aws.amazon.com/eks/latest/userguide/managing-vpc-cni.html
+                //
+                name: "vpc-cni",
+                attachPolicyARNs: ["arn:aws:iam::aws:policy/AmazonEKS_CNI_Policy"],
+                # FIXME: enabling network policy enforcement didn't work as of
+                #        August 2024, what's wrong isn't clear.
+                #
+                # configurationValues ref: https://github.com/aws/amazon-vpc-cni-k8s/blob/HEAD/charts/aws-vpc-cni/values.yaml
+                configurationValues: |||
+                    enableNetworkPolicy: "false"
+                |||,
             },
-        },
+            {
+                // aws-ebs-csi-driver ensures that our PVCs are bound to PVs that
+                // couple to AWS EBS based storage, without it expect to see pods
+                // mounting a PVC failing to schedule and PVC resources that are
+                // unbound.
+                //
+                // Related docs: https://docs.aws.amazon.com/eks/latest/userguide/managing-ebs-csi.html
+                //
+                name: "aws-ebs-csi-driver",
+                wellKnownPolicies: {
+                    ebsCSIController: true,
+                },
+                # configurationValues ref: https://github.com/kubernetes-sigs/aws-ebs-csi-driver/blob/HEAD/charts/aws-ebs-csi-driver/values.yaml
+                configurationValues: |||
+                    defaultStorageClass:
+                        enabled: true
+                |||,
+            },
+        ]
     ],
     nodeGroups: [
     n + {clusterName: $.metadata.name} for n in
