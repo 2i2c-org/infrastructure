@@ -38,7 +38,7 @@ local daskNodes = [];
     metadata+: {
         name: "jupyter-health",
         region: clusterRegion,
-        version: "1.29",
+        version: "1.30",
     },
     availabilityZones: masterAzs,
     iam: {
