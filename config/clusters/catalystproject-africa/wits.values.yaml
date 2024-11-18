@@ -22,3 +22,6 @@ jupyterhub:
       Authenticator:
         admin_users:
           - gentlelab2016
+  singleuser:
+    nodeSelector:
+      2i2c/hub-name: wits

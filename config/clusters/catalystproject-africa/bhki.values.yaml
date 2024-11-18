@@ -26,5 +26,7 @@ jupyterhub:
         admin_users:
           - LandiMi2
   singleuser:
+    nodeSelector:
+      2i2c/hub-name: bhki
     extraEnv:
       PERSISTENT_BUCKET: s3://catalystproject-africa-persistent-bhki/$(JUPYTERHUB_USER)
