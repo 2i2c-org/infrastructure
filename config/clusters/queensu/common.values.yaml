@@ -56,6 +56,7 @@ jupyterhub:
     userScheduler:
       enabled: true
   singleuser:
+    defaultUrl: /lab
     profileList:
       - display_name: "Choose an image to launch"
         description: "Launch either the Jupyter SciPy image, or a pre-existing docker image from a public docker registry (dockerhub, quay, etc)"
@@ -73,7 +74,7 @@ jupyterhub:
                 image: "{value}"
             choices:
               scipy:
-                display_name: Jupyter SciPy Notebook
+                display_name: Jupyter-Python Notebook
                 slug: scipy
                 kubespawner_override:
-                  image: quay.io/jupyter/scipy-notebook:2024-09-23
+                  image: quay.io/queensu/jupyter-python-image:latest

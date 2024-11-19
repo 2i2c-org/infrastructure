@@ -49,6 +49,8 @@ basehub:
         Authenticator:
           enable_auth_state: true
     singleuser:
+      nodeSelector:
+        2i2c/hub-name: showcase
       extraEnv:
         SCRATCH_BUCKET: s3://2i2c-aws-us-scratch-showcase/$(JUPYTERHUB_USER)
         PERSISTENT_BUCKET: s3://2i2c-aws-us-persistent-showcase/$(JUPYTERHUB_USER)
@@ -246,3 +248,14 @@ basehub:
               node.kubernetes.io/instance-type: g4dn.xlarge
             extra_resource_limits:
               nvidia.com/gpu: "1"
+
+dask-gateway:
+  gateway:
+    scheduler:
+      extraPodConfig:
+        nodeSelector:
+          2i2c/hub-name: showcase
+    worker:
+      extraPodConfig:
+        nodeSelector:
+          2i2c/hub-name: showcase

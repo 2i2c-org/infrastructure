@@ -7,7 +7,6 @@ enable_network_policy  = true
 enable_logging         = false
 
 filestores = {
-  "filestore" = { capacity_gb : 9216 },
   "filestore_b" = {
     name_suffix : "b",
     capacity_gb : 3072

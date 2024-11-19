@@ -14,6 +14,8 @@ nfs:
       - noresvport
     baseShareName: /
     # serverIP is set in staging / prod respectively
+jupyterhub-home-nfs:
+  enabled: true
 
 jupyterhub:
   custom:

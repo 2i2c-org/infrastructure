@@ -25,9 +25,42 @@ local nodeAz = "us-east-2a";
 // A `node.kubernetes.io/instance-type label is added, so pods
 // can request a particular kind of node with a nodeSelector
 local notebookNodes = [
-    { instanceType: "r5.xlarge" },
-    { instanceType: "r5.4xlarge" },
-    { instanceType: "r5.16xlarge" },
+    {
+        instanceType: "r5.xlarge",
+        namePrefix: "nb-staging",
+        labels+: { "2i2c/hub-name": "staging" },
+        tags+: { "2i2c:hub-name": "staging" },
+    },
+    {
+        instanceType: "r5.xlarge",
+        namePrefix: "nb-prod",
+        labels+: { "2i2c/hub-name": "prod" },
+        tags+: { "2i2c:hub-name": "prod" },
+    },
+    {
+        instanceType: "r5.4xlarge",
+        namePrefix: "nb-staging",
+        labels+: { "2i2c/hub-name": "staging" },
+        tags+: { "2i2c:hub-name": "staging" },
+    },
+    {
+        instanceType: "r5.4xlarge",
+        namePrefix: "nb-prod",
+        labels+: { "2i2c/hub-name": "prod" },
+        tags+: { "2i2c:hub-name": "prod" },
+    },
+    {
+        instanceType: "r5.16xlarge",
+        namePrefix: "nb-staging",
+        labels+: { "2i2c/hub-name": "staging" },
+        tags+: { "2i2c:hub-name": "staging" },
+    },
+    {
+        instanceType: "r5.16xlarge",
+        namePrefix: "nb-prod",
+        labels+: { "2i2c/hub-name": "prod" },
+        tags+: { "2i2c:hub-name": "prod" },
+    },
 ];
 local daskNodes = [];
 
@@ -38,7 +71,11 @@ local daskNodes = [];
     metadata+: {
         name: "jupyter-health",
         region: clusterRegion,
-        version: "1.29",
+        version: "1.30",
+        tags+: {
+            "ManagedBy": "2i2c",
+            "2i2c.org/cluster-name": $.metadata.name,
+        },
     },
     availabilityZones: masterAzs,
     iam: {
@@ -49,27 +86,55 @@ local daskNodes = [];
     //    eksctl create addon --config-file=jupyter-health.eksctl.yaml
     //
     addons: [
-        {
-            // aws-ebs-csi-driver ensures that our PVCs are bound to PVs that
-            // couple to AWS EBS based storage, without it expect to see pods
-            // mounting a PVC failing to schedule and PVC resources that are
-            // unbound.
-            //
-            // Related docs: https://docs.aws.amazon.com/eks/latest/userguide/managing-ebs-csi.html
-            //
-            name: 'aws-ebs-csi-driver',
-            version: "latest",
-            wellKnownPolicies: {
-                ebsCSIController: true,
+        { version: "latest", tags: $.metadata.tags } + addon
+        for addon in
+        [
+            { name: "coredns" },
+            { name: "kube-proxy" },
+            {
+                // vpc-cni is a Amazon maintained container networking interface
+                // (CNI), where a CNI is required for k8s networking. The aws-node
+                // DaemonSet in kube-system stems from installing this.
+                //
+                // Related docs: https://kubernetes.io/docs/concepts/extend-kubernetes/compute-storage-net/network-plugins/
+                //               https://docs.aws.amazon.com/eks/latest/userguide/managing-vpc-cni.html
+                //
+                name: "vpc-cni",
+                attachPolicyARNs: ["arn:aws:iam::aws:policy/AmazonEKS_CNI_Policy"],
+                # FIXME: enabling network policy enforcement didn't work as of
+                #        August 2024, what's wrong isn't clear.
+                #
+                # configurationValues ref: https://github.com/aws/amazon-vpc-cni-k8s/blob/HEAD/charts/aws-vpc-cni/values.yaml
+                configurationValues: |||
+                    enableNetworkPolicy: "false"
+                |||,
             },
-        },
+            {
+                // aws-ebs-csi-driver ensures that our PVCs are bound to PVs that
+                // couple to AWS EBS based storage, without it expect to see pods
+                // mounting a PVC failing to schedule and PVC resources that are
+                // unbound.
+                //
+                // Related docs: https://docs.aws.amazon.com/eks/latest/userguide/managing-ebs-csi.html
+                //
+                name: "aws-ebs-csi-driver",
+                wellKnownPolicies: {
+                    ebsCSIController: true,
+                },
+                # configurationValues ref: https://github.com/kubernetes-sigs/aws-ebs-csi-driver/blob/HEAD/charts/aws-ebs-csi-driver/values.yaml
+                configurationValues: |||
+                    defaultStorageClass:
+                        enabled: true
+                |||,
+            },
+        ]
     ],
     nodeGroups: [
     n + {clusterName: $.metadata.name} for n in
     [
         ng + {
             namePrefix: 'core',
-            nameSuffix: 'a',
+            nameSuffix: 'b',
             nameIncludeInstanceType: false,
             availabilityZones: [nodeAz],
             ssh: {
@@ -82,6 +147,7 @@ local daskNodes = [];
                 "hub.jupyter.org/node-purpose": "core",
                 "k8s.dask.org/node-purpose": "core"
             },
+            tags+: { "2i2c:node-purpose": "core" },
         },
     ] + [
         ng + {
@@ -97,6 +163,7 @@ local daskNodes = [];
                 "hub.jupyter.org/node-purpose": "user",
                 "k8s.dask.org/node-purpose": "scheduler"
             },
+            tags+: { "2i2c:node-purpose": "user" },
             taints+: {
                 "hub.jupyter.org_dedicated": "user:NoSchedule",
                 "hub.jupyter.org/dedicated": "user:NoSchedule"

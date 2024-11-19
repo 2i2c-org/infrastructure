@@ -28,8 +28,10 @@ jupyterhub:
           name: ""
           url: ""
   singleuser:
+    nodeSelector:
+      2i2c/hub-name: staging
     profileList:
-      - display_name: "Only Profile Available, this info is not shown in the UI"
+      - display_name: Choose your environment and resources
         slug: only-choice
         profile_options:
           image:
@@ -111,9 +113,6 @@ jupyterhub:
 
   hub:
     allowNamedServers: true
-    image:
-      name: quay.io/2i2c/dynamic-image-building-experiment
-      tag: "0.0.1-0.dev.git.8663.h049aa2c2"
     config:
       JupyterHub:
         authenticator_class: github

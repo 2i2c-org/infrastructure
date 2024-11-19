@@ -8,3 +8,6 @@ jupyterhub:
     config:
       CILogonOAuthenticator:
         oauth_callback_url: https://staging.ubc-eoas.2i2c.cloud/hub/oauth_callback
+  singleuser:
+    nodeSelector:
+      2i2c/hub-name: staging

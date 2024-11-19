@@ -30,7 +30,7 @@ jupyterhub:
           custom_html: <a href="https://www.dfg.de/">DFG</a>, <a href="https://www.cessda.eu/">CESSDA</a>, <a href="https://www.gesis.org/">GESIS</a>, FKZ/Project number <a href="https://gepris.dfg.de/gepris/projekt/460234259?language=en">460234259</a>
   singleuser:
     profileList:
-      - display_name: "Only Profile Available, this info is not shown in the UI"
+      - display_name: Choose your environment and resources
         slug: only-choice
         profile_options:
           image:
@@ -115,9 +115,6 @@ jupyterhub:
   hub:
     # Allows for multiple concurrent demos
     allowNamedServers: true
-    image:
-      name: quay.io/2i2c/dynamic-image-building-experiment
-      tag: "0.0.1-0.dev.git.10263.hc87b65cf"
     config:
       JupyterHub:
         authenticator_class: github
@@ -130,11 +127,6 @@ jupyterhub:
           - CYGNSS-VEDA:cygnss-iwg
         scope:
           - read:org
-
-    extraConfig:
-      enable-fancy-profiles: |
-        from jupyterhub_fancy_profiles import setup_ui
-        setup_ui(c)
 
 binderhub-service:
   enabled: true

@@ -1060,7 +1060,7 @@ jupyterhub:
         oauth_no_confirm: true
     image:
       name: quay.io/2i2c/pilot-hub
-      tag: "0.0.1-0.dev.git.8663.h049aa2c2"
+      tag: "0.0.1-0.dev.git.10892.h37c70b2e"
     networkPolicy:
       enabled: true
       # interNamespaceAccessLabels=accept makes the hub pod's associated
@@ -1591,6 +1591,10 @@ jupyterhub:
         if get_config('custom.auth.anonymizeUsername', False):
           # https://jupyterhub.readthedocs.io/en/stable/reference/api/auth.html#jupyterhub.auth.Authenticator.post_auth_hook
           c.Authenticator.post_auth_hook = salt_username
+
+      07-enable-fancy-profiles: |
+        from jupyterhub_fancy_profiles import setup_ui
+        setup_ui(c)
 
       # Initially copied from https://github.com/dask/helm-chart/blob/main/daskhub/values.yaml
       daskhub-01-add-dask-gateway-values: |

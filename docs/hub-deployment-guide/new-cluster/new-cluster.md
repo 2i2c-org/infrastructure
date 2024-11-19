@@ -583,7 +583,7 @@ Commit this file to the repo.
 ````{tab-item} AWS
 :sync: aws-key
 
-### Grant the deployer's IAM user access
+### Grant the deployer's IAM user cluster access
 
 ```{note}
 This still works, but makes use of a deprecated system (`iamidentitymapping` and
@@ -630,19 +630,52 @@ We need to grant the freshly created deployer IAM user access to the kubernetes 
 
   It should show you the provisioned node on the cluster if everything works out ok.
 
-### (no longer needed) Grant `eksctl` access to other users
+### Grant cluster access to other users
 
-Use of `eksctl create iamidentitymapping` was previously required step to grant
-access to other engineers, but after AWS introduced a new system (EKS access
-entries) in parallel to the now deprecated `iamidentitymapping` system, it seems
-AWS account admin users are no longer required to be granted access like this.
+```{note}
+This step is only needed within AWS accounts outside 2i2c's AWS organization where
+we haven't logged in using 2i2c SSO.
 
-To conclude, any AWS account admin authenticated should be able to acquire k8s
-cluster credentials like below without use of `eksctl create iamidentitymapping`:
+This is because new EKS clusters comes with an access entry to the _user or role_
+that created the cluster, and when we work against an AWS account within the 2i2c
+AWS organization, we all assume the same role, so an access entry for that role
+grants us all access. However, when we work against AWS accounts outside the 2i2c
+AWS organization, we typically use a IAM User directly, and that will be
+different for all of us, so we need to add access entries for other engineers as
+well then.
+```
+
+Find the usernames of the 2i2c engineers on this particular AWS account, and run
+the following command to give them access using the deprecated system active in
+parallel to the newer system with access entries:
+
+```{note}
+You can modify the command output by running `terraform output -raw eksctl_iam_command`
+as described in [](new-cluster:terraform:cluster-credentials).
+```
+
+```bash
+eksctl create iamidentitymapping \
+   --cluster $CLUSTER_NAME \
+   --region $CLUSTER_REGION \
+   --arn arn:aws:iam::<aws-account-id>:user/<iam-user-name> \
+   --username <iam-user-name> \
+   --group system:masters
+```
+
+This gives all the users full access to the entire kubernetes cluster.
+After this step is done, they can fetch local config with:
 
 ```bash
 aws eks update-kubeconfig --name=$CLUSTER_NAME --region=$CLUSTER_REGION
 ```
+
+This should eventually be converted to use an [IAM Role] instead, so we need not
+give each individual user access, but just grant access to the role - and users
+can modify them as they wish. It should also eventually be converted to use
+access entries instead of the legacy system active in parallel.
+
+[iam role]: https://docs.aws.amazon.com/IAM/latest/UserGuide/id_roles.html
 ````
 
 ````{tab-item} Google Cloud
@@ -679,17 +712,3 @@ kubectl get node
 It should show you the provisioned node on the cluster if everything works out ok.
 ````
 `````
-
-## AWS only: Expandable storage class
-
-The default storage class that is created when we deploy a cluster to AWS does permit auto-expansion of persistent volumes.
-This can cause problems when we want to expand the size of a disk, say used by Prometheus to store metrics data.
-We will therefore patch the default storage class to permite auto-expansion.
-
-```bash
-# Gain k8s access to the cluster
-deployer use-cluster-credentials $CLUSTER_NAME
-
-# Patch the storage class
-kubectl patch storageclass gp2 --patch '{\"allowVolumeExpansion\": true}'
-```

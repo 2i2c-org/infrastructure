@@ -25,9 +25,226 @@ local nodeAz = "af-south-1a";
 // A `node.kubernetes.io/instance-type label is added, so pods
 // can request a particular kind of node with a nodeSelector
 local notebookNodes = [
-    { instanceType: "r5.xlarge", nameSuffix: "b", volumeSize: 400 },
-    { instanceType: "r5.4xlarge", volumeSize: 400 },
-    { instanceType: "r5.16xlarge", volumeSize: 400 },
+    // staging hub
+    {
+        instanceType: "r5.xlarge",
+        volumeSize: 400,
+        namePrefix: "nb-staging",
+        labels+: { "2i2c/hub-name": "staging" },
+        tags+: { "2i2c:hub-name": "staging" },
+    },
+    {
+        instanceType: "r5.4xlarge",
+        volumeSize: 400,
+        namePrefix: "nb-staging",
+        labels+: { "2i2c/hub-name": "staging" },
+        tags+: { "2i2c:hub-name": "staging" },
+    },
+    {
+        instanceType: "r5.16xlarge",
+        volumeSize: 400,
+        namePrefix: "nb-staging",
+        labels+: { "2i2c/hub-name": "staging" },
+        tags+: { "2i2c:hub-name": "staging" },
+    },
+    // nm-aist hub
+    {
+        instanceType: "r5.xlarge",
+        volumeSize: 400,
+        namePrefix: "nb-nm-aist",
+        labels+: { "2i2c/hub-name": "nm-aist" },
+        tags+: { "2i2c:hub-name": "nm-aist" },
+    },
+    {
+        instanceType: "r5.4xlarge",
+        volumeSize: 400,
+        namePrefix: "nb-nm-aist",
+        labels+: { "2i2c/hub-name": "nm-aist" },
+        tags+: { "2i2c:hub-name": "nm-aist" },
+    },
+    {
+        instanceType: "r5.16xlarge",
+        volumeSize: 400,
+        namePrefix: "nb-nm-aist",
+        labels+: { "2i2c/hub-name": "nm-aist" },
+        tags+: { "2i2c:hub-name": "nm-aist" },
+    },
+    // must hub
+    {
+        instanceType: "r5.xlarge",
+        volumeSize: 400,
+        namePrefix: "nb-must",
+        labels+: { "2i2c/hub-name": "must" },
+        tags+: { "2i2c:hub-name": "must" },
+    },
+    {
+        instanceType: "r5.4xlarge",
+        volumeSize: 400,
+        namePrefix: "nb-must",
+        labels+: { "2i2c/hub-name": "must" },
+        tags+: { "2i2c:hub-name": "must" },
+    },
+    {
+        instanceType: "r5.16xlarge",
+        volumeSize: 400,
+        namePrefix: "nb-must",
+        labels+: { "2i2c/hub-name": "must" },
+        tags+: { "2i2c:hub-name": "must" },
+    },
+    // uvri hub
+    {
+        instanceType: "r5.xlarge",
+        volumeSize: 400,
+        namePrefix: "nb-uvri",
+        labels+: { "2i2c/hub-name": "uvri" },
+        tags+: { "2i2c:hub-name": "uvri" },
+    },
+    {
+        instanceType: "r5.4xlarge",
+        volumeSize: 400,
+        namePrefix: "nb-uvri",
+        labels+: { "2i2c/hub-name": "uvri" },
+        tags+: { "2i2c:hub-name": "uvri" },
+    },
+    {
+        instanceType: "r5.16xlarge",
+        volumeSize: 400,
+        namePrefix: "nb-uvri",
+        labels+: { "2i2c/hub-name": "uvri" },
+        tags+: { "2i2c:hub-name": "uvri" },
+    },
+    // wits hub
+    {
+        instanceType: "r5.xlarge",
+        volumeSize: 400,
+        namePrefix: "nb-wits",
+        labels+: { "2i2c/hub-name": "wits" },
+        tags+: { "2i2c:hub-name": "wits" },
+    },
+    {
+        instanceType: "r5.4xlarge",
+        volumeSize: 400,
+        namePrefix: "nb-wits",
+        labels+: { "2i2c/hub-name": "wits" },
+        tags+: { "2i2c:hub-name": "wits" },
+    },
+    {
+        instanceType: "r5.16xlarge",
+        volumeSize: 400,
+        namePrefix: "nb-wits",
+        labels+: { "2i2c/hub-name": "wits" },
+        tags+: { "2i2c:hub-name": "wits" },
+    },
+    // kush hub
+    {
+        instanceType: "r5.xlarge",
+        volumeSize: 400,
+        namePrefix: "nb-kush",
+        labels+: { "2i2c/hub-name": "kush" },
+        tags+: { "2i2c:hub-name": "kush" },
+    },
+    {
+        instanceType: "r5.4xlarge",
+        volumeSize: 400,
+        namePrefix: "nb-kush",
+        labels+: { "2i2c/hub-name": "kush" },
+        tags+: { "2i2c:hub-name": "kush" },
+    },
+    {
+        instanceType: "r5.16xlarge",
+        volumeSize: 400,
+        namePrefix: "nb-kush",
+        labels+: { "2i2c/hub-name": "kush" },
+        tags+: { "2i2c:hub-name": "kush" },
+    },
+    // molerhealth hub
+    {
+        instanceType: "r5.xlarge",
+        volumeSize: 400,
+        namePrefix: "nb-molerhealth",
+        labels+: { "2i2c/hub-name": "molerhealth" },
+        tags+: { "2i2c:hub-name": "molerhealth" },
+    },
+    {
+        instanceType: "r5.4xlarge",
+        volumeSize: 400,
+        namePrefix: "nb-molerhealth",
+        labels+: { "2i2c/hub-name": "molerhealth" },
+        tags+: { "2i2c:hub-name": "molerhealth" },
+    },
+    {
+        instanceType: "r5.16xlarge",
+        volumeSize: 400,
+        namePrefix: "nb-molerhealth",
+        labels+: { "2i2c/hub-name": "molerhealth" },
+        tags+: { "2i2c:hub-name": "molerhealth" },
+    },
+    // aibst hub
+    {
+        instanceType: "r5.xlarge",
+        volumeSize: 400,
+        namePrefix: "nb-aibst",
+        labels+: { "2i2c/hub-name": "aibst" },
+        tags+: { "2i2c:hub-name": "aibst" },
+    },
+    {
+        instanceType: "r5.4xlarge",
+        volumeSize: 400,
+        namePrefix: "nb-aibst",
+        labels+: { "2i2c/hub-name": "aibst" },
+        tags+: { "2i2c:hub-name": "aibst" },
+    },
+    {
+        instanceType: "r5.16xlarge",
+        volumeSize: 400,
+        namePrefix: "nb-aibst",
+        labels+: { "2i2c/hub-name": "aibst" },
+        tags+: { "2i2c:hub-name": "aibst" },
+    },
+    // bhki hub
+    {
+        instanceType: "r5.xlarge",
+        volumeSize: 400,
+        namePrefix: "nb-bhki",
+        labels+: { "2i2c/hub-name": "bhki" },
+        tags+: { "2i2c:hub-name": "bhki" },
+    },
+    {
+        instanceType: "r5.4xlarge",
+        volumeSize: 400,
+        namePrefix: "nb-bhki",
+        labels+: { "2i2c/hub-name": "bhki" },
+        tags+: { "2i2c:hub-name": "bhki" },
+    },
+    {
+        instanceType: "r5.16xlarge",
+        volumeSize: 400,
+        namePrefix: "nb-bhki",
+        labels+: { "2i2c/hub-name": "bhki" },
+        tags+: { "2i2c:hub-name": "bhki" },
+    },
+    // bon hub
+    {
+        instanceType: "r5.xlarge",
+        volumeSize: 400,
+        namePrefix: "nb-bon",
+        labels+: { "2i2c/hub-name": "bon" },
+        tags+: { "2i2c:hub-name": "bon" },
+    },
+    {
+        instanceType: "r5.4xlarge",
+        volumeSize: 400,
+        namePrefix: "nb-bon",
+        labels+: { "2i2c/hub-name": "bon" },
+        tags+: { "2i2c:hub-name": "bon" },
+    },
+    {
+        instanceType: "r5.16xlarge",
+        volumeSize: 400,
+        namePrefix: "nb-bon",
+        labels+: { "2i2c/hub-name": "bon" },
+        tags+: { "2i2c:hub-name": "bon" },
+    },
 ];
 local daskNodes = [];
 
@@ -38,7 +255,11 @@ local daskNodes = [];
     metadata+: {
         name: "catalystproject-africa",
         region: clusterRegion,
-        version: "1.29",
+        version: "1.30",
+        tags+: {
+            "ManagedBy": "2i2c",
+            "2i2c.org/cluster-name": $.metadata.name,
+        },
     },
     availabilityZones: masterAzs,
     iam: {
@@ -49,20 +270,48 @@ local daskNodes = [];
     //    eksctl create addon --config-file=catalystproject-africa.eksctl.yaml
     //
     addons: [
-        {
-            // aws-ebs-csi-driver ensures that our PVCs are bound to PVs that
-            // couple to AWS EBS based storage, without it expect to see pods
-            // mounting a PVC failing to schedule and PVC resources that are
-            // unbound.
-            //
-            // Related docs: https://docs.aws.amazon.com/eks/latest/userguide/managing-ebs-csi.html
-            //
-            name: 'aws-ebs-csi-driver',
-            version: "latest",
-            wellKnownPolicies: {
-                ebsCSIController: true,
+        { version: "latest", tags: $.metadata.tags } + addon
+        for addon in
+        [
+            { name: "coredns" },
+            { name: "kube-proxy" },
+            {
+                // vpc-cni is a Amazon maintained container networking interface
+                // (CNI), where a CNI is required for k8s networking. The aws-node
+                // DaemonSet in kube-system stems from installing this.
+                //
+                // Related docs: https://kubernetes.io/docs/concepts/extend-kubernetes/compute-storage-net/network-plugins/
+                //               https://docs.aws.amazon.com/eks/latest/userguide/managing-vpc-cni.html
+                //
+                name: "vpc-cni",
+                attachPolicyARNs: ["arn:aws:iam::aws:policy/AmazonEKS_CNI_Policy"],
+                # FIXME: enabling network policy enforcement didn't work as of
+                #        August 2024, what's wrong isn't clear.
+                #
+                # configurationValues ref: https://github.com/aws/amazon-vpc-cni-k8s/blob/HEAD/charts/aws-vpc-cni/values.yaml
+                configurationValues: |||
+                    enableNetworkPolicy: "false"
+                |||,
             },
-        },
+            {
+                // aws-ebs-csi-driver ensures that our PVCs are bound to PVs that
+                // couple to AWS EBS based storage, without it expect to see pods
+                // mounting a PVC failing to schedule and PVC resources that are
+                // unbound.
+                //
+                // Related docs: https://docs.aws.amazon.com/eks/latest/userguide/managing-ebs-csi.html
+                //
+                name: "aws-ebs-csi-driver",
+                wellKnownPolicies: {
+                    ebsCSIController: true,
+                },
+                # configurationValues ref: https://github.com/kubernetes-sigs/aws-ebs-csi-driver/blob/HEAD/charts/aws-ebs-csi-driver/values.yaml
+                configurationValues: |||
+                    defaultStorageClass:
+                        enabled: true
+                |||,
+            },
+        ]
     ],
     nodeGroups: [
     n + {clusterName: $.metadata.name} for n in
@@ -82,6 +331,7 @@ local daskNodes = [];
                 "hub.jupyter.org/node-purpose": "core",
                 "k8s.dask.org/node-purpose": "core"
             },
+            tags+: { "2i2c:node-purpose": "core" },
         },
     ] + [
         ng + {
@@ -97,6 +347,7 @@ local daskNodes = [];
                 "hub.jupyter.org/node-purpose": "user",
                 "k8s.dask.org/node-purpose": "scheduler"
             },
+            tags+: { "2i2c:node-purpose": "user" },
             taints+: {
                 "hub.jupyter.org_dedicated": "user:NoSchedule",
                 "hub.jupyter.org/dedicated": "user:NoSchedule"

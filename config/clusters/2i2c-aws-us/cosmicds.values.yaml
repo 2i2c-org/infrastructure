@@ -38,6 +38,9 @@ jupyterhub:
           name: Cosmic DS, Harvard
           url: https://www.cosmicds.cfa.harvard.edu/
   singleuser:
+    nodeSelector:
+      2i2c/hub-name: cosmicds
+      node.kubernetes.io/instance-type: r5.xlarge
     # No persistent storage should be kept to reduce any potential data
     # retention & privacy issues.
     # Ref https://github.com/2i2c-org/infrastructure/issues/2128#issuecomment-1635107926

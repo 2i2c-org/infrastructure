@@ -13,21 +13,14 @@ basehub:
         gitRepoBranch: "staging"
         gitRepoUrl: "https://github.com/US-GHG-Center/ghgc-hub-homepage"
     hub:
-      image:
-        name: quay.io/2i2c/dynamic-image-building-experiment
-        tag: "0.0.1-0.dev.git.10263.hc87b65cf"
       config:
         GitHubOAuthenticator:
           oauth_callback_url: https://staging.ghg.2i2c.cloud/hub/oauth_callback
-      extraConfig:
-        enable-fancy-profiles: |
-          from jupyterhub_fancy_profiles import setup_ui
-          setup_ui(c)
     singleuser:
       nodeSelector:
         2i2c/hub-name: staging
       profileList:
-        - display_name: "Only Profile Available, this info is not shown in the UI"
+        - display_name: Choose your environment and resources
           slug: only-choice
           profile_options:
             image:

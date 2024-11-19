@@ -47,3 +47,6 @@ jupyterhub:
             spawner.environment["CHCS_CLIENT_ID"] = "Ima7rx8D6eko0PzlU1jK28WBUT2ZweZj7mqVG2wm"
 
         c.Spawner.auth_state_hook = auth_state_env
+  singleuser:
+    nodeSelector:
+      2i2c/hub-name: staging

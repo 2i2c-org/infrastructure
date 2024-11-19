@@ -8,3 +8,6 @@
 # ref: https://github.com/yuvipanda/jupyterhub-configurator/commits/backported-jh41-compatibility
 #
 git+https://github.com/yuvipanda/jupyterhub-configurator@backported-jh41-compatibility
+
+# Brings in https://github.com/yuvipanda/jupyterhub-fancy-profiles
+jupyterhub-fancy-profiles==0.3.10

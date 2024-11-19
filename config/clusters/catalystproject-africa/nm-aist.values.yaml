@@ -30,3 +30,6 @@ jupyterhub:
       Authenticator:
         admin_users:
           - "beatus.lyimo@nm-aist.ac.tz"
+  singleuser:
+    nodeSelector:
+      2i2c/hub-name: nm-aist

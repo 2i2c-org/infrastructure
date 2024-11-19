@@ -43,7 +43,7 @@ jupyterhub:
     jupyterhub:
       singleuser:
         profileList:
-          - display_name: "Only Profile Available, this info is not shown in the UI"
+          - display_name: Choose your environment and resources
             slug: only-choice
             profile_options:
               image:

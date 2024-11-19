@@ -45,6 +45,8 @@ basehub:
             - NicholasCote # Nicholas Cote, Initial administrator
             - nwehrheim # Nick Wehrheim, Community representative
     singleuser:
+      nodeSelector:
+        2i2c/hub-name: ncar-cisl
       image:
         # image choice preliminary and is expected to be setup via
         # https://ncar-cisl.2i2c.cloud/services/configurator/ by the community
@@ -250,3 +252,14 @@ basehub:
               node.kubernetes.io/instance-type: g4dn.xlarge
             extra_resource_limits:
               nvidia.com/gpu: "1"
+
+dask-gateway:
+  gateway:
+    scheduler:
+      extraPodConfig:
+        nodeSelector:
+          2i2c/hub-name: ncar-cisl
+    worker:
+      extraPodConfig:
+        nodeSelector:
+          2i2c/hub-name: ncar-cisl

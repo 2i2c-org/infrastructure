@@ -24,5 +24,7 @@ basehub:
             # This isn't an actual URL, just a string. Must not have a trailing slash
             audience: https://api.earthscope.org
     singleuser:
+      nodeSelector:
+        2i2c/hub-name: prod
       extraEnv:
         SCRATCH_BUCKET: s3://earthscope-scratch/$(JUPYTERHUB_USER)
