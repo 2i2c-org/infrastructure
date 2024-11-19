@@ -43,9 +43,17 @@ local notebookNodes = [
         labels+: { "2i2c/hub-name": "staging" },
         tags+: { "2i2c:hub-name": "staging" }
     },
+    // FIXME: tainted
     {
         instanceType: "r5.xlarge",
         namePrefix: "nb-prod",
+        labels+: { "2i2c/hub-name": "prod" },
+        tags+: { "2i2c:hub-name": "prod" }
+    },
+    {
+        instanceType: "r5.xlarge",
+        namePrefix: "nb-prod",
+        nameSuffix: "b",
         labels+: { "2i2c/hub-name": "prod" },
         tags+: { "2i2c:hub-name": "prod" }
     },
@@ -118,7 +126,7 @@ local daskNodes = [
     metadata+: {
         name: "openscapeshub",
         region: clusterRegion,
-        version: "1.29",
+        version: "1.30",
         tags+: {
             "ManagedBy": "2i2c",
             "2i2c.org/cluster-name": $.metadata.name,
@@ -181,7 +189,7 @@ local daskNodes = [
     [
         ng + {
             namePrefix: 'core',
-            nameSuffix: 'a',
+            nameSuffix: 'b',
             nameIncludeInstanceType: false,
             availabilityZones: [nodeAz],
             ssh: {
