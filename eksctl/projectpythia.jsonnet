@@ -50,7 +50,7 @@ local daskNodes = [];
     metadata+: {
         name: "projectpythia",
         region: clusterRegion,
-        version: "1.29",
+        version: "1.30",
         tags+: {
             "ManagedBy": "2i2c",
             "2i2c.org/cluster-name": $.metadata.name,
@@ -113,7 +113,7 @@ local daskNodes = [];
     [
         ng + {
             namePrefix: 'core',
-            nameSuffix: 'a',
+            nameSuffix: 'b',
             nameIncludeInstanceType: false,
             availabilityZones: [nodeAz],
             ssh: {
