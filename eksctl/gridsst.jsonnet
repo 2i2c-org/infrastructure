@@ -33,7 +33,7 @@ local notebookNodes = [
     #
     {
         instanceType: "m5.large",
-        minSize: 1,
+        minSize: 0,
         namePrefix: "nb-staging",
         labels+: { "2i2c/hub-name": "staging" },
         tags+: { "2i2c:hub-name": "staging" },
