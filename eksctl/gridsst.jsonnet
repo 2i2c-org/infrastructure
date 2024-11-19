@@ -73,7 +73,7 @@ local daskNodes = [
     metadata+: {
         name: "gridsst",
         region: clusterRegion,
-        version: "1.29",
+        version: "1.30",
         tags+: {
             "ManagedBy": "2i2c",
             "2i2c.org/cluster-name": $.metadata.name,
