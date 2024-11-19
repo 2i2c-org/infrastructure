@@ -31,16 +31,127 @@ local notebookNodes = [
     #        scale up:   https://github.com/2i2c-org/infrastructure/pull/1836
     #        scale down: https://github.com/2i2c-org/infrastructure/pull/1844
     #
-    { instanceType: "m5.large", minSize: 1 },
-    { instanceType: "m5.xlarge", minSize: 0 },
-    { instanceType: "m5.2xlarge", minSize: 0 },
-    { instanceType: "m5.8xlarge", minSize: 0 },
-    { instanceType: "r5.xlarge", minSize: 0 },
-    { instanceType: "r5.4xlarge", minSize: 0 },
-    { instanceType: "r5.16xlarge", minSize: 0 },
     {
-        instanceType: "g4dn.xlarge", minSize: 0,
+        instanceType: "m5.large",
+        minSize: 0,
+        namePrefix: "nb-staging",
+        labels+: { "2i2c/hub-name": "staging" },
+        tags+: { "2i2c:hub-name": "staging" },
+    },
+    {
+        instanceType: "m5.large",
+        minSize: 1,
+        namePrefix: "nb-prod",
+        labels+: { "2i2c/hub-name": "prod" },
+        tags+: { "2i2c:hub-name": "prod" },
+    },
+    {
+        instanceType: "m5.xlarge",
+        minSize: 0,
+        namePrefix: "nb-staging",
+        labels+: { "2i2c/hub-name": "staging" },
+        tags+: { "2i2c:hub-name": "staging" },
+    },
+    {
+        instanceType: "m5.xlarge",
+        minSize: 0,
+        namePrefix: "nb-prod",
+        labels+: { "2i2c/hub-name": "prod" },
+        tags+: { "2i2c:hub-name": "prod" },
+    },
+    {
+        instanceType: "m5.2xlarge",
+        minSize: 0,
+        namePrefix: "nb-staging",
+        labels+: { "2i2c/hub-name": "staging" },
+        tags+: { "2i2c:hub-name": "staging" },
+    },
+    {
+        instanceType: "m5.2xlarge",
+        minSize: 0,
+        namePrefix: "nb-prod",
+        labels+: { "2i2c/hub-name": "prod" },
+        tags+: { "2i2c:hub-name": "prod" },
+    },
+    {
+        instanceType: "m5.8xlarge",
+        minSize: 0,
+        namePrefix: "nb-staging",
+        labels+: { "2i2c/hub-name": "staging" },
+        tags+: { "2i2c:hub-name": "staging" },
+    },
+    {
+        instanceType: "m5.8xlarge",
+        minSize: 0,
+        namePrefix: "nb-prod",
+        labels+: { "2i2c/hub-name": "prod" },
+        tags+: { "2i2c:hub-name": "prod" },
+    },
+    {
+        instanceType: "r5.xlarge",
+        minSize: 0,
+        namePrefix: "nb-staging",
+        labels+: { "2i2c/hub-name": "staging" },
+        tags+: { "2i2c:hub-name": "staging" },
+    },
+    {
+        instanceType: "r5.xlarge",
+        minSize: 0,
+        namePrefix: "nb-prod",
+        labels+: { "2i2c/hub-name": "prod" },
+        tags+: { "2i2c:hub-name": "prod" },
+    },
+    {
+        instanceType: "r5.4xlarge",
+        minSize: 0,
+        namePrefix: "nb-staging",
+        labels+: { "2i2c/hub-name": "staging" },
+        tags+: { "2i2c:hub-name": "staging" },
+    },
+    {
+        instanceType: "r5.4xlarge",
+        minSize: 0,
+        namePrefix: "nb-prod",
+        labels+: { "2i2c/hub-name": "prod" },
+        tags+: { "2i2c:hub-name": "prod" },
+    },
+    {
+        instanceType: "r5.16xlarge",
+        minSize: 0,
+        namePrefix: "nb-staging",
+        labels+: { "2i2c/hub-name": "staging" },
+        tags+: { "2i2c:hub-name": "staging" },
+    },
+    {
+        instanceType: "r5.16xlarge",
+        minSize: 0,
+        namePrefix: "nb-prod",
+        labels+: { "2i2c/hub-name": "prod" },
+        tags+: { "2i2c:hub-name": "prod" },
+    },
+    {
+        instanceType: "g4dn.xlarge",
+        minSize: 0,
+        namePrefix: "nb-staging",
+        labels+: { "2i2c/hub-name": "staging" },
         tags+: {
+            "2i2c:hub-name": "staging",
+            "k8s.io/cluster-autoscaler/node-template/resources/nvidia.com/gpu": "1"
+        },
+        taints+: {
+            "nvidia.com/gpu": "present:NoSchedule"
+        },
+        // Allow provisioning GPUs across all AZs, to prevent situation where all
+        // GPUs in a single AZ are in use and no new nodes can be spawned
+        availabilityZones: masterAzs,
+    },
+    {
+        instanceType: "g4dn.xlarge",
+        minSize: 0,
+        namePrefix: "nb-prod",
+        labels+: { "2i2c/hub-name": "prod" },
+        tags+: {
+            "2i2c:hub-name": "prod",
             "k8s.io/cluster-autoscaler/node-template/resources/nvidia.com/gpu": "1"
         },
         taints+: {
@@ -73,7 +184,7 @@ local daskNodes = [
     metadata+: {
         name: "gridsst",
         region: clusterRegion,
-        version: "1.29",
+        version: "1.30",
         tags+: {
             "ManagedBy": "2i2c",
             "2i2c.org/cluster-name": $.metadata.name,
@@ -136,7 +247,7 @@ local daskNodes = [
     [
         ng + {
             namePrefix: 'core',
-            nameSuffix: 'a',
+            nameSuffix: 'b',
             nameIncludeInstanceType: false,
             availabilityZones: [nodeAz],
             ssh: {
@@ -149,6 +260,7 @@ local daskNodes = [
                 "hub.jupyter.org/node-purpose": "core",
                 "k8s.dask.org/node-purpose": "core"
             },
+            tags+: { "2i2c:node-purpose": "core" },
         },
     ] + [
         ng + {
@@ -164,6 +276,7 @@ local daskNodes = [
                 "hub.jupyter.org/node-purpose": "user",
                 "k8s.dask.org/node-purpose": "scheduler"
             },
+            tags+: { "2i2c:node-purpose": "user" },
             taints+: {
                 "hub.jupyter.org_dedicated": "user:NoSchedule",
                 "hub.jupyter.org/dedicated": "user:NoSchedule"
