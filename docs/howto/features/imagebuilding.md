@@ -12,32 +12,9 @@ We call this an `imagebuilding` style hub and the primary features offered would
   - specifying another image, different from the ones in the pre-defined list
   - building and pushing an image to a registry from a GitHub repository
 
-## Use the `dynamic-image-building-experiment` hub image
-
-We will need to use `jupyterhub-fancy-profiles`, but this Python package isn't installed in the default image deployed with our hubs, so we should use the [`dynamic-image-building-experiment` hub image](https://github.com/2i2c-org/infrastructure/blob/main/helm-charts/images/hub/dynamic-image-building-requirements.txt) instead.
-
-```yaml
-jupyterhub:
-  hub:
-    image:
-      name: quay.io/2i2c/dynamic-image-building-experiment
-      tag: "0.0.1-0.dev.git.8663.h049aa2c2"
-```
-
 ## Connect with `jupyterhub-fancy-profiles`
 
-1. The [jupyterhub-fancy-profiles](https://github.com/yuvipanda/jupyterhub-fancy-profiles) project provides a user facing frontend for connecting the JupyterHub to the BinderHub service, allowing the users to build their own images similar with how they would on mybinder.org.
-
-    ```yaml
-    jupyterhub:
-      hub:
-        extraConfig:
-          enable-fancy-profiles: |
-            from jupyterhub_fancy_profiles import setup_ui
-            setup_ui(c)
-    ```
-
-2. Since `jupyterhub-fancy-profiles` adds on to the [`profileList` feature of `KubeSpawner`](https://jupyterhub-kubespawner.readthedocs.io/en/latest/spawner.html#kubespawner.KubeSpawner.profile_list), we need to configure a profile list here as well. Edit and update the following configuration per the community requesting the hub needs.
+1. Since `jupyterhub-fancy-profiles` adds on to the [`profileList` feature of `KubeSpawner`](https://jupyterhub-kubespawner.readthedocs.io/en/latest/spawner.html#kubespawner.KubeSpawner.profile_list), we need to configure a profile list here as well. Edit and update the following configuration per the community requesting the hub needs.
 
     ```yaml
     jupyterhub:
@@ -48,6 +25,9 @@ jupyterhub:
             profile_options:
               image:
                 display_name: Image
+                # Enables dynamic image building for this profile
+                dynamic_image_building:
+                  enabled: True
                 unlisted_choice:
                   enabled: True
                   display_name: "Custom image"
@@ -69,6 +49,9 @@ jupyterhub:
                     kubespawner_override:
                       image: quay.io/jupyter/scipy-notebook:2024-03-18
     ```
+
+    Note the `dynamic_image_building.enabled` property of the image option - that enables dynamic image
+    building!
 
 (howto:features:imagebuilding-hub:image-registry)=
 ## Setup the image registry
