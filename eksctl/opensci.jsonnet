@@ -132,7 +132,36 @@ local daskNodes = [
     // A not yet fully established policy is being developed about using a single
     // node pool, see https://github.com/2i2c-org/infrastructure/issues/2687.
     //
-    { instancesDistribution+: { instanceTypes: ["r5.4xlarge"] }},
+    {
+        namePrefix: "dask-staging",
+        labels+: { "2i2c/hub-name": "staging" },
+        tags+: { "2i2c:hub-name": "staging" },
+        instancesDistribution+: { instanceTypes: ["r5.4xlarge"] }
+    },
+    {
+        namePrefix: "dask-sciencecore",
+        labels+: { "2i2c/hub-name": "sciencecore" },
+        tags+: { "2i2c:hub-name": "sciencecore" },
+        instancesDistribution+: { instanceTypes: ["r5.4xlarge"] }
+    },
+    {
+        namePrefix: "dask-climaterisk",
+        labels+: { "2i2c/hub-name": "climaterisk" },
+        tags+: { "2i2c:hub-name": "climaterisk" },
+        instancesDistribution+: { instanceTypes: ["r5.4xlarge"] }
+    },
+    {
+        namePrefix: "dask-small-binder",
+        labels+: { "2i2c/hub-name": "small-binder" },
+        tags+: { "2i2c:hub-name": "small-binder" },
+        instancesDistribution+: { instanceTypes: ["r5.4xlarge"] }
+    },
+    {
+        namePrefix: "dask-big-binder",
+        labels+: { "2i2c/hub-name": "big-binder" },
+        tags+: { "2i2c:hub-name": "big-binder" },
+        instancesDistribution+: { instanceTypes: ["r5.4xlarge"] }
+    },
 ];
 
 
@@ -252,6 +281,9 @@ local daskNodes = [
             },
             labels+: {
                 "k8s.dask.org/node-purpose": "worker"
+            },
+            tags+: {
+                "2i2c:node-purpose": "worker"
             },
             taints+: {
                 "k8s.dask.org_dedicated" : "worker:NoSchedule",
