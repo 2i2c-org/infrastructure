@@ -32,3 +32,13 @@ basehub:
       nodeSelector:
         2i2c/hub-name: prod
         node.kubernetes.io/instance-type: m5.xlarge
+dask-gateway:
+  gateway:
+    scheduler:
+      extraPodConfig:
+        nodeSelector:
+          2i2c/hub-name: prod
+    worker:
+      extraPodConfig:
+        nodeSelector:
+          2i2c/hub-name: prod
