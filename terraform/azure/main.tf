@@ -3,7 +3,6 @@ terraform {
   required_version = "~> 1.9"
   required_providers {
     azurerm = {
-      # FIXME: upgrade to v4, see https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/guides/4.0-upgrade-guide
       # ref: https://registry.terraform.io/providers/hashicorp/azurerm/latest
       source  = "hashicorp/azurerm"
       version = "~> 4.3"
