@@ -235,6 +235,9 @@ local daskNodes = [
                 "k8s.dask.org_dedicated" : "worker:NoSchedule",
                 "k8s.dask.org/dedicated" : "worker:NoSchedule"
             },
+            tags+: {
+                "2i2c:node-purpose": "worker"
+            },
             instancesDistribution+: {
                 onDemandBaseCapacity: 0,
                 onDemandPercentageAboveBaseCapacity: 0,
