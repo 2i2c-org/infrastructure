@@ -249,13 +249,14 @@ basehub:
             extra_resource_limits:
               nvidia.com/gpu: "1"
 
-dask-gateway:
-  gateway:
-    scheduler:
-      extraPodConfig:
-        nodeSelector:
-          2i2c/hub-name: showcase
-    worker:
-      extraPodConfig:
-        nodeSelector:
-          2i2c/hub-name: showcase
+  dask-gateway:
+    gateway:
+      backend:
+        scheduler:
+          extraPodConfig:
+            nodeSelector:
+              2i2c/hub-name: showcase
+        worker:
+          extraPodConfig:
+            nodeSelector:
+              2i2c/hub-name: showcase
