@@ -84,6 +84,4 @@ jupyterhub:
           - read:org
       Authenticator:
         admin_users:
-          - richard-x-ball
           - maundjs-lis
-          - kestrai
