@@ -1,6 +1,6 @@
 dask-gateway:
   enabled: true
-  worker:
+  gateway:
     backend:
       imagePullSecrets: [{ name: image-pull-secret }]
       scheduler:
