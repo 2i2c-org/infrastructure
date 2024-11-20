@@ -44,7 +44,7 @@ dask-gateway:
     scheduler:
       extraPodConfig:
         nodeSelector:
-          2i2c/hub-name: climeterisk
+          2i2c/hub-name: climaterisk
     worker:
       extraPodConfig:
         nodeSelector:
