@@ -1,16 +1,16 @@
 dask-gateway:
   enabled: true
-  gateway:
+  worker:
     backend:
       imagePullSecrets: [{ name: image-pull-secret }]
-    scheduler:
-      extraPodConfig:
-        nodeSelector:
-          2i2c/hub-name: big-binder
-    worker:
-      extraPodConfig:
-        nodeSelector:
-          2i2c/hub-name: big-binder
+      scheduler:
+        extraPodConfig:
+          nodeSelector:
+            2i2c/hub-name: big-binder
+      worker:
+        extraPodConfig:
+          nodeSelector:
+            2i2c/hub-name: big-binder
 jupyterhub:
   ingress:
     hosts: [hub.big.binder.opensci.2i2c.cloud]

@@ -41,11 +41,12 @@ jupyterhub:
       limit: 3.725
 dask-gateway:
   gateway:
-    scheduler:
-      extraPodConfig:
-        nodeSelector:
-          2i2c/hub-name: climaterisk
-    worker:
-      extraPodConfig:
-        nodeSelector:
-          2i2c/hub-name: climaterisk
+    backend:
+      scheduler:
+        extraPodConfig:
+          nodeSelector:
+            2i2c/hub-name: climaterisk
+      worker:
+        extraPodConfig:
+          nodeSelector:
+            2i2c/hub-name: climaterisk

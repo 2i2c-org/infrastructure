@@ -133,13 +133,3 @@ binderhub-service:
   buildPodsRegistryCredentials:
     server: *url
     username: *username
-dask-gateway:
-  gateway:
-    scheduler:
-      extraPodConfig:
-        nodeSelector:
-          2i2c/hub-name: small-binder
-    worker:
-      extraPodConfig:
-        nodeSelector:
-          2i2c/hub-name: small-binder
