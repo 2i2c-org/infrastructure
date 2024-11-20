@@ -57,11 +57,6 @@ local dailyCostsPerHub =
       needs to setup to be hub specific. Currently compute, home storage, and
       object storage can be setup for specific hubs, but isn't unless explicitly
       requested.
-      
-      To provide hub specific cloud infrastructure for is opt-in because it is a
-      trade off. Documentation about this trade off isn't yet available but
-      tracked [in this github
-      issue](https://github.com/2i2c-org/infrastructure/issues/5000).
 
       ---
 
