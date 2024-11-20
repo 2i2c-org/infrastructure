@@ -9,16 +9,6 @@ default_budget_alert = {
 enable_aws_ce_grafana_backend_iam = true
 
 disable_cluster_wide_filestore = true
-filestores = {
-  "staging" = {
-    name_suffix = "staging",
-    tags        = { "2i2c:hub-name" : "staging" },
-  },
-  "prod" = {
-    name_suffix = "prod",
-    tags        = { "2i2c:hub-name" : "prod" },
-  },
-}
 ebs_volumes = {
   "staging" = {
     size        = 1
