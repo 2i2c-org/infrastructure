@@ -2,6 +2,18 @@ basehub:
   userServiceAccount:
     annotations:
       eks.amazonaws.com/role-arn: arn:aws:iam::597746869805:role/nasa-ghg-hub-staging
+  dask-gateway:
+    gateway:
+      backend:
+        scheduler:
+          extraPodConfig:
+            nodeSelector:
+              2i2c/hub-name: staging
+        worker:
+          extraPodConfig:
+            nodeSelector:
+              2i2c/hub-name: staging
+
   jupyterhub:
     ingress:
       hosts: [staging.ghg.2i2c.cloud]
