@@ -39,3 +39,13 @@ jupyterhub:
     cpu:
       guarantee: 1.8625
       limit: 3.725
+dask-gateway:
+  gateway:
+    scheduler:
+      extraPodConfig:
+        nodeSelector:
+          2i2c/hub-name: climeterisk
+    worker:
+      extraPodConfig:
+        nodeSelector:
+          2i2c/hub-name: climaterisk

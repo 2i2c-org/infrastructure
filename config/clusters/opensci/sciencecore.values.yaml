@@ -174,3 +174,14 @@ binderhub-service:
   buildPodsRegistryCredentials:
     server: "https://quay.io"
     username: "2i2c-opensci-sciencecore+image_manager"
+
+dask-gateway:
+  gateway:
+    scheduler:
+      extraPodConfig:
+        nodeSelector:
+          2i2c/hub-name: sciencecore
+    worker:
+      extraPodConfig:
+        nodeSelector:
+          2i2c/hub-name: sciencecore
