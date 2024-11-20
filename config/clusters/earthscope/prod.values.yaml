@@ -28,3 +28,13 @@ basehub:
         2i2c/hub-name: prod
       extraEnv:
         SCRATCH_BUCKET: s3://earthscope-scratch/$(JUPYTERHUB_USER)
+dask-gateway:
+  gateway:
+    scheduler:
+      extraPodConfig:
+        nodeSelector:
+          2i2c/hub-name: prod
+    worker:
+      extraPodConfig:
+        nodeSelector:
+          2i2c/hub-name: prod
