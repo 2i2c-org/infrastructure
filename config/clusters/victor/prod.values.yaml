@@ -2,7 +2,17 @@ basehub:
   userServiceAccount:
     annotations:
       eks.amazonaws.com/role-arn: arn:aws:iam::129856558350:role/victor-prod
-
+  dask-gateway:
+    gateway:
+      backend:
+        scheduler:
+          extraPodConfig:
+            nodeSelector:
+              2i2c/hub-name: prod
+        worker:
+          extraPodConfig:
+            nodeSelector:
+              2i2c/hub-name: prod
   jupyterhub:
     ingress:
       hosts: [hub.victorproject.org]
