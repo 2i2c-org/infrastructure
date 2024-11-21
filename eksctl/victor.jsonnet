@@ -188,7 +188,7 @@ local daskNodes = [
     [
         ng + {
             namePrefix: 'core',
-            nameSuffix: 'a',
+            nameSuffix: 'b',
             nameIncludeInstanceType: false,
             availabilityZones: [nodeAz],
             ssh: {
@@ -200,6 +200,9 @@ local daskNodes = [
             labels+: {
                 "hub.jupyter.org/node-purpose": "core",
                 "k8s.dask.org/node-purpose": "core"
+            },
+            tags+: {
+                "2i2c:node-purpose": "core"
             },
         },
     ] + [
@@ -219,6 +222,9 @@ local daskNodes = [
             taints+: {
                 "hub.jupyter.org_dedicated": "user:NoSchedule",
                 "hub.jupyter.org/dedicated": "user:NoSchedule"
+            },
+            tags+: {
+                "2i2c:node-purpose": "user"
             },
 
         } + n for n in notebookNodes
