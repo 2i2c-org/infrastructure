@@ -332,7 +332,7 @@ local daskNodes = [
                 "k8s.dask.org/node-purpose": "worker"
             },
             tags+: {
-                "k8s.dask.org/node-purpose": "worker"
+                "2i2c:node-purpose": "worker"
             },
             taints+: {
                 "k8s.dask.org_dedicated" : "worker:NoSchedule",
