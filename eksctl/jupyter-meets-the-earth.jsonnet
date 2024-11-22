@@ -112,7 +112,7 @@ local notebookNodes = [
     {
         instanceType: "g4dn.xlarge",
         minSize: 0,
-        namePrefix: "nb-staging",
+        namePrefix: "gpu-staging",
         labels+: { "2i2c/hub-name": "staging" },
         tags+: {
             "2i2c:hub-name": "staging",
@@ -125,7 +125,7 @@ local notebookNodes = [
     {
         instanceType: "g4dn.xlarge",
         minSize: 0,
-        namePrefix: "nb-prod",
+        namePrefix: "gpu-prod",
         labels+: { "2i2c/hub-name": "prod" },
         tags+: {
             "2i2c:hub-name": "prod",
@@ -138,7 +138,7 @@ local notebookNodes = [
     {
         instanceType: "g4dn.4xlarge",
         minSize: 0,
-        namePrefix: "nb-staging",
+        namePrefix: "gpu-staging",
         labels+: { "2i2c/hub-name": "staging" },
         tags+: {
             "2i2c:hub-name": "staging",
@@ -151,7 +151,7 @@ local notebookNodes = [
     {
         instanceType: "g4dn.4xlarge",
         minSize: 0,
-        namePrefix: "nb-prod",
+        namePrefix: "gpu-prod",
         labels+: { "2i2c/hub-name": "prod" },
         tags+: {
             "2i2c:hub-name": "prod",
@@ -164,7 +164,7 @@ local notebookNodes = [
     {
         instanceType: "g4dn.16xlarge",
         minSize: 0,
-        namePrefix: "nb-staging",
+        namePrefix: "gpu-staging",
         labels+: { "2i2c/hub-name": "staging" },
         taints+: {
           "nvidia.com/gpu": "NoSchedule"
@@ -177,7 +177,7 @@ local notebookNodes = [
     {
         instanceType: "g4dn.16xlarge",
         minSize: 0,
-        namePrefix: "nb-prod",
+        namePrefix: "gpu-prod",
         labels+: { "2i2c/hub-name": "prod" },
         taints+: {
           "nvidia.com/gpu": "NoSchedule"
