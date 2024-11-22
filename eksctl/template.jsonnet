@@ -36,11 +36,30 @@ local nodeAz = "<< cluster_region >>a";
 // A `node.kubernetes.io/instance-type label is added, so pods
 // can request a particular kind of node with a nodeSelector
 local notebookNodes = [
-    { instanceType: "r5.xlarge" },
-    { instanceType: "r5.4xlarge" },
-    { instanceType: "r5.16xlarge" },
+<% for hub in hubs %>
+    // << hub >>
+    {
+        instanceType: "r5.xlarge",
+        namePrefix: "nb-<< hub >>",
+        labels+: { "2i2c/hub-name": "<< hub >>" },
+        tags+: { "2i2c:hub-name": "<< hub >>" },
+    },
+    {
+        instanceType: "r5.4xlarge",
+        namePrefix: "nb-<< hub >>",
+        labels+: { "2i2c/hub-name": "<< hub >>" },
+        tags+: { "2i2c:hub-name": "<< hub >>" },
+    },
+    {
+        instanceType: "r5.16xlarge",
+        namePrefix: "nb-<< hub >>",
+        labels+: { "2i2c/hub-name": "<< hub >>" },
+        tags+: { "2i2c:hub-name": "<< hub >>" },
+    },
+<% endfor %>
 ];
-<% if hub_type == "daskhub" %>
+
+<% if dask_nodes %>
 local daskNodes = [
     // Node definitions for dask worker nodes. Config here is merged
     // with our dask worker node definition, which uses spot instances.
@@ -52,7 +71,14 @@ local daskNodes = [
     // A not yet fully established policy is being developed about using a single
     // node pool, see https://github.com/2i2c-org/infrastructure/issues/2687.
     //
-    { instancesDistribution+: { instanceTypes: ["r5.4xlarge"] }},
+<% for hub in hubs %>
+    {
+        namePrefix: "dask-<< hub >>",
+        labels+: { "2i2c/hub-name": "<< hub >>" },
+        tags+: { "2i2c:hub-name": "<< hub >>" },
+        instancesDistribution+: { instanceTypes: ["r5.4xlarge"] }
+    },
+<% endfor %>
 ];
 <% else %>
 local daskNodes = [];
@@ -145,6 +171,9 @@ local daskNodes = [];
                 "hub.jupyter.org/node-purpose": "core",
                 "k8s.dask.org/node-purpose": "core",
             },
+            tags+: {
+                "2i2c:node-purpose": "core"
+            },
         },
     ] + [
         ng + {
@@ -164,6 +193,9 @@ local daskNodes = [];
                 "hub.jupyter.org_dedicated": "user:NoSchedule",
                 "hub.jupyter.org/dedicated": "user:NoSchedule",
             },
+            tags+: {
+                "2i2c:node-purpose": "user"
+            },
         } + n for n in notebookNodes
     ] + ( if daskNodes != null then
         [
@@ -181,6 +213,9 @@ local daskNodes = [];
             taints+: {
                 "k8s.dask.org_dedicated" : "worker:NoSchedule",
                 "k8s.dask.org/dedicated" : "worker:NoSchedule",
+            },
+            tags+: {
+                "2i2c:node-purpose": "worker"
             },
             instancesDistribution+: {
                 onDemandBaseCapacity: 0,

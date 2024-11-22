@@ -260,7 +260,6 @@ for a GCP cluster.
     - `cluster_name` - the name of the cluster
     - `cluster_region`- the region where the cluster will be deployed
     - `project_id` - the project ID of the GCP project
-    - `hub_type` (basehub/daskhub) - whether the hub deployed there would need dask or not
     - `hub_name` - the name of the first hub which will be deployed in the cluster (usually `staging`)
 
 The templates have a set of default features and define some opinionated characteristics for the cluster.

@@ -110,6 +110,14 @@ def aws(
         ...,
         prompt="The AWS account id or alias. Declare 2i2c for 2i2c's SSO based accounts and paid_by_us=true",
     ),
+    hubs: str = typer.Option(
+        "staging",
+        prompt="The list of hubs that will be deployed in the cluster separated by a comma. Example: staging, prod.",
+    ),
+    dask_nodes: bool = typer.Option(
+        False,
+        prompt='If this cluster needs dask nodes, please type "y", otherwise hit ENTER.',
+    ),
     force: bool = typer.Option(
         False,
         "--force",
@@ -134,9 +142,12 @@ def aws(
         # Also store the provider, as it's useful for some jinja templates
         # to differentiate between them when rendering the configuration
         "provider": "aws",
-        "hub_type": "basehub",
+        "dask_nodes": dask_nodes,
         "cluster_name": cluster_name,
         "cluster_region": cluster_region,
+        "hubs": hubs.replace(
+            ",", " "
+        ).split(),  # Convert the comma separated string to a list
         "sign_in_url": sign_in_url,
         "paid_by_us": str(paid_by_us).lower(),
     }

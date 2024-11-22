@@ -18,7 +18,6 @@ def cluster_entry(
     """
 
     vars = {
-        "hub_type": "basehub",
         "cluster_name": cluster_name,
         "hub_name": hub_name,
     }
