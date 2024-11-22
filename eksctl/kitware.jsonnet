@@ -63,7 +63,7 @@ local notebookNodes = [
     },
     {
       instanceType: "g4dn.xlarge",
-      namePrefix: "nb-staging",
+      namePrefix: "gpu-staging",
       labels+: { "2i2c/hub-name": "staging" },
       tags+: {
         "2i2c:hub-name": "staging",
@@ -78,7 +78,7 @@ local notebookNodes = [
     },
     {
       instanceType: "g4dn.xlarge",
-      namePrefix: "nb-prod",
+      namePrefix: "gpu-prod",
       labels+: { "2i2c/hub-name": "prod" },
       tags+: {
         "2i2c:hub-name": "prod",
