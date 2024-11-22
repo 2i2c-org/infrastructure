@@ -36,10 +36,29 @@ local nodeAz = "<< cluster_region >>a";
 // A `node.kubernetes.io/instance-type label is added, so pods
 // can request a particular kind of node with a nodeSelector
 local notebookNodes = [
-    { instanceType: "r5.xlarge" },
-    { instanceType: "r5.4xlarge" },
-    { instanceType: "r5.16xlarge" },
+<% for hub in hubs %>
+    // << hub >>
+    {
+        instanceType: "r5.xlarge",
+        namePrefix: "nb-<< hub >>",
+        labels+: { "2i2c/hub-name": "<< hub >>" },
+        tags+: { "2i2c:hub-name": "<< hub >>" },
+    },
+    {
+        instanceType: "r5.4xlarge",
+        namePrefix: "nb-<< hub >>",
+        labels+: { "2i2c/hub-name": "<< hub >>" },
+        tags+: { "2i2c:hub-name": "<< hub >>" },
+    },
+    {
+        instanceType: "r5.16xlarge",
+        namePrefix: "nb-<< hub >>",
+        labels+: { "2i2c/hub-name": "<< hub >>" },
+        tags+: { "2i2c:hub-name": "<< hub >>" },
+    },
+<% endfor %>
 ];
+
 <% if hub_type == "daskhub" %>
 local daskNodes = [
     // Node definitions for dask worker nodes. Config here is merged
