@@ -50,6 +50,7 @@ repos:
     rev: v3.0.0
     hooks:
       - id: terraform-fmt
+        exclude: terraform/aws/projects/template.tfvars
 
   # Prevent unencrypted files from being committed
   - repo: https://github.com/yuvipanda/pre-commit-hook-ensure-sops
