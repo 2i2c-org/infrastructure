@@ -84,7 +84,7 @@ local notebookNodes = [
     },
     {
         instanceType: "g4dn.xlarge",
-        namePrefix: "nb-showcase",
+        namePrefix: "gpu-showcase",
         minSize: 0,
         labels+: { "2i2c/hub-name": "showcase" },
         tags+: {
@@ -119,7 +119,7 @@ local notebookNodes = [
     },
     {
         instanceType: "g4dn.xlarge",
-        namePrefix: "nb-ncar-cisl",
+        namePrefix: "gpu-ncar-cisl",
         minSize: 0,
         labels+: { "2i2c/hub-name": "ncar-cisl" },
         tags+: {
