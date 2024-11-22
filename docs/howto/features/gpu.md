@@ -112,8 +112,12 @@ AWS, and we can configure a node group there to provide us GPUs.
    ```
     {
         instanceType: "g4dn.xlarge",
+        namePrefix: "gpu-{{hub-name}}",
+        minSize: 0,
+        labels+: { "2i2c/hub-name": "{{hub-name}}" },
         tags+: {
-            "k8s.io/cluster-autoscaler/node-template/resources/nvidia.com/gpu": "1"
+            "k8s.io/cluster-autoscaler/node-template/resources/nvidia.com/gpu": "1",
+            "2i2c:hub-name": "{{hub-name}}",
         },
         taints+: {
             "nvidia.com/gpu": "present:NoSchedule"
@@ -126,7 +130,8 @@ AWS, and we can configure a node group there to provide us GPUs.
 
    `g4dn.xlarge` gives us 1 Nvidia T4 GPU and ~4 CPUs. The `tags` definition
    is necessary to let the autoscaler know that this nodegroup has
-   1 GPU per node. The `taints` definition is required to prevent scheduling of
+   1 GPU per node and also for the cost attribution system to differentiate
+   between hubs. The `taints` definition is required to prevent scheduling of
    non-GPU pods onto the GPU nodes. If you're using a different machine type with
    more GPUs, adjust this definition accordingly.
 
