@@ -59,7 +59,7 @@ local notebookNodes = [
 <% endfor %>
 ];
 
-<% if hub_type == "daskhub" %>
+<% if dask_nodes %>
 local daskNodes = [
     // Node definitions for dask worker nodes. Config here is merged
     // with our dask worker node definition, which uses spot instances.
@@ -71,7 +71,14 @@ local daskNodes = [
     // A not yet fully established policy is being developed about using a single
     // node pool, see https://github.com/2i2c-org/infrastructure/issues/2687.
     //
-    { instancesDistribution+: { instanceTypes: ["r5.4xlarge"] }},
+<% for hub in hubs %>
+    {
+        namePrefix: "dask-<< hub >>",
+        labels+: { "2i2c/hub-name": "<< hub >>" },
+        tags+: { "2i2c:hub-name": "<< hub >>" },
+        instancesDistribution+: { instanceTypes: ["r5.4xlarge"] }
+    },
+<% endfor %>
 ];
 <% else %>
 local daskNodes = [];
