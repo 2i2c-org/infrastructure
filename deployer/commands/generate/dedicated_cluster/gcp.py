@@ -63,6 +63,10 @@ def gcp(
     project_id: str = typer.Option(
         ..., prompt="Please insert the Project ID of the GCP project"
     ),
+    dask_nodes: bool = typer.Option(
+        False,
+        prompt='If this cluster needs dask nodes, please type "y", otherwise hit ENTER.',
+    ),
     force: bool = typer.Option(
         False,
         "--force",
@@ -79,7 +83,7 @@ def gcp(
         # Also store the provider, as it's useful for some jinja templates
         # to differentiate between them when rendering the configuration
         "provider": "gcp",
-        "hub_type": "basehub",
+        "dask_nodes": dask_nodes,
         "cluster_name": cluster_name,
         "cluster_region": cluster_region,
         "project_id": project_id,
