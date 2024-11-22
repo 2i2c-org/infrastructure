@@ -20,13 +20,16 @@ on:
       - "!deployer/commands/generate/dedicated_cluster/**"
       - "!deployer/commands/generate/hub_asset/**"
       - "!deployer/commands/generate/resource_allocation/**"
-      - "!config/clusters/templates/**"
       - requirements.txt
       - .github/actions/setup-deploy/**
       - helm-charts/**
       - config/clusters/**
       # Exclude the template configuration files
-      - "!config/clusters/templates"
+      - "!config/clusters/templates/**"
+      - "!terraform/aws/projects/template.tfvars"
+      - "!terraform/gcp/projects/cluster.tfvars.template"
+      - "!eksctl/template.jsonnet"
+
   pull_request:
     branches:
       - main
@@ -44,7 +47,10 @@ on:
       - helm-charts/**
       - config/clusters/**
       # Exclude the template configuration files
-      - "!config/clusters/templates"
+      - "!config/clusters/templates/**"
+      - "!terraform/aws/projects/template.tfvars"
+      - "!terraform/gcp/projects/cluster.tfvars.template"
+      - "!eksctl/template.jsonnet"
 
 # Queue triggered executions of this workflow stemming from pushes to avoid
 # deployment conflicts.
