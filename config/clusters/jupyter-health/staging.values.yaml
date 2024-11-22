@@ -35,6 +35,7 @@ jupyterhub:
           # this is the test user account
           - anna@example.com
           - fernando.perez@berkeley.edu
+          - maryam.vareth@berkeley.edu
     extraConfig:
       # add access tokens via auth state
       auth_state_env.py: |
