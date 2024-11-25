@@ -79,6 +79,7 @@ basehub:
             - Intercoonecta:ohwes24-organizers
             - Intercoonecta:ohwes24-mentor-helper-presenter
             - Intercoonecta:ohwes24-participants-tallerintermed
+            - Intercoonecta:ohwes24-participants-hackaton
             - oceanhackweek:ohw24-organizers
             - oceanhackweek:ohw24-project-mentors
             - oceanhackweek:ohw24-tutorial-presenters
