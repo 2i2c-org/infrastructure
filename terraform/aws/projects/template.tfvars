@@ -14,6 +14,15 @@ enable_aws_ce_grafana_backend_iam = true
 #
 
 {% for hub in hubs %}
+filestores = {
+  "{{ hub }}" = {
+    name_suffix = "{{ hub }}",
+    tags        = { "2i2c:hub-name" : "{{ hub }}" },
+  },
+}
+{% endfor %}
+
+{% for hub in hubs %}
 # "scratch-{{ hub }}" : {
 #   "delete_after" : 7,
 #   "tags" : { "2i2c:hub-name" : "{{ hub }}" },
