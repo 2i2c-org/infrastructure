@@ -1,6 +1,10 @@
 (features:shared-cluster:dedicated-nodepool)=
 # Setup a dedicated nodepool for a hub on a shared cluster
 
+```{important}
+On AWS, all clusters have dedicated nodepools for each hub.
+```
+
 Some hubs on shared clusters require dedicated nodepools, for a few reasons:
 
 1. Helpful to pre-warm during events, as we can scale a single nodepool up/down
@@ -77,72 +81,7 @@ Some hubs on shared clusters require dedicated nodepools, for a few reasons:
 
 ````{tab-item} AWS
 :sync: aws-key
-
-1. Setup a new nodepool in eksctl, via the `eksctl/<cluster-name>.jsonnet` for the
-   cluster. Add the new nodepool to `notebookNodes`:
-
-   ```
-   notebookNodes = [
-   {
-      {
-        instanceType: "<type>",
-        nameSuffix: 'dedicated',
-        labels+: {
-            "2i2c.org/community": "<community-name>"
-        },
-        tags+: {
-            "community": "<community-name>"
-        },
-        taints+: {
-            "2i2c.org/community": "<community-name>:NoSchedule"
-        },
-      },
-   }]
-   ```
-
-   This sets up a new node with:
-
-   1. Kubernetes labels so we can tell the scheduler that user pods of this hub
-      should come to this nodepool.
-   2. Kubernetes taints so user pods of *other* hubs will not be scheduled on this
-      nodepool.
-   3. AWS tags (unrelated to Kubernetes Labels!) that help us track costs.
-      The key name here is different from (1) and (2) because it must start with a
-      letter, and can not contain `/`.
-
-   Once done, run:
-
-   1. Export the jsonnet to eksctl.yaml
-
-      ```bash
-      jsonnet $CLUSTER_NAME.jsonnet > $CLUSTER_NAME.eksctl.yaml
-      ```
-   2. Create the new nodepool
-
-      ```bash
-      eksctl create nodegroup -f $CLUSTER_NAME.eksctl.yaml
-      ```
-
-2. Configure the hub's helm values to use this nodepool, and this nodepool only.
-
-   ```yaml
-   jupyterhub:
-     singleuser:
-       nodeSelector:
-         2i2c.org/community: <community-name>
-       extraTolerations:
-         - key: 2i2c.org/community
-           operator: Equal
-           value: <community-name>
-           effect: NoSchedule
-   ```
-
-   ```{note}
-   If this is a `daskhub`, nest these under a `basehub` key.
-   ```
-
-   This tells JupyterHub to place user pods from this hub on the nodepool we had
-   just created!
+On AWS, all clusters have dedicated nodepools for each hub.
 ````
 `````
 
