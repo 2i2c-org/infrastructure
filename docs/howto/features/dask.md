@@ -23,6 +23,22 @@ To enable dask-gateway support on a hub, the following configuration changes nee
           enabled: true
     ```
 
+1. set appropriate tags on worker and scheduler pods in order for the cost allocation system to pick the up accordingly
+
+    ```yaml
+    dask-gateway:
+      gateway:
+        backend:
+          scheduler:
+            extraPodConfig:
+              nodeSelector:
+                2i2c/hub-name: {{ hub-name }}
+          worker:
+            extraPodConfig:
+              nodeSelector:
+                2i2c/hub-name: {{ hub-name }}
+    ```
+
 1. set `jupyterhub.singleuser.cloudMetadata.blockWithIptables` to false:
 
     This is to don't block access to the cloud provider's metadata server!
@@ -86,21 +102,17 @@ AWS, and we can configure a node group there for the dask pods to run onto.
 
 1. In the appropriate `.jsonnet` file, update the `local daskNodes`:
 
-    This is how it could look in a .jsonnet file after updating the local daskNodes = [] variable:
+    This is how it could look in a .jsonnet file after updating the local daskNodes = [] variable.
+    Note that there needs to be one nodegroup dictionary per hub and {{hub-name}} should be replaced with the actual name of the hub.
 
     ```
     local daskNodes = [
-        // Node definitions for dask worker nodes. Config here is merged
-        // with our dask worker node definition, which uses spot instances.
-        // A `node.kubernetes.io/instance-type label is set to the name of the
-        // *first* item in instanceDistribution.instanceTypes, to match
-        // what we do with notebook nodes. Pods can request a particular
-        // kind of node with a nodeSelector
-        //
-        // A not yet fully established policy is being developed about using a single
-        // node pool, see https://github.com/2i2c-org/infrastructure/issues/2687.
-        //
-        { instancesDistribution+: { instanceTypes: ["r5.4xlarge"] }},
+      {
+        namePrefix: "dask-{{hub-name}}",
+        labels+: { "2i2c/hub-name": "{{hub-name}}" },
+        tags+: { "2i2c:hub-name": "{{hub-name}}" },
+        instancesDistribution+: { instanceTypes: ["r5.4xlarge"] }
+      },
     ];
     ```
 
