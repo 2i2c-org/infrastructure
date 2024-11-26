@@ -1,85 +1,14 @@
 (howto:cost-attribution:enable-aws)=
 # Enable AWS cost attribution system
 
-```{important}
-Until the [epic to roll out a cost attribution system in all AWS
-clusters](https://github.com/2i2c-org/infrastructure/issues/4872) is finalized,
-this documentation is subject to active change.
-```
-
 The AWS cost attribution system, referenced as the system in this document,
 consists of the `aws-ce-grafana-backend` Helm chart and a Grafana dashboard
 using the backend as a data source.
 
-## Practical steps
+Checkout the docs at [](topic:billing:cost-attribution) for more information on
+the system.
 
-### 1. Tag cloud infra
-
-The system relies on _at least one of these tags_ to be on any cloud infra to
-attribute cost to.
-
-- `2i2c.org/cluster-name`
-- `alpha.eksctl.io/cluster-name`
-- `kubernetes.io/cluster/<cluster name>`
-
-```{important}
-Currently, on clusters that have a k8s version greater or equal with 1.30,
-terraform managed resources already have the `2i2c.org/cluster-name`
-tag configured via the `default_tags` variable, and eksctl managed resources
-already have the tag configured for node groups via `nodegroup.libsonnet`.
-
-On clusters that have a k8s version less than 1.30, eksctl managed resources,
-the `alpha.eksctl.io/cluster-name` and `kubernetes.io/cluster/<cluster name>`
-tags are present and used instead.
-
-New clusters have _all_ eksctl managed resources configured to be tagged, not
-just the node groups. This isn't important to ensure for existing clusters'
-cost attribution though.
-```
-
-The system also relies on the tag `2i2c:hub-name` to be specified in addition to
-the tags above for any cloud infra tied to specific hubs.
-
-We only need to ensure the `2i2c.org/cluster-name` and `2i2c:hub-name` tags are
-declared, the others are applied by `eksctl` and Kubernetes controllers that can
-create cloud resources to represent k8s resources (block storage volumes for k8s
-PV resources referencing certain storage classes, and load balancers for k8s
-Service's of type LoadBalancer).
-
-1. _Configure `2i2c:hub-name` tags_
-
-   For any resource _specific to a hub_, declare an additional tag
-   `2i2c:hub-name=<hub name>`. If this isn't done, they will be listed under a
-   `shared` instead.
-
-   The following resources are known to be hub specific in some cases and known
-   to incur costs.
-
-   - **S3 buckets** in terraform
-   - **EFS storage** in terraform
-   - **EBS volumes** in terraform
-   - **Node groups** in eksctl
-
-   ```{important}
-   If EFS, EBS or nodegroups are not split based on the hub they're deployed to
-   and instead they are shared by the entire cluster, then splitting it in order
-   to add the `2i2c:hub-name` tag is an opt-in feature because the split incurs
-   additional cloud costs and startup times for communities.
-
-   See the following GitHub issue for additional context
-   https://github.com/2i2c-org/infrastructure/issues/4928#issuecomment-2417091407
-   ```
-
-   Search and mimic configuration of other clusters to understand how to
-   configure the `2i2c:hub-name` tags for specific cloud infra types.
-
-2. _Apply changes_
-
-   1. If you changed anything in terraform, apply those changes.
-   2. If you changed anything in eksctl, apply those changed by re-creating
-      those resources.
-
-### 2. Enable cost allocation tags
+### 1. Enable cost allocation tags
 
 Enabling cost allocation tags via terraform can be done for standalone AWS
 accounts, but not for member accounts part of an organization that we don't manage.
@@ -90,22 +19,10 @@ Due to this, we'll provide separate ways of doing this depending on the situatio
 ````{tab-item} Standalone account
 :sync: standalone
 
-In standalone accounts, we should have relevant permissions. Use terraform to
-enable relevant tags to also function as a cost allocation tags.
+The relevant tags are already present in the terraform template used to generate
+the new cluster and will be applied when creating the cluster.
 
-Configure the following terraform variable like below and apply the changes.
-
-```
-active_cost_allocation_tags = [
-  "2i2c:hub-name",
-  "2i2c.org/cluster-name",
-  "alpha.eksctl.io/cluster-name",
-  "kubernetes.io/cluster/{var_cluster_name}",
-  "kubernetes.io/created-for/pvc/namespace",
-]
-```
-
-The apply operation could fail with the following errors:
+If the apply operation fails with the following errors:
 
 1. _Tag keys not found_
 
@@ -178,7 +95,7 @@ not used by `aws-ce-grafana-backend`, as it could help us attribute cost for
 storage disks dynamically provisioned in case that's relevant in the future.
 ```
 
-### 3. (optional) Backfill billing data
+### 2. (optional) Backfill billing data
 
 You can optionally backfill billing data to tags having been around for a while
 but not enabled as cost allocation tags.
@@ -188,15 +105,15 @@ process the request. Make a request through the AWS web console by navigating to
 "Cost allocation tags" under "Billing and Cost Management", then from there
 click the "Backfill tags" button.
 
-### 4. Install `aws-ce-grafana-backend`
+### 3. Install `aws-ce-grafana-backend`
 
-In the cluster's terraform variables, declare and apply the following:
+In the cluster's terraform variables, make sure the following is present:
 
 ```
 enable_aws_ce_grafana_backend_iam = true
 ```
 
-Look at the terraform output named `aws_ce_grafana_backend_k8s_sa_annotation`:
+After applying this, look at the terraform output named `aws_ce_grafana_backend_k8s_sa_annotation`:
 
 ```
 terraform output -raw aws_ce_grafana_backend_k8s_sa_annotation
