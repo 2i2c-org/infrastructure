@@ -8,7 +8,7 @@ resource "aws_ebs_volume" "nfs_home_dirs" {
 
   tags = merge(each.value.tags, {
     Name      = each.value.name_suffix == null ? "hub-nfs-home-dirs" : "hub-nfs-home-dirs-${each.value.name_suffix}"
-    NFSBackup = var.enable_nfs_backup ? "true" : "false"  # Tag to identify volumes to backup by Data Lifecycle Manager (DLM)
+    NFSBackup = var.enable_nfs_backup ? "true" : "false" # Tag to identify volumes to backup by Data Lifecycle Manager (DLM)
   })
 
   lifecycle {
