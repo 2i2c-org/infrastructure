@@ -40,3 +40,14 @@ filestores = {
 #    },
 #  },
 {% endfor %}
+
+# Enable cost allocation tags
+# This will work for for standalone AWS accounts,
+# but fail for member accounts part of an organization that we don't manage.
+active_cost_allocation_tags = [
+  "2i2c:hub-name",
+  "2i2c.org/cluster-name",
+  "alpha.eksctl.io/cluster-name",
+  "kubernetes.io/cluster/{var_cluster_name}",
+  "kubernetes.io/created-for/pvc/namespace",
+]
