@@ -2,6 +2,7 @@
 # Data Lifecycle Manager (DLM) is used to automate backup of EBS volumes.
 
 resource "aws_iam_role" "dlm_lifecycle_role" {
+  count = var.enable_nfs_backup ? 1 : 0
   name = "dlm-lifecycle-role"
 
   assume_role_policy = jsonencode({
@@ -20,6 +21,7 @@ resource "aws_iam_role" "dlm_lifecycle_role" {
 
 # Attach required policy to the IAM role
 resource "aws_iam_role_policy" "dlm_lifecycle" {
+  count = var.enable_nfs_backup ? 1 : 0
   name = "dlm-lifecycle-policy"
   role = aws_iam_role.dlm_lifecycle_role.id
 
@@ -51,6 +53,7 @@ resource "aws_iam_role_policy" "dlm_lifecycle" {
 
 # Create the DLM lifecycle policy for NFS home directories backup
 resource "aws_dlm_lifecycle_policy" "nfs_backup" {
+  count = var.enable_nfs_backup ? 1 : 0
   description        = "DLM lifecycle policy for NFS home directories backup"
   execution_role_arn = aws_iam_role.dlm_lifecycle_role.arn
   state              = "ENABLED"
