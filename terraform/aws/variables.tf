@@ -208,7 +208,7 @@ variable "default_budget_alert" {
 }
 
 variable "disable_cluster_wide_filestore" {
-  default     = false
+  default     = true
   type        = bool
   description = <<-EOT
   Whether or not the initial cluster-wide `homedirs` filestore
