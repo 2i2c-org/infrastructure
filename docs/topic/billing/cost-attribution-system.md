@@ -2,10 +2,10 @@
 # Cost Attribution System
 
 The Cost Attribution System is designed to monitor and attribute cloud
-infrastructure costs to specific hub deployments managed. This system
-integrates with the [AWS Cost Explorer
+infrastructure costs to 2i2c hub deployments. This system integrates with the
+[AWS Cost Explorer
 API](https://docs.aws.amazon.com/cost-management/latest/userguide/ce-api.html)
-to provide detailed cost insights within a hub's Grafana dashboard.
+to provide detailed cost insights from a hub's Grafana dashboard.
 
 {{% callout note %}} Note that this feature is currently available to AWS
 hosted hubs only and will be rolled out to other cloud providers in the
