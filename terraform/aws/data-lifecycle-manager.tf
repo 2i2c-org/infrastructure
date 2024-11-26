@@ -53,7 +53,7 @@ resource "aws_iam_role_policy" "dlm_lifecycle" {
 resource "aws_dlm_lifecycle_policy" "nfs_backup" {
   description        = "DLM lifecycle policy for NFS home directories backup"
   execution_role_arn = aws_iam_role.dlm_lifecycle_role.arn
-  state             = "ENABLED"
+  state              = "ENABLED"
 
   policy_details {
     resource_types = ["VOLUME"]
@@ -68,7 +68,7 @@ resource "aws_dlm_lifecycle_policy" "nfs_backup" {
       }
 
       retain_rule {
-        count = 5  # Keep last 5 daily backups
+        count = 5 # Keep last 5 daily backups
       }
 
       tags_to_add = {
@@ -80,7 +80,7 @@ resource "aws_dlm_lifecycle_policy" "nfs_backup" {
     }
 
     target_tags = {
-      NFSBackup = "true"  # Tag to identify volumes to backup
+      NFSBackup = "true" # Tag to identify volumes to backup
     }
   }
 }
