@@ -8,6 +8,8 @@ using the backend as a data source.
 Checkout the docs at [](topic:billing:cost-attribution) for more information on
 the system.
 
+## Steps
+
 ### 1. Enable cost allocation tags
 
 Enabling cost allocation tags via terraform can be done for standalone AWS
