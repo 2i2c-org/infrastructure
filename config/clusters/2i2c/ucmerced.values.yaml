@@ -18,7 +18,8 @@ jupyterhub:
           # See https://2i2c.freshdesk.com/a/tickets/2076
           # See https://2i2c.freshdesk.com/a/tickets/2138
           # See https://2i2c.freshdesk.com/a/tickets/2396
-          image: quay.io/cirt_ucm/jupyter-scipy-xarray:0b689eb927fa
+          # See https://2i2c.freshdesk.com/a/tickets/2486
+          image: quay.io/cirt_ucm/jupyter-scipy-xarray:e7a77e8fcd6a
           # Launch into JupyterLab after the user logs in
           default_url: /lab
       - display_name: R
