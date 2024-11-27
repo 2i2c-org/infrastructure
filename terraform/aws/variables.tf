@@ -308,3 +308,11 @@ variable "ebs_volumes" {
   server to store home directories for users.
   EOT
 }
+
+variable "enable_nfs_backup" {
+  type        = bool
+  default     = false
+  description = <<-EOT
+  Enable backup of NFS home directories using Data Lifecycle Manager (DLM).
+  EOT
+}

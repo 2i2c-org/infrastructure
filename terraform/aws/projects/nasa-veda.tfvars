@@ -226,4 +226,6 @@ ebs_volumes = {
   }
 }
 
+enable_nfs_backup = true
+
 original_single_efs_tags = { "2i2c:hub-name" : "prod" }
