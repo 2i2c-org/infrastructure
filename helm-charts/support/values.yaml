@@ -65,10 +65,6 @@ ingress-nginx:
 # values ref: https://github.com/prometheus-community/helm-charts/blob/main/charts/prometheus/values.yaml
 #
 prometheus:
-  # alertmanager is an optional prometheus chart dependency that we opt-out from
-  # as we favor Grafana for this functionality. Grafana provides alerts and does
-  # so with a better UI that we expose publicly behind auth anyhow.
-  #
   alertmanager:
     enabled: false
 
