@@ -23,7 +23,7 @@ resource "aws_iam_role" "dlm_lifecycle_role" {
 resource "aws_iam_role_policy" "dlm_lifecycle" {
   count = var.enable_nfs_backup ? 1 : 0
   name  = "dlm-lifecycle-policy"
-  role  = aws_iam_role.dlm_lifecycle_role.id
+  role  = aws_iam_role.dlm_lifecycle_role[0].id
 
   policy = jsonencode({
     Version = "2012-10-17"
@@ -55,7 +55,7 @@ resource "aws_iam_role_policy" "dlm_lifecycle" {
 resource "aws_dlm_lifecycle_policy" "nfs_backup" {
   count              = var.enable_nfs_backup ? 1 : 0
   description        = "DLM lifecycle policy for NFS home directories backup"
-  execution_role_arn = aws_iam_role.dlm_lifecycle_role.arn
+  execution_role_arn = aws_iam_role.dlm_lifecycle_role[0].arn
   state              = "ENABLED"
 
   policy_details {
