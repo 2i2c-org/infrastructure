@@ -87,3 +87,5 @@ basehub:
     quotaEnforcer:
       hardQuota: "10" # in GB
       path: "/export/staging"
+    prometheusExporter:
+      enabled: true
