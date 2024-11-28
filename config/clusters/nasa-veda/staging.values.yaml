@@ -65,7 +65,6 @@ basehub:
     config:
       KubernetesBuildExecutor:
         node_selector:
-          node.kubernetes.io/instance-type: r5.xlarge
           2i2c/hub-name: staging
       BinderHub:
         # something like <region>-docker.pkg.dev/<project-name>/<repository-name> for grc.io
