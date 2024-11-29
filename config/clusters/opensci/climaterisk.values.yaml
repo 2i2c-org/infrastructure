@@ -30,6 +30,9 @@ jupyterhub:
     image:
       name: quay.io/2i2c/sciencecore-climaterisk-image
       tag: "09c3a11f1698"
+    extraEnv:
+      GH_SCOPED_CREDS_CLIENT_ID: Iv23lijUItbe0FgDL5Dr
+      GH_SCOPED_CREDS_APP_URL: https://github.com/apps/climaterisk-gh-scoped-creds
     nodeSelector:
       node.kubernetes.io/instance-type: r5.4xlarge
       2i2c/hub-name: climaterisk
