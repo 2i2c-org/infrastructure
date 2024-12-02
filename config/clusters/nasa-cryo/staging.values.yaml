@@ -30,3 +30,11 @@ basehub:
           extraPodConfig:
             nodeSelector:
               2i2c/hub-name: staging
+  jupyterhub-home-nfs:
+    enabled: true
+    eks:
+      enabled: true
+      volumeId: vol-02e09b4fdbf07100a
+    quotaEnforcer:
+      hardQuota: "0.1" # in GB
+      path: "/export/staging"
