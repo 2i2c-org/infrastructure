@@ -55,6 +55,8 @@ jupyterhub:
           - sean.smorris@berkeley.edu
           - bl222@humboldt.edu
           - bj117@humboldt.edu
+          - btc26@humboldt.edu
+          - rkc20@humboldt.edu
   cull:
     # Cull after 30min of inactivity
     every: 300
