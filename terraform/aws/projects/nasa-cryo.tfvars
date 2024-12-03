@@ -4,6 +4,16 @@ cluster_nodes_location = "us-west-2a"
 
 enable_aws_ce_grafana_backend_iam = true
 
+disable_cluster_wide_filestore = false
+ebs_volumes = {
+  "staging" = {
+    size        = 1
+    type        = "gp3"
+    name_suffix = "staging"
+    tags        = { "2i2c:hub-name" : "staging" }
+  }
+}
+
 user_buckets = {
   "scratch-staging" : {
     "delete_after" : 7,

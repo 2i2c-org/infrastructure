@@ -1,4 +1,7 @@
 basehub:
+  nfs:
+    pv:
+      serverIP: 10.100.177.142
   userServiceAccount:
     annotations:
       eks.amazonaws.com/role-arn: arn:aws:iam::574251165169:role/nasa-cryo-staging
@@ -30,3 +33,11 @@ basehub:
           extraPodConfig:
             nodeSelector:
               2i2c/hub-name: staging
+  jupyterhub-home-nfs:
+    enabled: true
+    eks:
+      enabled: true
+      volumeId: vol-02e09b4fdbf07100a
+    quotaEnforcer:
+      hardQuota: "0.1" # in GB
+      path: "/export/staging"
