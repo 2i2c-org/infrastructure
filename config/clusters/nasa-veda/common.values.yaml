@@ -123,6 +123,8 @@ basehub:
           profile_options:
             image:
               display_name: Environment
+              dynamic_image_building:
+                enabled: true
               unlisted_choice:
                 enabled: True
                 display_name: "Custom image"
@@ -252,6 +254,8 @@ basehub:
           profile_options:
             image:
               display_name: Environment
+              dynamic_image_building:
+                enabled: true
               unlisted_choice:
                 enabled: true
                 display_name: "Custom image"
@@ -285,3 +289,15 @@ basehub:
     scheduling:
       userScheduler:
         enabled: true
+
+  binderhub-service:
+    enabled: true
+    # Explicitly specify what nodes we want for our builds
+    # Otherwise we may scale up a larger node than needed
+    dockerApi:
+      nodeSelector:
+        node.kubernetes.io/instance-type: r5.xlarge
+    config:
+      KubernetesBuildExecutor:
+        node_selector:
+          node.kubernetes.io/instance-type: r5.xlarge
