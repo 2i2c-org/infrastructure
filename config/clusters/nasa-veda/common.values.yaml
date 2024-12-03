@@ -292,3 +292,12 @@ basehub:
 
   binderhub-service:
     enabled: true
+    # Explicitly specify what nodes we want for our builds
+    # Otherwise we may scale up a larger node than needed
+    dockerApi:
+      nodeSelector:
+        node.kubernetes.io/instance-type: r5.xlarge
+    config:
+      KubernetesBuildExecutor:
+        node_selector:
+          node.kubernetes.io/instance-type: r5.xlarge
