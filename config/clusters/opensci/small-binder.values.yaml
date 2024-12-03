@@ -23,9 +23,9 @@ jupyterhub:
       node.kubernetes.io/instance-type: r5.xlarge
       2i2c/hub-name: small-binder
     cpu:
-      limit: 2
+      limit: 1
     memory:
-      limit: 4G
+      limit: 2G
       guarantee: 2G
     storage:
       type: none

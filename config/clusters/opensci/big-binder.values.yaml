@@ -56,10 +56,10 @@ jupyterhub:
     cloudMetadata:
       blockWithIptables: false
     cpu:
-      limit: 0.25
+      limit: 4
     memory:
-      limit: 1G
-      guarantee: 256M
+      limit: 8G
+      guarantee: 8G
     storage:
       type: none
       extraVolumeMounts: []
