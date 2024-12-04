@@ -1,0 +1,42 @@
+prometheusIngressAuthSecret:
+  enabled: true
+
+prometheus:
+  server:
+    ingress:
+      enabled: true
+      hosts:
+        - prometheus.maap.2i2c.cloud
+      tls:
+        - secretName: prometheus-tls
+          hosts:
+            - prometheus.maap.2i2c.cloud
+
+grafana:
+  grafana.ini:
+    server:
+      root_url: https://grafana.maap.2i2c.cloud/
+  auth.github:
+    enabled: true
+    allowed_organizations: 2i2c-org
+  ingress:
+    hosts:
+      - grafana.maap.2i2c.cloud
+    tls:
+      - secretName: grafana-tls
+        hosts:
+          - grafana.maap.2i2c.cloud
+
+aws-ce-grafana-backend:
+  enabled: true
+  envBasedConfig:
+    clusterName: maap
+  serviceAccount:
+    annotations:
+      eks.amazonaws.com/role-arn: arn:aws:iam::916098889494:role/aws_ce_grafana_backend_iam_role
+
+cluster-autoscaler:
+  enabled: true
+  autoDiscovery:
+    clusterName: maap
+  awsRegion: us-west-2
