@@ -9,7 +9,7 @@ jupyterhub:
         secretName: https-auto-tls
   hub:
     config:
-      GitHubOAuthenticator:
+      GenericOAuthenticator:
         oauth_callback_url: https://jupyter-health.2i2c.cloud/hub/oauth_callback
   singleuser:
     nodeSelector:
