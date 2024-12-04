@@ -35,11 +35,11 @@ jupyterhub:
         manage_groups: true
         auth_state_groups_key: "organizations"
         allowed_groups:
-          - "20013"  # BIDS (~all users are here)
-          - "20014"  # 2i2c
-          - "20008"  # Yaffe Lab
-          - "20005"  # Moslehi Lab 
-          - "20006"  # Olgin Lab
+          - "20013" # BIDS (~all users are here)
+          - "20014" # 2i2c
+          - "20008" # Yaffe Lab
+          - "20005" # Moslehi Lab
+          - "20006" # Olgin Lab
     extraConfig:
       # add access tokens via auth state
       auth_state_env.py: |
