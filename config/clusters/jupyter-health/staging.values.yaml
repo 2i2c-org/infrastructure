@@ -32,16 +32,33 @@ jupyterhub:
         admin_users:
           - benjaminrk@gmail.com
           - yuvipanda@2i2c.org
-        allowed_users:
-          # TODO: implement allow based on organization membership,
-          # so we don't have to add users one at a time
-          # this is the test user account
-          - anna@example.com
-          - fernando.perez@berkeley.edu
-          - maryam.vareth@berkeley.edu
+        manage_groups: true
+        auth_state_groups_key: "organizations"
+        allowed_groups:
+          - "20013"  # BIDS (~all users are here)
+          - "20014"  # 2i2c
+          - "20008"  # Yaffe Lab
+          - "20005"  # Moslehi Lab 
+          - "20006"  # Olgin Lab
     extraConfig:
       # add access tokens via auth state
       auth_state_env.py: |
+        # get organization membership for allowed_groups
+        async def auth_state_hook(authenticator, auth_state):
+            if not auth_state:
+                return auth_state
+            access_token = auth_state["access_token"]
+            org_url = "https://jhe.fly.dev/api/v1/users/organizations"
+            organizations = await authenticator.httpfetch(
+                org_url,
+                headers={"Authorization": f"Bearer {access_token}"}
+            )
+            # use string ids for now
+            auth_state["organizations"] = [str(org['id']) for org in organizations]
+            return auth_state
+
+        c.OAuthenticator.modify_auth_state_hook = auth_state_hook
+
         def auth_state_env(spawner, auth_state):
             if not auth_state:
                 spawner.log.warning(f"Missing auth state for user {spawner.user.name}")
