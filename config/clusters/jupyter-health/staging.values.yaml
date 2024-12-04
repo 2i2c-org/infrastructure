@@ -15,6 +15,9 @@ jupyterhub:
         # requires logging into this hub. But since Jupyter Health team members have access to this
         # repo, this is acceptable
         authenticator_class: generic-oauth
+        # set cookie max age to 1
+        # while we don't have refresh tokens enabled
+        cookie_max_age_days: 1
       GenericOAuthenticator:
         client_id: Ima7rx8D6eko0PzlU1jK28WBUT2ZweZj7mqVG2wm
         oauth_callback_url: https://staging.jupyter-health.2i2c.cloud/hub/oauth_callback
