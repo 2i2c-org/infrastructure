@@ -2,7 +2,8 @@
 # install oauthenticator 17.1,
 # which adds PKCE support.
 # experiment no longer needed when base chart is updated to z2jh 4.0.0
-oauthenticator>=17.1,<18
+# Experiment with https://github.com/jupyterhub/oauthenticator/pull/780 and oauthenticator 17.2
+git+https://github.com/minrk/oauthenticator@refresh-skip
 
 
 # jupyterhub-configurator isn't maintained and its not intended to be developed
