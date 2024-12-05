@@ -34,6 +34,7 @@ jobs:
           - cluster_name: jupyter-meets-the-earth
           - cluster_name: kitware
           - cluster_name: leap
+          - cluster_name: maap
           - cluster_name: nasa-cryo
           - cluster_name: nasa-ghg
           - cluster_name: nasa-veda
