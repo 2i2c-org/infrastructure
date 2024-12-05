@@ -12,26 +12,19 @@ support:
     - support.values.yaml
     - enc-support.secret.values.yaml
 hubs:
-  []
-  # Uncomment the lines below once the support infrastructure was deployed and
-  # you are ready to add the first cluster
-
-  # - name: staging
-  #   # Tip: consider changing this to something more human friendly
-  #   display_name: "maap - staging"
-  #   domain: staging.maap.2i2c.cloud
-  #   helm_chart: basehub
-  #   helm_chart_values_files:
-  #     - common.values.yaml
-  #     - staging.values.yaml
-  #     - enc-staging.secret.values.yaml
-
-  # - name: prod
-  #   # Tip: consider changing this to something more human friendly
-  #   display_name: "maap - prod"
-  #   domain: prod.maap.2i2c.cloud
-  #   helm_chart: basehub
-  #   helm_chart_values_files:
-  #     - common.values.yaml
-  #     - prod.values.yaml
-  #     - enc-prod.secret.values.yaml
+  - name: staging
+    display_name: "MAAP - staging"
+    domain: staging.hub.maap.2i2c.cloud
+    helm_chart: basehub
+    helm_chart_values_files:
+      - common.values.yaml
+      - staging.values.yaml
+      - enc-staging.secret.values.yaml
+  - name: prod
+    display_name: "MAAP - prod"
+    domain: hub.maap.2i2c.cloud
+    helm_chart: basehub
+    helm_chart_values_files:
+      - common.values.yaml
+      - prod.values.yaml
+      - enc-prod.secret.values.yaml

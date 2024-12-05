@@ -1,0 +1,73 @@
+nfs:
+  pv:
+    serverIP: fs-024fede5429e74439.efs.us-west-2.amazonaws.com
+userServiceAccount:
+  annotations:
+    eks.amazonaws.com/role-arn: arn:aws:iam::916098889494:role/maap-prod
+jupyterhub:
+  singleuser:
+    extraEnv:
+      SCRATCH_BUCKET: s3://maap-scratch-prod/$(JUPYTERHUB_USER)
+    nodeSelector:
+      2i2c/hub-name: prod
+    initContainers:
+      - &volume_ownership_fix_initcontainer
+        name: volume-mount-ownership-fix
+        image: busybox:1.36.1
+        command:
+          - sh
+          - -c
+          - id && chown 1000:1000 /home/jovyan /home/jovyan/shared /home/jovyan/shared-public && ls -lhd /home/jovyan
+        securityContext:
+          runAsUser: 0
+        volumeMounts:
+          - name: home
+            mountPath: /home/jovyan
+            subPath: "{username}"
+          # Mounted without readonly attribute here,
+          # so we can chown it appropriately
+          - name: home
+            mountPath: /home/jovyan/shared
+            subPath: _shared
+          - name: home
+            mountPath: /home/jovyan/shared-public
+            subPath: _shared-public
+  hub:
+    config:
+      GitHubOAuthenticator:
+        oauth_callback_url: https://hub.maap.2i2c.cloud/hub/oauth_callback
+  ingress:
+    hosts: [hub.maap.2i2c.cloud]
+    tls:
+      - hosts: [hub.maap.2i2c.cloud]
+        secretName: https-auto-tls
+
+dask-gateway:
+  gateway:
+    backend:
+      scheduler:
+        extraPodConfig:
+          nodeSelector:
+            2i2c/hub-name: prod
+      worker:
+        extraPodConfig:
+          node_selector:
+            2i2c/hub-name: prod
+      imagePullSecrets: [{ name: image-pull-secret }]
+
+binderhub-service:
+  dockerApi:
+    nodeSelector:
+      2i2c/hub-name: prod
+  config:
+    KubernetesBuildExecutor:
+      node_selector:
+        2i2c/hub-name: prod
+    BinderHub:
+      image_prefix: quay.io/maap-imagebuilding/prod-
+    DockerRegistry:
+      url: &url https://quay.io
+      username: &username maap-imagebuilding+image_builder
+  buildPodsRegistryCredentials:
+    server: *url
+    username: *username
