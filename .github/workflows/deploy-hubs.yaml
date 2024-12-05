@@ -249,6 +249,7 @@ jobs:
       failure_jupyter-meets-the-earth: "${{ env.failure_jupyter-meets-the-earth }}"
       failure_kitware: "${{ env.failure_kitware }}"
       failure_leap: "${{ env.failure_leap }}"
+      failure_maap: "${{ env.failure_maap }}"
       failure_nasa-cryo: "${{ env.failure_nasa-cryo }}"
       failure_nasa-ghg: "${{ env.failure_nasa-ghg }}"
       failure_nasa-veda: "${{ env.failure_nasa-veda }}"
