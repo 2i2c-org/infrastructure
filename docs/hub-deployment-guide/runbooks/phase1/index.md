@@ -18,6 +18,11 @@ The following lists the information that needs to be available to the engineer b
 - Community Representatives
 - Technical Contacts added to Airtable?
 
+## Default cloud provider
+
+*If* the community has no particular preference for a cloud
+provider, we will default to using AWS.
+
 ## Outputs
 
 At the end of Phase 1, all engineers should have access to the cloud account where the new cluster and hub will be deployed to.
