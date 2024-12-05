@@ -110,7 +110,7 @@ All of the following steps must be followed in order to consider phase 3.1 compl
       Make sure you are in the right terraform directory, i.e. `terraform/projects/aws` and the right terraform workspace by running `terraform workspace show`.
 
       ```bash
-      terraform output nfs_server_dns
+      terraform output nfs_server_dns_map
       ```
       ````
 
@@ -160,7 +160,7 @@ All of the following steps must be followed in order to consider phase 3.1 compl
 
    Use the info provided in the new hub GitHub issue for the `Dask gateway` section.
    If Dask gateway will be needed, then choose a `basehub`, and follow the guide on
-   (how to enable dask-gateway on an existing hub)[howto:features:daskhub]
+   [how to enable dask-gateway on an existing hub](howto:features:daskhub).
 
 1. **Add the new cluster to CI/CD**
 
