@@ -31,8 +31,5 @@ hub_cloud_permissions = {
       bucket_admin_access : ["scratch-sciencecore"],
       bucket_readonly_access : ["persistent-sciencecore"],
     },
-    "admin-sa" : {
-      bucket_admin_access : ["scratch-sciencecore", "persistent-sciencecore"],
-    },
   },
 }

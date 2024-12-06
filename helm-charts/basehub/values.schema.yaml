@@ -16,7 +16,6 @@ required:
   - global
   - jupyterhub
   - userServiceAccount
-  - adminServiceAccount
   - dex
   - staticWebsite
   - ingressBasicAuth
@@ -144,27 +143,6 @@ properties:
 
           Config must still be set for notebook and dask pods to actually use
           this service account, which is named user-sa.
-      annotations:
-        type: object
-        additionalProperties: true
-        description: |
-          Dictionary of annotations that can be applied to the service account.
-
-          When used with GKE and Workload Identity, you need to set
-          the annotation with key "iam.gke.io/gcp-service-account" to the
-          email address of the Google Service Account whose credentials it
-          should have.
-  adminServiceAccount:
-    type: object
-    additionalProperties: false
-    required:
-      - enabled
-    properties:
-      enabled:
-        type: boolean
-        description: |
-          Enables creation of a Service Account named admin-sa for opt-in use
-          via jupyterhub.custom.singleuserAdmin.serviceAccountName.
       annotations:
         type: object
         additionalProperties: true
@@ -526,8 +504,6 @@ properties:
                   additionalProperties: true
               extraEnv:
                 type: object
-              serviceAccountName:
-                type: string
           2i2c:
             type: object
             additionalProperties: false

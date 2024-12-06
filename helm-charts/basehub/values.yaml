@@ -5,10 +5,6 @@ userServiceAccount:
   enabled: true
   annotations: {}
 
-adminServiceAccount:
-  enabled: false
-  annotations: {}
-
 binderhub-service:
   enabled: false
   ingress:

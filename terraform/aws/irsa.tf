@@ -2,7 +2,7 @@
   This file provides resources _per hub and role_. Each role is tied to a
   specific k8s ServiceAccount allowed to assume the role.
 
-  - Role                 - for use by k8s ServiceAccount (user-sa, admin-sa)
+  - Role                 - for use by k8s ServiceAccount (user-sa)
   - Policy               - if extra_iam_policy is declared
   - RolePolicyAttachment - if extra_iam_policy is declared
 */

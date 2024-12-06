@@ -23,8 +23,6 @@ locals {
         user-sa:
           bucket_admin_access: [scratch-sciencecore]
           bucket_readonly_access: [persistent-sciencecore]
-        admin-sa:
-          bucket_admin_access: [scratch-sciencecore, persistent-sciencecore]
 
     Then, the `local.bucket_role_actions` will look like below, with one list
     item for each element in all `bucket_admin/readonly_access` lists:
@@ -35,9 +33,6 @@ locals {
         actions: ["s3:*"]
       - bucket: scratch-sciencecore
         role: sciencecore
-        actions: ["s3:*"]
-      - bucket: scratch-sciencecore
-        role: sciencecore-admin-sa
         actions: ["s3:*"]
       - bucket: persistent-sciencecore
         role: sciencecore
@@ -93,9 +88,6 @@ locals {
       scratch-sciencecore:
         - bucket: scratch-sciencecore
           role: sciencecore
-          actions: ["s3:*"]
-        - bucket: scratch-sciencecore
-          role: sciencecore-admin-sa
           actions: ["s3:*"]
       persistent-sciencecore:
         - bucket: persistent-sciencecore

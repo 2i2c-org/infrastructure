@@ -68,8 +68,7 @@ variable "hub_cloud_permissions" {
   Accounts attached to it, for different kinds of users. The key is the name
   of the Kubernetes Service Account. By convention, basehub currently only
   supports creation of Kubernetes Service Accounts `user-sa` (for non-admin
-  users on the hub) and `admin-sa` (for admin users on the hub). The value
-  can be one of:
+  users on the hub). The value can be one of:
 
   1. bucket_admin_access: List of S3 storage buckets to grant full read & write
      permissions to.
@@ -78,8 +77,6 @@ variable "hub_cloud_permissions" {
   3. extra_iam_policy: An AWS IAM Policy document that grants additional rights
      to this Kubernetes Service Account.
 
-  Note that these are independent of each other - so if you want both admins
-  and non-admins to have a set of permissions, you may need to repeat them.
   EOT
 }
 
