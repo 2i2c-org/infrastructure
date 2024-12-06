@@ -7,7 +7,7 @@ default_budget_alert = {
 }
 
 enable_aws_ce_grafana_backend_iam = true
-disable_cluster_wide_filestore = false
+disable_cluster_wide_filestore    = false
 
 # The initial EFS is now used by the prod hub only
 # So we tag it appropriately for costs purposes
