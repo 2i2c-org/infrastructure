@@ -8,81 +8,9 @@ jupyterhub:
       - hosts: [staging.jupyter-health.2i2c.cloud]
         secretName: https-auto-tls
   hub:
-    # FIXME: Experiment to use https://github.com/jupyterhub/oauthenticator/pull/780
-    image:
-      name: quay.io/2i2c/pkce-experiment
-      tag: 0.0.1-0.dev.git.11169.h1e0fa323
     config:
-      JupyterHub:
-        # Uses CHCS auth provider
-        # Note: 2i2c engineers can not log in via this, so they can not provide support that
-        # requires logging into this hub. But since Jupyter Health team members have access to this
-        # repo, this is acceptable
-        authenticator_class: generic-oauth
-        # set cookie max age to 1
-        # while we don't have refresh tokens enabled
-        cookie_max_age_days: 1
       GenericOAuthenticator:
-        client_id: Ima7rx8D6eko0PzlU1jK28WBUT2ZweZj7mqVG2wm
         oauth_callback_url: https://staging.jupyter-health.2i2c.cloud/hub/oauth_callback
-        authorize_url: https://jhe.fly.dev/o/authorize/
-        token_url: https://jhe.fly.dev/o/token/
-        userdata_url: https://jhe.fly.dev/api/v1/users/profile
-        username_claim: email
-        login_service: JupyterHealth Exchange
-        scope:
-          - openid
-        enable_auth_state: true
-        admin_users:
-          - benjaminrk@gmail.com
-          - yuvipanda@2i2c.org
-        manage_groups: true
-        auth_state_groups_key: "organizations"
-        allowed_groups:
-          - "20013" # BIDS (~all users are here)
-          - "20014" # 2i2c
-          - "20008" # Yaffe Lab
-          - "20005" # Moslehi Lab
-          - "20006" # Olgin Lab
-    extraConfig:
-      # add access tokens via auth state
-      auth_state_env.py: |
-        # get organization membership for allowed_groups
-        async def auth_state_hook(authenticator, auth_state):
-            if not auth_state:
-                return auth_state
-            access_token = auth_state["access_token"]
-            org_url = "https://jhe.fly.dev/api/v1/users/organizations"
-            organizations = await authenticator.httpfetch(
-                org_url,
-                headers={"Authorization": f"Bearer {access_token}"}
-            )
-            # use string ids for now
-            auth_state["organizations"] = [str(org['id']) for org in organizations]
-            return auth_state
-
-        c.OAuthenticator.modify_auth_state_hook = auth_state_hook
-
-        def auth_state_env(spawner, auth_state):
-            if not auth_state:
-                spawner.log.warning(f"Missing auth state for user {spawner.user.name}")
-                return
-            spawner.environment["JHE_TOKEN"] = auth_state["access_token"]
-            spawner.environment["JHE_REFRESH_TOKEN"] = auth_state["refresh_token"]
-            spawner.environment["JHE_CLIENT_ID"] = "Ima7rx8D6eko0PzlU1jK28WBUT2ZweZj7mqVG2wm"
-
-        c.Spawner.auth_state_hook = auth_state_env
-
-      skip_refresh_for_test_user.py: |
-        def refresh_user_hook(authenticator, user, auth_state):
-            if user.name == "deployment-service-check":
-                # if this is the user,
-                # refresh_user doesn't make sense
-                # consider it always fresh
-                return True
-            # for all other users, refresh as usual
-            return None
-        c.OAuthenticator.refresh_user_hook = refresh_user_hook
   singleuser:
     nodeSelector:
       2i2c/hub-name: staging
