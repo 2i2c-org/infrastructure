@@ -3,6 +3,7 @@ cluster_name           = "opensci"
 cluster_nodes_location = "us-west-2a"
 
 enable_aws_ce_grafana_backend_iam = true
+disable_cluster_wide_filestore    = false
 
 user_buckets = {
   "scratch-staging" : {
@@ -19,17 +20,12 @@ user_buckets = {
   },
 }
 
-
 hub_cloud_permissions = {
   "staging" : {
-    "user-sa" : {
-      bucket_admin_access : ["scratch-staging"],
-    },
+    bucket_admin_access : ["scratch-staging"],
   },
   "sciencecore" : {
-    "user-sa" : {
-      bucket_admin_access : ["scratch-sciencecore"],
-      bucket_readonly_access : ["persistent-sciencecore"],
-    },
+    bucket_admin_access : ["scratch-sciencecore"],
+    bucket_readonly_access : ["persistent-sciencecore"],
   },
 }

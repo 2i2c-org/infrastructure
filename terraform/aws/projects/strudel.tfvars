@@ -8,6 +8,7 @@ cluster_name           = "strudel"
 cluster_nodes_location = "us-west-2a"
 
 enable_aws_ce_grafana_backend_iam = true
+disable_cluster_wide_filestore    = false
 
 # Tip: uncomment and fill the missing info in the lines below if you want
 #       to setup scratch buckets for the hubs on this cluster.

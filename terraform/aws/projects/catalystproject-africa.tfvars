@@ -3,6 +3,7 @@ cluster_name           = "catalystproject-africa"
 cluster_nodes_location = "af-south-1a"
 
 enable_aws_ce_grafana_backend_iam = true
+disable_cluster_wide_filestore    = false
 
 user_buckets = {
   "scratch-staging" : {
@@ -19,21 +20,14 @@ user_buckets = {
   },
 }
 
-
 hub_cloud_permissions = {
   "staging" : {
-    "user-sa" : {
-      bucket_admin_access : ["scratch-staging"],
-    },
+    bucket_admin_access : ["scratch-staging"],
   },
   "prod" : {
-    "user-sa" : {
-      bucket_admin_access : ["scratch"],
-    },
+    bucket_admin_access : ["scratch"],
   },
   "bhki" : {
-    "user-sa" : {
-      bucket_admin_access : ["persistent-bhki"],
-    },
+    bucket_admin_access : ["persistent-bhki"],
   },
 }
