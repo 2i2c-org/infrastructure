@@ -176,7 +176,7 @@ basehub:
                     # Launch people directly into the Linux desktop when they start
                     default_url: /desktop
                     # Built from https://github.com/2i2c-org/nasa-qgis-image
-                    image: quay.io/2i2c/nasa-qgis-image:d76118ea0c15
+                    image: quay.io/2i2c/nasa-qgis-image:607df3f5c661
             resource_allocation:
               display_name: Resource Allocation
               choices:
