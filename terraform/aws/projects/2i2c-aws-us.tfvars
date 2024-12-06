@@ -3,6 +3,7 @@ cluster_name           = "2i2c-aws-us"
 cluster_nodes_location = "us-west-2a"
 
 enable_aws_ce_grafana_backend_iam = true
+disable_cluster_wide_filestore    = false
 
 user_buckets = {
   "scratch-staging" : {
@@ -31,34 +32,23 @@ user_buckets = {
   },
 }
 
-
 hub_cloud_permissions = {
   "staging" : {
-    "user-sa" : {
-      bucket_admin_access : ["scratch-staging"],
-    },
+    bucket_admin_access : ["scratch-staging"],
   },
   "dask-staging" : {
-    "user-sa" : {
-      bucket_admin_access : ["scratch-dask-staging"],
-    },
+    bucket_admin_access : ["scratch-dask-staging"],
   },
   "showcase" : {
-    "user-sa" : {
-      bucket_admin_access : [
-        "scratch-showcase",
-        "persistent-showcase",
-      ],
-    },
+    bucket_admin_access : [
+      "scratch-showcase",
+      "persistent-showcase",
+    ],
   },
   "ncar-cisl" : {
-    "user-sa" : {
-      bucket_admin_access : ["scratch-ncar-cisl"],
-    },
+    bucket_admin_access : ["scratch-ncar-cisl"],
   },
   "itcoocean" : {
-    "user-sa" : {
-      bucket_admin_access : ["scratch-itcoocean"],
-    },
+    bucket_admin_access : ["scratch-itcoocean"],
   },
 }

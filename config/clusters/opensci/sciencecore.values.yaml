@@ -2,10 +2,6 @@ userServiceAccount:
   enabled: true
   annotations:
     eks.amazonaws.com/role-arn: arn:aws:iam::211125293633:role/opensci-sciencecore
-adminServiceAccount:
-  enabled: true
-  annotations:
-    eks.amazonaws.com/role-arn: arn:aws:iam::211125293633:role/opensci-sciencecore-admin-sa
 
 jupyterhub:
   ingress:
@@ -36,8 +32,6 @@ jupyterhub:
         funded_by:
           name: ""
           url: ""
-    singleuserAdmin:
-      serviceAccountName: admin-sa
   singleuser:
     nodeSelector:
       2i2c/hub-name: sciencecore

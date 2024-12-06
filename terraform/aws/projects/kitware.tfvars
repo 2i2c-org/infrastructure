@@ -3,6 +3,7 @@ cluster_name           = "kitware"
 cluster_nodes_location = "us-west-2a"
 
 enable_aws_ce_grafana_backend_iam = true
+disable_cluster_wide_filestore    = false
 
 user_buckets = {
   "scratch-staging" : {
@@ -17,13 +18,9 @@ user_buckets = {
 
 hub_cloud_permissions = {
   "staging" : {
-    "user-sa" : {
-      bucket_admin_access : ["scratch-staging"],
-    },
+    bucket_admin_access : ["scratch-staging"],
   },
   "prod" : {
-    "user-sa" : {
-      bucket_admin_access : ["scratch"],
-    },
+    bucket_admin_access : ["scratch"],
   },
 }

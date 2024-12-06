@@ -33,14 +33,9 @@ user_buckets = {
 
 hub_cloud_permissions = {
   "staging" : {
-    "user-sa" : {
-      bucket_admin_access : ["scratch-staging"],
-    },
+    bucket_admin_access : ["scratch-staging"],
   },
-
   "prod" : {
-    "user-sa" : {
-      bucket_admin_access : ["scratch-prod"],
-    },
+    bucket_admin_access : ["scratch-prod"],
   },
 }

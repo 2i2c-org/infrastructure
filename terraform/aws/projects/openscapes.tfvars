@@ -7,6 +7,7 @@ default_budget_alert = {
 }
 
 enable_aws_ce_grafana_backend_iam = true
+disable_cluster_wide_filestore    = false
 
 # The initial EFS is now used by the prod hub only
 # So we tag it appropriately for costs purposes
@@ -58,31 +59,24 @@ user_buckets = {
   },
 }
 
-
 hub_cloud_permissions = {
   "staging" : {
-    "user-sa" : {
-      bucket_admin_access : [
-        "scratch-staging",
-        "persistent-staging",
-      ],
-    },
+    bucket_admin_access : [
+      "scratch-staging",
+      "persistent-staging",
+    ],
   },
   "prod" : {
-    "user-sa" : {
-      bucket_admin_access : [
-        "scratch",
-        "persistent",
-      ],
-    }
+    bucket_admin_access : [
+      "scratch",
+      "persistent",
+    ],
   },
   "workshop" : {
-    "user-sa" : {
-      bucket_admin_access : [
-        "scratch-workshop",
-        "persistent-workshop",
-      ],
-    }
+    bucket_admin_access : [
+      "scratch-workshop",
+      "persistent-workshop",
+    ],
   },
 }
 

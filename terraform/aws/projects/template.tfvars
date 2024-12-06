@@ -35,9 +35,7 @@ filestores = {
 # hub_cloud_permissions = {
 {% for hub in hubs %}
 #  "{{ hub }}" : {
-#    "user-sa" : {
-#      bucket_admin_access : ["scratch-{{ hub }}"],
-#    },
+#    bucket_admin_access : ["scratch-{{ hub }}"],
 #  },
 {% endfor %}
 

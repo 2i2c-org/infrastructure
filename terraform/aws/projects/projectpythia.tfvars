@@ -7,6 +7,7 @@ default_budget_alert = {
 }
 
 enable_aws_ce_grafana_backend_iam = true
+disable_cluster_wide_filestore    = false
 
 # FIXME: placeholder bucket to get the 2i2c:hub-name tag in place
 # so the community cand enable it for cost allocation purposes
@@ -20,8 +21,6 @@ user_buckets = {
 
 hub_cloud_permissions = {
   "staging" : {
-    "user-sa" : {
-      bucket_admin_access : ["placeholder-bucket-staging"],
-    },
+    bucket_admin_access : ["placeholder-bucket-staging"],
   },
 }

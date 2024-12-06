@@ -48,28 +48,22 @@ variable "user_buckets" {
 
 variable "hub_cloud_permissions" {
   type = map(
-    map(
-      object({
-        bucket_admin_access : optional(set(string), [])
-        bucket_readonly_access : optional(set(string), [])
-        extra_iam_policy : optional(string, "")
-      })
-    )
+    object({
+      bucket_admin_access : optional(set(string), [])
+      bucket_readonly_access : optional(set(string), [])
+      extra_iam_policy : optional(string, "")
+    })
   )
   default     = {}
   description = <<-EOT
-  Cloud permissions attached to Kubernetes Service Accounts in a particular
+  Cloud permissions attached to a Kubernetes Service Account in a particular
   k8s namespace (hub) in this cluster.
 
   The key is a Kubernetes namespace, which by convention in 2i2c clusters
   is also the name of the hub.
 
-  The value is itself a map, as each hub can have multiple Kubernetes Service
-  Accounts attached to it, for different kinds of users. The key is the name
-  of the Kubernetes Service Account. By convention, basehub currently only
-  supports creation of Kubernetes Service Accounts `user-sa` (for non-admin
-  users on the hub) and `admin-sa` (for admin users on the hub). The value
-  can be one of:
+  The value is itself a map describing particular permissions users running on
+  those hubs should have. Currently supported are:
 
   1. bucket_admin_access: List of S3 storage buckets to grant full read & write
      permissions to.
@@ -78,8 +72,6 @@ variable "hub_cloud_permissions" {
   3. extra_iam_policy: An AWS IAM Policy document that grants additional rights
      to this Kubernetes Service Account.
 
-  Note that these are independent of each other - so if you want both admins
-  and non-admins to have a set of permissions, you may need to repeat them.
   EOT
 }
 

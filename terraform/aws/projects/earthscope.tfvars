@@ -3,7 +3,7 @@ cluster_name           = "earthscope"
 cluster_nodes_location = "us-east-2a"
 
 default_tags = {
-  "2i2c.org/cluster-name" : "{var_cluster_name}",
+  "2i2c.org/cluster-name" : "earthscope",
   "ManagedBy" : "2i2c",
   # Requested by the community in https://2i2c.freshdesk.com/a/tickets/1460
   "earthscope:application:name" : "geolab",
@@ -15,6 +15,7 @@ default_budget_alert = {
 }
 
 enable_aws_ce_grafana_backend_iam = true
+disable_cluster_wide_filestore    = false
 
 user_buckets = {
   "scratch-staging" : {
@@ -27,16 +28,11 @@ user_buckets = {
   },
 }
 
-
 hub_cloud_permissions = {
   "staging" : {
-    "user-sa" : {
-      bucket_admin_access : ["scratch-staging"],
-    },
+    bucket_admin_access : ["scratch-staging"],
   },
   "prod" : {
-    "user-sa" : {
-      bucket_admin_access : ["scratch"],
-    },
+    bucket_admin_access : ["scratch"],
   },
 }
