@@ -1,10 +1,10 @@
 jupyterhub:
   ingress:
-    hosts: [dubois.2i2c.cloud]
+    hosts: [prod.dubois.2i2c.cloud]
     tls:
-      - hosts: [dubois.2i2c.cloud]
+      - hosts: [prod.dubois.2i2c.cloud]
         secretName: https-auto-tls
   hub:
     config:
       GitHubOAuthenticator:
-        oauth_callback_url: https://dubois.2i2c.cloud/hub/oauth_callback
+        oauth_callback_url: https://prod.dubois.2i2c.cloud/hub/oauth_callback
