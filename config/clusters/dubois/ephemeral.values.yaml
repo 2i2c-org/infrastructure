@@ -1,0 +1,28 @@
+# nfs functionality explicitly disabled in case a common.values.yaml
+# file is used to enable it for all hubs in the cluster
+nfs:
+  enabled: false
+  pv:
+    enabled: false
+
+jupyterhub:
+  ingress:
+    hosts: [dubois.2i2c.cloud]
+    tls:
+      - hosts: [dubois.2i2c.cloud]
+        secretName: https-auto-tls
+  hub:
+    config:
+      JupyterHub:
+        authenticator_class: tmp
+  custom:
+    singleuserAdmin:
+      # Turn off trying to mount shared-readwrite folder for admins
+      extraVolumeMounts: []
+  singleuser:
+    initContainers: []
+    storage:
+      # No persistent storage should be kept to reduce any potential data
+      # retention & privacy issues.
+      type: none
+      extraVolumeMounts: []
