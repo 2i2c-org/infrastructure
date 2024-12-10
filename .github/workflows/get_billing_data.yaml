@@ -1,0 +1,38 @@
+name: Get billing data
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: "0 0 28 * *"
+
+jobs:
+  create_issue:
+    name: Create billing issues
+    runs-on: ubuntu-latest
+    permissions:
+      issues: write
+    steps:
+      - name: Get the next month name
+        id: get_next_month
+        run: echo "next_month=$(date -d '+1 month' +'%B')" >> $GITHUB_ENV
+
+      - name: Create issue for dedicated clusters billing
+        run: |
+          gh issue create \
+            --label "recurrent" \
+            --title "[Billing] Collect billing data for $NEXT_MONTH - Dedicated"
+            --template "💳 Collect billing data for a time period"
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GH_REPO: ${{ github.repository }}
+          NEXT_MONTH: ${{ env.next_month }}
+
+      - name: Create issue for shared clusters billing
+        run: |
+          gh issue create \
+            --label "recurrent" \
+            --title "[Billing] Collect billing data for $NEXT_MONTH - Shared"
+            --template "💳 Collect billing data for a time period"
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GH_REPO: ${{ github.repository }}
+          NEXT_MONTH: ${{ env.next_month }}
