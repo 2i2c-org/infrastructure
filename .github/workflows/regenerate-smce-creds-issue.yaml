@@ -9,16 +9,23 @@ on:
 
 jobs:
   create_issue:
-    name: Create team sync issue
+    name: Create credentials regeneration issue
     runs-on: ubuntu-latest
     permissions:
       issues: write
     steps:
-      - name: Create team sync issue
+      - name: Get Deadline
+        id: get_deadline
+        # The deadline is 4 days after the issue is opened
+        run: echo "deadline=$(date -d '+4 days' +'%B %d')" >> $GITHUB_ENV
+
+      - name: Create credentials regeneration issue
         run: |
           gh issue create \
             --label "recurrent" \
+            --title "[$DEADLINE] Regenerate NASA SMCE credentials"
             --template "🔐 Regenerate NASA SMCE credentials")
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           GH_REPO: ${{ github.repository }}
+          DEADLINE: ${{ env.deadline }}
