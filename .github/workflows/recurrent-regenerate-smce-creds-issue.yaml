@@ -23,7 +23,7 @@ jobs:
         run: |
           gh issue create \
             --label "recurrent" \
-            --title "[$DEADLINE] Regenerate NASA SMCE credentials" \
+            --title "[$DEADLINE] Regenerate SMCE credentials"
             --body "$BODY"
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -41,7 +41,5 @@ jobs:
             Follow [the instructions](https://infrastructure.2i2c.org/howto/regenerate-smce-creds/#regenerate-credentials-for-the-deployer) on how to do this.
 
             ### Definition of Done
-            ```[tasklist]
             - [ ] There is a deadline for this task
             - [ ] The credentials of the deployer on all 3 clusters have been renewed
-            ```
