@@ -1,0 +1,46 @@
+name: "Recurrent: regenerate SMCE credentials"
+on:
+  workflow_dispatch:
+  schedule:
+    # Run on January 6 → February 25 → April 6 → May 25, and so on
+    # This means a new issue will be opened every 40 to 50 days
+    - cron: "0 0 6 1,4,7,10 *"
+    - cron: "0 0 25 2,5,8,11 *"
+
+jobs:
+  create_issue:
+    name: Create credentials regeneration issue
+    runs-on: ubuntu-latest
+    permissions:
+      issues: write
+    steps:
+      - name: Get Deadline
+        id: get_deadline
+        # The deadline is 4 days after the issue is opened
+        run: echo "deadline=$(date -d '+4 days' +'%B %d')" >> $GITHUB_ENV
+
+      - name: Create credentials regeneration issue
+        run: |
+          gh issue create \
+            --label "recurrent" \
+            --title "[$DEADLINE] Regenerate SMCE credentials"
+            --body "$BODY"
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GH_REPO: ${{ github.repository }}
+          DEADLINE: ${{ env.deadline }}
+          BODY: |
+            The credentials of the deployer on SMCE clusters must be renewed every ~55 days.
+
+            ### Context
+            AWS credentials for our hub deployer must be renewed for the following clusters:
+            - [ ] nasa-veda
+            - [ ] nasa-ghg
+            - [ ] maap
+
+            ### Resources
+            Follow [the instructions](https://infrastructure.2i2c.org/howto/regenerate-smce-creds/#regenerate-credentials-for-the-deployer) on how to do this.
+
+            ### Definition of Done
+            - [ ] There is a deadline for this task
+            - [ ] The credentials of the deployer on all 3 clusters have been renewed
