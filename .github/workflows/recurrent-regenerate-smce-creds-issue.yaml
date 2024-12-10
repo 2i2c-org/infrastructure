@@ -24,8 +24,24 @@ jobs:
           gh issue create \
             --label "recurrent" \
             --title "[$DEADLINE] Regenerate NASA SMCE credentials" \
-            --template "🔐 Regenerate NASA SMCE credentials")
+            --body $BODY
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           GH_REPO: ${{ github.repository }}
           DEADLINE: ${{ env.deadline }}
+          BODY: |
+            The credentials of the deployer on SMCE clusters must be renewed every ~55 days.
+
+            ### Context
+            AWS credentials for our hub deployer must be renewed for the following clusters:
+            - [ ] nasa-veda
+            - [ ] nasa-ghg
+
+            ### Resources
+            Follow [the instructions](https://infrastructure.2i2c.org/howto/regenerate-smce-creds/#regenerate-credentials-for-the-deployer) on how to do this.
+
+            ### Definition of Done
+            ```[tasklist]
+            - [ ] There is a deadline for this task
+            - [ ] The credentials of the deployer on all 3 clusters have been renewed
+            ```
