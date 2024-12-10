@@ -23,7 +23,7 @@ jobs:
         run: |
           gh issue create \
             --label "recurrent" \
-            --title "[$DEADLINE] Regenerate SMCE credentials"
+            --title "[$DEADLINE] Regenerate SMCE credentials" \
             --body "$BODY"
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
