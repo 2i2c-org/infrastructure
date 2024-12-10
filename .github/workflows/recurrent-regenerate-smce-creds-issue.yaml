@@ -2,10 +2,10 @@ name: "Recurrent: regenerate SMCE credentials"
 on:
   workflow_dispatch:
   schedule:
+    # Run on January 6 → February 25 → April 6 → May 25, and so on
+    # This means a new issue will be opened every 40 to 50 days
     - cron: "0 0 6 1,4,7,10 *"
     - cron: "0 0 25 2,5,8,11 *"
-  # January 6 → February 25 → April 6 → May 25, and so on.
-  # This means a new issue will be opened every 40 to 50 days
 
 jobs:
   create_issue:
