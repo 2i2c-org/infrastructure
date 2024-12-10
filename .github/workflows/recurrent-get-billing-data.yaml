@@ -1,4 +1,4 @@
-name: Get billing data
+name: "Recurrent: get billing data"
 on:
   workflow_dispatch:
   schedule:
@@ -19,7 +19,7 @@ jobs:
         run: |
           gh issue create \
             --label "recurrent" \
-            --title "[Billing] Collect billing data for $NEXT_MONTH - Dedicated"
+            --title "[Billing] Collect billing data for $NEXT_MONTH - Dedicated" \
             --template "💳 Collect billing data for a time period"
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -30,7 +30,7 @@ jobs:
         run: |
           gh issue create \
             --label "recurrent" \
-            --title "[Billing] Collect billing data for $NEXT_MONTH - Shared"
+            --title "[Billing] Collect billing data for $NEXT_MONTH - Shared" \
             --template "💳 Collect billing data for a time period"
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}

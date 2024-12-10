@@ -1,4 +1,4 @@
-name: Regenerate SMCE credentials
+name: "Recurrent: regenerate SMCE credentials"
 on:
   workflow_dispatch:
   schedule:
@@ -23,7 +23,7 @@ jobs:
         run: |
           gh issue create \
             --label "recurrent" \
-            --title "[$DEADLINE] Regenerate NASA SMCE credentials"
+            --title "[$DEADLINE] Regenerate NASA SMCE credentials" \
             --template "🔐 Regenerate NASA SMCE credentials")
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
