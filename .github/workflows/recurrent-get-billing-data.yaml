@@ -20,7 +20,7 @@ jobs:
           gh issue create \
             --label "recurrent" \
             --title "[Billing] Collect billing data for $NEXT_MONTH - Dedicated" \
-            --body $BODY
+            --body "$BODY"
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           GH_REPO: ${{ github.repository }}
@@ -39,7 +39,7 @@ jobs:
           gh issue create \
             --label "recurrent" \
             --title "[Billing] Collect billing data for $NEXT_MONTH - Shared" \
-            --body $BODY
+            --body "$BODY"
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           GH_REPO: ${{ github.repository }}

@@ -24,7 +24,7 @@ jobs:
           gh issue create \
             --label "recurrent" \
             --title "[$DEADLINE] Regenerate NASA SMCE credentials" \
-            --body $BODY
+            --body "$BODY"
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           GH_REPO: ${{ github.repository }}
