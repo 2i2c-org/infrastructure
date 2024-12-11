@@ -41,7 +41,6 @@ jobs:
           - cluster_name: nmfs-openscapes
           - cluster_name: openscapes
           - cluster_name: opensci
-          - cluster_name: pangeo-hubs
           - cluster_name: projectpythia
           - cluster_name: queensu
           - cluster_name: smithsonian
