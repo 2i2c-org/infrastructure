@@ -48,7 +48,8 @@ jobs:
             ### Definition of Done
             - [ ] There is a deadline for this task
             - [ ] The credentials of the deployer on all 3 clusters have been renewed
-
+      - name: Sleep a bit to allow issue to be added to the board
+        run: sleep 3
       - name: Set the "Status" and "Estimate" project board fields
         uses: EndBug/project-fields@v2
         id: set-fields
