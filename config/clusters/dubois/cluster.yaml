@@ -40,7 +40,7 @@ hubs:
       - prod.values.yaml
       - enc-prod.secret.values.yaml
   - name: ephemeral
-    display_name: Dubois
+    display_name: Dubois ephemeral
     domain: dubois.2i2c.cloud
     helm_chart: basehub
     helm_chart_values_files:
