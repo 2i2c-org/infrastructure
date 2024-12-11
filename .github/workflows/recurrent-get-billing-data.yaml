@@ -14,7 +14,8 @@ jobs:
     steps:
       - name: Get the next month name
         id: get_next_month
-        run: echo "next_month=$(date -d '+1 month' +'%B')" >> $GITHUB_ENV
+        run: |
+          echo "next_month=$(date -d '+1 month' +'%B')" >> $GITHUB_ENV
           echo "start_date_as_iso=$(date -d '+1 month' +'%Y-%m-02')" >> $GITHUB_ENV
           echo "end_date_as_iso=$(date -d '+1 month' +'%Y-%m-07')" >> $GITHUB_ENV
 
