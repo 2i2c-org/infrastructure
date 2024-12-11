@@ -16,6 +16,7 @@ jobs:
         id: get_next_month
         run: echo "next_month=$(date -d '+1 month' +'%B')" >> $GITHUB_ENV
           echo "start_date_as_iso=$(date -d '+1 month' +'%Y-%m-02')" >> $GITHUB_ENV
+          echo "end_date_as_iso=$(date -d '+1 month' +'%Y-%m-07')" >> $GITHUB_ENV
 
       - name: Create issue for dedicated clusters billing
         run: |
@@ -78,8 +79,8 @@ jobs:
           operation: set
           # If the fields name or type will change
           # expect this step to fail
-          fields: Status,Estimate,Start date
+          fields: Status,Estimate,Start date,End date
           github_token: ${{ secrets.PROJECT_BOARD_PAT_TOKEN }}
           project_url: https://github.com/orgs/2i2c-org/projects/57
-          values: Up Next,1,${{ env.start_date_as_iso }}
+          values: Up Next,2,${{ env.start_date_as_iso }},${{ env.end_date_as_iso }}
           resource_url: ${{ env.shared_issue }}
