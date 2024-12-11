@@ -6,31 +6,16 @@ on:
 
 jobs:
   update-project-board-fields:
-    if: github.event.label.name == 'support'
+    if: github.event.label.name == 'recurrent'
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - name: Parse the ticket tracker issue template form
-        uses: stefanbuck/github-issue-parser@v3
-        id: issue-parser
-        with:
-          template-path: .github/ISSUE_TEMPLATE/5_freshdesk-ticket.yml
-      - name: Get ticket impact from the form
-        shell: python
-        id: get-ticket-impact
-        run: |
-          import os
-          form = ${{ steps.issue-parser.outputs.jsonString }}
-          impact = form.get("ticket_impact")
-          # Export the `impact` string to GITHUB_OUTPUT to be used in following steps
-          with open(os.environ["GITHUB_OUTPUT"], "a") as f :
-              print(f"impact={impact}", file=f)
-      - name: Set the "Impact" and "Type" project board fields
+      - name: Set the "Status" and "Estimate" project board fields
         uses: EndBug/project-fields@v2
         id: set-fields
         with:
           operation: set
-          fields: Impact,Type
+          fields: Status,Estimate
           github_token: ${{ secrets.PROJECT_BOARD_PAT_TOKEN }}
-          project_url: https://github.com/orgs/2i2c-org/projects/22
-          values: ${{ steps.get-ticket-impact.outputs.impact }},Support
+          project_url: https://github.com/orgs/2i2c-org/projects/57
+          values: Up Next,1
