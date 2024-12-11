@@ -20,7 +20,7 @@ jobs:
         # The deadline is 4 days after the issue is opened
         run: |
           echo "deadline=$(date -d '+4 days' +'%B %d')" >> $GITHUB_ENV
-          echo "deadline_as_date=$(date -d '+4 days' +'%B %d')" >> $GITHUB_ENV
+          echo "deadline_as_date=$(date -d '+4 days' +"%Y-%m-%d")" >> $GITHUB_ENV
 
       - name: Create credentials regeneration issue
         run: |
