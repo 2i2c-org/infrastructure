@@ -1,9 +1,8 @@
 # Image lives at quay.io/2i2c/pkce-experiment
-# install oauthenticator 17.1,
-# which adds PKCE support.
-# experiment no longer needed when base chart is updated to z2jh 4.0.0
-# Experiment with https://github.com/jupyterhub/oauthenticator/pull/780 and oauthenticator 17.2
-git+https://github.com/minrk/oauthenticator@refresh-skip
+# install oauthenticator 17.3,
+# which adds PKCE and refresh_token support
+# experiment no longer needed when base chart is updated to z2jh 4.1.0
+oauthenticator>=17.3,<18
 
 
 # jupyterhub-configurator isn't maintained and its not intended to be developed
