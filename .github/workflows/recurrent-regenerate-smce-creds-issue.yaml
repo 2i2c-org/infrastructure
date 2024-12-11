@@ -14,7 +14,6 @@ jobs:
     permissions:
       issues: write
     steps:
-      - uses: actions/checkout@v4
       - name: Get Deadline
         id: get_deadline
         # The deadline is 4 days after the issue is opened
