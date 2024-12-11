@@ -20,7 +20,7 @@ jobs:
 
       - name: Create issue for dedicated clusters billing
         run: |
-          dedicated_issue = $(gh issue create \
+          dedicated_issue=$(gh issue create \
             --label "recurrent" \
             --title "[Billing] Dedicated clusters: collect billing data for $NEXT_MONTH" \
             --body "$BODY")
@@ -39,7 +39,7 @@ jobs:
 
       - name: Create issue for shared clusters billing
         run: |
-          shared_issue = $(gh issue create \
+          shared_issue=$(gh issue create \
             --label "recurrent" \
             --title "[Billing] Shared clusters: collect billing data for $NEXT_MONTH" \
             --body "$BODY")
@@ -61,7 +61,7 @@ jobs:
 
       - name: "Dedicated clusters: set the relevant project board fields"
         uses: EndBug/project-fields@v2
-        id: set-fields
+        id: set-dedicated-fields
         with:
           operation: set
           # If the fields name or type will change
@@ -74,7 +74,7 @@ jobs:
 
       - name: "Shared clusters: set the relevant project board fields"
         uses: EndBug/project-fields@v2
-        id: set-fields
+        id: set-shared-fields
         with:
           operation: set
           # If the fields name or type will change

@@ -23,7 +23,7 @@ jobs:
 
       - name: Create issue
         run: |
-          issue = $(gh issue create \
+          issue=$(gh issue create \
             --label "recurrent" \
             --title "[${{ env.deadline }}] Regenerate SMCE credentials" \
             --body "$BODY")
