@@ -14,19 +14,23 @@ jobs:
     permissions:
       issues: write
     steps:
+      - uses: actions/checkout@v4
       - name: Get Deadline
         id: get_deadline
         # The deadline is 4 days after the issue is opened
-        run: echo "deadline=$(date -d '+4 days' +'%B %d')" >> $GITHUB_ENV
+        run: |
+          echo "deadline=$(date -d '+4 days' +'%B %d')" >> $GITHUB_ENV
+          echo "deadline_as_date=$(date -d '+4 days' +'%B %d')" >> $GITHUB_ENV
 
       - name: Create credentials regeneration issue
         run: |
-          gh issue create \
+          issue=$(gh issue create \
             --label "recurrent" \
             --title "[$DEADLINE] Regenerate SMCE credentials" \
-            --body "$BODY"
+            --body "$BODY")
+          echo "issue=$issue" >> $GITHUB_ENV
         env:
-          GH_TOKEN: ${{ secrets.PROJECT_BOARD_PAT_TOKEN }}
+          GH_TOKEN: ${{ secrets.GEO_PAT }}
           GH_REPO: ${{ github.repository }}
           DEADLINE: ${{ env.deadline }}
           BODY: |
@@ -44,3 +48,14 @@ jobs:
             ### Definition of Done
             - [ ] There is a deadline for this task
             - [ ] The credentials of the deployer on all 3 clusters have been renewed
+
+      - name: Set the "Status" and "Estimate" project board fields
+        uses: EndBug/project-fields@v2
+        id: set-fields
+        with:
+          operation: set
+          fields: Status,Estimate,End date
+          github_token: ${{ secrets.GEO_PAT }}
+          project_url: https://github.com/users/GeorgianaElena/projects/3
+          values: Up Next,1,${{ env.deadline_as_date }}
+          resource_url: ${{ env.issue }}

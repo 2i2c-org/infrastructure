@@ -1,8 +1,10 @@
 name: Set project board status fields
 on:
-  issues:
-    types:
-      - labeled
+  workflow_dispatch:
+
+  # issues:
+  #   types:
+  #     - labeled
 
 jobs:
   update-project-board-fields:
