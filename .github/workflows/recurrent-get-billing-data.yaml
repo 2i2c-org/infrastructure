@@ -23,7 +23,7 @@ jobs:
             --title "[Billing] Dedicated clusters: collect billing data for $NEXT_MONTH" \
             --body "$BODY"
         env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GH_TOKEN: ${{ secrets.PROJECT_BOARD_PAT_TOKEN }}
           GH_REPO: ${{ github.repository }}
           NEXT_MONTH: ${{ env.next_month }}
           BODY: |
@@ -41,7 +41,7 @@ jobs:
             --title "[Billing] Shared clusters: collect billing data for $NEXT_MONTH" \
             --body "$BODY"
         env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GH_TOKEN: ${{ secrets.PROJECT_BOARD_PAT_TOKEN }}
           GH_REPO: ${{ github.repository }}
           NEXT_MONTH: ${{ env.next_month }}
           BODY: |
