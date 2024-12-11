@@ -9,7 +9,7 @@ on:
 
 jobs:
   create_issue:
-    name: Create credentials regeneration issue
+    name: Create issue
     runs-on: ubuntu-latest
     permissions:
       issues: write
@@ -20,19 +20,18 @@ jobs:
         # The deadline is 4 days after the issue is opened
         run: |
           echo "deadline=$(date -d '+4 days' +'%B %d')" >> $GITHUB_ENV
-          echo "deadline_as_date=$(date -d '+4 days' +"%Y-%m-%d")" >> $GITHUB_ENV
+          echo "deadline_as_iso_date=$(date -d '+4 days' +"%Y-%m-%d")" >> $GITHUB_ENV
 
-      - name: Create credentials regeneration issue
+      - name: Create issue
         run: |
-          issue=$(gh issue create \
+          issue = $(gh issue create \
             --label "recurrent" \
-            --title "[$DEADLINE] Regenerate SMCE credentials" \
+            --title "[${{ env.deadline }}] Regenerate SMCE credentials" \
             --body "$BODY")
           echo "issue=$issue" >> $GITHUB_ENV
         env:
-          GH_TOKEN: ${{ secrets.GEO_PAT }}
+          GH_TOKEN: ${{ secrets.PROJECT_BOARD_PAT_TOKEN }}
           GH_REPO: ${{ github.repository }}
-          DEADLINE: ${{ env.deadline }}
           BODY: |
             The credentials of the deployer on SMCE clusters must be renewed every ~55 days.
 
@@ -48,15 +47,19 @@ jobs:
             ### Definition of Done
             - [ ] There is a deadline for this task
             - [ ] The credentials of the deployer on all 3 clusters have been renewed
-      - name: Sleep a bit to allow issue to be added to the board
+
+      - name: Sleep a bit to allow issue to be added to the board by automation
         run: sleep 3
+
       - name: Set the "Status" and "Estimate" project board fields
         uses: EndBug/project-fields@v2
         id: set-fields
         with:
           operation: set
+          # If the fields name or type will change
+          # expect this step to fail
           fields: Status,Estimate,End date
-          github_token: ${{ secrets.GEO_PAT }}
-          project_url: https://github.com/users/GeorgianaElena/projects/3
-          values: Up Next,1,${{ env.deadline_as_date }}
+          github_token: ${{ secrets.PROJECT_BOARD_PAT_TOKEN }}
+          project_url: https://github.com/orgs/2i2c-org/projects/57
+          values: Up Next,1,${{ env.deadline_as_iso_date }}
           resource_url: ${{ env.issue }}
