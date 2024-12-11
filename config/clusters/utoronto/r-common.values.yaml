@@ -16,8 +16,6 @@ jupyterhub:
           - "yuvi.panda@utoronto.ca"
           - "georgiana.elena@utoronto.ca"
           - "chris.holdgraf@utoronto.ca"
-          - "erik.sundell@utoronto.ca"
-          - "csadminsundelle@utoronto.ca"
   singleuser:
     defaultUrl: /rstudio
     image:

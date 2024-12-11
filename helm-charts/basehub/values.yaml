@@ -389,7 +389,6 @@ jupyterhub:
         - AIDEA775
         - choldgraf
         - colliand
-        - consideRatio
         - damianavila
         - GeorgianaElena
         - Gman0909
@@ -404,7 +403,6 @@ jupyterhub:
         - choldgraf@2i2c.org
         - colliand@2i2c.org
         - damianavila@2i2c.org
-        - erik@2i2c.org
         - georgianaelena@2i2c.org
         - gmaciocci@2i2c.org
         - hcampbell@2i2c.org
