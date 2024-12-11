@@ -3,15 +3,10 @@ on:
   issues:
     types:
       - labeled
-      # Issues opened by recurrent workflows don't trigger a labeled event
-      # so we check opened issues as well
-      - opened
 
 jobs:
   update-project-board-fields:
-    if: >
-      (github.event.action == "opened" && contains(github.event.issue.labels.*.name, "recurrent")) ||
-      (github.event.action == "labeled" && github.event.label.name == "recurrent")
+    if: github.event.label.name == 'recurrent'
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4

@@ -26,7 +26,7 @@ jobs:
             --title "[$DEADLINE] Regenerate SMCE credentials" \
             --body "$BODY"
         env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GH_TOKEN: ${{ secrets.PROJECT_BOARD_PAT_TOKEN }}
           GH_REPO: ${{ github.repository }}
           DEADLINE: ${{ env.deadline }}
           BODY: |
