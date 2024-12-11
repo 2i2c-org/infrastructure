@@ -15,13 +15,16 @@ jobs:
       - name: Get the next month name
         id: get_next_month
         run: echo "next_month=$(date -d '+1 month' +'%B')" >> $GITHUB_ENV
+          echo "start_date_as_iso=$(date -d '+1 month' +'%Y-%m-02')" >> $GITHUB_ENV
+          echo "end_date_as_iso=$(date -d '+1 month' +'%Y-%m-07')" >> $GITHUB_ENV
 
       - name: Create issue for dedicated clusters billing
         run: |
-          gh issue create \
+          dedicated_issue = $(gh issue create \
             --label "recurrent" \
             --title "[Billing] Dedicated clusters: collect billing data for $NEXT_MONTH" \
-            --body "$BODY"
+            --body "$BODY")
+          echo "dedicated_issue=$dedicated_issue" >> $GITHUB_ENV
         env:
           GH_TOKEN: ${{ secrets.PROJECT_BOARD_PAT_TOKEN }}
           GH_REPO: ${{ github.repository }}
@@ -36,10 +39,11 @@ jobs:
 
       - name: Create issue for shared clusters billing
         run: |
-          gh issue create \
+          shared_issue = $(gh issue create \
             --label "recurrent" \
             --title "[Billing] Shared clusters: collect billing data for $NEXT_MONTH" \
-            --body "$BODY"
+            --body "$BODY")
+          echo "shared_issue=$shared_issue" >> $GITHUB_ENV
         env:
           GH_TOKEN: ${{ secrets.PROJECT_BOARD_PAT_TOKEN }}
           GH_REPO: ${{ github.repository }}
@@ -51,3 +55,32 @@ jobs:
             ### Definition of Done
             - [ ] Billing data is collected according to instructions.
             - [ ] The billing slack was notified about the new billing data collected
+
+      - name: Sleep a bit to allow issues to be added to the board by automation
+        run: sleep 3
+
+      - name: "Dedicated clusters: set the relevant project board fields"
+        uses: EndBug/project-fields@v2
+        id: set-fields
+        with:
+          operation: set
+          # If the fields name or type will change
+          # expect this step to fail
+          fields: Status,Estimate,Start date
+          github_token: ${{ secrets.PROJECT_BOARD_PAT_TOKEN }}
+          project_url: https://github.com/orgs/2i2c-org/projects/57
+          values: Up Next,1,${{ env.start_date_as_iso }}
+          resource_url: ${{ env.dedicated_issue }}
+
+      - name: "Shared clusters: set the relevant project board fields"
+        uses: EndBug/project-fields@v2
+        id: set-fields
+        with:
+          operation: set
+          # If the fields name or type will change
+          # expect this step to fail
+          fields: Status,Estimate,Start date,End date
+          github_token: ${{ secrets.PROJECT_BOARD_PAT_TOKEN }}
+          project_url: https://github.com/orgs/2i2c-org/projects/57
+          values: Up Next,2,${{ env.start_date_as_iso }},${{ env.end_date_as_iso }}
+          resource_url: ${{ env.shared_issue }}
