@@ -40,12 +40,11 @@ def root_homes(
     with open(config_file_path) as f:
         cluster = Cluster(yaml.load(f), config_file_path.parent)
 
-    with cluster.auth():
-        hubs = cluster.hubs
-        hub = next((hub for hub in hubs if hub.spec["name"] == hub_name), None)
-        if not hub:
-            print_colour("Hub does not exist in {cluster_name} cluster}")
-            return
+    hubs = cluster.hubs
+    hub = next((hub for hub in hubs if hub.spec["name"] == hub_name), None)
+    if not hub:
+        print_colour("Hub does not exist in {cluster_name} cluster}")
+        return
 
     server_ip = base_share_name = ""
     for values_file in hub.spec["helm_chart_values_files"]:
