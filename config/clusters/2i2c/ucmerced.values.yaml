@@ -22,6 +22,21 @@ jupyterhub:
           image: quay.io/cirt_ucm/jupyter-scipy-xarray:e7a77e8fcd6a
           # Launch into JupyterLab after the user logs in
           default_url: /lab
+        profile_options: &profile_options
+          requests: &profile_options_resource_allocation
+            display_name: Resource Allocation
+            choices:
+              mem_1:
+                display_name: 1 GB RAM
+                kubespawner_override:
+                  mem_guarantee: 995622387
+                  mem_limit: 995622387
+                default: true
+              mem_2:
+                display_name: 2 GB RAM
+                kubespawner_override:
+                  mem_guarantee: 1991244775
+                  mem_limit: 1991244775
       - display_name: R
         description: Start a R server with tidyverse & Geospatial tools
         kubespawner_override:
@@ -31,6 +46,7 @@ jupyterhub:
           # Ensures container working dir is homedir
           # https://github.com/2i2c-org/infrastructure/issues/2559
           working_dir: /home/rstudio
+        profile_options: *profile_options
   hub:
     config:
       CILogonOAuthenticator:
