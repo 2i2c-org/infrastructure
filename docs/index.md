@@ -65,19 +65,15 @@ deployed occasionally as a specific addition.
 :maxdepth: 1
 :caption: How-to guides
 howto/features/index.md
-howto/bill.md
-howto/custom-jupyterhub-image.md
+howto/upgrade-cluster/index.md
+howto/budgeting-billing/index
+howto/image-management/index
+howto/filesystem-management/index
 howto/prepare-for-events/index.md
 howto/manage-domains/index.md
 howto/grafana-github-auth.md
-howto/update-env.md
-howto/upgrade-cluster/index.md
-howto/troubleshoot/index.md
 howto/regenerate-smce-creds.md
-howto/budget-alerts
-howto/decrease-size-gcp-filestore
-howto/filesystem-backups/index
-howto/cost-attribution/index
+howto/troubleshoot/index.md
 ```
 
 ## Topic guides

@@ -64,7 +64,7 @@ AWS management account. If a future cluster deviates from this, you can tell by
 1. On the right sidebar under "Time -> Granularity", ensure its selected as "Monthly"
 1. On the right sidebar under "Group by -> Dimension", select "Linked account"
 1. Click the 'Download as CSV' button
-   ```{figure} ../images/aws-billing-ui.jpg
+   ```{figure} /images/aws-billing-ui.jpg
    AWS billing UI
    ```
 1. Run the following deployer command to convert the generated CSV file into the format required for the invoicing process.
@@ -95,7 +95,7 @@ Currently this is the recommended way of retrieving the costs from GCP.
    It is important to not change the name of the file downloaded from GCP as it is used by the deployer to incur the month we are billing for.
    ```
 
-   ```{figure} ../images/gcp-billing-ui.png
+   ```{figure} /images/gcp-billing-ui.png
    GCP billing UI
    ```
 
