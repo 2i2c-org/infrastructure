@@ -1,4 +1,4 @@
-# Regenerating credentials for NASA SMCE accounts
+# Regenerate credentials for NASA SMCE accounts
 
 This document describes how we regenerate credentials for _users_ and the `deployer` when they expire in NASA SMCE accounts.
 
