@@ -4,6 +4,7 @@ basehub:
     volumeReporter:
       enabled: false
     pv:
+      # pv.serverIP is set in each individual staging and prod config file
       enabled: true
       # from https://docs.aws.amazon.com/efs/latest/ug/mounting-fs-nfs-mount-settings.html
       mountOptions:
@@ -13,7 +14,6 @@ basehub:
         - soft # We pick soft over hard, so NFS lockups don't lead to hung processes
         - retrans=2
         - noresvport
-      serverIP: fs-0872256335d483d5f.efs.us-west-2.amazonaws.com
       baseShareName: /
   dask-gateway:
     enabled: true
@@ -270,3 +270,7 @@ basehub:
     scheduling:
       userScheduler:
         enabled: true
+  jupyterhub-home-nfs:
+    enabled: true
+    eks:
+      enabled: true

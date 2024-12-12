@@ -1,4 +1,7 @@
 basehub:
+  nfs:
+    pv:
+      serverIP: 10.100.217.176
   userServiceAccount:
     annotations:
       eks.amazonaws.com/role-arn: arn:aws:iam::574251165169:role/nasa-cryo-prod
@@ -30,3 +33,9 @@ basehub:
           extraPodConfig:
             nodeSelector:
               2i2c/hub-name: prod
+  jupyterhub-home-nfs:
+    eks:
+      volumeId: vol-00b9cf4a258bce8ef
+    quotaEnforcer:
+      hardQuota: "350" # in GB
+      path: "/export/prod"
