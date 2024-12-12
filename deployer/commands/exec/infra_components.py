@@ -1,7 +1,7 @@
 import json
 import os
-import tempfile
 import subprocess
+import tempfile
 
 import typer
 from ruamel.yaml import YAML
@@ -23,7 +23,9 @@ UBUNTU_IMAGE = "ubuntu:22.04"
 def root_homes(
     cluster_name: str = typer.Argument(..., help="Name of cluster to operate on"),
     hub_name: str = typer.Argument(..., help="Name of hub to operate on"),
-    rm_pod: bool = typer.Option(False, "--rm", help="Automatically delete the pod after completing"),
+    rm_pod: bool = typer.Option(
+        False, "--rm", help="Automatically delete the pod after completing"
+    ),
     extra_nfs_server: str = typer.Option(
         None, help="IP address of an extra NFS server to mount"
     ),
@@ -128,7 +130,15 @@ def root_homes(
 
     # Command to exec into pod
     exec_cmd = [
-        "kubectl", "-n", hub_name, "exec", "-it", pod_name, "--", "/bin/bash", "-l"
+        "kubectl",
+        "-n",
+        hub_name,
+        "exec",
+        "-it",
+        pod_name,
+        "--",
+        "/bin/bash",
+        "-l",
     ]
 
     with cluster.auth():
