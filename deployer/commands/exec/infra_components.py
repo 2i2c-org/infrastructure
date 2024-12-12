@@ -119,14 +119,9 @@ def root_homes(
         },
     }
 
-    # Ask kube-controller to create a pod
-    create_cmd = ["kubectl", "create", "-f"]
-
     # Dump the pod spec to a temporary file
     with tempfile.NamedTemporaryFile(mode="w", suffix=".json", delete=False) as tmpf:
         json.dump(pod, tmpf)
-
-    create_cmd.append(tmpf.name)
 
     # Command to exec into pod
     exec_cmd = [
@@ -142,7 +137,8 @@ def root_homes(
     ]
 
     with cluster.auth():
-        subprocess.check_call(create_cmd)
+        # Ask kube-controller to create a pod
+        subprocess.check_call(["kubectl", "create", "-f", tmpf.name])
         subprocess.check_call(exec_cmd)
 
         # I want to ensure this code runs event if the exec cmd returns an exit code other than 0
