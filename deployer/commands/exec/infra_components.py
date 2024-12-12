@@ -22,13 +22,13 @@ UBUNTU_IMAGE = "ubuntu:22.04"
 def root_homes(
     cluster_name: str = typer.Argument(..., help="Name of cluster to operate on"),
     hub_name: str = typer.Argument(..., help="Name of hub to operate on"),
-    extra_nfs_server: str = typer.Argument(
+    extra_nfs_server: str = typer.Option(
         None, help="IP address of an extra NFS server to mount"
     ),
-    extra_nfs_base_path: str = typer.Argument(
+    extra_nfs_base_path: str = typer.Option(
         None, help="Path of the extra NFS share to mount"
     ),
-    extra_nfs_mount_path: str = typer.Argument(
+    extra_nfs_mount_path: str = typer.Option(
         None, help="Mount point for the extra NFS share"
     ),
 ):
