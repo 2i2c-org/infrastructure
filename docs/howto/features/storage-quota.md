@@ -82,7 +82,7 @@ Here's an example of how to do this:
 
 ```bash
 # Create a throwaway pod with both the existing home directories and the new NFS server mounted
-deployer exec root-homes <cluster_name> <hub_name> --extra_nfs_server=<nfs_service_ip> --extra_nfs_base_path=/ --extra_nfs_mount_path=/new-nfs-volume
+deployer exec root-homes <cluster_name> <hub_name> --extra-nfs-server=<nfs_service_ip> --extra-nfs-base-path=/ --extra-nfs-mount-path=/new-nfs-volume
 
 # Copy the existing home directories to the new NFS server while keeping the original permissions
 rsync -av --info=progress2 /root-homes/<path-to-the-parent-of-user-home-directories> /new-nfs-volume/
