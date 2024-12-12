@@ -1,5 +1,6 @@
 import json
 import os
+import tempfile
 import subprocess
 
 import typer
@@ -93,6 +94,10 @@ def root_homes(
     pod = {
         "apiVersion": "v1",
         "kind": "Pod",
+        "metadata": {
+            "name": pod_name,
+            "namespace": hub_name,
+        },
         "spec": {
             "terminationGracePeriodSeconds": 1,
             "automountServiceAccountToken": False,
@@ -111,27 +116,28 @@ def root_homes(
         },
     }
 
-    cmd = [
-        "kubectl",
-        "-n",
-        hub_name,
-        "run",
-        "--rm",  # Remove pod when we're done
-        "-it",  # Give us a shell!
-        "--overrides",
-        json.dumps(pod),
-        "--image",
-        # Use ubuntu image so we get GNU rm and other tools
-        # Should match what we have in our pod definition
-        UBUNTU_IMAGE,
-        pod_name,
-        "--",
-        "/bin/bash",
-        "-l",
+    # Ask kube-controller to create a pod
+    create_cmd = ["kubectl", "create", "-f"]
+
+    # Dump the pod spec to a temporary file
+    with tempfile.NamedTemporaryFile(mode="w", suffix=".json", delete=False) as tmpf:
+        json.dump(pod, tmpf)
+
+    create_cmd.append(tmpf.name)
+
+    # Command to exec into pod
+    exec_cmd = [
+        "kubectl", "-n", hub_name, "exec", "-it", pod_name, "--", "/bin/bash", "-l"
     ]
 
     with cluster.auth():
-        subprocess.check_call(cmd)
+        subprocess.check_call(create_cmd)
+        subprocess.check_call(exec_cmd)
+
+
+    # I want to ensure this code runs event if the exec cmd returns an exit code other than 0
+    # Delete temporary pod spec file
+    os.remove(tmpf.name)
 
 
 @exec_app.command()
