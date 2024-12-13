@@ -76,30 +76,38 @@ jupyterhub:
       node.kubernetes.io/instance-type: r5.2xlarge
     profileList:
       - display_name: EOSC211
-        description: "For class EOSC211, provides upto 1 CPU and ~4G RAM"
+        description: "For class EOSC211, provides up to 1 CPU and ~4G RAM"
         default: true
         kubespawner_override:
           # Using 'latest' for now so updates do not require 2i2c
           # involvement.
           image: quay.io/henrykmodzelewski/2i2c-eosc211:latest
       - display_name: EOSC212
-        description: "For class EOSC212, provides upto 1 CPU and ~4G RAM"
+        description: "For class EOSC212, provides up to 1 CPU and ~4G RAM"
         kubespawner_override:
           # Using 'latest' for now so updates do not require 2i2c
           # involvement.
           image: quay.io/henrykmodzelewski/2i2c-eosc212:latest
       - display_name: EOSC350
-        description: "For class EOSC350, provides upto 1 CPU and ~4G RAM"
+        description: "For class EOSC350, provides up to 1 CPU and ~4G RAM"
         kubespawner_override:
           # Using 'latest' for now so updates do not require 2i2c
           # involvement.
           image: quay.io/henrykmodzelewski/2i2c-eosc350:latest
       - display_name: EOSC454
-        description: "For class EOSC454, provides upto 1 CPU and ~4G RAM"
+        description: "For class EOSC454, provides up to 1 CPU and ~4G RAM"
         kubespawner_override:
           # Using 'latest' for now so updates do not require 2i2c
           # involvement.
           image: quay.io/henrykmodzelewski/2i2c-eosc454:latest
+      # https://2i2c.freshdesk.com/a/tickets/2578
+      - display_name: ENVR420
+        description: "For class ENVR420, provides up to 1 CPU and ~4G RAM"
+        kubespawner_override:
+          # Using 'latest' for now so updates do not require 2i2c
+          # involvement.
+          image: quay.io/henrykmodzelewski/2i2c-envr420:latest
+
   scheduling:
     userScheduler:
       enabled: true
