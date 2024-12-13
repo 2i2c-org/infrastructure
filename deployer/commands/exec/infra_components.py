@@ -141,6 +141,15 @@ def root_homes(
 
         with cluster.auth():
             try:
+                # We are splitting the previous `kubectl run` command into a
+                # create and exec couplet, because using run meant that the bash
+                # process we start would be assigned PID 1. This is a 'special'
+                # PID and killing it is equivalent to sending a shutdown command
+                # that will cause the pod to restart, killing any processes
+                # running in it. By using create then exec instead, we will be
+                # assigned a PID other than 1 and we can safely exit the pod to
+                # leave long-running processes if required.
+                #
                 # Ask api-server to create a pod
                 subprocess.check_call(["kubectl", "create", "-f", tmpf.name])
                 # Exec into pod
