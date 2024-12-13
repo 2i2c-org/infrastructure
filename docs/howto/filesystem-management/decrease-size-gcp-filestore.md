@@ -17,7 +17,7 @@ Navigate to the `terraform/gcp` folder in the `infrastructure` repository and op
 
 Add another filestore definition to the file with config that looks like this:
 
-```hcl
+```
 filestores = {
     "filestore" : {  # This first filestore instance should already be present
         capacity_gb: <larger capacity in GB>
