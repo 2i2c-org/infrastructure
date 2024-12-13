@@ -90,7 +90,7 @@ To check whether the NFS server is running properly, see the [Troubleshooting](#
 
 ## Migrating existing home directories and switching to the new NFS server
 
-See [](data-transfer) for instructions on performing these steps.
+See [](migrate-data) for instructions on performing these steps.
 
 ## Enforcing storage quotas
 

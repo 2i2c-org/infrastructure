@@ -48,7 +48,7 @@ Open a PR and merge these changes so that other engineers cannot accidentally ov
 
 ## Migrating the data and switching to the new filestore
 
-See [](data-transfer) for instructions on how to perform these steps.
+See [](migrate-data) for instructions on how to perform these steps.
 
 ## Decommission the previous filestore
 
