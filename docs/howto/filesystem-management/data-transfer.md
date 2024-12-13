@@ -1,4 +1,4 @@
-(data-transfer)=
+(migrate-data)=
 # Transfer data across filestores
 
 This documentation covers how to transfer data between filestores.
@@ -65,7 +65,7 @@ export HUB_NAME=<hub_name>
 
    Once you have detached from `screen`, can now `exit` the pod and let the copy run.
 
-(data-transfer:reattach-pod)=
+(migrate-data:reattach-pod)=
 ## Reattaching to the data transfer pod
 
 You can regain access to the pod created for the data transfer using:
@@ -82,7 +82,7 @@ At this point, it is useful to have a few terminal windows open:
 
 - One terminal with `deployer use-cluster-credentials $CLUSTER_NAME` running to run `kubectl` commands in
 - Another terminal to run `deployer deploy $CLUSTER_NAME $HUB_NAME` in
-- A terminal that is attached to the data transfer pod to re-run the file transfer (see [](data-transfer:reattach-pod))
+- A terminal that is attached to the data transfer pod to re-run the file transfer (see [](migrate-data:reattach-pod))
 
 1. **Check there are no active users on the hub.**
    You can check this by running:
