@@ -193,7 +193,7 @@ def homes(
         "-n",
         hub_name,
         "run",
-        "--rm",  # Remove pod when we're done
+        "--rm",  # Deletes the pod when the process completes, successfully or otherwise
         "-it",  # Give us a shell!
         "--overrides",
         json.dumps(pod),
