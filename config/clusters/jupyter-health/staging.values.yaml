@@ -16,6 +16,9 @@ jupyterhub:
         token_url: https://berkeley-jhe-staging.jupyterhealth.org/o/token/
         userdata_url: https://berkeley-jhe-staging.jupyterhealth.org/api/v1/users/profile
         login_service: JupyterHealth Exchange (staging)
+        allowed_groups:
+          - "20024" # JupyterHub users (~all users are here)
+          - "20017" # 2i2c
   singleuser:
     extraEnv:
       JHE_URL: https://berkeley-jhe-staging.jupyterhealth.org
