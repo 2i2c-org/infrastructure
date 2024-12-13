@@ -141,7 +141,7 @@ def root_homes(
 
         with cluster.auth():
             try:
-                # Ask kube-controller to create a pod
+                # Ask api-server to create a pod
                 subprocess.check_call(["kubectl", "create", "-f", tmpf.name])
                 # Exec into pod
                 subprocess.check_call(exec_cmd)
