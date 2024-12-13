@@ -23,8 +23,8 @@ UBUNTU_IMAGE = "ubuntu:22.04"
 def root_homes(
     cluster_name: str = typer.Argument(..., help="Name of cluster to operate on"),
     hub_name: str = typer.Argument(..., help="Name of hub to operate on"),
-    rm_pod: bool = typer.Option(
-        False, "--rm", help="Automatically delete the pod after completing"
+    persist: bool = typer.Option(
+        False, "--persist", help="Do not automatically delete the pod after completing. Useful for long-running processes."
     ),
     extra_nfs_server: str = typer.Option(
         None, help="IP address of an extra NFS server to mount"
@@ -144,7 +144,7 @@ def root_homes(
                 # Exec into pod
                 subprocess.check_call(exec_cmd)
             finally:
-                if rm_pod:
+                if not persist:
                     delete_pod(pod_name, hub_name)
 
 
