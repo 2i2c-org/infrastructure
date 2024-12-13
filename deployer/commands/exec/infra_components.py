@@ -119,10 +119,6 @@ def root_homes(
         },
     }
 
-    # Dump the pod spec to a temporary file
-    with tempfile.NamedTemporaryFile(mode="w", suffix=".json", delete=False) as tmpf:
-        json.dump(pod, tmpf)
-
     # Command to exec into pod
     exec_cmd = [
         "kubectl",
@@ -136,18 +132,20 @@ def root_homes(
         "-l",
     ]
 
-    with cluster.auth():
-        # Ask kube-controller to create a pod
-        subprocess.check_call(["kubectl", "create", "-f", tmpf.name])
-        subprocess.check_call(exec_cmd)
+    with tempfile.NamedTemporaryFile(mode="w", suffix=".json") as tmpf:
+        # Dump the pod spec to a temporary file
+        json.dump(pod, tmpf)
+        tmpf.flush()
 
-        # I want to ensure this code runs event if the exec cmd returns an exit code other than 0
-        if rm_pod:
-            delete_pod(pod_name, hub_name)
-
-    # I want to ensure this code runs event if the exec cmd returns an exit code other than 0
-    # Delete temporary pod spec file
-    os.remove(tmpf.name)
+        with cluster.auth():
+            try:
+                # Ask kube-controller to create a pod
+                subprocess.check_call(["kubectl", "create", "-f", tmpf.name])
+                # Exec into pod
+                subprocess.check_call(exec_cmd)
+            finally:
+                if rm_pod:
+                    delete_pod(pod_name, hub_name)
 
 
 @exec_app.command()
