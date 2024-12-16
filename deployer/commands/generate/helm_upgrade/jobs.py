@@ -14,7 +14,6 @@ from .decision import (
     ensure_support_staging_jobs_have_correct_keys,
     generate_hub_matrix_jobs,
     generate_support_matrix_jobs,
-    move_staging_hubs_to_staging_matrix,
     pretty_print_matrix_jobs,
 )
 
@@ -59,8 +58,9 @@ def helm_upgrade_jobs(
     cluster_files = get_all_cluster_yaml_files()
 
     # Empty lists to store job definitions in
+    support_matrix_jobs = []
+    staging_hub_matrix_jobs = []
     prod_hub_matrix_jobs = []
-    support_and_staging_matrix_jobs = []
 
     for cluster_file in cluster_files:
         # Read in the cluster.yaml file
@@ -92,7 +92,7 @@ def helm_upgrade_jobs(
             upgrade_support_on_this_cluster = False
 
         # Generate a job matrix of all hubs that need upgrading on this cluster
-        prod_hub_matrix_jobs.extend(
+        staging_hubs, prod_hubs = (
             generate_hub_matrix_jobs(
                 cluster_file,
                 cluster_config,
@@ -103,19 +103,8 @@ def helm_upgrade_jobs(
                 upgrade_all_hubs_on_all_clusters=upgrade_all_hubs_on_all_clusters,
             )
         )
-
-        # Generate a job matrix for support chart upgrades
-        support_and_staging_matrix_jobs.extend(
-            generate_support_matrix_jobs(
-                cluster_file,
-                cluster_config,
-                cluster_info,
-                set(changed_filepaths),
-                pr_labels,
-                upgrade_support_on_this_cluster=upgrade_support_on_this_cluster,
-                upgrade_support_on_all_clusters=upgrade_support_on_all_clusters,
-            )
-        )
+        staging_hub_matrix_jobs.extend(staging_hubs)
+        prod_hub_matrix_jobs.extend(prod_hubs)
 
     # Clean up the matrix jobs
     (
