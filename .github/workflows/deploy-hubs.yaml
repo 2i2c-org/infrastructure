@@ -73,16 +73,17 @@ jobs:
   # This job runs in Pull Requests and on pushes to the default branch. It identifies
   # which files have been added or modified by recent GitHub activity and parsed a list
   # to the `deployer generate helm-upgrade-job`s command of the deployer. This command generates
-  # two lists of dictionaries, which can be read by GitHub Actions as matrix jobs. The
-  # first set of jobs describes which clusters need their support chart and/or staging
-  # hub upgraded; and the second set of jobs describe which production hubs require
-  # upgrading. These two lists are set as job outputs via GITHUB_OUTPUT to be consumed
-  # by the later jobs. They are also pretty-printed in a human-readable format to the
-  # logs, and converted into Markdown tables for posting into GitHub comments.
+  # three lists of dictionaries, which can be read by GitHub Actions as matrix jobs. The
+  # first set of jobs describes which clusters need their support chart upgraded; the second set
+  # of jobs describe which staging hubs require upgrading; and the third set of jobs describe
+  # which production hubs require upgrading. These lists are set as job outputs via GITHUB_ENV
+  # to be consumed by the later jobs. They are also pretty-printed in a human-readable format
+  # to the logs, and converted into Markdown tables for posting into GitHub comments.
   generate-jobs:
     runs-on: ubuntu-latest
     outputs:
-      support-and-staging-matrix-jobs: ${{ steps.generate-jobs.outputs.support-and-staging-matrix-jobs }}
+      support-matrix-jobs: ${{ steps.generate-jobs.outputs.support-matrix-jobs }}
+      staging-matrix-jobs: ${{ steps.generate-jobs.outputs.staging-hub-matrix-jobs }}
       prod-hub-matrix-jobs: ${{ steps.generate-jobs.outputs.prod-hub-matrix-jobs }}
 
     steps:
@@ -182,7 +183,8 @@ jobs:
       - name: Upload artifacts
         if: >
           github.event_name == 'pull_request' &&
-          (steps.generate-jobs.outputs.support-and-staging-matrix-jobs != '[]' ||
+          (steps.generate-jobs.outputs.support-matrix-jobs != '[]' ||
+          steps.generate-jobs.outputs.staging-hub-matrix-jobs != '[]' ||
           steps.generate-jobs.outputs.prod-hub-matrix-jobs != '[]')
         uses: actions/upload-artifact@v4
         with:
