@@ -211,13 +211,12 @@ jobs:
         env:
           SLACK_WEBHOOK_URL: ${{ secrets.SLACK_GHA_FAILURES_WEBHOOK_URL }}
 
-  # This job upgrades the support chart, staging hub, and dask-staging hub (if present)
-  # for clusters in parallel, if those upgrades are required. This job needs the
-  # `generate-jobs` job to have completed and set an output to the
-  # `support-and-staging-matrix-jobs` variable name. It's inputs are a list of
-  # dictionaries with the keys cluster_name, provider, upgrade_support, and
-  # upgrade_staging for each cluster that requires it.
-  upgrade-support-and-staging:
+  # This job upgrades the support chart for clusters in parallel, if those upgrades
+  # are required. This job needs the `generate-jobs` job to have completed and set
+  # an output to the `support-matrix-jobs` variable name. It's inputs are a list of
+  # dictionaries with the keys cluster_name, provider, and upgrade_support for each
+  # cluster that requires it.
+  upgrade-support:
     runs-on: ubuntu-latest
     needs: [generate-jobs]
 
@@ -265,12 +264,12 @@ jobs:
     if: |
       (github.event_name == 'push' && contains(github.ref, 'main')) &&
       needs.generate-jobs.result == 'success' &&
-      needs.generate-jobs.outputs.support-and-staging-matrix-jobs != '[]'
+      needs.generate-jobs.outputs.support-matrix-jobs != '[]'
     strategy:
       # Don't stop other deployments if one fails
       fail-fast: false
       matrix:
-        jobs: ${{ fromJson(needs.generate-jobs.outputs.support-and-staging-matrix-jobs) }}
+        jobs: ${{ fromJson(needs.generate-jobs.outputs.support-matrix-jobs) }}
 
     steps:
       - uses: actions/checkout@v4
@@ -285,36 +284,6 @@ jobs:
         if: matrix.jobs.upgrade_support
         run: |
           deployer deploy-support ${{ matrix.jobs.cluster_name }}
-
-      - name: Upgrade staging hub on cluster ${{ matrix.jobs.cluster_name }}
-        if: matrix.jobs.upgrade_staging
-        run: |
-          deployer deploy ${{ matrix.jobs.cluster_name }} staging
-
-      # Retry action: https://github.com/marketplace/actions/retry-step
-      - name: Run health check for staging hub on cluster ${{ matrix.jobs.cluster_name }}
-        if: matrix.jobs.upgrade_staging
-        uses: nick-fields/retry@v3
-        with:
-          timeout_minutes: 10
-          max_attempts: 2
-          command: |
-            deployer run-hub-health-check ${{ matrix.jobs.cluster_name }} staging
-
-      - name: Upgrade dask-staging hub on cluster ${{ matrix.jobs.cluster_name }} if it exists
-        if: matrix.jobs.upgrade_staging && matrix.jobs.cluster_name == '2i2c'
-        run: |
-          deployer deploy ${{ matrix.jobs.cluster_name }} dask-staging
-
-      # Retry action: https://github.com/marketplace/actions/retry-step
-      - name: Run health check for dask-staging hub on cluster ${{ matrix.jobs.cluster_name }} if it exists
-        if: matrix.jobs.upgrade_staging && matrix.jobs.cluster_name == '2i2c'
-        uses: nick-fields/retry@v3
-        with:
-          timeout_minutes: 10
-          max_attempts: 2
-          command: |
-            deployer run-hub-health-check ${{ matrix.jobs.cluster_name }} dask-staging
 
       - name: Declare failure status
         id: declare-failure
