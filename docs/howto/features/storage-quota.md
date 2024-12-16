@@ -140,6 +140,8 @@ Once this is deployed, the hub will automatically enforce the storage quota for 
 
 ## Restoring home directories from EBS snapshots
 
+### AWS
+
 On AWS, the EBS volumes used for home directories are backed up using [Data Lifecycle Manager (DLM)](https://docs.aws.amazon.com/ebs/latest/userguide/snapshot-lifecycle.html). This means that we can restore home directories from a snapshot if they are deleted or corrupted.
 
 To restore a home directory from a snapshot, we need to create a new EBS volume from the snapshot, mount it to the EC2 instance attached to the existing EBS volume containing the NFS home directories, and then copy the contents from the restored EBS volume to the NFS home directories volume.
