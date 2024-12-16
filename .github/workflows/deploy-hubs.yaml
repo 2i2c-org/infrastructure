@@ -562,24 +562,24 @@ jobs:
           SLACK_WEBHOOK_URL: ${{ secrets.SLACK_GHA_FAILURES_WEBHOOK_URL }}
 
   # This job upgrades production hubs on clusters in parallel, if required. This
-  # job needs both the `filter-generate-jobs` to have completed to provide its
+  # job needs the `filter-failed-staging-jobs` to have completed to provide its
   # output `filtered-prod-hub-matrix-jobs`. It is a list of dictionaries with
   # the keys cluster_name, provider, and hub_name for each production hub that
-  # requires an upgrade and didn't have a failed support-and-staging-upgrade job
+  # requires an upgrade and didn't have a failed upgrade-staging-hub job
   # run as part of this workflow.
   upgrade-prod-hubs:
     runs-on: ubuntu-latest
-    needs: [filter-generate-jobs]
+    needs: [filter-failed-staging-jobs]
     if: |
       !cancelled() &&
       (github.event_name == 'push' && contains(github.ref, 'main')) &&
-      needs.filter-generate-jobs.result == 'success' &&
-      needs.filter-generate-jobs.outputs.prod-hub-matrix-jobs != '[]'
+      needs.filter-failed-staging-jobs.result == 'success' &&
+      needs.filter-failed-staging-jobs.outputs.prod-hub-matrix-jobs != '[]'
     strategy:
       # Don't stop other deployments if one fails
       fail-fast: false
       matrix:
-        jobs: ${{ fromJson(needs.filter-generate-jobs.outputs.prod-hub-matrix-jobs) }}
+        jobs: ${{ fromJson(needs.filter-failed-staging-jobs.outputs.prod-hub-matrix-jobs) }}
 
     steps:
       - uses: actions/checkout@v4
