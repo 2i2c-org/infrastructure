@@ -54,15 +54,8 @@ def create_markdown_comment(support_matrix, staging_matrix, prod_matrix):
     column_converter = {
         "cluster_name": "Cluster Name",
         "provider": "Cloud Provider",
-        "upgrade_support": "Upgrade Support?",
         "hub_name": "Hub Name",
         "reason_for_redeploy": "Reason for Redeploy",
-    }
-
-    # A dictionary to convert row values when they are Boolean
-    boolean_converter = {
-        True: "Yes",
-        False: "No",
     }
 
     # === To reliably convert a list of dictionaries into a Markdown table, the keys
@@ -78,9 +71,6 @@ def create_markdown_comment(support_matrix, staging_matrix, prod_matrix):
             formatted_entry = {
                 column_converter["provider"]: entry["provider"],
                 column_converter["cluster_name"]: entry["cluster_name"],
-                column_converter["upgrade_support"]: boolean_converter[
-                    entry["upgrade_support"]
-                ],
                 column_converter["reason_for_redeploy"]: entry["reason_for_redeploy"],
             }
             formatted_support_matrix.append(formatted_entry)

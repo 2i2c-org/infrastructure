@@ -231,7 +231,6 @@ def generate_support_matrix_jobs(
                     "cluster_name": 2i2c,
                     "provider": "gcp",
                     "reason_for_redeploy": "Support helm chart has been modified",
-                    "upgrade_support": True,
                 },
             ]
     """
@@ -248,7 +247,6 @@ def generate_support_matrix_jobs(
             # We know we're upgrading support on all clusters, so just add the cluster
             # name to the list of matrix jobs and move on
             matrix_job = cluster_info.copy()
-            matrix_job["upgrade_support"] = True
 
             if upgrade_support_on_all_clusters:
                 if pr_labels and "deployer:deploy-support" in pr_labels:
@@ -272,7 +270,6 @@ def generate_support_matrix_jobs(
 
             if intersection:
                 matrix_job = cluster_info.copy()
-                matrix_job["upgrade_support"] = True
                 matrix_job["reason_for_redeploy"] = (
                     "Following helm chart values files were modified: "
                     + ", ".join([path.name for path in intersection])
@@ -359,7 +356,6 @@ def pretty_print_matrix_jobs(
     support_table = Table(title="Support chart upgrades")
     support_table.add_column("Cloud Provider")
     support_table.add_column("Cluster Name")
-    support_table.add_column("Upgrade Support?")
     support_table.add_column("Reason for Redeploy")
 
     # Add rows
@@ -367,7 +363,6 @@ def pretty_print_matrix_jobs(
         support_table.add_row(
             job["provider"],
             job["cluster_name"],
-            "Yes" if job["upgrade_support"] else "No",
             job["reason_for_redeploy"],
             end_section=True,
         )

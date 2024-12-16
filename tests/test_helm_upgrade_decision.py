@@ -259,7 +259,6 @@ def test_generate_support_matrix_jobs_one_cluster():
         {
             "provider": "gcp",
             "cluster_name": "cluster1",
-            "upgrade_support": True,
             "reason_for_redeploy": "Following helm chart values files were modified: support.values.yaml",
         }
     ]
@@ -296,7 +295,6 @@ def test_generate_support_matrix_jobs_all_clusters():
             {
                 "provider": "gcp",
                 "cluster_name": "cluster1",
-                "upgrade_support": True,
                 "reason_for_redeploy": reason,
             }
         ]

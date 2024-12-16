@@ -214,8 +214,7 @@ jobs:
   # This job upgrades the support chart for clusters in parallel, if those upgrades
   # are required. This job needs the `generate-jobs` job to have completed and set
   # an output to the `support-matrix-jobs` variable name. It's inputs are a list of
-  # dictionaries with the keys cluster_name, provider, and upgrade_support for each
-  # cluster that requires it.
+  # dictionaries with the keys cluster_name and provider for each cluster that requires it.
   upgrade-support:
     runs-on: ubuntu-latest
     needs: [generate-jobs]
@@ -281,7 +280,6 @@ jobs:
           GCP_KMS_DECRYPTOR_KEY: ${{ secrets.GCP_KMS_DECRYPTOR_KEY }}
 
       - name: Upgrade support chart on cluster ${{ matrix.jobs.cluster_name }}
-        if: matrix.jobs.upgrade_support
         run: |
           deployer deploy-support ${{ matrix.jobs.cluster_name }}
 
