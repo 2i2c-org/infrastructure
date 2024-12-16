@@ -7,11 +7,41 @@ covers those steps for the cloud providers.
 (howto:filesystem-backup:restore:aws)=
 ## AWS
 
+### Restoring home directories from an EFS recovery point
+
 ```{note}
 We follow AWS's guidance for [restoring EFS from a recovery point](https://docs.aws.amazon.com/aws-backup/latest/devguide/restoring-efs.html#efs-restore-console)
 ```
 
 Due to the length of the steps listed in that document, we will not repeat them here.
+
+### Restoring home directories from EBS snapshots
+
+On AWS, the EBS volumes used for home directories are backed up using [Data Lifecycle Manager (DLM)](https://docs.aws.amazon.com/ebs/latest/userguide/snapshot-lifecycle.html). This means that we can restore home directories from a snapshot if they are deleted or corrupted.
+
+To restore a home directory from a snapshot, we need to create a new EBS volume from the snapshot, mount it to the EC2 instance attached to the existing EBS volume containing the NFS home directories, and then copy the contents from the restored EBS volume to the NFS home directories volume.
+
+```{note}
+Please follow AWS's guidance for [restoring EBS volumes from a snapshot](https://docs.aws.amazon.com/prescriptive-guidance/latest/backup-recovery/restore.html#restore-files) to create a new EBS volume from the snapshot.
+```
+
+Once we have created a new EBS volume from the snapshot, we need to mount it to the EC2 instance attached to the existing EBS volume containing the NFS home directories. To do this, we need to find the instance ID of the EC2 instance attached to the existing EBS volume. This involves the following steps:
+
+1. Go to the EBS volumes page in the AWS console
+2. Find the volume ID of the existing EBS volume containing the NFS home directories
+3. Click on the volume ID and find the instance ID in the "Attached resources" section
+4. Once we have the instance ID, we can mount the new EBS volume to the EC2 instance by following the steps outlined in the [Attaching an Amazon EBS volume to an instance](https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/ebs-attaching-volume.html) guide.
+
+Once we have mounted the new EBS volume to the EC2 instance, we can copy the contents from the restored EBS volume to the NFS home directories volume. This can be done by running the following commands on the EC2 instance:
+
+```bash
+# Copy the contents from the restored EBS volume to the NFS home directories volume
+rsync -av --info=progress2 </restored-volume/path-to-home-directories/> </existing-volume/path-to-home-directories/>
+```
+
+Once we have copied the contents from the restored EBS volume to the NFS home directories volume, we can delete the EBS volume that was created from the snapshot.
+
+After the restoration is complete, we should run `terraform plan` to double check that no unintended changes were made to the Terraform state.
 
 (howto:filesystem-backup:restore:gcp)=
 ## GCP
