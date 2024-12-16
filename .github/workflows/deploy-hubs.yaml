@@ -502,33 +502,46 @@ jobs:
           SLACK_WEBHOOK_URL: ${{ secrets.SLACK_GHA_FAILURES_WEBHOOK_URL }}
 
   # This job further reduces the filtered-prod-hub-matrix-jobs and deployments by
+  # filtering out any deployment to a cluster with a failed staging hub job.
+  filter-failed-staging-jobs:
+    runs-on: ubuntu-latest
+    needs: [generate-jobs, filter-failed-support-jobs, upgrade-staging]
+    if: |
+      !cancelled() &&
+      (github.event_name == 'push' && contains(github.ref, 'main')) &&
+      needs.generate-jobs.result == 'success' &&
+      needs.filter-failed-support-jobs.outputs.filtered-prod-hub-matrix-jobs != '[]'
+
+    outputs:
+      refiltered-prod-hub-matrix-jobs: ${{ env.refiltered-prod-hub-matrix-jobs }}
+
     steps:
       # This Python script filters out any prod hub deployment job from running
-      # later based on if its part of a cluster where support/staging upgrade
+      # later based on if its part of a cluster where staging hub upgrade
       # just failed. Data is injected to the script before its executed via
       # string literals as rendered GitHub workflow expressions.
-      - name: Filter prod deploy jobs to run based on failures in support/staging
+      - name: Filter prod deploy jobs to run based on failures in staging
         id: filter-jobs
         shell: python
         run: |
           import os
           import json
 
-          jobs = json.loads(r"""${{ needs.generate-jobs.outputs.prod-hub-matrix-jobs }}""")
-          outputs = json.loads(r"""${{ toJson(needs.upgrade-support-and-staging.outputs) }}""")
+          prod_jobs = json.loads(r"""${{ needs.filter-failed-support-jobs.outputs.filtered-prod-hub-matrix-jobs }}""")
+          outputs = json.loads(r"""${{ toJson(needs.upgrade-staging.outputs) }}""")
 
           try:
-            filtered_jobs = [
-                job
-                for job in jobs
-                if outputs[f"failure_{job['cluster_name'].replace('.', '-')}"] != "true"
+            filtered_prod_jobs = [
+                prod_job
+                for prod_job in prod_jobs
+                if outputs[f"failure_{prod_job['cluster_name'].replace('.', '-')}"] != "true"
             ]
           except KeyError:
-            print(f"The {cluster_name} cluster wasn't found in the `upgrade-support-and-staging.outputs` list. Please add it before continuing!")
+            print(f"The {cluster_name} cluster wasn't found in the `upgrade-staging.outputs` list. Please add it before continuing!")
 
           output_file = os.getenv("GITHUB_OUTPUT")
           with open(output_file, "a") as f:
-              f.write(f"prod-hub-matrix-jobs={json.dumps(filtered_jobs)}")
+              f.write(f"prod-hub-matrix-jobs={json.dumps(filtered_prod_jobs)}")
 
       # https://github.com/ravsamhq/notify-slack-action
       # Needs to be added per job
