@@ -1,7 +1,7 @@
 (migrate-data)=
-# Transfer data across filestores
+# Migrate data across NFS servers
 
-This documentation covers how to transfer data between filestores.
+This documentation covers how to transfer data between NFS servers in a cloud-agnostic way.
 
 This process should be repeated for as many hubs as there are on the cluster, remembering to update the value of `$HUB_NAME`.
 
@@ -12,10 +12,10 @@ export CLUSTER_NAME=<cluster_name>
 export HUB_NAME=<hub_name>
 ```
 
-1. **Create a pod on the cluster and mount the source and destination filestores.**
+1. **Create a pod on the cluster and mount the source and destination NFS servers.**
 
-   We can use the following deployer command to create a pod in the cluster with the two filestores mounted.
-   The current default filestore will be mounted automatically and we use `--extra-nfs-*` flags to mount the second filestore.
+   We can use the following deployer command to create a pod in the cluster with the two NFS servers mounted.
+   The current default NFS will be mounted automatically and we use `--extra-nfs-*` flags to mount the second NFS.
 
    ```bash
    deployer exec root-homes $CLUSTER_NAME $HUB_NAME \
@@ -25,7 +25,7 @@ export HUB_NAME=<hub_name>
      --persist
    ```
 
-   - `$SERVER_IP` can be found either through the relevant Cloud provider console, or by running `kubectl --namespace $HUB_NAME get svc` if the second filestore is running `jupyterhub-home-nfs`.
+   - `$SERVER_IP` can be found either through the relevant Cloud provider console, or by running `kubectl --namespace $HUB_NAME get svc` if the second NFS is running `jupyterhub-home-nfs`.
    - The `--persist` flag will prevent the pod from terminating when you exit it, so you can leave the transfer process running.
 
 1. **Install some tools into the pod.**
@@ -76,7 +76,7 @@ kubectl --namespace $HUB_NAME attach -i ${CLUSTER_NAME}-root-home-shell
 
 ## Switching the NFS servers over
 
-Once the files have been migrated to the new NFS filestore, we can update the hub(s) to use the new filestore IP address.
+Once the files have been migrated, we can update the hub(s) to use the new NFS server IP address.
 
 At this point, it is useful to have a few terminal windows open:
 
@@ -93,16 +93,16 @@ At this point, it is useful to have a few terminal windows open:
 
    If no resources are found, you can proceed to the next step.
 
-1. **Make the hub unavailable by deleting the `proxy-public` service.**
+2. **Make the hub unavailable by deleting the `proxy-public` service.**
 
    ```bash
    kubectl --namespace $HUB_NAME delete svc proxy-public
    ```
 
-1. **Re-run the `rsync` command in the data transfer pod.**
+3. **Re-run the `rsync` command in the data transfer pod.**
    This process should take much less time now that the initial copy has completed.
 
-1. **Delete the `PersistentVolume` and all dependent objects.**
+4. **Delete the `PersistentVolume` and all dependent objects.**
    `PersistentVolumes` are _not_ editable, so we need to delete and recreate them to allow the deploy with the new IP address to succeed.
    Below is the sequence of objects _dependent_ on the pv, and we need to delete all of them for the deploy to finish.
 
@@ -113,7 +113,7 @@ At this point, it is useful to have a few terminal windows open:
    kubectl --namespace $HUB_NAME delete pod -l component=shared-volume-metrics
    ```
 
-1. **Update `nfs.pv.serverIP` values in the `<hub-name>.values.yaml` file.**
+5. **Update `nfs.pv.serverIP` values in the `<hub-name>.values.yaml` file.**
 
    ```yaml
    nfs:
@@ -121,7 +121,7 @@ At this point, it is useful to have a few terminal windows open:
        serverIP: <nfs_service_ip>
    ```
 
-1. **Run `deployer deploy $CLUSTER_NAME $HUB_NAME`.**
+6. **Run `deployer deploy $CLUSTER_NAME $HUB_NAME`.**
    This should also bring back the `proxy-public` service and restore access.
    You can monitor progress by running:
 
@@ -131,7 +131,7 @@ At this point, it is useful to have a few terminal windows open:
 
 Open and merge a PR with these changes so that other engineers cannot accidentally overwrite them.
 
-We can now delete the pod we created to mount the filestores:
+We can now delete the pod we created to mount the NFS servers:
 
 ```bash
 kubectl --namespace $HUB_NAME delete pod ${CLUSTER_NAME}-root-home-shell
