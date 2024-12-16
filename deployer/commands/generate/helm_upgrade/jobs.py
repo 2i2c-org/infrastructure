@@ -124,8 +124,8 @@ def helm_upgrade_jobs(
     #     support_and_staging_matrix_jobs, prod_hub_matrix_jobs
     # )
     staging_matrix_jobs = assign_staging_jobs_for_missing_clusters(staging_hub_matrix_jobs, prod_hub_matrix_jobs)
-    # # Pretty print the jobs using rich
-    # pretty_print_matrix_jobs(prod_hub_matrix_jobs, support_and_staging_matrix_jobs)
+    # Pretty print the jobs using rich
+    pretty_print_matrix_jobs(support_matrix_jobs, staging_hub_matrix_jobs, prod_hub_matrix_jobs)
 
     # The existence of the CI environment variable is an indication that we are running
     # in an GitHub Actions workflow
