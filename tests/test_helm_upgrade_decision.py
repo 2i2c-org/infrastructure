@@ -7,10 +7,9 @@ from ruamel.yaml import YAML
 from deployer.commands.generate.helm_upgrade.decision import (
     assign_staging_jobs_for_missing_clusters,
     discover_modified_common_files,
-    ensure_support_staging_jobs_have_correct_keys,
+    filter_out_staging_hubs,
     generate_hub_matrix_jobs,
     generate_support_matrix_jobs,
-    move_staging_hubs_to_staging_matrix,
 )
 from deployer.utils.file_acquisition import get_all_cluster_yaml_files
 
@@ -24,6 +23,7 @@ def test_get_all_cluster_yaml_files():
     expected_cluster_files = {
         clusters_path.joinpath("cluster1/cluster.yaml"),
         clusters_path.joinpath("cluster2/cluster.yaml"),
+        clusters_path.joinpath("cluster3/cluster.yaml"),
     }
 
     with mock.patch(
@@ -35,7 +35,42 @@ def test_get_all_cluster_yaml_files():
     assert isinstance(result_cluster_files, set)
 
 
-def test_generate_hub_matrix_jobs_one_hub():
+def test_generate_hub_matrix_jobs_one_staging_hub():
+    cluster_file = root_path.joinpath("tests/test-clusters/cluster1/cluster.yaml")
+    with open(cluster_file) as f:
+        cluster_config = yaml.load(f)
+
+    cluster_info = {
+        "cluster_name": cluster_config.get("name", {}),
+        "provider": cluster_config.get("provider", {}),
+        "reason_for_redeploy": "",
+    }
+
+    modified_file = {
+        root_path.joinpath("tests/test-clusters/cluster1/staging.values.yaml"),
+    }
+
+    expected_matrix_jobs = [
+        {
+            "provider": "gcp",
+            "cluster_name": "cluster1",
+            "hub_name": "staging",
+            "reason_for_redeploy": "Following helm chart values files were modified: staging.values.yaml",
+        }
+    ]
+
+    result_staging_matrix_jobs, result_prod_matrix_jobs = generate_hub_matrix_jobs(
+        cluster_file, cluster_config, cluster_info, modified_file
+    )
+
+    case.assertCountEqual(result_staging_matrix_jobs, expected_matrix_jobs)
+    assert result_prod_matrix_jobs == []
+    assert isinstance(result_staging_matrix_jobs, list)
+    assert isinstance(result_prod_matrix_jobs, list)
+    assert isinstance(result_staging_matrix_jobs[0], dict)
+
+
+def test_generate_hub_matrix_jobs_one_prod_hub():
     cluster_file = root_path.joinpath("tests/test-clusters/cluster1/cluster.yaml")
     with open(cluster_file) as f:
         cluster_config = yaml.load(f)
@@ -59,13 +94,15 @@ def test_generate_hub_matrix_jobs_one_hub():
         }
     ]
 
-    result_matrix_jobs = generate_hub_matrix_jobs(
+    result_staging_matrix_jobs, result_prod_matrix_jobs = generate_hub_matrix_jobs(
         cluster_file, cluster_config, cluster_info, modified_file
     )
 
-    case.assertCountEqual(result_matrix_jobs, expected_matrix_jobs)
-    assert isinstance(result_matrix_jobs, list)
-    assert isinstance(result_matrix_jobs[0], dict)
+    case.assertCountEqual(result_prod_matrix_jobs, expected_matrix_jobs)
+    assert result_staging_matrix_jobs == []
+    assert isinstance(result_staging_matrix_jobs, list)
+    assert isinstance(result_prod_matrix_jobs, list)
+    assert isinstance(result_prod_matrix_jobs[0], dict)
 
 
 def test_generate_hub_matrix_jobs_many_hubs():
@@ -99,7 +136,7 @@ def test_generate_hub_matrix_jobs_many_hubs():
         },
     ]
 
-    result_matrix_jobs = generate_hub_matrix_jobs(
+    _, result_matrix_jobs = generate_hub_matrix_jobs(
         cluster_file,
         cluster_config,
         cluster_info,
@@ -130,13 +167,16 @@ def test_generate_hub_matrix_jobs_all_hubs():
     bool_options = [(True, False), (False, True), (True, True)]
 
     for reason, bool_option in zip(reasons, bool_options):
-        expected_matrix_jobs = [
+        expected_staging_matrix_jobs = [
             {
                 "provider": "gcp",
                 "cluster_name": "cluster1",
                 "hub_name": "staging",
                 "reason_for_redeploy": reason,
-            },
+            }
+        ]
+
+        expected_prod_matrix_jobs = [
             {
                 "provider": "gcp",
                 "cluster_name": "cluster1",
@@ -157,7 +197,7 @@ def test_generate_hub_matrix_jobs_all_hubs():
             },
         ]
 
-        result_matrix_jobs = generate_hub_matrix_jobs(
+        result_staging_matrix_jobs, result_prod_matrix_jobs = generate_hub_matrix_jobs(
             cluster_file,
             cluster_config,
             cluster_info,
@@ -166,9 +206,12 @@ def test_generate_hub_matrix_jobs_all_hubs():
             upgrade_all_hubs_on_all_clusters=bool_option[1],
         )
 
-        case.assertCountEqual(result_matrix_jobs, expected_matrix_jobs)
-        assert isinstance(result_matrix_jobs, list)
-        assert isinstance(result_matrix_jobs[0], dict)
+        case.assertCountEqual(result_staging_matrix_jobs, expected_staging_matrix_jobs)
+        case.assertCountEqual(result_prod_matrix_jobs, expected_prod_matrix_jobs)
+        assert isinstance(result_staging_matrix_jobs, list)
+        assert isinstance(result_prod_matrix_jobs, list)
+        assert isinstance(result_staging_matrix_jobs[0], dict)
+        assert isinstance(result_prod_matrix_jobs[0], dict)
 
 
 def test_generate_hub_matrix_jobs_skip_deploy_label():
@@ -217,7 +260,7 @@ def test_generate_support_matrix_jobs_one_cluster():
             "provider": "gcp",
             "cluster_name": "cluster1",
             "upgrade_support": True,
-            "reason_for_support_redeploy": "Following helm chart values files were modified: support.values.yaml",
+            "reason_for_redeploy": "Following helm chart values files were modified: support.values.yaml",
         }
     ]
 
@@ -254,7 +297,7 @@ def test_generate_support_matrix_jobs_all_clusters():
                 "provider": "gcp",
                 "cluster_name": "cluster1",
                 "upgrade_support": True,
-                "reason_for_support_redeploy": reason,
+                "reason_for_redeploy": reason,
             }
         ]
 
@@ -328,7 +371,7 @@ def test_discover_modified_common_files_support_helm_chart():
     assert not upgrade_all_hubs
 
 
-def test_move_staging_hubs_to_staging_matrix_job_exists():
+def test_filter_out_staging_hubs_job_exists():
     input_hub_matrix_jobs = [
         {
             "cluster_name": "cluster1",
@@ -343,16 +386,16 @@ def test_move_staging_hubs_to_staging_matrix_job_exists():
             "reason_for_redeploy": "cluster.yaml file was modified",
         },
     ]
-    input_support_staging_matrix_jobs = [
+
+    expected_staging_hub_matrix_jobs = [
         {
             "cluster_name": "cluster1",
             "provider": "gcp",
-            "upgrade_support": True,
-            "reason_for_support_redeploy": "cluster.yaml file was modified",
+            "hub_name": "staging",
+            "reason_for_redeploy": "cluster.yaml file was modified",
         }
     ]
-
-    expected_hub_matrix_jobs = [
+    expected_prod_hub_matrix_jobs = [
         {
             "cluster_name": "cluster1",
             "provider": "gcp",
@@ -360,31 +403,21 @@ def test_move_staging_hubs_to_staging_matrix_job_exists():
             "reason_for_redeploy": "cluster.yaml file was modified",
         },
     ]
-    expected_support_staging_matrix_jobs = [
-        {
-            "cluster_name": "cluster1",
-            "provider": "gcp",
-            "upgrade_support": True,
-            "reason_for_support_redeploy": "cluster.yaml file was modified",
-            "upgrade_staging": True,
-            "reason_for_staging_redeploy": "cluster.yaml file was modified",
-        }
-    ]
 
     (
-        result_hub_matrix_jobs,
-        result_support_staging_matrix_jobs,
-    ) = move_staging_hubs_to_staging_matrix(
-        input_hub_matrix_jobs, input_support_staging_matrix_jobs
-    )
+        result_staging_hub_matrix_jobs,
+        result_prod_hub_matrix_jobs,
+    ) = filter_out_staging_hubs(input_hub_matrix_jobs)
 
-    case.assertCountEqual(result_hub_matrix_jobs, expected_hub_matrix_jobs)
     case.assertCountEqual(
-        result_support_staging_matrix_jobs, expected_support_staging_matrix_jobs
+        result_staging_hub_matrix_jobs, expected_staging_hub_matrix_jobs
     )
+    case.assertCountEqual(result_prod_hub_matrix_jobs, expected_prod_hub_matrix_jobs)
 
 
-def test_move_staging_hubs_to_staging_matrix_job_does_not_exist():
+def test_filter_out_staging_hubs_job_does_not_exist():
+    clusters_path = root_path.joinpath("tests/test-clusters")
+
     input_hub_matrix_jobs = [
         {
             "cluster_name": "cluster1",
@@ -399,9 +432,16 @@ def test_move_staging_hubs_to_staging_matrix_job_does_not_exist():
             "reason_for_redeploy": "cluster.yaml file was modified",
         },
     ]
-    input_support_staging_matrix_jobs = []
 
-    expected_hub_matrix_jobs = [
+    expected_staging_hub_matrix_jobs = [
+        {
+            "cluster_name": "cluster1",
+            "provider": "gcp",
+            "hub_name": "staging",
+            "reason_for_redeploy": "cluster.yaml file was modified",
+        }
+    ]
+    expected_prod_hub_matrix_jobs = [
         {
             "cluster_name": "cluster1",
             "provider": "gcp",
@@ -409,96 +449,24 @@ def test_move_staging_hubs_to_staging_matrix_job_does_not_exist():
             "reason_for_redeploy": "cluster.yaml file was modified",
         },
     ]
-    expected_support_staging_matrix_jobs = [
-        {
-            "cluster_name": "cluster1",
-            "provider": "gcp",
-            "upgrade_support": False,
-            "reason_for_support_redeploy": "",
-            "upgrade_staging": True,
-            "reason_for_staging_redeploy": "cluster.yaml file was modified",
-        }
-    ]
 
-    (
-        result_hub_matrix_jobs,
-        result_support_staging_matrix_jobs,
-    ) = move_staging_hubs_to_staging_matrix(
-        input_hub_matrix_jobs, input_support_staging_matrix_jobs
-    )
+    with mock.patch(
+        "deployer.utils.file_acquisition.CONFIG_CLUSTERS_PATH", clusters_path
+    ):
+        (
+            result_staging_hub_matrix_jobs,
+            result_prod_hub_matrix_jobs,
+        ) = filter_out_staging_hubs(input_hub_matrix_jobs)
 
-    case.assertCountEqual(result_hub_matrix_jobs, expected_hub_matrix_jobs)
     case.assertCountEqual(
-        result_support_staging_matrix_jobs, expected_support_staging_matrix_jobs
+        result_staging_hub_matrix_jobs, expected_staging_hub_matrix_jobs
     )
-
-
-def test_ensure_support_staging_jobs_have_correct_keys_hubs_exist():
-    input_support_staging_jobs = [
-        {
-            "cluster_name": "cluster1",
-            "provider": "gcp",
-            "upgrade_support": False,
-            "reason_for_support_upgrade": "",
-        }
-    ]
-
-    input_hub_jobs = [
-        {
-            "cluster_name": "cluster1",
-            "provider": "gcp",
-            "hub_name": "hub1",
-            "reason_for_redeploy": "",
-        }
-    ]
-
-    expected_support_staging_jobs = [
-        {
-            "cluster_name": "cluster1",
-            "provider": "gcp",
-            "upgrade_support": False,
-            "reason_for_support_upgrade": "",
-            "upgrade_staging": True,
-            "reason_for_staging_redeploy": "Following prod hubs require redeploy: hub1",
-        }
-    ]
-
-    result_support_staging_jobs = ensure_support_staging_jobs_have_correct_keys(
-        input_support_staging_jobs, input_hub_jobs
-    )
-
-    case.assertCountEqual(result_support_staging_jobs, expected_support_staging_jobs)
-
-
-def test_ensure_support_staging_jobs_have_correct_keys_hubs_dont_exist():
-    input_support_staging_jobs = [
-        {
-            "cluster_name": "cluster1",
-            "provider": "gcp",
-            "upgrade_support": False,
-            "reason_for_support_upgrade": "",
-        }
-    ]
-
-    expected_support_staging_jobs = [
-        {
-            "cluster_name": "cluster1",
-            "provider": "gcp",
-            "upgrade_support": False,
-            "reason_for_support_upgrade": "",
-            "upgrade_staging": False,
-            "reason_for_staging_redeploy": "",
-        }
-    ]
-
-    result_support_staging_jobs = ensure_support_staging_jobs_have_correct_keys(
-        input_support_staging_jobs, []
-    )
-
-    case.assertCountEqual(result_support_staging_jobs, expected_support_staging_jobs)
+    case.assertCountEqual(result_prod_hub_matrix_jobs, expected_prod_hub_matrix_jobs)
 
 
 def test_assign_staging_jobs_for_missing_clusters_is_missing():
+    clusters_path = root_path.joinpath("tests/test-clusters")
+
     input_prod_jobs = [
         {
             "provider": "gcp",
@@ -507,25 +475,28 @@ def test_assign_staging_jobs_for_missing_clusters_is_missing():
         },
     ]
 
-    expected_support_staging_jobs = [
+    expected_staging_jobs = [
         {
             "provider": "gcp",
             "cluster_name": "cluster1",
-            "upgrade_support": False,
-            "reason_for_support_redeploy": "",
-            "upgrade_staging": True,
-            "reason_for_staging_redeploy": "Following prod hubs require redeploy: hub1",
+            "hub_name": "staging",
+            "reason_for_redeploy": "Following prod hubs require redeploy: hub1",
         }
     ]
 
-    result_support_staging_jobs = assign_staging_jobs_for_missing_clusters(
-        [], input_prod_jobs
-    )
+    with mock.patch(
+        "deployer.utils.file_acquisition.CONFIG_CLUSTERS_PATH", clusters_path
+    ):
+        result_staging_jobs = assign_staging_jobs_for_missing_clusters(
+            [], input_prod_jobs
+        )
 
-    case.assertCountEqual(result_support_staging_jobs, expected_support_staging_jobs)
+    case.assertCountEqual(result_staging_jobs, expected_staging_jobs)
 
 
 def test_assign_staging_jobs_for_missing_clusters_is_present():
+    clusters_path = root_path.joinpath("tests/test-clusters")
+
     input_prod_jobs = [
         {
             "provider": "gcp",
@@ -534,30 +505,66 @@ def test_assign_staging_jobs_for_missing_clusters_is_present():
         },
     ]
 
-    input_support_staging_jobs = [
+    input_staging_jobs = [
         {
             "provider": "gcp",
             "cluster_name": "cluster1",
-            "upgrade_support": False,
-            "reason_for_support_redeploy": "",
-            "upgrade_staging": True,
-            "reason_for_staging_redeploy": "Following prod hubs require redeploy: hub1",
+            "hub_name": "staging",
+            "reason_for_redeploy": "Following prod hubs require redeploy: hub1",
         }
     ]
 
-    expected_support_staging_jobs = [
+    expected_staging_jobs = [
         {
             "provider": "gcp",
             "cluster_name": "cluster1",
-            "upgrade_support": False,
-            "reason_for_support_redeploy": "",
-            "upgrade_staging": True,
-            "reason_for_staging_redeploy": "Following prod hubs require redeploy: hub1",
+            "hub_name": "staging",
+            "reason_for_redeploy": "Following prod hubs require redeploy: hub1",
         }
     ]
 
-    result_support_staging_jobs = assign_staging_jobs_for_missing_clusters(
-        input_support_staging_jobs, input_prod_jobs
-    )
+    with mock.patch(
+        "deployer.utils.file_acquisition.CONFIG_CLUSTERS_PATH", clusters_path
+    ):
+        result_staging_jobs = assign_staging_jobs_for_missing_clusters(
+            input_staging_jobs, input_prod_jobs
+        )
 
-    case.assertCountEqual(result_support_staging_jobs, expected_support_staging_jobs)
+    case.assertCountEqual(result_staging_jobs, expected_staging_jobs)
+
+
+def test_assign_staging_jobs_for_missing_clusters_is_missing_many_staging():
+    clusters_path = root_path.joinpath("tests/test-clusters")
+
+    input_prod_jobs = [
+        {
+            "provider": "gcp",
+            "cluster_name": "cluster3",
+            "hub_name": "prod",
+        },
+    ]
+
+    expected_staging_jobs = [
+        {
+            "provider": "gcp",
+            "cluster_name": "cluster3",
+            "hub_name": "staging1",
+            "reason_for_redeploy": "Following prod hubs require redeploy: prod",
+        },
+        {
+            "provider": "gcp",
+            "cluster_name": "cluster3",
+            "hub_name": "staging2",
+            "reason_for_redeploy": "Following prod hubs require redeploy: prod",
+        },
+    ]
+
+    with mock.patch(
+        "deployer.utils.file_acquisition.CONFIG_CLUSTERS_PATH", clusters_path
+    ):
+        result_staging_jobs = assign_staging_jobs_for_missing_clusters(
+            [], input_prod_jobs
+        )
+    print(result_staging_jobs)
+
+    case.assertCountEqual(result_staging_jobs, expected_staging_jobs)

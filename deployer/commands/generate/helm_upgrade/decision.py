@@ -252,11 +252,11 @@ def generate_support_matrix_jobs(
 
             if upgrade_support_on_all_clusters:
                 if pr_labels and "deployer:deploy-support" in pr_labels:
-                    matrix_job["reason_for_support_redeploy"] = (
+                    matrix_job["reason_for_redeploy"] = (
                         "deployer:deploy-support label detected"
                     )
                 else:
-                    matrix_job["reason_for_support_redeploy"] = (
+                    matrix_job["reason_for_redeploy"] = (
                         "Support helm chart has been modified"
                     )
 
@@ -336,7 +336,6 @@ def assign_staging_jobs_for_missing_clusters(
                 hub["name"]
                 for hub in cluster_config.get("hubs")
                 if "staging" in hub["name"]
-                and cluster_config["name"] == missing_cluster
             ]
 
             for staging_hub in staging_hubs:
