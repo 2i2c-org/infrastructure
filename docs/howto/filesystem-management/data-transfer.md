@@ -94,16 +94,33 @@ At this point, it is useful to have a few terminal windows open:
    If no resources are found, you can proceed to the next step.
    If there are resources, you may wish to wait until these servers have stopped, or coordinate a maintenance window with the community when disruption and potential data loss should be expected.
 
-2. **Make the hub unavailable by deleting the `proxy-public` service.**
+1. **Make the hub unavailable by deleting the `proxy-public` service.**
 
    ```bash
    kubectl --namespace $HUB_NAME delete svc proxy-public
    ```
 
-3. **Re-run the `rsync` command in the data transfer pod.**
+1. **Re-run the `rsync` command in the data transfer pod.**
    This process should take much less time now that the initial copy has completed.
 
-4. **Delete the `PersistentVolume` and all dependent objects.**
+1. **Check the Reclaim Policy of the `Persistent Volume`.**
+
+   We should first verify the [reclaim policy](https://kubernetes.io/docs/concepts/storage/persistent-volumes/#reclaiming) of the persistent volume to ensure we will not lose any data.
+
+   The reclaim policy can be checked by running:
+
+   ```bash
+   kubectl get pv ${HUB_NAME}-home-nfs
+   ```
+
+   If the reclaim policy is `Retain`, we are safe to delete the pv without data loss.
+   Otherwise, you may need to patch the reclaim policy to change it to `Retain` with:
+
+   ```bash
+   kubectl patch pv ${HUB_NAME}-home-nfs -p '{"spec": {"persistentVolumeReclaimPolicy": "Retain"}}'
+   ```
+
+1. **Delete the `PersistentVolume` and all dependent objects.**
    `PersistentVolumes` are _not_ editable, so we need to delete and recreate them to allow the deploy with the new IP address to succeed.
    Below is the sequence of objects _dependent_ on the pv, and we need to delete all of them for the deploy to finish.
 
@@ -114,7 +131,7 @@ At this point, it is useful to have a few terminal windows open:
    kubectl --namespace $HUB_NAME delete pod -l component=shared-volume-metrics
    ```
 
-5. **Update `nfs.pv.serverIP` values in the `<hub-name>.values.yaml` file.**
+1. **Update `nfs.pv.serverIP` values in the `<hub-name>.values.yaml` file.**
 
    ```yaml
    nfs:
@@ -122,7 +139,7 @@ At this point, it is useful to have a few terminal windows open:
        serverIP: <nfs_service_ip>
    ```
 
-6. **Run `deployer deploy $CLUSTER_NAME $HUB_NAME`.**
+1. **Run `deployer deploy $CLUSTER_NAME $HUB_NAME`.**
    This should also bring back the `proxy-public` service and restore access.
    You can monitor progress by running:
 
