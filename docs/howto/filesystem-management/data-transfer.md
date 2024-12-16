@@ -92,6 +92,7 @@ At this point, it is useful to have a few terminal windows open:
    ```
 
    If no resources are found, you can proceed to the next step.
+   If there are resources, you may wish to wait until these servers have stopped, or coordinate a maintenance window with the community when disruption and potential data loss should be expected.
 
 2. **Make the hub unavailable by deleting the `proxy-public` service.**
 
