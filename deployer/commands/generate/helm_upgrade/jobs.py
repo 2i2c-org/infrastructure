@@ -106,6 +106,19 @@ def helm_upgrade_jobs(
         staging_hub_matrix_jobs.extend(staging_hubs)
         prod_hub_matrix_jobs.extend(prod_hubs)
 
+        # Generate a job matrix for support chart upgrades
+        support_matrix_jobs.extend(
+            generate_support_matrix_jobs(
+                cluster_file,
+                cluster_config,
+                cluster_info,
+                set(changed_filepaths),
+                pr_labels,
+                upgrade_support_on_this_cluster=upgrade_support_on_this_cluster,
+                upgrade_support_on_all_clusters=upgrade_support_on_all_clusters,
+            )
+        )
+
     # Clean up the matrix jobs
     # support_and_staging_matrix_jobs = ensure_support_staging_jobs_have_correct_keys(
     #     support_and_staging_matrix_jobs, prod_hub_matrix_jobs

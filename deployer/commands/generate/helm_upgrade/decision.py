@@ -230,18 +230,13 @@ def generate_support_matrix_jobs(
                 {
                     "cluster_name": 2i2c,
                     "provider": "gcp",
-                    "reason_for_support_redeploy": "Support helm chart has been modified",
+                    "reason_for_redeploy": "Support helm chart has been modified",
                     "upgrade_support": True,
                 },
             ]
     """
     if pr_labels and "deployer:skip-deploy" in pr_labels:
         return []
-
-    # Rename dictionary key
-    cluster_info["reason_for_support_redeploy"] = cluster_info.pop(
-        "reason_for_redeploy"
-    )
 
     # Empty list to store the matrix definitions in
     matrix_jobs = []
@@ -278,7 +273,7 @@ def generate_support_matrix_jobs(
             if intersection:
                 matrix_job = cluster_info.copy()
                 matrix_job["upgrade_support"] = True
-                matrix_job["reason_for_support_redeploy"] = (
+                matrix_job["reason_for_redeploy"] = (
                     "Following helm chart values files were modified: "
                     + ", ".join([path.name for path in intersection])
                 )
