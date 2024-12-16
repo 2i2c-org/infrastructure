@@ -13,4 +13,3 @@ hubs:
   - name: prod
     helm_chart_values_files:
       - prod.values.yaml
-
