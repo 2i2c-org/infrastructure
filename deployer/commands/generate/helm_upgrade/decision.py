@@ -26,7 +26,7 @@ def discover_modified_common_files(modified_paths):
 
     Returns:
         upgrade_support_on_all_clusters (bool): Whether or not all clusters should have
-            their support chart upgraded since has changes
+            their support chart upgraded since it has changes
         upgrade_all_hubs_on_all_clusters (bool): Whether or not all hubs on all clusters
             should be upgraded since a core piece of infrastructure has changed
     """
@@ -88,7 +88,7 @@ def generate_hub_matrix_jobs(
             redeployed.
         added_or_modified_files (set[str]): A set of all added or modified files
             provided in a GitHub Pull Requests
-        pr_labels (list, optional): A list of PR labels
+        pr_labels (list, optional): A list of PR labels. Defaults to None.
         upgrade_all_hubs_on_this_cluster (bool, optional): If True, generates jobs to
             upgrade all hubs on the given cluster. This is triggered when the
             cluster.yaml file itself has been modified. Defaults to False.
@@ -180,7 +180,7 @@ def generate_support_matrix_jobs(
             cluster to be redeployed.
         added_or_modified_files (set[str]): A set of all added or modified files
             provided in a GitHub Pull Requests
-        pr_labels (list, optional): A list of PR labels
+        pr_labels (list, optional): A list of PR labels. Defaults to None.
         upgrade_support_on_this_cluster (bool, optional): If True, generates jobs to
             update the support chart on the given cluster. This is triggered when the
             cluster.yaml file itself is modified. Defaults to False.
@@ -283,7 +283,7 @@ def move_staging_hubs_to_staging_matrix(
         "cluster_name": str,
         "provider": str,
         "upgrade_support": bool,
-        "reason_for_support_redeploy_: str,
+        "reason_for_support_redeploy": str,
         "upgrade_staging": bool,
         "reason_for_staging_redeploy_: str,
     }
