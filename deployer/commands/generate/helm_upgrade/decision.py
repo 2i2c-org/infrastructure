@@ -10,8 +10,8 @@ from rich.console import Console
 from rich.table import Table
 from ruamel.yaml import YAML
 
-from deployer.utils.rendering import print_colour
 from deployer.utils.file_acquisition import find_absolute_path_to_cluster_file
+from deployer.utils.rendering import print_colour
 
 yaml = YAML(typ="safe", pure=True)
 
@@ -305,9 +305,7 @@ def assign_staging_jobs_for_missing_clusters(
             staging_hub_matrix_jobs now have an associated support/staging job.
     """
     prod_hub_clusters = {job["cluster_name"] for job in prod_hub_matrix_jobs}
-    staging_clusters = {
-        job["cluster_name"] for job in staging_hub_matrix_jobs
-    }
+    staging_clusters = {job["cluster_name"] for job in staging_hub_matrix_jobs}
     missing_clusters = prod_hub_clusters.difference(staging_clusters)
 
     if missing_clusters:
@@ -355,7 +353,9 @@ def assign_staging_jobs_for_missing_clusters(
     return staging_hub_matrix_jobs
 
 
-def pretty_print_matrix_jobs(support_matrix_jobs, staging_hub_matrix_jobs, prod_hub_matrix_jobs):
+def pretty_print_matrix_jobs(
+    support_matrix_jobs, staging_hub_matrix_jobs, prod_hub_matrix_jobs
+):
     # Construct table for support chart upgrades
     support_table = Table(title="Support chart upgrades")
     support_table.add_column("Cloud Provider")

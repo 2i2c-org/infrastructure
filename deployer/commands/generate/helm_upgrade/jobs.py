@@ -91,16 +91,14 @@ def helm_upgrade_jobs(
             upgrade_support_on_this_cluster = False
 
         # Generate a job matrix of all hubs that need upgrading on this cluster
-        staging_hubs, prod_hubs = (
-            generate_hub_matrix_jobs(
-                cluster_file,
-                cluster_config,
-                cluster_info,
-                set(changed_filepaths),
-                pr_labels,
-                upgrade_all_hubs_on_this_cluster=upgrade_all_hubs_on_this_cluster,
-                upgrade_all_hubs_on_all_clusters=upgrade_all_hubs_on_all_clusters,
-            )
+        staging_hubs, prod_hubs = generate_hub_matrix_jobs(
+            cluster_file,
+            cluster_config,
+            cluster_info,
+            set(changed_filepaths),
+            pr_labels,
+            upgrade_all_hubs_on_this_cluster=upgrade_all_hubs_on_this_cluster,
+            upgrade_all_hubs_on_all_clusters=upgrade_all_hubs_on_all_clusters,
         )
         staging_hub_matrix_jobs.extend(staging_hubs)
         prod_hub_matrix_jobs.extend(prod_hubs)
@@ -122,9 +120,13 @@ def helm_upgrade_jobs(
     # support_and_staging_matrix_jobs = ensure_support_staging_jobs_have_correct_keys(
     #     support_and_staging_matrix_jobs, prod_hub_matrix_jobs
     # )
-    staging_matrix_jobs = assign_staging_jobs_for_missing_clusters(staging_hub_matrix_jobs, prod_hub_matrix_jobs)
+    staging_matrix_jobs = assign_staging_jobs_for_missing_clusters(
+        staging_hub_matrix_jobs, prod_hub_matrix_jobs
+    )
     # Pretty print the jobs using rich
-    pretty_print_matrix_jobs(support_matrix_jobs, staging_hub_matrix_jobs, prod_hub_matrix_jobs)
+    pretty_print_matrix_jobs(
+        support_matrix_jobs, staging_hub_matrix_jobs, prod_hub_matrix_jobs
+    )
 
     # The existence of the CI environment variable is an indication that we are running
     # in an GitHub Actions workflow

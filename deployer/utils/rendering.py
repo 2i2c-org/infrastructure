@@ -81,9 +81,7 @@ def create_markdown_comment(support_matrix, staging_matrix, prod_matrix):
                 column_converter["upgrade_support"]: boolean_converter[
                     entry["upgrade_support"]
                 ],
-                column_converter["reason_for_redeploy"]: entry[
-                    "reason_for_redeploy"
-                ],
+                column_converter["reason_for_redeploy"]: entry["reason_for_redeploy"],
             }
             formatted_support_matrix.append(formatted_entry)
 
