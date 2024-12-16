@@ -1,0 +1,55 @@
+name: "Recurrent: check prometheus health"
+on:
+  workflow_dispatch:
+  schedule:
+    # Run on every quarter on the 1st of the month at midnight
+    - cron: "0 0 1 */3 *"
+
+jobs:
+  create_issue:
+    name: Create prometheus health issue
+    runs-on: ubuntu-latest
+    permissions:
+      issues: write
+    steps:
+      - name: Get current quarter
+        run: |
+          echo "quarter=$(date +%Y) Q$(( ($(date +%-m)-1)/3+1 ))" >> $GITHUB_ENV
+          echo "end_date_as_iso=$(date -d +'%Y-%m-01')" >> $GITHUB_ENV
+
+      - name: Create issue for prometheus health check
+        run: |
+          issue=$(gh issue create \
+          --label "recurrent" \
+          --title "[$QUARTER] Check Prometheus disk space" \
+          --body "$BODY")
+          echo "issue=$issue" >> $GITHUB_ENV
+        env:
+          GH_TOKEN: ${{ secrets.PROJECT_BOARD_PAT_TOKEN }}
+          GH_REPO: ${{ github.repository }}
+          QUARTER: ${{ env.quarter }}
+          BODY: |
+            ### Context
+            - On a quarterly basis we are regularly checking the disk space of our prometheus servers for each cluster so that we can increase the size if they are running out of space.
+
+            Use [grafana](https://grafana.pilot.2i2c.cloud/d/d560fa89-38bc-4253-964e-82573ea91d57/global-prometheus-health?orgId=1) to establish how much disk space each prometheus server has left.
+
+            ### Definition of Done
+            - [ ] Each cluster's prometheus server has been checked for disk space
+            - [ ] Any servers running low on space have had their disks expanded
+
+      - name: Sleep a bit to allow issues to be added to the board by automation
+        run: sleep 3
+
+      - name: "Set the relevant project board fields"
+        uses: EndBug/project-fields@v2
+        id: set-fields
+        with:
+          operation: set
+          # If the fields name or type will change
+          # expect this step to fail
+          fields: Status,Estimate,End date
+          github_token: ${{ secrets.PROJECT_BOARD_PAT_TOKEN }}
+          project_url: https://github.com/orgs/2i2c-org/projects/57
+          values: Up Next,1,${{ env.end_date_as_iso }}
+          resource_url: ${{ env.issue }}
