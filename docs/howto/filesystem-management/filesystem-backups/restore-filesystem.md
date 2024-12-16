@@ -7,6 +7,8 @@ covers those steps for the cloud providers.
 (howto:filesystem-backup:restore:aws)=
 ## AWS
 
+### Restoring home directories from an EFS recovery point
+
 ```{note}
 We follow AWS's guidance for [restoring EFS from a recovery point](https://docs.aws.amazon.com/aws-backup/latest/devguide/restoring-efs.html#efs-restore-console)
 ```
