@@ -107,21 +107,12 @@ def helm_upgrade_jobs(
         prod_hub_matrix_jobs.extend(prod_hubs)
 
     # Clean up the matrix jobs
-    (
-        prod_hub_matrix_jobs,
-        support_and_staging_matrix_jobs,
-    ) = move_staging_hubs_to_staging_matrix(
-        prod_hub_matrix_jobs, support_and_staging_matrix_jobs
-    )
-    support_and_staging_matrix_jobs = ensure_support_staging_jobs_have_correct_keys(
-        support_and_staging_matrix_jobs, prod_hub_matrix_jobs
-    )
-    support_and_staging_matrix_jobs = assign_staging_jobs_for_missing_clusters(
-        support_and_staging_matrix_jobs, prod_hub_matrix_jobs
-    )
-
-    # Pretty print the jobs using rich
-    pretty_print_matrix_jobs(prod_hub_matrix_jobs, support_and_staging_matrix_jobs)
+    # support_and_staging_matrix_jobs = ensure_support_staging_jobs_have_correct_keys(
+    #     support_and_staging_matrix_jobs, prod_hub_matrix_jobs
+    # )
+    staging_matrix_jobs = assign_staging_jobs_for_missing_clusters(staging_hub_matrix_jobs, prod_hub_matrix_jobs)
+    # # Pretty print the jobs using rich
+    # pretty_print_matrix_jobs(prod_hub_matrix_jobs, support_and_staging_matrix_jobs)
 
     # The existence of the CI environment variable is an indication that we are running
     # in an GitHub Actions workflow
