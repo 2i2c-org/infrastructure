@@ -11,7 +11,6 @@ from deployer.utils.rendering import create_markdown_comment, print_colour
 from .decision import (
     assign_staging_jobs_for_missing_clusters,
     discover_modified_common_files,
-    ensure_support_staging_jobs_have_correct_keys,
     generate_hub_matrix_jobs,
     generate_support_matrix_jobs,
     pretty_print_matrix_jobs,

@@ -285,53 +285,6 @@ def generate_support_matrix_jobs(
     return matrix_jobs
 
 
-def ensure_support_staging_jobs_have_correct_keys(
-    support_and_staging_matrix_jobs, prod_hub_matrix_jobs
-):
-    """This function ensures that all entries in support_and_staging_matrix_jobs have
-    the expected upgrade_staging and reason_for_staging_redeploy keys, even if they are
-    set to false/empty.
-
-    Args:
-        support_and_staging_matrix_jobs (list[dict]): A list of dictionaries
-            representing jobs to upgrade the support chart and staging hub on clusters
-            that require it.
-        prod_hub_matrix_jobs (list[dict]): A list of dictionaries representing jobs to
-            upgrade production hubs that require it.
-
-    Returns:
-        support_and_staging_matrix_jobs (list[dict]): Updated to ensure each entry has
-            the upgrade_staging and reason_for_staging_redeploy keys, even if they are
-            false/empty.
-    """
-    # For each job listed in support_and_staging_matrix_jobs, ensure it has the
-    # upgrade_staging key present, even if we just set it to False
-    for job in support_and_staging_matrix_jobs:
-        if "upgrade_staging" not in job.keys():
-            # Get a list of prod hubs running on the same cluster this staging job will
-            # run on
-            hubs_on_this_cluster = [
-                hub["hub_name"]
-                for hub in prod_hub_matrix_jobs
-                if hub["cluster_name"] == job["cluster_name"]
-            ]
-            if hubs_on_this_cluster:
-                # There are prod hubs on this cluster that require an upgrade, and so we
-                # also upgrade staging
-                job["upgrade_staging"] = True
-                job["reason_for_staging_redeploy"] = (
-                    "Following prod hubs require redeploy: "
-                    + ", ".join(hubs_on_this_cluster)
-                )
-            else:
-                # There are no prod hubs on this cluster that require an upgrade, so we
-                # do not upgrade staging
-                job["upgrade_staging"] = False
-                job["reason_for_staging_redeploy"] = ""
-
-    return support_and_staging_matrix_jobs
-
-
 def assign_staging_jobs_for_missing_clusters(
     staging_hub_matrix_jobs, prod_hub_matrix_jobs
 ):
