@@ -65,7 +65,7 @@ binderhub-service:
               log_name = "binderhub-event-logs"
               get_logger().info(f"Sending logs of launch events to a 2i2c managed GCP project {client.project} under log name {log_name}.")
               return [CloudLoggingHandler(client, name=log_name)]
-          c.EventLog.handlers_maker = _make_eventsink_handler
+          c.EventLogger.handlers_maker = _make_eventsink_handler
 
 ingressBasicAuth:
   enabled: false
