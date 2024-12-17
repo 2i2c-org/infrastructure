@@ -384,6 +384,30 @@ setup or an outage), or when taking down a hub.
 All these commands take a cluster and hub name as parameters, and perform appropriate
 authentication before performing their function.
 
+#### `exec hub`
+
+This subcommand gives you an interactive shell on the hub pod itself, so you
+can poke around to see what's going on. Particularly useful if you want to peek
+at the hub db with the `sqlite` command.
+
+#### `exec homes`
+
+This subcommand gives you a shell with the home directories of all the
+users on the given hub in the given cluster mounted under `/home`.
+Very helpful when doing (rare) manual operations on user home directories,
+such as renames.
+
+When you exit the shell, the temporary pod spun up is removed.
+
+#### `exec root-homes`
+
+Similar to `exec homes` but mounts the _entire_ NFS filesystem to `/root-homes`.
+You can optionally mount a secondary NFS share if required, which is useful when migrating data across servers.
+
+#### `exec aws`
+
+This sub-command can exec into a shell with appropriate AWS credentials (including MFA).
+
 #### `exec debug`
 
 This sub-command is useful for debugging.
@@ -409,28 +433,6 @@ Building docker images locally can be *extremely* slow and frustrating. We run a
 in our 2i2c cluster that can be accessed via this command, and speeds up image builds quite a bit!
 Once you run this command, run `export DOCKER_HOST=tcp://localhost:23760` in another terminal to use the faster remote
 docker daemon.
-
-#### `exec shell`
-This exec sub-command can be used to acquire a shell in various places of the infrastructure.
-
-##### `exec shell hub`
-
-This subcommand gives you an interactive shell on the hub pod itself, so you
-can poke around to see what's going on. Particularly useful if you want to peek
-at the hub db with the `sqlite` command.
-
-##### `exec shell homes`
-
-This subcommand gives you a shell with the home directories of all the
-users on the given hub in the given cluster mounted under `/home`.
-Very helpful when doing (rare) manual operations on user home directories,
-such as renames.
-
-When you exit the shell, the temporary pod spun up is removed.
-
-##### `exec shell aws`
-
-This sub-command can exec into a shall with appropriate AWS credentials (including MFA).
 
 ## Running Tests
 

@@ -1,6 +1,7 @@
 import json
 import os
 import subprocess
+import tempfile
 
 import typer
 from ruamel.yaml import YAML
@@ -22,13 +23,18 @@ UBUNTU_IMAGE = "ubuntu:22.04"
 def root_homes(
     cluster_name: str = typer.Argument(..., help="Name of cluster to operate on"),
     hub_name: str = typer.Argument(..., help="Name of hub to operate on"),
-    extra_nfs_server: str = typer.Argument(
+    persist: bool = typer.Option(
+        False,
+        "--persist",
+        help="Do not automatically delete the pod after completing. Useful for long-running processes.",
+    ),
+    extra_nfs_server: str = typer.Option(
         None, help="IP address of an extra NFS server to mount"
     ),
-    extra_nfs_base_path: str = typer.Argument(
+    extra_nfs_base_path: str = typer.Option(
         None, help="Path of the extra NFS share to mount"
     ),
-    extra_nfs_mount_path: str = typer.Argument(
+    extra_nfs_mount_path: str = typer.Option(
         None, help="Mount point for the extra NFS share"
     ),
 ):
@@ -40,12 +46,11 @@ def root_homes(
     with open(config_file_path) as f:
         cluster = Cluster(yaml.load(f), config_file_path.parent)
 
-    with cluster.auth():
-        hubs = cluster.hubs
-        hub = next((hub for hub in hubs if hub.spec["name"] == hub_name), None)
-        if not hub:
-            print_colour("Hub does not exist in {cluster_name} cluster}")
-            return
+    hubs = cluster.hubs
+    hub = next((hub for hub in hubs if hub.spec["name"] == hub_name), None)
+    if not hub:
+        print_colour("Hub does not exist in {cluster_name} cluster}")
+        return
 
     server_ip = base_share_name = ""
     for values_file in hub.spec["helm_chart_values_files"]:
@@ -94,6 +99,10 @@ def root_homes(
     pod = {
         "apiVersion": "v1",
         "kind": "Pod",
+        "metadata": {
+            "name": pod_name,
+            "namespace": hub_name,
+        },
         "spec": {
             "terminationGracePeriodSeconds": 1,
             "automountServiceAccountToken": False,
@@ -112,27 +121,42 @@ def root_homes(
         },
     }
 
-    cmd = [
+    # Command to exec into pod
+    exec_cmd = [
         "kubectl",
         "-n",
         hub_name,
-        "run",
-        "--rm",  # Remove pod when we're done
-        "-it",  # Give us a shell!
-        "--overrides",
-        json.dumps(pod),
-        "--image",
-        # Use ubuntu image so we get GNU rm and other tools
-        # Should match what we have in our pod definition
-        UBUNTU_IMAGE,
+        "exec",
+        "-it",
         pod_name,
         "--",
         "/bin/bash",
         "-l",
     ]
 
-    with cluster.auth():
-        subprocess.check_call(cmd)
+    with tempfile.NamedTemporaryFile(mode="w", suffix=".json") as tmpf:
+        # Dump the pod spec to a temporary file
+        json.dump(pod, tmpf)
+        tmpf.flush()
+
+        with cluster.auth():
+            try:
+                # We are splitting the previous `kubectl run` command into a
+                # create and exec couplet, because using run meant that the bash
+                # process we start would be assigned PID 1. This is a 'special'
+                # PID and killing it is equivalent to sending a shutdown command
+                # that will cause the pod to restart, killing any processes
+                # running in it. By using create then exec instead, we will be
+                # assigned a PID other than 1 and we can safely exit the pod to
+                # leave long-running processes if required.
+                #
+                # Ask api-server to create a pod
+                subprocess.check_call(["kubectl", "create", "-f", tmpf.name])
+                # Exec into pod
+                subprocess.check_call(exec_cmd)
+            finally:
+                if not persist:
+                    delete_pod(pod_name, hub_name)
 
 
 @exec_app.command()
@@ -180,7 +204,7 @@ def homes(
         "-n",
         hub_name,
         "run",
-        "--rm",  # Remove pod when we're done
+        "--rm",  # Deletes the pod when the process completes, successfully or otherwise
         "-it",  # Give us a shell!
         "--overrides",
         json.dumps(pod),
