@@ -547,7 +547,7 @@ jupyterhub:
         volumeMounts:
           - name: home
             mountPath: /home/jovyan
-            subPath: "{username}"
+            subPath: "{escaped_username}"
           # Mounted without readonly attribute here,
           # so we can chown it appropriately
           - name: home
@@ -767,7 +767,7 @@ jupyterhub:
       type: static
       static:
         pvcName: home-nfs
-        subPath: "{username}"
+        subPath: "{escaped_username}"
       extraVolumes:
         - name: dev-shm
           emptyDir:
@@ -792,7 +792,7 @@ jupyterhub:
         # problem by openscapes)
         - name: home
           mountPath: /home/rstudio
-          subPath: "{username}"
+          subPath: "{escaped_username}"
         - name: home
           mountPath: /home/rstudio/shared
           subPath: _shared
