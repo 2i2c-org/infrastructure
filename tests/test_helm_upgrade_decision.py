@@ -407,9 +407,7 @@ def test_filter_out_staging_hubs_job_exists():
         result_prod_hub_matrix_jobs,
     ) = filter_out_staging_hubs(input_hub_matrix_jobs)
 
-    case.assertCountEqual(
-        result_staging_matrix_jobs, expected_staging_matrix_jobs
-    )
+    case.assertCountEqual(result_staging_matrix_jobs, expected_staging_matrix_jobs)
     case.assertCountEqual(result_prod_hub_matrix_jobs, expected_prod_hub_matrix_jobs)
 
 
@@ -456,9 +454,7 @@ def test_filter_out_staging_hubs_job_does_not_exist():
             result_prod_hub_matrix_jobs,
         ) = filter_out_staging_hubs(input_hub_matrix_jobs)
 
-    case.assertCountEqual(
-        result_staging_matrix_jobs, expected_staging_matrix_jobs
-    )
+    case.assertCountEqual(result_staging_matrix_jobs, expected_staging_matrix_jobs)
     case.assertCountEqual(result_prod_hub_matrix_jobs, expected_prod_hub_matrix_jobs)
 
 
