@@ -193,11 +193,11 @@ as a comment and therefore requires the PR number). The second file we set the
 name of with our second environment variable.
 
 ```bash
-export GITHUB_ENV=test.txt  # You can call this file anything you like, it's the setting of GITHUB_ENV that's important
+export GITHUB_OUTPUT=test.txt  # You can call this file anything you like, it's the setting of GITHUB_OUTPUT that's important
 ```
 
-This mimics the GitHub Actions environment where a `GITHUB_ENV` file is available
-to store and share environment variables across steps/jobs, and this will be where
+This mimics the GitHub Actions environment where a `GITHUB_OUTPUT` file is available
+to store and share output variables across steps/jobs, and this will be where
 our JSON formatted job matrices will be written to.
 
 Now we're setup, we can run:
@@ -216,7 +216,7 @@ Where to find a list of changed files from GitHub Actions logs
 ```
 
 Once you have executed the command, the JSON formatted job matrices will be available
-in the file set by `GITHUB_ENV` in the following form:
+in the file set by `GITHUB_OUTPUT` in the following form:
 
 ```text
 prod-hub-matrix-jobs=<JSON formatted array>
