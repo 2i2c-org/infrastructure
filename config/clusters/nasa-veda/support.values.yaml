@@ -32,6 +32,18 @@ redirects:
       to: staging.hub.openveda.cloud
 
 prometheus:
+  alertmanager:
+    enabled: true
+    config:
+      route:
+        group_wait: 10s
+        group_interval: 5m
+        receiver: pagerduty
+        repeat_interval: 3h
+        routes:
+          - receiver: pagerduty
+            match:
+              channel: pagerduty
   server:
     ingress:
       enabled: true
@@ -41,6 +53,19 @@ prometheus:
         - secretName: prometheus-tls
           hosts:
             - prometheus.nasa-veda.2i2c.cloud
+  serverFiles:
+    alerting_rules.yml:
+      groups:
+        - name: NASA VEDA jupyterhub-home-nfs EBS volume full
+          rules:
+            - alert: jupyterhub-home-nfs-ebs-full
+              expr: node_filesystem_avail_bytes{mountpoint="/shared-volume", component="shared-volume-metrics"} / node_filesystem_size_bytes{mountpoint="/shared-volume", component="shared-volume-metrics"} < 0.1
+              for: 15m
+              labels:
+                severity: critical
+                channel: pagerduty
+              annotations:
+                summary: "jupyterhub-home-nfs EBS volume full in namespace {{ $labels.namespace }}"
 
 aws-ce-grafana-backend:
   enabled: true
