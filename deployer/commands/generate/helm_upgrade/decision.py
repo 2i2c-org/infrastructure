@@ -72,7 +72,7 @@ def filter_out_staging_hubs(all_hub_matrix_jobs):
             function.
 
     Returns:
-        staging_matrix_jobs (list[dict]): A list of dictionaries representing
+        staging_hub_matrix_jobs (list[dict]): A list of dictionaries representing
             matrix jobs to upgrade staging hubs on clusters that require it.
         prod_hub_matrix_jobs (list[dict]): A list of dictionaries representing matrix
             jobs to upgrade all production hubs, i.e., those without "staging" in their
@@ -302,8 +302,8 @@ def assign_staging_jobs_for_missing_clusters(
             staging_hub_matrix_jobs now have an associated support/staging job.
     """
     prod_hub_clusters = {job["cluster_name"] for job in prod_hub_matrix_jobs}
-    staging_clusters = {job["cluster_name"] for job in staging_hub_matrix_jobs}
-    missing_clusters = prod_hub_clusters.difference(staging_clusters)
+    staging_hub_clusters = {job["cluster_name"] for job in staging_hub_matrix_jobs}
+    missing_clusters = prod_hub_clusters.difference(staging_hub_clusters)
 
     if missing_clusters:
         # Generate staging jobs for clusters that don't have them but do have

@@ -117,10 +117,7 @@ def helm_upgrade_jobs(
         )
 
     # Clean up the matrix jobs
-    # support_and_staging_matrix_jobs = ensure_support_staging_jobs_have_correct_keys(
-    #     support_and_staging_matrix_jobs, prod_hub_matrix_jobs
-    # )
-    staging_matrix_jobs = assign_staging_jobs_for_missing_clusters(
+    staging_hub_matrix_jobs = assign_staging_jobs_for_missing_clusters(
         staging_hub_matrix_jobs, prod_hub_matrix_jobs
     )
     # Pretty print the jobs using rich

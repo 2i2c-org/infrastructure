@@ -385,7 +385,7 @@ def test_filter_out_staging_hubs_job_exists():
         },
     ]
 
-    expected_staging_hub_matrix_jobs = [
+    expected_staging_matrix_jobs = [
         {
             "cluster_name": "cluster1",
             "provider": "gcp",
@@ -403,12 +403,12 @@ def test_filter_out_staging_hubs_job_exists():
     ]
 
     (
-        result_staging_hub_matrix_jobs,
+        result_staging_matrix_jobs,
         result_prod_hub_matrix_jobs,
     ) = filter_out_staging_hubs(input_hub_matrix_jobs)
 
     case.assertCountEqual(
-        result_staging_hub_matrix_jobs, expected_staging_hub_matrix_jobs
+        result_staging_matrix_jobs, expected_staging_matrix_jobs
     )
     case.assertCountEqual(result_prod_hub_matrix_jobs, expected_prod_hub_matrix_jobs)
 
@@ -431,7 +431,7 @@ def test_filter_out_staging_hubs_job_does_not_exist():
         },
     ]
 
-    expected_staging_hub_matrix_jobs = [
+    expected_staging_matrix_jobs = [
         {
             "cluster_name": "cluster1",
             "provider": "gcp",
@@ -452,12 +452,12 @@ def test_filter_out_staging_hubs_job_does_not_exist():
         "deployer.utils.file_acquisition.CONFIG_CLUSTERS_PATH", clusters_path
     ):
         (
-            result_staging_hub_matrix_jobs,
+            result_staging_matrix_jobs,
             result_prod_hub_matrix_jobs,
         ) = filter_out_staging_hubs(input_hub_matrix_jobs)
 
     case.assertCountEqual(
-        result_staging_hub_matrix_jobs, expected_staging_hub_matrix_jobs
+        result_staging_matrix_jobs, expected_staging_matrix_jobs
     )
     case.assertCountEqual(result_prod_hub_matrix_jobs, expected_prod_hub_matrix_jobs)
 
