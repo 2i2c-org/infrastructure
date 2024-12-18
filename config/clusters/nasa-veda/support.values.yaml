@@ -64,6 +64,7 @@ prometheus:
               labels:
                 severity: critical
                 channel: pagerduty
+                cluster: nasa-veda
               annotations:
                 summary: "jupyterhub-home-nfs EBS volume full in namespace {{ $labels.namespace }}"
 
