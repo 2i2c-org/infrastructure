@@ -223,7 +223,7 @@ def root_homes(
                 #
                 # Ask api-server to create a pod
                 subprocess.check_call(["kubectl", "create", "-f", tmpf.name])
-                
+
                 # FIXME: Add a wait condition so that the pod is Running before
                 #        we exec into it, otherwise the exec will fail
 
@@ -238,7 +238,6 @@ def root_homes(
                             ["kubectl", "-n", hub_name, "delete", "pvc", pv_name]
                         )
                         subprocess.check_call(["kubectl", "delete", "pv", pv_name])
-
 
 
 @exec_app.command()
