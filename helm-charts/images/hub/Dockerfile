@@ -21,6 +21,10 @@ ARG REQUIREMENTS_FILE
 COPY ${REQUIREMENTS_FILE} /tmp/
 
 USER root
+
+RUN apt update > /dev/null && \
+    apt install --yes nodejs npm >/dev/null
+
 RUN pip install -r /tmp/${REQUIREMENTS_FILE}
 
 RUN mkdir -p /usr/local/etc/jupyterhub-configurator
