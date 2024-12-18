@@ -152,7 +152,25 @@ def root_homes(
                 #
                 # Ask api-server to create a pod
                 subprocess.check_call(["kubectl", "create", "-f", tmpf.name])
-                # Exec into pod
+
+                # Wait for the pod to be ready but don't wait forever in case
+                # there was an error
+                tries, status = 0, None
+                while status != "Running" and tries < 30:
+                    status = subprocess.check_output(
+                        [
+                            "kubectl",
+                            "-n",
+                            hub_name,
+                            "get",
+                            "pod",
+                            pod_name,
+                            "-o",
+                            "jsonpath={.status.phase}",
+                        ]
+                    ).decode()
+                    tries += 1
+                # Exec into pod now that is ready
                 subprocess.check_call(exec_cmd)
             finally:
                 if not persist:
