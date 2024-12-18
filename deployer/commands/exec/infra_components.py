@@ -204,8 +204,8 @@ def root_homes(
             if restore_volume_id:
                 with tempfile.NamedTemporaryFile(mode="w", suffix=".json") as pv_tmpf:
                     json.dump(pv, pv_tmpf)
-                pv_tmpf.flush()
-                subprocess.check_call(["kubectl", "create", "-f", pv_tmpf.name])
+                    pv_tmpf.flush()
+                    subprocess.check_call(["kubectl", "create", "-f", pv_tmpf.name])
 
             with tempfile.NamedTemporaryFile(mode="w", suffix=".json") as pvc_tmpf:
                 json.dump(pvc, pvc_tmpf)
