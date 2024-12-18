@@ -25,10 +25,10 @@ To restore a home directory from a snapshot, we need to create a new EBS volume 
 Please follow AWS's guidance for [restoring EBS volumes from a snapshot](https://docs.aws.amazon.com/prescriptive-guidance/latest/backup-recovery/restore.html#restore-files) to create a new EBS volume from the snapshot.
 ```
 
-Once we have created a new EBS volume from the snapshot, we can use the `deployer exec` command to mount the new EBS volume to a pod along with the existing NFS home directories volume.
+Once we have created a new EBS volume from the snapshot, we can use the `deployer exec root-homes` command to mount the new EBS volume to a pod along with the existing NFS home directories volume.
 
 ```bash
-deployer exec root-homes <cluster_name> <hub_name> --restore-volume-id=<new-ebs-volume-id> --restore-mount-path=/restore-volume --restore-volume-size=100Gi
+deployer exec root-homes $CLUSTER_NAME $HUB_NAME --restore-volume-id=<new-ebs-volume-id> --restore-mount-path=/restore-volume --restore-volume-size=100Gi
 ```
 
 Now, the NFS home directories volume is mounted to the pod along with the new EBS volume. We can now copy the contents from the restored EBS volume to the NFS home directories volume.
