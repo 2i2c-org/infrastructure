@@ -39,13 +39,13 @@ def root_homes(
     ),
     restore_volume_id: str = typer.Option(
         None,
-        help="ID of EBS volume to mount (e.g. vol-1234567890abcdef0) "
+        help="ID of volume to mount (e.g. vol-1234567890abcdef0) "
         "to restore data from",
     ),
     restore_mount_path: str = typer.Option(
-        "/restore-volume", help="Mount point for the EBS volume"
+        "/restore-volume", help="Mount point for the volume"
     ),
-    restore_volume_size: str = typer.Option("100Gi", help="Size of the EBS volume"),
+    restore_volume_size: str = typer.Option("100Gi", help="Size of the volume"),
 ):
     """
     Pop an interactive shell with the entire nfs file system of the given cluster mounted on /root-homes
@@ -92,16 +92,14 @@ def root_homes(
     ]
 
     if restore_volume_id:
-        # Create PV for EBS volume
+        # Create PV for volume
         pv_name = f"restore-{restore_volume_id}"
         pv = {
             "apiVersion": "v1",
             "kind": "PersistentVolume",
             "metadata": {"name": pv_name},
             "spec": {
-                "capacity": {
-                    "storage": restore_volume_size
-                },  # Arbitrary size, actual size determined by EBS volume
+                "capacity": {"storage": restore_volume_size},
                 "volumeMode": "Filesystem",
                 "accessModes": ["ReadWriteOnce"],
                 "persistentVolumeReclaimPolicy": "Retain",
@@ -138,9 +136,11 @@ def root_homes(
         }
 
         volumes.append(
-            {"name": "ebs-volume", "persistentVolumeClaim": {"claimName": pv_name}}
+            {"name": "restore-volume", "persistentVolumeClaim": {"claimName": pv_name}}
         )
-        volume_mounts.append({"name": "ebs-volume", "mountPath": restore_mount_path})
+        volume_mounts.append(
+            {"name": "restore-volume", "mountPath": restore_mount_path}
+        )
 
     if extra_nfs_server and extra_nfs_base_path and extra_nfs_mount_path:
         volumes.append(
@@ -200,7 +200,7 @@ def root_homes(
         tmpf.flush()
 
         with cluster.auth():
-            # If we have an EBS volume, create PV and PVC first
+            # If we have an volume to restore from, create PV and PVC first
             if restore_volume_id:
                 with tempfile.NamedTemporaryFile(mode="w", suffix=".json") as pv_tmpf:
                     json.dump(pv, pv_tmpf)
