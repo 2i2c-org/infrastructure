@@ -227,13 +227,14 @@ def root_homes(
                 subprocess.check_call(exec_cmd)
             finally:
                 if not persist:
+                    delete_pod(pod_name, hub_name)
                     # Clean up PV and PVC if we created them
                     if restore_volume_id:
                         subprocess.check_call(
                             ["kubectl", "-n", hub_name, "delete", "pvc", pv_name]
                         )
                         subprocess.check_call(["kubectl", "delete", "pv", pv_name])
-                    delete_pod(pod_name, hub_name)
+
 
 
 @exec_app.command()
