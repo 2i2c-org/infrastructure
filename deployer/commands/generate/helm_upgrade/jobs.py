@@ -11,10 +11,8 @@ from deployer.utils.rendering import create_markdown_comment, print_colour
 from .decision import (
     assign_staging_jobs_for_missing_clusters,
     discover_modified_common_files,
-    ensure_support_staging_jobs_have_correct_keys,
     generate_hub_matrix_jobs,
     generate_support_matrix_jobs,
-    move_staging_hubs_to_staging_matrix,
     pretty_print_matrix_jobs,
 )
 
@@ -59,8 +57,9 @@ def helm_upgrade_jobs(
     cluster_files = get_all_cluster_yaml_files()
 
     # Empty lists to store job definitions in
+    support_matrix_jobs = []
+    staging_hub_matrix_jobs = []
     prod_hub_matrix_jobs = []
-    support_and_staging_matrix_jobs = []
 
     for cluster_file in cluster_files:
         # Read in the cluster.yaml file
@@ -92,20 +91,20 @@ def helm_upgrade_jobs(
             upgrade_support_on_this_cluster = False
 
         # Generate a job matrix of all hubs that need upgrading on this cluster
-        prod_hub_matrix_jobs.extend(
-            generate_hub_matrix_jobs(
-                cluster_file,
-                cluster_config,
-                cluster_info,
-                set(changed_filepaths),
-                pr_labels,
-                upgrade_all_hubs_on_this_cluster=upgrade_all_hubs_on_this_cluster,
-                upgrade_all_hubs_on_all_clusters=upgrade_all_hubs_on_all_clusters,
-            )
+        staging_hubs, prod_hubs = generate_hub_matrix_jobs(
+            cluster_file,
+            cluster_config,
+            cluster_info,
+            set(changed_filepaths),
+            pr_labels,
+            upgrade_all_hubs_on_this_cluster=upgrade_all_hubs_on_this_cluster,
+            upgrade_all_hubs_on_all_clusters=upgrade_all_hubs_on_all_clusters,
         )
+        staging_hub_matrix_jobs.extend(staging_hubs)
+        prod_hub_matrix_jobs.extend(prod_hubs)
 
         # Generate a job matrix for support chart upgrades
-        support_and_staging_matrix_jobs.extend(
+        support_matrix_jobs.extend(
             generate_support_matrix_jobs(
                 cluster_file,
                 cluster_config,
@@ -118,21 +117,13 @@ def helm_upgrade_jobs(
         )
 
     # Clean up the matrix jobs
-    (
-        prod_hub_matrix_jobs,
-        support_and_staging_matrix_jobs,
-    ) = move_staging_hubs_to_staging_matrix(
-        prod_hub_matrix_jobs, support_and_staging_matrix_jobs
+    staging_hub_matrix_jobs = assign_staging_jobs_for_missing_clusters(
+        staging_hub_matrix_jobs, prod_hub_matrix_jobs
     )
-    support_and_staging_matrix_jobs = ensure_support_staging_jobs_have_correct_keys(
-        support_and_staging_matrix_jobs, prod_hub_matrix_jobs
-    )
-    support_and_staging_matrix_jobs = assign_staging_jobs_for_missing_clusters(
-        support_and_staging_matrix_jobs, prod_hub_matrix_jobs
-    )
-
     # Pretty print the jobs using rich
-    pretty_print_matrix_jobs(prod_hub_matrix_jobs, support_and_staging_matrix_jobs)
+    pretty_print_matrix_jobs(
+        support_matrix_jobs, staging_hub_matrix_jobs, prod_hub_matrix_jobs
+    )
 
     # The existence of the CI environment variable is an indication that we are running
     # in an GitHub Actions workflow
@@ -145,15 +136,14 @@ def helm_upgrade_jobs(
     if ci_env:
         # Add these matrix jobs as output variables for use in another job
         with open(output_file, "a") as f:
-            f.write(f"prod-hub-matrix-jobs={json.dumps(prod_hub_matrix_jobs)}\n")
-            f.write(
-                f"support-and-staging-matrix-jobs={json.dumps(support_and_staging_matrix_jobs)}\n"
-            )
+            f.write(f"support-jobs={json.dumps(support_matrix_jobs)}\n")
+            f.write(f"staging-jobs={json.dumps(staging_hub_matrix_jobs)}\n")
+            f.write(f"prod-jobs={json.dumps(prod_hub_matrix_jobs)}\n")
 
-        # Don't bother generating a comment if both of the matrices are empty
-        if support_and_staging_matrix_jobs or prod_hub_matrix_jobs:
+        # Don't bother generating a comment if all of the matrices are empty
+        if support_matrix_jobs or staging_hub_matrix_jobs or prod_hub_matrix_jobs:
             # Generate Markdown tables from the job matrices and write them to a file
             # for use in another job
             create_markdown_comment(
-                support_and_staging_matrix_jobs, prod_hub_matrix_jobs
+                support_matrix_jobs, staging_hub_matrix_jobs, prod_hub_matrix_jobs
             )

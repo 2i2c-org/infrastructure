@@ -36,15 +36,17 @@ def print_colour(msg: str, colour="green"):
         print(msg)
 
 
-def create_markdown_comment(support_staging_matrix, prod_matrix):
+def create_markdown_comment(support_matrix, staging_matrix, prod_matrix):
     """Convert a list of dictionaries into a Markdown formatted table for posting to
     GitHub as comments. This function will write the Markdown content to a file to allow
     a GitHub Actions to upload it as an artifact and reuse the content in another
     workflow.
 
     Args:
-        support_staging_matrix (list[dict]): The support of staging jobs to be converted
-            into a Markdown formatted table
+        support_matrix (list[dict]): The support jobs to be converted into a Markdown
+            formatted table
+        staging_matrix (list[dict]): The staging jobs to be converted into a Markdown
+            formatted table
         prod_matrix (list[dict]): The production jobs to be converted into a Markdown
             formatted table
     """
@@ -52,18 +54,8 @@ def create_markdown_comment(support_staging_matrix, prod_matrix):
     column_converter = {
         "cluster_name": "Cluster Name",
         "provider": "Cloud Provider",
-        "upgrade_support": "Upgrade Support?",
-        "reason_for_support_redeploy": "Reason for Support Redeploy",
-        "upgrade_staging": "Upgrade Staging?",
-        "reason_for_staging_redeploy": "Reason for Staging Redeploy",
         "hub_name": "Hub Name",
         "reason_for_redeploy": "Reason for Redeploy",
-    }
-
-    # A dictionary to convert row values when they are Boolean
-    boolean_converter = {
-        True: "Yes",
-        False: "No",
     }
 
     # === To reliably convert a list of dictionaries into a Markdown table, the keys
@@ -71,37 +63,48 @@ def create_markdown_comment(support_staging_matrix, prod_matrix):
     # === columns of the table. Moreover, we want the columns to be in 'sensible' order
     # === when a human reads this table; therefore, we reformat the inputted jobs.
 
-    # Only execute if support_staging_matrix is not an empty list
-    if support_staging_matrix:
-        # Format the Support and Staging matrix jobs
-        formatted_support_staging_matrix = []
-        for entry in support_staging_matrix:
+    # Only execute if support_matrix is not an empty list
+    if support_matrix:
+        # Format the Support matrix jobs
+        formatted_support_matrix = []
+        for entry in support_matrix:
             formatted_entry = {
                 column_converter["provider"]: entry["provider"],
                 column_converter["cluster_name"]: entry["cluster_name"],
-                column_converter["upgrade_support"]: boolean_converter[
-                    entry["upgrade_support"]
-                ],
-                column_converter["reason_for_support_redeploy"]: entry[
-                    "reason_for_support_redeploy"
-                ],
-                column_converter["upgrade_staging"]: boolean_converter[
-                    entry["upgrade_staging"]
-                ],
-                column_converter["reason_for_staging_redeploy"]: entry[
-                    "reason_for_staging_redeploy"
-                ],
+                column_converter["reason_for_redeploy"]: entry["reason_for_redeploy"],
             }
-            formatted_support_staging_matrix.append(formatted_entry)
+            formatted_support_matrix.append(formatted_entry)
 
         # Generate a Markdown table
-        support_staging_md_table = (
-            markdown_table(formatted_support_staging_matrix)
+        support_md_table = (
+            markdown_table(formatted_support_matrix)
             .set_params(row_sep="markdown", quote=False)
             .get_markdown()
         )
     else:
-        support_staging_md_table = []
+        support_md_table = []
+
+    # Only execute if staging_matrix is not an empty list
+    if staging_matrix:
+        # Format the Staging Hubs matrix jobs
+        formatted_staging_matrix = []
+        for entry in staging_matrix:
+            formatted_entry = {
+                column_converter["provider"]: entry["provider"],
+                column_converter["cluster_name"]: entry["cluster_name"],
+                column_converter["hub_name"]: entry["hub_name"],
+                column_converter["reason_for_redeploy"]: entry["reason_for_redeploy"],
+            }
+            formatted_staging_matrix.append(formatted_entry)
+
+        # Generate a Markdown table
+        staging_md_table = (
+            markdown_table(formatted_staging_matrix)
+            .set_params(row_sep="markdown", quote=False)
+            .get_markdown()
+        )
+    else:
+        staging_md_table = []
 
     # Only execute if prod_matrix is not an empty list
     if prod_matrix:
@@ -129,9 +132,13 @@ def create_markdown_comment(support_staging_matrix, prod_matrix):
     comment_body = f"""<!-- deployment-plan -->
 Merging this PR will trigger the following deployment actions.
 
-### Support and Staging deployments
+### Support deployments
 
-{support_staging_md_table if bool(support_staging_md_table) else 'No support or staging upgrades will be triggered'}
+{support_md_table if bool(support_md_table) else 'No support upgrades will be triggered'}
+
+### Staging deployments
+
+{staging_md_table if bool(staging_md_table) else 'No staging hub upgrades will be triggered'}
 
 ### Production deployments
 

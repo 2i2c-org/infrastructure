@@ -45,45 +45,31 @@ on:
       - "!terraform/gcp/projects/cluster.tfvars.template"
       - "!eksctl/template.jsonnet"
 
-# Queue triggered executions of this workflow stemming from pushes to avoid
-# deployment conflicts.
-#
-# By using a different concurrency groups for pull requests and pushes, we
-# reduce the risk of cancelling a queued but not started workflow as discussed
-# in https://github.com/2i2c-org/infrastructure/issues/3214.
-#
-# github.head_ref is used to create PR unique concurrency groups, and for
-# workflow executions not triggered by a PR we get a dedicated group.
-#
 # ref: https://docs.github.com/en/actions/using-jobs/using-concurrency
-#
 concurrency:
   group: ${{ github.workflow }}-${{ github.head_ref || 'not-a-pr' }}
   cancel-in-progress: false
 
-# This environment variable triggers the deployer to colourise print statements in the
-# GitHug Actions logs for easy reading
 env:
   TERM: xterm
-  # This may not be required any more, and it may depend on the kubectl version
-  # we use etc as well. For now, we have it added to avoid issues.
   USE_GKE_GCLOUD_AUTH_PLUGIN: "True"
 
 jobs:
   # This job runs in Pull Requests and on pushes to the default branch. It identifies
-  # which files have been added or modified by recent GitHub activity and parsed a list
-  # to the `deployer generate helm-upgrade-job`s command of the deployer. This command generates
-  # two lists of dictionaries, which can be read by GitHub Actions as matrix jobs. The
-  # first set of jobs describes which clusters need their support chart and/or staging
-  # hub upgraded; and the second set of jobs describe which production hubs require
-  # upgrading. These two lists are set as job outputs via GITHUB_OUTPUT to be consumed
-  # by the later jobs. They are also pretty-printed in a human-readable format to the
-  # logs, and converted into Markdown tables for posting into GitHub comments.
+  # which files have been added or modified by recent GitHub activity and parses a list
+  # to the `deployer generate helm-upgrade-job` command of the deployer. This command generates
+  # three lists of dictionaries, which can be read by GitHub Actions as matrix jobs. The
+  # first set of jobs describes which clusters need their support chart upgraded; the second set
+  # of jobs describe which staging hubs require upgrading; and the third set of jobs describe
+  # which production hubs require upgrading. These lists are set as job outputs via GITHUB_OUTPUT
+  # to be consumed by the later jobs. They are also pretty-printed in a human-readable format
+  # to the logs, and converted into Markdown tables for posting into GitHub comments.
   generate-jobs:
     runs-on: ubuntu-latest
     outputs:
-      support-and-staging-matrix-jobs: ${{ steps.generate-jobs.outputs.support-and-staging-matrix-jobs }}
-      prod-hub-matrix-jobs: ${{ steps.generate-jobs.outputs.prod-hub-matrix-jobs }}
+      support-jobs: ${{ steps.generate-jobs.outputs.support-jobs }}
+      staging-jobs: ${{ steps.generate-jobs.outputs.staging-jobs }}
+      prod-jobs: ${{ steps.generate-jobs.outputs.prod-jobs }}
 
     steps:
       - uses: actions/checkout@v4
@@ -100,9 +86,6 @@ jobs:
         uses: actions/cache@v4
         with:
           path: ~/.cache/pip
-          # key determines if we define or reuse an existing cache or not. Our
-          # key ensure we cache within a workflow run and its attempts, but not
-          # between workflow runs.
           key: "${{ github.run_id }}"
 
       - name: Install deployer script's Python dependencies
@@ -163,8 +146,7 @@ jobs:
               - added|modified: config/clusters/**
 
       # This step will create a comment-body.txt file containing the jobs to be run in a
-      # Markdown table format to be posted on a Pull Request, if this job is triggered
-      # by one
+      # Markdown table format to be posted on a Pull Request
       - name: Generate matrix jobs
         id: generate-jobs
         run: |
@@ -182,8 +164,9 @@ jobs:
       - name: Upload artifacts
         if: >
           github.event_name == 'pull_request' &&
-          (steps.generate-jobs.outputs.support-and-staging-matrix-jobs != '[]' ||
-          steps.generate-jobs.outputs.prod-hub-matrix-jobs != '[]')
+          (steps.generate-jobs.outputs.support-jobs != '[]' ||
+          steps.generate-jobs.outputs.staging-jobs != '[]' ||
+          steps.generate-jobs.outputs.prod-jobs != '[]')
         uses: actions/upload-artifact@v4
         with:
           name: pr
@@ -209,13 +192,10 @@ jobs:
         env:
           SLACK_WEBHOOK_URL: ${{ secrets.SLACK_GHA_FAILURES_WEBHOOK_URL }}
 
-  # This job upgrades the support chart, staging hub, and dask-staging hub (if present)
-  # for clusters in parallel, if those upgrades are required. This job needs the
-  # `generate-jobs` job to have completed and set an output to the
-  # `support-and-staging-matrix-jobs` variable name. It's inputs are a list of
-  # dictionaries with the keys cluster_name, provider, upgrade_support, and
-  # upgrade_staging for each cluster that requires it.
-  upgrade-support-and-staging:
+  # This job upgrades the support chart for clusters in parallel, if those upgrades
+  # are required. This job needs the `generate-jobs` job to have completed and set
+  # an output to the `support-jobs` variable name.
+  upgrade-support:
     runs-on: ubuntu-latest
     needs: [generate-jobs]
 
@@ -223,9 +203,6 @@ jobs:
     # variation. We are currently required to do this in a hardcoded fashion,
     # see this post for feature requests for this to be improved:
     # https://github.community/t/bug-jobs-output-should-return-a-list-for-a-matrix-job/128626/32?u=consideratio
-    #
-    # Warning: names can include alphanumerics, '-', and '_', but not '.', so
-    #            we replace '.' for '-' in cluster names.
     #
     # If you are adding a new cluster, please remember to list it here!
     outputs:
@@ -263,12 +240,11 @@ jobs:
     if: |
       (github.event_name == 'push' && contains(github.ref, 'main')) &&
       needs.generate-jobs.result == 'success' &&
-      needs.generate-jobs.outputs.support-and-staging-matrix-jobs != '[]'
+      needs.generate-jobs.outputs.support-jobs != '[]'
     strategy:
-      # Don't stop other deployments if one fails
       fail-fast: false
       matrix:
-        jobs: ${{ fromJson(needs.generate-jobs.outputs.support-and-staging-matrix-jobs) }}
+        jobs: ${{ fromJson(needs.generate-jobs.outputs.support-jobs) }}
 
     steps:
       - uses: actions/checkout@v4
@@ -280,39 +256,8 @@ jobs:
           GCP_KMS_DECRYPTOR_KEY: ${{ secrets.GCP_KMS_DECRYPTOR_KEY }}
 
       - name: Upgrade support chart on cluster ${{ matrix.jobs.cluster_name }}
-        if: matrix.jobs.upgrade_support
         run: |
           deployer deploy-support ${{ matrix.jobs.cluster_name }}
-
-      - name: Upgrade staging hub on cluster ${{ matrix.jobs.cluster_name }}
-        if: matrix.jobs.upgrade_staging
-        run: |
-          deployer deploy ${{ matrix.jobs.cluster_name }} staging
-
-      # Retry action: https://github.com/marketplace/actions/retry-step
-      - name: Run health check for staging hub on cluster ${{ matrix.jobs.cluster_name }}
-        if: matrix.jobs.upgrade_staging
-        uses: nick-fields/retry@v3
-        with:
-          timeout_minutes: 10
-          max_attempts: 2
-          command: |
-            deployer run-hub-health-check ${{ matrix.jobs.cluster_name }} staging
-
-      - name: Upgrade dask-staging hub on cluster ${{ matrix.jobs.cluster_name }} if it exists
-        if: matrix.jobs.upgrade_staging && matrix.jobs.cluster_name == '2i2c'
-        run: |
-          deployer deploy ${{ matrix.jobs.cluster_name }} dask-staging
-
-      # Retry action: https://github.com/marketplace/actions/retry-step
-      - name: Run health check for dask-staging hub on cluster ${{ matrix.jobs.cluster_name }} if it exists
-        if: matrix.jobs.upgrade_staging && matrix.jobs.cluster_name == '2i2c'
-        uses: nick-fields/retry@v3
-        with:
-          timeout_minutes: 10
-          max_attempts: 2
-          command: |
-            deployer run-hub-health-check ${{ matrix.jobs.cluster_name }} dask-staging
 
       - name: Declare failure status
         id: declare-failure
@@ -346,48 +291,289 @@ jobs:
         env:
           SLACK_WEBHOOK_URL: ${{ secrets.SLACK_GHA_FAILURES_WEBHOOK_URL }}
 
-  # This jobs reduces the initially planned prod-hub-matrix-jobs deployments by
-  # filtering out any deployment to a cluster with a failed support-and-staging
-  # job.
-  filter-generate-jobs:
+  # This job reduces the initially planned staging-jobs and prod-jobs deployments
+  # by filtering out any deployment to a cluster with a failed support job.
+  filter-failed-support:
     runs-on: ubuntu-latest
-    needs: [generate-jobs, upgrade-support-and-staging]
+    needs: [generate-jobs, upgrade-support]
     if: |
       !cancelled() &&
       (github.event_name == 'push' && contains(github.ref, 'main')) &&
       needs.generate-jobs.result == 'success' &&
-      needs.generate-jobs.outputs.prod-hub-matrix-jobs != '[]'
+      needs.generate-jobs.outputs.staging-jobs != '[]' &&
+      needs.generate-jobs.outputs.prod-jobs != '[]'
 
     outputs:
-      prod-hub-matrix-jobs: ${{ steps.filter-jobs.outputs.prod-hub-matrix-jobs }}
+      staging-jobs: ${{ steps.filter-jobs.outputs.filtered-staging-jobs}}
+      prod-jobs: ${{ steps.filter-jobs.outputs.filtered-prod-jobs }}
 
     steps:
-      # This Python script filters out any prod hub deployment job from running
-      # later based on if its part of a cluster where support/staging upgrade
-      # just failed. Data is injected to the script before its executed via
-      # string literals as rendered GitHub workflow expressions.
-      - name: Filter prod deploy jobs to run based on failures in support/staging
+      # This Python script filters out any staging and/or prod hub deployment job
+      # from running later based on if its part of a cluster where support upgrade
+      # just failed.
+      - name: Filter staging and prod deploy jobs to run based on failures in support
         id: filter-jobs
         shell: python
         run: |
           import os
           import json
 
-          jobs = json.loads(r"""${{ needs.generate-jobs.outputs.prod-hub-matrix-jobs }}""")
-          outputs = json.loads(r"""${{ toJson(needs.upgrade-support-and-staging.outputs) }}""")
+          staging_jobs = json.loads(r"""${{ needs.generate-jobs.outputs.staging-jobs}}""")
+          prod_jobs = json.loads(r"""${{ needs.generate-jobs.outputs.prod-jobs }}""")
+          outputs = json.loads(r"""${{ toJson(needs.upgrade-support.outputs) }}""")
 
           try:
-            filtered_jobs = [
-                job
-                for job in jobs
-                if outputs[f"failure_{job['cluster_name'].replace('.', '-')}"] != "true"
-            ]
+              filtered_staging_jobs = [
+                  staging_job
+                  for staging_job in staging_jobs
+                  if outputs[f"failure_{staging_job['cluster_name'].replace('.', '-')}"] != "true"
+              ]
+
+              filtered_prod_jobs = [
+                  prod_job
+                  for prod_job in prod_jobs
+                  if outputs[f"failure_{prod_job['cluster_name'].replace('.', '-')}"] != "true"
+              ]
           except KeyError:
-            print(f"The {cluster_name} cluster wasn't found in the `upgrade-support-and-staging.outputs` list. Please add it before continuing!")
+            print(f"The {cluster_name} cluster wasn't found in the `upgrade-support.outputs` list. Please add it before continuing!")
 
           output_file = os.getenv("GITHUB_OUTPUT")
           with open(output_file, "a") as f:
-              f.write(f"prod-hub-matrix-jobs={json.dumps(filtered_jobs)}")
+              f.write(f"filtered-staging-jobs={json.dumps(filtered_staging_jobs)}\n")
+              f.write(f"filtered-prod-jobs={json.dumps(filtered_prod_jobs)}")
+
+      # https://github.com/ravsamhq/notify-slack-action
+      # Needs to be added per job
+      # When https://github.com/integrations/slack/issues/1563 gets implemented,
+      # we can use that instead
+      - name: Report Status
+        if: always()
+        uses: ravsamhq/notify-slack-action@v2
+        with:
+          # Warning: there are multiple "Report Status" steps in this file (one per job).
+          # Make sure they are all updated
+          notify_when: "failure"
+          status: ${{ job.status }} # required
+          # Message should look like: "Hey @author! Deploy and test hubs failed for "Add new hub - 9305e08".
+          message_format: '{emoji} Hey @${{ github.event.head_commit.author.name }}! *{workflow}* {status_message} for "${{ github.event.head_commit.message }} - <{commit_url}|{commit_sha}>". Checkout the run at {run_url}.'
+          footer: "<{run_url}|Failing Run>"
+        env:
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_GHA_FAILURES_WEBHOOK_URL }}
+
+  # We need to run this job because if there are no support jobs executed, then
+  # filter-failed-support won't produce an output. We cannot use logic in a
+  # matrix.jobs definition,
+  # e.g. matrix.jobs: ${{ needs.filter-failed-suport-jobs.outputs.staging-jobs || needs.generate-jobs.outputs.staging-jobs }};
+  # therefore, we need to do this logic in another job and pass it along.
+  reset-jobs:
+    runs-on: ubuntu-latest
+    needs: [generate-jobs, filter-failed-support]
+    if: |
+      !cancelled() &&
+      (github.event_name == 'push' && contains(github.ref, 'main')) &&
+      needs.generate-jobs.result == 'success' &&
+      needs.generate-jobs.outputs.staging-jobs != '[]' &&
+      needs.generate-jobs.outputs.prod-jobs != '[]'
+    outputs:
+      staging-jobs: ${{ steps.reset-jobs.outputs.staging-jobs }}
+      prod-jobs: ${{ steps.reset-jobs.outputs.prod-jobs }}
+    steps:
+      - id: reset-jobs
+        shell: python
+        run: |
+          import os
+          import json
+
+          try:
+              staging_jobs = json.loads(r"""${{ needs.filter-failed-support.outputs.staging-jobs }}""")
+              prod_jobs = json.loads(r"""${{ needs.filter-failed-support.outputs.prod-jobs }}""")
+          except KeyError:
+              staging_jobs = json.loads(r"""${{ needs.generate-jobs.outputs.staging-jobs }}""")
+              prod_jobs = json.loads(r"""${{ needs.generate-jobs.outputs.prod-jobs }}""")
+
+          output_file = os.getenv("GITHUB_OUTPUT")
+          with open(output_file, "a") as f:
+              f.write(f"staging-jobs={json.dumps(staging_jobs)}\n")
+              f.write(f"prod-jobs={json.dumps(prod_jobs)}\n")
+
+      # https://github.com/ravsamhq/notify-slack-action
+      # Needs to be added per job
+      # When https://github.com/integrations/slack/issues/1563 gets implemented,
+      # we can use that instead
+      - name: Report Status
+        if: always()
+        uses: ravsamhq/notify-slack-action@v2
+        with:
+          # Warning: there are multiple "Report Status" steps in this file (one per job).
+          # Make sure they are all updated
+          notify_when: "failure"
+          status: ${{ job.status }} # required
+          # Message should look like: "Hey @author! Deploy and test hubs failed for "Add new hub - 9305e08".
+          message_format: '{emoji} Hey @${{ github.event.head_commit.author.name }}! *{workflow}* {status_message} for "${{ github.event.head_commit.message }} - <{commit_url}|{commit_sha}>". Checkout the run at {run_url}.'
+          footer: "<{run_url}|Failing Run>"
+        env:
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_GHA_FAILURES_WEBHOOK_URL }}
+
+  # This job upgrades staging hubs on clusters in parallel, if required. This
+  # job needs the `reset-jobs` to have completed to provide its output `staging-jobs`.
+  # It is a list of dictionaries with the keys cluster_name, provider, and hub_name
+  # for each staging hub that requires an upgrade and didn't have a failed
+  # support-upgrade job.
+  upgrade-staging:
+    runs-on: ubuntu-latest
+    needs: [reset-jobs]
+    if: |
+      !cancelled() &&
+      (github.event_name == 'push' && contains(github.ref, 'main')) &&
+      needs.reset-jobs.result == 'success' &&
+      needs.reset-jobs.outputs.staging-jobs != '[]'
+    strategy:
+      fail-fast: false
+      matrix:
+        jobs: ${{ fromJson(needs.reset-jobs.outputs.staging-jobs) }}
+
+    # We declare outputs indicating the job failed status of a specific job
+    # variation. We are currently required to do this in a hardcoded fashion,
+    # see this post for feature requests for this to be improved:
+    # https://github.community/t/bug-jobs-output-should-return-a-list-for-a-matrix-job/128626/32?u=consideratio
+    #
+    # If you are adding a new cluster/staging hub, please remember to list it here!
+    outputs:
+      failure_2i2c_staging: "${{ steps.declare-failure.outputs.failure_2i2c_staging }}"
+      failure_2i2c_dask-staging: "${{ steps.declare-failure.outputs.failure_2i2c_dask-staging }}"
+      failure_2i2c_ucmercedstaging: "${{ steps.declare-failure.outputs.failure_2i2c_ucmercedstaging }}"
+      failure_2i2c-aws-us_staging: "${{ steps.declare-failure.outputs.failure_2i2c-aws-us_staging }}"
+      failure_2i2c-aws-us_dask-staging: "${{ steps.declare-failure.outputs.failure_2i2c-aws-us_dask-staging }}"
+      failure_2i2c-uk_staging: "${{ steps.declare-failure.outputs.failure_2i2c-uk_staging }}"
+      failure_awi-ciroh_staging: "${{ steps.declare-failure.outputs.failure_awi-ciroh_staging }}"
+      failure_catalystproject-africa_staging: "${{ steps.declare-failure.outputs.failure_catalystproject-africa_staging }}"
+      failure_catalystproject-latam_staging: "${{ steps.declare-failure.outputs.failure_catalystproject-latam_staging }}"
+      failure_cloudbank_staging: "${{ steps.declare-failure.outputs.failure_cloudbank_staging }}"
+      failure_dubois_staging: "${{ steps.declare-failure.outputs.failure_dubois_staging }}"
+      failure_earthscope_staging: "${{ steps.declare-failure.outputs.failure_earthscope_staging }}"
+      failure_gridsst_staging: "${{ steps.declare-failure.outputs.failure_gridsst_staging }}"
+      failure_hhmi_staging: "${{ steps.declare-failure.outputs.failure_hhmi_staging }}"
+      failure_jupyter-health_staging: "${{ steps.declare-failure.outputs.failure_jupyter-health_staging }}"
+      failure_jupyter-meets-the-earth_staging: "${{ steps.declare-failure.outputs.failure_jupyter-meets-the-earth_staging }}"
+      failure_kitware_staging: "${{ steps.declare-failure.outputs.failure_kitware_staging }}"
+      failure_leap_staging: "${{ steps.declare-failure.outputs.failure_leap_staging }}"
+      failure_maap_staging: "${{ steps.declare-failure.outputs.failure_maap_staging }}"
+      failure_nasa-cryo_staging: "${{ steps.declare-failure.outputs.failure_nasa-cryo_staging }}"
+      failure_nasa-ghg_staging: "${{ steps.declare-failure.outputs.failure_nasa-ghg_staging }}"
+      failure_nasa-veda_staging: "${{ steps.declare-failure.outputs.failure_nasa-veda_staging }}"
+      failure_nmfs-openscapes_staging: "${{ steps.declare-failure.outputs.failure_nmfs-openscapes_staging }}"
+      failure_openscapes_staging: "${{ steps.declare-failure.outputs.failure_openscapes_staging }}"
+      failure_opensci_staging: "${{ steps.declare-failure.outputs.failure_opensci_staging }}"
+      failure_pangeo-hubs_staging: "${{ steps.declare-failure.outputs.failure_pangeo-hubs_staging }}"
+      failure_projectpythia_staging: "${{ steps.declare-failure.outputs.failure_projectpythia_staging }}"
+      failure_queensu_staging: "${{ steps.declare-failure.outputs.failure_queensu_staging }}"
+      failure_smithsonian_staging: "${{ steps.declare-failure.outputs.failure_smithsonian_staging }}"
+      failure_strudel_staging: "${{ steps.declare-failure.outputs.failure_strudel_staging }}"
+      failure_ubc-eoas_staging: "${{ steps.declare-failure.outputs.failure_ubc-eoas_staging }}"
+      failure_utoronto_staging: "${{ steps.declare-failure.outputs.failure_utoronto_staging }}"
+      failure_utoronto_r-staging: "${{ steps.declare-failure.outputs.failure_utoronto_r-staging }}"
+      failure_victor_staging: "${{ steps.declare-failure.outputs.failure_victor_staging }}"
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup deploy for ${{ matrix.jobs.cluster_name }} cluster
+        uses: ./.github/actions/setup-deploy
+        with:
+          provider: ${{ matrix.jobs.provider }}
+          GCP_KMS_DECRYPTOR_KEY: ${{ secrets.GCP_KMS_DECRYPTOR_KEY }}
+
+      - name: Upgrade ${{ matrix.jobs.hub_name }} hub on cluster ${{ matrix.jobs.cluster_name }}
+        run: |
+          deployer deploy ${{ matrix.jobs.cluster_name }} ${{ matrix.jobs.hub_name }}
+
+      # Retry action: https://github.com/marketplace/actions/retry-step
+      - name: Run health check against ${{ matrix.jobs.hub_name }} hub on cluster ${{ matrix.jobs.cluster_name}}
+        uses: nick-fields/retry@v3
+        with:
+          timeout_minutes: 10
+          max_attempts: 3
+          command: |
+            deployer run-hub-health-check ${{ matrix.jobs.cluster_name }} ${{ matrix.jobs.hub_name }}
+
+      - name: Declare failure status
+        id: declare-failure
+        if: always()
+        shell: python
+        run: |
+          import os
+
+          cluster_name = "${{ matrix.jobs.cluster_name }}".replace(".", "-")
+          hub_name = "${{ matrix.jobs.hub_name }}".replace(".", "-")
+          failure = "${{ job.status == 'failure' }}"
+
+          output_file = os.getenv("GITHUB_OUTPUT")
+          with open(output_file, "a") as f:
+              f.write(f"failure_{cluster_name}_{hub_name}={failure}\n")
+
+      # https://github.com/ravsamhq/notify-slack-action
+      # Needs to be added per job
+      # When https://github.com/integrations/slack/issues/1563 gets implemented,
+      # we can use that instead
+      - name: Report Status
+        if: always()
+        uses: ravsamhq/notify-slack-action@v2
+        with:
+          # Warning: there are multiple "Report Status" steps in this file (one per job).
+          # Make sure they are all updated
+          notify_when: "failure"
+          status: ${{ job.status }} # required
+          # Message should look like: "Hey @author! Deploy and test hubs failed for "Add new hub - 9305e08".
+          message_format: '{emoji} Hey @${{ github.event.head_commit.author.name }}! *{workflow}* {status_message} for "${{ github.event.head_commit.message }} - <{commit_url}|{commit_sha}>". Checkout the run at {run_url}.'
+          footer: "<{run_url}|Failing Run>"
+        env:
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_GHA_FAILURES_WEBHOOK_URL }}
+
+  # This job further reduces prod-jobs by filtering out any prod hub deployment
+  # to a cluster with a failed staging hub job.
+  filter-failed-staging:
+    runs-on: ubuntu-latest
+    needs: [reset-jobs, upgrade-staging]
+    if: |
+      !cancelled() &&
+      (github.event_name == 'push' && contains(github.ref, 'main')) &&
+      needs.reset-jobs.result == 'success' &&
+      needs.reset-jobs.outputs.prod-jobs != '[]'
+    outputs:
+      prod-jobs: ${{ steps.filter-jobs.outputs.filtered-prod-jobs }}
+    steps:
+      # This Python script filters out any prod hub deployment job from running
+      # later based on if its part of a cluster where staging hub upgrade
+      # just failed. Data is injected to the script before its executed via
+      # string literals as rendered GitHub workflow expressions.
+      - name: Filter prod deploy jobs to run based on failures in staging
+        id: filter-jobs
+        shell: python
+        run: |
+          import os
+          import json
+
+          prod_jobs = json.loads(r"""${{ needs.reset-jobs.outputs.prod-jobs }}""")
+          outputs = json.loads(r"""${{ toJson(needs.upgrade-staging.outputs) }}""")
+
+          try:
+              filtered_prod_jobs = []
+              for prod_job in prod_jobs:
+                  failed_jobs = {
+                      k: v
+                      for k, v in outputs.items()
+                      if prod_job["cluster_name"] in k
+                      and v == "true"
+                  }
+
+                  if len(failed_jobs) == 0:
+                      filtered_prod_jobs.append(prod_job)
+          except KeyError:
+              print(f"The {cluster_name} cluster wasn't found in the `upgrade-staging.outputs` list. Please add it before continuing!")
+
+          output_file = os.getenv("GITHUB_OUTPUT")
+          with open(output_file, "a") as f:
+              f.write(f"prod-jobs={json.dumps(filtered_prod_jobs)}")
 
       # https://github.com/ravsamhq/notify-slack-action
       # Needs to be added per job
@@ -408,24 +594,22 @@ jobs:
           SLACK_WEBHOOK_URL: ${{ secrets.SLACK_GHA_FAILURES_WEBHOOK_URL }}
 
   # This job upgrades production hubs on clusters in parallel, if required. This
-  # job needs both the `filter-generate-jobs` to have completed to provide its
-  # output `filtered-prod-hub-matrix-jobs`. It is a list of dictionaries with
-  # the keys cluster_name, provider, and hub_name for each production hub that
-  # requires an upgrade and didn't have a failed support-and-staging-upgrade job
-  # run as part of this workflow.
-  upgrade-prod-hubs:
+  # job needs the `filter-failed-staging` to have completed to provide its
+  # output `prod-jobs`. It is a list of dictionaries with the keys cluster_name,
+  # provider, and hub_name for each production hub that requires an upgrade and
+  # didn't have a failed staging job.
+  upgrade-prod:
     runs-on: ubuntu-latest
-    needs: [filter-generate-jobs]
+    needs: [filter-failed-staging]
     if: |
       !cancelled() &&
       (github.event_name == 'push' && contains(github.ref, 'main')) &&
-      needs.filter-generate-jobs.result == 'success' &&
-      needs.filter-generate-jobs.outputs.prod-hub-matrix-jobs != '[]'
+      needs.filter-failed-staging.result == 'success' &&
+      needs.filter-failed-staging.outputs.prod-jobs != '[]'
     strategy:
-      # Don't stop other deployments if one fails
       fail-fast: false
       matrix:
-        jobs: ${{ fromJson(needs.filter-generate-jobs.outputs.prod-hub-matrix-jobs) }}
+        jobs: ${{ fromJson(needs.filter-failed-staging.outputs.prod-jobs) }}
 
     steps:
       - uses: actions/checkout@v4
