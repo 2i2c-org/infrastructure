@@ -265,7 +265,6 @@ jobs:
       needs.generate-jobs.result == 'success' &&
       needs.generate-jobs.outputs.support-matrix-jobs != '[]'
     strategy:
-      # Don't stop other deployments if one fails
       fail-fast: false
       matrix:
         jobs: ${{ fromJson(needs.generate-jobs.outputs.support-matrix-jobs) }}
@@ -401,7 +400,6 @@ jobs:
       needs.filter-failed-support-jobs.result == 'success' &&
       needs.filter-failed-support-jobs.outputs.staging-hub-matrix-jobs != '[]'
     strategy:
-      # Don't stop other deployments if one fails
       fail-fast: false
       matrix:
         jobs: ${{ fromJson(needs.filter-failed-support-jobs.outputs.staging-hub-matrix-jobs) }}
@@ -583,7 +581,6 @@ jobs:
       needs.filter-failed-staging-jobs.result == 'success' &&
       needs.filter-failed-staging-jobs.outputs.prod-hub-matrix-jobs != '[]'
     strategy:
-      # Don't stop other deployments if one fails
       fail-fast: false
       matrix:
         jobs: ${{ fromJson(needs.filter-failed-staging-jobs.outputs.prod-hub-matrix-jobs) }}
