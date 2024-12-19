@@ -225,6 +225,7 @@ def root_homes(
                 subprocess.check_call(["kubectl", "create", "-f", tmpf.name])
 
                 # wait for the pod to be ready
+                print_colour("Waiting for the pod to be ready...", "yellow")
                 subprocess.check_call(
                     [
                         "kubectl",
