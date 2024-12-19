@@ -130,9 +130,9 @@ def generate_hub_matrix_jobs(
             deployed to that cluster, and the reason that hub needs to be redeployed.
     """
     if pr_labels and "deployer:skip-deploy" in pr_labels:
-        return []
+        return [], []
     if pr_labels and "deployer:skip-deploy-hubs" in pr_labels:
-        return []
+        return [], []
 
     # Empty list to store all the matrix job definitions in
     matrix_jobs = []
