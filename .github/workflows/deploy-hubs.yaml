@@ -142,6 +142,7 @@ jobs:
               - added|modified: deployer/**
               - added|modified: requirements.txt
               - added|modified: .github/actions/setup-deploy/**
+              - added|modified: .github/workflows/deploy-hubs.yaml
               - added|modified: helm-charts/basehub/**
               - added|modified: helm-charts/daskhub/**
               - added|modified: helm-charts/support/**
