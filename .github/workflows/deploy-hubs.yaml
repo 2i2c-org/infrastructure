@@ -417,6 +417,24 @@ jobs:
               f.write(f"staging-jobs={json.dumps(staging_jobs)}\n")
               f.write(f"prod-jobs={json.dumps(prod_jobs)}\n")
 
+      # https://github.com/ravsamhq/notify-slack-action
+      # Needs to be added per job
+      # When https://github.com/integrations/slack/issues/1563 gets implemented,
+      # we can use that instead
+      - name: Report Status
+        if: always()
+        uses: ravsamhq/notify-slack-action@v2
+        with:
+          # Warning: there are multiple "Report Status" steps in this file (one per job).
+          # Make sure they are all updated
+          notify_when: "failure"
+          status: ${{ job.status }} # required
+          # Message should look like: "Hey @author! Deploy and test hubs failed for "Add new hub - 9305e08".
+          message_format: '{emoji} Hey @${{ github.event.head_commit.author.name }}! *{workflow}* {status_message} for "${{ github.event.head_commit.message }} - <{commit_url}|{commit_sha}>". Checkout the run at {run_url}.'
+          footer: "<{run_url}|Failing Run>"
+        env:
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_GHA_FAILURES_WEBHOOK_URL }}
+
   # This job upgrades staging hubs on clusters in parallel, if required. This
   # job needs the `reset-matrices` to have completed to provide its
   # output `staging-jobs`. It is a list of dictionaries with
@@ -507,7 +525,7 @@ jobs:
           import os
 
           cluster_name = "${{ matrix.jobs.cluster_name }}".replace(".", "-")
-          hub_name = "${{ matrix.jobs.hub_name }}"
+          hub_name = "${{ matrix.jobs.hub_name }}".replace(".", "-")
           failure = "${{ job.status == 'failure' }}"
 
           output_file = os.getenv("GITHUB_OUTPUT")
