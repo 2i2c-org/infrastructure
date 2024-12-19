@@ -10,4 +10,4 @@
 git+https://github.com/yuvipanda/jupyterhub-configurator@backported-jh41-compatibility
 
 # Brings in https://github.com/2i2c-org/jupyterhub-fancy-profiles/pull/72
-git+https://github.com/2i2c-org/jupyterhub-fancy-profiles@bootstrap5
+git+https://github.com/2i2c-org/jupyterhub-fancy-profiles@main
