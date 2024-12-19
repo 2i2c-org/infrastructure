@@ -231,13 +231,12 @@ def test_generate_hub_matrix_jobs_skip_deploy_label():
 
     pr_labels = ["unrelated1", "deployer:skip-deploy", "unrelated2"]
 
-    expected_matrix_jobs = []
-
-    result_matrix_jobs = generate_hub_matrix_jobs(
+    result_staging_jobs, result_prod_jobs = generate_hub_matrix_jobs(
         cluster_file, cluster_config, cluster_info, modified_file, pr_labels
     )
 
-    case.assertCountEqual(result_matrix_jobs, expected_matrix_jobs)
+    case.assertCountEqual(result_staging_jobs, [])
+    case.assertCountEqual(result_prod_jobs, [])
 
 
 def test_generate_support_matrix_jobs_one_cluster():
