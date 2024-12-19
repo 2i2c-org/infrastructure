@@ -82,9 +82,9 @@ jobs:
   generate-jobs:
     runs-on: ubuntu-latest
     outputs:
-      support-matrix-jobs: ${{ steps.generate-jobs.outputs.support-matrix-jobs }}
-      staging-matrix-jobs: ${{ steps.generate-jobs.outputs.staging-hub-matrix-jobs }}
-      prod-hub-matrix-jobs: ${{ steps.generate-jobs.outputs.prod-hub-matrix-jobs }}
+      support-jobs: ${{ steps.generate-jobs.outputs.support-jobs }}
+      staging-jobs: ${{ steps.generate-jobs.outputs.staging-jobs }}
+      prod-jobs: ${{ steps.generate-jobs.outputs.prod-jobs }}
 
     steps:
       - uses: actions/checkout@v4
@@ -183,9 +183,9 @@ jobs:
       - name: Upload artifacts
         if: >
           github.event_name == 'pull_request' &&
-          (steps.generate-jobs.outputs.support-matrix-jobs != '[]' ||
-          steps.generate-jobs.outputs.staging-hub-matrix-jobs != '[]' ||
-          steps.generate-jobs.outputs.prod-hub-matrix-jobs != '[]')
+          (steps.generate-jobs.outputs.support-jobs != '[]' ||
+          steps.generate-jobs.outputs.staging-jobs != '[]' ||
+          steps.generate-jobs.outputs.prod-jobs != '[]')
         uses: actions/upload-artifact@v4
         with:
           name: pr
@@ -213,7 +213,7 @@ jobs:
 
   # This job upgrades the support chart for clusters in parallel, if those upgrades
   # are required. This job needs the `generate-jobs` job to have completed and set
-  # an output to the `support-matrix-jobs` variable name. It's inputs are a list of
+  # an output to the `support-jobs` variable name. It's inputs are a list of
   # dictionaries with the keys cluster_name and provider for each cluster that requires it.
   upgrade-support:
     runs-on: ubuntu-latest
@@ -263,11 +263,11 @@ jobs:
     if: |
       (github.event_name == 'push' && contains(github.ref, 'main')) &&
       needs.generate-jobs.result == 'success' &&
-      needs.generate-jobs.outputs.support-matrix-jobs != '[]'
+      needs.generate-jobs.outputs.support-jobs != '[]'
     strategy:
       fail-fast: false
       matrix:
-        jobs: ${{ fromJson(needs.generate-jobs.outputs.support-matrix-jobs) }}
+        jobs: ${{ fromJson(needs.generate-jobs.outputs.support-jobs) }}
 
     steps:
       - uses: actions/checkout@v4
@@ -314,8 +314,8 @@ jobs:
         env:
           SLACK_WEBHOOK_URL: ${{ secrets.SLACK_GHA_FAILURES_WEBHOOK_URL }}
 
-  # This job reduces the initially planned staging-hub-matrix-jobs and
-  # prod-hub-matrix-jobs deployments by filtering out any deployment to a cluster
+  # This job reduces the initially planned staging-jobs and
+  # prod-jobs deployments by filtering out any deployment to a cluster
   # with a failed support job.
   filter-failed-support-jobs:
     runs-on: ubuntu-latest
@@ -324,12 +324,12 @@ jobs:
       !cancelled() &&
       (github.event_name == 'push' && contains(github.ref, 'main')) &&
       needs.generate-jobs.result == 'success' &&
-      needs.generate-jobs.outputs.staging-hub-matrix-jobs != '[]' &&
-      needs.generate-jobs.outputs.prod-hub-matrix-jobs != '[]'
+      needs.generate-jobs.outputs.staging-jobs != '[]' &&
+      needs.generate-jobs.outputs.prod-jobs != '[]'
 
     outputs:
-      staging-hub-matrix-jobs: ${{ steps.filter-jobs.outputs.filtered-staging-hub-matrix-jobs}}
-      prod-hub-matrix-jobs: ${{ steps.filter-jobs.outputs.filtered-prod-hub-matrix-jobs }}
+      staging-jobs: ${{ steps.filter-jobs.outputs.filtered-staging-jobs}}
+      prod-jobs: ${{ steps.filter-jobs.outputs.filtered-prod-jobs }}
 
     steps:
       # This Python script filters out any staging and/or prod hub deployment job
@@ -343,8 +343,8 @@ jobs:
           import os
           import json
 
-          staging_jobs = json.loads(r"""${{ needs.generate-jobs.outputs.staging-hub-matrix-jobs}}""")
-          prod_jobs = json.loads(r"""${{ needs.generate-jobs.outputs.prod-hub-matrix-jobs }}""")
+          staging_jobs = json.loads(r"""${{ needs.generate-jobs.outputs.staging-jobs}}""")
+          prod_jobs = json.loads(r"""${{ needs.generate-jobs.outputs.prod-jobs }}""")
           outputs = json.loads(r"""${{ toJson(needs.upgrade-support.outputs) }}""")
 
           try:
@@ -364,8 +364,8 @@ jobs:
 
           output_file = os.getenv("GITHUB_OUTPUT")
           with open(output_file, "a") as f:
-              f.write(f"filtered-staging-hub-matrix-jobs={json.dumps(filtered_staging_jobs)}\n")
-              f.write(f"filtered-prod-hub-matrix-jobs={json.dumps(filtered_prod_jobs)}")
+              f.write(f"filtered-staging-jobs={json.dumps(filtered_staging_jobs)}\n")
+              f.write(f"filtered-prod-jobs={json.dumps(filtered_prod_jobs)}")
 
       # https://github.com/ravsamhq/notify-slack-action
       # Needs to be added per job
@@ -388,7 +388,7 @@ jobs:
   # We need to run this job because if there are no support jobs executed, then
   # filter-failed-support jobs won't produce an output. We cannot use logic in
   # the matrix.jobs definition,
-  # e.g. matrix.jobs: ${{ needs.filter-failed-suport-jobs.outputs.staging-matrix  || needs.generate-jobs.outputs.staging-matrix }},
+  # e.g. matrix.jobs: ${{ needs.filter-failed-suport-jobs.outputs.staging-jobs  || needs.generate-jobs.outputs.staging-jobs }},
   # therefore, we need to do this logic in another job and pass it along.
   reset-matrices:
     runs-on: ubuntu-latest
@@ -396,8 +396,8 @@ jobs:
     if: |
       !cancelled()
     outputs:
-      staging-matrix-jobs: ${{ steps.reset-matrices.outputs.staging-matrix }}
-      prod-hub-matrix-jobs: ${{ steps.reset-matrices.outputs.prod-matrix }}
+      staging-jobs: ${{ steps.reset-matrices.outputs.staging-jobs }}
+      prod-jobs: ${{ steps.reset-matrices.outputs.prod-jobs }}
     steps:
       - id: reset-matrices
         shell: python
@@ -406,35 +406,35 @@ jobs:
           import json
 
           try:
-              staging_matrix = json.loads(r"""${{ needs.filter-failed-support-jobs.outputs.staging-hub-matrix-jobs }}""")
-              prod_matrix = json.loads(r"""${{ needs.filter-failed-support-jobs.outputs.prod-hub-matrix-jobs }}""")
+              staging_jobs = json.loads(r"""${{ needs.filter-failed-support-jobs.outputs.staging-jobs }}""")
+              prod_jobs = json.loads(r"""${{ needs.filter-failed-support-jobs.outputs.prod-jobs }}""")
           except KeyError:
-              staging_matrix = json.loads(r"""${{ needs.generate-jobs.outputs.staging-hub-matrix-jobs }}""")
-              prod_matrix = json.loads(r"""${{ needs.generate-jobs.outputs.prod-hub-matrix-jobs }}""")
+              staging_jobs = json.loads(r"""${{ needs.generate-jobs.outputs.staging-jobs }}""")
+              prod_jobs = json.loads(r"""${{ needs.generate-jobs.outputs.prod-jobs }}""")
 
           output_file = os.getenv("GITHUB_OUTPUT")
           with open(output_file, "a") as f:
-              f.write(f"staging-matrix-jobs={json.dumps(staging_matrix)}\n")
-              f.write(f"prod-matrix-jobs={json.dumps(prod_matrix)}\n")
+              f.write(f"staging-jobs={json.dumps(staging_jobs)}\n")
+              f.write(f"prod-jobs={json.dumps(prod_jobs)}\n")
 
   # This job upgrades staging hubs on clusters in parallel, if required. This
   # job needs the `reset-matrices` to have completed to provide its
-  # output `staging-matrix-jobs`. It is a list of dictionaries with
+  # output `staging-jobs`. It is a list of dictionaries with
   # the keys cluster_name, provider, and hub_name for each staging hub that
   # requires an upgrade and didn't have a failed support-upgrade job
   # run as part of this workflow.
-  upgrade-staging-hubs:
+  upgrade-staging:
     runs-on: ubuntu-latest
     needs: [reset-matrices]
     if: |
       !cancelled() &&
       (github.event_name == 'push' && contains(github.ref, 'main')) &&
       needs.reset-matrices.result == 'success' &&
-      needs.reset-matrices.outputs.staging-matrix-jobs != '[]'
+      needs.reset-matrices.outputs.staging-jobs != '[]'
     strategy:
       fail-fast: false
       matrix:
-        jobs: ${{ fromJson(needs.reset-matrices.outputs.staging-matrix-jobs) }}
+        jobs: ${{ fromJson(needs.reset-matrices.outputs.staging-jobs) }}
 
     # We declare outputs indicating the job failed status of a specific job
     # variation. We are currently required to do this in a hardcoded fashion,
@@ -532,19 +532,19 @@ jobs:
         env:
           SLACK_WEBHOOK_URL: ${{ secrets.SLACK_GHA_FAILURES_WEBHOOK_URL }}
 
-  # This job further reduces the filtered-prod-hub-matrix-jobs and deployments by
+  # This job further reduces the filtered-prod-jobs and deployments by
   # filtering out any deployment to a cluster with a failed staging hub job.
   filter-failed-staging-jobs:
     runs-on: ubuntu-latest
-    needs: [reset-matrices, upgrade-staging-hubs]
+    needs: [reset-matrices, upgrade-staging]
     if: |
       !cancelled() &&
       (github.event_name == 'push' && contains(github.ref, 'main')) &&
       needs.reset-matrices.result == 'success' &&
-      needs.reset-matrices.outputs.prod-hub-matrix-jobs != '[]'
+      needs.reset-matrices.outputs.prod-jobs != '[]'
 
     outputs:
-      prod-hub-matrix-jobs: ${{ steps.filter-jobs.outputs.filtered-prod-hub-matrix-jobs }}
+      prod-jobs: ${{ steps.filter-jobs.outputs.filtered-prod-jobs }}
 
     steps:
       # This Python script filters out any prod hub deployment job from running
@@ -558,8 +558,8 @@ jobs:
           import os
           import json
 
-          prod_jobs = json.loads(r"""${{ needs.filter-failed-support-jobs.outputs.prod-hub-matrix-jobs }}""")
-          outputs = json.loads(r"""${{ toJson(needs.upgrade-staging-hubs.outputs) }}""")
+          prod_jobs = json.loads(r"""${{ needs.filter-failed-support-jobs.outputs.prod-jobs }}""")
+          outputs = json.loads(r"""${{ toJson(needs.upgrade-staging.outputs) }}""")
 
           try:
               filtered_prod_jobs = []
@@ -574,11 +574,11 @@ jobs:
                   if len(failed_jobs) == 0:
                       filtered_prod_jobs.append(prod_job)
           except KeyError:
-              print(f"The {cluster_name} cluster wasn't found in the `upgrade-staging-hubs.outputs` list. Please add it before continuing!")
+              print(f"The {cluster_name} cluster wasn't found in the `upgrade-staging.outputs` list. Please add it before continuing!")
 
           output_file = os.getenv("GITHUB_OUTPUT")
           with open(output_file, "a") as f:
-              f.write(f"prod-hub-matrix-jobs={json.dumps(filtered_prod_jobs)}")
+              f.write(f"prod-jobs={json.dumps(filtered_prod_jobs)}")
 
       # https://github.com/ravsamhq/notify-slack-action
       # Needs to be added per job
@@ -600,22 +600,22 @@ jobs:
 
   # This job upgrades production hubs on clusters in parallel, if required. This
   # job needs the `filter-failed-staging-jobs` to have completed to provide its
-  # output `filtered-prod-hub-matrix-jobs`. It is a list of dictionaries with
+  # output `filtered-prod-jobs`. It is a list of dictionaries with
   # the keys cluster_name, provider, and hub_name for each production hub that
-  # requires an upgrade and didn't have a failed upgrade-staging-hub job
+  # requires an upgrade and didn't have a failed upgrade-staging job
   # run as part of this workflow.
-  upgrade-prod-hubs:
+  upgrade-prod:
     runs-on: ubuntu-latest
     needs: [filter-failed-staging-jobs]
     if: |
       !cancelled() &&
       (github.event_name == 'push' && contains(github.ref, 'main')) &&
       needs.filter-failed-staging-jobs.result == 'success' &&
-      needs.filter-failed-staging-jobs.outputs.prod-hub-matrix-jobs != '[]'
+      needs.filter-failed-staging-jobs.outputs.prod-jobs != '[]'
     strategy:
       fail-fast: false
       matrix:
-        jobs: ${{ fromJson(needs.filter-failed-staging-jobs.outputs.prod-hub-matrix-jobs) }}
+        jobs: ${{ fromJson(needs.filter-failed-staging-jobs.outputs.prod-jobs) }}
 
     steps:
       - uses: actions/checkout@v4
