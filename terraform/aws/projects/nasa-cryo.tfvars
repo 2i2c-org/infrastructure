@@ -4,7 +4,6 @@ cluster_nodes_location = "us-west-2a"
 
 enable_aws_ce_grafana_backend_iam = true
 
-disable_cluster_wide_filestore = false
 ebs_volumes = {
   "staging" = {
     size        = 1
