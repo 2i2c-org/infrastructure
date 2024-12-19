@@ -365,24 +365,24 @@ jobs:
   # matrix.jobs definition,
   # e.g. matrix.jobs: ${{ needs.filter-failed-suport-jobs.outputs.staging-jobs || needs.generate-jobs.outputs.staging-jobs }};
   # therefore, we need to do this logic in another job and pass it along.
-  reset-matrices:
+  reset-jobs:
     runs-on: ubuntu-latest
-    needs: [generate-jobs, filter-failed-support-jobs]
+    needs: [generate-jobs, filter-failed-support]
     if: |
       !cancelled()
     outputs:
-      staging-jobs: ${{ steps.reset-matrices.outputs.staging-jobs }}
-      prod-jobs: ${{ steps.reset-matrices.outputs.prod-jobs }}
+      staging-jobs: ${{ steps.reset-jobs.outputs.staging-jobs }}
+      prod-jobs: ${{ steps.reset-jobs.outputs.prod-jobs }}
     steps:
-      - id: reset-matrices
+      - id: reset-jobs
         shell: python
         run: |
           import os
           import json
 
           try:
-              staging_jobs = json.loads(r"""${{ needs.filter-failed-support-jobs.outputs.staging-jobs }}""")
-              prod_jobs = json.loads(r"""${{ needs.filter-failed-support-jobs.outputs.prod-jobs }}""")
+              staging_jobs = json.loads(r"""${{ needs.filter-failed-support.outputs.staging-jobs }}""")
+              prod_jobs = json.loads(r"""${{ needs.filter-failed-support.outputs.prod-jobs }}""")
           except KeyError:
               staging_jobs = json.loads(r"""${{ needs.generate-jobs.outputs.staging-jobs }}""")
               prod_jobs = json.loads(r"""${{ needs.generate-jobs.outputs.prod-jobs }}""")
@@ -417,16 +417,16 @@ jobs:
   # support-upgrade job.
   upgrade-staging:
     runs-on: ubuntu-latest
-    needs: [reset-matrices]
+    needs: [reset-jobs]
     if: |
       !cancelled() &&
       (github.event_name == 'push' && contains(github.ref, 'main')) &&
-      needs.reset-matrices.result == 'success' &&
-      needs.reset-matrices.outputs.staging-jobs != '[]'
+      needs.reset-jobs.result == 'success' &&
+      needs.reset-jobs.outputs.staging-jobs != '[]'
     strategy:
       fail-fast: false
       matrix:
-        jobs: ${{ fromJson(needs.reset-matrices.outputs.staging-jobs) }}
+        jobs: ${{ fromJson(needs.reset-jobs.outputs.staging-jobs) }}
 
     # We declare outputs indicating the job failed status of a specific job
     # variation. We are currently required to do this in a hardcoded fashion,
@@ -523,18 +523,16 @@ jobs:
 
   # This job further reduces prod-jobs by filtering out any prod hub deployment
   # to a cluster with a failed staging hub job.
-  filter-failed-staging-jobs:
+  filter-failed-staging:
     runs-on: ubuntu-latest
-    needs: [reset-matrices, upgrade-staging]
+    needs: [reset-jobs, upgrade-staging]
     if: |
       !cancelled() &&
       (github.event_name == 'push' && contains(github.ref, 'main')) &&
-      needs.reset-matrices.result == 'success' &&
-      needs.reset-matrices.outputs.prod-jobs != '[]'
-
+      needs.reset-jobs.result == 'success' &&
+      needs.reset-jobs.outputs.prod-jobs != '[]'
     outputs:
       prod-jobs: ${{ steps.filter-jobs.outputs.filtered-prod-jobs }}
-
     steps:
       # This Python script filters out any prod hub deployment job from running
       # later based on if its part of a cluster where staging hub upgrade
@@ -547,7 +545,7 @@ jobs:
           import os
           import json
 
-          prod_jobs = json.loads(r"""${{ needs.filter-failed-support-jobs.outputs.prod-jobs }}""")
+          prod_jobs = json.loads(r"""${{ needs.reset-jobs.outputs.prod-jobs }}""")
           outputs = json.loads(r"""${{ toJson(needs.upgrade-staging.outputs) }}""")
 
           try:
@@ -594,16 +592,16 @@ jobs:
   # didn't have a failed staging job.
   upgrade-prod:
     runs-on: ubuntu-latest
-    needs: [filter-failed-staging-jobs]
+    needs: [filter-failed-staging]
     if: |
       !cancelled() &&
       (github.event_name == 'push' && contains(github.ref, 'main')) &&
-      needs.filter-failed-staging-jobs.result == 'success' &&
-      needs.filter-failed-staging-jobs.outputs.prod-jobs != '[]'
+      needs.filter-failed-staging.result == 'success' &&
+      needs.filter-failed-staging.outputs.prod-jobs != '[]'
     strategy:
       fail-fast: false
       matrix:
-        jobs: ${{ fromJson(needs.filter-failed-staging-jobs.outputs.prod-jobs) }}
+        jobs: ${{ fromJson(needs.filter-failed-staging.outputs.prod-jobs) }}
 
     steps:
       - uses: actions/checkout@v4
