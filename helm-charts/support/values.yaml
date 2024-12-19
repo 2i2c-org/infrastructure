@@ -461,6 +461,20 @@ jupyterhub-cost-monitoring:
     cpu: 5m
     memory: 100Mi
 
+dcgm-exporter:
+  serviceMonitor:
+    enabled: false
+  podAnnotations:
+    prometheus.io/path: "/metrics"
+    prometheus.io/port: "12121"
+    prometheus.io/scrape: "true"
+  tolerations:
+  - key: nvidia.com/gpu
+    operator: Equal
+    value: present
+    effect: NoSchedule
+
+
 # Configuration of templates provided directly by this chart
 # -------------------------------------------------------------------------------
 #
