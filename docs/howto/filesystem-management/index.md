@@ -7,4 +7,5 @@ This documentation covers tasks related to managing filesystems.
 :maxdepth: 2
 filesystem-backups/index
 decrease-size-gcp-filestore
+increase-size-aws-ebs
 ```
