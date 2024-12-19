@@ -412,8 +412,7 @@ jupyterhub:
         - yuvipanda@2i2c.org
     homepage:
       gitRepoUrl: "https://github.com/2i2c-org/default-hub-homepage"
-      # TODO: make main the default branch in the repo above
-      gitRepoBranch: "master"
+      gitRepoBranch: "bootstrap5"
       templateVars:
         enabled: true
     jupyterhubConfigurator:
