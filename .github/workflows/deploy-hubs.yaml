@@ -369,7 +369,11 @@ jobs:
     runs-on: ubuntu-latest
     needs: [generate-jobs, filter-failed-support]
     if: |
-      !cancelled()
+      !cancelled() &&
+      (github.event_name == 'push' && contains(github.ref, 'main')) &&
+      needs.generate-jobs.result == 'success' &&
+      needs.generate-jobs.outputs.staging-jobs != '[]' &&
+      needs.generate-jobs.outputs.prod-jobs != '[]'
     outputs:
       staging-jobs: ${{ steps.reset-jobs.outputs.staging-jobs }}
       prod-jobs: ${{ steps.reset-jobs.outputs.prod-jobs }}
