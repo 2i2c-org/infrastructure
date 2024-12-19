@@ -15,6 +15,7 @@ on:
       - "!deployer/commands/generate/resource_allocation/**"
       - requirements.txt
       - .github/actions/setup-deploy/**
+      - .github/workflows/deploy-hubs.yaml
       - helm-charts/**
       - config/clusters/**
       # Exclude the template configuration files
@@ -37,6 +38,7 @@ on:
       - "!deployer/commands/generate/resource_allocation/**"
       - requirements.txt
       - .github/actions/setup-deploy/**
+      - .github/workflows/deploy-hubs.yaml
       - helm-charts/**
       - config/clusters/**
       # Exclude the template configuration files
