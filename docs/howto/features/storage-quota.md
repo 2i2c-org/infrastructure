@@ -138,6 +138,62 @@ deployer deploy <cluster_name> <hub_name>
 
 Once this is deployed, the hub will automatically enforce the storage quota for each user. If a user's home directory exceeds the quota, the user's pod may not be able to start successfully.
 
+## Enabling alerting through Prometheus Alertmanager
+
+Once we have enabled storage quotas, we want to be alerted when the disk usage of the NFS server exceeds a certain threshold so that we can take appropriate action.
+
+To do this, we need to create a Prometheus rule that will alert us when the disk usage of the NFS server exceeds a certain threshold using Alertmanager. 
+
+First, we need to enable Alertmanager in the hub's support values file (for example, [here's the one for the `nasa-veda` cluster](https://github.com/2i2c-org/infrastructure/blob/main/config/clusters/nasa-veda/support.values.yaml)).
+
+```yaml
+prometheus:
+  alertmanager:
+    enabled: true
+```
+
+Then, we need to create a Prometheus rule that will alert us when the disk usage of the NFS server exceeds a certain threshold. For example, to alert us when the disk usage of the NFS server exceeds 90% of the total disk size, we would add the following to the hub's support values file:
+
+```yaml
+prometheus:
+  serverFiles:
+    alerting_rules.yml:
+      groups:
+        - name: <cluster_name> jupyterhub-home-nfs EBS volume full
+          rules:
+            - alert: jupyterhub-home-nfs-ebs-full
+              expr: node_filesystem_avail_bytes{mountpoint="/shared-volume", component="shared-volume-metrics"} / node_filesystem_size_bytes{mountpoint="/shared-volume", component="shared-volume-metrics"} < 0.1
+              for: 15m
+              labels:
+                severity: critical
+                channel: pagerduty
+                cluster: <cluster_name>
+              annotations:
+                summary: "jupyterhub-home-nfs EBS volume full in namespace {{ $labels.namespace }}"
+```
+
+And finally, we need to configure Alertmanager to send alerts to PagerDuty.
+
+```yaml
+prometheus:
+  alertmanager:
+    enabled: true
+    config:
+      route:
+        group_wait: 10s
+        group_interval: 5m
+        receiver: pagerduty
+        repeat_interval: 3h
+        routes:
+          - receiver: pagerduty
+            match:
+              channel: pagerduty
+```
+
+## Increasing the size of the volume used by the NFS server
+
+If the volume used by the NFS server is close to being full, we may need to increase the size of the volume. This can be done by following the instructions in the [Increase the size of an AWS EBS volume](howto:increase-size-aws-ebs) guide.
+
 ## Troubleshooting
 
 ### Checking the NFS server is running properly
