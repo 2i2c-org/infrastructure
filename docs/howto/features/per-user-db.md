@@ -68,7 +68,7 @@ jupyterhub:
         volumeMounts:
           - name: home
             mountPath: /home/jovyan
-            subPath: "{username}"
+            subPath: "{escaped_username}"
           # Mounted without readonly attribute here,
           # so we can chown it appropriately
           - name: home
@@ -132,7 +132,7 @@ jupyterhub:
           # that load data into the db from disk work
           - name: home
             mountPath: /home/jovyan
-            subPath: "{username}"
+            subPath: "{escaped_username}"
           - name: postgres-db
             mountPath: /var/lib/postgresql/data
             # postgres recommends against mounting a volume directly here
