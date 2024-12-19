@@ -39,6 +39,7 @@ def discover_modified_common_files(modified_paths):
         "requirements.txt",
         # Filepath to local GitHub Action that sets up clusters for deploy
         ".github/actions/setup-deploy/*",
+        ".github/workflows/deploy-hubs.yaml",
         # Filepaths related to helm chart infrastructure
         "helm-charts/basehub/*",
         "helm-charts/daskhub/*",
