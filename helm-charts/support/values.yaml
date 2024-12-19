@@ -502,11 +502,10 @@ dcgm-exporter:
     prometheus.io/port: "12121"
     prometheus.io/scrape: "true"
   tolerations:
-  - key: nvidia.com/gpu
-    operator: Equal
-    value: present
-    effect: NoSchedule
-
+    - key: nvidia.com/gpu
+      operator: Equal
+      value: present
+      effect: NoSchedule
 
 # Configuration of templates provided directly by this chart
 # -------------------------------------------------------------------------------
