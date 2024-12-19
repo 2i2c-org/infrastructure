@@ -1,12 +1,6 @@
 # This schema (a jsonschema in YAML format) is used to generate
 # values.schema.json which is, when available, used by the helm CLI for client
 # side validation by Helm of the chart's values before template rendering.
-#
-# We look to document everything we have default values for in values.yaml, but
-# we don't look to enforce the perfect validation logic within this file.
-#
-# ref: https://json-schema.org/learn/getting-started-step-by-step.html
-#
 $schema: http://json-schema.org/draft-07/schema#
 type: object
 additionalProperties: false
@@ -23,40 +17,34 @@ required:
   - aws-ce-grafana-backend
   - global
 properties:
-  # cluster-autoscaler is a dependent helm chart, we rely on its schema
-  # validation for values passed to it and are not imposing restrictions on them
-  # in this helm chart.
+  # We don't control validation of dependent charts here
   cluster-autoscaler:
     type: object
     additionalProperties: true
-  # ingress-nginx is a dependent helm chart, we rely on its schema validation
-  # for values passed to it and are not imposing restrictions on them in this
-  # helm chart.
   ingress-nginx:
     type: object
     additionalProperties: true
-  # prometheus is a dependent helm chart, we rely on its schema validation for
-  # values passed to it and are not imposing restrictions on them in this helm
-  # chart.
   prometheus:
     type: object
     additionalProperties: true
-  # grafana is a dependent helm chart, we rely on its schema validation for
-  # values passed to it and are not imposing restrictions on them in this helm
-  # chart.
   grafana:
     type: object
     additionalProperties: true
-  # aws-ce-grafana-backend is a dependent helm chart, we rely on its schema
-  # validation for values passed to it and are not imposing restrictions on them
-  # in this helm chart.
   aws-ce-grafana-backend:
     type: object
     additionalProperties: true
-  # Enables  https://github.com/yuvipanda/cryptnono/ to prevent cryptomining
   cryptnono:
     type: object
     additionalProperties: true
+  gcpFilestoreBackups:
+    type: object
+    additionalProperties: true
+  global:
+    type: object
+    additionalProperties: true
+
+  # These provide values for objects we create, so we validate their schema
+  # to the best of our ability.
   redirects:
     type: object
     additionalProperties: false
@@ -87,13 +75,6 @@ properties:
                 Relates to the HTTP Status code to use for the redirect.
 
                 Specify "redirect" for 302 (default), or "permanent" for 301.
-
-  # nvidiaDevicePlugin is _not a dependent helm chart_. It is values directly
-  # coupled with this helm chart and are influencing the rendering of templates
-  # we provide as part of this helm chart.
-  #
-  # Due to that, we maintain a strict schema here but not elsewhere.
-  #
   nvidiaDevicePlugin:
     type: object
     additionalProperties: false
@@ -111,11 +92,6 @@ properties:
 
   prometheusIngressAuthSecret:
     type: object
-    # prometheusIngressAuthSecret is _not a dependent helm chart_. It is values directly
-    # coupled with this helm chart and are influencing the rendering of templates
-    # we provide as part of this helm chart.
-    #
-    # Due to that, we maintain a strict schema here but not elsewhere.
     additionalProperties: false
     required:
       - enabled
@@ -173,11 +149,3 @@ properties:
             type: string
             description: |
               Name of the StorageClass to create
-  # Enables https://github.com/2i2c-org/gcp-filestore-backups to regularly backup
-  # GCP Filestore instances
-  gcpFilestoreBackups:
-    type: object
-    additionalProperties: true
-  global:
-    type: object
-    additionalProperties: true
