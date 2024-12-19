@@ -336,7 +336,7 @@ jobs:
               filtered_prod_jobs = [
                   prod_job
                   for prod_job in prod_jobs
-                  if f"failure_{staging_job['cluster_name'].replace('.', '-')}" in outputs.keys()
+                  if f"failure_{prod_job['cluster_name'].replace('.', '-')}" in outputs.keys()
                   and outputs[f"failure_{prod_job['cluster_name'].replace('.', '-')}"] != "true"
               ]
           except KeyError as ke:
