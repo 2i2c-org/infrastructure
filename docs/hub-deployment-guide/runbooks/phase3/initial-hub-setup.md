@@ -162,13 +162,13 @@ All of the following steps must be followed in order to consider phase 3.1 compl
    If Dask gateway will be needed, then choose a `basehub`, and follow the guide on
    [how to enable dask-gateway on an existing hub](howto:features:daskhub).
 
-1. **Add the new cluster to CI/CD**
+1. **Add the new cluster and staging hub to CI/CD**
 
    ```{important}
-   This step is only applicable if the hub is the first hub being deployed to a cluster.
+   This step is only applicable if the hub is the first hub being deployed to a cluster **or** has `staging` in it's name.
    ```
 
-   To ensure the new cluster and its hubs are appropriately handled by our CI/CD system, please add it as an entry in the following places:
+   To ensure the new cluster and its hubs are appropriately handled by our CI/CD system, please add it as an entry in the following places in the [`deploy-hubs.yaml`](https://github.com/2i2c-org/infrastructure/blob/HEAD/.github/workflows/deploy-hubs.yaml) GitHub Actions workflow file:
 
       - The [`deploy-hubs.yaml`](https://github.com/2i2c-org/infrastructure/blob/008ae2c1deb3f5b97d0c334ed124fa090df1f0c6/.github/workflows/deploy-hubs.yaml#L121) GitHub workflow has a job named [`upgrade-support-and-staging`](https://github.com/2i2c-org/infrastructure/blob/18f5a4f8f39ed98c2f5c99091ae9f19a1075c988/.github/workflows/deploy-hubs.yaml#L128-L166) that needs to list of clusters being automatically deployed by our CI/CD system. Add an entry for the new cluster here.
 
