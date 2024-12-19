@@ -1,4 +1,4 @@
-name: cluster1
+name: cluster3
 provider: gcp
 support:
   helm_chart_values_files:
