@@ -190,6 +190,9 @@ prometheus:
               channel: pagerduty
 ```
 
+## Increasing the size of the volume used by the NFS server
+
+If the volume used by the NFS server is close to being full, we may need to increase the size of the volume. This can be done by following the instructions in the [Increase the size of an AWS EBS volume](howto:increase-size-aws-ebs) guide.
 
 ## Troubleshooting
 
