@@ -45,38 +45,23 @@ on:
       - "!terraform/gcp/projects/cluster.tfvars.template"
       - "!eksctl/template.jsonnet"
 
-# Queue triggered executions of this workflow stemming from pushes to avoid
-# deployment conflicts.
-#
-# By using a different concurrency groups for pull requests and pushes, we
-# reduce the risk of cancelling a queued but not started workflow as discussed
-# in https://github.com/2i2c-org/infrastructure/issues/3214.
-#
-# github.head_ref is used to create PR unique concurrency groups, and for
-# workflow executions not triggered by a PR we get a dedicated group.
-#
 # ref: https://docs.github.com/en/actions/using-jobs/using-concurrency
-#
 concurrency:
   group: ${{ github.workflow }}-${{ github.head_ref || 'not-a-pr' }}
   cancel-in-progress: false
 
-# This environment variable triggers the deployer to colourise print statements in the
-# GitHub Actions logs for easy reading
 env:
   TERM: xterm
-  # This may not be required any more, and it may depend on the kubectl version
-  # we use etc as well. For now, we have it added to avoid issues.
   USE_GKE_GCLOUD_AUTH_PLUGIN: "True"
 
 jobs:
   # This job runs in Pull Requests and on pushes to the default branch. It identifies
-  # which files have been added or modified by recent GitHub activity and parsed a list
-  # to the `deployer generate helm-upgrade-job`s command of the deployer. This command generates
+  # which files have been added or modified by recent GitHub activity and parses a list
+  # to the `deployer generate helm-upgrade-job` command of the deployer. This command generates
   # three lists of dictionaries, which can be read by GitHub Actions as matrix jobs. The
   # first set of jobs describes which clusters need their support chart upgraded; the second set
   # of jobs describe which staging hubs require upgrading; and the third set of jobs describe
-  # which production hubs require upgrading. These lists are set as job outputs via GITHUB_ENV
+  # which production hubs require upgrading. These lists are set as job outputs via GITHUB_OUTPUT
   # to be consumed by the later jobs. They are also pretty-printed in a human-readable format
   # to the logs, and converted into Markdown tables for posting into GitHub comments.
   generate-jobs:
@@ -101,9 +86,6 @@ jobs:
         uses: actions/cache@v4
         with:
           path: ~/.cache/pip
-          # key determines if we define or reuse an existing cache or not. Our
-          # key ensure we cache within a workflow run and its attempts, but not
-          # between workflow runs.
           key: "${{ github.run_id }}"
 
       - name: Install deployer script's Python dependencies
@@ -164,8 +146,7 @@ jobs:
               - added|modified: config/clusters/**
 
       # This step will create a comment-body.txt file containing the jobs to be run in a
-      # Markdown table format to be posted on a Pull Request, if this job is triggered
-      # by one
+      # Markdown table format to be posted on a Pull Request
       - name: Generate matrix jobs
         id: generate-jobs
         run: |
@@ -213,8 +194,7 @@ jobs:
 
   # This job upgrades the support chart for clusters in parallel, if those upgrades
   # are required. This job needs the `generate-jobs` job to have completed and set
-  # an output to the `support-jobs` variable name. It's inputs are a list of
-  # dictionaries with the keys cluster_name and provider for each cluster that requires it.
+  # an output to the `support-jobs` variable name.
   upgrade-support:
     runs-on: ubuntu-latest
     needs: [generate-jobs]
@@ -223,9 +203,6 @@ jobs:
     # variation. We are currently required to do this in a hardcoded fashion,
     # see this post for feature requests for this to be improved:
     # https://github.community/t/bug-jobs-output-should-return-a-list-for-a-matrix-job/128626/32?u=consideratio
-    #
-    # Warning: names can include alphanumerics, '-', and '_', but not '.', so
-    #            we replace '.' for '-' in cluster names.
     #
     # If you are adding a new cluster, please remember to list it here!
     outputs:
@@ -314,10 +291,9 @@ jobs:
         env:
           SLACK_WEBHOOK_URL: ${{ secrets.SLACK_GHA_FAILURES_WEBHOOK_URL }}
 
-  # This job reduces the initially planned staging-jobs and
-  # prod-jobs deployments by filtering out any deployment to a cluster
-  # with a failed support job.
-  filter-failed-support-jobs:
+  # This job reduces the initially planned staging-jobs and prod-jobs deployments
+  # by filtering out any deployment to a cluster with a failed support job.
+  filter-failed-support:
     runs-on: ubuntu-latest
     needs: [generate-jobs, upgrade-support]
     if: |
@@ -334,8 +310,7 @@ jobs:
     steps:
       # This Python script filters out any staging and/or prod hub deployment job
       # from running later based on if its part of a cluster where support upgrade
-      # just failed. Data is injected to the script before its executed via
-      # string literals as rendered GitHub workflow expressions.
+      # just failed.
       - name: Filter staging and prod deploy jobs to run based on failures in support
         id: filter-jobs
         shell: python
@@ -386,9 +361,9 @@ jobs:
           SLACK_WEBHOOK_URL: ${{ secrets.SLACK_GHA_FAILURES_WEBHOOK_URL }}
 
   # We need to run this job because if there are no support jobs executed, then
-  # filter-failed-support jobs won't produce an output. We cannot use logic in
-  # the matrix.jobs definition,
-  # e.g. matrix.jobs: ${{ needs.filter-failed-suport-jobs.outputs.staging-jobs  || needs.generate-jobs.outputs.staging-jobs }},
+  # filter-failed-support won't produce an output. We cannot use logic in a
+  # matrix.jobs definition,
+  # e.g. matrix.jobs: ${{ needs.filter-failed-suport-jobs.outputs.staging-jobs || needs.generate-jobs.outputs.staging-jobs }};
   # therefore, we need to do this logic in another job and pass it along.
   reset-matrices:
     runs-on: ubuntu-latest
@@ -436,11 +411,10 @@ jobs:
           SLACK_WEBHOOK_URL: ${{ secrets.SLACK_GHA_FAILURES_WEBHOOK_URL }}
 
   # This job upgrades staging hubs on clusters in parallel, if required. This
-  # job needs the `reset-matrices` to have completed to provide its
-  # output `staging-jobs`. It is a list of dictionaries with
-  # the keys cluster_name, provider, and hub_name for each staging hub that
-  # requires an upgrade and didn't have a failed support-upgrade job
-  # run as part of this workflow.
+  # job needs the `reset-jobs` to have completed to provide its output `staging-jobs`.
+  # It is a list of dictionaries with the keys cluster_name, provider, and hub_name
+  # for each staging hub that requires an upgrade and didn't have a failed
+  # support-upgrade job.
   upgrade-staging:
     runs-on: ubuntu-latest
     needs: [reset-matrices]
@@ -459,10 +433,7 @@ jobs:
     # see this post for feature requests for this to be improved:
     # https://github.community/t/bug-jobs-output-should-return-a-list-for-a-matrix-job/128626/32?u=consideratio
     #
-    # Warning: names can include alphanumerics, '-', and '_', but not '.', so
-    #            we replace '.' for '-' in cluster names.
-    #
-    # If you are adding a new cluster, please remember to list it here!
+    # If you are adding a new cluster/staging hub, please remember to list it here!
     outputs:
       failure_2i2c-aws-us: "${{ env.failure_2i2c-aws-us }}"
       failure_2i2c-uk: "${{ env.failure_2i2c-uk }}"
@@ -550,8 +521,8 @@ jobs:
         env:
           SLACK_WEBHOOK_URL: ${{ secrets.SLACK_GHA_FAILURES_WEBHOOK_URL }}
 
-  # This job further reduces the filtered-prod-jobs and deployments by
-  # filtering out any deployment to a cluster with a failed staging hub job.
+  # This job further reduces prod-jobs by filtering out any prod hub deployment
+  # to a cluster with a failed staging hub job.
   filter-failed-staging-jobs:
     runs-on: ubuntu-latest
     needs: [reset-matrices, upgrade-staging]
@@ -617,11 +588,10 @@ jobs:
           SLACK_WEBHOOK_URL: ${{ secrets.SLACK_GHA_FAILURES_WEBHOOK_URL }}
 
   # This job upgrades production hubs on clusters in parallel, if required. This
-  # job needs the `filter-failed-staging-jobs` to have completed to provide its
-  # output `filtered-prod-jobs`. It is a list of dictionaries with
-  # the keys cluster_name, provider, and hub_name for each production hub that
-  # requires an upgrade and didn't have a failed upgrade-staging job
-  # run as part of this workflow.
+  # job needs the `filter-failed-staging` to have completed to provide its
+  # output `prod-jobs`. It is a list of dictionaries with the keys cluster_name,
+  # provider, and hub_name for each production hub that requires an upgrade and
+  # didn't have a failed staging job.
   upgrade-prod:
     runs-on: ubuntu-latest
     needs: [filter-failed-staging-jobs]
