@@ -16,12 +16,6 @@ charts:
         valuesPath: jupyterhub.hub.image
         buildArgs:
           REQUIREMENTS_FILE: requirements.txt
-      dynamic-image-building-experiment:
-        imageName: quay.io/2i2c/dynamic-image-building-experiment
-        buildArgs:
-          REQUIREMENTS_FILE: dynamic-image-building-requirements.txt
-        contextPath: images/hub
-        dockerfilePath: images/hub/Dockerfile
       pkce-experiment:
         imageName: quay.io/2i2c/pkce-experiment
         buildArgs:
