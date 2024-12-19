@@ -328,13 +328,15 @@ jobs:
               filtered_staging_jobs = [
                   staging_job
                   for staging_job in staging_jobs
-                  if outputs[f"failure_{staging_job['cluster_name'].replace('.', '-')}"] != "true"
+                  if f"failure_{staging_job['cluster_name'].replace('.', '-')}" in staging_jobs.keys()
+                  and outputs[f"failure_{staging_job['cluster_name'].replace('.', '-')}"] != "true"
               ]
 
               filtered_prod_jobs = [
                   prod_job
                   for prod_job in prod_jobs
-                  if outputs[f"failure_{prod_job['cluster_name'].replace('.', '-')}"] != "true"
+                  if f"failure_{staging_job['cluster_name'].replace('.', '-')}" in staging_jobs.keys()
+                  and outputs[f"failure_{prod_job['cluster_name'].replace('.', '-')}"] != "true"
               ]
           except KeyError as ke:
             print(f"A cluster wasn't found in the `upgrade-support.outputs` list. Please add it before continuing! {repr(ke)}")
