@@ -37,6 +37,15 @@ def root_homes(
     extra_nfs_mount_path: str = typer.Option(
         None, help="Mount point for the extra NFS share"
     ),
+    restore_volume_id: str = typer.Option(
+        None,
+        help="ID of volume to mount (e.g. vol-1234567890abcdef0) "
+        "to restore data from",
+    ),
+    restore_mount_path: str = typer.Option(
+        "/restore-volume", help="Mount point for the volume"
+    ),
+    restore_volume_size: str = typer.Option("100Gi", help="Size of the volume"),
 ):
     """
     Pop an interactive shell with the entire nfs file system of the given cluster mounted on /root-homes
@@ -81,6 +90,57 @@ def root_homes(
             "mountPath": "/root-homes",
         }
     ]
+
+    if restore_volume_id:
+        # Create PV for volume
+        pv_name = f"restore-{restore_volume_id}"
+        pv = {
+            "apiVersion": "v1",
+            "kind": "PersistentVolume",
+            "metadata": {"name": pv_name},
+            "spec": {
+                "capacity": {"storage": restore_volume_size},
+                "volumeMode": "Filesystem",
+                "accessModes": ["ReadWriteOnce"],
+                "persistentVolumeReclaimPolicy": "Retain",
+                "storageClassName": "",
+                "csi": {
+                    "driver": "ebs.csi.aws.com",
+                    "fsType": "xfs",
+                    "volumeHandle": restore_volume_id,
+                },
+                "mountOptions": [
+                    "rw",
+                    "relatime",
+                    "nouuid",
+                    "attr2",
+                    "inode64",
+                    "logbufs=8",
+                    "logbsize=32k",
+                    "pquota",
+                ],
+            },
+        }
+
+        # Create PVC to bind to the PV
+        pvc = {
+            "apiVersion": "v1",
+            "kind": "PersistentVolumeClaim",
+            "metadata": {"name": pv_name, "namespace": hub_name},
+            "spec": {
+                "accessModes": ["ReadWriteOnce"],
+                "volumeName": pv_name,
+                "storageClassName": "",
+                "resources": {"requests": {"storage": restore_volume_size}},
+            },
+        }
+
+        volumes.append(
+            {"name": "restore-volume", "persistentVolumeClaim": {"claimName": pv_name}}
+        )
+        volume_mounts.append(
+            {"name": "restore-volume", "mountPath": restore_mount_path}
+        )
 
     if extra_nfs_server and extra_nfs_base_path and extra_nfs_mount_path:
         volumes.append(
@@ -140,6 +200,17 @@ def root_homes(
         tmpf.flush()
 
         with cluster.auth():
+            # If we have an volume to restore from, create PV and PVC first
+            if restore_volume_id:
+                with tempfile.NamedTemporaryFile(mode="w", suffix=".json") as pv_tmpf:
+                    json.dump(pv, pv_tmpf)
+                    pv_tmpf.flush()
+                    subprocess.check_call(["kubectl", "create", "-f", pv_tmpf.name])
+
+            with tempfile.NamedTemporaryFile(mode="w", suffix=".json") as pvc_tmpf:
+                json.dump(pvc, pvc_tmpf)
+                pvc_tmpf.flush()
+                subprocess.check_call(["kubectl", "create", "-f", pvc_tmpf.name])
             try:
                 # We are splitting the previous `kubectl run` command into a
                 # create and exec couplet, because using run meant that the bash
@@ -152,11 +223,32 @@ def root_homes(
                 #
                 # Ask api-server to create a pod
                 subprocess.check_call(["kubectl", "create", "-f", tmpf.name])
+
+                # wait for the pod to be ready
+                print_colour("Waiting for the pod to be ready...", "yellow")
+                subprocess.check_call(
+                    [
+                        "kubectl",
+                        "wait",
+                        "-n",
+                        hub_name,
+                        f"pod/{pod_name}",
+                        "--for=condition=Ready",
+                        "--timeout=90s",
+                    ]
+                )
+
                 # Exec into pod
                 subprocess.check_call(exec_cmd)
             finally:
                 if not persist:
                     delete_pod(pod_name, hub_name)
+                    # Clean up PV and PVC if we created them
+                    if restore_volume_id:
+                        subprocess.check_call(
+                            ["kubectl", "-n", hub_name, "delete", "pvc", pv_name]
+                        )
+                        subprocess.check_call(["kubectl", "delete", "pv", pv_name])
 
 
 @exec_app.command()
