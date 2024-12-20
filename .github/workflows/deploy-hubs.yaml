@@ -303,11 +303,12 @@ jobs:
       !cancelled() &&
       (github.event_name == 'push' && contains(github.ref, 'main')) &&
       needs.generate-jobs.result == 'success' &&
+      needs.generate-jobs.outputs.support-jobs != '[]' &&
       needs.generate-jobs.outputs.staging-jobs != '[]' &&
       needs.generate-jobs.outputs.prod-jobs != '[]'
 
     outputs:
-      staging-jobs: ${{ steps.filter-jobs.outputs.filtered-staging-jobs}}
+      staging-jobs: ${{ steps.filter-jobs.outputs.filtered-staging-jobs }}
       prod-jobs: ${{ steps.filter-jobs.outputs.filtered-prod-jobs }}
 
     steps:
