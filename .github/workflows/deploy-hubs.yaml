@@ -579,7 +579,7 @@ jobs:
 
           output_file = os.getenv("GITHUB_OUTPUT")
           with open(output_file, "a") as f:
-              f.write(f"prod-jobs={json.dumps(filtered_prod_jobs)}")
+              f.write(f"filtered-prod-jobs={json.dumps(filtered_prod_jobs)}")
 
       # https://github.com/ravsamhq/notify-slack-action
       # Needs to be added per job
