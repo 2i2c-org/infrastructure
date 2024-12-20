@@ -200,18 +200,24 @@ def root_homes(
         tmpf.flush()
 
         with cluster.auth():
-            # If we have an volume to restore from, create PV and PVC first
-            if restore_volume_id:
-                with tempfile.NamedTemporaryFile(mode="w", suffix=".json") as pv_tmpf:
-                    json.dump(pv, pv_tmpf)
-                    pv_tmpf.flush()
-                    subprocess.check_call(["kubectl", "create", "-f", pv_tmpf.name])
-
-            with tempfile.NamedTemporaryFile(mode="w", suffix=".json") as pvc_tmpf:
-                json.dump(pvc, pvc_tmpf)
-                pvc_tmpf.flush()
-                subprocess.check_call(["kubectl", "create", "-f", pvc_tmpf.name])
             try:
+                # If we have an volume to restore from, create PV and PVC first
+                if restore_volume_id:
+                    with tempfile.NamedTemporaryFile(
+                        mode="w", suffix=".json"
+                    ) as pv_tmpf:
+                        json.dump(pv, pv_tmpf)
+                        pv_tmpf.flush()
+                        subprocess.check_call(["kubectl", "create", "-f", pv_tmpf.name])
+
+                    with tempfile.NamedTemporaryFile(
+                        mode="w", suffix=".json"
+                    ) as pvc_tmpf:
+                        json.dump(pvc, pvc_tmpf)
+                        pvc_tmpf.flush()
+                        subprocess.check_call(
+                            ["kubectl", "create", "-f", pvc_tmpf.name]
+                        )
                 # We are splitting the previous `kubectl run` command into a
                 # create and exec couplet, because using run meant that the bash
                 # process we start would be assigned PID 1. This is a 'special'
