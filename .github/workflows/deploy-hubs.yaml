@@ -15,7 +15,6 @@ on:
       - "!deployer/commands/generate/resource_allocation/**"
       - requirements.txt
       - .github/actions/setup-deploy/**
-      - .github/workflows/deploy-hubs.yaml
       - helm-charts/**
       - config/clusters/**
       # Exclude the template configuration files
@@ -38,7 +37,6 @@ on:
       - "!deployer/commands/generate/resource_allocation/**"
       - requirements.txt
       - .github/actions/setup-deploy/**
-      - .github/workflows/deploy-hubs.yaml
       - helm-charts/**
       - config/clusters/**
       # Exclude the template configuration files
@@ -142,7 +140,6 @@ jobs:
               - added|modified: deployer/**
               - added|modified: requirements.txt
               - added|modified: .github/actions/setup-deploy/**
-              - added|modified: .github/workflows/deploy-hubs.yaml
               - added|modified: helm-charts/basehub/**
               - added|modified: helm-charts/daskhub/**
               - added|modified: helm-charts/support/**
