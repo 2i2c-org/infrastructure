@@ -392,7 +392,7 @@ jobs:
           try:
               staging_jobs = json.loads(r"""${{ needs.filter-failed-support.outputs.staging-jobs }}""")
               prod_jobs = json.loads(r"""${{ needs.filter-failed-support.outputs.prod-jobs }}""")
-          except KeyError:
+          except json.decoder.JSONDecodeError:
               staging_jobs = json.loads(r"""${{ needs.generate-jobs.outputs.staging-jobs }}""")
               prod_jobs = json.loads(r"""${{ needs.generate-jobs.outputs.prod-jobs }}""")
 
