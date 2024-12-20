@@ -71,7 +71,11 @@ export HUB_NAME=<hub_name>
 You can regain access to the pod created for the data transfer using:
 
 ```bash
-kubectl --namespace $HUB_NAME attach -i ${CLUSTER_NAME}-root-home-shell
+# Creates a new bash process within the pod
+kubectl --namespace $HUB_NAME exec -it ${CLUSTER_NAME}-root-home-shell -- /bin/bash
+
+# Reattaches to the running screen process which is running the rsync process
+screen -r
 ```
 
 ## Switching the NFS servers over
