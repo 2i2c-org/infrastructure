@@ -45,9 +45,6 @@ def root_homes(
     additional_volume_mount_path: str = typer.Option(
         "/additional-volume", help="Mount point for the volume"
     ),
-    additional_volume_size: str = typer.Option(
-        default="100Gi", help="Size of the volume"
-    ),
 ):
     """
     Pop an interactive shell with the entire nfs file system of the given cluster mounted on /root-homes
@@ -101,7 +98,12 @@ def root_homes(
             "kind": "PersistentVolume",
             "metadata": {"name": pv_name},
             "spec": {
-                "capacity": {"storage": additional_volume_size},
+                # We intentionally set the size to 1Mi to avoid having to
+                # specify and match the size of the underlying disk
+                # This doesn't trigger a resize of the underlying disk
+                # as long as the size matches the specified capacity
+                # of the PVC.
+                "capacity": {"storage": "1Mi"},
                 "volumeMode": "Filesystem",
                 "accessModes": ["ReadWriteOnce"],
                 "persistentVolumeReclaimPolicy": "Retain",
@@ -133,7 +135,12 @@ def root_homes(
                 "accessModes": ["ReadWriteOnce"],
                 "volumeName": pv_name,
                 "storageClassName": "",
-                "resources": {"requests": {"storage": "120Gi"}},
+                # We intentionally set the size to 1Mi to avoid having to
+                # specify and match the size of the underlying disk
+                # This doesn't trigger a resize of the underlying disk
+                # as long as the size matches the specified capacity
+                # of the PV.
+                "resources": {"requests": {"storage": "1Mi"}},
             },
         }
 
