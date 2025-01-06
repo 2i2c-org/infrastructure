@@ -28,28 +28,30 @@ def root_homes(
         "--persist",
         help="Do not automatically delete the pod after completing. Useful for long-running processes.",
     ),
-    extra_nfs_server: str = typer.Option(
-        None, help="IP address of an extra NFS server to mount"
+    additional_nfs_server: str = typer.Option(
+        None, help="IP address of an additional NFS server to mount"
     ),
-    extra_nfs_base_path: str = typer.Option(
-        None, help="Path of the extra NFS share to mount"
+    additional_nfs_base_path: str = typer.Option(
+        None, help="Path of the additional NFS share to mount"
     ),
-    extra_nfs_mount_path: str = typer.Option(
-        None, help="Mount point for the extra NFS share"
+    additional_nfs_mount_path: str = typer.Option(
+        None, help="Mount point for the additional NFS share"
     ),
-    restore_volume_id: str = typer.Option(
+    additional_volume_id: str = typer.Option(
         None,
-        help="ID of volume to mount (e.g. vol-1234567890abcdef0) "
-        "to restore data from",
+        help="ID of volume to mount (e.g. vol-1234567890abcdef0). "
+        "Only EBS volumes are supported for now.",
     ),
-    restore_mount_path: str = typer.Option(
-        "/restore-volume", help="Mount point for the volume"
+    additional_volume_mount_path: str = typer.Option(
+        "/additional-volume", help="Mount point for the volume"
     ),
-    restore_volume_size: str = typer.Option("100Gi", help="Size of the volume"),
+    additional_volume_size: str = typer.Option(
+        default="100Gi", help="Size of the volume"
+    ),
 ):
     """
     Pop an interactive shell with the entire nfs file system of the given cluster mounted on /root-homes
-    Optionally mount an extra NFS share if required (useful when migrating data to a new NFS server).
+    Optionally mount an additional NFS or EBS volume if required (useful when migrating data to a new NFS server).
     """
     config_file_path = find_absolute_path_to_cluster_file(cluster_name)
     with open(config_file_path) as f:
@@ -91,15 +93,15 @@ def root_homes(
         }
     ]
 
-    if restore_volume_id:
+    if additional_volume_id:
         # Create PV for volume
-        pv_name = f"restore-{restore_volume_id}"
+        pv_name = f"addtional-volume-{additional_volume_id}"
         pv = {
             "apiVersion": "v1",
             "kind": "PersistentVolume",
             "metadata": {"name": pv_name},
             "spec": {
-                "capacity": {"storage": restore_volume_size},
+                "capacity": {"storage": additional_volume_size},
                 "volumeMode": "Filesystem",
                 "accessModes": ["ReadWriteOnce"],
                 "persistentVolumeReclaimPolicy": "Retain",
@@ -107,7 +109,7 @@ def root_homes(
                 "csi": {
                     "driver": "ebs.csi.aws.com",
                     "fsType": "xfs",
-                    "volumeHandle": restore_volume_id,
+                    "volumeHandle": additional_volume_id,
                 },
                 "mountOptions": [
                     "rw",
@@ -131,28 +133,34 @@ def root_homes(
                 "accessModes": ["ReadWriteOnce"],
                 "volumeName": pv_name,
                 "storageClassName": "",
-                "resources": {"requests": {"storage": restore_volume_size}},
+                "resources": {"requests": {"storage": "120Gi"}},
             },
         }
 
         volumes.append(
-            {"name": "restore-volume", "persistentVolumeClaim": {"claimName": pv_name}}
+            {
+                "name": "additional-volume",
+                "persistentVolumeClaim": {"claimName": pv_name},
+            }
         )
         volume_mounts.append(
-            {"name": "restore-volume", "mountPath": restore_mount_path}
+            {"name": "additional-volume", "mountPath": additional_volume_mount_path}
         )
 
-    if extra_nfs_server and extra_nfs_base_path and extra_nfs_mount_path:
+    if additional_nfs_server and additional_nfs_base_path and additional_nfs_mount_path:
         volumes.append(
             {
-                "name": "extra-nfs",
-                "nfs": {"server": extra_nfs_server, "path": extra_nfs_base_path},
+                "name": "additional-nfs",
+                "nfs": {
+                    "server": additional_nfs_server,
+                    "path": additional_nfs_base_path,
+                },
             }
         )
         volume_mounts.append(
             {
-                "name": "extra-nfs",
-                "mountPath": extra_nfs_mount_path,
+                "name": "additional-nfs",
+                "mountPath": additional_nfs_mount_path,
             }
         )
 
@@ -201,8 +209,8 @@ def root_homes(
 
         with cluster.auth():
             try:
-                # If we have an volume to restore from, create PV and PVC first
-                if restore_volume_id:
+                # If we have an additional volume to mount, create PV and PVC first
+                if additional_volume_id:
                     with tempfile.NamedTemporaryFile(
                         mode="w", suffix=".json"
                     ) as pv_tmpf:
@@ -250,7 +258,7 @@ def root_homes(
                 if not persist:
                     delete_pod(pod_name, hub_name)
                     # Clean up PV and PVC if we created them
-                    if restore_volume_id:
+                    if additional_volume_id:
                         subprocess.check_call(
                             ["kubectl", "-n", hub_name, "delete", "pvc", pv_name]
                         )
