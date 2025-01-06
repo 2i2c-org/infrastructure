@@ -73,7 +73,7 @@ basehub:
           description: Python datascience environment
           default: true
           kubespawner_override:
-            image: openscapes/python:39dffde
+            image: openscapes/python:07980b9
           profile_options: &profile_options
             requests: &profile_options_resource_allocation
               display_name: Resource Allocation
