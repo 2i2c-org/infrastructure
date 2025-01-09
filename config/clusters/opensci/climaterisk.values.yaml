@@ -6,7 +6,7 @@ jupyterhub:
         secretName: https-auto-tls
   custom:
     homepage:
-      gitRepoBranch: "username-and-password-homepage"
+      gitRepoBranch: "bootstrap5-username-and-password-homepage"
       templateVars:
         org:
           name: ScienceCore:climaterisk
