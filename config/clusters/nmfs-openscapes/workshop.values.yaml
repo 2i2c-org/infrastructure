@@ -186,14 +186,3 @@ basehub:
                   cpu_limit: 15.695
                   node_selector:
                     node.kubernetes.io/instance-type: r5.4xlarge
-  dask-gateway:
-    gateway:
-      backend:
-        scheduler:
-          extraPodConfig:
-            nodeSelector:
-              2i2c/hub-name: workshop
-        worker:
-          extraPodConfig:
-            nodeSelector:
-              2i2c/hub-name: workshop
