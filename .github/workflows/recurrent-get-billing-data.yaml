@@ -51,7 +51,7 @@ jobs:
           NEXT_MONTH: ${{ env.next_month }}
           BODY: |
             ### Context
-            - Shared clusters [instructions](https://infrastructure.2i2c.org/howto/bill/#communities-in-shared-cloud-accounts) for performing this task
+            - Shared clusters [instructions](https://infrastructure.2i2c.org/howto/budgeting-billing/bill/#communities-in-shared-cloud-accounts) for performing this task
 
             ### Definition of Done
             - [ ] Billing data is collected according to instructions.
