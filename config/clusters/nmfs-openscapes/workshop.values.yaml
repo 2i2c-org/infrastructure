@@ -6,7 +6,7 @@ basehub:
       jupyterhubConfigurator:
         enabled: false
       homepage:
-        gitRepoBranch: "no-homepage-customizations"
+        gitRepoBranch: "username-and-password-homepage"
         templateVars:
           org:
             name: ""
