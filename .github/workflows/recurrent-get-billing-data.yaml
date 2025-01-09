@@ -32,7 +32,7 @@ jobs:
           NEXT_MONTH: ${{ env.next_month }}
           BODY: |
             ### Context
-            - Dedicated clusters [instructions](https://infrastructure.2i2c.org/howto/bill/#communities-with-dedicated-cloud-accounts)  
+            - Dedicated clusters [instructions](https://infrastructure.2i2c.org/howto/budgeting-billing/bill/#communities-with-dedicated-cloud-accounts)  
 
             ### Definition of Done
             - [ ] Billing data is collected according to instructions.
