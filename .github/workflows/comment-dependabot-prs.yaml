@@ -16,4 +16,4 @@ jobs:
         with:
           issue-number: ${{ github.event.number }}
           body: |
-            After merging this PR, remember to take the additional manual steps described in https://infrastructure.2i2c.org/en/latest/topic/infrastructure/hub-image.html#updating-the-hub-image
+            After merging this PR, remember to take the additional manual steps described in https://infrastructure.2i2c.org/howto/image-management/custom-jupyterhub-image/#how-to-build-and-push-a-new-version-of-the-available-hub-images
