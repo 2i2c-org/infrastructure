@@ -21,7 +21,13 @@ ebs_volumes = {
     type        = "gp3"
     name_suffix = "prod"
     tags        = { "2i2c:hub-name" : "prod" }
-  }
+  },
+  "workshop" = {
+    size        = 128
+    type        = "gp3"
+    name_suffix = "workshop"
+    tags        = { "2i2c:hub-name" : "workshop" }
+  },
 }
 
 user_buckets = {

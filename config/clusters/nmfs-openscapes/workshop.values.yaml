@@ -171,3 +171,11 @@ jupyterhub:
                 cpu_limit: 15.695
                 node_selector:
                   node.kubernetes.io/instance-type: r5.4xlarge
+
+jupyterhub-home-nfs:
+  eks:
+    enabled: true
+    volumeId: vol-07154b7def3b80b96
+  quotaEnforcer:
+    hardQuota: "4" # in GB
+    path: "/export/workshop"
