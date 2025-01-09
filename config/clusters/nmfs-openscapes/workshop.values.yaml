@@ -7,20 +7,6 @@ basehub:
         enabled: false
       homepage:
         gitRepoBranch: "username-and-password-homepage"
-        templateVars:
-          org:
-            name: ""
-            logo_url: ""
-            url: ""
-          designed_by:
-            name: ""
-            url: ""
-          operated_by:
-            name: ""
-            url: ""
-          funded_by:
-            name: ""
-            url: ""
     ingress:
       hosts: [workshop.nmfs-openscapes.2i2c.cloud]
       tls:
