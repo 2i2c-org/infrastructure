@@ -31,7 +31,7 @@ hubs:
   - name: workshop
     display_name: "NOAA Fisheries Openscapes Workshop"
     domain: workshop.nmfs-openscapes.2i2c.cloud
-    helm_chart: daskhub
+    helm_chart: basehub
     helm_chart_values_files:
       - common.values.yaml
       - workshop.values.yaml
