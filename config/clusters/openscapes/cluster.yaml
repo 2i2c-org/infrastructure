@@ -22,6 +22,7 @@ hubs:
       # to the helm upgrade command in, and that has meaning. Please check
       # that you intend for these files to be applied in this order.
       - common.values.yaml
+      - enc-common.secret.values.yaml
       - staging.values.yaml
       - enc-staging.secret.values.yaml
   - name: prod
@@ -33,6 +34,7 @@ hubs:
       # to the helm upgrade command in, and that has meaning. Please check
       # that you intend for these files to be applied in this order.
       - common.values.yaml
+      - enc-common.secret.values.yaml
       - prod.values.yaml
       - enc-prod.secret.values.yaml
   - name: workshop
