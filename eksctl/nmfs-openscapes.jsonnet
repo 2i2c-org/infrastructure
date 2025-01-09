@@ -38,6 +38,12 @@ local notebookNodes = [
         tags+: { "2i2c:hub-name": "prod" },
     },
     {
+        instanceType: "r5.xlarge",
+        namePrefix: "nb-workshop",
+        labels+: { "2i2c/hub-name": "workshop" },
+        tags+: { "2i2c:hub-name": "workshop" },
+    },
+    {
         instanceType: "r5.4xlarge",
         namePrefix: "nb-staging",
         labels+: { "2i2c/hub-name": "staging" },
@@ -50,6 +56,12 @@ local notebookNodes = [
         tags+: { "2i2c:hub-name": "prod" },
     },
     {
+        instanceType: "r5.4xlarge",
+        namePrefix: "nb-workshop",
+        labels+: { "2i2c/hub-name": "workshop" },
+        tags+: { "2i2c:hub-name": "workshop" },
+    },
+    {
         instanceType: "r5.16xlarge",
         namePrefix: "nb-staging",
         labels+: { "2i2c/hub-name": "staging" },
@@ -60,6 +72,12 @@ local notebookNodes = [
         namePrefix: "nb-prod",
         labels+: { "2i2c/hub-name": "prod" },
         tags+: { "2i2c:hub-name": "prod" },
+    },
+    {
+        instanceType: "r5.16xlarge",
+        namePrefix: "nb-workshop",
+        labels+: { "2i2c/hub-name": "workshop" },
+        tags+: { "2i2c:hub-name": "workshop" },
     },
 ];
 local daskNodes = [];
