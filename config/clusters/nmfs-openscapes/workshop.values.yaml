@@ -1,3 +1,7 @@
+nfs:
+  pv:
+    serverIP: 10.100.92.26
+
 jupyterhub:
   custom:
     2i2c:
