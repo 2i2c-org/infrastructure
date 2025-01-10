@@ -21,7 +21,13 @@ ebs_volumes = {
     type        = "gp3"
     name_suffix = "prod"
     tags        = { "2i2c:hub-name" : "prod" }
-  }
+  },
+  "workshop" = {
+    size        = 128
+    type        = "gp3"
+    name_suffix = "workshop"
+    tags        = { "2i2c:hub-name" : "workshop" }
+  },
 }
 
 user_buckets = {
@@ -33,11 +39,19 @@ user_buckets = {
     "delete_after" : 7,
     "tags" : { "2i2c:hub-name" : "prod" },
   },
+  "scratch-workshop" : {
+    "delete_after" : 7,
+    "tags" : { "2i2c:hub-name" : "workshop" },
+  },
   "persistent-staging" : {
     "tags" : { "2i2c:hub-name" : "staging" },
   },
   "persistent" : {
     "tags" : { "2i2c:hub-name" : "prod" },
+  },
+  "persistent-workshop" : {
+    "delete_after" : null,
+    "tags" : { "2i2c:hub-name" : "workshop" },
   },
 }
 
@@ -47,6 +61,12 @@ hub_cloud_permissions = {
   },
   "prod" : {
     bucket_admin_access : ["scratch", "persistent"],
+  },
+  "workshop" : {
+    bucket_admin_access : [
+      "scratch-workshop",
+      "persistent-workshop",
+    ],
   },
 }
 
