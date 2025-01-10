@@ -69,13 +69,41 @@ basehub:
         GH_SCOPED_CREDS_CLIENT_ID: "Iv1.6981e043b45f042f"
         GH_SCOPED_CREDS_APP_URL: https://github.com/apps/openscapes-github-push-access
       profileList:
-        - display_name: Python
-          description: Python datascience environment
+        - display_name: Choose your environment and resources
           default: true
-          kubespawner_override:
-            image: openscapes/python:07980b9
-          profile_options: &profile_options
-            requests: &profile_options_resource_allocation
+          profile_options:
+            image:
+              display_name: Environment
+              dynamic_image_building:
+                enabled: True
+              unlisted_choice:
+                enabled: True
+                display_name: "Custom image"
+                description: Specify your own docker image (must have python and jupyterhub installed in it)
+                validation_regex: "^.+:.+$"
+                validation_message: "Must be a publicly available docker image, of form <image-name>:<tag>"
+                kubespawner_override:
+                  image: "{value}"
+              choices:
+                01-python:
+                  display_name: Python
+                  description: Python datascience environment
+                  kubespawner_override:
+                    image: openscapes/python:07980b9
+                02-R:
+                  display_name: R
+                  description: R (with RStudio) + Python environment
+                  kubespawner_override:
+                    image: openscapes/rocker:a7596b5
+                    # Ensures container working dir is homedir
+                    # https://github.com/2i2c-org/infrastructure/issues/2559
+                    working_dir: /home/rstudio
+                03-Matlab:
+                  display_name: Matlab
+                  description: Matlab environment
+                  kubespawner_override:
+                    image: openscapes/matlab:2023-11-28
+            resource_allocation:
               display_name: Resource Allocation
               choices:
                 mem_1_9:
@@ -142,34 +170,6 @@ basehub:
                     cpu_limit: 15.695
                     node_selector:
                       node.kubernetes.io/instance-type: r5.4xlarge
-        - display_name: R
-          description: R (with RStudio) + Python environment
-          kubespawner_override:
-            image: openscapes/rocker:a7596b5
-            # Ensures container working dir is homedir
-            # https://github.com/2i2c-org/infrastructure/issues/2559
-            working_dir: /home/rstudio
-          profile_options: *profile_options
-        - display_name: Matlab
-          description: Matlab environment
-          kubespawner_override:
-            image: openscapes/matlab:2023-11-28
-          profile_options: *profile_options
-        - display_name: "Bring your own image"
-          description: Specify your own docker image (must have python and jupyterhub installed in it)
-          slug: custom
-          profile_options:
-            image:
-              display_name: Image
-              unlisted_choice:
-                enabled: True
-                display_name: "Custom image"
-                validation_regex: "^.+:.+$"
-                validation_message: "Must be a publicly available docker image, of form <image-name>:<tag>"
-                kubespawner_override:
-                  image: "{value}"
-              choices: {}
-            resource_allocation: *profile_options_resource_allocation
     scheduling:
       userScheduler:
         enabled: true
@@ -201,3 +201,11 @@ basehub:
             - erinmr
             - betolink
             - ateucher
+  binderhub-service:
+    enabled: true
+    config:
+      BinderHub:
+        image_prefix: quay.io/openscapes/binder-
+    buildPodsRegistryCredentials:
+      server: https://quay.io
+      username: openscapes+image_builder
