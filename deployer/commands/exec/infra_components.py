@@ -28,19 +28,27 @@ def root_homes(
         "--persist",
         help="Do not automatically delete the pod after completing. Useful for long-running processes.",
     ),
-    extra_nfs_server: str = typer.Option(
-        None, help="IP address of an extra NFS server to mount"
+    additional_nfs_server: str = typer.Option(
+        None, help="IP address of an additional NFS server to mount"
     ),
-    extra_nfs_base_path: str = typer.Option(
-        None, help="Path of the extra NFS share to mount"
+    additional_nfs_base_path: str = typer.Option(
+        None, help="Path of the additional NFS share to mount"
     ),
-    extra_nfs_mount_path: str = typer.Option(
-        None, help="Mount point for the extra NFS share"
+    additional_nfs_mount_path: str = typer.Option(
+        None, help="Mount point for the additional NFS share"
+    ),
+    additional_volume_id: str = typer.Option(
+        None,
+        help="ID of volume to mount (e.g. vol-1234567890abcdef0). "
+        "Only EBS volumes are supported for now.",
+    ),
+    additional_volume_mount_path: str = typer.Option(
+        "/additional-volume", help="Mount point for the volume"
     ),
 ):
     """
     Pop an interactive shell with the entire nfs file system of the given cluster mounted on /root-homes
-    Optionally mount an extra NFS share if required (useful when migrating data to a new NFS server).
+    Optionally mount an additional NFS or EBS volume if required (useful when migrating data to a new NFS server).
     """
     config_file_path = find_absolute_path_to_cluster_file(cluster_name)
     with open(config_file_path) as f:
@@ -82,17 +90,84 @@ def root_homes(
         }
     ]
 
-    if extra_nfs_server and extra_nfs_base_path and extra_nfs_mount_path:
+    if additional_volume_id:
+        # Create PV for volume
+        pv_name = f"addtional-volume-{additional_volume_id}"
+        pv = {
+            "apiVersion": "v1",
+            "kind": "PersistentVolume",
+            "metadata": {"name": pv_name},
+            "spec": {
+                # We intentionally set the size to 1Mi to avoid having to
+                # specify and match the size of the underlying disk
+                # This doesn't trigger a resize of the underlying disk
+                # as long as the size matches the specified capacity
+                # of the PVC.
+                "capacity": {"storage": "1Mi"},
+                "volumeMode": "Filesystem",
+                "accessModes": ["ReadWriteOnce"],
+                "persistentVolumeReclaimPolicy": "Retain",
+                "storageClassName": "",
+                "csi": {
+                    "driver": "ebs.csi.aws.com",
+                    "fsType": "xfs",
+                    "volumeHandle": additional_volume_id,
+                },
+                "mountOptions": [
+                    "rw",
+                    "relatime",
+                    "nouuid",
+                    "attr2",
+                    "inode64",
+                    "logbufs=8",
+                    "logbsize=32k",
+                    "pquota",
+                ],
+            },
+        }
+
+        # Create PVC to bind to the PV
+        pvc = {
+            "apiVersion": "v1",
+            "kind": "PersistentVolumeClaim",
+            "metadata": {"name": pv_name, "namespace": hub_name},
+            "spec": {
+                "accessModes": ["ReadWriteOnce"],
+                "volumeName": pv_name,
+                "storageClassName": "",
+                # We intentionally set the size to 1Mi to avoid having to
+                # specify and match the size of the underlying disk
+                # This doesn't trigger a resize of the underlying disk
+                # as long as the size matches the specified capacity
+                # of the PV.
+                "resources": {"requests": {"storage": "1Mi"}},
+            },
+        }
+
         volumes.append(
             {
-                "name": "extra-nfs",
-                "nfs": {"server": extra_nfs_server, "path": extra_nfs_base_path},
+                "name": "additional-volume",
+                "persistentVolumeClaim": {"claimName": pv_name},
+            }
+        )
+        volume_mounts.append(
+            {"name": "additional-volume", "mountPath": additional_volume_mount_path}
+        )
+
+    if additional_nfs_server and additional_nfs_base_path and additional_nfs_mount_path:
+        volumes.append(
+            {
+                "name": "additional-nfs",
+                "nfs": {
+                    "server": additional_nfs_server,
+                    "path": additional_nfs_base_path,
+                },
             }
         )
         volume_mounts.append(
             {
-                "name": "extra-nfs",
-                "mountPath": extra_nfs_mount_path,
+                "name": "additional-nfs",
+                "mountPath": additional_nfs_mount_path,
             }
         )
 
@@ -141,6 +216,23 @@ def root_homes(
 
         with cluster.auth():
             try:
+                # If we have an additional volume to mount, create PV and PVC first
+                if additional_volume_id:
+                    with tempfile.NamedTemporaryFile(
+                        mode="w", suffix=".json"
+                    ) as pv_tmpf:
+                        json.dump(pv, pv_tmpf)
+                        pv_tmpf.flush()
+                        subprocess.check_call(["kubectl", "create", "-f", pv_tmpf.name])
+
+                    with tempfile.NamedTemporaryFile(
+                        mode="w", suffix=".json"
+                    ) as pvc_tmpf:
+                        json.dump(pvc, pvc_tmpf)
+                        pvc_tmpf.flush()
+                        subprocess.check_call(
+                            ["kubectl", "create", "-f", pvc_tmpf.name]
+                        )
                 # We are splitting the previous `kubectl run` command into a
                 # create and exec couplet, because using run meant that the bash
                 # process we start would be assigned PID 1. This is a 'special'
@@ -152,11 +244,32 @@ def root_homes(
                 #
                 # Ask api-server to create a pod
                 subprocess.check_call(["kubectl", "create", "-f", tmpf.name])
+
+                # wait for the pod to be ready
+                print_colour("Waiting for the pod to be ready...", "yellow")
+                subprocess.check_call(
+                    [
+                        "kubectl",
+                        "wait",
+                        "-n",
+                        hub_name,
+                        f"pod/{pod_name}",
+                        "--for=condition=Ready",
+                        "--timeout=90s",
+                    ]
+                )
+
                 # Exec into pod
                 subprocess.check_call(exec_cmd)
             finally:
                 if not persist:
                     delete_pod(pod_name, hub_name)
+                    # Clean up PV and PVC if we created them
+                    if additional_volume_id:
+                        subprocess.check_call(
+                            ["kubectl", "-n", hub_name, "delete", "pvc", pv_name]
+                        )
+                        subprocess.check_call(["kubectl", "delete", "pv", pv_name])
 
 
 @exec_app.command()

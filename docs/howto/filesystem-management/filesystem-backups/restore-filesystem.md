@@ -25,18 +25,24 @@ To restore a home directory from a snapshot, we need to create a new EBS volume 
 Please follow AWS's guidance for [restoring EBS volumes from a snapshot](https://docs.aws.amazon.com/prescriptive-guidance/latest/backup-recovery/restore.html#restore-files) to create a new EBS volume from the snapshot.
 ```
 
-Once we have created a new EBS volume from the snapshot, we need to mount it to the EC2 instance attached to the existing EBS volume containing the NFS home directories. To do this, we need to find the instance ID of the EC2 instance attached to the existing EBS volume. This involves the following steps:
-
-1. Go to the EBS volumes page in the AWS console
-2. Find the volume ID of the existing EBS volume containing the NFS home directories
-3. Click on the volume ID and find the instance ID in the "Attached resources" section
-4. Once we have the instance ID, we can mount the new EBS volume to the EC2 instance by following the steps outlined in the [Attaching an Amazon EBS volume to an instance](https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/ebs-attaching-volume.html) guide.
-
-Once we have mounted the new EBS volume to the EC2 instance, we can copy the contents from the restored EBS volume to the NFS home directories volume. This can be done by running the following commands on the EC2 instance:
+Once we have created a new EBS volume from the snapshot, we can use the `deployer exec root-homes` command to mount the new EBS volume to a pod along with the existing NFS home directories volume.
 
 ```bash
-# Copy the contents from the restored EBS volume to the NFS home directories volume
-rsync -av --info=progress2 </restored-volume/path-to-home-directories/> </existing-volume/path-to-home-directories/>
+deployer exec root-homes $CLUSTER_NAME $HUB_NAME --additional-volume-id=<new-ebs-volume-id> --additional-volume-mount-path=/restore-volume
+```
+
+Now, the NFS home directories volume is mounted to the pod along with the new EBS volume. We can now copy the contents from the restored EBS volume to the NFS home directories volume.
+
+If we want to do a full restore and/or we are restoring data to a new and empty NFS home directories volume, we can use the following command to copy everything from the restored EBS volume to the NFS home directories volume.
+
+```bash
+rsync -av --info=progress2 /restore-volume/ /root-homes/
+```
+
+If we want to do a partial restore and we are restoring only a subset of the data to an existing NFS home directories volume, we can use the following command to copy only the necessary data from the restored EBS volume to the NFS home directories volume.
+
+```bash
+rsync -av --info=progress2 /restore-volume/<path-to-restore> /root-homes/<path-to-restore>
 ```
 
 Once we have copied the contents from the restored EBS volume to the NFS home directories volume, we can delete the EBS volume that was created from the snapshot.
