@@ -28,7 +28,7 @@ Please follow AWS's guidance for [restoring EBS volumes from a snapshot](https:/
 Once we have created a new EBS volume from the snapshot, we can use the `deployer exec root-homes` command to mount the new EBS volume to a pod along with the existing NFS home directories volume.
 
 ```bash
-deployer exec root-homes $CLUSTER_NAME $HUB_NAME --restore-volume-id=<new-ebs-volume-id> --restore-mount-path=/restore-volume --restore-volume-size=100Gi
+deployer exec root-homes $CLUSTER_NAME $HUB_NAME --additional-volume-id=<new-ebs-volume-id> --additional-volume-mount-path=/restore-volume
 ```
 
 Now, the NFS home directories volume is mounted to the pod along with the new EBS volume. We can now copy the contents from the restored EBS volume to the NFS home directories volume.
