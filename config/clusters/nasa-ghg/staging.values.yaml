@@ -22,8 +22,9 @@ basehub:
           secretName: https-auto-tls
     custom:
       homepage:
-        gitRepoBranch: "staging"
-        gitRepoUrl: "https://github.com/US-GHG-Center/ghgc-hub-homepage"
+        gitRepoBranch: "bootstrap5-nasa-ghg-staging"
+        # FIXME: use this repository again once the changes in the bootstrap5-nasa-ghg-staging branch of 2i2c-org/default-hub-homepage have been ported to it
+        # gitRepoUrl: "https://github.com/US-GHG-Center/ghgc-hub-homepage"
     hub:
       config:
         GitHubOAuthenticator:
@@ -76,7 +77,7 @@ basehub:
                         volumeMounts:
                           - name: home
                             mountPath: /home/jovyan
-                            subPath: "{username}"
+                            subPath: "{escaped_username}"
                           # mounted without readonly attribute here,
                           # so we can chown it appropriately
                           - name: home
@@ -94,7 +95,7 @@ basehub:
                         volumeMounts:
                           - name: home
                             mountPath: /home/jovyan
-                            subPath: "{username}"
+                            subPath: "{escaped_username}"
                         securityContext:
                           runAsUser: 1000
                           runAsGroup: 1000

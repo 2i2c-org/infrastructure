@@ -22,7 +22,7 @@ basehub:
           volumeMounts:
             - name: home
               mountPath: /home/jovyan
-              subPath: "{username}"
+              subPath: "{escaped_username}"
             # Mounted without readonly attribute here,
             # so we can chown it appropriately
             - name: home
@@ -42,8 +42,9 @@ basehub:
           secretName: https-auto-tls
     custom:
       homepage:
-        gitRepoBranch: "staging"
-        gitRepoUrl: "https://github.com/NASA-IMPACT/veda-hub-homepage"
+        gitRepoBranch: "bootstrap5-nasa-veda-staging"
+        # FIXME: use this repository again once the changes in the bootstrap5-nasa-veda-staging branch of 2i2c-org/default-hub-homepage have been ported to it
+        # gitRepoUrl: "https://github.com/NASA-IMPACT/veda-hub-homepage"
 
   dask-gateway:
     gateway:

@@ -65,7 +65,7 @@ binderhub-service:
               log_name = "binderhub-event-logs"
               get_logger().info(f"Sending logs of launch events to a 2i2c managed GCP project {client.project} under log name {log_name}.")
               return [CloudLoggingHandler(client, name=log_name)]
-          c.EventLog.handlers_maker = _make_eventsink_handler
+          c.EventLogger.handlers_maker = _make_eventsink_handler
 
 ingressBasicAuth:
   enabled: false
@@ -412,8 +412,7 @@ jupyterhub:
         - yuvipanda@2i2c.org
     homepage:
       gitRepoUrl: "https://github.com/2i2c-org/default-hub-homepage"
-      # TODO: make main the default branch in the repo above
-      gitRepoBranch: "master"
+      gitRepoBranch: "bootstrap5"
       templateVars:
         enabled: true
     jupyterhubConfigurator:
@@ -547,7 +546,7 @@ jupyterhub:
         volumeMounts:
           - name: home
             mountPath: /home/jovyan
-            subPath: "{username}"
+            subPath: "{escaped_username}"
           # Mounted without readonly attribute here,
           # so we can chown it appropriately
           - name: home
@@ -767,7 +766,7 @@ jupyterhub:
       type: static
       static:
         pvcName: home-nfs
-        subPath: "{username}"
+        subPath: "{escaped_username}"
       extraVolumes:
         - name: dev-shm
           emptyDir:
@@ -792,7 +791,7 @@ jupyterhub:
         # problem by openscapes)
         - name: home
           mountPath: /home/rstudio
-          subPath: "{username}"
+          subPath: "{escaped_username}"
         - name: home
           mountPath: /home/rstudio/shared
           subPath: _shared
@@ -1055,7 +1054,7 @@ jupyterhub:
         oauth_no_confirm: true
     image:
       name: quay.io/2i2c/pilot-hub
-      tag: "0.0.1-0.dev.git.10892.h37c70b2e"
+      tag: "0.0.1-0.dev.git.11322.hb977bf05"
     networkPolicy:
       enabled: true
       # interNamespaceAccessLabels=accept makes the hub pod's associated

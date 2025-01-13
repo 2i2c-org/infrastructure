@@ -27,7 +27,7 @@ basehub:
       jupyterhubConfigurator:
         enabled: false
       homepage:
-        gitRepoBranch: "openscapes"
+        gitRepoBranch: "bootstrap5-openscapes"
         templateVars:
           org:
             name: NASA Openscapes

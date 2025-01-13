@@ -9,7 +9,7 @@ basehub:
       jupyterhubConfigurator:
         enabled: false
       homepage:
-        gitRepoBranch: "username-and-password-homepage"
+        gitRepoBranch: "bootstrap5-username-and-password-homepage"
     ingress:
       hosts: [workshop.openscapes.2i2c.cloud]
       tls:
