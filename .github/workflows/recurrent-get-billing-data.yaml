@@ -12,10 +12,9 @@ jobs:
     permissions:
       issues: write
     steps:
-      - name: Get the next month name
-        id: get_next_month
+      - name: Compute billing period and deadline
         run: |
-          echo "next_month=$(date -d '+1 month' +'%B')" >> $GITHUB_ENV
+          echo "billing_month=$(date -d +'%B')" >> $GITHUB_ENV
           echo "start_date_as_iso=$(date -d '+1 month' +'%Y-%m-02')" >> $GITHUB_ENV
           echo "end_date_as_iso=$(date -d '+1 month' +'%Y-%m-07')" >> $GITHUB_ENV
 
@@ -23,13 +22,13 @@ jobs:
         run: |
           dedicated_issue=$(gh issue create \
             --label "recurrent" \
-            --title "[Billing] Dedicated clusters: collect billing data for $NEXT_MONTH" \
+            --title "[Billing] Dedicated clusters: collect billing data for $BILLING_MONTH" \
             --body "$BODY")
           echo "dedicated_issue=$dedicated_issue" >> $GITHUB_ENV
         env:
           GH_TOKEN: ${{ secrets.PROJECT_BOARD_PAT_TOKEN }}
           GH_REPO: ${{ github.repository }}
-          NEXT_MONTH: ${{ env.next_month }}
+          BILLING_MONTH: ${{ env.billing_month }}
           BODY: |
             ### Context
             - Dedicated clusters [instructions](https://infrastructure.2i2c.org/howto/budgeting-billing/bill/#communities-with-dedicated-cloud-accounts)  
@@ -42,13 +41,13 @@ jobs:
         run: |
           shared_issue=$(gh issue create \
             --label "recurrent" \
-            --title "[Billing] Shared clusters: collect billing data for $NEXT_MONTH" \
+            --title "[Billing] Shared clusters: collect billing data for $BILLING_MONTH" \
             --body "$BODY")
           echo "shared_issue=$shared_issue" >> $GITHUB_ENV
         env:
           GH_TOKEN: ${{ secrets.PROJECT_BOARD_PAT_TOKEN }}
           GH_REPO: ${{ github.repository }}
-          NEXT_MONTH: ${{ env.next_month }}
+          BILLING_MONTH: ${{ env.billing_month }}
           BODY: |
             ### Context
             - Shared clusters [instructions](https://infrastructure.2i2c.org/howto/budgeting-billing/bill/#communities-in-shared-cloud-accounts) for performing this task
@@ -67,10 +66,10 @@ jobs:
           operation: set
           # If the fields name or type will change
           # expect this step to fail
-          fields: Status,Estimate,Start date
+          fields: Status,Estimate,Start date,End date
           github_token: ${{ secrets.PROJECT_BOARD_PAT_TOKEN }}
           project_url: https://github.com/orgs/2i2c-org/projects/57
-          values: Up Next,1,${{ env.start_date_as_iso }}
+          values: Up Next,1,${{ env.start_date_as_iso }},${{ env.end_date_as_iso }}
           resource_url: ${{ env.dedicated_issue }}
 
       - name: "Shared clusters: set the relevant project board fields"
