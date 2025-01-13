@@ -15,13 +15,13 @@ export HUB_NAME=<hub_name>
 1. **Create a pod on the cluster and mount the source and destination NFS servers.**
 
    We can use the following deployer command to create a pod in the cluster with the two NFS servers mounted.
-   The current default NFS will be mounted automatically and we use `--extra-nfs-*` flags to mount the second NFS.
+   The current default NFS will be mounted automatically and we use `--additional-nfs-*` flags to mount the second NFS.
 
    ```bash
    deployer exec root-homes $CLUSTER_NAME $HUB_NAME \
-     --extra-nfs-server=$SERVER_IP \
-     --extra-nfs-base-path="/" \
-     --extra-nfs-mount-path="dest-fs" \
+     --additional-nfs-server=$SERVER_IP \
+     --additional-nfs-base-path="/" \
+     --additional-nfs-mount-path="dest-fs" \
      --persist
    ```
 
