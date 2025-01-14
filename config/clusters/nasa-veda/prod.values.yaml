@@ -52,3 +52,10 @@ basehub:
     buildPodsRegistryCredentials:
       server: *url
       username: *username
+
+  jupyterhub-home-nfs:
+    eks:
+      volumeId: vol-0063ecd342e052ef5
+    quotaEnforcer:
+      hardQuota: "200" # in GB
+      path: "/export/prod"
