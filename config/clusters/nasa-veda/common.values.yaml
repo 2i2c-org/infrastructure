@@ -301,3 +301,10 @@ basehub:
       KubernetesBuildExecutor:
         node_selector:
           node.kubernetes.io/instance-type: r5.xlarge
+
+  jupyterhub-home-nfs:
+    enabled: true
+    eks:
+      enabled: true
+    prometheusExporter:
+      enabled: true
