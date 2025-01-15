@@ -10,3 +10,6 @@
 git+https://github.com/yuvipanda/jupyterhub-configurator@backported-jh41-compatibility
 
 jupyterhub-fancy-profiles==0.4.0
+
+# Bring in latest tmpauthenticator to be compatible with jupyterhub 5
+git+https://github.com/jupyterhub/tmpauthenticator@205ba14610651b96eca1c62bd0d91458d672f0df
