@@ -13,7 +13,6 @@ basehub:
         gitRepoBranch: "bootstrap5-nasa-veda-prod"
         # FIXME: use this repository again once the changes in the bootstrap5-nasa-veda-prod branch of 2i2c-org/default-hub-homepage have been ported to it
         # gitRepoUrl: "https://github.com/NASA-IMPACT/veda-hub-homepage"
-        gitRepoUrl: "https://github.com/NASA-IMPACT/veda-hub-homepage"
     singleuser:
       nodeSelector:
         2i2c/hub-name: prod
