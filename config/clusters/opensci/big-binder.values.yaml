@@ -83,6 +83,7 @@ jupyterhub:
         oauth_callback_url: https://hub.big.binder.opensci.2i2c.cloud/hub/oauth_callback
         allowed_organizations:
           - 2i2c-ephemeral-hubs:access
+          - 2i2c-org:hub-access-for-2i2c-staff
         scope:
           - read:org
     redirectToServer: false
