@@ -95,13 +95,13 @@ basehub:
             # For our deployment-service-check health check user, there is no auth_state.
             # So these env variables need not be set.
             if auth_state:
-              url_parts = urlparse(spawner.token_url)
+              url_parts = urlparse(spawner.authenticator.token_url)
               base_url = f"{url_parts.scheme}://{url_parts.netloc}"
-              scope_str = " ".join(spawner.scope)
+              scope_str = " ".join(spawner.authenticator.scope)
 
               token_env = {
-                'ES_OAUTH2__AUDIENCE': spawner.extra_authorize_params.get("audience", ""),
-                'ES_OAUTH2__CLIENT_ID': spawner.client_id,
+                'ES_OAUTH2__AUDIENCE': spawner.authenticator.extra_authorize_params.get("audience", ""),
+                'ES_OAUTH2__CLIENT_ID': spawner.authenticator.client_id,
                 'ES_OAUTH2__DOMAIN': base_url,
                 'ES_OAUTH2__SCOPE': scope_str,
                 'ES_OAUTH2__ACCESS_TOKEN': auth_state.get("access_token", ""),
