@@ -15,6 +15,8 @@ jupyterhub:
     config:
       JupyterHub:
         authenticator_class: tmp
+      Authenticator:
+        allow_all: True
   custom:
     singleuserAdmin:
       # Turn off trying to mount shared-readwrite folder for admins
