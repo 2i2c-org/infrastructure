@@ -45,6 +45,7 @@ basehub:
         001-username-claim: |
           from oauthenticator.generic import GenericOAuthenticator
           from traitlets import List, Unicode
+          from urllib.parse import urlparse
 
           class CustomGenericOAuthenticator(GenericOAuthenticator):
             # required_scopes functionality comes in from https://github.com/jupyterhub/oauthenticator/pull/719
@@ -90,14 +91,25 @@ basehub:
               resp["groups"] = resp["auth_state"]["scope"]
               return resp
 
+          def get_base_url(url):
+              parts = urlparse(url)
+              return f"{parts.scheme}://{parts.netloc}"
+
           def populate_token(spawner, auth_state):
             # For our deployment-service-check health check user, there is no auth_state.
             # So these env variables need not be set.
             if auth_state:
+              base_url = get_base_url(spawner.token_url)
+              scope_str = " ".join(spawner.scope)
+
               token_env = {
-                'AUTH0_ACCESS_TOKEN': auth_state.get("access_token", ""),
-                'AUTH0_ID_TOKEN': auth_state.get("id_token", ""),
-                'AUTH0_REFRESH_TOKEN': auth_state.get('refresh_token', '')
+                'ES_OAUTH2__AUDIENCE': spawner.extra_authorize_params.get("audience", ""),
+                'ES_OAUTH2__CLIENT_ID': spawner.client_id,
+                'ES_OAUTH2__DOMAIN': base_url,
+                'ES_OAUTH2__SCOPE': scope_str,
+                'ES_OAUTH2__ACCESS_TOKEN': auth_state.get("access_token", ""),
+                'ES_OAUTH2__ID_TOKEN': auth_state.get("id_token", ""),
+                'ES_OAUTH2__REFRESH_TOKEN': auth_state.get('refresh_token', '')
               }
               spawner.environment.update(token_env)
 
