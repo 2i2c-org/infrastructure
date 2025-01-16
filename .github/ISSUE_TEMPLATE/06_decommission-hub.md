@@ -14,9 +14,10 @@ Usually, it is because it was a hub that we created for a workshop/conference an
 
 ### Info
 
-- **Community Representative:** <!-- The GitHub ID of the current representative for the Hub and Community, e.g. @octocat -->
+- **Community Representative:** <!-- The name or GitHub ID of the current representative for the Hub and Community, e.g. Octo Cat or @octocat -->
 - **Link to New Hub issue:** <!-- The link to the original issue to create the hub, e.g. https://github.com/2i2c-org/infrastructure/issues/#NNN -->
 - **Proposed end date:** <!-- The date by which the hub should be out of service. This should have been mentioned in the New Hub issue above so can be copy-pasted. Otherwise, leave blank and negotiate with the Community Representative. -->
+- **Cluster the hub is on:** <!-- If you know which cluster the hub is on, please let us know. But don't worry if not! -->
 
 ### Task List
 
@@ -30,7 +31,7 @@ Usually, it is because it was a hub that we created for a workshop/conference an
 
 #### Phase II - Hub Removal
 
-(These steps are described in more detail in the docs at https://infrastructure.2i2c.org/hub-deployment-guide/hubs/delete-hub/)
+(These steps are described in more detail in the docs at <https://infrastructure.2i2c.org/hub-deployment-guide/hubs/delete-hub/>)
 
 - [ ] Manage existing home directory data (migrate data from the hub or delete it)
 - [ ] Manage existing cloud bucket data (migrate data, or delete it)
@@ -41,6 +42,7 @@ Usually, it is because it was a hub that we created for a workshop/conference an
   - TIP: Run `deployer use-cluster-credentials <cluster_name>` before running the commands below
   - `helm --namespace HUB_NAME delete HUB_NAME`
   - `kubectl delete namespace HUB_NAME`
+- [ ] If the hub has one or more dedicated nodegroups, e.g. because it is on AWS with cost allocation enabled, delete them via `eksctl `
 
 #### Phase III - Cluster Removal
 
@@ -58,6 +60,8 @@ _This phase is only necessary for single hub clusters._
 - [ ] Remove A record from Namecheap account
 
 ### Definition of Done
+
 _A non-specific, pre-defined list of tasks that should be considered before marking the task complete._
-- [] All the tasks above have been completed
-- [] Existing functionality was not broken
+
+- [ ] All the tasks above have been completed
+- [ ] Existing functionality was not broken
