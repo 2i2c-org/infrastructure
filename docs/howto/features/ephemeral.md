@@ -38,6 +38,8 @@ jupyterhub:
     config:
       JupyterHub:
         authenticator_class: tmp
+      Authenticator:
+        allow_all: True
 ```
 
 
