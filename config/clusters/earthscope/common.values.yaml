@@ -91,15 +91,12 @@ basehub:
               resp["groups"] = resp["auth_state"]["scope"]
               return resp
 
-          def get_base_url(url):
-              parts = urlparse(url)
-              return f"{parts.scheme}://{parts.netloc}"
-
           def populate_token(spawner, auth_state):
             # For our deployment-service-check health check user, there is no auth_state.
             # So these env variables need not be set.
             if auth_state:
-              base_url = get_base_url(spawner.token_url)
+              url_parts = urlparse(spawner.token_url)
+              base_url = f"{url_parts.scheme}://{url_parts.netloc}"
               scope_str = " ".join(spawner.scope)
 
               token_env = {
