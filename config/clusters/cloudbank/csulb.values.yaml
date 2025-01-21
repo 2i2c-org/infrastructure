@@ -58,6 +58,7 @@ jupyterhub:
           - Babette.Benken@csulb.edu
           - Florence.Newberger@csulb.edu
           - Seungjoon.Lee@csulb.edu
+          - tyler.nakamura@csulb.edu
   cull:
     # Cull after 30min of inactivity
     every: 300
