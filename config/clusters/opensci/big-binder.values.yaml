@@ -26,7 +26,7 @@ jupyterhub:
       add_staff_user_ids_to_admin_users: true
       add_staff_user_ids_of_type: github
     homepage:
-      gitRepoBranch: "bootstrap5-no-homepage-subsection"
+      gitRepoBranch: "no-homepage-subsections"
       templateVars:
         org:
           name: Ephemeral Interactive Computing for NASA Communities

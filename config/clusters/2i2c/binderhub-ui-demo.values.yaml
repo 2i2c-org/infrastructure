@@ -15,7 +15,7 @@ jupyterhub:
     binderhubUI:
       enabled: true
     homepage:
-      gitRepoBranch: "bootstrap5-no-homepage-subsection"
+      gitRepoBranch: "no-homepage-subsections"
       templateVars:
         org:
           name: Demo binderhub UI with binderhub-service

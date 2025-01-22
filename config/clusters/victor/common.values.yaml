@@ -23,7 +23,7 @@ basehub:
       jupyterhubConfigurator:
         enabled: false
       homepage:
-        gitRepoBranch: "bootstrap5-victor"
+        gitRepoBranch: "victor"
         templateVars:
           org:
             name: VICTOR

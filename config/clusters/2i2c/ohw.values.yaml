@@ -53,7 +53,7 @@ basehub:
       jupyterhubConfigurator:
         enabled: false
       homepage:
-        gitRepoBranch: "bootstrap5-2i2c-ohw"
+        gitRepoBranch: "2i2c-ohw"
         templateVars:
           org:
             name: OceanHackWeek en español
