@@ -12,17 +12,6 @@ support:
     - support.values.yaml
     - enc-support.secret.values.yaml
 hubs:
-  - name: staging
-    display_name: "gridSST Hack-A-Thon(staging)"
-    domain: staging.gridsst.2i2c.cloud
-    helm_chart: daskhub
-    helm_chart_values_files:
-      # The order in which you list files here is the order the will be passed
-      # to the helm upgrade command in, and that has meaning. Please check
-      # that you intend for these files to be applied in this order.
-      - common.values.yaml
-      - staging.values.yaml
-      - enc-staging.secret.values.yaml
   - name: prod
     display_name: "gridSST Hack-A-Thon (prod)"
     domain: gridsst.2i2c.cloud
