@@ -28,7 +28,6 @@ jobs:
           - cluster_name: cloudbank
           - cluster_name: dubois
           - cluster_name: earthscope
-          - cluster_name: gridsst
           - cluster_name: hhmi
           - cluster_name: jupyter-health
           - cluster_name: jupyter-meets-the-earth
