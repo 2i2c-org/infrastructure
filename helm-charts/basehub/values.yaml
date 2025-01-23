@@ -412,7 +412,7 @@ jupyterhub:
         - yuvipanda@2i2c.org
     homepage:
       gitRepoUrl: "https://github.com/2i2c-org/default-hub-homepage"
-      gitRepoBranch: "bootstrap5"
+      gitRepoBranch: "master"
       templateVars:
         enabled: true
     jupyterhubConfigurator:
