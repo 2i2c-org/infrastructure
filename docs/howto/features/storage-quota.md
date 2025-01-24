@@ -127,7 +127,7 @@ Once this is deployed, the hub will automatically enforce the storage quota for 
 
 Once we have enabled storage quotas, we want to be alerted when the disk usage of the NFS server exceeds a certain threshold so that we can take appropriate action.
 
-To do this, we need to create a Prometheus rule that will alert us when the disk usage of the NFS server exceeds a certain threshold using Alertmanager. 
+To do this, we need to create a Prometheus rule that will alert us when the disk usage of the NFS server exceeds a certain threshold using Alertmanager.
 
 First, we need to enable Alertmanager in the hub's support values file (for example, [here's the one for the `nasa-veda` cluster](https://github.com/2i2c-org/infrastructure/blob/main/config/clusters/nasa-veda/support.values.yaml)).
 
@@ -137,17 +137,18 @@ prometheus:
     enabled: true
 ```
 
-Then, we need to create a Prometheus rule that will alert us when the disk usage of the NFS server exceeds a certain threshold. For example, to alert us when the disk usage of the NFS server exceeds 90% of the total disk size, we would add the following to the hub's support values file:
+Then, we need to create a Prometheus rule that will alert us when the disk usage of the NFS server exceeds a certain threshold. For example, to alert us when the disk usage of the NFS server exceeds 90% of the total disk size over a 15min period, we would add the following to the hub's support values file:
 
 ```yaml
 prometheus:
   serverFiles:
     alerting_rules.yml:
       groups:
-        - name: <cluster_name> jupyterhub-home-nfs EBS volume full
+        # Duplicate this entry for every hub on the cluster that uses an EBS volume as an NFS server
+        - name: <cluster_name> <hub_name> jupyterhub-home-nfs EBS volume full
           rules:
-            - alert: jupyterhub-home-nfs-ebs-full
-              expr: node_filesystem_avail_bytes{mountpoint="/shared-volume", component="shared-volume-metrics"} / node_filesystem_size_bytes{mountpoint="/shared-volume", component="shared-volume-metrics"} < 0.1
+            - alert: <hub_name>-jupyterhub-home-nfs-ebs-full
+              expr: node_filesystem_avail_bytes{mountpoint="/shared-volume", component="shared-volume-metrics", namespace="<hub_name>"} / node_filesystem_size_bytes{mountpoint="/shared-volume", component="shared-volume-metrics", namespace="<hub_name>"} < 0.1
               for: 15m
               labels:
                 severity: critical
@@ -170,9 +171,12 @@ prometheus:
         receiver: pagerduty
         repeat_interval: 3h
         routes:
+          # Duplicate this entry for every hub on the cluster that uses an EBS volume as an NFS server
           - receiver: pagerduty
             match:
               channel: pagerduty
+              cluster: <cluster_name>
+              namespace: <hub_name>
 ```
 
 ## Increasing the size of the volume used by the NFS server
