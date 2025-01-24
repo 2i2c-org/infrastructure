@@ -126,8 +126,12 @@ Once this is deployed, the hub will automatically enforce the storage quota for 
 ## Enabling alerting through Prometheus Alertmanager
 
 Once we have enabled storage quotas, we want to be alerted when the disk usage of the NFS server exceeds a certain threshold so that we can take appropriate action.
+To do this, we need to create a Prometheus rule that will alert us when the disk usage of the NFS server exceeds a certain threshold using Alertmanager.
+We will then forward Alertmanager's alert to PagerDuty.
 
-To do this, we need to create a Prometheus rule that will alert us when the disk usage of the NFS server exceeds a certain threshold using Alertmanager. 
+```{note}
+Use these resource to learn more about [PagerDuty's Prometheus integration](https://www.pagerduty.com/docs/guides/prometheus-integration-guide/) and [Prometheus' Alertmanager configuration](https://prometheus.io/docs/alerting/latest/configuration/)
+```
 
 First, we need to enable Alertmanager in the hub's support values file (for example, [here's the one for the `nasa-veda` cluster](https://github.com/2i2c-org/infrastructure/blob/main/config/clusters/nasa-veda/support.values.yaml)).
 
@@ -137,17 +141,18 @@ prometheus:
     enabled: true
 ```
 
-Then, we need to create a Prometheus rule that will alert us when the disk usage of the NFS server exceeds a certain threshold. For example, to alert us when the disk usage of the NFS server exceeds 90% of the total disk size, we would add the following to the hub's support values file:
+Then, we need to create a Prometheus rule that will alert us when the disk usage of the NFS server exceeds a certain threshold. For example, to alert us when the disk usage of the NFS server exceeds 90% of the total disk size over a 15min period, we would add the following to the hub's support values file:
 
 ```yaml
 prometheus:
   serverFiles:
     alerting_rules.yml:
       groups:
-        - name: <cluster_name> jupyterhub-home-nfs EBS volume full
+        # Duplicate this entry for every hub on the cluster that uses an EBS volume as an NFS server
+        - name: <cluster_name> <hub_name> jupyterhub-home-nfs EBS volume full
           rules:
-            - alert: jupyterhub-home-nfs-ebs-full
-              expr: node_filesystem_avail_bytes{mountpoint="/shared-volume", component="shared-volume-metrics"} / node_filesystem_size_bytes{mountpoint="/shared-volume", component="shared-volume-metrics"} < 0.1
+            - alert: <hub_name>-jupyterhub-home-nfs-ebs-full
+              expr: node_filesystem_avail_bytes{mountpoint="/shared-volume", component="shared-volume-metrics", namespace="<hub_name>"} / node_filesystem_size_bytes{mountpoint="/shared-volume", component="shared-volume-metrics", namespace="<hub_name>"} < 0.1
               for: 15m
               labels:
                 severity: critical
@@ -155,6 +160,13 @@ prometheus:
                 cluster: <cluster_name>
               annotations:
                 summary: "jupyterhub-home-nfs EBS volume full in namespace {{ $labels.namespace }}"
+```
+
+```{note}
+The important variables to note here are:
+
+- `expr`: This is what Prometheus will evaluate
+- `for`: This is a duration over which Prometheus will collect data to evaluate `expr`
 ```
 
 And finally, we need to configure Alertmanager to send alerts to PagerDuty.
@@ -170,9 +182,23 @@ prometheus:
         receiver: pagerduty
         repeat_interval: 3h
         routes:
+          # Duplicate this entry for every hub on the cluster that uses an EBS volume as an NFS server
           - receiver: pagerduty
             match:
               channel: pagerduty
+              cluster: <cluster_name>
+              namespace: <hub_name>
+```
+
+```{note}
+The important variables to understand here are:
+
+- `group_wait`: How long Alertmanager will initially wait to send a notification to PagerDuty for a group of alerts
+- `group_interval`: How long Alertmanager will wait to send a notification to PagerDuty for new alerts in a group for which an initial notification has already been sent
+- `repeat_interval`: How long Alertmanager will wait to send a notification to PagerDuty again if it has already sent a successful notification
+- `match`: These labels are used to group fired alerts together and is how we manage separate incidents per hub per cluster in PagerDuty
+
+[Read more about these configuration options.](https://prometheus.io/docs/alerting/latest/configuration/#route)
 ```
 
 ## Increasing the size of the volume used by the NFS server

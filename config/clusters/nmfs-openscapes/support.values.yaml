@@ -2,6 +2,30 @@ prometheusIngressAuthSecret:
   enabled: true
 
 prometheus:
+  alertmanager:
+    enabled: true
+    config:
+      route:
+        group_wait: 10s
+        group_interval: 5m
+        receiver: pagerduty
+        repeat_interval: 3h
+        routes:
+          - receiver: pagerduty
+            match:
+              channel: pagerduty
+              cluster: nmfs-openscapes
+              namespace: staging
+          - receiver: pagerduty
+            match:
+              channel: pagerduty
+              cluster: nmfs-openscapes
+              namespace: prod
+          - receiver: pagerduty
+            match:
+              channel: pagerduty
+              cluster: nmfs-openscapes
+              namespace: workshop
   server:
     # Bumped as part of https://github.com/2i2c-org/infrastructure/issues/4632
     persistentVolume:
@@ -19,6 +43,42 @@ prometheus:
         memory: 8Gi
       limits:
         memory: 8Gi
+  serverFiles:
+    alerting_rules.yml:
+      groups:
+        - name: NMFS Openscapes staging jupyterhub-home-nfs EBS volume full
+          rules:
+            - alert: staging-jupyterhub-home-nfs-ebs-full
+              expr: node_filesystem_avail_bytes{mountpoint="/shared-volume", component="shared-volume-metrics", namespace="staging"} / node_filesystem_size_bytes{mountpoint="/shared-volume", component="shared-volume-metrics", namespace="staging"} < 0.1
+              for: 15m
+              labels:
+                severity: critical
+                channel: pagerduty
+                cluster: nmfs-openscapes
+              annotations:
+                summary: "jupyterhub-home-nfs EBS volume full in namespace {{ $labels.namespace }}"
+        - name: NMFS Openscapes prod jupyterhub-home-nfs EBS volume full
+          rules:
+            - alert: prod-jupyterhub-home-nfs-ebs-full
+              expr: node_filesystem_avail_bytes{mountpoint="/shared-volume", component="shared-volume-metrics", namespace="prod"} / node_filesystem_size_bytes{mountpoint="/shared-volume", component="shared-volume-metrics", namespace="prod"} < 0.1
+              for: 15m
+              labels:
+                severity: critical
+                channel: pagerduty
+                cluster: nmfs-openscapes
+              annotations:
+                summary: "jupyterhub-home-nfs EBS volume full in namespace {{ $labels.namespace }}"
+        - name: NMFS Openscapes workshop jupyterhub-home-nfs EBS volume full
+          rules:
+            - alert: workshop-jupyterhub-home-nfs-ebs-full
+              expr: node_filesystem_avail_bytes{mountpoint="/shared-volume", component="shared-volume-metrics", namespace="workshop"} / node_filesystem_size_bytes{mountpoint="/shared-volume", component="shared-volume-metrics", namespace="workshop"} < 0.1
+              for: 15m
+              labels:
+                severity: critical
+                channel: pagerduty
+                cluster: nmfs-openscapes
+              annotations:
+                summary: "jupyterhub-home-nfs EBS volume full in namespace {{ $labels.namespace }}"
 
 grafana:
   grafana.ini:
