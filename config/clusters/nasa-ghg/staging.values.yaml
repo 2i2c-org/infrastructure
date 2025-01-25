@@ -62,7 +62,7 @@ basehub:
                   description: "Pangeo based notebook with a Python environment"
                   allowed_groups: *allowed_groups
                   kubespawner_override:
-                    image: public.ecr.aws/nasa-veda/pangeo-notebook-veda-image:53b6fd1256f5
+                    image: public.ecr.aws/nasa-veda/pangeo-notebook-veda-image:2024.11.11-v1
                     init_containers:
                       # Need to explicitly fix ownership here, as otherwise these directories will be owned
                       # by root on most NFS filesystems - neither EFS nor Google Filestore support anonuid
