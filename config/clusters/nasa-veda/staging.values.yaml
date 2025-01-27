@@ -68,15 +68,7 @@ basehub:
         node_selector:
           2i2c/hub-name: staging
       BinderHub:
-        # something like <region>-docker.pkg.dev/<project-name>/<repository-name> for grc.io
-        # or quay.io/org/repo/cluster-hub/ for quay.io
-        image_prefix: quay.io/veda-binder/staging-
-      DockerRegistry:
-        url: &url https://quay.io
-        username: &username veda-binder+image_builder
-    buildPodsRegistryCredentials:
-      server: *url
-      username: *username
+        image_prefix: quay.io/imagebuilding-non-gcp-hubs/veda-staging-
 
   jupyterhub-home-nfs:
     eks:
