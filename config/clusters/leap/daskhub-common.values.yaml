@@ -169,6 +169,8 @@ basehub:
                     cpu_limit: 64
             image: &profile_list_profile_options_image
               display_name: Image
+              dynamic_image_building:
+                enabled: True
               unlisted_choice: &profile_list_unlisted_choice
                 enabled: True
                 display_name: "Custom image"
@@ -367,3 +369,11 @@ basehub:
             mem_guarantee: 24G
             extra_resource_limits:
               nvidia.com/gpu: "1"
+  binderhub-service:
+    enabled: true
+    config:
+      BinderHub:
+        image_prefix: us-central1-docker.pkg.dev/leap-pangeo/imagebuilding-registry/
+    buildPodsRegistryCredentials:
+      server: https://us-central1-docker.pkg.dev
+      username: "_json_key"
