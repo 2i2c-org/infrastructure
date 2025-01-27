@@ -33,6 +33,10 @@ terraform plan -var-file=projects/$CLUSTER_NAME.tfvars
 terraform apply -var-file=projects/$CLUSTER_NAME.tfvars
 ```
 
+```{important}
+At this point, it is also a good idea to enable [automatic backups of the the NFS server](howto:filesystem-backups:enable:aws) as well.
+```
+
 ## Enabling `jupyterhub-home-nfs`
 
 To be able to configure per-user storage quotas, we need to run an in-cluster NFS server using [`jupyterhub-home-nfs`](https://github.com/sunu/jupyterhub-home-nfs). This can be enabled by setting `jupyterhub-home-nfs.enabled = true` in the hub's values file (or the common values files if all hubs on this cluster will be using this).
