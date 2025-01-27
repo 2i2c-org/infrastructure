@@ -65,9 +65,3 @@ binderhub-service:
         2i2c/hub-name: staging
     BinderHub:
       image_prefix: quay.io/imagebuilding-non-gcp-hubs/maap-staging-
-    DockerRegistry:
-      url: &url https://quay.io
-      username: &username imagebuilding-non-gcp-hubs+image_builder
-  buildPodsRegistryCredentials:
-    server: *url
-    username: *username
