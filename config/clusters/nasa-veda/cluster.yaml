@@ -21,6 +21,7 @@ hubs:
       - common.values.yaml
       - enc-common.secret.values.yaml
       - staging.values.yaml
+      - enc-imagebuilding-common.secret.values.yaml
       - enc-staging.secret.values.yaml
   - name: prod
     display_name: "NASA VEDA (prod)"
@@ -30,6 +31,7 @@ hubs:
       - common.values.yaml
       - enc-common.secret.values.yaml
       - prod.values.yaml
+      - enc-imagebuilding-common.secret.values.yaml
       - enc-prod.secret.values.yaml
   - name: binder
     display_name: "NASA VEDA (binder)"
@@ -37,4 +39,5 @@ hubs:
     helm_chart: basehub
     helm_chart_values_files:
       - binder.values.yaml
+      - enc-imagebuilding-common.secret.values.yaml
       - enc-binder.secret.values.yaml
