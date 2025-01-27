@@ -105,7 +105,7 @@ We will use the [binderhub-service](https://github.com/2i2c-org/binderhub-servic
 1. Setup the `binderhub-service` config
 
     ```{note}
-    BinderHub.image_prefix setting has to respect a specific format, depending on the image registry used:
+    The `binderhub-service.config.BinderHub.image_prefix` setting has to respect a specific format, depending on the image registry used:
     - for gcr.io: `<region>-docker.pkg.dev/<project-name>/<repository-name>`
     - for quay.io: `quay.io/imagebuilding-non-gcp-hubs/<cluster-name>-<hub-name>-`
     ```
@@ -115,7 +115,8 @@ We will use the [binderhub-service](https://github.com/2i2c-org/binderhub-servic
       enabled: true
       config:
         BinderHub:
-          image_prefix: <repository_path>
+          # see note above for the format of the image_prefix
+          image_prefix: <path-to-image-registry>
       buildPodsRegistryCredentials:
         # registry server address like https://quay.io or https://us-central1-docker.pkg.dev
         server: <server_address>
