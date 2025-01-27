@@ -112,30 +112,3 @@ jupyterhub:
                   cpu_limit: 3.45
                   node_selector:
                     node.kubernetes.io/instance-type: n2-highmem-4
-              mem_6_7:
-                display_name: 6.7 GB RAM, upto 3.4 CPUs
-                kubespawner_override:
-                  mem_guarantee: 7241851732
-                  mem_limit: 7241851732
-                  cpu_guarantee: 0.8625
-                  cpu_limit: 3.45
-                  node_selector:
-                    node.kubernetes.io/instance-type: n2-highmem-4
-              mem_13_5:
-                display_name: 13.5 GB RAM, upto 3.4 CPUs
-                kubespawner_override:
-                  mem_guarantee: 14483703464
-                  mem_limit: 14483703464
-                  cpu_guarantee: 1.725
-                  cpu_limit: 3.45
-                  node_selector:
-                    node.kubernetes.io/instance-type: n2-highmem-4
-              mem_27_0:
-                display_name: 27.0 GB RAM, upto 3.4 CPUs
-                kubespawner_override:
-                  mem_guarantee: 28967406928
-                  mem_limit: 28967406928
-                  cpu_guarantee: 3.45
-                  cpu_limit: 3.45
-                  node_selector:
-                    node.kubernetes.io/instance-type: n2-highmem-4
