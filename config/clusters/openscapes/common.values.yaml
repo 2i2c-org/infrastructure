@@ -205,7 +205,7 @@ basehub:
     enabled: true
     config:
       BinderHub:
-        image_prefix: quay.io/openscapes/binder-
+        image_prefix: quay.io/imagebuilding-non-gcp-hubs/openscapes-
     buildPodsRegistryCredentials:
       server: https://quay.io
-      username: openscapes+image_builder
+      username: imagebuilding-non-gcp-hubs+image_builder
