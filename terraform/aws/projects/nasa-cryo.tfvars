@@ -18,6 +18,7 @@ ebs_volumes = {
     tags        = { "2i2c:hub-name" : "prod" }
   }
 }
+enable_nfs_backup = true
 
 user_buckets = {
   "scratch-staging" : {
