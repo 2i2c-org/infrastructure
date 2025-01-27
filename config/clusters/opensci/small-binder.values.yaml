@@ -108,14 +108,14 @@ binderhub-service:
       hub_url: https://hub.binder.opensci.2i2c.cloud
       badge_base_url: https://binder.opensci.2i2c.cloud
       cors_allow_origin: "*"
-      image_prefix: quay.io/opensci-small-binder/binderhub-ui-
+      image_prefix: quay.io/imagebuilding-non-gcp-hubs/opensci-small-binder-
       auth_enabled: false
       enable_api_only_mode: false
       banner_message: >-
         Operated by 2i2c.org. For support, please email binder-requests@2i2c.org. Funded by NASA NSPIRES F.15 High Priority Open-Source Science Award NNH22ZDA001N-HPOSS.
     DockerRegistry:
       url: &url https://quay.io
-      username: &username opensci-small-binder+image_builder
+      username: &username imagebuilding-non-gcp-hubs+image_builder
   extraEnv:
     - name: JUPYTERHUB_API_TOKEN
       valueFrom:

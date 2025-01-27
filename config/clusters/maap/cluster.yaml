@@ -19,6 +19,7 @@ hubs:
     helm_chart_values_files:
       - common.values.yaml
       - staging.values.yaml
+      - enc-common.secret.values.yaml
       - enc-staging.secret.values.yaml
   - name: prod
     display_name: "MAAP - prod"
@@ -27,4 +28,5 @@ hubs:
     helm_chart_values_files:
       - common.values.yaml
       - prod.values.yaml
+      - enc-common.secret.values.yaml
       - enc-prod.secret.values.yaml

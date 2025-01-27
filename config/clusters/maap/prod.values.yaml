@@ -64,10 +64,4 @@ binderhub-service:
       node_selector:
         2i2c/hub-name: prod
     BinderHub:
-      image_prefix: quay.io/maap-imagebuilding/prod-
-    DockerRegistry:
-      url: &url https://quay.io
-      username: &username maap-imagebuilding+image_builder
-  buildPodsRegistryCredentials:
-    server: *url
-    username: *username
+      image_prefix: quay.io/imagebuilding-non-gcp-hubs/maap-prod-

@@ -33,6 +33,7 @@ hubs:
       # that you intend for these files to be applied in this order.
       - common.values.yaml
       - sciencecore.values.yaml
+      - enc-imagebuilding-common.secret.values.yaml
       - enc-sciencecore.secret.values.yaml
   - name: climaterisk
     display_name: "climaterisk"
@@ -51,6 +52,7 @@ hubs:
     helm_chart: basehub
     helm_chart_values_files:
       - small-binder.values.yaml
+      - enc-imagebuilding-common.secret.values.yaml
       - enc-small-binder.secret.values.yaml
   - name: big-binder
     display_name: OpenSci Binder (Big)
@@ -58,4 +60,5 @@ hubs:
     helm_chart: basehub
     helm_chart_values_files:
       - big-binder.values.yaml
+      - enc-imagebuilding-common.secret.values.yaml
       - enc-big-binder.secret.values.yaml
