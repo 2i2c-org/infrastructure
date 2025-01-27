@@ -39,5 +39,4 @@ hubs:
     helm_chart: basehub
     helm_chart_values_files:
       - binder.values.yaml
-      - enc-imagebuilding-common.secret.values.yaml
       - enc-binder.secret.values.yaml
