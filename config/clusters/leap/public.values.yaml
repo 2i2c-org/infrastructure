@@ -145,7 +145,7 @@ binderhub-service:
   enabled: true
   config:
     BinderHub:
-      image_prefix: us-central1-docker.pkg.dev/leap-pangeo/imagebuilding-registry
+      image_prefix: us-central1-docker.pkg.dev/leap-pangeo/imagebuilding-registry/
   buildPodsRegistryCredentials:
     server: https://us-central1-docker.pkg.dev
     username: "_json_key"
