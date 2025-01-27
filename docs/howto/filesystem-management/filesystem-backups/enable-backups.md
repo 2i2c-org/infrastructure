@@ -4,12 +4,32 @@
 This document covers how to enable automatic filesystem backups across the cloud
 providers we use.
 
-(howto:filesystem-backups:enable:gcp)=
-## GCP
-
 ```bash
 export CLUSTER_NAME=<cluster-name>
 ```
+
+(howto:filesystem-backups:enable:aws)=
+## AWS
+
+```{attention}
+For AWS hubs running `jupyterhub-home-nfs` only
+```
+
+To enable backups of home directories running on AWS EBS volumes, add the following line to the cluster's terraform values file.
+
+```
+enable_nfs_backup = true
+```
+
+Then apply the changes with:
+
+```bash
+terraform plan -var-file=projects/$CLUSTER_NAME.tfvars
+terraform apply -var-file=projects/$CLUSTER_NAME.tfvars
+```
+
+(howto:filesystem-backups:enable:gcp)=
+## GCP
 
 1. **Create relevant resources via terraform.**
 
