@@ -89,40 +89,32 @@ If the hub will be deployed on a GCP cluster, we can setup [gcr.io](https://gcr.
 
 ### For other cloud providers (quay.io)
 
-If the hub will be deployed on another cloud provider than GCP, we must setup a new [quay.io](https://quay.io) organization and a robot account to push and pull from it.
+If the hub will be deployed on another cloud provider than GCP, we must get the credentials of the robot account that will allow us to push and pull from the central quay organization 'imagebuilding-non-gcp-hubs'. This organization stores the images used by 2i2c hubs running on infrastructure different than GCP.
 
-1. Go to https://quay.io/organizations/new/ and create a new organization.
-   Give it a memorable name like `<cluster-name>-<hub-name>`.
-   1. Set the Organisation Email to `support+quay-<cluster-name>-<hub-name>@2i2c.org`, like `support+quay-opensci-small-binder@2i2c.org`. It will still be delivered to `support@2i2c.org` but functions as a unique username identifier. This is called [subaddressing](https://en.wikipedia.org/wiki/Email_address#Subaddressing).
-   1. Select the free "Open Source" plan and create the organisation.
-1. Make sure this new organization is selected, by going to https://quay.io/organization/`<new-org-name>`.
-1. Select the 'Robot Accounts' option on the left menu.
-1. Click 'Create Robot account', give it a memorable name (such as `image_builder`) and click 'Create'.
-1. In the next screen, don't select any of the existing repositories, as we need this robot account to have enough permissions to push **any** new repository under the organization, so permissions to existing repositories is not needed.
-   (You likely will not see this "next screen" for new organisations which do not have any repositories yet.)
-1. Once done, click the name of the robot account again. This will give you its username and password.
+1. Go to the 'Robot Accounts' tab of the 'imagebuilding-non-gcp-hubs' organization
+1. Click on the 'imagebuilding-non-gcp-hubs+image_builder' name of the robot account. This will give you its username and password.
    ```{important}
    Store these somewhere safe as we will need them in a following step.
    ```
-1. Select the 'Team and Membership' option on the left menu.
-1. Click on the 'Options' wheel of the `owners` team, then select 'Manage Team Members'.
-1. Type in the name of the robot account that you created, select it from the list and add it to the `owners` team.
-1. Add also the other engineers as members of this new organization by searching their handles in the search bar on the right.
 
 (howto:features:imagebuilding-hub:configure-binderhub-service-chart)=
 ## Setup the `binderhub-service` chart
 
-We will use the [binderhub-service](https://github.com/2i2c-org/binderhub-service/) Helm chart to run BinderHub, the Python software, as a standalone service to build and push images with [repo2docker](https://github.com/jupyterhub/repo2docker), next to JupyterHub.
+We will use the [binderhub-service](https://github.com/2i2c-org/binderhub-service/) helm chart to run BinderHub, the Python software, as a standalone service to build and push images with [repo2docker](https://github.com/jupyterhub/repo2docker), next to JupyterHub.
 
 1. Setup the `binderhub-service` config
+
+    ```{note}
+    BinderHub.image_prefix setting has to respect a specific format, depending on the image registry used:
+    - for gcr.io: `<region>-docker.pkg.dev/<project-name>/<repository-name>`
+    - for quay.io: `quay.io/imagebuilding-non-gcp-hubs/<cluster-name>-<hub-name>-`
+    ```
 
     ```yaml
     binderhub-service:
       enabled: true
       config:
         BinderHub:
-          # something like <region>-docker.pkg.dev/<project-name>/<repository-name> for grc.io
-          # or quay.io/org/repo/cluster-hub/ for quay.io
           image_prefix: <repository_path>
       buildPodsRegistryCredentials:
         # registry server address like https://quay.io or https://us-central1-docker.pkg.dev
