@@ -53,6 +53,8 @@ jupyterhub:
         profile_options: &profile_options
           image: &profile_options_image
             display_name: Image
+            dynamic_image_building:
+              enabled: True
             choices:
               python:
                 display_name: Py - NASA Openscapes Python 39dffde
@@ -216,3 +218,9 @@ jupyterhub:
   scheduling:
     userScheduler:
       enabled: true
+
+binderhub-service:
+  enabled: true
+  buildPodsRegistryCredentials:
+    server: https://quay.io
+    username: "imagebuilding-non-gcp-hubs+image_builder"
