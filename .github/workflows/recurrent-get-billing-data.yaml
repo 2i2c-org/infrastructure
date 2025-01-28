@@ -14,7 +14,7 @@ jobs:
     steps:
       - name: Compute billing period and deadline
         run: |
-          echo "billing_month=$(date -d +'%B')" >> $GITHUB_ENV
+          echo "billing_month=$(date +'%B')" >> $GITHUB_ENV
           echo "start_date_as_iso=$(date -d '+1 month' +'%Y-%m-02')" >> $GITHUB_ENV
           echo "end_date_as_iso=$(date -d '+1 month' +'%Y-%m-07')" >> $GITHUB_ENV
 
