@@ -98,41 +98,6 @@ local notebookNodes = [
         // GPUs in a single AZ are in use and no new nodes can be spawned
         availabilityZones: masterAzs,
     },
-    // ncar-cisl
-    {
-        instanceType: "r5.xlarge",
-        namePrefix: "nb-ncar-cisl",
-        labels+: { "2i2c/hub-name": "ncar-cisl" },
-        tags+: { "2i2c:hub-name": "ncar-cisl" }
-    },
-    {
-        instanceType: "r5.4xlarge",
-        namePrefix: "nb-ncar-cisl",
-        labels+: { "2i2c/hub-name": "ncar-cisl" },
-        tags+: { "2i2c:hub-name": "ncar-cisl" }
-    },
-    {
-        instanceType: "r5.16xlarge",
-        namePrefix: "nb-ncar-cisl",
-        labels+: { "2i2c/hub-name": "ncar-cisl" },
-        tags+: { "2i2c:hub-name": "ncar-cisl" }
-    },
-    {
-        instanceType: "g4dn.xlarge",
-        namePrefix: "gpu-ncar-cisl",
-        minSize: 0,
-        labels+: { "2i2c/hub-name": "ncar-cisl" },
-        tags+: {
-            "k8s.io/cluster-autoscaler/node-template/resources/nvidia.com/gpu": "1",
-            "2i2c:hub-name": "ncar-cisl",
-        },
-        taints+: {
-            "nvidia.com/gpu": "present:NoSchedule"
-        },
-        // Allow provisioning GPUs across all AZs, to prevent situation where all
-        // GPUs in a single AZ are in use and no new nodes can be spawned
-        availabilityZones: masterAzs,
-    },
     // cosmicds
     {
         instanceType: "r5.xlarge",

@@ -22,10 +22,6 @@ user_buckets = {
     "delete_after" : null,
     "tags" : { "2i2c:hub-name" : "showcase" },
   },
-  "scratch-ncar-cisl" : {
-    "delete_after" : 7,
-    "tags" : { "2i2c:hub-name" : "ncar-cisl" },
-  },
 }
 
 hub_cloud_permissions = {
@@ -40,8 +36,5 @@ hub_cloud_permissions = {
       "scratch-showcase",
       "persistent-showcase",
     ],
-  },
-  "ncar-cisl" : {
-    bucket_admin_access : ["scratch-ncar-cisl"],
   },
 }
