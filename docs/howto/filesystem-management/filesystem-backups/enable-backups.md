@@ -21,6 +21,12 @@ To enable backups of home directories running on AWS EBS volumes, add the follow
 enable_nfs_backup = true
 ```
 
+Ensure you are in the correct terraform workspace to apply the changes:
+
+```bash
+terraform workspace select $CLUSTER_NAME
+```
+
 Then apply the changes with:
 
 ```bash
