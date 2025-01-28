@@ -133,25 +133,6 @@ local notebookNodes = [
         // GPUs in a single AZ are in use and no new nodes can be spawned
         availabilityZones: masterAzs,
     },
-    // itcoocean
-    {
-        instanceType: "r5.xlarge",
-        namePrefix: "nb-itcoocean",
-        labels+: { "2i2c/hub-name": "itcoocean" },
-        tags+: { "2i2c:hub-name": "itcoocean" }
-    },
-    {
-        instanceType: "r5.4xlarge",
-        namePrefix: "nb-itcoocean",
-        labels+: { "2i2c/hub-name": "itcoocean" },
-        tags+: { "2i2c:hub-name": "itcoocean" }
-    },
-    {
-        instanceType: "r5.16xlarge",
-        namePrefix: "nb-itcoocean",
-        labels+: { "2i2c/hub-name": "itcoocean" },
-        tags+: { "2i2c:hub-name": "itcoocean" }
-    },
     // cosmicds
     {
         instanceType: "r5.xlarge",

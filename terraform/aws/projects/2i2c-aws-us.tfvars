@@ -26,10 +26,6 @@ user_buckets = {
     "delete_after" : 7,
     "tags" : { "2i2c:hub-name" : "ncar-cisl" },
   },
-  "scratch-itcoocean" : {
-    "delete_after" : 7,
-    "tags" : { "2i2c:hub-name" : "itcoocean" },
-  },
 }
 
 hub_cloud_permissions = {
@@ -47,8 +43,5 @@ hub_cloud_permissions = {
   },
   "ncar-cisl" : {
     bucket_admin_access : ["scratch-ncar-cisl"],
-  },
-  "itcoocean" : {
-    bucket_admin_access : ["scratch-itcoocean"],
   },
 }
