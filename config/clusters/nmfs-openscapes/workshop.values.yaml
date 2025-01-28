@@ -183,3 +183,6 @@ jupyterhub-home-nfs:
   quotaEnforcer:
     hardQuota: "4" # in GB
     path: "/export/workshop"
+
+binderhub-service:
+  enabled: false
