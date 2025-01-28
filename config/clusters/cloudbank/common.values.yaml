@@ -19,7 +19,7 @@ jupyterhub:
       limit: 2
     image:
       name: quay.io/2i2c/cloudbank-data8-image
-      tag: a3737807fe74
+      tag: e0390051a2d9
     nodeSelector:
       # Put everything on the most appropriate instance type for these users
       node.kubernetes.io/instance-type: n2-highmem-4
