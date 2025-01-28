@@ -44,14 +44,6 @@ hubs:
       - daskhub-common.values.yaml
       - ncar-cisl.values.yaml
       - enc-ncar-cisl.secret.values.yaml
-  - name: itcoocean
-    display_name: "ITCOocean"
-    domain: itcoocean.2i2c.cloud
-    helm_chart: basehub
-    helm_chart_values_files:
-      - basehub-common.values.yaml
-      - itcoocean.values.yaml
-      - enc-itcoocean.secret.values.yaml
   - name: cosmicds
     display_name: "Cosmic DS"
     domain: cosmicds.2i2c.cloud
