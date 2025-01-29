@@ -35,17 +35,6 @@ cd terraform/azure
 terraform init
 ```
 
-````{note}
-Currently, since our GCP terraform config is the only one that uses different backends, an extra `-backend-config` flag needs to be passed to the `init` command to initialize.
-
-For example, for our Pangeo projects, run:
-
-```bash
-cd terraform/gcp
-terraform init -backend-config=backends/pangeo-backend.hcl
-```
-````
-
 ```{note}
 If prior backend data exists in a `terraform.lock.hcl`, you might see an `Error: Backend configuration changed` when trying to initialize that backend. To reconfigure this backend, ignoring any saved configuration, add the `-reconfigure` flag to the init command.
 ```
@@ -92,23 +81,6 @@ terraform workspace select justiceinnovationlab
 For the majority of day-to-day work, this will be the prevalent workflow provided you have initialised terraform with
 
 ```bash
-terraform init -backend-config=backends/default-backend.hcl -reconfigure
+terraform init
 ```
 ````
-
-### If the new workspace is stored in a different backend to the current workspace
-
-To change between workspaces that are stored in _different_ backends, terraform will need to be reinitialised in order to pick up the new backend.
-The commands, therefore, are:
-
-```bash
-terraform init -backend-config=backends/<REQUIRED_CONFIG>.hcl -reconfigure
-terraform workspace select WORKSPACE_NAME
-```
-
-For example, if you were working on our `pilot-hubs`, with our default backend initialised, but wanted to change to working on our Pangeo deployments, the commands would look as follows:
-
-```bash
-terraform init -backend-config=backends/pangeo-backend.hcl -reconfigure
-terraform workspace select pangeo-hubs
-```
