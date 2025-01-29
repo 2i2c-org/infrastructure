@@ -57,14 +57,6 @@ hubs:
       - basehub-common.values.yaml
       - demo.values.yaml
       - enc-demo.secret.values.yaml
-  - name: ohw
-    display_name: "Ocean Hack Week"
-    domain: oceanhackweek.2i2c.cloud
-    helm_chart: daskhub
-    helm_chart_values_files:
-      - daskhub-common.values.yaml
-      - ohw.values.yaml
-      - enc-ohw.secret.values.yaml
   - name: temple
     display_name: "Temple University"
     domain: temple.2i2c.cloud
