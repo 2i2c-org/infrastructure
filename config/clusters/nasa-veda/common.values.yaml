@@ -162,7 +162,7 @@ basehub:
                   display_name: Rocker Geospatial with RStudio
                   description: R environment with many geospatial libraries pre-installed
                   kubespawner_override:
-                    image: rocker/binder:4.3
+                    image: rocker/binder:4.4
                     image_pull_policy: Always
                     # Launch RStudio after the user logs in
                     default_url: /rstudio

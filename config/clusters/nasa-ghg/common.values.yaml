@@ -204,7 +204,7 @@ basehub:
             - US-GHG-Center:ghg-trial-access
             - 2i2c-org:hub-access-for-2i2c-staff
           kubespawner_override:
-            image: rocker/binder:4.3
+            image: rocker/binder:4.4
             image_pull_policy: Always
             # Launch RStudio after the user logs in
             default_url: /rstudio
