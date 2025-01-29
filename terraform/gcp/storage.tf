@@ -19,7 +19,7 @@ resource "google_filestore_instance" "homedirs" {
   }
 
   networks {
-    network = var.enable_private_cluster ? data.google_compute_network.default_network.name : "default"
+    network = "default"
     modes   = ["MODE_IPV4"]
   }
 }
