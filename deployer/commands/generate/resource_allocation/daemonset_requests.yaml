@@ -82,12 +82,6 @@ gke:
     cpu_requests: 354m
     memory_requests: 656Mi
     k8s_version: v1.29.1-gke.1589020
-  pangeo-hubs:
-    requesting_daemon_sets: calico-node,fluentbit-gke,gke-metadata-server,gke-metrics-agent,ip-masq-agent,netd,pdcsi-node,support-cryptnono,support-prometheus-node-exporter
-    other_daemon_sets: ""
-    cpu_requests: 354m
-    memory_requests: 656Mi
-    k8s_version: v1.29.1-gke.1589020
 eks:
   # Current overhead is 195m and 250Mi (May 15 2024 with EKS 1.29.4).
   #
