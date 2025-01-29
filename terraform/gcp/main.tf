@@ -1,7 +1,11 @@
 terraform {
   required_version = "~> 1.5"
 
-  backend "gcs" {}
+  backend "gcs" {
+    bucket = "two-eye-two-see-org-terraform-state"
+    prefix = "terraform/state/pilot-hubs"
+  }
+
   required_providers {
     google = {
       # FIXME: upgrade to v6, see https://registry.terraform.io/providers/hashicorp/google/latest/docs/guides/version_6_upgrade

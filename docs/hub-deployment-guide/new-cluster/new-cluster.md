@@ -333,7 +333,7 @@ terraform init
 :sync: gcp-key
 ```bash
 cd terraform/gcp
-terraform init -backend-config=backends/default-backend.hcl -reconfigure
+terraform init
 ```
 ````
 
@@ -345,19 +345,6 @@ terraform init
 ```
 ````
 `````
-
-````{note}
-There are other backend config files stored in `terraform/backends` that will configure a different storage bucket to read/write the remote terraform state for projects which we cannot access from GCP with our `@2i2c.org` email accounts.
-This saves us the pain of having to handle multiple authentications as these storage buckets are within the project we are trying to deploy to.
-
-For example, to work with Pangeo you would initialise terraform like so:
-
-```bash
-terraform init -backend-config=pangeo-backend.hcl -reconfigure
-```
-
-<!-- TODO: add instructions on how/when to create other backends -->
-````
 
 ## Creating a new terraform workspace
 
