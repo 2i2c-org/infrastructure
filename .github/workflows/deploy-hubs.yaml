@@ -198,6 +198,7 @@ jobs:
   upgrade-support:
     runs-on: ubuntu-latest
     needs: [generate-jobs]
+    name: "support-${{ matrix.jobs.cluster_name }}-${{ matrix.jobs.provider }}"
 
     # We declare outputs indicating the job failed status of a specific job
     # variation. We are currently required to do this in a hardcoded fashion,
@@ -227,7 +228,6 @@ jobs:
       failure_nmfs-openscapes: ${{ steps.declare-failure.outputs.failure_nmfs-openscapes }}
       failure_openscapes: ${{ steps.declare-failure.outputs.failure_openscapes }}
       failure_opensci: ${{ steps.declare-failure.outputs.failure_opensci }}
-      failure_pangeo-hubs: ${{ steps.declare-failure.outputs.failure_pangeo-hubs }}
       failure_projectpythia: ${{ steps.declare-failure.outputs.failure_projectpythia }}
       failure_queensu: ${{ steps.declare-failure.outputs.failure_queensu }}
       failure_smithsonian: ${{ steps.declare-failure.outputs.failure_smithsonian }}
@@ -424,6 +424,7 @@ jobs:
   upgrade-staging:
     runs-on: ubuntu-latest
     needs: [reset-jobs]
+    name: "${{ matrix.jobs.cluster_name }}-${{ matrix.jobs.hub_name }}-${{ matrix.jobs.provider }}"
     if: |
       !cancelled() &&
       (github.event_name == 'push' && contains(github.ref, 'main')) &&
@@ -465,7 +466,6 @@ jobs:
       failure_nmfs-openscapes_staging: ${{ steps.declare-failure.outputs.failure_nmfs-openscapes_staging }}
       failure_openscapes_staging: ${{ steps.declare-failure.outputs.failure_openscapes_staging }}
       failure_opensci_staging: ${{ steps.declare-failure.outputs.failure_opensci_staging }}
-      failure_pangeo-hubs_staging: ${{ steps.declare-failure.outputs.failure_pangeo-hubs_staging }}
       failure_projectpythia_staging: ${{ steps.declare-failure.outputs.failure_projectpythia_staging }}
       failure_queensu_staging: ${{ steps.declare-failure.outputs.failure_queensu_staging }}
       failure_smithsonian_staging: ${{ steps.declare-failure.outputs.failure_smithsonian_staging }}
@@ -602,6 +602,7 @@ jobs:
   upgrade-prod:
     runs-on: ubuntu-latest
     needs: [filter-failed-staging]
+    name: "${{ matrix.jobs.cluster_name }}-${{ matrix.jobs.hub_name }}-${{ matrix.jobs.provider }}"
     if: |
       !cancelled() &&
       (github.event_name == 'push' && contains(github.ref, 'main')) &&

@@ -30,3 +30,8 @@ jupyterhub-home-nfs:
   quotaEnforcer:
     hardQuota: "0.1" # in GB
     path: "/export/staging"
+
+binderhub-service:
+  config:
+    BinderHub:
+      image_prefix: quay.io/imagebuilding-non-gcp-hubs/nmfs-openscapes-staging-

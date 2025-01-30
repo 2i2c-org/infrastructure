@@ -113,10 +113,10 @@ binderhub-service:
       badge_base_url: https://binder.openveda.cloud
       auth_enabled: false
       enable_api_only_mode: false
-      image_prefix: quay.io/veda-binder/binder-
+      image_prefix: quay.io/imagebuilding-non-gcp-hubs/veda-binder-
     DockerRegistry:
-      url: https://quay.io
-      username: veda-binder+image_builder
+      url: &url https://quay.io
+      username: &username imagebuilding-non-gcp-hubs+image_builder
   extraEnv:
     - name: JUPYTERHUB_API_TOKEN
       valueFrom:
@@ -132,5 +132,5 @@ binderhub-service:
     - name: JUPYTERHUB_BASE_URL
       value: "https://hub.binder.openveda.cloud"
   buildPodsRegistryCredentials:
-    server: https://quay.io
-    username: veda-binder+image_builder
+    server: *url
+    username: *username

@@ -19,6 +19,7 @@ hubs:
     helm_chart_values_files:
       - common.values.yaml
       - staging.values.yaml
+      - enc-common.secret.values.yaml
       - enc-staging.secret.values.yaml
   - name: prod
     display_name: projectpythia prod
@@ -27,6 +28,7 @@ hubs:
     helm_chart_values_files:
       - common.values.yaml
       - prod.values.yaml
+      - enc-common.secret.values.yaml
       - enc-prod.secret.values.yaml
   - name: pythia-binder
     display_name: Binder for use with Project Pythia
@@ -35,4 +37,5 @@ hubs:
     helm_chart_values_files:
       - common.values.yaml
       - pythia-binder.values.yaml
+      - enc-common.secret.values.yaml
       - enc-pythia-binder.secret.values.yaml

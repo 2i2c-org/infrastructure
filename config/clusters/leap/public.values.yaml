@@ -115,6 +115,8 @@ jupyterhub:
                   cpu_limit: 3.45
           image:
             display_name: Image
+            dynamic_image_building:
+              enabled: True
             unlisted_choice:
               enabled: True
               display_name: "Custom image"
@@ -139,3 +141,11 @@ jupyterhub:
                 slug: "pytorch"
                 kubespawner_override:
                   image: "pangeo/pytorch-notebook:2024.06.02"
+binderhub-service:
+  enabled: true
+  config:
+    BinderHub:
+      image_prefix: us-central1-docker.pkg.dev/leap-pangeo/imagebuilding-registry/
+  buildPodsRegistryCredentials:
+    server: https://us-central1-docker.pkg.dev
+    username: "_json_key"
