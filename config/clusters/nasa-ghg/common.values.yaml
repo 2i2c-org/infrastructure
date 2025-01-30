@@ -86,7 +86,7 @@ basehub:
             - US-GHG-Center:ghg-trial-access
             - 2i2c-org:hub-access-for-2i2c-staff
           kubespawner_override:
-            image: public.ecr.aws/nasa-veda/pangeo-notebook-veda-image:2024.08.18-v1
+            image: public.ecr.aws/nasa-veda/pangeo-notebook-veda-image:2024.11.11-v1
             init_containers:
               # Need to explicitly fix ownership here, as otherwise these directories will be owned
               # by root on most NFS filesystems - neither EFS nor Google Filestore support anonuid
@@ -204,7 +204,7 @@ basehub:
             - US-GHG-Center:ghg-trial-access
             - 2i2c-org:hub-access-for-2i2c-staff
           kubespawner_override:
-            image: rocker/binder:4.3
+            image: rocker/binder:4.4
             image_pull_policy: Always
             # Launch RStudio after the user logs in
             default_url: /rstudio
