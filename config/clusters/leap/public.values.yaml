@@ -51,8 +51,8 @@ jupyterhub:
       Authenticator:
         enable_auth_state: true
         admin_users:
-          - rabernat
-          - jbusecke
+          - RobertPincus
+          - SammyAgrawal
   singleuser:
     initContainers: []
     storage:

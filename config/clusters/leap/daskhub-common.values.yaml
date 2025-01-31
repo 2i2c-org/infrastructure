@@ -97,8 +97,9 @@ basehub:
         Authenticator:
           enable_auth_state: true
           admin_users:
-            - rabernat
-            - jbusecke
+            # ref: https://2i2c.freshdesk.com/a/tickets/2761
+            - RobertPincus
+            - SammyAgrawal
     singleuser:
       cloudMetadata:
         blockWithIptables: false
