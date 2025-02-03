@@ -25,7 +25,6 @@ jupyterhub:
 
 jupyterhub-home-nfs:
   eks:
-    enabled: true
     volumeId: vol-004cc1b60a1dfb9e4
   quotaEnforcer:
     hardQuota: "64" # in GB
