@@ -16,6 +16,10 @@ nfs:
     # serverIP is set in staging / prod respectively
 jupyterhub-home-nfs:
   enabled: true
+  eks:
+    enabled: true
+  prometheusExporter:
+    enabled: true
 
 jupyterhub:
   custom:
