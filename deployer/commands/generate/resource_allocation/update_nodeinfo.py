@@ -68,7 +68,7 @@ def get_node_capacity_info(instance_type: str):
     # Total amount of RAM and CPU available to kubernetes as a whole.
     # This accounts for things running on the node, such as kubelet, the
     # container runtime, systemd, etc. This does *not* count for daemonsets
-    # and pods runninng on the kubernetes cluster.
+    # and pods running on the kubernetes cluster.
     allocatable = node["status"]["allocatable"]
     cpu_allocatable = parse_quantity(allocatable["cpu"])
     mem_allocatable = parse_quantity(allocatable["memory"])
