@@ -39,6 +39,10 @@ This provides 'Monthly costs by linked account' and 'Monthly costs by
 service'. Once you open those reports, you can further filter and group
 as you wish. A CSV of reports can also be downloaded from this page.
 
+#### Enable multi-year cost explorer data
+
+{ref}`Log into the 2i2c management account{cloud-access:aws-sso}` via the SSO and follow the [AWS User Guide](https://docs.aws.amazon.com/cost-management/latest/userguide/ce-configuring-data.html).
+
 ### Azure
 
 We have limited expertise here, as we have never actually had billing
