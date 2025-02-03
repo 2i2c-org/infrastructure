@@ -41,7 +41,7 @@ as you wish. A CSV of reports can also be downloaded from this page.
 
 #### Enable multi-year cost explorer data
 
-{ref}`Log into the 2i2c management account{cloud-access:aws-sso}` via the SSO and follow the [AWS User Guide](https://docs.aws.amazon.com/cost-management/latest/userguide/ce-configuring-data.html).
+Multi-year data is not available by default in the AWS Cost Explorer. To enable it, log into the {ref}`2i2c management account<cloud-access:aws-sso>` via the SSO and follow the AWS User Guide on [Configuring multi-year and granular data](https://docs.aws.amazon.com/cost-management/latest/userguide/ce-configuring-data.html).
 
 ### Azure
 
