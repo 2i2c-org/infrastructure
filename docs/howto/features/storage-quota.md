@@ -137,7 +137,16 @@ We will then forward Alertmanager's alert to PagerDuty.
 Use these resource to learn more about [PagerDuty's Prometheus integration](https://www.pagerduty.com/docs/guides/prometheus-integration-guide/) and [Prometheus' Alertmanager configuration](https://prometheus.io/docs/alerting/latest/configuration/)
 ```
 
-First, we need to enable Alertmanager in the hub's support values file (for example, [here's the one for the `nasa-veda` cluster](https://github.com/2i2c-org/infrastructure/blob/main/config/clusters/nasa-veda/support.values.yaml)).
+First, we need to enable the Prometheus exporter in the `jupyterhub-home-nfs` config so that the appropriate data is exported to Prometheus.
+Add the following config to wherever `jupyterhub-home-nfs` is running, e.g., [see the `nasa-veda` config](https://github.com/2i2c-org/infrastructure/blob/15ded3ff6fa1ee51f2622f8c3b7f7e91283eefa5/config/clusters/nasa-veda/common.values.yaml#L315-L316).
+
+```yaml
+jupyterhub-home-nfs:
+  prometheusExporter:
+    enabled: true
+```
+
+First, we need to enable Alertmanager in the cluster's support values file (for example, [here's the one for the `nasa-veda` cluster](https://github.com/2i2c-org/infrastructure/blob/main/config/clusters/nasa-veda/support.values.yaml)).
 
 ```yaml
 prometheus:
@@ -145,7 +154,7 @@ prometheus:
     enabled: true
 ```
 
-Then, we need to create a Prometheus rule that will alert us when the disk usage of the NFS server exceeds a certain threshold. For example, to alert us when the disk usage of the NFS server exceeds 90% of the total disk size over a 15min period, we would add the following to the hub's support values file:
+Next, we need to create a Prometheus rule that will alert us when the disk usage of the NFS server exceeds a certain threshold. For example, to alert us when the disk usage of the NFS server exceeds 90% of the total disk size over a 15min period, we would add the following to the hub's support values file:
 
 ```yaml
 prometheus:
