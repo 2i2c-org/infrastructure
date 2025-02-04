@@ -1,0 +1,16 @@
+name: jetstream
+provider: kubeconfig
+kubeconfig:
+  file: enc-deployer-credentials.secret.yaml
+support:
+  helm_chart_values_files:
+    - support.values.yaml
+    - enc-support.secret.values.yaml
+hubs:
+  - name: binderhub
+    display_name: "Jetstream2 BinderHub"
+    domain: hub.jetstream2.2i2c.cloud
+    helm_chart: basehub
+    helm_chart_values_files:
+      - binderhub.values.yaml
+      - enc-binderhub.secret.values.yaml
