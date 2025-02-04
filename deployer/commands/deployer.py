@@ -166,7 +166,7 @@ def run_hub_health_check(
 
     # Find the hub's config
     hub_indx = [
-        indx for (indx, h) in enumerate(cluster.hubs) if h.spec["name"] == hub_name
+        index for (index, h) in enumerate(cluster.hubs) if h.spec["name"] == hub_name
     ]
     if len(hub_indx) == 1:
         hub = cluster.hubs[hub_indx[0]]

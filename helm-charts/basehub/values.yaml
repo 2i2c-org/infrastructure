@@ -781,7 +781,7 @@ jupyterhub:
 
         # For all pods, mount home in both /home/jovyan (done via singleuser.storage.static)
         # as well as /home/rstudio. This allows rocker images (which use the
-        # rstudio user and put home ine /home/rstudio) to be first class citizens
+        # rstudio user and put home in /home/rstudio) to be first class citizens
         # along with jupyter based images, regardless of how they are specified (
         # via the configurator, or with unlisted_choice, or as a profile). For non-rocker
         # images, this is just invisible in the UI and there is no performance overhead
