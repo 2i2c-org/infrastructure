@@ -197,6 +197,47 @@ jupyterhub:
                   cpu_limit: 15.695
                   node_selector:
                     node.kubernetes.io/instance-type: r5.4xlarge
+      - display_name: NVIDIA Tesla T4, ~16 GB, ~4 CPUs
+        description: "Start a container on a dedicated node with a GPU"
+        slug: "gpu"
+        allowed_groups:
+          - nmfs-openscapes:gpu-access-2i2c
+          - 2i2c-org:hub-access-for-2i2c-staff
+        profile_options:
+          image:
+            display_name: Environment
+            dynamic_image_building:
+              enabled: true
+            unlisted_choice:
+              enabled: true
+              display_name: "Custom image"
+              validation_regex: "^.+:.+$"
+              validation_message: "Must be a publicly available docker image of form <image-name>:<tag>"
+              kubespawner_override:
+                image: "{value}"
+            choices:
+              pytorch:
+                display_name: Pangeo PyTorch ML Notebook
+                default: false
+                slug: "pytorch"
+                kubespawner_override:
+                  image: "quay.io/pangeo/pytorch-notebook:2024.11.11"
+              tensorflow2:
+                display_name: Pangeo Tensorflow2 ML Notebook
+                default: true
+                slug: "tensorflow2"
+                kubespawner_override:
+                  image: "quay.io/pangeo/ml-notebook:2024.11.11"
+        kubespawner_override:
+          environment:
+            NVIDIA_DRIVER_CAPABILITIES: compute,utility
+          mem_limit: null
+          mem_guarantee: 14G
+          node_selector:
+            node.kubernetes.io/instance-type: g4dn.xlarge
+          extra_resource_limits:
+            nvidia.com/gpu: "1"
+
   hub:
     allowNamedServers: true
     config:
