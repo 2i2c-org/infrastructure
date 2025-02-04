@@ -120,7 +120,7 @@ To do so, follow these steps:
 
 In some cases we need to gain root access to an AWS account, e.g. migrating billing responsibility to a client. To do this,
 
-1. Log into the AWS SSO and take note of the Account ID (12 digits) and root user email address that you want to gain root access to. The root user email address is usually aliased to `support@2i2c.org`.
+1. Log into the AWS SSO and take note of the Account ID (12 digits) and root user email address that you want to gain root access to. This information is also available by viewing "Organizations" from the [2i2c-sandbox account](https://us-east-1.console.aws.amazon.com/organizations/v2/home/accounts). The root user email address is usually aliased to `support@2i2c.org`.
 1. Sign into AWS and click on {bdg-muted-line}`Sign in using root user email`.
 1. Enter the root user email address and click on {bdg-muted-line}`Next`.
 1. Click on {bdg-muted-line}`Forgot password`.
