@@ -18,6 +18,7 @@ Usually, it is because it was a hub that we created for a workshop/conference an
 - **Link to New Hub issue:** <!-- The link to the original issue to create the hub, e.g. https://github.com/2i2c-org/infrastructure/issues/#NNN -->
 - **Proposed end date:** <!-- The date by which the hub should be out of service. This should have been mentioned in the New Hub issue above so can be copy-pasted. Otherwise, leave blank and negotiate with the Community Representative. -->
 - **Cluster the hub is on:** <!-- If you know which cluster the hub is on, please let us know. But don't worry if not! -->
+- **AirTable resource**: <!-- Airtable Enablement record. -->
 
 ### Task List
 
