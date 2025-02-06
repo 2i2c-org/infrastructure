@@ -12,6 +12,7 @@ k8s_versions = {
   notebook_nodes_version : "1.29.1-gke.1589018",
 }
 
+enable_filestore_backups = true
 filestores = {
   "filestore_b" = {
     name_suffix = "b",
