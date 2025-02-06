@@ -33,7 +33,7 @@ gcpFilestoreBackups:
     - two-eye-two-see-uk-homedirs
   project: two-eye-two-see-uk
   zone: europe-west2
-  retentionDays: 2
   serviceAccount:
+    name: gcp-filestore-backups-sa
     annotations:
       iam.gke.io/gcp-service-account: two-eye-two-filestore-backup@two-eye-two-see-uk.iam.gserviceaccount.com
