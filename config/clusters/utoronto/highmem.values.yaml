@@ -1,0 +1,18 @@
+jupyterhub:
+  ingress:
+    hosts: [highmem.utoronto.2i2c.cloud]
+    tls:
+      - hosts: [highmem.utoronto.2i2c.cloud]
+        secretName: https-auto-tls
+  hub:
+    db:
+      pvc:
+        # prod stores logs, so let's make it big
+        storage: 60Gi
+    config:
+      CILogonOAuthenticator:
+        oauth_callback_url: https://highmem.utoronto.2i2c.cloud/hub/oauth_callback
+  singleuser:
+    memory:
+      limit: 5G
+      guarantee: 2G
