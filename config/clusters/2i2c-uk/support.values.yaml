@@ -32,7 +32,7 @@ gcpFilestoreBackups:
   filestoreNames:
     - two-eye-two-see-uk-homedirs
   project: two-eye-two-see-uk
-  zone: europe-west2
+  zone: europe-west2-b
   serviceAccount:
     name: gcp-filestore-backups-sa
     annotations:
