@@ -4,7 +4,8 @@ project_id = "two-eye-two-see-uk"
 zone   = "europe-west2-b"
 region = "europe-west2"
 
-billing_account_id = "0157F7-E3EA8C-25AC3C"
+billing_account_id       = "0157F7-E3EA8C-25AC3C"
+enable_filestore_backups = true
 
 k8s_versions = {
   min_master_version : "1.29.1-gke.1589018",
