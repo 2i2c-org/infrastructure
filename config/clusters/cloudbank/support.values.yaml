@@ -26,3 +26,15 @@ grafana:
       - secretName: grafana-tls
         hosts:
           - grafana.cloudbank.2i2c.cloud
+
+gcpFilestoreBackups:
+  enabled: true
+  filestoreNames:
+    - cb-homedirs
+  project: cb-1003-1696
+  zone: us-central1-b
+  retentionDays: 2
+  serviceAccount:
+    name: gcp-filestore-backups-sa
+    annotations:
+      iam.gke.io/gcp-service-account: cb-filestore-backup@cb-1003-1696.iam.gserviceaccount.com
