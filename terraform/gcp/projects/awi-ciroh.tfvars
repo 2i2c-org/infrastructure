@@ -6,6 +6,7 @@ core_node_machine_type = "n2-highmem-4"
 enable_network_policy  = true
 enable_logging         = false
 
+enable_filestore_backups = true
 filestores = {
   "filestore_b" = {
     name_suffix : "b",
