@@ -6,7 +6,7 @@
 resource "google_service_account" "filestore_backup_sa" {
   count = var.enable_filestore_backups ? 1 : 0
   # Service account IDs are limited to 30 chars
-  account_id   = "${var.prefix}-filestore-backup"
+  account_id   = "${format("%.11s", var.prefix)}-filestore-backup"
   display_name = "Service account for gcp-filestore-backups pods in ${var.prefix}"
   project      = var.project_id
 }
