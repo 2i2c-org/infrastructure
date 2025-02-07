@@ -1655,3 +1655,27 @@ jupyterhub:
 
 jupyterhub-home-nfs:
   enabled: false
+  nfsServer:
+    resources:
+      requests:
+        cpu: 0.1
+        memory: 30G
+      limits:
+        cpu: 0.2
+        memory: 32G
+  quotaEnforcer:
+    resources:
+      requests:
+        cpu: 0.01
+        memory: 10M
+      limits:
+        cpu: 0.02
+        memory: 11M
+  prometheusExporter:
+    resources:
+      requests:
+        cpu: 0.01
+        memory: 11M
+      limits:
+        cpu: 0.02
+        memory: 13M
