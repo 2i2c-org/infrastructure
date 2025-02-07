@@ -16,5 +16,5 @@ resource "google_compute_disk" "nfs_homedirs" {
 }
 
 output "persistent_disk_id_map" {
-  value = { for pd in values(google_compute_disk.nfs_homedirs)[*] : pd.name => { "id": pd.id, "disk_id": pd.disk_id } }
+  value = { for pd in values(google_compute_disk.nfs_homedirs)[*] : pd.name => pd.id }
 }
