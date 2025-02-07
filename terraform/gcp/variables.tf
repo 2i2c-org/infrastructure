@@ -356,12 +356,12 @@ variable "enable_filestore_backups" {
 
 variable "persistent_disks" {
   type = map(object({
-    size = number
-    type = optional(string, "pd-ssd")
+    size        = number
+    type        = optional(string, "pd-ssd")
     name_suffix = optional(string, null)
-    tags = optional(map(string), {})
+    tags        = optional(map(string), {})
   }))
-  default = {}
+  default     = {}
   description = <<-EOT
   Deploy one or more GCP Compute Disks.
 
