@@ -211,7 +211,6 @@ hub_cloud_permissions = {
   },
 }
 
-disable_cluster_wide_filestore = false
 ebs_volumes = {
   "staging" = {
     size        = 110
@@ -228,5 +227,3 @@ ebs_volumes = {
 }
 
 enable_nfs_backup = true
-
-original_single_efs_tags = { "2i2c:hub-name" : "prod" }
