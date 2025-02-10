@@ -26,3 +26,15 @@ prometheus:
         - secretName: prometheus-tls
           hosts:
             - prometheus.ciroh.awi.2i2c.cloud
+
+gcpFilestoreBackups:
+  enabled: true
+  filestoreNames:
+    - awi-ciroh-homedirs-b
+  project: ciroh-jupyterhub-423218
+  zone: us-central1-b
+  retentionDays: 2
+  serviceAccount:
+    name: gcp-filestore-backups-sa
+    annotations:
+      iam.gke.io/gcp-service-account: awi-ciroh-filestore-backup@ciroh-jupyterhub-423218.iam.gserviceaccount.com

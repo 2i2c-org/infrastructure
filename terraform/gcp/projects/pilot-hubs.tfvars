@@ -63,15 +63,6 @@ user_buckets = {
   "scratch-dask-staging" : {
     "delete_after" : 7,
   },
-  "scratch-ohw" : {
-    # delete_after 30 was requested via https://2i2c.freshdesk.com/a/tickets/2051
-    "delete_after" : 30,
-    "extra_admin_members" : [
-      # Requested via https://2i2c.freshdesk.com/a/tickets/2051, Erik and James
-      # were added as group owners besides Alex who requested it.
-      "group:pilot-hubs-scratch-ohw-writers@googlegroups.com",
-    ],
-  },
 }
 
 
@@ -80,11 +71,6 @@ hub_cloud_permissions = {
     allow_access_to_external_requester_pays_buckets : true,
     bucket_admin_access : ["scratch-dask-staging"],
     hub_namespace : "dask-staging",
-  },
-  "ohw" : {
-    allow_access_to_external_requester_pays_buckets : true,
-    bucket_admin_access : ["scratch-ohw"],
-    hub_namespace : "ohw",
   },
 }
 

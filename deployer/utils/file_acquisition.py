@@ -255,5 +255,7 @@ def get_cluster_names_list():
     Returns a list of all the clusters currently listed under config/clusters
     """
     return [
-        d.name for d, _, _ in CONFIG_CLUSTERS_PATH.walk() if "templates" not in str(d)
+        d.split("/")[-1]
+        for d, _, _ in os.walk(CONFIG_CLUSTERS_PATH)
+        if "templates" not in d
     ]

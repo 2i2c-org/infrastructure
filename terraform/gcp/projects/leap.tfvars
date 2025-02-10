@@ -22,6 +22,7 @@ region = "us-central1"
 # Multi-tenant cluster, network policy is required to enforce separation between hubs
 enable_network_policy = true
 
+enable_filestore_backups = true
 filestores = {
   "filestore" = { capacity_gb = 4096 }
 }

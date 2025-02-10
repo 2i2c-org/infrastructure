@@ -14,7 +14,8 @@ region = "us-central1"
 # Config required to enable automatic budget alerts to be sent to support@2i2c.org
 billing_account_id = "0157F7-E3EA8C-25AC3C"
 
-enable_network_policy = true
+enable_network_policy    = true
+enable_filestore_backups = true
 
 k8s_versions = {
   min_master_version : "1.30.4-gke.1348000",

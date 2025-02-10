@@ -32,3 +32,15 @@ grafana:
       - secretName: grafana-tls
         hosts:
           - grafana.latam.catalystproject.2i2c.cloud
+
+gcpFilestoreBackups:
+  enabled: true
+  filestoreNames:
+    - latam-homedirs-b
+  project: catalystproject-392106
+  zone: southamerica-east1-c
+  retentionDays: 2
+  serviceAccount:
+    name: gcp-filestore-backups-sa
+    annotations:
+      iam.gke.io/gcp-service-account: latam-filestore-backup@catalystproject-392106.iam.gserviceaccount.com

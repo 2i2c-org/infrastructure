@@ -237,7 +237,7 @@ local daskNodes = [
             namePrefix: 'dask',
             availabilityZones: [nodeAz],
             minSize: 0,
-            maxSize: 500,
+            maxSize: 4,
             ssh: {
                 publicKeyPath: 'ssh-keys/earthscope.key.pub'
             },

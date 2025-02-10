@@ -25,8 +25,12 @@ jupyterhub:
 
 jupyterhub-home-nfs:
   eks:
-    enabled: true
     volumeId: vol-08dafa2e06872afbd
   quotaEnforcer:
     hardQuota: "0.1" # in GB
     path: "/export/staging"
+
+binderhub-service:
+  config:
+    BinderHub:
+      image_prefix: quay.io/imagebuilding-non-gcp-hubs/nmfs-openscapes-staging-

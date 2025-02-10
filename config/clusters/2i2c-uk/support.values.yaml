@@ -26,3 +26,15 @@ grafana:
       - secretName: grafana-tls
         hosts:
           - grafana.uk.2i2c.cloud
+
+gcpFilestoreBackups:
+  enabled: true
+  filestoreNames:
+    - two-eye-two-see-uk-homedirs
+  project: two-eye-two-see-uk
+  zone: europe-west2-b
+  retentionDays: 2
+  serviceAccount:
+    name: gcp-filestore-backups-sa
+    annotations:
+      iam.gke.io/gcp-service-account: two-eye-two-filestore-backup@two-eye-two-see-uk.iam.gserviceaccount.com

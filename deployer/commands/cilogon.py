@@ -317,7 +317,14 @@ def find_duplicated_clients(clients):
     """
     client_names = [c["name"] for c in clients]
     client_names_count = Counter(client_names)
-    return [k for k, v in client_names_count.items() if v > 1]
+    return [
+        print(
+            f"Found a duplicated entry for {k}. Marking the unused client for deletion."
+        )
+        or k
+        for k, v in client_names_count.items()
+        if v > 1
+    ]
 
 
 def find_orphaned_clients(clients):
@@ -356,7 +363,10 @@ def find_orphaned_clients(clients):
                     f"A hub pertaining to client {client['name']} does NOT exist. Marking client for deletion."
                 )
                 clients_to_be_deleted.append(client)
-        else:
+        # This was a client requested to us by the upstream community
+        # that they are using. We should not delete it.
+        # https://github.com/2i2c-org/infrastructure/issues/5496
+        elif client["name"] != "VEDA Auth Prod":
             print(
                 f"A cluster pertaining to client {client['name']} does NOT exist. Marking client for deletion."
             )
