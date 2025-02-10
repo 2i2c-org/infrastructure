@@ -1,1 +1,1 @@
-prefix = "test"
+prefix = "js"
