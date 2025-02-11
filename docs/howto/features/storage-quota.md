@@ -162,7 +162,7 @@ jupyterhub-home-nfs:
     enabled: true
 ```
 
-First, we need to enable Alertmanager in the cluster's support values file (for example, [here's the one for the `nasa-veda` cluster](https://github.com/2i2c-org/infrastructure/blob/main/config/clusters/nasa-veda/support.values.yaml)).
+Then, we need to enable Alertmanager in the cluster's support values file (for example, [here's the one for the `nasa-veda` cluster](https://github.com/2i2c-org/infrastructure/blob/main/config/clusters/nasa-veda/support.values.yaml)).
 
 ```yaml
 prometheus:
@@ -177,10 +177,10 @@ prometheus:
   serverFiles:
     alerting_rules.yml:
       groups:
-        # Duplicate this entry for every hub on the cluster that uses an EBS volume as an NFS server
-        - name: <cluster_name> <hub_name> jupyterhub-home-nfs EBS volume full
+        # Duplicate this entry for every hub on the cluster that uses a disk as an NFS server
+        - name: <cluster_name> <hub_name> jupyterhub-home-nfs disk full
           rules:
-            - alert: <hub_name>-jupyterhub-home-nfs-ebs-full
+            - alert: <hub_name>-jupyterhub-home-nfs-disk-full
               expr: node_filesystem_avail_bytes{mountpoint="/shared-volume", component="shared-volume-metrics", namespace="<hub_name>"} / node_filesystem_size_bytes{mountpoint="/shared-volume", component="shared-volume-metrics", namespace="<hub_name>"} < 0.1
               for: 15m
               labels:
@@ -188,7 +188,7 @@ prometheus:
                 channel: pagerduty
                 cluster: <cluster_name>
               annotations:
-                summary: "jupyterhub-home-nfs EBS volume full in namespace {{ $labels.namespace }}"
+                summary: "jupyterhub-home-nfs disk full in namespace {{ $labels.namespace }}"
 ```
 
 ```{note}
@@ -203,7 +203,6 @@ And finally, we need to configure Alertmanager to send alerts to PagerDuty.
 ```yaml
 prometheus:
   alertmanager:
-    enabled: true
     config:
       route:
         group_wait: 10s

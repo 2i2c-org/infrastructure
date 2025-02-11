@@ -20,6 +20,8 @@ basehub:
 
   jupyterhub-home-nfs:
     enabled: true
+    prometheusExporter:
+      enabled: true
     gke:
       enabled: true
       volumeId: projects/leap-pangeo/zones/us-central1-c/disks/hub-nfs-homedirs-staging
