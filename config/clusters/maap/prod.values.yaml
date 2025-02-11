@@ -65,3 +65,7 @@ binderhub-service:
         2i2c/hub-name: prod
     BinderHub:
       image_prefix: quay.io/imagebuilding-non-gcp-hubs/maap-prod-
+
+jupyterhub-home-nfs:
+  eks:
+    volumeId: vol-0cb9118aa95971a6a
