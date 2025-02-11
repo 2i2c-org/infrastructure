@@ -29,8 +29,7 @@ grafana:
 
 gcpFilestoreBackups:
   enabled: true
-  filestoreNames:
-    - cb-homedirs
+  filestoreName: cb-homedirs
   project: cb-1003-1696
   zone: us-central1-b
   retentionDays: 2

@@ -65,9 +65,7 @@ terraform apply -var-file=projects/$CLUSTER_NAME.tfvars
       ```yaml
       gcpFilestoreBackups:
         enabled: true
-        filestoreNames:
-          - <filestore-name>
-          - ...
+        filestoreName: <filestore-name>
         project: <gcp-project>
         zone: <gcp-zone>
         serviceAccount:
@@ -76,7 +74,7 @@ terraform apply -var-file=projects/$CLUSTER_NAME.tfvars
             iam.gke.io/gcp-service-account: <gcp-service-account-email>
       ```
       where:
-      - `filestoreNames` is a list of the filestore names to be backed up (can be
+      - `filestoreName` is the name of the filestore to be backed up (can be
         found from the Filestore Instances page in the GCP console)
       - `project` is the name of the GCP project in which the filestore exists
       - `zone` is the GCP zone the filestore is deployed to and where the backups
@@ -84,7 +82,7 @@ terraform apply -var-file=projects/$CLUSTER_NAME.tfvars
       - `annotations` is the output from the `terraform apply` command in the
         previous step. You can run `terraform output gcp_filestore_backups_k8s_sa_annotations`
         to retrieve this.
-1. **Upgrade the support chart.**
+2. **Upgrade the support chart.**
    ```bash
    deployer deploy-support $CLUSTER_NAME
    ```

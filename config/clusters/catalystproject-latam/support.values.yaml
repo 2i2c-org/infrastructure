@@ -35,8 +35,7 @@ grafana:
 
 gcpFilestoreBackups:
   enabled: true
-  filestoreNames:
-    - latam-homedirs-b
+  filestoreName: latam-homedirs-b
   project: catalystproject-392106
   zone: southamerica-east1-c
   retentionDays: 2

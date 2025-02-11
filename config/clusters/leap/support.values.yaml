@@ -36,8 +36,7 @@ grafana:
 
 gcpFilestoreBackups:
   enabled: true
-  filestoreNames:
-    - leap-homedirs
+  filestoreName: leap-homedirs
   project: leap-pangeo
   zone: us-central1-c
   retentionDays: 2
