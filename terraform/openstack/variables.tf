@@ -13,9 +13,13 @@ variable "prefix" {
   Should not end with a '-', that is automatically added.
   EOT
 }
+
+
 # https://registry.terraform.io/providers/terraform-provider-openstack/openstack/latest/docs/resources/containerinfra_clustertemplate_v1#master_flavor-1
 variable "master_flavor" {
-  type        = string
+  type = string
+
+  # https://docs.jetstream-cloud.org/general/instance-flavors/
   default     = "m3.small"
   description = "Machine type for the master nodes"
 }
@@ -28,7 +32,7 @@ variable "image" {
 
 variable "notebook_nodes" {
   type = map(object({
-    min : number,
+    min : optional(number),
     max : number,
     machine_type : string,
     role : optional(string, "notebook"),
@@ -37,7 +41,6 @@ variable "notebook_nodes" {
   description = "Notebook node pools to create"
   default     = {}
 }
-
 
 variable "dask_nodes" {
   type = map(object({
@@ -77,6 +80,6 @@ variable "core_node_max_count" {
   This number should be small enough to prevent runaway scaling,
   but large enough to support occasional spikes for whatever reason.
 
-  Minimum node count is fixed at 1.
+  Minimum node count is fixed at 1, see https://bugs.launchpad.net/magnum/+bug/2098002
   EOT
 }

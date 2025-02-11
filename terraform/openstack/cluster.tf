@@ -22,6 +22,7 @@ resource "openstack_containerinfra_clustertemplate_v1" "template" {
   }
 }
 
+# https://registry.terraform.io/providers/terraform-provider-openstack/openstack/latest/docs/resources/containerinfra_cluster_v1
 resource "openstack_containerinfra_cluster_v1" "cluster" {
   name                = "${var.prefix}-cluster"
   cluster_template_id = openstack_containerinfra_clustertemplate_v1.template.id
@@ -63,8 +64,19 @@ resource "openstack_containerinfra_nodegroup_v1" "nb" {
   max_node_count = each.value.max
   merge_labels   = true
   labels         = each.value.labels
+}
 
-  depends_on = [
-    openstack_containerinfra_nodegroup_v1.core,
-  ]
+resource "openstack_containerinfra_nodegroup_v1" "dask" {
+  for_each = var.dask_nodes
+  name     = "dask-${var.prefix}-${each.key}"
+
+  cluster_id     = openstack_containerinfra_cluster_v1.cluster.id
+  flavor_id      = each.value.machine_type
+  image_id       = var.image
+  role           = each.value.role
+  node_count     = 1
+  min_node_count = each.value.min
+  max_node_count = each.value.max
+  merge_labels   = true
+  labels         = each.value.labels
 }
