@@ -26,6 +26,12 @@ enable_filestore_backups = true
 filestores = {
   "filestore" = { capacity_gb = 4096 }
 }
+persistent_disks = {
+  "staging" = {
+    size        = 1
+    name_suffix = "staging"
+  }
+}
 
 user_buckets = {
   "scratch-staging" : {

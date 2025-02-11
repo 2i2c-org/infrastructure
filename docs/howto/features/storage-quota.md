@@ -13,6 +13,9 @@ The in-cluster NFS server uses a pre-provisioned disk to store the users' home d
 
 For infrastructure running on AWS, we can create a disk through Terraform by adding a block like the following to the [`tfvars` file of the cluster](https://github.com/2i2c-org/infrastructure/tree/main/terraform/aws/projects):
 
+`````{tab-set}
+````{tab-item} AWS
+:sync: aws-key
 ```
 ebs_volumes = {
   "staging" = {
@@ -23,6 +26,19 @@ ebs_volumes = {
   }
 }
 ```
+````
+````{tab-item} GCP
+:sync: gcp-key
+```
+persistent_disks = {
+  "staging" = {
+    size        = 100  # in GB
+    name_suffix = "staging"
+  }
+}
+```
+````
+`````
 
 This will create a disk with a size of 100GB for the `staging` hub that we can reference when configuring the NFS server.
 

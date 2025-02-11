@@ -1659,7 +1659,7 @@ jupyterhub-home-nfs:
     resources:
       requests:
         cpu: 0.1
-        memory: 30G
+        memory: 25G
       limits:
         cpu: 0.2
         memory: 32G

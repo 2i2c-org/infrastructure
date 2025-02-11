@@ -354,6 +354,21 @@ variable "enable_filestore_backups" {
   EOT
 }
 
+variable "persistent_disks" {
+  type = map(object({
+    size        = number
+    type        = optional(string, "pd-balanced")
+    name_suffix = optional(string, null)
+    tags        = optional(map(string), {})
+  }))
+  default     = {}
+  description = <<-EOT
+  Deploy one or more GCP Compute Disks.
+
+  This provisions a managed compute disk that can be used by jupyterhub-home-nfs
+  server to store home directories for users.
+  EOT
+}
 
 variable "enable_node_autoprovisioning" {
   type        = bool
