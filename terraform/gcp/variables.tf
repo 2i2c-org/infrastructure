@@ -357,7 +357,7 @@ variable "enable_filestore_backups" {
 variable "persistent_disks" {
   type = map(object({
     size        = number
-    type        = optional(string, "pd-ssd")
+    type        = optional(string, "pd-balanced")
     name_suffix = optional(string, null)
     tags        = optional(map(string), {})
   }))
