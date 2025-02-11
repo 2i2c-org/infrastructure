@@ -29,8 +29,7 @@ prometheus:
 
 gcpFilestoreBackups:
   enabled: true
-  filestoreNames:
-    - awi-ciroh-homedirs-b
+  filestoreName: awi-ciroh-homedirs-b
   project: ciroh-jupyterhub-423218
   zone: us-central1-b
   retentionDays: 2

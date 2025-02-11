@@ -29,8 +29,7 @@ grafana:
 
 gcpFilestoreBackups:
   enabled: true
-  filestoreNames:
-    - hhmi-homedirs
+  filestoreName: hhmi-homedirs
   project: hhmi-398911
   zone: us-west2-b
   retentionDays: 2

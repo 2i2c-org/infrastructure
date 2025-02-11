@@ -29,8 +29,7 @@ grafana:
 
 gcpFilestoreBackups:
   enabled: true
-  filestoreNames:
-    - two-eye-two-see-uk-homedirs
+  filestoreName: two-eye-two-see-uk-homedirs
   project: two-eye-two-see-uk
   zone: europe-west2-b
   retentionDays: 2

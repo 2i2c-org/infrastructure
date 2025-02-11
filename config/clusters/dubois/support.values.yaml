@@ -29,8 +29,7 @@ grafana:
 
 gcpFilestoreBackups:
   enabled: true
-  filestoreNames:
-    - dubois-homedirs
+  filestoreName: dubois-homedirs
   project: dubois-436615
   zone: us-central1-b
   retentionDays: 2
