@@ -1,6 +1,6 @@
 nfs:
   pv:
-    serverIP: fs-0ab6afc7642f72b90.efs.us-west-2.amazonaws.com
+    serverIP: 10.100.66.17
 userServiceAccount:
   annotations:
     eks.amazonaws.com/role-arn: arn:aws:iam::916098889494:role/maap-staging
@@ -65,3 +65,10 @@ binderhub-service:
         2i2c/hub-name: staging
     BinderHub:
       image_prefix: quay.io/imagebuilding-non-gcp-hubs/maap-staging-
+
+jupyterhub-home-nfs:
+  eks:
+    volumeId: vol-043cd887a98827319
+  quotaEnforcer:
+    hardQuota: "1" # in GB
+    path: "/export/staging"

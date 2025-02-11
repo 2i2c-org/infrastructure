@@ -1,6 +1,6 @@
 nfs:
   pv:
-    serverIP: fs-024fede5429e74439.efs.us-west-2.amazonaws.com
+    serverIP: 10.100.26.92
 userServiceAccount:
   annotations:
     eks.amazonaws.com/role-arn: arn:aws:iam::916098889494:role/maap-prod
@@ -65,3 +65,10 @@ binderhub-service:
         2i2c/hub-name: prod
     BinderHub:
       image_prefix: quay.io/imagebuilding-non-gcp-hubs/maap-prod-
+
+jupyterhub-home-nfs:
+  eks:
+    volumeId: vol-0cb9118aa95971a6a
+  quotaEnforcer:
+    hardQuota: "100" # in GB
+    path: "/export/prod"

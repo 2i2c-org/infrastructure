@@ -13,6 +13,14 @@ nfs:
       - retrans=2
       - noresvport
     baseShareName: /
+
+jupyterhub-home-nfs:
+  enabled: true
+  eks:
+    enabled: true
+  prometheusExporter:
+    enabled: true
+
 dask-gateway:
   enabled: true
 jupyterhub:
