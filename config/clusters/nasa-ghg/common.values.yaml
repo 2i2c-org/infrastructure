@@ -17,6 +17,9 @@ basehub:
       baseShareName: /
   dask-gateway:
     enabled: true
+    gateway:
+      backend:
+        imagePullSecrets: [{name: image-pull-secret}]
   jupyterhub:
     custom:
       daskhubSetup:
