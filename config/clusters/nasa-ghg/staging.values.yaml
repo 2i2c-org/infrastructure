@@ -186,3 +186,14 @@ basehub:
                     cpu_limit: 15.695
                     node_selector:
                       node.kubernetes.io/instance-type: r5.4xlarge
+
+  binderhub-service:
+    dockerApi:
+      nodeSelector:
+        2i2c/hub-name: staging
+    config:
+      KubernetesBuildExecutor:
+        node_selector:
+          2i2c/hub-name: staging
+      BinderHub:
+        image_prefix: quay.io/imagebuilding-non-gcp-hubs/nasa-ghg-staging-
