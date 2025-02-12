@@ -356,12 +356,12 @@ variable "enable_filestore_backups" {
 
 variable "persistent_disks" {
   type = map(object({
-    size               = number
-    type               = optional(string, "pd-balanced")
-    name_suffix        = optional(string, null)
-    enable_nfs_backups = optional(bool, true)
-    max_retention_days = optional(number, 5)
-    tags               = optional(map(string), {})
+    size                = number
+    type                = optional(string, "pd-balanced")
+    name_suffix         = optional(string, null)
+    disable_nfs_backups = optional(bool, false)
+    max_retention_days  = optional(number, 5)
+    tags                = optional(map(string), {})
   }))
   default     = {}
   description = <<-EOT
@@ -371,7 +371,7 @@ variable "persistent_disks" {
   server to store home directories for users.
 
   By default, daily backups of these disks will be enabled with a max retention
-  period of 5 days. To opt out, set enable_nfs_backups = false.
+  period of 5 days. To opt out, set disable_nfs_backups = true.
   EOT
 }
 

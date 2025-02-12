@@ -20,7 +20,7 @@ output "persistent_disk_id_map" {
 }
 
 resource "google_compute_resource_policy" "snapshot_schedule" {
-  for_each = { for k, v in var.persistent_disks : k => v if v.enable_nfs_backups }
+  for_each = { for k, v in var.persistent_disks : k => v if v.disable_nfs_backups != true }
 
   name    = "hub-nfs-homedirs-${each.value.name_suffix}-snapshot-schedule"
   region  = var.region
@@ -40,7 +40,7 @@ resource "google_compute_resource_policy" "snapshot_schedule" {
 }
 
 resource "google_compute_disk_resource_policy_attachment" "snapshot_schedule_policy_attachment" {
-  for_each = { for k, v in var.persistent_disks : k => v if v.enable_nfs_backups }
+  for_each = { for k, v in var.persistent_disks : k => v if v.disable_nfs_backups != true }
 
   name = google_compute_resource_policy.snapshot_schedule[each.value.name_suffix].name
   disk = google_compute_disk.nfs_homedirs[each.value.name_suffix].name

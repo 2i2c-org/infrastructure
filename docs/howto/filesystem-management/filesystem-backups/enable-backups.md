@@ -120,14 +120,14 @@ persistent_disks = {
 }
 ```
 
-Backups must be explicitly _disabled_ by adding `enable_nfs_backups = false`, like so:
+Backups must be explicitly _disabled_ by adding `disable_nfs_backups = true`, like so:
 
 ```
 persistent_disks = {
   "staging" = {
-    size        = 1
-    name_suffix = "staging"
-    enable_nfs_backups = false
+    size                = 1
+    name_suffix         = "staging"
+    disable_nfs_backups = true
   }
 }
 ```
