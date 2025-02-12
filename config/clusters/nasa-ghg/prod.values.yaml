@@ -32,13 +32,13 @@ basehub:
             nodeSelector:
               2i2c/hub-name: prod
 
-binderhub-service:
-  dockerApi:
-    nodeSelector:
-      2i2c/hub-name: prod
-  config:
-    KubernetesBuildExecutor:
-      node_selector:
+  binderhub-service:
+    dockerApi:
+      nodeSelector:
         2i2c/hub-name: prod
-    BinderHub:
-      image_prefix: quay.io/imagebuilding-non-gcp-hubs/nasa-ghg-prod-
+    config:
+      KubernetesBuildExecutor:
+        node_selector:
+          2i2c/hub-name: prod
+      BinderHub:
+        image_prefix: quay.io/imagebuilding-non-gcp-hubs/nasa-ghg-prod-
