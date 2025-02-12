@@ -42,8 +42,8 @@ resource "google_compute_resource_policy" "snapshot_schedule" {
 resource "google_compute_disk_resource_policy_attachment" "snapshot_schedule_policy_attachment" {
   for_each = { for k, v in var.persistent_disks : k => v if v.enable_nfs_backups }
 
-  name = google_compute_resource_policy.snapshot_schedule["${each.value.name_suffix}"].name
-  disk = google_compute_disk.nfs_homedirs["${each.value.name_suffix}"].name
+  name = google_compute_resource_policy.snapshot_schedule[each.value.name_suffix].name
+  disk = google_compute_disk.nfs_homedirs[each.value.name_suffix].name
 
   project = var.project_id
   zone    = var.zone
