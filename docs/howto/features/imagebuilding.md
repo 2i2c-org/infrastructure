@@ -115,7 +115,7 @@ to effectively repeat certain config values below.
     - for quay.io: `quay.io/imagebuilding-non-gcp-hubs/<cluster-name>-<hub-name>-`
     ```
 
-    ```yaml
+    ```
     binderhub-service:
       enabled: true
       config:
@@ -129,14 +129,14 @@ to effectively repeat certain config values below.
           username: &username <account_name>
       buildPodsRegistryCredentials:
         server: *url
-        username: *username*
+        username: *username
     ```
 
 1. Sops-encrypt and store the password for accessing the image registry, in the `enc-<hub>.secret.values.yaml` file, and any other credentials added there.
 
     You should have the password for accessing the image registry from a previous step.
 
-    ```yaml
+    ```
     binderhub-service:
       config:
         DockerRegistry:
