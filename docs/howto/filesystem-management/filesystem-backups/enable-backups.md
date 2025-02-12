@@ -37,6 +37,8 @@ terraform apply -var-file=projects/$CLUSTER_NAME.tfvars
 (howto:filesystem-backups:enable:gcp)=
 ## GCP
 
+### Backup Filestores
+
 1. **Create relevant resources via terraform.**
 
    Our terraform configuration supports creating the relevant resources to support
@@ -90,7 +92,7 @@ terraform apply -var-file=projects/$CLUSTER_NAME.tfvars
 This will have successfully enabled automatic backups of GCP Filestores for this
 cluster.
 
-### Verify successful backups on GCP
+#### Verify successful backups of GCP Filestores
 
 We manually verify that backups are being successfully created and cleaned up on a regular schedule.
 
@@ -104,3 +106,34 @@ where:
 - `<project-name>` is the name of the GCP project the Filestore is located in
 - `<region>` is the GCP region the Filestore is located in, e.g., `us-central1`
 - `<filestore-name>` is the name of the Filestore instance
+
+### Backup persistent disks
+
+Backups of persistent disks are automatically enabled when defining a disk in `.tfvars` file, such as:
+
+```
+persistent_disks = {
+  "staging" = {
+    size        = 1
+    name_suffix = "staging"
+  }
+}
+```
+
+Backups must be explicitly _disabled_ by adding `enable_nfs_backups = false`, like so:
+
+```
+persistent_disks = {
+  "staging" = {
+    size        = 1
+    name_suffix = "staging"
+    enable_nfs_backups = false
+  }
+}
+```
+
+By default, snapshots of the disk will be scheduled to be taken at `00:00 UTC` every day, and a maximum of 5 snapshots will be retained.
+
+```{warning}
+It is not currently possible to define a backup cadence other than daily
+```
