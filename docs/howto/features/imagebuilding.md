@@ -176,3 +176,17 @@ to effectively repeat certain config values below.
         backend:
           imagePullSecrets: [{name: image-pull-secret}]
     ```
+
+1. Ensure the BinderHub components are scheduled on appropriately small nodes using node selectors
+
+   ```yaml
+   binderhub-service:
+    dockerApi:
+      nodeSelector:
+        node.kubernetes.io/instance-type: <e.g. r5.xlarge>
+    config:
+      KubernetesBuildExecutor:
+        node_selector:
+          node.kubernetes.io/instance-type: <e.g. r5.xlarge>
+
+   ```
