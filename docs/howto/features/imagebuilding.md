@@ -102,6 +102,11 @@ If the hub will be deployed on another cloud provider than GCP, we must get the 
 
 We will use the [binderhub-service](https://github.com/2i2c-org/binderhub-service/) helm chart to run BinderHub, the Python software, as a standalone service to build and push images with [repo2docker](https://github.com/jupyterhub/repo2docker), next to JupyterHub.
 
+```{note}
+We make use of [YAML anchors and aliases](https://support.atlassian.com/bitbucket-cloud/docs/yaml-anchors/)
+to effectively repeat certain config values below.
+```
+
 1. Setup the `binderhub-service` config
 
     ```{note}
@@ -110,28 +115,34 @@ We will use the [binderhub-service](https://github.com/2i2c-org/binderhub-servic
     - for quay.io: `quay.io/imagebuilding-non-gcp-hubs/<cluster-name>-<hub-name>-`
     ```
 
-    ```yaml
+    ```
     binderhub-service:
       enabled: true
       config:
         BinderHub:
           # see note above for the format of the image_prefix
           image_prefix: <path-to-image-registry>
+        DockerRegistry:
+          # registry server address like https://quay.io or https://us-central1-docker.pkg.dev
+          url: &url <server_address>
+          # robot account namer or "_json_key" if using grc.io
+          username: &username <account_name>
       buildPodsRegistryCredentials:
-        # registry server address like https://quay.io or https://us-central1-docker.pkg.dev
-        server: <server_address>
-        # robot account namer or "_json_key" if using grc.io
-        username: <account_name>
+        server: *url
+        username: *username
     ```
 
 1. Sops-encrypt and store the password for accessing the image registry, in the `enc-<hub>.secret.values.yaml` file, and any other credentials added there.
 
     You should have the password for accessing the image registry from a previous step.
 
-    ```yaml
+    ```
     binderhub-service:
+      config:
+        DockerRegistry:
+          password: &password <password>
       buildPodsRegistryCredentials:
-        password: <password>
+        password: *password
     ```
 
 1. If pushing to quay.io registry, also setup the credentials for image pulling
@@ -165,3 +176,17 @@ We will use the [binderhub-service](https://github.com/2i2c-org/binderhub-servic
         backend:
           imagePullSecrets: [{name: image-pull-secret}]
     ```
+
+1. Ensure the BinderHub components are scheduled on appropriately small nodes using node selectors
+
+   ```yaml
+   binderhub-service:
+    dockerApi:
+      nodeSelector:
+        node.kubernetes.io/instance-type: <e.g. r5.xlarge>
+    config:
+      KubernetesBuildExecutor:
+        node_selector:
+          node.kubernetes.io/instance-type: <e.g. r5.xlarge>
+
+   ```
