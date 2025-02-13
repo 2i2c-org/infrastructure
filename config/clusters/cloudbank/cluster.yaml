@@ -372,6 +372,14 @@ hubs:
       - common.values.yaml
       - tuskegee.values.yaml
       - enc-tuskegee.secret.values.yaml
+  - name: ucsc
+    display_name: "University of California, Santa Cruz"
+    domain: ucsc.cloudbank.2i2c.cloud
+    helm_chart: basehub
+    helm_chart_values_files:
+      - common.values.yaml
+      - ucsc.values.yaml
+      - enc-ucsc.secret.values.yaml
   - name: wlac
     display_name: "West Los Angeles College"
     domain: wlac.cloudbank.2i2c.cloud
