@@ -1,4 +1,14 @@
 jupyterhub:
+  scheduling:
+    corePods:
+      nodeAffinity:
+        matchNodePurpose: ignore
+    userPods:
+      nodeAffinity:
+        matchNodePurpose: ignore
+    userScheduler:
+      nodeSelector:
+        capi.stackhpc.com/node-group: core-js
   ingress:
     hosts:
       - hub.jetstream2.2i2c.cloud
@@ -19,6 +29,8 @@ jupyterhub:
       templateVars:
         enabled: false
   singleuser:
+    nodeSelector:
+      capi.stackhpc.com/node-group: nb-js-m3-small
     cpu:
       limit: 2
     memory:
@@ -56,7 +68,20 @@ jupyterhub:
 
         # launch the notebook server
         os.execvp(exe, sys.argv)
+  proxy:
+    chp:
+      nodeSelector:
+        capi.stackhpc.com/node-group: core-js
+    traefik:
+      nodeSelector:
+        capi.stackhpc.com/node-group: core-js
+  prePuller:
+    hook:
+      nodeSelector:
+        capi.stackhpc.com/node-group: nb-js-m3-small
   hub:
+    nodeSelector:
+      capi.stackhpc.com/node-group: core-js
     loadRoles:
       binder:
         services:
@@ -74,8 +99,12 @@ jupyterhub:
         auth_enabled: false
       JupyterHub:
         authenticator_class: "null"
+
 binderhub-service:
   enabled: true
+  nodeSelector:
+    capi.stackhpc.com/node-group: core-js
+    hub.jupyter.org/node-purpose: null
   ingress:
     enabled: true
     hosts:
@@ -84,6 +113,10 @@ binderhub-service:
       - secretName: binder-https-auto-tls
         hosts:
           - binder.jetstream2.2i2c.cloud
+  dockerApi:
+    nodeSelector:
+      hub.jupyter.org/node-purpose: null
+      capi.stackhpc.com/node-group: nb-js-m3-small
   config:
     GitHubRepoProvider:
       allowed_specs:
@@ -100,6 +133,11 @@ binderhub-service:
     DockerRegistry:
       url: &url https://quay.io
       username: &username imagebuilding-non-gcp-hubs+image_builder
+    KubernetesBuildExecutor:
+      node_selector:
+        # Schedule builder pods to run on user nodes only
+        hub.jupyter.org/node-purpose: null
+        capi.stackhpc.com/node-group: nb-js-m3-small
   extraEnv:
     - name: JUPYTERHUB_API_TOKEN
       valueFrom:
