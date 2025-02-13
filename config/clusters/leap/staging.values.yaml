@@ -29,5 +29,5 @@ basehub:
       enabled: true
       volumeId: projects/leap-pangeo/zones/us-central1-c/disks/hub-nfs-homedirs-staging
     quotaEnforcer:
-      hardQuota: 0.1  # in GB
+      hardQuota: 0.1 # in GB
       path: "/export/staging"
