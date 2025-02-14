@@ -43,3 +43,14 @@ basehub:
           2i2c/hub-name: staging
       BinderHub:
         image_prefix: quay.io/imagebuilding-non-gcp-hubs/nasa-ghg-staging-
+
+  jupyterhub-home-nfs:
+    eks:
+      volumeId: vol-01889854859d8768d
+    quotaEnforcer:
+      hardQuota: "1" # in GB
+      path: "/export/staging"
+
+  nfs:
+    pv:
+      serverIP: 10.100.204.122
