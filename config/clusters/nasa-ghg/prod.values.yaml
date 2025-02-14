@@ -49,3 +49,7 @@ basehub:
     quotaEnforcer:
       hardQuota: "50" # in GB
       path: "/export/prod"
+
+  nfs:
+    pv:
+      serverIP: 10.100.13.73
