@@ -128,3 +128,20 @@ hub_cloud_permissions = {
     EOT
   },
 }
+
+ebs_volumes = {
+  "staging" = {
+    size        = 50 # 50GB
+    type        = "gp3"
+    name_suffix = "staging"
+    tags        = { "2i2c:hub-name" : "staging" }
+  },
+  "prod" = {
+    size        = 200 # 200GB
+    type        = "gp3"
+    name_suffix = "prod"
+    tags        = { "2i2c:hub-name" : "prod" }
+  }
+}
+
+enable_nfs_backup = true
