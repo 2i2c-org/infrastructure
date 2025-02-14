@@ -42,3 +42,14 @@ basehub:
           2i2c/hub-name: prod
       BinderHub:
         image_prefix: quay.io/imagebuilding-non-gcp-hubs/nasa-ghg-prod-
+
+  jupyterhub-home-nfs:
+    eks:
+      volumeId: vol-050b22932c5cf210e
+    quotaEnforcer:
+      hardQuota: "50" # in GB
+      path: "/export/prod"
+
+  nfs:
+    pv:
+      serverIP: 10.100.13.73
