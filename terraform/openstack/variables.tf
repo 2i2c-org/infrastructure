@@ -14,7 +14,6 @@ variable "prefix" {
   EOT
 }
 
-
 # https://registry.terraform.io/providers/terraform-provider-openstack/openstack/latest/docs/resources/containerinfra_clustertemplate_v1#master_flavor-1
 variable "master_flavor" {
   type = string
