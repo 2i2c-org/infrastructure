@@ -15,6 +15,12 @@ basehub:
         - noresvport
       serverIP: fs-09bd18b3ca23eefa2.efs.us-west-2.amazonaws.com
       baseShareName: /
+  jupyterhub-home-nfs:
+    enabled: true
+    eks:
+      enabled: true
+    prometheusExporter:
+      enabled: true
   dask-gateway:
     enabled: true
     gateway:
