@@ -59,6 +59,7 @@ jupyterhub:
           - craig.persiko@mail.ccsf.edu
           - efuchs@mail.ccsf.edu
           - amy.mclanahan@mail.ccsf.edu
+          - vsoon129@berkeley.edu
     extraFiles:
       configurator-schema-default:
         data:
