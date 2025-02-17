@@ -101,7 +101,6 @@ Reference information about our infrastructure.
 :maxdepth: 1
 
 reference/hubs
-reference/options
 reference/ci-cd/index
 reference/tools
 ```
