@@ -6,23 +6,23 @@ prometheus:
     ingress:
       enabled: true
       hosts:
-        - prometheus.jetstream2.2i2c.cloud
+        - prometheus.binder-pythia.jetstream2.2i2c.cloud
       tls:
         - secretName: prometheus-tls
           hosts:
-            - prometheus.jetstream2.2i2c.cloud
+            - prometheus.binder-pythia.jetstream2.2i2c.cloud
 
 grafana:
   grafana.ini:
     server:
-      root_url: https://grafana.jetstream2.2i2c.cloud/
+      root_url: https://grafana.binder-pythia.jetstream2.2i2c.cloud/
   auth.github:
     enabled: true
     allowed_organizations: 2i2c-org
   ingress:
     hosts:
-      - grafana.jetstream2.2i2c.cloud
+      - grafana.binder-pythia.jetstream2.2i2c.cloud
     tls:
       - secretName: grafana-tls
         hosts:
-          - grafana.jetstream2.2i2c.cloud
+          - grafana.binder-pythia.jetstream2.2i2c.cloud

@@ -1,5 +1,4 @@
-name: jetstream
-provider: kubeconfig
+name: projectpythia-binder
 kubeconfig:
   file: enc-deployer-credentials.secret.yaml
 support:

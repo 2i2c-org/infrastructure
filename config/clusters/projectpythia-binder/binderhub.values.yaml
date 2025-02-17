@@ -8,14 +8,14 @@ jupyterhub:
         matchNodePurpose: ignore
     userScheduler:
       nodeSelector:
-        capi.stackhpc.com/node-group: core-js
+        capi.stackhpc.com/node-group: core
   ingress:
     hosts:
-      - hub.jetstream2.2i2c.cloud
+      - hub.binder-pythia.jetstream2.2i2c.cloud
     tls:
       - secretName: https-auto-tls
         hosts:
-          - hub.jetstream2.2i2c.cloud
+          - hub.binder-pythia.jetstream2.2i2c.cloud
   custom:
     binderhubUI:
       enabled: true
@@ -30,12 +30,7 @@ jupyterhub:
         enabled: false
   singleuser:
     nodeSelector:
-      capi.stackhpc.com/node-group: nb-js-m3-small
-    cpu:
-      limit: 2
-    memory:
-      guarantee: 256M
-      limit: 1G
+      capi.stackhpc.com/node-group: user-m3-medium
     storage:
       type: none
       extraVolumeMounts: []
@@ -68,20 +63,22 @@ jupyterhub:
 
         # launch the notebook server
         os.execvp(exe, sys.argv)
+  # Custom selectors are needed because the magnum driver doesn't yet support
+  # custom labeling due to a bug
   proxy:
     chp:
       nodeSelector:
-        capi.stackhpc.com/node-group: core-js
+        capi.stackhpc.com/node-group: core
     traefik:
       nodeSelector:
-        capi.stackhpc.com/node-group: core-js
+        capi.stackhpc.com/node-group: core
   prePuller:
     hook:
       nodeSelector:
-        capi.stackhpc.com/node-group: nb-js-m3-small
+        capi.stackhpc.com/node-group: user-m3-medium
   hub:
     nodeSelector:
-      capi.stackhpc.com/node-group: core-js
+      capi.stackhpc.com/node-group: core
     loadRoles:
       binder:
         services:
@@ -103,32 +100,33 @@ jupyterhub:
 binderhub-service:
   enabled: true
   nodeSelector:
-    capi.stackhpc.com/node-group: core-js
+    capi.stackhpc.com/node-group: core
     hub.jupyter.org/node-purpose: null
   ingress:
     enabled: true
     hosts:
-      - binder.jetstream2.2i2c.cloud
+      - binder.binder-pythia.jetstream2.2i2c.cloud
     tls:
       - secretName: binder-https-auto-tls
         hosts:
-          - binder.jetstream2.2i2c.cloud
+          - binder.binder-pythia.jetstream2.2i2c.cloud
   dockerApi:
     nodeSelector:
       hub.jupyter.org/node-purpose: null
-      capi.stackhpc.com/node-group: nb-js-m3-small
+      capi.stackhpc.com/node-group: user-m3-medium
   config:
     GitHubRepoProvider:
       allowed_specs:
+        - ^ProjectPythia/.*$
         - "^binder-examples/.*"
     BinderHub:
       base_url: /
-      hub_url: https://hub.jetstream2.2i2c.cloud
-      badge_base_url: https://binder.jetstream2.2i2c.cloud
+      hub_url: https://hub.binder-pythia.jetstream2.2i2c.cloud
+      badge_base_url: https://binder.binder-pythia.jetstream2.2i2c.cloud
       auth_enabled: false
       enable_api_only_mode: false
-      image_prefix: quay.io/imagebuilding-non-gcp-hubs/jetstream-binderhub-
-      banner_message: ""
+      image_prefix: quay.io/imagebuilding-non-gcp-hubs/jetstream2-projectpythia-pythia-binder-
+      banner_message: "Binder on Jetstream2 for use with Project Pythia"
       about_message: ""
     DockerRegistry:
       url: &url https://quay.io
@@ -137,7 +135,7 @@ binderhub-service:
       node_selector:
         # Schedule builder pods to run on user nodes only
         hub.jupyter.org/node-purpose: null
-        capi.stackhpc.com/node-group: nb-js-m3-small
+        capi.stackhpc.com/node-group: user-m3-medium
   extraEnv:
     - name: JUPYTERHUB_API_TOKEN
       valueFrom:
@@ -147,11 +145,11 @@ binderhub-service:
     - name: JUPYTERHUB_CLIENT_ID
       value: "service-binder"
     - name: JUPYTERHUB_API_URL
-      value: "https://hub.jetstream2.2i2c.cloud/hub/api"
+      value: "https://hub.binder-pythia.jetstream2.2i2c.cloud/hub/api"
     # Without this, the redirect URL to /hub/api/... gets
     # appended to binderhub's URL instead of the hub's
     - name: JUPYTERHUB_BASE_URL
-      value: "https://hub.jetstream2.2i2c.cloud/"
+      value: "https://hub.binder-pythia.jetstream2.2i2c.cloud/"
   # The password to the registry is stored encrypted in the hub's encrypted config file
   buildPodsRegistryCredentials:
     server: *url
