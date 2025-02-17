@@ -105,11 +105,11 @@ binderhub-service:
   ingress:
     enabled: true
     hosts:
-      - binder.binder-pythia.jetstream2.2i2c.cloud
+      - binder-pythia.jetstream2.2i2c.cloud
     tls:
       - secretName: binder-https-auto-tls
         hosts:
-          - binder.binder-pythia.jetstream2.2i2c.cloud
+          - binder-pythia.jetstream2.2i2c.cloud
   dockerApi:
     nodeSelector:
       hub.jupyter.org/node-purpose: null
@@ -122,7 +122,7 @@ binderhub-service:
     BinderHub:
       base_url: /
       hub_url: https://hub.binder-pythia.jetstream2.2i2c.cloud
-      badge_base_url: https://binder.binder-pythia.jetstream2.2i2c.cloud
+      badge_base_url: https://binder-pythia.jetstream2.2i2c.cloud
       auth_enabled: false
       enable_api_only_mode: false
       image_prefix: quay.io/imagebuilding-non-gcp-hubs/jetstream2-projectpythia-pythia-binder-

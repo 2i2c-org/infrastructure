@@ -1,4 +1,5 @@
 name: projectpythia-binder
+provider: kubeconfig # allocation SEE240014_IU in https://js2.jetstream-cloud.org/project/
 kubeconfig:
   file: enc-deployer-credentials.secret.yaml
 support:
@@ -7,7 +8,7 @@ support:
     - enc-support.secret.values.yaml
 hubs:
   - name: binderhub
-    display_name: "Jetstream2 BinderHub"
+    display_name: "Project Pythis BinderHub on Jetstream2"
     domain: hub.jetstream2.2i2c.cloud
     helm_chart: basehub
     helm_chart_values_files:
