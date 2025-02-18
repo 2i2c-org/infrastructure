@@ -59,3 +59,9 @@ dependencies:
     version: "0.0.1"
     repository: https://2i2c.org/gcp-filestore-backups
     condition: gcpFilestoreBackups.enabled
+
+  # Provide metrics about GPU usage
+  # https://github.com/NVIDIA/dcgm-exporter
+  - name: dcgm-exporter
+    version: 3.6.1
+    repository: https://nvidia.github.io/dcgm-exporter/helm-charts
