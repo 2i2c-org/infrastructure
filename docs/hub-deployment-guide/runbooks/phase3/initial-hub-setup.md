@@ -77,6 +77,56 @@ All of the following steps must be followed in order to consider phase 3.1 compl
 
    You will be asked to input all the information needed for the command to run successfully. Follow the instructions on the screen and using the information provided to you, fill in all the fields.
 
+   ````{important}
+   If you are deploying a cluster using openstack, then you need to manually add specific node selectors and disable the z2jh default ones. This is because the magnum CAPI driver that is used by Jetstream2, does not currently support setting custom node selectors on nodepools.
+
+   Example:
+   ```yaml
+   jupyterhub:
+      scheduling:
+         corePods:
+            nodeAffinity:
+            matchNodePurpose: ignore
+         userPods:
+            nodeAffinity:
+            matchNodePurpose: ignore
+         userScheduler:
+            nodeSelector:
+            capi.stackhpc.com/node-group: core
+      singleuser:
+         nodeSelector:
+            capi.stackhpc.com/node-group: user-m3-medium
+      proxy:
+         chp:
+            nodeSelector:
+            capi.stackhpc.com/node-group: core
+         traefik:
+            nodeSelector:
+            capi.stackhpc.com/node-group: core
+      prePuller:
+         hook:
+            nodeSelector:
+            capi.stackhpc.com/node-group: user-m3-medium
+      hub:
+         nodeSelector:
+            capi.stackhpc.com/node-group: core
+   binderhub-service:
+      nodeSelector:
+         capi.stackhpc.com/node-group: core
+         hub.jupyter.org/node-purpose: null
+      dockerApi:
+         nodeSelector:
+            hub.jupyter.org/node-purpose: null
+            capi.stackhpc.com/node-group: user-m3-medium
+      config:
+         KubernetesBuildExecutor:
+            node_selector:
+               # Schedule builder pods to run on user nodes only
+               hub.jupyter.org/node-purpose: null
+               capi.stackhpc.com/node-group: user-m3-medium
+   ```
+   ````
+
    1. **If you're adding a hub to an existing cluster with hubs on it**
 
       Then run the deployer command below to generate config for the specific hub configuration:
@@ -139,6 +189,7 @@ All of the following steps must be followed in order to consider phase 3.1 compl
    You can also look at the entries for similar hubs under the same cluster folder, copy / paste one of them, and make modifications as needed for this specific hub.
    For example, see the hubs configuration in [the 2i2c Google Cloud cluster configuration directory](https://github.com/2i2c-org/infrastructure/tree/HEAD/config/clusters/2i2c).
    ```
+
 
 1. **Then reference these files in a new entry under the `hubs` key in the cluster's `cluster.yaml` file**
 
