@@ -79,7 +79,7 @@ This guide will assume you have already followed the guidance in [](/topic/infra
 
 ### Setup credentials
 
-`````{tab-set}
+``````{tab-set}
 
 ````{tab-item} AWS
 :sync: aws-key
@@ -112,9 +112,8 @@ There is a comprehensive guide on how to generate the credentials, and export th
      ```
      openstack coe cluster list
      ```
-````
-
 `````
+``````
 
 (new-cluster:generate-cluster-files)=
 ### Generate cluster files
@@ -150,7 +149,6 @@ We automatically generate the files required to setup a new cluster:
 An automated deployer command doesn't exist yet, these files need to be manually generated!
 ```
 ````
-`````
 
 ````{tab-item} Jetstream2
 :sync: jetstream2-key
@@ -321,7 +319,6 @@ global_storage_account_name    = "myawesomestorageaccount"
 ssh_pub_key                    = "ssh-rsa my-public-ssh-key"
 ```
 ````
-`````
 
 ````{tab-item} Jestream2
 :sync: jetstream2-key
@@ -334,12 +331,14 @@ An automated deployer command doesn't exist yet, these files need to be manually
   ```{warning}
   The value of `min` cannot be zero as currently the Magnum API driver doesn't support having any nodepool with zero nodes.
   ```
-  ```yaml
+
+  ```
   notebook_nodes = {
     "m3.medium" : {
       min : 1,
       max : 100,
-      # 8 CPU,	30 RAM
+      # 8 CPU, 30 RAM
+      # https://docs.jetstream-cloud.org/general/instance-flavors/#jetstream2-cpu
       machine_type : "m3.medium",
       labels = {
         "hub.jupyter.org/node-purpose" = "user",
@@ -347,7 +346,7 @@ An automated deployer command doesn't exist yet, these files need to be manually
       }
     },
   }
-```
+  ```
 ````
 `````
 
@@ -494,9 +493,8 @@ To begin deploying and operating hubs on your new cluster, we need to export the
       cd terraform/azure
       ```
     ````
-    `````
 
-      ````{tab-item} Jetstream2
+    ````{tab-item} Jetstream2
     :sync: jetstream2-key
       ```bash
       cd terraform/openstack
@@ -539,7 +537,7 @@ To begin deploying and operating hubs on your new cluster, we need to export the
       ```
     ````
 
-        ````{tab-item} Azure
+    ````{tab-item} Azure
     :sync: azure-key
       ```bash
       terraform output -raw kubeconfig > ../../config/clusters/$CLUSTER_NAME/deployer-credentials.secret.yaml
@@ -663,7 +661,6 @@ azure:
   resource_group: <resource-group-name>
 ```
 ````
-`````
 
 ````{tab-item} Jetstream2 (kubeconfig)
 :sync: jetstream2-key
@@ -675,6 +672,7 @@ kubeconfig:
   file: enc-deployer-credentials.secret.yaml
 ```
 ````
+`````
 
 Commit this file to the repo.
 
@@ -812,7 +810,6 @@ kubectl get node
 
 It should show you the provisioned node on the cluster if everything works out ok.
 ````
-`````
 
 ````{tab-item} Jetstream2
 :sync: jetstream2-key
