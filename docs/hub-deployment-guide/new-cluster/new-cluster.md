@@ -65,13 +65,21 @@ This guide will assume you have already followed the guidance in [](/topic/infra
    In [](tutorials:setup) you find instructions on how to setup `sops` to
    encrypt and decrypt files.
 ````
+
+````{tab-item} Jetstream2
+:sync: jetstream2-key
+1. Install `kubectl`, `helm`, `sops` and pip install `python-openstackclient` and `python-magnumclient`
+
+   In [](tutorials:setup) you find instructions on how to setup `sops` to
+   encrypt and decrypt files.
+````
 `````
 
 ## Create a new cluster
 
 ### Setup credentials
 
-`````{tab-set}
+``````{tab-set}
 
 ````{tab-item} AWS
 :sync: aws-key
@@ -91,7 +99,21 @@ N/A
 :sync: azure-key
 N/A
 ````
+
+````{tab-item} Jetstream2
+:sync: jetstream2-key
+
+You will need to generate Jetstream2 application credentials that the cli client will use to authenticate against the desired Jetstream2 allocation.
+
+There is a comprehensive guide on how to generate the credentials, and export them as environment variables through sourcing an `openrc.sh` file. It is important to note that when creating the application credentials you must give them `UNRESTRICTED` access by ticking the corresponding box and also select all roles available to you in the `ROLES` box.
+
+- Go to https://js2.jetstream-cloud.org/ and follow the guide at https://cvw.cac.cornell.edu/jetstreamapi/cli/openrc, **but keep in mind the `UNRESTRICTED` part as that's not covered in the guide.**
+- After exporting the variables in the openrc.sh file, make sure you have access by running:
+     ```
+     openstack coe cluster list
+     ```
 `````
+``````
 
 (new-cluster:generate-cluster-files)=
 ### Generate cluster files
@@ -123,6 +145,13 @@ We automatically generate the files required to setup a new cluster:
 
 ````{tab-item} Azure
 :sync: azure-key
+```{warning}
+An automated deployer command doesn't exist yet, these files need to be manually generated!
+```
+````
+
+````{tab-item} Jetstream2
+:sync: jetstream2-key
 ```{warning}
 An automated deployer command doesn't exist yet, these files need to be manually generated!
 ```
@@ -290,6 +319,35 @@ global_storage_account_name    = "myawesomestorageaccount"
 ssh_pub_key                    = "ssh-rsa my-public-ssh-key"
 ```
 ````
+
+````{tab-item} Jestream2
+:sync: jetstream2-key
+
+An automated deployer command doesn't exist yet, these files need to be manually generated. The _minimum_ inputs this file requires are:
+
+- `prefix`: A prefix that will be added to all the cluster-specific resources. Changing this will force the recreation of all resources.
+- `notebook_nodes`: A list of nodebook nodes that will be created in the cluster. The `machine_type` should be one of the [Jetstream2 flavors](https://docs.jetstream-cloud.org/general/instance-flavors/#jetstream2-cpu).
+
+  ```{warning}
+  The value of `min` cannot be zero as currently the Magnum API driver doesn't support having any nodepool with zero nodes.
+  ```
+
+  ```
+  notebook_nodes = {
+    "m3.medium" : {
+      min : 1,
+      max : 100,
+      # 8 CPU, 30 RAM
+      # https://docs.jetstream-cloud.org/general/instance-flavors/#jetstream2-cpu
+      machine_type : "m3.medium",
+      labels = {
+        "hub.jupyter.org/node-purpose" = "user",
+        "k8s.dask.org/node-purpose"    = "scheduler",
+      }
+    },
+  }
+  ```
+````
 `````
 
 ## Add GPU nodegroup if needed
@@ -341,6 +399,14 @@ terraform init
 :sync: azure-key
 ```bash
 cd terraform/azure
+terraform init
+```
+````
+
+````{tab-item} Jetstream2
+:sync: jetstream2-key
+```bash
+cd terraform/openstack
 terraform init
 ```
 ````
@@ -427,6 +493,13 @@ To begin deploying and operating hubs on your new cluster, we need to export the
       cd terraform/azure
       ```
     ````
+
+    ````{tab-item} Jetstream2
+    :sync: jetstream2-key
+      ```bash
+      cd terraform/openstack
+      ```
+    ````
     `````
 
 1. Check you are still in the correct terraform workspace
@@ -470,9 +543,37 @@ To begin deploying and operating hubs on your new cluster, we need to export the
       terraform output -raw kubeconfig > ../../config/clusters/$CLUSTER_NAME/deployer-credentials.secret.yaml
       ```
     ````
+
+    ````{tab-item} Jetstream2
+    :sync: jetstream2-key
+      To access the cluster using kubectl we need to get the kubeconfig with:
+      ```bash
+        openstack coe cluster config <cluster-name> --force > ../../config/clusters/$CLUSTER_NAME/deployer-credentials.secret.json
+      ```
+      This command will generate a file named config in the cwd with the configuration.
+      The --force flag will overwrite this file if it already exists.
+    
+      Encrypt the kubeconfig file using `sops`:
+      ```bash
+      sops --output ./config --encrypt ../../config/clusters/$CLUSTER_NAME/deployer-credentials.secret.json
+      ```
+
+      ```{note}
+      You must be logged into Google with your `@2i2c.org` account at this point so `sops` can read the encryption key from the `two-eye-two-see` project.
+      ```
+
+      Delete the config file to avoid committing it by mistake:
+      ```
+      rm ./config
+      ```
+    ````
     `````
 
 1. Then encrypt the key using `sops`.
+
+    ```{important}
+    This step can be skipped for Jetstream2 because the kubeconfig file is already encrypted from step 1.
+    ```
 
     ```{note}
     You must be logged into Google with your `@2i2c.org` account at this point so `sops` can read the encryption key from the `two-eye-two-see` project.
@@ -558,6 +659,17 @@ azure:
   # The name of the resource group the cluster has been deployed into. This is
   # the same as the resourcegroup_name variable in the .tfvars file.
   resource_group: <resource-group-name>
+```
+````
+
+````{tab-item} Jetstream2 (kubeconfig)
+:sync: jetstream2-key
+```yaml
+name: <cluster-name>  # This should also match the name of the folder: config/clusters/$CLUSTER_NAME
+provider: kubeconfig
+kubeconfig:
+  # The location of the *encrypted* key we exported from terraform
+  file: enc-deployer-credentials.secret.yaml
 ```
 ````
 `````
@@ -684,6 +796,23 @@ It should show you the provisioned node on the cluster if everything works out o
 
 ````{tab-item} Azure
 :sync: azure-key
+Test deployer access by running:
+
+```bash
+deployer use-cluster-credentials $CLUSTER_NAME
+```
+
+and running:
+
+```bash
+kubectl get node
+```
+
+It should show you the provisioned node on the cluster if everything works out ok.
+````
+
+````{tab-item} Jetstream2
+:sync: jetstream2-key
 Test deployer access by running:
 
 ```bash
