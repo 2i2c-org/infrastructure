@@ -23,11 +23,7 @@ basehub:
           oauth_callback_url: https://staging.leap.2i2c.cloud/hub/oauth_callback
 
   jupyterhub-home-nfs:
-    enabled: true
-    prometheusExporter:
-      enabled: true
     gke:
-      enabled: true
       volumeId: projects/leap-pangeo/zones/us-central1-c/disks/hub-nfs-homedirs-staging
     quotaEnforcer:
       hardQuota: 0.1 # in GB
