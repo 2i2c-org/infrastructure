@@ -8,16 +8,16 @@ billing_account_id       = "0157F7-E3EA8C-25AC3C"
 enable_filestore_backups = true
 
 k8s_versions = {
-  min_master_version : "1.29.1-gke.1589018",
-  core_nodes_version : "1.29.1-gke.1589018",
-  notebook_nodes_version : "1.29.1-gke.1589018",
+  min_master_version : "1.32.1-gke.1200003",
+  core_nodes_version : "1.32.1-gke.1200003",
+  notebook_nodes_version : "1.32.1-gke.1200003",
 }
 
 core_node_machine_type = "n2-highmem-4"
 enable_network_policy  = true
 
 notebook_nodes = {
-  "n2-highmem-4-b" : {
+  "n2-highmem-4" : {
     min : 0,
     max : 100,
     machine_type : "n2-highmem-4",
