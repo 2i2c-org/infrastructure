@@ -19,10 +19,10 @@ budget_alert_enabled = false
 billing_account_id   = ""
 
 k8s_versions = {
-  min_master_version : "1.29.4-gke.1043002",
-  core_nodes_version : "1.29.4-gke.1043002",
-  notebook_nodes_version : "1.29.4-gke.1043002",
-  dask_nodes_version : "1.29.4-gke.1043002",
+  min_master_version : "1.32.1-gke.1200003",
+  core_nodes_version : "1.32.1-gke.1200003",
+  notebook_nodes_version : "1.32.1-gke.1200003",
+  dask_nodes_version : "1.32.1-gke.1200003",
 }
 
 user_buckets = {
@@ -46,7 +46,7 @@ user_buckets = {
 
 # Setup notebook node pools
 notebook_nodes = {
-  "n2-highmem-4-b" : {
+  "n2-highmem-4" : {
     min : 0,
     max : 100,
     machine_type : "n2-highmem-4",
