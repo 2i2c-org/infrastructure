@@ -7,9 +7,9 @@ enable_network_policy = true
 billing_account_id = "0157F7-E3EA8C-25AC3C"
 
 k8s_versions = {
-  min_master_version : "1.29.1-gke.1589018",
-  core_nodes_version : "1.29.1-gke.1589018",
-  notebook_nodes_version : "1.29.1-gke.1589018",
+  min_master_version : "1.32.1-gke.1357001",
+  core_nodes_version : "1.32.1-gke.1357001",
+  notebook_nodes_version : "1.32.1-gke.1357001",
 }
 
 enable_filestore_backups = true
