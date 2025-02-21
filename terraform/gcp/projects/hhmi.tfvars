@@ -9,10 +9,10 @@ core_node_machine_type = "n2-highmem-4"
 billing_account_id = "0157F7-E3EA8C-25AC3C"
 
 k8s_versions = {
-  min_master_version : "1.29.1-gke.1589020",
-  core_nodes_version : "1.29.1-gke.1589020",
-  notebook_nodes_version : "1.29.1-gke.1589020",
-  dask_nodes_version : "1.29.1-gke.1589020",
+  min_master_version : "1.32.1-gke.1357001",
+  core_nodes_version : "1.32.1-gke.1357001",
+  notebook_nodes_version : "1.32.1-gke.1357001",
+  dask_nodes_version : "1.32.1-gke.1357001",
 }
 
 enable_network_policy    = true
