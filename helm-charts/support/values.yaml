@@ -473,18 +473,13 @@ cryptnono:
     monero:
       # disable the monero specific detector, as execwhacker catches most of that too
       # monero detector is using bpftrace, which has issues with cross-kernel compatibility
-      enabled: false
+      enabled: true
       resources:
-        # Measured with the following prometheus queries:
-        # Memory: sum(container_memory_usage_bytes{container="monero", namespace="support"}) by (instance)
-        # CPU: sum(rate(container_cpu_usage_seconds_total{container="trace", namespace="support"}[5m])) by (instance)
-        # Seems to hover mostly around the 60Mi mark for memory, and generally less than 0.0002 in CPU. But
-        # 1m (or 0.001) is the lowest that can be specified in kubernetes, so we use that.
         limits:
           memory: 128Mi
           cpu: 5m
         requests:
-          memory: 64Mi
+          memory: 16Mi
           cpu: 1m
 
 # aws-ce-grafana-backend exposes AWS Cost Explorer API info to Grafana
