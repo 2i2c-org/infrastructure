@@ -1,10 +1,10 @@
-prefix     = "dubois"
-project_id = "dubois-436615"
-zone   = "us-central1-b"
-region = "us-central1"
+prefix                   = "dubois"
+project_id               = "dubois-436615"
+zone                     = "us-central1-b"
+region                   = "us-central1"
 enable_network_policy    = true
 enable_filestore_backups = true
-core_node_machine_type = "n2-highmem-2"
+core_node_machine_type   = "n2-highmem-2"
 
 # Config required to enable automatic budget alerts to be sent to support@2i2c.org
 billing_account_id = "0157F7-E3EA8C-25AC3C"
