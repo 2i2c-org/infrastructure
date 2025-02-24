@@ -82,3 +82,19 @@ variable "core_node_max_count" {
   Minimum node count is fixed at 1, see https://bugs.launchpad.net/magnum/+bug/2098002
   EOT
 }
+
+variable "persistent_disks" {
+  type = map(object({
+    size        = number
+    type        = optional(string, "replicated_hdd")
+    name_suffix = optional(string, null)
+    tags        = optional(map(string), {})
+  }))
+  default     = {}
+  description = <<-EOT
+  Deploy one or more Jetstream2 Volumes.
+
+  This provisions a mountable block storage that can be used by jupyterhub-home-nfs
+  server to store home directories for users.
+  EOT
+}
