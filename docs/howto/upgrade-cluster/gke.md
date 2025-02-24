@@ -6,7 +6,7 @@
 [standard cluster upgrades]: https://cloud.google.com/kubernetes-engine/docs/concepts/cluster-upgrades
 
 GKE has helpful documentation on how it handles [standard cluster upgrades].
-Most notably, the default upgrade strategy is called "surge", which mimicks what we refer to as "rolling upgrades" in other parts of our documentation.
+Most notably, the default upgrade strategy is called "surge", which mimics what we refer to as "rolling upgrades" in other parts of our documentation.
 The basic steps remain consistent but are handled automatically be GKE:
 
 1. A node is cordoned so that new pods are not scheduled to it
