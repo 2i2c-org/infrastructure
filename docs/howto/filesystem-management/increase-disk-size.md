@@ -1,25 +1,48 @@
-(howto:increase-size-aws-ebs)=
-# Increase the size of an AWS EBS volume
+(howto:increase-disk-size)=
+# Increase the size of a disk storing home directories
 
 ```bash
 export CLUSTER_NAME=<cluster-name>;
 export HUB_NAME=<hub-name>
 ```
 
-To increase the size of an AWS EBS volume, we need to increase the size of the EBS volume in the [tfvars file of the hub](https://github.com/2i2c-org/infrastructure/tree/main/terraform/aws/projects):
+To increase the size of a disk storing users' home directories, we need to increase its size in the [tfvars file of the cluster](https://github.com/2i2c-org/infrastructure/tree/main/terraform/)
 
-For example, to increase the size of the EBS volume used by `jupyterhub-home-nfs` for the `staging` hub in the `nasa-veda` cluster, we would increase the `size` parameter in the `ebs_volumes` block for the `staging` hub in the [tfvars file for the `nasa-veda` cluster](https://github.com/2i2c-org/infrastructure/blob/main/terraform/aws/projects/nasa-veda.tfvars).
+`````{tab-set}
+````{tab-item} AWS
+```
+ebs_volumes = {
+  "staging" = {
+    size        = 100  # in GB. Increase this!
+    type        = "gp3"
+    name_suffix = "staging"
+    tags        = { "2i2c:hub-name": "staging" }
+  }
+}
+```
+````
+````{tab-item} GCP
+```
+persistent_disks = {
+  "staging" = {
+    size        = 100  # in GB. Increase this!
+    name_suffix = "staging"
+  }
+}
+```
+````
+`````
 
 After updating the tfvars file, we need to plan and apply the changes using terraform:
 
 ```bash
-cd terraform/aws
+terraform workspace select $CLUSTER_NAME
 terraform plan -var-file=projects/$CLUSTER_NAME.tfvars
 terraform apply -var-file=projects/$CLUSTER_NAME.tfvars
 ```
 
-```{note}
-The size of an EBS volume can only be increased, not decreased.
+```{warning}
+The size of a disk can **only** be increased, *not* decreased.
 ```
 
 Once terraform has successfully applied, we also need to grow the size of the filesystem.

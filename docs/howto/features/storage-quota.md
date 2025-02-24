@@ -252,9 +252,9 @@ The important variables to understand here are:
 [Read more about these configuration options.](https://prometheus.io/docs/alerting/latest/configuration/#route)
 ```
 
-## Increasing the size of the volume used by the NFS server
+## Increasing the size of the disk used by the NFS server
 
-If the volume used by the NFS server is close to being full, we may need to increase the size of the volume. This can be done by following the instructions in the [Increase the size of an AWS EBS volume](howto:increase-size-aws-ebs) guide.
+If the disk used by the NFS server is close to being full, we may need to increase its size. This can be done by following the instructions in [](howto:increase-disk-size).
 
 ## Troubleshooting
 
