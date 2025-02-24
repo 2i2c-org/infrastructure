@@ -260,7 +260,12 @@ If the volume used by the NFS server is close to being full, we may need to incr
 
 ### Checking the NFS server is running properly
 
-To check whether the NFS server is running properly, we can run the following command in the NFS server pod in the nfs-server container:
+To check whether the NFS server is running properly, get a shell inside the the NFS server pod in the nfs-server container with:
+
+```bash
+kubectl -n <namespace> exec --stdin --tty <nfs-server-pod> -c nfs-server -- /bin/bash
+```
+and run the following command:
 
 ```bash
 showmount -e 0.0.0.0
