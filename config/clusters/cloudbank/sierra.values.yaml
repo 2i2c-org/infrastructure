@@ -33,9 +33,11 @@ jupyterhub:
           http://google.com/accounts/o8/id:
             username_derivation:
               username_claim: "email"
+            allowed_domains:
+              - sierracollege.edu
       Authenticator:
         admin_users:
-          - profninh@gmail.com
+          - skolathuparambil@sierracollege.edu
           - ericvd@berkeley.edu
           - k_usovich@berkeley.edu
           - sean.smorris@berkeley.edu
