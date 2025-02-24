@@ -30,11 +30,16 @@ jupyterhub:
       CILogonOAuthenticator:
         oauth_callback_url: https://sierra.cloudbank.2i2c.cloud/hub/oauth_callback
         allowed_idps:
-          http://google.com/accounts/o8/id:
+          http://login.microsoftonline.com/common/oauth2/v2.0/authorize:
+            default: true
             username_derivation:
               username_claim: "email"
             allowed_domains:
               - sierracollege.edu
+              - student.sierracollege.edu
+          http://google.com/accounts/o8/id:
+            username_derivation:
+              username_claim: "email"
       Authenticator:
         admin_users:
           - skolathuparambil@sierracollege.edu
