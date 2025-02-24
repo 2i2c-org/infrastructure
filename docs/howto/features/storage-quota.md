@@ -38,6 +38,18 @@ persistent_disks = {
 }
 ```
 ````
+````{tab-item} Jetstream2
+:sync: jetstream2-key
+```
+persistent_disks = {
+  "staging" = {
+    size        = 100  # in GB
+    name_suffix = "staging"
+    tags        = { "2i2c:hub-name": "staging" }
+  }
+}
+```
+````
 `````
 
 This will create a disk with a size of 100GB for the `staging` hub that we can reference when configuring the NFS server.
@@ -86,6 +98,17 @@ jupyterhub-home-nfs:
   gke:
     enabled: true  # can be migrated to common values file
     volumeId: projects/jupyter-nfs/zones/us-central1-f/disks/jupyter-nfs-home-directories
+```
+````
+
+````{tab-item} Jetstream2
+:sync: jetstream2-key
+```yaml
+jupyterhub-home-nfs:
+  enabled: true  # can be migrated to common values file
+  openstack:
+    enabled: true  # can be migrated to common values file
+    volumeId: 694b2c04-6b08-4ebe-8cb9-74f7d42c1b1c
 ```
 ````
 `````
