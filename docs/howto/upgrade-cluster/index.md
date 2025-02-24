@@ -54,4 +54,5 @@ node-upgrade-strategies.md
 k8s-version-skew.md
 aws.md
 azure.md
+gke.md
 ```
