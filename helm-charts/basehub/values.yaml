@@ -1659,10 +1659,10 @@ jupyterhub-home-nfs:
     resources:
       requests:
         cpu: 0.1
-        memory: 25G
+        memory: 1G
       limits:
         cpu: 0.2
-        memory: 32G
+        memory: 3G
   quotaEnforcer:
     resources:
       requests:
@@ -1670,12 +1670,12 @@ jupyterhub-home-nfs:
         memory: 10M
       limits:
         cpu: 0.02
-        memory: 11M
+        memory: 15M
   prometheusExporter:
     resources:
       requests:
         cpu: 0.01
-        memory: 11M
+        memory: 7M
       limits:
         cpu: 0.02
-        memory: 13M
+        memory: 10M
