@@ -118,6 +118,7 @@ binderhub-service:
     GitHubRepoProvider:
       allowed_specs:
         - ^ProjectPythia/.*$
+        - ^ktyle/.*$
         - "^binder-examples/.*"
     BinderHub:
       base_url: /
