@@ -6,10 +6,7 @@ basehub:
       mountOptions:
         - soft
         - noatime
-      # Google FileStore IP
-      serverIP: 10.104.103.242
-      # Name of Google Filestore share
-      baseShareName: /homes/
+      baseShareName: /
   dask-gateway:
     enabled: true
     gateway:
