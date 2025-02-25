@@ -66,8 +66,8 @@ hubs:
     helm_chart: basehub
     helm_chart_values_files:
       - common.values.yaml
-      - calstatela.values.yaml
-      - enc-calstatela.secret.values.yaml
+      - csula.values.yaml
+      - enc-csula.secret.values.yaml
   - name: csulb
     display_name: "California State University Long Beach"
     domain: csulb.cloudbank.2i2c.cloud
