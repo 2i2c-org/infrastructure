@@ -1,0 +1,9 @@
+name: 2i2c-jetstream2
+provider: kubeconfig # allocation CIS250031_IU in https://js2.jetstream-cloud.org/project/
+kubeconfig:
+  file: enc-deployer-credentials.secret.yaml
+support:
+  helm_chart_values_files:
+    - support.values.yaml
+    - enc-support.secret.values.yaml
+hubs: []
