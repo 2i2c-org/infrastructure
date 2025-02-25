@@ -78,7 +78,7 @@ jupyterhub:
             display_name: Image
             choices:
               jupyter-r-notebook:
-                display_name: Jupyter R Notebook
+                display_name: Du Bois Jupyter Notebook
                 kubespawner_override:
                   image: quay.io/highereddata/du-bois-stem:latest
             unlisted_choice:
