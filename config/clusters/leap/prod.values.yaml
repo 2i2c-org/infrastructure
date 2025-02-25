@@ -9,6 +9,9 @@ dask-gateway:
           request: 2G
           limit: 4G
 basehub:
+  nfs:
+    pv:
+      serverIP: 10.3.250.100
   userServiceAccount:
     annotations:
       iam.gke.io/gcp-service-account: leap-prod@leap-pangeo.iam.gserviceaccount.com
