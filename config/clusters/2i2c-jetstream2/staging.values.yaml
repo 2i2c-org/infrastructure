@@ -1,0 +1,86 @@
+nfs:
+  enabled: true
+  volumeReporter:
+    enabled: false
+  pv:
+    enabled: true
+    mountOptions:
+      - rsize=1048576
+      - wsize=1048576
+      - timeo=600
+      - soft # We pick soft over hard, so NFS lockups don't lead to hung processes
+      - retrans=2
+      - noresvport
+    serverIP: 172.29.107.111
+    baseShareName: /
+
+jupyterhub:
+  scheduling:
+    userScheduler:
+      enabled: true
+      nodeSelector:
+        capi.stackhpc.com/node-group: core
+    corePods:
+      nodeAffinity:
+        matchNodePurpose: ignore
+    userPods:
+      nodeAffinity:
+        matchNodePurpose: ignore
+  proxy:
+    chp:
+      nodeSelector:
+        capi.stackhpc.com/node-group: core
+    traefik:
+      nodeSelector:
+        capi.stackhpc.com/node-group: core
+  prePuller:
+    hook:
+      nodeSelector:
+        capi.stackhpc.com/node-group: user-m3-quad
+  ingress:
+    hosts: [staging.js.2i2c.cloud]
+    tls:
+      - hosts: [staging.js.2i2c.cloud]
+        secretName: https-auto-tls
+  custom:
+    2i2c:
+      add_staff_user_ids_to_admin_users: true
+      add_staff_user_ids_of_type: "github"
+    homepage:
+      templateVars:
+        org:
+          name: 2i2c Jetstream2 Staging
+          url: https://2i2c.org
+          logo_url: https://2i2c.org/media/logo.png
+        designed_by:
+          name: 2i2c
+          url: https://2i2c.org
+        operated_by:
+          name: 2i2c
+          url: https://2i2c.org
+        funded_by:
+          name: 2i2c
+          url: https://2i2c.org
+  hub:
+    nodeSelector:
+      capi.stackhpc.com/node-group: core
+    config:
+      JupyterHub:
+        authenticator_class: "github"
+      GitHubOAuthenticator:
+        oauth_callback_url: "https://staging.js.2i2c.cloud/hub/oauth_callback"
+  singleuser:
+    defaultUrl: /lab
+    nodeSelector:
+      capi.stackhpc.com/node-group: user-m3-quad
+
+jupyterhub-home-nfs:
+  enabled: true
+  prometheusExporter:
+    enabled: true
+  openstack:
+    enabled: true
+    volumeId: 694b2c04-6b08-4ebe-8cb9-74f7d42c1b1c
+  quotaEnforcer:
+    hardQuota: 0.1 # in GB
+    path: "/export/staging"
