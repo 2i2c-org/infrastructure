@@ -1,0 +1,56 @@
+jupyterhub:
+  ingress:
+    hosts: [calstatela.cloudbank.2i2c.cloud]
+    tls:
+      - hosts: [calstatela.cloudbank.2i2c.cloud]
+        secretName: https-auto-tls
+  singleuser:
+    memory:
+      # Increased to help deal with possible kernel restarts
+      # https://2i2c.freshdesk.com/a/tickets/567
+      guarantee: 384M
+      limit: 1.5G
+  custom:
+    2i2c:
+      add_staff_user_ids_to_admin_users: true
+      add_staff_user_ids_of_type: "google"
+    homepage:
+      templateVars:
+        org:
+          name: Cal State LA
+          logo_url: https://uc14ab104f4b763300c0d7f2cef3.previews.dropboxusercontent.com/p/thumb/ACg9PU7yDE0WybKi07wazLbyXcMX-OsLTip8NQ_8v_WISbuT5kYH729VGKqZMtedu8UL2oru5xOKLhDJg4DuqZvW7Txv3gHkZt5DouRAc4wZvV352MOoBB140Yg6xW1_QGMnJY3Sy-Q6rWIQ_5-09hY8S_Y5xcu_rwNlXzZDNi2nbUFMHxgj_ba56CE52p-znTn7LjsYhc1BdLuPdfSh6lEAb6QG8df1uVowVqpxalEqOR_Z4N-68qPeZTwYd5_0pv13TT9Nb7KeulaN1fQ5OvJGf7xPxI1f60I9jpqLZkZu0K8K1kzfvC93RIiqk-1F7znqSH2ouBLf0cCgqP7n8dUqopmYP7al6XAKgU0bZbOGyQ/p.png
+          url: https://www.calstatela.edu/
+        designed_by:
+          name: 2i2c
+          url: https://2i2c.org
+        operated_by:
+          name: CloudBank
+          url: http://cloudbank.org/
+        funded_by:
+          name: CloudBank
+          url: http://cloudbank.org/
+  hub:
+    config:
+      JupyterHub:
+        authenticator_class: cilogon
+      CILogonOAuthenticator:
+        oauth_callback_url: https://calstatela.cloudbank.2i2c.cloud/hub/oauth_callback
+        allowed_idps:
+          https://idpp.calstatela.edu/idp:
+            default: true
+            username_derivation:
+              username_claim: "email"
+            allow_all: true
+          http://google.com/accounts/o8/id:
+            username_derivation:
+              username_claim: "email"
+      Authenticator:
+        admin_users:
+          - ericvd@berkeley.edu
+          - sean.smorris@berkeley.edu
+  cull:
+    # Cull after 30min of inactivity
+    every: 300
+    timeout: 1800
+    # No pods over 12h long
+    maxAge: 43200
