@@ -40,9 +40,9 @@ dependencies:
     condition: cluster-autoscaler.enabled
 
   # cryptnono, counters crypto mining
-  # Source code: https://github.com/cryptnono/cryptnono/
+  # https://github.com/cryptnono/cryptnono/
   - name: cryptnono
-    version: "0.3.1-0.dev.git.146.h6bdf5b7"
+    version: "0.3.1-0.dev.git.153.h8956dbb"
     repository: https://cryptnono.github.io/cryptnono/
     condition: cryptnono.enabled
 
