@@ -208,6 +208,7 @@ jobs:
     # If you are adding a new cluster, please remember to list it here!
     outputs:
       failure_2i2c-aws-us: ${{ steps.declare-failure.outputs.failure_2i2c-aws-us }}
+      failure_2i2c-jetstream2: ${{ steps.declare-failure.outputs.failure_2i2c-jetstream2 }}
       failure_2i2c-uk: ${{ steps.declare-failure.outputs.failure_2i2c-uk }}
       failure_2i2c: ${{ steps.declare-failure.outputs.failure_2i2c }}
       failure_awi-ciroh: ${{ steps.declare-failure.outputs.failure_awi-ciroh }}
