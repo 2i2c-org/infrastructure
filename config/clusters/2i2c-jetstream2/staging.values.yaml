@@ -1,0 +1,149 @@
+nfs:
+  enabled: true
+  volumeReporter:
+    enabled: false
+  pv:
+    enabled: true
+    mountOptions:
+      - rsize=1048576
+      - wsize=1048576
+      - timeo=600
+      - soft # We pick soft over hard, so NFS lockups don't lead to hung processes
+      - retrans=2
+      - noresvport
+    serverIP: 172.30.142.90
+    baseShareName: /
+
+jupyterhub:
+  scheduling:
+    userScheduler:
+      enabled: true
+      nodeSelector:
+        capi.stackhpc.com/node-group: core
+    corePods:
+      nodeAffinity:
+        matchNodePurpose: ignore
+    userPods:
+      nodeAffinity:
+        matchNodePurpose: ignore
+  proxy:
+    chp:
+      nodeSelector:
+        capi.stackhpc.com/node-group: core
+    traefik:
+      nodeSelector:
+        capi.stackhpc.com/node-group: core
+  prePuller:
+    hook:
+      nodeSelector:
+        capi.stackhpc.com/node-group: user-m3-quad
+  ingress:
+    hosts: [staging.js.2i2c.cloud]
+    tls:
+      - hosts: [staging.js.2i2c.cloud]
+        secretName: https-auto-tls
+  custom:
+    2i2c:
+      add_staff_user_ids_to_admin_users: true
+      add_staff_user_ids_of_type: "github"
+    homepage:
+      templateVars:
+        org:
+          name: 2i2c Jetstream2 Staging
+          url: https://2i2c.org
+          logo_url: https://2i2c.org/media/logo.png
+        designed_by:
+          name: 2i2c
+          url: https://2i2c.org
+        operated_by:
+          name: 2i2c
+          url: https://2i2c.org
+        funded_by:
+          name: 2i2c
+          url: https://2i2c.org
+  hub:
+    nodeSelector:
+      capi.stackhpc.com/node-group: core
+    config:
+      JupyterHub:
+        authenticator_class: "github"
+      GitHubOAuthenticator:
+        oauth_callback_url: "https://staging.js.2i2c.cloud/hub/oauth_callback"
+  singleuser:
+    defaultUrl: /lab
+    nodeSelector:
+      capi.stackhpc.com/node-group: user-m3-quad
+    profileList:
+      - display_name: Choose your environment and resources
+        slug: only-choice
+        profile_options:
+          image:
+            display_name: Image
+            unlisted_choice: &profile_list_unlisted_choice
+              enabled: True
+              display_name: "Custom image"
+              validation_regex: "^.+:.+$"
+              validation_message: "Must be a publicly available docker image, of form <image-name>:<tag>"
+              display_name_in_choices: "Specify an existing docker image"
+              description_in_choices: "Use a pre-existing docker image from a public docker registry (dockerhub, quay, etc)"
+              kubespawner_override:
+                image: "{value}"
+            choices:
+              pangeo:
+                display_name: Pangeo Notebook Image
+                description: "Python image with scientific, dask and geospatial tools"
+                kubespawner_override:
+                  image: pangeo/pangeo-notebook:2023.09.11
+              geospatial:
+                display_name: Rocker Geospatial
+                description: "R image with RStudio, the tidyverse & Geospatial tools"
+                default: true
+                slug: geospatial
+                kubespawner_override:
+                  image: rocker/binder:4.3
+                  image_pull_policy: Always
+                  # Launch into RStudio after the user logs in
+                  default_url: /rstudio
+                  # Ensures container working dir is homedir
+                  # https://github.com/2i2c-org/infrastructure/issues/2559
+                  working_dir: /home/rstudio
+              scipy:
+                display_name: Jupyter SciPy Notebook
+                slug: scipy
+                kubespawner_override:
+                  image: quay.io/jupyter/scipy-notebook:2024-03-18
+          resources:
+            display_name: Resource Allocation
+            choices:
+              mem_3_7:
+                display_name: 3.7 GB RAM, upto 3.7 CPUs
+                kubespawner_override:
+                  mem_guarantee: 3982489550
+                  mem_limit: 3982489550
+                  cpu_guarantee: 0.465625
+                  cpu_limit: 3.725
+                default: true
+              mem_7_4:
+                display_name: 7.4 GB RAM, upto 3.7 CPUs
+                kubespawner_override:
+                  mem_guarantee: 7964979101
+                  mem_limit: 7964979101
+                  cpu_guarantee: 0.93125
+                  cpu_limit: 3.725
+              mem_14_8:
+                display_name: 14.8 GB RAM, upto 3.7 CPUs
+                kubespawner_override:
+                  mem_guarantee: 15929958203
+                  mem_limit: 15929958203
+                  cpu_guarantee: 1.8625
+                  cpu_limit: 3.725
+jupyterhub-home-nfs:
+  enabled: true
+  prometheusExporter:
+    enabled: true
+  openstack:
+    enabled: true
+    volumeId: 694b2c04-6b08-4ebe-8cb9-74f7d42c1b1c
+  quotaEnforcer:
+    hardQuota: 1 # in GB
+    path: "/export/staging"

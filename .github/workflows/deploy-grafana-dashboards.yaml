@@ -21,6 +21,7 @@ jobs:
 
           - cluster_name: 2i2c
           - cluster_name: 2i2c-aws-us
+          - cluster_name: 2i2c-jetstream2
           - cluster_name: 2i2c-uk
           - cluster_name: awi-ciroh
           - cluster_name: catalystproject-africa
@@ -41,6 +42,7 @@ jobs:
           - cluster_name: openscapes
           - cluster_name: opensci
           - cluster_name: projectpythia
+          - cluster_name: projectpythia-binder
           - cluster_name: queensu
           - cluster_name: smithsonian
           - cluster_name: strudel
