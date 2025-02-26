@@ -137,3 +137,10 @@ By default, snapshots of the disk will be scheduled to be taken at `00:00 UTC` e
 ```{warning}
 It is not currently possible to define a backup cadence other than daily
 ```
+
+(howto:filesystem-backups:enable:jetstream2)=
+## Jetstream2
+
+Currently, [Jetstream2 does not provide any backup service for data](https://docs.jetstream-cloud.org/faq/general-faq/?h=backups#are-there-backups-of-jetstream2-storage-resources) and are recommending to keep any backups of the data offsite.
+
+We recommend that users take regular backups of their data to a separate location as we cannot currently ensure a disaster recovery service for Jetstream2 data.
