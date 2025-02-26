@@ -42,7 +42,7 @@ dependencies:
   # cryptnono, counters crypto mining
   # https://github.com/cryptnono/cryptnono/
   - name: cryptnono
-    version: "0.3.1-0.dev.git.153.h8956dbb"
+    version: "0.3.1"
     repository: https://cryptnono.github.io/cryptnono/
     condition: cryptnono.enabled
 
