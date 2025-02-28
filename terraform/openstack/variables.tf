@@ -29,6 +29,12 @@ variable "image" {
   default = "ubuntu-jammy-kube-v1.31.0-240828-1652"
 }
 
+variable "capi_helm_chart_version" {
+  type        = string
+  description = "Version of the CAPI helm chart to use"
+  default     = "0.10.1"
+}
+
 variable "notebook_nodes" {
   type = map(object({
     min : optional(number),
