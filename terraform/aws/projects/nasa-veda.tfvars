@@ -141,7 +141,9 @@ hub_cloud_permissions = {
               "arn:aws:s3:::sdap-dev-zarr",
               "arn:aws:s3:::sdap-dev-zarr/*",
               "arn:aws:s3:::usgs-landsat",
-              "arn:aws:s3:::usgs-landsat/*"
+              "arn:aws:s3:::usgs-landsat/*",
+              "arn:aws:s3:::sport-lis",
+              "arn:aws:s3:::sport-lis/*"
             ]
           },
           {
@@ -199,7 +201,9 @@ hub_cloud_permissions = {
               "arn:aws:s3:::usgs-landsat",
               "arn:aws:s3:::usgs-landsat/*",
               "arn:aws:s3:::sentinel-cogs",
-              "arn:aws:s3:::sentinel-cogs/*"
+              "arn:aws:s3:::sentinel-cogs/*",
+              "arn:aws:s3:::sport-lis",
+              "arn:aws:s3:::sport-lis/*"
             ]
           },
           {
