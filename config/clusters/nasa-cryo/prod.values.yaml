@@ -39,3 +39,26 @@ basehub:
     quotaEnforcer:
       hardQuota: "350" # in GB
       path: "/export/prod"
+      resources:
+        requests:
+          cpu: 0.01
+          memory: 10M
+        limits:
+          cpu: 0.02
+          memory: 15M
+    nfsServer:
+      resources:
+        requests:
+          cpu: 0.1
+          memory: 1G
+        limits:
+          cpu: 0.2
+          memory: 3G
+    prometheusExporter:
+      resources:
+        requests:
+          cpu: 0.01
+          memory: 7M
+        limits:
+          cpu: 0.02
+          memory: 10M
