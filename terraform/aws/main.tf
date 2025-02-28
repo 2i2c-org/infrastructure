@@ -3,19 +3,19 @@ terraform {
 
   required_providers {
     aws = {
-      # ref: https://registry.terraform.io/providers/hashicorp/aws/latest
+      # https://registry.terraform.io/providers/hashicorp/aws/latest
       source  = "hashicorp/aws"
-      version = "~> 5.57"
+      version = "~> 5.89"
     }
 
     mysql = {
-      # ref: https://registry.terraform.io/providers/petoju/mysql/latest
+      # https://registry.terraform.io/providers/petoju/mysql/latest
       source  = "petoju/mysql"
       version = "~> 3.0"
     }
 
     random = {
-      # ref: https://registry.terraform.io/providers/hashicorp/random/latest
+      # https://registry.terraform.io/providers/hashicorp/random/latest
       source  = "hashicorp/random"
       version = "~> 3.6"
     }
@@ -26,10 +26,9 @@ terraform {
   }
 }
 
-# ref: https://registry.terraform.io/providers/hashicorp/random/latest/docs
+# https://registry.terraform.io/providers/hashicorp/random/latest/docs
 provider "random" {}
 
-# ref: https://registry.terraform.io/providers/hashicorp/aws/latest/docs
 provider "aws" {
   region = var.region
 
