@@ -77,14 +77,3 @@ grafana:
       - secretName: grafana-tls
         hosts:
           - grafana.leap.2i2c.cloud
-
-gcpFilestoreBackups:
-  enabled: true
-  filestoreName: leap-homedirs
-  project: leap-pangeo
-  zone: us-central1-c
-  retentionDays: 2
-  serviceAccount:
-    name: gcp-filestore-backups-sa
-    annotations:
-      iam.gke.io/gcp-service-account: leap-filestore-backup@leap-pangeo.iam.gserviceaccount.com
