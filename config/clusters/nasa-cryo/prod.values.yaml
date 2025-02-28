@@ -41,24 +41,24 @@ basehub:
       path: "/export/prod"
       resources:
         requests:
-          cpu: 0.01
-          memory: 10M
-        limits:
           cpu: 0.02
-          memory: 15M
+          memory: 20M
+        limits:
+          cpu: 0.04
+          memory: 30M
     nfsServer:
       resources:
         requests:
-          cpu: 0.1
-          memory: 1G
-        limits:
           cpu: 0.2
-          memory: 3G
+          memory: 2G
+        limits:
+          cpu: 0.4
+          memory: 6G
     prometheusExporter:
       resources:
         requests:
-          cpu: 0.01
-          memory: 7M
-        limits:
           cpu: 0.02
-          memory: 10M
+          memory: 15M
+        limits:
+          cpu: 0.04
+          memory: 20M
