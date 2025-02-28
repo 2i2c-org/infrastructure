@@ -19,7 +19,7 @@
 
 # https://registry.terraform.io/providers/terraform-provider-openstack/openstack/latest/docs/resources/containerinfra_clustertemplate_v1
 resource "openstack_containerinfra_clustertemplate_v1" "template" {
-  name                = "${var.image}-template"
+  name                = "${var.image}-capi-${var.capi_helm_chart_version}"
   coe                 = "kubernetes"
   server_type         = "vm"
   tls_disabled        = false
@@ -36,6 +36,7 @@ resource "openstack_containerinfra_clustertemplate_v1" "template" {
     prometheus_monitoring            = "false" # these will handled by the support chart
     influx_grafana_dashboard_enabled = "false" # these will handled by the support chart
     kube_dashboard_enabled           = "false"
+    capi_helm_chart_version          = var.capi_helm_chart_version
     auto_scaling_enabled             = "true"
     min_node_count                   = 1
   }
