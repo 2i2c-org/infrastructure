@@ -9,7 +9,7 @@ support:
 hubs:
   - name: staging
     display_name: "2i2c Jetstream2 staging"
-    domain: staging.jetstream.2i2c.cloud
+    domain: staging.js.2i2c.cloud
     helm_chart: basehub
     helm_chart_values_files:
       - staging.values.yaml
