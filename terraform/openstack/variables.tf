@@ -32,7 +32,10 @@ variable "image" {
 variable "capi_helm_chart_version" {
   type        = string
   description = "Version of the CAPI helm chart to use"
-  default     = "0.10.1"
+  # This a version of the CAPI helm chart that is known to work with the
+  # the cluster autoscaler running on the management cluster
+  # https://github.com/azimuth-cloud/capi-helm-charts/releases
+  default = "0.10.1"
 }
 
 variable "notebook_nodes" {
