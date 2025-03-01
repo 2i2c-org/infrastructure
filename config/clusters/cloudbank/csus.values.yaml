@@ -1,0 +1,57 @@
+jupyterhub:
+  ingress:
+    hosts: [csus.cloudbank.2i2c.cloud]
+    tls:
+      - hosts: [csus.cloudbank.2i2c.cloud]
+        secretName: https-auto-tls
+  singleuser:
+    memory:
+      # Increased to help deal with possible kernel restarts
+      # https://2i2c.freshdesk.com/a/tickets/567
+      guarantee: 384M
+      limit: 1.5G
+  custom:
+    2i2c:
+      add_staff_user_ids_to_admin_users: true
+      add_staff_user_ids_of_type: "google"
+    homepage:
+      templateVars:
+        org:
+          name: CSU Sacramento
+          logo_url: https://www.csus.edu/NewCSUS2019-global-assets/_internal/images/logo-horizontal.png
+          url: https://www.csus.edu/
+        designed_by:
+          name: 2i2c
+          url: https://2i2c.org
+        operated_by:
+          name: CloudBank
+          url: http://cloudbank.org/
+        funded_by:
+          name: CloudBank
+          url: http://cloudbank.org/
+  hub:
+    config:
+      JupyterHub:
+        authenticator_class: cilogon
+      CILogonOAuthenticator:
+        oauth_callback_url: https://csus.cloudbank.2i2c.cloud/hub/oauth_callback
+        allowed_idps:
+          https://idp.csus.edu/idp/shibboleth:
+            default: true
+            username_derivation:
+              username_claim: "email"
+            allow_all: true
+          http://google.com/accounts/o8/id:
+            username_derivation:
+              username_claim: "email"
+      Authenticator:
+        admin_users:
+          - ericvd@berkeley.edu
+          - sean.smorris@berkeley.edu
+          - fitzgerald@csus.edu
+  cull:
+    # Cull after 30min of inactivity
+    every: 300
+    timeout: 1800
+    # No pods over 12h long
+    maxAge: 43200
