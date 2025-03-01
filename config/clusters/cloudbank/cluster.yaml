@@ -76,6 +76,14 @@ hubs:
       - common.values.yaml
       - csulb.values.yaml
       - enc-csulb.secret.values.yaml
+  - name: csun
+    display_name: "California State University Northridge"
+    domain: csun.cloudbank.2i2c.cloud
+    helm_chart: basehub
+    helm_chart_values_files:
+      - common.values.yaml
+      - csun.values.yaml
+      - enc-csun.secret.values.yaml
   - name: csum
     display_name: "Cal Maritime"
     domain: csum.cloudbank.2i2c.cloud
