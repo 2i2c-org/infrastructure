@@ -49,6 +49,31 @@ jupyterhub:
           - ericvd@berkeley.edu
           - sean.smorris@berkeley.edu
           - fitzgerald@csus.edu
+    extraFiles:
+      configurator-schema-default:
+        data:
+          properties:
+            Spawner.default_url:
+              type: string
+              title: Default User Interface
+              enum:
+                - "/tree"
+                - "/lab"
+                - "/retro"
+              default: "/lab"
+              enumMetadata:
+                interfaces:
+                  - value: "/tree"
+                    title: Classic Notebook
+                    description:
+                      The original single-document interface for creating
+                      Jupyter Notebooks.
+                  - value: "/lab"
+                    title: JupyterLab
+                    description: A Powerful next generation notebook interface
+                  - value: "/retro"
+                    title: RetroLab
+                    description: A JupyterLab distribution with a retro look and feel, more similar to the classic Jupyter notebook.
   cull:
     # Cull after 30min of inactivity
     every: 300
