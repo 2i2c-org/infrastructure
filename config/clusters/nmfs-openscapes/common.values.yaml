@@ -41,8 +41,8 @@ jupyterhub:
           name: 2i2c
           url: https://2i2c.org
         funded_by:
-          name: NOAA Fisheries and the Biden-Harris Administration's Inflation Reduction Act
-          url: https://www.fisheries.noaa.gov/media-release/biden-harris-administration-announces-34-million-modernize-noaa-fisheries-data
+          name: NOAA Fisheries
+          url: https://www.fisheries.noaa.gov
   singleuser:
     cloudMetadata:
       blockWithIptables: false
