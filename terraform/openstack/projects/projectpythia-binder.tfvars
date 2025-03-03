@@ -1,7 +1,7 @@
 prefix = "binder-pythia"
 
 notebook_nodes = {
-  "m3.quad" : {
+  "m3.medium" : {
     min : 1,
     max : 100,
     # 4 CPU, 15 RAM
