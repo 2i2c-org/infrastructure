@@ -30,7 +30,7 @@ jupyterhub:
         enabled: false
   singleuser:
     nodeSelector:
-      capi.stackhpc.com/node-group: user-m3-medium
+      capi.stackhpc.com/node-group: user-m3-quad
     storage:
       type: none
       extraVolumeMounts: []
@@ -75,7 +75,7 @@ jupyterhub:
   prePuller:
     hook:
       nodeSelector:
-        capi.stackhpc.com/node-group: user-m3-medium
+        capi.stackhpc.com/node-group: user-m3-quad
   hub:
     nodeSelector:
       capi.stackhpc.com/node-group: core
@@ -113,7 +113,7 @@ binderhub-service:
   dockerApi:
     nodeSelector:
       hub.jupyter.org/node-purpose: null
-      capi.stackhpc.com/node-group: user-m3-medium
+      capi.stackhpc.com/node-group: user-m3-quad
   config:
     GitHubRepoProvider:
       allowed_specs:
@@ -136,7 +136,7 @@ binderhub-service:
       node_selector:
         # Schedule builder pods to run on user nodes only
         hub.jupyter.org/node-purpose: null
-        capi.stackhpc.com/node-group: user-m3-medium
+        capi.stackhpc.com/node-group: user-m3-quad
   extraEnv:
     - name: JUPYTERHUB_API_TOKEN
       valueFrom:
