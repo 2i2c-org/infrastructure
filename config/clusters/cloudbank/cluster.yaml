@@ -212,6 +212,14 @@ hubs:
       - common.values.yaml
       - laney.values.yaml
       - enc-laney.secret.values.yaml
+  - name: lavc
+    display_name: "Los Angeles Valley College"
+    domain: lavc.cloudbank.2i2c.cloud
+    helm_chart: basehub
+    helm_chart_values_files:
+      - common.values.yaml
+      - lavc.values.yaml
+      - enc-lavc.secret.values.yaml
   - name: lbcc
     display_name: "Long Beach City College"
     domain: lbcc.cloudbank.2i2c.cloud
