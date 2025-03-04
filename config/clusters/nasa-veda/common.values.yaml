@@ -128,6 +128,7 @@ basehub:
               unlisted_choice:
                 enabled: True
                 display_name: "Custom image"
+                display_name_in_choices: "Bring your own image"
                 validation_regex: "^.+:.+$"
                 validation_message: "Must be a publicly available docker image, of form <image-name>:<tag>"
                 kubespawner_override:
