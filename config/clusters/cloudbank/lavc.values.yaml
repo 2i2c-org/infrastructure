@@ -1,0 +1,39 @@
+jupyterhub:
+  ingress:
+    hosts: [lavc.cloudbank.2i2c.cloud]
+    tls:
+      - hosts: [lavc.cloudbank.2i2c.cloud]
+        secretName: https-auto-tls
+  custom:
+    2i2c:
+      add_staff_user_ids_to_admin_users: true
+      add_staff_user_ids_of_type: "github"
+    homepage:
+      templateVars:
+        org:
+          name: Los Angeles Valley College
+          logo_url: https://www.lavc.edu/sites/lavc.edu/files/lavc-logo.svg
+          url: https://www.lavc.edu/
+        designed_by:
+          name: 2i2c
+          url: https://2i2c.org
+        operated_by:
+          name: CloudBank
+          url: http://cloudbank.org/
+        funded_by:
+          name: CloudBank
+          url: http://cloudbank.org/
+  hub:
+    config:
+      JupyterHub:
+        authenticator_class: github
+      GitHubOAuthenticator:
+        oauth_callback_url: https://lavc.cloudbank.2i2c.cloud/hub/oauth_callback
+        allowed_organizations:
+          - LAVC-DataScience
+        scope:
+          - read:org
+      Authenticator:
+        admin_users:
+          - sean-morris
+          - ScarletSarkissian
