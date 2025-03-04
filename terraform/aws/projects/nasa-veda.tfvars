@@ -79,7 +79,9 @@ hub_cloud_permissions = {
               "arn:aws:s3:::sentinel-cogs",
               "arn:aws:s3:::sentinel-cogs/*",
               "arn:aws:s3:::sport-lis",
-              "arn:aws:s3:::sport-lis/*"
+              "arn:aws:s3:::sport-lis/*",
+              "arn:aws:s3:::nasa-disasters",
+              "arn:aws:s3:::nasa-disasters/*"
             ]
           },
           {
@@ -203,7 +205,9 @@ hub_cloud_permissions = {
               "arn:aws:s3:::sentinel-cogs",
               "arn:aws:s3:::sentinel-cogs/*",
               "arn:aws:s3:::sport-lis",
-              "arn:aws:s3:::sport-lis/*"
+              "arn:aws:s3:::sport-lis/*",
+              "arn:aws:s3:::nasa-disasters",
+              "arn:aws:s3:::nasa-disasters/*"
             ]
           },
           {
