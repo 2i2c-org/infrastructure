@@ -145,7 +145,9 @@ hub_cloud_permissions = {
               "arn:aws:s3:::usgs-landsat",
               "arn:aws:s3:::usgs-landsat/*",
               "arn:aws:s3:::sport-lis",
-              "arn:aws:s3:::sport-lis/*"
+              "arn:aws:s3:::sport-lis/*",
+              "arn:aws:s3:::nasa-disasters",
+              "arn:aws:s3:::nasa-disasters/*"
             ]
           },
           {
