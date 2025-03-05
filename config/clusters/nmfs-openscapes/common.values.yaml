@@ -61,10 +61,10 @@ jupyterhub:
               enabled: True
             choices:
               python:
-                display_name: Py - NASA Openscapes Python 39dffde
+                display_name: Py - NASA Openscapes Python 07980b9
                 slug: python
                 kubespawner_override:
-                  image: openscapes/python:39dffde
+                  image: openscapes/python:07980b9
               pyrbase:
                 display_name: Py-R - py-rocket-base image 4.4-3.10
                 slug: pyrbase
