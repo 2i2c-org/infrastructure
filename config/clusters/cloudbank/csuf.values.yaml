@@ -1,0 +1,86 @@
+jupyterhub:
+  ingress:
+    hosts: [csuf.cloudbank.2i2c.cloud]
+    tls:
+      - hosts: [csuf.cloudbank.2i2c.cloud]
+        secretName: https-auto-tls
+  singleuser:
+    memory:
+      # Increased to help deal with possible kernel restarts
+      # https://2i2c.freshdesk.com/a/tickets/567
+      guarantee: 384M
+      limit: 1.5G
+    image:
+      name: public.ecr.aws/s7x4g6w9/cal-icor/base-user-image
+      tag: 4ed1b973f674
+  custom:
+    2i2c:
+      add_staff_user_ids_to_admin_users: true
+      add_staff_user_ids_of_type: "google"
+    homepage:
+      templateVars:
+        org:
+          name: CSU Fullerton
+          logo_url: https://www.fullerton.edu/_resources/images/logo.png
+          logo_url: https://user-content.givegab.com/uploads/group/logo/475023/702d439ab52b86541808e00607c6946b703d041e.png
+          url: https://www.fullerton.edu/
+        designed_by:
+          name: 2i2c
+          url: https://2i2c.org
+        operated_by:
+          name: CloudBank
+          url: http://cloudbank.org/
+        funded_by:
+          name: CloudBank
+          url: http://cloudbank.org/
+  hub:
+    config:
+      JupyterHub:
+        authenticator_class: cilogon
+      CILogonOAuthenticator:
+        oauth_callback_url: https://csuf.cloudbank.2i2c.cloud/hub/oauth_callback
+        allowed_idps:
+          https://shibboleth.fullerton.edu/idp/shibboleth:
+            default: true
+            username_derivation:
+              username_claim: "email"
+            allow_all: true
+          http://google.com/accounts/o8/id:
+            username_derivation:
+              username_claim: "email"
+      Authenticator:
+        admin_users:
+          - ericvd@berkeley.edu
+          - sean.smorris@berkeley.edu
+          - jjaynes@fullerton.edu
+    extraFiles:
+      configurator-schema-default:
+        data:
+          properties:
+            Spawner.default_url:
+              type: string
+              title: Default User Interface
+              enum:
+                - "/tree"
+                - "/lab"
+                - "/retro"
+              default: "/lab"
+              enumMetadata:
+                interfaces:
+                  - value: "/tree"
+                    title: Classic Notebook
+                    description:
+                      The original single-document interface for creating
+                      Jupyter Notebooks.
+                  - value: "/lab"
+                    title: JupyterLab
+                    description: A Powerful next generation notebook interface
+                  - value: "/retro"
+                    title: RetroLab
+                    description: A JupyterLab distribution with a retro look and feel, more similar to the classic Jupyter notebook.
+  cull:
+    # Cull after 30min of inactivity
+    every: 300
+    timeout: 1800
+    # No pods over 12h long
+    maxAge: 43200
