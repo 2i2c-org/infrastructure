@@ -21,7 +21,6 @@ jupyterhub:
       templateVars:
         org:
           name: CSU Fullerton
-          logo_url: https://www.fullerton.edu/_resources/images/logo.png
           logo_url: https://user-content.givegab.com/uploads/group/logo/475023/702d439ab52b86541808e00607c6946b703d041e.png
           url: https://www.fullerton.edu/
         designed_by:
