@@ -6,6 +6,18 @@ userServiceAccount:
   annotations:
     eks.amazonaws.com/role-arn: arn:aws:iam::891612562472:role/nmfs-openscapes-prod
 
+dask-gateway:
+  gateway:
+    backend:
+      scheduler:
+        extraPodConfig:
+          nodeSelector:
+            2i2c/hub-name: prod
+      worker:
+        extraPodConfig:
+          nodeSelector:
+            2i2c/hub-name: prod
+
 jupyterhub:
   ingress:
     hosts: [nmfs-openscapes.2i2c.cloud]
