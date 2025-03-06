@@ -11,6 +11,8 @@ redirects:
       to: staging.utoronto.2i2c.cloud
     - from: jupyter.datatools.utoronto.ca
       to: jupyter.utoronto.ca
+    - from: highmem.utoronto.2i2c.cloud
+      to: highmem.datatools.utoronto.ca
 
 prometheus:
   server:
