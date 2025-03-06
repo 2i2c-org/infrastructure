@@ -52,7 +52,7 @@ hubs:
     display_name: "University of Toronto (highmem)"
     # to access this hub, visit this link directly
     # https://highmem.utoronto.2i2c.cloud/hub/home
-    domain: highmem.utoronto.2i2c.cloud
+    domain: highmem.datatools.utoronto.ca
     helm_chart: "basehub"
     helm_chart_values_files:
       - common.values.yaml
