@@ -91,6 +91,35 @@ jupyterhub:
         admin_users: []
 ```
 
+## Disabling shared/shared-read-write directories
+
+Since there are no admin users on shared passwords hub, there's no point in having a shared directory.
+We can disable this by setting the following in the `${HUB_NAME}.values.yaml` file.
+
+```yaml
+jupyterhub:
+  hub:
+    custom:
+      singleuserAdmin:
+        extraVolumeMounts: []
+  singleuser:
+    initContainers:
+      - name: volume-mount-ownership-fix
+        image: busybox:1.36.1
+        command:
+          - sh
+          - -c
+          - id && chown 1000:1000 /home/jovyan && ls -lhd /home/jovyan
+        securityContext:
+          runAsUser: 0
+        volumeMounts:
+          - name: home
+            mountPath: /home/jovyan
+            subPath: "{escaped_username}"
+    storage:
+      extraVolumeMounts: []
+```
+
 ## Disabling the configurator
 
 For the same reason as above, we also need to disable the configurator as this is an admin-only feature.
