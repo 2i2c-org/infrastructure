@@ -21,6 +21,9 @@ jupyterhub-home-nfs:
   prometheusExporter:
     enabled: true
 
+dask-gateway:
+  enabled: true
+
 jupyterhub:
   custom:
     2i2c:
@@ -28,6 +31,8 @@ jupyterhub:
       add_staff_user_ids_of_type: github
     jupyterhubConfigurator:
       enabled: false
+    daskhubSetup:
+      enabled: true
     homepage:
       templateVars:
         org:
