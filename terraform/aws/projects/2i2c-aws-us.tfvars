@@ -59,3 +59,5 @@ ebs_volumes = {
     tags        = { "2i2c:hub-name" : "showcase" }
   }
 }
+
+enable_nfs_backup = true
