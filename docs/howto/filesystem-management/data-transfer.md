@@ -10,7 +10,10 @@ This process should be repeated for as many hubs as there are on the cluster, re
 ```bash
 export CLUSTER_NAME=<cluster_name>
 export HUB_NAME=<hub_name>
+export SERVER_IP=<nfs_service_ip>
 ```
+
+- `$SERVER_IP` can be found either through the relevant Cloud provider console, or by running `kubectl --namespace $HUB_NAME get svc` if the second NFS is running `jupyterhub-home-nfs`.
 
 1. **Create a pod on the cluster and mount the source and destination NFS servers.**
 
@@ -25,7 +28,6 @@ export HUB_NAME=<hub_name>
      --persist
    ```
 
-   - `$SERVER_IP` can be found either through the relevant Cloud provider console, or by running `kubectl --namespace $HUB_NAME get svc` if the second NFS is running `jupyterhub-home-nfs`.
    - The `--persist` flag will prevent the pod from terminating when you exit it, so you can leave the transfer process running.
 
 1. **Install some tools into the pod.**
@@ -41,10 +43,20 @@ export HUB_NAME=<hub_name>
    - `parallel` will help speed up the process by parallelising it
    - `screen` will help the process continue to live in the pod and be protected from network disruptions that would normally kill it
 
+1. **Export HUB_NAME for use in the pod.**
+
+   ```bash
+   export HUB_NAME=<hub_name>
+   ```
+
 1. **Start a screen session and begin the initial copy process.**
 
    ```bash
-   ls /root-homes/${HUB_NAME}/ | parallel -j4 rsync -ah --progress /root-homes/${HUB_NAME}/{}/ /dest-fs/${HUB_NAME}/{}/
+   screen
+   ```
+
+   ```bash
+   ls /root-homes/${HUB_NAME}/ | parallel -j4 rsync -ah --progress /root-homes/${HUB_NAME}/{}/ /dest-fs/{}/
    ```
 
    ```{admonition} Monitoring tips
@@ -84,7 +96,7 @@ Once the files have been migrated, we can update the hub(s) to use the new NFS s
 
 At this point, it is useful to have a few terminal windows open:
 
-- One terminal with `deployer use-cluster-credentials $CLUSTER_NAME` running to run `kubectl` commands in
+- One terminal with `deployer use-cluster-credentials $CLUSTER_NAME` to run `kubectl` commands in
 - Another terminal to run `deployer deploy $CLUSTER_NAME $HUB_NAME` in
 - A terminal that is attached to the data transfer pod to re-run the file transfer (see [](migrate-data:reattach-pod))
 
