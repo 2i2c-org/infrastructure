@@ -23,22 +23,6 @@ support:
     - support.values.yaml
     - enc-support.secret.values.yaml
 hubs:
-  - name: staging
-    display_name: Dubois staging
-    domain: staging.dubois.2i2c.cloud
-    helm_chart: basehub
-    helm_chart_values_files:
-      - common.values.yaml
-      - staging.values.yaml
-      - enc-staging.secret.values.yaml
-  - name: prod
-    display_name: Dubois
-    domain: prod.dubois.2i2c.cloud
-    helm_chart: basehub
-    helm_chart_values_files:
-      - common.values.yaml
-      - prod.values.yaml
-      - enc-prod.secret.values.yaml
   - name: ephemeral
     display_name: Dubois ephemeral
     domain: dubois.2i2c.cloud
