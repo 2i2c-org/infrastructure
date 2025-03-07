@@ -60,3 +60,6 @@ basehub:
   jupyterhub-home-nfs:
     eks:
       volumeId: vol-002bff088152dd5e9
+    quotaEnforcer:
+      hardQuota: "10" # in GB
+      path: "/export/dask-staging"
