@@ -5,6 +5,10 @@ basehub:
       # level. No terraform config was touched. Hence the kubernetes annotations retain
       # the original hub name.
       eks.amazonaws.com/role-arn: arn:aws:iam::790657130469:role/2i2c-aws-us-showcase
+  jupyterhub-home-nfs:
+    eks:
+      volumeId: vol-0a55e84bbf716b456
+
   jupyterhub:
     ingress:
       hosts: [showcase.2i2c.cloud]

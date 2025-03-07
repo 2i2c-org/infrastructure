@@ -1,6 +1,18 @@
+nfs:
+  pv:
+    serverIP: 10.100.60.182
+
 userServiceAccount:
   annotations:
     eks.amazonaws.com/role-arn: arn:aws:iam::790657130469:role/2i2c-aws-us-staging
+
+jupyterhub-home-nfs:
+  eks:
+    volumeId: vol-063f53806dd18c4a6
+  quotaEnforcer:
+    hardQuota: "10" # in GB
+    path: "/export/staging"
+
 jupyterhub:
   ingress:
     hosts: [staging.aws.2i2c.cloud]

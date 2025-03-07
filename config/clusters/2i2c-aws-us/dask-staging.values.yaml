@@ -53,3 +53,7 @@ basehub:
           extraPodConfig:
             nodeSelector:
               2i2c/hub-name: dask-staging
+
+  jupyterhub-home-nfs:
+    eks:
+      volumeId: vol-002bff088152dd5e9
