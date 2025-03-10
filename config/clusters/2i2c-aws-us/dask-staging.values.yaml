@@ -5,6 +5,12 @@ basehub:
   userServiceAccount:
     annotations:
       eks.amazonaws.com/role-arn: arn:aws:iam::790657130469:role/2i2c-aws-us-dask-staging
+  jupyterhub-home-nfs:
+    eks:
+      volumeId: vol-002bff088152dd5e9
+    quotaEnforcer:
+      hardQuota: "10" # in GB
+      path: "/export/dask-staging"
   jupyterhub:
     ingress:
       hosts: [dask-staging.aws.2i2c.cloud]
@@ -56,10 +62,3 @@ basehub:
           extraPodConfig:
             nodeSelector:
               2i2c/hub-name: dask-staging
-
-  jupyterhub-home-nfs:
-    eks:
-      volumeId: vol-002bff088152dd5e9
-    quotaEnforcer:
-      hardQuota: "10" # in GB
-      path: "/export/dask-staging"
