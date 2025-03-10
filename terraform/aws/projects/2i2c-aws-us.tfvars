@@ -38,3 +38,26 @@ hub_cloud_permissions = {
     ],
   },
 }
+
+ebs_volumes = {
+  "staging" = {
+    size        = 100 # in GB
+    type        = "gp3"
+    name_suffix = "staging"
+    tags        = { "2i2c:hub-name" : "staging" }
+  }
+  "dask-staging" = {
+    size        = 100 # in GB
+    type        = "gp3"
+    name_suffix = "dask-staging"
+    tags        = { "2i2c:hub-name" : "dask-staging" }
+  }
+  "showcase" = {
+    size        = 500 # in GB
+    type        = "gp3"
+    name_suffix = "showcase"
+    tags        = { "2i2c:hub-name" : "showcase" }
+  }
+}
+
+enable_nfs_backup = true

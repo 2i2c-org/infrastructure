@@ -17,6 +17,30 @@ grafana:
           - grafana.aws.2i2c.cloud
 
 prometheus:
+  alertmanager:
+    enabled: true
+    config:
+      route:
+        group_wait: 10s
+        group_interval: 5m
+        receiver: pagerduty
+        repeat_interval: 3h
+        routes:
+          - receiver: pagerduty
+            match:
+              channel: pagerduty
+              cluster: 2i2c-aws-us
+              namespace: staging
+          - receiver: pagerduty
+            match:
+              channel: pagerduty
+              cluster: 2i2c-aws-us
+              namespace: dask-staging
+          - receiver: pagerduty
+            match:
+              channel: pagerduty
+              cluster: 2i2c-aws-us
+              namespace: showcase
   server:
     ingress:
       enabled: true
@@ -28,6 +52,42 @@ prometheus:
             - prometheus.aws.2i2c.cloud
     persistentVolume:
       size: 500Gi
+  serverFiles:
+    alerting_rules.yml:
+      groups:
+        - name: 2i2c-aws-us staging volume full
+          rules:
+            - alert: staging-jupyterhub-home-nfs-ebs-full
+              expr: node_filesystem_avail_bytes{mountpoint="/shared-volume", component="shared-volume-metrics", namespace="staging"} / node_filesystem_size_bytes{mountpoint="/shared-volume", component="shared-volume-metrics", namespace="staging"} < 0.1
+              for: 15m
+              labels:
+                severity: critical
+                channel: pagerduty
+                cluster: 2i2c-aws-us
+              annotations:
+                summary: "jupyterhub-home-nfs volume full in namespace {{ $labels.namespace }}"
+        - name: 2i2c-aws-us dask-staging jupyterhub-home-nfs volume full
+          rules:
+            - alert: dask-staging-jupyterhub-home-nfs-ebs-full
+              expr: node_filesystem_avail_bytes{mountpoint="/shared-volume", component="shared-volume-metrics", namespace="dask-staging"} / node_filesystem_size_bytes{mountpoint="/shared-volume", component="shared-volume-metrics", namespace="dask-staging"} < 0.1
+              for: 15m
+              labels:
+                severity: critical
+                channel: pagerduty
+                cluster: 2i2c-aws-us
+              annotations:
+                summary: "jupyterhub-home-nfs volume full in namespace {{ $labels.namespace }}"
+        - name: 2i2c-aws-us showcase jupyterhub-home-nfs volume full
+          rules:
+            - alert: showcase-jupyterhub-home-nfs-ebs-full
+              expr: node_filesystem_avail_bytes{mountpoint="/shared-volume", component="shared-volume-metrics", namespace="showcase"} / node_filesystem_size_bytes{mountpoint="/shared-volume", component="shared-volume-metrics", namespace="showcase"} < 0.1
+              for: 15m
+              labels:
+                severity: critical
+                channel: pagerduty
+                cluster: 2i2c-aws-us
+              annotations:
+                summary: "jupyterhub-home-nfs volume full in namespace {{ $labels.namespace }}"
 
 aws-ce-grafana-backend:
   enabled: true
