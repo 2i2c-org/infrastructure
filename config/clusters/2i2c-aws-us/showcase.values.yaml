@@ -1,4 +1,7 @@
 basehub:
+  nfs:
+    pv:
+      serverIP: 10.100.221.109
   userServiceAccount:
     annotations:
       # When we renamed this hub, we did so at a DNS level and not an infrastructure
@@ -8,6 +11,9 @@ basehub:
   jupyterhub-home-nfs:
     eks:
       volumeId: vol-0a55e84bbf716b456
+    quotaEnforcer:
+      hardQuota: "20" # in GB
+      path: "/export/showcase"
 
   jupyterhub:
     ingress:
