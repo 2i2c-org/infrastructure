@@ -53,7 +53,7 @@ ebs_volumes = {
     tags        = { "2i2c:hub-name" : "dask-staging" }
   }
   "showcase" = {
-    size        = 100 # in GB
+    size        = 500 # in GB
     type        = "gp3"
     name_suffix = "showcase"
     tags        = { "2i2c:hub-name" : "showcase" }
