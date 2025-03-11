@@ -9,6 +9,9 @@ userServiceAccount:
 jupyterhub-home-nfs:
   eks:
     volumeId: vol-07d7e1173e4fd3a11
+  quotaEnforcer:
+    hardQuota: "0.5" # in GB
+    path: "/export/staging"
 
 jupyterhub:
   ingress:
