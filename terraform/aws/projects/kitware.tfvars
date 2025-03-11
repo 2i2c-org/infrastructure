@@ -24,3 +24,21 @@ hub_cloud_permissions = {
     bucket_admin_access : ["scratch"],
   },
 }
+
+enable_nfs_backup = true
+
+ebs_volumes = {
+  "staging" = {
+    size        = 5 # in GB
+    type        = "gp3"
+    name_suffix = "staging"
+    tags        = { "2i2c:hub-name" : "staging" }
+  }
+
+  "prod" = {
+    size        = 50 # in GB
+    type        = "gp3"
+    name_suffix = "prod"
+    tags        = { "2i2c:hub-name" : "prod" }
+  }
+}

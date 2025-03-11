@@ -1,6 +1,17 @@
+nfs:
+  pv:
+    serverIP: 10.100.178.61
+
 userServiceAccount:
   annotations:
     eks.amazonaws.com/role-arn: arn:aws:iam::471112920937:role/kitware-prod
+
+jupyterhub-home-nfs:
+  eks:
+    volumeId: vol-09c08b0fb382af749
+  quotaEnforcer:
+    hardQuota: "10" # in GB
+    path: "/export/prod"
 
 jupyterhub:
   ingress:
