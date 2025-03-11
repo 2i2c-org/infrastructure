@@ -1,3 +1,7 @@
+nfs:
+  pv:
+    serverIP: 10.100.178.61
+
 userServiceAccount:
   annotations:
     eks.amazonaws.com/role-arn: arn:aws:iam::471112920937:role/kitware-prod
