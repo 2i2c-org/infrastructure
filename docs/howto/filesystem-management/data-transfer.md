@@ -56,7 +56,7 @@ export SERVER_IP=<nfs_service_ip>
    ```
 
    ```bash
-   ls /root-homes/${HUB_NAME}/ | parallel -j4 rsync -ah --progress /root-homes/${HUB_NAME}/{}/ /dest-fs/{}/
+   ls /root-homes/${HUB_NAME} | parallel -j4 rsync -ah --progress /root-homes/${HUB_NAME}/{} /dest-fs/${HUB_NAME}/
    ```
 
    ```{admonition} Monitoring tips
