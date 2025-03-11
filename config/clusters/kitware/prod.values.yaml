@@ -2,6 +2,10 @@ userServiceAccount:
   annotations:
     eks.amazonaws.com/role-arn: arn:aws:iam::471112920937:role/kitware-prod
 
+jupyterhub-home-nfs:
+  eks:
+    volumeId: vol-09c08b0fb382af749
+
 jupyterhub:
   ingress:
     hosts: [kitware.2i2c.cloud]
