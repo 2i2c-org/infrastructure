@@ -9,6 +9,9 @@ userServiceAccount:
 jupyterhub-home-nfs:
   eks:
     volumeId: vol-09c08b0fb382af749
+  quotaEnforcer:
+    hardQuota: "10" # in GB
+    path: "/export/prod"
 
 jupyterhub:
   ingress:
