@@ -1,3 +1,7 @@
+nfs:
+  pv:
+    serverIP: 10.100.83.6
+
 userServiceAccount:
   annotations:
     eks.amazonaws.com/role-arn: arn:aws:iam::471112920937:role/kitware-staging
