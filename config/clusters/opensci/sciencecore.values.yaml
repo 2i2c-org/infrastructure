@@ -3,6 +3,17 @@ userServiceAccount:
   annotations:
     eks.amazonaws.com/role-arn: arn:aws:iam::211125293633:role/opensci-sciencecore
 
+nfs:
+  pv:
+    serverIP: 10.100.18.213
+
+jupyterhub-home-nfs:
+  eks:
+    volumeId: vol-0ead627e253d8383a
+  quotaEnforcer:
+    hardQuota: "10" # in GB
+    path: "/export/sciencecore"
+
 jupyterhub:
   ingress:
     hosts:
