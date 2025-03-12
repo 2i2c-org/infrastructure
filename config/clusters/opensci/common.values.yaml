@@ -15,6 +15,11 @@ nfs:
     serverIP: fs-065fcb5bb0ad79b25.efs.us-west-2.amazonaws.com
     baseShareName: /
 
+jupyterhub-home-nfs:
+  enabled: true
+  eks:
+    enabled: true
+
 jupyterhub:
   scheduling:
     userScheduler:

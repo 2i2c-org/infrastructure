@@ -3,6 +3,10 @@ userServiceAccount:
   annotations:
     eks.amazonaws.com/role-arn: arn:aws:iam::211125293633:role/opensci-sciencecore
 
+jupyterhub-home-nfs:
+  eks:
+    volumeId: vol-0ead627e253d8383a
+
 jupyterhub:
   ingress:
     hosts:
