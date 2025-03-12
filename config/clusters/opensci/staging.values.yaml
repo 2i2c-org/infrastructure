@@ -1,6 +1,9 @@
 jupyterhub-home-nfs:
   eks:
     volumeId: vol-02a23da5b534a990a
+nfs:
+  pv:
+    serverIP: 10.100.97.90
 
 jupyterhub:
   ingress:
