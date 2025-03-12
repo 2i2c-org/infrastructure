@@ -81,7 +81,9 @@ hub_cloud_permissions = {
               "arn:aws:s3:::sport-lis",
               "arn:aws:s3:::sport-lis/*",
               "arn:aws:s3:::nasa-disasters",
-              "arn:aws:s3:::nasa-disasters/*"
+              "arn:aws:s3:::nasa-disasters/*",
+              "arn:aws:s3:::nasa-eodc-scratch",
+              "arn:aws:s3:::nasa-eodc-scratch/*",
             ]
           },
           {
