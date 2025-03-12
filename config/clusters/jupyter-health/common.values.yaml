@@ -76,6 +76,7 @@ jupyterhub:
           - "20008" # Yaffe Lab
           - "20005" # Moslehi Lab
           - "20006" # Olgin Lab
+          - "20026" # BIDS - URAP
     extraConfig:
       # get organization membership for managed groups:
       managed_organizations.py: |
