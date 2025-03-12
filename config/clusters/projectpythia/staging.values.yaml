@@ -1,3 +1,14 @@
+nfs:
+  pv:
+    serverIP: 10.100.153.204
+
+jupyterhub-home-nfs:
+  eks:
+    volumeId: vol-039e18f9304722450
+  quotaEnforcer:
+    hardQuota: "0.5" # in GB
+    path: "/export/staging"
+
 jupyterhub:
   ingress:
     hosts: [staging.projectpythia.2i2c.cloud]
