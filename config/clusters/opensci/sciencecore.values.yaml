@@ -10,6 +10,9 @@ nfs:
 jupyterhub-home-nfs:
   eks:
     volumeId: vol-0ead627e253d8383a
+  quotaEnforcer:
+    hardQuota: "10" # in GB
+    path: "/export/sciencecore"
 
 jupyterhub:
   ingress:
