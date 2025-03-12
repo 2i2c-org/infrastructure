@@ -4,6 +4,9 @@ jupyterhub-home-nfs:
 nfs:
   pv:
     serverIP: 10.100.97.90
+  quotaEnforcer:
+    hardQuota: "0.5" # in GB
+    path: "/export/staging"
 
 jupyterhub:
   ingress:
