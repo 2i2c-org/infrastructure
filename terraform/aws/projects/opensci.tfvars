@@ -30,6 +30,8 @@ hub_cloud_permissions = {
   },
 }
 
+enable_nfs_backup = true
+
 ebs_volumes = {
   "staging" = {
     size        = 10 # in GB
