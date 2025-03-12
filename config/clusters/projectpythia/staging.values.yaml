@@ -1,3 +1,7 @@
+jupyterhub-home-nfs:
+  eks:
+    volumeId: vol-039e18f9304722450
+
 jupyterhub:
   ingress:
     hosts: [staging.projectpythia.2i2c.cloud]
