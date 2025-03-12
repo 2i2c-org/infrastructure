@@ -17,7 +17,6 @@ prometheus:
         receiver: pagerduty
         repeat_interval: 3h
         routes:
-          # Duplicate this entry for every hub on the cluster that uses an EBS volume as an NFS server
           - receiver: pagerduty
             match:
               channel: pagerduty
