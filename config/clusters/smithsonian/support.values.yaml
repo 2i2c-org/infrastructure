@@ -23,6 +23,21 @@ grafana:
           - grafana.smithsonian.2i2c.cloud
 
 prometheus:
+  alertmanager:
+    enabled: true
+    config:
+      route:
+        group_wait: 10s
+        group_interval: 5m
+        receiver: pagerduty
+        repeat_interval: 3h
+        routes:
+          # Duplicate this entry for every hub on the cluster that uses an EBS volume as an NFS server
+          - receiver: pagerduty
+            match:
+              channel: pagerduty
+              cluster: smithsonian
+              namespace: staging
   server:
     ingress:
       enabled: true
@@ -32,6 +47,21 @@ prometheus:
         - secretName: prometheus-tls
           hosts:
             - prometheus.smithsonian.2i2c.cloud
+  serverFiles:
+    alerting_rules.yml:
+      groups:
+        # Duplicate this entry for every hub on the cluster that uses a disk as an NFS server
+        - name: smithsonian staging jupyterhub-home-nfs disk full
+          rules:
+            - alert: staging-jupyterhub-home-nfs-disk-full
+              expr: node_filesystem_avail_bytes{mountpoint="/shared-volume", component="shared-volume-metrics", namespace="staging"} / node_filesystem_size_bytes{mountpoint="/shared-volume", component="shared-volume-metrics", namespace="staging"} < 0.1
+              for: 15m
+              labels:
+                severity: critical
+                channel: pagerduty
+                cluster: smithsonian
+              annotations:
+                summary: "jupyterhub-home-nfs disk full in namespace {{ $labels.namespace }}"
 
 aws-ce-grafana-backend:
   enabled: true
