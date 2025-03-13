@@ -17,6 +17,10 @@ basehub:
       baseShareName: /
   dask-gateway:
     enabled: true
+  jupyterhub-home-nfs:
+    enabled: true
+    eks:
+      enabled: true
   jupyterhub:
     custom:
       daskhubSetup:
