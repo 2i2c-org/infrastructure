@@ -61,9 +61,6 @@ basehub:
             - US-GHG-Center:ghg-use-case-1
             - US-GHG-Center:ghg-use-case-2
             - US-GHG-Center:ghg-use-case-3
-            - US-GHG-Center:ghg-external-collaborators
-            - US-GHG-Center:ghg-workshop-access
-            - US-GHG-Center:ghg-trial-access
             - 2i2c-org:hub-access-for-2i2c-staff
           scope:
             - read:org
