@@ -54,7 +54,7 @@ jupyterhub:
     image:
       # https://hub.docker.com/r/lisacuk/lishub-base
       name: "lisacuk/lishub-base"
-      tag: "98c548c"
+      tag: "364c386"
     profileList:
       # Setup as requested in https://2i2c.freshdesk.com/a/tickets/1348
       - display_name: Regular Instance
