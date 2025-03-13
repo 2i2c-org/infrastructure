@@ -50,14 +50,9 @@ basehub:
         GitHubOAuthenticator:
           populate_teams_in_auth_state: true
           allowed_organizations:
-            - CASI-LIS-Dashboard:dev-veda-jupyterhub
             - veda-analytics-access:all-users
-            - veda-analytics-access:collaborator-access
-            - CYGNSS-VEDA:cygnss-iwg
             - veda-analytics-access:maap-biomass-team
-            - Earth-Information-System:eis-fire
-            - Earth-Information-System:swot
-            - veda-analytics-access:harvard-data-team
+            - veda-analytics-access:veda-ghg-admins
           scope:
             - read:org
         Authenticator:
