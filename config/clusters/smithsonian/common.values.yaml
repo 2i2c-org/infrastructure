@@ -21,6 +21,8 @@ basehub:
     enabled: true
     eks:
       enabled: true
+    prometheusExporter:
+      enabled: true
   jupyterhub:
     custom:
       daskhubSetup:
