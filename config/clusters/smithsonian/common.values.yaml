@@ -13,10 +13,15 @@ basehub:
         - soft # We pick soft over hard, so NFS lockups don't lead to hung processes
         - retrans=2
         - noresvport
-      serverIP: fs-0ba20c6122f4a7236.efs.us-east-2.amazonaws.com
       baseShareName: /
   dask-gateway:
     enabled: true
+  jupyterhub-home-nfs:
+    enabled: true
+    eks:
+      enabled: true
+    prometheusExporter:
+      enabled: true
   jupyterhub:
     custom:
       daskhubSetup:
