@@ -65,7 +65,7 @@ jupyterhub:
                   # Launch people directly into VSCode IDE when they start
                   default_url: /vscode
                   # Built from https://github.com/strudel-science/strudel-infra
-                  image: quay.io/strudel/infrastructure-image:df1c1a55d8b6
+                  image: quay.io/strudel/infrastructure-image:e7f001e82e72
               qgis:
                 display_name: QGIS
                 description: QGIS environment
