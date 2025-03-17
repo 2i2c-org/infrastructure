@@ -22,7 +22,7 @@ jupyterhub:
       templateVars:
         org:
           name: strudel
-          logo_url: none
+          logo_url: https://raw.githubusercontent.com/strudel-science/strudel-web/refs/heads/main/content/images/strudel-logo-transp.png
           url: strudel
         designed_by:
           name: 2i2c
