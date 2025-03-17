@@ -58,6 +58,14 @@ jupyterhub:
               kubespawner_override:
                 image: "{value}"
             choices:
+              vscode:
+                display_name: VSCode
+                description: VSCode with STRUDEL-kit
+                kubespawner_override:
+                  # Launch people directly into VSCode IDE when they start
+                  default_url: /vscode
+                  # Built from https://github.com/strudel-science/strudel-infra
+                  image: quay.io/strudel/infrastructure-image:e7f001e82e72
               qgis:
                 display_name: QGIS
                 description: QGIS environment
