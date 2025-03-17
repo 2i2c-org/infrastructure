@@ -22,8 +22,8 @@ jupyterhub:
       templateVars:
         org:
           name: strudel
-          logo_url: none
-          url: strudel
+          logo_url: https://raw.githubusercontent.com/strudel-science/strudel-web/refs/heads/main/content/images/strudel-logo-transp.png
+          url: https://strudel.science/
         designed_by:
           name: 2i2c
           url: https://2i2c.org
@@ -31,8 +31,8 @@ jupyterhub:
           name: 2i2c
           url: https://2i2c.org
         funded_by:
-          name: none
-          url: none
+          name: Alfred P. Sloan Foundation
+          url: https://sloan.org/grant-detail/10074
   hub:
     allowNamedServers: true
     config:
