@@ -1,3 +1,7 @@
+nfs:
+  pv:
+    serverIP: 10.100.239.95
+
 jupyterhub-home-nfs:
   eks:
     volumeId: vol-0bddedd2c2a55e0f6
