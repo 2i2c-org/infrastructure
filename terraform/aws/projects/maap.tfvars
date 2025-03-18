@@ -26,6 +26,65 @@ hub_cloud_permissions = {
   },
   "prod" : {
     bucket_admin_access : ["scratch-prod"],
+    extra_iam_policy : <<-EOT
+      {
+        "Version": "2012-10-17",
+        "Statement": [
+          {
+            "Effect": "Allow",
+            "Action": [
+              "s3:GetObject",
+              "s3:ListBucketVersions",
+              "s3:ListBucket",
+              "s3:GetBucketLocation"
+            ],
+            "Resource": [
+              "arn:aws:s3:::veda-data-store",
+              "arn:aws:s3:::veda-data-store/*",
+              "arn:aws:s3:::veda-data-store-staging",
+              "arn:aws:s3:::veda-data-store-staging/*",
+              "arn:aws:s3:::veda-nex-gddp-cmip6-public",
+              "arn:aws:s3:::veda-nex-gddp-cmip6-public/*",
+              "arn:aws:s3:::cmip6-staging",
+              "arn:aws:s3:::cmip6-staging/*",
+              "arn:aws:s3:::lp-prod-protected",
+              "arn:aws:s3:::lp-prod-protected/*",
+              "arn:aws:s3:::gesdisc-cumulus-prod-protected",
+              "arn:aws:s3:::gesdisc-cumulus-prod-protected/*",
+              "arn:aws:s3:::nsidc-cumulus-prod-protected",
+              "arn:aws:s3:::nsidc-cumulus-prod-protected/*",
+              "arn:aws:s3:::ornl-cumulus-prod-protected",
+              "arn:aws:s3:::ornl-cumulus-prod-protected/*",
+              "arn:aws:s3:::pangeo-forge-veda-output",
+              "arn:aws:s3:::pangeo-forge-veda-output/*",
+              "arn:aws:s3:::podaac-ops-cumulus-public",
+              "arn:aws:s3:::podaac-ops-cumulus-public/*",
+              "arn:aws:s3:::podaac-ops-cumulus-protected",
+              "arn:aws:s3:::podaac-ops-cumulus-protected/*",
+              "arn:aws:s3:::maap-ops-workspace",
+              "arn:aws:s3:::maap-ops-workspace/*",
+              "arn:aws:s3:::nasa-maap-data-store",
+              "arn:aws:s3:::nasa-maap-data-store/*",
+              "arn:aws:s3:::sdap-dev-zarr",
+              "arn:aws:s3:::sdap-dev-zarr/*",
+              "arn:aws:s3:::usgs-landsat",
+              "arn:aws:s3:::usgs-landsat/*",
+              "arn:aws:s3:::sentinel-cogs",
+              "arn:aws:s3:::sentinel-cogs/*",
+              "arn:aws:s3:::sport-lis",
+              "arn:aws:s3:::sport-lis/*",
+              "arn:aws:s3:::nasa-disasters",
+              "arn:aws:s3:::nasa-disasters/*"
+            ]
+          },
+          {
+            "Effect": "Allow",
+            "Action": "s3:ListAllMyBuckets",
+            "Resource": "*"
+          }
+        ]
+      }
+    EOT
   },
 }
 
