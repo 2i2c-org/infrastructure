@@ -20,11 +20,11 @@ enable_filestore_backups = true
 
 persistent_disks = {
   "staging" = {
-    size        = 40  # in GB
+    size        = 40 # in GB
     name_suffix = "staging"
   },
   "prod" = {
-    size        = 100  # in GB
+    size        = 100 # in GB
     name_suffix = "prod"
   }
 }
