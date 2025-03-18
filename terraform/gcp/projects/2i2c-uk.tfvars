@@ -38,11 +38,11 @@ user_buckets = {}
 
 persistent_disks = {
   "staging" = {
-    size        = 10  # in GB
+    size        = 10 # in GB
     name_suffix = "staging"
   },
   "lis" = {
-    size        = 320  # in GB
+    size        = 320 # in GB
     name_suffix = "lis"
   }
 }
