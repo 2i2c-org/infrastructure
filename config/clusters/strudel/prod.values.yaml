@@ -5,6 +5,9 @@ nfs:
 jupyterhub-home-nfs:
   eks:
     volumeId: vol-06db6689a39f11202
+  quotaEnforcer:
+    hardQuota: "10" # in GB
+    path: "/export/prod"
 
 jupyterhub:
   ingress:
