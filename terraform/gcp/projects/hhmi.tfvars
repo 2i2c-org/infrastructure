@@ -18,6 +18,17 @@ k8s_versions = {
 enable_network_policy    = true
 enable_filestore_backups = true
 
+persistent_disks = {
+  "staging" = {
+    size        = 40  # in GB
+    name_suffix = "staging"
+  },
+  "prod" = {
+    size        = 100  # in GB
+    name_suffix = "prod"
+  }
+}
+
 hub_cloud_permissions = {
   "binder" : {
     allow_access_to_external_requester_pays_buckets : false,
