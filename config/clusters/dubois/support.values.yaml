@@ -28,12 +28,4 @@ grafana:
           - grafana.dubois.2i2c.cloud
 
 gcpFilestoreBackups:
-  enabled: true
-  filestoreName: dubois-homedirs
-  project: dubois-436615
-  zone: us-central1-b
-  retentionDays: 2
-  serviceAccount:
-    name: gcp-filestore-backups-sa
-    annotations:
-      iam.gke.io/gcp-service-account: dubois-filestore-backup@dubois-436615.iam.gserviceaccount.com
+  enabled: false
