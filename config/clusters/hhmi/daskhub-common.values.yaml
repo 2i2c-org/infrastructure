@@ -250,3 +250,10 @@ basehub:
           #
           admin_users:
             - colliand
+
+  jupyterhub-home-nfs:
+    enabled: true
+    prometheusExporter:
+      enabled: true
+    gke:
+      enabled: true
