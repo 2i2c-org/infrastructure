@@ -1,6 +1,11 @@
 userServiceAccount:
   annotations:
     eks.amazonaws.com/role-arn: arn:aws:iam::211125465508:role/jupyter-health-staging
+
+jupyterhub-home-nfs:
+  eks:
+    volumeId: vol-097e117991afc3759
+
 jupyterhub:
   ingress:
     hosts: [staging.jupyter-health.2i2c.cloud]

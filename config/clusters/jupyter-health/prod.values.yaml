@@ -1,6 +1,11 @@
 userServiceAccount:
   annotations:
     eks.amazonaws.com/role-arn: arn:aws:iam::211125465508:role/jupyter-health-prod
+
+jupyterhub-home-nfs:
+  eks:
+    volumeId: vol-02741e24417a9c2c2
+
 jupyterhub:
   ingress:
     hosts: [jupyter-health.2i2c.cloud]

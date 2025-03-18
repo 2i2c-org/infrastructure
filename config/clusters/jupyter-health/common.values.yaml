@@ -14,6 +14,12 @@ nfs:
       - noresvport
     serverIP: fs-07b67adf6626672af.efs.us-east-2.amazonaws.com
     baseShareName: /
+
+jupyterhub-home-nfs:
+  enabled: true
+  eks:
+    enabled: true
+
 jupyterhub:
   custom:
     2i2c:
