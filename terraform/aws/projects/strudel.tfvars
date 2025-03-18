@@ -1,33 +1,22 @@
-/*
- Some of the assumptions this jinja2 template makes about the cluster:
-   - location of the nodes of the kubernetes cluster will be <region>a
-   - no default scratch buckets support
-*/
 region                 = "us-west-2"
 cluster_name           = "strudel"
 cluster_nodes_location = "us-west-2a"
 
 enable_aws_ce_grafana_backend_iam = true
 disable_cluster_wide_filestore    = false
+enable_nfs_backup                 = true
 
-# Tip: uncomment and fill the missing info in the lines below if you want
-#       to setup scratch buckets for the hubs on this cluster.
-#
-#user_buckets = {
-#  "scratch-staging" : {
-#    "delete_after" : 7,
-#  },
-#  # Tip: add more scratch buckets below, if this cluster will be multi-tenant
-#}
-
-# Tip: uncomment and fill the missing info in the lines below if you want
-#       to setup specific cloud permissions for the buckets in this cluster.
-#
-#hub_cloud_permissions = {
-#  "staging" : {
-#    "user-sa" : {
-#      bucket_admin_access : ["scratch-staging"],
-#    },
-#  },
-#  # Tip: add more namespaces below, if this cluster will be multi-tenant
-#}
+ebs_volumes = {
+  "staging" = {
+    size        = 10 # in GB
+    type        = "gp3"
+    name_suffix = "staging"
+    tags        = { "2i2c:hub-name" : "staging" }
+  }
+  "prod" = {
+    size        = 100 # in GB
+    type        = "gp3"
+    name_suffix = "prod"
+    tags        = { "2i2c:hub-name" : "prod" }
+  }
+}
