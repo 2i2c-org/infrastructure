@@ -9,8 +9,8 @@ nfs:
     mountOptions:
       - soft
       - noatime
-    serverIP: 10.55.112.74
-    baseShareName: /homes/
+    serverIP: 10.87.246.71
+    baseShareName: /
     # The spyglass hub will be using the same *shared* directory from the 'prod' hub, so
     # hub admins can *write* to the shared directory there and it'll show up readonly here.
     shareNameOverride: prod

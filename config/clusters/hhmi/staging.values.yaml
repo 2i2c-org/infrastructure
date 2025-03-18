@@ -1,4 +1,7 @@
 basehub:
+  nfs:
+    pv:
+      serverIP: 10.87.253.56
   jupyterhub:
     ingress:
       hosts:
@@ -20,3 +23,6 @@ basehub:
   jupyterhub-home-nfs:
     gke:
       volumeId: projects/hhmi-398911/zones/us-west2-b/disks/hub-nfs-homedirs-staging
+    quotaEnforcer:
+      hardQuota: 2 # in GB
+      path: "/export/staging"
