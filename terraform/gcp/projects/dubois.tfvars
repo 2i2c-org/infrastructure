@@ -3,7 +3,7 @@ project_id               = "dubois-436615"
 zone                     = "us-central1-b"
 region                   = "us-central1"
 enable_network_policy    = true
-enable_filestore_backups = true
+enable_filestore_backups = false
 core_node_machine_type   = "n2-highmem-2"
 filestores               = {}
 
