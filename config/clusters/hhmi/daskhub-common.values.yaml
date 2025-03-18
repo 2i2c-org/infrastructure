@@ -6,8 +6,7 @@ basehub:
       mountOptions:
         - soft
         - noatime
-      serverIP: 10.55.112.74
-      baseShareName: /homes/
+      baseShareName: /
   dask-gateway:
     enabled: true
   jupyterhub:

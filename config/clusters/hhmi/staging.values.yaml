@@ -1,4 +1,7 @@
 basehub:
+  nfs:
+    pv:
+      serverIP: 10.87.253.56
   jupyterhub:
     ingress:
       hosts:
