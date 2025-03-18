@@ -9,6 +9,13 @@ nfs:
     serverIP: 10.65.88.114
     # Name of Google Filestore share
     baseShareName: /homes/
+jupyterhub-home-nfs:
+  enabled: true
+  prometheusExporter:
+    enabled: true
+  gke:
+    enabled: true
+    volumeId: projects/two-eye-two-see-uk/zones/europe-west2-b/disks/hub-nfs-homedirs-staging
 jupyterhub:
   ingress:
     hosts: [staging.uk.2i2c.cloud]
