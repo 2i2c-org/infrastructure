@@ -1,3 +1,7 @@
+jupyterhub-home-nfs:
+  eks:
+    volumeId: vol-06db6689a39f11202
+
 jupyterhub:
   ingress:
     hosts: [strudel.2i2c.cloud]

@@ -13,6 +13,11 @@ nfs:
     serverIP: fs-02429ba76bca794be.efs.us-west-2.amazonaws.com
     baseShareName: /
 
+jupyterhub-home-nfs:
+  enabled: true
+  eks:
+    enabled: true
+
 jupyterhub:
   custom:
     2i2c:
