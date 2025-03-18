@@ -24,7 +24,7 @@ persistent_disks = {
     name_suffix = "staging"
   },
   "prod" = {
-    size        = 100 # in GB
+    size        = 120 # in GB
     name_suffix = "prod"
   }
 }
