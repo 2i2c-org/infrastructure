@@ -5,10 +5,8 @@ nfs:
     mountOptions:
       - soft
       - noatime
-    # Google FileStore IP
-    serverIP: 10.65.88.114
-    # Name of Google Filestore share
-    baseShareName: /homes/
+    serverIP: 10.103.254.0
+    baseShareName: /
 jupyterhub-home-nfs:
   enabled: true
   prometheusExporter:
@@ -16,6 +14,9 @@ jupyterhub-home-nfs:
   gke:
     enabled: true
     volumeId: projects/two-eye-two-see-uk/zones/europe-west2-b/disks/hub-nfs-homedirs-staging
+  quotaEnforcer:
+    hardQuota: "1" # in GB
+    path: "/export/staging"
 jupyterhub:
   ingress:
     hosts: [staging.uk.2i2c.cloud]
