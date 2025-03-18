@@ -250,3 +250,8 @@ basehub:
           #
           admin_users:
             - colliand
+
+  jupyterhub-home-nfs:
+    enabled: true
+    gke:
+      enabled: true
