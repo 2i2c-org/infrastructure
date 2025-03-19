@@ -54,6 +54,12 @@ basehub:
                   slug: "rkernel"
                   kubespawner_override:
                     image: "quay.io/2i2c/awi-ciroh-image:f7f6aa41555b"
+                preprocessor:
+                  display_name: "NGIAB Data Preprocessor"
+                  kubespawner_override:
+                    # From  https://github.com/CIROH-UA/NGIAB_data_preprocess
+                    image: "quay.io/awiciroh/devcon25:ngiab_datapreprocess"
+                    image_pull_policy: "Always"
           kubespawner_override:
             mem_limit: 7G
             mem_guarantee: 5G
