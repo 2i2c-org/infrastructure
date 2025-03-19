@@ -3,7 +3,7 @@ cluster_name           = "2i2c-aws-us"
 cluster_nodes_location = "us-west-2a"
 
 enable_aws_ce_grafana_backend_iam = true
-disable_cluster_wide_filestore    = false
+disable_cluster_wide_filestore    = true
 
 user_buckets = {
   "scratch-staging" : {
