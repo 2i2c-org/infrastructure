@@ -57,6 +57,7 @@ basehub:
                 preprocessor:
                   display_name: "NGIAB Data Preprocessor"
                   kubespawner_override:
+                    # From  https://github.com/CIROH-UA/NGIAB_data_preprocess
                     image: "quay.io/awiciroh/devcon25:ngiab_datapreprocess"
                     image_pull_policy: "Always"
           kubespawner_override:
