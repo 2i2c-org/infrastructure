@@ -114,7 +114,7 @@ AWS, and we can configure a node group there to provide us GPUs.
         instanceType: "g4dn.xlarge",
         namePrefix: "gpu-{{hub-name}}",
         minSize: 0,
-        labels+: { "2i2c/hub-name": "{{hub-name}}" },
+        labels+: { "2i2c/hub-name": "{{hub-name}}", "2i2c/has-gpu": "true" },
         tags+: {
             "k8s.io/cluster-autoscaler/node-template/resources/nvidia.com/gpu": "1",
             "2i2c:hub-name": "{{hub-name}}",
