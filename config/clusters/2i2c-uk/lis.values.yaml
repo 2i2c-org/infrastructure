@@ -5,10 +5,8 @@ nfs:
     mountOptions:
       - soft
       - noatime
-    # Google FileStore IP
-    serverIP: 10.65.88.114
-    # Name of Google Filestore share
-    baseShareName: /homes/
+    serverIP: 10.103.253.53
+    baseShareName: /
 jupyterhub-home-nfs:
   enabled: true
   prometheusExporter:
