@@ -52,3 +52,7 @@ jupyterhub-home-nfs:
     # Default quota is 10GB per user. Uncomment below variable to edit this.
     # hardQuota: "10" # in GB
     path: "/export/ucmerced-staging"
+nfs:
+  pv:
+    serverIP: 10.3.242.252
+    baseShareName: /

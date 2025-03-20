@@ -54,3 +54,6 @@ basehub:
       # The default quota is 10GB per user. Uncomment below variable to edit this.
       # hardQuota: "10" # in GB
       path: "/export/dask-staging"
+  nfs:
+    pv:
+      serverIP: 10.3.241.233
