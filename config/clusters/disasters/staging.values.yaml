@@ -1,6 +1,6 @@
-# nfs:
-#   pv:
-#     serverIP: 10.100.88.130
+nfs:
+  pv:
+    serverIP: 10.100.165.154
 jupyterhub:
   singleuser:
     nodeSelector:
