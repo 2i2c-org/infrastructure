@@ -1,0 +1,47 @@
+# nfs:
+#   pv:
+#     serverIP: 10.100.88.130
+jupyterhub:
+  singleuser:
+    nodeSelector:
+      2i2c/hub-name: staging
+  hub:
+    config:
+      GitHubOAuthenticator:
+        oauth_callback_url: https://staging.hub.disasters.cloud/hub/oauth_callback
+  ingress:
+    hosts: [staging.hub.disasters.cloud]
+    tls:
+      - hosts: [staging.hub.disasters.cloud]
+        secretName: https-auto-tls
+
+dask-gateway:
+  gateway:
+    backend:
+      scheduler:
+        extraPodConfig:
+          nodeSelector:
+            2i2c/hub-name: staging
+      worker:
+        extraPodConfig:
+          node_selector:
+            2i2c/hub-name: staging
+      imagePullSecrets: [{ name: image-pull-secret }]
+
+binderhub-service:
+  dockerApi:
+    nodeSelector:
+      2i2c/hub-name: staging
+  config:
+    KubernetesBuildExecutor:
+      node_selector:
+        2i2c/hub-name: staging
+    BinderHub:
+      image_prefix: quay.io/imagebuilding-non-gcp-hubs/disasters-staging-
+
+jupyterhub-home-nfs:
+  eks:
+    volumeId: vol-08f3d124fcfd518b0
+  # quotaEnforcer:
+  #   hardQuota: "10" # in GB
+  #   path: "/export/staging"
