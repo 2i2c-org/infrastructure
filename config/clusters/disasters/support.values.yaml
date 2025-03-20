@@ -2,6 +2,25 @@ prometheusIngressAuthSecret:
   enabled: true
 
 prometheus:
+  alertmanager:
+    enabled: true
+    config:
+      route:
+        group_wait: 10s
+        group_interval: 5m
+        receiver: pagerduty
+        repeat_interval: 3h
+        routes:
+          - receiver: pagerduty
+            match:
+              channel: pagerduty
+              cluster: disasters
+              namespace: staging
+          - receiver: pagerduty
+            match:
+              channel: pagerduty
+              cluster: disasters
+              namespace: prod
   server:
     ingress:
       enabled: true
@@ -11,6 +30,31 @@ prometheus:
         - secretName: prometheus-tls
           hosts:
             - prometheus.disasters.2i2c.cloud
+  serverFiles:
+    alerting_rules.yml:
+      groups:
+        - name: disasters staging jupyterhub-home-nfs disk full
+          rules:
+            - alert: staging-jupyterhub-home-nfs-disk-full
+              expr: node_filesystem_avail_bytes{mountpoint="/shared-volume", component="shared-volume-metrics", namespace="staging"} / node_filesystem_size_bytes{mountpoint="/shared-volume", component="shared-volume-metrics", namespace="staging"} < 0.1
+              for: 15m
+              labels:
+                severity: critical
+                channel: pagerduty
+                cluster: disasters
+              annotations:
+                summary: "jupyterhub-home-nfs disk full in namespace {{ $labels.namespace }}"
+        - name: disasters prod jupyterhub-home-nfs disk full
+          rules:
+            - alert: prod-jupyterhub-home-nfs-disk-full
+              expr: node_filesystem_avail_bytes{mountpoint="/shared-volume", component="shared-volume-metrics", namespace="<hub_name>"} / node_filesystem_size_bytes{mountpoint="/shared-volume", component="shared-volume-metrics", namespace="<hub_name>"} < 0.1
+              for: 15m
+              labels:
+                severity: critical
+                channel: pagerduty
+                cluster: disasters
+              annotations:
+                summary: "jupyterhub-home-nfs disk full in namespace {{ $labels.namespace }}"
 
 grafana:
   grafana.ini:
