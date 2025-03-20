@@ -54,3 +54,6 @@ jupyterhub:
       Authenticator:
         admin_users:
           - jmsmith1@temple.edu
+jupyterhub-home-nfs:
+  gke:
+    volumeId: projects/two-eye-two-see/zones/us-central1-b/disks/hub-nfs-homedirs-temple

@@ -43,3 +43,6 @@ jupyterhub:
               username_claim: "email"
             allowed_domains:
               - rmbl.org
+jupyterhub-home-nfs:
+  gke:
+    volumeId: projects/two-eye-two-see/zones/us-central1-b/disks/hub-nfs-homedirs-demo

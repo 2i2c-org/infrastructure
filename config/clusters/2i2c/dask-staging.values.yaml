@@ -47,3 +47,6 @@ basehub:
               default: true
               username_derivation:
                 username_claim: "email"
+  jupyterhub-home-nfs:
+    gke:
+      volumeId: projects/jupyter-nfs/zones/us-central1-f/disks/jupyter-nfs-home-directories

@@ -137,3 +137,7 @@ binderhub-service:
   buildPodsRegistryCredentials:
     server: "https://us-central1-docker.pkg.dev"
     username: "_json_key"
+
+jupyterhub-home-nfs:
+  gke:
+    volumeId: projects/two-eye-two-see/zones/us-central1-b/disks/hub-nfs-homedirs-imagebuilding-demo

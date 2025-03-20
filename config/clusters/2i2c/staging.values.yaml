@@ -65,3 +65,6 @@ jupyterhub:
             default: true
             username_derivation:
               username_claim: "email"
+jupyterhub-home-nfs:
+  gke:
+    volumeId: projects/two-eye-two-see/zones/us-central1-b/disks/hub-nfs-homedirs-staging
