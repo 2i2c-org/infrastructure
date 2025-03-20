@@ -8,11 +8,11 @@ jupyterhub:
   hub:
     config:
       GitHubOAuthenticator:
-        oauth_callback_url: https://hub.disasters.cloud/hub/oauth_callback
+        oauth_callback_url: https://hub.disasters.2i2c.cloud/hub/oauth_callback
   ingress:
-    hosts: [hub.disasters.cloud]
+    hosts: [hub.disasters.2i2c.cloud]
     tls:
-      - hosts: [hub.disasters.cloud]
+      - hosts: [hub.disasters.2i2c.cloud]
         secretName: https-auto-tls
 
 dask-gateway:
