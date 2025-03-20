@@ -28,7 +28,7 @@ jupyterhub:
       templateVars:
         org:
           name: "NASA Disasters Program"
-          logo_url: https://github.com/NASA-IMPACT/veda-config-disasters/blob/221dbcee3ba0411eb6306008bb5f44714276ba28/overrides/components/header-brand/NASA_DISASTERS_LOGO_WHITE_TYPE-mapping-portal_small.png
+          logo_url: https://github.com/NASA-IMPACT/veda-config-disasters/blob/221dbcee3ba0411eb6306008bb5f44714276ba28/overrides/components/header-brand/NASA_DISASTERS_LOGO_WHITE_TYPE-mapping-portal_small.png?raw=true
           url: https://disasters-nasa.hub.arcgis.com/
         designed_by:
           name: "2i2c"
