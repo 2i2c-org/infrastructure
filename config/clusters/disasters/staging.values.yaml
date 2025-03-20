@@ -42,6 +42,6 @@ binderhub-service:
 jupyterhub-home-nfs:
   eks:
     volumeId: vol-08f3d124fcfd518b0
-  # quotaEnforcer:
-  #   hardQuota: "10" # in GB
-  #   path: "/export/staging"
+  quotaEnforcer:
+    hardQuota: "10" # in GB
+    path: "/export/staging"
