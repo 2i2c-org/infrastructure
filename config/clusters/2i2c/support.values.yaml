@@ -6,6 +6,56 @@ prometheusStorageClass:
     enabled: true
 
 prometheus:
+  alertmanager:
+    enabled: true
+    config:
+      route:
+        group_wait: 10s
+        group_interval: 5m
+        receiver: pagerduty
+        repeat_interval: 3h
+        routes:
+          # Duplicate this entry for every hub on the cluster that uses an EBS volume as an NFS server
+          - receiver: pagerduty
+            match:
+              channel: pagerduty
+              cluster: 2i2c
+              namespace: dask-staging
+          - receiver: pagerduty
+            match:
+              channel: pagerduty
+              cluster: 2i2c
+              namespace: demo
+          - receiver: pagerduty
+            match:
+              channel: pagerduty
+              cluster: 2i2c
+              namespace: imagebuilding-demo
+          - receiver: pagerduty
+            match:
+              channel: pagerduty
+              cluster: 2i2c
+              namespace: mtu
+          - receiver: pagerduty
+            match:
+              channel: pagerduty
+              cluster: 2i2c
+              namespace: staging
+          - receiver: pagerduty
+            match:
+              channel: pagerduty
+              cluster: 2i2c
+              namespace: temple
+          - receiver: pagerduty
+            match:
+              channel: pagerduty
+              cluster: 2i2c
+              namespace: ucmerced
+          - receiver: pagerduty
+            match:
+              channel: pagerduty
+              cluster: 2i2c
+              namespace: ucmerced-staging
   server:
     persistentVolume:
       # 100Gi filled up, and this is source of our billing data.
@@ -19,6 +69,98 @@ prometheus:
         - secretName: prometheus-tls
           hosts:
             - prometheus.pilot.2i2c.cloud
+  serverFiles:
+    alerting_rules.yml:
+      groups:
+        # Duplicate this entry for every hub on the cluster that uses a disk as an NFS server
+        - name: 2i2c dask-staging jupyterhub-home-nfs disk full
+          rules:
+            - alert: dask-staging-jupyterhub-home-nfs-disk-full
+              expr: node_filesystem_avail_bytes{mountpoint="/shared-volume", component="shared-volume-metrics", namespace="dask-staging"} / node_filesystem_size_bytes{mountpoint="/shared-volume", component="shared-volume-metrics", namespace="dask-staging"} < 0.1
+              for: 15m
+              labels:
+                severity: critical
+                channel: pagerduty
+                cluster: 2i2c
+              annotations:
+                summary: "jupyterhub-home-nfs disk full in namespace {{ $labels.namespace }}"
+        - name: 2i2c demo jupyterhub-home-nfs disk full
+          rules:
+            - alert: demo-jupyterhub-home-nfs-disk-full
+              expr: node_filesystem_avail_bytes{mountpoint="/shared-volume", component="shared-volume-metrics", namespace="demo"} / node_filesystem_size_bytes{mountpoint="/shared-volume", component="shared-volume-metrics", namespace="demo"} < 0.1
+              for: 15m
+              labels:
+                severity: critical
+                channel: pagerduty
+                cluster: 2i2c
+              annotations:
+                summary: "jupyterhub-home-nfs disk full in namespace {{ $labels.namespace }}"
+        - name: 2i2c imagebuilding-demo jupyterhub-home-nfs disk full
+          rules:
+            - alert: imagebuilding-demo-jupyterhub-home-nfs-disk-full
+              expr: node_filesystem_avail_bytes{mountpoint="/shared-volume", component="shared-volume-metrics", namespace="imagebuilding-demo"} / node_filesystem_size_bytes{mountpoint="/shared-volume", component="shared-volume-metrics", namespace="imagebuilding-demo"} < 0.1
+              for: 15m
+              labels:
+                severity: critical
+                channel: pagerduty
+                cluster: 2i2c
+              annotations:
+                summary: "jupyterhub-home-nfs disk full in namespace {{ $labels.namespace }}"
+        - name: 2i2c mtu jupyterhub-home-nfs disk full
+          rules:
+            - alert: mtu-jupyterhub-home-nfs-disk-full
+              expr: node_filesystem_avail_bytes{mountpoint="/shared-volume", component="shared-volume-metrics", namespace="mtu"} / node_filesystem_size_bytes{mountpoint="/shared-volume", component="shared-volume-metrics", namespace="mtu"} < 0.1
+              for: 15m
+              labels:
+                severity: critical
+                channel: pagerduty
+                cluster: 2i2c
+              annotations:
+                summary: "jupyterhub-home-nfs disk full in namespace {{ $labels.namespace }}"
+        - name: 2i2c staging jupyterhub-home-nfs disk full
+          rules:
+            - alert: staging-jupyterhub-home-nfs-disk-full
+              expr: node_filesystem_avail_bytes{mountpoint="/shared-volume", component="shared-volume-metrics", namespace="staging"} / node_filesystem_size_bytes{mountpoint="/shared-volume", component="shared-volume-metrics", namespace="staging"} < 0.1
+              for: 15m
+              labels:
+                severity: critical
+                channel: pagerduty
+                cluster: 2i2c
+              annotations:
+                summary: "jupyterhub-home-nfs disk full in namespace {{ $labels.namespace }}"
+        - name: 2i2c temple jupyterhub-home-nfs disk full
+          rules:
+            - alert: temple-jupyterhub-home-nfs-disk-full
+              expr: node_filesystem_avail_bytes{mountpoint="/shared-volume", component="shared-volume-metrics", namespace="temple"} / node_filesystem_size_bytes{mountpoint="/shared-volume", component="shared-volume-metrics", namespace="temple"} < 0.1
+              for: 15m
+              labels:
+                severity: critical
+                channel: pagerduty
+                cluster: 2i2c
+              annotations:
+                summary: "jupyterhub-home-nfs disk full in namespace {{ $labels.namespace }}"
+        - name: 2i2c ucmerced jupyterhub-home-nfs disk full
+          rules:
+            - alert: ucmerced-jupyterhub-home-nfs-disk-full
+              expr: node_filesystem_avail_bytes{mountpoint="/shared-volume", component="shared-volume-metrics", namespace="ucmerced"} / node_filesystem_size_bytes{mountpoint="/shared-volume", component="shared-volume-metrics", namespace="ucmerced"} < 0.1
+              for: 15m
+              labels:
+                severity: critical
+                channel: pagerduty
+                cluster: 2i2c
+              annotations:
+                summary: "jupyterhub-home-nfs disk full in namespace {{ $labels.namespace }}"
+        - name: 2i2c ucmerced-staging jupyterhub-home-nfs disk full
+          rules:
+            - alert: ucmerced-staging-jupyterhub-home-nfs-disk-full
+              expr: node_filesystem_avail_bytes{mountpoint="/shared-volume", component="shared-volume-metrics", namespace="ucmerced-staging"} / node_filesystem_size_bytes{mountpoint="/shared-volume", component="shared-volume-metrics", namespace="ucmerced-staging"} < 0.1
+              for: 15m
+              labels:
+                severity: critical
+                channel: pagerduty
+                cluster: 2i2c
+              annotations:
+                summary: "jupyterhub-home-nfs disk full in namespace {{ $labels.namespace }}"
 
 grafana:
   grafana.ini:
