@@ -28,6 +28,7 @@ jobs:
           - cluster_name: catalystproject-latam
           - cluster_name: cloudbank
           - cluster_name: dubois
+          - cluster_name: disasters
           - cluster_name: earthscope
           - cluster_name: hhmi
           - cluster_name: jupyter-health

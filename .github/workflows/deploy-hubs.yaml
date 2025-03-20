@@ -215,6 +215,7 @@ jobs:
       failure_catalystproject-africa: ${{ steps.declare-failure.outputs.failure_catalystproject-africa }}
       failure_catalystproject-latam: ${{ steps.declare-failure.outputs.failure_catalystproject-latam }}
       failure_cloudbank: ${{ steps.declare-failure.outputs.failure_cloudbank }}
+      failure_disasters: ${{ steps.declare-failure.outputs.failure_disasters }}
       failure_dubois: ${{ steps.declare-failure.outputs.failure_dubois }}
       failure_earthscope: ${{ steps.declare-failure.outputs.failure_earthscope }}
       failure_hhmi: ${{ steps.declare-failure.outputs.failure_hhmi }}
@@ -454,6 +455,7 @@ jobs:
       failure_catalystproject-latam_staging: ${{ steps.declare-failure.outputs.failure_catalystproject-latam_staging }}
       failure_cloudbank_staging: ${{ steps.declare-failure.outputs.failure_cloudbank_staging }}
       failure_dubois_staging: ${{ steps.declare-failure.outputs.failure_dubois_staging }}
+      failure_disasters_staging: ${{ steps.declare-failure.outputs.failure_disasters_staging }}
       failure_earthscope_staging: ${{ steps.declare-failure.outputs.failure_earthscope_staging }}
       failure_hhmi_staging: ${{ steps.declare-failure.outputs.failure_hhmi_staging }}
       failure_jupyter-health_staging: ${{ steps.declare-failure.outputs.failure_jupyter-health_staging }}
