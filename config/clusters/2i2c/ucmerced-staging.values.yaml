@@ -48,3 +48,11 @@ jupyterhub:
 jupyterhub-home-nfs:
   gke:
     volumeId: projects/two-eye-two-see/zones/us-central1-b/disks/hub-nfs-homedirs-ucmerced-staging
+  quotaEnforcer:
+    # Default quota is 10GB per user. Uncomment below variable to edit this.
+    # hardQuota: "10" # in GB
+    path: "/export/ucmerced-staging"
+nfs:
+  pv:
+    serverIP: 10.3.242.252
+    baseShareName: /
