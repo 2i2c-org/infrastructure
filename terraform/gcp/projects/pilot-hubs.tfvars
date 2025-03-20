@@ -30,35 +30,35 @@ enable_filestore_backups = true
 
 persistent_disks = {
   "staging" = {
-    size        = 5  # in GB
+    size        = 5 # in GB
     name_suffix = "staging"
   },
   "dask-staging" = {
-    size        = 3  # in GB
+    size        = 3 # in GB
     name_suffix = "dask-staging"
   },
   "imagebuilding-demo" = {
-    size        = 10  # in GB
+    size        = 10 # in GB
     name_suffix = "imagebuilding-demo"
   },
   "demo" = {
-    size        = 2  # in GB
+    size        = 2 # in GB
     name_suffix = "demo"
   },
   "mtu" = {
-    size        = 40  # in GB
+    size        = 40 # in GB
     name_suffix = "mtu"
   },
   "temple" = {
-    size        = 1200  # in GB
+    size        = 1200 # in GB
     name_suffix = "temple"
   },
   "ucmerced-staging" = {
-    size        = 10  # in GB
+    size        = 10 # in GB
     name_suffix = "ucmerced-staging"
   },
   "ucmerced" = {
-    size        = 120  # in GB
+    size        = 120 # in GB
     name_suffix = "ucmerced"
   }
 }
