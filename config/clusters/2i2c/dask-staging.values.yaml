@@ -49,4 +49,4 @@ basehub:
                 username_claim: "email"
   jupyterhub-home-nfs:
     gke:
-      volumeId: projects/jupyter-nfs/zones/us-central1-f/disks/jupyter-nfs-home-directories
+      volumeId: projects/two-eye-two-see/zones/us-central1-b/disks/hub-nfs-homedirs-dask-staging
