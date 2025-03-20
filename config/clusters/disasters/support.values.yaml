@@ -1,0 +1,42 @@
+prometheusIngressAuthSecret:
+  enabled: true
+
+prometheus:
+  server:
+    ingress:
+      enabled: true
+      hosts:
+        - prometheus.disasters.2i2c.cloud
+      tls:
+        - secretName: prometheus-tls
+          hosts:
+            - prometheus.disasters.2i2c.cloud
+
+grafana:
+  grafana.ini:
+    server:
+      root_url: https://grafana.disasters.2i2c.cloud/
+  auth.github:
+    enabled: true
+    allowed_organizations: 2i2c-org
+  ingress:
+    hosts:
+      - grafana.disasters.2i2c.cloud
+    tls:
+      - secretName: grafana-tls
+        hosts:
+          - grafana.disasters.2i2c.cloud
+
+aws-ce-grafana-backend:
+  enabled: true
+  envBasedConfig:
+    clusterName: disasters
+  serviceAccount:
+    annotations:
+      eks.amazonaws.com/role-arn: arn:aws:iam::515966502221:role/aws_ce_grafana_backend_iam_role
+
+cluster-autoscaler:
+  enabled: true
+  autoDiscovery:
+    clusterName: disasters
+  awsRegion: us-west-2
