@@ -18,3 +18,9 @@ basehub:
     singleuser:
       cloudMetadata:
         blockWithIptables: false
+  jupyterhub-home-nfs:
+    enabled: true
+    gke:
+      enabled: true
+    prometheusExporter:
+      enabled: true

@@ -8,3 +8,9 @@ nfs:
     serverIP: 10.234.45.250
     # MUST HAVE TRAILING SLASH
     baseShareName: /homes/homes/
+jupyterhub-home-nfs:
+  enabled: true
+  gke:
+    enabled: true
+  prometheusExporter:
+    enabled: true

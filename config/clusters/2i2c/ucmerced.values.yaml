@@ -45,3 +45,6 @@ jupyterhub:
     config:
       CILogonOAuthenticator:
         oauth_callback_url: https://ucmerced.2i2c.cloud/hub/oauth_callback
+jupyterhub-home-nfs:
+  gke:
+    volumeId: projects/two-eye-two-see/zones/us-central1-b/disks/hub-nfs-homedirs-ucmerced
