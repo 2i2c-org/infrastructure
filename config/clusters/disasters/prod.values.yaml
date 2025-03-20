@@ -1,0 +1,48 @@
+nfs:
+  pv:
+    serverIP: 10.100.115.246
+
+jupyterhub:
+  singleuser:
+    nodeSelector:
+      2i2c/hub-name: prod
+  hub:
+    config:
+      GitHubOAuthenticator:
+        oauth_callback_url: https://hub.disasters.2i2c.cloud/hub/oauth_callback
+  ingress:
+    hosts: [hub.disasters.2i2c.cloud]
+    tls:
+      - hosts: [hub.disasters.2i2c.cloud]
+        secretName: https-auto-tls
+
+dask-gateway:
+  gateway:
+    backend:
+      scheduler:
+        extraPodConfig:
+          nodeSelector:
+            2i2c/hub-name: prod
+      worker:
+        extraPodConfig:
+          node_selector:
+            2i2c/hub-name: prod
+      imagePullSecrets: [{ name: image-pull-secret }]
+
+binderhub-service:
+  dockerApi:
+    nodeSelector:
+      2i2c/hub-name: prod
+  config:
+    KubernetesBuildExecutor:
+      node_selector:
+        2i2c/hub-name: prod
+    BinderHub:
+      image_prefix: quay.io/imagebuilding-non-gcp-hubs/disasters-prod-
+
+jupyterhub-home-nfs:
+  eks:
+    volumeId: vol-08f3d124fcfd518b0
+  quotaEnforcer:
+    hardQuota: "200" # in GB
+    path: "/export/prod"
