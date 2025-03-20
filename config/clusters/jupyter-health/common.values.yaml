@@ -12,7 +12,6 @@ nfs:
       - soft # We pick soft over hard, so NFS lockups don't lead to hung processes
       - retrans=2
       - noresvport
-    serverIP: fs-07b67adf6626672af.efs.us-east-2.amazonaws.com
     baseShareName: /
 
 jupyterhub-home-nfs:
