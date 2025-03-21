@@ -31,3 +31,37 @@ jupyterhub:
           name: Some Funder
           url: https://some-funding.org
 ```
+
+## Redirect the logged out page to a different URL
+
+Sometimes communities want to maintain their own landing page in their own content management
+systems, consistent with their styling and practices. We can redirect the default logged out
+home page (what users see when they go to the hub but haven't logged in) to any such URL easily.
+
+Use the following config:
+
+```yaml
+jupyterhub:
+  custom:
+    homepage:
+      templateVars:
+        redirect_to: <full URL to redirect to>
+```
+
+If you specify a `redirect_to` URL, you can't specify the other parameters mentioned earlier.
+
+The page maintained by the community should contain a "Login" link that points to an appropriately
+constructed URL. The following are some common URL constructions:
+
+1. `https://<domain-of-the-hub>/hub/oauth_login` will ask the user to log in if
+   necessary, and send them to the default configured experience for the hub (such
+   as a profile list, JupyterLab, or RStudio). This is the most common URL to use.
+2. `https://<domain-of-the-hub>/hub/user-redirect/lab` is valid only on hubs that don't
+   offer the user a profile list to choose from, and will send them to JupyterLab after
+   logging in. Alternatively, you can use `https://<domain-of-the-hub>/hub/user-redirect/rstudio`
+   to send them to RStudio (if it's installed in your image) after login,
+   `https://<domain-of-the-hub>/hub/user-redirect/tree` for classic Jupyter Notebook,
+   or `https://<domain-of-the-hub>/hub/user-redirect/desktop` for Linux Desktop (if available in
+   your image)
+3. A link generated with the [nbgitpuller Link Generator](https://nbgitpuller.readthedocs.io/en/latest/link.html)
+   may also be used if you want to send the user to a particular repository pulled in by nbgitpuller.
