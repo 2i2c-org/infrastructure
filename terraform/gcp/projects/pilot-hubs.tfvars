@@ -46,7 +46,7 @@ persistent_disks = {
     name_suffix = "demo"
   },
   "mtu" = {
-    size        = 40 # in GB
+    size        = 50 # in GB
     name_suffix = "mtu"
   },
   "temple" = {
