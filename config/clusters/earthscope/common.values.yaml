@@ -26,20 +26,6 @@ basehub:
         add_staff_user_ids_of_type: "google"
       jupyterhubConfigurator:
         enabled: false
-      homepage:
-        templateVars:
-          org:
-            url: https://www.earthscope.org/
-            logo_url: https://github.com/2i2c-org/infrastructure/assets/7579677/589da909-86c2-4440-a42b-e3f1b59f49d5
-          designed_by:
-            name: "2i2c"
-            url: https://2i2c.org
-          operated_by:
-            name: "2i2c"
-            url: https://2i2c.org
-          funded_by:
-            name: "EarthScope Consortium"
-            url: https://www.earthscope.org/
     hub:
       extraConfig:
         001-username-claim: |

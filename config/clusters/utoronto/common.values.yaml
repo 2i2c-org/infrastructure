@@ -24,24 +24,8 @@ jupyterhub:
       add_staff_user_ids_to_admin_users: true
       add_staff_user_ids_of_type: google
     homepage:
-      # Everyone hitting the home page directly is redirected to
-      # https://datatools.utoronto.ca as the unified home page. The various parameters
-      # here under templateVars are no-op - UToronto manages the unified homepage themselves.
-      gitRepoBranch: "utoronto"
       templateVars:
-        org:
-          name: University of Toronto
-          logo_url: https://raw.githubusercontent.com/2i2c-org/default-hub-homepage/utoronto-prod/extra-assets/images/home-hero.png
-          url: https://www.utoronto.ca/
-        designed_by:
-          name: 2i2c
-          url: https://2i2c.org
-        operated_by:
-          name: 2i2c
-          url: https://2i2c.org
-        funded_by:
-          name: University of Toronto
-          url: https://www.utoronto.ca/
+        redirect_to: https://datatools.utoronto.ca
   singleuser:
     cpu:
       # Each node has about 8 CPUs total, and if we limit users to no more than
