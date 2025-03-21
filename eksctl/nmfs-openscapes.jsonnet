@@ -1,18 +1,3 @@
-/*
-    This file is a jsonnet template of a eksctl's cluster configuration file,
-    that is used with the eksctl CLI to both update and initialize an AWS EKS
-    based cluster.
-
-    This file has in turn been generated from eksctl/template.jsonnet which is
-    relevant to compare with for changes over time.
-
-    To use jsonnet to generate an eksctl configuration file from this, do:
-
-        jsonnet nmfs-openscapes.jsonnet > nmfs-openscapes.eksctl.yaml
-
-    References:
-    - https://eksctl.io/usage/schema/
-*/
 local ng = import "./libsonnet/nodegroup.jsonnet";
 
 // place all cluster nodes here
@@ -110,7 +95,27 @@ local notebookNodes = [
       availabilityZones: masterAzs,
     },
 ];
-local daskNodes = [];
+
+local daskNodes = [
+    {
+        namePrefix: "dask-staging",
+        labels+: { "2i2c/hub-name": "staging" },
+        tags+: { "2i2c:hub-name": "staging" },
+        instancesDistribution+: { instanceTypes: ["r5.4xlarge"] }
+    },
+    {
+        namePrefix: "dask-prod",
+        labels+: { "2i2c/hub-name": "prod" },
+        tags+: { "2i2c:hub-name": "prod" },
+        instancesDistribution+: { instanceTypes: ["r5.4xlarge"] }
+    },
+    {
+        namePrefix: "dask-workshop",
+        labels+: { "2i2c/hub-name": "workshop" },
+        tags+: { "2i2c:hub-name": "workshop" },
+        instancesDistribution+: { instanceTypes: ["r5.4xlarge"] }
+    },
+];
 
 
 {
