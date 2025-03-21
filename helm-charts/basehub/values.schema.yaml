@@ -407,17 +407,24 @@ properties:
                     enabled:
                       const: true
                 then:
-                  required:
-                    - org
-                    - designed_by
-                    - operated_by
-                    - funded_by
+                  oneOf:
+                    - required:
+                        - redirect_to
+                    - required:
+                        - org
+                        - designed_by
+                        - operated_by
+                        - funded_by
                 properties:
                   enabled:
                     type: boolean
                     description: |
                       Set to false to not provide homepage information on hubs that do not
                       have a homepage, such as unauthenticated binderhubs.
+                  redirect_to:
+                    type: string
+                    description: |
+                      When set, the unauthenticated home page will simply do a JS redirect to this URL.
                   learn_more:
                     type: string
                     description: |
