@@ -57,3 +57,7 @@ jupyterhub-home-nfs:
   quotaEnforcer:
     hardQuota: "20" # in GB
     path: "/export/mtu"
+nfs:
+  pv:
+    serverIP: 10.3.244.132
+    baseShareName: /
