@@ -1,3 +1,6 @@
+nfs:
+  pv:
+    baseShareName: /
 jupyterhub:
   custom:
     2i2c:

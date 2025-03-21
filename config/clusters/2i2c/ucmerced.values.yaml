@@ -51,3 +51,6 @@ jupyterhub-home-nfs:
   quotaEnforcer:
     hardQuota: "20" # in GB
     path: "/export/ucmerced"
+nfs:
+  pv:
+    serverIP: 10.3.252.119
