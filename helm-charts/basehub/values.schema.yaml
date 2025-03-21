@@ -409,12 +409,12 @@ properties:
                 then:
                   oneOf:
                     - required:
-                      - redirect_to
+                        - redirect_to
                     - required:
-                      - org
-                      - designed_by
-                      - operated_by
-                      - funded_by
+                        - org
+                        - designed_by
+                        - operated_by
+                        - funded_by
                 properties:
                   enabled:
                     type: boolean
