@@ -50,7 +50,7 @@ persistent_disks = {
     name_suffix = "mtu"
   },
   "temple" = {
-    size        = 1200 # in GB
+    size        = 1300 # in GB
     name_suffix = "temple"
   },
   "ucmerced-staging" = {
