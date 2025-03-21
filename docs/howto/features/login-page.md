@@ -65,3 +65,19 @@ constructed URL. The following are some common URL constructions:
    your image)
 3. A link generated with the [nbgitpuller Link Generator](https://nbgitpuller.readthedocs.io/en/latest/link.html)
    may also be used if you want to send the user to a particular repository pulled in by nbgitpuller.
+
+### Staging Hub Considerations
+
+We would like staging hubs to have the same configuration as production hubs to the extent possible.
+So if you're redirecting your production hub's home page, you should redirect the staging hub's as well.
+There are two ways to approach this:
+
+1. Redirect the staging and production hubs to the same community page. This works fine, but makes it *really*
+   confusing to log in to the staging hub to test anything, as the login link in the community maintained page is
+   probably pointing to the *production* hub! Anyone wanting to login to the staging hub will have to use a manually
+   constructed link (via formats specified above).
+
+2. Ask the community to maintain two different pages - one for staging and one for production. And redirect each
+   hub appropriately.
+
+Option (2) is preferred to minimize confusion.
