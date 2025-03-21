@@ -57,3 +57,6 @@ jupyterhub:
 jupyterhub-home-nfs:
   gke:
     volumeId: projects/two-eye-two-see/zones/us-central1-b/disks/hub-nfs-homedirs-temple
+  quotaEnforcer:
+    hardQuota: "20" # in GB
+    path: "/export/temple"
