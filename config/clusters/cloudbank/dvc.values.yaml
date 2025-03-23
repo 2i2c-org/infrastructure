@@ -50,6 +50,9 @@ jupyterhub:
               username_claim: "email"
             allowed_domains:
               - dvc.edu
+            allowed_users:
+              - jazlin.dvc@gmail.com
+              - sean.smorris@gmail.com
       JupyterHub:
         authenticator_class: cilogon
       Authenticator:
