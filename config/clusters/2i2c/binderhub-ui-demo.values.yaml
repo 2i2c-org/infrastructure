@@ -1,3 +1,9 @@
+nfs:
+  enabled: false
+  pv:
+    enabled: false
+jupyterhub-home-nfs:
+  enabled: false
 jupyterhub:
   ingress:
     hosts:
@@ -41,6 +47,7 @@ jupyterhub:
       type: none
       extraVolumeMounts: []
     initContainers: []
+    profileList: []
   hub:
     redirectToServer: false
     services:
