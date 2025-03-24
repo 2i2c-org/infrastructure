@@ -60,3 +60,6 @@ jupyterhub-home-nfs:
   quotaEnforcer:
     hardQuota: "20" # in GB
     path: "/export/temple"
+nfs:
+  pv:
+    serverIP: 10.3.243.151
