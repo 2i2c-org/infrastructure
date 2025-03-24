@@ -5,9 +5,7 @@ nfs:
     mountOptions:
       - soft
       - noatime
-    serverIP: 10.234.45.250
-    # MUST HAVE TRAILING SLASH
-    baseShareName: /homes/homes/
+    baseShareName: /
 jupyterhub-home-nfs:
   enabled: true
   gke:
