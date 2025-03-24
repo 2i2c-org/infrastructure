@@ -1,12 +1,10 @@
-prefix     = "hhmi"
-project_id = "hhmi-398911"
-
-zone   = "us-west2-b"
-region = "us-west2"
-
+prefix                 = "hhmi"
+project_id             = "hhmi-398911"
+zone                   = "us-west2-b"
+region                 = "us-west2"
 core_node_machine_type = "n2-highmem-4"
-
-billing_account_id = "0157F7-E3EA8C-25AC3C"
+billing_account_id     = "0157F7-E3EA8C-25AC3C"
+enable_network_policy  = true
 
 k8s_versions = {
   min_master_version : "1.32.1-gke.1357001",
@@ -15,8 +13,8 @@ k8s_versions = {
   dask_nodes_version : "1.32.1-gke.1357001",
 }
 
-enable_network_policy    = true
-enable_filestore_backups = true
+# Disable single centralised filestore in favour of persistent disks
+filestores = {}
 
 persistent_disks = {
   "staging" = {
