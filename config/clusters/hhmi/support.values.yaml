@@ -70,14 +70,3 @@ grafana:
       - secretName: grafana-tls
         hosts:
           - grafana.hhmi.2i2c.cloud
-
-gcpFilestoreBackups:
-  enabled: true
-  filestoreName: hhmi-homedirs
-  project: hhmi-398911
-  zone: us-west2-b
-  retentionDays: 2
-  serviceAccount:
-    name: gcp-filestore-backups-sa
-    annotations:
-      iam.gke.io/gcp-service-account: hhmi-filestore-backup@hhmi-398911.iam.gserviceaccount.com
