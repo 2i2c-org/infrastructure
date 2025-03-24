@@ -29,7 +29,7 @@ dependencies:
   # that references this controller.
   # https://github.com/kubernetes/ingress-nginx/tree/main/charts/ingress-nginx
   - name: ingress-nginx
-    version: 4.10.4
+    version: 4.11.5
     repository: https://kubernetes.github.io/ingress-nginx
 
   # cluster-autoscaler for k8s clusters where it doesn't come out of the box (EKS)
