@@ -66,7 +66,7 @@ jupyterhub:
               enabled: True
             choices:
               python:
-                display_name: Py - NASA Openscapes Python 07980b9
+                display_name: Py - NASA Openscapes Python, Dask Gateway 07980b9
                 slug: python
                 kubespawner_override:
                   image: openscapes/python:07980b9
@@ -75,11 +75,11 @@ jupyterhub:
                 slug: pyrbase
                 kubespawner_override:
                   image: ghcr.io/nmfs-opensci/py-rocket-base:latest
-              pyrgeo:
-                display_name: Py-R - Geospatial - py-rocket-geospatial latest
-                slug: pyrgeo
+              cryo:
+                display_name: Py - Cryointhecloud base image latest
+                slug: cryo
                 kubespawner_override:
-                  image: ghcr.io/nmfs-opensci/container-images/py-rocket-geospatial:latest
+                  image: quay.io/cryointhecloud/cryo-hub-image:latest
               pyrgeo2:
                 display_name: Py-R - Geospatial + QGIS, Panoply, CWUtils - py-rocket-geospatial-2 latest
                 slug: pyrgeo2
