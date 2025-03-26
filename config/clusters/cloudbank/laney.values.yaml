@@ -12,7 +12,7 @@ jupyterhub:
       templateVars:
         org:
           name: Laney College
-          logo_url: https://laney.edu/wp-content/themes/laneycollegesixteen/images/Laney%20College%20Coin.png
+          logo_url: https://laney.edu/hubfs/2024-website-laney/logos/Laney-College-full-color-logo-landscape.svg
           url: https://laney.edu/
         designed_by:
           name: 2i2c
