@@ -1,7 +1,17 @@
 nfs:
-  enabled: false
-  pv:
+  dirsizeReporter:
     enabled: false
+  pv:
+    mountOptions:
+      - rsize=1048576
+      - wsize=1048576
+      - timeo=600
+      - soft # We pick soft over hard, so NFS lockups don't lead to hung processes
+      - retrans=2
+      - noresvport
+    baseShareName: /
+    serverIP: 10.100.21.149
+    shareNameOverride: prod
 jupyterhub-home-nfs:
   enabled: false
 
@@ -25,12 +35,34 @@ jupyterhub:
   custom:
     2i2c:
       add_staff_user_ids_of_type: google
+    singleuserAdmin:
+      extraVolumeMounts: []
   ingress:
     hosts: [noaa.nmfs-openscapes.2i2c.cloud]
     tls:
       - hosts: [noaa.nmfs-openscapes.2i2c.cloud]
         secretName: https-auto-tls
   singleuser:
+    initContainers: []
+    storage:
+      type: none
+      extraVolumes:
+        # We include the dev-shm extraVolume as the list of extraVolumes from base hub will be overwritten
+        - name: dev-shm
+          emptyDir:
+            medium: Memory
+        - name: shared-dir-pvc
+          persistentVolumeClaim:
+            # The name of the PVC setup by nfs.yaml for the ephemeral hub to use
+            claimName: home-nfs
+      extraVolumeMounts:
+        # We include the dev-shm extraVolumeMount as the list of extraVolumeMounts from base hub will be overwritten
+        - name: dev-shm
+          mountPath: /dev/shm
+        - name: shared-dir-pvc
+          mountPath: /home/jovyan/shared
+          subPath: _shared
+          readOnly: true    
     nodeSelector:
       2i2c/hub-name: noaa-only
     extraEnv:
