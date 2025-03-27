@@ -1,0 +1,58 @@
+nfs:
+  enabled: false
+  pv:
+    enabled: false
+jupyterhub-home-nfs:
+  enabled: false
+
+userServiceAccount:
+  annotations:
+    eks.amazonaws.com/role-arn: arn:aws:iam::891612562472:role/nmfs-openscapes-noaa-only
+
+dask-gateway:
+  gateway:
+    backend:
+      scheduler:
+        extraPodConfig:
+          nodeSelector:
+            2i2c/hub-name: noaa-only
+      worker:
+        extraPodConfig:
+          nodeSelector:
+            2i2c/hub-name: noaa-only
+
+jupyterhub:
+  custom:
+    2i2c:
+      add_staff_user_ids_of_type: google
+  ingress:
+    hosts: [noaa.nmfs-openscapes.2i2c.cloud]
+    tls:
+      - hosts: [noaa.nmfs-openscapes.2i2c.cloud]
+        secretName: https-auto-tls
+  singleuser:
+    nodeSelector:
+      2i2c/hub-name: noaa-only
+    extraEnv:
+      SCRATCH_BUCKET: s3://nmfs-openscapes-scratch-noaa-only/$(JUPYTERHUB_USER)
+  hub:
+    config:
+      JupyterHub:
+        authenticator_class: cilogon
+      CILogonOAuthenticator:
+        oauth_callback_url: https://noaa.nmfs-openscapes.2i2c.cloud/hub/oauth_callback
+        allowed_idps:
+          http://google.com/accounts/o8/id:
+            username_derivation:
+              username_claim: email
+            allowed_domains:
+              - noaa.gov
+              - 2i2c.org
+      Authenticator:
+        admin_users:
+          - eli.holmes@noaa.gov
+
+binderhub-service:
+  config:
+    BinderHub:
+      image_prefix: quay.io/imagebuilding-non-gcp-hubs/nmfs-openscapes-noaa-only-
