@@ -10,6 +10,7 @@ from deployer.utils.file_acquisition import (
     get_decrypted_files,
 )
 from deployer.utils.rendering import print_colour
+from deployer.utils.helm import wait_for_deployments_daemonsets
 
 # Without `pure=True`, I get an exception about str / byte issues
 yaml = YAML(typ="safe", pure=True)
@@ -81,7 +82,6 @@ class Hub:
                 "upgrade",
                 "--install",
                 "--create-namespace",
-                "--wait",
                 f"--namespace={self.spec['name']}",
                 self.spec["name"],
                 HELM_CHARTS_DIR.joinpath(self.spec["helm_chart"]),
@@ -101,3 +101,6 @@ class Hub:
             # into a string first
             print_colour(f"Running {' '.join([str(c) for c in cmd])}")
             subprocess.check_call(cmd)
+
+        if not dry_run:
+            wait_for_deployments_daemonsets(self.spec["name"])
