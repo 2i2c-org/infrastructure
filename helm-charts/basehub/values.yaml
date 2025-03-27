@@ -1244,10 +1244,11 @@ jupyterhub:
         # jupyterhub.custom.jupyterhubConfigurator
         #
         from jupyterhub_configurator.mixins import ConfiguratorSpawnerMixin
-        from kubernetes_asyncio.client.models import V1VolumeMount
+        from kubernetes_asyncio.client.models import V1VolumeMount, V1Container
         from kubespawner import KubeSpawner
         from kubespawner.utils import get_k8s_model
         from z2jh import get_config
+        import shlex
 
 
         # Setup jupyterhub-configurator only if its enabled
@@ -1319,6 +1320,39 @@ jupyterhub:
 
             admin_volume_mounts = custom_admin.get('extraVolumeMounts', [])
             notebook_container.volume_mounts += [get_k8s_model(V1VolumeMount, obj) for obj in (admin_volume_mounts)]
+
+            block_ports = [2049, 20048, 111]
+            commands = []
+            for protocol in ("tcp", "udp"):
+              for port in block_ports:
+                commands.append([
+                  "iptables",
+                  "--append", "OUTPUT",
+                  "--protocol", protocol,
+                  "--destination-port", str(port),
+                  "--jump", "DROP"
+                ])
+
+            shell_command = " && ".join([shlex.join(c) for c in commands])
+
+            iptables_container = {
+              "name": "block-nfs-access",
+              "image": "quay.io/jupyterhub/k8s-network-tools:4.1.0",
+              "securityContext": {
+                "runAsUser": 0,
+                "privileged": True,
+                "capabilities": {
+                  "add": ["NET_ADMIN"]
+                }
+              },
+              "command": [
+                "/bin/sh",
+                "-c",
+                shell_command
+              ],
+            }
+
+            pod.spec.init_containers.append(get_k8s_model(V1Container, iptables_container))
 
             return pod
         c.KubeSpawner.modify_pod_hook = modify_pod_hook
