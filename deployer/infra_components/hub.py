@@ -9,8 +9,8 @@ from deployer.utils.file_acquisition import (
     get_decrypted_file,
     get_decrypted_files,
 )
-from deployer.utils.rendering import print_colour
 from deployer.utils.helm import wait_for_deployments_daemonsets
+from deployer.utils.rendering import print_colour
 
 # Without `pure=True`, I get an exception about str / byte issues
 yaml = YAML(typ="safe", pure=True)
