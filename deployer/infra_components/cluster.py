@@ -11,6 +11,7 @@ from deployer.utils.file_acquisition import (
     get_decrypted_file,
     get_decrypted_files,
 )
+from deployer.utils.helm import wait_for_deployments_daemonsets
 from deployer.utils.rendering import print_colour
 
 
@@ -86,7 +87,6 @@ class Cluster:
                 "--install",
                 "--create-namespace",
                 "--namespace=support",
-                "--wait",
                 "support",
                 str(support_dir),
             ]
@@ -100,6 +100,7 @@ class Cluster:
             print_colour(f"Running {' '.join([str(c) for c in cmd])}")
             subprocess.check_call(cmd)
 
+        wait_for_deployments_daemonsets("support")
         print_colour("Done!")
 
     def auth_kubeconfig(self):
