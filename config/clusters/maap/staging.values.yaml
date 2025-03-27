@@ -34,8 +34,15 @@ jupyterhub:
             subPath: _shared-public
   hub:
     config:
+      JupyterHub:
+        authenticator_class: generic-oauth
       GitHubOAuthenticator:
         oauth_callback_url: https://staging.hub.maap.2i2c.cloud/hub/oauth_callback
+      GenericOAuthenticator:
+        oauth_callback_url: https://staging.hub.maap.2i2c.cloud/hub/oauth_callback
+        token_url: https://keycloak.delta-backend.xyz/realms/veda/protocol/openid-connect/token
+        authorize_url: https://keycloak.delta-backend.xyz/realms/veda/protocol/openid-connect/auth
+        userdata_url: https://keycloak.delta-backend.xyz/realms/veda/protocol/openid-connect/userinfo
   ingress:
     hosts: [staging.hub.maap.2i2c.cloud]
     tls:
