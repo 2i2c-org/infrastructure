@@ -11,8 +11,7 @@ basehub:
     custom:
       homepage:
         templateVars:
-          org:
-            name: "EarthScope"
+          redirect_to: https://www.earthscope.org/data/geolab/
     hub:
       config:
         GenericOAuthenticator:
