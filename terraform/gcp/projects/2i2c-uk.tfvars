@@ -1,11 +1,11 @@
 prefix     = "two-eye-two-see-uk"
 project_id = "two-eye-two-see-uk"
-
 zone   = "europe-west2-b"
 region = "europe-west2"
-
 billing_account_id       = "0157F7-E3EA8C-25AC3C"
-enable_filestore_backups = true
+
+# Explicitly disable filestore in favour of persistent disks
+filestores = {}
 
 k8s_versions = {
   min_master_version : "1.32.1-gke.1200003",
