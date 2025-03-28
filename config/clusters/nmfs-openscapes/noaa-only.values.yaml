@@ -62,7 +62,7 @@ jupyterhub:
         - name: shared-dir-pvc
           mountPath: /home/jovyan/shared
           subPath: _shared
-          readOnly: true    
+          readOnly: true
     nodeSelector:
       2i2c/hub-name: noaa-only
     extraEnv:
