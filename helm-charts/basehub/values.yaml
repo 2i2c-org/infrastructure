@@ -1314,19 +1314,19 @@ jupyterhub:
                 pod.spec.init_containers = []
 
             custom_admin = get_config('custom.singleuserAdmin', {})
-            if not (spawner.user.admin and custom_admin):
-                return pod
+            if spawner.user.admin and custom_admin:
+              # Setup admin mounts only for admins
+              for c in pod.spec.containers:
+                  if c.name == "notebook":
+                      notebook_container = c
+                      break
+              else:
+                  raise Exception("No container named 'notebook' found in pod definition")
 
-            for c in pod.spec.containers:
-                if c.name == "notebook":
-                    notebook_container = c
-                    break
-            else:
-                raise Exception("No container named 'notebook' found in pod definition")
+              admin_volume_mounts = custom_admin.get('extraVolumeMounts', [])
+              notebook_container.volume_mounts += [get_k8s_model(V1VolumeMount, obj) for obj in (admin_volume_mounts)]
 
-            admin_volume_mounts = custom_admin.get('extraVolumeMounts', [])
-            notebook_container.volume_mounts += [get_k8s_model(V1VolumeMount, obj) for obj in (admin_volume_mounts)]
-
+            # Setup iptables blocking for everyone
             block_ports = [2049, 20048, 111]
             commands = []
             for protocol in ("tcp", "udp"):
