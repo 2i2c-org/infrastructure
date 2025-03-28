@@ -1,0 +1,270 @@
+nfs:
+  dirsizeReporter:
+    enabled: false
+  pv:
+    mountOptions:
+      - rsize=1048576
+      - wsize=1048576
+      - timeo=600
+      - soft # We pick soft over hard, so NFS lockups don't lead to hung processes
+      - retrans=2
+      - noresvport
+    baseShareName: /
+    serverIP: 10.100.21.149
+    shareNameOverride: prod
+jupyterhub-home-nfs:
+  enabled: false
+
+userServiceAccount:
+  annotations:
+    eks.amazonaws.com/role-arn: arn:aws:iam::891612562472:role/nmfs-openscapes-noaa-only
+
+dask-gateway:
+  gateway:
+    backend:
+      scheduler:
+        extraPodConfig:
+          nodeSelector:
+            2i2c/hub-name: noaa-only
+      worker:
+        extraPodConfig:
+          nodeSelector:
+            2i2c/hub-name: noaa-only
+
+jupyterhub:
+  custom:
+    2i2c:
+      add_staff_user_ids_of_type: google
+    singleuserAdmin:
+      extraVolumeMounts: []
+  ingress:
+    hosts: [noaa.nmfs-openscapes.2i2c.cloud]
+    tls:
+      - hosts: [noaa.nmfs-openscapes.2i2c.cloud]
+        secretName: https-auto-tls
+  singleuser:
+    initContainers: []
+    storage:
+      type: none
+      extraVolumes:
+        # We include the dev-shm extraVolume as the list of extraVolumes from base hub will be overwritten
+        - name: dev-shm
+          emptyDir:
+            medium: Memory
+        - name: shared-dir-pvc
+          persistentVolumeClaim:
+            # The name of the PVC setup by nfs.yaml for the ephemeral hub to use
+            claimName: home-nfs
+      extraVolumeMounts:
+        # We include the dev-shm extraVolumeMount as the list of extraVolumeMounts from base hub will be overwritten
+        - name: dev-shm
+          mountPath: /dev/shm
+        - name: shared-dir-pvc
+          mountPath: /home/jovyan/shared
+          subPath: _shared
+          readOnly: true
+    nodeSelector:
+      2i2c/hub-name: noaa-only
+    extraEnv:
+      SCRATCH_BUCKET: s3://nmfs-openscapes-scratch-noaa-only/$(JUPYTERHUB_USER)
+    profileList:
+      - display_name: Default
+        description: Choose image and resource allocation
+        default: true
+        profile_options: &profile_options
+          image: &profile_options_image
+            display_name: Image
+            dynamic_image_building:
+              enabled: True
+            choices:
+              python:
+                display_name: Py - NASA Openscapes Python, Dask Gateway 07980b9
+                slug: python
+                kubespawner_override:
+                  image: openscapes/python:07980b9
+              pyrbase:
+                display_name: Py-R - py-rocket-base image 4.4-3.10
+                slug: pyrbase
+                kubespawner_override:
+                  image: ghcr.io/nmfs-opensci/py-rocket-base:latest
+              cryo:
+                display_name: Py - Cryointhecloud base image latest
+                slug: cryo
+                kubespawner_override:
+                  image: quay.io/cryointhecloud/cryo-hub-image:latest
+              pyrgeo2:
+                display_name: Py-R - Geospatial + QGIS, Panoply, CWUtils - py-rocket-geospatial-2 latest
+                slug: pyrgeo2
+                default: true
+                kubespawner_override:
+                  image: ghcr.io/nmfs-opensci/container-images/py-rocket-geospatial-2:latest
+              coastwatch:
+                display_name: Py-R - CoastWatch - coastwatch latest
+                slug: coastwatch
+                kubespawner_override:
+                  image: ghcr.io/nmfs-opensci/container-images/coastwatch:latest
+              aomlomics:
+                display_name: Py - Tourmaline Snakemake workflow for QIIME 2 v.2023.5
+                slug: aomlomics
+                kubespawner_override:
+                  image: ghcr.io/nmfs-opensci/container-images/aomlomics-jh:latest
+              iorocker:
+                display_name: R - Geospatial w sdmTMB - r-geospatial-sdm latest
+                slug: rgeospatialsdm
+                kubespawner_override:
+                  image: ghcr.io/nmfs-opensci/container-images/r-geospatial-sdm:latest
+              echopype:
+                display_name: Py - Echopype with pangeo - image-acoustics latest
+                slug: echopype
+                kubespawner_override:
+                  image: ghcr.io/nmfs-opensci/image-acoustics:latest
+              arcgis:
+                display_name: Py - ArcGIS Python 3.9
+                slug: arcgis
+                kubespawner_override:
+                  image: ghcr.io/nmfs-opensci/container-images/arcgis:latest
+              vast:
+                display_name: R - VAST with TMB - vast latest
+                kubespawner_override:
+                  image: ghcr.io/nmfs-opensci/container-images/vast:latest
+              pace:
+                display_name: Py - PACE image with OCSSW tools
+                slug: pace
+                kubespawner_override:
+                  image: quay.io/pacehackweek/pace-2024:latest
+            unlisted_choice:
+              enabled: True
+              display_name: "Custom image"
+              validation_regex: "^.+:.+$"
+              validation_message: "Must be a publicly available docker image, of form <image-name>:<tag>"
+              kubespawner_override:
+                image: "{value}"
+          requests: &profile_options_resource_allocation
+            display_name: Resource Allocation
+            choices:
+              # choices generated by combining:
+              # - deployer generate resource-allocation choices r7i.xlarge
+              # - deployer generate resource-allocation choices r7i.4xlarge --num-allocations=2
+              mem_1_9:
+                display_name: 1.9 GB RAM, upto 3.7 CPUs
+                kubespawner_override:
+                  mem_guarantee: 1991244775
+                  mem_limit: 1991244775
+                  cpu_guarantee: 0.2328125
+                  cpu_limit: 3.725
+                  node_selector:
+                    node.kubernetes.io/instance-type: r5.xlarge
+                default: true
+              mem_3_7:
+                display_name: 3.7 GB RAM, upto 3.7 CPUs
+                kubespawner_override:
+                  mem_guarantee: 3982489550
+                  mem_limit: 3982489550
+                  cpu_guarantee: 0.465625
+                  cpu_limit: 3.725
+                  node_selector:
+                    node.kubernetes.io/instance-type: r5.xlarge
+              mem_7_4:
+                display_name: 7.4 GB RAM, upto 3.7 CPUs
+                kubespawner_override:
+                  mem_guarantee: 7964979101
+                  mem_limit: 7964979101
+                  cpu_guarantee: 0.93125
+                  cpu_limit: 3.725
+                  node_selector:
+                    node.kubernetes.io/instance-type: r5.xlarge
+              mem_14_8:
+                display_name: 14.8 GB RAM, upto 3.7 CPUs
+                kubespawner_override:
+                  mem_guarantee: 15929958203
+                  mem_limit: 15929958203
+                  cpu_guarantee: 1.8625
+                  cpu_limit: 3.725
+                  node_selector:
+                    node.kubernetes.io/instance-type: r5.xlarge
+              mem_29_7:
+                display_name: 29.7 GB RAM, upto 3.7 CPUs
+                kubespawner_override:
+                  mem_guarantee: 31859916406
+                  mem_limit: 31859916406
+                  cpu_guarantee: 3.725
+                  cpu_limit: 3.725
+                  node_selector:
+                    node.kubernetes.io/instance-type: r5.xlarge
+              mem_60_6:
+                display_name: 60.6 GB RAM, upto 15.6 CPUs
+                kubespawner_override:
+                  mem_guarantee: 65094448840
+                  mem_limit: 65094448840
+                  cpu_guarantee: 7.8475
+                  cpu_limit: 15.695
+                  node_selector:
+                    node.kubernetes.io/instance-type: r5.4xlarge
+              mem_121_2:
+                display_name: 121.2 GB RAM, upto 15.6 CPUs
+                kubespawner_override:
+                  mem_guarantee: 130188897681
+                  mem_limit: 130188897681
+                  cpu_guarantee: 15.695
+                  cpu_limit: 15.695
+                  node_selector:
+                    node.kubernetes.io/instance-type: r5.4xlarge
+      - display_name: NVIDIA Tesla T4, ~16 GB, ~4 CPUs
+        description: "Start a container on a dedicated node with a GPU"
+        slug: "gpu"
+        profile_options:
+          image:
+            display_name: Environment
+            dynamic_image_building:
+              enabled: true
+            unlisted_choice:
+              enabled: true
+              display_name: "Custom image"
+              validation_regex: "^.+:.+$"
+              validation_message: "Must be a publicly available docker image of form <image-name>:<tag>"
+              kubespawner_override:
+                image: "{value}"
+            choices:
+              pytorch:
+                display_name: Pangeo PyTorch ML Notebook
+                default: false
+                slug: "pytorch"
+                kubespawner_override:
+                  image: "quay.io/pangeo/pytorch-notebook:2024.11.11"
+              tensorflow2:
+                display_name: Pangeo Tensorflow2 ML Notebook
+                default: true
+                slug: "tensorflow2"
+                kubespawner_override:
+                  image: "quay.io/pangeo/ml-notebook:2024.11.11"
+        kubespawner_override:
+          environment:
+            NVIDIA_DRIVER_CAPABILITIES: compute,utility
+          mem_limit: null
+          mem_guarantee: 14G
+          node_selector:
+            node.kubernetes.io/instance-type: g4dn.xlarge
+          extra_resource_limits:
+            nvidia.com/gpu: "1"
+
+  hub:
+    config:
+      JupyterHub:
+        authenticator_class: cilogon
+      CILogonOAuthenticator:
+        oauth_callback_url: https://noaa.nmfs-openscapes.2i2c.cloud/hub/oauth_callback
+        allowed_idps:
+          http://google.com/accounts/o8/id:
+            username_derivation:
+              username_claim: email
+            allowed_domains:
+              - noaa.gov
+              - 2i2c.org
+      Authenticator:
+        admin_users:
+          - eli.holmes@noaa.gov
+
+binderhub-service:
+  config:
+    BinderHub:
+      image_prefix: quay.io/imagebuilding-non-gcp-hubs/nmfs-openscapes-noaa-only-

@@ -1307,6 +1307,12 @@ jupyterhub:
             overridden when a profile_list entry has a kubespawner_override
             modifying the same config.
             """
+            # This if-statement is a patch to ensure that if there are no
+            # initContainers, we can at least work with an empty list, so that
+            # later appending actions do not fail.
+            if pod.spec.init_containers is None:
+                pod.spec.init_containers = []
+
             custom_admin = get_config('custom.singleuserAdmin', {})
             if not (spawner.user.admin and custom_admin):
                 return pod

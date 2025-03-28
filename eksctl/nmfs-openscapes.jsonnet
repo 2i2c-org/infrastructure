@@ -29,6 +29,12 @@ local notebookNodes = [
         tags+: { "2i2c:hub-name": "workshop" },
     },
     {
+        instanceType: "r5.xlarge",
+        namePrefix: "nb-noaa-only",
+        labels+: { "2i2c/hub-name": "noaa-only" },
+        tags+: { "2i2c:hub-name": "noaa-only" },
+    },
+    {
         instanceType: "r5.4xlarge",
         namePrefix: "nb-staging",
         labels+: { "2i2c/hub-name": "staging" },
@@ -47,6 +53,12 @@ local notebookNodes = [
         tags+: { "2i2c:hub-name": "workshop" },
     },
     {
+        instanceType: "r5.4xlarge",
+        namePrefix: "nb-noaa-only",
+        labels+: { "2i2c/hub-name": "noaa-only" },
+        tags+: { "2i2c:hub-name": "noaa-only" },
+    },
+    {
         instanceType: "r5.16xlarge",
         namePrefix: "nb-staging",
         labels+: { "2i2c/hub-name": "staging" },
@@ -63,6 +75,12 @@ local notebookNodes = [
         namePrefix: "nb-workshop",
         labels+: { "2i2c/hub-name": "workshop" },
         tags+: { "2i2c:hub-name": "workshop" },
+    },
+    {
+        instanceType: "r5.16xlarge",
+        namePrefix: "nb-noaa-only",
+        labels+: { "2i2c/hub-name": "noaa-only" },
+        tags+: { "2i2c:hub-name": "noaa-only" },
     },
     {
       instanceType: "g4dn.xlarge",
@@ -94,6 +112,21 @@ local notebookNodes = [
       // GPUs in a single AZ are in use and no new nodes can be spawned
       availabilityZones: masterAzs,
     },
+    {
+      instanceType: "g4dn.xlarge",
+      namePrefix: "gpu-noaa-only",
+      labels+: { "2i2c/hub-name": "noaa-only" },
+      tags+: {
+            "2i2c:hub-name": "noaa-only",
+            "k8s.io/cluster-autoscaler/node-template/resources/nvidia.com/gpu": "1"
+      },
+      taints+: {
+            "nvidia.com/gpu": "present:NoSchedule"
+      },
+      // Allow provisioning GPUs across all AZs, to prevent situation where all
+      // GPUs in a single AZ are in use and no new nodes can be spawned
+      availabilityZones: masterAzs,
+    },
 ];
 
 local daskNodes = [
@@ -113,6 +146,12 @@ local daskNodes = [
         namePrefix: "dask-workshop",
         labels+: { "2i2c/hub-name": "workshop" },
         tags+: { "2i2c:hub-name": "workshop" },
+        instancesDistribution+: { instanceTypes: ["r5.4xlarge"] }
+    },
+    {
+        namePrefix: "dask-noaa-only",
+        labels+: { "2i2c/hub-name": "noaa-only" },
+        tags+: { "2i2c:hub-name": "noaa-only" },
         instancesDistribution+: { instanceTypes: ["r5.4xlarge"] }
     },
 ];

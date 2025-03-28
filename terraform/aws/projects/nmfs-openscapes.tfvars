@@ -54,6 +54,10 @@ user_buckets = {
     "delete_after" : null,
     "tags" : { "2i2c:hub-name" : "workshop" },
   },
+  "scratch-noaa-only" : {
+    "delete_after" : 7,
+    "tags" : { "2i2c:hub-name" : "noaa-only" },
+  },
 }
 
 hub_cloud_permissions = {
@@ -68,6 +72,9 @@ hub_cloud_permissions = {
       "scratch-workshop",
       "persistent-workshop",
     ],
+  },
+  "noaa-only" : {
+    bucket_admin_access : ["scratch-noaa-only"],
   },
 }
 
