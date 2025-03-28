@@ -84,3 +84,6 @@ cluster-autoscaler:
   autoDiscovery:
     clusterName: disasters
   awsRegion: us-west-2
+
+calico:
+  enabled: true
