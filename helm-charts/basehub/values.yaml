@@ -24,24 +24,24 @@ binderhub-service:
   # The docker-api pod must run on the same node as the builder pods.
   dockerApi:
     initContainers:
-    - name: block-nfs-access
-      command:
-      - /bin/sh
-      - -c
-      - |
-        iptables --append OUTPUT --protocol tcp --destination-port 2049 --jump DROP \
-        && iptables --append OUTPUT --protocol tcp --destination-port 20048 --jump DROP \
-        && iptables --append OUTPUT --protocol tcp --destination-port 111 --jump DROP \
-        && iptables --append OUTPUT --protocol udp --destination-port 2049 --jump DROP \
-        && iptables --append OUTPUT --protocol udp --destination-port 20048 --jump DROP \
-        && iptables --append OUTPUT --protocol udp --destination-port 111 --jump DROP
-      image: quay.io/jupyterhub/k8s-network-tools:4.1.0
-      securityContext:
-        capabilities:
-          add:
-          - NET_ADMIN
-        privileged: true
-        runAsUser: 0
+      - name: block-nfs-access
+        command:
+          - /bin/sh
+          - -c
+          - |
+            iptables --append OUTPUT --protocol tcp --destination-port 2049 --jump DROP \
+            && iptables --append OUTPUT --protocol tcp --destination-port 20048 --jump DROP \
+            && iptables --append OUTPUT --protocol tcp --destination-port 111 --jump DROP \
+            && iptables --append OUTPUT --protocol udp --destination-port 2049 --jump DROP \
+            && iptables --append OUTPUT --protocol udp --destination-port 20048 --jump DROP \
+            && iptables --append OUTPUT --protocol udp --destination-port 111 --jump DROP
+        image: quay.io/jupyterhub/k8s-network-tools:4.1.0
+        securityContext:
+          capabilities:
+            add:
+              - NET_ADMIN
+          privileged: true
+          runAsUser: 0
     nodeSelector:
       hub.jupyter.org/node-purpose: user
     tolerations:
