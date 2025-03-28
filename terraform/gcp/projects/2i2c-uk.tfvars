@@ -1,8 +1,8 @@
-prefix     = "two-eye-two-see-uk"
-project_id = "two-eye-two-see-uk"
-zone   = "europe-west2-b"
-region = "europe-west2"
-billing_account_id       = "0157F7-E3EA8C-25AC3C"
+prefix             = "two-eye-two-see-uk"
+project_id         = "two-eye-two-see-uk"
+zone               = "europe-west2-b"
+region             = "europe-west2"
+billing_account_id = "0157F7-E3EA8C-25AC3C"
 
 # Explicitly disable filestore in favour of persistent disks
 filestores = {}
