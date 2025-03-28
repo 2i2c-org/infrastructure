@@ -3,7 +3,7 @@ cluster_name           = "jupyter-health"
 cluster_nodes_location = "us-east-2a"
 
 enable_aws_ce_grafana_backend_iam = true
-disable_cluster_wide_filestore    = false
+disable_cluster_wide_filestore    = true
 
 user_buckets = {
   "scratch-staging" : {
