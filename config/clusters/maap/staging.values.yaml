@@ -43,6 +43,23 @@ jupyterhub:
         token_url: https://keycloak.delta-backend.xyz/realms/veda/protocol/openid-connect/token
         authorize_url: https://keycloak.delta-backend.xyz/realms/veda/protocol/openid-connect/auth
         userdata_url: https://keycloak.delta-backend.xyz/realms/veda/protocol/openid-connect/userinfo
+        scope:
+        - basic
+        - profile
+        - openid
+
+        - jupyterhub:admin
+
+        - jupyterhub:cpu:xs
+        - jupyterhub:cpu:s
+        - jupyterhub:cpu:m
+        - jupyterhub:cpu:l
+        - jupyterhub:cpu:xl
+        - jupyterhub:cpu:xxl
+        - jupyterhub:cpu:xxxl
+        - jupyterhub:gpu:t4
+        - jupyterhub:staging
+        username_claim: preferred_username
   ingress:
     hosts: [staging.hub.maap.2i2c.cloud]
     tls:
