@@ -31,10 +31,10 @@ body:
       label: Definition of Done
       description: |
         The Definition of Done. What must be true to consider this task complete?
-
+      value: |
         - [ ] The feature/service is technically complete
-        - [ ] The feature/service been tested with one or more users (if applicable)
-        - [ ] The feature/service been deployed to a production cluster
+        - [ ] The feature/service been tested with one or more users (if applicable)
+        - [ ] The feature/service been deployed to a production cluster
         - [ ] The feature/service has been shown to be replicably deployable
         - [ ] The feature/service is well documented, and the documentation is accessible for the target user base
         - [ ] The feature/service has been added to our product menu.
