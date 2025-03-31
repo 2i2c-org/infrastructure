@@ -10,15 +10,14 @@ This issue is to be used when Partnerships require some engineering assistance t
 
 ### Tasks
 
-```[tasklist]
 - [ ] Schedule a 30min sync chat with James Munroe, or a delegate, to refine the new hub requirements
 - [ ] Refine the requirements for this new hub deployment
 - [ ] Open the relevant Phase 1,2,3 issues with all of the required information
-```
 
 ### Definition of Done
 
 Each of the below phases for this new hub deployment should:
+
 - have an open issue,
 - have all the relevant information in the issue tables filled out and sections marked as READY,
 - have been placed in the Refined column of the Engineering board.
