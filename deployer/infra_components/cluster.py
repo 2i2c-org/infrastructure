@@ -68,6 +68,17 @@ class Cluster:
 
         if self.spec["provider"] == "aws":
             print_colour("Provisioning tigera operator...")
+            # Hardcoded here, as we want to upgrade everywhere together
+            # Ideally this would be a subchart of our support chart,
+            # but helm has made some unfortunate architectural choices
+            # with respect to CRDs and they seem super unreliable when
+            # used as subcharts. So we install it here directly from the
+            # manifests.
+            # We unconditionally install this on all AWS clusters - however,
+            # that doesn't actually turn NetworkPolicy enforcement on. That
+            # requires setting `calico.enabled` to True in `support` so a
+            # calico `Installation` object can be set up.
+            # I deeply loathe the operator *singleton* pattern.
             tigera_operator_version = "v3.29.3"
             subprocess.check_call(
                 [

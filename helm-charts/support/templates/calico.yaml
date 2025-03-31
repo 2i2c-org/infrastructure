@@ -1,10 +1,12 @@
 {{ if .Values.calico.enabled }}
 # Configures the CRD used by tigera-operator to install calico
+# https://docs.tigera.io/calico/latest/reference/installation/api#operator.tigera.io/v1.Installation
 apiVersion: operator.tigera.io/v1
 kind: Installation
 metadata:
   # Installation objects *must* be named 'default'
   # https://docs.tigera.io/calico/latest/reference/installation/api#operator.tigera.io%2fv1.Installation
+  # Enforces there can only be one per cluster
   name: default
 spec:
   kubernetesProvider: EKS
