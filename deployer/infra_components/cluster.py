@@ -84,9 +84,9 @@ class Cluster:
                 [
                     "kubectl",
                     "apply",
-                    "--server-side", # https://github.com/projectcalico/calico/issues/7826
+                    "--server-side",  # https://github.com/projectcalico/calico/issues/7826
                     "-f",
-                    f"https://raw.githubusercontent.com/projectcalico/calico/{tigera_operator_version}/manifests/tigera-operator.yaml"
+                    f"https://raw.githubusercontent.com/projectcalico/calico/{tigera_operator_version}/manifests/tigera-operator.yaml",
                 ]
             )
             print_colour("Done!")

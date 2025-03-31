@@ -94,7 +94,7 @@ properties:
     type: object
     additionalProperties: false
     required:
-    - enabled
+      - enabled
     properties:
       enabled:
         type: boolean
