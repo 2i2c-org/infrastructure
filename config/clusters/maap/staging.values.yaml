@@ -5,6 +5,9 @@ userServiceAccount:
   annotations:
     eks.amazonaws.com/role-arn: arn:aws:iam::916098889494:role/maap-staging
 jupyterhub:
+  custom:
+    2i2c:
+      add_staff_user_ids_to_admin_users: false
   singleuser:
     extraEnv:
       SCRATCH_BUCKET: s3://maap-scratch-staging/$(JUPYTERHUB_USER)
@@ -217,6 +220,8 @@ jupyterhub:
     config:
       JupyterHub:
         authenticator_class: generic-oauth
+      Authenticator:
+        admin_users: []
       GitHubOAuthenticator:
         oauth_callback_url: https://staging.hub.maap.2i2c.cloud/hub/oauth_callback
       GenericOAuthenticator:
