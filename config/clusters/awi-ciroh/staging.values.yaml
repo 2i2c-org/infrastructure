@@ -7,6 +7,9 @@ basehub:
     gke:
       enabled: true
       volumeId: projects/ciroh-jupyterhub-423218/zones/us-central1-b/disks/hub-nfs-homedirs-staging
+    quotaEnforcer:
+      hardQuota: "10" # in GB
+      path: "/export/staging"
   jupyterhub:
     ingress:
       hosts: [staging.ciroh.awi.2i2c.cloud]
