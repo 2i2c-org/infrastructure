@@ -249,6 +249,19 @@ jupyterhub:
         auth_state_groups_key: scope
         admin_groups:
           - jupyterhub:admin
+        # Being granted *any* jupyterhub related scope should allow you
+        # to login
+        allowed_groups:
+          - jupyterhub:admin
+
+          - jupyterhub:cpu:xs
+          - jupyterhub:cpu:s
+          - jupyterhub:cpu:m
+          - jupyterhub:cpu:l
+          - jupyterhub:cpu:xl
+          - jupyterhub:cpu:xxl
+          - jupyterhub:cpu:xxxl
+          - jupyterhub:gpu:t4
   ingress:
     hosts: [staging.hub.maap.2i2c.cloud]
     tls:
