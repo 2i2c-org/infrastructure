@@ -36,14 +36,19 @@ jupyterhub:
       CILogonOAuthenticator:
         oauth_callback_url: https://bcc.cloudbank.2i2c.cloud/hub/oauth_callback
         allowed_idps:
-          http://google.com/accounts/o8/id:
+          http://login.microsoftonline.com/common/oauth2/v2.0/authorize:
             default: true
             username_derivation:
               username_claim: "email"
             allowed_domains:
+              - cc.peralta.edu
               - peralta.edu
+          http://google.com/accounts/o8/id:
+            default: true
+            username_derivation:
+              username_claim: "email"
       Authenticator:
         admin_users:
           - ericvd@berkeley.edu
           - sean.smorris@berkeley.edu
-          - mseidel@peralta.edu
+          - jeronimoperez@peralta.edu
