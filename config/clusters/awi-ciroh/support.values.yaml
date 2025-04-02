@@ -44,7 +44,6 @@ prometheus:
   serverFiles:
     alerting_rules.yml:
       groups:
-        # Duplicate this entry for every hub on the cluster that uses a disk as an NFS server
         - name: awi-ciroh staging jupyterhub-home-nfs disk full
           rules:
             - alert: staging-jupyterhub-home-nfs-disk-full
