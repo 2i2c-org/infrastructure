@@ -63,6 +63,7 @@ jupyterhub:
           - jupyterhub:cpu:xxl
           - jupyterhub:cpu:xxxl
           - jupyterhub:gpu:t4
+          - jupyterhub:access:disasters
         username_claim: preferred_username
         manage_groups: true
         auth_state_groups_key: scope
@@ -71,16 +72,7 @@ jupyterhub:
         # Being granted *any* jupyterhub related scope should allow you
         # to login
         allowed_groups:
-          - jupyterhub:admin
-
-          - jupyterhub:cpu:xs
-          - jupyterhub:cpu:s
-          - jupyterhub:cpu:m
-          - jupyterhub:cpu:l
-          - jupyterhub:cpu:xl
-          - jupyterhub:cpu:xxl
-          - jupyterhub:cpu:xxxl
-          - jupyterhub:gpu:t4
+          - jupyterhub:access:disasters
       GitHubOAuthenticator:
         populate_teams_in_auth_state: true
         # allowed_organizations:
