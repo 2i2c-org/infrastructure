@@ -6,9 +6,7 @@ basehub:
     annotations:
       iam.gke.io/gcp-service-account: awi-ciroh-staging@ciroh-jupyterhub-423218.iam.gserviceaccount.com
   jupyterhub-home-nfs:
-    enabled: true
     gke:
-      enabled: true
       volumeId: projects/ciroh-jupyterhub-423218/zones/us-central1-b/disks/hub-nfs-homedirs-staging
     quotaEnforcer:
       hardQuota: "10" # in GB

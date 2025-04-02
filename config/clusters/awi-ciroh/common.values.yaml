@@ -10,6 +10,12 @@ basehub:
       serverIP: 10.26.195.98
       # Name of Google Filestore share
       baseShareName: /
+  jupyterhub-home-nfs:
+    enabled: true
+    gke:
+      enabled: true
+    prometheusExporter:
+      enabled: true
   dask-gateway:
     enabled: true
     gateway:
