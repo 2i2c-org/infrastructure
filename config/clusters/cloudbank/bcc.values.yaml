@@ -26,7 +26,7 @@ jupyterhub:
           name: CloudBank
           url: http://cloudbank.org/
         org:
-          logo_url: https://www.berkeleycitycollege.edu/wp-content/blogs.dir/1/files/2019/02/Berkeley-City-College-Logo-and-name.png
+          logo_url: https://www.berkeleycitycollege.edu/hubfs/BCC%20Images/logos/logo-berkeley-city-college-full-color.svg
           name: Berkeley City College
           url: https://www.berkeleycitycollege.edu/
   hub:
