@@ -1,10 +1,7 @@
 nfs:
-  enabled: true
-  volumeReporter:
+  dirsizeReporter:
     enabled: false
   pv:
-    enabled: true
-    # from https://docs.aws.amazon.com/efs/latest/ug/mounting-fs-nfs-mount-settings.html
     mountOptions:
       - rsize=1048576
       - wsize=1048576
@@ -13,48 +10,63 @@ nfs:
       - retrans=2
       - noresvport
     baseShareName: /
-    # serverIP is set in staging / prod respectively
+    serverIP: 10.100.21.149
+    shareNameOverride: prod
 jupyterhub-home-nfs:
-  enabled: true
-  eks:
-    enabled: true
-  prometheusExporter:
-    enabled: true
+  enabled: false
+
+userServiceAccount:
+  annotations:
+    eks.amazonaws.com/role-arn: arn:aws:iam::891612562472:role/nmfs-openscapes-noaa-only
 
 dask-gateway:
-  enabled: true
+  gateway:
+    backend:
+      scheduler:
+        extraPodConfig:
+          nodeSelector:
+            2i2c/hub-name: noaa-only
+      worker:
+        extraPodConfig:
+          nodeSelector:
+            2i2c/hub-name: noaa-only
 
 jupyterhub:
   custom:
     2i2c:
-      add_staff_user_ids_to_admin_users: true
-      add_staff_user_ids_of_type: github
-    jupyterhubConfigurator:
-      enabled: false
-    daskhubSetup:
-      enabled: true
-    homepage:
-      templateVars:
-        org:
-          name: NOAA Fisheries Openscapes
-          logo_url: https://raw.githubusercontent.com/nmfs-openscapes/nmfs-openscapes.github.io/main/images/logo-transparent-crop.png
-          url: https://nmfs-openscapes.github.io/
-        designed_by:
-          name: 2i2c
-          url: https://2i2c.org
-        operated_by:
-          name: 2i2c
-          url: https://2i2c.org
-        funded_by:
-          name: NOAA Fisheries
-          url: https://www.fisheries.noaa.gov
+      add_staff_user_ids_of_type: google
+    singleuserAdmin:
+      extraVolumeMounts: []
+  ingress:
+    hosts: [noaa.nmfs-openscapes.2i2c.cloud]
+    tls:
+      - hosts: [noaa.nmfs-openscapes.2i2c.cloud]
+        secretName: https-auto-tls
   singleuser:
-    cloudMetadata:
-      blockWithIptables: false
-    defaultUrl: /lab
+    initContainers: []
+    storage:
+      type: none
+      extraVolumes:
+        # We include the dev-shm extraVolume as the list of extraVolumes from base hub will be overwritten
+        - name: dev-shm
+          emptyDir:
+            medium: Memory
+        - name: shared-dir-pvc
+          persistentVolumeClaim:
+            # The name of the PVC setup by nfs.yaml for the ephemeral hub to use
+            claimName: home-nfs
+      extraVolumeMounts:
+        # We include the dev-shm extraVolumeMount as the list of extraVolumeMounts from base hub will be overwritten
+        - name: dev-shm
+          mountPath: /dev/shm
+        - name: shared-dir-pvc
+          mountPath: /home/jovyan/shared
+          subPath: _shared
+          readOnly: true
+    nodeSelector:
+      2i2c/hub-name: noaa-only
     extraEnv:
-      GH_SCOPED_CREDS_CLIENT_ID: "Iv23lio8dJq5euL8Y2kF"
-      GH_SCOPED_CREDS_APP_URL: https://github.com/apps/nmfs-openscapes-github-push-access
+      SCRATCH_BUCKET: s3://nmfs-openscapes-scratch-noaa-only/$(JUPYTERHUB_USER)
     profileList:
       - display_name: Default
         description: Choose image and resource allocation
@@ -200,9 +212,6 @@ jupyterhub:
       - display_name: NVIDIA Tesla T4, ~16 GB, ~4 CPUs
         description: "Start a container on a dedicated node with a GPU"
         slug: "gpu"
-        allowed_groups:
-          - nmfs-openscapes:gpu-access-2i2c
-          - 2i2c-org:hub-access-for-2i2c-staff
         profile_options:
           image:
             display_name: Environment
@@ -239,33 +248,23 @@ jupyterhub:
             nvidia.com/gpu: "1"
 
   hub:
-    allowNamedServers: true
     config:
       JupyterHub:
-        authenticator_class: github
-      GitHubOAuthenticator:
-        populate_teams_in_auth_state: true
-        allowed_organizations:
-          - nmfs-openscapes:longterm-access-2i2c
-          - nmfs-openscapes:2024-mentors
-          - nmfs-openscapes:2024-science-teams
-          - nmfs-openscapes:2024-CoastWatch
-          - nmfs-openscapes:2024-nmfs-champions-cohort
-        scope:
-          - read:org
+        authenticator_class: cilogon
+      CILogonOAuthenticator:
+        oauth_callback_url: https://noaa.nmfs-openscapes.2i2c.cloud/hub/oauth_callback
+        allowed_idps:
+          http://google.com/accounts/o8/id:
+            username_derivation:
+              username_claim: email
+            allowed_domains:
+              - noaa.gov
+              - 2i2c.org
       Authenticator:
-        enable_auth_state: true
         admin_users:
-          - ateucher # Andy Teucher
-          - jules32 # Julia Stewart Lowndes
-          - eeholmes # Eli Holmes
-
-  scheduling:
-    userScheduler:
-      enabled: true
+          - eli.holmes@noaa.gov
 
 binderhub-service:
-  enabled: true
-  buildPodsRegistryCredentials:
-    server: https://quay.io
-    username: "imagebuilding-non-gcp-hubs+image_builder"
+  config:
+    BinderHub:
+      image_prefix: quay.io/imagebuilding-non-gcp-hubs/nmfs-openscapes-noaa-only-

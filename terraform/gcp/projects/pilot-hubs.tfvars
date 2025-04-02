@@ -20,13 +20,8 @@ k8s_versions = {
 core_node_machine_type = "n2-highmem-4"
 enable_network_policy  = true
 
-filestores = {
-  "filestore" : {
-    capacity_gb : 5120,
-    source_backup : "projects/two-eye-two-see/locations/us-central1/backups/test",
-  },
-}
-enable_filestore_backups = true
+# Explicitly disabling filestores in favour of persistent disks
+filestores = {}
 
 persistent_disks = {
   "staging" = {
@@ -46,7 +41,7 @@ persistent_disks = {
     name_suffix = "demo"
   },
   "mtu" = {
-    size        = 50 # in GB
+    size        = 75 # in GB
     name_suffix = "mtu"
   },
   "temple" = {

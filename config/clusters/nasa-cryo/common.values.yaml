@@ -257,7 +257,7 @@ basehub:
                   default: true
                   slug: "pytorch"
                   kubespawner_override:
-                    image: "quay.io/pangeo/pytorch-notebook:2023.09.19"
+                    image: "quay.io/pangeo/pytorch-notebook:2025.01.24"
           kubespawner_override:
             environment:
               NVIDIA_DRIVER_CAPABILITIES: compute,utility

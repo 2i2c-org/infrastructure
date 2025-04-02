@@ -23,6 +23,25 @@ binderhub-service:
   # that will be accessible via a unix socket, mounted by the build.
   # The docker-api pod must run on the same node as the builder pods.
   dockerApi:
+    initContainers:
+      - name: block-nfs-access
+        command:
+          - /bin/sh
+          - -c
+          - |
+            iptables --append OUTPUT --protocol tcp --destination-port 2049 --jump DROP \
+            && iptables --append OUTPUT --protocol tcp --destination-port 20048 --jump DROP \
+            && iptables --append OUTPUT --protocol tcp --destination-port 111 --jump DROP \
+            && iptables --append OUTPUT --protocol udp --destination-port 2049 --jump DROP \
+            && iptables --append OUTPUT --protocol udp --destination-port 20048 --jump DROP \
+            && iptables --append OUTPUT --protocol udp --destination-port 111 --jump DROP
+        image: quay.io/jupyterhub/k8s-network-tools:4.1.0
+        securityContext:
+          capabilities:
+            add:
+              - NET_ADMIN
+          privileged: true
+          runAsUser: 0
     nodeSelector:
       hub.jupyter.org/node-purpose: user
     tolerations:
@@ -38,7 +57,7 @@ binderhub-service:
       base_url: /services/binder
       use_registry: true
     KubernetesBuildExecutor:
-      build_image: quay.io/jupyterhub/repo2docker:2024.07.0-34.gf77a7d9
+      build_image: quay.io/jupyterhub/repo2docker:2024.07.0-159.gd0ddd2e
       node_selector:
         # Schedule builder pods to run on user nodes only
         hub.jupyter.org/node-purpose: user
@@ -1244,10 +1263,11 @@ jupyterhub:
         # jupyterhub.custom.jupyterhubConfigurator
         #
         from jupyterhub_configurator.mixins import ConfiguratorSpawnerMixin
-        from kubernetes_asyncio.client.models import V1VolumeMount
+        from kubernetes_asyncio.client.models import V1VolumeMount, V1Container
         from kubespawner import KubeSpawner
         from kubespawner.utils import get_k8s_model
         from z2jh import get_config
+        import shlex
 
 
         # Setup jupyterhub-configurator only if its enabled
@@ -1306,19 +1326,58 @@ jupyterhub:
             overridden when a profile_list entry has a kubespawner_override
             modifying the same config.
             """
+            # This if-statement is a patch to ensure that if there are no
+            # initContainers, we can at least work with an empty list, so that
+            # later appending actions do not fail.
+            if pod.spec.init_containers is None:
+                pod.spec.init_containers = []
+
             custom_admin = get_config('custom.singleuserAdmin', {})
-            if not (spawner.user.admin and custom_admin):
-                return pod
+            if spawner.user.admin and custom_admin:
+              # Setup admin mounts only for admins
+              for c in pod.spec.containers:
+                  if c.name == "notebook":
+                      notebook_container = c
+                      break
+              else:
+                  raise Exception("No container named 'notebook' found in pod definition")
 
-            for c in pod.spec.containers:
-                if c.name == "notebook":
-                    notebook_container = c
-                    break
-            else:
-                raise Exception("No container named 'notebook' found in pod definition")
+              admin_volume_mounts = custom_admin.get('extraVolumeMounts', [])
+              notebook_container.volume_mounts += [get_k8s_model(V1VolumeMount, obj) for obj in (admin_volume_mounts)]
 
-            admin_volume_mounts = custom_admin.get('extraVolumeMounts', [])
-            notebook_container.volume_mounts += [get_k8s_model(V1VolumeMount, obj) for obj in (admin_volume_mounts)]
+            # Setup iptables blocking for everyone
+            block_ports = [2049, 20048, 111]
+            commands = []
+            for protocol in ("tcp", "udp"):
+              for port in block_ports:
+                commands.append([
+                  "iptables",
+                  "--append", "OUTPUT",
+                  "--protocol", protocol,
+                  "--destination-port", str(port),
+                  "--jump", "DROP"
+                ])
+
+            shell_command = " && ".join([shlex.join(c) for c in commands])
+
+            iptables_container = {
+              "name": "block-nfs-access",
+              "image": "quay.io/jupyterhub/k8s-network-tools:4.1.0",
+              "securityContext": {
+                "runAsUser": 0,
+                "privileged": True,
+                "capabilities": {
+                  "add": ["NET_ADMIN"]
+                }
+              },
+              "command": [
+                "/bin/sh",
+                "-c",
+                shell_command
+              ],
+            }
+
+            pod.spec.init_containers.append(get_k8s_model(V1Container, iptables_container))
 
             return pod
         c.KubeSpawner.modify_pod_hook = modify_pod_hook

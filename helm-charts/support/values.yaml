@@ -92,6 +92,11 @@ prometheus:
       - nodes=[*]
       - services=[app, component]
 
+    # collect pod annotation for usernames, as labels are escaped but annotations
+    # are not. We want unescaped usernames as that's what users know
+    metricAnnotationsAllowList:
+      - pods=[hub.jupyter.org/username]
+
   # prometheus-node-exporter is an optional prometheus chart dependency that we
   # rely on to collect metrics about the nodes
   #
@@ -518,6 +523,9 @@ prometheusStorageClass:
 
 # Setup a deployment that will periodically backup the Filestore contents
 gcpFilestoreBackups:
+  enabled: false
+
+calico:
   enabled: false
 
 # A placeholder as global values that can be referenced from the same location

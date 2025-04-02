@@ -26,7 +26,7 @@ jupyterhub:
           name: CloudBank
           url: http://cloudbank.org/
         org:
-          logo_url: https://www.berkeleycitycollege.edu/wp-content/blogs.dir/1/files/2019/02/Berkeley-City-College-Logo-and-name.png
+          logo_url: https://www.berkeleycitycollege.edu/hubfs/BCC%20Images/logos/logo-berkeley-city-college-full-color.svg
           name: Berkeley City College
           url: https://www.berkeleycitycollege.edu/
   hub:
@@ -36,14 +36,19 @@ jupyterhub:
       CILogonOAuthenticator:
         oauth_callback_url: https://bcc.cloudbank.2i2c.cloud/hub/oauth_callback
         allowed_idps:
-          http://google.com/accounts/o8/id:
+          http://login.microsoftonline.com/common/oauth2/v2.0/authorize:
             default: true
             username_derivation:
               username_claim: "email"
             allowed_domains:
+              - cc.peralta.edu
               - peralta.edu
+          http://google.com/accounts/o8/id:
+            default: true
+            username_derivation:
+              username_claim: "email"
       Authenticator:
         admin_users:
           - ericvd@berkeley.edu
           - sean.smorris@berkeley.edu
-          - mseidel@peralta.edu
+          - jeronimoperez@peralta.edu
