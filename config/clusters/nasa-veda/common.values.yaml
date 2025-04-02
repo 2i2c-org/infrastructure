@@ -43,6 +43,8 @@ basehub:
             name: "NASA"
             url: https://www.earthdata.nasa.gov/esds
     hub:
+      image:
+        tag: "0.0.1-0.dev.git.12172.hf6a94ef2"
       allowNamedServers: true
       config:
         JupyterHub:
