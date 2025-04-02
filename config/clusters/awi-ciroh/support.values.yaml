@@ -17,6 +17,8 @@ grafana:
           - grafana.ciroh.awi.2i2c.cloud
 
 prometheus:
+  alertmanager:
+    enabled: true
   server:
     ingress:
       enabled: true
