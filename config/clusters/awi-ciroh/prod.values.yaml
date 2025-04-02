@@ -1,10 +1,16 @@
 basehub:
+  nfs:
+    pv:
+      serverIP: 10.99.243.170
   userServiceAccount:
     annotations:
       iam.gke.io/gcp-service-account: awi-ciroh-prod@ciroh-jupyterhub-423218.iam.gserviceaccount.com
   jupyterhub-home-nfs:
     gke:
       volumeId: projects/ciroh-jupyterhub-423218/zones/us-central1-b/disks/hub-nfs-homedirs-prod
+    quotaEnforcer:
+      hardQuota: "250" # in GB
+      path: "/export/prod"
   jupyterhub:
     ingress:
       hosts: [ciroh.awi.2i2c.cloud]
