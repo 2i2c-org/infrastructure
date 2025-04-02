@@ -9,7 +9,7 @@ basehub:
       # Google FileStore IP
       serverIP: 10.26.195.98
       # Name of Google Filestore share
-      baseShareName: /homes/
+      baseShareName: /
   dask-gateway:
     enabled: true
     gateway:
