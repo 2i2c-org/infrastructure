@@ -74,7 +74,7 @@ hub_cloud_permissions = {
     EOT
   },
   "prod" : {
-    bucket_admin_access : ["scratch"],
+    bucket_admin_access : ["scratch-prod"],
     extra_iam_policy : <<-EOT
       {
         "Version": "2012-10-17",
@@ -118,57 +118,6 @@ hub_cloud_permissions = {
               "arn:aws:s3:::nasa-disasters/*",
               "arn:aws:s3:::sentinel-s2-l1c",
               "arn:aws:s3:::sentinel-s2-l1c/*"
-            ]
-          },
-          {
-            "Effect": "Allow",
-            "Action": "s3:ListAllMyBuckets",
-            "Resource": "*"
-          }
-        ]
-      }
-    EOT
-  },
-  "binder" : {
-    bucket_admin_access : ["scratch-binder"],
-    extra_iam_policy : <<-EOT
-      {
-        "Version": "2012-10-17",
-        "Statement": [
-          {
-            "Effect": "Allow",
-            "Action": [
-              "s3:GetObject",
-              "s3:ListBucketVersions",
-              "s3:ListBucket",
-              "s3:GetBucketLocation"
-            ],
-            "Resource": [
-              "arn:aws:s3:::veda-data-store",
-              "arn:aws:s3:::veda-data-store/*",
-              "arn:aws:s3:::cmip6-staging",
-              "arn:aws:s3:::cmip6-staging/*",
-              "arn:aws:s3:::lp-prod-protected",
-              "arn:aws:s3:::lp-prod-protected/*",
-              "arn:aws:s3:::gesdisc-cumulus-prod-protected",
-              "arn:aws:s3:::gesdisc-cumulus-prod-protected/*",
-              "arn:aws:s3:::nsidc-cumulus-prod-protected",
-              "arn:aws:s3:::nsidc-cumulus-prod-protected/*",
-              "arn:aws:s3:::ornl-cumulus-prod-protected",
-              "arn:aws:s3:::ornl-cumulus-prod-protected/*",
-              "arn:aws:s3:::pangeo-forge-veda-output",
-              "arn:aws:s3:::pangeo-forge-veda-output/*",
-              "arn:aws:s3:::podaac-ops-cumulus-public",
-              "arn:aws:s3:::podaac-ops-cumulus-public/*",
-              "arn:aws:s3:::podaac-ops-cumulus-protected",
-              "arn:aws:s3:::podaac-ops-cumulus-protected/*",
-              "arn:aws:s3:::usgs-landsat",
-              "arn:aws:s3:::usgs-landsat/*",
-              "arn:aws:s3:::nasa-disasters",
-              "arn:aws:s3:::nasa-disasters/*",
-              "arn:aws:s3:::sentinel-s2-l1c",
-              "arn:aws:s3:::sentinel-s2-l1c/*"
-            ]
             ]
           },
           {
