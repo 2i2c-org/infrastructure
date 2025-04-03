@@ -48,13 +48,16 @@ jupyterhub:
         admin_users: []
         enable_auth_state: true
       GenericOAuthenticator:
+        # We want to get user data from the JWT that's the id token,
+        # not from a separate userdata API call
+        userdata_from_id_token: True
         scope:
           - basic
           - profile
           - openid
         username_claim: preferred_username
         manage_groups: true
-        auth_state_groups_key: roles
+        auth_state_groups_key: oauth_user.roles
         admin_groups:
           - Admin
         # Being granted *any* jupyterhub related role should allow you

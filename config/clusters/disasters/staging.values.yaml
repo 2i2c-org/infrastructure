@@ -13,7 +13,6 @@ jupyterhub:
         oauth_callback_url: https://staging.hub.disasters.2i2c.cloud/hub/oauth_callback
         token_url: https://keycloak.delta-backend.xyz/realms/veda/protocol/openid-connect/token
         authorize_url: https://keycloak.delta-backend.xyz/realms/veda/protocol/openid-connect/auth
-        userdata_url: https://keycloak.delta-backend.xyz/realms/veda/protocol/openid-connect/userinfo
   ingress:
     hosts: [staging.hub.disasters.2i2c.cloud]
     tls:

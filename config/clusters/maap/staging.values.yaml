@@ -228,14 +228,16 @@ jupyterhub:
         oauth_callback_url: https://staging.hub.maap.2i2c.cloud/hub/oauth_callback
         token_url: https://keycloak.delta-backend.xyz/realms/veda/protocol/openid-connect/token
         authorize_url: https://keycloak.delta-backend.xyz/realms/veda/protocol/openid-connect/auth
-        userdata_url: https://keycloak.delta-backend.xyz/realms/veda/protocol/openid-connect/userinfo
+        # We want to get user data from the JWT that's the id token,
+        # not from a separate userdata API call
+        userdata_from_id_token: True
         scope:
           - basic
           - profile
           - openid
         username_claim: preferred_username
         manage_groups: true
-        auth_state_groups_key: roles
+        auth_state_groups_key: oauth_user.roles
         admin_groups:
           - Admin
         # Being granted *any* jupyterhub related role should allow you
