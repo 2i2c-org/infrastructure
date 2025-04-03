@@ -14,7 +14,6 @@ jupyterhub:
         oauth_callback_url: https://hub.disasters.2i2c.cloud/hub/oauth_callback
         token_url: https://auth.openveda.cloud//realms/veda/protocol/openid-connect/token
         authorize_url: https://auth.openveda.cloud/realms/veda/protocol/openid-connect/auth
-        userdata_url: https://auth.openveda.cloud/realms/veda/protocol/openid-connect/userinfo
   ingress:
     hosts: [hub.disasters.2i2c.cloud]
     tls:
