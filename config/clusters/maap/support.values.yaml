@@ -84,3 +84,6 @@ cluster-autoscaler:
   autoDiscovery:
     clusterName: maap
   awsRegion: us-west-2
+
+calico:
+  enabled: true

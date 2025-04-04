@@ -47,3 +47,6 @@ redirects:
       to: hub.victorproject.org
     - from: staging.victor.2i2c.cloud
       to: staging.hub.victorproject.org
+
+calico:
+  enabled: true
