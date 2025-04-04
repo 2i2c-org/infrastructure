@@ -37,6 +37,6 @@ resource "aws_efs_backup_policy" "homedirs" {
 
   file_system_id = one(aws_efs_file_system.homedirs[*].id)
   backup_policy {
-    status = "ENABLED"
+    status = var.enable_efs_backup ? "ENABLED" : "DISABLED"
   }
 }

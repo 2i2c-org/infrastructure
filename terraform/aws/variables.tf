@@ -305,6 +305,15 @@ variable "enable_nfs_backup" {
   type        = bool
   default     = false
   description = <<-EOT
-  Enable backup of NFS home directories using Data Lifecycle Manager (DLM).
+  Enable backup of NFS home directories on EBS using Data Lifecycle Manager (DLM).
   EOT
+}
+
+variable "enable_efs_backup" {
+  type        = bool
+  default     = true
+  description = <<-EOT
+  Enable backup of EFS home directories
+  EOT
+
 }
