@@ -10,6 +10,10 @@ jupyterhub:
     config:
       GitHubOAuthenticator:
         oauth_callback_url: https://hub.disasters.2i2c.cloud/hub/oauth_callback
+      GenericOAuthenticator:
+        oauth_callback_url: https://hub.disasters.2i2c.cloud/hub/oauth_callback
+        token_url: https://auth.openveda.cloud//realms/veda/protocol/openid-connect/token
+        authorize_url: https://auth.openveda.cloud/realms/veda/protocol/openid-connect/auth
   ingress:
     hosts: [hub.disasters.2i2c.cloud]
     tls:

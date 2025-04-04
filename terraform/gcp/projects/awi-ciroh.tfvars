@@ -14,6 +14,18 @@ filestores = {
   }
 }
 
+enable_nfs_backup = true
+persistent_disks = {
+  "staging" = {
+    size        = 100 # in GB
+    name_suffix = "staging"
+  }
+  "prod" = {
+    size        = 2500 # in GB
+    name_suffix = "prod"
+  }
+}
+
 # Cloud costs for this project are not passed through by 2i2c
 budget_alert_enabled = false
 billing_account_id   = ""

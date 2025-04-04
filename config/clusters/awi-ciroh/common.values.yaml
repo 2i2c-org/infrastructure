@@ -6,10 +6,13 @@ basehub:
       mountOptions:
         - soft
         - noatime
-      # Google FileStore IP
-      serverIP: 10.26.195.98
-      # Name of Google Filestore share
-      baseShareName: /homes/
+      baseShareName: /
+  jupyterhub-home-nfs:
+    enabled: true
+    prometheusExporter:
+      enabled: true
+    gke:
+      enabled: true
   dask-gateway:
     enabled: true
     gateway:

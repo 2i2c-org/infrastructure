@@ -20,8 +20,7 @@ jupyterhub:
     daskhubSetup:
       enabled: true
     2i2c:
-      add_staff_user_ids_to_admin_users: true
-      add_staff_user_ids_of_type: "github"
+      add_staff_user_ids_to_admin_users: false
     jupyterhubConfigurator:
       enabled: false
     homepage:
@@ -43,18 +42,42 @@ jupyterhub:
     allowNamedServers: true
     config:
       JupyterHub:
-        authenticator_class: github
+        authenticator_class: generic-oauth
+      Authenticator:
+        # Set for us by Keycloak
+        admin_users: []
+        enable_auth_state: true
+      GenericOAuthenticator:
+        # We want to get user data from the JWT that's the id token,
+        # not from a separate userdata API call
+        userdata_from_id_token: True
+        scope:
+          - basic
+          - profile
+          - openid
+        username_claim: preferred_username
+        manage_groups: true
+        auth_state_groups_key: oauth_user.roles
+        admin_groups:
+          - Admin
+        # Being granted *any* jupyterhub related role should allow you
+        # to login
+        allowed_groups:
+          - Admin
+          - CPU:XS
+          - CPU:S
+          - CPU:M
+          - CPU:L
+          - CPU:XL
+          - CPU:XXL
+          - CPU:XXXL
+          - GPU:T4
       GitHubOAuthenticator:
         populate_teams_in_auth_state: true
         # allowed_organizations:
         #   - todo
         scope:
           - read:org
-      Authenticator:
-        enable_auth_state: true
-        admin_users:
-          - freitagb
-          - slesaad
   singleuser:
     cloudMetadata:
       blockWithIptables: false
@@ -163,6 +186,8 @@ jupyterhub:
             choices:
               mem_1_9:
                 display_name: 1.9 GB RAM, upto 3.7 CPUs
+                allowed_groups:
+                  - CPU:XS
                 kubespawner_override:
                   mem_guarantee: 1991244775
                   mem_limit: 1991244775
@@ -173,6 +198,8 @@ jupyterhub:
                 default: true
               mem_3_7:
                 display_name: 3.7 GB RAM, upto 3.7 CPUs
+                allowed_groups:
+                  - CPU:S
                 kubespawner_override:
                   mem_guarantee: 3982489550
                   mem_limit: 3982489550
@@ -182,6 +209,8 @@ jupyterhub:
                     node.kubernetes.io/instance-type: r5.xlarge
               mem_7_4:
                 display_name: 7.4 GB RAM, upto 3.7 CPUs
+                allowed_groups:
+                  - CPU:M
                 kubespawner_override:
                   mem_guarantee: 7964979101
                   mem_limit: 7964979101
@@ -191,6 +220,8 @@ jupyterhub:
                     node.kubernetes.io/instance-type: r5.xlarge
               mem_14_8:
                 display_name: 14.8 GB RAM, upto 3.7 CPUs
+                allowed_groups:
+                  - CPU:L
                 kubespawner_override:
                   mem_guarantee: 15929958203
                   mem_limit: 15929958203
@@ -200,6 +231,8 @@ jupyterhub:
                     node.kubernetes.io/instance-type: r5.xlarge
               mem_29_7:
                 display_name: 29.7 GB RAM, upto 3.7 CPUs
+                allowed_groups:
+                  - CPU:XL
                 kubespawner_override:
                   mem_guarantee: 31859916406
                   mem_limit: 31859916406
@@ -209,6 +242,8 @@ jupyterhub:
                     node.kubernetes.io/instance-type: r5.xlarge
               mem_60_6:
                 display_name: 60.6 GB RAM, upto 15.6 CPUs
+                allowed_groups:
+                  - CPU:XXL
                 kubespawner_override:
                   mem_guarantee: 65094448840
                   mem_limit: 65094448840
@@ -218,6 +253,8 @@ jupyterhub:
                     node.kubernetes.io/instance-type: r5.4xlarge
               mem_121_2:
                 display_name: 121.2 GB RAM, upto 15.6 CPUs
+                allowed_groups:
+                  - CPU:XXXL
                 kubespawner_override:
                   mem_guarantee: 130188897681
                   mem_limit: 130188897681
@@ -229,7 +266,7 @@ jupyterhub:
         description: "Start a container on a dedicated node with a GPU"
         slug: "gpu"
         allowed_groups:
-          - 2i2c-org:hub-access-for-2i2c-staff
+          - GPU:T4
         profile_options:
           image:
             display_name: Environment

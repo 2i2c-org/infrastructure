@@ -1,7 +1,16 @@
 basehub:
+  nfs:
+    pv:
+      serverIP: 10.99.252.253
   userServiceAccount:
     annotations:
       iam.gke.io/gcp-service-account: awi-ciroh-staging@ciroh-jupyterhub-423218.iam.gserviceaccount.com
+  jupyterhub-home-nfs:
+    gke:
+      volumeId: projects/ciroh-jupyterhub-423218/zones/us-central1-b/disks/hub-nfs-homedirs-staging
+    quotaEnforcer:
+      hardQuota: "10" # in GB
+      path: "/export/staging"
   jupyterhub:
     ingress:
       hosts: [staging.ciroh.awi.2i2c.cloud]

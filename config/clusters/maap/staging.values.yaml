@@ -102,7 +102,7 @@ jupyterhub:
               mem_1_9:
                 display_name: 1.9 GB RAM, upto 3.7 CPUs
                 allowed_groups:
-                  - jupyterhub:cpu:xs
+                  - CPU:XS
                 kubespawner_override:
                   mem_guarantee: 1991244775
                   mem_limit: 1991244775
@@ -114,7 +114,7 @@ jupyterhub:
               mem_3_7:
                 display_name: 3.7 GB RAM, upto 3.7 CPUs
                 allowed_groups:
-                  - jupyterhub:cpu:s
+                  - CPU:S
                 kubespawner_override:
                   mem_guarantee: 3982489550
                   mem_limit: 3982489550
@@ -125,7 +125,7 @@ jupyterhub:
               mem_7_4:
                 display_name: 7.4 GB RAM, upto 3.7 CPUs
                 allowed_groups:
-                  - jupyterhub:cpu:m
+                  - CPU:M
                 kubespawner_override:
                   mem_guarantee: 7964979101
                   mem_limit: 7964979101
@@ -136,7 +136,7 @@ jupyterhub:
               mem_14_8:
                 display_name: 14.8 GB RAM, upto 3.7 CPUs
                 allowed_groups:
-                  - jupyterhub:cpu:l
+                  - CPU:L
                 kubespawner_override:
                   mem_guarantee: 15929958203
                   mem_limit: 15929958203
@@ -147,7 +147,7 @@ jupyterhub:
               mem_29_7:
                 display_name: 29.7 GB RAM, upto 3.7 CPUs
                 allowed_groups:
-                  - jupyterhub:cpu:xl
+                  - CPU:XL
                 kubespawner_override:
                   mem_guarantee: 31859916406
                   mem_limit: 31859916406
@@ -158,7 +158,7 @@ jupyterhub:
               mem_60_6:
                 display_name: 60.6 GB RAM, upto 15.6 CPUs
                 allowed_groups:
-                  - jupyterhub:cpu:xxl
+                  - CPU:XXL
                 kubespawner_override:
                   mem_guarantee: 65094448840
                   mem_limit: 65094448840
@@ -169,7 +169,7 @@ jupyterhub:
               mem_121_2:
                 display_name: 121.2 GB RAM, upto 15.6 CPUs
                 allowed_groups:
-                  - jupyterhub:cpu:xxxl
+                  - CPU:XXXL
                 kubespawner_override:
                   mem_guarantee: 130188897681
                   mem_limit: 130188897681
@@ -181,7 +181,7 @@ jupyterhub:
         description: "Start a container on a dedicated node with a GPU"
         slug: "gpu"
         allowed_groups:
-          - jupyterhub:gpu:t4
+          - GPU:T4
         profile_options:
           image:
             display_name: Environment
@@ -228,27 +228,30 @@ jupyterhub:
         oauth_callback_url: https://staging.hub.maap.2i2c.cloud/hub/oauth_callback
         token_url: https://keycloak.delta-backend.xyz/realms/veda/protocol/openid-connect/token
         authorize_url: https://keycloak.delta-backend.xyz/realms/veda/protocol/openid-connect/auth
-        userdata_url: https://keycloak.delta-backend.xyz/realms/veda/protocol/openid-connect/userinfo
+        # We want to get user data from the JWT that's the id token,
+        # not from a separate userdata API call
+        userdata_from_id_token: True
         scope:
           - basic
           - profile
           - openid
-
-          - jupyterhub:admin
-
-          - jupyterhub:cpu:xs
-          - jupyterhub:cpu:s
-          - jupyterhub:cpu:m
-          - jupyterhub:cpu:l
-          - jupyterhub:cpu:xl
-          - jupyterhub:cpu:xxl
-          - jupyterhub:cpu:xxxl
-          - jupyterhub:gpu:t4
         username_claim: preferred_username
         manage_groups: true
-        auth_state_groups_key: scope
+        auth_state_groups_key: oauth_user.roles
         admin_groups:
-          - jupyterhub:admin
+          - Admin
+        # Being granted *any* jupyterhub related role should allow you
+        # to login
+        allowed_groups:
+          - Admin
+          - CPU:XS
+          - CPU:S
+          - CPU:M
+          - CPU:L
+          - CPU:XL
+          - CPU:XXL
+          - CPU:XXXL
+          - GPU:T4
   ingress:
     hosts: [staging.hub.maap.2i2c.cloud]
     tls:
