@@ -107,3 +107,6 @@ redirects:
   rules:
     - from: researchdelight.2i2c.cloud
       to: showcase.2i2c.cloud
+
+calico:
+  enabled: true

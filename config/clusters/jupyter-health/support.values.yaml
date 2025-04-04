@@ -84,3 +84,6 @@ cluster-autoscaler:
   autoDiscovery:
     clusterName: jupyter-health
   awsRegion: us-east-2
+
+calico:
+  enabled: true

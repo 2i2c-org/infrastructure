@@ -108,3 +108,6 @@ aws-ce-grafana-backend:
   serviceAccount:
     annotations:
       eks.amazonaws.com/role-arn: arn:aws:iam::891612562472:role/aws_ce_grafana_backend_iam_role
+
+calico:
+  enabled: true

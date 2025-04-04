@@ -40,4 +40,7 @@ cluster-autoscaler:
   autoDiscovery:
     clusterName: {{ cluster_name }}
   awsRegion: {{ cluster_region }}
+
+calico:
+  enabled: true
 {% endif %}
