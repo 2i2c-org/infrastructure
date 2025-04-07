@@ -32,7 +32,7 @@ jupyterhub:
       templateVars:
         org:
           name: Jupyter Health
-          logo_url: https://jupyter.org/assets/homepage/main-logo.svg
+          logo_url: https://jupyterhealth.org/images/JupyterHealthLogoTransparentNoSpace.png
           url: https://github.com/jupyterhealth/
         designed_by:
           name: "Jupyter Health"
