@@ -37,7 +37,8 @@ spec:
         - port: 8786
           protocol: TCP
     # Allow Worker -> Worker comms
-    # allow all ports as they communicate on random ones
+    # allow all ports as they open random ones by default to communicate
+    # https://github.com/dask/distributed/blob/ec3f18044daad643f9f27ab8352a36757dfd5574/distributed/cli/dask_worker.py#L61-L67
     - to:
         - podSelector:
             matchLabels:
