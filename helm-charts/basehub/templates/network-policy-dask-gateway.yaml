@@ -1,0 +1,44 @@
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: dask-gateway-network-policy
+spec:
+  podSelector:
+    matchLabels:
+      app.kubernetes.io/name: dask-gateway
+      app.kubernetes.io/component: dask-worker
+  policyTypes:
+    - Egress
+  egress:
+    # Allow access to everything except private IPs
+    - to:
+        - ipBlock:
+            cidr: 0.0.0.0/0
+            except:
+              - 10.0.0.0/8
+              - 172.16.0.0/12
+              - 192.168.0.0/16
+    # Allow access to DNS
+    - ports:
+        - port: 53
+          protocol: UDP
+        - port: 53
+          protocol: TCP
+      to:
+        - namespaceSelector:
+            matchLabels:
+              kubernetes.io/metadata.name: kube-system
+    # Allow Worker -> Scheduler comms
+    - to:
+        - podSelector:
+            matchLabels:
+              app.kubernetes.io/component: dask-scheduler
+      ports:
+        - port: 8786
+          protocol: TCP
+    # Allow Worker -> Worker comms
+    # allow all ports as they communicate on random ones
+    - to:
+        - podSelector:
+            matchLabels:
+              app.kubernetes.io/component: dask-worker
