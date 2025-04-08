@@ -30,6 +30,7 @@ spec:
               kubernetes.io/metadata.name: kube-system
           podSelector:
             matchLabels:
+              # This label is also added to EKS core-dns deployments
               k8s-app: kube-dns
     # Allow Worker -> Scheduler comms
     - to:
