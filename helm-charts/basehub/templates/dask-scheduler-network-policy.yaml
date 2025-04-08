@@ -1,3 +1,4 @@
+# Dask-gateway network communications described in https://gateway.dask.org/install-kube.html#architecture
 {{- $daskGateway := index .Values "dask-gateway" }}
 {{- if $daskGateway.enabled }}
 {{- if .Values.jupyterhub.custom.daskhubSetup.enabled }}
