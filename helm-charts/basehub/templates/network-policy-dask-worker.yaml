@@ -1,4 +1,5 @@
-{{- if .Values.dask-gateway.enabled }}
+{{- $daskGateway := index .Values "dask-gateway" }}
+{{- if $daskGateway.enabled }}
 {{- if .Values.jupyterhub.custom.daskhubSetup.enabled }}
 apiVersion: networking.k8s.io/v1
 kind: NetworkPolicy
