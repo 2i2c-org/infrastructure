@@ -9,8 +9,6 @@ nfs:
     baseShareName: /
 jupyterhub-home-nfs:
   enabled: true
-  prometheusExporter:
-    enabled: true
   gke:
     enabled: true
     volumeId: projects/two-eye-two-see-uk/zones/europe-west2-b/disks/hub-nfs-homedirs-lis
@@ -33,6 +31,7 @@ jupyterhub-home-nfs:
         cpu: 0.4
         memory: 6G
   prometheusExporter:
+    enabled: true
     resources:
       requests:
         cpu: 0.02
