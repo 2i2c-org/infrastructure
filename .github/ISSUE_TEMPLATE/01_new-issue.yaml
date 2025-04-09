@@ -12,33 +12,31 @@ body:
       required: true
 
   - type: textarea
-    id: tasks
+    id: action
     attributes:
-      label: Task list
+      label: What we need to do
       description: |
-        (optional) A clear and concise list of steps to take to close this issue.
-      value: |
-        - [ ] .
-        - [ ] .
-        - [ ] .
+        State the required outcome and action plan, if known.
 
     validations:
-      required: false
+      required: true
 
   - type: textarea
     id: dod
     attributes:
       label: Definition of Done
       description: |
-        The Definition of Done. What must be true to consider this task complete?
-      value: |
+        The Definition of Done. Please only remove what is not applicable. 
+      placeholder: |
         - [ ] The feature/service is technically complete
         - [ ] The feature/service been tested with one or more users (if applicable)
         - [ ] The feature/service been deployed to a production cluster
         - [ ] The feature/service has been shown to be replicably deployable
         - [ ] The feature/service is well documented, and the documentation is accessible for the target user base
-        - [ ] The feature/service has been added to our product menu.
+        - [ ] The feature/service has been added to our product menu (if applicable).
         - [ ] Lessons learned have been documented
+        - [ ] The feature's availability has been communicated to Sales
+        - [ ] The feature has been communicated to our communities
 
     validations:
       required: false
