@@ -26,7 +26,7 @@ body:
     attributes:
       label: Definition of Done
       description: |
-        The Definition of Done. Please only remove what is not applicable. 
+        The Definition of Done. Please only remove what is not applicable.
       placeholder: |
         - [ ] The feature/service is technically complete
         - [ ] The feature/service been tested with one or more users (if applicable)
