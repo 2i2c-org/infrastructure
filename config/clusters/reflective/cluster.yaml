@@ -11,10 +11,10 @@ support:
   helm_chart_values_files:
     - support.values.yaml
     - enc-support.secret.values.yaml
-hubs: []
+hubs:
+  []
   # Uncomment the lines below once the support infrastructure was deployed and
   # you are ready to add the first cluster
-
 
   # - name: staging
   #   # Tip: consider changing this to something more human friendly

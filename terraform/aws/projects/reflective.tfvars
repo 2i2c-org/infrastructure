@@ -6,22 +6,22 @@ enable_efs_backup = false
 enable_nfs_backup = true
 ebs_volumes = {
   "staging" = {
-    size        = 100  # in GB
+    size        = 100 # in GB
     type        = "gp3"
     name_suffix = "staging"
-    tags        = { "2i2c:hub-name": "staging" }
+    tags        = { "2i2c:hub-name" : "staging" }
   },
-    "prod" = {
-    size        = 100  # in GB
+  "prod" = {
+    size        = 100 # in GB
     type        = "gp3"
     name_suffix = "prod"
-    tags        = { "2i2c:hub-name": "prod" }
+    tags        = { "2i2c:hub-name" : "prod" }
   },
   "workshop" = {
-    size        = 100  # in GB
+    size        = 100 # in GB
     type        = "gp3"
     name_suffix = "workshop"
-    tags        = { "2i2c:hub-name": "workshop" }
+    tags        = { "2i2c:hub-name" : "workshop" }
   }
 }
 
