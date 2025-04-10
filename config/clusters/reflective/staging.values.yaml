@@ -18,9 +18,9 @@ jupyterhub:
     nodeSelector:
       2i2c/hub-name: staging
     extraEnv:
-        SCRATCH_BUCKET: s3://reflective-scratch-staging/$(JUPYTERHUB_USER)
-        PANGEO_SCRATCH: s3://reflective-scratch-staging/$(JUPYTERHUB_USER)
-        PERSISTENT_BUCKET: s3://reflective-persistent-staging/$(JUPYTERHUB_USER)
+      SCRATCH_BUCKET: s3://reflective-scratch-staging/$(JUPYTERHUB_USER)
+      PANGEO_SCRATCH: s3://reflective-scratch-staging/$(JUPYTERHUB_USER)
+      PERSISTENT_BUCKET: s3://reflective-persistent-staging/$(JUPYTERHUB_USER)
 dask-gateway:
   gateway:
     backend:
