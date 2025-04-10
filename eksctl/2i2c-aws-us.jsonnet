@@ -139,7 +139,7 @@ local daskNodes = [
     metadata+: {
         name: "2i2c-aws-us",
         region: clusterRegion,
-        version: "1.30",
+        version: "1.32",
         tags+: {
             "ManagedBy": "2i2c",
             "2i2c.org/cluster-name": $.metadata.name,
@@ -202,7 +202,7 @@ local daskNodes = [
     [
         ng + {
             namePrefix: 'core',
-            nameSuffix: 'a',
+            nameSuffix: 'c',
             nameIncludeInstanceType: false,
             availabilityZones: [nodeAz],
             ssh: {
