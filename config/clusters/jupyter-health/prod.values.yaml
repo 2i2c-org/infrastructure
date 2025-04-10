@@ -45,6 +45,15 @@ jupyterhub:
     config:
       GenericOAuthenticator:
         oauth_callback_url: https://jupyter-health.2i2c.cloud/hub/oauth_callback
+        client_id: bS8rx5PRGM3U3XQm4HBLHhqjNyKQzhKsZchYO0Bd
+        authorize_url: https://berkeley-jhe-demo.jupyterhealth.org/o/authorize/
+        token_url: https://berkeley-jhe-demo.jupyterhealth.org/o/token/
+        userdata_url: https://berkeley-jhe-demo.jupyterhealth.org/api/v1/users/profile
+        login_service: JupyterHealth Exchange (Demo)
+        allowed_groups:
+          - "20014" # JupyterHub users (~all users are here)
   singleuser:
+    extraEnv:
+      JHE_URL: https://berkeley-jhe-demo.jupyterhealth.org
     nodeSelector:
       2i2c/hub-name: prod
