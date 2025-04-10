@@ -1,0 +1,41 @@
+nfs:
+  pv:
+    serverIP: 10.100.65.44
+userServiceAccount:
+  annotations:
+    eks.amazonaws.com/role-arn: arn:aws:iam::916143380841:role/reflective-staging
+jupyterhub:
+  ingress:
+    hosts: [staging.reflective.2i2c.cloud]
+    tls:
+      - hosts: [staging.reflective.2i2c.cloud]
+        secretName: https-auto-tls
+  hub:
+    config:
+      GitHubOAuthenticator:
+        oauth_callback_url: https://staging.reflective.2i2c.cloud/hub/oauth_callback
+  singleuser:
+    nodeSelector:
+      2i2c/hub-name: staging
+    extraEnv:
+        SCRATCH_BUCKET: s3://reflective-scratch-staging/$(JUPYTERHUB_USER)
+        PANGEO_SCRATCH: s3://reflective-scratch-staging/$(JUPYTERHUB_USER)
+        PERSISTENT_BUCKET: s3://reflective-persistent-staging/$(JUPYTERHUB_USER)
+dask-gateway:
+  gateway:
+    backend:
+      scheduler:
+        extraPodConfig:
+          nodeSelector:
+            2i2c/hub-name: staging
+      worker:
+        extraPodConfig:
+          nodeSelector:
+            2i2c/hub-name: staging
+jupyterhub-home-nfs:
+  eks:
+    volumeId: vol-059e5b626a64def0e
+  quotaEnforcer:
+    path: "/export/staging"
+    # Default per-user quota is 10GB. Uncomment below line to change this.
+    # hardQuota: "10" # in GB
