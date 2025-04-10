@@ -34,5 +34,17 @@ jupyterhub:
   singleuser:
     extraEnv:
       JHE_URL: https://berkeley-jhe-staging.jupyterhealth.org
+    extraFiles:
+      extra_server_config:
+        mountPath: /etc/jupyter/jupyter_server_config.json
+        data:
+          SMARTExtensionApp:
+            scopes:
+              - openid
+              - profile
+              - fhirUser
+              - launch/patient
+            client_id: "019615e1-ec27-7668-b4ab-4ade4d8e49d0"
+            redirect_uri: "https://staging.jupyter-health.2i2c.cloud/hub/user-redirect/smart-on-fhir/callback"
     nodeSelector:
       2i2c/hub-name: staging
