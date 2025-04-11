@@ -16,13 +16,9 @@ We must then enable [GitHub Pages deployment via GitHub Actions][pages] for the 
 
 We currently use [Namecheap] to manage the domains of our hubs. A [CNAME] record for the `docs` subdomain (e.g. `docs.<COMMUNITY>.2i2c.cloud`) should be added alongside the hub's existing records, and point to the deployed Jupyter Book static site, e.g. `<ORG>.github.io`.
 
-:::{note}
-For the current iteration of this feature, we expect that users will deploy their static sites to GitHub Pages under their own organisation. Therefore, we will need the users to provide us with the URL of their deployed documentation.
-:::
-
 Once the CNAME record has been established, the repo must be [configured to use a custom domain][repo-domain], e.g. `docs.<COMMUNITY>.2i2c.cloud`.
 
-Finally, we need to change the `BASE_URL` used by Jupyter Book to reflect the fact that the book is now served from the root path `/`, e.g.
+Finally, we need to modify `.github/workflows/deploy.yml` and change the `BASE_URL` used by Jupyter Book, to reflect the fact that the book is now served from the root path `/`, e.g.
 
 ```{code-block} yaml
 :linenos:
