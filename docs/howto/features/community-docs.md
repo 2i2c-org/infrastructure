@@ -22,6 +22,28 @@ For the current iteration of this feature, we expect that users will deploy thei
 
 Once the CNAME record has been established, the repo must be [configured to use a custom domain][repo-domain], e.g. `docs.<COMMUNITY>.2i2c.cloud`.
 
+Finally, we need to change the `BASE_URL` used by Jupyter Book to reflect the fact that the book is now served from the root path `/`, e.g.
+
+```{code} yml
+:linenos:
+:emphasize-lines: 13
+:filename: .github/workflows/deploy.yml
+
+# This file was created automatically with `jupyter book init --gh-pages` 🪄 💚
+# Ensure your GitHub Pages settings for this repository are set to deploy with **GitHub Actions**.
+
+name: GitHub Pages Deploy
+on:
+  push:
+    # Runs on pushes targeting the default branch
+    branches: [main]
+env:
+  # `BASE_URL` determines, relative to the root of the domain, the URL that your site is served from.
+  # E.g., if your site lives at `https://mydomain.org/myproject`, set `BASE_URL=/myproject`.
+  # If, instead, your site lives at the root of the domain, at `https://mydomain.org`, set `BASE_URL=''`.
+  BASE_URL: /
+```
+
 ## Add Binder/JupyterHub configuration to the book
 
 ### Hubs that deploy a BinderHub
