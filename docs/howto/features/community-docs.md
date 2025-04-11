@@ -47,7 +47,7 @@ If the hub is deployed alongside a BinderHub, its URL can be added to the [`myst
 
 ```{code-block} yaml
 :emphasize-lines: 11
-:lineenos:
+:linenos:
 
 # See docs at: https://mystmd.org/guide/frontmatter
 version: 1
@@ -74,7 +74,7 @@ For hubs that do not deploy a BinderHub, the launch-button UI can be enabled by 
 
 ```{code-block} yaml
 :emphasize-lines: 11
-:lineenos:
+:linenos:
 
 # See docs at: https://mystmd.org/guide/frontmatter
 version: 1
