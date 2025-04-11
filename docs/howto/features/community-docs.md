@@ -18,26 +18,11 @@ We currently use [Namecheap] to manage the domains of our hubs. A [CNAME] record
 
 Once the CNAME record has been established, the repo must be [configured to use a custom domain][repo-domain], e.g. `docs.<COMMUNITY>.2i2c.cloud`.
 
-Finally, we need to modify `.github/workflows/deploy.yml` and change the `BASE_URL` used by Jupyter Book, to reflect the fact that the book is now served from the root path `/`, e.g.
+:::{note} What about `BASE_URL`?
+:class: dropdown
 
-```{code-block} yaml
-:linenos:
-:emphasize-lines: 13
-
-# This file was created automatically with `jupyter book init --gh-pages` 🪄 💚
-# Ensure your GitHub Pages settings for this repository are set to deploy with **GitHub Actions**.
-
-name: GitHub Pages Deploy
-on:
-  push:
-    # Runs on pushes targeting the default branch
-    branches: [main]
-env:
-  # `BASE_URL` determines, relative to the root of the domain, the URL that your site is served from.
-  # E.g., if your site lives at `https://mydomain.org/myproject`, set `BASE_URL=/myproject`.
-  # If, instead, your site lives at the root of the domain, at `https://mydomain.org`, set `BASE_URL=''`.
-  BASE_URL: /
-```
+The [2i2c-org/community-docs-template] pre-configures the `BASE_URL` environment variable to reflect a custom-domain deployment. This means that initial GitHub Pages deployment to `https://<ORG>.github.io/<REPO>` will not render properly. This is expected; the site deployed on the custom domain will render properly.
+:::
 
 ## Add Binder/JupyterHub configuration to the book
 
