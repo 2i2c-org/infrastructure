@@ -18,8 +18,8 @@ We currently use [Namecheap] to manage the domains of our hubs. A [CNAME] record
 
 Once the CNAME record has been established, the repo must be [configured to use a custom domain][repo-domain], e.g. `docs.<COMMUNITY>.2i2c.cloud`.
 
-:::{note} What about `BASE_URL`?
-:class: dropdown
+:::{admonition} What about `BASE_URL`?
+:class: dropdown note
 
 The [2i2c-org/community-docs-template] pre-configures the `BASE_URL` environment variable to reflect a custom-domain deployment. This means that initial GitHub Pages deployment to `https://<ORG>.github.io/<REPO>` will not render properly. This is expected; the site deployed on the custom domain will render properly.
 :::
