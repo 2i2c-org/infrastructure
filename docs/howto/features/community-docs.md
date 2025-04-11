@@ -24,7 +24,7 @@ Once the CNAME record has been established, the repo must be [configured to use 
 
 Finally, we need to change the `BASE_URL` used by Jupyter Book to reflect the fact that the book is now served from the root path `/`, e.g.
 
-```{code} yml
+```{code} yaml
 :linenos:
 :emphasize-lines: 13
 :filename: .github/workflows/deploy.yml
