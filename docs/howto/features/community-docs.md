@@ -43,11 +43,58 @@ env:
 
 ### Hubs that deploy a BinderHub
 
-If the hub is deployed alongside a BinderHub, its URL can be added to the [`myst.yml`'s `project.binder` property][frontmatter]. This will enable the per-page launch-button that allows users to jump into an execution context with a JupyterHub or BinderHub. Setting the `binder` field will also set the default BinderHub URL to the given URL.
+If the hub is deployed alongside a BinderHub, its URL can be added to the [`myst.yml`'s `project.binder` property][frontmatter], e.g.
+
+```{code-block} yaml
+:emphasize-lines: 11
+:lineenos:
+
+# See docs at: https://mystmd.org/guide/frontmatter
+version: 1
+project:
+  id: df8b4a16-be6c-4b92-abcc-a95e23b9684a
+  # title:
+  # description:
+  # keywords: []
+  # authors: []
+  github: https://github.com/2i2c-org/community-docs-template
+  # To autogenerate a Table of Contents, run "jupyter-book init --write-toc"
+  binder: https://binder.<COMMUNITY>.2i2c.cloud/
+  toc:
+    - file: content/index.md
+    - file: content/kb/index.md
+    - file: content/metrics.md
+```
+
+This will enable the per-page launch-button that allows users to jump into an execution context with a JupyterHub or BinderHub. Setting the `binder` field will also set the default BinderHub URL to the given URL.
 
 ### Hubs without a BinderHub
 
-For hubs that do not deploy a BinderHub, the launch-button UI can be enabled by setting the default [`myst.yml`'s `project.binder` property][frontmatter] to <https://mybinder.org>. As described above, this will enable the launch-button UI.
+For hubs that do not deploy a BinderHub, the launch-button UI can be enabled by setting the default [`myst.yml`'s `project.binder` property][frontmatter] to <https://mybinder.org>, e.g.
+
+```{code-block} yaml
+:emphasize-lines: 11
+:lineenos:
+
+# See docs at: https://mystmd.org/guide/frontmatter
+version: 1
+project:
+  id: df8b4a16-be6c-4b92-abcc-a95e23b9684a
+  # title:
+  # description:
+  # keywords: []
+  # authors: []
+  github: https://github.com/2i2c-org/community-docs-template
+  # To autogenerate a Table of Contents, run "jupyter-book init --write-toc"
+  binder: https://mybinder.org/
+  toc:
+    - file: content/index.md
+    - file: content/kb/index.md
+    - file: content/metrics.md
+```
+
+
+As described above, this will enable the launch-button UI.
 
 [mvp]: https://github.com/2i2c-org/infrastructure/issues/5045
 [frontmatter]: https://mystmd.org/guide/frontmatter#available-frontmatter-fields
