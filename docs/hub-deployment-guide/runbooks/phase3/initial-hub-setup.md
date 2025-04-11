@@ -155,9 +155,17 @@ All of the following steps must be followed in order to consider phase 3.1 compl
       `````{tab-set}
       ````{tab-item} AWS
       :sync: aws-key
-      Get the address of the EFS server via terraform and store it as it will be required in a later step.
+      Get the address of the storage via terraform and store it as it will be required in a later step.
 
       Make sure you are in the right terraform directory, i.e. `terraform/projects/aws` and the right terraform workspace by running `terraform workspace show`.
+
+      For persistent disks, run:
+
+      ```bash
+      terraform output ebs_volume_id_map
+      ```
+
+      For EFS instances, run:
 
       ```bash
       terraform output nfs_server_dns_map
@@ -166,7 +174,17 @@ All of the following steps must be followed in order to consider phase 3.1 compl
 
       ````{tab-item} Google Cloud
       :sync: gcp-key
-      Get the address of the Google FileStore IP from the UI and store it as it will be required in a later step.
+      Get the address of the storage via terraform and store it as it will be required in a later step.
+
+      Make sure you are in the right terraform directory, i.e. `terraform/projects/aws` and the right terraform workspace by running `terraform workspace show`.
+
+      For persistent disks, run:
+
+      ```bash
+      terraform output persistent_disk_id_map
+      ```
+      
+      For Google FileStore instances, get the IP address from the GCP UI.
       ````
 
       ````{tab-item} Azure
@@ -221,7 +239,8 @@ All of the following steps must be followed in order to consider phase 3.1 compl
 
    To ensure the new cluster and its hubs are appropriately handled by our CI/CD system, please add it as an entry in the following places in the [`deploy-hubs.yaml`](https://github.com/2i2c-org/infrastructure/blob/HEAD/.github/workflows/deploy-hubs.yaml) GitHub Actions workflow file:
 
-      - The [`deploy-hubs.yaml`](https://github.com/2i2c-org/infrastructure/blob/008ae2c1deb3f5b97d0c334ed124fa090df1f0c6/.github/workflows/deploy-hubs.yaml#L121) GitHub workflow has a job named [`upgrade-support-and-staging`](https://github.com/2i2c-org/infrastructure/blob/18f5a4f8f39ed98c2f5c99091ae9f19a1075c988/.github/workflows/deploy-hubs.yaml#L128-L166) that needs to list of clusters being automatically deployed by our CI/CD system. Add an entry for the new cluster here.
+      - The job named [`upgrade-support`](https://github.com/2i2c-org/infrastructure/blob/41e811931cf1f853c3331d479ca583a342c1c05f/.github/workflows/deploy-hubs.yaml#L198) needs a list of clusters being automatically deployed by our CI/CD system. Add an entry for the new cluster here.
+      - If the hub has `staging` in its name (assuming a cluster can have many staging hubs), the job called [`upgrade-staging`](https://github.com/2i2c-org/infrastructure/blob/41e811931cf1f853c3331d479ca583a342c1c05f/.github/workflows/deploy-hubs.yaml#L427) requires a list of staging hubs per cluster. Add an entry for the new staging hub here.
 
 1. **Create a Pull Request with the new hub entry**
 
