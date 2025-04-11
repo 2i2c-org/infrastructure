@@ -27,7 +27,6 @@ Finally, we need to change the `BASE_URL` used by Jupyter Book to reflect the fa
 ```{code-block} yaml
 :linenos:
 :emphasize-lines: 13
-:filename: .github/workflows/deploy.yml
 
 # This file was created automatically with `jupyter book init --gh-pages` 🪄 💚
 # Ensure your GitHub Pages settings for this repository are set to deploy with **GitHub Actions**.
