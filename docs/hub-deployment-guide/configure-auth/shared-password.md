@@ -98,10 +98,9 @@ We can disable this by setting the following in the `${HUB_NAME}.values.yaml` fi
 
 ```yaml
 jupyterhub:
-  hub:
-    custom:
-      singleuserAdmin:
-        extraVolumeMounts: []
+  custom:
+    singleuserAdmin:
+      extraVolumeMounts: []
   singleuser:
     initContainers:
       - name: volume-mount-ownership-fix
