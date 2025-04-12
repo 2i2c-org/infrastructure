@@ -77,12 +77,11 @@ jupyterhub:
                 slug: pyrbase
                 kubespawner_override:
                   image: ghcr.io/nmfs-opensci/container-images/py-rocket-base:latest
-              pyrgeo:
-                display_name: Py-R - Geospatial - py-rocket-geospatial latest
-                slug: pyrgeo
-                default: true
+              cefi:
+                display_name: Py-R - CEFI image latest
+                slug: cefi
                 kubespawner_override:
-                  image: ghcr.io/nmfs-opensci/container-images/py-rocket-geospatial:latest
+                  image: ghcr.io/nmfs-opensci/cefi-image:latest
               pyrgeo2:
                 display_name: Py-R - Geospatial + QGIS, Panoply, CWUtils - py-rocket-geospatial-2 latest
                 slug: pyrgeo2
@@ -113,11 +112,6 @@ jupyterhub:
                 slug: arcgis
                 kubespawner_override:
                   image: ghcr.io/nmfs-opensci/container-images/arcgis:latest
-              cboettig:
-                display_name: Py-R - NASA TOPS - boettiger-lab nasa-tops latest
-                slug: cboettig
-                kubespawner_override:
-                  image: ghcr.io/boettiger-lab/nasa-tops:latest
               vast:
                 display_name: R - VAST with TMB - vast latest
                 kubespawner_override:
