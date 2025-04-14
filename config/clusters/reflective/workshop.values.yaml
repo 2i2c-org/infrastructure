@@ -1,0 +1,91 @@
+nfs:
+  pv:
+    serverIP: 10.100.85.125
+userServiceAccount:
+  annotations:
+    eks.amazonaws.com/role-arn: arn:aws:iam::916143380841:role/reflective-workshop
+jupyterhub:
+  custom:
+    2i2c: {}
+    homepage:
+      gitRepoBranch: "username-and-password-homepage"
+    jupyterhubConfigurator:
+      enabled: false
+    singleuserAdmin:
+      extraVolumeMounts: []
+  ingress:
+    hosts: [workshop.reflective.2i2c.cloud]
+    tls:
+      - hosts: [workshop.reflective.2i2c.cloud]
+        secretName: https-auto-tls
+  hub:
+    config:
+      GitHubOAuthenticator: {}
+      JupyterHub:
+        authenticator_class: dummy
+      Authenticator:
+        admin_users: []
+        enable_auth_state: false
+  singleuser:
+    nodeSelector:
+      2i2c/hub-name: workshop
+    extraEnv:
+      SCRATCH_BUCKET: s3://reflective-scratch-workshop/$(JUPYTERHUB_USER)
+      PANGEO_SCRATCH: s3://reflective-scratch-workshop/$(JUPYTERHUB_USER)
+      PERSISTENT_BUCKET: s3://reflective-persistent-workshop/$(JUPYTERHUB_USER)
+    initContainers:
+      - name: volume-mount-ownership-fix
+        image: busybox:1.36.1
+        command:
+          - sh
+          - -c
+          - id && chown 1000:1000 /home/jovyan && ls -lhd /home/jovyan
+        securityContext:
+          runAsUser: 0
+        volumeMounts:
+          - name: home
+            mountPath: /home/jovyan
+            subPath: "{escaped_username}"
+    storage:
+      extraVolumeMounts: []
+dask-gateway:
+  gateway:
+    backend:
+      scheduler:
+        extraPodConfig:
+          nodeSelector:
+            2i2c/hub-name: workshop
+      worker:
+        extraPodConfig:
+          nodeSelector:
+            2i2c/hub-name: workshop
+jupyterhub-home-nfs:
+  eks:
+    volumeId: vol-00223ae14cbcad300
+  quotaEnforcer:
+    path: "/export/workshop"
+    # Default per-user quota is 10GB. Uncomment below line to change this.
+    # hardQuota: "10" # in GB
+    resources:
+      requests:
+        cpu: 0.02
+        memory: 20M
+      limits:
+        cpu: 0.04
+        memory: 30M
+  nfsServer:
+    resources:
+      requests:
+        cpu: 0.2
+        memory: 2G
+      limits:
+        cpu: 0.4
+        memory: 6G
+  prometheusExporter:
+    resources:
+      requests:
+        cpu: 0.02
+        memory: 15M
+      limits:
+        cpu: 0.04
+        memory: 20M
