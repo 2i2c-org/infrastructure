@@ -223,13 +223,13 @@ sops config/clusters/<cluster-name>/enc-<hubname>.secret.values.yaml
 
 If accessing binderhub will require users to login first, then the login page, i.e. the page where users land to login into the hub before actually seeing the binderhub UI must be updated to use a simpler version of it.
 
-This is done by having the hub track the `bootstrap5-no-homepage-subsection` branch of the default homepage repo
+This is done by having the hub track the `no-homepage-subsection` branch of the default homepage repo
 
 ```yaml
 jupyterhub:
   custom:
     homepage:
-      gitRepoBranch: "bootstrap5-no-homepage-subsection"
+      gitRepoBranch: "no-homepage-subsection"
 ```
 
 #### 2. Make sure we don't redirect to singleuser server after login
