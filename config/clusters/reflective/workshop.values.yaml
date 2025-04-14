@@ -8,7 +8,7 @@ jupyterhub:
   custom:
     2i2c: {}
     homepage:
-      gitRepoBranch: "bootstrap5-username-and-password-homepage"
+      gitRepoBranch: "username-and-password-homepage"
     jupyterhubConfigurator:
       enabled: false
     singleuserAdmin:
