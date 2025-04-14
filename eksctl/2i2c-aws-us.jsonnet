@@ -86,7 +86,10 @@ local notebookNodes = [
         instanceType: "g4dn.xlarge",
         namePrefix: "gpu-showcase",
         minSize: 0,
-        labels+: { "2i2c/hub-name": "showcase" },
+        labels+: {
+            "2i2c/hub-name": "showcase",
+            "2i2c/has-gpu": "true"
+        },
         tags+: {
             "k8s.io/cluster-autoscaler/node-template/resources/nvidia.com/gpu": "1",
             "2i2c:hub-name": "showcase",
