@@ -6,6 +6,7 @@ userServiceAccount:
     eks.amazonaws.com/role-arn: arn:aws:iam::916143380841:role/reflective-workshop
 jupyterhub:
   custom:
+    2i2c: {}
     homepage:
       gitRepoBranch: "bootstrap5-username-and-password-homepage"
     jupyterhubConfigurator:
@@ -19,6 +20,7 @@ jupyterhub:
         secretName: https-auto-tls
   hub:
     config:
+      GitHubOAuthenticator: {}
       JupyterHub:
         authenticator_class: dummy
       Authenticator:
