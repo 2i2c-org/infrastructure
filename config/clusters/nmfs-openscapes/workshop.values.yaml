@@ -68,15 +68,15 @@ jupyterhub:
             display_name: Image
             choices:
               python:
-                display_name: Py - NASA Openscapes Python 39dffde
+                display_name: Py - NASA Openscapes Python, Dask Gateway 07980b9
                 slug: python
                 kubespawner_override:
-                  image: openscapes/python:39dffde
+                  image: openscapes/python:07980b9
               pyrbase:
-                display_name: Py-R - base image 4.4-3.10
+                display_name: Py-R - py-rocket-base image 4.4-3.10
                 slug: pyrbase
                 kubespawner_override:
-                  image: ghcr.io/nmfs-opensci/container-images/py-rocket-base:latest
+                  image: ghcr.io/nmfs-opensci/py-rocket-base:latest
               cefi:
                 display_name: Py-R - CEFI image latest
                 slug: cefi
