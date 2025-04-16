@@ -29,6 +29,11 @@ jupyterhub:
       templateVars:
         enabled: false
   singleuser:
+    cpu:
+      limit: 4
+    memory:
+      limit: 8G
+      guarantee: 8G
     nodeSelector:
       capi.stackhpc.com/node-group: user-m3-quad
     storage:
