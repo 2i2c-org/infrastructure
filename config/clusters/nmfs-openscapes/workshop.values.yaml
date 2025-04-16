@@ -85,6 +85,7 @@ jupyterhub:
               pyrgeo2:
                 display_name: Py-R - Geospatial + QGIS, Panoply, CWUtils - py-rocket-geospatial-2 latest
                 slug: pyrgeo2
+                default: true
                 kubespawner_override:
                   image: ghcr.io/nmfs-opensci/container-images/py-rocket-geospatial-2:latest
               coastwatch:
