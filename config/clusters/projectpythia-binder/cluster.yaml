@@ -8,7 +8,7 @@ support:
     - enc-support.secret.values.yaml
 hubs:
   - name: binderhub
-    display_name: "Project Pythis BinderHub on Jetstream2"
+    display_name: "Project Pythia BinderHub on Jetstream2"
     domain: hub.binder-pythia.jetstream2.2i2c.cloud
     helm_chart: basehub
     helm_chart_values_files:
