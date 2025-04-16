@@ -33,7 +33,7 @@ jupyterhub:
       limit: 4
     memory:
       limit: 8G
-      request: 8G 
+      request: 8G
     nodeSelector:
       capi.stackhpc.com/node-group: user-m3-quad
     storage:
