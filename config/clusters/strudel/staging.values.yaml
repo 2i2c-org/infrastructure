@@ -4,14 +4,6 @@ jupyterhub:
     tls:
       - hosts: [staging.strudel.2i2c.cloud]
         secretName: https-auto-tls
-  hub:
-    config:
-      GitHubOAuthenticator:
-        oauth_callback_url: https://staging.strudel.2i2c.cloud/hub/oauth_callback
-        allowed_organizations:
-          - strudel-science
-        scope:
-          - read:org
   singleuser:
     nodeSelector:
       2i2c/hub-name: staging

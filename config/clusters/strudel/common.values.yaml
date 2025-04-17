@@ -10,6 +10,7 @@ jupyterhub:
     jupyterhubConfigurator:
       enabled: false
     homepage:
+      gitRepoBranch: "username-and-password-homepage"
       templateVars:
         org:
           name: strudel
@@ -31,7 +32,7 @@ jupyterhub:
     allowNamedServers: true
     config:
       JupyterHub:
-        authenticator_class: github
+        authenticator_class: dummy
   scheduling:
     userScheduler:
       enabled: true
