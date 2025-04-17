@@ -82,6 +82,11 @@ jupyterhub:
                 slug: cefi
                 kubespawner_override:
                   image: ghcr.io/nmfs-opensci/cefi-image:latest
+              asar:
+                display_name: R - ASAR Stock Assessment
+                slug: asar
+                kubespawner_override:
+                  image: ghcr.io/nmfs-opensci/container-images/asar:latest
               pyrgeo2:
                 display_name: Py-R - Geospatial + QGIS, Panoply, CWUtils - py-rocket-geospatial-2 latest
                 slug: pyrgeo2
