@@ -1,29 +1,14 @@
 nfs:
-  enabled: true
+  enabled: false
   pv:
-    enabled: true
-    # from https://docs.aws.amazon.com/efs/latest/ug/mounting-fs-nfs-mount-settings.html
-    mountOptions:
-      - rsize=1048576
-      - wsize=1048576
-      - timeo=600
-      - soft # We pick soft over hard, so NFS lockups don't lead to hung processes
-      - retrans=2
-      - noresvport
-    baseShareName: /
-
-jupyterhub-home-nfs:
-  enabled: true
-  eks:
-    enabled: true
-  prometheusExporter:
-    enabled: true
+    enabled: false
 
 jupyterhub:
   custom:
-    2i2c:
-      add_staff_user_ids_to_admin_users: true
-      add_staff_user_ids_of_type: github
+    singleuserAdmins:
+      extraVolumeMounts: []
+    jupyterhubConfigurator:
+      enabled: false
     homepage:
       templateVars:
         org:
@@ -39,6 +24,9 @@ jupyterhub:
         funded_by:
           name: Alfred P. Sloan Foundation
           url: https://sloan.org/grant-detail/10074
+  prePuller:
+    hook:
+      enabled: true
   hub:
     allowNamedServers: true
     config:
@@ -48,6 +36,10 @@ jupyterhub:
     userScheduler:
       enabled: true
   singleuser:
+    initContainers: []
+    storage:
+      type: none
+      extraVolumeMounts: []
     profileList:
       - display_name: Choose your environment and resources
         slug: only-choice
