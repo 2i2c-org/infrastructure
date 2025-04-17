@@ -33,6 +33,8 @@ jupyterhub:
     config:
       JupyterHub:
         authenticator_class: dummy
+      Authenticator:
+        admin_users: []
   scheduling:
     userScheduler:
       enabled: true
