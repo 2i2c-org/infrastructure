@@ -80,6 +80,11 @@ jupyterhub:
                 slug: cryo
                 kubespawner_override:
                   image: quay.io/cryointhecloud/cryo-hub-image:latest
+              asar:
+                display_name: R - ASAR Stock Assessment
+                slug: asar
+                kubespawner_override:
+                  image: ghcr.io/nmfs-opensci/container-images/asar:latest
               cefi:
                 display_name: Py-R - CEFI image latest
                 slug: cefi
