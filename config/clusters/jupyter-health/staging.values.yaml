@@ -36,7 +36,7 @@ jupyterhub:
       JHE_URL: https://berkeley-jhe-staging.jupyterhealth.org
     extraFiles:
       extra_server_config:
-        mountPath: /etc/jupyter/jupyter_server_config.json
+        mountPath: /opt/conda/etc/jupyter/jupyter_server_config.json
         data:
           SMARTExtensionApp:
             scopes:
@@ -44,7 +44,20 @@ jupyterhub:
               - profile
               - fhirUser
               - launch/patient
-            client_id: "019615e1-ec27-7668-b4ab-4ade4d8e49d0"
             redirect_uri: "https://staging.jupyter-health.2i2c.cloud/hub/user-redirect/smart-on-fhir/callback"
+      extra_server_config_py:
+        mountPath: /opt/conda/etc/jupyter/jupyter_server_config.py
+        stringData: |
+          from tornado import web
+
+          async def smart_launch_hook(launch, url, smart_config, handler):
+              client_id = handler.get_argument("client_id", None)
+              if client_id:
+                  handler.log.info("Setting client_id=%s", client_id)
+                  handler.settings["smart_client_id"] = client_id
+              else:
+                  raise web.HTTPError(400, "client_id missing")
+
+          c.SMARTExtensionApp.smart_launch_hook = smart_launch_hook
     nodeSelector:
       2i2c/hub-name: staging
