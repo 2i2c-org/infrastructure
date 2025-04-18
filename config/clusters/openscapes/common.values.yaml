@@ -209,3 +209,7 @@ basehub:
     buildPodsRegistryCredentials:
       server: https://quay.io
       username: imagebuilding-non-gcp-hubs+image_builder
+  jupyterhub-home-nfs:
+    enabled: true
+    eks:
+      enabled: true

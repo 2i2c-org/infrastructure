@@ -35,3 +35,6 @@ basehub:
           extraPodConfig:
             nodeSelector:
               2i2c/hub-name: staging
+  jupyterhub-home-nfs:
+    eks:
+      volumeId: vol-0728f7b1555016f13

@@ -32,3 +32,6 @@ basehub:
           extraPodConfig:
             nodeSelector:
               2i2c/hub-name: prod
+  jupyterhub-home-nfs:
+    eks:
+      volumeId: vol-0cddd71981a7ff6ba
