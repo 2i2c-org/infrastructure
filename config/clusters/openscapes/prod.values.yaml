@@ -34,6 +34,8 @@ basehub:
               2i2c/hub-name: prod
   jupyterhub-home-nfs:
     quotaEnforcer:
+      hardQuota: "100" # in GB
+      path: "/export/prod"
       resources:
         requests:
           cpu: 0.02

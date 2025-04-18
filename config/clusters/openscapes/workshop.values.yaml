@@ -163,6 +163,8 @@ basehub:
               2i2c/hub-name: workshop
   jupyterhub-home-nfs:
     quotaEnforcer:
+      hardQuota: "16" # in GB
+      path: "/export/workshop"
       resources:
         requests:
           cpu: 0.02
