@@ -67,6 +67,8 @@ jupyterhub:
       2i2c/hub-name: noaa-only
     extraEnv:
       SCRATCH_BUCKET: s3://nmfs-openscapes-scratch-noaa-only/$(JUPYTERHUB_USER)
+      GH_SCOPED_CREDS_CLIENT_ID: Iv23lie5oLneHExwicr2
+      GH_SCOPED_CREDS_APP_URL: https://github.com/apps/nmfs-openscapes-noaa-push-access
     profileList:
       - display_name: Default
         description: Choose image and resource allocation
