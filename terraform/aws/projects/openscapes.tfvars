@@ -13,6 +13,28 @@ disable_cluster_wide_filestore    = false
 # So we tag it appropriately for costs purposes
 original_single_efs_tags = { "2i2c:hub-name" : "prod" }
 
+ebs_volumes = {
+  "staging" = {
+    size        = 1
+    type        = "gp3"
+    name_suffix = "staging"
+    tags        = { "2i2c:hub-name" : "staging" }
+  },
+  "workshop" = {
+    size        = 128
+    type        = "gp3"
+    name_suffix = "workshop"
+    tags        = { "2i2c:hub-name" : "workshop" }
+  },
+  "prod" = {
+    size        = 1536 # 1.5T
+    type        = "gp3"
+    name_suffix = "prod"
+    tags        = { "2i2c:hub-name" : "prod" }
+  },
+}
+enable_nfs_backup = true
+
 filestores = {
   "staging" = {
     name_suffix = "staging"
