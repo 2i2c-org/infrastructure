@@ -59,6 +59,8 @@ jupyterhub:
     extraEnv:
       SCRATCH_BUCKET: s3://nmfs-openscapes-scratch-workshop/$(JUPYTERHUB_USER)
       PERSISTENT_BUCKET: s3://nmfs-openscapes-persistent-workshop/$(JUPYTERHUB_USER)
+      GH_SCOPED_CREDS_CLIENT_ID: Iv23liopQ2cWF2zW212t
+      GH_SCOPED_CREDS_APP_URL: https://github.com/apps/nmfs-openscapes-workshop-github
     profileList:
       - display_name: Default
         description: Choose image and resource allocation
