@@ -61,3 +61,6 @@ basehub:
           memory: 20M
     eks:
       volumeId: vol-0cddd71981a7ff6ba
+  nfs:
+    pv:
+      serverIP: 10.100.91.5
