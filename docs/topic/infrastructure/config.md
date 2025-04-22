@@ -68,7 +68,7 @@ A hub's helm chart values file can be encrypted as well, following the naming co
 ```
 
 Where we run dedicated clusters that only host a `staging` and `prod` hub, we aggregate all helm chart values shared by each hub into a `common.values.yaml` file, and then describe the helm chart values specific to either `staging` or `prod` with a `staging.values.yaml` or `prod.values.yaml` file respectively.
-See the [Pangeo config](https://github.com/2i2c-org/infrastructure/blob/HEAD/config/clusters/kitware/cluster.yaml) for an example.
+See the [AWI-CIROH config](https://github.com/2i2c-org/infrastructure/tree/HEAD/config/clusters/awi-ciroh) for an example.
 
 ### Conventions for our configuration structure
 
