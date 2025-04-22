@@ -11,6 +11,7 @@ aws:
 support:
   helm_chart_values_files:
     - support.values.yaml
+    - support.values.jsonnet
     - enc-support.secret.values.yaml
 hubs:
   - name: staging

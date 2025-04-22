@@ -3,6 +3,7 @@ Functions related to validating configuration files such as helm chart values an
 cluster.yaml files
 """
 
+from contextlib import ExitStack
 import functools
 import json
 import os
@@ -20,6 +21,7 @@ from deployer.utils.file_acquisition import (
     HELM_CHARTS_DIR,
     find_absolute_path_to_cluster_file,
 )
+from deployer.utils.jsonnet import render_jsonnet
 from deployer.utils.rendering import print_colour
 
 yaml = YAML(typ="safe", pure=True)
@@ -131,25 +133,31 @@ def hub_config(
         if debug:
             cmd.append("--debug")
 
-        for values_file in hub.spec["helm_chart_values_files"]:
-            if "secret" not in os.path.basename(values_file):
-                values_file = config_file_path.parent.joinpath(values_file)
-                cmd.append(f"--values={values_file}")
-                config = yaml.load(values_file)
-                # Check if there's config that enables dask-gateway
-                dask_gateway_enabled = config.get("dask-gateway", {}).get(
-                    "enabled", False
-                )
-        # Workaround the current requirement for dask-gateway 0.9.0 to have a
-        # JupyterHub api-token specified, for updates if this workaround can be
-        # removed, see https://github.com/dask/dask-gateway/issues/473.
-        if dask_gateway_enabled:
-            cmd.append("--set=dask-gateway.gateway.auth.jupyterhub.apiToken=dummy")
-        try:
-            subprocess.check_output(cmd, text=True)
-        except subprocess.CalledProcessError as e:
-            print(e.stdout)
-            sys.exit(1)
+        with ExitStack() as jsonnet_stack:
+            for values_file in hub.spec["helm_chart_values_files"]:
+                # FIXME: The logic here for figuring out non secret files is not correct
+                if values_file.endswith(".jsonnet"):
+                    rendered_file = jsonnet_stack.enter_context(render_jsonnet(config_file_path.parent / values_file))
+                    cmd.append(f"--values={rendered_file}")
+                elif "secret" not in os.path.basename(values_file):
+                    values_file = config_file_path.parent.joinpath(values_file)
+                    cmd.append(f"--values={values_file}")
+                    config = yaml.load(values_file)
+                    # Check if there's config that enables dask-gateway
+                    dask_gateway_enabled = config.get("dask-gateway", {}).get(
+                        "enabled", False
+                    )
+
+            # Workaround the current requirement for dask-gateway 0.9.0 to have a
+            # JupyterHub api-token specified, for updates if this workaround can be
+            # removed, see https://github.com/dask/dask-gateway/issues/473.
+            if dask_gateway_enabled:
+                cmd.append("--set=dask-gateway.gateway.auth.jupyterhub.apiToken=dummy")
+            try:
+                subprocess.check_output(cmd, text=True)
+            except subprocess.CalledProcessError as e:
+                print(e.stdout)
+                sys.exit(1)
 
 
 @validate_app.command()
@@ -180,15 +188,20 @@ def support_config(
         if debug:
             cmd.append("--debug")
 
-        for values_file in cluster.support["helm_chart_values_files"]:
-            if "secret" not in os.path.basename(values_file):
-                cmd.append(f"--values={config_file_path.parent.joinpath(values_file)}")
+        with ExitStack() as jsonnet_stack:
+            for values_file in cluster.support["helm_chart_values_files"]:
+                if values_file.endswith(".jsonnet"):
+                    rendered_file = jsonnet_stack.enter_context(render_jsonnet(config_file_path.parent / values_file))
+                    cmd.append(f"--values={rendered_file}")
+                # FIXME: The logic here for figuring out non secret files is not correct
+                elif "secret" not in os.path.basename(values_file):
+                    cmd.append(f"--values={config_file_path.parent.joinpath(values_file)}")
 
-            try:
-                subprocess.check_output(cmd, text=True)
-            except subprocess.CalledProcessError as e:
-                print(e.stdout)
-                sys.exit(1)
+                try:
+                    subprocess.check_output(cmd, text=True)
+                except subprocess.CalledProcessError as e:
+                    print(e.stdout)
+                    sys.exit(1)
     else:
         print_colour(f"No support defined for {cluster_name}. Nothing to validate!")
 
