@@ -193,9 +193,6 @@ local daskNodes = [
             nameSuffix: 'a',
             nameIncludeInstanceType: false,
             availabilityZones: [nodeAz],
-            ssh: {
-                publicKeyPath: 'ssh-keys/disasters.key.pub'
-            },
             instanceType: "r5.xlarge",
             minSize: 1,
             maxSize: 6,
@@ -214,9 +211,6 @@ local daskNodes = [
             minSize: 0,
             maxSize: 500,
             instanceType: n.instanceType,
-            ssh: {
-                publicKeyPath: 'ssh-keys/disasters.key.pub'
-            },
             labels+: {
                 "hub.jupyter.org/node-purpose": "user",
                 "k8s.dask.org/node-purpose": "scheduler"
@@ -236,9 +230,6 @@ local daskNodes = [
             availabilityZones: [nodeAz],
             minSize: 0,
             maxSize: 500,
-            ssh: {
-                publicKeyPath: 'ssh-keys/disasters.key.pub'
-            },
             labels+: {
                 "k8s.dask.org/node-purpose": "worker"
             },
