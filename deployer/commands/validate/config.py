@@ -137,7 +137,7 @@ def hub_config(
             for values_file in hub.spec["helm_chart_values_files"]:
                 # FIXME: The logic here for figuring out non secret files is not correct
                 if values_file.endswith(".jsonnet"):
-                    rendered_file = jsonnet_stack.enter_context(render_jsonnet(config_file_path.parent / values_file))
+                    rendered_file = jsonnet_stack.enter_context(render_jsonnet(config_file_path.parent / values_file, [config_file_path]))
                     cmd.append(f"--values={rendered_file}")
                 elif "secret" not in os.path.basename(values_file):
                     values_file = config_file_path.parent.joinpath(values_file)
@@ -191,7 +191,7 @@ def support_config(
         with ExitStack() as jsonnet_stack:
             for values_file in cluster.support["helm_chart_values_files"]:
                 if values_file.endswith(".jsonnet"):
-                    rendered_file = jsonnet_stack.enter_context(render_jsonnet(config_file_path.parent / values_file))
+                    rendered_file = jsonnet_stack.enter_context(render_jsonnet(config_file_path.parent / values_file, [cluster.config_path]))
                     cmd.append(f"--values={rendered_file}")
                 # FIXME: The logic here for figuring out non secret files is not correct
                 elif "secret" not in os.path.basename(values_file):

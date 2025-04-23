@@ -2,20 +2,6 @@ prometheusIngressAuthSecret:
   enabled: true
 
 prometheus:
-  alertmanager:
-    enabled: true
-    config:
-      route:
-        group_wait: 10s
-        group_interval: 5m
-        receiver: pagerduty
-        repeat_interval: 3h
-        routes:
-          - receiver: pagerduty
-            match:
-              channel: pagerduty
-              cluster: 2i2c-jetstream2
-              namespace: staging
   server:
     ingress:
       enabled: true
@@ -25,20 +11,6 @@ prometheus:
         - secretName: prometheus-tls
           hosts:
             - prometheus.staging.js.2i2c.cloud
-  serverFiles:
-    alerting_rules.yml:
-      groups:
-        - name: 2i2c Jetstream2 staging jupyterhub-home-nfs volume full
-          rules:
-            - alert: staging-jupyterhub-home-nfs-vol-full
-              expr: node_filesystem_avail_bytes{mountpoint="/shared-volume", component="shared-volume-metrics", namespace="staging"} / node_filesystem_size_bytes{mountpoint="/shared-volume", component="shared-volume-metrics", namespace="staging"} < 0.1
-              for: 15m
-              labels:
-                severity: critical
-                channel: pagerduty
-                cluster: 2i2c-jetstream2
-              annotations:
-                summary: "jupyterhub-home-nfs volume full in namespace {{ $labels.namespace }} of {{ $labels.cluster }}"
 
 grafana:
   grafana.ini:

@@ -8,30 +8,6 @@ cluster-autoscaler:
   awsRegion: us-west-2
 
 prometheus:
-  alertmanager:
-    enabled: true
-    config:
-      route:
-        group_wait: 10s
-        group_interval: 5m
-        receiver: pagerduty
-        repeat_interval: 3h
-        routes:
-          - receiver: pagerduty
-            match:
-              channel: pagerduty
-              cluster: opensci
-              namespace: staging
-          - receiver: pagerduty
-            match:
-              channel: pagerduty
-              cluster: opensci
-              namespace: sciencecore
-          - receiver: pagerduty
-            match:
-              channel: pagerduty
-              cluster: opensci
-              namespace: climaterisk
   server:
     ingress:
       enabled: true
@@ -41,42 +17,6 @@ prometheus:
         - secretName: prometheus-tls
           hosts:
             - prometheus.opensci.2i2c.cloud
-  serverFiles:
-    alerting_rules.yml:
-      groups:
-        - name: opensci staging jupyterhub-home-nfs disk full
-          rules:
-            - alert: staging-jupyterhub-home-nfs-disk-full
-              expr: node_filesystem_avail_bytes{mountpoint="/shared-volume", component="shared-volume-metrics", namespace="staging"} / node_filesystem_size_bytes{mountpoint="/shared-volume", component="shared-volume-metrics", namespace="staging"} < 0.1
-              for: 15m
-              labels:
-                severity: critical
-                channel: pagerduty
-                cluster: opensci
-              annotations:
-                summary: "jupyterhub-home-nfs disk full in namespace {{ $labels.namespace }}"
-        - name: opensci sciencecore jupyterhub-home-nfs disk full
-          rules:
-            - alert: sciencecore-jupyterhub-home-nfs-disk-full
-              expr: node_filesystem_avail_bytes{mountpoint="/shared-volume", component="shared-volume-metrics", namespace="sciencecore"} / node_filesystem_size_bytes{mountpoint="/shared-volume", component="shared-volume-metrics", namespace="sciencecore"} < 0.1
-              for: 15m
-              labels:
-                severity: critical
-                channel: pagerduty
-                cluster: opensci
-              annotations:
-                summary: "jupyterhub-home-nfs disk full in namespace {{ $labels.namespace }}"
-        - name: opensci climaterisk jupyterhub-home-nfs disk full
-          rules:
-            - alert: climaterisk-jupyterhub-home-nfs-disk-full
-              expr: node_filesystem_avail_bytes{mountpoint="/shared-volume", component="shared-volume-metrics", namespace="climaterisk"} / node_filesystem_size_bytes{mountpoint="/shared-volume", component="shared-volume-metrics", namespace="climaterisk"} < 0.1
-              for: 15m
-              labels:
-                severity: critical
-                channel: pagerduty
-                cluster: opensci
-              annotations:
-                summary: "jupyterhub-home-nfs disk full in namespace {{ $labels.namespace }}"
 grafana:
   grafana.ini:
     server:

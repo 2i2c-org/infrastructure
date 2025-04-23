@@ -102,6 +102,7 @@ class Cluster:
         values_file_paths = [
             support_dir.joinpath("enc-support.secret.values.yaml"),
             support_dir.joinpath("enc-cryptnono.secret.values.yaml"),
+            support_dir.joinpath("support.values.jsonnet"),
         ] + [
             self.config_path.joinpath(p)
             for p in self.support["helm_chart_values_files"]
@@ -122,7 +123,7 @@ class Cluster:
                 _, ext = os.path.splitext(values_file)
                 if ext == ".jsonnet":
                     rendered_path = jsonnet_stack.enter_context(render_jsonnet(
-                        Path(values_file)
+                        Path(values_file), [self.config_path]
                     ))
                     cmd.append(f"--values={rendered_path}")
                 else:

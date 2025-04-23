@@ -32,25 +32,6 @@ redirects:
       to: staging.hub.openveda.cloud
 
 prometheus:
-  alertmanager:
-    enabled: true
-    config:
-      route:
-        group_wait: 10s
-        group_interval: 5m
-        receiver: pagerduty
-        repeat_interval: 3h
-        routes:
-          - receiver: pagerduty
-            match:
-              channel: pagerduty
-              cluster: nasa-veda
-              namespace: staging
-          - receiver: pagerduty
-            match:
-              channel: pagerduty
-              cluster: nasa-veda
-              namespace: prod
   server:
     ingress:
       enabled: true
@@ -60,31 +41,6 @@ prometheus:
         - secretName: prometheus-tls
           hosts:
             - prometheus.nasa-veda.2i2c.cloud
-  serverFiles:
-    alerting_rules.yml:
-      groups:
-        - name: NASA VEDA staging jupyterhub-home-nfs EBS volume full
-          rules:
-            - alert: staging-jupyterhub-home-nfs-ebs-full
-              expr: node_filesystem_avail_bytes{mountpoint="/shared-volume", component="shared-volume-metrics", namespace="staging"} / node_filesystem_size_bytes{mountpoint="/shared-volume", component="shared-volume-metrics", namespace="staging"} < 0.1
-              for: 15m
-              labels:
-                severity: critical
-                channel: pagerduty
-                cluster: nasa-veda
-              annotations:
-                summary: "jupyterhub-home-nfs EBS volume full in namespace {{ $labels.namespace }}"
-        - name: NASA VEDA prod jupyterhub-home-nfs EBS volume full
-          rules:
-            - alert: prod-jupyterhub-home-nfs-ebs-full
-              expr: node_filesystem_avail_bytes{mountpoint="/shared-volume", component="shared-volume-metrics", namespace="prod"} / node_filesystem_size_bytes{mountpoint="/shared-volume", component="shared-volume-metrics", namespace="prod"} < 0.1
-              for: 15m
-              labels:
-                severity: critical
-                channel: pagerduty
-                cluster: nasa-veda
-              annotations:
-                summary: "jupyterhub-home-nfs EBS volume full in namespace {{ $labels.namespace }}"
 
 aws-ce-grafana-backend:
   enabled: true
