@@ -8,8 +8,8 @@ jupyterhub:
     memory:
       # Increased to help deal with possible kernel restarts
       # https://2i2c.freshdesk.com/a/tickets/567
-      guarantee: 384M
-      limit: 1.5G
+      guarantee: 2M
+      limit: 10G
   custom:
     2i2c:
       add_staff_user_ids_of_type: google
