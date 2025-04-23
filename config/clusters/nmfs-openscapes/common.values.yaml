@@ -112,10 +112,10 @@ jupyterhub:
                 kubespawner_override:
                   image: ghcr.io/nmfs-opensci/container-images/r-geospatial-sdm:latest
               echopype:
-                display_name: Py - Echopype with pangeo - image-acoustics latest
+                display_name: Py - Echopype with pangeo - echopype latest
                 slug: echopype
                 kubespawner_override:
-                  image: ghcr.io/nmfs-opensci/image-acoustics:latest
+                  image: ghcr.io/nmfs-opensci/container-images/echopype:latest
               arcgis:
                 display_name: Py - ArcGIS Python 3.9
                 slug: arcgis
