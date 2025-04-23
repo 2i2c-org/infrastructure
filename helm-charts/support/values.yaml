@@ -25,6 +25,14 @@ cluster-autoscaler:
 #
 ingress-nginx:
   controller:
+    # Enable collecting prometheus metrics
+    metrics:
+      enabled: true
+
+    podAnnotations:
+      prometheus.io/scrape: "true"
+      prometheus.io/port: "10254"
+
     podLabels:
       # nginx-ingress controllers need to be allowed proxy traffic onwards to
       # JupyterHub's proxy pod (and only the proxy pod) in clusters with
