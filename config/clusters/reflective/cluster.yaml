@@ -13,7 +13,7 @@ support:
     - enc-support.secret.values.yaml
 hubs:
   - name: staging
-    display_name: "Reflective - staging"
+    display_name: "Reflective Cloud - staging"
     domain: staging.reflective.2i2c.cloud
     helm_chart: basehub
     helm_chart_values_files:
@@ -21,7 +21,7 @@ hubs:
       - staging.values.yaml
       - enc-staging.secret.values.yaml
   - name: prod
-    display_name: "Reflective - prod"
+    display_name: "Reflective Cloud - prod"
     domain: reflective.2i2c.cloud
     helm_chart: basehub
     helm_chart_values_files:
@@ -29,7 +29,7 @@ hubs:
       - prod.values.yaml
       - enc-prod.secret.values.yaml
   - name: workshop
-    display_name: "Reflective - workshop"
+    display_name: "Reflective Cloud - workshop"
     domain: workshop.reflective.2i2c.cloud
     helm_chart: basehub
     helm_chart_values_files:

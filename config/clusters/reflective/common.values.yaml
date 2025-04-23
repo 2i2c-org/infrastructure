@@ -23,8 +23,8 @@ jupyterhub:
     homepage:
       templateVars:
         org:
-          name: Reflective
-          logo_url: https://reflective.org/
+          name: Reflective Cloud
+          logo_url: "https://private-user-images.githubusercontent.com/47328986/436169139-41658b93-1ba3-4afe-851c-a833a4d622a9.png?jwt=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJnaXRodWIuY29tIiwiYXVkIjoicmF3LmdpdGh1YnVzZXJjb250ZW50LmNvbSIsImtleSI6ImtleTUiLCJleHAiOjE3NDU0MDYxNDUsIm5iZiI6MTc0NTQwNTg0NSwicGF0aCI6Ii80NzMyODk4Ni80MzYxNjkxMzktNDE2NThiOTMtMWJhMy00YWZlLTg1MWMtYTgzM2E0ZDYyMmE5LnBuZz9YLUFtei1BbGdvcml0aG09QVdTNC1ITUFDLVNIQTI1NiZYLUFtei1DcmVkZW50aWFsPUFLSUFWQ09EWUxTQTUzUFFLNFpBJTJGMjAyNTA0MjMlMkZ1cy1lYXN0LTElMkZzMyUyRmF3czRfcmVxdWVzdCZYLUFtei1EYXRlPTIwMjUwNDIzVDEwNTcyNVomWC1BbXotRXhwaXJlcz0zMDAmWC1BbXotU2lnbmF0dXJlPTk2ZWM2NDc0ZDI0MjJiODY2YWU4NmRjNTNmYjQ4ODdjMDgyNzBjODM1MzQ4YTgxYWZiMjc2NzRiZWUxMTgzYWQmWC1BbXotU2lnbmVkSGVhZGVycz1ob3N0In0.fRDz0eaYBYzfU1YuehLpmSGFfJLDpU5tOWbUYGcRB1k"
           url: https://reflective.org/
         designed_by:
           name: 2i2c
