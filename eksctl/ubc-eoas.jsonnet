@@ -83,7 +83,7 @@ local daskNodes = [];
     metadata+: {
         name: "ubc-eoas",
         region: clusterRegion,
-        version: "1.30",
+        version: "1.32",
         tags+: {
             "ManagedBy": "2i2c",
             "2i2c.org/cluster-name": $.metadata.name,
@@ -146,12 +146,9 @@ local daskNodes = [];
     [
         ng + {
             namePrefix: 'core',
-            nameSuffix: 'a',
+            nameSuffix: 'b',
             nameIncludeInstanceType: false,
             availabilityZones: [nodeAz],
-            ssh: {
-                publicKeyPath: 'ssh-keys/ubc-eoas.key.pub'
-            },
             instanceType: "m5.xlarge",
             minSize: 1,
             maxSize: 6,
@@ -170,9 +167,6 @@ local daskNodes = [];
             minSize: 0,
             maxSize: 500,
             instanceType: n.instanceType,
-            ssh: {
-                publicKeyPath: 'ssh-keys/ubc-eoas.key.pub'
-            },
             labels+: {
                 "hub.jupyter.org/node-purpose": "user",
                 "k8s.dask.org/node-purpose": "scheduler"
@@ -192,9 +186,6 @@ local daskNodes = [];
             availabilityZones: [nodeAz],
             minSize: 0,
             maxSize: 500,
-            ssh: {
-                publicKeyPath: 'ssh-keys/ubc-eoas.key.pub'
-            },
             labels+: {
                 "k8s.dask.org/node-purpose": "worker"
             },
