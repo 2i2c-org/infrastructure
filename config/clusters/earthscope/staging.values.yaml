@@ -25,6 +25,15 @@ basehub:
           extra_authorize_params:
             # This isn't an actual URL, just a string. Must not have a trailing slash
             audience: https://api.dev.earthscope.org
+      services:
+        jupyterhub-groups-exporter: {}
+      loadRoles:
+        jupyterhub-groups-exporter:
+          services:
+            - jupyterhub-groups-exporter
+          scopes:
+            - users
+            - groups
     singleuser:
       nodeSelector:
         2i2c/hub-name: staging
@@ -47,3 +56,8 @@ basehub:
   nfs:
     pv:
       serverIP: 10.100.217.166
+  jupyterhub-groups-exporter:
+    enabled: true
+    config:
+      groupsExporter:
+        update_exporter_interval: 60
