@@ -60,4 +60,4 @@ basehub:
     enabled: true
     config:
       groupsExporter:
-        update_exporter_interval: 60
+        update_exporter_interval: 3600
