@@ -227,13 +227,6 @@ local notebookNodes = [
     },
     // bhki hub
     {
-        instanceType: "r5.xlarge", // FIXME: tainted, to be deleted when empty, replaced by equivalent during k8s upgrade
-        volumeSize: 400,
-        namePrefix: "nb-bhki",
-        labels+: { "2i2c/hub-name": "bhki" },
-        tags+: { "2i2c:hub-name": "bhki" },
-    },
-    {
         instanceType: "r5.xlarge",
         volumeSize: 400,
         namePrefix: "nb-bhki",
