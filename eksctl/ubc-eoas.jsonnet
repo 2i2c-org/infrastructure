@@ -83,7 +83,7 @@ local daskNodes = [];
     metadata+: {
         name: "ubc-eoas",
         region: clusterRegion,
-        version: "1.30",
+        version: "1.32",
         tags+: {
             "ManagedBy": "2i2c",
             "2i2c.org/cluster-name": $.metadata.name,
