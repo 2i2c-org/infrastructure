@@ -59,3 +59,5 @@ hub_cloud_permissions = {
     EOT
   },
 }
+
+enable_efs_backup = false

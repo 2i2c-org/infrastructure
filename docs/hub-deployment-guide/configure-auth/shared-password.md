@@ -14,7 +14,7 @@ export HUB_NAME=hub_name
 
 The Dummy Authenticator requires presenting the user with a username and password input field, rather than the typical "log in" button.
 This means we cannot use the default homepage template since this will not provide these input fields.
-Instead we use a specialised branch of the homepage repo which allows us to have the username and password input fields, along with providing specific info about and for each community: [`bootstrap5-username-and-password-homepage`](https://github.com/2i2c-org/default-hub-homepage/tree/bootstrap5-username-and-password-homepage).
+Instead we use a specialised branch of the homepage repo which allows us to have the username and password input fields, along with providing specific info about and for each community: [`username-and-password-homepage`](https://github.com/2i2c-org/default-hub-homepage/tree/username-and-password-homepage).
 
 In the `${HUB_NAME}.values.yaml` file, include the following config.
 
@@ -22,7 +22,7 @@ In the `${HUB_NAME}.values.yaml` file, include the following config.
 jupyterhub:
   custom:
     homepage:
-      gitRepoBranch: "bootstrap5-username-and-password-homepage"
+      gitRepoBranch: "username-and-password-homepage"
       templateVars: [...]  # These values are as normal
 ```
 
@@ -98,10 +98,9 @@ We can disable this by setting the following in the `${HUB_NAME}.values.yaml` fi
 
 ```yaml
 jupyterhub:
-  hub:
-    custom:
-      singleuserAdmin:
-        extraVolumeMounts: []
+  custom:
+    singleuserAdmin:
+      extraVolumeMounts: []
   singleuser:
     initContainers:
       - name: volume-mount-ownership-fix

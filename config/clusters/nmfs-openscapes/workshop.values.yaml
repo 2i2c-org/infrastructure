@@ -59,6 +59,8 @@ jupyterhub:
     extraEnv:
       SCRATCH_BUCKET: s3://nmfs-openscapes-scratch-workshop/$(JUPYTERHUB_USER)
       PERSISTENT_BUCKET: s3://nmfs-openscapes-persistent-workshop/$(JUPYTERHUB_USER)
+      GH_SCOPED_CREDS_CLIENT_ID: Iv23liopQ2cWF2zW212t
+      GH_SCOPED_CREDS_APP_URL: https://github.com/apps/nmfs-openscapes-workshop-github
     profileList:
       - display_name: Default
         description: Choose image and resource allocation
@@ -68,24 +70,29 @@ jupyterhub:
             display_name: Image
             choices:
               python:
-                display_name: Py - NASA Openscapes Python 39dffde
+                display_name: Py - NASA Openscapes Python, Dask Gateway 07980b9
                 slug: python
                 kubespawner_override:
-                  image: openscapes/python:39dffde
+                  image: openscapes/python:07980b9
               pyrbase:
-                display_name: Py-R - base image 4.4-3.10
+                display_name: Py-R - py-rocket-base image 4.4-3.10
                 slug: pyrbase
                 kubespawner_override:
-                  image: ghcr.io/nmfs-opensci/container-images/py-rocket-base:latest
-              pyrgeo:
-                display_name: Py-R - Geospatial - py-rocket-geospatial latest
-                slug: pyrgeo
-                default: true
+                  image: ghcr.io/nmfs-opensci/py-rocket-base:latest
+              cefi:
+                display_name: Py-R - CEFI image latest
+                slug: cefi
                 kubespawner_override:
-                  image: ghcr.io/nmfs-opensci/container-images/py-rocket-geospatial:latest
+                  image: ghcr.io/nmfs-opensci/cefi-image:latest
+              asar:
+                display_name: R - ASAR Stock Assessment
+                slug: asar
+                kubespawner_override:
+                  image: ghcr.io/nmfs-opensci/container-images/asar:latest
               pyrgeo2:
                 display_name: Py-R - Geospatial + QGIS, Panoply, CWUtils - py-rocket-geospatial-2 latest
                 slug: pyrgeo2
+                default: true
                 kubespawner_override:
                   image: ghcr.io/nmfs-opensci/container-images/py-rocket-geospatial-2:latest
               coastwatch:
@@ -113,11 +120,6 @@ jupyterhub:
                 slug: arcgis
                 kubespawner_override:
                   image: ghcr.io/nmfs-opensci/container-images/arcgis:latest
-              cboettig:
-                display_name: Py-R - NASA TOPS - boettiger-lab nasa-tops latest
-                slug: cboettig
-                kubespawner_override:
-                  image: ghcr.io/boettiger-lab/nasa-tops:latest
               vast:
                 display_name: R - VAST with TMB - vast latest
                 kubespawner_override:
@@ -211,6 +213,28 @@ jupyterhub-home-nfs:
   quotaEnforcer:
     hardQuota: "4" # in GB
     path: "/export/workshop"
-
+    resources:
+      requests:
+        cpu: 0.02
+        memory: 20M
+      limits:
+        cpu: 0.04
+        memory: 30M
+  nfsServer:
+    resources:
+      requests:
+        cpu: 0.2
+        memory: 2G
+      limits:
+        cpu: 0.4
+        memory: 6G
+  prometheusExporter:
+    resources:
+      requests:
+        cpu: 0.02
+        memory: 15M
+      limits:
+        cpu: 0.04
+        memory: 20M
 binderhub-service:
   enabled: false

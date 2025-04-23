@@ -50,6 +50,29 @@ jupyterhub-home-nfs:
     # The default quota is 10GB per user. Uncomment below variable to edit this.
     # hardQuota: "10" # in GB
     path: "/export/demo"
+    resources:
+      requests:
+        cpu: 0.02
+        memory: 20M
+      limits:
+        cpu: 0.04
+        memory: 30M
+  nfsServer:
+    resources:
+      requests:
+        cpu: 0.2
+        memory: 2G
+      limits:
+        cpu: 0.4
+        memory: 6G
+  prometheusExporter:
+    resources:
+      requests:
+        cpu: 0.02
+        memory: 15M
+      limits:
+        cpu: 0.04
+        memory: 20M
 nfs:
   pv:
     serverIP: 10.3.243.135

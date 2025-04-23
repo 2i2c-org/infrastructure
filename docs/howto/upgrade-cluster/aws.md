@@ -183,6 +183,31 @@ kubectl get node --label-columns=alpha.eksctl.io/nodegroup-name
 
 3. *Delete the old node group*
 
+   ````{important}
+   Before draining and deleting the old node group, you need to update the `tigera-operator`
+   deployment and force it to not use the old node group anymore.
+   Otherwise, the the drain process will get stuck.
+
+   This is because `tigera-operator` tolerates all taints by default including
+   `NoSchedule`, and it will recreate itself indefinitely on the tainted node
+   that's being drained even though it's tainted with `NoSchedule`.
+
+   To fix this, you need to edit the `tigera-operator` deployment with:
+
+   ```bash
+   kubectl edit deployment tigera-operator -n tigera-operator
+   ```
+
+   and search after `Exists` and remove the following toleration from that entry:
+
+   ```yaml
+   tolerations:
+     - effect: NoSchedule
+       operator: Exists
+   ```
+   You can now proceed with the drain and delete process.
+   ````
+
    If you added a duplicate renamed node group, then first remove the old node
    group in the `.jsonnet` file.
 

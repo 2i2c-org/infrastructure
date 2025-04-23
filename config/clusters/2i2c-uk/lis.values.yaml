@@ -9,14 +9,36 @@ nfs:
     baseShareName: /
 jupyterhub-home-nfs:
   enabled: true
-  prometheusExporter:
-    enabled: true
   gke:
     enabled: true
     volumeId: projects/two-eye-two-see-uk/zones/europe-west2-b/disks/hub-nfs-homedirs-lis
   quotaEnforcer:
     hardQuota: "35" # in GB
     path: "/export/lis"
+    resources:
+      requests:
+        cpu: 0.02
+        memory: 20M
+      limits:
+        cpu: 0.04
+        memory: 30M
+  nfsServer:
+    resources:
+      requests:
+        cpu: 0.2
+        memory: 2G
+      limits:
+        cpu: 0.4
+        memory: 6G
+  prometheusExporter:
+    enabled: true
+    resources:
+      requests:
+        cpu: 0.02
+        memory: 15M
+      limits:
+        cpu: 0.04
+        memory: 20M
 jupyterhub:
   ingress:
     hosts: [ds.lis.2i2c.cloud]

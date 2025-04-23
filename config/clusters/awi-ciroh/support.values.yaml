@@ -70,14 +70,3 @@ prometheus:
                 cluster: awi-ciroh
               annotations:
                 summary: "jupyterhub-home-nfs disk full in namespace {{ $labels.namespace }}"
-
-gcpFilestoreBackups:
-  enabled: true
-  filestoreName: awi-ciroh-homedirs-b
-  project: ciroh-jupyterhub-423218
-  zone: us-central1-b
-  retentionDays: 2
-  serviceAccount:
-    name: gcp-filestore-backups-sa
-    annotations:
-      iam.gke.io/gcp-service-account: awi-ciroh-filestore-backup@ciroh-jupyterhub-423218.iam.gserviceaccount.com

@@ -1,0 +1,55 @@
+# Dask-gateway network communications described in https://gateway.dask.org/install-kube.html#architecture
+{{- $daskGateway := index .Values "dask-gateway" }}
+{{- if $daskGateway.enabled }}
+{{- if .Values.jupyterhub.custom.daskhubSetup.enabled }}
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: dask-scheduler-network-policy
+spec:
+  podSelector:
+    matchLabels:
+      app.kubernetes.io/name: dask-gateway
+      app.kubernetes.io/component: dask-scheduler
+  policyTypes:
+    - Egress
+  egress:
+    # Allow access to everything except private IPs
+    - to:
+        - ipBlock:
+            cidr: 0.0.0.0/0
+            except:
+              - 10.0.0.0/8
+              - 172.16.0.0/12
+              - 192.168.0.0/16
+    # Allow access to DNS
+    - ports:
+        - port: 53
+          protocol: UDP
+        - port: 53
+          protocol: TCP
+      to:
+        - namespaceSelector:
+            matchLabels:
+              kubernetes.io/metadata.name: kube-system
+          podSelector:
+            matchLabels:
+              # This label is also added to EKS core-dns deployments
+              k8s-app: kube-dns
+    # Allow Scheduler -> Worker comms
+    # allow all ports as they open random ones by default to communicate
+    # https://github.com/dask/distributed/blob/ec3f18044daad643f9f27ab8352a36757dfd5574/distributed/cli/dask_worker.py#L61-L67
+    - to:
+        - podSelector:
+            matchLabels:
+              app.kubernetes.io/component: dask-worker
+    # Allow Scheduler -> API heartbeats
+    - to:
+        - podSelector:
+            matchLabels:
+              app.kubernetes.io/component: gateway
+      ports:
+        - port: 8000
+          protocol: TCP
+{{- end }}
+{{- end }}

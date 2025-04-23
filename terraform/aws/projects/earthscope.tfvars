@@ -14,6 +14,22 @@ default_budget_alert = {
   "enabled" : false,
 }
 
+ebs_volumes = {
+  "staging" = {
+    size        = 1
+    type        = "gp3"
+    name_suffix = "staging"
+    tags        = { "2i2c:hub-name" : "staging" }
+  },
+  "prod" = {
+    size        = 1536 # 1.5T
+    type        = "gp3"
+    name_suffix = "prod"
+    tags        = { "2i2c:hub-name" : "prod" }
+  },
+}
+enable_nfs_backup = true
+
 enable_aws_ce_grafana_backend_iam = true
 disable_cluster_wide_filestore    = false
 
