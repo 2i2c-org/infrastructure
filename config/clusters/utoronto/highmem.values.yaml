@@ -14,5 +14,5 @@ jupyterhub:
         oauth_callback_url: https://highmem.datatools.utoronto.ca/hub/oauth_callback
   singleuser:
     memory:
-      limit: 5G
-      guarantee: 2G
+      limit: 8G
+      guarantee: 8G
