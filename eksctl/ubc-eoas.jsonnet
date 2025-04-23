@@ -146,12 +146,9 @@ local daskNodes = [];
     [
         ng + {
             namePrefix: 'core',
-            nameSuffix: 'a',
+            nameSuffix: 'b',
             nameIncludeInstanceType: false,
             availabilityZones: [nodeAz],
-            ssh: {
-                publicKeyPath: 'ssh-keys/ubc-eoas.key.pub'
-            },
             instanceType: "m5.xlarge",
             minSize: 1,
             maxSize: 6,
