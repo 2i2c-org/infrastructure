@@ -1,8 +1,4 @@
 jupyterhub:
-  singleuser:
-    memory:
-      limit: 8G
-      guarantee: 8G
   ingress:
     hosts: [jupyter.utoronto.ca]
     tls:
