@@ -32,4 +32,4 @@ redirects:
     - from: binder-pythia.jetstream2.2i2c.cloud
       to: binder.projectpythia.org
     - from: hub.binder-pythia.jetstream2.2i2c.cloud
-      to: hub.binder.projectpythia.org
+      to: hub.projectpythia.org

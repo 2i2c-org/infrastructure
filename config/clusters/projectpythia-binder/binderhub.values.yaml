@@ -11,11 +11,11 @@ jupyterhub:
         capi.stackhpc.com/node-group: core
   ingress:
     hosts:
-      - hub.binder.projectpythia.org
+      - hub.projectpythia.org
     tls:
       - secretName: https-auto-tls
         hosts:
-          - hub.binder.projectpythia.org
+          - hub.projectpythia.org
   custom:
     binderhubUI:
       enabled: true
@@ -127,7 +127,7 @@ binderhub-service:
         - "^binder-examples/.*"
     BinderHub:
       base_url: /
-      hub_url: https://hub.binder.projectpythia.org
+      hub_url: https://hub.projectpythia.org
       badge_base_url: https://binder.projectpythia.org
       auth_enabled: false
       enable_api_only_mode: false
@@ -151,11 +151,11 @@ binderhub-service:
     - name: JUPYTERHUB_CLIENT_ID
       value: "service-binder"
     - name: JUPYTERHUB_API_URL
-      value: "https://hub.binder.projectpythia.org/hub/api"
+      value: "https://hub.projectpythia.org/hub/api"
     # Without this, the redirect URL to /hub/api/... gets
     # appended to binderhub's URL instead of the hub's
     - name: JUPYTERHUB_BASE_URL
-      value: "https://hub.binder.projectpythia.org/"
+      value: "https://hub.projectpythia.org/"
   # The password to the registry is stored encrypted in the hub's encrypted config file
   buildPodsRegistryCredentials:
     server: *url
