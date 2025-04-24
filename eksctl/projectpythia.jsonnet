@@ -36,6 +36,9 @@ local notebookNodes = [
      taints+: {
          "nvidia.com/gpu": "present:NoSchedule"
      },
+     labels: {
+         "2i2c/has-gpu": "true"
+     },
      // Allow provisioning GPUs across all AZs, to prevent situation where all
      // GPUs in a single AZ are in use and no new nodes can be spawned
      availabilityZones: masterAzs,
