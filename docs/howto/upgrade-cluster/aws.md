@@ -240,7 +240,7 @@ can work with multiple node group at the time by using wildcards in the
    # IMPORTANT: review the --include flag's value
    # IMPORTANT: note that --approve is needed and commented out
 
-   eksctl delete nodegroup --config-file=$CLUSTER_NAME.eksctl.yaml --include="nb-*,dask-*" # --approve
+   eksctl delete nodegroup --config-file=$CLUSTER_NAME.eksctl.yaml --include="nb-*,dask-*,gpu-*" # --approve
    ```
 
 2. *Wait ~60 seconds*
@@ -255,7 +255,7 @@ can work with multiple node group at the time by using wildcards in the
    # re-create node group(s) (takes ~5 min)
    # IMPORTANT: review the --include flag's value
 
-   eksctl create nodegroup --config-file=$CLUSTER_NAME.eksctl.yaml --include="nb-*,dask-*"
+   eksctl create nodegroup --config-file=$CLUSTER_NAME.eksctl.yaml --include="nb-*,dask-*,gpu-*"
    ```
 
 ### 6. Notify in slack
