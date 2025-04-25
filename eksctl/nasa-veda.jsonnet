@@ -46,14 +46,13 @@ local notebookNodes = [
     {
         instanceType: "r5.xlarge",
         namePrefix: "nb-prod",
-        nameSuffix: "b",
+        nameSuffix: "a",
         labels+: { "2i2c/hub-name": "prod" },
         tags+: { "2i2c:hub-name": "prod" }
     },
     {
         instanceType: "r5.4xlarge",
         namePrefix: "nb-prod",
-        nameSuffix: "b",
         labels+: { "2i2c/hub-name": "prod" },
         tags+: { "2i2c:hub-name": "prod" }
     },
@@ -217,9 +216,6 @@ local daskNodes = [
             minSize: 0,
             maxSize: 500,
             instanceType: n.instanceType,
-            ssh: {
-                publicKeyPath: 'ssh-keys/nasa-veda.key.pub'
-            },
             labels+: {
                 "hub.jupyter.org/node-purpose": "user",
                 "k8s.dask.org/node-purpose": "scheduler"
@@ -239,9 +235,6 @@ local daskNodes = [
             availabilityZones: [nodeAz],
             minSize: 0,
             maxSize: 500,
-            ssh: {
-                publicKeyPath: 'ssh-keys/nasa-veda.key.pub'
-            },
             labels+: {
                 "k8s.dask.org/node-purpose": "worker"
             },
