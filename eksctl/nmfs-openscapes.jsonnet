@@ -245,9 +245,6 @@ local daskNodes = [
             minSize: 0,
             maxSize: 500,
             instanceType: n.instanceType,
-            ssh: {
-                publicKeyPath: 'ssh-keys/nmfs-openscapes.key.pub'
-            },
             labels+: {
                 "hub.jupyter.org/node-purpose": "user",
                 "k8s.dask.org/node-purpose": "scheduler"
@@ -265,9 +262,6 @@ local daskNodes = [
             availabilityZones: [nodeAz],
             minSize: 0,
             maxSize: 500,
-            ssh: {
-                publicKeyPath: 'ssh-keys/nmfs-openscapes.key.pub'
-            },
             labels+: {
                 "k8s.dask.org/node-purpose": "worker"
             },
